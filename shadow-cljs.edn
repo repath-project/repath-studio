@@ -1,0 +1,61 @@
+{:source-paths ["src" "test"]
+ 
+ :dependencies [[reagent "1.1.0"]
+                [re-frame "1.3.0-rc2"]
+                [day8.re-frame/re-frame-10x "1.2.1"]
+                [day8.re-frame/tracing "0.6.2"]
+                [day8/shadow-git-inject "0.0.5"]
+                [garden "1.3.10"]
+                [stylefy "3.2.0"]
+                [stylefy/reagent "3.0.0"]
+                [re-pressed "0.3.1"]
+                [binaryage/devtools "1.0.4"]
+                [net.mikera/core.matrix "0.62.0"]
+                [com.cognitect/transit-cljs "0.8.269"]
+                [replumb "0.2.4"]]
+ 
+ :build-defaults {:build-hooks [(shadow-git-inject.core/hook)]}
+
+ :dev-http {8290 "target/browser-test"}
+
+ :builds {:main {:target    :node-script
+                 :output-to "resources/main.js"
+                 :main      repath.main/main}
+          
+          :preload {:target     :node-script
+                    :output-to  "resources/preload.js"
+                    :main repath.preload/main
+                    :hashbang false}
+          
+          :app {:target     :browser
+                :output-dir "resources/public/js"
+                :asset-path "/js"
+                :compiler-options {;; :optimizations only apply when using the release command. 
+                                   ;; Development builds are never optimized by the Closure Compiler.
+                                   ;; SEE https://shadow-cljs.github.io/docs/UsersGuide.html#Optimization
+                                   :optimizations :simple
+                                   :infer-externs :none
+                                   :output-feature-set :es-next
+                                   :closure-defines {repath.config/version :shadow-git-inject/version}}
+                :dev {:compiler-options {:closure-defines {re-frame.trace.trace-enabled? true
+                                                           day8.re-frame.tracing.trace-enabled? true}}
+                      :devtools {:preloads [devtools.preload
+                                            day8.re-frame-10x.preload]}}
+                :release {:build-options {:ns-aliases {day8.re-frame.tracing day8.re-frame.tracing-stubs}}}
+
+                :modules {:app {:entries [repath.studio.core]
+                                :init-fn repath.studio.core/init}}}
+          
+          :bootstrap {:target :bootstrap
+                      :output-dir "resources/public/js/bootstrap"
+                      :exclude #{cljs.js}
+                      :entries [cljs.js re-frame.core reagent.core repath.user]}
+          
+          :browser-test {:target    :browser-test
+                         :ns-regexp "-test$"
+                         :runner-ns shadow.test.browser
+                         :test-dir  "target/browser-test"}
+          
+          :karma-test {:target    :karma
+                       :ns-regexp "-test$"
+                       :output-to "target/karma-test.js"}}}

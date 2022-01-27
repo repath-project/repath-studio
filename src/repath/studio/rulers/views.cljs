@@ -1,0 +1,88 @@
+(ns repath.studio.rulers.views
+  (:require
+   [re-frame.core :as rf]
+   [clojure.string :as str]
+   [repath.studio.styles :as styles]))
+
+(defn mouse-pointer
+  [orientation size]
+  (let [[x y] @(rf/subscribe [:mouse-pos])
+        pointer-size (/ size 5)]
+    [:polygon {:points (str/join " " (if (= orientation :vertical)
+                                       [size "," y (- size pointer-size) "," (- y pointer-size) (- size pointer-size) "," (+ y pointer-size)]
+                                       [x "," size (- x pointer-size) "," (- size pointer-size) (+ x pointer-size) "," (- size pointer-size)]))
+               :fill styles/font-color}]))
+
+(defn line
+  [{:keys [orientation adjusted-step size starting-point]}]
+  [:line (if (= orientation :vertical)
+           {:x1 starting-point :y1 adjusted-step :x2 size :y2 adjusted-step :stroke styles/border-color}
+           {:x1 adjusted-step :y1 starting-point :x2 adjusted-step :y2 size :stroke styles/border-color})])
+
+(defn base-lines
+  [orientation size]
+  (let [[x y]      @(rf/subscribe [:canvas/viewbox])
+        zoom       @(rf/subscribe [:zoom])
+        steps-coll @(rf/subscribe [:rullers/steps-coll orientation])]
+    (into [:g]
+          (map-indexed
+           (fn [i step]
+             (let [adjusted-step (* zoom step)
+                   font-size 9]
+               (cond
+                 (zero? (rem i 10)) [:<>
+                                     [line {:orientation orientation
+                                            :adjusted-step adjusted-step
+                                            :size size
+                                            :starting-point 0}]
+                                     [:text {:x (if (= orientation :vertical) font-size (+ adjusted-step 4))
+                                             :y (if (= orientation :vertical) (+ adjusted-step 4) font-size)
+                                             :writing-mode (when (= orientation :vertical) "vertical-rl")
+                                             :style (when (= orientation :vertical) {:text-orientation "upright"})
+                                             :fill styles/font-color-muted
+                                             :font-size font-size
+                                             :font-family styles/font-family}
+                                      (Math/round (if (= orientation :vertical) (+ step y) (+ step x)))]]
+                 (and (odd? i) (zero? (rem i 5))) [line {:orientation orientation
+                                                         :adjusted-step adjusted-step
+                                                         :size size
+                                                         :starting-point (/ size 3)}]
+                 :else [line {:orientation orientation
+                              :adjusted-step adjusted-step
+                              :size size
+                              :starting-point (/ size 1.5)}])))
+           steps-coll))))
+
+(defn ruler
+  [{:keys [orientation size]}]
+  [:svg {:width  (if (= orientation :vertical) size "100%")
+         :height (if (= orientation :vertical) "100%" size)
+         :style {:border-bottom (str "1px solid " styles/border-color)
+                 :border-right (when (= orientation :vertical) (str "1px solid " styles/border-color))
+                 :box-sizing "border-box"}}
+   [base-lines orientation size]
+   [mouse-pointer orientation size]])
+
+(defn grid-lines
+  [orientation]
+  (let [[x y width height] @(rf/subscribe [:canvas/viewbox])
+        zoom               @(rf/subscribe [:zoom])
+        steps-coll         @(rf/subscribe [:rullers/steps-coll orientation])
+        vertical?          (= orientation :vertical)]
+    (into [:g]
+          (map-indexed
+           (fn [i step]
+             (when (zero? (rem i 10))
+               [:line {:x1 (if vertical? x (+ step x))
+                       :y1 (if vertical? (+ step y) y)
+                       :x2 (if vertical? width (+ step x))
+                       :y2 (if vertical? (+ step y) height)
+                       :stroke-width (/ 1 zoom)
+                       :opacity ".4"
+                       :stroke styles/level-3}]))) steps-coll)))
+
+(defn grid
+  []
+  [:<>
+   [grid-lines :vertical]
+   [grid-lines :horizontal]])
