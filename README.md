@@ -2,10 +2,7 @@
   
 ![RePath Studio](https://repath.studio/assets/images/banner.png)\
 ![Build Website](https://github.com/sprocketc/repath-studio/actions/workflows/studio.yml/badge.svg)
-  
-*Originally, there is nothing — but as people walk this way again and again, a path appears.*\
-*Lu Xun, 1921*
-  
+
 </div>
 
 ## How to Run
