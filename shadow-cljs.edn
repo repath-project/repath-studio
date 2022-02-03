@@ -34,6 +34,9 @@
                                    ;; Development builds are never optimized by the Closure Compiler.
                                    ;; SEE https://shadow-cljs.github.io/docs/UsersGuide.html#Optimization
                                    :optimizations :simple
+                                   ;; Required for bootstrap build 
+                                   ;; SEE https://shadow-cljs.github.io/docs/UsersGuide.html#output-wrapper
+                                   :output-wrapper false
                                    :infer-externs :none
                                    :output-feature-set :es-next
                                    :closure-defines {repath.config/version :shadow-git-inject/version}}
