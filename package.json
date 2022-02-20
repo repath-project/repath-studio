@@ -9,6 +9,7 @@
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
     "dev": "npx shadow-cljs watch main preload app bootstrap browser-test karma-test",
+    "electron": "npx electron .",
     "build": "npx shadow-cljs release main preload app bootstrap",
     "pack": "npx electron-builder --dir",
     "dist": "npx electron-builder",
