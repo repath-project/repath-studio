@@ -56,7 +56,6 @@
     "blobs": "2.2.1-beta.1",
     "codemirror": "5.64.0",
     "create-react-class": "15.7.0",
-    "devtron": "1.4.0",
     "electron": "16.0.2",
     "electron-builder": "22.14.13",
     "element-to-path": "1.2.1",
