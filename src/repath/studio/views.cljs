@@ -111,7 +111,7 @@
       [:option {:key :no-filter :value :no-filter} "No filter"]
       (map (fn [{:keys [id]}] [:option {:key id :value id} (name id)]) filters/accessibility)]
      [comp/radio-icon-button {:title "Grid" :active? @(rf/subscribe [:grid?]) :icon "grid" :action #(rf/dispatch [:toggle-grid])}]
-     [comp/radio-icon-button {:title "Snap" :active? true :icon "magnet" :action #(rf/dispatch [:documents/new])}]
+     #_[comp/radio-icon-button {:title "Snap" :active? true :icon "magnet" :action #(rf/dispatch [:toggle-snap])}]
      [comp/radio-icon-button {:title "Rulers" :active? @(rf/subscribe [:rulers?]) :icon "ruler-combined" :action #(rf/dispatch [:toggle-rulers])}]
      [:div {::style {:position  "relative"}}
 
