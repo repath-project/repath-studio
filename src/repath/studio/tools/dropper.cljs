@@ -13,8 +13,9 @@
   (assoc db :cursor "crosshair"))
 
 (defmethod tools/deactivate :dropper
-  [_]
-  (js/window.api.send "toMain" #js {:action "endFrameSubscription"}))
+  [db]
+  (js/window.api.send "toMain" #js {:action "endFrameSubscription"})
+  db)
 
 (defmethod tools/click :dropper
   [db event element]
