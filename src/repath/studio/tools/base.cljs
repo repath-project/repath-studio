@@ -63,7 +63,7 @@
     (when (not (:locked? element)) (:type element))))
 
 (defmethod mouse-move :default [db _ _] db)
-(defmethod drag :default [])
+(defmethod drag :default [db _ _ _] db)
 (defmethod drag-end :default [])
 (defmethod properties :default [])
 (defmethod render :default [])
