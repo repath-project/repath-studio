@@ -1,6 +1,8 @@
 (ns repath.studio.tools.line
   (:require [repath.studio.elements.handlers :as elements]
-            [repath.studio.tools.base :as tools]))
+            [repath.studio.tools.base :as tools]
+            [repath.studio.units :as units]
+            [clojure.string :as str]))
 
 (derive :line ::tools/shape)
 
@@ -32,6 +34,12 @@
 (defmethod tools/bounds :line
   [_ {{:keys [x1 y1 x2 y2]} :attrs}]
   [(min x1 x2) (min y1 y2) (max x1 x2) (max y1 y2)])
+
+(defmethod tools/area :line
+  [{{:keys [x1 y1 x2 y2 stroke-width stroke]} :attrs}]
+  (let [[x1 y1 x2 y2 stroke-width-px] (map units/unit->px [x1 y1 x2 y2 stroke-width])
+        stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)]
+    (* stroke-width-px (Math/hypot (Math/abs (- x1 x2)) (Math/abs (- y1 y2))))))
 
 (defmethod tools/path :line
   [{{:keys [x1 y1 x2 y2]} :attrs}]

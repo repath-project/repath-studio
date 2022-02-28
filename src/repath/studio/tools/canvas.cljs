@@ -48,6 +48,8 @@
                    :cursor cursor}}
      (map (fn [element] ^{:key (:key element)} [tools/render element]) child-elements)
      [tools/render temp-element]
+     (when (not (next selected-elements)) 
+       (map (fn [element] ^{:key (str (:key element) "area")} [elements/area (tools/area element) (tools/adjusted-bounds elements element) zoom]) selected-elements))
      (map (fn [element] ^{:key (str (:key element) "bounds")} [elements/bounding-box (tools/adjusted-bounds elements element) zoom]) hovered-elements)
      (map (fn [element] ^{:key (str (:key element) "selection")} [elements/bounding-box (tools/adjusted-bounds elements element) zoom]) selected-elements)
      (when bounds [elements/edit bounds zoom])

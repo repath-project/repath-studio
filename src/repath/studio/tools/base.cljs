@@ -45,6 +45,7 @@
 (defmulti attrs (fn [type _] type))
 (defmulti properties (fn [type _] type))
 (defmulti path :type)
+(defmulti area :type)
 (defmulti bounds (fn [_ element] (:type element)))
 
 (defmulti mouse-move (fn [db _ _] (:tool db)))
@@ -68,6 +69,7 @@
 (defmethod properties :default [])
 (defmethod render :default [])
 (defmethod bounds :default [])
+(defmethod area :default [])
 
 (defmethod activate :default [db] db)
 (defmethod deactivate :default [db] db)

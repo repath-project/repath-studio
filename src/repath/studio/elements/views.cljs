@@ -143,6 +143,21 @@
      [:rect (merge attrs {:stroke "#fff"})]
      [:rect (merge attrs {:stroke "#555" :stroke-dasharray stroke-dasharray})]]))
 
+(defn area
+  [area bounds zoom]
+  (let [[x1 y1 x2 y2] bounds
+        width (- x2 x1)]
+    
+    (when area
+      [:text {:x (+ x1 (/ (- x2 x1) 2))
+              :y (+ y1 (/ -15 zoom))
+              :fill "black"
+              :dominant-baseline "middle"
+              :text-anchor "middle"
+              :font-family "Source Sans Pro"
+              :width width
+              :font-size (/ 12 zoom)} (-> area (.toFixed 2) (js/parseFloat)) " px\u00B2"])))
+
 (defn element-menu [e]
   (gen-menu e  [{:name "Cut"
                  :shortcut "Ctrl+X"
