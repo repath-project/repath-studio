@@ -39,10 +39,8 @@
       [(- cx rx) (- cy ry) (+ cx rx 2) (+ cy ry)]))
 
 (defmethod tools/area :ellipse
-  [{{:keys [rx ry stroke-width stroke]} :attrs}]
-  (let [[rx ry stroke-width-px] (map units/unit->px [rx ry stroke-width])
-        stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)
-        [rx ry] (map #(+ % (/ (if (str/blank? stroke) 0 stroke-width-px) 2)) [rx ry])]
+  [{{:keys [rx ry]} :attrs}]
+  (let [[rx ry] (map units/unit->px [rx ry])]
     (* Math/PI rx ry)))
 
 (defmethod tools/path :ellipse

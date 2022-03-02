@@ -42,7 +42,9 @@
 (derive :rx ::radius)
 (derive :ry ::radius)
 
-(def attrs-order [:x :y
+(def attrs-order [:d
+                  :points
+                  :x :y
                   :x1 :y1
                   :x2 :y2
                   :cx :cy

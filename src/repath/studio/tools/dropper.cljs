@@ -18,8 +18,12 @@
   db)
 
 (defmethod tools/click :dropper
-  [db event element]
+  [db event element tool-data]
   (let [{:keys [mouse-pos]} event
         body (-> (js/document.getElementById "canvas-frame") (.-contentWindow) (.-document) (.-body))
         html-canvas (html2canvas body)]
     (.then html-canvas #(rf/dispatch [:set-fill (-> % (.getContext "2d") (.getImageData (first mouse-pos) (second mouse-pos) 1 1) (.-data))]))))
+
+  (defmethod tools/drag-end :dropper
+    [db event element tool-data]
+    (tools/click db event element tool-data))

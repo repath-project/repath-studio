@@ -19,7 +19,7 @@
   (assoc db :cursor "text"))
 
 (defmethod tools/click :text
-  [{:keys [adjusted-mouse-offset] :as db} _ _]
+  [{:keys [adjusted-mouse-offset] :as db} _ _ _]
   (let [[offset-x offset-y] adjusted-mouse-offset
         attrs {:x offset-x
                :y offset-y

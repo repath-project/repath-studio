@@ -42,5 +42,5 @@
       db)))
 
 (defmethod tools/click :default
-  [db event element]
+  [db event element tool-data]
   (elements/select db (some #(contains? (:modifiers event) %) #{:ctrl :shift}) element))

@@ -28,8 +28,6 @@
         (elements/set-temp {:type :rect :attrs attrs}))))
 
 (defmethod tools/area :rect
-  [{{:keys [width height stroke-width stroke]} :attrs}]
-  (let [[width height stroke-width-px] (map units/unit->px [width height stroke-width])
-        stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)
-        [width height] (map #(+ % (/ (if (str/blank? stroke) 0 stroke-width-px) 2)) [width height])]
+  [{{:keys [width height]} :attrs}]
+  (let [[width height] (map units/unit->px [width height])]
     (* width height)))

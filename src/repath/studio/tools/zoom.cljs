@@ -8,7 +8,7 @@
 (defmethod tools/properties :zoom [] {:icon "magnifier"})
 
 (defmethod tools/mouse-move :zoom
-  [db event _]
+  [db event _ _]
   (assoc db :cursor (if (contains? (:modifiers event) :shift) "zoom-out" "zoom-in")))
 
 (defmethod tools/drag :zoom
@@ -33,7 +33,7 @@
       (assoc :state :default)))
 
 (defmethod tools/click :zoom
-  [db event element]
+  [db event element tool-data]
   (let [zoom-out-factor 0.8
         zoom-in-factor 1.2
         factor (if (contains? (:modifiers event) :shift) zoom-out-factor zoom-in-factor)]

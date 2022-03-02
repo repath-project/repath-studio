@@ -26,7 +26,7 @@
         (elements/conj-by-bounds-overlap (if intersecting? elements/bounds-intersect? elements/bounds-contained?) [:documents active-document :selected-keys] temp-element))))
 
 (defmethod tools/mouse-move :select
-  [{active-document :active-document :as db} _ element]
+  [{active-document :active-document :as db} _ element tool-data]
   (-> db
       (assoc-in [:documents active-document :hovered-keys] (if element #{(:key element)} #{}))
       (assoc :cursor (if element "move" "default"))))

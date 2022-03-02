@@ -46,11 +46,8 @@
     [(- cx r) (- cy r) (+ cx r) (+ cy r)]))
 
 (defmethod tools/area :circle
-  [{{:keys [r stroke-width stroke]} :attrs}]
-  (let [[r stroke-width-px] (map units/unit->px [r stroke-width])
-        stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)
-        r (+ r (/ (if (str/blank? stroke) 0 stroke-width-px) 2))]
-    (* Math/PI (Math/pow r 2))))
+  [{{:keys [r]} :attrs}]
+    (* Math/PI (Math/pow (units/unit->px r) 2)))
 
 (defmethod tools/path :circle
   [{{:keys [cx cy r]} :attrs}]

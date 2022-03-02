@@ -31,6 +31,7 @@
     [:svg {:on-mouse-up     #(mouse/event-handler % element)
            :on-mouse-down   #(mouse/event-handler % element)
            :on-wheel        #(mouse/event-handler % element)
+           :on-double-click #(mouse/event-handler % element)
            :on-click        (fn [e]
                               (mouse-event e)
                               (mouse/event-handler e element))

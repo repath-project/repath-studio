@@ -89,7 +89,7 @@
                      (assoc :cursor "grabbing")
                      (h/pan (matrix/sub (:mouse-pos db) (:mouse-pos event))))
                1 (tools/drag db event element tool-data))
-             (tools/mouse-move db event element))
+             (tools/mouse-move db event element tool-data))
            (assoc :mouse-pos mouse-pos)
            (assoc :mouse-over-canvas? true)
            (assoc :adjusted-mouse-pos adjusted-mouse-pos))
@@ -104,7 +104,7 @@
        :mouseup
        (-> (if (not= mouse-pos mouse-offset)
              (tools/drag-end db event element tool-data)
-             (tools/click db event element))
+             (tools/click db event element tool-data))
            (dissoc :mouse-offset))
 
        :wheel
