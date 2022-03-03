@@ -27,10 +27,18 @@
         (elements/set-temp {:type :rect :attrs attrs}))))
 
 (defmethod tools/drag-end :zoom
-  [db]
-  (-> db
-      (elements/clear-temp)
-      (assoc :state :default)))
+  [{:keys [active-document content-rect adjusted-mouse-offset] :as db} _ _ {:keys [adjusted-mouse-pos]}]
+  (let [[offset-x offset-y] adjusted-mouse-offset
+        [pos-x pos-y] adjusted-mouse-pos
+        width  (Math/abs (- pos-x offset-x))
+        height (Math/abs (- pos-y offset-y))
+        width-ratio (/ (:width content-rect) width)
+        height-ratio (/ (:height content-rect) height)]
+    (-> db
+        (elements/clear-temp)
+        (assoc :state :default)
+        (assoc-in [:documents active-document :zoom] (min width-ratio height-ratio))
+        (canvas-frame/pan-to-bounds [pos-x pos-y offset-x offset-y]))))
 
 (defmethod tools/click :zoom
   [db event element tool-data]

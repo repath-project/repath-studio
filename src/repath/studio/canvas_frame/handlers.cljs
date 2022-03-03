@@ -43,16 +43,22 @@
         position (matrix/add pan (matrix/div [width height] 2 zoom))]
     (zoom-in-position db factor position)))
 
-(defn pan-to-element
-  [{active-document :active-document content-rect :content-rect :as db} key]
+(defn pan-to-bounds
+  [{active-document :active-document content-rect :content-rect :as db} bounds]
   (let [zoom (get-in db [:documents active-document :zoom])
-        element (get-in db [:documents active-document :elements key])
-        elements (el/elements db)
-        [x1 y1 x2 y2] (tools/bounds elements element)
+        [x1 y1 x2 y2] bounds
         [width height] (matrix/sub [x2 y2] [x1 y1])
-        parrent-page-attrs (:attrs (helpers/parent-page elements element))
         pan (matrix/add
              (matrix/div (matrix/sub [width height] (matrix/div [(:width content-rect) (:height content-rect)] zoom)) 2)
-             [x1 y1]
-             (when-not (el/page? element) [(:x parrent-page-attrs) (:y parrent-page-attrs)]))]
+             [x1 y1])]
     (assoc-in db [:documents active-document :pan] pan)))
+
+(defn pan-to-element
+  [{active-document :active-document :as db} key]
+  (let [element (get-in db [:documents active-document :elements key])
+        elements (el/elements db)
+        parrent-page-attrs (:attrs (helpers/parent-page elements element))
+        db (pan-to-bounds db (tools/bounds elements element))]
+    (if (not (el/page? element))
+      (pan db [(:x parrent-page-attrs) (:y parrent-page-attrs)])
+      db)))
