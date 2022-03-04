@@ -1,6 +1,7 @@
 (ns repath.studio.tools.polyline
   (:require [repath.studio.elements.handlers :as elements]
             [repath.studio.tools.base :as tools]
+            [repath.studio.units :as units]
             [clojure.string :as str]))
 
 (derive :polyline ::tools/shape)
@@ -56,6 +57,16 @@
     (if points
       (assoc-in db [:documents active-document :temp-element :attrs :points] (str/join " " (concat (drop-last 2 (points-to-vec points)) adjusted-mouse-pos)))
       db)))
+
+(defmethod tools/move :polyline
+  [element [x y]] (-> element
+                      (update-in [:attrs :points] (fn [val]
+                                                    (->> val
+                                                         (points-to-vec)
+                                                         (partition 2)
+                                                         (reduce (fn [points point] (concat points [(units/transform #(+ x %) (first point)) (units/transform #(+ y %) (second point))])) [])
+                                                         (concat)
+                                                         (str/join " "))))))
 
 (defmethod tools/bounds :polyline
   [_ element]
