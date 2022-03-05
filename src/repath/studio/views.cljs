@@ -84,7 +84,7 @@
   (let [[x y] @(rf/subscribe [:adjusted-mouse-pos])]
     [:div.v-box {:style {:font-family  "Source Code Pro, monospace"
                          :margin-left styles/h-padding
-                         :min-width "70px"}}
+                         :min-width "80px"}}
      [:div {:style {:display "flex"
                     :justify-content "space-between"}} [:span {:style {:margin-right "5px"}} "X:"] [:span (gstring/format "%.2f" x)]]
      [:div {:style {:display "flex"
@@ -123,12 +123,12 @@
                         :background styles/level-3
                         :margin     "0 0 2px 4px"}
                 :class "icon-button"} "Z: "]
-      ^{:key zoom} [:input {:default-value (gstring/format "%.0f" (* 100 zoom))
+      ^{:key zoom} [:input {:default-value (gstring/format "%.2f" (* 100 zoom))
                             :class    ["icon-button"]
                             :on-blur #(rf/dispatch [:set-zoom (/ (.. % -target -value) 100)])
                             :on-key-down #((when (= (.-keyCode %) 13) (rf/dispatch [:set-zoom (/ (.. % -target -value) 100)])))
                             :style {:font-family  "Source Code Pro, monospace"
-                                    :min-width "40px"
+                                    :min-width "50px"
                                     :padding-left 0
                                     :padding-right 0
                                     :height "32px"

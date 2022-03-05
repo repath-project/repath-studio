@@ -33,11 +33,13 @@
         width  (Math/abs (- pos-x offset-x))
         height (Math/abs (- pos-y offset-y))
         width-ratio (/ (:width content-rect) width)
-        height-ratio (/ (:height content-rect) height)]
+        height-ratio (/ (:height content-rect) height)
+        current-zoom (get-in db [:documents active-document :zoom])
+        furute-zoom (min width-ratio height-ratio)]
     (-> db
         (elements/clear-temp)
         (assoc :state :default)
-        (assoc-in [:documents active-document :zoom] (min width-ratio height-ratio))
+        (canvas-frame/zoom (/ furute-zoom current-zoom))
         (canvas-frame/pan-to-bounds [pos-x pos-y offset-x offset-y]))))
 
 (defmethod tools/click :zoom
