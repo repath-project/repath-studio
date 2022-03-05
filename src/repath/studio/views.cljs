@@ -134,14 +134,14 @@
                                     :height "32px"
                                     :font-size "1em"
                                     :background styles/level-3
-                                    :margin     "0"}}]
+                                    :margin "0"}}]
       [:button {:style {:font-family  "Source Code Pro, monospace"
                         :padding-left 0
                         :padding-right 0
                         :height "32px"
                         :font-size "1em"
                         :background styles/level-3
-                        :margin     "0"}
+                        :margin "0"}
                 :class "icon-button"} "%"]
       [:select {:onChange #(rf/dispatch [:set-zoom (-> % .-target .-value js/parseFloat)])
                 :class    "icon-button"

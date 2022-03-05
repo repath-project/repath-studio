@@ -49,7 +49,6 @@
     (rf/dispatch [:set-cursor "default"])
     (elements/set-temp db {:type :blob :attrs attrs})))
 
-    
 (defn blob-path [attrs]
   (-> (.svgPath blobs (clj->js (reduce (fn [options [k v]] (assoc options k (int v))) {} (select-keys attrs [:seed :extraPoints :randomness :size]))))
       (svgpath)
