@@ -10,7 +10,8 @@
                                 :target (.-target event)
                                 :type (keyword (.-type event))
                                 :mouse-pos [(.-clientX event) (.-clientY event)]
-                                :button (.-buttons event)
+                                :button (.-button event)
+                                :buttons (.-button event)
                                 :delta [(.-deltaX event) (.-deltaY event)]
                                 :modifiers (cond-> #{}
                                              (.-altKey event) (conj :alt)
