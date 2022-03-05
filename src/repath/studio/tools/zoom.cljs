@@ -1,6 +1,7 @@
 (ns repath.studio.tools.zoom
   (:require [repath.studio.canvas-frame.handlers :as canvas-frame]
             [repath.studio.elements.handlers :as elements]
+            [repath.studio.styles :as styles]
             [repath.studio.tools.base :as tools]))
 
 (derive :zoom ::tools/transform)
@@ -20,8 +21,10 @@
                :y      (min pos-y offset-y)
                :width  (Math/abs (- pos-x offset-x))
                :height (Math/abs (- pos-y offset-y))
-               :fill   "transparent"
-               :stroke "#000"
+               :fill   styles/accent
+               :fill-opacity ".25"
+               :stroke styles/accent
+               :stroke-opacity ".5"
                :stroke-width (/ 1 zoom)}]
     (-> db
         (assoc :state :select)

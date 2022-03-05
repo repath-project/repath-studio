@@ -2,6 +2,7 @@
   (:require [repath.studio.tools.base :as tools]
             [clojure.core.matrix :as matrix]
             [repath.studio.elements.handlers :as elements]
+            [repath.studio.styles :as styles]
             [repath.studio.history.handlers :as history]))
 
 (derive :select ::tools/transform)
@@ -40,18 +41,21 @@
   (if (or (and (not element) (= state :default)) (= state :select))
     (let [[offset-x offset-y] adjusted-mouse-offset
           [pos-x pos-y] adjusted-mouse-pos
+          intersecting? (> pos-x offset-x)
           attrs {:key    :select
                  :x      (min pos-x offset-x)
                  :y      (min pos-y offset-y)
                  :width  (Math/abs (- pos-x offset-x))
                  :height (Math/abs (- pos-y offset-y))
-                 :fill   "transparent"
-                 :stroke "#000"
+                 :fill   (if intersecting? styles/accent "transparent")
+                 :fill-opacity ".25"
+                 :stroke styles/accent
+                 :stroke-opacity ".5"
                  :stroke-width (/ 1 zoom)}]
       (-> db
           (assoc :state :select)
           (elements/set-temp {:type :rect :attrs attrs})
-          (hover-by-area (> pos-x offset-x))))
+          (hover-by-area intersecting?)))
     (let [offset (matrix/sub adjusted-mouse-pos (:adjusted-mouse-pos db))]
       (case state
         :move (elements/move (if (some #(contains? (:modifiers event) %) #{:ctrl})
