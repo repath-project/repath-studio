@@ -57,7 +57,7 @@
   (js/window.api.receive "fromMain"
                          (fn [data]
                            (case (.-action data)
-                             "fontsLoaded" (js/console.log "dsfsdfsdf")
+                             "fontsLoaded" (js/console.log "fontsLoaded")
                              "windowMaximized" (rf/dispatch [:window/set-maximized? true])
                              "windowUnmaximized" (rf/dispatch [:window/set-maximized? false])
                              "windowEnteredFullscreen" (rf/dispatch [:window/set-fullscreen? true])

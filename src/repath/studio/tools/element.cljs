@@ -36,8 +36,7 @@
   (let [temp-element (get-in db [:documents (:active-document db) :temp-element])]
     (if temp-element
       (-> db
-          (elements/create temp-element)
-          (elements/clear-temp)
+          (elements/create-from-temp)
           (history/finalize (str "Create " (name (:type temp-element)))))
       db)))
 

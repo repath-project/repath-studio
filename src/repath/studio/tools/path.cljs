@@ -1,21 +1,12 @@
 (ns repath.studio.tools.path
   (:require [repath.studio.tools.base :as tools]
             [repath.studio.attrs.views :as attrs]
-            [re-frame.core :as rf]
             [clojure.string :as str]
-            [repath.studio.codemirror.views :as cm]
             [repath.studio.styles :as styles]
             ["svgpath" :as svgpath]
             ["svg-path-bounds" :as get-bounds]))
 
 (derive :path ::tools/shape)
-
-(defmethod attrs/form-element :style
-  [key value]
-  [:div {:key (or value key)
-         :style {:width "100%"
-                 :background-color styles/level-2
-                 :padding "0 8px"}} [cm/editor value {:on-blur #(rf/dispatch [:elements/set-attribute key %])}]])
 
 (def path-commands {"M" "Move To"
                     "L" "Line To"

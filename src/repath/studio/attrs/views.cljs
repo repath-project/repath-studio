@@ -6,6 +6,8 @@
    [reagent.core :as ra]
    [re-frame.core :as rf]
    [repath.studio.tools.base :as tools]
+   [repath.studio.codemirror.views :as cm]
+   [clojure.string :as str]
    [repath.config :as config]
    ["react-color" :refer [ChromePicker]]
    ["@fluentui/react" :as fui]))
@@ -135,6 +137,35 @@
                       :styles {:input {:font-size "12px"}}
                       :options fonts
                       :onChange #(on-change-handler % key value)}]))
+
+(defmethod form-element :style
+  [key value]
+  [:div {:key (or value key)
+         :style {:width "100%"
+                 :background-color styles/level-2
+                 :padding "0 8px"}} [cm/editor value {:on-blur #(rf/dispatch [:elements/set-attribute key %])}]])
+
+(defn points-to-vec
+  [points]
+  (as-> points p
+    (str/triml p)
+    (str/split p #"\s+")
+    (partition 2 p)))
+
+(defmethod form-element :points
+  [key value]
+  [:div.v-box
+   ^{:key value} [:input {:default-value value
+                          :on-blur #(on-change-handler % key value)
+                          :on-key-down #((when (= (.-keyCode %) 13) (on-change-handler % key value)))}]
+   [:div.v-scroll {:key key
+                   :style {:width "100%"
+                           :max-height "300px"
+                           :background-color styles/level-2}}
+    [:dl (map (fn [node] [:<>
+                          [:dt]
+                          [:dd (map (fn [step]
+                                      [:input {:style {:width "50%"} :value step}]) node)]]) (points-to-vec value))]]])
 
 (defn range-input
   [key value attrs]

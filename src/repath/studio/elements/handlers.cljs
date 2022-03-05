@@ -213,6 +213,13 @@
         (not page?) (move [(- (get-in active-page [:attrs :x])) (- (get-in active-page [:attrs :y]))]))
       db)))
 
+(defn create-from-temp
+  [{active-document :active-document :as db}]
+  (let [temp-element (get-in db [:documents active-document :temp-element])]
+    (-> db
+        (create temp-element)
+        (clear-temp))))
+
 (defn paste
   [{:keys [copied-elements] :as db}]
   (reduce (fn [db element] (create-element db (if (page? (element (:parent element))) (active-page db) (:parent element))  element)) (deselect-all db) copied-elements))

@@ -36,9 +36,9 @@
                               (mouse-event e)
                               (mouse/event-handler e element))
            ; Enable keyboard events on the svg element 
-           :tab-index       0 
+           :tab-index 0 
            ; We are using the [viewBox](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox) attribute to simulate pan and zoom
-           :viewBox         (str/join " " viewbox) 
+           :viewBox (str/join " " viewbox) 
            :width (:width content-rect)
            :height (:height content-rect)
            :transform (str "rotate(" rotate ")")
@@ -53,7 +53,7 @@
        (map (fn [element] ^{:key (str (:key element) "area")} [elements/area (tools/area element) (tools/adjusted-bounds elements element) zoom]) selected-elements))
      (map (fn [element] ^{:key (str (:key element) "bounds")} [elements/bounding-box (tools/adjusted-bounds elements element) zoom]) hovered-elements)
      (map (fn [element] ^{:key (str (:key element) "selection")} [elements/bounding-box (tools/adjusted-bounds elements element) zoom]) selected-elements)
-     (when bounds [elements/edit bounds zoom])
+     (when bounds [elements/bounding-handlers bounds zoom])
      (when  @(rf/subscribe [:grid?]) [rulers/grid])
      (when debug-info? (into [:g] (map #(elements/point-of-interest % zoom) @(rf/subscribe [:snaping-points]))))
      [:defs (map (fn [{:keys [id type attrs]}] [:filter {:id id :key id} [type attrs]]) filters/accessibility)]]))
