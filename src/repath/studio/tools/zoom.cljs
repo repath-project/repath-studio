@@ -12,7 +12,7 @@
   (assoc db :cursor (if (contains? (:modifiers event) :shift) "zoom-out" "zoom-in")))
 
 (defmethod tools/drag :zoom
-  [{:keys [adjusted-mouse-offset] :as db} _ _ {:keys [adjusted-mouse-pos]}]
+  [{:keys [adjusted-mouse-offset] :as db} _ _ {:keys [adjusted-mouse-pos zoom]}]
   (let [[offset-x offset-y] adjusted-mouse-offset
         [pos-x pos-y] adjusted-mouse-pos
         attrs {:key    :select
@@ -21,7 +21,8 @@
                :width  (Math/abs (- pos-x offset-x))
                :height (Math/abs (- pos-y offset-y))
                :fill   "transparent"
-               :stroke "#000"}]
+               :stroke "#000"
+               :stroke-width (/ 1 zoom)}]
     (-> db
         (assoc :state :select)
         (elements/set-temp {:type :rect :attrs attrs}))))
