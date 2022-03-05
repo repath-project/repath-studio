@@ -4,9 +4,15 @@
 
 (defn move
   "Moves the selected elements."
-  [offset]
-  (rf/dispatch [:elements/move offset])
-  "")
+  ([offset]
+   (rf/dispatch [:elements/move offset])
+   "")
+  ([x y]
+   (move [x y])))
+
+(defn m
+  [& args]
+  (apply move args))
 
 (defn fill
   "Fills the selected elements."
@@ -29,5 +35,6 @@
 (defn create
   "Creates a new element"
   [element]
-  (rf/dispatch [:elements/create element])
+  (apply #(rf/dispatch [:elements/create {:type (key %)
+                                        :attrs (val %)}]) element)
   "")

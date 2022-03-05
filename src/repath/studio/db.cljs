@@ -17,6 +17,7 @@
 (s/def ::pages-collapsed? boolean?)
 (s/def ::defs-collapsed? boolean?)
 (s/def ::symbols-collapsed? boolean?)
+(s/def ::repl-history? boolean?)
 (s/def ::active-theme keyword?)
 (s/def ::active-document keyword?)
 (s/def ::document-tabs (s/coll-of keyword? :kind vector? :distinct true))
@@ -46,6 +47,7 @@
    :command-palette? false
    :defs-collapsed? true
    :symbols-collapsed? true
+   :repl-history? false
    :active-theme :dark
    :documents {}
    :document-tabs []

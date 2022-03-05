@@ -16,6 +16,7 @@
                 :height "200px"
                 :padding "3px"
                 :flex-basis "100%"
+                :border-bottom (str "1px solid " styles/border-color)
                 :flex-shrink 1}
    :repl-item {:flex-direction :row
                :font-size 12

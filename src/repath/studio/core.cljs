@@ -40,8 +40,8 @@
   (js/window.api.initSentry)
   (devtools/set-pref! :cljs-land-style (str "filter:invert(1);" (:cljs-land-style (devtools/get-prefs))))
   ;; SEE https://code.thheller.com/blog/shadow-cljs/2017/10/14/bootstrap-support.html
-  (bootstrap/init repl/st {:path "js/bootstrap" 
-                           :load-on-init '[re-frame.core repath.user reagent.core]} #()) 
+  (bootstrap/init repl/st {:path "js/bootstrap" :load-on-init '[repath.user]} #((replumb/run-repl "(in-ns 'repath.user)" identity)
+                                                                                (print "Repl successfully loaded")))
   (fui/loadTheme (fui/createTheme (clj->js (:default theme/themes))))
   (stylefy/init {:dom (stylefy-reagent/init)})
   (rf/dispatch-sync [:initialize-db])
@@ -49,11 +49,6 @@
   (rf/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])
   (.then (.getFonts js/api.fontList #js {:disableQuoting true}) #(rf/dispatch-sync [:set-system-fonts (js->clj %)]))
 
-  (replumb/run-repl "(require
-                     '[repath.user :as r]
-                     '[reagent.core :as ra]
-                     '[re-frame.core :as rf])" identity)
-  
   (js/window.api.receive "fromMain"
                          (fn [data]
                            (case (.-action data)

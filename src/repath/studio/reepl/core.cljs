@@ -9,7 +9,8 @@
             [repath.studio.reepl.subs :as subs]
             [repath.studio.reepl.helpers :as helpers]
             [repath.studio.styles :as styles]
-            [replumb.core :as replumb])
+            [replumb.core :as replumb]
+            [re-frame.core :as rf])
   (:require-macros
    [reagent.ratom :refer [reaction]]))
 
@@ -122,7 +123,7 @@
                        :complete-word
                        :on-change]))]}
   (let [{:keys [pos count text]} @state]
-    [:div.h-box {:style {:border-top (str "1px solid " styles/border-color)}}
+    [:div.h-box
      [:span {:style {:padding "8px 0 8px 8px" :font-size "12px"}} (replumb/get-prompt)]
      ^{:key (str (hash (:js-cm-opts cm-opts)))}
      [code-mirror/code-mirror (reaction (:text @state))
@@ -173,7 +174,8 @@
                       show-value-opts
                       js-cm-opts
                       on-cm-init]}]
-  (let [state (or state (r/atom initial-state))
+  (let [repl-history? @(rf/subscribe [:repl-history?])
+        state (or state (r/atom initial-state))
         {:keys
          [add-input
           add-result
@@ -183,7 +185,7 @@
           set-text
           add-log]} (make-handlers state)
 
-        items (subs/items state)
+        items @(subs/items state)
         complete-atom (r/atom nil)
         docs (reaction
               (let [{:keys [pos list] :as state} @complete-atom]
@@ -211,7 +213,7 @@
                    js-cm-opts
                    on-cm-init]}]
      [:div
-      [repl-items @items (assoc show-value-opts :set-text set-text)]
+      (when repl-history? [repl-items items (assoc show-value-opts :set-text set-text)])
       [view :container
        [docs-view
         @docs]
