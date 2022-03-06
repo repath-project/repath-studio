@@ -108,12 +108,12 @@
 
 
 
-(def level-0 "#313131")
-(def level-1 "#383838")
-(def level-2 "#414141")
-(def level-3 "#515151")
+(def level-0 "#212121")
+(def level-1 "#282828")
+(def level-2 "#313131")
+(def level-3 "#414141")
 
-(def active "#515151")
+(def active "#414141")
 
 (def accent "#ec407a")
 

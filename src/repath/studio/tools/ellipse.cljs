@@ -38,6 +38,11 @@
     (let [[cx cy rx ry] (map units/unit->px [cx cy rx ry])]
       [(- cx rx) (- cy ry) (+ cx rx 2) (+ cy ry)]))
 
+(defmethod tools/area :ellipse
+  [{{:keys [rx ry]} :attrs}]
+  (let [[rx ry] (map units/unit->px [rx ry])]
+    (* Math/PI rx ry)))
+
 (defmethod tools/path :ellipse
   [{{:keys [cx cy rx ry]} :attrs}]
   (str/join " " ["M" (+ cx rx) cy

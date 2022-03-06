@@ -5,6 +5,7 @@
    [repath.studio.tools.base :as tools]
    [clojure.core.matrix :as matrix]
    [repath.studio.elements.handlers :as el]
+   [repath.studio.handlers :as handlers]
    [repath.studio.units :as units]))
 
 (rf/reg-event-db
@@ -71,7 +72,7 @@
 
 (rf/reg-event-db
  :mouse-event
- (fn [{:keys [mouse-offset active-document] :as db} [_ event]]
+ (fn [{:keys [mouse-offset active-document tool] :as db} [_ event]]
    (let [{:keys [fill stroke zoom selected-keys]} (get-in db [:documents active-document])
          {:keys [type mouse-pos modifiers delta button element]} event
          adjusted-mouse-pos (h/adjusted-mouse-pos db mouse-pos)
@@ -84,28 +85,28 @@
      (case type
        :mousemove
        (-> (if mouse-offset
-             (case button
-               4 (-> db
-                     (assoc :cursor "grabbing")
-                     (h/pan (matrix/sub (:mouse-pos db) (:mouse-pos event))))
-               1 (tools/drag db event element tool-data))
-             (tools/mouse-move db event element))
+             (tools/drag db event element tool-data)
+             (tools/mouse-move db event element tool-data))
            (assoc :mouse-pos mouse-pos)
            (assoc :mouse-over-canvas? true)
            (assoc :adjusted-mouse-pos adjusted-mouse-pos))
 
        :mousedown
        (if-not mouse-offset
-         (-> db
-             (assoc :mouse-offset mouse-pos)
-             (assoc :adjusted-mouse-offset adjusted-mouse-pos))
+         (cond-> db
+           (= button 1) (assoc :cached-tool tool)
+           (= button 1) (handlers/set-tool :pan)
+           :always (assoc :mouse-offset mouse-pos)
+           :always (assoc :adjusted-mouse-offset adjusted-mouse-pos))
          db)
 
        :mouseup
-       (-> (if (not= mouse-pos mouse-offset)
-             (tools/drag-end db event element tool-data)
-             (tools/click db event element))
-           (dissoc :mouse-offset))
+       (cond-> (if (not= mouse-pos mouse-offset)
+                 (tools/drag-end db event element tool-data)
+                 (tools/click db event element tool-data))
+         :always (dissoc :mouse-offset)
+         (:cached-tool db) (handlers/set-tool (:cached-tool db))
+         :always (dissoc :cached-tool))
 
        :wheel
        (if (some modifiers [:ctrl :alt])

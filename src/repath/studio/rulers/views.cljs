@@ -4,6 +4,16 @@
    [clojure.string :as str]
    [repath.studio.styles :as styles]))
 
+(defn selected-bounds
+  [orientation size]
+  (let [bounds @(rf/subscribe [:elements/bounds])
+        zoom @(rf/subscribe [:zoom])
+        pan @(rf/subscribe [:pan])
+        [x1 y1 x2 y2] (map #(* % zoom) bounds)]
+    (if (= orientation :vertical) 
+      [:rect {:x 0 :y (- y1 (* (second pan) zoom)) :width size :height (- y2 y1) :fill styles/level-3}]
+      [:rect {:x (- x1 (* (first pan) zoom)) :y 0 :width (- x2 x1) :height size :fill styles/level-3}])))
+
 (defn mouse-pointer
   [orientation size]
   (let [[x y] @(rf/subscribe [:mouse-pos])
@@ -16,8 +26,8 @@
 (defn line
   [{:keys [orientation adjusted-step size starting-point]}]
   [:line (if (= orientation :vertical)
-           {:x1 starting-point :y1 adjusted-step :x2 size :y2 adjusted-step :stroke styles/border-color}
-           {:x1 adjusted-step :y1 starting-point :x2 adjusted-step :y2 size :stroke styles/border-color})])
+           {:x1 starting-point :y1 adjusted-step :x2 size :y2 adjusted-step :stroke styles/font-color-muted}
+           {:x1 adjusted-step :y1 starting-point :x2 adjusted-step :y2 size :stroke styles/font-color-muted})])
 
 (defn base-lines
   [orientation size]
@@ -35,22 +45,22 @@
                                             :adjusted-step adjusted-step
                                             :size size
                                             :starting-point 0}]
-                                     [:text {:x (if (= orientation :vertical) font-size (+ adjusted-step 4))
-                                             :y (if (= orientation :vertical) (+ adjusted-step 4) font-size)
+                                     [:text {:x (if (= orientation :vertical) 6 (+ adjusted-step 4))
+                                             :y (if (= orientation :vertical) (+ adjusted-step 4) (+ font-size 1))
                                              :writing-mode (when (= orientation :vertical) "vertical-rl")
                                              :style (when (= orientation :vertical) {:text-orientation "upright"})
-                                             :fill styles/font-color-muted
+                                             :fill styles/font-color
                                              :font-size font-size
                                              :font-family styles/font-family}
                                       (Math/round (if (= orientation :vertical) (+ step y) (+ step x)))]]
                  (and (odd? i) (zero? (rem i 5))) [line {:orientation orientation
                                                          :adjusted-step adjusted-step
                                                          :size size
-                                                         :starting-point (/ size 3)}]
+                                                         :starting-point (/ size 1.6)}]
                  :else [line {:orientation orientation
                               :adjusted-step adjusted-step
                               :size size
-                              :starting-point (/ size 1.5)}])))
+                              :starting-point (/ size 1.3)}])))
            steps-coll))))
 
 (defn ruler
@@ -60,6 +70,7 @@
          :style {:border-bottom (str "1px solid " styles/border-color)
                  :border-right (when (= orientation :vertical) (str "1px solid " styles/border-color))
                  :box-sizing "border-box"}}
+   [selected-bounds orientation size]
    [base-lines orientation size]
    [mouse-pointer orientation size]])
 

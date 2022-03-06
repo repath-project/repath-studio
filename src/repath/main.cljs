@@ -1,5 +1,5 @@
 (ns repath.main
-  (:require ["electron" :refer [app shell ipcMain BrowserWindow clipboard]]
+  (:require ["electron" :refer [app shell ipcMain BrowserWindow clipboard nativeTheme]]
             ["path" :as path]
             ["electron-updater" :as updater]
             ["@sentry/electron" :as Sentry]    
@@ -24,6 +24,8 @@
                               :show false
                               :webPreferences {:devTools config/debug?
                                                :preload (.resolve path (str js/__dirname "/preload.js"))}})
+
+(set! (.. nativeTheme -themeSource) "dark")
 
 (defn send-frames-to-renderer
   "Sends bitmap frames to renderer for color picking purposes"
@@ -66,7 +68,7 @@
    [[web-contents--event function]
     [["will-navigate"  #(.preventDefault %)] ;; Prevent navigation
      ["new-window" #(.preventDefault %)] ;; Prevent popups
-     ["closed" #(reset! main-window nil)]]] 
+     ["closed" #(reset! main-window nil)]]]
     (.on (.-webContents ^js @main-window) web-contents--event function))
 
   (when config/debug? (.openDevTools (.-webContents ^js @main-window)))
@@ -83,7 +85,7 @@
      ["leave-full-screen" (send-to-renderer "windowLeavedFullscreen")]
      ["minimize" (send-to-renderer "windowMinimized")]
      ["restore" (send-to-renderer "windowRestored")]]]
-(.on ^js @main-window window-event function))
+    (.on ^js @main-window window-event function))
 
   (.checkForUpdatesAndNotify updater))
 

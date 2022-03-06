@@ -84,7 +84,7 @@
   (let [[x y] @(rf/subscribe [:adjusted-mouse-pos])]
     [:div.v-box {:style {:font-family  "Source Code Pro, monospace"
                          :margin-left styles/h-padding
-                         :min-width "70px"}}
+                         :min-width "80px"}}
      [:div {:style {:display "flex"
                     :justify-content "space-between"}} [:span {:style {:margin-right "5px"}} "X:"] [:span (gstring/format "%.2f" x)]]
      [:div {:style {:display "flex"
@@ -111,7 +111,7 @@
       [:option {:key :no-filter :value :no-filter} "No filter"]
       (map (fn [{:keys [id]}] [:option {:key id :value id} (name id)]) filters/accessibility)]
      [comp/radio-icon-button {:title "Grid" :active? @(rf/subscribe [:grid?]) :icon "grid" :action #(rf/dispatch [:toggle-grid])}]
-     [comp/radio-icon-button {:title "Snap" :active? true :icon "magnet" :action #(rf/dispatch [:documents/new])}]
+     #_[comp/radio-icon-button {:title "Snap" :active? true :icon "magnet" :action #(rf/dispatch [:toggle-snap])}]
      [comp/radio-icon-button {:title "Rulers" :active? @(rf/subscribe [:rulers?]) :icon "ruler-combined" :action #(rf/dispatch [:toggle-rulers])}]
      [:div {::style {:position  "relative"}}
 
@@ -123,25 +123,25 @@
                         :background styles/level-3
                         :margin     "0 0 2px 4px"}
                 :class "icon-button"} "Z: "]
-      ^{:key zoom} [:input {:default-value (gstring/format "%.0f" (* 100 zoom))
+      ^{:key zoom} [:input {:default-value (gstring/format "%.2f" (* 100 zoom))
                             :class    ["icon-button"]
                             :on-blur #(rf/dispatch [:set-zoom (/ (.. % -target -value) 100)])
                             :on-key-down #((when (= (.-keyCode %) 13) (rf/dispatch [:set-zoom (/ (.. % -target -value) 100)])))
                             :style {:font-family  "Source Code Pro, monospace"
-                                    :min-width "40px"
+                                    :min-width "50px"
                                     :padding-left 0
                                     :padding-right 0
                                     :height "32px"
                                     :font-size "1em"
                                     :background styles/level-3
-                                    :margin     "0"}}]
+                                    :margin "0"}}]
       [:button {:style {:font-family  "Source Code Pro, monospace"
                         :padding-left 0
                         :padding-right 0
                         :height "32px"
                         :font-size "1em"
                         :background styles/level-3
-                        :margin     "0"}
+                        :margin "0"}
                 :class "icon-button"} "%"]
       [:select {:onChange #(rf/dispatch [:set-zoom (-> % .-target .-value js/parseFloat)])
                 :class    "icon-button"

@@ -9,7 +9,9 @@
             [repath.studio.reepl.subs :as subs]
             [repath.studio.reepl.helpers :as helpers]
             [repath.studio.styles :as styles]
-            [replumb.core :as replumb])
+            [repath.studio.components :as comp]
+            [replumb.core :as replumb]
+            [re-frame.core :as rf])
   (:require-macros
    [reagent.ratom :refer [reaction]]))
 
@@ -56,8 +58,9 @@
           :position "absolute"
           :bottom "100%"
           :margin-bottom "21px"
-          :background styles/level-1
+          :background styles/level-3
           :left 0
+          :font-size "13px"
           :box-shadow "0 0 15px rgba(0, 0, 0, .25)"}
    
    :main-caret {:padding "8px 5px 8px 10px"
@@ -113,7 +116,7 @@
            (and in-place
                 (is-valid-cljs? source))))))})
 
-(defn repl-input [state submit cm-opts]
+(defn repl-input [state submit repl-history-collapsed? cm-opts]
   {:pre [(every? (comp not nil?)
                  (map cm-opts
                       [:on-up
@@ -122,8 +125,8 @@
                        :complete-word
                        :on-change]))]}
   (let [{:keys [pos count text]} @state]
-    [:div.h-box {:style {:border-top (str "1px solid " styles/border-color)}}
-     [:span {:style {:padding "8px 0 8px 8px" :font-size "12px"}} (replumb/get-prompt)]
+    [:div.h-box
+     [:span {:style {:padding "8px 0 8px 8px" :font-size "12px" :line-height "18px"}} (replumb/get-prompt)]
      ^{:key (str (hash (:js-cm-opts cm-opts)))}
      [code-mirror/code-mirror (reaction (:text @state))
       (merge
@@ -133,7 +136,13 @@
                 :padding "4px 0"
                 :font-size "12px"}
         :on-eval submit}
-       cm-opts)]]))
+       cm-opts)]
+     [comp/toggle-icon-button {:active? repl-history-collapsed?
+                               :active-icon "chevron-up"
+                               :active-text "show output"
+                               :inactive-icon "chevron-down"
+                               :inactive-text "hide output"
+                               :action #(rf/dispatch [:toggle-repl-history-collapsed])}]]))
 
 (defn docs-view [docs]
   (when docs [view :docs docs]))
@@ -173,7 +182,8 @@
                       show-value-opts
                       js-cm-opts
                       on-cm-init]}]
-  (let [state (or state (r/atom initial-state))
+  (let [repl-history-collapsed? (rf/subscribe [:repl-history-collapsed?])
+        state (or state (r/atom initial-state))
         {:keys
          [add-input
           add-result
@@ -211,22 +221,23 @@
                    js-cm-opts
                    on-cm-init]}]
      [:div
-      [repl-items @items (assoc show-value-opts :set-text set-text)]
+      (when-not @repl-history-collapsed? [repl-items @items (assoc show-value-opts :set-text set-text)])
       [view :container
-       [docs-view
-        @docs]
+       (when @docs [docs-view @docs])
        [completion-list
         @complete-atom
         ;; TODO this should also replace the text....
         identity
         #_(swap! complete-atom assoc :pos % :active true)]
-       [repl-input
-        (subs/current-text state)
-        submit
-        {:complete-word complete-word
-         :on-up go-up
-         :on-down go-down
-         :complete-atom complete-atom
-         :on-change set-text
-         :js-cm-opts js-cm-opts
-         :on-cm-init on-cm-init}]]])))
+       (let [items @items] ; TODO This needs to be removed
+         [repl-input
+          (subs/current-text state)
+          submit
+          @repl-history-collapsed?
+          {:complete-word complete-word
+           :on-up go-up
+           :on-down go-down
+           :complete-atom complete-atom
+           :on-change set-text
+           :js-cm-opts js-cm-opts
+           :on-cm-init on-cm-init}])]])))

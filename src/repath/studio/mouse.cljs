@@ -4,13 +4,14 @@
 
 (defn event-handler
   [event element]
-  (when (and event (not= (.-buttons event) 2)) ; Exclude right click that should be used for the contect menu exclusively.
+  (when event
     (.stopPropagation event)
     (rf/dispatch [:mouse-event {:element element
                                 :target (.-target event)
                                 :type (keyword (.-type event))
                                 :mouse-pos [(.-clientX event) (.-clientY event)]
-                                :button (.-buttons event)
+                                :button (.-button event)
+                                :buttons (.-button event)
                                 :delta [(.-deltaX event) (.-deltaY event)]
                                 :modifiers (cond-> #{}
                                              (.-altKey event) (conj :alt)

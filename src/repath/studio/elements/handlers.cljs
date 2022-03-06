@@ -59,14 +59,14 @@
   (assoc-in db [:documents active-document :selected-keys] #{}))
 
 (defn select
-  [{active-document :active-document :as db} multiselect element]
+  [{active-document :active-document :as db} multiselect? element]
   (if element
     (if (page? element)
       (-> db
           (assoc-in [:documents active-document :active-page] (:key element))
           (deselect-all)
           (select-element (:key element)))
-      (if-not multiselect
+      (if-not multiselect?
         (-> db
             (deselect-all)
             (select-element (:key element)))
@@ -103,7 +103,7 @@
 
 (defmulti intersects-with-bounds? (fn [element _] (:type element)))
 
-(defmethod intersects-with-bounds? :default [] false)
+(defmethod intersects-with-bounds? :default [])
 
 (defn toggle-property
   [db element-key property]
@@ -212,6 +212,13 @@
       (cond-> (reduce (fn [db element] (create-element db parent-key element)) (deselect-all db) (if (seq? elements) elements [elements]))
         (not page?) (move [(- (get-in active-page [:attrs :x])) (- (get-in active-page [:attrs :y]))]))
       db)))
+
+(defn create-from-temp
+  [{active-document :active-document :as db}]
+  (let [temp-element (get-in db [:documents active-document :temp-element])]
+    (-> db
+        (create temp-element)
+        (clear-temp))))
 
 (defn paste
   [{:keys [copied-elements] :as db}]

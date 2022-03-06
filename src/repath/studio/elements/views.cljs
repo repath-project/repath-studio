@@ -49,7 +49,8 @@
     :reagent-render
     (fn
       [{:keys [key attrs type title] :as element} child-elements]
-      [type (merge (dissoc attrs :style) {:on-mouse-up     #(mouse/event-handler % element)
+      [type (merge (dissoc attrs :style) {:on-double-click #(mouse/event-handler % element)
+                                          :on-mouse-up     #(mouse/event-handler % element)
                                           :on-mouse-down   #(mouse/event-handler % element)
                                           :on-mouse-move   #(mouse/event-handler % element)})
        (when title [:title title])
@@ -99,13 +100,13 @@
            :x2 x
            :y2 (+ y (/ size 2))}]])
 
-(defn edit
+(defn bounding-handlers
   [bounds zoom]
   (let [[x1 y1 x2 y2] bounds
         [width height] (matrix/sub [x2 y2] [x1 y1])
         handler-size (/ 6 zoom)
         stroke-width (/ 1 zoom)]
-    [:g {:key :edit}
+    [:g {:key :bounding-handlers}
      [cross {:x (+ x1 (/ width 2))
              :y (+ y1 (/ height 2))
              :size (/ 10 zoom)
@@ -142,6 +143,21 @@
     [:g {:style {:pointer-events "none"}}
      [:rect (merge attrs {:stroke "#fff"})]
      [:rect (merge attrs {:stroke "#555" :stroke-dasharray stroke-dasharray})]]))
+
+(defn area
+  [area bounds zoom]
+  (let [[x1 y1 x2 y2] bounds
+        width (- x2 x1)]
+    
+    (when area
+      [:text {:x (+ x1 (/ (- x2 x1) 2))
+              :y (+ y1 (/ -15 zoom))
+              :fill "black"
+              :dominant-baseline "middle"
+              :text-anchor "middle"
+              :font-family "Source Sans Pro"
+              :width width
+              :font-size (/ 12 zoom)} (-> area (.toFixed 2) (js/parseFloat)) " px\u00B2"])))
 
 (defn element-menu [e]
   (gen-menu e  [{:name "Cut"

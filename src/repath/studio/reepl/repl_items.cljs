@@ -16,6 +16,7 @@
                 :height "200px"
                 :padding "3px"
                 :flex-basis "100%"
+                :border-bottom (str "1px solid " styles/border-color)
                 :flex-shrink 1}
    :repl-item {:flex-direction :row
                :font-size 12
@@ -51,7 +52,7 @@
 (defmethod repl-item :input
   [{:keys [num text]} opts]
   [view {:style [:repl-item :input-item]}
-   [view {:style [:caret]} (replumb/get-prompt)]
+   [view {:style [:caret]} "=>"]
    [view {:style :input-text
           :on-click (partial (:set-text opts) text)}
     [codemirror/colored-text text]]])

@@ -37,7 +37,6 @@
 (derive :metadata ::descriptive)
 (derive :title ::descriptive)
 
-(derive :pencil ::draw)
 (derive :brush ::draw)
 (derive :pen ::draw)
 
@@ -45,10 +44,11 @@
 (defmulti attrs (fn [type _] type))
 (defmulti properties (fn [type _] type))
 (defmulti path :type)
+(defmulti area :type)
 (defmulti bounds (fn [_ element] (:type element)))
 
-(defmulti mouse-move (fn [db _ _] (:tool db)))
-(defmulti click (fn [db _ _] (:tool db)))
+(defmulti mouse-move (fn [db _ _ _] (:tool db)))
+(defmulti click (fn [db _ _ _] (:tool db)))
 (defmulti drag (fn [db _ _ _] (:tool db)))
 (defmulti drag-end (fn [db _ _ _] (:tool db)))
 (defmulti activate :tool)
@@ -63,11 +63,12 @@
     (when (not (:locked? element)) (:type element))))
 
 (defmethod mouse-move :default [db _ _] db)
-(defmethod drag :default [])
+(defmethod drag :default [db _ _ _] db)
 (defmethod drag-end :default [])
 (defmethod properties :default [])
 (defmethod render :default [])
 (defmethod bounds :default [])
+(defmethod area :default [])
 
 (defmethod activate :default [db] db)
 (defmethod deactivate :default [db] db)

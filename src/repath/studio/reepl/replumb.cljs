@@ -343,13 +343,15 @@ cljs.js/*load-fn*
 ;; Copied & modified from cljs.repl/print-doc
 (defn print-doc [doc]
   (println (:name doc))
-  (if-not (= :normal (:type doc))
+  (println)
+  (when-not (= :normal (:type doc))
     (println (type-name (:type doc))))
   (when (:forms doc)
     (prn (:forms doc)))
   (when (:please-see doc)
     (println (str "\n  Please see " (:please-see doc))))
   (when (:doc doc)
+    (println)
     (println (:doc doc)))
   (when (:methods doc)
     (doseq [[name {:keys [doc arglists]}] (:methods doc)]

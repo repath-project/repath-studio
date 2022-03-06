@@ -1,6 +1,8 @@
 (ns repath.studio.tools.rect
   (:require [repath.studio.elements.handlers :as elements]
-            [repath.studio.tools.base :as tools]))
+            [repath.studio.tools.base :as tools]
+            [repath.studio.units :as units]
+            [clojure.string :as str]))
 
 (derive :rect ::tools/shape)
 
@@ -24,3 +26,8 @@
     (-> db
         (assoc :state :create)
         (elements/set-temp {:type :rect :attrs attrs}))))
+
+(defmethod tools/area :rect
+  [{{:keys [width height]} :attrs}]
+  (let [[width height] (map units/unit->px [width height])]
+    (* width height)))

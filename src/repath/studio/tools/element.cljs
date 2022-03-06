@@ -36,11 +36,10 @@
   (let [temp-element (get-in db [:documents (:active-document db) :temp-element])]
     (if temp-element
       (-> db
-          (elements/create temp-element)
-          (elements/clear-temp)
+          (elements/create-from-temp)
           (history/finalize (str "Create " (name (:type temp-element)))))
       db)))
 
 (defmethod tools/click :default
-  [db event element]
+  [db event element tool-data]
   (elements/select db (some #(contains? (:modifiers event) %) #{:ctrl :shift}) element))

@@ -1,7 +1,7 @@
 (ns repath.studio.events
   (:require
    [re-frame.core :as rf]
-   [repath.studio.tools.base :as tools]
+   [repath.studio.handlers :as handlers]
    [repath.studio.db :refer [default-db]]))
 
 (rf/reg-event-db
@@ -37,10 +37,7 @@
 (rf/reg-event-db
  :set-tool
  (fn [db [_ tool]]
-   (-> db
-    (tools/deactivate)   
-    (assoc :tool tool)
-    (tools/activate))))
+   (handlers/set-tool db tool)))
 
 (doseq [x [:tree
            :properties
@@ -50,4 +47,5 @@
            :elements-collapsed
            :pages-collapsed
            :symbols-collapsed
+           :repl-history-collapsed
            :defs-collapsed]] (reg-toggle-event x))

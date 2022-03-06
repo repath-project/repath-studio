@@ -6,10 +6,17 @@
 </div>
 
 ## How to Run
+Install the dependencies.
 ```
 npm install
+```
+Build and watch the project files . 
+```
 npm run dev
-node_modules/.bin/electron .
+```
+Run electron on a different terminal.
+```
+npm run electron
 ```
 ## Release
 ```
