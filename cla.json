@@ -1,3 +1,12 @@
 {
-  "signedContributors": []
+  "signedContributors": [
+    {
+      "name": "WonderlustKing",
+      "id": 6639267,
+      "comment_id": 1060054205,
+      "created_at": "2022-03-06T22:46:20Z",
+      "repoId": 374744219,
+      "pullRequestNo": 32
+    }
+  ]
 }
