@@ -25,7 +25,9 @@
 (rf/reg-event-db
  :window/set-bitmap
  (fn [db [_ bitmap]]
-   (assoc db :window/bitmap bitmap)))
+   (assoc db 
+          :window/bitmap (.-bitmap bitmap)
+          :window/bitmap-size (js->clj (.-size bitmap) :keywordize-keys true))))
 
 (rf/reg-event-db
  :window/set-maximized?
