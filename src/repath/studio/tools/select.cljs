@@ -18,13 +18,13 @@
         (elements/conj-by-bounds-overlap (if intersecting? elements/bounds-intersect? elements/bounds-contained?) [:documents active-document :hovered-keys] temp-element))))
 
 (defn select-by-area
-  [db intersecting?]
+  [db intersecting? multiselect?]
   (let [active-document (:active-document db)
         temp-element (get-in db [:documents active-document :temp-element])]
-    (-> db
-        (elements/deselect-all)
-        (elements/clear-temp)
-        (elements/conj-by-bounds-overlap (if intersecting? elements/bounds-intersect? elements/bounds-contained?) [:documents active-document :selected-keys] temp-element))))
+    (cond-> db
+        (not multiselect?) (elements/deselect-all)
+        :always (elements/clear-temp)
+        :always (elements/conj-by-bounds-overlap (if intersecting? elements/bounds-intersect? elements/bounds-contained?) [:documents active-document :selected-keys] temp-element))))
 
 (defmethod tools/mouse-move :select
   [{active-document :active-document :as db} _ element tool-data]
@@ -74,11 +74,11 @@
           (= (:type element) :scale-handler) (assoc :scale (:key element)))))))
 
 (defmethod tools/drag-end :select
-  [{:keys [state adjusted-mouse-offset] :as db} _ _ {:keys [adjusted-mouse-pos]}]
+  [{:keys [state adjusted-mouse-offset] :as db} event _ {:keys [adjusted-mouse-pos]}]
   (let [[offset-x _] adjusted-mouse-offset
         [pos-x _] adjusted-mouse-pos]
     (cond-> db
-      (= state :select) (select-by-area (> pos-x offset-x))
+      (= state :select) (select-by-area (> pos-x offset-x) (some #(contains? (:modifiers event) %) #{:ctrl :shift}))
       (= state :move) (history/finalize "Move selection")
       (= state :scale) (history/finalize "Scale selection")
       (= state :clone) (history/finalize "Duplicate selection to position")
