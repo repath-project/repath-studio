@@ -26,7 +26,7 @@
    ^{:key value} [:input {:default-value value
                           :on-blur #(attrs/on-change-handler % key value)
                           :on-key-down #((when (= (.-keyCode %) 13) (attrs/on-change-handler % key value)))}]
-   [:div.v-scroll {:key key
+   #_[:div.v-scroll {:key key
                    :style {:width "100%"
                            :max-height "300px"
                            :background-color styles/level-2}}

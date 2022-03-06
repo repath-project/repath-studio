@@ -17,7 +17,7 @@
 (s/def ::pages-collapsed? boolean?)
 (s/def ::defs-collapsed? boolean?)
 (s/def ::symbols-collapsed? boolean?)
-(s/def ::repl-history? boolean?)
+(s/def ::repl-history-collapsed? boolean?)
 (s/def ::active-theme keyword?)
 (s/def ::active-document keyword?)
 (s/def ::document-tabs (s/coll-of keyword? :kind vector? :distinct true))
@@ -28,7 +28,7 @@
 (s/def ::mouse-over-canvas? boolean?)
 (s/def ::documents (s/and (s/map-of keyword? ::documents/document)))
 
-(s/def ::db (s/keys :req-un [::tool ::stroke-width ::mouse-pos ::left-sidebar-width  ::right-sidebar-width ::tree? ::properties? ::header? ::history?  ::rulers? ::elements-collapsed? ::pages-collapsed? ::defs-collapsed? ::symbols-collapsed? ::active-theme ::active-document ::document-tabs ::system-fonts ::max-undos ::maximized? ::minimized? ::mouse-over-canvas?]))
+(s/def ::db (s/keys :req-un [::tool ::state ::stroke-width ::mouse-pos ::left-sidebar-width  ::right-sidebar-width ::tree? ::properties? ::header? ::history?  ::rulers? ::elements-collapsed? ::pages-collapsed? ::defs-collapsed? ::symbols-collapsed? ::repl-history-collapsed? ::active-theme ::active-document ::document-tabs ::system-fonts ::max-undos ::maximized? ::minimized? ::mouse-over-canvas?]))
 
 (def default-db
   {:tool :select
@@ -47,7 +47,7 @@
    :command-palette? false
    :defs-collapsed? true
    :symbols-collapsed? true
-   :repl-history? false
+   :repl-history-collapsed? true
    :active-theme :dark
    :documents {}
    :document-tabs []

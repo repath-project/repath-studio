@@ -28,7 +28,8 @@
    [repath.studio.theme.db :as theme]
    ["@fluentui/react" :as fui]
    [shadow.cljs.bootstrap.browser :as bootstrap]
-   [devtools.core :as devtools]))
+   [devtools.core :as devtools]
+   [cljs.js :as jsc]))
 
 (defn ^:dev/after-load mount-root []
   (rf/clear-subscription-cache!)
@@ -36,12 +37,17 @@
     (rdom/unmount-component-at-node root-el)
     (rdom/render [views/main-panel] root-el)))
 
+(defn bootstrap-cb
+  []
+  (replumb/run-repl "(in-ns 'repath.user)" identity)
+  (replumb/run-repl "(require '[clojure.string :as str])" identity)
+  (print "Repl initialized"))
+
 (defn init []
   (js/window.api.initSentry)
   (devtools/set-pref! :cljs-land-style (str "filter:invert(1);" (:cljs-land-style (devtools/get-prefs))))
   ;; SEE https://code.thheller.com/blog/shadow-cljs/2017/10/14/bootstrap-support.html
-  (bootstrap/init repl/st {:path "js/bootstrap" :load-on-init '[repath.user]} #((replumb/run-repl "(in-ns 'repath.user)" identity)
-                                                                                (print "Repl successfully loaded")))
+  (bootstrap/init repl/st {:path "js/bootstrap" :load-on-init '[repath.user]} bootstrap-cb)
   (fui/loadTheme (fui/createTheme (clj->js (:default theme/themes))))
   (stylefy/init {:dom (stylefy-reagent/init)})
   (rf/dispatch-sync [:initialize-db])

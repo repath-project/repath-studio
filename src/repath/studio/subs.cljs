@@ -36,7 +36,7 @@
            :elements-collapsed?
            :pages-collapsed?
            :defs-collapsed?
-           :repl-history?
+           :repl-history-collapsed?
            :symbols-collapsed?
            :color-palette]] (reg-basic-sub x))
 

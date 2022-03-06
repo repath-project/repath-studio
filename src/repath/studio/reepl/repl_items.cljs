@@ -52,7 +52,7 @@
 (defmethod repl-item :input
   [{:keys [num text]} opts]
   [view {:style [:repl-item :input-item]}
-   [view {:style [:caret]} (replumb/get-prompt)]
+   [view {:style [:caret]} "=>"]
    [view {:style :input-text
           :on-click (partial (:set-text opts) text)}
     [codemirror/colored-text text]]])

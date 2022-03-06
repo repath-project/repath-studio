@@ -15,7 +15,6 @@
                      :left 0
                      :right 0
                      :overflow :hidden
-                     :background-color styles/level-0
                      :font-size 12}
 
    :completion-show-all {:top 0
@@ -25,9 +24,10 @@
                          :flex-direction :row
                          :flex-wrap :wrap}
    :completion-item {;; :cursor :pointer TODO make these clickable
-                     :padding "3px 5px"}
-   :completion-selected {:background-color styles/level-1}
-   :completion-active {:background-color styles/level-2}})
+                     :padding "3px 5px"
+                     :background-color styles/level-1}
+   :completion-selected {:background-color styles/level-2}
+   :completion-active {:background-color styles/level-3}})
 
 (def view (partial helpers/view styles))
 (def text (partial helpers/text styles))

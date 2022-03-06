@@ -47,4 +47,5 @@
            :elements-collapsed
            :pages-collapsed
            :symbols-collapsed
+           :repl-history-collapsed
            :defs-collapsed]] (reg-toggle-event x))
