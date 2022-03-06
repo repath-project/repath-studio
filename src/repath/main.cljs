@@ -28,7 +28,9 @@
 (defn send-frames-to-renderer
   "Sends bitmap frames to renderer for color picking purposes"
   [image dirtyRect]
-  (.send  (.-webContents ^js @main-window) "fromMain" #js {:action "windowPainted" :data (.toBitmap ^js image)}))
+  (.send  (.-webContents ^js @main-window) "fromMain" #js {:action "windowPainted" 
+                                                           :data #js {:bitmap (.toBitmap ^js image)
+                                                                      :size (.getSize ^js image)}}))
 
 (defn to-main-api
   [args]
