@@ -64,7 +64,7 @@
 
 (defmethod mouse-move :default [db _ _] db)
 (defmethod drag :default [db _ _ _] db)
-(defmethod drag-end :default [])
+(defmethod drag-end :default [db event element tool-data] (click db event element tool-data))
 (defmethod properties :default [])
 (defmethod render :default [])
 (defmethod bounds :default [])
