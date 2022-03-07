@@ -28,7 +28,7 @@
            :content-rect
            :copied-elements
            :system-fonts
-           :mouse-tail
+           :overlay
            :window/minimized?
            :window/maximized?
            :window/fullscreen?

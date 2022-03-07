@@ -56,11 +56,3 @@
             :style    {:background (when active? styles/active)}
             :on-click action}
    [repath.studio.components/icon {:icon icon}]])
-
-(defn mouse-tail [[x y] & children]
-  [:div {:class ".mouse-tail"
-         :style {:left             (+ x 15)
-                 :top              (+ y 20)
-                 :background-color "black"
-                 :color "white"
-                 :position         "absolute"}} children])

@@ -18,14 +18,11 @@
    [reagent.core :as ra]
    ["react-color" :refer [PhotoshopPicker]]
    ["@fluentui/react" :as fui]
-   [goog.string :as gstring]
-   [goog.color :as color]))
+   [goog.string :as gstring]))
 
 (defn color-drip [color]
   [:div {:key      (keyword (str color))
-         :on-click #((rf/dispatch [:set-fill color])
-                     (rf/dispatch [:elements/set-attribute :fill (tools/rgba color) true]))
-
+         :on-click #(rf/dispatch [:documents/set-fill color])
          :class "color-drip"
          :style    {:background-color (tools/rgba color)}}])
 
@@ -77,8 +74,7 @@
                       [:> PhotoshopPicker
                        {:color (tools/rgba fill)
                         :on-change-complete #(rf/dispatch [:elements/set-attribute :fill (:hex (js->clj % :keywordize-keys true)) true])
-                        :on-change #((rf/dispatch [:set-fill (vals (:rgb (js->clj % :keywordize-keys true)))])
-                                     (rf/dispatch [:elements/set-attribute :fill (:hex (js->clj % :keywordize-keys true)) false]))}]])])))
+                        :on-change #((rf/dispatch [:documents/set-fill (vals (:rgb (js->clj % :keywordize-keys true)))]))}]])])))
 
 (defn coordinates []
   (let [[x y] @(rf/subscribe [:adjusted-mouse-pos])]
@@ -315,8 +311,8 @@
            [comp/icon-button {:title "Bring Forward" :icon "bring-forward" :action #(rf/dispatch [:elements/raise])}]
            [comp/icon-button {:title "Send Backward" :icon "send-backward" :action #(rf/dispatch [:elements/lower])}]
            [:span.h-devider]
-           [comp/icon-button {:title "Group" :icon "group" :action #(rf/dispatch [:group])}]
-           [comp/icon-button {:title "Ungroup" :icon "ungroup" :action #(rf/dispatch [:ungroup])}]
+           [comp/icon-button {:title "Group" :icon "group" :action #(rf/dispatch [:elements/group])}]
+           [comp/icon-button {:title "Ungroup" :icon "ungroup" :action #(rf/dispatch [:elements/ungroup])}]
            [:span.h-devider]
            [comp/icon-button {:title "Align Left" :icon "objects-align-left" :action #(rf/dispatch [:elements/align :left])}]
            [comp/icon-button {:title "Align Center Horizontaly" :icon "objects-align-center-horizontal" :action #(rf/dispatch [:elements/align :center-horizontal])}]

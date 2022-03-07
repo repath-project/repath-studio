@@ -5,7 +5,9 @@
    [repath.studio.documents.db :as db]
    [repath.studio.history.handlers :as history]
    [repath.studio.canvas-frame.handlers :as canvas-frame]
-   [repath.studio.de-dupe.core :as dd]))
+   [repath.studio.tools.base :as tools]
+   [repath.studio.de-dupe.core :as dd]
+   [repath.studio.documents.handlers :as handlers]))
 
 (defn reg-set-active-document-event
   [k]
@@ -21,7 +23,6 @@
            :filter
            :stroke-width
            :temp-element
-           :fill
            :rotate]] (reg-set-active-document-event x))
 
 (rf/reg-event-db
@@ -43,6 +44,13 @@
 (doseq [x [:rulers-locked
            :grid
            :rulers]] (reg-toggle-active-document-event x))
+
+(rf/reg-event-db
+ :documents/set-fill
+ (fn [db   [_ fill]]
+   (-> db
+       (handlers/set-fill fill)
+       (history/finalize (str "Set fill " (tools/rgba fill))))))
 
 (rf/reg-event-fx
  :documents/open

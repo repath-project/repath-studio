@@ -28,8 +28,7 @@
    [repath.studio.theme.db :as theme]
    ["@fluentui/react" :as fui]
    [shadow.cljs.bootstrap.browser :as bootstrap]
-   [devtools.core :as devtools]
-   [cljs.js :as jsc]))
+   [devtools.core :as devtools]))
 
 (defn ^:dev/after-load mount-root []
   (rf/clear-subscription-cache!)
@@ -65,7 +64,7 @@
                              "windowLeavedFullscreen" (rf/dispatch [:window/set-fullscreen? false])
                              "windowMinimized" (rf/dispatch [:window/set-minimized? true])
                              "windowRestored" (rf/dispatch [:window/set-minimized? false])
-                             "windowPainted" (rf/dispatch [:window/set-bitmap (.-data data)])
+                             "windowPainted" (rf/dispatch [:window/set-bitmap-data (.-data data)])
                              "openDocument" (js/console.log (.-data data)))))
 
   (mount-root))

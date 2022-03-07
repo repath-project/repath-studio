@@ -7,6 +7,7 @@
    [repath.studio.elements.views :refer [element-menu]]
    [repath.studio.tools.base :as tools]
    [repath.studio.mouse :as mouse]
+   [repath.studio.styles :as styles]
    ["react-frame-component" :default Frame]))
 
 (defn frame-markup
@@ -22,7 +23,12 @@
    SEE https://github.com/ryanseddon/react-frame-component
    SEE https://medium.com/@ryanseddon/rendering-to-iframes-in-react-d1cb92274f86"
   []
-  (let [resize-observer (new js/ResizeObserver (fn [entries] (rf/dispatch [:canvas/resize (js->clj (.toJSON (.-contentRect (.find entries (fn [] true)))) :keywordize-keys true)])))]
+  (let [resize-observer (js/ResizeObserver. (fn [entries]
+                                               (let [client-rect (.getBoundingClientRect (.-target (.find entries (fn [] true))))
+                                                     content-rect (js->clj (.toJSON (.-contentRect (.find entries (fn [] true)))) :keywordize-keys true)]
+                                                 (rf/dispatch [:canvas/resize (-> content-rect
+                                                                                  (assoc :x (.-x client-rect))
+                                                                                  (assoc :y (.-y client-rect)))]))))]
     (ra/create-class
      {:component-did-mount
       (fn
@@ -41,13 +47,13 @@
         []
         (let [;; This is a different browsing context inside an iframe.
               ;; We need to simulate the events to the parent window.
-              keyboard-event     #(.dispatchEvent js/window.parent.document (new js/KeyboardEvent (.-type %) %))]
+              keyboard-event #(.dispatchEvent js/window.parent.document (js/KeyboardEvent. (.-type %) %))]
           [:> Frame {:initialContent (server/render-to-static-markup [frame-markup])
                      :mountTarget    "body"
                      :id             "canvas-frame"
                      :on-mouse-move   #(mouse/event-handler % nil)
                      :on-key-down     keyboard-event
-                     :on-key-up       keyboard-event 
+                     :on-key-up       keyboard-event
                      :on-mouse-enter #(rf/dispatch [:set-mouse-over-canvas? true])
                      :on-mouse-leave #(rf/dispatch [:set-mouse-over-canvas? false])
                      :on-context-menu element-menu
@@ -55,4 +61,11 @@
                                       :user-select "none"
                                       :overflow "hidden"
                                       :border 0}}
-           [tools/render @(rf/subscribe [:elements/canvas])]]))})))
+           [tools/render @(rf/subscribe [:elements/canvas])]
+           (when @(rf/subscribe [:overlay]) [:div {:style {:position "absolute"
+                                                           :top "10px"
+                                                           :left "10px"
+                                                           :background-color styles/level-3
+                                                           :padding styles/h-padding
+                                                           :color styles/font-color
+                                                           :font-family styles/font-family-mono}} @(rf/subscribe [:overlay])])]))})))

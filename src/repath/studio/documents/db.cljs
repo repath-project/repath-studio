@@ -11,7 +11,7 @@
 (s/def ::elements (s/and (s/map-of keyword? ::elements/element)))
 
 (s/def ::document
-  (s/keys :req-un [::hovered-keys ::selected-keys ::pages ::active-page ::rulers-locked? ::zoom ::elements]))
+  (s/keys :req-un [::hovered-keys ::selected-keys ::pages ::active-page ::rulers-locked? ::zoom ::elements ::pan]))
 
 (def default-document
   {:hovered-keys (hash-set)

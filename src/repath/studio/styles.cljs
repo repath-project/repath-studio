@@ -56,6 +56,7 @@
                     :font-style "bold"})
 
 (def font-family "Source Sans Pro")
+(def font-family-mono "Source Code Pro")
 
 ;; SEE https://www.nordtheme.com/docs/colors-and-palettes
 

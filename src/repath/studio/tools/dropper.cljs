@@ -1,6 +1,9 @@
 (ns repath.studio.tools.dropper
-  (:require [re-frame.core :as rf]
-            [repath.studio.tools.base :as tools]))
+  (:require [repath.studio.tools.base :as tools]
+            [clojure.core.matrix :as matrix]
+            [repath.studio.documents.handlers :as documents]
+            [repath.studio.history.handlers :as history]
+            [goog.color :as gcolor]))
 
 (derive :dropper ::tools/edit)
 
@@ -14,7 +17,7 @@
 (defmethod tools/deactivate :dropper
   [db]
   (js/window.api.send "toMain" #js {:action "endFrameSubscription"})
-  db)
+  (dissoc db :overlay))
 
 (defn get-pixel-color
   [bitmap bitmap-width x y]
@@ -27,17 +30,32 @@
     [r g b a]))
 
 (defmethod tools/click :dropper
-  [db event _]
+  [{:keys [mouse-pos content-rect] :as db}]
   (let [bitmap (:window/bitmap db)
-        bitmap-width (:width (:window/bitmap-size db))
-        {:keys [mouse-pos]} event
-        canvas-frame (-> (.getElementById js/document "canvas-frame") (.getBoundingClientRect))
-        canvas-frame-pos [(.-x canvas-frame) (.-y canvas-frame)]
-        mouse-x (+ (first mouse-pos) (first canvas-frame-pos))
-        mouse-y (+ (second mouse-pos) (second canvas-frame-pos))]
-    (rf/dispatch [:set-fill (get-pixel-color bitmap bitmap-width mouse-x mouse-y)]))
-  db)
+        size (:window/size db)
+        [mouse-x mouse-y] (matrix/add mouse-pos [(:x content-rect) (:y content-rect)])
+        color (get-pixel-color bitmap (:width size) mouse-x mouse-y)]
+    (-> db
+        (documents/set-fill color)
+        (history/finalize (str "Pick color " (tools/rgba color))))))
 
+(defmethod tools/mouse-move :dropper
+  [{:keys [mouse-pos content-rect] :as db}]
+  (let [bitmap (:window/bitmap db)
+        size (:window/size db)
+        [x y] (matrix/add mouse-pos [(:x content-rect) (:y content-rect)])
+        color (get-pixel-color bitmap (:width size) x y)]
+    (assoc db :overlay [:div {:style {:display "flex"
+                                    }}
+                        #_[:div {:style {:width "100px"
+                                         :height "100px"
+                                         :display "block"
+                                         :background-position (str (- x 50) "px " (- y 50) "px")
+                                         :background-image (str "url(" png ")")}}]
+                        [:div {:style {:width "24px"
+                                       :height "24px"
+                                       :background-color (tools/rgba color)}}]
+                        [:span {:style {:line-height "24px" :height "24px" :display "inline-block" :margin-left "12px"}} (gcolor/rgbArrayToHex (clj->js color))]])))
 
 
 

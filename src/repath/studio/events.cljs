@@ -29,7 +29,7 @@
            :left-sidebar-width
            :right-sidebar-width
            :active-document
-           :mouse-tail
+           :overlay
            :system-fonts
            :command-palette?
            :mouse-over-canvas?]] (reg-set-event x))

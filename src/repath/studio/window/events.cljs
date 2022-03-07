@@ -23,11 +23,11 @@
    (js/window.api.send "toMain" #js {:action "openRemoteUrl" :data url})))
 
 (rf/reg-event-db
- :window/set-bitmap
- (fn [db [_ bitmap]]
+ :window/set-bitmap-data
+ (fn [db [_ data]]
    (assoc db 
-          :window/bitmap (.-bitmap bitmap)
-          :window/bitmap-size (js->clj (.-size bitmap) :keywordize-keys true))))
+          :window/bitmap (.-bitmap data)
+          :window/size (js->clj (.-size data) :keywordize-keys true))))
 
 (rf/reg-event-db
  :window/set-maximized?
