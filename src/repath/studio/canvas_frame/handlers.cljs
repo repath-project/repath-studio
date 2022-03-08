@@ -10,16 +10,23 @@
   (let [zoom (get-in db [:documents active-document :zoom])]
     (update-in db [:documents active-document :pan] matrix/add (matrix/div offset zoom))))
 
+(defn validate-zoom
+  [zoom]
+  (cond
+    (< zoom 0.01) 0.01
+    (> zoom 100) 100
+    :else zoom))
+
 (defn zoom-in-position
   [{active-document :active-document :as db} factor pos]
   (let [zoom (get-in db [:documents active-document :zoom])
+        updated-zoom (validate-zoom (* zoom factor))
+        updated-factor (/ updated-zoom zoom)
         pan (get-in db [:documents active-document :pan])
-        pan-updated (matrix/sub (matrix/div pan factor) (matrix/sub (matrix/div pos factor) pos))]
-    (if (and (> (* zoom factor) 0.01) (< (* zoom factor) 100))
-      (-> db
-          (update-in [:documents active-document :zoom] * factor)
-          (assoc-in [:documents active-document :pan] pan-updated))
-      db)))
+        updated-pan (matrix/sub (matrix/div pan updated-factor) (matrix/sub (matrix/div pos updated-factor) pos))]
+    (-> db
+        (assoc-in [:documents active-document :zoom] updated-zoom)
+        (assoc-in [:documents active-document :pan] updated-pan))))
 
 (defn adjust-mouse-pos
   [zoom pan mouse-pos]
