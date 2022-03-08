@@ -1,6 +1,7 @@
 (ns repath.studio.tools.dropper
   (:require [repath.studio.tools.base :as tools]
             [clojure.core.matrix :as matrix]
+            [repath.studio.styles :as styles]
             [repath.studio.documents.handlers :as documents]
             [repath.studio.history.handlers :as history]
             [goog.color :as gcolor]))
@@ -40,22 +41,23 @@
         (history/finalize (str "Pick color " (tools/rgba color))))))
 
 (defmethod tools/mouse-move :dropper
-  [{:keys [mouse-pos content-rect] :as db}]
+  [{:keys [mouse-pos content-rect] :as db} event]
   (let [bitmap (:window/bitmap db)
         size (:window/size db)
         [x y] (matrix/add mouse-pos [(:x content-rect) (:y content-rect)])
         color (get-pixel-color bitmap (:width size) x y)]
-    (assoc db :overlay [:div {:style {:display "flex"
-                                    }}
-                        #_[:div {:style {:width "100px"
-                                         :height "100px"
-                                         :display "block"
-                                         :background-position (str (- x 50) "px " (- y 50) "px")
-                                         :background-image (str "url(" png ")")}}]
-                        [:div {:style {:width "24px"
-                                       :height "24px"
-                                       :background-color (tools/rgba color)}}]
-                        [:span {:style {:line-height "24px" :height "24px" :display "inline-block" :margin-left "12px"}} (gcolor/rgbArrayToHex (clj->js color))]])))
+    (assoc db :overlay [:div 
+                        [:div {:style {:width "110px" :height "110px" :display "flex" :flex-wrap "wrap"}}
+                         (map (fn [offset-y]
+                                (map (fn [offset-x]
+                                       [:div {:style {:width "10px"
+                                                      :height "10px"
+                                                      :box-sizing "border-box"
+                                                      :border (when (and (= offset-x 0) (= offset-y 0)) (str "1px solid " styles/accent))
+                                                      :background-color (gcolor/rgbArrayToHex (clj->js (get-pixel-color bitmap (:width size) (+ x offset-x) (+ y offset-y))))}}]) (range -5 6))) (range -5 6))]
+                        [:div {:style {:display "flex" :padding-top "12px"}}
+                         [:div {:style {:width "24px" :height "24px" :background-color (tools/rgba color)}}]
+                         [:span {:style {:line-height "24px" :margin-left "12px"}} (gcolor/rgbArrayToHex (clj->js color))]]])))
 
 
 
