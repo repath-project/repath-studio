@@ -5,6 +5,12 @@
                      :attrs {:in "SourceGraphic"
                              :type "matrix"
                              :stdDeviation "1"}}
+                    
+                    {:id :blur-x2
+                     :type :feGaussianBlur
+                     :attrs {:in "SourceGraphic"
+                             :type "matrix"
+                             :stdDeviation "2"}}
 
                     ;; https://github.com/hail2u/color-blindness-emulation
                     {:id :protanopia
