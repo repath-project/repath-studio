@@ -23,7 +23,6 @@
         bounds             @(rf/subscribe [:elements/bounds])
         temp-element       @(rf/subscribe [:temp-element])
         cursor             @(rf/subscribe [:cursor])
-        filter             @(rf/subscribe [:filter])
         zoom               @(rf/subscribe [:zoom])
         tool               @(rf/subscribe [:tool])
         rotate             @(rf/subscribe [:rotate])
@@ -43,7 +42,6 @@
            :width (:width content-rect)
            :height (:height content-rect)
            :transform (str "rotate(" rotate ")")
-           :filter (str "url(#" (name filter) ")")
            :style {:user-select "none"
                    :background (:fill attrs)
                    :outline "none"

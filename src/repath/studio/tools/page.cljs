@@ -26,10 +26,11 @@
 
 
 (defmethod tools/render :page
-  [{:keys [attrs children name key type] :as element}]
+  [{:keys [attrs children key type] :as element}]
   (let [child-elements @(rf/subscribe [:elements/filter-visible children])
         rect-attrs     (select-keys attrs [:x :y :width :height :fill])
         text-attrs     (select-keys attrs [:x :y])
+        filter         @(rf/subscribe [:filter])
         zoom           @(rf/subscribe [:zoom])]
     [:g {:key key}
      [:rect (merge rect-attrs {:fill "rgba(0, 0, 0, .2)"
@@ -42,6 +43,8 @@
                                                          :on-mouse-move #(mouse/event-handler % element)
                                                          :fill "#888"
                                                          :font-size (/ 12 zoom)
-                                                         :font-family "Source Code Pro"}) (or name type)]
-     [:svg (dissoc attrs :fill)
+                                                         :font-family "Source Code Pro"}) (or (:name element) type)]
+     [:svg  (-> attrs
+              (dissoc :fill)
+              (assoc :filter (str "url(#" (name filter) ")")))
       (map (fn [element] ^{:key (:key element)} [tools/render element]) (merge child-elements))]]))
