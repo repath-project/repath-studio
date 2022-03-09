@@ -11,7 +11,7 @@
             #_[repath.studio.tools.polygon]
             [repath.studio.tools.group]
             [repath.studio.tools.polyline]
-            #_[repath.studio.tools.image]
+            [repath.studio.tools.image]
             [repath.studio.tools.select]
             [repath.studio.tools.text]
             [repath.studio.tools.pan]
