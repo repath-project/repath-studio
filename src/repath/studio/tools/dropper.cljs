@@ -53,8 +53,8 @@
                                        [:div {:style {:width "10px"
                                                       :height "10px"
                                                       :box-sizing "border-box"
-                                                      :border (when (and (= offset-x 0) (= offset-y 0)) (str "1px solid " styles/accent))
-                                                      :background-color (gcolor/rgbArrayToHex (clj->js (get-pixel-color bitmap (:width size) (+ x offset-x) (+ y offset-y))))}}]) (range -5 6))) (range -5 6))]
+                                                      :border (str "1px solid " (if (and (= offset-x 5) (= offset-y 5)) styles/accent "hsla(0, 0%, 50%, .2)"))
+                                                      :background-color (gcolor/rgbArrayToHex (clj->js (get-pixel-color bitmap (:width size) (+ x offset-x) (+ y offset-y))))}}]) (range 11))) (range 11))]
                         [:div {:style {:display "flex" :padding-top "12px"}}
                          [:div {:style {:width "24px" :height "24px" :background-color (tools/rgba color)}}]
                          [:span {:style {:line-height "24px" :margin-left "12px"}} (gcolor/rgbArrayToHex (clj->js color))]]])))
