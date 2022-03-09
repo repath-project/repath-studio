@@ -44,7 +44,7 @@
                                                          :fill "#888"
                                                          :font-size (/ 12 zoom)
                                                          :font-family "Source Code Pro"}) (or (:name element) type)]
-     [:svg  (-> attrs
-              (dissoc :fill)
-              (assoc :filter (str "url(#" (name filter) ")")))
+     [:svg  (cond-> attrs
+              :always (dissoc :fill)
+              (not= filter :no-filter) (assoc :filter (str "url(#" (name filter) ")")))
       (map (fn [element] ^{:key (:key element)} [tools/render element]) (merge child-elements))]]))
