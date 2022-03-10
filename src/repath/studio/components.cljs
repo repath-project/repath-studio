@@ -18,7 +18,7 @@
   [{:keys [icon title action class disabled? tooltip]}]
   (let [tooltip-visible? (ra/atom false)]
     (fn [{:keys [icon title action class disabled? tooltip]}]
-      [:button {:class    ["icon-button muted " class (when disabled? " disabled")]
+      [:button {:class    ["icon-button" class (when disabled? " disabled")]
                 :title    title
                 :on-mouse-enter #(reset! tooltip-visible? true)
                 :on-mouse-leave #(reset! tooltip-visible? false)
@@ -29,7 +29,7 @@
 
 (defn toggle-icon-button
   [{:keys [active? active-icon inactive-icon active-text inactive-text action class]}]
-  [:button {:class    ["icon-button muted" class]
+  [:button {:class    ["icon-button" class]
             :title    (if active? active-text inactive-text)
             :on-click #((.stopPropagation %) (action))}
    [icon {:icon        (if active? active-icon inactive-icon)
@@ -52,7 +52,8 @@
 (defn radio-icon-button
   [{:keys [active? icon title action class]}]
   [:button {:title    title
-            :class    ["icon-button" (when-not active? "muted") class]
-            :style    {:background (when active? styles/active)}
+            :class    ["icon-button" class]
+            :style    {:color (when active? styles/font-color-active)
+                       :background (when active? styles/active)}
             :on-click action}
    [repath.studio.components/icon {:icon icon}]])

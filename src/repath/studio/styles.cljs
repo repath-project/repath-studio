@@ -195,6 +195,7 @@
                     :border           0
                     :padding          0
                     :color            font-color
+                    :fill             font-color
                     :font-family      font-family
                     :font-size        "1em"
                     :outline          "none"
