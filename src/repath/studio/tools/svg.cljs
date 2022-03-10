@@ -11,7 +11,7 @@
                                              :overflow]})
 
 (defmethod tools/drag :svg
-  [{:keys [adjusted-mouse-offset] :as db} _ _ {:keys [adjusted-mouse-pos]}]
+  [{:keys [adjusted-mouse-offset adjusted-mouse-pos] :as db}]
   (let [[offset-x offset-y] adjusted-mouse-offset
         [pos-x pos-y] adjusted-mouse-pos
         attrs {:x      (min pos-x offset-x)

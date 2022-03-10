@@ -31,7 +31,7 @@
         a (aget bitmap (+ b-index 3))]
     [r g b a]))
 
-(defmethod tools/click :dropper
+(defmethod tools/mouse-up :dropper
   [{:keys [mouse-pos content-rect] :as db}]
   (let [position (matrix/add mouse-pos [(:x content-rect) (:y content-rect)])
         color (get-pixel-color (:window/bitmap db) (-> db :window/size :width) position)]

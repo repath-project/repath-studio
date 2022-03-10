@@ -40,6 +40,6 @@
           (history/finalize (str "Create " (name (:type temp-element)))))
       db)))
 
-(defmethod tools/click :default
-  [db event element tool-data]
+(defmethod tools/mouse-up :default
+  [db event element]
   (elements/select db (some #(contains? (:modifiers event) %) #{:ctrl :shift}) element))

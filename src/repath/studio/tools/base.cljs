@@ -41,30 +41,32 @@
 (derive :pen ::draw)
 
 (defmulti render :type)
-(defmulti attrs (fn [type _] type))
-(defmulti properties (fn [type _] type))
+(defmulti attrs (fn [type] type))
+(defmulti properties (fn [type] type))
 (defmulti path :type)
 (defmulti area :type)
 (defmulti bounds (fn [_ element] (:type element)))
 
-(defmulti mouse-move (fn [db _ _ _] (:tool db)))
-(defmulti click (fn [db _ _ _] (:tool db)))
-(defmulti drag (fn [db _ _ _] (:tool db)))
-(defmulti drag-end (fn [db _ _ _] (:tool db)))
+(defmulti mouse-down (fn [db] (:tool db)))
+(defmulti mouse-move (fn [db] (:tool db)))
+(defmulti mouse-up (fn [db] (:tool db)))
+(defmulti drag (fn [db] (:tool db)))
+(defmulti drag-end (fn [db] (:tool db)))
 (defmulti activate :tool)
 (defmulti deactivate :tool)
 
 (defmulti move
-  (fn [element _]
+  (fn [element]
     (when (not (:locked? element)) (:type element))))
 
 (defmulti scale
-  (fn [element _ _]
+  (fn [element]
     (when (not (:locked? element)) (:type element))))
 
-(defmethod mouse-move :default [db _ _] db)
-(defmethod drag :default [db event element tool-data] (mouse-move db event element tool-data))
-(defmethod drag-end :default [db event element tool-data] (click db event element tool-data))
+(defmethod mouse-down :default [db] db)
+(defmethod mouse-move :default [db] db)
+(defmethod drag :default [db event element] (mouse-move db event element))
+(defmethod drag-end :default [db event element] (mouse-up db event element))
 (defmethod properties :default [])
 (defmethod render :default [])
 (defmethod bounds :default [])
@@ -76,8 +78,8 @@
 (defmethod activate ::transform [db] (assoc db :cursor "default"))
 
 (defmethod attrs :default [])
-(defmethod scale :default [element _] element)
-(defmethod move :default [element _] element)
+(defmethod scale :default [element] element)
+(defmethod move :default [element] element)
 
 (defn adjusted-bounds
   [elements element]

@@ -18,8 +18,8 @@
   [db]
   (assoc db :cursor "text"))
 
-(defmethod tools/click :text
-  [{:keys [adjusted-mouse-offset] :as db} _ _ _]
+(defmethod tools/mouse-up :text
+  [{:keys [adjusted-mouse-offset] :as db}]
   (let [[offset-x offset-y] adjusted-mouse-offset
         attrs {:x offset-x
                :y offset-y
@@ -27,7 +27,7 @@
     (elements/create db {:type :text :attrs attrs})))
 
 (defmethod tools/drag :text
-  [{:keys [adjusted-mouse-offset] :as db} _ _ {:keys [adjusted-mouse-pos]}]
+  [{:keys [adjusted-mouse-offset] :as db}]
   (let [[offset-x offset-y] adjusted-mouse-offset
         attrs {:x offset-x
                :y offset-y

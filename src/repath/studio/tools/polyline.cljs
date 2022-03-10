@@ -16,9 +16,10 @@
                                                   :stroke-linejoin
                                                   :opacity]})
 
-(defmethod tools/click :polyline
-  [{:keys [state active-document] :as db} event element {:keys [adjusted-mouse-pos fill stroke]}]
-  (let [temp-element (get-in db [:documents active-document :temp-element])]
+(defmethod tools/mouse-up :polyline
+  [{:keys [active-document adjusted-mouse-pos] :as db} event]
+  (let [temp-element (get-in db [:documents active-document :temp-element])
+        stroke (get-in db [:documents active-document :stroke])]
    (if temp-element
      (if (= (:button event) 2)
        (-> db
@@ -32,29 +33,31 @@
                                                      :fill "transparent"}})))))
 
 (defmethod tools/drag-end :polyline
-  [{:keys [state active-document] :as db} event element {:keys [adjusted-mouse-pos adjusted-mouse-offset fill stroke]}]
-  (if (get-in db [:documents active-document :temp-element])
-    (update-in db [:documents active-document :temp-element :attrs :points] #(str % " " (str/join " " adjusted-mouse-pos)))
-    (-> db
-        (assoc :state :create)
-        (elements/set-temp {:type :polyline :attrs {:points (str/join " " (concat adjusted-mouse-pos adjusted-mouse-offset))
-                                                    :stroke (tools/rgba stroke)
-                                                    :fill "transparent"}}))))
+  [{:keys [active-document adjusted-mouse-pos adjusted-mouse-offset] :as db}]
+  (let [stroke (get-in db [:documents active-document :stroke])]
+    (if (get-in db [:documents active-document :temp-element])
+      (update-in db [:documents active-document :temp-element :attrs :points] #(str % " " (str/join " " adjusted-mouse-pos)))
+      (-> db
+          (assoc :state :create)
+          (elements/set-temp {:type :polyline :attrs {:points (str/join " " (concat adjusted-mouse-pos adjusted-mouse-offset))
+                                                      :stroke (tools/rgba stroke)
+                                                      :fill "transparent"}})))))
 
 (defmethod tools/drag :polyline
-  [{:keys [adjusted-mouse-offset active-document] :as db} event element {:keys [adjusted-mouse-pos fill stroke] :as tool-data}]
-  (let [points (get-in db [:documents active-document :temp-element :attrs :points])
+  [{:keys [adjusted-mouse-offset active-document adjusted-mouse-pos] :as db} event element]
+  (let [stroke (get-in db [:documents active-document :stroke])
+        points (get-in db [:documents active-document :temp-element :attrs :points])
         attrs {:points (str/join " " (concat adjusted-mouse-pos adjusted-mouse-offset))
                :stroke (tools/rgba stroke)
                :fill "transparent"}]
     (if points
-      (tools/mouse-move db event element tool-data)
+      (tools/mouse-move db event element)
       (-> db
           (assoc :state :create)
           (elements/set-temp {:type :polyline :attrs attrs})))))
 
 (defmethod tools/mouse-move :polyline
-  [{active-document :active-document :as db} event element {:keys [mouse-pos adjusted-mouse-pos stroke]}]
+  [{:keys [active-document adjusted-mouse-pos] :as db}]
   (let [points (get-in db [:documents active-document :temp-element :attrs :points])]
     (if points
       (assoc-in db [:documents active-document :temp-element :attrs :points] (str/join " " (concat (apply concat (drop-last (attrs/points-to-vec points))) adjusted-mouse-pos)))

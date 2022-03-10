@@ -23,11 +23,11 @@
         temp-element (get-in db [:documents active-document :temp-element])]
     (cond-> db
         (not multiselect?) (elements/deselect-all)
-        :always (elements/clear-temp)
-        :always (elements/conj-by-bounds-overlap (if intersecting? elements/bounds-intersect? elements/bounds-contained?) [:documents active-document :selected-keys] temp-element))))
+        :always (-> (elements/clear-temp)
+                    (elements/conj-by-bounds-overlap (if intersecting? elements/bounds-intersect? elements/bounds-contained?) [:documents active-document :selected-keys] temp-element)))))
 
 (defmethod tools/mouse-move :select
-  [{active-document :active-document :as db} _ element tool-data]
+  [{active-document :active-document :as db} _ element]
   (-> db
       (assoc-in [:documents active-document :hovered-keys] (if element #{(:key element)} #{}))
       (assoc :cursor (if element "move" "default"))))
@@ -37,9 +37,10 @@
   (assoc db :cursor "default"))
 
 (defmethod tools/drag :select
-  [{:keys [state adjusted-mouse-offset] :as db} event element {:keys [adjusted-mouse-pos zoom is-element-selected?]}]
+  [{:keys [state adjusted-mouse-offset adjusted-mouse-pos active-document] :as db} event element]
   (if (or (and (not element) (= state :default)) (= state :select))
-    (let [[offset-x offset-y] adjusted-mouse-offset
+    (let [zoom (get-in db [:documents active-document :zoom])
+          [offset-x offset-y] adjusted-mouse-offset
           [pos-x pos-y] adjusted-mouse-pos
           intersecting? (> pos-x offset-x)
           attrs {:key    :select
@@ -56,7 +57,9 @@
           (assoc :state :select)
           (elements/set-temp {:type :rect :attrs attrs})
           (hover-by-area intersecting?)))
-    (let [offset (matrix/sub adjusted-mouse-pos (:adjusted-mouse-pos db))]
+    (let [selected-keys (get-in db [:documents active-document :selected-keys])
+          offset (:adjusted-mouse-diff db)
+          is-element-selected? (contains? selected-keys (:key element))]
       (case state
         :move (elements/move (if (some #(contains? (:modifiers event) %) #{:ctrl})
                                (-> db
@@ -74,7 +77,7 @@
                                                     :scale (:key element)))))))
 
 (defmethod tools/drag-end :select
-  [{:keys [state adjusted-mouse-offset] :as db} event _ {:keys [adjusted-mouse-pos]}]
+  [{:keys [state adjusted-mouse-offset adjusted-mouse-pos] :as db} event]
   (let [[offset-x _] adjusted-mouse-offset
         [pos-x _] adjusted-mouse-pos]
     (cond-> db

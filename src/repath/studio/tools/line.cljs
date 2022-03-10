@@ -12,8 +12,9 @@
                                               :opacity]})
 
 (defmethod tools/drag :line
-  [{:keys [adjusted-mouse-offset] :as db} _ _ {:keys [adjusted-mouse-pos stroke]}]
-  (let [[offset-x offset-y] adjusted-mouse-offset
+  [{:keys [adjusted-mouse-offset adjusted-mouse-pos active-document] :as db}]
+  (let [stroke (get-in db [:documents active-document :stroke])
+        [offset-x offset-y] adjusted-mouse-offset
         [pos-x pos-y] adjusted-mouse-pos
         attrs {:x1 offset-x
                :y1 offset-y

@@ -8,7 +8,7 @@
 (defmethod tools/properties :ruler [] {:icon "ruler-triangle"})
 
 (defmethod tools/drag :ruler
-  [{:keys [adjusted-mouse-offset] :as db} _ _ {:keys [adjusted-mouse-pos stroke]}]
+  [{:keys [adjusted-mouse-offset adjusted-mouse-pos] :as db}]
   (let [[offset-x offset-y] adjusted-mouse-offset
         [pos-x pos-y] adjusted-mouse-pos
         [diff-x diff-y] (matrix/sub adjusted-mouse-offset adjusted-mouse-pos)
@@ -16,8 +16,7 @@
         attrs {:x1 offset-x
                :y1 offset-y
                :x2 pos-x
-               :y2 pos-y
-               :stroke (tools/rgba stroke)}]
+               :y2 pos-y}]
     (-> db
         (assoc :state :create)
         (elements/set-temp {:type :line :attrs attrs}))))

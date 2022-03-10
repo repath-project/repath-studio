@@ -11,6 +11,14 @@
   [db]
   (assoc db :cursor "grab"))
 
+(defmethod tools/mouse-up :pan
+  [db]
+  (assoc db :cursor "grab"))
+
+(defmethod tools/mouse-down :pan
+  [db]
+  (assoc db :cursor "grabbing"))
+
 (defmethod tools/drag :pan
   [db event _]
   (-> db

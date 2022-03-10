@@ -72,21 +72,15 @@
 
 (rf/reg-event-db
  :mouse-event
- (fn [{:keys [mouse-offset active-document tool] :as db} [_ event]]
-   (let [{:keys [fill stroke zoom selected-keys]} (get-in db [:documents active-document])
-         {:keys [type mouse-pos modifiers delta button element]} event
+ (fn [{:keys [mouse-offset tool] :as db} [_ event]]
+   (let [{:keys [mouse-pos delta element]} event
          adjusted-mouse-pos (h/adjusted-mouse-pos db mouse-pos)
-         tool-data {:mouse-pos mouse-pos
-                    :adjusted-mouse-pos adjusted-mouse-pos
-                    :is-element-selected? (contains? selected-keys (:key element))
-                    :fill fill
-                    :zoom zoom
-                    :stroke stroke}]
-     (case type
+         db (assoc db :adjusted-mouse-diff (matrix/sub adjusted-mouse-pos (:adjusted-mouse-pos db)))]
+     (case (:type event)
        :mousemove
        (-> (if mouse-offset
-             (tools/drag db event element tool-data)
-             (tools/mouse-move db event element tool-data))
+             (tools/drag db event element)
+             (tools/mouse-move db event element))
            (assoc :mouse-pos mouse-pos
                   :mouse-over-canvas? true
                   :adjusted-mouse-pos adjusted-mouse-pos))
@@ -94,21 +88,22 @@
        :mousedown
        (if-not mouse-offset
          (cond-> db
-           (= button 1) (assoc :cached-tool tool)
-           (= button 1) (handlers/set-tool :pan)
-           :always (assoc :mouse-offset mouse-pos
-                          :adjusted-mouse-offset adjusted-mouse-pos))
+           (= (:button event) 1) (-> (assoc :cached-tool tool)
+                                     (handlers/set-tool :pan))
+           :always (-> (tools/mouse-down event element)
+                       (assoc :mouse-offset mouse-pos
+                              :adjusted-mouse-offset adjusted-mouse-pos)))
          db)
 
        :mouseup
        (cond-> (if (not= mouse-pos mouse-offset)
-                 (tools/drag-end db event element tool-data)
-                 (tools/click db event element tool-data))
+                 (tools/drag-end db event element)
+                 (tools/mouse-up db event element))
          (:cached-tool db) (handlers/set-tool (:cached-tool db))
          :always (dissoc :cached-tool :mouse-offset))
 
        :wheel
-       (if (some modifiers [:ctrl :alt])
+       (if (some (:modifiers event) [:ctrl :alt])
          (let [factor (if (pos? (second delta)) (:zoom-factor db) (/ 1 (:zoom-factor db)))]
            (h/zoom-in-mouse-position db factor))
          (h/pan db delta))
