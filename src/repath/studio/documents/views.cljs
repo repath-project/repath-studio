@@ -38,8 +38,8 @@
    [comp/icon-button {:title "Open" :icon "folder" :action #(rf/dispatch [:documents/open])}]
    [comp/icon-button {:title "Save" :icon "save" :action #(rf/dispatch [:documents/save])}]
    [:span.v-devider]
-   [comp/icon-button {:title "Import" :icon "import" :action #(rf/dispatch [:documents/import])}]
-   [comp/icon-button {:title "Export" :icon "export" :action #(rf/dispatch [:documents/export])}]
+   [comp/icon-button {:title "Import" :icon "import" :class "disabled" :action #(rf/dispatch [:documents/import])}]
+   [comp/icon-button {:title "Export" :icon "export" :class "disabled" :action #(rf/dispatch [:documents/export])}]
    [:span.v-devider]
    [comp/icon-button {:title "Undo" :icon "undo" :action #(rf/dispatch [:history/undo 1]) :disabled? (not @(rf/subscribe [:history/undos?]))}]
    [:select {:class "icon-button"
