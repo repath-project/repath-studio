@@ -91,8 +91,8 @@
  :documents/close-others
  (fn [db [_ key]]
    (-> db
-       (assoc :document-tabs [key])
-       (assoc :active-document key)
+       (assoc :document-tabs [key]
+              :active-document key)
        (assoc-in [:documents key] (get-in db [:documents key])))))
 
 (rf/reg-event-db
@@ -100,8 +100,7 @@
  (fn [db [_]]
      (-> db
          (assoc :document-tabs [])
-         (dissoc :active-document)
-         (dissoc :documents))))
+         (dissoc :active-document :documents))))
 
 (rf/reg-event-db
  :documents/scroll

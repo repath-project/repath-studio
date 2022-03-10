@@ -26,6 +26,5 @@
      (-> db
          (elements/clear-temp)
          (dissoc :mouse-offset)
-         (assoc :state :default)
          (h/swap)
          (assoc :state :default)))))

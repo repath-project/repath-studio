@@ -140,6 +140,6 @@
   (if (:locked? element)
     element
     (-> element
-        (assoc :attrs (attributes {:type :path :attrs (helpers/merge-common str (:attrs element) (attributes {:type :path :attrs {}}))}))
-        (assoc :type :path)
+        (assoc :attrs (attributes {:type :path :attrs (helpers/merge-common str (:attrs element) (attributes {:type :path :attrs {}}))})
+               :type :path)
         (assoc-in [:attrs :d] (path element)))))

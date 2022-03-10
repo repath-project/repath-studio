@@ -19,8 +19,8 @@
 
 (defmethod tools/drag-end :pan
   [db]
-  (-> db
-      (assoc :cursor "grab")
-      (assoc :state :default)))
+  (assoc db
+         :cursor "grab"
+         :state :default))
 
 

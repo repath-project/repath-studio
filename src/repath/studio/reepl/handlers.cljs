@@ -30,14 +30,13 @@
   (let [history (:history db)
         pos (:hist-pos db)
         idx (- (count history) pos 1)]
-    (-> db
-        (assoc :hist-pos 0)
-        (assoc :history
-               (if (= pos 0)
-                 (assoc history idx text)
-                 (if (= "" (last history))
-                   (assoc history (dec (count history)) text)
-                   (conj history text)))))))
+    (assoc db
+           :hist-pos 0
+           :history (if (= pos 0)
+                      (assoc history idx text)
+                      (if (= "" (last history))
+                        (assoc history (dec (count history)) text)
+                        (conj history text))))))
 
 (defn go-up [db]
   (let [pos (:hist-pos db)

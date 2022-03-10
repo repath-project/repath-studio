@@ -26,9 +26,9 @@
   (let [resize-observer (js/ResizeObserver. (fn [entries]
                                                (let [client-rect (.getBoundingClientRect (.-target (.find entries (fn [] true))))
                                                      content-rect (js->clj (.toJSON (.-contentRect (.find entries (fn [] true)))) :keywordize-keys true)]
-                                                 (rf/dispatch [:canvas/resize (-> content-rect
-                                                                                  (assoc :x (.-x client-rect))
-                                                                                  (assoc :y (.-y client-rect)))]))))]
+                                                 (rf/dispatch [:canvas/resize (assoc content-rect
+                                                                                     :x (.-x client-rect)
+                                                                                     :y (.-y client-rect))]))))]
     (ra/create-class
      {:component-did-mount
       (fn

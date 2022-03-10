@@ -60,18 +60,18 @@
       (case state
         :move (elements/move (if (some #(contains? (:modifiers event) %) #{:ctrl})
                                (-> db
-                                   (assoc :state :clone)
-                                   (assoc :cursor "copy")
+                                   (assoc :state :clone
+                                          :cursor "copy")
                                    (elements/duplicate))
                                db) offset)
         :clone (elements/move db offset)
         :scale (elements/scale db offset)
         (cond-> db
           (not (or is-element-selected? (= (:type element) :scale-handler))) (elements/select (some #(contains? (:modifiers event) %) #{:shift}) element)
-          (not= (:type element) :scale-handler) (assoc :cursor "move")
-          (not= (:type element) :scale-handler) (assoc :state :move)
-          (= (:type element) :scale-handler) (assoc :state :scale)
-          (= (:type element) :scale-handler) (assoc :scale (:key element)))))))
+          (not= (:type element) :scale-handler) (assoc :cursor "move"
+                                                       :state :move)
+          (= (:type element) :scale-handler) (assoc :state :scale
+                                                    :scale (:key element)))))))
 
 (defmethod tools/drag-end :select
   [{:keys [state adjusted-mouse-offset] :as db} event _ {:keys [adjusted-mouse-pos]}]
@@ -82,5 +82,5 @@
       (= state :move) (history/finalize "Move selection")
       (= state :scale) (history/finalize "Scale selection")
       (= state :clone) (history/finalize "Duplicate selection to position")
-      :always (assoc :cursor "default")
-      :always (assoc :state :default))))
+      :always (assoc :cursor "default"
+                     :state :default))))

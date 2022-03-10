@@ -87,26 +87,25 @@
        (-> (if mouse-offset
              (tools/drag db event element tool-data)
              (tools/mouse-move db event element tool-data))
-           (assoc :mouse-pos mouse-pos)
-           (assoc :mouse-over-canvas? true)
-           (assoc :adjusted-mouse-pos adjusted-mouse-pos))
+           (assoc :mouse-pos mouse-pos
+                  :mouse-over-canvas? true
+                  :adjusted-mouse-pos adjusted-mouse-pos))
 
        :mousedown
        (if-not mouse-offset
          (cond-> db
            (= button 1) (assoc :cached-tool tool)
            (= button 1) (handlers/set-tool :pan)
-           :always (assoc :mouse-offset mouse-pos)
-           :always (assoc :adjusted-mouse-offset adjusted-mouse-pos))
+           :always (assoc :mouse-offset mouse-pos
+                          :adjusted-mouse-offset adjusted-mouse-pos))
          db)
 
        :mouseup
        (cond-> (if (not= mouse-pos mouse-offset)
                  (tools/drag-end db event element tool-data)
                  (tools/click db event element tool-data))
-         :always (dissoc :mouse-offset)
          (:cached-tool db) (handlers/set-tool (:cached-tool db))
-         :always (dissoc :cached-tool))
+         :always (dissoc :cached-tool :mouse-offset))
 
        :wheel
        (if (some modifiers [:ctrl :alt])
