@@ -240,7 +240,7 @@
 
 (stylefy/class "muted" {:color font-color-muted})
 
-(stylefy/class "disabled" {:opacity ".3"
+(stylefy/class "disabled" {:opacity ".5"
                            :cursor (->!important "initial")
                            :pointer-events "none"
                            ::stylefy/mode {:hover {:background-color (->!important "inherit")}}})
