@@ -76,28 +76,25 @@
                (get-in tools/svg-elements [type :__compat]))]
     (when (:support data)
       [::div.v-box
-       [:h3 "Browser compatibility"]
-       [:div.h-box
-        (map (fn [[browser {:keys [version_added]}]]
-               [:div {:key browser :style {:text-align "center" :flex "1 1"}}
-                [:div {:title browser
-                       :style {:flex "1 1"}} (comp/icon {:icon (name browser)
-                                                         :set "brands"})]
-                (case version_added
-                  true [:div.support-cell.success "all"]
-                  false [:div.support-cell.error "x"]
-                  nil [:div.support-cell.warning "?"]
-                  [:div.support-cell.success (str "≥" version_added)])]) (:support data))]
-       (js/console.log (get-in tools/svg-elements [type attr :__compat])
-                       (get-in tools/svg-attributes [:presentation attr :__compat])
-                       (get-in tools/svg-attributes [:core attr :__compat])
-                       (get-in tools/svg-attributes [:style attr :__compat]))
+       (when (some :version_added (vals (:support data)))
+         [:<> [:h3 "Browser compatibility"]
+          [:div.h-box
+           (map (fn [[browser {:keys [version_added]}]]
+                  [:div {:key browser :style {:text-align "center" :flex "1 1"}}
+                   [:div {:title browser
+                          :style {:flex "1 1"}} (comp/icon {:icon (name browser)
+                                                            :set "brands"})]
+                   (case version_added
+                     true [:div.support-cell.success "all"]
+                     false [:div.support-cell.error "x"]
+                     nil [:div.support-cell.warning "?"]
+                     [:div.support-cell.success (str "≥" version_added)])]) (:support data))]])
        (when (or data (:mdn_url data))
-         [:a {:style {:margin-top "14px" :display "inline-block"} 
+         [:a {:style {:margin-top "14px" :display "inline-block"}
               :on-click #(rf/dispatch [:window/open-remote-url (if (:mdn_url data)
                                                                  (:mdn_url data)
                                                                  (str "https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/" (name attr)))])} "Learn more"])
-       (when (:spec_url data) [:a {:style {:margin-top "14px" :display "inline-block"} :on-click #(rf/dispatch [:window/open-remote-url (:spec_url data)])} "Specification"])])))
+       (when (and (:spec_url data) config/debug?) [:a {:style {:margin-top "14px" :display "inline-block"} :on-click #(rf/dispatch [:window/open-remote-url (:spec_url data)])} "Specification"])])))
 
 
 
