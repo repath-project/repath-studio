@@ -11,6 +11,7 @@
 
 (doseq [x [:active-theme
            :tool
+           :state
            :left-sidebar-width
            :right-sidebar-width
            :tree?

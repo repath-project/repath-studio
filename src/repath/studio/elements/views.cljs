@@ -5,8 +5,7 @@
             [re-frame.core :as rf]
             [repath.studio.tools.base :as tools]
             [repath.studio.mouse :as mouse]
-            [reagent.dom :as dom]
-            [goog.string :as gstring]))
+            [reagent.dom :as dom]))
 
 (defn get-bounds
   "Experimental way of getting the bounds of uknown or complicated elements using the getBBox method.
@@ -160,39 +159,40 @@
               :font-size (/ 12 zoom)} (-> area (.toFixed 2) (js/parseFloat)) " px\u00B2"])))
 
 (defn element-menu [e]
-  (gen-menu e  [{:name "Cut"
-                 :shortcut "Ctrl+X"
-                 :action [:elements/cut]}
-                {:name "Copy"
-                 :shortcut "Ctrl+C"
-                 :action [:elements/copy]}
-                {:name "Paste"
-                 :shortcut "Ctrl+V"
-                 :action [:elements/paste]}
-                :devider
-                {:name "Raise"
-                 :shortcut "Page Up"
-                 :action [:elements/raise]}
-                {:name "Lower"
-                 :shortcut "Page Down"
-                 :action [:elements/lower]}
-                {:name "Raise to top"
-                 :shortcut "Home"
-                 :action [:elements/raise-to-top]}
-                {:name "Lower to bottom"
-                 :shortcut "End"
-                 :action [:elements/lower-to-bottom]}
-                :devider
-                {:name "Animate"
-                 :action [:elements/animate :animate]}
-                {:name "Animate Transform"
-                 :action [:elements/animate :animateTransform]}
-                {:name "Animate Motion"
-                 :action [:elements/animate :animateMotion]}
-                :devider
-                {:name "Duplicate"
-                 :shortcut "Ctrl+D"
-                 :action [:elements/duplicate]}
-                {:name "Delete"
-                 :shortcut "Del"
-                 :action [:elements/delete]}]))
+  (let [state @(rf/subscribe [:state])]
+    (when (= state :default) (gen-menu e  [{:name "Cut"
+                                            :shortcut "Ctrl+X"
+                                            :action [:elements/cut]}
+                                           {:name "Copy"
+                                            :shortcut "Ctrl+C"
+                                            :action [:elements/copy]}
+                                           {:name "Paste"
+                                            :shortcut "Ctrl+V"
+                                            :action [:elements/paste]}
+                                           :devider
+                                           {:name "Raise"
+                                            :shortcut "Page Up"
+                                            :action [:elements/raise]}
+                                           {:name "Lower"
+                                            :shortcut "Page Down"
+                                            :action [:elements/lower]}
+                                           {:name "Raise to top"
+                                            :shortcut "Home"
+                                            :action [:elements/raise-to-top]}
+                                           {:name "Lower to bottom"
+                                            :shortcut "End"
+                                            :action [:elements/lower-to-bottom]}
+                                           :devider
+                                           {:name "Animate"
+                                            :action [:elements/animate :animate]}
+                                           {:name "Animate Transform"
+                                            :action [:elements/animate :animateTransform]}
+                                           {:name "Animate Motion"
+                                            :action [:elements/animate :animateMotion]}
+                                           :devider
+                                           {:name "Duplicate"
+                                            :shortcut "Ctrl+D"
+                                            :action [:elements/duplicate]}
+                                           {:name "Delete"
+                                            :shortcut "Del"
+                                            :action [:elements/delete]}]))))
