@@ -85,7 +85,7 @@
 
 ;; Light Theme
 
-;; (def level-0 "#fff")
+;; (def level-0 "#d1d1d1")
 ;; (def level-1 "#e1e1e1")
 ;; (def level-2 "#eee")
 ;; (def level-3 "#fff")
@@ -201,8 +201,9 @@
                     :cursor           "pointer"
                     :position         "relative"
                     :-webkit-app-region "no-drag"
-                    ::stylefy/mode     {:hover  {:cursor           "pointer"
-                                                 :background-color level-3}
+                    ::stylefy/mode     {:hover  {:cursor "pointer"
+                                                 :color font-color-active
+                                                 :fill font-color-active}
                                         :active {:background-color level-3}}})
 
 (def flex-box {:display         "flex"
@@ -245,13 +246,14 @@
 
 (stylefy/class "icon" {:display "flex"
                        :justify-content "center"
-                       ::stylefy/manual [[:div {:display "flex"}]]})
+                       ::stylefy/manual [[:div {:display "flex"
+                                                :fill "inherit"}]]})
 
 (stylefy/class "icon-button" (merge button-styles
                                     (square-styles "32px")
                                     {:margin "2px"
                                      :border-radius "4px"
-                                     ::stylefy/mode  {:hover  {:fill   font-color-hovered}
+                                     ::stylefy/mode  {:hover  {:color font-color-active}
                                                       :disabled  {:background "transparent"}
                                                       :active {:color font-color-active
                                                                :background level-3}}}))
