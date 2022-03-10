@@ -19,7 +19,7 @@
             [repath.studio.tools.pencil]
             [repath.studio.tools.dropper]
             [repath.studio.tools.fill]
-            #_[repath.studio.tools.ruler]
+            [repath.studio.tools.ruler]
             [repath.studio.tools.animate]
             [repath.studio.tools.blob]
             [repath.studio.tools.animate-transform]
