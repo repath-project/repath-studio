@@ -110,6 +110,8 @@
                  [{:keyCode (key-codes "S")}]]
                 [[:set-tool :rect]
                  [{:keyCode (key-codes "R")}]]
+                [[:set-tool :fill]
+                 [{:keyCode (key-codes "F")}]]
                 [[:elements/move [0 -1]]
                  [{:keyCode (key-codes "UP")}]]
                 [[:elements/move [0 1]]
