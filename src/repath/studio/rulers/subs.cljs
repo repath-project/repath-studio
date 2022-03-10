@@ -30,6 +30,7 @@
  :<- [:rulers/step]
  :<- [:canvas/viewbox]
  (fn [[ruler-step [x y width height]] [_ orientation]]
-   (range (- (+ (* 10 ruler-step) (rem (if (= orientation :vertical) y x) (* 10 ruler-step))))
-          (if (= orientation :vertical) height width)
-          ruler-step)))
+   (let [sections 10]
+     (range (- (+ (* sections ruler-step) (rem (if (= orientation :vertical) y x) (* sections ruler-step))))
+            (if (= orientation :vertical) height width)
+            ruler-step))))
