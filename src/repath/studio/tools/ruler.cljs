@@ -11,6 +11,10 @@
 
 (defmethod tools/properties :ruler [] {:icon "ruler-triangle"})
 
+(defmethod tools/activate :ruler
+  [db] 
+  (assoc db :cursor "crosshair"))
+
 (defmethod tools/deactivate :ruler
   [db]
   (elements/clear-temp db))

@@ -1,8 +1,7 @@
 (ns repath.studio.tools.rect
   (:require [repath.studio.elements.handlers :as elements]
             [repath.studio.tools.base :as tools]
-            [repath.studio.units :as units]
-            [clojure.string :as str]))
+            [repath.studio.units :as units]))
 
 (derive :rect ::tools/shape)
 

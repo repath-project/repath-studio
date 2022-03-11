@@ -75,7 +75,7 @@
 (defmethod activate :default [db] db)
 (defmethod deactivate :default [db] db)
 
-(defmethod activate ::transform [db] (assoc db :cursor "default"))
+(defmethod activate :default [db] (assoc db :cursor "default"))
 
 (defmethod attrs :default [])
 (defmethod scale :default [element] element)
