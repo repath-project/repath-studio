@@ -17,7 +17,13 @@
 (defn fill
   "Fills the selected elements."
   [color]
-  (rf/dispatch [:elements/fill [color]])
+  (rf/dispatch [:elements/fill color])
+  "")
+
+(defn delete
+  "Deletes selected elements."
+  []
+  (rf/dispatch [:elements/delete])
   "")
 
 (defn copy
@@ -36,7 +42,25 @@
   "Creates a new element."
   [element]
   (apply #(rf/dispatch [:elements/create {:type (key %)
-                                        :attrs (val %)}]) element)
+                                          :attrs (val %)}]) element)
+  "")
+
+(defn set-attribute
+  "Set the attribute of the selected elements."
+  [name value]
+  (rf/dispatch [:elements/set-attribute name value true])
+  "")
+
+(defn raise
+  "Raises the selected elements."
+  []
+  (rf/dispatch [:elements/raise])
+  "")
+
+(defn lower
+  "Lowers the selected elements."
+  []
+  (rf/dispatch [:elements/raise])
   "")
 
 (defn select-all
