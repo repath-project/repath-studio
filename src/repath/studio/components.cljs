@@ -44,6 +44,7 @@
   [toggle-icon-button {:active? collapsed?
                        :active-icon "chevron-right"
                        :active-text "expand"
+                       :class "collapse-button"
                        :inactive-icon "chevron-down"
                        :inactive-text "collapse"
                        :action action}])

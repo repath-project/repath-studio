@@ -11,7 +11,7 @@
                             :box-sizing  "border-box"
                             ::stylefy/manual [[:&:hover [:.list-item-button
                                                          {:visibility "visible"}]]
-                                              [:button {:height "24px"
+                                              [:button {:height "20px"
                                                         :width "24px"}]]})
 
 (stylefy/class "collapse-button" {::stylefy/manual [[:svg {:height "10px"
@@ -31,10 +31,11 @@
                                ::stylefy/mode  {:hover  {:color            styles/font-color-hovered
                                                          :background-color "inherit"}
                                                 :active {:background-color "inherit"}}
-                               ::stylefy/manual [[:button {:height "18px"
-                                                           :width "18px"}]]})
+                               ::stylefy/manual [[:button {:height "20px"
+                                                           :width "20px"}]]})
 
 (stylefy/class "list-item-input" {:flex "1 1 auto"
+                                  :padding-left "0"
                                   :background "transparent"
                                   :font-family "inherit"
                                   ::stylefy/mode {:placeholder {:color (styles/->!important styles/font-color)}}})

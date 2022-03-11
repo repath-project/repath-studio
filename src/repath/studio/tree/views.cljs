@@ -67,7 +67,7 @@
                   :on-click (fn [evt]
                               (.stopPropagation evt)
                               (rf/dispatch [:elements/select (or (.-ctrlKey evt) (.-ctrlKey evt)) element]))
-                  :style {:padding-left (- (* depth 20) (if has-children? 10 0))
+                  :style {:padding-left (- (* depth 20) (if has-children? 20 0))
                           :background-color (when hovered? styles/level-2)}}
       (when has-children?
         [comp/toggle-collapsed-button collapsed? #(rf/dispatch [:elements/toggle-property key :collapsed?])])
@@ -104,23 +104,22 @@
      [:div.button.tree-heading {:on-click #(rf/dispatch [:toggle-symbols-collapsed])}
       [comp/toggle-collapsed-icon symbols-collapsed?]
       [:div {:style {:flex 1}} "Symbols"]
-      [:button {:class "button icon-button"} [comp/icon {:icon "square-minus"}]]]
+      [comp/icon-button {:icon "square-minus"}]]
      [:div.v-scroll {:style {:flex (if symbols-collapsed? 0 "0 1 128px")
                              :transition "all .2s"}}]
      [:div.button.tree-heading {:on-click #(rf/dispatch [:toggle-pages-collapsed])}
       [comp/toggle-collapsed-icon pages-collapsed?]
       [:div {:style {:flex 1}} "Pages"]
-      [:button {:class "button icon-button"} [comp/icon {:icon "page-plus"}]]]
+      [comp/icon-button {:icon "page-plus"}]]
      [:div.v-scroll {:style {:flex (if pages-collapsed? 0 "0 1 128px")
                              :transition "all .2s"}}
       [:div {:on-mouse-leave #(rf/dispatch [:set-hovered-keys #{}])}
-       (map (fn [element]  ^{:key (:key page)} [page element (= (:key element) active-page) (contains? hovered-keys (:key element)) (contains? selected-keys (:key element))]) page-elements)]]
+       (map (fn [element] ^{:key (:key page)} [page element (= (:key element) active-page) (contains? hovered-keys (:key element)) (contains? selected-keys (:key element))]) page-elements)]]
      [:div.button.tree-heading {:on-click #(rf/dispatch [:toggle-elements-collapsed])}
       [comp/toggle-collapsed-icon elements-collapsed?]
       [:div {:style {:flex 1}} "Elements"]
-      #_[:button {:class "button icon-button" :on-click #((.stopPropagation %)
-                                                        (rf/dispatch [:elements/create {:type :g}]))} [comp/icon {:icon "folder-plus"}]]
-      [:button {:class "button icon-button"} [comp/icon {:icon "square-minus"}]]]
+      [comp/icon-button {:icon "folder-plus" :action  #((.stopPropagation %) (rf/dispatch [:elements/create {:type :g}]))}]
+      [comp/icon-button {:icon "square-minus"}]]
      [:div.v-scroll {:style {:flex (if elements-collapsed? 0 1)
                              :transition "all .2s"}}
       [:div {:style {:visibility "visible"}
@@ -129,6 +128,6 @@
      [:div.button.tree-heading {:on-click #(rf/dispatch [:toggle-defs-collapsed])}
       [comp/toggle-collapsed-icon defs-collapsed?]
       [:div {:style {:flex 1}} "Defs"]
-      [:button {:class "button icon-button"} [comp/icon {:icon "square-minus"}]]]
+      [comp/icon-button {:icon "square-minus"}]]
      [:div.v-scroll {:style {:flex (if defs-collapsed? 0 "0 1 128px")
                              :transition "all .2s"}}]]))
