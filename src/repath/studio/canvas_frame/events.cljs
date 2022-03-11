@@ -32,7 +32,7 @@
  :pan-to-active-page
  (fn [{:keys [active-document content-rect] :as db}  [_ zoom]]
    (let [active-page (get-in db [:documents active-document :active-page])
-         {:keys [width height]} (:attrs (el/element db active-page))
+         {:keys [width height]} (:attrs (el/get-element db active-page))
          [width height] (map units/unit->px [width height])
          width-ratio (/ (:width content-rect) width)
          height-ratio (/ (:height content-rect) height)]

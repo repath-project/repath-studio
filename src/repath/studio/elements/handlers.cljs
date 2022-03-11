@@ -12,7 +12,7 @@
   [db]
   (get-in db (elements-path db)))
 
-(defn element
+(defn get-element
   [db key]
   (key (elements db)))
 
@@ -30,7 +30,7 @@
 
 (defn active-page
   [{active-document :active-document :as db}]
-  (element db (get-in db [:documents active-document :active-page])))
+  (get-element db (get-in db [:documents active-document :active-page])))
 
 (defn selected-keys
   [{active-document :active-document :as db}]
@@ -47,7 +47,7 @@
 (defn select-element
   [{active-document :active-document :as db} key]
   (cond-> db
-    (page? (element db key)) (assoc-in [:documents active-document :active-page] key)
+    (page? (get-element db key)) (assoc-in [:documents active-document :active-page] key)
     :always (update-in [:documents active-document :selected-keys] conj key)))
 
 (defn deselect
@@ -128,11 +128,14 @@
     (assoc db :copied-elements selected-elements)))
 
 (defn delete
-  [db]
-  (assoc-in db (elements-path db)
-            (reduce dissoc
-                    (reduce #(assoc-in %1 [(:parent %2) :children] (vec (remove #{(:key %2)} (:children ((:parent %2) %1))))) (elements db) (selected db))
-                    (selected-keys db))))
+  ([db key]
+   (let [element (get-element db key)
+         parent (get-element db (:parent element))]
+     (-> db
+         (assoc-in (conj (elements-path db) (:parent element) :children) (vec (remove #{key} (:children parent))))
+         (dissoc (elements-path db) key))))
+  ([db]
+   (reduce #(delete %1 %2) db (selected-keys db))))
 
 (defn children
   [elements element]
@@ -186,7 +189,7 @@
                                                                                :center-horizontal [(- (/ parent-width 2) (+ x1 (/ width 2))) 0]
                                                                                :right [(- parent-width x2) 0])))))))
 
-(defn to-path 
+(defn to-path
   [db]
   (reduce (fn [db element]
             (if (get-method tools/path (:type element))
@@ -208,7 +211,7 @@
   (let [active-page (active-page db)
         page? (page? elements)
         parent-key (if page? :canvas (:key active-page))]
-    (if element
+    (if elements
       (cond-> (reduce (fn [db element] (create-element db parent-key element)) (deselect-all db) (if (seq? elements) elements [elements]))
         (not page?) (move [(- (get-in active-page [:attrs :x])) (- (get-in active-page [:attrs :y]))]))
       db)))
@@ -232,7 +235,7 @@
   [db type]
   (reduce (fn [db element] (create-element db (:key element) {:type type})) (deselect-all db) (selected db)))
 
-(defn paste-styles 
+(defn paste-styles
   [{copied-elements :copied-elements :as db}]
   (if (= 1 (count copied-elements))
     ;; TODO merge attributes from multiple selected elements
@@ -252,7 +255,7 @@
    (if (= element-key parent-key)
      db
      (-> db
-         (update-in (conj (elements-path db) (:parent (element db element-key)) :children) #(vec (remove #{element-key} %)))
+         (update-in (conj (elements-path db) (:parent (get-element db element-key)) :children) #(vec (remove #{element-key} %)))
          (update-in (conj (elements-path db) parent-key :children) conj element-key)
          (assoc-in (conj (elements-path db) element-key :parent) parent-key))))
   ([db parent-key]
@@ -260,6 +263,15 @@
 
 (defn group
   [db]
-  (reduce (fn [db key] (set-parent db key (first (selected-keys db)))) (-> db
-                                                                           (deselect-all)
-                                                                           (create-element (:key (active-page db)) {:type :g})) (selected-keys db)))
+  (reduce (fn [db key]
+            (set-parent db key (first (selected-keys db)))) (-> db
+                                                                (deselect-all)
+                                                                (create-element (:key (active-page db)) {:type :g})) (selected-keys db)))
+
+(defn ungroup
+  [db]
+  (reduce (fn [db key]
+            (let [element (get-element db key)]
+              (if (= (:type element) :g)
+                (reduce (fn [db child-key] (set-parent db child-key (:parent element))) (delete db key) (:children element))
+                db))) db (selected-keys db)))

@@ -65,6 +65,10 @@
                 [[:elements/duplicate]
                  [{:keyCode (key-codes "D")
                    :ctrlKey true}]]
+                [[:elements/ungroup]
+                 [{:keyCode (key-codes "G")
+                   :ctrlKey true
+                   :shiftKey true}]]
                 [[:elements/group]
                  [{:keyCode (key-codes "G")
                    :ctrlKey true}]]

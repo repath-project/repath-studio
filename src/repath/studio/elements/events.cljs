@@ -33,11 +33,10 @@
 
 (rf/reg-event-db
  :elements/fill
- (fn [{active-document :active-document :as db} _]
-   (let [color (tools/rgba (get-in db [:documents active-document :fill]))]
-     (-> db
-         (h/set-attribute :fill color)
-         (history/finalize (str "Fill " color))))))
+ (fn [db [_ color]]
+   (-> db
+       (h/set-attribute :fill color)
+       (history/finalize (str "Fill " color)))))
 
 (rf/reg-event-db
  :elements/delete
@@ -168,3 +167,10 @@
    (-> db
        (h/group)
        (history/finalize "Group selection"))))
+
+(rf/reg-event-db
+ :elements/ungroup
+ (fn [db  _]
+   (-> db
+       (h/ungroup)
+       (history/finalize "Ungroup selection"))))
