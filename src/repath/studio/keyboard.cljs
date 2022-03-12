@@ -52,6 +52,10 @@
                  [{:keyCode (key-codes "V")
                    :ctrlKey true
                    :shiftKey true}]]
+                [[:elements/paste-in-position]
+                 [{:keyCode (key-codes "V")
+                   :ctrlKey true
+                   :altKey true}]]
                 [[:elements/paste]
                  [{:keyCode (key-codes "V")
                    :ctrlKey true}]]

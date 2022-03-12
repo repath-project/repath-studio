@@ -1,7 +1,6 @@
 (ns repath.studio.elements.events
   (:require
    [re-frame.core :as rf]
-   [repath.studio.tools.base :as tools]
    [repath.studio.elements.handlers :as h]
    [repath.studio.history.handlers :as history]))
 
@@ -111,6 +110,13 @@
    (-> db
        (h/paste)
        (history/finalize "Paste selection"))))
+
+(rf/reg-event-db
+ :elements/paste-in-position
+ (fn [db _]
+   (-> db
+       (h/paste-in-position)
+       (history/finalize "Paste selection in position"))))
 
 (rf/reg-event-db
  :elements/paste-styles

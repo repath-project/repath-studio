@@ -224,9 +224,18 @@
         (create temp-element)
         (clear-temp))))
 
-(defn paste
+(defn paste-in-position
   [{:keys [copied-elements] :as db}]
   (reduce (fn [db element] (create-element db (if (page? (element (:parent element))) (active-page db) (:parent element))  element)) (deselect-all db) copied-elements))
+
+(defn paste
+  [db]
+  (let [db (paste-in-position db)
+        bounds (tools/elements-bounds (elements db) (selected db))
+        [x1 y1 x2 y2] bounds
+        [width height] (matrix/sub [x2 y2] [x1 y1])
+        [x y] (:adjusted-mouse-pos db)]
+    (move db [(- x (+ x1 (/ width 2)) ) (- y (+ y1 (/ height 2)))])))
 
 (defn duplicate
   [db]
