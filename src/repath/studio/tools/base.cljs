@@ -16,6 +16,8 @@
 (derive ::gradient ::element)
 (derive ::descriptive ::element)
 
+(derive ::animation ::descriptive)
+
 (derive :a ::container)
 (derive :clipPath ::container)
 (derive :defs ::container)
@@ -134,7 +136,7 @@
 (defn attributes
   [{:keys [type attrs]}]
   (merge (when type (merge (when (or (isa? type ::element) (= type :svg)) (merge (attrs-map (type svg-elements)) (attrs-map (:core svg-attributes)) (attrs-map (:style svg-attributes))))
-                           (when (contains? #{:animateMotion :animateTransform} type) (attrs-map (:elements/animate svg-elements)))
+                           (when (contains? #{:animateMotion :animateTransform} type) (attrs-map (:animate svg-elements)))
                            (zipmap (:attrs (properties type)) (repeat "")))) attrs))
 
 (defn to-path

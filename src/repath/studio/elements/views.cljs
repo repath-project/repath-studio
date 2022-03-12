@@ -1,65 +1,8 @@
 (ns repath.studio.elements.views
   (:require [repath.studio.context-menu.views :refer [gen-menu]]
             [clojure.core.matrix :as matrix]
-            [reagent.core :as ra]
             [re-frame.core :as rf]
-            [repath.studio.tools.base :as tools]
-            [repath.studio.mouse :as mouse]
-            [reagent.dom :as dom]))
-
-(defn get-bounds
-  "Experimental way of getting the bounds of uknown or complicated elements using the getBBox method.
-   SEE https://developer.mozilla.org/en-US/docs/Web/API/SVGGraphicsElement/getBBox"
-  [element-ref]
-  (let [bounds (.getBBox element-ref #js {:stroke true})
-        x (.-x bounds)
-        y (.-y bounds)]
-    [x y (+ x (.-width bounds)) (+ y (.-height bounds))]))
-
-(defn update-bounds
-  "We update the bounds on render. As a result, they lag behind the actual element.
-   Wrapping the dispatch in requestAnimationFrame helps, but doesn't fix the problem.
-   SEE https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame"
-  [key element-ref]
-  (.requestAnimationFrame js/window #(rf/dispatch [:elements/set-property key :bounds (get-bounds (dom/dom-node element-ref)) false])))
-
-(defn render-to-dom
-  "We need a reagent form-3 component in order to set the style attribute manually.
-   React expects a map, but we need to set a string to avoid serializing css.
-   We also experimentally calculate the bounds on updade."
-  [{:keys [key attrs type title] :as element} child-elements]
-  (ra/create-class
-   {:display-name  "element-renderer"
-
-    :componet-did-mount
-    (fn
-      [this]
-      (update-bounds key this)
-      (when (not-empty (:style attrs)) (.setAttribute (dom/dom-node this) "style" (:style attrs))))
-
-    :component-did-update
-    (fn
-      [this _]
-      (let [new-argv (rest (ra/argv this))
-            style (:style (into {} (:attrs (into {} new-argv))))]
-        (update-bounds key this)
-        (if (empty? style) (.removeAttribute (dom/dom-node this) "style") (.setAttribute (dom/dom-node this) "style" style))))
-
-    :reagent-render
-    (fn
-      [{:keys [key attrs type title] :as element} child-elements]
-      [type (merge (dissoc attrs :style) {:on-double-click #(mouse/event-handler % element)
-                                          :on-mouse-up     #(mouse/event-handler % element)
-                                          :on-mouse-down   #(mouse/event-handler % element)
-                                          :on-mouse-move   #(mouse/event-handler % element)})
-       (when title [:title title])
-       (:content attrs)
-       (map (fn [element] ^{:key (:key element)} [tools/render element]) child-elements)])}))
-
-(defmethod tools/render ::tools/element
-  [{:keys [children] :as element}]
-  (let [child-elements @(rf/subscribe [:elements/filter-visible children])]
-    [render-to-dom element child-elements]))
+            [repath.studio.mouse :as mouse]))
 
 (defn point-of-interest
   [[x y] zoom]
