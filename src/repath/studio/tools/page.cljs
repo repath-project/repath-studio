@@ -12,7 +12,7 @@
                                               :overflow]})
 
 (defmethod tools/drag :page
-  [{:keys [adjusted-mouse-offset] :as db} _ _ {:keys [adjusted-mouse-pos]}]
+  [{:keys [adjusted-mouse-pos adjusted-mouse-offset] :as db}]
   (let [[offset-x offset-y] adjusted-mouse-offset
         [pos-x pos-y] adjusted-mouse-pos
         attrs {:x      (min pos-x offset-x)
