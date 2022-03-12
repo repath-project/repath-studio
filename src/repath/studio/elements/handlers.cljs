@@ -130,12 +130,13 @@
 (defn delete
   ([db key]
    (let [element (get-element db key)
+         db (reduce delete db (:children element))
          parent (get-element db (:parent element))]
      (-> db
          (assoc-in (conj (elements-path db) (:parent element) :children) (vec (remove #{key} (:children parent))))
-         (dissoc (elements-path db) key))))
+         (update-in (elements-path db) dissoc key))))
   ([db]
-   (reduce #(delete %1 %2) db (selected-keys db))))
+   (reduce delete db (selected-keys db))))
 
 (defn children
   [elements element]
@@ -273,5 +274,5 @@
   (reduce (fn [db key]
             (let [element (get-element db key)]
               (if (= (:type element) :g)
-                (reduce (fn [db child-key] (set-parent db child-key (:parent element))) (delete db key) (:children element))
+                (delete (reduce (fn [db child-key] (set-parent db child-key (:parent element))) db (:children element)) key)
                 db))) db (selected-keys db)))
