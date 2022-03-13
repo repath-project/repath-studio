@@ -38,6 +38,18 @@
   (rf/dispatch [:elements/paste])
   "")
 
+(defn paste-in-place
+  "Pastes the selected elements in place."
+  []
+  (rf/dispatch [:elements/paste-in-place])
+  "")
+
+(defn duplicate
+  "Duplicates the selected elements."
+  []
+  (rf/dispatch [:elements/duplicate])
+  "")
+
 (defn create
   "Creates a new element."
   [element]
@@ -60,7 +72,7 @@
 (defn lower
   "Lowers the selected elements."
   []
-  (rf/dispatch [:elements/raise])
+  (rf/dispatch [:elements/lower])
   "")
 
 (defn select-all
