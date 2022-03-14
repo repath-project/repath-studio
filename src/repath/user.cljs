@@ -1,6 +1,7 @@
 (ns repath.user
   (:require
-   [re-frame.core :as rf]))
+   [re-frame.core :as rf]
+   [re-frame.db :as db]))
 
 (defn move
   "Moves the selected elements."
@@ -9,10 +10,6 @@
    "")
   ([x y]
    (move [x y])))
-
-(defn m
-  [& args]
-  (apply move args))
 
 (defn fill
   "Fills the selected elements."
@@ -63,6 +60,22 @@
   (rf/dispatch [:elements/set-attribute name value true])
   "")
 
+(defn db
+  []
+  @db/app-db)
+
+(defn document
+  []
+  (get-in (db) [:documents (:active-document (db))]))
+
+(defn elements
+  []
+  (:elements (document)))
+
+(defn selected
+  []
+  (:selected-keys (document)))
+
 (defn raise
   "Raises the selected elements."
   []
@@ -80,6 +93,16 @@
   []
   (rf/dispatch [:elements/select-all])
   "")
+
+(defn animate
+  "Animates the selected elements."
+  ([type attrs]
+   (rf/dispatch [:elements/animate type attrs])
+   "")
+  ([attrs]
+   (animate :animate attrs))
+  ([]
+   (animate {})))
 
 (defn deselect-all
   "Deselects all elements."
