@@ -6,7 +6,7 @@
             [repath.studio.tools.rect]
             [repath.studio.tools.ellipse]
             [repath.studio.tools.circle]
-            #_[repath.studio.tools.path]
+            [repath.studio.tools.path]
             [repath.studio.tools.line]
             #_[repath.studio.tools.polygon]
             [repath.studio.tools.group]
