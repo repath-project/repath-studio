@@ -268,10 +268,7 @@ cljs.js/*load-fn*
                   [[nil current-ns]
                    [nil 'cljs.core]]
                   (dedup-requires (vec requires)))
-        names (concat 
-               (set (apply concat requires))
-               ;; Autocomplete re-frame events 
-               (into #{} (keys (:event @re-frame.registrar/kind->id->handler))))
+        names (set (apply concat requires))
         defs (->> requires
                   (sort-by second (partial compare-ns current-ns))
                   (mapcat #(get-matching-ns-interns % matches? only-ns))
