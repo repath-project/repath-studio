@@ -155,9 +155,9 @@
 
 (rf/reg-event-db
  :elements/animate
- (fn [db [_ type]]
+ (fn [db [_ type attrs]]
    (-> db
-       (h/animate type)
+       (h/animate type attrs)
        (history/finalize (name type)))))
 
 (rf/reg-event-db

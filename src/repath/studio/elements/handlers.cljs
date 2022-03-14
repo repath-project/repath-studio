@@ -242,8 +242,8 @@
   (reduce (fn [db element] (create-element db (:parent element) element)) (deselect-all db) (selected db)))
 
 (defn animate
-  [db type]
-  (reduce (fn [db element] (create-element db (:key element) {:type type})) (deselect-all db) (selected db)))
+  [db type attrs]
+  (reduce (fn [db element] (create-element db (:key element) {:type type :attrs attrs})) (deselect-all db) (selected db)))
 
 (defn paste-styles
   [{copied-elements :copied-elements :as db}]

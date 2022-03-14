@@ -127,11 +127,11 @@
                                             :action [:elements/lower-to-bottom]}
                                            :devider
                                            {:name "Animate"
-                                            :action [:elements/animate :animate]}
+                                            :action [:elements/animate :animate {}]}
                                            {:name "Animate Transform"
-                                            :action [:elements/animate :animateTransform]}
+                                            :action [:elements/animate :animateTransform {}]}
                                            {:name "Animate Motion"
-                                            :action [:elements/animate :animateMotion]}
+                                            :action [:elements/animate :animateMotion {}]}
                                            :devider
                                            {:name "Duplicate"
                                             :shortcut "Ctrl+D"
