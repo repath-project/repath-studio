@@ -20,7 +20,7 @@
                 :flex-shrink 1}
    :repl-item {:flex-direction :row
                :font-size 12
-               :font-family "Source Code Pro"
+               :font-family "Source Code Pro, monospace"
                :padding "3px 5px"}
 
    :intro-message {:padding "10px 27px"

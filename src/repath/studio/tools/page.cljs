@@ -24,7 +24,6 @@
                            :name "Page"
                            :attrs attrs})))
 
-
 (defmethod tools/render :page
   [{:keys [attrs children key type] :as element}]
   (let [child-elements @(rf/subscribe [:elements/filter-visible children])
@@ -43,7 +42,7 @@
                                                          :on-mouse-move #(mouse/event-handler % element)
                                                          :fill "#888"
                                                          :font-size (/ 12 zoom)
-                                                         :font-family "Source Code Pro"}) (or (:name element) type)]
+                                                         :font-family "Source Code Pro, monospace"}) (or (:name element) type)]
      [:svg  (cond-> attrs
               :always (dissoc :fill)
               (not= filter :no-filter) (assoc :filter (str "url(#" (name filter) ")")))

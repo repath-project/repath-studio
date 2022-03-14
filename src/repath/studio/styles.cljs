@@ -218,6 +218,8 @@
                   :cursor "pointer"
                   :text-decoration "none"})
 
+(stylefy/tag "pre" {:font-family "Source Code Pro, monospace"})
+
 (stylefy/class "tooltip" {:position "absolute"
                           :background-color level-3
                           :border-radius "4px"
