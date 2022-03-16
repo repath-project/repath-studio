@@ -52,7 +52,7 @@
           :bootstrap {:target :bootstrap
                       :output-dir "resources/public/js/bootstrap"
                       :exclude #{cljs.js}
-                      :entries [cljs.js re-frame.core reagent.core repath.user]}
+                      :entries [cljs.js repath.user]}
           
           :browser-test {:target    :browser-test
                          :ns-regexp "-test$"
