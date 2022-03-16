@@ -18,6 +18,7 @@
            :stroke-width
            :active-page
            :pan
+           :title
            :history
            :elements
            :temp-element

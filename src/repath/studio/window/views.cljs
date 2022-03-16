@@ -88,7 +88,8 @@
              :on-click #(rf/dispatch [:window/close])} [comp/icon {:icon "times"}]]])
 
 (defn title-bar []
-  [:div.h-box {:class "title-bar"}  "Untitled 1"])
+  (let [title @(rf/subscribe [:title])]
+    [:div.h-box {:class "title-bar"}  title]))
 
 (defn app-header []
   (when-not @(rf/subscribe [:window/fullscreen?]) [:div.h-box
