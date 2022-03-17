@@ -11,8 +11,8 @@
 ## Showcase
 <div>
 
-<img alt="mountain" src="https://repath.studio/assets/images/mountain.png" width="334px">
-<img alt="silk" src="https://repath.studio/assets/images/silk.png" width="334px">
-<img alt="leaves" src="https://repath.studio/assets/images/leaves.png" width="334px">
+<img alt="mountain" src="https://repath.studio/assets/images/mountain.png" style="width: 33%;">
+<img alt="silk" src="https://repath.studio/assets/images/silk.png" style="width: 33%;">
+<img alt="leaves" src="https://repath.studio/assets/images/leaves.png" style="width: 33%;">
   
 </div>
