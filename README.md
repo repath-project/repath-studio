@@ -7,12 +7,3 @@
 </div>
 
 ![Studio Screenshot](https://repath.studio/assets/images/studio.png)
-
-## Showcase
-<div>
-
-<img alt="mountain" src="https://repath.studio/assets/images/mountain.png" style="width: 32%;">
-<img alt="silk" src="https://repath.studio/assets/images/silk.png" style="width: 32%;">
-<img alt="leaves" src="https://repath.studio/assets/images/leaves.png" style="width: 32%;">
-  
-</div>
