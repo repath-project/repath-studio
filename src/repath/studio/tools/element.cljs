@@ -81,7 +81,7 @@
     :component-did-update
     (fn
       [this _]
-      (let [new-argv (rest (ra/argv this))
+      (let [new-argv (second (ra/argv this))
             style (:style (into {} (:attrs (into {} new-argv))))]
         (update-bounds key this)
         (if (empty? style) (.removeAttribute (dom/dom-node this) "style") (.setAttribute (dom/dom-node this) "style" style))))
@@ -95,7 +95,7 @@
                                           :on-mouse-move   #(mouse/event-handler % element)})
        (when title [:title title])
        (:content attrs)
-       (map (fn [element] ^{:key (:key element)} [tools/render element]) child-elements)])}))
+       (map (fn [child] ^{:key (:key child)} [tools/render child]) child-elements)])}))
 
 (defmethod tools/render ::tools/element
   [{:keys [children] :as element}]
