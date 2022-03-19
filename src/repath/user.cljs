@@ -19,9 +19,10 @@
 
 (defn delete
   "Deletes selected elements."
-  []
-  (rf/dispatch [:elements/delete])
-  "")
+  ([element]
+   (rf/dispatch [:elements/delete element]))
+  ([]
+   (rf/dispatch [:elements/delete])))
 
 (defn copy
   "Copies the selected elements."
@@ -94,6 +95,18 @@
   (rf/dispatch [:elements/select-all])
   "")
 
+(defn deselect-all
+  "Deselects all elements."
+  []
+  (rf/dispatch [:elements/deselect-all])
+  "")
+
+(defn to-path
+  "Converts selected elements to paths."
+  []
+  (rf/dispatch [:elements/to-path])
+  "")
+
 (defn animate
   "Animates the selected elements."
   ([type attrs]
@@ -103,12 +116,6 @@
    (animate :animate attrs))
   ([]
    (animate {})))
-
-(defn deselect-all
-  "Deselects all elements."
-  []
-  (rf/dispatch [:elements/deselect-all])
-  "")
 
 (defn undo
   "Goes back in history."
