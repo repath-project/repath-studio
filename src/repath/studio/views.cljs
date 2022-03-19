@@ -208,6 +208,7 @@
 (defn command-input []
   [:div.v-box {:style {:background-color styles/level-0
                        :font-size "10px"
+                       :user-select "text"
                        :position "relative"
                        :overflow "visible"}}
    [repl/main-view]])
@@ -281,7 +282,6 @@
 
 (defn main-panel []
   [:div.v-box {:style {:flex               "1"
-                       :Webkit-user-select "none"
                        :height             "100vh"}}
    (when @(rf/subscribe [:header?]) [win/app-header])
    [:div.h-box {:style {:flex "1" :overflow "hidden"}}

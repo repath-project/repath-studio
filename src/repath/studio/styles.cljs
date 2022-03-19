@@ -159,6 +159,7 @@
                      :overflow    "hidden"
                      :font-family font-family
                      :font-size   "13px"
+                     :user-select  "none"
                      :color       font-color
                      :fill        font-color})
 

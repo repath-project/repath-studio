@@ -16,6 +16,7 @@
   [:html [:head] [:body {:style {:width "100%"
                                  :height "100%"
                                  :overflow "hidden"
+                                 :user-select "none"
                                  :margin 0}}]])
 
 (defn frame
@@ -58,7 +59,6 @@
                      :on-mouse-leave #(rf/dispatch [:set-mouse-over-canvas? false])
                      :on-context-menu element-menu
                      :style          {:flex "1 1"
-                                      :user-select "none"
                                       :overflow "hidden"
                                       :border 0}}
            [tools/render @(rf/subscribe [:elements/canvas])]

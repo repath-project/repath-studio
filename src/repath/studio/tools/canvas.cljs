@@ -42,12 +42,10 @@
            :width (:width content-rect)
            :height (:height content-rect)
            :transform (str "rotate(" rotate ")")
-           :style {:user-select "none"
-                   :background (:fill attrs)
+           :style {:background (:fill attrs)
                    :outline "none"
                    :cursor cursor}}
      (map (fn [element] ^{:key (:key element)} [tools/render element]) child-elements)
-
        [:<>
         [tools/render temp-element]
         (map (fn [element] ^{:key (str (:key element) "bounds")} [elements/bounding-box (tools/adjusted-bounds elements element) zoom]) hovered-elements)
