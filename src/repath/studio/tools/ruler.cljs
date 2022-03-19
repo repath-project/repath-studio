@@ -19,7 +19,9 @@
   [db]
   (elements/clear-temp db))
 
-(defmethod tools/mouse-up :ruler [db] db)
+(defmethod tools/mouse-up :ruler
+  [db]
+  (elements/clear-temp db))
 
 (defmethod tools/drag-end :ruler [db] db)
 
