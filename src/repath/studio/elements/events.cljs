@@ -39,16 +39,11 @@
 
 (rf/reg-event-db
  :elements/delete
- (fn [db [_ element]]
-   (if element
-     (-> db
-         (h/delete element)
-         (h/deselect-all)
-         (history/finalize (str "Delete " element)))
-     (-> db
-         (h/delete)
-         (h/deselect element)
-         (history/finalize "Delete selection")))))
+ (fn [db _]
+   (-> db
+       (h/delete)
+       (h/deselect-all)
+       (history/finalize "Delete selection"))))
 
 (rf/reg-event-db
  :elements/deselect-all

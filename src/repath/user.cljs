@@ -19,10 +19,8 @@
 
 (defn delete
   "Deletes selected elements."
-  ([element]
-   (rf/dispatch [:elements/delete element]))
-  ([]
-   (rf/dispatch [:elements/delete])))
+  []
+   (rf/dispatch [:elements/delete]))
 
 (defn copy
   "Copies the selected elements."
