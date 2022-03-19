@@ -136,9 +136,7 @@
 
    :clear-keys []
 
-   :always-listen-keys [{:keyCode (key-codes "MINUS_SIGN")}
-                        {:keyCode (key-codes "Z")
-                         :ctrlKey true}]
+   :always-listen-keys []
 
    :prevent-default-keys [{:keyCode (key-codes "RIGHT")}
                           {:keyCode (key-codes "LEFT")}
