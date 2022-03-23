@@ -136,3 +136,10 @@
   [element]
   (apply #(rf/dispatch [:window/close]) element)
   "")
+
+(defn help
+  "Lists available functions."
+  []
+  (doseq [x (keys (ns-publics 'repath.user))] (print x))
+  "")
+
