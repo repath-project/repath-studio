@@ -27,16 +27,11 @@
 (defmethod tools/render :page
   [{:keys [attrs children key type] :as element}]
   (let [child-elements @(rf/subscribe [:elements/filter-visible children])
-        rect-attrs     (select-keys attrs [:x :y :width :height :fill])
+        rect-attrs     (select-keys attrs [:width :height :fill])
         text-attrs     (select-keys attrs [:x :y])
         filter         @(rf/subscribe [:filter])
         zoom           @(rf/subscribe [:zoom])]
     [:g {:key key}
-     [:rect (merge rect-attrs {:fill "rgba(0, 0, 0, .2)"
-                               :transform "translate(1 1)"
-                               :style {:filter "blur(1px)"}})];}})]
-     [:rect (merge rect-attrs {:on-mouse-up   #(mouse/event-handler % element)
-                               :on-mouse-down #(mouse/event-handler % element)})]
      [:text (merge (update text-attrs :y - (/ 10 zoom)) {:on-mouse-up   #(mouse/event-handler % element)
                                                          :on-mouse-down #(mouse/event-handler % element)
                                                          :on-mouse-move #(mouse/event-handler % element)
@@ -46,4 +41,6 @@
      [:svg  (cond-> attrs
               :always (dissoc :fill)
               (not= filter :no-filter) (assoc :filter (str "url(#" (name filter) ")")))
+      (when (:fill attrs) [:rect (merge rect-attrs {:on-mouse-up   #(mouse/event-handler % element)
+                                :on-mouse-down #(mouse/event-handler % element)})])
       (map (fn [element] ^{:key (:key element)} [tools/render element]) (merge child-elements))]]))

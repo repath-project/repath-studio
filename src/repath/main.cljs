@@ -44,7 +44,8 @@
     "beginFrameSubscription" (.beginFrameSubscription (.-webContents ^js @main-window) false send-frames-to-renderer) ; SEE https://www.electronjs.org/docs/latest/api/web-contents#contentsbeginframesubscriptiononlydirty-callback
     "endFrameSubscription" (.endFrameSubscription (.-webContents ^js @main-window)) ; SEE https://www.electronjs.org/docs/latest/api/web-contents#contentsendframesubscription 
     "openDocument" (file/open)
-    "saveDocument" (file/save (.-data args))))
+    "saveDocument" (file/save (.-data args))
+    "export" (file/export (.-data args))))
 
 (defn send-to-renderer
   ([action data]

@@ -2,7 +2,9 @@
   (:require
    [re-frame.core :as rf]
    [repath.studio.elements.handlers :as h]
-   [repath.studio.history.handlers :as history]))
+   [repath.studio.history.handlers :as history]
+   [repath.studio.tools.base :as tools]
+   [reagent.dom.server :refer [render-to-string]]))
 
 (rf/reg-event-db
  :elements/select
@@ -52,7 +54,7 @@
 
 (rf/reg-event-db
  :elements/select-all
- (fn [{active-document :active-document :as db} [_]]
+ (fn [{active-document :active-document :as db} _]
    (let [active-page (get-in db [:documents active-document :active-page])]
      (assoc-in db [:documents active-document :selected-keys] (set (get-in db [:documents active-document :elements active-page :children]))))))
 
@@ -90,6 +92,13 @@
    (-> db
        (h/align direction)
        (history/finalize (str "Align " (name direction))))))
+
+(rf/reg-event-db
+ :elements/export
+ (fn [{active-document :active-document :as db} _]
+   (let [active-page (get-in db [:documents active-document :active-page])
+         html (render-to-string (tools/render (get-in db [:documents active-document :elements active-page])))]
+     (js/window.api.send "toMain" #js {:action "export" :data html}))))
 
 (rf/reg-event-db
  :elements/copy

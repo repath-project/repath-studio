@@ -1,7 +1,8 @@
 (ns repath.file
   (:require ["electron" :refer [app dialog]]
             ["fs" :as fs]
-            [cognitect.transit :as tr]))
+            [cognitect.transit :as tr]
+            ["html2canvas" :as html2canvas]))
 
 (def main-window (atom nil))
 
@@ -32,3 +33,22 @@
          (fn [^js/Promise file] (when-not (.-canceled file)
                                   (.readFileSync fs (.-filePath file) "utf-8" (fn [err data]
                                                                                 (.send (.-webContents ^js @main-window) "fromMain" (clj->js  {:action "openDocument" :data data}))))))))
+
+(def export-options {:defaultPath default-path
+                     :filters [{:name "svg"
+                                :extensions ["svg" "svgo"]}
+                               {:name "png"
+                                :extensions ["png" "svgo"]}
+                               {:name "jpg"
+                                :extensions ["jpg" "jpeg"]}]})
+
+(defn export
+  "Exports the provided data."
+  [data]
+  (let [svg (str "<svg>" data "</svg>")
+        html-canvas (html2canvas svg)
+        png nil #_(.toDataURL html-canvas "image/png")]
+    (.then (.showSaveDialog dialog ^js @main-window (clj->js export-options))
+           (fn [^js/Promise file] (when-not (.-canceled file) 
+                                    (js/console.log file)
+                                    (.writeFileSync fs (.-filePath file) svg "utf-8"))))))
