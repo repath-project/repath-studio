@@ -40,6 +40,7 @@
    :properties? true
    :header? true
    :history? false
+   :timeline? true
    :xml-view? false
    :state :default
    :elements-collapsed? false

@@ -17,6 +17,7 @@
            :tree?
            :properties?
            :header?
+           :timeline?
            :history?
            :command-palette?
            :cursor
