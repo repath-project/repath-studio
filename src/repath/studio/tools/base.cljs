@@ -57,7 +57,7 @@
 (defmulti activate :tool)
 (defmulti deactivate :tool)
 
-(defmulti move
+(defmulti translate
   (fn [element]
     (when (not (:locked? element)) (:type element))))
 
@@ -81,7 +81,7 @@
 
 (defmethod attrs :default [])
 (defmethod scale :default [element] element)
-(defmethod move :default [element] element)
+(defmethod translate :default [element] element)
 
 (defn adjusted-bounds
   [elements element]

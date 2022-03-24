@@ -61,13 +61,13 @@
           offset (:adjusted-mouse-diff db)
           is-element-selected? (contains? selected-keys (:key element))]
       (case state
-        :move (elements/move (if (some #(contains? (:modifiers event) %) #{:ctrl})
+        :move (elements/translate (if (some #(contains? (:modifiers event) %) #{:ctrl})
                                (-> db
                                    (assoc :state :clone
                                           :cursor "copy")
                                    (elements/duplicate))
                                db) offset)
-        :clone (elements/move db offset)
+        :clone (elements/translate db offset)
         :scale (elements/scale db offset)
         (cond-> db
           (not (or is-element-selected? (= (:type element) :scale-handler))) (elements/select (some #(contains? (:modifiers event) %) #{:shift}) element)

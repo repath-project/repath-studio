@@ -6,5 +6,5 @@
 
 (defmethod tools/properties :g [] {:description "The <g> SVG element is a container used to group other SVG elements."})
 
-(defmethod tools/move :g
+(defmethod tools/translate :g
   [element [x y]] element)

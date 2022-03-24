@@ -25,7 +25,7 @@
         (assoc :state :create)
         (elements/set-temp {:type :line :attrs attrs}))))
 
-(defmethod tools/move :line
+(defmethod tools/translate :line
   [element [x y]] (-> element
                       (update-in [:attrs :x1] + x)
                       (update-in [:attrs :x2] + x)

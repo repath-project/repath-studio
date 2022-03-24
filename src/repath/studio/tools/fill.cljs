@@ -11,7 +11,7 @@
     [db]
     (assoc db :cursor "crosshair"))
 
-  (defmethod tools/move :fill [])
+  (defmethod tools/translate :fill [])
 
   (defmethod tools/mouse-up :fill
     [{active-document :active-document :as db} _ element]

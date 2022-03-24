@@ -3,13 +3,13 @@
    [re-frame.core :as rf]
    [re-frame.db :as db]))
 
-(defn move
+(defn translate
   "Moves the selected elements."
   ([offset]
-   (rf/dispatch [:elements/move offset])
+   (rf/dispatch [:elements/translate offset])
    "")
   ([x y]
-   (move [x y])))
+   (translate [x y])))
 
 (defn fill
   "Fills the selected elements."

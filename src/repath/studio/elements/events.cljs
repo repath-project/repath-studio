@@ -142,10 +142,10 @@
        (history/finalize "Duplicate selection"))))
 
 (rf/reg-event-db
- :elements/move
+ :elements/translate
  (fn [db [_ offset]]
    (-> db
-       (h/move offset)
+       (h/translate offset)
        (history/finalize (str "Move selection " offset)))))
 
 (rf/reg-event-db

@@ -63,7 +63,7 @@
       (assoc-in db [:documents active-document :temp-element :attrs :points] (str/join " " (concat (apply concat (drop-last (attrs/points-to-vec points))) adjusted-mouse-pos)))
       db)))
 
-(defmethod tools/move :polyline
+(defmethod tools/translate :polyline
   [element [x y]] (-> element
                       (update-in [:attrs :points] (fn [val]
                                                     (->> val

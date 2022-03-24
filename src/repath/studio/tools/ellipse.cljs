@@ -29,7 +29,7 @@
         (assoc :state :create)
         (elements/set-temp {:type :ellipse :attrs attrs}))))
 
-(defmethod tools/move :ellipse
+(defmethod tools/translate :ellipse
   [element [x y]] (-> element
                       (update-in [:attrs :cx] #(units/transform + x val))
                       (update-in [:attrs :cy] #(units/transform + y val))))

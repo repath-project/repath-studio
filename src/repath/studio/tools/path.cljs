@@ -43,7 +43,7 @@
                                               :stroke-linejoin
                                               :opacity]})
 
-(defmethod tools/move :path
+(defmethod tools/translate :path
   [element [x y]]
   (assoc-in element [:attrs :d] (-> (:d (:attrs element))
                                     (svgpath)

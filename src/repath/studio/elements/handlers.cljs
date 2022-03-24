@@ -164,10 +164,10 @@
   [elements element]
   (update-position elements element (fn [_] (dec (count (children elements element))))))
 
-(defn move
+(defn translate
   [db offset]
   (update-selected db (fn [elements element]
-                        (assoc elements (:key element) (tools/move element offset)))))
+                        (assoc elements (:key element) (tools/translate element offset)))))
 
 (defn scale
   [db offset]
@@ -182,7 +182,7 @@
                               parent ((:parent element) elements)
                               [parent-x1 parent-y1 parent-x2 parent-y2] (tools/bounds (elements db) parent)
                               [parent-width parent-height] (matrix/sub [parent-x2 parent-y2] [parent-x1 parent-y1])]
-                          (assoc elements (:key element) (tools/move element (case direction
+                          (assoc elements (:key element) (tools/translate element (case direction
                                                                                :top [0 (- y1)]
                                                                                :center-vertical [0 (- (/ parent-height 2) (+ y1 (/ height 2)))]
                                                                                :bottom [0 (- parent-height y2)]
@@ -214,7 +214,7 @@
         parent-key (if page? :canvas (:key active-page))]
     (if elements
       (cond-> (reduce (fn [db element] (create-element db parent-key element)) (deselect-all db) (if (seq? elements) elements [elements]))
-        (not page?) (move [(- (get-in active-page [:attrs :x])) (- (get-in active-page [:attrs :y]))]))
+        (not page?) (translate [(- (get-in active-page [:attrs :x])) (- (get-in active-page [:attrs :y]))]))
       db)))
 
 (defn create-from-temp
@@ -235,7 +235,7 @@
         [x1 y1 x2 y2] bounds
         [width height] (matrix/sub [x2 y2] [x1 y1])
         [x y] (:adjusted-mouse-pos db)]
-    (move db [(- x (+ x1 (/ width 2)) ) (- y (+ y1 (/ height 2)))])))
+    (translate db [(- x (+ x1 (/ width 2)) ) (- y (+ y1 (/ height 2)))])))
 
 (defn duplicate
   [db]

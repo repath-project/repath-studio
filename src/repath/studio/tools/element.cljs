@@ -13,7 +13,7 @@
 
 (defmethod tools/activate ::tools/element [db] (assoc db :cursor "crosshair"))
 
-(defmethod tools/move ::tools/element
+(defmethod tools/translate ::tools/element
   [element [x y]] (-> element
                       (update-in [:attrs :x] #(units/transform + x %))
                       (update-in [:attrs :y] #(units/transform + y %))))

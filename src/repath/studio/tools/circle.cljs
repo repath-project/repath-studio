@@ -30,7 +30,7 @@
         (assoc :state :create)
         (elements/set-temp {:type :circle :attrs attrs}))))
 
-(defmethod tools/move :circle
+(defmethod tools/translate :circle
   [element [x y]] (-> element
                       (update-in [:attrs :cx] #(units/transform + x %))
                       (update-in [:attrs :cy] #(units/transform + y %))))
