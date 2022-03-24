@@ -68,7 +68,7 @@
                       (update-in [:attrs :points] (fn [val]
                                                     (->> val
                                                          (attrs/points-to-vec)
-                                                         (reduce (fn [points point] (concat points [(units/transform #(+ x %) (first point)) (units/transform #(+ y %) (second point))])) [])
+                                                         (reduce (fn [points point] (concat points [(units/transform + x (first point)) (units/transform + y (second point))])) [])
                                                          (concat)
                                                          (str/join " "))))))
 

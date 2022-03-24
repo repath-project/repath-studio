@@ -32,12 +32,12 @@
 
 (defmethod tools/move :circle
   [element [x y]] (-> element
-                      (update-in [:attrs :cx] (fn [val] (units/transform #(+ % x) val)))
-                      (update-in [:attrs :cy] (fn [val] (units/transform #(+ % y) val)))))
+                      (update-in [:attrs :cx] #(units/transform + x %))
+                      (update-in [:attrs :cy] #(units/transform + y %))))
 
 (defmethod tools/scale :circle
   [element [x y] handler]
-  (update-in element [:attrs :r] (fn [val] (units/transform #(+ % x) val))))
+  (update-in element [:attrs :r] #(units/transform + x %)))
 
 (defmethod tools/bounds :circle
   [_ {{:keys [cx cy r stroke-width stroke]} :attrs}]

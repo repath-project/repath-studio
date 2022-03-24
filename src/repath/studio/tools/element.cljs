@@ -15,16 +15,16 @@
 
 (defmethod tools/move ::tools/element
   [element [x y]] (-> element
-                      (update-in [:attrs :x] (fn [val] (units/transform #(+ % x) val)))
-                      (update-in [:attrs :y] (fn [val] (units/transform #(+ % y) val)))))
+                      (update-in [:attrs :x] #(units/transform + x %))
+                      (update-in [:attrs :y] #(units/transform + y %))))
 
 (defmethod tools/scale ::tools/element
   [element [x y] handler]
   (case handler
     :bottom-right (-> element
-                      (update-in [:attrs :width] (fn [val] (units/transform #(+ % x) val)))
-                      (update-in [:attrs :height] (fn [val] (units/transform #(+ % y) val))))
-    :bottom-middle (update-in element [:attrs :height] (fn [val] (units/transform #(+ % y) val)))))
+                      (update-in [:attrs :width] #(units/transform + x %))
+                      (update-in [:attrs :height] #(units/transform + y %)))
+    :bottom-middle (update-in element [:attrs :height] #(units/transform + y %))))
 
 (defmethod tools/bounds ::tools/element
     [_ {:keys [attrs]}]

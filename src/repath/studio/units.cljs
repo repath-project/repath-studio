@@ -63,9 +63,9 @@
 
 (defn transform
   "Converts a value to pixels, applies a transformation and converts the result back to the original unit."
-  [transformation-function value]
+  [transformation-f transformation-v value]
   (let [[number unit] (parse-unit value)]
     (-> (->px number unit)
-        (transformation-function)
+        (transformation-f transformation-v)
         (->unit unit)
         (str (when (valid-unit? unit) unit)))))
