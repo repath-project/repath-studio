@@ -80,10 +80,10 @@
   [{:keys [state adjusted-mouse-offset adjusted-mouse-pos] :as db} event]
   (let [[offset-x _] adjusted-mouse-offset
         [pos-x _] adjusted-mouse-pos]
-    (cond-> db
-      (= state :select) (select-by-area (> pos-x offset-x) (some #(contains? (:modifiers event) %) #{:ctrl :shift}))
-      (= state :move) (history/finalize "Move selection")
-      (= state :scale) (history/finalize "Scale selection")
-      (= state :clone) (history/finalize "Duplicate selection to position")
-      :always (assoc :cursor "default"
-                     :state :default))))
+    (assoc (case state
+             :select (select-by-area db (> pos-x offset-x) (some #(contains? (:modifiers event) %) #{:ctrl :shift}))
+             :move (history/finalize db "Move selection")
+             :scale (history/finalize db "Scale selection")
+             :clone (history/finalize db "Duplicate selection to position"))
+           :cursor "default"
+           :state :default)))
