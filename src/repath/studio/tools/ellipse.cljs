@@ -31,8 +31,8 @@
 
 (defmethod tools/translate :ellipse
   [element [x y]] (-> element
-                      (update-in [:attrs :cx] #(units/transform + x val))
-                      (update-in [:attrs :cy] #(units/transform + y val))))
+                      (update-in [:attrs :cx] #(units/transform + x %))
+                      (update-in [:attrs :cy] #(units/transform + y %))))
 
 (defmethod tools/bounds :ellipse
   [_ {{:keys [cx cy rx ry]} :attrs}]
