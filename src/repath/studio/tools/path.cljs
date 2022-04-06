@@ -51,6 +51,6 @@
                                     (.toString))))
 
 (defmethod tools/bounds :path
-  [_ {{:keys [d]} :attrs}]
+  [{{:keys [d]} :attrs}]
   (let [[left top right bottom] (js->clj (get-bounds d))]
     [left top right bottom]))

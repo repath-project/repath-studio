@@ -33,7 +33,7 @@
                       (update-in [:attrs :y2] + y)))
 
 (defmethod tools/bounds :line
-  [_ {{:keys [x1 y1 x2 y2]} :attrs}]
+  [{{:keys [x1 y1 x2 y2]} :attrs}]
   [(min x1 x2) (min y1 y2) (max x1 x2) (max y1 y2)])
 
 (defmethod tools/area :line

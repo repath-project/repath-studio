@@ -27,7 +27,7 @@
     :bottom-middle (update-in element [:attrs :height] #(units/transform + y %))))
 
 (defmethod tools/bounds ::tools/element
-    [_ {:keys [attrs]}]
+    [{:keys [attrs]}]
     (let [{:keys [x y width height stroke-width stroke]} attrs
           [x y width height stroke-width-px] (mapv units/unit->px [x y width height stroke-width])
           stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)
@@ -36,7 +36,7 @@
       (mapv units/unit->px [x y (+ x width) (+ y height)])))
 
 (defmethod tools/drag-end ::tools/element
-  [db _ _]
+  [db]
   (let [temp-element (get-in db [:documents (:active-document db) :temp-element])]
     (if temp-element
       (-> db

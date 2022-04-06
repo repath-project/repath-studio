@@ -40,7 +40,7 @@
   (update-in element [:attrs :r] #(units/transform + x %)))
 
 (defmethod tools/bounds :circle
-  [_ {{:keys [cx cy r stroke-width stroke]} :attrs}]
+  [{{:keys [cx cy r stroke-width stroke]} :attrs}]
   (let [[cx cy r stroke-width-px] (map units/unit->px [cx cy r stroke-width])
         stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)
         r (+ r (/ (if (str/blank? stroke) 0 stroke-width-px) 2))]

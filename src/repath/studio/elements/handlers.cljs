@@ -97,7 +97,7 @@
 
 (defn conj-by-bounds-overlap
   [db predicate path element]
-  (reduce #(if (and (not (page? %2)) (predicate (tools/adjusted-bounds (elements db) %2) (tools/adjusted-bounds (elements db) element)))
+  (reduce #(if (and (not (page? %2)) (predicate (tools/adjusted-bounds %2 (elements db)) (tools/adjusted-bounds element (elements db))))
              (update-in % path conj (:key %2))
              %) db (vals (elements db))))
 
@@ -177,10 +177,10 @@
 (defn align
   [db direction]
   (update-selected db (fn [elements element]
-                        (let [[x1 y1 x2 y2] (tools/bounds (elements db) element)
+                        (let [[x1 y1 x2 y2] (tools/bounds element (elements db))
                               [width height] (matrix/sub [x2 y2] [x1 y1])
                               parent ((:parent element) elements)
-                              [parent-x1 parent-y1 parent-x2 parent-y2] (tools/bounds (elements db) parent)
+                              [parent-x1 parent-y1 parent-x2 parent-y2] (tools/bounds parent (elements db))
                               [parent-width parent-height] (matrix/sub [parent-x2 parent-y2] [parent-x1 parent-y1])]
                           (assoc elements (:key element) (tools/translate element (case direction
                                                                                :top [0 (- y1)]

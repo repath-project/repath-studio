@@ -37,7 +37,7 @@
         (elements/set-temp {:type :text :attrs attrs}))))
 
 (defmethod tools/bounds :text
-  [_ element]
+  [element]
   (:bounds element))
 
 (defmethod tools/path :text

@@ -35,7 +35,7 @@
                       (update-in [:attrs :cy] #(units/transform + y %))))
 
 (defmethod tools/bounds :ellipse
-  [_ {{:keys [cx cy rx ry]} :attrs}]
+  [{{:keys [cx cy rx ry]} :attrs}]
     (let [[cx cy rx ry] (map units/unit->px [cx cy rx ry])]
       [(- cx rx) (- cy ry) (+ cx rx 2) (+ cy ry)]))
 

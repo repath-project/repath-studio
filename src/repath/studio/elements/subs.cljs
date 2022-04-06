@@ -99,7 +99,7 @@
  :<- [:elements/visible]
  (fn [elements visible-elements _]
    (reduce (fn [points element]
-             (let [[x1 y1 x2 y2] (tools/adjusted-bounds elements element)
+             (let [[x1 y1 x2 y2] (tools/adjusted-bounds element elements)
                    [width height] (matrix/sub [x2 y2] [x1 y1])]
                (concat points [[x1 y1]
                                [x1 y2]

@@ -73,7 +73,7 @@
                                                          (str/join " "))))))
 
 (defmethod tools/bounds :polyline
-  [_ {{:keys [points]} :attrs}]
+  [{{:keys [points]} :attrs}]
   (let [points-v (attrs/points-to-vec points)
         x1 (apply min (map #(units/unit->px (first %)) points-v))
         y1 (apply min (map #(units/unit->px (second %)) points-v))

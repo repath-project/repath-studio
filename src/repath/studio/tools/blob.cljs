@@ -65,7 +65,7 @@
                 (select-keys attrs [:stroke :fill :stroke-width :id :class :opacity]))])
 
 (defmethod tools/bounds :blob
-  [_ {{:keys [x y size]} :attrs}]
+  [{{:keys [x y size]} :attrs}]
   (let [[x y size] (map units/unit->px [x y size])]
     (mapv units/unit->px [x y (+ x size) (+ y size)])))
 

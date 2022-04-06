@@ -65,7 +65,7 @@
   (let [element (get-in db [:documents active-document :elements key])
         elements (el/elements db)
         parrent-page-attrs (:attrs (helpers/parent-page elements element))
-        db (pan-to-bounds db (tools/bounds elements element))]
+        db (pan-to-bounds db (tools/bounds element elements))]
     (if (not (el/page? element))
       (pan db [(:x parrent-page-attrs) (:y parrent-page-attrs)])
       db)))

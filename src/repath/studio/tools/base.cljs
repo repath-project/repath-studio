@@ -43,17 +43,17 @@
 (derive :pen ::draw)
 
 (defmulti render :type)
-(defmulti attrs (fn [type] type))
-(defmulti properties (fn [type] type))
+(defmulti attrs keyword)
+(defmulti properties keyword)
 (defmulti path :type)
 (defmulti area :type)
-(defmulti bounds (fn [_ element] (:type element)))
+(defmulti bounds #(:type %))
 
-(defmulti mouse-down (fn [db] (:tool db)))
-(defmulti mouse-move (fn [db] (:tool db)))
-(defmulti mouse-up (fn [db] (:tool db)))
-(defmulti drag (fn [db] (:tool db)))
-(defmulti drag-end (fn [db] (:tool db)))
+(defmulti mouse-down #(:tool %))
+(defmulti mouse-move #(:tool %))
+(defmulti mouse-up #(:tool %))
+(defmulti drag #(:tool %))
+(defmulti drag-end #(:tool %))
 (defmulti activate :tool)
 (defmulti deactivate :tool)
 
@@ -84,13 +84,13 @@
 (defmethod translate :default [element] element)
 
 (defn adjusted-bounds
-  [elements element]
+  [element elements]
   (let [page (helpers/parent-page elements element)]
     (if page
-      (let [[offset-x offset-y _ _] (bounds elements page)
-            [x1 y1 x2 y2] (bounds elements element)]
+      (let [[offset-x offset-y _ _] (bounds page elements)
+            [x1 y1 x2 y2] (bounds element elements)]
         [(+ x1 offset-x) (+ y1 offset-y) (+ x2 offset-x) (+ y2 offset-y)])
-      (bounds elements element))))
+      (bounds element elements))))
 
 (defn merge-bounds
   [[ax1 ay1 ax2 ay2] [bx1 by1 bx2 by2]]
@@ -98,10 +98,10 @@
 
 (defn elements-bounds
   [elements bound-elements]
-  (reduce #(merge-bounds % (adjusted-bounds elements %2)) (adjusted-bounds elements (first bound-elements)) (rest bound-elements)))
+  (reduce #(merge-bounds % (adjusted-bounds %2 elements)) (adjusted-bounds (first bound-elements) elements) (rest bound-elements)))
 
 (defmethod bounds ::container
-  [elements element]
+  [element elements]
   (let [children (vals (select-keys elements (:children element)))]
     (elements-bounds elements children)))
 
