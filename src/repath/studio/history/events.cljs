@@ -14,11 +14,6 @@
     (h/redo db n)))
 
 (rf/reg-event-db
- :history/finalize
- (fn [db [_ explanation]]
-   (h/finalize db explanation)))
-
-(rf/reg-event-db
  :history/cancel
  (fn [db _]
    (case (:state db)
