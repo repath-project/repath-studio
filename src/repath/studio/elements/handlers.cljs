@@ -254,7 +254,7 @@
                             (let [key (:key element)
                                   ;;  Copy all presentation attributes except transform
                                   ;;  SEE https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/Presentation
-                                  style-attrs (keys (dissoc (:presentation tools/svg-attributes) :transform))]
+                                  style-attrs (keys (dissoc (-> tools/svg-spec :attributes :presentation) :transform))]
                               (assoc-in elements [key] (assoc element :attrs (reduce (fn [updated-attrs key]
                                                                                        (if (contains? attrs key)
                                                                                          (assoc updated-attrs key (key attrs))

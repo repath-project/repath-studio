@@ -122,8 +122,7 @@
   (let [child-elements @(rf/subscribe [:elements/filter-visible children])]
     [type attrs (map (fn [element] ^{:key (:key element)} [render element]) child-elements)]))
 
-(def svg-elements (js->clj js/window.api.bcd.svg.elements :keywordize-keys true))
-(def svg-attributes (js->clj js/window.api.bcd.svg.attributes :keywordize-keys true))
+(def svg-spec (js->clj js/window.api.bcd.svg :keywordize-keys true))
 
 (defn attrs-map
   [attrs]
@@ -135,8 +134,8 @@
 
 (defn attributes
   [{:keys [type attrs]}]
-  (merge (when type (merge (when (or (isa? type ::element) (= type :svg)) (merge (attrs-map (type svg-elements)) (attrs-map (:core svg-attributes)) (attrs-map (:style svg-attributes))))
-                           (when (contains? #{:animateMotion :animateTransform} type) (attrs-map (:animate svg-elements)))
+  (merge (when type (merge (when (or (isa? type ::element) (= type :svg)) (merge (attrs-map (type (:elements svg-spec))) (attrs-map (-> svg-spec :attributes :core)) (attrs-map (-> svg-spec :attributes :style))))
+                           (when (contains? #{:animateMotion :animateTransform} type) (attrs-map (:animate (:elements svg-spec))))
                            (zipmap (:attrs (properties type)) (repeat "")))) attrs))
 
 (defn to-path

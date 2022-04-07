@@ -69,11 +69,11 @@
 (defn caniusethis
   [{:keys [type attr]}]
   (let [data (if attr
-               (or (get-in tools/svg-elements [type attr :__compat])
-                   (get-in tools/svg-attributes [:presentation attr :__compat])
-                   (get-in tools/svg-attributes [:core attr :__compat])
-                   (get-in tools/svg-attributes [:style attr :__compat]))
-               (get-in tools/svg-elements [type :__compat]))]
+               (or (-> tools/svg-spec :elements type attr :__compat)
+                   (-> tools/svg-spec :attributes :presentation attr :__compat)
+                   (-> tools/svg-spec :attributes :core attr :__compat)
+                   (-> tools/svg-spec :attributes :style attr :__compat))
+               (-> tools/svg-spec :elements type :__compat))]
     (when (:support data)
       [::div.v-box
        (when (some :version_added (vals (:support data)))
