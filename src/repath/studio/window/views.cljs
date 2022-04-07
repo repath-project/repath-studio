@@ -10,7 +10,7 @@
             :items [{:key :new-file
                      :text "New File"
                      :secondaryText "Ctrl+N"
-                     :onClick #(rf/dispatch [:documents/new])}
+                     :onClick #(rf/dispatch [:document/new])}
                     {:key :new-window
                      :text "New Window"
                      :secondaryText "Ctrl+Shift+N"}
@@ -19,13 +19,13 @@
                     {:key :save
                      :text "Save"
                      :secondaryText "Ctrl+S"
-                     :onClick #(rf/dispatch [:documents/save])}
+                     :onClick #(rf/dispatch [:document/save])}
                     {:key :save-as
                      :text "Save As"
                      :secondaryText "Ctrl+Shift+S"}
                     {:key :save-all
                      :text "Save All"
-                     :onClick #(rf/dispatch [:documents/save-all])}
+                     :onClick #(rf/dispatch [:document/save-all])}
                     {:key :devider-2
                      :itemType fui/ContextualMenuItemType.Divider}
                     {:key :auto-save

@@ -24,7 +24,7 @@
                :y      (min pos-y offset-y)
                :width  (Math/abs (- pos-x offset-x))
                :height (Math/abs (- pos-y offset-y))}]
-    (rf/dispatch [:set-temp-element {:type tool
+    (rf/dispatch [:document/set-temp-element {:type tool
                                      :attrs attrs}])))
 
 

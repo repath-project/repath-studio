@@ -10,7 +10,7 @@
 
 (rf/dispatch
  [::rp/set-keydown-rules
-  {:event-keys [[[:toggle-grid]
+  {:event-keys [[[:document/toggle-grid]
                  [{:keyCode 35}]
                  [{:keyCode (key-codes "THREE")
                    :shiftKey true}]]
@@ -81,7 +81,7 @@
                    :shiftKey true}]
                  [{:keyCode (key-codes "DELETE")}]
                  [{:keyCode (key-codes "BACKSPACE")}]]
-                [[:documents/new]
+                [[:document/new]
                  [{:keyCode (key-codes "N")
                    :ctrlKey true}]]
                 [[:history/cancel]

@@ -11,16 +11,16 @@
   (let [document-tabs @(rf/subscribe [:document-tabs])]
     (gen-menu e [{:name "Close"
                   :shortcut "Ctrl+X"
-                  :action [:documents/close key]}
+                  :action [:document/close key]}
                  {:name "Close Others"
                   :shortcut "Ctrl+C"
-                  :action (when (> (count document-tabs) 1) [:documents/close-others key])}
+                  :action (when (> (count document-tabs) 1) [:document/close-others key])}
                  {:name "Close Saved"
                   :shortcut "Ctrl+V"
-                  :action [:documents/close-saved]}
+                  :action [:document/close-saved]}
                  {:name "Close All"
                   :shortcut "Page Up"
-                  :action [:documents/close-all]}
+                  :action [:document/close-all]}
                  :devider
                  {:name "Copy Path"
                   :shortcut "Page Down"
@@ -34,11 +34,11 @@
 
 (defn actions []
   [:div.h-box {:style {:padding "2px" :overflow "visible"}}
-   [comp/icon-button {:title "New" :icon "file" :action #(rf/dispatch [:documents/new])}]
-   [comp/icon-button {:title "Open" :icon "folder" :action #(rf/dispatch [:documents/open])}]
-   [comp/icon-button {:title "Save" :icon "save" :action #(rf/dispatch [:documents/save])}]
+   [comp/icon-button {:title "New" :icon "file" :action #(rf/dispatch [:document/new])}]
+   [comp/icon-button {:title "Open" :icon "folder" :action #(rf/dispatch [:document/open])}]
+   [comp/icon-button {:title "Save" :icon "save" :action #(rf/dispatch [:document/save])}]
    [:span.v-devider]
-   [comp/icon-button {:title "Import" :icon "import" :class "disabled" :action #(rf/dispatch [:documents/import])}]
+   [comp/icon-button {:title "Import" :icon "import" :class "disabled" :action #(rf/dispatch [:document/import])}]
    [comp/icon-button {:title "Export" :icon "export" :action #(rf/dispatch [:elements/export])}]
    [:span.v-devider]
    [comp/icon-button {:title "Undo" :icon "undo" :action #(rf/dispatch [:history/undo 1]) :disabled? (not @(rf/subscribe [:history/undos?]))}]
@@ -66,7 +66,7 @@
             :style {:visibility (when active? "visible")}
             :on-mouse-down #(.stopPropagation %)
             :on-mouse-up #((.stopPropagation %)
-                           (rf/dispatch [:documents/close key]))} [comp/icon {:icon "times"}]])
+                           (rf/dispatch [:document/close key]))} [comp/icon {:icon "times"}]])
 
 (defn tab
   [key document active?]
@@ -74,9 +74,9 @@
     (fn [key document active?]
       [:div.h-box {:class "button document-tab"
                    :on-context-menu #(menu % key)
-                   :on-wheel #(rf/dispatch [:documents/scroll (.-deltaY %)])
+                   :on-wheel #(rf/dispatch [:document/scroll (.-deltaY %)])
                    :on-mouse-down #(case (.-buttons %)
-                                     4 (rf/dispatch [:documents/close key])
+                                     4 (rf/dispatch [:document/close key])
                                      1 (rf/dispatch [:set-active-document key]))
                    :draggable true
                    :on-drag-start #(.setData (.-dataTransfer %) "key" (apply str (rest (str key))))
@@ -86,7 +86,7 @@
                    :on-drop (fn [evt]
                               (.preventDefault evt)
                               (reset! dragged-over? false)
-                              (rf/dispatch [:documents/swap-position (keyword (.getData (.-dataTransfer evt) "key")) key]))
+                              (rf/dispatch [:document/swap-position (keyword (.getData (.-dataTransfer evt) "key")) key]))
                    :style    {:background-color (if (or active? @dragged-over?) styles/level-2 styles/level-1)
                               :color (if active? styles/font-color styles/font-color-muted)}}
        [:span.document-name (:title document)]

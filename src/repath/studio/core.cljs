@@ -50,7 +50,7 @@
   (fui/loadTheme (fui/createTheme (clj->js (:default theme/themes))))
   (stylefy/init {:dom (stylefy-reagent/init)})
   (rf/dispatch-sync [:initialize-db])
-  (rf/dispatch-sync [:documents/new])
+  (rf/dispatch-sync [:document/new])
   (rf/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])
   (.then (.getFonts js/api.fontList #js {:disableQuoting true}) #(rf/dispatch-sync [:set-system-fonts (js->clj %)]))
 

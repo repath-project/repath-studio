@@ -22,7 +22,7 @@
 
 (defn color-drip [color]
   [:div {:key      (keyword (str color))
-         :on-click #(rf/dispatch [:documents/set-fill color])
+         :on-click #(rf/dispatch [:document/set-fill color])
          :class "color-drip"
          :style    {:background-color (tools/rgba color)}}])
 
@@ -47,7 +47,7 @@
                      :position "relative"}}
        [:button {:title    "Swap"
                  :class    "button"
-                 :on-click #(rf/dispatch [:swap-colors])
+                 :on-click #(rf/dispatch [:document/swap-colors])
                  :style    {:padding  0
                             :position "absolute"
                             :bottom   "-6px"
@@ -74,7 +74,7 @@
                       [:> PhotoshopPicker
                        {:color (tools/rgba fill)
                         :on-change-complete #(rf/dispatch [:elements/set-attribute :fill (:hex (js->clj % :keywordize-keys true)) true])
-                        :on-change #((rf/dispatch [:documents/set-fill (vals (:rgb (js->clj % :keywordize-keys true)))]))}]])])))
+                        :on-change #((rf/dispatch [:document/set-fill (vals (:rgb (js->clj % :keywordize-keys true)))]))}]])])))
 
 (defn coordinates []
   (let [[x y] @(rf/subscribe [:adjusted-mouse-pos])]
@@ -98,7 +98,7 @@
      [color-picker fill stroke]
      [color-palette]
      #_(when element-colors (map (fn [color] [color-drip (color/hexToRgb color)]) element-colors))
-     [:select {:onChange #(rf/dispatch [:set-filter (-> % .-target .-value keyword)])
+     [:select {:onChange #(rf/dispatch [:document/set-filter (-> % .-target .-value keyword)])
                :value    @(rf/subscribe [:filter])
                :style    {:background styles/level-3
                           :margin "2px"
@@ -106,9 +106,9 @@
                           :width "auto"}}
       [:option {:key :no-filter :value :no-filter} "No filter"]
       (map (fn [{:keys [id]}] [:option {:key id :value id} (name id)]) filters/accessibility)]
-      [comp/radio-icon-button {:title "Snap" :active? false :icon "magnet" :class "disabled" :action #(rf/dispatch [:toggle-snap])}]
-     [comp/radio-icon-button {:title "Grid" :active? @(rf/subscribe [:grid?]) :icon "grid" :action #(rf/dispatch [:toggle-grid])}]
-     [comp/radio-icon-button {:title "Rulers" :active? @(rf/subscribe [:rulers?]) :icon "ruler-combined" :action #(rf/dispatch [:toggle-rulers])}]
+      [comp/radio-icon-button {:title "Snap" :active? false :icon "magnet" :class "disabled" :action #(rf/dispatch [:document/toggle-snap])}]
+     [comp/radio-icon-button {:title "Grid" :active? @(rf/subscribe [:grid?]) :icon "grid" :action #(rf/dispatch [:document/toggle-grid])}]
+     [comp/radio-icon-button {:title "Rulers" :active? @(rf/subscribe [:rulers?]) :icon "ruler-combined" :action #(rf/dispatch [:document/toggle-rulers])}]
      [:div {::style {:position  "relative"}}
 
       [:button {:style {:font-family  "Source Code Pro, monospace"
@@ -230,8 +230,8 @@
     [:h1 {:style {:margin "0"}} "RePath Studio"]
     [:h4 {:style {:margin "0"}} "Vector Graphics Manipulation"]
     [:h2 "Start"]
-    [:div [:a {:on-click #(rf/dispatch [:documents/new])} "New"] [:span {:class "muted"} " (Ctrl+N)"]]
-    [:div [:a {:on-click #(rf/dispatch [:documents/open])} "Open"] [:span {:class "muted"} " (Ctrl+O)"]]
+    [:div [:a {:on-click #(rf/dispatch [:document/new])} "New"] [:span {:class "muted"} " (Ctrl+N)"]]
+    [:div [:a {:on-click #(rf/dispatch [:document/open])} "Open"] [:span {:class "muted"} " (Ctrl+O)"]]
     [:h2 "Recent"]
     [:h2 "Help"]
     [:div [:a {:on-click #(rf/dispatch [:window/open-remote-url "https://repath.studio/"])} "Website"]]
@@ -258,7 +258,7 @@
                                                                                 ;;                           :active-text "unlock"
                                                                                 ;;                           :inactive-icon "unlock"
                                                                                 ;;                           :inactive-text "lock"
-                                                                                ;;                           :action #(rf/dispatch [:toggle-rulers-locked])}]
+                                                                                ;;                           :action #(rf/dispatch [:document/toggle-rulers-locked])}]
 
                                           [rulers/ruler {:orientation :horizontal :size 23}]])
        [:div.h-box {:style {:flex 1

@@ -33,7 +33,7 @@
 (defn page [{:keys [key type name visible? locked?] :as element} active? hovered? selected?]
   [:div.h-box {:key key
                :class ["button list-item page-item" (when selected? "selected") (when active? "active")] 
-               :on-mouse-enter #(rf/dispatch [:set-hovered-keys #{key}])
+               :on-mouse-enter #(rf/dispatch [:document/set-hovered-keys #{key}])
                :on-click (fn [e]
                            (.stopPropagation e)
                            (rf/dispatch [:elements/select (or (.-ctrlKey e) (.-ctrlKey e)) element]))
@@ -56,10 +56,10 @@
     [:li {:key key}
      [:div.h-box {:class ["button list-item" (when selected? "selected") (when visible? "text-muted")]
                   :on-double-click #(rf/dispatch [:pan-to-element key])
-                  :on-mouse-enter #(rf/dispatch [:set-hovered-keys #{key}])
+                  :on-mouse-enter #(rf/dispatch [:document/set-hovered-keys #{key}])
                   :draggable true
                   :on-drag-start #(.setData (.-dataTransfer %) "key" (apply str (rest (str key))))
-                  :on-drag-enter #(rf/dispatch [:set-hovered-keys #{key}])
+                  :on-drag-enter #(rf/dispatch [:document/set-hovered-keys #{key}])
                   :on-drag-over #(.preventDefault %)
                   :on-drop (fn [evt]
                              (.preventDefault evt)
@@ -113,7 +113,7 @@
       [comp/icon-button {:icon "page-plus"}]]
      [:div.v-scroll {:style {:flex (if pages-collapsed? 0 "0 1 128px")
                              :transition "all .2s"}}
-      [:div {:on-mouse-leave #(rf/dispatch [:set-hovered-keys #{}])}
+      [:div {:on-mouse-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
        (map (fn [element] ^{:key (:key page)} [page element (= (:key element) active-page) (contains? hovered-keys (:key element)) (contains? selected-keys (:key element))]) page-elements)]]
      [:div.button.tree-heading {:on-click #(rf/dispatch [:toggle-elements-collapsed])}
       [comp/toggle-collapsed-icon elements-collapsed?]
@@ -123,7 +123,7 @@
      [:div.v-scroll {:style {:flex (if elements-collapsed? 0 1)
                              :transition "all .2s"}}
       [:div {:style {:visibility "visible"}
-             :on-mouse-leave #(rf/dispatch [:set-hovered-keys #{}])}
+             :on-mouse-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
        [item-list (map #(item % 1 (contains? hovered-keys (:key %)) (contains? selected-keys (:key %)) elements) active-page-children)]]]
      [:div.button.tree-heading {:on-click #(rf/dispatch [:toggle-defs-collapsed])}
       [comp/toggle-collapsed-icon defs-collapsed?]
