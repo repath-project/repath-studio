@@ -34,15 +34,15 @@
 (defmethod tools/mouse-up :dropper
   [{:keys [mouse-pos content-rect] :as db}]
   (let [position (matrix/add mouse-pos [(:x content-rect) (:y content-rect)])
-        color (get-pixel-color (:window/bitmap db) (-> db :window/size :width) position)]
+        color (get-pixel-color (-> db :window :bitmap) (-> db :window :size :width) position)]
     (-> db
         (documents/set-fill color)
         (history/finalize (str "Pick color " (tools/rgba color))))))
 
 (defmethod tools/mouse-move :dropper
   [{:keys [mouse-pos content-rect] :as db}]
-  (let [bitmap (:window/bitmap db)
-        bitmap-width (-> db :window/size :width)
+  (let [bitmap (-> db :window :bitmap)
+        bitmap-width (-> db :window :size :width)
         position (matrix/add mouse-pos [(:x content-rect) (:y content-rect)])
         color (get-pixel-color bitmap bitmap-width position)]
     (assoc db :overlay [:div 

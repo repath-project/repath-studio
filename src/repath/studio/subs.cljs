@@ -2,45 +2,85 @@
   (:require
    [re-frame.core :as rf]))
 
-(defn reg-basic-sub
-  [k]
-  (rf/reg-sub
-   k
-   (fn [db _]
-     (get-in db [k]))))
+(rf/reg-sub
+ :active-theme
+ (fn [db _]
+   (:active-theme db)))
 
-(doseq [x [:active-theme
-           :tool
-           :state
-           :left-sidebar-width
-           :right-sidebar-width
-           :tree?
-           :properties?
-           :header?
-           :timeline?
-           :history?
-           :command-palette?
-           :cursor
-           :active-document
-           :documents
-           :document-tabs
-           :mouse-pos
-           :mouse-over-canvas?
-           :offset
-           :content-rect
-           :copied-elements
-           :system-fonts
-           :overlay
-           :window/minimized?
-           :window/maximized?
-           :window/fullscreen?
-           :debug-info?
-           :elements-collapsed?
-           :pages-collapsed?
-           :defs-collapsed?
-           :repl-history-collapsed?
-           :symbols-collapsed?
-           :color-palette]] (reg-basic-sub x))
+(rf/reg-sub
+ :tool
+ (fn [db _]
+   (:tool db)))
+
+(rf/reg-sub
+ :mouse-pos
+ (fn [db _]
+   (:mouse-pos db)))
+
+(rf/reg-sub
+ :cursor
+ (fn [db _]
+   (:cursor db)))
+
+(rf/reg-sub
+ :state
+ (fn [db _]
+   (:state db)))
+
+(rf/reg-sub
+ :command-palette?
+ (fn [db _]
+   (:command-palette? db)))
+
+(rf/reg-sub
+ :active-document
+ (fn [db _]
+   (:active-document db)))
+
+(rf/reg-sub
+ :documents
+ (fn [db _]
+   (:documents db)))
+
+(rf/reg-sub
+ :document-tabs
+ (fn [db _]
+   (:document-tabs db)))
+
+(rf/reg-sub
+ :offset
+ (fn [db _]
+   (:offset db)))
+
+(rf/reg-sub
+ :content-rect
+ (fn [db _]
+   (:content-rect db)))
+
+(rf/reg-sub
+ :copied-elements
+ (fn [db _]
+   (:copied-elements db)))
+
+(rf/reg-sub
+ :system-fonts
+ (fn [db _]
+   (:system-fonts db)))
+
+(rf/reg-sub
+ :overlay
+ (fn [db _]
+   (:overlay db)))
+
+(rf/reg-sub
+ :debug-info?
+ (fn [db _]
+   (:debug-info? db)))
+
+(rf/reg-sub
+ :color-palette
+ (fn [db _]
+   (:color-palette db)))
 
 (rf/reg-sub
  :font-options

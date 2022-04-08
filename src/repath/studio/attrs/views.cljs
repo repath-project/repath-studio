@@ -250,7 +250,7 @@
   []
   (let [info (ra/atom nil)]
     (fn []
-      (let [width @(rf/subscribe [:right-sidebar-width])
+      (let [width @(rf/subscribe [:window/right-sidebar-width])
             selected-elements @(rf/subscribe [:elements/selected])
             element (first selected-elements)
             selected-attrs @(rf/subscribe [:elements/selected-attrs])

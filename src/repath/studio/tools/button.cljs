@@ -39,7 +39,7 @@
                :radius (/ (Math/abs (- pos-y offset-y)) 2)
                :label   "button"
                :stroke (tools/rgba stroke)}]
-    (rf/dispatch [:set-temp-element {:type tool
+    (rf/dispatch [:document/set-temp-element {:type tool
                                      :attrs attrs}])))
 
 (defmethod tools/render :button

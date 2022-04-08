@@ -142,7 +142,7 @@
                                :active-text "show output"
                                :inactive-icon "chevron-down"
                                :inactive-text "hide output"
-                               :action #(rf/dispatch [:toggle-repl-history-collapsed])}]]))
+                               :action #(rf/dispatch [:window/toggle-repl-history-collapsed])}]]))
 
 (defn docs-view [docs]
   (when docs [view :docs docs]))
@@ -182,7 +182,7 @@
                       show-value-opts
                       js-cm-opts
                       on-cm-init]}]
-  (let [repl-history-collapsed? (rf/subscribe [:repl-history-collapsed?])
+  (let [repl-history-collapsed? (rf/subscribe [:window/repl-history-collapsed?])
         state (or state (r/atom initial-state))
         {:keys
          [add-input

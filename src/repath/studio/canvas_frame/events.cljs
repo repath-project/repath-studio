@@ -43,12 +43,6 @@
                                                         :fill (max width-ratio height-ratio)))
          (h/pan-to-element active-page)))))
 
-
-(rf/reg-event-db
- :zoom-in-mouse-position
- (fn [db [_ factor]]
-   (h/zoom-in-mouse-position db factor)))
-
 (rf/reg-event-db
  :zoom
  (fn [db [_ factor]]

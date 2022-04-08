@@ -92,22 +92,22 @@
         hovered-keys @(rf/subscribe [:hovered-keys])
         selected-keys @(rf/subscribe [:selected-keys])
         active-page @(rf/subscribe [:active-page])
-        elements-collapsed? @(rf/subscribe [:elements-collapsed?])
-        symbols-collapsed? @(rf/subscribe [:symbols-collapsed?])
-        pages-collapsed? @(rf/subscribe [:pages-collapsed?])
-        defs-collapsed? @(rf/subscribe [:defs-collapsed?])]
+        elements-collapsed? @(rf/subscribe [:window/elements-collapsed?])
+        symbols-collapsed? @(rf/subscribe [:window/symbols-collapsed?])
+        pages-collapsed? @(rf/subscribe [:window/pages-collapsed?])
+        defs-collapsed? @(rf/subscribe [:window/defs-collapsed?])]
     [:div.v-box {:on-context-menu element-menu
                  :on-click #(rf/dispatch [:elements/deselect-all])
                  :style {:flex 1
                          :overflow "hidden"
                          :background-color styles/level-1}}
-     [:div.button.tree-heading {:on-click #(rf/dispatch [:toggle-symbols-collapsed])}
+     [:div.button.tree-heading {:on-click #(rf/dispatch [:window/toggle-symbols-collapsed])}
       [comp/toggle-collapsed-icon symbols-collapsed?]
       [:div {:style {:flex 1}} "Symbols"]
       [comp/icon-button {:icon "square-minus"}]]
      [:div.v-scroll {:style {:flex (if symbols-collapsed? 0 "0 1 128px")
                              :transition "all .2s"}}]
-     [:div.button.tree-heading {:on-click #(rf/dispatch [:toggle-pages-collapsed])}
+     [:div.button.tree-heading {:on-click #(rf/dispatch [:window/toggle-pages-collapsed])}
       [comp/toggle-collapsed-icon pages-collapsed?]
       [:div {:style {:flex 1}} "Pages"]
       [comp/icon-button {:icon "page-plus"}]]
@@ -115,7 +115,7 @@
                              :transition "all .2s"}}
       [:div {:on-mouse-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
        (map (fn [element] ^{:key (:key page)} [page element (= (:key element) active-page) (contains? hovered-keys (:key element)) (contains? selected-keys (:key element))]) page-elements)]]
-     [:div.button.tree-heading {:on-click #(rf/dispatch [:toggle-elements-collapsed])}
+     [:div.button.tree-heading {:on-click #(rf/dispatch [:window/toggle-elements-collapsed])}
       [comp/toggle-collapsed-icon elements-collapsed?]
       [:div {:style {:flex 1}} "Elements"]
       [comp/icon-button {:icon "folder-plus" :action  #((.stopPropagation %) (rf/dispatch [:elements/create {:type :g}]))}]
@@ -125,7 +125,7 @@
       [:div {:style {:visibility "visible"}
              :on-mouse-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
        [item-list (map #(item % 1 (contains? hovered-keys (:key %)) (contains? selected-keys (:key %)) elements) active-page-children)]]]
-     [:div.button.tree-heading {:on-click #(rf/dispatch [:toggle-defs-collapsed])}
+     [:div.button.tree-heading {:on-click #(rf/dispatch [:window/toggle-defs-collapsed])}
       [comp/toggle-collapsed-icon defs-collapsed?]
       [:div {:style {:flex 1}} "Defs"]
       [comp/icon-button {:icon "square-minus"}]]

@@ -283,10 +283,10 @@
 (defn main-panel []
   [:div.v-box {:style {:flex               "1"
                        :height             "100vh"}}
-   (when @(rf/subscribe [:header?]) [win/app-header])
+   (when @(rf/subscribe [:window/header?]) [win/app-header])
    [:div.h-box {:style {:flex "1" :overflow "hidden"}}
-    (when @(rf/subscribe [:tree?])     [:div.v-box {:class "sidebar"
-                                                    :style {:flex (str "0 0 " @(rf/subscribe [:left-sidebar-width]))}}
+    (when @(rf/subscribe [:window/tree?])     [:div.v-box {:class "sidebar"
+                                                    :style {:flex (str "0 0 " @(rf/subscribe [:window/left-sidebar-width]))}}
                                         [docs/actions]
                                         (when (seq @(rf/subscribe [:documents])) [tree/tree-sidebar])])
     (if (seq @(rf/subscribe [:documents]))
@@ -296,12 +296,12 @@
        [:div.h-box {:style {:flex "1"}}
         [editor]
         [:div.v-box {:class "sidebar"
-                     :style {:flex (str "0 0 " @(rf/subscribe [:right-sidebar-width]))}}
+                     :style {:flex (str "0 0 " @(rf/subscribe [:window/right-sidebar-width]))}}
 
          [:div.h-box {:style {:background-color styles/level-1
                               :box-sizing "border-box"
                               :flex "1"}}
-          (when @(rf/subscribe [:properties?]) [attrs/form])
+          (when @(rf/subscribe [:window/properties?]) [attrs/form])
           [:div.v-box {:style {:flex "1"
                                :background-color styles/level-2
                                :padding "8px 4px"

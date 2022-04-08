@@ -32,17 +32,17 @@
                  [{:keyCode (key-codes "EQUALS")}]]
                 [[:zoom-out]
                  [{:keyCode (key-codes "DASH")}]]
-                [[:toggle-tree]
+                [[:window/toggle-tree]
                  [{:keyCode (key-codes "T")
                    :ctrlKey true}]]
                 [[:elements/to-path]
                  [{:keyCode (key-codes "P")
                    :ctrlKey true
                    :shiftKey true}]]
-                [[:toggle-properties]
+                [[:window/toggle-properties]
                  [{:keyCode (key-codes "P")
                    :ctrlKey true}]]
-                [[:toggle-header]
+                [[:window/toggle-header]
                  [{:keyCode (key-codes "L")
                    :ctrlKey true}]]
                 [[:elements/copy]

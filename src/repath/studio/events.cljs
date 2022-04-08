@@ -9,43 +9,37 @@
  (fn  [_ _]
    default-db))
 
-(defn reg-set-event
-  [k]
-  (rf/reg-event-db
-   (keyword (str "set-" (name k)))
-   (fn [db [_ v]]
-     (assoc-in db [k] v))))
+(rf/reg-event-db
+ :set-cursor
+ (fn [db [_ type]]
+   (assoc db :cursor type)))
 
-(defn reg-toggle-event
-  [k]
-  (rf/reg-event-db
-   (keyword (str "toggle-" (name k)))
-   (fn [db [_]]
-     (update db (keyword (str (name k) "?")) not))))
+(rf/reg-event-db
+ :set-active-document
+ (fn [db [_ document-id]]
+   (assoc db :active-document document-id)))
 
-(doseq [x [:active-theme
-           :state
-           :cursor
-           :left-sidebar-width
-           :right-sidebar-width
-           :active-document
-           :overlay
-           :system-fonts
-           :command-palette?
-           :mouse-over-canvas?]] (reg-set-event x))
+(rf/reg-event-db
+ :set-system-fonts
+ (fn [db [_ fonts]]
+   (assoc db :system-fonts fonts)))
+
+(rf/reg-event-db
+ :set-command-palette?
+ (fn [db [_ visible?]]
+   (assoc db :command-palette? visible?)))
+
+(rf/reg-event-db
+ :set-mouse-over-canvas?
+ (fn [db [_ is-over-canvas?]]
+   (assoc db :mouse-over-canvas? is-over-canvas?)))
 
 (rf/reg-event-db
  :set-tool
  (fn [db [_ tool]]
    (handlers/set-tool db tool)))
 
-(doseq [x [:tree
-           :properties
-           :header
-           :history
-           :debug-info
-           :elements-collapsed
-           :pages-collapsed
-           :symbols-collapsed
-           :repl-history-collapsed
-           :defs-collapsed]] (reg-toggle-event x))
+(rf/reg-event-db
+ :toggle-debug-info
+ (fn [db [_]]
+   (update db :debug-info? not)))

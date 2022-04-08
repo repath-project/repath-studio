@@ -2,44 +2,76 @@
   (:require
    [re-frame.core :as rf]))
 
-(rf/reg-event-fx
- :window/close
- (fn [_ _]
-   (.close js/window)))
-
-(rf/reg-event-fx
- :window/toggle-maximized
- (fn [_ _]
-   (js/window.api.send "toMain" #js {:action "windowToggleMaximized"})))
-
-(rf/reg-event-fx
- :window/minimize
- (fn [_ _]
-   (js/window.api.send "toMain" #js {:action "windowMinimize"})))
-
-(rf/reg-event-fx
- :window/open-remote-url
- (fn [_ [_ url]]
-   (js/window.api.send "toMain" #js {:action "openRemoteUrl" :data url})))
-
 (rf/reg-event-db
  :window/set-bitmap-data
+ (rf/path :window)
  (fn [db [_ data]]
    (assoc db 
-          :window/bitmap (.-bitmap data)
-          :window/size (js->clj (.-size data) :keywordize-keys true))))
+          :bitmap (.-bitmap data)
+          :size (js->clj (.-size data) :keywordize-keys true))))
 
 (rf/reg-event-db
  :window/set-maximized?
+ (rf/path :window)
  (fn [db [_ state]]
-  (assoc db :window/maximized? state)))
+  (assoc db :maximized? state)))
 
 (rf/reg-event-db
  :window/set-fullscreen?
+ (rf/path :window)
  (fn [db [_ state]]
-   (assoc db :window/fullscreen? state)))
+   (assoc db :fullscreen? state)))
 
 (rf/reg-event-db
  :window/set-minimized?
+  (rf/path :window)
  (fn [db [_ state]]
-   (assoc db :window/minimized? state)))
+   (assoc db :minimized? state)))
+
+(rf/reg-event-db
+ :window/toggle-tree
+ (rf/path :window)
+ (fn [db [_]]
+   (update db :tree? not)))
+
+(rf/reg-event-db
+ :window/toggle-properties
+ (rf/path :window)
+ (fn [db [_]]
+   (update db :properties? not)))
+
+(rf/reg-event-db
+ :window/toggle-header
+ (rf/path :window)
+ (fn [db [_]]
+   (update db :header? not)))
+
+(rf/reg-event-db
+ :window/toggle-elements-collapsed
+ (rf/path :window)
+ (fn [db [_]]
+   (update db :elements-collapsed? not)))
+
+(rf/reg-event-db
+ :window/toggle-pages-collapsed
+ (rf/path :window)
+ (fn [db [_]]
+   (update db :pages-collapsed? not)))
+
+(rf/reg-event-db
+ :window/toggle-symbols-collapsed
+ (rf/path :window)
+ (fn [db [_]]
+   (update db :symbols-collapsed? not)))
+
+(rf/reg-event-db
+ :window/toggle-repl-history-collapsed
+ (rf/path :window)
+ (fn [db [_]]
+   (update db :repl-history-collapsed? not)))
+
+(rf/reg-event-db
+ :window/toggle-defs-collapsed
+ (rf/path :window)
+ (fn [db [_]]
+   (update db :defs-collapsed? not)))
