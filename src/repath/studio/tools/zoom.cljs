@@ -32,7 +32,7 @@
         (elements/set-temp {:type :rect :attrs attrs}))))
 
 (defmethod tools/drag-end :zoom
-  [{:keys [active-document content-rect adjusted-mouse-offset adjusted-mouse-pos] :as db}]
+  [{:keys [active-document content-rect adjusted-mouse-offset adjusted-mouse-pos] :as db} event]
   (let [[offset-x offset-y] adjusted-mouse-offset
         [pos-x pos-y] adjusted-mouse-pos
         width  (Math/abs (- pos-x offset-x))
@@ -41,15 +41,13 @@
         height-ratio (/ (:height content-rect) height)
         current-zoom (get-in db [:documents active-document :zoom])
         furute-zoom (min width-ratio height-ratio)]
-    (-> db
-        (elements/clear-temp)
-        (assoc :state :default)
-        (canvas-frame/zoom (/ furute-zoom current-zoom))
-        (canvas-frame/pan-to-bounds [pos-x pos-y offset-x offset-y]))))
+      (-> db
+          (elements/clear-temp)
+          (assoc :state :default)
+          (canvas-frame/zoom (if (contains? (:modifiers event) :shift) (:zoom-factor db) (/ furute-zoom current-zoom)))
+          (canvas-frame/pan-to-bounds [pos-x pos-y offset-x offset-y]))))
 
 (defmethod tools/mouse-up :zoom
   [db event]
-  (let [zoom-out-factor 0.8
-        zoom-in-factor 1.2
-        factor (if (contains? (:modifiers event) :shift) zoom-out-factor zoom-in-factor)]
+  (let [factor (if (contains? (:modifiers event) :shift) (:zoom-factor db) (/ 1 (:zoom-factor db)))]
     (canvas-frame/zoom-in-mouse-position db factor)))
