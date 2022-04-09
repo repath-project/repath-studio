@@ -9,8 +9,8 @@
 (def main-window (atom nil))
 (def loading-window (atom nil))
 
-(defonce loading-window-options {:width 644
-                                 :height 368
+(defonce loading-window-options {:width 720
+                                 :height 576
                                  :backgroundColor "#313131"
                                  :icon (str js/__dirname "/public/img/icon.png")
                                  :show false
