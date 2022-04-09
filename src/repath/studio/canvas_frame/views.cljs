@@ -8,7 +8,23 @@
    [repath.studio.tools.base :as tools]
    [repath.studio.mouse :as mouse]
    [repath.studio.styles :as styles]
-   ["react-frame-component" :default Frame]))
+   ["react-frame-component" :default Frame :refer [useFrame]]))
+
+(defn inner-component
+  "We need access to the iframe's window to add the mouse move listener.
+   This is required in order to track mouse movement outside of our canvas.
+   SEE https://github.com/ryanseddon/react-frame-component#accessing-the-iframes-window-and-document
+   SEE https://github.com/reagent-project/reagent/blob/master/doc/ReactFeatures.md#function-components"
+  []
+  (let [window (.-window (useFrame))]
+    (ra/create-class
+     {:component-did-mount
+      (fn
+        []
+        (.addEventListener window "mousemove" #(mouse/event-handler % nil))
+        (.addEventListener window "mouseup" #(mouse/event-handler % nil)))
+
+      :reagent-render #() })))
 
 (defn frame-markup
   "SEE https://github.com/ryanseddon/react-frame-component#initialcontent"
@@ -52,7 +68,6 @@
           [:> Frame {:initialContent (server/render-to-static-markup [frame-markup])
                      :mountTarget    "body"
                      :id             "canvas-frame"
-                     :on-mouse-move   #(mouse/event-handler % nil)
                      :on-key-down     keyboard-event
                      :on-key-up       keyboard-event
                      :on-mouse-enter #(rf/dispatch [:set-mouse-over-canvas? true])
@@ -61,6 +76,7 @@
                      :style          {:flex "1 1"
                                       :overflow "hidden"
                                       :border 0}}
+           [:f> inner-component]
            [tools/render @(rf/subscribe [:elements/canvas])]
            (when @(rf/subscribe [:overlay]) [:div {:style {:position "absolute"
                                                            :top "10px"

@@ -64,16 +64,28 @@
  (fn [db [_ _]]
    (h/zoom db (:zoom-factor db))))
 
+(defn calc-pan-offset
+  [mouse-pos size]
+  (let [multiplier 0.1]
+    (cond
+    (< mouse-pos 0) (* mouse-pos multiplier)
+    (> mouse-pos size) (* (- mouse-pos size) multiplier)
+    :else 0)))
+
 (rf/reg-event-db
  :mouse-event
- (fn [{:keys [mouse-offset tool] :as db} [_ event]]
+ (fn [{:keys [mouse-offset tool content-rect] :as db} [_ event]]
    (let [{:keys [mouse-pos delta element]} event
          adjusted-mouse-pos (h/adjusted-mouse-pos db mouse-pos)
          db (assoc db :adjusted-mouse-diff (matrix/sub adjusted-mouse-pos (:adjusted-mouse-pos db)))]
      (case (:type event)
        :mousemove
        (-> (if mouse-offset
-             (tools/drag db event element)
+             (cond-> db
+               (not= tool :pan) (h/pan (let [[x y] mouse-pos
+                                             {:keys [width height]} content-rect]
+                                         [(calc-pan-offset x width) (calc-pan-offset y height)]))
+               :always (tools/drag event element))
              (tools/mouse-move db event element))
            (assoc :mouse-pos mouse-pos
                   :mouse-over-canvas? true
