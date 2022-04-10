@@ -74,6 +74,7 @@
           (not= (:type element) :scale-handler) (assoc :cursor "move"
                                                        :state :translate)
           (= (:type element) :scale-handler) (assoc :state :scale
+                                                    :cursor (:cursor element)
                                                     :scale (:key element)))))))
 
 (defmethod tools/drag-end :select

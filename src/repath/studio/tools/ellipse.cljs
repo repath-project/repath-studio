@@ -2,7 +2,8 @@
   (:require [repath.studio.elements.handlers :as elements]
             [repath.studio.tools.base :as tools]
             [repath.studio.units :as units]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [clojure.core.matrix :as matrix]))
 
 (derive :ellipse ::tools/shape)
 
@@ -33,6 +34,27 @@
   [element [x y]] (-> element
                       (update-in [:attrs :cx] #(units/transform + x %))
                       (update-in [:attrs :cy] #(units/transform + y %))))
+
+(defmethod tools/scale :ellipse
+  [element [x y] handler]
+  (let [[x y] (matrix/div [x y] 2)]
+    (cond-> element
+      (contains? #{:bottom-right
+                   :top-right
+                   :middle-right} handler) (-> (update-in [:attrs :rx] #(units/transform + x %))
+                                               (update-in [:attrs :cx] #(units/transform + x %)))
+      (contains? #{:bottom-left
+                   :top-left
+                   :middle-left} handler) (-> (update-in [:attrs :rx] #(units/transform - x %))
+                                              (update-in [:attrs :cx] #(units/transform + x %)))
+      (contains? #{:bottom-middle
+                   :bottom-right
+                   :bottom-left} handler) (-> (update-in [:attrs :cy] #(units/transform + y %))
+                                              (update-in [:attrs :ry] #(units/transform + y %)))
+      (contains? #{:top-middle
+                   :top-left
+                   :top-right} handler) (-> (update-in [:attrs :ry] #(units/transform - y %))
+                                            (update-in [:attrs :cy] #(units/transform + y %))))))
 
 (defmethod tools/bounds :ellipse
   [{{:keys [cx cy rx ry]} :attrs}]

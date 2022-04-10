@@ -20,11 +20,21 @@
 
 (defmethod tools/scale ::tools/element
   [element [x y] handler]
-  (case handler
-    :bottom-right (-> element
-                      (update-in [:attrs :width] #(units/transform + x %))
-                      (update-in [:attrs :height] #(units/transform + y %)))
-    :bottom-middle (update-in element [:attrs :height] #(units/transform + y %))))
+  (cond-> element
+    (contains? #{:bottom-right
+                 :top-right
+                 :middle-right} handler) (update-in [:attrs :width] #(units/transform + x %))
+    (contains? #{:bottom-left
+                 :top-left
+                 :middle-left} handler) (-> (update-in [:attrs :x] #(units/transform + x %))
+                                            (update-in [:attrs :width] #(units/transform - x %)))
+    (contains? #{:bottom-middle
+                 :bottom-right
+                 :bottom-left} handler) (update-in [:attrs :height] #(units/transform + y %))
+    (contains? #{:top-middle
+                 :top-left
+                 :top-right} handler) (-> (update-in [:attrs :y] #(units/transform + y %))
+                                          (update-in [:attrs :height] #(units/transform - y %)))))
 
 (defmethod tools/bounds ::tools/element
     [{:keys [attrs]}]

@@ -9,7 +9,7 @@
 (defmethod tools/properties :zoom [] {:icon "magnifier"})
 
 (defmethod tools/activate :zoom
-  [db _ _ _]
+  [db]
   (assoc db :cursor "zoom-in"))
 
 (defmethod tools/drag :zoom
