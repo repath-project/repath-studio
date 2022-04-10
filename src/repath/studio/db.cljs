@@ -3,7 +3,7 @@
             [cljs.spec.alpha :as s]))
 
 (s/def ::tool keyword?)
-(s/def ::state #{:default :select :create :move :scale :clone :edit})
+(s/def ::state #{:default :select :create :translate :scale :clone :edit})
 (s/def ::stroke-width number?)
 (s/def ::mouse-pos (s/map-of number? number?))
 (s/def ::active-theme keyword?)

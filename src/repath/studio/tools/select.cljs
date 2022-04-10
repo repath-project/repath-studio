@@ -61,18 +61,18 @@
           offset (:adjusted-mouse-diff db)
           is-element-selected? (contains? selected-keys (:key element))]
       (case state
-        :move (elements/translate (if (some #(contains? (:modifiers event) %) #{:ctrl})
-                               (-> db
-                                   (assoc :state :clone
-                                          :cursor "copy")
-                                   (elements/duplicate))
-                               db) offset)
+        :translate (elements/translate (if (some #(contains? (:modifiers event) %) #{:ctrl})
+                                         (-> db
+                                             (assoc :state :clone
+                                                    :cursor "copy")
+                                             (elements/duplicate))
+                                         db) offset)
         :clone (elements/translate db offset)
         :scale (elements/scale db offset)
         (cond-> db
           (not (or is-element-selected? (= (:type element) :scale-handler))) (elements/select (some #(contains? (:modifiers event) %) #{:shift}) element)
           (not= (:type element) :scale-handler) (assoc :cursor "move"
-                                                       :state :move)
+                                                       :state :translate)
           (= (:type element) :scale-handler) (assoc :state :scale
                                                     :scale (:key element)))))))
 
@@ -82,7 +82,7 @@
         [pos-x _] adjusted-mouse-pos]
     (assoc (case state
              :select (select-by-area db (> pos-x offset-x) (some #(contains? (:modifiers event) %) #{:ctrl :shift}))
-             :move (history/finalize db "Move selection")
+             :translate (history/finalize db "Move selection")
              :scale (history/finalize db "Scale selection")
              :clone (history/finalize db "Duplicate selection to position"))
            :cursor "default"
