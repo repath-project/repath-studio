@@ -170,9 +170,27 @@
                         (assoc elements (:key element) (tools/translate element offset)))))
 
 (defn scale
-  [db offset]
-  (update-selected db (fn [elements element]
-                        (assoc elements (:key element) (tools/scale element offset (:scale db))))))
+  [db offset maintain-proportions?]
+  (let [[x1 y1 x2 y2] (tools/elements-bounds (elements db) (selected db))
+        width (- x2 x1)
+        height (- y2 y1)]
+    (update-selected db (fn [elements element]
+                          (let [[inner-x1 inner-y1 inner-x2 inner-y2] (tools/bounds element)
+                                inner-width (- inner-x2 inner-x1)
+                                inner-height (- inner-y2 inner-y1)
+                                scale-multiplier (matrix/div [inner-width inner-height] [width height])
+                                translate-multiplier (matrix/div (case (:scale db)
+                                                                   :middle-right [(- inner-x1 x1) 0]
+                                                                   :middle-left [(- x2 inner-x2) 0]
+                                                                   :top-middle [0 (- y2 inner-y2)]
+                                                                   :bottom-middle [0 (- inner-y1 y1)]
+                                                                   :top-right [(- inner-x1 x1) (- y2 inner-y2)]
+                                                                   :top-left [(- x2 inner-x2) (- y2 inner-y2)]
+                                                                   :bottom-right [(- inner-x1 x1) (- inner-y1 y1)]
+                                                                   :bottom-left [(- x2 inner-x2) (- inner-y1 y1)]) [width height]) ]
+                            (assoc elements (:key element) (-> element
+                                                               (tools/translate (matrix/mul offset translate-multiplier))
+                                                               (tools/scale (matrix/mul offset scale-multiplier) (:scale db)))))))))
 
 (defn align
   [db direction]
