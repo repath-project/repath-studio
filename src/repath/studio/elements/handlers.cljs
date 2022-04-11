@@ -2,6 +2,7 @@
   (:require
    [repath.studio.tools.base :as tools]
    [repath.studio.helpers :as helpers]
+   [repath.studio.bounds :as bounds]
    [clojure.core.matrix :as matrix]
    [reagent.dom.server :refer [render-to-string]]))
 
@@ -74,26 +75,6 @@
           (deselect db (:key element))
           (select-element db (:key element)))))
     (deselect-all db)))
-
-(defn bounds-intersect?
-  [a-bounds b-bounds]
-  (if (and a-bounds b-bounds)
-    (let [[a-left a-top a-right a-bottom] a-bounds
-          [b-left b-top b-right b-bottom] b-bounds]
-      (not (or (> b-left a-right)
-               (< b-right a-left)
-               (> b-top a-bottom)
-               (< b-bottom a-top)))) false))
-
-(defn bounds-contained?
-  [a-bounds b-bounds]
-  (if (and a-bounds b-bounds)
-    (let [[a-left a-top a-right a-bottom] a-bounds
-          [b-left b-top b-right b-bottom] b-bounds]
-      (and (> a-left b-left)
-           (> a-top b-top)
-           (< a-right b-right)
-           (< a-bottom b-bottom))) false))
 
 (defn conj-by-bounds-overlap
   [db predicate path element]
@@ -172,13 +153,11 @@
 (defn scale
   [db offset maintain-proportions?]
   (let [[x1 y1 x2 y2] (tools/elements-bounds (elements db) (selected db))
-        width (- x2 x1)
-        height (- y2 y1)]
+        outer-dimensions (bounds/->dimensions [x1 y1 x2 y2])]
     (update-selected db (fn [elements element]
-                          (let [[inner-x1 inner-y1 inner-x2 inner-y2] (tools/bounds element)
-                                inner-width (- inner-x2 inner-x1)
-                                inner-height (- inner-y2 inner-y1)
-                                scale-multiplier (matrix/div [inner-width inner-height] [width height])
+                          (let [[inner-x1 inner-y1 inner-x2 inner-y2] (tools/bounds element (elements db))
+                                inner-dimensions (bounds/->dimensions [inner-x1 inner-y1 inner-x2 inner-y2])
+                                scale-multiplier (matrix/div inner-dimensions outer-dimensions)
                                 translate-multiplier (matrix/div (case (:scale db)
                                                                    :middle-right [(- inner-x1 x1) 0]
                                                                    :middle-left [(- x2 inner-x2) 0]
@@ -187,7 +166,7 @@
                                                                    :top-right [(- inner-x1 x1) (- y2 inner-y2)]
                                                                    :top-left [(- x2 inner-x2) (- y2 inner-y2)]
                                                                    :bottom-right [(- inner-x1 x1) (- inner-y1 y1)]
-                                                                   :bottom-left [(- x2 inner-x2) (- inner-y1 y1)]) [width height]) ]
+                                                                   :bottom-left [(- x2 inner-x2) (- inner-y1 y1)]) outer-dimensions) ]
                             (assoc elements (:key element) (-> element
                                                                (tools/translate (matrix/mul offset translate-multiplier))
                                                                (tools/scale (matrix/mul offset scale-multiplier) (:scale db)))))))))
@@ -196,7 +175,7 @@
   [db direction]
   (update-selected db (fn [elements element]
                         (let [[x1 y1 x2 y2] (tools/bounds element (elements db))
-                              [width height] (matrix/sub [x2 y2] [x1 y1])
+                              [width height] (bounds/->dimensions [x1 y1 x2 y2])
                               parent ((:parent element) elements)
                               [parent-x1 parent-y1 parent-x2 parent-y2] (tools/bounds parent (elements db))
                               [parent-width parent-height] (matrix/sub [parent-x2 parent-y2] [parent-x1 parent-y1])]

@@ -2,6 +2,7 @@
   (:require
    [re-frame.core :as rf]
    [repath.studio.helpers :as helpers]
+   [repath.studio.bounds :as bounds]
    ["element-to-path" :as element-to-path]))
 
 (derive ::transform ::tool)
@@ -92,13 +93,9 @@
         [(+ x1 offset-x) (+ y1 offset-y) (+ x2 offset-x) (+ y2 offset-y)])
       (bounds element elements))))
 
-(defn merge-bounds
-  [[ax1 ay1 ax2 ay2] [bx1 by1 bx2 by2]]
-  [(min ax1 bx1) (min ay1 by1) (max ax2 bx2) (max ay2 by2)])
-
 (defn elements-bounds
   [elements bound-elements]
-  (reduce #(merge-bounds % (adjusted-bounds %2 elements)) (adjusted-bounds (first bound-elements) elements) (rest bound-elements)))
+  (reduce #(bounds/union % (adjusted-bounds %2 elements)) (adjusted-bounds (first bound-elements) elements) (rest bound-elements)))
 
 (defmethod bounds ::container
   [element elements]

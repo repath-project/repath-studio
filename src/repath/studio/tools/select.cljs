@@ -1,8 +1,9 @@
+
 (ns repath.studio.tools.select
   (:require [repath.studio.tools.base :as tools]
-            [clojure.core.matrix :as matrix]
             [repath.studio.elements.handlers :as elements]
             [repath.studio.styles :as styles]
+            [repath.studio.bounds :as bounds]
             [repath.studio.history.handlers :as history]))
 
 (derive :select ::tools/transform)
@@ -15,7 +16,7 @@
         temp-element (get-in db [:documents (:active-document db) :temp-element])]
     (-> db
         (assoc-in [:documents (:active-document db) :hovered-keys] #{})
-        (elements/conj-by-bounds-overlap (if intersecting? elements/bounds-intersect? elements/bounds-contained?) [:documents active-document :hovered-keys] temp-element))))
+        (elements/conj-by-bounds-overlap (if intersecting? bounds/intersect? bounds/contained?) [:documents active-document :hovered-keys] temp-element))))
 
 (defn select-by-area
   [db intersecting? multiselect?]
@@ -24,7 +25,7 @@
     (cond-> db
         (not multiselect?) (elements/deselect-all)
         :always (-> (elements/clear-temp)
-                    (elements/conj-by-bounds-overlap (if intersecting? elements/bounds-intersect? elements/bounds-contained?) [:documents active-document :selected-keys] temp-element)))))
+                    (elements/conj-by-bounds-overlap (if intersecting? bounds/intersect? bounds/contained?) [:documents active-document :selected-keys] temp-element)))))
 
 (defmethod tools/mouse-move :select
   [{active-document :active-document :as db} _ element]
