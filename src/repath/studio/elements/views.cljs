@@ -2,7 +2,8 @@
   (:require [repath.studio.context-menu.views :refer [gen-menu]]
             [clojure.core.matrix :as matrix]
             [re-frame.core :as rf]
-            [repath.studio.mouse :as mouse]))
+            [repath.studio.mouse :as mouse]
+            [repath.studio.styles :as styles]))
 
 (defn point-of-interest
   [[x y] zoom]
@@ -86,6 +87,21 @@
     [:g {:style {:pointer-events "none"}}
      [:rect (merge attrs {:stroke "#fff"})]
      [:rect (merge attrs {:stroke "#555" :stroke-dasharray stroke-dasharray})]]))
+
+(defn select-box
+  [adjusted-mouse-pos adjusted-mouse-offset zoom]
+  (let [[offset-x offset-y] adjusted-mouse-offset
+        [pos-x pos-y] adjusted-mouse-pos]
+    {:type :rect :attrs {:key    :select
+                         :x      (min pos-x offset-x)
+                         :y      (min pos-y offset-y)
+                         :width  (Math/abs (- pos-x offset-x))
+                         :height (Math/abs (- pos-y offset-y))
+                         :fill   styles/accent
+                         :fill-opacity ".25"
+                         :stroke styles/accent
+                         :stroke-opacity ".5"
+                         :stroke-width (/ 1 zoom)}}))
 
 (defn area
   [area bounds zoom]

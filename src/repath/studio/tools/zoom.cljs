@@ -1,7 +1,7 @@
 (ns repath.studio.tools.zoom
   (:require [repath.studio.canvas-frame.handlers :as canvas-frame]
             [repath.studio.elements.handlers :as elements]
-            [repath.studio.styles :as styles]
+            [repath.studio.elements.views :as element-views]
             [repath.studio.tools.base :as tools]))
 
 (derive :zoom ::tools/transform)
@@ -14,22 +14,9 @@
 
 (defmethod tools/drag :zoom
   [{:keys [adjusted-mouse-offset adjusted-mouse-pos active-document] :as db}]
-  (let [zoom (get-in db [:documents active-document :zoom])
-        [offset-x offset-y] adjusted-mouse-offset
-        [pos-x pos-y] adjusted-mouse-pos
-        attrs {:key    :select
-               :x      (min pos-x offset-x)
-               :y      (min pos-y offset-y)
-               :width  (Math/abs (- pos-x offset-x))
-               :height (Math/abs (- pos-y offset-y))
-               :fill   styles/accent
-               :fill-opacity ".25"
-               :stroke styles/accent
-               :stroke-opacity ".5"
-               :stroke-width (/ 1 zoom)}]
-    (-> db
-        (assoc :state :select)
-        (elements/set-temp {:type :rect :attrs attrs}))))
+  (-> db
+      (assoc :state :select)
+      (elements/set-temp (element-views/select-box adjusted-mouse-pos adjusted-mouse-offset (get-in db [:documents active-document :zoom])))))
 
 (defmethod tools/drag-end :zoom
   [{:keys [active-document content-rect adjusted-mouse-offset adjusted-mouse-pos] :as db} event]

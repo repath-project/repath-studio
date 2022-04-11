@@ -2,6 +2,7 @@
 (ns repath.studio.tools.select
   (:require [repath.studio.tools.base :as tools]
             [repath.studio.elements.handlers :as elements]
+            [repath.studio.elements.views :as element-views]
             [repath.studio.styles :as styles]
             [repath.studio.bounds :as bounds]
             [repath.studio.history.handlers :as history]))
@@ -41,22 +42,13 @@
   [{:keys [state adjusted-mouse-offset adjusted-mouse-pos active-document] :as db} event element]
   (if (or (and (not element) (= state :default)) (= state :select))
     (let [zoom (get-in db [:documents active-document :zoom])
-          [offset-x offset-y] adjusted-mouse-offset
-          [pos-x pos-y] adjusted-mouse-pos
+          [offset-x _] adjusted-mouse-offset
+          [pos-x _] adjusted-mouse-pos
           intersecting? (> pos-x offset-x)
-          attrs {:key    :select
-                 :x      (min pos-x offset-x)
-                 :y      (min pos-y offset-y)
-                 :width  (Math/abs (- pos-x offset-x))
-                 :height (Math/abs (- pos-y offset-y))
-                 :fill   (if intersecting? styles/accent "transparent")
-                 :fill-opacity ".25"
-                 :stroke styles/accent
-                 :stroke-opacity ".5"
-                 :stroke-width (/ 1 zoom)}]
+          temp-element (assoc-in (element-views/select-box adjusted-mouse-pos adjusted-mouse-offset zoom) [:attrs :fill] (if intersecting? styles/accent "transparent"))]
       (-> db
           (assoc :state :select)
-          (elements/set-temp {:type :rect :attrs attrs})
+          (elements/set-temp temp-element)
           (hover-by-area intersecting?)))
     (let [selected-keys (get-in db [:documents active-document :selected-keys])
           offset (:adjusted-mouse-diff db)
