@@ -151,14 +151,14 @@
                         (assoc elements (:key element) (tools/translate element offset)))))
 
 (defn scale
-  [db offset maintain-proportions?]
+  [db offset handler maintain-proportions?]
   (let [[x1 y1 x2 y2] (tools/elements-bounds (elements db) (selected db))
         outer-dimensions (bounds/->dimensions [x1 y1 x2 y2])]
     (update-selected db (fn [elements element]
                           (let [[inner-x1 inner-y1 inner-x2 inner-y2] (tools/bounds element (elements db))
                                 inner-dimensions (bounds/->dimensions [inner-x1 inner-y1 inner-x2 inner-y2])
                                 scale-multiplier (matrix/div inner-dimensions outer-dimensions)
-                                translate-multiplier (matrix/div (case (:scale db)
+                                translate-multiplier (matrix/div (case handler
                                                                    :middle-right [(- inner-x1 x1) 0]
                                                                    :middle-left [(- x2 inner-x2) 0]
                                                                    :top-middle [0 (- y2 inner-y2)]
@@ -169,7 +169,7 @@
                                                                    :bottom-left [(- x2 inner-x2) (- inner-y1 y1)]) outer-dimensions) ]
                             (assoc elements (:key element) (-> element
                                                                (tools/translate (matrix/mul offset translate-multiplier))
-                                                               (tools/scale (matrix/mul offset scale-multiplier) (:scale db)))))))))
+                                                               (tools/scale (matrix/mul offset scale-multiplier) handler))))))))
 
 (defn align
   [db direction]

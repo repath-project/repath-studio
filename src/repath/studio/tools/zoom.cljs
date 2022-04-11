@@ -12,6 +12,10 @@
   [db]
   (assoc db :cursor "zoom-in"))
 
+(defmethod tools/mouse-down :zoom
+  [db]
+  (assoc db :cursor "default"))
+
 (defmethod tools/drag :zoom
   [{:keys [adjusted-mouse-offset adjusted-mouse-pos active-document] :as db}]
   (-> db
@@ -30,7 +34,8 @@
         furute-zoom (min width-ratio height-ratio)]
       (-> db
           (elements/clear-temp)
-          (assoc :state :default)
+          (assoc :state :default
+                 :cursor "zoom-in")
           (canvas-frame/zoom (if (contains? (:modifiers event) :shift) (:zoom-factor db) (/ furute-zoom current-zoom)))
           (canvas-frame/pan-to-bounds [pos-x pos-y offset-x offset-y]))))
 

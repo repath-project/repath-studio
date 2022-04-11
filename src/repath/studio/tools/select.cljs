@@ -61,12 +61,13 @@
                                              (elements/duplicate))
                                          db) offset)
         :clone (elements/translate db offset)
-        :scale (elements/scale db offset (contains? (:modifiers event) :ctrl))
+        :scale (elements/scale db offset (:scale db) (contains? (:modifiers event) :ctrl))
         (cond-> db
           (not (or is-element-selected? (= (:type element) :scale-handler))) (elements/select (contains? (:modifiers event) :shift) element)
-          (not= (:type element) :scale-handler) (assoc :cursor "move"
+          (not= (:type element) :scale-handler) (assoc :cursor "default"
                                                        :state :translate)
           (= (:type element) :scale-handler) (assoc :state :scale
+                                                    :cursor "default"
                                                     :scale (:key element)))))))
 
 (defmethod tools/drag-end :select

@@ -9,7 +9,9 @@
 
 (defmethod tools/activate :pan
   [db]
-  (assoc db :cursor "grab"))
+  (assoc db 
+         :cursor "grab"
+         :state :pan))
 
 (defmethod tools/mouse-up :pan
   [db]
@@ -21,9 +23,7 @@
 
 (defmethod tools/drag :pan
   [db event _]
-  (-> db
-      (assoc :cursor "grabbing")
-      (canvas-frame/pan (matrix/sub (:mouse-pos db) (:mouse-pos event)))))
+  (canvas-frame/pan db (matrix/sub (:mouse-pos db) (:mouse-pos event))))
 
 (defmethod tools/drag-end :pan
   [db]
