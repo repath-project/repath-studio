@@ -6,6 +6,5 @@
   [db tool]
   (-> db
       (tools/deactivate)
-      (assoc :state :default)
       (assoc :tool tool)
       (tools/activate)))

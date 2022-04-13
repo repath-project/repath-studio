@@ -18,9 +18,7 @@
 
 (defmethod tools/drag :zoom
   [{:keys [adjusted-mouse-offset adjusted-mouse-pos active-document] :as db}]
-  (-> db
-      (assoc :state :select)
-      (elements/set-temp (element-views/select-box adjusted-mouse-pos adjusted-mouse-offset (get-in db [:documents active-document :zoom])))))
+  (elements/set-temp db (element-views/select-box adjusted-mouse-pos adjusted-mouse-offset (get-in db [:documents active-document :zoom]))))
 
 (defmethod tools/drag-end :zoom
   [{:keys [active-document content-rect adjusted-mouse-offset adjusted-mouse-pos] :as db} event]
@@ -34,8 +32,7 @@
         furute-zoom (min width-ratio height-ratio)]
       (-> db
           (elements/clear-temp)
-          (assoc :state :default
-                 :cursor "zoom-in")
+          (assoc :cursor "zoom-in")
           (canvas-frame/zoom (if (contains? (:modifiers event) :shift) (:zoom-factor db) (/ furute-zoom current-zoom)))
           (canvas-frame/pan-to-bounds [pos-x pos-y offset-x offset-y]))))
 

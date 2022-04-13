@@ -9,9 +9,7 @@
 
 (defmethod tools/activate :pan
   [db]
-  (assoc db 
-         :cursor "grab"
-         :state :pan))
+  (assoc db :cursor "grab"))
 
 (defmethod tools/mouse-up :pan
   [db]
@@ -27,8 +25,6 @@
 
 (defmethod tools/drag-end :pan
   [db]
-  (assoc db
-         :cursor "grab"
-         :state :default))
+  (assoc db :cursor "grab"))
 
 
