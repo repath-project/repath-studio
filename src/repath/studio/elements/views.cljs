@@ -12,9 +12,9 @@
             :cy y
             :r (/ 3 zoom)}])
 
-(defn handler
-  [{:keys [x y key size stroke-width cursor]}]
-  (let [element {:key key :type :scale-handler :cursor cursor}]
+(defn scale-handler
+  [{:keys [x y key size stroke-width]}]
+  (let [element {:key key :type :scale-handler}]
    [:rect {:key key
            :fill "#fff"
            :stroke "#555"
@@ -23,10 +23,26 @@
            :y (- y (/ size 2))
            :width size
            :height size
-           :cursor cursor
+           :cursor "default"
            :on-mouse-up #(mouse/event-handler % element)
            :on-mouse-down #(mouse/event-handler % element)
            :on-mouse-move #(mouse/event-handler % element)}]))
+
+(defn edit-handler
+  [{:keys [x y key size stroke-width]}]
+  (let [element {:key key :type :edit-handler}]
+    [:rect {:key key
+            :fill "#fff"
+            :stroke "#555"
+            :stroke-width stroke-width
+            :x (- x (/ size 2))
+            :y (- y (/ size 2))
+            :width size
+            :height size
+            :cursor "default"
+            :on-mouse-up #(mouse/event-handler % element)
+            :on-mouse-down #(mouse/event-handler % element)
+            :on-mouse-move #(mouse/event-handler % element)}]))
 
 (defn cross
   [{:keys [x y size stroke-width]}]
@@ -36,13 +52,15 @@
            :x1 (- x (/ size 2))
            :y1 y
            :x2 (+ x (/ size 2))
-           :y2 y}]
+           :y2 y
+           :pointer-events "none"}]
    [:line {:stroke "#555"
            :stroke-width stroke-width
            :x1 x
            :y1 (- y (/ size 2))
            :x2 x
-           :y2 (+ y (/ size 2))}]])
+           :y2 (+ y (/ size 2))
+           :pointer-events "none"}]])
 
 (defn bounding-handlers
   [bounds zoom]
@@ -55,22 +73,28 @@
              :y (+ y1 (/ height 2))
              :size (/ 10 zoom)
              :stroke-width (/ 1 zoom)}]
-     [:text {:x (+ x1 (/ (- x2 x1) 2))
+     (map scale-handler [{:x x1 :y y1 :size handler-size :stroke-width stroke-width :key :top-left}
+                   {:x x2 :y y1 :size handler-size :stroke-width stroke-width :key :top-right}
+                   {:x x1 :y y2 :size handler-size :stroke-width stroke-width :key :bottom-left}
+                   {:x x2 :y y2 :size handler-size :stroke-width stroke-width :key :bottom-right}
+                   {:x (+ x1 (/ width 2)) :y y1 :size handler-size :stroke-width stroke-width :key :top-middle}
+                   {:x x2 :y (+ y1 (/ height 2)) :size handler-size :stroke-width stroke-width :key :middle-right}
+                   {:x x1 :y (+ y1 (/ height 2)) :size handler-size :stroke-width stroke-width :key :middle-left}
+                   {:x (+ x1 (/ width 2)) :y y2 :size handler-size :stroke-width stroke-width :key :bottom-middle}])]))
+
+(defn size
+  [bounds zoom]
+  (let [[x1 y1 x2 y2] bounds
+        [width height] (matrix/sub [x2 y2] [x1 y1])]
+     [:text {:key :size
+             :x (+ x1 (/ (- x2 x1) 2))
              :y (+ y2 (/ 15 zoom))
              :fill "black"
              :dominant-baseline "middle"
              :text-anchor "middle"
              :font-family "Source Sans Pro"
              :width width
-             :font-size (/ 12 zoom)} (-> width (.toFixed 2) (js/parseFloat)) " x " (-> height (.toFixed 2) (js/parseFloat))]
-     (map handler [{:x x1 :y y1 :size handler-size :stroke-width stroke-width :key :top-left :cursor :nwse-resize}
-                   {:x x2 :y y1 :size handler-size :stroke-width stroke-width :key :top-right :cursor :nesw-resize}
-                   {:x x1 :y y2 :size handler-size :stroke-width stroke-width :key :bottom-left :cursor :nesw-resize}
-                   {:x x2 :y y2 :size handler-size :stroke-width stroke-width :key :bottom-right :cursor :nwse-resize}
-                   {:x (+ x1 (/ width 2)) :y y1 :size handler-size :stroke-width stroke-width :key :top-middle :cursor :ns-resize}
-                   {:x x2 :y (+ y1 (/ height 2)) :size handler-size :stroke-width stroke-width :key :middle-right :cursor :ew-resize}
-                   {:x x1 :y (+ y1 (/ height 2)) :size handler-size :stroke-width stroke-width :key :middle-left :cursor :ew-resize}
-                   {:x (+ x1 (/ width 2)) :y y2 :size handler-size :stroke-width stroke-width :key :bottom-middle :cursor :ns-resize}])]))
+             :font-size (/ 12 zoom)} (-> width (.toFixed 2) (js/parseFloat)) " x " (-> height (.toFixed 2) (js/parseFloat))]))
 
 (defn bounding-box
   [bounds zoom]
@@ -107,7 +131,6 @@
   [area bounds zoom]
   (let [[x1 y1 x2 y2] bounds
         width (- x2 x1)]
-    
     (when area
       [:text {:x (+ x1 (/ (- x2 x1) 2))
               :y (+ y1 (/ -15 zoom))

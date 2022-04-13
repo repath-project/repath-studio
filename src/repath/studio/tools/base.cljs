@@ -48,6 +48,7 @@
 (defmulti properties keyword)
 (defmulti path :type)
 (defmulti area :type)
+(defmulti edit #(:type %))
 (defmulti bounds #(:type %))
 
 (defmulti mouse-down #(:tool %))
@@ -72,6 +73,7 @@
 (defmethod drag-end :default [db event element] (mouse-up db event element))
 (defmethod properties :default [])
 (defmethod render :default [])
+(defmethod edit :default [])
 (defmethod bounds :default [])
 (defmethod area :default [])
 

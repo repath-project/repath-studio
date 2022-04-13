@@ -1,7 +1,9 @@
 (ns repath.studio.tools.element
   (:require
    [repath.studio.tools.base :as tools]
-   [repath.studio.elements.handlers :as handlers]
+   [repath.studio.handlers :as handlers]
+   [repath.studio.elements.handlers :as element-handlers]
+   [repath.studio.elements.views :as element-views]
    [reagent.core :as ra]
    [re-frame.core :as rf]
    [repath.studio.history.handlers :as history]
@@ -11,7 +13,9 @@
    [repath.studio.mouse :as mouse]
    [reagent.dom :as dom]))
 
-(defmethod tools/activate ::tools/element [db] (assoc db :cursor "crosshair"))
+(defmethod tools/activate ::tools/element [db] (assoc db
+                                                      :cursor "crosshair"
+                                                      :state :create))
 
 (defmethod tools/translate ::tools/element
   [element [x y]] (-> element
@@ -46,17 +50,19 @@
       (mapv units/unit->px [x y (+ x width) (+ y height)])))
 
 (defmethod tools/drag-end ::tools/element
-  [db]
+  [{:keys [state] :as db}]
   (let [temp-element (get-in db [:documents (:active-document db) :temp-element])]
-    (if temp-element
-      (-> db
-          (handlers/create-from-temp)
-          (history/finalize (str "Create " (name (:type temp-element)))))
-      db)))
+    (cond-> db
+      (= state :create) (-> (element-handlers/create-from-temp)
+                            (history/finalize (str "Create " (name (:type temp-element)))))
+      (= state :edit) (history/finalize (str "Edit "))
+      :always (assoc :state :create))))
 
 (defmethod tools/mouse-up :default
   [db event element]
-  (handlers/select db (some #(contains? (:modifiers event) %) #{:ctrl :shift}) element))
+  (cond-> db
+    (= (:state db) :create) (handlers/set-tool (:type element)) 
+    :always (element-handlers/select (some #(contains? (:modifiers event) %) #{:ctrl :shift}) element)))
 
 (defn get-bounds
   "Experimental way of getting the bounds of uknown or complicated elements using the getBBox method.
@@ -111,3 +117,13 @@
   [{:keys [children] :as element}]
   (let [child-elements @(rf/subscribe [:elements/filter-visible children])]
     [render-to-dom element child-elements]))
+
+(defmethod tools/edit ::tools/element
+  [{:keys [attrs] :as element} zoom]
+  (let [{:keys [x y width height]} attrs
+        [x y width height] (mapv units/unit->px [x y width height])
+        handler-size (/ 8 zoom)
+        stroke-width (/ 1 zoom)]
+    [:g {:key :edit-handlers}
+     (map element-views/edit-handler [{:x x :y y :size handler-size :stroke-width stroke-width :key :position}
+                                      {:x (+ x width) :y (+ y height) :size handler-size :stroke-width stroke-width :key :size}])]))

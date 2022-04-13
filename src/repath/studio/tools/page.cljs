@@ -32,9 +32,9 @@
         filter         @(rf/subscribe [:filter])
         zoom           @(rf/subscribe [:zoom])]
     [:g {:key key}
-     [:text (merge (update text-attrs :y - (/ 10 zoom)) {:on-mouse-up   #(mouse/event-handler % element)
-                                                         :on-mouse-down #(mouse/event-handler % element)
-                                                         :on-mouse-move #(mouse/event-handler % element)
+     [:text (merge (update text-attrs :y - (/ 10 zoom)) {:on-mouse-up     #(mouse/event-handler % element)
+                                                         :on-mouse-down   #(mouse/event-handler % element)
+                                                         :on-mouse-move   #(mouse/event-handler % element)
                                                          :fill "#888"
                                                          :font-size (/ 12 zoom)
                                                          :font-family "Source Code Pro, monospace"}) (or (:name element) type)]
@@ -42,5 +42,7 @@
               :always (dissoc :fill)
               (not= filter :no-filter) (assoc :filter (str "url(#" (name filter) ")")))
       (when (:fill attrs) [:rect (merge rect-attrs {:on-mouse-up   #(mouse/event-handler % element)
-                                :on-mouse-down #(mouse/event-handler % element)})])
+                                                    :on-mouse-down #(mouse/event-handler % element)
+                                                    :on-double-click #(mouse/event-handler % element)
+})])
       (map (fn [element] ^{:key (:key element)} [tools/render element]) (merge child-elements))]]))

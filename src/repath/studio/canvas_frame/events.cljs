@@ -107,6 +107,8 @@
                  (tools/mouse-up db event element))
          (:cached-tool db) (handlers/set-tool (:cached-tool db))
          :always (dissoc :cached-tool :mouse-offset))
+       
+       :dblclick (handlers/set-tool db (:type element))
 
        :wheel
        (if (some (:modifiers event) [:ctrl :alt])

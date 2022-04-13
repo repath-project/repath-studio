@@ -25,6 +25,7 @@
         cursor             @(rf/subscribe [:cursor])
         zoom               @(rf/subscribe [:zoom])
         tool               @(rf/subscribe [:tool])
+        state              @(rf/subscribe [:state])
         rotate             @(rf/subscribe [:rotate])
         debug-info?        @(rf/subscribe [:debug-info?])
         mouse-event        #(.dispatchEvent js/window.parent.document.body.firstChild (new js/MouseEvent (.-type %) %))] 
@@ -48,13 +49,16 @@
      (map (fn [element] ^{:key (:key element)} [tools/render element]) child-elements)
        [:<>
         [tools/render temp-element]
-        (map (fn [element] ^{:key (str (:key element) "bounds")} [elements/bounding-box (tools/adjusted-bounds element elements) zoom]) hovered-elements)
-        (map (fn [element] ^{:key (str (:key element) "selection")} [elements/bounding-box (tools/adjusted-bounds element elements) zoom]) selected-elements)
         (when (not= tool :dropper)
           [:<>
-           (when (not (next selected-elements))
-             (map (fn [element] ^{:key (str (:key element) "area")} [elements/area (tools/area element) (tools/adjusted-bounds element elements) zoom]) selected-elements))
-           (when bounds [elements/bounding-handlers bounds zoom])
            (when  @(rf/subscribe [:grid?]) [rulers/grid])
+           (when (and (contains? #{:create :edit :default :scale} state) bounds)
+             [:<>
+              (map (fn [element] ^{:key (str (:key element) "bounds")} [elements/bounding-box (tools/adjusted-bounds element elements) zoom]) hovered-elements)
+              (map (fn [element] ^{:key (str (:key element) "selection")} [elements/bounding-box (tools/adjusted-bounds element elements) zoom]) selected-elements)
+              (map (fn [element] ^{:key (str (:key element) "area")} [elements/area (tools/area element) (tools/adjusted-bounds element elements) zoom]) selected-elements)
+              [elements/size bounds zoom]])
+           (when (and (= state :default) bounds) [elements/bounding-handlers bounds zoom])
+           (when (and (contains? #{:create :edit} state) (not (next selected-elements))) [tools/edit (first selected-elements) zoom])
            (when debug-info? (into [:g] (map #(elements/point-of-interest % zoom) @(rf/subscribe [:snaping-points]))))])]
      [:defs (map (fn [{:keys [id type attrs]}] [:filter {:id id :key id} [type attrs]]) filters/accessibility)]]))
