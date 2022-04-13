@@ -5,6 +5,7 @@
             [repath.studio.elements.views :as element-views]
             [repath.studio.styles :as styles]
             [repath.studio.bounds :as bounds]
+            [clojure.core.matrix :as matrix]
             [repath.studio.history.handlers :as history]))
 
 (derive :select ::tools/transform)
@@ -36,7 +37,9 @@
 
 (defmethod tools/activate :select
   [db _ _]
-  (assoc db :cursor "default"))
+  (assoc db 
+         :cursor "default"
+         :state :default))
 
 (defmethod tools/drag :select
   [{:keys [state adjusted-mouse-offset adjusted-mouse-pos active-document] :as db} event element]
@@ -51,7 +54,7 @@
           (elements/set-temp temp-element)
           (hover-by-area intersecting?)))
     (let [selected-keys (get-in db [:documents active-document :selected-keys])
-          offset (:adjusted-mouse-diff db)
+          offset (matrix/sub adjusted-mouse-pos adjusted-mouse-offset)
           is-element-selected? (contains? selected-keys (:key element))]
       (case state
         :translate (elements/translate (if (some #(contains? (:modifiers event) %) #{:ctrl})
@@ -59,16 +62,16 @@
                                              (assoc :state :clone
                                                     :cursor "copy")
                                              (elements/duplicate))
-                                         db) offset)
-        :clone (elements/translate db offset)
-        :scale (elements/scale db offset (:scale db) (contains? (:modifiers event) :ctrl))
+                                         (history/swap db)) offset)
+        :clone (elements/translate db (:adjusted-mouse-diff db))
+        :scale (elements/scale (history/swap db) offset (:scale db) (contains? (:modifiers event) :ctrl))
         (cond-> db
           (not (or is-element-selected? (= (:type element) :scale-handler))) (elements/select (contains? (:modifiers event) :shift) element)
           (not= (:type element) :scale-handler) (assoc :cursor "default"
-                                                       :state :translate)
+                                                        :state :translate)
           (= (:type element) :scale-handler) (assoc :state :scale
-                                                    :cursor "default"
-                                                    :scale (:key element)))))))
+                                                     :cursor "default"
+                                                     :scale (:key element)))))))
 
 (defmethod tools/drag-end :select
   [{:keys [state adjusted-mouse-offset adjusted-mouse-pos] :as db} event]
@@ -76,8 +79,8 @@
         [pos-x _] adjusted-mouse-pos]
     (assoc (case state
              :select (select-by-area db (> pos-x offset-x) (some #(contains? (:modifiers event) %) #{:ctrl :shift}))
-             :translate (history/finalize db "Move selection")
+             :translate (history/finalize db (str "Move selection by " adjusted-mouse-offset))
              :scale (history/finalize db "Scale selection")
-             :clone (history/finalize db "Duplicate selection to position"))
+             :clone (history/finalize db "Clone selection"))
            :cursor "default"
            :state :default)))
