@@ -180,12 +180,12 @@
                               [parent-x1 parent-y1 parent-x2 parent-y2] (tools/bounds parent (elements db))
                               [parent-width parent-height] (matrix/sub [parent-x2 parent-y2] [parent-x1 parent-y1])]
                           (assoc elements (:key element) (tools/translate element (case direction
-                                                                               :top [0 (- y1)]
-                                                                               :center-vertical [0 (- (/ parent-height 2) (+ y1 (/ height 2)))]
-                                                                               :bottom [0 (- parent-height y2)]
-                                                                               :left [(- x1) 0]
-                                                                               :center-horizontal [(- (/ parent-width 2) (+ x1 (/ width 2))) 0]
-                                                                               :right [(- parent-width x2) 0])))))))
+                                                                                    :top [0 (- y1)]
+                                                                                    :center-vertical [0 (- (/ parent-height 2) (+ y1 (/ height 2)))]
+                                                                                    :bottom [0 (- parent-height y2)]
+                                                                                    :left [(- x1) 0]
+                                                                                    :center-horizontal [(- (/ parent-width 2) (+ x1 (/ width 2))) 0]
+                                                                                    :right [(- parent-width x2) 0])))))))
 
 (defn to-path
   [db]
