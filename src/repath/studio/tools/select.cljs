@@ -81,6 +81,7 @@
              :select (select-by-area db (> pos-x offset-x) (some #(contains? (:modifiers event) %) #{:ctrl :shift}))
              :translate (history/finalize db (str "Move selection by " adjusted-mouse-offset))
              :scale (history/finalize db "Scale selection")
-             :clone (history/finalize db "Clone selection"))
+             :clone (history/finalize db "Clone selection")
+             db)
            :cursor "default"
            :state :default)))
