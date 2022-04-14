@@ -53,6 +53,48 @@
                                           :attrs (val %)}]) element)
   "")
 
+(defn circle
+  "Creates a circle."
+  ([cx cy r]
+   (create {:circle {:cx cx :cy cy :r r}})
+   "")
+  
+  ([[cx cy] r]
+   (circle cx cy r)
+   "")
+  
+  ([attrs]
+   (create {:circle attrs})
+   ""))
+
+(defn rect
+  "Creates a rectangle"
+  ([x y width height]
+   (create {:rect {:x x :y y :width width :height height}})
+   "")
+
+  ([[x y] [width height]]
+   (rect x y width height)
+   "")
+  
+  ([attrs]
+   (create {:rect attrs})
+   ""))
+
+(defn line
+  "Creates a rectangle"
+  ([x1 y1 x2 y2]
+   (create {:line {:x1 x1 :y1 y1 :x2 x2 :y2 y2 :stroke "#000000"}})
+   "")
+
+  ([[x1 y1] [x2 y2]]
+   (line x1 y1 x2 y2)
+   "")
+
+  ([attrs]
+   (create {:line attrs})
+   ""))
+
 (defn set-attribute
   "Set the attribute of the selected elements."
   [name value]
