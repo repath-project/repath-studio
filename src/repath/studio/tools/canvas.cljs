@@ -27,15 +27,11 @@
         tool               @(rf/subscribe [:tool])
         state              @(rf/subscribe [:state])
         rotate             @(rf/subscribe [:rotate])
-        debug-info?        @(rf/subscribe [:debug-info?])
-        mouse-event        #(.dispatchEvent js/window.parent.document.body.firstChild (new js/MouseEvent (.-type %) %))] 
+        debug-info?        @(rf/subscribe [:debug-info?])] 
     [:svg {:on-mouse-up     #(mouse/event-handler % element)
            :on-mouse-down   #(mouse/event-handler % element)
            :on-wheel        #(mouse/event-handler % element)
            :on-double-click #(mouse/event-handler % element)
-           :on-click        (fn [e]
-                              (mouse-event e)
-                              (mouse/event-handler e element))
            ; Enable keyboard events on the svg element 
            :tab-index 0 
            ; We are using the [viewBox](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox) attribute to simulate pan and zoom
