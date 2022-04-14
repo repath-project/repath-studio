@@ -52,7 +52,7 @@
         (when (not= tool :dropper)
           [:<>
            (when  @(rf/subscribe [:grid?]) [rulers/grid])
-           (when (and (contains? #{:create :edit :default :scale} state) bounds)
+           (when (and (contains? #{:create :edit :default :scale :select} state) bounds)
              [:<>
               (map (fn [element] ^{:key (str (:key element) "bounds")} [elements/bounding-box (tools/adjusted-bounds element elements) zoom]) hovered-elements)
               (map (fn [element] ^{:key (str (:key element) "selection")} [elements/bounding-box (tools/adjusted-bounds element elements) zoom]) selected-elements)
