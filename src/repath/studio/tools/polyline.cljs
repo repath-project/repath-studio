@@ -2,7 +2,7 @@
   (:require [repath.studio.elements.handlers :as elements]
             [repath.studio.tools.base :as tools]
             [repath.studio.units :as units]
-            [repath.studio.attrs.views :as attrs]
+            [repath.studio.attrs.base :as attrs]
             [repath.studio.history.handlers :as history]
             [clojure.string :as str]))
 
@@ -20,17 +20,17 @@
   [{:keys [active-document adjusted-mouse-pos] :as db} event]
   (let [temp-element (get-in db [:documents active-document :temp-element])
         stroke (get-in db [:documents active-document :stroke])]
-   (if temp-element
-     (if (= (:button event) 2)
-       (-> db
-           (elements/create-from-temp)
-           (history/finalize (str "Create " (name (:type temp-element)))))
-       (update-in db [:documents active-document :temp-element :attrs :points] #(str % " " (str/join " " adjusted-mouse-pos))))
-     (-> db
-         (assoc :state :create)
-         (elements/set-temp {:type :polyline :attrs {:points (str/join " " adjusted-mouse-pos)
-                                                     :stroke (tools/rgba stroke)
-                                                     :fill "transparent"}})))))
+    (if temp-element
+      (if (= (:button event) 2)
+        (-> db
+            (elements/create-from-temp)
+            (history/finalize (str "Create " (name (:type temp-element)))))
+        (update-in db [:documents active-document :temp-element :attrs :points] #(str % " " (str/join " " adjusted-mouse-pos))))
+      (-> db
+          (assoc :state :create)
+          (elements/set-temp {:type :polyline :attrs {:points (str/join " " adjusted-mouse-pos)
+                                                      :stroke (tools/rgba stroke)
+                                                      :fill "transparent"}})))))
 
 (defmethod tools/drag-end :polyline
   [{:keys [active-document adjusted-mouse-pos adjusted-mouse-offset] :as db}]
@@ -62,6 +62,12 @@
     (if points
       (assoc-in db [:documents active-document :temp-element :attrs :points] (str/join " " (concat (apply concat (drop-last (attrs/points-to-vec points))) adjusted-mouse-pos)))
       db)))
+
+(defmethod tools/double-click :polyline
+  [db]
+  (-> db
+      (elements/create-from-temp)
+      (history/finalize (str "Create polyyline"))))
 
 (defmethod tools/translate :polyline
   [element [x y]] (-> element

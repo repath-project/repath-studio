@@ -1,7 +1,7 @@
 (ns repath.studio.events
   (:require
    [re-frame.core :as rf]
-   [repath.studio.handlers :as handlers]
+   [repath.studio.tools.base :as tools]
    [repath.studio.db :refer [default-db]]))
 
 (rf/reg-event-db
@@ -37,7 +37,7 @@
 (rf/reg-event-db
  :set-tool
  (fn [db [_ tool]]
-   (handlers/set-tool db tool)))
+   (tools/set-tool db tool)))
 
 (rf/reg-event-db
  :toggle-debug-info

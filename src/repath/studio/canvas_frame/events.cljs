@@ -5,7 +5,6 @@
    [repath.studio.tools.base :as tools]
    [clojure.core.matrix :as matrix]
    [repath.studio.elements.handlers :as el]
-   [repath.studio.handlers :as handlers]
    [repath.studio.units :as units]))
 
 (rf/reg-event-db
@@ -95,7 +94,7 @@
        (if-not mouse-offset
          (cond-> db
            (= (:button event) 1) (-> (assoc :cached-tool tool)
-                                     (handlers/set-tool :pan))
+                                     (tools/set-tool :pan))
            :always (-> (tools/mouse-down event element)
                        (assoc :mouse-offset mouse-pos
                               :adjusted-mouse-offset adjusted-mouse-pos)))
@@ -105,10 +104,10 @@
        (cond-> (if (not= mouse-pos mouse-offset)
                  (tools/drag-end db event element)
                  (tools/mouse-up db event element))
-         (:cached-tool db) (handlers/set-tool (:cached-tool db))
+         (:cached-tool db) (tools/set-tool (:cached-tool db))
          :always (dissoc :cached-tool :mouse-offset))
        
-       :dblclick (handlers/set-tool db (:type element))
+       :dblclick (tools/double-click db event element) 
 
        :wheel
        (if (some (:modifiers event) [:ctrl :alt])

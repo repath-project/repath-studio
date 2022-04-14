@@ -43,21 +43,32 @@
 (derive :brush ::draw)
 (derive :pen ::draw)
 
-(defmulti render :type)
 (defmulti attrs keyword)
 (defmulti properties keyword)
+
+(defmulti render :type)
 (defmulti path :type)
 (defmulti area :type)
+
 (defmulti edit #(:type %))
 (defmulti bounds #(:type %))
 
 (defmulti mouse-down #(:tool %))
 (defmulti mouse-move #(:tool %))
 (defmulti mouse-up #(:tool %))
+(defmulti double-click #(:tool %))
 (defmulti drag #(:tool %))
 (defmulti drag-end #(:tool %))
+
 (defmulti activate :tool)
 (defmulti deactivate :tool)
+
+(defn set-tool
+  [db tool]
+  (-> db
+      (deactivate)
+      (assoc :tool tool)
+      (activate)))
 
 (defmulti translate
   (fn [element]
@@ -69,6 +80,8 @@
 
 (defmethod mouse-down :default [db] db)
 (defmethod mouse-move :default [db] db)
+(defmethod double-click :default [db _ element] (set-tool db (:type element)))
+
 (defmethod drag :default [db event element] (mouse-move db event element))
 (defmethod drag-end :default [db event element] (mouse-up db event element))
 (defmethod properties :default [])

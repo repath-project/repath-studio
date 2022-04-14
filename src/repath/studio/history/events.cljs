@@ -1,6 +1,6 @@
 (ns repath.studio.history.events
   (:require [re-frame.core :as rf]
-            [repath.studio.handlers :as handlers]
+            [repath.studio.tools.base :as tools]
             [repath.studio.history.handlers :as h]
             [repath.studio.elements.handlers :as elements]))
 
@@ -18,10 +18,9 @@
  :history/cancel
  (fn [db _]
    (cond-> db
-     (= (:state db) :default) (elements/deselect-all)
-     (= (:state db) :create) (->
-                              (handlers/set-tool :select)
-                              (assoc :state :default))
+     (and (= (:tool db) :select) (not (:mouse-offset db))) (elements/deselect-all)
+     (not (:mouse-offset db)) (-> (tools/set-tool :select)
+                                  (assoc :state :default))
+     (:mouse-offset db) (dissoc :mouse-offset)
      :always (-> (elements/clear-temp)
-                 (dissoc :mouse-offset)
                  (h/swap)))))
