@@ -3,6 +3,7 @@
             [reagent.dom :as dom]
             ["codemirror" :as codemirror]
             ["codemirror/mode/css/css.js"]
+            ["codemirror/mode/xml/xml.js"]
             ["codemirror/addon/hint/show-hint.js"]
             ["codemirror/addon/hint/css-hint.js"]))
 

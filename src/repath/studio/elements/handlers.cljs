@@ -4,7 +4,7 @@
    [repath.studio.helpers :as helpers]
    [repath.studio.bounds :as bounds]
    [clojure.core.matrix :as matrix]
-   [reagent.dom.server :refer [render-to-string]]))
+   [reagent.dom.server :refer [render-to-static-markup]]))
 
 (defn elements-path [db]
   [:documents (:active-document db) :elements])
@@ -104,7 +104,7 @@
 (defn copy
   [db]
   (let [selected-elements (selected db)
-        html (reduce #(str % (render-to-string [(:type %2) (:attrs %2)])) "" selected-elements)]
+        html (reduce #(str % (render-to-static-markup [(:type %2) (:attrs %2)])) "" selected-elements)]
     (js/window.api.send "toMain" (clj->js {:action "writeToClipboard" :data {:html html}}))
     (assoc db :copied-elements selected-elements)))
 

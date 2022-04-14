@@ -35,6 +35,7 @@
             :header? true
             :history? false
             :timeline? true
+            :xml? false
             :left-sidebar-width 300
             :right-sidebar-width 300
             :elements-collapsed? false

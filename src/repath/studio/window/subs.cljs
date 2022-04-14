@@ -18,6 +18,12 @@
    (-> db :window :header?)))
 
 (rf/reg-sub
+ :window/xml?
+ (fn [db _]
+   (-> db :window :xml?)))
+
+
+(rf/reg-sub
  :window/timeline?
  (fn [db _]
    (-> db :window :timeline?)))

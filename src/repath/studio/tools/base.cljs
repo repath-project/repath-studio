@@ -3,7 +3,8 @@
    [re-frame.core :as rf]
    [repath.studio.helpers :as helpers]
    [repath.studio.bounds :as bounds]
-   ["element-to-path" :as element-to-path]))
+   ["element-to-path" :as element-to-path]
+   [reagent.dom.server :as dom]))
 
 (derive ::transform ::tool)
 (derive ::element ::tool)
@@ -47,6 +48,7 @@
 (defmulti properties keyword)
 
 (defmulti render :type)
+(defmulti render-to-string :type)
 (defmulti path :type)
 (defmulti area :type)
 
@@ -86,6 +88,7 @@
 (defmethod drag-end :default [db event element] (mouse-up db event element))
 (defmethod properties :default [])
 (defmethod render :default [])
+(defmethod render-to-string :default [element] (dom/render-to-string (render element)))
 (defmethod edit :default [])
 (defmethod bounds :default [])
 (defmethod area :default [])

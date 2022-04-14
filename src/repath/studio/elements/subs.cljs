@@ -4,6 +4,7 @@
    [repath.studio.tools.base :as tools]
    [repath.studio.helpers :as helpers]
    [clojure.core.matrix :as matrix]
+   ["xml-formatter" :as xml-formatter]
    [goog.color :as color]))
 
 (rf/reg-sub
@@ -29,6 +30,14 @@
  :<- [:elements]
  (fn [[active-page elements] _]
    (get elements active-page)))
+
+(rf/reg-sub
+ :elements/xml
+  :<- [:elements/active-page]
+ (fn [active-page _]
+   (xml-formatter (tools/render-to-string active-page) (clj->js {:indentation "  "
+                                                                 :collapseContent true
+                                                                 :lineSeparator "\n"}))))
 
 (rf/reg-sub
  :elements/children

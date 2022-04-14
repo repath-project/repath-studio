@@ -3,7 +3,8 @@
             [repath.studio.tools.base :as tools]
             [repath.studio.elements.handlers :as elements]
             [repath.studio.units :as units]
-            [repath.studio.mouse :as mouse]))
+            [repath.studio.mouse :as mouse]
+            [reagent.dom.server :as dom]))
 
 (derive :page ::tools/element)
 
@@ -51,3 +52,8 @@
 (defmethod tools/area :page
   [{{:keys [width height]} :attrs}]
   (apply * (map units/unit->px [width height])))
+
+(defmethod tools/render-to-string :page
+  [{:keys [attrs children] :as element}]
+  (let [child-elements @(rf/subscribe [:elements/filter-visible children])]
+    (dom/render-to-static-markup [:svg (dissoc attrs :fill) (map (fn [element] ^{:key (:key element)} [tools/render element]) (merge child-elements))])))

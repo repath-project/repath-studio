@@ -11,6 +11,7 @@
    [repath.studio.canvas-frame.views :as frame-canvas]
    [repath.studio.rulers.views :as rulers]
    [repath.studio.context-menu.views :as menu]
+   [repath.studio.codemirror.views :as cm]
    [repath.studio.reepl.views :as repl]
    [repath.studio.filters :as filters]
    [repath.studio.history.views :as history]
@@ -106,7 +107,7 @@
                           :width "auto"}}
       [:option {:key :no-filter :value :no-filter} "No filter"]
       (map (fn [{:keys [id]}] [:option {:key id :value id} (name id)]) filters/accessibility)]
-      [comp/radio-icon-button {:title "Snap" :active? false :icon "magnet" :class "disabled" :action #(rf/dispatch [:document/toggle-snap])}]
+     [comp/radio-icon-button {:title "Snap" :active? false :icon "magnet" :class "disabled" :action #(rf/dispatch [:document/toggle-snap])}]
      [comp/radio-icon-button {:title "Grid" :active? @(rf/subscribe [:grid?]) :icon "grid" :action #(rf/dispatch [:document/toggle-grid])}]
      [comp/radio-icon-button {:title "Rulers" :active? @(rf/subscribe [:rulers?]) :icon "ruler-combined" :action #(rf/dispatch [:document/toggle-rulers])}]
      [:div {::style {:position  "relative"}}
@@ -278,7 +279,12 @@
         [frame-canvas/frame]]
        [footer]]
       [history/tree]]
-     [command-input]]]])
+     [command-input]]]
+   (when @(rf/subscribe [:window/xml?]) (let [xml @(rf/subscribe [:elements/xml])] [:div {:key xml
+                                                                                          :style {:flex "0 1 30%"
+                                                                                                  :padding styles/padding
+                                                                                                  :background styles/level-2
+                                                                                                  :margin-left "1px"}} [cm/editor xml {:mode "xml"}]]))])
 
 (defn main-panel []
   [:div.v-box {:style {:flex               "1"
@@ -286,9 +292,9 @@
    (when @(rf/subscribe [:window/header?]) [win/app-header])
    [:div.h-box {:style {:flex "1" :overflow "hidden"}}
     (when @(rf/subscribe [:window/tree?])     [:div.v-box {:class "sidebar"
-                                                    :style {:flex (str "0 0 " @(rf/subscribe [:window/left-sidebar-width]))}}
-                                        [docs/actions]
-                                        (when (seq @(rf/subscribe [:documents])) [tree/tree-sidebar])])
+                                                           :style {:flex (str "0 0 " @(rf/subscribe [:window/left-sidebar-width]))}}
+                                               [docs/actions]
+                                               (when (seq @(rf/subscribe [:documents])) [tree/tree-sidebar])])
     (if (seq @(rf/subscribe [:documents]))
       [:div.v-box {:style {:flex "1"}}
        [docs/tab-bar]
