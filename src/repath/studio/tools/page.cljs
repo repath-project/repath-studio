@@ -2,6 +2,7 @@
   (:require [re-frame.core :as rf]
             [repath.studio.tools.base :as tools]
             [repath.studio.elements.handlers :as elements]
+            [repath.studio.units :as units]
             [repath.studio.mouse :as mouse]))
 
 (derive :page ::tools/element)
@@ -46,3 +47,7 @@
                                                     :on-double-click #(mouse/event-handler % element)
 })])
       (map (fn [element] ^{:key (:key element)} [tools/render element]) (merge child-elements))]]))
+
+(defmethod tools/area :page
+  [{{:keys [width height]} :attrs}]
+  (apply * (map units/unit->px [width height])))

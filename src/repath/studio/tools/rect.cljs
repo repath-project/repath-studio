@@ -46,5 +46,4 @@
 
 (defmethod tools/area :rect
   [{{:keys [width height]} :attrs}]
-  (let [[width height] (map units/unit->px [width height])]
-    (* width height)))
+  (apply * (map units/unit->px [width height])))
