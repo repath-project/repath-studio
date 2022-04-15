@@ -96,8 +96,8 @@
  :elements/export
  (fn [{active-document :active-document :as db} _]
    (let [active-page (get-in db [:documents active-document :active-page])
-         html (tools/render-to-string (get-in db [:documents active-document :elements active-page]))]
-     (js/window.api.send "toMain" #js {:action "export" :data html}))))
+         xml (tools/render-to-string (get-in db [:documents active-document :elements active-page]))]
+     (js/window.api.send "toMain" #js {:action "export" :data xml}))))
 
 (rf/reg-event-db
  :elements/copy
