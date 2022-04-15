@@ -45,10 +45,8 @@
 (defn export
   "Exports the provided data."
   [data]
-  (let [svg (str "<svg>" data "</svg>")
-        html-canvas (html2canvas svg)
+  (let [html-canvas (html2canvas data)
         png nil #_(.toDataURL html-canvas "image/png")]
     (.then (.showSaveDialog dialog ^js @main-window (clj->js export-options))
            (fn [^js/Promise file] (when-not (.-canceled file) 
-                                    (js/console.log file)
-                                    (.writeFileSync fs (.-filePath file) svg "utf-8"))))))
+                                    (.writeFileSync fs (.-filePath file) data "utf-8"))))))
