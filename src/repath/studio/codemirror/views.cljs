@@ -40,6 +40,11 @@
       (fn []
         (when @cm (reset! cm nil)))
 
+      :component-did-update
+      (fn [this _]
+        (let [value (second (ra/argv this))]
+          (.setValue @cm value)))
+
       :reagent-render
       (fn [value]
         [:textarea {:value value :style style :on-blur #() :on-change #()}])})))

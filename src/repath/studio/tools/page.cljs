@@ -57,4 +57,4 @@
   [{:keys [attrs children] :as element}]
   (let [child-elements @(rf/subscribe [:elements/filter-visible children])]
     (dom/render-to-static-markup [:svg (dissoc attrs :fill) 
-                                  (map (fn [element] ^{:key (:key element)} [:<> "\n    " [tools/render element]]) (merge child-elements))])))
+                                  (map (fn [element] ^{:key (:key element)} [:<> "\n    " [tools/render element]]) (merge child-elements)) "\n"])))
