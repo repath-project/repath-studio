@@ -283,7 +283,11 @@
    (when @(rf/subscribe [:window/xml?]) (let [xml @(rf/subscribe [:elements/xml])] [:div.v-scroll {:style {:flex "0 1 30%"
                                                                                                            :padding styles/padding
                                                                                                            :background styles/level-2
-                                                                                                           :margin-left "1px"}} [cm/editor xml {:mode "xml"}]]))])
+                                                                                                           :margin-left "1px"}} [cm/editor xml {:mode "xml"}]]))
+   (when @(rf/subscribe [:window/history?]) [:div.v-scroll {:style {:flex "0 1 30%"
+                                                                    :padding styles/padding
+                                                                    :background styles/level-2
+                                                                    :margin-left "1px"}}])])
 
 (defn main-panel []
   [:div.v-box {:style {:flex               "1"
