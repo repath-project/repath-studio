@@ -39,21 +39,32 @@
         (documents/set-fill color)
         (history/finalize (str "Pick color " (tools/rgba color))))))
 
+(defn color-block
+  [color size active?]
+  [:div {:style {:width size
+                 :height size
+                 :box-sizing "border-box"
+                 :border (str "1px solid " (if active? styles/accent "hsla(0, 0%, 50%, .2)"))
+                 :background-color color}}])
+
 (defmethod tools/mouse-move :dropper
   [{:keys [mouse-pos content-rect] :as db}]
   (let [bitmap (-> db :window :bitmap)
         bitmap-width (-> db :window :size :width)
         position (matrix/add mouse-pos [(:x content-rect) (:y content-rect)])
-        color (get-pixel-color bitmap bitmap-width position)]
+        color (get-pixel-color bitmap bitmap-width position)
+        grid-size 11
+        block-size 10
+        center-position 5
+        container-size (* grid-size  block-size)]
     (assoc db :overlay [:div 
-                        [:div {:style {:width "110px" :height "110px" :display "flex" :flex-wrap "wrap"}}
+                        [:div {:style {:width container-size :height container-size :display "flex" :flex-wrap "wrap"}}
                          (map (fn [offset-y]
                                 (map (fn [offset-x]
-                                       [:div {:style {:width "10px"
-                                                      :height "10px"
-                                                      :box-sizing "border-box"
-                                                      :border (str "1px solid " (if (and (= offset-x 5) (= offset-y 5)) styles/accent "hsla(0, 0%, 50%, .2)"))
-                                                      :background-color (gcolor/rgbArrayToHex (clj->js (get-pixel-color bitmap bitmap-width (matrix/sub (matrix/add position [offset-x offset-y]) 5))))}}]) (range 11))) (range 11))]
+                                       (let [position (matrix/sub (matrix/add position [offset-x offset-y]) center-position)
+                                             color (gcolor/rgbArrayToHex (clj->js (get-pixel-color bitmap bitmap-width position)))
+                                             active? (and (= offset-x center-position) (= offset-y center-position))]
+                                        [color-block color block-size active?])) (range grid-size))) (range grid-size))]
                         [:div {:style {:display "flex" :padding-top "12px"}}
                          [:div {:style {:width "24px" :height "24px" :background-color (tools/rgba color)}}]
                          [:span {:style {:line-height "24px" :margin-left "12px"}} (gcolor/rgbArrayToHex (clj->js color))]]])))
