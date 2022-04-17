@@ -30,11 +30,6 @@
    (assoc db :command-palette? visible?)))
 
 (rf/reg-event-db
- :set-mouse-over-canvas?
- (fn [db [_ is-over-canvas?]]
-   (assoc db :mouse-over-canvas? is-over-canvas?)))
-
-(rf/reg-event-db
  :set-tool
  (fn [db [_ tool]]
    (tools/set-tool db tool)))

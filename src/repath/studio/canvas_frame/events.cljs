@@ -86,7 +86,6 @@
                :always (tools/drag event element))
              (tools/mouse-move db event element))
            (assoc :mouse-pos mouse-pos
-                  :mouse-over-canvas? true
                   :adjusted-mouse-pos adjusted-mouse-pos))
 
        :mousedown

@@ -11,9 +11,8 @@
 (s/def ::document-tabs (s/coll-of keyword? :kind vector? :distinct true))
 (s/def ::system-fonts  (s/coll-of string? :kind vector? :distinct true))
 (s/def ::max-undos number?)
-(s/def ::mouse-over-canvas? boolean?)
 (s/def ::documents (s/and (s/map-of keyword? ::documents/document)))
-(s/def ::db (s/keys :req-un [::tool ::state ::stroke-width ::mouse-pos ::active-theme ::active-document ::document-tabs ::system-fonts ::max-undos ::mouse-over-canvas? ::window ::documents]))
+(s/def ::db (s/keys :req-un [::tool ::state ::stroke-width ::mouse-pos ::active-theme ::active-document ::document-tabs ::system-fonts ::max-undos ::window ::documents]))
 
 (def default-db
   {:tool :select
@@ -26,7 +25,6 @@
    :system-fonts []
    :max-undos 100
    :debug-info? false
-   :mouse-over-canvas? false
    :window {:maximized? true
             :minimized? false
             :fullscreen? false

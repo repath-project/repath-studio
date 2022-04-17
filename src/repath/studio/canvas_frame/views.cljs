@@ -70,8 +70,6 @@
                      :id             "canvas-frame"
                      :on-key-down     keyboard-event
                      :on-key-up       keyboard-event
-                     :on-mouse-enter #(rf/dispatch [:set-mouse-over-canvas? true])
-                     :on-mouse-leave #(rf/dispatch [:set-mouse-over-canvas? false])
                      :on-context-menu element-menu
                      :style          {:flex "1 1"
                                       :overflow "hidden"
