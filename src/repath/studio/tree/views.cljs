@@ -109,7 +109,7 @@
      [:div.button.tree-heading {:on-click #(rf/dispatch [:window/toggle-pages-collapsed])}
       [comp/toggle-collapsed-icon pages-collapsed?]
       [:div {:style {:flex 1}} "Pages"]
-      [comp/icon-button {:icon "page-plus"}]]
+      [comp/icon-button {:icon "page-plus" :action #(rf/dispatch [:set-tool :page])}]]
      [:div.v-scroll {:style {:flex (if pages-collapsed? 0 "0 1 128px")
                              :transition "all .2s"}}
       [:div {:on-mouse-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
