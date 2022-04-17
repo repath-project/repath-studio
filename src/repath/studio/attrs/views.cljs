@@ -1,48 +1,18 @@
 (ns repath.studio.attrs.views
   (:require
    [repath.studio.attrs.db]
+   [repath.studio.attrs.base :as attrs]
    [repath.studio.styles :as styles]
    [repath.studio.components :as comp]
    [reagent.core :as ra]
    [re-frame.core :as rf]
    [repath.studio.tools.base :as tools]
    [repath.studio.codemirror.views :as cm]
-   [clojure.string :as str]
    [repath.config :as config]
    ["react-color" :refer [ChromePicker]]
    ["@fluentui/react" :as fui]))
 
 (def css-properties (js->clj js/window.api.mdn.css.properties :keywordize-keys true))
-
-(derive ::color ::attr)
-(derive ::coordinate ::attr)
-(derive ::length ::attr)
-(derive ::radius ::attr)
-
-(derive :fill ::color)
-(derive :stroke ::color)
-
-(derive :x ::coordinate)
-(derive :y ::coordinate)
-(derive :x1 ::coordinate)
-(derive :y1 ::coordinate)
-(derive :x2 ::coordinate)
-(derive :y2 ::coordinate)
-(derive :cx ::coordinate)
-(derive :cy ::coordinate)
-(derive :dx ::coordinate)
-(derive :dy ::coordinate)
-(derive :x ::coordinate)
-(derive :x ::coordinate)
-(derive :x ::coordinate)
-
-(derive :width ::length)
-(derive :height ::length)
-(derive :stroke-width ::length)
-(derive :r ::length)
-
-(derive :rx ::radius)
-(derive :ry ::radius)
 
 (def attrs-order [:d
                   :points
@@ -75,7 +45,7 @@
                    (-> tools/svg-spec :attributes :style attr :__compat))
                (-> tools/svg-spec :elements type :__compat))]
     (when (:support data)
-      [::div.v-box
+      [:div.v-box
        (when (some :version_added (vals (:support data)))
          [:<> [:h3 "Browser compatibility"]
           [:div.h-box
@@ -95,8 +65,6 @@
                                                                  (:mdn_url data)
                                                                  (str "https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/" (name attr)))])} "Learn more"])
        (when (and (:spec_url data) config/debug?) [:a {:style {:margin-top "14px" :display "inline-block"} :on-click #(rf/dispatch [:window/open-remote-url (:spec_url data)])} "Specification"])])))
-
-
 
 (defn on-change-handler
   ([event key old-value finalize?]
@@ -137,17 +105,9 @@
 
 (defmethod form-element :style
   [key value]
-  [:div {:key (or value key)
-         :style {:width "100%"
+  [:div { :style {:width "100%"
                  :background-color styles/level-2
-                 :padding "0 8px"}} [cm/editor value {:on-blur #(rf/dispatch [:elements/set-attribute key %])}]])
-
-(defn points-to-vec
-  [points]
-  (as-> points p
-    (str/triml p)
-    (str/split p #"\s+")
-    (partition 2 p)))
+                 :padding "0 8px"}} [cm/editor value {:on-blur #(rf/dispatch [:elements/set-attribute key % true])}]])
 
 (defmethod form-element :points
   [key value]
@@ -162,7 +122,7 @@
     [:dl (map (fn [node] [:<>
                           [:dt]
                           [:dd (map (fn [step]
-                                      [:input {:style {:width "50%"} :value step}]) node)]]) (points-to-vec value))]]])
+                                      [:input {:style {:width "50%"} :value step}]) node)]]) (attrs.points-to-vec value))]]])
 
 (defn range-input
   [key value attrs]
@@ -184,7 +144,7 @@
                           :max 1
                           :step "0.01"}])
 
-(defmethod form-element ::color
+(defmethod form-element ::attrs/color
   [key value]
   (let [picker (ra/atom nil)]
     (fn [key value]

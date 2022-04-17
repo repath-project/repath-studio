@@ -2,6 +2,7 @@
   (:require [clojure.string :as str]
             [repath.studio.tools.base :as tools]
             [repath.studio.elements.handlers :as elements]
+            [repath.studio.attrs.base :as attrs]
             [repath.studio.units :as units]))
 
 (derive :circle ::tools/shape)
@@ -32,8 +33,8 @@
 
 (defmethod tools/translate :circle
   [element [x y]] (-> element
-                      (update-in [:attrs :cx] #(units/transform + x %))
-                      (update-in [:attrs :cy] #(units/transform + y %))))
+                      (attrs/update-attr :cx + x)
+                      (attrs/update-attr :cy + y)))
 
 (defmethod tools/scale :circle
   [element [x y] handler]
