@@ -3,6 +3,7 @@
             [repath.studio.tools.base :as tools]
             [repath.studio.elements.handlers :as elements]
             [repath.studio.attrs.base :as attrs]
+            [clojure.core.matrix :as matrix]
             [repath.studio.units :as units]))
 
 (derive :circle ::tools/shape)
@@ -18,10 +19,7 @@
   [{:keys [adjusted-mouse-offset active-document adjusted-mouse-pos] :as db}]
   (let [{:keys [stroke fill]} (get-in db [:documents active-document])
         [offset-x offset-y] adjusted-mouse-offset
-        [pos-x pos-y] adjusted-mouse-pos
-        radius (Math/sqrt
-                (+ (Math/pow (- pos-x offset-x) 2)
-                   (Math/pow (- pos-y offset-y) 2)))
+        radius (Math/sqrt (apply + (matrix/pow (matrix/sub adjusted-mouse-pos adjusted-mouse-offset) 2)))
         attrs {:cx offset-x
                :cy offset-y
                :fill   (tools/rgba fill)
