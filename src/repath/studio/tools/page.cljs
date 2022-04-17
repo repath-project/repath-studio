@@ -49,9 +49,7 @@
 })])
       (map (fn [element] ^{:key (:key element)} [tools/render element]) (merge child-elements))]]))
 
-(defmethod tools/area :page
-  [{{:keys [width height]} :attrs}]
-  (apply * (map units/unit->px [width height])))
+(defmethod tools/area :page [])
 
 (defmethod tools/render-to-string :page
   [{:keys [attrs children] :as element}]
