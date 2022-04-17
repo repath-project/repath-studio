@@ -26,7 +26,7 @@
                               :width "100%"
                               ::stylefy/mode     {:hover  {:cursor           "pointer"
                                                            :background-color styles/level-2}
-                                                  :active {:background-color styles/level-3}}})
+                                                  :active {:background-color styles/overlay}}})
 
 
 (stylefy/class "context-button" {:width "100%"})

@@ -114,7 +114,7 @@
 (def level-2 "#313131")
 (def level-3 "#414141")
 
-(def active "#414141")
+(def overlay "rgba(255, 255, 255, .1)")
 
 (def accent "#ec407a")
 
@@ -165,8 +165,8 @@
 
 (stylefy/tag "::-webkit-scrollbar" {:width  "10px"
                                     :height "10px"})
-(stylefy/tag "::-webkit-scrollbar-thumb" {:background level-3})
-(stylefy/tag "::-webkit-scrollbar-corner" {:background level-3})
+(stylefy/tag "::-webkit-scrollbar-thumb" {:background overlay})
+(stylefy/tag "::-webkit-scrollbar-corner" {:background overlay})
 (stylefy/tag "::-webkit-scrollbar-track" {:background "transparent"})
 
 (stylefy/tag "input[type=range]" {:-webkit-appearance "none"
@@ -206,7 +206,7 @@
                     ::stylefy/mode     {:hover  {:cursor "pointer"
                                                  :color font-color-active
                                                  :fill font-color-active}
-                                        :active {:background-color level-3}}})
+                                        :active {:background-color overlay}}})
 
 (def flex-box {:display         "flex"
                :overflow       "hidden"})
@@ -239,7 +239,7 @@
 (stylefy/class "divider" {:margin      "4px 0"
                           :border-bottom (str "1px solid " border-color)})
 
-(stylefy/class "selected" {:background-color (->!important active)})
+(stylefy/class "selected" {:background-color (->!important overlay)})
 
 (stylefy/class "muted" {:color font-color-muted})
 
@@ -260,7 +260,7 @@
                                      ::stylefy/mode  {:hover  {:color font-color-active}
                                                       :disabled  {:background "transparent"}
                                                       :active {:color font-color-active
-                                                               :background level-3}}}))
+                                                               :background overlay}}}))
 
 (stylefy/class "v-devider" {:margin      "4px"
                             :border-left (str "1px solid " border-color)

@@ -37,7 +37,7 @@
       (assoc :cursor (if element "move" "default"))))
 
 (defmethod tools/activate :select
-  [db _ _]
+  [db]
   (assoc db 
          :cursor "default"
          :state :default))

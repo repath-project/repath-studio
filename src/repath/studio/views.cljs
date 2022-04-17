@@ -117,7 +117,7 @@
                         :padding-right 0
                         :height "32px"
                         :font-size "1em"
-                        :background styles/level-3
+                        :background styles/overlay
                         :margin     "0 0 2px 4px"}
                 :class "icon-button"} "Z: "]
       ^{:key zoom} [:input {:default-value (gstring/format "%.2f" (* 100 zoom))
@@ -130,14 +130,14 @@
                                     :padding-right 0
                                     :height "32px"
                                     :font-size "1em"
-                                    :background styles/level-3
+                                    :background styles/overlay
                                     :margin "0"}}]
       [:button {:style {:font-family  "Source Code Pro, monospace"
                         :padding-left 0
                         :padding-right 0
                         :height "32px"
                         :font-size "1em"
-                        :background styles/level-3
+                        :background styles/overlay
                         :margin "0"}
                 :class "icon-button"} "%"]
       [:select {:onChange #(rf/dispatch [:set-zoom (-> % .-target .-value js/parseFloat)])
@@ -158,7 +158,7 @@
                               :padding-right 0
                               :height "32px"
                               :font-size "1em"
-                              :background styles/level-3
+                              :background styles/overlay
                               :margin     "0 0 2px 4px"}
                       :class "icon-button"} "R: "]
         ^{:key zoom} [:input {:default-value rotate
@@ -171,7 +171,7 @@
                                       :padding-right 0
                                       :height "32px"
                                       :font-size "1em"
-                                      :background styles/level-3
+                                      :background styles/overlay
                                       :margin     "2px 0 2px 0"}}]]
      [coordinates]]))
 
@@ -182,7 +182,7 @@
   ;;    [:button {:key      (keyword (str "dropdown-" type))
   ;;              :title    type
   ;;              :class    ["icon-button" (when-not selected? "muted")]
-  ;;              :style    {:background (when selected? styles/level-3)
+  ;;              :style    {:background (when selected? styles/overlay)
   ;;                         :margin-left "0"
   ;;                         :width "16px"}
   ;;              :on-click #(rf/dispatch [:set-tool type])}

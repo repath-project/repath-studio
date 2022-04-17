@@ -55,6 +55,6 @@
   [:button {:title    title
             :class    ["icon-button" class]
             :style    {:color (when active? styles/font-color-active)
-                       :background (when active? styles/active)}
+                       :background (when active? styles/overlay)}
             :on-click action}
    [repath.studio.components/icon {:icon icon}]])

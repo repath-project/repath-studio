@@ -2,11 +2,11 @@
   (:require [stylefy.core :as stylefy]
             [repath.studio.styles :as styles]))
 
-(stylefy/class "CodeMirror-selected" {:background (styles/->!important styles/level-3)})
+(stylefy/class "CodeMirror-selected" {:background (styles/->!important styles/overlay)})
 
 (stylefy/class "CodeMirror-cursor" {:border-left (styles/->!important (str "1px solid " styles/font-color))
                                     :height (styles/->!important "16px")})
-(stylefy/class "CodeMirror-matchingbracket" {:background (styles/->!important styles/level-3)
+(stylefy/class "CodeMirror-matchingbracket" {:background (styles/->!important styles/overlay)
                                              :text-decoration (styles/->!important "none")})
 (stylefy/class "CodeMirror-wrap" (merge styles/form-element-style {:rows "5"
                                                                    :padding 0
