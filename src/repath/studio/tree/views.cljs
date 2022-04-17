@@ -30,7 +30,7 @@
                              :class (when-not locked? "list-item-button")
                              :action #(rf/dispatch [:elements/toggle-property key :locked?])}]])
 
-(defn page [{:keys [key type name visible? locked?] :as element} active? hovered? selected?]
+(defn page [{:keys [key type name visible? locked? selected?] :as element} active? hovered?]
   [:div.h-box {:key key
                :class ["button list-item page-item" (when selected? "selected") (when active? "active")] 
                :on-mouse-enter #(rf/dispatch [:document/set-hovered-keys #{key}])
@@ -51,7 +51,7 @@
             :on-change #(rf/dispatch [:elements/set-property key :name (.. % -target -value) true])}]
    [item-buttons {:locked? locked? :visible? visible? :key key}]])
 
-(defn item [{:keys [type name visible? collapsed? locked? children key] :as element} depth hovered? selected? elements]
+(defn item [{:keys [type name visible? collapsed? locked? selected? children key] :as element} depth hovered? elements]
   (let [has-children? (seq children)]
     [:li {:key key}
      [:div.h-box {:class ["button list-item" (when selected? "selected") (when visible? "text-muted")]
@@ -90,7 +90,6 @@
         active-page-children @(rf/subscribe [:elements/filter (:children active-page)])
         elements @(rf/subscribe [:elements])
         hovered-keys @(rf/subscribe [:hovered-keys])
-        selected-keys @(rf/subscribe [:selected-keys])
         active-page @(rf/subscribe [:active-page])
         elements-collapsed? @(rf/subscribe [:window/elements-collapsed?])
         symbols-collapsed? @(rf/subscribe [:window/symbols-collapsed?])
@@ -114,7 +113,7 @@
      [:div.v-scroll {:style {:flex (if pages-collapsed? 0 "0 1 128px")
                              :transition "all .2s"}}
       [:div {:on-mouse-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
-       (map (fn [element] ^{:key (:key page)} [page element (= (:key element) active-page) (contains? hovered-keys (:key element)) (contains? selected-keys (:key element))]) page-elements)]]
+       (map (fn [element] ^{:key (:key page)} [page element (= (:key element) active-page) (contains? hovered-keys (:key element))]) page-elements)]]
      [:div.button.tree-heading {:on-click #(rf/dispatch [:window/toggle-elements-collapsed])}
       [comp/toggle-collapsed-icon elements-collapsed?]
       [:div {:style {:flex 1}} "Elements"]
@@ -124,7 +123,7 @@
                              :transition "all .2s"}}
       [:div {:style {:visibility "visible"}
              :on-mouse-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
-       [item-list (map #(item % 1 (contains? hovered-keys (:key %)) (contains? selected-keys (:key %)) elements) active-page-children)]]]
+       [item-list (map #(item % 1 (contains? hovered-keys (:key %)) elements) active-page-children)]]]
      [:div.button.tree-heading {:on-click #(rf/dispatch [:window/toggle-defs-collapsed])}
       [comp/toggle-collapsed-icon defs-collapsed?]
       [:div {:style {:flex 1}} "Defs"]

@@ -24,7 +24,6 @@
            :temp-element
            :filter
            :hovered-keys
-           :selected-keys
            :rulers-locked?
            :rulers?
            :grid?]] (reg-document-sub x))

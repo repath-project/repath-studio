@@ -173,9 +173,9 @@
                                            {:name "Animate Motion"
                                             :action [:elements/animate :animateMotion {}]}
                                            :devider
-                                           {:name "Duplicate"
+                                           {:name "Duplicate in position"
                                             :shortcut "Ctrl+D"
-                                            :action [:elements/duplicate]}
+                                            :action [:elements/duplicate-in-posistion]}
                                            {:name "Delete"
                                             :shortcut "Del"
                                             :action [:elements/delete]}]))))

@@ -15,19 +15,20 @@
 (defn hover-by-area
   [db intersecting?]
   (let [active-document (:active-document db)
-        temp-element (get-in db [:documents (:active-document db) :temp-element])]
-    (-> db
-        (assoc-in [:documents (:active-document db) :hovered-keys] #{})
-        (elements/conj-by-bounds-overlap (if intersecting? bounds/intersect? bounds/contained?) [:documents active-document :hovered-keys] temp-element))))
+        predicate (if intersecting? bounds/intersect? bounds/contained?)
+        db (assoc-in db [:documents active-document :hovered-keys] #{})]
+    (reduce #(if (and (not (elements/page? %2)) (predicate (tools/adjusted-bounds %2 (elements/elements db)) (tools/adjusted-bounds (elements/get-temp db) (elements/elements db))))
+               (update-in % [:documents active-document :hovered-keys] conj (:key %2))
+               %) db (vals (elements/elements db)))))
 
 (defn select-by-area
   [db intersecting? multiselect?]
-  (let [active-document (:active-document db)
-        temp-element (get-in db [:documents active-document :temp-element])]
-    (cond-> db
-        (not multiselect?) (elements/deselect-all)
-        :always (-> (elements/clear-temp)
-                    (elements/conj-by-bounds-overlap (if intersecting? bounds/intersect? bounds/contained?) [:documents active-document :selected-keys] temp-element)))))
+  (let [predicate (if intersecting? bounds/intersect? bounds/contained?)]
+    (reduce #(if (and (not (elements/page? %2)) (predicate (tools/adjusted-bounds %2 (elements/elements db)) (tools/adjusted-bounds (elements/get-temp db) (elements/elements db))))
+               (elements/select-element % (:key %2))
+               %) (cond-> db
+                    (not multiselect?) (elements/deselect-all)
+                    :always (elements/clear-temp)) (vals (elements/elements db)))))
 
 (defmethod tools/mouse-move :select
   [{active-document :active-document :as db} _ element]
@@ -53,20 +54,19 @@
           (assoc :state :select)
           (elements/set-temp temp-element)
           (hover-by-area intersecting?)))
-    (let [selected-keys (get-in db [:documents active-document :selected-keys])
-          offset (matrix/sub adjusted-mouse-pos adjusted-mouse-offset)
-          is-element-selected? (contains? selected-keys (:key element))]
+    (let [offset (matrix/sub adjusted-mouse-pos adjusted-mouse-offset)]
       (case state
-        :translate (elements/translate (if (some #(contains? (:modifiers event) %) #{:ctrl})
-                                         (-> db
-                                             (assoc :state :clone
-                                                    :cursor "copy")
-                                             (elements/duplicate))
-                                         (history/swap db)) offset)
-        :clone (elements/translate db (:adjusted-mouse-diff db))
+        :translate (if (some #(contains? (:modifiers event) %) #{:ctrl})
+                     (assoc db
+                            :state :clone
+                            :cursor "copy")
+                     (elements/translate (history/swap db) offset))
+        :clone (elements/duplicate (history/swap db) offset)
         :scale (elements/scale (history/swap db) offset (:scale db) (contains? (:modifiers event) :ctrl))
         (cond-> db
-          (not (or is-element-selected? (= (:type element) :scale-handler))) (elements/select (contains? (:modifiers event) :shift) element)
+          (not (or (:selected? element) (= (:type element) :scale-handler))) (->
+                                                                              (elements/select (contains? (:modifiers event) :shift) element)
+                                                                              (history/finalize "Select element"))
           (not= (:type element) :scale-handler) (assoc :cursor "default"
                                                         :state :translate)
           (= (:type element) :scale-handler) (assoc :state :scale
@@ -78,7 +78,9 @@
   (let [[offset-x _] adjusted-mouse-offset
         [pos-x _] adjusted-mouse-pos]
     (assoc (case state
-             :select (select-by-area db (> pos-x offset-x) (some #(contains? (:modifiers event) %) #{:ctrl :shift}))
+             :select (-> db
+                         (select-by-area (> pos-x offset-x) (some #(contains? (:modifiers event) %) #{:ctrl :shift}))
+                         (history/finalize "Modify selection"))
              :translate (history/finalize db (str "Move selection by " adjusted-mouse-offset))
              :scale (history/finalize db "Scale selection")
              :clone (history/finalize db "Clone selection")

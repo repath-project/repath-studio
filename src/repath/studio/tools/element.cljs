@@ -1,9 +1,9 @@
 (ns repath.studio.tools.element
   (:require
    [repath.studio.tools.base :as tools]
-   [repath.studio.handlers :as handlers]
    [repath.studio.elements.handlers :as element-handlers]
    [repath.studio.elements.views :as element-views]
+   [repath.studio.attrs.base :as attrs]
    [reagent.core :as ra]
    [re-frame.core :as rf]
    [repath.studio.history.handlers :as history]
@@ -19,26 +19,26 @@
 
 (defmethod tools/translate ::tools/element
   [element [x y]] (-> element
-                      (update-in [:attrs :x] #(units/transform + x %))
-                      (update-in [:attrs :y] #(units/transform + y %))))
+                      (attrs/update-attr :x + x)
+                      (attrs/update-attr :y + y)))
 
 (defmethod tools/scale ::tools/element
   [element [x y] handler]
   (cond-> element
     (contains? #{:bottom-right
                  :top-right
-                 :middle-right} handler) (update-in [:attrs :width] #(units/transform + x %))
+                 :middle-right} handler) (attrs/update-attr :width + x)
     (contains? #{:bottom-left
                  :top-left
-                 :middle-left} handler) (-> (update-in [:attrs :x] #(units/transform + x %))
-                                            (update-in [:attrs :width] #(units/transform - x %)))
+                 :middle-left} handler) (-> (attrs/update-attr :x + x)
+                                            (attrs/update-attr :width - x))
     (contains? #{:bottom-middle
                  :bottom-right
-                 :bottom-left} handler) (update-in [:attrs :height] #(units/transform + y %))
+                 :bottom-left} handler) (attrs/update-attr :height + y)
     (contains? #{:top-middle
                  :top-left
-                 :top-right} handler) (-> (update-in [:attrs :y] #(units/transform + y %))
-                                          (update-in [:attrs :height] #(units/transform - y %)))))
+                 :top-right} handler) (-> (attrs/update-attr :y + y)
+                                          (attrs/update-attr :height - y))))
 
 (defmethod tools/bounds ::tools/element
     [{:keys [attrs]}]
@@ -61,8 +61,10 @@
 (defmethod tools/mouse-up :default
   [db event element]
   (cond-> db
-    (= (:state db) :create) (handlers/set-tool (:type element)) 
-    :always (element-handlers/select (some #(contains? (:modifiers event) %) #{:ctrl :shift}) element)))
+    (= (:state db) :create) (tools/set-tool (:type element)) 
+    :always (->
+             (element-handlers/select (some #(contains? (:modifiers event) %) #{:ctrl :shift}) element)
+             (history/finalize "Select element"))))
 
 (defn get-bounds
   "Experimental way of getting the bounds of uknown or complicated elements using the getBBox method.

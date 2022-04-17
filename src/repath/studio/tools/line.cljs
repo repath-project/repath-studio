@@ -3,7 +3,9 @@
             [repath.studio.elements.views :as element-views]
             [repath.studio.tools.base :as tools]
             [repath.studio.units :as units]
-            [clojure.string :as str]))
+            [clojure.core.matrix :as matrix]
+            [clojure.string :as str]
+            [repath.studio.history.handlers :as history]))
 
 (derive :line ::tools/shape)
 
@@ -13,21 +15,21 @@
                                               :opacity]})
 
 (defmethod tools/drag :line
-  [{:keys [state adjusted-mouse-offset adjusted-mouse-pos active-document adjusted-mouse-diff] :as db} event element]
+  [{:keys [state adjusted-mouse-offset adjusted-mouse-pos active-document] :as db} event element]
   (if (or (= state :edit) (= (:type element) :edit-handler))
-    (let [[x y] adjusted-mouse-diff
+    (let [[x y] (matrix/sub adjusted-mouse-pos adjusted-mouse-offset)
           db (cond-> db
                (= (:type element) :edit-handler) (assoc :edit (:key element))
                :always (assoc :state :edit))]
       (case (:edit db)
-        :starting-point (elements/update-selected db (fn [elements element]
+        :starting-point (elements/update-selected (history/swap db) (fn [elements element]
                                                  (assoc elements (:key element) (-> element
                                                                                     (update-in [:attrs :x1] #(units/transform + x %))
                                                                                     (update-in [:attrs :y1] #(units/transform + y %))))))
-        :ending-point (elements/update-selected db (fn [elements element]
-                                                   (assoc elements (:key element) (-> element
-                                                                                      (update-in [:attrs :x2] #(units/transform + x %))
-                                                                                      (update-in [:attrs :y2] #(units/transform + y %))))))))
+        :ending-point (elements/update-selected (history/swap db) (fn [elements element]
+                                                                    (assoc elements (:key element) (-> element
+                                                                                                       (update-in [:attrs :x2] #(units/transform + x %))
+                                                                                                       (update-in [:attrs :y2] #(units/transform + y %))))))))
     (let [stroke (get-in db [:documents active-document :stroke])
           [offset-x offset-y] adjusted-mouse-offset
           [pos-x pos-y] adjusted-mouse-pos

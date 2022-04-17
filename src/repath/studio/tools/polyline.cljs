@@ -1,5 +1,6 @@
 (ns repath.studio.tools.polyline
   (:require [repath.studio.elements.handlers :as elements]
+            [repath.studio.elements.views :as element-views]
             [repath.studio.tools.base :as tools]
             [repath.studio.units :as units]
             [repath.studio.attrs.base :as attrs]
@@ -77,6 +78,14 @@
                                                          (reduce (fn [points point] (concat points [(units/transform + x (first point)) (units/transform + y (second point))])) [])
                                                          (concat)
                                                          (str/join " "))))))
+
+(defmethod tools/edit :polyline
+  [{:keys [attrs] :as element} zoom]
+  (let [{:keys [points]} attrs
+        handler-size (/ 8 zoom)
+        stroke-width (/ 1 zoom)]
+    [:g {:key :edit-handlers}
+     (map element-views/edit-handler (mapv (fn [[x y]] {:x x :y y :size handler-size :stroke-width stroke-width :key :starting-point}) (attrs/points-to-vec points)))]))
 
 (defmethod tools/bounds :polyline
   [{{:keys [points]} :attrs}]

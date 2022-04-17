@@ -2,7 +2,8 @@
   (:require [repath.studio.elements.handlers :as elements]
             [repath.studio.tools.base :as tools]
             [repath.studio.units :as units]
-            [clojure.core.matrix :as matrix]))
+            [clojure.core.matrix :as matrix]
+            [repath.studio.history.handlers :as history]))
 
 (derive :rect ::tools/shape)
 
@@ -14,23 +15,23 @@
                                               :stroke]})
 
 (defmethod tools/drag :rect
-  [{:keys [state adjusted-mouse-offset active-document adjusted-mouse-pos adjusted-mouse-diff] :as db} event element]
+  [{:keys [state adjusted-mouse-offset active-document adjusted-mouse-pos] :as db} event element]
   (if (or (= state :edit) (= (:type element) :edit-handler))
-    (let [[offset-x offset-y] adjusted-mouse-diff
+    (let [[offset-x offset-y] (matrix/sub adjusted-mouse-pos adjusted-mouse-offset)
           db (cond-> db
                (= (:type element) :edit-handler) (assoc :edit (:key element))
                :always (assoc :state :edit))]
       (case (:edit db)
-        :position (elements/update-selected db (fn [elements element]
+        :position (elements/update-selected (history/swap db) (fn [elements element]
                                                  (assoc elements (:key element) (-> element
                                                                                     (update-in [:attrs :x] #(units/transform + offset-x %))
                                                                                     (update-in [:attrs :y] #(units/transform + offset-y %))
                                                                                     (update-in [:attrs :width] #(units/transform - offset-x %))
                                                                                     (update-in [:attrs :height] #(units/transform - offset-y %))))))
-        :size (elements/update-selected db (fn [elements element]
-                                                   (assoc elements (:key element) (-> element
-                                                                                      (update-in [:attrs :width] #(units/transform + offset-x %))
-                                                                                      (update-in [:attrs :height] #(units/transform + offset-y %))))))))
+        :size (elements/update-selected (history/swap db) (fn [elements element]
+                                                            (assoc elements (:key element) (-> element
+                                                                                               (update-in [:attrs :width] #(units/transform + offset-x %))
+                                                                                               (update-in [:attrs :height] #(units/transform + offset-y %))))))))
     (let [{:keys [stroke fill]} (get-in db [:documents active-document])
           [offset-x offset-y] adjusted-mouse-offset
           [pos-x pos-y] adjusted-mouse-pos

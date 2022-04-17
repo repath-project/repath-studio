@@ -54,9 +54,9 @@
   [{active-document :active-document content-rect :content-rect :as db} bounds]
   (let [zoom (get-in db [:documents active-document :zoom])
         [x1 y1 x2 y2] bounds
-        [width height] (matrix/sub [x2 y2] [x1 y1])
+        dimensions (matrix/sub [x2 y2] [x1 y1])
         pan (matrix/add
-             (matrix/div (matrix/sub [width height] (matrix/div [(:width content-rect) (:height content-rect)] zoom)) 2)
+             (matrix/div (matrix/sub dimensions (matrix/div [(:width content-rect) (:height content-rect)] zoom)) 2) 
              [x1 y1])]
     (assoc-in db [:documents active-document :pan] pan)))
 

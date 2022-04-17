@@ -61,9 +61,8 @@
 (rf/reg-sub
  :elements/selected
  :<- [:elements]
- :<- [:selected-keys]
- (fn [[elements selected-keys] _]
-   (vals (select-keys elements selected-keys))))
+ (fn [elements _]
+   (filter :selected? (vals elements))))
 
 (rf/reg-sub
  :elements/selected-attrs

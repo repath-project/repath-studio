@@ -29,17 +29,21 @@
   [{active-document :active-document :as db} element]
   (assoc-in db [:documents active-document :temp-element] element))
 
+(defn get-temp
+  [{active-document :active-document :as db}]
+  (get-in db [:documents active-document :temp-element]))
+
 (defn active-page
   [{active-document :active-document :as db}]
   (get-element db (get-in db [:documents active-document :active-page])))
 
-(defn selected-keys
-  [{active-document :active-document :as db}]
-  (get-in db [:documents active-document :selected-keys]))
-
 (defn selected
   [db]
-  (filter #(not (:locked? %)) (vals (select-keys (elements db) (selected-keys db)))))
+  (filter :selected? (vals (elements db))))
+
+(defn selected-keys
+  [db]
+  (into #{} (map :key (selected db))))
 
 (defn update-selected
   [db f]
@@ -49,38 +53,33 @@
   [{active-document :active-document :as db} key]
   (cond-> db
     (page? (get-element db key)) (assoc-in [:documents active-document :active-page] key)
-    :always (update-in [:documents active-document :selected-keys] conj key)))
+    :always (assoc-in (conj (elements-path db) key :selected?) true)))
 
-(defn deselect
-  [{active-document :active-document :as db} key]
-  (update-in db [:documents active-document :selected-keys] disj key))
+(defn deselect-element
+  [db key]
+    (assoc-in db (conj (elements-path db) key :selected?) false))
+
+(defn toggle-selected
+  [db key]
+  (update-in db (conj (elements-path db) key :selected?) not))
+
+(defn select-all
+  [db]
+  (reduce #(select-element %1 %2) db (:children (active-page db))))
 
 (defn deselect-all
-  [{active-document :active-document :as db}]
-  (assoc-in db [:documents active-document :selected-keys] #{}))
+  [db]
+  (reduce #(deselect-element %1 %2) db (keys (elements db))))
 
 (defn select
-  [{active-document :active-document :as db} multiselect? element]
+  [db multiselect? element]
   (if element
-    (if (page? element)
+    (if-not multiselect?
       (-> db
-          (assoc-in [:documents active-document :active-page] (:key element))
           (deselect-all)
           (select-element (:key element)))
-      (if-not multiselect?
-        (-> db
-            (deselect-all)
-            (select-element (:key element)))
-        (if (contains? (selected-keys db) (:key element))
-          (deselect db (:key element))
-          (select-element db (:key element)))))
+      (toggle-selected db (:key element)))
     (deselect-all db)))
-
-(defn conj-by-bounds-overlap
-  [db predicate path element]
-  (reduce #(if (and (not (page? %2)) (predicate (tools/adjusted-bounds %2 (elements db)) (tools/adjusted-bounds element (elements db))))
-             (update-in % path conj (:key %2))
-             %) db (vals (elements db))))
 
 (defmulti intersects-with-bounds? (fn [element _] (:type element)))
 
@@ -151,7 +150,7 @@
                         (assoc elements (:key element) (tools/translate element offset)))))
 
 (defn scale
-  [db offset handler maintain-proportions?]
+  [db offset handler lock-ratio?]
   (let [[x1 y1 x2 y2] (tools/elements-bounds (elements db) (selected db))
         outer-dimensions (bounds/->dimensions [x1 y1 x2 y2])]
     (update-selected db (fn [elements element]
@@ -197,11 +196,10 @@
 (defn create-element
   [db parent-key element]
   (let [key (helpers/uid)
-        element (helpers/deep-merge element {:key key :visible? true :parent parent-key :children []})]
+        element (helpers/deep-merge element {:key key :visible? true :selected? true :parent parent-key :children []})]
     (-> db
         (assoc-in (conj (elements-path db) key) element)
-        (update-in (conj (elements-path db) parent-key :children) #(vec (conj % key)))
-        (select-element key))))
+        (update-in (conj (elements-path db) parent-key :children) #(vec (conj % key))))))
 
 (defn create
   "TODO Handle child elements recursively"
@@ -234,9 +232,15 @@
         [x y] (:adjusted-mouse-pos db)]
     (translate db [(- x (+ x1 (/ width 2)) ) (- y (+ y1 (/ height 2)))])))
 
-(defn duplicate
+(defn duplicate-in-posistion
   [db]
   (reduce (fn [db element] (create-element db (:parent element) element)) (deselect-all db) (selected db)))
+
+(defn duplicate
+  [db offset]
+  (-> db
+      (duplicate-in-posistion)
+      (translate offset)))
 
 (defn animate
   [db type attrs]

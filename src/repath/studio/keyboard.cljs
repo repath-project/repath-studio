@@ -66,7 +66,7 @@
                  [{:keyCode (key-codes "D")
                    :ctrlKey true
                    :shiftKey true}]]
-                [[:elements/duplicate]
+                [[:elements/duplicate-in-posistion]
                  [{:keyCode (key-codes "D")
                    :ctrlKey true}]]
                 [[:elements/ungroup]

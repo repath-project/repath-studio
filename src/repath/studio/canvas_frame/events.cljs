@@ -75,8 +75,7 @@
  :mouse-event
  (fn [{:keys [mouse-offset tool content-rect] :as db} [_ event]]
    (let [{:keys [mouse-pos delta element]} event
-         adjusted-mouse-pos (h/adjusted-mouse-pos db mouse-pos)
-         db (assoc db :adjusted-mouse-diff (matrix/sub adjusted-mouse-pos (:adjusted-mouse-pos db)))]
+         adjusted-mouse-pos (h/adjusted-mouse-pos db mouse-pos)]
      (case (:type event)
        :mousemove
        (-> (if mouse-offset

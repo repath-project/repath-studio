@@ -3,7 +3,6 @@
             [cljs.spec.alpha :as s]))
 
 (s/def ::hovered-keys set?)
-(s/def ::selected-keys set?)
 (s/def ::active-page keyword?)
 (s/def ::rulers-locked? boolean?)
 (s/def ::zoom number?)
@@ -11,11 +10,10 @@
 (s/def ::elements (s/and (s/map-of keyword? ::elements/element)))
 
 (s/def ::document
-  (s/keys :req-un [::hovered-keys ::selected-keys ::pages ::active-page ::rulers-locked? ::zoom ::elements ::pan]))
+  (s/keys :req-un [::hovered-keys ::pages ::active-page ::rulers-locked? ::zoom ::elements ::pan]))
 
 (def default-document
   {:hovered-keys (hash-set)
-   :selected-keys (hash-set)
    :active-page :default-page
    :rulers-locked? false
    :grid? false

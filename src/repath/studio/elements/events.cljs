@@ -8,7 +8,9 @@
 (rf/reg-event-db
  :elements/select
  (fn [db [_ multiselect element]]
-   (h/select db multiselect element)))
+   (-> db
+       (h/select multiselect element)
+       (history/finalize "Select element"))))
 
 (rf/reg-event-db
  :elements/toggle-property
@@ -49,13 +51,16 @@
 (rf/reg-event-db
  :elements/deselect-all
  (fn [db _]
-   (h/deselect-all db)))
+   (-> db
+       (h/deselect-all)
+       (history/finalize "Deselect all"))))
 
 (rf/reg-event-db
  :elements/select-all
- (fn [{active-document :active-document :as db} _]
-   (let [active-page (get-in db [:documents active-document :active-page])]
-     (assoc-in db [:documents active-document :selected-keys] (set (get-in db [:documents active-document :elements active-page :children]))))))
+ (fn [db _]
+   (-> db
+       (h/select-all)
+       (history/finalize "Select all"))))
 
 (rf/reg-event-db
  :elements/raise
@@ -134,10 +139,10 @@
        (history/finalize "Paste styles to selection"))))
 
 (rf/reg-event-db
- :elements/duplicate
+ :elements/duplicate-in-posistion
  (fn [db [_]]
    (-> db
-       (h/duplicate)
+       (h/duplicate-in-posistion)
        (history/finalize "Duplicate selection"))))
 
 (rf/reg-event-db

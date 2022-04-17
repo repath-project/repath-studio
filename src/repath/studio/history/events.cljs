@@ -18,7 +18,8 @@
  :history/cancel
  (fn [db _]
    (cond-> db
-     (and (= (:tool db) :select) (not (:mouse-offset db))) (elements/deselect-all)
+     (and (= (:tool db) :select) (not (:mouse-offset db))) (-> (elements/deselect-all)
+                                                               (h/finalize "Deselect all"))
      (not (:mouse-offset db)) (-> (tools/set-tool :select)
                                   (assoc :state :default))
      (:mouse-offset db) (dissoc :mouse-offset)
