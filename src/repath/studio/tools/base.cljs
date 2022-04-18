@@ -88,7 +88,15 @@
 (defmethod drag-end :default [db event element] (mouse-up db event element))
 (defmethod properties :default [])
 (defmethod render :default [])
-(defmethod render-to-string :default [element] (dom/render-to-string (render element)))
+(defmethod render-to-string :default [element] (dom/render-to-static-markup (render element)))
+(defmethod render-to-string ::shape
+  [{:keys [type attrs children]}]
+  (let [child-elements @(rf/subscribe [:elements/filter-visible children])]
+    (dom/render-to-static-markup [type (-> attrs
+                                           (dissoc :style)
+                                           (assoc :dangerouslySetInnerHTML {:__html (map (fn [element] (render-to-string element)) (merge child-elements))}))])))
+
+
 (defmethod edit :default [])
 (defmethod bounds :default [])
 (defmethod area :default [])

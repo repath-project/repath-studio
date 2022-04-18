@@ -38,6 +38,7 @@
            :viewBox (str/join " " viewbox) 
            :width (:width content-rect)
            :height (:height content-rect)
+           :fill "white"
            :transform (str "rotate(" rotate ")")
            :style {:background (:fill attrs)
                    :outline "none"

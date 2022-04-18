@@ -2,7 +2,6 @@
   (:require [re-frame.core :as rf]
             [repath.studio.tools.base :as tools]
             [repath.studio.elements.handlers :as elements]
-            [repath.studio.units :as units]
             [repath.studio.mouse :as mouse]
             [reagent.dom.server :as dom]))
 
@@ -10,8 +9,7 @@
 
 (defmethod tools/properties :page [] {:icon "page"
                                       :description "The page is a top level SVG element with some extra custom attributes."
-                                      :attrs [:fill
-                                              :overflow]})
+                                      :attrs [:overflow]})
 
 (defmethod tools/drag :page
   [{:keys [adjusted-mouse-pos adjusted-mouse-offset] :as db}]
@@ -20,8 +18,7 @@
         attrs {:x      (min pos-x offset-x)
                :y      (min pos-y offset-y)
                :width  (Math/abs (- pos-x offset-x))
-               :height (Math/abs (- pos-y offset-y))
-               :fill   "#ffffff"}]
+               :height (Math/abs (- pos-y offset-y))}]
     (elements/set-temp db {:type :page
                            :name "Page"
                            :attrs attrs})))
@@ -29,7 +26,7 @@
 (defmethod tools/render :page
   [{:keys [attrs children key type] :as element}]
   (let [child-elements @(rf/subscribe [:elements/filter-visible children])
-        rect-attrs     (select-keys attrs [:width :height :fill])
+        rect-attrs     (select-keys attrs [:x :y :width :height])
         text-attrs     (select-keys attrs [:x :y])
         filter         @(rf/subscribe [:filter])
         zoom           @(rf/subscribe [:zoom])]
@@ -40,19 +37,26 @@
                                                          :fill "#888"
                                                          :font-size (/ 12 zoom)
                                                          :font-family "Source Code Pro, monospace"}) (or (:name element) type)]
+
+     [:rect (merge rect-attrs {:fill "rgba(0, 0, 0, .2)"
+                               :transform (str "translate(" (/ 1 zoom) " " (/ 1 zoom) ")")
+                               :style {:filter (str "blur(" (/ 2 zoom) ")")}})]
      [:svg  (cond-> attrs
               :always (dissoc :fill)
               (not= filter :no-filter) (assoc :filter (str "url(#" (name filter) ")")))
-      (when (:fill attrs) [:rect (merge rect-attrs {:on-mouse-up   #(mouse/event-handler % element)
+      (when (:fill attrs) [:rect (merge rect-attrs {:x 0
+                                                    :y 0
+                                                    :fill (:fill attrs)
+                                                    :on-mouse-up   #(mouse/event-handler % element)
                                                     :on-mouse-down #(mouse/event-handler % element)
-                                                    :on-double-click #(mouse/event-handler % element)
-})])
+                                                    :on-double-click #(mouse/event-handler % element)})])
       (map (fn [element] ^{:key (:key element)} [tools/render element]) (merge child-elements))]]))
 
 (defmethod tools/area :page [])
 
 (defmethod tools/render-to-string :page
-  [{:keys [attrs children] :as element}]
+  [{:keys [attrs children]}]
   (let [child-elements @(rf/subscribe [:elements/filter-visible children])]
-    (dom/render-to-static-markup [:svg (dissoc attrs :fill) 
-                                  (map (fn [element] ^{:key (:key element)} [:<> "\n    " [tools/render element]]) (merge child-elements)) "\n"])))
+    (dom/render-to-static-markup [:svg (-> attrs
+                                           (dissoc :fill)
+                                           (assoc :dangerouslySetInnerHTML {:__html (map (fn [element] (str "\n    " (tools/render-to-string element))) (merge child-elements))}))])))
