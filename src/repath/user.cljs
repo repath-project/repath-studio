@@ -1,8 +1,7 @@
 (ns repath.user
   (:require
    [re-frame.core :as rf]
-   [re-frame.db :as db]
-   [repath.studio.elements.handlers :as elements]))
+   [re-frame.db :as db]))
 
 (defn translate
   "Moves the selected elements."
@@ -113,10 +112,6 @@
 (defn elements
   []
   (:elements (document)))
-
-(defn selected
-  []
-  (elements/selected db))
 
 (defn raise
   "Raises the selected elements."
