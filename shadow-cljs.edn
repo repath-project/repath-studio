@@ -1,18 +1,4 @@
-{:source-paths ["src" "test"]
- 
- :dependencies [[reagent "1.1.1"]
-                [re-frame "1.3.0-rc3"]
-                [day8.re-frame/re-frame-10x "1.2.1"]
-                [day8.re-frame/tracing "0.6.2"]
-                [day8/shadow-git-inject "0.0.5"]
-                [garden "1.3.10"]
-                [stylefy "3.2.0"]
-                [stylefy/reagent "3.0.0"]
-                [re-pressed "0.3.1"]
-                [binaryage/devtools "1.0.4"]
-                [net.mikera/core.matrix "0.62.0"]
-                [com.cognitect/transit-cljs "0.8.269"]
-                [replumb "0.2.4"]]
+{:deps true
  
  :build-defaults {:build-hooks [(shadow-git-inject.core/hook)]}
 

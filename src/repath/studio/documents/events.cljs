@@ -7,7 +7,7 @@
    [repath.studio.history.handlers :as history]
    [repath.studio.canvas-frame.handlers :as canvas-frame]
    [repath.studio.tools.base :as tools]
-   [repath.studio.de-dupe.core :as dd]
+   [de-dupe.core :as dd]
    [repath.studio.documents.handlers :as handlers]))
 
 (def active-document-path
