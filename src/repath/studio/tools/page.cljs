@@ -57,6 +57,4 @@
 (defmethod tools/render-to-string :page
   [{:keys [attrs children]}]
   (let [child-elements @(rf/subscribe [:elements/filter-visible children])]
-    (dom/render-to-static-markup [:svg (-> attrs
-                                           (dissoc :fill)
-                                           (assoc :dangerouslySetInnerHTML {:__html (map (fn [element] (str "\n    " (tools/render-to-string element))) (merge child-elements))}))])))
+    (dom/render-to-static-markup [:svg (dissoc attrs :fill) (map (fn [element] [tools/render element]) (merge child-elements))])))
