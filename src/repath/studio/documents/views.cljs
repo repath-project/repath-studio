@@ -47,6 +47,7 @@
              :disabled (not @(rf/subscribe [:history/undos?]))
              :style {:margin-left "-2px"
                      :max-width "14px"
+                     :background styles/level-0
                      :font-size "1em"}}
     (history/select-options @(rf/subscribe [:history/undos]))]
    [comp/icon-button {:title "Undo" :icon "redo" :action #(rf/dispatch [:history/redo 1]) :disabled? (not @(rf/subscribe [:history/redos?]))}]
@@ -55,6 +56,7 @@
              :disabled (not @(rf/subscribe [:history/redos?]))
              :style {:margin-left "-2px"
                      :max-width "14px"
+                     :background styles/level-0
                      :font-size "1em"}}
     (history/select-options @(rf/subscribe [:history/redos]))]])
 
