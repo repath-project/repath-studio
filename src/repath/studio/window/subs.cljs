@@ -18,20 +18,9 @@
    (-> db :window :header?)))
 
 (rf/reg-sub
- :window/xml?
- (fn [db _]
-   (-> db :window :xml?)))
-
-
-(rf/reg-sub
  :window/timeline?
  (fn [db _]
    (-> db :window :timeline?)))
-
-(rf/reg-sub
- :window/history?
- (fn [db _]
-   (-> db :window :history?)))
 
 (rf/reg-sub
  :window/minimized?

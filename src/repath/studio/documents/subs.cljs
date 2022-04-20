@@ -26,6 +26,8 @@
            :hovered-keys
            :rulers-locked?
            :rulers?
+           :xml?
+           :history?
            :grid?]] (reg-document-sub x))
 
 (rf/reg-sub

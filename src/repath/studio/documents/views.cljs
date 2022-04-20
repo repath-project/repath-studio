@@ -102,8 +102,6 @@
      [:div.h-box {:style {:flex "1 0 auto"}}
       (map (fn [document] ^{:key document} [tab document (document documents) (= document active-document)]) document-tabs)]
      [:div {:style {:padding "0 4px"}}
-      [comp/radio-icon-button {:title "XML view" :active? @(rf/subscribe [:window/xml?]) :icon "code" :action #(rf/dispatch [:window/toggle-xml])}]
-      [comp/radio-icon-button {:title "History tree" :active? @(rf/subscribe [:window/history?]) :icon "history" :action #(rf/dispatch [:window/toggle-history])}]
       [:button {:title    "Document Actions"
                 :class    "icon-button"
                 :style {:font-size "16px"

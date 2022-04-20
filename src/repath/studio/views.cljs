@@ -95,6 +95,8 @@
         element-colors @(rf/subscribe [:elements/colors])]
     [:div.h-box {:style {:padding styles/h-padding
                          :overflow "visible"
+                         :background-color styles/level-2
+                         :margin-top "1px"
                          :elements/align-items "flex-end"}}
      [color-picker fill stroke]
      [color-palette]
@@ -110,6 +112,8 @@
      [comp/radio-icon-button {:title "Snap" :active? false :icon "magnet" :class "disabled" :action #(rf/dispatch [:document/toggle-snap])}]
      [comp/radio-icon-button {:title "Grid" :active? @(rf/subscribe [:grid?]) :icon "grid" :action #(rf/dispatch [:document/toggle-grid])}]
      [comp/radio-icon-button {:title "Rulers" :active? @(rf/subscribe [:rulers?]) :icon "ruler-combined" :action #(rf/dispatch [:document/toggle-rulers])}]
+     #_[comp/radio-icon-button {:title "History tree" :class:active? @(rf/subscribe [:history?]) :icon "history" :action #(rf/dispatch [:document/toggle-history])}]
+     [comp/radio-icon-button {:title "XML view" :active? @(rf/subscribe [:xml?]) :icon "code" :action #(rf/dispatch [:document/toggle-xml])}]
      [:div {::style {:position  "relative"}}
 
       [:button {:style {:font-family  "Source Code Pro, monospace"
@@ -153,7 +157,7 @@
        (let [zoom-options [0.1 0.5 1 2 5]]
          (when (not (contains? zoom-options zoom)) [:option {:key (str zoom) :value zoom} (str (* zoom 100) "%")])
          (map (fn [zoom-option] [:option {:key (str zoom-option) :value zoom-option} (str (* zoom-option 100) "%")]) zoom-options))]]
-     #_[:<> [:button {:style {:font-family  "Source Code Pro, monospace"
+     [:<> [:button {:style {:font-family  "Source Code Pro, monospace"
                               :padding-left styles/h-padding
                               :padding-right 0
                               :height "32px"
@@ -242,18 +246,17 @@
 (defn editor []
   [:div.h-box {:style {:flex "1"
                        :overflow "hidden"}}
-   [:div.v-box {:style {:flex             "1"
-                        :background-color styles/level-2}}
-    [:<>
-     [:div.h-box {:style {:flex 1}}
-      [:div.v-box {:style {:flex 1}}
-       [toolbar]
-       (when @(rf/subscribe [:rulers?])  [:div.h-box
-                                          [:div {:style {:width "22px"
-                                                         :height "22px"
-                                                         :text-align "center"
-                                                         :border-right (str "1px solid " styles/border-color)
-                                                         :border-bottom (str "1px solid " styles/border-color)}}]
+   [:div.v-box {:style {:flex "1" :margin-right "1px"}}
+     [:div.v-box {:style {:flex 1}}
+      [:div.h-box {:style {:flex 1 }}
+       [:div.v-box {:style {:flex 1 :background-color styles/level-2}}
+        [toolbar]
+        (when @(rf/subscribe [:rulers?])  [:div.h-box
+                                           [:div {:style {:width "22px"
+                                                          :height "22px"
+                                                          :text-align "center"
+                                                          :border-right (str "1px solid " styles/border-color)
+                                                          :border-bottom (str "1px solid " styles/border-color)}}]
                                                                                 ;; [comp/toggle-icon-button {:active? @(rf/subscribe [:rulers-locked?])
                                                                                 ;;                           :active-icon "lock"
                                                                                 ;;                           :active-text "unlock"
@@ -261,33 +264,33 @@
                                                                                 ;;                           :inactive-text "lock"
                                                                                 ;;                           :action #(rf/dispatch [:document/toggle-rulers-locked])}]
 
-                                          [rulers/ruler {:orientation :horizontal :size 23}]])
-       [:div.h-box {:style {:flex 1
-                            :position "relative"}}
-        (when @(rf/subscribe [:rulers?]) [rulers/ruler {:orientation :vertical :size 23}])
-        (when @(rf/subscribe [:command-palette?])
-          [:div.command-palette
-           [:> fui/ComboBox {:dropdownMaxWidth 300
-                             :allowFreeform false
-                             :autoComplete "on"
-                             :styles {:input {:font-size "12px"}}
-                             :options (mapv (fn [command] {:key (keyword command)
-                                                           :text command
-                                                           :styles {:optionText {:font-size "14px"}}}) (keys (:event @re-frame.registrar/kind->id->handler)))
-                             :onChange (fn [_ key]
-                                         (rf/dispatch-sync [(keyword (.-key key))]))}]])
-        [frame-canvas/frame]]
-       [footer]]
+                                           [rulers/ruler {:orientation :horizontal :size 23}]])
+        [:div.h-box {:style {:flex 1
+                             :position "relative"}}
+         (when @(rf/subscribe [:rulers?]) [rulers/ruler {:orientation :vertical :size 23}])
+         (when @(rf/subscribe [:command-palette?])
+           [:div.command-palette
+            [:> fui/ComboBox {:dropdownMaxWidth 300
+                              :allowFreeform false
+                              :autoComplete "on"
+                              :styles {:input {:font-size "12px"}}
+                              :options (mapv (fn [command] {:key (keyword command)
+                                                            :text command
+                                                            :styles {:optionText {:font-size "14px"}}}) (keys (:event @re-frame.registrar/kind->id->handler)))
+                              :onChange (fn [_ key]
+                                          (rf/dispatch-sync [(keyword (.-key key))]))}]])
+         [frame-canvas/frame]]]
+       (when @(rf/subscribe [:xml?]) (let [xml @(rf/subscribe [:elements/xml])] [:div.v-scroll {:style {:flex "0 1 30%"
+                                                                                                        :padding styles/padding
+                                                                                                        :background styles/level-2
+                                                                                                        :margin-left "1px"}} [cm/editor xml {:mode "xml"}]]))
+       (when @(rf/subscribe [:history?]) [:div.v-scroll {:style {:flex "0 1 30%"
+                                                                 :padding styles/padding
+                                                                 :background styles/level-2
+                                                                 :margin-left "1px"}}])
+       ][footer]
       [history/tree]]
-     [command-input]]]
-   (when @(rf/subscribe [:window/xml?]) (let [xml @(rf/subscribe [:elements/xml])] [:div.v-scroll {:style {:flex "0 1 30%"
-                                                                                                           :padding styles/padding
-                                                                                                           :background styles/level-2
-                                                                                                           :margin-left "1px"}} [cm/editor xml {:mode "xml"}]]))
-   (when @(rf/subscribe [:window/history?]) [:div.v-scroll {:style {:flex "0 1 30%"
-                                                                    :padding styles/padding
-                                                                    :background styles/level-2
-                                                                    :margin-left "1px"}}])])
+     [command-input]]])
 
 (defn main-panel []
   [:div.v-box {:style {:flex               "1"

@@ -222,7 +222,7 @@
            [:table {:style {:width width
                             :border-spacing "1px 1px"
                             :box-sizing "border-box"
-                            :margin-top "-1px"
+                            :margin "-1px"
                             :height "1px"}}
             [:tbody [:tr [:th.form-group {:col-span 2
                                           :style {:font-weight "300"

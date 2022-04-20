@@ -67,9 +67,7 @@
   [{:keys [orientation size]}]
   [:svg {:width  (if (= orientation :vertical) size "100%")
          :height (if (= orientation :vertical) "100%" size)
-         :style {:border-bottom (str "1px solid " styles/border-color)
-                 :border-right (when (= orientation :vertical) (str "1px solid " styles/border-color))
-                 :box-sizing "border-box"}}
+         :style {:box-sizing "border-box"}}
    [selected-bounds orientation size]
    [base-lines orientation size]
    [mouse-pointer orientation size]])

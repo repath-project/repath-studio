@@ -47,18 +47,6 @@
    (update db :header? not)))
 
 (rf/reg-event-db
- :window/toggle-xml
- (rf/path :window)
- (fn [db [_]]
-   (update db :xml? not)))
-
-(rf/reg-event-db
- :window/toggle-history
- (rf/path :window)
- (fn [db [_]]
-   (update db :history? not)))
-
-(rf/reg-event-db
  :window/toggle-elements-collapsed
  (rf/path :window)
  (fn [db [_]]

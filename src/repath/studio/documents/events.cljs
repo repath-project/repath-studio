@@ -71,6 +71,18 @@
    (update db :grid? not)))
 
 (rf/reg-event-db
+ :document/toggle-xml
+ active-document-path
+ (fn [db [_]]
+   (update db :xml? not)))
+
+(rf/reg-event-db
+ :document/toggle-history
+ active-document-path
+ (fn [db [_]]
+   (update db :history? not)))
+
+(rf/reg-event-db
  :document/set-fill
  (fn [db [_ fill]]
    (-> db
