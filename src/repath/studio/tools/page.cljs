@@ -18,7 +18,8 @@
         attrs {:x      (min pos-x offset-x)
                :y      (min pos-y offset-y)
                :width  (Math/abs (- pos-x offset-x))
-               :height (Math/abs (- pos-y offset-y))}]
+               :height (Math/abs (- pos-y offset-y))
+               :fill   "#ffffff"}]
     (elements/set-temp db {:type :page
                            :name "Page"
                            :attrs attrs})))
