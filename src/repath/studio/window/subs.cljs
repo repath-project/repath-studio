@@ -3,14 +3,14 @@
    [re-frame.core :as rf]))
 
 (rf/reg-sub
- :window/tree?
- (fn [db _]
-   (-> db :window :tree?)))
+ :window/sidebar?
+ (fn [db [_ key]]
+   (-> db :window key :visible?)))
 
 (rf/reg-sub
- :window/properties?
- (fn [db _]
-   (-> db :window :properties?)))
+ :window/sidebar
+ (fn [db [_ key]]
+   (-> db :window key :size)))
 
 (rf/reg-sub
  :window/header?
@@ -63,11 +63,6 @@
    (-> db :window :symbols-collapsed?)))
 
 (rf/reg-sub
- :window/left-sidebar-width
+ :window/drag
  (fn [db _]
-   (-> db :window :left-sidebar-width)))
-
-(rf/reg-sub
- :window/right-sidebar-width
- (fn [db _]
-   (-> db :window :right-sidebar-width)))
+   (-> db :window :drag)))

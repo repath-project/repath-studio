@@ -43,17 +43,16 @@
   (let [resize-observer (js/ResizeObserver. (fn [entries]
                                                (let [client-rect (.getBoundingClientRect (.-target (.find entries (fn [] true))))
                                                      content-rect (js->clj (.toJSON (.-contentRect (.find entries (fn [] true)))) :keywordize-keys true)]
-                                                 (rf/dispatch [:canvas/resize (assoc content-rect
-                                                                                     :x (.-x client-rect)
-                                                                                     :y (.-y client-rect))]))))]
+                                                 (rf/dispatch-sync [:canvas/resize (assoc content-rect
+                                                                                          :x (.-x client-rect)
+                                                                                          :y (.-y client-rect))]))))]
     (ra/create-class
      {:component-did-mount
       (fn
         [this]
         ;; We observe the frame to get its contentRect on resize.
         (.observe resize-observer (dom/dom-node this))
-        (.setTimeout js/window #(rf/dispatch [:pan-to-active-page :original])))
-
+        (.setTimeout js/window #(rf/dispatch-sync [:pan-to-active-page :original])))
       :component-will-unmount
       (fn
         []
@@ -67,13 +66,13 @@
               keyboard-event #(.dispatchEvent js/window.parent.document (js/KeyboardEvent. (.-type %) %))]
           [:> Frame {:initialContent (server/render-to-static-markup [frame-markup])
                      :mountTarget    "body"
-                     :id             "canvas-frame"
                      :on-key-down     keyboard-event
                      :on-key-up       keyboard-event
                      :on-context-menu element-menu
                      :style          {:flex "1 1"
                                       :overflow "hidden"
-                                      :border 0}}
+                                      :border 0
+                                      :background (-> @(rf/subscribe [:elements/canvas]) :attrs :fill)}}
            [:f> inner-component]
            [tools/render @(rf/subscribe [:elements/canvas])]
            (when @(rf/subscribe [:overlay]) [:div {:style {:position "absolute"

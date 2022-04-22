@@ -1,6 +1,7 @@
 (ns repath.studio.components
   (:require
    [reagent.core :as ra]
+   [re-frame.core :as rf]
    [repath.studio.styles :as styles]
    ["react-svg" :refer [ReactSVG]]))
 
@@ -58,3 +59,12 @@
                        :background (when active? styles/overlay)}
             :on-click action}
    [repath.studio.components/icon {:icon icon}]])
+
+(defn resizer
+  [key direction]
+  [:div {:style {:width "1px" :position "relative"}}
+   [:div.resize-handler {:draggable true
+                         :on-drag-over #(.preventDefault %)
+                         :on-drag-start #((.setDragImage (.-dataTransfer %) (.createElement js/document "img") 0 0)
+                                          (rf/dispatch-sync [:window/set-drag key direction]))
+                         :on-drag-end #(rf/dispatch-sync [:window/clear-drag])}]])

@@ -28,14 +28,14 @@
    :window {:maximized? true
             :minimized? false
             :fullscreen? false
-            :tree? true
-            :properties? true
             :header? true
             :history? false
             :timeline? true
             :xml? false
-            :left-sidebar-width 300
-            :right-sidebar-width 300
+            :tree {:size 300
+                   :visible? true}
+            :properties {:size 300
+                         :visible? true}
             :elements-collapsed? false
             :pages-collapsed? false
             :command-palette? false

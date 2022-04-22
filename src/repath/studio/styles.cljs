@@ -208,8 +208,7 @@
                                                  :fill font-color-active}
                                         :active {:background-color overlay}}})
 
-(def flex-box {:display         "flex"
-               :overflow       "hidden"})
+(def flex-box {:display "flex"})
 
 (stylefy/class "v-box" (merge flex-box {:flex-direction "column"}))
 
@@ -304,3 +303,21 @@
                                   :position "absolute"
                                   :top "20px"
                                   :left "calc(50% - 100px)"})
+
+(stylefy/class "resize-handler" {:width "5px"
+                                 :left "-2px"
+                                 :height "100%"
+                                 :z-index 1
+                                 :cursor "ew-resize"
+                                 :position "absolute"
+                                 :transition "background .3s"
+                                 ::stylefy/mode     {:hover  {:background accent}
+                                                     :active {:background accent}}})
+
+(stylefy/class "drag-overlay" {:position "absolute"
+                               :z-index "1"
+                               :cursor "ew-resize"
+                               :top "0"
+                               :left "0"
+                               :right "0"
+                               :bottom "0"})

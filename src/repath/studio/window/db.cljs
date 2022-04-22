@@ -1,10 +1,10 @@
 (ns repath.studio.window.db
   (:require [cljs.spec.alpha :as s]))
 
-(s/def ::left-sidebar-width number?)
-(s/def ::right-sidebar-width number?)
-(s/def ::tree? boolean?)
-(s/def ::properties? boolean?)
+(s/def ::left-sidebar map)
+(s/def ::right-sidebar map)
+(s/def ::collapsed? boolean?)
+(s/def ::size number?)
 (s/def ::header? boolean?)
 (s/def ::history? boolean?)
 (s/def ::rulers? boolean?)
@@ -16,10 +16,8 @@
 (s/def ::maximized? boolean?)
 (s/def ::minimized? boolean?)
 
-(s/def ::window (s/keys :req-un [::left-sidebar-width
-                                 ::right-sidebar-width
-                                 ::tree?
-                                 ::properties?
+(s/def ::window (s/keys :req-un [::left-sidebar
+                                 ::right-sidebar
                                  ::header?
                                  ::history?
                                  ::rulers?

@@ -114,7 +114,7 @@
      [comp/radio-icon-button {:title "Rulers" :active? @(rf/subscribe [:rulers?]) :icon "ruler-combined" :action #(rf/dispatch [:document/toggle-rulers])}]
      #_[comp/radio-icon-button {:title "History tree" :class:active? @(rf/subscribe [:history?]) :icon "history" :action #(rf/dispatch [:document/toggle-history])}]
      [comp/radio-icon-button {:title "XML view" :active? @(rf/subscribe [:xml?]) :icon "code" :action #(rf/dispatch [:document/toggle-xml])}]
-     [:div {::style {:position  "relative"}}
+     [:div {:style {:position  "relative"}}
 
       [:button {:style {:font-family  "Source Code Pro, monospace"
                         :padding-left styles/h-padding
@@ -244,19 +244,18 @@
     [:div [:a {:on-click #(rf/dispatch [:window/open-remote-url "https://github.com/sprocketc/repath-studio/"])} "Source Code"]]]])
 
 (defn editor []
-  [:div.h-box {:style {:flex "1"
-                       :overflow "hidden"}}
-   [:div.v-box {:style {:flex "1" :margin-right "1px"}}
-     [:div.v-box {:style {:flex 1}}
-      [:div.h-box {:style {:flex 1 }}
-       [:div.v-box {:style {:flex 1 :background-color styles/level-2}}
-        [toolbar]
-        (when @(rf/subscribe [:rulers?])  [:div.h-box
-                                           [:div {:style {:width "22px"
-                                                          :height "22px"
-                                                          :text-align "center"
-                                                          :border-right (str "1px solid " styles/border-color)
-                                                          :border-bottom (str "1px solid " styles/border-color)}}]
+  [:div.h-box {:style {:flex "1"}}
+   [:div.v-box {:style {:flex "1"}}
+    [:div.v-box {:style {:flex "1"}}
+     [:div.h-box {:style {:flex "1"}}
+      [:div.v-box {:style {:flex "1" :background-color styles/level-2}}
+       [toolbar]
+       (when @(rf/subscribe [:rulers?])  [:div.h-box
+                                          [:div {:style {:width "22px"
+                                                         :height "22px"
+                                                         :text-align "center"
+                                                         :border-right (str "1px solid " styles/border-color)
+                                                         :border-bottom (str "1px solid " styles/border-color)}}]
                                                                                 ;; [comp/toggle-icon-button {:active? @(rf/subscribe [:rulers-locked?])
                                                                                 ;;                           :active-icon "lock"
                                                                                 ;;                           :active-text "unlock"
@@ -264,89 +263,91 @@
                                                                                 ;;                           :inactive-text "lock"
                                                                                 ;;                           :action #(rf/dispatch [:document/toggle-rulers-locked])}]
 
-                                           [rulers/ruler {:orientation :horizontal :size 23}]])
-        [:div.h-box {:style {:flex 1
-                             :position "relative"}}
-         (when @(rf/subscribe [:rulers?]) [rulers/ruler {:orientation :vertical :size 23}])
-         (when @(rf/subscribe [:command-palette?])
-           [:div.command-palette
-            [:> fui/ComboBox {:dropdownMaxWidth 300
-                              :allowFreeform false
-                              :autoComplete "on"
-                              :styles {:input {:font-size "12px"}}
-                              :options (mapv (fn [command] {:key (keyword command)
-                                                            :text command
-                                                            :styles {:optionText {:font-size "14px"}}}) (keys (:event @re-frame.registrar/kind->id->handler)))
-                              :onChange (fn [_ key]
-                                          (rf/dispatch-sync [(keyword (.-key key))]))}]])
-         [frame-canvas/frame]]]
-       (when @(rf/subscribe [:xml?]) (let [xml @(rf/subscribe [:elements/xml])] [:div.v-scroll {:style {:flex "0 1 30%"
-                                                                                                        :padding styles/padding
-                                                                                                        :background styles/level-2
-                                                                                                        :margin-left "1px"}} [cm/editor xml {:mode "xml"}]]))
-       (when @(rf/subscribe [:history?]) [:div.v-scroll {:style {:flex "0 1 30%"
-                                                                 :padding styles/padding
-                                                                 :background styles/level-2
-                                                                 :margin-left "1px"}}])
-       ][footer]
-      [history/tree]]
-     [command-input]]])
+                                          [rulers/ruler {:orientation :horizontal :size 23}]])
+       [:div.h-box {:style {:flex 1
+                            :position "relative"}}
+        (when @(rf/subscribe [:rulers?]) [rulers/ruler {:orientation :vertical :size 23}])
+        (when @(rf/subscribe [:command-palette?])
+          [:div.command-palette
+           [:> fui/ComboBox {:dropdownMaxWidth 300
+                             :allowFreeform false
+                             :autoComplete "on"
+                             :styles {:input {:font-size "12px"}}
+                             :options (mapv (fn [command] {:key (keyword command)
+                                                           :text command
+                                                           :styles {:optionText {:font-size "14px"}}}) (keys (:event @re-frame.registrar/kind->id->handler)))
+                             :onChange (fn [_ key]
+                                         (rf/dispatch-sync [(keyword (.-key key))]))}]])
+        [frame-canvas/frame]]]
+      (when @(rf/subscribe [:xml?]) (let [xml @(rf/subscribe [:elements/xml])] [:div.v-scroll {:style {:flex "0 1 30%"
+                                                                                                       :padding styles/padding
+                                                                                                       :background styles/level-2}} [cm/editor xml {:mode "xml"}]]))
+      (when @(rf/subscribe [:history?]) [:div.v-scroll {:style {:flex "0 1 30%"
+                                                                :padding styles/padding
+                                                                :background styles/level-2}}])]
+     [footer]
+     [history/tree]]
+    [command-input]]])
 
 (defn main-panel []
-  [:div.v-box {:style {:flex               "1"
-                       :height             "100vh"}}
+  [:div.v-box {:style {:flex "1" :height "100vh"}}   
    (when @(rf/subscribe [:window/header?]) [win/app-header])
-   [:div.h-box {:style {:flex "1" :overflow "hidden"}}
-    (when @(rf/subscribe [:window/tree?])     [:div.v-box {:class "sidebar"
-                                                           :style {:flex (str "0 0 " @(rf/subscribe [:window/left-sidebar-width]))}}
-                                               [docs/actions]
-                                               (when (seq @(rf/subscribe [:documents])) [tree/tree-sidebar])])
+   [:div.h-box {:on-drag-over (fn [evt]
+                                (rf/dispatch [:window/on-drag evt]))
+                :style {:flex "1" :overflow "hidden"}}
+    (when @(rf/subscribe [:window/drag]) [:div.drag-overlay])
+    (when @(rf/subscribe [:window/sidebar? :tree])
+      [:div.v-box {:class "sidebar" :style {:flex (str "0 0 " @(rf/subscribe [:window/sidebar :tree]) "px")}}
+       [docs/actions]
+       (when (seq @(rf/subscribe [:documents])) [tree/tree-sidebar])])
+    [comp/resizer :tree :left]
     (if (seq @(rf/subscribe [:documents]))
       [:div.v-box {:style {:flex "1"}}
        [docs/tab-bar]
-
        [:div.h-box {:style {:flex "1"}}
         [editor]
-        [:div.v-box {:class "sidebar"
-                     :style {:flex (str "0 0 " @(rf/subscribe [:window/right-sidebar-width]))}}
+        [comp/resizer :properties :right]
+        (when @(rf/subscribe [:window/sidebar? :properties])
+          [:div.v-box {:class "sidebar"
+                       :style {:flex (str "0 0 " @(rf/subscribe [:window/sidebar :properties]) "px")}}
 
-         [:div.h-box {:style {:background-color styles/level-1
-                              :box-sizing "border-box"
-                              :flex "1"}}
-          (when @(rf/subscribe [:window/properties?]) [attrs/form])
-          [:div.v-box {:style {:flex "1"
-                               :background-color styles/level-2
-                               :padding "8px 4px"
-                               :text-align "center"}}
-           [comp/icon-button {:title "Bring To Front" :icon "bring-front" :action #(rf/dispatch [:elements/raise-to-top])}]
-           [comp/icon-button {:title "Send To Back" :icon "send-back" :action #(rf/dispatch [:elements/lower-to-bottom])}]
-           [comp/icon-button {:title "Bring Forward" :icon "bring-forward" :action #(rf/dispatch [:elements/raise])}]
-           [comp/icon-button {:title "Send Backward" :icon "send-backward" :action #(rf/dispatch [:elements/lower])}]
-           [:span.h-devider]
-           [comp/icon-button {:title "Group" :icon "group" :action #(rf/dispatch [:elements/group])}]
-           [comp/icon-button {:title "Ungroup" :icon "ungroup" :action #(rf/dispatch [:elements/ungroup])}]
-           [:span.h-devider]
-           [comp/icon-button {:title "Align Left" :icon "objects-align-left" :action #(rf/dispatch [:elements/align :left])}]
-           [comp/icon-button {:title "Align Center Horizontaly" :icon "objects-align-center-horizontal" :action #(rf/dispatch [:elements/align :center-horizontal])}]
-           [comp/icon-button {:title "Align Rignt" :icon "objects-align-right" :action #(rf/dispatch [:elements/align :right])}]
-           [:span.h-devider]
-           [comp/icon-button {:title "Align Top" :icon "objects-align-top" :action #(rf/dispatch [:elements/align :top])}]
-           [comp/icon-button {:title "Align Center Verticaly" :icon "objects-align-center-vertical" :action #(rf/dispatch [:elements/align :center-vertical])}]
-           [comp/icon-button {:title "Align Bottom" :icon "objects-align-bottom" :action #(rf/dispatch [:elements/align :bottom])}]
-           [:span.h-devider]
-           [comp/icon-button {:title "Distribute Spacing Horizontaly" :icon "distribute-spacing-horizontal" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
-           [comp/icon-button {:title "Distribute Spacing Verticaly" :icon "distribute-spacing-vertical" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
-           [:span.h-devider]
-           [comp/icon-button {:title "Union" :icon "union" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
-           [comp/icon-button {:title "Intersection" :icon "intersection" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
-           [comp/icon-button {:title "Difference" :icon "difference" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
-           [comp/icon-button {:title "Exclusion" :icon "exclusion" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
-           [:span.h-devider]
-           [comp/icon-button {:title "Distribute Spacing Horizontaly" :icon "rotate-clockwise" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
-           [comp/icon-button {:title "Distribute Spacing Verticaly" :icon "rotate-counterclockwise" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
-           [:span.h-devider]
-           [comp/icon-button {:title "Distribute Spacing Horizontaly" :icon "flip-horizontal" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
-           [comp/icon-button {:title "Distribute Spacing Verticaly" :icon "flip-vertical" :class "disabled" :action #(rf/dispatch [:elements/lower])}]]]]]]
+           [:div.h-box {:style {:background-color styles/level-1
+                                :box-sizing "border-box"
+                                :flex "1"}}
+            [attrs/form]]])
+        [:div.v-box {:style {:flex "0"
+                             :background-color styles/level-2
+                             :padding "8px 4px"
+                             :text-align "center"}}
+         [comp/icon-button {:title "Bring To Front" :icon "bring-front" :action #(rf/dispatch [:elements/raise-to-top])}]
+         [comp/icon-button {:title "Send To Back" :icon "send-back" :action #(rf/dispatch [:elements/lower-to-bottom])}]
+         [comp/icon-button {:title "Bring Forward" :icon "bring-forward" :action #(rf/dispatch [:elements/raise])}]
+         [comp/icon-button {:title "Send Backward" :icon "send-backward" :action #(rf/dispatch [:elements/lower])}]
+         [:span.h-devider]
+         [comp/icon-button {:title "Group" :icon "group" :action #(rf/dispatch [:elements/group])}]
+         [comp/icon-button {:title "Ungroup" :icon "ungroup" :action #(rf/dispatch [:elements/ungroup])}]
+         [:span.h-devider]
+         [comp/icon-button {:title "Align Left" :icon "objects-align-left" :action #(rf/dispatch [:elements/align :left])}]
+         [comp/icon-button {:title "Align Center Horizontaly" :icon "objects-align-center-horizontal" :action #(rf/dispatch [:elements/align :center-horizontal])}]
+         [comp/icon-button {:title "Align Rignt" :icon "objects-align-right" :action #(rf/dispatch [:elements/align :right])}]
+         [:span.h-devider]
+         [comp/icon-button {:title "Align Top" :icon "objects-align-top" :action #(rf/dispatch [:elements/align :top])}]
+         [comp/icon-button {:title "Align Center Verticaly" :icon "objects-align-center-vertical" :action #(rf/dispatch [:elements/align :center-vertical])}]
+         [comp/icon-button {:title "Align Bottom" :icon "objects-align-bottom" :action #(rf/dispatch [:elements/align :bottom])}]
+         [:span.h-devider]
+         [comp/icon-button {:title "Distribute Spacing Horizontaly" :icon "distribute-spacing-horizontal" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
+         [comp/icon-button {:title "Distribute Spacing Verticaly" :icon "distribute-spacing-vertical" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
+         [:span.h-devider]
+         [comp/icon-button {:title "Union" :icon "union" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
+         [comp/icon-button {:title "Intersection" :icon "intersection" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
+         [comp/icon-button {:title "Difference" :icon "difference" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
+         [comp/icon-button {:title "Exclusion" :icon "exclusion" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
+         [:span.h-devider]
+         [comp/icon-button {:title "Distribute Spacing Horizontaly" :icon "rotate-clockwise" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
+         [comp/icon-button {:title "Distribute Spacing Verticaly" :icon "rotate-counterclockwise" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
+         [:span.h-devider]
+         [comp/icon-button {:title "Distribute Spacing Horizontaly" :icon "flip-horizontal" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
+         [comp/icon-button {:title "Distribute Spacing Verticaly" :icon "flip-vertical" :class "disabled" :action #(rf/dispatch [:elements/lower])}]]]]
       [main-page])
 
     [menu/context-menu]]])

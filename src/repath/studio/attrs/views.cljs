@@ -210,16 +210,15 @@
   []
   (let [info (ra/atom nil)]
     (fn []
-      (let [width @(rf/subscribe [:window/right-sidebar-width])
-            selected-elements @(rf/subscribe [:elements/selected])
+      (let [selected-elements @(rf/subscribe [:elements/selected])
             element (first selected-elements)
             selected-attrs @(rf/subscribe [:elements/selected-attrs])
             {:keys [type attrs name]} element]
         [:div.v-scroll {:on-submit #(.preventDefault %)
-                        :style {:width width
+                        :style {:width "100%"
                                 :height "100%"}}
          (when (seq selected-elements)
-           [:table {:style {:width width
+           [:table {:style {:width "100%"
                             :border-spacing "1px 1px"
                             :box-sizing "border-box"
                             :margin "-1px"

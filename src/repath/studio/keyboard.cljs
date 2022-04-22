@@ -32,14 +32,14 @@
                  [{:keyCode (key-codes "EQUALS")}]]
                 [[:zoom-out]
                  [{:keyCode (key-codes "DASH")}]]
-                [[:window/toggle-tree]
+                [[:window/toggle-sidebar :tree]
                  [{:keyCode (key-codes "T")
                    :ctrlKey true}]]
                 [[:elements/to-path]
                  [{:keyCode (key-codes "P")
                    :ctrlKey true
                    :shiftKey true}]]
-                [[:window/toggle-properties]
+                [[:window/toggle-sidebar :properties]
                  [{:keyCode (key-codes "P")
                    :ctrlKey true}]]
                 [[:window/toggle-header]
