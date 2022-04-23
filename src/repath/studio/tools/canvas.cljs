@@ -31,14 +31,12 @@
     [:svg {:on-mouse-up     #(mouse/event-handler % element)
            :on-mouse-down   #(mouse/event-handler % element)
            :on-wheel        #(mouse/event-handler % element)
-           :on-double-click #(mouse/event-handler % element)
            ; Enable keyboard events on the svg element 
            :tab-index 0 
            ; We are using the [viewBox](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox) attribute to simulate pan and zoom
            :viewBox (str/join " " viewbox) 
            :width (:width content-rect)
            :height (:height content-rect)
-           :fill "white"
            :transform (str "rotate(" rotate ")")
            :style {:background (:fill attrs)
                    :outline "none"

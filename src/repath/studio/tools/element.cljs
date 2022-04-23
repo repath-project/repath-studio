@@ -11,7 +11,9 @@
    [clojure.core.matrix :as matrix]
    [clojure.string :as str]
    [repath.studio.mouse :as mouse]
-   [reagent.dom :as dom]))
+   [reagent.dom :as dom]
+   [reagent.dom.server :as server]
+   [goog.string :as gstring]))
 
 (defmethod tools/activate ::tools/element [db] (assoc db
                                                       :cursor "crosshair"
@@ -107,13 +109,27 @@
     :reagent-render
     (fn
       [{:keys [key attrs type title] :as element} child-elements]
-      [type (merge (dissoc attrs :style) {:on-double-click #(mouse/event-handler % element)
-                                          :on-mouse-up     #(mouse/event-handler % element)
-                                          :on-mouse-down   #(mouse/event-handler % element)
-                                          :on-mouse-move   #(mouse/event-handler % element)})
-       (when title [:title title])
-       (:content attrs)
-       (map (fn [child] ^{:key (:key child)} [tools/render child]) child-elements)])}))
+      [:<>
+       [type (dissoc attrs :style)
+        (when title [:title title])
+        (:content attrs)
+        (map (fn [child] ^{:key (:key child)} [tools/render child]) child-elements)]
+       
+       [type (merge (dissoc attrs :style) {:on-mouse-up   #(mouse/event-handler % element)
+                                           :on-mouse-down #(mouse/event-handler % element)
+                                           :on-mouse-move #(mouse/event-handler % element)
+                                           :on-double-click #(mouse/event-handler % element)
+                                           :fill "transparent"
+                                           :stroke "transparent"
+                                           :stroke-width (/ 20 @(rf/subscribe [:zoom]))})]])}))
+
+(defmethod tools/render-to-string :default
+  [{:keys [attrs type title children]}]
+  (let [child-elements @(rf/subscribe [:elements/filter-visible children])]
+    (gstring/unescapeEntities (server/render-to-static-markup [type (dissoc attrs :style)
+                                                               (when title [:title title])
+                                                               (:content attrs)
+                                                               (map tools/render-to-string child-elements)]))))
 
 (defmethod tools/render ::tools/element
   [{:keys [children] :as element}]

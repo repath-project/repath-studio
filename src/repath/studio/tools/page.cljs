@@ -3,7 +3,8 @@
             [repath.studio.tools.base :as tools]
             [repath.studio.elements.handlers :as elements]
             [repath.studio.mouse :as mouse]
-            [reagent.dom.server :as dom]))
+            [reagent.dom.server :as dom]
+            [goog.string :as gstring]))
 
 (derive :page ::tools/element)
 
@@ -58,4 +59,4 @@
 (defmethod tools/render-to-string :page
   [{:keys [attrs children]}]
   (let [child-elements @(rf/subscribe [:elements/filter-visible children])]
-    (dom/render-to-static-markup [:svg (dissoc attrs :fill) (map (fn [element] [tools/render element]) (merge child-elements))])))
+    (gstring/unescapeEntities (dom/render-to-static-markup [:svg (dissoc attrs :fill) (map tools/render-to-string (merge child-elements))]))))
