@@ -237,6 +237,11 @@
 (stylefy/tag "button" button-styles)
 (stylefy/class "button" button-styles)
 
+(stylefy/class "small" (merge (square-styles "22px !important")
+                              {:margin "0 !important"
+                               :border-radius "2px !important"
+                               ::stylefy/manual [[:svg (square-styles "13px !important")]]}))
+
 (stylefy/class "divider-v" {:margin      "0 4px"
                             :border-left (str "1px solid " border-color)
                             :height      "28px"})

@@ -15,9 +15,4 @@
                                  :white-space "nowrap"
                                  :pointer-events "none"})
 
-(stylefy/class "close-document-button" {:height "24px"
-                                        :width "24px"
-                                        :margin 0
-                                        :visibility "hidden"
-                                        ::stylefy/manual [[:svg {:width "10px"
-                                                                 :height "10px"}]]})
+(stylefy/class "close-document-button" {:visibility "hidden"})

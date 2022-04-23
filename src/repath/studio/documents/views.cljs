@@ -63,7 +63,7 @@
 (defn close-button 
   [key active?]
   [:button {:key key
-            :class "icon-button close-document-button"
+            :class "icon-button small close-document-button"
             :title "Close document"
             :style {:visibility (when active? "visible")}
             :on-mouse-down #(.stopPropagation %)

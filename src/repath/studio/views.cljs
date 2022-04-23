@@ -239,15 +239,16 @@
        (when @(rf/subscribe [:rulers?])  [:div.h-box
                                           [:div {:style {:width "22px"
                                                          :height "22px"
-                                                         :text-align "center"
                                                          :border-right (str "1px solid " styles/border-color)
-                                                         :border-bottom (str "1px solid " styles/border-color)}}]
-                                                                                ;; [comp/toggle-icon-button {:active? @(rf/subscribe [:rulers-locked?])
-                                                                                ;;                           :active-icon "lock"
-                                                                                ;;                           :active-text "unlock"
-                                                                                ;;                           :inactive-icon "unlock"
-                                                                                ;;                           :inactive-text "lock"
-                                                                                ;;                           :action #(rf/dispatch [:document/toggle-rulers-locked])}]
+                                                         :border-bottom (str "1px solid " styles/border-color)}}
+                                           [comp/toggle-icon-button {:active? @(rf/subscribe [:rulers-locked?])
+                                                                     :active-icon "lock"
+                                                                     :active-text "unlock"
+                                                                     :inactive-icon "unlock"
+                                                                     :inactive-text "lock"
+                                                                     :class "small"
+                                                                     :action #(rf/dispatch [:document/toggle-rulers-locked])}]]
+
 
                                           [rulers/ruler {:orientation :horizontal :size 23}]])
        [:div.h-box {:style {:flex 1
@@ -322,19 +323,19 @@
          [comp/icon-button {:title "Align Center Verticaly" :icon "objects-align-center-vertical" :action #(rf/dispatch [:elements/align :center-vertical])}]
          [comp/icon-button {:title "Align Bottom" :icon "objects-align-bottom" :action #(rf/dispatch [:elements/align :bottom])}]
          [:span.h-devider]
-         [comp/icon-button {:title "Distribute Spacing Horizontaly" :icon "distribute-spacing-horizontal" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
-         [comp/icon-button {:title "Distribute Spacing Verticaly" :icon "distribute-spacing-vertical" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
+         [comp/icon-button {:title "Distribute Spacing Horizontaly" :icon "distribute-spacing-horizontal" :action #(rf/dispatch [:elements/raise])}]
+         [comp/icon-button {:title "Distribute Spacing Verticaly" :icon "distribute-spacing-vertical" :action #(rf/dispatch [:elements/lower])}]
          [:span.h-devider]
-         [comp/icon-button {:title "Union" :icon "union" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
-         [comp/icon-button {:title "Intersection" :icon "intersection" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
-         [comp/icon-button {:title "Difference" :icon "difference" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
-         [comp/icon-button {:title "Exclusion" :icon "exclusion" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
+         [comp/icon-button {:title "Union" :icon "union" :action #(rf/dispatch [:elements/raise])}]
+         [comp/icon-button {:title "Intersection" :icon "intersection" :action #(rf/dispatch [:elements/lower])}]
+         [comp/icon-button {:title "Difference" :icon "difference" :action #(rf/dispatch [:elements/lower])}]
+         [comp/icon-button {:title "Exclusion" :icon "exclusion" :action #(rf/dispatch [:elements/lower])}]
          [:span.h-devider]
-         [comp/icon-button {:title "Distribute Spacing Horizontaly" :icon "rotate-clockwise" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
-         [comp/icon-button {:title "Distribute Spacing Verticaly" :icon "rotate-counterclockwise" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
+         [comp/icon-button {:title "Distribute Spacing Horizontaly" :icon "rotate-clockwise" :action #(rf/dispatch [:elements/raise])}]
+         [comp/icon-button {:title "Distribute Spacing Verticaly" :icon "rotate-counterclockwise" :action #(rf/dispatch [:elements/lower])}]
          [:span.h-devider]
-         [comp/icon-button {:title "Distribute Spacing Horizontaly" :icon "flip-horizontal" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
-         [comp/icon-button {:title "Distribute Spacing Verticaly" :icon "flip-vertical" :class "disabled" :action #(rf/dispatch [:elements/lower])}]]]]
+         [comp/icon-button {:title "Distribute Spacing Horizontaly" :icon "flip-horizontal" :action #(rf/dispatch [:elements/raise])}]
+         [comp/icon-button {:title "Distribute Spacing Verticaly" :icon "flip-vertical" :action #(rf/dispatch [:elements/lower])}]]]]
       [home-page])
 
     [menu/context-menu]]])
