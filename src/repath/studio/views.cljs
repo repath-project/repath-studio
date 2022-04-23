@@ -34,8 +34,8 @@
   (let [palette @(rf/subscribe [:color-palette])]
     (into [:div.v-box {:style {:margin-left styles/h-padding
                                :flex "1"
-                               :height "33px"
-                               :margin "1px"}}]
+                               :height "32px"
+                               :margin "2px"}}]
           (map color-swatch palette))))
 
 (defn color-picker
@@ -114,50 +114,37 @@
      [comp/radio-icon-button {:title "Rulers" :active? @(rf/subscribe [:rulers?]) :icon "ruler-combined" :action #(rf/dispatch [:document/toggle-rulers])}]
      #_[comp/radio-icon-button {:title "History tree" :class:active? @(rf/subscribe [:history?]) :icon "history" :action #(rf/dispatch [:document/toggle-history])}]
      [comp/radio-icon-button {:title "XML view" :active? @(rf/subscribe [:xml?]) :icon "code" :action #(rf/dispatch [:document/toggle-xml])}]
-     [:div {:style {:position  "relative"}}
-
-      [:button {:style {:font-family  "Source Code Pro, monospace"
+     [:div.h-box {:style {:align-items "center" :background styles/overlay :border-radius "4px" :margin "2px"}}
+      [:span {:style {:font-family  "Source Code Pro, monospace"
                         :padding-left styles/h-padding
-                        :padding-right 0
-                        :height "32px"
-                        :font-size "1em"
-                        :background styles/overlay
-                        :margin     "0 0 2px 4px"}
-                :class "icon-button"} "Z: "]
+                        :font-size "1em"}} "Z: "]
       ^{:key zoom} [:input {:default-value (gstring/format "%.2f" (* 100 zoom))
-                            :class    ["icon-button"]
                             :on-blur #(rf/dispatch [:set-zoom (/ (.. % -target -value) 100)])
                             :on-key-down #((when (= (.-keyCode %) 13) (rf/dispatch [:set-zoom (/ (.. % -target -value) 100)])))
                             :style {:font-family  "Source Code Pro, monospace"
-                                    :min-width "50px"
+                                    :width "60px"
+                                    :background "transparent"
                                     :padding-left 0
+                                    :line-height "1em"
                                     :padding-right 0
-                                    :height "32px"
                                     :font-size "1em"
-                                    :background styles/overlay
                                     :margin "0"}}]
-      [:button {:style {:font-family  "Source Code Pro, monospace"
-                        :padding-left 0
-                        :padding-right 0
-                        :height "32px"
-                        :font-size "1em"
-                        :background styles/overlay
-                        :margin "0"}
-                :class "icon-button"} "%"]
+      [:span {:style {:font-family  "Source Code Pro, monospace" :flex "0 0 10px"}} "%"]
       [:select {:onChange #(rf/dispatch [:set-zoom (-> % .-target .-value js/parseFloat)])
-                :class    "icon-button"
                 :value    zoom
-                :style    {:background styles/level-3
-                           :font-family  "Source Code Pro, monospace"
+                :style    {:font-family  "Source Code Pro, monospace"
                            :margin-left "0"
+                           :flex "0"
                            :width "16px"
+                           :background styles/level-3
                            :font-size "1em"
                            :padding-left "0"
+                           :height "32px"
                            :padding-right "0"}}
        (let [zoom-options [0.1 0.5 1 2 5]]
          (when (not (contains? zoom-options zoom)) [:option {:key (str zoom) :value zoom} (str (* zoom 100) "%")])
          (map (fn [zoom-option] [:option {:key (str zoom-option) :value zoom-option} (str (* zoom-option 100) "%")]) zoom-options))]]
-     [:<> [:button {:style {:font-family  "Source Code Pro, monospace"
+     #_[:<> [:button {:style {:font-family  "Source Code Pro, monospace"
                               :padding-left styles/h-padding
                               :padding-right 0
                               :height "32px"
@@ -205,7 +192,7 @@
 
 (defn toolbar []
   (let [tool @(rf/subscribe [:tool])]
-    (into [:div.h-box {:style {:justify-content "center" :padding "8px 16px 16px"}}]
+    (into [:div.h-box {:style {:justify-content "center" :padding "8px 8px 16px" :flex-wrap "wrap"}}]
           (interpose [:span.v-devider]
                      (map (fn [group] [toolbar-group group tool])
                           toolbars)))))

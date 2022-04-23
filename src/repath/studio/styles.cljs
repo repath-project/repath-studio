@@ -294,9 +294,9 @@
                              :border-style "solid"
                              :border-color "#aaa"})
 
-(stylefy/class "color-drip" {:width  "16px"
+(stylefy/class "color-drip" {:max-width  "16px"
                              :height "16px"
-                             :margin-left "1px"
+                             :flex "1"
                              :cursor "pointer"})
 
 (stylefy/class "command-palette" {:width "200px"
