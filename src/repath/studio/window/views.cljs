@@ -97,5 +97,5 @@
                                                                         :-webkit-app-region "drag"}}
                                                     [:img {:src "img/icon-no-bg.svg"
                                                            :style {:padding styles/padding
-                                                                   :width "16px"
-                                                                   :height "16px"}}] (map menu-button menu)] [title-bar] [window-controls]]))
+                                                                   :width styles/icon-size
+                                                                   :height styles/icon-size}}] (map menu-button menu)] [title-bar] [window-controls]]))

@@ -11,6 +11,10 @@
   [value]
   (str value " !important"))
 
+(defn ->px
+  [value]
+  (str value "px"))
+
 ;; Load Source Sans Pro font
 
 (stylefy/font-face {:font-family "Source Sans Pro"
@@ -140,6 +144,8 @@
 (def v-padding "8px")
 (def padding (str v-padding " " h-padding))
 
+(def icon-size 17)
+
 (def form-element-style
   {:outline "none"
    :background level-2
@@ -253,7 +259,7 @@
                                                 :fill "inherit"}]]})
 
 (stylefy/class "icon-button" (merge button-styles
-                                    (square-styles "32px")
+                                    (square-styles (->px (* icon-size 2)))
                                     {:margin "2px"
                                      :border-radius "4px"
                                      ::stylefy/mode  {:hover  {:color font-color-active}
@@ -285,8 +291,8 @@
 (stylefy/class "chrome-picker" color-picker-styles)
 (stylefy/class "photoshop-picker" color-picker-styles)
 
-(stylefy/class "color-rect" {:width        "32px"
-                             :height       "32px"
+(stylefy/class "color-rect" {:width        (->px (* icon-size 2))
+                             :height       (->px (* icon-size 2))
                              :position     "absolute"
                              :cursor       "pointer"
                              :box-sizing   "border-box"
@@ -294,8 +300,8 @@
                              :border-style "solid"
                              :border-color "#aaa"})
 
-(stylefy/class "color-drip" {:max-width  "16px"
-                             :height "16px"
+(stylefy/class "color-drip" {:max-width (->px icon-size)
+                             :height (->px icon-size)
                              :flex "1"
                              :cursor "pointer"})
 

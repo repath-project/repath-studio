@@ -34,6 +34,7 @@
                                                         :margin-left "1px"
                                                         :text-align "left"
                                                         :padding "8px"
+                                                        :height (styles/->px (* styles/icon-size 2))
                                                         :background styles/level-2
                                                         :color styles/font-color-muted
                                                         ::stylefy/mode {:hover {:color styles/font-color-hovered

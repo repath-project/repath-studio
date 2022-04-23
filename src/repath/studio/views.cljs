@@ -34,7 +34,7 @@
   (let [palette @(rf/subscribe [:color-palette])]
     (into [:div.v-box {:style {:margin-left styles/h-padding
                                :flex "1"
-                               :height "32px"
+                               :height (* styles/icon-size 2)
                                :margin "2px"}}]
           (map color-swatch palette))))
 
@@ -58,8 +58,8 @@
                       :bottom     0
                       :right      0}}
         [:div {:class "color-rect"
-               :style {:width      "16px"
-                       :height     "16px"
+               :style {:width      styles/icon-size
+                       :height     styles/icon-size
                        :bottom     "7px"
                        :right      "7px"
                        :background styles/level-2}}]]
@@ -135,11 +135,11 @@
                 :style    {:font-family  "Source Code Pro, monospace"
                            :margin-left "0"
                            :flex "0"
-                           :width "16px"
+                           :width styles/icon-size
                            :background styles/level-3
                            :font-size "1em"
                            :padding-left "0"
-                           :height "32px"
+                           :height (* styles/icon-size 2)
                            :padding-right "0"}}
        (let [zoom-options [0.1 0.5 1 2 5]]
          (when (not (contains? zoom-options zoom)) [:option {:key (str zoom) :value zoom} (str (* zoom 100) "%")])
@@ -324,17 +324,17 @@
          [:span.h-devider]
          [comp/icon-button {:title "Distribute Spacing Horizontaly" :icon "distribute-spacing-horizontal" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
          [comp/icon-button {:title "Distribute Spacing Verticaly" :icon "distribute-spacing-vertical" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
-         #_[:span.h-devider]
-         #_[comp/icon-button {:title "Union" :icon "union" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
-         #_[comp/icon-button {:title "Intersection" :icon "intersection" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
-         #_[comp/icon-button {:title "Difference" :icon "difference" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
-         #_[comp/icon-button {:title "Exclusion" :icon "exclusion" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
-         #_[:span.h-devider]
-         #_[comp/icon-button {:title "Distribute Spacing Horizontaly" :icon "rotate-clockwise" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
-         #_[comp/icon-button {:title "Distribute Spacing Verticaly" :icon "rotate-counterclockwise" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
-         #_[:span.h-devider]
-         #_[comp/icon-button {:title "Distribute Spacing Horizontaly" :icon "flip-horizontal" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
-         #_[comp/icon-button {:title "Distribute Spacing Verticaly" :icon "flip-vertical" :class "disabled" :action #(rf/dispatch [:elements/lower])}]]]]
+         [:span.h-devider]
+         [comp/icon-button {:title "Union" :icon "union" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
+         [comp/icon-button {:title "Intersection" :icon "intersection" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
+         [comp/icon-button {:title "Difference" :icon "difference" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
+         [comp/icon-button {:title "Exclusion" :icon "exclusion" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
+         [:span.h-devider]
+         [comp/icon-button {:title "Distribute Spacing Horizontaly" :icon "rotate-clockwise" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
+         [comp/icon-button {:title "Distribute Spacing Verticaly" :icon "rotate-counterclockwise" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
+         [:span.h-devider]
+         [comp/icon-button {:title "Distribute Spacing Horizontaly" :icon "flip-horizontal" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
+         [comp/icon-button {:title "Distribute Spacing Verticaly" :icon "flip-vertical" :class "disabled" :action #(rf/dispatch [:elements/lower])}]]]]
       [home-page])
 
     [menu/context-menu]]])

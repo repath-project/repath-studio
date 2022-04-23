@@ -2,102 +2,46 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="16"
-   height="16"
-   viewBox="0 0 16 16"
+   width="17"
+   height="17"
+   viewBox="0 0 17 17"
    version="1.1"
    id="svg5"
-   inkscape:version="1.1 (c4e8f9ed74, 2021-05-24)"
-   sodipodi:docname="icon-template.svg"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
-  <sodipodi:namedview
-     id="namedview7"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:document-units="px"
-     showgrid="true"
-     units="px"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0"
-     showguides="true"
-     inkscape:guide-bbox="true"
-     inkscape:snap-bbox="true"
-     inkscape:bbox-paths="true"
-     inkscape:bbox-nodes="true"
-     inkscape:snap-bbox-edge-midpoints="true"
-     inkscape:snap-bbox-midpoints="true"
-     inkscape:object-paths="true"
-     inkscape:snap-intersection-paths="true"
-     inkscape:snap-smooth-nodes="true"
-     inkscape:snap-midpoints="true"
-     inkscape:snap-object-midpoints="true"
-     inkscape:snap-center="true"
-     inkscape:zoom="22.627416"
-     inkscape:cx="1.5246991"
-     inkscape:cy="6.7175147"
-     inkscape:window-width="2560"
-     inkscape:window-height="1372"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="layer1"
-     scale-x="100">
-    <sodipodi:guide
-       position="-1,8"
-       orientation="0,-1"
-       id="guide1077" />
-    <sodipodi:guide
-       position="8,15"
-       orientation="1,0"
-       id="guide1079" />
-    <inkscape:grid
-       type="xygrid"
-       id="grid2179" />
-  </sodipodi:namedview>
   <defs
      id="defs2" />
   <g
-     inkscape:label="Layer 1"
-     inkscape:groupmode="layer"
      id="layer1"
      transform="translate(-107.73782,-120.06152)">
     <rect
-       style="opacity:0.560663;fill:#e10000;fill-opacity:0.224766;stroke-width:0.146701px;-inkscape-stroke:none;stop-color:#000000"
+       style="opacity:0.560663;fill:#e10000;fill-opacity:0.224766;stroke-width:0.15185px;-inkscape-stroke:none;stop-color:#000000"
        id="rect858-3"
-       width="13.999996"
+       width="14.999996"
        height="10.000004"
        x="108.73782"
        y="123.06152" />
     <rect
-       style="opacity:0.560663;fill:#e10000;fill-opacity:0.224766;stroke-width:0.146701px;-inkscape-stroke:none;stop-color:#000000"
+       style="opacity:0.560663;fill:#e10000;fill-opacity:0.224766;stroke-width:0.159262px;-inkscape-stroke:none;stop-color:#000000"
        id="rect858-3-6"
-       width="13.999996"
-       height="9.9999914"
+       width="14.999996"
+       height="10.999988"
        x="121.06152"
-       y="-120.73782"
-       transform="rotate(90)" />
-    <rect
-       style="opacity:0.560663;fill:#e10000;fill-opacity:0.224766;stroke-width:0.148782px;-inkscape-stroke:none;stop-color:#000000"
-       id="rect858-3-6-3"
-       width="11.999996"
-       height="11.999994"
-       x="122.06152"
        y="-121.73782"
        transform="rotate(90)" />
+    <rect
+       style="opacity:0.560663;fill:#e10000;fill-opacity:0.224766;stroke-width:0.16118px;-inkscape-stroke:none;stop-color:#000000"
+       id="rect858-3-6-3"
+       width="12.999996"
+       height="12.99999"
+       x="122.06152"
+       y="-122.73782"
+       transform="rotate(90)" />
     <circle
-       style="opacity:0.560663;fill:#e10000;fill-opacity:0.224766;stroke-width:0.362355px;-inkscape-stroke:none;stop-color:#000000"
+       style="opacity:0.560663;fill:#e10000;fill-opacity:0.224766;stroke-width:0.388237px;-inkscape-stroke:none;stop-color:#000000"
        id="path1308"
-       cx="115.73782"
-       cy="128.06152"
-       r="7" />
+       cx="116.23782"
+       cy="128.56152"
+       r="7.4999981" />
   </g>
 </svg>
