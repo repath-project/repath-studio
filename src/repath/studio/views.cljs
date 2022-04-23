@@ -206,11 +206,10 @@
    [repl/main-view]])
 
 (defn home-page []
-  [:div {:style {:display "flex"
-                 :flex 1
-                 :justify-content "center"
-                 :min-height "100%"
-                 :overflow "auto"}}
+  [:div.h-box {:style {:flex 1
+                       :justify-content "center"
+                       :min-height "100%"
+                       :overflow "auto"}}
    [:div {:style {:font-size "150%"
                   :justify-content "center"
                   :width "100%"
@@ -303,6 +302,7 @@
                                 :flex "1"}}
             [attrs/form]]])
         [:div.v-box {:style {:flex "0"
+                             :border-left (when-not @(rf/subscribe [:window/sidebar? :properties]) (str "1px solid " styles/level-1))
                              :background-color styles/level-2
                              :padding "8px 4px"
                              :text-align "center"}}

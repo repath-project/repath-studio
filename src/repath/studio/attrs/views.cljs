@@ -221,10 +221,10 @@
            [:table {:style {:width "100%"
                             :border-spacing "1px 1px"
                             :box-sizing "border-box"
-                            :margin "-1px"
+                            :margin "-1px 0"
                             :height "1px"}}
             [:tbody [:tr [:th.form-group {:col-span 2
-                                          :style {:font-weight "300"
+                                          :style {:font-weight "400"
                                                   :background-color styles/level-2
                                                   :text-align "left"
                                                   :font-size "18px"

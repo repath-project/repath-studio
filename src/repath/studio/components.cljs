@@ -62,7 +62,7 @@
 
 (defn resizer
   [key direction]
-  [:div {:style {:width "1px" :position "relative"}}
+  [:div {:style {:position "relative"}}
    [:div.resize-handler {:draggable true
                          :on-drag-over #(.preventDefault %)
                          :on-drag-start #((.setDragImage (.-dataTransfer %) (.createElement js/document "img") 0 0)
