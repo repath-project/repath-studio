@@ -218,7 +218,7 @@
                        :overflow "visible"}}
    [repl/main-view]])
 
-(defn main-page []
+(defn home-page []
   [:div {:style {:display "flex"
                  :flex 1
                  :justify-content "center"
@@ -232,16 +232,16 @@
                   :max-width "1200px"
                   :background  styles/level-1
                   :elements/align-self "center"}}
-    [:h1 {:style {:margin "0"}} "RePath Studio"]
-    [:h4 {:style {:margin "0"}} "Vector Graphics Manipulation"]
+    [:h1 {:style {:margin "0"}} "repath.studio"]
+    [:h4 {:style {:margin "0"}} "Scalable Vector Graphics Manipulation"]
     [:h2 "Start"]
     [:div [:a {:on-click #(rf/dispatch [:document/new])} "New"] [:span {:class "muted"} " (Ctrl+N)"]]
     [:div [:a {:on-click #(rf/dispatch [:document/open])} "Open"] [:span {:class "muted"} " (Ctrl+O)"]]
     [:h2 "Recent"]
     [:h2 "Help"]
     [:div [:a {:on-click #(rf/dispatch [:window/open-remote-url "https://repath.studio/"])} "Website"]]
-    [:div [:a {:on-click #(rf/dispatch [:window/open-remote-url "https://repath.studio/docs/getting-started/"])} "Getting Started"]]
-    [:div [:a {:on-click #(rf/dispatch [:window/open-remote-url "https://github.com/sprocketc/repath-studio/"])} "Source Code"]]]])
+    [:div [:a {:on-click #(rf/dispatch [:window/open-remote-url "https://repath.studio/docs/"])} "Getting Started"]]
+    [:div [:a {:on-click #(rf/dispatch [:window/open-remote-url "https://github.com/re-path/studio"])} "Source Code"]]]])
 
 (defn editor []
   [:div.h-box {:style {:flex "1"}}
@@ -348,6 +348,6 @@
          [:span.h-devider]
          [comp/icon-button {:title "Distribute Spacing Horizontaly" :icon "flip-horizontal" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
          [comp/icon-button {:title "Distribute Spacing Verticaly" :icon "flip-vertical" :class "disabled" :action #(rf/dispatch [:elements/lower])}]]]]
-      [main-page])
+      [home-page])
 
     [menu/context-menu]]])
