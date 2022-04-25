@@ -33,7 +33,7 @@
                   :action [:elements/lower]}])))
 
 (defn actions []
-  [:div.h-box {:style {:padding "2px" :overflow "visible"}}
+  [:div.h-box {:style {:padding "1px" :overflow "visible"}}
    [comp/icon-button {:title "New" :icon "file" :action #(rf/dispatch [:document/new])}]
    [comp/icon-button {:title "Open" :icon "folder" :action #(rf/dispatch [:document/open])}]
    [comp/icon-button {:title "Save" :icon "save" :action #(rf/dispatch [:document/save])}]

@@ -264,7 +264,7 @@
                                                 :fill "inherit"}]]})
 
 (stylefy/class "icon-button" (merge button-styles
-                                    (square-styles (->px (* icon-size 2)))
+                                    (square-styles "33px")
                                     {:margin "2px"
                                      :border-radius "4px"
                                      ::stylefy/mode  {:hover  {:color font-color-active}
@@ -296,8 +296,8 @@
 (stylefy/class "chrome-picker" color-picker-styles)
 (stylefy/class "photoshop-picker" color-picker-styles)
 
-(stylefy/class "color-rect" {:width        (->px (* icon-size 2))
-                             :height       (->px (* icon-size 2))
+(stylefy/class "color-rect" {:width        "33px"
+                             :height       "33px"
                              :position     "absolute"
                              :cursor       "pointer"
                              :box-sizing   "border-box"
