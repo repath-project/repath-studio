@@ -96,7 +96,9 @@
 (defn set-attribute
   ([db attribute value]
    (update-selected db (fn [elements element]
-                         (if (attribute (tools/attributes element)) (assoc-in elements [(:key element) :attrs attribute] value) elements))))
+                         (if (and (not (:locked? element)) (attribute (tools/attributes element)))
+                           (assoc-in elements [(:key element) :attrs attribute] value) 
+                           elements))))
   ([db element-key attribute value]
    (assoc-in db (conj (elements-path db) element-key :attrs attribute) value)))
 
