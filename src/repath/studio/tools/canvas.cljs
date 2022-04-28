@@ -21,6 +21,7 @@
         hovered-elements   @(rf/subscribe [:elements/hovered])
         selected-elements  @(rf/subscribe [:elements/selected])
         bounds             @(rf/subscribe [:elements/bounds])
+        area               @(rf/subscribe [:elements/area])
         temp-element       @(rf/subscribe [:temp-element])
         cursor             @(rf/subscribe [:cursor])
         zoom               @(rf/subscribe [:zoom])
@@ -50,9 +51,10 @@
            (when (contains? #{:create :edit :default :scale :select} state)
              [:<>
               (map (fn [element] ^{:key (str (:key element) "bounds")} [elements/bounding-box (tools/adjusted-bounds element elements) zoom]) hovered-elements)
-              (map (fn [element] ^{:key (str (:key element) "selection")} [elements/bounding-box (tools/adjusted-bounds element elements) zoom]) selected-elements)
-              (map (fn [element] ^{:key (str (:key element) "area")} [elements/area (tools/area element) (tools/adjusted-bounds element elements) zoom]) selected-elements)
-              (when bounds [elements/size bounds zoom])])
+              (when bounds [:<>
+                            [elements/size bounds zoom]
+                            [elements/area area bounds zoom]])])
+           (map (fn [element] ^{:key (str (:key element) "selection")} [elements/bounding-box (tools/adjusted-bounds element elements) zoom]) selected-elements)
            (when (and (= state :default) bounds) [elements/bounding-handlers bounds zoom])
            (when (and (contains? #{:create :edit} state) (not (next selected-elements))) [tools/edit (first selected-elements) zoom])
            (when debug-info? (into [:g] (map #(elements/point-of-interest % zoom) @(rf/subscribe [:snaping-points]))))])]

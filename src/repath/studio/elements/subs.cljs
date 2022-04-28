@@ -78,6 +78,12 @@
    (tools/elements-bounds elements selected-elements)))
 
 (rf/reg-sub
+ :elements/area
+ :<- [:elements/selected]
+ (fn [selected-elements _]
+   (reduce (fn [area element] (+ (tools/area element) area)) 0 selected-elements)))
+
+(rf/reg-sub
  :elements/visible
  :<- [:elements]
  (fn [elements _] (filter :visible? (vals elements))))
