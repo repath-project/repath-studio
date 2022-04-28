@@ -48,14 +48,13 @@
         (when (not= tool :dropper)
           [:<>
            (when  @(rf/subscribe [:grid?]) [rulers/grid])
-           (when (contains? #{:create :edit :default :scale :select} state)
-             [:<>
-              (map (fn [element] ^{:key (str (:key element) "bounds")} [elements/bounding-box (tools/adjusted-bounds element elements) zoom]) hovered-elements)
-              (when bounds [:<>
-                            [elements/size bounds zoom]
-                            [elements/area area bounds zoom]])])
+           (map (fn [element] ^{:key (str (:key element) "bounds")} [elements/bounding-box (tools/adjusted-bounds element elements) zoom]) hovered-elements)
+           [elements/area area bounds zoom]
            (map (fn [element] ^{:key (str (:key element) "selection")} [elements/bounding-box (tools/adjusted-bounds element elements) zoom]) selected-elements)
-           (when (and (= state :default) bounds) [elements/bounding-handlers bounds zoom])
+           (when bounds
+             [:<>
+              [elements/size bounds zoom]
+              [elements/bounding-handlers bounds zoom]])
            (when (and (contains? #{:create :edit} state) (not (next selected-elements))) [tools/edit (first selected-elements) zoom])
            (when debug-info? (into [:g] (map #(elements/point-of-interest % zoom) @(rf/subscribe [:snaping-points]))))])]
      [:defs (map (fn [{:keys [id type attrs]}] [:filter {:id id :key id} [type attrs]]) filters/accessibility)]]))
