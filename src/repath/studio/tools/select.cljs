@@ -44,34 +44,38 @@
 
 (defmethod tools/drag :select
   [{:keys [state adjusted-mouse-offset adjusted-mouse-pos active-document] :as db} event element]
-  (if (or (and (not element) (= state :default)) (= state :select))
-    (let [zoom (get-in db [:documents active-document :zoom])
-          [offset-x _] adjusted-mouse-offset
-          [pos-x _] adjusted-mouse-pos
-          intersecting? (> pos-x offset-x)
-          temp-element (assoc-in (element-views/select-box adjusted-mouse-pos adjusted-mouse-offset zoom) [:attrs :fill] (if intersecting? styles/accent "transparent"))]
-      (-> db
-          (assoc :state :select)
-          (elements/set-temp temp-element)
-          (hover-by-area intersecting?)))
-    (let [offset (matrix/sub adjusted-mouse-pos adjusted-mouse-offset)]
-      (case state
-        :translate (if (some #(contains? (:modifiers event) %) #{:ctrl})
-                     (assoc db
-                            :state :clone
-                            :cursor "copy")
-                     (elements/translate (history/swap db) offset))
-        :clone (elements/duplicate (history/swap db) offset)
-        :scale (elements/scale (history/swap db) offset (:scale db) (contains? (:modifiers event) :ctrl))
-        (cond-> db
-          (not (or (:selected? element) (= (:type element) :scale-handler))) (->
-                                                                              (elements/select (contains? (:modifiers event) :shift) element)
-                                                                              (history/finalize "Select element"))
-          (not= (:type element) :scale-handler) (assoc :cursor "default"
-                                                        :state :translate)
-          (= (:type element) :scale-handler) (assoc :state :scale
-                                                     :cursor "default"
-                                                     :scale (:key element)))))))
+  (let [offset (matrix/sub adjusted-mouse-pos adjusted-mouse-offset)]
+    (case state
+      :select (let [zoom (get-in db [:documents active-document :zoom])
+                    [offset-x _] adjusted-mouse-offset
+                    [pos-x _] adjusted-mouse-pos
+                    intersecting? (> pos-x offset-x)
+                    temp-element (assoc-in (element-views/select-box adjusted-mouse-pos adjusted-mouse-offset zoom) [:attrs :fill] (if intersecting? styles/accent "transparent"))]
+                (-> db
+                    (elements/set-temp temp-element)
+                    (hover-by-area intersecting?)))
+      :translate (if (and (:selected? element) (some #(contains? (:modifiers event) %) #{:ctrl}))
+                   (assoc db
+                          :state :clone
+                          :cursor "copy")
+                   (elements/translate (history/swap db) offset))
+      :clone (elements/duplicate (history/swap db) offset)
+      :scale (elements/scale (history/swap db) offset (:scale db) (contains? (:modifiers event) :ctrl))
+      :default (case (:type element)
+                 nil (assoc db
+                            :cursor "default"
+                            :state :select)
+                 :scale-handler (assoc db
+                                       :state :scale
+                                       :cursor "default"
+                                       :scale (:key element))
+                 (if (:selected? element)
+                   (assoc db
+                          :cursor "default"
+                          :state :translate)
+                   (-> db
+                       (elements/select (contains? (:modifiers event) :shift) element)
+                       (history/finalize "Select element")))))))
 
 (defmethod tools/drag-end :select
   [{:keys [state adjusted-mouse-offset adjusted-mouse-pos] :as db} event]
@@ -84,6 +88,6 @@
              :translate (history/finalize db (str "Move selection by " adjusted-mouse-offset))
              :scale (history/finalize db "Scale selection")
              :clone (history/finalize db "Clone selection")
-             db)
+             :default db)
            :cursor "default"
            :state :default)))
