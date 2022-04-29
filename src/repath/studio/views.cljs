@@ -268,7 +268,8 @@
         [frame-canvas/frame]]]
       (when @(rf/subscribe [:xml?]) (let [xml @(rf/subscribe [:elements/xml])] [:div.v-scroll {:style {:flex "0 1 30%"
                                                                                                        :padding styles/padding
-                                                                                                       :background styles/level-2}} [cm/editor xml {:mode "xml"}]]))
+                                                                                                       :background styles/level-2}} [cm/editor xml {:options {:mode "text/xml"
+                                                                                                                                                              :readOnly true}}]]))
       (when @(rf/subscribe [:history?]) [:div.v-scroll {:style {:flex "0 1 30%"
                                                                 :padding styles/padding
                                                                 :background styles/level-2}}])]

@@ -4,7 +4,8 @@
    [repath.studio.tools.base :as tools]
    [repath.studio.helpers :as helpers]
    [clojure.core.matrix :as matrix]
-   [goog.color :as color]))
+   [goog.color :as color]
+   ["js-beautify" :as js-beautify]))
 
 (rf/reg-sub
  :elements/element
@@ -34,7 +35,7 @@
  :elements/xml
   :<- [:elements/active-page]
  (fn [active-page _]
-   (tools/render-to-string active-page)))
+   (js-beautify/html (tools/render-to-string active-page) #js {:indent_size 2})))
 
 (rf/reg-sub
  :elements/children

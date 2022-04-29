@@ -30,6 +30,13 @@
 
           (.setValue @cm value)
 
+          (.on @cm "renderLine" (fn [editor line elt]
+                                  (let [off (* (.countColumn codemirror (.-text line) nil (.getOption editor "tabSize")) (.defaultCharWidth @cm))]
+                                    (set! (.. elt -style -textIndent) (str "-" off "px"))
+                                    (set! (.. elt -style -paddingLeft) (str (+ 4 off) "px")))))
+
+          (.refresh @cm)
+
           (when on-blur
             (.on @cm "blur" #(on-blur (.getValue @cm))))
 
