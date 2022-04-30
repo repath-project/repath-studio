@@ -8,7 +8,8 @@
 
 (derive :page ::tools/element)
 
-(defmethod tools/properties :page [] {:description "The page is a top level SVG element with some extra custom attributes."
+(defmethod tools/properties :page [] {:icon "page"
+                                      :description "The page is a top level SVG element with some extra custom attributes."
                                       :attrs [:overflow]})
 
 (defmethod tools/drag :page
