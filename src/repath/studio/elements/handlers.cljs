@@ -120,14 +120,14 @@
   ([db]
    (reduce delete db (selected-keys db))))
 
-(defn children
+(defn siblings-keys
   [elements element]
   (:children ((:parent element) elements)))
 
 (defn update-position
   [elements element f]
   (assoc-in elements [(:parent element) :children]
-            (let [children (children elements element)
+            (let [children (siblings-keys elements element)
                   index  (.indexOf children (:key element))] (helpers/vec-swap children index (f index)))))
 
 (defn raise
@@ -144,7 +144,7 @@
 
 (defn raise-to-top
   [elements element]
-  (update-position elements element (fn [_] (dec (count (children elements element))))))
+  (update-position elements element (fn [_] (dec (count (siblings-keys elements element))))))
 
 (defn translate
   [db offset]
