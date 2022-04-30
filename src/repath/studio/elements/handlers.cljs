@@ -17,6 +17,10 @@
   [db key]
   (key (elements db)))
 
+(defn parent
+  [db element]
+  (get-element db (:parent element)))
+
 (defn pages
   [db]
   (vals (select-keys (elements db) (-> (elements db) :canvas :children))))
@@ -40,6 +44,10 @@
 (defn active-page
   [{active-document :active-document :as db}]
   (get-element db (get-in db [:documents active-document :active-page])))
+
+(defn next-active-page
+  [{active-document :active-document :as db}]
+  (assoc-in db [:documents active-document :active-page] (last (-> (elements db) :canvas :children))))
 
 (defn selected
   [db]
@@ -116,11 +124,11 @@
 (defn delete
   ([db key]
    (let [element (get-element db key)
-         db (reduce delete db (:children element))
-         parent (get-element db (:parent element))]
-     (-> db
-         (assoc-in (conj (elements-path db) (:parent element) :children) (vec (remove #{key} (:children parent))))
-         (update-in (elements-path db) dissoc key))))
+         db (reduce delete db (:children element))]
+     (cond-> db
+       :always (assoc-in (conj (elements-path db) (:parent element) :children) (vec (remove #{key} (:children (parent db element)))))
+       (page? element) (next-active-page)
+       :always (update-in (elements-path db) dissoc key))))
   ([db]
    (reduce delete db (selected-keys db))))
 
