@@ -61,31 +61,28 @@
   [:> fui/DefaultButton {:key key
                          :text label
                          :class "muted"
-                         :styles {:root {:border 0 
+                         :styles {:root {:border 0
                                          :min-width "auto"
                                          :padding "0 10px"}
                                   :menuIcon {:display "none"}}
                          :menuProps {:shouldFocusOnMount true
                                      :shouldFocusOnContainer true
                                      :items items}}])
-  ;; [:button  {:key   key
-  ;;            :class "button muted"
-  ;;            :style {:padding styles/padding}} label]
-  
+
+(defn window-control-button
+  [{:keys [icon action]}]
+  [:button {:class "button muted window-control-button"
+            :on-click #(rf/dispatch action)} [comp/icon {:icon icon}]])
 
 (defn window-controls
-  "We could have used a different icon for :window/toggle-maximized based on :window/maximized? state,
-   but electron's api seems to behave inconsistently after version 13 (tested in linux)."
   []
-  [:div {:style {:flex "1 1 100%"
-                 :-webkit-app-region "drag"
-                 :text-align "right"}}
-   [:button {:class    "button muted window-control-button"
-             :on-click #(rf/dispatch [:window/minimize])} [comp/icon {:icon "window-minimize"}]]
-   [:button {:class "button muted window-control-button"
-             :on-click #(rf/dispatch [:window/toggle-maximized])} [comp/icon {:icon "window-restore"}]]
-   [:button {:class    "button muted window-control-button"
-             :on-click #(rf/dispatch [:window/close])} [comp/icon {:icon "times"}]]])
+  (into [:div {:style {:flex "1 1 100%" :-webkit-app-region "drag" :text-align "right"}}]
+        (mapv window-control-button [{:action [:window/minimize] :icon "window-minimize"}
+                                     ;; We could have used a different icon for :window/toggle-maximized based on :window/maximized? state,
+                                     ;; but electron's api seems to behave inconsistently after version 13 (tested in linux).
+                                     ;; TODO retest this on future versions.
+                                     {:action [:window/toggle-maximized] :icon "window-restore"}
+                                     {:action [:window/close] :icon "times"}])))
 
 (defn title-bar []
   (let [title @(rf/subscribe [:title])]
@@ -93,8 +90,7 @@
 
 (defn app-header []
   (when-not @(rf/subscribe [:window/fullscreen?]) [:div.h-box
-                                                   [:div.h-box {:style {:flex "1 1 100%"
-                                                                        :-webkit-app-region "drag"}}
+                                                   [:div.h-box {:style {:flex "1 1 100%" :-webkit-app-region "drag"}}
                                                     [:img {:src "img/icon-no-bg.svg"
                                                            :style {:padding styles/padding
                                                                    :width styles/icon-size
