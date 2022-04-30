@@ -17,6 +17,10 @@
   [db key]
   (key (elements db)))
 
+(defn pages
+  [db]
+  (vals (select-keys (elements db) (-> (elements db) :canvas :children))))
+
 (defn page?
   [el]
   (= :page (:type el)))
@@ -196,12 +200,13 @@
               db)) db (selected db)))
 
 (defn create-element
-  [db parent-key element]
+  [{active-document :active-document :as db} parent-key element]
   (let [key (helpers/uid)
         element (helpers/deep-merge element {:key key :visible? true :selected? true :parent parent-key :children []})]
-    (-> db
-        (assoc-in (conj (elements-path db) key) element)
-        (update-in (conj (elements-path db) parent-key :children) #(vec (conj % key))))))
+    (cond-> db
+        :always (assoc-in (conj (elements-path db) key) element)
+        :always (update-in (conj (elements-path db) parent-key :children) #(vec (conj % key)))
+        (page? element) (assoc-in [:documents active-document :active-page] key))))
 
 (defn create
   "TODO Handle child elements recursively"

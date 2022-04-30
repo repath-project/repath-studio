@@ -22,7 +22,7 @@
  :<- [:elements]
  :<- [:elements/canvas]
  (fn [[elements canvas] _]
-   (vals (select-keys elements (:children canvas)))))
+   (mapv elements (:children canvas))))
 
 (rf/reg-sub
  :elements/active-page
@@ -38,21 +38,9 @@
    (js-beautify/html (tools/render-to-string active-page) #js {:indent_size 2})))
 
 (rf/reg-sub
- :elements/children
- :<- [:elements]
- (fn [[elements] [_ element]]
-   (vals (select-keys elements (:children element)))))
-
-(rf/reg-sub
  :elements/filter
  :<- [:elements]
  (fn [elements [_ keys]] (mapv (fn [key] (get elements key)) keys)))
-
-(rf/reg-sub
- :elements/parent-page
- :<- [:elements]
- (fn [elements [_ element]]
-   (helpers/parent-page elements element)))
 
 (rf/reg-sub
  :elements/filter-visible

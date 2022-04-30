@@ -193,3 +193,18 @@
    (-> db
        (h/ungroup)
        (history/finalize "Ungroup selection"))))
+
+(rf/reg-event-db
+ :elements/add-page
+ (fn [db _]
+   (let [[_ y1 x2 _] (tools/elements-bounds (h/elements db) (h/pages db))
+         {:keys [width height fill]} (:attrs (h/active-page db))]
+    (-> db
+        (h/create {:type :page
+                   :name "Page"
+                   :attrs {:x (+ x2 100)
+                           :y y1
+                           :width width
+                           :height height
+                           :fill fill}})
+        (history/finalize "Add page")))))

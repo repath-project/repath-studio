@@ -30,6 +30,10 @@
                              :class (when-not locked? "list-item-button")
                              :action #(rf/dispatch [:elements/toggle-property key :locked?])}]])
 
+(defn scroll-into-view
+  [el]
+  (.scrollIntoView el #js {:behavior "smooth" :block "nearest"}))
+
 (defn page [{:keys [key type name visible? locked? selected?] :as element} active? hovered?]
   [:div.h-box {:key key
                :class ["button list-item page-item" (when selected? "selected") (when active? "active")] 
@@ -38,6 +42,7 @@
                            (.stopPropagation e)
                            (rf/dispatch [:elements/select (or (.-ctrlKey e) (.-ctrlKey e)) element]))
                :on-double-click #(rf/dispatch [:pan-to-element key])
+               :ref #(when (and % active?) (scroll-into-view %))
                :style    {:elements/align-items  "center"
                           :cursor       "pointer"
                           :padding      "4px 11px 4px 14px"
@@ -57,6 +62,7 @@
      [:div.h-box {:class ["button list-item" (when selected? "selected") (when visible? "text-muted")]
                   :on-double-click #(rf/dispatch [:pan-to-element key])
                   :on-mouse-enter #(rf/dispatch [:document/set-hovered-keys #{key}])
+                  :ref #(when (and % selected?) (scroll-into-view %))
                   :draggable true
                   :on-drag-start #(.setData (.-dataTransfer %) "key" (apply str (rest (str key))))
                   :on-drag-enter #(rf/dispatch [:document/set-hovered-keys #{key}])
@@ -109,7 +115,10 @@
      [:div.button.tree-heading {:on-click #(rf/dispatch [:window/toggle-pages-collapsed])}
       [comp/toggle-collapsed-icon pages-collapsed?]
       [:div {:style {:flex 1}} "Pages"]
-      [comp/icon-button {:icon "page-plus" :action #(rf/dispatch [:set-tool :page])}]]
+      [comp/icon-button {:icon "page-plus" :action (fn [evt]
+                                                     (.preventDefault evt)
+                                                     (rf/dispatch-sync [:elements/add-page])
+                                                     (rf/dispatch-sync [:pan-to-active-page :original]))}]]
      [:div.v-scroll {:style {:flex (if pages-collapsed? 0 "0 1 128px")
                              :transition "all .2s"}}
       [:div {:on-mouse-leave #(rf/dispatch [:document/set-hovered-keys #{}])}

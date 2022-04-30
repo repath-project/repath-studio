@@ -17,7 +17,6 @@
  (fn [db _]
    (:cached-tool db)))
 
-
 (rf/reg-sub
  :mouse-pos
  (fn [db _]
