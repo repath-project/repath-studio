@@ -2,6 +2,7 @@
   (:require
    [re-frame.core :as rf]
    [repath.studio.elements.handlers :as h]
+   [repath.studio.canvas-frame.handlers :as canvas]
    [repath.studio.history.handlers :as history]
    [repath.studio.tools.base :as tools]))
 
@@ -196,15 +197,16 @@
 
 (rf/reg-event-db
  :elements/add-page
- (fn [db _]
+ (fn [{active-document :active-document :as db} _]
    (let [[_ y1 x2 _] (tools/elements-bounds (h/elements db) (h/pages db))
-         {:keys [width height fill]} (:attrs (h/active-page db))]
+         {:keys [width height fill]} (:attrs (h/active-page db))
+         db (h/create db {:type :page
+                       :name "Page"
+                       :attrs {:x (+ x2 100)
+                               :y y1
+                               :width width
+                               :height height
+                               :fill fill}})]
     (-> db
-        (h/create {:type :page
-                   :name "Page"
-                   :attrs {:x (+ x2 100)
-                           :y y1
-                           :width width
-                           :height height
-                           :fill fill}})
+        (canvas/pan-to-element (get-in db [:documents active-document :active-page]))
         (history/finalize "Add page")))))

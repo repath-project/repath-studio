@@ -117,8 +117,7 @@
       [:div {:style {:flex 1}} "Pages"]
       [comp/icon-button {:icon "page-plus" :action (fn [evt]
                                                      (.preventDefault evt)
-                                                     (rf/dispatch-sync [:elements/add-page])
-                                                     (rf/dispatch-sync [:pan-to-active-page :original]))}]]
+                                                     (rf/dispatch-sync [:elements/add-page]))}]]
      [:div.v-scroll {:style {:flex (if pages-collapsed? 0 "0 1 128px")
                              :transition "all .2s"}}
       [:div {:on-mouse-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
