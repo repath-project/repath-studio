@@ -52,11 +52,12 @@
 
 
 (defn radio-icon-button
-  [{:keys [active? icon title action class]}]
+  [{:keys [active? bordered? icon title action class]}]
   [:button {:title    title
             :class    ["icon-button" class]
             :style    {:color (when active? styles/font-color-active)
-                       :background (when active? styles/overlay)}
+                       :background (when active? styles/overlay)
+                       :border (when bordered? (str "1px solid " styles/border-color))}
             :on-click action}
    [repath.studio.components/icon {:icon icon}]])
 

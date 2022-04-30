@@ -13,6 +13,12 @@
    (:tool db)))
 
 (rf/reg-sub
+ :cached-tool
+ (fn [db _]
+   (:cached-tool db)))
+
+
+(rf/reg-sub
  :mouse-pos
  (fn [db _]
    (:mouse-pos db)))

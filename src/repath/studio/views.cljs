@@ -166,9 +166,9 @@
                                       :margin     "2px 0 2px 0"}}]]
      [coordinates]]))
 
-(defn tool-button [type selected?]
+(defn tool-button [type selected? pre-selected?]
   (when (:icon (tools/properties type))
-    [comp/radio-icon-button {:title type :active? selected? :icon (:icon (tools/properties type)) :action #(rf/dispatch [:set-tool type])}]))
+    [comp/radio-icon-button {:title type :active? selected? :bordered? pre-selected? :icon (:icon (tools/properties type)) :action #(rf/dispatch [:set-tool type])}]))
   ;;  (when (descendants type)
   ;;    [:button {:key      (keyword (str "dropdown-" type))
   ;;              :title    type
@@ -180,9 +180,9 @@
   ;;     [comp/icon {:icon "angle-down"}]])
 
 
-(defn toolbar-group [group tool]
+(defn toolbar-group [group tool cached-tool]
   (into [:div.h-box]
-        (map #(tool-button % (= % tool))
+        (map #(tool-button % (= % tool) (= % cached-tool))
              (descendants group))))
 
 (def toolbars [::tools/transform
@@ -191,10 +191,11 @@
                ::tools/edit])
 
 (defn toolbar []
-  (let [tool @(rf/subscribe [:tool])]
+  (let [tool @(rf/subscribe [:tool])
+        cached-tool @(rf/subscribe [:cached-tool])]
     (into [:div.h-box {:style {:justify-content "center" :padding "8px 8px 16px" :flex-wrap "wrap"}}]
           (interpose [:span.v-devider]
-                     (map (fn [group] [toolbar-group group tool])
+                     (map (fn [group] [toolbar-group group tool cached-tool])
                           toolbars)))))
 
 (defn command-input []
