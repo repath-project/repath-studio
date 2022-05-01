@@ -233,8 +233,8 @@
 (defn editor []
   [:div.h-box {:style {:flex "1"}}
    [:div.v-box {:style {:flex "1"}}
-    [:div.v-box {:style {:flex "1"}}
-     [:div.h-box {:style {:flex "1"}}
+    [:div.v-box {:style {:flex "1" :overflow "hidden"}}
+     [:div.h-box {:style {:flex "1"  :overflow "hidden"}}
       [:div.v-box {:style {:flex "1" :background-color styles/level-2}}
        [toolbar]
        (when @(rf/subscribe [:rulers?])  [:div.h-box
@@ -268,6 +268,7 @@
                                          (rf/dispatch-sync [(keyword (.-key key))]))}]])
         [frame-canvas/frame]]]
       (when @(rf/subscribe [:xml?]) (let [xml @(rf/subscribe [:elements/xml])] [:div.v-scroll {:style {:flex "0 1 30%"
+                                                                                                        :height "100%"
                                                                                                        :padding styles/padding
                                                                                                        :background styles/level-2}} [cm/editor xml {:options {:mode "text/xml"
                                                                                                                                                               :readOnly true}}]]))
@@ -293,7 +294,7 @@
     (if (seq @(rf/subscribe [:documents]))
       [:div.v-box {:style {:flex "1"}}
        [docs/tab-bar]
-       [:div.h-box {:style {:flex "1"}}
+       [:div.h-box {:style {:flex "1"  :overflow "hidden"}}
         [editor]
         [comp/resizer :properties :right]
         (when @(rf/subscribe [:window/sidebar? :properties])
