@@ -42,7 +42,7 @@
                            (.stopPropagation e)
                            (rf/dispatch [:elements/select (or (.-ctrlKey e) (.-ctrlKey e)) element]))
                :on-double-click #(rf/dispatch [:pan-to-element key])
-               :ref #(when (and % active?) (scroll-into-view %))
+               :ref (fn [ref] (when (and ref active?) (scroll-into-view ref)))
                :style    {:elements/align-items  "center"
                           :cursor       "pointer"
                           :padding      "4px 11px 4px 14px"

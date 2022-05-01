@@ -100,9 +100,8 @@
 
 (rf/reg-event-db
  :elements/export
- (fn [{active-document :active-document :as db} _]
-   (let [active-page (get-in db [:documents active-document :active-page])
-         xml (tools/render-to-string (get-in db [:documents active-document :elements active-page]))]
+ (fn [db _]
+   (let [xml (tools/render-to-string (h/active-page db))]
      (js/window.api.send "toMain" #js {:action "export" :data xml}))))
 
 (rf/reg-event-db
@@ -208,5 +207,5 @@
                                :height height
                                :fill fill}})]
     (-> db
-        (canvas/pan-to-element (get-in db [:documents active-document :active-page]))
+        (canvas/pan-to-element (:key (h/active-page db)))
         (history/finalize "Add page")))))

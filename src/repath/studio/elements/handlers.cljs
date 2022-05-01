@@ -45,9 +45,21 @@
   [{active-document :active-document :as db}]
   (get-element db (get-in db [:documents active-document :active-page])))
 
+(defn page
+  [db el]
+  (if (= (:type el) :canvas)
+    (active-page db)
+    (if (page? el)
+      el
+      (recur db (parent db el)))))
+
+(defn set-active-page
+  [{active-document :active-document :as db} key]
+  (assoc-in db [:documents active-document :active-page] key))
+
 (defn next-active-page
-  [{active-document :active-document :as db}]
-  (assoc-in db [:documents active-document :active-page] (last (-> (elements db) :canvas :children))))
+  [db]
+  (set-active-page db (last (-> (elements db) :canvas :children))))
 
 (defn selected
   [db]
@@ -62,10 +74,8 @@
   (assoc-in db (elements-path db) (reduce f (elements db) (selected db))))
 
 (defn select-element
-  [{active-document :active-document :as db} key]
-  (cond-> db
-    (page? (get-element db key)) (assoc-in [:documents active-document :active-page] key)
-    :always (assoc-in (conj (elements-path db) key :selected?) true)))
+  [db key]
+  (assoc-in db (conj (elements-path db) key :selected?) true))
 
 (defn deselect-element
   [db key]
@@ -89,7 +99,8 @@
     (if-not multiselect?
       (-> db
           (deselect-all)
-          (select-element (:key element)))
+          (select-element (:key element))
+          (set-active-page (:key (page db element))))
       (toggle-selected db (:key element)))
     (deselect-all db)))
 
@@ -208,13 +219,13 @@
               db)) db (selected db)))
 
 (defn create-element
-  [{active-document :active-document :as db} parent-key element]
+  [db parent-key element]
   (let [key (helpers/uid)
         element (helpers/deep-merge element {:key key :visible? true :selected? true :parent parent-key :children []})]
     (cond-> db
         :always (assoc-in (conj (elements-path db) key) element)
         :always (update-in (conj (elements-path db) parent-key :children) #(vec (conj % key)))
-        (page? element) (assoc-in [:documents active-document :active-page] key))))
+        (page? element) (set-active-page key))))
 
 (defn create
   "TODO Handle child elements recursively"
