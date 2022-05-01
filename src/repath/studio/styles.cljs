@@ -214,7 +214,8 @@
                                                  :fill font-color-active}
                                         :active {:background-color overlay}}})
 
-(def flex-box {:display "flex"})
+(def flex-box {:display "flex"
+               :overflow "hidden"})
 
 (stylefy/class "v-box" (merge flex-box {:flex-direction "column"}))
 
