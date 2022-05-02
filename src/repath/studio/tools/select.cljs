@@ -36,6 +36,10 @@
       (assoc-in [:documents active-document :hovered-keys] (if element #{(:key element)} #{}))
       (assoc :cursor (if element "move" "default"))))
 
+(defmethod tools/mouse-down :select
+  [db _ element]
+  (assoc db :clicked-element element))
+
 (defmethod tools/activate :select
   [db]
   (assoc db 
@@ -54,28 +58,24 @@
                 (-> db
                     (elements/set-temp temp-element)
                     (hover-by-area intersecting?)))
-      :translate (if (and (:selected? element) (some #(contains? (:modifiers event) %) #{:ctrl}))
+      :translate (if (contains? (:modifiers event) :ctrl)
                    (assoc db
                           :state :clone
                           :cursor "copy")
                    (elements/translate (history/swap db) offset))
       :clone (elements/duplicate (history/swap db) offset)
       :scale (elements/scale (history/swap db) offset (:scale db) (contains? (:modifiers event) :ctrl))
-      :default (case (:type element)
-                 nil (assoc db
-                            :cursor "default"
-                            :state :select)
-                 :scale-handler (assoc db
-                                       :state :scale
-                                       :cursor "default"
-                                       :scale (:key element))
-                 (if (:selected? element)
-                   (assoc db
-                          :cursor "default"
-                          :state :translate)
-                   (-> db
-                       (elements/select (contains? (:modifiers event) :shift) element)
-                       (history/finalize "Select element")))))))
+      :default (assoc (case (-> db :clicked-element :type)
+                        :canvas (assoc db :state :select)
+                        :scale-handler (assoc db
+                                              :state :scale
+                                              :scale (:key element))
+
+                        (assoc (if-not (-> db :clicked-element :selected?)
+                                 (-> db
+                                     (elements/select (contains? (:modifiers event) :shift) (:clicked-element db))
+                                     (history/finalize "Select element"))
+                                 db) :state :translate)) :cursor "default"))))
 
 (defmethod tools/drag-end :select
   [{:keys [state adjusted-mouse-offset adjusted-mouse-pos] :as db} event]

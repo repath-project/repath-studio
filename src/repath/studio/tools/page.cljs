@@ -50,7 +50,6 @@
                                                     :y 0
                                                     :fill (:fill attrs)
                                                     :on-mouse-up   #(mouse/event-handler % element)
-                                                    :on-mouse-down #(mouse/event-handler % element)
                                                     :on-double-click #(mouse/event-handler % element)})])
       (map (fn [element] ^{:key (:key element)} [tools/render element]) (merge child-elements))]]))
 
