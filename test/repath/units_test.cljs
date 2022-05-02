@@ -24,7 +24,7 @@
     (is (= (units/match-unit "px") "px"))
     (is (= (units/match-unit "0") ""))))
 
-(deftest parse-unit
+(deftest test-parse-unit
   (testing "parse unit"
     (is (= (units/parse-unit "5px") [5 "px"]))
     (is (= (units/parse-unit " 5px ") [5 "px"]))
