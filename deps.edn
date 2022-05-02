@@ -12,7 +12,7 @@
         stylefy/stylefy {:mvn/version "3.2.0"}
         stylefy/reagent {:mvn/version "3.0.0"}
         re-pressed/re-pressed {:mvn/version "0.3.1"}
-        binaryage/devtools {:mvn/version "1.0.4"}
+        binaryage/devtools {:mvn/version "1.0.6"}
         net.mikera/core.matrix {:mvn/version "0.62.0"}
         com.cognitect/transit-cljs {:mvn/version "0.8.269"}
         replumb/replumb {:mvn/version "0.2.4"}}}
