@@ -35,8 +35,7 @@
   (.scrollIntoView el #js {:behavior "smooth" :block "nearest"}))
 
 (defn page [{:keys [key type name visible? locked? selected?] :as element} active? hovered?]
-  [:div.h-box {:key key
-               :class ["button list-item page-item" (when selected? "selected") (when active? "active")] 
+  [:div.h-box {:class ["button list-item page-item" (when selected? "selected") (when active? "active")] 
                :on-mouse-enter #(rf/dispatch [:document/set-hovered-keys #{key}])
                :on-click (fn [e]
                            (.stopPropagation e)
@@ -131,7 +130,7 @@
                              :transition "all .2s"}}
       [:div {:style {:visibility "visible"}
              :on-mouse-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
-       [item-list (map #(item % 1 (contains? hovered-keys (:key %)) elements) active-page-children)]]]
+       [item-list (map (fn [element] ^{:key element} [item element 1 (contains? hovered-keys (:key element)) elements]) active-page-children)]]]
      [:div.button.tree-heading {:on-click #(rf/dispatch [:window/toggle-defs-collapsed])}
       [comp/toggle-collapsed-icon defs-collapsed?]
       [:div {:style {:flex 1}} "Defs"]

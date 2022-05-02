@@ -3,6 +3,7 @@
             [clojure.core.matrix :as matrix]
             [re-frame.core :as rf]
             [repath.studio.mouse :as mouse]
+            [repath.studio.bounds :as bounds]
             [repath.studio.styles :as styles]))
 
 (defn point-of-interest
@@ -65,7 +66,7 @@
 (defn bounding-handlers
   [bounds zoom]
   (let [[x1 y1 x2 y2] bounds
-        [width height] (matrix/sub [x2 y2] [x1 y1])
+        [width height] (bounds/->dimensions bounds)
         handler-size (/ 8 zoom)
         stroke-width (/ 1 zoom)]
     [:g {:key :bounding-handlers}
@@ -84,8 +85,8 @@
 
 (defn size
   [bounds zoom]
-  (let [[x1 y1 x2 y2] bounds
-        [width height] (matrix/sub [x2 y2] [x1 y1])]
+  (let [[x1 _ x2 y2] bounds
+        [width height] (bounds/->dimensions bounds)]
      [:text {:key :size
              :x (+ x1 (/ (- x2 x1) 2))
              :y (+ y2 (/ 15 zoom))
@@ -98,13 +99,14 @@
 
 (defn bounding-box
   [bounds zoom]
-  (let [[x1 y1 x2 y2]    bounds
+  (let [[x1 y1 _ _]      bounds
+        [width height]   (bounds/->dimensions bounds)
         stroke-width     (/ 1 zoom)
         stroke-dasharray (/ 5 zoom)
         attrs            {:x x1
                           :y y1
-                          :width (- x2 x1)
-                          :height (- y2 y1)
+                          :width width
+                          :height height
                           :stroke-width stroke-width
                           :fill "transparent"}]
 
