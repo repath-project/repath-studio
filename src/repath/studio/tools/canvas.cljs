@@ -52,7 +52,7 @@
            (map (fn [element] ^{:key (str (:key element) "selection")} [elements/bounding-box (tools/adjusted-bounds element elements) zoom]) selected-elements)
            (when (and bounds (not (contains? #{:edit :create} state)))
              [:<>
-              [elements/area area bounds zoom]
+              (when (> area 0) [elements/area area bounds zoom])
               [elements/size bounds zoom]
               [elements/bounding-handlers bounds zoom]])
            (when (and (contains? #{:create :edit} state) (not (next selected-elements))) [tools/edit (first selected-elements) zoom])
