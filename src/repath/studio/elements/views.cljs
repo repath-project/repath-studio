@@ -67,19 +67,39 @@
                           {:x x1 :y (+ y1 (/ height 2)) :size handler-size :stroke-width stroke-width :key :middle-left :type :scale-handler}
                           {:x (+ x1 (/ width 2)) :y y2 :size handler-size :stroke-width stroke-width :key :bottom-middle :type :scale-handler}])]))
 
-(defn size
-  [bounds zoom]
-  (let [[x1 _ x2 y2] bounds
-        [width height] (bounds/->dimensions bounds)]
-     [:text {:key :size
-             :x (+ x1 (/ (- x2 x1) 2))
-             :y (+ y2 (/ 15 zoom))
-             :fill "black"
+(defn label
+  [text position zoom]
+  (let [[x y] position
+        font-size (/ 12 zoom)
+        font-width 5
+        label-width (/ (+ (* (count text) font-width) 6) zoom)
+        label-height (/ (+ 12 6) zoom)]
+    [:g
+     [:rect {:x (- x (/ label-width 2))
+             :y (- y (inc (/ label-height 2)))
+             :fill styles/level-2
+             :font-family "Source Sans Pro"
+             :rx (/ 4 zoom)
+             :width label-width
+             :height label-height} text]
+     [:text {:x x
+             :y y
+             :fill "white"
              :dominant-baseline "middle"
              :text-anchor "middle"
              :font-family "Source Sans Pro"
-             :width width
-             :font-size (/ 12 zoom)} (-> width (.toFixed 2) (js/parseFloat)) " x " (-> height (.toFixed 2) (js/parseFloat))]))
+             :font-weight "bold"
+             :width label-width
+             :font-size font-size} text]]))
+
+(defn size
+  [bounds zoom]
+  (let [[x1 _ x2 y2] bounds
+        x (+ x1 (/ (- x2 x1) 2))
+        y (+ y2 (/ 20 zoom))
+        [width height] (bounds/->dimensions bounds)
+        text (str (-> width (.toFixed 2) (js/parseFloat)) " x " (-> height (.toFixed 2) (js/parseFloat)))]
+    [label text [x y] zoom]))
 
 (defn bounding-box
   [bounds zoom]
@@ -115,17 +135,12 @@
 
 (defn area
   [area bounds zoom]
-  (let [[x1 y1 x2 y2] bounds
-        width (- x2 x1)]
-    (when area
-      [:text {:x (+ x1 (/ (- x2 x1) 2))
-              :y (+ y1 (/ -15 zoom))
-              :fill "black"
-              :dominant-baseline "middle"
-              :text-anchor "middle"
-              :font-family "Source Sans Pro"
-              :width width
-              :font-size (/ 12 zoom)} (-> area (.toFixed 2) (js/parseFloat)) " px\u00B2"])))
+  (when area
+    (let [[x1 y1 x2 _] bounds
+          x (+ x1 (/ (- x2 x1) 2))
+          y (+ y1 (/ -20 zoom))
+          text (str (-> area (.toFixed 2) (js/parseFloat)) " px\u00B2")]
+      [label text [x y] zoom])))
 
 (defn element-menu [e]
   (let [state @(rf/subscribe [:state])]
