@@ -85,7 +85,7 @@
         handler-size (/ 8 zoom)
         stroke-width (/ 1 zoom)]
     [:g {:key :edit-handlers}
-     (map element-views/edit-handler (mapv (fn [[x y]] {:x x :y y :size handler-size :stroke-width stroke-width :key :starting-point}) (attrs/points-to-vec points)))]))
+     (map element-views/square-handler (mapv (fn [[x y]] {:x x :y y :size handler-size :stroke-width stroke-width :key :starting-point :type :edit-handler}) (attrs/points-to-vec points)))]))
 
 (defmethod tools/bounds :polyline
   [{{:keys [points]} :attrs}]

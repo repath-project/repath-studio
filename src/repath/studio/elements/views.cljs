@@ -13,25 +13,9 @@
             :cy y
             :r (/ 3 zoom)}])
 
-(defn scale-handler
-  [{:keys [x y key size stroke-width]}]
-  (let [element {:key key :type :scale-handler}]
-   [:rect {:key key
-           :fill "#fff"
-           :stroke "#555"
-           :stroke-width stroke-width
-           :x (- x (/ size 2))
-           :y (- y (/ size 2))
-           :width size
-           :height size
-           :cursor "default"
-           :on-mouse-up #(mouse/event-handler % element)
-           :on-mouse-down #(mouse/event-handler % element)
-           :on-mouse-move #(mouse/event-handler % element)}]))
-
-(defn edit-handler
-  [{:keys [x y key size stroke-width]}]
-  (let [element {:key key :type :edit-handler}]
+(defn square-handler
+  [{:keys [x y key size stroke-width type]}]
+  (let [element {:key key :type type}]
     [:rect {:key key
             :fill "#fff"
             :stroke "#555"
@@ -74,14 +58,14 @@
              :y (+ y1 (/ height 2))
              :size (/ 10 zoom)
              :stroke-width (/ 1 zoom)}]
-     (map scale-handler [{:x x1 :y y1 :size handler-size :stroke-width stroke-width :key :top-left}
-                   {:x x2 :y y1 :size handler-size :stroke-width stroke-width :key :top-right}
-                   {:x x1 :y y2 :size handler-size :stroke-width stroke-width :key :bottom-left}
-                   {:x x2 :y y2 :size handler-size :stroke-width stroke-width :key :bottom-right}
-                   {:x (+ x1 (/ width 2)) :y y1 :size handler-size :stroke-width stroke-width :key :top-middle}
-                   {:x x2 :y (+ y1 (/ height 2)) :size handler-size :stroke-width stroke-width :key :middle-right}
-                   {:x x1 :y (+ y1 (/ height 2)) :size handler-size :stroke-width stroke-width :key :middle-left}
-                   {:x (+ x1 (/ width 2)) :y y2 :size handler-size :stroke-width stroke-width :key :bottom-middle}])]))
+     (map square-handler [{:x x1 :y y1 :size handler-size :stroke-width stroke-width :key :top-left :type :scale-handler}
+                          {:x x2 :y y1 :size handler-size :stroke-width stroke-width :key :top-right :type :scale-handler}
+                          {:x x1 :y y2 :size handler-size :stroke-width stroke-width :key :bottom-left :type :scale-handler}
+                          {:x x2 :y y2 :size handler-size :stroke-width stroke-width :key :bottom-right :type :scale-handler}
+                          {:x (+ x1 (/ width 2)) :y y1 :size handler-size :stroke-width stroke-width :key :top-middle :type :scale-handler}
+                          {:x x2 :y (+ y1 (/ height 2)) :size handler-size :stroke-width stroke-width :key :middle-right :type :scale-handler}
+                          {:x x1 :y (+ y1 (/ height 2)) :size handler-size :stroke-width stroke-width :key :middle-left :type :scale-handler}
+                          {:x (+ x1 (/ width 2)) :y y2 :size handler-size :stroke-width stroke-width :key :bottom-middle :type :scale-handler}])]))
 
 (defn size
   [bounds zoom]

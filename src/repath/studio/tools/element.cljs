@@ -144,5 +144,5 @@
         handler-size (/ 8 zoom)
         stroke-width (/ 1 zoom)]
     [:g {:key :edit-handlers}
-     (map element-views/edit-handler [{:x x :y y :size handler-size :stroke-width stroke-width :key :position}
-                                      {:x (+ x width) :y (+ y height) :size handler-size :stroke-width stroke-width :key :size}])]))
+     (map element-views/square-handler [{:x x :y y :size handler-size :stroke-width stroke-width :key :position :type :edit-handler}
+                                        {:x (+ x width) :y (+ y height) :size handler-size :stroke-width stroke-width :key :size :type :edit-handler}])]))

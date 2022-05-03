@@ -67,8 +67,8 @@
         handler-size (/ 8 zoom)
         stroke-width (/ 1 zoom)]
     [:g {:key :edit-handlers}
-     (map element-views/edit-handler [{:x x1 :y y1 :size handler-size :stroke-width stroke-width :key :starting-point}
-                                 {:x x2 :y y2 :size handler-size :stroke-width stroke-width :key :ending-point}])]))
+     (map element-views/square-handler [{:x x1 :y y1 :size handler-size :stroke-width stroke-width :key :starting-point :type :edit-handler}
+                                        {:x x2 :y y2 :size handler-size :stroke-width stroke-width :key :ending-point :type :edit-handler}])]))
 
 (defmethod tools/path :line
   [{{:keys [x1 y1 x2 y2]} :attrs}]
