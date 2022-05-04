@@ -29,6 +29,14 @@
   [el]
   (= :page (:type el)))
 
+(defn ancestor-keys
+  [db element]
+  (loop [parent-element (:parent element)
+         parent-keys #{}]
+    (if parent-element 
+      (recur (:parent (get-element db parent-element)) (conj parent-keys parent-element))
+      parent-keys)))
+
 (defn clear-temp
   [{active-document :active-document :as db}]
   (update-in db [:documents active-document] dissoc :temp-element))

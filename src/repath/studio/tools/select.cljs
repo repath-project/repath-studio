@@ -6,6 +6,7 @@
             [repath.studio.styles :as styles]
             [repath.studio.bounds :as bounds]
             [clojure.core.matrix :as matrix]
+            [clojure.set :as set]
             [repath.studio.history.handlers :as history]))
 
 (derive :select ::tools/transform)
@@ -16,15 +17,24 @@
   [db intersecting?]
   (let [active-document (:active-document db)
         predicate (if intersecting? bounds/intersect? bounds/contained?)
+        hovered-keys (-> db :documents active-document :hovered-keys)
         db (assoc-in db [:documents active-document :hovered-keys] #{})]
-    (reduce #(if (and (not (elements/page? %2)) (predicate (tools/adjusted-bounds %2 (elements/elements db)) (tools/adjusted-bounds (elements/get-temp db) (elements/elements db))))
+    (reduce #(if (and
+                  (empty? (set/intersection (elements/ancestor-keys db %2) hovered-keys))
+                  (not (elements/page? %2))
+                  (predicate (tools/adjusted-bounds %2 (elements/elements db)) (tools/adjusted-bounds (elements/get-temp db) (elements/elements db))))
                (update-in % [:documents active-document :hovered-keys] conj (:key %2))
                %) db (vals (elements/elements db)))))
 
 (defn select-by-area
   [db intersecting? multiselect?]
-  (let [predicate (if intersecting? bounds/intersect? bounds/contained?)]
-    (reduce #(if (and (not (elements/page? %2)) (predicate (tools/adjusted-bounds %2 (elements/elements db)) (tools/adjusted-bounds (elements/get-temp db) (elements/elements db))))
+  (let [active-document (:active-document db)
+        predicate (if intersecting? bounds/intersect? bounds/contained?)
+        hovered-keys (-> db :documents active-document :hovered-keys)]
+    (reduce #(if (and
+                  (empty? (set/intersection (elements/ancestor-keys db %2) hovered-keys))
+                  (not (elements/page? %2))
+                  (predicate (tools/adjusted-bounds %2 (elements/elements db)) (tools/adjusted-bounds (elements/get-temp db) (elements/elements db))))
                (elements/select-element % (:key %2))
                %) (cond-> db
                     (not multiselect?) (elements/deselect-all)
