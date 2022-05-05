@@ -112,6 +112,14 @@
       (toggle-selected db (:key element)))
     (deselect-all db)))
 
+(defn hover 
+  [{active-document :active-document :as db} key]
+  (update-in db [:documents active-document :hovered-keys] conj key))
+
+(defn clear-hovered
+  [{active-document :active-document :as db}]
+  (assoc-in db [:documents active-document :hovered-keys] #{}))
+
 (defmulti intersects-with-bounds? (fn [element _] (:type element)))
 
 (defmethod intersects-with-bounds? :default [])
