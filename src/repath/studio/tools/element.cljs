@@ -66,7 +66,7 @@
     (= (:state db) :create) (tools/set-tool (:type element)) 
     :always (->
              (dissoc db :clicked-element)
-             (element-handlers/select (some #(contains? (:modifiers event) %) #{:ctrl :shift}) element)
+             (element-handlers/select (mouse/multiselect? event) element)
              (history/finalize "Select element"))))
 
 (defn get-bounds

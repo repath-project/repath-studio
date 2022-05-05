@@ -2,6 +2,10 @@
   (:require
    [re-frame.core :as rf]))
 
+(defn multiselect?
+  [event]
+  (some #(contains? (:modifiers event) %) #{:ctrl :shift}))
+
 (defn event-handler
   [event element]
   (when (and event (not= (.-buttons event) 2)) ; Exclude right click that should be used for the contect menu exclusively.

@@ -7,7 +7,8 @@
             [repath.studio.bounds :as bounds]
             [clojure.core.matrix :as matrix]
             [clojure.set :as set]
-            [repath.studio.history.handlers :as history]))
+            [repath.studio.history.handlers :as history]
+            [repath.studio.mouse :as mouse]))
 
 (derive :select ::tools/transform)
 
@@ -51,10 +52,6 @@
   [db]
   (set-state db :default))
 
-(defn multiselect?
-  [event]
-  (some #(contains? (:modifiers event) %) #{:ctrl :shift}))
-
 (defn select-rect
   [{:keys [adjusted-mouse-offset adjusted-mouse-pos active-document] :as db}]
   (let [zoom (get-in db [:documents active-document :zoom])]
@@ -69,9 +66,7 @@
                   (elements/clear-hovered)
                   (reduce-by-area #(elements/hover %1 (:key %2))))
       :translate (if (contains? (:modifiers event) :ctrl)
-                   (assoc db
-                          :state :clone
-                          :cursor "copy")
+                   (set-state db :clone)
                    (elements/translate (history/swap db) offset))
       :clone (elements/duplicate (history/swap db) offset)
       :scale (elements/scale (history/swap db) offset (:scale db) (contains? (:modifiers event) :ctrl))
@@ -82,14 +77,14 @@
                                     (assoc :scale (:key element)))
                  (set-state (if-not (-> db :clicked-element :selected?)
                               (-> db
-                                  (elements/select (multiselect? event) (:clicked-element db))
+                                  (elements/select (mouse/multiselect? event) (:clicked-element db))
                                   (history/finalize "Select element"))
                               db) :translate)))))
 
 (defmethod tools/drag-end :select
   [{:keys [state adjusted-mouse-offset] :as db} event]
   (set-state (case state
-               :select (-> (if (not (multiselect? event)) (elements/deselect-all db) db)
+               :select (-> (if (not (mouse/multiselect? event)) (elements/deselect-all db) db)
                            (reduce-by-area #(elements/select-element % (:key %2)))
                            (elements/clear-temp)
                            (history/finalize "Modify selection"))
