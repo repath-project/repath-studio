@@ -2,6 +2,7 @@
   (:require [repath.studio.elements.handlers :as elements]
             [repath.studio.elements.views :as element-views]
             [repath.studio.tools.base :as tools]
+            [repath.studio.attrs.base :as attrs]
             [repath.studio.units :as units]
             [clojure.core.matrix :as matrix]
             [clojure.string :as str]
@@ -44,10 +45,10 @@
 
 (defmethod tools/translate :line
   [element [x y]] (-> element
-                      (update-in [:attrs :x1] + x)
-                      (update-in [:attrs :x2] + x)
-                      (update-in [:attrs :y1] + y)
-                      (update-in [:attrs :y2] + y)))
+                      (attrs/update-attr :x1 + x)
+                      (attrs/update-attr :y1 + y)
+                      (attrs/update-attr :x2 + x)
+                      (attrs/update-attr :y2 + y)))
 
 (defmethod tools/bounds :line
   [{{:keys [x1 y1 x2 y2]} :attrs}]
