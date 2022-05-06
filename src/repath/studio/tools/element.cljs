@@ -6,6 +6,7 @@
    [reagent.core :as ra]
    [re-frame.core :as rf]
    [repath.studio.history.handlers :as history]
+   [repath.studio.handlers :as handlers]
    [repath.studio.units :as units]
    [clojure.core.matrix :as matrix]
    [clojure.string :as str]
@@ -56,7 +57,9 @@
     (cond-> db
       (= state :create) (-> (element-handlers/create-from-temp)
                             (history/finalize (str "Create " (name (:type temp-element)))))
-      (= state :edit) (history/finalize (str "Edit ")))))
+      (= state :edit) (-> (dissoc :edit) 
+                          (handlers/set-state :create)
+                          (history/finalize (str "Edit "))))))
 
 (defmethod tools/mouse-up :default
   [db event element]
