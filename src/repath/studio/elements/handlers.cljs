@@ -93,13 +93,13 @@
   [db key]
   (update-in db (conj (elements-path db) key :selected?) not))
 
-(defn select-all
-  [db]
-  (reduce #(select-element %1 %2) db (:children (active-page db))))
-
 (defn deselect-all
   [db]
   (reduce #(deselect-element %1 %2) db (keys (elements db))))
+
+(defn select-all
+  [db]
+  (reduce #(select-element %1 %2) (deselect-all db) (:children (active-page db))))
 
 (defn select
   [db multiselect? element]

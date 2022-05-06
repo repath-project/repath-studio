@@ -5,7 +5,7 @@
             [repath.studio.attrs.base :as attrs]
             [repath.studio.units :as units]
             [clojure.core.matrix :as matrix]
-            [clojure.string :as str]
+            [repath.studio.handlers :as handlers]
             [repath.studio.history.handlers :as history]))
 
 (derive :line ::tools/shape)
@@ -21,14 +21,13 @@
     (let [[x y] (matrix/sub adjusted-mouse-pos adjusted-mouse-offset)
           db (cond-> db
                (= (:type element) :edit-handler) (assoc :edit (:key element))
-               :always (assoc :state :edit))]
-      (case (:edit db)
-        :starting-point (elements/update-selected (history/swap db) (fn [elements element]
-                                                 (assoc elements (:key element) (-> element
-                                                                                    (update-in [:attrs :x1] #(units/transform + x %))
-                                                                                    (update-in [:attrs :y1] #(units/transform + y %))))))
-        :ending-point (elements/update-selected (history/swap db) (fn [elements element]
-                                                                    (assoc elements (:key element) (-> element
+               :always (handlers/set-state :edit))]
+      (elements/update-selected (history/swap db) (fn [elements element]
+                                                    (assoc elements (:key element) (case (:edit db)
+                                                                                     :starting-point (-> element
+                                                                                                         (update-in [:attrs :x1] #(units/transform + x %))
+                                                                                                         (update-in [:attrs :y1] #(units/transform + y %)))
+                                                                                     :ending-point (-> element
                                                                                                        (update-in [:attrs :x2] #(units/transform + x %))
                                                                                                        (update-in [:attrs :y2] #(units/transform + y %))))))))
     (let [stroke (get-in db [:documents active-document :stroke])
@@ -40,7 +39,7 @@
                  :y2 pos-y
                  :stroke (tools/rgba stroke)}]
       (-> db
-          (assoc :state :create)
+          (handlers/set-state :create)
           (elements/set-temp {:type :line :attrs attrs})))))
 
 (defmethod tools/translate :line
@@ -54,12 +53,6 @@
   [{{:keys [x1 y1 x2 y2]} :attrs}]
   (let [[x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])]
     [(min x1 x2) (min y1 y2) (max x1 x2) (max y1 y2)]))
-
-(defmethod tools/area :line
-  [{{:keys [x1 y1 x2 y2 stroke-width stroke]} :attrs}]
-  (let [[x1 y1 x2 y2 stroke-width-px] (map units/unit->px [x1 y1 x2 y2 stroke-width])
-        stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)]
-    (* stroke-width-px (Math/hypot (Math/abs (- x1 x2)) (Math/abs (- y1 y2))))))
 
 (defmethod tools/edit :line
   [{:keys [attrs] :as element} zoom]

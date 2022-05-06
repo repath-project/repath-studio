@@ -8,6 +8,7 @@
             [clojure.core.matrix :as matrix]
             [clojure.set :as set]
             [repath.studio.history.handlers :as history]
+            [repath.studio.handlers :as handlers]
             [repath.studio.mouse :as mouse]))
 
 (derive :select ::tools/transform)
@@ -42,15 +43,9 @@
   [db _ element]
   (assoc db :clicked-element element))
 
-(defn set-state
-  [db state]
-  (assoc db
-         :state state
-         :cursor (if (= state :clone) "copy" "default")))
-
 (defmethod tools/activate :select
   [db]
-  (set-state db :default))
+  (handlers/set-state db :default))
 
 (defn select-rect
   [{:keys [adjusted-mouse-offset adjusted-mouse-pos active-document] :as db}]
@@ -66,16 +61,16 @@
                   (elements/clear-hovered)
                   (reduce-by-area #(elements/hover %1 (:key %2))))
       :translate (if (contains? (:modifiers event) :ctrl)
-                   (set-state db :clone)
+                   (handlers/set-state db :clone)
                    (elements/translate (history/swap db) offset))
       :clone (elements/duplicate (history/swap db) offset)
       :scale (elements/scale (history/swap db) offset (:scale db) (contains? (:modifiers event) :ctrl))
       :default (case (-> db :clicked-element :type)
-                 :canvas (set-state db :select)
+                 :canvas (handlers/set-state db :select)
                  :scale-handler (-> db
-                                    (set-state :scale)
+                                    (handlers/set-state :scale)
                                     (assoc :scale (:key element)))
-                 (set-state (if-not (-> db :clicked-element :selected?)
+                 (handlers/set-state (if-not (-> db :clicked-element :selected?)
                               (-> db
                                   (elements/select (mouse/multiselect? event) (:clicked-element db))
                                   (history/finalize "Select element"))
@@ -83,7 +78,7 @@
 
 (defmethod tools/drag-end :select
   [{:keys [state adjusted-mouse-offset] :as db} event]
-  (set-state (case state
+  (handlers/set-state (case state
                :select (-> (if (not (mouse/multiselect? event)) (elements/deselect-all db) db)
                            (reduce-by-area #(elements/select-element % (:key %2)))
                            (elements/clear-temp)
