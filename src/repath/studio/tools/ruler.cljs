@@ -7,7 +7,7 @@
             [repath.studio.styles :as styles]
             [goog.string :as gstring]))
 
-(derive :ruler ::tools/edit)
+(derive :ruler ::tools/misc)
 
 (defmethod tools/properties :ruler [] {:icon "ruler-triangle"})
 

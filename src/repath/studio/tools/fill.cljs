@@ -3,7 +3,7 @@
             [repath.studio.elements.handlers :as elements]
             [repath.studio.history.handlers :as history]))
 
-  (derive :fill ::tools/edit)
+  (derive :fill ::tools/misc)
 
   (defmethod tools/properties :fill [] {:icon "fill"})
 

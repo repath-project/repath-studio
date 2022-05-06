@@ -6,7 +6,7 @@
             [repath.studio.history.handlers :as history]
             [goog.color :as gcolor]))
 
-(derive :dropper ::tools/edit)
+(derive :dropper ::tools/misc)
 
 (defmethod tools/properties :dropper [] {:icon "eye-dropper"
                                          :description "Pick a color from your document."})

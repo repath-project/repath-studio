@@ -52,7 +52,7 @@
   [{{:keys [width height]} :attrs}]
   (apply * (map units/unit->px [width height])))
 
-(defmethod tools/edit :rect
+(defmethod tools/render-edit-handlers :rect
   [{:keys [attrs] :as element} zoom]
   (let [{:keys [x y width height]} attrs
         [x y width height] (mapv units/unit->px [x y width height])

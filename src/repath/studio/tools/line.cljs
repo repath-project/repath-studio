@@ -54,7 +54,7 @@
   (let [[x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])]
     [(min x1 x2) (min y1 y2) (max x1 x2) (max y1 y2)]))
 
-(defmethod tools/edit :line
+(defmethod tools/render-edit-handlers :line
   [{:keys [attrs] :as element} zoom]
   (let [{:keys [x1 y1 x2 y2]} attrs
         [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])

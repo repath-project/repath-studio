@@ -9,7 +9,7 @@
 (derive ::transform ::tool)
 (derive ::element ::tool)
 (derive ::draw ::tool)
-(derive ::edit ::tool)
+(derive ::misc ::tool)
 
 (derive ::container ::element)
 (derive ::renderable ::element)
@@ -52,7 +52,7 @@
 (defmulti path :type)
 (defmulti area :type)
 
-(defmulti edit #(:type %))
+(defmulti render-edit-handlers #(:type %))
 (defmulti bounds #(:type %))
 
 (defmulti mouse-down #(:tool %))
@@ -90,7 +90,7 @@
 (defmethod render :default [])
 (defmethod render-to-string :default [element] (dom/render-to-static-markup (render element)))
 
-(defmethod edit :default [])
+(defmethod render-edit-handlers :default [])
 (defmethod bounds :default [])
 (defmethod area :default [])
 

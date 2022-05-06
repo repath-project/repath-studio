@@ -188,7 +188,7 @@
 (def toolbars [::tools/transform
                ::tools/element
                ::tools/draw
-               ::tools/edit])
+               ::tools/misc])
 
 (defn toolbar []
   (let [tool @(rf/subscribe [:tool])
