@@ -5,6 +5,7 @@
             [repath.studio.units :as units]
             [repath.studio.attrs.base :as attrs]
             [repath.studio.history.handlers :as history]
+            [repath.studio.handlers :as handlers]
             [clojure.string :as str]))
 
 (derive :polyline ::tools/shape)
@@ -17,71 +18,73 @@
                                                   :stroke-linejoin
                                                   :opacity]})
 
+(defn create-polyline
+  [{:keys [active-document] :as db} points]
+  (elements/set-temp db {:type :polyline :attrs {:points (str/join " " points)
+                                                 :stroke (tools/rgba (get-in db [:documents active-document :stroke]))
+                                                 :fill "transparent"}}))
+
+(defn add-pont
+  [{:keys [active-document] :as db} point]
+  (update-in db [:documents active-document :temp-element :attrs :points] #(str % " " (str/join " " point))))
+
 (defmethod tools/mouse-up :polyline
-  [{:keys [active-document adjusted-mouse-pos] :as db} event]
-  (let [temp-element (get-in db [:documents active-document :temp-element])
-        stroke (get-in db [:documents active-document :stroke])]
-    (if temp-element
-      (if (= (:button event) 2)
-        (-> db
-            (elements/create-from-temp)
-            (history/finalize (str "Create " (name (:type temp-element)))))
-        (update-in db [:documents active-document :temp-element :attrs :points] #(str % " " (str/join " " adjusted-mouse-pos))))
-      (-> db
-          (assoc :state :create)
-          (elements/set-temp {:type :polyline :attrs {:points (str/join " " adjusted-mouse-pos)
-                                                      :stroke (tools/rgba stroke)
-                                                      :fill "transparent"}})))))
+  [{:keys [adjusted-mouse-offset] :as db}]
+  (if (elements/get-temp db)
+    (add-pont db adjusted-mouse-offset)
+    (-> db
+        (handlers/set-state :create)
+        (create-polyline adjusted-mouse-offset))))
+
+(defmethod tools/drag-start :polyline
+  [{:keys [adjusted-mouse-pos adjusted-mouse-offset] :as db}]
+  (if (elements/get-temp db)
+    (add-pont db (concat adjusted-mouse-offset adjusted-mouse-pos))
+    (create-polyline db (concat adjusted-mouse-offset adjusted-mouse-pos))))
 
 (defmethod tools/drag-end :polyline
-  [{:keys [active-document adjusted-mouse-pos adjusted-mouse-offset] :as db}]
-  (let [stroke (get-in db [:documents active-document :stroke])]
-    (if (get-in db [:documents active-document :temp-element])
-      (update-in db [:documents active-document :temp-element :attrs :points] #(str % " " (str/join " " adjusted-mouse-pos)))
-      (elements/set-temp db {:type :polyline :attrs {:points (str/join " " (concat adjusted-mouse-pos adjusted-mouse-offset))
-                                                     :stroke (tools/rgba stroke)
-                                                     :fill "transparent"}}))))
+  [{:keys [adjusted-mouse-pos adjusted-mouse-offset] :as db}]
+  (if (elements/get-temp db)
+    (add-pont db adjusted-mouse-pos)
+    (create-polyline db (concat adjusted-mouse-offset adjusted-mouse-pos))))
 
 (defmethod tools/drag :polyline
-  [{:keys [adjusted-mouse-offset active-document adjusted-mouse-pos] :as db} event element]
-  (let [stroke (get-in db [:documents active-document :stroke])
-        points (get-in db [:documents active-document :temp-element :attrs :points])
-        attrs {:points (str/join " " (concat adjusted-mouse-pos adjusted-mouse-offset))
-               :stroke (tools/rgba stroke)
-               :fill "transparent"}]
-    (if points
-      (tools/mouse-move db event element)
-      (elements/set-temp db {:type :polyline :attrs attrs}))))
+  [db]
+  (tools/mouse-move db))
 
 (defmethod tools/mouse-move :polyline
   [{:keys [active-document adjusted-mouse-pos] :as db}]
-  (let [points (get-in db [:documents active-document :temp-element :attrs :points])]
-    (if points
-      (assoc-in db [:documents active-document :temp-element :attrs :points] (str/join " " (concat (apply concat (drop-last (attrs/points-to-vec points))) adjusted-mouse-pos)))
-      db)))
+  (if-let [points (get-in db [:documents active-document :temp-element :attrs :points])]
+    (let [point-vector (attrs/points-to-vec points)]
+      (assoc-in db [:documents active-document :temp-element :attrs :points] (str/join " " (concat (apply concat (if (second point-vector) (drop-last point-vector) point-vector)) adjusted-mouse-pos)))) db))
 
 (defmethod tools/double-click :polyline
-  [db]
+  [{:keys [active-document] :as db}]
   (-> db
+      (update-in [:documents active-document :temp-element :attrs :points] #(str/join " " (apply concat (drop-last 2 (attrs/points-to-vec %)))))
       (elements/create-from-temp)
       (history/finalize (str "Create polyline"))))
 
 (defmethod tools/translate :polyline
-  [element [x y]] (-> element
-                      (update-in [:attrs :points] (fn [val]
-                                                    (->> val
-                                                         (attrs/points-to-vec)
-                                                         (reduce (fn [points point] (concat points [(units/transform + x (first point)) (units/transform + y (second point))])) [])
-                                                         (concat)
-                                                         (str/join " "))))))
+  [element [x y]] (update-in element [:attrs :points] (fn [val]
+                                                        (->> val
+                                                             (attrs/points-to-vec)
+                                                             (reduce (fn [points point] (concat points [(units/transform + x (first point)) (units/transform + y (second point))])) [])
+                                                             (concat)
+                                                             (str/join " ")))))
 
 (defmethod tools/render-edit-handlers :polyline
-  [{:keys [attrs] :as element} zoom]
+  [{:keys [attrs]} zoom]
   (let [{:keys [points]} attrs
         handler-size (/ 8 zoom)
         stroke-width (/ 1 zoom)]
     [:g {:key :edit-handlers}
-     (map element-views/square-handler (mapv (fn [[x y]] {:x x :y y :size handler-size :stroke-width stroke-width :key :starting-point :type :edit-handler}) (attrs/points-to-vec points)))]))
+     (map element-views/square-handler (mapv (fn [[x y]] {:x x
+                                                          :y y
+                                                          :size handler-size
+                                                          :stroke-width stroke-width
+                                                          :key :starting-point
+                                                          :type :edit-handler}) (attrs/points-to-vec points)))]))
 
 (defmethod tools/bounds :polyline
   [{{:keys [points]} :attrs}]
