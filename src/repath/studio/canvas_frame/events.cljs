@@ -71,6 +71,10 @@
     (> mouse-pos size) (* (- mouse-pos size) multiplier)
     :else 0)))
 
+(defn pan-out-of-canvas
+  [db {:keys [width height]} [x y]]
+  (h/pan db [(calc-pan-offset x width) (calc-pan-offset y height)]))
+
 (rf/reg-event-db
  :mouse-event
  (fn [{:keys [mouse-offset tool content-rect] :as db} [_ event]]
@@ -80,9 +84,9 @@
        :mousemove
        (-> (if mouse-offset
              (cond-> db
-               (not= tool :pan) (h/pan (let [[x y] mouse-pos
-                                             {:keys [width height]} content-rect]
-                                         [(calc-pan-offset x width) (calc-pan-offset y height)]))
+               (not= tool :pan) (pan-out-of-canvas content-rect mouse-pos)
+               (not (:drag-started db)) (-> (tools/drag-start event element)
+                                            (assoc :drag-started true))
                :always (tools/drag event element))
              (tools/mouse-move db event element))
            (assoc :mouse-pos mouse-pos
@@ -94,12 +98,13 @@
            (= (:button event) 1) (-> (assoc :cached-tool tool)
                                      (tools/set-tool :pan))
            :always (-> (tools/mouse-down event element)
-                       (assoc :mouse-offset mouse-pos
+                       (assoc :drag-started false
+                              :mouse-offset mouse-pos
                               :adjusted-mouse-offset adjusted-mouse-pos)))
          db)
 
        :mouseup
-       (cond-> (if (not= mouse-pos mouse-offset)
+       (cond-> (if (:drag-started db)
                  (tools/drag-end db event element)
                  (tools/mouse-up db event element))
          (:cached-tool db) (tools/set-tool (:cached-tool db))

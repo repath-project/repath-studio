@@ -60,6 +60,7 @@
 (defmulti mouse-up #(:tool %))
 (defmulti double-click #(:tool %))
 (defmulti drag #(:tool %))
+(defmulti drag-start #(:tool %))
 (defmulti drag-end #(:tool %))
 
 (defmulti activate :tool)
@@ -82,6 +83,7 @@
 
 (defmethod mouse-down :default [db] db)
 (defmethod mouse-move :default [db] db)
+(defmethod drag-start :default [db] db)
 (defmethod double-click :default [db _ element] (set-tool db (:type element)))
 
 (defmethod drag :default [db event element] (mouse-move db event element))

@@ -26,9 +26,7 @@
                :stroke (tools/rgba stroke)
                :rx (Math/abs (- pos-x offset-x))
                :ry (Math/abs (- pos-y offset-y))}]
-    (-> db
-        (assoc :state :create)
-        (elements/set-temp {:type :ellipse :attrs attrs}))))
+    (elements/set-temp db {:type :ellipse :attrs attrs})))
 
 (defmethod tools/translate :ellipse
   [element [x y]] (-> element

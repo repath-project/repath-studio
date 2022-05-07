@@ -38,9 +38,7 @@
                  :x2 pos-x
                  :y2 pos-y
                  :stroke (tools/rgba stroke)}]
-      (-> db
-          (handlers/set-state :create)
-          (elements/set-temp {:type :line :attrs attrs})))))
+      (elements/set-temp db {:type :line :attrs attrs}))))
 
 (defmethod tools/translate :line
   [element [x y]] (-> element

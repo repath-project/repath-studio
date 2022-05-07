@@ -38,11 +38,9 @@
   (let [stroke (get-in db [:documents active-document :stroke])]
     (if (get-in db [:documents active-document :temp-element])
       (update-in db [:documents active-document :temp-element :attrs :points] #(str % " " (str/join " " adjusted-mouse-pos)))
-      (-> db
-          (assoc :state :create)
-          (elements/set-temp {:type :polyline :attrs {:points (str/join " " (concat adjusted-mouse-pos adjusted-mouse-offset))
-                                                      :stroke (tools/rgba stroke)
-                                                      :fill "transparent"}})))))
+      (elements/set-temp db {:type :polyline :attrs {:points (str/join " " (concat adjusted-mouse-pos adjusted-mouse-offset))
+                                                     :stroke (tools/rgba stroke)
+                                                     :fill "transparent"}}))))
 
 (defmethod tools/drag :polyline
   [{:keys [adjusted-mouse-offset active-document adjusted-mouse-pos] :as db} event element]
@@ -53,9 +51,7 @@
                :fill "transparent"}]
     (if points
       (tools/mouse-move db event element)
-      (-> db
-          (assoc :state :create)
-          (elements/set-temp {:type :polyline :attrs attrs})))))
+      (elements/set-temp db {:type :polyline :attrs attrs}))))
 
 (defmethod tools/mouse-move :polyline
   [{:keys [active-document adjusted-mouse-pos] :as db}]
@@ -68,7 +64,7 @@
   [db]
   (-> db
       (elements/create-from-temp)
-      (history/finalize (str "Create polyyline"))))
+      (history/finalize (str "Create polyline"))))
 
 (defmethod tools/translate :polyline
   [element [x y]] (-> element

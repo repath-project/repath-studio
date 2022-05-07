@@ -32,9 +32,7 @@
         attrs {:x offset-x
                :y offset-y
                :fill "#000000"}]
-    (-> db
-        (assoc :state :create)
-        (elements/set-temp {:type :text :attrs attrs}))))
+    (elements/set-temp db {:type :text :attrs attrs})))
 
 (defmethod tools/bounds :text
   [element]

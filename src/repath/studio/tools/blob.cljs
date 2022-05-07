@@ -47,7 +47,6 @@
                :size (Math/abs (- pos-x offset-x))
                :fill (tools/rgba fill)
                :stroke (tools/rgba  stroke)}]
-    (rf/dispatch [:set-cursor "default"])
     (elements/set-temp db {:type :blob :attrs attrs})))
 
 (defn blob-path [attrs]

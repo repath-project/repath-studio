@@ -51,6 +51,10 @@
         [width height] (matrix/add [width height] (if (str/blank? stroke) 0 stroke-width-px))]
     (mapv units/unit->px [x y (+ x width) (+ y height)])))
 
+(defmethod tools/drag-start ::tools/element
+  [db]
+  (handlers/set-state db :create))
+
 (defmethod tools/drag-end ::tools/element
   [{:keys [state] :as db}]
   (let [temp-element (get-in db [:documents (:active-document db) :temp-element])]

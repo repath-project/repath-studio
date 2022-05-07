@@ -25,9 +25,7 @@
                :fill   (tools/rgba fill)
                :stroke (tools/rgba stroke)
                :r radius}]
-    (-> db
-        (assoc :state :create)
-        (elements/set-temp {:type :circle :attrs attrs}))))
+    (elements/set-temp db {:type :circle :attrs attrs})))
 
 (defmethod tools/translate :circle
   [element [x y]] (-> element
