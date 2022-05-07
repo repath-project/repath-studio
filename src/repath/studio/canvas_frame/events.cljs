@@ -67,9 +67,9 @@
   [mouse-pos size]
   (let [multiplier 0.1]
     (cond
-    (< mouse-pos 0) (* mouse-pos multiplier)
-    (> mouse-pos size) (* (- mouse-pos size) multiplier)
-    :else 0)))
+      (< mouse-pos 0) (* mouse-pos multiplier)
+      (> mouse-pos size) (* (- mouse-pos size) multiplier)
+      :else 0)))
 
 (defn pan-out-of-canvas
   [db {:keys [width height]} [x y]]
@@ -93,15 +93,13 @@
                   :adjusted-mouse-pos adjusted-mouse-pos))
 
        :mousedown
-       (if-not mouse-offset
-         (cond-> db
-           (= (:button event) 1) (-> (assoc :cached-tool tool)
-                                     (tools/set-tool :pan))
-           :always (-> (tools/mouse-down event element)
-                       (assoc :drag-started false
-                              :mouse-offset mouse-pos
-                              :adjusted-mouse-offset adjusted-mouse-pos)))
-         db)
+       (cond-> db
+         (= (:button event) 1) (-> (assoc :cached-tool tool)
+                                   (tools/set-tool :pan))
+         :always (-> (tools/mouse-down event element)
+                     (assoc :drag-started false
+                            :mouse-offset mouse-pos
+                            :adjusted-mouse-offset adjusted-mouse-pos)))
 
        :mouseup
        (cond-> (if (:drag-started db)
@@ -109,8 +107,8 @@
                  (tools/mouse-up db event element))
          (:cached-tool db) (tools/set-tool (:cached-tool db))
          :always (dissoc :cached-tool :mouse-offset))
-       
-       :dblclick (tools/double-click db event element) 
+
+       :dblclick (tools/double-click db event element)
 
        :wheel
        (if (some (:modifiers event) [:ctrl :alt])
