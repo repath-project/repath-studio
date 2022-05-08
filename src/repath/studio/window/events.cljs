@@ -88,6 +88,7 @@
  (fn [db [_ evt]]
    (let [mouse-pos [(.-clientX evt) (.-clientY evt)]
          min-width 300
+         max-width 600
          key (-> db :window :drag)
          previous-mouse-pos (-> db :window :mouse-pos)
          current-size (-> db :window key :size)
@@ -95,6 +96,8 @@
          direction (-> db :window :drag-direction )
          updated-size ((if (contains? #{:right :bottom} direction) + -) current-size ((if (contains? #{:left :right} direction) first second) offset))]
      (cond-> db
-       (or (> updated-size min-width) (not (-> db :window :mouse-pos))) (assoc-in [:window :mouse-pos] mouse-pos)
+       (or (and (> updated-size min-width) (< updated-size max-width)) (not (-> db :window :mouse-pos))) (assoc-in [:window :mouse-pos] mouse-pos)
        (and (not (-> db :window key :visible?)) (> updated-size current-size)) (assoc-in [:window key :visible?] true)
-       (and key previous-mouse-pos) (assoc-in [:window key :size] (if (> updated-size min-width) updated-size min-width))))))
+       (and key previous-mouse-pos) (assoc-in [:window key :size] (cond (< updated-size min-width) min-width
+                                                                        (> updated-size max-width) max-width
+                                                                        :else updated-size))))))
