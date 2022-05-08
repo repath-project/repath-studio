@@ -2,6 +2,7 @@
   (:require [clojure.string :as str]
             [repath.studio.tools.base :as tools]
             [repath.studio.elements.handlers :as elements]
+            [repath.studio.elements.views :as element-views]
             [repath.studio.attrs.base :as attrs]
             [clojure.core.matrix :as matrix]
             [repath.studio.units :as units]))
@@ -55,5 +56,16 @@
                    "A" r r 0 0 1 (- cx r) cy
                    "A" r r 0 0 1 (+ cx r) cy])))
 
+(defmethod tools/edit :circle
+  [element [x y] handler]
+  (case handler
+    :r (attrs/update-attr element :r + x)
+    element))
+
 (defmethod tools/render-edit :circle
-  [{:keys [attrs key] :as element} zoom])
+  [{:keys [attrs]} zoom]
+  (let [{:keys [cx cy r]} attrs
+        [cx cy r] (mapv units/unit->px [cx cy r])
+        handler-size (/ 8 zoom)
+        stroke-width (/ 1 zoom)]
+    [element-views/square-handler {:x (+ cx r) :y cy :size handler-size :stroke-width stroke-width :key :r :type :edit-handler}]))

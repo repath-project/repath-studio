@@ -2,6 +2,8 @@
   (:require [repath.studio.elements.handlers :as elements]
             [repath.studio.tools.base :as tools]
             [repath.studio.units :as units]
+            [repath.studio.elements.views :as element-views]
+            [repath.studio.attrs.base :as attrs]
             [clojure.string :as str]
             [clojure.core.matrix :as matrix]))
 
@@ -70,3 +72,20 @@
                  "A" rx ry 0 0 1 cx (+ cy ry)
                  "A" rx ry 0 0 1 (- cx rx) cy
                  "A" rx ry 0 0 1 (+ cx rx) cy]))
+
+(defmethod tools/edit :ellipse
+  [element [x y] handler]
+  (case handler
+    :rx (attrs/update-attr element :rx + x)
+    :ry (attrs/update-attr element :ry - y)
+    element))
+
+(defmethod tools/render-edit :ellipse
+  [{:keys [attrs]} zoom]
+  (let [{:keys [cx cy rx ry]} attrs
+        [cx cy rx ry] (mapv units/unit->px [cx cy rx ry])
+        handler-size (/ 8 zoom)
+        stroke-width (/ 1 zoom)]
+    [:g {:key :edit-handlers}
+     (map element-views/square-handler [{:x (+ cx rx) :y cy :size handler-size :stroke-width stroke-width :key :rx :type :edit-handler}
+                                        {:x cx :y (- cy ry) :size handler-size :stroke-width stroke-width :key :ry :type :edit-handler}])]))

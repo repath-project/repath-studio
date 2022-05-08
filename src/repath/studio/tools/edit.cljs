@@ -22,7 +22,7 @@
     (elements/update-selected db (fn [elements element] (assoc elements (:key element) (tools/edit element mouse-offset (:key (:clicked-element db))))))))
 
 (defmethod tools/drag-end :edit
-  [db _ element]
+  [db]
   (-> db
    (handlers/set-state :default)
-   (history/finalize (str "Edit " (-> element :key name)))))
+   (history/finalize (str "Edit " (-> db :clicked-element :key name)))))
