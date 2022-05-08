@@ -32,8 +32,8 @@
 
 (defmethod tools/translate :ellipse
   [element [x y]] (-> element
-                      (update-in [:attrs :cx] #(units/transform + x %))
-                      (update-in [:attrs :cy] #(units/transform + y %))))
+                      (attrs/update-attr :cx + x)
+                      (attrs/update-attr :cy + y)))
 
 (defmethod tools/scale :ellipse
   [element [x y] handler]
@@ -41,20 +41,20 @@
     (cond-> element
       (contains? #{:bottom-right
                    :top-right
-                   :middle-right} handler) (-> (update-in [:attrs :rx] #(units/transform + x %))
-                                               (update-in [:attrs :cx] #(units/transform + x %)))
+                   :middle-right} handler) (-> (attrs/update-attr :rx + x)
+                                               (attrs/update-attr :cx + x))
       (contains? #{:bottom-left
                    :top-left
-                   :middle-left} handler) (-> (update-in [:attrs :rx] #(units/transform - x %))
-                                              (update-in [:attrs :cx] #(units/transform + x %)))
+                   :middle-left} handler) (-> (attrs/update-attr :rx - x)
+                                              (attrs/update-attr :cx + x))
       (contains? #{:bottom-middle
                    :bottom-right
-                   :bottom-left} handler) (-> (update-in [:attrs :cy] #(units/transform + y %))
-                                              (update-in [:attrs :ry] #(units/transform + y %)))
+                   :bottom-left} handler) (-> (attrs/update-attr :cy + y)
+                                              (attrs/update-attr :ry + y))
       (contains? #{:top-middle
                    :top-left
-                   :top-right} handler) (-> (update-in [:attrs :ry] #(units/transform - y %))
-                                            (update-in [:attrs :cy] #(units/transform + y %))))))
+                   :top-right} handler) (-> (attrs/update-attr :ry - y)
+                                            (attrs/update-attr :cy + y)))))
 
 (defmethod tools/bounds :ellipse
   [{{:keys [cx cy rx ry]} :attrs}]
