@@ -102,6 +102,8 @@
                 [[:elements/select-all]
                  [{:keyCode (key-codes "A")
                    :ctrlKey true}]]
+                [[:set-tool :edit]
+                 [{:keyCode (key-codes "E")}]]
                 [[:set-tool :circle]
                  [{:keyCode (key-codes "C")}]]
                 [[:set-tool :line]
