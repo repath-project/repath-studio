@@ -52,8 +52,21 @@
   (let [zoom (get-in db [:documents active-document :zoom])]
     (assoc-in (element-views/select-box adjusted-mouse-pos adjusted-mouse-offset zoom) [:attrs :fill] (if (intersecting? db) styles/accent "transparent"))))
 
+(defmethod tools/drag-start :select
+  [db event element]
+  (case (-> db :clicked-element :type)
+    :canvas (handlers/set-state db :select)
+    :scale-handler (-> db
+                       (handlers/set-state :scale)
+                       (assoc :scale (:key element)))
+    (handlers/set-state (if-not (-> db :clicked-element :selected?)
+                          (-> db
+                              (elements/select (mouse/multiselect? event) (:clicked-element db))
+                              (history/finalize "Select element"))
+                          db) :translate)))
+
 (defmethod tools/drag :select
-  [{:keys [state adjusted-mouse-offset adjusted-mouse-pos] :as db} event element]
+  [{:keys [state adjusted-mouse-offset adjusted-mouse-pos] :as db} event]
   (let [offset (matrix/sub adjusted-mouse-pos adjusted-mouse-offset)]
     (case state
       :select (-> db
@@ -64,17 +77,7 @@
                    (handlers/set-state db :clone)
                    (elements/translate (history/swap db) offset))
       :clone (elements/duplicate (history/swap db) offset)
-      :scale (elements/scale (history/swap db) offset (:scale db) (contains? (:modifiers event) :ctrl))
-      :default (case (-> db :clicked-element :type)
-                 :canvas (handlers/set-state db :select)
-                 :scale-handler (-> db
-                                    (handlers/set-state :scale)
-                                    (assoc :scale (:key element)))
-                 (handlers/set-state (if-not (-> db :clicked-element :selected?)
-                              (-> db
-                                  (elements/select (mouse/multiselect? event) (:clicked-element db))
-                                  (history/finalize "Select element"))
-                              db) :translate)))))
+      :scale (elements/scale (history/swap db) offset (:scale db) (contains? (:modifiers event) :ctrl)))))
 
 (defmethod tools/drag-end :select
   [{:keys [state adjusted-mouse-offset] :as db} event]
