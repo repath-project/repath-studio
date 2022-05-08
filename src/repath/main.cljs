@@ -16,8 +16,8 @@
                                  :show false
                                  :frame false})
 
-(defonce main-window-options {:width 1280
-                              :height 920
+(defonce main-window-options {:width 1920
+                              :height 1080
                               :backgroundColor "#313131"
                               :icon (str js/__dirname "/public/img/icon.png")
                               :frame false
