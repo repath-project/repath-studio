@@ -40,7 +40,7 @@
   [element attribute f & args]
   (update-in element [:attrs attribute] f (first args)))
 
-(defmethod update-attr ::length
+(defmethod update-attr ::coordinate
   [element attribute f & args]
   (update-in element [:attrs attribute] #(units/transform f (first args) %)))
 

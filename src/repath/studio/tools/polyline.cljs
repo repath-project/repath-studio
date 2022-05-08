@@ -73,7 +73,7 @@
                                                              (concat)
                                                              (str/join " ")))))
 
-(defmethod tools/render-edit-handlers :polyline
+(defmethod tools/render-edit :polyline
   [{:keys [attrs]} zoom]
   (let [{:keys [points]} attrs
         handler-size (/ 8 zoom)

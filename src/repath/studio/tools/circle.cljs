@@ -54,3 +54,6 @@
                    "A" r r 0 0 1 cx (+ cy r)
                    "A" r r 0 0 1 (- cx r) cy
                    "A" r r 0 0 1 (+ cx r) cy])))
+
+(defmethod tools/render-edit :circle
+  [{:keys [attrs key] :as element} zoom])

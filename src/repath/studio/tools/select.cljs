@@ -47,6 +47,10 @@
   [db]
   (handlers/set-state db :default))
 
+(defmethod tools/deactivate :select
+  [db]
+  (elements/clear-hovered db))
+
 (defn select-rect
   [{:keys [adjusted-mouse-offset adjusted-mouse-pos active-document] :as db}]
   (let [zoom (get-in db [:documents active-document :zoom])]

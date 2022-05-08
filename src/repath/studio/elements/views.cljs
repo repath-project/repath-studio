@@ -14,20 +14,19 @@
             :r (/ 3 zoom)}])
 
 (defn square-handler
-  [{:keys [x y key size stroke-width type]}]
-  (let [element {:key key :type type}]
-    [:rect {:key key
-            :fill "#fff"
-            :stroke "#555"
-            :stroke-width stroke-width
-            :x (- x (/ size 2))
-            :y (- y (/ size 2))
-            :width size
-            :height size
-            :cursor "default"
-            :on-mouse-up #(mouse/event-handler % element)
-            :on-mouse-down #(mouse/event-handler % element)
-            :on-mouse-move #(mouse/event-handler % element)}]))
+  [{:keys [x y key size stroke-width] :as element}]
+  [:rect {:key key
+          :fill "#fff"
+          :stroke "#555"
+          :stroke-width stroke-width
+          :x (- x (/ size 2))
+          :y (- y (/ size 2))
+          :width size
+          :height size
+          :cursor "default"
+          :on-mouse-up #(mouse/event-handler % element)
+          :on-mouse-down #(mouse/event-handler % element)
+          :on-mouse-move #(mouse/event-handler % element)}])
 
 (defn cross
   [{:keys [x y size stroke-width]}]

@@ -2,6 +2,7 @@
   (:require
    [repath.studio.tools.base :as tools]
    [repath.studio.elements.handlers :as element-handlers]
+   [repath.studio.elements.views :as element-views]
    [repath.studio.attrs.base :as attrs]
    [reagent.core :as ra]
    [re-frame.core :as rf]
@@ -15,9 +16,7 @@
    [reagent.dom.server :as server]
    [goog.string :as gstring]))
 
-(defmethod tools/activate ::tools/element [db] (assoc db
-                                                      :cursor "crosshair"
-                                                      :state :create))
+(defmethod tools/activate ::tools/element [db] (assoc db :cursor "crosshair"))
 
 (defmethod tools/translate ::tools/element
   [element [x y]] (-> element
@@ -42,6 +41,29 @@
                  :top-right} handler) (-> (attrs/update-attr :y + y)
                                           (attrs/update-attr :height - y))))
 
+(defmethod tools/edit ::tools/element
+  [element [x y] handler]
+  (case handler
+    :position (-> element
+                  (attrs/update-attr :x + x)
+                  (attrs/update-attr :y + y)
+                  (attrs/update-attr :width - x)
+                  (attrs/update-attr :height - y))
+    :size (-> element
+              (attrs/update-attr :width + x)
+              (attrs/update-attr :height + y))
+    element))
+
+(defmethod tools/render-edit ::tools/element
+  [{:keys [attrs]} zoom]
+  (let [{:keys [x y width height]} attrs
+        [x y width height] (mapv units/unit->px [x y width height])
+        handler-size (/ 8 zoom)
+        stroke-width (/ 1 zoom)]
+    [:g {:key :edit-handlers}
+     (map element-views/square-handler [{:x x :y y :size handler-size :stroke-width stroke-width :key :position :type :edit-handler}
+                                        {:x (+ x width) :y (+ y height) :size handler-size :stroke-width stroke-width :key :size :type :edit-handler}])]))
+
 (defmethod tools/bounds ::tools/element
   [{:keys [attrs]}]
   (let [{:keys [x y width height stroke-width stroke]} attrs
@@ -56,20 +78,17 @@
   (handlers/set-state db :create))
 
 (defmethod tools/drag-end ::tools/element
-  [{:keys [state] :as db}]
+  [db]
   (let [temp-element (get-in db [:documents (:active-document db) :temp-element])]
-    (cond-> db
-      (= state :create) (-> (element-handlers/create-from-temp)
-                            (history/finalize (str "Create " (name (:type temp-element)))))
-      (= state :edit) (-> (dissoc :edit) 
-                          (handlers/set-state :create)
-                          (history/finalize (str "Edit "))))))
+    (-> db 
+        (element-handlers/create-from-temp)
+        (history/finalize (str "Create " (name (:type temp-element))))
+        (assoc :cursor "crosshair"))))
 
 (defmethod tools/mouse-up :default
   [db event element]
   (-> db
       (dissoc :clicked-element)
-      (element-handlers/clear-hovered)
       (element-handlers/select (mouse/multiselect? event) element)
       (history/finalize "Select element")))
 

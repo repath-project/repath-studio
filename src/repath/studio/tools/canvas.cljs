@@ -50,11 +50,11 @@
            (when  @(rf/subscribe [:grid?]) [rulers/grid])
            (map (fn [element] ^{:key (str (:key element) "bounds")} [elements/bounding-box (tools/adjusted-bounds element elements) zoom]) hovered-elements)
            (map (fn [element] ^{:key (str (:key element) "selection")} [elements/bounding-box (tools/adjusted-bounds element elements) zoom]) selected-elements)
-           (when (and bounds (not (contains? #{:edit :create} state)))
+           (when (and bounds (= tool :select))
              [:<>
               (when (> area 0) [elements/area area bounds zoom])
               [elements/size bounds zoom]
               [elements/bounding-handlers bounds zoom]])
-           (when (and (contains? #{:create :edit} state) (not (next selected-elements))) [tools/render-edit-handlers (first selected-elements) zoom])
+           (when (= tool :edit) [tools/render-edit (first selected-elements) zoom])
            (when debug-info? (into [:g] (map #(elements/point-of-interest % zoom) @(rf/subscribe [:snaping-points]))))])]
      [:defs (map (fn [{:keys [id type attrs]}] [:filter {:id id :key id} [type attrs]]) filters/accessibility)]]))

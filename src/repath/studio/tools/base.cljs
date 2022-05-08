@@ -52,7 +52,7 @@
 (defmulti path :type)
 (defmulti area :type)
 
-(defmulti render-edit-handlers #(:type %))
+(defmulti render-edit #(:type %))
 (defmulti bounds #(:type %))
 
 (defmulti mouse-down #(:tool %))
@@ -81,10 +81,14 @@
   (fn [element]
     (when (not (:locked? element)) (:type element))))
 
+(defmulti edit
+  (fn [element]
+    (when (not (:locked? element)) (:type element))))
+
 (defmethod mouse-down :default [db] db)
 (defmethod mouse-move :default [db] db)
 (defmethod drag-start :default [db] db)
-(defmethod double-click :default [db _ element] (set-tool db (:type element)))
+(defmethod double-click :default [db] (set-tool db :edit))
 
 (defmethod drag :default [db event element] (mouse-move db event element))
 (defmethod drag-end :default [db event element] (mouse-up db event element))
@@ -92,7 +96,7 @@
 (defmethod render :default [])
 (defmethod render-to-string :default [element] (dom/render-to-static-markup (render element)))
 
-(defmethod render-edit-handlers :default [])
+(defmethod render-edit :default [])
 (defmethod bounds :default [])
 (defmethod area :default [])
 
