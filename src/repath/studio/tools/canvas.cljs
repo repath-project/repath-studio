@@ -26,7 +26,7 @@
         cursor              @(rf/subscribe [:cursor])
         tool                @(rf/subscribe [:tool])
         rotate              @(rf/subscribe [:rotate])
-        debug-info?         @(rf/subscribe [:debug-info?])] 
+        debug-info?         @(rf/subscribe [:debug-info?])]
     [:svg {:on-mouse-up #(mouse/event-handler % element)
            :on-mouse-down #(mouse/event-handler % element)
            :on-wheel #(mouse/event-handler % element)
@@ -48,8 +48,9 @@
            (when (and bounds (= tool :select))
              [:<>
               (when (> area 0) [elements/area area bounds])
-              [elements/size bounds]
-              [elements/bounding-handlers bounds]])
+              (when (not-empty (filter (comp not zero?) bounds))
+                [elements/size bounds]
+                [elements/bounding-handlers bounds])])
            (when (= tool :edit) [tools/render-edit (first selected-elements)])
            (when debug-info? (into [:g] (map #(elements/point-of-interest %) @(rf/subscribe [:snaping-points]))))])]
      [:defs (map (fn [{:keys [id type attrs]}] [:filter {:id id :key id} [type attrs]]) filters/accessibility)]]))
