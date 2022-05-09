@@ -57,15 +57,12 @@
                    "A" r r 0 0 1 (+ cx r) cy])))
 
 (defmethod tools/edit :circle
-  [element [x y] handler]
+  [element [x _] handler]
   (case handler
     :r (attrs/update-attr element :r + x)
     element))
 
 (defmethod tools/render-edit :circle
-  [{:keys [attrs]} zoom]
-  (let [{:keys [cx cy r]} attrs
-        [cx cy r] (mapv units/unit->px [cx cy r])
-        handler-size (/ 8 zoom)
-        stroke-width (/ 1 zoom)]
-    [element-views/square-handler {:x (+ cx r) :y cy :size handler-size :stroke-width stroke-width :key :r :type :edit-handler}]))
+  [{{:keys [cx cy r]} :attrs}]
+  (let [[cx cy r] (mapv units/unit->px [cx cy r])]
+    [element-views/square-handler {:x (+ cx r) :y cy :key :r :type :edit-handler}]))

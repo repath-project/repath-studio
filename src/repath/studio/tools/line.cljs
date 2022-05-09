@@ -42,14 +42,12 @@
    (str "M" x1 "," y1 " L" x2 "," y2)))
 
 (defmethod tools/render-edit :line
-  [{:keys [attrs]} zoom]
+  [{:keys [attrs]}]
   (let [{:keys [x1 y1 x2 y2]} attrs
-        [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])
-        handler-size (/ 8 zoom)
-        stroke-width (/ 1 zoom)]
+        [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])]
     [:g {:key :edit-handlers}
-     (map element-views/square-handler [{:x x1 :y y1 :size handler-size :stroke-width stroke-width :key :starting-point :type :edit-handler}
-                                        {:x x2 :y y2 :size handler-size :stroke-width stroke-width :key :ending-point :type :edit-handler}])]))
+     (map element-views/square-handler [{:x x1 :y y1 :key :starting-point :type :edit-handler}
+                                        {:x x2 :y y2 :key :ending-point :type :edit-handler}])]))
 
 (defmethod tools/edit :line
   [element [x y] handler]

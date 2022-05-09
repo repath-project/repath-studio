@@ -83,11 +83,9 @@
     element))
 
 (defmethod tools/render-edit :ellipse
-  [{:keys [attrs]} zoom]
+  [{:keys [attrs]}]
   (let [{:keys [cx cy rx ry]} attrs
-        [cx cy rx ry] (mapv units/unit->px [cx cy rx ry])
-        handler-size (/ 8 zoom)
-        stroke-width (/ 1 zoom)]
+        [cx cy rx ry] (mapv units/unit->px [cx cy rx ry])]
     [:g {:key :edit-handlers}
-     (map element-views/square-handler [{:x (+ cx rx) :y cy :size handler-size :stroke-width stroke-width :key :rx :type :edit-handler}
-                                        {:x cx :y (- cy ry) :size handler-size :stroke-width stroke-width :key :ry :type :edit-handler}])]))
+     (map element-views/square-handler [{:x (+ cx rx) :y cy :key :rx :type :edit-handler}
+                                        {:x cx :y (- cy ry) :key :ry :type :edit-handler}])]))

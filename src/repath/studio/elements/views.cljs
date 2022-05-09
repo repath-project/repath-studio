@@ -1,32 +1,35 @@
 (ns repath.studio.elements.views
   (:require [repath.studio.context-menu.views :refer [gen-menu]]
-            [clojure.core.matrix :as matrix]
             [re-frame.core :as rf]
             [repath.studio.mouse :as mouse]
             [repath.studio.bounds :as bounds]
             [repath.studio.styles :as styles]))
 
 (defn point-of-interest
-  [[x y] zoom]
-  [:circle {:fill "red"
-            :cx x
-            :cy y
-            :r (/ 3 zoom)}])
+  [[x y]]
+  (let [zoom @(rf/subscribe [:zoom])]
+    [:circle {:fill "red"
+              :cx x
+              :cy y
+              :r (/ 3 zoom)}]))
 
 (defn square-handler
-  [{:keys [x y key size stroke-width] :as element}]
-  [:rect {:key key
-          :fill "#fff"
-          :stroke "#555"
-          :stroke-width stroke-width
-          :x (- x (/ size 2))
-          :y (- y (/ size 2))
-          :width size
-          :height size
-          :cursor "default"
-          :on-mouse-up #(mouse/event-handler % element)
-          :on-mouse-down #(mouse/event-handler % element)
-          :on-mouse-move #(mouse/event-handler % element)}])
+  [{:keys [x y key] :as element}]
+  (let [zoom @(rf/subscribe [:zoom])
+        size (/ 8 zoom)
+        stroke-width (/ 1 zoom)]
+    [:rect {:key key
+            :fill "#fff"
+            :stroke "#555"
+            :stroke-width stroke-width
+            :x (- x (/ size 2))
+            :y (- y (/ size 2))
+            :width size
+            :height size
+            :cursor "default"
+            :on-mouse-up #(mouse/event-handler % element)
+            :on-mouse-down #(mouse/event-handler % element)
+            :on-mouse-move #(mouse/event-handler % element)}]))
 
 (defn cross
   [{:keys [x y size stroke-width]}]
@@ -47,36 +50,37 @@
            :pointer-events "none"}]])
 
 (defn bounding-handlers
-  [bounds zoom]
-  (let [[x1 y1 x2 y2] bounds
-        [width height] (bounds/->dimensions bounds)
-        handler-size (/ 8 zoom)
-        stroke-width (/ 1 zoom)]
+  [bounds]
+  (let [zoom @(rf/subscribe [:zoom])
+        [x1 y1 x2 y2] bounds
+        [width height] (bounds/->dimensions bounds)]
     [:g {:key :bounding-handlers}
      [cross {:x (+ x1 (/ width 2))
              :y (+ y1 (/ height 2))
              :size (/ 10 zoom)
              :stroke-width (/ 1 zoom)}]
-     (map square-handler [{:x x1 :y y1 :size handler-size :stroke-width stroke-width :key :top-left :type :scale-handler}
-                          {:x x2 :y y1 :size handler-size :stroke-width stroke-width :key :top-right :type :scale-handler}
-                          {:x x1 :y y2 :size handler-size :stroke-width stroke-width :key :bottom-left :type :scale-handler}
-                          {:x x2 :y y2 :size handler-size :stroke-width stroke-width :key :bottom-right :type :scale-handler}
-                          {:x (+ x1 (/ width 2)) :y y1 :size handler-size :stroke-width stroke-width :key :top-middle :type :scale-handler}
-                          {:x x2 :y (+ y1 (/ height 2)) :size handler-size :stroke-width stroke-width :key :middle-right :type :scale-handler}
-                          {:x x1 :y (+ y1 (/ height 2)) :size handler-size :stroke-width stroke-width :key :middle-left :type :scale-handler}
-                          {:x (+ x1 (/ width 2)) :y y2 :size handler-size :stroke-width stroke-width :key :bottom-middle :type :scale-handler}])]))
+     (map square-handler [{:x x1 :y y1 :key :top-left :type :scale-handler}
+                          {:x x2 :y y1 :key :top-right :type :scale-handler}
+                          {:x x1 :y y2 :key :bottom-left :type :scale-handler}
+                          {:x x2 :y y2 :key :bottom-right :type :scale-handler}
+                          {:x (+ x1 (/ width 2)) :y y1 :key :top-middle :type :scale-handler}
+                          {:x x2 :y (+ y1 (/ height 2)) :key :middle-right :type :scale-handler}
+                          {:x x1 :y (+ y1 (/ height 2)) :key :middle-left :type :scale-handler}
+                          {:x (+ x1 (/ width 2)) :y y2 :key :bottom-middle :type :scale-handler}])]))
 
 (defn label
-  [text position zoom]
-  (let [[x y] position
+  [text position]
+  (let [zoom @(rf/subscribe [:zoom])
+        [x y] position
         font-size (/ 12 zoom)
+        padding 8
         font-width 5
-        label-width (/ (+ (* (count text) font-width) 6) zoom)
-        label-height (/ (+ 12 6) zoom)]
+        label-width (/ (+ (* (count text) font-width) 12) zoom)
+        label-height (/ (+ 12 padding) zoom)]
     [:g
      [:rect {:x (- x (/ label-width 2))
-             :y (- y (inc (/ label-height 2)))
-             :fill styles/level-2
+             :y (- y  (/ label-height 2))
+             :fill "rgba(0, 0, 0, .7)"
              :font-family "Source Sans Pro"
              :rx (/ 4 zoom)
              :width label-width
@@ -92,17 +96,19 @@
              :font-size font-size} text]]))
 
 (defn size
-  [bounds zoom]
-  (let [[x1 _ x2 y2] bounds
+  [bounds]
+  (let [zoom @(rf/subscribe [:zoom])
+        [x1 _ x2 y2] bounds
         x (+ x1 (/ (- x2 x1) 2))
         y (+ y2 (/ 20 zoom))
         [width height] (bounds/->dimensions bounds)
         text (str (-> width (.toFixed 2) (js/parseFloat)) " x " (-> height (.toFixed 2) (js/parseFloat)))]
-    [label text [x y] zoom]))
+    [label text [x y]]))
 
 (defn bounding-box
-  [bounds zoom]
-  (let [[x1 y1 _ _]      bounds
+  [bounds]
+  (let [zoom             @(rf/subscribe [:zoom])
+        [x1 y1 _ _]      bounds
         [width height]   (bounds/->dimensions bounds)
         stroke-width     (/ 1 zoom)
         stroke-dasharray (/ 5 zoom)
@@ -133,9 +139,10 @@
                          :stroke-width (/ 1 zoom)}}))
 
 (defn area
-  [area bounds zoom]
+  [area bounds]
   (when area
-    (let [[x1 y1 x2 _] bounds
+    (let [zoom @(rf/subscribe [:zoom])
+          [x1 y1 x2 _] bounds
           x (+ x1 (/ (- x2 x1) 2))
           y (+ y1 (/ -20 zoom))
           text (str (-> area (.toFixed 2) (js/parseFloat)) " px\u00B2")]

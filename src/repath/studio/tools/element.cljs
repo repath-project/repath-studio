@@ -55,14 +55,12 @@
     element))
 
 (defmethod tools/render-edit ::tools/element
-  [{:keys [attrs]} zoom]
+  [{:keys [attrs]}]
   (let [{:keys [x y width height]} attrs
-        [x y width height] (mapv units/unit->px [x y width height])
-        handler-size (/ 8 zoom)
-        stroke-width (/ 1 zoom)]
+        [x y width height] (mapv units/unit->px [x y width height])]
     [:g {:key :edit-handlers}
-     (map element-views/square-handler [{:x x :y y :size handler-size :stroke-width stroke-width :key :position :type :edit-handler}
-                                        {:x (+ x width) :y (+ y height) :size handler-size :stroke-width stroke-width :key :size :type :edit-handler}])]))
+     (map element-views/square-handler [{:x x :y y :key :position :type :edit-handler}
+                                        {:x (+ x width) :y (+ y height) :key :size :type :edit-handler}])]))
 
 (defmethod tools/bounds ::tools/element
   [{:keys [attrs]}]

@@ -24,18 +24,14 @@
         area               @(rf/subscribe [:elements/area])
         temp-element       @(rf/subscribe [:temp-element])
         cursor             @(rf/subscribe [:cursor])
-        zoom               @(rf/subscribe [:zoom])
         tool               @(rf/subscribe [:tool])
-        state              @(rf/subscribe [:state])
         rotate             @(rf/subscribe [:rotate])
         debug-info?        @(rf/subscribe [:debug-info?])] 
-    [:svg {:on-mouse-up     #(mouse/event-handler % element)
-           :on-mouse-down   #(mouse/event-handler % element)
-           :on-wheel        #(mouse/event-handler % element)
-           ; Enable keyboard events on the svg element 
-           :tab-index 0 
-           ; We are using the [viewBox](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox) attribute to simulate pan and zoom
-           :viewBox (str/join " " viewbox) 
+    [:svg {:on-mouse-up #(mouse/event-handler % element)
+           :on-mouse-down #(mouse/event-handler % element)
+           :on-wheel #(mouse/event-handler % element)
+           :tab-index 0 ; Enable keyboard events on the svg element 
+           :viewBox (str/join " " viewbox)
            :width (:width content-rect)
            :height (:height content-rect)
            :transform (str "rotate(" rotate ")")
@@ -48,13 +44,13 @@
         (when (not= tool :dropper)
           [:<>
            (when  @(rf/subscribe [:grid?]) [rulers/grid])
-           (map (fn [element] ^{:key (str (:key element) "bounds")} [elements/bounding-box (tools/adjusted-bounds element elements) zoom]) hovered-elements)
-           (map (fn [element] ^{:key (str (:key element) "selection")} [elements/bounding-box (tools/adjusted-bounds element elements) zoom]) selected-elements)
+           (map (fn [element] ^{:key (str (:key element) "bounds")} [elements/bounding-box (tools/adjusted-bounds element elements)]) hovered-elements)
+           (map (fn [element] ^{:key (str (:key element) "selection")} [elements/bounding-box (tools/adjusted-bounds element elements)]) selected-elements)
            (when (and bounds (= tool :select))
              [:<>
-              (when (> area 0) [elements/area area bounds zoom])
-              [elements/size bounds zoom]
-              [elements/bounding-handlers bounds zoom]])
-           (when (= tool :edit) [tools/render-edit (first selected-elements) zoom])
-           (when debug-info? (into [:g] (map #(elements/point-of-interest % zoom) @(rf/subscribe [:snaping-points]))))])]
+              (when (> area 0) [elements/area area bounds])
+              [elements/size bounds]
+              [elements/bounding-handlers bounds]])
+           (when (= tool :edit) [tools/render-edit (first selected-elements)])
+           (when debug-info? (into [:g] (map #(elements/point-of-interest %) @(rf/subscribe [:snaping-points]))))])]
      [:defs (map (fn [{:keys [id type attrs]}] [:filter {:id id :key id} [type attrs]]) filters/accessibility)]]))
