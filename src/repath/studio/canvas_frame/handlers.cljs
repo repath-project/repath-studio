@@ -6,7 +6,7 @@
    [clojure.core.matrix :as matrix]))
 
 (defn pan
-  [{active-document :active-document :as db} offset]
+  [{:keys [active-document] :as db} offset]
   (let [zoom (get-in db [:documents active-document :zoom])]
     (update-in db [:documents active-document :pan] matrix/add (matrix/div offset zoom))))
 
@@ -18,7 +18,7 @@
     :else zoom))
 
 (defn zoom-in-position
-  [{active-document :active-document :as db} factor pos]
+  [{:keys [active-document] :as db} factor pos]
   (let [zoom (get-in db [:documents active-document :zoom])
         updated-zoom (validate-zoom (* zoom factor))
         updated-factor (/ updated-zoom zoom)
@@ -44,14 +44,14 @@
     (zoom-in-position db factor (adjusted-mouse-pos db mouse-pos)))
 
 (defn zoom
-  [{active-document :active-document content-rect :content-rect :as db} factor]
+  [{:keys [active-document content-rect] :as db} factor]
   (let [{:keys [zoom pan]} (get-in db [:documents active-document])
         {:keys [width height]} content-rect
         position (matrix/add pan (matrix/div [width height] 2 zoom))]
     (zoom-in-position db factor position)))
 
 (defn pan-to-bounds
-  [{active-document :active-document content-rect :content-rect :as db} bounds]
+  [{:keys [active-document content-rect] :as db} bounds]
   (let [zoom (get-in db [:documents active-document :zoom])
         [x1 y1 x2 y2] bounds
         dimensions (matrix/sub [x2 y2] [x1 y1])
@@ -61,8 +61,8 @@
     (assoc-in db [:documents active-document :pan] pan)))
 
 (defn pan-to-element
-  [{active-document :active-document :as db} key]
-  (let [element (get-in db [:documents active-document :elements key])
+  [db key]
+  (let [element (el/get-element db key)
         elements (el/elements db)
         parrent-page-attrs (:attrs (helpers/parent-page elements element))
         db (pan-to-bounds db (tools/bounds element elements))]
