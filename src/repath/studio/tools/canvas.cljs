@@ -14,19 +14,19 @@
 
 (defmethod tools/render :canvas
   [{:keys [attrs children] :as element}]
-  (let [child-elements     @(rf/subscribe [:elements/filter-visible children])
-        elements           @(rf/subscribe [:elements])
-        viewbox            @(rf/subscribe [:canvas/viewbox])
-        content-rect       @(rf/subscribe [:content-rect])
-        hovered-elements   @(rf/subscribe [:elements/hovered])
-        selected-elements  @(rf/subscribe [:elements/selected])
-        bounds             @(rf/subscribe [:elements/bounds])
-        area               @(rf/subscribe [:elements/area])
-        temp-element       @(rf/subscribe [:temp-element])
-        cursor             @(rf/subscribe [:cursor])
-        tool               @(rf/subscribe [:tool])
-        rotate             @(rf/subscribe [:rotate])
-        debug-info?        @(rf/subscribe [:debug-info?])] 
+  (let [child-elements      @(rf/subscribe [:elements/filter-visible children])
+        elements            @(rf/subscribe [:elements])
+        viewbox             @(rf/subscribe [:canvas/viewbox])
+        content-rect        @(rf/subscribe [:content-rect])
+        hovered-or-selected @(rf/subscribe [:elements/hovered-or-selected])
+        selected-elements   @(rf/subscribe [:elements/selected])
+        bounds              @(rf/subscribe [:elements/bounds])
+        area                @(rf/subscribe [:elements/area])
+        temp-element        @(rf/subscribe [:temp-element])
+        cursor              @(rf/subscribe [:cursor])
+        tool                @(rf/subscribe [:tool])
+        rotate              @(rf/subscribe [:rotate])
+        debug-info?         @(rf/subscribe [:debug-info?])] 
     [:svg {:on-mouse-up #(mouse/event-handler % element)
            :on-mouse-down #(mouse/event-handler % element)
            :on-wheel #(mouse/event-handler % element)
@@ -44,8 +44,7 @@
         (when (not= tool :dropper)
           [:<>
            (when  @(rf/subscribe [:grid?]) [rulers/grid])
-           (map (fn [element] ^{:key (str (:key element) "bounds")} [elements/bounding-box (tools/adjusted-bounds element elements)]) hovered-elements)
-           (map (fn [element] ^{:key (str (:key element) "selection")} [elements/bounding-box (tools/adjusted-bounds element elements)]) selected-elements)
+           (map (fn [element] ^{:key (str (:key element) "bounds")} [elements/bounding-box (tools/adjusted-bounds element elements)]) hovered-or-selected)
            (when (and bounds (= tool :select))
              [:<>
               (when (> area 0) [elements/area area bounds])

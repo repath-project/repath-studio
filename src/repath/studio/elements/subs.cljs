@@ -4,6 +4,7 @@
    [repath.studio.tools.base :as tools]
    [repath.studio.helpers :as helpers]
    [clojure.core.matrix :as matrix]
+   [clojure.set :as set]
    [goog.color :as color]
    ["js-beautify" :as js-beautify]))
 
@@ -54,6 +55,12 @@
    (filter :selected? (vals elements))))
 
 (rf/reg-sub
+ :elements/selected-keys
+  :<- [:elements/selected]
+ (fn [selected-elements _]
+   (reduce #(conj %1 (:key %2)) #{} selected-elements)))
+
+(rf/reg-sub
  :elements/selected-attrs
  :<- [:elements/selected]
  (fn [selected-elements _]
@@ -83,6 +90,14 @@
  :<- [:hovered-keys]
  (fn [[elements hovered-keys] _] 
    (vals (select-keys elements hovered-keys))))
+
+(rf/reg-sub
+ :elements/hovered-or-selected
+ :<- [:elements]
+ :<- [:hovered-keys]
+ :<- [:elements/selected-keys]
+ (fn [[elements hovered-keys selected-keys] _]
+   (vals (select-keys elements (set/union hovered-keys selected-keys)))))
 
 (rf/reg-sub
  :elements/colors
