@@ -54,6 +54,9 @@
 
 (defmulti render-edit #(:type %))
 (defmulti bounds #(:type %))
+(defmulti translate #(when (not (:locked? %)) (:type %)))
+(defmulti scale #(when (not (:locked? %)) (:type %)))
+(defmulti edit #(when (not (:locked? %)) (:type %)))
 
 (defmulti mouse-down #(:tool %))
 (defmulti mouse-move #(:tool %))
@@ -73,37 +76,22 @@
       (assoc :tool tool)
       (activate)))
 
-(defmulti translate
-  (fn [element]
-    (when (not (:locked? element)) (:type element))))
-
-(defmulti scale
-  (fn [element]
-    (when (not (:locked? element)) (:type element))))
-
-(defmulti edit
-  (fn [element]
-    (when (not (:locked? element)) (:type element))))
-
 (defmethod mouse-down :default [db] db)
 (defmethod mouse-move :default [db] db)
 (defmethod drag-start :default [db] db)
-(defmethod double-click :default [db] (set-tool db :edit))
+(defmethod double-click :default [db] db)
 
 (defmethod drag :default [db event element] (mouse-move db event element))
 (defmethod drag-end :default [db event element] (mouse-up db event element))
 (defmethod properties :default [])
 (defmethod render :default [])
 (defmethod render-to-string :default [element] (dom/render-to-static-markup (render element)))
-
 (defmethod render-edit :default [])
 (defmethod bounds :default [])
 (defmethod area :default [])
 
-(defmethod activate :default [db] db)
-(defmethod deactivate :default [db] db)
-
 (defmethod activate :default [db] (assoc db :cursor "default"))
+(defmethod deactivate :default [db] db)
 
 (defmethod attrs :default [])
 (defmethod scale :default [element] element)

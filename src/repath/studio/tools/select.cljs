@@ -43,6 +43,10 @@
   [db _ element]
   (assoc db :clicked-element element))
 
+(defmethod tools/double-click :select
+  [db]
+  (tools/set-tool db :edit))
+
 (defmethod tools/activate :select
   [db]
   (handlers/set-state db :default))
