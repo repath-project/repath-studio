@@ -192,7 +192,7 @@
 
 (defn toolbar []
   (let [tool @(rf/subscribe [:tool])]
-    (into [:div.h-box {:style {:justify-content "center" :padding "8px 8px 16px" :flex-wrap "wrap"}}]
+    (into [:div.h-box {:style {:justify-content "center" :padding styles/padding :flex-wrap "wrap"}}]
           (interpose [:span.v-devider]
                      (map (fn [group] [toolbar-group group tool])
                           toolbars)))))
