@@ -12,7 +12,7 @@
   [db]
   (assoc db :cursor "zoom-in"))
 
-(defmethod tools/mouse-down :zoom
+(defmethod tools/drag-start :zoom
   [db]
   (assoc db :cursor "default"))
 
