@@ -8,7 +8,7 @@
 
 (defn event-handler
   [event element]
-  (when (and event (not= (.-buttons event) 2)) ; Exclude right click that should be used for the contect menu exclusively.
+  (when (and event (not= (.-button event) 2)) ; Exclude right click that should be used for the contect menu exclusively.
     (.stopPropagation event)
     (rf/dispatch [:mouse-event {:element element
                                 :target (.-target event)
