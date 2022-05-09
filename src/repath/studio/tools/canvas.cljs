@@ -49,8 +49,9 @@
              [:<>
               (when (> area 0) [elements/area area bounds])
               (when (not-empty (filter (comp not zero?) bounds))
-                [elements/size bounds]
-                [elements/bounding-handlers bounds])])
+                [:<>
+                  [elements/size bounds]
+                  [elements/bounding-handlers bounds]])])
            (when (= tool :edit) [tools/render-edit (first selected-elements)])
            (when debug-info? (into [:g] (map #(elements/point-of-interest %) @(rf/subscribe [:snaping-points]))))])]
      [:defs (map (fn [{:keys [id type attrs]}] [:filter {:id id :key id} [type attrs]]) filters/accessibility)]]))
