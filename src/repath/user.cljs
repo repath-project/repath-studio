@@ -98,7 +98,7 @@
 (defn set-attribute
   "Set the attribute of the selected elements."
   [name value]
-  (rf/dispatch [:elements/set-attribute name value true])
+  (rf/dispatch [:elements/set-attribute name value])
   "")
 
 (defn db

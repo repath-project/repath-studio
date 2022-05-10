@@ -74,7 +74,7 @@
                                       :target @picker}
                       [:> PhotoshopPicker
                        {:color (tools/rgba fill)
-                        :on-change-complete #(rf/dispatch [:elements/set-attribute :fill (:hex (js->clj % :keywordize-keys true)) true])
+                        :on-change-complete #(rf/dispatch [:elements/set-attribute :fill (:hex (js->clj % :keywordize-keys true))])
                         :on-change #((rf/dispatch [:document/set-fill (vals (:rgb (js->clj % :keywordize-keys true)))]))}]])])))
 
 (defn coordinates []

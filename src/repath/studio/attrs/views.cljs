@@ -69,10 +69,11 @@
 (defn on-change-handler
   ([event key old-value finalize?]
    (let [value (.. event -target -value)]
-     (when (not= value old-value) (rf/dispatch [:elements/set-attribute key value finalize?]))))
+     (when (not= value old-value) (if finalize?
+                                    (rf/dispatch [:elements/set-attribute key value])
+                                    (rf/dispatch [:elements/preview-attribute key value])))))
   ([event key old-value]
-   (let [value (.. event -target -value)]
-     (when (not= value old-value) (rf/dispatch [:elements/set-attribute key value true])))))
+   (on-change-handler event key old-value true)))
 
 (defn on-key-down-handler
   [event key value]
@@ -107,7 +108,7 @@
   [key value]
   [:div { :style {:width "100%"
                  :background-color styles/level-2
-                 :padding "0 8px"}} [cm/editor value {:on-blur #(rf/dispatch [:elements/set-attribute key % true])}]])
+                 :padding "0 8px"}} [cm/editor value {:on-blur #(rf/dispatch [:elements/set-attribute key %])}]])
 
 (defmethod form-element :points
   [key value]
@@ -136,7 +137,7 @@
                          :value (if (= "" value) 1 value)
                          :type "range"
                          :on-change #(on-change-handler % key value false)
-                         :on-mouse-up #(rf/dispatch [:elements/set-attribute key value true])})]])
+                         :on-mouse-up #(rf/dispatch [:elements/set-attribute key value])})]])
 
 (defmethod form-element :opacity
   [key value]
@@ -170,8 +171,8 @@
                       [:> ChromePicker
                        {:color value
                         :style {:overflowY "hidden"}
-                        :on-change-complete #(rf/dispatch [:elements/set-attribute key (:hex (js->clj % :keywordize-keys true)) true])
-                        :on-change #(rf/dispatch [:elements/set-attribute key (:hex (js->clj % :keywordize-keys true)) false])}]])])))
+                        :on-change-complete #(rf/dispatch [:elements/set-attribute key (:hex (js->clj % :keywordize-keys true))])
+                        :on-change #(rf/dispatch [:elements/preview-attribute key (:hex (js->clj % :keywordize-keys true))])}]])])))
 
 (defmethod form-group :default
   [type key value disabled?]

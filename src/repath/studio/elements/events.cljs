@@ -29,10 +29,15 @@
 
 (rf/reg-event-db
  :elements/set-attribute
- (fn [db [_ attribute value finalize?]]
-   (cond-> db
-       :always (h/set-attribute attribute value)
-       finalize? (history/finalize (str "Set " (name attribute) " to " value)))))
+ (fn [db [_ attribute value]]
+   (-> db
+       (h/set-attribute attribute value)
+       (history/finalize (str "Set " (name attribute) " to " value)))))
+
+(rf/reg-event-db
+ :elements/preview-attribute
+ (fn [db [_ attribute value]]
+   (h/set-attribute db attribute value)))
 
 (rf/reg-event-db
  :elements/fill
