@@ -228,7 +228,7 @@
                                                   :background-color styles/level-2
                                                   :text-align "left"
                                                   :font-size "18px"
-                                                  :padding "23px 8px 23px 16px"}}
+                                                  :padding "19px 6px 19px 16px"}}
                           [:div.h-box
                            [:span {:style {:flex "1" :elements/align-self "center"}} (if (empty? (rest selected-elements))
                                                                                        (if (empty? name) type name)
