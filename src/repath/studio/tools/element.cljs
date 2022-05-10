@@ -12,9 +12,7 @@
    [clojure.core.matrix :as matrix]
    [clojure.string :as str]
    [repath.studio.mouse :as mouse]
-   [reagent.dom :as dom]
-   [reagent.dom.server :as server]
-   [goog.string :as gstring]))
+   [reagent.dom :as dom]))
 
 (defmethod tools/activate ::tools/element [db] (assoc db :cursor "crosshair"))
 
@@ -144,14 +142,6 @@
                                            :fill "transparent"
                                            :stroke "transparent"
                                            :stroke-width (/ 20 @(rf/subscribe [:zoom]))})]])}))
-
-(defmethod tools/render-to-string :default
-  [{:keys [attrs type title children]}]
-  (let [child-elements @(rf/subscribe [:elements/filter-visible children])]
-    (gstring/unescapeEntities (server/render-to-static-markup [type (dissoc attrs :style)
-                                                               (when title [:title title])
-                                                               (:content attrs)
-                                                               (map tools/render-to-string child-elements)]))))
 
 (defmethod tools/render ::tools/element
   [{:keys [children] :as element}]

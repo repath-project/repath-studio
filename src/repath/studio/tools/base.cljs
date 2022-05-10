@@ -4,7 +4,8 @@
    [repath.studio.helpers :as helpers]
    [repath.studio.bounds :as bounds]
    ["element-to-path" :as element-to-path]
-   [reagent.dom.server :as dom]))
+   [reagent.dom.server :as server]
+   [goog.string :as gstring]))
 
 (derive ::transform ::tool)
 (derive ::element ::tool)
@@ -85,7 +86,14 @@
 (defmethod drag-end :default [db event element] (mouse-up db event element))
 (defmethod properties :default [])
 (defmethod render :default [])
-(defmethod render-to-string :default [element] (dom/render-to-static-markup (render element)))
+(defmethod render-to-string :default
+  [{:keys [attrs type title children]}]
+  (let [child-elements @(rf/subscribe [:elements/filter-visible children])]
+    (gstring/unescapeEntities (server/render-to-static-markup [type (dissoc attrs :style)
+                                                               (when title [:title title])
+                                                               (:content attrs)
+                                                               (map render-to-string child-elements)]))))
+
 (defmethod render-edit :default [])
 (defmethod bounds :default [])
 (defmethod area :default [])
