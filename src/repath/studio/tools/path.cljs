@@ -2,7 +2,6 @@
   (:require [repath.studio.tools.base :as tools]
             [repath.studio.attrs.views :as attrs]
             [clojure.string :as str]
-            [repath.studio.styles :as styles]
             ["svgpath" :as svgpath]
             ["svg-path-bounds" :as get-bounds]))
 
