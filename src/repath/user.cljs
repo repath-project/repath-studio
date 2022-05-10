@@ -178,6 +178,17 @@
 (defn help
   "Lists available functions."
   []
-  (doseq [x (keys (ns-publics 'repath.user))] (print x))
+  (doseq [x (vals (ns-publics 'repath.user))] (print (:name (meta x))  " - " (:doc (meta x))))
   "")
 
+(def del delete)
+(def dup duplicate)
+(def cp copy)
+(def move translate)
+(def mv translate)
+(def ->p to-path)
+(def h help)
+(def f fill)
+(def c circle)
+(def r rect)
+(def l line)
