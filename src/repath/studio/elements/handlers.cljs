@@ -239,9 +239,10 @@
   (let [key (helpers/uid)
         element (helpers/deep-merge element {:key key :visible? true :selected? true :parent parent-key :children []})]
     (cond-> db
-        :always (assoc-in (conj (elements-path db) key) element)
-        :always (update-in (conj (elements-path db) parent-key :children) #(vec (conj % key)))
-        (page? element) (set-active-page key))))
+      :always (-> (assoc-in (conj (elements-path db) key) element)
+                  (update-in (conj (elements-path db) parent-key :children) #(vec (conj % key))))
+      (not= (:tool db) :select) (tools/set-tool :select)
+      (page? element) (set-active-page key))))
 
 (defn create
   "TODO Handle child elements recursively"
