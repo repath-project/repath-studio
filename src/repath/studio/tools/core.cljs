@@ -12,7 +12,7 @@
             [repath.studio.tools.circle]
             [repath.studio.tools.path]
             [repath.studio.tools.line]
-            #_[repath.studio.tools.polygon]
+            [repath.studio.tools.polygon]
             [repath.studio.tools.group]
             [repath.studio.tools.polyline]
             [repath.studio.tools.image]
