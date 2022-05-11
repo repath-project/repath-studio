@@ -11,9 +11,6 @@
                      :text "New File"
                      :secondaryText "Ctrl+N"
                      :onClick #(rf/dispatch [:document/new])}
-                    {:key :new-window
-                     :text "New Window"
-                     :secondaryText "Ctrl+Shift+N"}
                     {:key :devider-1
                      :itemType fui/ContextualMenuItemType.Divider}
                     {:key :save
@@ -28,34 +25,118 @@
                      :onClick #(rf/dispatch [:document/save-all])}
                     {:key :devider-2
                      :itemType fui/ContextualMenuItemType.Divider}
-                    {:key :auto-save
-                     :canCheck true
-                     :isChecked true
-                     :text "Autosave"}
                     {:key :devider-3
                      :itemType fui/ContextualMenuItemType.Divider}
                     {:key :exit
-                     :text "Exit"}]}
+                     :text "Exit"
+                     :onClick #(rf/dispatch [:window/close])}]}
            {:key :edit
             :label "Edit"
-            :items [{:key :new
-                     :text "New File"
-                     :secondaryText "Ctrl+N"}]}
-           {:key :view
-            :label "View"
-            :items [{:key :new
-                     :text "New File"
-                     :secondaryText "Ctrl+N"}]}
+            :items [{:key :undo
+                     :text "Undo"
+                     :secondaryText "Ctrl+Z"
+                     :onClick #(rf/dispatch [:history/undo 1])}
+                    {:key :redp
+                     :text "Redo"
+                     :secondaryText "Ctrl+Shift+Z"
+                     :onClick #(rf/dispatch [:history/redo 1])}
+                    {:key :devider-1
+                     :itemType fui/ContextualMenuItemType.Divider}
+                    {:key :cut
+                     :text "Cut"
+                     :secondaryText "Ctrl+X"
+                     :onClick #(rf/dispatch [:elements/cut])}
+                    {:key :copy
+                     :text "Copy"
+                     :secondaryText "Ctrl+C"
+                     :onClick #(rf/dispatch [:elements/copy])}
+                    {:key :paste
+                     :text "Paste"
+                     :secondaryText "Ctrl+V"
+                     :onClick #(rf/dispatch [:elements/paste])}
+                    {:key :paste-in-place
+                     :text "Paste in place"
+                     :secondaryText "Ctrl+Alt+V"
+                     :onClick #(rf/dispatch [:elements/paste-in-position])}
+                    {:key :paste-styles
+                     :text "Paste styles"
+                     :secondaryText "Ctrl+Shift+V"
+                     :onClick #(rf/dispatch [:elements/paste-styles])}
+                    {:key :devider-2
+                     :itemType fui/ContextualMenuItemType.Divider}
+                    {:key :duplicate
+                     :text "Duplicate"
+                     :secondaryText "Ctrl+D"
+                     :onClick #(rf/dispatch [:elements/duplicate-in-posistion])}
+                    {:key :devider-1
+                     :itemType fui/ContextualMenuItemType.Divider}
+                    {:key :select-all
+                     :text "Select all"
+                     :secondaryText "Ctrl+A"
+                     :onClick #(rf/dispatch [:elements/select-all])}
+                    {:key :deselect-all
+                     :text "Deselect all"
+                     :secondaryText "Ctrl+Shift+A"
+                     :onClick #(rf/dispatch [:elements/deselect-all])}]}
            {:key :object
             :label "Object"
-            :items [{:key :new
-                     :text "New File"
-                     :secondaryText "Ctrl+N"}]}
+            :items [{:key :to-path
+                     :text "Convert to path"
+                     :secondaryText "Ctrl+Shift+P"
+                     :onClick #(rf/dispatch [:elements/to-path])}
+                    {:key :devider-1
+                     :itemType fui/ContextualMenuItemType.Divider}
+                    {:key :group
+                     :text "Group"
+                     :secondaryText "Ctrl+G"
+                     :onClick #(rf/dispatch [:elements/group])}
+                    {:key :ungroup
+                     :text "Ungroup"
+                     :secondaryText "Ctrl+Shift+G"
+                     :onClick #(rf/dispatch [:elements/ungroup])}
+                    {:key :devider-2
+                     :itemType fui/ContextualMenuItemType.Divider}
+                    {:key :raise
+                     :text "Raise"
+                     :secondaryText "Page Up"
+                     :onClick #(rf/dispatch [:elements/raise])}
+                    {:key :lower
+                     :text "lower"
+                     :secondaryText "Page Down"
+                     :onClick #(rf/dispatch [:elements/lower])}
+                    {:key :raise-to-top
+                     :text "Raise to top"
+                     :secondaryText "Home"
+                     :onClick #(rf/dispatch [:elements/raise-to-top])}
+                    {:key :lower-to-bottom
+                     :text "Lower to bottom"
+                     :secondaryText "End"
+                     :onClick #(rf/dispatch [:elements/lower-to-bottom])}]}
+           {:key :view
+            :label "View"
+            :items [{:key :toggle-tree
+                     :text "Toggle element tree"
+                     :secondaryText "Ctrl+T"
+                     :onClick #(rf/dispatch [:window/toggle-sidebar :tree])}
+                    {:key :toggle-properties
+                     :text "Toggle element properties"
+                     :secondaryText "Ctrl+P"
+                     :onClick #(rf/dispatch [:window/toggle-sidebar :properties])}
+                    {:key :toggle-header-menu
+                     :text "Toggle header menu"
+                     :secondaryText "Ctrl+L"
+                     :onClick #(rf/dispatch [:window/toggle-header])}]}
            {:key :help
             :label "Help"
-            :items [{:key :new
-                     :text "New File"
-                     :secondaryText "Ctrl+N"}]}])
+            :items [{:key :getting-started
+                     :text "Getting started"
+                     :onClick #(rf/dispatch [:window/open-remote-url "https://repath.studio/docs/"])}
+                    {:key :support-us
+                     :text "Support Us"
+                     :onClick #(rf/dispatch [:window/open-remote-url "https://repath.studio/contribute/support-us/"])}
+                    {:key :source-code
+                     :text "Source Code"
+                     :onClick #(rf/dispatch [:window/open-remote-url "https://github.com/re-path/studio"])}]}])
 
 (defn menu-button [{:keys [key label items]}]
   [:> fui/DefaultButton {:key key
