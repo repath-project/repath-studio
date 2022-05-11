@@ -16,66 +16,9 @@
    [repath.studio.filters :as filters]
    [repath.studio.history.views :as history]
    [re-frame.registrar]
-   [reagent.core :as ra]
-   ["react-color" :refer [PhotoshopPicker]]
+   [repath.studio.color.views :as color]
    ["@fluentui/react" :as fui]
    [goog.string :as gstring]))
-
-(defn color-drip [color]
-  [:div {:key      (keyword (str color))
-         :on-click #(rf/dispatch [:document/set-fill color])
-         :class "color-drip"
-         :style    {:background-color (tools/rgba color)}}])
-
-(defn color-swatch [colors]
-  [:div.h-box {:style {:flex "1 1 100%"}} (map color-drip colors)])
-
-(defn color-palette []
-  (let [palette @(rf/subscribe [:color-palette])]
-    (into [:div.v-box {:style {:margin-left styles/h-padding
-                               :flex "1"
-                               :height (* styles/icon-size 2)
-                               :margin "2px"}}]
-          (map color-swatch palette))))
-
-(defn color-picker
-  [fill stroke]
-  (let [picker (ra/atom nil)]
-    (fn [fill stroke]
-      [:div {:style {:width    "48px"
-                     :height   "48px"
-                     :margin "2px"
-                     :position "relative"}}
-       [:button {:title    "Swap"
-                 :class    "button"
-                 :on-click #(rf/dispatch [:document/swap-colors])
-                 :style    {:padding  0
-                            :position "absolute"
-                            :bottom   "-6px"
-                            :left     "-6px"}} [comp/icon {:icon "swap"}]]
-       [:div {:class "color-rect"
-              :style {:background (tools/rgba stroke)
-                      :bottom     0
-                      :right      0}}
-        [:div {:class "color-rect"
-               :style {:width      styles/icon-size
-                       :height     styles/icon-size
-                       :bottom     "7px"
-                       :right      "7px"
-                       :background styles/level-2}}]]
-       [:button {:class "color-rect"
-                 :on-click #(if @picker
-                              (reset! picker nil)
-                              (reset! picker (.-target %)))
-                 :style {:background (tools/rgba fill)}}]
-
-       (when @picker [:> fui/Callout {:styles {:root {:padding "0" :z-index "1000"}}
-                                      :onDismiss #(reset! picker nil)
-                                      :target @picker}
-                      [:> PhotoshopPicker
-                       {:color (tools/rgba fill)
-                        :on-change-complete #(rf/dispatch [:elements/set-attribute :fill (:hex (js->clj % :keywordize-keys true))])
-                        :on-change #((rf/dispatch [:document/set-fill (vals (:rgb (js->clj % :keywordize-keys true)))]))}]])])))
 
 (defn coordinates []
   (let [[x y] @(rf/subscribe [:adjusted-mouse-pos])]
@@ -98,8 +41,8 @@
                          :background-color styles/level-2
                          :margin-top "1px"
                          :elements/align-items "flex-end"}}
-     [color-picker fill stroke]
-     [color-palette]
+     [color/picker fill stroke]
+     [color/palette]
      #_(when element-colors (map (fn [color] [color-drip (color/hexToRgb color)]) element-colors))
      [:select {:onChange #(rf/dispatch [:document/set-filter (-> % .-target .-value keyword)])
                :value    @(rf/subscribe [:filter])

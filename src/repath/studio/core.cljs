@@ -6,6 +6,7 @@
    [repath.studio.keyboard]
    [repath.studio.history.core]
    [repath.studio.tree.core]
+   [repath.studio.color.core]
    [repath.studio.attrs.core]
    [repath.studio.tools.core]
    [repath.studio.rulers.core]
