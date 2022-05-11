@@ -130,7 +130,7 @@
             :label "Help"
             :items [{:key :getting-started
                      :text "Getting started"
-                     :onClick #(rf/dispatch [:window/open-remote-url "https://repath.studio/docs/"])}
+                     :onClick #(rf/dispatch [:window/open-remote-url "https://repath.studio/docs/getting-started/"])}
                     {:key :support-us
                      :text "Support Us"
                      :onClick #(rf/dispatch [:window/open-remote-url "https://repath.studio/contribute/support-us/"])}

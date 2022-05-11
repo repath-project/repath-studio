@@ -226,7 +226,7 @@
     [:h2 "Recent"]
     [:h2 "Help"]
     [:div [:a {:on-click #(rf/dispatch [:window/open-remote-url "https://repath.studio/"])} "Website"]]
-    [:div [:a {:on-click #(rf/dispatch [:window/open-remote-url "https://repath.studio/docs/"])} "Getting Started"]]
+    [:div [:a {:on-click #(rf/dispatch [:window/open-remote-url "https://repath.studio/docs/getting-started/"])} "Getting Started"]]
     [:div [:a {:on-click #(rf/dispatch [:window/open-remote-url "https://github.com/re-path/studio"])} "Source Code"]]]])
 
 (defn editor []
