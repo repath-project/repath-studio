@@ -101,7 +101,7 @@
                      :secondaryText "Page Up"
                      :onClick #(rf/dispatch [:elements/raise])}
                     {:key :lower
-                     :text "lower"
+                     :text "Lower"
                      :secondaryText "Page Down"
                      :onClick #(rf/dispatch [:elements/lower])}
                     {:key :raise-to-top
