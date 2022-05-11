@@ -1,7 +1,8 @@
 (ns repath.user
   (:require
    [re-frame.core :as rf]
-   [re-frame.db :as db]))
+   [re-frame.db :as db]
+   [repath.config :as config]))
 
 (defn translate
   "Moves the selected elements."
@@ -181,12 +182,15 @@
   (doseq [x (vals (ns-publics 'repath.user))] (print (:name (meta x))  " - " (:doc (meta x))))
   "")
 
+(def version config/version)
+
 (def del delete)
 (def dup duplicate)
 (def cp copy)
 (def move translate)
 (def mv translate)
 (def ->p to-path)
+(def ver version)
 (def h help)
 (def f fill)
 (def c circle)
