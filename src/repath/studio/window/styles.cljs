@@ -9,3 +9,6 @@
                             :justify-content    "center"
                             :padding            styles/padding
                             :-webkit-app-region "drag"})
+
+;; TODO needs to be removed
+(stylefy/class "ms-Button-label" {:font-weight "400"})
