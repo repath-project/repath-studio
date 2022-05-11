@@ -29,7 +29,7 @@
    :initSentry init-sentry})
 
 (defn main []
-  (init-sentry)
+  #_(init-sentry)
   ;; Expose protected methods that allow the renderer process to use the ipcRenderer without exposing the entire object
   ;; SEE https://www.electronjs.org/docs/api/context-bridge
   (.exposeInMainWorld contextBridge "api" (clj->js api)))
