@@ -24,14 +24,14 @@
                                                  :stroke (tools/rgba (get-in db [:documents active-document :stroke]))
                                                  :fill "transparent"}}))
 
-(defn add-pont
+(defn add-point
   [{:keys [active-document] :as db} point]
   (update-in db [:documents active-document :temp-element :attrs :points] #(str % " " (str/join " " point))))
 
 (defmethod tools/mouse-up :polyline
   [{:keys [adjusted-mouse-offset] :as db}]
   (if (elements/get-temp db)
-    (add-pont db adjusted-mouse-offset)
+    (add-point db adjusted-mouse-offset)
     (-> db
         (handlers/set-state :create)
         (create-polyline adjusted-mouse-offset))))
@@ -39,13 +39,13 @@
 (defmethod tools/drag-start :polyline
   [{:keys [adjusted-mouse-pos adjusted-mouse-offset] :as db}]
   (if (elements/get-temp db)
-    (add-pont db (concat adjusted-mouse-offset adjusted-mouse-pos))
+    (add-point db (concat adjusted-mouse-offset adjusted-mouse-pos))
     (create-polyline db (concat adjusted-mouse-offset adjusted-mouse-pos))))
 
 (defmethod tools/drag-end :polyline
   [{:keys [adjusted-mouse-pos adjusted-mouse-offset] :as db}]
   (if (elements/get-temp db)
-    (add-pont db adjusted-mouse-pos)
+    (add-point db adjusted-mouse-pos)
     (create-polyline db (concat adjusted-mouse-offset adjusted-mouse-pos))))
 
 (defmethod tools/drag :polyline
