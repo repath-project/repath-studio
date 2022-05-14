@@ -3,6 +3,7 @@
 ![RePath Studio](https://repath.studio/assets/images/banner.png)\
 ![Build Website](https://github.com/sprocketc/repath-studio/actions/workflows/studio.yml/badge.svg)
 [![Matrix](https://img.shields.io/matrix/repath.studio:matrix.org?label=MATRIX&logo=matrix&color=%230098d4)](https://matrix.to/#/#repath.studio:matrix.org)
+[![Discord](https://img.shields.io/discord/890005586958237716?color=%235865F2&label=Discord&logo=discord&logoColor=%23aaaaaa)](https://discord.gg/yzjY6W6ame)
 
 </div>
 
