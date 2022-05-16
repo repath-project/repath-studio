@@ -1,8 +1,7 @@
 (ns repath.file
   (:require ["electron" :refer [app dialog]]
             ["fs" :as fs]
-            [cognitect.transit :as tr]
-            ["html2canvas" :as html2canvas]))
+            [cognitect.transit :as tr]))
 
 (def main-window (atom nil))
 
@@ -45,8 +44,6 @@
 (defn export
   "Exports the provided data."
   [data]
-  (let [html-canvas (html2canvas data)
-        png nil #_(.toDataURL html-canvas "image/png")]
-    (.then (.showSaveDialog dialog ^js @main-window (clj->js export-options))
-           (fn [^js/Promise file] (when-not (.-canceled file) 
-                                    (.writeFileSync fs (.-filePath file) data "utf-8"))))))
+  (.then (.showSaveDialog dialog ^js @main-window (clj->js export-options))
+         (fn [^js/Promise file] (when-not (.-canceled file)
+                                  (.writeFileSync fs (.-filePath file) data "utf-8")))))
