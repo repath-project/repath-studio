@@ -9,7 +9,11 @@
 
 ![Studio Screenshot](https://repath.studio/assets/images/studio.png)
 
-## How to Run
+# How to build it locally
+
+## Requirements
+- [node.js](https://nodejs.org/)
+- Java SDK (8+) [OpenJDK](https://www.oracle.com/java/technologies/downloads/) or [Oracle](https://nodejs.org/)
 
 Install the dependencies.
 ```
@@ -24,7 +28,7 @@ Run electron on a different terminal.
 npm run electron
 ```
 
-## Useful shortcuts
+## Useful development shortcuts
 
 ```
 Ctrl+Shift+I Toggle devtools
