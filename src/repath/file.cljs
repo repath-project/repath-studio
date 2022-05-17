@@ -14,8 +14,8 @@
 
 (def dialog-options {:defaultPath default-path
                      ;; https://www.electronjs.org/docs/api/structures/file-filter#filefilter-object
-                     :filters [{:name "svg"
-                                :extensions ["svg" "svgo"]}]})
+                     :filters [{:name "rp"
+                                :extensions ["rp"]}]})
 
 (defn save
   "Saves the provided data.
