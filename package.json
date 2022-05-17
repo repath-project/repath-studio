@@ -30,6 +30,15 @@
     "productName": "Repath Studio",
     "artifactName": "${name}-${os}.${ext}",
     "icon": "resources/public/img/icon",
+    "fileAssociations": [
+      {
+        "ext": "rp",
+        "name": "RePath Studio File",
+        "role": "Editor",
+        "mimeType": "application/repath.studio",
+        "perMachine": true
+      }
+    ],
     "publish": [
       "github"
     ],
