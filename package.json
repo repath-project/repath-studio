@@ -65,7 +65,7 @@
     "blobs": "2.2.1-beta.1",
     "codemirror": "5.65.2",
     "create-react-class": "15.7.0",
-    "electron": "18.1.0",
+    "electron": "18.2.0",
     "electron-builder": "22.14.13",
     "element-to-path": "1.2.1",
     "highlight.js": "11.5.1",
