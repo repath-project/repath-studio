@@ -30,7 +30,7 @@
 (defn send-frames-to-renderer
   "Sends bitmap frames to renderer for color picking purposes"
   [image dirtyRect]
-  (.send  (.-webContents ^js @main-window) "fromMain" #js {:action "windowPainted" 
+  (.send (.-webContents ^js @main-window) "fromMain" #js {:action "windowPainted" 
                                                            :data #js {:bitmap (.toBitmap ^js image)
                                                                       :size (.getSize ^js image)}}))
 
@@ -49,7 +49,7 @@
 
 (defn send-to-renderer
   ([action data]
-   (.send (.-webContents ^js @main-window) "fromMain" #js {:action "windowEnteredFullscreen" :data data}))
+   (.send (.-webContents ^js @main-window) "fromMain" (clj->js {:action action :data data})))
   ([action]
    (send-to-renderer action nil)))
 
@@ -77,16 +77,17 @@
   (.on ipcMain "toMain" #(to-main-api %2))
 
   (doseq
-   [[window-event function]
+   [[window-event action]
     [;; Event "resized" is probably more suitable, but it is not supported on linux
-     ["resize" (send-to-renderer (if (.isMaximized ^js @main-window) "windowMaximized" "windowUnmaximized"))]
-     ["maximize" (send-to-renderer "windowMaximized")]
-     ["unmaximize" (send-to-renderer "windowUnmaximized")]
-     ["enter-full-screen" (send-to-renderer "windowEnteredFullscreen")]
-     ["leave-full-screen" (send-to-renderer "windowLeavedFullscreen")]
-     ["minimize" (send-to-renderer "windowMinimized")]
-     ["restore" (send-to-renderer "windowRestored")]]]
-    (.on ^js @main-window window-event function))
+     ["resize" #(if (.isMaximized ^js @main-window) "windowMaximized" "windowUnmaximized")]
+     ["maximize" "windowMaximized"]
+     ["unmaximize" "windowUnmaximized"]
+     ["enter-full-screen" "windowEnteredFullscreen"]
+     ["leave-full-screen" "windowLeavedFullscreen"]
+     ["minimize" "windowMinimized"]
+     ["restore" "windowRestored"]]]
+    (.on ^js @main-window window-event  #(send-to-renderer action)))
+
 
   (.checkForUpdatesAndNotify updater))
 
