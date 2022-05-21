@@ -159,10 +159,7 @@
   []
   (into [:div {:style {:flex "1 1 100%" :-webkit-app-region "drag" :text-align "right"}}]
         (mapv window-control-button [{:action [:window/minimize] :icon "window-minimize"}
-                                     ;; We could have used a different icon for :window/toggle-maximized based on :window/maximized? state,
-                                     ;; but electron's api seems to behave inconsistently after version 13 (tested in linux).
-                                     ;; TODO retest this on future versions.
-                                     {:action [:window/toggle-maximized] :icon "window-restore"}
+                                     {:action [:window/toggle-maximized] :icon (if @(rf/subscribe [:window/maximized?]) "window-restore" "window-maximize")}
                                      {:action [:window/close] :icon "times"}])))
 
 (defn title-bar []
