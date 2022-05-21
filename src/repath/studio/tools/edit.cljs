@@ -13,16 +13,16 @@
 
 (defmethod tools/mouse-down :edit
   [db _ element]
-  (assoc db :clicked-element element))
+  (assoc db :edit-element element))
 
 (defmethod tools/drag :edit
   [{:keys [adjusted-mouse-offset adjusted-mouse-pos] :as db}]
   (let [mouse-offset (matrix/sub adjusted-mouse-pos adjusted-mouse-offset)
         db (history/swap db)]
-    (elements/update-selected db (fn [elements element] (assoc elements (:key element) (tools/edit element mouse-offset (:key (:clicked-element db))))))))
+    (elements/update-selected db (fn [elements element] (assoc elements (:key element) (tools/edit element mouse-offset (:key (:edit-element db))))))))
 
 (defmethod tools/drag-end :edit
   [db]
   (-> db
    (handlers/set-state :default)
-   (history/finalize (str "Edit " (-> db :clicked-element :key name)))))
+   (history/finalize (str "Edit " (-> db :edit-element :key name)))))

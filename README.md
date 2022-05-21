@@ -7,7 +7,8 @@
 
 </div>
 
-> :construction: **This is work in progress.** Most of the tools are subject to change and might not work as expected.
+| :construction: **This is work in progress.** Most of the tools are subject to change and might not work as expected.|
+| --- |
 
 ![Studio Screenshot](https://repath.studio/assets/images/studio.png)
 

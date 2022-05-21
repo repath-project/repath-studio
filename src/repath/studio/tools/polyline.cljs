@@ -39,7 +39,8 @@
 (defmethod tools/drag-start :polyline
   [{:keys [adjusted-mouse-pos adjusted-mouse-offset] :as db}]
   (if (elements/get-temp db)
-    (add-point db (concat adjusted-mouse-offset adjusted-mouse-pos))
+    #_(add-point db (concat adjusted-mouse-offset adjusted-mouse-pos))
+    db
     (create-polyline db (concat adjusted-mouse-offset adjusted-mouse-pos))))
 
 (defmethod tools/drag-end :polyline
@@ -66,25 +67,19 @@
       (history/finalize (str "Create polyline"))))
 
 (defmethod tools/translate :polyline
-  [element [x y]] (update-in element [:attrs :points] (fn [val]
-                                                        (->> val
-                                                             (attrs/points-to-vec)
-                                                             (reduce (fn [points point] (concat points [(units/transform + x (first point)) (units/transform + y (second point))])) [])
-                                                             (concat)
-                                                             (str/join " ")))))
+  [element [x y]] (update-in element [:attrs :points] #(->> %
+                                                            (attrs/points-to-vec)
+                                                            (mapv (fn [point] [(units/transform + x (first point)) (units/transform + y (second point))]))
+                                                            (flatten)
+                                                            (str/join " "))))
 
 (defmethod tools/render-edit :polyline
-  [{:keys [attrs]} zoom]
-  (let [{:keys [points]} attrs
-        handler-size (/ 8 zoom)
-        stroke-width (/ 1 zoom)]
-    [:g {:key :edit-handlers}
-     (map element-views/square-handler (mapv (fn [[x y]] {:x x
-                                                          :y y
-                                                          :size handler-size
-                                                          :stroke-width stroke-width
-                                                          :key :starting-point
-                                                          :type :edit-handler}) (attrs/points-to-vec points)))]))
+  [{{:keys [points]} :attrs}]
+  [:g {:key :edit-handlers}
+   (map element-views/square-handler (map-indexed (fn [index [x y]] {:x x
+                                                                     :y y
+                                                                     :key (keyword index)
+                                                                     :type :edit-handler}) (attrs/points-to-vec points)))])
 
 (defmethod tools/bounds :polyline
   [{{:keys [points]} :attrs}]
