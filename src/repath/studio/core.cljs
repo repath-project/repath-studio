@@ -31,6 +31,21 @@
    [shadow.cljs.bootstrap.browser :as bootstrap]
    [devtools.core :as devtools]))
 
+(def console-easter-egg "
+██████╗░███████╗██████╗░░█████╗░████████╗██╗░░██╗
+██╔══██╗██╔════╝██╔══██╗██╔══██╗╚══██╔══╝██║░░██║
+██████╔╝█████╗░░██████╔╝███████║░░░██║░░░███████║
+██╔══██╗██╔══╝░░██╔═══╝░██╔══██║░░░██║░░░██╔══██║
+██║░░██║███████╗██║░░░░░██║░░██║░░░██║░░░██║░░██║
+╚═╝░░╚═╝╚══════╝╚═╝░░░░░╚═╝░░╚═╝░░░╚═╝░░░╚═╝░░╚═╝
+ 
+░██████╗████████╗██╗░░░██╗██████╗░██╗░█████╗░
+██╔════╝╚══██╔══╝██║░░░██║██╔══██╗██║██╔══██╗
+╚█████╗░░░░██║░░░██║░░░██║██║░░██║██║██║░░██║
+░╚═══██╗░░░██║░░░██║░░░██║██║░░██║██║██║░░██║
+██████╔╝░░░██║░░░╚██████╔╝██████╔╝██║╚█████╔╝
+╚═════╝░░░░╚═╝░░░░╚═════╝░╚═════╝░╚═╝░╚════╝░")
+
 (defn ^:dev/after-load mount-root []
   (rf/clear-subscription-cache!)
   (let [root-el (.getElementById js/document "app")]
@@ -44,6 +59,7 @@
   (print "Repl initialized"))
 
 (defn init []
+  (js/console.log console-easter-egg)
   (devtools/set-pref! :cljs-land-style (str "filter:invert(1);" (:cljs-land-style (devtools/get-prefs))))
   ;; SEE https://code.thheller.com/blog/shadow-cljs/2017/10/14/bootstrap-support.html
   (bootstrap/init repl/st {:path "js/bootstrap" :load-on-init '[repath.user]} bootstrap-cb)
