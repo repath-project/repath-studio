@@ -96,6 +96,12 @@
    (create {:line attrs})
    ""))
 
+(defn polygon
+  "Creates a polygon"
+  [attrs]
+  (create {:polygon attrs})
+  "")
+
 (defn set-attribute
   "Set the attribute of the selected elements."
   [name value]
