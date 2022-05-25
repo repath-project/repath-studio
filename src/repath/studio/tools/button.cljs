@@ -2,10 +2,10 @@
   (:require [re-frame.core :as rf]
             [repath.studio.tools.base :as tools]
             [repath.studio.attrs.views :as attrs]
-            [repath.studio.mouse-handler :as mouse-handler]
+            [repath.studio.mouse :as mouse]
             [repath.studio.units :as units]))
 
-(derive :button ::tools/element)
+(derive :button ::tools/custom)
 (derive :font-color ::attrs/color)
 
 (defmethod tools/properties :button [] {:icon "input-text"
@@ -47,9 +47,9 @@
   (let [{:keys [x y width height radius font-color]} attrs]
     [:g (merge
          (select-keys attrs [:id :class :opacity])
-         {:on-mouse-up   #(mouse-handler/mouse-event-handler % element)
-          :on-mouse-down #(mouse-handler/mouse-event-handler % element)
-          :on-mouse-move #(mouse-handler/mouse-event-handler % element)})
+         {:on-mouse-up   #(mouse/event-handler % element)
+          :on-mouse-down #(mouse/event-handler % element)
+          :on-mouse-move #(mouse/event-handler % element)})
      [:rect (merge
              {:ry radius
               :rx radius}

@@ -129,7 +129,9 @@
              (descendants group))))
 
 (def toolbars [::tools/transform
-               ::tools/element
+               ::tools/container
+               ::tools/graphics
+               ::tools/custom
                ::tools/draw
                ::tools/misc])
 

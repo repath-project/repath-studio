@@ -3,10 +3,13 @@
             [repath.studio.tools.base :as tools]
             [repath.studio.elements.handlers :as elements]
             [repath.studio.mouse :as mouse]
+            [clojure.core.matrix :as matrix]
+            [repath.studio.units :as units]
+            [clojure.string :as str]
             [reagent.dom.server :as dom]
             [goog.string :as gstring]))
 
-(derive :page ::tools/element)
+(derive :page ::tools/container)
 
 (defmethod tools/properties :page [] {:icon "page"
                                       :description "The page is a top level SVG element with some extra custom attributes."
@@ -24,6 +27,15 @@
     (elements/set-temp db {:type :page
                            :name "Page"
                            :attrs attrs})))
+
+(defmethod tools/bounds :page
+  [{:keys [attrs]}]
+  (let [{:keys [x y width height stroke-width stroke]} attrs
+        [x y width height stroke-width-px] (mapv units/unit->px [x y width height stroke-width])
+        stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)
+        [x y] (matrix/sub [x y] (/ (if (str/blank? stroke) 0 stroke-width-px) 2))
+        [width height] (matrix/add [width height] (if (str/blank? stroke) 0 stroke-width-px))]
+    (mapv units/unit->px [x y (+ x width) (+ y height)])))
 
 (defmethod tools/render :page
   [{:keys [attrs children key type] :as element}]

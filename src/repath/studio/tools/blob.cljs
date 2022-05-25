@@ -8,7 +8,7 @@
             ["svgpath" :as svgpath]
             ["blobs/v2" :as blobs]))
 
-(derive :blob ::tools/element)
+(derive :blob ::tools/custom)
 
 (defmethod attrs/form-element :extraPoints
   [key value]

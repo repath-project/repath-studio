@@ -18,6 +18,7 @@
 (derive ::shape ::graphics)
 (derive ::gradient ::element)
 (derive ::descriptive ::element)
+(derive ::custom ::element)
 
 (derive ::animation ::descriptive)
 
