@@ -175,10 +175,10 @@
     [:div [:a {:on-click #(rf/dispatch [:window/open-remote-url "https://github.com/re-path/studio"])} "Source Code"]]]])
 
 (defn editor []
-  [:div.h-box {:style {:flex "1"}}
-   [:div.v-box {:style {:flex "1"}}
+  [:div.h-box {:style {:flex "1" :overflow "hidden"}}
+   [:div.v-box {:style {:flex "1" :overflow "hidden"}}
     [:div.v-box {:style {:flex "1" :overflow "hidden"}}
-     [:div.h-box {:style {:flex "1"  :overflow "hidden"}}
+     [:div.h-box {:style {:flex "1" :overflow "hidden"}}
       [:div.v-box {:style {:flex "1" :background-color styles/level-2}}
        [toolbar]
        (when @(rf/subscribe [:rulers?])  [:div.h-box
@@ -236,9 +236,9 @@
        (when (seq @(rf/subscribe [:documents])) [tree/tree-sidebar])])
     [comp/resizer :tree :left]
     (if (seq @(rf/subscribe [:documents]))
-      [:div.v-box {:style {:flex "1"}}
+      [:div.v-box {:style {:flex "1" :overflow "hidden"}}
        [docs/tab-bar]
-       [:div.h-box {:style {:flex "1"  :overflow "hidden"}}
+       [:div.h-box {:style {:flex "1" :overflow "hidden"}}
         [editor]
         [comp/resizer :properties :right]
         (when @(rf/subscribe [:window/sidebar? :properties])
