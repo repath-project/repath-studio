@@ -61,7 +61,7 @@
     (let [[cx cy rx ry stroke-width-px] (map units/unit->px [cx cy rx ry stroke-width])
           stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)
           [rx ry] (matrix/add [rx ry] (/ (if (str/blank? stroke) 0 stroke-width-px) 2))]
-      [(- cx rx) (- cy ry) (+ cx rx 2) (+ cy ry)]))
+      [(- cx rx) (- cy ry) (+ cx rx) (+ cy ry)]))
 
 (defmethod tools/area :ellipse
   [{{:keys [rx ry]} :attrs}]
