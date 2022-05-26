@@ -102,8 +102,14 @@
   (create {:polygon attrs})
   "")
 
+(defn polyline
+  "Creates a polyline"
+  [attrs]
+  (create {:polygon attrs})
+  "")
+
 (defn set-attribute
-  "Set the attribute of the selected elements."
+  "Sets the attribute of the selected elements."
   [name value]
   (rf/dispatch [:elements/set-attribute name value])
   "")
@@ -132,6 +138,18 @@
   (rf/dispatch [:elements/lower])
   "")
 
+(defn group
+  "Groups the selected elements."
+  []
+  (rf/dispatch [:elements/group])
+  "")
+
+(defn ungroup
+  "Ungroups the selected elements."
+  []
+  (rf/dispatch [:elements/ungroup])
+  "")
+
 (defn select-all
   "Selects all elements."
   []
@@ -148,6 +166,12 @@
   "Converts selected elements to paths."
   []
   (rf/dispatch [:elements/to-path])
+  "")
+
+(defn align
+  "Aligns the selected elements."
+  [direction]
+  (rf/dispatch [:elements/align direction])
   "")
 
 (defn animate
@@ -196,6 +220,15 @@
 (def move translate)
 (def mv translate)
 (def ->p to-path)
+(def a align)
+(def al #(align :left))
+(def ar #(align :right))
+(def at #(align :top))
+(def ab #(align :bottom))
+(def acv #(align :center-vertical))
+(def ach #(align :center-horizontal))
+(def g group)
+(def u group)
 (def ver version)
 (def h help)
 (def f fill)
