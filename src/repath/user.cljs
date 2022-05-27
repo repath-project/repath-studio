@@ -69,7 +69,7 @@
    ""))
 
 (defn rect
-  "Creates a rectangle"
+  "Creates a rectangle."
   ([x y width height]
    (create {:rect {:x x :y y :width width :height height}})
    "")
@@ -83,7 +83,7 @@
    ""))
 
 (defn line
-  "Creates a line"
+  "Creates a line."
   ([x1 y1 x2 y2]
    (create {:line {:x1 x1 :y1 y1 :x2 x2 :y2 y2 :stroke "#000000"}})
    "")
@@ -97,15 +97,21 @@
    ""))
 
 (defn polygon
-  "Creates a polygon"
+  "Creates a polygon."
   [attrs]
   (create {:polygon attrs})
   "")
 
 (defn polyline
-  "Creates a polyline"
+  "Creates a polyline."
   [attrs]
   (create {:polygon attrs})
+  "")
+
+(defn image
+  "Creates an image"
+  [attrs]
+  (create {:image attrs})
   "")
 
 (defn set-attribute
