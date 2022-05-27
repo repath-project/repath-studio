@@ -3,7 +3,7 @@
    [re-frame.core :as rf]
    [re-frame.db :as db]
    [repath.config :as config]
-   [ajax.core]))
+   [ajax.core :as ajax]))
 
 (defn translate
   "Moves the selected elements."
@@ -242,3 +242,28 @@
 (def c circle)
 (def r rect)
 (def l line)
+
+
+(comment
+  
+  (dotimes [x 25] (circle {:cx (+ (* x 30) 40)
+                           :cy (+ (* (js/Math.sin x) 10) 200)
+                           :r 10
+                           :fill (str "hsl(" (* x 10) " ,50% , 50%)")}))
+
+
+(ajax/GET "https://api.thecatapi.com/v1/images/search" {:response-format (ajax/json-response-format {:keywords? true})
+                                                        :handler (fn [response]
+                                                                   (let [{:keys [width height url]} (first response)]
+                                                                     (image {:x 0 :y 0 :width width :height height :href url})))})
+
+(defn kitty [x y width height]
+  (ajax/GET "https://api.thecatapi.com/v1/images/search" {:response-format (ajax/json-response-format {:keywords? true})
+                                                          :handler (fn [response]
+                                                                     (image {:x x :y y :width width :height height :href (:url (first response)) :preserveAspectRatio "xMidYMid slice"}))}))
+
+(dotimes [x 8]
+  (dotimes [y 6]
+    (kitty (* x 100) (* y 100) 100 100)))
+  
+)
