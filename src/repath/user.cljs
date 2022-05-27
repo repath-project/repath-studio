@@ -2,7 +2,8 @@
   (:require
    [re-frame.core :as rf]
    [re-frame.db :as db]
-   [repath.config :as config]))
+   [repath.config :as config]
+   [ajax.core]))
 
 (defn translate
   "Moves the selected elements."
