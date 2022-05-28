@@ -59,14 +59,14 @@
              :y (+ y1 (/ height 2))
              :size (/ 10 zoom)
              :stroke-width (/ 1 zoom)}]
-     (map square-handler [{:x x1 :y y1 :key :top-left :type :scale-handler}
-                          {:x x2 :y y1 :key :top-right :type :scale-handler}
-                          {:x x1 :y y2 :key :bottom-left :type :scale-handler}
-                          {:x x2 :y y2 :key :bottom-right :type :scale-handler}
-                          {:x (+ x1 (/ width 2)) :y y1 :key :top-middle :type :scale-handler}
-                          {:x x2 :y (+ y1 (/ height 2)) :key :middle-right :type :scale-handler}
-                          {:x x1 :y (+ y1 (/ height 2)) :key :middle-left :type :scale-handler}
-                          {:x (+ x1 (/ width 2)) :y y2 :key :bottom-middle :type :scale-handler}])]))
+     (map (fn [handler] [square-handler handler]) [{:x x1 :y y1 :key :top-left :type :scale-handler}
+                                                   {:x x2 :y y1 :key :top-right :type :scale-handler}
+                                                   {:x x1 :y y2 :key :bottom-left :type :scale-handler}
+                                                   {:x x2 :y y2 :key :bottom-right :type :scale-handler}
+                                                   {:x (+ x1 (/ width 2)) :y y1 :key :top-middle :type :scale-handler}
+                                                   {:x x2 :y (+ y1 (/ height 2)) :key :middle-right :type :scale-handler}
+                                                   {:x x1 :y (+ y1 (/ height 2)) :key :middle-left :type :scale-handler}
+                                                   {:x (+ x1 (/ width 2)) :y y2 :key :bottom-middle :type :scale-handler}])]))
 
 (defn label
   [text position]

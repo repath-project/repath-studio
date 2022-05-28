@@ -87,5 +87,5 @@
   (let [{:keys [cx cy rx ry]} attrs
         [cx cy rx ry] (mapv units/unit->px [cx cy rx ry])]
     [:g {:key :edit-handlers}
-     (map element-views/square-handler [{:x (+ cx rx) :y cy :key :rx :type :edit-handler}
-                                        {:x cx :y (- cy ry) :key :ry :type :edit-handler}])]))
+     (map (fn [handler] [element-views/square-handler handler]) [{:x (+ cx rx) :y cy :key :rx :type :edit-handler}
+                                                                 {:x cx :y (- cy ry) :key :ry :type :edit-handler}])]))

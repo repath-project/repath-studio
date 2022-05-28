@@ -46,8 +46,8 @@
   (let [{:keys [x1 y1 x2 y2]} attrs
         [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])]
     [:g {:key :edit-handlers}
-     (map element-views/square-handler [{:x x1 :y y1 :key :starting-point :type :edit-handler}
-                                        {:x x2 :y y2 :key :ending-point :type :edit-handler}])]))
+     (map (fn [handler] [element-views/square-handler handler]) [{:x x1 :y y1 :key :starting-point :type :edit-handler}
+                                                                 {:x x2 :y y2 :key :ending-point :type :edit-handler}])]))
 
 (defmethod tools/edit :line
   [element [x y] handler]

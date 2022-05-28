@@ -57,8 +57,8 @@
   (let [{:keys [x y width height]} attrs
         [x y width height] (mapv units/unit->px [x y width height])]
     [:g {:key :edit-handlers}
-     (map element-views/square-handler [{:x x :y y :key :position :type :edit-handler}
-                                        {:x (+ x width) :y (+ y height) :key :size :type :edit-handler}])]))
+     (map (fn [handler] [element-views/square-handler handler]) [{:x x :y y :key :position :type :edit-handler}
+                                                                 {:x (+ x width) :y (+ y height) :key :size :type :edit-handler}])]))
 
 (defmethod tools/bounds ::tools/element
   [{:keys [attrs]}]
