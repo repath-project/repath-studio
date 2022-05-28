@@ -17,19 +17,23 @@
 - [node.js](https://nodejs.org/)
 - Java SDK (8+) [OpenJDK](https://www.oracle.com/java/technologies/downloads/) or [Oracle](https://nodejs.org/)
 
-Install the dependencies.
+
+Clone the project.
 ```
-npm install
+git clone https://github.com/re-path/studio.git
 ```
-Build and watch the project files . 
+Go into the directory.
 ```
-npm run dev
+cd studio
+```
+Install the dependencies, build the app and watch the project files.
+```
+npm install && npm run dev
 ```
 Run electron on a different terminal.
 ```
 npm run electron
 ```
-
 ## Useful development shortcuts
 
 ```
