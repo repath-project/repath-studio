@@ -7,7 +7,6 @@
    [repath.studio.history.handlers :as history]
    [repath.studio.canvas-frame.handlers :as canvas-frame]
    [repath.studio.tools.base :as tools]
-   [de-dupe.core :as dd]
    [repath.studio.documents.handlers :as handlers]))
 
 (def active-document-path
@@ -88,18 +87,6 @@
    (-> db
        (handlers/set-fill fill)
        (history/finalize (str "Set fill " (tools/rgba fill))))))
-
-(rf/reg-event-fx
- :document/open
- (fn [_ [_]]
-   (.then (js/window.api.send "toMain" #js {:action "openDocument"}))))
-
-(rf/reg-event-db
- :document/save
- (fn [{active-document :active-document :as db} [_]]
-   (let [document (get-in db [:documents active-document])
-         duped (assoc document :history (dd/de-dupe (:history document)))]
-     (.then (js/window.api.send "toMain" #js {:action "saveDocument" :data (pr-str duped)})))))
 
 (rf/reg-event-db
  :document/new

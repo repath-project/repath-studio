@@ -13,11 +13,13 @@
 
 (defmethod tools/activate :dropper
   [db]
+  ;; TODO side-effect...
   (js/window.api.send "toMain" #js {:action "beginFrameSubscription"})
   (assoc db :cursor "crosshair"))
 
 (defmethod tools/deactivate :dropper
   [db]
+  ;; TODO side-effect...
   (js/window.api.send "toMain" #js {:action "endFrameSubscription"})
   (dissoc db :overlay))
 
