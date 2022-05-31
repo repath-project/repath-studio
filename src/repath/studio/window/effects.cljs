@@ -10,34 +10,19 @@
 (rf/reg-event-fx
  :window/toggle-maximized
  (fn [_ _]
-   {::toggle-maximized nil}))
+   {:send-to-main {:action "windowToggleMaximized"}}))
 
 (rf/reg-event-fx
  :window/minimize
  (fn [_ _]
-   {::minimize nil}))
+   {:send-to-main {:action "windowMinimize"}}))
 
 (rf/reg-event-fx
  :window/open-remote-url
  (fn [_ [_ url]]
-   {::open-remote-url url}))
+    {:send-to-main {:action "openRemoteUrl" :data url}}))
 
 (rf/reg-fx
  ::close
  (fn [_]
    (.close js/window)))
-
-(rf/reg-fx
- ::toggle-maximized
- (fn [_]
-   (js/window.api.send "toMain" #js {:action "windowToggleMaximized"})))
-
-(rf/reg-fx
- ::minimize
- (fn [_]
-   (js/window.api.send "toMain" #js {:action "windowMinimize"})))
-
-(rf/reg-fx
- ::open-remote-url
- (fn [url]
-   (js/window.api.send "toMain" #js {:action "openRemoteUrl" :data url})))

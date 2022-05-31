@@ -2,6 +2,7 @@
   (:require
    [repath.studio.subs]
    [repath.studio.events]
+   [repath.studio.effects]
    [repath.studio.db]
    [repath.studio.keyboard]
    [repath.studio.history.core]
