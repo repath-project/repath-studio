@@ -3,13 +3,15 @@
    [re-frame.core :as rf]
    [re-frame.db :as db]
    [repath.config :as config]
-   [ajax.core :as ajax]))
+   [ajax.core :as ajax]
+   [clojure.string :as str]))
 
 (defn translate
   "Moves the selected elements."
   ([offset]
    (rf/dispatch [:elements/translate offset])
    "")
+  
   ([x y]
    (translate [x y])))
 
@@ -57,68 +59,56 @@
 
 (defn circle
   "Creates a circle."
-  ([cx cy r]
-   (create {:circle {:cx cx :cy cy :r r}})
-   "")
-  
   ([[cx cy] r]
-   (circle cx cy r)
-   "")
+   (circle [cx cy] r nil))
   
-  ([attrs]
-   (create {:circle attrs})
-   ""))
+  ([[cx cy] r attrs]
+   (create {:circle (merge {:cx cx :cy cy :r r} attrs)})))
 
 (defn rect
   "Creates a rectangle."
-  ([x y width height]
-   (create {:rect {:x x :y y :width width :height height}})
-   "")
+  ([[x y] width height]
+   (rect [x y] width height nil))
 
-  ([[x y] [width height]]
-   (rect x y width height)
-   "")
-  
-  ([attrs]
-   (create {:rect attrs})
-   ""))
+  ([[x y] width height attrs]
+   (create {:rect (merge {:x x :y y :width width :height height} attrs)})))
 
 (defn line
   "Creates a line."
-  ([x1 y1 x2 y2]
-   (create {:line {:x1 x1 :y1 y1 :x2 x2 :y2 y2 :stroke "#000000"}})
-   "")
+  ([[[x1 y1] [x2 y2]]]
+   (line [[x1 y1] [x2 y2]] {:stroke "#000000"}))
 
-  ([[x1 y1] [x2 y2]]
-   (line x1 y1 x2 y2)
-   "")
-
-  ([attrs]
-   (create {:line attrs})
-   ""))
+  ([[[x1 y1] [x2 y2]] attrs]
+   (create {:line (merge {:x1 x1 :y1 y1 :x2 x2 :y2 y2} attrs)})))
 
 (defn polygon
   "Creates a polygon."
-  [attrs]
-  (create {:polygon attrs})
-  "")
+  ([points]
+   (polygon points {:stroke "#000000"}))
+  
+  ([points attrs]
+    (create {:polygon (merge {:points (str/join " " (flatten points))} attrs)})))
 
 (defn polyline
   "Creates a polyline."
-  [attrs]
-  (create {:polygon attrs})
-  "")
+  ([points]
+   (polyline points {:stroke "#000000"}))
+  
+  ([points attrs]
+    (create {:polyline (merge {:points (str/join " " (flatten points))} attrs)})))
 
 (defn image
   "Creates an image"
-  [attrs]
-  (create {:image attrs})
-  "")
+  ([[x y] width height href]
+   (image [x y] width height href nil))
+
+  ([[x y] width height href attrs]
+   (create {:image (merge {:x x :y y :width width :height height :href href} attrs)})))
 
 (defn set-attribute
   "Sets the attribute of the selected elements."
-  [name value]
-  (rf/dispatch [:elements/set-attribute name value])
+  [key value]
+  (rf/dispatch [:elements/set-attribute key value])
   "")
 
 (defn db
@@ -183,29 +173,33 @@
 
 (defn animate
   "Animates the selected elements."
-  ([tag attrs]
-   (rf/dispatch [:elements/animate tag attrs])
-   "")
+  ([]
+   (animate {}))
+  
   ([attrs]
    (animate :animate attrs))
-  ([]
-   (animate {})))
+
+  ([tag attrs]
+   (rf/dispatch [:elements/animate tag attrs])
+   ""))
 
 (defn undo
   "Goes back in history."
+  ([]
+   (undo 1))
+  
   ([steps]
    (rf/dispatch [:history/undo steps])
-   "")
-  ([]
-   (undo 1)))
+   ""))
 
 (defn redo
   "Goes forward in history."
+  ([]
+   (redo 1))
+  
   ([steps]
    (rf/dispatch [:history/redo steps])
-   "")
-  ([]
-   (redo 1)))
+   ""))
 
 (defn exit
   "Closes the application."
@@ -246,24 +240,19 @@
 
 (comment
   
-  (dotimes [x 25] (circle {:cx (+ (* x 30) 40)
-                           :cy (+ (* (js/Math.sin x) 10) 200)
-                           :r 10
-                           :fill (str "hsl(" (* x 10) " ,50% , 50%)")}))
+  (dotimes [x 25] (circle [(+ (* x 30) 40) (+ (* (Math.sin x) 10) 200)] 10 {:fill (str "hsl(" (* x 10) " ,50% , 50%)")}))
 
-
-(ajax/GET "https://api.thecatapi.com/v1/images/search" {:response-format (ajax/json-response-format {:keywords? true})
-                                                        :handler (fn [response]
-                                                                   (let [{:keys [width height url]} (first response)]
-                                                                     (image {:x 0 :y 0 :width width :height height :href url})))})
-
-(defn kitty [x y width height]
   (ajax/GET "https://api.thecatapi.com/v1/images/search" {:response-format (ajax/json-response-format {:keywords? true})
                                                           :handler (fn [response]
-                                                                     (image {:x x :y y :width width :height height :href (:url (first response)) :preserveAspectRatio "xMidYMid slice"}))}))
+                                                                     (let [{:keys [width height url]} (first response)]
+                                                                       (image 0 0 [width height] url)))})
 
-(dotimes [x 8]
-  (dotimes [y 6]
-    (kitty (* x 100) (* y 100) 100 100)))
-  
-)
+  (defn kitty [x y width height]
+    (ajax/GET "https://api.thecatapi.com/v1/images/search" {:response-format (ajax/json-response-format {:keywords? true})
+                                                            :handler (fn [response]
+                                                                       (image [x y] width height (:url (first response)) {:preserveAspectRatio "xMidYMid slice"}))}))
+
+  (dotimes [x 8]
+    (dotimes [y 6]
+      (kitty (* x 100) (* y 100) 100 100)))
+  )
