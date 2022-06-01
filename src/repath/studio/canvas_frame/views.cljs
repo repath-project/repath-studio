@@ -52,7 +52,7 @@
         [this]
         ;; We observe the frame to get its contentRect on resize.
         (.observe resize-observer (dom/dom-node this))
-        (.setTimeout js/window #(rf/dispatch-sync [:pan-to-active-page :original])))
+        (rf/dispatch [:pan-to-active-page :original]))
       :component-will-unmount
       (fn
         []
