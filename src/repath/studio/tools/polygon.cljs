@@ -11,19 +11,19 @@
 (derive :polygon ::tools/shape)
 
 (defmethod tools/properties :polygon [] {:icon "polygon"
-                                          :description "The <polyline> SVG element is an SVG basic shape that creates straight lines connecting several points."
-                                          :attrs [:stroke-width
-                                                  :fill
-                                                  :stroke
-                                                  :stroke-linejoin
-                                                  :opacity]})
+                                         :description "The <polyline> SVG element is an SVG basic shape that creates straight lines connecting several points."
+                                         :attrs [:stroke-width
+                                                 :fill
+                                                 :stroke
+                                                 :stroke-linejoin
+                                                 :opacity]})
 
 (defn create-polyline
   [{:keys [active-document] :as db} points]
   (let [{:keys [fill]} (get-in db [:documents active-document])]
-    (elements/set-temp db {:type :polygon :attrs {:points (str/join " " points)
-                                                  :stroke (tools/rgba (get-in db [:documents active-document :stroke]))
-                                                  :fill   (tools/rgba fill)}})))
+    (elements/set-temp db {:type :element :tag :polygon :attrs {:points (str/join " " points)
+                                                                :stroke (tools/rgba (get-in db [:documents active-document :stroke]))
+                                                                :fill   (tools/rgba fill)}})))
 
 (defn add-point
   [{:keys [active-document] :as db} point]
@@ -79,7 +79,8 @@
    (map element-views/square-handler (map-indexed (fn [index [x y]] {:x x
                                                                      :y y
                                                                      :key (keyword index)
-                                                                     :type :edit-handler}) (attrs/points-to-vec points)))])
+                                                                     :type :handler
+                                                                     :tag :edit}) (attrs/points-to-vec points)))])
 
 (defmethod tools/bounds :polygon
   [{{:keys [points]} :attrs}]

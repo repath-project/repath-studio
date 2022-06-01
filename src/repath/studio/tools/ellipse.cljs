@@ -28,7 +28,7 @@
                :stroke (tools/rgba stroke)
                :rx (Math/abs (- pos-x offset-x))
                :ry (Math/abs (- pos-y offset-y))}]
-    (elements/set-temp db {:type :ellipse :attrs attrs})))
+    (elements/set-temp db {:type :element :tag :ellipse :attrs attrs})))
 
 (defmethod tools/translate :ellipse
   [element [x y]] (-> element
@@ -87,5 +87,5 @@
   (let [{:keys [cx cy rx ry]} attrs
         [cx cy rx ry] (mapv units/unit->px [cx cy rx ry])]
     [:g {:key :edit-handlers}
-     (map (fn [handler] [element-views/square-handler handler]) [{:x (+ cx rx) :y cy :key :rx :type :edit-handler}
-                                                                 {:x cx :y (- cy ry) :key :ry :type :edit-handler}])]))
+     (map (fn [handler] [element-views/square-handler handler]) [{:x (+ cx rx) :y cy :key :rx :type :handler :tag :edit}
+                                                                 {:x cx :y (- cy ry) :key :ry :type :handler :tag :edit}])]))

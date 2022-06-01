@@ -22,7 +22,7 @@
                :x2 pos-x
                :y2 pos-y
                :stroke (tools/rgba stroke)}]
-    (elements/set-temp db {:type :line :attrs attrs})))
+    (elements/set-temp db {:type :element :tag :line :attrs attrs})))
 
 (defmethod tools/translate :line
   [element [x y]] (-> element
@@ -46,8 +46,8 @@
   (let [{:keys [x1 y1 x2 y2]} attrs
         [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])]
     [:g {:key :edit-handlers}
-     (map (fn [handler] [element-views/square-handler handler]) [{:x x1 :y y1 :key :starting-point :type :edit-handler}
-                                                                 {:x x2 :y y2 :key :ending-point :type :edit-handler}])]))
+     (map (fn [handler] [element-views/square-handler handler]) [{:x x1 :y y1 :key :starting-point :type :handler :tag :edit}
+                                                                 {:x x2 :y y2 :key :ending-point :type :handler :tag :edit}])]))
 
 (defmethod tools/edit :line
   [element [x y] handler]

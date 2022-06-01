@@ -20,9 +20,9 @@
 
 (defn create-polyline
   [{:keys [active-document] :as db} points]
-  (elements/set-temp db {:type :polyline :attrs {:points (str/join " " points)
-                                                 :stroke (tools/rgba (get-in db [:documents active-document :stroke]))
-                                                 :fill "transparent"}}))
+  (elements/set-temp db {:type :element :tag :polyline :attrs {:points (str/join " " points)
+                                                               :stroke (tools/rgba (get-in db [:documents active-document :stroke]))
+                                                               :fill "transparent"}}))
 
 (defn add-point
   [{:keys [active-document] :as db} point]
@@ -84,7 +84,8 @@
                                                           :size handler-size
                                                           :stroke-width stroke-width
                                                           :key :starting-point
-                                                          :type :edit-handler}) (attrs/points-to-vec points)))]))
+                                                          :type :handler
+                                                          :tag :edit}) (attrs/points-to-vec points)))]))
 
 (defmethod tools/bounds :polyline
   [{{:keys [points]} :attrs}]

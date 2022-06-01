@@ -25,7 +25,7 @@
                :height (Math/abs (- pos-y offset-y))
                :fill   (tools/rgba fill)
                :stroke (tools/rgba stroke)}]
-    (elements/set-temp db {:type :rect :attrs attrs})))
+    (elements/set-temp db {:type :element :tag :rect :attrs attrs})))
 
 (defmethod tools/area :rect
   [{{:keys [width height]} :attrs}]

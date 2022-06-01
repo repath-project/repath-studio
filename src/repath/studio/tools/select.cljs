@@ -62,11 +62,11 @@
 
 (defmethod tools/drag-start :select
   [db event element]
-  (case (-> db :clicked-element :type)
+  (case (-> db :clicked-element :tag)
     :canvas (handlers/set-state db :select)
-    :scale-handler (-> db
-                       (handlers/set-state :scale)
-                       (assoc :scale (:key element)))
+    :scale (-> db
+               (handlers/set-state :scale)
+               (assoc :scale (:key element)))
     (handlers/set-state (if-not (-> db :clicked-element :selected?)
                           (-> db
                               (elements/select (mouse/multiselect? event) (:clicked-element db))

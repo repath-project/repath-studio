@@ -10,11 +10,12 @@
 (s/def ::visible? boolean?)
 (s/def ::locked? boolean?)
 (s/def ::type keyword?)
+(s/def ::tag keyword?)
 
-(defmulti element-type ::type)
+(defmulti element-type ::tag)
 
 (defmethod element-type :default [_]
-  (s/keys :req-un [::key ::type ::visible?]
+  (s/keys :req-un [::key ::tag ::type ::visible?]
           :opt-un [::name]))
 
-(s/def ::element (s/multi-spec element-type ::type))
+(s/def ::element (s/multi-spec element-type ::tag))

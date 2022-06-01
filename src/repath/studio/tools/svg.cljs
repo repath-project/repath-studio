@@ -18,5 +18,5 @@
                :y      (min pos-y offset-y)
                :width  (Math/abs (- pos-x offset-x))
                :height (Math/abs (- pos-y offset-y))}]
-    (elements/set-temp db {:type :svg :attrs attrs})))
+    (elements/set-temp db {:type :element :tag :svg :attrs attrs})))
 

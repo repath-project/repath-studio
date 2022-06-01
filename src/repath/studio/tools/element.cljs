@@ -57,8 +57,8 @@
   (let [{:keys [x y width height]} attrs
         [x y width height] (mapv units/unit->px [x y width height])]
     [:g {:key :edit-handlers}
-     (map (fn [handler] [element-views/square-handler handler]) [{:x x :y y :key :position :type :edit-handler}
-                                                                 {:x (+ x width) :y (+ y height) :key :size :type :edit-handler}])]))
+     (map (fn [handler] [element-views/square-handler handler]) [{:x x :y y :key :position :type :handler :tag :edit}
+                                                                 {:x (+ x width) :y (+ y height) :key :size :type :handler :tag :edit}])]))
 
 (defmethod tools/bounds ::tools/element
   [{:keys [attrs]}]
@@ -78,7 +78,7 @@
   (let [temp-element (get-in db [:documents (:active-document db) :temp-element])]
     (-> db 
         (element-handlers/create-from-temp)
-        (history/finalize (str "Create " (name (:type temp-element))))
+        (history/finalize (str "Create " (name (:tag temp-element))))
         (assoc :cursor "crosshair"))))
 
 (defmethod tools/mouse-up :default
@@ -108,7 +108,7 @@
   "We need a reagent form-3 component in order to set the style attribute manually.
    React expects a map, but we need to set a string to avoid serializing css.
    We also experimentally calculate the bounds on updade."
-  [{:keys [key attrs type title] :as element} child-elements]
+  [{:keys [key attrs tag title] :as element} child-elements]
   (ra/create-class
    {:display-name  "element-renderer"
 
@@ -128,14 +128,14 @@
 
     :reagent-render
     (fn
-      [{:keys [key attrs type title] :as element} child-elements]
+      [{:keys [key attrs tag title] :as element} child-elements]
       [:<>
-       [type (dissoc attrs :style)
+       [tag (dissoc attrs :style)
         (when title [:title title])
         (:content attrs)
         (map (fn [child] ^{:key (:key child)} [tools/render child]) child-elements)]
 
-       [type (merge (dissoc attrs :style) {:on-mouse-up   #(mouse/event-handler % element)
+       [tag (merge (dissoc attrs :style) {:on-mouse-up   #(mouse/event-handler % element)
                                            :on-mouse-down #(mouse/event-handler % element)
                                            :on-mouse-move #(mouse/event-handler % element)
                                            :on-double-click #(mouse/event-handler % element)

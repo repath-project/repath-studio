@@ -34,7 +34,7 @@
   [el]
   (.scrollIntoView el #js {:behavior "smooth" :block "nearest"}))
 
-(defn page [{:keys [key type name visible? locked? selected?] :as element} active? hovered?]
+(defn page [{:keys [key tag name visible? locked? selected?] :as element} active? hovered?]
   [:div.h-box {:class ["button list-item page-item" (when selected? "selected") (when active? "active")] 
                :on-mouse-enter #(rf/dispatch [:document/set-hovered-keys #{key}])
                :on-click (fn [e]
@@ -50,12 +50,12 @@
             :style {:color (when-not visible? styles/font-color-muted)
                     :pointer-events (when (not selected?) "none")}
             :value name
-            :placeholder type
+            :placeholder tag
             :on-double-click #(.stopPropagation %)
             :on-change #(rf/dispatch [:elements/set-property key :name (.. % -target -value) true])}]
    [item-buttons {:locked? locked? :visible? visible? :key key}]])
 
-(defn item [{:keys [type name visible? collapsed? locked? selected? children key] :as element} depth hovered? elements]
+(defn item [{:keys [tag name visible? collapsed? locked? selected? children key] :as element} depth hovered? elements]
   (let [has-children? (seq children)]
     [:li {:key key}
      [:div.h-box {:class ["button list-item" (when selected? "selected") (when visible? "text-muted")]
@@ -76,13 +76,13 @@
                           :background-color (when hovered? styles/level-2)}}
       (when has-children?
         [comp/toggle-collapsed-button collapsed? #(rf/dispatch [:elements/toggle-property key :collapsed?])])
-      ;;  [:span {:class "button icon-button"} [comp/icon {:icon        (:icon (tools/properties type))
+      ;;  [:span {:class "button icon-button"} [comp/icon {:icon        (:icon (tools/properties tag))
       ;;                                                    :fixed-width true}]]
       [:input {:class "list-item-input"
                :style {:color (when-not visible? styles/font-color-muted)
                        :pointer-events (when (not selected?) "none")}
                :value name
-               :placeholder type
+               :placeholder tag
                :on-double-click #(.stopPropagation %)
                :on-change #(rf/dispatch [:elements/set-property key :name (.. % -target -value) true])}]
       [item-buttons {:locked? locked? :visible? visible? :key key}]]

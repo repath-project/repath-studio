@@ -49,16 +49,16 @@
 (defmulti attrs keyword)
 (defmulti properties keyword)
 
-(defmulti render :type)
-(defmulti render-to-string :type)
-(defmulti path :type)
-(defmulti area :type)
+(defmulti render :tag)
+(defmulti render-to-string :tag)
+(defmulti path :tag)
+(defmulti area :tag)
 
-(defmulti render-edit #(:type %))
-(defmulti bounds #(:type %))
-(defmulti translate #(when (not (:locked? %)) (:type %)))
-(defmulti scale #(when (not (:locked? %)) (:type %)))
-(defmulti edit #(when (not (:locked? %)) (:type %)))
+(defmulti render-edit #(:tag %))
+(defmulti bounds #(:tag %))
+(defmulti translate #(when (not (:locked? %)) (:tag %)))
+(defmulti scale #(when (not (:locked? %)) (:tag %)))
+(defmulti edit #(when (not (:locked? %)) (:tag %)))
 
 (defmulti mouse-down #(:tool %))
 (defmulti mouse-move #(:tool %))
@@ -88,9 +88,9 @@
 (defmethod properties :default [])
 (defmethod render :default [])
 (defmethod render-to-string :default
-  [{:keys [attrs type title children]}]
+  [{:keys [tag attrs title children]}]
   (let [child-elements @(rf/subscribe [:elements/filter-visible children])]
-    (gstring/unescapeEntities (server/render-to-static-markup [type (dissoc attrs :style)
+    (gstring/unescapeEntities (server/render-to-static-markup [tag (dissoc attrs :style)
                                                                (when title [:title title])
                                                                (:content attrs)
                                                                (map render-to-string child-elements)]))))
@@ -132,14 +132,14 @@
   (str "rgba(" (reduce str (interpose ", " colors)) ")"))
 
 (defmethod render ::animation
-  [{:keys [children type attrs]}]
+  [{:keys [children tag attrs]}]
   (let [child-elements @(rf/subscribe [:elements/filter-visible children])]
-    [type attrs (map (fn [element] ^{:key (:key element)} [render element]) child-elements)]))
+    [tag attrs (map (fn [element] ^{:key (:key element)} [render element]) child-elements)]))
 
 (defmethod render ::container
-  [{:keys [children type attrs]}]
+  [{:keys [children tag attrs]}]
   (let [child-elements @(rf/subscribe [:elements/filter-visible children])]
-    [type attrs (map (fn [element] ^{:key (:key element)} [render element]) child-elements)]))
+    [tag attrs (map (fn [element] ^{:key (:key element)} [render element]) child-elements)]))
 
 (def svg-spec (js->clj js/window.api.bcd.svg :keywordize-keys true))
 
@@ -152,16 +152,16 @@
         (zipmap (repeat "")))))
 
 (defn attributes
-  [{:keys [type attrs]}]
-  (merge (when type (merge (when (or (isa? type ::element) (= type :svg)) (merge (attrs-map (type (:elements svg-spec))) (attrs-map (-> svg-spec :attributes :core)) (attrs-map (-> svg-spec :attributes :style))))
-                           (when (contains? #{:animateMotion :animateTransform} type) (attrs-map (:animate (:elements svg-spec))))
-                           (zipmap (:attrs (properties type)) (repeat "")))) attrs))
+  [{:keys [tag attrs]}]
+  (merge (when tag (merge (when (or (isa? tag ::element) (= tag :svg)) (merge (attrs-map (tag (:elements svg-spec))) (attrs-map (-> svg-spec :attributes :core)) (attrs-map (-> svg-spec :attributes :style))))
+                           (when (contains? #{:animateMotion :animateTransform} tag) (attrs-map (:animate (:elements svg-spec))))
+                           (zipmap (:attrs (properties tag)) (repeat "")))) attrs))
 
 (defn to-path
   [element]
   (if (:locked? element)
     element
     (-> element
-        (assoc :attrs (attributes {:type :path :attrs (helpers/merge-common str (:attrs element) (attributes {:type :path :attrs {}}))})
-               :type :path)
+        (assoc :attrs (attributes {:tag :path :attrs (helpers/merge-common str (:attrs element) (attributes {:tag :path :attrs {}}))})
+               :tag :path)
         (assoc-in [:attrs :d] (path element)))))

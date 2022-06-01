@@ -18,4 +18,4 @@
                :width  (Math/abs (- pos-x offset-x))
                :height (Math/abs (- pos-y offset-y))
                :preserveAspectRatio "xMidYMid slice"}]
-    (elements/set-temp db {:type :image :attrs attrs})))
+    (elements/set-temp db {:type :element :tag :image :attrs attrs})))

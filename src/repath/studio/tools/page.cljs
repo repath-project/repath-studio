@@ -24,7 +24,8 @@
                :width  (Math/abs (- pos-x offset-x))
                :height (Math/abs (- pos-y offset-y))
                :fill   "#ffffff"}]
-    (elements/set-temp db {:type :page
+    (elements/set-temp db {:tag :page
+                           :type :element
                            :name "Page"
                            :attrs attrs})))
 

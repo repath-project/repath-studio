@@ -47,7 +47,7 @@
                :size (Math/abs (- pos-x offset-x))
                :fill (tools/rgba fill)
                :stroke (tools/rgba  stroke)}]
-    (elements/set-temp db {:type :blob :attrs attrs})))
+    (elements/set-temp db {:type :element :tag :blob :attrs attrs})))
 
 (defn blob-path [attrs]
   (-> (.svgPath blobs (clj->js (reduce (fn [options [k v]] (assoc options k (int v))) {} (select-keys attrs [:seed :extraPoints :randomness :size]))))

@@ -37,13 +37,13 @@
                   :style])
 
 (defn caniusethis
-  [{:keys [type attr]}]
+  [{:keys [tag attr]}]
   (let [data (if attr
-               (or (-> tools/svg-spec :elements type attr :__compat)
+               (or (-> tools/svg-spec :elements tag attr :__compat)
                    (-> tools/svg-spec :attributes :presentation attr :__compat)
                    (-> tools/svg-spec :attributes :core attr :__compat)
                    (-> tools/svg-spec :attributes :style attr :__compat))
-               (-> tools/svg-spec :elements type :__compat))]
+               (-> tools/svg-spec :elements tag :__compat))]
     (when (:support data)
       [:div.v-box
        (when (some :version_added (vals (:support data)))
@@ -164,9 +164,9 @@
                         :on-change #(rf/dispatch [:elements/preview-attribute key (:hex (js->clj % :keywordize-keys true))])}]])])))
 
 (defmethod form-group :default
-  [type key value disabled?]
+  [tag key value disabled?]
   (let [attr-info (ra/atom nil)]
-    (fn [type key value disabled?]
+    (fn [tag key value disabled?]
       [:tr.form-group
        {:key key
         :class (when disabled? "disabled")}
@@ -187,7 +187,7 @@
                            [:h2 {:style {:margin-top 0}} key]
                            (when (-> css-properties key)
                              [:p (-> css-properties key :syntax)])
-                           [caniusethis {:type type :attr key}]]])]
+                           [caniusethis {:tag tag :attr key}]]])]
 
        [:td [:div.h-box {:style {:overflow "visible"
                                  :height "100%"}}
@@ -203,7 +203,7 @@
       (let [selected-elements @(rf/subscribe [:elements/selected])
             element (first selected-elements)
             selected-attrs @(rf/subscribe [:elements/selected-attrs])
-            {:keys [type attrs name]} element]
+            {:keys [tag attrs name]} element]
         [:div.v-scroll {:on-submit #(.preventDefault %)
                         :style {:width "100%"
                                 :height "100%"}}
@@ -221,7 +221,7 @@
                                                   :padding "19px 6px 19px 16px"}}
                           [:div.h-box
                            [:span {:style {:flex "1" :elements/align-self "center"}} (if (empty? (rest selected-elements))
-                                                                                       (if (empty? name) type name)
+                                                                                       (if (empty? name) tag name)
                                                                                        (str (count selected-elements) " elements"))]
                            [:<>
                             [comp/icon-button {:title "MDN Info" :icon "info" :action #(if @info
@@ -233,9 +233,9 @@
                                                          :target @info
                                                          :calloutWidth 300}
                                          [:<>
-                                          [:h2 {:style {:margin-top 0}} type]
-                                          [:p (:description (tools/properties type))]
-                                          [caniusethis {:type type}]]])]]]]
-             (map (fn [[k v]] ^{:key k} [form-group type k v]) (sort-by (fn [[k _]] (.indexOf attrs-order k)) selected-attrs))]])]))))
+                                          [:h2 {:style {:margin-top 0}} tag]
+                                          [:p (:description (tools/properties tag))]
+                                          [caniusethis {:tag tag}]]])]]]]
+             (map (fn [[k v]] ^{:key k} [form-group tag k v]) (sort-by (fn [[k _]] (.indexOf attrs-order k)) selected-attrs))]])]))))
 
 

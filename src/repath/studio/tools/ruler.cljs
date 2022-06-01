@@ -36,7 +36,7 @@
                :x2 pos-x
                :y2 pos-y
                :stroke styles/accent}]
-    (elements/set-temp db {:type :ruler :attrs attrs :hypotenuse hypotenuse})))
+    (elements/set-temp db {:type :overlay :tag :ruler :attrs attrs :hypotenuse hypotenuse})))
 
 (defmethod tools/render :ruler
   [{:keys [attrs key hypotenuse]}]

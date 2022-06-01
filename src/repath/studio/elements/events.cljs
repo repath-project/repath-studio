@@ -169,14 +169,14 @@
  (fn [db [_ element]]
    (-> db
        (h/create element)
-       (history/finalize (str "Create " (name (:type element)))))))
+       (history/finalize (str "Create " (name (:tag element)))))))
 
 (rf/reg-event-db
  :elements/animate
- (fn [db [_ type attrs]]
+ (fn [db [_ tag attrs]]
    (-> db
-       (h/animate type attrs)
-       (history/finalize (name type)))))
+       (h/animate tag attrs)
+       (history/finalize (name tag)))))
 
 (rf/reg-event-db
  :elements/set-parent
@@ -204,13 +204,13 @@
  (fn [{active-document :active-document :as db} _]
    (let [[_ y1 x2 _] (tools/elements-bounds (h/elements db) (h/pages db))
          {:keys [width height fill]} (:attrs (h/active-page db))
-         db (h/create db {:type :page
-                       :name "Page"
-                       :attrs {:x (+ x2 100)
-                               :y y1
-                               :width width
-                               :height height
-                               :fill fill}})]
-    (-> db
-        (canvas/pan-to-element (:key (h/active-page db)))
-        (history/finalize "Add page")))))
+         db (h/create db {:tag :page
+                          :name "Page"
+                          :attrs {:x (+ x2 100)
+                                  :y y1
+                                  :width width
+                                  :height height
+                                  :fill fill}})]
+     (-> db
+         (canvas/pan-to-element (:key (h/active-page db)))
+         (history/finalize "Add page")))))

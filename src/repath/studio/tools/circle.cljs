@@ -26,7 +26,7 @@
                :fill   (tools/rgba fill)
                :stroke (tools/rgba stroke)
                :r radius}]
-    (elements/set-temp db {:type :circle :attrs attrs})))
+    (elements/set-temp db {:type :element :tag :circle :attrs attrs})))
 
 (defmethod tools/translate :circle
   [element [x y]] (-> element
@@ -65,4 +65,4 @@
 (defmethod tools/render-edit :circle
   [{{:keys [cx cy r]} :attrs}]
   (let [[cx cy r] (mapv units/unit->px [cx cy r])]
-    [element-views/square-handler {:x (+ cx r) :y cy :key :r :type :edit-handler}]))
+    [element-views/square-handler {:x (+ cx r) :y cy :key :r :type :handler :tag :edit}]))

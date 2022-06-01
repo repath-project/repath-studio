@@ -28,13 +28,15 @@
    :attrs {:fill "#ffffff"}
    :elements {:canvas {:key :canvas
                        :visible? true
-                       :type :canvas
+                       :tag :canvas
+                       :type :element
                        :attrs {:fill "#eeeeee"}
                        :children [:default-page]}
               :default-page {:key :default-page
                              :name "Page"
                              :visible? true
-                             :type :page
+                             :type :element
+                             :tag :page
                              :parent :canvas
                              :attrs {:width 800
                                      :height 600

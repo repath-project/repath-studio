@@ -51,7 +51,7 @@
 (defn create
   "Creates a new element."
   [element]
-  (apply #(rf/dispatch [:elements/create {:type (key %)
+  (apply #(rf/dispatch [:elements/create {:tag (key %)
                                           :attrs (val %)}]) element)
   "")
 
@@ -183,8 +183,8 @@
 
 (defn animate
   "Animates the selected elements."
-  ([type attrs]
-   (rf/dispatch [:elements/animate type attrs])
+  ([tag attrs]
+   (rf/dispatch [:elements/animate tag attrs])
    "")
   ([attrs]
    (animate :animate attrs))

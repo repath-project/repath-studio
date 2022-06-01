@@ -24,9 +24,9 @@
   (let [stroke (get-in db [:documents active-document :stroke])]
     (if (get-in db [:documents active-document :temp-element :attrs :points])
       (update-in db [:documents active-document :temp-element :attrs :points] #(str % " " (str/join " " adjusted-mouse-pos)))
-      (elements/set-temp db {:type :polyline :attrs {:points (str/join " " adjusted-mouse-pos)
-                                                     :stroke (tools/rgba stroke)
-                                                     :fill "transparent"}}))))
+      (elements/set-temp db {:type :element :tag :polyline :attrs {:points (str/join " " adjusted-mouse-pos)
+                                                                   :stroke (tools/rgba stroke)
+                                                                   :fill "transparent"}}))))
 
 (defmethod tools/drag-end :pencil
   [db]

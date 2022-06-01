@@ -59,14 +59,14 @@
              :y (+ y1 (/ height 2))
              :size (/ 10 zoom)
              :stroke-width (/ 1 zoom)}]
-     (map (fn [handler] [square-handler handler]) [{:x x1 :y y1 :key :top-left :type :scale-handler}
-                                                   {:x x2 :y y1 :key :top-right :type :scale-handler}
-                                                   {:x x1 :y y2 :key :bottom-left :type :scale-handler}
-                                                   {:x x2 :y y2 :key :bottom-right :type :scale-handler}
-                                                   {:x (+ x1 (/ width 2)) :y y1 :key :top-middle :type :scale-handler}
-                                                   {:x x2 :y (+ y1 (/ height 2)) :key :middle-right :type :scale-handler}
-                                                   {:x x1 :y (+ y1 (/ height 2)) :key :middle-left :type :scale-handler}
-                                                   {:x (+ x1 (/ width 2)) :y y2 :key :bottom-middle :type :scale-handler}])]))
+     (map (fn [handler] [square-handler handler]) [{:x x1 :y y1 :key :top-left :type :handler :tag :scale}
+                                                   {:x x2 :y y1 :key :top-right :type :handler :tag :scale}
+                                                   {:x x1 :y y2 :key :bottom-left :type :handler :tag :scale}
+                                                   {:x x2 :y y2 :key :bottom-right :type :handler :tag :scale}
+                                                   {:x (+ x1 (/ width 2)) :y y1 :key :top-middle :type :handler :tag :scale}
+                                                   {:x x2 :y (+ y1 (/ height 2)) :key :middle-right :type :handler :tag :scale}
+                                                   {:x x1 :y (+ y1 (/ height 2)) :key :middle-left :type :handler :tag :scale}
+                                                   {:x (+ x1 (/ width 2)) :y y2 :key :bottom-middle :type :handler :tag :scale}])]))
 
 (defn label
   [text position]
@@ -127,16 +127,16 @@
   [adjusted-mouse-pos adjusted-mouse-offset zoom]
   (let [[offset-x offset-y] adjusted-mouse-offset
         [pos-x pos-y] adjusted-mouse-pos]
-    {:type :rect :attrs {:key    :select
-                         :x      (min pos-x offset-x)
-                         :y      (min pos-y offset-y)
-                         :width  (Math/abs (- pos-x offset-x))
-                         :height (Math/abs (- pos-y offset-y))
-                         :fill   styles/accent
-                         :fill-opacity ".25"
-                         :stroke styles/accent
-                         :stroke-opacity ".5"
-                         :stroke-width (/ 1 zoom)}}))
+    {:tag :rect :attrs {:key    :select
+                        :x      (min pos-x offset-x)
+                        :y      (min pos-y offset-y)
+                        :width  (Math/abs (- pos-x offset-x))
+                        :height (Math/abs (- pos-y offset-y))
+                        :fill   styles/accent
+                        :fill-opacity ".25"
+                        :stroke styles/accent
+                        :stroke-opacity ".5"
+                        :stroke-width (/ 1 zoom)}}))
 
 (defn area
   [area bounds]

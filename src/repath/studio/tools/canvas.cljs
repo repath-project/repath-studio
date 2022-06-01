@@ -55,4 +55,4 @@
                   [elements/bounding-handlers bounds]])])
            (when (or (= tool :edit) (= cached-tool :edit)) [tools/render-edit (first selected-elements)])
            (when debug-info? (into [:g] (map #(elements/point-of-interest %) @(rf/subscribe [:snaping-points]))))])]
-     [:defs (map (fn [{:keys [id type attrs]}] [:filter {:id id :key id} [type attrs]]) filters/accessibility)]]))
+     [:defs (map (fn [{:keys [id tag attrs]}] [:filter {:id id :key id} [tag attrs]]) filters/accessibility)]]))

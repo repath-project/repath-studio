@@ -27,7 +27,7 @@
 
 (defn page?
   [el]
-  (= :page (:type el)))
+  (= :page (:tag el)))
 
 (defn ancestor-keys
   [db element]
@@ -55,7 +55,7 @@
 
 (defn page
   [db el]
-  (if (= (:type el) :canvas)
+  (if (= (:tag el) :canvas)
     (active-page db)
     (if (page? el)
       el
@@ -120,7 +120,7 @@
   [{active-document :active-document :as db}]
   (assoc-in db [:documents active-document :hovered-keys] #{}))
 
-(defmulti intersects-with-bounds? (fn [element _] (:type element)))
+(defmulti intersects-with-bounds? (fn [element _] (:tag element)))
 
 (defmethod intersects-with-bounds? :default [])
 
@@ -144,7 +144,7 @@
 (defn copy
   [db]
   (let [selected-elements (selected db)
-        html (reduce #(str % (render-to-static-markup [(:type %2) (:attrs %2)])) "" selected-elements)]
+        html (reduce #(str % (render-to-static-markup [(:tag %2) (:attrs %2)])) "" selected-elements)]
     (js/window.api.send "toMain" (clj->js {:action "writeToClipboard" :data {:html html}}))
     (assoc db :copied-elements selected-elements)))
 
@@ -230,14 +230,14 @@
 (defn to-path
   [db]
   (reduce (fn [db element]
-            (if (get-method tools/path (:type element))
+            (if (get-method tools/path (:tag element))
               (assoc-in db (conj (elements-path db) (:key element)) (tools/to-path element))
               db)) db (selected db)))
 
 (defn create-element
   [db parent-key element]
   (let [key (helpers/uid)
-        element (helpers/deep-merge element {:key key :visible? true :selected? true :parent parent-key :children []})]
+        element (helpers/deep-merge element {:key key :type :element :visible? true :selected? true :parent parent-key :children []})]
     (cond-> db
       :always (-> (assoc-in (conj (elements-path db) key) element)
                   (update-in (conj (elements-path db) parent-key :children) #(vec (conj % key))))
@@ -286,8 +286,8 @@
       (translate offset)))
 
 (defn animate
-  [db type attrs]
-  (reduce (fn [db element] (create-element db (:key element) {:type type :attrs attrs})) (deselect-all db) (selected db)))
+  [db tag attrs]
+  (reduce (fn [db element] (create-element db (:key element) {:tag tag :attrs attrs})) (deselect-all db) (selected db)))
 
 (defn paste-styles
   [{copied-elements :copied-elements :as db}]
@@ -320,12 +320,12 @@
   (reduce (fn [db key]
             (set-parent db key (first (selected-keys db)))) (-> db
                                                                 (deselect-all)
-                                                                (create-element (:key (active-page db)) {:type :g})) (selected-keys db)))
+                                                                (create-element (:key (active-page db)) {:tag :g})) (selected-keys db)))
 
 (defn ungroup
   [db]
   (reduce (fn [db key]
             (let [element (get-element db key)]
-              (if (= (:type element) :g)
+              (if (= (:tag element) :g)
                 (delete (reduce (fn [db child-key] (set-parent db child-key (:parent element))) db (:children element)) key)
                 db))) db (selected-keys db)))

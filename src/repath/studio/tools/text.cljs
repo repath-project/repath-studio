@@ -24,7 +24,7 @@
         attrs {:x offset-x
                :y offset-y
                :fill "#000000"}]
-    (elements/create db {:type :text :attrs attrs})))
+    (elements/create db {:type :element :tag :text :attrs attrs})))
 
 (defmethod tools/drag :text
   [{:keys [adjusted-mouse-offset] :as db}]
@@ -32,7 +32,7 @@
         attrs {:x offset-x
                :y offset-y
                :fill "#000000"}]
-    (elements/set-temp db {:type :text :attrs attrs})))
+    (elements/set-temp db {:type :element :tag :text :attrs attrs})))
 
 (defmethod tools/bounds :text
   [element]
