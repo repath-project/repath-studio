@@ -93,17 +93,6 @@
                                   :on-blur #(on-change-handler % key value)
                                   :on-key-down #(on-key-down-handler % key value)}])
 
-(defmethod form-element :font-family
-  [key value]
-  (let [fonts @(rf/subscribe [:font-options])]
-    [:> fui/ComboBox {:text value
-                      :dropdownMaxWidth 300
-                      :allowFreeform true
-                      :autoComplete "on"
-                      :styles {:input {:font-size "12px"}}
-                      :options fonts
-                      :onChange #(on-change-handler % key value)}]))
-
 (defmethod form-element :style
   [key value]
   [:div { :style {:width "100%"
