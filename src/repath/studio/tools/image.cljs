@@ -6,8 +6,7 @@
 
 (defmethod tools/properties :image [] {:icon "image"
                                        :description "The <image> SVG element includes images inside SVG documents. It can display raster image files or other SVG files."
-                                       :attrs [:href
-                                               :xlink:href]})
+                                       :attrs [:href]})
 
 (defmethod tools/drag :image
   [{:keys [adjusted-mouse-offset adjusted-mouse-pos] :as db}]
