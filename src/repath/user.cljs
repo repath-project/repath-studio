@@ -3,8 +3,8 @@
    [re-frame.core :as rf]
    [re-frame.db :as db]
    [repath.config :as config]
-   [ajax.core :as ajax]
-   [clojure.string :as str]))
+   [clojure.string :as str]
+   [ajax.core]))
 
 (defn translate
   "Moves the selected elements."
@@ -239,16 +239,16 @@
 
 
 (comment
-  
+
   (dotimes [x 25] (circle [(+ (* x 30) 40) (+ (* (Math.sin x) 10) 200)] 10 {:fill (str "hsl(" (* x 10) " ,50% , 50%)")}))
 
-  (ajax/GET "https://api.thecatapi.com/v1/images/search" {:response-format (ajax/json-response-format {:keywords? true})
+  (ajax.core/GET "https://api.thecatapi.com/v1/images/search" {:response-format (ajax/json-response-format {:keywords? true})
                                                           :handler (fn [response]
                                                                      (let [{:keys [width height url]} (first response)]
                                                                        (image 0 0 [width height] url)))})
 
   (defn kitty [x y width height]
-    (ajax/GET "https://api.thecatapi.com/v1/images/search" {:response-format (ajax/json-response-format {:keywords? true})
+    (ajax.core/GET "https://api.thecatapi.com/v1/images/search" {:response-format (ajax/json-response-format {:keywords? true})
                                                             :handler (fn [response]
                                                                        (image [x y] width height (:url (first response)) {:preserveAspectRatio "xMidYMid slice"}))}))
 

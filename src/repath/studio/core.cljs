@@ -56,8 +56,6 @@
 (defn bootstrap-cb
   []
   (replumb/run-repl "(in-ns 'repath.user)" identity)
-  (replumb/run-repl "(require '[ajax.core :as ajax])" identity)
-  (replumb/run-repl "(require '[clojure.string :as str])" identity)
   (print "Repl initialized"))
 
 (defn init []
