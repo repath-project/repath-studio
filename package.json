@@ -65,7 +65,7 @@
     "blobs": "2.2.1-beta.1",
     "codemirror": "5.65.2",
     "create-react-class": "15.7.0",
-    "electron": "18.2.0",
+    "electron": "19.0.0",
     "electron-builder": "22.14.13",
     "element-to-path": "1.2.1",
     "highlight.js": "11.5.1",
@@ -87,7 +87,7 @@
     "svgpath": "2.3.1"
   },
   "dependencies": {
-    "@mdn/browser-compat-data": "4.1.16",
+    "@mdn/browser-compat-data": "5.0.1",
     "@sentry/electron": "3.0.7",
     "electron-updater": "5.0.2",
     "font-list": "1.4.2",
