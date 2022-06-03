@@ -14,7 +14,7 @@
     "pack": "npx electron-builder --dir",
     "dist": "npx electron-builder",
     "clean": "rm -rf resources/public/js/* && rm -rf target && rm -rf dist",
-    "build-report": "npx shadow-cljs run shadow.cljs.build-report main preload app bootstrap target/build-report.html",
+    "build-report": "npx shadow-cljs run shadow.cljs.build-report app target/build-report.html",
     "ci": "npx shadow-cljs compile karma-test && npx karma start --single-run --reporters junit,dots"
   },
   "keywords": [
