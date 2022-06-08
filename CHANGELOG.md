@@ -2,23 +2,23 @@
 
 ## (Unreleased)
 
-### Added
+**Added**
 
 - CHANGELOG.md
 - antq github action
 
-### Changed
+**Changed**
 
 - workflow packages upgraded
 
-### Fixed
+**Fixed**
 
 - build-report
 - user namespace indentation
 
 ## 0.1.3 (2022-05-09)
 
-### Added
+**Added**
 
 - deps.edn to add de-dupe dependency
 - matrix chat to README.md
@@ -34,7 +34,7 @@
 - select-box component
 - multi-element scaling support
 
-### Changed
+**Changed**
 
 - history select background
 - xml and history moved under documents
@@ -52,14 +52,14 @@
 - move state renamed
 - zoom tool enhanced
 
-### Removed
+**Removed**
 
 - selected method to fix a build error
 - mouse over canvas flag
 - xml-formatter dependency
 - mouse click simulation from canvas
 
-### Fixed
+**Fixed**
 
 - default background value of page
 - render to string method
@@ -71,7 +71,7 @@
 
 ## 0.1.2 (2022-04-09)
 
-### Added
+**Added**
 
 - out of canvas mouse tracking and and auto-panning
 - active document interceptor
@@ -80,7 +80,7 @@
 - help function to user namespace
 - animation icons
 
-### Changed
+**Changed**
 
 - events and subs
 - bcd svg spec
@@ -91,13 +91,13 @@
 - transform method simplified
 - README.md
 
-### Fixed
+**Fixed**
 
 - ellipse translate method
 
 ## 0.1.1 (2022-03-19)
 
-### Added
+**Added**
 
 - document title to app header
 - paste in position
@@ -109,13 +109,13 @@
 - keyboard shortcuts for multiple tools
 - dropper tool
 
-### Removed
+**Removed**
 
 - reagent and re-frame from bootstrap entries
 - re-frame events from repl completions
 - path button
 
-### Changed
+**Changed**
 
 - import/export buttons disabled
 - hide browser compatibility data
@@ -125,7 +125,7 @@
 - image tool
 - packages upgraded
 
-### Fixed
+**Fixed**
 
 - monospace font
 - drag page method
@@ -137,6 +137,6 @@
 
 ## 0.1.0 (2022-03-6)
 
-### Added
+**Added**
 
 - Initial proof of concept.
