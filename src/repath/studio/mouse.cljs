@@ -15,7 +15,7 @@
                                 :type (keyword (.-type event))
                                 :mouse-pos [(.-clientX event) (.-clientY event)]
                                 :button (.-button event)
-                                :buttons (.-button event)
+                                :buttons (.-buttons event)
                                 :delta [(.-deltaX event) (.-deltaY event)]
                                 :modifiers (cond-> #{}
                                              (.-altKey event) (conj :alt)
