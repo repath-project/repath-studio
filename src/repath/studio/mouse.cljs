@@ -7,6 +7,7 @@
   (some #(contains? (:modifiers event) %) #{:ctrl :shift}))
 
 (defn event-handler
+  "SEE https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/"
   [event element]
   (when (and event (not= (.-button event) 2)) ; Exclude right click that should be used for the contect menu exclusively.
     (.stopPropagation event)
