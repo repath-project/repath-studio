@@ -242,13 +242,13 @@
 
   (dotimes [x 25] (circle [(+ (* x 30) 40) (+ (* (Math.sin x) 10) 200)] 10 {:fill (str "hsl(" (* x 10) " ,50% , 50%)")}))
 
-  (ajax.core/GET "https://api.thecatapi.com/v1/images/search" {:response-format (ajax/json-response-format {:keywords? true})
+  (ajax.core/GET "https://api.thecatapi.com/v1/images/search" {:response-format (ajax.core/json-response-format {:keywords? true})
                                                                :handler (fn [response]
                                                                           (let [{:keys [width height url]} (first response)]
                                                                             (image 0 0 [width height] url)))})
 
   (defn kitty [x y width height]
-    (ajax.core/GET "https://api.thecatapi.com/v1/images/search" {:response-format (ajax/json-response-format {:keywords? true})
+    (ajax.core/GET "https://api.thecatapi.com/v1/images/search" {:response-format (ajax.core/json-response-format {:keywords? true})
                                                                  :handler (fn [response]
                                                                             (image [x y] width height (:url (first response)) {:preserveAspectRatio "xMidYMid slice"}))}))
 
