@@ -29,9 +29,9 @@ jobs:
           java-version: '8'
 
       - name: Install clojure tools
-        uses: DeLaGuardo/setup-clojure@6.0
+        uses: DeLaGuardo/setup-clojure@7.0
         with:
-          cli: 1.11.1.1129
+          cli: 1.11.1.1139
 
       - name: Electron Builder Action
         uses: samuelmeuli/action-electron-builder@v1.6.0
