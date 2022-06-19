@@ -266,7 +266,7 @@
 (defn bool-operation
   [db operation]
   (let [p (.setup paper)
-        selected-elements (selected db)
+        selected-elements (selected db) ; TODO sort elements by visibily index
         attrs (-> selected-elements first tools/to-path :attrs)
         new-path (reduce (fn [path element]
                            (let [path-a (Path. path)
@@ -275,7 +275,8 @@
                                                :unite (.unite path-a path-b)
                                                :intersect (.intersect path-a path-b)
                                                :subtract (.subtract path-a path-b)
-                                               :exclude (.exclude path-a path-b))]
+                                               :exclude (.exclude path-a path-b)
+                                               :devide (.devide path-a path-b))]
                              (.getAttribute (.exportSVG result-path) "d"))) (:d attrs) (rest selected-elements))]
     (-> db
         (delete)

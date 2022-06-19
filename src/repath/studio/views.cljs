@@ -277,6 +277,7 @@
          [comp/icon-button {:title "Intersect" :icon "intersect" :action #(rf/dispatch [:elements/bool-operation :intersect])}]
          [comp/icon-button {:title "Subtract" :icon "subtract" :action #(rf/dispatch [:elements/bool-operation :subtract])}]
          [comp/icon-button {:title "Exclude" :icon "exclude" :action #(rf/dispatch [:elements/bool-operation :exclude])}]
+         [comp/icon-button {:title "Devide" :icon "devide" :action #(rf/dispatch [:elements/bool-operation :devide])}]
          [:span.h-devider]
          [comp/icon-button {:title "Distribute Spacing Horizontaly" :icon "rotate-clockwise" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
          [comp/icon-button {:title "Distribute Spacing Verticaly" :icon "rotate-counterclockwise" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
