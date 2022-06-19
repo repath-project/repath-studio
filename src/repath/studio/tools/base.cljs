@@ -125,8 +125,8 @@
     (elements-bounds elements children)))
 
 (defmethod path ::shape
-  [{:keys [attrs type]}]
-  (element-to-path (clj->js {:name type :attributes attrs})))
+  [{:keys [attrs tag]}]
+  (element-to-path (clj->js {:name tag :attributes attrs})))
 
 (defn rgba [colors]
   (str "rgba(" (reduce str (interpose ", " colors)) ")"))

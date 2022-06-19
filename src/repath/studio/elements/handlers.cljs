@@ -4,7 +4,8 @@
    [repath.studio.helpers :as helpers]
    [repath.studio.bounds :as bounds]
    [clojure.core.matrix :as matrix]
-   [reagent.dom.server :refer [render-to-static-markup]]))
+   [reagent.dom.server :refer [render-to-static-markup]]
+   ["paper" :refer [paper Path]]))
 
 (defn elements-path [db]
   [:documents (:active-document db) :elements])
@@ -261,6 +262,25 @@
     (-> db
         (create temp-element)
         (clear-temp))))
+
+(defn bool-operation
+  [db operation]
+  (let [p (.setup paper)
+        selected-elements (selected db) ; TODO sort elements by visibily index
+        attrs (-> selected-elements first tools/to-path :attrs)
+        new-path (reduce (fn [path element]
+                           (let [path-a (Path. path)
+                                 path-b (-> element tools/to-path :attrs :d Path.)
+                                 result-path (case operation
+                                               :unite (.unite path-a path-b)
+                                               :intersect (.intersect path-a path-b)
+                                               :subtract (.subtract path-a path-b)
+                                               :exclude (.exclude path-a path-b)
+                                               :devide (.devide path-a path-b))]
+                             (.getAttribute (.exportSVG result-path) "d"))) (:d attrs) (rest selected-elements))]
+    (-> db
+        (delete)
+        (create {:type :element :tag :path :attrs (merge attrs {:d new-path})}))))
 
 (defn paste-in-position
   [{:keys [copied-elements] :as db}]

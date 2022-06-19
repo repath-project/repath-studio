@@ -4,7 +4,8 @@
    [repath.studio.elements.handlers :as h]
    [repath.studio.canvas-frame.handlers :as canvas]
    [repath.studio.history.handlers :as history]
-   [repath.studio.tools.base :as tools]))
+   [repath.studio.tools.base :as tools]
+   [clojure.string :as str]))
 
 (rf/reg-event-db
  :elements/select
@@ -163,6 +164,14 @@
    (-> db
        (h/to-path)
        (history/finalize "Convert selection to path"))))
+
+(rf/reg-event-db
+ :elements/bool-operation
+ (fn [db  [_ operation]]
+   (if (> (count (h/selected db)) 1)
+     (-> db
+         (h/bool-operation operation)
+         (history/finalize (-> operation name str/capitalize))) db)))
 
 (rf/reg-event-db
  :elements/create
