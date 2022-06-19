@@ -68,13 +68,6 @@
   (let [[rx ry] (map units/unit->px [rx ry])]
     (* Math/PI rx ry)))
 
-(defmethod tools/path :ellipse
-  [{{:keys [cx cy rx ry]} :attrs}]
-  (str/join " " ["M" (+ cx rx) cy
-                 "A" rx ry 0 0 1 cx (+ cy ry)
-                 "A" rx ry 0 0 1 (- cx rx) cy
-                 "A" rx ry 0 0 1 (+ cx rx) cy]))
-
 (defmethod tools/edit :ellipse
   [element [x y] handler]
   (case handler
