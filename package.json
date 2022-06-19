@@ -32,11 +32,10 @@
     "icon": "resources/public/img/icon",
     "fileAssociations": [
       {
-        "ext": "rp",
+        "ext": "rso",
         "name": "RePath Studio File",
         "role": "Editor",
-        "mimeType": "application/repath.studio",
-        "perMachine": true
+        "mimeType": "application/repath.studio"
       }
     ],
     "publish": [
