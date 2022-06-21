@@ -2,7 +2,7 @@
  :deps {thheller/shadow-cljs {:mvn/version "2.19.3"}
         reagent/reagent {:mvn/version "1.1.1"}
         re-frame/re-frame {:mvn/version "1.3.0-rc3"}
-        day8.re-frame/re-frame-10x {:mvn/version "1.3.0"}
+        day8.re-frame/re-frame-10x {:mvn/version "1.4.0"}
         day8.re-frame/tracing {:mvn/version "0.6.2"}
         cljs-ajax/cljs-ajax {:mvn/version "0.8.4"}
         de-dupe/de-dupe {:git/url "https://github.com/day8/de-dupe.git"
