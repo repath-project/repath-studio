@@ -1,5 +1,6 @@
 (ns repath.studio.tools.line
-  (:require [repath.studio.elements.handlers :as elements]
+  (:require [clojure.string :as str]
+            [repath.studio.elements.handlers :as elements]
             [repath.studio.elements.views :as element-views]
             [repath.studio.tools.base :as tools]
             [repath.studio.attrs.base :as attrs]
@@ -39,7 +40,8 @@
 (defmethod tools/path :line
   [{{:keys [x1 y1 x2 y2]} :attrs}]
   (let [[x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])]
-   (str "M" x1 "," y1 " L" x2 "," y2)))
+    (str/join " " ["M" x1 y1
+                   "L" x2 y2])))
 
 (defmethod tools/render-edit :line
   [{:keys [attrs]}]

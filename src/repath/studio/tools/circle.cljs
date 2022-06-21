@@ -48,6 +48,15 @@
   [{{:keys [r]} :attrs}]
     (* Math/PI (Math/pow (units/unit->px r) 2)))
 
+(defmethod tools/path :circle
+  [{{:keys [cx cy r]} :attrs}]
+  (let [[cx cy r] (map units/unit->px [cx cy r])]
+    (str/join " " ["M" (+ cx r) cy
+                   "A" r r 0 0 1 cx (+ cy r)
+                   "A" r r 0 0 1 (- cx r) cy
+                   "A" r r 0 0 1 (+ cx r) cy
+                   "z"])))
+
 (defmethod tools/edit :circle
   [element [x _] handler]
   (case handler

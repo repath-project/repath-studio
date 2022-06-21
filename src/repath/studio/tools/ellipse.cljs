@@ -63,6 +63,15 @@
           [rx ry] (matrix/add [rx ry] (/ (if (str/blank? stroke) 0 stroke-width-px) 2))]
       [(- cx rx) (- cy ry) (+ cx rx) (+ cy ry)]))
 
+(defmethod tools/path :ellipse
+  [{{:keys [cx cy rx ry]} :attrs}]
+  (let [[cx cy rx ry] (mapv units/unit->px [cx cy rx ry])]
+    (str/join " " ["M" (+ cx rx) cy
+                   "A" rx ry 0 0 1 cx (+ cy ry)
+                   "A" rx ry 0 0 1 (- cx rx) cy
+                   "A" rx ry 0 0 1 (+ cx rx) cy
+                   "z"])))
+
 (defmethod tools/area :ellipse
   [{{:keys [rx ry]} :attrs}]
   (let [[rx ry] (map units/unit->px [rx ry])]

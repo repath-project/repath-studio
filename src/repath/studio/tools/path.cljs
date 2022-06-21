@@ -49,6 +49,10 @@
                                     (.translate x y)
                                     (.toString))))
 
+(defmethod tools/area :path
+  [{{:keys [d]} :attrs}]
+  d)
+
 (defmethod tools/bounds :path
   [{{:keys [d]} :attrs}]
   (let [[left top right bottom] (js->clj (get-bounds d))]
