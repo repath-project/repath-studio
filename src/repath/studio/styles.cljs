@@ -272,11 +272,11 @@
                                                       :active {:color font-color-active
                                                                :background overlay}}}))
 
-(stylefy/class "v-devider" {:margin      "4px"
+(stylefy/class "v-divider" {:margin      "4px"
                             :border-left (str "1px solid " border-color)
                             :height      "28px"})
 
-(stylefy/class "h-devider" {:margin     "4px"
+(stylefy/class "h-divider" {:margin     "4px"
                             :border-top (str "1px solid " border-color)
                             :width      "28px"})
 

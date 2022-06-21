@@ -276,7 +276,7 @@
                                                :intersect (.intersect path-a path-b)
                                                :subtract (.subtract path-a path-b)
                                                :exclude (.exclude path-a path-b)
-                                               :devide (.devide path-a path-b))]
+                                               :divide (.divide path-a path-b))]
                              (.getAttribute (.exportSVG result-path) "d"))) (:d attrs) (rest selected-elements))]
     (-> db
         (delete)

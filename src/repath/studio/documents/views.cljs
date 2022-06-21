@@ -21,14 +21,14 @@
                  {:name "Close All"
                   :shortcut "Page Up"
                   :action [:document/close-all]}
-                 :devider
+                 :divider
                  {:name "Copy Path"
                   :shortcut "Page Down"
                   :action [:elements/lower]}
                  {:name "Copy Relative Path"
                   :shortcut "Home"
                   :action [:elements/raise-to-top]}
-                 :devider
+                 :divider
                  {:name "Open Containing Folder"
                   :action [:elements/lower]}])))
 
@@ -37,10 +37,10 @@
    [comp/icon-button {:title "New" :icon "file" :action #(rf/dispatch [:document/new])}]
    [comp/icon-button {:title "Open" :icon "folder" :action #(rf/dispatch [:document/open])}]
    [comp/icon-button {:title "Save" :icon "save" :action #(rf/dispatch [:document/save])}]
-   [:span.v-devider]
+   [:span.v-divider]
    [comp/icon-button {:title "Import" :icon "import" :class "disabled" :action #(rf/dispatch [:document/import])}]
    [comp/icon-button {:title "Export" :icon "export" :action #(rf/dispatch [:elements/export])}]
-   [:span.v-devider]
+   [:span.v-divider]
    [comp/icon-button {:title "Undo" :icon "undo" :action #(rf/dispatch [:history/undo 1]) :disabled? (not @(rf/subscribe [:history/undos?]))}]
    [:select {:class "icon-button"
              :onChange #(rf/dispatch [:history/undo (-> % .-target .-value js/parseInt)])

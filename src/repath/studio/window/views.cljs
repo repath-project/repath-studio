@@ -11,7 +11,7 @@
                      :text "New File"
                      :secondaryText "Ctrl+N"
                      :onClick #(rf/dispatch [:document/new])}
-                    {:key :devider-1
+                    {:key :divider-1
                      :itemType fui/ContextualMenuItemType.Divider}
                     {:key :save
                      :text "Save"
@@ -23,9 +23,9 @@
                     {:key :save-all
                      :text "Save All"
                      :onClick #(rf/dispatch [:document/save-all])}
-                    {:key :devider-2
+                    {:key :divider-2
                      :itemType fui/ContextualMenuItemType.Divider}
-                    {:key :devider-3
+                    {:key :divider-3
                      :itemType fui/ContextualMenuItemType.Divider}
                     {:key :exit
                      :text "Exit"
@@ -40,7 +40,7 @@
                      :text "Redo"
                      :secondaryText "Ctrl+Shift+Z"
                      :onClick #(rf/dispatch [:history/redo 1])}
-                    {:key :devider-1
+                    {:key :divider-1
                      :itemType fui/ContextualMenuItemType.Divider}
                     {:key :cut
                      :text "Cut"
@@ -62,13 +62,13 @@
                      :text "Paste styles"
                      :secondaryText "Ctrl+Shift+V"
                      :onClick #(rf/dispatch [:elements/paste-styles])}
-                    {:key :devider-2
+                    {:key :divider-2
                      :itemType fui/ContextualMenuItemType.Divider}
                     {:key :duplicate
                      :text "Duplicate"
                      :secondaryText "Ctrl+D"
                      :onClick #(rf/dispatch [:elements/duplicate-in-posistion])}
-                    {:key :devider-1
+                    {:key :divider-1
                      :itemType fui/ContextualMenuItemType.Divider}
                     {:key :select-all
                      :text "Select all"
@@ -84,7 +84,7 @@
                      :text "Convert to path"
                      :secondaryText "Ctrl+Shift+P"
                      :onClick #(rf/dispatch [:elements/to-path])}
-                    {:key :devider-1
+                    {:key :divider-1
                      :itemType fui/ContextualMenuItemType.Divider}
                     {:key :group
                      :text "Group"
@@ -94,7 +94,7 @@
                      :text "Ungroup"
                      :secondaryText "Ctrl+Shift+G"
                      :onClick #(rf/dispatch [:elements/ungroup])}
-                    {:key :devider-2
+                    {:key :divider-2
                      :itemType fui/ContextualMenuItemType.Divider}
                     {:key :raise
                      :text "Raise"

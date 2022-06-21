@@ -197,7 +197,7 @@
 (defn menu-item
   ([{:keys [name shortcut action submenu] :as item}]
    (if submenu [name (mapv menu-item submenu)]
-    (if (= item :devider) :devider
+    (if (= item :divider) :divider
         [[:div.command-row 
           [:span.cmd name]
           [:span.shortcut.muted shortcut]]

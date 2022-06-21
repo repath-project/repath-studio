@@ -159,7 +159,7 @@
                                            {:name "Paste"
                                             :shortcut "Ctrl+V"
                                             :action [:elements/paste]}
-                                           :devider
+                                           :divider
                                            {:name "Raise"
                                             :shortcut "Page Up"
                                             :action [:elements/raise]}
@@ -172,14 +172,14 @@
                                            {:name "Lower to bottom"
                                             :shortcut "End"
                                             :action [:elements/lower-to-bottom]}
-                                           :devider
+                                           :divider
                                            {:name "Animate"
                                             :action [:elements/animate :animate {}]}
                                            {:name "Animate Transform"
                                             :action [:elements/animate :animateTransform {}]}
                                            {:name "Animate Motion"
                                             :action [:elements/animate :animateMotion {}]}
-                                           :devider
+                                           :divider
                                            {:name "Duplicate in position"
                                             :shortcut "Ctrl+D"
                                             :action [:elements/duplicate-in-posistion]}
