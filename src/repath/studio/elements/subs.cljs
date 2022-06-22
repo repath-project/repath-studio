@@ -16,7 +16,8 @@
 (rf/reg-sub
  :elements/canvas
  :<- [:elements]
- (fn [elements _] (get elements :canvas)))
+ (fn [elements _]
+   (:canvas elements)))
 
 (rf/reg-sub
  :elements/pages
@@ -59,6 +60,24 @@
   :<- [:elements/selected]
  (fn [selected-elements _]
    (reduce #(conj %1 (:key %2)) #{} selected-elements)))
+
+(rf/reg-sub
+ :elements/selected?
+ :<- [:elements/selected]
+ (fn [selected-elements _]
+   (seq selected-elements)))
+
+(rf/reg-sub
+ :elements/multiple-selected?
+ :<- [:elements/selected]
+ (fn [selected-elements _]
+   (seq (rest selected-elements))))
+
+(rf/reg-sub
+ :elements/group-selected?
+ :<- [:elements/selected]
+ (fn [selected-elements _]
+   (seq (filter #(= (:tag %) :g) selected-elements))))
 
 (rf/reg-sub
  :elements/selected-attrs

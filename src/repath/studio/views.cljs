@@ -249,41 +249,43 @@
                                 :box-sizing "border-box"
                                 :flex "1"}}
             [attrs/form]]])
-        [:div.v-box {:style {:flex "0"
-                             :border-left (when-not @(rf/subscribe [:window/sidebar? :properties]) (str "1px solid " styles/level-1))
-                             :background-color styles/level-2
-                             :padding "8px 4px"
-                             :text-align "center"}}
-         [comp/icon-button {:title "Bring To Front" :icon "bring-front" :action #(rf/dispatch [:elements/raise-to-top])}]
-         [comp/icon-button {:title "Send To Back" :icon "send-back" :action #(rf/dispatch [:elements/lower-to-bottom])}]
-         [comp/icon-button {:title "Bring Forward" :icon "bring-forward" :action #(rf/dispatch [:elements/raise])}]
-         [comp/icon-button {:title "Send Backward" :icon "send-backward" :action #(rf/dispatch [:elements/lower])}]
-         [:span.h-divider]
-         [comp/icon-button {:title "Group" :icon "group" :action #(rf/dispatch [:elements/group])}]
-         [comp/icon-button {:title "Ungroup" :icon "ungroup" :action #(rf/dispatch [:elements/ungroup])}]
-         [:span.h-divider]
-         [comp/icon-button {:title "Align Left" :icon "objects-align-left" :action #(rf/dispatch [:elements/align :left])}]
-         [comp/icon-button {:title "Align Center Horizontaly" :icon "objects-align-center-horizontal" :action #(rf/dispatch [:elements/align :center-horizontal])}]
-         [comp/icon-button {:title "Align Rignt" :icon "objects-align-right" :action #(rf/dispatch [:elements/align :right])}]
-         [:span.h-divider]
-         [comp/icon-button {:title "Align Top" :icon "objects-align-top" :action #(rf/dispatch [:elements/align :top])}]
-         [comp/icon-button {:title "Align Center Verticaly" :icon "objects-align-center-vertical" :action #(rf/dispatch [:elements/align :center-vertical])}]
-         [comp/icon-button {:title "Align Bottom" :icon "objects-align-bottom" :action #(rf/dispatch [:elements/align :bottom])}]
-         [:span.h-divider]
-         [comp/icon-button {:title "Distribute Spacing Horizontaly" :icon "distribute-spacing-horizontal" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
-         [comp/icon-button {:title "Distribute Spacing Verticaly" :icon "distribute-spacing-vertical" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
-         [:span.h-divider]
-         [comp/icon-button {:title "Unite" :icon "unite" :action #(rf/dispatch [:elements/bool-operation :unite])}]
-         [comp/icon-button {:title "Intersect" :icon "intersect" :action #(rf/dispatch [:elements/bool-operation :intersect])}]
-         [comp/icon-button {:title "Subtract" :icon "subtract" :action #(rf/dispatch [:elements/bool-operation :subtract])}]
-         [comp/icon-button {:title "Exclude" :icon "exclude" :action #(rf/dispatch [:elements/bool-operation :exclude])}]
-         [comp/icon-button {:title "divide" :icon "divide" :action #(rf/dispatch [:elements/bool-operation :divide])}]
-         [:span.h-divider]
-         [comp/icon-button {:title "Distribute Spacing Horizontaly" :icon "rotate-clockwise" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
-         [comp/icon-button {:title "Distribute Spacing Verticaly" :icon "rotate-counterclockwise" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
-         [:span.h-divider]
-         [comp/icon-button {:title "Distribute Spacing Horizontaly" :icon "flip-horizontal" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
-         [comp/icon-button {:title "Distribute Spacing Verticaly" :icon "flip-vertical" :class "disabled" :action #(rf/dispatch [:elements/lower])}]]]]
+        (let [selected? @(rf/subscribe [:elements/selected?])
+              multiple-selected? @(rf/subscribe [:elements/multiple-selected?])]
+          [:div.v-box {:style {:flex "0"
+                               :border-left (when-not @(rf/subscribe [:window/sidebar? :properties]) (str "1px solid " styles/level-1))
+                               :background-color styles/level-2
+                               :padding "8px 4px"
+                               :text-align "center"}}
+           [comp/icon-button {:title "Bring to front" :icon "bring-front" :class (when-not selected? "disabled") :action #(rf/dispatch [:elements/raise-to-top])}]
+           [comp/icon-button {:title "Send to back" :icon "send-back" :class (when-not selected? "disabled") :action #(rf/dispatch [:elements/lower-to-bottom])}]
+           [comp/icon-button {:title "Bring forward" :icon "bring-forward" :class (when-not selected? "disabled") :action #(rf/dispatch [:elements/raise])}]
+           [comp/icon-button {:title "Send backward" :icon "send-backward" :class (when-not selected? "disabled") :action #(rf/dispatch [:elements/lower])}]
+           [:span.h-divider]
+           [comp/icon-button {:title "Group" :icon "group" :class (when-not selected? "disabled") :action #(rf/dispatch [:elements/group])}]
+           [comp/icon-button {:title "Ungroup" :icon "ungroup" :class (when-not @(rf/subscribe [:elements/group-selected?]) "disabled") :action #(rf/dispatch [:elements/ungroup])}]
+           [:span.h-divider]
+           [comp/icon-button {:title "Align left" :icon "objects-align-left" :class (when-not selected? "disabled") :action #(rf/dispatch [:elements/align :left])}]
+           [comp/icon-button {:title "Align center horizontally" :class (when-not selected? "disabled") :icon "objects-align-center-horizontal" :action #(rf/dispatch [:elements/align :center-horizontal])}]
+           [comp/icon-button {:title "Align rignt" :icon "objects-align-right" :class (when-not selected? "disabled") :action #(rf/dispatch [:elements/align :right])}]
+           [:span.h-divider]
+           [comp/icon-button {:title "Align top" :icon "objects-align-top" :class (when-not selected? "disabled") :action #(rf/dispatch [:elements/align :top])}]
+           [comp/icon-button {:title "Align center vertically" :icon "objects-align-center-vertical" :class (when-not selected? "disabled") :action #(rf/dispatch [:elements/align :center-vertical])}]
+           [comp/icon-button {:title "Align bottom" :icon "objects-align-bottom" :class (when-not selected? "disabled") :action #(rf/dispatch [:elements/align :bottom])}]
+           [:span.h-divider]
+           [comp/icon-button {:title "Distribute spacing horizontally" :icon "distribute-spacing-horizontal" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
+           [comp/icon-button {:title "Distribute spacing vertically" :icon "distribute-spacing-vertical" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
+           [:span.h-divider]
+           [comp/icon-button {:title "Rotate 90° clockwise" :icon "rotate-clockwise" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
+           [comp/icon-button {:title "Rotate 90° counterclockwise" :icon "rotate-counterclockwise" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
+           [:span.h-divider]
+           [comp/icon-button {:title "Flip horizontally" :icon "flip-horizontal" :class "disabled" :action #(rf/dispatch [:elements/raise])}]
+           [comp/icon-button {:title "Flip vertically" :icon "flip-vertical" :class "disabled" :action #(rf/dispatch [:elements/lower])}]
+           [:span.h-divider]
+           [comp/icon-button {:title "Unite" :icon "unite" :class (when-not multiple-selected? "disabled") :action #(rf/dispatch [:elements/bool-operation :unite])}]
+           [comp/icon-button {:title "Intersect" :icon "intersect" :class (when-not multiple-selected? "disabled") :action #(rf/dispatch [:elements/bool-operation :intersect])}]
+           [comp/icon-button {:title "Subtract" :icon "subtract" :class (when-not multiple-selected? "disabled") :action #(rf/dispatch [:elements/bool-operation :subtract])}]
+           [comp/icon-button {:title "Exclude" :icon "exclude" :class (when-not multiple-selected? "disabled") :action #(rf/dispatch [:elements/bool-operation :exclude])}]
+           [comp/icon-button {:title "divide" :icon "divide" :class (when-not multiple-selected? "disabled") :action #(rf/dispatch [:elements/bool-operation :divide])}]])]]
       [home-page])
 
     [menu/context-menu]]])
