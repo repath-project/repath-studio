@@ -201,6 +201,36 @@
    (rf/dispatch [:history/redo steps])
    ""))
 
+(defn unite
+  "Unites the selected elements."
+  []
+  (rf/dispatch [:elements/bool-operation :unite])
+  "")
+
+(defn intersect
+  "Unites the selected elements."
+  []
+  (rf/dispatch [:elements/bool-operation :intersect])
+  "")
+
+(defn subtract
+  "Unites the selected elements."
+  []
+  (rf/dispatch [:elements/bool-operation :subtract])
+  "")
+
+(defn exclude
+  "Unites the selected elements."
+  []
+  (rf/dispatch [:elements/bool-operation :exclude])
+  "")
+
+(defn divide
+  "Unites the selected elements."
+  []
+  (rf/dispatch [:elements/bool-operation :divide])
+  "")
+
 (defn exit
   "Closes the application."
   [element]
