@@ -85,13 +85,6 @@
  (fn [elements _] (filter :visible? (vals elements))))
 
 (rf/reg-sub
- :elements/hovered
- :<- [:elements]
- :<- [:hovered-keys]
- (fn [[elements hovered-keys] _] 
-   (vals (select-keys elements hovered-keys))))
-
-(rf/reg-sub
  :elements/hovered-or-selected
  :<- [:elements]
  :<- [:hovered-keys]
