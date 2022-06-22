@@ -75,10 +75,10 @@
 
 (defn line
   "Creates a line."
-  ([[[x1 y1] [x2 y2]]]
+  ([[x1 y1] [x2 y2]]
    (line [[x1 y1] [x2 y2]] {:stroke "#000000"}))
 
-  ([[[x1 y1] [x2 y2]] attrs]
+  ([[x1 y1] [x2 y2] attrs]
    (create {:line (merge {:x1 x1 :y1 y1 :x2 x2 :y2 y2} attrs)})))
 
 (defn polygon
