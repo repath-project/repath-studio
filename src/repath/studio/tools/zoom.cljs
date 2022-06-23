@@ -24,8 +24,8 @@
   [{:keys [active-document content-rect adjusted-mouse-offset adjusted-mouse-pos] :as db} event]
   (let [[offset-x offset-y] adjusted-mouse-offset
         [pos-x pos-y] adjusted-mouse-pos
-        width  (Math/abs (- pos-x offset-x))
-        height (Math/abs (- pos-y offset-y))
+        width  (abs (- pos-x offset-x))
+        height (abs (- pos-y offset-y))
         width-ratio (/ (:width content-rect) width)
         height-ratio (/ (:height content-rect) height)
         current-zoom (get-in db [:documents active-document :zoom])

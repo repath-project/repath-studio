@@ -32,11 +32,11 @@
         [pos-x pos-y] adjusted-mouse-pos
         attrs {:x      (min pos-x offset-x)
                :y      (min pos-y offset-y)
-               :width  (Math/abs (- pos-x offset-x))
-               :height (Math/abs (- pos-y offset-y))
+               :width  (abs (- pos-x offset-x))
+               :height (abs (- pos-y offset-y))
                :fill   (tools/rgba fill)
                :font-color "#000000"
-               :radius (/ (Math/abs (- pos-y offset-y)) 2)
+               :radius (/ (abs (- pos-y offset-y)) 2)
                :label   "button"
                :stroke (tools/rgba stroke)}]
     (rf/dispatch [:document/set-temp-element {:type tool

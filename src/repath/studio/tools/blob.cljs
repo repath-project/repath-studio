@@ -44,7 +44,7 @@
                :seed 1
                :extraPoints 8
                :randomness 4
-               :size (Math/abs (- pos-x offset-x))
+               :size (abs (- pos-x offset-x))
                :fill (tools/rgba fill)
                :stroke (tools/rgba  stroke)}]
     (elements/set-temp db {:type :element :tag :blob :attrs attrs})))

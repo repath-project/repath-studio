@@ -130,8 +130,8 @@
     {:tag :rect :attrs {:key    :select
                         :x      (min pos-x offset-x)
                         :y      (min pos-y offset-y)
-                        :width  (Math/abs (- pos-x offset-x))
-                        :height (Math/abs (- pos-y offset-y))
+                        :width  (abs (- pos-x offset-x))
+                        :height (abs (- pos-y offset-y))
                         :fill   styles/accent
                         :fill-opacity ".25"
                         :stroke styles/accent

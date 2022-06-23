@@ -22,8 +22,8 @@
         [pos-x pos-y] adjusted-mouse-pos
         attrs {:x      (min pos-x offset-x)
                :y      (min pos-y offset-y)
-               :width  (Math/abs (- pos-x offset-x))
-               :height (Math/abs (- pos-y offset-y))}]
+               :width  (abs (- pos-x offset-x))
+               :height (abs (- pos-y offset-y))}]
     (rf/dispatch [:document/set-temp-element {:type tool
                                      :attrs attrs}])))
 

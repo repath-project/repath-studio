@@ -26,8 +26,8 @@
                :cy offset-y
                :fill   (tools/rgba fill)
                :stroke (tools/rgba stroke)
-               :rx (Math/abs (- pos-x offset-x))
-               :ry (Math/abs (- pos-y offset-y))}]
+               :rx (abs (- pos-x offset-x))
+               :ry (abs (- pos-y offset-y))}]
     (elements/set-temp db {:type :element :tag :ellipse :attrs attrs})))
 
 (defmethod tools/translate :ellipse
