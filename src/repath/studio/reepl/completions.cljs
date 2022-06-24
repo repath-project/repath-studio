@@ -41,9 +41,9 @@
    {:component-did-update
     (fn [this [_ _ old-is-selected]]
       (let [[_ _ is-selected] (r/argv this)]
-        (if (and (not old-is-selected)
+        (when (and (not old-is-selected)
                  is-selected)
-          (if canScrollIfNeeded
+          (when canScrollIfNeeded
             (.scrollIntoViewIfNeeded (dom/dom-node this) false)
             (.scrollIntoView (dom/dom-node this))))))
     :reagent-render
@@ -64,7 +64,7 @@
                      active
                      (partial set-active %1)])
                list)]
-    (if show-all
+    (when show-all
       (into [view :completion-show-all] items))
     (into
      [view :completion-list]
