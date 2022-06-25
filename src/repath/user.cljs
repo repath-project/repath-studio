@@ -208,25 +208,26 @@
   "")
 
 (defn intersect
-  "Unites the selected elements."
+  "Intersects the selected elements."
   []
   (rf/dispatch [:elements/bool-operation :intersect])
   "")
 
 (defn subtract
-  "Unites the selected elements."
+  "Subtracts the selected elements."
   []
   (rf/dispatch [:elements/bool-operation :subtract])
   "")
 
 (defn exclude
-  "Unites the selected elements."
+  "Excludes the selected elements."
   []
   (rf/dispatch [:elements/bool-operation :exclude])
   "")
 
-(defn divide
-  "Unites the selected elements."
+;; divide already refers to cljs.core/divide
+(defn devide
+  "Divides the selected elements."
   []
   (rf/dispatch [:elements/bool-operation :divide])
   "")
