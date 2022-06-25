@@ -70,6 +70,13 @@
        (history/finalize "Select all"))))
 
 (rf/reg-event-db
+ :elements/select-same-tags
+ (fn [db _]
+   (-> db
+       (h/select-same-tags)
+       (history/finalize "Select same tags"))))
+
+(rf/reg-event-db
  :elements/raise
  (fn [db _]
    (-> db

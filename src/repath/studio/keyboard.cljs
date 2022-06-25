@@ -95,7 +95,7 @@
                 [[:history/undo 1]
                  [{:keyCode (key-codes "Z")
                    :ctrlKey true}]]
-                [[:elements/deselect-all]
+                [[:elements/select-same-tags]
                  [{:keyCode (key-codes "A")
                    :ctrlKey true
                    :shiftKey true}]]

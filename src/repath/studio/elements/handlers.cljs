@@ -102,6 +102,14 @@
   [db]
   (reduce #(select-element %1 %2) (deselect-all db) (:children (active-page db))))
 
+(defn select-same-tags
+  [db]
+  (let [selected-tags (reduce #(conj %1 (:tag %2)) #{} (selected db))]
+    (reduce (fn [db element]
+              (if (contains? selected-tags (:tag element))
+                (select-element db (:key element))
+                db)) (deselect-all db) (vals (elements db)))))
+
 (defn select
   [db multiselect? element]
   (if element

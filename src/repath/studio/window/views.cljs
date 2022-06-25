@@ -76,6 +76,10 @@
                      :onClick #(rf/dispatch [:elements/select-all])}
                     {:key :deselect-all
                      :text "Deselect all"
+                     :secondaryText "Esc"
+                     :onClick #(rf/dispatch [:elements/deselect-all])}
+                    {:key :select-same-tag
+                     :text "Select same tags"
                      :secondaryText "Ctrl+Shift+A"
                      :onClick #(rf/dispatch [:elements/deselect-all])}]}
            {:key :object
