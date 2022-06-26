@@ -78,10 +78,10 @@
                      :text "Deselect all"
                      :secondaryText "Esc"
                      :onClick #(rf/dispatch [:elements/deselect-all])}
-                    {:key :select-same-tag
+                    {:key :select-same-tags
                      :text "Select same tags"
                      :secondaryText "Ctrl+Shift+A"
-                     :onClick #(rf/dispatch [:elements/deselect-all])}]}
+                     :onClick #(rf/dispatch [:elements/select-same-tags])}]}
            {:key :object
             :label "Object"
             :items [{:key :to-path
