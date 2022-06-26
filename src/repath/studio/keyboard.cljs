@@ -69,6 +69,21 @@
                 [[:elements/duplicate-in-posistion]
                  [{:keyCode (key-codes "D")
                    :ctrlKey true}]]
+                [[:elements/bool-operation :exclude]
+                 [{:keyCode (key-codes "E")
+                   :ctrlKey true}]]
+                [[:elements/bool-operation :unite]
+                 [{:keyCode (key-codes "U")
+                   :ctrlKey true}]]
+                [[:elements/bool-operation :intersect]
+                 [{:keyCode (key-codes "I")
+                   :ctrlKey true}]]
+                [[:elements/bool-operation :subtract]
+                 [{:keyCode (key-codes "S")
+                   :ctrlKey true}]]
+                [[:elements/bool-operation :divide]
+                 [{:keyCode (key-codes "/")
+                   :ctrlKey true}]]
                 [[:elements/ungroup]
                  [{:keyCode (key-codes "G")
                    :ctrlKey true
