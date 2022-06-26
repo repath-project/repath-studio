@@ -5,7 +5,7 @@
 
 (defn select-options
   [history-list]
-  (map-indexed (fn [index step] [:option {:key (:index step) :value (inc index)} (str (:explanation step))]) history-list))
+  (map-indexed (fn [index step] [:option {:key (str (:index step)) :value (inc index)} (str (:explanation step))]) history-list))
 
 
 (defn tree

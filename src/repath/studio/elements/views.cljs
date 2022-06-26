@@ -127,8 +127,7 @@
   [adjusted-mouse-pos adjusted-mouse-offset zoom]
   (let [[offset-x offset-y] adjusted-mouse-offset
         [pos-x pos-y] adjusted-mouse-pos]
-    {:tag :rect :attrs {:key    :select
-                        :x      (min pos-x offset-x)
+    {:tag :rect :attrs {:x      (min pos-x offset-x)
                         :y      (min pos-y offset-y)
                         :width  (abs (- pos-x offset-x))
                         :height (abs (- pos-y offset-y))
