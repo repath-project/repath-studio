@@ -10,6 +10,10 @@
    [repath.studio.styles :as styles]
    ["react-frame-component" :default Frame :refer [useFrame]]))
 
+(defn mouse-handler
+  [event]
+  (mouse/event-handler event nil))
+
 (defn inner-component
   "We need access to the iframe's window to add the mouse move listener.
    This is required in order to track mouse movement outside of our canvas.
@@ -21,10 +25,18 @@
      {:component-did-mount
       (fn
         []
-        (.addEventListener window "mousemove" #(mouse/event-handler % nil))
-        (.addEventListener window "mouseup" #(mouse/event-handler % nil)))
+        (doseq
+         [event ["mousemove" "mouseup"]]
+          (.addEventListener window event mouse-handler)))
 
-      :reagent-render #() })))
+      :component-will-unmount
+      (fn
+        []
+        (doseq
+         [event ["mousemove" "mouseup"]]
+          (.removeEventListener window event mouse-handler)))
+
+      :reagent-render #()})))
 
 (defn frame-markup
   "SEE https://github.com/ryanseddon/react-frame-component#initialcontent"
