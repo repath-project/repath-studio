@@ -171,6 +171,36 @@
   (rf/dispatch [:elements/align direction])
   "")
 
+(defn al 
+  "Aligns the selected elements to the left."
+ [] 
+  (align :left))
+
+(defn ar 
+  "Aligns the selected elements to the right"
+  []
+  (align :right))
+
+(defn at 
+  "Aligns the selected elements to the top."
+  [[]]
+  (align :top))
+
+(defn ab 
+  "Aligns the selected elements to the bottom."
+  []
+  (align :bottom))
+
+(defn acv 
+  "Aligns the selected elements to the vertical center."
+  []
+  (align :center-vertical))
+
+(defn ach 
+  "Aligns the selected elements to the horizontal center."
+  []
+  (align :center-horizontal))
+
 (defn animate
   "Animates the selected elements."
   ([]
@@ -245,29 +275,6 @@
   "")
 
 (def version config/version)
-
-(def del delete)
-(def dup duplicate)
-(def cp copy)
-(def move translate)
-(def mv translate)
-(def ->p to-path)
-(def a align)
-(def al #(align :left))
-(def ar #(align :right))
-(def at #(align :top))
-(def ab #(align :bottom))
-(def acv #(align :center-vertical))
-(def ach #(align :center-horizontal))
-(def g group)
-(def u group)
-(def ver version)
-(def h help)
-(def f fill)
-(def c circle)
-(def r rect)
-(def l line)
-
 
 (comment
 
