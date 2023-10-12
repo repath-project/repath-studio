@@ -29,7 +29,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Scan code
-        uses: clj-holmes/clj-holmes-action@200d2d03900917d7eb3c24fc691ab83579a87fcb
+        uses: clj-holmes/clj-holmes-action@53daa4da4ff495cccf791e4ba4222a8317ddae9e
         with:
           rules-repository: 'git://clj-holmes/clj-holmes-rules#main'
           output-type: 'sarif'

@@ -20,7 +20,7 @@ jobs:
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 18
 
       - name: Prepare java
         uses: actions/setup-java@v3
@@ -29,7 +29,7 @@ jobs:
           java-version: '8'
 
       - name: Install clojure tools
-        uses: DeLaGuardo/setup-clojure@9.3
+        uses: DeLaGuardo/setup-clojure@12.1
         with:
           cli: 1.11.1.1149
 
