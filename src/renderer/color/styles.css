@@ -1,0 +1,88 @@
+.palette {
+  @apply ml-1;
+
+  flex: 0 1 210px;
+}
+
+.color-rect {
+  @apply cursor-pointer block;
+  width: 33px;
+  height: 33px;
+  border: 1px solid var(--border-color);
+}
+
+.color-drip {
+  box-sizing: content-box;
+  width: 16px;
+  max-width: 16px;
+  height: 16px;
+  flex: 1;
+  cursor: pointer;
+}
+
+.chrome-picker,
+.photoshop-picker {
+  background: transparent !important;
+  box-shadow: none  !important;
+  color: var(--font-color) !important;
+
+  div {
+    border-width: 0 !important;
+    color: var(--font-color) !important;
+  }
+
+  svg {
+    fill: var(--font-color) !important;
+    background: transparent !important;
+    display: initial;
+  }
+
+  input {
+    color: var(--font-color) !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+}
+
+.photoshop-picker {
+  @apply pb-3;
+
+  label {
+    font-size: 12px !important;
+    line-height: 12px !important;
+  }
+
+  > div {
+    background: transparent !important;
+  }
+
+  > div:last-child > div:last-child > div:last-child > div:last-child {
+    > div:nth-child(1),
+    > div:nth-child(2) {
+      display: none !important;
+    }
+
+    > div:nth-child(3)  {
+      @apply level-2 w-full !important;
+      padding-top: 9px !important;
+
+      > div:last-child {
+        right: 5px !important;
+        top: 7px !important;
+
+        div {
+          margin-bottom: 2px;
+        }
+      }
+    }
+  }
+
+  input {
+    width: 70% !important;
+    margin-left: 30px !important;
+  }
+
+  > div:first-of-type {
+    display: none;
+  }
+}

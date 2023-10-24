@@ -1,0 +1,22 @@
+.document-tab {
+  @apply items-center h-full mr-px text-left level-0 gap-2;
+  padding: 8px 8px 8px 16px;
+  flex: 0 1 130px;
+
+  .close-document-button {
+    visibility: hidden;
+  }
+
+  &:hover,
+  &.active {
+    .close-document-button {
+      visibility: visible;
+    }
+  }
+
+  .document-name {
+    @apply overflow-hidden text-ellipsis pointer-events-none;
+    flex: 1;
+    white-space: nowrap;
+  }
+}

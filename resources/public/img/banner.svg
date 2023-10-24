@@ -1,21 +1,5 @@
 <svg width="720" height="576" version="1.1" viewBox="0 0 720 576" xmlns="http://www.w3.org/2000/svg">
-    <rect width="720" height="576" rx="0" ry="0" fill="#161616" stop-color="#000000" stroke-width="1.3228" style="-inkscape-stroke:none;font-variation-settings:normal"/>
-    <path d="m60.689 458.45 83.144-161.05 339.94 278.6z" fill="#494949" stop-color="#000000" style="-inkscape-stroke:none;font-variation-settings:normal"/>
-    <path d="m169.7 576-109.01-117.55 423.08 117.55z" fill="#545454" stop-color="#000000" style="-inkscape-stroke:none;font-variation-settings:normal"/>
-    <path d="m169.7 576h-169.7l60.689-117.55z" fill="#424242" stop-color="#000000" style="-inkscape-stroke:none;font-variation-settings:normal"/>
-    <path d="m143.83 297.4-28.717-297.4 313.39 77.978z" fill="#464646" stop-color="#000000" style="-inkscape-stroke:none;font-variation-settings:normal"/>
-    <path d="m378.94 388.94-235.11-91.54 284.68-219.42z" fill="#535353" stop-color="#000000" style="-inkscape-stroke:none;font-variation-settings:normal"/>
-    <path d="m483.77 576-339.94-278.6 235.11 91.54z" fill="#5f5f5f" stop-color="#000000" style="-inkscape-stroke:none;font-variation-settings:normal"/>
-    <path d="m483.77 576-104.83-187.06 341.06-100.94z" fill="#555" stop-color="#000000" style="-inkscape-stroke:none;font-variation-settings:normal"/>
-    <path d="m428.51 77.978-313.39-77.978h604.88z" fill="#555" stop-color="#000000" style="-inkscape-stroke:none;font-variation-settings:normal"/>
-    <path d="m378.94 388.94 49.567-310.96 291.49 210.02z" fill="#4b4b4b" stop-color="#000000" style="-inkscape-stroke:none;font-variation-settings:normal"/>
-    <path d="m483.77 576 236.23-288v288z" fill="#4b4b4b" stop-color="#000000" style="-inkscape-stroke:none;font-variation-settings:normal"/>
-    <path d="m0 576v-440.89l60.689 323.33z" fill="#4b4b4b" stop-color="#000000" style="-inkscape-stroke:none;font-variation-settings:normal"/>
-    <path d="m0 135.11v-135.11h115.12z" fill="#565656" stop-color="#000000" style="-inkscape-stroke:none;font-variation-settings:normal"/>
-    <path d="m360.39 147.6c-23.178 0-45.114 5.746-64.466 15.869-8.2116-10.039-20.496-15.863-33.466-15.864-23.882-1e-4-43.24 19.36-43.24 43.24l.7781 237.56h140.4c77.026 0 140.4-63.366 140.4-140.39s-63.366-140.41-140.4-140.41zm0 86.464c30.3 0 53.926 23.64 53.926 53.938 0 30.3-23.63 53.93-53.926 53.93h-53.91v-54.75c.42366-29.902 23.886-53.12 53.91-53.12z" fill="#f00061" stop-color="#000000" stroke-width="4.1824" style="-inkscape-stroke:none;font-variation-settings:normal"/>
-    <path d="m0 135.11 143.83 162.29-83.144 161.05z" fill="#535353" stop-color="#000000" style="-inkscape-stroke:none;font-variation-settings:normal"/>
-    <path d="m0 135.11 115.12-135.11 28.717 297.4z" fill="#4d4d4d" stop-color="#000000" style="-inkscape-stroke:none;font-variation-settings:normal"/>
-    <path d="m428.51 77.978 291.49-77.978-66.335 149.4z" fill="#4d4d4d" stop-color="#000000" style="-inkscape-stroke:none;font-variation-settings:normal"/>
-    <path d="m428.51 77.978 225.16 71.42 66.335 138.6z" fill="#525252" stop-color="#000000" style="-inkscape-stroke:none;font-variation-settings:normal"/>
-    <path d="m720 0v288l-66.335-138.6z" fill="#434343" stop-color="#000000" style="-inkscape-stroke:none;font-variation-settings:normal"/>
+    <rect width="720" height="576" rx="0" ry="0" fill="#e93976" stop-color="#000000" stroke-width="4.1824" style="-inkscape-stroke:none;font-variation-settings:normal"/>
+    <path d="m360.39 147.6c-23.178 0-45.114 5.746-64.466 15.869-8.2116-10.039-20.496-15.863-33.466-15.864-23.882-1e-4-43.24 19.36-43.24 43.24l.7781 237.56h140.4c77.026 0 140.4-63.366 140.4-140.39s-63.366-140.41-140.4-140.41zm0 86.464c30.3 0 53.926 23.64 53.926 53.938 0 30.3-23.63 53.93-53.926 53.93h-53.91v-54.75c.42366-29.902 23.886-53.12 53.91-53.12z" fill="#f00061" stop-color="#000000" stroke-width="4.1824" style="font-variation-settings:normal"/>
+    <path d="m360.39 147.6c-23.178 0-45.114 5.746-64.466 15.869-8.2116-10.039-20.496-15.863-33.466-15.864-23.882-1e-4-43.24 19.36-43.24 43.24l.7781 237.56h140.4c77.026 0 140.4-63.366 140.4-140.39s-63.366-140.41-140.4-140.41zm0 86.464c30.3 0 53.926 23.64 53.926 53.938 0 30.3-23.63 53.93-53.926 53.93h-53.91v-54.75c.42366-29.902 23.886-53.12 53.91-53.12z" fill="#fff" stop-color="#000000" stroke-width="4.1824" style="font-variation-settings:normal"/>
 </svg>

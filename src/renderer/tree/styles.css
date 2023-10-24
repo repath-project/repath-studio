@@ -1,0 +1,90 @@
+.list-item-action {
+  visibility: hidden;
+}
+
+.list-item-button {
+  @apply pr-1;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    @apply level-2;
+
+    .list-item-action {
+      visibility: visible;
+    }
+  }
+
+  &.hovered {
+    @apply level-2;
+  }
+
+  &.page-item {
+    border-left: 4px solid transparent;
+    padding-left: 18px;
+
+    &.active {
+      border-left-color: var(--accent);
+    }
+  }
+}
+
+.tree-sidebar {
+  &:hover {
+    /* When the mouse is over the tree, ignore the hovered class if the element 
+       itself is not hovered */
+    .hovered:not(:hover) {
+      background-color: initial;
+    }
+  }
+}
+
+.tree-heading {
+  @apply pr-1;
+  display: flex;
+  text-align: left;
+  font-size: 11px;
+  align-items: center;
+  text-transform: uppercase;
+  font-weight: 700;
+
+  &:hover {
+    color: var(--font-color-hovered);
+    background-color: inherit;
+  }
+
+  &:active {
+    background-color: inherit;
+  }
+}
+
+.list-item-button .button,
+.tree-heading .button {
+  @apply mx-px shrink-0;
+  height: 20px;
+  width: 20px;
+  background-color: transparent !important;
+}
+
+.list-item-input {
+  flex: 1 1 auto;
+  padding-left: 0;
+  background: transparent;
+  font-family: inherit;
+  
+  &::placeholder {
+    color: var(--font-color);
+  }
+
+  &.text-muted::placeholder {
+    color: var(--font-color-disabled);
+  }
+
+  &.text-disabled::placeholder {
+    color: var(--font-color-disabled);
+  }
+
+  &:focus::placeholder {
+    color: var(--font-color-muted);
+  }
+}

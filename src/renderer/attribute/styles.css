@@ -1,0 +1,23 @@
+.attribute-grid {
+    @apply grid grid-cols-2 grid-flow-row my-px w-full gap-px;
+    grid-template-columns: minmax(100px, auto) 1fr;
+}
+
+.support-cell {
+    font-size: 10px;
+    padding: 1px;
+    margin: 1px;
+}
+
+.form-input {
+    .clear-input-button {
+        visibility: hidden;
+    }
+
+    &:hover,
+    &:active {
+        .clear-input-button {
+            visibility: visible;
+        }
+    }
+}

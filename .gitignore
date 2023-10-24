@@ -3,6 +3,7 @@
 /.cpcache/
 /.lsp/
 /resources/public/js/
+/resources/public/css/**/*.css
 /resources/public/src/
 /resources/*.js
 /target/
