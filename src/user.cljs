@@ -1,5 +1,4 @@
 (ns user
-  {:clj-kondo/config {:linters {:unused-public-var {:level :off}}}}
   (:require
    [re-frame.core :as rf]
    [re-frame.db :as db]
