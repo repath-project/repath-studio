@@ -1,7 +1,6 @@
 (ns main
   (:require ["electron" :refer [app shell ipcMain BrowserWindow clipboard nativeTheme]]
             ["path" :as path]
-            ["fs" :as fs]
             #_["electron-updater" :as updater]
             ["@sentry/electron/main" :as sentry-electron-main]   
             ["electron-window-state" :as window-state-keeper]
@@ -14,17 +13,6 @@
 (def loading-window (atom nil))
 
 (set! (.. nativeTheme -themeSource) "dark")
-
-(def user-data (.getPath app "userData"))
-(def prefs-path (.join path user-data "Preferences"))
-(def prefs (-> (js/JSON.parse (.readFileSync fs prefs-path "utf-8"))
-               (js->clj :keywordize-keys true)
-               (assoc-in [:electron :devtools :preferences :customFormatters] true)
-               (assoc-in [:electron :devtools :preferences :selectedContextFilterEnabled] config/debug?)
-               (clj->js)
-               (js/JSON.stringify)))
-
-(.writeFileSync fs prefs-path prefs)
 
 (defn to-main-api
   [args]
