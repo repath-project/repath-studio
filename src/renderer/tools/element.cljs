@@ -29,6 +29,31 @@
         (history/finalize (str "Create " (name (:tag temp-element))))
         (assoc :cursor "crosshair"))))
 
+(defn get-bounds
+  "Experimental way of getting the bounds of uknown or complicated elements 
+   using the getBBox method.
+   https://developer.mozilla.org/en-US/docs/Web/API/SVGGraphicsElement/getBBox"
+  [element]
+  (let [bounds (.getBBox element)
+        x1 (.-x bounds)
+        y1 (.-y bounds)
+        x2 (+ x1 (.-width bounds))
+        y2 (+ y1 (.-height bounds))]
+    [x1 y1 x2 y2]))
+
+(defmethod tools/bounds ::tools/element
+  [{:keys [tag attrs content]}]
+  (when-let [frame (.getElementById js/document "frame")]
+    (when-let [svg (.getElementById (.. frame -contentWindow -document) "canvas")]
+      (let [element (js/document.createElementNS "http://www.w3.org/2000/svg" (name tag))]
+        (doseq [[key value] attrs]
+          (.setAttributeNS element nil (name key) value))
+        (.appendChild svg element)
+        (set! (.-innerHTML element) (if (empty? content) "\u00a0" content))
+        (let [bounds (get-bounds element)]
+          (.remove element)
+          bounds)))))
+
 (defmethod tools/mouse-up :default
   [db event element]
   (if-not (and (= (:button event) 2)

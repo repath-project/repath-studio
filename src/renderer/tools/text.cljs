@@ -127,30 +127,3 @@
                (js/parseFloat (:x attrs))
                (js/parseFloat (:y attrs))
                (js/parseFloat (or (:font-size attrs) 16))))
-    
-(defn get-bounds
-  "Experimental way of getting the bounds of uknown or complicated elements 
-   using the getBBox method.
-   https://developer.mozilla.org/en-US/docs/Web/API/SVGGraphicsElement/getBBox"
-  [element textLength]
-  (let [bounds (.getBBox element)
-        x1 (.-x bounds)
-        y1 (.-y bounds)
-        x2 (+ x1 (if (zero? textLength) (.-width bounds) textLength))
-        y2 (+ y1 (.-height bounds))]
-    [x1 y1 x2 y2]))
-
-(defmethod tools/bounds :text
-  [{:keys [attrs content]}]
-  (when-let [frame (.getElementById js/document "frame")]
-   (when-let [svg (.getElementById (.. frame -contentWindow -document) "canvas")]
-     (let [text-tag (js/document.createElementNS "http://www.w3.org/2000/svg" "text")]
-       (doseq [[key value] attrs]
-         (.setAttributeNS text-tag nil (name key) value))
-       (.appendChild svg text-tag)
-       (set! (.-innerHTML text-tag) (if (empty? content) "\u00a0" content))
-       (let [{:keys [textLength]} attrs
-             textLength (units/unit->px textLength)
-             bounds (get-bounds text-tag textLength)]
-         (.remove text-tag)
-         bounds)))))
