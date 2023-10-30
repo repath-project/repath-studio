@@ -113,8 +113,18 @@
     [:g
      {:key :edit-handlers}
      (map (fn [handler] [overlay/square-handler handler])
-          [{:x x1 :y y1 :key :starting-point :type :handler :tag :edit :element key}
-           {:x x2 :y y2 :key :ending-point :type :handler :tag :edit :element key}])]))
+          [{:x x1 
+            :y y1 
+            :key :starting-point 
+            :type :handler 
+            :tag :edit 
+            :element key}
+           {:x x2 
+            :y y2 
+            :key :ending-point 
+            :type :handler 
+            :tag :edit 
+            :element key}])]))
 
 (defmethod tools/edit :line
   [element [x y] handler]
