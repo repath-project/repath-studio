@@ -37,7 +37,6 @@
     [:svg {:on-pointer-up #(mouse/event-handler % element)
            :on-pointer-down #(mouse/event-handler % element)
            :on-double-click #(mouse/event-handler % element)
-           :on-wheel #(mouse/event-handler % element)
            :on-key-up keyboard/event-handler
            :on-key-down keyboard/event-handler
            :tab-index 0 ; Enable keyboard events on the svg element 

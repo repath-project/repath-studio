@@ -43,7 +43,6 @@
               :on-pointer-up #(mouse/event-handler % element)
               :on-pointer-down #(mouse/event-handler % element)
               :on-pointer-move #(mouse/event-handler % element)
-              :on-wheel #(mouse/event-handler % element)
               :on-scroll #(mouse/event-handler % element)} children]))
 
 (defn square-handler
@@ -68,7 +67,6 @@
             :on-pointer-up #(mouse/event-handler % element)
             :on-pointer-down #(mouse/event-handler % element)
             :on-pointer-move #(mouse/event-handler % element)
-            :on-wheel #(mouse/event-handler % element)
             :on-scroll #(mouse/event-handler % element)} children]))
 
 (defn line

@@ -25,6 +25,7 @@
    mouse movement."
   [event element]
   (.stopPropagation event)
+  (.preventDefault event)
   (rf/dispatch-sync [:pointer-event {:element element
                                      :target (.-target event)
                                      :type (keyword (.-type event))

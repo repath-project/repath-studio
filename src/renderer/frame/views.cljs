@@ -24,12 +24,12 @@
     (ra/create-class
      {:component-did-mount
       #(doseq
-        [event ["pointermove" "pointerup"]]
-         (.addEventListener frame-window event mouse-handler))
+        [event ["pointermove" "pointerup" "wheel"]]
+         (.addEventListener frame-window event mouse-handler #js {:passive false}))
 
       :component-will-unmount
       #(doseq
-        [event ["pointermove" "pointerup"]]
+        [event ["pointermove" "pointerup" "wheel"]]
          (.removeEventListener frame-window event mouse-handler))
       
       :reagent-render #()})))
