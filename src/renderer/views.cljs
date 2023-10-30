@@ -17,8 +17,8 @@
    [renderer.status :as status]
    [re-frame.registrar]
    [renderer.debug :as debug]
-   ["@radix-ui/react-tooltip" :as Tooltip]
-   #_["@radix-ui/react-toast" :as Toast]))
+   [renderer.notification.views :as notification]
+   ["@radix-ui/react-tooltip" :as Tooltip]))
 
 (defn command-input []
   [:div.flex.flex-col.level-0.relative.overflow-visible
@@ -116,13 +116,4 @@
          [object/toolbar]]]]
       [home/panel])]
 
-   #_[:> Toast/Provider
-    [:> Toast/Root {:class "toast-root"}
-     [:> Toast/Title {:class "toast-title"} "foo"]
-     [:> Toast/Description {:class "toast-description"} "sadasdsa"]
-     [:> Toast/Action {:class "toast-action"
-                       :altText "sd"} [comp/icon "times"]]
-     #_[:> Toast/Close {:class "toast-close"}
-      ]]
-
-    [:> Toast/Viewport {:class "toast-viewport"}]]])
+   [notification/main]])

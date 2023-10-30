@@ -1,0 +1,12 @@
+.toast {
+  @apply flex level-3 rounded shadow-md p-4 relative;
+
+  width: 390px;
+  max-width: 100vw;
+}
+
+.toast-description {
+  grid-area: description;
+  margin: 0;
+  line-height: 1.3;
+}

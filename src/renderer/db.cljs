@@ -8,6 +8,7 @@
    :documents {}
    :document-tabs []
    :system-fonts []
+   :notifications []
    :debug-info? false
    :pen-mode? false
    :repl/mode :cljs
