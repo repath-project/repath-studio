@@ -4,7 +4,7 @@
    [platform]))
 
 (rf/reg-fx
- :set-html-attribute
+ ::set-html-attribute
  (fn [[attr val]]
    (js/window.document.documentElement.setAttribute attr val)))
 
@@ -21,6 +21,11 @@
       (.exitFullscreen element)
       (.requestFullscreen element)))))
 
+(rf/reg-fx
+ ::open-remote-url
+ (fn [url]
+   (.open js/window url)))
+
 (rf/reg-event-fx
  :window/cycle-theme-mode
  (fn [{:keys [db]} [_]]
@@ -29,7 +34,7 @@
                  :dark :light
                  :light :dark)]
      {:db (assoc-in db [:window :theme-mode] theme)
-      :set-html-attribute ["data-theme" (name theme)]
+      ::set-html-attribute ["data-theme" (name theme)]
       :send-to-main {:action "setThemeMode" :data (name theme)}})))
 
 (rf/reg-event-fx
@@ -57,4 +62,6 @@
 (rf/reg-event-fx
  :window/open-remote-url
  (fn [_ [_ url]]
-   {:send-to-main {:action "openRemoteUrl" :data url}}))
+    (if platform/electron?
+      {:send-to-main {:action "openRemoteUrl" :data url}}
+      {::open-remote-url url})))
