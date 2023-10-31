@@ -75,7 +75,7 @@
                (scroll-into-view this)))
       :draggable true
       :on-drag-start #(-> (.-dataTransfer %)
-                          (.setData "key" (apply str (rest key))))
+                          (.setData "key" (name key)))
       :on-drag-enter #(rf/dispatch [:document/set-hovered-keys #{key}])
       :on-drag-over #(.preventDefault %)
       :on-drop (fn [evt]
