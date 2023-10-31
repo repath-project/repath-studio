@@ -36,7 +36,7 @@
     "fileAssociations": [
       {
         "ext": "rso",
-        "name": "RePath Studio File",
+        "name": "Repath Studio File",
         "role": "Editor",
         "mimeType": "application/repath.studio"
       }
