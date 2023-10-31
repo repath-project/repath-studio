@@ -48,7 +48,9 @@
            "Learn more"])
         (when (:spec_url data)
           [:button.button.px-3.grow
-           {:on-click #(rf/dispatch [:window/open-remote-url (:spec_url data)])}
+           {:on-click #(rf/dispatch [:window/open-remote-url (if (vector? (:spec_url data)) 
+                                                               (first (:spec_url data))
+                                                               (:spec_url data))])}
            "Specification"])]])))
 
 (defn on-change-handler
