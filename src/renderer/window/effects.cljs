@@ -1,6 +1,7 @@
 (ns renderer.window.effects
   (:require
-   [re-frame.core :as rf]))
+   [re-frame.core :as rf]
+   [platform]))
 
 (rf/reg-fx
  :set-html-attribute
@@ -11,6 +12,14 @@
  ::close
  (fn [_]
    (.close js/window)))
+
+(rf/reg-fx
+ ::toggle-fullscreen
+ (fn [_]
+   (let [element js/document.documentElement]
+    (if (.-fullscreenElement element)
+      (.exitFullscreen element)
+      (.requestFullscreen element)))))
 
 (rf/reg-event-fx
  :window/cycle-theme-mode
@@ -36,7 +45,9 @@
 (rf/reg-event-fx
  :window/toggle-fullscreen
  (fn [_ _]
-   {:send-to-main {:action "windowToggleFullscreen"}}))
+   (if platform/electron?
+     {:send-to-main {:action "windowToggleFullscreen"}}
+     {::toggle-fullscreen nil})))
 
 (rf/reg-event-fx
  :window/minimize

@@ -182,6 +182,8 @@
                  [{:keyCode (key-codes "W")
                    :ctrlKey true
                    :shiftKey true}]]
+                [[:window/toggle-fullscreen]
+                 [{:keyCode (key-codes "F11")}]]
                 [[:set-command-palette? true]
                  [{:keyCode 186}]]]
   
@@ -195,6 +197,7 @@
                           {:keyCode (key-codes "LEFT")}
                           {:keyCode (key-codes "UP")}
                           {:keyCode (key-codes "DOWN")}
+                          {:keyCode (key-codes "F11")}
                           {:keyCode (key-codes "A")
                            :ctrlKey true}
                           {:keyCode (key-codes "P")

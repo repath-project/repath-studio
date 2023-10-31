@@ -78,28 +78,31 @@
   (rf/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])
   (rf/dispatch-sync [::rp/set-keydown-rules keyboard/keydown-rules])
 
-  (.addEventListener js/window.document "keydown" keyboard/event-handler)
-  (.addEventListener js/window.document "keyup" keyboard/event-handler)
+  (.addEventListener js/document "keydown" keyboard/event-handler)
+  (.addEventListener js/document "keyup" keyboard/event-handler)
 
   (.setup paper)
 
-  (when platform/electron?
-    (rf/dispatch-sync [:set-system-fonts (js->clj js/window.api.systemFonts  :keywordize-keys true)])
-    (.then (js/window.api.webrefCss.listAll)
-           #(rf/dispatch-sync [:set-webref-css (js->clj % :keywordize-keys true)]))
-    (rf/dispatch-sync [:set-mdn (js->clj js/window.api.mdn :keywordize-keys true)])
-    (js/window.api.receive
-     "fromMain"
-     (fn [data]
-       (case (.-action data)
-         "fontsLoaded" (js/console.log "fontsLoaded")
-         "windowMaximized" (rf/dispatch [:window/set-maximized? true])
-         "windowUnmaximized" (rf/dispatch [:window/set-maximized? false])
-         "windowEnteredFullscreen" (rf/dispatch [:window/set-fullscreen? true])
-         "windowLeavedFullscreen" (rf/dispatch [:window/set-fullscreen? false])
-         "windowMinimized" (rf/dispatch [:window/set-minimized? true])
-         "windowRestored" (rf/dispatch [:window/set-minimized? false])
-         "windowPainted" (rf/dispatch [:window/set-bitmap-data (.-data data)])
-         "openDocument" (js/console.log (.-data data))))))
-
+  (if platform/electron?
+    (do (rf/dispatch-sync [:set-system-fonts (js->clj js/window.api.systemFonts  :keywordize-keys true)])
+        (.then (js/window.api.webrefCss.listAll)
+               #(rf/dispatch-sync [:set-webref-css (js->clj % :keywordize-keys true)]))
+        (rf/dispatch-sync [:set-mdn (js->clj js/window.api.mdn :keywordize-keys true)])
+        (js/window.api.receive
+         "fromMain"
+         (fn [data]
+           (case (.-action data)
+             "fontsLoaded" (js/console.log "fontsLoaded")
+             "windowMaximized" (rf/dispatch [:window/set-maximized? true])
+             "windowUnmaximized" (rf/dispatch [:window/set-maximized? false])
+             "windowEnteredFullscreen" (rf/dispatch [:window/set-fullscreen? true])
+             "windowLeavedFullscreen" (rf/dispatch [:window/set-fullscreen? false])
+             "windowMinimized" (rf/dispatch [:window/set-minimized? true])
+             "windowRestored" (rf/dispatch [:window/set-minimized? false])
+             "windowPainted" (rf/dispatch [:window/set-bitmap-data (.-data data)])
+             "openDocument" (js/console.log (.-data data))))))
+    (.addEventListener js/document 
+                       "fullscreenchange" 
+                       #(rf/dispatch [:window/set-fullscreen? (boolean (.-fullscreenElement js/document))])))
+  
   (mount-root))
