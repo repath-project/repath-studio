@@ -1,6 +1,6 @@
 (ns preload
   (:require ["electron" :refer [contextBridge ipcRenderer]]
-            ["mdn-data" :as mdn]
+            ["mdn-data" :as mdn] ;; deprecating in favor of w3c/webref
             ["@webref/css" :as css]
             ["@sentry/electron" :as Sentry]
             ["opentype.js" :as opentype]
