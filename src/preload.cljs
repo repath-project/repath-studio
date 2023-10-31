@@ -2,7 +2,7 @@
   (:require ["electron" :refer [contextBridge ipcRenderer]]
             ["mdn-data" :as mdn] ;; deprecating in favor of w3c/webref
             ["@webref/css" :as css]
-            ["@sentry/electron" :as Sentry]
+            #_["@sentry/electron" :as Sentry]
             ["opentype.js" :as opentype]
             ["font-scanner" :as fontManager]
             [config]))
@@ -29,7 +29,7 @@
 #_:clj-kondo/ignore
 (defn main []
   ;; https://docs.sentry.io/platforms/javascript/guides/electron/#configuring-the-client
-  (.init Sentry (clj->js config/sentry-options))
+  #_(.init Sentry (clj->js config/sentry-options))
   ;; Expose protected methods that allow the renderer process to use the 
   ;; ipcRenderer without exposing the entire object
   ;; SEE https://www.electronjs.org/docs/api/context-bridge

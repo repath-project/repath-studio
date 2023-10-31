@@ -24,8 +24,8 @@
    [shadow.cljs.bootstrap.browser :as bootstrap]
    [devtools.core :as devtools]
    [renderer.utils.error :as error]
-   ["@sentry/electron/renderer" :as sentry-electron-renderer]
-   ["@sentry/react" :as sentry-react]
+   #_["@sentry/electron/renderer" :as sentry-electron-renderer]
+   #_["@sentry/react" :as sentry-react]
    ["paper" :refer [paper]]
    [user]
    [config]
@@ -59,9 +59,9 @@
 
 #_:clj-kondo/ignore
 (defn init []
-  (if platform/electron?
-    (sentry-electron-renderer/init (clj->js config/sentry-options) sentry-react/init)
-    (sentry-react/init (clj->js config/sentry-options)))
+  #_(if platform/electron?
+      (sentry-electron-renderer/init (clj->js config/sentry-options) sentry-react/init)
+      (sentry-react/init (clj->js config/sentry-options)))
 
   (js/console.log (str "%c" console-easter-egg) "color: #bada55")
 
@@ -101,8 +101,8 @@
              "windowRestored" (rf/dispatch [:window/set-minimized? false])
              "windowPainted" (rf/dispatch [:window/set-bitmap-data (.-data data)])
              "openDocument" (js/console.log (.-data data))))))
-    (.addEventListener js/document 
-                       "fullscreenchange" 
+    (.addEventListener js/document
+                       "fullscreenchange"
                        #(rf/dispatch [:window/set-fullscreen? (boolean (.-fullscreenElement js/document))])))
-  
+
   (mount-root))

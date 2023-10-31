@@ -2,7 +2,7 @@
   (:require ["electron" :refer [app shell ipcMain BrowserWindow clipboard nativeTheme]]
             ["path" :as path]
             #_["electron-updater" :as updater]
-            ["@sentry/electron/main" :as sentry-electron-main]   
+            #_["@sentry/electron/main" :as sentry-electron-main]   
             ["electron-window-state" :as window-state-keeper]
             ["electron-extension-installer$default" :as installExtension]
             ["electron-extension-installer" :refer [REACT_DEVELOPER_TOOLS]]
@@ -122,7 +122,7 @@
 
 #_:clj-kondo/ignore
 (defn main []
-  (sentry-electron-main/init (clj->js config/sentry-options))
+  #_(sentry-electron-main/init (clj->js config/sentry-options))
   (.on app "window-all-closed" #(when-not (= js/process.platform "darwin")
                                   (.quit app)))
   (.on app "ready" init-loading-window))
