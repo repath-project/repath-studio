@@ -5,8 +5,8 @@
    [renderer.utils.bounds :as bounds]
    ["paperjs-offset" :refer [PaperOffset]]
    ["paper" :refer [Path]]
+   ["@mdn/browser-compat-data" :as bcd]
    [reagent.dom.server :as server]
-   [platform :as platform]
    [goog.string :as gstring]))
 
 (derive ::transform ::tool)
@@ -119,8 +119,7 @@
    (adjusted-bounds (first bound-elements) elements) (rest bound-elements)))
 
 (def svg-spec
-  (when platform/electron?
-    (js->clj js/window.api.bcd.svg :keywordize-keys true)))
+  (js->clj (.-svg bcd) :keywordize-keys true))
 
 (defn attrs-map
   [attrs]

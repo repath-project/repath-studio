@@ -1,6 +1,5 @@
 (ns preload
   (:require ["electron" :refer [contextBridge ipcRenderer]]
-            ["@mdn/browser-compat-data" :as bcd]
             ["mdn-data" :as mdn]
             ["@webref/css" :as css]
             ["@sentry/electron" :as Sentry]
@@ -22,7 +21,6 @@
               (.on ipcRenderer channel (fn [_ args] (func args)))) 
    :mdn mdn
    :webrefCss css
-   :bcd bcd
    ;; https://github.com/axosoft/font-scanner#getavailablefonts
    :systemFonts (.getAvailableFontsSync fontManager)
    :findFonts (fn [descriptor] (.findFontsSync fontManager descriptor))
