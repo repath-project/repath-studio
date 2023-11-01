@@ -15,15 +15,39 @@
   []
   [:div.absolute.top-1.left-2.pointer-events-none
    {:style {:color "#555"}}
-   [:div [:strong "Content rect "] @(rf/subscribe [:content-rect])]
-   [:div [:strong "Viewbox "] (str (mapv units/->fixed @(rf/subscribe [:frame/viewbox])))]
-   [:div [:strong "Mouse position "] (str @(rf/subscribe [:mouse-pos]))]
-   [:div [:strong "Adjusted mouse position "] (str (mapv units/->fixed  @(rf/subscribe [:adjusted-mouse-pos])))]
-   [:div [:strong "Mouse offset "] (str @(rf/subscribe [:mouse-offset]))]
-   [:div [:strong "Adjusted mouse offset "] (str (mapv units/->fixed  @(rf/subscribe [:adjusted-mouse-offset])))]
-   [:div [:strong "Mouse drag? "] (str @(rf/subscribe [:drag?]))]
-   [:div [:strong "Pan "] (str (mapv units/->fixed @(rf/subscribe [:document/pan])))]
-   [:div [:strong "Active tool "] @(rf/subscribe [:tool])]
-   [:div [:strong "Primary tool "] @(rf/subscribe [:primary-tool])]
-   [:div [:strong "State "] @(rf/subscribe [:state])]
-   [:div [:strong "Clicked element "] (:key @(rf/subscribe [:clicked-element]))]])
+   (map (fn [[label value]] [:div [:strong.mr-1 label] value])
+        [["Content rect" 
+          @(rf/subscribe [:content-rect])]
+         
+         ["Viewbox" 
+          (str (mapv units/->fixed @(rf/subscribe [:frame/viewbox])))]
+         
+         ["Mouse position" 
+          (str @(rf/subscribe [:mouse-pos]))]
+         
+         ["Adjusted mouse position" 
+          (str (mapv units/->fixed  @(rf/subscribe [:adjusted-mouse-pos])))]
+         
+         ["Mouse offset" 
+          (str @(rf/subscribe [:mouse-offset]))]
+         
+         ["Adjusted mouse offset" 
+          (str (mapv units/->fixed  @(rf/subscribe [:adjusted-mouse-offset])))]
+         
+         ["Mouse drag?"  
+          (str @(rf/subscribe [:drag?]))]
+         
+         ["Pan" 
+          (str (mapv units/->fixed @(rf/subscribe [:document/pan])))]
+         
+         ["Active tool" 
+          @(rf/subscribe [:tool])]
+         
+         ["Primary tool" 
+          @(rf/subscribe [:primary-tool])]
+         
+         ["State" 
+          @(rf/subscribe [:state])]
+         
+         ["Clicked element" 
+          (:key @(rf/subscribe [:clicked-element]))]])])
