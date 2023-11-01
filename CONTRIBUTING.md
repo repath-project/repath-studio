@@ -11,17 +11,19 @@ You should probably take a look at their [exceptional documentation](https://day
 ## App structure
 
 Main structure
-
-src
+<pre>
+src\
 ├── renderer/     <--- [renderer process](https://www.electronjs.org/docs/latest/tutorial/process-model#the-renderer-process)
 ├── main.cljs     <--- [main process](https://www.electronjs.org/docs/latest/tutorial/process-model#the-main-process)
 └── preload.cljs  <--- [preload script](https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts)
+</pre>
 
 We are trying to split our code under renderer into relatively independent modules, 
 following [re-frame's app structure suggestions](https://day8.github.io/re-frame/App-Structure/
 with some minor additions. 
 
-module
+<pre>
+module\
 ├── core.cljs     <--- entry point
 ├── db.cljs       <--- schema, validation
 ├── views.cljs    <--- reagent views
@@ -29,7 +31,8 @@ module
 ├── effects.cljs  <--- effectful handlers
 ├── subs.cljs     <--- subscription handlers
 ├── handlers.cljs <--- helper functions for db transformations
-└── styles.css    <--- CSS styles
+└── styles.css    <--- styles
+</pre>
 
 ## How to build it locally
 
