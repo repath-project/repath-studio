@@ -13,9 +13,9 @@ You should probably take a look at their [exceptional documentation](https://day
 Main structure
 <pre>
 src\
-├── renderer/     <--- [renderer process](https://www.electronjs.org/docs/latest/tutorial/process-model#the-renderer-process)
-├── main.cljs     <--- [main process](https://www.electronjs.org/docs/latest/tutorial/process-model#the-main-process)
-└── preload.cljs  <--- [preload script](https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts)
+├── renderer/     <--- <a href="https://www.electronjs.org/docs/latest/tutorial/process-model#the-renderer-process">renderer process</a>
+├── main.cljs     <--- <a href="https://www.electronjs.org/docs/latest/tutorial/process-model#the-main-process">main process</a>
+└── preload.cljs  <--- <a href="https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts">preload script</a>
 </pre>
 
 We are trying to split our code under renderer into relatively independent modules, 
