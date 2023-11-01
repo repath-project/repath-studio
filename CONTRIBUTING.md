@@ -28,5 +28,36 @@ module
 ├── events.cljs   <--- event handlers
 ├── effects.cljs  <--- effectful handlers
 ├── subs.cljs     <--- subscription handlers
-├── handlers.cljs <--- helper functions for db transformations (usually shared across events/subs/effects)
-└── styles.css    <--- styles
+├── handlers.cljs <--- helper functions for db transformations
+└── styles.css    <--- CSS styles
+
+## How to build it locally
+
+### System Requirements
+- [node.js](https://nodejs.org/)
+- Java SDK (8+) [OpenJDK](https://www.oracle.com/java/technologies/downloads/) or [Oracle](https://nodejs.org/)
+
+Clone the project.
+```
+git clone https://github.com/re-path/studio.git
+```
+Go into the directory.
+```
+cd studio
+```
+Install the dependencies, build the app and watch the project files.
+```
+npm install && npm run dev
+```
+Run electron on a different terminal.
+```
+npm run electron
+```
+
+### Useful development shortcuts
+
+```
+Ctrl+Shift+I Toggle devtools
+Ctrl+H Toggle 10x
+Ctrl+R Reload app
+```
