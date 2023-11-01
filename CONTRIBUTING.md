@@ -13,7 +13,7 @@ You should probably take a look at their [exceptional documentation](https://day
 Main structure
 <pre>
 src\
-├── renderer/     <--- <a href="https://www.electronjs.org/docs/latest/tutorial/process-model#the-renderer-process">renderer process</a>
+├── renderer\     <--- <a href="https://www.electronjs.org/docs/latest/tutorial/process-model#the-renderer-process">renderer process</a>
 ├── main.cljs     <--- <a href="https://www.electronjs.org/docs/latest/tutorial/process-model#the-main-process">main process</a>
 └── preload.cljs  <--- <a href="https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts">preload script</a>
 </pre>
