@@ -1,8 +1,8 @@
-(ns renderer.elements.effects
+(ns renderer.element.effects
   (:require
    [re-frame.core :as rf]
    [renderer.tools.base :as tools]
-   [renderer.elements.handlers :as handlers]
+   [renderer.element.handlers :as element-handlers]
    [renderer.history.handlers :as history]))
 
 
@@ -23,18 +23,18 @@
 (rf/reg-event-fx
  :elements/copy
  (fn [{:keys [db]} [_]]
-   (let [selected-elements (handlers/selected db)
+   (let [selected-elements (element-handlers/selected db)
          text-html (elements->string selected-elements)]
-     {:db (handlers/copy db)
+     {:db (element-handlers/copy db)
       :clipboard-write [text-html]})))
 
 (rf/reg-event-fx
  :elements/cut
  (fn [{:keys [db]} [_]]
-   (let [selected-elements (handlers/selected db)
+   (let [selected-elements (element-handlers/selected db)
          text-html (elements->string selected-elements)]
      {:db (-> db
-              (handlers/copy)
-              (handlers/delete)
+              (element-handlers/copy)
+              (element-handlers/delete)
               (history/finalize "Cut selection"))
       :clipboard-write [text-html]})))

@@ -1,6 +1,6 @@
 (ns renderer.tools.text
   (:require
-   [renderer.elements.handlers :as elements]
+   [renderer.element.handlers :as elements]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.utils.units :as units]
    [clojure.core.matrix :as matrix]

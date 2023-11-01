@@ -2,7 +2,7 @@
   (:require [re-frame.core :as rf]
             [renderer.tools.base :as tools]
             [renderer.history.handlers :as handlers]
-            [renderer.elements.handlers :as elements]))
+            [renderer.element.handlers :as elements]))
 
 (rf/reg-event-db
  :history/undo

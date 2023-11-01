@@ -3,7 +3,7 @@
   (:require
    [clojure.string :as str]
    [renderer.tools.base :as tools]
-   [renderer.elements.handlers :as elements]
+   [renderer.element.handlers :as elements]
    [renderer.overlay :as overlay]
    [renderer.attribute.hierarchy :as hierarchy]
    [clojure.core.matrix :as matrix]

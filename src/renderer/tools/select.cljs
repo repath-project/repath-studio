@@ -2,7 +2,7 @@
 (ns renderer.tools.select
   (:require
    [renderer.tools.base :as tools]
-   [renderer.elements.handlers :as elements]
+   [renderer.element.handlers :as elements]
    [renderer.overlay :as overlay]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.units :as units]

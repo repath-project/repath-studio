@@ -1,7 +1,7 @@
 (ns renderer.tools.rect
   "https://www.w3.org/TR/SVG/shapes.html#RectElement"
   (:require
-   [renderer.elements.handlers :as elements]
+   [renderer.element.handlers :as elements]
    [renderer.tools.base :as tools]))
 
 (derive :rect ::tools/box)

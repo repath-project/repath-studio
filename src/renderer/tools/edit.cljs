@@ -2,7 +2,7 @@
   (:require
    [renderer.tools.base :as tools]
    [renderer.handlers :as handlers]
-   [renderer.elements.handlers :as elements]
+   [renderer.element.handlers :as elements]
    [renderer.history.handlers :as history]
    [renderer.utils.mouse :as mouse]
    [clojure.core.matrix :as matrix]))

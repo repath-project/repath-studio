@@ -11,7 +11,7 @@
    [renderer.window.core]
    [renderer.document.core]
    [renderer.frame.core]
-   [renderer.elements.core]
+   [renderer.element.core]
    [renderer.reepl.core]
    [renderer.attribute.core]
    [renderer.notification.core]

@@ -1,7 +1,7 @@
 (ns renderer.tools.zoom
   (:require
    [renderer.frame.handlers :as frame]
-   [renderer.elements.handlers :as elements]
+   [renderer.element.handlers :as elements]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
    [renderer.handlers :as handlers]))

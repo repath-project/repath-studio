@@ -1,7 +1,7 @@
 (ns renderer.tools.measure
   (:require
    [re-frame.core :as rf]
-   [renderer.elements.handlers :as elements]
+   [renderer.element.handlers :as elements]
    [renderer.overlay :as overlay]
    [clojure.core.matrix :as matrix]
    [renderer.handlers :as handlers]

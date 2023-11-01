@@ -6,7 +6,7 @@
    [renderer.utils.vec :as vec]
    [renderer.document.db :as db]
    [renderer.history.handlers :as history]
-   [renderer.elements.handlers :as element-handlers]
+   [renderer.element.handlers :as element-handlers]
    [renderer.document.handlers :as handlers]
    [renderer.frame.handlers :as frame]))
 

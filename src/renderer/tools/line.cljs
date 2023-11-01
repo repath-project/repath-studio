@@ -2,7 +2,7 @@
   "https://www.w3.org/TR/SVG/shapes.html#LineElement"
   (:require
    [clojure.string :as str]
-   [renderer.elements.handlers :as elements]
+   [renderer.element.handlers :as elements]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
    [renderer.attribute.hierarchy :as hierarchy]

@@ -3,7 +3,7 @@
    [re-frame.core :as rf]
    [renderer.frame.handlers :as handlers]
    [clojure.core.matrix :as matrix]
-   [renderer.elements.handlers :as el]
+   [renderer.element.handlers :as el]
    [renderer.utils.units :as units]))
 
 (rf/reg-event-db

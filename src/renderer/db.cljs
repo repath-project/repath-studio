@@ -1,4 +1,20 @@
-(ns renderer.db)
+(ns renderer.db
+  (:require
+   [renderer.window.db]
+   [renderer.document.db]))
+
+(def app
+  [:map
+   [:tool keyword?]
+   [:mouse-pos [:tuple double? double?]]
+   [:zoom-factor double?]
+   [:state keyword?]
+   [:documents [:map-of :uuid renderer.document.db/document]]
+   [:document-tabs [:vector uuid?]]
+   [:system-fonts vector?]
+   [:debug-info? boolean?]
+   [:pen-mode? boolean?]
+   [:window renderer.window.db/window]])
 
 (def default
   {:tool :select

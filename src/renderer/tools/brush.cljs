@@ -1,7 +1,7 @@
 (ns renderer.tools.brush
   "https://github.com/steveruizok/perfect-freehand"
   (:require
-   [renderer.elements.handlers :as elements]
+   [renderer.element.handlers :as elements]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
    [renderer.history.handlers :as history]

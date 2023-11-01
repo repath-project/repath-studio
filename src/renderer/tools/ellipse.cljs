@@ -1,7 +1,7 @@
 (ns renderer.tools.ellipse
   "https://www.w3.org/TR/SVG/shapes.html#EllipseElement"
   (:require
-   [renderer.elements.handlers :as elements]
+   [renderer.element.handlers :as elements]
    [renderer.tools.base :as tools]
    [renderer.utils.units :as units]
    [renderer.overlay :as overlay]

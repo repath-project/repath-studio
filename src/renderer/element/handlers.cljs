@@ -1,4 +1,4 @@
-(ns renderer.elements.handlers
+(ns renderer.element.handlers
   (:require
    [renderer.tools.base :as tools]
    [renderer.tools.path :as path]

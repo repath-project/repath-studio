@@ -1,7 +1,7 @@
 (ns renderer.tools.svg
   "https://www.w3.org/TR/SVG/struct.html#SVGElement"
   (:require
-   [renderer.elements.handlers :as elements]
+   [renderer.element.handlers :as elements]
    [renderer.tools.base :as tools]
    [clojure.core.matrix :as matrix]
    [renderer.utils.units :as units]

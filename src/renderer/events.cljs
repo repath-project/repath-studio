@@ -6,7 +6,6 @@
    [renderer.frame.handlers :as frame-handlers]
    [renderer.handlers :as handlers]
    [renderer.db :as db]
-   [renderer.schema :as schema]
    [malli.core :as ma]))
 
 (defn check-and-throw
@@ -17,7 +16,7 @@
     db))
 
 #_:clj-kondo/ignore
-(def schema-valdator (rf/after (partial check-and-throw schema/db)))
+(def schema-valdator (rf/after (partial check-and-throw db/app)))
 
 #_(rf/reg-global-interceptor schema-valdator)
 

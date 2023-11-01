@@ -1,4 +1,4 @@
-(ns renderer.window.schema)
+(ns renderer.window.db)
 
 (def sidebar
   [:map

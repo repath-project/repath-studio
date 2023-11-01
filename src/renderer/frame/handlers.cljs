@@ -1,8 +1,8 @@
 (ns renderer.frame.handlers
   (:require
    [renderer.tools.base :as tools]
-   [renderer.elements.handlers :as el]
-   [renderer.elements.utils :as el-utils]
+   [renderer.element.handlers :as el]
+   [renderer.element.utils :as el-utils]
    [clojure.core.matrix :as matrix]
    [goog.math]))
 

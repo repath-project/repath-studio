@@ -1,7 +1,7 @@
 (ns renderer.tools.arc
   (:require
    [renderer.tools.base :as tools]
-   [renderer.elements.handlers :as elements]
+   [renderer.element.handlers :as elements]
    [renderer.utils.mouse :as mouse]
    [renderer.overlay :as overlay]
    [renderer.attribute.hierarchy :as hierarchy]

@@ -1,4 +1,4 @@
-(ns renderer.elements.schema
+(ns renderer.element.db
   (:require
    [malli.core :as ma]))
 

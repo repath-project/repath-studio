@@ -1,6 +1,6 @@
 (ns renderer.tools.base
   (:require
-   [renderer.elements.utils :as el-utils]
+   [renderer.element.utils :as el-utils]
    [renderer.utils.map :as map]
    [renderer.utils.bounds :as bounds]
    ["paperjs-offset" :refer [PaperOffset]]

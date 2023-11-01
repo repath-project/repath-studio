@@ -1,4 +1,4 @@
-(ns renderer.elements.utils)
+(ns renderer.element.utils)
 
 (defn parent-page
   [elements element]

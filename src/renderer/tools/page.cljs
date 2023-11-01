@@ -2,7 +2,7 @@
   (:require
    [re-frame.core :as rf]
    [renderer.tools.base :as tools]
-   [renderer.elements.handlers :as elements]
+   [renderer.element.handlers :as elements]
    [renderer.utils.mouse :as mouse]
    [clojure.core.matrix :as matrix]
    [renderer.utils.units :as units]

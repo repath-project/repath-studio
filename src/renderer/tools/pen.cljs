@@ -1,6 +1,6 @@
 (ns renderer.tools.pen
   (:require
-   [renderer.elements.handlers :as elements]
+   [renderer.element.handlers :as elements]
    [renderer.tools.base :as tools]
    [renderer.history.handlers :as history]
    [renderer.handlers :as handlers]

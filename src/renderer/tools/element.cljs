@@ -1,7 +1,7 @@
 (ns renderer.tools.element
   (:require
    [renderer.tools.base :as tools]
-   [renderer.elements.handlers :as element-handlers]
+   [renderer.element.handlers :as element-handlers]
    [reagent.core :as ra]
    [re-frame.core :as rf]
    [renderer.history.handlers :as history]

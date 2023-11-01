@@ -1,7 +1,7 @@
 (ns renderer.handlers
   (:require
    [re-frame.core :as rf]
-   [renderer.elements.handlers :as elements]))
+   [renderer.element.handlers :as element-handlers]))
 
 (defn set-state
   [db state]
@@ -19,11 +19,11 @@
    (fn [db file]
      (case (.-type file)
        "image/png"
-       (elements/create db {:type :element
-                            :tag :image
-                            :attrs {:x (first adjusted-mouse-pos)
-                                    :y (second adjusted-mouse-pos)
-                                    :href (.-path file)}})
+       (element-handlers/create db {:type :element
+                                    :tag :image
+                                    :attrs {:x (first adjusted-mouse-pos)
+                                            :y (second adjusted-mouse-pos)
+                                            :href (.-path file)}})
        db))
    db
    files))

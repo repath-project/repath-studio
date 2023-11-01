@@ -2,7 +2,7 @@
   "This serves as an abstraction for polygons and polylines that have similar
    attributes and hehavior"
   (:require
-   [renderer.elements.handlers :as elements]
+   [renderer.element.handlers :as elements]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
    [renderer.utils.units :as units]

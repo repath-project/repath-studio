@@ -7,7 +7,7 @@
    [renderer.attribute.length :as length]
    [renderer.utils.mouse :as mouse]
    [renderer.utils.units :as units]
-   [renderer.elements.handlers :as elements]
+   [renderer.element.handlers :as elements]
    [renderer.overlay :as overlay]
    [renderer.components :as comp]
    [re-frame.core :as rf]
