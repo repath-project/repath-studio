@@ -1,7 +1,6 @@
 .toast {
-  @apply flex level-3 rounded shadow-md p-4 relative;
+  @apply flex level-3 w-80 p-4 rounded shadow-md relative;
 
-  width: 390px;
   max-width: 100vw;
 }
 
