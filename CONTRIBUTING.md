@@ -19,7 +19,7 @@ src\
 </pre>
 
 We are trying to split our code under renderer into relatively independent modules, 
-following [re-frame's app structure suggestions](https://day8.github.io/re-frame/App-Structure/
+following [re-frame's app structure suggestions](https://day8.github.io/re-frame/App-Structure/)
 with some minor additions. 
 
 <pre>
