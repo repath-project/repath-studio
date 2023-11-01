@@ -1,11 +1,12 @@
 (ns preload
-  (:require ["electron" :refer [contextBridge ipcRenderer]]
-            ["mdn-data" :as mdn] ;; deprecating in favor of w3c/webref
-            ["@webref/css" :as css]
-            #_["@sentry/electron" :as Sentry]
-            ["opentype.js" :as opentype]
-            ["font-scanner" :as fontManager]
-            [config]))
+  (:require
+   ["electron" :refer [contextBridge ipcRenderer]]
+   ["mdn-data" :as mdn] ;; deprecating in favor of w3c/webref
+   ["@webref/css" :as css]
+   #_["@sentry/electron" :as Sentry]
+   ["opentype.js" :as opentype]
+   ["font-scanner" :as fontManager]
+   [config]))
 
 (defn text->path
   "SEE https://github.com/opentypejs/opentype.js#loading-a-font-synchronously-nodejs"
@@ -26,8 +27,7 @@
    :findFonts (fn [descriptor] (.findFontsSync fontManager descriptor))
    :textToPath text->path})
 
-#_:clj-kondo/ignore
-(defn main []
+(defn ^:export init []
   ;; https://docs.sentry.io/platforms/javascript/guides/electron/#configuring-the-client
   #_(.init Sentry (clj->js config/sentry-options))
   ;; Expose protected methods that allow the renderer process to use the 

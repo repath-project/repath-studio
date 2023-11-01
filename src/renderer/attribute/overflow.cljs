@@ -1,10 +1,10 @@
 (ns renderer.attribute.overflow
-  (:require 
+  (:require
    [renderer.attribute.views :as views]
    [renderer.attribute.hierarchy :as hierarchy]))
 
-(defmethod hierarchy/description :overflow 
-  [] 
+(defmethod hierarchy/description :overflow
+  []
   "The overflow attribute sets what to do when an element's content is too big 
    to fit in its block formatting context. This feature is not widely 
    implemented yet.")

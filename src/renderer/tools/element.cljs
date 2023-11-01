@@ -24,7 +24,7 @@
 (defmethod tools/drag-end ::tools/element
   [db]
   (let [temp-element (get-in db [:documents (:active-document db) :temp-element])]
-    (-> db 
+    (-> db
         (element-handlers/create-from-temp)
         (history/finalize (str "Create " (name (:tag temp-element))))
         (assoc :cursor "crosshair"))))
@@ -85,8 +85,8 @@
 
     :reagent-render
     (fn
-      [{:keys [attrs tag title content] :as element} 
-       child-elements 
+      [{:keys [attrs tag title content] :as element}
+       child-elements
        default-state?]
       [:<>
        [tag (->> (-> attrs
@@ -102,18 +102,18 @@
              child-elements)]
 
        (when default-state?
-        [tag
-         (merge (dissoc attrs :style)
-                {:on-pointer-up #(mouse/event-handler % element)
-                 :on-pointer-down #(mouse/event-handler % element)
-                 :on-pointer-move #(mouse/event-handler % element)
-                 :on-double-click #(mouse/event-handler % element)
-                 :shape-rendering "optimizeSpeed"
-                 :fill "transparent"
-                 :stroke "transparent"
-                 :stroke-width (max (:stroke-width attrs)
-                                    (/ 20 @(rf/subscribe [:document/zoom])))})
-         content])])}))
+         [tag
+          (merge (dissoc attrs :style)
+                 {:on-pointer-up #(mouse/event-handler % element)
+                  :on-pointer-down #(mouse/event-handler % element)
+                  :on-pointer-move #(mouse/event-handler % element)
+                  :on-double-click #(mouse/event-handler % element)
+                  :shape-rendering "optimizeSpeed"
+                  :fill "transparent"
+                  :stroke "transparent"
+                  :stroke-width (max (:stroke-width attrs)
+                                     (/ 20 @(rf/subscribe [:document/zoom])))})
+          content])])}))
 
 (defmethod tools/render ::tools/element
   [{:keys [children] :as element}]

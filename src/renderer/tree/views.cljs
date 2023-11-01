@@ -125,7 +125,7 @@
         [comp/icon-button {:icon "square-minus"}]]
 
      #_[:div.v-scroll
-      {:style {:flex (if symbols-collapsed? 0 "0 1 128px")}}]
+        {:style {:flex (if symbols-collapsed? 0 "0 1 128px")}}]
 
      [:div.button.tree-heading
       {:on-click #(rf/dispatch [:window/toggle-pages-collapsed])}

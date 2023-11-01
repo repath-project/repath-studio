@@ -24,31 +24,31 @@
 (defn shortcuts
   [event]
   (let [shortcuts @(rf/subscribe [:event-shortcuts event])]
-     (into [:div.shortcuts]
-           (interpose [:span.text-muted " | "]
-                      (map (fn [[shortcut]]
-                             (str/join "+"
-                                       (cond-> []
-                                         (:ctrlKey shortcut)
-                                         (conj "Ctrl")
+    (into [:div.shortcuts]
+          (interpose [:span.text-muted " | "]
+                     (map (fn [[shortcut]]
+                            (str/join "+"
+                                      (cond-> []
+                                        (:ctrlKey shortcut)
+                                        (conj "Ctrl")
 
-                                         (:shiftKey shortcut)
-                                         (conj "⇧")
+                                        (:shiftKey shortcut)
+                                        (conj "⇧")
 
-                                         (:altKey shortcut)
-                                         (conj "Alt")
+                                        (:altKey shortcut)
+                                        (conj "Alt")
 
-                                         :always (conj (keyboard/code->key
-                                                        (:keyCode shortcut))))))
-                           shortcuts)))))
+                                        :always (conj (keyboard/code->key
+                                                       (:keyCode shortcut))))))
+                          shortcuts)))))
 
 (defn toggle-icon-button
-  [{:keys [active? 
-           active-icon 
-           inactive-icon 
-           active-text 
-           inactive-text 
-           action 
+  [{:keys [active?
+           active-icon
+           inactive-icon
+           active-text
+           inactive-text
+           action
            class]}]
   [:button.icon-button {:class class
                         :title (if active? active-text inactive-text)
@@ -83,7 +83,7 @@
     {:draggable true
      :on-drag-over #(.preventDefault %)
      :on-drag-start #(do (.setDragImage (.-dataTransfer %)
-                                        (.createElement js/document "img") 
+                                        (.createElement js/document "img")
                                         0 0)
                          (rf/dispatch-sync [:window/set-drag key direction]))
      :on-drag-end #(rf/dispatch-sync [:window/clear-drag])}]])

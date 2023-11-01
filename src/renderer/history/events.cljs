@@ -12,7 +12,7 @@
 (rf/reg-event-db
  :history/redo
  (fn [db [_ n]]
-    (handlers/redo db n)))
+   (handlers/redo db n)))
 
 (rf/reg-event-db
  :history/cancel

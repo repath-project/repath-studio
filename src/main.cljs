@@ -1,13 +1,14 @@
 (ns main
-  (:require ["electron" :refer [app shell ipcMain BrowserWindow clipboard nativeTheme]]
-            ["path" :as path]
-            #_["electron-updater" :as updater]
-            #_["@sentry/electron/main" :as sentry-electron-main]   
-            ["electron-window-state" :as window-state-keeper]
-            ["electron-extension-installer$default" :as installExtension]
-            ["electron-extension-installer" :refer [REACT_DEVELOPER_TOOLS]]
-            [config]
-            [file]))
+  (:require
+   ["electron" :refer [app shell ipcMain BrowserWindow clipboard nativeTheme]]
+   ["path" :as path]
+   #_["electron-updater" :as updater]
+   #_["@sentry/electron/main" :as sentry-electron-main]
+   ["electron-window-state" :as window-state-keeper]
+   ["electron-extension-installer$default" :as installExtension]
+   ["electron-extension-installer" :refer [REACT_DEVELOPER_TOOLS]]
+   [config]
+   [file]))
 
 (def main-window (atom nil))
 (def loading-window (atom nil))
@@ -27,7 +28,7 @@
     "setThemeMode" (set! (.. nativeTheme -themeSource) (.-data args))
     "openRemoteUrl" (.openExternal shell (.-data args))
     ;; SEE https://www.electronjs.org/docs/api/clipboard#clipboardwritedata-type
-    "writeToClipboard" (.write clipboard (.-data args)) 
+    "writeToClipboard" (.write clipboard (.-data args))
     "openDocument" (file/open)
     "saveDocument" (file/save (.-data args))
     "export" (file/export (.-data args))))
@@ -120,8 +121,7 @@
   (.loadURL ^js @loading-window (.join path "file://" js/__dirname "/public/loading.html"))
   (.once ^js (.-webContents @loading-window) "did-finish-load" #(.show ^js @loading-window)))
 
-#_:clj-kondo/ignore
-(defn main []
+(defn ^:export init []
   #_(sentry-electron-main/init (clj->js config/sentry-options))
   (.on app "window-all-closed" #(when-not (= js/process.platform "darwin")
                                   (.quit app)))

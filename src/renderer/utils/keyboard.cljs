@@ -1,8 +1,8 @@
 (ns renderer.utils.keyboard
-  (:require 
+  (:require
    [re-frame.core :as rf]
    [clojure.set :as set])
-  (:import 
+  (:import
    [goog.events KeyCodes]))
 
 (def key-codes
@@ -10,7 +10,7 @@
   (js->clj KeyCodes))
 
 (def key-chars
- (set/map-invert key-codes))
+  (set/map-invert key-codes))
 
 (defn code->key
   [code]
@@ -186,11 +186,11 @@
                  [{:keyCode (key-codes "F11")}]]
                 [[:set-command-palette? true]
                  [{:keyCode 186}]]]
-  
+
    :clear-keys []
-  
+
    :always-listen-keys []
-  
+
    :prevent-default-keys [{:keyCode (key-codes "EQUALS")}
                           {:keyCode (key-codes "DASH")}
                           {:keyCode (key-codes "RIGHT")}

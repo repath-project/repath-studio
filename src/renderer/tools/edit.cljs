@@ -1,10 +1,11 @@
 (ns renderer.tools.edit
-  (:require [renderer.tools.base :as tools]
-            [renderer.handlers :as handlers]
-            [renderer.elements.handlers :as elements]
-            [renderer.history.handlers :as history]
-            [renderer.utils.mouse :as mouse]
-            [clojure.core.matrix :as matrix]))
+  (:require
+   [renderer.tools.base :as tools]
+   [renderer.handlers :as handlers]
+   [renderer.elements.handlers :as elements]
+   [renderer.history.handlers :as history]
+   [renderer.utils.mouse :as mouse]
+   [clojure.core.matrix :as matrix]))
 
 (derive :edit ::tools/transform)
 
@@ -18,7 +19,7 @@
       (handlers/set-state :default)
       (handlers/set-message
        [:div
-        [:div"Drag a handler to modify your shape, or click on an element 
+        [:div "Drag a handler to modify your shape, or click on an element 
               to change selection."]
         [:div "Hold " [:strong "Ctrl"] " to restrict direction."]])))
 
@@ -50,5 +51,5 @@
 (defmethod tools/drag-end :edit
   [db]
   (-> db
-   (handlers/set-state :default)
-   (history/finalize (str "Edit " (-> db :clicked-element :key name)))))
+      (handlers/set-state :default)
+      (history/finalize (str "Edit " (-> db :clicked-element :key name)))))

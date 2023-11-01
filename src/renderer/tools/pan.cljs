@@ -1,7 +1,8 @@
 (ns renderer.tools.pan
-  (:require [renderer.tools.base :as tools]
-            [renderer.frame.handlers :as frame]
-            [clojure.core.matrix :as matrix]))
+  (:require
+   [renderer.tools.base :as tools]
+   [renderer.frame.handlers :as frame]
+   [clojure.core.matrix :as matrix]))
 
 (derive :pan ::tools/transform)
 

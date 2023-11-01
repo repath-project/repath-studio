@@ -14,7 +14,7 @@
   (assoc db :message message))
 
 (defn drop-files
-  [{:keys [adjusted-mouse-pos]:as db} files]
+  [{:keys [adjusted-mouse-pos] :as db} files]
   (reduce
    (fn [db file]
      (case (.-type file)

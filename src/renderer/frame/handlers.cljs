@@ -21,7 +21,7 @@
         updated-factor (/ updated-zoom zoom)
         pan (get-in db [:documents active-document :pan])
         updated-pan (matrix/sub (matrix/div pan updated-factor)
-                                (matrix/sub (matrix/div pos updated-factor) 
+                                (matrix/sub (matrix/div pos updated-factor)
                                             pos))]
     (-> db
         (assoc-in [:documents active-document :zoom] updated-zoom)
@@ -84,16 +84,16 @@
         step 15]
     (cond
       (and (< position threshold)
-           (< position offset)) 
+           (< position offset))
       (- step)
 
       (and (> position (- size threshold))
-           (> position offset)) 
+           (> position offset))
       step
-      
+
       :else 0)))
 
 (defn pan-out-of-canvas
   [db {:keys [width height]} [x y] [offset-x offset-y]]
-  (pan db [(calc-pan-offset x offset-x width) 
+  (pan db [(calc-pan-offset x offset-x width)
            (calc-pan-offset y offset-y height)]))

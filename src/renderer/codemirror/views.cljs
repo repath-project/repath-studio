@@ -1,22 +1,24 @@
 (ns renderer.codemirror.views
-  (:require [reagent.core :as ra]
-            [reagent.dom :as ra-dom]
-            ["codemirror" :as codemirror]
-            ["codemirror/mode/css/css.js"]
-            ["codemirror/mode/xml/xml.js"]
-            ["codemirror/addon/hint/show-hint.js"]
-            ["codemirror/addon/hint/css-hint.js"]))
+  (:require
+   [reagent.core :as ra]
+   [reagent.dom :as ra-dom]
+   ["codemirror" :as codemirror]
+   ["codemirror/mode/css/css.js"]
+   ["codemirror/mode/xml/xml.js"]
+   ["codemirror/addon/hint/show-hint.js"]
+   ["codemirror/addon/hint/css-hint.js"]))
 
-(def default-options {:lineNumbers false
-                      :matchBrackets true
-                      :lineWrapping true
-                      :styleActiveLine true
-                      :tabMode "spaces"
-                      :autofocus false
-                      :extraKeys {"Ctrl-Space" "autocomplete"}
-                      :theme "tomorrow-night-eighties"
-                      :autoCloseBrackets true
-                      :mode "css"})
+(def default-options
+  {:lineNumbers false
+   :matchBrackets true
+   :lineWrapping true
+   :styleActiveLine true
+   :tabMode "spaces"
+   :autofocus false
+   :extraKeys {"Ctrl-Space" "autocomplete"}
+   :theme "tomorrow-night-eighties"
+   :autoCloseBrackets true
+   :mode "css"})
 
 (defn editor
   [value {:keys [style options on-init on-blur]}]
@@ -24,12 +26,13 @@
     (ra/create-class
      {:component-did-mount
       (fn [this]
-        (let [el (ra-dom/dom-node this)]
+        (let [el (ra-dom/dom-node this)
+              options (clj->js (merge default-options options))]
 
-          (reset! cm (.fromTextArea codemirror el (clj->js (merge default-options options))))
+          (reset! cm (.fromTextArea codemirror el options))
 
           (.setValue @cm value)
-          
+
           ;; Line up wrapped text with the base indentation.
           ;; SEE https://codemirror.net/demo/indentwrap.html
           (.on @cm "renderLine" (fn [editor line elt]

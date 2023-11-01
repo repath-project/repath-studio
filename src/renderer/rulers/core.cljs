@@ -1,2 +1,3 @@
 (ns renderer.rulers.core
-  (:require [renderer.rulers.subs]))
+  (:require
+   [renderer.rulers.subs]))

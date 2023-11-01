@@ -48,7 +48,7 @@
            "Learn more"])
         (when (:spec_url data)
           [:button.button.px-3.grow
-           {:on-click #(rf/dispatch [:window/open-remote-url (if (vector? (:spec_url data)) 
+           {:on-click #(rf/dispatch [:window/open-remote-url (if (vector? (:spec_url data))
                                                                (first (:spec_url data))
                                                                (:spec_url data))])}
            "Specification"])]])))
@@ -97,9 +97,9 @@
 (defn range-input
   [key value attrs initial]
   [:div.flex.w-full
-   [form-input {:key key 
-                :value value 
-                :disabled? (:disabled attrs) 
+   [form-input {:key key
+                :value value
+                :disabled? (:disabled attrs)
                 :placeholder initial}]
    [:input.ml-px
     (merge attrs

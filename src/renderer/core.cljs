@@ -57,8 +57,7 @@
   (replumb/run-repl "(in-ns 'user)" identity)
   (print "Repl initialized"))
 
-#_:clj-kondo/ignore
-(defn init []
+(defn ^:export init []
   #_(if platform/electron?
       (sentry-electron-renderer/init (clj->js config/sentry-options) sentry-react/init)
       (sentry-react/init (clj->js config/sentry-options)))

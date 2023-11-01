@@ -1,15 +1,16 @@
 
 (ns renderer.tools.select
-  (:require [renderer.tools.base :as tools]
-            [renderer.elements.handlers :as elements]
-            [renderer.overlay :as overlay]
-            [renderer.utils.bounds :as bounds]
-            [renderer.utils.units :as units]
-            [clojure.core.matrix :as matrix]
-            [clojure.set :as set]
-            [renderer.history.handlers :as history]
-            [renderer.handlers :as handlers]
-            [renderer.utils.mouse :as mouse]))
+  (:require
+   [renderer.tools.base :as tools]
+   [renderer.elements.handlers :as elements]
+   [renderer.overlay :as overlay]
+   [renderer.utils.bounds :as bounds]
+   [renderer.utils.units :as units]
+   [clojure.core.matrix :as matrix]
+   [clojure.set :as set]
+   [renderer.history.handlers :as history]
+   [renderer.handlers :as handlers]
+   [renderer.utils.mouse :as mouse]))
 
 (derive :select ::tools/transform)
 
@@ -24,7 +25,7 @@
   [:div
    [:div "Click or click and drag to select."]
    [:div
-    "Hold " 
+    "Hold "
     [:strong "Ctrl"]
     " to add elements to selection or remove them, and "
     [:strong "Alt"]
@@ -34,10 +35,10 @@
   [offset]
   [:div
    [:div "Moving by " (str (map units/->fixed offset))]
-   [:div 
-    "Hold " 
-    [:strong "Ctrl"] 
-    " to restrict direction, and " 
+   [:div
+    "Hold "
+    [:strong "Ctrl"]
+    " to restrict direction, and "
     [:strong "Alt"] " to clone."]])
 
 (defmethod message :clone
@@ -55,11 +56,11 @@
   [_offset]
   [:div
    [:div "Scaling"]
-   [:div 
-    "Hold " 
-    [:strong "Ctrl"] 
-    " to lock proportions, and " 
-    [:strong "Alt"] 
+   [:div
+    "Hold "
+    [:strong "Ctrl"]
+    " to lock proportions, and "
+    [:strong "Alt"]
     " to center the pivot point."]])
 
 (defn reduce-by-area
@@ -110,8 +111,8 @@
       (elements/clear-ignored)))
 
 (defn select-rect
-  [{:keys [adjusted-mouse-offset 
-           adjusted-mouse-pos 
+  [{:keys [adjusted-mouse-offset
+           adjusted-mouse-pos
            active-document] :as db} intersecting?]
   (let [zoom (get-in db [:documents active-document :zoom])]
     (cond-> (overlay/select-box adjusted-mouse-pos adjusted-mouse-offset zoom)
@@ -120,12 +121,12 @@
 (defmethod tools/drag-start :select
   [db event]
   (case (-> db :clicked-element :tag)
-    :canvas 
+    :canvas
     (handlers/set-state db :select)
 
-    :scale 
+    :scale
     (handlers/set-state db :scale)
-    
+
     (handlers/set-state
      (if-not (-> db :clicked-element :selected?)
        (-> db
@@ -134,13 +135,13 @@
        db) :move)))
 
 (defmethod tools/drag :select
-  [{:keys [state 
-           adjusted-mouse-offset 
+  [{:keys [state
+           adjusted-mouse-offset
            adjusted-mouse-pos] :as db} event]
   (let [offset (matrix/sub adjusted-mouse-pos adjusted-mouse-offset)
         offset (if (and (contains? (:modifiers event) :ctrl)
-                        (not= state :scale)) 
-                 (mouse/lock-direction offset) 
+                        (not= state :scale))
+                 (mouse/lock-direction offset)
                  offset)
         alt-key? (contains? (:modifiers event) :alt)]
     (-> (case state
@@ -165,7 +166,7 @@
           (elements/scale (history/swap db) offset
                           (contains? (:modifiers event) :ctrl)
                           (contains? (:modifiers event) :shift))
-          
+
           :default db)
         (handlers/set-message (message offset state)))))
 

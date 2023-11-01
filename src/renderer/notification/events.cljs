@@ -14,6 +14,6 @@
    (update db :notifications #(vec/remove-by-index % index))))
 
 #_(rf/reg-event-db
- :notification/clear
- (fn [db [_]]
-   (assoc db :notifications [])))
+   :notification/clear
+   (fn [db [_]]
+     (assoc db :notifications [])))

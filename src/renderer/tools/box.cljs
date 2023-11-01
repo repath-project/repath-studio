@@ -1,6 +1,6 @@
 (ns renderer.tools.box
-  "This serves as an abstraction for box elements that share the 
-   :x :y :whidth :height attributes"
+  " This serves as an abstraction for box elements that share the
+:x :y :whidth :height attributes "
   (:require
    [renderer.tools.base :as tools]
    [renderer.overlay :as overlay]

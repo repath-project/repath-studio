@@ -6,6 +6,7 @@
    #_[clojure.core.matrix :as matrix]
    [clojure.set :as set]
    [goog.color :as color]
+   [renderer.attribute.utils :as attr-utils]
    ["js-beautify" :as js-beautify]))
 
 #_(rf/reg-sub
@@ -82,30 +83,6 @@
    (fn [selected-elements _]
      (seq (filter #(= (:tag %) :g) selected-elements))))
 
-(def attrs-order [:d
-                  :points
-                  :x :y
-                  :x1 :y1
-                  :x2 :y2
-                  :cx :cy
-                  :dx :dy
-                  :width :height
-                  :rx :ry
-                  :r
-                  :rotate
-                  :transform
-                  :font-family :font-size :font-weight :font-style
-                  :textLength
-                  :lengthAdjust
-                  :viewBox :preserveAspectRatio
-                  :stroke
-                  :fill
-                  :stroke-width :stroke-linecap :stroke-linejoin :stroke-dasharray
-                  :opacity
-                  :overflow
-                  :id :class :tabindex
-                  :style])
-
 (rf/reg-sub
  :elements/selected-attrs
  :<- [:elements/selected]
@@ -127,7 +104,7 @@
                                 :attrs
                                 (.indexOf k)))
                           attrs))]
-     (sort-by (fn [[k _]] (.indexOf attrs-order k)) attrs))))
+     (sort-by (fn [[k _]] (.indexOf attr-utils/attrs-order k)) attrs))))
 
 (rf/reg-sub
  :elements/bounds

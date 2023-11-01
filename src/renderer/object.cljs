@@ -69,22 +69,22 @@
     :action [:elements/lower]}
    #_{:type :divider}
    #_{:title "Rotate 90° clockwise"
-    :icon "rotate-clockwise"
-    :disabled? true
-    :action [:elements/raise]}
+      :icon "rotate-clockwise"
+      :disabled? true
+      :action [:elements/raise]}
    #_{:title "Rotate 90° counterclockwise"
-    :icon "rotate-counterclockwise"
-    :disabled? true
-    :action [:elements/lower]}
+      :icon "rotate-counterclockwise"
+      :disabled? true
+      :action [:elements/lower]}
    #_{:type :divider}
    #_{:title "Flip horizontally"
-    :icon "flip-horizontal"
-    :disabled? true
-    :action [:elements/raise]}
+      :icon "flip-horizontal"
+      :disabled? true
+      :action [:elements/raise]}
    #_{:title "Flip vertically"
-    :icon "flip-vertical"
-    :disabled? true
-    :action [:elements/lower]}
+      :icon "flip-vertical"
+      :disabled? true
+      :action [:elements/lower]}
    {:type :divider}
    {:title "Unite"
     :icon "unite"

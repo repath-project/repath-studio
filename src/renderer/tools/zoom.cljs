@@ -1,14 +1,15 @@
 (ns renderer.tools.zoom
-  (:require [renderer.frame.handlers :as frame]
-            [renderer.elements.handlers :as elements]
-            [renderer.overlay :as overlay]
-            [renderer.tools.base :as tools]
-            [renderer.handlers :as handlers]))
+  (:require
+   [renderer.frame.handlers :as frame]
+   [renderer.elements.handlers :as elements]
+   [renderer.overlay :as overlay]
+   [renderer.tools.base :as tools]
+   [renderer.handlers :as handlers]))
 
 (derive :zoom ::tools/transform)
 
-(defmethod tools/properties :zoom 
-  [] 
+(defmethod tools/properties :zoom
+  []
   {:icon "magnifier"})
 
 (defmethod tools/activate :zoom
@@ -16,9 +17,9 @@
   (-> db
       (assoc :cursor "zoom-in")
       (handlers/set-message
-      [:div
-       [:div "Click or select an area to zoom in."]
-       [:div "Hold " [:strong "Shift"] " to zoom out."]])))
+       [:div
+        [:div "Click or select an area to zoom in."]
+        [:div "Hold " [:strong "Shift"] " to zoom out."]])))
 
 (defmethod tools/key-down :zoom
   [db event]
@@ -38,15 +39,15 @@
 
 (defmethod tools/drag :zoom
   [{:keys [adjusted-mouse-offset adjusted-mouse-pos active-document] :as db}]
-  (elements/set-temp db (overlay/select-box 
-                         adjusted-mouse-pos 
-                         adjusted-mouse-offset 
+  (elements/set-temp db (overlay/select-box
+                         adjusted-mouse-pos
+                         adjusted-mouse-offset
                          (get-in db [:documents active-document :zoom]))))
 
 (defmethod tools/drag-end :zoom
-  [{:keys [active-document 
-           content-rect 
-           adjusted-mouse-offset 
+  [{:keys [active-document
+           content-rect
+           adjusted-mouse-offset
            adjusted-mouse-pos
            zoom-factor] :as db} event]
   (let [[offset-x offset-y] adjusted-mouse-offset
@@ -57,13 +58,13 @@
         height-ratio (/ (:height content-rect) height)
         current-zoom (get-in db [:documents active-document :zoom])
         furute-zoom (min width-ratio height-ratio)]
-      (-> db
-          (elements/clear-temp)
-          (assoc :cursor "zoom-in")
-          (frame/zoom (if (contains? (:modifiers event) :shift)
-                        zoom-factor
-                        (/ furute-zoom current-zoom)))
-          (frame/pan-to-bounds [pos-x pos-y offset-x offset-y]))))
+    (-> db
+        (elements/clear-temp)
+        (assoc :cursor "zoom-in")
+        (frame/zoom (if (contains? (:modifiers event) :shift)
+                      zoom-factor
+                      (/ furute-zoom current-zoom)))
+        (frame/pan-to-bounds [pos-x pos-y offset-x offset-y]))))
 
 (defmethod tools/mouse-up :zoom
   [db event]

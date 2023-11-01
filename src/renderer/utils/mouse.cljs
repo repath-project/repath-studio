@@ -14,10 +14,10 @@
     [0 y]))
 
 (defn event-handler
-  "Gathers pointer event props 
-    https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent
+  "Gathers pointer event props.
+   https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent
    
-   and dispathces the corresponding event
+   Then dispathces the corresponding event.
    SEE https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/
    
    Although the fps might drop because synced dispatch blocks the rendering, 
@@ -26,8 +26,9 @@
   [event element]
   (.stopPropagation event)
   ;; Disable native zoom on canvas
-  (when (and (.-ctrlKey event) (.-deltaY event)) 
+  (when (and (.-ctrlKey event) (.-deltaY event))
     (.preventDefault event))
+  
   (rf/dispatch-sync [:pointer-event {:element element
                                      :target (.-target event)
                                      :type (keyword (.-type event))

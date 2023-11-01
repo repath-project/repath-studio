@@ -19,7 +19,7 @@
         [:> Tooltip/Content {:class "tooltip-content" :side "bottom"}
          type
          [:> Tooltip/Arrow {:class "tooltip-arrow"}]]]]
-      
+
 
       #_(when (descendants type)
           [:button {:key      (keyword (str "dropdown-" type))

@@ -17,26 +17,26 @@
             ;; TODO Find an agnostix way to handle percentages
             :% 1})
 
-(defn unit->key 
+(defn unit->key
   "Converts the string unit to a lower-cased keyword."
   [unit]
   (keyword (str/lower-case unit)))
-  
-(defn valid-unit? 
+
+(defn valid-unit?
   [unit]
   (contains? units (unit->key unit)))
 
-(defn multiplier 
+(defn multiplier
   "Returns the multiplier by unit.
    If the unit is invalid, it fallbacks to :px (1)"
   [unit]
   ((if (valid-unit? unit) (unit->key unit) :px) units))
 
-(defn match-unit 
+(defn match-unit
   [s]
   (second (re-matches #"[\d.\-\+]*\s*(.*)" s)))
 
-(defn parse-unit 
+(defn parse-unit
   [s]
   (let [string (str/trim (str s))
         number (js/parseFloat string 10)

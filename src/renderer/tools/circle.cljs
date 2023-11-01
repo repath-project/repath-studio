@@ -1,13 +1,14 @@
 (ns renderer.tools.circle
   "https://www.w3.org/TR/SVG/shapes.html#CircleElement"
-  (:require [clojure.string :as str]
-            [renderer.tools.base :as tools]
-            [renderer.elements.handlers :as elements]
-            [renderer.overlay :as overlay]
-            [renderer.attribute.hierarchy :as hierarchy]
-            [clojure.core.matrix :as matrix]
-            [renderer.utils.units :as units]
-            [re-frame.core :as rf]))
+  (:require
+   [clojure.string :as str]
+   [renderer.tools.base :as tools]
+   [renderer.elements.handlers :as elements]
+   [renderer.overlay :as overlay]
+   [renderer.attribute.hierarchy :as hierarchy]
+   [clojure.core.matrix :as matrix]
+   [renderer.utils.units :as units]
+   [re-frame.core :as rf]))
 
 (derive :circle ::tools/shape)
 
@@ -70,7 +71,7 @@
 
 (defmethod tools/area :circle
   [{{:keys [r]} :attrs}]
-    (* Math/PI (Math/pow (units/unit->px r) 2)))
+  (* Math/PI (Math/pow (units/unit->px r) 2)))
 
 (defmethod tools/path :circle
   [{{:keys [cx cy r]} :attrs}]

@@ -1,7 +1,8 @@
 (ns renderer.tools.image
   "https://www.w3.org/TR/SVG/embedded.html#ImageElement"
-  (:require [renderer.elements.handlers :as elements]
-            [renderer.tools.base :as tools]))
+  (:require
+   [renderer.elements.handlers :as elements]
+   [renderer.tools.base :as tools]))
 
 (derive :image ::tools/graphics)
 (derive :image ::tools/box)

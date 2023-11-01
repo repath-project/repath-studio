@@ -1,14 +1,15 @@
 (ns file
-  (:require ["electron" :refer [app dialog]]
-            ["fs" :as fs]
-            #_[cognitect.transit :as tr]))
+  (:require
+   ["electron" :refer [app dialog]]
+   ["fs" :as fs]
+   #_[cognitect.transit :as tr]))
 
 (def main-window (atom nil))
 
 #_(defn roundtrip
-  [data]
-  (let [writer (tr/writer :json)]
-    (tr/write writer data)))
+    [data]
+    (let [writer (tr/writer :json)]
+      (tr/write writer data)))
 
 (def default-path (.getPath app "documents"))
 

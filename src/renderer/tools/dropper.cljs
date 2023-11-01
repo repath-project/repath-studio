@@ -1,8 +1,9 @@
 (ns renderer.tools.dropper
-  (:require [renderer.tools.base :as tools]
-            [re-frame.core :as rf]
-            [renderer.handlers :as handlers]
-            [goog.color]))
+  (:require
+   [renderer.tools.base :as tools]
+   [re-frame.core :as rf]
+   [renderer.handlers :as handlers]
+   [goog.color]))
 
 (derive :dropper ::tools/misc)
 

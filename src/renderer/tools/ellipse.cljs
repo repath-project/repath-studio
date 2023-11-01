@@ -1,13 +1,14 @@
 (ns renderer.tools.ellipse
   "https://www.w3.org/TR/SVG/shapes.html#EllipseElement"
-  (:require [renderer.elements.handlers :as elements]
-            [renderer.tools.base :as tools]
-            [renderer.utils.units :as units]
-            [renderer.overlay :as overlay]
-            [renderer.attribute.hierarchy :as hierarchy]
-            [clojure.string :as str]
-            [clojure.core.matrix :as matrix]
-            [re-frame.core :as rf]))
+  (:require
+   [renderer.elements.handlers :as elements]
+   [renderer.tools.base :as tools]
+   [renderer.utils.units :as units]
+   [renderer.overlay :as overlay]
+   [renderer.attribute.hierarchy :as hierarchy]
+   [clojure.string :as str]
+   [clojure.core.matrix :as matrix]
+   [re-frame.core :as rf]))
 
 (derive :ellipse ::tools/shape)
 
@@ -38,8 +39,8 @@
                :stroke stroke
                :rx (if lock-ratio? (min rx ry) rx)
                :ry (if lock-ratio? (min rx ry) ry)}]
-    (elements/set-temp db {:type :element 
-                           :tag :ellipse 
+    (elements/set-temp db {:type :element
+                           :tag :ellipse
                            :attrs attrs})))
 
 (defmethod tools/translate :ellipse
@@ -69,12 +70,12 @@
 
 (defmethod tools/bounds :ellipse
   [{{:keys [cx cy rx ry stroke-width stroke]} :attrs}]
-    (let [[cx cy rx ry stroke-width-px] (map units/unit->px
-                                             [cx cy rx ry stroke-width])
-          stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)
-          [rx ry] (matrix/add [rx ry]
-                              (/ (if (str/blank? stroke) 0 stroke-width-px) 2))]
-      [(- cx rx) (- cy ry) (+ cx rx) (+ cy ry)]))
+  (let [[cx cy rx ry stroke-width-px] (map units/unit->px
+                                           [cx cy rx ry stroke-width])
+        stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)
+        [rx ry] (matrix/add [rx ry]
+                            (/ (if (str/blank? stroke) 0 stroke-width-px) 2))]
+    [(- cx rx) (- cy ry) (+ cx rx) (+ cy ry)]))
 
 (defmethod tools/path :ellipse
   [{{:keys [cx cy rx ry]} :attrs}]
@@ -102,7 +103,7 @@
   (let [{:keys [cx cy rx ry]} attrs
         [cx cy rx ry] (mapv units/unit->px [cx cy rx ry])
         active-page @(rf/subscribe [:elements/active-page])
-        page-pos (mapv units/unit->px 
+        page-pos (mapv units/unit->px
                        [(-> active-page :attrs :x) (-> active-page :attrs :y)])
         [cx cy] (matrix/add page-pos [cx cy])]
     [:g :edit-handlers

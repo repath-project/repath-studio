@@ -6,7 +6,7 @@
    [clojure.string :as str]
    [ajax.core]))
 
-(defn move
+(defn ^:export move
   "Moves the selected elements."
   ([offset]
    (rf/dispatch [:elements/translate offset]))
@@ -14,43 +14,43 @@
   ([x y]
    (move [x y])))
 
-(defn fill
+(defn ^:export fill
   "Fills the selected elements."
   [color]
   (rf/dispatch [:elements/fill color]))
 
-(defn delete
+(defn ^:export delete
   "Deletes selected elements."
   []
   (rf/dispatch [:elements/delete]))
 
-(defn copy
+(defn ^:export copy
   "Copies the selected elements."
   []
   (rf/dispatch [:elements/copy]))
 
-(defn paste
+(defn ^:export paste
   "Pastes the selected elements."
   []
   (rf/dispatch [:elements/paste]))
 
-(defn paste-in-place
+(defn ^:export paste-in-place
   "Pastes the selected elements in place."
   []
   (rf/dispatch [:elements/paste-in-place]))
 
-(defn duplicate
+(defn ^:export duplicate
   "Duplicates the selected elements."
   []
   (rf/dispatch [:elements/duplicate-in-place]))
 
-(defn create
+(defn ^:export create
   "Creates a new element."
   [element]
   (apply #(rf/dispatch [:elements/create {:tag (key %)
                                           :attrs (val %)}]) element))
 
-(defn circle
+(defn ^:export circle
   "Creates a circle."
   ([[cx cy] r]
    (circle [cx cy] r nil))
@@ -58,7 +58,7 @@
   ([[cx cy] r attrs]
    (create {:circle (merge {:cx cx :cy cy :r r} attrs)})))
 
-(defn rect
+(defn ^:export rect
   "Creates a rectangle."
   ([[x y] width height]
    (rect [x y] width height nil))
@@ -66,7 +66,7 @@
   ([[x y] width height attrs]
    (create {:rect (merge {:x x :y y :width width :height height} attrs)})))
 
-(defn line
+(defn ^:export line
   "Creates a line."
   ([[[x1 y1] [x2 y2]]]
    (line [x1 y1] [x2 y2] {:stroke "#000000"}))
@@ -77,7 +77,7 @@
   ([[x1 y1] [x2 y2] attrs]
    (create {:line (merge {:x1 x1 :y1 y1 :x2 x2 :y2 y2} attrs)})))
 
-(defn polygon
+(defn ^:export polygon
   "Creates a polygon."
   ([points]
    (polygon points {:stroke "#000000"}))
@@ -85,7 +85,7 @@
   ([points attrs]
    (create {:polygon (merge {:points (str/join " " (flatten points))} attrs)})))
 
-(defn polyline
+(defn ^:export polyline
   "Creates a polyline."
   ([points]
    (polyline points {:stroke "#000000"}))
@@ -93,7 +93,7 @@
   ([points attrs]
    (create {:polyline (merge {:points (str/join " " (flatten points))} attrs)})))
 
-(defn path
+(defn ^:export path
   "Creates a path"
   ([path-commands]
    (path path-commands {:stroke "#000000"}))
@@ -101,7 +101,7 @@
   ([path-commands attrs]
    (create {:path (merge {:d (str/join " " (flatten path-commands))} attrs)})))
 
-(defn image
+(defn ^:export image
   "Creates an image"
   ([[x y] width height href]
    (image [x y] width height href nil))
@@ -109,111 +109,111 @@
   ([[x y] width height href attrs]
    (create {:image (merge {:x x :y y :width width :height height :href href} attrs)})))
 
-(defn set-attribute
+(defn ^:export set-attribute
   "Sets the attribute of the selected elements."
   [key value]
   (rf/dispatch [:elements/set-attribute key value]))
 
-(defn set-fill
+(defn ^:export set-fill
   "Sets the fill color of the editor."
   [color]
   (rf/dispatch [:document/set-fill color]))
 
-(defn set-stroke
+(defn ^:export set-stroke
   "Sets the stroke color of the editor."
   [color]
   (rf/dispatch [:document/set-stroke color]))
 
-(defn db
+(defn ^:export db
   []
   @db/app-db)
 
-(defn document
+(defn ^:export document
   []
   (get-in (db) [:documents (:active-document (db))]))
 
-(defn elements
+(defn ^:export elements
   []
   (:elements (document)))
 
-(defn raise
+(defn ^:export raise
   "Raises the selected elements."
   []
   (rf/dispatch [:elements/raise]))
 
-(defn lower
+(defn ^:export lower
   "Lowers the selected elements."
   []
   (rf/dispatch [:elements/lower]))
 
-(defn group
+(defn ^:export group
   "Groups the selected elements."
   []
   (rf/dispatch [:elements/group]))
 
-(defn ungroup
+(defn ^:export ungroup
   "Ungroups the selected elements."
   []
   (rf/dispatch [:elements/ungroup]))
 
-(defn select-all
+(defn ^:export select-all
   "Selects all elements."
   []
   (rf/dispatch [:elements/select-all]))
 
-(defn deselect-all
+(defn ^:export deselect-all
   "Deselects all elements."
   []
   (rf/dispatch [:elements/deselect-all]))
 
-(defn ->path
+(defn ^:export ->path
   "Converts selected elements to paths."
   []
   (rf/dispatch [:elements/->path]))
 
-(defn stroke->path
+(defn ^:export stroke->path
   "Converts selected elements to paths."
   []
   (rf/dispatch [:elements/stroke->path]))
 
-(defn align
+(defn ^:export align
   "Aligns the selected elements to the provided direction.
    Accepted directions
    :left :right :top :bottom :center-vertical :center-horizontal"
   [direction]
   (rf/dispatch [:elements/align direction]))
 
-(defn al
+(defn ^:export al
   "Aligns the selected elements to the left."
   []
   (align :left))
 
-(defn ar
+(defn ^:export ar
   "Aligns the selected elements to the right"
   []
   (align :right))
 
-(defn at
+(defn ^:export at
   "Aligns the selected elements to the top."
   [[]]
   (align :top))
 
-(defn ab
+(defn ^:export ab
   "Aligns the selected elements to the bottom."
   []
   (align :bottom))
 
-(defn acv
+(defn ^:export acv
   "Aligns the selected elements to the vertical center."
   []
   (align :center-vertical))
 
-(defn ach
+(defn ^:export ach
   "Aligns the selected elements to the horizontal center."
   []
   (align :center-horizontal))
 
-(defn animate
+(defn ^:export animate
   "Animates the selected elements."
   ([]
    (animate {}))
@@ -224,7 +224,7 @@
   ([tag attrs]
    (rf/dispatch [:elements/animate tag attrs])))
 
-(defn undo
+(defn ^:export undo
   "Goes back in history."
   ([]
    (undo 1))
@@ -232,7 +232,7 @@
   ([steps]
    (rf/dispatch [:history/undo steps])))
 
-(defn redo
+(defn ^:export redo
   "Goes forward in history."
   ([]
    (redo 1))
@@ -240,46 +240,46 @@
   ([steps]
    (rf/dispatch [:history/redo steps])))
 
-(defn unite
+(defn ^:export unite
   "Unites the selected elements."
   []
   (rf/dispatch [:elements/bool-operation :unite])
   "")
 
-(defn intersect
+(defn ^:export ntersect
   "Intersects the selected elements."
   []
   (rf/dispatch [:elements/bool-operation :intersect]))
 
-(defn subtract
+(defn ^:export subtract
   "Subtracts the selected elements."
   []
   (rf/dispatch [:elements/bool-operation :subtract]))
 
-(defn exclude
+(defn ^:export exclude
   "Excludes the selected elements."
   []
   (rf/dispatch [:elements/bool-operation :exclude]))
 
 ;; divide already refers to cljs.core/divide
-(defn devide
+(defn ^:export devide
   "Divides the selected elements."
   []
   (rf/dispatch [:elements/bool-operation :divide]))
 
-(defn exit
+(defn ^:export exit
   "Closes the application."
   [element]
   (apply #(rf/dispatch [:window/close]) element))
 
-(defn help
+(defn ^:export help
   "Lists available functions."
   []
   (doseq [x (sort-by str (vals (ns-publics 'user)))]
     (print (:name (meta x))  " - " (:doc (meta x))))
   "")
 
-(def version config/version)
+(def ^:export version config/version)
 
 #_{:clj-kondo/ignore [:unresolved-var]}
 (comment
@@ -310,47 +310,3 @@
   (dotimes [x 8]
     (dotimes [y 6]
       (kitty (* x 100) (* y 100) 100 100))))
-
-(defn isometric-city []
-  (let [grid-size 20
-        building-colors ["#e9c46a" "#f4a261" "#e76f51"]
-        building-shapes ["rect" "polygon"]
-        buildings (repeatedly 100
-                              #(hash-map :x (* grid-size (rand-int 20))
-                                         :y (* grid-size (rand-int 20))
-                                         :height (* grid-size (inc (rand-int 4)))
-                                         :color (rand-nth building-colors)
-                                         :shape (rand-nth building-shapes)))
-        streets (concat (for [x (range 0 400 grid-size)]
-                          (list [x 0] [x 400]))
-                        (for [y (range 0 400 grid-size)]
-                          (list [0 y] [400 y])))]
-    (doseq [building buildings]
-      (let [x (:x building)
-            y (:y building)
-            height (:height building)
-            color (:color building)
-            shape (:shape building)]
-        (case shape
-          "rect"
-          (rect [x y] grid-size height {:fill color})
-          "polygon"
-          (let [points [[x y]
-                        [x (+ y (* grid-size 0.5))]
-                        [x (+ y (* grid-size 1.5))]
-                        [x y]]
-                top-points [[x y]
-                            [x (+ y (* grid-size 0.5))]
-                            [x (+ y (* grid-size 1.5))]
-                            [x y]]
-                bottom-points [[x y height]
-                               [x (+ y (* grid-size 0.5)) height]
-                               [x (+ y (* grid-size 1.5)) height]
-                               [x y height]]]
-            (doseq [p (partition 2 points)]
-              (line (first p) (second p) {:stroke color :stroke-width 2}))
-            (polygon top-points {:fill color})
-            (polygon bottom-points {:fill color :opacity 0.5}))))
-      (doseq [street streets]
-        (line (first street) (second street) {:stroke "#222222"
-                                              :stroke-dasharray "4,2"})))))

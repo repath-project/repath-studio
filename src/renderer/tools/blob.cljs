@@ -1,20 +1,21 @@
 (ns renderer.tools.blob
   "Custom element for https://blobs.dev/"
-  (:require [renderer.tools.base :as tools]
-            [renderer.attribute.views :as attr-views]
-            [renderer.attribute.hierarchy :as attr-hierarchy]
-            [renderer.attribute.length :as length]
-            [renderer.utils.mouse :as mouse]
-            [renderer.utils.units :as units]
-            [renderer.elements.handlers :as elements]
-            [renderer.overlay :as overlay]
-            [renderer.components :as comp]
-            [re-frame.core :as rf]
-            ["svg-path-bbox" :as svg-path-bbox]
-            ["svgpath" :as svgpath]
-            ["blobs/v2" :as blobs]
-            [goog.math]
-            [clojure.core.matrix :as matrix]))
+  (:require
+   [renderer.tools.base :as tools]
+   [renderer.attribute.views :as attr-views]
+   [renderer.attribute.hierarchy :as attr-hierarchy]
+   [renderer.attribute.length :as length]
+   [renderer.utils.mouse :as mouse]
+   [renderer.utils.units :as units]
+   [renderer.elements.handlers :as elements]
+   [renderer.overlay :as overlay]
+   [renderer.components :as comp]
+   [re-frame.core :as rf]
+   ["svg-path-bbox" :as svg-path-bbox]
+   ["svgpath" :as svgpath]
+   ["blobs/v2" :as blobs]
+   [goog.math]
+   [clojure.core.matrix :as matrix]))
 
 (derive ::blob ::tools/custom)
 

@@ -71,7 +71,7 @@
   [db element]
   (loop [parent-element (:parent element)
          parent-keys #{}]
-    (if parent-element 
+    (if parent-element
       (recur
        (:parent (get-element db parent-element))
        (conj parent-keys parent-element))
@@ -115,7 +115,7 @@
 
 (defn deselect-element
   [db key]
-    (assoc-in db (conj (elements-path db) key :selected?) false))
+  (assoc-in db (conj (elements-path db) key :selected?) false))
 
 (defn toggle-selected
   [db key]
@@ -148,7 +148,7 @@
       (toggle-selected db (:key element)))
     (deselect-all db)))
 
-(defn hover 
+(defn hover
   [{active-document :active-document :as db} key]
   (update-in db [:documents active-document :hovered-keys] conj key))
 
@@ -179,26 +179,26 @@
 (defn set-attribute
   ([db attribute value]
    (update-by db (fn [elements element]
-                         (if (and (not (:locked? element))
-                                  (attribute (tools/attributes element)))
-                           (assoc-in elements [(:key element) :attrs attribute] value) 
-                           elements))))
+                   (if (and (not (:locked? element))
+                            (attribute (tools/attributes element)))
+                     (assoc-in elements [(:key element) :attrs attribute] value)
+                     elements))))
   ([db element-key attribute value]
-   (let [attr-path (conj (elements-path db) element-key :attrs attribute)] 
-    (cond-> db
-      (get-in db attr-path)
-      (assoc-in attr-path value)))))
+   (let [attr-path (conj (elements-path db) element-key :attrs attribute)]
+     (cond-> db
+       (get-in db attr-path)
+       (assoc-in attr-path value)))))
 
 
 (defn update-attribute
   [db attribute function]
   (update-by db (fn [elements element]
-                        (if (and (not (:locked? element))
-                                 (attribute (tools/attributes element)))
-                          (update elements
-                                  (:key element)
-                                  #(hierarchy/update-attr % attribute function))
-                          elements))))
+                  (if (and (not (:locked? element))
+                           (attribute (tools/attributes element)))
+                    (update elements
+                            (:key element)
+                            #(hierarchy/update-attr % attribute function))
+                    elements))))
 
 (defn copy
   [db]
@@ -210,15 +210,15 @@
    (let [element (get-element db key)
          db (reduce delete db (:children element))]
      (cond-> db
-       :always 
+       :always
        (assoc-in
         (conj (elements-path db) (:parent element) :children)
         (vec (remove #{key} (:children (parent db element)))))
 
-       (page? element) 
+       (page? element)
        (next-active-page)
 
-       :always 
+       :always
        (update-in (elements-path db) dissoc key))))
   ([db]
    (reduce delete db (selected-keys db))))
@@ -256,9 +256,9 @@
 (defn translate
   [db offset]
   (update-by db (fn [elements element]
-                        (assoc elements
-                               (:key element)
-                               (tools/translate element offset)))))
+                  (assoc elements
+                         (:key element)
+                         (tools/translate element offset)))))
 
 (defn scale
   [db offset _lock-ratio? _in-place?]
@@ -424,8 +424,8 @@
 (defn animate
   [db tag attrs]
   (reduce (fn [db element]
-            (create-element db (:key element) {:tag tag :attrs attrs})) 
-          (deselect-all db) 
+            (create-element db (:key element) {:tag tag :attrs attrs}))
+          (deselect-all db)
           (selected db)))
 
 (defn paste-styles
@@ -439,8 +439,8 @@
          (let [key (:key element)
                ;; Copy all presentation attributes except transform
                ;; SEE https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/Presentation
-               style-attrs (-> tools/svg-spec 
-                               :attributes 
+               style-attrs (-> tools/svg-spec
+                               :attributes
                                :presentation
                                (dissoc  :transform)
                                (keys))]
@@ -498,8 +498,8 @@
 (defn manipulate-path
   [db action]
   (update-by db (fn [elements element]
-                        (if (= (:tag element) :path)
-                          (assoc elements
-                                 (:key element)
-                                 (path/manipulate element action))
-                          elements))))
+                  (if (= (:tag element) :path)
+                    (assoc elements
+                           (:key element)
+                           (path/manipulate element action))
+                    elements))))

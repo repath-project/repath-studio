@@ -1,10 +1,11 @@
 (ns renderer.tools.svg
   "https://www.w3.org/TR/SVG/struct.html#SVGElement"
-  (:require [renderer.elements.handlers :as elements]
-            [renderer.tools.base :as tools]
-            [clojure.core.matrix :as matrix]
-            [renderer.utils.units :as units]
-            [clojure.string :as str]))
+  (:require
+   [renderer.elements.handlers :as elements]
+   [renderer.tools.base :as tools]
+   [clojure.core.matrix :as matrix]
+   [renderer.utils.units :as units]
+   [clojure.string :as str]))
 
 (derive :svg ::tools/container)
 
@@ -31,7 +32,7 @@
 (defmethod tools/bounds :svg
   [{:keys [attrs]}]
   (let [{:keys [x y width height stroke-width stroke]} attrs
-        [x y width height stroke-width-px] (mapv units/unit->px 
+        [x y width height stroke-width-px] (mapv units/unit->px
                                                  [x y width height stroke-width])
         stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)
         [x y] (matrix/sub [x y]

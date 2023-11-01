@@ -1,13 +1,14 @@
 (ns renderer.tools.canvas
   "The main SVG element that hosts all pages"
-  (:require [re-frame.core :as rf]
-            [renderer.tools.base :as tools]
-            [clojure.string :as str]
-            [renderer.filters :as filters]
-            [renderer.utils.mouse :as mouse]
-            [renderer.utils.keyboard :as keyboard]
-            [renderer.rulers.views :as rulers]
-            [renderer.overlay :as overlay]))
+  (:require
+   [re-frame.core :as rf]
+   [renderer.tools.base :as tools]
+   [clojure.string :as str]
+   [renderer.filters :as filters]
+   [renderer.utils.mouse :as mouse]
+   [renderer.utils.keyboard :as keyboard]
+   [renderer.rulers.views :as rulers]
+   [renderer.overlay :as overlay]))
 
 (derive :canvas ::tools/tool)
 
@@ -75,14 +76,14 @@
            [overlay/size bounds]
            [overlay/bounding-handlers bounds]])])
 
-     (when (or (= tool :edit) 
+     (when (or (= tool :edit)
                (= primary-tool :edit))
-             (map (fn [element]
-                    ^{:key (str (:key element) "-edit-points")}
-                    [:g
-                     [tools/render-edit element]
-                     ^{:key (str (:key element) "-centroid")}
-                     [overlay/centroid element]])
+       (map (fn [element]
+              ^{:key (str (:key element) "-edit-points")}
+              [:g
+               [tools/render-edit element]
+               ^{:key (str (:key element) "-centroid")}
+               [overlay/centroid element]])
             selected-elements))
 
      [tools/render temp-element]

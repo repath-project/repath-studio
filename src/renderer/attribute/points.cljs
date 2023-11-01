@@ -10,8 +10,8 @@
    [re-frame.core :as rf]
    ["@radix-ui/react-popover" :as Popover]))
 
-(defmethod hierarchy/description :points 
-  [] 
+(defmethod hierarchy/description :points
+  []
   "The points attribute defines a list of points. Each point is defined by a 
    pair of number representing a X and a Y coordinate in the user coordinate 
    system. If the attribute contains an odd number of coordinates, the last one 
@@ -51,7 +51,7 @@
                               [:div.grid.grid-flow-col.gap-px.mt-px
                                {:style {:grid-template-columns "minmax(0, 40px) 3fr 3fr 26px"}}
                                [:label.px-1.bg-transparent index]
-                               [:input.bg-transparent 
+                               [:input.bg-transparent
                                 {:key (str "x-" index value) :default-value x}]
                                [:input.bg-transparent
                                 {:key (str "y-" index value) :default-value y}]

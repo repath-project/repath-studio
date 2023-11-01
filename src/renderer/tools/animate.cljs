@@ -1,6 +1,7 @@
 (ns renderer.tools.animate
   "https://svgwg.org/specs/animations/#AnimateElement"
-  (:require [renderer.tools.base :as tools]))
+  (:require
+   [renderer.tools.base :as tools]))
 
 (derive :animate ::tools/animation)
 

@@ -139,9 +139,9 @@
 (rf/reg-event-db
  :document/close-all
  (fn [db [_]]
-     (-> db
-         (assoc :document-tabs [])
-         (dissoc :active-document :documents))))
+   (-> db
+       (assoc :document-tabs [])
+       (dissoc :active-document :documents))))
 
 (rf/reg-event-db
  :document/scroll

@@ -1,9 +1,10 @@
 (ns renderer.tools.button
-  (:require [re-frame.core :as rf]
-            [renderer.tools.base :as tools]
-            [renderer.attribute.views :as attr]
-            [renderer.utils.mouse :as mouse]
-            [renderer.utils.units :as units]))
+  (:require
+   [re-frame.core :as rf]
+   [renderer.tools.base :as tools]
+   [renderer.attribute.views :as attr]
+   [renderer.utils.mouse :as mouse]
+   [renderer.utils.units :as units]))
 
 (derive :button ::tools/custom)
 (derive :font-color ::attr/color)
@@ -55,12 +56,12 @@
      [:rect (merge
              {:ry radius
               :rx radius}
-             (select-keys attrs [:x 
-                                 :y 
-                                 :width 
-                                 :height 
-                                 :stroke 
-                                 :fill 
+             (select-keys attrs [:x
+                                 :y
+                                 :width
+                                 :height
+                                 :stroke
+                                 :fill
                                  :stroke-width]))]
      [:text (merge
              {:x (+ (units/unit->px x) (/ (units/unit->px width) 2))
@@ -68,7 +69,7 @@
               :fill font-color
               :dominant-baseline "middle"
               :text-anchor "middle"}
-             (select-keys attrs [:width 
-                                 :font-family 
-                                 :font-size 
+             (select-keys attrs [:width
+                                 :font-family
+                                 :font-size
                                  :font-weight])) (:label attrs)]]))

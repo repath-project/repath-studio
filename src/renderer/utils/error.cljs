@@ -1,6 +1,7 @@
 (ns renderer.utils.error
-    (:require [reagent.core :as ra]
-              [re-frame.core :as rf]))
+  (:require
+   [reagent.core :as ra]
+   [re-frame.core :as rf]))
 
 (defn boundary
   []

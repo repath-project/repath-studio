@@ -97,9 +97,9 @@
          {:class (when active? "active")
           :on-wheel #(rf/dispatch [:document/scroll (.-deltaY %)])
           :on-pointer-down #(case (.-buttons %)
-                            4 (rf/dispatch [:document/close key])
-                            1 (rf/dispatch [:set-active-document key])
-                            nil)
+                              4 (rf/dispatch [:document/close key])
+                              1 (rf/dispatch [:set-active-document key])
+                              nil)
           :draggable true
           :on-drag-start #(.setData (.-dataTransfer %) "key" (name key))
           :on-drag-over #(.preventDefault %)

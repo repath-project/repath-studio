@@ -17,13 +17,13 @@
       [:span.mr-1 "X:"] [:span (gstring/format "%.2f" x)]]
      [:div.flex.justify-between
       [:span.mr-1 "Y:"] [:span (gstring/format "%.2f" y)]]]))
-  
+
 
 (def view-radio-buttons
   [#_{:title "Snap to pixels"
-    :active? [:document/snap?]
-    :icon "magnet"
-    :action [:document/toggle-snap]}
+      :active? [:document/snap?]
+      :icon "magnet"
+      :action [:document/toggle-snap]}
    {:title "Grid"
     :active? [:document/grid?]
     :icon "grid"

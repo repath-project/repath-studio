@@ -1,20 +1,21 @@
 (ns renderer.tools.brush
   "https://github.com/steveruizok/perfect-freehand"
-  (:require [renderer.elements.handlers :as elements]
-            [renderer.overlay :as overlay]
-            [renderer.tools.base :as tools]
-            [renderer.history.handlers :as history]
-            [renderer.handlers :as handlers]
-            [renderer.attribute.views :as attr-views]
-            [renderer.attribute.hierarchy :as attr-hierarchy]
-            [renderer.utils.units :as units]
-            [renderer.attribute.range :as range]
-            [renderer.utils.mouse :as mouse]
-            [clojure.core.matrix :as matrix]
-            [renderer.attribute.color :as color]
-            ["svg-path-bbox" :as svg-path-bbox]
-            ["perfect-freehand" :refer [getStroke]]
-            [goog.math]))
+  (:require
+   [renderer.elements.handlers :as elements]
+   [renderer.overlay :as overlay]
+   [renderer.tools.base :as tools]
+   [renderer.history.handlers :as history]
+   [renderer.handlers :as handlers]
+   [renderer.attribute.views :as attr-views]
+   [renderer.attribute.hierarchy :as attr-hierarchy]
+   [renderer.utils.units :as units]
+   [renderer.attribute.range :as range]
+   [renderer.utils.mouse :as mouse]
+   [clojure.core.matrix :as matrix]
+   [renderer.attribute.color :as color]
+   ["svg-path-bbox" :as svg-path-bbox]
+   ["perfect-freehand" :refer [getStroke]]
+   [goog.math]))
 
 (derive :brush ::tools/draw)
 
@@ -53,24 +54,24 @@
            :disabled true
            :placeholder (when-not value "multiple")}])
 
-(defmethod attr-hierarchy/description ::points 
-  [] 
+(defmethod attr-hierarchy/description ::points
+  []
   "Input points recorded from a user's mouse movement.")
 
-(defmethod attr-hierarchy/description ::size 
-  [] 
+(defmethod attr-hierarchy/description ::size
+  []
   "The base size (diameter) of the stroke.")
 
-(defmethod attr-hierarchy/description ::thinning 
-  [] 
+(defmethod attr-hierarchy/description ::thinning
+  []
   "The effect of pressure on the stroke's size.")
 
-(defmethod attr-hierarchy/description ::smoothing 
-  [] 
+(defmethod attr-hierarchy/description ::smoothing
+  []
   "How much to soften the stroke's edges.")
 
-(defmethod attr-hierarchy/description ::streamline 
-  [] 
+(defmethod attr-hierarchy/description ::streamline
+  []
   "How much to streamline the stroke.")
 
 (defmethod tools/drag-start :brush
@@ -78,7 +79,7 @@
   (handlers/set-state db :create))
 
 (defmethod tools/drag :brush
-  [{:keys [active-document 
+  [{:keys [active-document
            adjusted-mouse-pos] :as db} {:keys [pressure]}]
   (let [stroke (get-in db [:documents active-document :stroke])]
     (if (get-in db [:documents active-document :temp-element :attrs ::points])
@@ -110,19 +111,19 @@
                " Q" (units/->fixed (first b)) "," (units/->fixed (second b))
                " " (units/->fixed (goog.math/average (first b) (first c))) ","
                (units/->fixed (goog.math/average (second b) (second c))) " T")]
-         (reduce-kv
-          (fn [result index]
-            (if (or (= len (inc index)) (< index 2))
-              result
-              (let [a (nth points index)
-                    b (nth points (inc index))]
-                (str result
-                     (units/->fixed (goog.math/average (first a)
-                                                       (first b))) 
-                     ","
-                     (units/->fixed (goog.math/average (second a)
-                                                       (second b))) 
-                     " ")))) d points)))))
+        (reduce-kv
+         (fn [result index]
+           (if (or (= len (inc index)) (< index 2))
+             result
+             (let [a (nth points index)
+                   b (nth points (inc index))]
+               (str result
+                    (units/->fixed (goog.math/average (first a)
+                                                      (first b)))
+                    ","
+                    (units/->fixed (goog.math/average (second a)
+                                                      (second b)))
+                    " ")))) d points)))))
 
 (defn points->path
   [points options]
@@ -133,7 +134,7 @@
 
 (defmethod tools/render :brush
   [{:keys [attrs] :as element}]
-  [:path (merge {:d (points->path (::points attrs) 
+  [:path (merge {:d (points->path (::points attrs)
                                   (merge (select-keys attrs options)
                                          {:simulatePressure false}))
                  :on-pointer-up #(mouse/event-handler % element)

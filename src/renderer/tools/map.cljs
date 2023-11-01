@@ -1,8 +1,9 @@
 (ns renderer.tools.map
-  (:require [reagent.core :as ra]
-            [re-frame.core :as rf]
-            [renderer.tools.base :as tools]
-            [renderer.utils.mouse :as mouse]))
+  (:require
+   [reagent.core :as ra]
+   [re-frame.core :as rf]
+   [renderer.tools.base :as tools]
+   [renderer.utils.mouse :as mouse]))
 
 (derive :map ::tools/box)
 (derive :map ::tools/custom)
@@ -27,7 +28,7 @@
                :width (abs (- pos-x offset-x))
                :height (abs (- pos-y offset-y))}]
     (rf/dispatch [:document/set-temp-element {:type tool
-                                     :attrs attrs}])))
+                                              :attrs attrs}])))
 
 
 (defn ->href [image]
@@ -46,24 +47,24 @@
                    (js/window.api.osmsm
                     (clj->js (merge {:center (when (and (:lat a) (:lng a)) (str (:lat a) "," (:lng a)))}
                                     (select-keys a [:width :height :zoom])))) #(reset! image (->href %))))]
-    
-    (ra/create-class             
-     {:display-name  "my-component"      
 
-      :component-did-mount            
+    (ra/create-class
+     {:display-name  "my-component"
+
+      :component-did-mount
       (fn [_this]
-        (get-map attrs)) 
-      
-      :component-did-update           
-      (fn [this _old-argv]          
+        (get-map attrs))
+
+      :component-did-update
+      (fn [this _old-argv]
         (let [_new-argv (rest (ra/argv this))
               _keys [:lat :lng :zoom :width :height]]
               ;; new-args (select-keys (into {} (:attrs (into {} new-argv))) keys)
               ;; old-args (select-keys (into {} (:attrs (into {} old-argv))) keys)]
           #_(when-not (= new-args old-args) (get-map attrs))))
 
-      :reagent-render  
-      (fn [{:keys [attrs] :as element} _child-elements]     
+      :reagent-render
+      (fn [{:keys [attrs] :as element} _child-elements]
         [:image (merge
                  {:href @image
                   :on-pointer-up   #(mouse/event-handler % element)

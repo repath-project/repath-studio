@@ -1,17 +1,18 @@
 (ns renderer.tools.polyshape
   "This serves as an abstraction for polygons and polylines that have similar
    attributes and hehavior"
-  (:require [renderer.elements.handlers :as elements]
-            [renderer.overlay :as overlay]
-            [renderer.tools.base :as tools]
-            [renderer.utils.units :as units]
-            [renderer.history.handlers :as history]
-            [renderer.handlers :as handlers]
-            [re-frame.core :as rf]
-            [clojure.string :as str]
-            [clojure.core.matrix :as matrix]
-            [renderer.attribute.utils :as attr-utils]
-            ["polylabel" :as polylabel]))
+  (:require
+   [renderer.elements.handlers :as elements]
+   [renderer.overlay :as overlay]
+   [renderer.tools.base :as tools]
+   [renderer.utils.units :as units]
+   [renderer.history.handlers :as history]
+   [renderer.handlers :as handlers]
+   [re-frame.core :as rf]
+   [clojure.string :as str]
+   [clojure.core.matrix :as matrix]
+   [renderer.attribute.utils :as attr-utils]
+   ["polylabel" :as polylabel]))
 
 (derive ::tools/polyshape ::tools/shape)
 

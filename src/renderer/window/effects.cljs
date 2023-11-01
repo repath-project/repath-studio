@@ -17,9 +17,9 @@
  ::toggle-fullscreen
  (fn [_]
    (let [element js/document.documentElement]
-    (if (.-fullscreenElement element)
-      (.exitFullscreen element)
-      (.requestFullscreen element)))))
+     (if (.-fullscreenElement element)
+       (.exitFullscreen element)
+       (.requestFullscreen element)))))
 
 (rf/reg-fx
  ::open-remote-url
@@ -62,6 +62,6 @@
 (rf/reg-event-fx
  :window/open-remote-url
  (fn [_ [_ url]]
-    (if platform/electron?
-      {:send-to-main {:action "openRemoteUrl" :data url}}
-      {::open-remote-url url})))
+   (if platform/electron?
+     {:send-to-main {:action "openRemoteUrl" :data url}}
+     {::open-remote-url url})))

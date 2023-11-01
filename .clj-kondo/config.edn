@@ -1,1 +1,0 @@
-{:linters {:clojure-lsp/unused-public-var {:exclude [user]}}}

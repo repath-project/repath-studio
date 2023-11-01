@@ -152,12 +152,12 @@
         (rest))))
 
 #_(rf/reg-sub
- :font-options
- :<- [:system-fonts]
- (fn [system-fonts _]
-   (mapv (fn [font]
-           {:key (keyword font)
-            :text font
-            :styles {:optionText {:fontFamily font
-                                  :font-size "14px"}}})
-         system-fonts)))
+   :font-options
+   :<- [:system-fonts]
+   (fn [system-fonts _]
+     (mapv (fn [font]
+             {:key (keyword font)
+              :text font
+              :styles {:optionText {:fontFamily font
+                                    :font-size "14px"}}})
+           system-fonts)))

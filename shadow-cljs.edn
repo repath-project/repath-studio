@@ -7,11 +7,11 @@
 
  :builds {:main {:target :node-script
                  :output-to "resources/main.js"
-                 :main main/main}
+                 :main main/init}
 
           :preload {:target :node-script
                     :output-to "resources/preload.js"
-                    :main preload/main
+                    :main preload/init
                     :hashbang false}
 
           :renderer {:target :browser

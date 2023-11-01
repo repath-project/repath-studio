@@ -31,7 +31,7 @@
       #(doseq
         [event ["pointermove" "pointerup" "wheel"]]
          (.removeEventListener frame-window event mouse-handler))
-      
+
       :reagent-render #()})))
 
 (defn markup
