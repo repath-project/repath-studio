@@ -3,11 +3,6 @@
    [re-frame.core :as rf]))
 
 (rf/reg-sub
- :window/theme-mode
- (fn [db [_]]
-   (-> db :window :theme-mode)))
-
-(rf/reg-sub
  :window/sidebar?
  (fn [db [_ key]]
    (-> db :window key :visible?)))

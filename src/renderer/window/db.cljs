@@ -19,5 +19,4 @@
    [:elements-collapsed? boolean?]
    [:pages-collapsed? boolean?]
    [:command-palette? boolean?]
-   [:repl-history? boolean?]
-   [:theme-mode [:enum :dark :light :system]]])
+   [:repl-history? boolean?]])

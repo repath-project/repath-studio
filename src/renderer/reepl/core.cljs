@@ -115,7 +115,7 @@
 
 #_(defn repl-mode-button
     [mode]
-    (let [repl-mode @(rf/subscribe [:repl/mode])
+    (let [repl-mode @(rf/subscribe [:repl-mode])
           active? (= repl-mode mode)]
       [:button.icon-button {:style {:class (when active? "overlay")
                                     :color (when active? "var(--font-color-active)")}

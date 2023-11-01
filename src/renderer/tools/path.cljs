@@ -40,7 +40,7 @@
 
 (defmethod tools/properties :path
   []
-  {:icon "bezier-curve"
+  {; :icon "bezier-curve"
    :description "The <path> SVG element is the generic element to define a shape. 
                  All the basic shapes can be created with a path element."
    :attrs [:stroke-width

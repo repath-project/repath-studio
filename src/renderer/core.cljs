@@ -15,6 +15,7 @@
    [renderer.reepl.core]
    [renderer.attribute.core]
    [renderer.notification.core]
+   [renderer.theme.core]
    [renderer.reepl.replumb :as replumb]
    [replumb.repl :as repl]
    [renderer.views :as views]

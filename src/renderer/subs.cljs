@@ -133,9 +133,9 @@
    (:clicked-element db)))
 
 (rf/reg-sub
- :repl/mode
+ :repl-mode
  (fn [db _]
-   (:repl/mode db)))
+   (:repl-mode db)))
 
 (rf/reg-sub
  :shortcuts

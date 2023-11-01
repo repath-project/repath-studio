@@ -58,7 +58,7 @@
 #_(rf/reg-event-db
    :set-repl-mode
    (fn [db [_ mode]]
-     (assoc db :repl/mode mode)))
+     (assoc db :repl-mode mode)))
 
 (rf/reg-event-db
  :toggle-debug-info

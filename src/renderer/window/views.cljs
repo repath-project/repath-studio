@@ -235,9 +235,9 @@
         :onValueChange #(rf/dispatch [:set-backdrop (seq %)])}
        (map (fn [item] ^{:key item} [menu-button item]) (menu))]]
      [title-bar]
-     (let [theme-mode @(rf/subscribe [:window/theme-mode])]
+     (let [theme-mode @(rf/subscribe [:theme/mode])]
        [:div.level-2
         {:class (when-not platform/electron? "mr-1.5")}
         [comp/icon-button {:icon (name theme-mode)
-                           :action #(rf/dispatch [:window/cycle-theme-mode])}]])
+                           :action #(rf/dispatch [:theme/cycle])}]])
      (when platform/electron? [window-controls])]))

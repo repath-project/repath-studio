@@ -1,7 +1,8 @@
 (ns renderer.db
   (:require
    [renderer.window.db]
-   [renderer.document.db]))
+   [renderer.document.db]
+   [renderer.theme.db]))
 
 (def app
   [:map
@@ -14,7 +15,8 @@
    [:system-fonts vector?]
    [:debug-info? boolean?]
    [:pen-mode? boolean?]
-   [:window renderer.window.db/window]])
+   [:window renderer.window.db/window]
+   [:theme-mode renderer.theme.db/modes]])
 
 (def default
   {:tool :select
@@ -27,7 +29,8 @@
    :notifications []
    :debug-info? false
    :pen-mode? false
-   :repl/mode :cljs
+   :repl-mode :cljs
+   :theme-mode :dark
    :window {:maximized? true
             :minimized? false
             :fullscreen? false
@@ -44,5 +47,4 @@
             :command-palette? false
             :defs-collapsed? true
             :symbols-collapsed? true
-            :repl-history? false
-            :theme-mode :dark}})
+            :repl-history? false}})
