@@ -51,7 +51,7 @@
   [db]
   (if (elements/get-temp db)
     (-> db
-        (elements/create-from-temp)
+        (elements/create)
         (history/finalize (str "Create line")))
     (-> db
         (handlers/set-state :create)

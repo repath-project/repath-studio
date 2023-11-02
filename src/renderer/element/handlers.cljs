@@ -22,8 +22,8 @@
   (key (elements db)))
 
 (defn active-page
-  [{active-document :active-document :as db}]
-  (->> (get-in db [:documents active-document :active-page])
+  [db]
+  (->> (get-in db [:documents (:active-document db) :active-page])
        (get-element db)))
 
 (defn selected
@@ -78,16 +78,16 @@
       parent-keys)))
 
 (defn clear-temp
-  [{active-document :active-document :as db}]
-  (update-in db [:documents active-document] dissoc :temp-element))
+  [db]
+  (update-in db [:documents (:active-document db)] dissoc :temp-element))
 
 (defn set-temp
-  [{active-document :active-document :as db} element]
-  (assoc-in db [:documents active-document :temp-element] element))
+  [db element]
+  (assoc-in db [:documents (:active-document db) :temp-element] element))
 
 (defn get-temp
-  [{active-document :active-document :as db}]
-  (get-in db [:documents active-document :temp-element]))
+  [db]
+  (get-in db [:documents (:active-document db) :temp-element]))
 
 (defn page
   [db el]
@@ -98,8 +98,8 @@
       (recur db (parent db el)))))
 
 (defn set-active-page
-  [{active-document :active-document :as db} key]
-  (assoc-in db [:documents active-document :active-page] key))
+  [db key]
+  (assoc-in db [:documents (:active-document db) :active-page] key))
 
 (defn next-active-page
   [db]
@@ -149,16 +149,16 @@
     (deselect-all db)))
 
 (defn hover
-  [{active-document :active-document :as db} key]
-  (update-in db [:documents active-document :hovered-keys] conj key))
+  [db key]
+  (update-in db [:documents (:active-document db) :hovered-keys] conj key))
 
 (defn ignore
-  [{active-document :active-document :as db} key]
-  (update-in db [:documents active-document :ignored-keys] conj key))
+  [db key]
+  (update-in db [:documents (:active-document db) :ignored-keys] conj key))
 
 (defn clear-hovered
-  [{active-document :active-document :as db}]
-  (assoc-in db [:documents active-document :hovered-keys] #{}))
+  [db]
+  (assoc-in db [:documents (:active-document db) :hovered-keys] #{}))
 
 (defn clear-ignored
   [{active-document :active-document :as db}]
@@ -348,24 +348,21 @@
 
 (defn create
   "TODO Handle child elements"
-  [db elements]
-  (let [active-page (active-page db)
-        page? (page? elements)
-        parent-key (if page? :canvas (:key active-page))]
-    (if elements
-      (cond-> (reduce (fn [db element] (create-element db parent-key element))
-                      (deselect-all db)
-                      (if (seq? elements) elements [elements]))
-        (not page?)
-        (translate [(- (get-in active-page [:attrs :x])) (- (get-in active-page [:attrs :y]))]))
-      db)))
-
-(defn create-from-temp
-  [{active-document :active-document :as db}]
-  (let [temp-element (get-in db [:documents active-document :temp-element])]
-    (-> db
-        (create temp-element)
-        (clear-temp))))
+  ([db]
+   (-> db
+       (create (get-temp db))
+       (clear-temp)))
+  ([db elements]
+   (let [active-page (active-page db)
+         page? (page? elements)
+         parent-key (if page? :canvas (:key active-page))]
+     (if elements
+       (cond-> (reduce (fn [db element] (create-element db parent-key element))
+                       (deselect-all db)
+                       (if (seq? elements) elements [elements]))
+         (not page?)
+         (translate [(- (get-in active-page [:attrs :x])) (- (get-in active-page [:attrs :y]))]))
+       db))))
 
 (defn bool-operation
   [db operation]
@@ -390,13 +387,13 @@
                  :attrs (merge attrs {:d new-path})}))))
 
 (defn paste-in-place
-  [{:keys [copied-elements] :as db}]
+  [db]
   (reduce (fn [db element]
             (create-element db (if (page? (element (:parent element)))
                                  (active-page db)
-                                 (:parent element))  element))
+                                 (:parent element)) element))
           (deselect-all db)
-          copied-elements))
+          (:copied-elements db )))
 
 (defn paste
   [db]

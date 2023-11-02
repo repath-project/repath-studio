@@ -161,7 +161,7 @@
 (defmethod tools/drag-end :brush
   [db]
   (-> db
-      (elements/create-from-temp)
+      (elements/create)
       (history/finalize (str "Draw line"))))
 
 (defmethod tools/path :brush

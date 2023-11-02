@@ -70,10 +70,11 @@
                 (matrix/add page-pos [x y])
                 [x y])]
     [:g {:key :edit-handlers}
-     (map (fn [handler] [overlay/square-handler
-                         (merge handler {:type :handler
-                                         :tag :edit
-                                         :element key})])
+     (map (fn [handler]
+            [overlay/square-handler (merge handler
+                                           {:type :handler
+                                            :tag :edit
+                                            :element key})])
           [{:x x :y y :key :position}
            {:x (+ x width) :y (+ y height) :key :size}])]))
 

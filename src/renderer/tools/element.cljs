@@ -25,7 +25,7 @@
   [db]
   (let [temp-element (get-in db [:documents (:active-document db) :temp-element])]
     (-> db
-        (element-handlers/create-from-temp)
+        (element-handlers/create)
         (history/finalize (str "Create " (name (:tag temp-element))))
         (assoc :cursor "crosshair"))))
 
