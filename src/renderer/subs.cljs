@@ -5,98 +5,79 @@
 
 (rf/reg-sub
  :tool
- (fn [db _]
-   (:tool db)))
+ :-> :tool)
 
 (rf/reg-sub
  :primary-tool
- (fn [db _]
-   (:primary-tool db)))
+ :-> :primary-tool)
 
 (rf/reg-sub
  :mouse-pos
- (fn [db _]
-   (:mouse-pos db)))
+ :-> :mouse-pos)
 
 (rf/reg-sub
  :adjusted-mouse-pos
- (fn [db _]
-   (:adjusted-mouse-pos db)))
+ :-> :adjusted-mouse-pos)
 
 (rf/reg-sub
  :adjusted-mouse-offset
- (fn [db _]
-   (:adjusted-mouse-offset db)))
+ :-> :adjusted-mouse-offset)
 
 (rf/reg-sub
  :mouse-offset
- (fn [db _]
-   (:mouse-offset db)))
+ :-> :mouse-offset)
 
 (rf/reg-sub
  :drag?
- (fn [db _]
-   (:drag? db)))
+ :-> :drag?)
 
 (rf/reg-sub
  :cursor
- (fn [db _]
-   (:cursor db)))
+ :-> :cursor)
 
 (rf/reg-sub
  :state
- (fn [db _]
-   (:state db)))
+ :-> :state)
 
 (rf/reg-sub
  :message
- (fn [db _]
-   (:message db)))
+ :-> :message)
 
 (rf/reg-sub
  :command-palette?
- (fn [db _]
-   (:command-palette? db)))
+ :-> :command-palette?)
 
 (rf/reg-sub
  :active-document
- (fn [db _]
-   (:active-document db)))
+ :-> :active-document)
 
 (rf/reg-sub
  :documents
- (fn [db _]
-   (:documents db)))
+ :-> :documents)
 
 (rf/reg-sub
  :document-tabs
- (fn [db _]
-   (:document-tabs db)))
+ :-> :document-tabs)
 
 (rf/reg-sub
  :offset
- (fn [db _]
-   (:offset db)))
+ :-> :offset)
 
 (rf/reg-sub
  :content-rect
- (fn [db _]
-   (:content-rect db)))
+ :-> :content-rect)
 
 (rf/reg-sub
  :copied-elements
- (fn [db _]
-   (:copied-elements db)))
+ :-> :copied-elements)
 
 (rf/reg-sub
  :system-fonts
- (fn [db _]
-   (:system-fonts db)))
+ :-> :system-fonts)
 
 (rf/reg-sub
  :webref-css
- (fn [db _]
-   (:webref-css db)))
+ :-> :webref-css)
 
 (rf/reg-sub
  :webref-css-property
@@ -108,8 +89,7 @@
 
 (rf/reg-sub
  :mdn
- (fn [db _]
-   (:mdn db)))
+ :-> :mdn)
 
 (rf/reg-sub
  :css-property
@@ -119,23 +99,19 @@
 
 (rf/reg-sub
  :backdrop?
- (fn [db _]
-   (:backdrop? db)))
+ :-> :backdrop?)
 
 (rf/reg-sub
  :debug-info?
- (fn [db _]
-   (:debug-info? db)))
+ :-> :debug-info?)
 
 (rf/reg-sub
  :clicked-element
- (fn [db _]
-   (:clicked-element db)))
+ :-> :clicked-element)
 
 (rf/reg-sub
  :repl-mode
- (fn [db _]
-   (:repl-mode db)))
+ :-> :repl-mode)
 
 (rf/reg-sub
  :shortcuts

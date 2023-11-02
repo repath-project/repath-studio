@@ -4,5 +4,4 @@
 
 (rf/reg-sub
  :theme/mode
- (fn [db [_]]
-   (-> db :theme-mode)))
+ :-> :theme-mode)

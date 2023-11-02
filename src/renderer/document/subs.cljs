@@ -13,113 +13,94 @@
 (rf/reg-sub
  :document/zoom
  :<- [:document/active]
- (fn [document _]
-   (:zoom document)))
+ :-> :zoom)
 
 (rf/reg-sub
  :document/rotate
  :<- [:document/active]
- (fn [document _]
-   (:rotate document)))
+ :-> :rotate)
 
 (rf/reg-sub
  :document/fill
  :<- [:document/active]
- (fn [document _]
-   (:fill document)))
+ :-> :fill)
 
 (rf/reg-sub
  :document/stroke
  :<- [:document/active]
- (fn [document _]
-   (:stroke document)))
+ :-> :stroke)
 
 (rf/reg-sub
  :document/pan
  :<- [:document/active]
- (fn [document _]
-   (:pan document)))
+ :-> :pan)
 
 (rf/reg-sub
  :document/title
  :<- [:document/active]
- (fn [document _]
-   (:title document)))
+ :-> :title)
 
 (rf/reg-sub
  :document/history
  :<- [:document/active]
- (fn [document _]
-   (:history document)))
+ :-> :history)
 
 (rf/reg-sub
  :document/elements
  :<- [:document/active]
- (fn [document _]
-   (:elements document)))
+ :-> :elements)
 
 (rf/reg-sub
  :document/active-page
  :<- [:document/active]
- (fn [document _]
-   (:active-page document)))
+ :-> :active-page)
 
 (rf/reg-sub
  :document/temp-element
  :<- [:document/active]
- (fn [document _]
-   (:temp-element document)))
+ :-> :temp-element)
 
 (rf/reg-sub
  :document/filter
  :<- [:document/active]
- (fn [document _]
-   (:filter document)))
+ :-> :filter)
 
 (rf/reg-sub
  :document/hovered-keys
  :<- [:document/active]
- (fn [document _]
-   (:hovered-keys document)))
+ :-> :hovered-keys)
 
 (rf/reg-sub
  :document/ignored-keys
  :<- [:document/active]
- (fn [document _]
-   (:ignored-keys document)))
+ :-> :ignored-keys)
 
 #_(rf/reg-sub
    :document/rulers-locked?
    :<- [:document/active]
-   (fn [document _]
-     (:rulers-locked? document)))
+   :-> :rulers-locked?)
 
 (rf/reg-sub
  :document/rulers?
  :<- [:document/active]
- (fn [document _]
-   (:rulers? document)))
+ :-> :rulers?)
 
 (rf/reg-sub
  :document/xml?
  :<- [:document/active]
- (fn [document _]
-   (:xml? document)))
+ :-> :xml?)
 
 (rf/reg-sub
  :document/history?
  :<- [:document/active]
- (fn [document _]
-   (:history? document)))
+ :-> :history?)
 
 (rf/reg-sub
  :document/grid?
  :<- [:document/active]
- (fn [document _]
-   (:grid? document)))
+ :-> :grid)
 
 #_(rf/reg-sub
    :document/snap?
    :<- [:document/active]
-   (fn [document _]
-     (:snap? document)))
+   :-> :snap?)

@@ -18,8 +18,7 @@
 (rf/reg-sub
  :elements/canvas
  :<- [:document/elements]
- (fn [elements _]
-   (:canvas elements)))
+ :-> :canvas)
 
 (rf/reg-sub
  :elements/pages
@@ -124,7 +123,8 @@
 (rf/reg-sub
  :elements/visible
  :<- [:document/elements]
- (fn [elements _] (filter :visible? (vals elements))))
+ (fn [elements _]
+   (filter :visible? (vals elements))))
 
 (rf/reg-sub
  :elements/hovered-or-selected
