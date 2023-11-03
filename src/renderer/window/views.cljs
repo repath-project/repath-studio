@@ -156,15 +156,20 @@
              :action [:window/toggle-repl-history]}]}
    {:key :help
     :label "Help"
-    :items [{:key :getting-started
-             :text "Getting started"
-             :action [:window/open-remote-url "https://repath.studio/docs/getting-started/"]}
-            {:key :support-us
-             :text "Support us"
-             :action [:window/open-remote-url "https://repath.studio/contribute/support-us/"]}
+    :items [{:key :website
+             :text "Website"
+             :action [:window/open-remote-url "https://repath.studio/"]}
             {:key :source-code
-             :text "Source code"
-             :action [:window/open-remote-url "https://github.com/re-path/studio"]}]}])
+             :text "Source Code"
+             :action [:window/open-remote-url "https://github.com/re-path/studio"]}
+            {:key :changelog
+             :text "Changelog"
+             :action [:window/open-remote-url "https://repath.studio/roadmap/changelog/"]}
+            {:key :divider-1
+             :type :separator}
+            {:key :submit-issue
+             :text "Submit an issue"
+             :action [:window/open-remote-url "https://github.com/re-path/studio/issues/new/choose"]}]}])
 
 (defn menu-button
   [{:keys [label items]}]

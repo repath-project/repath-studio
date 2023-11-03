@@ -38,11 +38,17 @@
     [:div
      [:a
       {:on-click #(rf/dispatch [:window/open-remote-url
-                                "https://repath.studio/docs/getting-started/"])}
-      "Getting Started"]]
+                                "https://github.com/re-path/studio"])}
+      "Source Code"]]
 
     [:div
      [:a
       {:on-click #(rf/dispatch [:window/open-remote-url
-                                "https://github.com/re-path/studio"])}
-      "Source Code"]]]])
+                                "https://repath.studio/roadmap/changelog/"])}
+      "Changelog"]]
+    
+    [:div
+     [:a
+      {:on-click #(rf/dispatch [:window/open-remote-url
+                                "https://github.com/re-path/studio/issues/new/choose"])}
+      "Submit an issue"]]]])
