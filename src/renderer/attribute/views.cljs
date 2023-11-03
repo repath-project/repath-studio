@@ -226,8 +226,7 @@
          [:div.py-px
           [:> Popover/Root {:modal true}
            [:> Popover/Trigger {:asChild true}
-            [:span.pb-px [comp/icon-button {:title "MDN Info"
-                                            :icon "info"}]]]
+            [:span.pb-px [comp/icon-button "info" {:title "MDN Info"}]]]
            [:> Popover/Portal
             [:> Popover/Content {:sideOffset 5
                                  :class "popover-content"

@@ -7,37 +7,45 @@
    ["@radix-ui/react-context-menu" :as ContextMenu]))
 
 (defn actions []
-  [:div.flex.toolbar {:style {:overflow "visible"
-                              :flex "0 0 40px"}}
-   [comp/icon-button {:title "New"
-                      :icon "file"
-                      :action #(rf/dispatch [:document/new])}]
+  [:div.flex.toolbar
+   {:style {:overflow "visible"
+            :flex "0 0 40px"}}
 
-   [comp/icon-button {:title "Open"
-                      :icon "folder"
-                      :action #(rf/dispatch [:document/open])}]
+   [comp/icon-button
+    "file"
+    {:title "New"
+     :on-click #(rf/dispatch [:document/new])}]
 
-   [comp/icon-button {:title "Save"
-                      :icon "save"
-                      :action #(rf/dispatch [:document/save])}]
+   [comp/icon-button
+    "folder"
+    {:title "Open"
+     :on-click #(rf/dispatch [:document/open])}]
 
-   [:span.v-divider]
-
-   [comp/icon-button {:title "Import"
-                      :icon "import"
-                      :class "disabled"
-                      :action #(rf/dispatch [:document/import])}]
-
-   [comp/icon-button {:title "Export"
-                      :icon "export"
-                      :action #(rf/dispatch [:elements/export])}]
+   [comp/icon-button
+    "save"
+    {:title "Save"
+     :on-click #(rf/dispatch [:document/save])}]
 
    [:span.v-divider]
 
-   [comp/icon-button {:title "Undo"
-                      :icon "undo"
-                      :action #(rf/dispatch [:history/undo 1])
-                      :disabled? (not @(rf/subscribe [:history/undos?]))}]
+   [comp/icon-button
+    "import"
+    {:title "Import"
+     :disabled true
+     :on-click #(rf/dispatch [:document/import])}]
+
+   [comp/icon-button
+    "export"
+    {:title "Export"
+     :on-click #(rf/dispatch [:elements/export])}]
+
+   [:span.v-divider]
+
+   [comp/icon-button
+    "undo"
+    {:title "Undo"
+     :on-click #(rf/dispatch [:history/undo 1])
+     :disabled (not @(rf/subscribe [:history/undos?]))}]
 
    [:select.icon-button
     {:onChange #(rf/dispatch [:history/undo (-> % .-target .-value js/parseInt)])
@@ -48,10 +56,9 @@
              :font-size "1em"}}
     (history/select-options @(rf/subscribe [:history/undos]))]
 
-   [comp/icon-button {:title "Undo"
-                      :icon "redo"
-                      :action #(rf/dispatch [:history/redo 1])
-                      :disabled? (not @(rf/subscribe [:history/redos?]))}]
+   [comp/icon-button "redo" {:title "Undo"
+                             :on-click #(rf/dispatch [:history/redo 1])
+                             :disabled (not @(rf/subscribe [:history/redos?]))}]
 
    [:select.icon-button
     {:onChange #(rf/dispatch [:history/redo (-> % .-target .-value js/parseInt)])

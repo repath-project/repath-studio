@@ -20,7 +20,7 @@
          [:div.toast-description
           (:content notification)]
          [comp/icon-button
+          "times"
           {:title "Dismiss"
-           :icon "times"
-           :action #(rf/dispatch [:notification/remove index])}]])
+           :on-click #(rf/dispatch [:notification/remove index])}]])
       notifications)]))

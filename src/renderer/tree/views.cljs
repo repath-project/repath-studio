@@ -122,7 +122,7 @@
         {:on-click #(rf/dispatch [:window/toggle-symbols-collapsed])}
         [comp/toggle-collapsed-button symbols-collapsed?]
         [:div.flex-1 "Symbols"]
-        [comp/icon-button {:icon "square-minus"}]]
+        [comp/icon-button "square-minus"]]
 
      #_[:div.v-scroll
         {:style {:flex (if symbols-collapsed? 0 "0 1 128px")}}]
@@ -131,11 +131,10 @@
       {:on-click #(rf/dispatch [:window/toggle-pages-collapsed])}
       [comp/toggle-collapsed-button pages-collapsed?]
       [:div.flex-1 "Pages"]
-      [comp/icon-button
-       {:icon "page-plus"
-        :action (fn [evt]
-                  (.preventDefault evt)
-                  (rf/dispatch-sync [:elements/add-page]))}]]
+      [comp/icon-button "page-plus"
+       {:on-click (fn [evt]
+                    (.stopPropagation evt)
+                    (rf/dispatch-sync [:elements/add-page]))}]]
 
      [:div.v-scroll
       {:style {:flex (if pages-collapsed? 0 "0 1 128px")}}
@@ -148,11 +147,10 @@
       {:on-click #(rf/dispatch [:window/toggle-elements-collapsed])}
       [comp/toggle-collapsed-button elements-collapsed?]
       [:div.flex-1 "Elements"]
-      #_[comp/icon-button
-         {:icon "folder-plus"
-          :action #(do (.stopPropagation %)
-                       (rf/dispatch [:elements/create {:type :g}]))}]
-      [comp/icon-button {:icon "square-minus"}]]
+      #_[comp/icon-button "folder-plus"
+         {:on-click #(do (.stopPropagation %)
+                         (rf/dispatch [:elements/create {:type :g}]))}]
+      [comp/icon-button "square-minus"]]
 
      [:> ContextMenu/Root
       [:> ContextMenu/Trigger {:asChild true}
@@ -173,6 +171,6 @@
         {:on-click #(rf/dispatch [:window/toggle-defs-collapsed])}
         [comp/toggle-collapsed-button defs-collapsed?]
         [:div.flex-1 "Defs"]
-        [comp/icon-button {:icon "square-minus"}]]
+        [comp/icon-button "square-minus"]]
 
      #_[:div.v-scroll {:style {:flex (if defs-collapsed? 0 "0 1 128px")}}]]))

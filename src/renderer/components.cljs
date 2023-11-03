@@ -12,13 +12,9 @@
   [:> ReactSVG {:class ["icon" class] :src (str "icons/" icon ".svg")}])
 
 (defn icon-button
-  [{:keys [icon title action class disabled?]}]
+  [icon props]
   [:button.icon-button
-   {:class [class (when disabled? " disabled")]
-    :title title
-    :on-click #(when action
-                 (.stopPropagation %)
-                 (action %))}
+   props
    [renderer.components/icon icon]])
 
 (defn shortcuts

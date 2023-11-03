@@ -243,6 +243,7 @@
      (let [theme-mode @(rf/subscribe [:theme/mode])]
        [:div.level-2
         {:class (when-not platform/electron? "mr-1.5")}
-        [comp/icon-button {:icon (name theme-mode)
-                           :action #(rf/dispatch [:theme/cycle])}]])
+        [comp/icon-button
+         (name theme-mode)
+         {:on-click #(rf/dispatch [:theme/cycle])}]])
      (when platform/electron? [window-controls])]))

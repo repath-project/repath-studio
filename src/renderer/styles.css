@@ -116,6 +116,8 @@
     }
 
     &:disabled {
+      cursor: initial;
+      pointer-events: none;
       color: var(--font-color-disabled);
     }
   }

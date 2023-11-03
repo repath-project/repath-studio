@@ -115,9 +115,9 @@
       {:asChild true}
       [:span.shadow-4
        [comp/icon-button
-        {:icon icon
-         :class (when disabled? "disabled")
-         :action #(rf/dispatch action)}]]]
+        icon
+        {:disabled disabled?
+         :on-click #(rf/dispatch action)}]]]
      [:> Tooltip/Portal
       [:> Tooltip/Content
        {:class "tooltip-content"
