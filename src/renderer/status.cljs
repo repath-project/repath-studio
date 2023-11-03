@@ -42,13 +42,24 @@
     :action [:document/toggle-xml]}])
 
 (def zoom-menu
-  [{:text "Restore"
+  [{:label "50%"
+    :key "50"
+    :action [:set-zoom 0.5]}
+   {:label "100%"
+    :key "100"
+    :action [:set-zoom 1]}
+   {:label "200%"
+    :key "200"
+    :action [:set-zoom 2]}
+   {:key :divider-1
+    :type :separator}
+   {:label "Restore"
     :key "restore-active-page"
     :action [:pan-to-active-page :original]}
-   {:text "Zoom to fit"
+   {:label "Zoom to fit"
     :key "fit-active-page"
     :action [:pan-to-active-page :fit]}
-   {:text "Zoom to fill"
+   {:label "Zoom to fill"
     :key "fill-active-page"
     :action [:pan-to-active-page :fill]}])
 

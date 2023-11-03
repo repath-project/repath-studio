@@ -47,11 +47,11 @@
  (fn [db [_ factor]]
    (handlers/zoom db factor)))
 
-#_(rf/reg-event-db
-   :set-zoom
-   (fn [{active-document :active-document :as db} [_ zoom]]
-     (let [current-zoom (get-in db [:documents active-document :zoom])]
-       (handlers/zoom db (/ zoom current-zoom)))))
+(rf/reg-event-db
+ :set-zoom
+ (fn [{active-document :active-document :as db} [_ zoom]]
+   (let [current-zoom (get-in db [:documents active-document :zoom])]
+     (handlers/zoom db (/ zoom current-zoom)))))
 
 (rf/reg-event-db
  :zoom-in

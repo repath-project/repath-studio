@@ -51,17 +51,11 @@
           [:<> (when rulers?
                  [:div.level-2.mr-px
                   [rulers/ruler {:orientation :vertical :size 23}]])]
-          (when @(rf/subscribe [:command-palette?])
-            [:div.command-palette
-             #_[:> fui/ComboBox {:dropdownMaxWidth 300
-                                 :allowFreeform false
-                                 :autoComplete "on"
-                                 :styles {:input {:font-size "12px"}}
-                                 :options (mapv (fn [command] {:key (keyword command)
-                                                               :text command
-                                                               :styles {:optionText {:font-size "14px"}}}) (keys (:event @re-frame.registrar/kind->id->handler)))
-                                 :onChange (fn [_ key]
-                                             (rf/dispatch-sync [(keyword (.-key key))]))}]])
+          #_(when @(rf/subscribe [:command-palette?])
+              [:div.command-palette
+               (mapv (fn [command] {:key (keyword command)
+                                    :text command
+                                    :styles {:optionText {:font-size "14px"}}}) (keys (:event @re-frame.registrar/kind->id->handler)))])
           [:div.relative.grow.flex
            [frame/main]
            [:div.absolute.bottom-1.left-2.pointer-events-none

@@ -81,18 +81,14 @@
 
 (defn context-menu
   [key]
-  [{:text "Close"
+  [{:label "Close"
     :action [:document/close key]}
-   {:text "Close Others"
+   {:label "Close Others"
     :action [:document/close-others]}
-   {:text "Close Saved"
+   {:label "Close Saved"
     :action [:document/close-saved]}
-   {:text "Close All"
-    :action [:document/close-all]}
-   {:key :divider-1
-    :type :separator}
-   {:text "Copy Path"}
-   {:text "Open Containing Folder"}])
+   {:label "Close All"
+    :action [:document/close-all]}])
 
 (defn tab
   []
@@ -125,8 +121,12 @@
          [:span.document-name (:title document)]
          [close-button key]]]
        [:> ContextMenu/Portal
-        (into [:> ContextMenu/Content {:class "menu-content context-menu-content"}]
-              (map (fn [item] [comp/context-menu-item item]) (context-menu key)))]])))
+        (into
+         [:> ContextMenu/Content
+          {:class "menu-content context-menu-content"}]
+         (map (fn [item]
+                [comp/context-menu-item item])
+              (context-menu key)))]])))
 
 (defn tab-bar []
   (let [documents @(rf/subscribe [:documents])

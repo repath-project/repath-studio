@@ -10,165 +10,165 @@
   [{:key :file
     :label "File"
     :items [{:key :new-file
-             :text "New"
+             :label "New"
              :action [:document/new]}
             {:key :divider-1
              :type :separator}
             {:key :open-file
-             :text "Open…"
+             :label "Open…"
              :action [:document/open]}
             {:key :divider-2
              :type :separator}
             {:key :save
-             :text "Save"
+             :label "Save"
              :action [:document/save]}
             {:key :save-as
-             :text "Save as…"
+             :label "Save as…"
              :action [:document/save-as]}
             {:key :save-all
-             :text "Save all"
+             :label "Save all"
              :action [:document/save-all]}
             {:key :divider-3
              :type :separator}
             {:key :save-all
-             :text "Close"
+             :label "Close"
              :action [:document/close-active]}
             {:key :divider-4
              :type :separator}
             {:key :exit
-             :text "Exit"
+             :label "Exit"
              :action [:window/close]}]}
    {:key :edit
     :label "Edit"
     :items [{:key :undo
-             :text "Undo"
+             :label "Undo"
              :action [:history/undo 1]}
             {:key :redo
-             :text "Redo"
+             :label "Redo"
              :action [:history/redo 1]}
             {:key :divider-1
              :type :separator}
             {:key :cut
-             :text "Cut"
+             :label "Cut"
              :action [:elements/cut]}
             {:key :copy
-             :text "Copy"
+             :label "Copy"
              :action [:elements/copy]}
             {:key :paste
-             :text "Paste"
+             :label "Paste"
              :action [:elements/paste]}
             {:key :paste-in-place
-             :text "Paste in place"
+             :label "Paste in place"
              :action [:elements/paste-in-place]}
             {:key :paste-styles
-             :text "Paste styles"
+             :label "Paste styles"
              :action [:elements/paste-styles]}
             {:key :divider-2
              :type :separator}
             {:key :duplicate
-             :text "Duplicate"
+             :label "Duplicate"
              :action [:elements/duplicate-in-place]}
             {:key :divider-3
              :type :separator}
             {:key :select-all
-             :text "Select all"
+             :label "Select all"
              :action [:elements/select-all]}
             {:key :deselect-all
-             :text "Deselect all"
+             :label "Deselect all"
              :action [:elements/deselect-all]}
             {:key :select-same-tags
-             :text "Select same tags"
+             :label "Select same tags"
              :action [:elements/select-same-tags]}]}
    {:key :object
     :label "Object"
     :items [{:key :to-path
-             :text "Object to path"
+             :label "Object to path"
              :action [:elements/->path]}
             {:key :stroke-to-path
-             :text "Stroke to path"
+             :label "Stroke to path"
              :action [:elements/stroke->path]}
             {:key :divider-1
              :type :separator}
             {:key :group
-             :text "Group"
+             :label "Group"
              :action [:elements/group]}
             {:key :ungroup
-             :text "Ungroup"
+             :label "Ungroup"
              :action [:elements/ungroup]}
             {:key :divider-2
              :type :separator}
             {:key :raise
-             :text "Raise"
+             :label "Raise"
              :action [:elements/raise]}
             {:key :lower
-             :text "Lower"
+             :label "Lower"
              :action [:elements/lower]}
             {:key :raise-to-top
-             :text "Raise to top"
+             :label "Raise to top"
              :action [:elements/raise-to-top]}
             {:key :lower-to-bottom
-             :text "Lower to bottom"
+             :label "Lower to bottom"
              :action [:elements/lower-to-bottom]}]}
    #_{:key :path
       :label "Path"
       :items [{:key :simplify
-               :text "Simplify"
+               :label "Simplify"
                :action [:elements/manipulate-path :simplify]}
               {:key :smooth
-               :text "Smooth"
+               :label "Smooth"
                :action [:elements/manipulate-path :smooth]}
               {:key :flatten
-               :text "Flatten"
+               :label "Flatten"
                :action [:elements/manipulate-path :flatten]}
               {:key :reverse
-               :text "Reverse"
+               :label "Reverse"
                :action [:elements/manipulate-path :reverse]}]}
    {:key :view
     :label "View"
     :items [{:key :toggle-fullscreen
-             :text "Fullscreen"
+             :label "Fullscreen"
              :type :checkbox
              :checked? [:window/fullscreen?]
              :action [:window/toggle-fullscreen]}
             {:key :divider-1
              :type :separator}
             {:key :toggle-tree
-             :text "Tree side bar"
+             :label "Tree side bar"
              :type :checkbox
              :checked? [:window/sidebar? :tree]
              :action [:window/toggle-sidebar :tree]}
             {:key :toggle-properties
-             :text "Properties side bar"
+             :label "Properties side bar"
              :type :checkbox
              :checked? [:window/sidebar? :properties]
              :action [:window/toggle-sidebar :properties]}
             {:key :toggle-header-menu
              :type :checkbox
-             :text "Menu bar"
+             :label "Menu bar"
              :checked? [:window/header?]
              :action [:window/toggle-header]}
             {:key :divider-2
              :type :separator}
             {:key :toggle-command-history
              :type :checkbox
-             :text "Command history"
+             :label "Command history"
              :checked? [:window/repl-history?]
              :action [:window/toggle-repl-history]}]}
    {:key :help
     :label "Help"
     :items [{:key :website
-             :text "Website"
+             :label "Website"
              :action [:window/open-remote-url "https://repath.studio/"]}
             {:key :source-code
-             :text "Source Code"
+             :label "Source Code"
              :action [:window/open-remote-url "https://github.com/re-path/studio"]}
             {:key :changelog
-             :text "Changelog"
+             :label "Changelog"
              :action [:window/open-remote-url "https://repath.studio/roadmap/changelog/"]}
             {:key :divider-1
              :type :separator}
             {:key :submit-issue
-             :text "Submit an issue"
+             :label "Submit an issue"
              :action [:window/open-remote-url "https://github.com/re-path/studio/issues/new/choose"]}]}])
 
 (defn menu-button
@@ -177,7 +177,7 @@
    [:> Menubar/Trigger {:class "menubar-trigger"} label]
    [:> Menubar/Portal
     (into [:> Menubar/Content {:class "menu-content" :align "start"}]
-          (map (fn [{:keys [type text action icon checked?]}]
+          (map (fn [{:keys [type label action icon checked?]}]
                  (case type
                    :separator
                    [:> Menubar/Separator {:class "menu-separator"}]
@@ -190,7 +190,7 @@
                     [:> Menubar/ItemIndicator
                      {:class "menu-item-indicator"}
                      [comp/icon "checkmark"]]
-                    text
+                    label
                     [:div {:class "right-slot"}
                      [comp/shortcuts action]]]
 
@@ -199,7 +199,7 @@
                      :onSelect #(rf/dispatch action)}
                     (when icon
                       [comp/icon icon {:class "menu-item-indicator"}])
-                    text
+                    label
                     [:div {:class "right-slot"}
                      [comp/shortcuts action]]])) items))]])
 

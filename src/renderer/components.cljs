@@ -85,7 +85,7 @@
      :on-drag-end #(rf/dispatch-sync [:window/clear-drag])}]])
 
 (defn context-menu-item
-  [{:keys [type text action checked?]}]
+  [{:keys [type label action checked?]}]
   (case type
     :separator
     [:> ContextMenu/Separator {:class "menu-separator"}]
@@ -98,20 +98,20 @@
      [:> ContextMenu/ItemIndicator
       {:class "menu-item-indicator"}
       [icon "checkmark"]]
-     text
+     label
      [:div {:class "right-slot"}
       [shortcuts action]]]
 
     [:> ContextMenu/Item
      {:class "menu-item context-menu-item"
       :onSelect #(rf/dispatch action)}
-     text
+     label
      [:div {:class "right-slot"}
       [shortcuts action]]]))
 
 
 (defn dropdown-menu-item
-  [{:keys [type text action checked?]}]
+  [{:keys [type label action checked?]}]
   (case type
     :separator
     [:> DropdownMenu/Separator {:class "menu-separator"}]
@@ -124,42 +124,42 @@
      [:> DropdownMenu/ItemIndicator
       {:class "menu-item-indicator"}
       [icon "checkmark"]]
-     text
+     label
      [:div {:class "right-slot"}
       [shortcuts action]]]
 
     [:> DropdownMenu/Item
      {:class "menu-item dropdown-menu-item"
       :onSelect #(rf/dispatch action)}
-     text
+     label
      [:div {:class "right-slot"}
       [shortcuts action]]]))
 
 (def element-menu
-  [{:text "Cut"
+  [{:label "Cut"
     :action [:elements/cut]}
-   {:text "Copy"
+   {:label "Copy"
     :action [:elements/copy]}
-   {:text "Paste"
+   {:label "Paste"
     :action [:elements/paste]}
    {:type :separator}
-   {:text "Raise"
+   {:label "Raise"
     :action [:elements/raise]}
-   {:text "Lower"
+   {:label "Lower"
     :action [:elements/lower]}
-   {:text "Raise to top"
+   {:label "Raise to top"
     :action [:elements/raise-to-top]}
-   {:text "Lower to bottom"
+   {:label "Lower to bottom"
     :action [:elements/lower-to-bottom]}
    {:type :separator}
-   {:text "Animate"
+   {:label "Animate"
     :action [:elements/animate :animate {}]}
-   {:text "Animate Transform"
+   {:label "Animate Transform"
     :action [:elements/animate :animateTransform {}]}
-   {:text "Animate Motion"
+   {:label "Animate Motion"
     :action [:elements/animate :animateMotion {}]}
    {:type :separator}
-   {:text "Duplicate in position"
+   {:label "Duplicate in position"
     :action [:elements/duplicate-in-place]}
-   {:text "Delete"
+   {:label "Delete"
     :action [:elements/delete]}])
