@@ -108,12 +108,14 @@
  :document/new
  (fn [db [_]]
    (let [key (uuid/generate)
-         title (str "Untitled-" (inc (count (:documents db))))]
+         title (str "Untitled-" (inc (count (:documents db))))
+         document-tabs (:document-tabs db)
+         active-index (.indexOf document-tabs (:active-document db))]
      (-> db
          (assoc-in [:documents key] (merge
                                      db/default-document
                                      {:key key :title title}))
-         (update :document-tabs conj key)
+         (update :document-tabs #(vec/add % (inc active-index) key))
          (assoc :active-document key)
          (frame/pan-to-element (:active-page db/default-document))
          (history/init "Create document")))))
