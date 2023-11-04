@@ -98,7 +98,7 @@
 (rf/reg-sub
  :document/grid?
  :<- [:document/active]
- :-> :grid)
+ :-> :grid?)
 
 #_(rf/reg-sub
    :document/snap?
