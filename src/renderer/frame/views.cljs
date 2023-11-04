@@ -83,6 +83,8 @@
            ;; This is a different browsing context inside an iframe.
            ;; We need to simulate the events to the parent window.
            on-keyboard-event (fn [event]
+                               ;; TODO use re-pressed :prevent-default-keys
+                               (.preventDefault event)
                                (.dispatchEvent js/window.parent.document
                                                (js/KeyboardEvent. (.-type event)
                                                                   event)))]
