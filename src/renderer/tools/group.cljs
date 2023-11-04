@@ -25,7 +25,8 @@
         ignored? (contains? ignored-keys (:key element))
         bounds (tools/bounds element elements)
         [x1 y1 _x2 _y2] bounds
-        [width height] (bounds/->dimensions bounds)]
+        [width height] (bounds/->dimensions bounds)
+        mouse-handler #(mouse/event-handler % element)]
     [:g attrs
      (map (fn [element] [tools/render element]) (merge child-elements))
      [:rect {:x x1
@@ -34,7 +35,7 @@
              :height height
              :fill "transparent"
              :pointer-events (when ignored? "none")
-             :on-double-click #(mouse/event-handler % element)
-             :on-pointer-up #(mouse/event-handler % element)
-             :on-pointer-down #(mouse/event-handler % element)
-             :on-pointer-move #(mouse/event-handler % element)}]]))
+             :on-double-click mouse-handler
+             :on-pointer-up mouse-handler
+             :on-pointer-down mouse-handler
+             :on-pointer-move mouse-handler}]]))

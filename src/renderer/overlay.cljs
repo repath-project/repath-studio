@@ -30,7 +30,8 @@
 (defn circle-handler
   [{:keys [x y key] :as element} & children]
   (let [zoom @(rf/subscribe [:document/zoom])
-        clicked-element @(rf/subscribe [:clicked-element])]
+        clicked-element @(rf/subscribe [:clicked-element])
+        mouse-handler #(mouse/event-handler % element)]
     [:circle {:key key
               :cx x
               :cy y
@@ -41,17 +42,18 @@
                       stroke-inverted)
               :r (/ 4 zoom)
               :cursor "default"
-              :on-pointer-up #(mouse/event-handler % element)
-              :on-pointer-down #(mouse/event-handler % element)
-              :on-pointer-move #(mouse/event-handler % element)
-              :on-scroll #(mouse/event-handler % element)} children]))
+              :on-pointer-up mouse-handler
+              :on-pointer-down mouse-handler
+              :on-pointer-move mouse-handler
+              :on-scroll mouse-handler} children]))
 
 (defn square-handler
   [{:keys [x y key] :as element} & children]
   (let [zoom @(rf/subscribe [:document/zoom])
         clicked-element @(rf/subscribe [:clicked-element])
         size (/ 8 zoom)
-        stroke-width (/ 1 zoom)]
+        stroke-width (/ 1 zoom)
+        mouse-handler #(mouse/event-handler % element)]
     [:rect {:key key
             :id (name key)
             :fill (if (= (:key clicked-element) key)
@@ -65,10 +67,10 @@
             :width size
             :height size
             :cursor "default"
-            :on-pointer-up #(mouse/event-handler % element)
-            :on-pointer-down #(mouse/event-handler % element)
-            :on-pointer-move #(mouse/event-handler % element)
-            :on-scroll #(mouse/event-handler % element)} children]))
+            :on-pointer-up mouse-handler
+            :on-pointer-down mouse-handler
+            :on-pointer-move mouse-handler
+            :on-scroll mouse-handler} children]))
 
 (defn line
   ([x1 y1 x2 y2]

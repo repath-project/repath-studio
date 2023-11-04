@@ -33,17 +33,18 @@
         primary-tool @(rf/subscribe [:primary-tool])
         rotate @(rf/subscribe [:document/rotate])
         grid? @(rf/subscribe [:document/grid?])
+        mouse-handler #(mouse/event-handler % element)
         select? (or (= tool :select)
                     (= primary-tool :select))]
-    [:svg {:on-pointer-up #(mouse/event-handler % element)
-           :on-pointer-down #(mouse/event-handler % element)
-           :on-double-click #(mouse/event-handler % element)
+    [:svg {:on-pointer-up mouse-handler
+           :on-pointer-down mouse-handler
+           :on-double-click mouse-handler
            :on-key-up keyboard/event-handler
            :on-key-down keyboard/event-handler
            :tab-index 0 ; Enable keyboard events on the svg element 
            :viewBox (str/join " " viewbox)
            :width (:width content-rect)
-           :on-drop #(mouse/event-handler % element)
+           :on-drop mouse-handler
            :on-drag-over #(.preventDefault %)
            :height (:height content-rect)
            :transform (str "rotate(" rotate ")")

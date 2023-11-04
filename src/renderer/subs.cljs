@@ -1,7 +1,6 @@
 (ns renderer.subs
   (:require
-   [re-frame.core :as rf]
-   [re-pressed.core :as rp]))
+   [re-frame.core :as rf]))
 
 (rf/reg-sub
  :tool
@@ -114,15 +113,15 @@
  :-> :repl-mode)
 
 (rf/reg-sub
- :shortcuts
- (fn [db _]
-   (-> db ::rp/keydown :event-keys)))
+ :keydown-rules
+ :-> :re-pressed.core/keydown)
 
 (rf/reg-sub
  :event-shortcuts
- :<- [:shortcuts]
- (fn [shortcuts [_ event]]
-   (->> shortcuts
+ :<- [:keydown-rules]
+ (fn [keydown-rules [_ event]]
+   (->> keydown-rules
+        :event-keys
         (filter #(= (first %) event))
         (first)
         (rest))))

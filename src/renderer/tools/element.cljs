@@ -102,18 +102,19 @@
              child-elements)]
 
        (when default-state?
-         [tag
-          (merge (dissoc attrs :style)
-                 {:on-pointer-up #(mouse/event-handler % element)
-                  :on-pointer-down #(mouse/event-handler % element)
-                  :on-pointer-move #(mouse/event-handler % element)
-                  :on-double-click #(mouse/event-handler % element)
-                  :shape-rendering "optimizeSpeed"
-                  :fill "transparent"
-                  :stroke "transparent"
-                  :stroke-width (max (:stroke-width attrs)
-                                     (/ 20 @(rf/subscribe [:document/zoom])))})
-          content])])}))
+         (let [mouse-handler #(mouse/event-handler % element)]
+           [tag
+            (merge (dissoc attrs :style)
+                   {:on-pointer-up mouse-handler
+                    :on-pointer-down mouse-handler
+                    :on-pointer-move mouse-handler
+                    :on-double-click mouse-handler
+                    :shape-rendering "optimizeSpeed"
+                    :fill "transparent"
+                    :stroke "transparent"
+                    :stroke-width (max (:stroke-width attrs)
+                                       (/ 20 @(rf/subscribe [:document/zoom])))})
+            content]))])}))
 
 (defmethod tools/render ::tools/element
   [{:keys [children] :as element}]

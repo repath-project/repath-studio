@@ -134,16 +134,17 @@
 
 (defmethod tools/render :brush
   [{:keys [attrs] :as element}]
-  [:path (merge {:d (points->path (::points attrs)
-                                  (merge (select-keys attrs options)
-                                         {:simulatePressure false}))
-                 :on-pointer-up #(mouse/event-handler % element)
-                 :on-pointer-down #(mouse/event-handler % element)
-                 :on-pointer-move #(mouse/event-handler % element)
-                 :on-double-click #(mouse/event-handler % element)}
-                (-> attrs
-                    (select-keys [:id :class :opacity])
-                    (assoc :fill (::stroke attrs))))])
+  (let [mouse-handler #(mouse/event-handler % element)]
+    [:path (merge {:d (points->path (::points attrs)
+                                    (merge (select-keys attrs options)
+                                           {:simulatePressure false}))
+                   :on-pointer-up mouse-handler
+                   :on-pointer-down mouse-handler
+                   :on-pointer-move mouse-handler
+                   :on-double-click mouse-handler}
+                  (-> attrs
+                      (select-keys [:id :class :opacity])
+                      (assoc :fill (::stroke attrs))))]))
 
 (defmethod tools/bounds :brush
   [{:keys [attrs]}]
