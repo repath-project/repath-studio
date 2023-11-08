@@ -8,18 +8,19 @@
   (let [notifications @(rf/subscribe [:notifications])]
     [:div.fixed.flex.flex-col.m-4.right-0.bottom-0.gap-2.items-end
 
-     [:div.relative
+     [:div
       (map-indexed
        (fn [index notification]
          [:div.toast
           {:key index
-           :style {:bottom (* index 10)
-                   :right 0}}
+           :style {:right 0}}
           [:div.toast-description
            (:content notification)]
           [comp/icon-button
            "times"
            {:title "Dismiss"
+            :style {:width "auto"
+                    :height "fit-content"}
             :on-click #(rf/dispatch [:notification/remove index])}]])
        notifications)]
 
