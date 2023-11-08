@@ -17,7 +17,7 @@
    (map (fn [[label value]] [:div [:strong.mr-1 label] value])
         [["Content rect"
           @(rf/subscribe [:content-rect])]
-         `["Viewbox"
+         ["Viewbox"
            (str (mapv units/->fixed @(rf/subscribe [:frame/viewbox])))]
 
          ["Mouse position"
