@@ -22,7 +22,7 @@
   (let [child-elements @(rf/subscribe [:elements/filter-visible children])
         elements @(rf/subscribe [:document/elements])
         viewbox @(rf/subscribe [:frame/viewbox])
-        content-rect @(rf/subscribe [:content-rect])
+        {:keys [width height]} @(rf/subscribe [:content-rect])
         hovered-or-selected @(rf/subscribe [:elements/hovered-or-selected])
         selected-elements @(rf/subscribe [:elements/selected])
         bounds @(rf/subscribe [:elements/bounds])
@@ -43,10 +43,10 @@
            :on-key-down keyboard/event-handler
            :tab-index 0 ; Enable keyboard events on the svg element 
            :viewBox (str/join " " viewbox)
-           :width (:width content-rect)
            :on-drop mouse-handler
            :on-drag-over #(.preventDefault %)
-           :height (:height content-rect)
+           :width width
+           :height height
            :transform (str "rotate(" rotate ")")
            :cursor cursor
            :id "canvas"

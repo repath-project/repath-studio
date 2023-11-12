@@ -78,7 +78,7 @@
   [element [x y]]
   (update-in element
              [:attrs :points]
-             #(->> %1
+             #(->> %
                    (attr-utils/points-to-vec)
                    (reduce (fn [points point]
                              (conj points
