@@ -9,8 +9,13 @@
 (defn boundary
   []
   (ra/create-class
-   {:component-did-catch (fn [_this _error _info]
-                           (rf/dispatch [:notification/add {:content error-message}]))
-    :get-derived-state-from-error #(rf/dispatch [:history/cancel])
-    :reagent-render (fn [& children]
-                      (into [:<>] children))}))
+   {:component-did-catch
+    (fn [_this _error _info]
+      (rf/dispatch [:notification/add {:content error-message}]))
+
+    :get-derived-state-from-error
+    #(rf/dispatch [:history/cancel])
+
+    :reagent-render
+    (fn [& children]
+      (into [:<>] children))}))
