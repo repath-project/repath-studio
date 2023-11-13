@@ -1,18 +1,18 @@
 (ns renderer.tree.events
   (:require
    [re-frame.core :as rf]
-   [akiroz.re-frame.storage :refer [persist-db-keys]]))
+   [renderer.utils.local-storage :as local-storage]))
 
 (rf/reg-event-db
  :tree/toggle-elements-collapsed
- [(persist-db-keys :repath [:tree :panel])
+ [local-storage/persist
   (rf/path :tree)]
  (fn [db [_]]
    (update db :elements-collapsed? not)))
 
 (rf/reg-event-db
  :tree/toggle-pages-collapsed
- [(persist-db-keys :repath [:tree :panel])
+ [local-storage/persist
   (rf/path :tree)]
  (fn [db [_]]
    (update db :pages-collapsed? not)))
