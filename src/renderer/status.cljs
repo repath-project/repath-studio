@@ -33,13 +33,13 @@
     :icon "ruler-combined"
     :action [:document/toggle-rulers]}
    #_{:title "History tree"
-      :active? @(rf/subscribe [:document/history?])
+      :active? @(rf/subscribe [:panel/visible? :history])
       :icon "history"
-      :action #(rf/dispatch [:document/toggle-history])}
+      :action #(rf/dispatch [:panel/toggle :history])}
    {:title "XML view"
-    :active? [:document/xml?]
+    :active? [:panel/visible? :xml]
     :icon "code"
-    :action [:document/toggle-xml]}])
+    :action [:panel/toggle :xml]}])
 
 (def zoom-menu
   [{:label "50%"

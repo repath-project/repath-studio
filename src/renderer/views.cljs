@@ -68,13 +68,13 @@
            (when @(rf/subscribe [:backdrop?])
              [:div.backdrop
               {:on-click #(rf/dispatch [:set-backdrop false])}])]]]
-        (when @(rf/subscribe [:document/xml?])
+        (when @(rf/subscribe [:panel/visible? :xml])
           (let [xml @(rf/subscribe [:elements/xml])]
             [:div.v-scroll.p-1.h-full.level-2.ml-px
              {:style {:flex "0 1 30%"}}
              [cm/editor xml {:options {:mode "text/xml"
                                        :readOnly true}}]]))
-        (when @(rf/subscribe [:document/history?])
+        (when @(rf/subscribe [:panel/visible? :history])
           [:div.v-scroll.p-1.level-2
            {:style {:flex "0 1 30%"}}])]
        [status/toolbar]
@@ -88,11 +88,11 @@
     (when @(rf/subscribe [:window/header?]) [win/app-header])
     (if (seq @(rf/subscribe [:documents]))
       [:div.flex.flex-1.overflow-hidden
-       {:on-drag-over #(rf/dispatch [:window/on-drag %])}
-       (when @(rf/subscribe [:window/drag]) [:div.drag-overlay])
-       (when @(rf/subscribe [:window/sidebar? :tree])
+       {:on-drag-over #(rf/dispatch [:panel/on-drag %])}
+       (when @(rf/subscribe [:panel/drag]) [:div.drag-overlay])
+       (when @(rf/subscribe [:panel/visible? :tree])
          [:div.flex.flex-col.mr-px
-          {:style {:flex (str "0 0 " @(rf/subscribe [:window/sidebar :tree]) "px")}}
+          {:style {:flex (str "0 0 " @(rf/subscribe [:panel/size :tree]) "px")}}
           [doc/actions]
           [tree/tree-sidebar]])
        [comp/resizer :tree :left]
@@ -102,9 +102,9 @@
         [:div.flex.flex-1.overflow-hidden
          [editor]
          [comp/resizer :properties :right]
-         (when @(rf/subscribe [:window/sidebar? :properties])
+         (when @(rf/subscribe [:panel/visible? :properties])
            [:div.flex.flex-col.sidebar
-            {:style {:flex (str "0 0 " @(rf/subscribe [:window/sidebar :properties]) "px")}}
+            {:style {:flex (str "0 0 " @(rf/subscribe [:panel/size :properties]) "px")}}
             [:div.flex.flex-1.box-border.overflow-hidden
              [attr/form]]])
          [object/toolbar]]]]

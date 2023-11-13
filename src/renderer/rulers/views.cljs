@@ -20,12 +20,9 @@
                 :y 0
                 :width (- x2 x1)
                 :height size
-                :fill "var(--level-3)"}]))))
-
-#_(defn selected-bounds-alt
-    [orientation size]
-    (when-let  [bounds @(rf/subscribe [:elements/bounds])]
-      (let [position (- size 6)
+                :fill "var(--level-3)"}]))
+    ;; Alternative view when page bounds are visible
+    #_(let [position (- size 6)
             zoom @(rf/subscribe [:document/zoom])
             [x y] @(rf/subscribe [:document/pan])
             [x1 y1 x2 y2] (map #(* % zoom) bounds)]

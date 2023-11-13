@@ -135,13 +135,13 @@
             {:key :toggle-tree
              :label "Tree side bar"
              :type :checkbox
-             :checked? [:window/sidebar? :tree]
-             :action [:window/toggle-sidebar :tree]}
+             :checked? [:panel/visible? :tree]
+             :action [:panel/toggle :tree]}
             {:key :toggle-properties
              :label "Properties side bar"
              :type :checkbox
-             :checked? [:window/sidebar? :properties]
-             :action [:window/toggle-sidebar :properties]}
+             :checked? [:panel/visible? :properties]
+             :action [:panel/toggle :properties]}
             {:key :toggle-header-menu
              :type :checkbox
              :label "Menu bar"
@@ -152,8 +152,8 @@
             {:key :toggle-command-history
              :type :checkbox
              :label "Command history"
-             :checked? [:window/repl-history?]
-             :action [:window/toggle-repl-history]}]}
+             :checked? [:panel/visible? :repl-history]
+             :action [:panel/toggle :repl-history]}]}
    {:key :help
     :label "Help"
     :items [{:key :website
@@ -245,5 +245,5 @@
         {:class (when-not platform/electron? "mr-1.5")}
         [comp/icon-button
          (name theme-mode)
-         {:on-click #(rf/dispatch [:theme/cycle])}]])
+         {:on-click #(rf/dispatch [:theme/cycle-mode])}]])
      (when platform/electron? [window-controls])]))

@@ -78,19 +78,6 @@
    (update db :snap? not)))
 
 (rf/reg-event-db
- :document/toggle-xml
- active-document-path
- (fn [db [_]]
-   (update db :xml? not)))
-
-#_:clj-kondo/ignore
-(rf/reg-event-db
- :document/toggle-history
- active-document-path
- (fn [db [_]]
-   (update db :history? not)))
-
-(rf/reg-event-db
  :document/set-fill
  (fn [{active-document :active-document :as db} [_ fill]]
    (-> db

@@ -86,16 +86,6 @@
  :-> :rulers?)
 
 (rf/reg-sub
- :document/xml?
- :<- [:document/active]
- :-> :xml?)
-
-(rf/reg-sub
- :document/history?
- :<- [:document/active]
- :-> :history?)
-
-(rf/reg-sub
  :document/grid?
  :<- [:document/active]
  :-> :grid?)

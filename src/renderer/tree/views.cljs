@@ -112,14 +112,14 @@
         active-page @(rf/subscribe [:elements/active-page])
         active-page-children @(rf/subscribe [:elements/filter (:children active-page)])
         elements @(rf/subscribe [:document/elements])
-        elements-collapsed? @(rf/subscribe [:window/elements-collapsed?])
-        _symbols-collapsed? @(rf/subscribe [:window/symbols-collapsed?])
-        pages-collapsed? @(rf/subscribe [:window/pages-collapsed?])
-        _defs-collapsed? @(rf/subscribe [:window/defs-collapsed?])]
+        elements-collapsed? @(rf/subscribe [:tree/elements-collapsed?])
+        _symbols-collapsed? @(rf/subscribe [:tree/symbols-collapsed?])
+        pages-collapsed? @(rf/subscribe [:tree/pages-collapsed?])
+        _defs-collapsed? @(rf/subscribe [:tree/defs-collapsed?])]
     [:div.flex.flex-col.flex-1.overflow-hidden.level-1.tree-sidebar
      {:on-click #(rf/dispatch [:elements/deselect-all])}
      #_[:div.button.tree-heading
-        {:on-click #(rf/dispatch [:window/toggle-symbols-collapsed])}
+        {:on-click #(rf/dispatch [:tree/toggle-symbols-collapsed])}
         [comp/toggle-collapsed-button symbols-collapsed?]
         [:div.flex-1 "Symbols"]
         [comp/icon-button "square-minus"]]
@@ -128,7 +128,7 @@
         {:style {:flex (if symbols-collapsed? 0 "0 1 128px")}}]
 
      [:div.button.tree-heading
-      {:on-click #(rf/dispatch [:window/toggle-pages-collapsed])}
+      {:on-click #(rf/dispatch [:tree/toggle-pages-collapsed])}
       [comp/toggle-collapsed-button pages-collapsed?]
       [:div.flex-1 "Pages"]
       [comp/icon-button "page-plus"
@@ -144,7 +144,7 @@
             (reverse page-elements))]]
 
      [:div.button.tree-heading
-      {:on-click #(rf/dispatch [:window/toggle-elements-collapsed])}
+      {:on-click #(rf/dispatch [:tree/toggle-elements-collapsed])}
       [comp/toggle-collapsed-button elements-collapsed?]
       [:div.flex-1 "Elements"]
       #_[comp/icon-button "folder-plus"
@@ -168,7 +168,7 @@
                   comp/element-menu))]]
 
      #_[:div.button.tree-heading
-        {:on-click #(rf/dispatch [:window/toggle-defs-collapsed])}
+        {:on-click #(rf/dispatch [:tree/toggle-defs-collapsed])}
         [comp/toggle-collapsed-button defs-collapsed?]
         [:div.flex-1 "Defs"]
         [comp/icon-button "square-minus"]]

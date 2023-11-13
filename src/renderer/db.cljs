@@ -2,7 +2,9 @@
   (:require
    [renderer.window.db]
    [renderer.document.db]
-   [renderer.theme.db]))
+   [renderer.theme.db]
+   [renderer.panel.db]
+   [renderer.tree.db]))
 
 (def app
   [:map
@@ -15,8 +17,11 @@
    [:system-fonts vector?]
    [:debug-info? boolean?]
    [:pen-mode? boolean?]
+   [:command-palette? boolean?]
+   [:tree renderer.tree.db/tree]
+   [:panel [:map-of :key renderer.panel.db/panel]]
    [:window renderer.window.db/window]
-   [:theme-mode renderer.theme.db/modes]])
+   [:theme [:mode renderer.theme.db/modes]]])
 
 (def default
   {:tool :select
@@ -29,22 +34,22 @@
    :notifications []
    :debug-info? false
    :pen-mode? false
+   :command-palette? false
    :repl-mode :cljs
-   :theme-mode :dark
+   :theme {:mode :dark}
+   :tree {:elements-collapsed? false
+          :pages-collapsed? false
+          :defs-collapsed? true
+          :symbols-collapsed? true}
+   :panel {:tree {:size 300
+                  :visible? true}
+           :properties {:size 300
+                        :visible? true}
+                       :history? false
+           :timeline {:visible? true}
+           :xml {:visible? false}
+           :repl-history {:visible? false}}
    :window {:maximized? true
             :minimized? false
             :fullscreen? false
-            :header? true
-            :history? false
-            :timeline? true
-            :xml? false
-            :tree {:size 300
-                   :visible? true}
-            :properties {:size 300
-                         :visible? true}
-            :elements-collapsed? false
-            :pages-collapsed? false
-            :command-palette? false
-            :defs-collapsed? true
-            :symbols-collapsed? true
-            :repl-history? false}})
+            :header? true}})

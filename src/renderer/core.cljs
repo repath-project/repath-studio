@@ -8,6 +8,8 @@
    [renderer.history.core]
    [renderer.tools.core]
    [renderer.rulers.core]
+   [renderer.tree.core]
+   [renderer.panel.core]
    [renderer.window.core]
    [renderer.document.core]
    [renderer.frame.core]
@@ -73,6 +75,8 @@
   (bootstrap/init repl/st {:path "js/bootstrap" :load-on-init '[user]} bootstrap-cb)
 
   (rf/dispatch-sync [:initialize-db])
+  (rf/dispatch-sync [:load-local-db])
+  (rf/dispatch-sync [:theme/init-mode])
   (rf/dispatch-sync [:document/new])
 
   (rf/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])
@@ -99,7 +103,6 @@
              "windowLeavedFullscreen" (rf/dispatch [:window/set-fullscreen? false])
              "windowMinimized" (rf/dispatch [:window/set-minimized? true])
              "windowRestored" (rf/dispatch [:window/set-minimized? false])
-             "windowPainted" (rf/dispatch [:window/set-bitmap-data (.-data data)])
              "openDocument" (js/console.log (.-data data))))))
     (.addEventListener js/document
                        "fullscreenchange"

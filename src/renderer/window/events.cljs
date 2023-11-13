@@ -1,15 +1,6 @@
 (ns renderer.window.events
   (:require
-   [re-frame.core :as rf]
-   [clojure.core.matrix :as matrix]))
-
-(rf/reg-event-db
- :window/set-bitmap-data
- (rf/path :window)
- (fn [db [_ data]]
-   (assoc db
-          :bitmap (.-bitmap data)
-          :size (js->clj (.-size data) :keywordize-keys true))))
+   [re-frame.core :as rf]))
 
 (rf/reg-event-db
  :window/set-maximized?
@@ -30,83 +21,7 @@
    (assoc db :minimized? state)))
 
 (rf/reg-event-db
- :window/toggle-sidebar
- (rf/path :window)
- (fn [db [_ key]]
-   (update-in db [key :visible?] not)))
-
-(rf/reg-event-db
  :window/toggle-header
  (rf/path :window)
  (fn [db [_]]
    (update db :header? not)))
-
-(rf/reg-event-db
- :window/toggle-elements-collapsed
- (rf/path :window)
- (fn [db [_]]
-   (update db :elements-collapsed? not)))
-
-(rf/reg-event-db
- :window/toggle-pages-collapsed
- (rf/path :window)
- (fn [db [_]]
-   (update db :pages-collapsed? not)))
-
-(rf/reg-event-db
- :window/toggle-repl-history
- (rf/path :window)
- (fn [db [_]]
-   (update db :repl-history? not)))
-
-#_(rf/reg-event-db
-   :window/toggle-symbols-collapsed
-   (rf/path :window)
-   (fn [db [_]]
-     (update db :symbols-collapsed? not)))
-
-#_(rf/reg-event-db
-   :window/toggle-defs-collapsed
-   (rf/path :window)
-   (fn [db [_]]
-     (update db :defs-collapsed? not)))
-
-(rf/reg-event-db
- :window/set-drag
- (fn [db [_ key direction]]
-   (-> db
-       (assoc-in [:window :drag] key)
-       (assoc-in [:window :drag-direction] direction))))
-
-(rf/reg-event-db
- :window/clear-drag
- (fn [db [_]]
-   (update db :window dissoc :drag :mouse-pos)))
-
-(rf/reg-event-db
- :window/on-drag
- (fn [db [_ evt]]
-   (when-let [key (-> db :window :drag)]
-     (let [mouse-pos [(.-clientX evt) (.-clientY evt)]
-           min-width 300
-           max-width 600
-           previous-mouse-pos (-> db :window :mouse-pos)
-           current-size (-> db :window key :size)
-           offset (when previous-mouse-pos (matrix/sub previous-mouse-pos mouse-pos))
-           direction (-> db :window :drag-direction)
-           updated-size ((if (contains? #{:right :bottom} direction) + -)
-                         current-size
-                         ((if (contains? #{:left :right} direction) first second) offset))]
-       (cond-> db
-         (or (and (> updated-size min-width)
-                  (< updated-size max-width))
-             (not (-> db :window :mouse-pos)))
-         (assoc-in [:window :mouse-pos] mouse-pos)
-
-         (and (not (-> db :window key :visible?)) (> updated-size current-size))
-         (assoc-in [:window key :visible?] true)
-
-         (and key previous-mouse-pos)
-         (assoc-in [:window key :size] (cond (< updated-size min-width) min-width
-                                             (> updated-size max-width) max-width
-                                             :else updated-size)))))))

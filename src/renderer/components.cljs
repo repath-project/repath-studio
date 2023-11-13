@@ -81,8 +81,8 @@
      :on-drag-start #(do (.setDragImage (.-dataTransfer %)
                                         (.createElement js/document "img")
                                         0 0)
-                         (rf/dispatch-sync [:window/set-drag key direction]))
-     :on-drag-end #(rf/dispatch-sync [:window/clear-drag])}]])
+                         (rf/dispatch-sync [:panel/set-drag key direction]))
+     :on-drag-end #(rf/dispatch-sync [:panel/clear-drag])}]])
 
 (defn context-menu-item
   [{:keys [type label action checked?]}]

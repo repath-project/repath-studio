@@ -39,7 +39,7 @@
                  [{:keyCode (key-codes "EQUALS")}]]
                 [[:zoom-out]
                  [{:keyCode (key-codes "DASH")}]]
-                [[:window/toggle-sidebar :tree]
+                [[:panel/toggle :tree]
                  [{:keyCode (key-codes "T")
                    :ctrlKey true}]]
                 [[:elements/->path]
@@ -50,7 +50,7 @@
                  [{:keyCode (key-codes "P")
                    :ctrlKey true
                    :altKey true}]]
-                [[:window/toggle-sidebar :properties]
+                [[:panel/toggle :properties]
                  [{:keyCode (key-codes "P")
                    :ctrlKey true}]]
                 [[:window/toggle-header]

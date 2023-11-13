@@ -154,7 +154,7 @@
         :active-text "show command output"
         :inactive-icon "chevron-down"
         :inactive-text "hide command output"
-        :action #(rf/dispatch [:window/toggle-repl-history])}]]]))
+        :action #(rf/dispatch [:panel/toggle :repl-history])}]]]))
 
 (defn docs-view [docs]
   (when docs [view :docs docs]))
@@ -194,7 +194,7 @@
                       _show-value-opts
                       _js-cm-opts
                       _on-cm-init]}]
-  (let [repl-history? (rf/subscribe [:window/repl-history?])
+  (let [repl-history? (rf/subscribe [:panel/visible? :repl-history])
         state (or state (r/atom initial-state))
         {:keys
          [add-input

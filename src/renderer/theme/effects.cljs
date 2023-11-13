@@ -1,6 +1,7 @@
 (ns renderer.theme.effects
   (:require
    [re-frame.core :as rf]
+   [renderer.utils.local-storage :as local-storage]
    [platform]))
 
 (rf/reg-fx
@@ -9,12 +10,25 @@
    (js/window.document.documentElement.setAttribute attr val)))
 
 (rf/reg-event-fx
- :theme/cycle
+ :theme/init-mode
+ (fn [{:keys [db]} _]
+   (let [mode (-> db :theme :mode name)]
+     {::set-html-attribute ["data-theme" mode]
+      :send-to-main {:action "setThemeMode" :data mode}})))
+
+(rf/reg-event-fx
+ :theme/set-mode
+ local-storage/persist
+ (fn [{:keys [db]} [_ mode]]
+   {:db (assoc-in db [:theme :mode] mode)
+    :dispatch [:theme/init-mode]}))
+
+(rf/reg-event-fx
+ :theme/cycle-mode
  (fn [{:keys [db]} [_]]
-   (let [theme (case (-> db :theme-mode)
-                 ; TODO system mode
-                 :dark :light
-                 :light :dark)]
-     {:db (assoc-in db [:theme-mode] theme)
-      ::set-html-attribute ["data-theme" (name theme)]
-      :send-to-main {:action "setThemeMode" :data (name theme)}})))
+   (let [mode (case (-> db :theme :mode)
+                ;; TODO system mode
+                :dark :light
+                :light :dark)]
+     {:dispatch [:theme/set-mode mode]})))
+

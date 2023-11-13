@@ -5,6 +5,7 @@
    [clojure.core.matrix :as matrix]
    [renderer.frame.handlers :as frame-handlers]
    [renderer.handlers :as handlers]
+   [renderer.utils.local-storage :as local-storage]
    [renderer.db :as db]
    [malli.core :as ma]))
 
@@ -24,6 +25,12 @@
  :initialize-db
  (fn  [_ _]
    db/default))
+
+(rf/reg-event-db
+ :load-local-db
+ local-storage/persist
+ (fn [db _]
+   db))
 
 (rf/reg-event-db
  :set-active-document
