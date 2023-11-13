@@ -13,8 +13,6 @@
 (def main-window (atom nil))
 (def loading-window (atom nil))
 
-(set! (.. nativeTheme -themeSource) "dark")
-
 (defn to-main-api
   [args]
   (case (.-action args)
