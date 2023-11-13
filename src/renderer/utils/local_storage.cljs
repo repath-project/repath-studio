@@ -6,8 +6,8 @@
 
 (def persistent-keys
   "Top level keys that should be persisted"
-  [:tree 
-   :panel 
+  [:tree
+   :panel
    :theme])
 
 (def persist

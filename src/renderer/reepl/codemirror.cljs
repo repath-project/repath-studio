@@ -258,7 +258,9 @@
         ;; Hacky way to remove the default theme class added by CodeMirror.colorize
         ;; SEE https://codemirror.net/addon/runmode/colorize.js
         (-> node .-classList (.remove  "cm-s-default")))) 
+    
     :reagent-render
     (fn [_]
-      [:pre.cm-s-tomorrow-night-eighties {:style (merge {:padding 0 :margin 0} style)}
+      [:pre.cm-s-tomorrow-night-eighties
+       {:style (merge {:padding 0 :margin 0} style)}
        text])}))
