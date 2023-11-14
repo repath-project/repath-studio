@@ -1,7 +1,7 @@
 (ns renderer.codemirror.views
   (:require
    [reagent.core :as ra]
-   [reagent.dom :as ra-dom]
+   ["react" :as react]
    ["codemirror" :as codemirror]
    ["codemirror/mode/css/css.js"]
    ["codemirror/mode/xml/xml.js"]
@@ -22,11 +22,12 @@
 
 (defn editor
   [value {:keys [style options on-init on-blur]}]
-  (let [cm (ra/atom nil)]
+  (let [cm (ra/atom nil)
+        ref (react/createRef)]
     (ra/create-class
      {:component-did-mount
-      (fn [this]
-        (let [el (ra-dom/dom-node this)
+      (fn [_this]
+        (let [el (.-current ref)
               options (clj->js (merge default-options options))]
 
           (reset! cm (.fromTextArea codemirror el options))
@@ -65,4 +66,5 @@
         [:textarea {:value value
                     :style style
                     :on-blur #()
-                    :on-change #()}])})))
+                    :on-change #()
+                    :ref ref}])})))

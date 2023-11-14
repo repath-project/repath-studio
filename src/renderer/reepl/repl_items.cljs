@@ -2,7 +2,7 @@
   (:require [cljs.reader]
             [cljs.tools.reader]
             [reagent.core :as r]
-            [reagent.dom :as dom]
+            ["react" :as react]
             [renderer.reepl.show-value :refer [show-value]]
             [renderer.reepl.codemirror :as codemirror]
             [renderer.reepl.helpers :as helpers]))
@@ -75,13 +75,15 @@
    [view :output-value [show-value value nil opts]]])
 
 (defn repl-items [_]
-  (r/create-class
-   {:component-did-update
-    (fn [this]
-      (let [el (dom/dom-node this)]
-        (set! (.-scrollTop el) (.-scrollHeight el))))
-    :reagent-render
-    (fn [items opts]
-      (into
-       [view :repl-items]
-       (map #(repl-item % opts) items)))}))
+  (let [ref (react/createRef)]
+    (r/create-class
+     {:component-did-update
+      (fn [_this]
+        (let [el (.-current ref)]
+          (set! (.-scrollTop el) (.-scrollHeight el))))
+      :reagent-render
+      (fn [items opts]
+        (into
+         [view {:style :repl-items
+                :ref ref}]
+         (map #(repl-item % opts) items)))})))

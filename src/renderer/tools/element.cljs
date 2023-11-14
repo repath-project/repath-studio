@@ -7,7 +7,7 @@
    [renderer.history.handlers :as history]
    [renderer.handlers :as handlers]
    [renderer.utils.mouse :as mouse]
-   [reagent.dom :as dom]))
+   ["react" :as react]))
 
 (derive ::tools/element ::tools/tool)
 
@@ -68,53 +68,55 @@
   "We need a reagent form-3 component in order to set the style attribute manually.
    React expects a map, but we need to set a string to avoid serializing css."
   [{:keys [attrs]}]
-  (ra/create-class
-   {:display-name "element-renderer"
+  (let [ref (react/createRef)]
+    (ra/create-class
+     {:display-name "element-renderer"
 
-    :component-did-mount
-    (fn
-      [this]
-      (.setAttribute (dom/dom-node this) "style" (:style attrs)))
+      :component-did-mount
+      (fn
+        [_this]
+        (.setAttribute (.-current ref) "style" (:style attrs)))
 
-    :component-did-update
-    (fn
-      [this _]
-      (let [new-argv (second (ra/argv this))
-            style (:style (into {} (:attrs (into {} new-argv))))]
-        (.setAttribute (dom/dom-node this) "style" style)))
+      :component-did-update
+      (fn
+        [this _]
+        (let [new-argv (second (ra/argv this))
+              style (:style (into {} (:attrs (into {} new-argv))))]
+          (.setAttribute (.-current ref) "style" style)))
 
-    :reagent-render
-    (fn
-      [{:keys [attrs tag title content] :as element}
-       child-elements
-       default-state?]
-      [:<>
-       [tag (->> (-> attrs
-                     (dissoc :style)
-                     (assoc :shape-rendering "geometricPrecision"))
-                 (remove #(empty? (str (second %))))
-                 (into {}))
-        (when title [:title title])
-        content
-        (map (fn [child]
-               ^{:key (:key child)}
-               [tools/render child])
-             child-elements)]
+      :reagent-render
+      (fn
+        [{:keys [attrs tag title content] :as element}
+         child-elements
+         default-state?]
+        [:<>
+         [tag (->> (-> attrs
+                       (dissoc :style)
+                       (assoc :shape-rendering "geometricPrecision"
+                              :ref ref))
+                   (remove #(empty? (str (second %))))
+                   (into {}))
+          (when title [:title title])
+          content
+          (map (fn [child]
+                 ^{:key (:key child)}
+                 [tools/render child])
+               child-elements)]
 
-       (when default-state?
-         (let [mouse-handler #(mouse/event-handler % element)]
-           [tag
-            (merge (dissoc attrs :style)
-                   {:on-pointer-up mouse-handler
-                    :on-pointer-down mouse-handler
-                    :on-pointer-move mouse-handler
-                    :on-double-click mouse-handler
-                    :shape-rendering "optimizeSpeed"
-                    :fill "transparent"
-                    :stroke "transparent"
-                    :stroke-width (max (:stroke-width attrs)
-                                       (/ 20 @(rf/subscribe [:document/zoom])))})
-            content]))])}))
+         (when default-state?
+           (let [mouse-handler #(mouse/event-handler % element)]
+             [tag
+              (merge (dissoc attrs :style)
+                     {:on-pointer-up mouse-handler
+                      :on-pointer-down mouse-handler
+                      :on-pointer-move mouse-handler
+                      :on-double-click mouse-handler
+                      :shape-rendering "optimizeSpeed"
+                      :fill "transparent"
+                      :stroke "transparent"
+                      :stroke-width (max (:stroke-width attrs)
+                                         (/ 20 @(rf/subscribe [:document/zoom])))})
+              content]))])})))
 
 (defmethod tools/render ::tools/element
   [{:keys [children] :as element}]

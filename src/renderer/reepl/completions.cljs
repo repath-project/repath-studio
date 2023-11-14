@@ -2,7 +2,7 @@
   (:require [cljs.reader]
             [cljs.tools.reader]
             [reagent.core :as r]
-            [reagent.dom :as dom]
+            ["react" :as react]
             [renderer.reepl.helpers :as helpers]))
 
 (def styles
@@ -32,24 +32,26 @@
   (not (nil? (.-scrollIntoViewIfNeeded js/document.body))))
 
 (defn completion-item [_text _is-selected _is-active _set-active]
-  (r/create-class
-   {:component-did-update
-    (fn [this [_ _ old-is-selected]]
-      (let [[_ _ is-selected] (r/argv this)]
-        (when (and (not old-is-selected)
-                 is-selected)
-          (when canScrollIfNeeded
-            (.scrollIntoViewIfNeeded (dom/dom-node this) false)
-            (.scrollIntoView (dom/dom-node this))))))
-    :reagent-render
-    (fn [text is-selected is-active set-active]
-      [view {:on-click set-active
-             :style [:completion-item
-                     (and is-selected
-                          (if is-active
-                            :completion-active
-                            :completion-selected))]}
-       text])}))
+  (let [ref (react/createRef)]
+    (r/create-class
+     {:component-did-update
+      (fn [this [_ _ old-is-selected]]
+        (let [[_ _ is-selected] (r/argv this)]
+          (when (and (not old-is-selected)
+                     is-selected)
+            (when canScrollIfNeeded
+              (.scrollIntoViewIfNeeded (.-current ref) false)
+              (.scrollIntoView (.-current ref))))))
+      :reagent-render
+      (fn [text is-selected is-active set-active]
+        [view {:on-click set-active
+               :ref ref
+               :style [:completion-item
+                       (and is-selected
+                            (if is-active
+                              :completion-active
+                              :completion-selected))]}
+         text])})))
 
 (defn completion-list [{:keys [pos list active show-all]} set-active]
   (let [items (->> list

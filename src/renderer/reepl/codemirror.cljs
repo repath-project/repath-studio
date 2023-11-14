@@ -1,6 +1,6 @@
 (ns renderer.reepl.codemirror
   (:require [reagent.core :as r]
-            [reagent.dom :as dom]
+            ["react" :as react]
             [clojure.string :as str]
             ["codemirror" :as codemirror]
             ["codemirror/addon/edit/closebrackets.js"]
@@ -160,11 +160,12 @@
                       js-cm-opts
                       on-cm-init]}]
 
-  (let [cm (atom nil)]
+  (let [cm (atom nil)
+        ref (react/createRef)]
     (r/create-class
      {:component-did-mount
-      (fn [this]
-        (let [el (dom/dom-node this)
+      (fn [_this]
+        (let [el (.-current ref)
               ;; On Escape, should we revert to the pre-completion-text?
               cancel-keys #{13 27}
               cmp-ignore #{9 16 17 18 91 93}
@@ -247,20 +248,23 @@
       :reagent-render
       (fn [_ _ _]
         @value-atom
-        [:div {:style style}])})))
+        [:div {:ref ref
+               :style style}])})))
 
 (defn colored-text [text style]
-  (r/create-class
-   {:component-did-mount
-    (fn [this]
-      (let [node (dom/dom-node this)]
-        ((aget codemirror "colorize") #js[node] "clojure")
+  (let [ref (react/createRef)]
+    (r/create-class
+     {:component-did-mount
+      (fn [_this]
+        (let [node (.-current ref)]
+          ((aget codemirror "colorize") #js[node] "clojure")
         ;; Hacky way to remove the default theme class added by CodeMirror.colorize
         ;; SEE https://codemirror.net/addon/runmode/colorize.js
-        (-> node .-classList (.remove  "cm-s-default")))) 
-    
-    :reagent-render
-    (fn [_]
-      [:pre.cm-s-tomorrow-night-eighties
-       {:style (merge {:padding 0 :margin 0} style)}
-       text])}))
+          (-> node .-classList (.remove  "cm-s-default"))))
+
+      :reagent-render
+      (fn [_]
+        [:pre.cm-s-tomorrow-night-eighties
+         {:style (merge {:padding 0 :margin 0} style)
+          :ref ref}
+         text])})))
