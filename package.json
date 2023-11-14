@@ -4,7 +4,7 @@
   "repository": "https://github.com/sprocketc/repath-studio",
   "author": "Konstantinos Kaloutas",
   "homepage": "https://repath.studio",
-  "license": "EPL-1.0",
+  "license": "AGPL-3.0",
   "version": "0.1.3",
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
