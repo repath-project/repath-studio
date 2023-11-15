@@ -399,8 +399,8 @@
   [db]
   (let [db (paste-in-place db)
         bounds (tools/elements-bounds (elements db) (selected db))
-        [x1 y1 x2 y2] bounds
-        [width height] (matrix/sub [x2 y2] [x1 y1])
+        [x1 y1] bounds
+        [width height] (bounds/->dimensions bounds)
         [x y] (:adjusted-mouse-pos db)]
     (translate db [(- x (+ x1 (/ width 2)))
                    (- y (+ y1 (/ height 2)))])))

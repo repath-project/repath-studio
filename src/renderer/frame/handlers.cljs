@@ -4,6 +4,7 @@
    [renderer.element.handlers :as el]
    [renderer.element.utils :as el-utils]
    [clojure.core.matrix :as matrix]
+   [renderer.utils.bounds :as bounds]
    [goog.math]))
 
 (defn pan
@@ -55,12 +56,11 @@
 (defn pan-to-bounds
   [{:keys [active-document content-rect] :as db} bounds]
   (let [zoom (get-in db [:documents active-document :zoom])
-        [x1 y1 x2 y2] bounds
-        dimensions (matrix/sub [x2 y2] [x1 y1])
+        [x1 y1] bounds
         pan (matrix/add
              (matrix/div
               (matrix/sub
-               dimensions
+               (bounds/->dimensions bounds)
                (matrix/div [(:width content-rect) (:height content-rect)]
                            zoom))
               2)
