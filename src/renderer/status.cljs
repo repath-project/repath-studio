@@ -25,13 +25,13 @@
       :icon "magnet"
       :action [:document/toggle-snap]}
    {:title "Grid"
-    :active? [:document/grid?]
+    :active? [:grid?]
     :icon "grid"
-    :action [:document/toggle-grid]}
+    :action [:toggle-grid]}
    {:title "Rulers"
-    :active? [:document/rulers?]
+    :active? [:rulers?]
     :icon "ruler-combined"
-    :action [:document/toggle-rulers]}
+    :action [:toggle-rulers]}
    #_{:title "History tree"
       :active? @(rf/subscribe [:panel/visible? :history])
       :icon "history"

@@ -43,10 +43,6 @@
  :-> :message)
 
 (rf/reg-sub
- :command-palette?
- :-> :command-palette?)
-
-(rf/reg-sub
  :active-document
  :-> :active-document)
 
@@ -125,6 +121,22 @@
         (filter #(= (first %) event))
         (first)
         (rest))))
+
+(rf/reg-sub
+ :rulers-locked?
+ :-> :rulers-locked?)
+
+(rf/reg-sub
+ :rulers?
+ :-> :rulers?)
+
+(rf/reg-sub
+ :grid?
+ :-> :grid?)
+
+#_(rf/reg-sub
+   :snap?
+   :-> :snap?)
 
 #_(rf/reg-sub
    :font-options

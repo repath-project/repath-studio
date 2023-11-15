@@ -6,11 +6,21 @@
 
 (rf/reg-event-db
  :history/undo
+ (fn [db _]
+   (handlers/undo db 1)))
+
+(rf/reg-event-db
+ :history/redo
+ (fn [db _]
+   (handlers/redo db 1)))
+
+(rf/reg-event-db
+ :history/undo-by
  (fn [db [_ n]]
    (handlers/undo db n)))
 
 (rf/reg-event-db
- :history/redo
+ :history/redo-by
  (fn [db [_ n]]
    (handlers/redo db n)))
 

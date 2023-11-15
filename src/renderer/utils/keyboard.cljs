@@ -110,13 +110,13 @@
                    :ctrlKey true}]]
                 [[:history/cancel]
                  [{:keyCode (key-codes "ESC")}]]
-                [[:history/redo 1]
+                [[:history/redo]
                  [{:keyCode (key-codes "Z")
                    :ctrlKey true
                    :shiftKey true}]
                  [{:keyCode (key-codes "Y")
                    :ctrlKey true}]]
-                [[:history/undo 1]
+                [[:history/undo]
                  [{:keyCode (key-codes "Z")
                    :ctrlKey true}]]
                 [[:elements/select-same-tags]
@@ -142,17 +142,15 @@
                  [{:keyCode (key-codes "R")}]]
                 [[:set-tool :select]
                  [{:keyCode (key-codes "S")}]]
-                [[:set-tool :rect]
-                 [{:keyCode (key-codes "R")}]]
                 [[:set-tool :fill]
                  [{:keyCode (key-codes "F")}]]
-                [[:elements/translate [0 -1]]
+                [[:elements/move-up]
                  [{:keyCode (key-codes "UP")}]]
-                [[:elements/translate [0 1]]
+                [[:elements/move-down]
                  [{:keyCode (key-codes "DOWN")}]]
-                [[:elements/translate [-1 0]]
+                [[:elements/move-left]
                  [{:keyCode (key-codes "LEFT")}]]
-                [[:elements/translate [1 0]]
+                [[:elements/move-right]
                  [{:keyCode (key-codes "RIGHT")}]]
                 [[:window/close]
                  [{:keyCode (key-codes "Q")
@@ -184,8 +182,9 @@
                    :shiftKey true}]]
                 [[:window/toggle-fullscreen]
                  [{:keyCode (key-codes "F11")}]]
-                [[:set-command-palette? true]
-                 [{:keyCode 186}]]]
+                [[:cmdk/toggle]
+                 [{:keyCode (key-codes "K")
+                   :ctrlKey true}]]]
 
    :clear-keys []
 

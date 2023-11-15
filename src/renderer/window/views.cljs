@@ -11,16 +11,19 @@
     :label "File"
     :items [{:key :new-file
              :label "New"
+             :icon "file"
              :action [:document/new]}
             {:key :divider-1
              :type :separator}
             {:key :open-file
              :label "Open…"
+             :icon "folder"
              :action [:document/open]}
             {:key :divider-2
              :type :separator}
             {:key :save
              :label "Save"
+             :icon "save"
              :action [:document/save]}
             {:key :save-as
              :label "Save as…"
@@ -42,10 +45,10 @@
     :label "Edit"
     :items [{:key :undo
              :label "Undo"
-             :action [:history/undo 1]}
+             :action [:history/undo]}
             {:key :redo
              :label "Redo"
-             :action [:history/redo 1]}
+             :action [:history/redo]}
             {:key :divider-1
              :type :separator}
             {:key :cut
@@ -142,6 +145,11 @@
              :type :checkbox
              :checked? [:panel/visible? :properties]
              :action [:panel/toggle :properties]}
+            {:key :toggle-xml
+             :label "XML view"
+             :type :checkbox
+             :checked? [:panel/visible? :xml]
+             :action [:panel/toggle :xml]}
             {:key :toggle-header-menu
              :type :checkbox
              :label "Menu bar"
@@ -149,6 +157,16 @@
              :action [:window/toggle-header]}
             {:key :divider-2
              :type :separator}
+            {:key :toggle-grid
+             :type :checkbox
+             :label "Grid"
+             :checked? [:grid?]
+             :action [:toggle-grid]}
+            {:key :toggle-rulers
+             :type :checkbox
+             :label "Rulers"
+             :checked? [:rulers?]
+             :action [:toggle-rulers]}
             {:key :toggle-command-history
              :type :checkbox
              :label "Command history"
@@ -197,8 +215,8 @@
                    [:> Menubar/Item
                     {:class "menu-item"
                      :onSelect #(rf/dispatch action)}
-                    (when icon
-                      [comp/icon icon {:class "menu-item-indicator"}])
+                    #_(when icon
+                        [comp/icon icon {:class "menu-item-indicator"}])
                     label
                     [:div {:class "right-slot"}
                      [comp/shortcuts action]]])) items))]])
@@ -238,7 +256,11 @@
       [:> Menubar/Root
        {:class "menubar-root"
         :onValueChange #(rf/dispatch [:set-backdrop (seq %)])}
-       (map (fn [item] ^{:key item} [menu-button item]) (menu))]]
+       (map (fn [item] ^{:key item} [menu-button item]) (menu))
+       [:button.button.px-3.flex.items-center
+        {:on-click #(rf/dispatch [:cmdk/toggle])}
+        "Search…"]]
+      ]
      [title-bar]
      (let [theme-mode @(rf/subscribe [:theme/mode])]
        [:div.level-2

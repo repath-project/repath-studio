@@ -32,7 +32,7 @@
         tool @(rf/subscribe [:tool])
         primary-tool @(rf/subscribe [:primary-tool])
         rotate @(rf/subscribe [:document/rotate])
-        grid? @(rf/subscribe [:document/grid?])
+        grid? @(rf/subscribe [:grid?])
         mouse-handler #(mouse/event-handler % element)
         select? (or (= tool :select)
                     (= primary-tool :select))]

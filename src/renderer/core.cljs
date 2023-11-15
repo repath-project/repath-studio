@@ -19,6 +19,7 @@
    [renderer.notification.core]
    [renderer.theme.core]
    [renderer.reepl.replumb :as replumb]
+   [renderer.cmdk.core]
    [replumb.repl :as repl]
    [renderer.views :as views]
    [reagent.dom :as rdom]

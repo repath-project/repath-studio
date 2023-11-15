@@ -227,18 +227,18 @@
 (defn ^:export undo
   "Goes back in history."
   ([]
-   (undo 1))
+   (rf/dispatch [:history/undo]))
 
   ([steps]
-   (rf/dispatch [:history/undo steps])))
+   (rf/dispatch [:history/undo-by steps])))
 
 (defn ^:export redo
   "Goes forward in history."
   ([]
-   (redo 1))
+   (rf/dispatch [:history/redo]))
 
   ([steps]
-   (rf/dispatch [:history/redo steps])))
+   (rf/dispatch [:history/redo-by steps])))
 
 (defn ^:export unite
   "Unites the selected elements."

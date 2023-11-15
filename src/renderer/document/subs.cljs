@@ -74,23 +74,3 @@
  :document/ignored-keys
  :<- [:document/active]
  :-> :ignored-keys)
-
-#_(rf/reg-sub
-   :document/rulers-locked?
-   :<- [:document/active]
-   :-> :rulers-locked?)
-
-(rf/reg-sub
- :document/rulers?
- :<- [:document/active]
- :-> :rulers?)
-
-(rf/reg-sub
- :document/grid?
- :<- [:document/active]
- :-> :grid?)
-
-#_(rf/reg-sub
-   :document/snap?
-   :<- [:document/active]
-   :-> :snap?)

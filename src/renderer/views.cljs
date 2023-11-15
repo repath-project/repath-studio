@@ -9,6 +9,7 @@
    [renderer.tools.views :as tools]
    [renderer.frame.views :as frame]
    [renderer.rulers.views :as rulers]
+   [renderer.cmdk.views :as cmdk]
    [renderer.object :as object]
    [renderer.codemirror.views :as cm]
    [renderer.reepl.views :as repl]
@@ -18,7 +19,8 @@
    [re-frame.registrar]
    [renderer.debug :as debug]
    [renderer.notification.views :as notification]
-   ["@radix-ui/react-tooltip" :as Tooltip]))
+   ["@radix-ui/react-tooltip" :as Tooltip]
+   ))
 
 (defn command-input []
   [:div.flex.flex-col.level-0.relative.overflow-visible
@@ -27,7 +29,7 @@
    [repl/main-view]])
 
 (defn editor []
-  (let [rulers? @(rf/subscribe [:document/rulers?])]
+  (let [rulers? @(rf/subscribe [:rulers?])]
     [:div.flex.flex-1.overflow-hidden
      [:div.flex.flex-col.flex-1.overflow-hidden
       [:div.flex.flex-col.flex-1.overflow-hidden
@@ -38,24 +40,19 @@
             [:div.flex.level-2
              [:div {:style {:width "23px" :height "23px"}}
               [comp/toggle-icon-button
-               {:active? rulers?
+               {:active? @(rf/subscribe [:rulers-locked?])
                 :active-icon "lock"
                 :active-text "unlock"
                 :inactive-icon "unlock"
                 :inactive-text "lock"
                 :class "small"
-                :action #(rf/dispatch [:document/toggle-rulers-locked])}]]
+                :action #(rf/dispatch [:toggle-rulers-locked])}]]
              [:div.w-full.ml-px
               [rulers/ruler {:orientation :horizontal :size 23}]]])]
          [:div.flex.flex-1.relative
           [:<> (when rulers?
                  [:div.level-2.mr-px
                   [rulers/ruler {:orientation :vertical :size 23}]])]
-          #_(when @(rf/subscribe [:command-palette?])
-              [:div.command-palette
-               (mapv (fn [command] {:key (keyword command)
-                                    :text command
-                                    :styles {:optionText {:font-size "14px"}}}) (keys (:event @re-frame.registrar/kind->id->handler)))])
           [:div.relative.grow.flex
            [frame/main]
            [:div.absolute.bottom-1.left-2.pointer-events-none
@@ -109,5 +106,7 @@
              [attr/form]]])
          [object/toolbar]]]]
       [home/panel])]
+
+   [cmdk/command-dialog]
 
    [notification/main]])

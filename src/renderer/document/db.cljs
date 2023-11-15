@@ -7,10 +7,6 @@
    [:hovered-keys [:set uuid?]]
    [:ignored-keys [:set uuid?]]
    [:active-page uuid?]
-   [:rulers-locked? boolean?]
-   [:grid? boolean?]
-   [:rulers? boolean?]
-   [:snap? boolean?]
    [:fill string?]
    [:stroke string?]
    [:zoom double?]
@@ -23,9 +19,6 @@
   {:hovered-keys #{}
    :ignored-keys #{}
    :active-page :default-page
-   :rulers-locked? false
-   :grid? false
-   :rulers? true
    :fill "#ffffff"
    :stroke "#000000"
    :zoom 1

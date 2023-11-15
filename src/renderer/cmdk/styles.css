@@ -1,0 +1,25 @@
+[cmdk-item],
+[cmdk-empty] {
+  @apply flex px-3 py-2;
+
+  &[data-selected] {
+    @apply level-3;
+  }
+}
+
+[cmdk-input] {
+  @apply p-3;
+
+  border-bottom: 1px solid var(--border-color)
+}
+
+[cmdk-overlay] {
+  @apply level-0 fixed inset-0;
+
+  background-color: var(--backdrop);
+}
+
+[cmdk-list] {
+  max-height: 300px;
+  overflow: auto;
+}

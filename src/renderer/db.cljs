@@ -12,12 +12,15 @@
    [:mouse-pos [:tuple double? double?]]
    [:zoom-factor double?]
    [:state keyword?]
+   [:grid? boolean?]
+   [:rulers? boolean?]
+   [:snap? boolean?]
+   [:rulers-locked? boolean?]
    [:documents [:map-of :uuid renderer.document.db/document]]
    [:document-tabs [:vector uuid?]]
    [:system-fonts vector?]
    [:debug-info? boolean?]
    [:pen-mode? boolean?]
-   [:command-palette? boolean?]
    [:tree renderer.tree.db/tree]
    [:panel [:map-of :key renderer.panel.db/panel]]
    [:window renderer.window.db/window]
@@ -34,9 +37,12 @@
    :notifications []
    :debug-info? false
    :pen-mode? false
-   :command-palette? false
+   :rulers-locked? false
+   :grid? false
+   :rulers? true
    :repl-mode :cljs
    :theme {:mode :dark}
+   :cmdk {:visible? false}
    :tree {:elements-collapsed? false
           :pages-collapsed? false
           :defs-collapsed? true
@@ -45,7 +51,7 @@
                   :visible? true}
            :properties {:size 300
                         :visible? true}
-                       :history? false
+           :history? false
            :timeline {:visible? true}
            :xml {:visible? false}
            :repl-history {:visible? false}}

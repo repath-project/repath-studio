@@ -44,11 +44,11 @@
    [comp/icon-button
     "undo"
     {:title "Undo"
-     :on-click #(rf/dispatch [:history/undo 1])
+     :on-click #(rf/dispatch [:history/undo])
      :disabled (not @(rf/subscribe [:history/undos?]))}]
 
    [:select.icon-button
-    {:onChange #(rf/dispatch [:history/undo (-> % .-target .-value js/parseInt)])
+    {:onChange #(rf/dispatch [:history/undo-by (-> % .-target .-value js/parseInt)])
      :disabled (not @(rf/subscribe [:history/undos?]))
      :style {:margin-left "-2px"
              :max-width "14px"
@@ -57,11 +57,11 @@
     (history/select-options @(rf/subscribe [:history/undos]))]
 
    [comp/icon-button "redo" {:title "Undo"
-                             :on-click #(rf/dispatch [:history/redo 1])
+                             :on-click #(rf/dispatch [:history/redo])
                              :disabled (not @(rf/subscribe [:history/redos?]))}]
 
    [:select.icon-button
-    {:onChange #(rf/dispatch [:history/redo (-> % .-target .-value js/parseInt)])
+    {:onChange #(rf/dispatch [:history/redo-by (-> % .-target .-value js/parseInt)])
      :disabled (not @(rf/subscribe [:history/redos?]))
      :style {:margin-left "-2px"
              :max-width "14px"

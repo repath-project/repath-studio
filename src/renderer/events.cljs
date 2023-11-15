@@ -53,11 +53,6 @@
    (assoc db :mdn mdn)))
 
 (rf/reg-event-db
- :set-command-palette?
- (fn [db [_ visible?]]
-   (assoc db :command-palette? visible?)))
-
-(rf/reg-event-db
  :set-tool
  (fn [db [_ tool]]
    (tools/set-tool db tool)))
@@ -76,6 +71,27 @@
  :set-backdrop
  (fn [db [_ backdrop?]]
    (assoc db :backdrop? backdrop?)))
+
+(rf/reg-event-db
+ :toggle-rulers
+ (fn [db [_]]
+   (update db :rulers? not)))
+
+(rf/reg-event-db
+ :toggle-rulers-locked
+ (fn [db [_]]
+   (update db :rulers-locked? not)))
+
+(rf/reg-event-db
+ :toggle-grid
+ (fn [db [_]]
+   (update db :grid? not)))
+
+#_:clj-kondo/ignore
+(rf/reg-event-db
+ :toggle-snap
+ (fn [db [_]]
+   (update db :snap? not)))
 
 (defn significant-movement?
   [mouse-pos mouse-offset]

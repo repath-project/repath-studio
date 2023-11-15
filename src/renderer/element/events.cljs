@@ -172,6 +172,34 @@
        (history-handlers/finalize (str "Move selection " offset)))))
 
 (rf/reg-event-db
+ :elements/move-up
+ (fn [db [_]]
+   (-> db
+       (handlers/translate [0 -1])
+       (history-handlers/finalize (str "Move selection up")))))
+
+(rf/reg-event-db
+ :elements/move-down
+ (fn [db [_]]
+   (-> db
+       (handlers/translate [0 1])
+       (history-handlers/finalize (str "Move selection down")))))
+
+(rf/reg-event-db
+ :elements/move-left
+ (fn [db [_]]
+   (-> db
+       (handlers/translate [-1 0])
+       (history-handlers/finalize (str "Move selection left")))))
+
+(rf/reg-event-db
+ :elements/move-right
+ (fn [db [_]]
+   (-> db
+       (handlers/translate [1 0])
+       (history-handlers/finalize (str "Move selection right")))))
+
+(rf/reg-event-db
  :elements/->path
  (fn [db  _]
    (-> db

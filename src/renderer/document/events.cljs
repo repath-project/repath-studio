@@ -59,25 +59,6 @@
           :stroke (:fill db))))
 
 (rf/reg-event-db
- :document/toggle-rulers
- active-document-path
- (fn [db [_]]
-   (update db :rulers? not)))
-
-(rf/reg-event-db
- :document/toggle-grid
- active-document-path
- (fn [db [_]]
-   (update db :grid? not)))
-
-#_:clj-kondo/ignore
-(rf/reg-event-db
- :document/toggle-snap
- active-document-path
- (fn [db [_]]
-   (update db :snap? not)))
-
-(rf/reg-event-db
  :document/set-fill
  (fn [{active-document :active-document :as db} [_ fill]]
    (-> db

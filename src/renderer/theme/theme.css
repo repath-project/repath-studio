@@ -12,6 +12,9 @@
     --level-2: #313131;
     --level-3: #414141;
 
+    --backdrop: rgb(0 0 0 / 0.5);
+
+
     --overlay: rgba(255, 255, 255, .1);
     
     --accent: #e93976;
