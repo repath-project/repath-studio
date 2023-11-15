@@ -194,7 +194,7 @@
   [:> Menubar/Menu
    [:> Menubar/Trigger {:class "menubar-trigger"} label]
    [:> Menubar/Portal
-    (into [:> Menubar/Content {:class "menu-content" :align "start"}]
+    (into [:> Menubar/Content {:class "menu-content" :align "start" :loop true}]
           (map (fn [{:keys [type label action icon checked?]}]
                  (case type
                    :separator
