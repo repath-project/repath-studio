@@ -33,7 +33,7 @@
              :action [:document/save-all]}
             {:key :divider-3
              :type :separator}
-            {:key :save-all
+            {:key :close
              :label "Close"
              :action [:document/close-active]}
             {:key :divider-4

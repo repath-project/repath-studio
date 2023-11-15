@@ -23,13 +23,14 @@
     [:> CommandEmpty
      "No results found."]
     (map (fn [{:keys [label items key]}]
+           ^{:key key}
            [:> CommandGroup
             [:div.px-3.py-2.text-muted.uppercase.font-bold
-             {:key key
-              :style {:font-size "10px"}}
+             {:style {:font-size "10px"}}
              label]
             (map (fn [{:keys [label action key]}]
                    (when action
+                     ^{:key key}
                      [:> CommandItem
                       {:key key
                        :on-select #(doall (rf/dispatch action)
