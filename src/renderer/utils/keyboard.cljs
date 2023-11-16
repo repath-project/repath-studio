@@ -202,6 +202,8 @@
                           {:keyCode (key-codes "P")
                            :ctrlKey true}
                           {:keyCode (key-codes "W")
+                           :ctrlKey true}
+                          {:keyCode (key-codes "K")
                            :ctrlKey true}]})
 
 (defn event-handler
