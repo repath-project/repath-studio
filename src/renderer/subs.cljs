@@ -123,6 +123,10 @@
         (rest))))
 
 (rf/reg-sub
+ :lang
+ :-> :lang)
+
+(rf/reg-sub
  :rulers-locked?
  :-> :rulers-locked?)
 

@@ -58,6 +58,11 @@
    (tools/set-tool db tool)))
 
 #_(rf/reg-event-db
+   :set-lang
+   (fn [db [_ lang]]
+     (assoc db :lang lang)))
+
+#_(rf/reg-event-db
    :set-repl-mode
    (fn [db [_ mode]]
      (assoc db :repl-mode mode)))

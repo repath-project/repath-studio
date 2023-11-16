@@ -1,0 +1,4 @@
+{:missing "Missing translation for :en-US"
+ :cmdk {:search-command "Search for a command"
+        :command-menu "Command menu"
+        :no-results "No results found."}}

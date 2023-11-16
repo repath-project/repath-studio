@@ -3,6 +3,7 @@
    [re-frame.core :as rf]
    [renderer.components :as comp]
    [renderer.window.views :as window]
+   [i18n :refer [t]]
    ["cmdk" :refer [CommandDialog
                    CommandGroup
                    CommandList
@@ -15,13 +16,13 @@
   [:> CommandDialog
    {:open @(rf/subscribe [:cmdk/visible?])
     :onOpenChange #(rf/dispatch [:cmdk/set %])
-    :label "Command Menu"
+    :label (t [:cmdk/command-menu "Command menu"])
     :class "dialog"}
    [:> CommandInput
-    {:placeholder "Search for a command"}]
+    {:placeholder (t [:cmdk/search-command "Search for a command"])}]
    [:> CommandList
     [:> CommandEmpty
-     "No results found."]
+     (t [:cmdk/no-results "No results found."])]
     (map (fn [{:keys [label items key]}]
            ^{:key key}
            [:> CommandGroup

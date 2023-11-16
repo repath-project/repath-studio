@@ -40,6 +40,7 @@
    :rulers-locked? false
    :grid? false
    :rulers? true
+   :lang :el-GR
    :repl-mode :cljs
    :theme {:mode :dark}
    :cmdk {:visible? false}
