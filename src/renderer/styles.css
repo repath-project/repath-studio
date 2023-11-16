@@ -121,6 +121,10 @@
       color: var(--font-color-disabled);
     }
   }
+
+  .backdrop {
+    @apply absolute inset-0; 
+  }
 }
 
 body {
@@ -204,10 +208,6 @@ label {
       color: var(--font-color-hovered);
       cursor: pointer;
   }
-}
-
-.backdrop {
-  @apply absolute inset-0; 
 }
 
 .select-trigger {

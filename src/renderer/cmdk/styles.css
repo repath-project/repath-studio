@@ -14,7 +14,7 @@
 }
 
 [cmdk-overlay] {
-  @apply level-0 fixed inset-0;
+  @apply backdrop level-0;
 
   background-color: var(--backdrop);
 }
