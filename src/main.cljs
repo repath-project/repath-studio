@@ -51,9 +51,10 @@
                   :icon (.join path js/__dirname "/public/img/icon.png")
                   :frame false
                   :show false
-                  :webPreferences #js {; :devTools config/debug?
-                                       :sandbox false
-                                       :preload (.join path js/__dirname "preload.js")}}))
+                  :webPreferences
+                  #js {:devTools config/debug?
+                       :sandbox false
+                       :preload (.join path js/__dirname "preload.js")}}))
 
     (.once ^js @main-window "ready-to-show"
            #(do (.show ^js @main-window)
@@ -91,7 +92,7 @@
 
     (doseq
      [[window-event action]
-      [;; Event "resized" is probably more suitable, but it is not supported on linux
+      [;; Event "resized" is more suitable, but it's not supported on linux
        ["resize" #(if (.isMaximized ^js @main-window)
                     "windowMaximized"
                     "windowUnmaximized")]
