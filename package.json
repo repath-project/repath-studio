@@ -79,8 +79,7 @@
     "codemirror": "5.65.15",
     "create-react-class": "15.7.0",
     "electron": "27.0.3",
-    "electron-builder": "24.7.0",
-    "electron-extension-installer": "1.2.0",
+    "electron-builder": "24.9.0",
     "element-to-path": "1.2.1",
     "highlight.js": "11.7.0",
     "js-beautify": "1.14.9",
@@ -113,6 +112,7 @@
   "dependencies": {
     "@sentry/electron": "4.10.0",
     "@webref/css": "6.7.1",
+    "electron-extension-installer": "1.2.0",
     "electron-updater": "6.1.5",
     "electron-window-state": "5.0.3",
     "font-scanner": "0.2.1",
