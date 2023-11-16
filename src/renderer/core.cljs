@@ -66,7 +66,7 @@
       (sentry-electron-renderer/init (clj->js config/sentry-options) sentry-react/init)
       (sentry-react/init (clj->js config/sentry-options)))
 
-  (js/console.log (str "%c" console-easter-egg) "color: #bada55")
+  (js/console.log (str "%c" console-easter-egg) "color: #e93976")
 
   (devtools/set-pref!
    :cljs-land-style
