@@ -129,13 +129,26 @@
   [db]
   (reduce #(select-element %1 %2) (deselect-all db) (:children (parent db))))
 
+(defn selected-tags
+  [db]
+  (reduce (fn [tags element] (conj tags (:tag element))) #{} (selected db)))
+
 (defn select-same-tags
   [db]
-  (let [selected-tags (reduce #(conj %1 (:tag %2)) #{} (selected db))]
+  (let [selected-tags (selected-tags db)]
     (reduce (fn [db element]
               (if (contains? selected-tags (:tag element))
                 (select-element db (:key element))
                 db)) (deselect-all db) (vals (elements db)))))
+
+(defn invert-selection
+  [db]
+  (reduce (fn [db {:keys [key tag]}]
+            (if (contains? #{:page :canvas} tag)
+              db
+              (update-in db (conj (elements-path db) key :selected?) not)))
+          db
+          (vals (elements db))))
 
 (defn select
   [db multiselect? element]

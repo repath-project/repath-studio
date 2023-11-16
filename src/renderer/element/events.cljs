@@ -96,6 +96,13 @@
        (history-handlers/finalize "Select same tags"))))
 
 (rf/reg-event-db
+ :elements/invert-selection
+ (fn [db _]
+   (-> db
+       (handlers/invert-selection)
+       (history-handlers/finalize "Invert selection"))))
+
+(rf/reg-event-db
  :elements/raise
  (fn [db _]
    (-> db

@@ -79,6 +79,9 @@
             {:key :deselect-all
              :label "Deselect all"
              :action [:elements/deselect-all]}
+            {:key :invert-selection
+             :label "Invert selection"
+             :action [:elements/invert-selection]}
             {:key :select-same-tags
              :label "Select same tags"
              :action [:elements/select-same-tags]}]}
