@@ -362,8 +362,7 @@ pre {
 }
 
 .dialog {
-  @apply fixed level-2 rounded;
-
+  @apply fixed level-0 rounded;
   width: 500px;
   top: 200px;
   left: calc(50% - 250px);

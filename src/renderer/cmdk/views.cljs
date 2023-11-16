@@ -4,35 +4,30 @@
    [renderer.components :as comp]
    [renderer.window.views :as window]
    [i18n :refer [t]]
-   ["cmdk" :refer [CommandDialog
-                   CommandGroup
-                   CommandList
-                   CommandItem
-                   CommandInput
-                   CommandEmpty]]))
+   ["cmdk" :as Command]))
 
 (defn command-dialog
   []
-  [:> CommandDialog
+  [:> Command/CommandDialog
    {:open @(rf/subscribe [:cmdk/visible?])
     :onOpenChange #(rf/dispatch [:cmdk/set %])
     :label (t [:cmdk/command-menu "Command menu"])
     :class "dialog"}
-   [:> CommandInput
+   [:> Command/CommandInput
     {:placeholder (t [:cmdk/search-command "Search for a command"])}]
-   [:> CommandList
-    [:> CommandEmpty
+   [:> Command/CommandList
+    [:> Command/CommandEmpty
      (t [:cmdk/no-results "No results found."])]
     (map (fn [{:keys [label items key]}]
            ^{:key key}
-           [:> CommandGroup
+           [:> Command/CommandGroup
             [:div.px-3.py-2.text-muted.uppercase.font-bold
              {:style {:font-size "10px"}}
              label]
             (map (fn [{:keys [label action key]}]
                    (when action
                      ^{:key key}
-                     [:> CommandItem
+                     [:> Command/CommandItem
                       {:key key
                        :on-select #(doall (rf/dispatch action)
                                           (rf/dispatch [:cmdk/set false]))}
