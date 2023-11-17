@@ -2,4 +2,7 @@
  :cmdk
  {:search-command "Search for a command"
   :command-menu "Command menu"
-  :no-results "No results found."}}
+  :no-results "No results found."}
+ 
+ :color
+ {:swap "Swap fill with stroke"}}

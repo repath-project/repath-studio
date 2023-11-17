@@ -2,6 +2,7 @@
   (:require
    [re-frame.core :as rf]
    [renderer.components :as comp]
+   [i18n :refer [t]]
    ["@radix-ui/react-popover" :as Popover]
    ["@re-path/react-color" :refer [PhotoshopPicker]]))
 
@@ -55,7 +56,7 @@
         [:> Popover/Arrow {:class "popover-arrow"}]]]]
 
      [:button.icon-button
-      {:title "Swap fill with stroke"
+      {:title (t [:color/swap "Swap fill with stroke"])
        :style {:width "21px"
                :background "transparent"}
        :on-click #(do (.stopPropagation %)
