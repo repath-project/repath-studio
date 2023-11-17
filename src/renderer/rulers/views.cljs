@@ -6,7 +6,7 @@
 
 (defn selected-bounds
   [orientation size]
-  (when-let [bounds @(rf/subscribe [:elements/bounds])]
+  (when-let [bounds @(rf/subscribe [:element/bounds])]
     (let [zoom @(rf/subscribe [:document/zoom])
           pan @(rf/subscribe [:document/pan])
           [x1 y1 x2 y2] (map #(* % zoom) bounds)]
@@ -62,7 +62,7 @@
 
 #_(defn page-bounds
     [orientation]
-    (let [{:keys [attrs]} @(rf/subscribe [:elements/active-page])
+    (let [{:keys [attrs]} @(rf/subscribe [:element/active-page])
           {:keys [x y width height]} attrs
           zoom @(rf/subscribe [:document/zoom])
           [pan-x pan-y] @(rf/subscribe [:document/pan])

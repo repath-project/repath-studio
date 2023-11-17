@@ -33,16 +33,16 @@
                       :placeholder (if value initial "multiple")
                       :on-wheel (fn [event]
                                   (if (pos? (.-deltaY event))
-                                    (rf/dispatch [:elements/dec-attribute key])
-                                    (rf/dispatch [:elements/inc-attribute key])))}]
+                                    (rf/dispatch [:element/dec-attribute key])
+                                    (rf/dispatch [:element/inc-attribute key])))}]
    [:div.flex {:style {:width "54px"}}
     [:button.button.ml-px.level-2.text-muted
      {:style {:width "26px" :height "26px"}
-      :on-pointer-down #(rf/dispatch [:elements/dec-attribute key])}
+      :on-pointer-down #(rf/dispatch [:element/dec-attribute key])}
      [comp/icon "minus" {:class "small"}]]
     [:button.button..ml-px.level-2.text-muted
      {:style {:width "26px" :height "26px"}
-      :on-click #(rf/dispatch [:elements/inc-attribute key])}
+      :on-click #(rf/dispatch [:element/inc-attribute key])}
      [comp/icon "plus" {:class "small"}]]]])
 
 (defmethod hierarchy/update-attr ::length

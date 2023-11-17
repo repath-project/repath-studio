@@ -9,7 +9,7 @@
 (defn ^:export move
   "Moves the selected elements."
   ([offset]
-   (rf/dispatch [:elements/translate offset]))
+   (rf/dispatch [:element/translate offset]))
 
   ([x y]
    (move [x y])))
@@ -17,37 +17,37 @@
 (defn ^:export fill
   "Fills the selected elements."
   [color]
-  (rf/dispatch [:elements/fill color]))
+  (rf/dispatch [:element/fill color]))
 
 (defn ^:export delete
   "Deletes selected elements."
   []
-  (rf/dispatch [:elements/delete]))
+  (rf/dispatch [:element/delete]))
 
 (defn ^:export copy
   "Copies the selected elements."
   []
-  (rf/dispatch [:elements/copy]))
+  (rf/dispatch [:element/copy]))
 
 (defn ^:export paste
   "Pastes the selected elements."
   []
-  (rf/dispatch [:elements/paste]))
+  (rf/dispatch [:element/paste]))
 
 (defn ^:export paste-in-place
   "Pastes the selected elements in place."
   []
-  (rf/dispatch [:elements/paste-in-place]))
+  (rf/dispatch [:element/paste-in-place]))
 
 (defn ^:export duplicate
   "Duplicates the selected elements."
   []
-  (rf/dispatch [:elements/duplicate-in-place]))
+  (rf/dispatch [:element/duplicate-in-place]))
 
 (defn ^:export create
   "Creates a new element."
   [element]
-  (apply #(rf/dispatch [:elements/create {:tag (key %)
+  (apply #(rf/dispatch [:element/create {:tag (key %)
                                           :attrs (val %)}]) element))
 
 (defn ^:export circle
@@ -112,7 +112,7 @@
 (defn ^:export set-attribute
   "Sets the attribute of the selected elements."
   [key value]
-  (rf/dispatch [:elements/set-attribute key value]))
+  (rf/dispatch [:element/set-attribute key value]))
 
 (defn ^:export set-fill
   "Sets the fill color of the editor."
@@ -139,49 +139,49 @@
 (defn ^:export raise
   "Raises the selected elements."
   []
-  (rf/dispatch [:elements/raise]))
+  (rf/dispatch [:element/raise]))
 
 (defn ^:export lower
   "Lowers the selected elements."
   []
-  (rf/dispatch [:elements/lower]))
+  (rf/dispatch [:element/lower]))
 
 (defn ^:export group
   "Groups the selected elements."
   []
-  (rf/dispatch [:elements/group]))
+  (rf/dispatch [:element/group]))
 
 (defn ^:export ungroup
   "Ungroups the selected elements."
   []
-  (rf/dispatch [:elements/ungroup]))
+  (rf/dispatch [:element/ungroup]))
 
 (defn ^:export select-all
   "Selects all elements."
   []
-  (rf/dispatch [:elements/select-all]))
+  (rf/dispatch [:element/select-all]))
 
 (defn ^:export deselect-all
   "Deselects all elements."
   []
-  (rf/dispatch [:elements/deselect-all]))
+  (rf/dispatch [:element/deselect-all]))
 
 (defn ^:export ->path
   "Converts selected elements to paths."
   []
-  (rf/dispatch [:elements/->path]))
+  (rf/dispatch [:element/->path]))
 
 (defn ^:export stroke->path
   "Converts selected elements to paths."
   []
-  (rf/dispatch [:elements/stroke->path]))
+  (rf/dispatch [:element/stroke->path]))
 
 (defn ^:export align
   "Aligns the selected elements to the provided direction.
    Accepted directions
    :left :right :top :bottom :center-vertical :center-horizontal"
   [direction]
-  (rf/dispatch [:elements/align direction]))
+  (rf/dispatch [:element/align direction]))
 
 (defn ^:export al
   "Aligns the selected elements to the left."
@@ -222,7 +222,7 @@
    (animate :animate attrs))
 
   ([tag attrs]
-   (rf/dispatch [:elements/animate tag attrs])))
+   (rf/dispatch [:element/animate tag attrs])))
 
 (defn ^:export undo
   "Goes back in history."
@@ -243,29 +243,29 @@
 (defn ^:export unite
   "Unites the selected elements."
   []
-  (rf/dispatch [:elements/bool-operation :unite])
+  (rf/dispatch [:element/bool-operation :unite])
   "")
 
 (defn ^:export ntersect
   "Intersects the selected elements."
   []
-  (rf/dispatch [:elements/bool-operation :intersect]))
+  (rf/dispatch [:element/bool-operation :intersect]))
 
 (defn ^:export subtract
   "Subtracts the selected elements."
   []
-  (rf/dispatch [:elements/bool-operation :subtract]))
+  (rf/dispatch [:element/bool-operation :subtract]))
 
 (defn ^:export exclude
   "Excludes the selected elements."
   []
-  (rf/dispatch [:elements/bool-operation :exclude]))
+  (rf/dispatch [:element/bool-operation :exclude]))
 
 ;; divide already refers to cljs.core/divide
 (defn ^:export devide
   "Divides the selected elements."
   []
-  (rf/dispatch [:elements/bool-operation :divide]))
+  (rf/dispatch [:element/bool-operation :divide]))
 
 (defn ^:export exit
   "Closes the application."

@@ -22,7 +22,7 @@
 
 (defmethod tools/render ::tools/container
   [{:keys [children tag attrs]}]
-  (let [child-elements @(rf/subscribe [:elements/filter-visible children])]
+  (let [child-elements @(rf/subscribe [:element/filter-visible children])]
     [tag attrs (map (fn [element]
                       ^{:key (:key element)}
                       [tools/render element])
@@ -30,7 +30,7 @@
 
 (defmethod tools/render-to-string ::tools/container
   [{:keys [tag attrs title children]}]
-  (let [child-elements @(rf/subscribe [:elements/filter-visible children])
+  (let [child-elements @(rf/subscribe [:element/filter-visible children])
         attrs (->> (dissoc attrs :style)
                    (remove #(empty? (str (second %))))
                    (into {}))]

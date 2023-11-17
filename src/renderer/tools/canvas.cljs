@@ -19,15 +19,15 @@
 
 (defmethod tools/render :canvas
   [{:keys [attrs children] :as element}]
-  (let [child-elements @(rf/subscribe [:elements/filter-visible children])
+  (let [child-elements @(rf/subscribe [:element/filter-visible children])
         elements @(rf/subscribe [:document/elements])
         viewbox @(rf/subscribe [:frame/viewbox])
         {:keys [width height]} @(rf/subscribe [:content-rect])
-        hovered-or-selected @(rf/subscribe [:elements/hovered-or-selected])
-        selected-elements @(rf/subscribe [:elements/selected])
-        bounds @(rf/subscribe [:elements/bounds])
+        hovered-or-selected @(rf/subscribe [:element/hovered-or-selected])
+        selected-elements @(rf/subscribe [:element/selected])
+        bounds @(rf/subscribe [:element/bounds])
         temp-element @(rf/subscribe [:document/temp-element])
-        elements-area @(rf/subscribe [:elements/area])
+        elements-area @(rf/subscribe [:element/area])
         cursor @(rf/subscribe [:cursor])
         tool @(rf/subscribe [:tool])
         primary-tool @(rf/subscribe [:primary-tool])

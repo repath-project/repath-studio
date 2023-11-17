@@ -82,7 +82,7 @@
 
 (defmethod tools/render :arc
   [{:keys [attrs children] :as element}]
-  (let [child-elements @(rf/subscribe [:elements/filter-visible children])
+  (let [child-elements @(rf/subscribe [:element/filter-visible children])
         mouse-handler #(mouse/event-handler % element)]
     [:path (merge {:d (tools/path element)
                    :on-pointer-up mouse-handler
@@ -100,7 +100,7 @@
   [{:keys [attrs key]}]
   (let [{:keys [cx cy rx ry ::start-deg ::end-deg]} attrs
         [cx cy rx ry] (mapv units/unit->px [cx cy rx ry])
-        active-page @(rf/subscribe [:elements/active-page])
+        active-page @(rf/subscribe [:element/active-page])
         x1 (+ cx (goog.math/angleDx start-deg rx))
         y1 (+ cy (goog.math/angleDy start-deg ry))
         x2 (+ cx (goog.math/angleDx end-deg rx))

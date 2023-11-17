@@ -19,7 +19,7 @@
     (do (-> (js/EyeDropper.)
             (.open)
             (.then (fn [result]
-                     (rf/dispatch [:elements/fill (.-sRGBHex result)])
+                     (rf/dispatch [:element/fill (.-sRGBHex result)])
                      (rf/dispatch [:document/set-fill (.-sRGBHex result)])
                      (rf/dispatch [:set-tool :select])))
             (.catch (fn [error]

@@ -92,7 +92,7 @@
   (let [{:keys [points]} attrs
         handler-size (/ 8 zoom)
         stroke-width (/ 1 zoom)
-        active-page @(rf/subscribe [:elements/active-page])
+        active-page @(rf/subscribe [:element/active-page])
         page-pos (mapv units/unit->px
                        [(-> active-page :attrs :x) (-> active-page :attrs :y)])]
     [:g {:key :edit-handlers}

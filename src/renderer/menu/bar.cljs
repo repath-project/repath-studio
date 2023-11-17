@@ -54,89 +54,89 @@
              :type :separator}
             {:key :cut
              :label "Cut"
-             :action [:elements/cut]}
+             :action [:element/cut]}
             {:key :copy
              :label "Copy"
-             :action [:elements/copy]}
+             :action [:element/copy]}
             {:key :paste
              :label "Paste"
-             :action [:elements/paste]}
+             :action [:element/paste]}
             {:key :paste-in-place
              :label "Paste in place"
-             :action [:elements/paste-in-place]}
+             :action [:element/paste-in-place]}
             {:key :paste-styles
              :label "Paste styles"
-             :action [:elements/paste-styles]}
+             :action [:element/paste-styles]}
             {:key :divider-2
              :type :separator}
             {:key :duplicate
              :label "Duplicate"
-             :action [:elements/duplicate-in-place]}
+             :action [:element/duplicate-in-place]}
             {:key :divider-3
              :type :separator}
             {:key :select-all
              :label "Select all"
-             :action [:elements/select-all]}
+             :action [:element/select-all]}
             {:key :deselect-all
              :label "Deselect all"
-             :action [:elements/deselect-all]}
+             :action [:element/deselect-all]}
             {:key :invert-selection
              :label "Invert selection"
-             :action [:elements/invert-selection]}
+             :action [:element/invert-selection]}
             {:key :select-same-tags
              :label "Select same tags"
-             :action [:elements/select-same-tags]}
+             :action [:element/select-same-tags]}
             {:key :divider-3
              :type :separator}
             {:key :delete
              :label "Delete"
-             :action [:elements/delete]}]}
+             :action [:element/delete]}]}
    {:key :object
     :label "Object"
     :type :root
     :items [{:key :to-path
              :label "Object to path"
-             :action [:elements/->path]}
+             :action [:element/->path]}
             {:key :stroke-to-path
              :label "Stroke to path"
-             :action [:elements/stroke->path]}
+             :action [:element/stroke->path]}
             {:key :divider-1
              :type :separator}
             {:key :group
              :label "Group"
-             :action [:elements/group]}
+             :action [:element/group]}
             {:key :ungroup
              :label "Ungroup"
-             :action [:elements/ungroup]}
+             :action [:element/ungroup]}
             {:key :divider-2
              :type :separator}
             {:key :raise
              :label "Raise"
-             :action [:elements/raise]}
+             :action [:element/raise]}
             {:key :lower
              :label "Lower"
-             :action [:elements/lower]}
+             :action [:element/lower]}
             {:key :raise-to-top
              :label "Raise to top"
-             :action [:elements/raise-to-top]}
+             :action [:element/raise-to-top]}
             {:key :lower-to-bottom
              :label "Lower to bottom"
-             :action [:elements/lower-to-bottom]}]}
+             :action [:element/lower-to-bottom]}]}
    #_{:key :path
       :label "Path"
       :type :root
       :items [{:key :simplify
                :label "Simplify"
-               :action [:elements/manipulate-path :simplify]}
+               :action [:element/manipulate-path :simplify]}
               {:key :smooth
                :label "Smooth"
-               :action [:elements/manipulate-path :smooth]}
+               :action [:element/manipulate-path :smooth]}
               {:key :flatten
                :label "Flatten"
-               :action [:elements/manipulate-path :flatten]}
+               :action [:element/manipulate-path :flatten]}
               {:key :reverse
                :label "Reverse"
-               :action [:elements/manipulate-path :reverse]}]}
+               :action [:element/manipulate-path :reverse]}]}
    {:key :view
     :label "View"
     :type :root

@@ -21,13 +21,13 @@
                  [{:keyCode 35}]
                  [{:keyCode (key-codes "THREE")
                    :shiftKey true}]]
-                [[:elements/raise]
+                [[:element/raise]
                  [{:keyCode (key-codes "PAGE_UP")}]]
-                [[:elements/lower]
+                [[:element/lower]
                  [{:keyCode (key-codes "PAGE_DOWN")}]]
-                [[:elements/raise-to-top]
+                [[:element/raise-to-top]
                  [{:keyCode (key-codes "HOME")}]]
-                [[:elements/lower-to-bottom]
+                [[:element/lower-to-bottom]
                  [{:keyCode (key-codes "END")}]]
                 [[:pan-to-active-page :original]
                  [{:keyCode (key-codes "ONE")}]]
@@ -43,11 +43,11 @@
                 [[:panel/toggle :tree]
                  [{:keyCode (key-codes "T")
                    :ctrlKey true}]]
-                [[:elements/->path]
+                [[:element/->path]
                  [{:keyCode (key-codes "P")
                    :ctrlKey true
                    :shiftKey true}]]
-                [[:elements/stroke->path]
+                [[:element/stroke->path]
                  [{:keyCode (key-codes "P")
                    :ctrlKey true
                    :altKey true}]]
@@ -57,53 +57,53 @@
                 [[:window/toggle-header]
                  [{:keyCode (key-codes "L")
                    :ctrlKey true}]]
-                [[:elements/copy]
+                [[:element/copy]
                  [{:keyCode (key-codes "C")
                    :ctrlKey true}]]
-                [[:elements/paste-styles]
+                [[:element/paste-styles]
                  [{:keyCode (key-codes "V")
                    :ctrlKey true
                    :shiftKey true}]]
-                [[:elements/paste-in-place]
+                [[:element/paste-in-place]
                  [{:keyCode (key-codes "V")
                    :ctrlKey true
                    :altKey true}]]
-                [[:elements/paste]
+                [[:element/paste]
                  [{:keyCode (key-codes "V")
                    :ctrlKey true}]]
-                [[:elements/cut]
+                [[:element/cut]
                  [{:keyCode (key-codes "X")
                    :ctrlKey true}]]
                 [[:toggle-debug-info]
                  [{:keyCode (key-codes "D")
                    :ctrlKey true
                    :shiftKey true}]]
-                [[:elements/duplicate-in-place]
+                [[:element/duplicate-in-place]
                  [{:keyCode (key-codes "D")
                    :ctrlKey true}]]
-                [[:elements/bool-operation :exclude]
+                [[:element/bool-operation :exclude]
                  [{:keyCode (key-codes "E")
                    :ctrlKey true}]]
-                [[:elements/bool-operation :unite]
+                [[:element/bool-operation :unite]
                  [{:keyCode (key-codes "U")
                    :ctrlKey true}]]
-                [[:elements/bool-operation :intersect]
+                [[:element/bool-operation :intersect]
                  [{:keyCode (key-codes "I")
                    :ctrlKey true}]]
-                [[:elements/bool-operation :subtract]
+                [[:element/bool-operation :subtract]
                  [{:keyCode (key-codes "S")
                    :ctrlKey true}]]
-                [[:elements/bool-operation :divide]
+                [[:element/bool-operation :divide]
                  [{:keyCode (key-codes "/")
                    :ctrlKey true}]]
-                [[:elements/ungroup]
+                [[:element/ungroup]
                  [{:keyCode (key-codes "G")
                    :ctrlKey true
                    :shiftKey true}]]
-                [[:elements/group]
+                [[:element/group]
                  [{:keyCode (key-codes "G")
                    :ctrlKey true}]]
-                [[:elements/delete]
+                [[:element/delete]
                  [{:keyCode (key-codes "DELETE")}]
                  [{:keyCode (key-codes "BACKSPACE")}]]
                 [[:document/new]
@@ -120,11 +120,11 @@
                 [[:history/undo]
                  [{:keyCode (key-codes "Z")
                    :ctrlKey true}]]
-                [[:elements/select-same-tags]
+                [[:element/select-same-tags]
                  [{:keyCode (key-codes "A")
                    :ctrlKey true
                    :shiftKey true}]]
-                [[:elements/select-all]
+                [[:element/select-all]
                  [{:keyCode (key-codes "A")
                    :ctrlKey true}]]
                 [[:set-tool :edit]
@@ -145,13 +145,13 @@
                  [{:keyCode (key-codes "S")}]]
                 [[:set-tool :fill]
                  [{:keyCode (key-codes "F")}]]
-                [[:elements/move-up]
+                [[:element/move-up]
                  [{:keyCode (key-codes "UP")}]]
-                [[:elements/move-down]
+                [[:element/move-down]
                  [{:keyCode (key-codes "DOWN")}]]
-                [[:elements/move-left]
+                [[:element/move-left]
                  [{:keyCode (key-codes "LEFT")}]]
-                [[:elements/move-right]
+                [[:element/move-right]
                  [{:keyCode (key-codes "RIGHT")}]]
                 [[:window/close]
                  [{:keyCode (key-codes "Q")

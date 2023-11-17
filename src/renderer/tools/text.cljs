@@ -60,7 +60,7 @@
 
 (defn set-text-and-select-element
   [event key]
-  (rf/dispatch [:elements/set-property
+  (rf/dispatch [:element/set-property
                 key
                 :content
                 (str/replace (.. event -target -value) "  " "\u00a0\u00a0")])
@@ -72,7 +72,7 @@
         bounds (tools/bounds element)
         [width height] (bounds/->dimensions bounds)
         [x y] bounds
-        active-page @(rf/subscribe [:elements/active-page])
+        active-page @(rf/subscribe [:element/active-page])
         page-pos (mapv units/unit->px
                        [(-> active-page :attrs :x)
                         (-> active-page :attrs :y)])
@@ -98,7 +98,7 @@
                         (set-text-and-select-element event key)
                         (.requestAnimationFrame
                          js/window
-                         #(rf/dispatch-sync [:elements/preview-property
+                         #(rf/dispatch-sync [:element/preview-property
                                              key
                                              :content
                                              (str/replace (.. event -target -value)

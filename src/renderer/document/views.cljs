@@ -37,7 +37,7 @@
    [comp/icon-button
     "export"
     {:title "Export"
-     :on-click #(rf/dispatch [:elements/export])}]
+     :on-click #(rf/dispatch [:element/export])}]
 
    [:span.v-divider]
 

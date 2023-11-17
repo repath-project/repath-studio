@@ -19,7 +19,7 @@
 
 (defmethod tools/render :g
   [{:keys [attrs children] :as element}]
-  (let [child-elements @(rf/subscribe [:elements/filter-visible children])
+  (let [child-elements @(rf/subscribe [:element/filter-visible children])
         elements @(rf/subscribe [:document/elements])
         ignored-keys @(rf/subscribe [:document/ignored-keys])
         ignored? (contains? ignored-keys (:key element))

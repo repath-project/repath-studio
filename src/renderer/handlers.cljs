@@ -37,7 +37,7 @@
          "string"
          (.getAsString
           item
-          #(rf/dispatch [:elements/create
+          #(rf/dispatch [:element/create
                          {:type :element
                           :tag :text
                           :content %

@@ -102,7 +102,7 @@
   [{:keys [attrs key]}]
   (let [{:keys [cx cy rx ry]} attrs
         [cx cy rx ry] (mapv units/unit->px [cx cy rx ry])
-        active-page @(rf/subscribe [:elements/active-page])
+        active-page @(rf/subscribe [:element/active-page])
         page-pos (mapv units/unit->px
                        [(-> active-page :attrs :x) (-> active-page :attrs :y)])
         [cx cy] (matrix/add page-pos [cx cy])]

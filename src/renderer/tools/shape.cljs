@@ -16,7 +16,7 @@
 
 (defmethod tools/render-to-string ::tools/renderable
   [{:keys [tag attrs title children content]}]
-  (let [child-elements @(rf/subscribe [:elements/filter-visible children])
+  (let [child-elements @(rf/subscribe [:element/filter-visible children])
         attrs (->> (dissoc attrs :style)
                    (remove #(empty? (str (second %))))
                    (into {}))]

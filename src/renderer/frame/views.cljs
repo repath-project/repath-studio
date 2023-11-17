@@ -79,7 +79,7 @@
       #(.disconnect resize-observer)
 
       :reagent-render
-      #(let [canvas @(rf/subscribe [:elements/canvas])
+      #(let [canvas @(rf/subscribe [:element/canvas])
              {:keys [x y]} @(rf/subscribe [:content-rect])
              ;; This is a different browsing context inside an iframe.
              ;; We need to simulate the events to the parent window.

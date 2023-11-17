@@ -66,7 +66,7 @@
              [:div.backdrop
               {:on-click #(rf/dispatch [:set-backdrop false])}])]]]
         (when @(rf/subscribe [:panel/visible? :xml])
-          (let [xml @(rf/subscribe [:elements/xml])]
+          (let [xml @(rf/subscribe [:element/xml])]
             [:div.v-scroll.p-1.h-full.level-2.ml-px
              {:style {:flex "0 1 30%"}}
              [cm/editor xml {:options {:mode "text/xml"

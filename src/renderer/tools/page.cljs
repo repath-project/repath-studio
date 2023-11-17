@@ -50,7 +50,7 @@
 
 (defmethod tools/render :page
   [{:keys [attrs children type] :as element}]
-  (let [child-elements @(rf/subscribe [:elements/filter-visible children])
+  (let [child-elements @(rf/subscribe [:element/filter-visible children])
         rect-attrs (select-keys attrs [:x :y :width :height])
         text-attrs (select-keys attrs [:x :y])
         filter @(rf/subscribe [:document/filter])
@@ -96,7 +96,7 @@
 
 (defmethod tools/render-to-string :page
   [{:keys [attrs children]}]
-  (let [child-elements @(rf/subscribe [:elements/filter-visible children])
+  (let [child-elements @(rf/subscribe [:element/filter-visible children])
         attrs (->> (dissoc attrs :fill)
                    (remove #(empty? (str (second %))))
                    (into {}))]

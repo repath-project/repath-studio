@@ -137,29 +137,29 @@
 
 (def element-menu
   [{:label "Cut"
-    :action [:elements/cut]}
+    :action [:element/cut]}
    {:label "Copy"
-    :action [:elements/copy]}
+    :action [:element/copy]}
    {:label "Paste"
-    :action [:elements/paste]}
+    :action [:element/paste]}
    {:type :separator}
    {:label "Raise"
-    :action [:elements/raise]}
+    :action [:element/raise]}
    {:label "Lower"
-    :action [:elements/lower]}
+    :action [:element/lower]}
    {:label "Raise to top"
-    :action [:elements/raise-to-top]}
+    :action [:element/raise-to-top]}
    {:label "Lower to bottom"
-    :action [:elements/lower-to-bottom]}
+    :action [:element/lower-to-bottom]}
    {:type :separator}
    {:label "Animate"
-    :action [:elements/animate :animate {}]}
+    :action [:element/animate :animate {}]}
    {:label "Animate Transform"
-    :action [:elements/animate :animateTransform {}]}
+    :action [:element/animate :animateTransform {}]}
    {:label "Animate Motion"
-    :action [:elements/animate :animateMotion {}]}
+    :action [:element/animate :animateMotion {}]}
    {:type :separator}
    {:label "Duplicate in position"
-    :action [:elements/duplicate-in-place]}
+    :action [:element/duplicate-in-place]}
    {:label "Delete"
-    :action [:elements/delete]}])
+    :action [:element/delete]}])

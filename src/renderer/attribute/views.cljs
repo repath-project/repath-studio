@@ -58,8 +58,8 @@
    (let [value (.. event -target -value)]
      (when (not= value old-value)
        (rf/dispatch [(if finalize?
-                       :elements/set-attribute
-                       :elements/preview-attribute) key value]))))
+                       :element/set-attribute
+                       :element/preview-attribute) key value]))))
   ([event key old-value]
    (on-change-handler event key old-value true)))
 
@@ -85,7 +85,7 @@
    (when-not (or (empty? (str value)) disabled?)
      [:button.button.ml-px.level-2.text-muted.absolute.right-0.clear-input-button
       {:style {:width "26px" :height "26px"}
-       :on-pointer-down #(rf/dispatch [:elements/set-attribute key ""])}
+       :on-pointer-down #(rf/dispatch [:element/set-attribute key ""])}
       [comp/icon "times" {:class "small"}]])])
 
 (defmethod hierarchy/form-element :default
@@ -106,7 +106,7 @@
            {:value (if (= "" value) initial value)
             :type "range"
             :on-change #(on-change-handler % key value false)
-            :on-pointer-up #(rf/dispatch [:elements/set-attribute key value])})]])
+            :on-pointer-up #(rf/dispatch [:element/set-attribute key value])})]])
 
 (defn select-input
   [{:keys [key value disabled? items initial]}]
@@ -116,7 +116,7 @@
                 :disabled? disabled?
                 :placeholder initial}]
    [:> Select/Root {:value value
-                    :onValueChange #(rf/dispatch [:elements/set-attribute key %])
+                    :onValueChange #(rf/dispatch [:element/set-attribute key %])
                     :disabled disabled?}
     [:> Select/Trigger {:class "select-trigger ml-px"
                         :aria-label (name key)
@@ -211,9 +211,9 @@
 
 (defn form
   []
-  (let [selected-elements @(rf/subscribe [:elements/selected])
+  (let [selected-elements @(rf/subscribe [:element/selected])
         element (first selected-elements)
-        selected-attrs @(rf/subscribe [:elements/selected-attrs])
+        selected-attrs @(rf/subscribe [:element/selected-attrs])
         {:keys [tag name locked?]} element]
     [:div.w-full.ml-px.v-scroll.flex.flex-col
      (when (seq selected-elements)

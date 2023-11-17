@@ -21,7 +21,7 @@
                                    #js {:type ["text/html"]}))})]))))
 
 (rf/reg-event-fx
- :elements/copy
+ :element/copy
  (fn [{:keys [db]} [_]]
    (let [selected-elements (element-handlers/selected db)
          text-html (elements->string selected-elements)]
@@ -29,7 +29,7 @@
       :clipboard-write [text-html]})))
 
 (rf/reg-event-fx
- :elements/cut
+ :element/cut
  (fn [{:keys [db]} [_]]
    (let [selected-elements (element-handlers/selected db)
          text-html (elements->string selected-elements)]

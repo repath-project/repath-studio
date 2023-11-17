@@ -234,7 +234,7 @@
 (defn centroid
   [element]
   (when-let [centroid (tools/centroid element)]
-    (let [active-page @(rf/subscribe [:elements/active-page])
+    (let [active-page @(rf/subscribe [:element/active-page])
           page-pos (mapv units/unit->px [(-> active-page :attrs :x) (-> active-page :attrs :y)])
           centroid (if (not= (:tag element) :page) (matrix/add page-pos centroid) centroid)]
       [point-of-interest centroid

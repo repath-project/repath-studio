@@ -9,102 +9,102 @@
   [selected-elements? multiple-selected?]
   [{:title "Bring to front"
     :icon "bring-front"
-    :action [:elements/raise-to-top]
+    :action [:element/raise-to-top]
     :disabled? (not selected-elements?)}
    {:title "Send to back"
     :icon "send-back"
-    :action [:elements/lower-to-bottom]
+    :action [:element/lower-to-bottom]
     :disabled? (not selected-elements?)}
    {:title "Bring forward"
     :icon "bring-forward"
-    :action [:elements/raise]
+    :action [:element/raise]
     :disabled? (not selected-elements?)}
    {:title "Send backward"
     :icon "send-backward"
-    :action [:elements/lower]
+    :action [:element/lower]
     :disabled? (not selected-elements?)}
    {:type :divider}
    {:title "Group"
     :icon "group"
     :disabled? (not selected-elements?)
-    :action [:elements/group]}
+    :action [:element/group]}
    {:title "Ungroup"
     :icon "ungroup"
     :disabled? (not selected-elements?)
-    :action [:elements/ungroup]}
+    :action [:element/ungroup]}
    {:type :divider}
    {:title "Align left"
     :icon "objects-align-left"
     :disabled? (not selected-elements?)
-    :action [:elements/align :left]}
+    :action [:element/align :left]}
    {:title "Align center horizontally"
     :disabled? (not selected-elements?)
     :icon "objects-align-center-horizontal"
-    :action [:elements/align :center-horizontal]}
+    :action [:element/align :center-horizontal]}
    {:title "Align rignt"
     :icon "objects-align-right"
     :disabled? (not selected-elements?)
-    :action [:elements/align :right]}
+    :action [:element/align :right]}
    {:type :divider}
    {:title "Align top"
     :icon "objects-align-top"
     :disabled?  (not selected-elements?)
-    :action [:elements/align :top]}
+    :action [:element/align :top]}
    {:title "Align center vertically"
     :icon "objects-align-center-vertical"
     :disabled?  (not selected-elements?)
-    :action [:elements/align :center-vertical]}
+    :action [:element/align :center-vertical]}
    {:title "Align bottom"
     :icon "objects-align-bottom"
     :disabled?  (not selected-elements?)
-    :action [:elements/align :bottom]}
+    :action [:element/align :bottom]}
    {:type :divider}
    {:title "Distribute spacing horizontally"
     :icon "distribute-spacing-horizontal"
     :disabled? true
-    :action [:elements/raise]}
+    :action [:element/raise]}
    {:title "Distribute spacing vertically"
     :icon "distribute-spacing-vertical"
     :disabled? true
-    :action [:elements/lower]}
+    :action [:element/lower]}
    #_{:type :divider}
    #_{:title "Rotate 90° clockwise"
       :icon "rotate-clockwise"
       :disabled? true
-      :action [:elements/raise]}
+      :action [:element/raise]}
    #_{:title "Rotate 90° counterclockwise"
       :icon "rotate-counterclockwise"
       :disabled? true
-      :action [:elements/lower]}
+      :action [:element/lower]}
    #_{:type :divider}
    #_{:title "Flip horizontally"
       :icon "flip-horizontal"
       :disabled? true
-      :action [:elements/raise]}
+      :action [:element/raise]}
    #_{:title "Flip vertically"
       :icon "flip-vertical"
       :disabled? true
-      :action [:elements/lower]}
+      :action [:element/lower]}
    {:type :divider}
    {:title "Unite"
     :icon "unite"
-    :disabled? (not multiple-selected?) :action [:elements/bool-operation :unite]}
+    :disabled? (not multiple-selected?) :action [:element/bool-operation :unite]}
    {:title "Intersect"
     :icon "intersect"
     :disabled? (not multiple-selected?)
-    :action [:elements/bool-operation :intersect]}
+    :action [:element/bool-operation :intersect]}
    {:title "Subtract"
     :icon "subtract"
     :disabled? (not multiple-selected?)
-    :action [:elements/bool-operation :subtract]}
+    :action [:element/bool-operation :subtract]}
    {:title "Exclude"
     :icon "exclude"
     :disabled? (not multiple-selected?)
-    :action [:elements/bool-operation :exclude]}
+    :action [:element/bool-operation :exclude]}
    {:title "divide"
     :icon "divide"
     :disabled? (not multiple-selected?)
-    :action [:elements/bool-operation :divide]}])
+    :action [:element/bool-operation :divide]}])
 
 (defn action-button
   [{:keys [title icon disabled? action type]}]
@@ -128,8 +128,8 @@
 
 (defn toolbar
   []
-  (let [selected-elements? @(rf/subscribe [:elements/selected?])
-        multiple-selected? @(rf/subscribe [:elements/multiple-selected?])
+  (let [selected-elements? @(rf/subscribe [:element/selected?])
+        multiple-selected? @(rf/subscribe [:element/multiple-selected?])
         object-actions (actions selected-elements? multiple-selected?)]
     (into [:div.flex.flex-col.level-2.text-center.flex-0.ml-px.toolbar]
           (map action-button object-actions))))

@@ -47,7 +47,7 @@
       {:title "Generate random seed"
        :style {:flex "0 0 26px"
                :height "100%"}
-       :on-click #(rf/dispatch [:elements/set-attribute key random-seed])}
+       :on-click #(rf/dispatch [:element/set-attribute key random-seed])}
       [comp/icon "refresh"]]]))
 
 (defmethod attr-hierarchy/description ::x
@@ -150,7 +150,7 @@
 
 (defmethod tools/render ::blob
   [{:keys [attrs children] :as element}]
-  (let [child-elements @(rf/subscribe [:elements/filter-visible children])
+  (let [child-elements @(rf/subscribe [:element/filter-visible children])
         mouse-handler #(mouse/event-handler % element)]
     [:path (merge {:d (tools/path element)
                    :on-pointer-up mouse-handler
@@ -204,7 +204,7 @@
   [{:keys [attrs key] :as element}]
   (let [{:keys [::x ::y ::size]} attrs
         [x y size] (mapv units/unit->px [x y size])
-        active-page @(rf/subscribe [:elements/active-page])
+        active-page @(rf/subscribe [:element/active-page])
         page-pos (mapv units/unit->px
                        [(-> active-page :attrs :x)
                         (-> active-page :attrs :y)])

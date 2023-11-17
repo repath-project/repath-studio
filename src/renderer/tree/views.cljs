@@ -14,7 +14,7 @@
      :inactive-icon "eye-closed"
      :inactive-text "show"
      :class (when visible? "list-item-action")
-     :action #(rf/dispatch [:elements/toggle-property key :visible?])}]
+     :action #(rf/dispatch [:element/toggle-property key :visible?])}]
    [comp/toggle-icon-button
     {:active? locked?
      :active-icon "lock"
@@ -22,7 +22,7 @@
      :inactive-icon "unlock"
      :inactive-text "lock"
      :class (when-not locked? "list-item-action")
-     :action #(rf/dispatch [:elements/toggle-property key :locked?])}]])
+     :action #(rf/dispatch [:element/toggle-property key :locked?])}]])
 
 (defn scroll-into-view
   [el]
@@ -31,7 +31,7 @@
 
 (defn- set-item-name
   [event key]
-  (rf/dispatch [:elements/set-property key :name (.. event -target -value)]))
+  (rf/dispatch [:element/set-property key :name (.. event -target -value)]))
 
 (defn on-key-down-handler
   [event key value]
@@ -59,9 +59,9 @@
   (let [hovered-keys @(rf/subscribe [:document/hovered-keys])
         hovered? (contains? hovered-keys key)
         page? (= tag :page)
-        active-page @(rf/subscribe [:elements/active-page])
+        active-page @(rf/subscribe [:element/active-page])
         active-page? (and page? (= (:key element) (:key active-page)))
-        multiple-selected? @(rf/subscribe [:elements/multiple-selected?])
+        multiple-selected? @(rf/subscribe [:element/multiple-selected?])
         collapse-button-width 22]
     [:div.flex.button.list-item-button
      {:class [(when selected? "selected")
@@ -80,12 +80,12 @@
       :on-drag-over #(.preventDefault %)
       :on-drop (fn [evt]
                  (.preventDefault evt)
-                 (rf/dispatch [:elements/set-parent (-> (.-dataTransfer evt)
+                 (rf/dispatch [:element/set-parent (-> (.-dataTransfer evt)
                                                         (.getData "key")
                                                         (keyword)) key]))
       :on-click (fn [evt]
                   (.stopPropagation evt)
-                  (rf/dispatch [:elements/select (.-ctrlKey evt) element]))
+                  (rf/dispatch [:element/select (.-ctrlKey evt) element]))
       :style {:padding-left (when (not page?)
                               (- (* depth collapse-button-width)
                                  (if (seq children) collapse-button-width 0)))}}
@@ -94,7 +94,7 @@
       (when (and (seq children) (not page?))
         [comp/toggle-collapsed-button
          collapsed?
-         #(rf/dispatch [:elements/toggle-property key :collapsed?])])
+         #(rf/dispatch [:element/toggle-property key :collapsed?])])
       [:<> [item-input element]]
       [item-buttons element]]]))
 
@@ -108,14 +108,14 @@
              (mapv (fn [key] (get elements key)) (reverse children)))])]))
 
 (defn tree-sidebar []
-  (let [page-elements @(rf/subscribe [:elements/pages])
-        active-page @(rf/subscribe [:elements/active-page])
-        active-page-children @(rf/subscribe [:elements/filter (:children active-page)])
+  (let [page-elements @(rf/subscribe [:element/pages])
+        active-page @(rf/subscribe [:element/active-page])
+        active-page-children @(rf/subscribe [:element/filter (:children active-page)])
         elements @(rf/subscribe [:document/elements])
         elements-collapsed? @(rf/subscribe [:tree/elements-collapsed?])
         pages-collapsed? @(rf/subscribe [:tree/pages-collapsed?])]
     [:div.flex.flex-col.flex-1.overflow-hidden.level-1.tree-sidebar
-     {:on-click #(rf/dispatch [:elements/deselect-all])}
+     {:on-click #(rf/dispatch [:element/deselect-all])}
 
      [:div.button.tree-heading
       {:on-click #(rf/dispatch [:tree/toggle-pages-collapsed])}
@@ -124,7 +124,7 @@
       [comp/icon-button "page-plus"
        {:on-click (fn [evt]
                     (.stopPropagation evt)
-                    (rf/dispatch-sync [:elements/add-page]))}]]
+                    (rf/dispatch-sync [:element/add-page]))}]]
 
      [:div.v-scroll
       {:style {:flex (if pages-collapsed? 0 "0 1 128px")}}

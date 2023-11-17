@@ -9,7 +9,7 @@
 
 (defmethod tools/render ::tools/animation
   [{:keys [children tag attrs]}]
-  (let [child-elements @(rf/subscribe [:elements/filter-visible children])]
+  (let [child-elements @(rf/subscribe [:element/filter-visible children])]
     [tag
      attrs
      (map (fn [element]

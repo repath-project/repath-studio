@@ -44,7 +44,7 @@
 
 (defn toolbar []
   (let [zoom @(rf/subscribe [:document/zoom])
-        _element-colors @(rf/subscribe [:elements/colors])
+        _element-colors @(rf/subscribe [:element/colors])
         filter @(rf/subscribe [:document/filter])]
     [:div.toolbar.footer
      [color/picker]

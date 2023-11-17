@@ -74,5 +74,5 @@
 
 (defmethod tools/render :map
   [{:keys [children] :as element}]
-  (let [child-elements @(rf/subscribe [:elements/filter-visible children])]
+  (let [child-elements @(rf/subscribe [:element/filter-visible children])]
     [render-map element child-elements]))

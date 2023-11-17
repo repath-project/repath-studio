@@ -120,7 +120,7 @@
 
 (defmethod tools/render ::tools/element
   [{:keys [children] :as element}]
-  (let [child-elements @(rf/subscribe [:elements/filter-visible children])
+  (let [child-elements @(rf/subscribe [:element/filter-visible children])
         state @(rf/subscribe [:state])
         zoom @(rf/subscribe [:document/zoom])]
     [render-to-dom element child-elements (= state :default) zoom]))

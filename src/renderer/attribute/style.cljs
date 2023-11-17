@@ -8,4 +8,4 @@
   [key value disabled?]
   [:div.w-full.level-2.py-0.px-2
    [cm/editor value {:options {:readOnly disabled?}
-                     :on-blur #(rf/dispatch [:elements/set-attribute key %])}]])
+                     :on-blur #(rf/dispatch [:element/set-attribute key %])}]])
