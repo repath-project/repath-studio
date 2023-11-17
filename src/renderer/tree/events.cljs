@@ -16,15 +16,3 @@
   (rf/path :tree)]
  (fn [db [_]]
    (update db :pages-collapsed? not)))
-
-#_(rf/reg-event-db
-   :tree/toggle-symbols-collapsed
-   (rf/path :tree)
-   (fn [db [_]]
-     (update db :symbols-collapsed? not)))
-
-#_(rf/reg-event-db
-   :tree/toggle-defs-collapsed
-   (rf/path :tree)
-   (fn [db [_]]
-     (update db :defs-collapsed? not)))

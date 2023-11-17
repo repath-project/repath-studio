@@ -6,6 +6,7 @@
    [re-frame.registrar]
    [renderer.color.views :as color]
    [goog.string :as gstring]
+   [renderer.menu.zoom :as zoom]
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    ["@radix-ui/react-select" :as Select]))
 
@@ -40,28 +41,6 @@
     :active? [:panel/visible? :xml]
     :icon "code"
     :action [:panel/toggle :xml]}])
-
-(def zoom-menu
-  [{:label "50%"
-    :key "50"
-    :action [:set-zoom 0.5]}
-   {:label "100%"
-    :key "100"
-    :action [:set-zoom 1]}
-   {:label "200%"
-    :key "200"
-    :action [:set-zoom 2]}
-   {:key :divider-1
-    :type :separator}
-   {:label "Restore"
-    :key "restore-active-page"
-    :action [:pan-to-active-page :original]}
-   {:label "Zoom to fit"
-    :key "fit-active-page"
-    :action [:pan-to-active-page :fit]}
-   {:label "Zoom to fill"
-    :key "fill-active-page"
-    :action [:pan-to-active-page :fill]}])
 
 (defn toolbar []
   (let [zoom @(rf/subscribe [:document/zoom])
@@ -138,6 +117,6 @@
         [:> DropdownMenu/Content
          {:class "menu-content rounded"
           :side "top"}
-         (map (fn [item] ^{:key (:key item)} [comp/dropdown-menu-item item]) zoom-menu)
+         (map (fn [item] ^{:key (:key item)} [comp/dropdown-menu-item item]) zoom/menu)
          [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]]]
      [coordinates]]))

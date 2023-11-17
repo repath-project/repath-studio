@@ -107,6 +107,6 @@
          [object/toolbar]]]]
       [home/panel])]
 
-   [cmdk/command-dialog]
+   [cmdk/dialog]
 
    [notification/main]])

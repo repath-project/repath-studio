@@ -89,7 +89,8 @@
   (.setup paper)
 
   (if platform/electron?
-    (do (rf/dispatch-sync [:set-system-fonts (js->clj js/window.api.systemFonts  :keywordize-keys true)])
+    (do (let [fonts (js->clj js/window.api.systemFonts :keywordize-keys true)]
+         (rf/dispatch-sync [:set-system-fonts fonts]))
         (.then (js/window.api.webrefCss.listAll)
                #(rf/dispatch-sync [:set-webref-css (js->clj % :keywordize-keys true)]))
         (rf/dispatch-sync [:set-mdn (js->clj js/window.api.mdn :keywordize-keys true)])

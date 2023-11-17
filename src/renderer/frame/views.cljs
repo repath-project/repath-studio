@@ -51,6 +51,7 @@
                                 'Segoe UI Emoji'"}}]])
 
 (def resize-observer
+  "Observes the frame and gets its contentRect on resize."
   (js/ResizeObserver.
    (fn [entries]
      (let [client-rect (.getBoundingClientRect (.-target (.find entries (fn [] true))))
@@ -71,7 +72,6 @@
      {:component-did-mount
       (fn
         [_this]
-        ;; We observe the frame to get its contentRect on resize.
         (.observe resize-observer (.-current ref))
         (rf/dispatch [:pan-to-active-page :original]))
 
@@ -81,10 +81,10 @@
       :reagent-render
       #(let [canvas @(rf/subscribe [:elements/canvas])
              {:keys [x y]} @(rf/subscribe [:content-rect])
-           ;; This is a different browsing context inside an iframe.
-           ;; We need to simulate the events to the parent window.
+             ;; This is a different browsing context inside an iframe.
+             ;; We need to simulate the events to the parent window.
              on-keyboard-event (fn [event]
-                               ;; TODO use re-pressed :prevent-default-keys
+                                 ;; TODO use re-pressed :prevent-default-keys
                                  (.preventDefault event)
                                  (.dispatchEvent js/window.parent.document
                                                  (js/KeyboardEvent. (.-type event)

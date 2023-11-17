@@ -99,14 +99,14 @@
       {:class "menu-item-indicator"}
       [icon "checkmark"]]
      label
-     [:div {:class "right-slot"}
+     [:div.right-slot
       [shortcuts action]]]
 
     [:> ContextMenu/Item
      {:class "menu-item context-menu-item"
       :onSelect #(rf/dispatch action)}
      label
-     [:div {:class "right-slot"}
+     [:div.right-slot
       [shortcuts action]]]))
 
 
@@ -125,14 +125,14 @@
       {:class "menu-item-indicator"}
       [icon "checkmark"]]
      label
-     [:div {:class "right-slot"}
+     [:div.right-slot
       [shortcuts action]]]
 
     [:> DropdownMenu/Item
      {:class "menu-item dropdown-menu-item"
       :onSelect #(rf/dispatch action)}
      label
-     [:div {:class "right-slot"}
+     [:div.right-slot
       [shortcuts action]]]))
 
 (def element-menu

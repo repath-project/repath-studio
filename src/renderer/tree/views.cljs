@@ -113,19 +113,9 @@
         active-page-children @(rf/subscribe [:elements/filter (:children active-page)])
         elements @(rf/subscribe [:document/elements])
         elements-collapsed? @(rf/subscribe [:tree/elements-collapsed?])
-        _symbols-collapsed? @(rf/subscribe [:tree/symbols-collapsed?])
-        pages-collapsed? @(rf/subscribe [:tree/pages-collapsed?])
-        _defs-collapsed? @(rf/subscribe [:tree/defs-collapsed?])]
+        pages-collapsed? @(rf/subscribe [:tree/pages-collapsed?])]
     [:div.flex.flex-col.flex-1.overflow-hidden.level-1.tree-sidebar
      {:on-click #(rf/dispatch [:elements/deselect-all])}
-     #_[:div.button.tree-heading
-        {:on-click #(rf/dispatch [:tree/toggle-symbols-collapsed])}
-        [comp/toggle-collapsed-button symbols-collapsed?]
-        [:div.flex-1 "Symbols"]
-        [comp/icon-button "square-minus"]]
-
-     #_[:div.v-scroll
-        {:style {:flex (if symbols-collapsed? 0 "0 1 128px")}}]
 
      [:div.button.tree-heading
       {:on-click #(rf/dispatch [:tree/toggle-pages-collapsed])}
@@ -147,9 +137,6 @@
       {:on-click #(rf/dispatch [:tree/toggle-elements-collapsed])}
       [comp/toggle-collapsed-button elements-collapsed?]
       [:div.flex-1 "Elements"]
-      #_[comp/icon-button "folder-plus"
-         {:on-click #(do (.stopPropagation %)
-                         (rf/dispatch [:elements/create {:type :g}]))}]
       [comp/icon-button "square-minus"]]
 
      [:> ContextMenu/Root
@@ -165,12 +152,4 @@
        (into [:> ContextMenu/Content
               {:class "menu-content context-menu-content"}]
              (map (fn [item] [comp/context-menu-item item])
-                  comp/element-menu))]]
-
-     #_[:div.button.tree-heading
-        {:on-click #(rf/dispatch [:tree/toggle-defs-collapsed])}
-        [comp/toggle-collapsed-button defs-collapsed?]
-        [:div.flex-1 "Defs"]
-        [comp/icon-button "square-minus"]]
-
-     #_[:div.v-scroll {:style {:flex (if defs-collapsed? 0 "0 1 128px")}}]]))
+                  comp/element-menu))]]]))

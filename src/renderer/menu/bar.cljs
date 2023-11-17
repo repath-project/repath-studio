@@ -1,0 +1,283 @@
+(ns renderer.menu.bar
+  (:require
+   [re-frame.core :as rf]
+   [renderer.components :as comp]
+   [renderer.menu.zoom :as zoom]
+   ["@radix-ui/react-menubar" :as Menubar]))
+
+(def menu
+  [{:key :file
+    :label "File"
+    :type :root
+    :items [{:key :new-file
+             :label "New"
+             :icon "file"
+             :action [:document/new]}
+            {:key :divider-1
+             :type :separator}
+            {:key :open-file
+             :label "Open…"
+             :icon "folder"
+             :action [:document/open]}
+            {:key :divider-2
+             :type :separator}
+            {:key :save
+             :label "Save"
+             :icon "save"
+             :action [:document/save]}
+            {:key :save-as
+             :label "Save as…"
+             :action [:document/save-as]}
+            {:key :save-all
+             :label "Save all"
+             :action [:document/save-all]}
+            {:key :divider-3
+             :type :separator}
+            {:key :close
+             :label "Close"
+             :action [:document/close-active]}
+            {:key :divider-4
+             :type :separator}
+            {:key :exit
+             :label "Exit"
+             :action [:window/close]}]}
+   {:key :edit
+    :label "Edit"
+    :type :root
+    :items [{:key :undo
+             :label "Undo"
+             :action [:history/undo]}
+            {:key :redo
+             :label "Redo"
+             :action [:history/redo]}
+            {:key :divider-1
+             :type :separator}
+            {:key :cut
+             :label "Cut"
+             :action [:elements/cut]}
+            {:key :copy
+             :label "Copy"
+             :action [:elements/copy]}
+            {:key :paste
+             :label "Paste"
+             :action [:elements/paste]}
+            {:key :paste-in-place
+             :label "Paste in place"
+             :action [:elements/paste-in-place]}
+            {:key :paste-styles
+             :label "Paste styles"
+             :action [:elements/paste-styles]}
+            {:key :divider-2
+             :type :separator}
+            {:key :duplicate
+             :label "Duplicate"
+             :action [:elements/duplicate-in-place]}
+            {:key :divider-3
+             :type :separator}
+            {:key :select-all
+             :label "Select all"
+             :action [:elements/select-all]}
+            {:key :deselect-all
+             :label "Deselect all"
+             :action [:elements/deselect-all]}
+            {:key :invert-selection
+             :label "Invert selection"
+             :action [:elements/invert-selection]}
+            {:key :select-same-tags
+             :label "Select same tags"
+             :action [:elements/select-same-tags]}
+            {:key :divider-3
+             :type :separator}
+            {:key :delete
+             :label "Delete"
+             :action [:elements/delete]}]}
+   {:key :object
+    :label "Object"
+    :type :root
+    :items [{:key :to-path
+             :label "Object to path"
+             :action [:elements/->path]}
+            {:key :stroke-to-path
+             :label "Stroke to path"
+             :action [:elements/stroke->path]}
+            {:key :divider-1
+             :type :separator}
+            {:key :group
+             :label "Group"
+             :action [:elements/group]}
+            {:key :ungroup
+             :label "Ungroup"
+             :action [:elements/ungroup]}
+            {:key :divider-2
+             :type :separator}
+            {:key :raise
+             :label "Raise"
+             :action [:elements/raise]}
+            {:key :lower
+             :label "Lower"
+             :action [:elements/lower]}
+            {:key :raise-to-top
+             :label "Raise to top"
+             :action [:elements/raise-to-top]}
+            {:key :lower-to-bottom
+             :label "Lower to bottom"
+             :action [:elements/lower-to-bottom]}]}
+   #_{:key :path
+      :label "Path"
+      :type :root
+      :items [{:key :simplify
+               :label "Simplify"
+               :action [:elements/manipulate-path :simplify]}
+              {:key :smooth
+               :label "Smooth"
+               :action [:elements/manipulate-path :smooth]}
+              {:key :flatten
+               :label "Flatten"
+               :action [:elements/manipulate-path :flatten]}
+              {:key :reverse
+               :label "Reverse"
+               :action [:elements/manipulate-path :reverse]}]}
+   {:key :view
+    :label "View"
+    :type :root
+    :items [{:key :zoom
+             :label "Zoom"
+             :type :sub-menu
+             :items (concat [{:key :zoom-in
+                              :label "Zoom in"
+                              :action [:zoom-in]}
+                             {:key :zoom-out
+                              :label "Zoom out"
+                              :action [:zoom-out]}
+                             {:key :divider-1
+                              :type :separator}]
+                            zoom/menu)}
+            {:key :divider-1
+             :type :separator}
+            {:key :toggle-tree
+             :label "Tree side bar"
+             :type :checkbox
+             :checked? [:panel/visible? :tree]
+             :action [:panel/toggle :tree]}
+            {:key :toggle-properties
+             :label "Properties side bar"
+             :type :checkbox
+             :checked? [:panel/visible? :properties]
+             :action [:panel/toggle :properties]}
+            {:key :toggle-xml
+             :label "XML view"
+             :type :checkbox
+             :checked? [:panel/visible? :xml]
+             :action [:panel/toggle :xml]}
+            {:key :toggle-header-menu
+             :type :checkbox
+             :label "Menu bar"
+             :checked? [:window/header?]
+             :action [:window/toggle-header]}
+            {:key :divider-2
+             :type :separator}
+            {:key :toggle-grid
+             :type :checkbox
+             :label "Grid"
+             :checked? [:grid?]
+             :action [:toggle-grid]}
+            {:key :toggle-rulers
+             :type :checkbox
+             :label "Rulers"
+             :checked? [:rulers?]
+             :action [:toggle-rulers]}
+            {:key :toggle-command-history
+             :type :checkbox
+             :label "Command history"
+             :checked? [:panel/visible? :repl-history]
+             :action [:panel/toggle :repl-history]}
+            {:key :divider-3
+             :type :separator}
+            {:key :toggle-fullscreen
+             :label "Fullscreen"
+             :type :checkbox
+             :checked? [:window/fullscreen?]
+             :action [:window/toggle-fullscreen]}]}
+   {:key :help
+    :label "Help"
+    :type :root
+    :items [{:key :website
+             :label "Website"
+             :action [:window/open-remote-url "https://repath.studio/"]}
+            {:key :source-code
+             :label "Source Code"
+             :action [:window/open-remote-url "https://github.com/re-path/studio"]}
+            {:key :changelog
+             :label "Changelog"
+             :action [:window/open-remote-url "https://repath.studio/roadmap/changelog/"]}
+            {:key :divider-1
+             :type :separator}
+            {:key :submit-issue
+             :label "Submit an issue"
+             :action [:window/open-remote-url "https://github.com/re-path/studio/issues/new/choose"]}]}])
+
+(defmulti menu-item :type)
+
+(defmethod menu-item :separator
+  []
+  [:> Menubar/Separator {:class "menu-separator"}])
+
+(defmethod menu-item :checkbox
+  [{:keys [label action checked?]}]
+  [:> Menubar/CheckboxItem
+   {:class "menu-checkbox-item inset"
+    :onSelect #(rf/dispatch action)
+    :checked @(rf/subscribe checked?)}
+   [:> Menubar/ItemIndicator
+    {:class "menu-item-indicator"}
+    [comp/icon "checkmark"]]
+   label
+   [:div.right-slot
+    [comp/shortcuts action]]])
+
+(defmethod menu-item :sub-menu
+  [{:keys [label items]}]
+  [:> Menubar/Sub
+   [:> Menubar/SubTrigger
+    {:class "sub-menu-item menu-item"}
+    label
+    [:div.right-slot
+     [comp/icon "chevron-right" {:class "small"}]]]
+   [:> Menubar/Portal
+    (into [:> Menubar/SubContent
+           {:class "menu-content"
+            :align "start"
+            :loop true}]
+          (map menu-item items))]])
+
+(defmethod menu-item :root
+  [{:keys [label items]}]
+  [:> Menubar/Menu
+   [:> Menubar/Trigger
+    {:class "menubar-trigger"}
+    label]
+   [:> Menubar/Portal
+    (into [:> Menubar/Content
+           {:class "menu-content"
+            :align "start"
+            :loop true}]
+          (map menu-item items))]])
+
+(defmethod menu-item :default
+  [{:keys [label action]}]
+  [:> Menubar/Item
+   {:class "menu-item"
+    :onSelect #(rf/dispatch action)}
+   label
+   [:div.right-slot
+    [comp/shortcuts action]]])
+
+(defn root
+  []
+  [:> Menubar/Root
+   {:class "menubar-root"
+    :onValueChange #(rf/dispatch [:set-backdrop (seq %)])}
+   (map (fn [item] ^{:key item} [menu-item item]) menu)
+   [:button.button.px-3.flex.items-center
+    {:on-click #(rf/dispatch [:cmdk/toggle])}
+    "Search…"]])
