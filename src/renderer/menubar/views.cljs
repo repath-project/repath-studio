@@ -188,7 +188,7 @@
                       :action [:set-zoom 2]}
                      {:key :divider-1
                       :type :separator}
-                     {:label "Restore and pan"
+                     {:label "Initial"
                       :key "restore-active-page"
                       :action [:pan-to-active-page :original]}
                      {:label "Fit active page"

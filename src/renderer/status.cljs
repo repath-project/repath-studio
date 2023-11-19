@@ -19,24 +19,24 @@
       [:span.mr-1 "Y:"] [:span (gstring/format "%.2f" y)]]]))
 
 (def zoom-menu
-  [{:label "Set zoom to 50%"
+  [{:label "Set to 50%"
     :key "50"
     :action [:set-zoom 0.5]}
-   {:label "Set zoom to 100%"
+   {:label "Set to 100%"
     :key "100"
     :action [:set-zoom 1]}
-   {:label "Set zoom to 200%"
+   {:label "Set to 200%"
     :key "200"
     :action [:set-zoom 2]}
    {:key :divider-1
     :type :separator}
-   {:label "Restore zoom and pan"
+   {:label "Initial"
     :key "restore-active-page"
     :action [:pan-to-active-page :original]}
-   {:label "Zoom to fit page"
+   {:label "Fit active page"
     :key "fit-active-page"
     :action [:pan-to-active-page :fit]}
-   {:label "Zoom to fill page"
+   {:label "Fill active page"
     :key "fill-active-page"
     :action [:pan-to-active-page :fill]}])
 
