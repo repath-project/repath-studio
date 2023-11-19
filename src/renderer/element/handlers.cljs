@@ -186,8 +186,11 @@
   (update-in db (conj (elements-path db) element-key property) not))
 
 (defn set-property
-  [db element-key property value]
-  (assoc-in db (conj (elements-path db) element-key property) value))
+  ([db property value]
+   (update-by db (fn [elements element]
+                   (assoc-in elements [(:key element) property] value))))
+  ([db element-key property value]
+   (assoc-in db (conj (elements-path db) element-key property) value)))
 
 (defn set-attribute
   ([db attribute value]
@@ -202,7 +205,6 @@
        (get-in db attr-path)
        (assoc-in attr-path value)))))
 
-
 (defn update-attribute
   [db attribute function]
   (update-by db (fn [elements element]
@@ -212,6 +214,16 @@
                             (:key element)
                             #(hierarchy/update-attr % attribute function))
                     elements))))
+
+(defn lock
+  [db]
+  (update-by db (fn [elements element]
+                  (assoc-in elements [(:key element) :locked?] true))))
+
+(defn unlock
+  [db]
+  (update-by db (fn [elements element]
+                  (assoc-in elements [(:key element) :locked?] false))))
 
 (defn copy
   [db]

@@ -34,6 +34,20 @@
        (history-handlers/finalize (str "Set " (name property) " to " value)))))
 
 (rf/reg-event-db
+ :element/lock
+ (fn [db [_]]
+   (-> db
+       (handlers/lock)
+       (history-handlers/finalize "Lock selection"))))
+
+(rf/reg-event-db
+ :element/unlock
+ (fn [db [_]]
+   (-> db
+       (handlers/unlock)
+       (history-handlers/finalize "Unlock selection"))))
+
+(rf/reg-event-db
  :element/set-attribute
  (fn [db [_ attribute value]]
    (-> db

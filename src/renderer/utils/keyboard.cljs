@@ -55,8 +55,8 @@
                  [{:keyCode (key-codes "P")
                    :ctrlKey true}]]
                 [[:window/toggle-header]
-                 [{:keyCode (key-codes "L")
-                   :ctrlKey true}]]
+                 [{:keyCode (key-codes "H")
+                   :altKey true}]]
                 [[:element/copy]
                  [{:keyCode (key-codes "C")
                    :ctrlKey true}]]
@@ -102,6 +102,13 @@
                    :shiftKey true}]]
                 [[:element/group]
                  [{:keyCode (key-codes "G")
+                   :ctrlKey true}]]
+                [[:element/unlock]
+                 [{:keyCode (key-codes "L")
+                   :ctrlKey true
+                   :shiftKey true}]]
+                [[:element/lock]
+                 [{:keyCode (key-codes "L")
                    :ctrlKey true}]]
                 [[:element/delete]
                  [{:keyCode (key-codes "DELETE")}]
