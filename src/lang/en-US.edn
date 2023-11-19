@@ -1,7 +1,7 @@
 {:missing "Missing translation for :en-US"
  :cmdk
  {:search-command "Search for a command"
-  :command-menu "Command menu"
+  :command-palette "Command palette"
   :no-results "No results found."}
  
  :color

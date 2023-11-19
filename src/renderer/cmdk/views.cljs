@@ -14,19 +14,20 @@
     {:key key
      :on-select #(doall (rf/dispatch action)
                         (rf/dispatch [:cmdk/set false]))}
-    (str group " / ") label
+    (str group " / " label)
     [:div.right-slot
      [comp/shortcuts action]]]))
 
 (defn group
+  "TODO recur groups"
   [{:keys [label items key]}]
   ^{:key key}
   [:> Command/CommandGroup
-   [:div.px-3.py-2.text-muted.uppercase.font-bold
+   #_[:div.px-3.py-2.text-muted.uppercase.font-bold
     {:style {:font-size "10px"}}
     label]
    (map #(if (:items %)
-           (map (fn [i] (item (:label %) i)) (:items %))
+           (map (fn [i] (item (str label " / " (:label %)) i)) (:items %))
            (item label %))
         items)])
 
@@ -35,7 +36,7 @@
   [:> Command/CommandDialog
    {:open @(rf/subscribe [:cmdk/visible?])
     :onOpenChange #(rf/dispatch [:cmdk/set %])
-    :label (t [:cmdk/command-menu "Command menu"])
+    :label (t [:cmdk/command-palette "Command palette"])
     :class "dialog"}
    [:> Command/CommandInput
     {:placeholder (t [:cmdk/search-command "Search for a command"])}]

@@ -138,7 +138,7 @@
                       :action [:element/align :left]}
                      {:label "Center horizontally"
                       :action [:element/align :center-horizontal]}
-                     {:label "Rignt"
+                     {:label "Right"
                       :action [:element/align :right]}
                      {:key :divider-1
                       :type :separator}
@@ -330,4 +330,4 @@
    (map (fn [item] ^{:key item} [menu-item item]) menu)
    [:button.button.px-3.flex.items-center
     {:on-click #(rf/dispatch [:cmdk/toggle])}
-    "Search…"]])
+    "Command palette…"]])
