@@ -36,8 +36,7 @@
                 [[:pan-to-active-page :fill]
                  [{:keyCode (key-codes "THREE")}]]
                 [[:zoom-in]
-                 [{:keyCode (key-codes "EQUALS")}]
-                 [{:keyCode (key-codes "PLUS_SIGN")}]]
+                 [{:keyCode (key-codes "EQUALS")}]]
                 [[:zoom-out]
                  [{:keyCode (key-codes "DASH")}]]
                 [[:panel/toggle :tree]
@@ -212,7 +211,10 @@
                           {:keyCode (key-codes "W")
                            :ctrlKey true}
                           {:keyCode (key-codes "K")
-                           :ctrlKey true}]})
+                           :ctrlKey true}
+                          {:keyCode (key-codes "D")
+                           :ctrlKey true
+                           :shiftKey true}]})
 
 (defn event-handler
   "SEE https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/"
