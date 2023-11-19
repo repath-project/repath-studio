@@ -1,8 +1,7 @@
-(ns renderer.menu.bar
+(ns renderer.menubar.views
   (:require
    [re-frame.core :as rf]
    [renderer.components :as comp]
-   [renderer.menu.zoom :as zoom]
    ["@radix-ui/react-menubar" :as Menubar]))
 
 (def menu
@@ -110,6 +109,14 @@
              :action [:element/ungroup]}
             {:key :divider-2
              :type :separator}
+            {:key :group
+             :label "Lock"
+             :action [:element/lock]}
+            {:key :ungroup
+             :label "Unlock"
+             :action [:element/unlock]}
+            {:key :divider-3
+             :type :separator}
             {:key :raise
              :label "Raise"
              :action [:element/raise]}
@@ -121,7 +128,26 @@
              :action [:element/raise-to-top]}
             {:key :lower-to-bottom
              :label "Lower to bottom"
-             :action [:element/lower-to-bottom]}]}
+             :action [:element/lower-to-bottom]}
+            {:key :divider-4
+             :type :separator}
+            {:key :path
+             :label "Align"
+             :type :sub-menu
+             :items [{:label "Left"
+                      :action [:element/align :left]}
+                     {:label "Center horizontally"
+                      :action [:element/align :center-horizontal]}
+                     {:label "Rignt"
+                      :action [:element/align :right]}
+                     {:key :divider-1
+                      :type :separator}
+                     {:label "Top"
+                      :action [:element/align :top]}
+                     {:label "Center vertically"
+                      :action [:element/align :center-vertical]}
+                     {:label "Bottom"
+                      :action [:element/align :bottom]}]}]}
    #_{:key :path
       :label "Path"
       :type :root
@@ -143,15 +169,34 @@
     :items [{:key :zoom
              :label "Zoom"
              :type :sub-menu
-             :items (concat [{:key :zoom-in
-                              :label "Zoom in"
-                              :action [:zoom-in]}
-                             {:key :zoom-out
-                              :label "Zoom out"
-                              :action [:zoom-out]}
-                             {:key :divider-1
-                              :type :separator}]
-                            zoom/menu)}
+             :items [{:key :zoom-in
+                      :label "In"
+                      :action [:zoom-in]}
+                     {:key :zoom-out
+                      :label "Out"
+                      :action [:zoom-out]}
+                     {:key :divider-1
+                      :type :separator}
+                     {:label "Set to 50%"
+                      :key "50"
+                      :action [:set-zoom 0.5]}
+                     {:label "Set to 100%"
+                      :key "100"
+                      :action [:set-zoom 1]}
+                     {:label "Set to 200%"
+                      :key "200"
+                      :action [:set-zoom 2]}
+                     {:key :divider-1
+                      :type :separator}
+                     {:label "Restore and pan"
+                      :key "restore-active-page"
+                      :action [:pan-to-active-page :original]}
+                     {:label "Fit active page"
+                      :key "fit-active-page"
+                      :action [:pan-to-active-page :fit]}
+                     {:label "Fill active page"
+                      :key "fill-active-page"
+                      :action [:pan-to-active-page :fill]}]}
             {:key :divider-1
              :type :separator}
             {:key :toggle-tree
@@ -191,6 +236,11 @@
              :label "Command history"
              :checked? [:panel/visible? :repl-history]
              :action [:panel/toggle :repl-history]}
+            {:key :toggle-debug-info
+             :type :checkbox
+             :label "Debug info"
+             :checked? [:debug-info?]
+             :action [:toggle-debug-info]}
             {:key :divider-3
              :type :separator}
             {:key :toggle-fullscreen
@@ -241,7 +291,7 @@
    [:> Menubar/SubTrigger
     {:class "sub-menu-item menu-item"}
     label
-    [:div.right-slot
+    [:div.right-slot.sub-menu-chevron
      [comp/icon "chevron-right" {:class "small"}]]]
    [:> Menubar/Portal
     (into [:> Menubar/SubContent

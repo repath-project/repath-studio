@@ -2,19 +2,19 @@
   (:require
    [re-frame.core :as rf]
    [renderer.components :as comp]
-   [renderer.menu.bar :as menu.bar]
+   [renderer.menubar.views :as menubar]
    [i18n :refer [t]]
    ["cmdk" :as Command]))
 
 (defn item
-  [{:keys [label action key type]}]
+  [group {:keys [label action key type]}]
   ^{:key key}
   (when-not (= type :separator)
    [:> Command/CommandItem
     {:key key
      :on-select #(doall (rf/dispatch action)
                         (rf/dispatch [:cmdk/set false]))}
-    (when (= type :checkbox) "Toggle > ") label
+    (str group " / ") label
     [:div.right-slot
      [comp/shortcuts action]]]))
 
@@ -26,8 +26,8 @@
     {:style {:font-size "10px"}}
     label]
    (map #(if (:items %)
-           (map item (:items %))
-           (item %))
+           (map (fn [i] (item (:label %) i)) (:items %))
+           (item label %))
         items)])
 
 (defn dialog
@@ -42,4 +42,4 @@
    [:> Command/CommandList
     [:> Command/CommandEmpty
      (t [:cmdk/no-results "No results found."])]
-    (map group menu.bar/menu)]])
+    (map group menubar/menu)]])

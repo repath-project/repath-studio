@@ -89,6 +89,11 @@
   color: var(--font-color-muted);
 }
 
+.sub-menu-chevron {
+  margin-right: -1rem;
+  color: inherit;
+}
+
 [data-highlighted] > .right-slot {
   color: var(--font-color-active);
 }

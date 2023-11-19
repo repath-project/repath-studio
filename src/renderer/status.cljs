@@ -6,7 +6,6 @@
    [re-frame.registrar]
    [renderer.color.views :as color]
    [goog.string :as gstring]
-   [renderer.menu.zoom :as zoom]
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    ["@radix-ui/react-select" :as Select]))
 
@@ -19,6 +18,27 @@
      [:div.flex.justify-between
       [:span.mr-1 "Y:"] [:span (gstring/format "%.2f" y)]]]))
 
+(def zoom-menu
+  [{:label "Set zoom to 50%"
+    :key "50"
+    :action [:set-zoom 0.5]}
+   {:label "Set zoom to 100%"
+    :key "100"
+    :action [:set-zoom 1]}
+   {:label "Set zoom to 200%"
+    :key "200"
+    :action [:set-zoom 2]}
+   {:key :divider-1
+    :type :separator}
+   {:label "Restore zoom and pan"
+    :key "restore-active-page"
+    :action [:pan-to-active-page :original]}
+   {:label "Zoom to fit page"
+    :key "fit-active-page"
+    :action [:pan-to-active-page :fit]}
+   {:label "Zoom to fill page"
+    :key "fill-active-page"
+    :action [:pan-to-active-page :fill]}])
 
 (def view-radio-buttons
   [#_{:title "Snap to pixels"
@@ -117,6 +137,9 @@
         [:> DropdownMenu/Content
          {:class "menu-content rounded"
           :side "top"}
-         (map (fn [item] ^{:key (:key item)} [comp/dropdown-menu-item item]) zoom/menu)
+         (map (fn [item]
+                ^{:key (:key item)}
+                [comp/dropdown-menu-item item])
+              zoom-menu)
          [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]]]
      [coordinates]]))

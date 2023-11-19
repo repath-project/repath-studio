@@ -4,7 +4,7 @@
    [renderer.components :as comp]
    [platform :as platform]
    [renderer.status]
-   [renderer.menu.bar :as menu-bar]))
+   [renderer.menubar.views :as menubar]))
 
 (defn window-control-button
   [{:keys [icon action]}]
@@ -37,7 +37,7 @@
        {:src "img/icon-no-bg.svg"
         :style {:width "14px"
                 :height "14px"}}]]
-     [menu-bar/root]
+     [menubar/root]
      [title-bar]
      (let [theme-mode @(rf/subscribe [:theme/mode])]
        [:div.level-2
