@@ -65,7 +65,7 @@
 
 (defn reduce-by-area
   [{:keys [active-document] :as db} intersecting? func]
-  (let [hovered? (if intersecting? bounds/intersect? bounds/contained?)
+  (let [hovered? (if intersecting? bounds/intersect-bounds? bounds/contain-bounds?)
         hovered-keys (-> db :documents active-document :hovered-keys)]
     (reduce (fn [db element]
               (if (and
@@ -164,7 +164,8 @@
             (handlers/set-state db :move))
 
           :scale
-          (elements/scale (history/swap db) offset
+          (elements/scale (history/swap db)
+                          offset
                           (contains? (:modifiers event) :ctrl)
                           (contains? (:modifiers event) :shift))
 

@@ -120,28 +120,28 @@
  :element/raise
  (fn [db _]
    (-> db
-       (handlers/update-by handlers/raise)
+       (handlers/update-selected-by handlers/raise)
        (history-handlers/finalize "Raise selection"))))
 
 (rf/reg-event-db
  :element/lower
  (fn [db _]
    (-> db
-       (handlers/update-by handlers/lower)
+       (handlers/update-selected-by handlers/lower)
        (history-handlers/finalize "Lower selection"))))
 
 (rf/reg-event-db
  :element/raise-to-top
  (fn [db _]
    (-> db
-       (handlers/update-by handlers/raise-to-top)
+       (handlers/update-selected-by handlers/raise-to-top)
        (history-handlers/finalize "Raise selection to top"))))
 
 (rf/reg-event-db
  :element/lower-to-bottom
  (fn [db _]
    (-> db
-       (handlers/update-by handlers/lower-to-bottom)
+       (handlers/update-selected-by handlers/lower-to-bottom)
        (history-handlers/finalize "Lower selection to bottom"))))
 
 (rf/reg-event-db

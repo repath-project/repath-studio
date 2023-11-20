@@ -105,7 +105,7 @@
   [db]
   (set-active-page db (last (-> (elements db) :canvas :children))))
 
-(defn update-by
+(defn update-selected-by
   [db f]
   (assoc-in db (elements-path db) (reduce f (elements db) (selected db))))
 
@@ -187,18 +187,18 @@
 
 (defn set-property
   ([db property value]
-   (update-by db (fn [elements element]
-                   (assoc-in elements [(:key element) property] value))))
+   (update-selected-by db (fn [elements element]
+                            (assoc-in elements [(:key element) property] value))))
   ([db element-key property value]
    (assoc-in db (conj (elements-path db) element-key property) value)))
 
 (defn set-attribute
   ([db attribute value]
-   (update-by db (fn [elements element]
-                   (if (and (not (:locked? element))
-                            (attribute (tools/attributes element)))
-                     (assoc-in elements [(:key element) :attrs attribute] value)
-                     elements))))
+   (update-selected-by db (fn [elements element]
+                            (if (and (not (:locked? element))
+                                     (attribute (tools/attributes element)))
+                              (assoc-in elements [(:key element) :attrs attribute] value)
+                              elements))))
   ([db element-key attribute value]
    (let [attr-path (conj (elements-path db) element-key :attrs attribute)]
      (cond-> db
@@ -207,23 +207,23 @@
 
 (defn update-attribute
   [db attribute function]
-  (update-by db (fn [elements element]
-                  (if (and (not (:locked? element))
-                           (attribute (tools/attributes element)))
-                    (update elements
-                            (:key element)
-                            #(hierarchy/update-attr % attribute function))
-                    elements))))
+  (update-selected-by db (fn [elements element]
+                           (if (and (not (:locked? element))
+                                    (attribute (tools/attributes element)))
+                             (update elements
+                                     (:key element)
+                                     #(hierarchy/update-attr % attribute function))
+                             elements))))
 
 (defn lock
   [db]
-  (update-by db (fn [elements element]
-                  (assoc-in elements [(:key element) :locked?] true))))
+  (update-selected-by db (fn [elements element]
+                           (assoc-in elements [(:key element) :locked?] true))))
 
 (defn unlock
   [db]
-  (update-by db (fn [elements element]
-                  (assoc-in elements [(:key element) :locked?] false))))
+  (update-selected-by db (fn [elements element]
+                           (assoc-in elements [(:key element) :locked?] false))))
 
 (defn copy
   [db]
@@ -252,45 +252,45 @@
   [elements element]
   (:children ((:parent element) elements)))
 
-(defn update-position
+(defn update-index
   [elements element f]
-  (assoc-in elements
-            [(:parent element) :children]
-            (let [children (siblings-keys elements element)
-                  index (.indexOf children (:key element))]
+  (let [children (siblings-keys elements element)
+        index (.indexOf children (:key element))]
+    (assoc-in elements
+              [(:parent element) :children]
               (vec/swap children index (f index)))))
 
 (defn raise
   [elements element]
-  (update-position elements element inc))
+  (update-index elements element inc))
 
 (defn lower
   [elements element]
-  (update-position elements element dec))
+  (update-index elements element dec))
 
 (defn lower-to-bottom
   [elements element]
-  (update-position elements element (fn [_] 0)))
+  (update-index elements element (fn [_] 0)))
 
 (defn raise-to-top
   [elements element]
-  (update-position elements
-                   element
-                   (fn [_] (dec (count (siblings-keys elements element))))))
+  (update-index elements element #(-> (siblings-keys elements element)
+                                      (count)
+                                      (dec))))
 
 (defn translate
   [db offset]
-  (update-by db (fn [elements element]
-                  (assoc elements
-                         (:key element)
-                         (tools/translate element offset)))))
+  (update-selected-by db (fn [elements element]
+                           (assoc elements
+                                  (:key element)
+                                  (tools/translate element offset)))))
 
 (defn scale
   [db offset _lock-ratio? _in-place?]
   (let [[x1 y1 x2 y2] (tools/elements-bounds (elements db) (selected db))
         outer-dimensions (bounds/->dimensions [x1 y1 x2 y2])
         handler (-> db :clicked-element :key)]
-    (update-by
+    (update-selected-by
      db
      (fn [elements element]
        (let [[inner-x1 inner-y1 inner-x2 inner-y2] (tools/bounds element (elements db))
@@ -311,7 +311,7 @@
 
 (defn align
   [db direction]
-  (update-by
+  (update-selected-by
    db
    (fn [elements element]
      (let [[x1 y1 x2 y2] (tools/bounds element (elements db))
@@ -418,7 +418,7 @@
                                  (active-page db)
                                  (:parent element)) element))
           (deselect-all db)
-          (:copied-elements db )))
+          (:copied-elements db)))
 
 (defn paste
   [db]
@@ -455,7 +455,7 @@
   (if (= 1 (count copied-elements))
     ;; TODO merge attributes from multiple selected elements
     (let [attrs (:attrs (first copied-elements))]
-      (update-by
+      (update-selected-by
        db
        (fn [elements element]
          (let [key (:key element)
@@ -519,9 +519,9 @@
 
 (defn manipulate-path
   [db action]
-  (update-by db (fn [elements element]
-                  (if (= (:tag element) :path)
-                    (assoc elements
-                           (:key element)
-                           (path/manipulate element action))
-                    elements))))
+  (update-selected-by db (fn [elements element]
+                           (if (= (:tag element) :path)
+                             (assoc elements
+                                    (:key element)
+                                    (path/manipulate element action))
+                             elements))))
