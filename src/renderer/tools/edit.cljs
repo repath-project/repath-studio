@@ -27,6 +27,13 @@
   [db _ element]
   (assoc db :clicked-element element))
 
+(defmethod tools/mouse-move :edit
+  [db _ element]
+  (-> db
+      (elements/clear-hovered)
+      (elements/hover (:key element))
+      (assoc :cursor (if element "crosshair" "default"))))
+
 (defmethod tools/drag-start :edit
   [db]
   (handlers/set-state db :edit))
@@ -52,4 +59,5 @@
   [db]
   (-> db
       (handlers/set-state :default)
+      (dissoc :clicked-element)
       (history/finalize (str "Edit " (-> db :clicked-element :key name)))))

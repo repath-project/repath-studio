@@ -51,12 +51,14 @@
   [{:keys [x y key] :as element} & children]
   (let [zoom @(rf/subscribe [:document/zoom])
         clicked-element @(rf/subscribe [:clicked-element])
-        size (/ 8 zoom)
+        hovered-keys @(rf/subscribe [:document/hovered-keys])
+        size (/ 10 zoom)
         stroke-width (/ 1 zoom)
         mouse-handler #(mouse/event-handler % element)]
     [:rect {:key key
             :id (name key)
-            :fill (if (= (:key clicked-element) key)
+            :fill (if (or (= (:key clicked-element) key)
+                          (contains? hovered-keys key))
                     accent
                     stroke-inverted)
             :stroke stroke
