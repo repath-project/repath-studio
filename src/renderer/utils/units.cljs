@@ -78,4 +78,6 @@
   ([value]
    (->fixed value 2))
   ([value digits]
-   (-> value (.toFixed digits) (js/parseFloat))))
+   (-> value
+       (.toFixed digits)
+       (js/parseFloat))))

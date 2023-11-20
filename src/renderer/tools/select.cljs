@@ -65,17 +65,18 @@
 
 (defn reduce-by-area
   [{:keys [active-document] :as db} intersecting? func]
-  (let [predicate (if intersecting? bounds/intersect? bounds/contained?)
+  (let [hovered? (if intersecting? bounds/intersect? bounds/contained?)
         hovered-keys (-> db :documents active-document :hovered-keys)]
-    (reduce #(if (and
-                  (empty? (set/intersection (elements/ancestor-keys db %2)
-                                            hovered-keys))
-                  (not (elements/page? %2))
-                  (predicate (tools/adjusted-bounds %2 (elements/elements db))
+    (reduce (fn [db element]
+              (if (and
+                   (empty? (set/intersection (elements/ancestor-keys db element)
+                                             hovered-keys))
+                   (not (elements/page? element))
+                   (hovered? (tools/adjusted-bounds element (elements/elements db))
                              (tools/adjusted-bounds (elements/get-temp db)
                                                     (elements/elements db))))
-               (func %1 %2)
-               %)
+                (func db element)
+                db))
             db
             (vals (elements/elements db)))))
 
