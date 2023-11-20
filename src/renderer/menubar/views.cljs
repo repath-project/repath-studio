@@ -109,10 +109,10 @@
              :action [:element/ungroup]}
             {:key :divider-2
              :type :separator}
-            {:key :group
+            {:key :lock
              :label "Lock"
              :action [:element/lock]}
-            {:key :ungroup
+            {:key :unlock
              :label "Unlock"
              :action [:element/unlock]}
             {:key :divider-3
