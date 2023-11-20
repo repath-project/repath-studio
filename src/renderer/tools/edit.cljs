@@ -31,8 +31,7 @@
   [db _ element]
   (-> db
       (elements/clear-hovered)
-      (elements/hover (:key element))
-      (assoc :cursor (if element "crosshair" "default"))))
+      (elements/hover (:key element))))
 
 (defmethod tools/drag-start :edit
   [db]
