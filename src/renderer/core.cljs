@@ -18,6 +18,7 @@
    [renderer.attribute.core]
    [renderer.notification.core]
    [renderer.theme.core]
+   [renderer.menubar.core]
    [renderer.reepl.replumb :as replumb]
    [renderer.cmdk.core]
    [replumb.repl :as repl]

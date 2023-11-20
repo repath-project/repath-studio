@@ -55,7 +55,8 @@
                    :ctrlKey true}]]
                 [[:window/toggle-header]
                  [{:keyCode (key-codes "H")
-                   :altKey true}]]
+                   :altKey true
+                   :ctrlKey true}]]
                 [[:element/copy]
                  [{:keyCode (key-codes "C")
                    :ctrlKey true}]]
@@ -133,6 +134,21 @@
                 [[:element/select-all]
                  [{:keyCode (key-codes "A")
                    :ctrlKey true}]]
+                [[:menubar/toggle "file"]
+                 [{:keyCode (key-codes "F")
+                   :altKey true}]]
+                [[:menubar/toggle "edit"]
+                 [{:keyCode (key-codes "E")
+                   :altKey true}]]
+                [[:menubar/toggle "object"]
+                 [{:keyCode (key-codes "O")
+                   :altKey true}]]
+                [[:menubar/toggle "view"]
+                 [{:keyCode (key-codes "V")
+                   :altKey true}]]
+                [[:menubar/toggle "help"]
+                 [{:keyCode (key-codes "H")
+                   :altKey true}]]
                 [[:set-tool :edit]
                  [{:keyCode (key-codes "E")}]]
                 [[:set-tool :circle]
