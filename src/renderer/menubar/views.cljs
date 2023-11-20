@@ -35,8 +35,6 @@
             {:key :close
              :label "Close"
              :action [:document/close-active]}
-            {:key :divider-4
-             :type :separator}
             {:key :exit
              :label "Exit"
              :action [:window/close]}]}
@@ -117,20 +115,6 @@
              :action [:element/unlock]}
             {:key :divider-3
              :type :separator}
-            {:key :raise
-             :label "Raise"
-             :action [:element/raise]}
-            {:key :lower
-             :label "Lower"
-             :action [:element/lower]}
-            {:key :raise-to-top
-             :label "Raise to top"
-             :action [:element/raise-to-top]}
-            {:key :lower-to-bottom
-             :label "Lower to bottom"
-             :action [:element/lower-to-bottom]}
-            {:key :divider-4
-             :type :separator}
             {:key :path
              :label "Align"
              :type :sub-menu
@@ -153,7 +137,41 @@
                       :action [:element/align :center-vertical]}
                      {:key :align-bottom
                       :label "Bottom"
-                      :action [:element/align :bottom]}]}]}
+                      :action [:element/align :bottom]}]}
+            {:key :divider-4
+             :type :separator}
+            {:key :boolean
+             :label "Boolean operation"
+             :type :sub-menu
+             :items [{:key :exclude
+                      :label "Exclude"
+                      :action [:element/bool-operation :exclude]}
+                     {:key :unite
+                      :label "Unite"
+                      :action [:element/bool-operation :unite]}
+                     {:key :intersect
+                      :label "Intersect"
+                      :action [:element/bool-operation :intersect]}
+                     {:key :subtract
+                      :label "Subtract"
+                      :action [:element/bool-operation :subtract]}
+                     {:key :divide
+                      :label "Divide"
+                      :action [:element/bool-operation :divide]}]}
+            {:key :divider-5
+             :type :separator}
+            {:key :raise
+             :label "Raise"
+             :action [:element/raise]}
+            {:key :lower
+             :label "Lower"
+             :action [:element/lower]}
+            {:key :raise-to-top
+             :label "Raise to top"
+             :action [:element/raise-to-top]}
+            {:key :lower-to-bottom
+             :label "Lower to bottom"
+             :action [:element/lower-to-bottom]}]}
    #_{:key :path
       :label "Path"
       :type :root
