@@ -134,19 +134,19 @@
                 [[:element/select-all]
                  [{:keyCode (key-codes "A")
                    :ctrlKey true}]]
-                [[:menubar/toggle "file"]
+                [[:menubar/focus "file"]
                  [{:keyCode (key-codes "F")
                    :altKey true}]]
-                [[:menubar/toggle "edit"]
+                [[:menubar/focus "edit"]
                  [{:keyCode (key-codes "E")
                    :altKey true}]]
-                [[:menubar/toggle "object"]
+                [[:menubar/focus "object"]
                  [{:keyCode (key-codes "O")
                    :altKey true}]]
-                [[:menubar/toggle "view"]
+                [[:menubar/focus "view"]
                  [{:keyCode (key-codes "V")
                    :altKey true}]]
-                [[:menubar/toggle "help"]
+                [[:menubar/focus "help"]
                  [{:keyCode (key-codes "H")
                    :altKey true}]]
                 [[:set-tool :edit]
