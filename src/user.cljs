@@ -48,7 +48,7 @@
   "Creates a new element."
   [element]
   (apply #(rf/dispatch [:element/create {:tag (key %)
-                                          :attrs (val %)}]) element))
+                                         :attrs (val %)}]) element))
 
 (defn ^:export circle
   "Creates a circle."

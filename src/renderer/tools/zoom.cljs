@@ -52,7 +52,7 @@
            zoom-factor] :as db} event]
   (let [[offset-x offset-y] adjusted-mouse-offset
         [pos-x pos-y] adjusted-mouse-pos
-        width  (abs (- pos-x offset-x))
+        width (abs (- pos-x offset-x))
         height (abs (- pos-y offset-y))
         width-ratio (/ (:width content-rect) width)
         height-ratio (/ (:height content-rect) height)

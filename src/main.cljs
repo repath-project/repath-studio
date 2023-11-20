@@ -32,10 +32,11 @@
     "export" (file/export (.-data args))))
 
 (defn send-to-renderer
-  ([action data]
-   (.send (.-webContents ^js @main-window) "fromMain" (clj->js {:action action :data data})))
   ([action]
-   (send-to-renderer action nil)))
+   (send-to-renderer action nil))
+  ([action data]
+   (.send (.-webContents ^js @main-window) "fromMain" (clj->js {:action action
+                                                                :data data}))))
 
 (defn init-main-window
   []

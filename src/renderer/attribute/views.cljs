@@ -44,7 +44,8 @@
            {:on-click #(rf/dispatch
                         [:window/open-remote-url
                          (or (:mdn_url data)
-                             (str "https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/" (name attr)))])}
+                             (str "https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/"
+                                  (name attr)))])}
            "Learn more"])
         (when (:spec_url data)
           [:button.button.px-3.grow
@@ -226,11 +227,13 @@
          [:div.py-px
           [:> Popover/Root {:modal true}
            [:> Popover/Trigger {:asChild true}
-            [:span.pb-px [comp/icon-button "info" {:title "MDN Info"}]]]
+            [:span.pb-px
+             [comp/icon-button "info" {:title "MDN Info"}]]]
            [:> Popover/Portal
-            [:> Popover/Content {:sideOffset 5
-                                 :class "popover-content"
-                                 :align "end"}
+            [:> Popover/Content
+             {:sideOffset 5
+              :class "popover-content"
+              :align "end"}
              [:div.p-6
               [:h2.mb-4.text-lg tag]
               (when-let [description (:description (tools/properties tag))]
