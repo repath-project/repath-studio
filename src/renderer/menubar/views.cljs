@@ -134,19 +134,25 @@
             {:key :path
              :label "Align"
              :type :sub-menu
-             :items [{:label "Left"
+             :items [{:key :align-left
+                      :label "Left"
                       :action [:element/align :left]}
-                     {:label "Center horizontally"
+                     {:key :align-center-horizontally
+                      :label "Center horizontally"
                       :action [:element/align :center-horizontal]}
-                     {:label "Right"
+                     {:key :align-right
+                      :label "Right"
                       :action [:element/align :right]}
                      {:key :divider-1
                       :type :separator}
-                     {:label "Top"
+                     {:key :align-top
+                      :label "Top"
                       :action [:element/align :top]}
-                     {:label "Center vertically"
+                     {:key :align-center-vertically
+                      :label "Center vertically"
                       :action [:element/align :center-vertical]}
-                     {:label "Bottom"
+                     {:key :align-bottom
+                      :label "Bottom"
                       :action [:element/align :bottom]}]}]}
    #_{:key :path
       :label "Path"
@@ -301,10 +307,11 @@
           (map menu-item items))]])
 
 (defmethod menu-item :root
-  [{:keys [label items]}]
+  [{:keys [label items key]}]
   [:> Menubar/Menu
    [:> Menubar/Trigger
-    {:class "menubar-trigger"}
+    {:class "menubar-trigger"
+     :id (name key)}
     label]
    [:> Menubar/Portal
     (into [:> Menubar/Content
