@@ -104,7 +104,7 @@
   [orientation size]
   (let [[x y] @(rf/subscribe [:frame/viewbox])
         zoom @(rf/subscribe [:document/zoom])
-        steps-coll @(rf/subscribe [:rullers/steps-coll orientation])]
+        steps-coll @(rf/subscribe [:rulers/steps-coll orientation])]
     (into [:g]
           (map-indexed
            (fn [i step]
@@ -156,7 +156,7 @@
   (let [zoom @(rf/subscribe [:document/zoom])
         [x y width height] @(rf/subscribe [:frame/viewbox])
         [width height] (matrix/add [width height] [x y])
-        steps-coll @(rf/subscribe [:rullers/steps-coll orientation])
+        steps-coll @(rf/subscribe [:rulers/steps-coll orientation])
         vertical? (= orientation :vertical)]
     (into [:g]
           (map-indexed

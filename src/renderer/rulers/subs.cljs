@@ -26,7 +26,7 @@
      0.1)))
 
 (rf/reg-sub
- :rullers/steps-coll
+ :rulers/steps-coll
  :<- [:rulers/step]
  :<- [:frame/viewbox]
  (fn [[ruler-step [x y width height]] [_ orientation]]
