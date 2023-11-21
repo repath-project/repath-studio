@@ -158,9 +158,9 @@
 
        :wheel
        (if (some (:modifiers event) [:ctrl :alt])
-         (let [factor (if (pos? (second delta))
-                        (:zoom-factor db)
-                        (/ 1 (:zoom-factor db)))]
+         (let [delta-y (second delta)
+               factor (Math/pow (+ 1 (/ (:zoom-sensitivity db) 100))
+                                (- delta-y))]
            (frame-handlers/zoom-in-mouse-position db factor))
          (frame-handlers/pan db delta))
 

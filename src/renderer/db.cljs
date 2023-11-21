@@ -29,7 +29,7 @@
 (def default
   {:tool :select
    :mouse-pos [0 0]
-   :zoom-factor 0.8
+   :zoom-sensitivity 0.3
    :state :default
    :documents {}
    :document-tabs []
