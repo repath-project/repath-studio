@@ -149,7 +149,7 @@
   (let [[x1 y1 x2 y2] bounds
         [width height] (bounds/->dimensions bounds)]
     [:g {:key :bounding-handlers}
-     [cross (+ x1 (/ width 2)) (+ y1 (/ height 2))]
+     [cross (bounds/center bounds)]
      (map (fn [handler] [scale-handler handler])
           [{:x x1 :y y1 :key :top-left}
            {:x x2 :y y1 :key :top-right}

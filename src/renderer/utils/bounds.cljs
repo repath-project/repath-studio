@@ -12,6 +12,11 @@
   [[x1 y1 x2 y2]]
   (matrix/sub [x2 y2] [x1 y1]))
 
+(defn center
+  [bounds]
+  (let [[x1 y1 _x2 _y2] bounds] 
+   (matrix/add [x1 y1] (matrix/div (->dimensions bounds) 2))))
+
 (defn intersect-bounds?
   "Checks if bounds intersect."
   [a-bounds b-bounds]
