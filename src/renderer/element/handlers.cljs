@@ -151,11 +151,11 @@
           (vals (elements db))))
 
 (defn select
-  [db multiple? el]
+  [db multi? el]
   (if el
-    (if-not multiple?
+    (if-not multi?
       (-> db
-          (deselect-all)
+          deselect-all
           (select-element (:key el))
           (set-active-page (:key (page db el))))
       (toggle-selected db (:key el)))
@@ -271,8 +271,8 @@
 (defn raise-to-top
   [elements element]
   (update-index elements element #(-> (siblings-keys elements element)
-                                      (count)
-                                      (dec))))
+                                      count
+                                      dec)))
 
 (defn translate
   [db offset]

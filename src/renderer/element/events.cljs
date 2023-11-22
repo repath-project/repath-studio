@@ -9,9 +9,9 @@
 
 (rf/reg-event-db
  :element/select
- (fn [db [_ multiple? el]]
+ (fn [db [_ multi? el]]
    (-> db
-       (handlers/select multiple? el)
+       (handlers/select multi? el)
        (history-handlers/finalize "Select element"))))
 
 (rf/reg-event-db
@@ -261,7 +261,8 @@
  (fn [db  [_ element parent-key]]
    (-> db
        (handlers/set-parent element parent-key)
-       (history-handlers/finalize (str "Set parent of " (:key element) " to " parent-key)))))
+       (history-handlers/finalize (str "Set parent of " (:key element)
+                                       " to " parent-key)))))
 
 (rf/reg-event-db
  :element/group
