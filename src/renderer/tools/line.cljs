@@ -51,11 +51,11 @@
   [db]
   (if (elements/get-temp db)
     (-> db
-        (elements/create)
+        elements/create
         (history/finalize (str "Create line")))
     (-> db
         (handlers/set-state :create)
-        (create-line))))
+        create-line)))
 
 (defmethod tools/mouse-down :line
   [db]
@@ -68,16 +68,16 @@
   (create-line db))
 
 (defmethod tools/translate :line
-  [element [x y]] (-> element
-                      (hierarchy/update-attr :x1 + x)
-                      (hierarchy/update-attr :y1 + y)
-                      (hierarchy/update-attr :x2 + x)
-                      (hierarchy/update-attr :y2 + y)))
+  [el [x y]] (-> el
+                 (hierarchy/update-attr :x1 + x)
+                 (hierarchy/update-attr :y1 + y)
+                 (hierarchy/update-attr :x2 + x)
+                 (hierarchy/update-attr :y2 + y)))
 
 (defmethod tools/scale :line
-  [element [x y] handler]
-  (let [{:keys [x1 y1 x2 y2]} (:attrs element)]
-    (cond-> element
+  [el [x y] handler]
+  (let [{:keys [x1 y1 x2 y2]} (:attrs el)]
+    (cond-> el
       (contains? #{:bottom-right :top-right :middle-right} handler)
       (hierarchy/update-attr (if (> x1 x2) :x1 :x2) + x)
 
@@ -128,12 +128,12 @@
             :element key}])]))
 
 (defmethod tools/edit :line
-  [element [x y] handler]
+  [el [x y] handler]
   (case handler
-    :starting-point (-> element
+    :starting-point (-> el
                         (hierarchy/update-attr :x1 + x)
                         (hierarchy/update-attr :y1 + y))
-    :ending-point (-> element
+    :ending-point (-> el
                       (hierarchy/update-attr :x2 + x)
                       (hierarchy/update-attr :y2 + y))
-    element))
+    el))

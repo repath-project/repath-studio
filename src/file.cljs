@@ -21,7 +21,7 @@
 
 (defn save
   "Saves the provided data.
-   SEE https://www.electronjs.org/docs/api/dialog#dialogshowsavedialogsyncbrowserwindow-options"
+   SEE: https://www.electronjs.org/docs/api/dialog#dialogshowsavedialogsyncbrowserwindow-options"
   [data]
   (.then (.showSaveDialog dialog ^js @main-window (clj->js dialog-options))
          (fn [^js/Promise file]
@@ -35,7 +35,7 @@
 
 (defn open
   "Opens a file.
-   SEE https://www.electronjs.org/docs/api/dialog#dialogshowopendialogsyncbrowserwindow-options"
+   SEE: https://www.electronjs.org/docs/api/dialog#dialogshowopendialogsyncbrowserwindow-options"
   []
   (.then (.showOpenDialog dialog ^js @main-window (clj->js dialog-options))
          (fn [^js/Promise file]

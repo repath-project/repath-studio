@@ -59,7 +59,7 @@
    (on-change-handler event k old-v true))
   ([event k old-v finalize?]
    (let [new-v (.. event -target -value)]
-     (when (not= new-v old-v)
+     (when-not (= new-v old-v)
        (rf/dispatch [(if finalize?
                        :element/set-attribute
                        :element/preview-attribute) k new-v])))))
@@ -174,13 +174,13 @@
               [:h3.font-bold "Applies to"]
               [:p applies-to]])
            (when-let [computed-value (:computedValue webref-property)]
-             (when (not= computed-value "as specified")
+             (when-not (= computed-value "as specified")
                [:<>
                 [:h3.font-bold "Computed value"]
                 [:p
                  computed-value
                  (when-let [percentages (:percentages webref-property)]
-                   (when (not= percentages "N/A")
+                   (when-not (= percentages "N/A")
                      (str " (percentages " percentages ")")))]]))
            (when-let [animatable (:animatable webref-property)]
              [:<>

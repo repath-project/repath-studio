@@ -104,13 +104,12 @@
 
 (defn adjusted-bounds
   [element elements]
-  (let [page (el-utils/parent-page elements element)]
-    (if (not page)
-      (bounds element elements)
-      (let [[offset-x offset-y _ _] (bounds page elements)
-            [x1 y1 x2 y2] (bounds element elements)]
-        [(+ x1 offset-x) (+ y1 offset-y)
-         (+ x2 offset-x) (+ y2 offset-y)]))))
+  (if-let [page (el-utils/parent-page elements element)]
+    (let [[offset-x offset-y _ _] (bounds page elements)
+          [x1 y1 x2 y2] (bounds element elements)]
+      [(+ x1 offset-x) (+ y1 offset-y)
+       (+ x2 offset-x) (+ y2 offset-y)])
+    (bounds element elements)))
 
 (defn elements-bounds
   [elements bound-elements]

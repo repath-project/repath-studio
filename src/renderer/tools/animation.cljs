@@ -12,7 +12,7 @@
   (let [child-elements @(rf/subscribe [:element/filter-visible children])]
     [tag
      attrs
-     (map (fn [element]
-            ^{:key (:key element)}
-            [tools/render element])
+     (map (fn [el]
+            ^{:key (:key el)}
+            [tools/render el])
           child-elements)]))

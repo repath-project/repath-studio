@@ -238,7 +238,9 @@
   (when-let [centroid (tools/centroid el)]
     (let [active-page @(rf/subscribe [:element/active-page])
           page-pos (mapv units/unit->px [(-> active-page :attrs :x) (-> active-page :attrs :y)])
-          centroid (if (not= (:tag el) :page) (mat/add page-pos centroid) centroid)]
+          centroid (if-not (= (:tag el) :page)
+                     (mat/add page-pos centroid)
+                     centroid)]
       [point-of-interest centroid
        ^{:key (str (:id el) "-centroid-title")}
        [:title "Centroid"]])))

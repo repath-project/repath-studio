@@ -1,6 +1,6 @@
 (ns renderer.utils.local-storage
   "Interceptor that persists part of app-db to local storage
-   SEE https://github.com/akiroz/re-frame-storage"
+   SEE: https://github.com/akiroz/re-frame-storage"
   (:require
    [akiroz.re-frame.storage :refer [persist-db-keys]]))
 

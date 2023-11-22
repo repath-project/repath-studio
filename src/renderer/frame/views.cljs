@@ -17,8 +17,8 @@
 (defn inner-component
   "We need access to the iframe's window to add the mouse move listener.
    This is required in order to track mouse movement outside of our canvas.
-   SEE https://github.com/ryanseddon/react-frame-component#accessing-the-iframes-window-and-document
-   SEE https://github.com/reagent-project/reagent/blob/master/doc/ReactFeatures.md#function-components"
+   SEE: https://github.com/ryanseddon/react-frame-component#accessing-the-iframes-window-and-document
+   SEE: https://github.com/reagent-project/reagent/blob/master/doc/ReactFeatures.md#function-components"
   []
   (let [frame-window (.-window (useFrame))]
     (ra/create-class
@@ -35,7 +35,7 @@
       :reagent-render #()})))
 
 (defn markup
-  "SEE https://github.com/ryanseddon/react-frame-component#initialcontent"
+  "SEE: https://github.com/ryanseddon/react-frame-component#initialcontent"
   []
   [:html
    [:head]
@@ -64,8 +64,8 @@
 (defn main
   "Our canvas is wrapped within an iframe element that hosts anything 
    that needs to be rendered.
-   SEE https://github.com/ryanseddon/react-frame-component
-   SEE https://medium.com/@ryanseddon/rendering-to-iframes-in-react-d1cb92274f86"
+   SEE: https://github.com/ryanseddon/react-frame-component
+   SEE: https://medium.com/@ryanseddon/rendering-to-iframes-in-react-d1cb92274f86"
   []
   (let [ref (react/createRef)]
     (ra/create-class
@@ -84,7 +84,7 @@
              ;; This is a different browsing context inside an iframe.
              ;; We need to simulate the events to the parent window.
              on-keyboard-event (fn [e]
-                                 ;; TODO use re-pressed :prevent-default-keys
+                                 ;; TODO: use re-pressed :prevent-default-keys
                                  (.preventDefault e)
                                  (.dispatchEvent js/window.parent.document
                                                  (js/KeyboardEvent. (.-type e)

@@ -16,16 +16,16 @@
 (derive :symbol ::tools/container)
 
 (defmethod tools/bounds ::tools/container
-  [element elements]
-  (let [children (vals (select-keys elements (:children element)))]
+  [el elements]
+  (let [children (vals (select-keys elements (:children el)))]
     (tools/elements-bounds elements children)))
 
 (defmethod tools/render ::tools/container
   [{:keys [children tag attrs]}]
   (let [child-elements @(rf/subscribe [:element/filter-visible children])]
-    [tag attrs (map (fn [element]
-                      ^{:key (:key element)}
-                      [tools/render element])
+    [tag attrs (map (fn [el]
+                      ^{:key (:key el)}
+                      [tools/render el])
                     child-elements)]))
 
 (defmethod tools/render-to-string ::tools/container

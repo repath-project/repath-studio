@@ -32,4 +32,4 @@
   (vec (as-> points p
          (str/triml p)
          (str/split p #"\s+")
-         (partition 2 p))))
+         (partition 2 p)))) ; OPTIMIZE

@@ -67,7 +67,7 @@
     [view {:style [:repl-item :output-item :error-item]}
      message
      (when underlying
-       ;; TODO also show stack?
+       ;; TODO: also show stack?
        [text :underlying-error (.-message underlying)])]))
 
 (defmethod repl-item :output

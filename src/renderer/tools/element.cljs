@@ -25,7 +25,7 @@
   [db]
   (let [temp-element (get-in db [:documents (:active-document db) :temp-element])]
     (-> db
-        (element-handlers/create)
+        element-handlers/create
         (history/finalize (str "Create " (name (:tag temp-element))))
         (assoc :cursor "crosshair"))))
 
@@ -33,8 +33,8 @@
   "Experimental way of getting the bounds of uknown or complicated elements 
    using the getBBox method.
    https://developer.mozilla.org/en-US/docs/Web/API/SVGGraphicsElement/getBBox"
-  [element]
-  (let [bounds (.getBBox element)
+  [el]
+  (let [bounds (.getBBox el)
         x1 (.-x bounds)
         y1 (.-y bounds)
         x2 (+ x1 (.-width bounds))
@@ -119,8 +119,8 @@
               content]))])})))
 
 (defmethod tools/render ::tools/element
-  [{:keys [children] :as element}]
+  [{:keys [children] :as el}]
   (let [child-elements @(rf/subscribe [:element/filter-visible children])
         state @(rf/subscribe [:state])
         zoom @(rf/subscribe [:document/zoom])]
-    [render-to-dom element child-elements (= state :default) zoom]))
+    [render-to-dom el child-elements (= state :default) zoom]))

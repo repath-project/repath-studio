@@ -24,14 +24,14 @@
         [:div "Hold " [:strong "Ctrl"] " to restrict direction."]])))
 
 (defmethod tools/mouse-down :edit
-  [db _ element]
-  (assoc db :clicked-element element))
+  [db _ el]
+  (assoc db :clicked-element el))
 
 (defmethod tools/mouse-move :edit
-  [db _ element]
+  [db _ el]
   (-> db
-      (elements/clear-hovered)
-      (elements/hover (:key element))))
+      elements/clear-hovered
+      (elements/hover (:key el))))
 
 (defmethod tools/drag-start :edit
   [db]

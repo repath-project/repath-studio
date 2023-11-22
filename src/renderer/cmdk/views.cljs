@@ -19,9 +19,9 @@
       [comp/shortcuts action]]]))
 
 (defn group
-  "TODO recur groups"
   [{:keys [label items key]}]
   ^{:key key}
+  ;; TODO: recur groups
   [:> Command/CommandGroup
    #_[:div.px-3.py-2.text-muted.uppercase.font-bold
       {:style {:font-size "10px"}}

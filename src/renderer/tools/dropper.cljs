@@ -14,7 +14,7 @@
 
 (defmethod tools/activate :dropper
   [db]
-  ;; FIXME side effect within db handler
+  ;; REVIEW: side effect within db handler
   (if (.-EyeDropper js/window)
     (do (-> (js/EyeDropper.)
             (.open)
@@ -27,5 +27,5 @@
                       (rf/dispatch [:set-tool :select]))))
         (handlers/set-message db [:div "Click anywhere to pick a color."]))
     (-> db
-        (update :notifications conj "Your browser does not support the EyeDropper API")
+        (update :notifications conj "Your browser does not support the EyeDropper API.")
         (tools/set-tool :select))))

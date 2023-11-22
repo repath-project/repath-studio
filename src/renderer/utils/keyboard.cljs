@@ -6,7 +6,7 @@
    [goog.events KeyCodes]))
 
 (def key-codes
-  "SEE https://google.github.io/closure-library/api/goog.events.KeyCodes.html"
+  "SEE: https://google.github.io/closure-library/api/goog.events.KeyCodes.html"
   (js->clj KeyCodes))
 
 (def key-chars
@@ -233,7 +233,7 @@
                            :shiftKey true}]})
 
 (defn event-handler
-  "SEE https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/"
+  "SEE: https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/"
   [e]
   (rf/dispatch-sync [:keyboard-event {:target (.-target e)
                                       :type (keyword (.-type e))

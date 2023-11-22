@@ -188,7 +188,7 @@
                                             ::randomness
                                             ::size]))]
     (-> (.svgPath blobs (clj->js options))
-        (svgpath)
+        svgpath
         (.translate (units/unit->px (::x attrs)) (units/unit->px (::y attrs)))
         (.toString))))
 
@@ -208,7 +208,7 @@
         page-pos (mapv units/unit->px
                        [(-> active-page :attrs :x)
                         (-> active-page :attrs :y)])
-        [x1 y1] (if (not= (:tag element) :page)
+        [x1 y1] (if-not (= (:tag element) :page)
                   (mat/add page-pos [x y])
                   [x y])
         [x2 y2] (mat/add [x1 y1] size)]

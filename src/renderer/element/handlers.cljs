@@ -367,12 +367,12 @@
       (page? element)
       (set-active-page key))))
 
+;; TODO: Handle child elements
 (defn create
-  "TODO Handle child elements"
   ([db]
    (-> db
        (create (get-temp db))
-       (clear-temp)))
+       clear-temp))
   ([db elements]
    (let [active-page (active-page db)
          page? (page? elements)
@@ -387,7 +387,7 @@
 
 (defn bool-operation
   [db operation]
-  (let [selected-elements (selected db) ; TODO sort elements by visibily index
+  (let [selected-elements (selected db) ; TODO: sort elements by visibily index
         attrs (-> selected-elements first tools/->path :attrs)
         new-path (reduce (fn [path element]
                            (let [path-a (Path. path)
@@ -402,7 +402,7 @@
                          (:d attrs)
                          (rest selected-elements))]
     (-> db
-        (delete)
+        delete
         (create {:type :element
                  :tag :path
                  :attrs (merge attrs {:d new-path})}))))
@@ -436,7 +436,7 @@
 (defn duplicate
   [db offset]
   (-> db
-      (duplicate-in-place)
+      duplicate-in-place
       (translate offset)))
 
 (defn animate
@@ -449,19 +449,19 @@
 (defn paste-styles
   [{copied-elements :copied-elements :as db}]
   (if (= 1 (count copied-elements))
-    ;; TODO merge attributes from multiple selected elements
+    ;; TODO: Merge attributes from multiple selected elements.
     (let [attrs (:attrs (first copied-elements))]
       (update-selected-by
        db
        (fn [elements element]
          (let [key (:key element)
-               ;; Copy all presentation attributes except transform
-               ;; SEE https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/Presentation
+               ;; Copy all presentation attributes except transform.
+               ;; SEE: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/Presentation
                style-attrs (-> tools/svg-spec
                                :attributes
                                :presentation
-                               (dissoc  :transform)
-                               (keys))]
+                               (dissoc :transform)
+                               keys)]
            (assoc-in
             elements
             [key]
@@ -495,7 +495,7 @@
   (reduce (fn [db key]
             (set-parent db key (first (selected-keys db))))
           (-> db
-              (deselect-all)
+              deselect-all
               (create-element (:key (active-page db)) {:tag :g}))
           (selected-keys db)))
 

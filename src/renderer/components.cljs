@@ -73,15 +73,16 @@
    [renderer.components/icon icon]])
 
 (defn resizer
-  [key direction]
+  [k direction]
   [:div.resizer
    [:div.resize-handler
     {:draggable true
      :on-drag-over #(.preventDefault %)
-     :on-drag-start #(do (.setDragImage (.-dataTransfer %)
-                                        (.createElement js/document "img")
-                                        0 0)
-                         (rf/dispatch-sync [:panel/set-drag key direction]))
+     :on-drag-start (fn [e]
+                      (.setDragImage (.-dataTransfer e)
+                                     (.createElement js/document "img")
+                                     0 0)
+                      (rf/dispatch-sync [:panel/set-drag k direction]))
      :on-drag-end #(rf/dispatch-sync [:panel/clear-drag])}]])
 
 (defn context-menu-item

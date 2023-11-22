@@ -8,8 +8,9 @@
 
 (defn drip [color]
   [:div.color-drip {:key (keyword (str color))
-                    :on-click #(do (rf/dispatch [:document/set-fill color])
-                                   (rf/dispatch [:element/set-attribute :fill color]))
+                    :on-click (fn []
+                                (rf/dispatch [:document/set-fill color])
+                                (rf/dispatch [:element/set-attribute :fill color]))
                     :style {:background-color color}}
    (when (= color "transparent")
      [:div.level-3.text-error.relative
@@ -59,8 +60,9 @@
       {:title (t [:color/swap "Swap fill with stroke"])
        :style {:width "21px"
                :background "transparent"}
-       :on-click #(do (.stopPropagation %)
-                      (rf/dispatch [:document/swap-colors]))}
+       :on-click (fn [e]
+                   (.stopPropagation e)
+                   (rf/dispatch [:document/swap-colors]))}
       [renderer.components/icon "swap-horizontal"]]
 
      [:> Popover/Root {:modal true}

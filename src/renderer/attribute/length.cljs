@@ -27,14 +27,15 @@
 (defmethod hierarchy/form-element ::length
   [k v disabled? initial]
   [:div.flex.w-full
-   [views/form-input {:key k
-                      :value v
-                      :disabled? disabled?
-                      :placeholder (if v initial "multiple")
-                      :on-wheel (fn [event]
-                                  (if (pos? (.-deltaY event))
-                                    (rf/dispatch [:element/dec-attribute k])
-                                    (rf/dispatch [:element/inc-attribute k])))}]
+   [views/form-input
+    {:key k
+     :value v
+     :disabled? disabled?
+     :placeholder (if v initial "multiple")
+     :on-wheel (fn [event]
+                 (if (pos? (.-deltaY event))
+                   (rf/dispatch [:element/dec-attribute k])
+                   (rf/dispatch [:element/inc-attribute k])))}]
    [:div.flex {:style {:width "54px"}}
     [:button.button.ml-px.level-2.text-muted
      {:style {:width "26px" :height "26px"}

@@ -51,8 +51,9 @@
 
 (defmethod tools/translate :path
   [element [x y]]
-  (assoc-in element [:attrs :d] (-> (:d (:attrs element))
-                                    (svgpath)
+  (assoc-in element [:attrs :d] (-> (:attrs element)
+                                    :d
+                                    svgpath
                                     (.translate x y)
                                     (.toString))))
 

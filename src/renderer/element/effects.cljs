@@ -34,7 +34,7 @@
    (let [selected-elements (element-handlers/selected db)
          text-html (elements->string selected-elements)]
      {:db (-> db
-              (element-handlers/copy)
-              (element-handlers/delete)
+              element-handlers/copy
+              element-handlers/delete
               (history/finalize "Cut selection"))
       :clipboard-write [text-html]})))

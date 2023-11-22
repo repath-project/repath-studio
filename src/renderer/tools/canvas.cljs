@@ -52,9 +52,9 @@
            :id "canvas"
            :style {:background (:fill attrs)
                    :outline "none"}}
-     (map (fn [element]
-            ^{:key (str (:key element))}
-            [tools/render element])
+     (map (fn [el]
+            ^{:key (str (:key el))}
+            [tools/render el])
           child-elements)
 
      [:defs
@@ -63,9 +63,9 @@
            filters/accessibility)]
 
      (when select?
-       (map (fn [element]
-              ^{:key (str (:key element) "-bounds")}
-              [overlay/bounding-box (tools/adjusted-bounds element elements)])
+       (map (fn [el]
+              ^{:key (str (:key el) "-bounds")}
+              [overlay/bounding-box (tools/adjusted-bounds el elements)])
             hovered-or-selected))
 
      (when (and bounds select?)
@@ -79,12 +79,12 @@
 
      (when (or (= tool :edit)
                (= primary-tool :edit))
-       (map (fn [element]
-              ^{:key (str (:key element) "-edit-points")}
+       (map (fn [el]
+              ^{:key (str (:key el) "-edit-points")}
               [:g
-               [tools/render-edit element]
-               ^{:key (str (:key element) "-centroid")}
-               [overlay/centroid element]])
+               [tools/render-edit el]
+               ^{:key (str (:key el) "-centroid")}
+               [overlay/centroid el]])
             selected-elements))
 
      [tools/render temp-element]

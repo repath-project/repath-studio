@@ -73,7 +73,7 @@
         elements (el/elements db)
         parrent-page-attrs (:attrs (el-utils/parent-page elements element))
         db (pan-to-bounds db (tools/bounds element elements))]
-    (if (not (el/page? element))
+    (if-not (el/page? element)
       (pan db [(:x parrent-page-attrs)
                (:y parrent-page-attrs)])
       db)))

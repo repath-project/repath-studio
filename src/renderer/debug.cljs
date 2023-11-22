@@ -14,7 +14,7 @@
   []
   (into [:div.absolute.top-1.left-2.pointer-events-none
          {:style {:color "#555"}}]
-        (map (fn [[label value]] [:div [:strong.mr-1 label] value])
+        (map (fn [[label v]] [:div [:strong.mr-1 label] v])
              [["Content rect"
                @(rf/subscribe [:content-rect])]
               ["Viewbox"

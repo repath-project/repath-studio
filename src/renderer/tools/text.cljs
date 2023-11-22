@@ -76,7 +76,7 @@
         page-pos (mapv units/unit->px
                        [(-> active-page :attrs :x)
                         (-> active-page :attrs :y)])
-        [x y] (if (not= (:tag element) :page)
+        [x y] (if-not (= (:tag element) :page)
                 (mat/add page-pos [x y])
                 [x y])]
     [:foreignObject {:x (- x 2)
@@ -119,7 +119,7 @@
   (.textToPath js/window.api
                (.-path (first (.findFonts
                                js/window.api
-                               ;; TODO Getting the computed styles might safer
+                               ;; TODO: Getting the computed styles might safer
                                #js {:family (:font-family attrs)
                                     :weight (js/parseInt (:font-weight attrs))
                                     :italic (= (:font-style attrs)

@@ -27,7 +27,7 @@
  :theme/cycle-mode
  (fn [{:keys [db]} [_]]
    (let [mode (case (-> db :theme :mode)
-                ;; TODO system mode
+                ;; TODO: system mode
                 :dark :light
                 :light :dark)]
      {:dispatch [:theme/set-mode mode]})))

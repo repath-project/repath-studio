@@ -114,7 +114,7 @@
      (case (:type e)
        :pointermove
        (-> (if (and (significant-movement? mouse-pos mouse-offset)
-                    (not (= (:buttons e) 2)))
+                    (not= (:buttons e) 2))
              (cond-> db
                (not= tool :pan)
                (frame-handlers/pan-out-of-canvas content-rect

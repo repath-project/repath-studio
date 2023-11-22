@@ -32,7 +32,7 @@
   (merge (replumb/options
           :browser
           ["js/bootstrap/src"]
-          ;; TODO figure out file loading
+          ;; TODO: figure out file loading
           #_(fn [& a] nil)
           fetch-file!)
          {:warning-as-error true
@@ -85,7 +85,7 @@ cljs.js/*load-fn*
   (binding [cljs.tools.reader/*data-readers* tags/*cljs-data-readers*]
     (let [rr (string-push-back-reader text)
           form (cljs.tools.reader/read rr)
-          ;; TODO this is a bit dependent on tools.reader internals...
+          ;; TODO: this is a bit dependent on tools.reader internals...
           s-pos (.-s-pos (.-rdr ^js rr))]
       [form s-pos])))
 
@@ -103,14 +103,14 @@ cljs.js/*load-fn*
         ;; (js/console.log "evaled" [success? result has-more?])
         (if-not success?
           (cb success? result)
-          ;; TODO should I log the result if it's not the end?
+          ;; TODO: should I log the result if it's not the end?
           (if has-more?
             (run-repl-multi remainder opts cb)
             (cb success? result))))
      source)))
 
 ;; Trying to get expressions + statements to play well together
-;; TODO is this a better way? The `do' stuff seems to work alright ... although
+;; TODO: is this a better way? The `do' stuff seems to work alright ... although
 ;; it won't work if there are other `ns' statements inside there...
 #_(defn run-repl-experimental* [text opts cb]
     (let [fixed (make-last-expr-set-val text "last_repl_value")]
@@ -126,7 +126,7 @@ cljs.js/*load-fn*
             form (cljs.tools.reader/read rr)
             is-ns (and (sequential? form)
                        (= 'ns (first form)))
-          ;; TODO this is a bit dependent on tools.reader internals...
+          ;; TODO: this is a bit dependent on tools.reader internals...
             s-pos (.-s-pos (.-rdr ^js rr))]
       ;; (js/console.log is-ns form s-pos)
         (if-not is-ns
@@ -238,11 +238,11 @@ cljs.js/*load-fn*
         prefix #(str "js/" (str/join "." (conj (vec (butlast parts)) %)))
         possibles (js-attrs (reduce aget js/window (butlast parts)))]
     (->> possibles
-         (filter #(not (= -1 (.indexOf % completing))))
+         (filter #(not= -1 (.indexOf % completing)))
          (sort (partial compare-completion text))
          (map #(-> [nil (prefix %) (prefix %)])))))
 
-;; TODO fuzzy-match if there are no normal matches
+;; TODO: fuzzy-match if there are no normal matches
 (defn cljs-completion
   "Tab completion. Copied w/ extensive modifications from replumb.repl/process-apropos."
   [text]
@@ -250,7 +250,7 @@ cljs.js/*load-fn*
                          (.split text "/")
                          [nil text])
         matches? #(and
-                   ;; TODO find out what these t_cljs$core things are... seem to be nil
+                   ;; TODO: find out what these t_cljs$core things are... seem to be nil
                    (= -1 (.indexOf (str %) "t_cljs$core"))
                    (< -1 (.indexOf (str %) text)))
         current-ns (replumb.repl/current-ns)
@@ -277,7 +277,7 @@ cljs.js/*load-fn*
                   (map #(-> [% (str %) (replace-name %) (name %)]))
                   (sort-by #(get % 3) (partial compare-completion text)))]
     (vec (concat
-          ;; TODO make this configurable
+          ;; TODO: make this configurable
           (take 75 defs)
           (map
            #(-> [% (str %) (str %)])

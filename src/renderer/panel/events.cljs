@@ -39,8 +39,7 @@
                          current-size
                          ((if (contains? #{:left :right} direction) first second) offset))]
        (cond-> db
-         (or (and (> updated-size min-width)
-                  (< updated-size max-width))
+         (or (< min-width updated-size max-width)
              (not (-> db :panel-state :mouse-pos)))
          (assoc-in [:panel-state :mouse-pos] mouse-pos)
 

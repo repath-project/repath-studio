@@ -127,10 +127,11 @@
 
 (defn points->path
   [points options]
-  (-> (clj->js points)
+  (-> points
+      clj->js
       (getStroke (clj->js options))
-      (js->clj)
-      (get-svg-path-from-stroke)))
+      js->clj
+      get-svg-path-from-stroke))
 
 (defmethod tools/render :brush
   [{:keys [attrs] :as element}]
@@ -150,8 +151,8 @@
   [{:keys [attrs]}]
   (-> (::points attrs)
       (points->path (select-keys attrs options))
-      (svg-path-bbox)
-      (js->clj)))
+      svg-path-bbox
+      js->clj))
 
 (defmethod tools/translate :brush
   [element [x y]]
@@ -162,7 +163,7 @@
 (defmethod tools/drag-end :brush
   [db]
   (-> db
-      (elements/create)
+      elements/create
       (history/finalize (str "Draw line"))))
 
 (defmethod tools/path :brush

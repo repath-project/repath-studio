@@ -42,7 +42,7 @@
 
 (def view (partial better-el :div view-style))
 (def text (partial better-el :span text-style))
-; TODO have the button also stop-propagation
+; TODO: have the button also stop-propagation
 #_(defn hoverable [_config & _children]
     (let [hovered (r/atom false)]
       (fn [{:keys [style hover-style el props]}
@@ -52,7 +52,7 @@
                     :style (if @hovered
                              (merge style hover-style)
                              style)
-                    :on-mouse-over #(do (reset! hovered true) nil)
-                    :on-mouse-out #(do (reset! hovered false) nil))]
+                    :on-mouse-over (fn [] (reset! hovered true) nil)
+                    :on-mouse-out (fn [] (reset! hovered false) nil))]
 
          children))))

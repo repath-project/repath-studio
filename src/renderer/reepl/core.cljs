@@ -47,7 +47,7 @@
                          :flex-direction :row
                          :background-color "#eef"
                          :flex-wrap :wrap}
-   :completion-item {;; :cursor :pointer TODO make these clickable
+   :completion-item {;; :cursor :pointer TODO: make these clickable
                      :padding "3px 5px 3px"}
    :completion-selected {:background-color "#eee"}
    :completion-active {:background-color "#aaa"}
@@ -80,7 +80,7 @@
     (catch js/Error _
       false)))
 
-;; TODO these should probably go inside code-mirror.cljs? They are really
+;; TODO: these should probably go inside code-mirror.cljs? They are really
 ;; coupled to CodeMirror....
 (def default-cm-opts
   {:should-go-up
@@ -94,7 +94,7 @@
            last-line (.lastLine inst)]
        (= last-line (.-line pos))))
 
-   ;; TODO if the cursor is inside a list, and the function doesn't have enought
+   ;; TODO: if the cursor is inside a list, and the function doesn't have enought
    ;; arguments yet, then return false
    ;; e.g. (map |) <- map needs at least one argument.
    :should-eval
@@ -178,7 +178,7 @@
    :hist-pos 0
    :history [""]})
 
-;; TODO is there a macro or something that could do this cleaner?
+;; TODO: is there a macro or something that could do this cleaner?
 (defn make-handlers [state]
   {:add-input (partial swap! state handlers/add-input)
    :add-result (partial swap! state handlers/add-result)
@@ -239,10 +239,10 @@
         (when @docs [docs-view @docs])
         [completion-list
          @complete-atom
-        ;; TODO this should also replace the text....
+        ;; TODO: this should also replace the text....
          identity
          #_(swap! complete-atom assoc :pos % :active true)]
-        (let [_items @items] ; TODO This needs to be removed
+        (let [_items @items] ; TODO: This needs to be removed
           [repl-input
            (subs/current-text state)
            submit

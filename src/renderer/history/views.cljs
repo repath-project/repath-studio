@@ -5,7 +5,11 @@
 
 (defn select-options
   [history-list]
-  (map-indexed (fn [index step] ^{:key (str "history-" index)} [:option {:key (str (:index step)) :value (inc index)} (str (:explanation step))]) history-list))
+  (map-indexed (fn [index step]
+                 ^{:key index}
+                 [:option {:key (str (:index step))
+                           :value (inc index)} (str (:explanation step))])
+               history-list))
 
 
 (defn tree
@@ -16,7 +20,10 @@
        [:div.p-1
         step-count
         (loop [tree (zip/root @(rf/subscribe [:document/history]))]
-          (map (fn [node] (if (and (zip/branch? (zip/vector-zip node)) (not (zip/end? node)))
-                            [:div "dfdf"]
-                            [:div {:style {:color (str "hsla(" (+ (* (/ 100 step-count) (:index (meta node))) 20) ",40%,60%,1)")}}
-                             (:explanation (meta node)) (:index (meta node))])) tree))])])
+          (map (fn [node]
+                 (if (and (zip/branch? (zip/vector-zip node))
+                          (not (zip/end? node)))
+                   [:div "dfdf"]
+                   [:div
+                    {:style {:color (str "hsla(" (+ (* (/ 100 step-count) (:index (meta node))) 20) ",40%,60%,1)")}}
+                    (:explanation (meta node)) (:index (meta node))])) tree))])])

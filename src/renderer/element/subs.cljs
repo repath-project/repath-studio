@@ -111,7 +111,7 @@
                  (sort-by (fn [[k _]]
                             (-> (first selected-elements)
                                 :tag
-                                (tools/properties)
+                                tools/properties
                                 :attrs
                                 (.indexOf k)))
                           attrs))]

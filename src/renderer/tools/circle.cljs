@@ -44,8 +44,8 @@
                       (hierarchy/update-attr :cy + y)))
 
 (defmethod tools/scale :circle
-  [element [x y] handler]
-  (cond-> element
+  [el [x y] handler]
+  (cond-> el
     (contains? #{:middle-right} handler)
     (-> (hierarchy/update-attr :cx + (/ x 2))
         (hierarchy/update-attr :r + (/ x 2)))
@@ -83,10 +83,10 @@
                    "z"])))
 
 (defmethod tools/edit :circle
-  [element [x _y] handler]
+  [el [x _y] handler]
   (case handler
-    :r (hierarchy/update-attr element :r #(abs (+ % x)))
-    element))
+    :r (hierarchy/update-attr el :r #(abs (+ % x)))
+    el))
 
 (defmethod tools/render-edit :circle
   [{:keys [attrs key]}]

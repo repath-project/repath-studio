@@ -82,11 +82,11 @@
                  (.preventDefault e)
                  (rf/dispatch [:element/set-parent (-> (.-dataTransfer e)
                                                        (.getData "key")
-                                                       (keyword)) key]))
+                                                       keyword) key]))
       :on-click (fn [e]
                   (.stopPropagation e)
                   (rf/dispatch [:element/select (.-ctrlKey e) el]))
-      :style {:padding-left (when (not page?)
+      :style {:padding-left (when-not page?
                               (- (* depth collapse-button-width)
                                  (if (seq children) collapse-button-width 0)))}}
 

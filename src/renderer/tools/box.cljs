@@ -43,30 +43,30 @@
         (hierarchy/update-attr :height - y))))
 
 (defmethod tools/edit ::tools/element
-  [element [x y] handler]
+  [el [x y] handler]
   (case handler
     :position
-    (-> element
+    (-> el
         (hierarchy/update-attr :width #(max 0 (- % x)))
         (hierarchy/update-attr :height #(max 0 (- % y)))
         (tools/translate [x y]))
 
     :size
-    (-> element
+    (-> el
         (hierarchy/update-attr :width #(max 0 (+ % x)))
         (hierarchy/update-attr :height #(max 0 (+ % y))))
 
-    element))
+    el))
 
 (defmethod tools/render-edit ::tools/box
-  [{:keys [attrs key] :as element}]
+  [{:keys [attrs key] :as el}]
   (let [{:keys [x y width height]} attrs
         [x y width height] (mapv units/unit->px [x y width height])
         active-page @(rf/subscribe [:element/active-page])
         page-pos (mapv units/unit->px
                        [(-> active-page :attrs :x)
                         (-> active-page :attrs :y)])
-        [x y] (if (not= (:tag element) :page)
+        [x y] (if-not (= (:tag el) :page)
                 (mat/add page-pos [x y])
                 [x y])]
     [:g {:key :edit-handlers}

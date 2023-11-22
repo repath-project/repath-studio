@@ -19,7 +19,7 @@
 (deftest test-match-unit
   (testing "match unit"
     (is (= (units/match-unit "5px") "px"))
-    ;; TODO The following case should not work. We need to adjust the regex.
+    ;; TODO: The following case should not work. We need to adjust the regex.
     (is (= (units/match-unit "5 px") "px"))
     (is (= (units/match-unit "5454px") "px"))
     (is (= (units/match-unit "px") "px"))

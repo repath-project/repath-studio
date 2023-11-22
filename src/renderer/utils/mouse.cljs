@@ -18,14 +18,14 @@
    https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent
    
    Then dispathces the corresponding event.
-   SEE https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/
+   SEE: https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/
    
    Although the fps might drop because synced dispatch blocks the rendering, 
    the end result appears to be more responsive because it's synced with the 
    mouse movement."
   [e el]
   (.stopPropagation e)
-  ;; Disable native zoom on canvas
+  ;; Disable native zoom on canvas.
   (when (and (.-ctrlKey e) (.-deltaY e))
     (.preventDefault e))
 

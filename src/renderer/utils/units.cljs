@@ -14,7 +14,7 @@
             :mm (/ ppi 25.4)
             :pt (/ ppi 72)
             :pc (/ ppi 6)
-            ;; TODO Find an agnostix way to handle percentages
+            ;; TODO: Find an agnostix way to handle percentages
             :% 1})
 
 (defn unit->key

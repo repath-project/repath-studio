@@ -83,7 +83,7 @@
 (defmethod tools/mouse-move :select
   [db _e el]
   (-> db
-      (elements/clear-hovered)
+      elements/clear-hovered
       (elements/hover (:key el))
       (assoc :cursor (if el "move" "default"))))
 
@@ -108,7 +108,7 @@
 (defmethod tools/deactivate :select
   [db]
   (-> db
-      (elements/clear-hovered)
+      elements/clear-hovered
       (elements/clear-ignored)))
 
 (defn select-rect
@@ -175,7 +175,7 @@
 (defmethod tools/drag-end :select
   [{:keys [state adjusted-mouse-offset] :as db} e]
   (-> (case state
-        :select (-> (if (not (mouse/multiselect? e))
+        :select (-> (if-not (mouse/multiselect? e)
                       (elements/deselect-all db)
                       db)
                     (reduce-by-area (contains? (:modifiers e) :alt)

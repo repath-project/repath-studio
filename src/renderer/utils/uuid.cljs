@@ -2,5 +2,5 @@
 
 (defn generate []
   (-> (random-uuid)
-      (str)
-      (keyword)))
+      str
+      keyword)) ; REVIEW

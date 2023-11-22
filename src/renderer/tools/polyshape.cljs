@@ -79,7 +79,7 @@
   (update-in element
              [:attrs :points]
              #(->> %
-                   (attr-utils/points-to-vec)
+                   attr-utils/points-to-vec
                    (reduce (fn [points point]
                              (conj points
                                    (units/transform + x (first point))
@@ -111,7 +111,7 @@
 
 (defmethod tools/edit ::tools/polyshape
   [element [x y] handler]
-  (if (not (keyword? handler))
+  (if-not (keyword? handler)
     (update-in element
                [:attrs :points]
                #(str/join " "
@@ -121,7 +121,7 @@
                                         (list
                                          (units/transform + x (first point))
                                          (units/transform + y (second point)))))
-                              (flatten))))
+                              flatten)))
     element))
 
 (defmethod tools/bounds ::tools/polyshape

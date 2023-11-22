@@ -29,7 +29,7 @@
 
 (defmethod tools/key-up :zoom
   [db e]
-  (if (not (contains? (:modifiers e) :shift))
+  (if-not (contains? (:modifiers e) :shift)
     (assoc db :cursor "zoom-in")
     db))
 
@@ -59,7 +59,7 @@
         current-zoom (get-in db [:documents active-document :zoom])
         furute-zoom (min width-ratio height-ratio)]
     (-> db
-        (elements/clear-temp)
+        elements/clear-temp
         (assoc :cursor "zoom-in")
         (frame/zoom (if (contains? (:modifiers e) :shift)
                       zoom-factor

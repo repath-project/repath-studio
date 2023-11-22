@@ -21,7 +21,7 @@
                          :z-index 1000
                          :flex-direction :row
                          :flex-wrap :wrap}
-   :completion-item {;; :cursor :pointer TODO make these clickable
+   :completion-item {;; :cursor :pointer TODO: make these clickable
                      :padding "3px 5px"
                      :background-color "var(--level-1)"}
    :completion-selected {:background-color "var(--level-2)"}

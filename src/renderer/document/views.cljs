@@ -75,8 +75,9 @@
    {:key key
     :title "Close document"
     :on-pointer-down #(.stopPropagation %)
-    :on-pointer-up #(do (.stopPropagation %)
-                        (rf/dispatch [:document/close key]))}
+    :on-pointer-up (fn [e]
+                     (.stopPropagation e)
+                     (rf/dispatch [:document/close key]))}
    [comp/icon "times"]])
 
 (defn context-menu

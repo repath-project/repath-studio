@@ -25,7 +25,7 @@
                               (not (.isFullScreen ^js @main-window)))
     "setThemeMode" (set! (.. nativeTheme -themeSource) (.-data args))
     "openRemoteUrl" (.openExternal shell (.-data args))
-    ;; SEE https://www.electronjs.org/docs/api/clipboard#clipboardwritedata-type
+    ;; SEE: https://www.electronjs.org/docs/api/clipboard#clipboardwritedata-type
     "writeToClipboard" (.write clipboard (.-data args))
     "openDocument" (file/open)
     "saveDocument" (file/save (.-data args))
@@ -58,16 +58,17 @@
                        :preload (.join path js/__dirname "preload.js")}}))
 
     (.once ^js @main-window "ready-to-show"
-           #(do (.show ^js @main-window)
-                (.manage win-state ^js @main-window)
-                (send-to-renderer (if (.isMaximized ^js @main-window)
-                                    "windowMaximized"
-                                    "windowUnmaximized"))
-                (send-to-renderer (if (.isFullScreen ^js @main-window)
-                                    "windowEnteredFullscreen"
-                                    "windowLeavedFullscreen"))
-                (.hide ^js @loading-window)
-                (.close ^js @loading-window)))
+           (fn []
+             (.show ^js @main-window)
+             (.manage win-state ^js @main-window)
+             (send-to-renderer (if (.isMaximized ^js @main-window)
+                                 "windowMaximized"
+                                 "windowUnmaximized"))
+             (send-to-renderer (if (.isFullScreen ^js @main-window)
+                                 "windowEnteredFullscreen"
+                                 "windowLeavedFullscreen"))
+             (.hide ^js @loading-window)
+             (.close ^js @loading-window)))
 
     (.loadURL ^js @main-window (if config/debug?
                                  "http://localhost:8080"

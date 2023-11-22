@@ -14,8 +14,8 @@
                  SVG elements."})
 
 (defmethod tools/translate :g
-  [element [_x _y]]
-  element)
+  [el [_x _y]]
+  el) ; TODO
 
 (defmethod tools/render :g
   [{:keys [attrs children] :as element}]

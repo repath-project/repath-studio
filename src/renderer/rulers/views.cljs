@@ -111,9 +111,9 @@
              (let [adjusted-step (* zoom step)
                    font-size 9
                    vertical? (= orientation :vertical)
-                   text (-> (if vertical? (+ step y) (+ step x))
-                            (Math/round)
-                            (str))]
+                   text (-> (+ step (if vertical? y x))
+                            Math/round
+                            str)]
                (cond
                  (zero? (rem i 10))
                  [:<>

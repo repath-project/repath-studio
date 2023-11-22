@@ -12,7 +12,7 @@
    [clojure.string :as str]
    [reagent.core :as r]))
 
-;; TODO can we avoid the global state modification here?
+;; TODO: can we avoid the global state modification here?
 #_(js/CodeMirror.registerHelper
    "wordChars"
    "clojure"
@@ -103,7 +103,7 @@
    go-back? cm evt]
   (when (and state (or (< 1 (count list))
                        (and (< 0 (count list))
-                            (not (= initial-text (get (first list) 2))))))
+                            (not= initial-text (get (first list) 2)))))
     (.preventDefault evt)
     (let [initial-active (= initial-text (get (first list) 2))
           [active pos] (if active
@@ -112,7 +112,7 @@
           text (if active
                  (get (get list pos) 2)
                  initial-text)]
-      ;; TODO don't replaceRange here, instead watch the state atom and react to
+      ;; TODO: don't replaceRange here, instead watch the state atom and react to
       ;; that.
       (.replaceRange cm text from to)
       (assoc state
@@ -122,7 +122,7 @@
                       :ch (+ (count text)
                              (.-ch from))}))))
 
-;; TODO refactor this to be smaller
+;; TODO: refactor this to be smaller
 (defn code-mirror
   "Create a code-mirror editor that knows a fair amount about being a good
   repl. The parameters:
@@ -130,7 +130,7 @@
   value-atom (reagent atom)
     when this changes, the editor will update to reflect it.
 
-  options (TODO finish documenting)
+  options (TODO: finish documenting)
 
   :style (reagent style map)
     will be applied to the container element
@@ -209,7 +209,7 @@
                    (17 18 91 93)
                    (swap! complete-atom assoc :show-all true)
                    ;; tab
-                   ;; TODO do I ever want to use TAB normally?
+                   ;; TODO: do I ever want to use TAB normally?
                    ;; Maybe if there are no completions...
                    ;; Then I'd move this into cycle-completions?
                    9 (swap! complete-atom
@@ -260,7 +260,7 @@
         (let [node (.-current ref)]
           ((aget codemirror "colorize") #js[node] "clojure")
         ;; Hacky way to remove the default theme class added by CodeMirror.colorize
-        ;; SEE https://codemirror.net/addon/runmode/colorize.js
+        ;; SEE: https://codemirror.net/addon/runmode/colorize.js
           (-> node .-classList (.remove  "cm-s-default"))))
 
       :reagent-render
