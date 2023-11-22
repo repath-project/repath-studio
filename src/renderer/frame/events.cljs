@@ -2,7 +2,7 @@
   (:require
    [re-frame.core :as rf]
    [renderer.frame.handlers :as handlers]
-   [clojure.core.matrix :as matrix]
+   [clojure.core.matrix :as mat]
    [renderer.element.handlers :as el]
    [renderer.utils.units :as units]))
 
@@ -11,7 +11,7 @@
  (fn [{content-rect :content-rect :as db} [_ updated-content-rect]]
    (let [offset (-> (merge-with - content-rect updated-content-rect)
                     (select-keys [:width :height]))
-         pan (matrix/div [(:width offset) (:height offset)] 2)]
+         pan (mat/div [(:width offset) (:height offset)] 2)]
      (-> db
          (assoc :content-rect updated-content-rect)
          (handlers/pan pan)))))

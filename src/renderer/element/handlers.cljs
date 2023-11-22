@@ -7,7 +7,7 @@
    [renderer.utils.vec :as vec]
    [renderer.utils.bounds :as bounds]
    [renderer.attribute.hierarchy :as hierarchy]
-   [clojure.core.matrix :as matrix]
+   [clojure.core.matrix :as mat]
    ["paper" :refer [Path]]))
 
 (defn elements-path [db]
@@ -295,19 +295,19 @@
      (fn [elements element]
        (let [[inner-x1 inner-y1 inner-x2 inner-y2] (tools/bounds element (elements db))
              inner-dimensions (bounds/->dimensions [inner-x1 inner-y1 inner-x2 inner-y2])
-             scale-multiplier (matrix/div inner-dimensions outer-dimensions)
-             translate-multiplier (matrix/div (case handler
-                                                :middle-right [(- inner-x1 x1) 0]
-                                                :middle-left [(- x2 inner-x2) 0]
-                                                :top-middle [0 (- y2 inner-y2)]
-                                                :bottom-middle [0 (- inner-y1 y1)]
-                                                :top-right [(- inner-x1 x1) (- y2 inner-y2)]
-                                                :top-left [(- x2 inner-x2) (- y2 inner-y2)]
-                                                :bottom-right [(- inner-x1 x1) (- inner-y1 y1)]
-                                                :bottom-left [(- x2 inner-x2) (- inner-y1 y1)]) outer-dimensions)]
+             scale-multiplier (mat/div inner-dimensions outer-dimensions)
+             translate-multiplier (mat/div (case handler
+                                             :middle-right [(- inner-x1 x1) 0]
+                                             :middle-left [(- x2 inner-x2) 0]
+                                             :top-middle [0 (- y2 inner-y2)]
+                                             :bottom-middle [0 (- inner-y1 y1)]
+                                             :top-right [(- inner-x1 x1) (- y2 inner-y2)]
+                                             :top-left [(- x2 inner-x2) (- y2 inner-y2)]
+                                             :bottom-right [(- inner-x1 x1) (- inner-y1 y1)]
+                                             :bottom-left [(- x2 inner-x2) (- inner-y1 y1)]) outer-dimensions)]
          (assoc elements (:key element) (-> element
-                                            (tools/scale (matrix/mul offset scale-multiplier) handler)
-                                            (tools/translate (matrix/mul offset translate-multiplier)))))))))
+                                            (tools/scale (mat/mul offset scale-multiplier) handler)
+                                            (tools/translate (mat/mul offset translate-multiplier)))))))))
 
 (defn align
   [db direction]
@@ -318,7 +318,7 @@
            [width height] (bounds/->dimensions [x1 y1 x2 y2])
            parent ((:parent element) elements)
            [parent-x1 parent-y1 parent-x2 parent-y2] (tools/bounds parent (elements db))
-           [parent-width parent-height] (matrix/sub [parent-x2 parent-y2] [parent-x1 parent-y1])]
+           [parent-width parent-height] (mat/sub [parent-x2 parent-y2] [parent-x1 parent-y1])]
        (assoc elements
               (:key element)
               (tools/translate element

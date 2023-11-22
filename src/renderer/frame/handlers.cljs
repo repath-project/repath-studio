@@ -3,7 +3,7 @@
    [renderer.tools.base :as tools]
    [renderer.element.handlers :as el]
    [renderer.element.utils :as el-utils]
-   [clojure.core.matrix :as matrix]
+   [clojure.core.matrix :as mat]
    [renderer.utils.bounds :as bounds]
    [goog.math]))
 
@@ -12,8 +12,8 @@
   (let [zoom (get-in db [:documents active-document :zoom])]
     (update-in db
                [:documents active-document :pan]
-               matrix/add
-               (matrix/div offset zoom))))
+               mat/add
+               (mat/div offset zoom))))
 
 (defn zoom-in-position
   [{:keys [active-document] :as db} factor pos]
@@ -21,9 +21,9 @@
         updated-zoom (goog.math.clamp (* zoom factor) 0.01 100)
         updated-factor (/ updated-zoom zoom)
         pan (get-in db [:documents active-document :pan])
-        updated-pan (matrix/sub (matrix/div pan updated-factor)
-                                (matrix/sub (matrix/div pos updated-factor)
-                                            pos))]
+        updated-pan (mat/sub (mat/div pan updated-factor)
+                             (mat/sub (mat/div pos updated-factor)
+                                      pos))]
     (-> db
         (assoc-in [:documents active-document :zoom] updated-zoom)
         (assoc-in [:documents active-document :pan] updated-pan))))
@@ -31,8 +31,8 @@
 (defn adjust-mouse-pos
   [zoom pan mouse-pos]
   (-> mouse-pos
-      (matrix/div zoom)
-      (matrix/add pan)))
+      (mat/div zoom)
+      (mat/add pan)))
 
 (defn adjusted-mouse-pos
   [{:keys [active-document] :as db} mouse-pos]
@@ -50,19 +50,19 @@
   [{:keys [active-document content-rect] :as db} factor]
   (let [{:keys [zoom pan]} (get-in db [:documents active-document])
         {:keys [width height]} content-rect
-        position (matrix/add pan (matrix/div [width height] 2 zoom))]
+        position (mat/add pan (mat/div [width height] 2 zoom))]
     (zoom-in-position db factor position)))
 
 (defn pan-to-bounds
   [{:keys [active-document content-rect] :as db} bounds]
   (let [zoom (get-in db [:documents active-document :zoom])
         [x1 y1] bounds
-        pan (matrix/add
-             (matrix/div
-              (matrix/sub
+        pan (mat/add
+             (mat/div
+              (mat/sub
                (bounds/->dimensions bounds)
-               (matrix/div [(:width content-rect) (:height content-rect)]
-                           zoom))
+               (mat/div [(:width content-rect) (:height content-rect)]
+                        zoom))
               2)
              [x1 y1])]
     (assoc-in db [:documents active-document :pan] pan)))

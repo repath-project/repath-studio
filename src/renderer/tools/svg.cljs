@@ -3,7 +3,7 @@
   (:require
    [renderer.element.handlers :as elements]
    [renderer.tools.base :as tools]
-   [clojure.core.matrix :as matrix]
+   [clojure.core.matrix :as mat]
    [renderer.utils.units :as units]
    [clojure.string :as str]))
 
@@ -35,8 +35,8 @@
         [x y width height stroke-width-px] (mapv units/unit->px
                                                  [x y width height stroke-width])
         stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)
-        [x y] (matrix/sub [x y]
-                          (/ (if (str/blank? stroke) 0 stroke-width-px) 2))
-        [width height] (matrix/add [width height]
-                                   (if (str/blank? stroke) 0 stroke-width-px))]
+        [x y] (mat/sub [x y]
+                       (/ (if (str/blank? stroke) 0 stroke-width-px) 2))
+        [width height] (mat/add [width height]
+                                (if (str/blank? stroke) 0 stroke-width-px))]
     (mapv units/unit->px [x y (+ x width) (+ y height)])))

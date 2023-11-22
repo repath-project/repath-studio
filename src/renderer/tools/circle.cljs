@@ -6,7 +6,7 @@
    [renderer.element.handlers :as elements]
    [renderer.overlay :as overlay]
    [renderer.attribute.hierarchy :as hierarchy]
-   [clojure.core.matrix :as matrix]
+   [clojure.core.matrix :as mat]
    [renderer.utils.units :as units]
    [re-frame.core :as rf]))
 
@@ -27,9 +27,9 @@
   [{:keys [adjusted-mouse-offset active-document adjusted-mouse-pos] :as db}]
   (let [{:keys [stroke fill]} (get-in db [:documents active-document])
         [offset-x offset-y] adjusted-mouse-offset
-        radius (Math/sqrt (apply + (matrix/pow
-                                    (matrix/sub adjusted-mouse-pos
-                                                adjusted-mouse-offset)
+        radius (Math/sqrt (apply + (mat/pow
+                                    (mat/sub adjusted-mouse-pos
+                                             adjusted-mouse-offset)
                                     2)))
         attrs {:cx offset-x
                :cy offset-y
@@ -96,7 +96,7 @@
         page-pos (mapv
                   units/unit->px
                   [(-> active-page :attrs :x) (-> active-page :attrs :y)])
-        [cx cy] (matrix/add page-pos [cx cy])]
+        [cx cy] (mat/add page-pos [cx cy])]
     [:g
      [overlay/line cx cy (+ cx r) cy]
      [overlay/label (str (units/->fixed r)) [(+ cx (/ r 2)) cy]]

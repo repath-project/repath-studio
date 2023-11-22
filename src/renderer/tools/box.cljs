@@ -7,7 +7,7 @@
    [renderer.attribute.hierarchy :as hierarchy]
    [re-frame.core :as rf]
    [renderer.utils.units :as units]
-   [clojure.core.matrix :as matrix]
+   [clojure.core.matrix :as mat]
    [clojure.string :as str]))
 
 (derive ::tools/box ::tools/element)
@@ -67,7 +67,7 @@
                        [(-> active-page :attrs :x)
                         (-> active-page :attrs :y)])
         [x y] (if (not= (:tag element) :page)
-                (matrix/add page-pos [x y])
+                (mat/add page-pos [x y])
                 [x y])]
     [:g {:key :edit-handlers}
      (map (fn [handler]
@@ -83,8 +83,8 @@
   (let [{:keys [x y width height stroke-width stroke]} attrs
         [x y width height stroke-width-px] (mapv units/unit->px [x y width height stroke-width])
         stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)
-        [x y] (matrix/sub [x y] (/ (if (str/blank? stroke) 0 stroke-width-px) 2))
-        [width height] (matrix/add
+        [x y] (mat/sub [x y] (/ (if (str/blank? stroke) 0 stroke-width-px) 2))
+        [width height] (mat/add
                         [width height]
                         (if (str/blank? stroke) 0 stroke-width-px))]
     (mapv units/unit->px [x y (+ x width) (+ y height)])))

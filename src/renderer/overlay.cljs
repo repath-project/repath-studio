@@ -6,7 +6,7 @@
    [renderer.utils.bounds :as bounds]
    [renderer.utils.units :as units]
    [renderer.tools.base :as tools]
-   [clojure.core.matrix :as matrix]
+   [clojure.core.matrix :as mat]
    [goog.math :as math]))
 
 ;; The iframe is isolated so we don't have access to the css vars of the parent.
@@ -238,7 +238,7 @@
   (when-let [centroid (tools/centroid element)]
     (let [active-page @(rf/subscribe [:element/active-page])
           page-pos (mapv units/unit->px [(-> active-page :attrs :x) (-> active-page :attrs :y)])
-          centroid (if (not= (:tag element) :page) (matrix/add page-pos centroid) centroid)]
+          centroid (if (not= (:tag element) :page) (mat/add page-pos centroid) centroid)]
       [point-of-interest centroid
        ^{:key (str (:id element) "-centroid-title")}
        [:title "Centroid"]])))

@@ -6,7 +6,7 @@
    [renderer.overlay :as overlay]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.units :as units]
-   [clojure.core.matrix :as matrix]
+   [clojure.core.matrix :as mat]
    [clojure.set :as set]
    [renderer.history.handlers :as history]
    [renderer.handlers :as handlers]
@@ -139,7 +139,7 @@
   [{:keys [state
            adjusted-mouse-offset
            adjusted-mouse-pos] :as db} event]
-  (let [offset (matrix/sub adjusted-mouse-pos adjusted-mouse-offset)
+  (let [offset (mat/sub adjusted-mouse-pos adjusted-mouse-offset)
         offset (if (and (contains? (:modifiers event) :ctrl)
                         (not= state :scale))
                  (mouse/lock-direction offset)

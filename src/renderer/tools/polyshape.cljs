@@ -10,7 +10,7 @@
    [renderer.handlers :as handlers]
    [re-frame.core :as rf]
    [clojure.string :as str]
-   [clojure.core.matrix :as matrix]
+   [clojure.core.matrix :as mat]
    [renderer.attribute.utils :as attr-utils]
    ["polylabel" :as polylabel]))
 
@@ -98,7 +98,7 @@
     [:g {:key :edit-handlers}
      (map-indexed (fn [index [x y]]
                     (let [[x y] (mapv units/unit->px [x y])
-                          [x y] (matrix/add page-pos [x y])]
+                          [x y] (mat/add page-pos [x y])]
                       [overlay/square-handler {:key (str index)
                                                :x x
                                                :y y
@@ -156,15 +156,11 @@
   [{{:keys [points]} :attrs}]
   (let [points-v (attr-utils/points-to-vec points)
         points-v (mapv (fn [point] (mapv units/unit->px point)) points-v)]
-    (-> (reduce matrix/add [0 0] points-v)
-        (matrix/div (count points-v)))))
+    (-> (reduce mat/add [0 0] points-v)
+        (mat/div (count points-v)))))
 
 (defmethod tools/poi ::tools/polyshape
   [{{:keys [points]} :attrs}]
   (let [points-v (attr-utils/points-to-vec points)
         points-v (mapv (fn [point] (mapv units/unit->px point)) points-v)]
     (take 2 (polylabel (clj->js [points-v])))))
-
-
-
-

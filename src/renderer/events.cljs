@@ -2,7 +2,7 @@
   (:require
    [re-frame.core :as rf]
    [renderer.tools.base :as tools]
-   [clojure.core.matrix :as matrix]
+   [clojure.core.matrix :as mat]
    [renderer.frame.handlers :as frame-handlers]
    [renderer.handlers :as handlers]
    [renderer.utils.local-storage :as local-storage]
@@ -102,7 +102,7 @@
   [mouse-pos mouse-offset]
   (let [threshold 1]
     (when (and (vector? mouse-pos) (vector? mouse-offset))
-      (> (apply max (map abs (matrix/sub mouse-pos mouse-offset)))
+      (> (apply max (map abs (mat/sub mouse-pos mouse-offset)))
          threshold))))
 
 (rf/reg-event-db

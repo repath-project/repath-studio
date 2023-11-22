@@ -3,7 +3,7 @@
    [renderer.element.handlers :as elements]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.utils.units :as units]
-   [clojure.core.matrix :as matrix]
+   [clojure.core.matrix :as mat]
    [renderer.tools.base :as tools]
    [renderer.utils.bounds :as bounds]
    [renderer.handlers :as handlers]
@@ -77,7 +77,7 @@
                        [(-> active-page :attrs :x)
                         (-> active-page :attrs :y)])
         [x y] (if (not= (:tag element) :page)
-                (matrix/add page-pos [x y])
+                (mat/add page-pos [x y])
                 [x y])]
     [:foreignObject {:x (- x 2)
                      :y (- y 2)

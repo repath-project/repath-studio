@@ -7,7 +7,7 @@
    [renderer.overlay :as overlay]
    [renderer.attribute.hierarchy :as hierarchy]
    [clojure.string :as str]
-   [clojure.core.matrix :as matrix]
+   [clojure.core.matrix :as mat]
    [re-frame.core :as rf]))
 
 (derive :ellipse ::tools/shape)
@@ -50,7 +50,7 @@
 
 (defmethod tools/scale :ellipse
   [element [x y] handler]
-  (let [[x y] (matrix/div [x y] 2)]
+  (let [[x y] (mat/div [x y] 2)]
     (cond-> element
       (contains? #{:bottom-right :top-right :middle-right} handler)
       (-> (hierarchy/update-attr :rx + x)
@@ -73,8 +73,8 @@
   (let [[cx cy rx ry stroke-width-px] (map units/unit->px
                                            [cx cy rx ry stroke-width])
         stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)
-        [rx ry] (matrix/add [rx ry]
-                            (/ (if (str/blank? stroke) 0 stroke-width-px) 2))]
+        [rx ry] (mat/add [rx ry]
+                         (/ (if (str/blank? stroke) 0 stroke-width-px) 2))]
     [(- cx rx) (- cy ry) (+ cx rx) (+ cy ry)]))
 
 (defmethod tools/path :ellipse
@@ -105,7 +105,7 @@
         active-page @(rf/subscribe [:element/active-page])
         page-pos (mapv units/unit->px
                        [(-> active-page :attrs :x) (-> active-page :attrs :y)])
-        [cx cy] (matrix/add page-pos [cx cy])]
+        [cx cy] (mat/add page-pos [cx cy])]
     [:g :edit-handlers
      [overlay/times cx cy]
      [overlay/line cx cy (+ cx rx) cy]

@@ -2,7 +2,7 @@
   (:require
    [renderer.tools.base :as tools]
    [renderer.frame.handlers :as frame]
-   [clojure.core.matrix :as matrix]))
+   [clojure.core.matrix :as mat]))
 
 (derive :pan ::tools/transform)
 
@@ -24,10 +24,8 @@
 
 (defmethod tools/drag :pan
   [db event _]
-  (frame/pan db (matrix/sub (:mouse-pos db) (:mouse-pos event))))
+  (frame/pan db (mat/sub (:mouse-pos db) (:mouse-pos event))))
 
 (defmethod tools/drag-end :pan
   [db]
   (assoc db :cursor "grab"))
-
-

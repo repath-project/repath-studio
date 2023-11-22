@@ -11,7 +11,7 @@
    [renderer.utils.units :as units]
    [renderer.attribute.range :as range]
    [renderer.utils.mouse :as mouse]
-   [clojure.core.matrix :as matrix]
+   [clojure.core.matrix :as mat]
    [renderer.attribute.color :as color]
    ["svg-path-bbox" :as svg-path-bbox]
    ["perfect-freehand" :refer [getStroke]]
@@ -157,7 +157,7 @@
   [element [x y]]
   (update-in element
              [:attrs ::points]
-             #(mapv (fn [point] (matrix/add point [x y 0])) %)))
+             #(mapv (fn [point] (mat/add point [x y 0])) %)))
 
 (defmethod tools/drag-end :brush
   [db]

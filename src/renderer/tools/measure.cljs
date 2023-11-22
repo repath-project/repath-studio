@@ -3,7 +3,7 @@
    [re-frame.core :as rf]
    [renderer.element.handlers :as elements]
    [renderer.overlay :as overlay]
-   [clojure.core.matrix :as matrix]
+   [clojure.core.matrix :as mat]
    [renderer.handlers :as handlers]
    [renderer.tools.base :as tools]
    [renderer.utils.units :as units]
@@ -35,8 +35,8 @@
   [{:keys [adjusted-mouse-offset adjusted-mouse-pos] :as db}]
   (let [[offset-x offset-y] adjusted-mouse-offset
         [pos-x pos-y] adjusted-mouse-pos
-        [adjacent opposite] (matrix/sub adjusted-mouse-offset
-                                        adjusted-mouse-pos)
+        [adjacent opposite] (mat/sub adjusted-mouse-offset
+                                     adjusted-mouse-pos)
         hypotenuse (Math/hypot adjacent opposite)
         attrs {:x1 offset-x
                :y1 offset-y

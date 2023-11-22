@@ -5,7 +5,7 @@
    [renderer.element.handlers :as elements]
    [renderer.history.handlers :as history]
    [renderer.utils.mouse :as mouse]
-   [clojure.core.matrix :as matrix]))
+   [clojure.core.matrix :as mat]))
 
 (derive :edit ::tools/transform)
 
@@ -40,7 +40,7 @@
 (defmethod tools/drag :edit
   [{:keys [adjusted-mouse-offset adjusted-mouse-pos clicked-element] :as db}
    event]
-  (let [mouse-offset (matrix/sub adjusted-mouse-pos adjusted-mouse-offset)
+  (let [mouse-offset (mat/sub adjusted-mouse-pos adjusted-mouse-offset)
         db (history/swap db)
         element-key (:element clicked-element)
         mouse-offset (if (contains? (:modifiers event) :ctrl)

@@ -1,6 +1,6 @@
 (ns renderer.utils.bounds
   (:require
-   [clojure.core.matrix :as matrix]))
+   [clojure.core.matrix :as mat]))
 
 (defn union
   "Calculates the wrapping bounds of bounds."
@@ -10,12 +10,12 @@
 (defn ->dimensions
   "Converts bounds to a [width heigh] vector."
   [[x1 y1 x2 y2]]
-  (matrix/sub [x2 y2] [x1 y1]))
+  (mat/sub [x2 y2] [x1 y1]))
 
 (defn center
   [bounds]
-  (let [[x1 y1 _x2 _y2] bounds] 
-   (matrix/add [x1 y1] (matrix/div (->dimensions bounds) 2))))
+  (let [[x1 y1 _x2 _y2] bounds]
+    (mat/add [x1 y1] (mat/div (->dimensions bounds) 2))))
 
 (defn intersect-bounds?
   "Checks if bounds intersect."

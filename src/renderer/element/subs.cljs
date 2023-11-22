@@ -3,7 +3,7 @@
    [re-frame.core :as rf]
    [renderer.tools.base :as tools]
    [renderer.utils.map :as map]
-   #_[clojure.core.matrix :as matrix]
+   #_[clojure.core.matrix :as mat]
    [clojure.set :as set]
    [goog.color :as color]
    [renderer.attribute.utils :as attr-utils]
@@ -153,7 +153,7 @@
    (fn [elements visible-elements _]
      (reduce (fn [points element]
                (let [[x1 y1 x2 y2] (tools/adjusted-bounds element elements)
-                     [width height] (matrix/sub [x2 y2] [x1 y1])]
+                     [width height] (mat/sub [x2 y2] [x1 y1])]
                  (concat points [[x1 y1]
                                  [x1 y2]
                                  [x1 (+ y1 (/ height 2))]

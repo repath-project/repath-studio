@@ -10,7 +10,7 @@
    [renderer.history.handlers :as history]
    [renderer.handlers :as handlers]
    [re-frame.core :as rf]
-   [clojure.core.matrix :as matrix]))
+   [clojure.core.matrix :as mat]))
 
 (derive :line ::tools/shape)
 
@@ -109,8 +109,8 @@
         page-pos (mapv units/unit->px
                        [(-> active-page :attrs :x)
                         (-> active-page :attrs :y)])
-        [x1 y1] (matrix/add page-pos [x1 y1])
-        [x2 y2] (matrix/add page-pos [x2 y2])]
+        [x1 y1] (mat/add page-pos [x1 y1])
+        [x2 y2] (mat/add page-pos [x2 y2])]
     [:g
      {:key :edit-handlers}
      (map (fn [handler] [overlay/square-handler handler])

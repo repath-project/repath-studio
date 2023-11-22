@@ -2,7 +2,7 @@
   (:require
    [re-frame.core :as rf]
    [renderer.frame.handlers :as handlers]
-   [clojure.core.matrix  :as matrix]))
+   [clojure.core.matrix :as mat]))
 
 (rf/reg-sub
  :frame/viewbox
@@ -11,7 +11,7 @@
  :<- [:content-rect]
  (fn [[zoom pan {:keys [width height]}] _]
    (let [[x y] pan
-         [width height] (matrix/div [width height] zoom)]
+         [width height] (mat/div [width height] zoom)]
      [x y width height])))
 
 (rf/reg-sub

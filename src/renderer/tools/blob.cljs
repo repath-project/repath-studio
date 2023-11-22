@@ -15,7 +15,7 @@
    ["svgpath" :as svgpath]
    ["blobs/v2" :as blobs]
    [goog.math]
-   [clojure.core.matrix :as matrix]))
+   [clojure.core.matrix :as mat]))
 
 (derive ::blob ::tools/custom)
 
@@ -92,13 +92,13 @@
 
 (defmethod tools/drag-start ::blob
   [{:keys [adjusted-mouse-offset
-           active-document 
+           active-document
            adjusted-mouse-pos] :as db}]
   (let [{:keys [stroke fill]} (get-in db [:documents active-document])
         [offset-x offset-y] adjusted-mouse-offset
-        radius (Math/sqrt (apply + (matrix/pow
-                                    (matrix/sub adjusted-mouse-pos
-                                                adjusted-mouse-offset)
+        radius (Math/sqrt (apply + (mat/pow
+                                    (mat/sub adjusted-mouse-pos
+                                             adjusted-mouse-offset)
                                     2)))
         attrs {::x (- offset-x radius)
                ::y (- offset-y radius)
@@ -113,9 +113,9 @@
 (defmethod tools/drag ::blob
   [{:keys [adjusted-mouse-offset adjusted-mouse-pos] :as db}]
   (let [[offset-x offset-y] adjusted-mouse-offset
-        radius (Math/sqrt (apply + (matrix/pow
-                                    (matrix/sub adjusted-mouse-pos
-                                                adjusted-mouse-offset)
+        radius (Math/sqrt (apply + (mat/pow
+                                    (mat/sub adjusted-mouse-pos
+                                             adjusted-mouse-offset)
                                     2)))
         temp (-> (elements/get-temp db)
                  (assoc-in [:attrs ::x] (- offset-x radius))
@@ -177,7 +177,7 @@
 (defmethod tools/centroid ::blob
   [{{:keys [::x ::y ::size]} :attrs}]
   (let [[x y size] (mapv units/unit->px [x y size])]
-   (matrix/add [x y] (/ size 2))))
+    (mat/add [x y] (/ size 2))))
 
 (defmethod tools/path ::blob
   [{:keys [attrs]}]
@@ -209,9 +209,9 @@
                        [(-> active-page :attrs :x)
                         (-> active-page :attrs :y)])
         [x1 y1] (if (not= (:tag element) :page)
-                  (matrix/add page-pos [x y])
+                  (mat/add page-pos [x y])
                   [x y])
-        [x2 y2] (matrix/add [x1 y1] size)]
+        [x2 y2] (mat/add [x1 y1] size)]
     [:<>
      [overlay/line x1 y1 x2 y2]
      [overlay/square-handler

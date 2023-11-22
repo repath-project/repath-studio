@@ -1,7 +1,7 @@
 (ns renderer.panel.events
   (:require
    [re-frame.core :as rf]
-   [clojure.core.matrix :as matrix]
+   [clojure.core.matrix :as mat]
    [renderer.utils.local-storage :as local-storage]))
 
 (rf/reg-event-db
@@ -33,7 +33,7 @@
            max-width 600
            previous-mouse-pos (-> db :panel-state :mouse-pos)
            current-size (-> db :panel key :size)
-           offset (when previous-mouse-pos (matrix/sub previous-mouse-pos mouse-pos))
+           offset (when previous-mouse-pos (mat/sub previous-mouse-pos mouse-pos))
            direction (-> db :panel-state :drag-direction)
            updated-size ((if (contains? #{:right :bottom} direction) + -)
                          current-size

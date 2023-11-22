@@ -2,7 +2,7 @@
   (:require
    [re-frame.core :as rf]
    [clojure.string :as str]
-   [clojure.core.matrix :as matrix]))
+   [clojure.core.matrix :as mat]))
 
 (defn selected-bounds
   [orientation size]
@@ -66,7 +66,7 @@
           {:keys [x y width height]} attrs
           zoom @(rf/subscribe [:document/zoom])
           [pan-x pan-y] @(rf/subscribe [:document/pan])
-          [x y] (matrix/sub [x y] [pan-x pan-y])
+          [x y] (mat/sub [x y] [pan-x pan-y])
           [x y width height] (map #(* % zoom) [x y width height])]
       (if (= orientation :vertical)
         [:rect {:x 0 :y y :width 23 :height height :fill "var(--level-3)"}]
@@ -155,7 +155,7 @@
   [orientation]
   (let [zoom @(rf/subscribe [:document/zoom])
         [x y width height] @(rf/subscribe [:frame/viewbox])
-        [width height] (matrix/add [width height] [x y])
+        [width height] (mat/add [width height] [x y])
         steps-coll @(rf/subscribe [:rulers/steps-coll orientation])
         vertical? (= orientation :vertical)]
     (into [:g]

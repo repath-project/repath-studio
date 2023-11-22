@@ -5,7 +5,7 @@
    [renderer.utils.mouse :as mouse]
    [renderer.overlay :as overlay]
    [renderer.attribute.hierarchy :as hierarchy]
-   [clojure.core.matrix :as matrix]
+   [clojure.core.matrix :as mat]
    [renderer.utils.units :as units]
    [renderer.attribute.angle :as angle]
    ["svg-path-bbox" :as svg-path-bbox]
@@ -108,7 +108,7 @@
         page-pos (mapv
                   units/unit->px
                   [(-> active-page :attrs :x) (-> active-page :attrs :y)])
-        [[cx cy][x1 y1][x2 y2]] (matrix/add page-pos [[cx cy][x1 y1][x2 y2]])
+        [[cx cy] [x1 y1] [x2 y2]] (mat/add page-pos [[cx cy] [x1 y1] [x2 y2]])
         zoom @(rf/subscribe [:document/zoom])]
     [:g
      [overlay/times cx cy]
