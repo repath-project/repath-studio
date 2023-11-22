@@ -3,8 +3,7 @@
    [platform :as platform]
    [re-frame.core :as rf]
    [renderer.components :as comp]
-   [renderer.menubar.views :as menubar]
-   [renderer.status]))
+   [renderer.menubar.views :as menubar]))
 
 (defn window-control-button
   [{:keys [icon action]}]

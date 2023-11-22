@@ -16,7 +16,7 @@
    [renderer.object :as object]
    [renderer.reepl.views :as repl]
    [renderer.rulers.views :as rulers]
-   [renderer.status :as status]
+   [renderer.statusbar :as status-bar]
    [renderer.tools.views :as tools]
    [renderer.tree.views :as tree]
    [renderer.window.views :as win]))
@@ -73,7 +73,7 @@
         (when @(rf/subscribe [:panel/visible? :history])
           [:div.v-scroll.p-1.level-2
            {:style {:flex "0 1 30%"}}])]
-       [status/toolbar]
+       [status-bar/root]
        [history/tree]]
       [command-input]]]))
 

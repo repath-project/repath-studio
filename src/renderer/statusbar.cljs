@@ -1,4 +1,4 @@
-(ns renderer.status
+(ns renderer.statusbar
   (:require
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    ["@radix-ui/react-select" :as Select]
@@ -62,7 +62,7 @@
     :icon "code"
     :action [:panel/toggle :xml]}])
 
-(defn toolbar []
+(defn root []
   (let [zoom @(rf/subscribe [:document/zoom])
         _element-colors @(rf/subscribe [:element/colors])
         filter @(rf/subscribe [:document/filter])]
