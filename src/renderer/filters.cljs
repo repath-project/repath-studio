@@ -13,7 +13,7 @@
             :type "matrix"
             :stdDeviation "2"}}
 
-   ;; SEE: https://github.com/hail2u/color-blindness-emulation
+   ;; https://github.com/hail2u/color-blindness-emulation
    {:id :protanopia
     :tag :feColorMatrix
     :attrs {:in "SourceGraphic"

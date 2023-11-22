@@ -73,7 +73,7 @@
    :cljs-land-style
    (str "filter:invert(1);" (:cljs-land-style (devtools/get-prefs))))
 
-  ;; SEE: https://code.thheller.com/blog/shadow-cljs/2017/10/14/bootstrap-support.html
+  ;; https://code.thheller.com/blog/shadow-cljs/2017/10/14/bootstrap-support.html
   (bootstrap/init repl/st {:path "js/bootstrap" :load-on-init '[user]} bootstrap-cb)
 
   (rf/dispatch-sync [:initialize-db])

@@ -25,7 +25,7 @@
                               (not (.isFullScreen ^js @main-window)))
     "setThemeMode" (set! (.. nativeTheme -themeSource) (.-data args))
     "openRemoteUrl" (.openExternal shell (.-data args))
-    ;; SEE: https://www.electronjs.org/docs/api/clipboard#clipboardwritedata-type
+    ;; https://www.electronjs.org/docs/api/clipboard#clipboardwritedata-type
     "writeToClipboard" (.write clipboard (.-data args))
     "openDocument" (file/open)
     "saveDocument" (file/save (.-data args))

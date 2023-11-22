@@ -23,14 +23,14 @@
 
 (rf/reg-event-db
  :element/preview-property
- (fn [db [_ el-k k v]]
-   (handlers/set-property db el-k k v)))
+ (fn [db [_ el k v]]
+   (handlers/set-property db el k v)))
 
 (rf/reg-event-db
  :element/set-property
- (fn [db [_ el-k k v]]
+ (fn [db [_ el k v]]
    (-> db
-       (handlers/set-property el-k k v)
+       (handlers/set-property el k v)
        (history-handlers/finalize (str "Set " (name k) " to " v)))))
 
 (rf/reg-event-db

@@ -59,24 +59,24 @@
                       (hierarchy/update-attr :y + y)))
 
 (defn set-text-and-select-element
-  [e k]
+  [e el]
   (rf/dispatch [:element/set-property
-                k
+                el
                 :content
                 (str/replace (.. e -target -value) "  " "\u00a0\u00a0")])
   (rf/dispatch [:set-tool :select]))
 
 (defmethod tools/render-edit :text
-  [{:keys [attrs key content] :as element}]
+  [{:keys [attrs key content] :as el}]
   (let [{:keys [fill font-family font-size font-weight]} attrs
-        bounds (tools/bounds element)
+        bounds (tools/bounds el)
         [width height] (bounds/->dimensions bounds)
         [x y] bounds
         active-page @(rf/subscribe [:element/active-page])
         page-pos (mapv units/unit->px
                        [(-> active-page :attrs :x)
                         (-> active-page :attrs :y)])
-        [x y] (if-not (= (:tag element) :page)
+        [x y] (if-not (= (:tag el) :page)
                 (mat/add page-pos [x y])
                 [x y])]
     [:foreignObject {:x (- x 2)
@@ -90,16 +90,16 @@
        :on-focus #(.. % -target select)
        :on-pointer-down #(.stopPropagation %)
        :on-pointer-up #(.stopPropagation %)
-       :on-blur #(set-text-and-select-element % key)
+       :on-blur #(set-text-and-select-element % el)
        :on-key-down (fn [e]
                       (.stopPropagation e)
                       (if (or (= 13 (.-keyCode e))
                               (= 27 (.-keyCode e)))
-                        (set-text-and-select-element e key)
+                        (set-text-and-select-element e el)
                         (.requestAnimationFrame
                          js/window
                          #(rf/dispatch-sync [:element/preview-property
-                                             key
+                                             el
                                              :content
                                              (str/replace (.. e -target -value)
                                                           " "

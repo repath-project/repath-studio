@@ -41,7 +41,7 @@
 
 (defn swap
   [db]
-  (assoc-in db (elements/elements-path db) (zip/node (history db))))
+  (assoc-in db (elements/path db) (zip/node (history db))))
 
 (defn move
   [db f]

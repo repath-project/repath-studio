@@ -260,7 +260,7 @@
         (let [node (.-current ref)]
           ((aget codemirror "colorize") #js[node] "clojure")
         ;; Hacky way to remove the default theme class added by CodeMirror.colorize
-        ;; SEE: https://codemirror.net/addon/runmode/colorize.js
+        ;; https://codemirror.net/addon/runmode/colorize.js
           (-> node .-classList (.remove  "cm-s-default"))))
 
       :reagent-render

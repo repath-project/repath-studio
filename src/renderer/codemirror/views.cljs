@@ -35,7 +35,7 @@
           (.setValue @cm value)
 
           ;; Line up wrapped text with the base indentation.
-          ;; SEE: https://codemirror.net/demo/indentwrap.html
+          ;; https://codemirror.net/demo/indentwrap.html
           (.on @cm "renderLine" (fn [editor line elt]
                                   (let [off (* (.countColumn codemirror (.-text line) nil (.getOption editor "tabSize"))
                                                (.defaultCharWidth @cm))]

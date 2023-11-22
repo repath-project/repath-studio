@@ -47,7 +47,7 @@
                        mouse-offset)]
     (if element-key
       (assoc-in db
-                (conj (elements/elements-path db) element-key)
+                (conj (elements/path db) element-key)
                 (tools/edit (elements/get-element db element-key)
                             mouse-offset
                             (:key clicked-element)))

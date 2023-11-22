@@ -9,7 +9,7 @@
    [config]))
 
 (defn text->path
-  "SEE: https://github.com/opentypejs/opentype.js#loading-a-font-synchronously-nodejs"
+  "https://github.com/opentypejs/opentype.js#loading-a-font-synchronously-nodejs"
   [font-url text x y font-size]
   (let [font (.loadSync opentype font-url)
         path (.getPath font text x y font-size)]
@@ -32,5 +32,5 @@
   #_(.init Sentry (clj->js config/sentry-options))
   ;; Expose protected methods that allow the renderer process to use the 
   ;; ipcRenderer without exposing the entire object
-  ;; SEE: https://www.electronjs.org/docs/api/context-bridge
+  ;; https://www.electronjs.org/docs/api/context-bridge
   (.exposeInMainWorld contextBridge "api" (clj->js api)))
