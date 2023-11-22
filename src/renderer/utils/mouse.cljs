@@ -3,8 +3,8 @@
    [re-frame.core :as rf]))
 
 (defn multiselect?
-  [event]
-  (some #(contains? (:modifiers event) %) #{:ctrl :shift}))
+  [e]
+  (some #(contains? (:modifiers e) %) #{:ctrl :shift}))
 
 (defn lock-direction
   "Locks mouse movement to the axis with the biggest offset"
@@ -23,29 +23,29 @@
    Although the fps might drop because synced dispatch blocks the rendering, 
    the end result appears to be more responsive because it's synced with the 
    mouse movement."
-  [event element]
-  (.stopPropagation event)
+  [e el]
+  (.stopPropagation e)
   ;; Disable native zoom on canvas
-  (when (and (.-ctrlKey event) (.-deltaY event))
-    (.preventDefault event))
+  (when (and (.-ctrlKey e) (.-deltaY e))
+    (.preventDefault e))
 
-  (rf/dispatch-sync [:pointer-event {:element element
-                                     :target (.-target event)
-                                     :type (keyword (.-type event))
-                                     :mouse-pos [(.-pageX event) (.-pageY event)]
-                                     :pressure (.-pressure event)
-                                     :pointer-type (.-pointerType event)
-                                     :primary? (.-isPrimary event)
-                                     :altitude (.-altitudeAngle event)
-                                     :azimuth (.-azimuthAngle event)
-                                     :twist (.-twist event)
-                                     :tilt [(.-tiltX event) (.-tiltY event)]
-                                     :data-transfer (.-dataTransfer event)
-                                     :button (.-button event)
-                                     :buttons (.-buttons event)
-                                     :delta [(.-deltaX event) (.-deltaY event)]
+  (rf/dispatch-sync [:pointer-event {:element el
+                                     :target (.-target e)
+                                     :type (keyword (.-type e))
+                                     :mouse-pos [(.-pageX e) (.-pageY e)]
+                                     :pressure (.-pressure e)
+                                     :pointer-type (.-pointerType e)
+                                     :primary? (.-isPrimary e)
+                                     :altitude (.-altitudeAngle e)
+                                     :azimuth (.-azimuthAngle e)
+                                     :twist (.-twist e)
+                                     :tilt [(.-tiltX e) (.-tiltY e)]
+                                     :data-transfer (.-dataTransfer e)
+                                     :button (.-button e)
+                                     :buttons (.-buttons e)
+                                     :delta [(.-deltaX e) (.-deltaY e)]
                                      :modifiers (cond-> #{}
-                                                  (.-altKey event) (conj :alt)
-                                                  (.-ctrlKey event) (conj :ctrl)
-                                                  (.-metaKey event) (conj :meta)
-                                                  (.-shiftKey event) (conj :shift))}]))
+                                                  (.-altKey e) (conj :alt)
+                                                  (.-ctrlKey e) (conj :ctrl)
+                                                  (.-metaKey e) (conj :meta)
+                                                  (.-shiftKey e) (conj :shift))}]))

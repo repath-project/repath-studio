@@ -25,24 +25,24 @@
 (derive :ry ::length)
 
 (defmethod hierarchy/form-element ::length
-  [key value disabled? initial]
+  [k v disabled? initial]
   [:div.flex.w-full
-   [views/form-input {:key key
-                      :value value
+   [views/form-input {:key k
+                      :value v
                       :disabled? disabled?
-                      :placeholder (if value initial "multiple")
+                      :placeholder (if v initial "multiple")
                       :on-wheel (fn [event]
                                   (if (pos? (.-deltaY event))
-                                    (rf/dispatch [:element/dec-attribute key])
-                                    (rf/dispatch [:element/inc-attribute key])))}]
+                                    (rf/dispatch [:element/dec-attribute k])
+                                    (rf/dispatch [:element/inc-attribute k])))}]
    [:div.flex {:style {:width "54px"}}
     [:button.button.ml-px.level-2.text-muted
      {:style {:width "26px" :height "26px"}
-      :on-pointer-down #(rf/dispatch [:element/dec-attribute key])}
+      :on-pointer-down #(rf/dispatch [:element/dec-attribute k])}
      [comp/icon "minus" {:class "small"}]]
     [:button.button..ml-px.level-2.text-muted
      {:style {:width "26px" :height "26px"}
-      :on-click #(rf/dispatch [:element/inc-attribute key])}
+      :on-click #(rf/dispatch [:element/inc-attribute k])}
      [comp/icon "plus" {:class "small"}]]]])
 
 (defmethod hierarchy/update-attr ::length

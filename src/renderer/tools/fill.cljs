@@ -20,12 +20,12 @@
 (defmethod tools/translate :fill [])
 
 (defmethod tools/mouse-up :fill
-  [{active-document :active-document :as db} _ element]
+  [{active-document :active-document :as db} _ el]
   (let [color (get-in db [:documents active-document :fill])]
     (-> db
-        (elements/set-attribute (:key element) :fill color)
+        (elements/set-attribute (:key el) :fill color)
         (history/finalize (str "Fill " color)))))
 
 (defmethod tools/drag-end :fill
-  [db event element]
-  (tools/mouse-up db event element))
+  [db e el]
+  (tools/mouse-up db e el))

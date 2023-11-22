@@ -7,10 +7,10 @@
    [renderer.components :as comp]))
 
 (defmethod hierarchy/form-element ::angle
-  [key value disabled? initial]
+  [k v disabled? initial]
   [:<>
-   [views/form-input {:key key
-                      :value value
+   [views/form-input {:key k
+                      :value v
                       :disabled? disabled?
                       :placeholder initial}]
    [:> Popover/Root {:modal true}

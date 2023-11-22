@@ -22,14 +22,14 @@
         [:div "Hold " [:strong "Shift"] " to zoom out."]])))
 
 (defmethod tools/key-down :zoom
-  [db event]
-  (if (contains? (:modifiers event) :shift)
+  [db e]
+  (if (contains? (:modifiers e) :shift)
     (assoc db :cursor "zoom-out")
     db))
 
 (defmethod tools/key-up :zoom
-  [db event]
-  (if (not (contains? (:modifiers event) :shift))
+  [db e]
+  (if (not (contains? (:modifiers e) :shift))
     (assoc db :cursor "zoom-in")
     db))
 
@@ -49,7 +49,7 @@
            content-rect
            adjusted-mouse-offset
            adjusted-mouse-pos
-           zoom-factor] :as db} event]
+           zoom-factor] :as db} e]
   (let [[offset-x offset-y] adjusted-mouse-offset
         [pos-x pos-y] adjusted-mouse-pos
         width (abs (- pos-x offset-x))
@@ -61,14 +61,14 @@
     (-> db
         (elements/clear-temp)
         (assoc :cursor "zoom-in")
-        (frame/zoom (if (contains? (:modifiers event) :shift)
+        (frame/zoom (if (contains? (:modifiers e) :shift)
                       zoom-factor
                       (/ furute-zoom current-zoom)))
         (frame/pan-to-bounds [pos-x pos-y offset-x offset-y]))))
 
 (defmethod tools/mouse-up :zoom
-  [db event]
-  (let [factor (if (contains? (:modifiers event) :shift)
+  [db e]
+  (let [factor (if (contains? (:modifiers e) :shift)
                  (:zoom-factor db)
                  (/ 1 (:zoom-factor db)))]
     (frame/zoom-in-mouse-position db factor)))

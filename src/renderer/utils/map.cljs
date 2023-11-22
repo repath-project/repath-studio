@@ -1,10 +1,10 @@
 (ns renderer.utils.map)
 
 (defn deep-merge
-  [a & maps]
+  [a & more]
   (if (map? a)
-    (apply merge-with deep-merge a maps)
-    (apply merge-with deep-merge maps)))
+    (apply merge-with deep-merge a more)
+    (apply merge-with deep-merge more)))
 
 (defn merge-common-with
   [f a b]

@@ -46,8 +46,8 @@
   (when-let [frame (.getElementById js/document "frame")]
     (when-let [svg (.getElementById (.. frame -contentWindow -document) "canvas")]
       (let [element (js/document.createElementNS "http://www.w3.org/2000/svg" (name tag))]
-        (doseq [[key value] attrs]
-          (.setAttributeNS element nil (name key) value))
+        (doseq [[k v] attrs]
+          (.setAttributeNS element nil (name k) v))
         (.appendChild svg element)
         (set! (.-innerHTML element) (if (empty? content) "\u00a0" content))
         (let [bounds (get-bounds element)]
@@ -55,12 +55,12 @@
           bounds)))))
 
 (defmethod tools/mouse-up :default
-  [db event element]
-  (if-not (and (= (:button event) 2)
-               (:selected? element))
+  [db e el]
+  (if-not (and (= (:button e) 2)
+               (:selected? el))
     (-> db
         (dissoc :clicked-element)
-        (element-handlers/select (mouse/multiselect? event) element)
+        (element-handlers/select (mouse/multiselect? e) el)
         (history/finalize "Select element"))
     (dissoc db :clicked-element)))
 
@@ -86,7 +86,7 @@
 
       :reagent-render
       (fn
-        [{:keys [attrs tag title content] :as element}
+        [{:keys [attrs tag title content] :as el}
          child-elements
          default-state?]
         [:<>
@@ -104,7 +104,7 @@
                child-elements)]
 
          (when default-state?
-           (let [mouse-handler #(mouse/event-handler % element)]
+           (let [mouse-handler #(mouse/event-handler % el)]
              [tag
               (merge (dissoc attrs :style)
                      {:on-pointer-up mouse-handler

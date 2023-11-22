@@ -9,9 +9,9 @@
 
 (rf/reg-event-db
  :element/select
- (fn [db [_ multiselect element]]
+ (fn [db [_ multiple? el]]
    (-> db
-       (handlers/select multiselect element)
+       (handlers/select multiple? el)
        (history-handlers/finalize "Select element"))))
 
 (rf/reg-event-db
@@ -23,15 +23,15 @@
 
 (rf/reg-event-db
  :element/preview-property
- (fn [db [_ key property value]]
-   (handlers/set-property db key property value)))
+ (fn [db [_ el-k k v]]
+   (handlers/set-property db el-k k v)))
 
 (rf/reg-event-db
  :element/set-property
- (fn [db [_ key property value]]
+ (fn [db [_ el-k k v]]
    (-> db
-       (handlers/set-property key property value)
-       (history-handlers/finalize (str "Set " (name property) " to " value)))))
+       (handlers/set-property el-k k v)
+       (history-handlers/finalize (str "Set " (name k) " to " v)))))
 
 (rf/reg-event-db
  :element/lock
@@ -49,29 +49,29 @@
 
 (rf/reg-event-db
  :element/set-attribute
- (fn [db [_ attribute value]]
+ (fn [db [_ k v]]
    (-> db
-       (handlers/set-attribute attribute value)
-       (history-handlers/finalize (str "Set " (name attribute) " to " value)))))
+       (handlers/set-attribute k v)
+       (history-handlers/finalize (str "Set " (name k) " to " v)))))
 
 (rf/reg-event-db
  :element/inc-attribute
- (fn [db [_ attribute]]
+ (fn [db [_ k]]
    (-> db
-       (handlers/update-attribute attribute inc)
-       (history-handlers/finalize (str "Increase " (name attribute))))))
+       (handlers/update-attribute k inc)
+       (history-handlers/finalize (str "Increase " (name k))))))
 
 (rf/reg-event-db
  :element/dec-attribute
- (fn [db [_ attribute]]
+ (fn [db [_ k]]
    (-> db
-       (handlers/update-attribute attribute dec)
-       (history-handlers/finalize (str "Decrease " (name attribute))))))
+       (handlers/update-attribute k dec)
+       (history-handlers/finalize (str "Decrease " (name k))))))
 
 (rf/reg-event-db
  :element/preview-attribute
- (fn [db [_ attribute value]]
-   (handlers/set-attribute db attribute value)))
+ (fn [db [_ k v]]
+   (handlers/set-attribute db k v)))
 
 (rf/reg-event-db
  :element/fill

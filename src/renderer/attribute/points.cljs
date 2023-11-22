@@ -23,15 +23,15 @@
     (rf/dispatch [:element/set-attribute :points points])))
 
 (defmethod hierarchy/form-element :points
-  [key value disabled?]
+  [k v disabled?]
   (let [state-default? (= @(rf/subscribe [:state]) :default)]
     [:<>
-     [views/form-input {:key key
-                        :value (if state-default? value "waiting")
+     [views/form-input {:key k
+                        :value (if state-default? v "waiting")
                         :disabled? (or disabled?
-                                       (not value)
+                                       (not v)
                                        (not state-default?))}]
-     (when value
+     (when v
        [:> Popover/Root {:modal true}
         [:> Popover/Trigger {:asChild true}
          [:button.ml-px.inline-block.level-2.text-muted
@@ -43,7 +43,7 @@
                               :className "popover-content"
                               :align "end"}
           (when state-default?
-            (let [points (utils/points-to-vec value)]
+            (let [points (utils/points-to-vec v)]
               [:div.flex.flex-col.v-scroll.py-4.pr-2
                {:style {:max-height "500px"}}
                (map-indexed (fn [index [x y]]
@@ -52,9 +52,9 @@
                                {:style {:grid-template-columns "minmax(0, 40px) 3fr 3fr 26px"}}
                                [:label.px-1.bg-transparent index]
                                [:input.bg-transparent
-                                {:key (str "x-" index value) :default-value x}]
+                                {:key (str "x-" index v) :default-value x}]
                                [:input.bg-transparent
-                                {:key (str "y-" index value) :default-value y}]
+                                {:key (str "y-" index v) :default-value y}]
                                [:button.button.bg-transparent.text-muted
                                 {:style {:height "26px"}
                                  :on-click #(remove-point-by-index points index)}

@@ -64,7 +64,7 @@
     " to center the pivot point."]])
 
 (defn reduce-by-area
-  [{:keys [active-document] :as db} intersecting? func]
+  [{:keys [active-document] :as db} intersecting? f]
   (let [hovered? (if intersecting? bounds/intersect-bounds? bounds/contain-bounds?)
         hovered-keys (-> db :documents active-document :hovered-keys)]
     (reduce (fn [db element]
@@ -75,28 +75,28 @@
                    (hovered? (tools/adjusted-bounds element (elements/elements db))
                              (tools/adjusted-bounds (elements/get-temp db)
                                                     (elements/elements db))))
-                (func db element)
+                (f db element)
                 db))
             db
             (vals (elements/elements db)))))
 
 (defmethod tools/mouse-move :select
-  [db _ element]
+  [db _e el]
   (-> db
       (elements/clear-hovered)
-      (elements/hover (:key element))
-      (assoc :cursor (if element "move" "default"))))
+      (elements/hover (:key el))
+      (assoc :cursor (if el "move" "default"))))
 
 (defmethod tools/mouse-down :select
-  [db _ element]
-  (assoc db :clicked-element element))
+  [db _e el]
+  (assoc db :clicked-element el))
 
 (defmethod tools/double-click :select
-  [db _event element]
-  (if (= (:tag element) :g)
+  [db _e el]
+  (if (= (:tag el) :g)
     (-> db
-        (elements/ignore (:key element))
-        (elements/deselect-element (:key element)))
+        (elements/ignore (:key el))
+        (elements/deselect-element (:key el)))
     (tools/set-tool db :edit)))
 
 (defmethod tools/activate :select
@@ -120,7 +120,7 @@
       (not intersecting?) (assoc-in [:attrs :fill] "transparent"))))
 
 (defmethod tools/drag-start :select
-  [db event]
+  [db e]
   (case (-> db :clicked-element :tag)
     :canvas
     (handlers/set-state db :select)
@@ -131,26 +131,26 @@
     (handlers/set-state
      (if-not (-> db :clicked-element :selected?)
        (-> db
-           (elements/select (mouse/multiselect? event) (:clicked-element db))
+           (elements/select (mouse/multiselect? e) (:clicked-element db))
            (history/finalize "Select element"))
        db) :move)))
 
 (defmethod tools/drag :select
   [{:keys [state
            adjusted-mouse-offset
-           adjusted-mouse-pos] :as db} event]
+           adjusted-mouse-pos] :as db} e]
   (let [offset (mat/sub adjusted-mouse-pos adjusted-mouse-offset)
-        offset (if (and (contains? (:modifiers event) :ctrl)
+        offset (if (and (contains? (:modifiers e) :ctrl)
                         (not= state :scale))
                  (mouse/lock-direction offset)
                  offset)
-        alt-key? (contains? (:modifiers event) :alt)]
+        alt-key? (contains? (:modifiers e) :alt)]
     (-> (case state
           :select
           (-> db
               (elements/set-temp (select-rect db alt-key?))
               (elements/clear-hovered)
-              (reduce-by-area (contains? (:modifiers event) :alt)
+              (reduce-by-area (contains? (:modifiers e) :alt)
                               #(elements/hover %1 (:key %2))))
 
           :move
@@ -166,19 +166,19 @@
           :scale
           (elements/scale (history/swap db)
                           offset
-                          (contains? (:modifiers event) :ctrl)
-                          (contains? (:modifiers event) :shift))
+                          (contains? (:modifiers e) :ctrl)
+                          (contains? (:modifiers e) :shift))
 
           :default db)
         (handlers/set-message (message offset state)))))
 
 (defmethod tools/drag-end :select
-  [{:keys [state adjusted-mouse-offset] :as db} event]
+  [{:keys [state adjusted-mouse-offset] :as db} e]
   (-> (case state
-        :select (-> (if (not (mouse/multiselect? event))
+        :select (-> (if (not (mouse/multiselect? e))
                       (elements/deselect-all db)
                       db)
-                    (reduce-by-area (contains? (:modifiers event) :alt)
+                    (reduce-by-area (contains? (:modifiers e) :alt)
                                     #(elements/select-element % (:key %2)))
                     (elements/clear-temp)
                     (history/finalize "Modify selection"))

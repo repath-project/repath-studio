@@ -2,30 +2,30 @@
 
 (defn remove-by-index
   "Removes element by index."
-  [coll pos]
+  [coll index]
   (vec (concat
-        (subvec coll 0 pos)
-        (subvec coll (inc pos)))))
+        (subvec coll 0 index)
+        (subvec coll (inc index)))))
 
 (defn add
   "Adds element by index."
-  [coll pos el]
+  [coll index el]
   (vec (concat
-        (subvec coll 0 pos)
+        (subvec coll 0 index)
         [el]
-        (subvec coll pos))))
+        (subvec coll index))))
 
 #_(defn move
     "Moves element by index."
-    [coll pos1 pos2]
-    (let [el (nth coll pos1)]
-      (if (= pos1 pos2)
+    [coll index-1 index-2]
+    (let [el (nth coll index-1)]
+      (if (= index-1 index-2)
         coll
-        (into [] (add (remove-by-index coll pos1) pos2 el)))))
+        (into [] (add (remove-by-index coll index-1) index-2 el)))))
 
 (defn swap
   "Swaps the position of two elements by index."
-  [coll pos1 pos2]
+  [coll index-1 index-2]
   (assoc coll
-         pos2 (coll pos1)
-         pos1 (coll pos2)))
+         index-2 (coll index-1)
+         index-1 (coll index-2)))

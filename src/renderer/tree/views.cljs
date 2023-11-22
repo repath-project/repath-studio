@@ -30,17 +30,17 @@
                            :block "nearest"}))
 
 (defn- set-item-name
-  [event key]
-  (rf/dispatch [:element/set-property key :name (.. event -target -value)]))
+  [e k]
+  (rf/dispatch [:element/set-property k :name (.. e -target -value)]))
 
 (defn on-key-down-handler
-  [event key value]
-  (let [target (.-target event)]
-    (case (.-keyCode event)
-      13 (do (set-item-name event key)
+  [e k v]
+  (let [target (.-target e)]
+    (case (.-keyCode e)
+      13 (do (set-item-name e k)
              (.blur target))
       27 (do (.blur target)
-             (set! (.-value target) value))
+             (set! (.-value target) v))
       nil)))
 
 (defn item-input
@@ -55,12 +55,12 @@
     :on-blur #(set-item-name % key)}])
 
 (defn list-item-button
-  [{:keys [key selected? collapsed? children tag] :as element} depth]
+  [{:keys [key selected? collapsed? children tag] :as el} depth]
   (let [hovered-keys @(rf/subscribe [:document/hovered-keys])
         hovered? (contains? hovered-keys key)
         page? (= tag :page)
         active-page @(rf/subscribe [:element/active-page])
-        active-page? (and page? (= (:key element) (:key active-page)))
+        active-page? (and page? (= (:key el) (:key active-page)))
         multiple-selected? @(rf/subscribe [:element/multiple-selected?])
         collapse-button-width 22]
     [:div.flex.button.list-item-button
@@ -78,14 +78,14 @@
                           (.setData "key" (name key)))
       :on-drag-enter #(rf/dispatch [:document/set-hovered-keys #{key}])
       :on-drag-over #(.preventDefault %)
-      :on-drop (fn [evt]
-                 (.preventDefault evt)
-                 (rf/dispatch [:element/set-parent (-> (.-dataTransfer evt)
+      :on-drop (fn [e]
+                 (.preventDefault e)
+                 (rf/dispatch [:element/set-parent (-> (.-dataTransfer e)
                                                        (.getData "key")
                                                        (keyword)) key]))
-      :on-click (fn [evt]
-                  (.stopPropagation evt)
-                  (rf/dispatch [:element/select (.-ctrlKey evt) element]))
+      :on-click (fn [e]
+                  (.stopPropagation e)
+                  (rf/dispatch [:element/select (.-ctrlKey e) el]))
       :style {:padding-left (when (not page?)
                               (- (* depth collapse-button-width)
                                  (if (seq children) collapse-button-width 0)))}}
@@ -95,16 +95,16 @@
         [comp/toggle-collapsed-button
          collapsed?
          #(rf/dispatch [:element/toggle-property key :collapsed?])])
-      [:<> [item-input element]]
-      [item-buttons element]]]))
+      [:<> [item-input el]]
+      [item-buttons el]]]))
 
-(defn item [{:keys [collapsed? selected? children] :as element} depth elements]
+(defn item [{:keys [collapsed? selected? children] :as el} depth elements]
   (let [has-children? (seq children)]
     [:li {:class (when selected? "level-2")}
-     [list-item-button element depth]
+     [list-item-button el depth]
      (when (and has-children? (not collapsed?))
        [:ul (map
-             (fn [element] [item element (inc depth) elements])
+             (fn [el] [item el (inc depth) elements])
              (mapv (fn [key] (get elements key)) (reverse children)))])]))
 
 (defn tree-sidebar []
@@ -130,7 +130,7 @@
       {:style {:flex (if pages-collapsed? 0 "0 1 128px")}}
       [:div
        {:on-mouse-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
-       (map (fn [element] [list-item-button element 0])
+       (map (fn [el] [list-item-button el 0])
             (reverse page-elements))]]
 
      [:div.button.tree-heading
@@ -146,7 +146,7 @@
 
         [:div
          {:on-mouse-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
-         [:ul (map (fn [element] [item element 1 elements])
+         [:ul (map (fn [el] [item el 1 elements])
                    (reverse active-page-children))]]]]
       [:> ContextMenu/Portal
        (into [:> ContextMenu/Content

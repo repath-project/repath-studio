@@ -8,6 +8,17 @@ The project is based on [re-frame](https://github.com/day8/re-frame/),
 a framework for building Modern Web Apps in ClojureScript.
 You should probably take a look at their [exceptional documentation](https://day8.github.io/re-frame/re-frame/).
 
+## Style Guide
+
+We try to follow the [Clojure Style Guide](https://guide.clojure.style/) as much as possible.
+
+In addition to the [idiomatic names](https://guide.clojure.style/#idiomatic-names),
+we use the following conventions
+
+- e - event
+- el - element
+- attr, attrs - attribute, attributes
+
 ## App structure
 
 Main structure

@@ -28,10 +28,10 @@
               :r (/ 3 zoom)} children]))
 
 (defn circle-handler
-  [{:keys [x y key] :as element} & children]
+  [{:keys [x y key] :as el} & children]
   (let [zoom @(rf/subscribe [:document/zoom])
         clicked-element @(rf/subscribe [:clicked-element])
-        mouse-handler #(mouse/event-handler % element)]
+        mouse-handler #(mouse/event-handler % el)]
     [:circle {:key key
               :cx x
               :cy y
@@ -48,13 +48,13 @@
               :on-scroll mouse-handler} children]))
 
 (defn square-handler
-  [{:keys [x y key] :as element} & children]
+  [{:keys [x y key] :as el} & children]
   (let [zoom @(rf/subscribe [:document/zoom])
         clicked-element @(rf/subscribe [:clicked-element])
         hovered-keys @(rf/subscribe [:document/hovered-keys])
         size (/ 10 zoom)
         stroke-width (/ 1 zoom)
-        mouse-handler #(mouse/event-handler % element)]
+        mouse-handler #(mouse/event-handler % el)]
     [:rect {:key key
             :id (name key)
             :fill (if (or (= (:key clicked-element) key)
@@ -234,13 +234,13 @@
                         :stroke-width (/ 1 zoom)}}))
 
 (defn centroid
-  [element]
-  (when-let [centroid (tools/centroid element)]
+  [el]
+  (when-let [centroid (tools/centroid el)]
     (let [active-page @(rf/subscribe [:element/active-page])
           page-pos (mapv units/unit->px [(-> active-page :attrs :x) (-> active-page :attrs :y)])
-          centroid (if (not= (:tag element) :page) (mat/add page-pos centroid) centroid)]
+          centroid (if (not= (:tag el) :page) (mat/add page-pos centroid) centroid)]
       [point-of-interest centroid
-       ^{:key (str (:id element) "-centroid-title")}
+       ^{:key (str (:id el) "-centroid-title")}
        [:title "Centroid"]])))
 
 (defn area

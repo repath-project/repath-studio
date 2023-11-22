@@ -23,8 +23,8 @@
   (assoc db :cursor "grabbing"))
 
 (defmethod tools/drag :pan
-  [db event _]
-  (frame/pan db (mat/sub (:mouse-pos db) (:mouse-pos event))))
+  [db e _]
+  (frame/pan db (mat/sub (:mouse-pos db) (:mouse-pos e))))
 
 (defmethod tools/drag-end :pan
   [db]

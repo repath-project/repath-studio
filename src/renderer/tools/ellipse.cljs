@@ -25,12 +25,11 @@
            :stroke-dasharray]})
 
 (defmethod tools/drag :ellipse
-  [{:keys [adjusted-mouse-offset active-document adjusted-mouse-pos] :as db}
-   event]
+  [{:keys [adjusted-mouse-offset active-document adjusted-mouse-pos] :as db} e]
   (let [{:keys [stroke fill]} (get-in db [:documents active-document])
         [offset-x offset-y] adjusted-mouse-offset
         [pos-x pos-y] adjusted-mouse-pos
-        lock-ratio? (contains? (:modifiers event) :ctrl)
+        lock-ratio? (contains? (:modifiers e) :ctrl)
         rx (abs (- pos-x offset-x))
         ry (abs (- pos-y offset-y))
         attrs {:cx offset-x
@@ -49,9 +48,9 @@
                       (hierarchy/update-attr :cy + y)))
 
 (defmethod tools/scale :ellipse
-  [element [x y] handler]
+  [el [x y] handler]
   (let [[x y] (mat/div [x y] 2)]
-    (cond-> element
+    (cond-> el
       (contains? #{:bottom-right :top-right :middle-right} handler)
       (-> (hierarchy/update-attr :rx + x)
           (hierarchy/update-attr :cx + x))
@@ -92,11 +91,11 @@
     (* Math/PI rx ry)))
 
 (defmethod tools/edit :ellipse
-  [element [x y] handler]
+  [el [x y] handler]
   (case handler
-    :rx (hierarchy/update-attr element :rx #(abs (+ % x)))
-    :ry (hierarchy/update-attr element :ry #(abs (- % y)))
-    element))
+    :rx (hierarchy/update-attr el :rx #(abs (+ % x)))
+    :ry (hierarchy/update-attr el :ry #(abs (- % y)))
+    el))
 
 (defmethod tools/render-edit :ellipse
   [{:keys [attrs key]}]

@@ -107,14 +107,14 @@
 
 (rf/reg-event-db
  :pointer-event
- (fn [{:keys [mouse-offset tool content-rect] :as db} [_ event]]
-   (let [{:keys [mouse-pos delta element]} event
+ (fn [{:keys [mouse-offset tool content-rect] :as db} [_ e]]
+   (let [{:keys [mouse-pos delta element]} e
          mouse-pos (mapv js/parseInt mouse-pos)
          adjusted-mouse-pos (frame-handlers/adjusted-mouse-pos db mouse-pos)]
-     (case (:type event)
+     (case (:type e)
        :pointermove
        (-> (if (and (significant-movement? mouse-pos mouse-offset)
-                    (not (= (:buttons event) 2)))
+                    (not (= (:buttons e) 2)))
              (cond-> db
                (not= tool :pan)
                (frame-handlers/pan-out-of-canvas content-rect
@@ -122,31 +122,31 @@
                                                  mouse-offset)
 
                (not (:drag? db))
-               (-> (tools/drag-start event element)
+               (-> (tools/drag-start e element)
                    (assoc :drag? true))
 
                :always
-               (tools/drag event element))
-             (tools/mouse-move db event element))
+               (tools/drag e element))
+             (tools/mouse-move db e element))
            (assoc :mouse-pos mouse-pos
                   :adjusted-mouse-pos adjusted-mouse-pos))
 
        :pointerdown
        (cond-> db
-         (= (:button event) 1)
+         (= (:button e) 1)
          (-> (assoc :primary-tool tool)
              (tools/set-tool :pan))
 
          :always
-         (-> (tools/mouse-down event element)
+         (-> (tools/mouse-down e element)
              (assoc :mouse-offset mouse-pos
                     :adjusted-mouse-offset adjusted-mouse-pos)))
 
        :pointerup
        (cond-> (if (:drag? db)
-                 (tools/drag-end db event element)
-                 (tools/mouse-up db event element))
-         (and (:primary-tool db) (= (:button event) 1))
+                 (tools/drag-end db e element)
+                 (tools/mouse-up db e element))
+         (and (:primary-tool db) (= (:button e) 1))
          (-> (tools/set-tool (:primary-tool db))
              (dissoc :primary-tool))
 
@@ -154,10 +154,10 @@
          (dissoc :mouse-offset :drag?))
 
        :dblclick
-       (tools/double-click db event element)
+       (tools/double-click db e element)
 
        :wheel
-       (if (some (:modifiers event) [:ctrl :alt])
+       (if (some (:modifiers e) [:ctrl :alt])
          (let [delta-y (second delta)
                factor (Math/pow (+ 1 (/ (:zoom-sensitivity db) 100))
                                 (- delta-y))]
@@ -165,7 +165,7 @@
          (frame-handlers/pan db delta))
 
        :drop
-       (let [data-transfer (:data-transfer event)
+       (let [data-transfer (:data-transfer e)
              items (.-items data-transfer)
              files (.-files data-transfer)]
          (-> db
@@ -179,7 +179,7 @@
 
 (rf/reg-event-db
  :keyboard-event
- (fn [{:keys [tool] :as db} [_ {:keys [type code] :as event}]]
+ (fn [{:keys [tool] :as db} [_ {:keys [type code] :as e}]]
    (case type
      :keydown
      (cond-> db
@@ -189,7 +189,7 @@
            (tools/set-tool :pan))
 
        :always
-       (tools/key-down event))
+       (tools/key-down e))
 
      :keyup
      (cond-> db
@@ -199,6 +199,6 @@
            (dissoc :primary-tool))
 
        :always
-       (tools/key-up event))
+       (tools/key-up e))
 
      db)))

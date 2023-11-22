@@ -35,20 +35,20 @@
 (rf/reg-event-db
  :document/set-hovered-keys
  active-document-path
- (fn [db [_ keys]]
-   (assoc db :hovered-keys keys)))
+ (fn [db [_ ks]]
+   (assoc db :hovered-keys ks)))
 
 (rf/reg-event-db
  :document/set-filter
  active-document-path
- (fn [db [_ keys]]
-   (assoc db :filter keys)))
+ (fn [db [_ ks]]
+   (assoc db :filter ks)))
 
 (rf/reg-event-db
  :document/set-temp-element
  active-document-path
- (fn [db [_ keys]]
-   (assoc db :temp-element keys)))
+ (fn [db [_ ks]]
+   (assoc db :temp-element ks)))
 
 (rf/reg-event-db
  :document/swap-colors

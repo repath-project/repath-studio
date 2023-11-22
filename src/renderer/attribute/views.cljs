@@ -55,21 +55,21 @@
            "Specification"])]])))
 
 (defn on-change-handler
-  ([event key old-value finalize?]
-   (let [value (.. event -target -value)]
-     (when (not= value old-value)
+  ([event k old-v]
+   (on-change-handler event k old-v true))
+  ([event k old-v finalize?]
+   (let [new-v (.. event -target -value)]
+     (when (not= new-v old-v)
        (rf/dispatch [(if finalize?
                        :element/set-attribute
-                       :element/preview-attribute) key value]))))
-  ([event key old-value]
-   (on-change-handler event key old-value true)))
+                       :element/preview-attribute) k new-v])))))
 
 (defn on-key-down-handler
-  [event key value]
+  [event k v]
   (case (.-keyCode event)
-    13 (on-change-handler event key value)
+    13 (on-change-handler event k v)
     27 ((.. event -target blur)
-        (set! (.. event -target -value) value))
+        (set! (.. event -target -value) v))
     nil))
 
 (defn form-input
@@ -90,24 +90,24 @@
       [comp/icon "times" {:class "small"}]])])
 
 (defmethod hierarchy/form-element :default
-  [key value disabled?]
-  [form-input {:key key
-               :value value
+  [k v disabled?]
+  [form-input {:key k
+               :value v
                :disabled? disabled?}])
 
 (defn range-input
-  [key value attrs initial]
+  [k v attrs initial]
   [:div.flex.w-full
-   [form-input {:key key
-                :value value
+   [form-input {:key k
+                :value v
                 :disabled? (:disabled attrs)
                 :placeholder initial}]
    [:input.ml-px
     (merge attrs
-           {:value (if (= "" value) initial value)
+           {:value (if (= "" v) initial v)
             :type "range"
-            :on-change #(on-change-handler % key value false)
-            :on-pointer-up #(rf/dispatch [:element/set-attribute key value])})]])
+            :on-change #(on-change-handler % k v false)
+            :on-pointer-up #(rf/dispatch [:element/set-attribute k v])})]])
 
 (defn select-input
   [{:keys [key value disabled? items initial]}]
@@ -203,47 +203,51 @@
        [:> Popover/Arrow {:class "popover-arrow"}]]]]))
 
 (defn row
-  [key value locked? tag]
-  (let [property @(rf/subscribe [:webref-css-property key])]
+  [k v locked? tag]
+  (let [property @(rf/subscribe [:webref-css-property k])]
     [:<>
-     [label tag key]
+     [label tag k]
      [:div.flex.h-full.overflow-visible
-      [hierarchy/form-element key value locked? (when property (:initial property))]]]))
+      [hierarchy/form-element k v locked? (when property (:initial property))]]]))
 
 (defn form
   []
   (let [selected-elements @(rf/subscribe [:element/selected])
-        element (first selected-elements)
+        selected-tags @(rf/subscribe [:element/selected-tags])
         selected-attrs @(rf/subscribe [:element/selected-attrs])
-        {:keys [tag name locked?]} element]
+        locked? @(rf/subscribe [:element/selected-locked?])
+        tag (first selected-tags)]
     [:div.w-full.ml-px.v-scroll.flex.flex-col
      (when (seq selected-elements)
        [:div.w-full
         [:div.flex.level-2.py-4.pl-4.pr-2
-         [:h1.self-center.flex-1.text-lg
+         [:h1.self-center.flex-1.text-lg.p-1
           (if (empty? (rest selected-elements))
-            (if (empty? name) tag name)
+            (let [el (first selected-elements)
+                  name (:name el)]
+              (if (empty? name) tag name))
             (str (count selected-elements) " elements"))]
-         [:div.py-px
-          [:> Popover/Root {:modal true}
-           [:> Popover/Trigger {:asChild true}
-            [:span.pb-px
-             [comp/icon-button "info" {:title "MDN Info"}]]]
-           [:> Popover/Portal
-            [:> Popover/Content
-             {:sideOffset 5
-              :class "popover-content"
-              :align "end"}
-             [:div.p-6
-              [:h2.mb-4.text-lg tag]
-              (when-let [description (:description (tools/properties tag))]
-                [:p description])
-              [caniusethis {:tag tag}]
-              (when-let [url (:url (tools/properties tag))]
-                [:button.button.px-3.level-2.w-full
-                 {:on-click #(rf/dispatch [:window/open-remote-url url])}
-                 "Learn more"])]
-             [:> Popover/Arrow {:class "popover-arrow"}]]]]]]
+         (when (empty? (rest selected-tags))
+           [:div.py-px
+            [:> Popover/Root {:modal true}
+             [:> Popover/Trigger {:asChild true}
+              [:span.pb-px
+               [comp/icon-button "info" {:title "MDN Info"}]]]
+             [:> Popover/Portal
+              [:> Popover/Content
+               {:sideOffset 5
+                :class "popover-content"
+                :align "end"}
+               [:div.p-6
+                [:h2.mb-4.text-lg tag]
+                (when-let [description (:description (tools/properties tag))]
+                  [:p description])
+                [caniusethis {:tag tag}]
+                (when-let [url (:url (tools/properties tag))]
+                  [:button.button.px-3.level-2.w-full
+                   {:on-click #(rf/dispatch [:window/open-remote-url url])}
+                   "Learn more"])]
+               [:> Popover/Arrow {:class "popover-arrow"}]]]]])]
         [:div.attribute-grid
          (map (fn [[k v]] ^{:key k} [row k v locked? tag]) selected-attrs)]])
      [:div.level-1.grow.w-full.flex]]))

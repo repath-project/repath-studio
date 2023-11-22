@@ -234,14 +234,14 @@
 
 (defn event-handler
   "SEE https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/"
-  [event]
-  (rf/dispatch-sync [:keyboard-event {:target (.-target event)
-                                      :type (keyword (.-type event))
-                                      :code (.-code event)
-                                      :key-code (.-keyCode event)
-                                      :key (.-key event)
+  [e]
+  (rf/dispatch-sync [:keyboard-event {:target (.-target e)
+                                      :type (keyword (.-type e))
+                                      :code (.-code e)
+                                      :key-code (.-keyCode e)
+                                      :key (.-key e)
                                       :modifiers (cond-> #{}
-                                                   (.-altKey event) (conj :alt)
-                                                   (.-ctrlKey event) (conj :ctrl)
-                                                   (.-metaKey event) (conj :meta)
-                                                   (.-shiftKey event) (conj :shift))}]))
+                                                   (.-altKey e) (conj :alt)
+                                                   (.-ctrlKey e) (conj :ctrl)
+                                                   (.-metaKey e) (conj :meta)
+                                                   (.-shiftKey e) (conj :shift))}]))

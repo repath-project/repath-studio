@@ -9,9 +9,9 @@
    to be used at the corners of paths when they are stroked.")
 
 (defmethod hierarchy/form-element :stroke-linejoin
-  [key value disabled? initial]
-  [views/select-input {:key key
-                       :value value
+  [k v disabled? initial]
+  [views/select-input {:key k
+                       :value v
                        :disabled? disabled?
                        :initial initial
                        :default-value "miter"

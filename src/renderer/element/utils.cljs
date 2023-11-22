@@ -1,8 +1,8 @@
 (ns renderer.element.utils)
 
 (defn parent-page
-  [elements element]
-  (loop [parent (:parent element)]
+  [elements el]
+  (loop [parent (:parent el)]
     (when parent
       (let [parent-element (parent elements)]
         (if (= :page (:tag parent-element))

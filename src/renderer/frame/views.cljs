@@ -11,8 +11,8 @@
    [renderer.utils.mouse :as mouse]))
 
 (defn mouse-handler
-  [event]
-  (mouse/event-handler event nil))
+  [e]
+  (mouse/event-handler e nil))
 
 (defn inner-component
   "We need access to the iframe's window to add the mouse move listener.
@@ -83,12 +83,12 @@
              {:keys [x y]} @(rf/subscribe [:content-rect])
              ;; This is a different browsing context inside an iframe.
              ;; We need to simulate the events to the parent window.
-             on-keyboard-event (fn [event]
+             on-keyboard-event (fn [e]
                                  ;; TODO use re-pressed :prevent-default-keys
-                                 (.preventDefault event)
+                                 (.preventDefault e)
                                  (.dispatchEvent js/window.parent.document
-                                                 (js/KeyboardEvent. (.-type event)
-                                                                    event)))]
+                                                 (js/KeyboardEvent. (.-type e)
+                                                                    e)))]
          [:> Frame {:initialContent (server/render-to-static-markup [markup])
                     :mountTarget "body"
                     :on-key-down on-keyboard-event

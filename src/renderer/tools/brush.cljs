@@ -42,11 +42,11 @@
 (derive ::streamline ::range/range)
 
 (defmethod attr-hierarchy/form-element ::size
-  [key value disabled?]
-  [attr-views/range-input key value {:disabled disabled?
-                                     :min 1
-                                     :max 100
-                                     :step 1}])
+  [k v disabled?]
+  [attr-views/range-input k v {:disabled disabled?
+                               :min 1
+                               :max 100
+                               :step 1}])
 
 (defmethod attr-hierarchy/form-element ::points
   [value]

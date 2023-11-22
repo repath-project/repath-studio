@@ -6,8 +6,8 @@
 (derive :opacity ::range)
 
 (defmethod hierarchy/form-element ::range
-  [key value disabled? initial]
-  [views/range-input key value {:disabled disabled?
-                                :min 0
-                                :max 1
-                                :step 0.01} initial])
+  [k v disabled? initial]
+  [views/range-input k v {:disabled disabled?
+                          :min 0
+                          :max 1
+                          :step 0.01} initial])

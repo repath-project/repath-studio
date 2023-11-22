@@ -9,9 +9,9 @@
    to be used at the end of open subpaths when they are stroked.")
 
 (defmethod hierarchy/form-element :stroke-linecap
-  [key value disabled? initial]
-  [views/select-input {:key key
-                       :value value
+  [k v disabled? initial]
+  [views/select-input {:key k
+                       :value v
                        :disabled? disabled?
                        :initial initial
                        :default-value "butt"

@@ -46,9 +46,9 @@
 
 (defn ^:export create
   "Creates a new element."
-  [element]
+  [el]
   (apply #(rf/dispatch [:element/create {:tag (key %)
-                                         :attrs (val %)}]) element))
+                                         :attrs (val %)}]) el))
 
 (defn ^:export circle
   "Creates a circle."
@@ -111,8 +111,8 @@
 
 (defn ^:export set-attribute
   "Sets the attribute of the selected elements."
-  [key value]
-  (rf/dispatch [:element/set-attribute key value]))
+  [k v]
+  (rf/dispatch [:element/set-attribute k v]))
 
 (defn ^:export set-fill
   "Sets the fill color of the editor."
@@ -269,8 +269,8 @@
 
 (defn ^:export exit
   "Closes the application."
-  [element]
-  (apply #(rf/dispatch [:window/close]) element))
+  []
+  (rf/dispatch [:window/close]))
 
 (defn ^:export help
   "Lists available functions."

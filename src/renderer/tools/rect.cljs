@@ -21,12 +21,11 @@
            :stroke-linejoin]})
 
 (defmethod tools/drag :rect
-  [{:keys [adjusted-mouse-offset active-document adjusted-mouse-pos] :as db}
-   event]
+  [{:keys [adjusted-mouse-offset active-document adjusted-mouse-pos] :as db} e]
   (let [{:keys [stroke fill]} (get-in db [:documents active-document])
         [offset-x offset-y] adjusted-mouse-offset
         [pos-x pos-y] adjusted-mouse-pos
-        lock-ratio? (contains? (:modifiers event) :ctrl)
+        lock-ratio? (contains? (:modifiers e) :ctrl)
         width (abs (- pos-x offset-x))
         height (abs (- pos-y offset-y))
         attrs {:x (min pos-x offset-x)

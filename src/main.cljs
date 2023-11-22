@@ -83,11 +83,11 @@
       (.openDevTools (.-webContents ^js @main-window)))
 
     (doseq
-     [[web-contents-event function]
+     [[web-contents-event f]
       [["will-navigate"  #(.preventDefault %)] ;; Prevent navigation
        ["new-window" #(.preventDefault %)] ;; Prevent popups
        ["closed" #(reset! main-window nil)]]]
-      (.on (.-webContents ^js @main-window) web-contents-event function))
+      (.on (.-webContents ^js @main-window) web-contents-event f))
 
     (.on ipcMain "toMain" #(to-main-api %2))
 

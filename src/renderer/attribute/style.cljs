@@ -5,7 +5,7 @@
    [renderer.codemirror.views :as cm]))
 
 (defmethod hierarchy/form-element :style
-  [key value disabled?]
+  [k v disabled?]
   [:div.w-full.level-2.py-0.px-2
-   [cm/editor value {:options {:readOnly disabled?}
-                     :on-blur #(rf/dispatch [:element/set-attribute key %])}]])
+   [cm/editor v {:options {:readOnly disabled?}
+                 :on-blur #(rf/dispatch [:element/set-attribute k %])}]])

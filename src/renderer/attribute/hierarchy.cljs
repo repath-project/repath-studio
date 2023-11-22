@@ -2,11 +2,11 @@
 
 (defmulti update-attr (fn [_ attr] attr))
 (defmulti description (fn [attr] attr))
-(defmulti form-element (fn [key _value _disabled? _initial] key))
+(defmulti form-element (fn [k _v _disabled? _initial] k))
 
 (defmethod update-attr :default
-  [element attribute f & args]
-  (update-in element [:attrs attribute] f (first args)))
+  [el attr f & args]
+  (update-in el [:attrs attr] f (first args)))
 
 (defmethod description :d
   []

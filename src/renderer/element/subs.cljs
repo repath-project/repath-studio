@@ -43,14 +43,14 @@
 (rf/reg-sub
  :element/filter
  :<- [:document/elements]
- (fn [elements [_ keys]]
-   (mapv (fn [key] (get elements key)) keys)))
+ (fn [elements [_ ks]]
+   (mapv #(% elements) ks)))
 
 (rf/reg-sub
  :element/filter-visible
  :<- [:document/elements]
- (fn [elements [_ keys]]
-   (filter :visible? (mapv (fn [key] (get elements key)) keys))))
+ (fn [elements [_ ks]]
+   (filter :visible? (mapv #(% elements) ks))))
 
 (rf/reg-sub
  :element/selected
@@ -65,10 +65,22 @@
    (reduce #(conj %1 (:key %2)) #{} selected-elements)))
 
 (rf/reg-sub
+ :element/selected-tags
+ :<- [:element/selected]
+ (fn [selected-elements _]
+   (reduce #(conj %1 (:tag %2)) #{} selected-elements)))
+
+(rf/reg-sub
  :element/selected?
  :<- [:element/selected]
  (fn [selected-elements _]
    (seq selected-elements)))
+
+(rf/reg-sub
+ :element/selected-locked?
+ :<- [:element/selected]
+ (fn [selected-elements _]
+   (not-any? #(not (:locked? %)) selected-elements)))
 
 (rf/reg-sub
  :element/multiple-selected?

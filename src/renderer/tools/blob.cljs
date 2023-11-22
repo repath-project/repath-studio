@@ -24,30 +24,30 @@
 (derive ::size ::length/length)
 
 (defmethod attr-hierarchy/form-element ::extraPoints
-  [key value]
-  [attr-views/range-input key value {:min 0
-                                     :max 50
-                                     :step "1"} 0])
+  [k v]
+  [attr-views/range-input k v {:min 0
+                               :max 50
+                               :step "1"} 0])
 
 (defmethod attr-hierarchy/form-element ::randomness
-  [key value]
-  [attr-views/range-input key value {:min 0
-                                     :max 50
-                                     :step "1"} 0])
+  [k v]
+  [attr-views/range-input k v {:min 0
+                               :max 50
+                               :step "1"} 0])
 
 (defmethod attr-hierarchy/form-element ::seed
-  [key value disabled?]
+  [k v disabled?]
   (let [random-seed (goog.math/randomInt 1000000)]
     [:<>
-     [attr-views/form-input {:key key
-                             :value value
+     [attr-views/form-input {:key k
+                             :value v
                              :disabled? disabled?
                              :placeholder 0}]
      [:button.button.ml-px.inline-block.level-2.text-muted
       {:title "Generate random seed"
        :style {:flex "0 0 26px"
                :height "100%"}
-       :on-click #(rf/dispatch [:element/set-attribute key random-seed])}
+       :on-click #(rf/dispatch [:element/set-attribute k random-seed])}
       [comp/icon "refresh"]]]))
 
 (defmethod attr-hierarchy/description ::x
