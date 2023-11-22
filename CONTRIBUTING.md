@@ -42,7 +42,8 @@ module\
 ├── effects.cljs  <--- effectful handlers
 ├── subs.cljs     <--- subscription handlers
 ├── handlers.cljs <--- helper functions for db transformations
-└── styles.css    <--- styles
+├── styles.css    <--- styles
+└── README.md     <--- documentation
 </pre>
 
 ## How to build it locally
