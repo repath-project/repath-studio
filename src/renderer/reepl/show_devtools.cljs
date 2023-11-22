@@ -1,8 +1,9 @@
 (ns renderer.reepl.show-devtools
-  (:require [clojure.string :as str]
-            [reagent.core :as r]
-            [devtools.formatters.core :as devtools]
-            #_[cljs.pprint :as pprint]))
+  (:require
+   #_[cljs.pprint :as pprint]
+   [devtools.formatters.core :as devtools]
+   [reagent.core :as r]
+   [clojure.string :as str]))
 
 #_(defn pprint-str [val]
     (pprint/write val :stream nil))

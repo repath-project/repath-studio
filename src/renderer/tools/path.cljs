@@ -1,12 +1,12 @@
 (ns renderer.tools.path
   "https://www.w3.org/TR/SVG/paths.html#PathElement"
   (:require
-   [renderer.tools.base :as tools]
-   #_[clojure.string :as str]
-   ["svgpath" :as svgpath]
-   ["svg-path-bbox" :as svg-path-bbox]
    ["paper" :refer [Path]]
-   [goog.object]))
+   ["svg-path-bbox" :as svg-path-bbox]
+   ["svgpath" :as svgpath]
+   #_[clojure.string :as str]
+   [goog.object]
+   [renderer.tools.base :as tools]))
 
 (derive :path ::tools/graphics)
 

@@ -2,13 +2,13 @@
   (:require
    [re-frame.core :as rf]
    [re-frame.interceptor :refer [->interceptor get-effect get-coeffect assoc-coeffect assoc-effect]]
-   [renderer.utils.uuid :as uuid]
-   [renderer.utils.vec :as vec]
    [renderer.document.db :as db]
-   [renderer.history.handlers :as history]
-   [renderer.element.handlers :as element-handlers]
    [renderer.document.handlers :as handlers]
-   [renderer.frame.handlers :as frame]))
+   [renderer.element.handlers :as element-handlers]
+   [renderer.frame.handlers :as frame]
+   [renderer.history.handlers :as history]
+   [renderer.utils.uuid :as uuid]
+   [renderer.utils.vec :as vec]))
 
 (def active-document-path
   (let [db-store-key :re-frame-path/db-store]

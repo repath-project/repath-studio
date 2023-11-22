@@ -1,11 +1,11 @@
 (ns preload
   (:require
-   ["electron" :refer [contextBridge ipcRenderer]]
-   ["mdn-data" :as mdn] ;; deprecating in favor of w3c/webref
-   ["@webref/css" :as css]
    #_["@sentry/electron" :as Sentry]
-   ["opentype.js" :as opentype]
+   ["@webref/css" :as css]
+   ["electron" :refer [contextBridge ipcRenderer]]
    ["font-scanner" :as fontManager]
+   ["mdn-data" :as mdn] ;; deprecating in favor of w3c/webref
+   ["opentype.js" :as opentype]
    [config]))
 
 (defn text->path
@@ -17,9 +17,9 @@
 
 (defonce api
   {:send (fn [channel data] (.send ipcRenderer channel data))
-   :receive (fn [channel func] 
+   :receive (fn [channel func]
               ;; Strip event (_) as it includes `sender`
-              (.on ipcRenderer channel (fn [_ args] (func args)))) 
+              (.on ipcRenderer channel (fn [_ args] (func args))))
    :mdn mdn
    :webrefCss css
    ;; https://github.com/axosoft/font-scanner#getavailablefonts

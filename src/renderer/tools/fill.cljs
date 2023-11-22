@@ -1,9 +1,9 @@
 (ns renderer.tools.fill
   (:require
-   [renderer.tools.base :as tools]
    [renderer.element.handlers :as elements]
    [renderer.handlers :as handlers]
-   [renderer.history.handlers :as history]))
+   [renderer.history.handlers :as history]
+   [renderer.tools.base :as tools]))
 
 (derive :fill ::tools/misc)
 

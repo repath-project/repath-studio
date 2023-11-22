@@ -1,10 +1,10 @@
 (ns renderer.document.views
   (:require
+   ["@radix-ui/react-context-menu" :as ContextMenu]
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [renderer.components :as comp]
-   [renderer.history.views :as history]
-   ["@radix-ui/react-context-menu" :as ContextMenu]))
+   [renderer.history.views :as history]))
 
 (defn actions []
   [:div.flex.toolbar

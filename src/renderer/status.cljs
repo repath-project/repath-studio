@@ -1,13 +1,13 @@
 (ns renderer.status
   (:require
+   ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
+   ["@radix-ui/react-select" :as Select]
+   [goog.string :as gstring]
    [re-frame.core :as rf]
-   [renderer.components :as comp]
-   [renderer.filters :as filters]
    [re-frame.registrar]
    [renderer.color.views :as color]
-   [goog.string :as gstring]
-   ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
-   ["@radix-ui/react-select" :as Select]))
+   [renderer.components :as comp]
+   [renderer.filters :as filters]))
 
 (defn coordinates []
   (let [[x y] @(rf/subscribe [:frame/adjusted-mouse-pos])]

@@ -1,9 +1,9 @@
 (ns renderer.element.effects
   (:require
    [re-frame.core :as rf]
-   [renderer.tools.base :as tools]
    [renderer.element.handlers :as element-handlers]
-   [renderer.history.handlers :as history]))
+   [renderer.history.handlers :as history]
+   [renderer.tools.base :as tools]))
 
 
 (defn elements->string

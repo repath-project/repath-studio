@@ -1,6 +1,7 @@
 (ns bounds-test
-  (:require [cljs.test :refer-macros [deftest testing is]]
-            [renderer.utils.bounds :as bounds]))
+  (:require
+   [cljs.test :refer-macros [deftest testing is]]
+   [renderer.utils.bounds :as bounds]))
 
 (deftest test-intersect-bounds?
   (testing "bounds are intesrecting"

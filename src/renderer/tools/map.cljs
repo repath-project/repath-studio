@@ -1,7 +1,7 @@
 (ns renderer.tools.map
   (:require
-   [reagent.core :as ra]
    [re-frame.core :as rf]
+   [reagent.core :as ra]
    [renderer.tools.base :as tools]
    [renderer.utils.mouse :as mouse]))
 

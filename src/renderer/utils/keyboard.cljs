@@ -1,7 +1,7 @@
 (ns renderer.utils.keyboard
   (:require
-   [re-frame.core :as rf]
-   [clojure.set :as set])
+   [clojure.set :as set]
+   [re-frame.core :as rf])
   (:import
    [goog.events KeyCodes]))
 

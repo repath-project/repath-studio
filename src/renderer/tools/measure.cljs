@@ -1,13 +1,13 @@
 (ns renderer.tools.measure
   (:require
+   [clojure.core.matrix :as mat]
+   [goog.math]
    [re-frame.core :as rf]
    [renderer.element.handlers :as elements]
-   [renderer.overlay :as overlay]
-   [clojure.core.matrix :as mat]
    [renderer.handlers :as handlers]
+   [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
-   [renderer.utils.units :as units]
-   [goog.math]))
+   [renderer.utils.units :as units]))
 
 (derive :measure ::tools/misc)
 

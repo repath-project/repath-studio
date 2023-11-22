@@ -1,11 +1,11 @@
 (ns renderer.reepl.views
   (:require
-   [renderer.reepl.core :as reepl]
+   [re-frame.core :as rf]
    [reagent.core :as r]
+   [renderer.reepl.core :as reepl]
    [renderer.reepl.replumb :as replumb]
-   [renderer.reepl.show-function :as show-function]
    [renderer.reepl.show-devtools :as show-devtools]
-   [re-frame.core :as rf]))
+   [renderer.reepl.show-function :as show-function]))
 
 ;; Used to make the repl reload-tolerant
 (defonce repl-state

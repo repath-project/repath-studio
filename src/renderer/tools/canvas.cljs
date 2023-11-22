@@ -1,14 +1,14 @@
 (ns renderer.tools.canvas
-  "The main SVG element that hosts all pages"
+  "The main SVG element that hosts all pages."
   (:require
-   [re-frame.core :as rf]
-   [renderer.tools.base :as tools]
    [clojure.string :as str]
+   [re-frame.core :as rf]
    [renderer.filters :as filters]
-   [renderer.utils.mouse :as mouse]
-   [renderer.utils.keyboard :as keyboard]
+   [renderer.overlay :as overlay]
    [renderer.rulers.views :as rulers]
-   [renderer.overlay :as overlay]))
+   [renderer.tools.base :as tools]
+   [renderer.utils.keyboard :as keyboard]
+   [renderer.utils.mouse :as mouse]))
 
 (derive :canvas ::tools/tool)
 

@@ -1,8 +1,8 @@
 (ns renderer.frame.subs
   (:require
+   [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
-   [renderer.frame.handlers :as handlers]
-   [clojure.core.matrix :as mat]))
+   [renderer.frame.handlers :as handlers]))
 
 (rf/reg-sub
  :frame/viewbox

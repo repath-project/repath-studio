@@ -1,11 +1,12 @@
 (ns renderer.reepl.repl-items
-  (:require [cljs.reader]
-            [cljs.tools.reader]
-            [reagent.core :as r]
-            ["react" :as react]
-            [renderer.reepl.show-value :refer [show-value]]
-            [renderer.reepl.codemirror :as codemirror]
-            [renderer.reepl.helpers :as helpers]))
+  (:require
+   ["react" :as react]
+   [cljs.reader]
+   [cljs.tools.reader]
+   [reagent.core :as r]
+   [renderer.reepl.codemirror :as codemirror]
+   [renderer.reepl.helpers :as helpers]
+   [renderer.reepl.show-value :refer [show-value]]))
 
 (def styles
   {:repl-items {:flex 1

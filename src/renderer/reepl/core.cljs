@@ -1,16 +1,17 @@
 (ns renderer.reepl.core
-  (:require [cljs.reader]
-            [cljs.tools.reader]
-            [reagent.core :as r]
-            [renderer.reepl.codemirror :as code-mirror]
-            [renderer.reepl.repl-items :refer [repl-items]]
-            [renderer.reepl.completions :refer [completion-list]]
-            [renderer.reepl.handlers :as handlers]
-            [renderer.reepl.subs :as subs]
-            [renderer.reepl.helpers :as helpers]
-            [renderer.components :as comp]
-            [replumb.core :as replumb]
-            [re-frame.core :as rf])
+  (:require
+   [cljs.reader]
+   [cljs.tools.reader]
+   [re-frame.core :as rf]
+   [reagent.core :as r]
+   [renderer.components :as comp]
+   [renderer.reepl.codemirror :as code-mirror]
+   [renderer.reepl.completions :refer [completion-list]]
+   [renderer.reepl.handlers :as handlers]
+   [renderer.reepl.helpers :as helpers]
+   [renderer.reepl.repl-items :refer [repl-items]]
+   [renderer.reepl.subs :as subs]
+   [replumb.core :as replumb])
   (:require-macros
    [reagent.ratom :refer [reaction]]))
 

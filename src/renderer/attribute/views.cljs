@@ -1,14 +1,14 @@
 (ns renderer.attribute.views
   (:require
-   [clojure.string :as str]
-   [re-frame.core :as rf]
    ["@radix-ui/react-popover" :as Popover]
    ["@radix-ui/react-select" :as Select]
+   [clojure.string :as str]
+   [config]
+   [platform]
+   [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.components :as comp]
-   [renderer.tools.base :as tools]
-   [config]
-   [platform]))
+   [renderer.tools.base :as tools]))
 
 (defn browser-support
   [browser version-added]

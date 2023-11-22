@@ -1,14 +1,14 @@
 (ns renderer.element.handlers
   (:require
+   ["paper" :refer [Path]]
+   [clojure.core.matrix :as mat]
+   [renderer.attribute.hierarchy :as hierarchy]
    [renderer.tools.base :as tools]
    [renderer.tools.path :as path]
-   [renderer.utils.uuid :as uuid]
-   [renderer.utils.map :as map]
-   [renderer.utils.vec :as vec]
    [renderer.utils.bounds :as bounds]
-   [renderer.attribute.hierarchy :as hierarchy]
-   [clojure.core.matrix :as mat]
-   ["paper" :refer [Path]]))
+   [renderer.utils.map :as map]
+   [renderer.utils.uuid :as uuid]
+   [renderer.utils.vec :as vec]))
 
 (defn elements-path [db]
   [:documents (:active-document db) :elements])

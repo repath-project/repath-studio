@@ -1,14 +1,14 @@
 (ns renderer.tools.circle
   "https://www.w3.org/TR/SVG/shapes.html#CircleElement"
   (:require
+   [clojure.core.matrix :as mat]
    [clojure.string :as str]
-   [renderer.tools.base :as tools]
+   [re-frame.core :as rf]
+   [renderer.attribute.hierarchy :as hierarchy]
    [renderer.element.handlers :as elements]
    [renderer.overlay :as overlay]
-   [renderer.attribute.hierarchy :as hierarchy]
-   [clojure.core.matrix :as mat]
-   [renderer.utils.units :as units]
-   [re-frame.core :as rf]))
+   [renderer.tools.base :as tools]
+   [renderer.utils.units :as units]))
 
 (derive :circle ::tools/shape)
 

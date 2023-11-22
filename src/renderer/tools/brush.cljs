@@ -1,21 +1,21 @@
 (ns renderer.tools.brush
   "https://github.com/steveruizok/perfect-freehand"
   (:require
+   ["perfect-freehand" :refer [getStroke]]
+   ["svg-path-bbox" :as svg-path-bbox]
+   [clojure.core.matrix :as mat]
+   [goog.math]
+   [renderer.attribute.color :as color]
+   [renderer.attribute.hierarchy :as attr-hierarchy]
+   [renderer.attribute.range :as range]
+   [renderer.attribute.views :as attr-views]
    [renderer.element.handlers :as elements]
+   [renderer.handlers :as handlers]
+   [renderer.history.handlers :as history]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
-   [renderer.history.handlers :as history]
-   [renderer.handlers :as handlers]
-   [renderer.attribute.views :as attr-views]
-   [renderer.attribute.hierarchy :as attr-hierarchy]
-   [renderer.utils.units :as units]
-   [renderer.attribute.range :as range]
    [renderer.utils.mouse :as mouse]
-   [clojure.core.matrix :as mat]
-   [renderer.attribute.color :as color]
-   ["svg-path-bbox" :as svg-path-bbox]
-   ["perfect-freehand" :refer [getStroke]]
-   [goog.math]))
+   [renderer.utils.units :as units]))
 
 (derive :brush ::tools/draw)
 

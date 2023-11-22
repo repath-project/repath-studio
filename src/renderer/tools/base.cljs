@@ -1,13 +1,13 @@
 (ns renderer.tools.base
   (:require
-   [renderer.element.utils :as el-utils]
-   [renderer.utils.map :as map]
-   [renderer.utils.bounds :as bounds]
-   ["paperjs-offset" :refer [PaperOffset]]
-   ["paper" :refer [Path]]
    ["@mdn/browser-compat-data" :as bcd]
+   ["paper" :refer [Path]]
+   ["paperjs-offset" :refer [PaperOffset]]
+   [goog.string :as gstring]
    [reagent.dom.server :as server]
-   [goog.string :as gstring]))
+   [renderer.element.utils :as el-utils]
+   [renderer.utils.bounds :as bounds]
+   [renderer.utils.map :as map]))
 
 (derive ::transform ::tool)
 (derive ::draw ::tool)

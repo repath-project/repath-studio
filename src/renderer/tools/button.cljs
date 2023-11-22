@@ -1,8 +1,8 @@
 (ns renderer.tools.button
   (:require
    [re-frame.core :as rf]
-   [renderer.tools.base :as tools]
    [renderer.attribute.views :as attr]
+   [renderer.tools.base :as tools]
    [renderer.utils.mouse :as mouse]
    [renderer.utils.units :as units]))
 

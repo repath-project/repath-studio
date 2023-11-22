@@ -1,8 +1,8 @@
 (ns renderer.menubar.views
   (:require
+   ["@radix-ui/react-menubar" :as Menubar]
    [re-frame.core :as rf]
-   [renderer.components :as comp]
-   ["@radix-ui/react-menubar" :as Menubar]))
+   [renderer.components :as comp]))
 
 (def menu
   [{:key :file

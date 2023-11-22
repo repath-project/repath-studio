@@ -1,6 +1,7 @@
 (ns renderer.reepl.show-function
-  (:require [clojure.string :as str]
-            [renderer.reepl.helpers :as helpers]))
+  (:require
+   [clojure.string :as str]
+   [renderer.reepl.helpers :as helpers]))
 
 (def text (partial helpers/text))
 

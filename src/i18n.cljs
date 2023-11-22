@@ -1,10 +1,9 @@
 (ns i18n
   "Internationalization namespace
    SEE https://github.com/taoensso/tempura"
-  (:require [re-frame.core :as rf]
-            [taoensso.tempura
-             :refer [tr]
-             :refer-macros [load-resource-at-compile-time]]))
+  (:require
+   [re-frame.core :as rf]
+   [taoensso.tempura :refer [tr] :refer-macros [load-resource-at-compile-time]]))
 
 (def dictionary
   "We need to load resources at compile time in clojurescript

@@ -1,14 +1,14 @@
 (ns renderer.tools.text
   (:require
-   [renderer.element.handlers :as elements]
-   [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.utils.units :as units]
    [clojure.core.matrix :as mat]
+   [clojure.string :as str]
+   [re-frame.core :as rf]
+   [renderer.attribute.hierarchy :as hierarchy]
+   [renderer.element.handlers :as elements]
+   [renderer.handlers :as handlers]
    [renderer.tools.base :as tools]
    [renderer.utils.bounds :as bounds]
-   [renderer.handlers :as handlers]
-   [re-frame.core :as rf]
-   [clojure.string :as str]))
+   [renderer.utils.units :as units]))
 
 (derive :text ::tools/renderable)
 

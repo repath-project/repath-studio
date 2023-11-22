@@ -1,7 +1,7 @@
 (ns renderer.panel.events
   (:require
-   [re-frame.core :as rf]
    [clojure.core.matrix :as mat]
+   [re-frame.core :as rf]
    [renderer.utils.local-storage :as local-storage]))
 
 (rf/reg-event-db

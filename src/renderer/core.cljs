@@ -1,40 +1,40 @@
 (ns renderer.core
   (:require
-   [renderer.subs]
-   [renderer.events]
-   [renderer.effects]
-   [renderer.db]
-   [renderer.utils.keyboard :as keyboard]
-   [renderer.history.core]
-   [renderer.tools.core]
-   [renderer.rulers.core]
-   [renderer.tree.core]
-   [renderer.panel.core]
-   [renderer.window.core]
-   [renderer.document.core]
-   [renderer.frame.core]
-   [renderer.element.core]
-   [renderer.reepl.core]
-   [renderer.attribute.core]
-   [renderer.notification.core]
-   [renderer.theme.core]
-   [renderer.menubar.core]
-   [renderer.reepl.replumb :as replumb]
-   [renderer.cmdk.core]
-   [replumb.repl :as repl]
-   [renderer.views :as views]
-   [reagent.dom :as rdom]
-   [re-frame.core :as rf]
-   [re-pressed.core :as rp]
-   [shadow.cljs.bootstrap.browser :as bootstrap]
-   [devtools.core :as devtools]
-   [renderer.utils.error :as error]
    #_["@sentry/electron/renderer" :as sentry-electron-renderer]
    #_["@sentry/react" :as sentry-react]
    ["paper" :refer [paper]]
-   [user]
    [config]
-   [platform]))
+   [devtools.core :as devtools]
+   [platform]
+   [re-frame.core :as rf]
+   [re-pressed.core :as rp]
+   [reagent.dom :as rdom]
+   [renderer.attribute.core]
+   [renderer.cmdk.core]
+   [renderer.db]
+   [renderer.document.core]
+   [renderer.effects]
+   [renderer.element.core]
+   [renderer.events]
+   [renderer.frame.core]
+   [renderer.history.core]
+   [renderer.menubar.core]
+   [renderer.notification.core]
+   [renderer.panel.core]
+   [renderer.reepl.core]
+   [renderer.reepl.replumb :as replumb]
+   [renderer.rulers.core]
+   [renderer.subs]
+   [renderer.theme.core]
+   [renderer.tools.core]
+   [renderer.tree.core]
+   [renderer.utils.error :as error]
+   [renderer.utils.keyboard :as keyboard]
+   [renderer.views :as views]
+   [renderer.window.core]
+   [replumb.repl :as repl]
+   [shadow.cljs.bootstrap.browser :as bootstrap]
+   [user]))
 
 (def console-easter-egg "
 ██████╗░███████╗██████╗░░█████╗░████████╗██╗░░██╗
@@ -91,7 +91,7 @@
 
   (if platform/electron?
     (do (let [fonts (js->clj js/window.api.systemFonts :keywordize-keys true)]
-         (rf/dispatch-sync [:set-system-fonts fonts]))
+          (rf/dispatch-sync [:set-system-fonts fonts]))
         (.then (js/window.api.webrefCss.listAll)
                #(rf/dispatch-sync [:set-webref-css (js->clj % :keywordize-keys true)]))
         (rf/dispatch-sync [:set-mdn (js->clj js/window.api.mdn :keywordize-keys true)])

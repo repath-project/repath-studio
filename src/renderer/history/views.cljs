@@ -1,6 +1,7 @@
 (ns renderer.history.views
-  #_(:require [re-frame.core :as rf]
-              [clojure.zip :as zip]))
+  #_(:require
+     [clojure.zip :as zip]
+     [re-frame.core :as rf]))
 
 (defn select-options
   [history-list]

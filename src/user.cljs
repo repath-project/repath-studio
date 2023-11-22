@@ -1,10 +1,10 @@
 (ns user
   (:require
-   [re-frame.core :as rf]
-   [re-frame.db :as db]
-   [config]
+   [ajax.core]
    [clojure.string :as str]
-   [ajax.core]))
+   [config]
+   [re-frame.core :as rf]
+   [re-frame.db :as db]))
 
 (defn ^:export move
   "Moves the selected elements."

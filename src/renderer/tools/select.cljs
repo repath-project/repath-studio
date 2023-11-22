@@ -1,16 +1,16 @@
 
 (ns renderer.tools.select
   (:require
-   [renderer.tools.base :as tools]
-   [renderer.element.handlers :as elements]
-   [renderer.overlay :as overlay]
-   [renderer.utils.bounds :as bounds]
-   [renderer.utils.units :as units]
    [clojure.core.matrix :as mat]
    [clojure.set :as set]
-   [renderer.history.handlers :as history]
+   [renderer.element.handlers :as elements]
    [renderer.handlers :as handlers]
-   [renderer.utils.mouse :as mouse]))
+   [renderer.history.handlers :as history]
+   [renderer.overlay :as overlay]
+   [renderer.tools.base :as tools]
+   [renderer.utils.bounds :as bounds]
+   [renderer.utils.mouse :as mouse]
+   [renderer.utils.units :as units]))
 
 (derive :select ::tools/transform)
 

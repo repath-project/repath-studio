@@ -1,10 +1,10 @@
 (ns renderer.tools.views
   (:require
+   ["@radix-ui/react-tooltip" :as Tooltip]
    [re-frame.core :as rf]
-   [renderer.components :as comp]
-   [renderer.tools.base :as tools]
    [re-frame.registrar]
-   ["@radix-ui/react-tooltip" :as Tooltip]))
+   [renderer.components :as comp]
+   [renderer.tools.base :as tools]))
 
 (defn tool-button [type]
   (let [tool @(rf/subscribe [:tool])

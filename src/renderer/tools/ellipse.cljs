@@ -1,14 +1,14 @@
 (ns renderer.tools.ellipse
   "https://www.w3.org/TR/SVG/shapes.html#EllipseElement"
   (:require
-   [renderer.element.handlers :as elements]
-   [renderer.tools.base :as tools]
-   [renderer.utils.units :as units]
-   [renderer.overlay :as overlay]
-   [renderer.attribute.hierarchy :as hierarchy]
-   [clojure.string :as str]
    [clojure.core.matrix :as mat]
-   [re-frame.core :as rf]))
+   [clojure.string :as str]
+   [re-frame.core :as rf]
+   [renderer.attribute.hierarchy :as hierarchy]
+   [renderer.element.handlers :as elements]
+   [renderer.overlay :as overlay]
+   [renderer.tools.base :as tools]
+   [renderer.utils.units :as units]))
 
 (derive :ellipse ::tools/shape)
 

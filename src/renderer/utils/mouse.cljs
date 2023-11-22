@@ -28,7 +28,7 @@
   ;; Disable native zoom on canvas
   (when (and (.-ctrlKey event) (.-deltaY event))
     (.preventDefault event))
-  
+
   (rf/dispatch-sync [:pointer-event {:element element
                                      :target (.-target event)
                                      :type (keyword (.-type event))

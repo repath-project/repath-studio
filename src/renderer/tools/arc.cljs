@@ -1,16 +1,16 @@
 (ns renderer.tools.arc
   (:require
-   [renderer.tools.base :as tools]
-   [renderer.element.handlers :as elements]
-   [renderer.utils.mouse :as mouse]
-   [renderer.overlay :as overlay]
-   [renderer.attribute.hierarchy :as hierarchy]
-   [clojure.core.matrix :as mat]
-   [renderer.utils.units :as units]
-   [renderer.attribute.angle :as angle]
    ["svg-path-bbox" :as svg-path-bbox]
+   [clojure.core.matrix :as mat]
+   [goog.math]
    [re-frame.core :as rf]
-   [goog.math]))
+   [renderer.attribute.angle :as angle]
+   [renderer.attribute.hierarchy :as hierarchy]
+   [renderer.element.handlers :as elements]
+   [renderer.overlay :as overlay]
+   [renderer.tools.base :as tools]
+   [renderer.utils.mouse :as mouse]
+   [renderer.utils.units :as units]))
 
 (derive :arc ::tools/custom)
 (derive ::start-deg ::angle/angle)

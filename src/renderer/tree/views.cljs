@@ -1,8 +1,8 @@
 (ns renderer.tree.views
   (:require
+   ["@radix-ui/react-context-menu" :as ContextMenu]
    [re-frame.core :as rf]
-   [renderer.components :as comp]
-   ["@radix-ui/react-context-menu" :as ContextMenu]))
+   [renderer.components :as comp]))
 
 (defn item-buttons
   [{:keys [key locked? visible?]}]
@@ -81,8 +81,8 @@
       :on-drop (fn [evt]
                  (.preventDefault evt)
                  (rf/dispatch [:element/set-parent (-> (.-dataTransfer evt)
-                                                        (.getData "key")
-                                                        (keyword)) key]))
+                                                       (.getData "key")
+                                                       (keyword)) key]))
       :on-click (fn [evt]
                   (.stopPropagation evt)
                   (rf/dispatch [:element/select (.-ctrlKey evt) element]))

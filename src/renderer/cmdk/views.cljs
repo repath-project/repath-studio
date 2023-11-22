@@ -10,13 +10,13 @@
   [group {:keys [label action key type]}]
   ^{:key key}
   (when-not (= type :separator)
-   [:> Command/CommandItem
-    {:key key
-     :on-select #(doall (rf/dispatch action)
-                        (rf/dispatch [:cmdk/set false]))}
-    (str group " / " label)
-    [:div.right-slot
-     [comp/shortcuts action]]]))
+    [:> Command/CommandItem
+     {:key key
+      :on-select #(doall (rf/dispatch action)
+                         (rf/dispatch [:cmdk/set false]))}
+     (str group " / " label)
+     [:div.right-slot
+      [comp/shortcuts action]]]))
 
 (defn group
   "TODO recur groups"
@@ -24,8 +24,8 @@
   ^{:key key}
   [:> Command/CommandGroup
    #_[:div.px-3.py-2.text-muted.uppercase.font-bold
-    {:style {:font-size "10px"}}
-    label]
+      {:style {:font-size "10px"}}
+      label]
    (map #(if (:items %)
            (map (fn [i] (item (str label " / " (:label %)) i)) (:items %))
            (item label %))

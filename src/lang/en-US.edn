@@ -3,6 +3,6 @@
  {:search-command "Search for a command"
   :command-palette "Command palette"
   :no-results "No results found."}
- 
+
  :color
  {:swap "Swap fill with stroke"}}

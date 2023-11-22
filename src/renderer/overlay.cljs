@@ -1,13 +1,13 @@
 (ns renderer.overlay
   "Render functions for canvas overlay objects"
   (:require
-   [re-frame.core :as rf]
-   [renderer.utils.mouse :as mouse]
-   [renderer.utils.bounds :as bounds]
-   [renderer.utils.units :as units]
-   [renderer.tools.base :as tools]
    [clojure.core.matrix :as mat]
-   [goog.math :as math]))
+   [goog.math :as math]
+   [re-frame.core :as rf]
+   [renderer.tools.base :as tools]
+   [renderer.utils.bounds :as bounds]
+   [renderer.utils.mouse :as mouse]
+   [renderer.utils.units :as units]))
 
 ;; The iframe is isolated so we don't have access to the css vars of the parent.
 ;; We are currently using hardcoded values, but we hould be able to set those 

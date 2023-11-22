@@ -1,11 +1,11 @@
 (ns renderer.tools.pen
   (:require
+   [clojure.string :as str]
    [renderer.element.handlers :as elements]
-   [renderer.tools.base :as tools]
-   [renderer.history.handlers :as history]
    [renderer.handlers :as handlers]
-   #_[renderer.tools.path :as path]
-   [clojure.string :as str]))
+   [renderer.history.handlers :as history]
+   [renderer.tools.base :as tools]
+   #_[renderer.tools.path :as path]))
 
 (derive :pen ::tools/draw)
 

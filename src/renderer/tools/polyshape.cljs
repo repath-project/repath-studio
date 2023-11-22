@@ -2,17 +2,17 @@
   "This serves as an abstraction for polygons and polylines that have similar
    attributes and hehavior"
   (:require
+   ["polylabel" :as polylabel]
+   [clojure.core.matrix :as mat]
+   [clojure.string :as str]
+   [re-frame.core :as rf]
+   [renderer.attribute.utils :as attr-utils]
    [renderer.element.handlers :as elements]
+   [renderer.handlers :as handlers]
+   [renderer.history.handlers :as history]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
-   [renderer.utils.units :as units]
-   [renderer.history.handlers :as history]
-   [renderer.handlers :as handlers]
-   [re-frame.core :as rf]
-   [clojure.string :as str]
-   [clojure.core.matrix :as mat]
-   [renderer.attribute.utils :as attr-utils]
-   ["polylabel" :as polylabel]))
+   [renderer.utils.units :as units]))
 
 (derive ::tools/polyshape ::tools/shape)
 

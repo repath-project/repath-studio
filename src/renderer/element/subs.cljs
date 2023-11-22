@@ -1,13 +1,13 @@
 (ns renderer.element.subs
   (:require
-   [re-frame.core :as rf]
-   [renderer.tools.base :as tools]
-   [renderer.utils.map :as map]
+   ["js-beautify" :as js-beautify]
    #_[clojure.core.matrix :as mat]
    [clojure.set :as set]
    [goog.color :as color]
+   [re-frame.core :as rf]
    [renderer.attribute.utils :as attr-utils]
-   ["js-beautify" :as js-beautify]))
+   [renderer.tools.base :as tools]
+   [renderer.utils.map :as map]))
 
 #_(rf/reg-sub
    :element/element

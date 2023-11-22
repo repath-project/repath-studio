@@ -1,9 +1,9 @@
 (ns renderer.object
   (:require
+   ["@radix-ui/react-tooltip" :as Tooltip]
    [re-frame.core :as rf]
-   [renderer.components :as comp]
    [re-frame.registrar]
-   ["@radix-ui/react-tooltip" :as Tooltip]))
+   [renderer.components :as comp]))
 
 (defn actions
   [selected-elements? multiple-selected?]

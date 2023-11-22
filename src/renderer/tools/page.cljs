@@ -1,14 +1,14 @@
 (ns renderer.tools.page
   (:require
-   [re-frame.core :as rf]
-   [renderer.tools.base :as tools]
-   [renderer.element.handlers :as elements]
-   [renderer.utils.mouse :as mouse]
    [clojure.core.matrix :as mat]
-   [renderer.utils.units :as units]
    [clojure.string :as str]
+   [goog.string :as gstring]
+   [re-frame.core :as rf]
    [reagent.dom.server :as dom]
-   [goog.string :as gstring]))
+   [renderer.element.handlers :as elements]
+   [renderer.tools.base :as tools]
+   [renderer.utils.mouse :as mouse]
+   [renderer.utils.units :as units]))
 
 (derive :page ::tools/container)
 

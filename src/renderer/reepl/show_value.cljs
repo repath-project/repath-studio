@@ -1,5 +1,6 @@
 (ns renderer.reepl.show-value
-  (:require [cljs.pprint :as pprint]))
+  (:require
+   [cljs.pprint :as pprint]))
 
 (defn pprint-str [val]
   (pprint/write val :stream nil))

@@ -1,11 +1,11 @@
 (ns renderer.components
   (:require
-   [re-frame.core :as rf]
-   [renderer.utils.keyboard :as keyboard]
-   [clojure.string :as str]
-   ["react-svg" :refer [ReactSVG]]
    ["@radix-ui/react-context-menu" :as ContextMenu]
-   ["@radix-ui/react-dropdown-menu" :as DropdownMenu]))
+   ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
+   ["react-svg" :refer [ReactSVG]]
+   [clojure.string :as str]
+   [re-frame.core :as rf]
+   [renderer.utils.keyboard :as keyboard]))
 
 (defn icon
   [icon {:keys [class]}]

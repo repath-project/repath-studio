@@ -1,16 +1,16 @@
 (ns renderer.tools.line
   "https://www.w3.org/TR/SVG/shapes.html#LineElement"
   (:require
+   [clojure.core.matrix :as mat]
    [clojure.string :as str]
+   [re-frame.core :as rf]
+   [renderer.attribute.hierarchy :as hierarchy]
    [renderer.element.handlers :as elements]
+   [renderer.handlers :as handlers]
+   [renderer.history.handlers :as history]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
-   [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.utils.units :as units]
-   [renderer.history.handlers :as history]
-   [renderer.handlers :as handlers]
-   [re-frame.core :as rf]
-   [clojure.core.matrix :as mat]))
+   [renderer.utils.units :as units]))
 
 (derive :line ::tools/shape)
 

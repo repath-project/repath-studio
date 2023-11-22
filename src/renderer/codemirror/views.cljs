@@ -1,12 +1,12 @@
 (ns renderer.codemirror.views
   (:require
-   [reagent.core :as ra]
-   ["react" :as react]
    ["codemirror" :as codemirror]
+   ["codemirror/addon/hint/css-hint.js"]
+   ["codemirror/addon/hint/show-hint.js"]
    ["codemirror/mode/css/css.js"]
    ["codemirror/mode/xml/xml.js"]
-   ["codemirror/addon/hint/show-hint.js"]
-   ["codemirror/addon/hint/css-hint.js"]))
+   ["react" :as react]
+   [reagent.core :as ra]))
 
 (def default-options
   {:lineNumbers false

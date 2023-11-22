@@ -1,3 +1,4 @@
 (ns renderer.frame.core
-  (:require [renderer.frame.subs]
-            [renderer.frame.events]))
+  (:require
+   [renderer.frame.events]
+   [renderer.frame.subs]))

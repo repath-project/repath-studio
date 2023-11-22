@@ -1,11 +1,11 @@
 (ns renderer.tools.svg
   "https://www.w3.org/TR/SVG/struct.html#SVGElement"
   (:require
+   [clojure.core.matrix :as mat]
+   [clojure.string :as str]
    [renderer.element.handlers :as elements]
    [renderer.tools.base :as tools]
-   [clojure.core.matrix :as mat]
-   [renderer.utils.units :as units]
-   [clojure.string :as str]))
+   [renderer.utils.units :as units]))
 
 (derive :svg ::tools/container)
 

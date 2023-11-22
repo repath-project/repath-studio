@@ -1,13 +1,13 @@
 (ns renderer.tools.element
   (:require
-   [renderer.tools.base :as tools]
-   [renderer.element.handlers :as element-handlers]
-   [reagent.core :as ra]
+   ["react" :as react]
    [re-frame.core :as rf]
-   [renderer.history.handlers :as history]
+   [reagent.core :as ra]
+   [renderer.element.handlers :as element-handlers]
    [renderer.handlers :as handlers]
-   [renderer.utils.mouse :as mouse]
-   ["react" :as react]))
+   [renderer.history.handlers :as history]
+   [renderer.tools.base :as tools]
+   [renderer.utils.mouse :as mouse]))
 
 (derive ::tools/element ::tools/tool)
 

@@ -1,6 +1,7 @@
 (ns renderer.history.handlers
-  (:require [renderer.element.handlers :as elements]
-            [clojure.zip :as zip]))
+  (:require
+   [clojure.zip :as zip]
+   [renderer.element.handlers :as elements]))
 
 (defn history-path [db]
   [:documents (:active-document db) :history])

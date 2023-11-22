@@ -1,7 +1,7 @@
 (ns renderer.attribute.range
   (:require
-   [renderer.attribute.views :as views]
-   [renderer.attribute.hierarchy :as hierarchy]))
+   [renderer.attribute.hierarchy :as hierarchy]
+   [renderer.attribute.views :as views]))
 
 (derive :opacity ::range)
 
@@ -11,4 +11,3 @@
                                 :min 0
                                 :max 1
                                 :step 0.01} initial])
-

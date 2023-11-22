@@ -1,8 +1,8 @@
 (ns renderer.theme.effects
   (:require
+   [platform]
    [re-frame.core :as rf]
-   [renderer.utils.local-storage :as local-storage]
-   [platform]))
+   [renderer.utils.local-storage :as local-storage]))
 
 (rf/reg-fx
  ::set-html-attribute
@@ -31,4 +31,3 @@
                 :dark :light
                 :light :dark)]
      {:dispatch [:theme/set-mode mode]})))
-

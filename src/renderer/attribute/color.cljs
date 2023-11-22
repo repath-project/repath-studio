@@ -1,11 +1,11 @@
 (ns renderer.attribute.color
   "https://developer.mozilla.org/en-US/docs/Web/SVG/Content_type#color"
   (:require
-   [renderer.attribute.views :as views]
+   ["@radix-ui/react-popover" :as Popover]
+   ["@re-path/react-color" :refer [ChromePicker]]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
-   ["@re-path/react-color" :refer [ChromePicker]]
-   ["@radix-ui/react-popover" :as Popover]))
+   [renderer.attribute.views :as views]))
 
 (derive :stroke ::color)
 (derive :fill ::color)

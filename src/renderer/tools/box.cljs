@@ -1,14 +1,14 @@
 (ns renderer.tools.box
   "This serves as an abstraction for box elements that share the
-   :x :y :whidth :height attributes "
+   :x :y :whidth :height attributes."
   (:require
-   [renderer.tools.base :as tools]
-   [renderer.overlay :as overlay]
-   [renderer.attribute.hierarchy :as hierarchy]
-   [re-frame.core :as rf]
-   [renderer.utils.units :as units]
    [clojure.core.matrix :as mat]
-   [clojure.string :as str]))
+   [clojure.string :as str]
+   [re-frame.core :as rf]
+   [renderer.attribute.hierarchy :as hierarchy]
+   [renderer.overlay :as overlay]
+   [renderer.tools.base :as tools]
+   [renderer.utils.units :as units]))
 
 (derive ::tools/box ::tools/element)
 

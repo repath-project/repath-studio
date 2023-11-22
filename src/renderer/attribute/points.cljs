@@ -1,14 +1,14 @@
 (ns renderer.attribute.points
   "https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/points"
   (:require
-   [renderer.attribute.views :as views]
-   [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.components :as comp]
-   [renderer.attribute.utils :as utils]
+   ["@radix-ui/react-popover" :as Popover]
    [clojure.string :as str]
-   [renderer.utils.vec :as vec]
    [re-frame.core :as rf]
-   ["@radix-ui/react-popover" :as Popover]))
+   [renderer.attribute.hierarchy :as hierarchy]
+   [renderer.attribute.utils :as utils]
+   [renderer.attribute.views :as views]
+   [renderer.components :as comp]
+   [renderer.utils.vec :as vec]))
 
 (defmethod hierarchy/description :points
   []
@@ -60,5 +60,3 @@
                                  :on-click #(remove-point-by-index points index)}
                                 [comp/icon "times" {:class "small"}]]]) points)]))
           [:> Popover/Arrow {:class "popover-arrow"}]]]])]))
-
-

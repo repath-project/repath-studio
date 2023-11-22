@@ -1,10 +1,10 @@
 (ns renderer.attribute.angle
   "https://developer.mozilla.org/en-US/docs/Web/SVG/Content_type#angle"
   (:require
-   [renderer.attribute.views :as views]
+   ["@radix-ui/react-popover" :as Popover]
    [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.components :as comp]
-   ["@radix-ui/react-popover" :as Popover]))
+   [renderer.attribute.views :as views]
+   [renderer.components :as comp]))
 
 (defmethod hierarchy/form-element ::angle
   [key value disabled? initial]

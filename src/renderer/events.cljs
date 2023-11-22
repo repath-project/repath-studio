@@ -1,13 +1,13 @@
 (ns renderer.events
   (:require
-   [re-frame.core :as rf]
-   [renderer.tools.base :as tools]
    [clojure.core.matrix :as mat]
+   [malli.core :as ma]
+   [re-frame.core :as rf]
+   [renderer.db :as db]
    [renderer.frame.handlers :as frame-handlers]
    [renderer.handlers :as handlers]
-   [renderer.utils.local-storage :as local-storage]
-   [renderer.db :as db]
-   [malli.core :as ma]))
+   [renderer.tools.base :as tools]
+   [renderer.utils.local-storage :as local-storage]))
 
 (defn check-and-throw
   "Throws an exception if `db` doesn't match the Spec"

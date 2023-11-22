@@ -46,7 +46,7 @@
       {:on-click #(rf/dispatch [:window/open-remote-url
                                 "https://repath.studio/roadmap/changelog/"])}
       "Changelog"]]
-    
+
     [:div
      [:a
       {:on-click #(rf/dispatch [:window/open-remote-url

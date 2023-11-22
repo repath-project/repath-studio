@@ -1,11 +1,11 @@
 (ns renderer.tools.shape
   "https://www.w3.org/TR/SVG/shapes.html#TermShapeElement"
   (:require
-   [renderer.tools.base :as tools]
-   [re-frame.core :as rf]
    ["element-to-path" :as element-to-path]
+   [goog.string :as gstring]
+   [re-frame.core :as rf]
    [reagent.dom.server :as server]
-   [goog.string :as gstring]))
+   [renderer.tools.base :as tools]))
 
 (derive ::tools/shape ::tools/graphics)
 

@@ -1,8 +1,8 @@
 (ns renderer.tools.group
   "https://www.w3.org/TR/SVG/struct.html#GElement"
   (:require
-   [renderer.tools.base :as tools]
    [re-frame.core :as rf]
+   [renderer.tools.base :as tools]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.mouse :as mouse]))
 

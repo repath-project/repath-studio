@@ -1,12 +1,12 @@
 (ns main
   (:require
+   #_["@sentry/electron/main" :as sentry-electron-main]
+   ["electron-extension-installer" :refer [REACT_DEVELOPER_TOOLS]]
+   ["electron-extension-installer$default" :as installExtension]
+   #_["electron-updater" :as updater]
+   ["electron-window-state" :as window-state-keeper]
    ["electron" :refer [app shell ipcMain BrowserWindow clipboard nativeTheme]]
    ["path" :as path]
-   #_["electron-updater" :as updater]
-   #_["@sentry/electron/main" :as sentry-electron-main]
-   ["electron-window-state" :as window-state-keeper]
-   ["electron-extension-installer$default" :as installExtension]
-   ["electron-extension-installer" :refer [REACT_DEVELOPER_TOOLS]]
    [config]
    [file]))
 

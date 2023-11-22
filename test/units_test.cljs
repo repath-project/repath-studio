@@ -1,6 +1,7 @@
 (ns units-test
-  (:require [cljs.test :refer-macros [deftest testing is]]
-            [renderer.utils.units :as units]))
+  (:require
+   [cljs.test :refer-macros [deftest testing is]]
+   [renderer.utils.units :as units]))
 
 (deftest test-unit->key
   (testing "convert unit string to keyword"

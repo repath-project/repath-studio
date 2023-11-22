@@ -1,10 +1,10 @@
 (ns renderer.attribute.length
   "https://developer.mozilla.org/en-US/docs/Web/SVG/Content_type#length"
   (:require
-   [renderer.attribute.views :as views]
-   [renderer.components :as comp]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
+   [renderer.attribute.views :as views]
+   [renderer.components :as comp]
    [renderer.utils.units :as units]))
 
 (derive :x ::length)

@@ -1,10 +1,10 @@
 (ns renderer.color.views
   (:require
-   [re-frame.core :as rf]
-   [renderer.components :as comp]
-   [i18n :refer [t]]
    ["@radix-ui/react-popover" :as Popover]
-   ["@re-path/react-color" :refer [PhotoshopPicker]]))
+   ["@re-path/react-color" :refer [PhotoshopPicker]]
+   [i18n :refer [t]]
+   [re-frame.core :as rf]
+   [renderer.components :as comp]))
 
 (defn drip [color]
   [:div.color-drip {:key (keyword (str color))

@@ -1,11 +1,11 @@
 (ns renderer.element.events
   (:require
+   [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.element.handlers :as handlers]
    [renderer.frame.handlers :as frame-handlers]
    [renderer.history.handlers :as history-handlers]
-   [renderer.tools.base :as tools]
-   [clojure.string :as str]))
+   [renderer.tools.base :as tools]))
 
 (rf/reg-event-db
  :element/select

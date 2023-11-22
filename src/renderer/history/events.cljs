@@ -1,8 +1,9 @@
 (ns renderer.history.events
-  (:require [re-frame.core :as rf]
-            [renderer.tools.base :as tools]
-            [renderer.history.handlers :as handlers]
-            [renderer.element.handlers :as elements]))
+  (:require
+   [re-frame.core :as rf]
+   [renderer.element.handlers :as elements]
+   [renderer.history.handlers :as handlers]
+   [renderer.tools.base :as tools]))
 
 (rf/reg-event-db
  :history/undo

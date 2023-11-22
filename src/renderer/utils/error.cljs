@@ -1,7 +1,7 @@
 (ns renderer.utils.error
   (:require
-   [reagent.core :as ra]
-   [re-frame.core :as rf]))
+   [re-frame.core :as rf]
+   [reagent.core :as ra]))
 
 (def error-message
   "Your last action was canceled due to an error.")

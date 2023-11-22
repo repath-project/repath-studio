@@ -1,7 +1,7 @@
 (ns renderer.document.effects
   (:require
-   [re-frame.core :as rf]
-   [de-dupe.core :as dd]))
+   [de-dupe.core :as dd]
+   [re-frame.core :as rf]))
 
 (rf/reg-event-fx
  :document/open

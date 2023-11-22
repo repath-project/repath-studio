@@ -1,7 +1,7 @@
 (ns renderer.attribute.overflow
   (:require
-   [renderer.attribute.views :as views]
-   [renderer.attribute.hierarchy :as hierarchy]))
+   [renderer.attribute.hierarchy :as hierarchy]
+   [renderer.attribute.views :as views]))
 
 (defmethod hierarchy/description :overflow
   []

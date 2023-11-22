@@ -1,16 +1,17 @@
 (ns renderer.reepl.replumb
-  (:require [cljs.js :as jsc]
-            [cljs.tools.reader]
-            [clojure.string :as str]
-            [replumb.core :as replumb]
-            [replumb.repl]
-            [replumb.ast :as ast]
-            #_[shadow.cljs.bootstrap.browser :as bootstrap]
-            [re-frame.registrar]
-            [replumb.doc-maps :as docs]
-            [cljs.tools.reader.reader-types :refer [string-push-back-reader]]
-            [cljs.tagged-literals :as tags]
-            [config])
+  (:require
+   [cljs.js :as jsc]
+   [cljs.tagged-literals :as tags]
+   [cljs.tools.reader.reader-types :refer [string-push-back-reader]]
+   [cljs.tools.reader]
+   [clojure.string :as str]
+   [config]
+   [re-frame.registrar]
+   [replumb.ast :as ast]
+   [replumb.core :as replumb]
+   [replumb.doc-maps :as docs]
+   [replumb.repl]
+   #_[shadow.cljs.bootstrap.browser :as bootstrap])
   (:import goog.net.XhrIo))
 
 (defn fetch-file!

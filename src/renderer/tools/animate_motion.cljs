@@ -9,5 +9,3 @@
   []
   {:description "The SVG <animateMotion> element let define how an element 
                  moves along a motion path."})
-
-

@@ -1,6 +1,7 @@
 (ns renderer.history.subs
-  (:require [re-frame.core :as rf]
-            [renderer.history.handlers :as handlers]))
+  (:require
+   [re-frame.core :as rf]
+   [renderer.history.handlers :as handlers]))
 
 (rf/reg-sub
  :history/undos?

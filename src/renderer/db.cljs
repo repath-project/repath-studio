@@ -1,10 +1,10 @@
 (ns renderer.db
   (:require
-   [renderer.window.db]
    [renderer.document.db]
-   [renderer.theme.db]
    [renderer.panel.db]
-   [renderer.tree.db]))
+   [renderer.theme.db]
+   [renderer.tree.db]
+   [renderer.window.db]))
 
 (def app
   [:map

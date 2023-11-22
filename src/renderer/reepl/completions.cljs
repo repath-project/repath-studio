@@ -1,9 +1,10 @@
 (ns renderer.reepl.completions
-  (:require [cljs.reader]
-            [cljs.tools.reader]
-            [reagent.core :as r]
-            ["react" :as react]
-            [renderer.reepl.helpers :as helpers]))
+  (:require
+   ["react" :as react]
+   [cljs.reader]
+   [cljs.tools.reader]
+   [reagent.core :as r]
+   [renderer.reepl.helpers :as helpers]))
 
 (def styles
   {:completion-list {:flex-direction :row

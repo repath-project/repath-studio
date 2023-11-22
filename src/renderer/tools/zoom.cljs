@@ -1,10 +1,10 @@
 (ns renderer.tools.zoom
   (:require
-   [renderer.frame.handlers :as frame]
    [renderer.element.handlers :as elements]
+   [renderer.frame.handlers :as frame]
+   [renderer.handlers :as handlers]
    [renderer.overlay :as overlay]
-   [renderer.tools.base :as tools]
-   [renderer.handlers :as handlers]))
+   [renderer.tools.base :as tools]))
 
 (derive :zoom ::tools/transform)
 

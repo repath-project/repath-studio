@@ -1,7 +1,7 @@
 (ns renderer.effects
   (:require
-   [re-frame.core :as rf]
-   [platform]))
+   [platform]
+   [re-frame.core :as rf]))
 
 (rf/reg-fx
  :send-to-main

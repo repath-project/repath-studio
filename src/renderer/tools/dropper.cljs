@@ -1,9 +1,9 @@
 (ns renderer.tools.dropper
   (:require
-   [renderer.tools.base :as tools]
+   [goog.color]
    [re-frame.core :as rf]
    [renderer.handlers :as handlers]
-   [goog.color]))
+   [renderer.tools.base :as tools]))
 
 (derive :dropper ::tools/misc)
 
@@ -29,6 +29,3 @@
     (-> db
         (update :notifications conj "Your browser does not support the EyeDropper API")
         (tools/set-tool :select))))
-
-
-

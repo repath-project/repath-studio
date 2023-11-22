@@ -1,9 +1,9 @@
 (ns renderer.frame.events
   (:require
-   [re-frame.core :as rf]
-   [renderer.frame.handlers :as handlers]
    [clojure.core.matrix :as mat]
+   [re-frame.core :as rf]
    [renderer.element.handlers :as el]
+   [renderer.frame.handlers :as handlers]
    [renderer.utils.units :as units]))
 
 (rf/reg-event-db

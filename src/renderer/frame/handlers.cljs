@@ -1,11 +1,11 @@
 (ns renderer.frame.handlers
   (:require
-   [renderer.tools.base :as tools]
+   [clojure.core.matrix :as mat]
+   [goog.math]
    [renderer.element.handlers :as el]
    [renderer.element.utils :as el-utils]
-   [clojure.core.matrix :as mat]
-   [renderer.utils.bounds :as bounds]
-   [goog.math]))
+   [renderer.tools.base :as tools]
+   [renderer.utils.bounds :as bounds]))
 
 (defn pan
   [{:keys [active-document] :as db} offset]

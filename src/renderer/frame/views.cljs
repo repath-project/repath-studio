@@ -1,14 +1,14 @@
 (ns renderer.frame.views
   (:require
+   ["@radix-ui/react-context-menu" :as ContextMenu]
+   ["react-frame-component" :default Frame :refer [useFrame]]
+   ["react" :as react]
+   [re-frame.core :as rf]
    [reagent.core :as ra]
    [reagent.dom.server :as server]
-   [re-frame.core :as rf]
-   [renderer.tools.base :as tools]
-   [renderer.utils.mouse :as mouse]
    [renderer.components :as comp]
-   ["react" :as react]
-   ["react-frame-component" :default Frame :refer [useFrame]]
-   ["@radix-ui/react-context-menu" :as ContextMenu]))
+   [renderer.tools.base :as tools]
+   [renderer.utils.mouse :as mouse]))
 
 (defn mouse-handler
   [event]
@@ -110,12 +110,3 @@
                             :margin-top (str y "px")}}]
                   (map (fn [item] [comp/context-menu-item item])
                        comp/element-menu))]]])})))
-
-
-
-
-
-
-
-
-

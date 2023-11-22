@@ -1,9 +1,9 @@
 (ns renderer.debug
   (:require
+   ["react-fps" :refer [FpsView]]
    [re-frame.core :as rf]
-   [renderer.utils.units :as units]
    [re-frame.registrar]
-   ["react-fps" :refer [FpsView]]))
+   [renderer.utils.units :as units]))
 
 (defn fps
   []

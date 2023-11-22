@@ -1,2 +1,3 @@
 (ns renderer.menubar.core
-  (:require [renderer.menubar.effects]))
+  (:require
+   [renderer.menubar.effects]))

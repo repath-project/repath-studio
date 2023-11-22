@@ -1,15 +1,16 @@
 (ns renderer.reepl.codemirror
-  (:require [reagent.core :as r]
-            ["react" :as react]
-            [clojure.string :as str]
-            ["codemirror" :as codemirror]
-            ["codemirror/addon/edit/closebrackets.js"]
-            ["codemirror/addon/edit/matchbrackets.js"]
-            ["codemirror/addon/hint/show-hint.js"]
-            ["codemirror/addon/runmode/runmode.js"]
-            ["codemirror/addon/runmode/colorize.js"]
-            ["codemirror/mode/clojure/clojure.js"]
-            ["codemirror/mode/javascript/javascript.js"]))
+  (:require
+   ["codemirror" :as codemirror]
+   ["codemirror/addon/edit/closebrackets.js"]
+   ["codemirror/addon/edit/matchbrackets.js"]
+   ["codemirror/addon/hint/show-hint.js"]
+   ["codemirror/addon/runmode/colorize.js"]
+   ["codemirror/addon/runmode/runmode.js"]
+   ["codemirror/mode/clojure/clojure.js"]
+   ["codemirror/mode/javascript/javascript.js"]
+   ["react" :as react]
+   [clojure.string :as str]
+   [reagent.core :as r]))
 
 ;; TODO can we avoid the global state modification here?
 #_(js/CodeMirror.registerHelper

@@ -1,11 +1,11 @@
 (ns renderer.tools.edit
   (:require
-   [renderer.tools.base :as tools]
-   [renderer.handlers :as handlers]
+   [clojure.core.matrix :as mat]
    [renderer.element.handlers :as elements]
+   [renderer.handlers :as handlers]
    [renderer.history.handlers :as history]
-   [renderer.utils.mouse :as mouse]
-   [clojure.core.matrix :as mat]))
+   [renderer.tools.base :as tools]
+   [renderer.utils.mouse :as mouse]))
 
 (derive :edit ::tools/transform)
 

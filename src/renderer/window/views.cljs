@@ -1,10 +1,10 @@
 (ns renderer.window.views
   (:require
+   [platform :as platform]
    [re-frame.core :as rf]
    [renderer.components :as comp]
-   [platform :as platform]
-   [renderer.status]
-   [renderer.menubar.views :as menubar]))
+   [renderer.menubar.views :as menubar]
+   [renderer.status]))
 
 (defn window-control-button
   [{:keys [icon action]}]
