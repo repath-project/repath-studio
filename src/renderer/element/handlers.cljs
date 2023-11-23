@@ -281,9 +281,13 @@
   ([db el offset]
    (assoc-in db (conj (path db) (:key el)) (tools/translate el offset))))
 
+(defn selected-bounds
+  [db]
+  (tools/elements-bounds (elements db) (selected db)))
+
 (defn scale
   [db offset _lock-ratio? _in-place?]
-  (let [[x1 y1 x2 y2] (tools/elements-bounds (elements db) (selected db))
+  (let [[x1 y1 x2 y2] (selected-bounds db)
         outer-dimensions (bounds/->dimensions [x1 y1 x2 y2])
         handler (-> db :clicked-element :key)]
     (update-selected-by
@@ -416,7 +420,7 @@
 (defn paste
   [db]
   (let [db (paste-in-place db)
-        bounds (tools/elements-bounds (elements db) (selected db))
+        bounds (selected-bounds db)
         [x1 y1] bounds
         [width height] (bounds/->dimensions bounds)
         [x y] (:adjusted-mouse-pos db)]
