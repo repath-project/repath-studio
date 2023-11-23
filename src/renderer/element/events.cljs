@@ -9,9 +9,9 @@
 
 (rf/reg-event-db
  :element/select
- (fn [db [_ multi? el]]
+ (fn [db [_ el-k multi?]]
    (-> db
-       (handlers/select multi? el)
+       (handlers/select el-k multi?)
        (history-handlers/finalize "Select element"))))
 
 (rf/reg-event-db
@@ -23,14 +23,14 @@
 
 (rf/reg-event-db
  :element/preview-property
- (fn [db [_ el k v]]
-   (handlers/set-property db el k v)))
+ (fn [db [_ el-k k v]]
+   (handlers/set-property db el-k k v)))
 
 (rf/reg-event-db
  :element/set-property
- (fn [db [_ el k v]]
+ (fn [db [_ el-k k v]]
    (-> db
-       (handlers/set-property el k v)
+       (handlers/set-property el-k k v)
        (history-handlers/finalize (str "Set " (name k) " to " v)))))
 
 (rf/reg-event-db
@@ -258,11 +258,10 @@
 
 (rf/reg-event-db
  :element/set-parent
- (fn [db  [_ element parent-key]]
+ (fn [db  [_ element-key parent-key]]
    (-> db
-       (handlers/set-parent element parent-key)
-       (history-handlers/finalize (str "Set parent of " (:key element)
-                                       " to " parent-key)))))
+       (handlers/set-parent element-key parent-key)
+       (history-handlers/finalize "Set parent of selection"))))
 
 (rf/reg-event-db
  :element/group

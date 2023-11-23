@@ -96,7 +96,7 @@
   (if (= (:tag el) :g)
     (-> db
         (elements/ignore (:key el))
-        (elements/deselect-element (:key el)))
+        (elements/deselect (:key el)))
     (tools/set-tool db :edit)))
 
 (defmethod tools/activate :select
@@ -131,7 +131,7 @@
     (handlers/set-state
      (if-not (-> db :clicked-element :selected?)
        (-> db
-           (elements/select (mouse/multiselect? e) (:clicked-element db))
+           (elements/select (-> db :clicked-element :key) (mouse/multiselect? e))
            (history/finalize "Select element"))
        db) :move)))
 
@@ -179,7 +179,7 @@
                       (elements/deselect-all db)
                       db)
                     (reduce-by-area (contains? (:modifiers e) :alt)
-                                    #(elements/select-element % (:key %2)))
+                                    #(elements/select %1 (:key %2) ))
                     (elements/clear-temp)
                     (history/finalize "Modify selection"))
         :move (history/finalize db (str "Move selection by " adjusted-mouse-offset))

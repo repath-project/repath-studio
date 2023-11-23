@@ -59,9 +59,9 @@
                       (hierarchy/update-attr :y + y)))
 
 (defn set-text-and-select-element
-  [e el]
+  [e el-k]
   (rf/dispatch [:element/set-property
-                el
+                el-k
                 :content
                 (str/replace (.. e -target -value) "  " "\u00a0\u00a0")])
   (rf/dispatch [:set-tool :select]))
@@ -90,16 +90,16 @@
        :on-focus #(.. % -target select)
        :on-pointer-down #(.stopPropagation %)
        :on-pointer-up #(.stopPropagation %)
-       :on-blur #(set-text-and-select-element % el)
+       :on-blur #(set-text-and-select-element % key)
        :on-key-down (fn [e]
                       (.stopPropagation e)
                       (if (or (= 13 (.-keyCode e))
                               (= 27 (.-keyCode e)))
-                        (set-text-and-select-element e el)
+                        (set-text-and-select-element e key)
                         (.requestAnimationFrame
                          js/window
                          #(rf/dispatch-sync [:element/preview-property
-                                             el
+                                             key
                                              :content
                                              (str/replace (.. e -target -value)
                                                           " "
