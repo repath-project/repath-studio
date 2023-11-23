@@ -375,7 +375,7 @@
          page? (page? elements)
          parent-key (if page? :canvas (:key active-page))]
      (if elements
-       (cond-> (reduce (fn [db element] (create-element db parent-key element))
+       (cond-> (reduce (fn [db el] (create-element db parent-key el))
                        (deselect-all db)
                        (if (seq? elements) elements [elements]))
          (not page?)
@@ -406,10 +406,10 @@
 
 (defn paste-in-place
   ([db]
-   (reduce #(paste-in-place %1 %2) (deselect-all db) (:copied-elements db)))
+   (reduce paste-in-place (deselect-all db) (:copied-elements db)))
   ([db el]
    (create-element db (if (page? (get-element db (:parent el)))
-                        (active-page db)
+                        (-> db active-page :key)
                         (:parent el)) el)))
 
 (defn paste
@@ -424,7 +424,7 @@
 
 (defn duplicate-in-place
   ([db]
-   (reduce #(duplicate-in-place %1 %2) (deselect-all db) (selected db)))
+   (reduce duplicate-in-place (deselect-all db) (selected db)))
   ([db el]
    (create-element db (:parent el) el)))
 
