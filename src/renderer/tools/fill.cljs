@@ -23,7 +23,7 @@
   [{active-document :active-document :as db} _e el]
   (let [color (get-in db [:documents active-document :fill])]
     (-> db
-        (elements/set-attribute el :fill color)
+        (elements/set-attribute (:key el) :fill color)
         (history/finalize (str "Fill " color)))))
 
 (defmethod tools/drag-end :fill
