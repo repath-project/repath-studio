@@ -32,8 +32,11 @@
         tool @(rf/subscribe [:tool])
         primary-tool @(rf/subscribe [:primary-tool])
         rotate @(rf/subscribe [:document/rotate])
+        snapping-points @(rf/subscribe [:snapping-points])
+        debug-info? @(rf/subscribe [:debug-info?])
         grid? @(rf/subscribe [:grid?])
         mouse-handler #(mouse/event-handler % element)
+        pivot-point @(rf/subscribe [:pivot-point])
         select? (or (= tool :select)
                     (= primary-tool :select))]
     [:svg {:on-pointer-up mouse-handler
@@ -62,6 +65,11 @@
              [:filter {:id id :key id} [tag attrs]])
            filters/accessibility)]
 
+     (when debug-info?
+       (into [:g] (map (fn [snapping-point]
+                         [overlay/point-of-interest snapping-point])
+                       snapping-points)))
+
      (when select?
        (map (fn [el]
               ^{:key (str (:key el) "-bounds")}
@@ -75,7 +83,8 @@
         (when (not-empty (filter (comp not zero?) bounds))
           [:<>
            [overlay/size bounds]
-           [overlay/bounding-handlers bounds]])])
+           [overlay/bounding-handlers bounds]
+           (when pivot-point [overlay/point-of-interest pivot-point])])])
 
      (when (or (= tool :edit)
                (= primary-tool :edit))

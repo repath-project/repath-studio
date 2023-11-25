@@ -36,9 +36,9 @@
         [:div "Click to enter your text."]])))
 
 (defmethod tools/mouse-up :text
-  [{:keys [adjusted-mouse-offset active-document] :as db}]
+  [{:keys [adjusted-pointer-offset active-document] :as db}]
   (let [fill (get-in db [:documents active-document :fill])
-        [offset-x offset-y] adjusted-mouse-offset
+        [offset-x offset-y] adjusted-pointer-offset
         attrs {:x offset-x
                :y offset-y
                :fill fill}]
@@ -119,7 +119,7 @@
   (.textToPath js/window.api
                (.-path (first (.findFonts
                                js/window.api
-                               ;; TODO: Getting the computed styles might safer
+                               ;; TODO: Getting the computed styles might safer.
                                #js {:family (:font-family attrs)
                                     :weight (js/parseInt (:font-weight attrs))
                                     :italic (= (:font-style attrs)

@@ -6,7 +6,7 @@
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.attribute.utils :as utils]
-   [renderer.attribute.views :as views]
+   [renderer.attribute.views :as v]
    [renderer.components :as comp]
    [renderer.utils.vec :as vec]))
 
@@ -26,11 +26,11 @@
   [k v disabled?]
   (let [state-default? (= @(rf/subscribe [:state]) :default)]
     [:<>
-     [views/form-input {:key k
-                        :value (if state-default? v "waiting")
-                        :disabled? (or disabled?
-                                       (not v)
-                                       (not state-default?))}]
+     [v/form-input {:key k
+                    :value (if state-default? v "waiting")
+                    :disabled? (or disabled?
+                                   (not v)
+                                   (not state-default?))}]
      (when v
        [:> Popover/Root {:modal true}
         [:> Popover/Trigger {:asChild true}
@@ -43,7 +43,7 @@
                               :className "popover-content"
                               :align "end"}
           (when state-default?
-            (let [points (utils/points-to-vec v)]
+            (let [points (utils/points->vec v)]
               [:div.flex.flex-col.v-scroll.py-4.pr-2
                {:style {:max-height "500px"}}
                (map-indexed (fn [index [x y]]

@@ -91,15 +91,12 @@
            :opacity]})
 
 (defmethod tools/drag-start ::blob
-  [{:keys [adjusted-mouse-offset
+  [{:keys [adjusted-pointer-offset
            active-document
-           adjusted-mouse-pos] :as db}]
+           adjusted-pointer-pos] :as db}]
   (let [{:keys [stroke fill]} (get-in db [:documents active-document])
-        [offset-x offset-y] adjusted-mouse-offset
-        radius (Math/sqrt (apply + (mat/pow
-                                    (mat/sub adjusted-mouse-pos
-                                             adjusted-mouse-offset)
-                                    2)))
+        [offset-x offset-y] adjusted-pointer-offset
+        radius (mat/distance adjusted-pointer-pos adjusted-pointer-offset)
         attrs {::x (- offset-x radius)
                ::y (- offset-y radius)
                ::seed (goog.math/randomInt 1000000)
@@ -111,12 +108,9 @@
     (elements/set-temp db {:type :element :tag ::blob :attrs attrs})))
 
 (defmethod tools/drag ::blob
-  [{:keys [adjusted-mouse-offset adjusted-mouse-pos] :as db}]
-  (let [[offset-x offset-y] adjusted-mouse-offset
-        radius (Math/sqrt (apply + (mat/pow
-                                    (mat/sub adjusted-mouse-pos
-                                             adjusted-mouse-offset)
-                                    2)))
+  [{:keys [adjusted-pointer-offset adjusted-pointer-pos] :as db}]
+  (let [[offset-x offset-y] adjusted-pointer-offset
+        radius (mat/distance adjusted-pointer-pos adjusted-pointer-offset)
         temp (-> (elements/get-temp db)
                  (assoc-in [:attrs ::x] (- offset-x radius))
                  (assoc-in [:attrs ::y] (- offset-y radius))

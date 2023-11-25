@@ -8,7 +8,8 @@
    [renderer.element.handlers :as elements]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
-   [renderer.utils.units :as units]))
+   [renderer.utils.units :as units]
+   [renderer.utils.bounds :as bounds]))
 
 (derive :ellipse ::tools/shape)
 
@@ -25,10 +26,10 @@
            :stroke-dasharray]})
 
 (defmethod tools/drag :ellipse
-  [{:keys [adjusted-mouse-offset active-document adjusted-mouse-pos] :as db} e]
+  [{:keys [adjusted-pointer-offset active-document adjusted-pointer-pos] :as db} e]
   (let [{:keys [stroke fill]} (get-in db [:documents active-document])
-        [offset-x offset-y] adjusted-mouse-offset
-        [pos-x pos-y] adjusted-mouse-pos
+        [offset-x offset-y] adjusted-pointer-offset
+        [pos-x pos-y] adjusted-pointer-pos
         lock-ratio? (contains? (:modifiers e) :ctrl)
         rx (abs (- pos-x offset-x))
         ry (abs (- pos-y offset-y))
@@ -48,24 +49,15 @@
                       (hierarchy/update-attr :cy + y)))
 
 (defmethod tools/scale :ellipse
-  [el [x y] handler]
-  (let [[x y] (mat/div [x y] 2)]
-    (cond-> el
-      (contains? #{:bottom-right :top-right :middle-right} handler)
-      (-> (hierarchy/update-attr :rx + x)
-          (hierarchy/update-attr :cx + x))
-
-      (contains? #{:bottom-left :top-left :middle-left} handler)
-      (-> (hierarchy/update-attr :rx - x)
-          (hierarchy/update-attr :cx + x))
-
-      (contains? #{:bottom-middle :bottom-right :bottom-left} handler)
-      (-> (hierarchy/update-attr :cy + y)
-          (hierarchy/update-attr :ry + y))
-
-      (contains? #{:top-middle :top-left :top-right} handler)
-      (-> (hierarchy/update-attr :ry - y)
-          (hierarchy/update-attr :cy + y)))))
+  [element ratio pivot-point]
+  (let [[x y] ratio
+        center (bounds/center (tools/bounds element))
+        pivot-diff (mat/sub pivot-point center)
+        translate-diff (mat/sub pivot-diff (mat/mul pivot-diff ratio))]
+    (-> element
+        (hierarchy/update-attr :rx * x)
+        (hierarchy/update-attr :ry * y)
+        (tools/translate translate-diff))))
 
 (defmethod tools/bounds :ellipse
   [{{:keys [cx cy rx ry stroke-width stroke]} :attrs}]

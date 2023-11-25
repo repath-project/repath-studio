@@ -13,6 +13,11 @@
     [x 0]
     [0 y]))
 
+(defn lock-ratio
+  [[x y]]
+  (let [ratio (if (< (abs x) (abs y)) x y)]
+    [ratio ratio]))
+
 (defn event-handler
   "Gathers pointer event props.
    https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent
@@ -32,7 +37,7 @@
   (rf/dispatch-sync [:pointer-event {:element el
                                      :target (.-target e)
                                      :type (keyword (.-type e))
-                                     :mouse-pos [(.-pageX e) (.-pageY e)]
+                                     :pointer-pos [(.-pageX e) (.-pageY e)]
                                      :pressure (.-pressure e)
                                      :pointer-type (.-pointerType e)
                                      :primary? (.-isPrimary e)

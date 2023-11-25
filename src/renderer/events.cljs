@@ -4,8 +4,8 @@
    [malli.core :as ma]
    [re-frame.core :as rf]
    [renderer.db :as db]
-   [renderer.frame.handlers :as frame-handlers]
-   [renderer.handlers :as handlers]
+   [renderer.frame.handlers :as frame-h]
+   [renderer.handlers :as h]
    [renderer.tools.base :as tools]
    [renderer.utils.local-storage :as local-storage]))
 
@@ -99,27 +99,27 @@
    (update db :snap? not)))
 
 (defn significant-movement?
-  [mouse-pos mouse-offset]
+  [pointer-pos pointer-offset]
   (let [threshold 1]
-    (when (and (vector? mouse-pos) (vector? mouse-offset))
-      (> (apply max (map abs (mat/sub mouse-pos mouse-offset)))
+    (when (and (vector? pointer-pos) (vector? pointer-offset))
+      (> (apply max (map abs (mat/sub pointer-pos pointer-offset)))
          threshold))))
 
 (rf/reg-event-db
  :pointer-event
- (fn [{:keys [mouse-offset tool content-rect] :as db} [_ e]]
-   (let [{:keys [mouse-pos delta element]} e
-         mouse-pos (mapv js/parseInt mouse-pos)
-         adjusted-mouse-pos (frame-handlers/adjusted-mouse-pos db mouse-pos)]
+ (fn [{:keys [pointer-offset tool content-rect] :as db} [_ e]]
+   (let [{:keys [pointer-pos delta element]} e
+         pointer-pos (mapv js/parseInt pointer-pos)
+         adjusted-pointer-pos (frame-h/adjusted-pointer-pos db pointer-pos)]
      (case (:type e)
        :pointermove
-       (-> (if (and (significant-movement? mouse-pos mouse-offset)
+       (-> (if (and (significant-movement? pointer-pos pointer-offset)
                     (not= (:buttons e) 2))
              (cond-> db
                (not= tool :pan)
-               (frame-handlers/pan-out-of-canvas content-rect
-                                                 mouse-pos
-                                                 mouse-offset)
+               (frame-h/pan-out-of-canvas content-rect
+                                          pointer-pos
+                                          pointer-offset)
 
                (not (:drag? db))
                (-> (tools/drag-start e element)
@@ -128,8 +128,8 @@
                :always
                (tools/drag e element))
              (tools/mouse-move db e element))
-           (assoc :mouse-pos mouse-pos
-                  :adjusted-mouse-pos adjusted-mouse-pos))
+           (assoc :pointer-pos pointer-pos
+                  :adjusted-pointer-pos adjusted-pointer-pos))
 
        :pointerdown
        (cond-> db
@@ -139,8 +139,8 @@
 
          :always
          (-> (tools/mouse-down e element)
-             (assoc :mouse-offset mouse-pos
-                    :adjusted-mouse-offset adjusted-mouse-pos)))
+             (assoc :pointer-offset pointer-pos
+                    :adjusted-pointer-offset adjusted-pointer-pos)))
 
        :pointerup
        (cond-> (if (:drag? db)
@@ -151,7 +151,7 @@
              (dissoc :primary-tool))
 
          :always
-         (dissoc :mouse-offset :drag?))
+         (dissoc :pointer-offset :drag?))
 
        :dblclick
        (tools/double-click db e element)
@@ -161,19 +161,19 @@
          (let [delta-y (second delta)
                factor (Math/pow (+ 1 (/ (:zoom-sensitivity db) 100))
                                 (- delta-y))]
-           (frame-handlers/zoom-in-mouse-position db factor))
-         (frame-handlers/pan db delta))
+           (frame-h/zoom-in-pointer-position db factor))
+         (frame-h/pan db delta))
 
        :drop
        (let [data-transfer (:data-transfer e)
              items (.-items data-transfer)
              files (.-files data-transfer)]
          (-> db
-             (assoc :mouse-pos mouse-pos
-                    :adjusted-mouse-pos adjusted-mouse-pos)
+             (assoc :pointer-pos pointer-pos
+                    :adjusted-pointer-pos adjusted-pointer-pos)
              (cond->
-              items (handlers/drop-items items)
-              files (handlers/drop-files files))))
+              items (h/drop-items items)
+              files (h/drop-files files))))
 
        db))))
 

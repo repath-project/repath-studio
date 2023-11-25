@@ -1,5 +1,5 @@
 (ns renderer.overlay
-  "Render functions for canvas overlay objects"
+  "Render functions for canvas overlay objects (select helpers etc)."
   (:require
    [clojure.core.matrix :as mat]
    [goog.math :as math]
@@ -22,9 +22,8 @@
   (let [zoom @(rf/subscribe [:document/zoom])]
     [:circle {:cx x
               :cy y
-              :stroke stroke
-              :stroke-width (/ 1 zoom)
-              :fill "transparent"
+              :stroke-width 0
+              :fill accent
               :r (/ 3 zoom)} children]))
 
 (defn circle-handler
@@ -219,9 +218,9 @@
                           :stroke-dasharray stroke-dasharray})]]))
 
 (defn select-box
-  [adjusted-mouse-pos adjusted-mouse-offset zoom]
-  (let [[offset-x offset-y] adjusted-mouse-offset
-        [pos-x pos-y] adjusted-mouse-pos]
+  [adjusted-pointer-pos adjusted-pointer-offset zoom]
+  (let [[offset-x offset-y] adjusted-pointer-offset
+        [pos-x pos-y] adjusted-pointer-pos]
     {:tag :rect :attrs {:x (min pos-x offset-x)
                         :y (min pos-y offset-y)
                         :width (abs (- pos-x offset-x))

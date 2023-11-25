@@ -12,8 +12,9 @@
   (when-not (= type :separator)
     [:> Command/CommandItem
      {:key key
-      :on-select #(doall (rf/dispatch action)
-                         (rf/dispatch [:cmdk/set false]))}
+      :on-select (fn []
+                   (rf/dispatch action)
+                   (rf/dispatch [:cmdk/set false]))}
      (str group " / " label)
      [:div.right-slot
       [comp/shortcuts action]]]))

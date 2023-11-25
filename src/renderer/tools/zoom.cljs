@@ -38,20 +38,20 @@
   (assoc db :cursor "default"))
 
 (defmethod tools/drag :zoom
-  [{:keys [adjusted-mouse-offset adjusted-mouse-pos active-document] :as db}]
+  [{:keys [adjusted-pointer-offset adjusted-pointer-pos active-document] :as db}]
   (elements/set-temp db (overlay/select-box
-                         adjusted-mouse-pos
-                         adjusted-mouse-offset
+                         adjusted-pointer-pos
+                         adjusted-pointer-offset
                          (get-in db [:documents active-document :zoom]))))
 
 (defmethod tools/drag-end :zoom
   [{:keys [active-document
            content-rect
-           adjusted-mouse-offset
-           adjusted-mouse-pos
+           adjusted-pointer-offset
+           adjusted-pointer-pos
            zoom-factor] :as db} e]
-  (let [[offset-x offset-y] adjusted-mouse-offset
-        [pos-x pos-y] adjusted-mouse-pos
+  (let [[offset-x offset-y] adjusted-pointer-offset
+        [pos-x pos-y] adjusted-pointer-pos
         width (abs (- pos-x offset-x))
         height (abs (- pos-y offset-y))
         width-ratio (/ (:width content-rect) width)
@@ -71,4 +71,4 @@
   (let [factor (if (contains? (:modifiers e) :shift)
                  (:zoom-factor db)
                  (/ 1 (:zoom-factor db)))]
-    (frame/zoom-in-mouse-position db factor)))
+    (frame/zoom-in-pointer-position db factor)))

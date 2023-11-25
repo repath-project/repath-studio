@@ -60,8 +60,8 @@
     "Hold "
     [:strong "Ctrl"]
     " to lock proportions, and "
-    [:strong "Alt"]
-    " to center the pivot point."]])
+    [:strong "Shift"]
+    " to scale in position."]])
 
 (defn reduce-by-area
   [{:keys [active-document] :as db} intersecting? f]
@@ -112,11 +112,11 @@
       (elements/clear-ignored)))
 
 (defn select-rect
-  [{:keys [adjusted-mouse-offset
-           adjusted-mouse-pos
+  [{:keys [adjusted-pointer-offset
+           adjusted-pointer-pos
            active-document] :as db} intersecting?]
   (let [zoom (get-in db [:documents active-document :zoom])]
-    (cond-> (overlay/select-box adjusted-mouse-pos adjusted-mouse-offset zoom)
+    (cond-> (overlay/select-box adjusted-pointer-pos adjusted-pointer-offset zoom)
       (not intersecting?) (assoc-in [:attrs :fill] "transparent"))))
 
 (defmethod tools/drag-start :select
@@ -135,11 +135,36 @@
            (history/finalize "Select element"))
        db) :move)))
 
+(defn offset-scale
+  [db [x y] lock-ratio? in-place?]
+  (let [handler (-> db :clicked-element :key)
+        bounds (elements/selected-bounds db)
+        dimensions (bounds/->dimensions bounds)
+        [x1 y1 x2 y2] bounds
+        [cx cy] (bounds/center bounds)
+        [offset pivot-point] (case handler
+                               :middle-right [[x 0] [x1 cy]]
+                               :middle-left [[(- x) 0] [x2 cy]]
+                               :top-middle [[0 (- y)] [cx y2]]
+                               :bottom-middle [[0 y] [cx y1]]
+                               :top-right [[x (- y)] [x1 y2]]
+                               :top-left [[(- x) (- y)] [x2 y2]]
+                               :bottom-right [[x y] [x1 y1]]
+                               :bottom-left [[(- x) y] [x2 y1]])
+        offset (cond-> offset in-place? (mat/mul 2))
+        pivot-point (if in-place? [cx cy] pivot-point)
+        scale-ratio (mat/div (mat/add dimensions offset) dimensions)
+        scale-ratio (cond-> scale-ratio lock-ratio? mouse/lock-ratio)
+        scale-ratio (mapv #(max 0 %) scale-ratio)]
+    (-> db
+        (assoc :pivot-point pivot-point)
+        (elements/scale scale-ratio pivot-point))))
+
 (defmethod tools/drag :select
   [{:keys [state
-           adjusted-mouse-offset
-           adjusted-mouse-pos] :as db} e]
-  (let [offset (mat/sub adjusted-mouse-pos adjusted-mouse-offset)
+           adjusted-pointer-offset
+           adjusted-pointer-pos] :as db} e]
+  (let [offset (mat/sub adjusted-pointer-pos adjusted-pointer-offset)
         offset (if (and (contains? (:modifiers e) :ctrl)
                         (not= state :scale))
                  (mouse/lock-direction offset)
@@ -164,28 +189,26 @@
             (handlers/set-state db :move))
 
           :scale
-          (elements/scale (history/swap db)
-                          offset
-                          (contains? (:modifiers e) :ctrl)
-                          (contains? (:modifiers e) :shift))
+          (offset-scale (history/swap db)
+                        offset
+                        (contains? (:modifiers e) :ctrl)
+                        (contains? (:modifiers e) :shift))
 
           :default db)
         (handlers/set-message (message offset state)))))
 
 (defmethod tools/drag-end :select
-  [{:keys [state adjusted-mouse-offset] :as db} e]
+  [{:keys [state adjusted-pointer-offset] :as db} e]
   (-> (case state
-        :select (-> (if-not (mouse/multiselect? e)
-                      (elements/deselect-all db)
-                      db)
+        :select (-> (cond-> db (not (mouse/multiselect? e)) elements/deselect)
                     (reduce-by-area (contains? (:modifiers e) :alt)
-                                    #(elements/select %1 (:key %2) ))
+                                    #(elements/select %1 (:key %2)))
                     (elements/clear-temp)
                     (history/finalize "Modify selection"))
-        :move (history/finalize db (str "Move selection by " adjusted-mouse-offset))
+        :move (history/finalize db (str "Move selection by " adjusted-pointer-offset))
         :scale (history/finalize db "Scale selection")
         :clone (history/finalize db "Clone selection")
         :default db)
       (handlers/set-state :default)
-      (dissoc :clicked-element)
+      (dissoc :clicked-element :pivot-point)
       (handlers/set-message (message nil :default))))

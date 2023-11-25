@@ -1,7 +1,7 @@
 (ns renderer.attribute.stroke-linejoin
   (:require
    [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.attribute.views :as views]))
+   [renderer.attribute.views :as v]))
 
 (defmethod hierarchy/description :stroke-linejoin
   []
@@ -10,17 +10,17 @@
 
 (defmethod hierarchy/form-element :stroke-linejoin
   [k v disabled? initial]
-  [views/select-input {:key k
-                       :value v
-                       :disabled? disabled?
-                       :initial initial
-                       :default-value "miter"
-                       :items [{:key :bevel
-                                :value "bevel"
-                                :label "Bevel"}
-                               {:key :miter
-                                :value "miter"
-                                :label "Miter"}
-                               {:key :round
-                                :value "round"
-                                :label "Round"}]}])
+  [v/select-input {:key k
+                   :value v
+                   :disabled? disabled?
+                   :initial initial
+                   :default-value "miter"
+                   :items [{:key :bevel
+                            :value "bevel"
+                            :label "Bevel"}
+                           {:key :miter
+                            :value "miter"
+                            :label "Miter"}
+                           {:key :round
+                            :value "round"
+                            :label "Round"}]}])

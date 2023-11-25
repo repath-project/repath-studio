@@ -32,11 +32,11 @@
 (defmethod tools/drag-end :measure  [db] db)
 
 (defmethod tools/drag :measure
-  [{:keys [adjusted-mouse-offset adjusted-mouse-pos] :as db}]
-  (let [[offset-x offset-y] adjusted-mouse-offset
-        [pos-x pos-y] adjusted-mouse-pos
-        [adjacent opposite] (mat/sub adjusted-mouse-offset
-                                     adjusted-mouse-pos)
+  [{:keys [adjusted-pointer-offset adjusted-pointer-pos] :as db}]
+  (let [[offset-x offset-y] adjusted-pointer-offset
+        [pos-x pos-y] adjusted-pointer-pos
+        [adjacent opposite] (mat/sub adjusted-pointer-offset
+                                     adjusted-pointer-pos)
         hypotenuse (Math/hypot adjacent opposite)
         attrs {:x1 offset-x
                :y1 offset-y

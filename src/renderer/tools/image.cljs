@@ -15,9 +15,9 @@
    :attrs [:href]})
 
 (defmethod tools/drag :image
-  [{:keys [adjusted-mouse-offset adjusted-mouse-pos] :as db}]
-  (let [[offset-x offset-y] adjusted-mouse-offset
-        [pos-x pos-y] adjusted-mouse-pos
+  [{:keys [adjusted-pointer-offset adjusted-pointer-pos] :as db}]
+  (let [[offset-x offset-y] adjusted-pointer-offset
+        [pos-x pos-y] adjusted-pointer-pos
         attrs {:x (min pos-x offset-x)
                :y (min pos-y offset-y)
                :width (abs (- pos-x offset-x))

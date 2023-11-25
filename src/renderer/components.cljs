@@ -136,8 +136,8 @@
      [:div.right-slot
       [shortcuts action]]]))
 
-;; TODO: Add and group actions
 (def element-menu
+  ;; TODO: Add and group actions
   [{:label "Cut"
     :action [:element/cut]}
    {:label "Copy"

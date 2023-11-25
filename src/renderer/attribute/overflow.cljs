@@ -1,7 +1,7 @@
 (ns renderer.attribute.overflow
   (:require
    [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.attribute.views :as views]))
+   [renderer.attribute.views :as v]))
 
 (defmethod hierarchy/description :overflow
   []
@@ -11,7 +11,7 @@
 
 (defmethod hierarchy/form-element :overflow
   [k v disabled? _initial]
-  [views/select-input
+  [v/select-input
    {:key k
     :value v
     :disabled? disabled?

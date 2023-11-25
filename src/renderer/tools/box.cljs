@@ -1,6 +1,6 @@
 (ns renderer.tools.box
   "This serves as an abstraction for box elements that share the
-   :x :y :whidth :height attributes."
+   :x :y :width :height attributes."
   (:require
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
@@ -18,63 +18,42 @@
                       (hierarchy/update-attr :y + y)))
 
 (defmethod tools/scale ::tools/box
-  [element [x y] handler]
-  (cond-> element
-    (contains? #{:bottom-right
-                 :top-right
-                 :middle-right} handler)
-    (hierarchy/update-attr :width + x)
-
-    (contains? #{:bottom-left
-                 :top-left
-                 :middle-left} handler)
-    (-> (hierarchy/update-attr :x + x)
-        (hierarchy/update-attr :width - x))
-
-    (contains? #{:bottom-middle
-                 :bottom-right
-                 :bottom-left} handler)
-    (hierarchy/update-attr :height + y)
-
-    (contains? #{:top-middle
-                 :top-left
-                 :top-right} handler)
-    (-> (hierarchy/update-attr :y + y)
-        (hierarchy/update-attr :height - y))))
+  [el ratio pivot-point]
+  (let [[x y] ratio
+        bounds (tools/bounds el)
+        [x1 y1 _ _] bounds
+        pivot-diff (mat/sub pivot-point [x1 y1])
+        translate-diff (mat/sub pivot-diff (mat/mul pivot-diff ratio))]
+    (-> el
+        (hierarchy/update-attr :width * x)
+        (hierarchy/update-attr :height * y)
+        (hierarchy/update-attr :stroke-width * y)
+        (tools/translate translate-diff))))
 
 (defmethod tools/edit ::tools/element
   [el [x y] handler]
   (case handler
-    :position
-    (-> el
-        (hierarchy/update-attr :width #(max 0 (- % x)))
-        (hierarchy/update-attr :height #(max 0 (- % y)))
-        (tools/translate [x y]))
-
-    :size
-    (-> el
-        (hierarchy/update-attr :width #(max 0 (+ % x)))
-        (hierarchy/update-attr :height #(max 0 (+ % y))))
-
-    el))
+    :position (-> el
+                  (hierarchy/update-attr :width #(max 0 (- % x)))
+                  (hierarchy/update-attr :height #(max 0 (- % y)))
+                  (tools/translate [x y]))
+    :size (-> el
+              (hierarchy/update-attr :width #(max 0 (+ % x)))
+              (hierarchy/update-attr :height #(max 0 (+ % y))))))
 
 (defmethod tools/render-edit ::tools/box
   [{:keys [attrs key] :as el}]
   (let [{:keys [x y width height]} attrs
         [x y width height] (mapv units/unit->px [x y width height])
         active-page @(rf/subscribe [:element/active-page])
-        page-pos (mapv units/unit->px
-                       [(-> active-page :attrs :x)
-                        (-> active-page :attrs :y)])
-        [x y] (if-not (= (:tag el) :page)
-                (mat/add page-pos [x y])
-                [x y])]
+        page-pos (mapv units/unit->px [(-> active-page :attrs :x)
+                                       (-> active-page :attrs :y)])
+        [x y] (cond-> [x y] (not= (:tag el) :page) (mat/add page-pos))]
     [:g {:key :edit-handlers}
      (map (fn [handler]
-            [overlay/square-handler (merge handler
-                                           {:type :handler
-                                            :tag :edit
-                                            :element key})])
+            [overlay/square-handler (merge handler {:type :handler
+                                                    :tag :edit
+                                                    :element key})])
           [{:x x :y y :key :position}
            {:x (+ x width) :y (+ y height) :key :size}])]))
 
@@ -88,7 +67,6 @@
                         [width height]
                         (if (str/blank? stroke) 0 stroke-width-px))]
     (mapv units/unit->px [x y (+ x width) (+ y height)])))
-
 
 (defmethod tools/area ::tools/box
   [{{:keys [width height]} :attrs}]

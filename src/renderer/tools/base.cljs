@@ -1,13 +1,13 @@
 (ns renderer.tools.base
   (:require
-   ["@mdn/browser-compat-data" :as bcd]
    ["paper" :refer [Path]]
    ["paperjs-offset" :refer [PaperOffset]]
    [goog.string :as gstring]
    [reagent.dom.server :as server]
    [renderer.element.utils :as el-utils]
    [renderer.utils.bounds :as bounds]
-   [renderer.utils.map :as map]))
+   [renderer.utils.map :as map]
+   [renderer.utils.spec :as spec]))
 
 (derive ::transform ::tool)
 (derive ::draw ::tool)
@@ -46,8 +46,8 @@
 
 (defmulti render-edit #(:tag %))
 (defmulti bounds #(:tag %))
-(defmulti translate #(when-not (:locked? %) (:tag %)))
-(defmulti scale #(when-not (:locked? %) (:tag %)))
+(defmulti translate #(:tag %))
+(defmulti scale #(:tag %))
 (defmulti edit #(when-not (:locked? %) (:tag %)))
 
 (defmulti mouse-down #(:tool %))
@@ -114,12 +114,8 @@
 
 (defn elements-bounds
   [elements bound-elements]
-  (reduce
-   #(bounds/union % (adjusted-bounds %2 elements))
-   (adjusted-bounds (first bound-elements) elements) (rest bound-elements)))
-
-(def svg-spec
-  (js->clj (.-svg bcd) :keywordize-keys true))
+  (when (seq bound-elements)
+    (apply bounds/union (map #(adjusted-bounds % elements) bound-elements))))
 
 (defn attrs-map
   [attrs]
@@ -138,11 +134,11 @@
    (when tag
      (merge (when (or (isa? tag ::shape) (= tag :svg))
               (merge
-               (attrs-map (tag (:elements svg-spec)))
-               (attrs-map (-> svg-spec :attributes :core))
-               (attrs-map (-> svg-spec :attributes :style))))
+               (attrs-map (tag (:elements spec/svg)))
+               (attrs-map (-> spec/svg :attributes :core))
+               (attrs-map (-> spec/svg :attributes :style))))
             (when (contains? #{:animateMotion :animateTransform} tag)
-              (attrs-map (:animate (:elements svg-spec))))
+              (attrs-map (:animate (:elements spec/svg))))
             (zipmap (:attrs (properties tag)) (repeat ""))))
    attrs))
 

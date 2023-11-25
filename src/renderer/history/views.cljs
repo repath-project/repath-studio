@@ -14,8 +14,9 @@
 
 (defn tree
   []
-  #_[:div {:style {:flex "0 0 300px"
-                   :overflow "auto"}}
+  #_[:div
+     {:style {:flex "0 0 300px"
+              :overflow "auto"}}
      (loop [step-count @(rf/subscribe [:history/step-count])]
        [:div.p-1
         step-count

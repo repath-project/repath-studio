@@ -30,9 +30,9 @@
            :class]})
 
 (defmethod tools/drag :button
-  [{:keys [adjusted-mouse-pos tool adjusted-mouse-offset fill stroke]}]
-  (let [[offset-x offset-y] adjusted-mouse-offset
-        [pos-x pos-y] adjusted-mouse-pos
+  [{:keys [adjusted-pointer-pos tool adjusted-pointer-offset fill stroke]}]
+  (let [[offset-x offset-y] adjusted-pointer-offset
+        [pos-x pos-y] adjusted-pointer-pos
         attrs {:x (min pos-x offset-x)
                :y (min pos-y offset-y)
                :width (abs (- pos-x offset-x))

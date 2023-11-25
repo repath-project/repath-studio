@@ -8,7 +8,9 @@
    [renderer.element.handlers :as elements]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
-   [renderer.utils.units :as units]))
+   [renderer.utils.units :as units]
+   [renderer.utils.bounds :as bounds]
+   [renderer.utils.mouse :as mouse]))
 
 (derive :circle ::tools/shape)
 
@@ -24,13 +26,10 @@
            :stroke-dasharray]})
 
 (defmethod tools/drag :circle
-  [{:keys [adjusted-mouse-offset active-document adjusted-mouse-pos] :as db}]
+  [{:keys [adjusted-pointer-offset active-document adjusted-pointer-pos] :as db}]
   (let [{:keys [stroke fill]} (get-in db [:documents active-document])
-        [offset-x offset-y] adjusted-mouse-offset
-        radius (Math/sqrt (apply + (mat/pow
-                                    (mat/sub adjusted-mouse-pos
-                                             adjusted-mouse-offset)
-                                    2)))
+        [offset-x offset-y] adjusted-pointer-offset
+        radius (mat/distance adjusted-pointer-pos adjusted-pointer-offset)
         attrs {:cx offset-x
                :cy offset-y
                :fill fill
@@ -44,23 +43,13 @@
                       (hierarchy/update-attr :cy + y)))
 
 (defmethod tools/scale :circle
-  [el [x y] handler]
-  (cond-> el
-    (contains? #{:middle-right} handler)
-    (-> (hierarchy/update-attr :cx + (/ x 2))
-        (hierarchy/update-attr :r + (/ x 2)))
-
-    (contains? #{:middle-left} handler)
-    (-> (hierarchy/update-attr :cx + (/ x 2))
-        (hierarchy/update-attr :r - (/ x 2)))
-
-    (contains? #{:bottom-middle} handler)
-    (-> (hierarchy/update-attr :cy + (/ y 2))
-        (hierarchy/update-attr :r + (/ y 2)))
-
-    (contains? #{:top-middle} handler)
-    (-> (hierarchy/update-attr :cy + (/ y 2))
-        (hierarchy/update-attr :r - (/ y 2)))))
+  [element ratio pivot-point]
+  (let [center (bounds/center (tools/bounds element))
+        pivot-diff (mat/sub pivot-point center)
+        translate-diff (mat/sub pivot-diff (mat/mul pivot-diff ratio))]
+    (-> element
+        (hierarchy/update-attr :r * ratio)
+        (tools/translate translate-diff))))
 
 (defmethod tools/bounds :circle
   [{{:keys [cx cy r stroke-width stroke]} :attrs}]

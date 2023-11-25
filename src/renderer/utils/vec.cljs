@@ -15,13 +15,13 @@
         [el]
         (subvec coll index))))
 
-#_(defn move
-    "Moves element by index."
-    [coll index-1 index-2]
-    (let [el (nth coll index-1)]
-      (if (= index-1 index-2)
-        coll
-        (into [] (add (remove-by-index coll index-1) index-2 el)))))
+(defn move
+  "Moves element by index."
+  [coll index-1 index-2]
+  (let [el (nth coll index-1)]
+    (if (= index-1 index-2)
+      coll
+      (into [] (add (remove-by-index coll index-1) index-2 el)))))
 
 (defn swap
   "Swaps the position of two elements by index."

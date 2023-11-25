@@ -3,9 +3,12 @@
    [clojure.core.matrix :as mat]))
 
 (defn union
-  "Calculates the wrapping bounds of bounds."
-  [[ax1 ay1 ax2 ay2] [bx1 by1 bx2 by2]]
-  [(min ax1 bx1) (min ay1 by1) (max ax2 bx2) (max ay2 by2)])
+  "Calculates the union of bounds."
+  [& bounds]
+  (concat (apply map min (map #(take 2 %) bounds))
+          (apply map max (map #(drop 2 %) bounds))))
+
+(apply union [[-100 -100 100 100]] )
 
 (defn ->dimensions
   "Converts bounds to a [width heigh] vector."

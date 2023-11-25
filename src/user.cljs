@@ -14,6 +14,13 @@
   ([x y]
    (move [x y])))
 
+(defn ^:export scale
+  "Scales the selected elements."
+  ([ratio]
+   (rf/dispatch [:element/scale (if (number? ratio) [ratio ratio] ratio)]))
+  ([x y]
+   (rf/dispatch [:element/scale [x y]])))
+
 (defn ^:export fill
   "Fills the selected elements."
   [color]

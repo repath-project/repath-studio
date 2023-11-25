@@ -11,20 +11,24 @@
  :-> :primary-tool)
 
 (rf/reg-sub
- :mouse-pos
- :-> :mouse-pos)
+ :pointer-pos
+ :-> :pointer-pos)
 
 (rf/reg-sub
- :adjusted-mouse-pos
- :-> :adjusted-mouse-pos)
+ :adjusted-pointer-pos
+ :-> :adjusted-pointer-pos)
 
 (rf/reg-sub
- :adjusted-mouse-offset
- :-> :adjusted-mouse-offset)
+ :pointer-offset
+ :-> :pointer-offset)
 
 (rf/reg-sub
- :mouse-offset
- :-> :mouse-offset)
+ :adjusted-pointer-offset
+ :-> :adjusted-pointer-offset)
+
+(rf/reg-sub
+ :pivot-point
+ :-> :pivot-point)
 
 (rf/reg-sub
  :drag?

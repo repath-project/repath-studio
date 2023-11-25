@@ -9,7 +9,7 @@
 (def app
   [:map
    [:tool keyword?]
-   [:mouse-pos [:tuple double? double?]]
+   [:pointer-pos [:tuple double? double?]]
    [:zoom-factor double?]
    [:state keyword?]
    [:grid? boolean?]
@@ -28,7 +28,7 @@
 
 (def default
   {:tool :select
-   :mouse-pos [0 0]
+   :pointer-pos [0 0]
    :zoom-sensitivity 0.3
    :state :default
    :documents {}

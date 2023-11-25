@@ -1,4 +1,4 @@
-(ns renderer.menubar.effects
+(ns renderer.menubar.events
   (:require
    [re-frame.core :as rf]))
 

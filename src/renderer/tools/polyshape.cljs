@@ -40,37 +40,37 @@
              #(str % " " (str/join " " point))))
 
 (defmethod tools/mouse-up ::tools/polyshape
-  [{:keys [adjusted-mouse-pos] :as db}]
+  [{:keys [adjusted-pointer-pos] :as db}]
   (if (elements/get-temp db)
-    (add-point db adjusted-mouse-pos)
+    (add-point db adjusted-pointer-pos)
     (-> db
         (handlers/set-state :create)
-        (create-polyline adjusted-mouse-pos))))
+        (create-polyline adjusted-pointer-pos))))
 
 (defmethod tools/drag-end ::tools/polyshape
-  [{:keys [adjusted-mouse-pos] :as db}]
+  [{:keys [adjusted-pointer-pos] :as db}]
   (if (elements/get-temp db)
-    (add-point db adjusted-mouse-pos)
+    (add-point db adjusted-pointer-pos)
     (-> db
         (handlers/set-state :create)
-        (create-polyline adjusted-mouse-pos))))
+        (create-polyline adjusted-pointer-pos))))
 
 (defmethod tools/mouse-move ::tools/polyshape
-  [{:keys [active-document adjusted-mouse-pos] :as db}]
+  [{:keys [active-document adjusted-pointer-pos] :as db}]
   (if-let [points (get-in db [:documents active-document :temp-element :attrs :points])]
-    (let [point-vector (attr-utils/points-to-vec points)]
+    (let [point-vector (attr-utils/points->vec points)]
       (assoc-in db
                 [:documents active-document :temp-element :attrs :points]
                 (str/join " " (concat (apply concat (if (second point-vector)
                                                       (drop-last point-vector)
                                                       point-vector))
-                                      adjusted-mouse-pos)))) db))
+                                      adjusted-pointer-pos)))) db))
 
 (defmethod tools/double-click ::tools/polyshape
   [{:keys [active-document] :as db}]
   (-> db
       (update-in [:documents active-document :temp-element :attrs :points]
-                 #(str/join " " (apply concat (drop-last 2 (attr-utils/points-to-vec %)))))
+                 #(str/join " " (apply concat (drop-last 2 (attr-utils/points->vec %)))))
       (elements/create)
       (history/finalize (str "Create " (:tool db)))))
 
@@ -79,11 +79,11 @@
   (update-in element
              [:attrs :points]
              #(->> %
-                   attr-utils/points-to-vec
+                   attr-utils/points->vec
                    (reduce (fn [points point]
                              (conj points
-                                   (units/transform + x (first point))
-                                   (units/transform + y (second point)))) [])
+                                   (units/transform (first point) + x)
+                                   (units/transform (second point) + y))) [])
                    (str/join " "))))
 
 
@@ -107,7 +107,7 @@
                                                :type :handler
                                                :tag :edit
                                                :element key}]))
-                  (attr-utils/points-to-vec points))]))
+                  (attr-utils/points->vec points))]))
 
 (defmethod tools/edit ::tools/polyshape
   [element [x y] handler]
@@ -115,18 +115,18 @@
     (update-in element
                [:attrs :points]
                #(str/join " "
-                          (-> (attr-utils/points-to-vec %1)
+                          (-> (attr-utils/points->vec %1)
                               (update (int handler)
                                       (fn [point]
                                         (list
-                                         (units/transform + x (first point))
-                                         (units/transform + y (second point)))))
+                                         (units/transform (first point) + x)
+                                         (units/transform (second point) + y))))
                               flatten)))
     element))
 
 (defmethod tools/bounds ::tools/polyshape
   [{{:keys [points]} :attrs}]
-  (let [points-v (attr-utils/points-to-vec points)
+  (let [points-v (attr-utils/points->vec points)
         x1 (apply min (map #(units/unit->px (first %)) points-v))
         y1 (apply min (map #(units/unit->px (second %)) points-v))
         x2 (apply max (map #(units/unit->px (first %)) points-v))
@@ -148,19 +148,16 @@
 
 (defmethod tools/area ::tools/polyshape
   [{{:keys [points]} :attrs}]
-  (let [points-v (attr-utils/points-to-vec points)
-        points-v (mapv (fn [point] (mapv units/unit->px point)) points-v)]
+  (let [points-v (attr-utils/points->px points)]
     (calc-polygon-area points-v)))
 
 (defmethod tools/centroid ::tools/polyshape
   [{{:keys [points]} :attrs}]
-  (let [points-v (attr-utils/points-to-vec points)
-        points-v (mapv (fn [point] (mapv units/unit->px point)) points-v)]
+  (let [points-v (attr-utils/points->px points)]
     (-> (reduce mat/add [0 0] points-v)
         (mat/div (count points-v)))))
 
 (defmethod tools/poi ::tools/polyshape
   [{{:keys [points]} :attrs}]
-  (let [points-v (attr-utils/points-to-vec points)
-        points-v (mapv (fn [point] (mapv units/unit->px point)) points-v)]
+  (let [points-v (attr-utils/points->px points)]
     (take 2 (polylabel (clj->js [points-v])))))

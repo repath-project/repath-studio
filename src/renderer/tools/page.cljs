@@ -20,9 +20,9 @@
    :attrs [:overflow]})
 
 (defmethod tools/drag :page
-  [{:keys [adjusted-mouse-pos adjusted-mouse-offset] :as db} e]
-  (let [[offset-x offset-y] adjusted-mouse-offset
-        [pos-x pos-y] adjusted-mouse-pos
+  [{:keys [adjusted-pointer-pos adjusted-pointer-offset] :as db} e]
+  (let [[offset-x offset-y] adjusted-pointer-offset
+        [pos-x pos-y] adjusted-pointer-pos
         lock-ratio? (contains? (:modifiers e) :ctrl)
         width (abs (- pos-x offset-x))
         height (abs (- pos-y offset-y))

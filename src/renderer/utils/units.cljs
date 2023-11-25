@@ -4,18 +4,19 @@
 
 (def ppi 96)
 
-(def units {:px 1
-            :ch 8
-            :ex 7.15625
-            :em 16
-            :rem 16
-            :in ppi
-            :cm (/ ppi 2.54)
-            :mm (/ ppi 25.4)
-            :pt (/ ppi 72)
-            :pc (/ ppi 6)
-            ;; TODO: Find an agnostix way to handle percentages
-            :% 1})
+(def units
+  ;; TODO: Find an agnostix way to handle percentages.
+  {:px 1
+   :ch 8
+   :ex 7.15625
+   :em 16
+   :rem 16
+   :in ppi
+   :cm (/ ppi 2.54)
+   :mm (/ ppi 25.4)
+   :pt (/ ppi 72)
+   :pc (/ ppi 6)
+   :% 1})
 
 (defn unit->key
   "Converts the string unit to a lower-cased keyword."
@@ -64,11 +65,9 @@
 (defn transform
   "Converts a value to pixels, applies a transformation and converts the result 
    back to the original unit."
-  [transformation-f transformation-v value]
+  [value f & more]
   (let [[number unit] (parse-unit value)]
-    (-> number
-        (->px unit)
-        (transformation-f transformation-v)
+    (-> (apply f (->px number unit) more)
         (js/parseFloat)
         (.toFixed 2)
         (->unit unit)

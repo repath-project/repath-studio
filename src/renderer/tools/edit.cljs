@@ -38,18 +38,18 @@
   (handlers/set-state db :edit))
 
 (defmethod tools/drag :edit
-  [{:keys [adjusted-mouse-offset adjusted-mouse-pos clicked-element] :as db} e]
-  (let [mouse-offset (mat/sub adjusted-mouse-pos adjusted-mouse-offset)
+  [{:keys [adjusted-pointer-offset adjusted-pointer-pos clicked-element] :as db} e]
+  (let [pointer-offset (mat/sub adjusted-pointer-pos adjusted-pointer-offset)
         db (history/swap db)
         element-key (:element clicked-element)
-        mouse-offset (if (contains? (:modifiers e) :ctrl)
-                       (mouse/lock-direction mouse-offset)
-                       mouse-offset)]
+        pointer-offset (if (contains? (:modifiers e) :ctrl)
+                       (mouse/lock-direction pointer-offset)
+                       pointer-offset)]
     (if element-key
       (assoc-in db
                 (conj (elements/path db) element-key)
-                (tools/edit (elements/get-element db element-key)
-                            mouse-offset
+                (tools/edit (elements/element db element-key)
+                            pointer-offset
                             (:key clicked-element)))
       db)))
 

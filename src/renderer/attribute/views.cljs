@@ -8,7 +8,8 @@
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.components :as comp]
-   [renderer.tools.base :as tools]))
+   [renderer.tools.base :as tools]
+   [renderer.utils.spec :as spec]))
 
 (defn browser-support
   [browser version-added]
@@ -23,12 +24,7 @@
 
 (defn caniusethis
   [{:keys [tag attr]}]
-  (let [data (if attr
-               (or (-> tools/svg-spec :elements tag attr :__compat)
-                   (-> tools/svg-spec :attributes :presentation attr :__compat)
-                   (-> tools/svg-spec :attributes :core attr :__compat)
-                   (-> tools/svg-spec :attributes :style attr :__compat))
-               (-> tools/svg-spec :elements tag :__compat))]
+  (let [data (if attr (spec/compat-data tag attr) (spec/compat-data tag))]
     (when (or (:support data) (isa? tag ::tools/animation))
       [:div.flex.flex-col
        (when (some :version_added (vals (:support data)))

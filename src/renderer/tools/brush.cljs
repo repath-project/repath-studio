@@ -80,16 +80,16 @@
 
 (defmethod tools/drag :brush
   [{:keys [active-document
-           adjusted-mouse-pos] :as db} {:keys [pressure]}]
+           adjusted-pointer-pos] :as db} {:keys [pressure]}]
   (let [stroke (get-in db [:documents active-document :stroke])]
     (if (get-in db [:documents active-document :temp-element :attrs ::points])
       (update-in db
                  [:documents active-document :temp-element :attrs ::points]
                  conj
-                 (conj adjusted-mouse-pos pressure))
+                 (conj adjusted-pointer-pos pressure))
       (elements/set-temp db {:type :element
                              :tag :brush
-                             :attrs {::points [(conj adjusted-mouse-pos pressure)]
+                             :attrs {::points [(conj adjusted-pointer-pos pressure)]
                                      ::stroke stroke
                                      ::size 16
                                      ::thinning 0.5

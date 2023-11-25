@@ -5,12 +5,12 @@
    [goog.string :as gstring]
    [re-frame.core :as rf]
    [re-frame.registrar]
-   [renderer.color.views :as color]
+   [renderer.color.views :as color-v]
    [renderer.components :as comp]
    [renderer.filters :as filters]))
 
 (defn coordinates []
-  (let [[x y] @(rf/subscribe [:frame/adjusted-mouse-pos])]
+  (let [[x y] @(rf/subscribe [:frame/adjusted-pointer-pos])]
     [:div.flex.flex-col.ml-2.font-mono
      {:style {:min-width "80px"}}
      [:div.flex.justify-between
@@ -67,8 +67,8 @@
         _element-colors @(rf/subscribe [:element/colors])
         filter @(rf/subscribe [:document/filter])]
     [:div.toolbar.footer
-     [color/picker]
-     [:div.grow [color/palette]]
+     [color-v/picker]
+     [:div.grow [color-v/palette]]
      #_(when element-colors (map (fn [color] [color-drip (color/hexToRgb color)]) element-colors))
      [:> Select/Root {:value (name filter)
                       :onValueChange #(rf/dispatch [:document/set-filter %])}

@@ -5,7 +5,7 @@
    ["@re-path/react-color" :refer [ChromePicker]]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.attribute.views :as views]))
+   [renderer.attribute.views :as v]))
 
 (derive :stroke ::color)
 (derive :fill ::color)
@@ -14,10 +14,10 @@
 (defmethod hierarchy/form-element ::color
   [k v disabled? initial]
   [:<>
-   [views/form-input {:key k
-                      :value v
-                      :disabled? disabled?
-                      :placeholder initial}]
+   [v/form-input {:key k
+                  :value v
+                  :disabled? disabled?
+                  :placeholder initial}]
    [:> Popover/Root {:modal true}
     [:> Popover/Trigger {:asChild true}
      [:button.color-drip.ml-px.inline-block

@@ -34,10 +34,10 @@
            :stroke-dasharray]})
 
 (defmethod tools/drag :arc
-  [{:keys [adjusted-mouse-offset active-document adjusted-mouse-pos] :as db}]
+  [{:keys [adjusted-pointer-offset active-document adjusted-pointer-pos] :as db}]
   (let [{:keys [stroke fill]} (get-in db [:documents active-document])
-        [offset-x offset-y] adjusted-mouse-offset
-        [pos-x pos-y] adjusted-mouse-pos
+        [offset-x offset-y] adjusted-pointer-offset
+        [pos-x pos-y] adjusted-pointer-pos
         attrs {:cx offset-x
                :cy offset-y
                ::start-deg 90

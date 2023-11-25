@@ -24,15 +24,15 @@
   (handlers/set-state db :create))
 
 (defmethod tools/drag :pen
-  [{:keys [active-document adjusted-mouse-pos] :as db}]
+  [{:keys [active-document adjusted-pointer-pos] :as db}]
   (let [stroke (get-in db [:documents active-document :stroke])]
     (if (get-in db [:documents active-document :temp-element :attrs :points])
       (update-in db
                  [:documents active-document :temp-element :attrs :points]
-                 #(str % " " (str/join " " adjusted-mouse-pos)))
+                 #(str % " " (str/join " " adjusted-pointer-pos)))
       (elements/set-temp db {:type :element
                              :tag :polyline
-                             :attrs {:points (str/join " " adjusted-mouse-pos)
+                             :attrs {:points (str/join " " adjusted-pointer-pos)
                                      :stroke stroke
                                      :fill "transparent"}}))))
 

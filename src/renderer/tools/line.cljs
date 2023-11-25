@@ -24,10 +24,10 @@
               :opacity]})
 
 (defn create-line
-  [{:keys [adjusted-mouse-offset adjusted-mouse-pos active-document] :as db}]
+  [{:keys [adjusted-pointer-offset adjusted-pointer-pos active-document] :as db}]
   (let [stroke (get-in db [:documents active-document :stroke])
-        [offset-x offset-y] adjusted-mouse-offset
-        [pos-x pos-y] adjusted-mouse-pos
+        [offset-x offset-y] adjusted-pointer-offset
+        [pos-x pos-y] adjusted-pointer-pos
         attrs {:x1 offset-x
                :y1 offset-y
                :x2 pos-x
@@ -36,10 +36,10 @@
     (elements/set-temp db {:type :element :tag :line :attrs attrs})))
 
 (defn update-line-end
-  [{:keys [adjusted-mouse-pos] :as db}]
+  [{:keys [adjusted-pointer-pos] :as db}]
   (let [temp (-> (elements/get-temp db)
-                 (assoc-in [:attrs :x2] (first adjusted-mouse-pos))
-                 (assoc-in [:attrs :y2] (second adjusted-mouse-pos)))]
+                 (assoc-in [:attrs :x2] (first adjusted-pointer-pos))
+                 (assoc-in [:attrs :y2] (second adjusted-pointer-pos)))]
     (elements/set-temp db temp)))
 
 (defmethod tools/mouse-move :line

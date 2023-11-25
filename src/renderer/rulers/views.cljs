@@ -74,7 +74,7 @@
 
 (defn mouse-pointer
   [orientation size]
-  (let [[x y] @(rf/subscribe [:mouse-pos])
+  (let [[x y] @(rf/subscribe [:pointer-pos])
         pointer-size (/ size 5)
         size-diff (- size pointer-size)]
     [:polygon {:points (str/join " " (if (= orientation :vertical)
