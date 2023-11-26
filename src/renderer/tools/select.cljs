@@ -135,6 +135,15 @@
            (history/finalize "Select element"))
        db) :move)))
 
+(defn lock-ratio
+  [[x y] handler]
+  (let [[x y] (condp contains? handler
+                #{:middle-right :middle-left} [x x]
+                #{:top-middle :bottom-middle} [y y]
+                [x y])
+        ratio (if (< (abs x) (abs y)) x y)]
+    [ratio ratio]))
+
 (defn offset-scale
   [db [x y] lock-ratio? in-place?]
   (let [handler (-> db :clicked-element :key)
@@ -151,14 +160,14 @@
                                :top-left [[(- x) (- y)] [x2 y2]]
                                :bottom-right [[x y] [x1 y1]]
                                :bottom-left [[(- x) y] [x2 y1]])
-        offset (cond-> offset in-place? (mat/mul 2))
         pivot-point (if in-place? [cx cy] pivot-point)
-        scale-ratio (mat/div (mat/add dimensions offset) dimensions)
-        scale-ratio (cond-> scale-ratio lock-ratio? mouse/lock-ratio)
-        scale-ratio (mapv #(max 0 %) scale-ratio)]
+        offset (cond-> offset in-place? (mat/mul 2))
+        ratio (mat/div (mat/add dimensions offset) dimensions)
+        ratio (cond-> ratio lock-ratio? (lock-ratio handler))
+        ratio (mapv #(max 0 %) ratio)]
     (-> db
         (assoc :pivot-point pivot-point)
-        (elements/scale scale-ratio pivot-point))))
+        (elements/scale ratio pivot-point))))
 
 (defmethod tools/drag :select
   [{:keys [state

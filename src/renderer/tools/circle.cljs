@@ -9,8 +9,7 @@
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
    [renderer.utils.units :as units]
-   [renderer.utils.bounds :as bounds]
-   [renderer.utils.mouse :as mouse]))
+   [renderer.utils.bounds :as bounds]))
 
 (derive :circle ::tools/shape)
 
