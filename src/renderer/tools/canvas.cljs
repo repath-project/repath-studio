@@ -35,6 +35,7 @@
         snapping-points @(rf/subscribe [:snapping-points])
         debug-info? @(rf/subscribe [:debug-info?])
         grid? @(rf/subscribe [:grid?])
+        state @(rf/subscribe [:state])
         mouse-handler #(mouse/event-handler % element)
         pivot-point @(rf/subscribe [:pivot-point])
         select? (or (= tool :select)
@@ -70,21 +71,22 @@
                          [overlay/point-of-interest snapping-point])
                        snapping-points)))
 
-     (when select?
-       (map (fn [el]
-              ^{:key (str (:key el) "-bounds")}
-              [overlay/bounding-box (tools/adjusted-bounds el elements)])
-            hovered-or-selected))
+     (when (and select? pivot-point)
+       [overlay/point-of-interest pivot-point])
 
-     (when (and bounds select?)
+     (when (and bounds select? (= state :default))
        [:<>
+        (map (fn [el]
+               ^{:key (str (:key el) "-bounds")}
+               [overlay/bounding-box (tools/adjusted-bounds el elements)])
+             hovered-or-selected)
+        
         (when (> elements-area 0)
           [overlay/area elements-area bounds])
         (when (not-empty (filter (comp not zero?) bounds))
           [:<>
            [overlay/size bounds]
-           [overlay/bounding-handlers bounds]
-           (when pivot-point [overlay/point-of-interest pivot-point])])])
+           [overlay/bounding-handlers bounds]])])
 
      (when (or (= tool :edit)
                (= primary-tool :edit))

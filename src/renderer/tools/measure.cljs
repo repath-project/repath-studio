@@ -60,11 +60,7 @@
      [overlay/cross x1 y1]
      [overlay/cross x2 y2]
 
-     [overlay/arc
-      [x1 y1]
-      20
-      (if straight? 0 angle)
-      (abs straight-angle)]
+     [overlay/arc [x1 y1] 20 (if straight? 0 angle) (abs straight-angle)]
 
      [overlay/line x1 y1 x2 y2 false]
      [overlay/line x1 y1 (+ x1 (/ 30 zoom)) y1]
