@@ -119,10 +119,6 @@
   [db]
   (set-active-page db (last (-> (elements db) :canvas :children))))
 
-(defn update-selected-by
-  [db f]
-  (assoc-in db (path db) (reduce f (elements db) (selected db))))
-
 (defn update-property
   [db el-k k f & more]
   (apply update-in db (conj (path db) el-k k) f more))
@@ -438,27 +434,16 @@
    (create-element db {:tag tag :attrs attrs :parent (:key el)})))
 
 (defn paste-styles
-  [{copied-elements :copied-elements :as db}]
-  (if (= 1 (count copied-elements))
-    ;; TODO: Merge attributes from multiple selected elements.
-    (let [attrs (:attrs (first copied-elements))]
-      (update-selected-by
-       db
-       (fn [elements element]
-         (let [key (:key element)
-               ;; Copy all presentation attributes except transform.
-               style-attrs (disj spec/presentation-attrs :transform)]
-           (assoc-in
-            elements
-            [key]
-            (assoc element
-                   :attrs
-                   (reduce (fn [updated-attrs key]
-                             (if (contains? attrs key)
-                               (assoc updated-attrs key (key attrs))
-                               updated-attrs))
-                           (:attrs element)
-                           style-attrs))))))) db))
+  ([db]
+   (reduce paste-styles db (selected db)))
+  ([{copied-elements :copied-elements :as db} el]
+   ;; TODO: Merge attributes from multiple selected elements.
+   (if (= 1 (count copied-elements))
+     (let [attrs (:attrs (first copied-elements))
+           style-attrs (disj spec/presentation-attrs :transform)]
+       (reduce (fn [db attr]
+                 (update-attribute db el attr #(if % (-> attrs attr) disj)))
+               db style-attrs)) db)))
 
 (defn set-parent
   ([db parent-key]
@@ -487,7 +472,7 @@
               (create-element {:tag :g :parent (:key (active-page db))}))
           (selected-keys db)))
 
-(defn copy-attrs
+(defn inherit-attrs
   [db el el-k]
   (reduce
    (fn [db attr]
@@ -513,7 +498,7 @@
                 (set-parent-at-index el-k (:parent el) index)
                 ;; Group attributes are inherited by its children, 
                 ;; so we need to maintain the presentation attrs.
-                (copy-attrs el el-k)))
+                (inherit-attrs el el-k)))
           db (reverse (:children el))))
        (delete db (:key el))))))
 
