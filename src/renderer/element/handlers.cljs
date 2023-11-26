@@ -472,12 +472,30 @@
          (update-property parent-key :children conj element-key)
          (set-property element-key :parent parent-key)))))
 
+(defn set-parent-at-index
+  [db element-key parent-key index]
+  (let [siblings (:children (element db parent-key))
+        last-index (-> siblings count)]
+    (-> db
+        (set-parent element-key parent-key)
+        (update-property parent-key :children vec/move last-index index))))
+
 (defn group
   [db]
   (reduce (fn [db key] (set-parent db key (first (selected-keys db))))
           (-> (deselect db)
               (create-element {:tag :g :parent (:key (active-page db))}))
           (selected-keys db)))
+
+(defn copy-attrs
+  [db el el-k]
+  (reduce
+   (fn [db attr]
+     (update-attribute db (element db el-k) attr
+                       #(if (and (empty? (str %))
+                                 (-> el :attrs attr))
+                          (-> el :attrs attr)
+                          %))) db spec/presentation-attrs))
 
 (defn ungroup
   ([db]
@@ -487,8 +505,16 @@
      (and (not (:locked? el))
           (= (:tag el) :g))
      (as-> db db
-       ;; TODO: Apply group attrs to children.
-       (reduce #(set-parent %1 %2 (:parent el)) db (:children el))
+       (let [siblings (siblings db el)
+             index (.indexOf siblings (:key el))]
+         (reduce
+          (fn [db el-k]
+            (-> db
+                (set-parent-at-index el-k (:parent el) index)
+                ;; Group attributes are inherited by its children, 
+                ;; so we need to maintain the presentation attrs.
+                (copy-attrs el el-k)))
+          db (reverse (:children el))))
        (delete db (:key el))))))
 
 (defn manipulate-path
