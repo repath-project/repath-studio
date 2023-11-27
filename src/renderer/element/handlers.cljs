@@ -313,9 +313,9 @@
   ([db direction]
    (reduce #(align %1 %2 direction) db (selected db)))
   ([db el direction]
-   (let [bounds (tools/bounds el (elements db))
+   (let [bounds (tools/adjusted-bounds el (elements db))
          center (bounds/center bounds)
-         parent-bounds (tools/bounds (parent db el) (elements db))
+         parent-bounds (tools/adjusted-bounds (parent db el) (elements db))
          parent-center (bounds/center parent-bounds)
          [cx cy] (mat/sub parent-center center)
          [x1 y1 x2 y2] (mat/sub parent-bounds bounds)]
