@@ -10,7 +10,8 @@
    [renderer.history.handlers :as history]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
-   [renderer.utils.units :as units]))
+   [renderer.utils.units :as units]
+   [renderer.utils.bounds :as bounds]))
 
 (derive :line ::tools/shape)
 
@@ -75,20 +76,16 @@
                  (hierarchy/update-attr :y2 + y)))
 
 (defmethod tools/scale :line
-  [el [x y] handler]
-  (let [{:keys [x1 y1 x2 y2]} (:attrs el)]
-    (cond-> el
-      (contains? #{:bottom-right :top-right :middle-right} handler)
-      (hierarchy/update-attr (if (> x1 x2) :x1 :x2) + x)
-
-      (contains? #{:bottom-left :top-left :middle-left} handler)
-      (-> (hierarchy/update-attr (if (< x1 x2) :x1 :x2) + x))
-
-      (contains? #{:bottom-middle :bottom-right :bottom-left} handler)
-      (hierarchy/update-attr (if (> y1 y2) :y1 :y2) + y)
-
-      (contains? #{:top-middle :top-left :top-right} handler)
-      (-> (hierarchy/update-attr (if (< y1 y2) :y1 :y2) + y)))))
+  [el ratio pivot-point]
+  (let [{:keys [x1 y1 x2 y2]} (:attrs el)
+        dimentions (bounds/->dimensions (tools/bounds el))
+        [x y] (mat/sub dimentions (mat/mul dimentions ratio))
+        pivot-diff (mat/sub pivot-point dimentions)
+        offset (mat/sub pivot-diff (mat/mul pivot-diff ratio))]
+    (-> el
+        (hierarchy/update-attr (if (< x1 x2) :x1 :x2) + x)
+        (hierarchy/update-attr (if (< y1 y2) :y1 :y2) + y)
+        (tools/translate offset))))
 
 (defmethod tools/bounds :line
   [{{:keys [x1 y1 x2 y2]} :attrs}]

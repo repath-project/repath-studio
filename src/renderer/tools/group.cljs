@@ -12,7 +12,7 @@
   []
   {:description "The <g> SVG element is a container used to group other 
                  SVG elements."
-   :attrs []})
+   :attrs [:transform]})
 
 (defmethod tools/translate :g
   [el [_x _y]]

@@ -2,9 +2,9 @@
   "Custom element for https://blobs.dev/"
   (:require
    ["blobs/v2" :as blobs]
-   ["svg-path-bbox" :as svg-path-bbox]
    ["svgpath" :as svgpath]
    [clojure.core.matrix :as mat]
+   [clojure.string :as str]
    [goog.math]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as attr-hierarchy]
@@ -124,23 +124,12 @@
                       (attr-hierarchy/update-attr ::y + y)))
 
 (defmethod tools/scale ::blob
-  [element [x y] handler]
-  (cond-> element
-    (contains? #{:middle-right} handler)
-    (-> (attr-hierarchy/update-attr ::x + x)
-        (attr-hierarchy/update-attr ::size + x))
-
-    (contains? #{:middle-left} handler)
-    (-> (attr-hierarchy/update-attr ::x + x)
-        (attr-hierarchy/update-attr ::size - x))
-
-    (contains? #{:bottom-middle} handler)
-    (-> (attr-hierarchy/update-attr ::y + y)
-        (attr-hierarchy/update-attr ::size + y))
-
-    (contains? #{:top-middle} handler)
-    (-> (attr-hierarchy/update-attr ::y + y)
-        (attr-hierarchy/update-attr ::size - y))))
+  [el ratio pivot-point]
+ (let [[x y] ratio
+       offset (mat/sub pivot-point (mat/mul pivot-point ratio))]
+   (-> el
+       (attr-hierarchy/update-attr ::size * (apply min ratio))
+       (tools/translate offset))))
 
 (defmethod tools/render ::blob
   [{:keys [attrs children] :as element}]
@@ -164,9 +153,15 @@
       (attr-hierarchy/update-attr ::y + y)))
 
 (defmethod tools/bounds ::blob
-  [element]
-  (let [[left top right bottom] (js->clj (svg-path-bbox (tools/path element)))]
-    [left top right bottom]))
+  [{:keys [attrs]}]
+  (let [{:keys [::x ::y ::size stroke-width stroke]} attrs
+        [x y size stroke-width-px] (mapv units/unit->px [x y size stroke-width])
+        stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)
+        [x y] (mat/sub [x y] (/ (if (str/blank? stroke) 0 stroke-width-px) 2))
+        size (cond-> size
+               (str/blank? stroke)
+               (+ stroke-width-px))]
+    [x y (+ x size) (+ y size)]))
 
 (defmethod tools/centroid ::blob
   [{{:keys [::x ::y ::size]} :attrs}]
@@ -191,7 +186,6 @@
   (case handler
     :size
     (attr-hierarchy/update-attr element ::size #(max 0 (+ % (min x y))))
-
     element))
 
 (defmethod tools/render-edit ::blob

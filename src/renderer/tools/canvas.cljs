@@ -72,7 +72,7 @@
                        snapping-points)))
 
      (when (and select? pivot-point)
-       [overlay/cross pivot-point])
+       [overlay/times pivot-point])
 
      (when (and bounds select? (= state :default))
        [:<>

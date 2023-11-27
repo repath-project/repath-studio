@@ -49,15 +49,15 @@
                       (hierarchy/update-attr :cy + y)))
 
 (defmethod tools/scale :ellipse
-  [element ratio pivot-point]
+  [el ratio pivot-point]
   (let [[x y] ratio
-        center (bounds/center (tools/bounds element))
-        pivot-diff (mat/sub pivot-point center)
-        translate-diff (mat/sub pivot-diff (mat/mul pivot-diff ratio))]
-    (-> element
+        dimentions (bounds/->dimensions (tools/bounds el))
+        pivot-point (mat/sub pivot-point (mat/div dimentions 2))
+        offset (mat/sub pivot-point (mat/mul pivot-point ratio))]
+    (-> el
         (hierarchy/update-attr :rx * x)
         (hierarchy/update-attr :ry * y)
-        (tools/translate translate-diff))))
+        (tools/translate offset))))
 
 (defmethod tools/bounds :ellipse
   [{{:keys [cx cy rx ry stroke-width stroke]} :attrs}]

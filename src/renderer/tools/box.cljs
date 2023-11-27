@@ -13,18 +13,18 @@
 (derive ::tools/box ::tools/element)
 
 (defmethod tools/translate ::tools/box
-  [element [x y]] (-> element
-                      (hierarchy/update-attr :x + x)
-                      (hierarchy/update-attr :y + y)))
+  [el [x y]] (-> el
+                 (hierarchy/update-attr :x + x)
+                 (hierarchy/update-attr :y + y)))
 
 (defmethod tools/scale ::tools/box
   [el ratio pivot-point]
   (let [[x y] ratio
-        translate-diff (mat/sub pivot-point (mat/mul pivot-point ratio))]
+        offset (mat/sub pivot-point (mat/mul pivot-point ratio))]
     (-> el
         (hierarchy/update-attr :width * x)
         (hierarchy/update-attr :height * y)
-        (tools/translate translate-diff))))
+        (tools/translate offset))))
 
 (defmethod tools/edit ::tools/element
   [el [x y] handler]
@@ -47,9 +47,10 @@
         [x y] (cond-> [x y] (not= (:tag el) :page) (mat/add page-pos))]
     [:g {:key :edit-handlers}
      (map (fn [handler]
-            [overlay/square-handler (merge handler {:type :handler
-                                                    :tag :edit
-                                                    :element key})])
+            (let [handler (merge handler {:type :handler
+                                          :tag :edit
+                                          :element key})]
+              [overlay/square-handler handler]))
           [{:x x :y y :key :position}
            {:x (+ x width) :y (+ y height) :key :size}])]))
 
@@ -59,10 +60,9 @@
         [x y width height stroke-width-px] (mapv units/unit->px [x y width height stroke-width])
         stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)
         [x y] (mat/sub [x y] (/ (if (str/blank? stroke) 0 stroke-width-px) 2))
-        [width height] (mat/add
-                        [width height]
-                        (if (str/blank? stroke) 0 stroke-width-px))]
-    (mapv units/unit->px [x y (+ x width) (+ y height)])))
+        [width height] (cond-> [width height]
+                         (str/blank? stroke) (mat/add stroke-width-px))]
+    [x y (+ x width) (+ y height)]))
 
 (defmethod tools/area ::tools/box
   [{{:keys [width height]} :attrs}]

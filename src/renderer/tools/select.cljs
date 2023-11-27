@@ -145,6 +145,20 @@
     [ratio ratio]))
 
 (defn offset-scale
+  "Translates the x/y offset and the handler to a ratio and a pivot point,
+   to decouple this from the scaling method of the elements.
+
+   :pivot-point 
+   + ─────────□──┬-------□
+   │             |       |
+   │             |       |
+   │             │       │
+   □ ─────────── ■ ─ x ─ □
+   |          |    ↖     │
+   |          y      ↖   │
+   |          |        ↖ │
+   □----------□--------- ■ :bottom-right (active handler)
+   "     
   [db [x y] lock-ratio? in-place?]
   (let [handler (-> db :clicked-element :key)
         bounds (elements/bounds db)
@@ -164,6 +178,7 @@
         offset (cond-> offset in-place? (mat/mul 2))
         ratio (mat/div (mat/add dimensions offset) dimensions)
         ratio (cond-> ratio lock-ratio? (lock-ratio handler))
+        ;; TODO: Handle negative/inverted ratio.
         ratio (mapv #(max 0 %) ratio)]
     (-> db
         (assoc :pivot-point pivot-point)
@@ -180,28 +195,24 @@
                  offset)
         alt-key? (contains? (:modifiers e) :alt)]
     (-> (case state
-          :select
-          (-> db
-              (elements/set-temp (select-rect db alt-key?))
-              (elements/clear-hovered)
-              (reduce-by-area (contains? (:modifiers e) :alt)
-                              #(elements/hover %1 (:key %2))))
+          :select (-> db
+                      (elements/set-temp (select-rect db alt-key?))
+                      (elements/clear-hovered)
+                      (reduce-by-area (contains? (:modifiers e) :alt)
+                                      #(elements/hover %1 (:key %2))))
 
-          :move
-          (if alt-key?
-            (handlers/set-state db :clone)
-            (elements/translate (history/swap db) offset))
+          :move (if alt-key?
+                  (handlers/set-state db :clone)
+                  (elements/translate (history/swap db) offset))
 
-          :clone
-          (if alt-key?
-            (elements/duplicate (history/swap db) offset)
-            (handlers/set-state db :move))
+          :clone (if alt-key?
+                   (elements/duplicate (history/swap db) offset)
+                   (handlers/set-state db :move))
 
-          :scale
-          (offset-scale (history/swap db)
-                        offset
-                        (contains? (:modifiers e) :ctrl)
-                        (contains? (:modifiers e) :shift))
+          :scale (offset-scale (history/swap db)
+                               offset
+                               (contains? (:modifiers e) :ctrl)
+                               (contains? (:modifiers e) :shift))
 
           :default db)
         (handlers/set-message (message offset state)))))
@@ -214,7 +225,7 @@
                                     #(elements/select %1 (:key %2)))
                     (elements/clear-temp)
                     (history/finalize "Modify selection"))
-        :move (history/finalize db (str "Move selection by " adjusted-pointer-offset))
+        :move (history/finalize db "Move selection by " adjusted-pointer-offset)
         :scale (history/finalize db "Scale selection")
         :clone (history/finalize db "Clone selection")
         :default db)

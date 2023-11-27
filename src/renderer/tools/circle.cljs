@@ -42,13 +42,13 @@
                       (hierarchy/update-attr :cy + y)))
 
 (defmethod tools/scale :circle
-  [element ratio pivot-point]
-  (let [center (bounds/center (tools/bounds element))
-        pivot-diff (mat/sub pivot-point center)
-        translate-diff (mat/sub pivot-diff (mat/mul pivot-diff ratio))]
-    (-> element
-        (hierarchy/update-attr :r * ratio)
-        (tools/translate translate-diff))))
+  [el ratio pivot-point]
+  (let [dimentions (bounds/->dimensions (tools/bounds el))
+        pivot-point (mat/sub pivot-point (mat/div dimentions 2))
+        offset (mat/sub pivot-point (mat/mul pivot-point ratio))]
+    (-> el
+        (hierarchy/update-attr :r * (first ratio))
+        (tools/translate offset))))
 
 (defmethod tools/bounds :circle
   [{{:keys [cx cy r stroke-width stroke]} :attrs}]

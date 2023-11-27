@@ -449,7 +449,9 @@
      (let [attrs (:attrs (first copied-elements))
            style-attrs (disj spec/presentation-attrs :transform)]
        (reduce (fn [db attr]
-                 (update-attribute db el attr #(if % (-> attrs attr) disj)))
+                 (cond-> db
+                   (-> attrs attr) 
+                   (update-attribute el attr #(if % (-> attrs attr) disj))))
                db style-attrs)) db)))
 
 (defn set-parent
@@ -483,11 +485,15 @@
   [db source-el target-el-k]
   (reduce
    (fn [db attr]
-     (update-attribute db (element db target-el-k) attr
-                       #(if (and (empty? (str %))
-                                 (-> source-el :attrs attr))
-                          (-> source-el :attrs attr)
-                          %))) db spec/presentation-attrs))
+     (let [source-attr (-> source-el :attrs attr)]
+       (cond-> db
+         source-attr
+         (update-attribute (element db target-el-k)
+                           attr
+                           (fn [v]
+                             (if (empty? (str v))
+                               source-attr
+                               v)))))) db spec/presentation-attrs))
 
 (defn ungroup
   ([db]

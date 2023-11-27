@@ -4,6 +4,7 @@
    ["paper" :refer [Path]]
    ["svg-path-bbox" :as svg-path-bbox]
    ["svgpath" :as svgpath]
+   [clojure.core.matrix :as mat]
    #_[clojure.string :as str]
    [goog.object]
    [renderer.tools.base :as tools]))
@@ -50,12 +51,24 @@
            :opacity]})
 
 (defmethod tools/translate :path
-  [element [x y]]
-  (assoc-in element [:attrs :d] (-> (:attrs element)
-                                    :d
-                                    svgpath
-                                    (.translate x y)
-                                    (.toString))))
+  [el [x y]]
+  (assoc-in el [:attrs :d] (-> (:attrs el)
+                               :d
+                               svgpath
+                               (.translate x y)
+                               (.toString))))
+
+(defmethod tools/scale :path
+  [el ratio pivot-point]
+  (let [[scale-x scale-y] ratio
+        [x y] (mat/sub pivot-point (mat/mul pivot-point ratio))]
+    (assoc-in el [:attrs :d] (-> (:attrs el)
+                                 :d
+                                 svgpath
+                                 (.translate x y)
+                                 (.scale scale-x scale-y)
+                                 (.abs)
+                                 (.toString)))))
 
 (defmethod tools/area :path
   [{{:keys [d]} :attrs}]
