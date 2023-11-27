@@ -147,7 +147,7 @@
 (defn offset-scale
   [db [x y] lock-ratio? in-place?]
   (let [handler (-> db :clicked-element :key)
-        bounds (elements/selected-bounds db)
+        bounds (elements/bounds db)
         dimensions (bounds/->dimensions bounds)
         [x1 y1 x2 y2] bounds
         [cx cy] (bounds/center bounds)

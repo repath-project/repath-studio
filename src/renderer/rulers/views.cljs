@@ -4,7 +4,7 @@
    [clojure.string :as str]
    [clojure.core.matrix :as mat]))
 
-(defn selected-bounds
+(defn bounds
   [orientation size]
   (when-let [bounds @(rf/subscribe [:element/bounds])]
     (let [zoom @(rf/subscribe [:document/zoom])
@@ -147,7 +147,7 @@
   [{:keys [orientation size]}]
   [:svg {:width  (if (= orientation :vertical) size "100%")
          :height (if (= orientation :vertical) "100%" size)}
-   [selected-bounds orientation size]
+   [bounds orientation size]
    [base-lines orientation size]
    [mouse-pointer orientation size]])
 

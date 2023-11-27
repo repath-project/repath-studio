@@ -20,14 +20,10 @@
 (defmethod tools/scale ::tools/box
   [el ratio pivot-point]
   (let [[x y] ratio
-        bounds (tools/bounds el)
-        [x1 y1 _ _] bounds
-        pivot-diff (mat/sub pivot-point [x1 y1])
-        translate-diff (mat/sub pivot-diff (mat/mul pivot-diff ratio))]
+        translate-diff (mat/sub pivot-point (mat/mul pivot-point ratio))]
     (-> el
         (hierarchy/update-attr :width * x)
         (hierarchy/update-attr :height * y)
-        (hierarchy/update-attr :stroke-width * y)
         (tools/translate translate-diff))))
 
 (defmethod tools/edit ::tools/element

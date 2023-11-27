@@ -125,7 +125,7 @@
                             (into {}))]
     (-> filtered-attrs
         (dissoc :__compat :lang :tabindex)
-        (keys)
+        keys
         (zipmap (repeat "")))))
 
 (defn attributes

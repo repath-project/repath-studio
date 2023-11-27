@@ -18,8 +18,8 @@
    (conj (path db) el-k)))
 
 (defn update-el
-  [db key f & more]
-  (apply update-in db (conj (path db) key) f more))
+  [db el f & more]
+  (apply update-in db (conj (path db) (:key el)) f more))
 
 (defn elements
   [db]
@@ -149,7 +149,7 @@
   ([db el k f]
    (cond-> db
      (and (not (:locked? el)) (-> el tools/attributes k))
-     (update-el (:key el) hierarchy/update-attr k f))))
+     (update-el el hierarchy/update-attr k f))))
 
 (defn deselect
   ([db]
@@ -251,13 +251,13 @@
        (update-in (path db) dissoc k)))))
 
 (defn update-index
-  [db el f]
+  [db el f & more]
   (let [siblings (siblings db el)
         index (.indexOf siblings (:key el))
         new-index (f index)]
     (cond-> db
       (<= 0 new-index (-> siblings count dec))
-      (update-property (:parent el) :children vec/move index (f index)))))
+      (update-property (:parent el) :children vec/move index (apply f index more)))))
 
 (defn raise
   ([db]
@@ -289,11 +289,13 @@
   ([db el offset]
    (cond-> db
      (not (:locked? el))
-     (update-el (:key el) tools/translate offset))))
+     (update-el el tools/translate offset))))
 
-(defn selected-bounds
-  [db]
-  (tools/elements-bounds (elements db) (selected db)))
+(defn bounds
+  ([db]
+   (tools/elements-bounds (elements db) (selected db)))
+  ([db elements]
+   (tools/elements-bounds elements (selected db))))
 
 (defn scale
   ([db ratio pivot-point]
@@ -301,7 +303,11 @@
   ([db el ratio pivot-point]
    (cond-> db
      (not (:locked? el))
-     (update-el (:key el) tools/scale ratio pivot-point))))
+     (update-el el
+                tools/scale
+                ratio
+                (let [bounds (tools/adjusted-bounds el (elements db))]
+                  (mat/sub pivot-point (take 2 bounds)))))))
 
 (defn align
   ([db direction]
@@ -326,14 +332,14 @@
    (reduce ->path db (selected db)))
   ([db el]
    (cond-> db
-     (not (:locked? el)) (update-el (:key el) tools/->path))))
+     (not (:locked? el)) (update-el el tools/->path))))
 
 (defn stroke->path
   ([db]
    (reduce stroke->path db (selected db)))
   ([db el]
    (cond-> db
-     (not (:locked? el)) (update-el (:key el) tools/stroke->path))))
+     (not (:locked? el)) (update-el el tools/stroke->path))))
 
 (def default-props
   {:type :element
@@ -365,11 +371,12 @@
   ([db elements]
    ;; TODO: Handle child elements
    (let [active-page (active-page db)
-         elements (if (seq? elements) elements [elements])]
+         page? (page? elements)
+         elements (if (seq? elements) elements [elements])
+         [x1 y1 _ _] (tools/bounds active-page)]
      (cond-> (reduce create-element (deselect db) elements)
        (not page?)
-       (translate [(- (get-in active-page [:attrs :x]))
-                   (- (get-in active-page [:attrs :y]))])))))
+       (translate [(- x1) (- y1)])))))
 
 (defn bool
   [path-a path-b operation]
@@ -408,7 +415,7 @@
 (defn paste
   [db]
   (let [db (paste-in-place db)
-        bounds (selected-bounds db)
+        bounds (bounds db)
         [x1 y1] bounds
         [width height] (bounds/->dimensions bounds)
         [x y] (:adjusted-pointer-pos db)]
@@ -473,13 +480,13 @@
           (selected-keys db)))
 
 (defn inherit-attrs
-  [db el el-k]
+  [db source-el target-el-k]
   (reduce
    (fn [db attr]
-     (update-attribute db (element db el-k) attr
+     (update-attribute db (element db target-el-k) attr
                        #(if (and (empty? (str %))
-                                 (-> el :attrs attr))
-                          (-> el :attrs attr)
+                                 (-> source-el :attrs attr))
+                          (-> source-el :attrs attr)
                           %))) db spec/presentation-attrs))
 
 (defn ungroup

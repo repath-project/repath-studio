@@ -191,7 +191,7 @@
 (rf/reg-event-db
  :element/scale
  (fn [db [_ ratio]]
-   (let [bounds (h/selected-bounds db)
+   (let [bounds (h/bounds db)
          pivot-point (bounds/center bounds)]
      (-> db
          (h/scale ratio pivot-point)
