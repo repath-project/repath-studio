@@ -222,6 +222,8 @@
                           {:keyCode (key-codes "F11")}
                           {:keyCode (key-codes "A")
                            :ctrlKey true}
+                          {:keyCode (key-codes "G")
+                           :ctrlKey true}
                           {:keyCode (key-codes "P")
                            :ctrlKey true}
                           {:keyCode (key-codes "W")
