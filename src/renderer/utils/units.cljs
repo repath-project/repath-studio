@@ -20,18 +20,18 @@
 
 (defn unit->key
   "Converts the string unit to a lower-cased keyword."
-  [unit]
-  (keyword (str/lower-case unit)))
+  [s]
+  (keyword (str/lower-case s)))
 
 (defn valid-unit?
-  [unit]
-  (contains? units (unit->key unit)))
+  [s]
+  (contains? units (unit->key s)))
 
 (defn multiplier
   "Returns the multiplier by unit.
    If the unit is invalid, it fallbacks to :px (1)"
-  [unit]
-  ((if (valid-unit? unit) (unit->key unit) :px) units))
+  [s]
+  ((if (valid-unit? s) (unit->key s) :px) units))
 
 (defn match-unit
   [s]
@@ -39,12 +39,10 @@
 
 (defn parse-unit
   [s]
-  (let [string (str/trim (str s))
-        number (js/parseFloat string 10)
-        unit (match-unit string)]
-    [(if (js/isNaN number)
-       0
-       number)
+  (let [s (str/trim (str s))
+        n (js/parseFloat s 10)
+        unit (match-unit s)]
+    [(if (js/isNaN n) 0 n)
      unit]))
 
 (defn ->px
@@ -56,27 +54,27 @@
   (/ number (multiplier unit)))
 
 (defn unit->px
-  [value]
-  (let [[number unit] (parse-unit value)]
+  [v]
+  (let [[n unit] (parse-unit v)]
     (if (empty? unit)
-      number
-      (if (valid-unit? unit) (->px number unit) 0))))
+      n
+      (if (valid-unit? unit) (->px n unit) 0))))
 
 (defn transform
-  "Converts a value to pixels, applies a transformation and converts the result 
+  "Converts a value to pixels, applies a function and converts the result 
    back to the original unit."
-  [value f & more]
-  (let [[number unit] (parse-unit value)]
-    (-> (apply f (->px number unit) more)
-        (js/parseFloat)
+  [v f & more]
+  (let [[n unit] (parse-unit v)]
+    (-> (apply f (->px n unit) more)
+        js/parseFloat
         (.toFixed 2)
         (->unit unit)
         (str (when (valid-unit? unit) unit)))))
 
 (defn ->fixed
-  ([value]
-   (->fixed value 2))
-  ([value digits]
-   (-> value
+  ([v]
+   (->fixed v 2))
+  ([v digits]
+   (-> v
        (.toFixed digits)
-       (js/parseFloat))))
+       js/parseFloat)))
