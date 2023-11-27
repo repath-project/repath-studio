@@ -13,9 +13,10 @@
 (derive ::tools/box ::tools/element)
 
 (defmethod tools/translate ::tools/box
-  [el [x y]] (-> el
-                 (hierarchy/update-attr :x + x)
-                 (hierarchy/update-attr :y + y)))
+  [el [x y]]
+  (-> el
+      (hierarchy/update-attr :x + x)
+      (hierarchy/update-attr :y + y)))
 
 (defmethod tools/scale ::tools/box
   [el ratio pivot-point]
@@ -59,9 +60,9 @@
   (let [{:keys [x y width height stroke-width stroke]} attrs
         [x y width height stroke-width-px] (mapv units/unit->px [x y width height stroke-width])
         stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)
-        [x y] (mat/sub [x y] (/ (if (str/blank? stroke) 0 stroke-width-px) 2))
-        [width height] (cond-> [width height]
-                         (str/blank? stroke) (mat/add stroke-width-px))]
+        stroke? (not (str/blank? stroke))
+        [x y] (cond-> [x y] stroke? (mat/sub (/ stroke-width-px 2)))
+        [width height] (cond-> [width height] stroke? (mat/add stroke-width-px))]
     [x y (+ x width) (+ y height)]))
 
 (defmethod tools/area ::tools/box
