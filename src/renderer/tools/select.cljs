@@ -151,12 +151,12 @@
    :pivot-point 
    + ─────────□──┬-------□
    │             |       |
-   │             |       |
+   │             | ─ x ─ |
    │             │       │
-   □ ─────────── ■ ─ x ─ □
-   |          |    ↖     │
-   |          y      ↖   │
-   |          |        ↖ │
+   □ ─────────── ■       □
+   |      |        ↖     │
+   |      y          ↖   │
+   |      |            ↖ │
    □----------□--------- ■ :bottom-right (active handler)
    "     
   [db [x y] lock-ratio? in-place?]
@@ -195,24 +195,27 @@
                  offset)
         alt-key? (contains? (:modifiers e) :alt)]
     (-> (case state
-          :select (-> db
-                      (elements/set-temp (select-rect db alt-key?))
-                      (elements/clear-hovered)
-                      (reduce-by-area (contains? (:modifiers e) :alt)
-                                      #(elements/hover %1 (:key %2))))
+          :select
+          (-> db
+              (elements/set-temp (select-rect db alt-key?))
+              (elements/clear-hovered)
+              (reduce-by-area (contains? (:modifiers e) :alt) elements/hover))
 
-          :move (if alt-key?
-                  (handlers/set-state db :clone)
-                  (elements/translate (history/swap db) offset))
+          :move
+          (if alt-key?
+            (handlers/set-state db :clone)
+            (elements/translate (history/swap db) offset))
 
-          :clone (if alt-key?
-                   (elements/duplicate (history/swap db) offset)
-                   (handlers/set-state db :move))
+          :clone
+          (if alt-key?
+            (elements/duplicate (history/swap db) offset)
+            (handlers/set-state db :move))
 
-          :scale (offset-scale (history/swap db)
-                               offset
-                               (contains? (:modifiers e) :ctrl)
-                               (contains? (:modifiers e) :shift))
+          :scale
+          (offset-scale (history/swap db)
+                        offset
+                        (contains? (:modifiers e) :ctrl)
+                        (contains? (:modifiers e) :shift))
 
           :default db)
         (handlers/set-message (message offset state)))))

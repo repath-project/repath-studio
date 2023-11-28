@@ -306,8 +306,8 @@
      (update-el el
                 tools/scale
                 ratio
-                (let [bounds (tools/adjusted-bounds el (elements db))]
-                  (mat/sub pivot-point (take 2 bounds)))))))
+                (let [[x1 y1] (tools/adjusted-bounds el (elements db))]
+                  (mat/sub pivot-point [x1 y1]))))))
 
 (defn align
   ([db direction]
