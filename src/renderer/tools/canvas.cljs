@@ -74,7 +74,7 @@
      (when (and select? pivot-point)
        [overlay/times pivot-point])
 
-     (when (and bounds select? (= state :default))
+     (when (and select? (= state :default))
        [:<>
         (map (fn [el]
                ^{:key (str (:key el) "-bounds")}
