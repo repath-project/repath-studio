@@ -17,12 +17,15 @@
 (derive :cy ::length)
 (derive :dx ::length)
 (derive :dy ::length)
-(derive :width ::length)
-(derive :height ::length)
-(derive :stroke-width ::length)
-(derive :r ::length)
-(derive :rx ::length)
-(derive :ry ::length)
+
+(derive ::positive-length ::length)
+
+(derive :width ::positive-length)
+(derive :height ::positive-length)
+(derive :stroke-width ::positive-length)
+(derive :r ::positive-length)
+(derive :rx ::positive-length)
+(derive :ry ::positive-length)
 
 (defmethod hierarchy/form-element ::length
   [k v disabled? initial]
@@ -49,3 +52,8 @@
 (defmethod hierarchy/update-attr ::length
   [element attribute f & more]
   (update-in element [:attrs attribute] #(apply units/transform % f more)))
+
+(defmethod hierarchy/update-attr ::positive-length
+  [element attribute f & more]
+  (update-in element [:attrs attribute]
+             #(units/transform % (fn [v] (max 0 (apply f v more))))))
