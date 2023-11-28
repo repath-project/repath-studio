@@ -191,7 +191,7 @@
   (reduce (fn [db {:keys [key tag]}]
             (cond-> db
               (not (contains? #{:page :canvas} tag))
-              (update-attribute key :selected? not)))
+              (update-property key :selected? not)))
           db
           (vals (elements db))))
 
@@ -368,15 +368,13 @@
    (-> db
        (create (get-temp db))
        clear-temp))
-  ([db elements]
+  ([db & elements]
    ;; TODO: Handle child elements
-   (let [active-page (active-page db)
-         page? (page? elements)
-         elements (if (seq? elements) elements [elements])
-         [x1 y1 _ _] (tools/bounds active-page)]
-     (cond-> (reduce create-element (deselect db) elements)
-       (not page?)
-       (translate [(- x1) (- y1)])))))
+   (let [[x1 y1 _ _] (tools/bounds (active-page db))]
+     (reduce #(cond-> (create-element %1 %2)
+                 (not (page? %2)) (translate [(- x1) (- y1)]))
+             (deselect db) elements))))
+
 
 (defn bool
   [path-a path-b operation]
