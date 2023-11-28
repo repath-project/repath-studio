@@ -298,7 +298,8 @@ pre {
 
   margin: 2px;
 
-  .button {
+  .button,
+  input {
     @apply level-3 m-0 ml-px rounded-none;
 
     &:first-child {

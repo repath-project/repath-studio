@@ -12,7 +12,7 @@
 (defn coordinates []
   (let [[x y] @(rf/subscribe [:frame/adjusted-pointer-pos])]
     [:div.flex.flex-col.ml-2.font-mono
-     {:style {:min-width "80px"}}
+     {:style {:min-width "90px"}}
      [:div.flex.justify-between
       [:span.mr-1 "X:"] [:span (gstring/format "%.2f" x)]]
      [:div.flex.justify-between
@@ -31,13 +31,13 @@
    {:key :divider-1
     :type :separator}
    {:label "Initial"
-    :key "restore-active-page"
+    :key "restore-page"
     :action [:pan-to-active-page :original]}
-   {:label "Fit active page"
-    :key "fit-active-page"
+   {:label "Fit page"
+    :key "fit-page"
     :action [:pan-to-active-page :fit]}
-   {:label "Fill active page"
-    :key "fill-active-page"
+   {:label "Fill page"
+    :key "fill-page"
     :action [:pan-to-active-page :fill]}])
 
 (def view-radio-buttons
@@ -113,30 +113,35 @@
 
      [:div.button-group
       [:button.button.level-3.px-2.font-mono.rounded
-       [:div.flex.items-center
-        {:class (when (<= zoom 0.01) "disabled")
-         :on-click #(rf/dispatch [:zoom-out])}
-        [comp/icon "minus" {:class "small"}]]]
+       {:class (when (<= zoom 0.01) "disabled")
+        :on-click #(rf/dispatch [:zoom-out])}
+       [comp/icon "minus" {:class "small"}]]
 
       [:button.button.level-3.px-2.font-mono.rounded
-       [:div.flex.items-center
-        {:class (when (>= zoom 100) "disabled")
-         :on-click #(rf/dispatch [:zoom-in])}
-        [comp/icon "plus" {:class "small"}]]]
+       {:class (when (>= zoom 100) "disabled")
+        :on-click #(rf/dispatch [:zoom-in])}
+       [comp/icon "plus" {:class "small"}]]
+
+      [:input.level-3.text-right.flex
+       {:key zoom
+        :style {:width "90px"}
+        :default-value (str (gstring/format "%.2f" (* 100 zoom)))
+        :on-blur #(let [v (-> (.. % -target -value) (js/parseFloat) (/ 100))]
+                    (when-not (js/isNaN v) (rf/dispatch [:set-zoom v])))}]
+      [:div.pr-2.level-3.flex.items-center "%"]
 
       [:> DropdownMenu/Root
        [:> DropdownMenu/Trigger
         {:class "button flex items-center justify-center level-3 px-2 font-mono rounded"
          :side "top"}
-        [:div
-         {:style {:min-width "80px"}}
-         (str (gstring/format "%.2f" (* 100 zoom)) "%")]
         [:div.flex.items-center
          [comp/icon "chevron-up" {:class "small"}]]]
+
        [:> DropdownMenu/Portal
         [:> DropdownMenu/Content
          {:class "menu-content rounded"
-          :side "top"}
+          :side "top"
+          :align "end"}
          (map (fn [item]
                 ^{:key (:key item)}
                 [comp/dropdown-menu-item item])

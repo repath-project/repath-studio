@@ -10,7 +10,7 @@
   [:map
    [:tool keyword?]
    [:pointer-pos [:tuple double? double?]]
-   [:zoom-factor double?]
+   [:zoom-sensitivity double?]
    [:state keyword?]
    [:grid? boolean?]
    [:rulers? boolean?]
@@ -29,7 +29,7 @@
 (def default
   {:tool :select
    :pointer-pos [0 0]
-   :zoom-sensitivity 0.3
+   :zoom-sensitivity 0.75
    :state :default
    :documents {}
    :document-tabs []

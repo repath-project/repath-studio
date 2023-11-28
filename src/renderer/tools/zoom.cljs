@@ -49,7 +49,7 @@
            content-rect
            adjusted-pointer-offset
            adjusted-pointer-pos
-           zoom-factor] :as db} e]
+           zoom-sensitivity] :as db} e]
   (let [[offset-x offset-y] adjusted-pointer-offset
         [pos-x pos-y] adjusted-pointer-pos
         width (abs (- pos-x offset-x))
@@ -62,13 +62,13 @@
         elements/clear-temp
         (assoc :cursor "zoom-in")
         (frame/zoom (if (contains? (:modifiers e) :shift)
-                      zoom-factor
+                      zoom-sensitivity
                       (/ furute-zoom current-zoom)))
         (frame/pan-to-bounds [pos-x pos-y offset-x offset-y]))))
 
 (defmethod tools/mouse-up :zoom
   [db e]
   (let [factor (if (contains? (:modifiers e) :shift)
-                 (:zoom-factor db)
-                 (/ 1 (:zoom-factor db)))]
+                 (:zoom-sensitivity db)
+                 (/ 1 (:zoom-sensitivity db)))]
     (frame/zoom-in-pointer-position db factor)))

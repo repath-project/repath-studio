@@ -56,9 +56,9 @@
 (rf/reg-event-db
  :zoom-in
  (fn [db [_ _]]
-   (handlers/zoom db (/ 1 (:zoom-factor db)))))
+   (handlers/zoom db (/ 1 (:zoom-sensitivity db)))))
 
 (rf/reg-event-db
  :zoom-out
  (fn [db [_ _]]
-   (handlers/zoom db (:zoom-factor db))))
+   (handlers/zoom db (:zoom-sensitivity db))))
