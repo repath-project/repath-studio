@@ -125,10 +125,10 @@
 
 (defmethod tools/scale ::blob
   [el ratio pivot-point]
- (let [[x y] ratio
+ (let [ratio (apply min ratio)
        offset (mat/sub pivot-point (mat/mul pivot-point ratio))]
    (-> el
-       (attr-hierarchy/update-attr ::size * (apply min ratio))
+       (attr-hierarchy/update-attr ::size * ratio)
        (tools/translate offset))))
 
 (defmethod tools/render ::blob
@@ -154,13 +154,8 @@
 
 (defmethod tools/bounds ::blob
   [{:keys [attrs]}]
-  (let [{:keys [::x ::y ::size stroke-width stroke]} attrs
-        [x y size stroke-width-px] (mapv units/unit->px [x y size stroke-width])
-        stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)
-        [x y] (mat/sub [x y] (/ (if (str/blank? stroke) 0 stroke-width-px) 2))
-        size (cond-> size
-               (str/blank? stroke)
-               (+ stroke-width-px))]
+  (let [{:keys [::x ::y ::size]} attrs
+        [x y size] (mapv units/unit->px [x y size])]
     [x y (+ x size) (+ y size)]))
 
 (defmethod tools/centroid ::blob

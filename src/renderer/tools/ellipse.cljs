@@ -60,12 +60,8 @@
         (tools/translate offset))))
 
 (defmethod tools/bounds :ellipse
-  [{{:keys [cx cy rx ry stroke-width stroke]} :attrs}]
-  (let [[cx cy rx ry stroke-width-px] (map units/unit->px
-                                           [cx cy rx ry stroke-width])
-        stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)
-        [rx ry] (mat/add [rx ry]
-                         (/ (if (str/blank? stroke) 0 stroke-width-px) 2))]
+  [{{:keys [cx cy rx ry]} :attrs}]
+  (let [[cx cy rx ry] (map units/unit->px [cx cy rx ry])]
     [(- cx rx) (- cy ry) (+ cx rx) (+ cy ry)]))
 
 (defmethod tools/path :ellipse

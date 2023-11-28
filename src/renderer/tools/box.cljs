@@ -3,7 +3,6 @@
    :x :y :width :height attributes."
   (:require
    [clojure.core.matrix :as mat]
-   [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.overlay :as overlay]
@@ -30,13 +29,16 @@
 (defmethod tools/edit ::tools/element
   [el [x y] handler]
   (case handler
-    :position (-> el
-                  (hierarchy/update-attr :width #(max 0 (- % x)))
-                  (hierarchy/update-attr :height #(max 0 (- % y)))
-                  (tools/translate [x y]))
-    :size (-> el
-              (hierarchy/update-attr :width #(max 0 (+ % x)))
-              (hierarchy/update-attr :height #(max 0 (+ % y))))))
+    :position
+    (-> el
+        (hierarchy/update-attr :width #(max 0 (- % x)))
+        (hierarchy/update-attr :height #(max 0 (- % y)))
+        (tools/translate [x y]))
+
+    :size
+    (-> el
+        (hierarchy/update-attr :width #(max 0 (+ % x)))
+        (hierarchy/update-attr :height #(max 0 (+ % y))))))
 
 (defmethod tools/render-edit ::tools/box
   [{:keys [attrs key] :as el}]
@@ -57,12 +59,8 @@
 
 (defmethod tools/bounds ::tools/box
   [{:keys [attrs]}]
-  (let [{:keys [x y width height stroke-width stroke]} attrs
-        [x y width height stroke-width-px] (mapv units/unit->px [x y width height stroke-width])
-        stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)
-        stroke? (not (str/blank? stroke))
-        [x y] (cond-> [x y] stroke? (mat/sub (/ stroke-width-px 2)))
-        [width height] (cond-> [width height] stroke? (mat/add stroke-width-px))]
+  (let [{:keys [x y width height]} attrs
+        [x y width height] (mapv units/unit->px [x y width height])]
     [x y (+ x width) (+ y height)]))
 
 (defmethod tools/area ::tools/box

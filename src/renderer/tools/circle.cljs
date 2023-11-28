@@ -45,16 +45,15 @@
   [el ratio pivot-point]
   (let [dimentions (bounds/->dimensions (tools/bounds el))
         pivot-point (mat/sub pivot-point (mat/div dimentions 2))
+        ratio (apply min ratio)
         offset (mat/sub pivot-point (mat/mul pivot-point ratio))]
     (-> el
-        (hierarchy/update-attr :r * (first ratio))
+        (hierarchy/update-attr :r * ratio)
         (tools/translate offset))))
 
 (defmethod tools/bounds :circle
-  [{{:keys [cx cy r stroke-width stroke]} :attrs}]
-  (let [[cx cy r stroke-width-px] (map units/unit->px [cx cy r stroke-width])
-        stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)
-        r (+ r (/ (if (str/blank? stroke) 0 stroke-width-px) 2))]
+  [{{:keys [cx cy r]} :attrs}]
+  (let [[cx cy r] (map units/unit->px [cx cy r])]
     [(- cx r) (- cy r) (+ cx r) (+ cy r)]))
 
 (defmethod tools/area :circle
