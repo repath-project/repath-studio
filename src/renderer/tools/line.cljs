@@ -78,6 +78,7 @@
 (defmethod tools/scale :line
   [el ratio pivot-point]
   (let [{:keys [x1 y1 x2 y2]} (:attrs el)
+        [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])
         dimentions (bounds/->dimensions (tools/bounds el))
         [x y] (mat/sub dimentions (mat/mul dimentions ratio))
         pivot-diff (mat/sub pivot-point dimentions)
@@ -127,10 +128,13 @@
 (defmethod tools/edit :line
   [el [x y] handler]
   (case handler
-    :starting-point (-> el
-                        (hierarchy/update-attr :x1 + x)
-                        (hierarchy/update-attr :y1 + y))
-    :ending-point (-> el
-                      (hierarchy/update-attr :x2 + x)
-                      (hierarchy/update-attr :y2 + y))
+    :starting-point
+    (-> el
+        (hierarchy/update-attr :x1 + x)
+        (hierarchy/update-attr :y1 + y))
+
+    :ending-point
+    (-> el
+        (hierarchy/update-attr :x2 + x)
+        (hierarchy/update-attr :y2 + y))
     el))
