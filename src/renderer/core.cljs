@@ -29,7 +29,7 @@
    [renderer.tools.core]
    [renderer.tree.core]
    [renderer.utils.error :as error]
-   [renderer.utils.keyboard :as keyboard]
+   [renderer.utils.keyboard :as keyb]
    [renderer.views :as views]
    [renderer.window.core]
    [replumb.repl :as repl]
@@ -82,10 +82,10 @@
   (rf/dispatch-sync [:document/new])
 
   (rf/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])
-  (rf/dispatch-sync [::rp/set-keydown-rules keyboard/keydown-rules])
+  (rf/dispatch-sync [::rp/set-keydown-rules keyb/keydown-rules])
 
-  (.addEventListener js/document "keydown" keyboard/event-handler)
-  (.addEventListener js/document "keyup" keyboard/event-handler)
+  (.addEventListener js/document "keydown" keyb/event-handler)
+  (.addEventListener js/document "keyup" keyb/event-handler)
 
   (.setup paper)
 

@@ -16,6 +16,31 @@
   [code]
   (get key-chars code))
 
+(defn event-handler
+  "https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/"
+  [e]
+  (rf/dispatch-sync [:keyboard-event
+                     {:target (.-target e)
+                      :type (keyword (.-type e))
+                      :code (.-code e)
+                      :key-code (.-keyCode e)
+                      :key (.-key e)
+                      :modifiers (cond-> #{}
+                                   (.-altKey e) (conj :alt)
+                                   (.-ctrlKey e) (conj :ctrl)
+                                   (.-metaKey e) (conj :meta)
+                                   (.-shiftKey e) (conj :shift))}]))
+
+(defn input-key-down-handler
+  [e v f & more]
+  (let [target (.-target e)]
+    (case (.-code e)
+      "Enter" (do (apply f e more)
+                  (.blur target))
+      "Escape" (do (.blur target)
+                   (set! (.-value target) v))
+      nil)))
+
 (def keydown-rules
   {:event-keys [[[:document/toggle-grid]
                  [{:keyCode 35}]
@@ -233,17 +258,3 @@
                           {:keyCode (key-codes "D")
                            :ctrlKey true
                            :shiftKey true}]})
-
-(defn event-handler
-  "https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/"
-  [e]
-  (rf/dispatch-sync [:keyboard-event {:target (.-target e)
-                                      :type (keyword (.-type e))
-                                      :code (.-code e)
-                                      :key-code (.-keyCode e)
-                                      :key (.-key e)
-                                      :modifiers (cond-> #{}
-                                                   (.-altKey e) (conj :alt)
-                                                   (.-ctrlKey e) (conj :ctrl)
-                                                   (.-metaKey e) (conj :meta)
-                                                   (.-shiftKey e) (conj :shift))}]))

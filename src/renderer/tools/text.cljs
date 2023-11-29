@@ -93,8 +93,7 @@
        :on-blur #(set-text-and-select-element % key)
        :on-key-down (fn [e]
                       (.stopPropagation e)
-                      (if (or (= 13 (.-keyCode e))
-                              (= 27 (.-keyCode e)))
+                      (if (contains? #{"Enter" "Escape"} (.-code e))
                         (set-text-and-select-element e key)
                         (.requestAnimationFrame
                          js/window

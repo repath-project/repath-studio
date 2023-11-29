@@ -5,7 +5,7 @@
    ["react-svg" :refer [ReactSVG]]
    [clojure.string :as str]
    [re-frame.core :as rf]
-   [renderer.utils.keyboard :as keyboard]))
+   [renderer.utils.keyboard :as keyb]))
 
 (defn icon
   [icon {:keys [class]}]
@@ -34,7 +34,7 @@
                                         (:altKey shortcut)
                                         (conj "Alt")
 
-                                        :always (conj (keyboard/code->key
+                                        :always (conj (keyb/code->key
                                                        (:keyCode shortcut))))))
                           shortcuts)))))
 

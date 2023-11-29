@@ -7,7 +7,7 @@
    [renderer.overlay :as overlay]
    [renderer.rulers.views :as rulers]
    [renderer.tools.base :as tools]
-   [renderer.utils.keyboard :as keyboard]
+   [renderer.utils.keyboard :as keyb]
    [renderer.utils.mouse :as mouse]))
 
 (derive :canvas ::tools/tool)
@@ -43,8 +43,8 @@
     [:svg {:on-pointer-up mouse-handler
            :on-pointer-down mouse-handler
            :on-double-click mouse-handler
-           :on-key-up keyboard/event-handler
-           :on-key-down keyboard/event-handler
+           :on-key-up keyb/event-handler
+           :on-key-down keyb/event-handler
            :tab-index 0 ; Enable keyboard events on the svg element 
            :viewBox (str/join " " viewbox)
            :on-drop mouse-handler
