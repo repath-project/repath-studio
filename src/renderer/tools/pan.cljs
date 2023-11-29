@@ -24,7 +24,7 @@
 
 (defmethod tools/drag :pan
   [db e _]
-  (frame/pan db (mat/sub (:mouse-pos db) (:mouse-pos e))))
+  (frame/pan db (mat/sub (:pointer-pos db) (:pointer-pos e))))
 
 (defmethod tools/drag-end :pan
   [db]

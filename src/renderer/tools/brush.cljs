@@ -5,13 +5,13 @@
    ["svg-path-bbox" :as svg-path-bbox]
    [clojure.core.matrix :as mat]
    [goog.math]
-   [renderer.attribute.color :as color]
-   [renderer.attribute.hierarchy :as attr-hierarchy]
-   [renderer.attribute.range :as range]
-   [renderer.attribute.views :as attr-views]
-   [renderer.element.handlers :as elements]
+   [renderer.attribute.color :as attr.color]
+   [renderer.attribute.hierarchy :as attr.hierarchy]
+   [renderer.attribute.range :as attr.range]
+   [renderer.attribute.views :as attr.v]
+   [renderer.element.handlers :as element.h]
    [renderer.handlers :as handlers]
-   [renderer.history.handlers :as history]
+   [renderer.history.handlers :as history.h]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
    [renderer.utils.mouse :as mouse]
@@ -19,7 +19,7 @@
 
 (derive :brush ::tools/draw)
 
-(derive ::stroke ::color/color)
+(derive ::stroke ::attr.color/color)
 
 (defmethod tools/properties :brush
   []
@@ -37,40 +37,40 @@
 (defonce options
   [::size ::thinning ::smoothing ::streamline])
 
-(derive ::thinning ::range/range)
-(derive ::smoothing ::range/range)
-(derive ::streamline ::range/range)
+(derive ::thinning ::attr.range/range)
+(derive ::smoothing ::attr.range/range)
+(derive ::streamline ::attr.range/range)
 
-(defmethod attr-hierarchy/form-element ::size
+(defmethod attr.hierarchy/form-element ::size
   [k v disabled?]
-  [attr-views/range-input k v {:disabled disabled?
+  [attr.v/range-input k v {:disabled disabled?
                                :min 1
                                :max 100
                                :step 1}])
 
-(defmethod attr-hierarchy/form-element ::points
+(defmethod attr.hierarchy/form-element ::points
   [value]
   [:input {:value value
            :disabled true
            :placeholder (when-not value "multiple")}])
 
-(defmethod attr-hierarchy/description ::points
+(defmethod attr.hierarchy/description ::points
   []
   "Input points recorded from a user's mouse movement.")
 
-(defmethod attr-hierarchy/description ::size
+(defmethod attr.hierarchy/description ::size
   []
   "The base size (diameter) of the stroke.")
 
-(defmethod attr-hierarchy/description ::thinning
+(defmethod attr.hierarchy/description ::thinning
   []
   "The effect of pressure on the stroke's size.")
 
-(defmethod attr-hierarchy/description ::smoothing
+(defmethod attr.hierarchy/description ::smoothing
   []
   "How much to soften the stroke's edges.")
 
-(defmethod attr-hierarchy/description ::streamline
+(defmethod attr.hierarchy/description ::streamline
   []
   "How much to streamline the stroke.")
 
@@ -80,21 +80,21 @@
 
 (defmethod tools/drag :brush
   [{:keys [active-document
-           adjusted-mouse-pos] :as db} {:keys [pressure]}]
+           adjusted-pointer-pos] :as db} {:keys [pressure]}]
   (let [stroke (get-in db [:documents active-document :stroke])]
     (if (get-in db [:documents active-document :temp-element :attrs ::points])
       (update-in db
                  [:documents active-document :temp-element :attrs ::points]
                  conj
-                 (conj adjusted-mouse-pos pressure))
-      (elements/set-temp db {:type :element
-                             :tag :brush
-                             :attrs {::points [(conj adjusted-mouse-pos pressure)]
-                                     ::stroke stroke
-                                     ::size 16
-                                     ::thinning 0.5
-                                     ::smoothing 0.5
-                                     ::streamline 0.5}}))))
+                 (conj adjusted-pointer-pos pressure))
+      (element.h/set-temp db {:type :element
+                              :tag :brush
+                              :attrs {::points [(conj adjusted-pointer-pos pressure)]
+                                      ::stroke stroke
+                                      ::size 16
+                                      ::thinning 0.5
+                                      ::smoothing 0.5
+                                      ::streamline 0.5}}))))
 
 (defn get-svg-path-from-stroke
   "Turns the points returned by getStroke into SVG path data.
@@ -155,16 +155,27 @@
       js->clj))
 
 (defmethod tools/translate :brush
-  [element [x y]]
-  (update-in element
+  [el [x y]]
+  (update-in el
              [:attrs ::points]
              #(mapv (fn [point] (mat/add point [x y 0])) %)))
+
+(defmethod tools/scale :brush
+  [el ratio pivot-point]
+  (update-in el
+             [:attrs ::points]
+             #(mapv (fn [point]
+                        (let [bounds (tools/bounds el)
+                              rel-point (mat/sub (take 2 bounds) (take 2 point))
+                              pivot-point (mat/sub pivot-point (mat/mul pivot-point ratio))
+                              [x y] (mat/add pivot-point (mat/sub rel-point (mat/mul rel-point ratio)))]
+                          (mat/add point [x y 0]))) %)))  ;; OPTIMIZE
 
 (defmethod tools/drag-end :brush
   [db]
   (-> db
-      elements/create
-      (history/finalize (str "Draw line"))))
+      element.h/create
+      (history.h/finalize (str "Draw line"))))
 
 (defmethod tools/path :brush
   [{:keys [attrs]}]

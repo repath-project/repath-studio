@@ -1,4 +1,4 @@
-(ns renderer.theme.effects
+(ns renderer.theme.events
   (:require
    [platform]
    [re-frame.core :as rf]
@@ -27,7 +27,7 @@
  :theme/cycle-mode
  (fn [{:keys [db]} [_]]
    (let [mode (case (-> db :theme :mode)
-                ;; TODO: system mode
+                ;; TODO: Support system mode.
                 :dark :light
                 :light :dark)]
      {:dispatch [:theme/set-mode mode]})))

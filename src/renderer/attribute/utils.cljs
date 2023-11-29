@@ -1,6 +1,7 @@
 (ns renderer.attribute.utils
   (:require
-   [clojure.string :as str]))
+   [clojure.string :as str]
+   [renderer.utils.units :as units]))
 
 (def attrs-order
   [:d
@@ -27,9 +28,17 @@
    :id :class :tabindex
    :style])
 
-(defn points-to-vec
+(defn points->vec
   [points]
   (vec (as-> points p
          (str/triml p)
          (str/split p #"\s+")
          (partition 2 p)))) ; OPTIMIZE
+
+(defn points->px
+  [points]
+  (vec (as-> points p
+         (str/triml p)
+         (str/split p #"\s+")
+         (map units/unit->px p)
+         (partition 2 p))))

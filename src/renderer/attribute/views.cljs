@@ -8,7 +8,9 @@
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.components :as comp]
-   [renderer.tools.base :as tools]))
+   [renderer.tools.base :as tools]
+   [renderer.utils.keyboard :as keyb]
+   [renderer.utils.spec :as spec]))
 
 (defn browser-support
   [browser version-added]
@@ -23,12 +25,7 @@
 
 (defn caniusethis
   [{:keys [tag attr]}]
-  (let [data (if attr
-               (or (-> tools/svg-spec :elements tag attr :__compat)
-                   (-> tools/svg-spec :attributes :presentation attr :__compat)
-                   (-> tools/svg-spec :attributes :core attr :__compat)
-                   (-> tools/svg-spec :attributes :style attr :__compat))
-               (-> tools/svg-spec :elements tag :__compat))]
+  (let [data (if attr (spec/compat-data tag attr) (spec/compat-data tag))]
     (when (or (:support data) (isa? tag ::tools/animation))
       [:div.flex.flex-col
        (when (some :version_added (vals (:support data)))
@@ -64,14 +61,6 @@
                        :element/set-attribute
                        :element/preview-attribute) k new-v])))))
 
-(defn on-key-down-handler
-  [event k v]
-  (case (.-keyCode event)
-    13 (on-change-handler event k v)
-    27 ((.. event -target blur)
-        (set! (.. event -target -value) v))
-    nil))
-
 (defn form-input
   [{:keys [key value disabled? placeholder on-wheel]}]
   [:div.relative.flex.form-input
@@ -82,7 +71,7 @@
             :placeholder (if value placeholder "multiple")
             :on-wheel on-wheel
             :on-blur #(on-change-handler % key value)
-            :on-key-down #(on-key-down-handler % key value)}]
+            :on-key-down #(keyb/input-key-down-handler % value on-change-handler key value)}]
    (when-not (or (empty? (str value)) disabled?)
      [:button.button.ml-px.level-2.text-muted.absolute.right-0.clear-input-button
       {:style {:width "26px" :height "26px"}

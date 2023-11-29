@@ -19,6 +19,15 @@ we use the following conventions
 - el - element
 - attr, attrs - attribute, attributes
 
+We also use the following namespace aliases
+
+- v - views
+- e - events
+- h - handlers
+- s - subs
+
+If the namespace belongs to a different module, we use `module.v`.
+
 ## App structure
 
 Main structure
@@ -39,7 +48,6 @@ module\
 ├── db.cljs       <--- schema, validation
 ├── views.cljs    <--- reagent views
 ├── events.cljs   <--- event handlers
-├── effects.cljs  <--- effectful handlers
 ├── subs.cljs     <--- subscription handlers
 ├── handlers.cljs <--- helper functions for db transformations
 ├── styles.css    <--- styles

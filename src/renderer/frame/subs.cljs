@@ -2,7 +2,7 @@
   (:require
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
-   [renderer.frame.handlers :as handlers]))
+   [renderer.frame.handlers :as h]))
 
 (rf/reg-sub
  :frame/viewbox
@@ -15,9 +15,9 @@
      [x y width height])))
 
 (rf/reg-sub
- :frame/adjusted-mouse-pos
+ :frame/adjusted-pointer-pos
  :<- [:document/zoom]
  :<- [:document/pan]
- :<- [:mouse-pos]
- (fn [[zoom pan mouse-pos] _]
-   (handlers/adjust-mouse-pos zoom pan mouse-pos)))
+ :<- [:pointer-pos]
+ (fn [[zoom pan pointer-pos] _]
+   (h/adjust-pointer-pos zoom pan pointer-pos)))

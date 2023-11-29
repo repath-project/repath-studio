@@ -1,43 +1,43 @@
 (ns renderer.history.events
   (:require
    [re-frame.core :as rf]
-   [renderer.element.handlers :as elements]
-   [renderer.history.handlers :as handlers]
+   [renderer.element.handlers :as element.h]
+   [renderer.history.handlers :as h]
    [renderer.tools.base :as tools]))
 
 (rf/reg-event-db
  :history/undo
  (fn [db _]
-   (handlers/undo db 1)))
+   (h/undo db 1)))
 
 (rf/reg-event-db
  :history/redo
  (fn [db _]
-   (handlers/redo db 1)))
+   (h/redo db 1)))
 
 (rf/reg-event-db
  :history/undo-by
  (fn [db [_ n]]
-   (handlers/undo db n)))
+   (h/undo db n)))
 
 (rf/reg-event-db
  :history/redo-by
  (fn [db [_ n]]
-   (handlers/redo db n)))
+   (h/redo db n)))
 
 (rf/reg-event-db
  :history/cancel
  (fn [db _]
    (cond-> db
-     (and (= (:tool db) :select) (not (:mouse-offset db)))
-     (-> elements/deselect-all
-         (handlers/finalize "Deselect all"))
+     (and (= (:tool db) :select) (not (:pointer-offset db)))
+     (-> element.h/deselect
+         (h/finalize "Deselect all"))
 
-     (not (:mouse-offset db))
+     (not (:pointer-offset db))
      (-> (tools/set-tool :select)
          (assoc :state :default))
 
-     (:mouse-offset db) (dissoc :mouse-offset)
+     (:pointer-offset db) (dissoc :pointer-offset)
 
-     :always (-> elements/clear-temp
-                 handlers/swap))))
+     :always (-> element.h/clear-temp
+                 h/swap))))

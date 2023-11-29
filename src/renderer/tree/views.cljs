@@ -2,7 +2,8 @@
   (:require
    ["@radix-ui/react-context-menu" :as ContextMenu]
    [re-frame.core :as rf]
-   [renderer.components :as comp]))
+   [renderer.components :as comp]
+   [renderer.utils.keyboard :as keyb]))
 
 (defn item-buttons
   [{:keys [key locked? visible?]}]
@@ -33,16 +34,6 @@
   [e k]
   (rf/dispatch [:element/set-property k :name (.. e -target -value)]))
 
-(defn on-key-down-handler
-  [e k v]
-  (let [target (.-target e)]
-    (case (.-keyCode e)
-      13 (do (set-item-name e k)
-             (.blur target))
-      27 (do (.blur target)
-             (set! (.-value target) v))
-      nil)))
-
 (defn item-input
   [{:keys [tag name visible? selected? key]}]
   [:input.list-item-input
@@ -50,7 +41,7 @@
             (when-not selected? "pointer-events-none")]
     :default-value name
     :placeholder tag
-    :on-key-down #(on-key-down-handler % key name)
+    :on-key-down #(keyb/input-key-down-handler % name set-item-name key)
     :on-double-click #(.stopPropagation %)
     :on-blur #(set-item-name % key)}])
 
@@ -85,7 +76,7 @@
                                                        keyword) key]))
       :on-click (fn [e]
                   (.stopPropagation e)
-                  (rf/dispatch [:element/select (.-ctrlKey e) el]))
+                  (rf/dispatch [:element/select key (.-ctrlKey e)]))
       :style {:padding-left (when-not page?
                               (- (* depth collapse-button-width)
                                  (if (seq children) collapse-button-width 0)))}}

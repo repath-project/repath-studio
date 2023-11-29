@@ -1,7 +1,7 @@
 (ns renderer.handlers
   (:require
    [re-frame.core :as rf]
-   [renderer.element.handlers :as element-handlers]))
+   [renderer.element.handlers :as element-h]))
 
 (defn set-state
   [db state]
@@ -15,15 +15,15 @@
 
 (defn drop-files
   "https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/files"
-  [{:keys [adjusted-mouse-pos] :as db} files]
+  [{:keys [adjusted-pointer-pos] :as db} files]
   (reduce
    (fn [db file]
      (case (.-type file)
        "image/png"
-       (element-handlers/create db {:type :element
+       (element-h/create db {:type :element
                                     :tag :image
-                                    :attrs {:x (first adjusted-mouse-pos)
-                                            :y (second adjusted-mouse-pos)
+                                    :attrs {:x (first adjusted-pointer-pos)
+                                            :y (second adjusted-pointer-pos)
                                             :href (.-path file)}})
 
        db))
@@ -32,7 +32,7 @@
 
 (defn drop-items
   "https://developer.mozilla.org/en-US/docs/Web/API/DataTransferItem"
-  [{:keys [adjusted-mouse-pos active-document] :as db} items]
+  [{:keys [adjusted-pointer-pos active-document] :as db} items]
   (let [fill (get-in db [:documents active-document :fill])]
     (doall
      (for [item items]
@@ -43,8 +43,8 @@
                                   {:type :element
                                    :tag :text
                                    :content %
-                                   :attrs {:x (first adjusted-mouse-pos)
-                                           :y (second adjusted-mouse-pos)
+                                   :attrs {:x (first adjusted-pointer-pos)
+                                           :y (second adjusted-pointer-pos)
                                            :fill fill}}]))
          nil))))
   db)

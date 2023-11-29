@@ -6,13 +6,20 @@
    [re-frame.core :as rf]
    [re-frame.db :as db]))
 
-(defn ^:export move
+(defn ^:export translate
   "Moves the selected elements."
   ([offset]
    (rf/dispatch [:element/translate offset]))
 
   ([x y]
-   (move [x y])))
+   (translate [x y])))
+
+(defn ^:export scale
+  "Scales the selected elements."
+  ([ratio]
+   (rf/dispatch [:element/scale (if (number? ratio) [ratio ratio] ratio)]))
+  ([x y]
+   (rf/dispatch [:element/scale [x y]])))
 
 (defn ^:export fill
   "Fills the selected elements."

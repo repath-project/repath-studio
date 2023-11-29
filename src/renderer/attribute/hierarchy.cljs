@@ -5,8 +5,8 @@
 (defmulti form-element (fn [k _v _disabled? _initial] k))
 
 (defmethod update-attr :default
-  [el attr f & args]
-  (update-in el [:attrs attr] f (first args)))
+  [el attr f & more]
+  (apply update-in el [:attrs attr] f more))
 
 (defmethod description :d
   []

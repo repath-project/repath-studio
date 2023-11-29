@@ -3,16 +3,16 @@
   (:require
    ["@radix-ui/react-popover" :as Popover]
    [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.attribute.views :as views]
+   [renderer.attribute.views :as v]
    [renderer.components :as comp]))
 
 (defmethod hierarchy/form-element ::angle
   [k v disabled? initial]
   [:<>
-   [views/form-input {:key k
-                      :value v
-                      :disabled? disabled?
-                      :placeholder initial}]
+   [v/form-input {:key k
+                  :value v
+                  :disabled? disabled?
+                  :placeholder initial}]
    [:> Popover/Root {:modal true}
     [:> Popover/Trigger {:asChild true}
      [:button.button.ml-px.level-2.text-muted

@@ -7,7 +7,7 @@
    [renderer.overlay :as overlay]
    [renderer.rulers.views :as rulers]
    [renderer.tools.base :as tools]
-   [renderer.utils.keyboard :as keyboard]
+   [renderer.utils.keyboard :as keyb]
    [renderer.utils.mouse :as mouse]))
 
 (derive :canvas ::tools/tool)
@@ -32,15 +32,19 @@
         tool @(rf/subscribe [:tool])
         primary-tool @(rf/subscribe [:primary-tool])
         rotate @(rf/subscribe [:document/rotate])
+        snapping-points @(rf/subscribe [:snapping-points])
+        debug-info? @(rf/subscribe [:debug-info?])
         grid? @(rf/subscribe [:grid?])
+        state @(rf/subscribe [:state])
         mouse-handler #(mouse/event-handler % element)
+        pivot-point @(rf/subscribe [:pivot-point])
         select? (or (= tool :select)
                     (= primary-tool :select))]
     [:svg {:on-pointer-up mouse-handler
            :on-pointer-down mouse-handler
            :on-double-click mouse-handler
-           :on-key-up keyboard/event-handler
-           :on-key-down keyboard/event-handler
+           :on-key-up keyb/event-handler
+           :on-key-down keyb/event-handler
            :tab-index 0 ; Enable keyboard events on the svg element 
            :viewBox (str/join " " viewbox)
            :on-drop mouse-handler
@@ -62,14 +66,21 @@
              [:filter {:id id :key id} [tag attrs]])
            filters/accessibility)]
 
-     (when select?
-       (map (fn [el]
-              ^{:key (str (:key el) "-bounds")}
-              [overlay/bounding-box (tools/adjusted-bounds el elements)])
-            hovered-or-selected))
+     (when debug-info?
+       (into [:g] (map (fn [snapping-point]
+                         [overlay/point-of-interest snapping-point])
+                       snapping-points)))
 
-     (when (and bounds select?)
+     (when (and select? pivot-point)
+       [overlay/times pivot-point])
+
+     (when (and select? (= state :default))
        [:<>
+        (map (fn [el]
+               ^{:key (str (:key el) "-bounds")}
+               [overlay/bounding-box (tools/adjusted-bounds el elements)])
+             hovered-or-selected)
+        
         (when (> elements-area 0)
           [overlay/area elements-area bounds])
         (when (not-empty (filter (comp not zero?) bounds))

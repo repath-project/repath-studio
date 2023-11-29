@@ -1,6 +1,6 @@
 (ns renderer.tools.zoom
   (:require
-   [renderer.element.handlers :as elements]
+   [renderer.element.handlers :as element.h]
    [renderer.frame.handlers :as frame]
    [renderer.handlers :as handlers]
    [renderer.overlay :as overlay]
@@ -38,20 +38,20 @@
   (assoc db :cursor "default"))
 
 (defmethod tools/drag :zoom
-  [{:keys [adjusted-mouse-offset adjusted-mouse-pos active-document] :as db}]
-  (elements/set-temp db (overlay/select-box
-                         adjusted-mouse-pos
-                         adjusted-mouse-offset
-                         (get-in db [:documents active-document :zoom]))))
+  [{:keys [adjusted-pointer-offset adjusted-pointer-pos active-document] :as db}]
+  (element.h/set-temp db (overlay/select-box
+                          adjusted-pointer-pos
+                          adjusted-pointer-offset
+                          (get-in db [:documents active-document :zoom]))))
 
 (defmethod tools/drag-end :zoom
   [{:keys [active-document
            content-rect
-           adjusted-mouse-offset
-           adjusted-mouse-pos
-           zoom-factor] :as db} e]
-  (let [[offset-x offset-y] adjusted-mouse-offset
-        [pos-x pos-y] adjusted-mouse-pos
+           adjusted-pointer-offset
+           adjusted-pointer-pos
+           zoom-sensitivity] :as db} e]
+  (let [[offset-x offset-y] adjusted-pointer-offset
+        [pos-x pos-y] adjusted-pointer-pos
         width (abs (- pos-x offset-x))
         height (abs (- pos-y offset-y))
         width-ratio (/ (:width content-rect) width)
@@ -59,16 +59,16 @@
         current-zoom (get-in db [:documents active-document :zoom])
         furute-zoom (min width-ratio height-ratio)]
     (-> db
-        elements/clear-temp
+        element.h/clear-temp
         (assoc :cursor "zoom-in")
         (frame/zoom (if (contains? (:modifiers e) :shift)
-                      zoom-factor
+                      zoom-sensitivity
                       (/ furute-zoom current-zoom)))
         (frame/pan-to-bounds [pos-x pos-y offset-x offset-y]))))
 
 (defmethod tools/mouse-up :zoom
   [db e]
   (let [factor (if (contains? (:modifiers e) :shift)
-                 (:zoom-factor db)
-                 (/ 1 (:zoom-factor db)))]
-    (frame/zoom-in-mouse-position db factor)))
+                 (:zoom-sensitivity db)
+                 (/ 1 (:zoom-sensitivity db)))]
+    (frame/zoom-in-pointer-position db factor)))

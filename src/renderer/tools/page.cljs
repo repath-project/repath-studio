@@ -2,10 +2,10 @@
   (:require
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
-   [goog.string :as gstring]
+   [goog.string :as g.str]
    [re-frame.core :as rf]
    [reagent.dom.server :as dom]
-   [renderer.element.handlers :as elements]
+   [renderer.element.handlers :as element.h]
    [renderer.tools.base :as tools]
    [renderer.utils.mouse :as mouse]
    [renderer.utils.units :as units]))
@@ -20,9 +20,9 @@
    :attrs [:overflow]})
 
 (defmethod tools/drag :page
-  [{:keys [adjusted-mouse-pos adjusted-mouse-offset] :as db} e]
-  (let [[offset-x offset-y] adjusted-mouse-offset
-        [pos-x pos-y] adjusted-mouse-pos
+  [{:keys [adjusted-pointer-pos adjusted-pointer-offset] :as db} e]
+  (let [[offset-x offset-y] adjusted-pointer-offset
+        [pos-x pos-y] adjusted-pointer-pos
         lock-ratio? (contains? (:modifiers e) :ctrl)
         width (abs (- pos-x offset-x))
         height (abs (- pos-y offset-y))
@@ -31,10 +31,10 @@
                :width (if lock-ratio? (min width height) width)
                :height (if lock-ratio? (min width height) height)
                :fill "#ffffff"}]
-    (elements/set-temp db {:tag :page
-                           :type :element
-                           :name "Page"
-                           :attrs attrs})))
+    (element.h/set-temp db {:tag :page
+                            :type :element
+                            :name "Page"
+                            :attrs attrs})))
 
 (defmethod tools/bounds :page
   [{:keys [attrs]}]
@@ -99,7 +99,7 @@
         attrs (->> (dissoc attrs :fill)
                    (remove #(empty? (str (second %))))
                    (into {}))]
-    (gstring/unescapeEntities
+    (g.str/unescapeEntities
      (dom/render-to-static-markup
       [:svg attrs
        (doall (map tools/render-to-string (merge child-elements)))]))))

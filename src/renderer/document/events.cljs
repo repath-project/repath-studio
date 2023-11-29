@@ -1,12 +1,13 @@
 (ns renderer.document.events
   (:require
+   [de-dupe.core :as dd]
    [re-frame.core :as rf]
    [re-frame.interceptor :refer [->interceptor get-effect get-coeffect assoc-coeffect assoc-effect]]
    [renderer.document.db :as db]
-   [renderer.document.handlers :as handlers]
-   [renderer.element.handlers :as element-handlers]
+   [renderer.document.handlers :as h]
+   [renderer.element.handlers :as element.h]
    [renderer.frame.handlers :as frame]
-   [renderer.history.handlers :as history]
+   [renderer.history.handlers :as history.h]
    [renderer.utils.uuid :as uuid]
    [renderer.utils.vec :as vec]))
 
@@ -63,14 +64,14 @@
  (fn [{active-document :active-document :as db} [_ fill]]
    (-> db
        (assoc-in [:documents active-document :fill] fill)
-       (element-handlers/set-attribute :fill fill))))
+       (element.h/set-attribute :fill fill))))
 
 (rf/reg-event-db
  :document/set-stroke
  (fn [{active-document :active-document :as db} [_ stroke]]
    (-> db
        (assoc-in [:documents active-document :stroke] stroke)
-       (element-handlers/set-attribute :stroke stroke))))
+       (element.h/set-attribute :stroke stroke))))
 
 (rf/reg-event-db
  :document/new
@@ -86,17 +87,17 @@
          (update :document-tabs #(vec/add % (inc active-index) key))
          (assoc :active-document key)
          (frame/pan-to-element (:active-page db/default-document))
-         (history/init "Create document")))))
+         (history.h/init "Create document")))))
 
 (rf/reg-event-db
  :document/close
  (fn [db [_ key]]
-   (handlers/close db key)))
+   (h/close db key)))
 
 (rf/reg-event-db
  :document/close-active
  (fn [db [_]]
-   (handlers/close db)))
+   (h/close db)))
 
 (rf/reg-event-db
  :document/close-others
@@ -131,3 +132,25 @@
          dragged-index (.indexOf document-tabs dragged-key)
          swapped-index (.indexOf document-tabs swapped-key)]
      (assoc db :document-tabs (vec/swap document-tabs dragged-index swapped-index)))))
+
+(rf/reg-event-fx
+ :document/open
+ (fn [_ [_]]
+   {:send-to-main {:action "openDocument"}}))
+
+(rf/reg-event-fx
+ :document/save
+ (fn [{:keys [db]} [_]]
+   (let [document (get-in db [:documents (:active-document db)])
+         duped (assoc document :history (dd/de-dupe (:history document)))]
+     {:send-to-main {:action "saveDocument" :data (pr-str duped)}})))
+
+(rf/reg-event-fx
+ :document/save-as
+ (fn [{:keys [db]} [_]]
+   db))
+
+(rf/reg-event-fx
+ :document/save-all
+ (fn [{:keys [db]} [_]]
+   db))

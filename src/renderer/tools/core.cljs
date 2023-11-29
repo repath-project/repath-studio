@@ -1,5 +1,6 @@
 (ns renderer.tools.core
   (:require
+   [renderer.tools.select]
    [renderer.tools.animate-motion]
    [renderer.tools.animate-transform]
    [renderer.tools.animate]
@@ -27,7 +28,6 @@
    [renderer.tools.polyline]
    [renderer.tools.polyshape]
    [renderer.tools.rect]
-   [renderer.tools.select]
    [renderer.tools.shape]
    [renderer.tools.svg]
    [renderer.tools.text]

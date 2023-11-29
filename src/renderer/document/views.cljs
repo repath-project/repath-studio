@@ -4,7 +4,7 @@
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [renderer.components :as comp]
-   [renderer.history.views :as history]))
+   [renderer.history.views :as history.h]))
 
 (defn actions []
   [:div.flex.toolbar
@@ -54,7 +54,7 @@
              :max-width "14px"
              :background "var(--level-0)"
              :font-size "1em"}}
-    (history/select-options @(rf/subscribe [:history/undos]))]
+    (history.h/select-options @(rf/subscribe [:history/undos]))]
 
    [comp/icon-button "redo" {:title "Undo"
                              :on-click #(rf/dispatch [:history/redo])
@@ -67,7 +67,7 @@
              :max-width "14px"
              :background "var(--level-0)"
              :font-size "1em"}}
-    (history/select-options @(rf/subscribe [:history/redos]))]])
+    (history.h/select-options @(rf/subscribe [:history/redos]))]])
 
 (defn close-button
   [key]

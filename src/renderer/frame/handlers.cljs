@@ -3,7 +3,7 @@
    [clojure.core.matrix :as mat]
    [goog.math]
    [renderer.element.handlers :as el]
-   [renderer.element.utils :as el-utils]
+   [renderer.element.utils :as el.utils]
    [renderer.tools.base :as tools]
    [renderer.utils.bounds :as bounds]))
 
@@ -28,23 +28,23 @@
         (assoc-in [:documents active-document :zoom] updated-zoom)
         (assoc-in [:documents active-document :pan] updated-pan))))
 
-(defn adjust-mouse-pos
-  [zoom pan mouse-pos]
-  (-> mouse-pos
+(defn adjust-pointer-pos
+  [zoom pan pointer-pos]
+  (-> pointer-pos
       (mat/div zoom)
       (mat/add pan)))
 
-(defn adjusted-mouse-pos
-  [{:keys [active-document] :as db} mouse-pos]
+(defn adjusted-pointer-pos
+  [{:keys [active-document] :as db} pointer-pos]
   (let [{:keys [zoom pan snap?]} (get-in db [:documents active-document])
-        adjusted-mouse-pos (adjust-mouse-pos zoom pan mouse-pos)]
+        adjusted-pointer-pos (adjust-pointer-pos zoom pan pointer-pos)]
     (if snap?
-      (mapv Math/round (adjust-mouse-pos zoom pan mouse-pos))
-      adjusted-mouse-pos)))
+      (mapv Math/round (adjust-pointer-pos zoom pan pointer-pos))
+      adjusted-pointer-pos)))
 
-(defn zoom-in-mouse-position
-  [{:keys [mouse-pos] :as db} factor]
-  (zoom-in-position db factor (adjusted-mouse-pos db mouse-pos)))
+(defn zoom-in-pointer-position
+  [{:keys [pointer-pos] :as db} factor]
+  (zoom-in-position db factor (adjusted-pointer-pos db pointer-pos)))
 
 (defn zoom
   [{:keys [active-document content-rect] :as db} factor]
@@ -69,9 +69,9 @@
 
 (defn pan-to-element
   [db key]
-  (let [element (el/get-element db key)
+  (let [element (el/element db key)
         elements (el/elements db)
-        parrent-page-attrs (:attrs (el-utils/parent-page elements element))
+        parrent-page-attrs (:attrs (el.utils/parent-page elements element))
         db (pan-to-bounds db (tools/bounds element elements))]
     (if-not (el/page? element)
       (pan db [(:x parrent-page-attrs)

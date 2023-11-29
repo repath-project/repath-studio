@@ -8,23 +8,31 @@
    [renderer.utils.bounds :as bounds]
    [renderer.utils.map :as map]
    [renderer.utils.uuid :as uuid]
-   [renderer.utils.vec :as vec]))
+   [renderer.utils.vec :as vec]
+   [renderer.utils.spec :as spec]))
 
-(defn path [db]
-  [:documents (:active-document db) :elements])
+(defn path
+  ([db]
+   [:documents (:active-document db) :elements])
+  ([db el-k]
+   (conj (path db) el-k)))
+
+(defn update-el
+  [db el f & more]
+  (apply update-in db (conj (path db) (:key el)) f more))
 
 (defn elements
   [db]
   (get-in db (path db)))
 
-(defn get-element
+(defn element
   [db k]
-  (k (elements db)))
+  (get-in db (path db k)))
 
 (defn active-page
   [db]
   (->> (get-in db [:documents (:active-document db) :active-page])
-       (get-element db)))
+       (element db)))
 
 (defn selected
   [db]
@@ -45,7 +53,7 @@
          (and (first parents)
               (empty? (rest parents))
               (= (count selected)
-                 (count (:children (get-element db (first parents)))))))
+                 (count (:children (element db (first parents)))))))
        (or (parent db (parent db (first selected)))
            (active-page db))
 
@@ -57,7 +65,13 @@
        (active-page db))))
   ([db el]
    (when-let [parent (:parent el)]
-     (get-element db parent))))
+     (element db parent))))
+
+(defn siblings
+  ([db]
+   (:children (parent db)))
+  ([db el]
+   (:children (parent db el))))
 
 (defn pages
   [db]
@@ -68,13 +82,13 @@
   (= :page (:tag el)))
 
 (defn ancestor-keys
-  [db element]
-  (loop [parent-element (:parent element)
+  [db el]
+  (loop [parent-key (:parent el)
          parent-keys #{}]
-    (if parent-element
+    (if parent-key
       (recur
-       (:parent (get-element db parent-element))
-       (conj parent-keys parent-element))
+       (:parent (element db parent-key))
+       (conj parent-keys parent-key))
       parent-keys)))
 
 (defn clear-temp
@@ -82,8 +96,8 @@
   (update-in db [:documents (:active-document db)] dissoc :temp-element))
 
 (defn set-temp
-  [db element]
-  (assoc-in db [:documents (:active-document db) :temp-element] element))
+  [db el]
+  (assoc-in db [:documents (:active-document db) :temp-element] el))
 
 (defn get-temp
   [db]
@@ -105,61 +119,81 @@
   [db]
   (set-active-page db (last (-> (elements db) :canvas :children))))
 
-(defn update-selected-by
-  [db f]
-  (assoc-in db (path db) (reduce f (elements db) (selected db))))
+(defn update-property
+  [db el-k k f & more]
+  (apply update-in db (conj (path db) el-k k) f more))
 
-(defn select-element
-  [db key]
-  (assoc-in db (conj (path db) key :selected?) true))
+(defn toggle-property
+  [db el-k k]
+  (update-property db el-k k not))
 
-(defn deselect-element
-  [db key]
-  (assoc-in db (conj (path db) key :selected?) false))
+(defn set-property
+  ([db k v]
+   (reduce #(set-property %1 %2 k v) db (selected-keys db)))
+  ([db el-k k v]
+   (assoc-in db (conj (path db) el-k k) v)))
 
-(defn toggle-selected
-  [db key]
-  (update-in db (conj (path db) key :selected?) not))
+(defn set-attribute
+  ([db k v]
+   (reduce #(set-attribute %1 %2 k v) db (selected-keys db)))
+  ([db el-k k v]
+   (let [attr-path (conj (path db) el-k :attrs k)]
+     (cond-> db
+       (and (not (:locked? (element db el-k)))
+            (-> (element db el-k) tools/attributes k))
+       (assoc-in attr-path v)))))
 
-(defn deselect-all
-  [db]
-  (reduce #(deselect-element %1 %2) db (keys (elements db))))
+(defn update-attribute
+  ([db k f]
+   (reduce #(update-attribute %1 %2 k f) db (selected db)))
+  ([db el k f]
+   (cond-> db
+     (and (not (:locked? el)) (-> el tools/attributes k))
+     (update-el el hierarchy/update-attr k f))))
+
+(defn deselect
+  ([db]
+   (reduce deselect db (keys (elements db))))
+  ([db key]
+   (set-property db key :selected? false)))
+
+(defn select
+  ([db key]
+   (set-property db key :selected? true))
+  ([db key multi?]
+   (if-let [el (element db key)]
+     (if-not multi?
+       (-> db
+           deselect
+           (select key)
+           (set-active-page (:key (page db el))))
+       (toggle-property db key :selected?))
+     (deselect db))))
 
 (defn select-all
   [db]
-  (reduce #(select-element %1 %2) (deselect-all db) (:children (parent db))))
+  (reduce select (deselect db) (siblings db)))
 
 (defn selected-tags
   [db]
-  (reduce (fn [tags element] (conj tags (:tag element))) #{} (selected db)))
+  (reduce #(conj %1 (:tag %2)) #{} (selected db)))
 
 (defn select-same-tags
   [db]
   (let [selected-tags (selected-tags db)]
-    (reduce (fn [db element]
-              (if (contains? selected-tags (:tag element))
-                (select-element db (:key element))
-                db)) (deselect-all db) (vals (elements db)))))
+    (reduce (fn [db {:keys [key tag]}]
+              (cond-> db
+                (contains? selected-tags tag)
+                (select key))) (deselect db) (vals (elements db)))))
 
 (defn invert-selection
   [db]
   (reduce (fn [db {:keys [key tag]}]
-            (if (contains? #{:page :canvas} tag)
-              db
-              (update-in db (conj (path db) key :selected?) not)))
+            (cond-> db
+              (not (contains? #{:page :canvas} tag))
+              (update-property key :selected? not)))
           db
           (vals (elements db))))
-
-(defn select
-  [db multi? el]
-  (if el
-    (if-not multi?
-      (-> db
-          deselect-all
-          (select-element (:key el))
-          (set-active-page (:key (page db el))))
-      (toggle-selected db (:key el)))
-    (deselect-all db)))
 
 (defn hover
   [db k]
@@ -174,52 +208,24 @@
   (assoc-in db [:documents (:active-document db) :hovered-keys] #{}))
 
 (defn clear-ignored
-  [{active-document :active-document :as db}]
-  (assoc-in db [:documents active-document :ignored-keys] #{}))
+  [db]
+  (assoc-in db [:documents (:active-document db) :ignored-keys] #{}))
 
 (defmulti intersects-with-bounds? (fn [element _] (:tag element)))
 
 (defmethod intersects-with-bounds? :default [])
 
-(defn toggle-property
-  [db el-k k]
-  (update-in db (conj (path db) el-k k) not))
-
-(defn set-property
-  ([db k v]
-   (update-selected-by db #(assoc-in %1 [(:key %2) k] v)))
-  ([db el k v]
-   (assoc-in db (conj (path db) (:key el) k) v)))
-
-(defn set-attribute
-  ([db k v]
-   (update-selected-by db (fn [elements el]
-                            (if (and (not (:locked? el))
-                                     (-> el tools/attributes k))
-                              (assoc-in elements [(:key el) :attrs k] v)
-                              elements))))
-  ([db el k v]
-   (let [attr-path (conj (path db) (:key el) :attrs k)]
-     (cond-> db
-       (get-in db attr-path) (assoc-in attr-path v)))))
-
-(defn update-attribute
-  [db k f]
-  (update-selected-by db (fn [elements el]
-                           (if (and (not (:locked? el))
-                                    (-> el tools/attributes k))
-                             (update elements
-                                     (:key el)
-                                     #(hierarchy/update-attr % k f))
-                             elements))))
-
 (defn lock
-  [db]
-  (update-selected-by db #(assoc-in %1 [(:key %2) :locked?] true)))
+  ([db]
+   (reduce lock db (selected-keys db)))
+  ([db el-k]
+   (set-property db el-k :locked? true)))
 
 (defn unlock
-  [db]
-  (update-selected-by db #(assoc-in %1 [(:key %2) :locked?] false)))
+  ([db]
+   (reduce unlock db (selected-keys db)))
+  ([db el-k]
+   (set-property db el-k :locked? false)))
 
 (defn copy
   [db]
@@ -229,134 +235,127 @@
   ([db]
    (reduce delete db (selected-keys db)))
   ([db k]
-   (let [element (get-element db k)
-         db (reduce delete db (:children element))]
+   (let [el (element db k)
+         ;; OPTIMIZE: No need to recur to delete all children
+         db (reduce delete db (:children el))]
      (cond-> db
        :always
        (assoc-in
-        (conj (path db) (:parent element) :children)
-        (vec (remove #{k} (:children (parent db element)))))
+        (conj (path db) (:parent el) :children)
+        (vec (remove #{k} (siblings db el))))
 
-       (page? element)
+       (page? el)
        (next-active-page)
 
        :always
        (update-in (path db) dissoc k)))))
 
-(defn siblings-keys
-  [elements el]
-  (:children ((:parent el) elements)))
-
 (defn update-index
-  [elements el f]
-  (let [children (siblings-keys elements el)
-        index (.indexOf children (:key el))]
-    (assoc-in elements
-              [(:parent el) :children]
-              (vec/swap children index (f index)))))
+  [db el f & more]
+  (let [siblings (siblings db el)
+        index (.indexOf siblings (:key el))
+        new-index (f index)]
+    (cond-> db
+      (<= 0 new-index (-> siblings count dec))
+      (update-property (:parent el) :children vec/move index (apply f index more)))))
 
 (defn raise
-  [elements el]
-  (update-index elements el inc))
+  ([db]
+   (reduce raise db (selected db)))
+  ([db el]
+   (update-index db el inc)))
 
 (defn lower
-  [elements el]
-  (update-index elements el dec))
+  ([db]
+   (reduce lower db (selected db)))
+  ([db el]
+   (update-index db el dec)))
 
 (defn lower-to-bottom
-  [elements el]
-  (update-index elements el (fn [_] 0)))
+  ([db]
+   (reduce lower-to-bottom db (selected db)))
+  ([db el]
+   (update-index db el (fn [_] 0))))
 
 (defn raise-to-top
-  [elements el]
-  (update-index elements el #(-> (siblings-keys elements el)
-                                 count
-                                 dec)))
+  ([db]
+   (reduce raise-to-top db (selected db)))
+  ([db el]
+   (update-index db el #(-> (siblings db el) count dec))))
 
 (defn translate
-  [db offset]
-  (update-selected-by db (fn [elements el]
-                           (assoc elements
-                                  (:key el)
-                                  (tools/translate el offset)))))
+  ([db offset]
+   (reduce #(translate %1 %2 offset) db (selected db)))
+  ([db el offset]
+   (cond-> db
+     (not (:locked? el))
+     (update-el el tools/translate offset))))
+
+(defn bounds
+  ([db]
+   (tools/elements-bounds (elements db) (selected db)))
+  ([db elements]
+   (tools/elements-bounds elements (selected db))))
 
 (defn scale
-  [db offset _lock-ratio? _in-place?]
-  (let [[x1 y1 x2 y2] (tools/elements-bounds (elements db) (selected db))
-        outer-dimensions (bounds/->dimensions [x1 y1 x2 y2])
-        handler (-> db :clicked-element :key)]
-    (update-selected-by
-     db
-     (fn [elements element]
-       (let [[inner-x1 inner-y1 inner-x2 inner-y2] (tools/bounds element (elements db))
-             inner-dimensions (bounds/->dimensions [inner-x1 inner-y1 inner-x2 inner-y2])
-             scale-multiplier (mat/div inner-dimensions outer-dimensions)
-             translate-multiplier (mat/div (case handler
-                                             :middle-right [(- inner-x1 x1) 0]
-                                             :middle-left [(- x2 inner-x2) 0]
-                                             :top-middle [0 (- y2 inner-y2)]
-                                             :bottom-middle [0 (- inner-y1 y1)]
-                                             :top-right [(- inner-x1 x1) (- y2 inner-y2)]
-                                             :top-left [(- x2 inner-x2) (- y2 inner-y2)]
-                                             :bottom-right [(- inner-x1 x1) (- inner-y1 y1)]
-                                             :bottom-left [(- x2 inner-x2) (- inner-y1 y1)]) outer-dimensions)]
-         (assoc elements (:key element) (-> element
-                                            (tools/scale (mat/mul offset scale-multiplier) handler)
-                                            (tools/translate (mat/mul offset translate-multiplier)))))))))
+  ([db ratio pivot-point]
+   (reduce #(scale %1 %2 ratio pivot-point) db (selected db)))
+  ([db el ratio pivot-point]
+   (cond-> db
+     (not (:locked? el))
+     (update-el el
+                tools/scale
+                ratio
+                (let [[x1 y1] (tools/adjusted-bounds el (elements db))]
+                  (mat/sub pivot-point [x1 y1]))))))
 
 (defn align
   ([db direction]
-   (update-selected-by
-    db
-    (fn [elements el]
-      (let [[x1 y1 x2 y2] (tools/bounds el (elements db))
-            [width height] (bounds/->dimensions [x1 y1 x2 y2])
-            parent ((:parent el) elements)
-            [parent-x1 parent-y1 parent-x2 parent-y2] (tools/bounds parent (elements db))
-            [parent-width parent-height] (mat/sub [parent-x2 parent-y2] [parent-x1 parent-y1])]
-        (assoc elements
-               (:key el)
-               (tools/translate el
-                                (case direction
-                                  :top [0 (- y1)]
-                                  :center-vertical [0 (- (/ parent-height 2)
-                                                         (+ y1 (/ height 2)))]
-                                  :bottom [0 (- parent-height y2)]
-                                  :left [(- x1) 0]
-                                  :center-horizontal [(- (/ parent-width 2)
-                                                         (+ x1 (/ width 2))) 0]
-                                  :right [(- parent-width x2) 0]))))))))
+   (reduce #(align %1 %2 direction) db (selected db)))
+  ([db el direction]
+   (let [bounds (tools/adjusted-bounds el (elements db))
+         center (bounds/center bounds)
+         parent-bounds (tools/adjusted-bounds (parent db el) (elements db))
+         parent-center (bounds/center parent-bounds)
+         [cx cy] (mat/sub parent-center center)
+         [x1 y1 x2 y2] (mat/sub parent-bounds bounds)]
+     (translate db el (case direction
+                        :top [0 y1]
+                        :center-vertical [0 cy]
+                        :bottom [0 y2]
+                        :left [x1 0]
+                        :center-horizontal [cx 0]
+                        :right [x2 0])))))
 
 (defn ->path
   ([db]
-   (reduce #(->path %1 %2) db (selected db)))
+   (reduce ->path db (selected db)))
   ([db el]
-   (if (get-method tools/path (:tag el))
-     (assoc-in db (conj (path db) (:key el)) (tools/->path el))
-     db)))
+   (cond-> db
+     (not (:locked? el)) (update-el el tools/->path))))
 
 (defn stroke->path
   ([db]
-   (reduce #(stroke->path %1 %2) db (selected db)))
+   (reduce stroke->path db (selected db)))
   ([db el]
-   (if (get-method tools/stroke->path (:tag el))
-     (assoc-in db (conj (path db) (:key el)) (tools/stroke->path el))
-     db)))
+   (cond-> db
+     (not (:locked? el)) (update-el el tools/stroke->path))))
+
+(def default-props
+  {:type :element
+   :visible? true
+   :selected? true
+   :children []})
 
 (defn create-element
-  [db parent-key el]
+  [db el]
   (let [key (uuid/generate)
-        el (map/deep-merge el {:key key
-                               :type :element
-                               :visible? true
-                               :selected? true
-                               :parent parent-key
-                               :children []})]
+        parent (if (page? el) :canvas (-> db active-page :key))
+        el (map/deep-merge el default-props {:key key :parent parent})]
     (cond-> db
       :always
       (-> (assoc-in (conj (path db) key) el)
-          (update-in (conj (path db) parent-key :children)
-                     #(vec (conj % key))))
+          (update-property (:parent el) :children #(vec (conj % key))))
 
       (not= (:tool db) :select)
       (tools/set-tool :select)
@@ -364,38 +363,39 @@
       (page? el)
       (set-active-page key))))
 
-;; TODO: Handle child elements
 (defn create
   ([db]
    (-> db
        (create (get-temp db))
        clear-temp))
-  ([db elements]
-   (let [active-page (active-page db)
-         page? (page? elements)
-         parent-key (if page? :canvas (:key active-page))]
-     (if elements
-       (cond-> (reduce (fn [db el] (create-element db parent-key el))
-                       (deselect-all db)
-                       (if (seq? elements) elements [elements]))
-         (not page?)
-         (translate [(- (get-in active-page [:attrs :x])) (- (get-in active-page [:attrs :y]))]))
-       db))))
+  ([db & elements]
+   ;; TODO: Handle child elements
+   (let [[x1 y1 _ _] (tools/bounds (active-page db))]
+     (reduce #(cond-> (create-element %1 %2)
+                 (not (page? %2)) (translate [(- x1) (- y1)]))
+             (deselect db) elements))))
+
+
+(defn bool
+  [path-a path-b operation]
+  (case operation
+    :unite (.unite path-a path-b)
+    :intersect (.intersect path-a path-b)
+    :subtract (.subtract path-a path-b)
+    :exclude (.exclude path-a path-b)
+    :divide (.divide path-a path-b)))
 
 (defn bool-operation
   [db operation]
-  (let [selected-elements (selected db) ; TODO: sort elements by visibily index
+  ;; TODO: Sort elements by visibily index
+  (let [selected-elements (selected db)
         attrs (-> selected-elements first tools/->path :attrs)
         new-path (reduce (fn [path element]
                            (let [path-a (Path. path)
-                                 path-b (-> element tools/->path :attrs :d Path.)
-                                 result-path (case operation
-                                               :unite (.unite path-a path-b)
-                                               :intersect (.intersect path-a path-b)
-                                               :subtract (.subtract path-a path-b)
-                                               :exclude (.exclude path-a path-b)
-                                               :divide (.divide path-a path-b))]
-                             (.getAttribute (.exportSVG result-path) "d")))
+                                 path-b (-> element tools/->path :attrs :d Path.)]
+                             (-> (bool path-a path-b operation)
+                                 (.exportSVG)
+                                 (.getAttribute "d"))))
                          (:d attrs)
                          (rest selected-elements))]
     (-> db
@@ -406,27 +406,25 @@
 
 (defn paste-in-place
   ([db]
-   (reduce paste-in-place (deselect-all db) (:copied-elements db)))
+   (reduce paste-in-place (deselect db) (:copied-elements db)))
   ([db el]
-   (create-element db (if (page? (get-element db (:parent el)))
-                        (-> db active-page :key)
-                        (:parent el)) el)))
+   (create-element db (assoc el :parent (-> db active-page :key)))))
 
 (defn paste
   [db]
   (let [db (paste-in-place db)
-        bounds (tools/elements-bounds (elements db) (selected db))
+        bounds (bounds db)
         [x1 y1] bounds
         [width height] (bounds/->dimensions bounds)
-        [x y] (:adjusted-mouse-pos db)]
+        [x y] (:adjusted-pointer-pos db)]
     (translate db [(- x (+ x1 (/ width 2)))
                    (- y (+ y1 (/ height 2)))])))
 
 (defn duplicate-in-place
   ([db]
-   (reduce duplicate-in-place (deselect-all db) (selected db)))
+   (reduce duplicate-in-place (deselect db) (selected db)))
   ([db el]
-   (create-element db (:parent el) el)))
+   (create-element db el)))
 
 (defn duplicate
   [db offset]
@@ -436,82 +434,90 @@
 
 (defn animate
   ([db tag attrs]
-   (reduce #(animate %1 %2 tag attrs) (deselect-all db) (selected db)))
+   (reduce #(animate %1 %2 tag attrs) (deselect db) (selected db)))
   ([db el tag attrs]
-   (create-element db (:key el) {:tag tag :attrs attrs})))
+   (create-element db {:tag tag :attrs attrs :parent (:key el)})))
 
 (defn paste-styles
-  [{copied-elements :copied-elements :as db}]
-  (if (= 1 (count copied-elements))
-    ;; TODO: Merge attributes from multiple selected elements.
-    (let [attrs (:attrs (first copied-elements))]
-      (update-selected-by
-       db
-       (fn [elements element]
-         (let [key (:key element)
-               ;; Copy all presentation attributes except transform.
-               ;; https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/Presentation
-               style-attrs (-> tools/svg-spec
-                               :attributes
-                               :presentation
-                               (dissoc :transform)
-                               keys)]
-           (assoc-in
-            elements
-            [key]
-            (assoc element
-                   :attrs
-                   (reduce (fn [updated-attrs key]
-                             (if (contains? attrs key)
-                               (assoc updated-attrs key (key attrs))
-                               updated-attrs))
-                           (:attrs element)
-                           style-attrs))))))) db))
+  ([db]
+   (reduce paste-styles db (selected db)))
+  ([{copied-elements :copied-elements :as db} el]
+   ;; TODO: Merge attributes from multiple selected elements.
+   (if (= 1 (count copied-elements))
+     (let [attrs (:attrs (first copied-elements))
+           style-attrs (disj spec/presentation-attrs :transform)]
+       (reduce (fn [db attr]
+                 (cond-> db
+                   (-> attrs attr) 
+                   (update-attribute el attr #(if % (-> attrs attr) disj))))
+               db style-attrs)) db)))
 
 (defn set-parent
-  ([db element-key parent-key]
-   (if (= element-key parent-key)
-     db
-     (-> db
-         (update-in (conj (path db)
-                          (:parent (get-element db element-key)) :children)
-                    #(vec (remove #{element-key} %)))
-         (update-in (conj (path db)
-                          parent-key :children) conj element-key)
-         (assoc-in (conj
-                    (path db) element-key :parent)
-                   parent-key))))
   ([db parent-key]
-   (reduce (fn [db key] (set-parent db key parent-key)) db (selected-keys db))))
+   (reduce #(set-parent %1 %2 parent-key) db (selected-keys db)))
+  ([db element-key parent-key]
+   (cond-> db
+     (not= element-key parent-key)
+     (-> (update-property (:parent (element db element-key))
+                          :children
+                          #(vec (remove #{element-key} %)))
+         (update-property parent-key :children conj element-key)
+         (set-property element-key :parent parent-key)))))
+
+(defn set-parent-at-index
+  [db element-key parent-key index]
+  (let [siblings (:children (element db parent-key))
+        last-index (-> siblings count)]
+    (-> db
+        (set-parent element-key parent-key)
+        (update-property parent-key :children vec/move last-index index))))
 
 (defn group
   [db]
-  (reduce (fn [db key]
-            (set-parent db key (first (selected-keys db))))
-          (-> db
-              deselect-all
-              (create-element (:key (active-page db)) {:tag :g}))
+  (reduce (fn [db key] (set-parent db key (first (selected-keys db))))
+          (-> (deselect db)
+              (create-element {:tag :g :parent (:key (active-page db))}))
           (selected-keys db)))
+
+(defn inherit-attrs
+  [db source-el target-el-k]
+  (reduce
+   (fn [db attr]
+     (let [source-attr (-> source-el :attrs attr)]
+       (cond-> db
+         source-attr
+         (update-attribute (element db target-el-k)
+                           attr
+                           (fn [v]
+                             (if (empty? (str v))
+                               source-attr
+                               v)))))) db spec/presentation-attrs))
 
 (defn ungroup
-  [db]
-  (reduce (fn [db key]
-            (let [element (get-element db key)]
-              (if (= (:tag element) :g)
-                (delete (reduce (fn [db child-key]
-                                  (set-parent db child-key (:parent element)))
-                                db
-                                (:children element))
-                        key)
-                db)))
-          db
-          (selected-keys db)))
+  ([db]
+   (reduce ungroup db (selected db)))
+  ([db el]
+   (cond-> db
+     (and (not (:locked? el))
+          (= (:tag el) :g))
+     (as-> db db
+       (let [siblings (siblings db el)
+             index (.indexOf siblings (:key el))]
+         (reduce
+          (fn [db el-k]
+            (-> db
+                (set-parent-at-index el-k (:parent el) index)
+                ;; Group attributes are inherited by its children, 
+                ;; so we need to maintain the presentation attrs.
+                (inherit-attrs el el-k)))
+          db (reverse (:children el))))
+       (delete db (:key el))))))
 
 (defn manipulate-path
-  [db action]
-  (update-selected-by db (fn [elements element]
-                           (if (= (:tag element) :path)
-                             (assoc elements
-                                    (:key element)
-                                    (path/manipulate element action))
-                             elements))))
+  ([db action]
+   (reduce #(manipulate-path %1 %2 action) db (selected db)))
+  ([db el action]
+   (cond-> db
+     (and (not (:locked? el))
+          (= (:tag el) :path))
+     (update-in (path db (:key el)) path/manipulate action))))

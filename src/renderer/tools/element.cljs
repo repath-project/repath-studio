@@ -60,7 +60,7 @@
                (:selected? el))
     (-> db
         (dissoc :clicked-element)
-        (element-handlers/select (mouse/multiselect? e) el)
+        (element-handlers/select (:key el) (mouse/multiselect? e))
         (history/finalize "Select element"))
     (dissoc db :clicked-element)))
 

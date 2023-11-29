@@ -2,16 +2,15 @@
   "Custom element for https://blobs.dev/"
   (:require
    ["blobs/v2" :as blobs]
-   ["svg-path-bbox" :as svg-path-bbox]
    ["svgpath" :as svgpath]
    [clojure.core.matrix :as mat]
    [goog.math]
    [re-frame.core :as rf]
-   [renderer.attribute.hierarchy :as attr-hierarchy]
+   [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.attribute.length :as length]
-   [renderer.attribute.views :as attr-views]
+   [renderer.attribute.views :as attr.v]
    [renderer.components :as comp]
-   [renderer.element.handlers :as elements]
+   [renderer.element.handlers :as element.h]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
    [renderer.utils.mouse :as mouse]
@@ -23,23 +22,23 @@
 (derive ::y ::length/length)
 (derive ::size ::length/length)
 
-(defmethod attr-hierarchy/form-element ::extraPoints
+(defmethod attr.hierarchy/form-element ::extraPoints
   [k v]
-  [attr-views/range-input k v {:min 0
+  [attr.v/range-input k v {:min 0
                                :max 50
-                               :step "1"} 0])
+                               :step 1} 0])
 
-(defmethod attr-hierarchy/form-element ::randomness
+(defmethod attr.hierarchy/form-element ::randomness
   [k v]
-  [attr-views/range-input k v {:min 0
+  [attr.v/range-input k v {:min 0
                                :max 50
-                               :step "1"} 0])
+                               :step 1} 0])
 
-(defmethod attr-hierarchy/form-element ::seed
+(defmethod attr.hierarchy/form-element ::seed
   [k v disabled?]
   (let [random-seed (goog.math/randomInt 1000000)]
     [:<>
-     [attr-views/form-input {:key k
+     [attr.v/form-input {:key k
                              :value v
                              :disabled? disabled?
                              :placeholder 0}]
@@ -50,27 +49,27 @@
        :on-click #(rf/dispatch [:element/set-attribute k random-seed])}
       [comp/icon "refresh"]]]))
 
-(defmethod attr-hierarchy/description ::x
+(defmethod attr.hierarchy/description ::x
   []
   "Horizontal coordinate of the blob's center.")
 
-(defmethod attr-hierarchy/description ::y
+(defmethod attr.hierarchy/description ::y
   []
   "Vertical coordinate of the blob's center.")
 
-(defmethod attr-hierarchy/description ::seed
+(defmethod attr.hierarchy/description ::seed
   []
   "A given seed will always produce the same blob.")
 
-(defmethod attr-hierarchy/description ::extraPoints
+(defmethod attr.hierarchy/description ::extraPoints
   []
   "The actual number of points will be `3 + extraPoints`.")
 
-(defmethod attr-hierarchy/description ::randomness
+(defmethod attr.hierarchy/description ::randomness
   []
   "Increases the amount of variation in point position.")
 
-(defmethod attr-hierarchy/description ::size
+(defmethod attr.hierarchy/description ::size
   []
   "The size of the bounding box.")
 
@@ -91,15 +90,12 @@
            :opacity]})
 
 (defmethod tools/drag-start ::blob
-  [{:keys [adjusted-mouse-offset
+  [{:keys [adjusted-pointer-offset
            active-document
-           adjusted-mouse-pos] :as db}]
+           adjusted-pointer-pos] :as db}]
   (let [{:keys [stroke fill]} (get-in db [:documents active-document])
-        [offset-x offset-y] adjusted-mouse-offset
-        radius (Math/sqrt (apply + (mat/pow
-                                    (mat/sub adjusted-mouse-pos
-                                             adjusted-mouse-offset)
-                                    2)))
+        [offset-x offset-y] adjusted-pointer-offset
+        radius (mat/distance adjusted-pointer-pos adjusted-pointer-offset)
         attrs {::x (- offset-x radius)
                ::y (- offset-y radius)
                ::seed (goog.math/randomInt 1000000)
@@ -108,45 +104,31 @@
                ::size (* radius 2)
                :fill fill
                :stroke stroke}]
-    (elements/set-temp db {:type :element :tag ::blob :attrs attrs})))
+    (element.h/set-temp db {:type :element :tag ::blob :attrs attrs})))
 
 (defmethod tools/drag ::blob
-  [{:keys [adjusted-mouse-offset adjusted-mouse-pos] :as db}]
-  (let [[offset-x offset-y] adjusted-mouse-offset
-        radius (Math/sqrt (apply + (mat/pow
-                                    (mat/sub adjusted-mouse-pos
-                                             adjusted-mouse-offset)
-                                    2)))
-        temp (-> (elements/get-temp db)
+  [{:keys [adjusted-pointer-offset adjusted-pointer-pos] :as db}]
+  (let [[offset-x offset-y] adjusted-pointer-offset
+        radius (mat/distance adjusted-pointer-pos adjusted-pointer-offset)
+        temp (-> (element.h/get-temp db)
                  (assoc-in [:attrs ::x] (- offset-x radius))
                  (assoc-in [:attrs ::y] (- offset-y radius))
                  (assoc-in [:attrs ::size] (* radius 2)))]
-    (elements/set-temp db temp)))
+    (element.h/set-temp db temp)))
 
 
 (defmethod tools/translate ::blob
   [element [x y]] (-> element
-                      (attr-hierarchy/update-attr ::x + x)
-                      (attr-hierarchy/update-attr ::y + y)))
+                      (attr.hierarchy/update-attr ::x + x)
+                      (attr.hierarchy/update-attr ::y + y)))
 
 (defmethod tools/scale ::blob
-  [element [x y] handler]
-  (cond-> element
-    (contains? #{:middle-right} handler)
-    (-> (attr-hierarchy/update-attr ::x + x)
-        (attr-hierarchy/update-attr ::size + x))
-
-    (contains? #{:middle-left} handler)
-    (-> (attr-hierarchy/update-attr ::x + x)
-        (attr-hierarchy/update-attr ::size - x))
-
-    (contains? #{:bottom-middle} handler)
-    (-> (attr-hierarchy/update-attr ::y + y)
-        (attr-hierarchy/update-attr ::size + y))
-
-    (contains? #{:top-middle} handler)
-    (-> (attr-hierarchy/update-attr ::y + y)
-        (attr-hierarchy/update-attr ::size - y))))
+  [el ratio pivot-point]
+ (let [offset (mat/sub pivot-point (mat/mul pivot-point ratio))
+       ratio (apply min ratio)]
+   (-> el
+       (attr.hierarchy/update-attr ::size * ratio)
+       (tools/translate offset))))
 
 (defmethod tools/render ::blob
   [{:keys [attrs children] :as element}]
@@ -166,13 +148,14 @@
 (defmethod tools/translate ::blob
   [element [x y]]
   (-> element
-      (attr-hierarchy/update-attr ::x + x)
-      (attr-hierarchy/update-attr ::y + y)))
+      (attr.hierarchy/update-attr ::x + x)
+      (attr.hierarchy/update-attr ::y + y)))
 
 (defmethod tools/bounds ::blob
-  [element]
-  (let [[left top right bottom] (js->clj (svg-path-bbox (tools/path element)))]
-    [left top right bottom]))
+  [{:keys [attrs]}]
+  (let [{:keys [::x ::y ::size]} attrs
+        [x y size] (mapv units/unit->px [x y size])]
+    [x y (+ x size) (+ y size)]))
 
 (defmethod tools/centroid ::blob
   [{{:keys [::x ::y ::size]} :attrs}]
@@ -196,8 +179,7 @@
   [element [x y] handler]
   (case handler
     :size
-    (attr-hierarchy/update-attr element ::size #(max 0 (+ % (min x y))))
-
+    (attr.hierarchy/update-attr element ::size #(max 0 (+ % (min x y))))
     element))
 
 (defmethod tools/render-edit ::blob

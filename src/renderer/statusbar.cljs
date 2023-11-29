@@ -2,21 +2,23 @@
   (:require
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    ["@radix-ui/react-select" :as Select]
-   [goog.string :as gstring]
+   [goog.string :as g.str]
    [re-frame.core :as rf]
    [re-frame.registrar]
-   [renderer.color.views :as color]
+   [renderer.color.views :as color-v]
    [renderer.components :as comp]
-   [renderer.filters :as filters]))
+   [renderer.filters :as filters]
+   [renderer.utils.keyboard :as keyb]
+   [renderer.utils.units :as units]))
 
 (defn coordinates []
-  (let [[x y] @(rf/subscribe [:frame/adjusted-mouse-pos])]
+  (let [[x y] @(rf/subscribe [:frame/adjusted-pointer-pos])]
     [:div.flex.flex-col.ml-2.font-mono
-     {:style {:min-width "80px"}}
+     {:style {:min-width "90px"}}
      [:div.flex.justify-between
-      [:span.mr-1 "X:"] [:span (gstring/format "%.2f" x)]]
+      [:span.mr-1 "X:"] [:span (g.str/format "%.2f" x)]]
      [:div.flex.justify-between
-      [:span.mr-1 "Y:"] [:span (gstring/format "%.2f" y)]]]))
+      [:span.mr-1 "Y:"] [:span (g.str/format "%.2f" y)]]]))
 
 (def zoom-menu
   [{:label "Set to 50%"
@@ -31,13 +33,13 @@
    {:key :divider-1
     :type :separator}
    {:label "Initial"
-    :key "restore-active-page"
+    :key "restore-page"
     :action [:pan-to-active-page :original]}
-   {:label "Fit active page"
-    :key "fit-active-page"
+   {:label "Fit page"
+    :key "fit-page"
     :action [:pan-to-active-page :fit]}
-   {:label "Fill active page"
-    :key "fill-active-page"
+   {:label "Fill page"
+    :key "fill-page"
     :action [:pan-to-active-page :fill]}])
 
 (def view-radio-buttons
@@ -62,13 +64,20 @@
     :icon "code"
     :action [:panel/toggle :xml]}])
 
+(defn set-zoom
+  [e v]
+  (let [new-v (-> (.. e -target -value) (js/parseFloat) (/ 100))]
+    (if (js/isNaN new-v)
+      (set! (.. e -target -value) v)
+      (rf/dispatch [:set-zoom new-v]))))
+
 (defn root []
   (let [zoom @(rf/subscribe [:document/zoom])
         _element-colors @(rf/subscribe [:element/colors])
         filter @(rf/subscribe [:document/filter])]
     [:div.toolbar.footer
-     [color/picker]
-     [:div.grow [color/palette]]
+     [color-v/picker]
+     [:div.grow [color-v/palette]]
      #_(when element-colors (map (fn [color] [color-drip (color/hexToRgb color)]) element-colors))
      [:> Select/Root {:value (name filter)
                       :onValueChange #(rf/dispatch [:document/set-filter %])}
@@ -113,30 +122,41 @@
 
      [:div.button-group
       [:button.button.level-3.px-2.font-mono.rounded
-       [:div.flex.items-center
-        {:class (when (<= zoom 0.01) "disabled")
-         :on-click #(rf/dispatch [:zoom-out])}
-        [comp/icon "minus" {:class "small"}]]]
+       {:class (when (<= zoom 0.01) "disabled")
+        :on-click #(rf/dispatch [:zoom-out])}
+       [comp/icon "minus" {:class "small"}]]
 
       [:button.button.level-3.px-2.font-mono.rounded
-       [:div.flex.items-center
-        {:class (when (>= zoom 100) "disabled")
-         :on-click #(rf/dispatch [:zoom-in])}
-        [comp/icon "plus" {:class "small"}]]]
+       {:class (when (>= zoom 100) "disabled")
+        :on-click #(rf/dispatch [:zoom-in])}
+       [comp/icon "plus" {:class "small"}]]
+
+      (let [zoom-formatted (units/->fixed (* 100 zoom) (if (< zoom 0.1) 1 0))]
+        [:input.level-3.text-right.flex
+         {:key zoom
+          :type "number"
+          :inputmode "decimal"
+          :min "1"
+          :max "10000"
+          :style {:width "60px"}
+          :default-value zoom-formatted
+          :on-blur #(set-zoom % zoom-formatted)
+          :on-key-down #(keyb/input-key-down-handler % zoom-formatted set-zoom % zoom-formatted)
+          :on-wheel #(rf/dispatch (if (pos? (.-deltaY %)) [:zoom-out] [:zoom-in]))}])
+      [:div.pr-2.level-3.flex.items-center "%"]
 
       [:> DropdownMenu/Root
        [:> DropdownMenu/Trigger
         {:class "button flex items-center justify-center level-3 px-2 font-mono rounded"
          :side "top"}
-        [:div
-         {:style {:min-width "80px"}}
-         (str (gstring/format "%.2f" (* 100 zoom)) "%")]
         [:div.flex.items-center
          [comp/icon "chevron-up" {:class "small"}]]]
+
        [:> DropdownMenu/Portal
         [:> DropdownMenu/Content
          {:class "menu-content rounded"
-          :side "top"}
+          :side "top"
+          :align "end"}
          (map (fn [item]
                 ^{:key (:key item)}
                 [comp/dropdown-menu-item item])

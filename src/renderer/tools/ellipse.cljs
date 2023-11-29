@@ -5,10 +5,11 @@
    [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.element.handlers :as elements]
+   [renderer.element.handlers :as element.h]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
-   [renderer.utils.units :as units]))
+   [renderer.utils.units :as units]
+   [renderer.utils.bounds :as bounds]))
 
 (derive :ellipse ::tools/shape)
 
@@ -25,10 +26,10 @@
            :stroke-dasharray]})
 
 (defmethod tools/drag :ellipse
-  [{:keys [adjusted-mouse-offset active-document adjusted-mouse-pos] :as db} e]
+  [{:keys [adjusted-pointer-offset active-document adjusted-pointer-pos] :as db} e]
   (let [{:keys [stroke fill]} (get-in db [:documents active-document])
-        [offset-x offset-y] adjusted-mouse-offset
-        [pos-x pos-y] adjusted-mouse-pos
+        [offset-x offset-y] adjusted-pointer-offset
+        [pos-x pos-y] adjusted-pointer-pos
         lock-ratio? (contains? (:modifiers e) :ctrl)
         rx (abs (- pos-x offset-x))
         ry (abs (- pos-y offset-y))
@@ -38,9 +39,9 @@
                :stroke stroke
                :rx (if lock-ratio? (min rx ry) rx)
                :ry (if lock-ratio? (min rx ry) ry)}]
-    (elements/set-temp db {:type :element
-                           :tag :ellipse
-                           :attrs attrs})))
+    (element.h/set-temp db {:type :element
+                            :tag :ellipse
+                            :attrs attrs})))
 
 (defmethod tools/translate :ellipse
   [element [x y]] (-> element
@@ -48,32 +49,19 @@
                       (hierarchy/update-attr :cy + y)))
 
 (defmethod tools/scale :ellipse
-  [el [x y] handler]
-  (let [[x y] (mat/div [x y] 2)]
-    (cond-> el
-      (contains? #{:bottom-right :top-right :middle-right} handler)
-      (-> (hierarchy/update-attr :rx + x)
-          (hierarchy/update-attr :cx + x))
-
-      (contains? #{:bottom-left :top-left :middle-left} handler)
-      (-> (hierarchy/update-attr :rx - x)
-          (hierarchy/update-attr :cx + x))
-
-      (contains? #{:bottom-middle :bottom-right :bottom-left} handler)
-      (-> (hierarchy/update-attr :cy + y)
-          (hierarchy/update-attr :ry + y))
-
-      (contains? #{:top-middle :top-left :top-right} handler)
-      (-> (hierarchy/update-attr :ry - y)
-          (hierarchy/update-attr :cy + y)))))
+  [el ratio pivot-point]
+  (let [[x y] ratio
+        dimentions (bounds/->dimensions (tools/bounds el))
+        pivot-point (mat/sub pivot-point (mat/div dimentions 2))
+        offset (mat/sub pivot-point (mat/mul pivot-point ratio))]
+    (-> el
+        (hierarchy/update-attr :rx * x)
+        (hierarchy/update-attr :ry * y)
+        (tools/translate offset))))
 
 (defmethod tools/bounds :ellipse
-  [{{:keys [cx cy rx ry stroke-width stroke]} :attrs}]
-  (let [[cx cy rx ry stroke-width-px] (map units/unit->px
-                                           [cx cy rx ry stroke-width])
-        stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)
-        [rx ry] (mat/add [rx ry]
-                         (/ (if (str/blank? stroke) 0 stroke-width-px) 2))]
+  [{{:keys [cx cy rx ry]} :attrs}]
+  (let [[cx cy rx ry] (map units/unit->px [cx cy rx ry])]
     [(- cx rx) (- cy ry) (+ cx rx) (+ cy ry)]))
 
 (defmethod tools/path :ellipse

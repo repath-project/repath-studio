@@ -5,12 +5,13 @@
    [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.element.handlers :as elements]
+   [renderer.element.handlers :as element.h]
    [renderer.handlers :as handlers]
    [renderer.history.handlers :as history]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
-   [renderer.utils.units :as units]))
+   [renderer.utils.units :as units]
+   [renderer.utils.bounds :as bounds]))
 
 (derive :line ::tools/shape)
 
@@ -24,34 +25,34 @@
               :opacity]})
 
 (defn create-line
-  [{:keys [adjusted-mouse-offset adjusted-mouse-pos active-document] :as db}]
+  [{:keys [adjusted-pointer-offset adjusted-pointer-pos active-document] :as db}]
   (let [stroke (get-in db [:documents active-document :stroke])
-        [offset-x offset-y] adjusted-mouse-offset
-        [pos-x pos-y] adjusted-mouse-pos
+        [offset-x offset-y] adjusted-pointer-offset
+        [pos-x pos-y] adjusted-pointer-pos
         attrs {:x1 offset-x
                :y1 offset-y
                :x2 pos-x
                :y2 pos-y
                :stroke stroke}]
-    (elements/set-temp db {:type :element :tag :line :attrs attrs})))
+    (element.h/set-temp db {:type :element :tag :line :attrs attrs})))
 
 (defn update-line-end
-  [{:keys [adjusted-mouse-pos] :as db}]
-  (let [temp (-> (elements/get-temp db)
-                 (assoc-in [:attrs :x2] (first adjusted-mouse-pos))
-                 (assoc-in [:attrs :y2] (second adjusted-mouse-pos)))]
-    (elements/set-temp db temp)))
+  [{:keys [adjusted-pointer-pos] :as db}]
+  (let [temp (-> (element.h/get-temp db)
+                 (assoc-in [:attrs :x2] (first adjusted-pointer-pos))
+                 (assoc-in [:attrs :y2] (second adjusted-pointer-pos)))]
+    (element.h/set-temp db temp)))
 
 (defmethod tools/mouse-move :line
   [db]
   (cond-> db
-    (elements/get-temp db) (update-line-end)))
+    (element.h/get-temp db) (update-line-end)))
 
 (defmethod tools/mouse-up :line
   [db]
-  (if (elements/get-temp db)
+  (if (element.h/get-temp db)
     (-> db
-        elements/create
+        element.h/create
         (history/finalize (str "Create line")))
     (-> db
         (handlers/set-state :create)
@@ -59,7 +60,7 @@
 
 (defmethod tools/mouse-down :line
   [db]
-  (if (elements/get-temp db)
+  (if (element.h/get-temp db)
     (history/finalize db (str "Create line"))
     db))
 
@@ -75,20 +76,17 @@
                  (hierarchy/update-attr :y2 + y)))
 
 (defmethod tools/scale :line
-  [el [x y] handler]
-  (let [{:keys [x1 y1 x2 y2]} (:attrs el)]
-    (cond-> el
-      (contains? #{:bottom-right :top-right :middle-right} handler)
-      (hierarchy/update-attr (if (> x1 x2) :x1 :x2) + x)
-
-      (contains? #{:bottom-left :top-left :middle-left} handler)
-      (-> (hierarchy/update-attr (if (< x1 x2) :x1 :x2) + x))
-
-      (contains? #{:bottom-middle :bottom-right :bottom-left} handler)
-      (hierarchy/update-attr (if (> y1 y2) :y1 :y2) + y)
-
-      (contains? #{:top-middle :top-left :top-right} handler)
-      (-> (hierarchy/update-attr (if (< y1 y2) :y1 :y2) + y)))))
+  [el ratio pivot-point]
+  (let [{:keys [x1 y1 x2 y2]} (:attrs el)
+        [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])
+        dimentions (bounds/->dimensions (tools/bounds el))
+        [x y] (mat/sub dimentions (mat/mul dimentions ratio))
+        pivot-diff (mat/sub pivot-point dimentions)
+        offset (mat/sub pivot-diff (mat/mul pivot-diff ratio))]
+    (-> el
+        (hierarchy/update-attr (if (< x1 x2) :x1 :x2) + x)
+        (hierarchy/update-attr (if (< y1 y2) :y1 :y2) + y)
+        (tools/translate offset))))
 
 (defmethod tools/bounds :line
   [{{:keys [x1 y1 x2 y2]} :attrs}]
@@ -130,10 +128,13 @@
 (defmethod tools/edit :line
   [el [x y] handler]
   (case handler
-    :starting-point (-> el
-                        (hierarchy/update-attr :x1 + x)
-                        (hierarchy/update-attr :y1 + y))
-    :ending-point (-> el
-                      (hierarchy/update-attr :x2 + x)
-                      (hierarchy/update-attr :y2 + y))
+    :starting-point
+    (-> el
+        (hierarchy/update-attr :x1 + x)
+        (hierarchy/update-attr :y1 + y))
+
+    :ending-point
+    (-> el
+        (hierarchy/update-attr :x2 + x)
+        (hierarchy/update-attr :y2 + y))
     el))

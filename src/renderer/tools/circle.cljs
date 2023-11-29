@@ -5,10 +5,11 @@
    [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.element.handlers :as elements]
+   [renderer.element.handlers :as element.h]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
-   [renderer.utils.units :as units]))
+   [renderer.utils.units :as units]
+   [renderer.utils.bounds :as bounds]))
 
 (derive :circle ::tools/shape)
 
@@ -24,19 +25,16 @@
            :stroke-dasharray]})
 
 (defmethod tools/drag :circle
-  [{:keys [adjusted-mouse-offset active-document adjusted-mouse-pos] :as db}]
+  [{:keys [adjusted-pointer-offset active-document adjusted-pointer-pos] :as db}]
   (let [{:keys [stroke fill]} (get-in db [:documents active-document])
-        [offset-x offset-y] adjusted-mouse-offset
-        radius (Math/sqrt (apply + (mat/pow
-                                    (mat/sub adjusted-mouse-pos
-                                             adjusted-mouse-offset)
-                                    2)))
+        [offset-x offset-y] adjusted-pointer-offset
+        radius (mat/distance adjusted-pointer-pos adjusted-pointer-offset)
         attrs {:cx offset-x
                :cy offset-y
                :fill fill
                :stroke stroke
                :r radius}]
-    (elements/set-temp db {:type :element :tag :circle :attrs attrs})))
+    (element.h/set-temp db {:type :element :tag :circle :attrs attrs})))
 
 (defmethod tools/translate :circle
   [element [x y]] (-> element
@@ -44,29 +42,18 @@
                       (hierarchy/update-attr :cy + y)))
 
 (defmethod tools/scale :circle
-  [el [x y] handler]
-  (cond-> el
-    (contains? #{:middle-right} handler)
-    (-> (hierarchy/update-attr :cx + (/ x 2))
-        (hierarchy/update-attr :r + (/ x 2)))
-
-    (contains? #{:middle-left} handler)
-    (-> (hierarchy/update-attr :cx + (/ x 2))
-        (hierarchy/update-attr :r - (/ x 2)))
-
-    (contains? #{:bottom-middle} handler)
-    (-> (hierarchy/update-attr :cy + (/ y 2))
-        (hierarchy/update-attr :r + (/ y 2)))
-
-    (contains? #{:top-middle} handler)
-    (-> (hierarchy/update-attr :cy + (/ y 2))
-        (hierarchy/update-attr :r - (/ y 2)))))
+  [el ratio pivot-point]
+  (let [dimentions (bounds/->dimensions (tools/bounds el))
+        pivot-point (mat/sub pivot-point (mat/div dimentions 2))
+        offset (mat/sub pivot-point (mat/mul pivot-point ratio))
+        ratio (apply min ratio)]
+    (-> el
+        (hierarchy/update-attr :r * ratio)
+        (tools/translate offset))))
 
 (defmethod tools/bounds :circle
-  [{{:keys [cx cy r stroke-width stroke]} :attrs}]
-  (let [[cx cy r stroke-width-px] (map units/unit->px [cx cy r stroke-width])
-        stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)
-        r (+ r (/ (if (str/blank? stroke) 0 stroke-width-px) 2))]
+  [{{:keys [cx cy r]} :attrs}]
+  (let [[cx cy r] (map units/unit->px [cx cy r])]
     [(- cx r) (- cy r) (+ cx r) (+ cy r)]))
 
 (defmethod tools/area :circle

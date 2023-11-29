@@ -1,7 +1,7 @@
 (ns renderer.tools.pen
   (:require
    [clojure.string :as str]
-   [renderer.element.handlers :as elements]
+   [renderer.element.handlers :as element.h]
    [renderer.handlers :as handlers]
    [renderer.history.handlers :as history]
    [renderer.tools.base :as tools]
@@ -24,24 +24,24 @@
   (handlers/set-state db :create))
 
 (defmethod tools/drag :pen
-  [{:keys [active-document adjusted-mouse-pos] :as db}]
+  [{:keys [active-document adjusted-pointer-pos] :as db}]
   (let [stroke (get-in db [:documents active-document :stroke])]
     (if (get-in db [:documents active-document :temp-element :attrs :points])
       (update-in db
                  [:documents active-document :temp-element :attrs :points]
-                 #(str % " " (str/join " " adjusted-mouse-pos)))
-      (elements/set-temp db {:type :element
-                             :tag :polyline
-                             :attrs {:points (str/join " " adjusted-mouse-pos)
-                                     :stroke stroke
-                                     :fill "transparent"}}))))
+                 #(str % " " (str/join " " adjusted-pointer-pos)))
+      (element.h/set-temp db {:type :element
+                              :tag :polyline
+                              :attrs {:points (str/join " " adjusted-pointer-pos)
+                                      :stroke stroke
+                                      :fill "transparent"}}))))
 
 (defmethod tools/drag-end :pen
   [db]
-  (let [path (-> (elements/get-temp db)
+  (let [path (-> (element.h/get-temp db)
                  #_(tools/->path)
                  #_(path/manipulate :smooth))]
     (-> db
-        (elements/set-temp path)
-        (elements/create)
+        (element.h/set-temp path)
+        (element.h/create)
         (history/finalize (str "Draw line")))))

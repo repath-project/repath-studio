@@ -4,23 +4,24 @@
    ["paper" :refer [Path]]
    ["svg-path-bbox" :as svg-path-bbox]
    ["svgpath" :as svgpath]
+   [clojure.core.matrix :as mat]
    #_[clojure.string :as str]
    [goog.object]
    [renderer.tools.base :as tools]))
 
 (derive :path ::tools/graphics)
 
-#_(def path-commands {"M" "Move To"
-                      "L" "Line To"
-                      "V" "Vertical Line"
-                      "H" "Horizontal Line"
-                      "C" "Cubic Bézier"
-                      "A" "Arc"
-                      "Z" "Close Path"})
+#_(def path-commands {:m "Move To"
+                      :l "Line To"
+                      :v "Vertical Line"
+                      :h "Horizontal Line"
+                      :c "Cubic Bézier"
+                      :a "Arc"
+                      :z "Close Path"})
 
 #_(defn ->command
     [char]
-    (get path-commands (str/upper-case char)))
+    (get path-commands (keyword (str/lower-case char))))
 
 #_(defn manipulate-paper-path
     [path action]
@@ -50,12 +51,27 @@
            :opacity]})
 
 (defmethod tools/translate :path
-  [element [x y]]
-  (assoc-in element [:attrs :d] (-> (:attrs element)
-                                    :d
-                                    svgpath
-                                    (.translate x y)
-                                    (.toString))))
+  [el [x y]]
+  (assoc-in el [:attrs :d] (-> (:attrs el)
+                               :d
+                               svgpath
+                               (.translate x y)
+                               (.toString))))
+
+(defmethod tools/scale :path
+  [el ratio pivot-point]
+  (let [[scale-x scale-y] ratio
+        [x y] (tools/bounds el)
+        [x y] (mat/sub (mat/add [x y] 
+                                (mat/sub pivot-point 
+                                         (mat/mul pivot-point ratio)))
+                       (mat/mul ratio [x y]))]
+    (assoc-in el [:attrs :d] (-> (:attrs el)
+                                 :d
+                                 svgpath
+                                 (.scale scale-x scale-y)
+                                 (.translate x y)
+                                 (.toString)))))
 
 (defmethod tools/area :path
   [{{:keys [d]} :attrs}]

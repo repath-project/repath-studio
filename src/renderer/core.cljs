@@ -8,7 +8,7 @@
    [platform]
    [re-frame.core :as rf]
    [re-pressed.core :as rp]
-   [reagent.dom :as rdom]
+   [reagent.dom :as ra.dom]
    [renderer.attribute.core]
    [renderer.cmdk.core]
    [renderer.db]
@@ -29,8 +29,8 @@
    [renderer.tools.core]
    [renderer.tree.core]
    [renderer.utils.error :as error]
-   [renderer.utils.keyboard :as keyboard]
-   [renderer.views :as views]
+   [renderer.utils.keyboard :as keyb]
+   [renderer.views :as v]
    [renderer.window.core]
    [replumb.repl :as repl]
    [shadow.cljs.bootstrap.browser :as bootstrap]
@@ -54,8 +54,8 @@
 (defn ^:dev/after-load mount-root []
   (rf/clear-subscription-cache!)
   (let [root-el (.getElementById js/document "app")]
-    (rdom/unmount-component-at-node root-el)
-    (rdom/render [error/boundary [views/main-panel]] root-el)))
+    (ra.dom/unmount-component-at-node root-el)
+    (ra.dom/render [error/boundary [v/main-panel]] root-el)))
 
 (defn bootstrap-cb
   []
@@ -82,10 +82,10 @@
   (rf/dispatch-sync [:document/new])
 
   (rf/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])
-  (rf/dispatch-sync [::rp/set-keydown-rules keyboard/keydown-rules])
+  (rf/dispatch-sync [::rp/set-keydown-rules keyb/keydown-rules])
 
-  (.addEventListener js/document "keydown" keyboard/event-handler)
-  (.addEventListener js/document "keyup" keyboard/event-handler)
+  (.addEventListener js/document "keydown" keyb/event-handler)
+  (.addEventListener js/document "keyup" keyb/event-handler)
 
   (.setup paper)
 

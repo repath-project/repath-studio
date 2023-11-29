@@ -1,6 +1,6 @@
 (ns renderer.document.db
   (:require
-   [renderer.element.db :as element-db]))
+   [renderer.element.db :as element.db]))
 
 (def document
   [:map
@@ -13,7 +13,7 @@
    [:rotate double?]
    [:filter string?]
    [:pan [:tuple double? double?]]
-   [:elements [:map-of :uuid element-db/element]]])
+   [:elements [:map-of :uuid element.db/element]]])
 
 (def default-document
   {:hovered-keys #{}

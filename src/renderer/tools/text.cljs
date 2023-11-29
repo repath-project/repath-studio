@@ -4,7 +4,7 @@
    [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.element.handlers :as elements]
+   [renderer.element.handlers :as element.h]
    [renderer.handlers :as handlers]
    [renderer.tools.base :as tools]
    [renderer.utils.bounds :as bounds]
@@ -36,16 +36,16 @@
         [:div "Click to enter your text."]])))
 
 (defmethod tools/mouse-up :text
-  [{:keys [adjusted-mouse-offset active-document] :as db}]
+  [{:keys [adjusted-pointer-offset active-document] :as db}]
   (let [fill (get-in db [:documents active-document :fill])
-        [offset-x offset-y] adjusted-mouse-offset
+        [offset-x offset-y] adjusted-pointer-offset
         attrs {:x offset-x
                :y offset-y
                :fill fill}]
     (-> db
-        (elements/create {:type :element
-                          :tag :text
-                          :attrs attrs})
+        (element.h/create {:type :element
+                           :tag :text
+                           :attrs attrs})
         (tools/set-tool :edit)
         (handlers/set-state :create))))
 
@@ -59,9 +59,9 @@
                       (hierarchy/update-attr :y + y)))
 
 (defn set-text-and-select-element
-  [e el]
+  [e el-k]
   (rf/dispatch [:element/set-property
-                el
+                el-k
                 :content
                 (str/replace (.. e -target -value) "  " "\u00a0\u00a0")])
   (rf/dispatch [:set-tool :select]))
@@ -90,16 +90,15 @@
        :on-focus #(.. % -target select)
        :on-pointer-down #(.stopPropagation %)
        :on-pointer-up #(.stopPropagation %)
-       :on-blur #(set-text-and-select-element % el)
+       :on-blur #(set-text-and-select-element % key)
        :on-key-down (fn [e]
                       (.stopPropagation e)
-                      (if (or (= 13 (.-keyCode e))
-                              (= 27 (.-keyCode e)))
-                        (set-text-and-select-element e el)
+                      (if (contains? #{"Enter" "Escape"} (.-code e))
+                        (set-text-and-select-element e key)
                         (.requestAnimationFrame
                          js/window
                          #(rf/dispatch-sync [:element/preview-property
-                                             el
+                                             key
                                              :content
                                              (str/replace (.. e -target -value)
                                                           " "
@@ -119,7 +118,7 @@
   (.textToPath js/window.api
                (.-path (first (.findFonts
                                js/window.api
-                               ;; TODO: Getting the computed styles might safer
+                               ;; TODO: Getting the computed styles might safer.
                                #js {:family (:font-family attrs)
                                     :weight (js/parseInt (:font-weight attrs))
                                     :italic (= (:font-style attrs)

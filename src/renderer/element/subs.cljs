@@ -1,13 +1,13 @@
 (ns renderer.element.subs
   (:require
    ["js-beautify" :as js-beautify]
-   #_[clojure.core.matrix :as mat]
    [clojure.set :as set]
    [goog.color :as color]
    [re-frame.core :as rf]
-   [renderer.attribute.utils :as attr-utils]
+   [renderer.attribute.utils :as attr.utils]
    [renderer.tools.base :as tools]
-   [renderer.utils.map :as map]))
+   [renderer.utils.map :as map]
+   [renderer.utils.bounds :as bounds]))
 
 #_(rf/reg-sub
    :element/element
@@ -115,7 +115,7 @@
                                 :attrs
                                 (.indexOf k)))
                           attrs))]
-     (sort-by (fn [[k _]] (.indexOf attr-utils/attrs-order k)) attrs))))
+     (sort-by (fn [[k _]] (.indexOf attr.utils/attrs-order k)) attrs))))
 
 (rf/reg-sub
  :element/bounds
@@ -158,20 +158,20 @@
            #{}
            visible-elements)))
 
-#_(rf/reg-sub
-   :snaping-points
-   :<- [:document/elements]
-   :<- [:element/visible]
-   (fn [elements visible-elements _]
-     (reduce (fn [points element]
-               (let [[x1 y1 x2 y2] (tools/adjusted-bounds element elements)
-                     [width height] (mat/sub [x2 y2] [x1 y1])]
-                 (concat points [[x1 y1]
-                                 [x1 y2]
-                                 [x1 (+ y1 (/ height 2))]
-                                 [x2 y1]
-                                 [(+ x1 (/ width 2)) y1]
-                                 [x2 y2]
-                                 [(+ x1 (/ width 2)) (+ y1 (/ height 2))]])))
-             []
-             visible-elements)))
+(rf/reg-sub
+ :snapping-points
+ :<- [:document/elements]
+ :<- [:element/visible]
+ (fn [[elements visible-elements] _]
+   (reduce (fn [points element]
+             (let [[x1 y1 x2 y2] (tools/adjusted-bounds element elements)
+                   [cx cy] (bounds/center [x1 y1 x2 y2])]
+               (conj points [x1 y1]
+                            [x1 y2]
+                            [x1 cy]
+                            [x2 y1]
+                            [x2 y2]
+                            [x2 cy]
+                            [cx y1]
+                            [cx y2]
+                            [cx cy]))) [] visible-elements)))

@@ -3,7 +3,7 @@
    [clojure.core.matrix :as mat]
    [goog.math]
    [re-frame.core :as rf]
-   [renderer.element.handlers :as elements]
+   [renderer.element.handlers :as element.h]
    [renderer.handlers :as handlers]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
@@ -23,30 +23,30 @@
 
 (defmethod tools/deactivate :measure
   [db]
-  (elements/clear-temp db))
+  (element.h/clear-temp db))
 
 (defmethod tools/mouse-up :measure
   [db]
-  (elements/clear-temp db))
+  (element.h/clear-temp db))
 
 (defmethod tools/drag-end :measure  [db] db)
 
 (defmethod tools/drag :measure
-  [{:keys [adjusted-mouse-offset adjusted-mouse-pos] :as db}]
-  (let [[offset-x offset-y] adjusted-mouse-offset
-        [pos-x pos-y] adjusted-mouse-pos
-        [adjacent opposite] (mat/sub adjusted-mouse-offset
-                                     adjusted-mouse-pos)
+  [{:keys [adjusted-pointer-offset adjusted-pointer-pos] :as db}]
+  (let [[offset-x offset-y] adjusted-pointer-offset
+        [pos-x pos-y] adjusted-pointer-pos
+        [adjacent opposite] (mat/sub adjusted-pointer-offset
+                                     adjusted-pointer-pos)
         hypotenuse (Math/hypot adjacent opposite)
         attrs {:x1 offset-x
                :y1 offset-y
                :x2 pos-x
                :y2 pos-y
                :stroke "gray"}]
-    (elements/set-temp db {:type :overlay
-                           :tag :measure
-                           :attrs attrs
-                           :hypotenuse hypotenuse})))
+    (element.h/set-temp db {:type :overlay
+                            :tag :measure
+                            :attrs attrs
+                            :hypotenuse hypotenuse})))
 
 (defmethod tools/render :measure
   [{:keys [attrs key hypotenuse]}]
@@ -60,11 +60,7 @@
      [overlay/cross x1 y1]
      [overlay/cross x2 y2]
 
-     [overlay/arc
-      [x1 y1]
-      20
-      (if straight? 0 angle)
-      (abs straight-angle)]
+     [overlay/arc [x1 y1] 20 (if straight? 0 angle) (abs straight-angle)]
 
      [overlay/line x1 y1 x2 y2 false]
      [overlay/line x1 y1 (+ x1 (/ 30 zoom)) y1]

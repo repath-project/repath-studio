@@ -4,33 +4,34 @@
 
 (def ppi 96)
 
-(def units {:px 1
-            :ch 8
-            :ex 7.15625
-            :em 16
-            :rem 16
-            :in ppi
-            :cm (/ ppi 2.54)
-            :mm (/ ppi 25.4)
-            :pt (/ ppi 72)
-            :pc (/ ppi 6)
-            ;; TODO: Find an agnostix way to handle percentages
-            :% 1})
+(def units
+  ;; TODO: Find an agnostix way to handle percentages.
+  {:px 1
+   :ch 8
+   :ex 7.15625
+   :em 16
+   :rem 16
+   :in ppi
+   :cm (/ ppi 2.54)
+   :mm (/ ppi 25.4)
+   :pt (/ ppi 72)
+   :pc (/ ppi 6)
+   :% 1})
 
 (defn unit->key
   "Converts the string unit to a lower-cased keyword."
-  [unit]
-  (keyword (str/lower-case unit)))
+  [s]
+  (keyword (str/lower-case s)))
 
 (defn valid-unit?
-  [unit]
-  (contains? units (unit->key unit)))
+  [s]
+  (contains? units (unit->key s)))
 
 (defn multiplier
   "Returns the multiplier by unit.
    If the unit is invalid, it fallbacks to :px (1)"
-  [unit]
-  ((if (valid-unit? unit) (unit->key unit) :px) units))
+  [s]
+  ((if (valid-unit? s) (unit->key s) :px) units))
 
 (defn match-unit
   [s]
@@ -38,12 +39,10 @@
 
 (defn parse-unit
   [s]
-  (let [string (str/trim (str s))
-        number (js/parseFloat string 10)
-        unit (match-unit string)]
-    [(if (js/isNaN number)
-       0
-       number)
+  (let [s (str/trim (str s))
+        n (js/parseFloat s 10)
+        unit (match-unit s)]
+    [(if (js/isNaN n) 0 n)
      unit]))
 
 (defn ->px
@@ -55,29 +54,27 @@
   (/ number (multiplier unit)))
 
 (defn unit->px
-  [value]
-  (let [[number unit] (parse-unit value)]
+  [v]
+  (let [[n unit] (parse-unit v)]
     (if (empty? unit)
-      number
-      (if (valid-unit? unit) (->px number unit) 0))))
+      n
+      (if (valid-unit? unit) (->px n unit) 0))))
 
 (defn transform
-  "Converts a value to pixels, applies a transformation and converts the result 
+  "Converts a value to pixels, applies a function and converts the result 
    back to the original unit."
-  [transformation-f transformation-v value]
-  (let [[number unit] (parse-unit value)]
-    (-> number
-        (->px unit)
-        (transformation-f transformation-v)
-        (js/parseFloat)
+  [v f & more]
+  (let [[n unit] (parse-unit v)]
+    (-> (apply f (->px n unit) more)
+        js/parseFloat
         (.toFixed 2)
         (->unit unit)
         (str (when (valid-unit? unit) unit)))))
 
 (defn ->fixed
-  ([value]
-   (->fixed value 2))
-  ([value digits]
-   (-> value
+  ([v]
+   (->fixed v 2))
+  ([v digits]
+   (-> v
        (.toFixed digits)
-       (js/parseFloat))))
+       js/parseFloat)))

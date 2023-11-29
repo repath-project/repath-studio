@@ -30,7 +30,7 @@
  :pan-to-active-page
  (fn [{:keys [active-document content-rect] :as db}  [_ zoom]]
    (let [active-page (get-in db [:documents active-document :active-page])
-         {:keys [width height]} (:attrs (el/get-element db active-page))
+         {:keys [width height]} (:attrs (el/element db active-page))
          [width height] (map units/unit->px [width height])
          width-ratio (/ (:width content-rect) width)
          height-ratio (/ (:height content-rect) height)]
@@ -56,9 +56,9 @@
 (rf/reg-event-db
  :zoom-in
  (fn [db [_ _]]
-   (handlers/zoom db (/ 1 (:zoom-factor db)))))
+   (handlers/zoom db (/ 1 (:zoom-sensitivity db)))))
 
 (rf/reg-event-db
  :zoom-out
  (fn [db [_ _]]
-   (handlers/zoom db (:zoom-factor db))))
+   (handlers/zoom db (:zoom-sensitivity db))))

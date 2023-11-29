@@ -32,7 +32,7 @@
   (rf/dispatch-sync [:pointer-event {:element el
                                      :target (.-target e)
                                      :type (keyword (.-type e))
-                                     :mouse-pos [(.-pageX e) (.-pageY e)]
+                                     :pointer-pos [(.-pageX e) (.-pageY e)]
                                      :pressure (.-pressure e)
                                      :pointer-type (.-pointerType e)
                                      :primary? (.-isPrimary e)
