@@ -25,23 +25,23 @@
 (defmethod attr.hierarchy/form-element ::extraPoints
   [k v]
   [attr.v/range-input k v {:min 0
-                               :max 50
-                               :step 1} 0])
+                           :max 50
+                           :step 1} 0])
 
 (defmethod attr.hierarchy/form-element ::randomness
   [k v]
   [attr.v/range-input k v {:min 0
-                               :max 50
-                               :step 1} 0])
+                           :max 50
+                           :step 1} 0])
 
 (defmethod attr.hierarchy/form-element ::seed
   [k v disabled?]
   (let [random-seed (goog.math/randomInt 1000000)]
     [:<>
      [attr.v/form-input {:key k
-                             :value v
-                             :disabled? disabled?
-                             :placeholder 0}]
+                         :value v
+                         :disabled? disabled?
+                         :placeholder 0}]
      [:button.button.ml-px.inline-block.level-2.text-muted
       {:title "Generate random seed"
        :style {:flex "0 0 26px"
@@ -124,11 +124,11 @@
 
 (defmethod tools/scale ::blob
   [el ratio pivot-point]
- (let [offset (mat/sub pivot-point (mat/mul pivot-point ratio))
-       ratio (apply min ratio)]
-   (-> el
-       (attr.hierarchy/update-attr ::size * ratio)
-       (tools/translate offset))))
+  (let [offset (mat/sub pivot-point (mat/mul pivot-point ratio))
+        ratio (apply min ratio)]
+    (-> el
+        (attr.hierarchy/update-attr ::size * ratio)
+        (tools/translate offset))))
 
 (defmethod tools/render ::blob
   [{:keys [attrs children] :as element}]
@@ -164,16 +164,15 @@
 
 (defmethod tools/path ::blob
   [{:keys [attrs]}]
-  (let [options (reduce (fn [options [k v]] (assoc options k (int v)))
-                        {}
-                        (select-keys attrs [::seed
-                                            ::extraPoints
-                                            ::randomness
-                                            ::size]))]
-    (-> (.svgPath blobs (clj->js options))
+  (let [[x y] (mapv units/unit->px [(::x attrs) (::y attrs)])
+        options (->> [::seed ::extraPoints ::randomness ::size]
+                     (select-keys attrs)
+                     (reduce (fn [options [k v]] (assoc options k (int v))) {})
+                     clj->js)]
+    (-> (.svgPath blobs options)
         svgpath
-        (.translate (units/unit->px (::x attrs)) (units/unit->px (::y attrs)))
-        (.toString))))
+        (.translate x y)
+        .toString)))
 
 (defmethod tools/edit ::blob
   [element [x y] handler]
