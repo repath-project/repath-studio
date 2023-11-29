@@ -20,11 +20,11 @@
   "Simple dot used for debugging purposes."
   [[x y] & children]
   (let [zoom @(rf/subscribe [:document/zoom])]
-    [:circle {:cx x
-              :cy y
-              :stroke-width 0
-              :fill accent
-              :r (/ 3 zoom)} children]))
+    (into [:circle {:cx x
+                    :cy y
+                    :stroke-width 0
+                    :fill accent
+                    :r (/ 3 zoom)}] children)))
 
 (defn circle-handler
   [{:keys [x y key] :as el} & children]
@@ -240,7 +240,7 @@
                      (mat/add page-pos centroid)
                      centroid)]
       [point-of-interest centroid
-       ^{:key (str (:id el) "-centroid-title")}
+
        [:title "Centroid"]])))
 
 (defn area

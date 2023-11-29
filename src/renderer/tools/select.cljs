@@ -67,15 +67,13 @@
   [{:keys [active-document] :as db} intersecting? f]
   (let [hovered? (if intersecting? bounds/intersect-bounds? bounds/contain-bounds?)
         hovered-keys (-> db :documents active-document :hovered-keys)]
-    (reduce (fn [db element]
-              (if (and
-                   (empty? (set/intersection (element.h/ancestor-keys db element)
-                                             hovered-keys))
-                   (not (element.h/page? element))
-                   (hovered? (tools/adjusted-bounds element (element.h/elements db))
-                             (tools/adjusted-bounds (element.h/get-temp db)
-                                                    (element.h/elements db))))
-                (f db element)
+    (reduce (fn [db el]
+              (if (and (empty? (set/intersection (element.h/ancestor-keys db el) hovered-keys))
+                       (not (element.h/page? el))
+                       (hovered? (tools/adjusted-bounds el (element.h/elements db))
+                                 (tools/adjusted-bounds (element.h/get-temp db)
+                                                        (element.h/elements db))))
+                (f db (:key el))
                 db))
             db
             (vals (element.h/elements db)))))
@@ -225,8 +223,7 @@
   [{:keys [state adjusted-pointer-offset] :as db} e]
   (-> (case state
         :select (-> (cond-> db (not (mouse/multiselect? e)) element.h/deselect)
-                    (reduce-by-area (contains? (:modifiers e) :alt)
-                                    #(element.h/select %1 (:key %2)))
+                    (reduce-by-area (contains? (:modifiers e) :alt) element.h/select)
                     (element.h/clear-temp)
                     (history/finalize "Modify selection"))
         :move (history/finalize db "Move selection by " adjusted-pointer-offset)

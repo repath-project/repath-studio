@@ -74,13 +74,13 @@
      (when (and select? pivot-point)
        [overlay/times pivot-point])
 
-     (when (and select? (= state :default))
+     (when (and select? (contains? #{:default :select} state))
        [:<>
-        (map (fn [el]
-               ^{:key (str (:key el) "-bounds")}
-               [overlay/bounding-box (tools/adjusted-bounds el elements)])
-             hovered-or-selected)
-        
+        (into [:g]
+              (map (fn [el]
+                     [overlay/bounding-box (tools/adjusted-bounds el elements)])
+                   hovered-or-selected))
+
         (when (> elements-area 0)
           [overlay/area elements-area bounds])
         (when (not-empty (filter (comp not zero?) bounds))
@@ -90,13 +90,12 @@
 
      (when (or (= tool :edit)
                (= primary-tool :edit))
-       (map (fn [el]
-              ^{:key (str (:key el) "-edit-points")}
-              [:g
-               [tools/render-edit el]
-               ^{:key (str (:key el) "-centroid")}
-               [overlay/centroid el]])
-            selected-elements))
+       (into [:g]
+        (map (fn [el]
+               [:<>
+                [tools/render-edit el]
+                [overlay/centroid el]])
+            selected-elements)))
 
      [tools/render temp-element]
 
