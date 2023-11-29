@@ -4,7 +4,6 @@
    ["blobs/v2" :as blobs]
    ["svgpath" :as svgpath]
    [clojure.core.matrix :as mat]
-   [clojure.string :as str]
    [goog.math]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as attr-hierarchy]
@@ -27,13 +26,13 @@
   [k v]
   [attr-views/range-input k v {:min 0
                                :max 50
-                               :step "1"} 0])
+                               :step 1} 0])
 
 (defmethod attr-hierarchy/form-element ::randomness
   [k v]
   [attr-views/range-input k v {:min 0
                                :max 50
-                               :step "1"} 0])
+                               :step 1} 0])
 
 (defmethod attr-hierarchy/form-element ::seed
   [k v disabled?]

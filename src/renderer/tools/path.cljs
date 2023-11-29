@@ -7,8 +7,7 @@
    [clojure.core.matrix :as mat]
    #_[clojure.string :as str]
    [goog.object]
-   [renderer.tools.base :as tools]
-   [renderer.utils.bounds :as bounds]))
+   [renderer.tools.base :as tools]))
 
 (derive :path ::tools/graphics)
 
