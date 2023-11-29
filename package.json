@@ -78,7 +78,7 @@
     "cmdk": "0.2.0",
     "codemirror": "5.65.15",
     "create-react-class": "15.7.0",
-    "electron": "27.0.3",
+    "electron": "27.1.2",
     "electron-builder": "24.9.1",
     "element-to-path": "1.2.1",
     "highlight.js": "11.7.0",
