@@ -8,7 +8,8 @@
    [renderer.color.views :as color-v]
    [renderer.components :as comp]
    [renderer.filters :as filters]
-   [renderer.utils.keyboard :as keyb]))
+   [renderer.utils.keyboard :as keyb]
+   [renderer.utils.units :as units]))
 
 (defn coordinates []
   (let [[x y] @(rf/subscribe [:frame/adjusted-pointer-pos])]
@@ -130,13 +131,18 @@
         :on-click #(rf/dispatch [:zoom-in])}
        [comp/icon "plus" {:class "small"}]]
 
-      (let [zoom-formatted (gstring/format "%.2f" (* 100 zoom))]
+      (let [zoom-formatted (units/->fixed (* 100 zoom) (if (< zoom 0.1) 1 0))]
         [:input.level-3.text-right.flex
          {:key zoom
-          :style {:width "90px"}
+          :type "number"
+          :inputmode "decimal"
+          :min "1"
+          :max "10000"
+          :style {:width "60px"}
           :default-value zoom-formatted
           :on-blur #(set-zoom % zoom-formatted)
-          :on-key-down #(keyb/input-key-down-handler % zoom-formatted set-zoom % zoom-formatted)}])
+          :on-key-down #(keyb/input-key-down-handler % zoom-formatted set-zoom % zoom-formatted)
+          :on-wheel #(rf/dispatch (if (pos? (.-deltaY %)) [:zoom-out] [:zoom-in]))}])
       [:div.pr-2.level-3.flex.items-center "%"]
 
       [:> DropdownMenu/Root

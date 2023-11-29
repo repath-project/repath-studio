@@ -165,7 +165,12 @@ p {
 }
 
 input {
-  @apply form-element font-mono;
+  @apply form-element font-mono appearance-none;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    @apply appearance-none;
+  }
 }
 
 input[type=range] {
