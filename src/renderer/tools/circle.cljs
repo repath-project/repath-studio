@@ -45,8 +45,8 @@
   [el ratio pivot-point]
   (let [dimentions (bounds/->dimensions (tools/bounds el))
         pivot-point (mat/sub pivot-point (mat/div dimentions 2))
-        ratio (apply min ratio)
-        offset (mat/sub pivot-point (mat/mul pivot-point ratio))]
+        offset (mat/sub pivot-point (mat/mul pivot-point ratio))
+        ratio (apply min ratio)]
     (-> el
         (hierarchy/update-attr :r * ratio)
         (tools/translate offset))))

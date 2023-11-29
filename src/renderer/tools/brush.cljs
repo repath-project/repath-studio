@@ -6,7 +6,7 @@
    [clojure.core.matrix :as mat]
    [goog.math]
    [renderer.attribute.color :as color]
-   [renderer.attribute.hierarchy :as attr-hierarchy]
+   [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.attribute.range :as range]
    [renderer.attribute.views :as attr-views]
    [renderer.element.handlers :as elements]
@@ -41,36 +41,36 @@
 (derive ::smoothing ::range/range)
 (derive ::streamline ::range/range)
 
-(defmethod attr-hierarchy/form-element ::size
+(defmethod attr.hierarchy/form-element ::size
   [k v disabled?]
   [attr-views/range-input k v {:disabled disabled?
                                :min 1
                                :max 100
                                :step 1}])
 
-(defmethod attr-hierarchy/form-element ::points
+(defmethod attr.hierarchy/form-element ::points
   [value]
   [:input {:value value
            :disabled true
            :placeholder (when-not value "multiple")}])
 
-(defmethod attr-hierarchy/description ::points
+(defmethod attr.hierarchy/description ::points
   []
   "Input points recorded from a user's mouse movement.")
 
-(defmethod attr-hierarchy/description ::size
+(defmethod attr.hierarchy/description ::size
   []
   "The base size (diameter) of the stroke.")
 
-(defmethod attr-hierarchy/description ::thinning
+(defmethod attr.hierarchy/description ::thinning
   []
   "The effect of pressure on the stroke's size.")
 
-(defmethod attr-hierarchy/description ::smoothing
+(defmethod attr.hierarchy/description ::smoothing
   []
   "How much to soften the stroke's edges.")
 
-(defmethod attr-hierarchy/description ::streamline
+(defmethod attr.hierarchy/description ::streamline
   []
   "How much to streamline the stroke.")
 
@@ -155,10 +155,21 @@
       js->clj))
 
 (defmethod tools/translate :brush
-  [element [x y]]
-  (update-in element
+  [el [x y]]
+  (update-in el
              [:attrs ::points]
              #(mapv (fn [point] (mat/add point [x y 0])) %)))
+
+(defmethod tools/scale :brush
+  [el ratio pivot-point]
+  (update-in el
+             [:attrs ::points]
+             #(mapv (fn [point]
+                        (let [bounds (tools/bounds el)
+                              rel-point (mat/sub (take 2 bounds) (take 2 point))
+                              pivot-point (mat/sub pivot-point (mat/mul pivot-point ratio))
+                              [x y] (mat/add pivot-point (mat/sub rel-point (mat/mul rel-point ratio)))]
+                          (mat/add point [x y 0]))) %)))  ;; OPTIMIZE
 
 (defmethod tools/drag-end :brush
   [db]

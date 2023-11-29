@@ -6,7 +6,7 @@
    [clojure.core.matrix :as mat]
    [goog.math]
    [re-frame.core :as rf]
-   [renderer.attribute.hierarchy :as attr-hierarchy]
+   [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.attribute.length :as length]
    [renderer.attribute.views :as attr-views]
    [renderer.components :as comp]
@@ -22,19 +22,19 @@
 (derive ::y ::length/length)
 (derive ::size ::length/length)
 
-(defmethod attr-hierarchy/form-element ::extraPoints
+(defmethod attr.hierarchy/form-element ::extraPoints
   [k v]
   [attr-views/range-input k v {:min 0
                                :max 50
                                :step 1} 0])
 
-(defmethod attr-hierarchy/form-element ::randomness
+(defmethod attr.hierarchy/form-element ::randomness
   [k v]
   [attr-views/range-input k v {:min 0
                                :max 50
                                :step 1} 0])
 
-(defmethod attr-hierarchy/form-element ::seed
+(defmethod attr.hierarchy/form-element ::seed
   [k v disabled?]
   (let [random-seed (goog.math/randomInt 1000000)]
     [:<>
@@ -49,27 +49,27 @@
        :on-click #(rf/dispatch [:element/set-attribute k random-seed])}
       [comp/icon "refresh"]]]))
 
-(defmethod attr-hierarchy/description ::x
+(defmethod attr.hierarchy/description ::x
   []
   "Horizontal coordinate of the blob's center.")
 
-(defmethod attr-hierarchy/description ::y
+(defmethod attr.hierarchy/description ::y
   []
   "Vertical coordinate of the blob's center.")
 
-(defmethod attr-hierarchy/description ::seed
+(defmethod attr.hierarchy/description ::seed
   []
   "A given seed will always produce the same blob.")
 
-(defmethod attr-hierarchy/description ::extraPoints
+(defmethod attr.hierarchy/description ::extraPoints
   []
   "The actual number of points will be `3 + extraPoints`.")
 
-(defmethod attr-hierarchy/description ::randomness
+(defmethod attr.hierarchy/description ::randomness
   []
   "Increases the amount of variation in point position.")
 
-(defmethod attr-hierarchy/description ::size
+(defmethod attr.hierarchy/description ::size
   []
   "The size of the bounding box.")
 
@@ -119,15 +119,15 @@
 
 (defmethod tools/translate ::blob
   [element [x y]] (-> element
-                      (attr-hierarchy/update-attr ::x + x)
-                      (attr-hierarchy/update-attr ::y + y)))
+                      (attr.hierarchy/update-attr ::x + x)
+                      (attr.hierarchy/update-attr ::y + y)))
 
 (defmethod tools/scale ::blob
   [el ratio pivot-point]
- (let [ratio (apply min ratio)
-       offset (mat/sub pivot-point (mat/mul pivot-point ratio))]
+ (let [offset (mat/sub pivot-point (mat/mul pivot-point ratio))
+       ratio (apply min ratio)]
    (-> el
-       (attr-hierarchy/update-attr ::size * ratio)
+       (attr.hierarchy/update-attr ::size * ratio)
        (tools/translate offset))))
 
 (defmethod tools/render ::blob
@@ -148,8 +148,8 @@
 (defmethod tools/translate ::blob
   [element [x y]]
   (-> element
-      (attr-hierarchy/update-attr ::x + x)
-      (attr-hierarchy/update-attr ::y + y)))
+      (attr.hierarchy/update-attr ::x + x)
+      (attr.hierarchy/update-attr ::y + y)))
 
 (defmethod tools/bounds ::blob
   [{:keys [attrs]}]
@@ -179,7 +179,7 @@
   [element [x y] handler]
   (case handler
     :size
-    (attr-hierarchy/update-attr element ::size #(max 0 (+ % (min x y))))
+    (attr.hierarchy/update-attr element ::size #(max 0 (+ % (min x y))))
     element))
 
 (defmethod tools/render-edit ::blob
