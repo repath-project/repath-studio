@@ -76,10 +76,10 @@
 
      (when (and select? (contains? #{:default :select} state))
        [:<>
-        (into [:g]
-              (map (fn [el]
-                     [overlay/bounding-box (tools/adjusted-bounds el elements)])
-                   hovered-or-selected))
+        (map (fn [el]
+               ^{:key (str (:key el) "-bounds")}
+               [overlay/bounding-box (tools/adjusted-bounds el elements)])
+             hovered-or-selected)
 
         (when (> elements-area 0)
           [overlay/area elements-area bounds])
@@ -90,12 +90,13 @@
 
      (when (or (= tool :edit)
                (= primary-tool :edit))
-       (into [:g]
-        (map (fn [el]
-               [:<>
-                [tools/render-edit el]
-                [overlay/centroid el]])
-            selected-elements)))
+       (map (fn [el]
+              ^{:key (str (:key el) "-edit-points")}
+              [:g
+               [tools/render-edit el]
+               ^{:key (str (:key el) "-centroid")}
+               [overlay/centroid el]])
+            selected-elements))
 
      [tools/render temp-element]
 
