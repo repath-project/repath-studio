@@ -88,20 +88,20 @@
 
 (defmethod tools/scale ::tools/polyshape
   [el ratio pivot-point]
-  (update-in el
-             [:attrs :points]
-             #(->> %
-                   attr.utils/points->vec
-                   (reduce (fn [points point]
-                             (let [[point-x point-y] point
-                                   bounds (tools/bounds el)
-                                   rel-point (mat/sub (take 2 bounds) point)
-                                   pivot-point (mat/sub pivot-point (mat/mul pivot-point ratio))
-                                   [x y] (mat/add pivot-point (mat/sub rel-point (mat/mul rel-point ratio)))]
-                               (conj points
-                                     (units/transform point-x + x)
-                                     (units/transform point-y + y)))) [])
-                   (str/join " ")))) ;; OPTIMIZE
+  (let [bounds-start (take 2 (tools/bounds el))
+        pivot-point (mat/sub pivot-point (mat/mul pivot-point ratio))]
+    (update-in el
+               [:attrs :points]
+               #(->> %
+                     attr.utils/points->vec
+                     (reduce (fn [points point]
+                               (let [[point-x point-y] point
+                                     rel-point (mat/sub (take 2 bounds-start) point)
+                                     [x y] (mat/add pivot-point (mat/sub rel-point (mat/mul rel-point ratio)))]
+                                 (conj points
+                                       (units/transform point-x + x)
+                                       (units/transform point-y + y)))) [])
+                     (str/join " ")))))
 
 (defmethod tools/render-edit ::tools/polyshape
   [{:keys [attrs key]} zoom]

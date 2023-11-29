@@ -162,14 +162,14 @@
 
 (defmethod tools/scale :brush
   [el ratio pivot-point]
-  (update-in el
-             [:attrs ::points]
-             #(mapv (fn [point]
-                        (let [bounds (tools/bounds el)
-                              rel-point (mat/sub (take 2 bounds) (take 2 point))
-                              pivot-point (mat/sub pivot-point (mat/mul pivot-point ratio))
+  (let [bounds-start (take 2 (tools/bounds el))
+        pivot-point (mat/sub pivot-point (mat/mul pivot-point ratio))]
+    (update-in el
+               [:attrs ::points]
+               #(mapv (fn [point]
+                        (let [rel-point (mat/sub (take 2 bounds-start) (take 2 point))
                               [x y] (mat/add pivot-point (mat/sub rel-point (mat/mul rel-point ratio)))]
-                          (mat/add point [x y 0]))) %)))  ;; OPTIMIZE
+                          (mat/add point [x y 0]))) %))))
 
 (defmethod tools/drag-end :brush
   [db]
