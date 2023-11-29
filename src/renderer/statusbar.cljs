@@ -135,7 +135,7 @@
         [:input.level-3.text-right.flex
          {:key zoom
           :type "number"
-          :inputmode "decimal"
+          :input-mode "decimal"
           :min "1"
           :max "10000"
           :style {:width "60px"}
