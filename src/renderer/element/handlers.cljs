@@ -2,6 +2,7 @@
   (:require
    ["paper" :refer [Path]]
    [clojure.core.matrix :as mat]
+   [clojure.set :as set]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.tools.base :as tools]
    [renderer.tools.path :as path]
@@ -22,12 +23,14 @@
   (apply update-in db (conj (path db) (:key el)) f more))
 
 (defn elements
-  [db]
-  (get-in db (path db)))
+  ([db]
+   (get-in db (path db)))
+  ([db keys]
+   (vals (select-keys (elements db) (vec keys)))))
 
 (defn element
   [db k]
-  (get-in db (path db k)))
+  (k (elements db)))
 
 (defn active-page
   [db]
@@ -90,6 +93,26 @@
        (:parent (element db parent-key))
        (conj parent-keys parent-key))
       parent-keys)))
+
+(defn descendant-keys
+  ([db]
+   (reduce #(set/union %1 (descendant-keys db %2)) #{} (selected db)))
+  ([db el]
+   (loop [children (set (:children el))
+          child-keys #{}]
+     (if (seq children)
+       (recur
+        (reduce #(set/union %1 (:children (element db %2))) #{} children)
+        (set/union child-keys children))
+       child-keys))))
+
+(defn top-selected-keys
+  [db]
+  (set/difference (selected-keys db) (descendant-keys db)))
+
+(defn top-selected
+  [db]
+  (elements db (top-selected-keys db)))
 
 (defn clear-temp
   [db]
@@ -285,7 +308,7 @@
 
 (defn translate
   ([db offset]
-   (reduce #(translate %1 %2 offset) db (selected db)))
+   (reduce #(translate %1 %2 offset) db (top-selected db)))
   ([db el offset]
    (cond-> db
      (not (:locked? el))
@@ -372,9 +395,8 @@
    ;; TODO: Handle child elements
    (let [[x1 y1 _ _] (tools/bounds (active-page db))]
      (reduce #(cond-> (create-element %1 %2)
-                 (not (page? %2)) (translate [(- x1) (- y1)]))
+                (not (page? %2)) (translate [(- x1) (- y1)]))
              (deselect db) elements))))
-
 
 (defn bool
   [path-a path-b operation]
@@ -448,7 +470,7 @@
            style-attrs (disj spec/presentation-attrs :transform)]
        (reduce (fn [db attr]
                  (cond-> db
-                   (-> attrs attr) 
+                   (-> attrs attr)
                    (update-attribute el attr #(if % (-> attrs attr) disj))))
                db style-attrs)) db)))
 
