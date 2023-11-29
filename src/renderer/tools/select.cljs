@@ -34,7 +34,7 @@
 (defmethod message :move
   [offset]
   [:div
-   [:div "Moving by " (str (map units/->fixed offset))]
+   [:div "Moving by " (str (mapv units/->fixed offset))]
    [:div
     "Hold "
     [:strong "Ctrl"]
@@ -44,7 +44,7 @@
 (defmethod message :clone
   [offset]
   [:div
-   [:div "Cloning to " (str (map units/->fixed offset))]
+   [:div "Cloning to " (str (mapv units/->fixed offset))]
    [:div
     "Hold "
     [:strong "Ctrl"]
@@ -53,9 +53,9 @@
     " to move."]])
 
 (defmethod message :scale
-  [_offset]
+  [ratio]
   [:div
-   [:div "Scaling"]
+   [:div "Scaling by " (str (mapv units/->fixed (distinct ratio)))]
    [:div
     "Hold "
     [:strong "Ctrl"]
@@ -182,6 +182,7 @@
         ratio (mapv #(max 0 %) ratio)]
     (-> db
         (assoc :pivot-point pivot-point)
+        (handlers/set-message (message ratio :scale))
         (element.h/scale ratio pivot-point))))
 
 (defmethod tools/drag :select
@@ -193,7 +194,8 @@
                         (not= state :scale))
                  (mouse/lock-direction offset)
                  offset)
-        alt-key? (contains? (:modifiers e) :alt)]
+        alt-key? (contains? (:modifiers e) :alt)
+        db (handlers/set-message db (message offset state))]
     (-> (case state
           :select
           (-> db
@@ -217,8 +219,7 @@
                         (contains? (:modifiers e) :ctrl)
                         (contains? (:modifiers e) :shift))
 
-          :default db)
-        (handlers/set-message (message offset state)))))
+          :default db))))
 
 (defmethod tools/drag-end :select
   [{:keys [state adjusted-pointer-offset] :as db} e]
