@@ -1,7 +1,7 @@
 (ns renderer.tools.edit
   (:require
    [clojure.core.matrix :as mat]
-   [renderer.element.handlers :as elements]
+   [renderer.element.handlers :as element.h]
    [renderer.handlers :as handlers]
    [renderer.history.handlers :as history]
    [renderer.tools.base :as tools]
@@ -30,8 +30,8 @@
 (defmethod tools/mouse-move :edit
   [db _ el]
   (-> db
-      elements/clear-hovered
-      (elements/hover (:key el))))
+      element.h/clear-hovered
+      (element.h/hover (:key el))))
 
 (defmethod tools/drag-start :edit
   [db]
@@ -43,12 +43,12 @@
         db (history/swap db)
         element-key (:element clicked-element)
         pointer-offset (if (contains? (:modifiers e) :ctrl)
-                       (mouse/lock-direction pointer-offset)
-                       pointer-offset)]
+                         (mouse/lock-direction pointer-offset)
+                         pointer-offset)]
     (if element-key
       (assoc-in db
-                (conj (elements/path db) element-key)
-                (tools/edit (elements/element db element-key)
+                (conj (element.h/path db) element-key)
+                (tools/edit (element.h/element db element-key)
                             pointer-offset
                             (:key clicked-element)))
       db)))

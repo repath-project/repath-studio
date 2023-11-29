@@ -1,6 +1,6 @@
 (ns renderer.tools.fill
   (:require
-   [renderer.element.handlers :as elements]
+   [renderer.element.handlers :as element.h]
    [renderer.handlers :as handlers]
    [renderer.history.handlers :as history]
    [renderer.tools.base :as tools]))
@@ -23,7 +23,7 @@
   [{active-document :active-document :as db} _e el]
   (let [color (get-in db [:documents active-document :fill])]
     (-> db
-        (elements/set-attribute (:key el) :fill color)
+        (element.h/set-attribute (:key el) :fill color)
         (history/finalize (str "Fill " color)))))
 
 (defmethod tools/drag-end :fill

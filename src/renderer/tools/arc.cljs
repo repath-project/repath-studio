@@ -6,7 +6,7 @@
    [re-frame.core :as rf]
    [renderer.attribute.angle :as angle]
    [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.element.handlers :as elements]
+   [renderer.element.handlers :as element.h]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
    [renderer.utils.mouse :as mouse]
@@ -46,7 +46,7 @@
                :stroke stroke
                :rx (abs (- pos-x offset-x))
                :ry (abs (- pos-y offset-y))}]
-    (elements/set-temp db {:type :element :tag :arc :attrs attrs})))
+    (element.h/set-temp db {:type :element :tag :arc :attrs attrs})))
 
 (defmethod tools/translate :arc
   [element [x y]] (-> element

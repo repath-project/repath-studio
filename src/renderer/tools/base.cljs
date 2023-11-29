@@ -2,7 +2,7 @@
   (:require
    ["paper" :refer [Path]]
    ["paperjs-offset" :refer [PaperOffset]]
-   [goog.string :as gstring]
+   [goog.string :as g.str]
    [reagent.dom.server :as server]
    [renderer.element.utils :as el-utils]
    [renderer.utils.bounds :as bounds]
@@ -85,9 +85,9 @@
 (defmethod render :default [])
 (defmethod render-to-string :default
   [element]
-  (gstring/unescapeEntities
-   (server/render-to-static-markup
-    [render element])))
+  (-> [render element]
+      server/render-to-static-markup
+      g.str/unescapeEntities))
 
 (defmethod render-edit :default [])
 (defmethod bounds :default [])

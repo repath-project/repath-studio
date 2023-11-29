@@ -8,9 +8,9 @@
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.attribute.length :as length]
-   [renderer.attribute.views :as attr-views]
+   [renderer.attribute.views :as attr.v]
    [renderer.components :as comp]
-   [renderer.element.handlers :as elements]
+   [renderer.element.handlers :as element.h]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
    [renderer.utils.mouse :as mouse]
@@ -24,13 +24,13 @@
 
 (defmethod attr.hierarchy/form-element ::extraPoints
   [k v]
-  [attr-views/range-input k v {:min 0
+  [attr.v/range-input k v {:min 0
                                :max 50
                                :step 1} 0])
 
 (defmethod attr.hierarchy/form-element ::randomness
   [k v]
-  [attr-views/range-input k v {:min 0
+  [attr.v/range-input k v {:min 0
                                :max 50
                                :step 1} 0])
 
@@ -38,7 +38,7 @@
   [k v disabled?]
   (let [random-seed (goog.math/randomInt 1000000)]
     [:<>
-     [attr-views/form-input {:key k
+     [attr.v/form-input {:key k
                              :value v
                              :disabled? disabled?
                              :placeholder 0}]
@@ -104,17 +104,17 @@
                ::size (* radius 2)
                :fill fill
                :stroke stroke}]
-    (elements/set-temp db {:type :element :tag ::blob :attrs attrs})))
+    (element.h/set-temp db {:type :element :tag ::blob :attrs attrs})))
 
 (defmethod tools/drag ::blob
   [{:keys [adjusted-pointer-offset adjusted-pointer-pos] :as db}]
   (let [[offset-x offset-y] adjusted-pointer-offset
         radius (mat/distance adjusted-pointer-pos adjusted-pointer-offset)
-        temp (-> (elements/get-temp db)
+        temp (-> (element.h/get-temp db)
                  (assoc-in [:attrs ::x] (- offset-x radius))
                  (assoc-in [:attrs ::y] (- offset-y radius))
                  (assoc-in [:attrs ::size] (* radius 2)))]
-    (elements/set-temp db temp)))
+    (element.h/set-temp db temp)))
 
 
 (defmethod tools/translate ::blob

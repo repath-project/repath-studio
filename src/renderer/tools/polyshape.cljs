@@ -7,7 +7,7 @@
    [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.attribute.utils :as attr.utils]
-   [renderer.element.handlers :as elements]
+   [renderer.element.handlers :as element.h]
    [renderer.handlers :as handlers]
    [renderer.history.handlers :as history]
    [renderer.overlay :as overlay]
@@ -27,11 +27,11 @@
 (defn create-polyline
   [{:keys [active-document tool] :as db} points]
   (let [{:keys [fill stroke]} (get-in db [:documents active-document])]
-    (elements/set-temp db {:type :element
-                           :tag tool
-                           :attrs {:points (str/join " " points)
-                                   :stroke stroke
-                                   :fill fill}})))
+    (element.h/set-temp db {:type :element
+                            :tag tool
+                            :attrs {:points (str/join " " points)
+                                    :stroke stroke
+                                    :fill fill}})))
 
 (defn add-point
   [{:keys [active-document] :as db} point]
@@ -41,7 +41,7 @@
 
 (defmethod tools/mouse-up ::tools/polyshape
   [{:keys [adjusted-pointer-pos] :as db}]
-  (if (elements/get-temp db)
+  (if (element.h/get-temp db)
     (add-point db adjusted-pointer-pos)
     (-> db
         (handlers/set-state :create)
@@ -49,7 +49,7 @@
 
 (defmethod tools/drag-end ::tools/polyshape
   [{:keys [adjusted-pointer-pos] :as db}]
-  (if (elements/get-temp db)
+  (if (element.h/get-temp db)
     (add-point db adjusted-pointer-pos)
     (-> db
         (handlers/set-state :create)
@@ -71,7 +71,7 @@
   (-> db
       (update-in [:documents active-document :temp-element :attrs :points]
                  #(str/join " " (apply concat (drop-last 2 (attr.utils/points->vec %)))))
-      (elements/create)
+      element.h/create
       (history/finalize (str "Create " (:tool db)))))
 
 (defmethod tools/translate ::tools/polyshape

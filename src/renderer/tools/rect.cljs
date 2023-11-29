@@ -1,7 +1,7 @@
 (ns renderer.tools.rect
   "https://www.w3.org/TR/SVG/shapes.html#RectElement"
   (:require
-   [renderer.element.handlers :as elements]
+   [renderer.element.handlers :as element.h]
    [renderer.tools.base :as tools]))
 
 (derive :rect ::tools/box)
@@ -34,4 +34,4 @@
                :height (if lock-ratio? (min width height) height)
                :fill fill
                :stroke stroke}]
-    (elements/set-temp db {:type :element :tag :rect :attrs attrs})))
+    (element.h/set-temp db {:type :element :tag :rect :attrs attrs})))

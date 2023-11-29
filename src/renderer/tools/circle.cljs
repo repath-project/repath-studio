@@ -5,7 +5,7 @@
    [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.element.handlers :as elements]
+   [renderer.element.handlers :as element.h]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
    [renderer.utils.units :as units]
@@ -34,7 +34,7 @@
                :fill fill
                :stroke stroke
                :r radius}]
-    (elements/set-temp db {:type :element :tag :circle :attrs attrs})))
+    (element.h/set-temp db {:type :element :tag :circle :attrs attrs})))
 
 (defmethod tools/translate :circle
   [element [x y]] (-> element

@@ -3,7 +3,7 @@
   (:require
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
-   [renderer.element.handlers :as elements]
+   [renderer.element.handlers :as element.h]
    [renderer.tools.base :as tools]
    [renderer.utils.units :as units]))
 
@@ -27,7 +27,7 @@
                :y (min pos-y offset-y)
                :width (abs (- pos-x offset-x))
                :height (abs (- pos-y offset-y))}]
-    (elements/set-temp db {:type :element :tag :svg :attrs attrs})))
+    (element.h/set-temp db {:type :element :tag :svg :attrs attrs})))
 
 (defmethod tools/bounds :svg
   [{:keys [attrs]}]

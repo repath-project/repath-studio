@@ -3,7 +3,7 @@
   (:require
    [clojure.core.matrix :as mat]
    [clojure.set :as set]
-   [renderer.element.handlers :as elements]
+   [renderer.element.handlers :as element.h]
    [renderer.handlers :as handlers]
    [renderer.history.handlers :as history]
    [renderer.overlay :as overlay]
@@ -69,22 +69,22 @@
         hovered-keys (-> db :documents active-document :hovered-keys)]
     (reduce (fn [db element]
               (if (and
-                   (empty? (set/intersection (elements/ancestor-keys db element)
+                   (empty? (set/intersection (element.h/ancestor-keys db element)
                                              hovered-keys))
-                   (not (elements/page? element))
-                   (hovered? (tools/adjusted-bounds element (elements/elements db))
-                             (tools/adjusted-bounds (elements/get-temp db)
-                                                    (elements/elements db))))
+                   (not (element.h/page? element))
+                   (hovered? (tools/adjusted-bounds element (element.h/elements db))
+                             (tools/adjusted-bounds (element.h/get-temp db)
+                                                    (element.h/elements db))))
                 (f db element)
                 db))
             db
-            (vals (elements/elements db)))))
+            (vals (element.h/elements db)))))
 
 (defmethod tools/mouse-move :select
   [db _e el]
   (-> db
-      elements/clear-hovered
-      (elements/hover (:key el))
+      element.h/clear-hovered
+      (element.h/hover (:key el))
       (assoc :cursor (if el "move" "default"))))
 
 (defmethod tools/mouse-down :select
@@ -95,8 +95,8 @@
   [db _e el]
   (if (= (:tag el) :g)
     (-> db
-        (elements/ignore (:key el))
-        (elements/deselect (:key el)))
+        (element.h/ignore (:key el))
+        (element.h/deselect (:key el)))
     (tools/set-tool db :edit)))
 
 (defmethod tools/activate :select
@@ -108,8 +108,8 @@
 (defmethod tools/deactivate :select
   [db]
   (-> db
-      elements/clear-hovered
-      (elements/clear-ignored)))
+      element.h/clear-hovered
+      (element.h/clear-ignored)))
 
 (defn select-rect
   [{:keys [adjusted-pointer-offset
@@ -131,7 +131,7 @@
     (handlers/set-state
      (if-not (-> db :clicked-element :selected?)
        (-> db
-           (elements/select (-> db :clicked-element :key) (mouse/multiselect? e))
+           (element.h/select (-> db :clicked-element :key) (mouse/multiselect? e))
            (history/finalize "Select element"))
        db) :move)))
 
@@ -158,10 +158,10 @@
    |      y          ↖   │
    |      |            ↖ │
    □----------□--------- ■ :bottom-right (active handler)
-   "     
+   "
   [db [x y] lock-ratio? in-place?]
   (let [handler (-> db :clicked-element :key)
-        bounds (elements/bounds db)
+        bounds (element.h/bounds db)
         dimensions (bounds/->dimensions bounds)
         [x1 y1 x2 y2] bounds
         [cx cy] (bounds/center bounds)
@@ -182,7 +182,7 @@
         ratio (mapv #(max 0 %) ratio)]
     (-> db
         (assoc :pivot-point pivot-point)
-        (elements/scale ratio pivot-point))))
+        (element.h/scale ratio pivot-point))))
 
 (defmethod tools/drag :select
   [{:keys [state
@@ -197,18 +197,18 @@
     (-> (case state
           :select
           (-> db
-              (elements/set-temp (select-rect db alt-key?))
-              (elements/clear-hovered)
-              (reduce-by-area (contains? (:modifiers e) :alt) elements/hover))
+              (element.h/set-temp (select-rect db alt-key?))
+              (element.h/clear-hovered)
+              (reduce-by-area (contains? (:modifiers e) :alt) element.h/hover))
 
           :move
           (if alt-key?
             (handlers/set-state db :clone)
-            (elements/translate (history/swap db) offset))
+            (element.h/translate (history/swap db) offset))
 
           :clone
           (if alt-key?
-            (elements/duplicate (history/swap db) offset)
+            (element.h/duplicate (history/swap db) offset)
             (handlers/set-state db :move))
 
           :scale
@@ -223,10 +223,10 @@
 (defmethod tools/drag-end :select
   [{:keys [state adjusted-pointer-offset] :as db} e]
   (-> (case state
-        :select (-> (cond-> db (not (mouse/multiselect? e)) elements/deselect)
+        :select (-> (cond-> db (not (mouse/multiselect? e)) element.h/deselect)
                     (reduce-by-area (contains? (:modifiers e) :alt)
-                                    #(elements/select %1 (:key %2)))
-                    (elements/clear-temp)
+                                    #(element.h/select %1 (:key %2)))
+                    (element.h/clear-temp)
                     (history/finalize "Modify selection"))
         :move (history/finalize db "Move selection by " adjusted-pointer-offset)
         :scale (history/finalize db "Scale selection")

@@ -4,7 +4,7 @@
    [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.element.handlers :as elements]
+   [renderer.element.handlers :as element.h]
    [renderer.handlers :as handlers]
    [renderer.tools.base :as tools]
    [renderer.utils.bounds :as bounds]
@@ -43,9 +43,9 @@
                :y offset-y
                :fill fill}]
     (-> db
-        (elements/create {:type :element
-                          :tag :text
-                          :attrs attrs})
+        (element.h/create {:type :element
+                           :tag :text
+                           :attrs attrs})
         (tools/set-tool :edit)
         (handlers/set-state :create))))
 

@@ -1,7 +1,7 @@
 (ns renderer.tools.image
   "https://www.w3.org/TR/SVG/embedded.html#ImageElement"
   (:require
-   [renderer.element.handlers :as elements]
+   [renderer.element.handlers :as element.h]
    [renderer.tools.base :as tools]))
 
 (derive :image ::tools/graphics)
@@ -23,4 +23,4 @@
                :width (abs (- pos-x offset-x))
                :height (abs (- pos-y offset-y))
                :preserveAspectRatio "xMidYMid slice"}]
-    (elements/set-temp db {:type :element :tag :image :attrs attrs})))
+    (element.h/set-temp db {:type :element :tag :image :attrs attrs})))

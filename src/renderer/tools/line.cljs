@@ -5,7 +5,7 @@
    [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.element.handlers :as elements]
+   [renderer.element.handlers :as element.h]
    [renderer.handlers :as handlers]
    [renderer.history.handlers :as history]
    [renderer.overlay :as overlay]
@@ -34,25 +34,25 @@
                :x2 pos-x
                :y2 pos-y
                :stroke stroke}]
-    (elements/set-temp db {:type :element :tag :line :attrs attrs})))
+    (element.h/set-temp db {:type :element :tag :line :attrs attrs})))
 
 (defn update-line-end
   [{:keys [adjusted-pointer-pos] :as db}]
-  (let [temp (-> (elements/get-temp db)
+  (let [temp (-> (element.h/get-temp db)
                  (assoc-in [:attrs :x2] (first adjusted-pointer-pos))
                  (assoc-in [:attrs :y2] (second adjusted-pointer-pos)))]
-    (elements/set-temp db temp)))
+    (element.h/set-temp db temp)))
 
 (defmethod tools/mouse-move :line
   [db]
   (cond-> db
-    (elements/get-temp db) (update-line-end)))
+    (element.h/get-temp db) (update-line-end)))
 
 (defmethod tools/mouse-up :line
   [db]
-  (if (elements/get-temp db)
+  (if (element.h/get-temp db)
     (-> db
-        elements/create
+        element.h/create
         (history/finalize (str "Create line")))
     (-> db
         (handlers/set-state :create)
@@ -60,7 +60,7 @@
 
 (defmethod tools/mouse-down :line
   [db]
-  (if (elements/get-temp db)
+  (if (element.h/get-temp db)
     (history/finalize db (str "Create line"))
     db))
 

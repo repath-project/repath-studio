@@ -5,7 +5,7 @@
    [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.element.handlers :as elements]
+   [renderer.element.handlers :as element.h]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
    [renderer.utils.units :as units]
@@ -39,9 +39,9 @@
                :stroke stroke
                :rx (if lock-ratio? (min rx ry) rx)
                :ry (if lock-ratio? (min rx ry) ry)}]
-    (elements/set-temp db {:type :element
-                           :tag :ellipse
-                           :attrs attrs})))
+    (element.h/set-temp db {:type :element
+                            :tag :ellipse
+                            :attrs attrs})))
 
 (defmethod tools/translate :ellipse
   [element [x y]] (-> element

@@ -3,7 +3,7 @@
    [clojure.core.matrix :as mat]
    [goog.math]
    [re-frame.core :as rf]
-   [renderer.element.handlers :as elements]
+   [renderer.element.handlers :as element.h]
    [renderer.handlers :as handlers]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
@@ -23,11 +23,11 @@
 
 (defmethod tools/deactivate :measure
   [db]
-  (elements/clear-temp db))
+  (element.h/clear-temp db))
 
 (defmethod tools/mouse-up :measure
   [db]
-  (elements/clear-temp db))
+  (element.h/clear-temp db))
 
 (defmethod tools/drag-end :measure  [db] db)
 
@@ -43,10 +43,10 @@
                :x2 pos-x
                :y2 pos-y
                :stroke "gray"}]
-    (elements/set-temp db {:type :overlay
-                           :tag :measure
-                           :attrs attrs
-                           :hypotenuse hypotenuse})))
+    (element.h/set-temp db {:type :overlay
+                            :tag :measure
+                            :attrs attrs
+                            :hypotenuse hypotenuse})))
 
 (defmethod tools/render :measure
   [{:keys [attrs key hypotenuse]}]

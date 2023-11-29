@@ -2,7 +2,7 @@
   (:require
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    ["@radix-ui/react-select" :as Select]
-   [goog.string :as gstring]
+   [goog.string :as g.str]
    [re-frame.core :as rf]
    [re-frame.registrar]
    [renderer.color.views :as color-v]
@@ -16,9 +16,9 @@
     [:div.flex.flex-col.ml-2.font-mono
      {:style {:min-width "90px"}}
      [:div.flex.justify-between
-      [:span.mr-1 "X:"] [:span (gstring/format "%.2f" x)]]
+      [:span.mr-1 "X:"] [:span (g.str/format "%.2f" x)]]
      [:div.flex.justify-between
-      [:span.mr-1 "Y:"] [:span (gstring/format "%.2f" y)]]]))
+      [:span.mr-1 "Y:"] [:span (g.str/format "%.2f" y)]]]))
 
 (def zoom-menu
   [{:label "Set to 50%"

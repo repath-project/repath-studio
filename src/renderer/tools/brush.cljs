@@ -5,13 +5,13 @@
    ["svg-path-bbox" :as svg-path-bbox]
    [clojure.core.matrix :as mat]
    [goog.math]
-   [renderer.attribute.color :as color]
+   [renderer.attribute.color :as attr.color]
    [renderer.attribute.hierarchy :as attr.hierarchy]
-   [renderer.attribute.range :as range]
-   [renderer.attribute.views :as attr-views]
-   [renderer.element.handlers :as elements]
+   [renderer.attribute.range :as attr.range]
+   [renderer.attribute.views :as attr.v]
+   [renderer.element.handlers :as element.h]
    [renderer.handlers :as handlers]
-   [renderer.history.handlers :as history]
+   [renderer.history.handlers :as history.h]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
    [renderer.utils.mouse :as mouse]
@@ -19,7 +19,7 @@
 
 (derive :brush ::tools/draw)
 
-(derive ::stroke ::color/color)
+(derive ::stroke ::attr.color/color)
 
 (defmethod tools/properties :brush
   []
@@ -37,13 +37,13 @@
 (defonce options
   [::size ::thinning ::smoothing ::streamline])
 
-(derive ::thinning ::range/range)
-(derive ::smoothing ::range/range)
-(derive ::streamline ::range/range)
+(derive ::thinning ::attr.range/range)
+(derive ::smoothing ::attr.range/range)
+(derive ::streamline ::attr.range/range)
 
 (defmethod attr.hierarchy/form-element ::size
   [k v disabled?]
-  [attr-views/range-input k v {:disabled disabled?
+  [attr.v/range-input k v {:disabled disabled?
                                :min 1
                                :max 100
                                :step 1}])
@@ -87,14 +87,14 @@
                  [:documents active-document :temp-element :attrs ::points]
                  conj
                  (conj adjusted-pointer-pos pressure))
-      (elements/set-temp db {:type :element
-                             :tag :brush
-                             :attrs {::points [(conj adjusted-pointer-pos pressure)]
-                                     ::stroke stroke
-                                     ::size 16
-                                     ::thinning 0.5
-                                     ::smoothing 0.5
-                                     ::streamline 0.5}}))))
+      (element.h/set-temp db {:type :element
+                              :tag :brush
+                              :attrs {::points [(conj adjusted-pointer-pos pressure)]
+                                      ::stroke stroke
+                                      ::size 16
+                                      ::thinning 0.5
+                                      ::smoothing 0.5
+                                      ::streamline 0.5}}))))
 
 (defn get-svg-path-from-stroke
   "Turns the points returned by getStroke into SVG path data.
@@ -174,8 +174,8 @@
 (defmethod tools/drag-end :brush
   [db]
   (-> db
-      elements/create
-      (history/finalize (str "Draw line"))))
+      element.h/create
+      (history.h/finalize (str "Draw line"))))
 
 (defmethod tools/path :brush
   [{:keys [attrs]}]

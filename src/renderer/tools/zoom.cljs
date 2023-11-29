@@ -1,6 +1,6 @@
 (ns renderer.tools.zoom
   (:require
-   [renderer.element.handlers :as elements]
+   [renderer.element.handlers :as element.h]
    [renderer.frame.handlers :as frame]
    [renderer.handlers :as handlers]
    [renderer.overlay :as overlay]
@@ -39,10 +39,10 @@
 
 (defmethod tools/drag :zoom
   [{:keys [adjusted-pointer-offset adjusted-pointer-pos active-document] :as db}]
-  (elements/set-temp db (overlay/select-box
-                         adjusted-pointer-pos
-                         adjusted-pointer-offset
-                         (get-in db [:documents active-document :zoom]))))
+  (element.h/set-temp db (overlay/select-box
+                          adjusted-pointer-pos
+                          adjusted-pointer-offset
+                          (get-in db [:documents active-document :zoom]))))
 
 (defmethod tools/drag-end :zoom
   [{:keys [active-document
@@ -59,7 +59,7 @@
         current-zoom (get-in db [:documents active-document :zoom])
         furute-zoom (min width-ratio height-ratio)]
     (-> db
-        elements/clear-temp
+        element.h/clear-temp
         (assoc :cursor "zoom-in")
         (frame/zoom (if (contains? (:modifiers e) :shift)
                       zoom-sensitivity
