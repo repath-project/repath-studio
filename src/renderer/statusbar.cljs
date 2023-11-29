@@ -7,7 +7,8 @@
    [re-frame.registrar]
    [renderer.color.views :as color-v]
    [renderer.components :as comp]
-   [renderer.filters :as filters]))
+   [renderer.filters :as filters]
+   [renderer.utils.keyboard :as keyb]))
 
 (defn coordinates []
   (let [[x y] @(rf/subscribe [:frame/adjusted-pointer-pos])]
@@ -61,6 +62,13 @@
     :active? [:panel/visible? :xml]
     :icon "code"
     :action [:panel/toggle :xml]}])
+
+(defn set-zoom
+  [e v]
+  (let [new-v (-> (.. e -target -value) (js/parseFloat) (/ 100))]
+    (if (js/isNaN new-v)
+      (set! (.. e -target -value) v)
+      (rf/dispatch [:set-zoom new-v]))))
 
 (defn root []
   (let [zoom @(rf/subscribe [:document/zoom])
@@ -122,12 +130,13 @@
         :on-click #(rf/dispatch [:zoom-in])}
        [comp/icon "plus" {:class "small"}]]
 
-      [:input.level-3.text-right.flex
-       {:key zoom
-        :style {:width "90px"}
-        :default-value (str (gstring/format "%.2f" (* 100 zoom)))
-        :on-blur #(let [v (-> (.. % -target -value) (js/parseFloat) (/ 100))]
-                    (when-not (js/isNaN v) (rf/dispatch [:set-zoom v])))}]
+      (let [zoom-formatted (gstring/format "%.2f" (* 100 zoom))]
+        [:input.level-3.text-right.flex
+         {:key zoom
+          :style {:width "90px"}
+          :default-value zoom-formatted
+          :on-blur #(set-zoom % zoom-formatted)
+          :on-key-down #(keyb/input-key-down-handler % zoom-formatted set-zoom % zoom-formatted)}])
       [:div.pr-2.level-3.flex.items-center "%"]
 
       [:> DropdownMenu/Root

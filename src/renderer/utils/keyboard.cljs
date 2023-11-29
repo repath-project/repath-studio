@@ -37,8 +37,8 @@
     (case (.-code e)
       "Enter" (do (apply f e more)
                   (.blur target))
-      "Escape" (do (.blur target)
-                   (set! (.-value target) v))
+      "Escape" (do (set! (.-value target) v)
+                   (.blur target))
       nil)))
 
 (def keydown-rules
