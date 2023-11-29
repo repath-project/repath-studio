@@ -4,7 +4,7 @@
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
    [re-frame.core :as rf]
-   [renderer.attribute.hierarchy :as hierarchy]
+   [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.handlers :as element.h]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
@@ -38,8 +38,8 @@
 
 (defmethod tools/translate :circle
   [element [x y]] (-> element
-                      (hierarchy/update-attr :cx + x)
-                      (hierarchy/update-attr :cy + y)))
+                      (attr.hierarchy/update-attr :cx + x)
+                      (attr.hierarchy/update-attr :cy + y)))
 
 (defmethod tools/scale :circle
   [el ratio pivot-point]
@@ -48,7 +48,7 @@
         offset (mat/sub pivot-point (mat/mul pivot-point ratio))
         ratio (apply min ratio)]
     (-> el
-        (hierarchy/update-attr :r * ratio)
+        (attr.hierarchy/update-attr :r * ratio)
         (tools/translate offset))))
 
 (defmethod tools/bounds :circle
@@ -72,7 +72,7 @@
 (defmethod tools/edit :circle
   [el [x _y] handler]
   (case handler
-    :r (hierarchy/update-attr el :r #(abs (+ % x)))
+    :r (attr.hierarchy/update-attr el :r #(abs (+ % x)))
     el))
 
 (defmethod tools/render-edit :circle
