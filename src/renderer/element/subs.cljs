@@ -105,7 +105,7 @@
                   #(map/merge-common-with (fn [v1 v2] (if (= v1 v2) v1 nil))
                                           %1
                                           (tools/attributes %2))
-                  attrs
+                  (dissoc attrs :id)
                   (rest selected-elements))
 
                  (sort-by (fn [[k _]]
@@ -167,11 +167,11 @@
              (let [[x1 y1 x2 y2] (tools/adjusted-bounds element elements)
                    [cx cy] (bounds/center [x1 y1 x2 y2])]
                (conj points [x1 y1]
-                            [x1 y2]
-                            [x1 cy]
-                            [x2 y1]
-                            [x2 y2]
-                            [x2 cy]
-                            [cx y1]
-                            [cx y2]
-                            [cx cy]))) [] visible-elements)))
+                     [x1 y2]
+                     [x1 cy]
+                     [x2 y1]
+                     [x2 y2]
+                     [x2 cy]
+                     [cx y1]
+                     [cx y2]
+                     [cx cy]))) [] visible-elements)))
