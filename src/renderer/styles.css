@@ -137,13 +137,6 @@ body {
   user-select: none;
   color: var(--font-color);
   fill: var(--font-color);
-
-  .small {
-    svg {
-      width: 13px;
-      height: 13px;
-    }
-  }
 }
 
 ::-webkit-scrollbar {
@@ -288,6 +281,13 @@ pre {
   svg {
     fill: currentColor;
   }
+
+  &.small {
+    svg {
+      width: 13px;
+      height: 13px;
+    }
+  }
 }
 
 .toolbar {
@@ -328,6 +328,11 @@ pre {
     line-height: 22px;
     margin: 0 !important;
     border-radius: 2px !important;
+    
+    svg {
+      width: 13px;
+      height: 13px;
+    }
   }
 }
 
