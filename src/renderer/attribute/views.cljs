@@ -75,7 +75,7 @@
    (when-not (or (empty? (str value)) disabled?)
      [:button.button.ml-px.level-2.text-muted.absolute.right-0.clear-input-button
       {:style {:width "26px" :height "26px"}
-       :on-pointer-down #(rf/dispatch [:element/set-attribute key ""])}
+       :on-pointer-down #(rf/dispatch [:element/remove-attribute key])}
       [comp/icon "times" {:class "small"}]])])
 
 (defmethod hierarchy/form-element :default

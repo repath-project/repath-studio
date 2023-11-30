@@ -156,22 +156,36 @@
   ([db el-k k v]
    (assoc-in db (conj (path db) el-k k) v)))
 
+(defn remove-attribute
+  ([db k]
+   (reduce #(remove-attribute %1 %2 k) db (selected-keys db)))
+  ([db el-k k]
+   (cond-> db
+     (not (:locked? (element db el-k)))
+     (update-property el-k :attrs dissoc k))))
+
+(defn supports-attr?
+  [el k]
+  (-> el tools/attributes k))
+
 (defn set-attribute
   ([db k v]
    (reduce #(set-attribute %1 %2 k v) db (selected-keys db)))
   ([db el-k k v]
-   (let [attr-path (conj (path db) el-k :attrs k)]
-     (cond-> db
-       (and (not (:locked? (element db el-k)))
-            (-> (element db el-k) tools/attributes k))
-       (assoc-in attr-path v)))))
+   (let [attr-path (conj (path db) el-k :attrs k)
+         el (element db el-k)]
+     (if (and (not (:locked? el)) (supports-attr? el k))
+       (if (empty? v)
+         (remove-attribute db el-k k)
+         (assoc-in db attr-path v))
+       db))))
 
 (defn update-attribute
   ([db k f]
    (reduce #(update-attribute %1 %2 k f) db (selected db)))
   ([db el k f]
    (cond-> db
-     (and (not (:locked? el)) (-> el tools/attributes k))
+     (and (not (:locked? el)) (supports-attr? el k))
      (update-el el hierarchy/update-attr k f))))
 
 (defn deselect

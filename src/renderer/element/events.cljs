@@ -56,6 +56,13 @@
        (history.h/finalize "Set " (name k) " to " v))))
 
 (rf/reg-event-db
+ :element/remove-attribute
+ (fn [db [_ k]]
+   (-> db
+       (h/remove-attribute k)
+       (history.h/finalize "Remove " (name k)))))
+
+(rf/reg-event-db
  :element/inc-attribute
  (fn [db [_ k]]
    (-> db
