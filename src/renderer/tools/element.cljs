@@ -3,9 +3,9 @@
    ["react" :as react]
    [re-frame.core :as rf]
    [reagent.core :as ra]
-   [renderer.element.handlers :as element-handlers]
-   [renderer.handlers :as handlers]
-   [renderer.history.handlers :as history]
+   [renderer.element.handlers :as element.h]
+   [renderer.handlers :as h]
+   [renderer.history.handlers :as history.h]
    [renderer.tools.base :as tools]
    [renderer.utils.mouse :as mouse]))
 
@@ -15,18 +15,18 @@
   [db]
   (-> db
       (assoc :cursor "crosshair")
-      (handlers/set-message [:div "Click and drag to create an element."])))
+      (h/set-message [:div "Click and drag to create an element."])))
 
 (defmethod tools/drag-start ::tools/element
   [db]
-  (handlers/set-state db :create))
+  (h/set-state db :create))
 
 (defmethod tools/drag-end ::tools/element
   [db]
   (let [temp-element (get-in db [:documents (:active-document db) :temp-element])]
     (-> db
-        element-handlers/create
-        (history/finalize (str "Create " (name (:tag temp-element))))
+        element.h/create
+        (history.h/finalize (str "Create " (name (:tag temp-element))))
         (assoc :cursor "crosshair"))))
 
 (defn get-bounds
@@ -60,8 +60,8 @@
                (:selected? el))
     (-> db
         (dissoc :clicked-element)
-        (element-handlers/select (:key el) (mouse/multiselect? e))
-        (history/finalize "Select element"))
+        (element.h/select (:key el) (mouse/multiselect? e))
+        (history.h/finalize "Select element"))
     (dissoc db :clicked-element)))
 
 (defn render-to-dom

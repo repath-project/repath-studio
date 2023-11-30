@@ -115,15 +115,15 @@
 (rf/reg-event-db
  :element/raise
  (fn [db _]
-   (-> db 
-       h/raise 
+   (-> db
+       h/raise
        (history.h/finalize "Raise selection"))))
 
 (rf/reg-event-db
  :element/lower
  (fn [db _]
-   (-> db 
-       h/lower 
+   (-> db
+       h/lower
        (history.h/finalize "Lower selection"))))
 
 (rf/reg-event-db
@@ -271,15 +271,15 @@
 (rf/reg-event-db
  :element/group
  (fn [db  _]
-   (-> db 
-       h/group 
+   (-> db
+       h/group
        (history.h/finalize "Group selection"))))
 
 (rf/reg-event-db
  :element/ungroup
  (fn [db  _]
-   (-> db 
-       h/ungroup 
+   (-> db
+       h/ungroup
        (history.h/finalize "Ungroup selection"))))
 
 (rf/reg-event-db
@@ -289,12 +289,12 @@
                                             (h/pages db))
          {:keys [width height fill]} (:attrs (h/active-page db))
          db (h/create db {:tag :page
-                                 :name "Page"
-                                 :attrs {:x (+ x2 100)
-                                         :y y1
-                                         :width width
-                                         :height height
-                                         :fill fill}})]
+                          :name "Page"
+                          :attrs {:x (+ x2 100)
+                                  :y y1
+                                  :width width
+                                  :height height
+                                  :fill fill}})]
      (-> db
          (frame.h/pan-to-element (:key (h/active-page db)))
          (history.h/finalize "Add page")))))

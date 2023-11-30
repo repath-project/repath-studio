@@ -104,7 +104,7 @@
        ["leave-full-screen" "windowLeavedFullscreen"]
        ["minimize" "windowMinimized"]
        ["restore" "windowRestored"]]]
-      (.on ^js @main-window window-event  #(send-to-renderer action)))
+      (.on ^js @main-window window-event #(send-to-renderer action)))
 
     #_(.checkForUpdatesAndNotify updater)))
 

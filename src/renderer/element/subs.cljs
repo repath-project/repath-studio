@@ -128,9 +128,7 @@
  :element/area
  :<- [:element/selected]
  (fn [selected-elements _]
-   (reduce (fn [area element] (+ (tools/area element) area))
-           0
-           selected-elements)))
+   (reduce  #(+ %1 (tools/area %2)) 0 selected-elements)))
 
 (rf/reg-sub
  :element/visible
