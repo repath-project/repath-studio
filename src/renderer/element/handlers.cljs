@@ -94,6 +94,21 @@
        (conj parent-keys parent-key))
       parent-keys)))
 
+(defn index
+  [db el]
+  (if-let [siblings (siblings db el)]
+    (.indexOf siblings (:key el))
+    0))
+
+(defn index-tree
+  "Returns a sequence that represents the index tree of an element.
+   For example, the seventh element of the second page of the canvas
+   will return [0 2 7]. This is useful when we need to sort nested elements."
+  [db el]
+  (let [ancestors (-> db (ancestor-keys el) reverse)]
+    (conj (mapv #(index db %) (elements db ancestors))
+          (index db el))))
+
 (defn descendant-keys
   ([db]
    (reduce #(set/union %1 (descendant-keys db %2)) #{} (selected db)))
@@ -290,11 +305,11 @@
 (defn update-index
   [db el f & more]
   (let [siblings (siblings db el)
-        index (.indexOf siblings (:key el))
-        new-index (f index)]
+        index (index db el)
+        new-index (apply f index more)]
     (cond-> db
       (<= 0 new-index (-> siblings count dec))
-      (update-property (:parent el) :children vec/move index (apply f index more)))))
+      (update-property (:parent el) :children vec/move index new-index))))
 
 (defn raise
   ([db]
@@ -423,12 +438,11 @@
 
 (defn bool-operation
   [db operation]
-  ;; TODO: Sort elements by visibily index
-  (let [selected-elements (selected db)
+  (let [selected-elements (sort-by #(index-tree db %) (selected db))
         attrs (-> selected-elements first tools/->path :attrs)
-        new-path (reduce (fn [path element]
+        new-path (reduce (fn [path el]
                            (let [path-a (Path. path)
-                                 path-b (-> element tools/->path :attrs :d Path.)]
+                                 path-b (-> el tools/->path :attrs :d Path.)]
                              (-> (bool path-a path-b operation)
                                  (.exportSVG)
                                  (.getAttribute "d"))))
@@ -535,12 +549,11 @@
    (cond-> db
      (and (not (:locked? el)) (= (:tag el) :g))
      (as-> db db
-       (let [siblings (siblings db el)
-             index (.indexOf siblings (:key el))]
+       (let [i (index db el)]
          (reduce
           (fn [db el-k]
             (-> db
-                (set-parent-at-index el-k (:parent el) index)
+                (set-parent-at-index el-k (:parent el) i)
                 ;; Group attributes are inherited by its children, 
                 ;; so we need to maintain the presentation attrs.
                 (inherit-attrs el el-k)))
