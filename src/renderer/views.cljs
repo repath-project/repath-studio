@@ -36,8 +36,8 @@
         [:div.flex.flex-col.flex-1
          [:div.mb-px [tools/toolbar]
           (when rulers?
-            [:div.flex.level-2
-             [:div {:style {:width "23px" :height "23px"}}
+            [:div.flex
+             [:div.level-2 {:style {:width "23px" :height "23px"}}
               [comp/toggle-icon-button
                {:active? @(rf/subscribe [:rulers-locked?])
                 :active-icon "lock"
@@ -46,7 +46,7 @@
                 :inactive-text "lock"
                 :class "small"
                 :action #(rf/dispatch [:toggle-rulers-locked])}]]
-             [:div.w-full.ml-px
+             [:div.w-full.ml-px.level-2
               [rulers/ruler {:orientation :horizontal :size 23}]]])]
          [:div.flex.flex-1.relative
           [:<> (when rulers?
