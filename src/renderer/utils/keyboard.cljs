@@ -34,6 +34,7 @@
 (defn input-key-down-handler
   [e v f & more]
   (let [target (.-target e)]
+    (.stopPropagation e)
     (case (.-code e)
       "Enter" (do (apply f e more)
                   (.blur target))

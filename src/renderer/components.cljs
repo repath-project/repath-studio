@@ -48,6 +48,7 @@
            class]}]
   [:button.icon-button {:class class
                         :title (if active? active-text inactive-text)
+                        :on-double-click #(.stopPropagation %)
                         :on-click #(when action
                                      (.stopPropagation %)
                                      (action))}

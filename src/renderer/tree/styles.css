@@ -67,10 +67,13 @@
 }
 
 .list-item-input {
-  flex: 1 1 auto;
+  @apply mr-1;
   padding-left: 0;
+  flex: 1 1 auto;
   background: transparent;
   font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
   
   &::placeholder {
     color: var(--font-color);

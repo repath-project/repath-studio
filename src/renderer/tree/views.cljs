@@ -2,6 +2,7 @@
   (:require
    ["@radix-ui/react-context-menu" :as ContextMenu]
    [re-frame.core :as rf]
+   [reagent.core :as ra]
    [renderer.components :as comp]
    [renderer.utils.keyboard :as keyb]))
 
@@ -34,16 +35,25 @@
   [e k]
   (rf/dispatch [:element/set-property k :name (.. e -target -value)]))
 
-(defn item-input
-  [{:keys [tag name visible? selected? key]}]
-  [:input.list-item-input
-   {:class [(when-not visible? "text-disabled")
-            (when-not selected? "pointer-events-none")]
-    :default-value name
-    :placeholder tag
-    :on-key-down #(keyb/input-key-down-handler % name set-item-name key)
-    :on-double-click #(.stopPropagation %)
-    :on-blur #(set-item-name % key)}])
+(defn label
+  [{:keys [key name visible? tag]}]
+  (ra/with-let [edit-mode? (ra/atom false)]
+    (if @edit-mode?
+      [:input.list-item-input
+       {:default-value name
+        :placeholder tag
+        :auto-focus true
+        :on-key-down #(keyb/input-key-down-handler % name set-item-name key)
+        :on-blur (fn [e]
+                   (reset! edit-mode? false)
+                   (set-item-name e key))}]
+      [:span
+       {:class [(when-not visible? "text-disabled")]
+        :style {:cursor "text"}
+        :on-double-click (fn [e]
+                           (.stopPropagation e)
+                           (reset! edit-mode? true))}
+       (if (empty? name) tag name)])))
 
 (defn list-item-button
   [{:keys [key selected? collapsed? children tag] :as el} depth]
@@ -69,24 +79,23 @@
                           (.setData "key" (name key)))
       :on-drag-enter #(rf/dispatch [:document/set-hovered-keys #{key}])
       :on-drag-over #(.preventDefault %)
-      :on-drop (fn [e]
-                 (.preventDefault e)
-                 (rf/dispatch [:element/set-parent (-> (.-dataTransfer e)
-                                                       (.getData "key")
-                                                       keyword) key]))
+      :on-drop #(let [parent-key (-> (.-dataTransfer %)
+                                     (.getData "key")
+                                     keyword)]
+                  (.preventDefault %)
+                  (rf/dispatch [:element/set-parent parent-key key]))
       :on-click (fn [e]
                   (.stopPropagation e)
                   (rf/dispatch [:element/select key (.-ctrlKey e)]))
       :style {:padding-left (when-not page?
                               (- (* depth collapse-button-width)
                                  (if (seq children) collapse-button-width 0)))}}
-
-     [:<>
+     [:div.flex.items-center.content-between.w-full
       (when (and (seq children) (not page?))
         [comp/toggle-collapsed-button
          collapsed?
          #(rf/dispatch [:element/toggle-property key :collapsed?])])
-      [:<> [item-input el]]
+      [:div.flex-1 [label el]]
       [item-buttons el]]]))
 
 (defn item [{:keys [collapsed? selected? children] :as el} depth elements]

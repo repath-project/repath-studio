@@ -492,13 +492,12 @@
   ([db parent-key]
    (reduce #(set-parent %1 %2 parent-key) db (selected-keys db)))
   ([db element-key parent-key]
-   (cond-> db
-     (not= element-key parent-key)
-     (-> (update-property (:parent (element db element-key))
-                          :children
-                          #(vec (remove #{element-key} %)))
-         (update-property parent-key :children conj element-key)
-         (set-property element-key :parent parent-key)))))
+   (let [el (element db element-key)]
+     (cond-> db
+       (and (not= element-key parent-key) (not (:locked? el)))
+       (-> (update-property (:parent el) :children #(vec (remove #{element-key} %)))
+           (update-property parent-key :children conj element-key)
+           (set-property element-key :parent parent-key))))))
 
 (defn set-parent-at-index
   [db element-key parent-key index]
@@ -534,8 +533,7 @@
    (reduce ungroup db (selected db)))
   ([db el]
    (cond-> db
-     (and (not (:locked? el))
-          (= (:tag el) :g))
+     (and (not (:locked? el)) (= (:tag el) :g))
      (as-> db db
        (let [siblings (siblings db el)
              index (.indexOf siblings (:key el))]
