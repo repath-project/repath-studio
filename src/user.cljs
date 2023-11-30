@@ -250,8 +250,7 @@
 (defn ^:export unite
   "Unites the selected elements."
   []
-  (rf/dispatch [:element/bool-operation :unite])
-  "")
+  (rf/dispatch [:element/bool-operation :unite]))
 
 (defn ^:export ntersect
   "Intersects the selected elements."
