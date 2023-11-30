@@ -9,7 +9,7 @@
    [goog.object]
    [renderer.tools.base :as tools]))
 
-(derive :path ::tools/graphics)
+(derive :path ::tools/shape)
 
 #_(def path-commands {:m "Move To"
                       :l "Line To"
@@ -62,8 +62,8 @@
   [el ratio pivot-point]
   (let [[scale-x scale-y] ratio
         [x y] (tools/bounds el)
-        [x y] (mat/sub (mat/add [x y] 
-                                (mat/sub pivot-point 
+        [x y] (mat/sub (mat/add [x y]
+                                (mat/sub pivot-point
                                          (mat/mul pivot-point ratio)))
                        (mat/mul ratio [x y]))]
     (assoc-in el [:attrs :d] (-> (:attrs el)
