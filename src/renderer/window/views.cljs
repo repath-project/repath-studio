@@ -26,7 +26,9 @@
 
 (defn title-bar []
   (let [title @(rf/subscribe [:document/title])]
-    [:div.title-bar title]))
+    [:div.title-bar
+     [:span title]
+     [:span {:style {:width "250px"}}]]))
 
 (defn app-header []
   (when-not @(rf/subscribe [:window/fullscreen?])
@@ -38,10 +40,9 @@
                 :height "14px"}}]]
      [menubar/root]
      [title-bar]
-     (let [theme-mode @(rf/subscribe [:theme/mode])]
-       [:div.level-2
-        {:class (when-not platform/electron? "mr-1.5")}
-        [comp/icon-button
-         (name theme-mode)
-         {:on-click #(rf/dispatch [:theme/cycle-mode])}]])
+     [:div.level-2
+      {:class (when-not platform/electron? "mr-1.5")}
+      [comp/icon-button
+       (name @(rf/subscribe [:theme/mode]))
+       {:on-click #(rf/dispatch [:theme/cycle-mode])}]]
      (when platform/electron? [window-controls])]))
