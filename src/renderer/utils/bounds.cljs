@@ -19,7 +19,6 @@
   (concat (apply map min (map #(take 2 %) bounds))
           (apply map max (map #(drop 2 %) bounds))))
 
-
 (defn ->dimensions
   "Converts bounds to a [width heigh] vector."
   [[x1 y1 x2 y2]]

@@ -109,6 +109,14 @@
     (conj (mapv #(index db %) (elements db ancestors))
           (index db el))))
 
+#_(defn element-by-index
+    [db index-vec]
+    (loop [element (element db :canvas)
+           i 0]
+      (if (= (count index-vec) i)
+        element
+        (recur (get (:children element) index) (inc i)))))
+
 (defn descendant-keys
   ([db]
    (reduce #(set/union %1 (descendant-keys db %2)) #{} (selected db)))
@@ -121,13 +129,13 @@
         (set/union child-keys children))
        child-keys))))
 
-(defn top-selected-keys
+(defn top-ancestor-keys
   [db]
   (set/difference (selected-keys db) (descendant-keys db)))
 
-(defn top-selected
+(defn top-selected-ancestors
   [db]
-  (elements db (top-selected-keys db)))
+  (elements db (top-ancestor-keys db)))
 
 (defn clear-temp
   [db]
@@ -238,6 +246,29 @@
                 (contains? selected-tags tag)
                 (select key))) (deselect db) (vals (elements db)))))
 
+(defn selected-sorted
+  [db]
+  (->> (selected db)
+       (sort-by #(index-tree db %))))
+
+(defn select-up
+  ([db multi?]
+   (select-up db (last (selected-sorted db)) multi?))
+  ([db el multi?]
+   (let [i (index db el)]
+     (select db (if (= i (dec (count (siblings db el))))
+                  (:parent el)
+                  (get (siblings db el) (inc i))) multi?))))
+
+(defn select-down
+  ([db multi?]
+   (select-down db (first (selected-sorted db)) multi?))
+  ([db el multi?]
+   (let [i (index db el)]
+     (select db (if (zero? i)
+                  (:parent el)
+                  (get (siblings db el) (dec i))) multi?))))
+
 (defn invert-selection
   [db]
   (reduce (fn [db {:keys [key tag]}]
@@ -337,7 +368,7 @@
 
 (defn translate
   ([db offset]
-   (reduce #(translate %1 %2 offset) db (top-selected db)))
+   (reduce #(translate %1 %2 offset) db (top-selected-ancestors db)))
   ([db el offset]
    (cond-> db
      (not (:locked? el))
@@ -438,7 +469,7 @@
 
 (defn bool-operation
   [db operation]
-  (let [selected-elements (sort-by #(index-tree db %) (selected db))
+  (let [selected-elements (selected-sorted db)
         attrs (-> selected-elements first tools/->path :attrs)
         new-path (reduce (fn [path el]
                            (let [path-a (Path. path)

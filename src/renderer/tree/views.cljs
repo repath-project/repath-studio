@@ -113,7 +113,12 @@
         elements-collapsed? @(rf/subscribe [:tree/elements-collapsed?])
         pages-collapsed? @(rf/subscribe [:tree/pages-collapsed?])]
     [:div.flex.flex-col.flex-1.overflow-hidden.level-1.tree-sidebar
-     {:on-pointer-up #(rf/dispatch [:element/deselect-all])}
+     {:on-pointer-up #(rf/dispatch [:element/deselect-all])
+      :on-key-down #(case (.-key %)
+                      "ArrowUp" (rf/dispatch [:element/select-up (.-ctrlKey %)])
+                      "ArrowDown" (rf/dispatch [:element/select-down (.-ctrlKey %)])
+                      "ArrowLeft" (rf/dispatch [:element/collapse])
+                      "ArrowRight" (rf/dispatch [:element/expand]))}
 
      [:div.button.tree-heading
       {:on-click #(rf/dispatch [:tree/toggle-pages-collapsed])}

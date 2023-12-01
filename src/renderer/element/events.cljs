@@ -16,6 +16,20 @@
        (history.h/finalize "Select element"))))
 
 (rf/reg-event-db
+ :element/select-up
+ (fn [db [_ multi?]]
+   (-> db
+       (h/select-up multi?)
+       (history.h/finalize "Select up"))))
+
+(rf/reg-event-db
+ :element/select-down
+ (fn [db [_ multi?]]
+   (-> db
+       (h/select-down multi?)
+       (history.h/finalize "Select down"))))
+
+(rf/reg-event-db
  :element/toggle-property
  (fn [db [_ key property]]
    (-> db
@@ -33,6 +47,20 @@
    (-> db
        (h/set-property el-k k v)
        (history.h/finalize "Set " (name k) " to " v))))
+
+(rf/reg-event-db
+ :element/collapse
+ (fn [db [_]]
+   (-> db
+       (h/set-property :collapsed? true)
+       (history.h/finalize "Collapse"))))
+
+(rf/reg-event-db
+ :element/expand
+ (fn [db [_]]
+   (-> db
+       (h/set-property :collapsed? false)
+       (history.h/finalize "Collapse"))))
 
 (rf/reg-event-db
  :element/lock
