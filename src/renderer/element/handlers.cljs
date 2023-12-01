@@ -433,7 +433,8 @@
 (defn create-element
   [db el]
   (let [key (uuid/generate)
-        parent (if (page? el) :canvas (-> db active-page :key))
+        parent (or (:parent el)
+                   (if (page? el) :canvas (-> db active-page :key)))
         el (map/deep-merge el default-props {:key key :parent parent})
         [x1 y1 _ _] (tools/bounds (active-page db))]
     (cond-> db
