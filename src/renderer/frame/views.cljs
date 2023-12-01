@@ -70,8 +70,7 @@
   (let [ref (react/createRef)]
     (ra/create-class
      {:component-did-mount
-      (fn
-        [_this]
+      (fn [_this]
         (.observe resize-observer (.-current ref))
         (rf/dispatch [:pan-to-active-page :original]))
 
@@ -79,34 +78,35 @@
       #(.disconnect resize-observer)
 
       :reagent-render
-      #(let [canvas @(rf/subscribe [:element/canvas])
-             {:keys [x y]} @(rf/subscribe [:content-rect])
+      (fn []
+        (let [canvas @(rf/subscribe [:element/canvas])
+              {:keys [x y]} @(rf/subscribe [:content-rect])
              ;; This is a different browsing context inside an iframe.
              ;; We need to simulate the events to the parent window.
-             on-keyboard-event (fn [e]
+              on-keyboard-event (fn [e]
                                  ;; TODO: use re-pressed :prevent-default-keys
-                                 (.preventDefault e)
-                                 (.dispatchEvent js/window.parent.document
-                                                 (js/KeyboardEvent. (.-type e)
-                                                                    e)))]
-         [:> Frame {:initialContent (server/render-to-static-markup [markup])
-                    :mountTarget "body"
-                    :on-key-down on-keyboard-event
-                    :on-key-up on-keyboard-event
-                    :id "frame"
-                    :ref ref
-                    :style {:flex "1 1"
-                            :overflow "hidden"
-                            :border 0
-                            :background (-> canvas :attrs :fill)}}
-          [:f> inner-component]
-          [:> ContextMenu/Root
-           [:> ContextMenu/Trigger
-            [tools/render canvas]]
-           [:> ContextMenu/Portal
-            (into [:> ContextMenu/Content
-                   {:class "menu-content context-menu-content"
-                    :style {:margin-left (str x "px")
-                            :margin-top (str y "px")}}]
-                  (map (fn [item] [comp/context-menu-item item])
-                       comp/element-menu))]]])})))
+                                  (.preventDefault e)
+                                  (.dispatchEvent js/window.parent.document
+                                                  (js/KeyboardEvent. (.-type e)
+                                                                     e)))]
+          [:> Frame {:initial-content (server/render-to-static-markup [markup])
+                     :mount-target "body"
+                     :on-key-down on-keyboard-event
+                     :on-key-up on-keyboard-event
+                     :id "frame"
+                     :ref ref
+                     :style {:flex "1 1"
+                             :overflow "hidden"
+                             :border 0
+                             :background (-> canvas :attrs :fill)}}
+           [:f> inner-component]
+           [:> ContextMenu/Root
+            [:> ContextMenu/Trigger
+             [tools/render canvas]]
+            [:> ContextMenu/Portal
+             (into [:> ContextMenu/Content
+                    {:class "menu-content context-menu-content"
+                     :on-close-auto-focus #(.preventDefault %)
+                     :style {:margin-left (str x "px")
+                             :margin-top (str y "px")}}]
+                   (map comp/context-menu-item comp/element-menu))]]]))})))
