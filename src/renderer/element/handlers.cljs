@@ -96,14 +96,14 @@
 
 (defn index
   [db el]
-  (if-let [siblings (siblings db el)]
-    (.indexOf siblings (:key el))
-    0))
+  (when-let [siblings (siblings db el)]
+    (.indexOf siblings (:key el))))
 
 (defn index-tree
   "Returns a sequence that represents the index tree of an element.
-   For example, the seventh element of the second page of the canvas
-   will return [0 2 7]. This is useful when we need to sort nested elements."
+   For example, the seventh element of the second page on the canvas
+   will return [2 7]. This is useful when we need to figure put the index of 
+   nested elements."
   [db el]
   (let [ancestors (-> db (ancestor-keys el) reverse)]
     (conj (mapv #(index db %) (elements db ancestors))
@@ -403,7 +403,8 @@
   [db el]
   (let [key (uuid/generate)
         parent (if (page? el) :canvas (-> db active-page :key))
-        el (map/deep-merge el default-props {:key key :parent parent})]
+        el (map/deep-merge el default-props {:key key :parent parent})
+        [x1 y1 _ _] (tools/bounds (active-page db))]
     (cond-> db
       :always
       (-> (assoc-in (conj (path db) key) el)
@@ -411,6 +412,9 @@
 
       (not= (:tool db) :select)
       (tools/set-tool :select)
+
+      (not (page? el))
+      (translate [(- x1) (- y1)])
 
       (page? el)
       (set-active-page key))))
@@ -421,11 +425,7 @@
        (create (get-temp db))
        clear-temp))
   ([db & elements]
-   ;; TODO: Handle child elements
-   (let [[x1 y1 _ _] (tools/bounds (active-page db))]
-     (reduce #(cond-> (create-element %1 %2)
-                (not (page? %2)) (translate [(- x1) (- y1)]))
-             (deselect db) elements))))
+   (reduce create-element (deselect db) elements))) ; TODO: Handle children
 
 (defn bool
   [path-a path-b operation]
@@ -444,7 +444,7 @@
                            (let [path-a (Path. path)
                                  path-b (-> el tools/->path :attrs :d Path.)]
                              (-> (bool path-a path-b operation)
-                                 (.exportSVG)
+                                 .exportSVG
                                  (.getAttribute "d"))))
                          (:d attrs)
                          (rest selected-elements))]
