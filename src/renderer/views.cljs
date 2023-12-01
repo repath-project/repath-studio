@@ -90,7 +90,7 @@
          [:div.flex.flex-col.mr-px
           {:style {:flex (str "0 0 " @(rf/subscribe [:panel/size :tree]) "px")}}
           [doc/actions]
-          [tree/tree-sidebar]])
+          [tree/root]])
        [comp/resizer :tree :left]
 
        [:div.flex.flex-col.flex-1.overflow-hidden

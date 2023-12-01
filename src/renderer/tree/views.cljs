@@ -4,6 +4,7 @@
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [renderer.components :as comp]
+   [renderer.utils.dom :as dom]
    [renderer.utils.keyboard :as keyb]))
 
 (defn item-buttons
@@ -25,11 +26,6 @@
      :inactive-text "lock"
      :class (when-not locked? "list-item-action")
      :action #(rf/dispatch [:element/toggle-property key :locked?])}]])
-
-(defn scroll-into-view
-  [el]
-  (.scrollIntoView el #js {:behavior "smooth"
-                           :block "nearest"}))
 
 (defn- set-item-name
   [e k]
@@ -69,11 +65,13 @@
               (when hovered? "hovered")
               (when page? "page-item")
               (when active-page? "active")]
+      :tab-index 0
+      :role "menuitem"
       :on-double-click #(rf/dispatch [:pan-to-element key])
       :on-mouse-enter #(rf/dispatch [:document/set-hovered-keys #{key}])
       :ref (fn [this]
              (when (and this selected? hovered? (not multiple-selected?))
-               (scroll-into-view this)))
+               (dom/scroll-into-view this)))
       :draggable true
       :on-drag-start #(-> (.-dataTransfer %)
                           (.setData "key" (name key)))
@@ -84,9 +82,9 @@
                                      keyword)]
                   (.preventDefault %)
                   (rf/dispatch [:element/set-parent parent-key key]))
-      :on-click (fn [e]
-                  (.stopPropagation e)
-                  (rf/dispatch [:element/select key (.-ctrlKey e)]))
+      :on-pointer-up (fn [e]
+                       (.stopPropagation e)
+                       (rf/dispatch [:element/select key (.-ctrlKey e)]))
       :style {:padding-left (when-not page?
                               (- (* depth collapse-button-width)
                                  (if (seq children) collapse-button-width 0)))}}
@@ -107,7 +105,7 @@
              (fn [el] [item el (inc depth) elements])
              (mapv (fn [key] (get elements key)) (reverse children)))])]))
 
-(defn tree-sidebar []
+(defn inner-sidebar []
   (let [page-elements @(rf/subscribe [:element/pages])
         active-page @(rf/subscribe [:element/active-page])
         active-page-children @(rf/subscribe [:element/filter (:children active-page)])
@@ -115,7 +113,7 @@
         elements-collapsed? @(rf/subscribe [:tree/elements-collapsed?])
         pages-collapsed? @(rf/subscribe [:tree/pages-collapsed?])]
     [:div.flex.flex-col.flex-1.overflow-hidden.level-1.tree-sidebar
-     {:on-click #(rf/dispatch [:element/deselect-all])}
+     {:on-pointer-up #(rf/dispatch [:element/deselect-all])}
 
      [:div.button.tree-heading
       {:on-click #(rf/dispatch [:tree/toggle-pages-collapsed])}
@@ -139,17 +137,21 @@
       [:div.flex-1 "Elements"]
       [comp/icon-button "square-minus"]]
 
-     [:> ContextMenu/Root
-      [:> ContextMenu/Trigger {:asChild true}
-       [:div.v-scroll
-        {:style {:flex (if elements-collapsed? 0 1)}}
+     [:div.v-scroll
+      {:style {:flex (if elements-collapsed? 0 1)}}
+      [:div
+       {:on-mouse-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
+       [:ul (map (fn [el] [item el 1 elements])
+                 (reverse active-page-children))]]]]))
 
-        [:div
-         {:on-mouse-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
-         [:ul (map (fn [el] [item el 1 elements])
-                   (reverse active-page-children))]]]]
-      [:> ContextMenu/Portal
-       (into [:> ContextMenu/Content
-              {:class "menu-content context-menu-content"}]
-             (map (fn [item] [comp/context-menu-item item])
-                  comp/element-menu))]]]))
+(defn root
+  []
+  [:> ContextMenu/Root
+   [:> ContextMenu/Trigger {:class "flex h-full"}
+    [inner-sidebar]]
+   [:> ContextMenu/Portal
+    (into [:> ContextMenu/Content
+           {:class "menu-content context-menu-content"
+            :on-close-auto-focus #(.preventDefault %)}]
+          (map (fn [item] [comp/context-menu-item item])
+               comp/element-menu))]])

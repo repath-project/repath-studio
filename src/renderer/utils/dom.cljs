@@ -8,3 +8,8 @@
   []
   (when-let [frame (.getElementById js/document "frame")]
     (.getElementById (.. frame -contentWindow -document) "canvas")))
+
+(defn scroll-into-view
+  [el]
+  (.scrollIntoView el #js {:behavior "smooth"
+                           :block "nearest"}))

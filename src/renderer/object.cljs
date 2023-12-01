@@ -112,7 +112,7 @@
     [:span.h-divider]
     [:> Tooltip/Root
      [:> Tooltip/Trigger
-      {:asChild true}
+      {:as-child true}
       [:span.shadow-4
        [comp/icon-button
         icon
