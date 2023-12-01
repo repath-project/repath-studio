@@ -30,6 +30,7 @@
    [renderer.tree.core]
    [renderer.utils.error :as error]
    [renderer.utils.keyboard :as keyb]
+   [renderer.utils.dom :as dom]
    [renderer.views :as v]
    [renderer.window.core]
    [replumb.repl :as repl]
@@ -53,7 +54,7 @@
 
 (defn ^:dev/after-load mount-root []
   (rf/clear-subscription-cache!)
-  (let [root-el (.getElementById js/document "app")]
+  (let [root-el (dom/root-element)]
     (ra.dom/unmount-component-at-node root-el)
     (ra.dom/render [error/boundary [v/main-panel]] root-el)))
 

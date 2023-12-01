@@ -2,13 +2,23 @@
   (:require
    [clojure.core.matrix :as mat]))
 
+(defn from-bbox
+  "Experimental way of getting the bounds of uknown or complicated elements 
+   using the getBBox method.
+   https://developer.mozilla.org/en-US/docs/Web/API/SVGGraphicsElement/getBBox"
+  [el]
+  (let [bounds (.getBBox el)
+        x1 (.-x bounds)
+        y1 (.-y bounds)
+        x2 (+ x1 (.-width bounds))
+        y2 (+ y1 (.-height bounds))]
+    [x1 y1 x2 y2]))
+
 (defn union
-  "Calculates the union of bounds."
   [& bounds]
   (concat (apply map min (map #(take 2 %) bounds))
           (apply map max (map #(drop 2 %) bounds))))
 
-(apply union [[-100 -100 100 100]] )
 
 (defn ->dimensions
   "Converts bounds to a [width heigh] vector."
@@ -20,8 +30,7 @@
   (let [[x1 y1 _x2 _y2] bounds]
     (mat/add [x1 y1] (mat/div (->dimensions bounds) 2))))
 
-(defn intersect-bounds?
-  "Checks if bounds intersect."
+(defn intersected?
   [a-bounds b-bounds]
   (if (and a-bounds b-bounds)
     (let [[a-left a-top a-right a-bottom] a-bounds
@@ -31,7 +40,7 @@
                (> b-top a-bottom)
                (< b-bottom a-top)))) false))
 
-(defn contain-bounds?
+(defn contained?
   [a-bounds b-bounds]
   (if (and a-bounds b-bounds)
     (let [[a-left a-top a-right a-bottom] a-bounds

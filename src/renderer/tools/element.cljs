@@ -7,6 +7,8 @@
    [renderer.handlers :as h]
    [renderer.history.handlers :as history.h]
    [renderer.tools.base :as tools]
+   [renderer.utils.bounds :as bounds]
+   [renderer.utils.dom :as dom]
    [renderer.utils.mouse :as mouse]))
 
 (derive ::tools/element ::tools/tool)
@@ -29,30 +31,17 @@
         (history.h/finalize (str "Create " (name (:tag temp-element))))
         (assoc :cursor "crosshair"))))
 
-(defn get-bounds
-  "Experimental way of getting the bounds of uknown or complicated elements 
-   using the getBBox method.
-   https://developer.mozilla.org/en-US/docs/Web/API/SVGGraphicsElement/getBBox"
-  [el]
-  (let [bounds (.getBBox el)
-        x1 (.-x bounds)
-        y1 (.-y bounds)
-        x2 (+ x1 (.-width bounds))
-        y2 (+ y1 (.-height bounds))]
-    [x1 y1 x2 y2]))
-
 (defmethod tools/bounds ::tools/element
   [{:keys [tag attrs content]}]
-  (when-let [frame (.getElementById js/document "frame")]
-    (when-let [svg (.getElementById (.. frame -contentWindow -document) "canvas")]
-      (let [element (js/document.createElementNS "http://www.w3.org/2000/svg" (name tag))]
-        (doseq [[k v] attrs]
-          (.setAttributeNS element nil (name k) v))
-        (.appendChild svg element)
-        (set! (.-innerHTML element) (if (empty? content) "\u00a0" content))
-        (let [bounds (get-bounds element)]
-          (.remove element)
-          bounds)))))
+  (when-let [svg (dom/canvas-element)]
+    (let [element (js/document.createElementNS "http://www.w3.org/2000/svg" (name tag))]
+      (doseq [[k v] attrs]
+        (.setAttributeNS element nil (name k) v))
+      (.appendChild svg element)
+      (set! (.-innerHTML element) (if (empty? content) "\u00a0" content))
+      (let [bounds (bounds/from-bbox element)]
+        (.remove element)
+        bounds))))
 
 (defmethod tools/mouse-up :default
   [db e el]
