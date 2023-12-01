@@ -198,7 +198,7 @@
    (let [attr-path (conj (path db) el-k :attrs k)
          el (element db el-k)]
      (if (and (not (:locked? el)) (supports-attr? el k))
-       (if (empty? v)
+       (if (empty? (str v))
          (remove-attribute db el-k k)
          (assoc-in db attr-path v))
        db))))
