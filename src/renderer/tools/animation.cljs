@@ -16,3 +16,5 @@
             ^{:key (:key el)}
             [tools/render el])
           child-elements)]))
+
+(defmethod tools/bounds ::tools/animation [] [])
