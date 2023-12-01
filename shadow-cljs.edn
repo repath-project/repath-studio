@@ -42,7 +42,7 @@
     :devtools
     {:preloads
      [devtools.preload
-      day8.re-frame-10x.preload.react-18]}}
+      day8.re-frame-10x.preload]}}
    :release
    {:build-options
     {:ns-aliases
