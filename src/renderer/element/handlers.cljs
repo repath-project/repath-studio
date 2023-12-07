@@ -435,8 +435,7 @@
   (let [key (uuid/generate)
         parent (or (:parent el)
                    (if (page? el) :canvas (-> db active-page :key)))
-        el (map/deep-merge el default-props {:key key :parent parent})
-        [x1 y1 _ _] (tools/bounds (active-page db))]
+        el (map/deep-merge el default-props {:key key :parent parent})]
     (cond-> db
       :always
       (-> (assoc-in (conj (path db) key) el)
@@ -444,9 +443,6 @@
 
       (not= (:tool db) :select)
       (tools/set-tool :select)
-
-      (not (page? el))
-      (translate [(- x1) (- y1)])
 
       (page? el)
       (set-active-page key))))
