@@ -10,7 +10,6 @@
   "Moves the selected elements."
   ([offset]
    (rf/dispatch [:element/translate offset]))
-
   ([x y]
    (translate [x y])))
 
@@ -77,10 +76,8 @@
   "Creates a line."
   ([[[x1 y1] [x2 y2]]]
    (line [x1 y1] [x2 y2] {:stroke "#000000"}))
-
   ([[x1 y1] [x2 y2]]
    (line [x1 y1] [x2 y2] {:stroke "#000000"}))
-
   ([[x1 y1] [x2 y2] attrs]
    (create {:line (merge {:x1 x1 :y1 y1 :x2 x2 :y2 y2} attrs)})))
 
@@ -88,7 +85,6 @@
   "Creates a polygon."
   ([points]
    (polygon points {:stroke "#000000"}))
-
   ([points attrs]
    (create {:polygon (merge {:points (str/join " " (flatten points))} attrs)})))
 
@@ -96,7 +92,6 @@
   "Creates a polyline."
   ([points]
    (polyline points {:stroke "#000000"}))
-
   ([points attrs]
    (create {:polyline (merge {:points (str/join " " (flatten points))} attrs)})))
 
@@ -104,7 +99,6 @@
   "Creates a path"
   ([path-commands]
    (path path-commands {:stroke "#000000"}))
-
   ([path-commands attrs]
    (create {:path (merge {:d (str/join " " (flatten path-commands))} attrs)})))
 
@@ -112,7 +106,6 @@
   "Creates an image"
   ([[x y] width height href]
    (image [x y] width height href nil))
-
   ([[x y] width height href attrs]
    (create {:image (merge {:x x :y y :width width :height height :href href} attrs)})))
 
@@ -224,10 +217,8 @@
   "Animates the selected elements."
   ([]
    (animate {}))
-
   ([attrs]
    (animate :animate attrs))
-
   ([tag attrs]
    (rf/dispatch [:element/animate tag attrs])))
 
@@ -235,7 +226,6 @@
   "Goes back in history."
   ([]
    (rf/dispatch [:history/undo]))
-
   ([steps]
    (rf/dispatch [:history/undo-by steps])))
 
@@ -243,7 +233,6 @@
   "Goes forward in history."
   ([]
    (rf/dispatch [:history/redo]))
-
   ([steps]
    (rf/dispatch [:history/redo-by steps])))
 

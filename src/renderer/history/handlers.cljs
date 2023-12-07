@@ -87,8 +87,9 @@
 
 (defn finalize
   "Pushes changes to the zip-tree.
-   Explicitly adding states, allows canceling actions before adding the result to the history.
-   We also avoid the need of throttling in consecutive actions (move, color pick etc)"
+   Explicitly adding states, allows canceling actions before adding the state 
+   to history. We also avoid the need of throttling in consecutive actions 
+   (move, color pick etc)"
   [db explanation & more]
   (let [explanation (apply str explanation more)
         state (state db explanation)
