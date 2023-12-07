@@ -37,7 +37,6 @@
      (-> (tools/set-tool :select)
          (assoc :state :default))
 
-     (:pointer-offset db) (dissoc :pointer-offset)
-
-     :always (-> element.h/clear-temp
+     :always (-> (dissoc :pointer-offset)
+                 element.h/clear-temp
                  h/swap))))

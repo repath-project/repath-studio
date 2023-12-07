@@ -44,12 +44,20 @@
                    (reset! edit-mode? false)
                    (set-item-name e key))}]
       [:span
-       {:class [(when-not visible? "text-disabled")]
+       {:class (when-not visible? "text-disabled")
         :style {:cursor "text"}
         :on-double-click (fn [e]
                            (.stopPropagation e)
                            (reset! edit-mode? true))}
        (if (empty? name) tag name)])))
+
+(defn drop-handler
+  [e k]
+  (let [parent-key (-> (.-dataTransfer e)
+                       (.getData "key")
+                       keyword)]
+    (.preventDefault e)
+    (rf/dispatch [:element/set-parent parent-key k])))
 
 (defn list-item-button
   [{:keys [key selected? collapsed? children tag] :as el} depth]
@@ -77,11 +85,7 @@
                           (.setData "key" (name key)))
       :on-drag-enter #(rf/dispatch [:document/set-hovered-keys #{key}])
       :on-drag-over #(.preventDefault %)
-      :on-drop #(let [parent-key (-> (.-dataTransfer %)
-                                     (.getData "key")
-                                     keyword)]
-                  (.preventDefault %)
-                  (rf/dispatch [:element/set-parent parent-key key]))
+      :on-drop #(drop-handler % key)
       :on-pointer-up (fn [e]
                        (.stopPropagation e)
                        (rf/dispatch [:element/select key (.-ctrlKey e)]))
@@ -101,9 +105,17 @@
     [:li {:class (when selected? "level-2")}
      [list-item-button el depth]
      (when (and has-children? (not collapsed?))
-       [:ul (map
-             (fn [el] [item el (inc depth) elements])
-             (mapv (fn [key] (get elements key)) (reverse children)))])]))
+       [:ul (map (fn [el] [item el (inc depth) elements])
+                 (mapv (fn [key] (get elements key)) (reverse children)))])]))
+
+(defn key-down-handler
+  [e]
+  (let [ctrl? (.-ctrlKey e)]
+    (case (.-key e)
+    "ArrowUp" (rf/dispatch [:element/select-up ctrl?])
+    "ArrowDown" (rf/dispatch [:element/select-down ctrl?])
+    "ArrowLeft" (rf/dispatch [:element/collapse])
+    "ArrowRight" (rf/dispatch [:element/expand]))))
 
 (defn inner-sidebar []
   (let [page-elements @(rf/subscribe [:element/pages])
@@ -114,11 +126,7 @@
         pages-collapsed? @(rf/subscribe [:tree/pages-collapsed?])]
     [:div.flex.flex-col.flex-1.overflow-hidden.level-1.tree-sidebar
      {:on-pointer-up #(rf/dispatch [:element/deselect-all])
-      :on-key-down #(case (.-key %)
-                      "ArrowUp" (rf/dispatch [:element/select-up (.-ctrlKey %)])
-                      "ArrowDown" (rf/dispatch [:element/select-down (.-ctrlKey %)])
-                      "ArrowLeft" (rf/dispatch [:element/collapse])
-                      "ArrowRight" (rf/dispatch [:element/expand]))}
+      :on-key-down key-down-handler}
 
      [:div.button.tree-heading
       {:on-click #(rf/dispatch [:tree/toggle-pages-collapsed])}
