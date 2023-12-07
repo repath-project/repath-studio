@@ -14,8 +14,8 @@
 (def opts {:dict dictionary})
 
 (defn t
-  "Custom translation fn. 
+  "Custom translation function. 
    Should be called in a reactive context."
-  [resource-ids]
+  [& more]
   (let [lang @(rf/subscribe [:lang])]
-    (tr opts [lang] resource-ids)))
+    (apply tr opts [lang] more)))
