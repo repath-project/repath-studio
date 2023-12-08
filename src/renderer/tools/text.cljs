@@ -103,7 +103,8 @@
                                              (str/replace (.. e -target -value)
                                                           " "
                                                           "\u00a0")]))))
-       :style {:color fill
+       :style {:color "transparent"
+               :caret-color fill
                :display "block"
                :width (+ width 15)
                :height height
