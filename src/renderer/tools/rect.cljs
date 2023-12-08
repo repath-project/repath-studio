@@ -9,7 +9,7 @@
 
 (defmethod tools/properties :rect
   []
-  {:icon "rectangle"
+  {:icon "rectangle-alt"
    :description "The <rect> element is a basic SVG shape that draws rectangles, 
                  defined by their position, width, and height. The rectangles 
                  may have their corners rounded."

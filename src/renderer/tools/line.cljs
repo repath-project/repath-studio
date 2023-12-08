@@ -16,7 +16,7 @@
 (derive :line ::tools/shape)
 
 (defmethod tools/properties :line
-  [] {:icon "line"
+  [] {:icon "line-alt"
       :description "The <line> element is an SVG basic shape used to create 
                     a line connecting two points."
       :attrs [:stroke-width
@@ -69,11 +69,12 @@
   (create-line db))
 
 (defmethod tools/translate :line
-  [el [x y]] (-> el
-                 (hierarchy/update-attr :x1 + x)
-                 (hierarchy/update-attr :y1 + y)
-                 (hierarchy/update-attr :x2 + x)
-                 (hierarchy/update-attr :y2 + y)))
+  [el [x y]]
+  (-> el
+      (hierarchy/update-attr :x1 + x)
+      (hierarchy/update-attr :y1 + y)
+      (hierarchy/update-attr :x2 + x)
+      (hierarchy/update-attr :y2 + y)))
 
 (defmethod tools/scale :line
   [el ratio pivot-point]

@@ -15,7 +15,7 @@
 
 (defmethod tools/properties :ellipse
   []
-  {:icon "ellipse"
+  {:icon "ellipse-alt"
    :description "The <ellipse> element is an SVG basic shape, used to create 
                  ellipses based on a center coordinate, and both their x and 
                  y radius."
