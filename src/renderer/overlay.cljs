@@ -143,20 +143,33 @@
   [square-handler (merge attrs {:type :handler
                                 :tag :scale})])
 
+(defn min-bounds
+  [bounds]
+  (let [zoom @(rf/subscribe [:document/zoom])
+        dimensions (bounds/->dimensions bounds)
+        [w h] dimensions
+        min-size (/ 20 zoom)]
+    (cond-> bounds
+      (< w min-size) (mat/add [(- (/ (- min-size w) 2)) 0
+                               (/ (- min-size w) 2) 0])
+      (< h min-size) (mat/add [0 (- (/ (- min-size h) 2))
+                               0 (/ (- min-size h) 2)]))))
+
 (defn bounding-handlers
   [bounds]
-  (let [[x1 y1 x2 y2] bounds
-        [width height] (bounds/->dimensions bounds)]
+  (let [bounds (min-bounds bounds)
+        [x1 y1 x2 y2] bounds
+        [w h] (bounds/->dimensions bounds)]
     [:g {:key :bounding-handlers}
      (map (fn [handler] [scale-handler handler])
           [{:x x1 :y y1 :key :top-left}
            {:x x2 :y y1 :key :top-right}
            {:x x1 :y y2 :key :bottom-left}
            {:x x2 :y y2 :key :bottom-right}
-           {:x (+ x1 (/ width 2)) :y y1 :key :top-middle}
-           {:x x2 :y (+ y1 (/ height 2)) :key :middle-right}
-           {:x x1 :y (+ y1 (/ height 2)) :key :middle-left}
-           {:x (+ x1 (/ width 2)) :y y2 :key :bottom-middle}])]))
+           {:x (+ x1 (/ w 2)) :y y1 :key :top-middle}
+           {:x x2 :y (+ y1 (/ h 2)) :key :middle-right}
+           {:x x1 :y (+ y1 (/ h 2)) :key :middle-left}
+           {:x (+ x1 (/ w 2)) :y y2 :key :bottom-middle}])]))
 
 (defn label
   [text position anchor]
@@ -190,6 +203,7 @@
 (defn size
   [bounds]
   (let [zoom @(rf/subscribe [:document/zoom])
+        bounds (min-bounds bounds)
         [x1 _ x2 y2] bounds
         x (+ x1 (/ (- x2 x1) 2))
         y (+ y2 (/ 20 zoom))
@@ -247,6 +261,7 @@
   [area bounds]
   (when area
     (let [zoom @(rf/subscribe [:document/zoom])
+          bounds (min-bounds bounds)
           [x1 y1 x2 _y2] bounds
           x (+ x1 (/ (- x2 x1) 2))
           y (+ y1 (/ -20 zoom))

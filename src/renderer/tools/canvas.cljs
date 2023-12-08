@@ -71,10 +71,7 @@
                          [overlay/point-of-interest snapping-point])
                        snapping-points)))
 
-     (when (and select? pivot-point)
-       [overlay/times pivot-point])
-
-     (when (and select? (contains? #{:default :select} state))
+     (when (and select? (contains? #{:default :select :scale} state))
        [:<>
         (map (fn [el]
                ^{:key (str (:key el) "-bounds")}
@@ -83,10 +80,14 @@
 
         (when (> elements-area 0)
           [overlay/area elements-area bounds])
+        
         (when (not-empty (filter (comp not zero?) bounds))
           [:<>
            [overlay/size bounds]
-           [overlay/bounding-handlers bounds]])])
+           [overlay/bounding-handlers bounds]])
+
+        (when (and select? pivot-point)
+          [overlay/times pivot-point])])
 
      (when (or (= tool :edit)
                (= primary-tool :edit))
