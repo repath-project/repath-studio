@@ -23,6 +23,7 @@
            :font-size
            :font-weight
            :font-style
+           :fill
            :stroke
            :stroke-width
            :opacity]})
@@ -36,12 +37,10 @@
         [:div "Click to enter your text."]])))
 
 (defmethod tools/mouse-up :text
-  [{:keys [adjusted-pointer-offset active-document] :as db}]
-  (let [fill (get-in db [:documents active-document :fill])
-        [offset-x offset-y] adjusted-pointer-offset
+  [{:keys [adjusted-pointer-offset] :as db}]
+  (let [[offset-x offset-y] adjusted-pointer-offset
         attrs {:x offset-x
-               :y offset-y
-               :fill fill}]
+               :y offset-y}]
     (-> db
         (element.h/set-temp  {:type :element
                               :tag :text
