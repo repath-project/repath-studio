@@ -43,9 +43,10 @@
                :y offset-y
                :fill fill}]
     (-> db
-        (element.h/create {:type :element
-                           :tag :text
-                           :attrs attrs})
+        (element.h/set-temp  {:type :element
+                              :tag :text
+                              :attrs attrs})
+        element.h/create
         (tools/set-tool :edit)
         (handlers/set-state :create))))
 
