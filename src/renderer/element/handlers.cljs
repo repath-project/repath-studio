@@ -449,9 +449,11 @@
 
 (defn create
   ([db]
-   (-> db
-       (create (get-temp db))
-       clear-temp))
+   (let [[x1 y1 _ _] (tools/bounds (active-page db))]
+     (cond-> db
+         :always (create (get-temp db))
+         (not (page? (get-temp db))) (translate [(- x1) (- y1)])
+         :always clear-temp)))
   ([db & elements]
    (reduce create-element (deselect db) elements))) ; TODO: Handle children
 

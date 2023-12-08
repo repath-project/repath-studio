@@ -48,7 +48,7 @@
 (defmulti bounds #(:tag %))
 (defmulti translate #(:tag %))
 (defmulti scale #(:tag %))
-(defmulti edit #(when-not (:locked? %) (:tag %)))
+(defmulti edit #(:tag %))
 
 (defmulti mouse-down #(:tool %))
 (defmulti mouse-move #(:tool %))
