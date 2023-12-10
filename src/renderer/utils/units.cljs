@@ -60,21 +60,21 @@
       n
       (if (valid-unit? unit) (->px n unit) 0))))
 
+(defn ->fixed
+  ([v]
+   (->fixed v 2))
+  ([v digits]
+   (-> v
+       js/parseFloat
+       (.toFixed digits))))
+
+
 (defn transform
   "Converts a value to pixels, applies a function and converts the result 
    back to the original unit."
   [v f & more]
   (let [[n unit] (parse-unit v)]
     (-> (apply f (->px n unit) more)
-        js/parseFloat
-        (.toFixed 2)
+        ->fixed
         (->unit unit)
         (str (when (valid-unit? unit) unit)))))
-
-(defn ->fixed
-  ([v]
-   (->fixed v 2))
-  ([v digits]
-   (-> v
-       (.toFixed digits)
-       js/parseFloat)))
