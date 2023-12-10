@@ -16,7 +16,7 @@
 
 (defmethod tools/properties :select
   []
-  {:icon "pointer"})
+  {:icon "pointer-alt"})
 
 (defmulti message (fn [_offset state] state))
 
