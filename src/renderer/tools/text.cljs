@@ -104,7 +104,7 @@
                                                           " "
                                                           "\u00a0")]))))
        :style {:color "transparent"
-               :caret-color fill
+               :caret-color (or fill "black")
                :display "block"
                :width (+ width 15)
                :height height
