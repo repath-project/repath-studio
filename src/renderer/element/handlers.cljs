@@ -107,8 +107,8 @@
   (when-let [siblings (siblings db el)]
     (.indexOf siblings (:key el))))
 
-(defn index-tree
-  "Returns a sequence that represents the index tree of an element.
+(defn index-tree-path
+  "Returns a sequence that represents the index tree path of an element.
    For example, the seventh element of the second page on the canvas
    will return [2 7]. This is useful when we need to figure put the index of 
    nested elements."
@@ -257,7 +257,7 @@
 (defn selected-sorted
   [db]
   (->> (selected db)
-       (sort-by #(index-tree db %))))
+       (sort-by #(index-tree-path db %))))
 
 (defn select-up
   ([db multi?]
