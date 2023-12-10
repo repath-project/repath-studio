@@ -16,6 +16,9 @@
 (def stroke-inverted "#fff")
 (def accent "#e93976")
 
+(def handler-size 10)
+(def dash-size 5)
+
 (defn point-of-interest
   "Simple dot used for debugging purposes."
   [[x y] & children]
@@ -49,29 +52,31 @@
 (defn square-handler
   [{:keys [x y key] :as el} & children]
   (let [zoom @(rf/subscribe [:document/zoom])
+        state @(rf/subscribe [:state])
         clicked-element @(rf/subscribe [:clicked-element])
         hovered-keys @(rf/subscribe [:document/hovered-keys])
-        size (/ 10 zoom)
+        size (/ handler-size zoom)
         stroke-width (/ 1 zoom)
-        mouse-handler #(mouse/event-handler % el)]
-    [:rect {:key key
-            :id (name key)
-            :fill (if (or (= (:key clicked-element) key)
-                          (contains? hovered-keys key))
-                    accent
-                    stroke-inverted)
-            :stroke stroke
-            :stroke-width stroke-width
-            :x (- x (/ size 2))
-            :y (- y (/ size 2))
-            :shape-rendering "crispEdges"
-            :width size
-            :height size
-            :cursor "default"
-            :on-pointer-up mouse-handler
-            :on-pointer-down mouse-handler
-            :on-pointer-move mouse-handler
-            :on-scroll mouse-handler} children]))
+        mouse-handler #(mouse/event-handler % el)
+        clicked? (= (:key clicked-element) key)]
+    (when (or clicked? (not= state :scale))
+      [:rect {:key key
+              :id (name key)
+              :fill (if (or clicked? (contains? hovered-keys key))
+                      accent
+                      stroke-inverted)
+              :stroke stroke
+              :stroke-width stroke-width
+              :x (- x (/ size 2))
+              :y (- y (/ size 2))
+              :shape-rendering "crispEdges"
+              :width size
+              :height size
+              :cursor "default"
+              :on-pointer-up mouse-handler
+              :on-pointer-down mouse-handler
+              :on-pointer-move mouse-handler
+              :on-scroll mouse-handler} children])))
 
 (defn line
   ([x1 y1 x2 y2]
@@ -97,7 +102,7 @@
    (cross x y))
   ([x y]
    (let [zoom @(rf/subscribe [:document/zoom])
-         size (/ 10 zoom)]
+         size (/ handler-size zoom)]
      [:g
       [line (- x (/ size 2)) y (+ x (/ size 2)) y false]
       [line x (- y (/ size 2)) x (+ y (/ size 2)) false]])))
@@ -108,7 +113,7 @@
         stroke-width (/ 1 zoom)
         radius (/ radius zoom)
         end-degrees (+ start-degrees size-degrees)
-        stroke-dasharray (/ 5 zoom)
+        stroke-dasharray (/ dash-size zoom)
         x1 (+ x (goog.math/angleDx start-degrees radius))
         y1 (+ y (goog.math/angleDy start-degrees radius))
         x2 (+ x (goog.math/angleDx end-degrees radius))
@@ -128,7 +133,7 @@
    (times x y))
   ([x y]
    (let [zoom @(rf/subscribe [:document/zoom])
-         size (/ 10 zoom)
+         size (/ handler-size zoom)
          mid (/ size 2)]
      [:g
       [line
@@ -148,7 +153,7 @@
   (let [zoom @(rf/subscribe [:document/zoom])
         dimensions (bounds/->dimensions bounds)
         [w h] dimensions
-        min-size (/ 20 zoom)]
+        min-size (/ (* handler-size 2) zoom)]
     (cond-> bounds
       (< w min-size) (mat/add [(- (/ (- min-size w) 2)) 0
                                (/ (- min-size w) 2) 0])
@@ -206,7 +211,7 @@
         bounds (min-bounds bounds)
         [x1 _ x2 y2] bounds
         x (+ x1 (/ (- x2 x1) 2))
-        y (+ y2 (/ 20 zoom))
+        y (+ y2 (/ (+ (/ handler-size 2) 15) zoom))
         [width height] (bounds/->dimensions bounds)
         text (str (units/->fixed width) " x " (units/->fixed height))]
     [label text [x y]]))
@@ -217,7 +222,7 @@
         [x1 y1 _x2 _y2] bounds
         [width height] (bounds/->dimensions bounds)
         stroke-width (/ 1 zoom)
-        stroke-dasharray (/ 5 zoom)
+        stroke-dasharray (/ dash-size zoom)
         attrs {:x x1
                :y y1
                :width width
@@ -264,6 +269,6 @@
           bounds (min-bounds bounds)
           [x1 y1 x2 _y2] bounds
           x (+ x1 (/ (- x2 x1) 2))
-          y (+ y1 (/ -20 zoom))
+          y (+ y1 (/ (- -15 (/ handler-size 2)) zoom))
           text (str (units/->fixed area) " px²")]
       [label text [x y]])))
