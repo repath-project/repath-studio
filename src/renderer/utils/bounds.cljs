@@ -31,23 +31,23 @@
 
 (defn intersected?
   [a-bounds b-bounds]
-  (if (and a-bounds b-bounds)
+  (when (and a-bounds b-bounds)
     (let [[a-left a-top a-right a-bottom] a-bounds
           [b-left b-top b-right b-bottom] b-bounds]
       (not (or (> b-left a-right)
                (< b-right a-left)
                (> b-top a-bottom)
-               (< b-bottom a-top)))) false))
+               (< b-bottom a-top))))))
 
 (defn contained?
   [a-bounds b-bounds]
-  (if (and a-bounds b-bounds)
+  (when (and a-bounds b-bounds)
     (let [[a-left a-top a-right a-bottom] a-bounds
           [b-left b-top b-right b-bottom] b-bounds]
       (and (> a-left b-left)
            (> a-top b-top)
            (< a-right b-right)
-           (< a-bottom b-bottom))) false))
+           (< a-bottom b-bottom)))))
 
 (defn contain-point?
   [[left top right bottom] [x y]]

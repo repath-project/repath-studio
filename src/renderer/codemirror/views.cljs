@@ -20,6 +20,17 @@
    :autoCloseBrackets true
    :mode "css"})
 
+(defn on-render-line
+  "Line up wrapped text with the base indentation.
+   https://codemirror.net/demo/indentwrap.html"
+  [editor line el]
+  (let [off (* (.countColumn codemirror (.-text line) nil (.getOption editor "tabSize"))
+               (.defaultCharWidth editor))]
+    (set! (.. el -style -textIndent)
+          (str "-" off "px"))
+    (set! (.. el -style -paddingLeft)
+          (str (+ 4 off) "px"))))
+
 (defn editor
   [value {:keys [style options on-init on-blur]}]
   (let [cm (ra/atom nil)
@@ -29,32 +40,15 @@
       (fn [_this]
         (let [el (.-current ref)
               options (clj->js (merge default-options options))]
-
           (reset! cm (.fromTextArea codemirror el options))
-
           (.setValue @cm value)
-
-          ;; Line up wrapped text with the base indentation.
-          ;; https://codemirror.net/demo/indentwrap.html
-          (.on @cm "renderLine" (fn [editor line elt]
-                                  (let [off (* (.countColumn codemirror (.-text line) nil (.getOption editor "tabSize"))
-                                               (.defaultCharWidth @cm))]
-                                    (set! (.. elt -style -textIndent)
-                                          (str "-" off "px"))
-                                    (set! (.. elt -style -paddingLeft)
-                                          (str (+ 4 off) "px")))))
-
+          (.on @cm "renderLine" on-render-line)
           (.refresh @cm)
-
-          (when on-blur
-            (.on @cm "blur" #(on-blur (.getValue %))))
-
-          (when on-init
-            (on-init @cm))))
+          (when on-blur (.on @cm "blur" #(on-blur (.getValue %))))
+          (when on-init (on-init @cm))))
 
       :component-will-unmount
-      (fn []
-        (when @cm (reset! cm nil)))
+      #(when @cm (reset! cm nil))
 
       :component-did-update
       (fn [this _]
