@@ -161,7 +161,6 @@
                   0
                   vertices) 2)))
 
-
 (defmethod tools/area ::tools/polyshape
   [{{:keys [points]} :attrs}]
   (let [points-v (attr.utils/points->px points)]

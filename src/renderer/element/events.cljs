@@ -277,7 +277,7 @@
 (rf/reg-event-db
  :element/bool-operation
  (fn [db  [_ operation]]
-   (if (> (count (h/selected db)) 1)
+   (if (seq (rest (h/selected db)))
      (-> db
          (h/bool-operation operation)
          (history.h/finalize (-> operation name str/capitalize))) db)))

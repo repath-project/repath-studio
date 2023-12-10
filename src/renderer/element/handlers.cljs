@@ -45,6 +45,18 @@
   [db]
   (into #{} (map :key (selected db))))
 
+(defn single? [coll]
+  (and (seq coll)
+       (empty? (rest coll))))
+
+(defn siblings-selected?
+  [db]
+  (let [selected (selected db)
+        parents (into #{} (map :parent selected))]
+    (and (single? parents)
+         (= (count selected)
+            (count (:children (element db (first parents))))))))
+
 (defn parent
   ([db]
    (let [selected (selected db)]
@@ -52,15 +64,11 @@
        (empty? selected)
        (active-page db)
 
-       (let [parents (into #{} (map :parent selected))]
-         (and (first parents)
-              (empty? (rest parents))
-              (= (count selected)
-                 (count (:children (element db (first parents)))))))
+       (siblings-selected? db)
        (or (parent db (parent db (first selected)))
            (active-page db))
 
-       (= (count selected) 1)
+       (single? selected)
        (or (parent db (first selected))
            (active-page db))
 
