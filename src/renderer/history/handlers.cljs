@@ -19,8 +19,8 @@
 (defn state
   [db explanation]
   (with-meta (element.h/elements db) {:explanation explanation
-                                     :date (.now js/Date)
-                                     :index (step-count db)}))
+                                      :date (.now js/Date)
+                                      :index (step-count db)}))
 
 (defn init
   "Creates the vector zipper and moves down to the first position."

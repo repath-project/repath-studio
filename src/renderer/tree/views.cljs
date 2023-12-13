@@ -59,6 +59,12 @@
     (.preventDefault e)
     (rf/dispatch [:element/set-parent parent-key k])))
 
+(defn padding
+  [depth children?]
+  (let [collapse-button-width 22]
+    (- (* depth collapse-button-width)
+       (if children? collapse-button-width 0))))
+
 (defn list-item-button
   [{:keys [key selected? collapsed? children tag] :as el} depth]
   (let [hovered-keys @(rf/subscribe [:document/hovered-keys])
@@ -66,8 +72,7 @@
         page? (= tag :page)
         active-page @(rf/subscribe [:element/active-page])
         active-page? (and page? (= (:key el) (:key active-page)))
-        multiple-selected? @(rf/subscribe [:element/multiple-selected?])
-        collapse-button-width 22]
+        multiple-selected? @(rf/subscribe [:element/multiple-selected?])]
     [:div.flex.button.list-item-button
      {:class [(when selected? "selected")
               (when hovered? "hovered")
@@ -89,9 +94,7 @@
       :on-pointer-up (fn [e]
                        (.stopPropagation e)
                        (rf/dispatch [:element/select key (.-ctrlKey e)]))
-      :style {:padding-left (when-not page?
-                              (- (* depth collapse-button-width)
-                                 (if (seq children) collapse-button-width 0)))}}
+      :style {:padding-left (when-not page? (padding depth (seq children)))}}
      [:div.flex.items-center.content-between.w-full
       (when (and (seq children) (not page?))
         [comp/toggle-collapsed-button

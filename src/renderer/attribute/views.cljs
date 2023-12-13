@@ -23,33 +23,44 @@
      nil [:div.support-cell.warning "?"]
      [:div.support-cell.success (str "≥" version-added)])])
 
+(defn browser-compatibility
+  [support-data]
+  [:<>
+   [:h4.font-bold.mb-1 "Browser compatibility"]
+   [:div.flex.mb-4
+    (map (fn [[browser {:keys [version_added]}]]
+           ^{:key browser}
+           [browser-support browser version_added]) support-data)]])
+
+(defn mdn-button
+  [mdn_url attr]
+  [:button.button.px-3.level-2.grow
+   {:on-click #(rf/dispatch
+                [:window/open-remote-url
+                 (or mdn_url
+                     (str "https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/"
+                          (name attr)))])} "Learn more"])
+
+(defn spec-button
+  [url]
+  [:button.button.px-3.grow
+   {:on-click #(rf/dispatch [:window/open-remote-url (if (vector? url) (first url) url)])}
+   "Specification"])
+
 (defn caniusethis
   [{:keys [tag attr]}]
-  (let [data (if attr (spec/compat-data tag attr) (spec/compat-data tag))]
-    (when (or (:support data) (isa? tag ::tools/animation))
+  (let [data (if attr (spec/compat-data tag attr) (spec/compat-data tag))
+        support-data (:support data)
+        animation? (isa? tag ::tools/animation)]
+    (when (or support-data animation?)
       [:div.flex.flex-col
-       (when (some :version_added (vals (:support data)))
-         [:<>
-          [:h4.font-bold.mb-1 "Browser compatibility"]
-          [:div.flex.mb-4
-           (map (fn [[browser {:keys [version_added]}]]
-                  ^{:key browser}
-                  [browser-support browser version_added]) (:support data))]])
+       (when (some :version_added (vals support-data))
+         [browser-compatibility support-data])
        [:div.flex.gap-2
-        (when (or data (:mdn_url data) (isa? tag ::tools/animation))
-          [:button.button.px-3.level-2.grow
-           {:on-click #(rf/dispatch
-                        [:window/open-remote-url
-                         (or (:mdn_url data)
-                             (str "https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/"
-                                  (name attr)))])}
-           "Learn more"])
+        (when (or data (:mdn_url data) animation?)
+          [mdn-button (:mdn_url data) attr])
         (when (:spec_url data)
-          [:button.button.px-3.grow
-           {:on-click #(rf/dispatch [:window/open-remote-url (if (vector? (:spec_url data))
-                                                               (first (:spec_url data))
-                                                               (:spec_url data))])}
-           "Specification"])]])))
+          [spec-button (:spec_url data)])]])))
 
 (defn on-change-handler
   ([event k old-v]
@@ -135,6 +146,35 @@
       [:> Select/ScrollDownButton {:class "select-scroll-button"}
        [comp/icon "chevron-down"]]]]]])
 
+(defn property-list
+  [property]
+  [:<>
+   (when-let [applies-to (:appliesTo property)]
+     [:<>
+      [:h3.font-bold "Applies to"]
+      [:p applies-to]])
+   (when-let [computed-value (:computedValue property)]
+     (when-not (= computed-value "as specified")
+       [:<>
+        [:h3.font-bold "Computed value"]
+        [:p
+         computed-value
+         (when-let [percentages (:percentages property)]
+           (when-not (= percentages "N/A")
+             (str " (percentages " percentages ")")))]]))
+   (when-let [animatable (:animatable property)]
+     [:<>
+      [:h3.font-bold "Animatable"]
+      [:p animatable]])
+   (when-let [animation-type (:animationType property)]
+     [:<>
+      [:h3.font-bold "Animation Type"]
+      [:p animation-type]])
+   (when-let [style-declaration (:styleDeclaration property)]
+     [:<>
+      [:h3.font-bold "Style declaration"]
+      [:p (str/join " | " style-declaration)]])])
+
 (defn label
   [tag key]
   (let [clicked-element @(rf/subscribe [:clicked-element])
@@ -156,33 +196,7 @@
         [:h2.mb-4.text-lg key]
         (when (get-method hierarchy/description key)
           [:p (hierarchy/description key)])
-        (when webref-property
-          [:<>
-           (when-let [applies-to (:appliesTo webref-property)]
-             [:<>
-              [:h3.font-bold "Applies to"]
-              [:p applies-to]])
-           (when-let [computed-value (:computedValue webref-property)]
-             (when-not (= computed-value "as specified")
-               [:<>
-                [:h3.font-bold "Computed value"]
-                [:p
-                 computed-value
-                 (when-let [percentages (:percentages webref-property)]
-                   (when-not (= percentages "N/A")
-                     (str " (percentages " percentages ")")))]]))
-           (when-let [animatable (:animatable webref-property)]
-             [:<>
-              [:h3.font-bold "Animatable"]
-              [:p animatable]])
-           (when-let [animation-type (:animationType webref-property)]
-             [:<>
-              [:h3.font-bold "Animation Type"]
-              [:p animation-type]])
-           (when-let [style-declaration (:styleDeclaration webref-property)]
-             [:<>
-              [:h3.font-bold "Style declaration"]
-              [:p (str/join " | " style-declaration)]])])
+        (when webref-property [property-list webref-property])
         (when css-property
           [:<>
            [:h3.font-bold "Syntax"]
@@ -198,6 +212,29 @@
      [label tag k]
      [:div.flex.h-full.overflow-visible
       [hierarchy/form-element k v locked? (when property (:initial property))]]]))
+
+(defn tag-info
+  [tag]
+  [:div.py-px
+   [:> Popover/Root {:modal true}
+    [:> Popover/Trigger {:asChild true}
+     [:span.pb-px
+      [comp/icon-button "info" {:title "MDN Info"}]]]
+    [:> Popover/Portal
+     [:> Popover/Content
+      {:sideOffset 5
+       :class "popover-content"
+       :align "end"}
+      [:div.p-6
+       [:h2.mb-4.text-lg tag]
+       (when-let [description (:description (tools/properties tag))]
+         [:p description])
+       [caniusethis {:tag tag}]
+       (when-let [url (:url (tools/properties tag))]
+         [:button.button.px-3.level-2.w-full
+          {:on-click #(rf/dispatch [:window/open-remote-url url])}
+          "Learn more"])]
+      [:> Popover/Arrow {:class "popover-arrow"}]]]]])
 
 (defn form
   []
@@ -217,26 +254,7 @@
               (if (empty? name) tag name))
             (str (count selected-elements) " elements"))]
          (when (empty? (rest selected-tags))
-           [:div.py-px
-            [:> Popover/Root {:modal true}
-             [:> Popover/Trigger {:asChild true}
-              [:span.pb-px
-               [comp/icon-button "info" {:title "MDN Info"}]]]
-             [:> Popover/Portal
-              [:> Popover/Content
-               {:sideOffset 5
-                :class "popover-content"
-                :align "end"}
-               [:div.p-6
-                [:h2.mb-4.text-lg tag]
-                (when-let [description (:description (tools/properties tag))]
-                  [:p description])
-                [caniusethis {:tag tag}]
-                (when-let [url (:url (tools/properties tag))]
-                  [:button.button.px-3.level-2.w-full
-                   {:on-click #(rf/dispatch [:window/open-remote-url url])}
-                   "Learn more"])]
-               [:> Popover/Arrow {:class "popover-arrow"}]]]]])]
+           [tag-info tag])]
         [:div.attribute-grid
          (map (fn [[k v]] ^{:key k} [row k v locked? tag]) selected-attrs)]])
      [:div.level-1.grow.w-full.flex]]))
