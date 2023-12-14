@@ -44,9 +44,9 @@
 (defmethod attr.hierarchy/form-element ::size
   [k v disabled?]
   [attr.v/range-input k v {:disabled disabled?
-                               :min 1
-                               :max 100
-                               :step 1}])
+                           :min 1
+                           :max 100
+                           :step 1}])
 
 (defmethod attr.hierarchy/form-element ::points
   [value]
@@ -81,15 +81,16 @@
 (defmethod tools/drag :brush
   [{:keys [active-document
            adjusted-pointer-pos] :as db} {:keys [pressure]}]
-  (let [stroke (get-in db [:documents active-document :stroke])]
+  (let [stroke (get-in db [:documents active-document :stroke])
+        point (conj adjusted-pointer-pos pressure)]
     (if (get-in db [:documents active-document :temp-element :attrs ::points])
       (update-in db
                  [:documents active-document :temp-element :attrs ::points]
                  conj
-                 (conj adjusted-pointer-pos pressure))
+                 point)
       (element.h/set-temp db {:type :element
                               :tag :brush
-                              :attrs {::points [(conj adjusted-pointer-pos pressure)]
+                              :attrs {::points [point]
                                       ::stroke stroke
                                       ::size 16
                                       ::thinning 0.5

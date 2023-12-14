@@ -34,13 +34,13 @@
 (defmethod tools/bounds ::tools/element
   [{:keys [tag attrs content]}]
   (when-let [svg (dom/canvas-element)]
-    (let [element (js/document.createElementNS "http://www.w3.org/2000/svg" (name tag))]
+    (let [el (js/document.createElementNS "http://www.w3.org/2000/svg" (name tag))]
       (doseq [[k v] attrs]
-        (.setAttributeNS element nil (name k) v))
-      (.appendChild svg element)
-      (set! (.-innerHTML element) (if (empty? content) "\u00a0" content))
-      (let [bounds (bounds/from-bbox element)]
-        (.remove element)
+        (.setAttributeNS el nil (name k) v))
+      (.appendChild svg el)
+      (set! (.-innerHTML el) (if (empty? content) "\u00a0" content))
+      (let [bounds (bounds/from-bbox el)]
+        (.remove el)
         bounds))))
 
 (defmethod tools/mouse-up :default
