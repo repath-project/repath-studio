@@ -50,7 +50,7 @@
               :on-scroll mouse-handler} children]))
 
 (defn square-handler
-  [{:keys [x y key] :as el} & children]
+  [{:keys [x y key cursor] :as el} & children]
   (let [zoom @(rf/subscribe [:document/zoom])
         state @(rf/subscribe [:state])
         clicked-element @(rf/subscribe [:clicked-element])
@@ -72,7 +72,7 @@
               :shape-rendering "crispEdges"
               :width size
               :height size
-              :cursor "default"
+              :cursor (if (or clicked? (not cursor)) "default" cursor)
               :on-pointer-up mouse-handler
               :on-pointer-down mouse-handler
               :on-pointer-move mouse-handler
@@ -167,14 +167,14 @@
         [w h] (bounds/->dimensions bounds)]
     [:g {:key :bounding-handlers}
      (map (fn [handler] [scale-handler handler])
-          [{:x x1 :y y1 :key :top-left}
-           {:x x2 :y y1 :key :top-right}
-           {:x x1 :y y2 :key :bottom-left}
-           {:x x2 :y y2 :key :bottom-right}
-           {:x (+ x1 (/ w 2)) :y y1 :key :top-middle}
-           {:x x2 :y (+ y1 (/ h 2)) :key :middle-right}
-           {:x x1 :y (+ y1 (/ h 2)) :key :middle-left}
-           {:x (+ x1 (/ w 2)) :y y2 :key :bottom-middle}])]))
+          [{:x x1 :y y1 :key :top-left :cursor "nwse-resize"}
+           {:x x2 :y y1 :key :top-right :cursor "nesw-resize"}
+           {:x x1 :y y2 :key :bottom-left :cursor "nesw-resize"}
+           {:x x2 :y y2 :key :bottom-right :cursor "nwse-resize"}
+           {:x (+ x1 (/ w 2)) :y y1 :key :top-middle :cursor "ns-resize"}
+           {:x x2 :y (+ y1 (/ h 2)) :key :middle-right :cursor "ew-resize"}
+           {:x x1 :y (+ y1 (/ h 2)) :key :middle-left :cursor "ew-resize"}
+           {:x (+ x1 (/ w 2)) :y y2 :key :bottom-middle :cursor "ns-resize"}])]))
 
 (defn label
   [text position anchor]
