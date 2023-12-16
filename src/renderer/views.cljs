@@ -17,6 +17,7 @@
    [renderer.reepl.views :as repl]
    [renderer.rulers.views :as rulers]
    [renderer.statusbar :as status-bar]
+   [renderer.timeline.views :as timeline]
    [renderer.tools.views :as tools]
    [renderer.tree.views :as tree]
    [renderer.window.views :as win]))
@@ -75,6 +76,7 @@
            {:style {:flex "0 1 30%"}}])]
        [status-bar/root]
        [history/tree]]
+      [timeline/root]
       [command-input]]]))
 
 (defn main-panel

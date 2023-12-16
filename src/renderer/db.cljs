@@ -59,4 +59,6 @@
    :window {:maximized? true
             :minimized? false
             :fullscreen? false
-            :header? true}})
+            :header? true}
+   :timeline {:time 0
+              :paused? true}})

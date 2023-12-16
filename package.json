@@ -72,6 +72,7 @@
     "@sentry/react": "7.66.0",
     "@types/react": "18.2.0",
     "@types/react-dom": "18.2.0",
+    "@xzdarcy/react-timeline-editor": "0.1.9",
     "acorn": "8.8.1",
     "autoprefixer": "10.4.15",
     "blobs": "2.3.0-beta.2",

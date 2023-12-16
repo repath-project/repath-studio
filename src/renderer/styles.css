@@ -291,7 +291,7 @@ pre {
 }
 
 .toolbar {
-  @apply p-1;
+  @apply flex p-1;
 
   .button {
     margin: 2px;

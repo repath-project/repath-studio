@@ -7,7 +7,7 @@
    [renderer.history.views :as history.h]))
 
 (defn actions []
-  [:div.flex.toolbar
+  [:div.toolbar
    {:style {:overflow "visible"
             :flex "0 0 40px"}}
 

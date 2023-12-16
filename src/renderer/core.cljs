@@ -26,6 +26,7 @@
    [renderer.rulers.core]
    [renderer.subs]
    [renderer.theme.core]
+   [renderer.timeline.core]
    [renderer.tools.core]
    [renderer.tree.core]
    [renderer.utils.error :as error]

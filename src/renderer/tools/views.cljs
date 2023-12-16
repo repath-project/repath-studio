@@ -44,6 +44,6 @@
                ::tools/misc])
 
 (defn toolbar []
-  (into [:div.flex.justify-center.flex-wrap.level-2.toolbar]
+  (into [:div.justify-center.flex-wrap.level-2.toolbar]
         (interpose [:span.v-divider]
                    (map toolbar-group toolbars))))
