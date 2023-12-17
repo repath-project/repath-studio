@@ -1,7 +1,14 @@
 (ns renderer.timeline.subs
   (:require
+   [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.tools.base :as tools]))
+
+(rf/reg-sub
+ :animations
+ :<- [:document/elements]
+ (fn [elements]
+   (filter #(contains? (descendants ::tools/animation) (:tag %)) (vals elements))))
 
 (defn effect-id
   [el]
@@ -22,17 +29,6 @@
                 :end end
                 :effectId (effect-id el)}]}))
 
-(defn animation->effect
-  [{:keys [attrs] :as el}]
-  {:id (effect-id el)
-   :name (str (name (:tag el)) (:attributeName attrs))})
-
-(rf/reg-sub
- :animations
- :<- [:document/elements]
- (fn [elements]
-   (filter #(contains? (descendants ::tools/animation) (:tag %)) (vals elements))))
-
 (rf/reg-sub
  :timeline/rows
  :<- [:animations]
@@ -40,6 +36,11 @@
    (->> animations
         (mapv animation->timeline-row)
         clj->js)))
+
+(defn animation->effect
+  [{:keys [attrs] :as el}]
+  {:id (effect-id el)
+   :name (str (name (:tag el)) (:attributeName attrs))})
 
 (rf/reg-sub
  :timeline/effects
@@ -49,10 +50,18 @@
         (reduce #(assoc %1 (effect-id %2) (animation->effect %2)) {})
         clj->js)))
 
+(defn pad-2
+  [n]
+  (-> n str js/parseInt str (.padStart 2 "0")))
+
 (rf/reg-sub
- :timeline/time
+ :timeline/time-formatted
  (fn [db _]
-   (-> db :timeline :time)))
+   (let [time (-> db :timeline :time)
+         min (-> time (/ 60) pad-2)
+         sec (-> time (rem 60) pad-2)
+         ms (-> time (rem 1) (* 100) pad-2 (str/replace "0." ""))]
+     (str min ":"  sec ":" ms))))
 
 (rf/reg-sub
  :timeline/paused?

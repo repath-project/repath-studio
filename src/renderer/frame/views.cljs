@@ -23,9 +23,11 @@
   (let [frame-window (.-window (useFrame))]
     (ra/create-class
      {:component-did-mount
-      #(doseq
-        [event ["pointermove" "pointerup" "wheel"]]
-         (.addEventListener frame-window event mouse-handler #js {:passive false}))
+      (fn []
+        (rf/dispatch [:timeline/pause])
+        (doseq
+         [event ["pointermove" "pointerup" "wheel"]]
+          (.addEventListener frame-window event mouse-handler #js {:passive false})))
 
       :component-will-unmount
       #(doseq

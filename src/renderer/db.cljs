@@ -61,4 +61,4 @@
             :fullscreen? false
             :header? true}
    :timeline {:time 0
-              :paused? true}})
+              :paused? false}})

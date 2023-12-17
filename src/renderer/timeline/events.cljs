@@ -21,14 +21,7 @@
 (rf/reg-fx
  ::unpause-animations
  (fn []
-   (doall (map #(.pauseAnimations %) (svg-elements)))))
-
-(rf/reg-event-fx
- :timeline/set-time
- (fn [{:keys [db]} [_ time]]
-   {:db (assoc-in db [:timeline :time] time)
-    ::pause-animations nil
-    ::set-current-time time}))
+   (doall (map #(.unpauseAnimations %) (svg-elements)))))
 
 (rf/reg-event-fx
  :timeline/pause
@@ -41,3 +34,9 @@
  (fn [{:keys [db]} _]
    {:db (assoc-in db [:timeline :paused?] false)
     ::unpause-animations nil}))
+
+(rf/reg-event-fx
+ :timeline/set-time
+ (fn [{:keys [db]} [_ time]]
+   {:db (assoc-in db [:timeline :time] time)
+    ::set-current-time time}))
