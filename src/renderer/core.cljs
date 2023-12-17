@@ -13,7 +13,6 @@
    [renderer.cmdk.core]
    [renderer.db]
    [renderer.document.core]
-   [renderer.effects]
    [renderer.element.core]
    [renderer.events]
    [renderer.frame.core]
@@ -64,6 +63,31 @@
   (replumb/run-repl "(in-ns 'user)" identity)
   (print "Repl initialized"))
 
+(defn init-api
+  []
+  (js/window.api.receive
+   "fromMain"
+   (fn [data]
+     (case (.-action data)
+       "fontsLoaded" (js/console.log "fontsLoaded")
+       "windowMaximized" (rf/dispatch [:window/set-maximized? true])
+       "windowUnmaximized" (rf/dispatch [:window/set-maximized? false])
+       "windowEnteredFullscreen" (rf/dispatch [:window/set-fullscreen? true])
+       "windowLeavedFullscreen" (rf/dispatch [:window/set-fullscreen? false])
+       "windowMinimized" (rf/dispatch [:window/set-minimized? true])
+       "windowRestored" (rf/dispatch [:window/set-minimized? false])
+       "openDocument" (js/console.log (.-data data))))))
+
+(defn load-system-fonts
+  []
+  (let [fonts (js->clj js/window.api.systemFonts :keywordize-keys true)]
+    (rf/dispatch-sync [:set-system-fonts fonts])))
+
+(defn load-webref
+  []
+  (.then (js/window.api.webrefCss.listAll)
+         #(rf/dispatch-sync [:set-webref-css (js->clj % :keywordize-keys true)])))
+
 (defn ^:export init []
   #_(if platform/electron?
       (sentry-electron-renderer/init (clj->js config/sentry-options) sentry-react/init)
@@ -92,23 +116,10 @@
   (.setup paper)
 
   (if platform/electron?
-    (do (let [fonts (js->clj js/window.api.systemFonts :keywordize-keys true)]
-          (rf/dispatch-sync [:set-system-fonts fonts]))
-        (.then (js/window.api.webrefCss.listAll)
-               #(rf/dispatch-sync [:set-webref-css (js->clj % :keywordize-keys true)]))
+    (do (load-system-fonts)
+        (load-webref)
         (rf/dispatch-sync [:set-mdn (js->clj js/window.api.mdn :keywordize-keys true)])
-        (js/window.api.receive
-         "fromMain"
-         (fn [data]
-           (case (.-action data)
-             "fontsLoaded" (js/console.log "fontsLoaded")
-             "windowMaximized" (rf/dispatch [:window/set-maximized? true])
-             "windowUnmaximized" (rf/dispatch [:window/set-maximized? false])
-             "windowEnteredFullscreen" (rf/dispatch [:window/set-fullscreen? true])
-             "windowLeavedFullscreen" (rf/dispatch [:window/set-fullscreen? false])
-             "windowMinimized" (rf/dispatch [:window/set-minimized? true])
-             "windowRestored" (rf/dispatch [:window/set-minimized? false])
-             "openDocument" (js/console.log (.-data data))))))
+        (init-api))
     (.addEventListener js/document
                        "fullscreenchange"
                        #(rf/dispatch [:window/set-fullscreen? (boolean (.-fullscreenElement js/document))])))

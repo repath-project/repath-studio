@@ -2,6 +2,7 @@
   (:require
    [clojure.core.matrix :as mat]
    [malli.core :as ma]
+   [platform]
    [re-frame.core :as rf]
    [renderer.db :as db]
    [renderer.frame.handlers :as frame-h]
@@ -202,3 +203,19 @@
        (tools/key-up e))
 
      db)))
+
+(rf/reg-fx
+ :send-to-main
+ (fn [data]
+   (when platform/electron?
+     (js/window.api.send "toMain" (clj->js data)))))
+
+(rf/reg-fx
+ :clipboard-write
+ (fn [text-html]
+   (js/navigator.clipboard.write
+    (clj->js [(js/ClipboardItem.
+               #js {"text/html" (when text-html
+                                  (js/Blob.
+                                   [text-html]
+                                   #js {:type ["text/html"]}))})]))))

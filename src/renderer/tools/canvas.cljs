@@ -81,7 +81,7 @@
         (when (> elements-area 0)
           [overlay/area elements-area bounds])
         
-        (when (not-empty (filter (comp not zero?) bounds))
+        (when (not-empty (filter (complement zero?) bounds))
           [:<>
            [overlay/size bounds]
            [overlay/bounding-handlers bounds]])
