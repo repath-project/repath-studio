@@ -10,4 +10,7 @@
   {:description "The animateTransform element animates a transformation 
                  attribute on its target element, thereby allowing animations 
                  to control translation, scaling, rotation, and/or skewing."
-   :attrs []})
+   :attrs [:type
+           :from
+           :to
+           :by]})

@@ -1,7 +1,7 @@
 .timeline-editor {
-  @apply level-1 w-full !important;
-  height: 200px !important;
+  @apply level-1 w-full min-h-0 !important;
   font-family: inherit !important;
+  color: var(--font-color-muted) !important;
  }
 
  .timeline-editor-action {
@@ -20,7 +20,15 @@
   fill: var(--accent) !important;
 }
 
+.timeline-editor-time-unit {
+  border-color: var(--border-color) !important;
+}
+
+.timeline-editor-time-unit-scale {
+  color: var(--font-color-muted) !important;
+}
+
 .timeline-editor-edit-row {
   background-image: linear-gradient(var(--level-1), var(--level-1)), 
-                    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 0) !important;
+                    linear-gradient(90deg, var(--border-color) 1px, transparent 0) !important;
 }

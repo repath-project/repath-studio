@@ -37,6 +37,12 @@
         (mapv animation->timeline-row)
         clj->js)))
 
+(rf/reg-sub
+ :timeline/end
+ :<- [:animations]
+ (fn [animations]
+   (reduce #(max (js/parseInt (-> %2 :attrs :end)) %1) 0 animations)))
+
 (defn animation->effect
   [{:keys [attrs] :as el}]
   {:id (effect-id el)
@@ -55,10 +61,15 @@
   (-> n str js/parseInt str (.padStart 2 "0")))
 
 (rf/reg-sub
- :timeline/time-formatted
+ :timeline/time
  (fn [db _]
-   (let [time (-> db :timeline :time)
-         min (-> time (/ 60) pad-2)
+   (-> db :timeline :time)))
+
+(rf/reg-sub
+ :timeline/time-formatted
+ :<- [:timeline/time]
+ (fn [time]
+   (let [min (-> time (/ 60) pad-2)
          sec (-> time (rem 60) pad-2)
          ms (-> time (rem 1) (* 100) pad-2 (str/replace "0." ""))]
      (str min ":"  sec ":" ms))))
@@ -77,3 +88,8 @@
  :timeline/guide-snap?
  (fn [db _]
    (-> db :timeline :guide-snap?)))
+
+(rf/reg-sub
+ :timeline/replay?
+ (fn [db _]
+   (-> db :timeline :replay?)))

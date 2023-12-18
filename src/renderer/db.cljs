@@ -52,7 +52,6 @@
                   :visible? true}
            :properties {:size 300
                         :visible? true}
-           :history? false
            :timeline {:visible? true}
            :xml {:visible? false}
            :repl-history {:visible? false}}
@@ -61,6 +60,7 @@
             :fullscreen? false
             :header? true}
    :timeline {:time 0
+              :replay? true
               :grid-snap? false
               :guide-snap? true
               :paused? false}})

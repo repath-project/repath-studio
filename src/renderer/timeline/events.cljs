@@ -49,3 +49,8 @@
  :timeline/set-guide-snap
  (fn [db [_ state]]
    (assoc-in db [:timeline :guide-snap?] state)))
+
+ (rf/reg-event-db
+ :timeline/toggle-replay
+ (fn [db _]
+   (update-in db [:timeline :replay?] not)))
