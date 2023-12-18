@@ -32,11 +32,20 @@
 (rf/reg-event-fx
  :timeline/play
  (fn [{:keys [db]} _]
-   {:db (assoc-in db [:timeline :paused?] false)
-    ::unpause-animations nil}))
+   {:db (assoc-in db [:timeline :paused?] false)}))
 
 (rf/reg-event-fx
  :timeline/set-time
  (fn [{:keys [db]} [_ time]]
    {:db (assoc-in db [:timeline :time] time)
     ::set-current-time time}))
+
+ (rf/reg-event-db
+  :timeline/set-grid-snap
+  (fn [db [_ state]]
+    (assoc-in db [:timeline :grid-snap?] state)))
+
+ (rf/reg-event-db
+ :timeline/set-guide-snap
+ (fn [db [_ state]]
+   (assoc-in db [:timeline :guide-snap?] state)))

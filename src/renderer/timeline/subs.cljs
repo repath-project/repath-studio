@@ -67,3 +67,13 @@
  :timeline/paused?
  (fn [db _]
    (-> db :timeline :paused?)))
+
+(rf/reg-sub
+ :timeline/grid-snap?
+ (fn [db _]
+   (-> db :timeline :grid-snap?)))
+
+(rf/reg-sub
+ :timeline/guide-snap?
+ (fn [db _]
+   (-> db :timeline :guide-snap?)))

@@ -61,4 +61,6 @@
             :fullscreen? false
             :header? true}
    :timeline {:time 0
+              :grid-snap? false
+              :guide-snap? true
               :paused? false}})

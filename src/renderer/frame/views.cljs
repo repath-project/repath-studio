@@ -24,7 +24,6 @@
     (ra/create-class
      {:component-did-mount
       (fn []
-        (rf/dispatch [:timeline/pause])
         (doseq
          [event ["pointermove" "pointerup" "wheel"]]
           (.addEventListener frame-window event mouse-handler #js {:passive false})))
