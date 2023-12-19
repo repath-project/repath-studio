@@ -93,3 +93,8 @@
  :timeline/replay?
  (fn [db _]
    (-> db :timeline :replay?)))
+
+(rf/reg-sub
+ :timeline/speed
+ (fn [db _]
+   (-> db :timeline :speed)))

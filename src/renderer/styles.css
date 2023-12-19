@@ -504,3 +504,8 @@ pre {
     transform: translateX(19px);
   }
 }
+
+.switch-label {
+  @apply h-auto;
+  background: transparent;
+}

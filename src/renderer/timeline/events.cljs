@@ -5,8 +5,8 @@
 
 (defn svg-elements
   []
-  (-> (dom/canvas-element)
-      (.querySelectorAll "svg")))
+  (when-let [canvas (dom/canvas-element)]
+    (.querySelectorAll canvas "svg")))
 
 (rf/reg-fx
  ::set-current-time
@@ -18,6 +18,7 @@
  (fn []
    (doall (map #(.pauseAnimations %) (svg-elements)))))
 
+#_:clj-kondo/ignore
 (rf/reg-fx
  ::unpause-animations
  (fn []
@@ -54,3 +55,8 @@
  :timeline/toggle-replay
  (fn [db _]
    (update-in db [:timeline :replay?] not)))
+
+ (rf/reg-event-db
+ :timeline/set-speed
+ (fn [db [_ speed]]
+   (assoc-in db [:timeline :speed] speed)))

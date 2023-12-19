@@ -3,6 +3,7 @@
    [renderer.document.db]
    [renderer.panel.db]
    [renderer.theme.db]
+   [renderer.timeline.db]
    [renderer.tree.db]
    [renderer.window.db]))
 
@@ -24,7 +25,8 @@
    [:tree renderer.tree.db/tree]
    [:panel [:map-of :key renderer.panel.db/panel]]
    [:window renderer.window.db/window]
-   [:theme [:mode renderer.theme.db/modes]]])
+   [:theme [:mode renderer.theme.db/modes]]
+   [:timeline renderer.timeline.db/timeline]])
 
 (def default
   {:tool :select
@@ -63,4 +65,5 @@
               :replay? true
               :grid-snap? false
               :guide-snap? true
-              :paused? false}})
+              :paused? false
+              :speed 1}})

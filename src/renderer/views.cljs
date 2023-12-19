@@ -76,7 +76,7 @@
            {:style {:flex "0 1 30%"}}])]
        [status-bar/root]
        [history/tree]]
-      [timeline/root]
+      (when @(rf/subscribe [:panel/visible? :timeline]) [timeline/root])
       [command-input]]]))
 
 (defn main-panel
