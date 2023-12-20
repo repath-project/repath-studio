@@ -45,7 +45,7 @@
         (element.h/set-temp  {:type :element
                               :tag :text
                               :attrs attrs})
-        element.h/create
+        element.h/add
         (tools/set-tool :edit)
         (handlers/set-state :create))))
 
@@ -60,7 +60,7 @@
 
 (defn set-text-and-select-element
   [e el-k]
-  (rf/dispatch [:element/set-property
+  (rf/dispatch [:element/set-prop
                 el-k
                 :content
                 (str/replace (.. e -target -value) "  " "\u00a0\u00a0")])
@@ -97,7 +97,7 @@
                         (set-text-and-select-element e key)
                         (.requestAnimationFrame
                          js/window
-                         #(rf/dispatch-sync [:element/preview-property
+                         #(rf/dispatch-sync [:element/preview-prop
                                              key
                                              :content
                                              (str/replace (.. e -target -value)

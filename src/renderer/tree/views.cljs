@@ -17,7 +17,7 @@
      :inactive-icon "eye-closed"
      :inactive-text "show"
      :class (when visible? "list-item-action")
-     :action #(rf/dispatch [:element/toggle-property key :visible?])}]
+     :action #(rf/dispatch [:element/toggle-prop key :visible?])}]
    [comp/toggle-icon-button
     {:active? locked?
      :active-icon "lock"
@@ -25,11 +25,11 @@
      :inactive-icon "unlock"
      :inactive-text "lock"
      :class (when-not locked? "list-item-action")
-     :action #(rf/dispatch [:element/toggle-property key :locked?])}]])
+     :action #(rf/dispatch [:element/toggle-prop key :locked?])}]])
 
 (defn- set-item-name
   [e k]
-  (rf/dispatch [:element/set-property k :name (.. e -target -value)]))
+  (rf/dispatch [:element/set-prop k :name (.. e -target -value)]))
 
 (defn label
   [{:keys [key name visible? tag]}]
@@ -99,7 +99,7 @@
       (when (and (seq children) (not page?))
         [comp/toggle-collapsed-button
          collapsed?
-         #(rf/dispatch [:element/toggle-property key :collapsed?])])
+         #(rf/dispatch [:element/toggle-prop key :collapsed?])])
       [:div.flex-1 [label el]]
       [item-buttons el]]]))
 

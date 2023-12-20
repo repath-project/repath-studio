@@ -46,7 +46,7 @@
       {:title "Generate random seed"
        :style {:flex "0 0 26px"
                :height "100%"}
-       :on-click #(rf/dispatch [:element/set-attribute k random-seed])}
+       :on-click #(rf/dispatch [:element/set-attr k random-seed])}
       [comp/icon "refresh"]]]))
 
 (defmethod attr.hierarchy/description ::x

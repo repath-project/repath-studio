@@ -4,7 +4,6 @@
    [re-frame.core :as rf]
    [renderer.tools.base :as tools]))
 
-
 (derive ::tools/animation ::tools/descriptive)
 
 (defmethod tools/render ::tools/animation
@@ -14,4 +13,4 @@
      attrs
      (map (fn [el] ^{:key (:key el)} [tools/render el]) child-elements)]))
 
-(defmethod tools/bounds ::tools/animation [] [])
+(defmethod tools/bounds ::tools/animation [] nil)

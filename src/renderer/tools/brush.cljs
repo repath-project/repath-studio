@@ -175,8 +175,8 @@
 (defmethod tools/drag-end :brush
   [db]
   (-> db
-      element.h/create
-      (history.h/finalize (str "Draw line"))))
+      element.h/add
+      (history.h/finalize "Draw line")))
 
 (defmethod tools/path :brush
   [{:keys [attrs]}]

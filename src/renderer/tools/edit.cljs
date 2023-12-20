@@ -58,4 +58,4 @@
   (-> db
       (handlers/set-state :default)
       (dissoc :clicked-element)
-      (history/finalize (str "Edit " (-> db :clicked-element :key name)))))
+      (history/finalize "Edit " (-> db :clicked-element :key name))))

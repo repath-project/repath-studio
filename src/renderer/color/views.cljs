@@ -10,7 +10,7 @@
   [:div.color-drip {:key (keyword (str color))
                     :on-click (fn []
                                 (rf/dispatch [:document/set-fill color])
-                                (rf/dispatch [:element/set-attribute :fill color]))
+                                (rf/dispatch [:element/set-attr :fill color]))
                     :style {:background-color color}}
    (when (= color "transparent")
      [:div.level-3.text-error.relative
@@ -52,7 +52,7 @@
         [:> PhotoshopPicker
          {:color stroke
           :header nil
-          :on-change-complete #(rf/dispatch [:element/set-attribute :stroke (get-hex %)])
+          :on-change-complete #(rf/dispatch [:element/set-attr :stroke (get-hex %)])
           :on-change #(rf/dispatch [:document/set-stroke (get-hex %)])}]
         [:> Popover/Arrow {:class "popover-arrow"}]]]]
 
@@ -74,6 +74,6 @@
          :align "start"}
         [:> PhotoshopPicker
          {:color fill
-          :on-change-complete #(rf/dispatch [:element/set-attribute :fill (get-hex %)])
+          :on-change-complete #(rf/dispatch [:element/set-attr :fill (get-hex %)])
           :on-change #(rf/dispatch [:document/set-fill (get-hex %)])}]
         [:> Popover/Arrow {:class "popover-arrow"}]]]]]))

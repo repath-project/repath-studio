@@ -18,6 +18,7 @@ we use the following conventions
 - e - event
 - el - element
 - attr, attrs - attribute, attributes
+- prop, props - property, properties
 
 We also use the following namespace aliases
 

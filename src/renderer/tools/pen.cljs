@@ -43,5 +43,5 @@
                  #_(path/manipulate :smooth))]
     (-> db
         (element.h/set-temp path)
-        (element.h/create)
-        (history/finalize (str "Draw line")))))
+        element.h/add
+        (history/finalize "Draw line"))))

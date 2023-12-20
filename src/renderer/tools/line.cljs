@@ -52,17 +52,17 @@
   [db]
   (if (element.h/get-temp db)
     (-> db
-        element.h/create
-        (history/finalize (str "Create line")))
+        element.h/add
+        (history/finalize "Create line"))
     (-> db
         (handlers/set-state :create)
         create-line)))
 
 (defmethod tools/mouse-down :line
   [db]
-  (if (element.h/get-temp db)
-    (history/finalize db (str "Create line"))
-    db))
+  (cond-> db
+    (element.h/get-temp db)
+    (history/finalize "Create line")))
 
 (defmethod tools/drag :line
   [db]

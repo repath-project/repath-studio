@@ -30,5 +30,5 @@
                           :align "end"}
       [:> ChromePicker
        {:color (or v "")
-        :on-change-complete #(rf/dispatch [:element/set-attribute k (.-hex %)])
+        :on-change-complete #(rf/dispatch [:element/set-attr k (.-hex %)])
         :on-change #(rf/dispatch [:element/preview-attribute k (.-hex %)])}]]]]])

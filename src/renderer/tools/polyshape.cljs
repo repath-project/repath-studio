@@ -71,8 +71,8 @@
   (-> db
       (update-in [:documents active-document :temp-element :attrs :points]
                  #(str/join " " (apply concat (drop-last 2 (attr.utils/points->vec %)))))
-      element.h/create
-      (history/finalize (str "Create " (:tool db)))))
+      element.h/add
+      (history/finalize "Create " (:tool db))))
 
 (defmethod tools/translate ::tools/polyshape
   [el [x y]]

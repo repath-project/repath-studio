@@ -20,7 +20,7 @@
 (defn remove-point-by-index
   [points index]
   (let [points (str/join " " (flatten (vec/remove-by-index points index)))]
-    (rf/dispatch [:element/set-attribute :points points])))
+    (rf/dispatch [:element/set-attr :points points])))
 
 (defmethod hierarchy/form-element :points
   [k v disabled?]

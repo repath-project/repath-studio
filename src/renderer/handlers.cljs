@@ -20,11 +20,11 @@
    (fn [db file]
      (case (.-type file)
        "image/png"
-       (element-h/create db {:type :element
-                                    :tag :image
-                                    :attrs {:x (first adjusted-pointer-pos)
-                                            :y (second adjusted-pointer-pos)
-                                            :href (.-path file)}})
+       (element-h/add db {:type :element
+                          :tag :image
+                          :attrs {:x (first adjusted-pointer-pos)
+                                  :y (second adjusted-pointer-pos)
+                                  :href (.-path file)}})
 
        db))
    db
@@ -39,7 +39,7 @@
        (case (.-kind item)
          "string" (.getAsString
                    item
-                   #(rf/dispatch [:element/create
+                   #(rf/dispatch [:element/add
                                   {:type :element
                                    :tag :text
                                    :content %

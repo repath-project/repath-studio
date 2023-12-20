@@ -53,8 +53,8 @@
 (defn ^:export create
   "Creates a new element."
   [el]
-  (apply #(rf/dispatch [:element/create {:tag (key %)
-                                         :attrs (val %)}]) el))
+  (apply #(rf/dispatch [:element/add {:tag (key %)
+                                      :attrs (val %)}]) el))
 
 (defn ^:export circle
   "Creates a circle."
@@ -109,10 +109,10 @@
   ([[x y] width height href attrs]
    (create {:image (merge {:x x :y y :width width :height height :href href} attrs)})))
 
-(defn ^:export set-attribute
+(defn ^:export set-attr
   "Sets the attribute of the selected elements."
   [k v]
-  (rf/dispatch [:element/set-attribute k v]))
+  (rf/dispatch [:element/set-attr k v]))
 
 (defn ^:export set-fill
   "Sets the fill color of the editor."

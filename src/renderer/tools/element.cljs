@@ -27,8 +27,8 @@
   [db]
   (let [temp-element (get-in db [:documents (:active-document db) :temp-element])]
     (-> db
-        element.h/create
-        (history.h/finalize (str "Create " (name (:tag temp-element))))
+        element.h/add
+        (history.h/finalize "Create " (name (:tag temp-element)))
         (assoc :cursor "crosshair"))))
 
 (defmethod tools/bounds ::tools/element
