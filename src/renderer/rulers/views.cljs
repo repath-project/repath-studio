@@ -52,7 +52,7 @@
 (defn label
   [vertical? step font-size text]
   [:text {:x (if vertical? 19 (+ step 4))
-          :y (if vertical? (- step 10) (+ font-size 1))
+          :y (if vertical? (- step 8) (+ font-size 1))
           :writing-mode (when vertical? "vertical-rl")
           :fill "var(--font-color)"
           :font-size font-size
