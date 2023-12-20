@@ -50,9 +50,9 @@
 (defmulti scale #(:tag %))
 (defmulti edit #(:tag %))
 
-(defmulti mouse-down #(:tool %))
-(defmulti mouse-move #(:tool %))
-(defmulti mouse-up #(:tool %))
+(defmulti pointer-down #(:tool %))
+(defmulti pointer-move #(:tool %))
+(defmulti pointer-up #(:tool %))
 (defmulti double-click #(:tool %))
 (defmulti drag #(:tool %))
 (defmulti drag-start #(:tool %))
@@ -71,16 +71,16 @@
       (assoc :tool tool)
       (activate)))
 
-(defmethod mouse-down :default [db] db)
-(defmethod mouse-move :default [db] db)
+(defmethod pointer-down :default [db] db)
+(defmethod pointer-move :default [db] db)
 (defmethod drag-start :default [db] db)
 (defmethod double-click :default [db] db)
 
 (defmethod key-up :default [db] db)
 (defmethod key-down :default [db] db)
 
-(defmethod drag :default [db event element] (mouse-move db event element))
-(defmethod drag-end :default [db event element] (mouse-up db event element))
+(defmethod drag :default [db event element] (pointer-move db event element))
+(defmethod drag-end :default [db event element] (pointer-up db event element))
 (defmethod properties :default [])
 (defmethod render :default [])
 (defmethod render-to-string :default

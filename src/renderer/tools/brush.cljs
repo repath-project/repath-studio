@@ -14,7 +14,7 @@
    [renderer.history.handlers :as history.h]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
-   [renderer.utils.mouse :as mouse]
+   [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
 
 (derive :brush ::tools/draw)
@@ -136,14 +136,14 @@
 
 (defmethod tools/render :brush
   [{:keys [attrs] :as element}]
-  (let [mouse-handler #(mouse/event-handler % element)]
+  (let [pointer-handler #(pointer/event-handler % element)]
     [:path (merge {:d (points->path (::points attrs)
                                     (merge (select-keys attrs options)
                                            {:simulatePressure false}))
-                   :on-pointer-up mouse-handler
-                   :on-pointer-down mouse-handler
-                   :on-pointer-move mouse-handler
-                   :on-double-click mouse-handler}
+                   :on-pointer-up pointer-handler
+                   :on-pointer-down pointer-handler
+                   :on-pointer-move pointer-handler
+                   :on-double-click pointer-handler}
                   (-> attrs
                       (select-keys [:id :class :opacity])
                       (assoc :fill (::stroke attrs))))]))

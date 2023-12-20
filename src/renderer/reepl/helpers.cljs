@@ -52,7 +52,7 @@
                     :style (if @hovered
                              (merge style hover-style)
                              style)
-                    :on-mouse-over (fn [] (reset! hovered true) nil)
-                    :on-mouse-out (fn [] (reset! hovered false) nil))]
+                    :on-pointer-over (fn [] (reset! hovered true) nil)
+                    :on-pointer-out (fn [] (reset! hovered false) nil))]
 
          children))))

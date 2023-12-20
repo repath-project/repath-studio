@@ -19,7 +19,7 @@
 
 (defmethod tools/translate :fill [])
 
-(defmethod tools/mouse-up :fill
+(defmethod tools/pointer-up :fill
   [{active-document :active-document :as db} _e el]
   (let [color (get-in db [:documents active-document :fill])]
     (-> db
@@ -28,4 +28,4 @@
 
 (defmethod tools/drag-end :fill
   [db e el]
-  (tools/mouse-up db e el))
+  (tools/pointer-up db e el))

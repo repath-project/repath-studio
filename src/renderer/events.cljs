@@ -128,7 +128,7 @@
 
                :always
                (tools/drag e element))
-             (tools/mouse-move db e element))
+             (tools/pointer-move db e element))
            (assoc :pointer-pos pointer-pos
                   :adjusted-pointer-pos adjusted-pointer-pos))
 
@@ -139,14 +139,14 @@
              (tools/set-tool :pan))
 
          :always
-         (-> (tools/mouse-down e element)
+         (-> (tools/pointer-down e element)
              (assoc :pointer-offset pointer-pos
                     :adjusted-pointer-offset adjusted-pointer-pos)))
 
        :pointerup
        (cond-> (if (:drag? db)
                  (tools/drag-end db e element)
-                 (tools/mouse-up db e element))
+                 (tools/pointer-up db e element))
          (and (:primary-tool db) (= (:button e) 1))
          (-> (tools/set-tool (:primary-tool db))
              (dissoc :primary-tool))

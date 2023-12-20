@@ -66,7 +66,7 @@
                       (/ furute-zoom current-zoom)))
         (frame/pan-to-bounds [pos-x pos-y offset-x offset-y]))))
 
-(defmethod tools/mouse-up :zoom
+(defmethod tools/pointer-up :zoom
   [db e]
   (let [factor (if (contains? (:modifiers e) :shift)
                  (:zoom-sensitivity db)

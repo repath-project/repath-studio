@@ -20,19 +20,19 @@
               ["Viewbox"
                (str (mapv units/->fixed @(rf/subscribe [:frame/viewbox])))]
 
-              ["Mouse position"
+              ["Pointer position"
                (str @(rf/subscribe [:pointer-pos]))]
 
-              ["Adjusted mouse position"
+              ["Adjusted pointer position"
                (str (mapv units/->fixed  @(rf/subscribe [:adjusted-pointer-pos])))]
 
-              ["Mouse offset"
+              ["Pointer offset"
                (str @(rf/subscribe [:pointer-offset]))]
 
-              ["Adjusted mouse offset"
+              ["Adjusted pointer offset"
                (str (mapv units/->fixed  @(rf/subscribe [:adjusted-pointer-offset])))]
 
-              ["Mouse drag?"
+              ["Pointer drag?"
                (str @(rf/subscribe [:drag?]))]
 
               ["Pan"

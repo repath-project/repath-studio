@@ -43,12 +43,12 @@
                  (assoc-in [:attrs :y2] (second adjusted-pointer-pos)))]
     (element.h/set-temp db temp)))
 
-(defmethod tools/mouse-move :line
+(defmethod tools/pointer-move :line
   [db]
   (cond-> db
     (element.h/get-temp db) (update-line-end)))
 
-(defmethod tools/mouse-up :line
+(defmethod tools/pointer-up :line
   [db]
   (if (element.h/get-temp db)
     (-> db
@@ -58,7 +58,7 @@
         (handlers/set-state :create)
         create-line)))
 
-(defmethod tools/mouse-down :line
+(defmethod tools/pointer-down :line
   [db]
   (cond-> db
     (element.h/get-temp db)

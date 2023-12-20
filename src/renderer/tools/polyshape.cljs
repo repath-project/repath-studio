@@ -39,7 +39,7 @@
              [:documents active-document :temp-element :attrs :points]
              #(str % " " (str/join " " point))))
 
-(defmethod tools/mouse-up ::tools/polyshape
+(defmethod tools/pointer-up ::tools/polyshape
   [{:keys [adjusted-pointer-pos] :as db}]
   (if (element.h/get-temp db)
     (add-point db adjusted-pointer-pos)
@@ -55,7 +55,7 @@
         (handlers/set-state :create)
         (create-polyline adjusted-pointer-pos))))
 
-(defmethod tools/mouse-move ::tools/polyshape
+(defmethod tools/pointer-move ::tools/polyshape
   [{:keys [active-document adjusted-pointer-pos] :as db}]
   (if-let [points (get-in db [:documents active-document :temp-element :attrs :points])]
     (let [point-vector (attr.utils/points->vec points)]

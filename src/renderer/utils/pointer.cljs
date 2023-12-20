@@ -1,4 +1,4 @@
-(ns renderer.utils.mouse
+(ns renderer.utils.pointer
   (:require
    [re-frame.core :as rf]))
 
@@ -7,7 +7,7 @@
   (some #(contains? (:modifiers e) %) #{:ctrl :shift}))
 
 (defn lock-direction
-  "Locks mouse movement to the axis with the biggest offset"
+  "Locks pointer movement to the axis with the biggest offset"
   [[x y]]
   (if (> (abs x) (abs y))
     [x 0]
@@ -22,7 +22,7 @@
    
    Although the fps might drop because synced dispatch blocks the rendering, 
    the end result appears to be more responsive because it's synced with the 
-   mouse movement."
+   pointer movement."
   [e el]
   (.stopPropagation e)
   ;; Disable native zoom on canvas.

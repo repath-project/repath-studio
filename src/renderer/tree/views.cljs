@@ -81,7 +81,7 @@
       :tab-index 0
       :role "menuitem"
       :on-double-click #(rf/dispatch [:pan-to-element key])
-      :on-mouse-enter #(rf/dispatch [:document/set-hovered-keys #{key}])
+      :on-pointer-enter #(rf/dispatch [:document/set-hovered-keys #{key}])
       :ref (fn [this]
              (when (and this selected? hovered? (not multiple-selected?))
                (dom/scroll-into-view this)))
@@ -143,7 +143,7 @@
      [:div.v-scroll
       {:style {:flex (if pages-collapsed? 0 "0 1 128px")}}
       [:div
-       {:on-mouse-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
+       {:on-pointer-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
        (map (fn [el] [list-item-button el 0])
             (reverse page-elements))]]
 
@@ -156,7 +156,7 @@
      [:div.v-scroll
       {:style {:flex (if elements-collapsed? 0 1)}}
       [:div
-       {:on-mouse-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
+       {:on-pointer-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
        [:ul (map (fn [el] [item el 1 elements])
                  (reverse active-page-children))]]]]))
 

@@ -36,7 +36,7 @@
        [:div
         [:div "Click to enter your text."]])))
 
-(defmethod tools/mouse-up :text
+(defmethod tools/pointer-up :text
   [{:keys [adjusted-pointer-offset] :as db}]
   (let [[offset-x offset-y] adjusted-pointer-offset
         attrs {:x offset-x
@@ -51,7 +51,7 @@
 
 (defmethod tools/drag-end :text
   [db]
-  (tools/mouse-up db))
+  (tools/pointer-up db))
 
 (defmethod tools/translate :text
   [element [x y]] (-> element

@@ -22,7 +22,7 @@
                 :height size
                 :fill "var(--level-3)"}]))))
 
-(defn mouse-pointer
+(defn pointer
   [orientation size]
   (let [[x y] @(rf/subscribe [:pointer-pos])
         pointer-size (/ size 5)
@@ -103,7 +103,7 @@
          :height (if (= orientation :vertical) "100%" size)}
    [bounds orientation size]
    [base-lines orientation size]
-   [mouse-pointer orientation size]])
+   [pointer orientation size]])
 
 (defn grid-lines
   [orientation]
