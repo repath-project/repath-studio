@@ -1,8 +1,7 @@
 (ns renderer.rulers.views
   (:require
    [re-frame.core :as rf]
-   [clojure.string :as str]
-   [clojure.core.matrix :as mat]))
+   [clojure.string :as str]))
 
 (defn bounds
   [orientation size]
@@ -20,57 +19,7 @@
                 :y 0
                 :width (- x2 x1)
                 :height size
-                :fill "var(--level-3)"}]))
-    ;; Alternative view when page bounds are visible
-    #_(let [position (- size 6)
-            zoom @(rf/subscribe [:document/zoom])
-            [x y] @(rf/subscribe [:document/pan])
-            [x1 y1 x2 y2] (map #(* % zoom) bounds)]
-        (if (= orientation :vertical)
-          [:<>
-           [:rect {:x position
-                   :y (- y1 (* y zoom))
-                   :width 1
-                   :height (- y2 y1)
-                   :fill "var(--font-color)"}]
-           [:circle {:cx position
-                     :cy (- y1 (* y zoom))
-                     :r 3
-                     :fill "var(--level-3)"
-                     :stroke "var(--font-color)"}]
-           [:circle {:cx position
-                     :cy (- y2 (* y zoom))
-                     :fill "var(--level-3)"
-                     :r 3
-                     :stroke "var(--font-color)"}]]
-          [:<>
-           [:rect {:x (- x1 (* x zoom))
-                   :y position
-                   :width (- x2 x1)
-                   :height 1
-                   :fill "var(--font-color)"}]
-           [:circle {:cx (- x1 (* x zoom))
-                     :cy position
-                     :fill "var(--level-3)"
-                     :r 3
-                     :stroke "var(--font-color)"}]
-           [:circle {:cx (- x2 (* x zoom))
-                     :cy position
-                     :fill "var(--level-3)"
-                     :r 3
-                     :stroke "var(--font-color)"}]]))))
-
-#_(defn page-bounds
-    [orientation]
-    (let [{:keys [attrs]} @(rf/subscribe [:element/active-page])
-          {:keys [x y width height]} attrs
-          zoom @(rf/subscribe [:document/zoom])
-          [pan-x pan-y] @(rf/subscribe [:document/pan])
-          [x y] (mat/sub [x y] [pan-x pan-y])
-          [x y width height] (map #(* % zoom) [x y width height])]
-      (if (= orientation :vertical)
-        [:rect {:x 0 :y y :width 23 :height height :fill "var(--level-3)"}]
-        [:rect {:x x :y 0 :width width :height 23 :fill "var(--level-3)"}])))
+                :fill "var(--level-3)"}]))))
 
 (defn mouse-pointer
   [orientation size]
@@ -100,6 +49,17 @@
             :y2 size
             :stroke "var(--font-color-muted)"})])
 
+(defn label
+  [vertical? step font-size text]
+  [:text {:x (if vertical? 19 (+ step 4))
+          :y (if vertical? (- step 10) (+ font-size 1))
+          :writing-mode (when vertical? "vertical-rl")
+          :fill "var(--font-color)"
+          :font-size font-size
+          :rotate (when vertical? 180)
+          :font-family "var(--font-mono"}
+   (if vertical? (reverse text) text)])
+
 (defn base-lines
   [orientation size]
   (let [[x y] @(rf/subscribe [:frame/viewbox])
@@ -121,14 +81,7 @@
                          :adjusted-step adjusted-step
                          :size size
                          :starting-point 0}]
-                  [:text {:x (if vertical? 19 (+ adjusted-step 4))
-                          :y (if vertical? (- adjusted-step 10) (+ font-size 1))
-                          :writing-mode (when vertical? "vertical-rl")
-                          :fill "var(--font-color)"
-                          :font-size font-size
-                          :rotate (when vertical? 180)
-                          :font-family "var(--font-mono"}
-                   (if vertical? (reverse text) text)]]
+                  [label vertical? adjusted-step font-size text]]
 
                  (and (odd? i) (zero? (rem i 5)))
                  [line {:orientation orientation
@@ -151,31 +104,20 @@
    [base-lines orientation size]
    [mouse-pointer orientation size]])
 
-(defn grid-lines
-  [orientation]
-  (let [zoom @(rf/subscribe [:document/zoom])
-        [x y width height] @(rf/subscribe [:frame/viewbox])
-        [width height] (mat/add [width height] [x y])
-        steps-coll @(rf/subscribe [:rulers/steps-coll orientation])
-        vertical? (= orientation :vertical)]
-    (into [:g]
-          (map-indexed
-           (fn [i step]
-             (let [step-x (+ step x)
-                   step-y (+ step y)
-                   main? (zero? (rem i 10))]
-               (when (or main? (< zoom 50))
-                 [:line {:x1 (if vertical? x step-x)
-                         :y1 (if vertical? step-y y)
-                         :x2 (if vertical? width step-x)
-                         :y2 (if vertical? step-y height)
-                         :stroke-width (/ 1 zoom)
-                         :opacity (if main? ".3"  ".1")
-                         :stroke "#777"
-                         :pointer-events "none"}]))) steps-coll))))
-
 (defn grid
+  [position step]
+  [:div.absolute.inset-0.pointer-events-none
+   {:style {:background-position position
+            :background-size (str step  "px " step "px")
+            :background-image (str "linear-gradient(to right, #77777715 1px, transparent 1px), 
+                                    linear-gradient(to bottom, #77777715 1px, transparent 1px)")}}])
+
+(defn grids
   []
-  [:<>
-   [grid-lines :vertical]
-   [grid-lines :horizontal]])
+  (let [zoom @(rf/subscribe [:document/zoom])
+        position @(rf/subscribe [:rulers/position])
+        step @(rf/subscribe [:rulers/step])
+        step (* zoom step)]
+    [:<>
+     [grid position step]
+     [grid position (* step 10)]]))
