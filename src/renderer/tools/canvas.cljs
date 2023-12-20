@@ -34,6 +34,7 @@
         rotate @(rf/subscribe [:document/rotate])
         snapping-points @(rf/subscribe [:snapping-points])
         debug-info? @(rf/subscribe [:debug-info?])
+        grid? @(rf/subscribe [:grid?])
         state @(rf/subscribe [:state])
         mouse-handler #(mouse/event-handler % element)
         pivot-point @(rf/subscribe [:pivot-point])
@@ -98,4 +99,6 @@
                [overlay/centroid el]])
             selected-elements))
 
-     [tools/render temp-element]]))
+     [tools/render temp-element]
+
+     (when grid? [rulers/grid])]))

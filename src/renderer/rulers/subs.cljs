@@ -1,6 +1,5 @@
 (ns renderer.rulers.subs
   (:require
-   [clojure.core.matrix :as mat]
    [re-frame.core :as rf]))
 
 (rf/reg-sub
@@ -37,11 +36,3 @@
                        (* sections ruler-step))))
             (if (= orientation :vertical) height width)
             ruler-step))))
-
-(rf/reg-sub
- :rulers/position
- :<- [:document/zoom]
- :<- [:document/pan]
- (fn [[zoom pan]]
-   (let [pan (mat/mul pan zoom)]
-    (str (- (first pan)) "px " (- (last pan)) "px"))))

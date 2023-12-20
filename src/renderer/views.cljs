@@ -58,7 +58,6 @@
            [:div.absolute.bottom-1.left-2.pointer-events-none
             {:style {:color "#555"}}
             @(rf/subscribe [:message])]
-           (when @(rf/subscribe [:grid?]) [rulers/grids])
            (when @(rf/subscribe [:debug-info?])
              [:<>
               [debug/info]
