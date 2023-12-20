@@ -54,7 +54,7 @@
                   :visible? true}
            :properties {:size 300
                         :visible? true}
-           :timeline {:visible? true}
+           :timeline {:visible? false}
            :xml {:visible? false}
            :repl-history {:visible? false}}
    :window {:maximized? true

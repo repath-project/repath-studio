@@ -43,7 +43,8 @@
           [comp/icon "chevron-down" {:class "small"}]]]]]
       [:> Select/Portal
        [:> Select/Content
-        {:class "menu-content rounded select-content"}
+        {:class "menu-content rounded select-content"
+         :style {:min-width "auto"}}
         [:> Select/ScrollUpButton {:class "select-scroll-button"}
          [comp/icon "chevron-up"]]
         [:> Select/Viewport {:class "select-viewport"}
