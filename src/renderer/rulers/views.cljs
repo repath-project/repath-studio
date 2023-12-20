@@ -20,57 +20,7 @@
                 :y 0
                 :width (- x2 x1)
                 :height size
-                :fill "var(--level-3)"}]))
-    ;; Alternative view when page bounds are visible
-    #_(let [position (- size 6)
-            zoom @(rf/subscribe [:document/zoom])
-            [x y] @(rf/subscribe [:document/pan])
-            [x1 y1 x2 y2] (map #(* % zoom) bounds)]
-        (if (= orientation :vertical)
-          [:<>
-           [:rect {:x position
-                   :y (- y1 (* y zoom))
-                   :width 1
-                   :height (- y2 y1)
-                   :fill "var(--font-color)"}]
-           [:circle {:cx position
-                     :cy (- y1 (* y zoom))
-                     :r 3
-                     :fill "var(--level-3)"
-                     :stroke "var(--font-color)"}]
-           [:circle {:cx position
-                     :cy (- y2 (* y zoom))
-                     :fill "var(--level-3)"
-                     :r 3
-                     :stroke "var(--font-color)"}]]
-          [:<>
-           [:rect {:x (- x1 (* x zoom))
-                   :y position
-                   :width (- x2 x1)
-                   :height 1
-                   :fill "var(--font-color)"}]
-           [:circle {:cx (- x1 (* x zoom))
-                     :cy position
-                     :fill "var(--level-3)"
-                     :r 3
-                     :stroke "var(--font-color)"}]
-           [:circle {:cx (- x2 (* x zoom))
-                     :cy position
-                     :fill "var(--level-3)"
-                     :r 3
-                     :stroke "var(--font-color)"}]]))))
-
-#_(defn page-bounds
-    [orientation]
-    (let [{:keys [attrs]} @(rf/subscribe [:element/active-page])
-          {:keys [x y width height]} attrs
-          zoom @(rf/subscribe [:document/zoom])
-          [pan-x pan-y] @(rf/subscribe [:document/pan])
-          [x y] (mat/sub [x y] [pan-x pan-y])
-          [x y width height] (map #(* % zoom) [x y width height])]
-      (if (= orientation :vertical)
-        [:rect {:x 0 :y y :width 23 :height height :fill "var(--level-3)"}]
-        [:rect {:x x :y 0 :width width :height 23 :fill "var(--level-3)"}])))
+                :fill "var(--level-3)"}]))))
 
 (defn mouse-pointer
   [orientation size]
