@@ -79,10 +79,10 @@
         [x y] (if-not (= (:tag el) :page)
                 (mat/add page-pos [x y])
                 [x y])]
-    [:foreignObject {:x (- x 2)
-                     :y (- y 2)
-                     :width (+ width 19)
-                     :height (+ height 4)}
+    [:foreignObject {:x x
+                     :y y
+                     :width (+ width 20)
+                     :height height}
      [:input
       {:key key
        :default-value content
@@ -109,6 +109,8 @@
                :width (+ width 15)
                :height height
                :padding 0
+               :border 0
+               :outline-color "transparent";
                :background "transparent"
                :font-family (if (empty? font-family) "inherit" font-family)
                :font-size (if (empty? font-size) "inherit" font-size)
@@ -127,4 +129,4 @@
                content
                (js/parseFloat (:x attrs))
                (js/parseFloat (:y attrs))
-               (js/parseFloat (or (:font-size attrs) 16))))
+               (js/parseFloat (or (:font-size attrs) 16)))) ; FIXME
