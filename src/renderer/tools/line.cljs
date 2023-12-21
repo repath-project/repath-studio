@@ -16,13 +16,14 @@
 (derive :line ::tools/shape)
 
 (defmethod tools/properties :line
-  [] {:icon "line-alt"
-      :description "The <line> element is an SVG basic shape used to create 
-                    a line connecting two points."
-      :attrs [:stroke-width
-              :stroke-linecap
-              :stroke-dasharray
-              :opacity]})
+  []
+  {:icon "line-alt"
+   :description "The <line> element is an SVG basic shape used to create a line 
+                 connecting two points."
+   :attrs [:stroke-width
+           :stroke-linecap
+           :stroke-dasharray
+           :opacity]})
 
 (defn create-line
   [{:keys [adjusted-pointer-offset adjusted-pointer-pos active-document] :as db}]
