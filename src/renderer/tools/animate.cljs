@@ -10,7 +10,6 @@
   {:description "The SVG <animate> element provides a way to animate an 
                  attribute of an element over time."
    :attrs [:href
-           :attributeType
            :attributeName
            :begin
            :end
