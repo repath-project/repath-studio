@@ -3,6 +3,13 @@
    [cljs.test :refer-macros [deftest testing is]]
    [renderer.utils.bounds :as bounds]))
 
+(deftest test-union
+  (testing "united bounds"
+    (is (= (bounds/union [0 0 10 10] [11 11 20 20]) [0 0 20 20]))
+    (is (= (bounds/union [0 0 10 10] [9 9 20 20]) [0 0 20 20]))
+    (is (= (bounds/union [11 11 11 11] [0 0 0 0]) [0 0 11 11]))))
+
+
 (deftest test-intersected?
   (testing "bounds are intesrecting"
     (is (= (bounds/intersected? [0 0 10 10] [11 11 20 20]) false))
