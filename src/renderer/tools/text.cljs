@@ -113,7 +113,9 @@
                :outline-color "transparent";
                :background "transparent"
                :font-family (if (empty? font-family) "inherit" font-family)
-               :font-size (if (empty? font-size) "inherit" font-size)
+               :font-size (if (empty? font-size)
+                            "inherit"
+                            (str (units/unit->px font-size) "px"))
                :font-weight (if (empty? font-weight) "inherit" font-weight)}}]]))
 
 (defmethod tools/path :text
