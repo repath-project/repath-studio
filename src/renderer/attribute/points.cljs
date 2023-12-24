@@ -26,11 +26,12 @@
   [k v disabled?]
   (let [state-default? (= @(rf/subscribe [:state]) :default)]
     [:<>
-     [v/form-input {:key k
-                    :value (if state-default? v "waiting")
-                    :disabled? (or disabled?
-                                   (not v)
-                                   (not state-default?))}]
+     [v/form-input
+      {:key k
+       :value (if state-default? v "waiting")
+       :disabled? (or disabled?
+                      (not v)
+                      (not state-default?))}]
      (when v
        [:> Popover/Root {:modal true}
         [:> Popover/Trigger {:asChild true}

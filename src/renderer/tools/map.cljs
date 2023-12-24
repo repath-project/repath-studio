@@ -30,7 +30,6 @@
     (rf/dispatch [:document/set-temp-element {:type tool
                                               :attrs attrs}])))
 
-
 (defn ->href [image]
   (->> image
        (map char)

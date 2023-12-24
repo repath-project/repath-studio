@@ -30,8 +30,9 @@
     [:div.inline-flex.items-center
      [:label {:style {:height "auto"
                       :background "transparent"}} "Speed"]
-     [:> Select/Root {:value speed
-                      :onValueChange #(.setPlayRate (.-current editor-ref) %)}
+     [:> Select/Root
+      {:value speed
+       :onValueChange #(.setPlayRate (.-current editor-ref) %)}
       [:> Select/Trigger
        {:class "select-trigger"
         :aria-label "No a11y filter"}

@@ -9,18 +9,20 @@
 (defmethod hierarchy/form-element ::angle
   [k v disabled? initial]
   [:<>
-   [v/form-input {:key k
-                  :value v
-                  :disabled? disabled?
-                  :placeholder initial}]
+   [v/form-input
+    {:key k
+     :value v
+     :disabled? disabled?
+     :placeholder initial}]
    [:> Popover/Root {:modal true}
     [:> Popover/Trigger {:asChild true}
      [:button.button.ml-px.level-2.text-muted
       {:style {:width "26px" :height "26px"}}
       [comp/icon "degrees" {:class "small"}]]]
     [:> Popover/Portal
-     [:> Popover/Content {:sideOffset 5
-                          :className "popover-content"
-                          :align "end"}
+     [:> Popover/Content
+      {:sideOffset 5
+       :className "popover-content"
+       :align "end"}
       [:div.circular-slider]
       [:> Popover/Arrow {:class "popover-arrow"}]]]]])
