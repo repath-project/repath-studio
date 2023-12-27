@@ -19,8 +19,8 @@
    (conj (path db) el-k)))
 
 (defn update-el
-  [db el f & more]
-  (apply update-in db (conj (path db) (:key el)) f more))
+  [db el & more]
+  (apply update-in db (conj (path db) (:key el)) more))
 
 (defn elements
   ([db]
@@ -60,20 +60,13 @@
 (defn parent
   ([db]
    (let [selected (selected db)]
-     (cond
-       (empty? selected)
-       (active-page db)
+     (or (cond
+           (siblings-selected? db)
+           (parent db (parent db (first selected)))
 
-       (siblings-selected? db)
-       (or (parent db (parent db (first selected)))
-           (active-page db))
-
-       (single? selected)
-       (or (parent db (first selected))
-           (active-page db))
-
-       :else
-       (active-page db))))
+           (single? selected)
+           (parent db (first selected)))
+         (active-page db))))
   ([db el]
    (when-let [parent (:parent el)]
      (element db parent))))
@@ -110,7 +103,7 @@
 (defn index-tree-path
   "Returns a sequence that represents the index tree path of an element.
    For example, the seventh element of the second page on the canvas
-   will return [2 7]. This is useful when we need to figure put the index of 
+   will return [2 7]. This is useful when we need to figure out the index of 
    nested elements."
   [db el]
   (let [ancestors (-> db (ancestor-keys el) reverse)]
@@ -174,8 +167,8 @@
   (set-active-page db (last (-> (elements db) :canvas :children))))
 
 (defn update-prop
-  [db el-k k f & more]
-  (apply update-in db (conj (path db) el-k k) f more))
+  [db el-k k & more]
+  (apply update-in db (conj (path db) el-k k) more))
 
 (defn toggle-prop
   [db el-k k]

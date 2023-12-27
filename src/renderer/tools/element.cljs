@@ -64,6 +64,8 @@
       :component-did-mount
       (fn
         [_this]
+        (when (.-pauseAnimations (.-current ref))
+          (.pauseAnimations (.-current ref)))
         (.setAttribute (.-current ref) "style" (:style attrs)))
 
       :component-did-update
@@ -75,9 +77,7 @@
 
       :reagent-render
       (fn
-        [{:keys [attrs tag title content] :as el}
-         child-elements
-         default-state?]
+        [{:keys [attrs tag title content] :as el} child-elements default-state?]
         [:<>
          [tag (->> (-> attrs
                        (dissoc :style)

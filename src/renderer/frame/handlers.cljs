@@ -72,10 +72,10 @@
         elements (el/elements db)
         parrent-page-attrs (:attrs (el.utils/parent-page elements element))
         db (pan-to-bounds db (tools/bounds element elements))]
-    (if-not (el/page? element)
-      (pan db [(:x parrent-page-attrs)
-               (:y parrent-page-attrs)])
-      db)))
+    (cond-> db
+      (not (el/page? element))
+      (pan [(:x parrent-page-attrs)
+            (:y parrent-page-attrs)]))))
 
 (defn calc-pan-offset
   [position offset size]
