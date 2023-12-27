@@ -60,7 +60,7 @@
   },
   "main": "resources/main.js",
   "devDependencies": {
-    "@mdn/browser-compat-data": "5.5.1",
+    "@mdn/browser-compat-data": "5.5.2",
     "@playwright/test": "1.39.0",
     "@radix-ui/react-context-menu": "2.1.5",
     "@radix-ui/react-dropdown-menu": "2.0.6",
