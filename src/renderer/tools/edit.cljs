@@ -5,7 +5,7 @@
    [renderer.handlers :as handlers]
    [renderer.history.handlers :as history]
    [renderer.tools.base :as tools]
-   [renderer.utils.mouse :as mouse]))
+   [renderer.utils.pointer :as pointer]))
 
 (derive :edit ::tools/transform)
 
@@ -23,11 +23,11 @@
               to change selection."]
         [:div "Hold " [:strong "Ctrl"] " to restrict direction."]])))
 
-(defmethod tools/mouse-down :edit
+(defmethod tools/pointer-down :edit
   [db _ el]
   (assoc db :clicked-element el))
 
-(defmethod tools/mouse-move :edit
+(defmethod tools/pointer-move :edit
   [db _ el]
   (-> db
       element.h/clear-hovered
@@ -43,7 +43,7 @@
         db (history/swap db)
         element-key (:element clicked-element)
         pointer-offset (if (contains? (:modifiers e) :ctrl)
-                         (mouse/lock-direction pointer-offset)
+                         (pointer/lock-direction pointer-offset)
                          pointer-offset)]
     (if element-key
       (assoc-in db
@@ -58,4 +58,4 @@
   (-> db
       (handlers/set-state :default)
       (dissoc :clicked-element)
-      (history/finalize (str "Edit " (-> db :clicked-element :key name)))))
+      (history/finalize "Edit " (-> db :clicked-element :key name))))

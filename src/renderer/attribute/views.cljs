@@ -69,7 +69,7 @@
    (let [new-v (.. event -target -value)]
      (when-not (= new-v old-v)
        (rf/dispatch [(if finalize?
-                       :element/set-attribute
+                       :element/set-attr
                        :element/preview-attribute) k new-v])))))
 
 (defn form-input
@@ -86,7 +86,7 @@
    (when-not (or (empty? (str value)) disabled?)
      [:button.button.ml-px.level-2.text-muted.absolute.right-0.clear-input-button
       {:style {:width "26px" :height "26px"}
-       :on-pointer-down #(rf/dispatch [:element/remove-attribute key])}
+       :on-pointer-down #(rf/dispatch [:element/remove-attr key])}
       [comp/icon "times" {:class "small"}]])])
 
 (defmethod hierarchy/form-element :default
@@ -107,7 +107,7 @@
            {:value (if (= "" v) initial v)
             :type "range"
             :on-change #(on-change-handler % k v false)
-            :on-pointer-up #(rf/dispatch [:element/set-attribute k v])})]])
+            :on-pointer-up #(rf/dispatch [:element/set-attr k v])})]])
 
 (defn select-input
   [{:keys [key value disabled? items initial]}]
@@ -117,7 +117,7 @@
                 :disabled? disabled?
                 :placeholder initial}]
    [:> Select/Root {:value value
-                    :onValueChange #(rf/dispatch [:element/set-attribute key %])
+                    :onValueChange #(rf/dispatch [:element/set-attr key %])
                     :disabled disabled?}
     [:> Select/Trigger {:class "select-trigger ml-px"
                         :aria-label (name key)

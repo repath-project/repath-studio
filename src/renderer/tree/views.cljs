@@ -17,7 +17,7 @@
      :inactive-icon "eye-closed"
      :inactive-text "show"
      :class (when visible? "list-item-action")
-     :action #(rf/dispatch [:element/toggle-property key :visible?])}]
+     :action #(rf/dispatch [:element/toggle-prop key :visible?])}]
    [comp/toggle-icon-button
     {:active? locked?
      :active-icon "lock"
@@ -25,11 +25,11 @@
      :inactive-icon "unlock"
      :inactive-text "lock"
      :class (when-not locked? "list-item-action")
-     :action #(rf/dispatch [:element/toggle-property key :locked?])}]])
+     :action #(rf/dispatch [:element/toggle-prop key :locked?])}]])
 
 (defn- set-item-name
   [e k]
-  (rf/dispatch [:element/set-property k :name (.. e -target -value)]))
+  (rf/dispatch [:element/set-prop k :name (.. e -target -value)]))
 
 (defn label
   [{:keys [key name visible? tag]}]
@@ -81,7 +81,7 @@
       :tab-index 0
       :role "menuitem"
       :on-double-click #(rf/dispatch [:pan-to-element key])
-      :on-mouse-enter #(rf/dispatch [:document/set-hovered-keys #{key}])
+      :on-pointer-enter #(rf/dispatch [:document/set-hovered-keys #{key}])
       :ref (fn [this]
              (when (and this selected? hovered? (not multiple-selected?))
                (dom/scroll-into-view this)))
@@ -99,7 +99,7 @@
       (when (and (seq children) (not page?))
         [comp/toggle-collapsed-button
          collapsed?
-         #(rf/dispatch [:element/toggle-property key :collapsed?])])
+         #(rf/dispatch [:element/toggle-prop key :collapsed?])])
       [:div.flex-1 [label el]]
       [item-buttons el]]]))
 
@@ -143,7 +143,7 @@
      [:div.v-scroll
       {:style {:flex (if pages-collapsed? 0 "0 1 128px")}}
       [:div
-       {:on-mouse-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
+       {:on-pointer-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
        (map (fn [el] [list-item-button el 0])
             (reverse page-elements))]]
 
@@ -156,7 +156,7 @@
      [:div.v-scroll
       {:style {:flex (if elements-collapsed? 0 1)}}
       [:div
-       {:on-mouse-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
+       {:on-pointer-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
        [:ul (map (fn [el] [item el 1 elements])
                  (reverse active-page-children))]]]]))
 

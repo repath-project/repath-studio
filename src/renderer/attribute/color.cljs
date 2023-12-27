@@ -14,10 +14,11 @@
 (defmethod hierarchy/form-element ::color
   [k v disabled? initial]
   [:<>
-   [v/form-input {:key k
-                  :value v
-                  :disabled? disabled?
-                  :placeholder initial}]
+   [v/form-input
+    {:key k
+     :value v
+     :disabled? disabled?
+     :placeholder initial}]
    [:> Popover/Root {:modal true}
     [:> Popover/Trigger {:asChild true}
      [:button.color-drip.ml-px.inline-block
@@ -25,10 +26,11 @@
                :border "5px solid var(--level-2)"
                :background v}}]]
     [:> Popover/Portal
-     [:> Popover/Content {:sideOffset 5
-                          :className "popover-content"
-                          :align "end"}
+     [:> Popover/Content
+      {:sideOffset 5
+       :className "popover-content"
+       :align "end"}
       [:> ChromePicker
        {:color (or v "")
-        :on-change-complete #(rf/dispatch [:element/set-attribute k (.-hex %)])
+        :on-change-complete #(rf/dispatch [:element/set-attr k (.-hex %)])
         :on-change #(rf/dispatch [:element/preview-attribute k (.-hex %)])}]]]]])

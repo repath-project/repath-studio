@@ -25,7 +25,7 @@
   [db]
   (element.h/clear-temp db))
 
-(defmethod tools/mouse-up :measure
+(defmethod tools/pointer-up :measure
   [db]
   (element.h/clear-temp db))
 

@@ -9,7 +9,7 @@
    [renderer.tools.base :as tools]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.dom :as dom]
-   [renderer.utils.mouse :as mouse]))
+   [renderer.utils.pointer :as pointer]))
 
 (derive ::tools/element ::tools/tool)
 
@@ -27,8 +27,8 @@
   [db]
   (let [temp-element (get-in db [:documents (:active-document db) :temp-element])]
     (-> db
-        element.h/create
-        (history.h/finalize (str "Create " (name (:tag temp-element))))
+        element.h/add
+        (history.h/finalize "Create " (name (:tag temp-element)))
         (assoc :cursor "crosshair"))))
 
 (defmethod tools/bounds ::tools/element
@@ -43,13 +43,13 @@
         (.remove el)
         bounds))))
 
-(defmethod tools/mouse-up :default
+(defmethod tools/pointer-up :default
   [db e el]
   (if-not (and (= (:button e) 2)
                (:selected? el))
     (-> db
         (dissoc :clicked-element)
-        (element.h/select (:key el) (mouse/multiselect? e))
+        (element.h/select (:key el) (pointer/multiselect? e))
         (history.h/finalize "Select element"))
     (dissoc db :clicked-element)))
 
@@ -64,6 +64,8 @@
       :component-did-mount
       (fn
         [_this]
+        (when (.-pauseAnimations (.-current ref))
+          (.pauseAnimations (.-current ref)))
         (.setAttribute (.-current ref) "style" (:style attrs)))
 
       :component-did-update
@@ -75,9 +77,7 @@
 
       :reagent-render
       (fn
-        [{:keys [attrs tag title content] :as el}
-         child-elements
-         default-state?]
+        [{:keys [attrs tag title content] :as el} child-elements default-state?]
         [:<>
          [tag (->> (-> attrs
                        (dissoc :style)
@@ -93,13 +93,13 @@
                child-elements)]
 
          (when default-state?
-           (let [mouse-handler #(mouse/event-handler % el)]
+           (let [pointer-handler #(pointer/event-handler % el)]
              [tag
               (merge (dissoc attrs :style)
-                     {:on-pointer-up mouse-handler
-                      :on-pointer-down mouse-handler
-                      :on-pointer-move mouse-handler
-                      :on-double-click mouse-handler
+                     {:on-pointer-up pointer-handler
+                      :on-pointer-down pointer-handler
+                      :on-pointer-move pointer-handler
+                      :on-double-click pointer-handler
                       :shape-rendering "optimizeSpeed"
                       :fill "transparent"
                       :stroke "transparent"

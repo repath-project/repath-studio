@@ -64,14 +64,14 @@
  (fn [{active-document :active-document :as db} [_ fill]]
    (-> db
        (assoc-in [:documents active-document :fill] fill)
-       (element.h/set-attribute :fill fill))))
+       (element.h/set-attr :fill fill))))
 
 (rf/reg-event-db
  :document/set-stroke
  (fn [{active-document :active-document :as db} [_ stroke]]
    (-> db
        (assoc-in [:documents active-document :stroke] stroke)
-       (element.h/set-attribute :stroke stroke))))
+       (element.h/set-attr :stroke stroke))))
 
 (rf/reg-event-db
  :document/new

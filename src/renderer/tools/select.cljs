@@ -9,7 +9,7 @@
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
    [renderer.utils.bounds :as bounds]
-   [renderer.utils.mouse :as mouse]
+   [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
 
 (derive :select ::tools/transform)
@@ -78,14 +78,14 @@
             db
             (vals (element.h/elements db)))))
 
-(defmethod tools/mouse-move :select
+(defmethod tools/pointer-move :select
   [db _e el]
   (-> db
       element.h/clear-hovered
       (element.h/hover (:key el))
       (assoc :cursor (if el "move" "default"))))
 
-(defmethod tools/mouse-down :select
+(defmethod tools/pointer-down :select
   [db _e el]
   (assoc db :clicked-element el))
 
@@ -129,7 +129,7 @@
     (handlers/set-state
      (if-not (-> db :clicked-element :selected?)
        (-> db
-           (element.h/select (-> db :clicked-element :key) (mouse/multiselect? e))
+           (element.h/select (-> db :clicked-element :key) (pointer/multiselect? e))
            (history/finalize "Select element"))
        db) :move)))
 
@@ -190,7 +190,7 @@
   (let [offset (mat/sub adjusted-pointer-pos adjusted-pointer-offset)
         offset (if (and (contains? (:modifiers e) :ctrl)
                         (not= state :scale))
-                 (mouse/lock-direction offset)
+                 (pointer/lock-direction offset)
                  offset)
         alt-key? (contains? (:modifiers e) :alt)
         db (handlers/set-message db (message offset state))]
@@ -222,7 +222,7 @@
 (defmethod tools/drag-end :select
   [{:keys [state adjusted-pointer-offset] :as db} e]
   (-> (case state
-        :select (-> (cond-> db (not (mouse/multiselect? e)) element.h/deselect)
+        :select (-> (cond-> db (not (pointer/multiselect? e)) element.h/deselect)
                     (reduce-by-area (contains? (:modifiers e) :alt) element.h/select)
                     (element.h/clear-temp)
                     (history/finalize "Modify selection"))

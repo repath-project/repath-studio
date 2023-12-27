@@ -8,29 +8,30 @@
    [reagent.dom.server :as server]
    [renderer.components :as comp]
    [renderer.tools.base :as tools]
-   [renderer.utils.mouse :as mouse]))
+   [renderer.utils.pointer :as pointer]))
 
-(defn mouse-handler
+(defn pointer-handler
   [e]
-  (mouse/event-handler e nil))
+  (pointer/event-handler e nil))
 
 (defn inner-component
-  "We need access to the iframe's window to add the mouse move listener.
-   This is required in order to track mouse movement outside of our canvas.
+  "We need access to the iframe's window to add the pointer move listener.
+   This is required in order to track pointer movement outside of our canvas.
    https://github.com/ryanseddon/react-frame-component#accessing-the-iframes-window-and-document
    https://github.com/reagent-project/reagent/blob/master/doc/ReactFeatures.md#function-components"
   []
   (let [frame-window (.-window (useFrame))]
     (ra/create-class
      {:component-did-mount
-      #(doseq
-        [event ["pointermove" "pointerup" "wheel"]]
-         (.addEventListener frame-window event mouse-handler #js {:passive false}))
+      (fn []
+        (doseq
+         [event ["pointermove" "pointerup" "wheel"]]
+          (.addEventListener frame-window event pointer-handler #js {:passive false})))
 
       :component-will-unmount
       #(doseq
         [event ["pointermove" "pointerup" "wheel"]]
-         (.removeEventListener frame-window event mouse-handler))
+         (.removeEventListener frame-window event pointer-handler))
 
       :reagent-render #()})))
 

@@ -1,0 +1,34 @@
+.timeline-editor {
+  @apply level-1 w-full min-h-0 !important;
+  font-family: inherit !important;
+  color: var(--font-color-muted) !important;
+ }
+
+ .timeline-editor-action {
+  @apply level-2 !important;
+
+  &-selected {
+    @apply level-3 !important;
+  }
+}
+
+.timeline-editor-cursor {
+  border-color: var(--accent) !important;
+}
+
+.timeline-editor-cursor-top path {
+  fill: var(--accent) !important;
+}
+
+.timeline-editor-time-unit {
+  border-color: var(--border-color) !important;
+}
+
+.timeline-editor-time-unit-scale {
+  color: var(--font-color-muted) !important;
+}
+
+.timeline-editor-edit-row {
+  background-image: linear-gradient(var(--level-1), var(--level-1)), 
+                    linear-gradient(90deg, var(--border-color) 1px, transparent 0) !important;
+}

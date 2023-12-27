@@ -2,6 +2,7 @@
   (:require
    ["@radix-ui/react-context-menu" :as ContextMenu]
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
+   ["@radix-ui/react-switch" :as Switch]
    ["react-svg" :refer [ReactSVG]]
    [clojure.string :as str]
    [re-frame.core :as rf]
@@ -16,6 +17,17 @@
   [:button.icon-button
    props
    [renderer.components/icon icon]])
+
+(defn switch
+  [{:keys [id label default-checked? on-checked-change]}]
+  [:span.inline-flex.items-center
+   [:label.switch-label {:for id} label]
+   [:> Switch/Root
+    {:class "switch-root"
+     :id id
+     :default-checked default-checked?
+     :on-checked-change on-checked-change}
+    [:> Switch/Thumb {:class "switch-thumb"}]]])
 
 (defn shortcuts
   [event]
@@ -110,7 +122,6 @@
      label
      [:div.right-slot
       [shortcuts action]]]))
-
 
 (defn dropdown-menu-item
   [{:keys [type label action checked?]}]

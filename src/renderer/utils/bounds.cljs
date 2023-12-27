@@ -20,7 +20,7 @@
           (apply map max (map #(drop 2 %) bounds))))
 
 (defn ->dimensions
-  "Converts bounds to a [width heigh] vector."
+  "Converts bounds to [width heigh]"
   [[x1 y1 x2 y2]]
   (mat/sub [x2 y2] [x1 y1]))
 

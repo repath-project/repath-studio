@@ -2,6 +2,7 @@
   (:require
    [clojure.core.matrix :as mat]
    [malli.core :as ma]
+   [platform]
    [re-frame.core :as rf]
    [renderer.db :as db]
    [renderer.frame.handlers :as frame-h]
@@ -127,7 +128,7 @@
 
                :always
                (tools/drag e element))
-             (tools/mouse-move db e element))
+             (tools/pointer-move db e element))
            (assoc :pointer-pos pointer-pos
                   :adjusted-pointer-pos adjusted-pointer-pos))
 
@@ -138,14 +139,14 @@
              (tools/set-tool :pan))
 
          :always
-         (-> (tools/mouse-down e element)
+         (-> (tools/pointer-down e element)
              (assoc :pointer-offset pointer-pos
                     :adjusted-pointer-offset adjusted-pointer-pos)))
 
        :pointerup
        (cond-> (if (:drag? db)
                  (tools/drag-end db e element)
-                 (tools/mouse-up db e element))
+                 (tools/pointer-up db e element))
          (and (:primary-tool db) (= (:button e) 1))
          (-> (tools/set-tool (:primary-tool db))
              (dissoc :primary-tool))
@@ -202,3 +203,19 @@
        (tools/key-up e))
 
      db)))
+
+(rf/reg-fx
+ :send-to-main
+ (fn [data]
+   (when platform/electron?
+     (js/window.api.send "toMain" (clj->js data)))))
+
+(rf/reg-fx
+ :clipboard-write
+ (fn [text-html]
+   (js/navigator.clipboard.write
+    (clj->js [(js/ClipboardItem.
+               #js {"text/html" (when text-html
+                                  (js/Blob.
+                                   [text-html]
+                                   #js {:type ["text/html"]}))})]))))

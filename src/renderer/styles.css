@@ -291,7 +291,7 @@ pre {
 }
 
 .toolbar {
-  @apply p-1;
+  @apply flex p-1;
 
   .button {
     margin: 2px;
@@ -480,4 +480,32 @@ pre {
   &[data-state='delayed-open'][data-side='left'] {
     animation-name: slideRightAndFade;
   }
+}
+
+.switch-root {
+  @apply level-3 relative rounded-full;
+  width: 42px;
+  height: 25px;
+
+  &[data-state='checked'] {
+    background-color: var(--accent);
+  }
+}
+
+.switch-thumb {
+  @apply block level-1 rounded-full shadow-sm;
+  width: 21px;
+  height: 21px;
+  transition: transform 100ms;
+  transform: translateX(2px);
+  will-change: transform;
+
+  &[data-state='checked'] {
+    transform: translateX(19px);
+  }
+}
+
+.switch-label {
+  @apply h-auto;
+  background: transparent;
 }

@@ -8,7 +8,7 @@
    [renderer.rulers.views :as rulers]
    [renderer.tools.base :as tools]
    [renderer.utils.keyboard :as keyb]
-   [renderer.utils.mouse :as mouse]))
+   [renderer.utils.pointer :as pointer]))
 
 (derive :canvas ::tools/tool)
 
@@ -36,18 +36,18 @@
         debug-info? @(rf/subscribe [:debug-info?])
         grid? @(rf/subscribe [:grid?])
         state @(rf/subscribe [:state])
-        mouse-handler #(mouse/event-handler % element)
+        pointer-handler #(pointer/event-handler % element)
         pivot-point @(rf/subscribe [:pivot-point])
         select? (or (= tool :select)
                     (= primary-tool :select))]
-    [:svg {:on-pointer-up mouse-handler
-           :on-pointer-down mouse-handler
-           :on-double-click mouse-handler
+    [:svg {:on-pointer-up pointer-handler
+           :on-pointer-down pointer-handler
+           :on-double-click pointer-handler
            :on-key-up keyb/event-handler
            :on-key-down keyb/event-handler
            :tab-index 0 ; Enable keyboard events on the svg element 
            :viewBox (str/join " " viewbox)
-           :on-drop mouse-handler
+           :on-drop pointer-handler
            :on-drag-over #(.preventDefault %)
            :width width
            :height height
@@ -81,7 +81,7 @@
         (when (> elements-area 0)
           [overlay/area elements-area bounds])
         
-        (when (not-empty (filter (comp not zero?) bounds))
+        (when (not-empty (filter (complement zero?) bounds))
           [:<>
            [overlay/size bounds]
            [overlay/bounding-handlers bounds]])

@@ -8,4 +8,4 @@
   [k v disabled?]
   [:div.w-full.level-2.py-0.px-2
    [cm/editor v {:options {:readOnly disabled?}
-                 :on-blur #(rf/dispatch [:element/set-attribute k %])}]])
+                 :on-blur #(rf/dispatch [:element/set-attr k %])}]])

@@ -19,8 +19,8 @@
    (conj (path db) el-k)))
 
 (defn update-el
-  [db el f & more]
-  (apply update-in db (conj (path db) (:key el)) f more))
+  [db el & more]
+  (apply update-in db (conj (path db) (:key el)) more))
 
 (defn elements
   ([db]
@@ -60,20 +60,13 @@
 (defn parent
   ([db]
    (let [selected (selected db)]
-     (cond
-       (empty? selected)
-       (active-page db)
+     (or (cond
+           (siblings-selected? db)
+           (parent db (parent db (first selected)))
 
-       (siblings-selected? db)
-       (or (parent db (parent db (first selected)))
-           (active-page db))
-
-       (single? selected)
-       (or (parent db (first selected))
-           (active-page db))
-
-       :else
-       (active-page db))))
+           (single? selected)
+           (parent db (first selected)))
+         (active-page db))))
   ([db el]
    (when-let [parent (:parent el)]
      (element db parent))))
@@ -110,7 +103,7 @@
 (defn index-tree-path
   "Returns a sequence that represents the index tree path of an element.
    For example, the seventh element of the second page on the canvas
-   will return [2 7]. This is useful when we need to figure put the index of 
+   will return [2 7]. This is useful when we need to figure out the index of 
    nested elements."
   [db el]
   (let [ancestors (-> db (ancestor-keys el) reverse)]
@@ -173,47 +166,47 @@
   [db]
   (set-active-page db (last (-> (elements db) :canvas :children))))
 
-(defn update-property
-  [db el-k k f & more]
-  (apply update-in db (conj (path db) el-k k) f more))
+(defn update-prop
+  [db el-k k & more]
+  (apply update-in db (conj (path db) el-k k) more))
 
-(defn toggle-property
+(defn toggle-prop
   [db el-k k]
-  (update-property db el-k k not))
+  (update-prop db el-k k not))
 
-(defn set-property
+(defn set-prop
   ([db k v]
-   (reduce #(set-property %1 %2 k v) db (selected-keys db)))
+   (reduce #(set-prop %1 %2 k v) db (selected-keys db)))
   ([db el-k k v]
    (assoc-in db (conj (path db) el-k k) v)))
 
-(defn remove-attribute
+(defn remove-attr
   ([db k]
-   (reduce #(remove-attribute %1 %2 k) db (selected-keys db)))
+   (reduce #(remove-attr %1 %2 k) db (selected-keys db)))
   ([db el-k k]
    (cond-> db
      (not (:locked? (element db el-k)))
-     (update-property el-k :attrs dissoc k))))
+     (update-prop el-k :attrs dissoc k))))
 
 (defn supports-attr?
   [el k]
   (-> el tools/attributes k))
 
-(defn set-attribute
+(defn set-attr
   ([db k v]
-   (reduce #(set-attribute %1 %2 k v) db (selected-keys db)))
+   (reduce #(set-attr %1 %2 k v) db (selected-keys db)))
   ([db el-k k v]
    (let [attr-path (conj (path db) el-k :attrs k)
          el (element db el-k)]
      (if (and (not (:locked? el)) (supports-attr? el k))
        (if (empty? (str v))
-         (remove-attribute db el-k k)
+         (remove-attr db el-k k)
          (assoc-in db attr-path v))
        db))))
 
-(defn update-attribute
+(defn update-attr
   ([db k f]
-   (reduce #(update-attribute %1 %2 k f) db (selected db)))
+   (reduce #(update-attr %1 %2 k f) db (selected db)))
   ([db el k f]
    (cond-> db
      (and (not (:locked? el)) (supports-attr? el k))
@@ -223,11 +216,11 @@
   ([db]
    (reduce deselect db (keys (elements db))))
   ([db key]
-   (set-property db key :selected? false)))
+   (set-prop db key :selected? false)))
 
 (defn select
   ([db key]
-   (set-property db key :selected? true))
+   (set-prop db key :selected? true))
   ([db key multi?]
    (if-let [el (element db key)]
      (if-not multi?
@@ -235,7 +228,7 @@
            deselect
            (select key)
            (set-active-page (:key (page db el))))
-       (toggle-property db key :selected?))
+       (toggle-prop db key :selected?))
      (deselect db))))
 
 (defn select-all
@@ -282,7 +275,7 @@
   (reduce (fn [db {:keys [key tag]}]
             (cond-> db
               (not (contains? #{:page :canvas} tag))
-              (update-property key :selected? not)))
+              (update-prop key :selected? not)))
           db
           (vals (elements db))))
 
@@ -310,13 +303,13 @@
   ([db]
    (reduce lock db (selected-keys db)))
   ([db el-k]
-   (set-property db el-k :locked? true)))
+   (set-prop db el-k :locked? true)))
 
 (defn unlock
   ([db]
    (reduce unlock db (selected-keys db)))
   ([db el-k]
-   (set-property db el-k :locked? false)))
+   (set-prop db el-k :locked? false)))
 
 (defn copy
   [db]
@@ -348,7 +341,7 @@
         new-index (apply f index more)]
     (cond-> db
       (<= 0 new-index (-> siblings count dec))
-      (update-property (:parent el) :children vec/move index new-index))))
+      (update-prop (:parent el) :children vec/move index new-index))))
 
 (defn raise
   ([db]
@@ -438,7 +431,7 @@
    :selected? true
    :children []})
 
-(defn create-element
+(defn create
   [db el]
   (let [key (uuid/generate)
         parent (or (:parent el)
@@ -447,7 +440,7 @@
     (cond-> db
       :always
       (-> (assoc-in (conj (path db) key) el)
-          (update-property (:parent el) :children #(vec (conj % key))))
+          (update-prop (:parent el) :children #(vec (conj % key))))
 
       (not= (:tool db) :select)
       (tools/set-tool :select)
@@ -455,15 +448,15 @@
       (page? el)
       (set-active-page key))))
 
-(defn create
+(defn add
   ([db]
    (let [[x1 y1 _ _] (tools/bounds (active-page db))]
      (cond-> db
-         :always (create (get-temp db))
-         (not (page? (get-temp db))) (translate [(- x1) (- y1)])
-         :always clear-temp)))
+       :always (add (get-temp db))
+       (not (page? (get-temp db))) (translate [(- x1) (- y1)])
+       :always clear-temp)))
   ([db & elements]
-   (reduce create-element (deselect db) elements))) ; TODO: Handle children
+   (reduce create (deselect db) elements))) ; TODO: Handle children
 
 (defn bool
   [path-a path-b operation]
@@ -488,15 +481,15 @@
                          (rest selected-elements))]
     (-> db
         delete
-        (create {:type :element
-                 :tag :path
-                 :attrs (merge attrs {:d new-path})}))))
+        (add {:type :element
+              :tag :path
+              :attrs (merge attrs {:d new-path})}))))
 
 (defn paste-in-place
   ([db]
    (reduce paste-in-place (deselect db) (:copied-elements db)))
   ([db el]
-   (create-element db (assoc el :parent (-> db active-page :key)))))
+   (create db (assoc el :parent (-> db active-page :key)))))
 
 (defn paste
   [db]
@@ -512,7 +505,7 @@
   ([db]
    (reduce duplicate-in-place (deselect db) (selected db)))
   ([db el]
-   (create-element db el)))
+   (create db el)))
 
 (defn duplicate
   [db offset]
@@ -524,7 +517,7 @@
   ([db tag attrs]
    (reduce #(animate %1 %2 tag attrs) (deselect db) (selected db)))
   ([db el tag attrs]
-   (create-element db {:tag tag :attrs attrs :parent (:key el)})))
+   (create db {:tag tag :attrs attrs :parent (:key el)})))
 
 (defn paste-styles
   ([db]
@@ -537,7 +530,7 @@
        (reduce (fn [db attr]
                  (cond-> db
                    (-> attrs attr)
-                   (update-attribute el attr #(if % (-> attrs attr) disj))))
+                   (update-attr el attr #(if % (-> attrs attr) disj))))
                db style-attrs)) db)))
 
 (defn set-parent
@@ -547,9 +540,9 @@
    (let [el (element db element-key)]
      (cond-> db
        (and (not= element-key parent-key) (not (:locked? el)))
-       (-> (update-property (:parent el) :children #(vec (remove #{element-key} %)))
-           (update-property parent-key :children conj element-key)
-           (set-property element-key :parent parent-key))))))
+       (-> (update-prop (:parent el) :children #(vec (remove #{element-key} %)))
+           (update-prop parent-key :children conj element-key)
+           (set-prop element-key :parent parent-key))))))
 
 (defn set-parent-at-index
   [db element-key parent-key index]
@@ -557,13 +550,13 @@
         last-index (-> siblings count)]
     (-> db
         (set-parent element-key parent-key)
-        (update-property parent-key :children vec/move last-index index))))
+        (update-prop parent-key :children vec/move last-index index))))
 
 (defn group
   [db]
   (reduce (fn [db key] (set-parent db key (first (selected-keys db))))
           (-> (deselect db)
-              (create-element {:tag :g :parent (:key (active-page db))}))
+              (create {:tag :g :parent (:key (active-page db))}))
           (selected-keys db)))
 
 (defn inherit-attrs
@@ -573,12 +566,12 @@
      (let [source-attr (-> source-el :attrs attr)]
        (cond-> db
          source-attr
-         (update-attribute (element db target-el-k)
-                           attr
-                           (fn [v]
-                             (if (empty? (str v))
-                               source-attr
-                               v)))))) db spec/presentation-attrs))
+         (update-attr (element db target-el-k)
+                      attr
+                      (fn [v]
+                        (if (empty? (str v))
+                          source-attr
+                          v)))))) db spec/presentation-attrs))
 
 (defn ungroup
   ([db]

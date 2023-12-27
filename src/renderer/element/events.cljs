@@ -30,36 +30,36 @@
        (history.h/finalize "Select down"))))
 
 (rf/reg-event-db
- :element/toggle-property
- (fn [db [_ key property]]
+ :element/toggle-prop
+ (fn [db [_ key prop]]
    (-> db
-       (h/toggle-property key property)
-       (history.h/finalize "Toggle " (name property)))))
+       (h/toggle-prop key prop)
+       (history.h/finalize "Toggle " (name prop)))))
 
 (rf/reg-event-db
- :element/preview-property
+ :element/preview-prop
  (fn [db [_ el-k k v]]
-   (h/set-property db el-k k v)))
+   (h/set-prop db el-k k v)))
 
 (rf/reg-event-db
- :element/set-property
+ :element/set-prop
  (fn [db [_ el-k k v]]
    (-> db
-       (h/set-property el-k k v)
+       (h/set-prop el-k k v)
        (history.h/finalize "Set " (name k) " to " v))))
 
 (rf/reg-event-db
  :element/collapse
  (fn [db [_]]
    (-> db
-       (h/set-property :collapsed? true)
+       (h/set-prop :collapsed? true)
        (history.h/finalize "Collapse"))))
 
 (rf/reg-event-db
  :element/expand
  (fn [db [_]]
    (-> db
-       (h/set-property :collapsed? false)
+       (h/set-prop :collapsed? false)
        (history.h/finalize "Collapse"))))
 
 (rf/reg-event-db
@@ -77,43 +77,43 @@
        (history.h/finalize "Unlock selection"))))
 
 (rf/reg-event-db
- :element/set-attribute
+ :element/set-attr
  (fn [db [_ k v]]
    (-> db
-       (h/set-attribute k v)
+       (h/set-attr k v)
        (history.h/finalize "Set " (name k) " to " v))))
 
 (rf/reg-event-db
- :element/remove-attribute
+ :element/remove-attr
  (fn [db [_ k]]
    (-> db
-       (h/remove-attribute k)
+       (h/remove-attr k)
        (history.h/finalize "Remove " (name k)))))
 
 (rf/reg-event-db
  :element/inc-attribute
  (fn [db [_ k]]
    (-> db
-       (h/update-attribute k inc)
+       (h/update-attr k inc)
        (history.h/finalize "Increase " (name k)))))
 
 (rf/reg-event-db
  :element/dec-attribute
  (fn [db [_ k]]
    (-> db
-       (h/update-attribute k dec)
+       (h/update-attr k dec)
        (history.h/finalize "Decrease " (name k)))))
 
 (rf/reg-event-db
  :element/preview-attribute
  (fn [db [_ k v]]
-   (h/set-attribute db k v)))
+   (h/set-attr db k v)))
 
 (rf/reg-event-db
  :element/fill
  (fn [db [_ color]]
    (-> db
-       (h/set-attribute :fill color)
+       (h/set-attr :fill color)
        (history.h/finalize "Fill " color))))
 
 (rf/reg-event-db
@@ -283,10 +283,10 @@
          (history.h/finalize (-> operation name str/capitalize))) db)))
 
 (rf/reg-event-db
- :element/create
+ :element/add
  (fn [db [_ element]]
    (-> db
-       (h/create element)
+       (h/add element)
        (history.h/finalize "Create " (name (:tag element))))))
 
 (rf/reg-event-db
@@ -323,13 +323,13 @@
    (let [[_ y1 x2 _] (tools/elements-bounds (h/elements db)
                                             (h/pages db))
          {:keys [width height fill]} (:attrs (h/active-page db))
-         db (h/create db {:tag :page
-                          :name "Page"
-                          :attrs {:x (+ x2 100)
-                                  :y y1
-                                  :width width
-                                  :height height
-                                  :fill fill}})]
+         db (h/add db {:tag :page
+                       :name "Page"
+                       :attrs {:x (+ x2 100)
+                               :y y1
+                               :width width
+                               :height height
+                               :fill fill}})]
      (-> db
          (frame.h/pan-to-element (:key (h/active-page db)))
          (history.h/finalize "Add page")))))

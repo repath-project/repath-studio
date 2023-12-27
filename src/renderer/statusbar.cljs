@@ -56,13 +56,17 @@
     :icon "ruler-combined"
     :action [:toggle-rulers]}
    #_{:title "History tree"
-      :active? @(rf/subscribe [:panel/visible? :history])
+      :active? [:panel/visible? :history]
       :icon "history"
-      :action #(rf/dispatch [:panel/toggle :history])}
+      :action [:panel/toggle :history]}
    {:title "XML view"
     :active? [:panel/visible? :xml]
     :icon "code"
-    :action [:panel/toggle :xml]}])
+    :action [:panel/toggle :xml]}
+   {:title "Timeline"
+    :active? [:panel/visible? :timeline]
+    :icon "timeline"
+    :action [:panel/toggle :timeline]}])
 
 (defn set-zoom
   [e v]
@@ -71,47 +75,73 @@
       (set! (.. e -target -value) v)
       (rf/dispatch [:set-zoom new-v]))))
 
+(defn zoom-decimal-points
+  [zoom]
+  (condp > zoom
+    1 2
+    10 1
+    0))
+
+(defn zoom-input
+  [zoom]
+  (let [value (units/->fixed (* 100 zoom) (zoom-decimal-points zoom))]
+    [:input.level-3.text-right.flex
+     {:key zoom
+      :type "number"
+      :input-mode "decimal"
+      :min "1"
+      :max "10000"
+      :style {:width "60px"}
+      :default-value value
+      :on-blur #(set-zoom % value)
+      :on-key-down #(keyb/input-key-down-handler % value set-zoom % value)
+      :on-wheel #(rf/dispatch (if (pos? (.-deltaY %))
+                                [:zoom-out]
+                                [:zoom-in]))}]))
+
+(defn a11y-select
+  []
+  (let [filter @(rf/subscribe [:document/filter])]
+    [:> Select/Root {:value (name filter)
+                    :onValueChange #(rf/dispatch [:document/set-filter %])}
+    [:> Select/Trigger
+     {:class "select-trigger"
+      :aria-label "No a11y filter"}
+     [:> Select/Value {:placeholder "Filter"}
+      [:div.flex.gap-1.justify-between.items-center
+       {:style {:min-width "110px"}}
+       [:span (name filter)]
+       [:> Select/Icon {:class "select-icon"}
+        [comp/icon "chevron-up" {:class "small"}]]]]]
+    [:> Select/Portal
+     [:> Select/Content
+      {:side "top"
+       :sideOffset 5
+       :position "popper"
+       :class "menu-content rounded select-content"}
+      [:> Select/ScrollUpButton {:class "select-scroll-button"}
+       [comp/icon "chevron-up"]]
+      [:> Select/Viewport {:class "select-viewport"}
+       [:> Select/Group
+        [:> Select/Item
+         {:value "No a11y filter"
+          :class "menu-item select-item"}
+         [:> Select/ItemText "No a11y filter"]]
+        (map (fn [{:keys [id]}] ^{:key id}
+               [:> Select/Item
+                {:value (name id)
+                 :class "menu-item select-item"}
+                [:> Select/ItemText (name id)]]) filters/accessibility)]]
+      [:> Select/ScrollDownButton
+       {:class "select-scroll-button"}
+       [comp/icon "chevron-down"]]]]]))
+
 (defn root []
-  (let [zoom @(rf/subscribe [:document/zoom])
-        _element-colors @(rf/subscribe [:element/colors])
-        filter @(rf/subscribe [:document/filter])]
+  (let [zoom @(rf/subscribe [:document/zoom])]
     [:div.toolbar.footer
      [color-v/picker]
      [:div.grow [color-v/palette]]
-     #_(when element-colors (map (fn [color] [color-drip (color/hexToRgb color)]) element-colors))
-     [:> Select/Root {:value (name filter)
-                      :onValueChange #(rf/dispatch [:document/set-filter %])}
-      [:> Select/Trigger
-       {:class "select-trigger"
-        :aria-label "No a11y filter"}
-       [:> Select/Value {:placeholder "Filter"}
-        [:div.flex.gap-1.justify-between.items-center
-         {:style {:min-width "110px"}}
-         [:span (name filter)]
-         [:> Select/Icon {:class "select-icon"}
-          [comp/icon "chevron-up" {:class "small"}]]]]]
-      [:> Select/Portal
-       [:> Select/Content
-        {:side "top"
-         :sideOffset 5
-         :position "popper"
-         :class "menu-content rounded select-content"}
-        [:> Select/ScrollUpButton {:class "select-scroll-button"}
-         [comp/icon "chevron-up"]]
-        [:> Select/Viewport {:class "select-viewport"}
-         [:> Select/Group
-          [:> Select/Item
-           {:value "No a11y filter"
-            :class "menu-item select-item"}
-           [:> Select/ItemText "No a11y filter"]]
-          (map (fn [{:keys [id]}] ^{:key id}
-                 [:> Select/Item
-                  {:value (name id)
-                   :class "menu-item select-item"}
-                  [:> Select/ItemText (name id)]]) filters/accessibility)]]
-        [:> Select/ScrollDownButton
-         {:class "select-scroll-button"}
-         [comp/icon "chevron-down"]]]]]
+     [a11y-select]
      (into [:<>]
            (map (fn [{:keys [title active? icon action]}]
                   [comp/radio-icon-button {:title title
@@ -130,19 +160,7 @@
        {:class (when (>= zoom 100) "disabled")
         :on-click #(rf/dispatch [:zoom-in])}
        [comp/icon "plus" {:class "small"}]]
-
-      (let [zoom-formatted (units/->fixed (* 100 zoom) (if (< zoom 0.1) 1 0))]
-        [:input.level-3.text-right.flex
-         {:key zoom
-          :type "number"
-          :input-mode "decimal"
-          :min "1"
-          :max "10000"
-          :style {:width "60px"}
-          :default-value zoom-formatted
-          :on-blur #(set-zoom % zoom-formatted)
-          :on-key-down #(keyb/input-key-down-handler % zoom-formatted set-zoom % zoom-formatted)
-          :on-wheel #(rf/dispatch (if (pos? (.-deltaY %)) [:zoom-out] [:zoom-in]))}])
+      [zoom-input zoom]
       [:div.pr-2.level-3.flex.items-center "%"]
 
       [:> DropdownMenu/Root

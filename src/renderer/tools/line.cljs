@@ -16,13 +16,14 @@
 (derive :line ::tools/shape)
 
 (defmethod tools/properties :line
-  [] {:icon "line-alt"
-      :description "The <line> element is an SVG basic shape used to create 
-                    a line connecting two points."
-      :attrs [:stroke-width
-              :stroke-linecap
-              :stroke-dasharray
-              :opacity]})
+  []
+  {:icon "line-alt"
+   :description "The <line> element is an SVG basic shape used to create a line 
+                 connecting two points."
+   :attrs [:stroke-width
+           :stroke-linecap
+           :stroke-dasharray
+           :opacity]})
 
 (defn create-line
   [{:keys [adjusted-pointer-offset adjusted-pointer-pos active-document] :as db}]
@@ -43,26 +44,26 @@
                  (assoc-in [:attrs :y2] (second adjusted-pointer-pos)))]
     (element.h/set-temp db temp)))
 
-(defmethod tools/mouse-move :line
+(defmethod tools/pointer-move :line
   [db]
   (cond-> db
     (element.h/get-temp db) (update-line-end)))
 
-(defmethod tools/mouse-up :line
+(defmethod tools/pointer-up :line
   [db]
   (if (element.h/get-temp db)
     (-> db
-        element.h/create
-        (history/finalize (str "Create line")))
+        element.h/add
+        (history/finalize "Create line"))
     (-> db
         (handlers/set-state :create)
         create-line)))
 
-(defmethod tools/mouse-down :line
+(defmethod tools/pointer-down :line
   [db]
-  (if (element.h/get-temp db)
-    (history/finalize db (str "Create line"))
-    db))
+  (cond-> db
+    (element.h/get-temp db)
+    (history/finalize "Create line")))
 
 (defmethod tools/drag :line
   [db]

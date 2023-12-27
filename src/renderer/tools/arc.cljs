@@ -9,7 +9,7 @@
    [renderer.element.handlers :as element.h]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
-   [renderer.utils.mouse :as mouse]
+   [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
 
 (derive :arc ::tools/custom)
@@ -83,12 +83,12 @@
 (defmethod tools/render :arc
   [{:keys [attrs children] :as element}]
   (let [child-elements @(rf/subscribe [:element/filter-visible children])
-        mouse-handler #(mouse/event-handler % element)]
+        pointer-handler #(pointer/event-handler % element)]
     [:path (merge {:d (tools/path element)
-                   :on-pointer-up mouse-handler
-                   :on-pointer-down mouse-handler
-                   :on-pointer-move mouse-handler
-                   :on-double-click mouse-handler}
+                   :on-pointer-up pointer-handler
+                   :on-pointer-down pointer-handler
+                   :on-pointer-move pointer-handler
+                   :on-double-click pointer-handler}
                   (select-keys attrs [:stroke-width
                                       :opacity
                                       :fill

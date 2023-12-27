@@ -3,7 +3,7 @@
    [re-frame.core :as rf]
    [renderer.attribute.views :as attr]
    [renderer.tools.base :as tools]
-   [renderer.utils.mouse :as mouse]
+   [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
 
 (derive :button ::tools/custom)
@@ -50,9 +50,9 @@
   (let [{:keys [x y width height radius font-color]} attrs]
     [:g (merge
          (select-keys attrs [:id :class :opacity])
-         {:on-pointer-up   #(mouse/event-handler % element)
-          :on-pointer-down #(mouse/event-handler % element)
-          :on-pointer-move #(mouse/event-handler % element)})
+         {:on-pointer-up   #(pointer/event-handler % element)
+          :on-pointer-down #(pointer/event-handler % element)
+          :on-pointer-move #(pointer/event-handler % element)})
      [:rect (merge
              {:ry radius
               :rx radius}

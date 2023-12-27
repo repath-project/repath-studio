@@ -36,7 +36,7 @@
        [:div
         [:div "Click to enter your text."]])))
 
-(defmethod tools/mouse-up :text
+(defmethod tools/pointer-up :text
   [{:keys [adjusted-pointer-offset] :as db}]
   (let [[offset-x offset-y] adjusted-pointer-offset
         attrs {:x offset-x
@@ -45,13 +45,13 @@
         (element.h/set-temp  {:type :element
                               :tag :text
                               :attrs attrs})
-        element.h/create
+        element.h/add
         (tools/set-tool :edit)
         (handlers/set-state :create))))
 
 (defmethod tools/drag-end :text
   [db]
-  (tools/mouse-up db))
+  (tools/pointer-up db))
 
 (defmethod tools/translate :text
   [element [x y]] (-> element
@@ -60,7 +60,7 @@
 
 (defn set-text-and-select-element
   [e el-k]
-  (rf/dispatch [:element/set-property
+  (rf/dispatch [:element/set-prop
                 el-k
                 :content
                 (str/replace (.. e -target -value) "  " "\u00a0\u00a0")])
@@ -79,10 +79,10 @@
         [x y] (if-not (= (:tag el) :page)
                 (mat/add page-pos [x y])
                 [x y])]
-    [:foreignObject {:x (- x 2)
-                     :y (- y 2)
-                     :width (+ width 19)
-                     :height (+ height 4)}
+    [:foreignObject {:x x
+                     :y y
+                     :width (+ width 20)
+                     :height height}
      [:input
       {:key key
        :default-value content
@@ -97,7 +97,7 @@
                         (set-text-and-select-element e key)
                         (.requestAnimationFrame
                          js/window
-                         #(rf/dispatch-sync [:element/preview-property
+                         #(rf/dispatch-sync [:element/preview-prop
                                              key
                                              :content
                                              (str/replace (.. e -target -value)
@@ -109,9 +109,13 @@
                :width (+ width 15)
                :height height
                :padding 0
+               :border 0
+               :outline-color "transparent";
                :background "transparent"
                :font-family (if (empty? font-family) "inherit" font-family)
-               :font-size (if (empty? font-size) "inherit" font-size)
+               :font-size (if (empty? font-size)
+                            "inherit"
+                            (str (units/unit->px font-size) "px"))
                :font-weight (if (empty? font-weight) "inherit" font-weight)}}]]))
 
 (defmethod tools/path :text
@@ -127,4 +131,4 @@
                content
                (js/parseFloat (:x attrs))
                (js/parseFloat (:y attrs))
-               (js/parseFloat (or (:font-size attrs) 16))))
+               (js/parseFloat (or (:font-size attrs) 16)))) ; FIXME

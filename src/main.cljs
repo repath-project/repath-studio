@@ -38,6 +38,31 @@
    (.send (.-webContents ^js @main-window) "fromMain" (clj->js {:action action
                                                                 :data data}))))
 
+(defn register-window-events!
+  []
+  (doseq
+   [[window-event action]
+    [;; Event "resized" is more suitable, but it's not supported on linux
+     ["resize" #(if (.isMaximized ^js @main-window)
+                  "windowMaximized"
+                  "windowUnmaximized")]
+     ["maximize" "windowMaximized"]
+     ["unmaximize" "windowUnmaximized"]
+     ["enter-full-screen" "windowEnteredFullscreen"]
+     ["leave-full-screen" "windowLeavedFullscreen"]
+     ["minimize" "windowMinimized"]
+     ["restore" "windowRestored"]]]
+    (.on ^js @main-window window-event #(send-to-renderer action))))
+
+(defn register-web-contents-events!
+  []
+  (doseq
+   [[web-contents-event f]
+    [["will-navigate"  #(.preventDefault %)] ;; Prevent navigation
+     ["new-window" #(.preventDefault %)] ;; Prevent popups
+     ["closed" #(reset! main-window nil)]]]
+    (.on (.-webContents ^js @main-window) web-contents-event f)))
+
 (defn init-main-window
   []
   (let [win-state (window-state-keeper #js {:defaultWidth 1920
@@ -74,7 +99,6 @@
                                  "http://localhost:8080"
                                  (.join path "file://" js/__dirname "/public/index.html")))
 
-
     (when config/debug?
       (-> (installExtension
            REACT_DEVELOPER_TOOLS
@@ -83,28 +107,9 @@
           (.catch (fn [err] (js/console.log "An error occurred: " err))))
       (.openDevTools (.-webContents ^js @main-window)))
 
-    (doseq
-     [[web-contents-event f]
-      [["will-navigate"  #(.preventDefault %)] ;; Prevent navigation
-       ["new-window" #(.preventDefault %)] ;; Prevent popups
-       ["closed" #(reset! main-window nil)]]]
-      (.on (.-webContents ^js @main-window) web-contents-event f))
-
+    (register-web-contents-events!)
     (.on ipcMain "toMain" #(to-main-api %2))
-
-    (doseq
-     [[window-event action]
-      [;; Event "resized" is more suitable, but it's not supported on linux
-       ["resize" #(if (.isMaximized ^js @main-window)
-                    "windowMaximized"
-                    "windowUnmaximized")]
-       ["maximize" "windowMaximized"]
-       ["unmaximize" "windowUnmaximized"]
-       ["enter-full-screen" "windowEnteredFullscreen"]
-       ["leave-full-screen" "windowLeavedFullscreen"]
-       ["minimize" "windowMinimized"]
-       ["restore" "windowRestored"]]]
-      (.on ^js @main-window window-event #(send-to-renderer action)))
+    (register-window-events!)
 
     #_(.checkForUpdatesAndNotify updater)))
 

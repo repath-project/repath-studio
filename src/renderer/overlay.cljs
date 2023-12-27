@@ -6,7 +6,7 @@
    [re-frame.core :as rf]
    [renderer.tools.base :as tools]
    [renderer.utils.bounds :as bounds]
-   [renderer.utils.mouse :as mouse]
+   [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
 
 ;; The iframe is isolated so we don't have access to the css vars of the parent.
@@ -33,7 +33,7 @@
   [{:keys [x y key] :as el} & children]
   (let [zoom @(rf/subscribe [:document/zoom])
         clicked-element @(rf/subscribe [:clicked-element])
-        mouse-handler #(mouse/event-handler % el)]
+        pointer-handler #(pointer/event-handler % el)]
     [:circle {:key key
               :cx x
               :cy y
@@ -44,10 +44,10 @@
                       stroke-inverted)
               :r (/ 4 zoom)
               :cursor "default"
-              :on-pointer-up mouse-handler
-              :on-pointer-down mouse-handler
-              :on-pointer-move mouse-handler
-              :on-scroll mouse-handler} children]))
+              :on-pointer-up pointer-handler
+              :on-pointer-down pointer-handler
+              :on-pointer-move pointer-handler
+              :on-scroll pointer-handler} children]))
 
 (defn square-handler
   [{:keys [x y key cursor] :as el} & children]
@@ -57,7 +57,7 @@
         hovered-keys @(rf/subscribe [:document/hovered-keys])
         size (/ handler-size zoom)
         stroke-width (/ 1 zoom)
-        mouse-handler #(mouse/event-handler % el)
+        pointer-handler #(pointer/event-handler % el)
         clicked? (= (:key clicked-element) key)]
     (when (or clicked? (not= state :scale))
       [:rect {:key key
@@ -73,10 +73,10 @@
               :width size
               :height size
               :cursor (if (or clicked? (not cursor)) "default" cursor)
-              :on-pointer-up mouse-handler
-              :on-pointer-down mouse-handler
-              :on-pointer-move mouse-handler
-              :on-scroll mouse-handler} children])))
+              :on-pointer-up pointer-handler
+              :on-pointer-down pointer-handler
+              :on-pointer-move pointer-handler
+              :on-scroll pointer-handler} children])))
 
 (defn line
   ([x1 y1 x2 y2]

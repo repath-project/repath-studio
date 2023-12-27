@@ -18,7 +18,7 @@
         (replumb/print-doc doc)))))
 
 (defn main-view []
-  [:div.flex.flex-col {:style {:overflow "visible"}}
+  [:div.flex.flex-col.overflow-visible
    [reepl/repl
     :execute #(replumb/run-repl (if (= @(rf/subscribe [:repl-mode]) :cljs) %1 (str "(js/eval \"" %1 "\")")) {:warning-as-error true} %2)
     :complete-word replumb/process-apropos

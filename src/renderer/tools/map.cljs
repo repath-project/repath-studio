@@ -3,7 +3,7 @@
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [renderer.tools.base :as tools]
-   [renderer.utils.mouse :as mouse]))
+   [renderer.utils.pointer :as pointer]))
 
 (derive :map ::tools/box)
 (derive :map ::tools/custom)
@@ -29,7 +29,6 @@
                :height (abs (- pos-y offset-y))}]
     (rf/dispatch [:document/set-temp-element {:type tool
                                               :attrs attrs}])))
-
 
 (defn ->href [image]
   (->> image
@@ -67,9 +66,9 @@
       (fn [{:keys [attrs] :as element} _child-elements]
         [:image (merge
                  {:href @image
-                  :on-pointer-up   #(mouse/event-handler % element)
-                  :on-pointer-down #(mouse/event-handler % element)
-                  :on-pointer-move #(mouse/event-handler % element)}
+                  :on-pointer-up   #(pointer/event-handler % element)
+                  :on-pointer-down #(pointer/event-handler % element)
+                  :on-pointer-move #(pointer/event-handler % element)}
                  (select-keys attrs [:x :y :width :height :id :class]))])})))
 
 (defmethod tools/render :map

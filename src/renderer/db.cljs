@@ -3,6 +3,7 @@
    [renderer.document.db]
    [renderer.panel.db]
    [renderer.theme.db]
+   [renderer.timeline.db]
    [renderer.tree.db]
    [renderer.window.db]))
 
@@ -24,7 +25,8 @@
    [:tree renderer.tree.db/tree]
    [:panel [:map-of :key renderer.panel.db/panel]]
    [:window renderer.window.db/window]
-   [:theme [:mode renderer.theme.db/modes]]])
+   [:theme [:mode renderer.theme.db/modes]]
+   [:timeline renderer.timeline.db/timeline]])
 
 (def default
   {:tool :select
@@ -52,11 +54,16 @@
                   :visible? true}
            :properties {:size 300
                         :visible? true}
-           :history? false
-           :timeline {:visible? true}
+           :timeline {:visible? false}
            :xml {:visible? false}
            :repl-history {:visible? false}}
    :window {:maximized? true
             :minimized? false
             :fullscreen? false
-            :header? true}})
+            :header? true}
+   :timeline {:time 0
+              :replay? true
+              :grid-snap? false
+              :guide-snap? true
+              :paused? false
+              :speed 1}})

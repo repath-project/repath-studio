@@ -20,17 +20,18 @@
 (defn remove-point-by-index
   [points index]
   (let [points (str/join " " (flatten (vec/remove-by-index points index)))]
-    (rf/dispatch [:element/set-attribute :points points])))
+    (rf/dispatch [:element/set-attr :points points])))
 
 (defmethod hierarchy/form-element :points
   [k v disabled?]
   (let [state-default? (= @(rf/subscribe [:state]) :default)]
     [:<>
-     [v/form-input {:key k
-                    :value (if state-default? v "waiting")
-                    :disabled? (or disabled?
-                                   (not v)
-                                   (not state-default?))}]
+     [v/form-input
+      {:key k
+       :value (if state-default? v "waiting")
+       :disabled? (or disabled?
+                      (not v)
+                      (not state-default?))}]
      (when v
        [:> Popover/Root {:modal true}
         [:> Popover/Trigger {:asChild true}
