@@ -160,6 +160,10 @@ p {
 input {
   @apply form-element font-mono appearance-none;
 
+  &:focus {
+    @apply outline-none;
+  }
+
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
     @apply appearance-none;

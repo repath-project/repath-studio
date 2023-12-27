@@ -91,7 +91,8 @@
       :input-mode "decimal"
       :min "1"
       :max "10000"
-      :style {:width "60px"}
+      :style {:width "60px"
+              :appearance "textfield"}
       :default-value value
       :on-blur #(set-zoom % value)
       :on-key-down #(keyb/input-key-down-handler % value set-zoom % value)
