@@ -23,7 +23,9 @@
                      (rf/dispatch [:document/set-fill (.-sRGBHex result)])
                      (rf/dispatch [:set-tool :select])))
             (.catch (fn [error]
-                      (rf/dispatch [:notification/add {:content (str error)}])
+                      (rf/dispatch [:notification/add {:content [:div
+                                                                 [:h2.pb-4.text-md "EyeDropper cannot be activated."]
+                                                                 [:div.text-error (str error)]]}])
                       (rf/dispatch [:set-tool :select]))))
         (handlers/set-message db [:div "Click anywhere to pick a color."]))
     (-> db
