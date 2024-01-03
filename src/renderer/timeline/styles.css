@@ -12,6 +12,10 @@
   }
 }
 
+.timeline-editor-time-area .ReactVirtualized__Grid {
+  overflow: hidden !important;
+}
+
 .timeline-editor-cursor {
   border-color: var(--accent) !important;
 }
