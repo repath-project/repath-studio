@@ -162,8 +162,8 @@ cljs.js/*load-fn*
     (= text a) -1
     (= text b) 1
     :else
-    (let [a-starts (zero? (.indexOf a text))
-          b-starts (zero? (.indexOf b text))]
+    (let [a-starts (= 0 (.indexOf a text))
+          b-starts (= 0 (.indexOf b text))]
       (cond
         (and a-starts b-starts) 0
         a-starts -1
@@ -284,7 +284,7 @@ cljs.js/*load-fn*
            (filter matches? names))))))
 
 (defn process-apropos [text]
-  (if (zero? (.indexOf text "js/"))
+  (if (= 0 (.indexOf text "js/"))
     (js-completion (.slice text 3))
     (cljs-completion text)))
 
