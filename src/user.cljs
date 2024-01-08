@@ -26,7 +26,7 @@
   (rf/dispatch [:element/fill color]))
 
 (defn ^:export delete
-  "Deletes selected elements."
+  "Deletes the selected elements."
   []
   (rf/dispatch [:element/delete]))
 
@@ -167,12 +167,12 @@
   (rf/dispatch [:element/deselect-all]))
 
 (defn ^:export ->path
-  "Converts selected elements to paths."
+  "Converts the selected elements to paths."
   []
   (rf/dispatch [:element/->path]))
 
 (defn ^:export stroke->path
-  "Converts selected elements to paths."
+  "Converts the selected elements' stroke to paths."
   []
   (rf/dispatch [:element/stroke->path]))
 

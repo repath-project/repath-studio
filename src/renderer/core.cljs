@@ -61,7 +61,10 @@
 (defn bootstrap-cb
   []
   (replumb/run-repl "(in-ns 'user)" identity)
-  (print "Repl initialized"))
+  (print "Welcome to your REPL!")
+  (print "")
+  (print "You can create or modify shapes using the command line.")
+  (print "Type (help) to see the list of commands."))
 
 (defn init-api
   []
