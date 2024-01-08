@@ -121,14 +121,14 @@
 (defmethod tools/path :text
   [{:keys [attrs content]}]
   (.textToPath js/window.api
-               (.-path (first (.findFonts
-                               js/window.api
-                               ;; TODO: Getting the computed styles might safer.
-                               #js {:family (:font-family attrs)
-                                    :weight (js/parseInt (:font-weight attrs))
-                                    :italic (= (:font-style attrs)
-                                               "italic")})))
                content
-               (js/parseFloat (:x attrs))
-               (js/parseFloat (:y attrs))
-               (js/parseFloat (or (:font-size attrs) 16)))) ; FIXME
+               #js {:font-url (.-path (first (.findFonts
+                                              js/window.api
+                                              ;; TODO: Getting the computed styles might safer.
+                                              #js {:family (:font-family attrs)
+                                                   :weight (js/parseInt (:font-weight attrs))
+                                                   :italic (= (:font-style attrs)
+                                                              "italic")})))
+                    :x (js/parseFloat (:x attrs))
+                    :y (js/parseFloat (:y attrs))
+                    :font-size (js/parseFloat (or (:font-size attrs) 16))})) ; FIXME

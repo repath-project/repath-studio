@@ -164,7 +164,8 @@
    (reduce (fn [points element]
              (let [[x1 y1 x2 y2] (tools/adjusted-bounds element elements)
                    [cx cy] (bounds/center [x1 y1 x2 y2])]
-               (conj points [x1 y1]
+               (conj points
+                     [x1 y1]
                      [x1 y2]
                      [x1 cy]
                      [x2 y1]

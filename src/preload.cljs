@@ -10,7 +10,8 @@
 
 (defn text->path
   "https://github.com/opentypejs/opentype.js#loading-a-font-synchronously-nodejs"
-  [font-url text x y font-size]
+  [text {:keys [font-url x y font-size]}]
+  (js/console.log font-url x y font-size)
   (let [font (.loadSync opentype font-url)
         path (.getPath font text x y font-size)]
     (.toPathData path)))
@@ -25,7 +26,8 @@
    ;; https://github.com/axosoft/font-scanner#getavailablefonts
    :systemFonts (.getAvailableFontsSync fontManager)
    :findFonts (fn [descriptor] (.findFontsSync fontManager descriptor))
-   :textToPath text->path})
+   :textToPath (fn [text options]
+                 (text->path text (js->clj options :keywordize-keys true)))})
 
 (defn ^:export init []
   ;; https://docs.sentry.io/platforms/javascript/guides/electron/#configuring-the-client
