@@ -86,7 +86,7 @@
   {:should-go-up
    (fn [_source inst]
      (let [pos (.getCursor inst)]
-       (= 0 (.-line pos))))
+       (zero? (.-line pos))))
 
    :should-go-down
    (fn [_source inst]

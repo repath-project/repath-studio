@@ -144,17 +144,17 @@
  (fn [[elements hovered-keys selected-keys] _]
    (vals (select-keys elements (set/union hovered-keys selected-keys)))))
 
-(rf/reg-sub
- :element/colors
- :<- [:element/visible]
- (fn [visible-elements _]
-   (reduce (fn [colors element]
-             (let [color (get-in element [:attrs :fill])]
-               (if (and color (color/isValidColor color))
-                 (conj colors (keyword (:hex (color/parse color))))
-                 colors)))
-           #{}
-           visible-elements)))
+#_(rf/reg-sub
+   :element/colors
+   :<- [:element/visible]
+   (fn [visible-elements _]
+     (reduce (fn [colors element]
+               (let [color (get-in element [:attrs :fill])]
+                 (if (and color (color/isValidColor color))
+                   (conj colors (keyword (:hex (color/parse color))))
+                   colors)))
+             #{}
+             visible-elements)))
 
 (rf/reg-sub
  :snapping-points
