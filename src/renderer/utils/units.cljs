@@ -68,7 +68,6 @@
        js/parseFloat
        (.toFixed digits))))
 
-
 (defn transform
   "Converts a value to pixels, applies a function and converts the result 
    back to the original unit."
