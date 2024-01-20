@@ -125,13 +125,9 @@
                                 :border-radius 0
                                 :width "26px"
                                 :height "26px"}}
-     [:> Select/Value
-      (let [selected-item (some #(when (= (:value %) value) %)
-                                items)]
-        (if-let [icon (:icon selected-item)]
-          [comp/icon icon]
-          [:> Select/Icon
-           [comp/icon "chevron-down" {:class "small"}]]))]]
+     [:> Select/Value ""]
+     [:> Select/Icon
+      [comp/icon "chevron-down" {:class "small"}]]]
     [:> Select/Portal
      [:> Select/Content {:class "menu-content rounded select-content"}
       [:> Select/ScrollUpButton {:class "select-scroll-button"}
