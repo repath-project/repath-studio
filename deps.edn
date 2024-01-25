@@ -1,5 +1,5 @@
 {:paths ["src" "test"]
- :deps {thheller/shadow-cljs {:mvn/version "2.26.5"}
+ :deps {thheller/shadow-cljs {:mvn/version "2.27.1"}
         metosin/malli {:mvn/version "0.13.0"}
         reagent/reagent {:mvn/version "1.2.0"}
         re-frame/re-frame {:mvn/version "1.4.2"}
