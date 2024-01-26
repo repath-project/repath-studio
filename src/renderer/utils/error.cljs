@@ -20,8 +20,8 @@
     ;; Try to revert to a working state
     ;; https://react.dev/reference/react/Component#static-getderivedstatefromerror
     :get-derived-state-from-error
-    #(rf/dispatch-sync [:history/undo])
+    #(rf/dispatch-sync [:history/cancel])
 
     :reagent-render
-    (fn [& children]
-      (into [:<>] children))}))
+    (fn [children]
+      children)}))
