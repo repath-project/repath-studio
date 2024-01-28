@@ -28,58 +28,64 @@
             :user-select "text"}}
    [repl/main-view]])
 
-(defn editor []
-  (let [rulers? @(rf/subscribe [:rulers?])]
-    [:div.flex.flex-1.overflow-hidden
-     [:div.flex.flex-col.flex-1.overflow-hidden
-      [:div.flex.flex-col.flex-1.overflow-hidden
-       [:div.flex.flex-1.overflow-hidden
-        [:div.flex.flex-col.flex-1
-         [:div.mb-px [tools/toolbar]
-          (when rulers?
-            [:div.flex
-             [:div.level-2 {:style {:width "23px" :height "23px"}}
-              [comp/toggle-icon-button
-               {:active? @(rf/subscribe [:rulers-locked?])
-                :active-icon "lock"
-                :active-text "unlock"
-                :inactive-icon "unlock"
-                :inactive-text "lock"
-                :class "small"
-                :action #(rf/dispatch [:toggle-rulers-locked])}]]
-             [:div.w-full.ml-px.level-2
-              [rulers/ruler {:orientation :horizontal :size 23}]]])]
-         [:div.flex.flex-1.relative
-          [:<> (when rulers?
-                 [:div.level-2.mr-px
-                  [rulers/ruler {:orientation :vertical :size 23}]])]
-          [:div.relative.grow.flex
-           [frame/main]
-           [:div.absolute.bottom-1.left-2.pointer-events-none
-            {:style {:color "#555"}}
-            @(rf/subscribe [:message])]
-           (when @(rf/subscribe [:debug-info?])
-             [:<>
-              [debug/info]
-              [debug/fps]])
-           (when @(rf/subscribe [:backdrop?])
-             [:div.backdrop
-              {:on-click #(rf/dispatch [:set-backdrop false])}])]]]
-        (when @(rf/subscribe [:panel/visible? :xml])
-          (let [xml @(rf/subscribe [:element/xml])]
-            [:div.v-scroll.p-1.h-full.level-2.ml-px
-             {:style {:flex "0 1 30%"}}
-             [cm/editor xml {:options {:mode "text/xml"
-                                       :readOnly true}}]]))
-        (when @(rf/subscribe [:panel/visible? :history])
-          [:div.v-scroll.p-1.level-2
-           {:style {:flex "0 1 30%"}}])]
-       [status-bar/root]
-       [history/tree]]
-      (when @(rf/subscribe [:panel/visible? :timeline]) [timeline/root])
-      [command-input]]]))
-
 (defn main-panel
+  []
+  (let [rulers? @(rf/subscribe [:rulers?])]
+    [:div.flex.flex-col.flex-1
+     [:div.mb-px [tools/toolbar]
+      (when rulers?
+        [:div.flex
+         [:div.level-2 {:style {:width "23px" :height "23px"}}
+          [comp/toggle-icon-button
+           {:active? @(rf/subscribe [:rulers-locked?])
+            :active-icon "lock"
+            :active-text "unlock"
+            :inactive-icon "unlock"
+            :inactive-text "lock"
+            :class "small"
+            :action #(rf/dispatch [:toggle-rulers-locked])}]]
+         [:div.w-full.ml-px.level-2
+          [rulers/ruler {:orientation :horizontal :size 23}]]])]
+     [:div.flex.flex-1.relative
+      [:<> (when rulers?
+             [:div.level-2.mr-px
+              [rulers/ruler {:orientation :vertical :size 23}]])]
+      [:div.relative.grow.flex
+       [frame/main]
+       [:div.absolute.bottom-1.left-2.pointer-events-none
+        {:style {:color "#555"}}
+        @(rf/subscribe [:message])]
+       (when @(rf/subscribe [:debug-info?])
+         [:<>
+          [debug/info]
+          [debug/fps]])
+       (when @(rf/subscribe [:backdrop?])
+         [:div.backdrop
+          {:on-click #(rf/dispatch [:set-backdrop false])}])]]]))
+
+(defn editor 
+  []
+  [:div.flex.flex-1.overflow-hidden
+   [:div.flex.flex-col.flex-1.overflow-hidden
+    [:div.flex.flex-col.flex-1.overflow-hidden
+     [:div.flex.flex-1.overflow-hidden
+      [main-panel]
+      (when @(rf/subscribe [:panel/visible? :xml])
+        (let [xml @(rf/subscribe [:element/xml])]
+          [:div.v-scroll.p-1.h-full.level-2.ml-px
+           {:style {:flex "0 1 30%"}}
+           [cm/editor xml
+            {:options {:mode "text/xml"
+                       :readOnly true}}]]))
+      (when @(rf/subscribe [:panel/visible? :history])
+        [:div.v-scroll.p-1.level-2
+         {:style {:flex "0 1 30%"}}])]
+     [status-bar/root]
+     [history/tree]]
+    (when @(rf/subscribe [:panel/visible? :timeline]) [timeline/root])
+    [command-input]]])
+
+(defn root
   []
   [:> Tooltip/Provider
    [:div.flex.flex-col.flex-1.h-screen

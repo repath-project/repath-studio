@@ -56,7 +56,7 @@
   (rf/clear-subscription-cache!)
   (let [root-el (dom/root-element)]
     (ra.dom/unmount-component-at-node root-el)
-    (ra.dom/render [error/boundary [v/main-panel]] root-el)))
+    (ra.dom/render [error/boundary [v/root]] root-el)))
 
 (defn bootstrap-cb
   []
