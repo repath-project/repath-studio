@@ -32,6 +32,14 @@
                                    (.-shiftKey e) (conj :shift))}]))
 
 (defn input-key-down-handler
+  "Generic on-key-down handler for input elements that dispatches an event `f` 
+   in order to update a db value on keyboard enter, or reset to the initial 
+   value `v` on escape.
+
+   We need this to avoid updating the canvas with incomplete values while the 
+   user is typing, and also avoid polluting the history stack.
+
+   The `default-value` attribute should be used to update the value reactively."
   [e v f & more]
   (let [target (.-target e)]
     (.stopPropagation e)
