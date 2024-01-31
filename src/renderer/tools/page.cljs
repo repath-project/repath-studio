@@ -1,14 +1,11 @@
 (ns renderer.tools.page
   (:require
-   [clojure.core.matrix :as mat]
-   [clojure.string :as str]
    [goog.string :as g.str]
    [re-frame.core :as rf]
    [reagent.dom.server :as dom]
    [renderer.element.handlers :as element.h]
    [renderer.tools.base :as tools]
-   [renderer.utils.pointer :as pointer]
-   [renderer.utils.units :as units]))
+   [renderer.utils.pointer :as pointer]))
 
 (derive :page ::tools/container)
 
