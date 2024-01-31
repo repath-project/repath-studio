@@ -7,7 +7,6 @@
   []
   (let [notifications @(rf/subscribe [:notifications])]
     [:div.fixed.flex.flex-col.m-4.right-0.bottom-0.gap-2.items-end
-
      [:div
       (map-indexed
        (fn [index notification]
@@ -21,7 +20,9 @@
            {:title "Dismiss"
             :style {:width "auto"
                     :height "fit-content"}
-            :on-click #(rf/dispatch [:notification/remove index])}]])
+            :on-click #(rf/dispatch [:notification/remove index])}]
+          (when-let [count (:count notification)]
+            [:div.toast-count count])])
        notifications)]
 
      (when (second notifications)
