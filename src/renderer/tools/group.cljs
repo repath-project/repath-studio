@@ -40,3 +40,8 @@
              :on-pointer-up pointer-handler
              :on-pointer-down pointer-handler
              :on-pointer-move pointer-handler}]]))
+
+(defmethod tools/bounds :g
+  [el elements]
+  (let [children (vals (select-keys elements (:children el)))]
+    (tools/elements-bounds elements children)))

@@ -15,11 +15,6 @@
 (derive :switch ::tools/container)
 (derive :symbol ::tools/container)
 
-(defmethod tools/bounds ::tools/container
-  [el elements]
-  (let [children (vals (select-keys elements (:children el)))]
-    (tools/elements-bounds elements children)))
-
 (defmethod tools/render ::tools/container
   [{:keys [children tag attrs]}]
   (let [child-elements @(rf/subscribe [:element/filter-visible children])]

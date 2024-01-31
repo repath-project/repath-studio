@@ -28,15 +28,3 @@
                :width (abs (- pos-x offset-x))
                :height (abs (- pos-y offset-y))}]
     (element.h/set-temp db {:type :element :tag :svg :attrs attrs})))
-
-(defmethod tools/bounds :svg
-  [{:keys [attrs]}]
-  (let [{:keys [x y width height stroke-width stroke]} attrs
-        [x y width height stroke-width-px] (mapv units/unit->px
-                                                 [x y width height stroke-width])
-        stroke-width-px (if (str/blank? stroke-width) 1 stroke-width-px)
-        [x y] (mat/sub [x y]
-                       (/ (if (str/blank? stroke) 0 stroke-width-px) 2))
-        [width height] (mat/add [width height]
-                                (if (str/blank? stroke) 0 stroke-width-px))]
-    (mapv units/unit->px [x y (+ x width) (+ y height)])))

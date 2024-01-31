@@ -58,9 +58,8 @@
            {:x (+ x width) :y (+ y height) :key :size}])]))
 
 (defmethod tools/bounds ::tools/box
-  [{:keys [attrs]}]
-  (let [{:keys [x y width height]} attrs
-        [x y width height] (mapv units/unit->px [x y width height])]
+  [{{:keys [x y width height]} :attrs}]
+  (let [[x y width height] (mapv units/unit->px [x y width height])]
     [x y (+ x width) (+ y height)]))
 
 (defmethod tools/area ::tools/box
