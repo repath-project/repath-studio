@@ -1,9 +1,9 @@
 (ns renderer.cmdk.views
   (:require
+   [i18n :refer [t]]
    [re-frame.core :as rf]
    [renderer.components :as comp]
    [renderer.menubar.views :as menubar]
-   [i18n :refer [t]]
    ["cmdk" :as Command]))
 
 (defn item

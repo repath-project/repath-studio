@@ -1,6 +1,7 @@
 (ns renderer.menubar.views
   (:require
    ["@radix-ui/react-menubar" :as Menubar]
+   [i18n :refer [t]]
    [re-frame.core :as rf]
    [renderer.components :as comp]))
 
@@ -355,4 +356,4 @@
    (map (fn [item] ^{:key item} [menu-item item]) menu)
    [:button.button.px-3.flex.items-center
     {:on-click #(rf/dispatch [:cmdk/toggle])}
-    "Search…"]])
+    (t [:cmdk/search "Search…"])]])
