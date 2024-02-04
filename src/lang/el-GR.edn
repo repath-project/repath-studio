@@ -1,7 +1,8 @@
 {:missing "Λείπει η μετάφραση για :el-GR"
  :cmdk
- {:search-command "Αναζήτηση για εντολή"
-  :command-palette "Μενού εντολών"
+ {:command-palette "Μενού εντολών"
+  :search-command "Αναζήτηση για εντολή"
+  :search "Αναζήτηση…"
   :no-results "Δεν βρέθηκαν αποτελέσματα."}
 
  :color

@@ -355,4 +355,4 @@
    (map (fn [item] ^{:key item} [menu-item item]) menu)
    [:button.button.px-3.flex.items-center
     {:on-click #(rf/dispatch [:cmdk/toggle])}
-    "Command palette…"]])
+    "Search…"]])
