@@ -91,6 +91,9 @@
       :on-drag-enter #(rf/dispatch [:document/set-hovered-keys #{key}])
       :on-drag-over #(.preventDefault %)
       :on-drop #(drop-handler % key)
+      :on-pointer-down (fn [e]
+                         (when (= (.-button e) 2)
+                           (rf/dispatch [:element/select key (.-ctrlKey e)])))
       :on-pointer-up (fn [e]
                        (.stopPropagation e)
                        (rf/dispatch [:element/select key (.-ctrlKey e)]))
@@ -115,10 +118,10 @@
   [e]
   (let [ctrl? (.-ctrlKey e)]
     (case (.-key e)
-    "ArrowUp" (rf/dispatch [:element/select-up ctrl?])
-    "ArrowDown" (rf/dispatch [:element/select-down ctrl?])
-    "ArrowLeft" (rf/dispatch [:element/collapse])
-    "ArrowRight" (rf/dispatch [:element/expand]))))
+      "ArrowUp" (rf/dispatch [:element/select-up ctrl?])
+      "ArrowDown" (rf/dispatch [:element/select-down ctrl?])
+      "ArrowLeft" (rf/dispatch [:element/collapse])
+      "ArrowRight" (rf/dispatch [:element/expand]))))
 
 (defn inner-sidebar []
   (let [page-elements @(rf/subscribe [:element/pages])

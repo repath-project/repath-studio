@@ -45,7 +45,7 @@
 
 (defmethod tools/pointer-up :default
   [db e el]
-  (if-not (and (= (:button e) 2)
+  (if-not (and (= (:button e) :right)
                (:selected? el))
     (-> db
         (dissoc :clicked-element)

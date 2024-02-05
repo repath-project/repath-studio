@@ -6,6 +6,14 @@
   [e]
   (some #(contains? (:modifiers e) %) #{:ctrl :shift}))
 
+(def button
+  "https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button"
+  [:left
+   :middle
+   :right
+   :back
+   :forward])
+
 (defn lock-direction
   "Locks pointer movement to the axis with the biggest offset"
   [[x y]]
@@ -41,8 +49,8 @@
                                      :twist (.-twist e)
                                      :tilt [(.-tiltX e) (.-tiltY e)]
                                      :data-transfer (.-dataTransfer e)
-                                     :button (.-button e)
-                                     :buttons (.-buttons e)
+                                     :button (get button (.-button e))
+                                     :buttons (get button (.-buttons e))
                                      :delta [(.-deltaX e) (.-deltaY e)]
                                      :modifiers (cond-> #{}
                                                   (.-altKey e) (conj :alt)

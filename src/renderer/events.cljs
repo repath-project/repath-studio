@@ -108,35 +108,39 @@
 
 (rf/reg-event-db
  :pointer-event
- (fn [{:keys [pointer-offset tool content-rect] :as db} [_ e]]
-   (let [{:keys [pointer-pos delta element]} e
-         pointer-pos (mapv js/parseInt pointer-pos)
+ (fn [{:keys [pointer-offset tool content-rect drag?] :as db}
+      [_ {:keys [button buttons modifiers data-transfer pointer-pos delta element] :as e}]]
+   (let [pointer-pos (mapv js/parseInt pointer-pos)
          adjusted-pointer-pos (frame-h/adjusted-pointer-pos db pointer-pos)]
      (case (:type e)
        :pointermove
-       (-> (if (and (significant-movement? pointer-pos pointer-offset)
-                    (not= (:buttons e) 2))
-             (cond-> db
-               (not= tool :pan)
-               (frame-h/pan-out-of-canvas content-rect
-                                          pointer-pos
-                                          pointer-offset)
+       (if (= buttons :right)
+         db
+         (-> (if (significant-movement? pointer-pos pointer-offset)
+               (cond-> db
+                 (not= tool :pan)
+                 (frame-h/pan-out-of-canvas content-rect
+                                            pointer-pos
+                                            pointer-offset)
 
-               (not (:drag? db))
-               (-> (tools/drag-start e element)
-                   (assoc :drag? true))
+                 (not drag?)
+                 (-> (tools/drag-start e element)
+                     (assoc :drag? true))
 
-               :always
-               (tools/drag e element))
-             (tools/pointer-move db e element))
-           (assoc :pointer-pos pointer-pos
-                  :adjusted-pointer-pos adjusted-pointer-pos))
+                 :always
+                 (tools/drag e element))
+               (tools/pointer-move db e element))
+             (assoc :pointer-pos pointer-pos
+                    :adjusted-pointer-pos adjusted-pointer-pos)))
 
        :pointerdown
        (cond-> db
-         (= (:button e) 1)
+         (= button :middle)
          (-> (assoc :primary-tool tool)
              (tools/set-tool :pan))
+
+         (= button :right)
+         (tools/pointer-up e element)
 
          :always
          (-> (tools/pointer-down e element)
@@ -144,10 +148,10 @@
                     :adjusted-pointer-offset adjusted-pointer-pos)))
 
        :pointerup
-       (cond-> (if (:drag? db)
+       (cond-> (if drag?
                  (tools/drag-end db e element)
-                 (tools/pointer-up db e element))
-         (and (:primary-tool db) (= (:button e) 1))
+                 (cond-> db (not= button :right) (tools/pointer-up e element)))
+         (and (:primary-tool db) (= button :middle))
          (-> (tools/set-tool (:primary-tool db))
              (dissoc :primary-tool))
 
@@ -158,7 +162,7 @@
        (tools/double-click db e element)
 
        :wheel
-       (if (some (:modifiers e) [:ctrl :alt])
+       (if (some modifiers [:ctrl :alt])
          (let [delta-y (second delta)
                factor (Math/pow (inc (/ (- 1 (:zoom-sensitivity db)) 100))
                                 (- delta-y))]
@@ -166,8 +170,7 @@
          (frame-h/pan db delta))
 
        :drop
-       (let [data-transfer (:data-transfer e)
-             items (.-items data-transfer)
+       (let [items (.-items data-transfer)
              files (.-files data-transfer)]
          (-> db
              (assoc :pointer-pos pointer-pos
