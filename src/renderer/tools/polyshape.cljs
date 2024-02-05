@@ -18,11 +18,11 @@
 
 (defmethod tools/activate ::tools/polyshape
   [db]
-  (-> db
-      (handlers/set-message
-       [:div
-        [:div "Click to add points."]
-        [:div "Double click to finalize the shape."]])))
+  (handlers/set-message
+   db
+   [:div
+    [:div "Click to add points."]
+    [:div "Double click to finalize the shape."]]))
 
 (defn create-polyline
   [{:keys [active-document tool] :as db} points]
@@ -169,8 +169,8 @@
 (defmethod tools/centroid ::tools/polyshape
   [{{:keys [points]} :attrs}]
   (let [points-v (attr.utils/points->px points)]
-    (-> (reduce mat/add [0 0] points-v)
-        (mat/div (count points-v)))))
+    (mat/div (reduce mat/add [0 0] points-v)
+             (count points-v))))
 
 (defmethod tools/poi ::tools/polyshape
   [{{:keys [points]} :attrs}]

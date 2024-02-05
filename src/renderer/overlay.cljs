@@ -166,7 +166,7 @@
         [x1 y1 x2 y2] bounds
         [w h] (bounds/->dimensions bounds)]
     [:g {:key :bounding-handlers}
-     (map (fn [handler] [scale-handler handler])
+     (map scale-handler
           [{:x x1 :y y1 :key :top-left :cursor "nwse-resize"}
            {:x x2 :y y1 :key :top-right :cursor "nesw-resize"}
            {:x x1 :y y2 :key :bottom-left :cursor "nesw-resize"}

@@ -26,7 +26,7 @@
   ([db]
    (get-in db (path db)))
   ([db keys]
-   (vals (select-keys (elements db) (vec keys)))))
+   ((apply juxt keys) (elements db))))
 
 (defn element
   [db k]
@@ -34,8 +34,7 @@
 
 (defn active-page
   [db]
-  (->> (get-in db [:documents (:active-document db) :active-page])
-       (element db)))
+  (element db (get-in db [:documents (:active-document db) :active-page])))
 
 (defn selected
   [db]
@@ -43,7 +42,7 @@
 
 (defn selected-keys
   [db]
-  (into #{} (map :key (selected db))))
+  (set (map :key (selected db))))
 
 (defn single? [coll]
   (and (seq coll)
@@ -52,7 +51,7 @@
 (defn siblings-selected?
   [db]
   (let [selected (selected db)
-        parents (into #{} (map :parent selected))]
+        parents (set (map :parent selected))]
     (and (single? parents)
          (= (count selected)
             (count (:children (element db (first parents))))))))
@@ -79,7 +78,7 @@
 
 (defn pages
   [db]
-  (vals (select-keys (elements db) (-> (elements db) :canvas :children))))
+  ((apply juxt (-> (elements db) :canvas :children)) (elements db)))
 
 (defn page?
   [el]
@@ -249,8 +248,7 @@
 
 (defn selected-sorted
   [db]
-  (->> (selected db)
-       (sort-by #(index-tree-path db %))))
+  (sort-by #(index-tree-path db %) (selected db)))
 
 (defn select-up
   ([db multi?]
@@ -529,7 +527,7 @@
            style-attrs (disj spec/presentation-attrs :transform)]
        (reduce (fn [db attr]
                  (cond-> db
-                   (-> attrs attr)
+                   (attr attrs)
                    (update-attr el attr #(if % (-> attrs attr) disj))))
                db style-attrs)) db)))
 
@@ -547,7 +545,7 @@
 (defn set-parent-at-index
   [db element-key parent-key index]
   (let [siblings (:children (element db parent-key))
-        last-index (-> siblings count)]
+        last-index (count siblings)]
     (-> db
         (set-parent element-key parent-key)
         (update-prop parent-key :children vec/move last-index index))))

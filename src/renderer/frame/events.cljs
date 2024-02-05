@@ -9,8 +9,8 @@
 (rf/reg-event-db
  :frame/resize
  (fn [{content-rect :content-rect :as db} [_ updated-content-rect]]
-   (let [offset (-> (merge-with - content-rect updated-content-rect)
-                    (select-keys [:width :height]))
+   (let [offset (select-keys (merge-with - content-rect updated-content-rect)
+                             [:width :height])
          pan (mat/div [(:width offset) (:height offset)] 2)]
      (-> db
          (assoc :content-rect updated-content-rect)

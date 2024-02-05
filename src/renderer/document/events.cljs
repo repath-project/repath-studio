@@ -28,10 +28,9 @@
                     context' (-> (assoc context db-store-key new-db-store)
                                  (assoc-coeffect :db original-db))
                     db           (get-effect context :db ::not-found)]
-                (if (= db ::not-found)
-                  context'
-                  (->> (assoc-in original-db [:documents (:active-document original-db)] db)
-                       (assoc-effect context' :db))))))))
+                (cond-> context'
+                  (not= db ::not-found)
+                  (assoc-effect :db (assoc-in original-db [:documents (:active-document original-db)] db))))))))
 
 (rf/reg-event-db
  :document/set-hovered-keys
@@ -142,7 +141,7 @@
  :document/save
  (fn [{:keys [db]} [_]]
    (let [document (get-in db [:documents (:active-document db)])
-         duped (assoc document :history (dd/de-dupe (:history document)))]
+         duped (update-in document [:history] dd/de-dupe)]
      {:send-to-main {:action "saveDocument" :data (pr-str duped)}})))
 
 (rf/reg-event-fx

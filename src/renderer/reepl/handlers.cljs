@@ -32,7 +32,7 @@
         idx (- (count history) pos 1)]
     (assoc db
            :hist-pos 0
-           :history (if (= pos 0)
+           :history (if (zero? pos)
                       (assoc history idx text)
                       (if (= "" (last history))
                         (assoc history (dec (count history)) text)

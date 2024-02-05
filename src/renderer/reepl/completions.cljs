@@ -30,7 +30,7 @@
 (def view (partial helpers/view styles))
 
 (def canScrollIfNeeded
-  (not (nil? (.-scrollIntoViewIfNeeded js/document.body))))
+  (some? (.-scrollIntoViewIfNeeded js/document.body)))
 
 (defn completion-item [_text _is-selected _is-active _set-active]
   (let [ref (react/createRef)]
@@ -55,13 +55,12 @@
          text])})))
 
 (defn completion-list [{:keys [pos list active show-all]} set-active]
-  (let [items (->> list
-                   (map-indexed
-                    #(-> [completion-item
-                          (get %2 2)
-                          (= %1 pos)
-                          active
-                          (partial set-active %1)])))]
+  (let [items (map-indexed
+               #(-> [completion-item
+                     (get %2 2)
+                     (= %1 pos)
+                     active
+                     (partial set-active %1)]) list)]
     (when show-all
       (into [view :completion-show-all] items))
     (into

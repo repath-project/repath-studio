@@ -160,7 +160,7 @@
        :wheel
        (if (some (:modifiers e) [:ctrl :alt])
          (let [delta-y (second delta)
-               factor (Math/pow (+ 1 (/ (- 1 (:zoom-sensitivity db)) 100))
+               factor (Math/pow (inc (/ (- 1 (:zoom-sensitivity db)) 100))
                                 (- delta-y))]
            (frame-h/zoom-in-pointer-position db factor))
          (frame-h/pan db delta))

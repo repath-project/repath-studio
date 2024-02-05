@@ -1,7 +1,6 @@
 (ns renderer.menubar.views
   (:require
    ["@radix-ui/react-menubar" :as Menubar]
-   [i18n :refer [t]]
    [re-frame.core :as rf]
    [renderer.components :as comp]))
 
@@ -350,10 +349,7 @@
 
 (defn root
   []
-  [:> Menubar/Root
-   {:class "menubar-root"
-    :onValueChange #(rf/dispatch [:set-backdrop (seq %)])}
-   (map (fn [item] ^{:key item} [menu-item item]) menu)
-   [:button.button.px-3.flex.items-center
-    {:on-click #(rf/dispatch [:cmdk/toggle])}
-    (t [:cmdk/search "Search…"])]])
+  (into [:> Menubar/Root
+         {:class "menubar-root"
+          :onValueChange #(rf/dispatch [:set-backdrop (seq %)])}]
+        (map menu-item menu)))

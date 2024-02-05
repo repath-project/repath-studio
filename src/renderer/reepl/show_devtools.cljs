@@ -44,8 +44,7 @@
 
 ;; see https://docs.google.com/document/d/1FTascZXT9cxfetuPRT2eXPQKXui4nWFivUnS_335T3U/preview
 (defn show-devtools [val config show-value]
-  (if (var? val)
-    nil
+  (when-not (var? val)
     (let [header (try
                    (devtools/header-api-call val config)
                    (catch js/Error e
@@ -53,8 +52,10 @@
       (cond
         (not header)
         nil
+
         (instance? js/Error header)
         [:div.inline-flex "Error expanding lazy value"]
+
         :else
         (if-not (devtools/has-body-api-call val config)
           [:div.inline-flex (show-el header show-value)]

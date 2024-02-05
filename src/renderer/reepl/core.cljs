@@ -219,7 +219,7 @@
                    (do
                      (clear-items)
                      (set-text ""))
-                   (when (< 0 (count (.trim text)))
+                   (when (pos? (count (.trim text)))
                      (set-text text)
                      (add-input text)
                      (execute text #(add-result (not %1) %2)))))]

@@ -1,5 +1,6 @@
 (ns renderer.window.views
   (:require
+   [i18n :refer [t]]
    [platform :as platform]
    [re-frame.core :as rf]
    [renderer.components :as comp]
@@ -39,6 +40,9 @@
         :style {:width "14px"
                 :height "14px"}}]]
      [menubar/root]
+     [:button.button.px-3.flex.items-center
+      {:on-click #(rf/dispatch [:cmdk/toggle])}
+      (t [:cmdk/search "Search…"])]
      [title-bar]
      [:div.level-2
       {:class (when-not platform/electron? "mr-1.5")}

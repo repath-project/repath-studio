@@ -78,10 +78,10 @@
                [overlay/bounding-box (tools/adjusted-bounds el elements)])
              hovered-or-selected)
 
-        (when (> elements-area 0)
+        (when (pos? elements-area)
           [overlay/area elements-area bounds])
-        
-        (when (not-empty (filter (complement zero?) bounds))
+
+        (when (not-empty (remove zero? bounds))
           [:<>
            [overlay/size bounds]
            [overlay/bounding-handlers bounds]])

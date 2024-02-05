@@ -21,7 +21,9 @@
   (let [el (nth coll index-1)]
     (if (= index-1 index-2)
       coll
-      (into [] (add (remove-by-index coll index-1) index-2 el)))))
+      (-> (remove-by-index coll index-1)
+          (add index-2 el)
+          vec))))
 
 (defn swap
   "Swaps the position of two elements by index."
