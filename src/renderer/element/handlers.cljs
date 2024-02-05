@@ -515,7 +515,9 @@
   ([db tag attrs]
    (reduce #(animate %1 %2 tag attrs) (deselect db) (selected db)))
   ([db el tag attrs]
-   (create db {:tag tag :attrs attrs :parent (:key el)})))
+   (create db {:tag tag 
+               :attrs attrs 
+               :parent (:key el)})))
 
 (defn paste-styles
   ([db]
