@@ -24,13 +24,13 @@
                (str @(rf/subscribe [:pointer-pos]))]
 
               ["Adjusted pointer position"
-               (str (mapv units/->fixed  @(rf/subscribe [:adjusted-pointer-pos])))]
+               (str (mapv units/->fixed @(rf/subscribe [:adjusted-pointer-pos])))]
 
               ["Pointer offset"
                (str @(rf/subscribe [:pointer-offset]))]
 
               ["Adjusted pointer offset"
-               (str (mapv units/->fixed  @(rf/subscribe [:adjusted-pointer-offset])))]
+               (str (mapv units/->fixed @(rf/subscribe [:adjusted-pointer-offset])))]
 
               ["Pointer drag?"
                (str @(rf/subscribe [:drag?]))]
