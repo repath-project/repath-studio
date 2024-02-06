@@ -13,7 +13,11 @@
   {:icon "page"
    :description "The page is a top level SVG element with some extra custom 
                  attributes."
-   :attrs [:overflow]})
+   :attrs [:x
+           :y
+           :width
+           :height
+           :overflow]})
 
 (defmethod tools/drag :page
   [{:keys [adjusted-pointer-pos adjusted-pointer-offset] :as db} e]

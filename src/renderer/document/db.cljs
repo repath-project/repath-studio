@@ -39,7 +39,5 @@
                              :parent :canvas
                              :attrs {:width 800
                                      :height 600
-                                     :x 0
-                                     :y 0
                                      :fill "#ffffff"}
                              :children []}}})
