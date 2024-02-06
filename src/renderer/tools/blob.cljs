@@ -4,7 +4,6 @@
    ["blobs/v2" :as blobs]
    ["svgpath" :as svgpath]
    [clojure.core.matrix :as mat]
-   [goog.math]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.attribute.length :as length]
@@ -36,7 +35,7 @@
 
 (defmethod attr.hierarchy/form-element ::seed
   [k v disabled?]
-  (let [random-seed (goog.math/randomInt 1000000)]
+  (let [random-seed (rand-int 1000000)]
     [:<>
      [attr.v/form-input {:key k
                          :value v
@@ -98,7 +97,7 @@
         radius (mat/distance adjusted-pointer-pos adjusted-pointer-offset)
         attrs {::x (- offset-x radius)
                ::y (- offset-y radius)
-               ::seed (goog.math/randomInt 1000000)
+               ::seed (rand-int 1000000)
                ::extraPoints 8
                ::randomness 4
                ::size (* radius 2)

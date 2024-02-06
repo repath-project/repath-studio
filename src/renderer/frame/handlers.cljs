@@ -1,11 +1,11 @@
 (ns renderer.frame.handlers
   (:require
    [clojure.core.matrix :as mat]
-   [goog.math]
    [renderer.element.handlers :as el]
    [renderer.element.utils :as el.utils]
    [renderer.tools.base :as tools]
-   [renderer.utils.bounds :as bounds]))
+   [renderer.utils.bounds :as bounds]
+   [renderer.utils.math :as math]))
 
 (defn pan
   [{:keys [active-document] :as db} offset]
@@ -18,7 +18,7 @@
 (defn zoom-in-position
   [{:keys [active-document] :as db} factor pos]
   (let [zoom (get-in db [:documents active-document :zoom])
-        updated-zoom (goog.math.clamp (* zoom factor) 0.01 100)
+        updated-zoom (math/clamp (* zoom factor) 0.01 100)
         updated-factor (/ updated-zoom zoom)
         pan (get-in db [:documents active-document :pan])
         updated-pan (mat/sub (mat/div pan updated-factor)

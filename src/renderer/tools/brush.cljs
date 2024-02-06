@@ -4,7 +4,7 @@
    ["perfect-freehand" :refer [getStroke]]
    ["svg-path-bbox" :as svg-path-bbox]
    [clojure.core.matrix :as mat]
-   [goog.math]
+   [clojure.core.matrix.stats :as mat.stats]
    [renderer.attribute.color :as attr.color]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.attribute.range :as attr.range]
@@ -110,8 +110,8 @@
             d (str
                "M" (units/->fixed (first a)) "," (units/->fixed (second a))
                " Q" (units/->fixed (first b)) "," (units/->fixed (second b))
-               " " (units/->fixed (goog.math/average (first b) (first c))) ","
-               (units/->fixed (goog.math/average (second b) (second c))) " T")]
+               " " (units/->fixed (mat.stats/mean [(first b) (first c)])) ","
+               (units/->fixed (mat.stats/mean [(second b) (second c)])) " T")]
         (reduce-kv
          (fn [result index]
            (if (or (= len (inc index)) (< index 2))
@@ -119,11 +119,9 @@
              (let [a (nth points index)
                    b (nth points (inc index))]
                (str result
-                    (units/->fixed (goog.math/average (first a)
-                                                      (first b)))
+                    (units/->fixed (mat.stats/mean [(first a) (first b)]))
                     ","
-                    (units/->fixed (goog.math/average (second a)
-                                                      (second b)))
+                    (units/->fixed (mat.stats/mean [(second a) (second b)]))
                     " ")))) d points)))))
 
 (defn points->path
