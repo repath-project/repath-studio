@@ -77,7 +77,8 @@
            :y 0
            :fill (:fill attrs)
            :on-pointer-up pointer-handler
-           :on-pointer-down pointer-handler
+           :on-pointer-down #(when (= (.-button %) 2)
+                               (pointer/event-handler % element))
            :on-double-click pointer-handler})])
       (map (fn [element] [tools/render element]) (merge child-elements))]]))
 
