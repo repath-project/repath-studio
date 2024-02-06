@@ -1,8 +1,7 @@
 (ns renderer.tools.page
   (:require
-   [goog.string :as g.str]
    [re-frame.core :as rf]
-   [reagent.dom.server :as dom]
+   [reagent.dom.server :as dom.server]
    [renderer.element.handlers :as element.h]
    [renderer.tools.base :as tools]
    [renderer.utils.pointer :as pointer]))
@@ -85,7 +84,6 @@
         attrs (->> (dissoc attrs :fill)
                    (remove #(empty? (str (second %))))
                    (into {}))]
-    (g.str/unescapeEntities
-     (dom/render-to-static-markup
-      [:svg attrs
-       (doall (map tools/render-to-string (merge child-elements)))]))))
+    (->> (doall (map tools/render-to-string (merge child-elements)))
+         (into [:svg attrs])
+         dom.server/render-to-static-markup)))

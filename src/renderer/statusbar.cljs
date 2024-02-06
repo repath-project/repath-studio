@@ -2,7 +2,6 @@
   (:require
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    ["@radix-ui/react-select" :as Select]
-   [goog.string :as g.str]
    [re-frame.core :as rf]
    [re-frame.registrar]
    [renderer.color.views :as color-v]
@@ -16,9 +15,9 @@
     [:div.flex.flex-col.ml-2.font-mono
      {:style {:min-width "90px"}}
      [:div.flex.justify-between
-      [:span.mr-1 "X:"] [:span (g.str/format "%.2f" x)]]
+      [:span.mr-1 "X:"] [:span (units/->fixed x)]]
      [:div.flex.justify-between
-      [:span.mr-1 "Y:"] [:span (g.str/format "%.2f" y)]]]))
+      [:span.mr-1 "Y:"] [:span (units/->fixed y)]]]))
 
 (def zoom-menu
   [{:label "Set to 50%"
@@ -104,38 +103,38 @@
   []
   (let [filter @(rf/subscribe [:document/filter])]
     [:> Select/Root {:value (name filter)
-                    :onValueChange #(rf/dispatch [:document/set-filter %])}
-    [:> Select/Trigger
-     {:class "select-trigger"
-      :aria-label "No a11y filter"}
-     [:> Select/Value {:placeholder "Filter"}
-      [:div.flex.gap-1.justify-between.items-center
-       {:style {:min-width "110px"}}
-       [:span (name filter)]
-       [:> Select/Icon {:class "select-icon"}
-        [comp/icon "chevron-up" {:class "small"}]]]]]
-    [:> Select/Portal
-     [:> Select/Content
-      {:side "top"
-       :sideOffset 5
-       :position "popper"
-       :class "menu-content rounded select-content"}
-      [:> Select/ScrollUpButton {:class "select-scroll-button"}
-       [comp/icon "chevron-up"]]
-      [:> Select/Viewport {:class "select-viewport"}
-       [:> Select/Group
-        [:> Select/Item
-         {:value "No a11y filter"
-          :class "menu-item select-item"}
-         [:> Select/ItemText "No a11y filter"]]
-        (map (fn [{:keys [id]}] ^{:key id}
-               [:> Select/Item
-                {:value (name id)
-                 :class "menu-item select-item"}
-                [:> Select/ItemText (name id)]]) filters/accessibility)]]
-      [:> Select/ScrollDownButton
-       {:class "select-scroll-button"}
-       [comp/icon "chevron-down"]]]]]))
+                     :onValueChange #(rf/dispatch [:document/set-filter %])}
+     [:> Select/Trigger
+      {:class "select-trigger"
+       :aria-label "No a11y filter"}
+      [:> Select/Value {:placeholder "Filter"}
+       [:div.flex.gap-1.justify-between.items-center
+        {:style {:min-width "110px"}}
+        [:span (name filter)]
+        [:> Select/Icon {:class "select-icon"}
+         [comp/icon "chevron-up" {:class "small"}]]]]]
+     [:> Select/Portal
+      [:> Select/Content
+       {:side "top"
+        :sideOffset 5
+        :position "popper"
+        :class "menu-content rounded select-content"}
+       [:> Select/ScrollUpButton {:class "select-scroll-button"}
+        [comp/icon "chevron-up"]]
+       [:> Select/Viewport {:class "select-viewport"}
+        [:> Select/Group
+         [:> Select/Item
+          {:value "No a11y filter"
+           :class "menu-item select-item"}
+          [:> Select/ItemText "No a11y filter"]]
+         (map (fn [{:keys [id]}] ^{:key id}
+                [:> Select/Item
+                 {:value (name id)
+                  :class "menu-item select-item"}
+                 [:> Select/ItemText (name id)]]) filters/accessibility)]]
+       [:> Select/ScrollDownButton
+        {:class "select-scroll-button"}
+        [comp/icon "chevron-down"]]]]]))
 
 (defn root []
   (let [zoom @(rf/subscribe [:document/zoom])]

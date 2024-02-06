@@ -2,8 +2,6 @@
   (:require
    ["paper" :refer [Path]]
    ["paperjs-offset" :refer [PaperOffset]]
-   [goog.string :as g.str]
-   [reagent.dom.server :as server]
    [renderer.element.utils :as el-utils]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.map :as map]
@@ -83,11 +81,7 @@
 (defmethod drag-end :default [db event element] (pointer-up db event element))
 (defmethod properties :default [])
 (defmethod render :default [])
-(defmethod render-to-string :default
-  [element]
-  (-> [render element]
-      server/render-to-static-markup
-      g.str/unescapeEntities))
+(defmethod render-to-string :default [element] [render element])
 
 (defmethod render-edit :default [])
 (defmethod bounds :default [])

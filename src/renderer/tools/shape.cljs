@@ -2,9 +2,7 @@
   "https://www.w3.org/TR/SVG/shapes.html#TermShapeElement"
   (:require
    ["element-to-path" :as element-to-path]
-   [goog.string :as g.str]
    [re-frame.core :as rf]
-   [reagent.dom.server :as server]
    [renderer.tools.base :as tools]))
 
 (derive ::tools/shape ::tools/graphics)
@@ -24,6 +22,4 @@
          attrs
          (when title [:title title])
          content
-         (map tools/render-to-string child-elements)]
-        (server/render-to-static-markup)
-        (g.str/unescapeEntities))))
+         (doall (map tools/render-to-string child-elements))])))

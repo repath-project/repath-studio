@@ -6,7 +6,6 @@
    ["svgpath" :as svgpath]
    [clojure.core.matrix :as mat]
    #_[clojure.string :as str]
-   [goog.object]
    [renderer.tools.base :as tools]))
 
 (derive :path ::tools/shape)
@@ -34,7 +33,6 @@
 (defn manipulate
   [element _action]
   (update-in element [:attrs :d] #(-> (Path. %)
-                                      #_(goog.object/set "fullySelected" true)
                                       #_(manipulate-paper-path action)
                                       (.exportSVG)
                                       (.getAttribute "d"))))

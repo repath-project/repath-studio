@@ -1,17 +1,9 @@
 (ns platform
   (:require
-   [clojure.string :as str])
-  (:import
-   [goog userAgent]))
+   [clojure.string :as str]))
 
 (defonce user-agent
-  (.getUserAgentString userAgent))
-
-#_(defonce platform
-    (.-PLATFORM userAgent))
-
-#_(defonce mobile?
-    (.-MOBILE userAgent))
+  (.-userAgent js/navigator))
 
 (defonce electron?
   (str/includes? user-agent "Electron"))

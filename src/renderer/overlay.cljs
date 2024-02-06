@@ -2,7 +2,7 @@
   "Render functions for canvas overlay objects (select helpers etc)."
   (:require
    [clojure.core.matrix :as mat]
-   [goog.math :as math]
+   [goog.math]
    [re-frame.core :as rf]
    [renderer.tools.base :as tools]
    [renderer.utils.bounds :as bounds]
