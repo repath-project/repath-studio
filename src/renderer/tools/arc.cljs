@@ -2,13 +2,13 @@
   (:require
    ["svg-path-bbox" :as svg-path-bbox]
    [clojure.core.matrix :as mat]
-   [goog.math]
    [re-frame.core :as rf]
    [renderer.attribute.angle :as angle]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.element.handlers :as element.h]
    [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
+   [renderer.utils.math :as math]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
 
@@ -65,10 +65,10 @@
 (defmethod tools/path :arc
   [{{:keys [cx cy rx ry ::start-deg ::end-deg]} :attrs}]
   (let [[cx cy rx ry] (map units/unit->px [cx cy rx ry])
-        x1 (+ cx (goog.math/angleDx start-deg rx))
-        y1 (+ cy (goog.math/angleDy start-deg ry))
-        x2 (+ cx (goog.math/angleDx end-deg rx))
-        y2 (+ cy (goog.math/angleDy end-deg ry))
+        x1 (+ cx (math/angle-dx start-deg rx))
+        y1 (+ cy (math/angle-dy start-deg ry))
+        x2 (+ cx (math/angle-dx end-deg rx))
+        y2 (+ cy (math/angle-dy end-deg ry))
         diff-deg (- end-deg start-deg)]
     (str "M" x1 "," y1 " "
          "A" rx "," ry " 0 " (if (>= diff-deg 180) 1 0) ",1 " x2 "," y2)))
@@ -101,10 +101,10 @@
   (let [{:keys [cx cy rx ry ::start-deg ::end-deg]} attrs
         [cx cy rx ry] (mapv units/unit->px [cx cy rx ry])
         active-page @(rf/subscribe [:element/active-page])
-        x1 (+ cx (goog.math/angleDx start-deg rx))
-        y1 (+ cy (goog.math/angleDy start-deg ry))
-        x2 (+ cx (goog.math/angleDx end-deg rx))
-        y2 (+ cy (goog.math/angleDy end-deg ry))
+        x1 (+ cx (math/angle-dx start-deg rx))
+        y1 (+ cy (math/angle-dy start-deg ry))
+        x2 (+ cx (math/angle-dx end-deg rx))
+        y2 (+ cy (math/angle-dy end-deg ry))
         page-pos (mapv
                   units/unit->px
                   [(-> active-page :attrs :x) (-> active-page :attrs :y)])

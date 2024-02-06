@@ -2,10 +2,10 @@
   "Render functions for canvas overlay objects (select helpers etc)."
   (:require
    [clojure.core.matrix :as mat]
-   [goog.math]
    [re-frame.core :as rf]
    [renderer.tools.base :as tools]
    [renderer.utils.bounds :as bounds]
+   [renderer.utils.math :as math]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
 
@@ -114,10 +114,10 @@
         radius (/ radius zoom)
         end-degrees (+ start-degrees size-degrees)
         stroke-dasharray (/ dash-size zoom)
-        x1 (+ x (goog.math/angleDx start-degrees radius))
-        y1 (+ y (goog.math/angleDy start-degrees radius))
-        x2 (+ x (goog.math/angleDx end-degrees radius))
-        y2 (+ y (goog.math/angleDy end-degrees radius))
+        x1 (+ x (math/angle-dx start-degrees radius))
+        y1 (+ y (math/angle-dy start-degrees radius))
+        x2 (+ x (math/angle-dx end-degrees radius))
+        y2 (+ y (math/angle-dy end-degrees radius))
         d (str "M" x1 "," y1 " "
                "A" radius "," radius " 0 0,1 " x2 "," y2)
         attrs {:d d

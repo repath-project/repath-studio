@@ -1,6 +1,5 @@
 (ns renderer.tools.dropper
   (:require
-   [goog.color]
    [re-frame.core :as rf]
    [renderer.handlers :as handlers]
    [renderer.tools.base :as tools]))

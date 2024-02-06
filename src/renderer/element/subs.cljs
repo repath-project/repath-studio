@@ -2,7 +2,6 @@
   (:require
    ["js-beautify" :as js-beautify]
    [clojure.set :as set]
-   [goog.color :as color]
    [re-frame.core :as rf]
    [renderer.attribute.utils :as attr.utils]
    [renderer.tools.base :as tools]
@@ -150,9 +149,7 @@
  (fn [visible-elements _]
    (reduce (fn [colors element]
              (let [color (get-in element [:attrs :fill])]
-               (if (and color (color/isValidColor color))
-                 (conj colors (keyword (:hex (color/parse color))))
-                 colors)))
+               (conj colors color)))
            #{}
            visible-elements)))
 
