@@ -4,6 +4,7 @@
    ["@re-path/react-color" :refer [PhotoshopPicker]]
    [i18n :refer [t]]
    [re-frame.core :as rf]
+   [renderer.color.db :as color.db]
    [renderer.components :as comp]))
 
 (defn drip [color]
@@ -19,14 +20,8 @@
 (defn swatch [colors]
   [:div.flex (map drip colors)])
 
-(def color-palette
-  [["white" "maroon" "red" "purple" "magenta" "green" "lime"
-    "olive" "yellow" "navy" "blue" "teal" "cyan" "transparent"]
-   ["black" "#111111" "#222222" "#333333" "#444444" "#555555" "#666666"
-    "#777777" "#888888" "#999999" "#aaaaaa" "#cccccc" "#dddddd" "#eeeeee"]])
-
 (defn palette []
-  (into [:div.flex.flex-col.palette] (map swatch color-palette)))
+  (into [:div.flex.flex-col.palette] (map swatch color.db/default-palette)))
 
 (defn get-hex
   [color-object]

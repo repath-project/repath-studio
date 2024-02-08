@@ -144,16 +144,6 @@
    (vals (select-keys elements (set/union hovered-keys selected-keys)))))
 
 (rf/reg-sub
- :element/colors
- :<- [:element/visible]
- (fn [visible-elements _]
-   (reduce (fn [colors element]
-             (let [color (get-in element [:attrs :fill])]
-               (conj colors color)))
-           #{}
-           visible-elements)))
-
-(rf/reg-sub
  :snapping-points
  :<- [:document/elements]
  :<- [:element/visible]

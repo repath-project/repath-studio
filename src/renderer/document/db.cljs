@@ -19,8 +19,8 @@
   {:hovered-keys #{}
    :ignored-keys #{}
    :active-page :default-page
-   :fill "#ffffff"
-   :stroke "#000000"
+   :fill "white"
+   :stroke "black"
    :zoom 1
    :rotate 0
    :filter "No a11y filter"
@@ -39,5 +39,5 @@
                              :parent :canvas
                              :attrs {:width 800
                                      :height 600
-                                     :fill "#ffffff"}
+                                     :fill "white"}
                              :children []}}})
