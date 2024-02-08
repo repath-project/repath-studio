@@ -242,7 +242,7 @@
   []
   (rf/dispatch [:element/bool-operation :unite]))
 
-(defn ^:export ntersect
+(defn ^:export intersect
   "Intersects the selected elements."
   []
   (rf/dispatch [:element/bool-operation :intersect]))

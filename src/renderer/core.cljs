@@ -64,7 +64,7 @@
   (print "Welcome to your REPL!")
   (print "")
   (print "You can create or modify shapes using the command line.")
-  (print "Type (help) to see the list of commands."))
+  (print "Type (help) to see a list of commands."))
 
 (defn init-api
   []
