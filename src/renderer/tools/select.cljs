@@ -105,9 +105,7 @@
 
 (defmethod tools/deactivate :select
   [db]
-  (-> db
-      element.h/clear-hovered
-      (element.h/clear-ignored)))
+  (element.h/clear-ignored db))
 
 (defn select-rect
   [{:keys [adjusted-pointer-offset

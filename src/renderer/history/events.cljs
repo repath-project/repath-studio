@@ -29,14 +29,18 @@
  :history/cancel
  (fn [db _]
    (cond-> db
-     (and (= (:tool db) :select) (not (:pointer-offset db)))
+     (and (= (:tool db) :select) (= (:state db) :default))
      (-> element.h/deselect
          (h/finalize "Deselect all"))
 
-     (not (:pointer-offset db))
-     (-> (tools/set-tool :select)
-         (assoc :state :default))
+     (= (:state db) :select)
+     (element.h/clear-hovered)
+
+     (= (:state db) :default)
+     (tools/set-tool :select)
 
      :always (-> (dissoc :pointer-offset)
+                 (dissoc :drag?)
+                 (assoc :state :default)
                  element.h/clear-temp
                  h/swap))))
