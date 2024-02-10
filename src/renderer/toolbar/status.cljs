@@ -1,4 +1,4 @@
-(ns renderer.statusbar
+(ns renderer.toolbar.status
   (:require
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    ["@radix-ui/react-select" :as Select]

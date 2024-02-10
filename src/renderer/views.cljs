@@ -13,12 +13,12 @@
    [renderer.history.views :as history]
    [renderer.home :as home]
    [renderer.notification.views :as notification]
-   [renderer.object :as object]
    [renderer.reepl.views :as repl]
    [renderer.rulers.views :as rulers]
-   [renderer.statusbar :as status-bar]
    [renderer.timeline.views :as timeline]
-   [renderer.tools.views :as tools]
+   [renderer.toolbar.object :as toolbar.object]
+   [renderer.toolbar.status :as toolbar.status]
+   [renderer.toolbar.tools :as toolbar.tools]
    [renderer.tree.views :as tree]
    [renderer.window.views :as win]))
 
@@ -32,7 +32,7 @@
   []
   (let [rulers? @(rf/subscribe [:rulers?])]
     [:div.flex.flex-col.flex-1
-     [:div.mb-px [tools/toolbar]
+     [:div.mb-px [toolbar.tools/root]
       (when rulers?
         [:div.flex
          [:div.level-2 {:style {:width "23px" :height "23px"}}
@@ -63,7 +63,7 @@
          [:div.backdrop
           {:on-click #(rf/dispatch [:set-backdrop false])}])]]]))
 
-(defn editor 
+(defn editor
   []
   [:div.flex.flex-1.overflow-hidden
    [:div.flex.flex-col.flex-1.overflow-hidden
@@ -80,7 +80,7 @@
       (when @(rf/subscribe [:panel/visible? :history])
         [:div.v-scroll.p-1.level-2
          {:style {:flex "0 1 30%"}}])]
-     [status-bar/root]
+     [toolbar.status/root]
      [history/tree]]
     (when @(rf/subscribe [:panel/visible? :timeline]) [timeline/root])
     [command-input]]])
@@ -111,7 +111,7 @@
             {:style {:flex (str "0 0 " @(rf/subscribe [:panel/size :properties]) "px")}}
             [:div.flex.flex-1.box-border.overflow-hidden
              [attr/form]]])
-         [object/toolbar]]]]
+         [toolbar.object/root]]]]
       [home/panel])]
 
    [cmdk/dialog]

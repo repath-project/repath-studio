@@ -1,4 +1,4 @@
-(ns renderer.tools.views
+(ns renderer.toolbar.tools
   (:require
    ["@radix-ui/react-tooltip" :as Tooltip]
    [re-frame.core :as rf]
@@ -6,7 +6,7 @@
    [renderer.components :as comp]
    [renderer.tools.base :as tools]))
 
-(defn tool-button
+(defn button
   [type]
   (let [tool @(rf/subscribe [:tool])
         selected? (= tool type)]
@@ -33,12 +33,12 @@
            [comp/icon "angle-down"]]))))
 
 
-(defn toolbar-group
+(defn group
   [group]
   (into [:div.flex]
-        (map tool-button (descendants group))))
+        (map button (descendants group))))
 
-(def toolbars
+(def groups
   [::tools/transform
    ::tools/container
    ::tools/renderable
@@ -46,8 +46,8 @@
    ::tools/draw
    ::tools/misc])
 
-(defn toolbar
+(defn root
   []
   (into [:div.justify-center.flex-wrap.level-2.toolbar]
         (interpose [:span.v-divider]
-                   (map toolbar-group toolbars))))
+                   (map group groups))))

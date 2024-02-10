@@ -1,4 +1,4 @@
-(ns renderer.object
+(ns renderer.toolbar.object
   (:require
    ["@radix-ui/react-tooltip" :as Tooltip]
    [re-frame.core :as rf]
@@ -126,7 +126,7 @@
        [:> Tooltip/Arrow
         {:class "tooltip-arrow"}]]]]))
 
-(defn toolbar
+(defn root
   []
   (let [selected-elements? @(rf/subscribe [:element/selected?])
         multiple-selected? @(rf/subscribe [:element/multiple-selected?])
