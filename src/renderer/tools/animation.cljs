@@ -11,6 +11,7 @@
   (let [child-elements @(rf/subscribe [:element/filter-visible children])]
     [tag
      attrs
-     (map (fn [el] ^{:key (:key el)} [tools/render el]) child-elements)]))
+     (for [el child-elements]
+       ^{:key (:key el)} [tools/render el])]))
 
 (defmethod tools/bounds ::tools/animation [] nil)

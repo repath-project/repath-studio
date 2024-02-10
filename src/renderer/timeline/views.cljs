@@ -50,11 +50,11 @@
          [comp/icon "chevron-up"]]
         [:> Select/Viewport {:class "select-viewport"}
          [:> Select/Group
-          (map (fn [{:keys [id value label]}] ^{:key id}
-                 [:> Select/Item
-                  {:value value
-                   :class "menu-item select-item"}
-                  [:> Select/ItemText label]]) speed-options)]]
+          (for [{:keys [id value label]} speed-options]
+            ^{:key id} [:> Select/Item
+                        {:value value
+                         :class "menu-item select-item"}
+                        [:> Select/ItemText label]])]]
         [:> Select/ScrollDownButton
          {:class "select-scroll-button"}
          [comp/icon "chevron-down"]]]]]]))

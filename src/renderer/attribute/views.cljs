@@ -28,9 +28,8 @@
   [:<>
    [:h4.font-bold.mb-1 "Browser compatibility"]
    [:div.flex.mb-4
-    (map (fn [[browser {:keys [version_added]}]]
-           ^{:key browser}
-           [browser-support browser version_added]) support-data)]])
+    (for [[browser {:keys [version_added]}] support-data]
+      ^{:key browser} [browser-support browser version_added])]])
 
 (defn mdn-button
   [mdn_url attr]
@@ -133,12 +132,12 @@
       [:> Select/ScrollUpButton {:class "select-scroll-button"}
        [comp/icon "chevron-up"]]
       [:> Select/Viewport {:class "select-viewport"}
-       (map (fn [item]
-              ^{:key item}
-              [:> Select/Item {:value (:value item) :class "menu-item "}
-               (when (:icon item)
-                 [:div.absolute.left-2 [comp/icon (:icon item)]])
-               [:> Select/ItemText (:label item)]]) items)]
+       (for [item items]
+         ^{:key item}
+         [:> Select/Item {:value (:value item) :class "menu-item "}
+          (when (:icon item)
+            [:div.absolute.left-2 [comp/icon (:icon item)]])
+          [:> Select/ItemText (:label item)]])]
       [:> Select/ScrollDownButton {:class "select-scroll-button"}
        [comp/icon "chevron-down"]]]]]])
 
@@ -252,5 +251,6 @@
          (when (empty? (rest selected-tags))
            [tag-info tag])]
         [:div.attribute-grid
-         (map (fn [[k v]] ^{:key k} [row k v locked? tag]) selected-attrs)]])
+         (for [[k v] selected-attrs]
+           ^{:key k} [row k v locked? tag])]])
      [:div.level-1.grow.w-full.flex]]))

@@ -45,7 +45,7 @@
            :on-double-click pointer-handler
            :on-key-up keyb/event-handler
            :on-key-down keyb/event-handler
-           :tab-index 0 ; Enable keyboard events on the svg element 
+           :tab-index 0 ; Enable keyboard events 
            :viewBox (str/join " " viewbox)
            :on-drop pointer-handler
            :on-drag-over #(.preventDefault %)
@@ -56,10 +56,8 @@
            :id "canvas"
            :style {:background (:fill attrs)
                    :outline "none"}}
-     (map (fn [el]
-            ^{:key (str (:key el))}
-            [tools/render el])
-          child-elements)
+     (for [el child-elements]
+       ^{:key (str (:key el))} [tools/render el])
 
      [:defs
       (map (fn [{:keys [id tag attrs]}]
@@ -67,16 +65,13 @@
            filters/accessibility)]
 
      (when debug-info?
-       (into [:g] (map (fn [snapping-point]
-                         [overlay/point-of-interest snapping-point])
-                       snapping-points)))
+       (into [:g] (map overlay/point-of-interest snapping-points)))
 
      (when (and select? (contains? #{:default :select :scale} state))
        [:<>
-        (map (fn [el]
-               ^{:key (str (:key el) "-bounds")}
-               [overlay/bounding-box (tools/adjusted-bounds el elements)])
-             hovered-or-selected)
+        (for [el hovered-or-selected]
+          ^{:key (str (:key el) "-bounds")}
+          [overlay/bounding-box (tools/adjusted-bounds el elements)])
 
         (when (pos? elements-area)
           [overlay/area elements-area bounds])
@@ -91,13 +86,12 @@
 
      (when (or (= tool :edit)
                (= primary-tool :edit))
-       (map (fn [el]
-              ^{:key (str (:key el) "-edit-points")}
-              [:g
-               [tools/render-edit el]
-               ^{:key (str (:key el) "-centroid")}
-               [overlay/centroid el]])
-            selected-elements))
+       (for [el selected-elements]
+         ^{:key (str (:key el) "-edit-points")}
+         [:g
+          [tools/render-edit el]
+          ^{:key (str (:key el) "-centroid")}
+          [overlay/centroid el]]))
 
      [tools/render temp-element]
 

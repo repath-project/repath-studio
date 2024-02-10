@@ -135,10 +135,9 @@
         active-document @(rf/subscribe [:active-document])]
     [:div.flex.drag.justify-between {:style {:flex "0 0 40px"}}
      [:div.flex {:style {:flex "1 0 auto"}}
-      (map (fn [document]
-             ^{:key document}
-             [tab document (document documents) (= document active-document)])
-           document-tabs)]
+      (for [document document-tabs]
+        ^{:key document}
+        [tab document (document documents) (= document active-document)])]
      [:div.toolbar
       [:button.p-1.icon-button {:title "Document Actions"}
        [comp/icon "ellipsis-h"]]]]))

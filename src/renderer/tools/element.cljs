@@ -87,10 +87,8 @@
                    (into {}))
           (when title [:title title])
           content
-          (map (fn [child]
-                 ^{:key (:key child)}
-                 [tools/render child])
-               child-elements)]
+          (for [child child-elements]
+            ^{:key (:key child)} [tools/render child])]
 
          (when default-state?
            (let [pointer-handler #(pointer/event-handler % el)]

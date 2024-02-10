@@ -18,10 +18,8 @@
 (defmethod tools/render ::tools/container
   [{:keys [children tag attrs]}]
   (let [child-elements @(rf/subscribe [:element/filter-visible children])]
-    [tag attrs (map (fn [el]
-                      ^{:key (:key el)}
-                      [tools/render el])
-                    child-elements)]))
+    [tag attrs (for [el child-elements]
+                 ^{:key (:key el)} [tools/render el])]))
 
 (defmethod tools/render-to-string ::tools/container
   [{:keys [tag attrs title children]}]

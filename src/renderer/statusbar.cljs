@@ -127,11 +127,12 @@
           {:value "No a11y filter"
            :class "menu-item select-item"}
           [:> Select/ItemText "No a11y filter"]]
-         (map (fn [{:keys [id]}] ^{:key id}
-                [:> Select/Item
-                 {:value (name id)
-                  :class "menu-item select-item"}
-                 [:> Select/ItemText (name id)]]) filters/accessibility)]]
+         (for [{:keys [id]} filters/accessibility]
+           ^{:key id}
+           [:> Select/Item
+            {:value (name id)
+             :class "menu-item select-item"}
+            [:> Select/ItemText (name id)]])]]
        [:> Select/ScrollDownButton
         {:class "select-scroll-button"}
         [comp/icon "chevron-down"]]]]]))
@@ -175,9 +176,7 @@
          {:class "menu-content rounded"
           :side "top"
           :align "end"}
-         (map (fn [item]
-                ^{:key (:key item)}
-                [comp/dropdown-menu-item item])
-              zoom-menu)
+         (for [item zoom-menu]
+           ^{:key (:key item)} [comp/dropdown-menu-item item])
          [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]]]
      [coordinates]]))
