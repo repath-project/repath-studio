@@ -3,5 +3,10 @@
 }
 
 .title-bar {
-  @apply flex justify-center drag grow h-full items-center;
+  @apply absolute flex justify-center drag grow h-full items-center;
+
+  z-index: -1;
+  pointer-events: none;
+  left: 50%;
+  transform: translate(-50%, 0);
 }

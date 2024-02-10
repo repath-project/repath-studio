@@ -1,6 +1,5 @@
-
 .menubar-root {
-  display: flex;
+  @apply flex;
 }
 
 .menubar-trigger {

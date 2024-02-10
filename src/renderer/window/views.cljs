@@ -14,7 +14,7 @@
 
 (defn window-controls
   []
-  (into [:div.text-right.drag]
+  (into [:div.text-right]
         (mapv window-control-button
               [{:action [:window/minimize]
                 :icon "window-minimize"}
@@ -25,25 +25,21 @@
                {:action [:window/close]
                 :icon "times"}])))
 
-(defn title-bar []
-  (let [title @(rf/subscribe [:document/title])]
-    [:div.title-bar
-     [:span title]
-     [:span {:style {:width "250px"}}]]))
-
 (defn app-header []
   (when-not @(rf/subscribe [:window/fullscreen?])
-    [:div.flex.items-center
+    [:div.flex.items-center.relative
      [:div.drag
       [:img.ml-2.mr-1
        {:src "img/icon-no-bg.svg"
         :style {:width "14px"
                 :height "14px"}}]]
-     [menubar/root]
-     [:button.button.px-3.flex.items-center
-      {:on-click #(rf/dispatch [:cmdk/toggle])}
-      (t [:cmdk/search "Search…"])]
-     [title-bar]
+     [:div.flex.relative.level-0
+      [menubar/root]
+      [:button.button.px-3.flex.items-center
+       {:on-click #(rf/dispatch [:cmdk/toggle])}
+       (t [:cmdk/search "Search…"])]]
+     [:div.title-bar @(rf/subscribe [:document/title])]
+     [:div.flex.h-full.flex-1.drag]
      [:div.level-2
       {:class (when-not platform/electron? "mr-1.5")}
       [comp/icon-button
