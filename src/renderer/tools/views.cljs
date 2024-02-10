@@ -6,7 +6,8 @@
    [renderer.components :as comp]
    [renderer.tools.base :as tools]))
 
-(defn tool-button [type]
+(defn tool-button
+  [type]
   (let [tool @(rf/subscribe [:tool])
         selected? (= tool type)]
     (when (:icon (tools/properties type))
@@ -32,18 +33,21 @@
            [comp/icon "angle-down"]]))))
 
 
-(defn toolbar-group [group]
+(defn toolbar-group
+  [group]
   (into [:div.flex]
         (map tool-button (descendants group))))
 
-(def toolbars [::tools/transform
-               ::tools/container
-               ::tools/renderable
-               ::tools/custom
-               ::tools/draw
-               ::tools/misc])
+(def toolbars
+  [::tools/transform
+   ::tools/container
+   ::tools/renderable
+   ::tools/custom
+   ::tools/draw
+   ::tools/misc])
 
-(defn toolbar []
+(defn toolbar
+  []
   (into [:div.justify-center.flex-wrap.level-2.toolbar]
         (interpose [:span.v-divider]
                    (map toolbar-group toolbars))))

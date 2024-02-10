@@ -5,7 +5,7 @@
    [clojure.set :as set]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.tools.base :as tools]
-   [renderer.tools.path :as path]
+   [renderer.tools.shape.path :as path]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.map :as map]
    [renderer.utils.uuid :as uuid]
@@ -515,8 +515,8 @@
   ([db tag attrs]
    (reduce #(animate %1 %2 tag attrs) (deselect db) (selected db)))
   ([db el tag attrs]
-   (create db {:tag tag 
-               :attrs attrs 
+   (create db {:tag tag
+               :attrs attrs
                :parent (:key el)})))
 
 (defn paste-styles
