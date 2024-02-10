@@ -5,8 +5,8 @@
    [re-frame.core :as rf]
    [renderer.element.handlers :as element.h]
    [renderer.handlers :as handlers]
-   [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
+   [renderer.tools.overlay :as overlay]
    [renderer.utils.units :as units]))
 
 (derive :measure ::tools/misc)

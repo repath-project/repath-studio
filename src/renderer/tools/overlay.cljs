@@ -1,4 +1,4 @@
-(ns renderer.overlay
+(ns renderer.tools.overlay
   "Render functions for canvas overlay objects (select helpers etc)."
   (:require
    [clojure.core.matrix :as mat]

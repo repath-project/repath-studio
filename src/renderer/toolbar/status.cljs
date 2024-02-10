@@ -6,7 +6,7 @@
    [re-frame.registrar]
    [renderer.color.views :as color-v]
    [renderer.components :as comp]
-   [renderer.filters :as filters]
+   [renderer.toolbar.filters :as filters]
    [renderer.utils.keyboard :as keyb]
    [renderer.utils.units :as units]))
 

@@ -6,8 +6,8 @@
    [renderer.attribute.angle :as angle]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.element.handlers :as element.h]
-   [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
+   [renderer.tools.overlay :as overlay]
    [renderer.utils.math :as math]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))

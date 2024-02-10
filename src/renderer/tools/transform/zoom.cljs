@@ -3,8 +3,8 @@
    [renderer.element.handlers :as element.h]
    [renderer.frame.handlers :as frame]
    [renderer.handlers :as handlers]
-   [renderer.overlay :as overlay]
-   [renderer.tools.base :as tools]))
+   [renderer.tools.base :as tools]
+   [renderer.tools.overlay :as overlay]))
 
 (derive :zoom ::tools/transform)
 

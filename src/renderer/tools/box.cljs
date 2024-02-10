@@ -5,8 +5,8 @@
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
+   [renderer.tools.overlay :as overlay]
    [renderer.utils.units :as units]))
 
 (derive ::tools/box ::tools/element)

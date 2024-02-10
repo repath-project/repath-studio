@@ -6,10 +6,10 @@
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.handlers :as element.h]
-   [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
-   [renderer.utils.units :as units]
-   [renderer.utils.bounds :as bounds]))
+   [renderer.tools.overlay :as overlay]
+   [renderer.utils.bounds :as bounds]
+   [renderer.utils.units :as units]))
 
 (derive :circle ::tools/shape)
 

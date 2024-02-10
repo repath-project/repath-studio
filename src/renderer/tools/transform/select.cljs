@@ -6,8 +6,8 @@
    [renderer.element.handlers :as element.h]
    [renderer.handlers :as handlers]
    [renderer.history.handlers :as history]
-   [renderer.overlay :as overlay]
    [renderer.tools.base :as tools]
+   [renderer.tools.overlay :as overlay]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))

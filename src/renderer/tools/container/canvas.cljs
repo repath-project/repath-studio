@@ -3,10 +3,10 @@
   (:require
    [clojure.string :as str]
    [re-frame.core :as rf]
-   [renderer.filters :as filters]
-   [renderer.overlay :as overlay]
    [renderer.rulers.views :as rulers]
+   [renderer.toolbar.filters :as filters]
    [renderer.tools.base :as tools]
+   [renderer.tools.overlay :as overlay]
    [renderer.utils.keyboard :as keyb]
    [renderer.utils.pointer :as pointer]))
 
