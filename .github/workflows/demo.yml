@@ -32,7 +32,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install clojure tools
-        uses: DeLaGuardo/setup-clojure@12.3
+        uses: DeLaGuardo/setup-clojure@12.4
         with:
           cli: 1.11.1.1435
       - run: npm ci && npm run build
