@@ -28,6 +28,7 @@
   (let [temp-element (get-in db [:documents (:active-document db) :temp-element])]
     (-> db
         element.h/add
+        (tools/set-tool :select)
         (history.h/finalize "Create " (name (:tag temp-element)))
         (assoc :cursor "crosshair"))))
 

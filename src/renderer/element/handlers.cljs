@@ -429,30 +429,35 @@
    :selected? true
    :children []})
 
+(defn overlapping-page
+  [db el]
+  (or
+   (some #(when (bounds/contained? (tools/bounds %) (tools/bounds el)) %) (pages db))
+   (some #(when (bounds/intersected? (tools/bounds %) (tools/bounds el)) %) (pages db))
+   (active-page db)))
+
 (defn create
   [db el]
   (let [key (uuid/generate)
+        page (overlapping-page db el)
         parent (or (:parent el)
-                   (if (page? el) :canvas (-> db active-page :key)))
-        el (map/deep-merge el default-props {:key key :parent parent})]
+                   (if (page? el) :canvas (:key page)))
+        el (map/deep-merge el default-props {:key key :parent parent})
+        [x1 y1 _ _] (tools/bounds page)]
     (cond-> db
       :always
       (-> (assoc-in (conj (path db) key) el)
-          (update-prop (:parent el) :children #(vec (conj % key))))
+          (update-prop (:parent el) :children #(vec (conj % key)))
+          (set-active-page (if (page? el) key (:key page))))
 
-      (not= (:tool db) :select)
-      (tools/set-tool :select)
-
-      (page? el)
-      (set-active-page key))))
+      (not (page? el))
+      (translate [(- x1) (- y1)]))))
 
 (defn add
   ([db]
-   (let [[x1 y1 _ _] (tools/bounds (active-page db))]
-     (cond-> db
-       :always (add (get-temp db))
-       (not (page? (get-temp db))) (translate [(- x1) (- y1)])
-       :always clear-temp)))
+   (-> db
+       (add (get-temp db))
+       clear-temp))
   ([db & elements]
    (reduce create (deselect db) elements))) ; TODO: Handle children
 
