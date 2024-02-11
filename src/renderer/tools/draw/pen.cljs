@@ -2,7 +2,7 @@
   (:require
    [clojure.string :as str]
    [renderer.element.handlers :as element.h]
-   [renderer.handlers :as handlers]
+   [renderer.handlers :as h]
    [renderer.history.handlers :as history]
    [renderer.tools.base :as tools]
    #_[renderer.tools.path :as path]))
@@ -21,7 +21,7 @@
 
 (defmethod tools/drag-start :pen
   [db]
-  (handlers/set-state db :create))
+  (h/set-state db :create))
 
 (defmethod tools/drag :pen
   [{:keys [active-document adjusted-pointer-pos] :as db}]
@@ -44,4 +44,5 @@
     (-> db
         (element.h/set-temp path)
         element.h/add
+        (h/set-state :default)
         (history/finalize "Draw line"))))

@@ -32,10 +32,6 @@
   [db k]
   (k (elements db)))
 
-(defn active-page
-  [db]
-  (element db (get-in db [:documents (:active-document db) :active-page])))
-
 (defn selected
   [db]
   (filter :selected? (vals (elements db))))
@@ -65,7 +61,7 @@
 
            (single? selected)
            (parent db (first selected)))
-         (active-page db))))
+         (element db :canvas))))
   ([db el]
    (when-let [parent (:parent el)]
      (element db parent))))
@@ -78,7 +74,7 @@
 
 (defn pages
   [db]
-  ((apply juxt (-> (elements db) :canvas :children)) (elements db)))
+  (filter #(= (:tag %) :page) (vals (elements db))))
 
 (defn page?
   [el]
@@ -149,22 +145,6 @@
   [db]
   (get-in db [:documents (:active-document db) :temp-element]))
 
-(defn page
-  [db el]
-  (if (or (not (:parent el)) (= (:tag el) :canvas))
-    (active-page db)
-    (if (page? el)
-      el
-      (recur db (parent db el)))))
-
-(defn set-active-page
-  [db key]
-  (assoc-in db [:documents (:active-document db) :active-page] key))
-
-(defn next-active-page
-  [db]
-  (set-active-page db (last (-> (elements db) :canvas :children))))
-
 (defn update-prop
   [db el-k k & more]
   (apply update-in db (conj (path db) el-k k) more))
@@ -221,12 +201,11 @@
   ([db key]
    (set-prop db key :selected? true))
   ([db key multi?]
-   (if-let [el (element db key)]
+   (if (element db key)
      (if-not multi?
        (-> db
            deselect
-           (select key)
-           (set-active-page (:key (page db el))))
+           (select key))
        (toggle-prop db key :selected?))
      (deselect db))))
 
@@ -325,9 +304,6 @@
        (assoc-in
         (conj (path db) (:parent el) :children)
         (vec (remove #{k} (siblings db el))))
-
-       (page? el)
-       (next-active-page)
 
        :always
        (update-in (path db) dissoc k)))))
@@ -432,9 +408,9 @@
 (defn overlapping-page
   [db el]
   (or
-   (some #(when (bounds/contained? (tools/bounds %) (tools/bounds el)) %) (pages db))
-   (some #(when (bounds/intersected? (tools/bounds %) (tools/bounds el)) %) (pages db))
-   (active-page db)))
+   (some #(when (bounds/contained? (tools/bounds el) (tools/bounds %)) %) (pages db))
+   (some #(when (bounds/intersected? (tools/bounds el) (tools/bounds %)) %) (pages db))
+   (element db :canvas)))
 
 (defn create
   [db el]
@@ -447,8 +423,7 @@
     (cond-> db
       :always
       (-> (assoc-in (conj (path db) key) el)
-          (update-prop (:parent el) :children #(vec (conj % key)))
-          (set-active-page (if (page? el) key (:key page))))
+          (update-prop (:parent el) :children #(vec (conj % key))))
 
       (not (page? el))
       (translate [(- x1) (- y1)]))))
@@ -492,7 +467,7 @@
   ([db]
    (reduce paste-in-place (deselect db) (:copied-elements db)))
   ([db el]
-   (create db (assoc el :parent (-> db active-page :key)))))
+   (create db el)))
 
 (defn paste
   [db]
@@ -561,7 +536,7 @@
   [db]
   (reduce (fn [db key] (set-parent db key (first (selected-keys db))))
           (-> (deselect db)
-              (create {:tag :g :parent (:key (active-page db))}))
+              (create {:tag :g}))
           (selected-keys db)))
 
 (defn inherit-attrs
@@ -604,3 +579,7 @@
      (and (not (:locked? el))
           (= (:tag el) :path))
      (update-in (path db (:key el)) path/manipulate action))))
+
+(defn ->string
+  [elements]
+  (reduce #(str % (tools/render-to-string %2)) "" elements))

@@ -29,6 +29,7 @@
     (-> db
         element.h/add
         (tools/set-tool :select)
+        (h/set-state :default)
         (history.h/finalize "Create " (name (:tag temp-element)))
         (assoc :cursor "crosshair"))))
 

@@ -10,7 +10,7 @@
    [renderer.attribute.range :as attr.range]
    [renderer.attribute.views :as attr.v]
    [renderer.element.handlers :as element.h]
-   [renderer.handlers :as handlers]
+   [renderer.handlers :as h]
    [renderer.history.handlers :as history.h]
    [renderer.tools.base :as tools]
    [renderer.tools.overlay :as overlay]
@@ -76,7 +76,7 @@
 
 (defmethod tools/drag-start :brush
   [db]
-  (handlers/set-state db :create))
+  (h/set-state db :create))
 
 (defmethod tools/drag :brush
   [{:keys [active-document
@@ -174,6 +174,7 @@
   [db]
   (-> db
       element.h/add
+      (h/set-state :default)
       (history.h/finalize "Draw line")))
 
 (defmethod tools/path :brush

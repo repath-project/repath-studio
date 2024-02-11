@@ -6,7 +6,9 @@
    [renderer.attribute.utils :as attr.utils]
    [renderer.tools.base :as tools]
    [renderer.utils.map :as map]
-   [renderer.utils.bounds :as bounds]))
+   [renderer.utils.bounds :as bounds]
+   [renderer.element.handlers :as h]
+   [renderer.element.utils :as el.utils]))
 
 #_(rf/reg-sub
    :element/element
@@ -27,23 +29,16 @@
    (mapv elements (:children canvas))))
 
 (rf/reg-sub
- :element/active-page
- :<- [:document/active-page]
- :<- [:document/elements]
- (fn [[active-page elements] _]
-   (get elements active-page)))
-
-(rf/reg-sub
  :element/xml
- :<- [:element/active-page]
- (fn [active-page _]
-   (js-beautify/html (tools/render-to-string active-page) #js {:indent_size 2})))
+ :<- [:element/pages]
+ (fn [pages _]
+   (js-beautify/html (h/->string pages) #js {:indent_size 2})))
 
-(rf/reg-sub
- :element/filter
- :<- [:document/elements]
- (fn [elements [_ ks]]
-   (mapv #(% elements) ks)))
+#_(rf/reg-sub
+   :element/filter
+   :<- [:document/elements]
+   (fn [elements [_ ks]]
+     (mapv #(% elements) ks)))
 
 (rf/reg-sub
  :element/filter-visible
@@ -122,6 +117,12 @@
  :<- [:element/selected]
  (fn [[elements selected-elements] _]
    (tools/elements-bounds elements selected-elements)))
+
+(rf/reg-sub
+ :element/parent-page
+ :<- [:document/elements]
+ (fn [elements [_ el]]
+   (el.utils/parent-page elements el)))
 
 (rf/reg-sub
  :element/area

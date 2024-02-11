@@ -44,9 +44,9 @@
   [{:keys [attrs key] :as el}]
   (let [{:keys [x y width height]} attrs
         [x y width height] (mapv units/unit->px [x y width height])
-        active-page @(rf/subscribe [:element/active-page])
-        page-pos (mapv units/unit->px [(-> active-page :attrs :x)
-                                       (-> active-page :attrs :y)])
+        parent-page @(rf/subscribe [:element/parent-page])
+        page-pos (mapv units/unit->px [(-> parent-page :attrs :x)
+                                       (-> parent-page :attrs :y)])
         [x y] (cond-> [x y] (not= (:tag el) :page) (mat/add page-pos))]
     [:g {:key :edit-handlers}
      (map (fn [handler]

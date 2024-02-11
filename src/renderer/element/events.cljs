@@ -185,7 +185,7 @@
 (rf/reg-event-db
  :element/export
  (fn [db _]
-   (let [xml (tools/render-to-string (h/active-page db))]
+   (let [xml (tools/render-to-string (h/selected db))]
      (js/window.api.send "toMain" #js {:action "export" :data xml}))))
 
 (rf/reg-event-db
@@ -317,23 +317,6 @@
        h/ungroup
        (history.h/finalize "Ungroup selection"))))
 
-(rf/reg-event-db
- :element/add-page
- (fn [db _]
-   (let [[_ y1 x2 _] (tools/elements-bounds (h/elements db)
-                                            (h/pages db))
-         {:keys [width height fill]} (:attrs (h/active-page db))
-         db (h/add db {:tag :page
-                       :name "Page"
-                       :attrs {:x (+ x2 100)
-                               :y y1
-                               :width width
-                               :height height
-                               :fill fill}})]
-     (-> db
-         (frame.h/pan-to-element (:key (h/active-page db)))
-         (history.h/finalize "Add page")))))
-
 #_:clj-kondo/ignore
 (rf/reg-event-db
  :element/manipulate-path
@@ -342,15 +325,11 @@
        (h/manipulate-path action)
        (history.h/finalize (str/capitalize (name action)) "path"))))
 
-(defn elements->string
-  [elements]
-  (reduce #(str % (tools/render-to-string %2)) "" elements))
-
 (rf/reg-event-fx
  :element/copy
  (fn [{:keys [db]} [_]]
    (let [selected-elements (h/selected db)
-         text-html (elements->string selected-elements)]
+         text-html (h/->string selected-elements)]
      {:db (h/copy db)
       :clipboard-write [text-html]})))
 
@@ -358,7 +337,7 @@
  :element/cut
  (fn [{:keys [db]} [_]]
    (let [selected-elements (h/selected db)
-         text-html (elements->string selected-elements)]
+         text-html (h/->string selected-elements)]
      {:db (-> db
               h/copy
               h/delete

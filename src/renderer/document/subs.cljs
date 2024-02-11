@@ -51,11 +51,6 @@
  :-> :elements)
 
 (rf/reg-sub
- :document/active-page
- :<- [:document/active]
- :-> :active-page)
-
-(rf/reg-sub
  :document/temp-element
  :<- [:document/active]
  :-> :temp-element)

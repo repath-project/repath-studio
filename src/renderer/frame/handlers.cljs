@@ -96,3 +96,9 @@
   [db {:keys [width height]} [x y] [offset-x offset-y]]
   (pan db [(calc-pan-offset x offset-x width)
            (calc-pan-offset y offset-y height)]))
+
+(defn recenter-to-content-rect
+  [{content-rect :content-rect :as db} updated-content-rect]
+  (let [offset (select-keys (merge-with - content-rect updated-content-rect)
+                            [:width :height])]
+    (pan db (mat/div [(:width offset) (:height offset)] 2))))

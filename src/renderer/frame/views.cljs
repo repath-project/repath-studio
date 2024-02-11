@@ -71,9 +71,7 @@
   (let [ref (react/createRef)]
     (ra/create-class
      {:component-did-mount
-      (fn [_this]
-        (.observe resize-observer (.-current ref))
-        (rf/dispatch [:pan-to-active-page :original]))
+      #(.observe resize-observer (.-current ref))
 
       :component-will-unmount
       #(.disconnect resize-observer)

@@ -6,7 +6,6 @@
   [:map
    [:hovered-keys [:set uuid?]]
    [:ignored-keys [:set uuid?]]
-   [:active-page uuid?]
    [:fill string?]
    [:stroke string?]
    [:zoom double?]
@@ -18,7 +17,6 @@
 (def default-document
   {:hovered-keys #{}
    :ignored-keys #{}
-   :active-page :default-page
    :fill "white"
    :stroke "black"
    :zoom 1

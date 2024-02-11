@@ -78,14 +78,14 @@
    (let [key (uuid/generate)
          title (str "Untitled-" (inc (count (:documents db))))
          document-tabs (:document-tabs db)
-         active-index (.indexOf document-tabs (:active-document db))]
+         active-index (.indexOf document-tabs (:active-document db))
+         document (merge db/default-document {:key key
+                                              :title title})]
      (-> db
-         (assoc-in [:documents key] (merge
-                                     db/default-document
-                                     {:key key :title title}))
+         (assoc-in [:documents key] document)
          (update :document-tabs #(vec/add % (inc active-index) key))
          (assoc :active-document key)
-         (frame/pan-to-element (:active-page db/default-document))
+         (frame/pan-to-element (-> document :elements :canvas :children first))
          (history.h/init "Create document")))))
 
 (rf/reg-event-db

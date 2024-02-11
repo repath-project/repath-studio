@@ -8,7 +8,7 @@
    [re-frame.core :as rf]
    [renderer.attribute.utils :as attr.utils]
    [renderer.element.handlers :as element.h]
-   [renderer.handlers :as handlers]
+   [renderer.handlers :as h]
    [renderer.history.handlers :as history]
    [renderer.tools.base :as tools]
    [renderer.tools.overlay :as overlay]
@@ -18,7 +18,7 @@
 
 (defmethod tools/activate ::tools/polyshape
   [db]
-  (handlers/set-message
+  (h/set-message
    db
    [:div
     [:div "Click to add points."]
@@ -44,7 +44,7 @@
   (if (element.h/get-temp db)
     (add-point db adjusted-pointer-pos)
     (-> db
-        (handlers/set-state :create)
+        (h/set-state :create)
         (create-polyline adjusted-pointer-pos))))
 
 (defmethod tools/drag-end ::tools/polyshape
@@ -52,7 +52,7 @@
   (if (element.h/get-temp db)
     (add-point db adjusted-pointer-pos)
     (-> db
-        (handlers/set-state :create)
+        (h/set-state :create)
         (create-polyline adjusted-pointer-pos))))
 
 (defmethod tools/pointer-move ::tools/polyshape
@@ -72,6 +72,8 @@
       (update-in [:documents active-document :temp-element :attrs :points]
                  #(str/join " " (apply concat (drop-last 2 (attr.utils/points->vec %)))))
       element.h/add
+      (tools/set-tool :select)
+      (h/set-state :default)
       (history/finalize "Create " (:tool db))))
 
 (defmethod tools/translate ::tools/polyshape

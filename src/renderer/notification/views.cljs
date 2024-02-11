@@ -22,7 +22,7 @@
                     :height "fit-content"}
             :on-click #(rf/dispatch [:notification/remove index])}]
           (when-let [count (:count notification)]
-            [:div.toast-count count])])
+            [:div.toast-count (inc count)])])
        notifications)]
 
      (when (second notifications)

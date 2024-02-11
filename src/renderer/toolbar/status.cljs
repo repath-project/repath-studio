@@ -31,15 +31,15 @@
     :action [:set-zoom 2]}
    {:key :divider-1
     :type :separator}
-   {:label "Initial"
-    :key "restore-page"
-    :action [:pan-to-active-page :original]}
-   {:label "Fit page"
-    :key "fit-page"
-    :action [:pan-to-active-page :fit]}
-   {:label "Fill page"
-    :key "fill-page"
-    :action [:pan-to-active-page :fill]}])
+   {:label "Center selected"
+    :key "center-selected"
+    :action [:pan-to-selected :original]}
+   {:label "Fit selected"
+    :key "fit-selected"
+    :action [:pan-to-selected :fit]}
+   {:label "Fill selected"
+    :key "fill-selected"
+    :action [:pan-to-selected :fill]}])
 
 (def view-radio-buttons
   [#_{:title "Snap to pixels"

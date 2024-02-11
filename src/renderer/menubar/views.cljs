@@ -217,15 +217,15 @@
                       :action [:set-zoom 2]}
                      {:key :divider-1
                       :type :separator}
-                     {:label "Initial"
-                      :key "restore-active-page"
-                      :action [:pan-to-active-page :original]}
-                     {:label "Fit active page"
-                      :key "fit-active-page"
-                      :action [:pan-to-active-page :fit]}
-                     {:label "Fill active page"
-                      :key "fill-active-page"
-                      :action [:pan-to-active-page :fill]}]}
+                     {:label "Center selected"
+                      :key "center-selected"
+                      :action [:pan-to-selected :original]}
+                     {:label "Fit selected"
+                      :key "fit-selected"
+                      :action [:pan-to-selected :fit]}
+                     {:label "Fill selected"
+                      :key "fill-selected"
+                      :action [:pan-to-selected :fill]}]}
             {:key :divider-1
              :type :separator}
             {:key :toggle-tree
