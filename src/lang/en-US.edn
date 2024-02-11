@@ -2,7 +2,6 @@
  :cmdk
  {:command-palette "Command palette"
   :search-command "Search for a command"
-  :search "Search…"
   :no-results "No results found."}
 
  :color

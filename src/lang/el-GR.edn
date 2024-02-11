@@ -2,7 +2,6 @@
  :cmdk
  {:command-palette "Μενού εντολών"
   :search-command "Αναζήτηση για εντολή"
-  :search "Αναζήτηση…"
   :no-results "Δεν βρέθηκαν αποτελέσματα."}
 
  :color
