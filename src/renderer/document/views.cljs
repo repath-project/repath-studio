@@ -29,19 +29,6 @@
    [:span.v-divider]
 
    [comp/icon-button
-    "import"
-    {:title "Import"
-     :disabled true
-     :on-click #(rf/dispatch [:document/import])}]
-
-   [comp/icon-button
-    "export"
-    {:title "Export"
-     :on-click #(rf/dispatch [:element/export])}]
-
-   [:span.v-divider]
-
-   [comp/icon-button
     "undo"
     {:title "Undo"
      :on-click #(rf/dispatch [:history/undo])

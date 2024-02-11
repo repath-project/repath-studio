@@ -34,10 +34,7 @@
         :style {:width "14px"
                 :height "14px"}}]]
      [:div.flex.relative.level-0
-      [menubar/root]
-      [:button.button.px-3.flex.items-center
-       {:on-click #(rf/dispatch [:cmdk/toggle])}
-       (t [:cmdk/search "Search…"])]]
+      [menubar/root]]
      [:div.title-bar @(rf/subscribe [:document/title])]
      [:div.flex.h-full.flex-1.drag]
      [:div.level-2

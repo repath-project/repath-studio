@@ -50,7 +50,7 @@
           :pages-collapsed? false
           :defs-collapsed? true
           :symbols-collapsed? true}
-   :panel {:tree {:size 300
+   :panel {:tree {:size 230
                   :visible? true}
            :properties {:size 300
                         :visible? true}

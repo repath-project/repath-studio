@@ -17,6 +17,7 @@
            :y
            :width
            :height
+           :fill
            :overflow]})
 
 (defmethod tools/drag :page
@@ -37,13 +38,13 @@
                             :attrs attrs})))
 
 (defmethod tools/render :page
-  [{:keys [attrs children type] :as element}]
+  [{:keys [attrs children tag] :as el}]
   (let [child-elements @(rf/subscribe [:element/filter-visible children])
         rect-attrs (select-keys attrs [:x :y :width :height])
         text-attrs (select-keys attrs [:x :y])
         filter @(rf/subscribe [:document/filter])
         zoom @(rf/subscribe [:document/zoom])
-        pointer-handler #(pointer/event-handler % element)]
+        pointer-handler #(pointer/event-handler % el)]
     [:g
      [:text
       (merge
@@ -53,7 +54,7 @@
         :on-pointer-move pointer-handler
         :fill "#888"
         :font-family "monospace"
-        :font-size (/ 12 zoom)}) (or (:name element) type)]
+        :font-size (/ 12 zoom)}) (or (:name el) (name tag))]
 
      [:rect
       (merge
@@ -78,9 +79,10 @@
            :fill (:fill attrs)
            :on-pointer-up pointer-handler
            :on-pointer-down #(when (= (.-button %) 2)
-                               (pointer/event-handler % element))
+                               (pointer/event-handler % el))
            :on-double-click pointer-handler})])
-      (map (fn [element] [tools/render element]) (merge child-elements))]]))
+      (for [element (merge child-elements)]
+        [tools/render element])]]))
 
 (defmethod tools/area :page [])
 

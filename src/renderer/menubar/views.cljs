@@ -32,6 +32,11 @@
              :action [:document/save-all]}
             {:key :divider-3
              :type :separator}
+            {:key :export
+             :label "Export"
+             :action [:element/export]}
+            {:key :divider-4
+             :type :separator}
             {:key :close
              :label "Close"
              :action [:document/close-active]}

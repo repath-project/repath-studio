@@ -29,7 +29,7 @@
  (fn [db [_ evt]]
    (when-let [key (-> db :panel-state :drag)]
      (let [pointer-pos [(.-clientX evt) (.-clientY evt)]
-           min-width 300
+           min-width 230
            max-width 600
            previous-pointer-pos (-> db :panel-state :pointer-pos)
            current-size (-> db :panel key :size)

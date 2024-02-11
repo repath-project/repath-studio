@@ -39,27 +39,7 @@
   }
 }
 
-.tree-heading {
-  @apply pr-1;
-  display: flex;
-  text-align: left;
-  font-size: 11px;
-  align-items: center;
-  text-transform: uppercase;
-  font-weight: 700;
-
-  &:hover {
-    color: var(--font-color-hovered);
-    background-color: inherit;
-  }
-
-  &:active {
-    background-color: inherit;
-  }
-}
-
-.list-item-button .button,
-.tree-heading .button {
+.list-item-button .button {
   @apply mx-px shrink-0;
   height: 20px;
   width: 20px;
@@ -67,8 +47,7 @@
 }
 
 .list-item-input {
-  @apply mr-1;
-  padding-left: 0;
+  @apply mr-1 pl-0;
   flex: 1 1 auto;
   background: transparent;
   font-family: inherit;

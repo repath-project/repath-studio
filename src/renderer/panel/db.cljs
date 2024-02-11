@@ -2,5 +2,5 @@
 
 (def panel
   [:map
-   [:size [int? {:default 300}]]
+   [:size int?]
    [:visible? boolean?]])
