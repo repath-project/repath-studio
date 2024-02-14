@@ -75,7 +75,7 @@
               (when hovered? "hovered")]
       :tab-index 0
       :role "menuitem"
-      :on-double-click #(rf/dispatch [:pan-to-element key])
+      :on-double-click #(rf/dispatch [:focus-selection :original])
       :on-pointer-enter #(rf/dispatch [:document/set-hovered-keys #{key}])
       :ref (fn [this]
              (when (and this selected? hovered? (not multiple-selected?))
@@ -116,10 +116,11 @@
       "ArrowUp" (rf/dispatch [:element/select-up ctrl?])
       "ArrowDown" (rf/dispatch [:element/select-down ctrl?])
       "ArrowLeft" (rf/dispatch [:element/collapse])
-      "ArrowRight" (rf/dispatch [:element/expand]))))
+      "ArrowRight" (rf/dispatch [:element/expand])
+      nil)))
 
 (defn inner-sidebar []
-  (let [page-elements @(rf/subscribe [:element/pages])
+  (let [canvas-children @(rf/subscribe [:element/canvas-children])
         elements @(rf/subscribe [:document/elements])]
     [:div.flex.flex-col.flex-1.overflow-hidden.level-1.tree-sidebar
      {:on-pointer-up #(rf/dispatch [:element/deselect-all])
@@ -129,7 +130,7 @@
       [:div
        {:on-pointer-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
        [:ul (map (fn [el] [item el 1 elements])
-                 (reverse page-elements))]]]]))
+                 (reverse canvas-children))]]]]))
 
 (defn root
   []

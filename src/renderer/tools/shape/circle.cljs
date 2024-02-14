@@ -41,6 +41,12 @@
                       (attr.hierarchy/update-attr :cx + x)
                       (attr.hierarchy/update-attr :cy + y)))
 
+(defmethod tools/position :circle
+  [el [x y]]
+  (-> el
+      (assoc-in [:attrs :cx] x)
+      (assoc-in [:attrs :cy] y)))
+
 (defmethod tools/scale :circle
   [el ratio pivot-point]
   (let [dimentions (bounds/->dimensions (tools/bounds el))
@@ -50,11 +56,6 @@
     (-> el
         (attr.hierarchy/update-attr :r * ratio)
         (tools/translate offset))))
-
-(defmethod tools/bounds :circle
-  [{{:keys [cx cy r]} :attrs}]
-  (let [[cx cy r] (map units/unit->px [cx cy r])]
-    [(- cx r) (- cy r) (+ cx r) (+ cy r)]))
 
 (defmethod tools/area :circle
   [{{:keys [r]} :attrs}]
@@ -71,28 +72,24 @@
 
 (defmethod tools/edit :circle
   [el [x _y] handler]
-  (case handler
+  (case (keyword (name handler))
     :r (attr.hierarchy/update-attr el :r #(abs (+ % x)))
     el))
 
 (defmethod tools/render-edit :circle
-  [{:keys [attrs key]}]
-  (let [{:keys [cx cy r]} attrs
-        [cx cy r] (mapv units/unit->px [cx cy r])
-        active-page @(rf/subscribe [:element/active-page])
-        page-pos (mapv
-                  units/unit->px
-                  [(-> active-page :attrs :x) (-> active-page :attrs :y)])
-        [cx cy] (mat/add page-pos [cx cy])]
+  [{:keys [key] :as el}]
+  (let [bounds @(rf/subscribe [:element/el-bounds el])
+        [cx cy] (bounds/center bounds)
+        r (/ (first (bounds/->dimensions bounds)) 2)]
     [:g
      [overlay/line cx cy (+ cx r) cy]
      [overlay/label (str (units/->fixed r)) [(+ cx (/ r 2)) cy]]
      [overlay/times cx cy]
      [overlay/square-handler {:x (+ cx r)
                               :y cy
-                              :key :r
+                              :key (keyword (:key el) :r)
                               :type :handler
                               :tag :edit
                               :element key}
-      ^{:key (str key "-r")}
+      ^{:key (keyword (:key el) :r)}
       [:title "r"]]]))

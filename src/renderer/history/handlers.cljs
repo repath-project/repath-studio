@@ -83,7 +83,7 @@
   [history]
   (accumulate history zip/next))
 
-(print )
+(print)
 
 (defn finalize
   "Pushes changes to the zip-tree.

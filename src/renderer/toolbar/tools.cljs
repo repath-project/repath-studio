@@ -1,6 +1,7 @@
 (ns renderer.toolbar.tools
   (:require
    ["@radix-ui/react-tooltip" :as Tooltip]
+   [clojure.string :as str]
    [re-frame.core :as rf]
    [re-frame.registrar]
    [renderer.components :as comp]
@@ -17,8 +18,14 @@
                                         :icon (:icon (tools/properties type))
                                         :action #(rf/dispatch [:set-tool type])}]]]
        [:> Tooltip/Portal
-        [:> Tooltip/Content {:class "tooltip-content" :side "bottom"}
-         type
+        [:> Tooltip/Content
+         {:class "tooltip-content"
+          :side "bottom"}
+         [:div.flex.gap-2.items-center
+          (str/capitalize (name type))
+          (when-let [shortcuts (comp/shortcuts [:set-tool type])]
+            [:div.text-muted.p-1.text-xs.level-1.rounded
+             shortcuts])]
          [:> Tooltip/Arrow {:class "tooltip-arrow"}]]]]
 
 

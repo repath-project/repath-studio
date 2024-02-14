@@ -1,9 +1,8 @@
 (ns renderer.toolbar.object
   (:require
-   ["@radix-ui/react-tooltip" :as Tooltip]
    [re-frame.core :as rf]
    [re-frame.registrar]
-   [renderer.components :as comp]))
+   [renderer.toolbar.views :as v]))
 
 (defn actions
   [selected-elements? multiple-selected?]
@@ -101,30 +100,10 @@
     :icon "exclude"
     :disabled? (not multiple-selected?)
     :action [:element/bool-operation :exclude]}
-   {:title "divide"
+   {:title "Divide"
     :icon "divide"
     :disabled? (not multiple-selected?)
     :action [:element/bool-operation :divide]}])
-
-(defn action-button
-  [{:keys [title icon disabled? action type]}]
-  (if (= type :divider)
-    [:span.h-divider]
-    [:> Tooltip/Root
-     [:> Tooltip/Trigger
-      {:as-child true}
-      [:span.shadow-4
-       [comp/icon-button
-        icon
-        {:disabled disabled?
-         :on-click #(rf/dispatch action)}]]]
-     [:> Tooltip/Portal
-      [:> Tooltip/Content
-       {:class "tooltip-content"
-        :side "left"}
-       title
-       [:> Tooltip/Arrow
-        {:class "tooltip-arrow"}]]]]))
 
 (defn root
   []
@@ -132,4 +111,4 @@
         multiple-selected? @(rf/subscribe [:element/multiple-selected?])
         object-actions (actions selected-elements? multiple-selected?)]
     (into [:div.flex.flex-col.level-2.text-center.flex-0.ml-px.toolbar]
-          (map action-button object-actions))))
+          (map v/button object-actions))))

@@ -4,7 +4,6 @@
    [renderer.panel.db]
    [renderer.theme.db]
    [renderer.timeline.db]
-   [renderer.tree.db]
    [renderer.window.db]))
 
 (def app
@@ -22,7 +21,6 @@
    [:system-fonts vector?]
    [:debug-info? boolean?]
    [:pen-mode? boolean?]
-   [:tree renderer.tree.db/tree]
    [:panel [:map-of :key renderer.panel.db/panel]]
    [:window renderer.window.db/window]
    [:theme [:mode renderer.theme.db/modes]]
@@ -46,10 +44,6 @@
    :repl-mode :cljs
    :theme {:mode :dark}
    :cmdk {:visible? false}
-   :tree {:elements-collapsed? false
-          :pages-collapsed? false
-          :defs-collapsed? true
-          :symbols-collapsed? true}
    :panel {:tree {:size 230
                   :visible? true}
            :properties {:size 300

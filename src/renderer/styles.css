@@ -463,7 +463,7 @@ pre {
 
 .tooltip-content {
   @apply level-0 px-2 py-1 rounded drop-shadow-md;
-  max-width: 200px;
+  max-width: 300px;
   border: 1px solid var(--border-color);
   animation-duration: 200ms;
   animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);

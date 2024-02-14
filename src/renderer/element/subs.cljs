@@ -5,16 +5,10 @@
    [re-frame.core :as rf]
    [renderer.attribute.utils :as attr.utils]
    [renderer.tools.base :as tools]
+   [renderer.utils.element :as utils.el]
    [renderer.utils.map :as map]
    [renderer.utils.bounds :as bounds]
-   [renderer.element.handlers :as h]
-   [renderer.element.utils :as el.utils]))
-
-#_(rf/reg-sub
-   :element/element
-   :<- [:document/elements]
-   (fn [elements [_ key]]
-     (get elements key)))
+   [renderer.element.handlers :as h]))
 
 (rf/reg-sub
  :element/canvas
@@ -22,7 +16,7 @@
  :-> :canvas)
 
 (rf/reg-sub
- :element/pages
+ :element/canvas-children
  :<- [:document/elements]
  :<- [:element/canvas]
  (fn [[elements canvas] _]
@@ -30,15 +24,10 @@
 
 (rf/reg-sub
  :element/xml
- :<- [:element/pages]
- (fn [pages _]
-   (js-beautify/html (h/->string pages) #js {:indent_size 2})))
-
-#_(rf/reg-sub
-   :element/filter
-   :<- [:document/elements]
-   (fn [elements [_ ks]]
-     (mapv #(% elements) ks)))
+ :<- [:element/canvas-children]
+ (fn [canvas-children _]
+   (-> (h/->string canvas-children)
+       (js-beautify/html #js {:indent_size 2}))))
 
 (rf/reg-sub
  :element/filter-visible
@@ -82,11 +71,6 @@
  (fn [selected-elements _]
    (seq (rest selected-elements))))
 
-#_(rf/reg-sub
-   :element/group-selected?
-   :<- [:element/selected]
-   (fn [selected-elements _]
-     (seq (filter #(= (:tag %) :g) selected-elements))))
 
 (rf/reg-sub
  :element/selected-attrs
@@ -116,13 +100,13 @@
  :<- [:document/elements]
  :<- [:element/selected]
  (fn [[elements selected-elements] _]
-   (tools/elements-bounds elements selected-elements)))
+   (utils.el/bounds elements selected-elements)))
 
 (rf/reg-sub
- :element/parent-page
+ :element/el-bounds
  :<- [:document/elements]
  (fn [elements [_ el]]
-   (el.utils/parent-page elements el)))
+   (utils.el/bounds elements [el])))
 
 (rf/reg-sub
  :element/area
@@ -150,7 +134,7 @@
  :<- [:element/visible]
  (fn [[elements visible-elements] _]
    (reduce (fn [points element]
-             (let [[x1 y1 x2 y2] (tools/adjusted-bounds element elements)
+             (let [[x1 y1 x2 y2] (utils.el/adjusted-bounds element elements)
                    [cx cy] (bounds/center [x1 y1 x2 y2])]
                (conj points
                      [x1 y1]

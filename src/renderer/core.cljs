@@ -27,7 +27,6 @@
    [renderer.theme.core]
    [renderer.timeline.core]
    [renderer.tools.core]
-   [renderer.tree.core]
    [renderer.utils.error :as error]
    [renderer.utils.keyboard :as keyb]
    [renderer.utils.dom :as dom]

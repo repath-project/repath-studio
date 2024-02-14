@@ -2,8 +2,8 @@
   (:require
    [clojure.core.matrix :as mat]
    [renderer.element.handlers :as element.h]
-   [renderer.handlers :as handlers]
-   [renderer.history.handlers :as history]
+   [renderer.handlers :as h]
+   [renderer.history.handlers :as history.h]
    [renderer.tools.base :as tools]
    [renderer.utils.pointer :as pointer]))
 
@@ -16,8 +16,9 @@
 (defmethod tools/activate :edit
   [db]
   (-> db
-      (handlers/set-state :default)
-      (handlers/set-message
+      (h/set-state :default)
+      (h/set-cursor "default")
+      (h/set-message
        [:div
         [:div "Drag a handler to modify your shape, or click on an element 
               to change selection."]
@@ -35,12 +36,12 @@
 
 (defmethod tools/drag-start :edit
   [db]
-  (handlers/set-state db :edit))
+  (h/set-state db :edit))
 
 (defmethod tools/drag :edit
   [{:keys [adjusted-pointer-offset adjusted-pointer-pos clicked-element] :as db} e]
   (let [pointer-offset (mat/sub adjusted-pointer-pos adjusted-pointer-offset)
-        db (history/swap db)
+        db (history.h/swap db)
         element-key (:element clicked-element)
         pointer-offset (if (contains? (:modifiers e) :ctrl)
                          (pointer/lock-direction pointer-offset)
@@ -56,6 +57,6 @@
 (defmethod tools/drag-end :edit
   [db]
   (-> db
-      (handlers/set-state :default)
+      (h/set-state :default)
       (dissoc :clicked-element)
-      (history/finalize "Edit " (-> db :clicked-element :key name))))
+      (history.h/finalize "Edit " (-> db :clicked-element :key name))))

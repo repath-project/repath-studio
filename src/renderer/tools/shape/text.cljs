@@ -5,7 +5,8 @@
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.element.handlers :as element.h]
-   [renderer.handlers :as handlers]
+   [renderer.handlers :as h]
+   [renderer.history.handlers :as history.h]
    [renderer.tools.base :as tools]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.units :as units]))
@@ -32,7 +33,7 @@
   [db]
   (-> db
       (assoc :cursor "text")
-      (handlers/set-message
+      (h/set-message
        [:div
         [:div "Click to enter your text."]])))
 
@@ -42,12 +43,13 @@
         attrs {:x offset-x
                :y offset-y}]
     (-> db
-        (element.h/set-temp  {:type :element
-                              :tag :text
-                              :attrs attrs})
-        element.h/add
+        element.h/deselect
+        (element.h/create {:type :element
+                           :tag :text
+                           :attrs attrs})
+        (history.h/finalize "Create text")
         (tools/set-tool :edit)
-        (handlers/set-state :create))))
+        (h/set-state :edit)))) ; FIXME: Merge create and edit history action.
 
 (defmethod tools/drag-end :text
   [db]
@@ -58,27 +60,32 @@
                       (hierarchy/update-attr :x + x)
                       (hierarchy/update-attr :y + y)))
 
+(defmethod tools/position :text
+  [el [x y]]
+  (let [dimensions (bounds/->dimensions (tools/bounds el))
+        [cx cy] (mat/div dimensions 2)]
+    (-> el
+        (assoc-in [:attrs :x] (- x cx))
+        (assoc-in [:attrs :y] (+ y cy)))))
+
+(defn get-text
+  [e]
+  (str/replace (.. e -target -value) " " "\u00a0")) ; REVIEW
+
 (defn set-text-and-select-element
   [e el-k]
   (rf/dispatch [:element/set-prop
                 el-k
                 :content
-                (str/replace (.. e -target -value) "  " "\u00a0\u00a0")])
+                (get-text e)])
   (rf/dispatch [:set-tool :select]))
 
 (defmethod tools/render-edit :text
   [{:keys [attrs key content] :as el}]
-  (let [{:keys [fill font-family font-size font-weight]} attrs
-        bounds (tools/bounds el)
-        [width height] (bounds/->dimensions bounds)
-        [x y] bounds
-        active-page @(rf/subscribe [:element/active-page])
-        page-pos (mapv units/unit->px
-                       [(-> active-page :attrs :x)
-                        (-> active-page :attrs :y)])
-        [x y] (if-not (= (:tag el) :page)
-                (mat/add page-pos [x y])
-                [x y])]
+  (let [el-bounds @(rf/subscribe [:element/el-bounds el])
+        [x y] el-bounds
+        [width height] (bounds/->dimensions el-bounds)
+        {:keys [fill font-family font-size font-weight]} attrs]
     [:foreignObject {:x x
                      :y y
                      :width (+ width 20)
@@ -100,9 +107,7 @@
                          #(rf/dispatch-sync [:element/preview-prop
                                              key
                                              :content
-                                             (str/replace (.. e -target -value)
-                                                          " "
-                                                          "\u00a0")]))))
+                                             (get-text e)]))))
        :style {:color "transparent"
                :caret-color (or fill "black")
                :display "block"
@@ -110,7 +115,7 @@
                :height height
                :padding 0
                :border 0
-               :outline-color "transparent";
+               :outline "none"
                :background "transparent"
                :font-family (if (empty? font-family) "inherit" font-family)
                :font-size (if (empty? font-size)

@@ -3,9 +3,7 @@
    [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.element.handlers :as h]
-   [renderer.frame.handlers :as frame.h]
    [renderer.history.handlers :as history.h]
-   [renderer.tools.base :as tools]
    [renderer.utils.bounds :as bounds]))
 
 (rf/reg-event-db
@@ -114,7 +112,7 @@
  (fn [db [_ color]]
    (-> db
        (h/set-attr :fill color)
-       (history.h/finalize "Fill " color))))
+       (history.h/finalize "Fill color"))))
 
 (rf/reg-event-db
  :element/delete
@@ -185,7 +183,8 @@
 (rf/reg-event-db
  :element/export
  (fn [db _]
-   (let [xml (tools/render-to-string (h/selected db))]
+   (let [xml (-> (h/selected db)
+                 (h/->string))]
      (js/window.api.send "toMain" #js {:action "export" :data xml}))))
 
 (rf/reg-event-db
@@ -221,7 +220,14 @@
  (fn [db [_ offset]]
    (-> db
        (h/translate offset)
-       (history.h/finalize "Move selection by " offset))))
+       (history.h/finalize "Move selection"))))
+
+(rf/reg-event-db
+ :element/position
+ (fn [db [_ position]]
+   (-> db
+       (h/position position)
+       (history.h/finalize "Position selection"))))
 
 (rf/reg-event-db
  :element/scale
@@ -230,7 +236,7 @@
          pivot-point (bounds/center bounds)]
      (-> db
          (h/scale ratio pivot-point)
-         (history.h/finalize "Scale selection by " ratio)))))
+         (history.h/finalize "Scale selection")))))
 
 (rf/reg-event-db
  :element/move-up

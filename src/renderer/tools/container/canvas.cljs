@@ -7,6 +7,7 @@
    [renderer.toolbar.filters :as filters]
    [renderer.tools.base :as tools]
    [renderer.tools.overlay :as overlay]
+   [renderer.utils.element :as element]
    [renderer.utils.keyboard :as keyb]
    [renderer.utils.pointer :as pointer]))
 
@@ -14,7 +15,7 @@
 
 (defmethod tools/properties :canvas
   []
-  {:description "The canvas is the main SVG element that hosts all pages."
+  {:description "The canvas is the main SVG container that hosts all elements."
    :attrs [:fill]})
 
 (defmethod tools/render :canvas
@@ -40,22 +41,24 @@
         pivot-point @(rf/subscribe [:pivot-point])
         select? (or (= tool :select)
                     (= primary-tool :select))]
-    [:svg {:on-pointer-up pointer-handler
-           :on-pointer-down pointer-handler
-           :on-double-click pointer-handler
-           :on-key-up keyb/event-handler
-           :on-key-down keyb/event-handler
-           :tab-index 0 ; Enable keyboard events 
-           :viewBox (str/join " " viewbox)
-           :on-drop pointer-handler
-           :on-drag-over #(.preventDefault %)
-           :width width
-           :height height
-           :transform (str "rotate(" rotate ")")
-           :cursor cursor
-           :id "canvas"
-           :style {:background (:fill attrs)
-                   :outline "none"}}
+    [:svg#canvas {:on-pointer-up pointer-handler
+                  :on-pointer-down pointer-handler
+                  :on-double-click pointer-handler
+                  :on-key-up keyb/event-handler
+                  :on-key-down keyb/event-handler
+                  :tab-index 0 ; Enable keyboard events 
+                  :viewBox (str/join " " viewbox)
+                  :on-drop pointer-handler
+                  :on-drag-over #(.preventDefault %)
+                  :width width
+                  :height height
+                  :transform (str "rotate(" rotate ")")
+                  :cursor cursor
+                  :style {:background (:fill attrs)
+                          :outline "none"}}
+     (when (not-empty (remove zero? bounds))
+       [overlay/bottom-bounding-box bounds])
+
      (for [el child-elements]
        ^{:key (str (:key el))} [tools/render el])
 
@@ -71,7 +74,7 @@
        [:<>
         (for [el hovered-or-selected]
           ^{:key (str (:key el) "-bounds")}
-          [overlay/bounding-box (tools/adjusted-bounds el elements)])
+          [overlay/bounding-box (element/adjusted-bounds el elements)])
 
         (when (pos? elements-area)
           [overlay/area elements-area bounds])

@@ -22,7 +22,7 @@
    :zoom 1
    :rotate 0
    :filter "No a11y filter"
-   :pan [0.0]
+   :pan [0 0]
    :elements {:canvas {:key :canvas
                        :visible? true
                        :tag :canvas
@@ -30,12 +30,11 @@
                        :attrs {:fill "#eeeeee"}
                        :children [:default-page]}
               :default-page {:key :default-page
-                             :name "Page"
                              :visible? true
+                             :selected? false
                              :type :element
-                             :tag :page
+                             :tag :svg
                              :parent :canvas
                              :attrs {:width 800
-                                     :height 600
-                                     :fill "white"}
+                                     :height 600}
                              :children []}}})

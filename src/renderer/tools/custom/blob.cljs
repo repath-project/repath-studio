@@ -12,7 +12,9 @@
    [renderer.element.handlers :as element.h]
    [renderer.tools.base :as tools]
    [renderer.tools.overlay :as overlay]
+   [renderer.utils.element :as element]
    [renderer.utils.pointer :as pointer]
+   [renderer.utils.bounds :as bounds]
    [renderer.utils.units :as units]))
 
 (derive ::blob ::tools/custom)
@@ -150,6 +152,14 @@
       (attr.hierarchy/update-attr ::x + x)
       (attr.hierarchy/update-attr ::y + y)))
 
+(defmethod tools/position ::blob
+  [el [x y]]
+  (let [dimensions (bounds/->dimensions (tools/bounds el))
+        [cx cy] (mat/div dimensions 2)]
+    (-> el
+        (assoc-in [:attrs ::x] (- x cx))
+        (assoc-in [:attrs ::y] (- y cy)))))
+
 (defmethod tools/bounds ::blob
   [{:keys [attrs]}]
   (let [{:keys [::x ::y ::size]} attrs
@@ -168,7 +178,8 @@
                      (select-keys attrs)
                      (reduce (fn [options [k v]] (assoc options k (int v))) {})
                      clj->js)]
-    (-> (.svgPath blobs options)
+    (-> blobs
+        (.svgPath options)
         svgpath
         (.translate x y)
         .toString)))
@@ -188,9 +199,7 @@
         page-pos (mapv units/unit->px
                        [(-> active-page :attrs :x)
                         (-> active-page :attrs :y)])
-        [x1 y1] (if-not (= (:tag element) :page)
-                  (mat/add page-pos [x y])
-                  [x y])
+        [x1 y1] (cond->> [x y] (not (element/svg? element)) (mat/add page-pos))
         [x2 y2] (mat/add [x1 y1] size)]
     [:<>
      [overlay/line x1 y1 x2 y2]

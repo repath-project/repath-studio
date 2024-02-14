@@ -95,7 +95,7 @@
        {:on-drag-over #(rf/dispatch [:panel/on-drag %])}
        (when @(rf/subscribe [:panel/drag]) [:div.drag-overlay])
        (when @(rf/subscribe [:panel/visible? :tree])
-         [:div.flex.flex-col.mr-px
+         [:div.flex.flex-col.mr-px.overflow-hidden
           {:style {:flex (str "0 0 " @(rf/subscribe [:panel/size :tree]) "px")}}
           [doc/actions]
           [tree/root]])

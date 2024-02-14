@@ -5,6 +5,7 @@
    [re-frame.core :as rf]
    [renderer.tools.base :as tools]
    [renderer.utils.bounds :as bounds]
+   [renderer.utils.element :as element]
    [renderer.utils.math :as math]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
@@ -159,6 +160,24 @@
                                (/ (- min-size w) 2) 0])
       (< h min-size) (mat/add [0 (- (/ (- min-size h) 2))
                                0 (/ (- min-size h) 2)]))))
+(defn bottom-bounding-box
+  [bounds]
+  (let [zoom @(rf/subscribe [:document/zoom])
+        bounds (min-bounds bounds)
+        [x1 y1 _x2 _y2] bounds
+        [w h] (bounds/->dimensions bounds)
+        pointer-handler #(pointer/event-handler % nil)
+        stroke-width (/ 1 zoom)
+        rect-attrs {:x x1
+                    :y y1
+                    :width w
+                    :height h
+                    :stroke-width stroke-width
+                    :fill "transparent"}]
+    [:rect (merge rect-attrs {:on-pointer-up pointer-handler
+                              :on-pointer-down pointer-handler
+                              :on-pointer-move pointer-handler
+                              :style {:z-index -1}})]))
 
 (defn bounding-handlers
   [bounds]
@@ -255,11 +274,8 @@
   (when-let [centroid (tools/centroid el)]
     (let [active-page @(rf/subscribe [:element/active-page])
           page-pos (mapv units/unit->px [(-> active-page :attrs :x) (-> active-page :attrs :y)])
-          centroid (if-not (= (:tag el) :page)
-                     (mat/add page-pos centroid)
-                     centroid)]
+          centroid (cond->> centroid (not (element/svg? el)) (mat/add page-pos))]
       [point-of-interest centroid
-
        [:title "Centroid"]])))
 
 (defn area

@@ -16,7 +16,7 @@
       (rf/dispatch [:notification/add {:content [:div
                                                  [:h2.pb-4.text-md error-message]
                                                  [:div.text-error (str error)]]}]))
-    
+
     ;; Try to revert to a working state
     ;; https://react.dev/reference/react/Component#static-getderivedstatefromerror
     :get-derived-state-from-error

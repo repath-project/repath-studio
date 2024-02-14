@@ -85,7 +85,7 @@
          (assoc-in [:documents key] document)
          (update :document-tabs #(vec/add % (inc active-index) key))
          (assoc :active-document key)
-         (frame/pan-to-element (-> document :elements :canvas :children first))
+         (frame/focus-selection :original)
          (history.h/init "Create document")))))
 
 (rf/reg-event-db

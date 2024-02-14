@@ -14,6 +14,13 @@
   ([x y]
    (translate [x y])))
 
+(defn ^:export position
+  "Moves the selected elements."
+  ([position]
+   (rf/dispatch [:element/position position]))
+  ([x y]
+   (position [x y])))
+
 (defn ^:export scale
   "Scales the selected elements."
   ([ratio]

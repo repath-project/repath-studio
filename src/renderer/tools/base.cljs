@@ -2,8 +2,6 @@
   (:require
    ["paper" :refer [Path]]
    ["paperjs-offset" :refer [PaperOffset]]
-   [renderer.element.utils :as el-utils]
-   [renderer.utils.bounds :as bounds]
    [renderer.utils.map :as map]
    [renderer.utils.spec :as spec]))
 
@@ -45,6 +43,7 @@
 (defmulti render-edit #(:tag %))
 (defmulti bounds #(:tag %))
 (defmulti translate #(:tag %))
+(defmulti position #(:tag %))
 (defmulti scale #(:tag %))
 (defmulti edit #(:tag %))
 
@@ -70,6 +69,7 @@
       (activate)))
 
 (defmethod pointer-down :default [db] db)
+(defmethod pointer-up :default [db] db)
 (defmethod pointer-move :default [db] db)
 (defmethod drag-start :default [db] db)
 (defmethod double-click :default [db] db)
@@ -90,26 +90,13 @@
 (defmethod poi :default [])
 
 (defmethod activate :default [db] (assoc db :cursor "default"))
-(defmethod deactivate :default [db] db)
+(defmethod deactivate :default [db] (assoc db :cursor "default"))
 
 (defmethod attrs :default [])
 (defmethod path :default [element] element)
 (defmethod scale :default [element] element)
 (defmethod translate :default [element] element)
-
-(defn adjusted-bounds
-  [element elements]
-  (if-let [page (el-utils/parent-page elements element)]
-    (let [[offset-x offset-y _ _] (bounds page elements)
-          [x1 y1 x2 y2] (bounds element elements)]
-      [(+ x1 offset-x) (+ y1 offset-y)
-       (+ x2 offset-x) (+ y2 offset-y)])
-    (bounds element elements)))
-
-(defn elements-bounds
-  [elements bound-elements]
-  (when (seq bound-elements)
-    (apply bounds/union (map #(adjusted-bounds % elements) bound-elements))))
+(defmethod position :default [element] element)
 
 (defn attrs-map
   [attrs]

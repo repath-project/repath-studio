@@ -12,17 +12,19 @@
    [renderer.history.handlers :as history]
    [renderer.tools.base :as tools]
    [renderer.tools.overlay :as overlay]
+   [renderer.utils.bounds :as bounds]
    [renderer.utils.units :as units]))
 
 (derive ::tools/polyshape ::tools/shape)
 
 (defmethod tools/activate ::tools/polyshape
   [db]
-  (h/set-message
-   db
-   [:div
-    [:div "Click to add points."]
-    [:div "Double click to finalize the shape."]]))
+  (-> db
+      (assoc :cursor "crosshair")
+      (h/set-message
+       [:div
+        [:div "Click to add points."]
+        [:div "Double click to finalize the shape."]])))
 
 (defn create-polyline
   [{:keys [active-document tool] :as db} points]
@@ -88,6 +90,20 @@
                                    (units/transform (second point) + y))) [])
                    (str/join " "))))
 
+(defmethod tools/position ::tools/polyshape
+  [el [x y]]
+  (let [dimensions (bounds/->dimensions (tools/bounds el))
+        [cx cy] (mat/div dimensions 2)]
+    (update-in el
+               [:attrs :points]
+               #(->> %
+                     attr.utils/points->vec
+                     (reduce (fn [points point]
+                               (conj points
+                                     (units/transform (first point) + x)
+                                     (units/transform (second point) + y))) [])
+                     (str/join " ")))))
+
 (defmethod tools/scale ::tools/polyshape
   [el ratio pivot-point]
   (let [bounds-start (take 2 (tools/bounds el))
@@ -141,15 +157,6 @@
                                (units/transform (first point) + x)
                                (units/transform (second point) + y))))
                     flatten)))))
-
-(defmethod tools/bounds ::tools/polyshape
-  [{{:keys [points]} :attrs}]
-  (let [points-v (attr.utils/points->vec points)
-        x1 (apply min (map #(units/unit->px (first %)) points-v))
-        y1 (apply min (map #(units/unit->px (second %)) points-v))
-        x2 (apply max (map #(units/unit->px (first %)) points-v))
-        y2 (apply max (map #(units/unit->px (second %)) points-v))]
-    [x1 y1 x2 y2]))
 
 (defn calc-polygon-area [vertices]
   (let [count-v (count vertices)]

@@ -34,6 +34,12 @@
            ::smoothing
            ::streamline]})
 
+(defmethod tools/activate :brush
+  [db]
+  (-> db
+      (assoc :cursor "crosshair")
+      (h/set-message [:div "Click and drag to draw."])))
+
 (defonce options
   [::size ::thinning ::smoothing ::streamline])
 

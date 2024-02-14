@@ -90,11 +90,6 @@
         (hierarchy/update-attr (if (< y1 y2) :y1 :y2) + y)
         (tools/translate offset))))
 
-(defmethod tools/bounds :line
-  [{{:keys [x1 y1 x2 y2]} :attrs}]
-  (let [[x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])]
-    [(min x1 x2) (min y1 y2) (max x1 x2) (max y1 y2)]))
-
 (defmethod tools/path :line
   [{{:keys [x1 y1 x2 y2]} :attrs}]
   (let [[x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])]
@@ -102,34 +97,32 @@
                    "L" x2 y2])))
 
 (defmethod tools/render-edit :line
-  [{:keys [attrs key]}]
-  (let [{:keys [x1 y1 x2 y2]} attrs
+  [{:keys [attrs key] :as el}]
+  (let [[b-x1 b-y1 b-x2 b-y2] @(rf/subscribe [:element/el-bounds el])
+        {:keys [x1 y1 x2 y2]} attrs
         [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])
-        active-page @(rf/subscribe [:element/active-page])
-        page-pos (mapv units/unit->px
-                       [(-> active-page :attrs :x)
-                        (-> active-page :attrs :y)])
-        [x1 y1] (mat/add page-pos [x1 y1])
-        [x2 y2] (mat/add page-pos [x2 y2])]
+        [x1 y1] [(if (< x1 x2) b-x1 b-x2) (if (< y1 y2) b-y1 b-y2)]
+        [x2 y2] [(if (< x1 x2) b-x2 b-x1) (if (< y1 y2) b-y2 b-y1)]]
     [:g
      {:key :edit-handlers}
-     (map (fn [handler] [overlay/square-handler handler])
+     (map (fn [handler] [overlay/square-handler handler
+                         ^{:key (:key handler)} [:title (name (:key handler))]])
           [{:x x1
             :y y1
-            :key :starting-point
+            :key (keyword (:key el) :starting-point)
             :type :handler
             :tag :edit
             :element key}
            {:x x2
             :y y2
-            :key :ending-point
+            :key (keyword (:key el) :ending-point)
             :type :handler
             :tag :edit
             :element key}])]))
 
 (defmethod tools/edit :line
   [el [x y] handler]
-  (case handler
+  (case (keyword (name handler))
     :starting-point
     (-> el
         (hierarchy/update-attr :x1 + x)

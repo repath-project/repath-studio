@@ -1,11 +1,10 @@
 (ns renderer.frame.handlers
   (:require
    [clojure.core.matrix :as mat]
-   [renderer.element.handlers :as el]
-   [renderer.element.utils :as el.utils]
-   [renderer.tools.base :as tools]
+   [renderer.element.handlers :as element.h]
    [renderer.utils.bounds :as bounds]
-   [renderer.utils.math :as math]))
+   [renderer.utils.math :as math]
+   [renderer.utils.element :as element]))
 
 (defn pan
   [{:keys [active-document] :as db} offset]
@@ -68,14 +67,24 @@
 
 (defn pan-to-element
   [db key]
-  (let [element (el/element db key)
-        elements (el/elements db)
-        parrent-page-attrs (:attrs (el.utils/parent-page elements element))
-        db (pan-to-bounds db (tools/bounds element elements))]
-    (cond-> db
-      (not (el/page? element))
-      (pan [(:x parrent-page-attrs)
-            (:y parrent-page-attrs)]))))
+  (let [element (element.h/element db key)
+        elements (element.h/elements db)]
+    (pan-to-bounds db (element/adjusted-bounds element elements))))
+
+(defn focus-selection
+  [{:keys [active-document content-rect] :as db} zoom]
+  (if-let [bounds (element.h/bounds db)]
+    (let [[width height] (bounds/->dimensions bounds)
+          width-ratio (/ (:width content-rect) width)
+          height-ratio (/ (:height content-rect) height)]
+      (-> db
+          (assoc-in [:documents active-document :zoom]
+                    (case zoom
+                      :original 1
+                      :fit (min width-ratio height-ratio)
+                      :fill (max width-ratio height-ratio)))
+          (pan-to-bounds bounds)))
+    (pan-to-element db (-> db (element.h/element :canvas) :children first))))
 
 (defn calc-pan-offset
   [position offset size]

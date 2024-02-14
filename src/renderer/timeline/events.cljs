@@ -3,20 +3,15 @@
    [re-frame.core :as rf]
    [renderer.utils.dom :as dom]))
 
-(defn svg-elements
-  []
-  (when-let [canvas (dom/canvas-element)]
-    (.querySelectorAll canvas "svg")))
-
 (rf/reg-fx
  ::set-current-time
  (fn [time]
-   (doall (map #(.setCurrentTime % time) (svg-elements)))))
+   (doall (map #(.setCurrentTime % time) (dom/svg-elements)))))
 
 (rf/reg-fx
  ::pause-animations
  (fn []
-   (doall (map #(.pauseAnimations %) (svg-elements)))))
+   (doall (map #(.pauseAnimations %) (dom/svg-elements)))))
 
 (rf/reg-event-db
  :timeline/pause

@@ -32,23 +32,24 @@
 (defn shortcuts
   [event]
   (let [shortcuts @(rf/subscribe [:event-shortcuts event])]
-    (into [:div.shortcuts]
-          (interpose [:span.text-muted " | "]
-                     (map (fn [[shortcut]]
-                            (str/join "+"
-                                      (cond-> []
-                                        (:ctrlKey shortcut)
-                                        (conj "Ctrl")
+    (when (seq shortcuts)
+      (into [:div.shortcuts]
+            (interpose [:span.text-muted " | "]
+                       (map (fn [[shortcut]]
+                              (str/join "+"
+                                        (cond-> []
+                                          (:ctrlKey shortcut)
+                                          (conj "Ctrl")
 
-                                        (:shiftKey shortcut)
-                                        (conj "⇧")
+                                          (:shiftKey shortcut)
+                                          (conj "⇧")
 
-                                        (:altKey shortcut)
-                                        (conj "Alt")
+                                          (:altKey shortcut)
+                                          (conj "Alt")
 
-                                        :always (conj (keyb/code->key
-                                                       (:keyCode shortcut))))))
-                          shortcuts)))))
+                                          :always (conj (keyb/code->key
+                                                         (:keyCode shortcut))))))
+                            shortcuts))))))
 
 (defn toggle-icon-button
   [{:keys [active?

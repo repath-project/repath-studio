@@ -73,8 +73,6 @@
     :action [:document/close key]}
    {:label "Close Others"
     :action [:document/close-others]}
-   {:label "Close Saved"
-    :action [:document/close-saved]}
    {:label "Close All"
     :action [:document/close-all]}])
 

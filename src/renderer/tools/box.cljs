@@ -1,13 +1,14 @@
 (ns renderer.tools.box
   "This serves as an abstraction for box elements that share the
-   :x :y :width :height attributes."
+   :x :y :width :height attributes (e.g. rect, svg, image)."
   (:require
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.tools.base :as tools]
    [renderer.tools.overlay :as overlay]
-   [renderer.utils.units :as units]))
+   [renderer.utils.units :as units]
+   [renderer.utils.bounds :as bounds]))
 
 (derive ::tools/box ::tools/element)
 
@@ -16,6 +17,14 @@
   (-> el
       (hierarchy/update-attr :x + x)
       (hierarchy/update-attr :y + y)))
+
+(defmethod tools/position ::tools/box
+  [el [x y]]
+  (let [dimensions (bounds/->dimensions (tools/bounds el))
+        [cx cy] (mat/div dimensions 2)]
+    (-> el
+        (assoc-in [:attrs :x] (- x cx))
+        (assoc-in [:attrs :y] (- y cy)))))
 
 (defmethod tools/scale ::tools/box
   [el ratio pivot-point]
@@ -26,9 +35,9 @@
         (hierarchy/update-attr :height * y)
         (tools/translate offset))))
 
-(defmethod tools/edit ::tools/element
+(defmethod tools/edit ::tools/box
   [el [x y] handler]
-  (case handler
+  (case (keyword (name handler))
     :position
     (-> el
         (hierarchy/update-attr :width #(max 0 (- % x)))
@@ -38,29 +47,25 @@
     :size
     (-> el
         (hierarchy/update-attr :width #(max 0 (+ % x)))
-        (hierarchy/update-attr :height #(max 0 (+ % y))))))
+        (hierarchy/update-attr :height #(max 0 (+ % y))))
+
+    el))
 
 (defmethod tools/render-edit ::tools/box
-  [{:keys [attrs key] :as el}]
-  (let [{:keys [x y width height]} attrs
-        [x y width height] (mapv units/unit->px [x y width height])
-        parent-page @(rf/subscribe [:element/parent-page])
-        page-pos (mapv units/unit->px [(-> parent-page :attrs :x)
-                                       (-> parent-page :attrs :y)])
-        [x y] (cond-> [x y] (not= (:tag el) :page) (mat/add page-pos))]
+  [el]
+  (let [el-bounds @(rf/subscribe [:element/el-bounds el])
+        [x y] el-bounds
+        [width height] (bounds/->dimensions el-bounds)]
     [:g {:key :edit-handlers}
      (map (fn [handler]
             (let [handler (merge handler {:type :handler
                                           :tag :edit
-                                          :element key})]
-              [overlay/square-handler handler]))
-          [{:x x :y y :key :position}
-           {:x (+ x width) :y (+ y height) :key :size}])]))
-
-(defmethod tools/bounds ::tools/box
-  [{{:keys [x y width height]} :attrs}]
-  (let [[x y width height] (mapv units/unit->px [x y width height])]
-    [x y (+ x width) (+ y height)]))
+                                          :key (keyword (:key el) (:key handler))
+                                          :element (:key el)})]
+              [overlay/square-handler handler
+               ^{:key (:key handler)} [:title (name (:key handler))]]))
+          [{:x x :y y :key (keyword (:key el) :position)}
+           {:x (+ x width) :y (+ y height) :key (keyword (:key el) :size)}])]))
 
 (defmethod tools/area ::tools/box
   [{{:keys [width height]} :attrs}]

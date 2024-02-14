@@ -4,6 +4,7 @@
    [re-frame.core :as rf]
    [renderer.tools.base :as tools]
    [renderer.utils.bounds :as bounds]
+   [renderer.utils.element :as element]
    [renderer.utils.pointer :as pointer]))
 
 (derive :g ::tools/container)
@@ -44,4 +45,4 @@
 (defmethod tools/bounds :g
   [el elements]
   (let [children (vals (select-keys elements (:children el)))]
-    (tools/elements-bounds elements children)))
+    (element/bounds elements children)))

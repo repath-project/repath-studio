@@ -30,8 +30,7 @@
         element.h/add
         (tools/set-tool :select)
         (h/set-state :default)
-        (history.h/finalize "Create " (name (:tag temp-element)))
-        (assoc :cursor "crosshair"))))
+        (history.h/finalize "Create " (name (:tag temp-element))))))
 
 (defmethod tools/bounds ::tools/element
   [{:keys [tag attrs content]}]
@@ -53,7 +52,7 @@
         (dissoc :clicked-element)
         (element.h/select (:key el) (pointer/multiselect? e))
         (history.h/finalize "Select element"))
-    (dissoc db :clicked-element)))
+    (dissoc db :clicked-element))) ;; TODO: Move to better namespace
 
 (defn render-to-dom
   "We need a reagent form-3 component in order to set the style attribute manually.

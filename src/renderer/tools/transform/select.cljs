@@ -4,11 +4,12 @@
    [clojure.core.matrix :as mat]
    [clojure.set :as set]
    [renderer.element.handlers :as element.h]
-   [renderer.handlers :as handlers]
+   [renderer.handlers :as h]
    [renderer.history.handlers :as history]
    [renderer.tools.base :as tools]
    [renderer.tools.overlay :as overlay]
    [renderer.utils.bounds :as bounds]
+   [renderer.utils.element :as utils.element]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
 
@@ -69,10 +70,11 @@
         hovered-keys (-> db :documents active-document :hovered-keys)]
     (reduce (fn [db el]
               (if (and (empty? (set/intersection (element.h/ancestor-keys db el) hovered-keys))
-                       (not (element.h/page? el))
-                       (hovered? (tools/adjusted-bounds el (element.h/elements db))
-                                 (tools/adjusted-bounds (element.h/get-temp db)
-                                                        (element.h/elements db))))
+                       (not (utils.element/svg? el))
+                       (not (utils.element/root? el))
+                       (hovered? (utils.element/adjusted-bounds el (element.h/elements db))
+                                 (utils.element/adjusted-bounds (element.h/get-temp db)
+                                                                (element.h/elements db))))
                 (f db (:key el))
                 db))
             db
@@ -100,8 +102,9 @@
 (defmethod tools/activate :select
   [db]
   (-> db
-      (handlers/set-state :default)
-      (handlers/set-message (message nil :default))))
+      (h/set-state :default)
+      (h/set-cursor "default")
+      (h/set-message (message nil :default))))
 
 (defmethod tools/deactivate :select
   [db]
@@ -119,13 +122,13 @@
   [db e]
   (case (-> db :clicked-element :tag)
     :canvas
-    (handlers/set-state db :select)
+    (h/set-state db :select)
 
     :scale
-    (handlers/set-state db :scale)
+    (h/set-state db :scale)
 
-    (handlers/set-state
-     (if-not (-> db :clicked-element :selected?)
+    (h/set-state
+     (if (and (:clicked-element db) (not (-> db :clicked-element :selected?)))
        (-> db
            (element.h/select (-> db :clicked-element :key) (pointer/multiselect? e))
            (history/finalize "Select element"))
@@ -178,7 +181,7 @@
         ratio (mapv #(max 0 %) ratio)]
     (-> db
         (assoc :pivot-point pivot-point)
-        (handlers/set-message (message ratio :scale))
+        (h/set-message (message ratio :scale))
         (element.h/scale ratio pivot-point))))
 
 (defmethod tools/drag :select
@@ -191,7 +194,7 @@
                  (pointer/lock-direction offset)
                  offset)
         alt-key? (contains? (:modifiers e) :alt)
-        db (handlers/set-message db (message offset state))]
+        db (h/set-message db (message offset state))]
     (-> (case state
           :select
           (-> db
@@ -201,13 +204,13 @@
 
           :move
           (if alt-key?
-            (handlers/set-state db :clone)
+            (h/set-state db :clone)
             (element.h/translate (history/swap db) offset))
 
           :clone
           (if alt-key?
             (element.h/duplicate (history/swap db) offset)
-            (handlers/set-state db :move))
+            (h/set-state db :move))
 
           :scale
           (offset-scale (history/swap db)
@@ -218,16 +221,16 @@
           :default db))))
 
 (defmethod tools/drag-end :select
-  [{:keys [state adjusted-pointer-offset] :as db} e]
-  (-> (case state
+  [db e]
+  (-> (case (:state db)
         :select (-> (cond-> db (not (pointer/multiselect? e)) element.h/deselect)
                     (reduce-by-area (contains? (:modifiers e) :alt) element.h/select)
                     (element.h/clear-temp)
                     (history/finalize "Modify selection"))
-        :move (history/finalize db "Move selection by " adjusted-pointer-offset)
+        :move (history/finalize db "Move selection")
         :scale (history/finalize db "Scale selection")
         :clone (history/finalize db "Clone selection")
         :default db)
-      (handlers/set-state :default)
+      (h/set-state :default)
       (dissoc :clicked-element :pivot-point)
-      (handlers/set-message (message nil :default))))
+      (h/set-message (message nil :default))))

@@ -48,6 +48,12 @@
                       (hierarchy/update-attr :cx + x)
                       (hierarchy/update-attr :cy + y)))
 
+(defmethod tools/position :ellipse
+  [el [x y]]
+  (-> el
+      (assoc-in [:attrs :cx] x)
+      (assoc-in [:attrs :cy] y)))
+
 (defmethod tools/scale :ellipse
   [el ratio pivot-point]
   (let [[x y] ratio
@@ -73,26 +79,18 @@
                    "A" rx ry 0 0 1 (+ cx rx) cy
                    "z"])))
 
-(defmethod tools/area :ellipse
-  [{{:keys [rx ry]} :attrs}]
-  (let [[rx ry] (map units/unit->px [rx ry])]
-    (* Math/PI rx ry)))
-
 (defmethod tools/edit :ellipse
   [el [x y] handler]
-  (case handler
+  (case (keyword (name handler))
     :rx (hierarchy/update-attr el :rx #(abs (+ % x)))
     :ry (hierarchy/update-attr el :ry #(abs (- % y)))
     el))
 
 (defmethod tools/render-edit :ellipse
-  [{:keys [attrs key]}]
-  (let [{:keys [cx cy rx ry]} attrs
-        [cx cy rx ry] (mapv units/unit->px [cx cy rx ry])
-        active-page @(rf/subscribe [:element/active-page])
-        page-pos (mapv units/unit->px
-                       [(-> active-page :attrs :x) (-> active-page :attrs :y)])
-        [cx cy] (mat/add page-pos [cx cy])]
+  [{:keys [key] :as el}]
+  (let [bounds @(rf/subscribe [:element/el-bounds el])
+        [cx cy] (bounds/center bounds)
+        [rx ry] (mat/div (bounds/->dimensions bounds) 2)]
     [:g :edit-handlers
      [overlay/times cx cy]
      [overlay/line cx cy (+ cx rx) cy]
@@ -104,7 +102,7 @@
                                            {:type :handler
                                             :tag :edit
                                             :element key})
-             ^{:key (str key "-" (:key handler))}
-             [:title (:key handler)]])
-          [{:x (+ cx rx) :y cy :key :rx}
-           {:x cx :y (- cy ry) :key :ry}])]))
+             ^{:key (:key handler)}
+             [:title (name (:key handler))]])
+          [{:x (+ cx rx) :y cy :key (keyword (:key el) :rx)}
+           {:x cx :y (- cy ry) :key (keyword (:key el) :ry)}])]))
