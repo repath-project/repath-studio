@@ -18,6 +18,7 @@
     --overlay: rgba(255, 255, 255, .1);
     
     --accent: #e93976;
+    --accent-inverted: #fff;
 
     --font-color: rgba(255, 255, 255, .7);
     --error-color: #f78484;

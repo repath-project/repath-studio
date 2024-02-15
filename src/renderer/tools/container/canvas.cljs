@@ -56,7 +56,6 @@
                   :cursor cursor
                   :style {:background (:fill attrs)
                           :outline "none"}}
-
      (for [el child-elements]
        ^{:key (str (:key el))} [tools/render el])
 

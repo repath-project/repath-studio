@@ -162,12 +162,15 @@
 (defn wrapping-bounding-box
   [bounds]
   (let [zoom @(rf/subscribe [:document/zoom])
+        key :bounding-box
+        ignored-keys @(rf/subscribe [:document/ignored-keys])
+        ignored? (contains? ignored-keys key)
         bounds (min-bounds bounds)
         [x1 y1 _x2 _y2] bounds
         [w h] (bounds/->dimensions bounds)
         pointer-handler #(pointer/event-handler % {:type :element
                                                    :tag :move
-                                                   :key :bounding-box})
+                                                   :key key})
         rect-attrs {:x x1
                     :y y1
                     :width w
@@ -175,7 +178,8 @@
                     :stroke-width (/ 1 zoom)
                     :fill-opacity ".1"
                     :fill "transparent"
-                    :stroke accent}]
+                    :stroke accent
+                    :pointer-events (when ignored? "none")}]
     [:rect (merge rect-attrs {:on-pointer-up pointer-handler
                               :on-pointer-down pointer-handler
                               :on-pointer-move pointer-handler})]))
@@ -214,7 +218,6 @@
                   "end" (- x label-width (/ (- padding) 2)))
              :y (- y  (/ label-height 2))
              :fill accent
-             :fill-opacity 0.9
              :rx (/ 4 zoom)
              :width label-width
              :height label-height} text]

@@ -11,7 +11,8 @@
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as utils.element]
    [renderer.utils.pointer :as pointer]
-   [renderer.utils.units :as units]))
+   [renderer.utils.units :as units]
+   [renderer.document.db :as db]))
 
 (derive :select ::tools/transform)
 
@@ -87,9 +88,22 @@
       (element.h/hover (:key el))
       (assoc :cursor (if el "move" "default"))))
 
+(defmethod tools/key-down :select
+  [db e]
+  (cond-> db
+    (pointer/multiselect? e)
+    (element.h/ignore :bounding-box)))
+
+(defmethod tools/key-up :select
+  [db e]
+  (cond-> db
+    (not (pointer/multiselect? e))
+    element.h/clear-ignored))
+
 (defmethod tools/pointer-down :select
   [db _e el]
-  (assoc db :clicked-element el))
+  (-> (assoc db :clicked-element el)
+      (element.h/ignore :bounding-box)))
 
 (defmethod tools/double-click :select
   [db _e el]
@@ -130,12 +144,11 @@
     :move
     (h/set-state db :move)
 
-    (h/set-state
-     (if (and (:clicked-element db) (not (-> db :clicked-element :selected?)))
-       (-> db
-           (element.h/select (-> db :clicked-element :key) (pointer/multiselect? e))
-           (history/finalize "Select element"))
-       db) :move)))
+    (-> (cond-> db
+          (and (:clicked-element db) (not (-> db :clicked-element :selected?)))
+          (-> (element.h/select (-> db :clicked-element :key) (pointer/multiselect? e))
+              (history/finalize "Select element")))
+        (h/set-state :move))))
 
 (defn lock-ratio
   [[x y] handler]
@@ -241,5 +254,6 @@
         :clone (history/finalize db "Clone selection")
         :default db)
       (h/set-state :default)
+      element.h/clear-ignored
       (dissoc :clicked-element :pivot-point)
       (h/set-message (message nil :default))))

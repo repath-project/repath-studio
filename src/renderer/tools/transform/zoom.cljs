@@ -24,15 +24,15 @@
 
 (defmethod tools/key-down :zoom
   [db e]
-  (if (pointer/shift? e)
-    (assoc db :cursor "zoom-out")
-    db))
+  (cond-> db
+    (pointer/shift? e)
+    (assoc :cursor "zoom-out")))
 
 (defmethod tools/key-up :zoom
   [db e]
-  (if-not (pointer/shift? e)
-    (assoc db :cursor "zoom-in")
-    db))
+  (cond-> db
+    (not (pointer/shift? e))
+    (assoc :cursor "zoom-in")))
 
 (defmethod tools/drag-start :zoom
   [db]

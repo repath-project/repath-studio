@@ -479,14 +479,14 @@
         page (overlapping-svg db el)
         parent (or (:parent el)
                    (if (element/svg? el) :canvas (:key page)))
-        el (map/deep-merge el default-props {:key key :parent parent})
-        [x1 y1 _ _] (tools/bounds page)]
+        new-el (map/deep-merge el default-props {:key key :parent parent})
+        [x1 y1] (tools/bounds (element db parent))]
     (cond-> db
       :always
-      (-> (assoc-in (conj (path db) key) el)
-          (update-prop (:parent el) :children #(vec (conj % key))))
+      (-> (assoc-in (conj (path db) key) new-el)
+          (update-prop (:parent new-el) :children #(vec (conj % key))))
 
-      (not (element/svg? el))
+      (not (or (element/svg? new-el) (:parent el)))
       (translate [(- x1) (- y1)]))))
 
 (defn add

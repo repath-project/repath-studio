@@ -139,7 +139,7 @@
          (-> (assoc :primary-tool tool)
              (tools/set-tool :pan))
 
-         (= button :right)
+         (and (= button :right) (not= (:key element) :bounding-box))
          (tools/pointer-up e element)
 
          :always

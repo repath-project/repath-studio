@@ -108,6 +108,7 @@
   (rf/dispatch-sync [:load-local-db])
   (rf/dispatch-sync [:theme/init-mode])
   (rf/dispatch-sync [:document/new])
+  (rf/dispatch-sync [:set-tool :select])
   (rf/dispatch [:pan-to-element :default-page])
 
   (rf/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])

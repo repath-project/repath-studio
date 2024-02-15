@@ -77,6 +77,16 @@
       (hierarchy/update-attr :x2 + x)
       (hierarchy/update-attr :y2 + y)))
 
+(defmethod tools/position :line
+  [el [x y]]
+  (let [dimensions (bounds/->dimensions (tools/bounds el))
+        [cx cy] (mat/div dimensions 2)]
+    (-> el
+        (assoc-in [:attrs :x1] (- x cx))
+        (assoc-in [:attrs :y1] (+ y cy))
+        (assoc-in [:attrs :x2] (+ x cx))
+        (assoc-in [:attrs :y2] (- y cy)))))
+
 (defmethod tools/scale :line
   [el ratio pivot-point]
   (let [{:keys [x1 y1 x2 y2]} (:attrs el)
@@ -98,11 +108,13 @@
 
 (defmethod tools/render-edit :line
   [{:keys [attrs key] :as el}]
-  (let [[b-x1 b-y1 b-x2 b-y2] @(rf/subscribe [:element/el-bounds el])
+  (let [bounds @(rf/subscribe [:element/el-bounds el])
+        original-bounds (tools/bounds el)
+        offset (take 2 (mat/sub bounds original-bounds))
         {:keys [x1 y1 x2 y2]} attrs
         [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])
-        [x1 y1] [(if (< x1 x2) b-x1 b-x2) (if (< y1 y2) b-y1 b-y2)]
-        [x2 y2] [(if (< x1 x2) b-x2 b-x1) (if (< y1 y2) b-y2 b-y1)]]
+        [x1 y1] (mat/add offset [x1 y1])
+        [x2 y2] (mat/add offset [x2 y2])]
     [:g
      {:key :edit-handlers}
      (map (fn [handler] [overlay/square-handler handler
