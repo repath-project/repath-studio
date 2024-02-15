@@ -44,16 +44,6 @@
         (.remove el)
         bounds))))
 
-(defmethod tools/pointer-up :default
-  [db e el]
-  (if-not (and (= (:button e) :right)
-               (:selected? el))
-    (-> db
-        (dissoc :clicked-element)
-        (element.h/select (:key el) (pointer/multiselect? e))
-        (history.h/finalize "Select element"))
-    (dissoc db :clicked-element))) ;; TODO: Move to better namespace
-
 (defn render-to-dom
   "We need a reagent form-3 component in order to set the style attribute manually.
    React expects a map, but we need to set a string to avoid serializing css."

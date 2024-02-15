@@ -5,14 +5,13 @@
    [clojure.set :as set]
    [renderer.element.handlers :as element.h]
    [renderer.handlers :as h]
-   [renderer.history.handlers :as history]
+   [renderer.history.handlers :as history.h]
    [renderer.tools.base :as tools]
    [renderer.tools.overlay :as overlay]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as utils.element]
    [renderer.utils.pointer :as pointer]
-   [renderer.utils.units :as units]
-   [renderer.document.db :as db]))
+   [renderer.utils.units :as units]))
 
 (derive :select ::tools/transform)
 
@@ -102,8 +101,20 @@
 
 (defmethod tools/pointer-down :select
   [db _e el]
-  (-> (assoc db :clicked-element el)
+  (-> db
+      (assoc :clicked-element el)
       (element.h/ignore :bounding-box)))
+
+(defmethod tools/pointer-up :select
+  [db e el]
+  (if-not (and (= (:button e) :right)
+               (:selected? el))
+    (-> db
+        element.h/clear-ignored
+        (dissoc :clicked-element)
+        (element.h/select (:key el) (pointer/multiselect? e))
+        (history.h/finalize "Select element"))
+    (dissoc db :clicked-element)))
 
 (defmethod tools/double-click :select
   [db _e el]
@@ -147,7 +158,7 @@
     (-> (cond-> db
           (and (:clicked-element db) (not (-> db :clicked-element :selected?)))
           (-> (element.h/select (-> db :clicked-element :key) (pointer/multiselect? e))
-              (history/finalize "Select element")))
+              (history.h/finalize "Select element")))
         (h/set-state :move))))
 
 (defn lock-ratio
@@ -210,7 +221,9 @@
                  (pointer/lock-direction offset)
                  offset)
         alt-key? (contains? (:modifiers e) :alt)
-        db (h/set-message db (message offset state))]
+        db (-> db
+               element.h/clear-ignored
+               (h/set-message (message offset state)))]
     (-> (case state
           :select
           (-> db
@@ -222,21 +235,21 @@
           (if alt-key?
             (h/set-state db :clone)
             (-> db
-                history/swap
+                history.h/swap
                 (element.h/translate offset)
                 (h/set-cursor "default")))
 
           :clone
           (if alt-key?
             (-> db
-                history/swap
+                history.h/swap
                 (element.h/duplicate offset)
                 (h/set-cursor "default"))
             (h/set-state db :move))
 
           :scale
           (-> db
-              history/swap
+              history.h/swap
               (h/set-cursor "default")
               (offset-scale offset (pointer/ctrl? e) (pointer/shift? e)))
 
@@ -248,12 +261,11 @@
         :select (-> (cond-> db (not (pointer/multiselect? e)) element.h/deselect)
                     (reduce-by-area (contains? (:modifiers e) :alt) element.h/select)
                     (element.h/clear-temp)
-                    (history/finalize "Modify selection"))
-        :move (history/finalize db "Move selection")
-        :scale (history/finalize db "Scale selection")
-        :clone (history/finalize db "Clone selection")
+                    (history.h/finalize "Modify selection"))
+        :move (history.h/finalize db "Move selection")
+        :scale (history.h/finalize db "Scale selection")
+        :clone (history.h/finalize db "Clone selection")
         :default db)
       (h/set-state :default)
-      element.h/clear-ignored
       (dissoc :clicked-element :pivot-point)
       (h/set-message (message nil :default))))

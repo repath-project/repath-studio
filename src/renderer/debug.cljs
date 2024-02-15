@@ -48,4 +48,7 @@
                @(rf/subscribe [:state])]
 
               ["Clicked element"
-               (:key @(rf/subscribe [:clicked-element]))]])))
+               (:key @(rf/subscribe [:clicked-element]))]
+
+              ["Ignored elements"
+               @(rf/subscribe [:document/ignored-keys])]])))
