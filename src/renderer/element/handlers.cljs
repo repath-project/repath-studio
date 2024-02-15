@@ -357,9 +357,49 @@
   ([db el]
    (update-index db el #(-> (siblings db el) count dec))))
 
+(defn set-parent
+  ([db parent-key]
+   (reduce #(set-parent %1 %2 parent-key) db (selected-sorted-keys db)))
+  ([db element-key parent-key]
+   (let [el (element db element-key)]
+     (cond-> db
+       (and (not= element-key parent-key) (not (:locked? el)))
+       (-> (update-prop (:parent el) :children #(vec (remove #{element-key} %)))
+           (update-prop parent-key :children conj element-key)
+           (set-prop element-key :parent parent-key))))))
+
+(defn set-parent-at-index
+  [db element-key parent-key index]
+  (let [siblings (:children (element db parent-key))
+        last-index (count siblings)]
+    (-> db
+        (set-parent element-key parent-key)
+        (update-prop parent-key :children vec/move last-index index))))
+
+(defn hovered-svg
+  [db]
+  (let [svgs (reverse (root-svgs db))
+        pointer-pos (:adjusted-pointer-pos db)]
+    (or
+     (some #(when (bounds/contain-point? (tools/bounds %) pointer-pos) %) svgs)
+     (element db :canvas))))
+
 (defn translate
   ([db offset]
-   (reduce #(translate %1 %2 offset) db (top-selected-ancestors db)))
+   (reduce (fn [db el]
+             (cond-> db
+               :always
+               (translate el offset)
+
+               ;; TODO: Enhance auto switching parents.
+               (and (element/root? (parent db))
+                    (not (element/svg? el))
+                    (single? (selected db)))
+               (-> (set-parent (:key (hovered-svg db)))
+                   (translate el (mat/mul (take 2 (element/adjusted-bounds (hovered-svg db) (elements db)))
+                                          -1)))))
+           db
+           (top-selected-ancestors db)))
   ([db el offset]
    (cond-> db
      (not (:locked? el))
@@ -433,14 +473,6 @@
      (some #(when (bounds/intersected? el-bounds (tools/bounds %)) %) svgs)
      (element db :canvas))))
 
-(defn hovered-svg
-  [db]
-  (let [svgs (reverse (root-svgs db))
-        pointer-pos (:adjusted-pointer-pos db)]
-    (or
-     (some #(when (bounds/contain-point? (tools/bounds %) pointer-pos) %) svgs)
-     (element db :canvas))))
-
 (defn create
   [db el]
   (let [key (uuid/generate)
@@ -491,25 +523,6 @@
         (add {:type :element
               :tag :path
               :attrs (merge attrs {:d new-path})}))))
-
-(defn set-parent
-  ([db parent-key]
-   (reduce #(set-parent %1 %2 parent-key) db (selected-sorted-keys db)))
-  ([db element-key parent-key]
-   (let [el (element db element-key)]
-     (cond-> db
-       (and (not= element-key parent-key) (not (:locked? el)))
-       (-> (update-prop (:parent el) :children #(vec (remove #{element-key} %)))
-           (update-prop parent-key :children conj element-key)
-           (set-prop element-key :parent parent-key))))))
-
-(defn set-parent-at-index
-  [db element-key parent-key index]
-  (let [siblings (:children (element db parent-key))
-        last-index (count siblings)]
-    (-> db
-        (set-parent element-key parent-key)
-        (update-prop parent-key :children vec/move last-index index))))
 
 (defn paste-in-place
   ([db]

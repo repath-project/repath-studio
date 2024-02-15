@@ -22,7 +22,7 @@
   [{:keys [adjusted-pointer-pos adjusted-pointer-offset] :as db} e]
   (let [[offset-x offset-y] adjusted-pointer-offset
         [pos-x pos-y] adjusted-pointer-pos
-        lock-ratio? (contains? (:modifiers e) :ctrl)
+        lock-ratio? (pointer/ctrl? e)
         width (abs (- pos-x offset-x))
         height (abs (- pos-y offset-y))
         attrs {:x (min pos-x offset-x)

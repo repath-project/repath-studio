@@ -21,8 +21,7 @@
   (loop [parent (:parent el)]
     (when parent
       (let [parent-element (parent elements)]
-        (if (or (= :canvas (:tag parent-element))
-                (container? parent-element))
+        (if (container? parent-element)
           parent-element
           (recur (:parent parent-element)))))))
 

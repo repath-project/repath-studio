@@ -56,8 +56,6 @@
                   :cursor cursor
                   :style {:background (:fill attrs)
                           :outline "none"}}
-     (when (not-empty (remove zero? bounds))
-       [overlay/bottom-bounding-box bounds])
 
      (for [el child-elements]
        ^{:key (str (:key el))} [tools/render el])
@@ -81,6 +79,7 @@
 
         (when (not-empty (remove zero? bounds))
           [:<>
+           [overlay/wrapping-bounding-box bounds]
            [overlay/size bounds]
            [overlay/bounding-handlers bounds]])
 

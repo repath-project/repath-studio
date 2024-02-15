@@ -13,8 +13,7 @@
 ;; The iframe is isolated so we don't have access to the css vars of the parent.
 ;; We are currently using hardcoded values, but we hould be able to set those 
 ;; vars in the nested document if we have to.
-(def stroke "#000")
-(def stroke-inverted "#fff")
+(def accent-inverted "#fff")
 (def accent "#e93976")
 
 (def handler-size 10)
@@ -38,11 +37,11 @@
     [:circle {:key key
               :cx x
               :cy y
-              :stroke stroke
+              :stroke accent
               :stroke-width (/ 1 zoom)
               :fill (if (= (:key clicked-element) key)
                       accent
-                      stroke-inverted)
+                      accent-inverted)
               :r (/ 4 zoom)
               :cursor "default"
               :on-pointer-up pointer-handler
@@ -65,8 +64,8 @@
               :id (name key)
               :fill (if (or clicked? (contains? hovered-keys key))
                       accent
-                      stroke-inverted)
-              :stroke stroke
+                      accent-inverted)
+              :stroke accent
               :stroke-width stroke-width
               :x (- x (/ size 2))
               :y (- y (/ size 2))
@@ -93,9 +92,9 @@
                 :stroke-width stroke-width
                 :shape-rendering (when dashed? "crispEdges")}]
      [:g
-      (when dashed? [:line (merge attrs {:stroke stroke-inverted})])
+      (when dashed? [:line (merge attrs {:stroke accent-inverted})])
       [:line (merge attrs
-                    {:stroke stroke
+                    {:stroke accent
                      :stroke-dasharray (when dashed? stroke-dasharray)})]])))
 
 (defn cross
@@ -125,8 +124,8 @@
                :fill "transparent"
                :stroke-width stroke-width}]
     [:g
-     [:path (merge {:stroke stroke-inverted} attrs)]
-     [:path (merge {:stroke stroke
+     [:path (merge {:stroke accent-inverted} attrs)]
+     [:path (merge {:stroke accent
                     :stroke-dasharray stroke-dasharray} attrs)]]))
 
 (defn times
@@ -160,24 +159,26 @@
                                (/ (- min-size w) 2) 0])
       (< h min-size) (mat/add [0 (- (/ (- min-size h) 2))
                                0 (/ (- min-size h) 2)]))))
-(defn bottom-bounding-box
+(defn wrapping-bounding-box
   [bounds]
   (let [zoom @(rf/subscribe [:document/zoom])
         bounds (min-bounds bounds)
         [x1 y1 _x2 _y2] bounds
         [w h] (bounds/->dimensions bounds)
-        pointer-handler #(pointer/event-handler % nil)
-        stroke-width (/ 1 zoom)
+        pointer-handler #(pointer/event-handler % {:type :element
+                                                   :tag :move
+                                                   :key :bounding-box})
         rect-attrs {:x x1
                     :y y1
                     :width w
                     :height h
-                    :stroke-width stroke-width
-                    :fill "transparent"}]
+                    :stroke-width (/ 1 zoom)
+                    :fill-opacity ".1"
+                    :fill "transparent"
+                    :stroke accent}]
     [:rect (merge rect-attrs {:on-pointer-up pointer-handler
                               :on-pointer-down pointer-handler
-                              :on-pointer-move pointer-handler
-                              :style {:z-index -1}})]))
+                              :on-pointer-move pointer-handler})]))
 
 (defn bounding-handlers
   [bounds]
@@ -199,7 +200,7 @@
   [text position anchor]
   (let [zoom @(rf/subscribe [:document/zoom])
         [x y] position
-        font-size (/ 11 zoom)
+        font-size (/ 10 zoom)
         padding (/ 8 zoom)
         font-width (/ font-size 2)
         label-width (+ (* (count text) font-width)
@@ -212,13 +213,14 @@
                   "middle" (- x (/ label-width 2))
                   "end" (- x label-width (/ (- padding) 2)))
              :y (- y  (/ label-height 2))
-             :fill "#eee"
+             :fill accent
+             :fill-opacity 0.9
              :rx (/ 4 zoom)
              :width label-width
              :height label-height} text]
      [:text {:x x
              :y y
-             :fill "#555"
+             :fill accent-inverted
              :dominant-baseline "middle"
              :text-anchor text-anchor
              :width label-width
@@ -250,8 +252,8 @@
                :fill "transparent"}]
 
     [:g {:style {:pointer-events "none"}}
-     [:rect (merge attrs {:stroke stroke-inverted})]
-     [:rect (merge attrs {:stroke stroke
+     [:rect (merge attrs {:stroke accent-inverted})]
+     [:rect (merge attrs {:stroke accent
                           :stroke-dasharray stroke-dasharray})]]))
 
 (defn select-box
@@ -263,7 +265,7 @@
                         :width (abs (- pos-x offset-x))
                         :height (abs (- pos-y offset-y))
                         :shape-rendering "crispEdges"
-                        :fill-opacity ".2"
+                        :fill-opacity ".1"
                         :fill accent
                         :stroke accent
                         :stroke-opacity ".5"

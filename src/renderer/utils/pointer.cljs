@@ -2,6 +2,14 @@
   (:require
    [re-frame.core :as rf]))
 
+(defn ctrl?
+  [e]
+  (contains? (:modifiers e) :ctrl))
+
+(defn shift?
+  [e]
+  (contains? (:modifiers e) :shift))
+
 (defn multiselect?
   [e]
   (some #(contains? (:modifiers e) %) #{:ctrl :shift}))

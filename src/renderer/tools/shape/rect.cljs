@@ -2,7 +2,8 @@
   "https://www.w3.org/TR/SVG/shapes.html#RectElement"
   (:require
    [renderer.element.handlers :as element.h]
-   [renderer.tools.base :as tools]))
+   [renderer.tools.base :as tools]
+   [renderer.utils.pointer :as pointer]))
 
 (derive :rect ::tools/box)
 (derive :rect ::tools/shape)
@@ -25,7 +26,7 @@
   (let [{:keys [stroke fill]} (get-in db [:documents active-document])
         [offset-x offset-y] adjusted-pointer-offset
         [pos-x pos-y] adjusted-pointer-pos
-        lock-ratio? (contains? (:modifiers e) :ctrl)
+        lock-ratio? (pointer/ctrl? e)
         width (abs (- pos-x offset-x))
         height (abs (- pos-y offset-y))
         attrs {:x (min pos-x offset-x)

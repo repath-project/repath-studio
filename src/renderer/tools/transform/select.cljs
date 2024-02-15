@@ -127,6 +127,9 @@
     :scale
     (h/set-state db :scale)
 
+    :move
+    (h/set-state db :move)
+
     (h/set-state
      (if (and (:clicked-element db) (not (-> db :clicked-element :selected?)))
        (-> db
@@ -189,7 +192,7 @@
            adjusted-pointer-offset
            adjusted-pointer-pos] :as db} e]
   (let [offset (mat/sub adjusted-pointer-pos adjusted-pointer-offset)
-        offset (if (and (contains? (:modifiers e) :ctrl)
+        offset (if (and (pointer/ctrl? e)
                         (not= state :scale))
                  (pointer/lock-direction offset)
                  offset)
@@ -205,18 +208,24 @@
           :move
           (if alt-key?
             (h/set-state db :clone)
-            (element.h/translate (history/swap db) offset))
+            (-> db
+                history/swap
+                (element.h/translate offset)
+                (h/set-cursor "default")))
 
           :clone
           (if alt-key?
-            (element.h/duplicate (history/swap db) offset)
+            (-> db
+                history/swap
+                (element.h/duplicate offset)
+                (h/set-cursor "default"))
             (h/set-state db :move))
 
           :scale
-          (offset-scale (history/swap db)
-                        offset
-                        (contains? (:modifiers e) :ctrl)
-                        (contains? (:modifiers e) :shift))
+          (-> db
+              history/swap
+              (h/set-cursor "default")
+              (offset-scale offset (pointer/ctrl? e) (pointer/shift? e)))
 
           :default db))))
 

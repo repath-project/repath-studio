@@ -43,7 +43,7 @@
   (let [pointer-offset (mat/sub adjusted-pointer-pos adjusted-pointer-offset)
         db (history.h/swap db)
         element-key (:element clicked-element)
-        pointer-offset (if (contains? (:modifiers e) :ctrl)
+        pointer-offset (if (pointer/ctrl? e)
                          (pointer/lock-direction pointer-offset)
                          pointer-offset)]
     (if element-key

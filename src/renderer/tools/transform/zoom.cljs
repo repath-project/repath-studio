@@ -4,7 +4,8 @@
    [renderer.frame.handlers :as frame]
    [renderer.handlers :as handlers]
    [renderer.tools.base :as tools]
-   [renderer.tools.overlay :as overlay]))
+   [renderer.tools.overlay :as overlay]
+   [renderer.utils.pointer :as pointer]))
 
 (derive :zoom ::tools/transform)
 
@@ -23,13 +24,13 @@
 
 (defmethod tools/key-down :zoom
   [db e]
-  (if (contains? (:modifiers e) :shift)
+  (if (pointer/shift? e)
     (assoc db :cursor "zoom-out")
     db))
 
 (defmethod tools/key-up :zoom
   [db e]
-  (if-not (contains? (:modifiers e) :shift)
+  (if-not (pointer/shift? e)
     (assoc db :cursor "zoom-in")
     db))
 
@@ -61,14 +62,14 @@
     (-> db
         element.h/clear-temp
         (assoc :cursor "zoom-in")
-        (frame/zoom (if (contains? (:modifiers e) :shift)
+        (frame/zoom (if (pointer/shift? e)
                       zoom-sensitivity
                       (/ furute-zoom current-zoom)))
         (frame/pan-to-bounds [pos-x pos-y offset-x offset-y]))))
 
 (defmethod tools/pointer-up :zoom
   [db e]
-  (let [factor (if (contains? (:modifiers e) :shift)
+  (let [factor (if (pointer/shift? e)
                  (:zoom-sensitivity db)
                  (/ 1 (:zoom-sensitivity db)))]
     (frame/zoom-in-pointer-position db factor)))
