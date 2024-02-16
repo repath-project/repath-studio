@@ -6,7 +6,6 @@
    [renderer.document.db :as db]
    [renderer.document.handlers :as h]
    [renderer.element.handlers :as element.h]
-   [renderer.frame.handlers :as frame]
    [renderer.history.handlers :as history.h]
    [renderer.utils.uuid :as uuid]
    [renderer.utils.vec :as vec]))
@@ -73,22 +72,6 @@
        (element.h/set-attr :stroke stroke))))
 
 (rf/reg-event-db
- :document/new
- (fn [db [_]]
-   (let [key (uuid/generate)
-         title (str "Untitled-" (inc (count (:documents db))))
-         document-tabs (:document-tabs db)
-         active-index (.indexOf document-tabs (:active-document db))
-         document (merge db/default-document {:key key
-                                              :title title})]
-     (-> db
-         (assoc-in [:documents key] document)
-         (update :document-tabs #(vec/add % (inc active-index) key))
-         (assoc :active-document key)
-         (frame/focus-selection :original)
-         (history.h/init "Create document")))))
-
-(rf/reg-event-db
  :document/close
  (fn [db [_ key]]
    (h/close db key)))
@@ -131,6 +114,22 @@
          dragged-index (.indexOf document-tabs dragged-key)
          swapped-index (.indexOf document-tabs swapped-key)]
      (assoc db :document-tabs (vec/swap document-tabs dragged-index swapped-index)))))
+
+(rf/reg-event-fx
+ :document/new
+ (fn [{:keys [db]} [_]]
+   {:db (let [key (uuid/generate)
+              title (str "Untitled-" (inc (count (:documents db))))
+              document-tabs (:document-tabs db)
+              active-index (.indexOf document-tabs (:active-document db))
+              document (merge db/default-document {:key key
+                                                   :title title})]
+          (-> db
+              (assoc-in [:documents key] document)
+              (update :document-tabs #(vec/add % (inc active-index) key))
+              (assoc :active-document key)
+              (history.h/init "Create document")))
+    :dispatch [:pan-to-element :default-page]}))
 
 (rf/reg-event-fx
  :document/open
