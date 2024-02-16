@@ -28,6 +28,17 @@
   [db _ el]
   (assoc db :clicked-element el))
 
+(defmethod tools/pointer-up :edit
+  [db e el]
+  (if-not (and (= (:button e) :right)
+               (:selected? el))
+    (-> db
+        element.h/clear-ignored
+        (dissoc :clicked-element)
+        (element.h/select (:key el) (pointer/multiselect? e))
+        (history.h/finalize "Select element"))
+    (dissoc db :clicked-element)))
+
 (defmethod tools/pointer-move :edit
   [db _ el]
   (-> db
