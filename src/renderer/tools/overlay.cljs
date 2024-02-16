@@ -177,6 +177,7 @@
                     :stroke-width (/ 1 zoom)
                     :fill-opacity ".1"
                     :fill "transparent"
+                    :shape-rendering "crispEdges"
                     :stroke accent
                     :pointer-events (when ignored? "none")}]
     [:rect (merge rect-attrs {:on-pointer-up pointer-handler
@@ -250,6 +251,7 @@
                :y y1
                :width width
                :height height
+               :shape-rendering "crispEdges"
                :stroke-width stroke-width
                :fill "transparent"}]
 
