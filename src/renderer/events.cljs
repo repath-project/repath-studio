@@ -99,7 +99,7 @@
  (fn [db [_]]
    (update db :snap? not)))
 
-(defn significant-movement?
+(defn significant-drag?
   [pointer-pos pointer-offset]
   (let [threshold 1]
     (when (and (vector? pointer-pos) (vector? pointer-offset))
@@ -110,25 +110,26 @@
  :pointer-event
  (fn [{:keys [pointer-offset tool content-rect drag?] :as db}
       [_ {:keys [button buttons modifiers data-transfer pointer-pos delta element] :as e}]]
-   (let [pointer-pos (mapv js/parseInt pointer-pos)
-         adjusted-pointer-pos (frame-h/adjusted-pointer-pos db pointer-pos)]
+   (let [adjusted-pointer-pos (frame-h/adjusted-pointer-pos db pointer-pos)]
      (case (:type e)
        :pointermove
        (if (= buttons :right)
          db
-         (-> (if (significant-movement? pointer-pos pointer-offset)
-               (cond-> db
-                 (not= tool :pan)
-                 (frame-h/pan-out-of-canvas content-rect
-                                            pointer-pos
-                                            pointer-offset)
+         (-> (if pointer-offset
+               (if (significant-drag? pointer-pos pointer-offset)
+                 (cond-> db
+                   (not= tool :pan)
+                   (frame-h/pan-out-of-canvas content-rect
+                                              pointer-pos
+                                              pointer-offset)
 
-                 (not drag?)
-                 (-> (tools/drag-start e element)
-                     (assoc :drag? true))
+                   (not drag?)
+                   (-> (tools/drag-start e element)
+                       (assoc :drag? true))
 
-                 :always
-                 (tools/drag e element))
+                   :always
+                   (tools/drag e element))
+                 db)
                (tools/pointer-move db e element))
              (assoc :pointer-pos pointer-pos
                     :adjusted-pointer-pos adjusted-pointer-pos)))
