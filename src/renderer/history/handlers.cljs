@@ -91,13 +91,15 @@
    to history. We also avoid the need of throttling in consecutive actions 
    (move, color pick etc)"
   [db explanation & more]
-  (let [explanation (apply str explanation more)
-        state (state db explanation)
-        history (history db)]
-    (assoc-in db
-              (history-path db)
-              (cond-> history
-                (redos? history) (zip/replace (conj (conj (zip/rights history) (zip/node history)) state))
-                (zip/branch? history) zip/down
-                (not (redos? history)) (zip/insert-right state)
-                :always zip/rightmost))))
+  (if (= (element.h/elements db) (zip/node (history db)))
+    db
+    (let [explanation (apply str explanation more)
+          state (state db explanation)
+          history (history db)]
+      (assoc-in db
+                (history-path db)
+                (cond-> history
+                  (redos? history) (zip/replace (conj (conj (zip/rights history) (zip/node history)) state))
+                  (zip/branch? history) zip/down
+                  (not (redos? history)) (zip/insert-right state)
+                  :always zip/rightmost)))))
