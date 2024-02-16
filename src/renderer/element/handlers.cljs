@@ -392,7 +392,7 @@
                (translate el offset)
 
                ;; TODO: Enhance auto switching parents.
-               (and (element/root? (parent db))
+               (and (= :canvas (:parent el))
                     (not (element/svg? el))
                     (single? (selected db)))
                (-> (set-parent (:key (hovered-svg db)))
