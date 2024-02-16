@@ -64,28 +64,34 @@
     [:strong "Shift"]
     " to scale in position."]])
 
-(defn reduce-by-area
-  [{:keys [active-document] :as db} intersecting? f]
-  (let [hovered? (if intersecting? bounds/intersected? bounds/contained?)
+(defn hovered?
+  [{:keys [active-document] :as db} el intersecting?]
+  (let [f? (if intersecting? bounds/intersected? bounds/contained?)
         hovered-keys (-> db :documents active-document :hovered-keys)]
-    (reduce (fn [db el]
-              (if (and (empty? (set/intersection (element.h/ancestor-keys db el) hovered-keys))
-                       (not (utils.element/svg? el))
-                       (not (utils.element/root? el))
-                       (hovered? (utils.element/adjusted-bounds el (element.h/elements db))
-                                 (utils.element/adjusted-bounds (element.h/get-temp db)
-                                                                (element.h/elements db))))
-                (f db (:key el))
-                db))
-            db
-            (vals (element.h/elements db)))))
+    (and (empty? (set/intersection (element.h/ancestor-keys db el) hovered-keys))
+         (not (utils.element/svg? el)) ; REVIEW
+         (not (utils.element/root? el))
+         (f? (utils.element/adjusted-bounds el (element.h/elements db))
+             (utils.element/adjusted-bounds (element.h/get-temp db)
+                                            (element.h/elements db))))))
+
+(defn reduce-by-area
+  [db intersecting? f]
+  (reduce (fn [db el]
+            (cond-> db
+              (hovered? db el intersecting?)
+              (f (:key el)))) db (vals (element.h/elements db))))
 
 (defmethod tools/pointer-move :select
-  [db _e el]
-  (-> db
-      element.h/clear-hovered
-      (element.h/hover (:key el))
-      (assoc :cursor (if el "move" "default"))))
+  [db e el]
+  (cond-> db
+    (not (pointer/multiselect? e))
+    element.h/clear-ignored
+
+    :always
+    (-> element.h/clear-hovered
+        (element.h/hover (:key el))
+        (assoc :cursor (if el "move" "default")))))
 
 (defmethod tools/key-down :select
   [db e]
@@ -260,7 +266,7 @@
   (-> (case (:state db)
         :select (-> (cond-> db (not (pointer/multiselect? e)) element.h/deselect)
                     (reduce-by-area (contains? (:modifiers e) :alt) element.h/select)
-                    (element.h/clear-temp)
+                    element.h/clear-temp
                     (history.h/finalize "Modify selection"))
         :move (history.h/finalize db "Move selection")
         :scale (history.h/finalize db "Scale selection")
