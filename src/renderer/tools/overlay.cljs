@@ -5,7 +5,6 @@
    [re-frame.core :as rf]
    [renderer.tools.base :as tools]
    [renderer.utils.bounds :as bounds]
-   [renderer.utils.element :as element]
    [renderer.utils.math :as math]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
@@ -277,9 +276,8 @@
 (defn centroid
   [el]
   (when-let [centroid (tools/centroid el)]
-    (let [active-page @(rf/subscribe [:element/active-page])
-          page-pos (mapv units/unit->px [(-> active-page :attrs :x) (-> active-page :attrs :y)])
-          centroid (cond->> centroid (not (element/svg? el)) (mat/add page-pos))]
+    (let [offset @(rf/subscribe [:element/el-offset el])
+          centroid (mat/add offset centroid)]
       [point-of-interest centroid
        [:title "Centroid"]])))
 

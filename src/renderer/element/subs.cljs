@@ -1,6 +1,7 @@
 (ns renderer.element.subs
   (:require
    ["js-beautify" :as js-beautify]
+   [clojure.core.matrix :as mat]
    [clojure.set :as set]
    [re-frame.core :as rf]
    [renderer.attribute.utils :as attr.utils]
@@ -107,6 +108,14 @@
  :<- [:document/elements]
  (fn [elements [_ el]]
    (utils.el/bounds elements [el])))
+
+(rf/reg-sub
+ :element/el-offset
+ :<- [:document/elements]
+ (fn [elements [_ el]]
+   (let [bounds (utils.el/bounds elements [el])
+         original-bounds (tools/bounds el)]
+     (take 2 (mat/sub bounds original-bounds)))))
 
 (rf/reg-sub
  :element/area

@@ -122,17 +122,15 @@
                      (str/join " ")))))
 
 (defmethod tools/render-edit ::tools/polyshape
-  [{:keys [attrs key]} zoom]
+  [{:keys [attrs key] :as el} zoom]
   (let [{:keys [points]} attrs
         handler-size (/ 8 zoom)
         stroke-width (/ 1 zoom)
-        active-page @(rf/subscribe [:element/active-page])
-        page-pos (mapv units/unit->px
-                       [(-> active-page :attrs :x) (-> active-page :attrs :y)])]
+        offset @(rf/subscribe [:element/el-offset el])]
     [:g {:key :edit-handlers}
      (map-indexed (fn [index [x y]]
                     (let [[x y] (mapv units/unit->px [x y])
-                          [x y] (mat/add page-pos [x y])]
+                          [x y] (mat/add offset [x y])]
                       [overlay/square-handler {:key (str index)
                                                :x x
                                                :y y

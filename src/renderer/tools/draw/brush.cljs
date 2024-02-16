@@ -5,7 +5,9 @@
    ["svg-path-bbox" :as svg-path-bbox]
    [clojure.core.matrix :as mat]
    [clojure.core.matrix.stats :as mat.stats]
+   [re-frame.core :as rf]
    [renderer.attribute.color :as attr.color]
+   [renderer.attribute.utils :as attr.utils]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.attribute.range :as attr.range]
    [renderer.attribute.views :as attr.v]
@@ -188,9 +190,20 @@
   (points->path (::points attrs) (select-keys attrs options)))
 
 (defmethod tools/render-edit :brush
-  [{:keys [attrs key]}]
-  [:g {:key :edit-handlers}
-   (map (fn [point]
-          [overlay/square-handler {:x (first point)
-                                   :y (second point)
-                                   :element key}]) (::points attrs))])
+  [{:keys [attrs key] :as el} zoom]
+  (let [handler-size (/ 8 zoom)
+        stroke-width (/ 1 zoom)
+        offset @(rf/subscribe [:element/el-offset el])]
+    [:g {:key :edit-handlers}
+     (map-indexed (fn [index [x y]]
+                    (let [[x y] (mapv units/unit->px [x y])
+                          [x y] (mat/add offset [x y])]
+                      [overlay/square-handler {:key (str index)
+                                               :x x
+                                               :y y
+                                               :size handler-size
+                                               :stroke-width stroke-width
+                                               :type :handler
+                                               :tag :edit
+                                               :element key}]))
+                  (::points attrs))]))

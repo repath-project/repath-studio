@@ -108,9 +108,7 @@
 
 (defmethod tools/render-edit :line
   [{:keys [attrs key] :as el}]
-  (let [bounds @(rf/subscribe [:element/el-bounds el])
-        original-bounds (tools/bounds el)
-        offset (take 2 (mat/sub bounds original-bounds))
+  (let [offset @(rf/subscribe [:element/el-offset el])
         {:keys [x1 y1 x2 y2]} attrs
         [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])
         [x1 y1] (mat/add offset [x1 y1])
