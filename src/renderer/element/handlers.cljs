@@ -316,7 +316,7 @@
   ([db k]
    (let [el (element db k)
          ;; OPTIMIZE: No need to recur to delete all children
-         db (reduce delete db (:children el))]
+         db (if (element/root? el) db (reduce delete db (:children el)))]
      (cond-> db
        (not (element/root? el))
        (-> (assoc-in
