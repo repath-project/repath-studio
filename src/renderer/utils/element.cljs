@@ -27,15 +27,17 @@
 
 (defn adjusted-bounds
   [element elements]
-  (if-let [container (parent-container elements element)]
-    (let [[offset-x offset-y _ _] (tools/bounds container elements)
-          [x1 y1 x2 y2] (tools/bounds element elements)]
-      [(+ x1 offset-x) (+ y1 offset-y)
-       (+ x2 offset-x) (+ y2 offset-y)])
-    (let [b (tools/bounds element elements)]
-      (when (seq b) b))))
+  (when-let [bounds (tools/bounds element elements)]
+    (if-let [container (parent-container elements element)]
+      (let [[offset-x offset-y _ _] (tools/bounds container elements)
+            [x1 y1 x2 y2] bounds]
+        [(+ x1 offset-x) (+ y1 offset-y)
+         (+ x2 offset-x) (+ y2 offset-y)])
+      bounds)))
 
 (defn bounds
   [elements bound-elements]
-  (when (seq bound-elements)
-    (apply bounds/union (map #(adjusted-bounds % elements) bound-elements))))
+  (let [bounds (->> bound-elements
+                    (map #(adjusted-bounds % elements))
+                    (remove nil?))]
+    (when (seq bounds) (apply bounds/union bounds))))

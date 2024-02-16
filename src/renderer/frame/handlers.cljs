@@ -68,8 +68,11 @@
 (defn pan-to-element
   [db key]
   (let [element (element.h/element db key)
-        elements (element.h/elements db)]
-    (pan-to-bounds db (element/adjusted-bounds element elements))))
+        elements (element.h/elements db)
+        el-bounds (element/adjusted-bounds element elements)]
+    (cond-> db
+      el-bounds
+      (pan-to-bounds el-bounds))))
 
 (defn focus-selection
   [{:keys [active-document content-rect] :as db} zoom]
@@ -84,7 +87,7 @@
                       :fit (min width-ratio height-ratio)
                       :fill (max width-ratio height-ratio)))
           (pan-to-bounds bounds)))
-    (pan-to-element db (-> db (element.h/element :canvas) :children first))))
+    db))
 
 (defn calc-pan-offset
   [position offset size]
