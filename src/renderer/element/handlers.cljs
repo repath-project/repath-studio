@@ -556,7 +556,7 @@
 
 (defn duplicate-in-place
   ([db]
-   (reduce duplicate-in-place (deselect db) (selected db)))
+   (reduce duplicate-in-place (deselect db) (selected-sorted db)))
   ([db el]
    (create db el)))
 
