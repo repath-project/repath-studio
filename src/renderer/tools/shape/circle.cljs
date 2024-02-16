@@ -57,6 +57,11 @@
         (attr.hierarchy/update-attr :r * ratio)
         (tools/translate offset))))
 
+(defmethod tools/bounds :circle
+  [{{:keys [cx cy r]} :attrs}]
+  (let [[cx cy r] (map units/unit->px [cx cy r])]
+    [(- cx r) (- cy r) (+ cx r) (+ cy r)]))
+
 (defmethod tools/area :circle
   [{{:keys [r]} :attrs}]
   (* Math/PI (Math/pow (units/unit->px r) 2)))

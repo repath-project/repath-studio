@@ -158,6 +158,15 @@
                                (units/transform (second point) + y))))
                     flatten)))))
 
+(defmethod tools/bounds ::tools/polyshape
+  [{{:keys [points]} :attrs}]
+  (let [points-v (attr.utils/points->vec points)
+        x1 (apply min (map #(units/unit->px (first %)) points-v))
+        y1 (apply min (map #(units/unit->px (second %)) points-v))
+        x2 (apply max (map #(units/unit->px (first %)) points-v))
+        y2 (apply max (map #(units/unit->px (second %)) points-v))]
+    [x1 y1 x2 y2]))
+
 (defn calc-polygon-area [vertices]
   (let [count-v (count vertices)]
     (/ (reduce-kv (fn [area index point]
