@@ -1,10 +1,10 @@
 (ns renderer.cmdk.views
   (:require
+   ["cmdk" :as Command]
    [i18n :refer [t]]
    [re-frame.core :as rf]
    [renderer.components :as comp]
-   [renderer.menubar.views :as menubar]
-   ["cmdk" :as Command]))
+   [renderer.menubar.views :as menubar]))
 
 (defn item
   [group {:keys [label action key type]}]
@@ -40,7 +40,8 @@
     :label (t [:cmdk/command-palette "Command palette"])
     :class "dialog"}
    [:> Command/CommandInput
-    {:placeholder (t [:cmdk/search-command "Search for a command"])}]
+    {:placeholder (t [:cmdk/search-command "Search for a command"])
+     :on-key-down #(.stopPropagation %)}]
    [:> Command/CommandList
     [:> Command/CommandEmpty
      (t [:cmdk/no-results "No results found."])]
