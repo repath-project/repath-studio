@@ -7,11 +7,6 @@
  :-> :window)
 
 (rf/reg-sub
- :window/header?
- :<- [:window]
- :-> :header?)
-
-(rf/reg-sub
  :window/maximized?
  :<- [:window]
  :-> :maximized?)
@@ -27,14 +22,14 @@
  :-> :size)
 
 (rf/reg-sub
- :window/left-sidebar-min-width
+ :window/tree-min-width
  :<- [:window/size]
  (fn [size]
    (when-let [width (first size)]
      (* (/ 230 width) 100))))
 
 (rf/reg-sub
- :window/right-sidebar-min-width
+ :window/props-min-width
  :<- [:window/size]
  (fn [size]
    (when-let [width (first size)]

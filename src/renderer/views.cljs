@@ -94,11 +94,56 @@
         :collapsedSize 15}
        [timeline/root]]])])
 
-(defn root
+(defn center-panel
+  []
+  [:> Panel
+   {:id "center-panel"
+    :order 1}
+   [:div.flex.h-full.flex-col
+    [:> PanelGroup
+     {:direction "horizontal"
+      :id "center-top-group"
+      :autoSaveId "center-top-group"}
+     [:> Panel
+      {:id "center-top-panel"
+       :order 1}
+      [editor]]
+     (when @(rf/subscribe [:panel/visible? :xml])
+       (let [xml @(rf/subscribe [:element/xml])]
+         [:<>
+          [:> PanelResizeHandle
+           {:id "xml-resize-handle"
+            :className "resize-handle"}]
+          [:> Panel {:id "xml-panel"
+                     :defaulSize 30
+                     :minSize 10
+                     :order 2}
+           [:div.v-scroll.p-1.h-full.level-2.ml-px
+            [cm/editor xml
+             {:options {:mode "text/xml"
+                        :readOnly true}}]]]]))]
+    [command-input]]])
+
+(defn tree-panel
   []
   (let [tree? @(rf/subscribe [:panel/visible? :tree])
-        right-sidebar-min-width @(rf/subscribe [:window/right-sidebar-min-width])
-        left-sidebar-min-width @(rf/subscribe [:window/left-sidebar-min-width])]
+        tree-min-width @(rf/subscribe [:window/tree-min-width])]
+    (when tree-min-width
+      [:> Panel
+       {:id "tree-panel"
+        :collapsible true
+        :minSize tree-min-width
+        :defaultSize tree-min-width
+        :onCollapse #(rf/dispatch-sync [:panel/collapse :tree])
+        :onExpand #(rf/dispatch-sync [:panel/expand :tree])}
+       (when tree?
+         [:<>
+          [doc/actions]
+          [tree/root]])])))
+
+(defn root
+  []
+  (let [props-min-width @(rf/subscribe [:window/props-min-width])]
     [:> Tooltip/Provider
      [:div.flex.flex-col.flex-1.h-screen
       [win/app-header]
@@ -107,18 +152,7 @@
          {:direction "horizontal"
           :id "root-group"
           :autoSaveId "root-group"}
-         (when left-sidebar-min-width
-           [:> Panel
-            {:id "tree-panel"
-             :collapsible true
-             :minSize left-sidebar-min-width
-             :defaultSize left-sidebar-min-width
-             :onCollapse #(rf/dispatch-sync [:panel/collapse :tree])
-             :onExpand #(rf/dispatch-sync [:panel/expand :tree])}
-            (when tree?
-              [:<>
-               [doc/actions]
-               [tree/root]])])
+         [tree-panel]
          [:> PanelResizeHandle
           {:id "tree-resize-handle"
            :className "resize-handle"}]
@@ -131,50 +165,22 @@
             {:direction "horizontal"
              :id "center-group"
              :autoSaveId "center-group"}
-            [:> Panel
-             {:id "center-panel"
-              :order 1}
-             [:div.flex.h-full.flex-col [:> PanelGroup
-                                         {:direction "horizontal"
-                                          :id "center-top-group"
-                                          :autoSaveId "center-top-group"}
-                                         [:> Panel
-                                          {:id "center-top-panel"
-                                           :order 1}
-                                          [editor]]
-                                         (when @(rf/subscribe [:panel/visible? :xml])
-                                           (let [xml @(rf/subscribe [:element/xml])]
-                                             [:<>
-                                              [:> PanelResizeHandle
-                                               {:id "xml-resize-handle"
-                                                :className "resize-handle"}]
-                                              [:> Panel {:id "xml-panel"
-                                                         :defaulSize 30
-                                                         :minSize 10
-                                                         :order 2}
-                                               [:div.v-scroll.p-1.h-full.level-2.ml-px
-                                                [cm/editor xml
-                                                 {:options {:mode "text/xml"
-                                                            :readOnly true}}]]]]))]
-              [command-input]]]
-
+            [center-panel]
             [:> PanelResizeHandle
              {:id "properties-resize-handle"
               :className "resize-handle"}]
-            (when right-sidebar-min-width
+            (when props-min-width
               [:> Panel
                {:id "properties-panel"
                 :collapsible true
                 :order 2
-                :minSize right-sidebar-min-width
-                :defaultSize right-sidebar-min-width
+                :minSize props-min-width
+                :defaultSize props-min-width
                 :onCollapse #(rf/dispatch-sync [:panel/collapse :properties])
                 :onExpand #(rf/dispatch-sync [:panel/expand :properties])}
                (when @(rf/subscribe [:panel/visible? :properties])
                  [attr/form])])
             [toolbar.object/root]]]]]
         [home/panel])]
-
      [cmdk/dialog]
-
      [notification/main]]))
