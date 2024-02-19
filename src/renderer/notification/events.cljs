@@ -6,11 +6,11 @@
 (rf/reg-event-db
  :notification/add
  (fn [db [_ notification]]
-   (let [notifications (:notifications db)] 
-    (if (= (:content notification) (-> notifications peek :content))
-     (assoc db :notifications
-            (conj (pop notifications) (update (peek notifications) :count inc)))
-     (update db :notifications conj notification)))))
+   (let [notifications (:notifications db)]
+     (if (= (:content notification) (-> notifications peek :content))
+       (assoc db :notifications
+              (conj (pop notifications) (update (peek notifications) :count inc)))
+       (update db :notifications conj notification)))))
 
 (rf/reg-event-db
  :notification/remove
