@@ -35,8 +35,8 @@
      :value v
      :disabled? disabled?
      :placeholder (if v initial "multiple")
-     :on-wheel (fn [event]
-                 (if (pos? (.-deltaY event))
+     :on-wheel (fn [e]
+                 (if (pos? (.-deltaY e))
                    (rf/dispatch [:element/dec-attribute k])
                    (rf/dispatch [:element/inc-attribute k])))}]
    [:div.flex {:style {:width "54px"}}

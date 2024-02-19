@@ -43,6 +43,7 @@
   (doseq
    [[window-event action]
     [;; Event "resized" is more suitable, but it's not supported on linux
+     ;; https://www.electronjs.org/docs/latest/api/browser-window#event-resized-macos-windows
      ["resize" #(if (.isMaximized ^js @main-window)
                   "windowMaximized"
                   "windowUnmaximized")]

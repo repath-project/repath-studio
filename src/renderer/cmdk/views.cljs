@@ -40,8 +40,7 @@
     :label (t [:cmdk/command-palette "Command palette"])
     :class "dialog"}
    [:> Command/CommandInput
-    {:placeholder (t [:cmdk/search-command "Search for a command"])
-     :on-key-down #(.stopPropagation %)}]
+    {:placeholder (t [:cmdk/search-command "Search for a command"])}]
    [:> Command/CommandList
     [:> Command/CommandEmpty
      (t [:cmdk/no-results "No results found."])]

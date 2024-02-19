@@ -22,10 +22,10 @@
    (assoc db :minimized? state)))
 
 (rf/reg-event-db
- :window/toggle-header
+ :window/resize
  (rf/path :window)
- (fn [db [_]]
-   (update db :header? not)))
+ (fn [db [_ size]]
+   (assoc db :size size)))
 
 (rf/reg-fx
  ::close
@@ -35,10 +35,9 @@
 (rf/reg-fx
  ::toggle-fullscreen
  (fn [_]
-   (let [element js/document.documentElement]
-     (if (.-fullscreenElement element)
-       (.exitFullscreen element)
-       (.requestFullscreen element)))))
+   (if (.-fullscreenElement js/document)
+     (.exitFullscreen js/document)
+     (.. js/document -documentElement requestFullscreen))))
 
 (rf/reg-fx
  ::open-remote-url

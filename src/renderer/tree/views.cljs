@@ -44,7 +44,8 @@
                    (reset! edit-mode? false)
                    (set-item-name e key))}]
       [:span
-       {:class (when-not visible? "text-disabled")
+       {:class [(when-not visible? "text-disabled")
+                (when (= :svg tag) "font-bold")]
         :style {:cursor "text"}
         :on-double-click (fn [e]
                            (.stopPropagation e)
@@ -122,15 +123,13 @@
 (defn inner-sidebar []
   (let [canvas-children @(rf/subscribe [:element/canvas-children])
         elements @(rf/subscribe [:document/elements])]
-    [:div.flex.flex-col.flex-1.overflow-hidden.level-1.tree-sidebar
+    [:div.tree-sidebar.overflow-hidden
      {:on-pointer-up #(rf/dispatch [:element/deselect-all])
       :on-key-down key-down-handler}
-
-     [:div.v-scroll
-      [:div
-       {:on-pointer-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
-       [:ul (map (fn [el] [item el 1 elements])
-                 (reverse canvas-children))]]]]))
+     [:div.v-scroll.h-full
+      {:on-pointer-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
+      [:ul (map (fn [el] [item el 1 elements])
+                (reverse canvas-children))]]]))
 
 (defn root
   []

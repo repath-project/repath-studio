@@ -73,9 +73,6 @@
                  [{:keyCode (key-codes "EQUALS")}]]
                 [[:zoom-out]
                  [{:keyCode (key-codes "DASH")}]]
-                [[:panel/toggle :tree]
-                 [{:keyCode (key-codes "T")
-                   :ctrlKey true}]]
                 [[:element/->path]
                  [{:keyCode (key-codes "P")
                    :ctrlKey true
@@ -84,13 +81,6 @@
                  [{:keyCode (key-codes "P")
                    :ctrlKey true
                    :altKey true}]]
-                [[:panel/toggle :properties]
-                 [{:keyCode (key-codes "P")
-                   :ctrlKey true}]]
-                [[:window/toggle-header]
-                 [{:keyCode (key-codes "H")
-                   :altKey true
-                   :ctrlKey true}]]
                 [[:element/copy]
                  [{:keyCode (key-codes "C")
                    :ctrlKey true}]]

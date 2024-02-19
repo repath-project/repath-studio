@@ -99,6 +99,7 @@
     font-size: 1em;
     outline: none;
     height: 33px;
+    transition: background 75ms;
     -webkit-app-region: no-drag;
 
     &:hover {
@@ -231,7 +232,7 @@ label {
 }
 
 .v-scroll {
-  @apply box-border overflow-auto;
+  @apply box-border overflow-y-auto;
 
   transition: all .2s;
   
@@ -385,22 +386,34 @@ pre {
   left: calc(50% - 250px);
 }
 
-.resizer {
+.resize-handle {
   @apply relative;
-}
 
-.resize-handler {
-  width: 5px;
-  left: -2px;
-  height: 100%;
-  z-index: 1;
-  cursor: ew-resize;
-  position: absolute;
-  transition: background-color .3s;
+  &:after {
+    content: "";
+    display: block;
+    z-index: 1;
+    position: absolute;
+    transition: background-color .3s;
+  }
 
-  &:hover,
-  &:active {
-    background-color: var(--accent);
+  &[data-panel-group-direction="vertical"]:after {
+    width: 100%;
+    top: -2px;
+    height: 5px;
+  }
+
+  &[data-panel-group-direction="horizontal"]:after {
+    width: 5px;
+    left: -2px;
+    height: 100%;
+  }
+
+  &[data-resize-handle-state="hover"],
+  &[data-resize-handle-state="drag"] {
+    &:after {
+      background-color: var(--accent);
+    } 
   }
 }
 

@@ -8,8 +8,6 @@
 
 (defn actions []
   [:div.toolbar
-   {:style {:overflow "visible"
-            :flex "0 0 40px"}}
 
    [comp/icon-button
     "file"

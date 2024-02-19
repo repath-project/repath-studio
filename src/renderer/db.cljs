@@ -44,17 +44,14 @@
    :repl-mode :cljs
    :theme {:mode :dark}
    :cmdk {:visible? false}
-   :panel {:tree {:size 230
-                  :visible? true}
-           :properties {:size 300
-                        :visible? true}
+   :panel {:tree {:visible? true}
+           :properties {:visible? true}
            :timeline {:visible? false}
            :xml {:visible? false}
            :repl-history {:visible? false}}
    :window {:maximized? true
             :minimized? false
-            :fullscreen? false
-            :header? true}
+            :fullscreen? false}
    :timeline {:time 0
               :replay? true
               :grid-snap? false

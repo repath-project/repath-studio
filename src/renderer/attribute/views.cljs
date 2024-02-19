@@ -1,6 +1,6 @@
 (ns renderer.attribute.views
   (:require
-   ["@radix-ui/react-popover" :as Popover]
+   ["@radix-ui/react-hover-card" :as HoverCard]
    ["@radix-ui/react-select" :as Select]
    [clojure.string :as str]
    [config]
@@ -76,6 +76,7 @@
   [:div.relative.flex.form-input
    {:style {:flex "1 0 70px"}}
    [:input {:key value
+            :id (name key)
             :default-value value
             :disabled disabled?
             :placeholder (if value placeholder "multiple")
@@ -177,13 +178,13 @@
         css-property  @(rf/subscribe [:css-property key])
         active? (and (= (:type clicked-element) :handler)
                      (= (:key clicked-element) key))]
-    [:> Popover/Root
-     {:modal true}
-     [:> Popover/Trigger
+    [:> HoverCard/Root
+     [:> HoverCard/Trigger
       [:label.max-w-full.text-ellipsis
-       {:class (when active? "text-active")} key]]
-     [:> Popover/Portal
-      [:> Popover/Content
+       {:for (name key)
+        :class (when active? "text-active")} key]]
+     [:> HoverCard/Portal
+      [:> HoverCard/Content
        {:side "left"
         :class "popover-content"
         :align "start"}
@@ -198,7 +199,7 @@
            [:p (:syntax css-property)]])
 
         [caniusethis {:tag tag :attr key}]]
-       [:> Popover/Arrow {:class "popover-arrow"}]]]]))
+       [:> HoverCard/Arrow {:class "popover-arrow"}]]]]))
 
 (defn row
   [k v locked? tag]
@@ -211,12 +212,12 @@
 (defn tag-info
   [tag]
   [:div.py-px
-   [:> Popover/Root {:modal true}
-    [:> Popover/Trigger {:asChild true}
+   [:> HoverCard/Root
+    [:> HoverCard/Trigger {:asChild true}
      [:span.pb-px
       [comp/icon-button "info" {:title "MDN Info"}]]]
-    [:> Popover/Portal
-     [:> Popover/Content
+    [:> HoverCard/Portal
+     [:> HoverCard/Content
       {:sideOffset 5
        :class "popover-content"
        :align "end"}
@@ -229,7 +230,7 @@
          [:button.button.px-3.level-2.w-full
           {:on-click #(rf/dispatch [:window/open-remote-url url])}
           "Learn more"])]
-      [:> Popover/Arrow {:class "popover-arrow"}]]]]])
+      [:> HoverCard/Arrow {:class "popover-arrow"}]]]]])
 
 (defn form
   []
@@ -238,9 +239,9 @@
         selected-attrs @(rf/subscribe [:element/selected-attrs])
         locked? @(rf/subscribe [:element/selected-locked?])
         tag (first selected-tags)]
-    [:div.w-full.ml-px.v-scroll.flex.flex-col
+    [:div.w-full.ml-px.v-scroll.flex.flex-col.level-1.h-full
      (when (seq selected-elements)
-       [:div.w-full
+       [:div.w-full.overflow-x-hidden
         [:div.flex.level-2.py-4.pl-4.pr-2
          [:h1.self-center.flex-1.text-lg.p-1
           (if (empty? (rest selected-elements))

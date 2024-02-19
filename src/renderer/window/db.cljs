@@ -5,4 +5,4 @@
    [:maximized? boolean?]
    [:minimized? boolean?]
    [:fullscreen? boolean?]
-   [:header? boolean?]])
+   [:size [:tuple double? double?]]])

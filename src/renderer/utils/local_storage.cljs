@@ -6,9 +6,7 @@
 
 (def persistent-keys
   "Top level keys that should be persisted"
-  [:tree
-   :panel
-   :theme])
+  [:theme :panel])
 
 (def persist
   (persist-db-keys :repath persistent-keys))

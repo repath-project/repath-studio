@@ -138,13 +138,11 @@
         (let [data @(rf/subscribe [:timeline/rows])
               effects @(rf/subscribe [:timeline/effects])
               grid-snap? @(rf/subscribe [:timeline/grid-snap?])
-              guide-snap? @(rf/subscribe [:timeline/guide-snap?])
-              timeline? @(rf/subscribe [:panel/visible? :timeline])]
-          [:div
+              guide-snap? @(rf/subscribe [:timeline/guide-snap?])]
+          [:div.mt-px.h-full
            [toolbar ref]
            [:> Timeline
-            {:style {:height (if timeline? "200px" 0)}
-             :editor-data data
+            {:editor-data data
              :effects effects
              :ref ref
              :grid-snap grid-snap?

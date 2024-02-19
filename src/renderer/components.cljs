@@ -86,19 +86,6 @@
     :on-click action}
    [renderer.components/icon icon]])
 
-(defn resizer
-  [k direction]
-  [:div.resizer
-   [:div.resize-handler
-    {:draggable true
-     :on-drag-over #(.preventDefault %)
-     :on-drag-start (fn [e]
-                      (.setDragImage (.-dataTransfer e)
-                                     (.createElement js/document "img")
-                                     0 0)
-                      (rf/dispatch-sync [:panel/set-drag k direction]))
-     :on-drag-end #(rf/dispatch-sync [:panel/clear-drag])}]])
-
 (defn context-menu-item
   [{:keys [type label action checked?]}]
   (case type

@@ -228,26 +228,16 @@
                       :action [:focus-selection :fill]}]}
             {:key :divider-1
              :type :separator}
-            {:key :toggle-tree
-             :label "Tree side bar"
-             :type :checkbox
-             :checked? [:panel/visible? :tree]
-             :action [:panel/toggle :tree]}
-            {:key :toggle-properties
-             :label "Properties side bar"
-             :type :checkbox
-             :checked? [:panel/visible? :properties]
-             :action [:panel/toggle :properties]}
             {:key :toggle-xml
              :label "XML view"
              :type :checkbox
              :checked? [:panel/visible? :xml]
              :action [:panel/toggle :xml]}
-            {:key :toggle-header-menu
+            {:key :toggle-command-history
              :type :checkbox
-             :label "Menu bar"
-             :checked? [:window/header?]
-             :action [:window/toggle-header]}
+             :label "Command history"
+             :checked? [:panel/visible? :repl-history]
+             :action [:panel/toggle :repl-history]}
             {:key :divider-2
              :type :separator}
             {:key :toggle-grid
@@ -260,11 +250,6 @@
              :label "Rulers"
              :checked? [:rulers?]
              :action [:toggle-rulers]}
-            {:key :toggle-command-history
-             :type :checkbox
-             :label "Command history"
-             :checked? [:panel/visible? :repl-history]
-             :action [:panel/toggle :repl-history]}
             {:key :toggle-debug-info
              :type :checkbox
              :label "Debug info"

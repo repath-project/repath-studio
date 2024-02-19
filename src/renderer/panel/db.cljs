@@ -2,5 +2,4 @@
 
 (def panel
   [:map
-   [:size int?]
    [:visible? boolean?]])

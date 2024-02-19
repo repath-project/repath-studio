@@ -1,5 +1,5 @@
 .timeline-editor {
-  @apply level-1 w-full min-h-0 !important;
+  @apply level-1 w-full min-h-0 h-full !important;
   font-family: inherit !important;
   color: var(--font-color-muted) !important;
  }

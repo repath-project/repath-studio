@@ -90,6 +90,11 @@
   (.then (js/window.api.webrefCss.listAll)
          #(rf/dispatch-sync [:set-webref-css (js->clj % :keywordize-keys true)])))
 
+(defn resize-event
+  []
+  (rf/dispatch-sync [:window/resize [(.-innerWidth js/window)
+                                     (.-innerHeight js/window)]]))
+
 (defn ^:export init []
   #_(if platform/electron?
       (sentry-electron-renderer/init (clj->js config/sentry-options) sentry-react/init)
@@ -115,6 +120,9 @@
 
   (.addEventListener js/document "keydown" keyb/event-handler)
   (.addEventListener js/document "keyup" keyb/event-handler)
+
+  (.addEventListener js/window "load" resize-event) ; Save initial size.
+  (.addEventListener js/window "resize" resize-event)
 
   (.setup paper)
 

@@ -1,6 +1,5 @@
 (ns renderer.window.views
   (:require
-   [i18n :refer [t]]
    [platform :as platform]
    [re-frame.core :as rf]
    [renderer.components :as comp]
@@ -15,31 +14,37 @@
 (defn window-controls
   []
   (into [:div.text-right]
-        (mapv window-control-button
-              [{:action [:window/minimize]
-                :icon "window-minimize"}
-               {:action [:window/toggle-maximized]
-                :icon (if @(rf/subscribe [:window/maximized?])
-                        "window-restore"
-                        "window-maximize")}
-               {:action [:window/close]
-                :icon "times"}])))
+        (map window-control-button
+             [{:action [:window/minimize]
+               :icon "window-minimize"}
+              {:action [:window/toggle-maximized]
+               :icon (if @(rf/subscribe [:window/maximized?])
+                       "window-restore"
+                       "window-maximize")}
+              {:action [:window/close]
+               :icon "times"}])))
 
-(defn app-header []
-  (when-not @(rf/subscribe [:window/fullscreen?])
+(defn app-header
+  []
+  (let [fullscreen? @(rf/subscribe [:window/fullscreen?])]
     [:div.flex.items-center.relative
-     [:div.drag
-      [:img.ml-2.mr-1
-       {:src "img/icon-no-bg.svg"
-        :style {:width "14px"
-                :height "14px"}}]]
+     (when-not fullscreen?
+       [:div.drag
+        [:img.ml-2.mr-1
+         {:src "img/icon-no-bg.svg"
+          :style {:width "14px"
+                  :height "14px"}}]])
      [:div.flex.relative.level-0
       [menubar/root]]
      [:div.title-bar @(rf/subscribe [:document/title])]
      [:div.flex.h-full.flex-1.drag]
      [:div.level-2
-      {:class (when-not platform/electron? "mr-1.5")}
+      {:class (when-not (or platform/electron? fullscreen?) "mr-1.5")}
       [comp/icon-button
        (name @(rf/subscribe [:theme/mode]))
        {:on-click #(rf/dispatch [:theme/cycle-mode])}]]
-     (when platform/electron? [window-controls])]))
+     (when (and platform/electron? (not fullscreen?))
+       [window-controls])
+     (when fullscreen?
+       [window-control-button {:action [:window/toggle-fullscreen]
+                               :icon "arrow-minimize"}])]))
