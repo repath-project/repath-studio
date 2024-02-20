@@ -99,11 +99,11 @@
     font-size: 1em;
     outline: none;
     height: 33px;
-    transition: background 75ms;
     -webkit-app-region: no-drag;
 
     &:hover {
       cursor: pointer;
+      transition: all 75ms;
       color: var(--font-color-hovered);
     }
 
