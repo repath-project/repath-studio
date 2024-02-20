@@ -17,7 +17,7 @@
    [renderer.tools.shape.ellipse]
    [renderer.tools.misc.fill]
    [renderer.tools.container.group]
-   #_[renderer.tools.shape.image]
+   [renderer.tools.shape.image]
    [renderer.tools.shape.line]
    [renderer.tools.misc.measure]
    [renderer.tools.container.svg]

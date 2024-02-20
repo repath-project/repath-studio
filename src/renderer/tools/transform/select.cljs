@@ -273,5 +273,6 @@
         :clone (history.h/finalize db "Clone selection")
         :default db)
       (h/set-state :default)
+      element.h/clear-hovered
       (dissoc :clicked-element :pivot-point)
       (h/set-message (message nil :default))))

@@ -113,6 +113,7 @@
 (defn key-down-handler
   [e]
   (let [ctrl? (.-ctrlKey e)]
+    (.stopPropagation e)
     (case (.-key e)
       "ArrowUp" (rf/dispatch [:element/select-up ctrl?])
       "ArrowDown" (rf/dispatch [:element/select-down ctrl?])
