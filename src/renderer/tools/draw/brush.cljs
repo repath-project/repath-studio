@@ -15,6 +15,7 @@
    [renderer.history.handlers :as history.h]
    [renderer.tools.base :as tools]
    [renderer.tools.overlay :as overlay]
+   [renderer.utils.bounds :as bounds]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
 
@@ -165,6 +166,14 @@
   (update-in el
              [:attrs ::points]
              #(mapv (fn [point] (mat/add point [x y 0])) %)))
+
+(defmethod tools/position :brush
+  [el position]
+  (let [center (bounds/center (tools/bounds el))
+        [x y] (mat/sub position center)]
+    (update-in el
+               [:attrs ::points]
+               #(mapv (fn [point] (mat/add point [x y 0])) %))))
 
 (defmethod tools/scale :brush
   [el ratio pivot-point]

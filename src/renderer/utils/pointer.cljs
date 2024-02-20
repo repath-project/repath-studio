@@ -12,7 +12,7 @@
 
 (defn multiselect?
   [e]
-  (shift? e))
+  (some #(contains? (:modifiers e) %) #{:ctrl :shift}))
 
 (def button
   "https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button"

@@ -91,9 +91,9 @@
                    (str/join " "))))
 
 (defmethod tools/position ::tools/polyshape
-  [el [x y]]
-  (let [dimensions (bounds/->dimensions (tools/bounds el))
-        [_cx _cy] (mat/div dimensions 2)]
+  [el position]
+  (let [center (bounds/center (tools/bounds el))
+        [x y] (mat/sub position center)]
     (update-in el
                [:attrs :points]
                #(->> %
