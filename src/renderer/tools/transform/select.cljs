@@ -250,7 +250,7 @@
             (-> db
                 history.h/swap
                 (element.h/duplicate offset)
-                (h/set-cursor "default"))
+                (h/set-cursor "copy"))
             (h/set-state db :move))
 
           :scale

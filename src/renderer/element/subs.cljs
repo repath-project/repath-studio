@@ -2,7 +2,6 @@
   (:require
    ["js-beautify" :as js-beautify]
    [clojure.core.matrix :as mat]
-   [clojure.set :as set]
    [re-frame.core :as rf]
    [renderer.attribute.utils :as attr.utils]
    [renderer.tools.base :as tools]
@@ -43,10 +42,11 @@
    (filter :selected? (vals elements))))
 
 (rf/reg-sub
- :element/selected-keys
- :<- [:element/selected]
- (fn [selected-elements _]
-   (reduce #(conj %1 (:key %2)) #{} selected-elements)))
+ :element/hovered
+ :<- [:document/elements]
+ :<- [:document/hovered-keys]
+ (fn [[elements hovered-keys] _]
+   (vals (select-keys elements hovered-keys))))
 
 (rf/reg-sub
  :element/selected-tags
@@ -128,14 +128,6 @@
  :<- [:document/elements]
  (fn [elements _]
    (filter :visible? (vals elements))))
-
-(rf/reg-sub
- :element/hovered-or-selected
- :<- [:document/elements]
- :<- [:document/hovered-keys]
- :<- [:element/selected-keys]
- (fn [[elements hovered-keys selected-keys] _]
-   (vals (select-keys elements (set/union hovered-keys selected-keys)))))
 
 (rf/reg-sub
  :snapping-points

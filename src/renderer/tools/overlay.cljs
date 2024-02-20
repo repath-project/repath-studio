@@ -241,7 +241,7 @@
     [label text [x y]]))
 
 (defn bounding-box
-  [bounds]
+  [bounds dashed?]
   (let [zoom @(rf/subscribe [:document/zoom])
         [x1 y1 _x2 _y2] bounds
         [width height] (bounds/->dimensions bounds)
@@ -256,9 +256,10 @@
                :fill "transparent"}]
 
     [:g {:style {:pointer-events "none"}}
-     [:rect (merge attrs {:stroke accent-inverted})]
-     [:rect (merge attrs {:stroke accent
-                          :stroke-dasharray stroke-dasharray})]]))
+     [:rect (merge attrs {:stroke accent})]
+     (when dashed?
+       [:rect (merge attrs {:stroke accent-inverted
+                            :stroke-dasharray stroke-dasharray})])]))
 
 (defn select-box
   [adjusted-pointer-pos adjusted-pointer-offset zoom]

@@ -24,7 +24,7 @@
         elements @(rf/subscribe [:document/elements])
         viewbox @(rf/subscribe [:frame/viewbox])
         {:keys [width height]} @(rf/subscribe [:content-rect])
-        hovered-or-selected @(rf/subscribe [:element/hovered-or-selected])
+        hovered-elements @(rf/subscribe [:element/hovered])
         selected-elements @(rf/subscribe [:element/selected])
         bounds @(rf/subscribe [:element/bounds])
         temp-element @(rf/subscribe [:document/temp-element])
@@ -69,9 +69,13 @@
 
      (when (and select? (contains? #{:default :select :scale} state))
        [:<>
-        (for [el hovered-or-selected]
+        (for [el selected-elements]
           ^{:key (str (:key el) "-bounds")}
-          [overlay/bounding-box (element/adjusted-bounds el elements)])
+          [overlay/bounding-box (element/adjusted-bounds el elements) false])
+
+        (for [el hovered-elements]
+          ^{:key (str (:key el) "-bounds")}
+          [overlay/bounding-box (element/adjusted-bounds el elements) true])
 
         (when (pos? elements-area)
           [overlay/area elements-area bounds])
