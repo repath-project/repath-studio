@@ -115,7 +115,7 @@
            {:id "xml-resize-handle"
             :className "resize-handle"}]
           [:> Panel {:id "xml-panel"
-                     :defaulSize 30
+                     :defaultSize 30
                      :minSize 10
                      :order 2}
            [:div.v-scroll.p-1.h-full.level-2.ml-px
