@@ -6,7 +6,7 @@
 
 (defmethod tools/properties :polygon
   []
-  {:icon "polygon"
+  {:icon "polygon-alt"
    :description "The <polyline> SVG element is an SVG basic shape that creates 
                  straight lines connecting several points."
    :attrs [:stroke-width
