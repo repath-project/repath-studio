@@ -93,7 +93,7 @@
 (defmethod tools/position ::tools/polyshape
   [el [x y]]
   (let [dimensions (bounds/->dimensions (tools/bounds el))
-        [cx cy] (mat/div dimensions 2)]
+        [_cx _cy] (mat/div dimensions 2)]
     (update-in el
                [:attrs :points]
                #(->> %

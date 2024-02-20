@@ -7,7 +7,6 @@
    [clojure.core.matrix.stats :as mat.stats]
    [re-frame.core :as rf]
    [renderer.attribute.color :as attr.color]
-   [renderer.attribute.utils :as attr.utils]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.attribute.range :as attr.range]
    [renderer.attribute.views :as attr.v]

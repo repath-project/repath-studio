@@ -40,4 +40,5 @@
   (let [bounds (->> bound-elements
                     (map #(adjusted-bounds % elements))
                     (remove nil?))]
-    (when (seq bounds) (apply bounds/union bounds))))
+    (when (seq bounds)
+      (apply bounds/union bounds))))
