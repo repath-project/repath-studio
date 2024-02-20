@@ -10,11 +10,14 @@
 (defn button
   [type]
   (let [tool @(rf/subscribe [:tool])
-        selected? (= tool type)]
+        primary-tool @(rf/subscribe [:primary-tool])
+        selected? (= tool type)
+        primary? (= primary-tool type)]
     (when (:icon (tools/properties type))
       [:> Tooltip/Root
        [:> Tooltip/Trigger {:asChild true}
         [:span [comp/radio-icon-button {:active? selected?
+                                        :class (when primary? "border border-accent")
                                         :icon (:icon (tools/properties type))
                                         :action #(rf/dispatch [:set-tool type])}]]]
        [:> Tooltip/Portal
