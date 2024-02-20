@@ -68,14 +68,16 @@
    [icon (if active? active-icon inactive-icon) {:fixed-width true}]])
 
 (defn toggle-collapsed-button
-  [collapsed? action]
+  [el-k collapsed?]
   [toggle-icon-button {:active? collapsed?
                        :active-icon "chevron-right"
                        :active-text "expand"
                        :class "small"
                        :inactive-icon "chevron-down"
                        :inactive-text "collapse"
-                       :action action}])
+                       :action #(rf/dispatch (if collapsed?
+                                               [:document/expand-el el-k]
+                                               [:document/collapse-el el-k]))}])
 
 
 (defn radio-icon-button

@@ -38,6 +38,18 @@
    (assoc db :hovered-keys ks)))
 
 (rf/reg-event-db
+ :document/collapse-el
+ active-document-path
+ (fn [db [_ el-k]]
+   (update db :collapsed-keys conj el-k)))
+
+(rf/reg-event-db
+ :document/expand-el
+ active-document-path
+ (fn [db [_ el-k]]
+   (update db :collapsed-keys disj el-k)))
+
+(rf/reg-event-db
  :document/set-filter
  active-document-path
  (fn [db [_ ks]]
@@ -46,8 +58,8 @@
 (rf/reg-event-db
  :document/set-temp-element
  active-document-path
- (fn [db [_ ks]]
-   (assoc db :temp-element ks)))
+ (fn [db [_ el]]
+   (assoc db :temp-element el)))
 
 (rf/reg-event-db
  :document/swap-colors

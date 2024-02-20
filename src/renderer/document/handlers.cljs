@@ -14,3 +14,7 @@
          (update :document-tabs #(filterv (complement #{key}) %))
          (assoc :active-document active-document)
          (update :documents dissoc key)))))
+
+(defn expand-el
+  [{:keys [active-document] :as db} el-k]
+  (update-in db [:documents active-document :collapsed-keys] disj el-k))

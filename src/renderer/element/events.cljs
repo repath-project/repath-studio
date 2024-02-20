@@ -47,20 +47,6 @@
        (history.h/finalize "Set " (name k) " to " v))))
 
 (rf/reg-event-db
- :element/collapse
- (fn [db [_]]
-   (-> db
-       (h/set-prop :collapsed? true)
-       (history.h/finalize "Collapse"))))
-
-(rf/reg-event-db
- :element/expand
- (fn [db [_]]
-   (-> db
-       (h/set-prop :collapsed? false)
-       (history.h/finalize "Collapse"))))
-
-(rf/reg-event-db
  :element/lock
  (fn [db _]
    (-> db

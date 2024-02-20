@@ -66,9 +66,22 @@
     (- (* depth collapse-button-width)
        (if children? collapse-button-width 0))))
 
+(defn key-down-handler
+  [e el-k]
+  (let [ctrl? (.-ctrlKey e)]
+    (.stopPropagation e)
+    (case (.-key e)
+      "ArrowUp" (rf/dispatch [:element/select-up ctrl?])
+      "ArrowDown" (rf/dispatch [:element/select-down ctrl?])
+      "ArrowLeft" (rf/dispatch [:document/collapse-el el-k])
+      "ArrowRight" (rf/dispatch [:document/expand-el el-k])
+      nil)))
+
 (defn list-item-button
-  [{:keys [key selected? collapsed? children] :as el} depth]
+  [{:keys [key selected? children] :as el} depth]
   (let [hovered-keys @(rf/subscribe [:document/hovered-keys])
+        collapsed-keys @(rf/subscribe [:document/collapsed-keys])
+        collapsed? (contains? collapsed-keys key)
         hovered? (contains? hovered-keys key)
         multiple-selected? @(rf/subscribe [:element/multiple-selected?])]
     [:div.flex.button.list-item-button
@@ -81,6 +94,7 @@
       :ref (fn [this]
              (when (and this selected? hovered? (not multiple-selected?))
                (dom/scroll-into-view this)))
+      :on-key-down #(key-down-handler % key)
       :draggable true
       :on-drag-start #(-> (.-dataTransfer %)
                           (.setData "key" (name key)))
@@ -96,37 +110,25 @@
       :style {:padding-left (padding depth (seq children))}}
      [:div.flex.items-center.content-between.w-full
       (when (seq children)
-        [comp/toggle-collapsed-button
-         collapsed?
-         #(rf/dispatch [:element/toggle-prop key :collapsed?])])
+        [comp/toggle-collapsed-button key collapsed?])
       [:div.flex-1 [label el]]
       [item-buttons el]]]))
 
-(defn item [{:keys [collapsed? selected? children] :as el} depth elements]
-  (let [has-children? (seq children)]
+(defn item [{:keys [selected? children key] :as el} depth elements]
+  (let [has-children? (seq children)
+        collapsed-keys @(rf/subscribe [:document/collapsed-keys])
+        collapsed? (contains? collapsed-keys key)]
     [:li {:class (when selected? "level-2")}
      [list-item-button el depth]
      (when (and has-children? (not collapsed?))
        [:ul (map (fn [el] [item el (inc depth) elements])
                  (mapv (fn [key] (get elements key)) (reverse children)))])]))
 
-(defn key-down-handler
-  [e]
-  (let [ctrl? (.-ctrlKey e)]
-    (.stopPropagation e)
-    (case (.-key e)
-      "ArrowUp" (rf/dispatch [:element/select-up ctrl?])
-      "ArrowDown" (rf/dispatch [:element/select-down ctrl?])
-      "ArrowLeft" (rf/dispatch [:element/collapse])
-      "ArrowRight" (rf/dispatch [:element/expand])
-      nil)))
-
 (defn inner-sidebar []
   (let [canvas-children @(rf/subscribe [:element/canvas-children])
         elements @(rf/subscribe [:document/elements])]
     [:div.tree-sidebar.overflow-hidden
-     {:on-pointer-up #(rf/dispatch [:element/deselect-all])
-      :on-key-down key-down-handler}
+     {:on-pointer-up #(rf/dispatch [:element/deselect-all])}
      [:div.v-scroll.h-full
       {:on-pointer-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
       [:ul (map (fn [el] [item el 1 elements])

@@ -412,7 +412,6 @@ pre {
     height: 100%;
   }
 
-  &[data-resize-handle-state="hover"],
   &[data-resize-handle-state="drag"] {
     &:after {
       background-color: var(--accent);

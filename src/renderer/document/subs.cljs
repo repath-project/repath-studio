@@ -66,6 +66,11 @@
  :-> :hovered-keys)
 
 (rf/reg-sub
+ :document/collapsed-keys
+ :<- [:document/active]
+ :-> :collapsed-keys)
+
+(rf/reg-sub
  :document/ignored-keys
  :<- [:document/active]
  :-> :ignored-keys)

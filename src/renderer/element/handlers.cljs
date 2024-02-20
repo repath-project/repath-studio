@@ -6,6 +6,7 @@
    [clojure.string :as str]
    [reagent.dom.server :as dom.server]
    [renderer.attribute.hierarchy :as hierarchy]
+   [renderer.document.handlers :as document.h]
    [renderer.tools.base :as tools]
    [renderer.tools.shape.path :as path]
    [renderer.utils.bounds :as bounds]
@@ -201,16 +202,24 @@
   ([db key]
    (set-prop db key :selected? false)))
 
+(defn expand-ancestors
+  [db k]
+  (->> (element db k)
+       (ancestor-keys db)
+       (reduce document.h/expand-el db)))
+
 (defn select
-  ([db key]
-   (set-prop db key :selected? true))
-  ([db key multi?]
-   (if (element db key)
+  ([db k]
+   (-> db
+       (expand-ancestors k)
+       (set-prop k :selected? true)))
+  ([db k multi?]
+   (if (element db k)
      (if-not multi?
        (-> db
            deselect
-           (select key))
-       (toggle-prop db key :selected?))
+           (select k))
+       (toggle-prop db k :selected?))
      (deselect db))))
 
 (defn select-all
@@ -322,7 +331,8 @@
        (-> (assoc-in
             (conj (path db) (:parent el) :children)
             (vec (remove #{k} (siblings db el))))
-           (update-in (path db) dissoc k))))))
+           (update-in (path db) dissoc k)
+           (document.h/expand-el (:key el)))))))
 
 (defn update-index
   [db el f & more]

@@ -135,7 +135,8 @@
         :minSize tree-min-width
         :defaultSize tree-min-width
         :onCollapse #(rf/dispatch-sync [:panel/collapse :tree])
-        :onExpand #(rf/dispatch-sync [:panel/expand :tree])}
+        :onExpand #(rf/dispatch-sync [:panel/expand :tree])
+        :class "flex flex-col"}
        (when tree?
          [:<>
           [doc/actions]
