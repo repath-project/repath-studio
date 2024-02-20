@@ -49,12 +49,6 @@
                       (hierarchy/update-attr :cx + x)
                       (hierarchy/update-attr :cy + y)))
 
-(defmethod tools/position :ellipse
-  [el [x y]]
-  (-> el
-      (assoc-in [:attrs :cx] x)
-      (assoc-in [:attrs :cy] y)))
-
 (defmethod tools/scale :ellipse
   [el ratio pivot-point]
   (let [[x y] ratio

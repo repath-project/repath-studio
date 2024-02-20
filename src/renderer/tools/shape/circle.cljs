@@ -41,12 +41,6 @@
                       (attr.hierarchy/update-attr :cx + x)
                       (attr.hierarchy/update-attr :cy + y)))
 
-(defmethod tools/position :circle
-  [el [x y]]
-  (-> el
-      (assoc-in [:attrs :cx] x)
-      (assoc-in [:attrs :cy] y)))
-
 (defmethod tools/scale :circle
   [el ratio pivot-point]
   (let [dimentions (bounds/->dimensions (tools/bounds el))

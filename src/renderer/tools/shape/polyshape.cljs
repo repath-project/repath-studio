@@ -12,7 +12,6 @@
    [renderer.history.handlers :as history]
    [renderer.tools.base :as tools]
    [renderer.tools.overlay :as overlay]
-   [renderer.utils.bounds :as bounds]
    [renderer.utils.units :as units]))
 
 (derive ::tools/polyshape ::tools/shape)
@@ -89,20 +88,6 @@
                                    (units/transform (first point) + x)
                                    (units/transform (second point) + y))) [])
                    (str/join " "))))
-
-(defmethod tools/position ::tools/polyshape
-  [el position]
-  (let [center (bounds/center (tools/bounds el))
-        [x y] (mat/sub position center)]
-    (update-in el
-               [:attrs :points]
-               #(->> %
-                     attr.utils/points->vec
-                     (reduce (fn [points point]
-                               (conj points
-                                     (units/transform (first point) + x)
-                                     (units/transform (second point) + y))) [])
-                     (str/join " ")))))
 
 (defmethod tools/scale ::tools/polyshape
   [el ratio pivot-point]

@@ -77,16 +77,6 @@
       (hierarchy/update-attr :x2 + x)
       (hierarchy/update-attr :y2 + y)))
 
-(defmethod tools/position :line
-  [el [x y]]
-  (let [dimensions (bounds/->dimensions (tools/bounds el))
-        [cx cy] (mat/div dimensions 2)]
-    (-> el
-        (assoc-in [:attrs :x1] (- x cx))
-        (assoc-in [:attrs :y1] (+ y cy))
-        (assoc-in [:attrs :x2] (+ x cx))
-        (assoc-in [:attrs :y2] (- y cy)))))
-
 (defmethod tools/scale :line
   [el ratio pivot-point]
   (let [{:keys [x1 y1 x2 y2]} (:attrs el)
@@ -143,3 +133,8 @@
         (hierarchy/update-attr :x2 + x)
         (hierarchy/update-attr :y2 + y))
     el))
+
+(defmethod tools/bounds :line
+  [{{:keys [x1 y1 x2 y2]} :attrs}]
+  (let [[x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])]
+    [(min x1 x2) (min y1 y2) (max x1 x2) (max y1 y2)]))

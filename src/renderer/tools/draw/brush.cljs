@@ -170,10 +170,8 @@
 (defmethod tools/position :brush
   [el position]
   (let [center (bounds/center (tools/bounds el))
-        [x y] (mat/sub position center)]
-    (update-in el
-               [:attrs ::points]
-               #(mapv (fn [point] (mat/add point [x y 0])) %))))
+        offset (mat/sub position center)]
+    (tools/translate el offset)))
 
 (defmethod tools/scale :brush
   [el ratio pivot-point]

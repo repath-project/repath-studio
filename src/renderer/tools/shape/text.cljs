@@ -60,14 +60,6 @@
                       (hierarchy/update-attr :x + x)
                       (hierarchy/update-attr :y + y)))
 
-(defmethod tools/position :text
-  [el [x y]]
-  (let [dimensions (bounds/->dimensions (tools/bounds el))
-        [cx cy] (mat/div dimensions 2)]
-    (-> el
-        (assoc-in [:attrs :x] (- x cx))
-        (assoc-in [:attrs :y] (+ y cy)))))
-
 (defn get-text
   [e]
   (str/replace (.. e -target -value) " " "\u00a0")) ; REVIEW

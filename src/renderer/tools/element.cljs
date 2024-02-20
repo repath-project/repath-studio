@@ -1,6 +1,7 @@
 (ns renderer.tools.element
   (:require
    ["react" :as react]
+   [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [renderer.element.handlers :as element.h]
@@ -43,6 +44,12 @@
       (let [bounds (bounds/from-bbox el)]
         (.remove el)
         bounds))))
+
+(defmethod tools/position ::tools/element
+  [el position]
+  (let [center (bounds/center (tools/bounds el))
+        offset (mat/sub position center)]
+    (tools/translate el offset)))
 
 (defn render-to-dom
   "We need a reagent form-3 component in order to set the style attribute manually.
