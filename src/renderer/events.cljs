@@ -58,6 +58,11 @@
  (fn [db [_ tool]]
    (tools/set-tool db tool)))
 
+(rf/reg-event-db
+ :clear-restored
+ (fn [db [_]]
+   (dissoc db :restored?)))
+
 #_(rf/reg-event-db
    :set-lang
    (fn [db [_ lang]]
@@ -108,7 +113,7 @@
 
 (rf/reg-event-db
  :pointer-event
- (fn [{:keys [pointer-offset tool content-rect drag?] :as db}
+ (fn [{:keys [pointer-offset tool content-rect drag? state] :as db}
       [_ {:keys [button buttons modifiers data-transfer pointer-pos delta element] :as e}]]
    (let [adjusted-pointer-pos (frame-h/adjusted-pointer-pos db pointer-pos)]
      (case (:type e)

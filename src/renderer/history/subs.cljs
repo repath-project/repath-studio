@@ -29,6 +29,7 @@
     {:name (:explanation state)
      :id id
      :active (= id (h/current-position db))
+     :restored (:restored? state)
      :color (str "hsla(" (+ (* (/ 100 (h/state-count db)) (:index state)) 20) ",40%,60%,1)")
      :children (mapv #(state->d3-data db %) (:children state))}))
 

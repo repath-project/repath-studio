@@ -14,6 +14,10 @@
   [db]
   (:position (history db)))
 
+(defn mark-restored
+  [db]
+  (assoc-in db (conj (history-path db) :states (current-position db) :restored?) true))
+
 (defn state
   ([db]
    (state db (current-position db)))
@@ -44,7 +48,8 @@
   [db position]
   (-> db
       (assoc-in (conj (history-path db) :position) position)
-      swap))
+      swap
+      (update-in (conj (history-path db) :states position) dissoc :restored?)))
 
 (defn undo
   ([db]
@@ -112,3 +117,9 @@
        current-position
        (update-in (conj (history-path db) :states current-position :children)
                   conj id)))))
+
+(defn clear
+  [db]
+  (-> db
+      (update-in [:documents (:active-document db)] dissoc :history)
+      (finalize "Clear history")))

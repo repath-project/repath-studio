@@ -31,6 +31,11 @@
    (h/move db id)))
 
 (rf/reg-event-db
+ :history/clear
+ (fn [db _]
+   (h/clear db)))
+
+(rf/reg-event-db
  :history/cancel
  (fn [db _]
    (cond-> db
@@ -49,3 +54,23 @@
                  (assoc :state :default)
                  element.h/clear-temp
                  h/swap))))
+
+(rf/reg-event-fx
+ :history/restore
+ (fn [{:keys [db]} _]
+   {:db (if (:restored? db)
+          (-> db
+              (h/mark-restored)
+              (h/undo 1)
+              (dissoc :restored?))
+          (-> db
+              element.h/clear-hovered
+              (tools/set-tool :select)
+              (dissoc :pointer-offset)
+              (dissoc :clicked-element)
+              (dissoc :drag?)
+              (assoc :state :default)
+              (assoc :restored? true)
+              element.h/clear-temp
+              h/swap))
+    :dispatch-sync [:clear-restored]}))

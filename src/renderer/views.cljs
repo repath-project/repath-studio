@@ -32,7 +32,7 @@
 (defn frame-panel
   []
   (let [rulers? @(rf/subscribe [:rulers?])]
-    [:div.flex.flex-col.flex-1
+    [:div.flex.flex-col.flex-1.h-full
      [:div.mb-px [toolbar.tools/root]
       (when rulers?
         [:div.flex
@@ -64,6 +64,46 @@
          [:div.backdrop
           {:on-click #(rf/dispatch [:set-backdrop false])}])]]]))
 
+(defn center-top-group
+  []
+  [:div.flex.flex-col.flex-1.h-full
+   [:> PanelGroup
+    {:direction "horizontal"
+     :id "center-top-group"
+     :autoSaveId "center-top-group"}
+    [:div.flex.flex-1.overflow-hidden
+     [:> Panel
+      {:id "frame-panel"
+       :order 1}
+      [frame-panel]]
+     (when @(rf/subscribe [:panel/visible? :history])
+       [:<>
+        [:> PanelResizeHandle
+         {:id "history-resize-handle"
+          :className "resize-handle"}]
+        [:> Panel {:id "history-panel"
+                   :defaultSize 30
+                   :minSize 5
+                   :order 2}
+         [:div.v-scroll.p-1.level-2.h-full.ml-px
+          [history/root]]]])
+
+     (when @(rf/subscribe [:panel/visible? :xml])
+       (let [xml @(rf/subscribe [:element/xml])]
+         [:<>
+          [:> PanelResizeHandle
+           {:id "xml-resize-handle"
+            :className "resize-handle"}]
+          [:> Panel {:id "xml-panel"
+                     :defaultSize 30
+                     :minSize 5
+                     :order 3}
+           [:div.v-scroll.p-1.h-full.level-2.ml-px
+            [cm/editor xml
+             {:options {:mode "text/xml"
+                        :readOnly true}}]]]]))]]
+   [toolbar.status/root]])
+
 (defn editor
   []
   [:> PanelGroup
@@ -73,14 +113,7 @@
    [:> Panel {:id "editor-panel"
               :minSize 10
               :order 1}
-    [:div.flex.flex-col.flex-1.h-full
-     [:div.flex.flex-1.overflow-hidden
-      [frame-panel]
-      (when @(rf/subscribe [:panel/visible? :history])
-        [:div.v-scroll.p-1.level-2
-         {:style {:flex "0 1 30%"}}
-         [history/tree]])]
-     [toolbar.status/root]]]
+    [center-top-group]]
    (when @(rf/subscribe [:panel/visible? :timeline])
      [:<>
       [:> PanelResizeHandle
@@ -100,28 +133,7 @@
    {:id "center-panel"
     :order 1}
    [:div.flex.h-full.flex-col
-    [:> PanelGroup
-     {:direction "horizontal"
-      :id "center-top-group"
-      :autoSaveId "center-top-group"}
-     [:> Panel
-      {:id "center-top-panel"
-       :order 1}
-      [editor]]
-     (when @(rf/subscribe [:panel/visible? :xml])
-       (let [xml @(rf/subscribe [:element/xml])]
-         [:<>
-          [:> PanelResizeHandle
-           {:id "xml-resize-handle"
-            :className "resize-handle"}]
-          [:> Panel {:id "xml-panel"
-                     :defaultSize 30
-                     :minSize 10
-                     :order 2}
-           [:div.v-scroll.p-1.h-full.level-2.ml-px
-            [cm/editor xml
-             {:options {:mode "text/xml"
-                        :readOnly true}}]]]]))]
+    [editor]
     [command-input]]])
 
 (defn tree-panel

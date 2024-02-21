@@ -1,6 +1,7 @@
-.rd3t-node {
+.rd3t-node,
+.rd3t-leaf-node {
     circle {
-        stroke: var(--level-0);
+        stroke: var(--border-color);
     }
 
     &:hover {
