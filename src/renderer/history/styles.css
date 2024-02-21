@@ -1,0 +1,21 @@
+.rd3t-node {
+    circle {
+        stroke: var(--level-0);
+    }
+
+    &:hover {
+        circle {
+            stroke : var(--accent);
+        }
+    }
+}
+
+.rd3t-link {
+    stroke : var(--border-color) !important;
+    stroke-width: 3;
+}
+
+.rd3t-label__title {
+    font-weight: normal !important;
+    fill: inherit !important;
+}

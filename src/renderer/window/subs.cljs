@@ -33,4 +33,4 @@
  :<- [:window/size]
  (fn [size]
    (when-let [width (first size)]
-     (* (/ 300 width) 100))))
+     (* (/ 320 width) 100))))

@@ -237,8 +237,6 @@ label {
 
 .v-scroll {
   @apply box-border overflow-y-auto;
-
-  transition: all .2s;
   
   /* scrollbar-gutter: stable; */
 }

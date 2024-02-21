@@ -4,7 +4,7 @@
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [renderer.components :as comp]
-   [renderer.history.views :as history.h]))
+   [renderer.history.views :as history]))
 
 (defn actions []
   [:div.toolbar
@@ -32,27 +32,19 @@
      :on-click #(rf/dispatch [:history/undo])
      :disabled (not @(rf/subscribe [:history/undos?]))}]
 
-   [:select.icon-button
-    {:onChange #(rf/dispatch [:history/undo-by (-> % .-target .-value js/parseInt)])
-     :disabled (not @(rf/subscribe [:history/undos?]))
-     :style {:margin-left "-2px"
-             :max-width "14px"
-             :background "var(--level-0)"
-             :font-size "1em"}}
-    (history.h/select-options @(rf/subscribe [:history/undos]))]
+   [history/select
+    "Undo stack"
+    @(rf/subscribe [:history/undos])
+    (not @(rf/subscribe [:history/undos?]))]
 
    [comp/icon-button "redo" {:title "Undo"
                              :on-click #(rf/dispatch [:history/redo])
                              :disabled (not @(rf/subscribe [:history/redos?]))}]
 
-   [:select.icon-button
-    {:onChange #(rf/dispatch [:history/redo-by (-> % .-target .-value js/parseInt)])
-     :disabled (not @(rf/subscribe [:history/redos?]))
-     :style {:margin-left "-2px"
-             :max-width "14px"
-             :background "var(--level-0)"
-             :font-size "1em"}}
-    (history.h/select-options @(rf/subscribe [:history/redos]))]])
+   [history/select
+    "Redo stack"
+    @(rf/subscribe [:history/redos])
+    (not @(rf/subscribe [:history/redos?]))]])
 
 (defn close-button
   [key]

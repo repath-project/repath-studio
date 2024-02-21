@@ -26,6 +26,11 @@
    (h/redo db n)))
 
 (rf/reg-event-db
+ :history/move
+ (fn [db [_ id]]
+   (h/move db id)))
+
+(rf/reg-event-db
  :history/cancel
  (fn [db _]
    (cond-> db

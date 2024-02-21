@@ -1,7 +1,7 @@
 (ns renderer.history.handlers
   (:require
-   [clojure.zip :as zip]
-   [renderer.element.handlers :as element.h]))
+   [renderer.element.handlers :as element.h]
+   [renderer.utils.uuid :as uuid]))
 
 (defn history-path [db]
   [:documents (:active-document db) :history])
@@ -10,80 +10,89 @@
   [db]
   (get-in db (history-path db)))
 
-(defn step-count
+(defn current-position
   [db]
-  (if (history db)
-    (count (flatten (zip/root (history db))))
-    0))
+  (:position (history db)))
 
 (defn state
-  [db explanation]
-  (with-meta (element.h/elements db) {:explanation explanation
-                                      :date (.now js/Date)
-                                      :index (step-count db)}))
+  ([db]
+   (state db (current-position db)))
+  ([db position]
+   (get-in (history db) [:states position])))
 
-(defn init
-  "Creates the vector zipper and moves down to the first position."
-  [db explanation]
-  (assoc-in db (history-path db) (zip/down (zip/vector-zip [(state db explanation)]))))
+(defn previous-position
+  [db]
+  (-> db state :parent))
+
+(defn next-position
+  [db]
+  (-> db state :children last))
 
 (defn undos?
-  "Checks if there are available redos.
-   We need to move back twice to avoid wiping the initial elements."
-  [history]
-  (and history (-> history
-                   zip/prev
-                   zip/prev)))
+  [db]
+  (boolean (previous-position db)))
 
 (defn redos?
-  [history]
-  (and history (not (zip/end? (zip/next history)))))
+  [db]
+  (boolean (next-position db)))
 
 (defn swap
   [db]
-  (assoc-in db (element.h/path db) (zip/node (history db))))
+  (assoc-in db (element.h/path db) (:elements (state db))))
 
 (defn move
-  [db f]
+  [db position]
   (-> db
-      (update-in (history-path db) f)
+      (assoc-in (conj (history-path db) :position) position)
       swap))
 
 (defn undo
   ([db]
    (undo db 1))
   ([db n]
-   (if (and (pos? n) (undos? (history db)))
-     (recur (move db zip/prev) (dec n))
+   (if (and (pos? n) (undos? db))
+     (recur (move db (previous-position db)) (dec n))
      db)))
 
 (defn redo
   ([db]
    (redo db 1))
   ([db n]
-   (if (and (pos? n) (redos? (history db)))
-     (recur (move db zip/next) (dec n))
+   (if (and (pos? n) (redos? db))
+     (recur (move db (next-position db)) (dec n))
      db)))
 
 (defn accumulate
-  [history f]
-  (loop [history history
+  [db f]
+  (loop [current-state (state db)
          stack []]
-    (if (and history (not (zip/end? history)))
-      (if (zip/branch? history)
-        (recur (f history) stack)
-        (recur (f history) (conj stack (meta (zip/node history)))))
+    (if-let [position (f current-state)]
+      (let [accumulated-state (state db position)
+            accumulated-state (dissoc accumulated-state :elements)]
+        (recur accumulated-state (conj stack accumulated-state)))
       stack)))
 
 (defn undos
-  [history]
-  (accumulate history zip/prev))
+  [db]
+  (accumulate db :parent))
 
 (defn redos
-  [history]
-  (accumulate history zip/next))
+  [db]
+  (accumulate db (fn [state] (-> state :children last))))
 
-(print)
+(defn state-count
+  [db]
+  (-> (history db) :states count))
+
+(defn create-state
+  [db id explanation]
+  {:explanation explanation
+   :elements (element.h/elements db)
+   :timestamp (.now js/Date)
+   :index (state-count db)
+   :id id
+   :parent (:position (history db))
+   :children []})
 
 (defn finalize
   "Pushes changes to the zip-tree.
@@ -91,15 +100,15 @@
    to history. We also avoid the need of throttling in consecutive actions 
    (move, color pick etc)"
   [db explanation & more]
-  (if (= (element.h/elements db) (zip/node (history db)))
-    db
-    (let [explanation (apply str explanation more)
-          state (state db explanation)
-          history (history db)]
-      (assoc-in db
-                (history-path db)
-                (cond-> history
-                  (redos? history) (zip/replace (conj (conj (zip/rights history) (zip/node history)) state))
-                  (zip/branch? history) zip/down
-                  (not (redos? history)) (zip/insert-right state)
-                  :always zip/rightmost)))))
+  (let [current-position (current-position db)
+        id (uuid/generate)]
+    (cond-> db
+      (not= (element.h/elements db) (:elements (state db)))
+      (cond->
+       :always (-> (assoc-in (conj (history-path db) :position) id)
+                   (assoc-in (conj (history-path db) :states id)
+                             (create-state db id (apply str explanation more))))
+
+       current-position
+       (update-in (conj (history-path db) :states current-position :children)
+                  conj id)))))

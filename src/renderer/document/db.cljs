@@ -30,13 +30,4 @@
                        :tag :canvas
                        :type :element
                        :attrs {:fill "#eeeeee"}
-                       :children [:default-page]}
-              :default-page {:key :default-page
-                             :visible? true
-                             :selected? false
-                             :type :element
-                             :tag :svg
-                             :parent :canvas
-                             :attrs {:width 800
-                                     :height 600}
-                             :children []}}})
+                       :children []}}})

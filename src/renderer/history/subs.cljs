@@ -5,24 +5,40 @@
 
 (rf/reg-sub
  :history/undos?
- :<- [:document/history]
- (fn [history _] (h/undos? history)))
+ (fn [db _]
+   (h/undos? db)))
 
 (rf/reg-sub
  :history/redos?
- :<- [:document/history]
- (fn [history _] (h/redos? history)))
+ (fn [db _]
+   (h/redos? db)))
 
 (rf/reg-sub
  :history/undos
- :<- [:document/history]
- (fn [history _] (drop-last (h/undos history))))
+ (fn [db _]
+   (h/undos db)))
 
 (rf/reg-sub
  :history/redos
- :<- [:document/history]
- (fn [history _] (rest (h/redos history))))
+ (fn [db _]
+   (h/redos db)))
 
-#_(rf/reg-sub
-   :history/step-count
-   (fn [db _] (h/step-count db)))
+(defn state->d3-data
+  [db id]
+  (let [state (h/state db id)]
+    {:name (:explanation state)
+     :id id
+     :active (= id (h/current-position db))
+     :color (str "hsla(" (+ (* (/ 100 (h/state-count db)) (:index state)) 20) ",40%,60%,1)")
+     :children (mapv #(state->d3-data db %) (:children state))}))
+
+(rf/reg-sub
+ :history/tree-data
+ (fn [db _]
+   (clj->js
+    (let [root (:id (first (sort-by :index (vals (:states (h/history db))))))]
+      (state->d3-data db root)))))
+
+(rf/reg-sub
+ :history/state-count
+ (fn [db _] (h/state-count db)))

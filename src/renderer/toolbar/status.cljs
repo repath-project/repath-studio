@@ -54,10 +54,10 @@
     :active? [:rulers?]
     :icon "ruler-combined"
     :action [:toggle-rulers]}
-   #_{:title "History tree"
-      :active? [:panel/visible? :history]
-      :icon "history"
-      :action [:panel/toggle :history]}
+   {:title "History tree"
+    :active? [:panel/visible? :history]
+    :icon "history"
+    :action [:panel/toggle :history]}
    {:title "XML view"
     :active? [:panel/visible? :xml]
     :icon "code"

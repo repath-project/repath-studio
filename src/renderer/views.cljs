@@ -78,9 +78,9 @@
       [frame-panel]
       (when @(rf/subscribe [:panel/visible? :history])
         [:div.v-scroll.p-1.level-2
-         {:style {:flex "0 1 30%"}}])]
-     [toolbar.status/root]
-     [history/tree]]]
+         {:style {:flex "0 1 30%"}}
+         [history/tree]])]
+     [toolbar.status/root]]]
    (when @(rf/subscribe [:panel/visible? :timeline])
      [:<>
       [:> PanelResizeHandle

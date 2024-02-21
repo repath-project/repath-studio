@@ -140,8 +140,10 @@
               (assoc-in [:documents key] document)
               (update :document-tabs #(vec/add % (inc active-index) key))
               (assoc :active-document key)
-              (history.h/init "Create document")))
-    :dispatch [:pan-to-element :default-page]}))
+              (element.h/create {:tag :svg
+                                 :attrs {:width "800" :height "600"}})
+              (history.h/finalize "Create document")))
+    :dispatch [:focus-selection :original]}))
 
 (rf/reg-event-fx
  :document/open
