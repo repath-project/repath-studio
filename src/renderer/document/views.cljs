@@ -29,6 +29,7 @@
    [comp/icon-button
     "undo"
     {:title "Undo"
+     :style {:margin-right 0}
      :on-click #(rf/dispatch [:history/undo])
      :disabled (not @(rf/subscribe [:history/undos?]))}]
 
@@ -37,9 +38,11 @@
     @(rf/subscribe [:history/undos])
     (not @(rf/subscribe [:history/undos?]))]
 
-   [comp/icon-button "redo" {:title "Undo"
-                             :on-click #(rf/dispatch [:history/redo])
-                             :disabled (not @(rf/subscribe [:history/redos?]))}]
+   [comp/icon-button "redo"
+    {:title "Undo"
+     :style {:margin-right 0}
+     :on-click #(rf/dispatch [:history/redo])
+     :disabled (not @(rf/subscribe [:history/redos?]))}]
 
    [history/select
     "Redo stack"

@@ -1,7 +1,8 @@
 (ns renderer.history.handlers
   (:require
    [renderer.element.handlers :as element.h]
-   [renderer.utils.uuid :as uuid]))
+   [renderer.utils.uuid :as uuid]
+   [renderer.utils.vec :as vec]))
 
 (defn history-path [db]
   [:documents (:active-document db) :history])
@@ -99,6 +100,18 @@
    :parent (:position (history db))
    :children []})
 
+(defn update-ancestors
+  [db]
+  (loop [node (state db)
+         db db]
+    (let [parent-id (:parent node)
+          parent (state db parent-id)]
+      (if parent
+        (let [index (.indexOf (:children parent) (:id node))
+              new-index (dec (count (:children parent)))]
+          (recur parent (update-in db (conj (history-path db) :states parent-id :children) vec/move index new-index)))
+        db)))) ; REVIEW
+
 (defn finalize
   "Pushes changes to the zip-tree.
    Explicitly adding states, allows canceling actions before adding the state 
@@ -115,8 +128,8 @@
                              (create-state db id (apply str explanation more))))
 
        current-position
-       (update-in (conj (history-path db) :states current-position :children)
-                  conj id)))))
+       (-> (update-in (conj (history-path db) :states current-position :children) conj id)
+           update-ancestors)))))
 
 (defn clear
   [db]

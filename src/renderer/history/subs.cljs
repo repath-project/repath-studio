@@ -26,19 +26,18 @@
 (defn state->d3-data
   [db id]
   (let [state (h/state db id)]
-    {:name (:explanation state)
-     :id id
-     :active (= id (h/current-position db))
-     :restored (:restored? state)
-     :color (str "hsla(" (+ (* (/ 100 (h/state-count db)) (:index state)) 20) ",40%,60%,1)")
-     :children (mapv #(state->d3-data db %) (:children state))}))
+    #js {:name (:explanation state)
+         :id id
+         :active (= id (h/current-position db))
+         :restored (:restored? state)
+         :color (str "hsla(" (+ (* (/ 100 (h/state-count db)) (:index state)) 20) ",40%,60%,1)")
+         :children (apply array (map #(state->d3-data db %) (:children state)))}))
 
 (rf/reg-sub
  :history/tree-data
  (fn [db _]
-   (clj->js
-    (let [root (:id (first (sort-by :index (vals (:states (h/history db))))))]
-      (state->d3-data db root)))))
+   (let [root (:id (first (sort-by :index (vals (:states (h/history db))))))]
+     (state->d3-data db root))))
 
 (rf/reg-sub
  :history/state-count
