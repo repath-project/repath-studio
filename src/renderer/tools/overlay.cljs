@@ -2,7 +2,6 @@
   "Render functions for canvas overlay objects (select helpers etc)."
   (:require
    [clojure.core.matrix :as mat]
-   [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.tools.base :as tools]
    [renderer.utils.bounds :as bounds]
@@ -203,11 +202,10 @@
 (defn label
   [text position anchor]
   (let [zoom @(rf/subscribe [:document/zoom])
-        text (str/trim text)
         [x y] position
         font-size (/ 10 zoom)
         padding (/ 8 zoom)
-        font-width 6
+        font-width (/ 6 zoom)
         label-width (+ (* (count text) font-width)
                        font-size)
         label-height (+ font-size padding)
