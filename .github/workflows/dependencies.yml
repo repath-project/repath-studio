@@ -1,4 +1,4 @@
-name: dependencies
+name: Outdated dependencies
 
 on:
   push:

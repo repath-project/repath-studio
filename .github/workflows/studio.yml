@@ -1,4 +1,4 @@
-name: Build Studio
+name: Build desktop app
 
 on:
   create:

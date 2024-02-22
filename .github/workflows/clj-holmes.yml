@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: clj-holmes
+name: Static security testing
 
 on:
   push:
