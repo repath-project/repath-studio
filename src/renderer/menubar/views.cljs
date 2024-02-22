@@ -233,12 +233,11 @@
              :type :checkbox
              :checked? [:panel/visible? :xml]
              :action [:panel/toggle :xml]}
-            {:key :timeline
-             :label "Timeline"
-             :checked? [:panel/visible? :timeline]
-             :icon "timeline"
+            {:key :toggle-history
+             :label "History tree"
              :type :checkbox
-             :action [:panel/toggle :timeline]}
+             :checked? [:panel/visible? :history]
+             :action [:panel/toggle :history]}
             {:key :toggle-command-history
              :type :checkbox
              :label "Command history"

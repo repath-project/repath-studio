@@ -114,18 +114,7 @@
               :minSize 10
               :order 1}
     [center-top-group]]
-   (when @(rf/subscribe [:panel/visible? :timeline])
-     [:<>
-      [:> PanelResizeHandle
-       {:id "timeline-resize-handle"
-        :className "resize-handle"}]
-      [:> Panel
-       {:id "timeline-panel"
-        :minSize 10
-        :defaultSize 20
-        :order 2
-        :collapsedSize 15}
-       [timeline/root]]])])
+   [timeline/root]])
 
 (defn center-panel
   []

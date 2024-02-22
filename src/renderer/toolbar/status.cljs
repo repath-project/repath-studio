@@ -61,11 +61,7 @@
    {:title "XML view"
     :active? [:panel/visible? :xml]
     :icon "code"
-    :action [:panel/toggle :xml]}
-   {:title "Timeline"
-    :active? [:panel/visible? :timeline]
-    :icon "timeline"
-    :action [:panel/toggle :timeline]}])
+    :action [:panel/toggle :xml]}])
 
 (defn set-zoom
   [e v]

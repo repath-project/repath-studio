@@ -53,7 +53,7 @@
             :minimized? false
             :fullscreen? false}
    :timeline {:time 0
-              :replay? true
+              :replay? false
               :grid-snap? false
               :guide-snap? true
               :paused? false

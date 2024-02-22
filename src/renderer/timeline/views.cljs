@@ -3,6 +3,7 @@
    ["@xzdarcy/react-timeline-editor" :refer [Timeline]]
    ["@radix-ui/react-select" :as Select]
    ["react" :as react]
+   ["react-resizable-panels" :refer [Panel PanelResizeHandle]]
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [renderer.components :as comp]))
@@ -76,43 +77,54 @@
        :on-checked-change #(rf/dispatch [:timeline/set-guide-snap %])}]]))
 
 (defn toolbar
-  [editor-ref]
+  [timeline-ref panel-ref]
   (let [time @(rf/subscribe [:timeline/time])
         time-formatted @(rf/subscribe [:timeline/time-formatted])
         paused? @(rf/subscribe [:timeline/paused?])
         replay? @(rf/subscribe [:timeline/replay?])
         end @(rf/subscribe [:timeline/end])
-        timeline? @(rf/subscribe [:panel/visible? :timeline])]
-    [:div.toolbar.level-1.mb-px
+        timeline? @(rf/subscribe [:panel/visible? :timeline])
+        panel (.-current panel-ref)]
+    [:div.toolbar.level-1.mt-px
      [:div.flex-1.flex
       [comp/icon-button "go-to-start"
-       {:on-click #(.setTime (.-current editor-ref) 0)
+       {:on-click #(.setTime (.-current timeline-ref) 0)
         :disabled (zero? time)}]
       [comp/radio-icon-button
        {:title (if paused? "Play" "Pause")
         :active? (not paused?)
         :icon (if paused? "play" "pause")
         :action #(if paused?
-                   (.play (.-current editor-ref) #js {:autoEnd true})
-                   (.pause (.-current editor-ref)))}]
+                   (.play (.-current timeline-ref) #js {:autoEnd true})
+                   (.pause (.-current timeline-ref)))}]
       [comp/icon-button "go-to-end"
-       {:on-click #(.setTime (.-current editor-ref) end)
+       {:on-click #(.setTime (.-current timeline-ref) end)
         :disabled (>= time end)}]
       [comp/radio-icon-button
        {:title "Replay"
         :active? replay?
         :icon "refresh"
         :action #(rf/dispatch [:timeline/toggle-replay])}]
-      [speed-select editor-ref]
+      [speed-select timeline-ref]
       [:span.p-2.font-mono time-formatted]
       (when timeline?
-        [:<>
+        [:div.snap-controls.flex
          [:span.v-divider]
-         [snap-controls]])]]))
+         [snap-controls]])]
+     [comp/toggle-icon-button
+      {:active? timeline?
+       :active-icon "times"
+       :active-text "Hide timeline"
+       :inactive-icon "timeline"
+       :inactive-text "Show timeline"
+       :action #(if timeline?
+                  (.collapse panel)
+                  (.expand panel))}]]))
 
 (defn root
   []
-  (let [ref (react/createRef)]
+  (let [timeline-ref (react/createRef)
+        panel-ref (react/createRef)]
     (ra/create-class
      {:component-did-mount
       (fn []
@@ -123,15 +135,15 @@
           [["play" #(rf/dispatch-sync [:timeline/play])] ;; Prevent navigation
            ["paused" #(rf/dispatch-sync [:timeline/pause])]
            ["ended" #(when @(rf/subscribe [:timeline/replay?])
-                       (.setTime (.-current ref) 0)
-                       (.play (.-current ref) #js {:autoEnd true}))]
+                       (.setTime (.-current timeline-ref) 0)
+                       (.play (.-current timeline-ref) #js {:autoEnd true}))]
            ["afterSetTime" #(rf/dispatch-sync [:timeline/set-time (.-time %)])]
            ["setTimeByTick" #(rf/dispatch-sync [:timeline/set-time (.-time %)])]
            ["afterSetPlayRate" #(rf/dispatch [:timeline/set-speed (.-rate %)])]]]
-          (.on (.-listener (.-current ref)) e f)))
+          (.on (.-listener (.-current timeline-ref)) e f)))
 
       :component-will-unmount
-      #(.offAll (.-listener (.-current ref)))
+      #(.offAll (.-listener (.-current timeline-ref)))
 
       :reagent-render
       (fn []
@@ -139,13 +151,26 @@
               effects @(rf/subscribe [:timeline/effects])
               grid-snap? @(rf/subscribe [:timeline/grid-snap?])
               guide-snap? @(rf/subscribe [:timeline/guide-snap?])]
-          [:div.mt-px.h-full
-           [toolbar ref]
-           [:> Timeline
-            {:editor-data data
-             :effects effects
-             :ref ref
-             :grid-snap grid-snap?
-             :drag-line guide-snap?
-             :auto-scroll true
-             :on-click-action #(rf/dispatch [:element/select (keyword (.. %2 -action -id))])}]]))})))
+          [:<>
+           [toolbar timeline-ref panel-ref]
+           [:> PanelResizeHandle
+            {:id "timeline-resize-handle"
+             :className "resize-handle"}]
+           [:> Panel
+            {:id "timeline-panel"
+             :class "mt-px"
+             :minSize 10
+             :defaultSize 0
+             :collapsible true
+             :order 2
+             :ref panel-ref
+             :onCollapse #(rf/dispatch-sync [:panel/collapse :timeline])
+             :onExpand #(rf/dispatch-sync [:panel/expand :timeline])}
+            [:> Timeline
+             {:editor-data data
+              :effects effects
+              :ref timeline-ref
+              :grid-snap grid-snap?
+              :drag-line guide-snap?
+              :auto-scroll true
+              :on-click-action #(rf/dispatch [:element/select (keyword (.. %2 -action -id))])}]]]))})))
