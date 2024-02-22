@@ -21,5 +21,6 @@
 - Create a cross platform / open source vector graphics editor.
 - Rely heavily on the [SVG](https://developer.mozilla.org/en-US/docs/Web/SVG) specification.
 - Support [SMIL](https://developer.mozilla.org/en-US/docs/Web/SVG/SVG_animation_with_SMIL) animations - an extension of SVG allowing to animating SVG elements.
+- Include an interactive REPL - a shell which allows you to evaluate clojure code to generate shapes or even extend the editor on the fly.
 - Advanced undo/redo - maintain a history tree of all actions and never lose your redo stack.
 - Implement built-in accessibility testing features.
