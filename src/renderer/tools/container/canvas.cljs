@@ -77,13 +77,13 @@
           ^{:key (str (:key el) "-bounds")}
           [overlay/bounding-box (element/adjusted-bounds el elements) true])
 
-        (when (pos? elements-area)
+        (when (and (pos? elements-area) (= state :scale))
           [overlay/area elements-area bounds])
 
         (when (not-empty (remove zero? bounds))
           [:<>
            [overlay/wrapping-bounding-box bounds]
-           [overlay/size bounds]
+           (when (= state :scale) [overlay/size bounds])
            [overlay/bounding-handlers bounds]])
 
         (when (and select? pivot-point)

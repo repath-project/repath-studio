@@ -2,6 +2,7 @@
   "Render functions for canvas overlay objects (select helpers etc)."
   (:require
    [clojure.core.matrix :as mat]
+   [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.tools.base :as tools]
    [renderer.utils.bounds :as bounds]
@@ -15,7 +16,7 @@
 (def accent-inverted "#fff")
 (def accent "#e93976")
 
-(def handler-size 10)
+(def handler-size 12)
 (def dash-size 5)
 
 (defn point-of-interest
@@ -57,18 +58,17 @@
         size (/ handler-size zoom)
         stroke-width (/ 1 zoom)
         pointer-handler #(pointer/event-handler % el)
-        clicked? (= (:key clicked-element) key)]
+        clicked? (= (:key clicked-element) key)
+        active? (or clicked? (contains? hovered-keys key))]
     (when (or clicked? (not= state :scale))
       [:rect {:key key
               :id (name key)
-              :fill (if (or clicked? (contains? hovered-keys key))
-                      accent
-                      accent-inverted)
-              :stroke accent
+              :fill (if active? accent accent-inverted)
+              :stroke (if active? accent "#999")
               :stroke-width stroke-width
+              :rx 1
               :x (- x (/ size 2))
               :y (- y (/ size 2))
-              :shape-rendering "crispEdges"
               :width size
               :height size
               :cursor (if (or clicked? (not cursor)) "default" cursor)
@@ -174,8 +174,8 @@
                     :y y1
                     :width w
                     :height h
-                    :stroke-width (/ 1 zoom)
-                    :fill-opacity ".1"
+                    :stroke-width (/ 2 zoom)
+                    :stroke-opacity ".3"
                     :fill "transparent"
                     :shape-rendering "crispEdges"
                     :stroke accent
@@ -203,10 +203,11 @@
 (defn label
   [text position anchor]
   (let [zoom @(rf/subscribe [:document/zoom])
+        text (str/trim text)
         [x y] position
         font-size (/ 10 zoom)
         padding (/ 8 zoom)
-        font-width (/ font-size 2)
+        font-width 6
         label-width (+ (* (count text) font-width)
                        font-size)
         label-height (+ font-size padding)
@@ -227,6 +228,7 @@
              :dominant-baseline "middle"
              :text-anchor text-anchor
              :width label-width
+             :font-family "'Consolas (Custom)', 'Bitstream Vera Sans Mono', monospace, 'Apple Color Emoji', 'Segoe UI Emoji'"
              :font-size font-size} text]]))
 
 (defn size
@@ -245,7 +247,7 @@
   (let [zoom @(rf/subscribe [:document/zoom])
         [x1 y1 _x2 _y2] bounds
         [width height] (bounds/->dimensions bounds)
-        stroke-width (/ 1 zoom)
+        stroke-width (/ 2 zoom)
         stroke-dasharray (/ dash-size zoom)
         attrs {:x x1
                :y y1
