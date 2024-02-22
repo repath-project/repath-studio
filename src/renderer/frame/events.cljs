@@ -16,6 +16,11 @@
    (h/pan db [x y])))
 
 (rf/reg-event-db
+ :center
+ (fn [db [_]]
+   (h/pan-to-element db)))
+
+(rf/reg-event-db
  :pan-to-element
  (fn [db [_ key]]
    (h/pan-to-element db key)))

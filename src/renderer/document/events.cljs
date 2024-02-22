@@ -142,8 +142,9 @@
               (assoc :active-document key)
               (element.h/create {:tag :svg
                                  :attrs {:width "800" :height "600"}})
+              element.h/deselect
               (history.h/finalize "Create document")))
-    :dispatch [:focus-selection :original]}))
+    :dispatch [:center]}))
 
 (rf/reg-event-fx
  :document/open

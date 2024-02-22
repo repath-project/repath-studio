@@ -66,13 +66,15 @@
     (assoc-in db [:documents active-document :pan] pan)))
 
 (defn pan-to-element
-  [db key]
-  (let [element (element.h/element db key)
-        elements (element.h/elements db)
-        el-bounds (element/adjusted-bounds element elements)]
-    (cond-> db
-      el-bounds
-      (pan-to-bounds el-bounds))))
+  ([db]
+   (pan-to-element db (-> (element.h/element db :canvas) :children first)))
+  ([db key]
+   (let [element (element.h/element db key)
+         elements (element.h/elements db)
+         el-bounds (element/adjusted-bounds element elements)]
+     (cond-> db
+       el-bounds
+       (pan-to-bounds el-bounds)))))
 
 (defn focus-selection
   [{:keys [active-document content-rect] :as db} zoom]
