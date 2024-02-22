@@ -44,7 +44,7 @@
                    (reset! edit-mode? false)
                    (set-item-name e key))}]
       [:span
-       {:class [(when-not visible? "text-disabled")
+       {:class [(when-not visible? "opacity-60")
                 (when (= :svg tag) "font-bold")]
         :style {:cursor "text"}
         :on-double-click (fn [e]
@@ -121,7 +121,7 @@
   (let [has-children? (seq children)
         collapsed-keys @(rf/subscribe [:document/collapsed-keys])
         collapsed? (contains? collapsed-keys key)]
-    [:li {:class (when selected? "level-2")}
+    [:li {:class (when selected? "overlay")}
      [list-item-button el depth]
      (when (and has-children? (not collapsed?))
        [:ul (map (fn [el] [item el (inc depth) elements])

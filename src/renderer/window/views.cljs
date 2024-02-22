@@ -38,7 +38,7 @@
       [menubar/root]]
      [:div.title-bar @(rf/subscribe [:document/title])]
      [:div.flex.h-full.flex-1.drag]
-     [:div.level-2
+     [:div.level-1
       {:class (when-not (or platform/electron? fullscreen?) "mr-1.5")}
       [comp/icon-button
        (name @(rf/subscribe [:theme/mode]))

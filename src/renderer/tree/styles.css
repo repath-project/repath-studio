@@ -3,12 +3,9 @@
 }
 
 .list-item-button {
-  @apply pr-1;
-  align-items: center;
-  cursor: pointer;
-
+  @apply pr-1 items-center cursor-pointer transition-none;
   &:hover {
-    @apply level-2;
+    @apply overlay;
 
     .list-item-action {
       visibility: visible;
@@ -16,16 +13,15 @@
   }
 
   &.hovered {
-    @apply level-2;
+    @apply overlay;
   }
 
-  &.page-item {
-    border-left: 4px solid transparent;
-    padding-left: 18px;
-
-    &.active {
-      border-left-color: var(--accent);
-    }
+  .button {
+    @apply mx-px shrink-0;
+    height: 20px;
+    width: 20px;
+    color: inherit;
+    background-color: transparent !important;
   }
 }
 
@@ -38,17 +34,6 @@
     .hovered:not(:hover) {
       background-color: initial;
     }
-  }
-}
-
-.list-item-button { 
-  transition: none;
-  
-  .button {
-    @apply mx-px shrink-0;
-    height: 20px;
-    width: 20px;
-    background-color: transparent !important;
   }
 }
 

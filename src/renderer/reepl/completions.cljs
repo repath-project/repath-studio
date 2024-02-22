@@ -23,9 +23,9 @@
                          :flex-wrap :wrap}
    :completion-item {;; :cursor :pointer TODO: make these clickable
                      :padding "3px 5px"
-                     :background-color "var(--level-1)"}
-   :completion-selected {:background-color "var(--level-2)"}
-   :completion-active {:background-color "var(--level-3)"}})
+                     :background-color "var(--level-0)"}
+   :completion-selected {:background-color "var(--level-1)"}
+   :completion-active {:background-color "var(--accent"}})
 
 (def view (partial helpers/view styles))
 

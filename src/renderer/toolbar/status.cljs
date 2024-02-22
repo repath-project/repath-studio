@@ -84,7 +84,7 @@
 (defn zoom-input
   [zoom]
   (let [value (units/->fixed (* 100 zoom) (zoom-decimal-points zoom))]
-    [:input.level-3.text-right.flex
+    [:input.overlay.text-right.flex
      {:key zoom
       :type "number"
       :input-mode "decimal"
@@ -152,21 +152,21 @@
                 view-radio-buttons))
 
      [:div.button-group
-      [:button.button.level-3.px-2.font-mono.rounded
+      [:button.button.overlay.px-2.font-mono.rounded
        {:class (when (<= zoom 0.01) "disabled")
         :on-click #(rf/dispatch [:zoom-out])}
        [comp/icon "minus" {:class "small"}]]
 
-      [:button.button.level-3.px-2.font-mono.rounded
+      [:button.button.overlay.px-2.font-mono.rounded
        {:class (when (>= zoom 100) "disabled")
         :on-click #(rf/dispatch [:zoom-in])}
        [comp/icon "plus" {:class "small"}]]
       [zoom-input zoom]
-      [:div.pr-2.level-3.flex.items-center "%"]
+      [:div.pr-2.overlay.flex.items-center "%"]
 
       [:> DropdownMenu/Root
        [:> DropdownMenu/Trigger
-        {:class "button flex items-center justify-center level-3 px-2 font-mono rounded"
+        {:class "button flex items-center justify-center overlay px-2 font-mono rounded"
          :side "top"}
         [:div.flex.items-center
          [comp/icon "chevron-up" {:class "small"}]]]

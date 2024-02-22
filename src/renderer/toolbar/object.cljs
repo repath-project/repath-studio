@@ -110,5 +110,5 @@
   (let [selected-elements? @(rf/subscribe [:element/selected?])
         multiple-selected? @(rf/subscribe [:element/multiple-selected?])
         object-actions (actions selected-elements? multiple-selected?)]
-    (into [:div.flex.flex-col.level-2.text-center.flex-0.ml-px.toolbar]
+    (into [:div.flex.flex-col.level-1.text-center.flex-0.ml-px.toolbar]
           (map v/button object-actions))))

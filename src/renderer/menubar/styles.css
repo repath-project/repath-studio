@@ -58,7 +58,7 @@
 .menu-sub-trigger[data-highlighted],
 .menu-checkbox-item[data-highlighted],
 .menu-radio-item[data-highlighted] {
-  background: var(--level-2);
+  background: var(--overlay);
   color: var(--font-color-active);
 }
 

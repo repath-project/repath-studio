@@ -15,6 +15,8 @@
 ;; vars in the nested document if we have to.
 (def accent-inverted "#fff")
 (def accent "#e93976")
+(def font-mono "'Consolas (Custom)', 'Bitstream Vera Sans Mono', monospace, 
+                'Apple Color Emoji', 'Segoe UI Emoji'")
 
 (def handler-size 12)
 (def dash-size 5)
@@ -52,7 +54,6 @@
 (defn square-handler
   [{:keys [x y key cursor] :as el} & children]
   (let [zoom @(rf/subscribe [:document/zoom])
-        state @(rf/subscribe [:state])
         clicked-element @(rf/subscribe [:clicked-element])
         hovered-keys @(rf/subscribe [:document/hovered-keys])
         size (/ handler-size zoom)
@@ -60,22 +61,21 @@
         pointer-handler #(pointer/event-handler % el)
         clicked? (= (:key clicked-element) key)
         active? (or clicked? (contains? hovered-keys key))]
-    (when (or clicked? (not= state :scale))
-      [:rect {:key key
-              :id (name key)
-              :fill (if active? accent accent-inverted)
-              :stroke (if active? accent "#999")
-              :stroke-width stroke-width
-              :rx 1
-              :x (- x (/ size 2))
-              :y (- y (/ size 2))
-              :width size
-              :height size
-              :cursor (if (or clicked? (not cursor)) "default" cursor)
-              :on-pointer-up pointer-handler
-              :on-pointer-down pointer-handler
-              :on-pointer-move pointer-handler
-              :on-scroll pointer-handler} children])))
+    [:rect {:key key
+            :id (name key)
+            :fill (if active? accent accent-inverted)
+            :stroke (if active? accent "#999")
+            :stroke-width stroke-width
+            :rx 1
+            :x (- x (/ size 2))
+            :y (- y (/ size 2))
+            :width size
+            :height size
+            :cursor (if (or clicked? (not cursor)) "default" cursor)
+            :on-pointer-up pointer-handler
+            :on-pointer-down pointer-handler
+            :on-pointer-move pointer-handler
+            :on-scroll pointer-handler} children]))
 
 (defn line
   ([x1 y1 x2 y2]
@@ -228,7 +228,7 @@
              :dominant-baseline "middle"
              :text-anchor text-anchor
              :width label-width
-             :font-family "'Consolas (Custom)', 'Bitstream Vera Sans Mono', monospace, 'Apple Color Emoji', 'Segoe UI Emoji'"
+             :font-family font-mono
              :font-size font-size} text]]))
 
 (defn size

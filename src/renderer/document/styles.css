@@ -1,5 +1,5 @@
 .document-tab {
-  @apply items-center h-full mr-px text-left level-0 gap-2;
+  @apply items-center h-full mr-px text-left level-1 gap-2 opacity-50;
   padding: 8px 8px 8px 16px;
   flex: 0 1 130px;
 
@@ -12,6 +12,14 @@
     .close-document-button {
       visibility: visible;
     }
+  }
+
+  &:active {
+    @apply level-1;
+  }
+
+  &.active {
+    @apply opacity-100;
   }
 
   .document-name {

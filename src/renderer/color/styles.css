@@ -63,7 +63,7 @@
     }
 
     > div:nth-child(3)  {
-      @apply level-2 w-full !important;
+      @apply level-1 w-full !important;
       padding-top: 9px !important;
 
       > div:last-child {

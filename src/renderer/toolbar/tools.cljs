@@ -58,6 +58,6 @@
 
 (defn root
   []
-  (into [:div.justify-center.flex-wrap.level-2.toolbar]
+  (into [:div.justify-center.flex-wrap.level-1.toolbar]
         (interpose [:span.v-divider]
                    (map group groups))))

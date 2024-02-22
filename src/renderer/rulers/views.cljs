@@ -15,12 +15,12 @@
                 :y (- y1 (* (second pan) zoom))
                 :width size
                 :height (- y2 y1)
-                :fill "var(--level-3)"}]
+                :fill "var(--overlay)"}]
         [:rect {:x (- x1 (* (first pan) zoom))
                 :y 0
                 :width (- x2 x1)
                 :height size
-                :fill "var(--level-3)"}]))))
+                :fill "var(--overlay)"}]))))
 
 (defn pointer
   [orientation size]

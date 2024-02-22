@@ -58,7 +58,7 @@
           :position "absolute"
           :bottom "100%"
           :margin-bottom "24px"
-          :background "var(--level-3)"
+          :background "var(--level-1)"
           :left 0
           :font-size "13px"
           :box-shadow "0 0 15px rgba(0, 0, 0, .25)"}

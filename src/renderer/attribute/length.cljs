@@ -40,11 +40,11 @@
                    (rf/dispatch [:element/dec-attribute k])
                    (rf/dispatch [:element/inc-attribute k])))}]
    [:div.flex {:style {:width "54px"}}
-    [:button.button.ml-px.level-2.text-muted
+    [:button.button.ml-px.level-1.text-muted
      {:style {:width "26px" :height "26px"}
       :on-pointer-down #(rf/dispatch [:element/dec-attribute k])}
      [comp/icon "minus" {:class "small"}]]
-    [:button.button..ml-px.level-2.text-muted
+    [:button.button..ml-px.level-1.text-muted
      {:style {:width "26px" :height "26px"}
       :on-click #(rf/dispatch [:element/inc-attribute k])}
      [comp/icon "plus" {:class "small"}]]]])

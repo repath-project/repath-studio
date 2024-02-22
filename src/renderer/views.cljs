@@ -36,7 +36,7 @@
      [:div.mb-px [toolbar.tools/root]
       (when rulers?
         [:div.flex
-         [:div.level-2 {:style {:width "23px" :height "23px"}}
+         [:div.level-1 {:style {:width "23px" :height "23px"}}
           [comp/toggle-icon-button
            {:active? @(rf/subscribe [:rulers-locked?])
             :active-icon "lock"
@@ -45,11 +45,11 @@
             :inactive-text "lock"
             :class "small"
             :action #(rf/dispatch [:toggle-rulers-locked])}]]
-         [:div.w-full.ml-px.level-2
+         [:div.w-full.ml-px.level-1
           [rulers/ruler {:orientation :horizontal :size 23}]]])]
      [:div.flex.flex-1.relative
       [:<> (when rulers?
-             [:div.level-2.mr-px
+             [:div.level-1.mr-px
               [rulers/ruler {:orientation :vertical :size 23}]])]
       [:div.relative.grow.flex
        [frame/main]
@@ -85,7 +85,7 @@
                    :defaultSize 30
                    :minSize 5
                    :order 2}
-         [:div.v-scroll.p-1.level-2.h-full.ml-px
+         [:div.v-scroll.p-1.level-1.h-full.ml-px
           [history/root]]]])
 
      (when @(rf/subscribe [:panel/visible? :xml])
@@ -98,7 +98,7 @@
                      :defaultSize 30
                      :minSize 5
                      :order 3}
-           [:div.v-scroll.p-1.h-full.level-2.ml-px
+           [:div.v-scroll.p-1.h-full.level-1.ml-px
             [cm/editor xml
              {:options {:mode "text/xml"
                         :readOnly true}}]]]]))]]

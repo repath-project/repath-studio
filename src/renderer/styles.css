@@ -7,14 +7,6 @@
     background: var(--level-1);
   }
 
-  .level-2 {
-    background: var(--level-2);
-  }
-
-  .level-3 {
-    background: var(--level-3);
-  }
-
   .drag {
     -webkit-app-region: drag;
   }
@@ -70,7 +62,7 @@
 
 @layer components {
   .form-element {
-    @apply level-2 border-0 w-full;
+    @apply level-1 border-0 w-full;
 
     outline: none;
     padding: 4px 12px;
@@ -112,12 +104,12 @@
     }
 
     &:active {
-      background-color: var(--level-3);
+      background-color: var(--overlay);
     }
 
     &.selected {
-      background-color: var(--level-3) !important;
-      color: var(--font-color-active);
+      background-color: var(--accent) !important;
+      color: var(--accent-inverted);
     }
 
     &:disabled {
@@ -176,7 +168,7 @@ input {
 }
 
 input[type=range] {
-  @apply m-0 level-2 appearance-none;
+  @apply m-0 level-1 appearance-none;
   padding: 5px;
 
   &:focus {
@@ -190,7 +182,7 @@ input[type=range] {
 
 input[type=range] {
   &::-webkit-slider-runnable-track {
-    @apply border-0 rounded-none level-1;
+    @apply border-0 rounded-none level-0;
     height: 16px;
   }
 
@@ -218,7 +210,7 @@ label {
 }
 
 .select-trigger {
-  @apply button px-2 level-3 rounded;
+  @apply button px-2 overlay rounded;
   height: 34px;
 }
 
@@ -252,7 +244,7 @@ pre {
 }
 
 .tooltip {
-  @apply absolute level-3 rounded;
+  @apply absolute level-0 rounded;
   z-index: 1;
   margin: 8px;
   line-height: 24px;
@@ -312,7 +304,7 @@ pre {
 
   .button,
   input {
-    @apply level-3 m-0 ml-px rounded-none;
+    @apply overlay m-0 ml-px rounded-none;
 
     &:first-child {
       @apply rounded-l ml-0;
@@ -372,7 +364,7 @@ pre {
 }
 
 .footer {
-  @apply flex p-1 level-2 overflow-visible items-center mt-px;
+  @apply flex p-1 level-1 overflow-visible items-center mt-px;
 }
 
 .shortcut {
@@ -502,7 +494,7 @@ pre {
 }
 
 .switch-root {
-  @apply level-3 relative rounded-full;
+  @apply overlay relative rounded-full;
   width: 42px;
   height: 25px;
 

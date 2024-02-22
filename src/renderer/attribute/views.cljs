@@ -33,7 +33,7 @@
 
 (defn mdn-button
   [mdn_url attr]
-  [:button.button.px-3.level-2.grow
+  [:button.button.px-3.level-1.grow
    {:on-click #(rf/dispatch
                 [:window/open-remote-url
                  (or mdn_url
@@ -84,7 +84,7 @@
             :on-blur #(on-change-handler % key value)
             :on-key-down #(keyb/input-key-down-handler % value on-change-handler key value)}]
    (when-not (or (empty? (str value)) disabled?)
-     [:button.button.ml-px.level-2.text-muted.absolute.right-0.clear-input-button
+     [:button.button.ml-px.level-1.text-muted.absolute.right-0.clear-input-button
       {:style {:width "26px" :height "26px"}
        :on-pointer-down #(rf/dispatch [:element/remove-attr key])}
       [comp/icon "times" {:class "small"}]])])
@@ -121,7 +121,7 @@
                     :disabled disabled?}
     [:> Select/Trigger {:class "select-trigger ml-px"
                         :aria-label (name key)
-                        :style {:background "var(--level-2)"
+                        :style {:background "var(--level-1)"
                                 :border-radius 0
                                 :width "26px"
                                 :height "26px"}}
@@ -227,7 +227,7 @@
          [:p description])
        [caniusethis {:tag tag}]
        (when-let [url (:url (tools/properties tag))]
-         [:button.button.px-3.level-2.w-full
+         [:button.button.px-3.level-1.w-full
           {:on-click #(rf/dispatch [:window/open-remote-url url])}
           "Learn more"])]
       [:> HoverCard/Arrow {:class "popover-arrow"}]]]]])
@@ -239,10 +239,10 @@
         selected-attrs @(rf/subscribe [:element/selected-attrs])
         locked? @(rf/subscribe [:element/selected-locked?])
         tag (first selected-tags)]
-    [:div.w-full.ml-px.v-scroll.flex.flex-col.level-1.h-full
+    [:div.w-full.ml-px.v-scroll.flex.flex-col.h-full
      (when (seq selected-elements)
        [:div.w-full.overflow-x-hidden
-        [:div.flex.level-2.py-4.pl-4.pr-2
+        [:div.flex.level-1.py-4.pl-4.pr-2
          [:h1.self-center.flex-1.text-lg.p-1
           (if (empty? (rest selected-elements))
             (let [el (first selected-elements)

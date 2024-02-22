@@ -75,7 +75,7 @@
     (fn [key document active?]
       [:> ContextMenu/Root
        [:> ContextMenu/Trigger
-        [:div.flex.button.document-tab
+        [:div.flex.button.document-tab.level-1
          {:class (when active? "active")
           :on-wheel #(rf/dispatch [:document/scroll (.-deltaY %)])
           :on-pointer-down #(case (.-buttons %)
@@ -93,10 +93,7 @@
                      (rf/dispatch [:document/swap-position
                                    (-> (.getData (.-dataTransfer evt) "key")
                                        keyword)
-                                   key]))
-          :style {:background-color (if (or active? @dragged-over?)
-                                      "var(--level-2)"
-                                      "var(--level-1)")}}
+                                   key]))}
          [:span.document-name (:title document)]
          [close-button key]]]
        [:> ContextMenu/Portal

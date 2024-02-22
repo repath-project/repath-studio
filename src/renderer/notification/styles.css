@@ -3,7 +3,7 @@
 }
 
 .toast {
-  @apply relative flex level-3 w-80 p-4 mb-2 rounded shadow-md;
+  @apply relative flex level-0 w-80 p-4 mb-2 rounded shadow-md border border-default;
 
   max-width: 100vw;
 }

@@ -16,7 +16,7 @@
      :placeholder initial}]
    [:> Popover/Root {:modal true}
     [:> Popover/Trigger {:asChild true}
-     [:button.button.ml-px.level-2.text-muted
+     [:button.button.ml-px.level-1.text-muted
       {:style {:width "26px" :height "26px"}}
       [comp/icon "degrees" {:class "small"}]]]
     [:> Popover/Portal
