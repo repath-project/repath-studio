@@ -6,11 +6,11 @@
 
 [![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/re-path/studio/latest/total?style=for-the-badge)](https://github.com/re-path/studio/releases/latest/)
 
-[![CodeScene Code Health](https://codescene.io/projects/47852/status-badges/code-health)](https://codescene.io/projects/47852)
 [![Build desktop app](https://github.com/re-path/studio/actions/workflows/studio.yml/badge.svg)](https://github.com/re-path/studio/actions/workflows/studio.yml)
 [![Deploy demo website](https://github.com/re-path/studio/actions/workflows/demo.yml/badge.svg)](https://github.com/re-path/studio/actions/workflows/demo.yml)
 [![Outdated dependencies](https://github.com/re-path/studio/actions/workflows/dependencies.yml/badge.svg)](https://github.com/re-path/studio/actions/workflows/dependencies.yml)
 [![Static security testing](https://github.com/re-path/studio/actions/workflows/clj-holmes.yml/badge.svg)](https://github.com/re-path/studio/actions/workflows/clj-holmes.yml)
+[![CodeScene Code Health](https://codescene.io/projects/47852/status-badges/code-health)](https://codescene.io/projects/47852)
 
 </div>
 
