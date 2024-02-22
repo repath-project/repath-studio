@@ -1,20 +1,38 @@
 # Changelog
 
-## (Unreleased)
+## 0.2.0 (2024-02-22)
 
 **Added**
 
-- CHANGELOG.md
-- antq github action
+- Timeline module
+- History tree module
+- Notification module
+- Error boundary component
+- Pressure-sensitive brush tool
+- Select similar objects
+- Multi-element resize on anchor point
+- Theme switch
+- Persist workspace configuration
+- Introduce centroid (wip)
+- Translation module (wip)
+
+**Removed**
+
+- Page element
+- Most google closure deps
+- Fluentui dependency
 
 **Changed**
 
-- workflow packages upgraded
+- UI rewrite
+- Extended refactoring
+- Enhance all tools
+- Enhance menubar
+- Enhance user repl commands
 
 **Fixed**
 
-- build-report
-- user namespace indentation
+Too many fixes to list.
 
 ## 0.1.3 (2022-05-09)
 
