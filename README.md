@@ -1,11 +1,11 @@
 <div align="center">
 
-![Repath Studio](https://repath.studio/assets/images/banner.png)\
+![Repath Studio](https://repath.studio/assets/images/banner.png)
+<br>
  :construction: **This project is in alpha stage!**
 
-[![Discord](https://img.shields.io/discord/890005586958237716?color=%235865F2&label=Discord&logo=discord&logoColor=%23aaaaaa)](https://discord.gg/yzjY6W6ame)
-![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/repath_studio?style=flat)
-<br>
+[![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/re-path/studio/latest/total?style=for-the-badge)](https://github.com/re-path/studio/releases/latest/)
+
 [![CodeScene Code Health](https://codescene.io/projects/47852/status-badges/code-health)](https://codescene.io/projects/47852)
 [![Build desktop app](https://github.com/re-path/studio/actions/workflows/studio.yml/badge.svg)](https://github.com/re-path/studio/actions/workflows/studio.yml)
 [![Deploy demo website](https://github.com/re-path/studio/actions/workflows/demo.yml/badge.svg)](https://github.com/re-path/studio/actions/workflows/demo.yml)
