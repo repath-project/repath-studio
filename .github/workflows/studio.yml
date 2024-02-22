@@ -1,4 +1,4 @@
-name: Build desktop app
+name: Desktop app
 
 on:
   create:
