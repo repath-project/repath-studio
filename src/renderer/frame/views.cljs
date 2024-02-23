@@ -96,10 +96,7 @@
                      :id "frame"
                      :class (when read-only? "read-only")
                      :ref ref
-                     :style {:flex "1 1"
-                             :overflow "hidden"
-                             :border 0
-                             :background (-> canvas :attrs :fill)}}
+                     :style {:background (-> canvas :attrs :fill)}}
            [:f> inner-component]
            [:> ContextMenu/Root
             [:> ContextMenu/Trigger

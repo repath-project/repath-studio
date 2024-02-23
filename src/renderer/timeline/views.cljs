@@ -83,8 +83,7 @@
         paused? @(rf/subscribe [:timeline/paused?])
         replay? @(rf/subscribe [:timeline/replay?])
         end @(rf/subscribe [:timeline/end])
-        timeline? @(rf/subscribe [:panel/visible? :timeline])
-        panel (.-current panel-ref)]
+        timeline? @(rf/subscribe [:panel/visible? :timeline])]
     [:div.toolbar.level-1.mt-px
      [:div.flex-1.flex
       [comp/icon-button "go-to-start"
@@ -117,9 +116,39 @@
        :active-text "Hide timeline"
        :inactive-icon "timeline"
        :inactive-text "Show timeline"
-       :action #(if timeline?
-                  (.collapse panel)
-                  (.expand panel))}]]))
+       :action #(when-let [panel (.-current panel-ref)]
+                  (if (.isExpanded panel)
+                    (.collapse panel)
+                    (.expand panel)))}]]))
+
+(defn register-listeners
+  [timeline-ref]
+  (doseq
+   [[e f]
+    [["play" #(rf/dispatch-sync [:timeline/play])] ;; Prevent navigation
+     ["paused" #(rf/dispatch-sync [:timeline/pause])]
+     ["ended" #(when @(rf/subscribe [:timeline/replay?])
+                 (.setTime (.-current timeline-ref) 0)
+                 (.play (.-current timeline-ref) #js {:autoEnd true}))]
+     ["afterSetTime" #(rf/dispatch-sync [:timeline/set-time (.-time %)])]
+     ["setTimeByTick" #(rf/dispatch-sync [:timeline/set-time (.-time %)])]
+     ["afterSetPlayRate" #(rf/dispatch [:timeline/set-speed (.-rate %)])]]]
+    (.on (.-listener (.-current timeline-ref)) e f)))
+
+(defn timeline
+  [timeline-ref]
+  (let [data @(rf/subscribe [:timeline/rows])
+        effects @(rf/subscribe [:timeline/effects])
+        grid-snap? @(rf/subscribe [:timeline/grid-snap?])
+        guide-snap? @(rf/subscribe [:timeline/guide-snap?])]
+    [:> Timeline
+     {:editor-data data
+      :effects effects
+      :ref timeline-ref
+      :grid-snap grid-snap?
+      :drag-line guide-snap?
+      :auto-scroll true
+      :on-click-action #(rf/dispatch [:element/select (keyword (.. %2 -action -id))])}]))
 
 (defn root
   []
@@ -130,47 +159,26 @@
       (fn []
         (rf/dispatch [:timeline/pause])
         (rf/dispatch [:timeline/set-time 0])
-        (doseq
-         [[e f]
-          [["play" #(rf/dispatch-sync [:timeline/play])] ;; Prevent navigation
-           ["paused" #(rf/dispatch-sync [:timeline/pause])]
-           ["ended" #(when @(rf/subscribe [:timeline/replay?])
-                       (.setTime (.-current timeline-ref) 0)
-                       (.play (.-current timeline-ref) #js {:autoEnd true}))]
-           ["afterSetTime" #(rf/dispatch-sync [:timeline/set-time (.-time %)])]
-           ["setTimeByTick" #(rf/dispatch-sync [:timeline/set-time (.-time %)])]
-           ["afterSetPlayRate" #(rf/dispatch [:timeline/set-speed (.-rate %)])]]]
-          (.on (.-listener (.-current timeline-ref)) e f)))
+        (register-listeners timeline-ref))
 
       :component-will-unmount
       #(.offAll (.-listener (.-current timeline-ref)))
 
       :reagent-render
       (fn []
-        (let [data @(rf/subscribe [:timeline/rows])
-              effects @(rf/subscribe [:timeline/effects])
-              grid-snap? @(rf/subscribe [:timeline/grid-snap?])
-              guide-snap? @(rf/subscribe [:timeline/guide-snap?])]
-          [:<>
-           [:> PanelResizeHandle
-            {:id "timeline-resize-handle"
-             :className "resize-handle"}]
-           [toolbar timeline-ref panel-ref]
-           [:> Panel
-            {:id "timeline-panel"
-             :class "mt-px"
-             :minSize 10
-             :defaultSize 0
-             :collapsible true
-             :order 2
-             :ref panel-ref
-             :onCollapse #(rf/dispatch-sync [:panel/collapse :timeline])
-             :onExpand #(rf/dispatch-sync [:panel/expand :timeline])}
-            [:> Timeline
-             {:editor-data data
-              :effects effects
-              :ref timeline-ref
-              :grid-snap grid-snap?
-              :drag-line guide-snap?
-              :auto-scroll true
-              :on-click-action #(rf/dispatch [:element/select (keyword (.. %2 -action -id))])}]]]))})))
+        [:<>
+         [:> PanelResizeHandle
+          {:id "timeline-resize-handle"
+           :className "resize-handle"}]
+         [toolbar timeline-ref panel-ref]
+         [:> Panel
+          {:id "timeline-panel"
+           :class "mt-px"
+           :minSize 10
+           :defaultSize 0
+           :collapsible true
+           :order 2
+           :ref panel-ref
+           :onCollapse #(rf/dispatch-sync [:panel/collapse :timeline])
+           :onExpand #(rf/dispatch-sync [:panel/expand :timeline])}
+          [timeline timeline-ref]]])})))
