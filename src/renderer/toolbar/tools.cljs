@@ -23,7 +23,7 @@
        [:> Tooltip/Portal
         [:> Tooltip/Content
          {:class "tooltip-content"
-          :side "bottom"}
+          :side "top"}
          [:div.flex.gap-2.items-center
           (str/capitalize (name type))
           (when-let [shortcuts (comp/shortcuts [:set-tool type])]
