@@ -65,7 +65,7 @@
             :fill (if active? accent accent-inverted)
             :stroke (if active? accent "#999")
             :stroke-width stroke-width
-            :rx 1
+            :rx (/ 2 zoom)
             :x (- x (/ size 2))
             :y (- y (/ size 2))
             :width size
@@ -163,7 +163,6 @@
         key :bounding-box
         ignored-keys @(rf/subscribe [:document/ignored-keys])
         ignored? (contains? ignored-keys key)
-        bounds (min-bounds bounds)
         [x1 y1 _x2 _y2] bounds
         [w h] (bounds/->dimensions bounds)
         pointer-handler #(pointer/event-handler % {:type :element
@@ -232,7 +231,6 @@
 (defn size
   [bounds]
   (let [zoom @(rf/subscribe [:document/zoom])
-        bounds (min-bounds bounds)
         [x1 _ x2 y2] bounds
         x (+ x1 (/ (- x2 x1) 2))
         y (+ y2 (/ (+ (/ handler-size 2) 15) zoom))
@@ -288,7 +286,6 @@
   [area bounds]
   (when area
     (let [zoom @(rf/subscribe [:document/zoom])
-          bounds (min-bounds bounds)
           [x1 y1 x2 _y2] bounds
           x (+ x1 (/ (- x2 x1) 2))
           y (+ y1 (/ (- -15 (/ handler-size 2)) zoom))
