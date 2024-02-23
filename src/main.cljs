@@ -106,7 +106,7 @@
            #js {:loadExtensionOptions {:allowFileAccess true}})
           (.then (fn [name] (js/console.log "Added Extension: " name)))
           (.catch (fn [err] (js/console.log "An error occurred: " err))))
-      (.openDevTools (.-webContents ^js @main-window)))
+      #_(.openDevTools (.-webContents ^js @main-window)))
 
     (register-web-contents-events!)
     (.on ipcMain "toMain" #(to-main-api %2))
