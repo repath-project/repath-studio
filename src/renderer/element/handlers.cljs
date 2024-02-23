@@ -224,7 +224,8 @@
 
 (defn select-all
   [db]
-  (reduce select (deselect db) (siblings db)))
+  (reduce select (deselect db) (or (siblings db)
+                                   (:children (element db :canvas)))))
 
 (defn selected-tags
   [db]
