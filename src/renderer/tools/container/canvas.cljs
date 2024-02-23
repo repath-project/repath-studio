@@ -41,7 +41,8 @@
         pivot-point @(rf/subscribe [:pivot-point])
         select? (or (= tool :select)
                     (= primary-tool :select))]
-    [:svg#canvas {:on-pointer-up pointer-handler
+    [:svg#canvas {:class "outline-none"
+                  :on-pointer-up pointer-handler
                   :on-pointer-down pointer-handler
                   :on-double-click pointer-handler
                   :on-key-up keyb/event-handler
@@ -54,8 +55,7 @@
                   :height height
                   :transform (str "rotate(" rotate ")")
                   :cursor cursor
-                  :style {:background (:fill attrs)
-                          :outline "none"}}
+                  :style {:background (:fill attrs)}}
      (for [el child-elements]
        ^{:key (str (:key el))} [tools/render el])
 

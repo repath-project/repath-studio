@@ -41,11 +41,6 @@
  :-> :title)
 
 (rf/reg-sub
- :document/history
- :<- [:document/active]
- :-> :history)
-
-(rf/reg-sub
  :document/elements
  :<- [:document/active]
  :-> :elements)
@@ -74,3 +69,9 @@
  :document/ignored-keys
  :<- [:document/active]
  :-> :ignored-keys)
+
+(rf/reg-sub
+ :document/read-only?
+ :<- [:timeline/time]
+ (fn [time _]
+   (not= time 0)))

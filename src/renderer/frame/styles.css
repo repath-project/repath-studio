@@ -1,0 +1,5 @@
+#frame {
+    &.read-only {
+        @apply pointer-events-none;
+    }
+}
