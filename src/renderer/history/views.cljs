@@ -49,7 +49,8 @@
     (ra/as-element
      [:circle
       {:on-click #(rf/dispatch [:history/move (keyword (.-id datum))])
-       :on-mouse-enter #(rf/dispatch [:history/preview (keyword (.-id datum))])
+       :on-mouse-enter #(when-not (.-restored datum)
+                          (rf/dispatch [:history/preview (keyword (.-id datum))]))
        :on-mouse-leave #(rf/dispatch [:history/swap])
        :cx "0"
        :cy "0"
