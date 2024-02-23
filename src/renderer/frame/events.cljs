@@ -1,7 +1,10 @@
 (ns renderer.frame.events
   (:require
+   [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
-   [renderer.frame.handlers :as h]))
+   [renderer.element.handlers :as element.h]
+   [renderer.frame.handlers :as h]
+   [renderer.utils.element :as element]))
 
 (rf/reg-event-db
  :frame/resize
@@ -11,19 +14,9 @@
        (assoc :content-rect updated-content-rect))))
 
 (rf/reg-event-db
- :pan
- (fn [db [_ [x y]]]
-   (h/pan db [x y])))
-
-(rf/reg-event-db
  :center
  (fn [db [_]]
    (h/pan-to-element db)))
-
-(rf/reg-event-db
- :pan-to-element
- (fn [db [_ key]]
-   (h/pan-to-element db key)))
 
 (rf/reg-event-db
  :focus-selection
@@ -50,3 +43,30 @@
  :zoom-out
  (fn [db [_ _]]
    (h/zoom db (:zoom-sensitivity db))))
+
+(rf/reg-event-db
+ :pan-to-bounds
+ (fn [db [_ bounds]]
+   (cond-> db
+     (= (:state db) :default)
+     (h/pan-to-bounds bounds))))
+
+(rf/reg-event-fx
+ :pan-to-element
+ (fn [{:keys [db]} [_ key]]
+   {:fx
+    (let [{:keys [content-rect active-document]} db
+          element (element.h/element db key)
+          elements (element.h/elements db)
+          el-bounds (element/adjusted-bounds element elements)
+          zoom (get-in db [:documents active-document :zoom])
+          {:keys [width height]} content-rect
+          [x y] (get-in db [:documents active-document :pan])
+          [width height] (mat/div [width height] zoom)
+          viewbox [x y (+ x width) (+ y height)] ; TODO: Convert to flow.
+          diff (mat/sub el-bounds viewbox)
+          frames 30]
+      (for [i (range (inc frames))]
+        (let [bounds (mat/add viewbox (mat/mul diff (/ i frames)))]
+          [:dispatch-later {:ms (* i 10) ; TODO: Easing and canceling.
+                            :dispatch [:pan-to-bounds bounds]}])))}))

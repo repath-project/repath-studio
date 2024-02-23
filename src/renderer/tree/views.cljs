@@ -92,7 +92,7 @@
               (when hovered? "hovered")]
       :tab-index 0
       :role "menuitem"
-      :on-double-click #(rf/dispatch [:focus-selection :original])
+      :on-double-click #(rf/dispatch [:pan-to-element key])
       :on-pointer-enter #(rf/dispatch [:document/set-hovered-keys #{key}])
       :ref (fn [this]
              (when (and this selected? hovered? (not multiple-selected?))

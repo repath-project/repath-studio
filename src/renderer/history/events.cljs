@@ -73,4 +73,4 @@
               (assoc :restored? true)
               element.h/clear-temp
               h/swap))
-    :dispatch-sync [:clear-restored]}))
+    :dispatch ^:flush-dom [:clear-restored]}))

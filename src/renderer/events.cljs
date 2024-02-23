@@ -113,7 +113,7 @@
 
 (rf/reg-event-db
  :pointer-event
- (fn [{:keys [pointer-offset tool content-rect drag? state] :as db}
+ (fn [{:keys [pointer-offset tool content-rect drag?] :as db}
       [_ {:keys [button buttons modifiers data-transfer pointer-pos delta element] :as e}]]
    (let [adjusted-pointer-pos (frame-h/adjusted-pointer-pos db pointer-pos)]
      (case (:type e)
