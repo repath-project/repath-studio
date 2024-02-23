@@ -23,6 +23,16 @@
  (fn [db _]
    (h/redos db)))
 
+(rf/reg-sub
+ :history/zoom
+ (fn [db _]
+   (get-in db [:documents (:active-document db) :history :zoom])))
+
+(rf/reg-sub
+ :history/translate
+ (fn [db _]
+   (get-in db [:documents (:active-document db) :history :translate])))
+
 (defn state->d3-data
   [db id]
   (let [{:keys [index restored?] :as state} (h/state db id)

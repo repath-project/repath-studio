@@ -25,6 +25,7 @@
    :rotate 0
    :filter "No a11y filter"
    :pan [0 0]
+   :history {:zoom 0.5}
    :elements {:canvas {:key :canvas
                        :visible? true
                        :tag :canvas

@@ -2,6 +2,8 @@
   (:require
    ["@radix-ui/react-select" :as Select]
    ["react-d3-tree" :refer [Tree]]
+   ["react" :as react]
+   [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [renderer.components :as comp]))
@@ -62,33 +64,47 @@
                  (.-color datum)))}
       [:title (.-name datum)]])))
 
+(defn on-update
+  [target]
+  (let [translate (.-translate target)
+        zoom (.-zoom target)]
+    (rf/dispatch [:history/tree-view-updated zoom [(.-x translate)
+                                                   (.-y translate)]])))
+
+(defn center
+  [ref]
+  (when-let [current (.-current ref)]
+    (mat/div [(.-clientWidth current)
+              (.-clientHeight current)] 2)))
+
 (defn tree
-  []
-  (let [tree-data @(rf/subscribe [:history/tree-data])]
-    [:> Tree {:data tree-data
-              :collapsible false
-              :orientation "vertical"
-              :rootNodeClassName "root-node"
-              :depthFactor -100
-              :zoom 0.5
-              :separation #js {:nonSiblings 1 :siblings 1}
-              :translate #js {:x "100" :y "200"}
-              :renderCustomNodeElement node}]))
+  [ref]
+  (let [tree-data @(rf/subscribe [:history/tree-data])
+        zoom @(rf/subscribe [:history/zoom])
+        [x y] @(rf/subscribe [:history/translate])]
+    [:> Tree
+     {:data tree-data
+      :collapsible false
+      :orientation "vertical"
+      :rootNodeClassName "root-node"
+      :depthFactor -100
+      :zoom zoom
+      :translate #js {:x (or x (when (.-current ref) (/ (.. ref -current -clientWidth) 2)))
+                      :y (or y (when (.-current ref) (/ (.. ref -current -clientHeight) 2)))}
+      :onUpdate on-update
+      :separation #js {:nonSiblings 1 :siblings 1}
+      :renderCustomNodeElement node}]))
 
 (defn root
   []
-  [:div.flex.flex-col.h-full
-   [:div.flex.p-1
-    [:button.button.flex-auto
-     {:on-click #(rf/dispatch [:history/undo])
-      :disabled (not @(rf/subscribe [:history/undos?]))}
-     "Undo"]
-    [:button.button.flex-auto
-     {:on-click #(rf/dispatch [:history/redo])
-      :disabled (not @(rf/subscribe [:history/redos?]))}
-     "Redo"]
-    [:button.button.flex-auto
-     {:on-click #(rf/dispatch [:history/clear])}
-     "Clear history"]]
-   [:div.flex-1
-    [tree]]])
+  (let [ref (react/createRef)]
+    [:div.flex.flex-col.h-full
+     [:div.flex.p-1
+      [:button.button.flex-1
+       {:on-click #(rf/dispatch [:history/tree-view-updated 0.5 (center ref)])}
+       "Center view"]
+      [:button.button.flex-1
+       {:on-click #(rf/dispatch [:history/clear])}
+       "Clear history"]]
+     [:div.flex-1 {:ref ref}
+      [tree ref]]]))

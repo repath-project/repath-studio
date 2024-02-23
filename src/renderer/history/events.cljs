@@ -46,6 +46,13 @@
    (h/clear db)))
 
 (rf/reg-event-db
+ :history/tree-view-updated
+ (fn [db [_ zoom translate]]
+   (-> db
+       (h/set-zoom zoom)
+       (h/set-translate translate))))
+
+(rf/reg-event-db
  :history/cancel
  (fn [db _]
    (cond-> db

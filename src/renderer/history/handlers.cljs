@@ -94,6 +94,14 @@
   [db]
   (-> (history db) :states count))
 
+(defn set-zoom
+  [db zoom]
+  (assoc-in db (conj (history-path db) :zoom) zoom))
+
+(defn set-translate
+  [db [x y]]
+  (assoc-in db (conj (history-path db) :translate) [x y]))
+
 (defn create-state
   [db id explanation]
   {:explanation explanation
@@ -138,5 +146,5 @@
 (defn clear
   [db]
   (-> db
-      (update-in [:documents (:active-document db)] dissoc :history)
+      (update-in [:documents (:active-document db) :history] dissoc :states :position)
       (finalize "Clear history")))
