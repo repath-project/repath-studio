@@ -24,16 +24,18 @@
 (derive ::size ::length/length)
 
 (defmethod attr.hierarchy/form-element ::extraPoints
-  [k v]
+  [k v disabled?]
   [attr.v/range-input k v {:min 0
                            :max 50
-                           :step 1} 0])
+                           :step 1
+                           :disabled disabled?} 0])
 
 (defmethod attr.hierarchy/form-element ::randomness
-  [k v]
+  [k v disabled?]
   [attr.v/range-input k v {:min 0
                            :max 50
-                           :step 1} 0])
+                           :step 1
+                           :disabled disabled?} 0])
 
 (defmethod attr.hierarchy/form-element ::seed
   [k v disabled?]
