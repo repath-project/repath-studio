@@ -49,9 +49,11 @@
     (ra/as-element
      [:circle
       {:on-click #(rf/dispatch [:history/move (keyword (.-id datum))])
+       :on-mouse-enter #(rf/dispatch [:history/preview (keyword (.-id datum))])
+       :on-mouse-leave #(rf/dispatch [:history/swap])
        :cx "0"
        :cy "0"
-       :r "12"
+       :r "18"
        :fill (if (.-restored datum)
                "black"
                (if (.-active datum)
@@ -69,7 +71,7 @@
               :depthFactor -100
               :zoom 0.5
               :separation #js {:nonSiblings 1 :siblings 1}
-              :translate #js {:x "100" :y "100"}
+              :translate #js {:x "100" :y "200"}
               :renderCustomNodeElement node}]))
 
 (defn root

@@ -26,6 +26,16 @@
    (h/redo db n)))
 
 (rf/reg-event-db
+ :history/swap
+ (fn [db _]
+   (h/swap db)))
+
+(rf/reg-event-db
+ :history/preview
+ (fn [db [_ id]]
+   (h/preview db id)))
+
+(rf/reg-event-db
  :history/move
  (fn [db [_ id]]
    (h/move db id)))
@@ -39,6 +49,12 @@
  :history/cancel
  (fn [db _]
    (cond-> db
+     :always (-> (dissoc :pointer-offset)
+                 (dissoc :drag?)
+                 (assoc :state :default)
+                 element.h/clear-temp
+                 h/swap)
+
      (and (= (:tool db) :select) (= (:state db) :default))
      (-> element.h/deselect
          (h/finalize "Deselect all"))
@@ -47,13 +63,7 @@
      (element.h/clear-hovered)
 
      (= (:state db) :default)
-     (tools/set-tool :select)
-
-     :always (-> (dissoc :pointer-offset)
-                 (dissoc :drag?)
-                 (assoc :state :default)
-                 element.h/clear-temp
-                 h/swap))))
+     (tools/set-tool :select)))) ; FIXME
 
 (rf/reg-event-fx
  :history/restore

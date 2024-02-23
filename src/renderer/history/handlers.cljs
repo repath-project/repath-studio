@@ -42,8 +42,12 @@
   (boolean (next-position db)))
 
 (defn swap
-  [db]
-  (assoc-in db (element.h/path db) (:elements (state db))))
+  ([db]
+   (assoc-in db (element.h/path db) (:elements (state db)))))
+
+(defn preview
+  [db position]
+  (assoc-in db (element.h/path db) (:elements (state db position))))
 
 (defn move
   [db position]
