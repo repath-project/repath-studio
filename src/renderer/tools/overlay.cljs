@@ -65,7 +65,7 @@
             :fill (if active? accent accent-inverted)
             :stroke (if active? accent "#999")
             :stroke-width stroke-width
-            :rx (/ 2 zoom)
+            :rx (/ 1 zoom)
             :x (- x (/ size 2))
             :y (- y (/ size 2))
             :width size
