@@ -152,10 +152,10 @@
               grid-snap? @(rf/subscribe [:timeline/grid-snap?])
               guide-snap? @(rf/subscribe [:timeline/guide-snap?])]
           [:<>
-           [toolbar timeline-ref panel-ref]
            [:> PanelResizeHandle
             {:id "timeline-resize-handle"
              :className "resize-handle"}]
+           [toolbar timeline-ref panel-ref]
            [:> Panel
             {:id "timeline-panel"
              :class "mt-px"
