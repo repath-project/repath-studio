@@ -51,6 +51,25 @@
         offset (mat/sub position center)]
     (tools/translate el offset)))
 
+(defn ghost-element
+  "Renders a ghost element on top of the actual element to ensure that the user
+   can interact it."
+  [{:keys [attrs tag content] :as el}]
+  (let [pointer-handler #(pointer/event-handler % el)
+        zoom @(rf/subscribe [:document/zoom])
+        stroke-width (max (:stroke-width attrs) (/ 20 zoom))]
+    [tag
+     (merge (dissoc attrs :style)
+            {:on-pointer-up pointer-handler
+             :on-pointer-down pointer-handler
+             :on-pointer-move pointer-handler
+             :on-double-click pointer-handler
+             :shape-rendering "optimizeSpeed"
+             :fill "transparent"
+             :stroke "transparent"
+             :stroke-width stroke-width})
+     content]))
+
 (defn render-to-dom
   "We need a reagent form-3 component in order to set the style attribute manually.
    React expects a map, but we need to set a string to avoid serializing css."
@@ -88,24 +107,10 @@
           (for [child child-elements]
             ^{:key (:key child)} [tools/render child])]
 
-         (when default-state?
-           (let [pointer-handler #(pointer/event-handler % el)]
-             [tag
-              (merge (dissoc attrs :style)
-                     {:on-pointer-up pointer-handler
-                      :on-pointer-down pointer-handler
-                      :on-pointer-move pointer-handler
-                      :on-double-click pointer-handler
-                      :shape-rendering "optimizeSpeed"
-                      :fill "transparent"
-                      :stroke "transparent"
-                      :stroke-width (max (:stroke-width attrs)
-                                         (/ 20 @(rf/subscribe [:document/zoom])))})
-              content]))])})))
+         (when default-state? [ghost-element el])])})))
 
 (defmethod tools/render ::tools/element
   [{:keys [children] :as el}]
   (let [child-elements @(rf/subscribe [:element/filter-visible children])
-        state @(rf/subscribe [:state])
-        zoom @(rf/subscribe [:document/zoom])]
-    [render-to-dom el child-elements (= state :default) zoom]))
+        state @(rf/subscribe [:state])]
+    [render-to-dom el child-elements (= state :default)]))

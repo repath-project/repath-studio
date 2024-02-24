@@ -63,7 +63,7 @@
     [:rect {:key key
             :id (name key)
             :fill (if active? accent accent-inverted)
-            :stroke (if active? accent "#999")
+            :stroke (if active? accent "#777")
             :stroke-width stroke-width
             :rx (/ 1 zoom)
             :x (- x (/ size 2))

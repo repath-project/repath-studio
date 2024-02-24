@@ -34,8 +34,6 @@
         tool @(rf/subscribe [:tool])
         primary-tool @(rf/subscribe [:primary-tool])
         rotate @(rf/subscribe [:document/rotate])
-        snapping-points @(rf/subscribe [:snapping-points])
-        debug-info? @(rf/subscribe [:debug-info?])
         grid? @(rf/subscribe [:grid?])
         state @(rf/subscribe [:state])
         pointer-handler #(pointer/event-handler % element)
@@ -67,9 +65,6 @@
 
      (when-not read-only?
        [:<>
-        (when debug-info?
-          (into [:g] (map overlay/point-of-interest snapping-points)))
-
         (when (and select? (contains? #{:default :select :scale} state))
           [:<>
            (for [el selected-elements]

@@ -31,17 +31,7 @@
           (when-let [shortcuts (comp/shortcuts [:set-tool type])]
             [:div.text-muted.p-1.text-xs.level-1.rounded
              shortcuts])]
-         [:> Tooltip/Arrow {:class "tooltip-arrow"}]]]]
-      #_(when (descendants type)
-          [:button {:key      (keyword (str "dropdown-" type))
-                    :title    type
-                    :class    ["icon-button" (when-not selected? "text-muted")]
-                    :style    {:background (when selected? styles/overlay)
-                               :margin-left "0"
-                               :width "16px"}
-                    :on-click #(rf/dispatch [:set-tool type])}
-           [comp/icon "angle-down"]]))))
-
+         [:> Tooltip/Arrow {:class "tooltip-arrow"}]]]])))
 
 (defn group
   [group]
