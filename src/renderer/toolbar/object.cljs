@@ -5,7 +5,7 @@
    [renderer.toolbar.views :as v]))
 
 (defn actions
-  [selected-elements? multiple-selected?]
+  [selected-elements? multiple-selected? top-level?]
   [{:title "Bring to front"
     :icon "bring-front"
     :action [:element/raise-to-top]
@@ -34,38 +34,38 @@
    {:type :divider}
    {:title "Align left"
     :icon "objects-align-left"
-    :disabled? (not selected-elements?)
+    :disabled? top-level?
     :action [:element/align :left]}
    {:title "Align center horizontally"
-    :disabled? (not selected-elements?)
+    :disabled? top-level?
     :icon "objects-align-center-horizontal"
     :action [:element/align :center-horizontal]}
    {:title "Align rignt"
     :icon "objects-align-right"
-    :disabled? (not selected-elements?)
+    :disabled? top-level?
     :action [:element/align :right]}
    {:type :divider}
    {:title "Align top"
     :icon "objects-align-top"
-    :disabled?  (not selected-elements?)
+    :disabled?  top-level?
     :action [:element/align :top]}
    {:title "Align center vertically"
     :icon "objects-align-center-vertical"
-    :disabled?  (not selected-elements?)
+    :disabled?  top-level?
     :action [:element/align :center-vertical]}
    {:title "Align bottom"
     :icon "objects-align-bottom"
-    :disabled?  (not selected-elements?)
+    :disabled?  top-level?
     :action [:element/align :bottom]}
-   {:type :divider}
-   {:title "Distribute spacing horizontally"
-    :icon "distribute-spacing-horizontal"
-    :disabled? true
-    :action [:element/raise]}
-   {:title "Distribute spacing vertically"
-    :icon "distribute-spacing-vertical"
-    :disabled? true
-    :action [:element/lower]}
+   #_{:type :divider}
+   #_{:title "Distribute spacing horizontally"
+      :icon "distribute-spacing-horizontal"
+      :disabled? true
+      :action [:element/raise]}
+   #_{:title "Distribute spacing vertically"
+      :icon "distribute-spacing-vertical"
+      :disabled? true
+      :action [:element/lower]}
    #_{:type :divider}
    #_{:title "Rotate 90° clockwise"
       :icon "rotate-clockwise"
@@ -109,6 +109,7 @@
   []
   (let [selected-elements? @(rf/subscribe [:element/selected?])
         multiple-selected? @(rf/subscribe [:element/multiple-selected?])
-        object-actions (actions selected-elements? multiple-selected?)]
+        top-level? @(rf/subscribe [:element/top-level?])
+        object-actions (actions selected-elements? multiple-selected? top-level?)]
     (into [:div.flex.flex-col.level-1.text-center.flex-0.ml-px.toolbar]
           (map v/button object-actions))))

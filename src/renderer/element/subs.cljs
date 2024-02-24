@@ -124,6 +124,17 @@
    (reduce  #(+ %1 (tools/area %2)) 0 selected-elements)))
 
 (rf/reg-sub
+ :element/ancestor-keys
+ (fn [db _]
+   (h/ancestor-keys db)))
+
+(rf/reg-sub
+ :element/top-level?
+ :<- [:element/ancestor-keys]
+ (fn [ancestor-keys _]
+   (empty? (disj ancestor-keys :canvas))))
+
+(rf/reg-sub
  :element/visible
  :<- [:document/elements]
  (fn [elements _]

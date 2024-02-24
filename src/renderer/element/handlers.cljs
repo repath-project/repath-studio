@@ -84,14 +84,16 @@
        (filter element/svg?)))
 
 (defn ancestor-keys
-  [db el]
-  (loop [parent-key (:parent el)
-         parent-keys #{}]
-    (if parent-key
-      (recur
-       (:parent (element db parent-key))
-       (conj parent-keys parent-key))
-      parent-keys)))
+  ([db]
+   (reduce #(set/union %1 (ancestor-keys db %2)) #{} (selected db)))
+  ([db el]
+   (loop [parent-key (:parent el)
+          parent-keys #{}]
+     (if parent-key
+       (recur
+        (:parent (element db parent-key))
+        (conj parent-keys parent-key))
+       parent-keys))))
 
 (defn index
   [db el]
