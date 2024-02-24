@@ -91,6 +91,7 @@
         :disabled (zero? time)}]
       [comp/radio-icon-button
        {:title (if paused? "Play" "Pause")
+        :class (when (pos? time) "border border-accent")
         :active? (not paused?)
         :icon (if paused? "play" "pause")
         :action #(if paused?
@@ -127,13 +128,18 @@
    [[e f]
     [["play" #(rf/dispatch-sync [:timeline/play])] ;; Prevent navigation
      ["paused" #(rf/dispatch-sync [:timeline/pause])]
-     ["ended" #(when @(rf/subscribe [:timeline/replay?])
-                 (.setTime (.-current timeline-ref) 0)
-                 (.play (.-current timeline-ref) #js {:autoEnd true}))]
+     ["ended" #(do (.setTime (.-current timeline-ref) 0)
+                   (when @(rf/subscribe [:timeline/replay?])
+                     (.play (.-current timeline-ref) #js {:autoEnd true})))]
      ["afterSetTime" #(rf/dispatch-sync [:timeline/set-time (.-time %)])]
      ["setTimeByTick" #(rf/dispatch-sync [:timeline/set-time (.-time %)])]
      ["afterSetPlayRate" #(rf/dispatch [:timeline/set-speed (.-rate %)])]]]
     (.on (.-listener (.-current timeline-ref)) e f)))
+
+(defn custom-renderer
+  [action _row]
+  (ra/as-element
+   [:span (.-name action)]))
 
 (defn timeline
   [timeline-ref]
@@ -148,7 +154,18 @@
       :grid-snap grid-snap?
       :drag-line guide-snap?
       :auto-scroll true
+      :getActionRender custom-renderer
       :on-click-action #(rf/dispatch [:element/select (keyword (.. %2 -action -id))])}]))
+
+(defn time-bar
+  []
+  (let [time @(rf/subscribe [:timeline/time])
+        end @(rf/subscribe [:timeline/end])
+        timeline? @(rf/subscribe [:panel/visible? :timeline])]
+    [:div.h-px.block
+     {:style {:width (str (* (/ time end) 100) "%")
+              :background (when-not (or (zero? time) (zero? end) timeline?)
+                            "var(--accent)")}}]))
 
 (defn root
   []
@@ -171,9 +188,9 @@
           {:id "timeline-resize-handle"
            :className "resize-handle"}]
          [toolbar timeline-ref panel-ref]
+         [time-bar]
          [:> Panel
           {:id "timeline-panel"
-           :class "mt-px"
            :minSize 10
            :defaultSize 0
            :collapsible true

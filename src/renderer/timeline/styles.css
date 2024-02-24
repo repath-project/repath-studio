@@ -5,10 +5,16 @@
  }
 
  .timeline-editor-action {
-  @apply overlay !important;
+  @apply overlay flex justify-around items-center !important;
 
   &-selected {
-    background-color: var(--accent) !important;
+    @apply border border-accent;
+    .timeline-editor-action-left-stretch::after {
+      border-left-color: var(--accent) !important;
+    }
+    .timeline-editor-action-right-stretch::after {
+      border-right-color: var(--accent) !important;
+    }
   }
 }
 

@@ -12,7 +12,7 @@
 
 (defn effect-id
   [el]
-  (str "effect" (:key el)))
+  (str "effect" (name (:key el))))
 
 (defn animation->timeline-row
   [{:keys [attrs] :as el}]
@@ -25,6 +25,7 @@
                 :selected (:selected? el)
                 :disable (:locked? el)
                 :movable (not (:locked? el))
+                :name (str/join " " [(name (:tag el)) (:attributeName attrs)])
                 :start start
                 :end end
                 :effectId (effect-id el)}]}))
@@ -44,9 +45,8 @@
    (reduce #(max (js/parseInt (-> %2 :attrs :end)) %1) 0 animations)))
 
 (defn animation->effect
-  [{:keys [attrs] :as el}]
-  {:id (effect-id el)
-   :name (str (name (:tag el)) (:attributeName attrs))})
+  [el]
+  {:id (effect-id el)})
 
 (rf/reg-sub
  :timeline/effects
