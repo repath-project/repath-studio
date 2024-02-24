@@ -29,7 +29,7 @@
          [:div.flex.gap-2.items-center
           (str/capitalize (name type))
           (when-let [shortcuts (comp/shortcuts [:set-tool type])]
-            [:div.text-muted.p-1.text-xs.level-1.rounded
+            [:div.text-muted.px-1.py-0.5.text-xs.overlay.rounded-sm
              shortcuts])]
          [:> Tooltip/Arrow {:class "tooltip-arrow"}]]]])))
 

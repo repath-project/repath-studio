@@ -29,36 +29,26 @@
      :on-checked-change on-checked-change}
     [:> Switch/Thumb {:class "switch-thumb"}]]])
 
+(defn format-shortcut
+  [[shortcut]] ; REVIEW
+  (->> (cond-> []
+         (:ctrlKey shortcut) (conj "Ctrl")
+         (:shiftKey shortcut) (conj "⇧")
+         (:altKey shortcut) (conj "Alt")
+         :always (conj (keyb/code->key (:keyCode shortcut))))
+       (str/join "+")))
+
 (defn shortcuts
   [event]
   (let [shortcuts @(rf/subscribe [:event-shortcuts event])]
     (when (seq shortcuts)
-      (into [:div.shortcuts]
-            (interpose [:span.text-muted " | "]
-                       (map (fn [[shortcut]]
-                              (str/join "+"
-                                        (cond-> []
-                                          (:ctrlKey shortcut)
-                                          (conj "Ctrl")
-
-                                          (:shiftKey shortcut)
-                                          (conj "⇧")
-
-                                          (:altKey shortcut)
-                                          (conj "Alt")
-
-                                          :always (conj (keyb/code->key
-                                                         (:keyCode shortcut))))))
-                            shortcuts))))))
+      (->> shortcuts
+           (map format-shortcut)
+           (interpose [:span.text-muted " | "])
+           (into [:div.shortcuts])))))
 
 (defn toggle-icon-button
-  [{:keys [active?
-           active-icon
-           inactive-icon
-           active-text
-           inactive-text
-           action
-           class]}]
+  [{:keys [active? active-icon inactive-icon active-text inactive-text action class]}]
   [:button.icon-button {:class class
                         :title (if active? active-text inactive-text)
                         :on-double-click #(.stopPropagation %)
