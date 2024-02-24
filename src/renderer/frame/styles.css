@@ -1,6 +1,3 @@
 #frame {
     @apply overflow-hidden flex-1 border-0;
-    &.read-only {
-        @apply pointer-events-none;
-    }
 }

@@ -16,10 +16,12 @@
     (when (:icon (tools/properties type))
       [:> Tooltip/Root
        [:> Tooltip/Trigger {:asChild true}
-        [:span [comp/radio-icon-button {:active? selected?
-                                        :class (when primary? "border border-accent")
-                                        :icon (:icon (tools/properties type))
-                                        :action #(rf/dispatch [:set-tool type])}]]]
+        [:span
+         [comp/radio-icon-button
+          {:active? selected?
+           :class (when primary? "border border-accent")
+           :icon (:icon (tools/properties type))
+           :action #(rf/dispatch [:set-tool type])}]]]
        [:> Tooltip/Portal
         [:> Tooltip/Content
          {:class "tooltip-content"
@@ -30,8 +32,6 @@
             [:div.text-muted.p-1.text-xs.level-1.rounded
              shortcuts])]
          [:> Tooltip/Arrow {:class "tooltip-arrow"}]]]]
-
-
       #_(when (descendants type)
           [:button {:key      (keyword (str "dropdown-" type))
                     :title    type

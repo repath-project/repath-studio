@@ -79,7 +79,6 @@
       :reagent-render
       (fn []
         (let [canvas @(rf/subscribe [:element/canvas])
-              read-only? @(rf/subscribe [:document/read-only?])
               {:keys [x y]} @(rf/subscribe [:content-rect])
              ;; This is a different browsing context inside an iframe.
              ;; We need to simulate the events to the parent window.
@@ -94,7 +93,6 @@
                      :on-key-down on-keyboard-event
                      :on-key-up on-keyboard-event
                      :id "frame"
-                     :class (when read-only? "read-only")
                      :ref ref
                      :style {:background (-> canvas :attrs :fill)}}
            [:f> inner-component]

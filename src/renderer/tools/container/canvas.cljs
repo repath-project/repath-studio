@@ -29,6 +29,7 @@
         bounds @(rf/subscribe [:element/bounds])
         temp-element @(rf/subscribe [:document/temp-element])
         elements-area @(rf/subscribe [:element/area])
+        read-only? @(rf/subscribe [:document/read-only?])
         cursor @(rf/subscribe [:cursor])
         tool @(rf/subscribe [:tool])
         primary-tool @(rf/subscribe [:primary-tool])
@@ -64,40 +65,42 @@
              [:filter {:id id :key id} [tag attrs]])
            filters/accessibility)]
 
-     (when debug-info?
-       (into [:g] (map overlay/point-of-interest snapping-points)))
-
-     (when (and select? (contains? #{:default :select :scale} state))
+     (when-not read-only?
        [:<>
-        (for [el selected-elements]
-          ^{:key (str (:key el) "-bounds")}
-          [overlay/bounding-box (element/adjusted-bounds el elements) false])
+        (when debug-info?
+          (into [:g] (map overlay/point-of-interest snapping-points)))
 
-        (for [el hovered-elements]
-          ^{:key (str (:key el) "-bounds")}
-          [overlay/bounding-box (element/adjusted-bounds el elements) true])
-
-        (when (and (pos? elements-area) (= state :scale))
-          [overlay/area elements-area bounds])
-
-        (when (not-empty (remove zero? bounds))
+        (when (and select? (contains? #{:default :select :scale} state))
           [:<>
-           [overlay/wrapping-bounding-box bounds]
-           (when (= state :scale) [overlay/size bounds])
-           [overlay/bounding-handlers bounds]])
+           (for [el selected-elements]
+             ^{:key (str (:key el) "-bounds")}
+             [overlay/bounding-box (element/adjusted-bounds el elements) false])
 
-        (when (and select? pivot-point)
-          [overlay/times pivot-point])])
+           (for [el hovered-elements]
+             ^{:key (str (:key el) "-bounds")}
+             [overlay/bounding-box (element/adjusted-bounds el elements) true])
 
-     (when (or (= tool :edit)
-               (= primary-tool :edit))
-       (for [el selected-elements]
-         ^{:key (str (:key el) "-edit-points")}
-         [:g
-          [tools/render-edit el]
-          ^{:key (str (:key el) "-centroid")}
-          [overlay/centroid el]]))
+           (when (and (pos? elements-area) (= state :scale))
+             [overlay/area elements-area bounds])
 
-     [tools/render temp-element]
+           (when (not-empty (remove zero? bounds))
+             [:<>
+              [overlay/wrapping-bounding-box bounds]
+              (when (= state :scale) [overlay/size bounds])
+              [overlay/bounding-handlers bounds]])
+
+           (when (and select? pivot-point)
+             [overlay/times pivot-point])])
+
+        (when (or (= tool :edit)
+                  (= primary-tool :edit))
+          (for [el selected-elements]
+            ^{:key (str (:key el) "-edit-points")}
+            [:g
+             [tools/render-edit el]
+             ^{:key (str (:key el) "-centroid")}
+             [overlay/centroid el]]))
+
+        [tools/render temp-element]])
 
      (when grid? [rulers/grid])]))

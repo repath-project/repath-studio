@@ -31,7 +31,8 @@
 
 (defn frame-panel
   []
-  (let [rulers? @(rf/subscribe [:rulers?])]
+  (let [rulers? @(rf/subscribe [:rulers?])
+        read-only? @(rf/subscribe [:document/read-only?])]
     [:div.flex.flex-col.flex-1.h-full
      [:div.mb-px [toolbar.tools/root]
       (when rulers?
@@ -53,13 +54,16 @@
               [rulers/ruler {:orientation :vertical :size 23}]])]
       [:div.relative.grow.flex
        [frame/main]
-       [:div.absolute.bottom-1.left-2.pointer-events-none
-        {:style {:color "#555"}}
-        @(rf/subscribe [:message])]
-       (when @(rf/subscribe [:debug-info?])
+       (if read-only?
+         [:div.absolute.inset-0.border-4.border-accent]
          [:<>
-          [debug/info]
-          [debug/fps]])
+          [:div.absolute.bottom-1.left-2.pointer-events-none
+           {:style {:color "#555"}}
+           @(rf/subscribe [:message])]
+          (when @(rf/subscribe [:debug-info?])
+            [:<>
+             [debug/info]
+             [debug/fps]])])
        (when @(rf/subscribe [:backdrop?])
          [:div.backdrop
           {:on-click #(rf/dispatch [:set-backdrop false])}])]]]))
