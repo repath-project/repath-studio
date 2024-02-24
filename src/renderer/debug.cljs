@@ -10,7 +10,8 @@
   [:div.fps-wrapper
    [:> FpsView #js {:width 240 :height 180}]])
 
-(def rows
+(defn rows
+  []
   [["Content rect" @(rf/subscribe [:content-rect])]
    ["Viewbox" (str (mapv units/->fixed @(rf/subscribe [:frame/viewbox])))]
    ["Pointer position" (str @(rf/subscribe [:pointer-pos]))]
@@ -31,5 +32,5 @@
   []
   (into [:div.absolute.top-1.left-2.pointer-events-none
          {:style {:color "#555"}}]
-        (for [[label v] rows]
+        (for [[label v] (rows)]
           [:div [:strong.mr-1 label] v])))
