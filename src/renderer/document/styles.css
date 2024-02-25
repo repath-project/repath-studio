@@ -1,5 +1,5 @@
 .document-tab {
-  @apply items-center h-full mr-px text-left level-1 gap-2 opacity-50;
+  @apply button flex items-center h-full mr-px text-left level-1 gap-2 opacity-50 hover:level-1;
   padding: 8px 8px 8px 16px;
   flex: 0 1 130px;
 

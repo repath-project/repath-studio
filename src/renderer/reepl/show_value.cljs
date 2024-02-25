@@ -2,15 +2,18 @@
   (:require
    [cljs.pprint :as pprint]))
 
-(defn pprint-str [val]
+(defn pprint-str
+  [val]
   (pprint/write val :stream nil))
 
-(defn show-str [val]
+(defn show-str
+  [val]
   (if (string? val)
     val
     (pprint-str val)))
 
-(defn show-value- [val config showers]
+(defn show-value-
+  [val config showers]
   (loop [shower-list showers]
     (if (empty? shower-list)
       (throw (js/Error. (str "No shower for value " val)))

@@ -80,7 +80,8 @@ cljs.js/*load-fn*
                       (cb false (:error result))
                       (cb true (aget js/window "last_repl_value"))))))
 
-(defn get-first-form [text]
+(defn get-first-form
+  [text]
   ;; parse #js {} correctly
   (binding [cljs.tools.reader/*data-readers* tags/*cljs-data-readers*]
     (let [rr (string-push-back-reader text)
@@ -89,7 +90,8 @@ cljs.js/*load-fn*
           s-pos (.-s-pos (.-rdr ^js rr))]
       [form s-pos])))
 
-(defn run-repl-multi [text opts cb]
+(defn run-repl-multi
+  [text opts cb]
   (let [text (.trim text)
         [_form pos] (get-first-form text)
         source (.slice text 0 pos)
@@ -112,14 +114,16 @@ cljs.js/*load-fn*
 ;; Trying to get expressions + statements to play well together
 ;; TODO: is this a better way? The `do' stuff seems to work alright ... although
 ;; it won't work if there are other `ns' statements inside there...
-#_(defn run-repl-experimental* [text opts cb]
+#_(defn run-repl-experimental* \
+    [text opts cb]
     (let [fixed (make-last-expr-set-val text "last_repl_value")]
       (if fixed
         (jsc-run fixed cb)
         (replumb/read-eval-call
          opts #(cb (replumb/success? %) (replumb/unwrap-result %)) text))))
 
-#_(defn fix-ns-do [text]
+#_(defn fix-ns-do
+    [text]
   ;; parse #js {} correctly
     (binding [cljs.tools.reader/*data-readers* tags/*cljs-data-readers*]
       (let [rr (string-push-back-reader text)
@@ -137,7 +141,8 @@ cljs.js/*load-fn*
            (.slice text s-pos)
            ")")))))
 
-#_(defn run-repl* [text opts cb]
+#_(defn run-repl*
+    [text opts cb]
     (replumb/read-eval-call
      opts
      #(cb
@@ -283,12 +288,14 @@ cljs.js/*load-fn*
            #(-> [% (str %) (str %)])
            (filter matches? names))))))
 
-(defn process-apropos [text]
+(defn process-apropos
+  [text]
   (if (zero? (.indexOf text "js/"))
     (js-completion (.slice text 3))
     (cljs-completion text)))
 
-(defn get-forms [m]
+(defn get-forms
+  [m]
   (cond
     (:forms m) (:forms m)
     (:arglists m) (let [arglists (:arglists m)]
@@ -300,7 +307,8 @@ cljs.js/*load-fn*
                         arglists)))))
 
 ;; Copied & modified from cljs.repl/print-doc
-(defn get-doc [m]
+(defn get-doc
+  [m]
   (merge {:name (str (when-let [ns (:ns m)] (str ns "/")) (:name m))
           :type (cond
                   (:protocol m) :protocol
@@ -318,7 +326,8 @@ cljs.js/*load-fn*
            (when (:protocol m)
              {:protocol-methods (:methods m)}))))
 
-(defn doc-from-sym [sym]
+(defn doc-from-sym
+  [sym]
   (cond
     (docs/special-doc-map sym) (get-doc (docs/special-doc sym))
     (docs/repl-special-doc-map sym) (get-doc (docs/repl-special-doc sym))
@@ -339,7 +348,8 @@ cljs.js/*load-fn*
    :repl-special-function "REPL Special Function"})
 
 ;; Copied & modified from cljs.repl/print-doc
-(defn print-doc [doc]
+(defn print-doc
+  [doc]
   (println (:name doc))
   (println)
   (when-not (= :normal (:type doc))

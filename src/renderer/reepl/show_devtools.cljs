@@ -1,23 +1,22 @@
 (ns renderer.reepl.show-devtools
   (:require
-   #_[cljs.pprint :as pprint]
    [devtools.formatters.core :as devtools]
    [reagent.core :as r]
    [clojure.string :as str]))
 
-#_(defn pprint-str [val]
-    (pprint/write val :stream nil))
-
-(defn js-array? [val]
+(defn js-array?
+  [val]
   (= js/Array (type val)))
 
-(defn parse-style [raw]
+(defn parse-style
+  [raw]
   (into {}
         (map (fn [line]
                (let [[k v] (str/split line ":")]
                  [(keyword k) v])) (str/split raw ";"))))
 
-(defn show-el [val show-value]
+(defn show-el
+  [val show-value]
   (let [type (first val)
         opts (second val)
         children (drop 2 val)]
@@ -27,23 +26,23 @@
        [(keyword type) {:style (when opts (parse-style (.-style opts)))}]
        (map #(if-not (js-array? %) % (show-el % show-value)) children)))))
 
-
-(defn openable [header val config show-value]
+(defn openable
+  [header val config show-value]
   (let [open (r/atom false)]
     (fn [_ _]
       (let [is-open @open]
         [:div.flex.flex-col
          [:div.flex
-          [:div.flex.value-toggle
+          [:div.flex.cursor-pointer.px-1
            {:on-click #(swap! open not)}
            (if is-open "▼" "▶")]
           (show-el header show-value)]
          (when is-open
            (show-el (devtools/body-api-call val config) show-value))]))))
 
-
 ;; see https://docs.google.com/document/d/1FTascZXT9cxfetuPRT2eXPQKXui4nWFivUnS_335T3U/preview
-(defn show-devtools [val config show-value]
+(defn show-devtools
+  [val config show-value]
   (when-not (var? val)
     (let [header (try
                    (devtools/header-api-call val config)

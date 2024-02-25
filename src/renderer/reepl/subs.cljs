@@ -2,10 +2,12 @@
   (:require-macros
    [reagent.ratom :refer [reaction]]))
 
-(defn items [db]
+(defn items
+  [db]
   (reaction (:items @db)))
 
-(defn current-text [db]
+(defn current-text
+  [db]
   (let [idx (reaction (:hist-pos @db))
         history (reaction (:history @db))]
     (reaction (let [items @history

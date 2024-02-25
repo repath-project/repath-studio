@@ -48,13 +48,16 @@
            (into [:div.shortcuts])))))
 
 (defn toggle-icon-button
-  [{:keys [active? active-icon inactive-icon active-text inactive-text action class]}]
-  [:button.icon-button {:class class
-                        :title (if active? active-text inactive-text)
-                        :on-double-click #(.stopPropagation %)
-                        :on-click #(when action
-                                     (.stopPropagation %)
-                                     (action))}
+  [{:keys [active? active-icon inactive-icon active-text inactive-text action class]}
+   attrs]
+  [:button.icon-button
+   (merge attrs
+          {:class class
+           :title (if active? active-text inactive-text)
+           :on-double-click #(.stopPropagation %)
+           :on-click #(when action
+                        (.stopPropagation %)
+                        (action))})
    [icon (if active? active-icon inactive-icon) {:fixed-width true}]])
 
 (defn toggle-collapsed-button

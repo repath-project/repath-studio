@@ -1,5 +1,7 @@
-.value-toggle {
-    font-size: 9;
-    padding: 4;
-    cursor: pointer;
+.repl-item {
+    @apply font-mono p-1 flex text-xs;
+}
+
+.function {
+    @apply inline-block shrink-0 box-border	;
 }

@@ -238,11 +238,6 @@
              :type :checkbox
              :checked? [:panel/visible? :history]
              :action [:panel/toggle :history]}
-            {:key :toggle-command-history
-             :type :checkbox
-             :label "Command history"
-             :checked? [:panel/visible? :repl-history]
-             :action [:panel/toggle :repl-history]}
             {:key :divider-2
              :type :separator}
             {:key :toggle-grid

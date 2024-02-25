@@ -3,66 +3,38 @@
    ["react" :as react]
    [cljs.reader]
    [cljs.tools.reader]
-   [reagent.core :as r]
-   [renderer.reepl.helpers :as helpers]))
+   [reagent.core :as ra]
+   [renderer.utils.dom :as dom]))
 
-(def styles
-  {:completion-list {:flex-direction :row
-                     :position :absolute
-                     :bottom "100%"
-                     :left 0
-                     :right 0
-                     :overflow :hidden
-                     :font-size 12}
-
-   :completion-show-all {:top 0
-                         :left 0
-                         :right 0
-                         :z-index 1000
-                         :flex-direction :row
-                         :flex-wrap :wrap}
-   :completion-item {;; :cursor :pointer TODO: make these clickable
-                     :padding "3px 5px"
-                     :background-color "var(--level-0)"}
-   :completion-selected {:background-color "var(--level-1)"}
-   :completion-active {:background-color "var(--accent"}})
-
-(def view (partial helpers/view styles))
-
-(def canScrollIfNeeded
-  (some? (.-scrollIntoViewIfNeeded js/document.body)))
-
-(defn completion-item [_text _is-selected _is-active _set-active]
+(defn completion-item
+  [_text _selected? _active? _set-active]
   (let [ref (react/createRef)]
-    (r/create-class
+    (ra/create-class
      {:component-did-update
-      (fn [this [_ _ old-is-selected]]
-        (let [[_ _ is-selected] (r/argv this)]
-          (when (and (not old-is-selected)
-                     is-selected)
-            (when canScrollIfNeeded
-              (.scrollIntoViewIfNeeded (.-current ref) false)
-              (.scrollIntoView (.-current ref))))))
+      (fn [this [_ _ old-selected?]]
+        (let [[_ _ selected?] (ra/argv this)]
+          (when (and (not old-selected?)
+                     selected?)
+            (dom/scroll-into-view (.-current ref)))))
       :reagent-render
-      (fn [text is-selected is-active set-active]
-        [view {:on-click set-active
-               :ref ref
-               :style [:completion-item
-                       (and is-selected
-                            (if is-active
-                              :completion-active
-                              :completion-selected))]}
+      (fn [text selected? active? set-active]
+        [:div.p-1.level-0.text-nowrap
+         {:on-click set-active
+          :class (and selected? (if active? "bg-accent" "level-1"))
+          :ref ref}
          text])})))
 
-(defn completion-list [{:keys [pos list active show-all]} set-active]
+(defn completion-list
+  [docs {:keys [pos list active? show-all?]} set-active]
   (let [items (map-indexed
                #(-> [completion-item
                      (get %2 2)
                      (= %1 pos)
-                     active
+                     active?
                      (partial set-active %1)]) list)]
-    (when show-all
-      (into [view :completion-show-all] items))
-    (into
-     [view :completion-list]
-     items)))
+    [:div.absolute.bottom-full.left-0.w-full.text-xs
+     (when docs [:div.level-1.drop-shadow.p-4.absolute.bottom-full docs])
+     (into
+      [:div.overflow-hidden.flex
+       {:class (when show-all? "flex-wrap")}]
+      items)]))

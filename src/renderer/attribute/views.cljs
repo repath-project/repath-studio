@@ -84,7 +84,7 @@
             :on-blur #(on-change-handler % key value)
             :on-key-down #(keyb/input-key-down-handler % value on-change-handler key value)}]
    (when-not (or (empty? (str value)) disabled?)
-     [:button.button.ml-px.level-1.text-muted.absolute.right-0.clear-input-button
+     [:button.button.ml-px.level-1.text-muted.absolute.right-0.clear-input-button.hover:bg-transparent
       {:style {:width "26px" :height "26px"}
        :on-pointer-down #(rf/dispatch [:element/remove-attr key])}
       [comp/icon "times" {:class "small"}]])])

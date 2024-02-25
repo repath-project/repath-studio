@@ -7,6 +7,10 @@
     background: var(--level-1);
   }
 
+  .bg-accent {
+    background: var(--accent);
+  }
+
   .drag {
     -webkit-app-region: drag;
   }
@@ -100,15 +104,12 @@
     &:hover {
       cursor: pointer;
       transition: all 75ms;
+      background-color: var(--overlay);
       color: var(--font-color-hovered);
     }
 
-    &:active {
-      background-color: var(--overlay);
-    }
-
     &.selected {
-      background-color: var(--accent) !important;
+      @apply bg-accent !important;
       color: var(--accent-inverted);
     }
 

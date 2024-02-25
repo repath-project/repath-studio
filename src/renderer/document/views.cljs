@@ -51,7 +51,7 @@
 
 (defn close-button
   [key]
-  [:button.icon-button.small.close-document-button
+  [:button.icon-button.small.close-document-button.hover:bg-transparent
    {:key key
     :title "Close document"
     :on-pointer-down #(.stopPropagation %)
@@ -75,7 +75,7 @@
     (fn [key document active?]
       [:> ContextMenu/Root
        [:> ContextMenu/Trigger
-        [:div.flex.button.document-tab.level-1
+        [:div.document-tab
          {:class (when active? "active")
           :on-wheel #(rf/dispatch [:document/scroll (.-deltaY %)])
           :on-pointer-down #(case (.-buttons %)

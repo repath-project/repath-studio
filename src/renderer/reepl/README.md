@@ -8,10 +8,10 @@ Based on reepl https://github.com/jaredly/reepl by Jared Forsyth under "ISC Lice
 - Conform with replumb breaking changes https://github.com/arichiardi/replumb#usage
 - Parinfer removed
 - Multiple view and style changes
+- Separate styles
 
 ## Todo
 
-- Separate styles
 - Use re-frame to store and retrieve state to global app-db
 
 ## Considerations

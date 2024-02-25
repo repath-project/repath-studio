@@ -23,12 +23,6 @@
    [renderer.tree.views :as tree]
    [renderer.window.views :as win]))
 
-(defn command-input []
-  [:div.flex.flex-col.level-0.relative.overflow-visible
-   {:style {:font-size "10px"
-            :user-select "text"}}
-   [repl/main-view]])
-
 (defn frame-panel
   []
   (let [rulers? @(rf/subscribe [:rulers?])
@@ -115,19 +109,12 @@
     :id "editor-group"
     :autoSaveId "editor-group"}
    [:> Panel {:id "editor-panel"
-              :minSize 10
+              :minSize 20
+              :defaultSize 100
               :order 1}
     [center-top-group]]
-   [timeline/root]])
-
-(defn center-panel
-  []
-  [:> Panel
-   {:id "center-panel"
-    :order 1}
-   [:div.flex.h-full.flex-col
-    [editor]
-    [command-input]]])
+   [timeline/root]
+   [repl/root]])
 
 (defn tree-panel
   []
@@ -171,7 +158,11 @@
             {:direction "horizontal"
              :id "center-group"
              :autoSaveId "center-group"}
-            [center-panel]
+            [:> Panel
+             {:id "center-panel"
+              :order 1}
+             [:div.flex.h-full.flex-col
+              [editor]]]
             [:> PanelResizeHandle
              {:id "properties-resize-handle"
               :className "resize-handle"}]

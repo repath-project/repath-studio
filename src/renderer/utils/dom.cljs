@@ -25,5 +25,4 @@
 
 (defn scroll-into-view
   [el]
-  (.scrollIntoView el #js {:behavior "smooth"
-                           :block "nearest"}))
+  (.scrollIntoView el #js {:block "nearest"}))

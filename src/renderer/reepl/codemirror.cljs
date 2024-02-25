@@ -55,8 +55,8 @@
     (when-not (empty? words)
       {:list words
        :num (count words)
-       :active (= (get (first words) 2) text)
-       :show-all false
+       :active? (= (get (first words) 2) text)
+       :show-all? false
        :initial-text text
        :pos 0
        :from (:start range)
@@ -99,17 +99,17 @@
   evt
     the triggering event. it will be `.preventDefault'd if there are completions
     to cycle through."
-  [{:keys [num pos active from to list initial-text] :as state}
+  [{:keys [num pos active? from to list initial-text] :as state}
    go-back? cm evt]
   (when (and state (or (< 1 (count list))
                        (and (< 0 (count list))
                             (not= initial-text (get (first list) 2)))))
     (.preventDefault evt)
     (let [initial-active (= initial-text (get (first list) 2))
-          [active pos] (if active
-                         (cycle-pos num pos go-back? initial-active)
-                         [true (if go-back? (dec num) pos)])
-          text (if active
+          [active? pos] (if active?
+                          (cycle-pos num pos go-back? initial-active)
+                          [true (if go-back? (dec num) pos)])
+          text (if active?
                  (get (get list pos) 2)
                  initial-text)]
       ;; TODO: don't replaceRange here, instead watch the state atom and react to
@@ -117,7 +117,7 @@
       (.replaceRange cm text from to)
       (assoc state
              :pos pos
-             :active active
+             :active? active?
              :to #js {:line (.-line from)
                       :ch (+ (count text)
                              (.-ch from))}))))
@@ -199,7 +199,7 @@
                  (if (cancel-keys (.-keyCode evt))
                    (reset! complete-atom nil)
                    (if (cmp-show (.-keyCode evt))
-                     (swap! complete-atom assoc :show-all false)
+                     (swap! complete-atom assoc :show-all? false)
                      (when-not (cmp-ignore (.-keyCode evt))
                        (reset! complete-atom (repl-hint complete-word inst nil)))))))
 
@@ -207,7 +207,7 @@
                (fn [inst evt]
                  (case (.-keyCode evt)
                    (17 18 91 93)
-                   (swap! complete-atom assoc :show-all true)
+                   (swap! complete-atom assoc :show-all? true)
                    ;; tab
                    ;; TODO: do I ever want to use TAB normally?
                    ;; Maybe if there are no completions...

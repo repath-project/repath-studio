@@ -1,5 +1,7 @@
 (ns renderer.reepl.core
   (:require
+   ["react" :as react]
+   ["react-resizable-panels" :refer [Panel PanelResizeHandle]]
    [cljs.reader]
    [cljs.tools.reader]
    [re-frame.core :as rf]
@@ -8,71 +10,14 @@
    [renderer.reepl.codemirror :as code-mirror]
    [renderer.reepl.completions :refer [completion-list]]
    [renderer.reepl.handlers :as handlers]
-   [renderer.reepl.helpers :as helpers]
    [renderer.reepl.repl-items :refer [repl-items]]
    [renderer.reepl.subs :as subs]
    [replumb.core :as replumb])
   (:require-macros
    [reagent.ratom :refer [reaction]]))
 
-(def styles
-  {:container {:font-family "var(--font-mono)"
-               :flex 1
-               :display :flex
-               :white-space "pre-wrap"
-               :flex-wrap "wrap"
-               :position :relative}
-
-   :intro-message {:padding "10px 20px"
-                   :line-height 1.5
-                   :border-bottom "1px solid #aaa"
-                   :flex-direction :row
-                   :margin-bottom 10}
-   :intro-code {:background-color "#eee"
-                :padding "0 5px"}
-
-   :completion-container {:font-size 12}
-   :completion-list {:flex-direction :row
-                     :overflow :hidden
-                     :height 20}
-   :completion-empty {:color "#ccc"
-                      ;;:font-weight :bold
-                      :padding "3px 10px"}
-
-   :completion-show-all {:position :absolute
-                         :top 0
-                         :left 0
-                         :right 0
-                         :z-index 1000
-                         :flex-direction :row
-                         :background-color "#eef"
-                         :flex-wrap :wrap}
-   :completion-item {;; :cursor :pointer TODO: make these clickable
-                     :padding "3px 5px 3px"}
-   :completion-selected {:background-color "#eee"}
-   :completion-active {:background-color "#aaa"}
-
-   :docs {:max-height 300
-          :overflow :auto
-          :padding "16px"
-          :position "absolute"
-          :bottom "100%"
-          :margin-bottom "24px"
-          :background "var(--level-1)"
-          :left 0
-          :font-size "13px"
-          :box-shadow "0 0 15px rgba(0, 0, 0, .25)"}
-
-   :main-caret {:padding "8px 5px 8px 10px"
-                :margin-right 0
-                :flex-direction :row}
-
-   :input-caret {:color "#55f"
-                 :margin-right 10}})
-
-(def view (partial helpers/view styles))
-
-(defn is-valid-cljs? [source]
+(defn is-valid-cljs?
+  [source]
   (try
     (fn []
       (cljs.tools.reader/read-string source)
@@ -123,7 +68,8 @@
                             :on-click #(rf/dispatch [:set-repl-mode mode])}
        mode]))
 
-(defn repl-input [state submit repl-history? cm-opts]
+(defn repl-input
+  [state submit panel-ref cm-opts]
   {:pre [(every? (comp not nil?)
                  (map cm-opts
                       [:on-up
@@ -131,10 +77,10 @@
                        :complete-atom
                        :complete-word
                        :on-change]))]}
-  (let [{:keys [_pos _count _text]} @state]
-    [:div.flex
-     [:div.flex.pl-2 {:style {:font-size "12px"
-                              :margin-top "6px"}} (replumb/get-prompt)]
+  (let [{:keys [_pos _count _text]} @state
+        repl-history? @(rf/subscribe [:panel/visible? :repl-history])]
+    [:div.toolbar {:style {:padding-top "0" :padding-bottom "0"}}
+     [:div.flex.text-xs {:style {:margin-top "7px"}} (replumb/get-prompt)]
      ^{:key (str (hash (:js-cm-opts cm-opts)))}
      [code-mirror/code-mirror (reaction (:text @state))
       (merge
@@ -147,20 +93,21 @@
      #_[:div
         (repl-mode-button :cljs)
         (repl-mode-button :js)]
-     [:div.toolbar
-      [comp/toggle-icon-button
-       {:class "small"
-        :active? (not repl-history?)
-        :active-icon "chevron-up"
-        :active-text "show command output"
-        :inactive-icon "chevron-down"
-        :inactive-text "hide command output"
-        :action #(rf/dispatch [:panel/toggle :repl-history])}]]]))
+     [comp/toggle-icon-button
+      {:class "hover:bg-transparent my-0"
+       :active? repl-history?
+       :active-icon "chevron-down"
+       :active-text "Hide command output"
+       :inactive-icon "chevron-up"
+       :inactive-text "Show command output"
+       :action #(when-let [panel (.-current panel-ref)]
+                  (if (.isExpanded panel)
+                    (.collapse panel)
+                    (.expand panel)))}
+      {:style {:margin-top "0" :margin-bottom "0"}}]]))
 
-(defn docs-view [docs]
-  (when docs [view :docs docs]))
-
-(defn set-print! [log]
+(defn set-print!
+  [log]
   (set! cljs.core/*print-newline* false)
   (set! cljs.core/*print-err-fn*
         (fn [& args]
@@ -179,7 +126,8 @@
    :history [""]})
 
 ;; TODO: is there a macro or something that could do this cleaner?
-(defn make-handlers [state]
+(defn make-handlers
+  [state]
   {:add-input (partial swap! state handlers/add-input)
    :add-result (partial swap! state handlers/add-result)
    :go-up (partial swap! state handlers/go-up)
@@ -188,14 +136,15 @@
    :set-text (partial swap! state handlers/set-text)
    :add-log (partial swap! state handlers/add-log)})
 
-(defn repl [& {:keys [execute
-                      _complete-word
-                      get-docs
-                      state
-                      _show-value-opts
-                      _js-cm-opts
-                      _on-cm-init]}]
-  (let [repl-history? (rf/subscribe [:panel/visible? :repl-history])
+(defn repl
+  [& {:keys [execute
+             _complete-word
+             get-docs
+             state
+             _show-value-opts
+             _js-cm-opts
+             _on-cm-init]}]
+  (let [panel-ref (react/createRef)
         state (or state (r/atom initial-state))
         {:keys
          [add-input
@@ -233,20 +182,33 @@
                    show-value-opts
                    js-cm-opts
                    on-cm-init]}]
-      [:div
-       (when @repl-history? [repl-items @items (assoc show-value-opts :set-text set-text)])
-       [view :container
-        (when @docs [docs-view @docs])
+      [:<>
+       [:> PanelResizeHandle
+        {:id "repl-resize-handle"
+         :className "resize-handle"}]
+       [:> Panel
+        {:id "repl-panel"
+         :minSize 10
+         :defaultSize 0
+         :collapsible true
+         :order 3
+         :ref panel-ref
+         :onCollapse #(rf/dispatch-sync [:panel/collapse :repl-history])
+         :onExpand #(rf/dispatch-sync [:panel/expand :repl-history])}
+        [repl-items @items (assoc show-value-opts :set-text set-text)]]
+
+       [:div.relative.whitespace-pre-wrap.font-mono
         [completion-list
+         @docs
          @complete-atom
         ;; TODO: this should also replace the text....
          identity
-         #_(swap! complete-atom assoc :pos % :active true)]
+         #_(swap! complete-atom assoc :pos % :active? true)]
         (let [_items @items] ; TODO: This needs to be removed
           [repl-input
            (subs/current-text state)
            submit
-           @repl-history?
+           panel-ref
            {:complete-word complete-word
             :on-up go-up
             :on-down go-down
