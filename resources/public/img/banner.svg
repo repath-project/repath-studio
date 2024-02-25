@@ -1,4 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <svg width="720" height="576" version="1.1" viewBox="0 0 720 576" xmlns="http://www.w3.org/2000/svg">
- <rect width="720" height="576" rx="0" ry="0" fill="#e93976" stop-color="#000000" stroke-width="4.1824" style="-inkscape-stroke:none;font-variation-settings:normal"/>
- <path d="m360.39 147.6c-23.178 0-45.114 5.746-64.466 15.869-8.2116-10.039-20.496-15.863-33.466-15.864-23.882-1e-4 -43.24 19.36-43.24 43.24l0.7781 237.56h140.4c77.026 0 140.4-63.366 140.4-140.39s-63.366-140.41-140.4-140.41zm0 86.464c30.3 0 53.926 23.64 53.926 53.938 0 30.3-23.63 53.93-53.926 53.93h-53.91v-54.75c0.42366-29.902 23.886-53.12 53.91-53.12z" fill="#fff" stop-color="#000000" stroke-width="4.1824" style="font-variation-settings:normal"/>
+ <defs>
+  <linearGradient id="linearGradient9-9" x1="1487.8" x2="1629.5" y1="403.31" y2="403.31" gradientTransform="translate(-1267.8 -115.53)" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#c0c0c0" offset="0"/>
+   <stop stop-color="#fff" offset="1"/>
+  </linearGradient>
+  <linearGradient id="linearGradient4" x1="349.46" x2="349.46" y1="557.68" y2="2.442" gradientTransform="matrix(1.0374,0,0,1.0374,-2.5333,-2.5333)" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#d01761" offset="0"/>
+   <stop stop-color="#e93976" offset="1"/>
+  </linearGradient>
+ </defs>
+ <rect width="720" height="576" rx="0" ry="0" fill="url(#linearGradient4)" stop-color="#000000" stroke-width=".97479" style="-inkscape-stroke:none;font-variation-settings:normal"/>
+ <path d="m220 287.78 0.016 0.2285h-0.016v140.4h86.318v-11.176c17.182 7.2926 35.645 11.092 54.311 11.176 39.901 0 75.92-16.617 101.52-43.309 24.227-25.264 39.113-59.553 39.113-97.32h-86.32c0 29.994-24.315 54.309-54.309 54.309s-54.309-24.315-54.309-54.309z" fill="url(#linearGradient9-9)" style="-inkscape-stroke:none;font-variation-settings:normal"/>
+ <path d="m360.62 147.15c-22.418 0.11184-44.484 5.5815-64.359 15.953-8.1846-9.7838-20.271-15.455-33.027-15.496-23.868 1e-3 -43.221 19.34-43.24 43.207v237.59h86.484v-142.08c0.7868-29.36 24.773-52.775 54.144-52.854 29.994 0 54.309 24.315 54.309 54.309-0.048 0.48575-0.1028 0.97083-0.164 1.4551h86.381c0.037-0.48485 0.071-0.96989 0.1035-1.4551 0-77.668-62.962-140.63-140.63-140.63z" fill="#fff" stop-color="#000000" style="-inkscape-stroke:none;font-variation-settings:normal"/>
 </svg>
