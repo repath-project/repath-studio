@@ -77,7 +77,7 @@
        :on-checked-change #(rf/dispatch [:timeline/set-guide-snap %])}]]))
 
 (defn toolbar
-  [timeline-ref panel-ref]
+  [timeline-ref]
   (let [time @(rf/subscribe [:timeline/time])
         time-formatted @(rf/subscribe [:timeline/time-formatted])
         paused? @(rf/subscribe [:timeline/paused?])
@@ -117,10 +117,7 @@
        :active-text "Hide timeline"
        :inactive-icon "timeline"
        :inactive-text "Show timeline"
-       :action #(when-let [panel (.-current panel-ref)]
-                  (if (.isExpanded panel)
-                    (.collapse panel)
-                    (.expand panel)))}]]))
+       :action #(rf/dispatch [:panel/toggle :timeline])}]]))
 
 (defn register-listeners
   [timeline-ref]
@@ -169,8 +166,7 @@
 
 (defn root
   []
-  (let [timeline-ref (react/createRef)
-        panel-ref (react/createRef)]
+  (let [timeline-ref (react/createRef)]
     (ra/create-class
      {:component-did-mount
       (fn []
@@ -183,19 +179,21 @@
 
       :reagent-render
       (fn []
-        [:<>
-         [:> PanelResizeHandle
-          {:id "timeline-resize-handle"
-           :className "resize-handle"}]
-         [toolbar timeline-ref panel-ref]
-         [time-bar]
-         [:> Panel
-          {:id "timeline-panel"
-           :minSize 10
-           :defaultSize 0
-           :collapsible true
-           :order 2
-           :ref panel-ref
-           :onCollapse #(rf/dispatch-sync [:panel/collapse :timeline])
-           :onExpand #(rf/dispatch-sync [:panel/expand :timeline])}
-          [timeline timeline-ref]]])})))
+        (let [timeline? @(rf/subscribe [:panel/visible? :timeline])]
+          [:<>
+
+           [toolbar timeline-ref]
+           [time-bar]
+           (when timeline?
+             [:> PanelResizeHandle
+              {:id "timeline-resize-handle"
+               :className "resize-handle"}])
+           (if timeline?
+             [:> Panel
+              {:id "timeline-panel"
+               :minSize 10
+               :defaultSize 10
+               :order 2}
+              [timeline timeline-ref]]
+             ;; We need an invisible timeline to get the ref for our toolbar.
+             [:div.h-0 [timeline timeline-ref]])]))})))

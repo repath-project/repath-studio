@@ -105,39 +105,42 @@
 
 (defn editor
   []
-  [:> PanelGroup
-   {:direction "vertical"
-    :id "editor-group"
-    :autoSaveId "editor-group"}
-   [:> Panel {:id "editor-panel"
-              :minSize 20
-              :defaultSize 100
-              :order 1}
-    [center-top-group]]
-   [timeline/root]
-   [repl/root]])
+  (let [timeline? @(rf/subscribe [:panel/visible? :timeline])
+        repl-history? @(rf/subscribe [:panel/visible? :repl-history])]
+    [:> PanelGroup
+     ;; REVIEW: We need to rerender the group to properly resize the panels.
+     {:key (str timeline? repl-history?)
+      :direction "vertical"
+      :id "editor-group"
+      :autoSaveId "editor-group"}
+     [:> Panel {:id "editor-panel"
+                :minSize 20
+                :order 1}
+      [center-top-group]]
+     [timeline/root]
+     [repl/root]]))
 
 (defn tree-panel
   []
   (let [tree? @(rf/subscribe [:panel/visible? :tree])
         tree-min-width @(rf/subscribe [:window/tree-min-width])]
-    (when tree-min-width
-      [:> Panel
-       {:id "tree-panel"
-        :collapsible true
-        :minSize tree-min-width
-        :defaultSize tree-min-width
-        :onCollapse #(rf/dispatch-sync [:panel/collapse :tree])
-        :onExpand #(rf/dispatch-sync [:panel/expand :tree])
-        :class "flex flex-col"}
-       (when tree?
-         [:<>
-          [doc/actions]
-          [tree/root]])])))
+    (when (and tree? tree-min-width)
+      [:<>
+       [:> Panel
+        {:id "tree-panel"
+         :minSize tree-min-width
+         :defaultSize tree-min-width
+         :class "flex flex-col"}
+        [doc/actions]
+        [tree/root]]
+       [:> PanelResizeHandle
+        {:id "tree-resize-handle"
+         :className "resize-handle"}]])))
 
 (defn root
   []
-  (let [props-min-width @(rf/subscribe [:window/props-min-width])]
+  (let [props-min-width @(rf/subscribe [:window/props-min-width])
+        props? @(rf/subscribe [:panel/visible? :properties])]
     [:> Tooltip/Provider
      [:div.flex.flex-col.flex-1.h-screen
       [win/app-header]
@@ -147,9 +150,6 @@
           :id "root-group"
           :autoSaveId "root-group"}
          [tree-panel]
-         [:> PanelResizeHandle
-          {:id "tree-resize-handle"
-           :className "resize-handle"}]
          [:> Panel
           {:id "main-panel"
            :order 2}
@@ -161,23 +161,25 @@
              :autoSaveId "center-group"}
             [:> Panel
              {:id "center-panel"
+              :minSize 10
               :order 1}
              [:div.flex.h-full.flex-col
               [editor]]]
-            [:> PanelResizeHandle
-             {:id "properties-resize-handle"
-              :className "resize-handle"}]
-            (when props-min-width
-              [:> Panel
-               {:id "properties-panel"
-                :collapsible true
-                :order 2
-                :minSize props-min-width
-                :defaultSize props-min-width
-                :onCollapse #(rf/dispatch-sync [:panel/collapse :properties])
-                :onExpand #(rf/dispatch-sync [:panel/expand :properties])}
-               (when @(rf/subscribe [:panel/visible? :properties])
-                 [attr/form])])
+
+            (when (and props? props-min-width)
+              [:<>
+               [:> PanelResizeHandle
+                {:id "properties-resize-handle"
+                 :className "resize-handle"}]
+               [:> Panel
+                {:id "properties-panel"
+                 :order 2
+                 :minSize props-min-width
+                 :defaultSize props-min-width
+                 :onCollapse #(rf/dispatch-sync [:panel/collapse :properties])
+                 :onExpand #(rf/dispatch-sync [:panel/expand :properties])}
+
+                [attr/form]]])
             [toolbar.object/root]]]]]
         [home/panel])]
      [cmdk/dialog]

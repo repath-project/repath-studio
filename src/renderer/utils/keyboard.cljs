@@ -77,6 +77,12 @@
                  [{:keyCode (key-codes "P")
                    :ctrlKey true
                    :shiftKey true}]]
+                [[:panel/toggle :tree]
+                 [{:keyCode (key-codes "T")
+                   :ctrlKey true}]]
+                [[:panel/toggle :properties]
+                 [{:keyCode (key-codes "P")
+                   :ctrlKey true}]]
                 [[:element/stroke->path]
                  [{:keyCode (key-codes "P")
                    :ctrlKey true

@@ -69,7 +69,7 @@
        mode]))
 
 (defn repl-input
-  [state submit panel-ref cm-opts]
+  [state submit cm-opts]
   {:pre [(every? (comp not nil?)
                  (map cm-opts
                       [:on-up
@@ -80,7 +80,7 @@
   (let [{:keys [_pos _count _text]} @state
         repl-history? @(rf/subscribe [:panel/visible? :repl-history])]
     [:div.toolbar {:style {:padding-top "0" :padding-bottom "0"}}
-     [:div.flex.text-xs {:style {:margin-top "7px"}} (replumb/get-prompt)]
+     [:div.flex.text-xs.pl-1 {:style {:margin-top "7px"}} (replumb/get-prompt)]
      ^{:key (str (hash (:js-cm-opts cm-opts)))}
      [code-mirror/code-mirror (reaction (:text @state))
       (merge
@@ -100,10 +100,7 @@
        :active-text "Hide command output"
        :inactive-icon "chevron-up"
        :inactive-text "Show command output"
-       :action #(when-let [panel (.-current panel-ref)]
-                  (if (.isExpanded panel)
-                    (.collapse panel)
-                    (.expand panel)))}
+       :action #(rf/dispatch [:panel/toggle :repl-history])}
       {:style {:margin-top "0" :margin-bottom "0"}}]]))
 
 (defn set-print!
@@ -144,8 +141,7 @@
              _show-value-opts
              _js-cm-opts
              _on-cm-init]}]
-  (let [panel-ref (react/createRef)
-        state (or state (r/atom initial-state))
+  (let [state (or state (r/atom initial-state))
         {:keys
          [add-input
           add-result
@@ -183,19 +179,17 @@
                    js-cm-opts
                    on-cm-init]}]
       [:<>
-       [:> PanelResizeHandle
-        {:id "repl-resize-handle"
-         :className "resize-handle"}]
-       [:> Panel
-        {:id "repl-panel"
-         :minSize 10
-         :defaultSize 0
-         :collapsible true
-         :order 3
-         :ref panel-ref
-         :onCollapse #(rf/dispatch-sync [:panel/collapse :repl-history])
-         :onExpand #(rf/dispatch-sync [:panel/expand :repl-history])}
-        [repl-items @items (assoc show-value-opts :set-text set-text)]]
+       (when @(rf/subscribe [:panel/visible? :repl-history])
+         [:<>
+          [:> PanelResizeHandle
+           {:id "repl-resize-handle"
+            :className "resize-handle"}]
+          [:> Panel
+           {:id "repl-panel"
+            :minSize 10
+            :defaultSize 10
+            :order 3}
+           [repl-items @items (assoc show-value-opts :set-text set-text)]]])
 
        [:div.relative.whitespace-pre-wrap.font-mono
         [completion-list
@@ -208,7 +202,6 @@
           [repl-input
            (subs/current-text state)
            submit
-           panel-ref
            {:complete-word complete-word
             :on-up go-up
             :on-down go-down

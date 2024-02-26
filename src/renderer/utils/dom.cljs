@@ -26,3 +26,7 @@
 (defn scroll-into-view
   [el]
   (.scrollIntoView el #js {:block "nearest"}))
+
+(defn scroll-to-bottom
+  [el]
+  (set! (.-scrollTop el) (.-scrollHeight el)))

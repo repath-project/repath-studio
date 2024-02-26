@@ -5,7 +5,8 @@
    [cljs.tools.reader]
    [reagent.core :as r]
    [renderer.reepl.codemirror :as codemirror]
-   [renderer.reepl.show-value :refer [show-value]]))
+   [renderer.reepl.show-value :refer [show-value]]
+   [renderer.utils.dom :as dom]))
 
 (defmulti repl-item (fn [item _opts] (:type item)))
 
@@ -40,13 +41,17 @@
 (defn repl-items [_]
   (let [ref (react/createRef)]
     (r/create-class
-     {:component-did-update
+     {:component-did-mount
       (fn [_this]
         (let [el (.-current ref)]
-          (set! (.-scrollTop el) (.-scrollHeight el))))
+          (dom/scroll-to-bottom el)))
+      :component-did-update
+      (fn [_this]
+        (let [el (.-current ref)]
+          (dom/scroll-to-bottom el)))
       :reagent-render
       (fn [items opts]
         (into
-         [:div.flex-1.border-b.border-default.h-full.overflow-auto
+         [:div.flex-1.border-b.border-default.h-full.overflow-y-auto.overflow-x-hidden.p-1
           {:ref ref}]
          (map #(repl-item % opts) items)))})))

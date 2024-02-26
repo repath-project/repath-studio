@@ -228,6 +228,16 @@
                       :action [:focus-selection :fill]}]}
             {:key :divider-1
              :type :separator}
+            {:key :toggle-tree
+             :type :checkbox
+             :label "Element tree"
+             :checked? [:panel/visible? :tree]
+             :action [:panel/toggle :tree]}
+            {:key :toggle-props
+             :type :checkbox
+             :label "Properties"
+             :checked? [:panel/visible? :properties]
+             :action [:panel/toggle :properties]}
             {:key :toggle-xml
              :label "XML view"
              :type :checkbox
@@ -238,6 +248,16 @@
              :type :checkbox
              :checked? [:panel/visible? :history]
              :action [:panel/toggle :history]}
+            {:key :toggle-command-history
+             :type :checkbox
+             :label "Command history"
+             :checked? [:panel/visible? :repl-history]
+             :action [:panel/toggle :repl-history]}
+            {:key :toggle-timeline-panel
+             :type :checkbox
+             :label "Timeline editor"
+             :checked? [:panel/visible? :timeline]
+             :action [:panel/toggle :timeline]}
             {:key :divider-2
              :type :separator}
             {:key :toggle-grid
