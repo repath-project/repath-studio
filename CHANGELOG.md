@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.1 (2024-02-26)
+
+**Changed**
+
+- Logo
+  
+**Fixed**
+
+- Resizable panels
+
 ## 0.2.0 (2024-02-22)
 
 **Added**
