@@ -31,7 +31,7 @@
      [:div.mb-px [toolbar.tools/root]
       (when rulers?
         [:div.flex
-         [:div.level-1 {:style {:width "23px" :height "23px"}}
+         [:div.bg-primary {:style {:width "23px" :height "23px"}}
           [comp/toggle-icon-button
            {:active? @(rf/subscribe [:rulers-locked?])
             :active-icon "lock"
@@ -40,12 +40,13 @@
             :inactive-text "lock"
             :class "small"
             :action #(rf/dispatch [:toggle-rulers-locked])}]]
-         [:div.w-full.ml-px.level-1
+         [:div.w-full.ml-px.bg-primary
           [rulers/ruler {:orientation :horizontal :size 23}]]])]
      [:div.flex.flex-1.relative
-      [:<> (when rulers?
-             [:div.level-1.mr-px
-              [rulers/ruler {:orientation :vertical :size 23}]])]
+      [:<>
+       (when rulers?
+         [:div.bg-primary.mr-px
+          [rulers/ruler {:orientation :vertical :size 22}]])]
       [:div.relative.grow.flex
        [frame/main]
        (if read-only?
@@ -83,7 +84,7 @@
                    :defaultSize 30
                    :minSize 5
                    :order 2}
-         [:div.v-scroll.p-1.level-1.h-full.ml-px
+         [:div.v-scroll.p-1.bg-primary.h-full.ml-px
           [history/root]]]])
 
      (when @(rf/subscribe [:panel/visible? :xml])
@@ -96,7 +97,7 @@
                      :defaultSize 30
                      :minSize 5
                      :order 3}
-           [:div.v-scroll.p-1.h-full.level-1.ml-px
+           [:div.v-scroll.p-1.h-full.bg-primary.ml-px
             [cm/editor xml
              {:options {:mode "text/xml"
                         :readOnly true}}]]]]))]]

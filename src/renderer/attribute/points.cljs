@@ -35,7 +35,7 @@
      (when v
        [:> Popover/Root {:modal true}
         [:> Popover/Trigger {:asChild true}
-         [:button.ml-px.inline-block.level-1.text-muted
+         [:button.ml-px.inline-block.bg-primary.text-muted
           {:style {:flex "0 0 26px"
                    :height "26px"}}
           [comp/icon "pencil" {:class "small"}]]]

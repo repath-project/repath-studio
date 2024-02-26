@@ -4,7 +4,7 @@
 
 (defn panel []
   [:div.flex.overflow-auto.flex-1.min-h-full.justify-center
-   [:div.level-1.w-full.self-center.justify-center.p-12
+   [:div.bg-primary.w-full.self-center.justify-center.p-12
     {:style {:max-width "1200px"}}
 
     [:h1.text-xl.mb-1 "repath.studio"]

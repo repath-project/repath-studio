@@ -23,7 +23,7 @@
 
 .menu-content,
 .menu-sub-content {
-  @apply level-0 drop-shadow-lg py-1 z-10;
+  @apply bg-secondary drop-shadow-lg py-1 z-10;
   min-width: 200px;
   will-change: transform, opacity;
   border: 1px solid var(--border-color);

@@ -24,7 +24,7 @@
        [:div.flex.gap-2.items-center
         title
         (when-let [shortcuts (comp/shortcuts action)]
-          [:div.p-1.text-xs.level-1.rounded
+          [:div.p-1.text-xs.bg-primary.rounded
            shortcuts])]
        [:> Tooltip/Arrow
         {:class "tooltip-arrow"}]]]]))

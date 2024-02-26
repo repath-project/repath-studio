@@ -18,9 +18,9 @@
             (dom/scroll-into-view (.-current ref)))))
       :reagent-render
       (fn [text selected? active? set-active]
-        [:div.p-1.level-0.text-nowrap
+        [:div.p-1.bg-secondary.text-nowrap
          {:on-click set-active
-          :class (and selected? (if active? "bg-accent" "level-1"))
+          :class (and selected? (if active? "bg-accent" "bg-primary"))
           :ref ref}
          text])})))
 
@@ -33,7 +33,7 @@
                      active?
                      (partial set-active %1)]) list)]
     [:div.absolute.bottom-full.left-0.w-full.text-xs
-     (when docs [:div.level-1.drop-shadow.p-4.absolute.bottom-full docs])
+     (when docs [:div.bg-primary.drop-shadow.p-4.absolute.bottom-full docs])
      (into
       [:div.overflow-hidden.flex
        {:class (when show-all? "flex-wrap")}]

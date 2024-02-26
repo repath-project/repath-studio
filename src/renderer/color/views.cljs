@@ -14,7 +14,7 @@
                                 (rf/dispatch [:element/set-attr :fill color]))
                     :style {:background-color color}}
    (when (= color "transparent")
-     [:div.level-1.text-error.relative
+     [:div.bg-primary.text-error.relative
       [comp/icon "times"]])])
 
 (defn swatch [colors]
@@ -35,7 +35,7 @@
      [:> Popover/Root {:modal true}
       [:> Popover/Trigger
        [:div.color-rect.relative {:style {:background stroke}}
-        [:div.color-rect.level-1.absolute
+        [:div.color-rect.bg-primary.absolute
          {:style {:width "13px"
                   :height "13px"
                   :bottom "9px"

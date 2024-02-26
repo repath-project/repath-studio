@@ -7,8 +7,8 @@
     'Apple Color Emoji', 'Segoe UI Emoji';
     --font-size: 13px;
 
-    --level-0: #222;
-    --level-1: #2d2d2d;
+    --bg-secondary: #222;
+    --bg-primary: #2d2d2d;
 
     --backdrop: rgb(0 0 0 / 0.5);
 
@@ -36,8 +36,8 @@
 }
 
 [data-theme='light'] {
-    --level-0: #e5e5e5;
-    --level-1: #f5f5f5;
+    --bg-secondary: #e5e5e5;
+    --bg-primary: #f5f5f5;
 
     --overlay: #fff;
 
@@ -61,13 +61,13 @@
     .popover-arrow,
     .tooltip-arrow,
     .menu-arrow  {
-      fill: var(--level-1);
+      fill: var(--bg-primary);
     }
     
     .popover-content,
     .tooltip-content,
     .menu-content,
     .menu-sub-content {
-      @apply level-1;
+      @apply bg-primary;
     }
 }

@@ -84,7 +84,7 @@
         replay? @(rf/subscribe [:timeline/replay?])
         end @(rf/subscribe [:timeline/end])
         timeline? @(rf/subscribe [:panel/visible? :timeline])]
-    [:div.toolbar.level-1.mt-px
+    [:div.toolbar.bg-primary.mt-px
      [:div.flex-1.flex
       [comp/icon-button "go-to-start"
        {:on-click #(.setTime (.-current timeline-ref) 0)

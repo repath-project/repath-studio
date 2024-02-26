@@ -45,7 +45,7 @@
                          :value v
                          :disabled? disabled?
                          :placeholder 0}]
-     [:button.button.ml-px.inline-block.level-1.text-muted
+     [:button.button.ml-px.inline-block.bg-primary.text-muted
       {:title "Generate random seed"
        :style {:flex "0 0 26px"
                :height "100%"}

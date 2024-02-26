@@ -21,7 +21,7 @@
 }
 
 .CodeMirror-gutters {
-    @apply level-0 !important;
+    @apply bg-secondary !important;
 }
 
 .CodeMirror {

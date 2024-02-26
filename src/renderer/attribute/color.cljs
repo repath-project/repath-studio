@@ -23,7 +23,7 @@
     [:> Popover/Trigger {:asChild true}
      [:button.color-drip.ml-px.inline-block
       {:style {:flex "0 0 26px"
-               :border "5px solid var(--level-1)"
+               :border "5px solid var(--bg-primary)"
                :background v}}]]
     [:> Popover/Portal
      [:> Popover/Content

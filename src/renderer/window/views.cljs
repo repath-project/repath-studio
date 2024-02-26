@@ -34,11 +34,11 @@
          {:src "img/icon-no-bg.svg"
           :style {:width "14px"
                   :height "14px"}}]])
-     [:div.flex.relative.level-0
+     [:div.flex.relative.bg-secondary
       [menubar/root]]
      [:div.title-bar @(rf/subscribe [:document/title])]
      [:div.flex.h-full.flex-1.drag]
-     [:div.level-1
+     [:div.bg-primary
       {:class (when-not (or platform/electron? fullscreen?) "mr-1.5")}
       [comp/icon-button
        (name @(rf/subscribe [:theme/mode]))

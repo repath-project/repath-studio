@@ -1,5 +1,5 @@
 .timeline-editor {
-  @apply level-1 w-full min-h-0 h-full !important;
+  @apply bg-primary w-full min-h-0 h-full !important;
   font-family: inherit !important;
   color: var(--font-color-muted) !important;
  }
@@ -39,7 +39,7 @@
 }
 
 .timeline-editor-edit-row {
-  background-image: linear-gradient(var(--level-1), var(--level-1)), 
+  background-image: linear-gradient(var(--bg-primary), var(--bg-primary)), 
                     linear-gradient(90deg, var(--border-color) 1px, transparent 0) !important;
 }
 

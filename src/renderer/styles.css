@@ -1,10 +1,10 @@
 @layer utilities {
-  .level-0 {
-    background: var(--level-0);
+  .bg-secondary {
+    background: var(--bg-secondary);
   }
 
-  .level-1 {
-    background: var(--level-1);
+  .bg-primary {
+    background: var(--bg-primary);
   }
 
   .bg-accent {
@@ -66,7 +66,7 @@
 
 @layer components {
   .form-element {
-    @apply level-1 border-0 w-full;
+    @apply bg-primary border-0 w-full;
 
     outline: none;
     padding: 4px 12px;
@@ -128,7 +128,7 @@
 body {
   margin: 0;
   padding: 0;
-  background: var(--level-0) !important;
+  background: var(--bg-secondary) !important;
   overflow: hidden;
   font-family: var(--font-sans);
   font-size: var(--font-size);
@@ -169,7 +169,7 @@ input {
 }
 
 input[type=range] {
-  @apply m-0 level-1 appearance-none;
+  @apply m-0 bg-primary appearance-none;
   padding: 5px;
 
   &:focus {
@@ -183,7 +183,7 @@ input[type=range] {
 
 input[type=range] {
   &::-webkit-slider-runnable-track {
-    @apply border-0 rounded-none level-0;
+    @apply border-0 rounded-none bg-secondary;
     height: 16px;
   }
 
@@ -245,7 +245,7 @@ pre {
 }
 
 .tooltip {
-  @apply absolute level-0 rounded;
+  @apply absolute bg-secondary rounded;
   z-index: 1;
   margin: 8px;
   line-height: 24px;
@@ -365,7 +365,7 @@ pre {
 }
 
 .footer {
-  @apply flex p-1 level-1 overflow-visible items-center mt-px;
+  @apply flex p-1 bg-primary overflow-visible items-center mt-px;
 }
 
 .shortcut {
@@ -374,7 +374,7 @@ pre {
 }
 
 .dialog {
-  @apply fixed level-0 rounded;
+  @apply fixed bg-secondary rounded;
   width: 500px;
   top: 200px;
   left: calc(50% - 250px);
@@ -438,7 +438,7 @@ pre {
 }
 
 .popover-content {
-  @apply level-0 drop-shadow-lg z-10;
+  @apply bg-secondary drop-shadow-lg z-10;
   max-width: 300px;
   border: 1px solid var(--border-color);
   animation-duration: 400ms;
@@ -466,11 +466,11 @@ pre {
 .popover-arrow,
 .tooltip-arrow,
 .menu-arrow  {
-  fill: var(--level-0);
+  fill: var(--bg-secondary);
 }
 
 .tooltip-content {
-  @apply level-0 px-2 py-1 rounded drop-shadow-md;
+  @apply bg-secondary px-2 py-1 rounded drop-shadow-md;
   max-width: 300px;
   border: 1px solid var(--border-color);
   animation-duration: 200ms;
@@ -505,7 +505,7 @@ pre {
 }
 
 .switch-thumb {
-  @apply block level-1 rounded-full shadow-sm;
+  @apply block bg-primary rounded-full shadow-sm;
   width: 21px;
   height: 21px;
   transition: transform 100ms;

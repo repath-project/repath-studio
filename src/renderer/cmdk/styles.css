@@ -8,7 +8,7 @@
 }
 
 [cmdk-input] {
-  @apply p-3 level-0;
+  @apply p-3 bg-secondary;
 
   border-bottom: 1px solid var(--border-color)
 }
