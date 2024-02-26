@@ -15,22 +15,3 @@
  :window/fullscreen?
  :<- [:window]
  :-> :fullscreen?)
-
-(rf/reg-sub
- :window/size
- :<- [:window]
- :-> :size)
-
-(rf/reg-sub
- :window/tree-min-width
- :<- [:window/size]
- (fn [size]
-   (when-let [width (first size)]
-     (* (/ 230 width) 100))))
-
-(rf/reg-sub
- :window/props-min-width
- :<- [:window/size]
- (fn [size]
-   (when-let [width (first size)]
-     (* (/ 320 width) 100))))

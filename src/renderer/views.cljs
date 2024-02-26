@@ -122,65 +122,55 @@
 
 (defn tree-panel
   []
-  (let [tree? @(rf/subscribe [:panel/visible? :tree])
-        tree-min-width @(rf/subscribe [:window/tree-min-width])]
-    (when (and tree? tree-min-width)
-      [:<>
-       [:> Panel
-        {:id "tree-panel"
-         :minSize tree-min-width
-         :defaultSize tree-min-width
-         :class "flex flex-col"}
-        [doc/actions]
-        [tree/root]]
-       [:> PanelResizeHandle
-        {:id "tree-resize-handle"
-         :className "resize-handle"}]])))
+  (when @(rf/subscribe [:panel/visible? :tree])
+    [:<>
+     [:> Panel
+      {:id "tree-panel"
+       :class "flex flex-col"
+       :style {:min-width "230px"}}
+      [doc/actions]
+      [tree/root]]
+     [:> PanelResizeHandle
+      {:id "tree-resize-handle"
+       :className "resize-handle"}]]))
 
 (defn root
   []
-  (let [props-min-width @(rf/subscribe [:window/props-min-width])
-        props? @(rf/subscribe [:panel/visible? :properties])]
-    [:> Tooltip/Provider
-     [:div.flex.flex-col.flex-1.h-screen
-      [win/app-header]
-      (if (seq @(rf/subscribe [:documents]))
-        [:> PanelGroup
-         {:direction "horizontal"
-          :id "root-group"
-          :autoSaveId "root-group"}
-         [tree-panel]
-         [:> Panel
-          {:id "main-panel"
-           :order 2}
-          [:div.flex.flex-col.flex-1.overflow-hidden.h-full
-           [doc/tab-bar]
-           [:> PanelGroup
-            {:direction "horizontal"
-             :id "center-group"
-             :autoSaveId "center-group"}
-            [:> Panel
-             {:id "center-panel"
-              :minSize 10
-              :order 1}
-             [:div.flex.h-full.flex-col
-              [editor]]]
-
-            (when (and props? props-min-width)
-              [:<>
-               [:> PanelResizeHandle
-                {:id "properties-resize-handle"
-                 :className "resize-handle"}]
-               [:> Panel
-                {:id "properties-panel"
-                 :order 2
-                 :minSize props-min-width
-                 :defaultSize props-min-width
-                 :onCollapse #(rf/dispatch-sync [:panel/collapse :properties])
-                 :onExpand #(rf/dispatch-sync [:panel/expand :properties])}
-
-                [attr/form]]])
-            [toolbar.object/root]]]]]
-        [home/panel])]
-     [cmdk/dialog]
-     [notification/main]]))
+  [:> Tooltip/Provider
+   [:div.flex.flex-col.flex-1.h-screen
+    [win/app-header]
+    (if (seq @(rf/subscribe [:documents]))
+      [:> PanelGroup
+       {:direction "horizontal"
+        :id "root-group"
+        :autoSaveId "root-group"}
+       [tree-panel]
+       [:> Panel
+        {:id "main-panel"
+         :order 2}
+        [:div.flex.flex-col.flex-1.overflow-hidden.h-full
+         [doc/tab-bar]
+         [:> PanelGroup
+          {:direction "horizontal"
+           :id "center-group"
+           :autoSaveId "center-group"}
+          [:> Panel
+           {:id "center-panel"
+            :minSize 10
+            :order 1}
+           [:div.flex.h-full.flex-col
+            [editor]]]
+          (when @(rf/subscribe [:panel/visible? :properties])
+            [:<>
+             [:> PanelResizeHandle
+              {:id "properties-resize-handle"
+               :className "resize-handle"}]
+             [:> Panel
+              {:id "properties-panel"
+               :order 2
+               :style {:min-width "320px"}}
+              [attr/form]]])
+          [toolbar.object/root]]]]]
+      [home/panel])]
+   [cmdk/dialog]
+   [notification/main]])

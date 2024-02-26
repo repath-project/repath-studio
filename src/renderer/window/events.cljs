@@ -21,12 +21,6 @@
  (fn [db [_ state]]
    (assoc db :minimized? state)))
 
-(rf/reg-event-db
- :window/resize
- (rf/path :window)
- (fn [db [_ size]]
-   (assoc db :size size)))
-
 (rf/reg-fx
  ::close
  (fn [_]

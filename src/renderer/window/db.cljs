@@ -4,5 +4,4 @@
   [:map
    [:maximized? boolean?]
    [:minimized? boolean?]
-   [:fullscreen? boolean?]
-   [:size [:tuple double? double?]]])
+   [:fullscreen? boolean?]])
