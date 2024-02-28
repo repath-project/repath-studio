@@ -176,7 +176,7 @@
 
 (defn supports-attr?
   [el k]
-  (-> el tools/attributes k))
+  (-> el element/attributes k))
 
 (defn set-attr
   ([db k v]
@@ -461,14 +461,14 @@
    (reduce ->path db (selected db)))
   ([db el]
    (cond-> db
-     (not (:locked? el)) (update-el el tools/->path))))
+     (not (:locked? el)) (update-el el element/->path))))
 
 (defn stroke->path
   ([db]
    (reduce stroke->path db (selected db)))
   ([db el]
    (cond-> db
-     (not (:locked? el)) (update-el el tools/stroke->path))))
+     (not (:locked? el)) (update-el el element/stroke->path))))
 
 (def default-props
   {:type :element
@@ -522,10 +522,10 @@
 (defn bool-operation
   [db operation]
   (let [selected-elements (selected-sorted db)
-        attrs (-> selected-elements first tools/->path :attrs)
+        attrs (-> selected-elements first element/->path :attrs)
         new-path (reduce (fn [path el]
                            (let [path-a (Path. path)
-                                 path-b (-> el tools/->path :attrs :d Path.)]
+                                 path-b (-> el element/->path :attrs :d Path.)]
                              (-> (bool path-a path-b operation)
                                  .exportSVG
                                  (.getAttribute "d"))))

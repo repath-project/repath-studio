@@ -78,12 +78,12 @@
  :<- [:element/selected]
  :<- [:element/multiple-selected?]
  (fn [[selected-elements multiple-selected?] _]
-   (let [attrs (tools/attributes (first selected-elements))
+   (let [attrs (utils.el/attributes (first selected-elements))
          attrs (if multiple-selected?
                  (reduce
                   #(map/merge-common-with (fn [v1 v2] (if (= v1 v2) v1 nil))
                                           %1
-                                          (tools/attributes %2))
+                                          (utils.el/attributes %2))
                   (dissoc attrs :id)
                   (rest selected-elements))
 

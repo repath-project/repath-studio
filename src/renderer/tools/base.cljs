@@ -1,9 +1,4 @@
-(ns renderer.tools.base
-  (:require
-   ["paper" :refer [Path]]
-   ["paperjs-offset" :refer [PaperOffset]]
-   [renderer.utils.map :as map]
-   [renderer.utils.spec :as spec]))
+(ns renderer.tools.base)
 
 (derive ::transform ::tool)
 (derive ::draw ::tool)
@@ -35,7 +30,6 @@
 (defmulti render :tag)
 (defmulti render-to-string :tag)
 (defmulti path :tag)
-(defmulti stroke->path :tag)
 (defmulti area :tag)
 (defmulti centroid :tag)
 (defmulti poi :tag) ;; pole-of-inaccessibility
@@ -97,65 +91,3 @@
 (defmethod scale :default [element] element)
 (defmethod translate :default [element] element)
 (defmethod position :default [element] element)
-
-(defn attrs-map
-  [attrs]
-  (let [deprecated-path [:__compat :status :deprecated]
-        filtered-attrs (->> attrs
-                            (filter #(not (get-in (val %) deprecated-path)))
-                            (into {}))]
-    (-> filtered-attrs
-        (dissoc :__compat :lang :tabindex)
-        keys
-        (zipmap (repeat "")))))
-
-(defn attributes
-  [{:keys [tag attrs]}]
-  (merge
-   (when tag
-     (merge (when (or (isa? tag ::shape) (= tag :svg))
-              (merge
-               (attrs-map (tag (:elements spec/svg)))
-               (attrs-map (-> spec/svg :attributes :core))
-               (attrs-map (-> spec/svg :attributes :style))))
-            (when (contains? #{:animateMotion :animateTransform} tag)
-              (attrs-map (:animate (:elements spec/svg))))
-            (zipmap (:attrs (properties tag)) (repeat ""))))
-   attrs))
-
-(defn ->path
-  [el]
-  (-> el
-      (assoc :attrs (attributes
-                     {:tag :path
-                      :attrs (map/merge-common-with
-                              str
-                              (:attrs el)
-                              (attributes {:tag :path
-                                           :attrs {}}))})
-             :tag :path)
-      (assoc-in [:attrs :d] (path el))))
-
-(defmethod stroke->path :default
-  [{:keys [attrs] :as el}]
-  (let [d (path el)
-        paper-path (Path. d)
-        offset (or (:stroke-width attrs) 1)
-        stroke-path (PaperOffset.offsetStroke
-                     paper-path
-                     (/ offset 2)
-                     #js {:cap (or (:stroke-linecap attrs) "butt")
-                          :join (or (:stroke-linejoin attrs) "miter")})
-        new-d (.getAttribute (.exportSVG stroke-path) "d")]
-    (-> el
-        (assoc :attrs (attributes {:tag :path
-                                   :attrs (map/merge-common-with
-                                           str
-                                           (dissoc (:attrs el)
-                                                   :stroke
-                                                   :stroke-width)
-                                           (attributes {:tag :path
-                                                        :attrs {}}))})
-               :tag :path)
-        (assoc-in [:attrs :d] new-d)
-        (assoc-in [:attrs :fill] (:stroke attrs)))))
