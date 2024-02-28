@@ -32,6 +32,9 @@
     :output-wrapper false
     :infer-externs :none
     :output-feature-set :es-next
+    ;; https://clojurescript.org/reference/advanced-compilation#fixing-advanced-compilation-issues
+    :pseudo-names true
+    :pretty-print true
     :closure-defines
     {config/version :shadow-git-inject/version}}
    :dev
