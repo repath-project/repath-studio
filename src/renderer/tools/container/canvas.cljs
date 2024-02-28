@@ -82,7 +82,7 @@
              [:<>
               [overlay/wrapping-bounding-box bounds]
               (when (= state :scale) [overlay/size bounds])
-              [overlay/bounding-handlers bounds]])
+              [overlay/bounding-handles bounds]])
 
            (when (and select? pivot-point)
              [overlay/times pivot-point])])

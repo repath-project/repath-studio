@@ -86,18 +86,18 @@
   (let [bounds @(rf/subscribe [:element/el-bounds el])
         [cx cy] (bounds/center bounds)
         [rx ry] (mat/div (bounds/->dimensions bounds) 2)]
-    [:g :edit-handlers
+    [:g ::edit-handles
      [overlay/times cx cy]
      [overlay/line cx cy (+ cx rx) cy]
      [overlay/label (str (units/->fixed rx)) [(+ cx (/ rx 2)) cy]]
      [overlay/line cx cy cx (- cy ry)]
      [overlay/label (str (units/->fixed ry)) [cx (- cy (/ ry 2))]]
-     (map (fn [handler]
-            [overlay/square-handler (merge handler
-                                           {:type :handler
-                                            :tag :edit
-                                            :element key})
-             ^{:key (:key handler)}
-             [:title (name (:key handler))]])
+     (map (fn [handle]
+            [overlay/square-handle (merge handle
+                                          {:type :handler
+                                           :tag :edit
+                                           :element key})
+             ^{:key (:key handle)}
+             [:title (name (:key handle))]])
           [{:x (+ cx rx) :y cy :key (keyword (:key el) :rx)}
            {:x cx :y (- cy ry) :key (keyword (:key el) :ry)}])]))

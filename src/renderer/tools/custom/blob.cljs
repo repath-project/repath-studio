@@ -202,7 +202,7 @@
         [x2 y2] (mat/add [x1 y1] size)]
     [:<>
      [overlay/line x1 y1 x2 y2]
-     [overlay/square-handler
+     [overlay/square-handle
       {:type :handler
        :tag :edit
        :element key

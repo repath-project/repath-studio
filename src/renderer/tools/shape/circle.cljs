@@ -84,11 +84,11 @@
      [overlay/line cx cy (+ cx r) cy]
      [overlay/label (str (units/->fixed r)) [(+ cx (/ r 2)) cy]]
      [overlay/times cx cy]
-     [overlay/square-handler {:x (+ cx r)
-                              :y cy
-                              :key (keyword (:key el) :r)
-                              :type :handler
-                              :tag :edit
-                              :element key}
+     [overlay/square-handle {:x (+ cx r)
+                             :y cy
+                             :key (keyword (:key el) :r)
+                             :type :handler
+                             :tag :edit
+                             :element key}
       ^{:key (keyword (:key el) :r)}
       [:title "r"]]]))

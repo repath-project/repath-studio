@@ -49,13 +49,13 @@
   (let [el-bounds @(rf/subscribe [:element/el-bounds el])
         [x y] el-bounds
         [width height] (bounds/->dimensions el-bounds)]
-    [:g {:key :edit-handlers}
-     (map (fn [handler]
-            (let [handler (merge handler {:type :handler
-                                          :tag :edit
-                                          :key (keyword (:key el) (:key handler))
-                                          :element (:key el)})]
-              [overlay/square-handler handler
+    [:g {:key ::edit-handles}
+     (map (fn [handle]
+            (let [handler (merge handle {:type :handler
+                                         :tag :edit
+                                         :key (keyword (:key el) (:key handle))
+                                         :element (:key el)})]
+              [overlay/square-handle handler
                ^{:key (:key handler)} [:title (name (:key handler))]]))
           [{:x x :y y :key (keyword (:key el) :position)}
            {:x (+ x width) :y (+ y height) :key (keyword (:key el) :size)}])]))

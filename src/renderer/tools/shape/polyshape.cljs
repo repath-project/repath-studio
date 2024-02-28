@@ -112,18 +112,18 @@
         handler-size (/ 8 zoom)
         stroke-width (/ 1 zoom)
         offset @(rf/subscribe [:element/el-offset el])]
-    [:g {:key :edit-handlers}
+    [:g {:key ::edit-handles}
      (map-indexed (fn [index [x y]]
                     (let [[x y] (mapv units/unit->px [x y])
                           [x y] (mat/add offset [x y])]
-                      [overlay/square-handler {:key (str index)
-                                               :x x
-                                               :y y
-                                               :size handler-size
-                                               :stroke-width stroke-width
-                                               :type :handler
-                                               :tag :edit
-                                               :element key}]))
+                      [overlay/square-handle {:key (str index)
+                                              :x x
+                                              :y y
+                                              :size handler-size
+                                              :stroke-width stroke-width
+                                              :type :handler
+                                              :tag :edit
+                                              :element key}]))
                   (attr.utils/points->vec points))]))
 
 (defmethod tools/edit ::tools/polyshape

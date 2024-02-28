@@ -30,7 +30,7 @@
                     :fill accent
                     :r (/ 3 zoom)}] children)))
 
-(defn circle-handler
+(defn circle-handle
   [{:keys [x y key] :as el} & children]
   (let [zoom @(rf/subscribe [:document/zoom])
         clicked-element @(rf/subscribe [:clicked-element])
@@ -50,7 +50,7 @@
               :on-pointer-move pointer-handler
               :on-scroll pointer-handler} children]))
 
-(defn square-handler
+(defn square-handle
   [{:keys [x y key cursor] :as el} & children]
   (let [zoom @(rf/subscribe [:document/zoom])
         clicked-element @(rf/subscribe [:clicked-element])
@@ -143,8 +143,8 @@
 
 (defn scale-handler
   [attrs]
-  [square-handler (merge attrs {:type :handler
-                                :tag :scale})])
+  [square-handle (merge attrs {:type :handler
+                               :tag :scale})])
 
 (defn min-bounds
   [bounds]
@@ -182,12 +182,12 @@
                               :on-pointer-down pointer-handler
                               :on-pointer-move pointer-handler})]))
 
-(defn bounding-handlers
+(defn bounding-handles
   [bounds]
   (let [bounds (min-bounds bounds)
         [x1 y1 x2 y2] bounds
         [w h] (bounds/->dimensions bounds)]
-    [:g {:key :bounding-handlers}
+    [:g {:key :bounding-handles}
      (map scale-handler
           [{:x x1 :y y1 :key :top-left :cursor "nwse-resize"}
            {:x x2 :y y1 :key :top-right :cursor "nesw-resize"}

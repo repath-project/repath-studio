@@ -124,9 +124,9 @@
                 :stroke-dasharray 2
                 :stroke "#555"
                 :stroke-width (/ 1 zoom)}]
-     (map (fn [handler] [overlay/circle-handler handler])
+     (map (fn [handle] [overlay/circle-handle handle])
           [{:x x1 :y y1 :key ::start-deg :type :handler :tag :edit :element key}
            {:x x2 :y y2 :key ::end-deg :type :handler :tag :edit :element key}])
-     (map (fn [handler] [overlay/square-handler handler])
+     (map (fn [handle] [overlay/square-handle handle])
           [{:x (+ cx rx) :y cy :key :rx :type :handler :tag :edit :element key}
            {:x cx :y (- cy ry) :key :ry :type :handler :tag :edit :element key}])]))
