@@ -63,15 +63,15 @@
  (fn [db [_]]
    (dissoc db :restored?)))
 
-#_(rf/reg-event-db
-   :set-lang
-   (fn [db [_ lang]]
-     (assoc db :lang lang)))
+(rf/reg-event-db
+ :set-lang
+ (fn [db [_ lang]]
+   (assoc db :lang lang)))
 
-#_(rf/reg-event-db
-   :set-repl-mode
-   (fn [db [_ mode]]
-     (assoc db :repl-mode mode)))
+(rf/reg-event-db
+ :set-repl-mode
+ (fn [db [_ mode]]
+   (assoc db :repl-mode mode)))
 
 (rf/reg-event-db
  :toggle-debug-info

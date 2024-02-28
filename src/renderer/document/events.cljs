@@ -1,5 +1,6 @@
 (ns renderer.document.events
   (:require
+   [clojure.edn :as edn]
    [de-dupe.core :as dd]
    [re-frame.core :as rf]
    [re-frame.interceptor :refer [->interceptor get-effect get-coeffect assoc-coeffect assoc-effect]]
@@ -7,7 +8,6 @@
    [renderer.document.handlers :as h]
    [renderer.element.handlers :as element.h]
    [renderer.history.handlers :as history.h]
-   [renderer.utils.uuid :as uuid]
    [renderer.utils.vec :as vec]))
 
 (def active-document-path
@@ -130,20 +130,12 @@
 (rf/reg-event-fx
  :document/new
  (fn [{:keys [db]} [_]]
-   {:db (let [key (uuid/generate)
-              title (str "Untitled-" (inc (count (:documents db))))
-              document-tabs (:document-tabs db)
-              active-index (.indexOf document-tabs (:active-document db))
-              document (merge db/default-document {:key key
-                                                   :title title})]
-          (-> db
-              (assoc-in [:documents key] document)
-              (update :document-tabs #(vec/add % (inc active-index) key))
-              (assoc :active-document key)
-              (element.h/create {:tag :svg
-                                 :attrs {:width "800" :height "600"}})
-              element.h/deselect
-              (history.h/finalize "Create document")))
+   {:db (-> db
+            (h/create-tab db/default-document)
+            (element.h/create {:tag :svg
+                               :attrs {:width "800" :height "600"}})
+            element.h/deselect
+            (history.h/finalize "Create document"))
     :dispatch [:center]}))
 
 (rf/reg-event-fx
@@ -152,10 +144,21 @@
    {:send-to-main {:action "openDocument"}}))
 
 (rf/reg-event-fx
+ :document/load
+ (fn [{:keys [db]} [_ data]]
+   (let [_ (js/console.log data)
+         document (-> data
+                      edn/read-string
+                      (update-in [:history :states] dd/expand))]
+     {:db (-> db
+              (h/create-tab document))
+      :dispatch [:center]})))
+
+(rf/reg-event-fx
  :document/save
  (fn [{:keys [db]} [_]]
    (let [document (get-in db [:documents (:active-document db)])
-         duped (update-in document [:history] dd/de-dupe)]
+         duped (update-in document [:history :states] dd/de-dupe)]
      {:send-to-main {:action "saveDocument" :data (pr-str duped)}})))
 
 (rf/reg-event-fx

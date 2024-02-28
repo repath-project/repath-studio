@@ -2,6 +2,7 @@
   (:require
    #_["@sentry/electron/renderer" :as sentry-electron-renderer]
    #_["@sentry/react" :as sentry-react]
+   ["electron-log/renderer"]
    ["paper" :refer [paper]]
    [config]
    [devtools.core :as devtools]
@@ -78,7 +79,7 @@
        "windowLeavedFullscreen" (rf/dispatch [:window/set-fullscreen? false])
        "windowMinimized" (rf/dispatch [:window/set-minimized? true])
        "windowRestored" (rf/dispatch [:window/set-minimized? false])
-       "openDocument" (js/console.log (.-data data))))))
+       "loadDocument" (rf/dispatch [:document/load (.-data data)])))))
 
 (defn load-system-fonts
   []

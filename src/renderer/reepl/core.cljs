@@ -62,7 +62,7 @@
   [mode]
   (let [repl-mode @(rf/subscribe [:repl-mode])
         active? (= repl-mode mode)]
-    [:button.button.p-1.rounded.mx-1.uppercase.leading-none.text-2xs.h-auto
+    [:button.button.p-1.rounded.mx-1.leading-none.text-2xs.h-auto
      {:class (when active? "selected")
       :on-click #(rf/dispatch [:set-repl-mode mode])}
      mode]))

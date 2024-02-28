@@ -1,4 +1,7 @@
-(ns renderer.document.handlers)
+(ns renderer.document.handlers
+  (:require
+   [renderer.utils.uuid :as uuid]
+   [renderer.utils.vec :as vec]))
 
 (defn close
   ([{:keys [active-document] :as db}]
@@ -18,3 +21,15 @@
 (defn expand-el
   [{:keys [active-document] :as db} el-k]
   (update-in db [:documents active-document :collapsed-keys] disj el-k))
+
+(defn create-tab
+  [db document]
+  (let [key (or (:key document) (uuid/generate))
+        title (str "Untitled-" (inc (count (:documents db))))
+        document-tabs (:document-tabs db)
+        active-index (.indexOf document-tabs (:active-document db))
+        document (merge document {:key key :title title})]
+    (-> db
+        (assoc-in [:documents key] document)
+        (update :document-tabs #(vec/add % (inc active-index) key))
+        (assoc :active-document key))))

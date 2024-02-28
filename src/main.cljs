@@ -3,6 +3,7 @@
    #_["@sentry/electron/main" :as sentry-electron-main]
    ["electron-extension-installer" :refer [REACT_DEVELOPER_TOOLS]]
    ["electron-extension-installer$default" :as installExtension]
+   ["electron-log/main" :as log]
    #_["electron-updater" :as updater]
    ["electron-window-state" :as window-state-keeper]
    ["electron" :refer [app shell ipcMain BrowserWindow clipboard nativeTheme]]
@@ -12,6 +13,16 @@
 
 (def main-window (atom nil))
 (def loading-window (atom nil))
+
+(defn send-to-renderer
+  ([action]
+   (send-to-renderer action nil))
+  ([action data]
+   (.send (.-webContents ^js @main-window) "fromMain" (clj->js {:action action
+                                                                :data data}))))
+(defn load-file
+  [data]
+  (send-to-renderer "loadDocument" data))
 
 (defn to-main-api
   [args]
@@ -27,16 +38,9 @@
     "openRemoteUrl" (.openExternal shell (.-data args))
     ;; https://www.electronjs.org/docs/api/clipboard#clipboardwritedata-type
     "writeToClipboard" (.write clipboard (.-data args))
-    "openDocument" (file/open)
+    "openDocument" (file/open load-file)
     "saveDocument" (file/save (.-data args))
     "export" (file/export (.-data args))))
-
-(defn send-to-renderer
-  ([action]
-   (send-to-renderer action nil))
-  ([action data]
-   (.send (.-webContents ^js @main-window) "fromMain" (clj->js {:action action
-                                                                :data data}))))
 
 (defn register-window-events!
   []
@@ -130,6 +134,7 @@
 
 (defn ^:export init []
   #_(sentry-electron-main/init (clj->js config/sentry-options))
+  (.initialize log)
   (.on app "window-all-closed" #(when-not (= js/process.platform "darwin")
                                   (.quit app)))
   (.on app "ready" init-loading-window))

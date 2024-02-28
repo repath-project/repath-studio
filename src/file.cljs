@@ -16,8 +16,8 @@
 (def dialog-options
   {:defaultPath default-path
    ;; https://www.electronjs.org/docs/api/structures/file-filter#filefilter-object
-   :filters [{:name "rp"
-              :extensions ["rp"]}]})
+   :filters [{:name "edn"
+              :extensions ["edn"]}]})
 
 (defn save
   "Saves the provided data.
@@ -28,19 +28,18 @@
            (when-not (.-canceled file)
              (.writeFileSync fs (.-filePath file) data "utf-8")))))
 
-(defn open-to-renderer
-  [_err data]
-  (let [web-contents (.-webContents ^js @main-window)]
-    (.send web-contents "fromMain" (clj->js {:action "openDocument" :data data}))))
-
 (defn open
   "Opens a file.
    https://www.electronjs.org/docs/api/dialog#dialogshowopendialogsyncbrowserwindow-options"
-  []
+  [f]
   (.then (.showOpenDialog dialog ^js @main-window (clj->js dialog-options))
          (fn [^js/Promise file]
            (when-not (.-canceled file)
-             (.readFileSync fs (.-filePath file) "utf-8" open-to-renderer)))))
+             (.readFile fs
+                        (first (js->clj (.-filePaths file)))
+                        #js {:encoding "utf-8"}
+                        (fn [_err data]
+                          (f data)))))))
 
 (def export-options
   {:defaultPath default-path
