@@ -65,11 +65,11 @@
             :fill (if active? accent accent-inverted)
             :stroke (if active? accent "#777")
             :stroke-width stroke-width
-            :rx (/ 1 zoom)
             :x (- x (/ size 2))
             :y (- y (/ size 2))
             :width size
             :height size
+            :shape-rendering "crispEdges"
             :cursor (if (or clicked? (not cursor)) "default" cursor)
             :on-pointer-up pointer-handler
             :on-pointer-down pointer-handler
