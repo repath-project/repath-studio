@@ -73,7 +73,5 @@
 (rf/reg-sub
  :document/read-only?
  :<- [:timeline/time]
- :<- [:timeline/paused?]
- (fn [[time paused?] _]
-   (or (not= time 0)
-       (not paused?))))
+ (fn [time _]
+   (pos? time)))
