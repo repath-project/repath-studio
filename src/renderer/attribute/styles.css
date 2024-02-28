@@ -4,9 +4,7 @@
 }
 
 .support-cell {
-    font-size: 10px;
-    padding: 1px;
-    margin: 1px;
+    @apply text-2xs p-px m-px;
 }
 
 .form-input {

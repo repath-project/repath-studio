@@ -62,9 +62,8 @@
   [mode]
   (let [repl-mode @(rf/subscribe [:repl-mode])
         active? (= repl-mode mode)]
-    [:button.button.p-1.rounded.m-1.uppercase.leading-none.text-xs
+    [:button.button.p-1.rounded.mx-1.uppercase.leading-none.text-2xs.h-auto
      {:class (when active? "selected")
-      :style {:height "22px"}
       :on-click #(rf/dispatch [:set-repl-mode mode])}
      mode]))
 
@@ -90,7 +89,7 @@
                 :padding "2px 0"}
         :on-eval submit}
        cm-opts)]
-     [:div
+     [:div.flex.my-1
       (repl-mode-button :cljs)
       (repl-mode-button :js)]
      [comp/toggle-icon-button
