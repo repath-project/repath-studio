@@ -4,6 +4,7 @@
    ["electron-extension-installer" :refer [REACT_DEVELOPER_TOOLS]]
    ["electron-extension-installer$default" :as installExtension]
    ["electron-log/main" :as log]
+   ["electron-reloader"]
    #_["electron-updater" :as updater]
    ["electron-window-state" :as window-state-keeper]
    ["electron" :refer [app shell ipcMain BrowserWindow clipboard nativeTheme]]
@@ -11,8 +12,8 @@
    [config]
    [file]))
 
-(def main-window (atom nil))
-(def loading-window (atom nil))
+(defonce main-window (atom nil))
+(defonce loading-window (atom nil))
 
 (defn send-to-renderer
   ([action]
@@ -20,7 +21,7 @@
   ([action data]
    (.send (.-webContents ^js @main-window) "fromMain" (clj->js {:action action
                                                                 :data data}))))
-(defn load-file
+(defn load
   [data]
   (send-to-renderer "loadDocument" data))
 
@@ -38,7 +39,7 @@
     "openRemoteUrl" (.openExternal shell (.-data args))
     ;; https://www.electronjs.org/docs/api/clipboard#clipboardwritedata-type
     "writeToClipboard" (.write clipboard (.-data args))
-    "openDocument" (file/open load-file)
+    "openDocument" (file/open load)
     "saveDocument" (file/save (.-data args))
     "export" (file/export (.-data args))))
 
