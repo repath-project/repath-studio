@@ -2,6 +2,7 @@
   (:require
    ["electron" :refer [app dialog]]
    ["fs" :as fs]
+   ["path" :as path]
    #_[cognitect.transit :as tr]))
 
 (def main-window (atom nil))
@@ -35,11 +36,11 @@
   (.then (.showOpenDialog dialog ^js @main-window (clj->js dialog-options))
          (fn [^js/Promise file]
            (when-not (.-canceled file)
-             (.readFile fs
-                        (first (js->clj (.-filePaths file)))
-                        #js {:encoding "utf-8"}
-                        (fn [_err data]
-                          (f data)))))))
+             (let [file-path (first (js->clj (.-filePaths file)))]
+               (.readFile fs file-path #js {:encoding "utf-8"}
+                          (fn [_err data] (f {:path file-path
+                                              :name (.basename path file-path)
+                                              :data data}))))))))
 
 (def export-options
   {:defaultPath default-path

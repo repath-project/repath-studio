@@ -36,7 +36,9 @@
                   :height "14px"}}]])
      [:div.flex.relative.bg-secondary
       [menubar/root]]
-     [:div.title-bar @(rf/subscribe [:document/title])]
+     [:div.title-bar (str (or @(rf/subscribe [:document/path])
+                              @(rf/subscribe [:document/title]))
+                          " - Repath Studio")]
      [:div.flex.h-full.flex-1.drag]
      [:div.bg-primary
       {:class (when-not (or platform/electron? fullscreen?) "mr-1.5")}

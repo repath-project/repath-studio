@@ -41,6 +41,11 @@
  :-> :title)
 
 (rf/reg-sub
+ :document/path
+ :<- [:document/active]
+ :-> :path)
+
+(rf/reg-sub
  :document/elements
  :<- [:document/active]
  :-> :elements)

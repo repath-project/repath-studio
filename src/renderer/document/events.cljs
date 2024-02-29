@@ -146,19 +146,23 @@
 (rf/reg-event-fx
  :document/load
  (fn [{:keys [db]} [_ data]]
-   (let [_ (js/console.log data)
-         document (-> data
+   (let [document (-> (.-data data)
                       edn/read-string
-                      (update-in [:history :states] dd/expand))]
+                      (assoc :path (.-path data)
+                             :title (.-name data))
+                      (update-in [:history] dissoc :states :position)
+                      ;; FIXME: Still contains cached values after expand.
+                      #_(update-in [:history :states] dd/expand))]
      {:db (-> db
-              (h/create-tab document))
+              (h/create-tab document)
+              (history.h/finalize "Load document"))
       :dispatch [:center]})))
 
 (rf/reg-event-fx
  :document/save
  (fn [{:keys [db]} [_]]
    (let [document (get-in db [:documents (:active-document db)])
-         duped (update-in document [:history :states] dd/de-dupe)]
+         duped (update-in document [:history :states] dd/de-dupe-eq)]
      {:send-to-main {:action "saveDocument" :data (pr-str duped)}})))
 
 (rf/reg-event-fx

@@ -25,11 +25,12 @@
 (defn create-tab
   [db document]
   (let [key (or (:key document) (uuid/generate))
-        title (str "Untitled-" (inc (count (:documents db))))
+        title (or (:title document) (str "Untitled-" (inc (count (:documents db)))))
         document-tabs (:document-tabs db)
         active-index (.indexOf document-tabs (:active-document db))
+        open? (some #{key} document-tabs)
         document (merge document {:key key :title title})]
-    (-> db
-        (assoc-in [:documents key] document)
-        (update :document-tabs #(vec/add % (inc active-index) key))
-        (assoc :active-document key))))
+    (cond-> db
+      (not open?) (update :document-tabs #(vec/add % (inc active-index) key))
+      :always (-> (assoc-in [:documents key] document)
+                  (assoc :active-document key)))))
