@@ -26,6 +26,6 @@
        notifications)]
 
      (when (second notifications)
-       [:button.button.overlay.p-2
+       [:button.button.overlay.px-2
         {:on-click #(rf/dispatch [:notification/clear-all])}
         "Clear all"])]))
