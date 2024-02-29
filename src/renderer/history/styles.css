@@ -1,7 +1,7 @@
 .rd3t-node,
 .rd3t-leaf-node {
     circle {
-        transition: fill .2s;
+        transition: fill .3s;
         stroke: var(--border-color);
     }
 

@@ -79,8 +79,9 @@
   (let [tree-data @(rf/subscribe [:history/tree-data])
         zoom @(rf/subscribe [:history/zoom])
         [x y] @(rf/subscribe [:history/translate])
-        translate #js {:x (or x (when (.-current ref) (/ (.. ref -current -clientWidth) 2)))
-                       :y (or y (when (.-current ref) (/ (.. ref -current -clientHeight) 2)))}]
+        el (.-current ref)
+        translate #js {:x (or x (when el (/ (.-clientWidth el) 2)))
+                       :y (or y (when el (/ (.-clientHeight el) 2)))}]
     [:> Tree
      {:data tree-data
       :collapsible false
