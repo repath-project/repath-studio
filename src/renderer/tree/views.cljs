@@ -95,7 +95,7 @@
         collapsed? (contains? collapsed-keys key)
         hovered? (contains? hovered-keys key)
         multiple-selected? @(rf/subscribe [:element/multiple-selected?])]
-    [:div.flex.button.list-item-button
+    [:div.button.list-item-button
      {:class [(when selected? "selected")
               (when hovered? "hovered")]
       :tab-index 0

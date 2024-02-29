@@ -91,7 +91,7 @@
   }
 
   .button {
-    @apply relative p-0 cursor-pointer;
+    @apply inline-block relative cursor-pointer text-center;
     background-color: transparent;
     color: var(--font-color);
     fill: var(--font-color);
@@ -99,6 +99,7 @@
     font-size: 1em;
     outline: none;
     height: 33px;
+    line-height: 33px;
     -webkit-app-region: no-drag;
 
     &:hover {

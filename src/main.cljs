@@ -25,6 +25,16 @@
   [data]
   (send-to-renderer "loadDocument" data))
 
+(defn open-external
+  [url]
+  (let [url-parsed (js/URL. url)]
+    (when (and (= (.-protocol url-parsed) "https:")
+               (contains? #{"repath.studio"
+                            "github.com"
+                            "developer.mozilla.org"
+                            "svgwg.org"} (.-host url-parsed)))
+      (.openExternal shell url-parsed.href))))
+
 (defn to-main-api
   [args]
   (case (.-action args)
@@ -36,7 +46,7 @@
                               ^js @main-window
                               (not (.isFullScreen ^js @main-window)))
     "setThemeMode" (set! (.. nativeTheme -themeSource) (.-data args))
-    "openRemoteUrl" (.openExternal shell (.-data args))
+    "openRemoteUrl" (open-external (.-data args))
     ;; https://www.electronjs.org/docs/api/clipboard#clipboardwritedata-type
     "writeToClipboard" (.write clipboard (.-data args))
     "openDocument" (file/open load)
@@ -64,10 +74,13 @@
   []
   (doseq
    [[web-contents-event f]
-    [["will-navigate"  #(.preventDefault %)] ;; Prevent navigation
-     ["new-window" #(.preventDefault %)] ;; Prevent popups
+    [["will-frame-navigate" #(.preventDefault %)] ;; Prevent navigation
      ["closed" #(reset! main-window nil)]]]
-    (.on (.-webContents ^js @main-window) web-contents-event f)))
+    (.on (.-webContents ^js @main-window) web-contents-event f))
+  ;; Forward popups
+  (.setWindowOpenHandler (.-webContents ^js @main-window) (fn [handler]
+                                                            (open-external (.-url handler))
+                                                            #js {:action "deny"})))
 
 (defn init-main-window
   []

@@ -3,7 +3,7 @@
 }
 
 .list-item-button {
-  @apply pr-1 items-center cursor-pointer transition-none;
+  @apply flex pr-1 items-center cursor-pointer transition-none text-start;
   &:hover {
     @apply overlay;
 

@@ -33,17 +33,18 @@
 
 (defn mdn-button
   [mdn_url attr]
-  [:button.button.px-3.bg-primary.grow
-   {:on-click #(rf/dispatch
-                [:window/open-remote-url
-                 (or mdn_url
-                     (str "https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/"
-                          (name attr)))])} "Learn more"])
+  [:a.button.px-3.bg-primary.grow
+   {:href (or mdn_url
+              (str "https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/"
+                   (name attr)))
+    :target "_blank"}
+   "Learn more"])
 
 (defn spec-button
   [url]
-  [:button.button.px-3.grow
-   {:on-click #(rf/dispatch [:window/open-remote-url (if (vector? url) (first url) url)])}
+  [:a.button.px-3.grow
+   {:href (if (vector? url) (first url) url)
+    :target "_blank"}
    "Specification"])
 
 (defn caniusethis
@@ -227,8 +228,9 @@
          [:p description])
        [caniusethis {:tag tag}]
        (when-let [url (:url (tools/properties tag))]
-         [:button.button.px-3.bg-primary.w-full
-          {:on-click #(rf/dispatch [:window/open-remote-url url])}
+         [:a.button.px-3.bg-primary.w-full
+          {:href url
+           :target "_blank"}
           "Learn more"])]
       [:> HoverCard/Arrow {:class "popover-arrow"}]]]]])
 

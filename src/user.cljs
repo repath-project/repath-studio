@@ -284,7 +284,7 @@
 
 ;; Expose all commands to global namespace.
 (doseq [command (vals (ns-publics 'user))]
-  (aset js/window (:name (meta command)) (.call (.-val command))))
+  (aset js/window (:name (meta command)) (.call ^js (.-val command))))
 
 (def ^:export version config/version)
 

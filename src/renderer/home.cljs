@@ -29,26 +29,7 @@
 
     [:h2.mb-1.mt-2 "Help"]
 
-    [:div
-     [:a
-      {:on-click #(rf/dispatch [:window/open-remote-url
-                                "https://repath.studio/"])}
-      "Website"]]
-
-    [:div
-     [:a
-      {:on-click #(rf/dispatch [:window/open-remote-url
-                                "https://github.com/re-path/studio"])}
-      "Source Code"]]
-
-    [:div
-     [:a
-      {:on-click #(rf/dispatch [:window/open-remote-url
-                                "https://repath.studio/roadmap/changelog/"])}
-      "Changelog"]]
-
-    [:div
-     [:a
-      {:on-click #(rf/dispatch [:window/open-remote-url
-                                "https://github.com/re-path/studio/issues/new/choose"])}
-      "Submit an issue"]]]])
+    [:div [:a {:href "https://repath.studio/" :target "_blank"} "Website"]]
+    [:div [:a {:href "https://github.com/re-path/studio" :target "_blank"} "Source Code"]]
+    [:div [:a {:href "https://repath.studio/roadmap/changelog/" :target "_blank"} "Changelog"]]
+    [:div [:a {:href "https://github.com/re-path/studio/issues/new/choose" :target "_blank"} "Submit an issue"]]]])

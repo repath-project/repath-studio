@@ -7,15 +7,29 @@
 (def error-message
   "Your last action was canceled due to the following error:")
 
+(defn pretty-stacktrace
+  [stack]
+  (str "<details>
+        <summary>Stacktrace</summary>"
+       (.-componentStack stack)
+       "</details>"))
+
 (defn boundary
   []
   (ra/create-class
    {;;https://react.dev/reference/react/Component#componentdidcatch
     :component-did-catch
     (fn [_this error _info]
-      (rf/dispatch [:notification/add {:content [:div
-                                                 [:h2.pb-4.text-md error-message]
-                                                 [:div.text-error (str error)]]}]))
+      (rf/dispatch [:notification/add
+                    {:content [:div
+                               [:h2.mb-4.text-md error-message]
+                               [:p.text-error (str error)]
+                               [:a.button.bg-primary.px-2
+                                {:target "_blank"
+                                 :href (str "https://github.com/re-path/studio/issues/new?"
+                                            "&title=" error
+                                            "&template=bug_report.md")}
+                                "Submit report"]]}]))
 
     ;; Try to revert to a working state
     ;; https://react.dev/reference/react/Component#static-getderivedstatefromerror
