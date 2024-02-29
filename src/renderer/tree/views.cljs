@@ -70,14 +70,22 @@
   [e el-k]
   (let [ctrl? (.-ctrlKey e)]
     (case (.-key e)
-      "ArrowUp" (do (.stopPropagation e)
-                    (rf/dispatch [:element/select-up ctrl?]))
-      "ArrowDown" (do (.stopPropagation e)
-                      (rf/dispatch [:element/select-down ctrl?]))
-      "ArrowLeft" (do (.stopPropagation e)
-                      (rf/dispatch [:document/collapse-el el-k]))
-      "ArrowRight" (do (.stopPropagation e)
-                       (rf/dispatch [:document/expand-el el-k]))
+      "ArrowUp"
+      (do (.stopPropagation e)
+          (rf/dispatch [:element/select-up ctrl?]))
+
+      "ArrowDown"
+      (do (.stopPropagation e)
+          (rf/dispatch [:element/select-down ctrl?]))
+
+      "ArrowLeft"
+      (do (.stopPropagation e)
+          (rf/dispatch [:document/collapse-el el-k]))
+
+      "ArrowRight"
+      (do (.stopPropagation e)
+          (rf/dispatch [:document/expand-el el-k]))
+
       nil)))
 
 (defn list-item-button

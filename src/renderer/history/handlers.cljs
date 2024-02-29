@@ -20,34 +20,34 @@
   (assoc-in db (conj (history-path db) :states (current-position db) :restored?) true))
 
 (defn state
-  ([db]
-   (state db (current-position db)))
-  ([db position]
-   (get-in (history db) [:states position])))
+  ([history]
+   (state history (:position history)))
+  ([history position]
+   (get-in history [:states position])))
 
 (defn previous-position
-  [db]
-  (-> db state :parent))
+  [history]
+  (-> history state :parent))
 
 (defn next-position
-  [db]
-  (-> db state :children last))
+  [history]
+  (-> history state :children last))
 
 (defn undos?
-  [db]
-  (boolean (previous-position db)))
+  [history]
+  (boolean (previous-position history)))
 
 (defn redos?
-  [db]
-  (boolean (next-position db)))
+  [history]
+  (boolean (next-position history)))
 
 (defn swap
   ([db]
-   (assoc-in db (element.h/path db) (:elements (state db)))))
+   (assoc-in db (element.h/path db) (:elements (state (history db))))))
 
 (defn preview
   [db position]
-  (assoc-in db (element.h/path db) (:elements (state db position))))
+  (assoc-in db (element.h/path db) (:elements (state (history db) position))))
 
 (defn move
   [db position]
@@ -73,22 +73,22 @@
      db)))
 
 (defn accumulate
-  [db f]
-  (loop [current-state (state db)
+  [history f]
+  (loop [current-state (state history)
          stack []]
     (if-let [position (f current-state)]
-      (let [accumulated-state (state db position)
+      (let [accumulated-state (state history position)
             accumulated-state (dissoc accumulated-state :elements)]
         (recur accumulated-state (conj stack accumulated-state)))
       stack)))
 
 (defn undos
-  [db]
-  (accumulate db :parent))
+  [history]
+  (accumulate history :parent))
 
 (defn redos
-  [db]
-  (accumulate db (fn [state] (-> state :children last))))
+  [history]
+  (accumulate history (fn [state] (-> state :children last))))
 
 (defn state-count
   [db]
@@ -114,10 +114,10 @@
 
 (defn update-ancestors
   [db]
-  (loop [node (state db)
+  (loop [node (state (history db))
          db db]
     (let [parent-id (:parent node)
-          parent (state db parent-id)]
+          parent (state (history db) parent-id)]
       (if parent
         (let [index (.indexOf (:children parent) (:id node))
               new-index (dec (count (:children parent)))]
@@ -133,7 +133,7 @@
   (let [current-position (current-position db)
         id (uuid/generate)]
     (cond-> db
-      (not= (element.h/elements db) (:elements (state db)))
+      (not= (element.h/elements db) (:elements (state (history db))))
       (cond->
        :always (-> (assoc-in (conj (history-path db) :position) id)
                    (assoc-in (conj (history-path db) :states id)

@@ -4,48 +4,59 @@
    [renderer.history.handlers :as h]))
 
 (rf/reg-sub
- :history/undos?
+ :history/history
  (fn [db _]
-   (h/undos? db)))
+   (h/history db)))
+
+(rf/reg-sub
+ :history/undos?
+ :<- [:history/history]
+ (fn [history _]
+   (h/undos? history)))
 
 (rf/reg-sub
  :history/redos?
- (fn [db _]
-   (h/redos? db)))
+ :<- [:history/history]
+ (fn [history _]
+   (h/redos? history)))
 
 (rf/reg-sub
  :history/undos
- (fn [db _]
-   (h/undos db)))
+ :<- [:history/history]
+ (fn [history _]
+   (h/undos history)))
 
 (rf/reg-sub
  :history/redos
- (fn [db _]
-   (h/redos db)))
+ :<- [:history/history]
+ (fn [history _]
+   (h/redos history)))
 
 (rf/reg-sub
  :history/zoom
- (fn [db _]
-   (get-in db [:documents (:active-document db) :history :zoom])))
+ :<- [:history/history]
+ :-> :zoom)
 
 (rf/reg-sub
  :history/translate
- (fn [db _]
-   (get-in db [:documents (:active-document db) :history :translate])))
+ :<- [:history/history]
+ :-> :translate)
 
 (defn state->d3-data
-  [db id]
-  (let [{:keys [index restored?] :as state} (h/state db id)
-        count (h/state-count db)]
+  [history id]
+  (let [states (:states history)
+        {:keys [index restored?] :as state} (get states id)
+        count (count states)]
     #js {:name (:explanation state)
          :id id
-         :active (= id (h/current-position db))
+         :active (= id (:position history))
          :restored restored?
          :color (str "hsla(" (+ (* (/ 100 count) index) 20) ",40%,60%,1)")
-         :children (apply array (map #(state->d3-data db %) (:children state)))}))
+         :children (apply array (map #(state->d3-data history %) (:children state)))}))
 
 (rf/reg-sub
  :history/tree-data
- (fn [db _]
-   (let [root (:id (first (sort-by :index (vals (:states (h/history db))))))]
-     (state->d3-data db root))))
+ :<- [:history/history]
+ (fn [history _]
+   (let [root (:id (first (sort-by :index (vals (:states history)))))]
+     (state->d3-data history root))))

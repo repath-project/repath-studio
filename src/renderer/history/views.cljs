@@ -47,18 +47,18 @@
 
 (defn node
   [node]
-  (let [datum (.-nodeDatum node)]
+  (let [datum (.-nodeDatum node)
+        fill (if (.-restored datum) "black"
+                 (if (.-active datum)
+                   "var(--accent)"
+                   (.-color datum)))]
     (ra/as-element
      [:circle
       {:on-click #(rf/dispatch [:history/move (keyword (.-id datum))])
        :cx "0"
        :cy "0"
-       :r "18"
-       :fill (if (.-restored datum)
-               "black"
-               (if (.-active datum)
-                 "var(--accent)"
-                 (.-color datum)))}
+       :r 18
+       :ref #(when % (.setAttribute % "fill" fill))}
       [:title (.-name datum)]])))
 
 (defn on-update
@@ -78,7 +78,9 @@
   [ref]
   (let [tree-data @(rf/subscribe [:history/tree-data])
         zoom @(rf/subscribe [:history/zoom])
-        [x y] @(rf/subscribe [:history/translate])]
+        [x y] @(rf/subscribe [:history/translate])
+        translate #js {:x (or x (when (.-current ref) (/ (.. ref -current -clientWidth) 2)))
+                       :y (or y (when (.-current ref) (/ (.. ref -current -clientHeight) 2)))}]
     [:> Tree
      {:data tree-data
       :collapsible false
@@ -86,8 +88,7 @@
       :rootNodeClassName "root-node"
       :depthFactor -100
       :zoom zoom
-      :translate #js {:x (or x (when (.-current ref) (/ (.. ref -current -clientWidth) 2)))
-                      :y (or y (when (.-current ref) (/ (.. ref -current -clientHeight) 2)))}
+      :translate translate
       :onUpdate on-update
       :separation #js {:nonSiblings 1 :siblings 1}
       :renderCustomNodeElement node}]))
