@@ -60,16 +60,16 @@
   ([db]
    (undo db 1))
   ([db n]
-   (if (and (pos? n) (undos? db))
-     (recur (move db (previous-position db)) (dec n))
+   (if (and (pos? n) (undos? (history db)))
+     (recur (move db (previous-position (history db))) (dec n))
      db)))
 
 (defn redo
   ([db]
    (redo db 1))
   ([db n]
-   (if (and (pos? n) (redos? db))
-     (recur (move db (next-position db)) (dec n))
+   (if (and (pos? n) (redos? (history db)))
+     (recur (move db (next-position (history db))) (dec n))
      db)))
 
 (defn accumulate
