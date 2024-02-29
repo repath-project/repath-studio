@@ -439,7 +439,7 @@ pre {
 }
 
 .popover-content {
-  @apply bg-secondary drop-shadow-lg z-10;
+  @apply bg-secondary drop-shadow-lg z-10 rounded;
   max-width: 300px;
   border: 1px solid var(--border-color);
   animation-duration: 400ms;

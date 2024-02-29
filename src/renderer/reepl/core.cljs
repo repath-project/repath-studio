@@ -89,7 +89,7 @@
                 :padding "2px 0"}
         :on-eval submit}
        cm-opts)]
-     [:div.flex.my-1
+     [:div.my-1
       (repl-mode-button :cljs)
       (repl-mode-button :js)]
      [comp/toggle-icon-button

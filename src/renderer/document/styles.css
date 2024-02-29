@@ -1,6 +1,6 @@
 .document-tab {
   @apply button flex items-center h-full mr-px text-left bg-primary gap-2 opacity-50 hover:bg-primary;
-  padding: 8px 8px 8px 16px;
+  padding: 0 8px 0 16px;
   flex: 0 1 130px;
 
   .close-document-button {
