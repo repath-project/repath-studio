@@ -34,7 +34,7 @@
 
 (defn element
   [db k]
-  (k (elements db)))
+  (get (elements db) k))
 
 (defn selected
   [db]
