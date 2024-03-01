@@ -5,6 +5,8 @@
 **Fixed**
 
 - Electron log
+- Electron reloader
+- Default panel size
 
 ## 0.2.2 (2024-03-01)
 

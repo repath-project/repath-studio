@@ -127,6 +127,7 @@
      [:> Panel
       {:id "tree-panel"
        :class "flex flex-col"
+       :defaultSize 5
        :style {:min-width "230px"}}
       [doc/actions]
       [tree/root]]
@@ -168,6 +169,7 @@
              [:> Panel
               {:id "properties-panel"
                :order 2
+               :defaultSize 5
                :style {:min-width "320px"}}
               [attr/form]]])
           [toolbar.object/root]]]]]
