@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.2.2 (2024-03-01)
+
+**Added**
+
+- File save/load
+- Auto reload on main changes
+
+**Changed**
+
+- Url handling
+- Refactor element to path
+  
+**Fixed**
+
+- History tree rendering
+- Element selection
+
 ## 0.2.1 (2024-02-26)
 
 **Changed**
