@@ -169,8 +169,9 @@
 (rf/reg-event-db
  :element/export
  (fn [db _]
-   (let [xml (-> (h/selected db)
-                 (h/->string))]
+   (let [xml (-> db
+                 h/root-children
+                 h/->string)]
      (js/window.api.send "toMain" #js {:action "export" :data xml}))))
 
 (rf/reg-event-db

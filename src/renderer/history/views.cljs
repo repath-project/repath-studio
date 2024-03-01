@@ -49,14 +49,15 @@
   [node]
   (let [datum (.-nodeDatum node)
         fill (if (.-restored datum) "black"
-                 (if (.-active datum)
-                   "var(--accent)"
-                   (.-color datum)))]
+                 (if (.-active datum) "var(--accent)" (.-color datum)))
+        stroke (if (.-saved datum) "var(--accent)" (.-color datum))]
     (ra/as-element
      [:circle
       {:on-click #(rf/dispatch [:history/move (keyword (.-id datum))])
        :cx "0"
        :cy "0"
+       :stroke stroke
+       :stroke-width 4
        :r 18
        :ref #(when % (.setAttribute % "fill" fill))}
       [:title (.-name datum)]])))

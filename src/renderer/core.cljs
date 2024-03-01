@@ -79,7 +79,8 @@
        "windowLeavedFullscreen" (rf/dispatch [:window/set-fullscreen? false])
        "windowMinimized" (rf/dispatch [:window/set-minimized? true])
        "windowRestored" (rf/dispatch [:window/set-minimized? false])
-       "loadDocument" (rf/dispatch [:document/load (.-data data)])))))
+       "fileLoaded" (rf/dispatch [:document/load (.-data data)])
+       "fileSaved" (rf/dispatch [:document/saved (.-data data)])))))
 
 (defn load-system-fonts
   []

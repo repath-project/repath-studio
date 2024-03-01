@@ -23,17 +23,15 @@
             {:key :save
              :label "Save"
              :icon "save"
-             :action [:document/save]}
+             :action [:document/save]
+             :disabled? [:document/active-saved?]}
             {:key :save-as
              :label "Save as…"
              :action [:document/save-as]}
-            {:key :save-all
-             :label "Save all"
-             :action [:document/save-all]}
             {:key :divider-3
              :type :separator}
             {:key :export
-             :label "Export"
+             :label "Export as SVG"
              :action [:element/export]}
             {:key :divider-4
              :type :separator}
@@ -349,10 +347,11 @@
           (map menu-item items))]])
 
 (defmethod menu-item :default
-  [{:keys [label action]}]
+  [{:keys [label action disabled?]}]
   [:> Menubar/Item
    {:class "menu-item"
-    :onSelect #(rf/dispatch action)}
+    :onSelect #(rf/dispatch action)
+    :disabled (when disabled? @(rf/subscribe disabled?))}
    label
    [:div.right-slot
     [comp/shortcuts action]]])
@@ -361,5 +360,6 @@
   []
   (into [:> Menubar/Root
          {:class "menubar-root"
+          :on-key-down #(.stopPropagation %)
           :onValueChange #(rf/dispatch [:set-backdrop (seq %)])}]
         (map menu-item menu)))

@@ -1,16 +1,27 @@
 .document-tab {
-  @apply button flex items-center h-full mr-px text-left bg-primary gap-2 opacity-50 hover:bg-primary;
+  @apply button flex items-center h-full mr-px text-left bg-primary gap-2 opacity-50 hover:bg-primary relative;
   padding: 0 8px 0 16px;
   flex: 0 1 130px;
 
   .close-document-button {
-    visibility: hidden;
+    @apply icon-button invisible;
+
+    .circle {
+      @apply small absolute inset-0 text-center bg-primary;
+    }
+
+    &:hover {
+      .circle {
+        @apply hidden;
+      }
+    }
   }
 
   &:hover,
-  &.active {
+  &.active,
+  &:not(.saved) {
     .close-document-button {
-      visibility: visible;
+      @apply visible;
     }
   }
 

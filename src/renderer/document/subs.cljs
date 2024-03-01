@@ -76,7 +76,26 @@
  :-> :ignored-keys)
 
 (rf/reg-sub
+ :document/save
+ :<- [:document/active]
+ :-> :save)
+
+(rf/reg-sub
  :document/read-only?
  :<- [:timeline/time]
  (fn [time _]
    (pos? time)))
+
+(rf/reg-sub
+ :document/saved?
+ :<- [:documents]
+ (fn [documents [_ k]]
+   (= (get-in documents [k :save])
+      (get-in documents [k :history :position]))))
+
+(rf/reg-sub
+ :document/active-saved?
+ :<- [:document/active]
+ (fn [document [_]]
+   (= (:save document)
+      (get-in document [:history :position]))))

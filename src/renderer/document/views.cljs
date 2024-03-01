@@ -22,7 +22,8 @@
    [comp/icon-button
     "save"
     {:title "Save"
-     :on-click #(rf/dispatch [:document/save])}]
+     :on-click #(rf/dispatch [:document/save])
+     :disabled @(rf/subscribe [:document/active-saved?])}]
 
    [:span.v-divider]
 
@@ -50,15 +51,17 @@
     (not @(rf/subscribe [:history/redos?]))]])
 
 (defn close-button
-  [key]
-  [:button.icon-button.small.close-document-button.hover:bg-transparent
+  [key saved?]
+  [:button.close-document-button.small.hover:bg-transparent
    {:key key
     :title "Close document"
     :on-pointer-down #(.stopPropagation %)
     :on-pointer-up (fn [e]
                      (.stopPropagation e)
                      (rf/dispatch [:document/close key]))}
-   [comp/icon "times"]])
+   [comp/icon "times"]
+   (when-not saved?
+     [:div.circle "●"])])
 
 (defn context-menu
   [key]
@@ -70,13 +73,14 @@
     :action [:document/close-all]}])
 
 (defn tab
-  []
-  (let [dragged-over? (ra/atom false)]
-    (fn [key document active?]
+  [key document active?]
+  (ra/with-let [dragged-over? (ra/atom false)]
+    (let [saved? @(rf/subscribe [:document/saved? key])]
       [:> ContextMenu/Root
        [:> ContextMenu/Trigger
         [:div.document-tab
-         {:class (when active? "active")
+         {:class [(when active? "active")
+                  (when saved? "saved")]
           :on-wheel #(rf/dispatch [:document/scroll (.-deltaY %)])
           :on-pointer-down #(case (.-buttons %)
                               4 (rf/dispatch [:document/close key])
@@ -95,7 +99,7 @@
                                        keyword)
                                    key]))}
          [:span.document-name (:title document)]
-         [close-button key]]]
+         [close-button key saved?]]]
        [:> ContextMenu/Portal
         (into
          [:> ContextMenu/Content

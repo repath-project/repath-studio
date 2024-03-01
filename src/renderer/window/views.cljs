@@ -48,5 +48,6 @@
      (when (and platform/electron? (not fullscreen?))
        [window-controls])
      (when fullscreen?
-       [window-control-button {:action [:window/toggle-fullscreen]
-                               :icon "arrow-minimize"}])]))
+       [window-control-button
+        {:action [:window/toggle-fullscreen]
+         :icon "arrow-minimize"}])]))

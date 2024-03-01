@@ -43,20 +43,22 @@
  :-> :translate)
 
 (defn state->d3-data
-  [history id]
+  [history id save]
   (let [states (:states history)
         {:keys [index restored?] :as state} (get states id)
         count (count states)]
     #js {:name (:explanation state)
          :id id
+         :saved (= id save)
          :active (= id (:position history))
          :restored restored?
          :color (str "hsla(" (+ (* (/ 100 count) index) 20) ",40%,60%,1)")
-         :children (apply array (map #(state->d3-data history %) (:children state)))}))
+         :children (apply array (map #(state->d3-data history % save) (:children state)))}))
 
 (rf/reg-sub
  :history/tree-data
  :<- [:history/history]
- (fn [history _]
+ :<- [:document/save]
+ (fn [[history save] _]
    (let [root (:id (first (sort-by :index (vals (:states history)))))]
-     (state->d3-data history root))))
+     (state->d3-data history root save))))

@@ -76,11 +76,16 @@
   ([db el]
    (:children (parent db el))))
 
-(defn root-svgs
+(defn root-children
   [db]
   (->> (element db :canvas)
        :children
-       (mapv (elements db))
+       (mapv (elements db))))
+
+(defn root-svgs
+  [db]
+  (->> db
+       root-children
        (filter element/svg?)))
 
 (defn ancestor-keys

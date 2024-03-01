@@ -149,26 +149,42 @@
    (let [document (-> (.-data data)
                       edn/read-string
                       (assoc :path (.-path data)
-                             :title (.-name data))
-                      (update-in [:history] dissoc :states :position)
+                             :title (.-title data))
                       ;; FIXME: Still contains cached values after expand.
                       #_(update-in [:history :states] dd/expand))]
      {:db (-> db
               (h/create-tab document)
-              (history.h/finalize "Load document"))
+              (history.h/finalize "Load document")
+              (update-in [:documents (:key document)] #(assoc % :save (-> % :history :position))))
       :dispatch [:center]})))
 
 (rf/reg-event-fx
  :document/save
  (fn [{:keys [db]} [_]]
-   (let [document (get-in db [:documents (:active-document db)])
-         duped (update-in document [:history :states] dd/de-dupe-eq)]
-     {:send-to-main {:action "saveDocument" :data (pr-str duped)}})))
+   (let [document (-> db
+                      (get-in [:documents (:active-document db)])
+                      (assoc :save (history.h/current-position db))
+                      (dissoc :history)
+                      #_(update-in [:history :states] dd/de-dupe-eq))]
+     {:send-to-main {:action "saveDocument" :data (pr-str document)}})))
 
 (rf/reg-event-fx
  :document/save-as
  (fn [{:keys [db]} [_]]
-   db))
+   (let [document (-> db
+                      (get-in [:documents (:active-document db)])
+                      (assoc :save (history.h/current-position db))
+                      (dissoc :history :path))]
+     {:send-to-main {:action "saveDocument" :data (pr-str document)}})))
+
+(rf/reg-event-db
+ :document/saved
+ (fn [db [_ data]]
+   (let [document (-> (.-data data)
+                      edn/read-string
+                      (assoc :path (.-path data)
+                             :title (.-title data)))]
+     (update-in db [:documents (:key document)] merge document))))
 
 (rf/reg-event-fx
  :document/save-all

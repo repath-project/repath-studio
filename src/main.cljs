@@ -21,9 +21,13 @@
   ([action data]
    (.send (.-webContents ^js @main-window) "fromMain" (clj->js {:action action
                                                                 :data data}))))
-(defn load
+(defn fileLoaded
   [data]
-  (send-to-renderer "loadDocument" data))
+  (send-to-renderer "fileLoaded" data))
+
+(defn fileSaved
+  [data]
+  (send-to-renderer "fileSaved" data))
 
 (defn open-external
   [url]
@@ -49,8 +53,8 @@
     "openRemoteUrl" (open-external (.-data args))
     ;; https://www.electronjs.org/docs/api/clipboard#clipboardwritedata-type
     "writeToClipboard" (.write clipboard (.-data args))
-    "openDocument" (file/open load)
-    "saveDocument" (file/save (.-data args))
+    "openDocument" (file/open fileLoaded)
+    "saveDocument" (file/save (.-data args) fileSaved)
     "export" (file/export (.-data args))))
 
 (defn register-window-events!
