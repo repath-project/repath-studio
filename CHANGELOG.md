@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.3 (2024-03-01)
+  
+**Fixed**
+
+- Electron log
+
 ## 0.2.2 (2024-03-01)
 
 **Added**
