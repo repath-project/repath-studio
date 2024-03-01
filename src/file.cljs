@@ -18,8 +18,8 @@
 (def dialog-options
   {:defaultPath default-path
    ;; https://www.electronjs.org/docs/api/structures/file-filter#filefilter-object
-   :filters [{:name "edn"
-              :extensions ["edn"]}]})
+   :filters [{:name "rso"
+              :extensions ["rso"]}]})
 
 (defn write-to-file
   [file-path data f]
