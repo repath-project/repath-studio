@@ -27,6 +27,7 @@
     ;; Development builds are never optimized by the Closure Compiler.
     ;; https://shadow-cljs.github.io/docs/UsersGuide.html#Optimization
     :optimizations :simple
+    :silence-optimizations-warning true
     ;; Required for bootstrap build.
     ;; https://shadow-cljs.github.io/docs/UsersGuide.html#output-wrapper
     :output-wrapper false
