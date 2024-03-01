@@ -109,7 +109,7 @@
     "react-frame-component": "5.2.6",
     "react-resizable-panels": "2.0.11",
     "react-svg": "16.1.33",
-    "shadow-cljs": "2.27.4",
+    "shadow-cljs": "2.27.5",
     "source-map-support": "0.5.21",
     "svg-path-bbox": "1.2.4",
     "svgo": "3.2.0",
