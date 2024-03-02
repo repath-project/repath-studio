@@ -56,11 +56,7 @@
 (def export-options
   {:defaultPath default-path
    :filters [{:name "svg"
-              :extensions ["svg" "svgo"]}
-             {:name "png"
-              :extensions ["png" "svgo"]}
-             {:name "jpg"
-              :extensions ["jpg" "jpeg"]}]})
+              :extensions ["svg" "svgo"]}]})
 
 (defn export
   "Exports the provided data."
