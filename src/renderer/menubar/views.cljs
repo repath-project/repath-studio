@@ -360,5 +360,6 @@
   []
   (into [:> Menubar/Root
          {:class "menubar-root"
+          :on-key-down #(.stopPropagation %)
           :onValueChange #(rf/dispatch [:set-backdrop (seq %)])}]
         (map menu-item menu)))
