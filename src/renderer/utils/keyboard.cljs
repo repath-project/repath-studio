@@ -260,6 +260,8 @@
                            :ctrlKey true}
                           {:keyCode (key-codes "K")
                            :ctrlKey true}
+                          {:keyCode (key-codes "W")
+                           :ctrlKey true}
                           {:keyCode (key-codes "D")
                            :ctrlKey true
                            :shiftKey true}]})
