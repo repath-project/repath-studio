@@ -196,7 +196,6 @@
 
           (.on inst "keyup"
                (fn [inst evt]
-                 (.stopPropagation evt)
                  (if (cancel-keys (.-keyCode evt))
                    (reset! complete-atom nil)
                    (if (cmp-show (.-keyCode evt))
@@ -206,7 +205,6 @@
 
           (.on inst "keydown"
                (fn [inst evt]
-                 (.stopPropagation evt)
                  (case (.-keyCode evt)
                    (17 18 91 93)
                    (swap! complete-atom assoc :show-all? true)

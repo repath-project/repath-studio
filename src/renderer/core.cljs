@@ -115,9 +115,6 @@
   (rf/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])
   (rf/dispatch-sync [::rp/set-keydown-rules keyb/keydown-rules])
 
-  (.addEventListener js/document "keydown" keyb/event-handler)
-  (.addEventListener js/document "keyup" keyb/event-handler)
-
   (.setup paper)
 
   (if platform/electron?
