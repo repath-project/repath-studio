@@ -1,7 +1,7 @@
 (ns renderer.handlers
   (:require
    [re-frame.core :as rf]
-   [renderer.element.handlers :as element-h]))
+   [renderer.element.handlers :as element.h]))
 
 (defn set-state
   [db state]
@@ -22,7 +22,7 @@
    (fn [db file]
      (case (.-type file)
        "image/png"
-       (element-h/add db {:type :element
+       (element.h/add db {:type :element
                           :tag :image
                           :attrs {:x (first adjusted-pointer-pos)
                                   :y (second adjusted-pointer-pos)

@@ -97,7 +97,7 @@
 
 (defn a11y-select
   []
-  (let [filter @(rf/subscribe [:document/filter])]
+  (when-let [filter @(rf/subscribe [:document/filter])]
     [:> Select/Root {:value (name filter)
                      :onValueChange #(rf/dispatch [:document/set-filter %])}
      [:> Select/Trigger
