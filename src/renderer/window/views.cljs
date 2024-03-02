@@ -26,7 +26,9 @@
 
 (defn app-header
   []
-  (let [fullscreen? @(rf/subscribe [:window/fullscreen?])]
+  (let [fullscreen? @(rf/subscribe [:window/fullscreen?])
+        title (or @(rf/subscribe [:document/path])
+                  @(rf/subscribe [:document/title]))]
     [:div.flex.items-center.relative
      (when-not fullscreen?
        [:div.drag
@@ -36,9 +38,7 @@
                   :height "14px"}}]])
      [:div.flex.relative.bg-secondary
       [menubar/root]]
-     [:div.title-bar (str (or @(rf/subscribe [:document/path])
-                              @(rf/subscribe [:document/title]))
-                          " - Repath Studio")]
+     [:div.title-bar (when title (str title " - ")) "Repath Studio"]
      [:div.flex.h-full.flex-1.drag]
      [:div.bg-primary
       {:class (when-not (or platform/electron? fullscreen?) "mr-1.5")}
