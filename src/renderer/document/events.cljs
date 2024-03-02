@@ -179,11 +179,14 @@
 (rf/reg-event-db
  :document/saved
  (fn [db [_ data]]
-   (let [document (-> (.-data data)
-                      edn/read-string
-                      (assoc :path (.-path data)
-                             :title (.-title data)))]
-     (update-in db [:documents (:key document)] merge document))))
+   (let [document (-> (.-data data) edn/read-string)
+         key (:key document)]
+     ;; Update the path/name and the saved position of the document.
+     ;; Any other changes that could happen while saving should be preserved.
+     (-> db
+         (assoc-in [:documents key :path] (.-path data))
+         (assoc-in [:documents key :title] (.-title data))
+         (assoc-in [:documents key :save] (:save document))))))
 
 (rf/reg-event-fx
  :document/save-all
