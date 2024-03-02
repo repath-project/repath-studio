@@ -1,5 +1,6 @@
 (ns renderer.utils.pointer
   (:require
+   [clojure.core.matrix :as mat]
    [re-frame.core :as rf]))
 
 (defn ctrl?
@@ -13,6 +14,13 @@
 (defn multiselect?
   [e]
   (some #(contains? (:modifiers e) %) #{:ctrl :shift}))
+
+(defn significant-drag?
+  [pointer-pos pointer-offset]
+  (let [threshold 1]
+    (when (and (vector? pointer-pos) (vector? pointer-offset))
+      (> (apply max (map abs (mat/sub pointer-pos pointer-offset)))
+         threshold))))
 
 (def button
   "https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button"

@@ -1,7 +1,7 @@
 (ns renderer.document.events
   (:require
    [clojure.edn :as edn]
-   [de-dupe.core :as dd]
+   #_[de-dupe.core :as dd]
    [re-frame.core :as rf]
    [re-frame.interceptor :refer [->interceptor get-effect get-coeffect assoc-coeffect assoc-effect]]
    [renderer.document.db :as db]
@@ -14,8 +14,7 @@
   (let [db-store-key :re-frame-path/db-store]
     (->interceptor
      :id :active-document-path
-     :before (fn
-               [context]
+     :before (fn [context]
                (let [original-db (get-coeffect context :db)]
                  (-> context
                      (update db-store-key conj original-db)

@@ -1,6 +1,5 @@
 (ns renderer.events
   (:require
-   [clojure.core.matrix :as mat]
    [malli.core :as ma]
    [platform]
    [re-frame.core :as rf]
@@ -8,7 +7,8 @@
    [renderer.frame.handlers :as frame-h]
    [renderer.handlers :as h]
    [renderer.tools.base :as tools]
-   [renderer.utils.local-storage :as local-storage]))
+   [renderer.utils.local-storage :as local-storage]
+   [renderer.utils.pointer :as pointer]))
 
 (defn check-and-throw
   "Throws an exception if `db` doesn't match the Spec"
@@ -104,13 +104,6 @@
  (fn [db [_]]
    (update db :snap? not)))
 
-(defn significant-drag?
-  [pointer-pos pointer-offset]
-  (let [threshold 1]
-    (when (and (vector? pointer-pos) (vector? pointer-offset))
-      (> (apply max (map abs (mat/sub pointer-pos pointer-offset)))
-         threshold))))
-
 (rf/reg-event-db
  :pointer-event
  (fn [{:keys [pointer-offset tool content-rect drag?] :as db}
@@ -121,7 +114,7 @@
        (if (= buttons :right)
          db
          (-> (if pointer-offset
-               (if (significant-drag? pointer-pos pointer-offset)
+               (if (pointer/significant-drag? pointer-pos pointer-offset)
                  (cond-> db
                    (not= tool :pan)
                    (frame-h/pan-out-of-canvas content-rect
