@@ -29,8 +29,7 @@
          [:div.flex.gap-2.items-center
           (str/capitalize (name type))
           (when-let [shortcuts (comp/shortcuts [:set-tool type])]
-            [:div.p-1.text-2xs.bg-primary.rounded.font-bold.text-muted.uppercase
-             shortcuts])]
+            [:div.shortcut shortcuts])]
          [:> Tooltip/Arrow {:class "tooltip-arrow"}]]]])))
 
 (defn group

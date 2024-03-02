@@ -370,8 +370,7 @@ pre {
 }
 
 .shortcut {
-  flex: 1 0;
-  text-align: right;
+  @apply p-1 text-2xs overlay rounded font-bold text-muted uppercase;
 }
 
 .dialog {

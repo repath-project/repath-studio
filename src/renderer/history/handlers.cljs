@@ -42,8 +42,8 @@
   (boolean (next-position history)))
 
 (defn swap
-  ([db]
-   (assoc-in db (element.h/path db) (:elements (state (history db))))))
+  [db]
+  (assoc-in db (element.h/path db) (:elements (state (history db)))))
 
 (defn preview
   [db position]
