@@ -1,6 +1,5 @@
 (ns renderer.tools.shape.text
   (:require
-   [clojure.core.matrix :as mat]
    [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
@@ -9,6 +8,7 @@
    [renderer.history.handlers :as history.h]
    [renderer.tools.base :as tools]
    [renderer.utils.bounds :as bounds]
+   [renderer.utils.dom :as dom]
    [renderer.utils.units :as units]))
 
 (derive :text ::tools/renderable)
@@ -66,6 +66,7 @@
 
 (defn set-text-and-select-element
   [e el-k]
+  (.focus (dom/canvas-element)) ; REVIEW
   (rf/dispatch [:element/set-prop
                 el-k
                 :content
@@ -89,7 +90,6 @@
        :on-focus #(.. % -target select)
        :on-pointer-down #(.stopPropagation %)
        :on-pointer-up #(.stopPropagation %)
-       :on-blur #(set-text-and-select-element % key)
        :on-key-down (fn [e]
                       (.stopPropagation e)
                       (if (contains? #{"Enter" "Escape"} (.-code e))
