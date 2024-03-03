@@ -4,6 +4,7 @@
    #_["@sentry/react" :as sentry-react]
    ["electron-log/renderer"]
    ["paper" :refer [paper]]
+   [cljs.reader :as edn]
    [config]
    [devtools.core :as devtools]
    [platform]
@@ -28,9 +29,9 @@
    [renderer.theme.core]
    [renderer.timeline.core]
    [renderer.tools.core]
+   [renderer.utils.dom :as dom]
    [renderer.utils.error :as error]
    [renderer.utils.keyboard :as keyb]
-   [renderer.utils.dom :as dom]
    [renderer.views :as v]
    [renderer.window.core]
    [replumb.repl :as repl]
@@ -79,8 +80,8 @@
        "windowLeavedFullscreen" (rf/dispatch [:window/set-fullscreen? false])
        "windowMinimized" (rf/dispatch [:window/set-minimized? true])
        "windowRestored" (rf/dispatch [:window/set-minimized? false])
-       "fileLoaded" (rf/dispatch [:document/load (.-data data)])
-       "fileSaved" (rf/dispatch [:document/saved (.-data data)])))))
+       "fileLoaded" (rf/dispatch [:document/load (edn/read-string (.-data data))])
+       "fileSaved" (rf/dispatch [:document/saved (edn/read-string (.-data data))])))))
 
 (defn load-system-fonts
   []

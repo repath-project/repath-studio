@@ -3,15 +3,9 @@
    ["electron" :refer [app dialog]]
    ["fs" :as fs]
    ["path" :as path]
-   [clojure.edn :as edn]
-   #_[cognitect.transit :as tr]))
+   [clojure.edn :as edn]))
 
 (def main-window (atom nil))
-
-#_(defn roundtrip
-    [data]
-    (let [writer (tr/writer :json)]
-      (tr/write writer data)))
 
 (def default-path (.getPath app "documents"))
 
@@ -21,37 +15,44 @@
    :filters [{:name "rso"
               :extensions ["rso"]}]})
 
+(defn serialize-document
+  [data file-path]
+  (pr-str (assoc data
+                 :path file-path
+                 :title (.basename path file-path))))
+
 (defn write-to-file
   [file-path data f]
-  (.writeFile fs file-path data #js {:encoding "utf-8"}
-              (fn [_err] (f {:path file-path
-                             :title (.basename path file-path)
-                             :data data}))))
+  (.writeFile fs file-path (pr-str data) #js {:encoding "utf-8"}
+              (fn [_err] (f (serialize-document data file-path)))))
 
 (defn save
   "Saves the provided data.
-   https://www.electronjs.org/docs/api/dialog#dialogshowsavedialogsyncbrowserwindow-options"
+   
+   If there is no path defined, pick a new file.
+   https://www.electronjs.org/docs/api/dialog#dialogshowsavedialogbrowserwindow-options"
   [data f]
-  (let [file-path (-> data edn/read-string :path)]
+  (let [document (edn/read-string data)
+        file-path (:path document)]
     (if (and file-path (.existsSync fs file-path))
-      (write-to-file file-path data f)
+      (write-to-file file-path document f)
       (.then (.showSaveDialog dialog ^js @main-window (clj->js dialog-options))
              (fn [^js/Promise file]
                (when-not (.-canceled file)
-                 (write-to-file (.-filePath file) data f)))))))
+                 (write-to-file (.-filePath file) document f)))))))
 
 (defn open
   "Opens a file.
-   https://www.electronjs.org/docs/api/dialog#dialogshowopendialogsyncbrowserwindow-options"
+   https://www.electronjs.org/docs/api/dialog#dialogshowopendialogbrowserwindow-options"
   [f]
   (.then (.showOpenDialog dialog ^js @main-window (clj->js dialog-options))
          (fn [^js/Promise file]
            (when-not (.-canceled file)
              (let [file-path (first (js->clj (.-filePaths file)))]
                (.readFile fs file-path #js {:encoding "utf-8"}
-                          (fn [_err data] (f {:path file-path
-                                              :title (.basename path file-path)
-                                              :data data}))))))))
+                          (fn [_err data]
+                            (let [document (edn/read-string data)]
+                              (f (serialize-document document file-path))))))))))
 
 (def export-options
   {:defaultPath default-path

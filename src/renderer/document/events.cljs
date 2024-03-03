@@ -2,6 +2,7 @@
   (:require
    [clojure.edn :as edn]
    #_[de-dupe.core :as dd]
+   [platform]
    [re-frame.core :as rf]
    [re-frame.interceptor :refer [->interceptor get-effect get-coeffect assoc-coeffect assoc-effect]]
    [renderer.document.db :as db]
@@ -137,56 +138,97 @@
             (history.h/finalize "Create document"))
     :dispatch [:center]}))
 
+(def repath-types
+  [{:accept {"application/repath.studio" [".rso"]}}])
+
+(def file-picker-options
+  (clj->js {:startIn "documents"
+            :types repath-types}))
+
+(rf/reg-fx
+ ::open
+ (fn []
+   (.then (.showOpenFilePicker js/window file-picker-options)
+          (fn [[file-handle]]
+            (.then (.getFile file-handle)
+                   (fn [file]
+                     (let [reader (js/FileReader.)]
+                       (.addEventListener
+                        reader
+                        "load"
+                        #(let [document (.. % -target -result)]
+                           (rf/dispatch [:document/load (edn/read-string document)])))
+                       (.readAsText reader file))))))))
+
 (rf/reg-event-fx
  :document/open
  (fn [_ [_]]
-   {:send-to-main {:action "openDocument"}}))
+   (if platform/electron?
+     {:send-to-main {:action "openDocument"}}
+     {::open nil})))
 
 (rf/reg-event-fx
  :document/load
- (fn [{:keys [db]} [_ data]]
-   (let [document (-> (.-data data)
-                      edn/read-string
-                      (assoc :path (.-path data)
-                             :title (.-title data))
+ (fn [{:keys [db]} [_ document]]
+   (let [document (-> document
                       ;; FIXME: Still contains cached values after expand.
-                      #_(update-in [:history :states] dd/expand))]
+                      #_(update-in document [:history :states] dd/expand))]
      {:db (-> db
               (h/create-tab document)
               (history.h/finalize "Load document")
-              (update-in [:documents (:key document)] #(assoc % :save (-> % :history :position))))
+              (update-in [:documents (:key document)]
+                         #(assoc % :save (-> % :history :position))))
       :dispatch [:center]})))
+
+(rf/reg-fx
+ ::save
+ (fn [data]
+   (.then (.showSaveFilePicker js/window file-picker-options)
+          (fn [file-handle]
+            (.then (.createWritable file-handle)
+                   (fn [writable]
+                     (.then (.write writable (pr-str data))
+                            (let [document (assoc data
+                                                  :title (.-name file-handle)
+                                                  :path (.-name file-handle))]
+                              (.close writable)
+                              (rf/dispatch [:document/saved document])))))))))
+
+(defn save-format
+  [db]
+  (-> db
+      (get-in [:documents (:active-document db)])
+      (assoc :save (history.h/current-position db))
+      (dissoc :history)))
 
 (rf/reg-event-fx
  :document/save
  (fn [{:keys [db]} [_]]
    (let [document (-> db
-                      (get-in [:documents (:active-document db)])
-                      (assoc :save (history.h/current-position db))
-                      (dissoc :history)
+                      save-format
                       #_(update-in [:history :states] dd/de-dupe-eq))]
-     {:send-to-main {:action "saveDocument" :data (pr-str document)}})))
+     (if platform/electron?
+       {:send-to-main {:action "saveDocument" :data (pr-str document)}}
+       {::save document}))))
 
 (rf/reg-event-fx
  :document/save-as
  (fn [{:keys [db]} [_]]
    (let [document (-> db
-                      (get-in [:documents (:active-document db)])
-                      (assoc :save (history.h/current-position db))
-                      (dissoc :history :path))]
-     {:send-to-main {:action "saveDocument" :data (pr-str document)}})))
+                      save-format
+                      ;; Remove the path to trigger a file selection dialog.
+                      (dissoc :path))]
+     (if platform/electron?
+       {:send-to-main {:action "saveDocument" :data (pr-str document)}}
+       {::save document}))))
 
 (rf/reg-event-db
  :document/saved
- (fn [db [_ data]]
-   (let [document (-> (.-data data) edn/read-string)
-         key (:key document)]
-     ;; Update the path/name and the saved position of the document.
-     ;; Any other changes that could happen while saving should be preserved.
-     (-> db
-         (assoc-in [:documents key :path] (.-path data))
-         (assoc-in [:documents key :title] (.-title data))
-         (assoc-in [:documents key :save] (:save document))))))
+ (fn [db [_ document]]
+   ;; Update only the path, teh title and the saved position of the document.
+   ;; Any other changes that could happen while saving should be preserved.
+   (let [updates (select-keys document [:path :title :save])]
+     (update-in db [:documents (:key document)] merge updates))))
 
 (rf/reg-event-fx
  :document/save-all
