@@ -7,48 +7,53 @@
    [renderer.history.views :as history]))
 
 (defn actions []
-  [:div.toolbar
+  (let [undos? @(rf/subscribe [:history/undos?])
+        redos? @(rf/subscribe [:history/redos?])]
+    [:div.toolbar
 
-   [comp/icon-button
-    "file"
-    {:title "New"
-     :on-click #(rf/dispatch [:document/new])}]
+     [comp/icon-button
+      "file"
+      {:title "New"
+       :on-click #(rf/dispatch [:document/new])}]
 
-   [comp/icon-button
-    "folder"
-    {:title "Open"
-     :on-click #(rf/dispatch [:document/open])}]
+     [comp/icon-button
+      "folder"
+      {:title "Open"
+       :on-click #(rf/dispatch [:document/open])}]
 
-   [comp/icon-button
-    "save"
-    {:title "Save"
-     :on-click #(rf/dispatch [:document/save])
-     :disabled @(rf/subscribe [:document/active-saved?])}]
+     [comp/icon-button
+      "save"
+      {:title "Save"
+       :on-click #(rf/dispatch [:document/save])
+       :disabled @(rf/subscribe [:document/active-saved?])}]
 
-   [:span.v-divider]
+     [:span.v-divider]
 
-   [comp/icon-button
-    "undo"
-    {:title "Undo"
-     :style {:margin-right 0}
-     :on-click #(rf/dispatch [:history/undo])
-     :disabled (not @(rf/subscribe [:history/undos?]))}]
+     [:button.icon-button.items-center.px-1.gap-1
+      {:title "Undo"
+       :style {:margin-right 0
+               :width "auto"
+               :display "flex"}
+       :on-click #(rf/dispatch [:history/undo])
+       :disabled (not undos?)}
+      [renderer.components/icon "undo"]
+      [history/select
+       "Undo stack"
+       @(rf/subscribe [:history/undos])
+       (not undos?)]]
 
-   [history/select
-    "Undo stack"
-    @(rf/subscribe [:history/undos])
-    (not @(rf/subscribe [:history/undos?]))]
-
-   [comp/icon-button "redo"
-    {:title "Undo"
-     :style {:margin-right 0}
-     :on-click #(rf/dispatch [:history/redo])
-     :disabled (not @(rf/subscribe [:history/redos?]))}]
-
-   [history/select
-    "Redo stack"
-    @(rf/subscribe [:history/redos])
-    (not @(rf/subscribe [:history/redos?]))]])
+     [:button.icon-button.items-center.px-1.gap-1
+      {:title "Redo"
+       :style {:margin-right 0
+               :width "auto"
+               :display "flex"}
+       :on-click #(rf/dispatch [:history/redo])
+       :disabled (not redos?)}
+      [renderer.components/icon "redo"]
+      [history/select
+       "Redo stack"
+       @(rf/subscribe [:history/redos])
+       (not redos?)]]]))
 
 (defn close-button
   [key saved?]

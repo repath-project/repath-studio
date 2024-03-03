@@ -19,10 +19,11 @@
 
 (defn select
   [label options disabled?]
-  [:> Select/Root {:onValueChange #(rf/dispatch [:history/move (keyword %)])
-                   :disabled disabled?}
+  [:> Select/Root
+   {:onValueChange #(rf/dispatch [:history/move (keyword %)])
+    :disabled disabled?}
    [:> Select/Trigger
-    {:class "select-trigger"
+    {:class "select-trigger hover:top-0.5"
      :aria-label label
      :style {:background "transparent"
              :width "16px"
@@ -34,6 +35,7 @@
     [:> Select/Content
      {:side "top"
       :sideOffset 5
+      :alignOffset -24
       :position "popper"
       :class "menu-content rounded select-content"}
      [:> Select/ScrollUpButton {:class "select-scroll-button"}
