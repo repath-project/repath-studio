@@ -44,7 +44,8 @@
       {:class (when-not (or platform/electron? fullscreen?) "mr-1.5")}
       [comp/icon-button
        (name @(rf/subscribe [:theme/mode]))
-       {:on-click #(rf/dispatch [:theme/cycle-mode])}]]
+       {:on-click #(rf/dispatch [:theme/cycle-mode])
+        :class "rounded-none"}]]
      (when (and platform/electron? (not fullscreen?))
        [window-controls])
      (when fullscreen?

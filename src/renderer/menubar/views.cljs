@@ -343,6 +343,7 @@
     (into [:> Menubar/Content
            {:class "menu-content"
             :align "start"
+            :sideOffset 3
             :loop true}]
           (map menu-item items))]])
 
