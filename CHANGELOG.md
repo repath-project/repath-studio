@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.2.4 (2024-03-03)
+
+**Added**
+
+- Support save/load file on supported browsers
+- Recent open documents
+- Pull request template
+
+**Changed**
+
+- Enhance home page
+- Enhance undo/redo styles
+  
+**Fixed**
+
+- Document title
+
 ## 0.2.3 (2024-03-01)
   
 **Fixed**
