@@ -188,9 +188,7 @@
             (.then (.createWritable file-handle)
                    (fn [writable]
                      (.then (.write writable (pr-str data))
-                            (let [document (assoc data
-                                                  :title (.-name file-handle)
-                                                  :path (.-name file-handle))]
+                            (let [document (assoc data :title (.-name file-handle))]
                               (.close writable)
                               (rf/dispatch [:document/saved document])))))))))
 
@@ -199,14 +197,13 @@
   (-> db
       (get-in [:documents (:active-document db)])
       (assoc :save (history.h/current-position db))
+      #_(update-in [:history :states] dd/de-dupe-eq)
       (dissoc :history)))
 
 (rf/reg-event-fx
  :document/save
  (fn [{:keys [db]} [_]]
-   (let [document (-> db
-                      save-format
-                      #_(update-in [:history :states] dd/de-dupe-eq))]
+   (let [document (save-format db)]
      (if platform/electron?
        {:send-to-main {:action "saveDocument" :data (pr-str document)}}
        {::save document}))))
