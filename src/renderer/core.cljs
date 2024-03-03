@@ -116,7 +116,7 @@
   (rf/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])
   (rf/dispatch-sync [::rp/set-keydown-rules keyb/keydown-rules])
 
-  (.setup paper)
+  (.setup paper) ; REVIEW
 
   (if platform/electron?
     (do (load-system-fonts)

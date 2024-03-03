@@ -42,4 +42,4 @@
    [:> Command/CommandList
     [:> Command/CommandEmpty
      (t [:cmdk/no-results "No results found."])]
-    (map group menubar/menu)]])
+    (map group (menubar/root-menu))]])

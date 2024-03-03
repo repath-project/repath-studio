@@ -47,7 +47,7 @@
     "openRemoteUrl" (open-external (.-data args))
     ;; https://www.electronjs.org/docs/api/clipboard#clipboardwritedata-type
     "writeToClipboard" (.write clipboard (.-data args))
-    "openDocument" (file/open #(send-to-renderer "fileLoaded" %))
+    "openDocument" (file/open (.-data args) #(send-to-renderer "fileLoaded" %))
     "saveDocument" (file/save (.-data args) #(send-to-renderer "fileSaved" %))
     "export" (file/export (.-data args))))
 

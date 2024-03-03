@@ -3,6 +3,22 @@
    [re-frame.core :as rf]))
 
 (rf/reg-sub
+ :document/recent
+ :-> :recent)
+
+(rf/reg-sub
+ :document/recent?
+ :<- [:document/recent]
+ (fn [recent _]
+   (seq recent)))
+
+(rf/reg-sub
+ :document/recent-disabled?
+ :<- [:document/recent?]
+ (fn [recent? _]
+   (not recent?)))
+
+(rf/reg-sub
  :document/active
  :<- [:documents]
  :<- [:active-document]

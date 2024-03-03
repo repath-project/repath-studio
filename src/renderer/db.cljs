@@ -33,6 +33,7 @@
    :state :default
    :documents {}
    :document-tabs []
+   :recent []
    :system-fonts []
    :notifications []
    :debug-info? false

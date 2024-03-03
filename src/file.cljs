@@ -21,7 +21,7 @@
                  :path file-path
                  :title (.basename path file-path))))
 
-(defn write-to-file
+(defn write-file
   [file-path data f]
   (.writeFile fs file-path (pr-str data) #js {:encoding "utf-8"}
               (fn [_err] (f (serialize-document data file-path)))))
@@ -35,24 +35,30 @@
   (let [document (edn/read-string data)
         file-path (:path document)]
     (if (and file-path (.existsSync fs file-path))
-      (write-to-file file-path document f)
+      (write-file file-path document f)
       (.then (.showSaveDialog dialog ^js @main-window (clj->js dialog-options))
              (fn [^js/Promise file]
                (when-not (.-canceled file)
-                 (write-to-file (.-filePath file) document f)))))))
+                 (write-file (.-filePath file) document f)))))))
+
+(defn read-file
+  [file-path f]
+  (.readFile fs file-path #js {:encoding "utf-8"}
+             (fn [_err data]
+               (let [document (edn/read-string data)]
+                 (f (serialize-document document file-path))))))
 
 (defn open
   "Opens a file.
    https://www.electronjs.org/docs/api/dialog#dialogshowopendialogbrowserwindow-options"
-  [f]
-  (.then (.showOpenDialog dialog ^js @main-window (clj->js dialog-options))
-         (fn [^js/Promise file]
-           (when-not (.-canceled file)
-             (let [file-path (first (js->clj (.-filePaths file)))]
-               (.readFile fs file-path #js {:encoding "utf-8"}
-                          (fn [_err data]
-                            (let [document (edn/read-string data)]
-                              (f (serialize-document document file-path))))))))))
+  [file-path f]
+  (if (and file-path (.existsSync fs file-path))
+    (read-file file-path f)
+    (.then (.showOpenDialog dialog ^js @main-window (clj->js dialog-options))
+           (fn [^js/Promise file]
+             (when-not (.-canceled file)
+               (let [file-path (first (js->clj (.-filePaths file)))]
+                 (read-file file-path f)))))))
 
 (def export-options
   {:defaultPath default-path

@@ -22,6 +22,10 @@
   [{:keys [active-document] :as db} el-k]
   (update-in db [:documents active-document :collapsed-keys] disj el-k))
 
+(defn add-recent
+  [db file-path]
+  (update db :recent #(-> % (conj file-path) distinct)))
+
 (defn create-tab
   [db document]
   (let [key (or (:key document) (uuid/generate))

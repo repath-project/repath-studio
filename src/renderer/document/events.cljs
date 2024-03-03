@@ -9,6 +9,7 @@
    [renderer.document.handlers :as h]
    [renderer.element.handlers :as element.h]
    [renderer.history.handlers :as history.h]
+   [renderer.utils.local-storage :as local-storage]
    [renderer.utils.vec :as vec]))
 
 (def active-document-path
@@ -162,19 +163,21 @@
 
 (rf/reg-event-fx
  :document/open
- (fn [_ [_]]
+ (fn [_ [_ file-path]]
    (if platform/electron?
-     {:send-to-main {:action "openDocument"}}
+     {:send-to-main {:action "openDocument" :data file-path}}
      {::open nil})))
 
 (rf/reg-event-fx
  :document/load
+ local-storage/persist
  (fn [{:keys [db]} [_ document]]
    (let [document (-> document
                       ;; FIXME: Still contains cached values after expand.
                       #_(update-in document [:history :states] dd/expand))]
      {:db (-> db
               (h/create-tab document)
+              (h/add-recent (:path document))
               (history.h/finalize "Load document")
               (update-in [:documents (:key document)]
                          #(assoc % :save (-> % :history :position))))
@@ -231,3 +234,9 @@
  :document/save-all
  (fn [{:keys [db]} [_]]
    db))
+
+(rf/reg-event-db
+ :document/clear-recent
+ local-storage/persist
+ (fn [db [_]]
+   (assoc db :recent [])))
