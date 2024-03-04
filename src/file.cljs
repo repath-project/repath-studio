@@ -26,20 +26,30 @@
   (.writeFile fs file-path (pr-str data) #js {:encoding "utf-8"}
               (fn [_err] (f (serialize-document data file-path)))))
 
-(defn save
+(defn save-as
   "Saves the provided data.
    
    If there is no path defined, pick a new file.
    https://www.electronjs.org/docs/api/dialog#dialogshowsavedialogbrowserwindow-options"
   [data f]
   (let [document (edn/read-string data)
+        file-path (:path document)
+        directory (and file-path (.dirname path file-path))
+        dialog-options (cond-> dialog-options
+                         (and directory (.existsSync fs directory))
+                         (assoc :defaultPath directory))]
+    (.then (.showSaveDialog dialog ^js @main-window (clj->js dialog-options))
+           (fn [^js/Promise file]
+             (when-not (.-canceled file)
+               (write-file (.-filePath file) document f))))))
+
+(defn save
+  [data f]
+  (let [document (edn/read-string data)
         file-path (:path document)]
     (if (and file-path (.existsSync fs file-path))
       (write-file file-path document f)
-      (.then (.showSaveDialog dialog ^js @main-window (clj->js dialog-options))
-             (fn [^js/Promise file]
-               (when-not (.-canceled file)
-                 (write-file (.-filePath file) document f)))))))
+      (save-as data f))))
 
 (defn read-file
   [file-path f]

@@ -225,12 +225,9 @@
 (rf/reg-event-fx
  :document/save-as
  (fn [{:keys [db]} [_]]
-   (let [document (-> db
-                      save-format
-                      ;; Remove the path to trigger a file selection dialog.
-                      (dissoc :path))]
+   (let [document (save-format db)]
      (if platform/electron?
-       {:send-to-main {:action "saveDocument" :data (pr-str document)}}
+       {:send-to-main {:action "saveDocumentAs" :data (pr-str document)}}
        {::save document}))))
 
 (rf/reg-event-db

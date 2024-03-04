@@ -51,6 +51,7 @@
     "openDirectory" (.showItemInFolder shell (.-data args))
     "openDocument" (file/open (.-data args) #(send-to-renderer "fileLoaded" %))
     "saveDocument" (file/save (.-data args) #(send-to-renderer "fileSaved" %))
+    "saveDocumentAs" (file/save-as (.-data args) #(send-to-renderer "fileSaved" %))
     "export" (file/export (.-data args))))
 
 (defn register-window-events!
@@ -94,7 +95,7 @@
                   :height (.-height win-state)
                   :backgroundColor "#313131"
                   :titleBarStyle (when (= (.platform os) "darwin") "hidden")
-                  :trafficLightPosition #js { :x 8 :y 10 }
+                  :trafficLightPosition #js {:x 8 :y 10}
                   :icon (.join path js/__dirname "/public/img/icon.png")
                   :frame false
                   :show false
