@@ -514,16 +514,12 @@ pre {
 
 .slider-thumb {
   @apply flex shadow h-full rounded-sm;
-  background-color: var(--font-color-muted);
+  background-color: var(--font-color);
   width: 8px;
   height: 20px;
 
-  &:hover {
-    background-color: var(--font-color);
-  }
-
   &:focus {
-    @apply outline-none bg-accent;
-    background-color: var(--font-color-active);
+    @apply outline-none;
+    box-shadow: 0 0 0 4px var(--border-color);
   }
 }
