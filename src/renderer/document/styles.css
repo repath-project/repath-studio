@@ -4,14 +4,14 @@
   flex: 0 1 130px;
 
   .close-document-button {
-    @apply icon-button invisible;
+    @apply icon-button invisible relative;
 
-    .circle {
-      @apply small absolute inset-0 text-center bg-primary;
+    .dot {
+      @apply absolute inset-0 bg-primary flex items-center;
     }
 
     &:hover {
-      .circle {
+      .dot {
         @apply hidden;
       }
     }
