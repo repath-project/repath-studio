@@ -8,6 +8,7 @@
    #_["electron-updater" :as updater]
    ["electron-window-state" :as window-state-keeper]
    ["electron" :refer [app shell ipcMain BrowserWindow clipboard nativeTheme]]
+   ["os" :as os]
    ["path" :as path]
    [config]
    [file]))
@@ -92,6 +93,8 @@
                   :width (.-width win-state)
                   :height (.-height win-state)
                   :backgroundColor "#313131"
+                  :titleBarStyle (when (= (.platform os) "darwin") "hidden")
+                  :trafficLightPosition #js { :x 8 :y 10 }
                   :icon (.join path js/__dirname "/public/img/icon.png")
                   :frame false
                   :show false

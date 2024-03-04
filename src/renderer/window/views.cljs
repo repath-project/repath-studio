@@ -1,6 +1,6 @@
 (ns renderer.window.views
   (:require
-   [platform :as platform]
+   [platform]
    [re-frame.core :as rf]
    [renderer.components :as comp]
    [renderer.menubar.views :as menubar]))
@@ -38,19 +38,20 @@
         title (or @(rf/subscribe [:document/path])
                   @(rf/subscribe [:document/title]))]
     [:div.flex.items-center.relative
-     (when-not fullscreen?
+     (when-not (or fullscreen? platform/mac?)
        [app-icon])
      [:div.flex.relative.bg-secondary
+      {:class (when (and platform/mac? (not fullscreen?)) "ml-16")}
       [menubar/root]]
      [:div.title-bar (when title (str title " - ")) "Repath Studio"]
      [:div.flex.h-full.flex-1.drag]
      [:div.bg-primary
-      {:class (when-not (or platform/electron? fullscreen?) "mr-1.5")}
+      {:class (when-not (or (and platform/electron? (not platform/mac?)) fullscreen?) "mr-1.5")}
       [comp/icon-button
        (name @(rf/subscribe [:theme/mode]))
        {:on-click #(rf/dispatch [:theme/cycle-mode])
         :class "rounded-none"}]]
-     (when (and platform/electron? (not fullscreen?))
+     (when (and platform/electron? (not fullscreen?) (not platform/mac?))
        [window-controls])
      (when fullscreen?
        [window-control-button

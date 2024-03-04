@@ -6,6 +6,7 @@
    ["font-scanner" :as fontManager]
    ["mdn-data" :as mdn] ;; deprecating in favor of w3c/webref
    ["opentype.js" :as opentype]
+   ["os" :as os]
    [config]))
 
 (defn text->path
@@ -23,6 +24,7 @@
               (.on ipcRenderer channel (fn [_ args] (f args))))
    :mdn mdn
    :webrefCss css
+   :platform (.platform os)
    ;; https://github.com/axosoft/font-scanner#getavailablefonts
    :systemFonts (.getAvailableFontsSync fontManager)
    :findFonts (fn [descriptor] (.findFontsSync fontManager descriptor))
