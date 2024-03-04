@@ -82,7 +82,7 @@
    [renderer.components/icon icon]])
 
 (defn context-menu-item
-  [{:keys [type label action checked?]}]
+  [{:keys [type label action checked? disabled?]}]
   (case type
     :separator
     [:> ContextMenu/Separator {:class "menu-separator"}]
@@ -91,7 +91,8 @@
     [:> ContextMenu/CheckboxItem
      {:class "menu-checkbox-item inset"
       :onSelect #(rf/dispatch action)
-      :checked @(rf/subscribe checked?)}
+      :checked @(rf/subscribe checked?)
+      :disabled disabled?}
      [:> ContextMenu/ItemIndicator
       {:class "menu-item-indicator"}
       [icon "checkmark"]]
@@ -101,7 +102,8 @@
 
     [:> ContextMenu/Item
      {:class "menu-item context-menu-item"
-      :onSelect #(rf/dispatch action)}
+      :onSelect #(rf/dispatch action)
+      :disabled disabled?}
      label
      [:div.right-slot
       [shortcuts action]]]))
