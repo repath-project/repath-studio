@@ -1,5 +1,5 @@
 .menubar-root {
-  @apply flex;
+  @apply flex ml-1;
 }
 
 .menubar-trigger {

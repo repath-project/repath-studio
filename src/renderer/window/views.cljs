@@ -24,6 +24,14 @@
               {:action [:window/close]
                :icon "times"}])))
 
+(defn app-icon
+  []
+  [:div.drag
+   [:img.ml-2
+    {:src "img/icon-no-bg.svg"
+     :style {:width "14px"
+             :height "14px"}}]])
+
 (defn app-header
   []
   (let [fullscreen? @(rf/subscribe [:window/fullscreen?])
@@ -31,11 +39,7 @@
                   @(rf/subscribe [:document/title]))]
     [:div.flex.items-center.relative
      (when-not fullscreen?
-       [:div.drag
-        [:img.ml-2.mr-1
-         {:src "img/icon-no-bg.svg"
-          :style {:width "14px"
-                  :height "14px"}}]])
+       [app-icon])
      [:div.flex.relative.bg-secondary
       [menubar/root]]
      [:div.title-bar (when title (str title " - ")) "Repath Studio"]
