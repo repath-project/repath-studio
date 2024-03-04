@@ -27,6 +27,12 @@
      (active-document documents))))
 
 (rf/reg-sub
+ :document/document
+ :<- [:documents]
+ (fn [documents [_ k]]
+   (get documents k)))
+
+(rf/reg-sub
  :document/zoom
  :<- [:document/active]
  :-> :zoom)

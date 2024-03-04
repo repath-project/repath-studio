@@ -169,6 +169,11 @@
      {::open nil})))
 
 (rf/reg-event-fx
+ :document/open-directory
+ (fn [_ [_ path]]
+   {:send-to-main {:action "openDirectory" :data path}}))
+
+(rf/reg-event-fx
  :document/load
  local-storage/persist
  (fn [{:keys [db]} [_ document]]

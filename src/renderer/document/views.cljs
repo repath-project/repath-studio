@@ -1,6 +1,7 @@
 (ns renderer.document.views
   (:require
    ["@radix-ui/react-context-menu" :as ContextMenu]
+   [platform]
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [renderer.components :as comp]
@@ -70,12 +71,18 @@
 
 (defn context-menu
   [key]
-  [{:label "Close"
-    :action [:document/close key]}
-   {:label "Close Others"
-    :action [:document/close-others]}
-   {:label "Close All"
-    :action [:document/close-all]}])
+  (let [document @(rf/subscribe [:document/document key])
+        path (:path document)]
+    (cond-> [{:label "Close"
+              :action [:document/close key]}
+             {:label "Close Others"
+              :action [:document/close-others]}
+             {:label "Close All"
+              :action [:document/close-all]}]
+      (and path platform/electron?)
+      (concat [{:type :separator}
+               {:label "Open containing directory"
+                :action [:document/open-directory path]}]))))
 
 (defn tab
   [key document active?]
