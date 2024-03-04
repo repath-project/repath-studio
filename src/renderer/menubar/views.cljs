@@ -4,60 +4,63 @@
    [re-frame.core :as rf]
    [renderer.components :as comp]))
 
-(defn file-menu
+(defn recent-submenu
   []
   (let [recent @(rf/subscribe [:document/recent])
         recent-items (mapv (fn [path] {:key (keyword path)
                                        :label path
-                                       :action [:document/open path]}) recent)
-        recent-items (cond-> recent-items
-                       (seq recent-items)
-                       (concat [{:key :divider-1
-                                 :type :separator}
-                                {:key :clear-recent
-                                 :label "Clear recent"
-                                 :action [:document/clear-recent]}]))]
-    {:key :file
-     :label "File"
-     :type :root
-     :items [{:key :new-file
-              :label "New"
-              :icon "file"
-              :action [:document/new]}
-             {:key :divider-1
-              :type :separator}
-             {:key :open-file
-              :label "Open…"
-              :icon "folder"
-              :action [:document/open]}
-             {:key :open-recent
-              :label "Open recent"
-              :type :sub-menu
-              :disabled? [:document/recent-disabled?]
-              :items recent-items}
-             {:key :divider-2
-              :type :separator}
-             {:key :save
-              :label "Save"
-              :icon "save"
-              :action [:document/save]
-              :disabled? [:document/active-saved?]}
-             {:key :save-as
-              :label "Save as…"
-              :action [:document/save-as]}
-             {:key :divider-3
-              :type :separator}
-             {:key :export
-              :label "Export as SVG"
-              :action [:element/export]}
-             {:key :divider-4
-              :type :separator}
-             {:key :close
-              :label "Close"
-              :action [:document/close-active]}
-             {:key :exit
-              :label "Exit"
-              :action [:window/close]}]}))
+                                       :action [:document/open path]}) recent)]
+    (cond-> recent-items
+      (seq recent-items)
+      (concat [{:key :divider-1
+                :type :separator}
+               {:key :clear-recent
+                :label "Clear recent"
+                :action [:document/clear-recent]}]))))
+
+(defn file-menu
+  []
+  {:key :file
+   :label "File"
+   :type :root
+   :items [{:key :new-file
+            :label "New"
+            :icon "file"
+            :action [:document/new]}
+           {:key :divider-1
+            :type :separator}
+           {:key :open-file
+            :label "Open…"
+            :icon "folder"
+            :action [:document/open]}
+           {:key :open-recent
+            :label "Open recent"
+            :type :sub-menu
+            :disabled? [:document/recent-disabled?]
+            :items (recent-submenu)}
+           {:key :divider-2
+            :type :separator}
+           {:key :save
+            :label "Save"
+            :icon "save"
+            :action [:document/save]
+            :disabled? [:document/active-saved?]}
+           {:key :save-as
+            :label "Save as…"
+            :action [:document/save-as]}
+           {:key :divider-3
+            :type :separator}
+           {:key :export
+            :label "Export as SVG"
+            :action [:element/export]}
+           {:key :divider-4
+            :type :separator}
+           {:key :close
+            :label "Close"
+            :action [:document/close-active]}
+           {:key :exit
+            :label "Exit"
+            :action [:window/close]}]})
 
 (defn edit-menu
   []
@@ -112,6 +115,47 @@
             :label "Delete"
             :action [:element/delete]}]})
 
+(defn align-submenu
+  []
+  [{:key :align-left
+    :label "Left"
+    :action [:element/align :left]}
+   {:key :align-center-horizontally
+    :label "Center horizontally"
+    :action [:element/align :center-horizontal]}
+   {:key :align-right
+    :label "Right"
+    :action [:element/align :right]}
+   {:key :divider-1
+    :type :separator}
+   {:key :align-top
+    :label "Top"
+    :action [:element/align :top]}
+   {:key :align-center-vertically
+    :label "Center vertically"
+    :action [:element/align :center-vertical]}
+   {:key :align-bottom
+    :label "Bottom"
+    :action [:element/align :bottom]}])
+
+(defn boolean-submenu
+  []
+  [{:key :exclude
+    :label "Exclude"
+    :action [:element/bool-operation :exclude]}
+   {:key :unite
+    :label "Unite"
+    :action [:element/bool-operation :unite]}
+   {:key :intersect
+    :label "Intersect"
+    :action [:element/bool-operation :intersect]}
+   {:key :subtract
+    :label "Subtract"
+    :action [:element/bool-operation :subtract]}
+   {:key :divide
+    :label "Divide"
+    :action [:element/bool-operation :divide]}])
+
 (defn object-menu
   []
   {:key :object
@@ -144,46 +188,13 @@
            {:key :path
             :label "Align"
             :type :sub-menu
-            :items [{:key :align-left
-                     :label "Left"
-                     :action [:element/align :left]}
-                    {:key :align-center-horizontally
-                     :label "Center horizontally"
-                     :action [:element/align :center-horizontal]}
-                    {:key :align-right
-                     :label "Right"
-                     :action [:element/align :right]}
-                    {:key :divider-1
-                     :type :separator}
-                    {:key :align-top
-                     :label "Top"
-                     :action [:element/align :top]}
-                    {:key :align-center-vertically
-                     :label "Center vertically"
-                     :action [:element/align :center-vertical]}
-                    {:key :align-bottom
-                     :label "Bottom"
-                     :action [:element/align :bottom]}]}
+            :items (align-submenu)}
            {:key :divider-4
             :type :separator}
            {:key :boolean
             :label "Boolean operation"
             :type :sub-menu
-            :items [{:key :exclude
-                     :label "Exclude"
-                     :action [:element/bool-operation :exclude]}
-                    {:key :unite
-                     :label "Unite"
-                     :action [:element/bool-operation :unite]}
-                    {:key :intersect
-                     :label "Intersect"
-                     :action [:element/bool-operation :intersect]}
-                    {:key :subtract
-                     :label "Subtract"
-                     :action [:element/bool-operation :subtract]}
-                    {:key :divide
-                     :label "Divide"
-                     :action [:element/bool-operation :divide]}]}
+            :items (boolean-submenu)}
            {:key :divider-5
             :type :separator}
            {:key :raise
@@ -217,6 +228,37 @@
             :label "Reverse"
             :action [:element/manipulate-path :reverse]}]}) ; TODO: Enable
 
+(defn zoom-submenu
+  []
+  [{:key :zoom-in
+    :label "In"
+    :action [:zoom-in]}
+   {:key :zoom-out
+    :label "Out"
+    :action [:zoom-out]}
+   {:key :divider-1
+    :type :separator}
+   {:label "Set to 50%"
+    :key "50"
+    :action [:set-zoom 0.5]}
+   {:label "Set to 100%"
+    :key "100"
+    :action [:set-zoom 1]}
+   {:label "Set to 200%"
+    :key "200"
+    :action [:set-zoom 2]}
+   {:key :divider-1
+    :type :separator}
+   {:label "Focus selected"
+    :key "focus-selected"
+    :action [:focus-selection :original]}
+   {:label "Fit selected"
+    :key "fit-selected"
+    :action [:focus-selection :fit]}
+   {:label "Fill selected"
+    :key "fill-selected"
+    :action [:focus-selection :fill]}])
+
 (defn view-menu
   []
   {:key :view
@@ -225,34 +267,7 @@
    :items [{:key :zoom
             :label "Zoom"
             :type :sub-menu
-            :items [{:key :zoom-in
-                     :label "In"
-                     :action [:zoom-in]}
-                    {:key :zoom-out
-                     :label "Out"
-                     :action [:zoom-out]}
-                    {:key :divider-1
-                     :type :separator}
-                    {:label "Set to 50%"
-                     :key "50"
-                     :action [:set-zoom 0.5]}
-                    {:label "Set to 100%"
-                     :key "100"
-                     :action [:set-zoom 1]}
-                    {:label "Set to 200%"
-                     :key "200"
-                     :action [:set-zoom 2]}
-                    {:key :divider-1
-                     :type :separator}
-                    {:label "Focus selected"
-                     :key "focus-selected"
-                     :action [:focus-selection :original]}
-                    {:label "Fit selected"
-                     :key "fit-selected"
-                     :action [:focus-selection :fit]}
-                    {:label "Fill selected"
-                     :key "fill-selected"
-                     :action [:focus-selection :fill]}]}
+            :items (zoom-submenu)}
            {:key :divider-1
             :type :separator}
            {:key :toggle-tree
@@ -402,6 +417,7 @@
   []
   (into [:> Menubar/Root
          {:class "menubar-root"
-          :on-key-down #(.stopPropagation %)
+          :on-key-down #(when-not (= (.-key %) "Escape")
+                          (.stopPropagation %)) ; FIXME: Esc global action also triggered.
           :onValueChange #(rf/dispatch [:set-backdrop (seq %)])}]
         (map menu-item (root-menu))))
