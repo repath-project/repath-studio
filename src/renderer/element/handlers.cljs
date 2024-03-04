@@ -145,7 +145,9 @@
 
 (defn clear-temp
   [db]
-  (update-in db [:documents (:active-document db)] dissoc :temp-element))
+  (cond-> db
+    (:active-document db)
+    (update-in [:documents (:active-document db)] dissoc :temp-element)))
 
 (defn set-temp
   [db el]
@@ -291,11 +293,15 @@
 
 (defn clear-hovered
   [db]
-  (assoc-in db [:documents (:active-document db) :hovered-keys] #{}))
+  (cond-> db
+    (:active-document db)
+    (assoc-in  [:documents (:active-document db) :hovered-keys] #{})))
 
 (defn clear-ignored
   [db]
-  (assoc-in db [:documents (:active-document db) :ignored-keys] #{}))
+  (cond-> db
+    (:active-document db)
+    (assoc-in [:documents (:active-document db) :ignored-keys] #{})))
 
 (defmulti intersects-with-bounds? (fn [element _] (:tag element)))
 

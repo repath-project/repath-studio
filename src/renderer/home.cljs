@@ -17,12 +17,14 @@
        [:h2.mb-3.mt-8.text-2xl "Start"]
 
        [:div
-        [:a.text-lg {:on-click #(rf/dispatch [:document/new])} "New"]
+        [:button.text-lg.text-accent
+         {:on-click #(rf/dispatch [:document/new])} "New"]
         (when-let [shortcuts (comp/shortcuts [:document/new])]
           [:span.shortcut.ml-2 shortcuts])]
 
        [:div
-        [:a.text-lg {:on-click #(rf/dispatch [:document/open])} "Open"]
+        [:button.text-lg.text-accent
+         {:on-click #(rf/dispatch [:document/open])} "Open"]
         (when-let [shortcuts (comp/shortcuts [:document/open])]
           [:span.shortcut.ml-2 shortcuts])]
 
@@ -31,7 +33,10 @@
         "Recent"]
 
        (for [file-path (take 2 recent)]
-         [:a.text-lg.block {:on-click #(rf/dispatch [:document/open file-path])} file-path])
+         ^{:key file-path}
+         [:button.text-lg.text-accent
+          {:on-click #(rf/dispatch [:document/open file-path])}
+          file-path])
 
        [:h2.mb-3.mt-8.text-2xl "Help"]
 

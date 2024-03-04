@@ -51,6 +51,10 @@
     color: var(--font-color-disabled);
   }
 
+  .text-accent {
+    color: var(--accent);
+  }
+
   .text-active {
     color: var(--font-color-active);
   }
