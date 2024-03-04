@@ -26,7 +26,7 @@
   [db file-path]
   (cond-> db
     file-path
-    (update :recent #(->> % (conj file-path) distinct))))
+    (update :recent #(-> % (conj file-path) distinct))))
 
 (defn create-tab
   [db document]
