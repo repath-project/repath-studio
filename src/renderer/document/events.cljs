@@ -95,6 +95,12 @@
    (h/close db)))
 
 (rf/reg-event-db
+ :document/close-saved
+ (fn [db [_]]
+   (let [saved (filter #(h/saved? db %) (:document-tabs db))]
+     (reduce h/close db saved))))
+
+(rf/reg-event-db
  :document/close-others
  (fn [db [_ key]]
    (-> db

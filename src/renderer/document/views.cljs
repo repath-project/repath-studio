@@ -72,17 +72,21 @@
 (defn context-menu
   [key]
   (let [document @(rf/subscribe [:document/document key])
-        path (:path document)]
-    (cond-> [{:label "Close"
-              :action [:document/close key]}
-             {:label "Close Others"
-              :action [:document/close-others]}
-             {:label "Close All"
-              :action [:document/close-all]}]
-      (and path platform/electron?)
-      (concat [{:type :separator}
-               {:label "Open containing directory"
-                :action [:document/open-directory path]}]))))
+        path (:path document)
+        document-tabs @(rf/subscribe [:document-tabs])]
+    [{:label "Close"
+      :action [:document/close key]}
+     {:label "Close others"
+      :action [:document/close-others]
+      :disabled? (empty? (rest document-tabs))}
+     {:label "Close all"
+      :action [:document/close-all]}
+     {:label "Close saved"
+      :action [:document/close-saved]}
+     {:type :separator}
+     {:label "Open containing directory"
+      :action [:document/open-directory path]
+      :disabled? (not (and path platform/electron?))}]))
 
 (defn tab
   [key document active?]

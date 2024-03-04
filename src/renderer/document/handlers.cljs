@@ -40,3 +40,9 @@
       (not open?) (update :document-tabs #(vec/add % (inc active-index) key))
       :always (-> (assoc-in [:documents key] document)
                   (assoc :active-document key)))))
+
+(defn saved?
+  [db k]
+  (let [document (-> db :documents k)]
+    (= (:save document)
+       (get-in document [:history :position]))))
