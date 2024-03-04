@@ -75,21 +75,21 @@
        (history.h/finalize "Remove " (name k)))))
 
 (rf/reg-event-db
- :element/inc-attribute
+ :element/inc-attr
  (fn [db [_ k]]
    (-> db
        (h/update-attr k inc)
        (history.h/finalize "Increase " (name k)))))
 
 (rf/reg-event-db
- :element/dec-attribute
+ :element/dec-attr
  (fn [db [_ k]]
    (-> db
        (h/update-attr k dec)
        (history.h/finalize "Decrease " (name k)))))
 
 (rf/reg-event-db
- :element/preview-attribute
+ :element/preview-attr
  (fn [db [_ k v]]
    (h/set-attr db k v)))
 

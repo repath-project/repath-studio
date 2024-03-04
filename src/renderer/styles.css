@@ -173,33 +173,6 @@ input {
   }
 }
 
-input[type=range] {
-  @apply m-0 bg-primary appearance-none;
-  padding: 5px;
-
-  &:focus {
-    outline: none;
-  }
-
-  &:hover {
-    cursor: col-resize;
-  }
-}
-
-input[type=range] {
-  &::-webkit-slider-runnable-track {
-    @apply border-0 rounded-none bg-secondary;
-    height: 16px;
-  }
-
-  &::-webkit-slider-thumb {
-    @apply border-0 rounded-none mt-0 appearance-none;
-    height: 16px;
-    width: 4px;
-    background: var(--font-color);
-  }
-}
-
 textarea {
   @apply form-element w-full;
   resize: none;
@@ -524,4 +497,33 @@ pre {
 .switch-label {
   @apply h-auto;
   background: transparent;
+}
+
+.slider-root {
+  @apply relative flex items-center select-none w-full touch-none h-full;
+}
+
+.slider-track {
+  @apply relative h-full bg-secondary flex-1;
+  height: 4px;
+}
+
+.slider-range {
+  @apply absolute h-full overlay;
+}
+
+.slider-thumb {
+  @apply flex shadow h-full rounded-sm;
+  background-color: var(--font-color-muted);
+  width: 8px;
+  height: 20px;
+
+  &:hover {
+    background-color: var(--font-color);
+  }
+
+  &:focus {
+    @apply outline-none bg-accent;
+    background-color: var(--font-color-active);
+  }
 }
