@@ -23,14 +23,15 @@
    {:onValueChange #(rf/dispatch [:history/move (keyword %)])
     :disabled disabled?}
    [:> Select/Trigger
-    {:class "select-trigger hover:top-0.5"
-     :aria-label label
+    {:aria-label label
+     :as-child true
      :style {:background "transparent"
              :width "16px"
              :margin 0}}
-    [:> Select/Value ""]
-    [:> Select/Icon
-     [comp/icon "chevron-down" {:class "small"}]]]
+    [:div.h-full.hover:pt-1.flex.items-center
+     [:> Select/Value ""]
+     [:> Select/Icon
+      [comp/icon "chevron-down" {:class "small"}]]]]
    [:> Select/Portal
     [:> Select/Content
      {:side "top"
