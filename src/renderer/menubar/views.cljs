@@ -232,32 +232,32 @@
   []
   [{:key :zoom-in
     :label "In"
-    :action [:zoom-in]}
+    :action [:frame/zoom-in]}
    {:key :zoom-out
     :label "Out"
-    :action [:zoom-out]}
+    :action [:frame/zoom-out]}
    {:key :divider-1
     :type :separator}
    {:label "Set to 50%"
     :key "50"
-    :action [:set-zoom 0.5]}
+    :action [:frame/set-zoom 0.5]}
    {:label "Set to 100%"
     :key "100"
-    :action [:set-zoom 1]}
+    :action [:frame/set-zoom 1]}
    {:label "Set to 200%"
     :key "200"
-    :action [:set-zoom 2]}
+    :action [:frame/set-zoom 2]}
    {:key :divider-1
     :type :separator}
    {:label "Focus selected"
     :key "focus-selected"
-    :action [:focus-selection :original]}
+    :action [:frame/focus-selection :original]}
    {:label "Fit selected"
     :key "fit-selected"
-    :action [:focus-selection :fit]}
+    :action [:frame/focus-selection :fit]}
    {:label "Fill selected"
     :key "fill-selected"
-    :action [:focus-selection :fill]}])
+    :action [:frame/focus-selection :fill]}])
 
 (defn view-menu
   []

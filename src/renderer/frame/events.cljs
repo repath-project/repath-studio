@@ -14,45 +14,40 @@
        (assoc :content-rect updated-content-rect))))
 
 (rf/reg-event-db
- :center
+ :frame/center
  (fn [db [_]]
    (h/pan-to-element db)))
 
 (rf/reg-event-db
- :focus-selection
+ :frame/focus-selection
  (fn [db [_ zoom]]
    (h/focus-selection db zoom)))
 
 (rf/reg-event-db
- :zoom
- (fn [db [_ factor]]
-   (h/zoom db factor)))
-
-(rf/reg-event-db
- :set-zoom
+ :frame/set-zoom
  (fn [{active-document :active-document :as db} [_ zoom]]
    (let [current-zoom (get-in db [:documents active-document :zoom])]
      (h/zoom db (/ zoom current-zoom)))))
 
 (rf/reg-event-db
- :zoom-in
+ :frame/zoom-in
  (fn [db [_ _]]
    (h/zoom db (/ 1 (:zoom-sensitivity db)))))
 
 (rf/reg-event-db
- :zoom-out
+ :frame/zoom-out
  (fn [db [_ _]]
    (h/zoom db (:zoom-sensitivity db))))
 
 (rf/reg-event-db
- :pan-to-bounds
+ :frame/pan-to-bounds
  (fn [db [_ bounds]]
    (cond-> db
      (= (:state db) :default)
      (h/pan-to-bounds bounds))))
 
 (rf/reg-event-fx
- :pan-to-element
+ :frame/pan-to-element
  (fn [{:keys [db]} [_ key]]
    {:fx
     (let [{:keys [content-rect active-document]} db
@@ -69,4 +64,4 @@
       (for [i (range (inc frames))]
         (let [bounds (mat/add viewbox (mat/mul diff (/ i frames)))]
           [:dispatch-later {:ms (* i 10) ; TODO: Easing and canceling.
-                            :dispatch [:pan-to-bounds bounds]}])))}))
+                            :dispatch [:frame/pan-to-bounds bounds]}])))}))

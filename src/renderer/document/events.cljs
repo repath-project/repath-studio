@@ -137,7 +137,7 @@
                                :attrs {:width "800" :height "600"}})
             element.h/deselect
             (history.h/finalize "Create document"))
-    :dispatch [:center]}))
+    :dispatch [:frame/center]}))
 
 (def repath-types
   [{:accept {"application/repath.studio" [".rso"]}}])
@@ -181,7 +181,7 @@
               (history.h/finalize "Load document")
               (update-in [:documents (:key document)]
                          #(assoc % :save (-> % :history :position))))
-      :dispatch [:center]})))
+      :dispatch [:frame/center]})))
 
 (rf/reg-fx
  ::save

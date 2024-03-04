@@ -22,24 +22,24 @@
 (def zoom-menu
   [{:label "Set to 50%"
     :key "50"
-    :action [:set-zoom 0.5]}
+    :action [:frame/set-zoom 0.5]}
    {:label "Set to 100%"
     :key "100"
-    :action [:set-zoom 1]}
+    :action [:frame/set-zoom 1]}
    {:label "Set to 200%"
     :key "200"
-    :action [:set-zoom 2]}
+    :action [:frame/set-zoom 2]}
    {:key :divider-1
     :type :separator}
    {:label "Focus selected"
     :key "center-selected"
-    :action [:focus-selection :original]}
+    :action [:frame/focus-selection :original]}
    {:label "Fit selected"
     :key "fit-selected"
-    :action [:focus-selection :fit]}
+    :action [:frame/focus-selection :fit]}
    {:label "Fill selected"
     :key "fill-selected"
-    :action [:focus-selection :fill]}])
+    :action [:frame/focus-selection :fill]}])
 
 (def view-radio-buttons
   [#_{:title "Snap to pixels"
@@ -92,8 +92,8 @@
       :on-blur #(set-zoom % value)
       :on-key-down #(keyb/input-key-down-handler % value set-zoom % value)
       :on-wheel #(rf/dispatch (if (pos? (.-deltaY %))
-                                [:zoom-out]
-                                [:zoom-in]))}]))
+                                [:frame/zoom-out]
+                                [:frame/zoom-in]))}]))
 
 (defn a11y-select
   []
@@ -150,12 +150,12 @@
      [:div.button-group
       [:button.button.overlay.px-2.font-mono.rounded
        {:class (when (<= zoom 0.01) "disabled")
-        :on-click #(rf/dispatch [:zoom-out])}
+        :on-click #(rf/dispatch [:frame/zoom-out])}
        [comp/icon "minus" {:class "small"}]]
 
       [:button.button.overlay.px-2.font-mono.rounded
        {:class (when (>= zoom 100) "disabled")
-        :on-click #(rf/dispatch [:zoom-in])}
+        :on-click #(rf/dispatch [:frame/zoom-in])}
        [comp/icon "plus" {:class "small"}]]
       [zoom-input zoom]
       [:div.pr-2.overlay.flex.items-center "%"]
