@@ -382,15 +382,15 @@
    (update-index db el #(-> (siblings db el) count dec))))
 
 (defn set-parent
-  ([db parent-key]
-   (reduce #(set-parent %1 %2 parent-key) db (selected-sorted-keys db)))
-  ([db element-key parent-key]
-   (let [el (element db element-key)]
+  ([db k]
+   (reduce #(set-parent %1 %2 k) db (selected-sorted-keys db)))
+  ([db el-k k]
+   (let [el (element db el-k)]
      (cond-> db
-       (and (not= element-key parent-key) (not (:locked? el)))
-       (-> (update-prop (:parent el) :children #(vec (remove #{element-key} %)))
-           (update-prop parent-key :children conj element-key)
-           (set-prop element-key :parent parent-key))))))
+       (and el (not= el-k k) (not (:locked? el)))
+       (-> (update-prop (:parent el) :children #(vec (remove #{el-k} %)))
+           (update-prop k :children conj el-k)
+           (set-prop el-k :parent k))))))
 
 (defn set-parent-at-index
   [db element-key parent-key index]
