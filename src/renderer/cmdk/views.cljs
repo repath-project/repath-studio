@@ -36,8 +36,7 @@
    {:open @(rf/subscribe [:cmdk/visible?])
     :onOpenChange #(rf/dispatch [:cmdk/set %])
     :label (t [:cmdk/command-palette "Command palette"])
-    :on-key-down #(.stopPropagation %)
-    :on-key-up #(.stopPropagation %)
+    :on-key-down #(when-not (= (.-key %) "Escape") (.stopPropagation %))
     :class "dialog"}
    [:> Command/CommandInput
     {:placeholder (t [:cmdk/search-command "Search for a command"])}]
