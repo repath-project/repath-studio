@@ -62,7 +62,7 @@
   [{:keys [tag attrs]}]
   (merge
    (when tag
-     (merge (when (or (isa? tag ::shape) (= tag :svg))
+     (merge (when (or (isa? tag ::tools/shape) (= tag :svg))
               (merge
                (attrs-map (tag (:elements spec/svg)))
                (attrs-map (-> spec/svg :attributes :core))
