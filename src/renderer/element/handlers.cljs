@@ -23,8 +23,8 @@
    (conj (path db) el-k)))
 
 (defn update-el
-  [db el & more]
-  (apply update-in db (conj (path db) (:key el)) more))
+  [db el f & more]
+  (apply update-in db (conj (path db) (:key el)) f more))
 
 (defn elements
   ([db]
@@ -198,12 +198,10 @@
        db))))
 
 (defn update-attr
-  ([db k f]
-   (reduce #(update-attr %1 %2 k f) db (selected db)))
-  ([db el k f]
-   (cond-> db
-     (and (not (:locked? el)) (supports-attr? el k))
-     (update-el el hierarchy/update-attr k f))))
+  [db el k f & more]
+  (if (and (not (:locked? el)) (supports-attr? el k))
+    (apply update-el db el hierarchy/update-attr k f more)
+    db))
 
 (defn deselect
   ([db]

@@ -103,7 +103,11 @@
    [form-input {:key k
                 :value v
                 :disabled? (:disabled attrs)
-                :placeholder initial}]
+                :placeholder initial
+                :on-wheel (fn [e]
+                            (if (pos? (.-deltaY e))
+                              (rf/dispatch [:element/update-attr k - (:step attrs)])
+                              (rf/dispatch [:element/update-attr k + (:step attrs)])))}]
    [:div.ml-px.px-1.w-full.bg-primary
     [:> Slider/Root
      (merge attrs {:class "slider-root"

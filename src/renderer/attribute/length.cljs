@@ -37,16 +37,16 @@
      :placeholder (if v initial "multiple")
      :on-wheel (fn [e]
                  (if (pos? (.-deltaY e))
-                   (rf/dispatch [:element/dec-attr k])
-                   (rf/dispatch [:element/inc-attr k])))}]
+                   (rf/dispatch [:element/update-attr k - 1])
+                   (rf/dispatch [:element/update-attr k + 1])))}]
    [:div.flex {:style {:width "54px"}}
     [:button.button.ml-px.bg-primary.text-muted
      {:style {:width "26px" :height "26px"}
-      :on-pointer-down #(rf/dispatch [:element/dec-attr k])}
+      :on-pointer-down #(rf/dispatch [:element/update-attr k - 1])}
      [comp/icon "minus" {:class "small"}]]
     [:button.button..ml-px.bg-primary.text-muted
      {:style {:width "26px" :height "26px"}
-      :on-click #(rf/dispatch [:element/inc-attr k])}
+      :on-click #(rf/dispatch [:element/update-attr k + 1])}
      [comp/icon "plus" {:class "small"}]]]])
 
 (defmethod hierarchy/update-attr ::length
