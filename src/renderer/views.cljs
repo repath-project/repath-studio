@@ -128,7 +128,7 @@
       {:id "tree-panel"
        :class "flex flex-col"
        :defaultSize 5
-       :style {:min-width "230px"}}
+       :style {:min-width "222px"}}
       [doc/actions]
       [tree/root]]
      [:> PanelResizeHandle
@@ -170,7 +170,7 @@
               {:id "properties-panel"
                :order 2
                :defaultSize 5
-               :style {:min-width "320px"}}
+               :style {:min-width "300px"}}
               [attr/form]]])
           [toolbar.object/root]]]]]
       [home/panel])]
