@@ -1,6 +1,7 @@
 (ns renderer.document.views
   (:require
    ["@radix-ui/react-context-menu" :as ContextMenu]
+   ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    [platform]
    [re-frame.core :as rf]
    [reagent.core :as ra]
@@ -134,5 +135,16 @@
         ^{:key document}
         [tab document (document documents) (= document active-document)])]
      [:div.toolbar
-      [:button.p-1.icon-button {:title "Document Actions"}
-       [comp/icon "ellipsis-h"]]]]))
+      [:> DropdownMenu/Root
+       [:> DropdownMenu/Trigger
+        {:class "button flex items-center justify-center aria-expanded:overlay px-2 font-mono rounded"}
+        [comp/icon "ellipsis-h"]]
+       [:> DropdownMenu/Portal
+        [:> DropdownMenu/Content
+         {:class "menu-content rounded"}
+         (for [item [{:label "Close all"
+                      :action [:document/close-all]}
+                     {:label "Close saved"
+                      :action [:document/close-saved]}]]
+           ^{:key (:key item)} [comp/dropdown-menu-item item])
+         [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]]]]))
