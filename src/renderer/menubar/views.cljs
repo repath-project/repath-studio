@@ -395,7 +395,7 @@
      :id (name key)
      :on-click (when action #(rf/dispatch action))
      :on-key-down (fn [e]
-                    (.stopPropagation e)
+                    ; FIXME: Doesn't work when the menu content is open.
                     (when (contains? #{"Enter" "Space"} (.-key e))
                       (rf/dispatch action)))}
     label]
