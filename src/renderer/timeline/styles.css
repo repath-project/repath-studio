@@ -5,7 +5,7 @@
  }
 
  .timeline-editor-action {
-  @apply overlay flex justify-around items-center !important;
+  @apply overlay flex justify-around items-center pointer-events-none !important;
 
   &-selected {
     @apply border border-accent;
