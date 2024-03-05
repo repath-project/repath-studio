@@ -20,7 +20,9 @@
                  of text. It's possible to apply a gradient, pattern, 
                  clipping path, mask, or filter to <text>, like any other SVG 
                  graphics element."
-   :attrs [:font-family
+   :attrs [:x
+           :y
+           :font-family
            :font-size
            :font-weight
            :font-style
