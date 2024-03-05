@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.2.5 (2024-03-05)
+
+**Added**
+
+- Recent documents to home page
+- close saved and containing directory actions to document menu
+- Disabled state on context menu items
+- Documents menu
+
+**Changed**
+
+- Rename frame events
+- Enhance slider
+- Enhance window controls
+- Enhance file operations
+
+**Fixed**
+
+- Nil recent paths
+- App icon margin
+- Undo/redo dom structure
+- Select content max height
+- Setting parent of non-existing element
+- Missing default element attrs
+- Window keyboard listeners
+
 ## 0.2.4 (2024-03-03)
 
 **Added**

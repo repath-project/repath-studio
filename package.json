@@ -5,7 +5,7 @@
   "author": "Konstantinos Kaloutas",
   "homepage": "https://repath.studio",
   "license": "AGPL-3.0",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
     "postcss:build": "npx postcss main.css -o resources/public/css/main.css --verbose",
