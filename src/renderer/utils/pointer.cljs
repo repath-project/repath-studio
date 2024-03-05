@@ -47,7 +47,7 @@
    Although the fps might drop because synced dispatch blocks the rendering, 
    the end result appears to be more responsive because it's synced with the 
    pointer movement."
-  [e el]
+  [^js/PointerEvent e el]
   (.stopPropagation e)
   ;; Disable native zoom on canvas.
   (when (and (.-ctrlKey e) (.-deltaY e))

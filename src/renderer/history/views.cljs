@@ -49,7 +49,8 @@
       [comp/icon "chevron-down"]]]]])
 
 (defn node
-  [node]
+  "https://bkrem.github.io/react-d3-tree/docs/interfaces/_src_tree_types_.treeprops.html#rendercustomnodeelement"
+  [^js/CustomNodeElementProps node]
   (let [datum (.-nodeDatum node)
         fill (if (.-restored datum) "black"
                  (if (.-active datum) "var(--accent)" (.-color datum)))
@@ -66,6 +67,7 @@
       [:title (.-name datum)]])))
 
 (defn on-update
+  "https://bkrem.github.io/react-d3-tree/docs/interfaces/_src_tree_types_.treeprops.html#onupdate"
   [target]
   (let [translate (.-translate target)
         zoom (.-zoom target)]

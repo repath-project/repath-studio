@@ -156,9 +156,9 @@
  ::open
  (fn []
    (.then (.showOpenFilePicker js/window file-picker-options)
-          (fn [[file-handle]]
+          (fn [[^js/FileSystemFileHandle file-handle]]
             (.then (.getFile file-handle)
-                   (fn [file]
+                   (fn [^js/File file]
                      (let [reader (js/FileReader.)]
                        (.addEventListener
                         reader
@@ -195,12 +195,12 @@
       :dispatch [:frame/center]})))
 
 (rf/reg-fx
- ::save
+ ::save-as
  (fn [data]
    (.then (.showSaveFilePicker js/window file-picker-options)
-          (fn [file-handle]
+          (fn [^js/FileSystemFileHandle file-handle]
             (.then (.createWritable file-handle)
-                   (fn [writable]
+                   (fn [^js/FileSystemWritableFileStream writable]
                      (.then (.write writable (pr-str data))
                             (let [document (assoc data :title (.-name file-handle))]
                               (.close writable)
@@ -220,7 +220,9 @@
    (let [document (save-format db)]
      (if platform/electron?
        {:send-to-main {:action "saveDocument" :data (pr-str document)}}
-       {::save document}))))
+       ;; The path is not available when we use web APIs for security reasons, 
+       ;; so we always dispatch save-as.
+       {::save-as document}))))
 
 (rf/reg-event-fx
  :document/save-as
@@ -228,12 +230,12 @@
    (let [document (save-format db)]
      (if platform/electron?
        {:send-to-main {:action "saveDocumentAs" :data (pr-str document)}}
-       {::save document}))))
+       {::save-as document}))))
 
 (rf/reg-event-db
  :document/saved
  (fn [db [_ document]]
-   ;; Update only the path, teh title and the saved position of the document.
+   ;; Update only the path, the title and the saved position of the document.
    ;; Any other changes that could happen while saving should be preserved.
    (let [updates (select-keys document [:path :title :save])]
      (update-in db [:documents (:key document)] merge updates))))

@@ -17,7 +17,7 @@
   (if (.-EyeDropper js/window)
     (do (-> (js/EyeDropper.)
             (.open)
-            (.then (fn [result]
+            (.then (fn [^js/Object result]
                      (rf/dispatch [:element/fill (.-sRGBHex result)])
                      (rf/dispatch [:document/set-fill (.-sRGBHex result)])
                      (rf/dispatch [:set-tool :select])))

@@ -17,8 +17,9 @@
   (get key-chars code))
 
 (defn event-handler
-  "https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/"
-  [e]
+  "https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
+   https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/"
+  [^js/KeyboardEvent e]
   (rf/dispatch-sync [:keyboard-event
                      {:target (.-target e)
                       :type (keyword (.-type e))
@@ -40,7 +41,7 @@
    user is typing, and also avoid polluting the history stack.
 
    The `default-value` attribute should be used to update the value reactively."
-  [e v f & more]
+  [^js/KeyboardEvent e v f & more]
   (let [target (.-target e)]
     (.stopPropagation e)
     (case (.-code e)

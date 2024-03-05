@@ -31,7 +31,6 @@
     ;; Required for bootstrap build.
     ;; https://shadow-cljs.github.io/docs/UsersGuide.html#output-wrapper
     :output-wrapper false
-    :infer-externs :none
     :output-feature-set :es-next
     ;; https://clojurescript.org/reference/advanced-compilation#fixing-advanced-compilation-issues
     :pseudo-names true
