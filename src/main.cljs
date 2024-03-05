@@ -24,35 +24,37 @@
        (.send "fromMain" (clj->js {:action action
                                    :data data})))))
 
+(defonce allowed-urls
+  #{"repath.studio"
+    "github.com"
+    "developer.mozilla.org"
+    "svgwg.org"})
+
+(defn allowed-url?
+  [url]
+  (contains? allowed-urls (.-host url)))
+
 (defn open-external
   [url]
   (let [url-parsed (js/URL. url)]
-    (when (and (= (.-protocol url-parsed) "https:")
-               (contains? #{"repath.studio"
-                            "github.com"
-                            "developer.mozilla.org"
-                            "svgwg.org"} (.-host url-parsed)))
+    (when (and (= (.-protocol url-parsed) "https:") (allowed-url? url-parsed))
       (.openExternal shell url-parsed.href))))
 
 (defn to-main-api
   [args]
   (case (.-action args)
     "windowMinimize" (.minimize ^js @main-window)
-    "windowToggleMaximized" (if (.isMaximized ^js @main-window)
-                              (.unmaximize ^js @main-window)
-                              (.maximize ^js @main-window))
-    "windowToggleFullscreen" (.setFullScreen
-                              ^js @main-window
-                              (not (.isFullScreen ^js @main-window)))
+    "windowToggleMaximized" (if (.isMaximized ^js @main-window) (.unmaximize ^js @main-window) (.maximize ^js @main-window))
+    "windowToggleFullscreen" (.setFullScreen ^js @main-window (not (.isFullScreen ^js @main-window)))
     "setThemeMode" (set! (.. nativeTheme -themeSource) (.-data args))
     "openRemoteUrl" (open-external (.-data args))
     ;; https://www.electronjs.org/docs/api/clipboard#clipboardwritedata-type
     "writeToClipboard" (.write clipboard (.-data args))
     "openDirectory" (.showItemInFolder shell (.-data args))
-    "openDocument" (file/open (.-data args) #(send-to-renderer "fileLoaded" %))
-    "saveDocument" (file/save (.-data args) #(send-to-renderer "fileSaved" %))
-    "saveDocumentAs" (file/save-as (.-data args) #(send-to-renderer "fileSaved" %))
-    "export" (file/export (.-data args))))
+    "openDocument" (file/open @main-window (.-data args) #(send-to-renderer "fileLoaded" %))
+    "saveDocument" (file/save @main-window (.-data args) #(send-to-renderer "fileSaved" %))
+    "saveDocumentAs" (file/save-as @main-window (.-data args) #(send-to-renderer "fileSaved" %))
+    "export" (file/export @main-window (.-data args))))
 
 (defn register-window-events!
   []
@@ -60,9 +62,7 @@
    [[window-event action]
     [;; Event "resized" is more suitable, but it's not supported on linux
      ;; https://www.electronjs.org/docs/latest/api/browser-window#event-resized-macos-windows
-     ["resize" #(if (.isMaximized ^js @main-window)
-                  "windowMaximized"
-                  "windowUnmaximized")]
+     ["resize" #(if (.isMaximized ^js @main-window) "windowMaximized" "windowUnmaximized")]
      ["maximize" "windowMaximized"]
      ["unmaximize" "windowUnmaximized"]
      ["enter-full-screen" "windowEnteredFullscreen"]

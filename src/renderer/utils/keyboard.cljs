@@ -194,17 +194,13 @@
                 [[:document/open]
                  [{:keyCode (key-codes "O")
                    :ctrlKey true}]]
-                [[:document/save]
-                 [{:keyCode (key-codes "S")
-                   :ctrlKey true}]]
                 [[:document/save-as]
                  [{:keyCode (key-codes "S")
                    :ctrlKey true
                    :shiftKey true}]]
-                [[:document/save-all]
+                [[:document/save]
                  [{:keyCode (key-codes "S")
-                   :ctrlKey true
-                   :altKey true}]]
+                   :ctrlKey true}]]
                 [[:document/close-active]
                  [{:keyCode (key-codes "W")
                    :ctrlKey true}]]

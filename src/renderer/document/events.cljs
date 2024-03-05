@@ -238,12 +238,9 @@
    ;; Update only the path, the title and the saved position of the document.
    ;; Any other changes that could happen while saving should be preserved.
    (let [updates (select-keys document [:path :title :save])]
-     (update-in db [:documents (:key document)] merge updates))))
-
-(rf/reg-event-fx
- :document/save-all
- (fn [{:keys [db]} [_]]
-   db))
+     (-> db
+         (update-in [:documents (:key document)] merge updates)
+         (h/add-recent (:path updates))))))
 
 (rf/reg-event-db
  :document/clear-recent
