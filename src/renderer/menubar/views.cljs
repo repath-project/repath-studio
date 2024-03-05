@@ -345,6 +345,13 @@
             :label "Submit an issue"
             :action [:window/open-remote-url "https://github.com/re-path/studio/issues/new/choose"]}]})
 
+(defn cmdk-toggle
+  []
+  {:key :website
+   :label "⌘"
+   :type :root
+   :action [:cmdk/toggle]})
+
 (defmulti menu-item :type)
 
 (defmethod menu-item :separator
@@ -381,15 +388,20 @@
           (map menu-item items))]])
 
 (defmethod menu-item :root
-  [{:keys [label items key]}]
+  [{:keys [label items key action]}]
   [:> Menubar/Menu
    [:> Menubar/Trigger
     {:class "menubar-trigger"
-     :id (name key)}
+     :id (name key)
+     :on-click (when action #(rf/dispatch action))
+     :on-key-down (fn [e]
+                    (.stopPropagation e)
+                    (when (contains? #{"Enter" "Space"} (.-key e))
+                      (rf/dispatch action)))}
     label]
    [:> Menubar/Portal
     (into [:> Menubar/Content
-           {:class "menu-content"
+           {:class (when items "menu-content")
             :align "start"
             :sideOffset 3
             :loop true}]
@@ -411,7 +423,8 @@
    (object-menu)
    (edit-menu)
    (view-menu)
-   (help-menu)])
+   (help-menu)
+   (cmdk-toggle)])
 
 (defn root
   []
@@ -420,4 +433,4 @@
           :on-key-down #(when-not (= (.-key %) "Escape")
                           (.stopPropagation %)) ; FIXME: Esc global action also triggered.
           :onValueChange #(rf/dispatch [:set-backdrop (seq %)])}]
-        (map menu-item (root-menu))))
+        (map menu-item (conj (root-menu)))))
