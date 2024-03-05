@@ -62,8 +62,9 @@
   [mode]
   (let [repl-mode @(rf/subscribe [:repl-mode])
         active? (= repl-mode mode)]
-    [:button.button.p-1.rounded.mx-1.leading-none.text-2xs.h-auto
-     {:class (when active? "selected")
+    [:button.button.rounded.px-1.leading-none.text-2xs.h-4
+     {:class [(when active? "selected")
+              "m-0.5"]
       :on-click #(rf/dispatch [:set-repl-mode mode])}
      mode]))
 
@@ -78,29 +79,28 @@
                        :on-change]))]}
   (let [{:keys [_pos _count _text]} @state
         repl-history? @(rf/subscribe [:panel/visible? :repl-history])]
-    [:div.flex.pl-1.5.pr-2
-     [:div.flex.text-xs.pl-1 {:style {:margin-top "7px"}} (replumb/get-prompt)]
+    [:div.flex.p-0.5.items-center.m-1
+     [:div.flex.text-xs.self-start {:class "m-0.5"} (replumb/get-prompt)]
      ^{:key (str (hash (:js-cm-opts cm-opts)))}
      [code-mirror/code-mirror (reaction (:text @state))
       (merge
        default-cm-opts
        {:style {:height "auto"
-                :flex 1
-                :padding "2px 0"}
+                :flex 1}
         :on-eval submit}
        cm-opts)]
-     [:div.my-1
+     [:div.self-start.h-full.flex.items-center
       (repl-mode-button :cljs)
       (repl-mode-button :js)]
      [comp/toggle-icon-button
-      {:class "hover:bg-transparent my-0"
+      {:class "m-0.5 self-start"
        :active? repl-history?
        :active-icon "chevron-down"
        :active-text "Hide command output"
        :inactive-icon "chevron-up"
        :inactive-text "Show command output"
        :action #(rf/dispatch [:panel/toggle :repl-history])}
-      {:style {:height "30px"}}]]))
+      {:style {:height "16px"}}]]))
 
 (defn set-print!
   [log]

@@ -28,3 +28,11 @@
     @apply font-mono h-auto z-0;
     background: transparent !important;
 }
+
+.CodeMirror-sizer {
+    min-height: initial !important;
+}
+
+.CodeMirror-lines {
+    @apply p-0;
+}

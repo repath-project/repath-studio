@@ -1,5 +1,5 @@
 .repl-item {
-    @apply font-mono p-1 flex text-xs;
+    @apply font-mono p-0.5 flex text-xs min-h-4;
 }
 
 .function {

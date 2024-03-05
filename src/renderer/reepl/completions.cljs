@@ -32,7 +32,7 @@
                      (= %1 pos)
                      active?
                      (partial set-active %1)]) list)]
-    [:div.absolute.bottom-full.left-0.w-full.text-xs
+    [:div.absolute.bottom-full.left-0.w-full.text-xs.mb-px
      (when docs [:div.bg-primary.drop-shadow.p-4.absolute.bottom-full docs])
      (into
       [:div.overflow-hidden.flex
