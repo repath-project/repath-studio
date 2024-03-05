@@ -43,6 +43,8 @@
           (reset! cm (.fromTextArea codemirror el options))
           (.setValue @cm value)
           (.on @cm "renderLine" on-render-line)
+          (.on @cm "keydown" (fn [_editor evt] (.stopPropagation evt)))
+          (.on @cm "keyup" (fn [_editor evt] (.stopPropagation evt)))
           (.refresh @cm)
           (when on-blur (.on @cm "blur" #(on-blur (.getValue %))))
           (when on-init (on-init @cm))))
