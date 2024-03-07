@@ -23,3 +23,5 @@
 - Include an interactive REPL - a shell which allows you to evaluate clojure code to generate shapes or even extend the editor on the fly.
 - Advanced undo/redo - maintain a history tree of all actions and never lose your redo stack.
 - Implement built-in accessibility testing features.
+
+<!-- sponsors --><!-- sponsors -->
