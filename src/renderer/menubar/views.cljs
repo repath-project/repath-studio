@@ -448,8 +448,8 @@
 (defn root-menu
   []
   [(file-menu)
-   (object-menu)
    (edit-menu)
+   (object-menu)
    (view-menu)
    (help-menu)
    (cmdk-toggle)])
