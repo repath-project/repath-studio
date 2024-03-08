@@ -2,7 +2,7 @@
 [cmdk-empty] {
   @apply flex px-3 py-2;
 
-  &[data-selected] {
+  &[data-selected="true"] {
     @apply overlay;
   }
 }
