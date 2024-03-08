@@ -61,7 +61,7 @@
            :on-click #(when action
                         (.stopPropagation %)
                         (action))})
-   [icon (if active? active-icon inactive-icon) {:fixed-width true}]])
+   [icon (if active? active-icon inactive-icon)]])
 
 (defn toggle-collapsed-button
   [el-k collapsed?]

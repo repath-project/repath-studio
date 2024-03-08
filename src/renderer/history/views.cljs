@@ -31,7 +31,7 @@
     [:div.h-full.hover:pt-1.flex.items-center
      [:> Select/Value ""]
      [:> Select/Icon
-      [comp/icon "chevron-down" {:class "small"}]]]]
+      [comp/icon "chevron-down" {:class "icon small"}]]]]
    [:> Select/Portal
     [:> Select/Content
      {:side "top"

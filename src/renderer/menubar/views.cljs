@@ -111,7 +111,7 @@
            {:key :select-same-tags
             :label "Select same tags"
             :action [:element/select-same-tags]}
-           {:key :divider-3
+           {:key :divider-4
             :type :separator}
            {:key :delete
             :label "Delete"
@@ -270,7 +270,7 @@
    {:label "Set to 200%"
     :key "200"
     :action [:frame/set-zoom 2]}
-   {:key :divider-1
+   {:key :divider-2
     :type :separator}
    {:label "Focus selected"
     :key "focus-selected"

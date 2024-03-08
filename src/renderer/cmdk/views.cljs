@@ -6,10 +6,9 @@
    [renderer.components :as comp]
    [renderer.menubar.views :as menubar]))
 
-(defn group-item
+(defn item
   [{:keys [label action key icon type]}]
-  (if (= type :separator)
-    [:> Command/CommandSeparator]
+  (when-not (= type :separator)
     [:> Command/CommandItem
      {:key key
       :on-select (fn []
@@ -26,11 +25,11 @@
   [{:keys [label items key]}]
   [:> Command/CommandGroup
    {:heading label}
-   (for [item items]
+   (for [i items]
      ^{:key key}
-     (if (:items item)
-       [group item]
-       [group-item item]))])
+     (if (:items i)
+       [group i]
+       [item i]))])
 
 (defn dialog
   []
@@ -45,4 +44,6 @@
    [:> Command/CommandList
     [:> Command/CommandEmpty
      (t [:cmdk/no-results "No results found."])]
-    (map group (menubar/root-menu))]])
+    (for [i (menubar/root-menu)]
+      ^{:key (:key i)}
+      [group i])]])
