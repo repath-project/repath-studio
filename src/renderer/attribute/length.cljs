@@ -43,11 +43,11 @@
     [:button.button.ml-px.bg-primary.text-muted
      {:style {:width "26px" :height "26px"}
       :on-pointer-down #(rf/dispatch [:element/update-attr k - 1])}
-     [comp/icon "minus" {:class "small"}]]
+     [comp/icon "minus" {:class "icon small"}]]
     [:button.button..ml-px.bg-primary.text-muted
      {:style {:width "26px" :height "26px"}
       :on-click #(rf/dispatch [:element/update-attr k + 1])}
-     [comp/icon "plus" {:class "small"}]]]])
+     [comp/icon "plus" {:class "icon small"}]]]])
 
 (defmethod hierarchy/update-attr ::length
   [element attribute f & more]

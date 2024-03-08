@@ -89,7 +89,7 @@
      [:button.button.ml-px.bg-primary.text-muted.absolute.right-0.clear-input-button.hover:bg-transparent
       {:style {:width "26px" :height "26px"}
        :on-pointer-down #(rf/dispatch [:element/remove-attr key])}
-      [comp/icon "times" {:class "small"}]])])
+      [comp/icon "times" {:class "icon small"}]])])
 
 (defmethod hierarchy/form-element :default
   [k v disabled?]
@@ -136,7 +136,7 @@
                                 :height "26px"}}
      [:> Select/Value ""]
      [:> Select/Icon
-      [comp/icon "chevron-down" {:class "small"}]]]
+      [comp/icon "chevron-down" {:class "icon small"}]]]
     [:> Select/Portal
      [:> Select/Content {:class "menu-content rounded select-content"}
       [:> Select/ScrollUpButton {:class "select-scroll-button"}

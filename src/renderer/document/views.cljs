@@ -143,8 +143,10 @@
         [:> DropdownMenu/Content
          {:class "menu-content rounded"}
          (for [item [{:label "Close all"
+                      :key :close-all
                       :action [:document/close-all]}
                      {:label "Close saved"
+                      :key :close-saved
                       :action [:document/close-saved]}]]
            ^{:key (:key item)} [comp/dropdown-menu-item item])
          [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]]]]))

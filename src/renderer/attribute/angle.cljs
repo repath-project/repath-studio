@@ -18,7 +18,7 @@
     [:> Popover/Trigger {:asChild true}
      [:button.button.ml-px.bg-primary.text-muted
       {:style {:width "26px" :height "26px"}}
-      [comp/icon "degrees" {:class "small"}]]]
+      [comp/icon "degrees" {:class "icon small"}]]]
     [:> Popover/Portal
      [:> Popover/Content
       {:sideOffset 5

@@ -38,7 +38,7 @@
          [:button.ml-px.inline-block.bg-primary.text-muted
           {:style {:flex "0 0 26px"
                    :height "26px"}}
-          [comp/icon "pencil" {:class "small"}]]]
+          [comp/icon "pencil" {:class "icon small"}]]]
         [:> Popover/Portal
          [:> Popover/Content {:sideOffset 5
                               :className "popover-content"

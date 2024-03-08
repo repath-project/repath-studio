@@ -60,7 +60,7 @@
              [debug/info]
              [debug/fps]])])
        (when @(rf/subscribe [:backdrop?])
-         [:div.backdrop
+         [:div.absolute.inset-0
           {:on-click #(rf/dispatch [:set-backdrop false])}])]]]))
 
 (defn center-top-group

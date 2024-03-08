@@ -6,29 +6,31 @@
    [renderer.components :as comp]
    [renderer.menubar.views :as menubar]))
 
-(defn item
-  [group {:keys [label action key type]}]
-  ^{:key key}
-  (when-not (= type :separator)
+(defn group-item
+  [{:keys [label action key icon type]}]
+  (if (= type :separator)
+    [:> Command/CommandSeparator]
     [:> Command/CommandItem
      {:key key
       :on-select (fn []
                    (rf/dispatch action)
                    (rf/dispatch [:cmdk/set false]))}
-     (str group " / " label)
+     [:div.w-7.h-7.mr-2.rounded.line-height-6.flex.justify-center.items-center
+      {:class (when icon "overlay")}
+      (when icon [comp/icon icon {:class "icon"}])]
+     label
      [:div.right-slot
       [comp/shortcuts action]]]))
 
 (defn group
   [{:keys [label items key]}]
-  ^{:key key}
-  ;; TODO: recur groups
   [:> Command/CommandGroup
-   #_[:div.px-3.py-2.text-muted.uppercase.font-bold.text-2xs label]
-   (map #(if (:items %)
-           (map (fn [i] (item (str label " / " (:label %)) i)) (:items %))
-           (item label %))
-        items)])
+   {:heading label}
+   (for [item items]
+     ^{:key key}
+     (if (:items item)
+       [group item]
+       [group-item item]))])
 
 (defn dialog
   []

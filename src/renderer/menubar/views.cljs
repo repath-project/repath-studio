@@ -33,8 +33,8 @@
             :label "Open…"
             :icon "folder"
             :action [:document/open]}
-           {:key :open-recent
-            :label "Open recent"
+           {:key :recent
+            :label "Recent"
             :type :sub-menu
             :disabled? [:document/recent-disabled?]
             :items (recent-submenu)}
@@ -69,9 +69,11 @@
    :type :root
    :items [{:key :undo
             :label "Undo"
+            :icon "undo"
             :action [:history/undo]}
            {:key :redo
             :label "Redo"
+            :icon "redo"
             :action [:history/redo]}
            {:key :divider-1
             :type :separator}
@@ -119,41 +121,52 @@
   []
   [{:key :align-left
     :label "Left"
+    :icon "objects-align-left"
     :action [:element/align :left]}
    {:key :align-center-horizontally
     :label "Center horizontally"
+    :icon "objects-align-center-horizontal"
     :action [:element/align :center-horizontal]}
    {:key :align-right
     :label "Right"
+    :icon "objects-align-right"
     :action [:element/align :right]}
    {:key :divider-1
     :type :separator}
    {:key :align-top
     :label "Top"
+    :icon "objects-align-top"
     :action [:element/align :top]}
    {:key :align-center-vertically
     :label "Center vertically"
+    :icon "objects-align-center-vertical"
     :action [:element/align :center-vertical]}
    {:key :align-bottom
     :label "Bottom"
+    :icon "objects-align-bottom"
     :action [:element/align :bottom]}])
 
 (defn boolean-submenu
   []
   [{:key :exclude
     :label "Exclude"
+    :icon "exclude"
     :action [:element/bool-operation :exclude]}
    {:key :unite
     :label "Unite"
+    :icon "unite"
     :action [:element/bool-operation :unite]}
    {:key :intersect
     :label "Intersect"
+    :icon "intersect"
     :action [:element/bool-operation :intersect]}
    {:key :subtract
     :label "Subtract"
+    :icon "subtract"
     :action [:element/bool-operation :subtract]}
    {:key :divide
     :label "Divide"
+    :icon "divide"
     :action [:element/bool-operation :divide]}])
 
 (defn object-menu
@@ -171,17 +184,21 @@
             :type :separator}
            {:key :group
             :label "Group"
+            :icon "group"
             :action [:element/group]}
            {:key :ungroup
             :label "Ungroup"
+            :icon "ungroup"
             :action [:element/ungroup]}
            {:key :divider-2
             :type :separator}
            {:key :lock
             :label "Lock"
+            :icon "lock"
             :action [:element/lock]}
            {:key :unlock
             :label "Unlock"
+            :icon "unlock"
             :action [:element/unlock]}
            {:key :divider-3
             :type :separator}
@@ -199,15 +216,19 @@
             :type :separator}
            {:key :raise
             :label "Raise"
+            :icon "bring-forward"
             :action [:element/raise]}
            {:key :lower
             :label "Lower"
+            :icon "send-backward"
             :action [:element/lower]}
            {:key :raise-to-top
             :label "Raise to top"
+            :icon "bring-front"
             :action [:element/raise-to-top]}
            {:key :lower-to-bottom
             :label "Lower to bottom"
+            :icon "send-back"
             :action [:element/lower-to-bottom]}]})
 
 (defn path-menu
@@ -232,9 +253,11 @@
   []
   [{:key :zoom-in
     :label "In"
+    :icon "plus"
     :action [:frame/zoom-in]}
    {:key :zoom-out
     :label "Out"
+    :icon "minus"
     :action [:frame/zoom-out]}
    {:key :divider-1
     :type :separator}
@@ -283,10 +306,12 @@
            {:key :toggle-xml
             :label "XML view"
             :type :checkbox
+            :icon "code"
             :checked? [:panel/visible? :xml]
             :action [:panel/toggle :xml]}
            {:key :toggle-history
             :label "History tree"
+            :icon "history"
             :type :checkbox
             :checked? [:panel/visible? :history]
             :action [:panel/toggle :history]}
@@ -298,6 +323,7 @@
            {:key :toggle-timeline-panel
             :type :checkbox
             :label "Timeline editor"
+            :icon "timeline"
             :checked? [:panel/visible? :timeline]
             :action [:panel/toggle :timeline]}
            {:key :divider-2
@@ -305,11 +331,13 @@
            {:key :toggle-grid
             :type :checkbox
             :label "Grid"
+            :icon "grid"
             :checked? [:grid?]
             :action [:toggle-grid]}
            {:key :toggle-rulers
             :type :checkbox
             :label "Rulers"
+            :icon "ruler-combined"
             :checked? [:rulers?]
             :action [:toggle-rulers]}
            {:key :toggle-debug-info

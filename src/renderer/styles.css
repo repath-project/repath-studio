@@ -126,7 +126,8 @@
   }
 
   .backdrop {
-    @apply absolute inset-0; 
+    @apply absolute inset-0;
+    background-color: var(--backdrop);
   }
 }
 
@@ -351,7 +352,7 @@ pre {
 }
 
 .dialog {
-  @apply fixed bg-secondary rounded;
+  @apply fixed bg-secondary rounded overflow-hidden;
   width: 500px;
   top: 200px;
   left: calc(50% - 250px);

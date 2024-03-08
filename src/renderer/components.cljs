@@ -9,8 +9,11 @@
    [renderer.utils.keyboard :as keyb]))
 
 (defn icon
-  [icon {:keys [class]}]
-  [:> ReactSVG {:class ["icon" class] :src (str "icons/" icon ".svg")}])
+  [icon attrs]
+  [:> ReactSVG
+   (merge {:class "icon"
+           :src (str "icons/" icon ".svg")}
+          attrs)])
 
 (defn icon-button
   [icon props]
