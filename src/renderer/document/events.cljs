@@ -152,20 +152,26 @@
   (clj->js {:startIn "documents"
             :types repath-types}))
 
+(defn read-file
+  [^js/File file]
+  (js/console.log file)
+  (let [reader (js/FileReader.)]
+    (.addEventListener
+     reader
+     "load"
+     #(let [document (-> (.. % -target -result)
+                         edn/read-string
+                         (dissoc :path)
+                         (assoc :name (.-name file)))]
+        (rf/dispatch [:document/load document])))
+    (.readAsText reader file)))
+
 (rf/reg-fx
  ::open
  (fn []
    (.then (.showOpenFilePicker js/window file-picker-options)
           (fn [[^js/FileSystemFileHandle file-handle]]
-            (.then (.getFile file-handle)
-                   (fn [^js/File file]
-                     (let [reader (js/FileReader.)]
-                       (.addEventListener
-                        reader
-                        "load"
-                        #(let [document (.. % -target -result)]
-                           (rf/dispatch [:document/load (edn/read-string document)])))
-                       (.readAsText reader file))))))))
+            (.then (.getFile file-handle) read-file)))))
 
 (rf/reg-event-fx
  :document/open
