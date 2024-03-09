@@ -115,6 +115,8 @@
    :children []})
 
 (defn update-ancestors
+  "Makes all ancestors of the active branch the rightmost element.
+   This ensures that when users remain in the latest branch when they undo/redo."
   [db]
   (loop [node (state (history db))
          db db]
@@ -122,8 +124,9 @@
           parent (state (history db) parent-id)]
       (if parent
         (let [index (.indexOf (:children parent) (:id node))
-              new-index (dec (count (:children parent)))]
-          (recur parent (update-in db (conj (history-path db) :states parent-id :children) vec/move index new-index)))
+              new-index (dec (count (:children parent)))
+              children-path (conj (history-path db) :states parent-id :children)]
+          (recur parent (update-in db children-path vec/move index new-index)))
         db)))) ; REVIEW
 
 (defn finalize
