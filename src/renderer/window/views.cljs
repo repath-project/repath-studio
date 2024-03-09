@@ -27,10 +27,8 @@
 (defn app-icon
   []
   [:div.drag
-   [:img.ml-2
-    {:src "img/icon-no-bg.svg"
-     :style {:width "14px"
-             :height "14px"}}]])
+   [:img.ml-2.h-4.w-4
+    {:src "img/icon-no-bg.svg"}]])
 
 (defn app-header
   []
