@@ -130,15 +130,16 @@
         document-tabs @(rf/subscribe [:document-tabs])
         active-document @(rf/subscribe [:active-document])]
     [:div.flex.drag.justify-between {:style {:flex "0 0 40px"}}
-     [:div.flex {:style {:flex "1 0 auto"}}
+     [:div.flex.flex-1.overflow-hidden
       (for [document document-tabs]
         ^{:key document}
         [tab document (document documents) (= document active-document)])]
      [:div.toolbar
       [:> DropdownMenu/Root
        [:> DropdownMenu/Trigger
-        {:class "button flex items-center justify-center aria-expanded:overlay px-2 font-mono rounded"}
-        [comp/icon "ellipsis-h"]]
+        {:as-child true}
+        [:button.button.flex.items-center.justify-center.aria-expanded:overlay.px-2.font-mono.rounded
+         [comp/icon "ellipsis-h"]]]
        [:> DropdownMenu/Portal
         [:> DropdownMenu/Content
          {:class "menu-content rounded"}
