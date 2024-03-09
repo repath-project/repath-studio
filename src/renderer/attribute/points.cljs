@@ -59,5 +59,5 @@
                                [:button.button.bg-transparent.text-muted
                                 {:style {:height "26px"}
                                  :on-click #(remove-point-by-index points index)}
-                                [comp/icon "times" {:class "small"}]]]) points)]))
+                                [comp/icon "times" {:class "icon small"}]]]) points)]))
           [:> Popover/Arrow {:class "popover-arrow"}]]]])]))

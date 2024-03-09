@@ -108,7 +108,7 @@
         {:style {:min-width "110px"}}
         [:span (name filter)]
         [:> Select/Icon {:class "select-icon"}
-         [comp/icon "chevron-up" {:class "small"}]]]]]
+         [comp/icon "chevron-up" {:class "icon small"}]]]]]
      [:> Select/Portal
       [:> Select/Content
        {:side "top"
@@ -151,12 +151,12 @@
       [:button.button.overlay.px-2.font-mono.rounded
        {:class (when (<= zoom 0.01) "disabled")
         :on-click #(rf/dispatch [:frame/zoom-out])}
-       [comp/icon "minus" {:class "small"}]]
+       [comp/icon "minus" {:class "icon small"}]]
 
       [:button.button.overlay.px-2.font-mono.rounded
        {:class (when (>= zoom 100) "disabled")
         :on-click #(rf/dispatch [:frame/zoom-in])}
-       [comp/icon "plus" {:class "small"}]]
+       [comp/icon "plus" {:class "icon small"}]]
       [zoom-input zoom]
       [:div.pr-2.overlay.flex.items-center "%"]
 
@@ -165,7 +165,7 @@
         {:class "button flex items-center justify-center overlay px-2 font-mono rounded"
          :side "top"}
         [:div.flex.items-center
-         [comp/icon "chevron-up" {:class "small"}]]]
+         [comp/icon "chevron-up" {:class "icon small"}]]]
 
        [:> DropdownMenu/Portal
         [:> DropdownMenu/Content

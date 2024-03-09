@@ -407,7 +407,7 @@
      :disabled (when disabled? @(rf/subscribe disabled?))}
     label
     [:div.right-slot.sub-menu-chevron
-     [comp/icon "chevron-right" {:class "small"}]]]
+     [comp/icon "chevron-right" {:class "icon small"}]]]
    [:> Menubar/Portal
     (into [:> Menubar/SubContent
            {:class "menu-content"
