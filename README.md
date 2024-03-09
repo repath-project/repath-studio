@@ -25,3 +25,27 @@
 - Implement built-in accessibility testing features.
 
 <!-- sponsors --><!-- sponsors -->
+
+## How to build it locally
+
+### System Requirements
+- [node.js](https://nodejs.org/)
+- Java SDK (8+) [OpenJDK](https://openjdk.org/) or [Oracle](https://www.oracle.com/java/technologies/downloads/)
+- [Clojure](https://clojure.org/guides/install_clojure)
+
+Clone the project.
+```
+git clone https://github.com/re-path/studio.git
+```
+Go into the directory.
+```
+cd studio
+```
+Install the dependencies, build the app and watch the project files.
+```
+npm install && npm run dev
+```
+Run electron on a different terminal.
+```
+npm run electron
+```
