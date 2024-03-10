@@ -17,16 +17,14 @@
        [:h2.mb-3.mt-8.text-2xl "Start"]
 
        [:div
-        [:button.text-lg.text-accent
+        [:button.text-lg.text-accent.mr-2
          {:on-click #(rf/dispatch [:document/new])} "New"]
-        (when-let [shortcuts (comp/shortcuts [:document/new])]
-          [:span.shortcut.ml-2 shortcuts])]
+        [comp/shortcuts [:document/new]]]
 
        [:div
-        [:button.text-lg.text-accent
+        [:button.text-lg.text-accent.mr-2
          {:on-click #(rf/dispatch [:document/open])} "Open"]
-        (when-let [shortcuts (comp/shortcuts [:document/open])]
-          [:span.shortcut.ml-2 shortcuts])]
+        [comp/shortcuts [:document/open]]]
 
        [:h2.mb-3.mt-8.text-2xl
         {:class (when-not (seq recent) "text-muted")}

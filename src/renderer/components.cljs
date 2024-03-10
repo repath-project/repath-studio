@@ -48,7 +48,7 @@
       (->> shortcuts
            (map format-shortcut)
            (interpose [:span.text-muted " | "])
-           (into [:span])))))
+           (into [:span.shortcut])))))
 
 (defn toggle-icon-button
   [{:keys [active? active-icon inactive-icon active-text inactive-text action class]}

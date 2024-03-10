@@ -23,7 +23,6 @@
         :side "left"}
        [:div.flex.gap-2.items-center
         title
-        (when-let [shortcuts (comp/shortcuts action)]
-          [:div.shortcut shortcuts])]
+        [comp/shortcuts action]]
        [:> Tooltip/Arrow
         {:class "tooltip-arrow"}]]]]))
