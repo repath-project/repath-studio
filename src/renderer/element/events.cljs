@@ -44,7 +44,7 @@
  (fn [db [_ el-k k v]]
    (-> db
        (h/set-prop el-k k v)
-       (history.h/finalize "Set " (name k) " to " v))))
+       (history.h/finalize "Set " (name k)))))
 
 (rf/reg-event-db
  :element/lock
@@ -65,7 +65,7 @@
  (fn [db [_ k v]]
    (-> db
        (h/set-attr k v)
-       (history.h/finalize "Set " (name k) " to " v))))
+       (history.h/finalize "Set " (name k)))))
 
 (rf/reg-event-db
  :element/remove-attr

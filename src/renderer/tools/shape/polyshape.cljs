@@ -75,7 +75,7 @@
       element.h/add
       (tools/set-tool :select)
       (h/set-state :default)
-      (history/finalize "Create " (:tool db))))
+      (history/finalize "Create " (name (:tool db)))))
 
 (defmethod tools/translate ::tools/polyshape
   [el [x y]]
