@@ -68,7 +68,7 @@
                      (rf/dispatch [:document/close key]))}
    [comp/icon "times"]
    (when-not saved?
-     [comp/icon "dot" {:class "dot"}])])
+     [comp/icon "dot" {:class "icon dot"}])])
 
 (defn context-menu
   [key]
