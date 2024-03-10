@@ -9,6 +9,7 @@
   (let [recent @(rf/subscribe [:document/recent])
         recent-items (mapv (fn [path] {:key (keyword path)
                                        :label path
+                                       :icon "folder"
                                        :action [:document/open path]}) recent)]
     (cond-> recent-items
       (seq recent-items)
@@ -16,6 +17,7 @@
                 :type :separator}
                {:key :clear-recent
                 :label "Clear recent"
+                :icon "times"
                 :action [:document/clear-recent]}]))))
 
 (defn file-menu
@@ -47,16 +49,19 @@
             :disabled? [:document/active-saved?]}
            {:key :save-as
             :label "Save as…"
+            :icon "save"
             :action [:document/save-as]}
            {:key :divider-3
             :type :separator}
            {:key :export
             :label "Export as SVG"
+            :icon "export"
             :action [:element/export]}
            {:key :divider-4
             :type :separator}
            {:key :close
             :label "Close"
+            :icon "times"
             :action [:document/close-active]}
            {:key :exit
             :label "Exit"
@@ -451,8 +456,7 @@
    (edit-menu)
    (object-menu)
    (view-menu)
-   (help-menu)
-   (cmdk-toggle)])
+   (help-menu)])
 
 (defn root
   []
@@ -461,4 +465,4 @@
           :on-key-down #(when-not (= (.-key %) "Escape")
                           (.stopPropagation %)) ; FIXME: Esc global action also triggered.
           :onValueChange #(rf/dispatch [:set-backdrop (seq %)])}]
-        (map menu-item (conj (root-menu)))))
+        (map menu-item (conj (root-menu) (cmdk-toggle)))))

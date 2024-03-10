@@ -1,6 +1,7 @@
 (ns renderer.cmdk.views
   (:require
    ["cmdk" :as Command]
+   [clojure.string :as str]
    [i18n :refer [t]]
    [re-frame.core :as rf]
    [renderer.components :as comp]
@@ -21,15 +22,19 @@
      [:div.right-slot
       [comp/shortcuts action]]]))
 
+(defn group-inner
+  [items label]
+  (for [i items]
+    ^{:key key}
+    (if-not (:items i)
+      [item (update i :label #(str/join " - " (remove nil? [label %])))]
+      (group-inner (:items i) (:label i)))))
+
 (defn group
-  [{:keys [label items key]}]
+  [{:keys [label items]}]
   [:> Command/CommandGroup
    {:heading label}
-   (for [i items]
-     ^{:key key}
-     (if (:items i)
-       [group i]
-       [item i]))])
+   (group-inner items nil)])
 
 (defn dialog
   []
