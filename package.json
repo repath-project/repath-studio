@@ -120,7 +120,7 @@
     "@sentry/electron": "4.20.0",
     "@webref/css": "6.12.2",
     "electron-extension-installer": "1.2.0",
-    "electron-log": "5.1.1",
+    "electron-log": "5.1.2",
     "electron-reloader": "1.2.3",
     "electron-updater": "6.1.8",
     "electron-window-state": "5.0.3",
