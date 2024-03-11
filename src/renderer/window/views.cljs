@@ -44,7 +44,8 @@
      [:div.title-bar (when title (str title " - ")) "Repath Studio"]
      [:div.flex.h-full.flex-1.drag]
      [:div.bg-primary
-      {:class (when-not (or (and platform/electron? (not platform/mac?)) fullscreen?) "mr-1.5")}
+      {:class (when-not (or (and platform/electron? (not platform/mac?))
+                            fullscreen?) "mr-1.5")}
       [comp/icon-button
        (name @(rf/subscribe [:theme/mode]))
        {:on-click #(rf/dispatch [:theme/cycle-mode])

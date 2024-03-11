@@ -121,11 +121,11 @@
                 [[:element/bool-operation :intersect]
                  [{:keyCode (key-codes "I")
                    :ctrlKey true}]]
-                #_[[:element/bool-operation :subtract]
-                   [{:keyCode (key-codes "S")
-                     :ctrlKey true}]]
+                [[:element/bool-operation :subtract]
+                 [{:keyCode (key-codes "BACKSLASH")
+                   :ctrlKey true}]]
                 [[:element/bool-operation :divide]
-                 [{:keyCode (key-codes "/")
+                 [{:keyCode (key-codes "SLASH")
                    :ctrlKey true}]]
                 [[:element/ungroup]
                  [{:keyCode (key-codes "G")
