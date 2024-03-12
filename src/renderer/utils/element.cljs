@@ -23,11 +23,10 @@
 (defn parent-container
   [elements el]
   (loop [parent (:parent el)]
-    (when parent
-      (let [parent-element (parent elements)]
-        (if (container? parent-element)
-          parent-element
-          (recur (:parent parent-element)))))))
+    (when-let [parent-element (get elements parent)]
+      (if (container? parent-element)
+        parent-element
+        (recur (:parent parent-element))))))
 
 (defn adjusted-bounds
   [element elements]
@@ -62,7 +61,7 @@
   [{:keys [tag attrs]}]
   (merge
    (when tag
-     (merge (when (or (isa? tag ::tools/shape) (= tag :svg))
+     (merge (when (isa? tag ::tools/element)
               (merge
                (attrs-map (tag (:elements spec/svg)))
                (attrs-map (-> spec/svg :attributes :core))
