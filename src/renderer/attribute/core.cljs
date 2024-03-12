@@ -1,6 +1,7 @@
 (ns renderer.attribute.core
   (:require
    [renderer.attribute.color]
+   [renderer.attribute.d]
    [renderer.attribute.length]
    [renderer.attribute.overflow]
    [renderer.attribute.points]

@@ -105,8 +105,10 @@
         [x2 y2] (mat/add offset [x2 y2])]
     [:g
      {:key ::edit-handles}
-     (map (fn [handle] [overlay/square-handle handle
-                        ^{:key (:key handle)} [:title (name (:key handle))]])
+     (map (fn [handle]
+            [overlay/square-handle handle
+             ^{:key (:key handle)}
+             [:title (name (:key handle))]])
           [{:x x1
             :y y1
             :key (keyword (:key el) :starting-point)

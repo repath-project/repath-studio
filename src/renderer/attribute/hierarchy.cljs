@@ -8,10 +8,6 @@
   [el attr f & more]
   (apply update-in el [:attrs attr] f more))
 
-(defmethod description :d
-  []
-  "The d attribute defines a path to be drawn.")
-
 (defmethod description :x
   []
   "The x attribute defines an x-axis coordinate in the user coordinate system.")

@@ -13,18 +13,6 @@
 
 (derive :path ::tools/shape)
 
-#_(def path-commands {:m "Move To"
-                      :l "Line To"
-                      :v "Vertical Line"
-                      :h "Horizontal Line"
-                      :c "Cubic Bézier"
-                      :a "Arc"
-                      :z "Close Path"})
-
-#_(defn ->command
-    [char]
-    (get path-commands (keyword (str/lower-case char))))
-
 #_(defn manipulate-paper-path
     [path action]
     (case action
