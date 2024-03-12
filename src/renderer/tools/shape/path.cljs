@@ -5,8 +5,11 @@
    ["svg-path-bbox" :as svg-path-bbox]
    ["svgpath" :as svgpath]
    [clojure.core.matrix :as mat]
-   #_[clojure.string :as str]
-   [renderer.tools.base :as tools]))
+   [clojure.string :as str]
+   [re-frame.core :as rf]
+   [renderer.tools.base :as tools]
+   [renderer.tools.overlay :as overlay]
+   [renderer.utils.units :as units]))
 
 (derive :path ::tools/shape)
 
@@ -54,7 +57,7 @@
                                :d
                                svgpath
                                (.translate x y)
-                               (.toString))))
+                               .toString)))
 
 (defmethod tools/scale :path
   [el ratio pivot-point]
@@ -69,7 +72,7 @@
                                  svgpath
                                  (.scale scale-x scale-y)
                                  (.translate x y)
-                                 (.toString)))))
+                                 .toString))))
 
 (defmethod tools/area :path
   [{{:keys [d]} :attrs}]
@@ -79,3 +82,53 @@
   [{{:keys [d]} :attrs}]
   (let [[left top right bottom] (js->clj (svg-path-bbox d))]
     [left top right bottom]))
+
+(defmethod tools/render-edit :path
+  [{:keys [attrs key] :as el} zoom]
+  (let [handler-size (/ 8 zoom)
+        stroke-width (/ 1 zoom)
+        offset @(rf/subscribe [:element/el-offset el])
+        segments (-> attrs :d svgpath .-segments)
+        square-handle (fn [i [x y]]
+                        [overlay/square-handle {:key (str i)
+                                                :x x
+                                                :y y
+                                                :size handler-size
+                                                :stroke-width stroke-width
+                                                :type :handler
+                                                :tag :edit
+                                                :element key}])]
+    [:g {:key ::edit-handles}
+     (map-indexed (fn [i segment]
+                    (case (-> segment first str/lower-case)
+                      "m"
+                      (let [[x y] (mapv units/unit->px [(second segment) (last segment)])
+                            [x y] (mat/add offset [x y])]
+                        (square-handle i [x y]))
+
+                      "l"
+                      (let [[x y] (mapv units/unit->px [(second segment) (last segment)])
+                            [x y] (mat/add offset [x y])]
+                        (square-handle i [x y]))
+
+                      nil))
+                  segments)]))
+
+(defn translate-segment
+  [path i [x y]]
+  (let [segment (aget (.-segments path) i)
+        segment (array (aget segment 0)
+                       (units/transform (aget segment 1) + x)
+                       (units/transform (aget segment 2) + y))]
+    (aset (.-segments path) i segment)
+    path))
+
+(defmethod tools/edit :path
+  [el offset handler]
+  (cond-> el
+    (not (keyword? handler))
+    (update-in
+     [:attrs :d]
+     #(-> (svgpath %)
+          (translate-segment (int handler) offset)
+          .toString))))

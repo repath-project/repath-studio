@@ -31,7 +31,9 @@
   "Returns the multiplier by unit.
    If the unit is invalid, it fallbacks to :px (1)"
   [s]
-  ((if (valid-unit? s) (unit->key s) :px) units))
+  (get units (if (valid-unit? s)
+               (unit->key s)
+               :px)))
 
 (defn match-unit
   [s]
