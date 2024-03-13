@@ -416,8 +416,9 @@ pre {
 }
 
 .popover-content {
-  @apply bg-secondary drop-shadow-lg z-10 rounded;
+  @apply bg-secondary drop-shadow-lg z-10 rounded overflow-auto;
   max-width: 350px;
+  max-height: 50vh;
   border: 1px solid var(--border-color);
   animation-duration: 400ms;
   animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);

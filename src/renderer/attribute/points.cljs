@@ -45,8 +45,7 @@
                               :align "end"}
           (when state-default?
             (let [points (utils/points->vec v)]
-              [:div.flex.flex-col.v-scroll.py-4.pr-2
-               {:style {:max-height "500px"}}
+              [:div.flex.flex-col.py-4.pr-2
                (map-indexed (fn [index [x y]]
                               ^{:key (str "point-" index)}
                               [:div.grid.grid-flow-col.gap-px.mt-px

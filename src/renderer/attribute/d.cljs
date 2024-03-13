@@ -13,16 +13,27 @@
   []
   "The d attribute defines a path to be drawn.")
 
-(def path-commands {:m "Move To"
-                    :l "Line To"
-                    :v "Vertical Line"
-                    :h "Horizontal Line"
-                    :c "Cubic Bézier"
-                    :s "Several Cubic Bézier"
-                    :q "Quadratic Bézier"
-                    :t "Several Quadratic Bézier"
-                    :a "Arc"
-                    :z "Close Path"})
+(def path-commands
+  {:m {:label "Move To"
+       :url "https://svgwg.org/svg2-draft/paths.html#PathDataMovetoCommands"}
+   :l {:label "Line To"
+       :url "https://svgwg.org/svg2-draft/paths.html#PathDataLinetoCommands"}
+   :v {:label "Vertical Line"
+       :url "https://svgwg.org/svg2-draft/paths.html#PathDataLinetoCommands"}
+   :h {:label "Horizontal Line"
+       :url "https://svgwg.org/svg2-draft/paths.html#PathDataLinetoCommands"}
+   :c {:label "Cubic Bézier Curve"
+       :url "https://svgwg.org/svg2-draft/paths.html#PathDataCubicBezierCommands"}
+   :s {:label "Shortcut Cubic Bézier Curve"
+       :url "https://svgwg.org/svg2-draft/paths.html#PathDataCubicBezierCommands"}
+   :q {:label "Quadratic Bézier Curve"
+       :url "https://svgwg.org/svg2-draft/paths.html#PathDataQuadraticBezierCommands"}
+   :t {:label "Shortcut Quadratic Bézier Curve"
+       :url "https://svgwg.org/svg2-draft/paths.html#PathDataQuadraticBezierCommands"}
+   :a {:label "Elliptical Arc Curve"
+       :url "https://svgwg.org/svg2-draft/paths.html#PathDataEllipticalArcCommands"}
+   :z {:label "Close Path"
+       :url "https://svgwg.org/svg2-draft/paths.html#PathDataClosePathCommand"}})
 
 (defn ->command
   [char]
@@ -37,8 +48,7 @@
 
 (defmethod segment-form :default
   [segment i]
-  [:div.grid.grid-cols-4
-   {:style {:grid-template-columns "1fr 2fr 1fr 2fr"}}
+  [:div.grid.grid-cols-4.gap-px
    [:label.px-1 "x"]
    [:input
     {:key (str "x-" i) :default-value (nth segment 1)}]
@@ -48,55 +58,66 @@
 
 (defmethod segment-form :h
   [segment i]
-  [:div.mb-px
-   [:input
-    {:key (str "width-" i) :default-value (nth segment 1)}]])
+  [:input {:key (str "width-" i) :default-value (nth segment 1)}])
 
 (defmethod segment-form :v
   [segment i]
-  [:div.mb-px
-   [:input
-    {:key (str "height-" i) :default-value (nth segment 1)}]])
+  [:input {:key (str "height-" i) :default-value (nth segment 1)}])
 
-(defmethod segment-form :z
-  [_segment _i]
-  [:div.grid.grid-cols-2.mb-px])
+(defmethod segment-form :z [_segment _i])
 
 
 (defmethod segment-form :a
   [segment i]
   [:div
-   [:div.grid.grid-cols-4.mb-px
-    {:style {:grid-template-columns "1fr 2fr 1fr 2fr"}}
-    [:label.px-1.mr-px "rx"]
+   [:div.grid.grid-cols-4.gap-px
+    [:label.px-1 "rx"]
     [:input
      {:key (str "rx-" i) :default-value (nth segment 1)}]
-    [:label.px-1.mr-px "ry"]
+    [:label.px-1 "ry"]
     [:input
      {:key (str "ry-" i) :default-value (nth segment 2)}]]
-   [:div.grid.grid-cols-2.mb-px
-    {:style {:grid-template-columns "2fr 1fr"}}
-    [:label.px-1.text-nowrap.mr-px "x-axis-rotation"]
+   [:div.grid.grid-cols-2.gap-px
+    [:label.px-1.text-nowrap "x-axis-rotation"]
     [:input
      {:key (str "x-axis-rotation-" i) :default-value (nth segment 3)}]]
-   [:div.grid.grid-cols-2.mb-px
-    {:style {:grid-template-columns "2fr 1fr"}}
-    [:label.px-1.text-nowrap.mr-px "large-arc-flag"]
+   [:div.grid.grid-cols-2.gap-px
+    [:label.px-1.text-nowrap "large-arc-flag"]
     [:input
      {:key (str "large-arc-flag-" i) :default-value (nth segment 4)}]]
-   [:div.grid.grid-cols-2.mb-px
-    {:style {:grid-template-columns "2fr 1fr"}}
-    [:label.px-1.text-nowrap.mr-px "sweep-flag"]
+   [:div.grid.grid-cols-2.gap-px
+    [:label.px-1.text-nowrap "sweep-flag"]
     [:input
      {:key (str "sweep-flag" i) :default-value (nth segment 5)}]]
-   [:div.grid.grid-cols-4
-    {:style {:grid-template-columns "1fr 2fr 1fr 2fr"}}
-    [:label.px-1.mr-px "x"]
+   [:div.grid.grid-cols-4.gap-px
+    [:label.px-1 "x"]
     [:input
      {:key (str "x-" i) :default-value (nth segment 6)}]
-    [:label.px-1.mr-px "y"]
+    [:label.px-1. "y"]
     [:input
      {:key (str "y-" i) :default-value (nth segment 7)}]]])
+
+(defn edit-form
+  [v]
+  (let [path (-> v svgpath)
+        segments (.-segments path)]
+    [:div.flex.flex-col.p-4
+     (map-indexed (fn [i segment]
+                    (let [command (first segment)
+                          {:keys [label url]} (->command command)]
+                      ^{:key (str "segment-" i)}
+                      [:div.my-2
+                       #_[:div (str/join " " segment)]
+                       [:div.flex.items-center.justify-between.mb-1
+                        [:span
+                         [:span.bg-primary.p-1 (first segment)]
+                         [:a.p-1.text-inherit {:href url :target "_blank"} label]
+                         (if (= command (str/lower-case command))
+                           "(Relative)" "(Absolute)")]
+                        [:button.icon-button.small.bg-transparent.text-muted
+                         {:on-click #(remove-segment-by-index path i)}
+                         [comp/icon "times" {:class "icon small"}]]]
+                       [segment-form segment i]])) segments)]))
 
 (defmethod hierarchy/form-element :d
   [k v disabled?]
@@ -119,19 +140,5 @@
          [:> Popover/Content {:sideOffset 5
                               :className "popover-content"
                               :align "end"}
-          (when state-default?
-            (let [path (-> v svgpath)
-                  segments (.-segments path)]
-              [:div.flex.flex-col.v-scroll.p-3
-               {:style {:max-height "500px"}}
-               (map-indexed (fn [i segment]
-                              ^{:key (str "point-" i)}
-                              [:div.grid.grid-flow-col.gap-px.my-1
-                               {:style {:grid-template-columns "26px 2fr 26px"}}
-                               [:div.text-right.p-1 (first segment)]
-                               [segment-form segment i]
-                               [:button.button.bg-transparent.text-muted
-                                {:style {:height "26px"}
-                                 :on-click #(remove-segment-by-index path i)}
-                                [comp/icon "times" {:class "icon small"}]]]) segments)]))
+          (when state-default? [edit-form v])
           [:> Popover/Arrow {:class "popover-arrow"}]]]])]))
