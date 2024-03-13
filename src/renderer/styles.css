@@ -416,7 +416,7 @@ pre {
 }
 
 .popover-content {
-  @apply bg-secondary drop-shadow-lg z-10 rounded overflow-auto;
+  @apply bg-secondary drop-shadow-lg z-10 rounded overflow-x-hidden overflow-y-auto;
   max-width: 350px;
   max-height: 50vh;
   border: 1px solid var(--border-color);
