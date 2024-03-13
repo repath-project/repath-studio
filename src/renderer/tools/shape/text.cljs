@@ -90,6 +90,7 @@
        :on-focus #(.. % -target select)
        :on-pointer-down #(.stopPropagation %)
        :on-pointer-up #(.stopPropagation %)
+       :on-blur #(set-text-and-select-element % key)
        :on-key-down (fn [e]
                       (.stopPropagation e)
                       (if (contains? #{"Enter" "Escape"} (.-code e))
