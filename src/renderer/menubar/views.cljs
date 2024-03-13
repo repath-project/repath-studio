@@ -369,6 +369,9 @@
            {:key :source-code
             :label "Source Code"
             :action [:window/open-remote-url "https://github.com/re-path/studio"]}
+           {:key :license
+            :label "License"
+            :action [:window/open-remote-url "https://github.com/re-path/studio/blob/main/LICENSE"]}
            {:key :changelog
             :label "Changelog"
             :action [:window/open-remote-url "https://repath.studio/roadmap/changelog/"]}
