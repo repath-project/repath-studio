@@ -14,8 +14,7 @@
      [:h1.text-3xl.mb-2.font-light "Repath Studio"]
      [:div  [:strong "Version: "] config/version]
      [:div  [:strong "Browser: "] platform/user-agent]]]
-   [:div.flex.justify-end
-    [:button.button.px-2.bg-primary.rounded
-     {:on-click #(rf/dispatch [:dialog/close])}
-     "OK"]]
+   [:button.button.px-2.bg-primary.rounded.w-full
+    {:on-click #(rf/dispatch [:dialog/close])}
+    "OK"]
    [v/close]])

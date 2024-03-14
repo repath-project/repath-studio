@@ -34,11 +34,6 @@
    db))
 
 (rf/reg-event-db
- :set-active-document
- (fn [db [_ document-id]]
-   (assoc db :active-document document-id)))
-
-(rf/reg-event-db
  :set-system-fonts
  (fn [db [_ fonts]]
    (assoc db :system-fonts fonts)))

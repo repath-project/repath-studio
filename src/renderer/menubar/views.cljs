@@ -2,8 +2,7 @@
   (:require
    ["@radix-ui/react-menubar" :as Menubar]
    [re-frame.core :as rf]
-   [renderer.components :as comp]
-   [renderer.dialog.about :as about]))
+   [renderer.components :as comp]))
 
 (defn recent-submenu
   []

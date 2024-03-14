@@ -65,7 +65,7 @@
     :on-pointer-down #(.stopPropagation %)
     :on-pointer-up (fn [e]
                      (.stopPropagation e)
-                     (rf/dispatch [:document/close key]))}
+                     (rf/dispatch [:document/close key true]))}
    [comp/icon "times"]
    (when-not saved?
      [comp/icon "dot" {:class "icon dot"}])])
@@ -76,7 +76,7 @@
         path (:path document)
         document-tabs @(rf/subscribe [:document-tabs])]
     [{:label "Close"
-      :action [:document/close key]}
+      :action [:document/close key true]}
      {:label "Close others"
       :action [:document/close-others]
       :disabled? (empty? (rest document-tabs))}
@@ -100,8 +100,8 @@
                   (when saved? "saved")]
           :on-wheel #(rf/dispatch [:document/scroll (.-deltaY %)])
           :on-pointer-down #(case (.-buttons %)
-                              4 (rf/dispatch [:document/close key])
-                              1 (rf/dispatch [:set-active-document key])
+                              4 (rf/dispatch [:document/close key true])
+                              1 (rf/dispatch [:document/set-active key])
                               nil)
           :draggable true
           :on-drag-start #(.setData (.-dataTransfer %) "key" (name key))

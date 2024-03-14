@@ -84,15 +84,21 @@
        (assoc-in [:documents active-document :stroke] stroke)
        (element.h/set-attr :stroke stroke))))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  :document/close
- (fn [db [_ key]]
-   (h/close db key)))
+ (fn [{:keys [db]} [_ k confirm?]]
+   (if (or (h/saved? db k) (not confirm?))
+     {:db (h/close db k)}
+     {:fx [[:dispatch [:document/set-active k]]
+           [:dispatch [:dialog/save k]]]})))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  :document/close-active
- (fn [db [_]]
-   (h/close db)))
+ (fn [{:keys [db]} [_]]
+   (let [active-document (:active-document db)]
+     (if (h/saved? db active-document)
+       {:db (h/close db active-document)}
+       {:dispatch [:dialog/save active-document]}))))
 
 (rf/reg-event-db
  :document/close-saved
@@ -231,6 +237,15 @@
        {::save-as document}))))
 
 (rf/reg-event-fx
+ :document/save-and-close
+ (fn [{:keys [db]} [_]]
+   (let [document (-> (save-format db)
+                      (assoc :closing? true))]
+     (if platform/electron?
+       {:send-to-main {:action "saveDocument" :data (pr-str document)}}
+       {::save-as document}))))
+
+(rf/reg-event-fx
  :document/save-as
  (fn [{:keys [db]} [_]]
    (let [document (save-format db)]
@@ -244,12 +259,23 @@
    ;; Update only the path, the title and the saved position of the document.
    ;; Any other changes that could happen while saving should be preserved.
    (let [updates (select-keys document [:path :title :save])]
-     (-> db
-         (update-in [:documents (:key document)] merge updates)
-         (h/add-recent (:path updates))))))
+     (cond-> db
+       :always
+       (h/add-recent (:path updates))
+
+       (:closing? document)
+       (h/close (:key document))
+       
+       (not (:closing? document))
+       (update-in [:documents (:key document)] merge updates)))))
 
 (rf/reg-event-db
  :document/clear-recent
  local-storage/persist
  (fn [db [_]]
    (assoc db :recent [])))
+
+(rf/reg-event-db
+ :document/set-active
+ (fn [db [_ document-id]]
+   (assoc db :active-document document-id)))
