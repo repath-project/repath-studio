@@ -14,7 +14,7 @@
      {:key key
       :on-select (fn []
                    (rf/dispatch action)
-                   (rf/dispatch [:cmdk/set false]))}
+                   (rf/dispatch [:dialog/close false]))}
      [:div.w-7.h-7.mr-2.rounded.line-height-6.flex.justify-center.items-center
       {:class (when icon "overlay")}
       (when icon [comp/icon icon {:class "icon"}])]
