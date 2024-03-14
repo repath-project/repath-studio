@@ -351,13 +351,6 @@ pre {
   @apply p-1 text-2xs overlay rounded font-bold text-muted uppercase;
 }
 
-.dialog {
-  @apply fixed bg-secondary rounded-lg overflow-hidden;
-  width: 500px;
-  top: 200px;
-  left: calc(50% - 250px);
-}
-
 .resize-handle {
   @apply relative;
 

@@ -2,7 +2,8 @@
   (:require
    ["@radix-ui/react-menubar" :as Menubar]
    [re-frame.core :as rf]
-   [renderer.components :as comp]))
+   [renderer.components :as comp]
+   [renderer.dialog.about :as about]))
 
 (defn recent-submenu
   []
@@ -379,14 +380,19 @@
             :type :separator}
            {:key :submit-issue
             :label "Submit an issue"
-            :action [:window/open-remote-url "https://github.com/re-path/studio/issues/new/choose"]}]})
+            :action [:window/open-remote-url "https://github.com/re-path/studio/issues/new/choose"]}
+           {:key :divider-2
+            :type :separator}
+           {:key :about
+            :label "About"
+            :action [:dialog/about]}]})
 
 (defn cmdk-toggle
   []
   {:key :website
    :label "⌘"
    :type :root
-   :action [:cmdk/toggle]})
+   :action [:dialog/cmdk]})
 
 (defmulti menu-item :type)
 

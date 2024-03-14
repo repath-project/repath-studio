@@ -5,10 +5,10 @@
    [re-frame.core :as rf]
    [re-frame.registrar]
    [renderer.attribute.views :as attr]
-   [renderer.cmdk.views :as cmdk]
    [renderer.codemirror.views :as cm]
    [renderer.components :as comp]
    [renderer.debug :as debug]
+   [renderer.dialog.views :as dialog]
    [renderer.document.views :as doc]
    [renderer.frame.views :as frame]
    [renderer.history.views :as history]
@@ -174,5 +174,5 @@
               [attr/form]]])
           [toolbar.object/root]]]]]
       [home/panel])]
-   [cmdk/dialog]
+   [dialog/root]
    [notification/main]])

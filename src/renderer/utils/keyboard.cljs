@@ -214,7 +214,7 @@
                    :shiftKey true}]]
                 [[:window/toggle-fullscreen]
                  [{:keyCode (key-codes "F11")}]]
-                [[:cmdk/toggle]
+                [[:dialog/cmdk]
                  [{:keyCode (key-codes "K")
                    :ctrlKey true}]]
                 [[:set-tool :edit]

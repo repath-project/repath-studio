@@ -1,4 +1,4 @@
-(ns renderer.cmdk.views
+(ns renderer.dialog.cmdk
   (:require
    ["cmdk" :as Command]
    [clojure.string :as str]
@@ -36,14 +36,10 @@
    {:heading label}
    (group-inner items nil)])
 
-(defn dialog
+(defn root
   []
-  [:> Command/CommandDialog
-   {:open @(rf/subscribe [:cmdk/visible?])
-    :onOpenChange #(rf/dispatch [:cmdk/set %])
-    :label (t [:cmdk/command-palette "Command palette"])
-    :on-key-down #(when-not (= (.-key %) "Escape") (.stopPropagation %))
-    :class "dialog"}
+  [:> Command/Command
+   {:on-key-down #(when-not (= (.-key %) "Escape") (.stopPropagation %))}
    [:> Command/CommandInput
     {:placeholder (t [:cmdk/search-command "Search for a command"])}]
    [:> Command/CommandList

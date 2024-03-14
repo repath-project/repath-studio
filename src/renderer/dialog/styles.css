@@ -1,3 +1,18 @@
+.dialog-content {
+  @apply fixed bg-secondary rounded-lg overflow-hidden;
+  width: 500px;
+  top: 200px;
+  left: calc(50% - 250px);
+}
+
+.dialog-overlay {
+  @apply backdrop;
+}
+
+.dialog-close {
+  @apply icon-button absolute top-3 right-3 !important;
+}
+
 [cmdk-item],
 [cmdk-empty] {
   @apply flex p-2 rounded items-center text-sm;
@@ -10,10 +25,6 @@
 [cmdk-input] {
   @apply p-3 bg-secondary text-sm;
   border-bottom: 1px solid var(--border-color)
-}
-
-[cmdk-overlay] {
-  @apply backdrop;
 }
 
 [cmdk-list] {
