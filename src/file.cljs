@@ -22,7 +22,7 @@
 (defn- write-file
   "https://www.geeksforgeeks.org/node-js-fs-writefile-method/"
   [file-path data f]
-  (.writeFile fs file-path (pr-str data) #js {:encoding "utf-8"}
+  (.writeFile fs file-path (pr-str (dissoc data :closing?)) #js {:encoding "utf-8"}
               (fn [_err] (f (serialize-document data file-path)))))
 
 (defn- read-file

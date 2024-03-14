@@ -213,7 +213,7 @@
           (fn [^js/FileSystemFileHandle file-handle]
             (.then (.createWritable file-handle)
                    (fn [^js/FileSystemWritableFileStream writable]
-                     (.then (.write writable (pr-str data))
+                     (.then (.write writable (pr-str (dissoc data :closing?)))
                             (let [document (assoc data :title (.-name file-handle))]
                               (.close writable)
                               (rf/dispatch [:document/saved document])))))))))
@@ -265,7 +265,7 @@
 
        (:closing? document)
        (h/close (:key document))
-       
+
        (not (:closing? document))
        (update-in [:documents (:key document)] merge updates)))))
 
