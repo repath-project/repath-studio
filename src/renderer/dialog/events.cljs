@@ -1,10 +1,8 @@
 (ns renderer.dialog.events
   (:require
    [re-frame.core :as rf]
-   [renderer.dialog.about :as about]
-   [renderer.dialog.confirmation :as confirmation]
-   [renderer.dialog.cmdk :as cmdk]
-   [renderer.dialog.save :as save]))
+   [renderer.dialog.views :as v]
+   [renderer.dialog.cmdk :as cmdk]))
 
 (rf/reg-event-db
  :dialog/cmdk
@@ -14,17 +12,17 @@
 (rf/reg-event-db
  :dialog/about
  (fn [db [_]]
-   (assoc db :dialog {:content [about/root]})))
+   (assoc db :dialog {:content [v/about]})))
 
 (rf/reg-event-db
  :dialog/save
  (fn [db [_ k]]
-   (assoc db :dialog {:content [save/root k]})))
+   (assoc db :dialog {:content [v/save k]})))
 
 (rf/reg-event-db
  :dialog/confirmation
  (fn [db [_ data]]
-   (assoc db :dialog {:content [confirmation/root data]})))
+   (assoc db :dialog {:content [v/confirmation data]})))
 
 (rf/reg-event-db
  :dialog/close
