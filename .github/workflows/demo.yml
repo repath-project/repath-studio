@@ -35,10 +35,7 @@ jobs:
         uses: DeLaGuardo/setup-clojure@12.5
         with:
           cli: 1.11.2.1446
-      - name: Install Git
-        run: sudo apt-get update && sudo apt-get install -y git
-      - name: Build
-        run: npm ci && npm run build
+      - run: npm ci && npm run build
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
