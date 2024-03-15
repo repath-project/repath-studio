@@ -31,6 +31,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-tags: true
       - name: Install clojure tools
         uses: DeLaGuardo/setup-clojure@12.5
         with:
