@@ -16,6 +16,9 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
 
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v4
