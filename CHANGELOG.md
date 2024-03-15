@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.7 (2024-03-15)
+
+**Fixed**
+
+- Image sources
+- Shortcuts
+- Git version
+
 ## 0.2.6 (2024-03-15)
 
 **Added**
