@@ -326,7 +326,7 @@ pre {
   flex: 0 0 auto;
 }
 
-.shortcut {
+.shortcut-key {
   @apply p-1 text-2xs overlay rounded font-bold text-muted uppercase;
 }
 

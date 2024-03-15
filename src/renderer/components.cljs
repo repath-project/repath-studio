@@ -38,8 +38,9 @@
          (:shiftKey shortcut) (conj "⇧")
          (:altKey shortcut) (conj "Alt")
          :always (conj (keyb/code->key (:keyCode shortcut))))
-       (mapv #(into [:span.shortcut] %))
-       (interpose [:span {:class "px-0.5"} "+"])))
+       (map #(into [:span.shortcut-key] %))
+       (interpose [:span {:class "px-0.5"} "+"])
+       (into [:span])))
 
 (defn shortcuts
   [event]
