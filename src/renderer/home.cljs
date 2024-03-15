@@ -57,4 +57,4 @@
         "Changelog"]]
 
       [:div
-       [:img {:src "/img/icon.svg"}]]]]))
+       [:img {:src "img/icon.svg"}]]]]))
