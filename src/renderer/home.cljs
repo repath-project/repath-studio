@@ -38,6 +38,11 @@
 
        [:h2.mb-3.mt-8.text-2xl "Help"]
 
+       [:div
+        [:button.text-lg.text-accent.mr-2
+         {:on-click #(rf/dispatch [:dialog/shortcuts])}
+         "Keyboard shortcuts"]
+        [comp/shortcuts [:dialog/shortcuts]]]
        [:a.text-lg.block
         {:href "https://repath.studio/"
          :target "_blank"}

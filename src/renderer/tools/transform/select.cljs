@@ -95,6 +95,7 @@
 
 (defmethod tools/key-down :select
   [db e]
+  db
   (cond-> db
     (pointer/multiselect? e)
     (element.h/ignore :bounding-box)))

@@ -377,10 +377,15 @@
             :action [:window/open-remote-url "https://repath.studio/roadmap/changelog/"]}
            {:key :divider-1
             :type :separator}
+           {:key :shortcuts
+            :label "Keyboard shortcuts"
+            :action [:dialog/shortcuts]}
+           {:key :divider-2
+            :type :separator}
            {:key :submit-issue
             :label "Submit an issue"
             :action [:window/open-remote-url "https://github.com/re-path/studio/issues/new/choose"]}
-           {:key :divider-2
+           {:key :divider-3
             :type :separator}
            {:key :about
             :label "About"

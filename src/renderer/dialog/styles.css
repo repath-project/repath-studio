@@ -1,8 +1,14 @@
 .dialog-content {
   @apply fixed bg-secondary rounded-lg overflow-hidden;
   width: 500px;
-  top: 200px;
-  left: calc(50% - 250px);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.dialog-cmdk-content {
+  top: 33px;
+  transform: translate(-50%, 0);
 }
 
 .dialog-overlay {
@@ -29,7 +35,7 @@
 
 [cmdk-list] {
   @apply p-1 overflow-auto;
-  max-height: 300px;
+  max-height: 50vh;
 }
 
 [cmdk-group-heading] {

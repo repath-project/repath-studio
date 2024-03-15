@@ -287,7 +287,9 @@
 
 (defn ignore
   [db k]
-  (update-in db [:documents (:active-document db) :ignored-keys] conj k))
+  (cond-> db
+    (:active-document db)
+    (update-in [:documents (:active-document db) :ignored-keys] conj k)))
 
 (defn clear-hovered
   [db]

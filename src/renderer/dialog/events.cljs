@@ -7,7 +7,8 @@
 (rf/reg-event-db
  :dialog/cmdk
  (fn [db [_]]
-   (assoc db :dialog {:content [cmdk/root]})))
+   (assoc db :dialog {:content [cmdk/root]
+                      :attrs {:class "dialog-content dialog-cmdk-content"}})))
 
 (rf/reg-event-db
  :dialog/about
@@ -18,6 +19,11 @@
  :dialog/save
  (fn [db [_ k]]
    (assoc db :dialog {:content [v/save k]})))
+
+(rf/reg-event-db
+ :dialog/shortcuts
+ (fn [db [_ k]]
+   (assoc db :dialog {:content [v/shortcuts]})))
 
 (rf/reg-event-db
  :dialog/confirmation

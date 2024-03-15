@@ -2,6 +2,7 @@
   (:require
    ["@radix-ui/react-dialog" :as Dialog]
    [config]
+   [clojure.string :as str]
    [platform]
    [re-frame.core :as rf]
    [renderer.components :as comp]))
@@ -48,7 +49,9 @@
     [:div.p-4
      [:h1.text-xl.mb-2
       "Do you want to save your changes?"]
-     [:p "Your changes to " [:strong (:title document)] " will be lost if you close the document without saving."]
+     [:p
+      "Your changes to " [:strong (:title document)]
+      " will be lost if you close the document without saving."]
      [:div.flex.gap-2
       [:button.button.px-2.bg-primary.rounded.flex-1
        {:on-click #(do (rf/dispatch [:dialog/close])
@@ -63,6 +66,30 @@
        "Save"]]
      [close-button]]))
 
+(defn shortcuts
+  []
+  (let [shortcuts (:event-keys @(rf/subscribe [:keydown-rules]))]
+    [:div.p-4.overflow-hidden
+     [:h1.text-xl.mb-2
+      "Keyboard shortcuts"]
+     [:ul.overflow-hidden.overflow-y-auto.mb-2.pr-2
+      {:style {:height "50vh"}}
+      (for [shortcut shortcuts]
+        [:li.flex.justify-between.py-2
+         [:div
+          (str/join
+           " "
+           (remove empty? [(str/capitalize (str (name (ffirst shortcut))))
+                           (str/join " " (->> shortcut
+                                              first
+                                              rest
+                                              (map name)))]))]
+         [:div [comp/shortcuts (first shortcut)]]])]
+     [:button.button.px-2.bg-primary.rounded.w-full
+      {:on-click #(rf/dispatch [:dialog/close])}
+      "OK"]
+     [close-button]]))
+
 (defn root
   []
   (let [dialog @(rf/subscribe [:dialog])]
@@ -71,5 +98,7 @@
       :on-open-change #(rf/dispatch [:dialog/close])}
      [:> Dialog/Portal
       [:> Dialog/Overlay {:class "dialog-overlay"}]
-      [:> Dialog/Content {:class "dialog-content"}
+      [:> Dialog/Content
+       (merge {:class "dialog-content"}
+              (:attrs dialog))
        (:content dialog)]]]))
