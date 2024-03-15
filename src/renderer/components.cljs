@@ -40,7 +40,7 @@
          (:altKey shortcut) (conj "Alt")
          :always (conj (keyb/code->key (:keyCode shortcut))))
        (mapv #(into [:span.shortcut] %))
-       (interpose " + ")))
+       (interpose [:span {:class "px-0.5"} "+"])))
 
 (defn shortcuts
   [event]
@@ -48,7 +48,7 @@
     (when (seq shortcuts)
       (->> shortcuts
            (map format-shortcut)
-           (interpose [:span " | "])
+           (interpose [:span.px-1 "or"])
            (into [:span.text-muted])))))
 
 (defn toggle-icon-button
