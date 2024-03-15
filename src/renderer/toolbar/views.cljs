@@ -22,7 +22,6 @@
        {:class "tooltip-content"
         :side "left"}
        [:div.flex.gap-2.items-center
-        title
-        [comp/shortcuts action]]
+        title]
        [:> Tooltip/Arrow
         {:class "tooltip-arrow"}]]]]))

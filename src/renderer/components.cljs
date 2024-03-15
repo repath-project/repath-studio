@@ -39,7 +39,8 @@
          (:shiftKey shortcut) (conj "⇧")
          (:altKey shortcut) (conj "Alt")
          :always (conj (keyb/code->key (:keyCode shortcut))))
-       (str/join "+")))
+       (mapv #(into [:span.shortcut] %))
+       (interpose " + ")))
 
 (defn shortcuts
   [event]
@@ -47,8 +48,8 @@
     (when (seq shortcuts)
       (->> shortcuts
            (map format-shortcut)
-           (interpose [:span.text-muted " | "])
-           (into [:span.shortcut])))))
+           (interpose [:span " | "])
+           (into [:span.text-muted])))))
 
 (defn toggle-icon-button
   [{:keys [active? active-icon inactive-icon active-text inactive-text action class]}
