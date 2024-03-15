@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.2.6 (2024-03-15)
+
+**Added**
+
+- Keyboard shortcuts dialog
+- About dialog
+- Close and save confirmation dialog
+- Command button to menubar
+- Path editing (wip)
+
+**Changed**
+
+- Enhance command dialog
+- Refine shortcuts
+- Refactor toolbar styles
+- Enhance popovers
+
+**Fixed**
+
+- Menu order
+- Dot icon
+
+
 ## 0.2.5 (2024-03-05)
 
 **Added**
