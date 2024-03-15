@@ -129,7 +129,7 @@
   (let [documents @(rf/subscribe [:documents])
         document-tabs @(rf/subscribe [:document-tabs])
         active-document @(rf/subscribe [:active-document])]
-    [:div.flex.drag.justify-between {:style {:flex "0 0 40px"}}
+    [:div.flex.drag.justify-between
      [:div.flex.flex-1.overflow-hidden
       (for [document document-tabs]
         ^{:key document}

@@ -4,7 +4,6 @@
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    ["@radix-ui/react-switch" :as Switch]
    ["react-svg" :refer [ReactSVG]]
-   [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.utils.keyboard :as keyb]))
 

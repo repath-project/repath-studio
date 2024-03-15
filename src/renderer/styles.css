@@ -191,7 +191,7 @@ label {
 
 .select-trigger {
   @apply button px-2 overlay rounded;
-  height: 34px;
+  height: 33px;
 }
 
 
@@ -231,17 +231,6 @@ pre {
   padding: 0 8px;
 }
 
-.divider-v {
-  margin: 0 4px;
-  border-left: 1px solid var(--border-color);
-  height: 28px;
-}
-
-.divider {
-  margin: 4px 0;
-  border-bottom: 1px solid var(--border-color)
-}
-
 .disabled {
   opacity: .5;
   cursor: initial !important;
@@ -270,17 +259,11 @@ pre {
 }
 
 .toolbar {
-  @apply flex p-1;
-
-  .button {
-    margin: 2px;
-  }
+  @apply flex gap-1 p-1 items-center;
 }
 
 .button-group {
   @apply flex;
-
-  margin: 2px;
 
   .button,
   input {
@@ -328,23 +311,19 @@ pre {
 }
             
 .v-divider {
-  margin: 4px;
+  @apply mx-1;
+  height: 27px;
   border-left: 1px solid var(--border-color);
-  height: 28px;
 }
 
 .h-divider {
-  margin: 4px;
+  @apply my-1;
+  width: 27px;
   border-top: 1px solid var(--border-color);
-  width: 28px;
 }
 
 .sidebar {
   flex: 0 0 auto;
-}
-
-.footer {
-  @apply flex p-1 bg-primary overflow-visible items-center mt-px;
 }
 
 .shortcut {

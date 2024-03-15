@@ -128,7 +128,7 @@
       {:id "tree-panel"
        :class "flex flex-col"
        :defaultSize 5
-       :style {:min-width "222px"}}
+       :style {:min-width "227px"}}
       [doc/actions]
       [tree/root]]
      [:> PanelResizeHandle

@@ -29,8 +29,7 @@
   [editor-ref]
   (let [speed @(rf/subscribe [:timeline/speed])]
     [:div.inline-flex.items-center
-     [:label {:style {:height "auto"
-                      :background "transparent"}} "Speed"]
+     [:label "Speed"]
      [:> Select/Root
       {:value speed
        :onValueChange #(.setPlayRate (.-current editor-ref) %)}
@@ -84,8 +83,8 @@
         replay? @(rf/subscribe [:timeline/replay?])
         end @(rf/subscribe [:timeline/end])
         timeline? @(rf/subscribe [:panel/visible? :timeline])]
-    [:div.toolbar.bg-primary.mt-px
-     [:div.flex-1.flex
+    [:div.flex.bg-primary.mt-px
+     [:div.toolbar.flex-1
       [comp/icon-button "go-to-start"
        {:on-click #(.setTime (.-current timeline-ref) 0)
         :disabled (zero? time)}]
@@ -106,18 +105,19 @@
         :icon "refresh"
         :action #(rf/dispatch [:timeline/toggle-replay])}]
       [speed-select timeline-ref]
-      [:span.p-2.font-mono time-formatted]
+      [:span.font-mono time-formatted]
       (when timeline?
         [:div.snap-controls.flex
          [:span.v-divider]
          [snap-controls]])]
-     [comp/toggle-icon-button
-      {:active? timeline?
-       :active-icon "times"
-       :active-text "Hide timeline"
-       :inactive-icon "timeline"
-       :inactive-text "Show timeline"
-       :action #(rf/dispatch [:panel/toggle :timeline])}]]))
+     [:div.toolbar
+      [comp/toggle-icon-button
+       {:active? timeline?
+        :active-icon "times"
+        :active-text "Hide timeline"
+        :inactive-icon "timeline"
+        :inactive-text "Show timeline"
+        :action #(rf/dispatch [:panel/toggle :timeline])}]]]))
 
 (defn register-listeners
   [timeline-ref]

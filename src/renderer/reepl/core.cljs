@@ -93,8 +93,7 @@
       (repl-mode-button :cljs)
       (repl-mode-button :js)]
      [comp/toggle-icon-button
-      {:class "m-0.5 self-start"
-       :active? repl-history?
+      {:active? repl-history?
        :active-icon "chevron-down"
        :active-text "Hide command output"
        :inactive-icon "chevron-up"

@@ -12,7 +12,7 @@
 
 (defn coordinates []
   (let [[x y] @(rf/subscribe [:frame/adjusted-pointer-pos])]
-    [:div.flex.flex-col.ml-2.font-mono
+    [:div.flex.flex-col.font-mono.leading-tight
      {:style {:min-width "90px"}}
      [:div.flex.justify-between
       [:span.mr-1 "X:"] [:span (units/->fixed x)]]
@@ -135,7 +135,7 @@
 
 (defn root []
   (let [zoom @(rf/subscribe [:document/zoom])]
-    [:div.toolbar.footer
+    [:div.toolbar.bg-primary.mt-px
      [color-v/picker]
      [:div.grow [color-v/palette]]
      [a11y-select]

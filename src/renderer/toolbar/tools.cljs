@@ -32,7 +32,7 @@
 
 (defn group
   [group]
-  (into [:div.flex]
+  (into [:div.flex.gap-1]
         (map button (descendants group))))
 
 (def groups
