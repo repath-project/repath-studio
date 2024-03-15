@@ -20,13 +20,13 @@
                  :title (.basename path file-path))))
 
 (defn- write-file
-  "https://www.geeksforgeeks.org/node-js-fs-writefile-method/"
+  "https://nodejs.org/en/learn/manipulating-files/writing-files-with-nodejs"
   [file-path data f]
   (.writeFile fs file-path (pr-str (dissoc data :closing?)) #js {:encoding "utf-8"}
               (fn [_err] (f (serialize-document data file-path)))))
 
 (defn- read-file
-  "https://www.geeksforgeeks.org/node-js-fs-readfile-method/?ref=lbp"
+  "https://nodejs.org/en/learn/manipulating-files/reading-files-with-nodejs"
   [file-path f]
   (.readFile fs file-path #js {:encoding "utf-8"}
              (fn [_err data]
