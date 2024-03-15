@@ -52,11 +52,7 @@
       nil)))
 
 (def keydown-rules
-  {:event-keys [[[:document/toggle-grid]
-                 [{:keyCode 35}]
-                 [{:keyCode (key-codes "THREE")
-                   :shiftKey true}]]
-                [[:element/raise]
+  {:event-keys [[[:element/raise]
                  [{:keyCode (key-codes "PAGE_UP")}]]
                 [[:element/lower]
                  [{:keyCode (key-codes "PAGE_DOWN")}]]
@@ -248,6 +244,7 @@
                           {:keyCode (key-codes "LEFT")}
                           {:keyCode (key-codes "UP")}
                           {:keyCode (key-codes "DOWN")}
+                          {:keyCode (key-codes "F1")}
                           {:keyCode (key-codes "F11")}
                           {:keyCode (key-codes "A")
                            :ctrlKey true}

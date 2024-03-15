@@ -48,8 +48,8 @@
     (when (seq shortcuts)
       (->> shortcuts
            (map format-shortcut)
-           (interpose [:span.px-1 "or"])
-           (into [:span.text-muted])))))
+           (interpose [:span])
+           (into [:span.inline-flex.text-muted.gap-2])))))
 
 (defn toggle-icon-button
   [{:keys [active? active-icon inactive-icon active-text inactive-text action class]}

@@ -6,13 +6,13 @@
 (defn panel []
   (let [recent @(rf/subscribe [:document/recent])]
     [:div.flex.overflow-auto.flex-1.min-h-full.justify-center
-     [:div.bg-primary.w-full.self-center.justify-between.p-12.flex
-      {:style {:max-width "1200px"}}
-
+     [:div.bg-primary.w-full.self-center.justify-between.p-12.flex.max-w-screen-xl
       [:div
-       [:h1.text-4xl.mb-1.font-light "Repath Studio"]
+       [:h1.text-4xl.mb-1.font-light
+        "Repath Studio"]
 
-       [:p.text-xl.text-muted.font-bold "Scalable Vector Graphics Manipulation"]
+       [:p.text-xl.text-muted.font-bold
+        "Scalable Vector Graphics Manipulation"]
 
        [:h2.mb-3.mt-8.text-2xl "Start"]
 
@@ -23,7 +23,8 @@
 
        [:div
         [:button.text-lg.text-accent.mr-2
-         {:on-click #(rf/dispatch [:document/open])} "Open"]
+         {:on-click #(rf/dispatch [:document/open])}
+         "Open"]
         [comp/shortcuts [:document/open]]]
 
        [:h2.mb-3.mt-8.text-2xl
