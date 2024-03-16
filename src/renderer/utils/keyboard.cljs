@@ -248,6 +248,10 @@
                           {:keyCode (key-codes "F11")}
                           {:keyCode (key-codes "A")
                            :ctrlKey true}
+                          {:keyCode (key-codes "O")
+                           :ctrlKey true}
+                          {:keyCode (key-codes "S")
+                           :ctrlKey true}
                           {:keyCode (key-codes "G")
                            :ctrlKey true}
                           {:keyCode (key-codes "P")
