@@ -51,10 +51,11 @@
         [:> Select/Viewport {:class "select-viewport"}
          [:> Select/Group
           (for [{:keys [id value label]} speed-options]
-            ^{:key id} [:> Select/Item
-                        {:value value
-                         :class "menu-item select-item"}
-                        [:> Select/ItemText label]])]]
+            ^{:key id}
+            [:> Select/Item
+             {:value value
+              :class "menu-item select-item"}
+             [:> Select/ItemText label]])]]
         [:> Select/ScrollDownButton
          {:class "select-scroll-button"}
          [comp/icon "chevron-down"]]]]]]))
@@ -105,7 +106,7 @@
         :icon "refresh"
         :action #(rf/dispatch [:timeline/toggle-replay])}]
       [speed-select timeline-ref]
-      [:span.font-mono time-formatted]
+      [:span.font-mono.px-2 time-formatted]
       (when timeline?
         [:div.snap-controls.flex
          [:span.v-divider]
