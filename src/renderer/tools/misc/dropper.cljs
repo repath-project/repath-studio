@@ -26,7 +26,7 @@
             (.catch (fn [error]
                       (rf/dispatch [:notification/add
                                     [:div
-                                     [:h2.pb-4.text-md "EyeDropper cannot be activated."]
+                                     [:h2.pb-4.font-bold "EyeDropper cannot be activated."]
                                      [:div.text-error (str error)]]])
                       (rf/dispatch [:set-tool :select]))))
         (h/set-message db [:div "Click anywhere to pick a color."]))

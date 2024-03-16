@@ -497,3 +497,7 @@ pre {
     box-shadow: 0 0 0 4px var(--border-color);
   }
 }
+
+.close-button {
+  @apply icon-button absolute top-3 right-3 !important;
+}

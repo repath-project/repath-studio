@@ -10,7 +10,7 @@
 (defn close-button
   []
   [:> Dialog/Close
-   {:class "dialog-close small"
+   {:class "close-button small"
     :aria-label "Close"}
    [comp/icon "times"]])
 

@@ -21,14 +21,13 @@
       (map-indexed
        (fn [index notification]
          [:div.toast
-          {:key index
-           :style {:right 0}}
+          {:key index}
           [:div.toast-description
            (:content notification)]
           [comp/icon-button
            "times"
            {:aria-label "Close"
-            :class "small"
+            :class "close-button small"
             :on-click #(rf/dispatch [:notification/remove index])}]
           (when-let [count (:count notification)]
             [:div.toast-count (inc count)])])

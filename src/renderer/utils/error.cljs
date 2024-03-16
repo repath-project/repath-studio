@@ -22,14 +22,14 @@
     (fn [_this error _info]
       (rf/dispatch [:notification/add
                     [:div
-                     [:h2.mb-4.text-md error-message]
+                     [:h2.mb-4.font-bold error-message]
                      [:p.text-error (str error)]
-                     [:a.button.bg-primary.px-2
+                     [:a.button.bg-primary.px-2.w-full
                       {:target "_blank"
                        :href (str "https://github.com/re-path/studio/issues/new?"
                                   "&title=" error
                                   "&template=bug_report.md")}
-                      "Submit report"]]]))
+                      "Submit error report"]]]))
 
     ;; Try to revert to a working state
     ;; https://react.dev/reference/react/Component#static-getderivedstatefromerror

@@ -10,7 +10,6 @@
 
 .toast-description {
   flex: 1;
-  margin-right: 1rem;
   grid-area: description;
   line-height: 1.3;
 }

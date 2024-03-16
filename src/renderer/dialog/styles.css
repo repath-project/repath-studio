@@ -15,10 +15,6 @@
   @apply backdrop;
 }
 
-.dialog-close {
-  @apply icon-button absolute top-3 right-3 !important;
-}
-
 [cmdk-item],
 [cmdk-empty] {
   @apply flex p-2 rounded items-center text-sm;
