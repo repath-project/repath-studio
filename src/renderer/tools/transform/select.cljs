@@ -66,21 +66,21 @@
 
 (defn hovered?
   [{:keys [active-document] :as db} el intersecting?]
-  (let [f? (if intersecting? bounds/intersected? bounds/contained?)
-        hovered-keys (-> db :documents active-document :hovered-keys)]
+  (let [hovered-keys (-> db :documents active-document :hovered-keys)]
     (and (empty? (set/intersection (element.h/ancestor-keys db el) hovered-keys))
          (not (utils.element/svg? el)) ; REVIEW
          (not (utils.element/root? el))
-         (f? (utils.element/adjusted-bounds el (element.h/elements db))
-             (utils.element/adjusted-bounds (element.h/get-temp db)
-                                            (element.h/elements db))))))
+         ((if intersecting? bounds/intersected? bounds/contained?)
+          (utils.element/adjusted-bounds el (element.h/elements db))
+          (utils.element/adjusted-bounds (element.h/get-temp db)
+                                         (element.h/elements db))))))
 
 (defn reduce-by-area
   [db intersecting? f]
   (reduce (fn [db el]
             (cond-> db
               (hovered? db el intersecting?)
-              (f (:key el)))) db (vals (element.h/elements db))))
+              (f (:key el)))) db (filter :visible? (vals (element.h/elements db)))))
 
 (defmethod tools/pointer-move :select
   [db e el]
