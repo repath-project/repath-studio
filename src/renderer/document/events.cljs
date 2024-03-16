@@ -174,9 +174,14 @@
 (rf/reg-fx
  ::open
  (fn []
-   (.then (.showOpenFilePicker js/window file-picker-options)
-          (fn [[^js/FileSystemFileHandle file-handle]]
-            (.then (.getFile file-handle) read-file)))))
+   (if (.-showOpenFilePicker js/window)
+     (.then (.showOpenFilePicker js/window file-picker-options)
+            (fn [[^js/FileSystemFileHandle file-handle]]
+              (.then (.getFile file-handle) read-file)))
+     (rf/dispatch
+      [:notification/unavailable-feature
+       "Open File Picker"
+       "https://developer.mozilla.org/en-US/docs/Web/API/window/showOpenFilePicker#browser_compatibility"]))))
 
 (rf/reg-event-fx
  :document/open
@@ -208,14 +213,19 @@
 (rf/reg-fx
  ::save-as
  (fn [data]
-   (.then (.showSaveFilePicker js/window file-picker-options)
-          (fn [^js/FileSystemFileHandle file-handle]
-            (.then (.createWritable file-handle)
-                   (fn [^js/FileSystemWritableFileStream writable]
-                     (.then (.write writable (pr-str (dissoc data :closing?)))
-                            (let [document (assoc data :title (.-name file-handle))]
-                              (.close writable)
-                              (rf/dispatch [:document/saved document])))))))))
+   (if (.-showSaveFilePicker js/window)
+     (.then (.showSaveFilePicker js/window file-picker-options)
+            (fn [^js/FileSystemFileHandle file-handle]
+              (.then (.createWritable file-handle)
+                     (fn [^js/FileSystemWritableFileStream writable]
+                       (.then (.write writable (pr-str (dissoc data :closing?)))
+                              (let [document (assoc data :title (.-name file-handle))]
+                                (.close writable)
+                                (rf/dispatch [:document/saved document])))))))
+     (rf/dispatch
+      [:notification/unavailable-feature
+       "Save File Picker"
+       "https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker#browser_compatibility"]))))
 
 (defn save-format
   [db]

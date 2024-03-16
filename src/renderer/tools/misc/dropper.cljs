@@ -1,7 +1,9 @@
 (ns renderer.tools.misc.dropper
   (:require
    [re-frame.core :as rf]
-   [renderer.handlers :as handlers]
+   [renderer.handlers :as h]
+   [renderer.notification.handlers :as notification.h]
+   [renderer.notification.views :as notification.v]
    [renderer.tools.base :as tools]))
 
 (derive :dropper ::tools/misc)
@@ -26,7 +28,10 @@
                                                                  [:h2.pb-4.text-md "EyeDropper cannot be activated."]
                                                                  [:div.text-error (str error)]]}])
                       (rf/dispatch [:set-tool :select]))))
-        (handlers/set-message db [:div "Click anywhere to pick a color."]))
+        (h/set-message db [:div "Click anywhere to pick a color."]))
     (-> db
-        (update :notifications conj "Your browser does not support the EyeDropper API.")
+        (notification.h/add
+         (notification.v/unavailable-feature
+          "EyeDropper"
+          "https://developer.mozilla.org/en-US/docs/Web/API/EyeDropper_API#browser_compatibility"))
         (tools/set-tool :select))))

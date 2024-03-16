@@ -21,15 +21,15 @@
     :component-did-catch
     (fn [_this error _info]
       (rf/dispatch [:notification/add
-                    {:content [:div
-                               [:h2.mb-4.text-md error-message]
-                               [:p.text-error (str error)]
-                               [:a.button.bg-primary.px-2
-                                {:target "_blank"
-                                 :href (str "https://github.com/re-path/studio/issues/new?"
-                                            "&title=" error
-                                            "&template=bug_report.md")}
-                                "Submit report"]]}]))
+                    [:div
+                     [:h2.mb-4.text-md error-message]
+                     [:p.text-error (str error)]
+                     [:a.button.bg-primary.px-2
+                      {:target "_blank"
+                       :href (str "https://github.com/re-path/studio/issues/new?"
+                                  "&title=" error
+                                  "&template=bug_report.md")}
+                      "Submit report"]]]))
 
     ;; Try to revert to a working state
     ;; https://react.dev/reference/react/Component#static-getderivedstatefromerror

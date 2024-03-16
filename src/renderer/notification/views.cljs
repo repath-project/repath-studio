@@ -3,6 +3,16 @@
    [re-frame.core :as rf]
    [renderer.components :as comp]))
 
+(defn unavailable-feature
+  [feature compatibility-url]
+  [:div
+   [:h2.pb-4.font-bold feature " is unnavailable."]
+   [:div
+    "Your browser does not support this API."
+    "You can check the "
+    [:a {:href compatibility-url}
+     "browser compatibility table."]]])
+
 (defn main
   []
   (let [notifications @(rf/subscribe [:notifications])]
@@ -17,9 +27,8 @@
            (:content notification)]
           [comp/icon-button
            "times"
-           {:title "Dismiss"
-            :style {:width "auto"
-                    :height "fit-content"}
+           {:aria-label "Close"
+            :class "small"
             :on-click #(rf/dispatch [:notification/remove index])}]
           (when-let [count (:count notification)]
             [:div.toast-count (inc count)])])
