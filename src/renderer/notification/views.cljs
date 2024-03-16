@@ -6,7 +6,7 @@
 (defn unavailable-feature
   [feature compatibility-url]
   [:div
-   [:h2.pb-4.font-bold feature " is unnavailable."]
+   [:h2.pb-4.font-bold feature " is unavailable."]
    [:div
     "Your browser does not support this API."
     "You can check the "
