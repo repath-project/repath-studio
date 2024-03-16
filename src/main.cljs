@@ -1,8 +1,7 @@
 (ns main
   (:require
    #_["@sentry/electron/main" :as sentry-electron-main]
-   ["electron-extension-installer" :refer [REACT_DEVELOPER_TOOLS]]
-   ["electron-extension-installer$default" :as installExtension]
+   ["electron-extension-installer" :refer [REACT_DEVELOPER_TOOLS installExtension]]
    ["electron-log/main" :as log]
    ["electron-reloader"]
    #_["electron-updater" :as updater]
@@ -15,6 +14,14 @@
 
 (defonce main-window (atom nil))
 (defonce loading-window (atom nil))
+
+(defn add-extension
+  [extension]
+  (-> (installExtension
+       extension
+       #js {:loadExtensionOptions {:allowFileAccess true}})
+      (.then (fn [name] (js/console.log "Added Extension: " name)))
+      (.catch (fn [err] (js/console.log "An error occurred: " err)))))
 
 (defn send-to-renderer
   ([action]
@@ -122,11 +129,7 @@
                                  (.join path "file://" js/__dirname "/public/index.html")))
 
     (when config/debug?
-      (-> (installExtension
-           REACT_DEVELOPER_TOOLS
-           #js {:loadExtensionOptions {:allowFileAccess true}})
-          (.then (fn [name] (js/console.log "Added Extension: " name)))
-          (.catch (fn [err] (js/console.log "An error occurred: " err))))
+      (add-extension REACT_DEVELOPER_TOOLS)
       #_(.openDevTools (.-webContents ^js @main-window)))
 
     (register-web-contents-events!)
