@@ -36,7 +36,7 @@
     "icon": "resources/public/img/icon",
     "fileAssociations": [
       {
-        "ext": "rso",
+        "ext": "rp",
         "name": "Repath Studio File",
         "role": "Editor",
         "mimeType": "application/repath.studio"

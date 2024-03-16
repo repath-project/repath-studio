@@ -10,8 +10,8 @@
 (def dialog-options
   {:defaultPath default-path
    ;; https://www.electronjs.org/docs/api/structures/file-filter#filefilter-object
-   :filters [{:name "rso"
-              :extensions ["rso"]}]})
+   :filters [{:name "rp"
+              :extensions ["rp"]}]})
 
 (defn- serialize-document
   [data file-path]

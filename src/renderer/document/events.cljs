@@ -152,7 +152,7 @@
     :dispatch [:frame/center]}))
 
 (def repath-types
-  [{:accept {"application/repath.studio" [".rso"]}}])
+  [{:accept {"application/repath.studio" [".rp"]}}])
 
 (def file-picker-options
   (clj->js {:startIn "documents"
@@ -160,7 +160,6 @@
 
 (defn read-file
   [^js/File file]
-  (js/console.log file)
   (let [reader (js/FileReader.)]
     (.addEventListener
      reader
