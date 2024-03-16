@@ -18,9 +18,8 @@
   []
   [:div.p-4
    [:div.flex.gap-3.items-start.pb-2
-    [:img.w-24 {:src "img/icon.svg"}]
     [:div
-     [:h1.text-3xl.mb-2.font-light "Repath Studio"]
+     [:h1.text-3xl.font-light.mb-2 "Repath Studio"]
      [:div  [:strong "Version: "] config/version]
      [:div  [:strong "Browser: "] platform/user-agent]]]
    [:button.button.px-2.bg-primary.rounded.w-full
