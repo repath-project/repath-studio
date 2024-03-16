@@ -49,7 +49,7 @@
       (->> shortcuts
            (map format-shortcut)
            (interpose [:span])
-           (into [:span.inline-flex.text-muted.gap-2])))))
+           (into [:span.inline-flex.text-muted {:class "gap-1.5"}])))))
 
 (defn toggle-icon-button
   [{:keys [active? active-icon inactive-icon active-text inactive-text action class]}
