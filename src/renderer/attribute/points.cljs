@@ -36,8 +36,7 @@
        [:> Popover/Root {:modal true}
         [:> Popover/Trigger {:asChild true}
          [:button.ml-px.inline-block.bg-primary.text-muted
-          {:style {:flex "0 0 26px"
-                   :height "26px"}}
+          {:style {:flex "0 0 26px"}}
           [comp/icon "pencil" {:class "icon small"}]]]
         [:> Popover/Portal
          [:> Popover/Content {:sideOffset 5
@@ -55,8 +54,7 @@
                                 {:key (str "x-" index v) :default-value x}]
                                [:input.bg-transparent
                                 {:key (str "y-" index v) :default-value y}]
-                               [:button.button.bg-transparent.text-muted
-                                {:style {:height "26px"}
-                                 :on-click #(remove-point-by-index points index)}
+                               [:button.button.bg-transparent.text-muted.h-full
+                                {:on-click #(remove-point-by-index points index)}
                                 [comp/icon "times" {:class "icon small"}]]]) points)]))
           [:> Popover/Arrow {:class "popover-arrow"}]]]])]))

@@ -132,9 +132,8 @@
      (when v
        [:> Popover/Root {:modal true}
         [:> Popover/Trigger {:asChild true}
-         [:button.ml-px.inline-block.bg-primary.text-muted
-          {:style {:flex "0 0 26px"
-                   :height "26px"}}
+         [:button.ml-px.inline-block.bg-primary.text-muted.h-full
+          {:style {:flex "0 0 26px"}}
           [comp/icon "pencil" {:class "icon small"}]]]
         [:> Popover/Portal
          [:> Popover/Content {:sideOffset 5

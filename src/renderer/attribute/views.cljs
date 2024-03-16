@@ -86,8 +86,8 @@
             :on-blur #(on-change-handler % key value)
             :on-key-down #(keyb/input-key-down-handler % value on-change-handler key value)}]
    (when-not (or (empty? (str value)) disabled?)
-     [:button.button.ml-px.bg-primary.text-muted.absolute.right-0.clear-input-button.hover:bg-transparent
-      {:style {:width "26px" :height "26px"}
+     [:button.button.ml-px.bg-primary.text-muted.absolute.h-full.right-0.clear-input-button.hover:bg-transparent
+      {:style {:width "26px"}
        :on-pointer-down #(rf/dispatch [:element/remove-attr key])}
       [comp/icon "times" {:class "icon small"}]])])
 
@@ -121,19 +121,22 @@
 (defn select-input
   [{:keys [key value disabled? items initial]}]
   [:div.flex.w-full
-   [form-input {:key key
-                :value value
-                :disabled? disabled?
-                :placeholder initial}]
-   [:> Select/Root {:value value
-                    :onValueChange #(rf/dispatch [:element/set-attr key %])
-                    :disabled disabled?}
-    [:> Select/Trigger {:class "select-trigger ml-px"
-                        :aria-label (name key)
-                        :style {:background "var(--bg-primary)"
-                                :border-radius 0
-                                :width "26px"
-                                :height "26px"}}
+   [form-input
+    {:key key
+     :value value
+     :disabled? disabled?
+     :placeholder initial}]
+   [:> Select/Root
+    {:value value
+     :onValueChange #(rf/dispatch [:element/set-attr key %])
+     :disabled disabled?}
+    [:> Select/Trigger
+     {:class "select-trigger ml-px h-full"
+      :aria-label (name key)
+      :style {:background "var(--bg-primary)"
+              :border-radius 0
+              :width "26px"
+              :height "26px"}}
      [:> Select/Value ""]
      [:> Select/Icon
       [comp/icon "chevron-down" {:class "icon small"}]]]
