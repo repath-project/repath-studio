@@ -208,11 +208,10 @@
                  [{:keyCode (key-codes "W")
                    :ctrlKey true
                    :shiftKey true}]]
-                [[:dialog/shortcuts]
-                 [{:keyCode (key-codes "F1")}]]
                 [[:window/toggle-fullscreen]
                  [{:keyCode (key-codes "F11")}]]
                 [[:dialog/cmdk]
+                 [{:keyCode (key-codes "F1")}]
                  [{:keyCode (key-codes "K")
                    :ctrlKey true}]]
                 [[:set-tool :edit]

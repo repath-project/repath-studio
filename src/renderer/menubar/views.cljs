@@ -364,6 +364,11 @@
    :label "Help"
    :type :root
    :items [{:key :website
+            :label "Command panel"
+            :action [:dialog/cmdk]}
+           {:key :divider-1
+            :type :separator}
+           {:key :website
             :label "Website"
             :action [:window/open-remote-url "https://repath.studio/"]}
            {:key :source-code
@@ -375,11 +380,6 @@
            {:key :changelog
             :label "Changelog"
             :action [:window/open-remote-url "https://repath.studio/roadmap/changelog/"]}
-           {:key :divider-1
-            :type :separator}
-           {:key :shortcuts
-            :label "Keyboard shortcuts"
-            :action [:dialog/shortcuts]}
            {:key :divider-2
             :type :separator}
            {:key :submit-issue
@@ -390,13 +390,6 @@
            {:key :about
             :label "About"
             :action [:dialog/about]}]})
-
-(defn cmdk-toggle
-  []
-  {:key :website
-   :label "⌘"
-   :type :root
-   :action [:dialog/cmdk]})
 
 (defmulti menu-item :type)
 
@@ -478,4 +471,4 @@
           :on-key-down #(when-not (= (.-key %) "Escape")
                           (.stopPropagation %)) ; FIXME: Esc global action also triggered.
           :onValueChange #(rf/dispatch [:set-backdrop (seq %)])}]
-        (map menu-item (conj (root-menu) (cmdk-toggle)))))
+        (map menu-item (root-menu))))

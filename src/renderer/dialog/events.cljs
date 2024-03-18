@@ -21,11 +21,6 @@
    (assoc db :dialog {:content [v/save k]})))
 
 (rf/reg-event-db
- :dialog/shortcuts
- (fn [db [_ k]]
-   (assoc db :dialog {:content [v/shortcuts]})))
-
-(rf/reg-event-db
  :dialog/confirmation
  (fn [db [_ data]]
    (assoc db :dialog {:content [v/confirmation data]})))
