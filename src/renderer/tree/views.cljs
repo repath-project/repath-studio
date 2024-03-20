@@ -43,7 +43,7 @@
         :on-blur (fn [e]
                    (reset! edit-mode? false)
                    (set-item-name e key))}]
-      [:span
+      [:div.truncate
        {:class [(when-not visible? "opacity-60")
                 (when (= :svg tag) "font-bold")]
         :style {:cursor "text"}
@@ -122,7 +122,7 @@
      [:div.flex.items-center.content-between.w-full
       (when (seq children)
         [comp/toggle-collapsed-button key collapsed?])
-      [:div.flex-1 [label el]]
+      [:div.flex-1.overflow-hidden [label el]]
       [item-buttons el]]]))
 
 (defn item [{:keys [selected? children key] :as el} depth elements]
