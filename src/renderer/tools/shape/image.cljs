@@ -25,5 +25,5 @@
                       "image/bmp" [".fmp"]}}]}
    (fn [file]
      (rf/dispatch [:set-tool :select])
-     (handlers/add-image file adjusted-pointer-pos)))
+     (handlers/add-image! file adjusted-pointer-pos)))
   db)

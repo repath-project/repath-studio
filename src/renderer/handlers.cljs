@@ -14,7 +14,7 @@
   [db message]
   (assoc db :message message))
 
-(defn add-image
+(defn add-image!
   [^js/File file adjusted-pointer-pos]
   (let [reader (js/FileReader.)]
     (.addEventListener
@@ -46,9 +46,9 @@
   (reduce
    (fn [db file]
      (case (.-type file)
-       "image/png" (add-image file adjusted-pointer-pos)
-       "image/jpeg" (add-image file adjusted-pointer-pos)
-       "image/bmp" (add-image file adjusted-pointer-pos)
+       "image/png" (add-image! file adjusted-pointer-pos)
+       "image/jpeg" (add-image! file adjusted-pointer-pos)
+       "image/bmp" (add-image! file adjusted-pointer-pos)
        db)) db files))
 
 (defn drop-items
