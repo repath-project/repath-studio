@@ -15,7 +15,7 @@
         (let [[_ _ selected?] (ra/argv this)]
           (when (and (not old-selected?)
                      selected?)
-            (dom/scroll-into-view (.-current ref)))))
+            (dom/scroll-into-view! (.-current ref)))))
       :reagent-render
       (fn [text selected? active? set-active]
         [:div.p-1.bg-secondary.text-nowrap

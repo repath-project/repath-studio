@@ -104,7 +104,7 @@
       :on-pointer-enter #(rf/dispatch [:document/set-hovered-keys #{key}])
       :ref (fn [this]
              (when (and this selected? hovered? (not multiple-selected?))
-               (dom/scroll-into-view this)))
+               (dom/scroll-into-view! this)))
       :on-key-down #(key-down-handler % key)
       :draggable true
       :on-drag-start #(-> (.-dataTransfer %)

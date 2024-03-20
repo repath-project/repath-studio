@@ -44,11 +44,11 @@
      {:component-did-mount
       (fn [_this]
         (let [el (.-current ref)]
-          (dom/scroll-to-bottom el)))
+          (dom/scroll-to-bottom! el)))
       :component-did-update
       (fn [_this]
         (let [el (.-current ref)]
-          (dom/scroll-to-bottom el)))
+          (dom/scroll-to-bottom! el)))
       :reagent-render
       (fn [items opts]
         (into
