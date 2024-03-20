@@ -3,8 +3,9 @@
    [clojure.string :as str]
    [renderer.utils.units :as units]))
 
-(def attrs-order
-  [:d
+(def order
+  [:href
+   :d
    :points
    :x :y
    :x1 :y1
@@ -23,6 +24,8 @@
    :stroke
    :fill
    :stroke-width :stroke-linecap :stroke-linejoin :stroke-dasharray
+   :crossorigin
+   :decoding
    :opacity
    :overflow
    :id :class :tabindex

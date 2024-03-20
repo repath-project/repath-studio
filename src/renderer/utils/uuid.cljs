@@ -3,4 +3,4 @@
 (defn generate []
   (-> (random-uuid)
       str
-      keyword)) ; REVIEW
+      keyword))

@@ -94,7 +94,7 @@
                                 :attrs
                                 (.indexOf k)))
                           attrs))]
-     (sort-by (fn [[k _]] (.indexOf attr.utils/attrs-order k)) attrs))))
+     (sort-by (fn [[k _]] (.indexOf attr.utils/order k)) attrs))))
 
 (rf/reg-sub
  :element/bounds
