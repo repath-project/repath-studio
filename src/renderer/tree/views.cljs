@@ -43,14 +43,15 @@
         :on-blur (fn [e]
                    (reset! edit-mode? false)
                    (set-item-name e key))}]
-      [:div.truncate
-       {:class [(when-not visible? "opacity-60")
-                (when (= :svg tag) "font-bold")]
-        :style {:cursor "text"}
-        :on-double-click (fn [e]
-                           (.stopPropagation e)
-                           (reset! edit-mode? true))}
-       (if (empty? name) tag name)])))
+      [:div.flex
+       [:div.truncate
+        {:class [(when-not visible? "opacity-60")
+                 (when (= :svg tag) "font-bold")]
+         :style {:cursor "text"}
+         :on-double-click (fn [e]
+                            (.stopPropagation e)
+                            (reset! edit-mode? true))}
+        (if (empty? name) tag name)]])))
 
 (defn drop-handler
   [e k]
