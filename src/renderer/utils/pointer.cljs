@@ -49,9 +49,7 @@
    pointer movement."
   [^js/PointerEvent e el]
   (.stopPropagation e)
-  ;; Disable native zoom on canvas.
-  (when (and (.-ctrlKey e) (.-deltaY e))
-    (.preventDefault e))
+  (.preventDefault e)
 
   (rf/dispatch-sync [:pointer-event {:element el
                                      :target (.-target e)
