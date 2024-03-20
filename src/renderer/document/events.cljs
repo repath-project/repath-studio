@@ -172,10 +172,7 @@
 (rf/reg-fx
  ::open
  (fn []
-   (file/open!
-    file-picker-options
-    (fn [[^js/FileSystemFileHandle file-handle]]
-      (.then (.getFile file-handle) read-file)))))
+   (file/open! file-picker-options read-file)))
 
 (rf/reg-event-fx
  :document/open

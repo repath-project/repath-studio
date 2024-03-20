@@ -23,9 +23,7 @@
     :types [{:accept {"image/png" [".png"]
                       "image/jpeg" [".jpeg" ".jpg"]
                       "image/bmp" [".fmp"]}}]}
-   (fn [[^js/FileSystemFileHandle file-handle]]
-     (.then (.getFile file-handle)
-            (fn [file]
-              (rf/dispatch [:set-tool :select])
-              (handlers/add-image file adjusted-pointer-pos)))))
+   (fn [file]
+     (rf/dispatch [:set-tool :select])
+     (handlers/add-image file adjusted-pointer-pos)))
   db)
