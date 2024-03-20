@@ -2,6 +2,7 @@
   (:require
    [renderer.attribute.color]
    [renderer.attribute.d]
+   [renderer.attribute.href]
    [renderer.attribute.length]
    [renderer.attribute.overflow]
    [renderer.attribute.points]
