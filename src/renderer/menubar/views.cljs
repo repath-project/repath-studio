@@ -363,7 +363,7 @@
   {:key :help
    :label "Help"
    :type :root
-   :items [{:key :website
+   :items [{:key :cmdk
             :label "Command panel"
             :action [:dialog/cmdk]}
            {:key :divider-1
