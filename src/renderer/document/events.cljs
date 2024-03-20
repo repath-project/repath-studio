@@ -9,6 +9,7 @@
    [renderer.document.handlers :as h]
    [renderer.element.handlers :as element.h]
    [renderer.history.handlers :as history.h]
+   [renderer.utils.file :as file]
    [renderer.utils.local-storage :as local-storage]
    [renderer.utils.vec :as vec]))
 
@@ -151,12 +152,9 @@
             (history.h/finalize "Create document"))
     :dispatch [:frame/center]}))
 
-(def repath-types
-  [{:accept {"application/repath.studio" [".rp"]}}])
-
 (def file-picker-options
-  (clj->js {:startIn "documents"
-            :types repath-types}))
+  {:startIn "documents"
+   :types [{:accept {"application/repath.studio" [".rp"]}}]})
 
 (defn read-file
   [^js/File file]
@@ -167,21 +165,17 @@
      #(let [document (-> (.. % -target -result)
                          edn/read-string
                          (dissoc :path)
-                         (assoc :name (.-name file)))]
+                         (assoc :title (.-name file)))]
         (rf/dispatch [:document/load document])))
     (.readAsText reader file)))
 
 (rf/reg-fx
  ::open
  (fn []
-   (if (.-showOpenFilePicker js/window)
-     (.then (.showOpenFilePicker js/window file-picker-options)
-            (fn [[^js/FileSystemFileHandle file-handle]]
-              (.then (.getFile file-handle) read-file)))
-     (rf/dispatch
-      [:notification/unavailable-feature
-       "Open File Picker"
-       "https://developer.mozilla.org/en-US/docs/Web/API/window/showOpenFilePicker#browser_compatibility"]))))
+   (file/open!
+    file-picker-options
+    (fn [[^js/FileSystemFileHandle file-handle]]
+      (.then (.getFile file-handle) read-file)))))
 
 (rf/reg-event-fx
  :document/open
@@ -213,19 +207,15 @@
 (rf/reg-fx
  ::save-as
  (fn [data]
-   (if (.-showSaveFilePicker js/window)
-     (.then (.showSaveFilePicker js/window file-picker-options)
-            (fn [^js/FileSystemFileHandle file-handle]
-              (.then (.createWritable file-handle)
-                     (fn [^js/FileSystemWritableFileStream writable]
-                       (.then (.write writable (pr-str (dissoc data :closing?)))
-                              (let [document (assoc data :title (.-name file-handle))]
-                                (.close writable)
-                                (rf/dispatch [:document/saved document])))))))
-     (rf/dispatch
-      [:notification/unavailable-feature
-       "Save File Picker"
-       "https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker#browser_compatibility"]))))
+   (file/save!
+    file-picker-options
+    (fn [^js/FileSystemFileHandle file-handle]
+      (.then (.createWritable file-handle)
+             (fn [^js/FileSystemWritableFileStream writable]
+               (.then (.write writable (pr-str (dissoc data :closing?)))
+                      (let [document (assoc data :title (.-name file-handle))]
+                        (.close writable)
+                        (rf/dispatch [:document/saved document])))))))))
 
 (defn save-format
   [db]

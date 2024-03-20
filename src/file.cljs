@@ -5,10 +5,8 @@
    ["path" :as path]
    [clojure.edn :as edn]))
 
-(def default-path (.getPath app "documents"))
-
 (def dialog-options
-  {:defaultPath default-path
+  {:defaultPath (.getPath app "documents")
    ;; https://www.electronjs.org/docs/api/structures/file-filter#filefilter-object
    :filters [{:name "rp"
               :extensions ["rp"]}]})
@@ -71,7 +69,7 @@
                  (read-file file-path f)))))))
 
 (def export-options
-  {:defaultPath default-path
+  {:defaultPath (.getPath app "pictures")
    :filters [{:name "svg"
               :extensions ["svg" "svgo"]}]})
 

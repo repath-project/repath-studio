@@ -1,8 +1,10 @@
 (ns renderer.tools.shape.image
   "https://www.w3.org/TR/SVG/embedded.html#ImageElement"
   (:require
-   [renderer.element.handlers :as element.h]
-   [renderer.tools.base :as tools]))
+   [re-frame.core :as rf]
+   [renderer.handlers :as handlers]
+   [renderer.tools.base :as tools]
+   [renderer.utils.file :as file]))
 
 (derive :image ::tools/graphics)
 (derive :image ::tools/box)
@@ -14,13 +16,16 @@
                  It can display raster image files or other SVG files."
    :attrs [:href]})
 
-(defmethod tools/drag :image
-  [{:keys [adjusted-pointer-offset adjusted-pointer-pos] :as db}]
-  (let [[offset-x offset-y] adjusted-pointer-offset
-        [pos-x pos-y] adjusted-pointer-pos
-        attrs {:x (min pos-x offset-x)
-               :y (min pos-y offset-y)
-               :width (abs (- pos-x offset-x))
-               :height (abs (- pos-y offset-y))
-               :preserveAspectRatio "xMidYMid slice"}]
-    (element.h/set-temp db {:type :element :tag :image :attrs attrs})))
+(defmethod tools/pointer-down :image
+  [{:keys [adjusted-pointer-pos] :as db}]
+  (file/open!
+   {:startIn "pictures"
+    :types [{:accept {"image/png" [".png"]
+                      "image/jpeg" [".jpeg" ".jpg"]
+                      "image/bmp" [".fmp"]}}]}
+   (fn [[^js/FileSystemFileHandle file-handle]]
+     (.then (.getFile file-handle)
+            (fn [file]
+              (rf/dispatch [:set-tool :select])
+              (handlers/add-image file adjusted-pointer-pos)))))
+  db)

@@ -1,10 +1,12 @@
 (ns renderer.element.events
   (:require
    [clojure.string :as str]
+   [platform]
    [re-frame.core :as rf]
    [renderer.element.handlers :as h]
    [renderer.history.handlers :as history.h]
-   [renderer.utils.bounds :as bounds]))
+   [renderer.utils.bounds :as bounds]
+   [renderer.utils.file :as file]))
 
 (rf/reg-event-db
  :element/select
@@ -158,13 +160,26 @@
        (h/align direction)
        (history.h/finalize "Align " (name direction)))))
 
-(rf/reg-event-db
+(rf/reg-fx
+ ::export
+ (fn [data]
+   (file/save!
+    {:startIn "pictures"
+     :types [{:accept {"image/svg+xml" [".svg" ".svgo"]}}]}
+    (fn [^js/FileSystemFileHandle file-handle]
+      (.then (.createWritable file-handle)
+             (fn [^js/FileSystemWritableFileStream writable]
+               (.then (.write writable data) (.close writable))))))))
+
+(rf/reg-event-fx
  :element/export
- (fn [db _]
+ (fn [{:keys [db]} _]
    (let [xml (-> db
                  h/root-children
                  h/->string)]
-     (js/window.api.send "toMain" #js {:action "export" :data xml}))))
+     (if platform/electron?
+       {:send-to-main {:action "export" :data xml}}
+       {::export xml}))))
 
 (rf/reg-event-db
  :element/paste
