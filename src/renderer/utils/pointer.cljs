@@ -49,7 +49,10 @@
    pointer movement."
   [^js/PointerEvent e el]
   (.stopPropagation e)
-  (.preventDefault e)
+  ;; Disable zoom and drop handling on canvas.
+  (when (or (and (.-ctrlKey e) (.-deltaY e))
+            (= (.-type e) "drop"))
+    (.preventDefault e))
 
   (rf/dispatch-sync [:pointer-event {:element el
                                      :target (.-target e)
