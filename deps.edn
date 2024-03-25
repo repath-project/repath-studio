@@ -10,7 +10,7 @@
         de-dupe/de-dupe {:git/url "https://github.com/day8/de-dupe.git"
                          :sha "932a03e1c12f8690ce753b2fe639719a7fe5072f"
                          :deps/manifest :deps}
-        metosin/malli {:mvn/version "0.14.0"}
+        metosin/malli {:mvn/version "0.15.0"}
         net.mikera/core.matrix {:mvn/version "0.63.0"}
         org.slf4j/slf4j-simple {:mvn/version "2.0.12"}
         re-frame/re-frame {:mvn/version "1.4.3"}
