@@ -23,7 +23,7 @@
   (let [child-elements @(rf/subscribe [:element/filter-visible children])
         elements @(rf/subscribe [:document/elements])
         viewbox @(rf/subscribe [:frame/viewbox])
-        {:keys [width height]} @(rf/subscribe [:content-rect])
+        {:keys [width height]} @(rf/subscribe [:dom-rect])
         hovered-elements @(rf/subscribe [:element/hovered])
         selected-elements @(rf/subscribe [:element/selected])
         bounds @(rf/subscribe [:element/bounds])

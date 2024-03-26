@@ -47,7 +47,7 @@
 
 (defmethod tools/drag-end :zoom
   [{:keys [active-document
-           content-rect
+           dom-rect
            adjusted-pointer-offset
            adjusted-pointer-pos
            zoom-sensitivity] :as db} e]
@@ -55,8 +55,8 @@
         [pos-x pos-y] adjusted-pointer-pos
         width (abs (- pos-x offset-x))
         height (abs (- pos-y offset-y))
-        width-ratio (/ (:width content-rect) width)
-        height-ratio (/ (:height content-rect) height)
+        width-ratio (/ (:width dom-rect) width)
+        height-ratio (/ (:height dom-rect) height)
         current-zoom (get-in db [:documents active-document :zoom])
         furute-zoom (min width-ratio height-ratio)]
     (-> db

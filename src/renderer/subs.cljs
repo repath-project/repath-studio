@@ -63,8 +63,8 @@
  :-> :offset)
 
 (rf/reg-sub
- :content-rect
- :-> :content-rect)
+ :dom-rect
+ :-> :dom-rect)
 
 (rf/reg-sub
  :copied-elements

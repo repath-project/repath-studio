@@ -8,10 +8,10 @@
 
 (rf/reg-event-db
  :frame/resize
- (fn [db [_ updated-content-rect]]
+ (fn [db [_ dom-rect]]
    (-> db
-       (h/recenter-to-content-rect updated-content-rect)
-       (assoc :content-rect updated-content-rect))))
+       (h/recenter-to-dom-rect dom-rect)
+       (assoc :dom-rect dom-rect))))
 
 (rf/reg-event-db
  :frame/center
@@ -50,12 +50,12 @@
  :frame/pan-to-element
  (fn [{:keys [db]} [_ key]]
    {:fx
-    (let [{:keys [content-rect active-document]} db
+    (let [{:keys [dom-rect active-document]} db
           element (element.h/element db key)
           elements (element.h/elements db)
           el-bounds (element/adjusted-bounds element elements)
           zoom (get-in db [:documents active-document :zoom])
-          {:keys [width height]} content-rect
+          {:keys [width height]} dom-rect
           [x y] (get-in db [:documents active-document :pan])
           [width height] (mat/div [width height] zoom)
           viewbox [x y (+ x width) (+ y height)] ; TODO: Convert to flow.

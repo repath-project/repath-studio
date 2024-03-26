@@ -55,12 +55,11 @@
   "Observes the frame and gets its contentRect on resize."
   (js/ResizeObserver.
    (fn [entries]
-     (let [client-rect (.getBoundingClientRect (.-target (.find entries (fn [] true))))
-           content-rect (js->clj (.toJSON (.-contentRect (.find entries (fn [] true))))
-                                 :keywordize-keys true)]
-       (rf/dispatch-sync [:frame/resize (assoc content-rect
-                                               :x (.-x client-rect)
-                                               :y (.-y client-rect))])))))
+     (let [dom-rect (-> entries
+                        (.find (fn [] true))
+                        (.. -target getBoundingClientRect toJSON)
+                        (js->clj :keywordize-keys true))]
+       (rf/dispatch-sync [:frame/resize dom-rect])))))
 
 (defn main
   "Our canvas is wrapped within an iframe element that hosts anything 
@@ -79,7 +78,7 @@
       :reagent-render
       (fn []
         (let [canvas @(rf/subscribe [:element/canvas])
-              {:keys [x y]} @(rf/subscribe [:content-rect])
+              {:keys [x y]} @(rf/subscribe [:dom-rect])
              ;; This is a different browsing context inside an iframe.
              ;; We need to simulate the events to the parent window.
               on-keyboard-event (fn [e]

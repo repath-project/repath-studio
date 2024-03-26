@@ -12,7 +12,7 @@
 
 (defn rows
   []
-  [["Content rect" @(rf/subscribe [:content-rect])]
+  [["Dom rect" @(rf/subscribe [:dom-rect])]
    ["Viewbox" (str (mapv units/->fixed @(rf/subscribe [:frame/viewbox])))]
    ["Pointer position" (str @(rf/subscribe [:pointer-pos]))]
    ["Adjusted pointer position"

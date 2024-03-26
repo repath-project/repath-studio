@@ -101,7 +101,7 @@
 
 (rf/reg-event-db
  :pointer-event
- (fn [{:keys [pointer-offset tool content-rect drag?] :as db}
+ (fn [{:keys [pointer-offset tool dom-rect drag?] :as db}
       [_ {:keys [button buttons modifiers data-transfer pointer-pos delta element] :as e}]]
    (let [adjusted-pointer-pos (frame-h/adjusted-pointer-pos db pointer-pos)]
      (case (:type e)
@@ -112,7 +112,7 @@
                (if (pointer/significant-drag? pointer-pos pointer-offset)
                  (cond-> db
                    (not= tool :pan)
-                   (frame-h/pan-out-of-canvas content-rect
+                   (frame-h/pan-out-of-canvas dom-rect
                                               pointer-pos
                                               pointer-offset)
 

@@ -8,7 +8,7 @@
  :frame/viewbox
  :<- [:document/zoom]
  :<- [:document/pan]
- :<- [:content-rect]
+ :<- [:dom-rect]
  (fn [[zoom pan {:keys [width height]}] _]
    (let [[x y] pan
          [width height] (mat/div [width height] zoom)]
