@@ -52,7 +52,6 @@
                                 'Segoe UI Emoji'"}}]])
 
 (def resize-observer
-  "Observes the frame and gets its contentRect on resize."
   (js/ResizeObserver.
    (fn [entries]
      (let [dom-rect (-> entries
