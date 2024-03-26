@@ -41,9 +41,9 @@
 
        [:div
         [:button.text-lg.text-accent.mr-2
-         {:on-click #(rf/dispatch [:dialog/shortcuts])}
-         "Keyboard shortcuts"]
-        [comp/shortcuts [:dialog/shortcuts]]]
+         {:on-click #(rf/dispatch [:dialog/cmdk])}
+         "Command panel"]
+        [comp/shortcuts [:dialog/cmdk]]]
        [:a.text-lg.block
         {:href "https://repath.studio/"
          :target "_blank"}
