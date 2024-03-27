@@ -17,21 +17,21 @@
   []
   (let [notifications @(rf/subscribe [:notifications])]
     [:div.fixed.flex.flex-col.m-4.right-0.bottom-0.gap-2.items-end
-     [:div
-      (map-indexed
-       (fn [index notification]
-         [:div.toast
-          {:key index}
-          [:div.toast-description
-           (:content notification)]
-          [comp/icon-button
-           "times"
-           {:aria-label "Close"
-            :class "close-button small"
-            :on-click #(rf/dispatch [:notification/remove index])}]
-          (when-let [count (:count notification)]
-            [:div.toast-count (inc count)])])
-       notifications)]
+     (map-indexed
+      (fn [index notification]
+        [:div.relative.flex.bg-secondary.w-80.p-4.mb-2.rounded.shadow-md.border.border-default
+         {:key index}
+         (:content notification)
+         [comp/icon-button
+          "times"
+          {:aria-label "Close"
+           :class "close-button small"
+           :on-click #(rf/dispatch [:notification/remove index])}]
+         (when-let [count (:count notification)]
+           [:div.absolute.error.left-0.top-0.px-1.py-0.5.rounded
+            {:class "-translate-x-1/2 -translate-y-1/2"}
+            (inc count)])])
+      notifications)
 
      (when (second notifications)
        [:button.button.overlay.px-2

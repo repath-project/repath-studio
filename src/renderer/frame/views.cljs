@@ -88,6 +88,7 @@
                                                                      e)))]
           [:> Frame {:initial-content (server/render-to-static-markup [markup])
                      :mount-target "body"
+                     :class "overflow-hidden flex-1 border-0"
                      :on-key-down on-keyboard-event
                      :on-key-up on-keyboard-event
                      :id "frame"
