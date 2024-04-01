@@ -17,7 +17,7 @@
         re-pressed/re-pressed {:mvn/version "0.3.2"}
         reagent/reagent {:mvn/version "1.2.0"}
         replumb/replumb {:mvn/version "0.2.4"}
-        thheller/shadow-cljs {:mvn/version "2.28.2"}}
+        thheller/shadow-cljs {:mvn/version "2.28.3"}}
  :aliases {:kibit {:extra-deps {jonase/kibit {:git/url "https://github.com/clj-commons/kibit.git"
                                               :sha "a5fbc722265ee8456b8a985db8c18093c7d83820"}}
                    :exec-fn kibit.driver/exec
