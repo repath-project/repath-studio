@@ -2,7 +2,6 @@
   "This serves as an abstraction for polygons and polylines that have similar
    attributes and hehavior"
   (:require
-   ["polylabel" :as polylabel]
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
    [re-frame.core :as rf]
@@ -172,8 +171,3 @@
   (let [points-v (attr.utils/points->px points)]
     (mat/div (reduce mat/add [0 0] points-v)
              (count points-v))))
-
-(defmethod tools/poi ::tools/polyshape
-  [{{:keys [points]} :attrs}]
-  (let [points-v (attr.utils/points->px points)]
-    (take 2 (polylabel (clj->js [points-v])))))

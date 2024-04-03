@@ -32,7 +32,6 @@
 (defmulti path :tag)
 (defmulti area :tag)
 (defmulti centroid :tag)
-(defmulti poi :tag) ;; pole-of-inaccessibility
 
 (defmulti render-edit #(:tag %))
 (defmulti bounds #(:tag %))
@@ -81,7 +80,6 @@
 (defmethod bounds :default [])
 (defmethod area :default [])
 (defmethod centroid :default [])
-(defmethod poi :default [])
 
 (defmethod activate :default [db] (assoc db :cursor "default"))
 (defmethod deactivate :default [db] (assoc db :cursor "default"))
