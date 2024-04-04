@@ -26,7 +26,8 @@
    ["Primary tool" @(rf/subscribe [:primary-tool])]
    ["State"  @(rf/subscribe [:state])]
    ["Clicked element" (:key @(rf/subscribe [:clicked-element]))]
-   ["Ignored elements" @(rf/subscribe [:document/ignored-keys])]])
+   ["Ignored elements" @(rf/subscribe [:document/ignored-keys])]
+   ["Nearest neighbor" (str (:point @(rf/subscribe [:element/nearest-neighbor])))]])
 
 (defn info
   []

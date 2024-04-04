@@ -46,6 +46,20 @@
     (when (seq bounds)
       (apply bounds/union bounds))))
 
+(defn snapping-points
+  [element elements]
+  (let [[x1 y1 x2 y2] (adjusted-bounds element elements)
+        [cx cy] (bounds/center [x1 y1 x2 y2])]
+    [[x1 y1]
+     [x1 y2]
+     [x1 cy]
+     [x2 y1]
+     [x2 y2]
+     [x2 cy]
+     [cx y1]
+     [cx y2]
+     [cx cy]]))
+
 (defn attrs-map
   [attrs]
   (let [deprecated-path [:__compat :status :deprecated]

@@ -42,11 +42,7 @@
     :action [:frame/focus-selection :fill]}])
 
 (def view-radio-buttons
-  [#_{:title "Snap to pixels"
-      :active? [:document/snap?]
-      :icon "magnet"
-      :action [:document/toggle-snap]}
-   {:title "Grid"
+  [{:title "Grid"
     :active? [:grid?]
     :icon "grid"
     :action [:toggle-grid]}
@@ -54,6 +50,10 @@
     :active? [:rulers?]
     :icon "ruler-combined"
     :action [:toggle-rulers]}
+   {:title "Snap"
+    :active? [:snap?]
+    :icon "magnet"
+    :action [:toggle-snap]}
    {:title "History tree"
     :active? [:panel/visible? :history]
     :icon "history"

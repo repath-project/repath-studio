@@ -2,12 +2,12 @@
   (:require
    ["js-beautify" :as js-beautify]
    [clojure.core.matrix :as mat]
+   [kdtree]
    [re-frame.core :as rf]
    [renderer.attribute.utils :as attr.utils]
    [renderer.tools.base :as tools]
    [renderer.utils.element :as utils.el]
    [renderer.utils.map :as map]
-   [renderer.utils.bounds :as bounds]
    [renderer.element.handlers :as h]))
 
 (rf/reg-sub
@@ -40,6 +40,19 @@
  :<- [:document/elements]
  (fn [elements _]
    (filter :selected? (vals elements))))
+
+(rf/reg-sub
+ :element/selected-visible
+ :<- [:element/selected]
+ (fn [selected-elements _]
+   (filter :visible? selected-elements)))
+
+(rf/reg-sub
+ :element/non-selected-visible
+ :<- [:document/elements]
+ (fn [elements _]
+   (filter #(and (not (:selected? %))
+                 (:visible? %)) (vals elements))))
 
 (rf/reg-sub
  :element/hovered
@@ -141,20 +154,60 @@
    (filter :visible? (vals elements))))
 
 (rf/reg-sub
- :snapping-points
+ :element/base-points
  :<- [:document/elements]
- :<- [:element/visible]
- (fn [[elements visible-elements] _]
-   (reduce (fn [points element]
-             (let [[x1 y1 x2 y2] (utils.el/adjusted-bounds element elements)
-                   [cx cy] (bounds/center [x1 y1 x2 y2])]
-               (conj points
-                     [x1 y1]
-                     [x1 y2]
-                     [x1 cy]
-                     [x2 y1]
-                     [x2 y2]
-                     [x2 cy]
-                     [cx y1]
-                     [cx y2]
-                     [cx cy]))) [] visible-elements)))
+ :<- [:element/selected-visible]
+ :<- [:snap?]
+ (fn [[elements non-selected-visible-elements snap?] _]
+   (when snap?
+     (reduce (fn [points element]
+               (apply conj points (utils.el/snapping-points element elements)))
+             [] non-selected-visible-elements))))
+
+(rf/reg-sub
+ :element/snapping-points
+ :<- [:document/elements]
+ :<- [:element/non-selected-visible]
+ :<- [:snap?]
+ (fn [[elements non-selected-visible-elements snap?] _]
+   (when snap?
+     (reduce (fn [points element]
+               (apply conj points (utils.el/snapping-points element elements)))
+             [] non-selected-visible-elements))))
+
+(rf/reg-sub
+ :element/kdtree
+ :<- [:element/snapping-points]
+ (fn [snapping-points _]
+   (kdtree/build-tree snapping-points)))
+
+(rf/reg-sub
+ :element/in-viewport-kdtree
+ :<- [:frame/viewbox]
+ :<- [:element/kdtree]
+ (fn [[[x y width height] tree] _]
+   (kdtree/build-tree (kdtree/interval-search tree [[x (+ x width)]
+                                                    [y (+ y height)]]))))
+
+(rf/reg-sub
+ :element/nearest-neighbors
+ :<- [:element/in-viewport-kdtree]
+ :<- [:element/base-points]
+ (fn [[tree base-points] _]
+   (map #(kdtree/nearest-neighbor tree %) base-points)))
+
+(rf/reg-sub
+ :element/nearest-neighbor
+ :<- [:element/nearest-neighbors]
+ :<- [:document/zoom]
+ (fn [[nearest-neighbors zoom] _]
+   (let [snap-threshold (/ 100 zoom)
+         nearest-neighbor (reduce
+                           (fn [nearest-neighbor neighbor]
+                             (if (< (:dist-squared neighbor) (:dist-squared nearest-neighbor))
+                               neighbor
+                               nearest-neighbor))
+                           (first nearest-neighbors)
+                           (rest nearest-neighbors))]
+     (when (< (:dist-squared nearest-neighbor) snap-threshold)
+       nearest-neighbor))))
