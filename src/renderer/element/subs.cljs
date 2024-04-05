@@ -42,10 +42,17 @@
    (filter :selected? (vals elements))))
 
 (rf/reg-sub
+ :element/selected-descendant-keys
+ (fn [db _]
+   (h/descendant-keys db)))
+
+(rf/reg-sub
  :element/non-selected-visible
  :<- [:document/elements]
- (fn [elements _]
+ :<- [:element/selected-descendant-keys]
+ (fn [[elements selected-descendant-keys] _]
    (filter #(and (not (:selected? %))
+                 (not (contains? selected-descendant-keys (:id %)))
                  (:visible? %)) (vals elements))))
 
 (rf/reg-sub
@@ -78,7 +85,6 @@
  :<- [:element/selected]
  (fn [selected-elements _]
    (seq (rest selected-elements))))
-
 
 (rf/reg-sub
  :element/selected-attrs
@@ -146,28 +152,3 @@
  :<- [:document/elements]
  (fn [elements _]
    (filter :visible? (vals elements))))
-
-(rf/reg-sub
- :element/snapping-points
- :<- [:document/elements]
- :<- [:element/non-selected-visible]
- :<- [:snap?]
- (fn [[elements non-selected-visible-elements snap?] _]
-   (when snap?
-     (reduce (fn [points element]
-               (apply conj points (utils.el/snapping-points element elements)))
-             [] non-selected-visible-elements))))
-
-(rf/reg-sub
- :element/kdtree
- :<- [:element/snapping-points]
- (fn [snapping-points _]
-   (kdtree/build-tree snapping-points)))
-
-(rf/reg-sub
- :element/in-viewport-kdtree
- :<- [:frame/viewbox]
- :<- [:element/kdtree]
- (fn [[[x y width height] tree] _]
-   (kdtree/build-tree (kdtree/interval-search tree [[x (+ x width)]
-                                                    [y (+ y height)]]))))

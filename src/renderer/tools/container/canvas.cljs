@@ -38,7 +38,7 @@
         state @(rf/subscribe [:state])
         pointer-handler #(pointer/event-handler % element)
         pivot-point @(rf/subscribe [:pivot-point])
-        snapping-points @(rf/subscribe [:element/snapping-points])
+        snapping-points @(rf/subscribe [:snap/points])
         snap @(rf/subscribe [:snap])
         debug? @(rf/subscribe [:debug-info?])
         select? (or (= tool :select)

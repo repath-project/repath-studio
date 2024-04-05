@@ -25,6 +25,7 @@
    [renderer.reepl.core]
    [renderer.reepl.replumb :as replumb]
    [renderer.rulers.core]
+   [renderer.snap.core]
    [renderer.subs]
    [renderer.theme.core]
    [renderer.timeline.core]
