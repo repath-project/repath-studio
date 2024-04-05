@@ -52,7 +52,7 @@
  :<- [:element/selected-descendant-keys]
  (fn [[elements selected-descendant-keys] _]
    (filter #(and (not (:selected? %))
-                 (not (contains? selected-descendant-keys (:id %)))
+                 (not (contains? selected-descendant-keys (:key %)))
                  (:visible? %)) (vals elements))))
 
 (rf/reg-sub
