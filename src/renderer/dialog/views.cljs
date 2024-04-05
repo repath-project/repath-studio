@@ -2,7 +2,6 @@
   (:require
    ["@radix-ui/react-dialog" :as Dialog]
    [config]
-   [clojure.string :as str]
    [platform]
    [re-frame.core :as rf]
    [renderer.components :as comp]))

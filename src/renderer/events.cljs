@@ -150,7 +150,7 @@
              (dissoc :primary-tool))
 
          :always
-         (dissoc :pointer-offset :drag?))
+         (dissoc :pointer-offset :drag? :snap))
 
        :dblclick
        (tools/double-click db e element)

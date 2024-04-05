@@ -35,14 +35,12 @@
 
 (defn adjusted-pointer-pos
   [{:keys [active-document] :as db} pointer-pos]
-  (let [{:keys [zoom pan snap?]} (get-in db [:documents active-document])
-        adjusted-pointer-pos (adjust-pointer-pos zoom pan pointer-pos)]
-    (cond->> adjusted-pointer-pos
-      snap? (mapv Math/round)))) ; FIXME: Pixel snapping.
+  (let [{:keys [zoom pan]} (get-in db [:documents active-document])]
+    (adjust-pointer-pos zoom pan pointer-pos)))
 
 (defn zoom-in-pointer-position
-  [{:keys [pointer-pos] :as db} factor]
-  (zoom-in-position db factor (adjusted-pointer-pos db pointer-pos)))
+  [{:keys [adjusted-pointer-pos] :as db} factor]
+  (zoom-in-position db factor adjusted-pointer-pos))
 
 (defn zoom
   [{:keys [active-document dom-rect] :as db} factor]

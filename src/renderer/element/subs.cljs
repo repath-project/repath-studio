@@ -42,12 +42,6 @@
    (filter :selected? (vals elements))))
 
 (rf/reg-sub
- :element/selected-visible
- :<- [:element/selected]
- (fn [selected-elements _]
-   (filter :visible? selected-elements)))
-
-(rf/reg-sub
  :element/non-selected-visible
  :<- [:document/elements]
  (fn [elements _]
@@ -154,17 +148,6 @@
    (filter :visible? (vals elements))))
 
 (rf/reg-sub
- :element/base-points
- :<- [:document/elements]
- :<- [:element/selected-visible]
- :<- [:snap?]
- (fn [[elements non-selected-visible-elements snap?] _]
-   (when snap?
-     (reduce (fn [points element]
-               (apply conj points (utils.el/snapping-points element elements)))
-             [] non-selected-visible-elements))))
-
-(rf/reg-sub
  :element/snapping-points
  :<- [:document/elements]
  :<- [:element/non-selected-visible]
@@ -188,26 +171,3 @@
  (fn [[[x y width height] tree] _]
    (kdtree/build-tree (kdtree/interval-search tree [[x (+ x width)]
                                                     [y (+ y height)]]))))
-
-(rf/reg-sub
- :element/nearest-neighbors
- :<- [:element/in-viewport-kdtree]
- :<- [:element/base-points]
- (fn [[tree base-points] _]
-   (map #(kdtree/nearest-neighbor tree %) base-points)))
-
-(rf/reg-sub
- :element/nearest-neighbor
- :<- [:element/nearest-neighbors]
- :<- [:document/zoom]
- (fn [[nearest-neighbors zoom] _]
-   (let [snap-threshold (/ 100 zoom)
-         nearest-neighbor (reduce
-                           (fn [nearest-neighbor neighbor]
-                             (if (< (:dist-squared neighbor) (:dist-squared nearest-neighbor))
-                               neighbor
-                               nearest-neighbor))
-                           (first nearest-neighbors)
-                           (rest nearest-neighbors))]
-     (when (< (:dist-squared nearest-neighbor) snap-threshold)
-       nearest-neighbor))))

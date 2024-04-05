@@ -69,7 +69,6 @@
             :y (- y (/ size 2))
             :width size
             :height size
-            :shape-rendering "crispEdges"
             :cursor (if (or clicked? (not cursor)) "default" cursor)
             :on-pointer-up pointer-handler
             :on-pointer-down pointer-handler
@@ -132,7 +131,7 @@
   ([x y]
    (let [zoom @(rf/subscribe [:document/zoom])
          size (/ handler-size zoom)
-         mid (/ size 2)]
+         mid (/ size Math/PI)]
      [:g
       [line
        (- x mid) (- y mid)
