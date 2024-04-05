@@ -45,6 +45,9 @@
   [{:keys [snap?] :as db} cb]
   (let [{:keys [point base-point] :as nearest-neighbor} (nearest-neighbor db)]
     (cond-> db
+      :always
+      (dissoc :snap)
+
       (and snap? nearest-neighbor)
       (-> (cb (mat/sub point base-point))
           (assoc :snap nearest-neighbor)))))
