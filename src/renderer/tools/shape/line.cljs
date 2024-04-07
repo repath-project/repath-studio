@@ -3,7 +3,6 @@
   (:require
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
-   [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.element.handlers :as element.h]
    [renderer.handlers :as handlers]
@@ -11,6 +10,7 @@
    [renderer.tools.base :as tools]
    [renderer.tools.overlay :as overlay]
    [renderer.utils.bounds :as bounds]
+   [renderer.utils.element :as element]
    [renderer.utils.units :as units]))
 
 (derive :line ::tools/shape)
@@ -98,7 +98,7 @@
 
 (defmethod tools/render-edit :line
   [{:keys [attrs key] :as el}]
-  (let [offset @(rf/subscribe [:element/el-offset el])
+  (let [offset (element/offset el)
         {:keys [x1 y1 x2 y2]} attrs
         [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])
         [x1 y1] (mat/add offset [x1 y1])

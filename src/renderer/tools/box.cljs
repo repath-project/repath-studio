@@ -3,7 +3,6 @@
    :x :y :width :height attributes (e.g. rect, svg, image)."
   (:require
    [clojure.core.matrix :as mat]
-   [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.tools.base :as tools]
    [renderer.tools.overlay :as overlay]
@@ -46,7 +45,7 @@
 
 (defmethod tools/render-edit ::tools/box
   [el]
-  (let [el-bounds @(rf/subscribe [:element/el-bounds el])
+  (let [el-bounds (:bounds el)
         [x y] el-bounds
         [width height] (bounds/->dimensions el-bounds)]
     [:g {:key ::edit-handles}

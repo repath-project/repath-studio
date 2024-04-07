@@ -33,15 +33,17 @@
 
 (defn points->vec
   [points]
-  (vec (as-> points p
-         (str/triml p)
-         (str/split p #"\s+")
-         (partition 2 p)))) ; OPTIMIZE
+  (as-> points p
+    (str/triml p)
+    (str/split p #"\s+")
+    (partition 2 p)
+    (vec p))) ; OPTIMIZE
 
 (defn points->px
   [points]
-  (vec (as-> points p
-         (str/triml p)
-         (str/split p #"\s+")
-         (map units/unit->px p)
-         (partition 2 p))))
+  (as-> points p
+    (str/triml p)
+    (str/split p #"\s+")
+    (map units/unit->px p)
+    (partition 2 p)
+    (vec p)))

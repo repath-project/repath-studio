@@ -6,13 +6,12 @@
 
 (rf/reg-sub
  :snap/points
- :<- [:document/elements]
  :<- [:element/non-selected-visible]
  :<- [:snap?]
- (fn [[elements non-selected-visible-elements snap?] _]
+ (fn [[non-selected-visible-elements snap?] _]
    (when snap?
      (reduce (fn [points element]
-               (apply conj points (utils.el/snapping-points element elements)))
+               (apply conj points (utils.el/snapping-points element)))
              [] non-selected-visible-elements))))
 
 (rf/reg-sub

@@ -45,4 +45,4 @@
 (defmethod tools/bounds :g
   [el elements]
   (let [children (vals (select-keys elements (:children el)))]
-    (element/bounds elements children)))
+    (element/bounds children)))

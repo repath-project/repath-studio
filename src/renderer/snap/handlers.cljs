@@ -7,16 +7,22 @@
    [renderer.utils.element :as utils.el]))
 
 (defn base-points
-  [{:keys [snap? adjusted-pointer-pos] :as db}]
+  [{:keys [snap?
+           adjusted-pointer-pos
+           adjusted-pointer-offset
+           clicked-element
+           state] :as db}]
   (let [elements (element.h/elements db)
         selected-visible (filter #(and (:visible? %)
                                        (:selected? %)) (vals elements))]
     (when snap?
-      (if (seq selected-visible)
+      (if (and (contains? #{:move :clone} state) (seq selected-visible))
         (reduce (fn [points element]
-                  (apply conj points (utils.el/snapping-points element elements)))
+                  (apply conj points (utils.el/snapping-points element)))
                 [] selected-visible)
-        [adjusted-pointer-pos]))))
+        [(mat/add [(:x clicked-element) (:y clicked-element)]
+                  (mat/sub adjusted-pointer-pos
+                           adjusted-pointer-offset))]))))
 
 (defn nearest-neighbors
   [db]
@@ -41,13 +47,14 @@
     (when (< (:dist-squared nearest-neighbor) snap-threshold)
       nearest-neighbor)))
 
-(defn snap
-  [{:keys [snap?] :as db} cb]
-  (let [{:keys [point base-point] :as nearest-neighbor} (nearest-neighbor db)]
-    (cond-> db
-      :always
-      (dissoc :snap)
+(defn snap-to-offset
+  [db f offset more]
+  (apply f db offset more))
 
+(defn snap
+  [{:keys [snap?] :as db} f & more]
+  (let [{:keys [point base-point] :as nearest-neighbor} (nearest-neighbor db)]
+    (cond-> (dissoc db :snap)
       (and snap? nearest-neighbor)
-      (-> (cb (mat/sub point base-point))
-          (assoc :snap nearest-neighbor)))))
+      (-> (assoc :snap nearest-neighbor)
+          (snap-to-offset f (mat/sub point base-point) more)))))

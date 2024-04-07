@@ -7,7 +7,6 @@
    [renderer.toolbar.filters :as filters]
    [renderer.tools.base :as tools]
    [renderer.tools.overlay :as overlay]
-   [renderer.utils.element :as element]
    [renderer.utils.keyboard :as keyb]
    [renderer.utils.pointer :as pointer]))
 
@@ -20,8 +19,8 @@
 
 (defmethod tools/render :canvas
   [{:keys [attrs children] :as element}]
-  (let [child-elements @(rf/subscribe [:element/filter-visible children])
-        elements @(rf/subscribe [:document/elements])
+  (let [_ @(rf/subscribe [:snap/in-viewport-tree])
+        child-elements @(rf/subscribe [:element/filter-visible children])
         viewbox @(rf/subscribe [:frame/viewbox])
         {:keys [width height]} @(rf/subscribe [:dom-rect])
         hovered-elements @(rf/subscribe [:element/hovered])
@@ -72,11 +71,11 @@
           [:<>
            (for [el selected-elements]
              ^{:key (str (:key el) "-bounds")}
-             [overlay/bounding-box (element/adjusted-bounds el elements) false])
+             [overlay/bounding-box (:bounds el) false])
 
            (for [el hovered-elements]
              ^{:key (str (:key el) "-bounds")}
-             [overlay/bounding-box (element/adjusted-bounds el elements) true])
+             [overlay/bounding-box (:bounds el) true])
 
            (when (and (pos? elements-area) (= state :scale))
              [overlay/area elements-area bounds])

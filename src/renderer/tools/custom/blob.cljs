@@ -196,7 +196,7 @@
   [{:keys [attrs key] :as el}]
   (let [{:keys [x y size]} attrs
         [x y size] (mapv units/unit->px [x y size])
-        offset @(rf/subscribe [:element/el-offset el])
+        offset (element/offset el)
         [x1 y1] (cond->> [x y] (not (element/svg? el)) (mat/add offset))
         [x2 y2] (mat/add [x1 y1] size)]
     [:<>

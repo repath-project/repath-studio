@@ -1,7 +1,6 @@
 (ns renderer.element.subs
   (:require
    ["js-beautify" :as js-beautify]
-   [clojure.core.matrix :as mat]
    [kdtree]
    [re-frame.core :as rf]
    [renderer.attribute.utils :as attr.utils]
@@ -111,24 +110,9 @@
 
 (rf/reg-sub
  :element/bounds
- :<- [:document/elements]
  :<- [:element/selected]
- (fn [[elements selected-elements] _]
-   (utils.el/bounds elements selected-elements)))
-
-(rf/reg-sub
- :element/el-bounds
- :<- [:document/elements]
- (fn [elements [_ el]]
-   (utils.el/bounds elements [el])))
-
-(rf/reg-sub
- :element/el-offset
- :<- [:document/elements]
- (fn [elements [_ el]]
-   (let [bounds (utils.el/bounds elements [el])
-         original-bounds (tools/bounds el)]
-     (take 2 (mat/sub bounds original-bounds)))))
+ (fn [selected-elements _]
+   (utils.el/bounds selected-elements)))
 
 (rf/reg-sub
  :element/area

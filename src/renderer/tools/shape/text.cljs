@@ -1,5 +1,6 @@
 (ns renderer.tools.shape.text
   (:require
+   [clojure.core.matrix :as mat]
    [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
@@ -9,6 +10,7 @@
    [renderer.tools.base :as tools]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.dom :as dom]
+   [renderer.utils.element :as element]
    [renderer.utils.units :as units]))
 
 (derive :text ::tools/renderable)
@@ -75,8 +77,9 @@
 
 (defmethod tools/render-edit :text
   [{:keys [attrs key content] :as el}]
-  (let [el-bounds @(rf/subscribe [:element/el-bounds el])
-        [x y] el-bounds
+  (let [offset (element/offset el)
+        el-bounds (tools/bounds el)
+        [x y] (mat/add (take 2 el-bounds) offset)
         [width height] (bounds/->dimensions el-bounds)
         {:keys [fill font-family font-size font-weight]} attrs]
     [:foreignObject {:x x

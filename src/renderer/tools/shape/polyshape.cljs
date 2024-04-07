@@ -4,13 +4,13 @@
   (:require
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
-   [re-frame.core :as rf]
    [renderer.attribute.utils :as attr.utils]
    [renderer.element.handlers :as element.h]
    [renderer.handlers :as h]
    [renderer.history.handlers :as history]
    [renderer.tools.base :as tools]
    [renderer.tools.overlay :as overlay]
+   [renderer.utils.element :as element]
    [renderer.utils.units :as units]))
 
 (derive ::tools/polyshape ::tools/shape)
@@ -110,7 +110,7 @@
   (let [{:keys [points]} attrs
         handler-size (/ 8 zoom)
         stroke-width (/ 1 zoom)
-        offset @(rf/subscribe [:element/el-offset el])]
+        offset (element/offset el)]
     [:g {:key ::edit-handles}
      (map-indexed (fn [index [x y]]
                     (let [[x y] (mapv units/unit->px [x y])
@@ -171,3 +171,7 @@
   (let [points-v (attr.utils/points->px points)]
     (mat/div (reduce mat/add [0 0] points-v)
              (count points-v))))
+
+(defmethod tools/snapping-points ::tools/polyshape
+  [{{:keys [points]} :attrs}]
+  (attr.utils/points->px points))

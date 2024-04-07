@@ -22,10 +22,6 @@
   ([db el-k]
    (conj (path db) el-k)))
 
-(defn update-el
-  [db el f & more]
-  (apply update-in db (conj (path db) (:key el)) f more))
-
 (defn elements
   ([db]
    (get-in db (path db)))
@@ -35,6 +31,17 @@
 (defn element
   [db k]
   (get (elements db) k))
+
+(defn update-bounds
+  [db el-k]
+  (as-> db db
+    (update-in db (conj (path db) el-k) #(assoc % :bounds (element/adjusted-bounds % (elements db))))
+    (reduce #(update-bounds %1 %2) db (:children (element db el-k)))))
+
+(defn update-el
+  [db el f & more]
+  (-> (apply update-in db (conj (path db) (:key el)) f more)
+      (update-bounds (:key el))))
 
 (defn selected
   [db]
@@ -169,9 +176,10 @@
   ([db k v]
    (reduce #(set-prop %1 %2 k v) db (selected-keys db)))
   ([db el-k k v]
-   (if (str/blank? v)
-     (update-in db (conj (path db) el-k) dissoc k)
-     (assoc-in db (conj (path db) el-k k) v))))
+   (-> (if (str/blank? v)
+         (update-in db (conj (path db) el-k) dissoc k)
+         (assoc-in db (conj (path db) el-k k) v))
+       (update-bounds el-k))))
 
 (defn remove-attr
   ([db k]
@@ -320,18 +328,14 @@
    (set-prop db el-k :locked? false)))
 
 (defn bounds
-  ([db]
-   (element/bounds (elements db) (selected db)))
-  ([db elements]
-   (element/bounds elements (selected db))))
+  [db]
+  (element/bounds (selected db)))
 
 (defn copy
   [db]
-  (let [elements (mapv #(assoc % :bounds (element/adjusted-bounds % (elements db)))
-                       (selected-sorted db))]
-    (assoc db
-           :copied-elements elements
-           :copied-bounds (bounds db))))
+  (assoc db
+         :copied-elements (selected-sorted db)
+         :copied-bounds (bounds db)))
 
 (defn delete
   ([db]
@@ -420,7 +424,7 @@
                     (not (element/svg? el))
                     (single? (selected db)))
                (-> (set-parent (:key (hovered-svg db)))
-                   (translate el (mat/mul (take 2 (element/adjusted-bounds (hovered-svg db) (elements db)))
+                   (translate el (mat/mul (take 2 (:bounds (hovered-svg db)))
                                           -1)))))
            db
            (top-selected-ancestors db)))
@@ -446,16 +450,16 @@
      (update-el el
                 tools/scale
                 ratio
-                (let [[x1 y1] (element/adjusted-bounds el (elements db))]
+                (let [[x1 y1] (:bounds el)]
                   (mat/sub pivot-point [x1 y1]))))))
 
 (defn align
   ([db direction]
    (reduce #(align %1 %2 direction) db (selected db)))
   ([db el direction]
-   (let [bounds (element/adjusted-bounds el (elements db))
+   (let [bounds (:bounds el)
          center (bounds/center bounds)
-         parent-bounds (element/adjusted-bounds (parent db el) (elements db))
+         parent-bounds (:bounds (parent db el))
          parent-center (bounds/center parent-bounds)
          [cx cy] (mat/sub parent-center center)
          [x1 y1 x2 y2] (mat/sub parent-bounds bounds)]
@@ -511,7 +515,10 @@
           (update-prop (:parent new-el) :children #(vec (conj % key))))
 
       (not (or (element/svg? new-el) (:parent el)))
-      (translate [(- x1) (- y1)]))))
+      (translate [(- x1) (- y1)])
+
+      :always
+      (update-bounds key))))
 
 (defn add
   ([db]

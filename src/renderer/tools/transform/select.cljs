@@ -73,9 +73,9 @@
          (not (utils.el/svg? el)) ; REVIEW
          (not (utils.el/root? el))
          ((if intersecting? bounds/intersected? bounds/contained?)
-          (utils.el/adjusted-bounds el (element.h/elements db))
-          (utils.el/adjusted-bounds (element.h/get-temp db)
-                                    (element.h/elements db))))))
+          (:bounds el)
+          (let [{{:keys [x y width height]} :attrs} (element.h/get-temp db)]
+            [x y (+ x width) (+ y height)])))))
 
 (defn reduce-by-area
   [db intersecting? f]

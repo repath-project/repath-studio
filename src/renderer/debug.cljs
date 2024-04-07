@@ -27,7 +27,7 @@
    ["State"  @(rf/subscribe [:state])]
    ["Clicked element" (:key @(rf/subscribe [:clicked-element]))]
    ["Ignored elements" @(rf/subscribe [:document/ignored-keys])]
-   ["Snap point" (str (:point @(rf/subscribe [:snap])))]])
+   ["Snap point" (map (fn [[k v]] (str k " - " v)) @(rf/subscribe [:snap]))]])
 
 (defn info
   []

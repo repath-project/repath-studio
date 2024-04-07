@@ -6,9 +6,9 @@
    ["svgpath" :as svgpath]
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
-   [re-frame.core :as rf]
    [renderer.tools.base :as tools]
    [renderer.tools.overlay :as overlay]
+   [renderer.utils.element :as element]
    [renderer.utils.units :as units]))
 
 (derive :path ::tools/shape)
@@ -75,7 +75,7 @@
   [{:keys [attrs key] :as el} zoom]
   (let [handler-size (/ 8 zoom)
         stroke-width (/ 1 zoom)
-        offset @(rf/subscribe [:element/el-offset el])
+        offset (element/offset el)
         segments (-> attrs :d svgpath .-segments)
         square-handle (fn [i [x y]]
                         [overlay/square-handle {:key (str i)

@@ -5,7 +5,6 @@
    ["svg-path-bbox" :as svg-path-bbox]
    [clojure.core.matrix :as mat]
    [clojure.core.matrix.stats :as mat.stats]
-   [re-frame.core :as rf]
    [renderer.attribute.color :as attr.color]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.attribute.range :as attr.range]
@@ -16,6 +15,7 @@
    [renderer.tools.base :as tools]
    [renderer.tools.overlay :as overlay]
    [renderer.utils.bounds :as bounds]
+   [renderer.utils.element :as element]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
 
@@ -199,7 +199,7 @@
   [{:keys [attrs key] :as el} zoom]
   (let [handler-size (/ 8 zoom)
         stroke-width (/ 1 zoom)
-        offset @(rf/subscribe [:element/el-offset el])]
+        offset (element/offset el)]
     [:g {:key ::edit-handles}
      (map-indexed (fn [index [x y]]
                     (let [[x y] (mapv units/unit->px [x y])

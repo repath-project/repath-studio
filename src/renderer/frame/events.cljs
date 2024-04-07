@@ -3,8 +3,7 @@
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
    [renderer.element.handlers :as element.h]
-   [renderer.frame.handlers :as h]
-   [renderer.utils.element :as element]))
+   [renderer.frame.handlers :as h]))
 
 (rf/reg-event-db
  :frame/resize
@@ -52,8 +51,7 @@
    {:fx
     (let [{:keys [dom-rect active-document]} db
           element (element.h/element db key)
-          elements (element.h/elements db)
-          el-bounds (element/adjusted-bounds element elements)
+          el-bounds (:bounds element)
           zoom (get-in db [:documents active-document :zoom])
           {:keys [width height]} dom-rect
           [x y] (get-in db [:documents active-document :pan])

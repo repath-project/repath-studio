@@ -4,6 +4,7 @@
    [renderer.element.handlers :as element.h]
    [renderer.handlers :as h]
    [renderer.history.handlers :as history.h]
+   [renderer.snap.handlers :as snap.h]
    [renderer.tools.base :as tools]
    [renderer.utils.pointer :as pointer]))
 
@@ -49,21 +50,24 @@
   [db]
   (h/set-state db :edit))
 
+(defn snap-handler
+  [db offset el k]
+  (element.h/update-el db el tools/edit offset k))
+
 (defmethod tools/drag :edit
   [{:keys [adjusted-pointer-offset adjusted-pointer-pos clicked-element] :as db} e]
   (let [pointer-offset (mat/sub adjusted-pointer-pos adjusted-pointer-offset)
         db (history.h/swap db)
-        element-key (:element clicked-element)
+        el-key (:element clicked-element)
+        el (element.h/element db el-key)
         pointer-offset (if (pointer/ctrl? e)
                          (pointer/lock-direction pointer-offset)
                          pointer-offset)]
-    (if element-key
-      (assoc-in db
-                (conj (element.h/path db) element-key)
-                (tools/edit (element.h/element db element-key)
-                            pointer-offset
-                            (:key clicked-element)))
-      db)))
+
+    (cond-> db
+      el-key
+      (-> (element.h/update-el el tools/edit pointer-offset (:key clicked-element))
+          (snap.h/snap snap-handler el (:key clicked-element))))))
 
 (defmethod tools/drag-end :edit
   [db]

@@ -2,6 +2,7 @@
   (:require
    ["paper" :refer [Path]]
    ["paperjs-offset" :refer [PaperOffset]]
+   [clojure.core.matrix :as mat]
    [renderer.tools.base :as tools]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.map :as map]
@@ -39,26 +40,33 @@
       bounds)))
 
 (defn bounds
-  [elements bound-elements]
-  (let [bounds (->> bound-elements
-                    (map #(adjusted-bounds % elements))
+  [elements]
+  (let [bounds (->> elements
+                    (map :bounds)
                     (remove nil?))]
     (when (seq bounds)
       (apply bounds/union bounds))))
 
+(defn offset
+  [el]
+  (let [bounds (:bounds el)
+        local-bounds (tools/bounds el)]
+    (take 2 (mat/sub bounds local-bounds))))
+
 (defn snapping-points
-  [element elements]
-  (let [[x1 y1 x2 y2] (adjusted-bounds element elements)
+  [element]
+  (let [[x1 y1 x2 y2] (:bounds element)
         [cx cy] (bounds/center [x1 y1 x2 y2])]
-    [[x1 y1]
-     [x1 y2]
-     [x1 cy]
-     [x2 y1]
-     [x2 y2]
-     [x2 cy]
-     [cx y1]
-     [cx y2]
-     [cx cy]]))
+    (concat [[x1 y1]
+             [x1 y2]
+             [x1 cy]
+             [x2 y1]
+             [x2 y2]
+             [x2 cy]
+             [cx y1]
+             [cx y2]
+             [cx cy]]
+            (tools/snapping-points element))))
 
 (defn attrs-map
   [attrs]

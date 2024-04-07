@@ -32,6 +32,7 @@
 (defmulti path :tag)
 (defmulti area :tag)
 (defmulti centroid :tag)
+(defmulti snapping-points :tag)
 
 (defmulti render-edit #(:tag %))
 (defmulti bounds #(:tag %))
@@ -80,6 +81,7 @@
 (defmethod bounds :default [])
 (defmethod area :default [])
 (defmethod centroid :default [])
+(defmethod snapping-points :default [])
 
 (defmethod activate :default [db] (assoc db :cursor "default"))
 (defmethod deactivate :default [db] (assoc db :cursor "default"))

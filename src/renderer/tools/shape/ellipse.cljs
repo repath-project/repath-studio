@@ -3,7 +3,6 @@
   (:require
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
-   [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.element.handlers :as element.h]
    [renderer.tools.base :as tools]
@@ -83,7 +82,7 @@
 
 (defmethod tools/render-edit :ellipse
   [{:keys [key] :as el}]
-  (let [bounds @(rf/subscribe [:element/el-bounds el])
+  (let [bounds (:bounds el)
         [cx cy] (bounds/center bounds)
         [rx ry] (mat/div (bounds/->dimensions bounds) 2)]
     [:g ::edit-handles

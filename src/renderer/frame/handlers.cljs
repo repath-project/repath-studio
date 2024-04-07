@@ -3,8 +3,7 @@
    [clojure.core.matrix :as mat]
    [renderer.element.handlers :as element.h]
    [renderer.utils.bounds :as bounds]
-   [renderer.utils.math :as math]
-   [renderer.utils.element :as element]))
+   [renderer.utils.math :as math]))
 
 (defn pan
   [{:keys [active-document] :as db} offset]
@@ -68,8 +67,7 @@
    (pan-to-element db (-> (element.h/element db :canvas) :children first)))
   ([db key]
    (let [element (element.h/element db key)
-         elements (element.h/elements db)
-         el-bounds (element/adjusted-bounds element elements)]
+         el-bounds (:bounds element)]
      (cond-> db
        el-bounds
        (pan-to-bounds el-bounds)))))

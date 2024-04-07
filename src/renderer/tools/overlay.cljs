@@ -5,6 +5,7 @@
    [re-frame.core :as rf]
    [renderer.tools.base :as tools]
    [renderer.utils.bounds :as bounds]
+   [renderer.utils.element :as element]
    [renderer.utils.math :as math]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
@@ -276,7 +277,7 @@
 (defn centroid
   [el]
   (when-let [centroid (tools/centroid el)]
-    (let [offset @(rf/subscribe [:element/el-offset el])
+    (let [offset (element/offset el)
           centroid (mat/add offset centroid)]
       [point-of-interest centroid
        [:title "Centroid"]])))
