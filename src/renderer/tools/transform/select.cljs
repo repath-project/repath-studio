@@ -87,7 +87,7 @@
 (defmethod tools/pointer-move :select
   [db e el]
   (cond-> db
-    (not (pointer/multiselect? e))
+    (not (pointer/shift? e))
     element.h/clear-ignored
 
     :always
@@ -99,13 +99,13 @@
   [db e]
   db
   (cond-> db
-    (pointer/multiselect? e)
+    (pointer/shift? e)
     (element.h/ignore :bounding-box)))
 
 (defmethod tools/key-up :select
   [db e]
   (cond-> db
-    (not (pointer/multiselect? e))
+    (not (pointer/shift? e))
     element.h/clear-ignored))
 
 (defmethod tools/pointer-down :select
@@ -121,7 +121,7 @@
     (-> db
         element.h/clear-ignored
         (dissoc :clicked-element)
-        (element.h/select (:key el) (pointer/multiselect? e))
+        (element.h/select (:key el) (pointer/shift? e))
         (history.h/finalize "Select element"))
     (dissoc db :clicked-element)))
 
@@ -166,7 +166,7 @@
 
     (-> (cond-> db
           (and (:clicked-element db) (not (-> db :clicked-element :selected?)))
-          (-> (element.h/select (-> db :clicked-element :key) (pointer/multiselect? e))
+          (-> (element.h/select (-> db :clicked-element :key) (pointer/shift? e))
               (history.h/finalize "Select element")))
         (h/set-state :move))))
 
@@ -271,7 +271,7 @@
 (defmethod tools/drag-end :select
   [db e]
   (-> (case (:state db)
-        :select (-> (cond-> db (not (pointer/multiselect? e)) element.h/deselect)
+        :select (-> (cond-> db (not (pointer/shift? e)) element.h/deselect)
                     (reduce-by-area (contains? (:modifiers e) :alt) element.h/select)
                     element.h/clear-temp
                     (history.h/finalize "Modify selection"))

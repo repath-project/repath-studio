@@ -58,9 +58,10 @@
   (tools/pointer-up db))
 
 (defmethod tools/translate :text
-  [element [x y]] (-> element
-                      (hierarchy/update-attr :x + x)
-                      (hierarchy/update-attr :y + y)))
+  [el [x y]]
+  (-> el
+      (hierarchy/update-attr :x + x)
+      (hierarchy/update-attr :y + y)))
 
 (defn get-text
   [e]

@@ -11,10 +11,6 @@
   [e]
   (contains? (:modifiers e) :shift))
 
-(defn multiselect?
-  [e]
-  (some #(contains? (:modifiers e) %) #{:ctrl :shift}))
-
 (defn significant-drag?
   [pointer-pos pointer-offset]
   (let [threshold 1]

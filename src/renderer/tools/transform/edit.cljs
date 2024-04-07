@@ -36,7 +36,7 @@
     (-> db
         element.h/clear-ignored
         (dissoc :clicked-element)
-        (element.h/select (:key el) (pointer/multiselect? e))
+        (element.h/select (:key el) (pointer/shift? e))
         (history.h/finalize "Select element"))
     (dissoc db :clicked-element)))
 
