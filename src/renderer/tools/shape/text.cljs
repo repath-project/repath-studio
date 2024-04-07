@@ -69,11 +69,17 @@
 (defn set-text-and-select-element
   [e el-k]
   (.focus (dom/canvas-element)) ; REVIEW
-  (rf/dispatch [:element/set-prop
-                el-k
-                :content
-                (get-text e)])
+  (rf/dispatch [:element/set-prop el-k :content (get-text e)])
   (rf/dispatch [:set-tool :select]))
+
+(defn key-down-handler
+  [e el-k]
+  (.stopPropagation e)
+  (if (contains? #{"Enter" "Escape"} (.-code e))
+    (set-text-and-select-element e key)
+    (.requestAnimationFrame
+     js/window
+     #(rf/dispatch-sync [:element/preview-prop el-k :content (get-text e)]))))
 
 (defmethod tools/render-edit :text
   [{:keys [attrs key content] :as el}]
@@ -94,16 +100,7 @@
        :on-pointer-down #(.stopPropagation %)
        :on-pointer-up #(.stopPropagation %)
        :on-blur #(set-text-and-select-element % key)
-       :on-key-down (fn [e]
-                      (.stopPropagation e)
-                      (if (contains? #{"Enter" "Escape"} (.-code e))
-                        (set-text-and-select-element e key)
-                        (.requestAnimationFrame
-                         js/window
-                         #(rf/dispatch-sync [:element/preview-prop
-                                             key
-                                             :content
-                                             (get-text e)]))))
+       :on-key-down #(key-down-handler % key)
        :style {:color "transparent"
                :caret-color (or fill "black")
                :display "block"
@@ -121,15 +118,13 @@
 
 (defmethod tools/path :text
   [{:keys [attrs content]}]
-  (.textToPath js/window.api
-               content
-               #js {:font-url (.-path (first (.findFonts
-                                              js/window.api
-                                              ;; TODO: Getting the computed styles might safer.
-                                              #js {:family (:font-family attrs)
-                                                   :weight (js/parseInt (:font-weight attrs))
-                                                   :italic (= (:font-style attrs)
-                                                              "italic")})))
-                    :x (js/parseFloat (:x attrs))
-                    :y (js/parseFloat (:y attrs))
-                    :font-size (js/parseFloat (or (:font-size attrs) 16))})) ; FIXME
+  (let [font-descriptor #js {:family (:font-family attrs)
+                             :weight (js/parseInt (:font-weight attrs))
+                             :italic (= (:font-style attrs) "italic")}]
+    (.textToPath
+     js/window.api
+     content
+     #js {:font-url (.-path (first (.findFonts js/window.api font-descriptor)))
+          :x (js/parseFloat (:x attrs))
+          :y (js/parseFloat (:y attrs))
+          :font-size (js/parseFloat (or (:font-size attrs) 16))}))) ; FIXME

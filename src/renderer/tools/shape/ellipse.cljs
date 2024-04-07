@@ -44,9 +44,10 @@
                             :attrs attrs})))
 
 (defmethod tools/translate :ellipse
-  [element [x y]] (-> element
-                      (hierarchy/update-attr :cx + x)
-                      (hierarchy/update-attr :cy + y)))
+  [el [x y]]
+  (-> el
+      (hierarchy/update-attr :cx + x)
+      (hierarchy/update-attr :cy + y)))
 
 (defmethod tools/scale :ellipse
   [el ratio pivot-point]

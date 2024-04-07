@@ -36,9 +36,10 @@
     (element.h/set-temp db {:type :element :tag :circle :attrs attrs})))
 
 (defmethod tools/translate :circle
-  [element [x y]] (-> element
-                      (attr.hierarchy/update-attr :cx + x)
-                      (attr.hierarchy/update-attr :cy + y)))
+  [el [x y]]
+  (-> el
+      (attr.hierarchy/update-attr :cx + x)
+      (attr.hierarchy/update-attr :cy + y)))
 
 (defmethod tools/scale :circle
   [el ratio pivot-point]
