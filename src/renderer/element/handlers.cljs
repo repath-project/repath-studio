@@ -166,7 +166,8 @@
 
 (defn update-prop
   [db el-k k & more]
-  (apply update-in db (conj (path db) el-k k) more))
+  (-> (apply update-in db (conj (path db) el-k k) more)
+      (update-bounds el-k)))
 
 (defn toggle-prop
   [db el-k k]
@@ -202,7 +203,9 @@
      (if (and (not (:locked? el)) (supports-attr? el k))
        (if (str/blank? v)
          (remove-attr db el-k k)
-         (assoc-in db attr-path (str/trim (str v))))
+         (-> db
+             (assoc-in attr-path (str/trim (str v)))
+             (update-bounds el-k)))
        db))))
 
 (defn update-attr
