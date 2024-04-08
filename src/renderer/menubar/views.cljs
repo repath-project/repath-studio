@@ -51,6 +51,9 @@
             :label "Save as…"
             :icon "save"
             :action [:document/save-as]}
+           {:key :download
+            :label "Download"
+            :action [:document/download]}
            {:key :divider-3
             :type :separator}
            {:key :export

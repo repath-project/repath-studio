@@ -8,6 +8,7 @@
    [config]
    [devtools.core :as devtools]
    [platform]
+   [promesa.core :as p]
    [re-frame.core :as rf]
    [re-pressed.core :as rp]
    [reagent.dom :as ra.dom]
@@ -91,8 +92,8 @@
 
 (defn load-webref
   []
-  (.then (js/window.api.webrefCss.listAll)
-         #(rf/dispatch-sync [:set-webref-css (js->clj % :keywordize-keys true)])))
+  (p/let [files (js/window.api.webrefCss.listAll)]
+    (rf/dispatch-sync [:set-webref-css (js->clj files :keywordize-keys true)])))
 
 (defn ^:export init []
   #_(if platform/electron?

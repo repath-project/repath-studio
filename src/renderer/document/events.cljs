@@ -3,6 +3,7 @@
    [clojure.edn :as edn]
    #_[de-dupe.core :as dd]
    [platform]
+   [promesa.core :as p]
    [re-frame.core :as rf]
    [re-frame.interceptor :refer [->interceptor get-effect get-coeffect assoc-coeffect assoc-effect]]
    [renderer.document.db :as db]
@@ -11,6 +12,7 @@
    [renderer.history.handlers :as history.h]
    [renderer.utils.file :as file]
    [renderer.utils.local-storage :as local-storage]
+   [renderer.utils.uuid :as uuid]
    [renderer.utils.vec :as vec]))
 
 (def active-document-path
@@ -191,6 +193,7 @@
  local-storage/persist
  (fn [{:keys [db]} [_ document]]
    (let [document (-> document
+                      (assoc :key (uuid/generate))
                       ;; FIXME: Still contains cached values after expand.
                       #_(update-in document [:history :states] dd/expand))]
      {:db (-> db
@@ -207,12 +210,11 @@
    (file/save!
     file-picker-options
     (fn [^js/FileSystemFileHandle file-handle]
-      (.then (.createWritable file-handle)
-             (fn [^js/FileSystemWritableFileStream writable]
-               (.then (.write writable (pr-str (dissoc data :closing?)))
-                      (let [document (assoc data :title (.-name file-handle))]
-                        (.close writable)
-                        (rf/dispatch [:document/saved document])))))))))
+      (p/let [writable (.createWritable file-handle)]
+        (.then (.write writable (pr-str (dissoc data :closing?)))
+               (let [document (assoc data :title (.-name file-handle))]
+                 (.close writable)
+                 (rf/dispatch [:document/saved document]))))))))
 
 (defn save-format
   [db]
@@ -231,6 +233,23 @@
        ;; The path is not available when we use web APIs for security reasons, 
        ;; so we always dispatch save-as.
        {::save-as document}))))
+
+(rf/reg-fx
+ ::download
+ (fn [data]
+   (let [blob (js/Blob. [data])
+         url (js/URL.createObjectURL blob)
+         a (js/document.createElement "a")]
+     (.setAttribute a "href" url)
+     (.setAttribute a "download" "document.rp")
+     (.click a)
+     (js/window.URL.revokeObjectURL url))))
+
+(rf/reg-event-fx
+ :document/download
+ (fn [{:keys [db]} [_]]
+   (let [document (save-format db)]
+     {::download (pr-str document)})))
 
 (rf/reg-event-fx
  :document/save-and-close

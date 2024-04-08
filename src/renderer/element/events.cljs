@@ -2,6 +2,7 @@
   (:require
    [clojure.string :as str]
    [platform]
+   [promesa.core :as p]
    [re-frame.core :as rf]
    [renderer.element.handlers :as h]
    [renderer.history.handlers :as history.h]
@@ -167,9 +168,8 @@
     {:startIn "pictures"
      :types [{:accept {"image/svg+xml" [".svg" ".svgo"]}}]}
     (fn [^js/FileSystemFileHandle file-handle]
-      (.then (.createWritable file-handle)
-             (fn [^js/FileSystemWritableFileStream writable]
-               (.then (.write writable data) (.close writable))))))))
+      (p/let [writable (.createWritable file-handle)]
+        (.then (.write writable data) (.close writable)))))))
 
 (rf/reg-event-fx
  :element/export

@@ -10,7 +10,8 @@
    ["os" :as os]
    ["path" :as path]
    [config]
-   [file]))
+   [file]
+   [promesa.core :as p]))
 
 (defonce main-window (atom nil))
 (defonce loading-window (atom nil))
@@ -58,9 +59,9 @@
     ;; https://www.electronjs.org/docs/api/clipboard#clipboardwritedata-type
     "writeToClipboard" (.write clipboard (.-data args))
     "openDirectory" (.showItemInFolder shell (.-data args))
-    "openDocument" (file/open @main-window (.-data args) #(send-to-renderer "fileLoaded" %))
-    "saveDocument" (file/save @main-window (.-data args) #(send-to-renderer "fileSaved" %))
-    "saveDocumentAs" (file/save-as @main-window (.-data args) #(send-to-renderer "fileSaved" %))
+    "openDocument" (p/let [documents (file/open @main-window (.-data args))] (doseq [document documents] (send-to-renderer "fileLoaded" document)))
+    "saveDocument" (p/let [document (file/save @main-window (.-data args))] (send-to-renderer "fileSaved" document))
+    "saveDocumentAs" (p/let [document (file/save-as @main-window (.-data args))] (send-to-renderer "fileSaved" document))
     "export" (file/export @main-window (.-data args))))
 
 (defn register-window-events!
