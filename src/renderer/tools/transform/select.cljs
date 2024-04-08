@@ -263,8 +263,8 @@
                 (h/set-cursor "default")
                 (offset-scale offset (pointer/ctrl? e) (pointer/shift? e)))
 
-            (not (or (pointer/ctrl? e) (pointer/shift? e)))
-            (snap.h/snap offset-scale))
+            (not (pointer/ctrl? e))
+            (snap.h/snap offset-scale false (pointer/shift? e)))
 
           :default db))))
 
