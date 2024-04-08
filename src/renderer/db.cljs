@@ -41,6 +41,7 @@
    :rulers-locked? false
    :grid? false
    :rulers? true
+   :snap? true
    :snap-threshold 100
    :lang :en-US
    :repl-mode :cljs
