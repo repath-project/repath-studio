@@ -21,7 +21,7 @@
       (h/set-cursor "default")
       (h/set-message
        [:div
-        [:div "Drag a handler to modify your shape, or click on an element 
+        [:div "Drag a handle to modify your shape, or click on an element 
               to change selection."]
         [:div "Hold " [:strong "Ctrl"] " to restrict direction."]])))
 

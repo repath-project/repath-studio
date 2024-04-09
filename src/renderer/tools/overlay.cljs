@@ -18,7 +18,7 @@
 (def font-mono "'Consolas (Custom)', 'Bitstream Vera Sans Mono', monospace, 
                 'Apple Color Emoji', 'Segoe UI Emoji'")
 
-(def handler-size 12)
+(def handle-size 12)
 (def dash-size 5)
 
 (defn point-of-interest
@@ -56,7 +56,7 @@
   (let [zoom @(rf/subscribe [:document/zoom])
         clicked-element @(rf/subscribe [:clicked-element])
         hovered-keys @(rf/subscribe [:document/hovered-keys])
-        size (/ handler-size zoom)
+        size (/ handle-size zoom)
         stroke-width (/ 1 zoom)
         pointer-handler #(pointer/event-handler % el)
         clicked? (= (:key clicked-element) key)
@@ -100,7 +100,7 @@
    (cross x y))
   ([x y]
    (let [zoom @(rf/subscribe [:document/zoom])
-         size (/ handler-size zoom)]
+         size (/ handle-size zoom)]
      [:g
       [line (- x (/ size 2)) y (+ x (/ size 2)) y false]
       [line x (- y (/ size 2)) x (+ y (/ size 2)) false]])))
@@ -131,7 +131,7 @@
    (times x y))
   ([x y]
    (let [zoom @(rf/subscribe [:document/zoom])
-         size (/ handler-size zoom)
+         size (/ handle-size zoom)
          mid (/ size Math/PI)]
      [:g
       [line
@@ -143,7 +143,7 @@
 
 (defn scale-handler
   [attrs]
-  [square-handle (merge attrs {:type :handler
+  [square-handle (merge attrs {:type :handle
                                :tag :scale})])
 
 (defn min-bounds
@@ -151,7 +151,7 @@
   (let [zoom @(rf/subscribe [:document/zoom])
         dimensions (bounds/->dimensions bounds)
         [w h] dimensions
-        min-size (/ (* handler-size 2) zoom)]
+        min-size (/ (* handle-size 2) zoom)]
     (cond-> bounds
       (< w min-size) (mat/add [(- (/ (- min-size w) 2)) 0
                                (/ (- min-size w) 2) 0])
@@ -233,7 +233,7 @@
   (let [zoom @(rf/subscribe [:document/zoom])
         [x1 _ x2 y2] bounds
         x (+ x1 (/ (- x2 x1) 2))
-        y (+ y2 (/ (+ (/ handler-size 2) 15) zoom))
+        y (+ y2 (/ (+ (/ handle-size 2) 15) zoom))
         [width height] (bounds/->dimensions bounds)
         text (str (units/->fixed width) " x " (units/->fixed height))]
     [label text [x y]]))
@@ -288,6 +288,6 @@
     (let [zoom @(rf/subscribe [:document/zoom])
           [x1 y1 x2 _y2] bounds
           x (+ x1 (/ (- x2 x1) 2))
-          y (+ y1 (/ (- -15 (/ handler-size 2)) zoom))
+          y (+ y1 (/ (- -15 (/ handle-size 2)) zoom))
           text (str (units/->fixed area) " px²")]
       [label text [x y]])))

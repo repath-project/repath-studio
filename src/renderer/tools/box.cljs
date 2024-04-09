@@ -28,8 +28,8 @@
         (tools/translate offset))))
 
 (defmethod tools/edit ::tools/box
-  [el [x y] handler]
-  (case (keyword (name handler))
+  [el [x y] handle]
+  (case (keyword (name handle))
     :position
     (-> el
         (hierarchy/update-attr :width #(max 0 (- % x)))
@@ -50,12 +50,12 @@
         [width height] (bounds/->dimensions el-bounds)]
     [:g {:key ::edit-handles}
      (map (fn [handle]
-            (let [handler (merge handle {:type :handler
-                                         :tag :edit
-                                         :key (keyword (:key el) (:key handle))
-                                         :element (:key el)})]
-              [overlay/square-handle handler
-               ^{:key (:key handler)} [:title (name (:key handler))]]))
+            (let [handle (merge handle {:type :handle
+                                        :tag :edit
+                                        :key (keyword (:key el) (:key handle))
+                                        :element (:key el)})]
+              [overlay/square-handle handle
+               ^{:key (:key handle)} [:title (name (:key handle))]]))
           [{:x x :y y :key (keyword (:key el) :position)}
            {:x (+ x width) :y (+ y height) :key (keyword (:key el) :size)}])]))
 

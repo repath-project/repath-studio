@@ -29,7 +29,7 @@
    [:div "Click or click and drag to select."]
    [:div
     "Hold "
-    [:strong "Ctrl"]
+    [:strong "Shift"]
     " to add elements to selection or remove them, and "
     [:strong "Alt"]
     " while dragging to select intersecting elements."]])
@@ -171,8 +171,8 @@
         (h/set-state :move))))
 
 (defn lock-ratio
-  [[x y] handler]
-  (let [[x y] (condp contains? handler
+  [[x y] handle]
+  (let [[x y] (condp contains? handle
                 #{:middle-right :middle-left} [x x]
                 #{:top-middle :bottom-middle} [y y]
                 [x y])
@@ -180,7 +180,7 @@
     [ratio ratio]))
 
 (defn offset-scale
-  "Translates the x/y offset and the handler to a ratio and a pivot point,
+  "Converts the x/y pointer offset to a scale ratio and a pivot point,
    to decouple this from the scaling method of the elements.
 
    :pivot-point 
@@ -192,15 +192,15 @@
    |      |        ↖     │
    |      y          ↖   │
    |      |            ↖ │
-   □----------□--------- ■ :bottom-right (active handler)
+   □----------□--------- ■ :bottom-right (active handle)
    "
   [db [x y] lock-ratio? in-place?]
-  (let [handler (-> db :clicked-element :key)
+  (let [handle (-> db :clicked-element :key)
         bounds (element.h/bounds db)
         dimensions (bounds/->dimensions bounds)
         [x1 y1 x2 y2] bounds
         [cx cy] (bounds/center bounds)
-        [offset pivot-point] (case handler
+        [offset pivot-point] (case handle
                                :middle-right [[x 0] [x1 cy]]
                                :middle-left [[(- x) 0] [x2 cy]]
                                :top-middle [[0 (- y)] [cx y2]]
@@ -212,7 +212,7 @@
         pivot-point (if in-place? [cx cy] pivot-point)
         offset (cond-> offset in-place? (mat/mul 2))
         ratio (mat/div (mat/add dimensions offset) dimensions)
-        ratio (cond-> ratio lock-ratio? (lock-ratio handler))
+        ratio (cond-> ratio lock-ratio? (lock-ratio handle))
         ;; TODO: Handle negative/inverted ratio.
         ratio (mapv #(max 0 %) ratio)]
     (-> db

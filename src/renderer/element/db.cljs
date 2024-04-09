@@ -7,7 +7,7 @@
    [::ma/default
     [:map
      [:key uuid?]
-     [:type [:enum :element :handler]]
+     [:type [:enum :element :handle]]
      [:visible? boolean?]
      [:selected? boolean?]
      [:attrs [:map-of :uuid string?]]]]])

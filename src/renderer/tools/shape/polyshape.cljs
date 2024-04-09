@@ -108,7 +108,7 @@
 (defmethod tools/render-edit ::tools/polyshape
   [{:keys [attrs key] :as el} zoom]
   (let [{:keys [points]} attrs
-        handler-size (/ 8 zoom)
+        handle-size (/ 8 zoom)
         stroke-width (/ 1 zoom)
         offset (element/offset el)]
     [:g {:key ::edit-handles}
@@ -118,22 +118,22 @@
                       [overlay/square-handle {:key (str index)
                                               :x x
                                               :y y
-                                              :size handler-size
+                                              :size handle-size
                                               :stroke-width stroke-width
-                                              :type :handler
+                                              :type :handle
                                               :tag :edit
                                               :element key}]))
                   (attr.utils/points->vec points))]))
 
 (defmethod tools/edit ::tools/polyshape
-  [el [x y] handler]
+  [el [x y] handle]
   (cond-> el
-    (not (keyword? handler))
+    (not (keyword? handle))
     (update-in
      [:attrs :points]
      #(str/join " "
                 (-> (attr.utils/points->vec %1)
-                    (update (int handler)
+                    (update (int handle)
                             (fn [point]
                               (list
                                (units/transform (first point) + x)

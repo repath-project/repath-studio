@@ -112,19 +112,19 @@
           [{:x x1
             :y y1
             :key (keyword (:key el) :starting-point)
-            :type :handler
+            :type :handle
             :tag :edit
             :element key}
            {:x x2
             :y y2
             :key (keyword (:key el) :ending-point)
-            :type :handler
+            :type :handle
             :tag :edit
             :element key}])]))
 
 (defmethod tools/edit :line
-  [el [x y] handler]
-  (case (keyword (name handler))
+  [el [x y] handle]
+  (case (keyword (name handle))
     :starting-point
     (-> el
         (hierarchy/update-attr :x1 + x)

@@ -35,9 +35,12 @@
         open? (some #{key} document-tabs)
         document (merge document {:key key :title title})]
     (cond-> db
-      (not open?) (update :document-tabs #(vec/add % (inc active-index) key))
-      :always (-> (assoc-in [:documents key] document)
-                  (assoc :active-document key)))))
+      (not open?)
+      (update :document-tabs #(vec/add % (inc active-index) key))
+
+      :always
+      (-> (assoc-in [:documents key] document)
+          (assoc :active-document key)))))
 
 (defn saved?
   [db k]

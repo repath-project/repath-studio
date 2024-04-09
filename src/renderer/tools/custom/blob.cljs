@@ -186,8 +186,8 @@
         .toString)))
 
 (defmethod tools/edit :blob
-  [element [x y] handler]
-  (case handler
+  [element [x y] handle]
+  (case handle
     :size
     (attr.hierarchy/update-attr element :size #(max 0 (+ % (min x y))))
     element))
@@ -202,7 +202,7 @@
     [:<>
      [overlay/line x1 y1 x2 y2]
      [overlay/square-handle
-      {:type :handler
+      {:type :handle
        :tag :edit
        :element key
        :x x2

@@ -73,7 +73,7 @@
 
 (defmethod tools/render-edit :path
   [{:keys [attrs key] :as el} zoom]
-  (let [handler-size (/ 8 zoom)
+  (let [handle-size (/ 8 zoom)
         stroke-width (/ 1 zoom)
         offset (element/offset el)
         segments (-> attrs :d svgpath .-segments)
@@ -81,9 +81,9 @@
                         [overlay/square-handle {:key (str i)
                                                 :x x
                                                 :y y
-                                                :size handler-size
+                                                :size handle-size
                                                 :stroke-width stroke-width
-                                                :type :handler
+                                                :type :handle
                                                 :tag :edit
                                                 :element key}])]
     [:g {:key ::edit-handles}
@@ -112,11 +112,11 @@
     path))
 
 (defmethod tools/edit :path
-  [el offset handler]
+  [el offset handle]
   (cond-> el
-    (not (keyword? handler))
+    (not (keyword? handle))
     (update-in
      [:attrs :d]
      #(-> (svgpath %)
-          (translate-segment (int handler) offset)
+          (translate-segment (int handle) offset)
           .toString))))

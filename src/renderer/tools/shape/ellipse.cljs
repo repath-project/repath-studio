@@ -75,8 +75,8 @@
                    "z"])))
 
 (defmethod tools/edit :ellipse
-  [el [x y] handler]
-  (case (keyword (name handler))
+  [el [x y] handle]
+  (case (keyword (name handle))
     :rx (hierarchy/update-attr el :rx #(abs (+ % x)))
     :ry (hierarchy/update-attr el :ry #(abs (- % y)))
     el))
@@ -94,7 +94,7 @@
      [overlay/label (str (units/->fixed ry)) [cx (- cy (/ ry 2))]]
      (map (fn [handle]
             [overlay/square-handle (merge handle
-                                          {:type :handler
+                                          {:type :handle
                                            :tag :edit
                                            :element key})
              ^{:key (:key handle)}

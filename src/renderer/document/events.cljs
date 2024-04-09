@@ -194,7 +194,7 @@
  (fn [{:keys [db]} [_ document]]
    (let [document (-> document
                       (assoc :key (uuid/generate))
-                      ;; FIXME: Still contains cached values after expand.
+                      ;; FIXME: Contains cached values after expand.
                       #_(update-in document [:history :states] dd/expand))]
      {:db (-> db
               (h/create-tab document)

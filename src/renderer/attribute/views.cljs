@@ -188,7 +188,7 @@
   (let [clicked-element @(rf/subscribe [:clicked-element])
         webref-property @(rf/subscribe [:webref-css-property key])
         css-property  @(rf/subscribe [:css-property key])
-        active? (and (= (:type clicked-element) :handler)
+        active? (and (= (:type clicked-element) :handle)
                      (= (:key clicked-element) key))]
     [:> HoverCard/Root
      [:> HoverCard/Trigger

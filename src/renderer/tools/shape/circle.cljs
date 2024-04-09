@@ -70,8 +70,8 @@
                    "z"])))
 
 (defmethod tools/edit :circle
-  [el [x _y] handler]
-  (case (keyword (name handler))
+  [el [x _y] handle]
+  (case (keyword (name handle))
     :r (attr.hierarchy/update-attr el :r #(abs (+ % x)))
     el))
 
@@ -87,7 +87,7 @@
      [overlay/square-handle {:x (+ cx r)
                              :y cy
                              :key (keyword (:key el) :r)
-                             :type :handler
+                             :type :handle
                              :tag :edit
                              :element key}
       ^{:key (keyword (:key el) :r)}
