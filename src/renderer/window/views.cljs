@@ -6,13 +6,18 @@
    [renderer.menubar.views :as menubar]))
 
 (defn button
-  [{:keys [icon action]}]
-  [:button.button.text-muted.window-control-button
-   {:on-click #(rf/dispatch action)}
+  [{:keys [icon action class]}]
+  [:button.button.text-muted
+   {:class ["px-3.5" class]
+    :on-click #(rf/dispatch action)}
    [comp/icon icon]])
 
-(def window-control-buttons
-  [{:action [:window/minimize]
+(defn window-control-buttons
+  []
+  [{:action [:theme/cycle-mode]
+    :icon (name @(rf/subscribe [:theme/mode]))
+    :class "bg-primary"}
+   {:action [:window/minimize]
     :icon "window-minimize"}
    {:action [:window/toggle-maximized]
     :icon (if @(rf/subscribe [:window/maximized?])
@@ -33,17 +38,16 @@
     [:div.flex.items-center.relative
      (when-not (or fullscreen? platform/mac?)
        [app-icon])
-     [:div.flex.relative.bg-secondary
+     [:div.flex.relative.bg-secondary.z-10
       {:class (when (and platform/mac? (not fullscreen?)) "ml-16")}
       [menubar/root]]
-     [:div.title-bar @(rf/subscribe [:document/title-bar])]
+     [:div.absolute.flex.justify-center.drag.grow.h-full.items-center.pointer-events-none
+      {:class "left-1/2 -translate-x-1/2"}
+      @(rf/subscribe [:document/title-bar])]
      [:div.flex.h-full.flex-1.drag]
-     [:div.bg-primary
-      [button {:action [:theme/cycle-mode]
-               :icon (name @(rf/subscribe [:theme/mode]))}]]
      (when (and platform/electron? (not fullscreen?) (not platform/mac?))
        (into [:div.text-right]
-             (map button window-control-buttons)))
+             (map button (window-control-buttons))))
      (when fullscreen?
        [button {:action [:window/toggle-fullscreen]
                 :icon "arrow-minimize"}])]))
