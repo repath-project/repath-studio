@@ -8,21 +8,16 @@
 (defn button
   [{:keys [icon action class]}]
   [:button.button.text-muted
-   {:class ["px-3.5" class]
+   {:class ["px-3" class]
     :on-click #(rf/dispatch action)}
    [comp/icon icon]])
 
 (defn window-control-buttons
-  []
-  [{:action [:theme/cycle-mode]
-    :icon (name @(rf/subscribe [:theme/mode]))
-    :class "bg-primary"}
-   {:action [:window/minimize]
+  [maximized?]
+  [{:action [:window/minimize]
     :icon "window-minimize"}
    {:action [:window/toggle-maximized]
-    :icon (if @(rf/subscribe [:window/maximized?])
-            "window-restore"
-            "window-maximize")}
+    :icon (if maximized? "window-restore" "window-maximize")}
    {:action [:window/close]
     :icon "times"}])
 
@@ -34,7 +29,8 @@
 
 (defn app-header
   []
-  (let [fullscreen? @(rf/subscribe [:window/fullscreen?])]
+  (let [fullscreen? @(rf/subscribe [:window/fullscreen?])
+        maximized? @(rf/subscribe [:window/maximized?])]
     [:div.flex.items-center.relative
      (when-not (or fullscreen? platform/mac?)
        [app-icon])
@@ -46,9 +42,12 @@
        :style {:z-index -1}}
       @(rf/subscribe [:document/title-bar])]
      [:div.flex.h-full.flex-1.drag]
+     [button {:action [:theme/cycle-mode]
+              :icon (name @(rf/subscribe [:theme/mode]))
+              :class "bg-primary"}]
      (when (and platform/electron? (not fullscreen?) (not platform/mac?))
        (into [:div.text-right]
-             (map button (window-control-buttons))))
+             (map button (window-control-buttons maximized?))))
      (when fullscreen?
        [button {:action [:window/toggle-fullscreen]
                 :icon "arrow-minimize"}])]))
