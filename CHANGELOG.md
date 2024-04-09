@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.2.8 (2024-04-09)
+
+**Added**
+
+- Snapping to points
+- Image drop
+- Export for browsers
+- Open and download file for legacy browsers
+- Multi-select on file open
+
+**Changed**
+
+- File association
+- Enhanced error notifications and dialogs
+- Replaced shortcuts with command dialog
+- Remove ctrl from multiselect
+
+**Fixed**
+
+- Tree item double click area
+- Attribute order
+- Prevent default on canvas
+
 ## 0.2.7 (2024-03-15)
 
 **Fixed**
@@ -29,7 +52,6 @@
 
 - Menu order
 - Dot icon
-
 
 ## 0.2.5 (2024-03-05)
 
