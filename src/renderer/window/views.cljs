@@ -38,11 +38,12 @@
     [:div.flex.items-center.relative
      (when-not (or fullscreen? platform/mac?)
        [app-icon])
-     [:div.flex.relative.bg-secondary.z-10
+     [:div.flex.relative.bg-secondary
       {:class (when (and platform/mac? (not fullscreen?)) "ml-16")}
       [menubar/root]]
      [:div.absolute.flex.justify-center.drag.grow.h-full.items-center.pointer-events-none
-      {:class "left-1/2 -translate-x-1/2"}
+      {:class "left-1/2 -translate-x-1/2"
+       :style {:z-index -1}}
       @(rf/subscribe [:document/title-bar])]
      [:div.flex.h-full.flex-1.drag]
      (when (and platform/electron? (not fullscreen?) (not platform/mac?))
