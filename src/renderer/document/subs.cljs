@@ -68,6 +68,14 @@
  :-> :path)
 
 (rf/reg-sub
+ :document/title-bar
+ :<- [:document/title]
+ :<- [:document/path]
+ (fn [[title path] _]
+   (let [title (or path title)]
+     (when title (str title " - ")) "Repath Studio")))
+
+(rf/reg-sub
  :document/elements
  :<- [:document/active]
  :-> :elements)

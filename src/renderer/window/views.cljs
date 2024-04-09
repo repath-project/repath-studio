@@ -5,24 +5,21 @@
    [renderer.components :as comp]
    [renderer.menubar.views :as menubar]))
 
-(defn window-control-button
+(defn button
   [{:keys [icon action]}]
   [:button.button.text-muted.window-control-button
    {:on-click #(rf/dispatch action)}
    [comp/icon icon]])
 
-(defn window-controls
-  []
-  (into [:div.text-right]
-        (map window-control-button
-             [{:action [:window/minimize]
-               :icon "window-minimize"}
-              {:action [:window/toggle-maximized]
-               :icon (if @(rf/subscribe [:window/maximized?])
-                       "window-restore"
-                       "window-maximize")}
-              {:action [:window/close]
-               :icon "times"}])))
+(def window-control-buttons
+  [{:action [:window/minimize]
+    :icon "window-minimize"}
+   {:action [:window/toggle-maximized]
+    :icon (if @(rf/subscribe [:window/maximized?])
+            "window-restore"
+            "window-maximize")}
+   {:action [:window/close]
+    :icon "times"}])
 
 (defn app-icon
   []
@@ -32,27 +29,21 @@
 
 (defn app-header
   []
-  (let [fullscreen? @(rf/subscribe [:window/fullscreen?])
-        title (or @(rf/subscribe [:document/path])
-                  @(rf/subscribe [:document/title]))]
+  (let [fullscreen? @(rf/subscribe [:window/fullscreen?])]
     [:div.flex.items-center.relative
      (when-not (or fullscreen? platform/mac?)
        [app-icon])
      [:div.flex.relative.bg-secondary
       {:class (when (and platform/mac? (not fullscreen?)) "ml-16")}
       [menubar/root]]
-     [:div.title-bar (when title (str title " - ")) "Repath Studio"]
+     [:div.title-bar @(rf/subscribe [:document/title-bar])]
      [:div.flex.h-full.flex-1.drag]
      [:div.bg-primary
-      {:class (when-not (or (and platform/electron? (not platform/mac?))
-                            fullscreen?) "mr-1.5")}
-      [comp/icon-button
-       (name @(rf/subscribe [:theme/mode]))
-       {:on-click #(rf/dispatch [:theme/cycle-mode])
-        :class "rounded-none"}]]
+      [button {:action [:theme/cycle-mode]
+               :icon (name @(rf/subscribe [:theme/mode]))}]]
      (when (and platform/electron? (not fullscreen?) (not platform/mac?))
-       [window-controls])
+       (into [:div.text-right]
+             (map button window-control-buttons)))
      (when fullscreen?
-       [window-control-button
-        {:action [:window/toggle-fullscreen]
-         :icon "arrow-minimize"}])]))
+       [button {:action [:window/toggle-fullscreen]
+                :icon "arrow-minimize"}])]))
