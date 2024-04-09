@@ -115,7 +115,8 @@
                                    (-> (.getData (.-dataTransfer evt) "key")
                                        keyword)
                                    key]))}
-         [:span.document-name (:title document)]
+         [:span.truncate.pointer-events-none
+          (:title document)]
          [close-button key saved?]]]
        [:> ContextMenu/Portal
         (into

@@ -32,10 +32,4 @@
   &.active {
     @apply opacity-100;
   }
-
-  .document-name {
-    @apply overflow-hidden text-ellipsis pointer-events-none;
-    flex: 1;
-    white-space: nowrap;
-  }
 }
