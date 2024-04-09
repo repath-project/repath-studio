@@ -88,6 +88,7 @@
     "electron-builder": "24.13.3",
     "element-to-path": "1.2.1",
     "highlight.js": "11.9.0",
+    "imagetracerjs": "1.2.6",
     "js-beautify": "1.15.1",
     "karma": "6.4.3",
     "karma-chrome-launcher": "3.2.0",

@@ -237,7 +237,12 @@
            {:key :lower-to-bottom
             :label "Lower to bottom"
             :icon "send-back"
-            :action [:element/lower-to-bottom]}]})
+            :action [:element/lower-to-bottom]}
+           {:key :divider-6
+            :type :separator}
+           {:key :trace
+            :label "Trace image"
+            :action [:element/trace]}]})
 
 (defn path-menu
   []

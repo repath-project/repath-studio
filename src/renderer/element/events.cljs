@@ -1,5 +1,6 @@
 (ns renderer.element.events
   (:require
+   ["imagetracerjs" :as ImageTracer]
    [clojure.string :as str]
    [platform]
    [promesa.core :as p]
@@ -343,3 +344,28 @@
               h/delete
               (history.h/finalize "Cut selection"))
       :clipboard-write [text-html]})))
+
+(rf/reg-fx
+ ::trace
+ (fn [elements]
+   (doseq [el elements]
+     (let [data-url (-> el :attrs :href)
+           canvas (js/document.createElement "canvas")
+           context (.getContext canvas "2d")
+           image (js/Image.)]
+       (set! (.-onload image)
+             #(let [width (.-width image)
+                    height (.-height image)]
+                (set! (.-width canvas) width)
+                (set! (.-height canvas) height)
+                (.drawImage context image 0 0 width height)
+                (let [image-data (.getImageData context 0 0 width height)
+                      svg (.imagedataToSVG ImageTracer image-data)]
+                  (js/console.log svg))
+                #_(rf/dispatch [:element/add el])))
+       (set! (.-src image) data-url)))))
+
+(rf/reg-event-fx
+ :element/trace
+ (fn [{:keys [db]} [_]]
+   {::trace (filter #(= :image (:tag %)) (h/selected db))}))

@@ -450,11 +450,8 @@
   ([db el ratio pivot-point]
    (cond-> db
      (not (:locked? el))
-     (update-el el
-                tools/scale
-                ratio
-                (let [[x1 y1] (:bounds el)]
-                  (mat/sub pivot-point [x1 y1]))))))
+     (update-el el tools/scale ratio (let [[x1 y1] (:bounds el)]
+                                       (mat/sub pivot-point [x1 y1]))))))
 
 (defn align
   ([db direction]
