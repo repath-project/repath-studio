@@ -288,7 +288,7 @@
  (fn [db [_ element]]
    (-> db
        (h/add element)
-       (history.h/finalize "Create " (name (:tag element))))))
+       (history.h/finalize "Create element" (name (:tag element))))))
 
 (rf/reg-event-db
  :element/animate

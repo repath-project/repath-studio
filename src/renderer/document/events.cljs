@@ -148,9 +148,8 @@
  (fn [{:keys [db]} [_]]
    {:db (-> db
             (h/create-tab db/default-document)
-            (element.h/create {:tag :svg
-                               :attrs {:width "800" :height "600"}})
-            element.h/deselect
+            (element.h/add {:tag :svg
+                            :attrs {:width "800" :height "600"}})
             (history.h/finalize "Create document"))
     :dispatch [:frame/center]}))
 

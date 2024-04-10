@@ -508,7 +508,9 @@
         parent (or (:parent el)
                    (if (element/svg? el) :canvas (:key page)))
         new-el (map/deep-merge el default-props {:key key :parent parent})
-        [x1 y1] (tools/bounds (element db parent))]
+        [x1 y1] (tools/bounds (element db parent))
+        children (:content el)
+        el (dissoc el :children)]
     (cond-> db
       :always
       (-> (assoc-in (conj (path db) key) new-el)
@@ -525,8 +527,8 @@
    (-> db
        (add (get-temp db))
        clear-temp))
-  ([db & elements]
-   (reduce create (deselect db) elements))) ; TODO: Handle children
+  ([db element]
+   (create (deselect db) element))) ; TODO: Handle children
 
 (defn bool
   [path-a path-b operation]
