@@ -1,6 +1,6 @@
 (ns renderer.document.events
   (:require
-   [clojure.edn :as edn]
+   [config]
    #_[de-dupe.core :as dd]
    [platform]
    [promesa.core :as p]
@@ -149,31 +149,19 @@
    {:db (-> db
             (h/create-tab db/default-document)
             (element.h/add {:tag :svg
+                            :selected false
                             :attrs {:width "800" :height "600"}})
             (history.h/finalize "Create document"))
     :dispatch [:frame/center]}))
 
 (def file-picker-options
   {:startIn "documents"
-   :types [{:accept {"application/repath.studio" [".rp"]}}]})
-
-(defn read-file
-  [^js/File file]
-  (let [reader (js/FileReader.)]
-    (.addEventListener
-     reader
-     "load"
-     #(let [document (-> (.. % -target -result)
-                         edn/read-string
-                         (dissoc :path)
-                         (assoc :title (.-name file)))]
-        (rf/dispatch [:document/load document])))
-    (.readAsText reader file)))
+   :types [{:accept {"application/repath.studio" [".rps"]}}]})
 
 (rf/reg-fx
  ::open
  (fn []
-   (file/open! file-picker-options read-file)))
+   (file/open! file-picker-options)))
 
 (rf/reg-event-fx
  :document/open
@@ -240,7 +228,7 @@
          url (js/URL.createObjectURL blob)
          a (js/document.createElement "a")]
      (.setAttribute a "href" url)
-     (.setAttribute a "download" "document.rp")
+     (.setAttribute a "download" (str "document." config/ext))
      (.click a)
      (js/window.URL.revokeObjectURL url))))
 

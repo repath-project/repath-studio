@@ -505,12 +505,17 @@
   [db el]
   (let [key (uuid/generate)
         page (overlapping-svg db el)
-        parent (or (:parent el)
-                   (if (element/svg? el) :canvas (:key page)))
-        new-el (map/deep-merge el default-props {:key key :parent parent})
+        parent (or (:parent el) (if (element/svg? el) :canvas (:key page)))
+        children (vals (select-keys (elements db) (:children el)))
         [x1 y1] (tools/bounds (element db parent))
-        children (:content el)
-        el (dissoc el :children)]
+        children (concat children (:content el))
+        new-el (map/deep-merge el default-props {:key key :parent parent})
+        add-children (fn [db children]
+                       (reduce #(cond-> %1
+                                  (and (map? %2) (= (:type %2) :element))
+                                  (create (assoc %2
+                                                 :parent key
+                                                 :selected false))) db children))]
     (cond-> db
       :always
       (-> (assoc-in (conj (path db) key) new-el)
@@ -520,7 +525,10 @@
       (translate [(- x1) (- y1)])
 
       :always
-      (update-bounds key))))
+      (update-bounds key)
+
+      children
+      (add-children children))))
 
 (defn add
   ([db]
@@ -528,7 +536,7 @@
        (add (get-temp db))
        clear-temp))
   ([db element]
-   (create (deselect db) element))) ; TODO: Handle children
+   (create (deselect db) element)))
 
 (defn bool
   [path-a path-b operation]
@@ -580,8 +588,7 @@
       (cond-> db
         :always
         (-> deselect
-            (create el)
-            (set-parent (:key svg))
+            (add (assoc el :parent (:key svg)))
             (position (mat/add pointer-pos offset)))
 
         (not= :canvas (:key svg))

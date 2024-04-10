@@ -2,6 +2,9 @@
   (:require
    ["imagetracerjs" :as ImageTracer]
    [clojure.string :as str]
+   [clojure.zip :as zip]
+   [hickory.core :as hickory]
+   [hickory.zip]
    [platform]
    [promesa.core :as p]
    [re-frame.core :as rf]
@@ -285,10 +288,24 @@
 
 (rf/reg-event-db
  :element/add
- (fn [db [_ element]]
+ (fn [db [_ el]]
    (-> db
-       (h/add element)
-       (history.h/finalize "Create element" (name (:tag element))))))
+       (h/add el)
+       (history.h/finalize "Create element " (name (:tag el))))))
+
+(rf/reg-event-db
+ :element/import-svg
+ (fn [db [_ s name [x y]]]
+   (let [hickory (hickory/as-hickory (hickory/parse s))
+         zipper (hickory.zip/hickory-zip hickory)
+         svg (-> zipper zip/next zip/next zip/right zip/next zip/node)
+         el (-> svg
+                (assoc :name name)
+                (assoc-in [:attrs :x] x)
+                (assoc-in [:attrs :y] y))]
+     (-> db
+         (h/add el)
+         (history.h/finalize "Import svg")))))
 
 (rf/reg-event-db
  :element/animate
@@ -350,6 +367,7 @@
  (fn [elements]
    (doseq [el elements]
      (let [data-url (-> el :attrs :href)
+           position (:bounds el)
            canvas (js/document.createElement "canvas")
            context (.getContext canvas "2d")
            image (js/Image.)]
@@ -361,8 +379,7 @@
                 (.drawImage context image 0 0 width height)
                 (let [image-data (.getImageData context 0 0 width height)
                       svg (.imagedataToSVG ImageTracer image-data)]
-                  (js/console.log svg))
-                #_(rf/dispatch [:element/add el])))
+                  (rf/dispatch [:element/import-svg svg (:name el) position]))))
        (set! (.-src image) data-url)))))
 
 (rf/reg-event-fx

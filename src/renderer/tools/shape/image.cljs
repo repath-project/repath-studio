@@ -2,8 +2,8 @@
   "https://www.w3.org/TR/SVG/embedded.html#ImageElement"
   (:require
    [re-frame.core :as rf]
-   [renderer.handlers :as handlers]
    [renderer.tools.base :as tools]
+   [renderer.utils.drop :as drop]
    [renderer.utils.file :as file]))
 
 (derive :image ::tools/graphics)
@@ -25,5 +25,5 @@
                       "image/bmp" [".fmp"]}}]}
    (fn [file]
      (rf/dispatch [:set-tool :select])
-     (handlers/add-image! file adjusted-pointer-pos)))
+     (drop/add-image! file adjusted-pointer-pos)))
   db)

@@ -5,8 +5,8 @@
    [re-frame.core :as rf]
    [renderer.db :as db]
    [renderer.frame.handlers :as frame-h]
-   [renderer.handlers :as h]
    [renderer.tools.base :as tools]
+   [renderer.utils.drop :as drop]
    [renderer.utils.local-storage :as local-storage]
    [renderer.utils.pointer :as pointer]))
 
@@ -99,81 +99,73 @@
  (fn [db [_]]
    (update db :snap? not)))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  :pointer-event
- (fn [{:keys [pointer-offset tool dom-rect drag?] :as db}
-      [_ {:keys [button buttons modifiers data-transfer pointer-pos delta element] :as e}]]
-   (let [adjusted-pointer-pos (frame-h/adjusted-pointer-pos db pointer-pos)]
-     (case (:type e)
-       :pointermove
-       (if (= buttons :right)
-         db
-         (-> (if pointer-offset
-               (if (pointer/significant-drag? pointer-pos pointer-offset)
-                 (cond-> db
-                   (not= tool :pan)
-                   (frame-h/pan-out-of-canvas dom-rect
-                                              pointer-pos
-                                              pointer-offset)
+ (fn [{:keys [db]} [_ {:keys [button buttons modifiers data-transfer pointer-pos delta element] :as e}]]
+   (let [{:keys [pointer-offset tool dom-rect drag?]} db
+         adjusted-pointer-pos (frame-h/adjusted-pointer-pos db pointer-pos)]
+     {:db (case (:type e)
+            :pointermove
+            (if (= buttons :right)
+              db
+              (-> (if pointer-offset
+                    (if (pointer/significant-drag? pointer-pos pointer-offset)
+                      (cond-> db
+                        (not= tool :pan)
+                        (frame-h/pan-out-of-canvas dom-rect
+                                                   pointer-pos
+                                                   pointer-offset)
 
-                   (not drag?)
-                   (-> (tools/drag-start e element)
-                       (assoc :drag? true))
+                        (not drag?)
+                        (-> (tools/drag-start e element)
+                            (assoc :drag? true))
 
-                   :always
-                   (tools/drag e element))
-                 db)
-               (tools/pointer-move db e element))
-             (assoc :pointer-pos pointer-pos
-                    :adjusted-pointer-pos adjusted-pointer-pos)))
+                        :always
+                        (tools/drag e element))
+                      db)
+                    (tools/pointer-move db e element))
+                  (assoc :pointer-pos pointer-pos
+                         :adjusted-pointer-pos adjusted-pointer-pos)))
 
-       :pointerdown
-       (cond-> db
-         (= button :middle)
-         (-> (assoc :primary-tool tool)
-             (tools/set-tool :pan))
+            :pointerdown
+            (cond-> db
+              (= button :middle)
+              (-> (assoc :primary-tool tool)
+                  (tools/set-tool :pan))
 
-         (and (= button :right) (not= (:key element) :bounding-box))
-         (tools/pointer-up e element)
+              (and (= button :right) (not= (:key element) :bounding-box))
+              (tools/pointer-up e element)
 
-         :always
-         (-> (tools/pointer-down e element)
-             (assoc :pointer-offset pointer-pos
-                    :adjusted-pointer-offset adjusted-pointer-pos)))
+              :always
+              (-> (tools/pointer-down e element)
+                  (assoc :pointer-offset pointer-pos
+                         :adjusted-pointer-offset adjusted-pointer-pos)))
 
-       :pointerup
-       (cond-> (if drag?
-                 (tools/drag-end db e element)
-                 (cond-> db (not= button :right) (tools/pointer-up e element)))
-         (and (:primary-tool db) (= button :middle))
-         (-> (tools/set-tool (:primary-tool db))
-             (dissoc :primary-tool))
+            :pointerup
+            (cond-> (if drag?
+                      (tools/drag-end db e element)
+                      (cond-> db (not= button :right) (tools/pointer-up e element)))
+              (and (:primary-tool db) (= button :middle))
+              (-> (tools/set-tool (:primary-tool db))
+                  (dissoc :primary-tool))
 
-         :always
-         (dissoc :pointer-offset :drag? :snap))
+              :always
+              (dissoc :pointer-offset :drag? :snap))
 
-       :dblclick
-       (tools/double-click db e element)
+            :dblclick
+            (tools/double-click db e element)
 
-       :wheel
-       (if (some modifiers [:ctrl :alt])
-         (let [delta-y (second delta)
-               factor (Math/pow (inc (/ (- 1 (:zoom-sensitivity db)) 100))
-                                (- delta-y))]
-           (frame-h/zoom-in-pointer-position db factor))
-         (frame-h/pan db delta))
+            :wheel
+            (if (some modifiers [:ctrl :alt])
+              (let [delta-y (second delta)
+                    factor (Math/pow (inc (/ (- 1 (:zoom-sensitivity db)) 100))
+                                     (- delta-y))]
+                (frame-h/zoom-in-pointer-position db factor))
+              (frame-h/pan db delta))
 
-       :drop
-       (let [items (.-items data-transfer)
-             files (.-files data-transfer)]
-         (-> db
-             (assoc :pointer-pos pointer-pos
-                    :adjusted-pointer-pos adjusted-pointer-pos)
-             (cond->
-              items (h/drop-items items)
-              files (h/drop-files files))))
-
-       db))))
+            db)
+      :fx [(when (= (:type e) :drop)
+             [::drop [adjusted-pointer-pos data-transfer]])]})))
 
 (rf/reg-event-db
  :keyboard-event
@@ -206,6 +198,12 @@
  (fn [data]
    (when platform/electron?
      (js/window.api.send "toMain" (clj->js data)))))
+
+(rf/reg-fx
+ ::drop
+ (fn [[position data-transfer]]
+   (drop/items! position (.-items data-transfer))
+   (drop/files! position (.-files data-transfer))))
 
 (rf/reg-fx
  :clipboard-write

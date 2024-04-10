@@ -12,7 +12,6 @@
 (defn text->path
   "https://github.com/opentypejs/opentype.js#loading-a-font-synchronously-nodejs"
   [text {:keys [font-url x y font-size]}]
-  (js/console.log font-url x y font-size)
   (let [font (.loadSync opentype font-url)
         path (.getPath font text x y font-size)]
     (.toPathData path)))

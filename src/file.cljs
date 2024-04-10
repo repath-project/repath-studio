@@ -3,14 +3,15 @@
    ["electron" :refer [app dialog]]
    ["fs" :as fs]
    ["path" :as path]
+   [config]
    [clojure.edn :as edn]
    [promesa.core :as p]))
 
 (def dialog-options
   {:defaultPath (.getPath app "documents")
    :properties ["multiSelections"]
-   :filters [{:name "rp"
-              :extensions ["rp"]}]})
+   :filters [{:name "rps"
+              :extensions [config/ext]}]})
 
 (defn- serialize-document
   [data file-path]

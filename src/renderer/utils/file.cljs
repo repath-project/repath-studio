@@ -1,5 +1,6 @@
 (ns renderer.utils.file
   (:require
+   [clojure.edn :as edn]
    [re-frame.core :as rf]))
 
 (defn legacy-open!
@@ -10,14 +11,29 @@
                                         (cb (first (.. % -target -files)))))
     (.click el)))
 
+(defn read!
+  [^js/File file]
+  (let [reader (js/FileReader.)]
+    (.addEventListener
+     reader
+     "load"
+     #(let [document (-> (.. % -target -result)
+                         edn/read-string
+                         (dissoc :path)
+                         (assoc :title (.-name file)))]
+        (rf/dispatch [:document/load document])))
+    (.readAsText reader file)))
+
 (defn open!
   "https://developer.mozilla.org/en-US/docs/Web/API/Window/showOpenFilePicker"
-  [file-picker-options cb]
-  (if (.-showOpenFilePicker js/window)
-    (.then (.showOpenFilePicker js/window (clj->js file-picker-options))
-           (fn [[^js/FileSystemFileHandle file-handle]]
-             (.then (.getFile file-handle) cb)))
-    (legacy-open! cb)))
+  ([file-picker-options]
+   (open! file-picker-options read!))
+  ([file-picker-options cb]
+   (if (.-showOpenFilePicker js/window)
+     (.then (.showOpenFilePicker js/window (clj->js file-picker-options))
+            (fn [[^js/FileSystemFileHandle file-handle]]
+              (.then (.getFile file-handle) cb)))
+     (legacy-open! cb))))
 
 (defn save!
   "https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker"
