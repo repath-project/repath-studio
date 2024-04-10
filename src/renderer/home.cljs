@@ -33,7 +33,7 @@
 
        (for [file-path (take 2 recent)]
          ^{:key file-path}
-         [:button.text-lg.text-accent
+         [:button.text-lg.text-accent.block
           {:on-click #(rf/dispatch [:document/open file-path])}
           file-path])
 
