@@ -179,16 +179,21 @@
  :document/load
  local-storage/persist
  (fn [{:keys [db]} [_ document]]
-   (let [document (-> document
-                      (assoc :key (uuid/generate))
+   (let [open-key (h/search-by-path db (:path document))
+         document (-> document
+                      (assoc :key (or open-key (uuid/generate)))
                       ;; FIXME: Contains cached values after expand.
                       #_(update-in document [:history :states] dd/expand))]
-     {:db (-> db
-              (h/create-tab document)
-              (h/add-recent (:path document))
-              (history.h/finalize "Load document")
-              (update-in [:documents (:key document)]
-                         #(assoc % :save (-> % :history :position))))
+     {:db (cond-> db
+            (not open-key)
+            (-> (h/create-tab document)
+                (history.h/finalize "Load document")
+                (update-in [:documents (:key document)]
+                           #(assoc % :save (-> % :history :position))))
+
+            :always
+            (-> (h/add-recent (:path document))
+                (assoc :active-document (:key document))))
       :dispatch [:frame/center]})))
 
 (rf/reg-fx
@@ -198,7 +203,7 @@
     file-picker-options
     (fn [^js/FileSystemFileHandle file-handle]
       (p/let [writable (.createWritable file-handle)]
-        (.then (.write writable (pr-str (dissoc data :closing?)))
+        (.then (.write writable (pr-str (dissoc data :closing? :path)))
                (let [document (assoc data :title (.-name file-handle))]
                  (.close writable)
                  (rf/dispatch [:document/saved document]))))))))

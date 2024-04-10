@@ -26,21 +26,20 @@
     file-path
     (update :recent #(-> % (conj file-path) distinct))))
 
+(defn search-by-path
+  [{:keys [documents]} file-path]
+  (some #(when (and file-path (= (:path %) file-path)) (:key %)) (vals documents)))
+
 (defn create-tab
   [db document]
   (let [key (or (:key document) (uuid/generate))
         title (or (:title document) (str "Untitled-" (inc (count (:documents db)))))
-        document-tabs (:document-tabs db)
-        active-index (.indexOf document-tabs (:active-document db))
-        open? (some #{key} document-tabs)
+        active-index (.indexOf (:document-tabs db) (:active-document db))
         document (merge document {:key key :title title})]
-    (cond-> db
-      (not open?)
-      (update :document-tabs #(vec/add % (inc active-index) key))
-
-      :always
-      (-> (assoc-in [:documents key] document)
-          (assoc :active-document key)))))
+    (-> db
+        (assoc-in [:documents key] document)
+        (assoc :active-document key)
+        (update :document-tabs #(vec/add % (inc active-index) key)))))
 
 (defn saved?
   [db k]

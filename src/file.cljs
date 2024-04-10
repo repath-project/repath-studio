@@ -21,7 +21,7 @@
 
 (defn- write-file
   [file-path data]
-  (.writeFileSync fs file-path (pr-str (dissoc data :closing?)) "utf-8")
+  (.writeFileSync fs file-path (pr-str (dissoc data :closing? :path)) "utf-8")
   (p/resolved (serialize-document data file-path)))
 
 (defn- read-file
@@ -58,7 +58,7 @@
 (defn open
   [window file-path]
   (if (and file-path (.existsSync fs file-path))
-    (read-file file-path)
+    [(read-file file-path)]
     (p/let [files (.showOpenDialog dialog window (clj->js dialog-options))
             file-paths (get (js->clj files) "filePaths")]
       (p/resolved (map read-file file-paths)))))
