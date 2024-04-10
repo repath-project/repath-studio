@@ -336,9 +336,11 @@
 
 (defn copy
   [db]
-  (assoc db
-         :copied-elements (selected-sorted db)
-         :copied-bounds (bounds db)))
+  (let [elements (selected-sorted db)]
+    (cond-> db
+      (seq elements)
+      (assoc :copied-elements elements
+             :copied-bounds (bounds db)))))
 
 (defn delete
   ([db]
