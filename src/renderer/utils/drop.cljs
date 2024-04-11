@@ -37,7 +37,7 @@
     (.addEventListener
      reader
      "load"
-     #(rf/dispatch [:element/import-svg (.-result reader) (.-name file) position]))
+     (rf/dispatch [:element/import-svg (.-result reader) (.-name file) position]))
     (.readAsText reader file)))
 
 (defn files!

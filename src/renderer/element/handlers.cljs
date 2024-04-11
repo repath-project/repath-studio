@@ -4,6 +4,9 @@
    [clojure.core.matrix :as mat]
    [clojure.set :as set]
    [clojure.string :as str]
+   [clojure.zip :as zip]
+   [hickory.core :as hickory]
+   [hickory.zip]
    [reagent.dom.server :as dom.server]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.document.handlers :as document.h]
@@ -683,3 +686,13 @@
   (reduce #(-> (tools/render-to-string %2)
                dom.server/render-to-static-markup
                (str  "\n" %)) "" elements))
+
+(defn import-svg
+  [db s name [x y]]
+  (let [hickory (hickory/as-hickory (hickory/parse s))
+        zipper (hickory.zip/hickory-zip hickory)
+        svg (-> zipper zip/next zip/next zip/right zip/next zip/node)]
+    (add db (-> svg
+                (assoc :name name)
+                (assoc-in [:attrs :x] x)
+                (assoc-in [:attrs :y] y)))))
