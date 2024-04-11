@@ -52,6 +52,7 @@
             :icon "save"
             :action [:document/save-as]}
            {:key :download
+            :icon "download"
             :label "Download"
             :action [:document/download]}
            {:key :divider-3
@@ -68,6 +69,7 @@
             :action [:document/close-active]}
            {:key :exit
             :label "Exit"
+            :icon "exit"
             :action [:window/close]}]})
 
 (defn edit-menu
@@ -331,7 +333,8 @@
             :action [:panel/toggle :history]}
            {:key :toggle-command-history
             :type :checkbox
-            :label "Command history"
+            :label "Shell history"
+            :icon "shell"
             :checked? [:panel/visible? :repl-history]
             :action [:panel/toggle :repl-history]}
            {:key :toggle-timeline-panel
@@ -363,6 +366,7 @@
             :type :separator}
            {:key :toggle-fullscreen
             :label "Fullscreen"
+            :icon "arrow-minimize"
             :type :checkbox
             :checked? [:window/fullscreen?]
             :action [:window/toggle-fullscreen]}]})
