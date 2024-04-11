@@ -30,8 +30,7 @@
           {:class "menu-checkbox-item inset"
            :on-click #(.stopPropagation %)
            :onSelect #(do (.preventDefault %)
-
-                          (rf/dispatch [:snap/toggle-option option]))
+                          (rf/dispatch [:element/import-traced-image option]))
            :checked (contains? options option)}
           [:> DropdownMenu/ItemIndicator
            {:class "menu-item-indicator"}

@@ -298,7 +298,7 @@
        (history.h/finalize "Import svg"))))
 
 (rf/reg-event-db
- :element/trace
+ :element/import-traced-image
  (fn [db [_ s name position]]
    (-> db
        (h/import-svg s name position)
@@ -376,7 +376,7 @@
                 (.drawImage context image 0 0 width height)
                 (let [image-data (.getImageData context 0 0 width height)
                       svg (.imagedataToSVG ImageTracer image-data)]
-                  (rf/dispatch [:element/trace svg (:name el) position]))))
+                  (rf/dispatch [:element/import-svg svg (:name el) position]))))
        (set! (.-src image) data-url)))))
 
 (rf/reg-event-fx
