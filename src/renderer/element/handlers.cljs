@@ -510,7 +510,7 @@
   [el]
   (and (map? el)
        (keyword? (:tag el))
-       (contains? (descendants ::tools/element) (:tag el))))
+       (contains? (descendants ::tools/tool) (:tag el))))
 
 (defn create
   [db el]
