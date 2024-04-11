@@ -177,6 +177,21 @@
     :icon "divide"
     :action [:element/bool-operation :divide]}])
 
+(defn path-submenu
+  []
+  [{:key :simplify
+    :label "Simplify"
+    :action [:element/manipulate-path :simplify]}
+   {:key :smooth
+    :label "Smooth"
+    :action [:element/manipulate-path :smooth]}
+   {:key :flatten
+    :label "Flatten"
+    :action [:element/manipulate-path :flatten]}
+   {:key :reverse
+    :label "Reverse"
+    :action [:element/manipulate-path :reverse]}])
+
 (defn object-menu
   []
   {:key :object
@@ -242,25 +257,11 @@
             :type :separator}
            {:key :trace
             :label "Trace image"
-            :action [:element/trace]}]})
-
-(defn path-menu
-  []
-  {:key :path
-   :label "Path"
-   :type :root
-   :items [{:key :simplify
-            :label "Simplify"
-            :action [:element/manipulate-path :simplify]}
-           {:key :smooth
-            :label "Smooth"
-            :action [:element/manipulate-path :smooth]}
-           {:key :flatten
-            :label "Flatten"
-            :action [:element/manipulate-path :flatten]}
-           {:key :reverse
-            :label "Reverse"
-            :action [:element/manipulate-path :reverse]}]}) ; TODO: Enable
+            :action [:element/trace]}
+           {:key :path
+            :label "Path"
+            :type :sub-menu
+            :items (path-submenu)}]})
 
 (defn zoom-submenu
   []

@@ -5,7 +5,8 @@
    [renderer.handlers :as h]
    [renderer.history.handlers :as history]
    [renderer.tools.base :as tools]
-   #_[renderer.tools.path :as path]))
+   [renderer.tools.shape.path :as path]
+   [renderer.utils.element :as element]))
 
 (derive :pen ::tools/draw)
 
@@ -39,8 +40,9 @@
 (defmethod tools/drag-end :pen
   [db]
   (let [path (-> (element.h/get-temp db)
-                 #_(tools/->path)
-                 #_(path/manipulate :smooth))]
+                 (element/->path)
+                 (path/manipulate :smooth)
+                 (path/manipulate :simplify))]
     (-> db
         (element.h/set-temp path)
         element.h/add

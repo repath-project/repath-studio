@@ -13,18 +13,20 @@
 
 (derive :path ::tools/shape)
 
-#_(defn manipulate-paper-path
-    [path action]
-    (case action
-      :simplify (.simplify path)
-      :smooth (.smooth path)
-      :flatten (.flatten path)
-      :reverse (.reverse path)))
+(defn manipulate-paper-path
+  [path action options]
+  (case action
+    :simplify (.simplify path options)
+    :smooth (.smooth path options)
+    :flatten (.flatten path options)
+    :reverse (.reverse path options)
+    nil)
+  path)
 
 (defn manipulate
-  [element _action]
+  [element action & more]
   (update-in element [:attrs :d] #(-> (Path. %)
-                                      #_(manipulate-paper-path action)
+                                      (manipulate-paper-path action more)
                                       (.exportSVG)
                                       (.getAttribute "d"))))
 
