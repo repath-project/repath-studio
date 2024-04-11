@@ -19,7 +19,7 @@
         [:span
          [comp/radio-icon-button
           {:active? selected?
-           :class (when primary? "border border-accent")
+           :class (when primary? "outline-shadow")
            :icon (:icon (tools/properties type))
            :action #(rf/dispatch [:set-tool type])}]]]
        [:> Tooltip/Portal

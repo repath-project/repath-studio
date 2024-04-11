@@ -66,6 +66,10 @@
   .border-accent {
     border-color: var(--accent);
   }
+
+  .outline-shadow {
+    box-shadow: inset 0 0 1px 1px var(--accent)
+  }
 }
 
 @layer components {
@@ -95,13 +99,12 @@
   }
 
   .button {
-    @apply inline-block relative cursor-pointer text-center;
+    @apply inline-block relative cursor-pointer text-center outline-none;
     background-color: transparent;
     color: var(--font-color);
     fill: var(--font-color);
     font-family: var(--font-color);
     font-size: 1em;
-    outline: none;
     height: 33px;
     line-height: 33px;
     -webkit-app-region: no-drag;
@@ -111,6 +114,10 @@
       transition: all 75ms;
       background-color: var(--overlay);
       color: var(--font-color-hovered);
+    }
+
+    &:focus:not(:hover) {
+      @apply outline-shadow;
     }
 
     &.selected {

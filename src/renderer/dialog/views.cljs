@@ -22,7 +22,8 @@
      [:div  [:strong "Version: "] config/version]
      [:div  [:strong "Browser: "] platform/user-agent]]]
    [:button.button.px-2.bg-primary.rounded.w-full
-    {:on-click #(rf/dispatch [:dialog/close])}
+    {:auto-focus true
+     :on-click #(rf/dispatch [:dialog/close])}
     "OK"]
    [close-button]])
 
@@ -36,7 +37,8 @@
      {:on-click #(rf/dispatch [:dialog/close])}
      "No"]
     [:button.button.px-2.bg-primary.rounded
-     {:on-click #(do (rf/dispatch [:dialog/close])
+     {:auto-focus true
+      :on-click #(do (rf/dispatch [:dialog/close])
                      (rf/dispatch action))}
      "Yes"]]
    [close-button]])
@@ -59,7 +61,8 @@
        {:on-click #(rf/dispatch [:dialog/close])}
        "Cancel"]
       [:button.button.px-2.bg-primary.rounded.flex-1
-       {:on-click #(do (rf/dispatch [:dialog/close])
+       {:auto-focus true
+        :on-click #(do (rf/dispatch [:dialog/close])
                        (rf/dispatch [:document/save-and-close]))}
        "Save"]]
      [close-button]]))
@@ -73,6 +76,7 @@
      [:> Dialog/Portal
       [:> Dialog/Overlay {:class "dialog-overlay"}]
       [:> Dialog/Content
-       (merge {:class "dialog-content"}
+       (merge {:class "dialog-content"
+               :onOpenAutoFocus #(.preventDefault %)}
               (:attrs dialog))
        (:content dialog)]]]))

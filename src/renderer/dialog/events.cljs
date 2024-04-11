@@ -8,7 +8,8 @@
  :dialog/cmdk
  (fn [db [_]]
    (assoc db :dialog {:content [cmdk/root]
-                      :attrs {:class "dialog-content dialog-cmdk-content"}})))
+                      :attrs {:onOpenAutoFocus #()
+                              :class "dialog-content dialog-cmdk-content"}})))
 
 (rf/reg-event-db
  :dialog/about
