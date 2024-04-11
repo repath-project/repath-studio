@@ -506,34 +506,43 @@
      (some #(when (bounds/intersected? el-bounds (tools/bounds %)) %) svgs)
      (element db :canvas))))
 
+(defn element?
+  [el]
+  (and (map? el)
+       (keyword? (:tag el))
+       (contains? (descendants ::tools/element) (:tag el))))
+
 (defn create
   [db el]
-  (let [key (uuid/generate)
-        page (overlapping-svg db el)
-        parent (or (:parent el) (if (element/svg? el) :canvas (:key page)))
-        children (vals (select-keys (elements db) (:children el)))
-        [x1 y1] (tools/bounds (element db parent))
-        children (concat children (:content el))
-        new-el (map/deep-merge el default-props {:key key :parent parent})
-        add-children (fn [db children]
-                       (reduce #(cond-> %1
-                                  (and (map? %2) (= (:type %2) :element))
-                                  (create (assoc %2
-                                                 :parent key
-                                                 :selected false))) db children))]
-    (cond-> db
-      :always
-      (-> (assoc-in (conj (path db) key) new-el)
-          (update-prop (:parent new-el) :children #(vec (conj % key))))
+  (if (element? el)
+    (let [key (uuid/generate)
+          page (overlapping-svg db el)
+          parent (or (:parent el) (if (element/svg? el) :canvas (:key page)))
+          children (vals (select-keys (elements db) (:children el)))
+          [x1 y1] (tools/bounds (element db parent))
+          children (concat children (:content el))
+          new-el (map/deep-merge el default-props {:key key :parent parent})
+          new-el (dissoc new-el :viewbox)
+          add-children (fn [db children]
+                         (reduce #(cond-> %1
+                                    (element? %2)
+                                    (create (assoc %2
+                                                   :parent key
+                                                   :selected false))) db children))]
+      (cond-> db
+        :always
+        (-> (assoc-in (conj (path db) key) new-el)
+            (update-prop (:parent new-el) :children #(vec (conj % key))))
 
-      (not (or (element/svg? new-el) (:parent el)))
-      (translate [(- x1) (- y1)])
+        (not (or (element/svg? new-el) (:parent el)))
+        (translate [(- x1) (- y1)])
 
-      :always
-      (update-bounds key)
+        :always
+        (update-bounds key)
 
-      children
-      (add-children children))))
+        children
+        (add-children children)))
+    db))
 
 (defn add
   ([db]
@@ -687,11 +696,20 @@
                dom.server/render-to-static-markup
                (str  "\n" %)) "" elements))
 
+(defn find-svg
+  [zipper]
+  (loop [loc zipper]
+    (if (zip/end? loc)
+      (zip/root loc)
+      (if (= (:tag (zip/node loc)) :svg)
+        (zip/node loc)
+        (recur (zip/next loc))))))
+
 (defn import-svg
   [db s name [x y]]
   (let [hickory (hickory/as-hickory (hickory/parse s))
         zipper (hickory.zip/hickory-zip hickory)
-        svg (-> zipper zip/next zip/next zip/right zip/next zip/node)]
+        svg (find-svg zipper)]
     (add db (-> svg
                 (assoc :name name)
                 (assoc-in [:attrs :x] x)
