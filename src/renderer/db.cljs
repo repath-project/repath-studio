@@ -2,6 +2,7 @@
   (:require
    [renderer.document.db]
    [renderer.panel.db]
+   [renderer.snap.db]
    [renderer.theme.db]
    [renderer.timeline.db]
    [renderer.window.db]))
@@ -14,7 +15,7 @@
    [:state keyword?]
    [:grid? boolean?]
    [:rulers? boolean?]
-   [:snap? boolean?]
+   [:snap renderer.snap.db/snap]
    [:rulers-locked? boolean?]
    [:documents [:map-of :uuid renderer.document.db/document]]
    [:document-tabs [:vector uuid?]]
@@ -41,8 +42,9 @@
    :rulers-locked? false
    :grid? false
    :rulers? true
-   :snap? true
-   :snap-threshold 100
+   :snap {:enabled? true
+          :threshold 100
+          :options #{:centers :midpoints :corners :nodes}}
    :lang :en-US
    :repl-mode :cljs
    :theme {:mode :dark}

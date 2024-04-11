@@ -5,13 +5,36 @@
    [renderer.utils.element :as utils.el]))
 
 (rf/reg-sub
+ :snap
+ :-> :snap)
+
+(rf/reg-sub
+ :snap/enabled?
+ :<- [:snap]
+ (fn [snap _]
+   (:enabled? snap)))
+
+(rf/reg-sub
+ :snap/options
+ :<- [:snap]
+ (fn [snap _]
+   (:options snap)))
+
+(rf/reg-sub
+ :snap/nearest-neighbor
+ :<- [:snap]
+ (fn [snap _]
+   (:nearest-neighbor snap)))
+
+(rf/reg-sub
  :snap/points
  :<- [:element/non-selected-visible]
- :<- [:snap?]
- (fn [[non-selected-visible-elements snap?] _]
-   (when snap?
+ :<- [:snap/enabled?]
+ :<- [:snap/options]
+ (fn [[non-selected-visible-elements enabled? options] _]
+   (when enabled?
      (reduce (fn [points element]
-               (apply conj points (utils.el/snapping-points element)))
+               (apply conj points (utils.el/snapping-points element options)))
              [] non-selected-visible-elements))))
 
 (rf/reg-sub

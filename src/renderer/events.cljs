@@ -93,16 +93,10 @@
  (fn [db [_]]
    (update db :grid? not)))
 
-#_:clj-kondo/ignore
-(rf/reg-event-db
- :toggle-snap
- (fn [db [_]]
-   (update db :snap? not)))
-
 (rf/reg-event-fx
  :pointer-event
  (fn [{:keys [db]} [_ {:keys [button buttons modifiers data-transfer pointer-pos delta element] :as e}]]
-   (let [{:keys [pointer-offset tool dom-rect drag?]} db
+   (let [{:keys [pointer-offset tool dom-rect drag? primary-tool]} db
          adjusted-pointer-pos (frame-h/adjusted-pointer-pos db pointer-pos)]
      {:db (case (:type e)
             :pointermove
@@ -145,12 +139,13 @@
             (cond-> (if drag?
                       (tools/drag-end db e element)
                       (cond-> db (not= button :right) (tools/pointer-up e element)))
-              (and (:primary-tool db) (= button :middle))
-              (-> (tools/set-tool (:primary-tool db))
+              (and primary-tool (= button :middle))
+              (-> (tools/set-tool primary-tool)
                   (dissoc :primary-tool))
 
               :always
-              (dissoc :pointer-offset :drag? :snap))
+              (-> (dissoc :pointer-offset :drag?)
+                  (update :snap dissoc :nearest-neighbor)))
 
             :dblclick
             (tools/double-click db e element)

@@ -38,7 +38,8 @@
         pointer-handler #(pointer/event-handler % element)
         pivot-point @(rf/subscribe [:pivot-point])
         snapping-points @(rf/subscribe [:snap/points])
-        snap @(rf/subscribe [:snap])
+        snap? @(rf/subscribe [:snap/enabled?])
+        nearest-neighbor @(rf/subscribe [:snap/nearest-neighbor])
         debug? @(rf/subscribe [:debug-info?])
         select? (or (= tool :select)
                     (= primary-tool :select))]
@@ -105,7 +106,7 @@
         (for [snapping-point snapping-points]
           [overlay/point-of-interest snapping-point])])
 
-     (when snap
-       [overlay/times (:point snap)])
+     (when (and snap? nearest-neighbor)
+       [overlay/times (:point nearest-neighbor)])
 
      (when grid? [rulers/grid])]))

@@ -6,6 +6,7 @@
    [re-frame.registrar]
    [renderer.color.views :as color-v]
    [renderer.components :as comp]
+   [renderer.snap.views :as snap.v]
    [renderer.toolbar.filters :as filters]
    [renderer.utils.keyboard :as keyb]
    [renderer.utils.units :as units]))
@@ -50,10 +51,6 @@
     :active? [:rulers?]
     :icon "ruler-combined"
     :action [:toggle-rulers]}
-   {:title "Snap"
-    :active? [:snap?]
-    :icon "magnet"
-    :action [:toggle-snap]}
    {:title "History tree"
     :active? [:panel/visible? :history]
     :icon "history"
@@ -146,6 +143,7 @@
                                            :icon icon
                                            :action #(rf/dispatch action)}])
                 view-radio-buttons))
+     [snap.v/root]
 
      [:div.button-group
       [:button.button.overlay.px-2.font-mono.rounded

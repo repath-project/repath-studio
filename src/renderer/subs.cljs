@@ -142,15 +142,6 @@
  :grid?
  :-> :grid?)
 
-(rf/reg-sub
- :snap?
- :-> :snap?)
-
-
-(rf/reg-sub
- :snap
- :-> :snap)
-
 #_(rf/reg-sub
    :font-options
    :<- [:system-fonts]

@@ -54,19 +54,26 @@
     (take 2 (mat/sub bounds local-bounds))))
 
 (defn snapping-points
-  [element]
+  [element options]
   (let [[x1 y1 x2 y2] (:bounds element)
         [cx cy] (bounds/center [x1 y1 x2 y2])]
-    (concat [[x1 y1]
-             [x1 y2]
-             [x1 cy]
-             [x2 y1]
-             [x2 y2]
-             [x2 cy]
-             [cx y1]
-             [cx y2]
-             [cx cy]]
-            (tools/snapping-points element))))
+    (concat (when (:corners options)
+              [[x1 y1]
+               [x1 y2]
+               [x2 y1]
+               [x2 y2]])
+
+            (when (:centers options)
+              [[cx cy]])
+
+            (when (:midpoints options)
+              [[x1 cy]
+               [x2 cy]
+               [cx y1]
+               [cx y2]])
+
+            (when :nodes
+              (tools/snapping-points element)))))
 
 (defn attrs-map
   [attrs]
