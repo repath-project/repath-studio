@@ -136,15 +136,24 @@
        [:ul (map (fn [el] [item el (inc depth) elements])
                  (mapv (fn [key] (get elements key)) (reverse children)))])]))
 
+(defn inner-sidebar-render
+  [canvas-children elements]
+  [:div.tree-sidebar.overflow-hidden
+   {:on-pointer-up #(rf/dispatch [:element/deselect-all])}
+   [:div.v-scroll.h-full
+    {:on-pointer-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
+    [:ul (map (fn [el] [item el 1 elements])
+              (reverse canvas-children))]]])
+
 (defn inner-sidebar []
-  (let [canvas-children @(rf/subscribe [:element/canvas-children])
-        elements @(rf/subscribe [:document/elements])]
-    [:div.tree-sidebar.overflow-hidden
-     {:on-pointer-up #(rf/dispatch [:element/deselect-all])}
-     [:div.v-scroll.h-full
-      {:on-pointer-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
-      [:ul (map (fn [el] [item el 1 elements])
-                (reverse canvas-children))]]]))
+  (let [state @(rf/subscribe [:state])]
+    (if (= state :default)
+      (let [canvas-children @(rf/subscribe [:element/canvas-children])
+            elements @(rf/subscribe [:document/elements])]
+        [inner-sidebar-render canvas-children elements])
+      (ra/with-let [canvas-children @(rf/subscribe [:element/canvas-children])
+                    elements @(rf/subscribe [:document/elements])]
+        [inner-sidebar-render canvas-children elements]))))
 
 (defn root
   []
