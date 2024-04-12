@@ -13,7 +13,7 @@
    [renderer.tools.container.container]
    [renderer.tools.misc.dropper]
    [renderer.tools.transform.edit]
-   [renderer.tools.element]
+   [renderer.tools.renderable]
    [renderer.tools.shape.ellipse]
    [renderer.tools.misc.fill]
    [renderer.tools.container.group]

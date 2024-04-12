@@ -7,12 +7,13 @@
    using the getBBox method.
    https://developer.mozilla.org/en-US/docs/Web/API/SVGGraphicsElement/getBBox"
   [el]
-  (let [bounds (.getBBox el)
-        x1 (.-x bounds)
-        y1 (.-y bounds)
-        x2 (+ x1 (.-width bounds))
-        y2 (+ y1 (.-height bounds))]
-    [x1 y1 x2 y2]))
+  (when (.-getBBox el)
+    (let [bounds (.getBBox el)
+          x1 (.-x bounds)
+          y1 (.-y bounds)
+          x2 (+ x1 (.-width bounds))
+          y2 (+ y1 (.-height bounds))]
+      [x1 y1 x2 y2])))
 
 (defn union
   [& bounds]

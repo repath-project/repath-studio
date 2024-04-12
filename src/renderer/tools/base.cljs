@@ -4,6 +4,8 @@
 (derive ::draw ::tool)
 (derive ::misc ::tool)
 
+(derive ::element ::tool)
+
 (derive ::renderable ::element)
 (derive ::never-renderable ::element)
 

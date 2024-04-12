@@ -1,4 +1,4 @@
-(ns renderer.tools.element
+(ns renderer.tools.renderable
   (:require
    ["react" :as react]
    [clojure.core.matrix :as mat]
@@ -12,19 +12,17 @@
    [renderer.utils.dom :as dom]
    [renderer.utils.pointer :as pointer]))
 
-(derive ::tools/element ::tools/tool)
-
-(defmethod tools/activate ::tools/element
+(defmethod tools/activate ::tools/renderable
   [db]
   (-> db
       (assoc :cursor "crosshair")
       (h/set-message [:div "Click and drag to create an element."])))
 
-(defmethod tools/drag-start ::tools/element
+(defmethod tools/drag-start ::tools/renderable
   [db]
   (h/set-state db :create))
 
-(defmethod tools/drag-end ::tools/element
+(defmethod tools/drag-end ::tools/renderable
   [db]
   (let [temp-element (get-in db [:documents (:active-document db) :temp-element])]
     (-> db
@@ -33,7 +31,7 @@
         (h/set-state :default)
         (history.h/finalize "Create " (name (:tag temp-element))))))
 
-(defmethod tools/bounds ::tools/element
+(defmethod tools/bounds ::tools/renderable
   [{:keys [tag attrs content]}]
   (when-let [svg (dom/canvas-element)]
     (let [el (js/document.createElementNS "http://www.w3.org/2000/svg" (name tag))]
@@ -45,7 +43,7 @@
         (.remove el)
         bounds))))
 
-(defmethod tools/position ::tools/element
+(defmethod tools/position ::tools/renderable
   [el position]
   (let [center (bounds/center (tools/bounds el))
         offset (mat/sub position center)]
@@ -109,7 +107,7 @@
 
          (when default-state? [ghost-element el])])})))
 
-(defmethod tools/render ::tools/element
+(defmethod tools/render ::tools/renderable
   [{:keys [children] :as el}]
   (let [child-elements @(rf/subscribe [:element/filter-visible children])
         state @(rf/subscribe [:state])]

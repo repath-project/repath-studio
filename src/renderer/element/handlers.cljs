@@ -508,7 +508,7 @@
      (some #(when (bounds/intersected? el-bounds (tools/bounds %)) %) svgs)
      (element db :canvas))))
 
-(defn element?
+(defn supported-element?
   [el]
   (and (map? el)
        (keyword? (:tag el))
@@ -516,7 +516,7 @@
 
 (defn create
   [db el]
-  (if (element? el)
+  (if (supported-element? el)
     (let [key (uuid/generate)
           page (overlapping-svg db el)
           parent (or (:parent el) (if (element/svg? el) :canvas (:key page)))
@@ -524,10 +524,9 @@
           [x1 y1] (tools/bounds (element db parent))
           children (concat children (:content el))
           new-el (map/deep-merge el default-props {:key key :parent parent})
-          new-el (dissoc new-el :viewbox)
           add-children (fn [db children]
                          (reduce #(cond-> %1
-                                    (element? %2)
+                                    (supported-element? %2)
                                     (create (assoc %2
                                                    :parent key
                                                    :selected false))) db children))]

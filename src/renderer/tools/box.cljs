@@ -9,7 +9,7 @@
    [renderer.utils.units :as units]
    [renderer.utils.bounds :as bounds]))
 
-(derive ::tools/box ::tools/element)
+(derive ::tools/box ::tools/renderable)
 
 (defmethod tools/translate ::tools/box
   [el [x y]]
