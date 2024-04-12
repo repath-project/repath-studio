@@ -2,7 +2,8 @@
   (:require
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    [re-frame.core :as rf]
-   [renderer.components :as comp]))
+   [renderer.components :as comp]
+   [renderer.snap.db :as snap.db]))
 
 (defn options-dropdown
   []
@@ -24,13 +25,13 @@
         :alignOffset -5
         :position "popper"
         :class "menu-content rounded select-content"}
-       (for [option #{:centers :midpoints :corners :nodes}]
+       (for [option (rest snap.db/options)]
          ^{:key option}
          [:> DropdownMenu/CheckboxItem
           {:class "menu-checkbox-item inset"
            :on-click #(.stopPropagation %)
            :onSelect #(do (.preventDefault %)
-                          (rf/dispatch [:element/import-traced-image option]))
+                          (rf/dispatch [:snap/toggle-option option]))
            :checked (contains? options option)}
           [:> DropdownMenu/ItemIndicator
            {:class "menu-item-indicator"}
