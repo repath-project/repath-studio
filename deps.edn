@@ -17,7 +17,7 @@
         metosin/malli {:mvn/version "0.15.0"}
         net.mikera/core.matrix {:mvn/version "0.63.0"}
         org.clj-commons/hickory {:mvn/version "0.7.4"}
-        org.slf4j/slf4j-simple {:mvn/version "2.0.12"}
+        org.slf4j/slf4j-simple {:mvn/version "2.0.13"}
         re-frame/re-frame {:mvn/version "1.4.3"}
         re-pressed/re-pressed {:mvn/version "0.3.2"}
         reagent/reagent {:mvn/version "1.2.0"}
