@@ -495,7 +495,6 @@
 (def default-props
   {:type :element
    :visible? true
-   :selected? true
    :locked? false
    :children []})
 
@@ -551,7 +550,7 @@
        (add (get-temp db))
        clear-temp))
   ([db element]
-   (create (deselect db) element)))
+   (create (deselect db) (assoc element :selected? true))))
 
 (defn bool
   [path-a path-b operation]
