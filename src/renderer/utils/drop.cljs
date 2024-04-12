@@ -48,6 +48,7 @@
       "image/png" (add-image! file position)
       "image/jpeg" (add-image! file position)
       "image/bmp" (add-image! file position)
+      "image/gif" (add-image! file position)
       "image/svg+xml" (add-svg! file position)
       (when (= (last (str/split (.-name file) ".")) "rps")
         (file/read! file)))))
