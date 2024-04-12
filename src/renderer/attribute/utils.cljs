@@ -35,7 +35,7 @@
   [points]
   (as-> points p
     (str/triml p)
-    (str/split p #"\s+")
+    (str/split p #"\s*[\s,]\s*")
     (partition 2 p)
     (vec p))) ; OPTIMIZE
 
@@ -43,7 +43,7 @@
   [points]
   (as-> points p
     (str/triml p)
-    (str/split p #"\s+")
+    (str/split p #"\s*[\s,]\s*")
     (map units/unit->px p)
     (partition 2 p)
     (vec p)))
