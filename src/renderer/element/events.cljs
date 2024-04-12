@@ -302,7 +302,7 @@
  :element/import-traced-image
  (fn [db [_ s name position]]
    (-> db
-       (h/import-svg s name position)
+       (h/import-svg s (str "Traced " name) position)
        (history.h/finalize "Trace"))))
 
 (rf/reg-event-db
@@ -377,7 +377,7 @@
                 (.drawImage context image 0 0 width height)
                 (p/let [image-data (.getImageData context 0 0 width height)
                         svg (f image-data)]
-                  (rf/dispatch [:element/import-svg svg (:name el) position]))))
+                  (rf/dispatch [:element/import-traced-image svg (:name el) position]))))
        (set! (.-src image) data-url)))))
 
 (rf/reg-event-fx
