@@ -713,5 +713,6 @@
         svg (find-svg zipper)]
     (add db (-> svg
                 (assoc :name name)
+                (update :attrs dissoc :desc :version :xmlns)
                 (assoc-in [:attrs :x] x)
                 (assoc-in [:attrs :y] y)))))

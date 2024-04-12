@@ -146,13 +146,13 @@
               (reverse canvas-children))]]])
 
 (defn inner-sidebar []
-  (let [state @(rf/subscribe [:state])]
+  (let [state @(rf/subscribe [:state])
+        canvas-children @(rf/subscribe [:element/canvas-children])
+        elements @(rf/subscribe [:document/elements])]
     (if (= state :default)
-      (let [canvas-children @(rf/subscribe [:element/canvas-children])
-            elements @(rf/subscribe [:document/elements])]
-        [inner-sidebar-render canvas-children elements])
-      (ra/with-let [canvas-children @(rf/subscribe [:element/canvas-children])
-                    elements @(rf/subscribe [:document/elements])]
+      [inner-sidebar-render canvas-children elements]
+      (ra/with-let [canvas-children canvas-children
+                    elements elements]
         [inner-sidebar-render canvas-children elements]))))
 
 (defn root
