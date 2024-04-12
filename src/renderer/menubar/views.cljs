@@ -194,6 +194,15 @@
     :label "Reverse"
     :action [:element/manipulate-path :reverse]}])
 
+(defn image-submenu
+  []
+  [{:key :trace
+    :label "Trace"
+    :action [:element/trace]}
+   {:key :trianlgulate
+    :label "Trianlgulate"
+    :action [:element/triangulate]}])
+
 (defn object-menu
   []
   {:key :object
@@ -257,9 +266,10 @@
             :action [:element/lower-to-bottom]}
            {:key :divider-6
             :type :separator}
-           {:key :trace
-            :label "Trace image"
-            :action [:element/trace]}
+           {:key :image
+            :type :sub-menu
+            :label "Image"
+            :items (image-submenu)}
            {:key :path
             :label "Path"
             :type :sub-menu
