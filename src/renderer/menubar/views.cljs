@@ -473,7 +473,8 @@
   [{:keys [label action disabled?]}]
   [:> Menubar/Item
    {:class "menu-item"
-    :onSelect #(rf/dispatch action)
+    :onSelect #(do (rf/dispatch action)
+                   (rf/dispatch [:menubar/focus nil]))
     :disabled (when disabled? @(rf/subscribe disabled?))}
    label
    [:div.right-slot

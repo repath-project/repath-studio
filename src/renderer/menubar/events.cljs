@@ -1,12 +1,13 @@
 (ns renderer.menubar.events
   (:require
-   [re-frame.core :as rf]))
+   [re-frame.core :as rf]
+   [renderer.utils.dom :as dom]))
 
 (rf/reg-fx
  ::focus
  (fn [id]
-   (when-let [element (.getElementById js/document id)]
-     (.focus element))))
+   (when-let [element (if id (.getElementById js/document id) (dom/canvas-element))]
+     (js/setTimeout #(.focus element)))))
 
 (rf/reg-event-fx
  :menubar/focus
