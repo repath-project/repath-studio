@@ -59,9 +59,9 @@
           {:class class
            :title (if active? active-text inactive-text)
            :on-double-click #(.stopPropagation %)
-           :on-click #(when action
-                        (.stopPropagation %)
-                        (action))})
+           :on-pointer-up #(when action
+                             (.stopPropagation %)
+                             (action))})
    [icon (if active? active-icon inactive-icon)]])
 
 (defn toggle-collapsed-button
