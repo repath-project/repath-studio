@@ -25,6 +25,7 @@
        [:> Tooltip/Portal
         [:> Tooltip/Content
          {:class "tooltip-content"
+          :sideOffset 5
           :side "top"}
          [:div.flex.gap-2.items-center
           (str/capitalize (name type))]

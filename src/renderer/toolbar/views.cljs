@@ -20,7 +20,8 @@
      [:> Tooltip/Portal
       [:> Tooltip/Content
        {:class "tooltip-content"
-        :side "left"}
+        :side "left"
+        :sideOffset 5}
        [:div.flex.gap-2.items-center
         title]
        [:> Tooltip/Arrow
