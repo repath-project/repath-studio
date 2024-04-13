@@ -46,9 +46,9 @@
                :y offset-y}]
     (-> db
         element.h/deselect
-        (element.h/create {:type :element
-                           :tag :text
-                           :attrs attrs})
+        (element.h/add {:type :element
+                        :tag :text
+                        :attrs attrs})
         (history.h/finalize "Create text")
         (tools/set-tool :edit)
         (h/set-state :edit)))) ; FIXME: Merge create and edit history action.
