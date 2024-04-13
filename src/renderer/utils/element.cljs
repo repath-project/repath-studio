@@ -21,6 +21,12 @@
   #_(isa? (:tag el) ::tools/container)
   (or (svg? el) (root? el))) ; FIXME
 
+(defn supported?
+  [el]
+  (and (map? el)
+       (keyword? (:tag el))
+       (contains? (descendants ::tools/tool) (:tag el))))
+
 (defn parent-container
   [elements el]
   (loop [parent (:parent el)]
@@ -99,6 +105,10 @@
               (attrs-map (:animate (:elements spec/svg))))
             (zipmap (:attrs (tools/properties tag)) (repeat ""))))
    attrs))
+
+(defn supports-attr?
+  [el k]
+  (-> el attributes k))
 
 (defn ->path
   [el]

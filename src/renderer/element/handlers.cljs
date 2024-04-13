@@ -192,17 +192,13 @@
      (not (:locked? (element db el-k)))
      (update-prop el-k :attrs dissoc k))))
 
-(defn supports-attr?
-  [el k]
-  (-> el element/attributes k))
-
 (defn set-attr
   ([db k v]
    (reduce #(set-attr %1 %2 k v) db (selected-keys db)))
   ([db el-k k v]
    (let [attr-path (conj (path db) el-k :attrs k)
          el (element db el-k)]
-     (if (and (not (:locked? el)) (supports-attr? el k))
+     (if (and (not (:locked? el)) (element/supports-attr? el k))
        (if (str/blank? v)
          (remove-attr db el-k k)
          (-> db
@@ -212,7 +208,7 @@
 
 (defn update-attr
   [db el k f & more]
-  (if (and (not (:locked? el)) (supports-attr? el k))
+  (if (and (not (:locked? el)) (element/supports-attr? el k))
     (apply update-el db el hierarchy/update-attr k f more)
     db))
 
@@ -323,10 +319,6 @@
   (cond-> db
     (:active-document db)
     (assoc-in [:documents (:active-document db) :ignored-keys] #{})))
-
-(defmulti intersects-with-bounds? (fn [element _] (:tag element)))
-
-(defmethod intersects-with-bounds? :default [])
 
 (defn lock
   ([db]
@@ -512,15 +504,9 @@
      (some #(when (bounds/intersected? el-bounds (tools/bounds %)) %) svgs)
      (element db :canvas))))
 
-(defn supported-element?
-  [el]
-  (and (map? el)
-       (keyword? (:tag el))
-       (contains? (descendants ::tools/tool) (:tag el))))
-
 (defn create
   [db el]
-  (if (supported-element? el)
+  (if (element/supported? el)
     (let [key (uuid/generate)
           page (overlapping-svg db el)
           parent (or (:parent el) (if (element/svg? el) :canvas (:key page)))
@@ -530,7 +516,7 @@
           new-el (map/deep-merge el default-props {:key key :parent parent})
           add-children (fn [db children]
                          (reduce #(cond-> %1
-                                    (supported-element? %2)
+                                    (element/supported? %2)
                                     (create (assoc %2 :parent key))) db children))]
       (cond-> db
         :always
@@ -698,7 +684,7 @@
   [elements]
   (reduce #(-> (tools/render-to-string %2)
                dom.server/render-to-static-markup
-               (str  "\n" %)) "" elements))
+               (str "\n" %)) "" elements))
 
 (defn find-svg
   [zipper]
