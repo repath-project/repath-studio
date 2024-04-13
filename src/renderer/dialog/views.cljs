@@ -76,7 +76,6 @@
      [:> Dialog/Portal
       [:> Dialog/Overlay {:class "dialog-overlay"}]
       [:> Dialog/Content
-       (merge {:class "dialog-content"
-               :onOpenAutoFocus #(.preventDefault %)}
+       (merge {:class "dialog-content"}
               (:attrs dialog))
        (:content dialog)]]]))
