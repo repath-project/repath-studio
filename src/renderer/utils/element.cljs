@@ -81,7 +81,7 @@
             (when :nodes
               (tools/snapping-points element)))))
 
-(defn attrs-map
+(defn- attrs-map
   [attrs]
   (let [deprecated-path [:__compat :status :deprecated]
         filtered-attrs (->> attrs

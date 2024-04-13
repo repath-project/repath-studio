@@ -90,12 +90,8 @@
       nil)))
 
 (defn list-item-button
-  [{:keys [key selected? children] :as el} depth]
-  (let [hovered-keys @(rf/subscribe [:document/hovered-keys])
-        collapsed-keys @(rf/subscribe [:document/collapsed-keys])
-        collapsed? (contains? collapsed-keys key)
-        hovered? (contains? hovered-keys key)
-        multiple-selected? @(rf/subscribe [:element/multiple-selected?])]
+  [{:keys [key selected? children] :as el} depth hovered? collapsed?]
+  (let [multiple-selected? @(rf/subscribe [:element/multiple-selected?])]
     [:div.button.list-item-button
      {:class [(when selected? "selected")
               (when hovered? "hovered")]
@@ -126,24 +122,26 @@
       [:div.flex-1.overflow-hidden [label el]]
       [item-buttons el]]]))
 
-(defn item [{:keys [selected? children key] :as el} depth elements]
+(defn item [{:keys [selected? children key] :as el} depth elements hovered-keys collapsed-keys]
   (let [has-children? (seq children)
-        collapsed-keys @(rf/subscribe [:document/collapsed-keys])
-        collapsed? (contains? collapsed-keys key)]
+        collapsed? (contains? collapsed-keys key)
+        hovered? (contains? hovered-keys key)]
     [:li {:class (when selected? "overlay")}
-     [list-item-button el depth]
+     [list-item-button el depth hovered? collapsed?]
      (when (and has-children? (not collapsed?))
-       [:ul (map (fn [el] [item el (inc depth) elements])
+       [:ul (map (fn [el] [item el (inc depth) elements hovered-keys collapsed-keys])
                  (mapv (fn [key] (get elements key)) (reverse children)))])]))
 
 (defn inner-sidebar-render
   [canvas-children elements]
-  [:div.tree-sidebar.overflow-hidden
-   {:on-pointer-up #(rf/dispatch [:element/deselect-all])}
-   [:div.v-scroll.h-full
-    {:on-pointer-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
-    [:ul (map (fn [el] [item el 1 elements])
-              (reverse canvas-children))]]])
+  (let [hovered-keys @(rf/subscribe [:document/hovered-keys])
+        collapsed-keys @(rf/subscribe [:document/collapsed-keys])]
+    [:div.tree-sidebar.overflow-hidden
+     {:on-pointer-up #(rf/dispatch [:element/deselect-all])}
+     [:div.v-scroll.h-full
+      {:on-pointer-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
+      [:ul (map (fn [el] [item el 1 elements hovered-keys collapsed-keys])
+                (reverse canvas-children))]]]))
 
 (defn inner-sidebar []
   (let [state @(rf/subscribe [:state])
