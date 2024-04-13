@@ -9,7 +9,8 @@
    [renderer.element.handlers :as h]
    [renderer.history.handlers :as history.h]
    [renderer.utils.bounds :as bounds]
-   [renderer.utils.file :as file]))
+   [renderer.utils.file :as file]
+   [renderer.utils.units :as units]))
 
 (rf/reg-event-db
  :element/select
@@ -368,16 +369,17 @@
            position (:bounds el)
            canvas (js/document.createElement "canvas")
            context (.getContext canvas "2d")
-           image (js/Image.)]
+           image (js/Image.)
+           ;; TODO: Handle preserveAspectRatio.
+           width (units/unit->px (-> el :attrs :width))
+           height (units/unit->px (-> el :attrs :height))]
        (set! (.-onload image)
-             #(let [width (.-width image)
-                    height (.-height image)]
-                (set! (.-width canvas) width)
-                (set! (.-height canvas) height)
-                (.drawImage context image 0 0 width height)
-                (p/let [image-data (.getImageData context 0 0 width height)
-                        svg (f image-data)]
-                  (rf/dispatch [:element/import-traced-image svg (:name el) position]))))
+             #(do (set! (.-width canvas) width)
+                  (set! (.-height canvas) height)
+                  (.drawImage context image 0 0 width height)
+                  (p/let [image-data (.getImageData context 0 0 width height)
+                          svg (f image-data)]
+                    (rf/dispatch [:element/import-traced-image svg (:name el) position]))))
        (set! (.-src image) data-url)))))
 
 (rf/reg-event-fx
