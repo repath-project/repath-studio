@@ -531,9 +531,7 @@
           add-children (fn [db children]
                          (reduce #(cond-> %1
                                     (supported-element? %2)
-                                    (create (assoc %2
-                                                   :parent key
-                                                   :selected false))) db children))]
+                                    (create (assoc %2 :parent key))) db children))]
       (cond-> db
         :always
         (-> (assoc-in (conj (path db) key) new-el)
@@ -588,7 +586,7 @@
   ([db]
    (reduce paste-in-place (deselect db) (:copied-elements db)))
   ([db el]
-   (create db el)))
+   (add db el)))
 
 (defn paste
   ([db]
@@ -617,7 +615,7 @@
   ([db]
    (reduce duplicate-in-place (deselect db) (top-selected-sorted db)))
   ([db el]
-   (create db el)))
+   (add db el)))
 
 (defn duplicate
   [db offset]
@@ -629,9 +627,9 @@
   ([db tag attrs]
    (reduce #(animate %1 %2 tag attrs) (deselect db) (selected db)))
   ([db el tag attrs]
-   (create db {:tag tag
-               :attrs attrs
-               :parent (:key el)})))
+   (add db {:tag tag
+            :attrs attrs
+            :parent (:key el)})))
 
 (defn paste-styles
   ([db]
@@ -649,9 +647,10 @@
 
 (defn group
   [db]
-  (reduce (fn [db key] (set-parent db key (first (selected-keys db))))
-          (-> (deselect db)
-              (create {:tag :g}))
+  (reduce (fn [db key]
+            (set-parent db key (-> db selected-keys first)))
+          (add db {:tag :g
+                   :parent (:key (parent db))})
           (top-selected-sorted-keys db)))
 
 (defn inherit-attrs
