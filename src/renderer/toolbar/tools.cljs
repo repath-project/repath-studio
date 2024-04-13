@@ -33,15 +33,15 @@
 (defn group
   [group]
   (into [:div.flex.gap-1]
-        (map button (descendants group))))
+        (map button group)))
 
 (def groups
-  [::tools/transform
-   ::tools/container
-   ::tools/renderable
-   ::tools/custom
-   ::tools/draw
-   ::tools/misc])
+  [[:select :edit :pan :zoom]
+   [:svg]
+   [:circle :ellipse :rect :line :polyline :polygon :text]
+   [:blob]
+   [:brush :pen]
+   [:dropper :fill :measure]])
 
 (defn root
   []
