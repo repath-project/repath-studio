@@ -266,13 +266,21 @@
   [db]
   (sort-by #(index-tree-path db %) (selected db)))
 
+(defn top-selected-sorted
+  [db]
+  (sort-by #(index-tree-path db %) (top-selected-ancestors db)))
+
 (defn selected-sorted-keys
   [db]
   (set (map :key (selected-sorted db))))
 
+(defn top-selected-sorted-keys
+  [db]
+  (set (map :key (top-selected-sorted db))))
+
 (defn select-up
   ([db multi?]
-   (select-up db (last (selected-sorted db)) multi?))
+   (select-up db (last (top-selected-sorted db)) multi?))
   ([db el multi?]
    (let [i (index db el)]
      (select db (if (= i (dec (count (siblings db el))))
@@ -281,7 +289,7 @@
 
 (defn select-down
   ([db multi?]
-   (select-down db (first (selected-sorted db)) multi?))
+   (select-down db (first (top-selected-sorted db)) multi?))
   ([db el multi?]
    (let [i (index db el)]
      (select db (if (zero? i)
@@ -341,7 +349,7 @@
 
 (defn copy
   [db]
-  (let [elements (selected-sorted db)]
+  (let [elements (top-selected-sorted db)]
     (cond-> db
       (seq elements)
       (assoc :copied-elements elements
@@ -563,7 +571,7 @@
 
 (defn bool-operation
   [db operation]
-  (let [selected-elements (selected-sorted db)
+  (let [selected-elements (top-selected-sorted db)
         attrs (-> selected-elements first element/->path :attrs)
         new-path (reduce (fn [path el]
                            (let [path-a (Path. path)
@@ -610,7 +618,7 @@
 
 (defn duplicate-in-place
   ([db]
-   (reduce duplicate-in-place (deselect db) (selected-sorted db)))
+   (reduce duplicate-in-place (deselect db) (top-selected-sorted db)))
   ([db el]
    (create db el)))
 
@@ -647,7 +655,7 @@
   (reduce (fn [db key] (set-parent db key (first (selected-keys db))))
           (-> (deselect db)
               (create {:tag :g}))
-          (selected-sorted-keys db)))
+          (top-selected-sorted-keys db)))
 
 (defn inherit-attrs
   [db source-el target-el-k]
