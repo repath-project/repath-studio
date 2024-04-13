@@ -615,7 +615,7 @@
   ([db]
    (reduce duplicate-in-place (deselect db) (top-selected-sorted db)))
   ([db el]
-   (add db el)))
+   (create db el)))
 
 (defn duplicate
   [db offset]
