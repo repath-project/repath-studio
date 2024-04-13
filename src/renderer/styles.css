@@ -67,6 +67,10 @@
     border-color: var(--accent);
   }
 
+  .outline-accent {
+    outline-color: var(--accent);
+  }
+
   .outline-shadow {
     box-shadow: inset 0 0 1px 1px var(--accent)
   }
@@ -116,8 +120,8 @@
       color: var(--font-color-hovered);
     }
 
-    &:focus:not(:hover) {
-      @apply outline-shadow;
+    &:focus:not(:active) {
+      @apply outline outline-1 outline-offset-1 outline-accent;
     }
 
     &.selected {

@@ -16,6 +16,10 @@
     @apply overlay;
   }
 
+  &:focus:not(:active) {
+    @apply outline-none outline-shadow;
+  }
+
   .button {
     @apply mx-px shrink-0;
     height: 20px;
