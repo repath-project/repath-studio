@@ -6,26 +6,31 @@
    [renderer.menubar.views :as menubar]))
 
 (defn button
-  [{:keys [icon action class]}]
-  [:button.button.text-muted
+  [{:keys [icon action class title]}]
+  [:button.button.text-muted.focus:outline-none
    {:class ["px-3" class]
+    :title title
     :on-click #(rf/dispatch action)}
    [comp/icon icon]])
 
 (defn window-control-buttons
   [maximized?]
   [{:action [:window/minimize]
+    :title "Minimize"
     :icon "window-minimize"}
    {:action [:window/toggle-maximized]
+    :title (if maximized? "Restore" "Maximize")
     :icon (if maximized? "window-restore" "window-maximize")}
    {:action [:window/close]
+    :title "Close"
     :icon "times"}])
 
 (defn app-icon
   []
   [:div.drag
    [:img.ml-2.h-4.w-4
-    {:src "img/icon-no-bg.svg"}]])
+    {:src "img/icon-no-bg.svg"
+     :alt "logo"}]])
 
 (defn app-header
   []
@@ -43,6 +48,7 @@
       @(rf/subscribe [:document/title-bar])]
      [:div.flex.h-full.flex-1.drag]
      [button {:action [:theme/cycle-mode]
+              :title "Theme mode"
               :icon (name @(rf/subscribe [:theme/mode]))
               :class "bg-primary"}]
      (when (and platform/electron? (not fullscreen?) (not platform/mac?))

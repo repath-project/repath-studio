@@ -79,6 +79,7 @@
   (let [value (units/->fixed (* 100 zoom) (zoom-decimal-points zoom))]
     [:input.overlay.text-right.flex
      {:key zoom
+      :aria-label "Zoom"
       :type "number"
       :input-mode "decimal"
       :min "1"
@@ -148,11 +149,13 @@
      [:div.button-group
       [:button.button.overlay.px-2.font-mono.rounded
        {:class (when (<= zoom 0.01) "disabled")
+        :title "Zoom out"
         :on-click #(rf/dispatch [:frame/zoom-out])}
        [comp/icon "minus" {:class "icon small"}]]
 
       [:button.button.overlay.px-2.font-mono.rounded
        {:class (when (>= zoom 100) "disabled")
+        :title "Zoom in"
         :on-click #(rf/dispatch [:frame/zoom-in])}
        [comp/icon "plus" {:class "icon small"}]]
       [zoom-input zoom]

@@ -92,6 +92,7 @@
                      :on-key-down on-keyboard-event
                      :on-key-up on-keyboard-event
                      :id "frame"
+                     :title "main canvas"
                      :ref ref
                      :style {:background (-> canvas :attrs :fill)}}
            [:f> inner-component]

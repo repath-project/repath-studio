@@ -63,4 +63,5 @@
                     :style style
                     :on-blur #()
                     :on-change #()
-                    :ref ref}])})))
+                    :ref ref
+                    :aria-label "Command prompt"}])})))

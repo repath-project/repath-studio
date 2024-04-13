@@ -16,6 +16,7 @@
        [comp/icon-button
         icon
         {:disabled disabled?
+         :area-label title
          :on-click #(rf/dispatch action)}]]]
      [:> Tooltip/Portal
       [:> Tooltip/Content
