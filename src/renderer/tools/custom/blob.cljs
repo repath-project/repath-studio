@@ -17,7 +17,7 @@
    [renderer.utils.bounds :as bounds]
    [renderer.utils.units :as units]))
 
-(derive :blob ::tools/custom)
+(derive :blob ::tools/renderable)
 
 (derive :size ::length/length)
 
@@ -117,12 +117,6 @@
                  (assoc-in [:attrs :y] (- offset-y radius))
                  (assoc-in [:attrs :size] (* radius 2)))]
     (element.h/set-temp db temp)))
-
-
-(defmethod tools/translate :blob
-  [element [x y]] (-> element
-                      (attr.hierarchy/update-attr :x + x)
-                      (attr.hierarchy/update-attr :y + y)))
 
 (defmethod tools/scale :blob
   [el ratio pivot-point]

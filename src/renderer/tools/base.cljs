@@ -13,7 +13,6 @@
 
 (derive ::gradient ::element)
 (derive ::descriptive ::element)
-(derive ::custom ::element)
 
 (derive :foreignObject ::graphics)
 (derive :textPath ::graphics)
