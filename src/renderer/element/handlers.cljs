@@ -71,12 +71,9 @@
 (defn parent
   ([db]
    (let [selected (selected db)]
-     (or (cond
-           (siblings-selected? db)
-           (parent db (parent db (first selected)))
-
-           (single? selected)
-           (parent db (first selected)))
+     (or (parent db (if (siblings-selected? db)
+                      (parent db (first selected))
+                      (first selected)))
          (element db :canvas))))
   ([db el]
    (when-let [parent (:parent el)]
