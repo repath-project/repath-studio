@@ -120,8 +120,12 @@
       color: var(--font-color-hovered);
     }
 
-    &:focus:not(:active) {
+    &:focus {
       @apply outline outline-1 outline-offset-1 outline-accent;
+    }
+
+    &:active {
+      @apply outline-none;
     }
 
     &.selected {
@@ -427,7 +431,6 @@ pre {
 }
 
 .popover-arrow,
-.tooltip-arrow,
 .menu-arrow  {
   fill: var(--bg-secondary);
 }

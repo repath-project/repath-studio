@@ -28,8 +28,7 @@
           :sideOffset 5
           :side "top"}
          [:div.flex.gap-2.items-center
-          (str/capitalize (name type))]
-         [:> Tooltip/Arrow {:class "tooltip-arrow"}]]]])))
+          (str/capitalize (name type))]]]])))
 
 (defn group
   [group]

@@ -60,7 +60,6 @@
     --background-warning: #ffc252;
     --background-success: #63c263;
     .popover-arrow,
-    .tooltip-arrow,
     .menu-arrow  {
       fill: var(--bg-primary);
     }

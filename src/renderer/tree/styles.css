@@ -16,8 +16,12 @@
     @apply overlay;
   }
 
-  &:focus:not(:active) {
+  &:focus {
     @apply outline-none outline-shadow;
+  }
+
+  &:active {
+    @apply shadow-none;
   }
 
   .button {
@@ -26,6 +30,10 @@
     width: 20px;
     color: inherit;
     background-color: transparent !important;
+
+    &:focus {
+      @apply outline-none;
+    }
   }
 }
 
