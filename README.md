@@ -15,6 +15,8 @@
 
 ![Studio Screenshot](https://repath.studio/assets/images/studio.png)
 
+<!-- sponsors --><!-- sponsors -->
+
 ## Main goals
 
 - Create a cross platform / open source vector graphics editor.
@@ -24,7 +26,33 @@
 - Advanced undo/redo - maintain a history tree of all actions and never lose your redo stack.
 - Implement built-in accessibility testing features.
 
-<!-- sponsors --><!-- sponsors -->
+## Rationale
+
+### Why is this implemented as a web application?
+
+- Using the main targeting platform to also create your SVGs, ensures that what you see while editing, is as close as possible to what you are going to get when you load your exported creations. 
+- Avoid re-implementing complex specifications, like SMIL.
+- Access to JavaScript ecosystem.
+- Being able to serve this as website is a huge plus.
+
+### Why is the desktop app wrapped with ElectronJS?
+
+- Electron is a mature framework with a rich API. 
+- Embedded Chromium ensures that web APIs will work consistently across multiple operating systems.
+- Using the same rendering engine promotes UI consistency.  
+- We can use the same language to develop our backend and frontend.
+
+### Why ClojureScript?
+
+- Built-in immutability.
+- Easy data manipulation.
+- Stability of libraries.
+- Interoperability with js and react.
+- Clean syntax.
+
+### What about performance?
+
+We are currently trying to optimize for hundreds of elements per document. Editing thousands of nodes on a single document is not within the scope of this project (at least for now).
 
 ## How to build it locally
 
