@@ -175,4 +175,7 @@
           [toolbar.object/root]]]]]
       [home/panel])]
    [dialog/root]
-   [notification/main]])
+   [notification/main]
+   (when-let [loading @(rf/subscribe [:loading])]
+     [:div.backdrop
+      [:div.text-2xl loading]])])

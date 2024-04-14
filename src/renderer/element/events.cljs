@@ -379,14 +379,17 @@
                   (.drawImage context image 0 0 width height)
                   (p/let [image-data (.getImageData context 0 0 width height)
                           svg (f image-data)]
-                    (rf/dispatch [:element/import-traced-image svg (:name el) position]))))
+                    (rf/dispatch-sync [:element/import-traced-image svg (:name el) position]))))
        (set! (.-src image) data-url)))))
 
 (rf/reg-event-fx
  :element/trace
  (fn [{:keys [db]} [_]]
-   {::->svg [(filter #(= :image (:tag %)) (h/selected db))
-             #(.imagedataToSVG ImageTracer %)]}))
+   (let [images (h/filter-by-tag db :image)]
+     {:db (cond-> db images (assoc :loading "Tracing.."))
+      :fx [[::->svg [(filter #(= :image (:tag %)) (h/selected db))
+                     #(.imagedataToSVG ImageTracer %)]]
+           [:dispatch [:clear-loading]]]})))
 
 (def triangulation-options
   #js {:accuracy 0.5 ; float between 0 and 1
@@ -405,8 +408,11 @@
 (rf/reg-event-fx
  :element/triangulate
  (fn [{:keys [db]} [_]]
-   {::->svg [(filter #(= :image (:tag %)) (h/selected db))
-             #(-> triangulation-options
-                  (triangulate)
-                  (.fromImageDataSync %)
-                  (.toSVG))]}))
+   (let [images (h/filter-by-tag db :image)]
+     {:db (cond-> db images (assoc :loading "Triangulating.."))
+      :fx [[::->svg [(filter #(= :image (:tag %)) (h/selected db))
+                     #(-> triangulation-options
+                          (triangulate)
+                          (.fromImageDataSync %)
+                          (.toSVG))]]
+           [:dispatch [:clear-loading]]]})))

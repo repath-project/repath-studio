@@ -247,6 +247,10 @@
   [db]
   (reduce #(conj %1 (:tag %2)) #{} (selected db)))
 
+(defn filter-by-tag
+  [db tag]
+  (filter #(= tag (:tag %)) (selected db)))
+
 (defn select-same-tags
   [db]
   (let [selected-tags (selected-tags db)]
