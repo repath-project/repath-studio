@@ -19,7 +19,7 @@
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
 
-(derive :brush ::tools/draw)
+(derive :brush ::tools/renderable)
 
 (derive ::stroke ::attr.color/color)
 
@@ -81,10 +81,6 @@
 (defmethod attr.hierarchy/description ::streamline
   []
   "How much to streamline the stroke.")
-
-(defmethod tools/drag-start :brush
-  [db]
-  (h/set-state db :create))
 
 (defmethod tools/drag :brush
   [{:keys [active-document

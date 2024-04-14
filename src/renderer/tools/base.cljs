@@ -1,7 +1,6 @@
 (ns renderer.tools.base)
 
 (derive ::transform ::tool)
-(derive ::draw ::tool)
 (derive ::misc ::tool)
 
 (derive ::element ::tool)

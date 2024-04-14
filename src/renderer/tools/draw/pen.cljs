@@ -8,7 +8,7 @@
    [renderer.tools.shape.path :as path]
    [renderer.utils.element :as element]))
 
-(derive :pen ::tools/draw)
+(derive :pen ::tools/renderable)
 
 (defmethod tools/properties :pen
   []
@@ -19,10 +19,6 @@
            :stroke
            :stroke-linejoin
            :opacity]})
-
-(defmethod tools/drag-start :pen
-  [db]
-  (h/set-state db :create))
 
 (defmethod tools/drag :pen
   [{:keys [active-document adjusted-pointer-pos] :as db}]
