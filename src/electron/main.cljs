@@ -1,4 +1,4 @@
-(ns main
+(ns electron.main
   (:require
    #_["@sentry/electron/main" :as sentry-electron-main]
    ["electron-extension-installer" :refer [REACT_DEVELOPER_TOOLS installExtension]]
@@ -10,7 +10,7 @@
    ["os" :as os]
    ["path" :as path]
    [config]
-   [file]
+   [electron.file :as file]
    [promesa.core :as p]))
 
 (defonce main-window (atom nil))

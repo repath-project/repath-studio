@@ -1,4 +1,4 @@
-(ns preload
+(ns electron.preload
   (:require
    #_["@sentry/electron" :as Sentry]
    ["@webref/css" :as css]

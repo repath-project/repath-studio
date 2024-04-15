@@ -11,12 +11,12 @@
  {:main
   {:target :node-script
    :output-to "resources/main.js"
-   :main main/init}
+   :main electron.main/init}
 
   :preload
   {:target :node-script
    :output-to "resources/preload.js"
-   :main preload/init
+   :main electron.preload/init
    :hashbang false}
 
   :renderer
@@ -52,9 +52,18 @@
      {day8.re-frame.tracing
       day8.re-frame.tracing-stubs}}}
    :modules
-   {:renderer
+   {:shared
+    {:entries [shadow.cljs.bootstrap.env]}
+
+    :renderer
     {:entries [renderer.core]
-     :init-fn renderer.core/init}}}
+     :depends-on #{:shared}
+     :init-fn renderer.core/init}
+
+    :worker
+    {:entries [worker.core]
+     :web-worker true
+     :depends-on #{:shared}}}}
 
   :bootstrap
   {:target :bootstrap

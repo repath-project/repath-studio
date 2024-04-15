@@ -1,4 +1,4 @@
-(ns file
+(ns electron.file
   (:require
    ["electron" :refer [app dialog]]
    ["fs" :as fs]
