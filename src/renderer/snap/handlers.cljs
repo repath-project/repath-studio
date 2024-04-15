@@ -16,13 +16,19 @@
         selected-visible (filter #(and (:visible? %)
                                        (:selected? %)) (vals elements))]
     (when (:enabled? snap)
-      (if (and (contains? #{:move :clone} state) (seq selected-visible))
+      (cond
+        (and (contains? #{:move :clone} state) (seq selected-visible))
         (reduce (fn [points element]
                   (apply conj points (utils.el/snapping-points element (:options snap))))
                 [] selected-visible)
+
+        (contains? #{:edit :scale} state)
         [(mat/add [(:x clicked-element) (:y clicked-element)]
                   (mat/sub adjusted-pointer-pos
-                           adjusted-pointer-offset))]))))
+                           adjusted-pointer-offset))]
+
+        :else
+        [adjusted-pointer-pos]))))
 
 (defn nearest-neighbors
   [db]
