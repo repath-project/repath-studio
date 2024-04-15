@@ -61,7 +61,7 @@
   "main": "resources/main.js",
   "devDependencies": {
     "@mdn/browser-compat-data": "5.5.13",
-    "@playwright/test": "1.42.1",
+    "@playwright/test": "1.43.1",
     "@radix-ui/react-context-menu": "2.1.5",
     "@radix-ui/react-dialog": "1.0.5",
     "@radix-ui/react-dropdown-menu": "2.0.6",
@@ -73,9 +73,9 @@
     "@radix-ui/react-switch": "1.0.3",
     "@radix-ui/react-tooltip": "1.0.7",
     "@re-path/react-color": "2.19.4",
-    "@sentry/react": "7.109.0",
-    "@types/react": "18.2.74",
-    "@types/react-dom": "18.2.23",
+    "@sentry/react": "7.110.1",
+    "@types/react": "18.2.78",
+    "@types/react-dom": "18.2.25",
     "@xzdarcy/react-timeline-editor": "0.1.9",
     "acorn": "8.11.3",
     "autoprefixer": "10.4.19",
@@ -84,7 +84,7 @@
     "cmdk": "1.0.0",
     "codemirror": "5.65.15",
     "create-react-class": "15.7.0",
-    "electron": "29.1.6",
+    "electron": "29.3.0",
     "electron-builder": "24.13.3",
     "element-to-path": "1.2.1",
     "highlight.js": "11.9.0",
@@ -118,15 +118,15 @@
     "triangulate-image": "0.6.6"
   },
   "dependencies": {
-    "@sentry/electron": "4.21.0",
-    "@webref/css": "6.12.5",
+    "@sentry/electron": "4.22.0",
+    "@webref/css": "6.12.7",
     "electron-extension-installer": "1.2.0",
     "electron-log": "5.1.2",
     "electron-reloader": "1.2.3",
     "electron-updater": "6.1.8",
     "electron-window-state": "5.0.3",
     "font-scanner": "0.2.1",
-    "mdn-data": "2.4.2",
+    "mdn-data": "2.5.0",
     "opentype.js": "1.3.4"
   }
 }
