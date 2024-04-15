@@ -1,5 +1,5 @@
 
-(ns renderer.tools.transform.select
+(ns renderer.tool.transform.select
   (:require
    [clojure.core.matrix :as mat]
    [clojure.set :as set]
@@ -8,16 +8,16 @@
    [renderer.handlers :as h]
    [renderer.history.handlers :as history.h]
    [renderer.snap.handlers :as snap.h]
-   [renderer.tools.base :as tools]
-   [renderer.tools.overlay :as overlay]
+   [renderer.tool.base :as tool]
+   [renderer.tool.overlay :as overlay]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as utils.el]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
 
-(derive :select ::tools/tool)
+(derive :select ::tool/tool)
 
-(defmethod tools/properties :select
+(defmethod tool/properties :select
   []
   {:icon "pointer-alt"})
 
@@ -84,7 +84,7 @@
               (hovered? db el intersecting?)
               (f (:key el)))) db (filter :visible? (vals (element.h/elements db)))))
 
-(defmethod tools/pointer-move :select
+(defmethod tool/pointer-move :select
   [db e el]
   (cond-> db
     (not (pointer/shift? e))
@@ -95,26 +95,26 @@
         (element.h/hover (:key el))
         (assoc :cursor (if el "move" "default")))))
 
-(defmethod tools/key-down :select
+(defmethod tool/key-down :select
   [db e]
   db
   (cond-> db
     (pointer/shift? e)
     (element.h/ignore :bounding-box)))
 
-(defmethod tools/key-up :select
+(defmethod tool/key-up :select
   [db e]
   (cond-> db
     (not (pointer/shift? e))
     element.h/clear-ignored))
 
-(defmethod tools/pointer-down :select
+(defmethod tool/pointer-down :select
   [db _e el]
   (-> db
       (assoc :clicked-element el)
       (element.h/ignore :bounding-box)))
 
-(defmethod tools/pointer-up :select
+(defmethod tool/pointer-up :select
   [db e el]
   (if-not (and (= (:button e) :right)
                (:selected? el))
@@ -125,22 +125,22 @@
         (history.h/finalize "Select element"))
     (dissoc db :clicked-element)))
 
-(defmethod tools/double-click :select
+(defmethod tool/double-click :select
   [db _e el]
   (if (= (:tag el) :g)
     (-> db
         (element.h/ignore (:key el))
         (element.h/deselect (:key el)))
-    (tools/set-tool db :edit)))
+    (tool/set-tool db :edit)))
 
-(defmethod tools/activate :select
+(defmethod tool/activate :select
   [db]
   (-> db
       (h/set-state :default)
       (h/set-cursor "default")
       (h/set-message (message nil :default))))
 
-(defmethod tools/deactivate :select
+(defmethod tool/deactivate :select
   [db]
   (element.h/clear-ignored db))
 
@@ -152,7 +152,7 @@
     (cond-> (overlay/select-box adjusted-pointer-pos adjusted-pointer-offset zoom)
       (not intersecting?) (assoc-in [:attrs :fill] "transparent"))))
 
-(defmethod tools/drag-start :select
+(defmethod tool/drag-start :select
   [db e]
   (case (-> db :clicked-element :tag)
     :canvas
@@ -220,7 +220,7 @@
         (h/set-message (message ratio :scale))
         (element.h/scale ratio pivot-point))))
 
-(defmethod tools/drag :select
+(defmethod tool/drag :select
   [{:keys [state adjusted-pointer-offset adjusted-pointer-pos] :as db} e]
   (let [offset (mat/sub adjusted-pointer-pos adjusted-pointer-offset)
         ctrl? (pointer/ctrl? e)
@@ -268,7 +268,7 @@
 
           :default db))))
 
-(defmethod tools/drag-end :select
+(defmethod tool/drag-end :select
   [db e]
   (-> (case (:state db)
         :select (-> (cond-> db (not (pointer/shift? e)) element.h/deselect)

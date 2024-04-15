@@ -1,17 +1,17 @@
-(ns renderer.tools.animation.animation
+(ns renderer.tool.animation.animation
   "https://svgwg.org/specs/animations/#AnimationElements"
   (:require
    [re-frame.core :as rf]
-   [renderer.tools.base :as tools]))
+   [renderer.tool.base :as tool]))
 
-(derive ::tools/animation ::tools/descriptive)
+(derive ::tool/animation ::tool/descriptive)
 
-(defmethod tools/render ::tools/animation
+(defmethod tool/render ::tool/animation
   [{:keys [children tag attrs]}]
   (let [child-elements @(rf/subscribe [:element/filter-visible children])]
     [tag
      attrs
      (for [el child-elements]
-       ^{:key (:key el)} [tools/render el])]))
+       ^{:key (:key el)} [tool/render el])]))
 
-(defmethod tools/bounds ::tools/animation [] nil)
+(defmethod tool/bounds ::tool/animation [] nil)

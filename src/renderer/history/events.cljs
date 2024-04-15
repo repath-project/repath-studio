@@ -3,7 +3,7 @@
    [re-frame.core :as rf]
    [renderer.element.handlers :as element.h]
    [renderer.history.handlers :as h]
-   [renderer.tools.base :as tools]))
+   [renderer.tool.base :as tool]))
 
 (rf/reg-event-db
  :history/undo
@@ -70,7 +70,7 @@
      (element.h/clear-hovered)
 
      (= (:state db) :default)
-     (tools/set-tool :select)))) ; FIXME
+     (tool/set-tool :select)))) ; FIXME
 
 (rf/reg-event-fx
  :history/restore
@@ -82,7 +82,7 @@
               (dissoc :restored?))
           (-> db
               element.h/clear-hovered
-              (tools/set-tool :select)
+              (tool/set-tool :select)
               (dissoc :pointer-offset)
               (dissoc :clicked-element)
               (dissoc :drag?)

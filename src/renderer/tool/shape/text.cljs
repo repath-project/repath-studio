@@ -1,4 +1,4 @@
-(ns renderer.tools.shape.text
+(ns renderer.tool.shape.text
   (:require
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
@@ -7,15 +7,15 @@
    [renderer.element.handlers :as element.h]
    [renderer.handlers :as h]
    [renderer.history.handlers :as history.h]
-   [renderer.tools.base :as tools]
+   [renderer.tool.base :as tool]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.dom :as dom]
    [renderer.utils.element :as element]
    [renderer.utils.units :as units]))
 
-(derive :text ::tools/renderable)
+(derive :text ::tool/renderable)
 
-(defmethod tools/properties :text
+(defmethod tool/properties :text
   []
   {:icon "text"
    :description "The SVG <text> element draws a graphics element consisting 
@@ -31,7 +31,7 @@
            :stroke-width
            :opacity]})
 
-(defmethod tools/activate :text
+(defmethod tool/activate :text
   [db]
   (-> db
       (assoc :cursor "text")
@@ -39,7 +39,7 @@
        [:div
         [:div "Click to enter your text."]])))
 
-(defmethod tools/pointer-up :text
+(defmethod tool/pointer-up :text
   [{:keys [adjusted-pointer-offset] :as db}]
   (let [[offset-x offset-y] adjusted-pointer-offset
         attrs {:x offset-x
@@ -50,14 +50,14 @@
                         :tag :text
                         :attrs attrs})
         (history.h/finalize "Create text")
-        (tools/set-tool :edit)
+        (tool/set-tool :edit)
         (h/set-state :edit)))) ; FIXME: Merge create and edit history action.
 
-(defmethod tools/drag-end :text
+(defmethod tool/drag-end :text
   [db]
-  (tools/pointer-up db))
+  (tool/pointer-up db))
 
-(defmethod tools/translate :text
+(defmethod tool/translate :text
   [el [x y]]
   (-> el
       (hierarchy/update-attr :x + x)
@@ -82,10 +82,10 @@
      js/window
      #(rf/dispatch-sync [:element/preview-prop el-k :content (get-text e)]))))
 
-(defmethod tools/render-edit :text
+(defmethod tool/render-edit :text
   [{:keys [attrs key content] :as el}]
   (let [offset (element/offset el)
-        el-bounds (tools/bounds el)
+        el-bounds (tool/bounds el)
         [x y] (mat/add (take 2 el-bounds) offset)
         [width height] (bounds/->dimensions el-bounds)
         {:keys [fill font-family font-size font-weight]} attrs]
@@ -117,7 +117,7 @@
                             (str (units/unit->px font-size) "px"))
                :font-weight (if (empty? font-weight) "inherit" font-weight)}}]]))
 
-(defmethod tools/path :text
+(defmethod tool/path :text
   [{:keys [attrs content]}]
   (let [font-descriptor #js {:family (:font-family attrs)
                              :weight (js/parseInt (:font-weight attrs))

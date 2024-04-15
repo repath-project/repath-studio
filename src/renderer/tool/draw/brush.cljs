@@ -1,4 +1,4 @@
-(ns renderer.tools.draw.brush
+(ns renderer.tool.draw.brush
   "https://github.com/steveruizok/perfect-freehand"
   (:require
    ["perfect-freehand" :refer [getStroke]]
@@ -12,18 +12,18 @@
    [renderer.element.handlers :as element.h]
    [renderer.handlers :as h]
    [renderer.history.handlers :as history.h]
-   [renderer.tools.base :as tools]
-   [renderer.tools.overlay :as overlay]
+   [renderer.tool.base :as tool]
+   [renderer.tool.overlay :as overlay]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
 
-(derive :brush ::tools/renderable)
+(derive :brush ::tool/renderable)
 
 (derive ::stroke ::attr.color/color)
 
-(defmethod tools/properties :brush
+(defmethod tool/properties :brush
   []
   {:icon "brush"
    :description "Draw pressure-sensitive freehand lines using perfect-freehand."
@@ -36,7 +36,7 @@
            ::smoothing
            ::streamline]})
 
-(defmethod tools/activate :brush
+(defmethod tool/activate :brush
   [db]
   (-> db
       (assoc :cursor "crosshair")
@@ -82,7 +82,7 @@
   []
   "How much to streamline the stroke.")
 
-(defmethod tools/drag :brush
+(defmethod tool/drag :brush
   [{:keys [active-document
            adjusted-pointer-pos] :as db} {:keys [pressure]}]
   (let [stroke (get-in db [:documents active-document :stroke])
@@ -136,7 +136,7 @@
       js->clj
       get-svg-path-from-stroke))
 
-(defmethod tools/render :brush
+(defmethod tool/render :brush
   [{:keys [attrs] :as element}]
   (let [pointer-handler #(pointer/event-handler % element)]
     [:path (merge {:d (points->path (::points attrs)
@@ -150,28 +150,28 @@
                       (select-keys [:id :class :opacity])
                       (assoc :fill (::stroke attrs))))]))
 
-(defmethod tools/bounds :brush
+(defmethod tool/bounds :brush
   [{:keys [attrs]}]
   (-> (::points attrs)
       (points->path (select-keys attrs options))
       svg-path-bbox
       js->clj))
 
-(defmethod tools/translate :brush
+(defmethod tool/translate :brush
   [el [x y]]
   (update-in el
              [:attrs ::points]
              #(mapv (fn [point] (mat/add point [x y 0])) %)))
 
-(defmethod tools/position :brush
+(defmethod tool/position :brush
   [el position]
-  (let [center (bounds/center (tools/bounds el))
+  (let [center (bounds/center (tool/bounds el))
         offset (mat/sub position center)]
-    (tools/translate el offset)))
+    (tool/translate el offset)))
 
-(defmethod tools/scale :brush
+(defmethod tool/scale :brush
   [el ratio pivot-point]
-  (let [bounds-start (take 2 (tools/bounds el))
+  (let [bounds-start (take 2 (tool/bounds el))
         pivot-point (mat/sub pivot-point (mat/mul pivot-point ratio))]
     (update-in el
                [:attrs ::points]
@@ -180,18 +180,18 @@
                               [x y] (mat/add pivot-point (mat/sub rel-point (mat/mul rel-point ratio)))]
                           (mat/add point [x y 0]))) %))))
 
-(defmethod tools/drag-end :brush
+(defmethod tool/drag-end :brush
   [db]
   (-> db
       element.h/add
       (h/set-state :default)
       (history.h/finalize "Draw line")))
 
-(defmethod tools/path :brush
+(defmethod tool/path :brush
   [{:keys [attrs]}]
   (points->path (::points attrs) (select-keys attrs options)))
 
-(defmethod tools/render-edit :brush
+(defmethod tool/render-edit :brush
   [{:keys [attrs key] :as el} zoom]
   (let [handle-size (/ 8 zoom)
         stroke-width (/ 1 zoom)

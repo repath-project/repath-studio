@@ -1,4 +1,4 @@
-(ns renderer.tools.shape.polyshape
+(ns renderer.tool.shape.polyshape
   "This serves as an abstraction for polygons and polylines that have similar
    attributes and hehavior"
   (:require
@@ -8,14 +8,14 @@
    [renderer.element.handlers :as element.h]
    [renderer.handlers :as h]
    [renderer.history.handlers :as history]
-   [renderer.tools.base :as tools]
-   [renderer.tools.overlay :as overlay]
+   [renderer.tool.base :as tool]
+   [renderer.tool.overlay :as overlay]
    [renderer.utils.element :as element]
    [renderer.utils.units :as units]))
 
-(derive ::tools/polyshape ::tools/shape)
+(derive ::tool/polyshape ::tool/shape)
 
-(defmethod tools/activate ::tools/polyshape
+(defmethod tool/activate ::tool/polyshape
   [db]
   (-> db
       (assoc :cursor "crosshair")
@@ -39,7 +39,7 @@
              [:documents active-document :temp-element :attrs :points]
              #(str % " " (str/join " " point))))
 
-(defmethod tools/pointer-up ::tools/polyshape
+(defmethod tool/pointer-up ::tool/polyshape
   [{:keys [adjusted-pointer-pos] :as db}]
   (if (element.h/get-temp db)
     (add-point db adjusted-pointer-pos)
@@ -47,7 +47,7 @@
         (h/set-state :create)
         (create-polyline adjusted-pointer-pos))))
 
-(defmethod tools/drag-end ::tools/polyshape
+(defmethod tool/drag-end ::tool/polyshape
   [{:keys [adjusted-pointer-pos] :as db}]
   (if (element.h/get-temp db)
     (add-point db adjusted-pointer-pos)
@@ -55,7 +55,7 @@
         (h/set-state :create)
         (create-polyline adjusted-pointer-pos))))
 
-(defmethod tools/pointer-move ::tools/polyshape
+(defmethod tool/pointer-move ::tool/polyshape
   [{:keys [active-document adjusted-pointer-pos] :as db}]
   (if-let [points (get-in db [:documents active-document :temp-element :attrs :points])]
     (let [point-vector (attr.utils/points->vec points)]
@@ -66,17 +66,17 @@
                                                       point-vector))
                                       adjusted-pointer-pos)))) db))
 
-(defmethod tools/double-click ::tools/polyshape
+(defmethod tool/double-click ::tool/polyshape
   [{:keys [active-document] :as db}]
   (-> db
       (update-in [:documents active-document :temp-element :attrs :points]
                  #(str/join " " (apply concat (drop-last 2 (attr.utils/points->vec %)))))
       element.h/add
-      (tools/set-tool :select)
+      (tool/set-tool :select)
       (h/set-state :default)
       (history/finalize "Create " (name (:tool db)))))
 
-(defmethod tools/translate ::tools/polyshape
+(defmethod tool/translate ::tool/polyshape
   [el [x y]]
   (update-in el
              [:attrs :points]
@@ -88,9 +88,9 @@
                                    (units/transform (second point) + y))) [])
                    (str/join " "))))
 
-(defmethod tools/scale ::tools/polyshape
+(defmethod tool/scale ::tool/polyshape
   [el ratio pivot-point]
-  (let [bounds-start (take 2 (tools/bounds el))
+  (let [bounds-start (take 2 (tool/bounds el))
         pivot-point (mat/sub pivot-point (mat/mul pivot-point ratio))]
     (update-in el
                [:attrs :points]
@@ -105,7 +105,7 @@
                                        (units/transform point-y + y)))) [])
                      (str/join " ")))))
 
-(defmethod tools/render-edit ::tools/polyshape
+(defmethod tool/render-edit ::tool/polyshape
   [{:keys [attrs key] :as el} zoom]
   (let [{:keys [points]} attrs
         handle-size (/ 8 zoom)
@@ -125,7 +125,7 @@
                                               :element key}]))
                   (attr.utils/points->vec points))]))
 
-(defmethod tools/edit ::tools/polyshape
+(defmethod tool/edit ::tool/polyshape
   [el [x y] handle]
   (cond-> el
     (not (keyword? handle))
@@ -140,7 +140,7 @@
                                (units/transform (second point) + y))))
                     flatten)))))
 
-(defmethod tools/bounds ::tools/polyshape
+(defmethod tool/bounds ::tool/polyshape
   [{{:keys [points]} :attrs}]
   (let [points-v (attr.utils/points->vec points)
         x1 (apply min (map #(units/unit->px (first %)) points-v))
@@ -161,17 +161,17 @@
                   0
                   vertices) 2)))
 
-(defmethod tools/area ::tools/polyshape
+(defmethod tool/area ::tool/polyshape
   [{{:keys [points]} :attrs}]
   (let [points-v (attr.utils/points->px points)]
     (calc-polygon-area points-v)))
 
-(defmethod tools/centroid ::tools/polyshape
+(defmethod tool/centroid ::tool/polyshape
   [{{:keys [points]} :attrs}]
   (let [points-v (attr.utils/points->px points)]
     (mat/div (reduce mat/add [0 0] points-v)
              (count points-v))))
 
-(defmethod tools/snapping-points ::tools/polyshape
+(defmethod tool/snapping-points ::tool/polyshape
   [{{:keys [points]} :attrs}]
   (attr.utils/points->px points))

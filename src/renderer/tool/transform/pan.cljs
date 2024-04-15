@@ -1,31 +1,31 @@
-(ns renderer.tools.transform.pan
+(ns renderer.tool.transform.pan
   (:require
    [clojure.core.matrix :as mat]
    [renderer.frame.handlers :as frame]
-   [renderer.tools.base :as tools]))
+   [renderer.tool.base :as tool]))
 
-(derive :pan ::tools/tool)
+(derive :pan ::tool/tool)
 
-(defmethod tools/properties :pan
+(defmethod tool/properties :pan
   []
   {:icon "hand"})
 
-(defmethod tools/activate :pan
+(defmethod tool/activate :pan
   [db]
   (assoc db :cursor "grab"))
 
-(defmethod tools/pointer-up :pan
+(defmethod tool/pointer-up :pan
   [db]
   (assoc db :cursor "grab"))
 
-(defmethod tools/pointer-down :pan
+(defmethod tool/pointer-down :pan
   [db]
   (assoc db :cursor "grabbing"))
 
-(defmethod tools/drag :pan
+(defmethod tool/drag :pan
   [db e _]
   (frame/pan db (mat/sub (:pointer-pos db) (:pointer-pos e))))
 
-(defmethod tools/drag-end :pan
+(defmethod tool/drag-end :pan
   [db]
   (assoc db :cursor "grab"))

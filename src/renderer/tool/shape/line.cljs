@@ -1,4 +1,4 @@
-(ns renderer.tools.shape.line
+(ns renderer.tool.shape.line
   "https://www.w3.org/TR/SVG/shapes.html#LineElement"
   (:require
    [clojure.core.matrix :as mat]
@@ -7,15 +7,15 @@
    [renderer.element.handlers :as element.h]
    [renderer.handlers :as handlers]
    [renderer.history.handlers :as history]
-   [renderer.tools.base :as tools]
-   [renderer.tools.overlay :as overlay]
+   [renderer.tool.base :as tool]
+   [renderer.tool.overlay :as overlay]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
    [renderer.utils.units :as units]))
 
-(derive :line ::tools/shape)
+(derive :line ::tool/shape)
 
-(defmethod tools/properties :line
+(defmethod tool/properties :line
   []
   {:icon "line-alt"
    :description "The <line> element is an SVG basic shape used to create a line 
@@ -44,12 +44,12 @@
                  (assoc-in [:attrs :y2] (second adjusted-pointer-pos)))]
     (element.h/set-temp db temp)))
 
-(defmethod tools/pointer-move :line
+(defmethod tool/pointer-move :line
   [db]
   (cond-> db
     (element.h/get-temp db) (update-line-end)))
 
-(defmethod tools/pointer-up :line
+(defmethod tool/pointer-up :line
   [db]
   (if (element.h/get-temp db)
     (-> db
@@ -59,17 +59,17 @@
         (handlers/set-state :create)
         create-line)))
 
-(defmethod tools/pointer-down :line
+(defmethod tool/pointer-down :line
   [db]
   (cond-> db
     (element.h/get-temp db)
     (history/finalize "Create line")))
 
-(defmethod tools/drag :line
+(defmethod tool/drag :line
   [db]
   (create-line db))
 
-(defmethod tools/translate :line
+(defmethod tool/translate :line
   [el [x y]]
   (-> el
       (hierarchy/update-attr :x1 + x)
@@ -77,26 +77,26 @@
       (hierarchy/update-attr :x2 + x)
       (hierarchy/update-attr :y2 + y)))
 
-(defmethod tools/scale :line
+(defmethod tool/scale :line
   [el ratio pivot-point]
   (let [{:keys [x1 y1 x2 y2]} (:attrs el)
         [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])
-        dimentions (bounds/->dimensions (tools/bounds el))
+        dimentions (bounds/->dimensions (tool/bounds el))
         [x y] (mat/sub dimentions (mat/mul dimentions ratio))
         pivot-diff (mat/sub pivot-point dimentions)
         offset (mat/sub pivot-diff (mat/mul pivot-diff ratio))]
     (-> el
         (hierarchy/update-attr (if (< x1 x2) :x1 :x2) + x)
         (hierarchy/update-attr (if (< y1 y2) :y1 :y2) + y)
-        (tools/translate offset))))
+        (tool/translate offset))))
 
-(defmethod tools/path :line
+(defmethod tool/path :line
   [{{:keys [x1 y1 x2 y2]} :attrs}]
   (let [[x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])]
     (str/join " " ["M" x1 y1
                    "L" x2 y2])))
 
-(defmethod tools/render-edit :line
+(defmethod tool/render-edit :line
   [{:keys [attrs key] :as el}]
   (let [offset (element/offset el)
         {:keys [x1 y1 x2 y2]} attrs
@@ -122,7 +122,7 @@
             :tag :edit
             :element key}])]))
 
-(defmethod tools/edit :line
+(defmethod tool/edit :line
   [el [x y] handle]
   (case (keyword (name handle))
     :starting-point
@@ -136,7 +136,7 @@
         (hierarchy/update-attr :y2 + y))
     el))
 
-(defmethod tools/bounds :line
+(defmethod tool/bounds :line
   [{{:keys [x1 y1 x2 y2]} :attrs}]
   (let [[x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])]
     [(min x1 x2) (min y1 y2) (max x1 x2) (max y1 y2)]))

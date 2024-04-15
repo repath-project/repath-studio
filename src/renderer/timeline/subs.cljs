@@ -2,13 +2,13 @@
   (:require
    [clojure.string :as str]
    [re-frame.core :as rf]
-   [renderer.tools.base :as tools]))
+   [renderer.tool.base :as tool]))
 
 (rf/reg-sub
  :animations
  :<- [:document/elements]
  (fn [elements]
-   (filter #(contains? (descendants ::tools/animation) (:tag %)) (vals elements))))
+   (filter #(contains? (descendants ::tool/animation) (:tag %)) (vals elements))))
 
 (defn effect-id
   [el]

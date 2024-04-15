@@ -10,8 +10,8 @@
    [reagent.dom.server :as dom.server]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.document.handlers :as document.h]
-   [renderer.tools.base :as tools]
-   [renderer.tools.shape.path :as path]
+   [renderer.tool.base :as tool]
+   [renderer.tool.shape.path :as path]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
    [renderer.utils.map :as map]
@@ -420,7 +420,7 @@
   (let [svgs (reverse (root-svgs db))
         pointer-pos (:adjusted-pointer-pos db)]
     (or
-     (some #(when (bounds/contain-point? (tools/bounds %) pointer-pos) %) svgs)
+     (some #(when (bounds/contain-point? (tool/bounds %) pointer-pos) %) svgs)
      (element db :canvas))))
 
 (defn translate
@@ -442,7 +442,7 @@
   ([db el offset]
    (cond-> db
      (not (:locked? el))
-     (update-el el tools/translate offset))))
+     (update-el el tool/translate offset))))
 
 (defn position
   ([db pos]
@@ -450,7 +450,7 @@
   ([db el pos]
    (cond-> db
      (not (:locked? el))
-     (update-el el tools/position pos))))
+     (update-el el tool/position pos))))
 
 (defn scale
   ([db ratio pivot-point]
@@ -458,8 +458,8 @@
   ([db el ratio pivot-point]
    (cond-> db
      (not (:locked? el))
-     (update-el el tools/scale ratio (let [[x1 y1] (:bounds el)]
-                                       (mat/sub pivot-point [x1 y1]))))))
+     (update-el el tool/scale ratio (let [[x1 y1] (:bounds el)]
+                                      (mat/sub pivot-point [x1 y1]))))))
 
 (defn align
   ([db direction]
@@ -502,10 +502,10 @@
 (defn overlapping-svg
   [db el]
   (let [svgs (reverse (root-svgs db)) ; Reverse to select top svgs first.
-        el-bounds (tools/bounds el)]
+        el-bounds (tool/bounds el)]
     (or
-     (some #(when (bounds/contained? el-bounds (tools/bounds %)) %) svgs)
-     (some #(when (bounds/intersected? el-bounds (tools/bounds %)) %) svgs)
+     (some #(when (bounds/contained? el-bounds (tool/bounds %)) %) svgs)
+     (some #(when (bounds/intersected? el-bounds (tool/bounds %)) %) svgs)
      (element db :canvas))))
 
 (defn create
@@ -515,7 +515,7 @@
           page (overlapping-svg db el)
           parent (or (:parent el) (if (element/svg? el) :canvas (:key page)))
           children (vals (select-keys (elements db) (:children el)))
-          [x1 y1] (tools/bounds (element db parent))
+          [x1 y1] (tool/bounds (element db parent))
           children (concat children (:content el))
           new-el (map/deep-merge el default-props {:key key :parent parent})
           add-children (fn [db children]
@@ -587,7 +587,7 @@
          offset (mat/sub el-center center)
          el (dissoc el :bounds)
          svg (hovered-svg db)
-         [s-x1 s-y1] (tools/bounds svg)
+         [s-x1 s-y1] (tool/bounds svg)
          pointer-pos (:adjusted-pointer-pos db)
          selected (selected-keys db)]
      (reduce
@@ -686,7 +686,7 @@
 
 (defn ->string
   [elements]
-  (reduce #(-> (tools/render-to-string %2)
+  (reduce #(-> (tool/render-to-string %2)
                dom.server/render-to-static-markup
                (str "\n" %)) "" elements))
 

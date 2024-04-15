@@ -1,11 +1,11 @@
-(ns renderer.tools.animation.animate-motion
+(ns renderer.tool.animation.animate-motion
   "https://svgwg.org/specs/animations/#AnimateMotionElement"
   (:require
-   [renderer.tools.base :as tools]))
+   [renderer.tool.base :as tool]))
 
-(derive :animateMotion ::tools/animation)
+(derive :animateMotion ::tool/animation)
 
-(defmethod tools/properties :animateMotion
+(defmethod tool/properties :animateMotion
   []
   {:description "The SVG <animateMotion> element let define how an element 
                  moves along a motion path."

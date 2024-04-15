@@ -3,7 +3,7 @@
    ["paper" :refer [Path]]
    ["paperjs-offset" :refer [PaperOffset]]
    [clojure.core.matrix :as mat]
-   [renderer.tools.base :as tools]
+   [renderer.tool.base :as tool]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.map :as map]
    [renderer.utils.spec :as spec]))
@@ -18,14 +18,14 @@
 
 (defn container?
   [el]
-  #_(isa? (:tag el) ::tools/container)
+  #_(isa? (:tag el) ::tool/container)
   (or (svg? el) (root? el))) ; FIXME
 
 (defn supported?
   [el]
   (and (map? el)
        (keyword? (:tag el))
-       (contains? (descendants ::tools/element) (:tag el))))
+       (contains? (descendants ::tool/element) (:tag el))))
 
 (defn parent-container
   [elements el]
@@ -37,9 +37,9 @@
 
 (defn adjusted-bounds
   [element elements]
-  (when-let [bounds (tools/bounds element elements)]
+  (when-let [bounds (tool/bounds element elements)]
     (if-let [container (parent-container elements element)]
-      (let [[offset-x offset-y _ _] (tools/bounds container elements)
+      (let [[offset-x offset-y _ _] (tool/bounds container elements)
             [x1 y1 x2 y2] bounds]
         [(+ x1 offset-x) (+ y1 offset-y)
          (+ x2 offset-x) (+ y2 offset-y)])
@@ -56,7 +56,7 @@
 (defn offset
   [el]
   (let [bounds (:bounds el)
-        local-bounds (tools/bounds el)]
+        local-bounds (tool/bounds el)]
     (take 2 (mat/sub bounds local-bounds))))
 
 (defn snapping-points
@@ -79,7 +79,7 @@
                [cx y2]])
 
             (when :nodes
-              (tools/snapping-points element)))))
+              (tool/snapping-points element)))))
 
 (defn- attrs-map
   [attrs]
@@ -96,14 +96,14 @@
   [{:keys [tag attrs]}]
   (merge
    (when tag
-     (merge (when (isa? tag ::tools/element)
+     (merge (when (isa? tag ::tool/element)
               (merge
                (attrs-map (tag (:elements spec/svg)))
                (attrs-map (-> spec/svg :attributes :core))
                (attrs-map (-> spec/svg :attributes :style))))
             (when (contains? #{:animateMotion :animateTransform} tag)
               (attrs-map (:animate (:elements spec/svg))))
-            (zipmap (:attrs (tools/properties tag)) (repeat ""))))
+            (zipmap (:attrs (tool/properties tag)) (repeat ""))))
    attrs))
 
 (defn supports-attr?
@@ -121,11 +121,11 @@
                               (attributes {:tag :path
                                            :attrs {}}))})
              :tag :path)
-      (assoc-in [:attrs :d] (tools/path el))))
+      (assoc-in [:attrs :d] (tool/path el))))
 
 (defn stroke->path
   [{:keys [attrs] :as el}]
-  (let [d (tools/path el)
+  (let [d (tool/path el)
         paper-path (Path. d)
         offset (or (:stroke-width attrs) 1)
         stroke-path (PaperOffset.offsetStroke

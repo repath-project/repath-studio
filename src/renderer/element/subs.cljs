@@ -4,7 +4,7 @@
    [kdtree]
    [re-frame.core :as rf]
    [renderer.attribute.utils :as attr.utils]
-   [renderer.tools.base :as tools]
+   [renderer.tool.base :as tool]
    [renderer.utils.element :as utils.el]
    [renderer.utils.map :as map]
    [renderer.element.handlers :as h]))
@@ -102,7 +102,7 @@
                  (sort-by (fn [[k _]]
                             (-> (first selected-elements)
                                 :tag
-                                tools/properties
+                                tool/properties
                                 :attrs
                                 (.indexOf k)))
                           attrs))]
@@ -118,7 +118,7 @@
  :element/area
  :<- [:element/selected]
  (fn [selected-elements _]
-   (reduce  #(+ %1 (tools/area %2)) 0 selected-elements)))
+   (reduce  #(+ %1 (tool/area %2)) 0 selected-elements)))
 
 (rf/reg-sub
  :element/ancestor-keys

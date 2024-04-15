@@ -30,7 +30,7 @@
    [renderer.subs]
    [renderer.theme.core]
    [renderer.timeline.core]
-   [renderer.tools.core]
+   [renderer.tool.core]
    [renderer.utils.dom :as dom]
    [renderer.utils.error :as error]
    [renderer.utils.keyboard :as keyb]

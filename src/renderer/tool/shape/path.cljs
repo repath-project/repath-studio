@@ -1,4 +1,4 @@
-(ns renderer.tools.shape.path
+(ns renderer.tool.shape.path
   "https://www.w3.org/TR/SVG/paths.html#PathElement"
   (:require
    ["paper" :refer [Path]]
@@ -6,12 +6,12 @@
    ["svgpath" :as svgpath]
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
-   [renderer.tools.base :as tools]
-   [renderer.tools.overlay :as overlay]
+   [renderer.tool.base :as tool]
+   [renderer.tool.overlay :as overlay]
    [renderer.utils.element :as element]
    [renderer.utils.units :as units]))
 
-(derive :path ::tools/shape)
+(derive :path ::tool/shape)
 
 (defn manipulate-paper-path
   [path action options]
@@ -30,7 +30,7 @@
                                       (.exportSVG)
                                       (.getAttribute "d"))))
 
-(defmethod tools/properties :path
+(defmethod tool/properties :path
   []
   {; :icon "bezier-curve"
    :description "The <path> SVG element is the generic element to define a shape. 
@@ -41,7 +41,7 @@
            :stroke-linejoin
            :opacity]})
 
-(defmethod tools/translate :path
+(defmethod tool/translate :path
   [el [x y]]
   (assoc-in el [:attrs :d] (-> (:attrs el)
                                :d
@@ -49,10 +49,10 @@
                                (.translate x y)
                                .toString)))
 
-(defmethod tools/scale :path
+(defmethod tool/scale :path
   [el ratio pivot-point]
   (let [[scale-x scale-y] ratio
-        [x y] (tools/bounds el)
+        [x y] (tool/bounds el)
         [x y] (mat/sub (mat/add [x y]
                                 (mat/sub pivot-point
                                          (mat/mul pivot-point ratio)))
@@ -64,16 +64,16 @@
                                  (.translate x y)
                                  .toString))))
 
-(defmethod tools/area :path
+(defmethod tool/area :path
   [{{:keys [d]} :attrs}]
   d)
 
-(defmethod tools/bounds :path
+(defmethod tool/bounds :path
   [{{:keys [d]} :attrs}]
   (let [[left top right bottom] (js->clj (svg-path-bbox d))]
     [left top right bottom]))
 
-(defmethod tools/render-edit :path
+(defmethod tool/render-edit :path
   [{:keys [attrs key] :as el} zoom]
   (let [handle-size (/ 8 zoom)
         stroke-width (/ 1 zoom)
@@ -113,7 +113,7 @@
     (aset (.-segments path) i segment)
     path))
 
-(defmethod tools/edit :path
+(defmethod tool/edit :path
   [el offset handle]
   (cond-> el
     (not (keyword? handle))

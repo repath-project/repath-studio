@@ -1,37 +1,37 @@
-(ns renderer.tools.misc.measure
+(ns renderer.tool.misc.measure
   (:require
    [clojure.core.matrix :as mat]
    [goog.math]
    [re-frame.core :as rf]
    [renderer.element.handlers :as element.h]
    [renderer.handlers :as handlers]
-   [renderer.tools.base :as tools]
-   [renderer.tools.overlay :as overlay]
+   [renderer.tool.base :as tool]
+   [renderer.tool.overlay :as overlay]
    [renderer.utils.units :as units]))
 
-(derive :measure ::tools/tool)
+(derive :measure ::tool/tool)
 
-(defmethod tools/properties :measure
+(defmethod tool/properties :measure
   []
   {:icon "ruler-triangle"})
 
-(defmethod tools/activate :measure
+(defmethod tool/activate :measure
   [db]
   (-> db
       (assoc :cursor "crosshair")
       (handlers/set-message  [:div "Click and drag to measure a distance."])))
 
-(defmethod tools/deactivate :measure
+(defmethod tool/deactivate :measure
   [db]
   (element.h/clear-temp db))
 
-(defmethod tools/pointer-up :measure
+(defmethod tool/pointer-up :measure
   [db]
   (element.h/clear-temp db))
 
-(defmethod tools/drag-end :measure  [db] db)
+(defmethod tool/drag-end :measure  [db] db)
 
-(defmethod tools/drag :measure
+(defmethod tool/drag :measure
   [{:keys [adjusted-pointer-offset adjusted-pointer-pos] :as db}]
   (let [[offset-x offset-y] adjusted-pointer-offset
         [pos-x pos-y] adjusted-pointer-pos
@@ -48,7 +48,7 @@
                             :attrs attrs
                             :hypotenuse hypotenuse})))
 
-(defmethod tools/render :measure
+(defmethod tool/render :measure
   [{:keys [attrs key hypotenuse]}]
   (let [{:keys [x1 x2 y1 y2]} attrs
         [x1 y1 x2 y2] (map units/unit->px [x1 y1 x2 y2])

@@ -1,18 +1,18 @@
-(ns renderer.tools.shape.shape
+(ns renderer.tool.shape.shape
   "https://www.w3.org/TR/SVG/shapes.html#TermShapeElement"
   (:require
    ["element-to-path" :as element-to-path]
    [re-frame.core :as rf]
-   [renderer.tools.base :as tools]))
+   [renderer.tool.base :as tool]))
 
-(derive ::tools/shape ::tools/graphics)
+(derive ::tool/shape ::tool/graphics)
 
-(defmethod tools/path ::tools/shape
+(defmethod tool/path ::tool/shape
   [{:keys [attrs tag]}]
   (element-to-path (clj->js {:name tag
                              :attributes attrs})))
 
-(defmethod tools/render-to-string ::tools/renderable
+(defmethod tool/render-to-string ::tool/renderable
   [{:keys [tag attrs title children content]}]
   (let [child-elements @(rf/subscribe [:element/filter-visible children])
         attrs (->> (dissoc attrs :style)
@@ -22,4 +22,4 @@
          attrs
          (when title [:title title])
          content
-         (doall (map tools/render-to-string child-elements))])))
+         (doall (map tool/render-to-string child-elements))])))

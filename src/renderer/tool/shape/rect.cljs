@@ -1,14 +1,14 @@
-(ns renderer.tools.shape.rect
+(ns renderer.tool.shape.rect
   "https://www.w3.org/TR/SVG/shapes.html#RectElement"
   (:require
    [renderer.element.handlers :as element.h]
-   [renderer.tools.base :as tools]
+   [renderer.tool.base :as tool]
    [renderer.utils.pointer :as pointer]))
 
-(derive :rect ::tools/box)
-(derive :rect ::tools/shape)
+(derive :rect ::tool/box)
+(derive :rect ::tool/shape)
 
-(defmethod tools/properties :rect
+(defmethod tool/properties :rect
   []
   {:icon "rectangle-alt"
    :description "The <rect> element is a basic SVG shape that draws rectangles, 
@@ -21,7 +21,7 @@
            :stroke-dasharray
            :stroke-linejoin]})
 
-(defmethod tools/drag :rect
+(defmethod tool/drag :rect
   [{:keys [adjusted-pointer-offset active-document adjusted-pointer-pos] :as db} e]
   (let [{:keys [stroke fill]} (get-in db [:documents active-document])
         [offset-x offset-y] adjusted-pointer-offset

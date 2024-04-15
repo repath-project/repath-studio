@@ -1,23 +1,23 @@
-(ns renderer.tools.container.canvas
+(ns renderer.tool.container.canvas
   "The main SVG element that hosts all pages."
   (:require
    [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.rulers.views :as rulers]
    [renderer.toolbar.filters :as filters]
-   [renderer.tools.base :as tools]
-   [renderer.tools.overlay :as overlay]
+   [renderer.tool.base :as tool]
+   [renderer.tool.overlay :as overlay]
    [renderer.utils.keyboard :as keyb]
    [renderer.utils.pointer :as pointer]))
 
-(derive :canvas ::tools/tool)
+(derive :canvas ::tool/tool)
 
-(defmethod tools/properties :canvas
+(defmethod tool/properties :canvas
   []
   {:description "The canvas is the main SVG container that hosts all elements."
    :attrs [:fill]})
 
-(defmethod tools/render :canvas
+(defmethod tool/render :canvas
   [{:keys [attrs children] :as element}]
   (let [_ @(rf/subscribe [:snap/in-viewport-tree])
         child-elements @(rf/subscribe [:element/filter-visible children])
@@ -59,7 +59,7 @@
                   :style {:outline 0
                           :background (:fill attrs)}}
      (for [el child-elements]
-       ^{:key (str (:key el))} [tools/render el])
+       ^{:key (str (:key el))} [tool/render el])
 
      [:defs
       (map (fn [{:keys [id tag attrs]}]
@@ -95,11 +95,11 @@
           (for [el selected-elements]
             ^{:key (str (:key el) "-edit-points")}
             [:g
-             [tools/render-edit el]
+             [tool/render-edit el]
              ^{:key (str (:key el) "-centroid")}
              [overlay/centroid el]]))
 
-        [tools/render temp-element]])
+        [tool/render temp-element]])
 
      (when debug?
        [into [:g]

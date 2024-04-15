@@ -1,16 +1,16 @@
-(ns renderer.tools.draw.pen
+(ns renderer.tool.draw.pen
   (:require
    [clojure.string :as str]
    [renderer.element.handlers :as element.h]
    [renderer.handlers :as h]
    [renderer.history.handlers :as history]
-   [renderer.tools.base :as tools]
-   [renderer.tools.shape.path :as path]
+   [renderer.tool.base :as tool]
+   [renderer.tool.shape.path :as path]
    [renderer.utils.element :as element]))
 
-(derive :pen ::tools/renderable)
+(derive :pen ::tool/renderable)
 
-(defmethod tools/properties :pen
+(defmethod tool/properties :pen
   []
   {:icon "pencil"
    :description "Pencil tool"
@@ -20,7 +20,7 @@
            :stroke-linejoin
            :opacity]})
 
-(defmethod tools/drag :pen
+(defmethod tool/drag :pen
   [{:keys [active-document adjusted-pointer-pos] :as db}]
   (let [stroke (get-in db [:documents active-document :stroke])]
     (if (get-in db [:documents active-document :temp-element :attrs :points])
@@ -33,7 +33,7 @@
                                       :stroke stroke
                                       :fill "transparent"}}))))
 
-(defmethod tools/drag-end :pen
+(defmethod tool/drag-end :pen
   [db]
   (let [path (-> (element.h/get-temp db)
                  (element/->path)

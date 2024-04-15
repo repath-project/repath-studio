@@ -1,9 +1,9 @@
-(ns renderer.tools.overlay
+(ns renderer.tool.overlay
   "Render functions for canvas overlay objects (select helpers etc)."
   (:require
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
-   [renderer.tools.base :as tools]
+   [renderer.tool.base :as tool]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
    [renderer.utils.math :as math]
@@ -276,7 +276,7 @@
 
 (defn centroid
   [el]
-  (when-let [centroid (tools/centroid el)]
+  (when-let [centroid (tool/centroid el)]
     (let [offset (element/offset el)
           centroid (mat/add offset centroid)]
       [point-of-interest centroid

@@ -1,15 +1,15 @@
-(ns renderer.tools.container.svg
+(ns renderer.tool.container.svg
   "https://www.w3.org/TR/SVG/struct.html#SVGElement"
   (:require
    [re-frame.core :as rf]
    [renderer.element.handlers :as element.h]
-   [renderer.tools.base :as tools]
+   [renderer.tool.base :as tool]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
 
-(derive :svg ::tools/container)
+(derive :svg ::tool/container)
 
-(defmethod tools/properties :svg
+(defmethod tool/properties :svg
   []
   {:icon "svg"
    :description "The svg element is a container that defines a new coordinate 
@@ -18,7 +18,7 @@
                  inside an SVG or HTML document."
    :attrs [:overflow]})
 
-(defmethod tools/drag :svg
+(defmethod tool/drag :svg
   [{:keys [adjusted-pointer-pos adjusted-pointer-offset] :as db} e]
   (let [[offset-x offset-y] adjusted-pointer-offset
         [pos-x pos-y] adjusted-pointer-pos
@@ -33,7 +33,7 @@
                             :type :element
                             :attrs attrs})))
 
-(defmethod tools/render :svg
+(defmethod tool/render :svg
   [{:keys [attrs children tag] :as el}]
   (let [child-elements @(rf/subscribe [:element/filter-visible children])
         rect-attrs (select-keys attrs [:x :y :width :height])
@@ -77,18 +77,18 @@
                              (pointer/event-handler % el))
          :on-double-click pointer-handler})]
       (for [element (merge child-elements)]
-        [tools/render element])]]))
+        [tool/render element])]]))
 
-(defmethod tools/bounds :svg
+(defmethod tool/bounds :svg
   [{{:keys [x y width height]} :attrs}]
   (let [[x y width height] (mapv units/unit->px [x y width height])]
     [x y (+ x width) (+ y height)]))
 
-(defmethod tools/render-to-string :svg
+(defmethod tool/render-to-string :svg
   [{:keys [attrs children]}]
   (let [child-elements @(rf/subscribe [:element/filter-visible children])
         attrs (->> (dissoc attrs :fill)
                    (remove #(empty? (str (second %))))
                    (into {}))]
-    (->> (doall (map tools/render-to-string (merge child-elements)))
+    (->> (doall (map tool/render-to-string (merge child-elements)))
          (into [:svg attrs]))))

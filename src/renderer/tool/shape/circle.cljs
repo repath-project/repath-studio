@@ -1,18 +1,18 @@
-(ns renderer.tools.shape.circle
+(ns renderer.tool.shape.circle
   "https://www.w3.org/TR/SVG/shapes.html#CircleElement"
   (:require
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.handlers :as element.h]
-   [renderer.tools.base :as tools]
-   [renderer.tools.overlay :as overlay]
+   [renderer.tool.base :as tool]
+   [renderer.tool.overlay :as overlay]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.units :as units]))
 
-(derive :circle ::tools/shape)
+(derive :circle ::tool/shape)
 
-(defmethod tools/properties :circle
+(defmethod tool/properties :circle
   []
   {:icon "circle-alt"
    :description "The <circle> SVG element is an SVG basic shape, used to draw 
@@ -23,7 +23,7 @@
            :stroke
            :stroke-dasharray]})
 
-(defmethod tools/drag :circle
+(defmethod tool/drag :circle
   [{:keys [adjusted-pointer-offset active-document adjusted-pointer-pos] :as db}]
   (let [{:keys [stroke fill]} (get-in db [:documents active-document])
         [offset-x offset-y] adjusted-pointer-offset
@@ -35,32 +35,32 @@
                :r radius}]
     (element.h/set-temp db {:type :element :tag :circle :attrs attrs})))
 
-(defmethod tools/translate :circle
+(defmethod tool/translate :circle
   [el [x y]]
   (-> el
       (attr.hierarchy/update-attr :cx + x)
       (attr.hierarchy/update-attr :cy + y)))
 
-(defmethod tools/scale :circle
+(defmethod tool/scale :circle
   [el ratio pivot-point]
-  (let [dimentions (bounds/->dimensions (tools/bounds el))
+  (let [dimentions (bounds/->dimensions (tool/bounds el))
         pivot-point (mat/sub pivot-point (mat/div dimentions 2))
         offset (mat/sub pivot-point (mat/mul pivot-point ratio))
         ratio (apply min ratio)]
     (-> el
         (attr.hierarchy/update-attr :r * ratio)
-        (tools/translate offset))))
+        (tool/translate offset))))
 
-(defmethod tools/bounds :circle
+(defmethod tool/bounds :circle
   [{{:keys [cx cy r]} :attrs}]
   (let [[cx cy r] (map units/unit->px [cx cy r])]
     [(- cx r) (- cy r) (+ cx r) (+ cy r)]))
 
-(defmethod tools/area :circle
+(defmethod tool/area :circle
   [{{:keys [r]} :attrs}]
   (* Math/PI (Math/pow (units/unit->px r) 2)))
 
-(defmethod tools/path :circle
+(defmethod tool/path :circle
   [{{:keys [cx cy r]} :attrs}]
   (let [[cx cy r] (map units/unit->px [cx cy r])]
     (str/join " " ["M" (+ cx r) cy
@@ -69,13 +69,13 @@
                    "A" r r 0 0 1 (+ cx r) cy
                    "z"])))
 
-(defmethod tools/edit :circle
+(defmethod tool/edit :circle
   [el [x _y] handle]
   (case (keyword (name handle))
     :r (attr.hierarchy/update-attr el :r #(abs (+ % x)))
     el))
 
-(defmethod tools/render-edit :circle
+(defmethod tool/render-edit :circle
   [{:keys [key] :as el}]
   (let [bounds (:bounds el)
         [cx cy] (bounds/center bounds)

@@ -7,7 +7,7 @@
    [reagent.core :as ra]
    [reagent.dom.server :as server]
    [renderer.components :as comp]
-   [renderer.tools.base :as tools]
+   [renderer.tool.base :as tool]
    [renderer.utils.pointer :as pointer]))
 
 (defn pointer-handler
@@ -98,7 +98,7 @@
            [:f> inner-component]
            [:> ContextMenu/Root
             [:> ContextMenu/Trigger
-             [tools/render canvas]]
+             [tool/render canvas]]
             [:> ContextMenu/Portal
              (into [:> ContextMenu/Content
                     {:class "menu-content context-menu-content"

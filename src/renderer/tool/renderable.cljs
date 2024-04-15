@@ -1,4 +1,4 @@
-(ns renderer.tools.renderable
+(ns renderer.tool.renderable
   (:require
    ["react" :as react]
    [clojure.core.matrix :as mat]
@@ -7,31 +7,31 @@
    [renderer.element.handlers :as element.h]
    [renderer.handlers :as h]
    [renderer.history.handlers :as history.h]
-   [renderer.tools.base :as tools]
+   [renderer.tool.base :as tool]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.dom :as dom]
    [renderer.utils.pointer :as pointer]))
 
-(defmethod tools/activate ::tools/renderable
+(defmethod tool/activate ::tool/renderable
   [db]
   (-> db
       (assoc :cursor "crosshair")
       (h/set-message [:div "Click and drag to create an element."])))
 
-(defmethod tools/drag-start ::tools/renderable
+(defmethod tool/drag-start ::tool/renderable
   [db]
   (h/set-state db :create))
 
-(defmethod tools/drag-end ::tools/renderable
+(defmethod tool/drag-end ::tool/renderable
   [db]
   (let [temp-element (get-in db [:documents (:active-document db) :temp-element])]
     (-> db
         element.h/add
-        (tools/set-tool :select)
+        (tool/set-tool :select)
         (h/set-state :default)
         (history.h/finalize "Create " (name (:tag temp-element))))))
 
-(defmethod tools/bounds ::tools/renderable
+(defmethod tool/bounds ::tool/renderable
   [{:keys [tag attrs content]}]
   (when-let [svg (dom/canvas-element)]
     (let [el (js/document.createElementNS "http://www.w3.org/2000/svg" (name tag))]
@@ -43,11 +43,11 @@
         (.remove el)
         bounds))))
 
-(defmethod tools/position ::tools/renderable
+(defmethod tool/position ::tool/renderable
   [el position]
-  (let [center (bounds/center (tools/bounds el))
+  (let [center (bounds/center (tool/bounds el))
         offset (mat/sub position center)]
-    (tools/translate el offset)))
+    (tool/translate el offset)))
 
 (defn ghost-element
   "Renders a ghost element on top of the actual element to ensure that the user
@@ -103,11 +103,11 @@
           (when title [:title title])
           content
           (for [child child-elements]
-            ^{:key (:key child)} [tools/render child])]
+            ^{:key (:key child)} [tool/render child])]
 
          (when default-state? [ghost-element el])])})))
 
-(defmethod tools/render ::tools/renderable
+(defmethod tool/render ::tool/renderable
   [{:keys [children] :as el}]
   (let [child-elements @(rf/subscribe [:element/filter-visible children])
         state @(rf/subscribe [:state])]

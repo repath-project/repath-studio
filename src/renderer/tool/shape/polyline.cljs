@@ -1,10 +1,10 @@
-(ns renderer.tools.shape.polyline
+(ns renderer.tool.shape.polyline
   "https://www.w3.org/TR/SVG/shapes.html#PolylineElement"
-  (:require [renderer.tools.base :as tools]))
+  (:require [renderer.tool.base :as tool]))
 
-(derive :polyline ::tools/polyshape)
+(derive :polyline ::tool/polyshape)
 
-(defmethod tools/properties :polyline
+(defmethod tool/properties :polyline
   []
   {:icon "polyline"
    :description "The <polyline> SVG element is an SVG basic shape that creates 

@@ -9,7 +9,7 @@
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.components :as comp]
-   [renderer.tools.base :as tools]
+   [renderer.tool.base :as tool]
    [renderer.utils.keyboard :as keyb]
    [renderer.utils.spec :as spec]))
 
@@ -52,7 +52,7 @@
   [{:keys [tag attr]}]
   (let [data (if attr (spec/compat-data tag attr) (spec/compat-data tag))
         support-data (:support data)
-        animation? (isa? tag ::tools/animation)]
+        animation? (isa? tag ::tool/animation)]
     (when (or support-data animation?)
       [:div.flex.flex-col
        (when (some :version_added (vals support-data))
@@ -235,10 +235,10 @@
        :align "end"}
       [:div.p-6
        [:h2.mb-4.text-lg tag]
-       (when-let [description (:description (tools/properties tag))]
+       (when-let [description (:description (tool/properties tag))]
          [:p description])
        [caniusethis {:tag tag}]
-       (when-let [url (:url (tools/properties tag))]
+       (when-let [url (:url (tool/properties tag))]
          [:a.button.px-3.bg-primary.w-full
           {:href url
            :target "_blank"}

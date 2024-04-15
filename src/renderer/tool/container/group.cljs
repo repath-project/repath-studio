@@ -1,36 +1,36 @@
-(ns renderer.tools.container.group
+(ns renderer.tool.container.group
   "https://www.w3.org/TR/SVG/struct.html#GElement"
   (:require
    [re-frame.core :as rf]
-   [renderer.tools.base :as tools]
+   [renderer.tool.base :as tool]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
    [renderer.utils.pointer :as pointer]))
 
-(derive :g ::tools/container)
+(derive :g ::tool/container)
 
-(defmethod tools/properties :g
+(defmethod tool/properties :g
   []
   {:description "The <g> SVG element is a container used to group other 
                  SVG elements."
    :attrs [:transform]})
 
-(defmethod tools/translate :g
+(defmethod tool/translate :g
   [el [_x _y]]
   el) ; TODO
 
-(defmethod tools/render :g
+(defmethod tool/render :g
   [{:keys [attrs children] :as element}]
   (let [child-elements @(rf/subscribe [:element/filter-visible children])
         elements @(rf/subscribe [:document/elements])
         ignored-keys @(rf/subscribe [:document/ignored-keys])
         ignored? (contains? ignored-keys (:key element))
-        bounds (tools/bounds element elements)
+        bounds (tool/bounds element elements)
         [x1 y1 _x2 _y2] bounds
         [width height] (bounds/->dimensions bounds)
         pointer-handler #(pointer/event-handler % element)]
     [:g attrs
-     (map (fn [element] [tools/render element]) (merge child-elements))
+     (map (fn [element] [tool/render element]) (merge child-elements))
      [:rect {:x x1
              :y y1
              :width width
@@ -42,7 +42,7 @@
              :on-pointer-down pointer-handler
              :on-pointer-move pointer-handler}]]))
 
-(defmethod tools/bounds :g
+(defmethod tool/bounds :g
   [el elements]
   (let [children (vals (select-keys elements (:children el)))]
     (element/bounds children)))

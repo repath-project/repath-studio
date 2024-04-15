@@ -5,7 +5,7 @@
    [re-frame.core :as rf]
    [renderer.db :as db]
    [renderer.frame.handlers :as frame-h]
-   [renderer.tools.base :as tools]
+   [renderer.tool.base :as tool]
    [renderer.utils.drop :as drop]
    [renderer.utils.local-storage :as local-storage]
    [renderer.utils.pointer :as pointer]))
@@ -51,7 +51,7 @@
 (rf/reg-event-db
  :set-tool
  (fn [db [_ tool]]
-   (tools/set-tool db tool)))
+   (tool/set-tool db tool)))
 
 (rf/reg-event-db
  :clear-restored
@@ -116,13 +116,13 @@
                                                    pointer-offset)
 
                         (not drag?)
-                        (-> (tools/drag-start e element)
+                        (-> (tool/drag-start e element)
                             (assoc :drag? true))
 
                         :always
-                        (tools/drag e element))
+                        (tool/drag e element))
                       db)
-                    (tools/pointer-move db e element))
+                    (tool/pointer-move db e element))
                   (assoc :pointer-pos pointer-pos
                          :adjusted-pointer-pos adjusted-pointer-pos)))
 
@@ -130,22 +130,22 @@
             (cond-> db
               (= button :middle)
               (-> (assoc :primary-tool tool)
-                  (tools/set-tool :pan))
+                  (tool/set-tool :pan))
 
               (and (= button :right) (not= (:key element) :bounding-box))
-              (tools/pointer-up e element)
+              (tool/pointer-up e element)
 
               :always
-              (-> (tools/pointer-down e element)
+              (-> (tool/pointer-down e element)
                   (assoc :pointer-offset pointer-pos
                          :adjusted-pointer-offset adjusted-pointer-pos)))
 
             :pointerup
             (cond-> (if drag?
-                      (tools/drag-end db e element)
-                      (cond-> db (not= button :right) (tools/pointer-up e element)))
+                      (tool/drag-end db e element)
+                      (cond-> db (not= button :right) (tool/pointer-up e element)))
               (and primary-tool (= button :middle))
-              (-> (tools/set-tool primary-tool)
+              (-> (tool/set-tool primary-tool)
                   (dissoc :primary-tool))
 
               :always
@@ -153,7 +153,7 @@
                   (update :snap dissoc :nearest-neighbor)))
 
             :dblclick
-            (tools/double-click db e element)
+            (tool/double-click db e element)
 
             :wheel
             (if (some modifiers [:ctrl :alt])
@@ -176,20 +176,20 @@
        (and (= code "Space")
             (not= tool :pan))
        (-> (assoc :primary-tool tool)
-           (tools/set-tool :pan))
+           (tool/set-tool :pan))
 
        :always
-       (tools/key-down e))
+       (tool/key-down e))
 
      :keyup
      (cond-> db
        (and (= code "Space")
             (:primary-tool db))
-       (-> (tools/set-tool (:primary-tool db))
+       (-> (tool/set-tool (:primary-tool db))
            (dissoc :primary-tool))
 
        :always
-       (tools/key-up e))
+       (tool/key-up e))
 
      db)))
 

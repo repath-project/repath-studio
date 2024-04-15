@@ -1,4 +1,4 @@
-(ns renderer.tools.custom.blob
+(ns renderer.tool.custom.blob
   "Custom element for https://blobs.dev/"
   (:require
    ["blobs/v2" :as blobs]
@@ -10,14 +10,14 @@
    [renderer.attribute.views :as attr.v]
    [renderer.components :as comp]
    [renderer.element.handlers :as element.h]
-   [renderer.tools.base :as tools]
-   [renderer.tools.overlay :as overlay]
+   [renderer.tool.base :as tool]
+   [renderer.tool.overlay :as overlay]
    [renderer.utils.element :as element]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.units :as units]))
 
-(derive :blob ::tools/renderable)
+(derive :blob ::tool/renderable)
 
 (derive :size ::length/length)
 
@@ -74,7 +74,7 @@
   []
   "The size of the bounding box.")
 
-(defmethod tools/properties :blob
+(defmethod tool/properties :blob
   []
   {:icon "blob"
    :description "Vector based blob."
@@ -90,7 +90,7 @@
            :stroke-width
            :opacity]})
 
-(defmethod tools/drag-start :blob
+(defmethod tool/drag-start :blob
   [{:keys [adjusted-pointer-offset
            active-document
            adjusted-pointer-pos] :as db}]
@@ -108,7 +108,7 @@
                                     :fill fill
                                     :stroke stroke}})))
 
-(defmethod tools/drag :blob
+(defmethod tool/drag :blob
   [{:keys [adjusted-pointer-offset adjusted-pointer-pos] :as db}]
   (let [[offset-x offset-y] adjusted-pointer-offset
         radius (mat/distance adjusted-pointer-pos adjusted-pointer-offset)
@@ -118,19 +118,19 @@
                  (assoc-in [:attrs :size] (* radius 2)))]
     (element.h/set-temp db temp)))
 
-(defmethod tools/scale :blob
+(defmethod tool/scale :blob
   [el ratio pivot-point]
   (let [offset (mat/sub pivot-point (mat/mul pivot-point ratio))
         ratio (apply min ratio)]
     (-> el
         (attr.hierarchy/update-attr :size * ratio)
-        (tools/translate offset))))
+        (tool/translate offset))))
 
-(defmethod tools/render :blob
+(defmethod tool/render :blob
   [{:keys [attrs children] :as element}]
   (let [child-elements @(rf/subscribe [:element/filter-visible children])
         pointer-handler #(pointer/event-handler % element)]
-    [:path (merge {:d (tools/path element)
+    [:path (merge {:d (tool/path element)
                    :on-pointer-up pointer-handler
                    :on-pointer-down pointer-handler
                    :on-pointer-move pointer-handler}
@@ -141,32 +141,32 @@
                                       :class
                                       :opacity])) child-elements]))
 
-(defmethod tools/translate :blob
+(defmethod tool/translate :blob
   [element [x y]]
   (-> element
       (attr.hierarchy/update-attr :x + x)
       (attr.hierarchy/update-attr :y + y)))
 
-(defmethod tools/position :blob
+(defmethod tool/position :blob
   [el [x y]]
-  (let [dimensions (bounds/->dimensions (tools/bounds el))
+  (let [dimensions (bounds/->dimensions (tool/bounds el))
         [cx cy] (mat/div dimensions 2)]
     (-> el
         (assoc-in [:attrs :x] (- x cx))
         (assoc-in [:attrs :y] (- y cy)))))
 
-(defmethod tools/bounds :blob
+(defmethod tool/bounds :blob
   [{:keys [attrs]}]
   (let [{:keys [x y size]} attrs
         [x y size] (mapv units/unit->px [x y size])]
     [x y (+ x size) (+ y size)]))
 
-(defmethod tools/centroid :blob
+(defmethod tool/centroid :blob
   [{{:keys [x y size]} :attrs}]
   (let [[x y size] (mapv units/unit->px [x y size])]
     (mat/add [x y] (/ size 2))))
 
-(defmethod tools/path :blob
+(defmethod tool/path :blob
   [{:keys [attrs]}]
   (let [[x y] (mapv units/unit->px [(:x attrs) (:y attrs)])
         options (->> [:seed :extraPoints :randomness :size]
@@ -179,14 +179,14 @@
         (.translate x y)
         .toString)))
 
-(defmethod tools/edit :blob
+(defmethod tool/edit :blob
   [element [x y] handle]
   (case handle
     :size
     (attr.hierarchy/update-attr element :size #(max 0 (+ % (min x y))))
     element))
 
-(defmethod tools/render-edit :blob
+(defmethod tool/render-edit :blob
   [{:keys [attrs key] :as el}]
   (let [{:keys [x y size]} attrs
         [x y size] (mapv units/unit->px [x y size])

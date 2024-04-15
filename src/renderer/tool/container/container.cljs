@@ -1,27 +1,27 @@
-(ns renderer.tools.container.container
+(ns renderer.tool.container.container
   "https://www.w3.org/TR/SVG/struct.html#TermContainerElement"
   (:require
    [re-frame.core :as rf]
-   [renderer.tools.base :as tools]))
+   [renderer.tool.base :as tool]))
 
-(derive ::tools/container ::tools/box)
+(derive ::tool/container ::tool/box)
 
-(derive :a ::tools/container)
-(derive :clipPath ::tools/container)
-(derive :defs ::tools/container)
-(derive :marker ::tools/container)
-(derive :mask ::tools/container)
-(derive :pattern ::tools/container)
-(derive :switch ::tools/container)
-(derive :symbol ::tools/container)
+(derive :a ::tool/container)
+(derive :clipPath ::tool/container)
+(derive :defs ::tool/container)
+(derive :marker ::tool/container)
+(derive :mask ::tool/container)
+(derive :pattern ::tool/container)
+(derive :switch ::tool/container)
+(derive :symbol ::tool/container)
 
-(defmethod tools/render ::tools/container
+(defmethod tool/render ::tool/container
   [{:keys [children tag attrs]}]
   (let [child-elements @(rf/subscribe [:element/filter-visible children])]
     [tag attrs (for [el child-elements]
-                 ^{:key (:key el)} [tools/render el])]))
+                 ^{:key (:key el)} [tool/render el])]))
 
-(defmethod tools/render-to-string ::tools/container
+(defmethod tool/render-to-string ::tool/container
   [{:keys [tag attrs title children]}]
   (let [child-elements @(rf/subscribe [:element/filter-visible children])
         attrs (->> (dissoc attrs :style)
@@ -30,4 +30,4 @@
     (-> [tag
          attrs
          (when title [:title title])
-         (map tools/render-to-string child-elements)])))
+         (map tool/render-to-string child-elements)])))

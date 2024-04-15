@@ -1,19 +1,19 @@
-(ns renderer.tools.misc.dropper
+(ns renderer.tool.misc.dropper
   (:require
    [re-frame.core :as rf]
    [renderer.handlers :as h]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
-   [renderer.tools.base :as tools]))
+   [renderer.tool.base :as tool]))
 
-(derive :dropper ::tools/tool)
+(derive :dropper ::tool/tool)
 
-(defmethod tools/properties :dropper
+(defmethod tool/properties :dropper
   []
   {:icon "eye-dropper"
    :description "Pick a color from your document."})
 
-(defmethod tools/activate :dropper
+(defmethod tool/activate :dropper
   [db]
   ;; REVIEW: side effect within db handler
   (if (.-EyeDropper js/window)
@@ -35,4 +35,4 @@
          (notification.v/unavailable-feature
           "EyeDropper"
           "https://developer.mozilla.org/en-US/docs/Web/API/EyeDropper_API#browser_compatibility"))
-        (tools/set-tool :select))))
+        (tool/set-tool :select))))

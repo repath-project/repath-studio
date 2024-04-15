@@ -1,14 +1,14 @@
-(ns renderer.tools.custom.map
+(ns renderer.tool.custom.map
   (:require
    [re-frame.core :as rf]
    [reagent.core :as ra]
-   [renderer.tools.base :as tools]
+   [renderer.tool.base :as tool]
    [renderer.utils.pointer :as pointer]))
 
-(derive :map ::tools/box)
-(derive :map ::tools/custom)
+(derive :map ::tool/box)
+(derive :map ::tool/custom)
 
-(defmethod tools/properties :map
+(defmethod tool/properties :map
   []
   {:icon "map"
    :attrs [:lat
@@ -19,7 +19,7 @@
            :width
            :height]})
 
-(defmethod tools/drag :map
+(defmethod tool/drag :map
   [{:keys [adjusted-pointer-pos tool adjusted-pointer-offset]}]
   (let [[offset-x offset-y] adjusted-pointer-offset
         [pos-x pos-y] adjusted-pointer-pos
@@ -71,7 +71,7 @@
                   :on-pointer-move #(pointer/event-handler % element)}
                  (select-keys attrs [:x :y :width :height :id :class]))])})))
 
-(defmethod tools/render :map
+(defmethod tool/render :map
   [{:keys [children] :as element}]
   (let [child-elements @(rf/subscribe [:element/filter-visible children])]
     [render-map element child-elements]))

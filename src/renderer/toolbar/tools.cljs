@@ -5,7 +5,7 @@
    [re-frame.core :as rf]
    [re-frame.registrar]
    [renderer.components :as comp]
-   [renderer.tools.base :as tools]))
+   [renderer.tool.base :as tool]))
 
 (defn button
   [type]
@@ -13,14 +13,14 @@
         primary-tool @(rf/subscribe [:primary-tool])
         selected? (= tool type)
         primary? (= primary-tool type)]
-    (when (:icon (tools/properties type))
+    (when (:icon (tool/properties type))
       [:> Tooltip/Root
        [:> Tooltip/Trigger {:asChild true}
         [:span
          [comp/radio-icon-button
           {:active? selected?
            :class (when primary? "outline-shadow")
-           :icon (:icon (tools/properties type))
+           :icon (:icon (tool/properties type))
            :action #(rf/dispatch [:set-tool type])}]]]
        [:> Tooltip/Portal
         [:> Tooltip/Content
