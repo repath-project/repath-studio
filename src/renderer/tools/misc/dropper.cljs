@@ -6,7 +6,7 @@
    [renderer.notification.views :as notification.v]
    [renderer.tools.base :as tools]))
 
-(derive :dropper ::tools/misc)
+(derive :dropper ::tools/tool)
 
 (defmethod tools/properties :dropper
   []

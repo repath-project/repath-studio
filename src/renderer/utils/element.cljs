@@ -25,7 +25,7 @@
   [el]
   (and (map? el)
        (keyword? (:tag el))
-       (contains? (descendants ::tools/tool) (:tag el))))
+       (contains? (descendants ::tools/element) (:tag el))))
 
 (defn parent-container
   [elements el]

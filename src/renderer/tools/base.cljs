@@ -1,17 +1,9 @@
 (ns renderer.tools.base)
-
-(derive ::transform ::tool)
-(derive ::misc ::tool)
-
-(derive ::element ::tool)
-
 (derive ::renderable ::element)
-(derive ::never-renderable ::element)
-
+(derive ::shape ::renderable)
 (derive ::graphics ::renderable)
-
-(derive ::gradient ::element)
-(derive ::descriptive ::element)
+(derive ::gradient ::renderable)
+(derive ::descriptive ::renderable)
 
 (derive :foreignObject ::graphics)
 (derive :textPath ::graphics)

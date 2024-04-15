@@ -15,7 +15,7 @@
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
 
-(derive :select ::tools/transform)
+(derive :select ::tools/tool)
 
 (defmethod tools/properties :select
   []

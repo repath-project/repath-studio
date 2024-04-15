@@ -4,7 +4,7 @@
    [renderer.frame.handlers :as frame]
    [renderer.tools.base :as tools]))
 
-(derive :pan ::tools/transform)
+(derive :pan ::tools/tool)
 
 (defmethod tools/properties :pan
   []

@@ -5,7 +5,7 @@
    [renderer.history.handlers :as history]
    [renderer.tools.base :as tools]))
 
-(derive :fill ::tools/misc)
+(derive :fill ::tools/tool)
 
 (defmethod tools/properties :fill
   []

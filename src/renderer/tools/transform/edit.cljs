@@ -8,7 +8,7 @@
    [renderer.tools.base :as tools]
    [renderer.utils.pointer :as pointer]))
 
-(derive :edit ::tools/transform)
+(derive :edit ::tools/tool)
 
 (defmethod tools/properties :edit
   []

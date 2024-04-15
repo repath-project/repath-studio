@@ -9,7 +9,7 @@
    [renderer.tools.overlay :as overlay]
    [renderer.utils.units :as units]))
 
-(derive :measure ::tools/misc)
+(derive :measure ::tools/tool)
 
 (defmethod tools/properties :measure
   []

@@ -7,7 +7,7 @@
    [renderer.tools.overlay :as overlay]
    [renderer.utils.pointer :as pointer]))
 
-(derive :zoom ::tools/transform)
+(derive :zoom ::tools/tool)
 
 (defmethod tools/properties :zoom
   []
