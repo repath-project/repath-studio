@@ -1,6 +1,7 @@
 (ns renderer.tool.transform.pan
   (:require
    [clojure.core.matrix :as mat]
+   [renderer.handlers :as h]
    [renderer.frame.handlers :as frame]
    [renderer.tool.base :as tool]))
 
@@ -13,6 +14,15 @@
 (defmethod tool/activate :pan
   [db]
   (assoc db :cursor "grab"))
+
+(defmethod tool/activate :pan
+  [db]
+  (-> db
+      (h/set-state :default)
+      (h/set-cursor "grab")
+      (h/set-message
+       [:div
+        [:div "Click and drag to pan."]])))
 
 (defmethod tool/pointer-up :pan
   [db]
