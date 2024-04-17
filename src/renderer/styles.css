@@ -27,6 +27,10 @@
     background-color: var(--overlay);
   }
 
+  .overlay-2x {
+    background-color: var(--overlay-2x);
+  }
+
   .text-color {
     color: var(--font-color);
   }
@@ -113,19 +117,18 @@
     line-height: 33px;
     -webkit-app-region: no-drag;
 
-    &:hover {
-      cursor: pointer;
-      transition: all 75ms;
-      background-color: var(--overlay);
-      color: var(--font-color-hovered);
-    }
-
     &:focus {
       @apply outline outline-1 outline-offset-1 outline-accent;
     }
 
+    &:hover {
+      @apply overlay outline-none cursor-pointer;
+      transition: all 75ms;
+      color: var(--font-color-hovered);
+    }
+
     &:active {
-      @apply outline-none;
+      @apply outline-none overlay-2x;
     }
 
     &.selected {

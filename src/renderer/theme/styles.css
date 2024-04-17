@@ -13,6 +13,7 @@
     --backdrop: rgb(0 0 0 / 0.75);
 
     --overlay: rgba(255, 255, 255, .1);
+    --overlay-2x: rgba(255, 255, 255, .2);
     
     --accent: #e93976;
     --accent-inverted: #fff;
@@ -40,9 +41,8 @@
     --bg-primary: #f5f5f5;
 
     --overlay: #fff;
-
+    --overlay-2x: #fff;
     
-
     --font-color: rgba(0, 0, 0, .8);
     --error-color: #f78484;
     --font-color-disabled: rgba(0, 0, 0, .3);
