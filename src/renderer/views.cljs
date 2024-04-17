@@ -51,14 +51,10 @@
        [frame/main]
        (if read-only?
          [:div.absolute.inset-0.border-4.border-accent]
-         [:<>
-          [:div.absolute.bottom-1.left-2.pointer-events-none
-           {:style {:color "#555"}}
-           @(rf/subscribe [:message])]
-          (when @(rf/subscribe [:debug-info?])
-            [:<>
-             [debug/info]
-             [debug/fps]])])
+         (when @(rf/subscribe [:debug-info?])
+           [:<>
+            [debug/info]
+            [debug/fps]]))
        (when @(rf/subscribe [:backdrop?])
          [:div.absolute.inset-0
           {:on-click #(rf/dispatch [:set-backdrop false])}])]]]))
@@ -100,8 +96,7 @@
            [:div.v-scroll.p-1.h-full.bg-primary.ml-px
             [cm/editor xml
              {:options {:mode "text/xml"
-                        :readOnly true}}]]]]))]]
-   [toolbar.status/root]])
+                        :readOnly true}}]]]]))]]])
 
 (defn editor
   []
@@ -117,7 +112,7 @@
                 :minSize 20
                 :order 1}
       [center-top-group]]
-     [timeline/root]
+     [toolbar.status/root]
      [repl/root]]))
 
 (defn tree-panel
@@ -175,7 +170,4 @@
           [toolbar.object/root]]]]]
       [home/panel])]
    [dialog/root]
-   [notification/main]
-   (when-let [loading @(rf/subscribe [:loading])]
-     [:div.backdrop
-      [:div.text-2xl loading]])])
+   [notification/main]])

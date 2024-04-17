@@ -36,11 +36,12 @@
    [renderer.utils.keyboard :as keyb]
    [renderer.views :as v]
    [renderer.window.core]
+   [renderer.worker.core]
    [replumb.repl :as repl]
    [shadow.cljs.bootstrap.browser :as bootstrap]
    [user]))
 
-(def console-easter-egg "
+(def easter-egg "
 ██████╗░███████╗██████╗░░█████╗░████████╗██╗░░██╗
 ██╔══██╗██╔════╝██╔══██╗██╔══██╗╚══██╔══╝██║░░██║
 ██████╔╝█████╗░░██████╔╝███████║░░░██║░░░███████║
@@ -69,7 +70,7 @@
   (print "You can create or modify shapes using the command line.")
   (print "Type (help) to see a list of commands."))
 
-(defn init-api
+(defn init-api!
   []
   (js/window.api.receive
    "fromMain"
@@ -85,12 +86,12 @@
        "fileLoaded" (rf/dispatch [:document/load (edn/read-string (.-data data))])
        "fileSaved" (rf/dispatch [:document/saved (edn/read-string (.-data data))])))))
 
-(defn load-system-fonts
+(defn load-system-fonts!
   []
   (let [fonts (js->clj js/window.api.systemFonts :keywordize-keys true)]
     (rf/dispatch-sync [:set-system-fonts fonts])))
 
-(defn load-webref
+(defn load-webref!
   []
   (p/let [files (js/window.api.webrefCss.listAll)]
     (rf/dispatch-sync [:set-webref-css (js->clj files :keywordize-keys true)])))
@@ -100,7 +101,7 @@
       (sentry-electron-renderer/init (clj->js config/sentry-options) sentry-react/init)
       (sentry-react/init (clj->js config/sentry-options)))
 
-  (js/console.log (str "%c" console-easter-egg) "color: #e93976")
+  (js/console.log (str "%c" easter-egg) "color: #e93976")
 
   (devtools/set-pref!
    :cljs-land-style
@@ -124,10 +125,10 @@
   (.setup paper) ; REVIEW
 
   (if platform/electron?
-    (do (load-system-fonts)
-        (load-webref)
+    (do (load-system-fonts!)
+        (load-webref!)
         (rf/dispatch-sync [:set-mdn (js->clj js/window.api.mdn :keywordize-keys true)])
-        (init-api))
+        (init-api!))
     (.addEventListener js/document
                        "fullscreenchange"
                        #(rf/dispatch [:window/set-fullscreen? (boolean (.-fullscreenElement js/document))])))

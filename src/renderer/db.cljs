@@ -48,6 +48,7 @@
    :lang :en-US
    :repl-mode :cljs
    :theme {:mode :dark}
+   :worker {:tasks {}}
    :cmdk {:visible? false}
    :panel {:tree {:visible? true}
            :properties {:visible? true}

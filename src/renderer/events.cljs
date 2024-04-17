@@ -59,11 +59,6 @@
    (dissoc db :restored?)))
 
 (rf/reg-event-db
- :clear-loading
- (fn [db [_]]
-   (dissoc db :loading)))
-
-(rf/reg-event-db
  :set-lang
  (fn [db [_ lang]]
    (assoc db :lang lang)))

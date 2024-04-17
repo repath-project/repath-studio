@@ -1,7 +1,5 @@
 (ns renderer.element.events
   (:require
-   ["imagetracerjs" :as ImageTracer]
-   ["triangulate-image" :as triangulate]
    [clojure.string :as str]
    [platform]
    [promesa.core :as p]
@@ -294,17 +292,17 @@
 
 (rf/reg-event-db
  :element/import-svg
- (fn [db [_ s name position]]
+ (fn [db [_ data]]
    (-> db
-       (h/import-svg s name position)
+       (h/import-svg data)
        (history.h/finalize "Import svg"))))
 
 (rf/reg-event-db
  :element/import-traced-image
- (fn [db [_ s name position]]
+ (fn [db [_ data]]
    (-> db
-       (h/import-svg s (str "Traced " name) position)
-       (history.h/finalize "Trace"))))
+       (h/import-svg data)
+       (history.h/finalize "Trace image"))))
 
 (rf/reg-event-db
  :element/animate
@@ -363,10 +361,10 @@
 
 (rf/reg-fx
  ::->svg
- (fn [[elements f]]
+ (fn [[elements action worker]]
    (doseq [el elements]
      (let [data-url (-> el :attrs :href)
-           position (:bounds el)
+           [x y] (:bounds el)
            canvas (js/document.createElement "canvas")
            context (.getContext canvas "2d")
            image (js/Image.)
@@ -377,42 +375,27 @@
              #(do (set! (.-width canvas) width)
                   (set! (.-height canvas) height)
                   (.drawImage context image 0 0 width height)
-                  (p/let [image-data (.getImageData context 0 0 width height)
-                          svg (f image-data)]
-                    (rf/dispatch-sync [:element/import-traced-image svg (:name el) position]))))
+                  (p/let [image-data (.getImageData context 0 0 width height)]
+                    (rf/dispatch [:worker/create
+                                  {:action action
+                                   :worker worker
+                                   :data {:name (:name el)
+                                          :image image-data
+                                          :position [x y]}
+                                   :callback (fn [e]
+                                               (let [data (js->clj (.. e -data) :keywordize-keys true)]
+                                                 (rf/dispatch [:element/import-traced-image data])
+                                                 (rf/dispatch [:worker/completed (keyword (:id data))])))}]))))
        (set! (.-src image) data-url)))))
 
 (rf/reg-event-fx
  :element/trace
  (fn [{:keys [db]} [_]]
    (let [images (h/filter-by-tag db :image)]
-     {:db (cond-> db images (assoc :loading "Tracing.."))
-      :fx [[::->svg [(filter #(= :image (:tag %)) (h/selected db))
-                     #(.imagedataToSVG ImageTracer %)]]
-           [:dispatch [:clear-loading]]]})))
-
-(def triangulation-options
-  #js {:accuracy 0.5 ; float between 0 and 1
-       :blur 40 ; positive integer
-       :threshold 50 ; integer between 1 and 100
-       :vertexCount 100 ; positive integer
-       :fill true ; boolean or string with css color (e.g '#bada55', 'red', rgba(100,100,100,0.5))
-       :stroke false ; boolean or string with css color (e.g '#bada55', 'red', hsla(0, 50%, 52%, 0.5))
-       :strokeWidth 0.5 ; positive float
-       :gradients false ; boolean
-       :gradientStops 4 ; positive integer >= 2
-       :lineJoin "miter" ; 'miter', 'round', or 'bevel'
-       :transparentColor false ; boolean false or string with css color
-       })
+     {::->svg [images "Tracing" "trace.js"]})))
 
 (rf/reg-event-fx
  :element/triangulate
  (fn [{:keys [db]} [_]]
    (let [images (h/filter-by-tag db :image)]
-     {:db (cond-> db images (assoc :loading "Triangulating.."))
-      :fx [[::->svg [(filter #(= :image (:tag %)) (h/selected db))
-                     #(-> triangulation-options
-                          (triangulate)
-                          (.fromImageDataSync %)
-                          (.toSVG))]]
-           [:dispatch [:clear-loading]]]})))
+     {::->svg [images "Triangulating" "triangulate.js"]})))

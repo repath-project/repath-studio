@@ -142,10 +142,6 @@
  :grid?
  :-> :grid?)
 
-(rf/reg-sub
- :loading
- :-> :loading)
-
 #_(rf/reg-sub
    :font-options
    :<- [:system-fonts]

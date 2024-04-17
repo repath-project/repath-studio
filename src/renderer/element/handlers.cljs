@@ -700,8 +700,9 @@
         (recur (zip/next loc))))))
 
 (defn import-svg
-  [db s name [x y]]
-  (let [hickory (hickory/as-hickory (hickory/parse s))
+  [db {:keys [svg name position]}]
+  (let [[x y] position
+        hickory (hickory/as-hickory (hickory/parse svg))
         zipper (hickory.zip/hickory-zip hickory)
         svg (find-svg zipper)]
     (add db (-> svg

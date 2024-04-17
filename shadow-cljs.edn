@@ -60,8 +60,13 @@
      :depends-on #{:shared}
      :init-fn renderer.core/init}
 
-    :worker
-    {:entries [worker.core]
+    :trace
+    {:init-fn worker.trace/init
+     :web-worker true
+     :depends-on #{:shared}}
+
+    :triangulate
+    {:init-fn worker.triangulate/init
      :web-worker true
      :depends-on #{:shared}}}}
 
