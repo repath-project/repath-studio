@@ -12,7 +12,7 @@
   (element-to-path (clj->js {:name tag
                              :attributes attrs})))
 
-(defmethod tool/render-to-string ::tool/renderable
+(defmethod tool/render-to-string ::tool/shape
   [{:keys [tag attrs title children content]}]
   (let [child-elements @(rf/subscribe [:element/filter-visible children])
         attrs (->> (dissoc attrs :style)
