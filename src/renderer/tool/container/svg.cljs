@@ -64,7 +64,7 @@
         :always
         (dissoc :style)
 
-        (not= filter "No a11y filter")
+        filter
         (assoc :filter (str "url(#" (name filter) ")")))
       [:rect
        (merge

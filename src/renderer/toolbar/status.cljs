@@ -1,13 +1,13 @@
 (ns renderer.toolbar.status
   (:require
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
-   ["@radix-ui/react-select" :as Select]
+   ["react-resizable-panels" :refer [Panel PanelResizeHandle]]
    [re-frame.core :as rf]
    [re-frame.registrar]
    [renderer.color.views :as color-v]
    [renderer.components :as comp]
    [renderer.snap.views :as snap.v]
-   [renderer.toolbar.filters :as filters]
+   [renderer.timeline.views :as timeline.v]
    [renderer.utils.keyboard :as keyb]
    [renderer.utils.units :as units]))
 
@@ -43,7 +43,11 @@
     :action [:frame/focus-selection :fill]}])
 
 (def view-radio-buttons
-  [{:title "Grid"
+  [{:title "Timeline"
+    :active? [:panel/visible? :timeline]
+    :icon "timeline"
+    :action [:panel/toggle :timeline]}
+   {:title "Grid"
     :active? [:grid?]
     :icon "grid"
     :action [:toggle-grid]}
@@ -51,11 +55,11 @@
     :active? [:rulers?]
     :icon "ruler-combined"
     :action [:toggle-rulers]}
-   {:title "History tree"
+   {:title "History"
     :active? [:panel/visible? :history]
     :icon "history"
     :action [:panel/toggle :history]}
-   {:title "XML view"
+   {:title "XML"
     :active? [:panel/visible? :xml]
     :icon "code"
     :action [:panel/toggle :xml]}])
@@ -93,87 +97,62 @@
                                 [:frame/zoom-out]
                                 [:frame/zoom-in]))}]))
 
-(defn a11y-select
-  []
-  (when-let [filter @(rf/subscribe [:document/filter])]
-    [:> Select/Root {:value (name filter)
-                     :onValueChange #(rf/dispatch [:document/set-filter %])}
-     [:> Select/Trigger
-      {:class "select-trigger"
-       :aria-label "No a11y filter"}
-      [:> Select/Value {:placeholder "Filter"}
-       [:div.flex.gap-1.justify-between.items-center
-        {:style {:min-width "110px"}}
-        [:span (name filter)]
-        [:> Select/Icon {:class "select-icon"}
-         [comp/icon "chevron-up" {:class "icon small"}]]]]]
-     [:> Select/Portal
-      [:> Select/Content
-       {:side "top"
-        :sideOffset 5
-        :position "popper"
-        :class "menu-content rounded select-content"}
-       [:> Select/ScrollUpButton {:class "select-scroll-button"}
-        [comp/icon "chevron-up"]]
-       [:> Select/Viewport {:class "select-viewport"}
-        [:> Select/Group
-         [:> Select/Item
-          {:value "No a11y filter"
-           :class "menu-item select-item"}
-          [:> Select/ItemText "No a11y filter"]]
-         (for [{:keys [id]} filters/accessibility]
-           ^{:key id}
-           [:> Select/Item
-            {:value (name id)
-             :class "menu-item select-item"}
-            [:> Select/ItemText (name id)]])]]
-       [:> Select/ScrollDownButton
-        {:class "select-scroll-button"}
-        [comp/icon "chevron-down"]]]]]))
-
 (defn root []
-  (let [zoom @(rf/subscribe [:document/zoom])]
-    [:div.toolbar.bg-primary.mt-px
-     [color-v/picker]
-     [:div.grow [color-v/palette]]
-     [a11y-select]
-     (into [:<>]
-           (map (fn [{:keys [title active? icon action]}]
-                  [comp/radio-icon-button {:title title
-                                           :active? @(rf/subscribe active?)
-                                           :icon icon
-                                           :action #(rf/dispatch action)}])
-                view-radio-buttons))
-     [snap.v/root]
+  (let [zoom @(rf/subscribe [:document/zoom])
+        timeline? @(rf/subscribe [:panel/visible? :timeline])]
+    [:<>
+     [:div.toolbar.bg-primary
+      [color-v/picker]
+      [:div.grow.text-xs.truncate.mx-1
+       @(rf/subscribe [:message])]
+      (into [:<>]
+            (map (fn [{:keys [title active? icon action]}]
+                   [comp/radio-icon-button {:title title
+                                            :active? @(rf/subscribe active?)
+                                            :icon icon
+                                            :action #(rf/dispatch action)}])
+                 view-radio-buttons))
+      [snap.v/root]
+      [:div.button-group
+       [:button.button.overlay.px-2.font-mono.rounded
+        {:class (when (<= zoom 0.01) "disabled")
+         :title "Zoom out"
+         :on-click #(rf/dispatch [:frame/zoom-out])}
+        [comp/icon "minus" {:class "icon small"}]]
 
-     [:div.button-group
-      [:button.button.overlay.px-2.font-mono.rounded
-       {:class (when (<= zoom 0.01) "disabled")
-        :title "Zoom out"
-        :on-click #(rf/dispatch [:frame/zoom-out])}
-       [comp/icon "minus" {:class "icon small"}]]
+       [:button.button.overlay.px-2.font-mono.rounded
+        {:class (when (>= zoom 100) "disabled")
+         :title "Zoom in"
+         :on-click #(rf/dispatch [:frame/zoom-in])}
+        [comp/icon "plus" {:class "icon small"}]]
+       [zoom-input zoom]
+       [:div.pr-2.overlay.flex.items-center "%"]
 
-      [:button.button.overlay.px-2.font-mono.rounded
-       {:class (when (>= zoom 100) "disabled")
-        :title "Zoom in"
-        :on-click #(rf/dispatch [:frame/zoom-in])}
-       [comp/icon "plus" {:class "icon small"}]]
-      [zoom-input zoom]
-      [:div.pr-2.overlay.flex.items-center "%"]
+       [:> DropdownMenu/Root
+        [:> DropdownMenu/Trigger
+         {:class "button flex items-center justify-center overlay px-2 font-mono rounded"
+          :side "top"}
+         [:div.flex.items-center
+          [comp/icon "chevron-up" {:class "icon small"}]]]
 
-      [:> DropdownMenu/Root
-       [:> DropdownMenu/Trigger
-        {:class "button flex items-center justify-center overlay px-2 font-mono rounded"
-         :side "top"}
-        [:div.flex.items-center
-         [comp/icon "chevron-up" {:class "icon small"}]]]
-
-       [:> DropdownMenu/Portal
-        [:> DropdownMenu/Content
-         {:class "menu-content rounded"
-          :side "top"
-          :align "end"}
-         (for [item zoom-menu]
-           ^{:key (:key item)} [comp/dropdown-menu-item item])
-         [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]]]
-     [coordinates]]))
+        [:> DropdownMenu/Portal
+         [:> DropdownMenu/Content
+          {:class "menu-content rounded"
+           :side "top"
+           :align "end"}
+          (for [item zoom-menu]
+            ^{:key (:key item)} [comp/dropdown-menu-item item])
+          [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]]]
+      [coordinates]]
+     [timeline.v/time-bar]
+     (when timeline?
+       [:> PanelResizeHandle
+        {:id "timeline-resize-handle"
+         :className "resize-handle"}])
+     (when timeline?
+       [:> Panel
+        {:id "timeline-panel"
+         :minSize 10
+         :defaultSize 10
+         :order 2}
+        [timeline.v/root]])]))

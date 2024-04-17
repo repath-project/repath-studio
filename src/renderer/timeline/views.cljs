@@ -3,7 +3,6 @@
    ["@xzdarcy/react-timeline-editor" :refer [Timeline]]
    ["@radix-ui/react-select" :as Select]
    ["react" :as react]
-   ["react-resizable-panels" :refer [Panel PanelResizeHandle]]
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [renderer.components :as comp]))
@@ -64,7 +63,7 @@
   []
   (let [grid-snap? @(rf/subscribe [:timeline/grid-snap?])
         guide-snap? @(rf/subscribe [:timeline/guide-snap?])]
-    [:<>
+    [:div.grow
      [comp/switch
       {:id "grid-snap"
        :label "Grid snap"
@@ -82,43 +81,34 @@
         time-formatted @(rf/subscribe [:timeline/time-formatted])
         paused? @(rf/subscribe [:timeline/paused?])
         replay? @(rf/subscribe [:timeline/replay?])
-        end @(rf/subscribe [:timeline/end])
-        timeline? @(rf/subscribe [:panel/visible? :timeline])]
-    [:div.flex.bg-primary.mt-px
-     [:div.toolbar.flex-1
-      [comp/icon-button "go-to-start"
-       {:on-click #(.setTime (.-current timeline-ref) 0)
-        :disabled (zero? time)}]
-      [comp/radio-icon-button
-       {:title (if paused? "Play" "Pause")
-        :class (when (pos? time) "border border-accent")
-        :active? (not paused?)
-        :icon (if paused? "play" "pause")
-        :action #(if paused?
-                   (.play (.-current timeline-ref) #js {:autoEnd true})
-                   (.pause (.-current timeline-ref)))}]
-      [comp/icon-button "go-to-end"
-       {:on-click #(.setTime (.-current timeline-ref) end)
-        :disabled (>= time end)}]
-      [comp/radio-icon-button
-       {:title "Replay"
-        :active? replay?
-        :icon "refresh"
-        :action #(rf/dispatch [:timeline/toggle-replay])}]
-      [speed-select timeline-ref]
-      [:span.font-mono.px-2 time-formatted]
-      (when timeline?
-        [:div.snap-controls.flex
-         [:span.v-divider]
-         [snap-controls]])]
-     [:div.toolbar
-      [comp/toggle-icon-button
-       {:active? timeline?
-        :active-icon "times"
-        :active-text "Hide timeline"
-        :inactive-icon "timeline"
-        :inactive-text "Show timeline"
-        :action #(rf/dispatch [:panel/toggle :timeline])}]]]))
+        end @(rf/subscribe [:timeline/end])]
+    [:div.toolbar.bg-primary
+     [comp/icon-button "go-to-start"
+      {:on-click #(.setTime (.-current timeline-ref) 0)
+       :disabled (zero? time)}]
+     [comp/radio-icon-button
+      {:title (if paused? "Play" "Pause")
+       :class (when (pos? time) "border border-accent")
+       :active? (not paused?)
+       :icon (if paused? "play" "pause")
+       :action #(if paused?
+                  (.play (.-current timeline-ref) #js {:autoEnd true})
+                  (.pause (.-current timeline-ref)))}]
+     [comp/icon-button "go-to-end"
+      {:on-click #(.setTime (.-current timeline-ref) end)
+       :disabled (>= time end)}]
+     [comp/radio-icon-button
+      {:title "Replay"
+       :active? replay?
+       :icon "refresh"
+       :action #(rf/dispatch [:timeline/toggle-replay])}]
+     [speed-select timeline-ref]
+     [:span.font-mono.px-2 time-formatted]
+     [:span.v-divider]
+     [snap-controls]
+     [comp/icon-button "times"
+      {:title "Hide timeline"
+       :on-click #(rf/dispatch [:panel/toggle :timeline])}]]))
 
 (defn register-listeners
   [timeline-ref]
@@ -180,21 +170,6 @@
 
       :reagent-render
       (fn []
-        (let [timeline? @(rf/subscribe [:panel/visible? :timeline])]
-          [:<>
-
-           [toolbar timeline-ref]
-           [time-bar]
-           (when timeline?
-             [:> PanelResizeHandle
-              {:id "timeline-resize-handle"
-               :className "resize-handle"}])
-           (if timeline?
-             [:> Panel
-              {:id "timeline-panel"
-               :minSize 10
-               :defaultSize 10
-               :order 2}
-              [timeline timeline-ref]]
-             ;; We need an invisible timeline to get the ref for our toolbar.
-             [:div.h-0 [timeline timeline-ref]])]))})))
+        [:div.flex-col.h-full
+         [toolbar timeline-ref]
+         [timeline timeline-ref]])})))

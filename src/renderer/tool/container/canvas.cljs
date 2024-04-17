@@ -4,7 +4,7 @@
    [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.rulers.views :as rulers]
-   [renderer.toolbar.filters :as filters]
+   [renderer.menubar.filters :as filters]
    [renderer.tool.base :as tool]
    [renderer.tool.overlay :as overlay]
    [renderer.utils.keyboard :as keyb]

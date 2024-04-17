@@ -42,8 +42,3 @@
   background-image: linear-gradient(var(--bg-primary), var(--bg-primary)), 
                     linear-gradient(90deg, var(--border-color) 1px, transparent 0) !important;
 }
-
-.snap-controls {
-  animation-duration: 300ms;
-  animation-name: slideRightAndFade;
-}

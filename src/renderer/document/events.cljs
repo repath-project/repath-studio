@@ -54,10 +54,12 @@
    (update db :collapsed-keys disj el-k)))
 
 (rf/reg-event-db
- :document/set-filter
+ :document/toggle-filter
  active-document-path
- (fn [db [_ ks]]
-   (assoc db :filter ks)))
+ (fn [db [_ k]]
+   (if (= (:filter db) k)
+     (dissoc db :filter)
+     (assoc db :filter k))))
 
 (rf/reg-event-db
  :document/set-temp-element

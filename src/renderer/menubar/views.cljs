@@ -2,7 +2,8 @@
   (:require
    ["@radix-ui/react-menubar" :as Menubar]
    [re-frame.core :as rf]
-   [renderer.components :as comp]))
+   [renderer.components :as comp]
+   [renderer.menubar.filters :as filters]))
 
 (defn recent-submenu
   []
@@ -308,6 +309,54 @@
     :key "fill-selected"
     :action [:frame/focus-selection :fill]}])
 
+(defn a11y-submenu
+  []
+  (mapv (fn [{:keys [id]}]
+          {:key id
+           :label (name id)
+           :type :checkbox
+           :checked? [:document/filter-active? id]
+           :action [:document/toggle-filter id]}) filters/accessibility))
+
+(defn panels-submenu
+  []
+  [{:key :toggle-tree
+    :type :checkbox
+    :label "Element tree"
+    :checked? [:panel/visible? :tree]
+    :action [:panel/toggle :tree]}
+   {:key :toggle-props
+    :type :checkbox
+    :label "Properties"
+    :checked? [:panel/visible? :properties]
+    :action [:panel/toggle :properties]}
+   {:key :toggle-xml
+    :label "XML view"
+    :type :checkbox
+    :icon "code"
+    :checked? [:panel/visible? :xml]
+    :action [:panel/toggle :xml]}
+   {:key :toggle-history
+    :label "History tree"
+    :icon "history"
+    :type :checkbox
+    :checked? [:panel/visible? :history]
+    :action [:panel/toggle :history]}
+   {:key :toggle-command-history
+    :type :checkbox
+    :label "Shell history"
+    :icon "shell"
+    :checked? [:panel/visible? :repl-history]
+    :action [:panel/toggle :repl-history]}
+   {:key :toggle-timeline-panel
+    :type :checkbox
+    :label "Timeline editor"
+    :icon "timeline"
+    :checked? [:panel/visible? :timeline]
+    :action [:panel/toggle :timeline]}
+   {:key :divider-2
+    :type :separator}])
+
 (defn view-menu
   []
   {:key :view
@@ -317,43 +366,11 @@
             :label "Zoom"
             :type :sub-menu
             :items (zoom-submenu)}
+           {:key :a11y
+            :label "Accessibility filters"
+            :type :sub-menu
+            :items (a11y-submenu)}
            {:key :divider-1
-            :type :separator}
-           {:key :toggle-tree
-            :type :checkbox
-            :label "Element tree"
-            :checked? [:panel/visible? :tree]
-            :action [:panel/toggle :tree]}
-           {:key :toggle-props
-            :type :checkbox
-            :label "Properties"
-            :checked? [:panel/visible? :properties]
-            :action [:panel/toggle :properties]}
-           {:key :toggle-xml
-            :label "XML view"
-            :type :checkbox
-            :icon "code"
-            :checked? [:panel/visible? :xml]
-            :action [:panel/toggle :xml]}
-           {:key :toggle-history
-            :label "History tree"
-            :icon "history"
-            :type :checkbox
-            :checked? [:panel/visible? :history]
-            :action [:panel/toggle :history]}
-           {:key :toggle-command-history
-            :type :checkbox
-            :label "Shell history"
-            :icon "shell"
-            :checked? [:panel/visible? :repl-history]
-            :action [:panel/toggle :repl-history]}
-           {:key :toggle-timeline-panel
-            :type :checkbox
-            :label "Timeline editor"
-            :icon "timeline"
-            :checked? [:panel/visible? :timeline]
-            :action [:panel/toggle :timeline]}
-           {:key :divider-2
             :type :separator}
            {:key :toggle-grid
             :type :checkbox
@@ -372,6 +389,12 @@
             :label "Debug info"
             :checked? [:debug-info?]
             :action [:toggle-debug-info]}
+           {:key :divider-2
+            :type :separator}
+           {:key :panels
+            :label "Panels"
+            :type :sub-menu
+            :items (panels-submenu)}
            {:key :divider-3
             :type :separator}
            {:key :toggle-fullscreen

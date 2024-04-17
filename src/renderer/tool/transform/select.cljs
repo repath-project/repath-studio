@@ -30,7 +30,7 @@
    [:div
     "Hold "
     [:strong "Shift"]
-    " to add elements to selection or remove them, and "
+    " to add or remove elements to selection and "
     [:strong "Alt"]
     " while dragging to select intersecting elements."]])
 

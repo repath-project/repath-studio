@@ -91,6 +91,12 @@
  :-> :filter)
 
 (rf/reg-sub
+ :document/filter-active?
+ :<- [:document/filter]
+ (fn [filter [_ k]]
+   (= filter k)))
+
+(rf/reg-sub
  :document/hovered-keys
  :<- [:document/active]
  :-> :hovered-keys)

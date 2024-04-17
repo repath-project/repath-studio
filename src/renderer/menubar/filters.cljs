@@ -1,4 +1,4 @@
-(ns renderer.toolbar.filters)
+(ns renderer.menubar.filters)
 
 (def accessibility
   [{:id :blur
