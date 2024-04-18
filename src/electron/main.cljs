@@ -108,8 +108,7 @@
                   :frame false
                   :show false
                   :webPreferences
-                  #js {:devTools config/debug?
-                       :sandbox false
+                  #js {:sandbox false
                        :preload (.join path js/__dirname "preload.js")}}))
 
     (.once ^js @main-window "ready-to-show"
