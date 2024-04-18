@@ -22,13 +22,13 @@
     (is (= (bounds/contained? [5 5 10 10] [0 0 20 20]) true))
     (is (= (bounds/contained? [0 0 10 10] [1 1 10 10]) false))))
 
-(deftest test-contain-point?
+(deftest test-contained-point?
   (testing "bounds contain point"
-    (is (= (bounds/contain-point? [0 0 10 10] [0 0]) true))
-    (is (= (bounds/contain-point? [0 0 10 10] [5 5]) true))
-    (is (= (bounds/contain-point? [0 0 10 10] [10 10]) true))
-    (is (= (bounds/contain-point? [0 0 10 10] [-5 5]) false))
-    (is (= (bounds/contain-point? [0 0 10 10] [5 -5]) false))))
+    (is (= (bounds/contained-point? [0 0 10 10] [0 0]) true))
+    (is (= (bounds/contained-point? [0 0 10 10] [5 5]) true))
+    (is (= (bounds/contained-point? [0 0 10 10] [10 10]) true))
+    (is (= (bounds/contained-point? [0 0 10 10] [-5 5]) false))
+    (is (= (bounds/contained-point? [0 0 10 10] [5 -5]) false))))
 
 (deftest test-center
   (testing "center of bounds"
