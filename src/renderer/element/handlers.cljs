@@ -29,7 +29,7 @@
   ([db]
    (get-in db (path db)))
   ([db keys]
-   ((apply juxt keys) (elements db))))
+   (vals (select-keys (elements db) (vec keys)))))
 
 (defn element
   [db k]
@@ -119,7 +119,7 @@
 (defn index-tree-path
   "Returns a sequence that represents the index tree path of an element.
    For example, the seventh element of the second page on the canvas
-   will return [2 7]. This is useful when we need to figure out the index of 
+   will return [2 7]. This is useful when we need to figure out the index of
    nested elements."
   [db el]
   (let [ancestors (-> db (ancestor-keys el) reverse)]
@@ -671,7 +671,7 @@
           (fn [db el-k]
             (-> db
                 (set-parent-at-index el-k (:parent el) i)
-                ;; Group attributes are inherited by its children, 
+                ;; Group attributes are inherited by its children,
                 ;; so we need to maintain the presentation attrs.
                 (inherit-attrs el el-k)))
           db (reverse (:children el))))
