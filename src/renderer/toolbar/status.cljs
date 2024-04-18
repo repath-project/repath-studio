@@ -69,7 +69,7 @@
   (let [new-v (-> (.. e -target -value) (js/parseFloat) (/ 100))]
     (if (js/isNaN new-v)
       (set! (.. e -target -value) v)
-      (rf/dispatch [:set-zoom new-v]))))
+      (rf/dispatch [:frame/set-zoom new-v]))))
 
 (defn zoom-decimal-points
   [zoom]
