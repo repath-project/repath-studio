@@ -12,9 +12,9 @@
 
 .color-drip {
   box-sizing: content-box;
-  width: 17px;
-  max-width: 17px;
-  height: 17px;
+  width: 16px;
+  max-width: 16px;
+  height: 16px;
   flex: 1;
 }
 

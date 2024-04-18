@@ -39,7 +39,7 @@
                  (if (pos? (.-deltaY e))
                    (rf/dispatch [:element/update-attr k - 1])
                    (rf/dispatch [:element/update-attr k + 1])))}]
-   [:div.flex {:style {:width "55px"}}
+   [:div.flex
     [:button.button.ml-px.bg-primary.text-muted.h-full
      {:style {:width "26px"}
       :on-pointer-down #(rf/dispatch [:element/update-attr k - 1])}
