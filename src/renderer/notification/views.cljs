@@ -34,6 +34,7 @@
       notifications)
 
      (when (second notifications)
-       [:button.button.overlay.px-2
-        {:on-click #(rf/dispatch [:notification/clear-all])}
-        "Clear all"])]))
+       [:div.bg-primary
+        [:button.button.overlay.px-2.rounded
+         {:on-click #(rf/dispatch [:notification/clear-all])}
+         "Clear all"]])]))
