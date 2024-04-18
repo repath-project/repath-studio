@@ -13,5 +13,3 @@
      attrs
      (for [el child-elements]
        ^{:key (:key el)} [tool/render el])]))
-
-(defmethod tool/bounds ::tool/animation [] nil)

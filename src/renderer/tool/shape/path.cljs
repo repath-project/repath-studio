@@ -64,10 +64,6 @@
                                  (.translate x y)
                                  .toString))))
 
-(defmethod tool/area :path
-  [{{:keys [d]} :attrs}]
-  d)
-
 (defmethod tool/bounds :path
   [{{:keys [d]} :attrs}]
   (let [[left top right bottom] (js->clj (svg-path-bbox d))]
