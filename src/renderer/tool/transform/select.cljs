@@ -70,7 +70,6 @@
   [{:keys [active-document] :as db} el intersecting?]
   (let [hovered-keys (-> db :documents active-document :hovered-keys)]
     (and (empty? (set/intersection (element.h/ancestor-keys db el) hovered-keys))
-         (not (utils.el/svg? el)) ; REVIEW
          (not (utils.el/root? el))
          ((if intersecting? bounds/intersected? bounds/contained?)
           (:bounds el)
@@ -183,7 +182,7 @@
   "Converts the x/y pointer offset to a scale ratio and a pivot point,
    to decouple this from the scaling method of the elements.
 
-   :pivot-point 
+   :pivot-point
    + ─────────□──┬-------□
    │             |       |
    │             | ─ x ─ |
