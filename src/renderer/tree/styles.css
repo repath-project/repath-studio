@@ -41,7 +41,7 @@
   @apply flex-1 bg-primary mr-px h-full overflow-hidden;
 
   &:hover {
-    /* When the mouse is over the tree, ignore the hovered class if the element 
+    /* When the mouse is over the tree, ignore the hovered class if the element
        itself is not hovered */
     .hovered:not(:hover) {
       background-color: initial;
@@ -56,7 +56,7 @@
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
-  
+
   &::placeholder {
     color: var(--font-color);
   }

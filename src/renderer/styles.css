@@ -91,7 +91,7 @@
     font-size: 12px;
     box-shadow: none !important;
     color: var(--font-color) !important;
-    
+
     &:hover,
     &:focus {
       color: var(--font-color-active) !important;
@@ -228,7 +228,7 @@ label {
 
 .v-scroll {
   @apply box-border overflow-y-auto;
-  
+
   /* scrollbar-gutter: stable; */
 }
 
@@ -259,7 +259,7 @@ pre {
 .icon {
   display: flex;
   justify-content: center;
-  
+
   div {
     display: flex;
     fill: inherit;
@@ -291,7 +291,7 @@ pre {
     &:first-child {
       @apply rounded-l ml-0;
     }
-  
+
     &:last-child {
       @apply rounded-r;
     }
@@ -309,7 +309,7 @@ pre {
     line-height: 22px;
     margin: 0 !important;
     border-radius: 2px !important;
-    
+
     svg {
       width: 13px;
       height: 13px;
@@ -328,7 +328,7 @@ pre {
   height: 10px;
   width: 10px;
 }
-            
+
 .v-divider {
   @apply mx-1;
   height: 27px;
@@ -375,7 +375,7 @@ pre {
   &[data-resize-handle-state="drag"] {
     &:after {
       background-color: var(--accent);
-    } 
+    }
   }
 }
 
@@ -393,7 +393,7 @@ pre {
   @apply drop-shadow-md;
 
   > div {
-    @apply absolute top-2 left-auto right-2 overflow-hidden font-sans text-sm 
+    @apply absolute top-2 left-auto right-2 overflow-hidden font-sans text-sm
     px-2 py-1.5 bg-white text-gray-500 !important;
 
     > div {
@@ -401,7 +401,7 @@ pre {
 
       > div {
         background-color: var(--accent) !important;
-      } 
+      }
     }
   }
 }

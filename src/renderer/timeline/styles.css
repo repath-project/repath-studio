@@ -39,6 +39,6 @@
 }
 
 .timeline-editor-edit-row {
-  background-image: linear-gradient(var(--bg-primary), var(--bg-primary)), 
+  background-image: linear-gradient(var(--bg-primary), var(--bg-primary)),
                     linear-gradient(90deg, var(--border-color) 1px, transparent 0) !important;
 }

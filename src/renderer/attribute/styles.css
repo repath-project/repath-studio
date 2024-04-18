@@ -1,21 +1,21 @@
 .attribute-grid {
-    @apply grid grid-cols-2 grid-flow-row my-px w-full gap-px;
-    grid-template-columns: minmax(100px, auto) 1fr;
+  @apply grid grid-cols-2 grid-flow-row my-px w-full gap-px;
+  grid-template-columns: minmax(100px, auto) 1fr;
 }
 
 .support-cell {
-    @apply text-2xs p-px m-px;
+  @apply text-2xs p-px m-px;
 }
 
 .form-input {
-    .clear-input-button {
-        visibility: hidden;
-    }
+  .clear-input-button {
+    visibility: hidden;
+  }
 
-    &:hover,
-    &:active {
-        .clear-input-button {
-            visibility: visible;
-        }
+  &:hover,
+  &:active {
+    .clear-input-button {
+      visibility: visible;
     }
+  }
 }
