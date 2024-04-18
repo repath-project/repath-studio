@@ -5,7 +5,7 @@
    [clojure.string :as str]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.element.handlers :as element.h]
-   [renderer.handlers :as handlers]
+   [renderer.handlers :as h]
    [renderer.history.handlers :as history]
    [renderer.tool.base :as tool]
    [renderer.tool.overlay :as overlay]
@@ -54,9 +54,11 @@
   (if (element.h/get-temp db)
     (-> db
         element.h/add
+        (h/set-tool :select)
+        (h/set-state :default)
         (history/finalize "Create line"))
     (-> db
-        (handlers/set-state :create)
+        (h/set-state :create)
         create-line)))
 
 (defmethod tool/pointer-down :line
