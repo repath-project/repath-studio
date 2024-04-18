@@ -1,6 +1,16 @@
 .attribute-grid {
   @apply grid grid-cols-2 grid-flow-row my-px w-full gap-px;
   grid-template-columns: minmax(100px, auto) 1fr;
+
+  .button {
+    &:focus {
+      @apply outline-none outline-shadow;
+    }
+
+    &:active {
+      @apply shadow-none;
+    }
+  }
 }
 
 .support-cell {

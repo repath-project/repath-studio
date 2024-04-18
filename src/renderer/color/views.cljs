@@ -8,11 +8,12 @@
    [renderer.components :as comp]))
 
 (defn drip [color]
-  [:div.color-drip {:key (keyword (str color))
-                    :on-click (fn []
-                                (rf/dispatch [:document/set-fill color])
-                                (rf/dispatch [:element/set-attr :fill color]))
-                    :style {:background-color color}}
+  [:button.button.color-drip
+   {:key (keyword (str color))
+    :on-click (fn []
+                (rf/dispatch [:document/set-fill color])
+                (rf/dispatch [:element/set-attr :fill color]))
+    :style {:background-color color}}
    (when (= color "transparent")
      [:div.bg-primary.text-error.relative
       [comp/icon "times"]])])
@@ -33,8 +34,8 @@
         stroke @(rf/subscribe [:document/stroke])]
     [:<>
      [:> Popover/Root {:modal true}
-      [:> Popover/Trigger
-       [:div.color-rect.relative {:style {:background stroke}}
+      [:> Popover/Trigger {:as-child true}
+       [:button.button.color-rect.relative {:style {:background stroke}}
         [:div.color-rect.bg-primary.absolute
          {:style {:width "13px"
                   :height "13px"
@@ -61,8 +62,8 @@
       [renderer.components/icon "swap-horizontal"]]
 
      [:> Popover/Root {:modal true}
-      [:> Popover/Trigger
-       [:div.color-rect {:style {:background fill}}]]
+      [:> Popover/Trigger {:as-child true}
+       [:button.button.color-rect {:style {:background fill}}]]
       [:> Popover/Portal
        [:> Popover/Content
         {:class "popover-content color-picker-lg"

@@ -21,7 +21,7 @@
      :placeholder initial}]
    [:> Popover/Root {:modal true}
     [:> Popover/Trigger {:asChild true}
-     [:button.color-drip.ml-px.inline-block
+     [:button.button.color-drip.ml-px.inline-block
       {:style {:flex "0 0 26px"
                :border "5px solid var(--bg-primary)"
                :background v}}]]
