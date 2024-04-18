@@ -68,3 +68,9 @@
     transform: translateX(calc(100% + var(--viewport-padding)));
   }
 }
+
+@keyframes spin {
+  100% {
+      transform:rotate(360deg);
+  }
+}

@@ -519,3 +519,11 @@ pre {
 .close-button {
   @apply icon-button absolute top-3 right-3 !important;
 }
+
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -9px 0 0 -9px;
+  animation: spin 4s linear infinite;
+}

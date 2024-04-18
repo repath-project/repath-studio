@@ -10,3 +10,9 @@
  :worker/tasks
  :<- [:worker]
  :-> :tasks)
+
+(rf/reg-sub
+ :worker/loading?
+ :<- [:worker/tasks]
+ (fn [tasks]
+   (seq tasks)))
