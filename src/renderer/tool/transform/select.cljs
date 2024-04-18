@@ -67,13 +67,12 @@
     " to scale in position."]])
 
 (defn hovered?
-  [{:keys [active-document] :as db} el intersecting?]
-  (let [hovered-keys (-> db :documents active-document :hovered-keys)]
-    (and (empty? (set/intersection (element.h/ancestor-keys db el) hovered-keys))
-         ((if intersecting? bounds/intersected? bounds/contained?)
-          (:bounds el)
-          (let [{{:keys [x y width height]} :attrs} (element.h/get-temp db)]
-            [x y (+ x width) (+ y height)])))))
+  [db el intersecting?]
+  (let [{{:keys [x y width height]} :attrs} (element.h/get-temp db)
+        selection-bounds [x y (+ x width) (+ y height)]]
+    (if intersecting?
+      (bounds/intersected? (:bounds el) selection-bounds)
+      (bounds/contained? (:bounds el) selection-bounds))))
 
 (defn reduce-by-area
   [db intersecting? f]
