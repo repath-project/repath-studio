@@ -131,7 +131,7 @@
     (-> db
         (element.h/ignore (:key el))
         (element.h/deselect (:key el)))
-    (tool/set-tool db :edit)))
+    (h/set-tool db :edit)))
 
 (defmethod tool/activate :select
   [db]

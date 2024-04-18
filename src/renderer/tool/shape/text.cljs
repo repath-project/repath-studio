@@ -50,7 +50,7 @@
                         :tag :text
                         :attrs attrs})
         (history.h/finalize "Create text")
-        (tool/set-tool :edit)
+        (h/set-tool :edit)
         (h/set-state :edit)))) ; FIXME: Merge create and edit history action.
 
 (defmethod tool/drag-end :text

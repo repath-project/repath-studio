@@ -35,4 +35,4 @@
          (notification.v/unavailable-feature
           "EyeDropper"
           "https://developer.mozilla.org/en-US/docs/Web/API/EyeDropper_API#browser_compatibility"))
-        (tool/set-tool :select))))
+        (h/set-tool :select))))

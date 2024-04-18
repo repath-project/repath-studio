@@ -72,7 +72,7 @@
       (update-in [:documents active-document :temp-element :attrs :points]
                  #(str/join " " (apply concat (drop-last 2 (attr.utils/points->vec %)))))
       element.h/add
-      (tool/set-tool :select)
+      (h/set-tool :select)
       (h/set-state :default)
       (history/finalize "Create " (name (:tool db)))))
 

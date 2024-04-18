@@ -27,7 +27,7 @@
   (let [temp-element (get-in db [:documents (:active-document db) :temp-element])]
     (-> db
         element.h/add
-        (tool/set-tool :select)
+        (h/set-tool :select)
         (h/set-state :default)
         (history.h/finalize "Create " (name (:tag temp-element))))))
 

@@ -4,6 +4,7 @@
    [platform]
    [re-frame.core :as rf]
    [renderer.db :as db]
+   [renderer.handlers :as h]
    [renderer.frame.handlers :as frame-h]
    [renderer.tool.base :as tool]
    [renderer.utils.drop :as drop]
@@ -51,7 +52,7 @@
 (rf/reg-event-db
  :set-tool
  (fn [db [_ tool]]
-   (tool/set-tool db tool)))
+   (h/set-tool db tool)))
 
 (rf/reg-event-db
  :clear-restored
@@ -125,7 +126,7 @@
             (cond-> db
               (= button :middle)
               (-> (assoc :primary-tool tool)
-                  (tool/set-tool :pan))
+                  (h/set-tool :pan))
 
               (and (= button :right) (not= (:key element) :bounding-box))
               (tool/pointer-up e element)
@@ -140,7 +141,7 @@
                       (tool/drag-end db e element)
                       (cond-> db (not= button :right) (tool/pointer-up e element)))
               (and primary-tool (= button :middle))
-              (-> (tool/set-tool primary-tool)
+              (-> (h/set-tool primary-tool)
                   (dissoc :primary-tool))
 
               :always
@@ -171,7 +172,7 @@
        (and (= code "Space")
             (not= tool :pan))
        (-> (assoc :primary-tool tool)
-           (tool/set-tool :pan))
+           (h/set-tool :pan))
 
        :always
        (tool/key-down e))
@@ -180,7 +181,7 @@
      (cond-> db
        (and (= code "Space")
             (:primary-tool db))
-       (-> (tool/set-tool (:primary-tool db))
+       (-> (h/set-tool (:primary-tool db))
            (dissoc :primary-tool))
 
        :always
