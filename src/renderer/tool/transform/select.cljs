@@ -70,7 +70,6 @@
   [{:keys [active-document] :as db} el intersecting?]
   (let [hovered-keys (-> db :documents active-document :hovered-keys)]
     (and (empty? (set/intersection (element.h/ancestor-keys db el) hovered-keys))
-         (not (utils.el/root? el))
          ((if intersecting? bounds/intersected? bounds/contained?)
           (:bounds el)
           (let [{{:keys [x y width height]} :attrs} (element.h/get-temp db)]
