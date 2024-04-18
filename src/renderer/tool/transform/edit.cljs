@@ -26,25 +26,25 @@
         [:div "Hold " [:strong "Ctrl"] " to restrict direction."]])))
 
 (defmethod tool/pointer-down :edit
-  [db _ el]
-  (assoc db :clicked-element el))
+  [db {:keys [element]}]
+  (assoc db :clicked-element element))
 
 (defmethod tool/pointer-up :edit
-  [db e el]
+  [db {:keys [element] :as e}]
   (if-not (and (= (:button e) :right)
-               (:selected? el))
+               (:selected? element))
     (-> db
         element.h/clear-ignored
         (dissoc :clicked-element)
-        (element.h/select (:key el) (pointer/shift? e))
+        (element.h/select (:key element) (pointer/shift? e))
         (history.h/finalize "Select element"))
     (dissoc db :clicked-element)))
 
 (defmethod tool/pointer-move :edit
-  [db _ el]
+  [db {:keys [element]}]
   (-> db
       element.h/clear-hovered
-      (element.h/hover (:key el))))
+      (element.h/hover (:key element))))
 
 (defmethod tool/drag-start :edit
   [db]

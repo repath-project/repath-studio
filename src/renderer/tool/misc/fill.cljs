@@ -20,12 +20,12 @@
 (defmethod tool/translate :fill [])
 
 (defmethod tool/pointer-up :fill
-  [{active-document :active-document :as db} _e el]
+  [{active-document :active-document :as db} {:keys [element]}]
   (let [color (get-in db [:documents active-document :fill])]
     (-> db
-        (element.h/set-attr (:key el) :fill color)
+        (element.h/set-attr (:key element) :fill color)
         (history/finalize "Fill " color))))
 
 (defmethod tool/drag-end :fill
-  [db e el]
-  (tool/pointer-up db e el))
+  [db e]
+  (tool/pointer-up db e))

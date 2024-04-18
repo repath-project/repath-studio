@@ -112,13 +112,13 @@
                                                    pointer-offset)
 
                         (not drag?)
-                        (-> (tool/drag-start e element)
+                        (-> (tool/drag-start e)
                             (assoc :drag? true))
 
                         :always
-                        (tool/drag e element))
+                        (tool/drag e))
                       db)
-                    (tool/pointer-move db e element))
+                    (tool/pointer-move db e))
                   (assoc :pointer-pos pointer-pos
                          :adjusted-pointer-pos adjusted-pointer-pos)))
 
@@ -129,17 +129,17 @@
                   (h/set-tool :pan))
 
               (and (= button :right) (not= (:key element) :bounding-box))
-              (tool/pointer-up e element)
+              (tool/pointer-up e)
 
               :always
-              (-> (tool/pointer-down e element)
+              (-> (tool/pointer-down e)
                   (assoc :pointer-offset pointer-pos
                          :adjusted-pointer-offset adjusted-pointer-pos)))
 
             :pointerup
             (cond-> (if drag?
-                      (tool/drag-end db e element)
-                      (cond-> db (not= button :right) (tool/pointer-up e element)))
+                      (tool/drag-end db e)
+                      (cond-> db (not= button :right) (tool/pointer-up e)))
               (and primary-tool (= button :middle))
               (-> (h/set-tool primary-tool)
                   (dissoc :primary-tool))
@@ -149,7 +149,7 @@
                   (update :snap dissoc :nearest-neighbor)))
 
             :dblclick
-            (tool/double-click db e element)
+            (tool/double-click db e)
 
             :wheel
             (if (some modifiers [:ctrl :alt])

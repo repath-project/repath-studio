@@ -33,7 +33,7 @@
   (assoc db :cursor "grabbing"))
 
 (defmethod tool/drag :pan
-  [db e _]
+  [db e]
   (frame/pan db (mat/sub (:pointer-pos db) (:pointer-pos e))))
 
 (defmethod tool/drag-end :pan

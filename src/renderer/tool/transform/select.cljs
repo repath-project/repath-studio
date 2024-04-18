@@ -85,15 +85,15 @@
               (f (:key el)))) db (filter :visible? (vals (element.h/elements db)))))
 
 (defmethod tool/pointer-move :select
-  [db e el]
+  [db {:keys [element] :as e}]
   (cond-> db
     (not (pointer/shift? e))
     element.h/clear-ignored
 
     :always
     (-> element.h/clear-hovered
-        (element.h/hover (:key el))
-        (assoc :cursor (if el "move" "default")))))
+        (element.h/hover (:key element))
+        (assoc :cursor (if element "move" "default")))))
 
 (defmethod tool/key-down :select
   [db e]
@@ -109,28 +109,28 @@
     element.h/clear-ignored))
 
 (defmethod tool/pointer-down :select
-  [db _e el]
+  [db {:keys [element]}]
   (-> db
-      (assoc :clicked-element el)
+      (assoc :clicked-element element)
       (element.h/ignore :bounding-box)))
 
 (defmethod tool/pointer-up :select
-  [db e el]
+  [db {:keys [element] :as e}]
   (if-not (and (= (:button e) :right)
-               (:selected? el))
+               (:selected? element))
     (-> db
         element.h/clear-ignored
         (dissoc :clicked-element)
-        (element.h/select (:key el) (pointer/shift? e))
+        (element.h/select (:key element) (pointer/shift? e))
         (history.h/finalize "Select element"))
     (dissoc db :clicked-element)))
 
 (defmethod tool/double-click :select
-  [db _e el]
-  (if (= (:tag el) :g)
+  [db {:keys [element]}]
+  (if (= (:tag element) :g)
     (-> db
-        (element.h/ignore (:key el))
-        (element.h/deselect (:key el)))
+        (element.h/ignore (:key element))
+        (element.h/deselect (:key element)))
     (h/set-tool db :edit)))
 
 (defmethod tool/activate :select

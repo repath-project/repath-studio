@@ -54,8 +54,8 @@
         (h/set-state :edit)))) ; FIXME: Merge create and edit history action.
 
 (defmethod tool/drag-end :text
-  [db]
-  (tool/pointer-up db))
+  [db e]
+  (tool/pointer-up db e))
 
 (defmethod tool/translate :text
   [el [x y]]

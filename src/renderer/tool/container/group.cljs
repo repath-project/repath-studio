@@ -20,12 +20,10 @@
   el) ; TODO
 
 (defmethod tool/render :g
-  [{:keys [attrs children] :as element}]
+  [{:keys [attrs children bounds] :as element}]
   (let [child-elements @(rf/subscribe [:element/filter-visible children])
-        elements @(rf/subscribe [:document/elements])
         ignored-keys @(rf/subscribe [:document/ignored-keys])
         ignored? (contains? ignored-keys (:key element))
-        bounds (tool/bounds element elements)
         [x1 y1 _x2 _y2] bounds
         [width height] (bounds/->dimensions bounds)
         pointer-handler #(pointer/event-handler % element)]
