@@ -14,6 +14,7 @@
 (derive :metadata ::descriptive)
 (derive :title ::descriptive)
 
+;; Tool multimethods.
 (defmulti pointer-down (fn [db _e] (:tool db)))
 (defmulti pointer-move (fn [db _e] (:tool db)))
 (defmulti pointer-up (fn [db _e] (:tool db)))
@@ -27,19 +28,6 @@
 (defmulti deactivate :tool)
 (defmulti properties keyword)
 
-(defmulti render :tag)
-(defmulti render-to-string :tag)
-(defmulti path :tag)
-(defmulti area :tag)
-(defmulti centroid :tag)
-(defmulti snapping-points :tag)
-(defmulti render-edit :tag)
-(defmulti bounds (fn [el _elements] (:tag el))) ; REVIEW
-(defmulti translate (fn [el _offset] (:tag el)))
-(defmulti position (fn [el _position] (:tag el)))
-(defmulti scale (fn [el _ration _pivot-point] (:tag el)))
-(defmulti edit (fn [el _offset _handle] (:tag el)))
-
 (defmethod pointer-down :default [db _e] db)
 (defmethod pointer-up :default [db _e] db)
 (defmethod pointer-move :default [db _e] db)
@@ -52,6 +40,20 @@
 (defmethod activate :default [db] (assoc db :cursor "default"))
 (defmethod deactivate :default [db] (assoc db :cursor "default"))
 (defmethod properties :default [])
+
+;; Element multimethods.
+(defmulti render :tag)
+(defmulti render-to-string :tag)
+(defmulti path :tag)
+(defmulti area :tag)
+(defmulti centroid :tag)
+(defmulti snapping-points :tag)
+(defmulti render-edit :tag)
+(defmulti bounds (fn [el _elements] (:tag el))) ; REVIEW
+(defmulti translate (fn [el _offset] (:tag el)))
+(defmulti position (fn [el _position] (:tag el)))
+(defmulti scale (fn [el _ration _pivot-point] (:tag el)))
+(defmulti edit (fn [el _offset _handle] (:tag el)))
 
 (defmethod render :default [])
 (defmethod render-to-string :default [element] [render element])
