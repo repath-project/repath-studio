@@ -109,7 +109,7 @@
       (when loading?
         [:<>
          [:span.icon-button.relative
-          [comp/icon "refresh" {:class "loading"}]]
+          [comp/icon "spinner" {:class "loading"}]]
          [:span.v-divider]])
       (into [:<>]
             (map (fn [{:keys [title active? icon action]}]
