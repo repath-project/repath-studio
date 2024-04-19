@@ -42,6 +42,10 @@
       (assoc :cursor "crosshair")
       (h/set-message [:div "Click and drag to draw."])))
 
+(defmethod tool/deactivate :measure
+  [db]
+  (element.h/clear-temp db))
+
 (defonce options
   [::size ::thinning ::smoothing ::streamline])
 
@@ -81,6 +85,18 @@
 (defmethod attr.hierarchy/description ::streamline
   []
   "How much to streamline the stroke.")
+
+(defmethod tool/pointer-move :brush
+  [{:keys [adjusted-pointer-pos] :as db} {:keys [pressure]}]
+  (let [[x y] adjusted-pointer-pos
+        r (* (/ 16 2) (if (zero? pressure) 1 pressure))
+        stroke (get-in db [:documents (:active-document db) :stroke])]
+    (element.h/set-temp db {:type :element
+                            :tag :circle
+                            :attrs {:cx x
+                                    :cy y
+                                    :r r
+                                    :fill stroke}})))
 
 (defmethod tool/drag :brush
   [{:keys [active-document
