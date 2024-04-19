@@ -42,18 +42,21 @@
 (defmethod properties :default [])
 
 ;; Element multimethods.
-(defmulti render :tag)
-(defmulti render-to-string :tag)
-(defmulti path :tag)
-(defmulti area :tag)
-(defmulti centroid :tag)
-(defmulti snapping-points :tag)
-(defmulti render-edit :tag)
-(defmulti bounds (fn [el _elements] (:tag el))) ; REVIEW
-(defmulti translate (fn [el _offset] (:tag el)))
-(defmulti position (fn [el _position] (:tag el)))
-(defmulti scale (fn [el _ration _pivot-point] (:tag el)))
-(defmulti edit (fn [el _offset _handle] (:tag el)))
+;; The context of the element methods should be limited to the element.
+;; Additional arguments should not include the global db.
+(defmulti render "Renders the element to dom." :tag)
+(defmulti render-to-string "Returns an SVG string of the element." :tag)
+(defmulti path "Converts the elemnt to path commands (d)." :tag)
+(defmulti area "Calculates the area enclosed by the shape." :tag)
+(defmulti centroid "Returns the elements' center of mass." :tag)
+(defmulti snapping-points "Returns additional snapping point for the element." :tag)
+(defmulti render-edit "Renders the edit overlay of the element." :tag)
+;; REVIEW: Is there a way to avoid passing all elelemts?
+(defmulti bounds "Returns the local bounds of the element." (fn [el _elements] (:tag el)))
+(defmulti translate "Translates the element by a given offset." (fn [el _offset] (:tag el)))
+(defmulti position "Moves the element to a given global position." (fn [el _position] (:tag el)))
+(defmulti scale "Scales the element by a given ratio and pivot-point." (fn [el _ration _pivot-point] (:tag el)))
+(defmulti edit "Edits the element by a given offset and handle." (fn [el _offset _handle] (:tag el)))
 
 (defmethod render :default [])
 (defmethod render-to-string :default [element] [render element])
