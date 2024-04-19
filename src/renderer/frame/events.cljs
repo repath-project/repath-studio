@@ -22,21 +22,24 @@
  (fn [db [_ zoom]]
    (h/focus-selection db zoom)))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  :frame/set-zoom
- (fn [{active-document :active-document :as db} [_ zoom]]
-   (let [current-zoom (get-in db [:documents active-document :zoom])]
-     (h/zoom db (/ zoom current-zoom)))))
+ (fn [{:keys [db]} [_ zoom]]
+   (let [current-zoom (get-in db [:documents (:active-document db) :zoom])]
+     {:db (h/zoom db (/ zoom current-zoom))
+      :focus nil})))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  :frame/zoom-in
- (fn [db [_ _]]
-   (h/zoom db (/ 1 (:zoom-sensitivity db)))))
+ (fn [{:keys [db]} [_ _]]
+   {:db (h/zoom db (/ 1 (:zoom-sensitivity db)))
+    :focus nil}))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  :frame/zoom-out
- (fn [db [_ _]]
-   (h/zoom db (:zoom-sensitivity db))))
+ (fn [{:keys [db]} [_ _]]
+   {:db (h/zoom db (:zoom-sensitivity db))
+    :focus nil}))
 
 (rf/reg-event-db
  :frame/pan-to-bounds

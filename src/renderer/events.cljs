@@ -7,6 +7,7 @@
    [renderer.handlers :as h]
    [renderer.frame.handlers :as frame-h]
    [renderer.tool.base :as tool]
+   [renderer.utils.dom :as dom]
    [renderer.utils.drop :as drop]
    [renderer.utils.local-storage :as local-storage]
    [renderer.utils.pointer :as pointer]))
@@ -49,10 +50,11 @@
  (fn [db [_ mdn]]
    (assoc db :mdn mdn)))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  :set-tool
- (fn [db [_ tool]]
-   (h/set-tool db tool)))
+ (fn [{:keys [db]} [_ tool]]
+   {:db (h/set-tool db tool)
+    :focus nil}))
 
 (rf/reg-event-db
  :clear-restored
@@ -210,3 +212,9 @@
                                   (js/Blob.
                                    [text-html]
                                    #js {:type ["text/html"]}))})]))))
+
+(rf/reg-fx
+ :focus
+ (fn [id]
+   (when-let [element (if id (.getElementById js/document id) (dom/canvas-element))]
+     (js/setTimeout #(.focus element)))))

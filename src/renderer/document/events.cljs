@@ -153,7 +153,8 @@
             (element.h/create {:tag :svg
                                :attrs {:width "800" :height "600"}})
             (history.h/finalize "Create document"))
-    :dispatch [:frame/center]}))
+    :fx [[:dispatch [:frame/center]]
+         [:focus nil]]}))
 
 (def file-picker-options
   {:startIn "documents"
@@ -195,7 +196,8 @@
             :always
             (-> (h/add-recent (:path document))
                 (assoc :active-document (:key document))))
-      :dispatch [:frame/center]})))
+      :fx [[:dispatch [:frame/center]]
+           [:focus nil]]})))
 
 (rf/reg-fx
  ::save-as
@@ -223,7 +225,7 @@
    (let [document (save-format db)]
      (if platform/electron?
        {:send-to-main {:action "saveDocument" :data (pr-str document)}}
-       ;; The path is not available when we use web APIs for security reasons, 
+       ;; The path is not available when we use web APIs for security reasons,
        ;; so we always dispatch save-as.
        {::save-as document}))))
 

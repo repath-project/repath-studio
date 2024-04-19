@@ -9,7 +9,6 @@
    [renderer.history.handlers :as history.h]
    [renderer.tool.base :as tool]
    [renderer.utils.bounds :as bounds]
-   [renderer.utils.dom :as dom]
    [renderer.utils.element :as element]
    [renderer.utils.units :as units]))
 
@@ -18,9 +17,9 @@
 (defmethod tool/properties :text
   []
   {:icon "text"
-   :description "The SVG <text> element draws a graphics element consisting 
-                 of text. It's possible to apply a gradient, pattern, 
-                 clipping path, mask, or filter to <text>, like any other SVG 
+   :description "The SVG <text> element draws a graphics element consisting
+                 of text. It's possible to apply a gradient, pattern,
+                 clipping path, mask, or filter to <text>, like any other SVG
                  graphics element."
    :attrs [:font-family
            :font-size
@@ -69,7 +68,6 @@
 
 (defn set-text-and-select-element
   [e el-k]
-  (.focus (dom/canvas-element)) ; REVIEW
   (rf/dispatch [:element/set-prop el-k :content (get-text e)])
   (rf/dispatch [:set-tool :select]))
 
