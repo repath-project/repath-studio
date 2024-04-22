@@ -52,7 +52,7 @@
 
 ### What about performance?
 
-We are currently trying to optimize for hundreds of elements per document. Editing thousands of nodes on a single document is not within the scope of this project (at least for now).
+We are currently trying to optimize for hundreds of elements per document. We are also testing a canvas based implementation that can handle thousands of nodes on a single document, but that's not within the current scope of the project.
 
 ## How to build it locally
 
