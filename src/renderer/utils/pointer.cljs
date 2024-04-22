@@ -18,6 +18,12 @@
       (> (apply max (map abs (mat/sub pointer-pos pointer-offset)))
          threshold))))
 
+(defn adjust-position
+  [zoom pan pointer-pos]
+  (-> pointer-pos
+      (mat/div zoom)
+      (mat/add pan)))
+
 (def button
   "https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button"
   [:left
@@ -36,12 +42,12 @@
 (defn event-handler
   "Gathers pointer event props.
    https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent
-   
+
    Then dispathces the corresponding event.
    https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/
-   
-   Although the fps might drop because synced dispatch blocks the rendering, 
-   the end result appears to be more responsive because it's synced with the 
+
+   Although the fps might drop because synced dispatch blocks the rendering,
+   the end result appears to be more responsive because it's synced with the
    pointer movement."
   [^js/PointerEvent e el]
   (.stopPropagation e)

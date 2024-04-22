@@ -3,7 +3,8 @@
    [clojure.core.matrix :as mat]
    [renderer.element.handlers :as element.h]
    [renderer.utils.bounds :as bounds]
-   [renderer.utils.math :as math]))
+   [renderer.utils.math :as math]
+   [renderer.utils.pointer :as pointer]))
 
 (defn pan
   [{:keys [active-document] :as db} offset]
@@ -26,16 +27,10 @@
         (assoc-in [:documents active-document :zoom] updated-zoom)
         (assoc-in [:documents active-document :pan] updated-pan))))
 
-(defn adjust-pointer-pos
-  [zoom pan pointer-pos]
-  (-> pointer-pos
-      (mat/div zoom)
-      (mat/add pan)))
-
 (defn adjusted-pointer-pos
   [{:keys [active-document] :as db} pointer-pos]
   (let [{:keys [zoom pan]} (get-in db [:documents active-document])]
-    (adjust-pointer-pos zoom pan pointer-pos)))
+    (pointer/adjust-position zoom pan pointer-pos)))
 
 (defn zoom-in-pointer-position
   [{:keys [adjusted-pointer-pos] :as db} factor]
