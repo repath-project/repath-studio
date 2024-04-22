@@ -7,7 +7,8 @@
   (js->clj (.-svg bcd) :keywordize-keys true))
 
 (def presentation-attrs
-  "https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/Presentation"
+  "TODO: Removed on @mdn/browser-compat-data 5.5.14.
+   https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/Presentation"
   (-> svg
       :attributes
       :presentation
