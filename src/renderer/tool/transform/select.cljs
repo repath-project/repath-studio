@@ -2,7 +2,6 @@
 (ns renderer.tool.transform.select
   (:require
    [clojure.core.matrix :as mat]
-   [clojure.set :as set]
    [kdtree]
    [renderer.element.handlers :as element.h]
    [renderer.handlers :as h]
@@ -11,7 +10,6 @@
    [renderer.tool.base :as tool]
    [renderer.tool.overlay :as overlay]
    [renderer.utils.bounds :as bounds]
-   [renderer.utils.element :as utils.el]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
 
