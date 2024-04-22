@@ -86,7 +86,6 @@
     "create-react-class": "15.7.0",
     "electron": "29.3.1",
     "electron-builder": "24.13.3",
-    "element-to-path": "1.2.1",
     "highlight.js": "11.9.0",
     "imagetracerjs": "1.2.6",
     "js-beautify": "1.15.1",

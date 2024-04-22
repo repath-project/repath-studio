@@ -112,16 +112,17 @@
 
 (defn ->path
   [el]
-  (-> el
-      (assoc :attrs (attributes
-                     {:tag :path
-                      :attrs (map/merge-common-with
-                              str
-                              (:attrs el)
-                              (attributes {:tag :path
-                                           :attrs {}}))})
-             :tag :path)
-      (assoc-in [:attrs :d] (tool/path el))))
+  (cond-> el
+    (get-method tool/path (:tag el))
+    (-> (assoc :attrs (attributes
+                       {:tag :path
+                        :attrs (map/merge-common-with
+                                str
+                                (:attrs el)
+                                (attributes {:tag :path
+                                             :attrs {}}))})
+               :tag :path)
+        (assoc-in [:attrs :d] (tool/path el)))))
 
 (defn stroke->path
   [{:keys [attrs] :as el}]

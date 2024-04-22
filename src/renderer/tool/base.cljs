@@ -65,7 +65,6 @@
 (defmethod area :default [])
 (defmethod centroid :default [])
 (defmethod snapping-points :default [])
-(defmethod path :default [element] element)
 (defmethod scale :default [element] element)
 (defmethod translate :default [element] element)
 (defmethod position :default [element] element)

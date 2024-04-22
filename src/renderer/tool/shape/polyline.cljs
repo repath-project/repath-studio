@@ -7,7 +7,7 @@
 (defmethod tool/properties :polyline
   []
   {:icon "polyline"
-   :description "The <polyline> SVG element is an SVG basic shape that creates 
+   :description "The <polyline> SVG element is an SVG basic shape that creates
                  straight lines connecting several points."
    :attrs [:stroke-width
            :fill
@@ -16,3 +16,7 @@
            :stroke-dasharray
            :stroke-linejoin
            :opacity]})
+
+(defmethod tool/path :polyline
+  [{{:keys [points]} :attrs}]
+  (str "M" points))
