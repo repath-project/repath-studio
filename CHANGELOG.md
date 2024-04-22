@@ -1,5 +1,44 @@
 # Changelog
 
+## 0.2.9 (2024-04-22)
+
+**Added**
+
+- Image tracing
+- Image triangulation
+- SVG import
+- Snap options
+- Path manipulations (simplify, smooth, flatten, reverse)
+- Brush circle pointer
+- Open document on drop
+- Various icons
+- Web workers and loading indicator
+
+**Removed**
+
+- Element-to-path dependency
+- Tooltip arrow
+
+**Changed**
+
+- Allow selecting svg elements on drag
+- Enable chromium devtools on prod
+- Enhance focus styles
+- Rearrange toolbars and menus
+- Move tool help text to statusbar
+- Enhance a11y
+- Enhance performance
+
+**Fixed**
+
+- Set-zoom event
+- Render to string
+- Default modal focus
+- Text element creation
+- Point parsing
+- Prevent copying empty selection
+- Recent documents on home
+
 ## 0.2.8 (2024-04-09)
 
 **Added**
