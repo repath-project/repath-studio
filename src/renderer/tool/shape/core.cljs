@@ -1,8 +1,17 @@
-(ns renderer.tool.shape.shape
+(ns renderer.tool.shape.core
   "https://www.w3.org/TR/SVG/shapes.html#TermShapeElement"
   (:require
    [re-frame.core :as rf]
-   [renderer.tool.base :as tool]))
+   [renderer.tool.base :as tool]
+   [renderer.tool.shape.circle]
+   [renderer.tool.shape.ellipse]
+   [renderer.tool.shape.image]
+   [renderer.tool.shape.line]
+   [renderer.tool.shape.path]
+   [renderer.tool.shape.polygon]
+   [renderer.tool.shape.polyline]
+   [renderer.tool.shape.polyshape]
+   [renderer.tool.shape.rect]))
 
 (derive ::tool/shape ::tool/graphics)
 

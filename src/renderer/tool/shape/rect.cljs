@@ -48,7 +48,6 @@
         ry (units/unit->px (if (and (not ry) rx) rx ry))
         rx (if (> rx (/ width 2)) (/ width 2) rx)
         ry (if (> ry (/ height 2)) (/ height 2) ry)
-        _ (print [x y width height rx ry])
         curved? (and (> rx 0) (> ry 0))]
     (->> ["M" (+ x rx) y
           "H" (- (+ x width) rx)

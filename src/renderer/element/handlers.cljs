@@ -47,8 +47,10 @@
 
 (defn update-el
   [db el f & more]
-  (-> (apply update-in db (conj (path db) (:key el)) f more)
-      (update-bounds (:key el))))
+  (if (:locked? el)
+    db
+    (-> (apply update-in db (conj (path db) (:key el)) f more)
+        (update-bounds (:key el)))))
 
 (defn selected
   [db]
@@ -210,7 +212,7 @@
 
 (defn update-attr
   [db el k f & more]
-  (if (and (not (:locked? el)) (element/supports-attr? el k))
+  (if (element/supports-attr? el k)
     (apply update-el db el hierarchy/update-attr k f more)
     db))
 
@@ -442,26 +444,20 @@
            db
            (top-selected-ancestors db)))
   ([db el offset]
-   (cond-> db
-     (not (:locked? el))
-     (update-el el tool/translate offset))))
+   (update-el db el tool/translate offset)))
 
 (defn position
   ([db pos]
    (reduce #(position %1 %2 pos) db (top-selected-ancestors db)))
   ([db el pos]
-   (cond-> db
-     (not (:locked? el))
-     (update-el el tool/position pos))))
+   (update-el db el tool/position pos)))
 
 (defn scale
   ([db ratio pivot-point]
    (reduce #(scale %1 %2 ratio pivot-point) db (selected db)))
   ([db el ratio pivot-point]
-   (cond-> db
-     (not (:locked? el))
-     (update-el el tool/scale ratio (let [[x1 y1] (:bounds el)]
-                                      (mat/sub pivot-point [x1 y1]))))))
+   (update-el db el tool/scale ratio (let [[x1 y1] (:bounds el)]
+                                       (mat/sub pivot-point [x1 y1])))))
 
 (defn align
   ([db direction]
@@ -485,15 +481,13 @@
   ([db]
    (reduce ->path db (selected db)))
   ([db el]
-   (cond-> db
-     (not (:locked? el)) (update-el el element/->path))))
+   (update-el db el element/->path)))
 
 (defn stroke->path
   ([db]
    (reduce stroke->path db (selected db)))
   ([db el]
-   (cond-> db
-     (not (:locked? el)) (update-el el element/stroke->path))))
+   (update-el db el element/stroke->path)))
 
 (def default-props
   {:type :element
@@ -682,9 +676,8 @@
    (reduce #(manipulate-path %1 %2 action) db (selected db)))
   ([db el action]
    (cond-> db
-     (and (not (:locked? el))
-          (= (:tag el) :path))
-     (update-in (path db (:key el)) path/manipulate action))))
+     (= (:tag el) :path)
+     (update-el el path/manipulate action))))
 
 (defn ->string
   [elements]

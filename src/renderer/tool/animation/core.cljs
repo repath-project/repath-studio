@@ -1,8 +1,11 @@
-(ns renderer.tool.animation.animation
+(ns renderer.tool.animation.core
   "https://svgwg.org/specs/animations/#AnimationElements"
   (:require
    [re-frame.core :as rf]
-   [renderer.tool.base :as tool]))
+   [renderer.tool.base :as tool]
+   [renderer.tool.animation.animate-motion]
+   [renderer.tool.animation.animate-transform]
+   [renderer.tool.animation.animate]))
 
 (derive ::tool/animation ::tool/descriptive)
 

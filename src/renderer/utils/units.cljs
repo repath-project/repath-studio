@@ -5,7 +5,7 @@
 (def ppi 96)
 
 (def units
-  ;; TODO: Find an agnostix way to handle percentages.
+  ;; TODO: Find an agnostix way to handle percentages (we need to pass a base).
   {:px 1
    :ch 8
    :ex 7.15625

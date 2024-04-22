@@ -1,8 +1,11 @@
-(ns renderer.tool.container.container
+(ns renderer.tool.container.core
   "https://www.w3.org/TR/SVG/struct.html#TermContainerElement"
   (:require
    [re-frame.core :as rf]
-   [renderer.tool.base :as tool]))
+   [renderer.tool.base :as tool]
+   [renderer.tool.container.canvas]
+   [renderer.tool.container.group]
+   [renderer.tool.container.svg]))
 
 (derive ::tool/container ::tool/box)
 

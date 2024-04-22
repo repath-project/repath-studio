@@ -1,4 +1,4 @@
-(ns renderer.tool.shape.text
+(ns renderer.tool.text
   (:require
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
