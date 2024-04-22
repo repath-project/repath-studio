@@ -51,7 +51,7 @@
 (defmulti centroid "Returns the elements' center of mass." :tag)
 (defmulti snapping-points "Returns additional snapping point for the element." :tag)
 (defmulti render-edit "Renders the edit overlay of the element." :tag)
-;; REVIEW: Is there a way to avoid passing all elelemts?
+;; REVIEW: Is there a way to avoid passing all elements?
 (defmulti bounds "Returns the local bounds of the element." (fn [el _elements] (:tag el)))
 (defmulti translate "Translates the element by a given offset." (fn [el _offset] (:tag el)))
 (defmulti position "Moves the element to a given global position." (fn [el _position] (:tag el)))
