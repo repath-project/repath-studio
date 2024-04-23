@@ -18,7 +18,7 @@
                 :type :separator}
                {:key :clear-recent
                 :label "Clear recent"
-                :icon "times"
+                :icon "delete"
                 :action [:document/clear-recent]}]))))
 
 (defn file-menu
@@ -92,39 +92,48 @@
             :label "Cut"
             :action [:element/cut]}
            {:key :copy
+            :icon "copy"
             :label "Copy"
             :action [:element/copy]}
            {:key :paste
             :label "Paste"
+            :icon "paste"
             :action [:element/paste]}
            {:key :paste-in-place
+            :icon "paste"
             :label "Paste in place"
             :action [:element/paste-in-place]}
            {:key :paste-styles
+            :icon "paste"
             :label "Paste styles"
             :action [:element/paste-styles]}
            {:key :divider-2
             :type :separator}
            {:key :duplicate
+            :icon "copy"
             :label "Duplicate"
             :action [:element/duplicate-in-place]}
            {:key :divider-3
             :type :separator}
            {:key :select-all
+            :icon "select-all"
             :label "Select all"
             :action [:element/select-all]}
            {:key :deselect-all
+            :icon "deselect-all"
             :label "Deselect all"
             :action [:element/deselect-all]}
            {:key :invert-selection
             :label "Invert selection"
             :action [:element/invert-selection]}
            {:key :select-same-tags
+            :icon "select-same"
             :label "Select same tags"
             :action [:element/select-same-tags]}
            {:key :divider-4
             :type :separator}
            {:key :delete
+            :icon "delete"
             :label "Delete"
             :action [:element/delete]}]})
 
@@ -280,11 +289,11 @@
   []
   [{:key :zoom-in
     :label "In"
-    :icon "plus"
+    :icon "zoom-in"
     :action [:frame/zoom-in]}
    {:key :zoom-out
     :label "Out"
-    :icon "minus"
+    :icon "zoom-out"
     :action [:frame/zoom-out]}
    {:key :divider-1
     :type :separator}
@@ -434,6 +443,7 @@
            {:key :divider-3
             :type :separator}
            {:key :about
+            :icon "info"
             :label "About"
             :action [:dialog/about]}]})
 
