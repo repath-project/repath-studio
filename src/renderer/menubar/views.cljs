@@ -189,6 +189,18 @@
     :icon "divide"
     :action [:element/bool-operation :divide]}])
 
+(defn animate-submenu
+  []
+  [{:key :animate
+    :label "Animate"
+    :action [:element/animate :animate {}]}
+   {:key :animate-transform
+    :label "Animate Transform"
+    :action [:element/animate :animateTransform {}]}
+   {:key :animate-motion
+    :label "Animate Motion"
+    :action [:element/animate :animateMotion {}]}])
+
 (defn path-submenu
   []
   [{:key :simplify
@@ -250,13 +262,15 @@
             :label "Align"
             :type :sub-menu
             :items (align-submenu)}
-           {:key :divider-4
-            :type :separator}
+           {:key :boolean
+            :label "Animate"
+            :type :sub-menu
+            :items (animate-submenu)}
            {:key :boolean
             :label "Boolean operation"
             :type :sub-menu
             :items (boolean-submenu)}
-           {:key :divider-5
+           {:key :divider-4
             :type :separator}
            {:key :raise
             :label "Raise"
@@ -274,7 +288,7 @@
             :label "Lower to bottom"
             :icon "send-back"
             :action [:element/lower-to-bottom]}
-           {:key :divider-6
+           {:key :divider-5
             :type :separator}
            {:key :image
             :type :sub-menu
