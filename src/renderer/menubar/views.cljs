@@ -345,6 +345,7 @@
   []
   [{:key :toggle-tree
     :type :checkbox
+    :icon "tree"
     :label "Element tree"
     :checked? [:panel/visible? :tree]
     :action [:panel/toggle :tree]}
