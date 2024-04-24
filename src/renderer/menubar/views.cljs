@@ -50,7 +50,7 @@
             :disabled? [:document/active-saved?]}
            {:key :save-as
             :label "Save as…"
-            :icon "save"
+            :icon "save-as"
             :action [:document/save-as]}
            {:key :download
             :icon "download"
@@ -351,6 +351,7 @@
     :action [:panel/toggle :tree]}
    {:key :toggle-props
     :type :checkbox
+    :icon "properties"
     :label "Properties"
     :checked? [:panel/visible? :properties]
     :action [:panel/toggle :properties]}
@@ -435,24 +436,29 @@
    :type :root
    :items [{:key :cmdk
             :label "Command panel"
+            :icon "command"
             :action [:dialog/cmdk]}
            {:key :divider-1
             :type :separator}
            {:key :website
             :label "Website"
+            :icon "earth"
             :action [:window/open-remote-url "https://repath.studio/"]}
            {:key :source-code
             :label "Source Code"
+            :icon "commit"
             :action [:window/open-remote-url "https://github.com/re-path/studio"]}
            {:key :license
             :label "License"
             :action [:window/open-remote-url "https://github.com/re-path/studio/blob/main/LICENSE"]}
            {:key :changelog
+            :icon "list"
             :label "Changelog"
             :action [:window/open-remote-url "https://repath.studio/roadmap/changelog/"]}
            {:key :divider-2
             :type :separator}
            {:key :submit-issue
+            :icon "warning"
             :label "Submit an issue"
             :action [:window/open-remote-url "https://github.com/re-path/studio/issues/new/choose"]}
            {:key :divider-3
