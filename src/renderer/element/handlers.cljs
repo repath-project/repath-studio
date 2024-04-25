@@ -612,9 +612,9 @@
   ([db tag attrs]
    (reduce #(animate %1 %2 tag attrs) (deselect db) (selected db)))
   ([db el tag attrs]
-   (add db {:tag tag
-            :attrs attrs
-            :parent (:key el)})))
+   (reduce select (add db {:tag tag
+                           :attrs attrs
+                           :parent (:key el)}) (selected-keys db))))
 
 (defn paste-styles
   ([db]
