@@ -572,7 +572,7 @@
   ([db]
    (reduce paste-in-place (deselect db) (:copied-elements db)))
   ([db el]
-   (add db el)))
+   (reduce select (add db el) (selected-keys db))))
 
 (defn paste
   ([db]
@@ -584,10 +584,9 @@
          offset (mat/sub el-center center)
          el (dissoc el :bounds)
          [s-x1 s-y1] (:bounds parent)
-         pointer-pos (:adjusted-pointer-pos db)
-         selected (selected-keys db)]
+         pointer-pos (:adjusted-pointer-pos db)]
      (reduce
-      (fn [db k] (select db k))
+      select
       (cond-> db
         :always
         (-> deselect
@@ -595,7 +594,7 @@
             (position (mat/add pointer-pos offset)))
 
         (not= :canvas (:key parent))
-        (translate [(- s-x1) (- s-y1)])) selected))))
+        (translate [(- s-x1) (- s-y1)])) (selected-keys db)))))
 
 (defn duplicate-in-place
   ([db]
