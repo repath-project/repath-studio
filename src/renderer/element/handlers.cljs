@@ -576,14 +576,14 @@
 
 (defn paste
   ([db]
-   (reduce paste (deselect db) (:copied-elements db)))
-  ([db el]
+   (let [parent (hovered-svg db)]
+     (reduce #(paste %1 %2 parent) (deselect db) (:copied-elements db))))
+  ([db el parent]
    (let [center (bounds/center (:copied-bounds db))
          el-center (bounds/center (:bounds el))
          offset (mat/sub el-center center)
          el (dissoc el :bounds)
-         svg (hovered-svg db)
-         [s-x1 s-y1] (:bounds svg)
+         [s-x1 s-y1] (:bounds parent)
          pointer-pos (:adjusted-pointer-pos db)
          selected (selected-keys db)]
      (reduce
@@ -591,10 +591,10 @@
       (cond-> db
         :always
         (-> deselect
-            (add (assoc el :parent (:key svg)))
+            (add (assoc el :parent (:key parent)))
             (position (mat/add pointer-pos offset)))
 
-        (not= :canvas (:key svg))
+        (not= :canvas (:key parent))
         (translate [(- s-x1) (- s-y1)])) selected))))
 
 (defn duplicate-in-place
