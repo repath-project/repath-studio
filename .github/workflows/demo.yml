@@ -37,7 +37,7 @@ jobs:
       - name: Install clojure tools
         uses: DeLaGuardo/setup-clojure@12.5
         with:
-          cli: 1.11.3.1452
+          cli: 1.11.3.1456
       - run: npm ci && npm run build
       - name: Setup Pages
         uses: actions/configure-pages@v5
