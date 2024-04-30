@@ -14,7 +14,7 @@
                          :sha "932a03e1c12f8690ce753b2fe639719a7fe5072f"
                          :deps/manifest :deps}
         funcool/promesa {:mvn/version "11.0.678"}
-        metosin/malli {:mvn/version "0.16.0"}
+        metosin/malli {:mvn/version "0.16.1"}
         net.mikera/core.matrix {:mvn/version "0.63.0"}
         org.clj-commons/hickory {:mvn/version "0.7.4"}
         org.slf4j/slf4j-simple {:mvn/version "2.0.13"}
