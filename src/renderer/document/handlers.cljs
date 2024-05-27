@@ -33,7 +33,7 @@
 (defn create-tab
   [db document]
   (let [key (or (:key document) (uuid/generate))
-        title (or (:title document) (str "Untitled-" (-> db :documents count inc)))
+        title (or (:title document) (str "Untitled-" (inc (count (:documents db)))))
         active-index (.indexOf (:document-tabs db) (:active-document db))
         document (merge document {:key key :title title})]
     (-> db
