@@ -97,10 +97,8 @@
   (merge
    (when tag
      (merge (when (isa? tag ::tool/element)
-              (merge
-               (attrs-map (tag (:elements spec/svg)))
-               (attrs-map (-> spec/svg :attributes :core))
-               (attrs-map (-> spec/svg :attributes :style))))
+              (merge (attrs-map (tag (:elements spec/svg)))
+                     (zipmap spec/core-attrs (repeat ""))))
             (when (contains? #{:animateMotion :animateTransform} tag)
               (attrs-map (:animate (:elements spec/svg))))
             (zipmap (:attrs (tool/properties tag)) (repeat ""))))
