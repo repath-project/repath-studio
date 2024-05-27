@@ -17,8 +17,8 @@
 
 (rf/reg-event-db
  :notification/remove
- (fn [db [_ index]]
-   (update db :notifications vec/remove-by-index index)))
+ (fn [db [_ i]]
+   (update db :notifications vec/remove-nth i)))
 
 (rf/reg-event-db
  :notification/clear-all

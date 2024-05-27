@@ -12,14 +12,14 @@
 
 (defmethod hierarchy/description :points
   []
-  "The points attribute defines a list of points. Each point is defined by a 
-   pair of number representing a X and a Y coordinate in the user coordinate 
-   system. If the attribute contains an odd number of coordinates, the last one 
+  "The points attribute defines a list of points. Each point is defined by a
+   pair of number representing a X and a Y coordinate in the user coordinate
+   system. If the attribute contains an odd number of coordinates, the last one
    will be ignored.")
 
-(defn remove-point-by-index
-  [points index]
-  (let [points (str/join " " (flatten (vec/remove-by-index points index)))]
+(defn remove-nth
+  [points i]
+  (let [points (str/join " " (flatten (vec/remove-nth points i)))]
     (rf/dispatch [:element/set-attr :points points])))
 
 (defmethod hierarchy/form-element :points
@@ -55,6 +55,6 @@
                                [:input.bg-transparent
                                 {:key (str "y-" index v) :default-value y}]
                                [:button.button.bg-transparent.text-muted.h-full
-                                {:on-click #(remove-point-by-index points index)}
+                                {:on-click #(remove-nth points index)}
                                 [comp/icon "times" {:class "icon small"}]]]) points)]))
           [:> Popover/Arrow {:class "popover-arrow"}]]]])]))
