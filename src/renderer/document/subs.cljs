@@ -1,6 +1,7 @@
 (ns renderer.document.subs
   (:require
-   [re-frame.core :as rf]))
+   [re-frame.core :as rf]
+   [renderer.document.handlers :as h]))
 
 (rf/reg-sub
  :document/recent
@@ -124,16 +125,11 @@
 
 (rf/reg-sub
  :document/saved?
- :<- [:documents]
- (fn [documents [_ k]]
-   (or (= (get-in documents [k :save])
-          (get-in documents [k :history :position]))
-       (and (not (get-in documents [k :save]))
-            (empty? (rest (get-in documents [k :history :states])))))))
+ (fn [db [_ k]]
+   (h/saved? db k)))
 
 (rf/reg-sub
  :document/active-saved?
- :<- [:document/active]
- (fn [document [_]]
-   (= (:save document)
-      (get-in document [:history :position]))))
+ (fn [{:keys [active-document] :as db} [_]]
+   (when active-document
+     (h/saved? db active-document))))

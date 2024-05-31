@@ -44,5 +44,7 @@
 (defn saved?
   [db k]
   (let [document (-> db :documents k)]
-    (= (:save document)
-       (get-in document [:history :position]))))
+    (or (= (:save document)
+           (get-in document [:history :position]))
+        (and (not (:save document))
+             (empty? (rest (get-in document [:history :states])))))))
