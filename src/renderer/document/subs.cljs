@@ -126,8 +126,10 @@
  :document/saved?
  :<- [:documents]
  (fn [documents [_ k]]
-   (= (get-in documents [k :save])
-      (get-in documents [k :history :position]))))
+   (or (= (get-in documents [k :save])
+          (get-in documents [k :history :position]))
+       (and (not (get-in documents [k :save]))
+            (empty? (rest (get-in documents [k :history :states])))))))
 
 (rf/reg-sub
  :document/active-saved?
