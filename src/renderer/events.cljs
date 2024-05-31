@@ -130,7 +130,7 @@
               (-> (assoc :primary-tool tool)
                   (h/set-tool :pan))
 
-              (and (= button :right) (not= (:tag element) :move))
+              (and (= button :right) (not= (:key element) :bounding-box))
               (tool/pointer-up e)
 
               :always

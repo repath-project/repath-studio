@@ -80,21 +80,41 @@
               (f (:key el)))) db (filter :visible? (vals (element.h/elements db)))))
 
 (defmethod tool/pointer-move :select
-  [db {:keys [element]}]
-  (-> db
-      element.h/clear-hovered
-      (element.h/hover (:key element))
-      (assoc :cursor (if element "move" "default"))))
+  [db {:keys [element] :as e}]
+  (cond-> db
+    (not (pointer/shift? e))
+    element.h/clear-ignored
+
+    :always
+    (-> element.h/clear-hovered
+        (element.h/hover (:key element))
+        (assoc :cursor (if element "move" "default")))))
+
+(defmethod tool/key-down :select
+  [db e]
+  db
+  (cond-> db
+    (pointer/shift? e)
+    (element.h/ignore :bounding-box)))
+
+(defmethod tool/key-up :select
+  [db e]
+  (cond-> db
+    (not (pointer/shift? e))
+    element.h/clear-ignored))
 
 (defmethod tool/pointer-down :select
   [db {:keys [element]}]
-  (assoc db :clicked-element element))
+  (-> db
+      (assoc :clicked-element element)
+      (element.h/ignore :bounding-box)))
 
 (defmethod tool/pointer-up :select
   [db {:keys [element] :as e}]
   (if-not (and (= (:button e) :right)
                (:selected? element))
     (-> db
+        element.h/clear-ignored
         (dissoc :clicked-element)
         (element.h/select (:key element) (pointer/shift? e))
         (history.h/finalize "Select element"))
@@ -102,7 +122,6 @@
 
 (defmethod tool/double-click :select
   [db {:keys [element]}]
-  (print element)
   (if (= (:tag element) :g)
     (-> db
         (element.h/ignore (:key element))
@@ -204,7 +223,9 @@
                  (and ctrl? (not= state :scale))
                  pointer/lock-direction)
         alt-key? (contains? (:modifiers e) :alt)
-        db (h/set-message db (message offset state))]
+        db (-> db
+               element.h/clear-ignored
+               (h/set-message (message offset state)))]
     (-> (case state
           :select
           (-> db

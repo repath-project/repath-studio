@@ -48,7 +48,7 @@
                   :on-double-click pointer-handler
                   :on-key-up keyb/event-handler
                   :on-key-down keyb/event-handler
-                  :tab-index 0 ; Enable keyboard events
+                  :tab-index 0 ; Enable keyboard events 
                   :viewBox (str/join " " viewbox)
                   :on-drop pointer-handler
                   :on-drag-over #(.preventDefault %)
@@ -70,22 +70,20 @@
        [:<>
         (when (and select? (contains? #{:default :select :scale} state))
           [:<>
-           (when (and (pos? elements-area) (= state :scale))
-             [overlay/area elements-area bounds])
-
-           (when (not-empty bounds)
-             [overlay/wrapping-bounding-box bounds])
-
            (for [el selected-elements]
              ^{:key (str (:key el) "-bounds")}
-             [overlay/bounding-box (:bounds el) el false])
+             [overlay/bounding-box (:bounds el) false])
 
            (for [el hovered-elements]
              ^{:key (str (:key el) "-bounds")}
-             [overlay/bounding-box (:bounds el) el (not (:selected? el))])
+             [overlay/bounding-box (:bounds el) true])
 
-           (when (not-empty bounds)
+           (when (and (pos? elements-area) (= state :scale))
+             [overlay/area elements-area bounds])
+
+           (when (not-empty (remove zero? bounds))
              [:<>
+              [overlay/wrapping-bounding-box bounds]
               (when (= state :scale) [overlay/size bounds])
               [overlay/bounding-handles bounds]])
 
