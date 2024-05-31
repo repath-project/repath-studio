@@ -21,7 +21,7 @@
       (h/set-cursor "default")
       (h/set-message
        [:div
-        [:div "Drag a handle to modify your shape, or click on an element 
+        [:div "Drag a handle to modify your shape, or click on an element
               to change selection."]
         [:div "Hold " [:strong "Ctrl"] " to restrict direction."]])))
 
@@ -34,7 +34,6 @@
   (if-not (and (= (:button e) :right)
                (:selected? element))
     (-> db
-        element.h/clear-ignored
         (dissoc :clicked-element)
         (element.h/select (:key element) (pointer/shift? e))
         (history.h/finalize "Select element"))

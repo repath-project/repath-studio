@@ -11,11 +11,11 @@
    [renderer.utils.units :as units]))
 
 ;; The iframe is isolated so we don't have access to the css vars of the parent.
-;; We are currently using hardcoded values, but we hould be able to set those 
+;; We are currently using hardcoded values, but we hould be able to set those
 ;; vars in the nested document if we have to.
 (def accent-inverted "#fff")
 (def accent "#e93976")
-(def font-mono "'Consolas (Custom)', 'Bitstream Vera Sans Mono', monospace, 
+(def font-mono "'Consolas (Custom)', 'Bitstream Vera Sans Mono', monospace,
                 'Apple Color Emoji', 'Segoe UI Emoji'")
 
 (def handle-size 12)
@@ -160,13 +160,11 @@
 (defn wrapping-bounding-box
   [bounds]
   (let [zoom @(rf/subscribe [:document/zoom])
-        key :bounding-box
         ignored-keys @(rf/subscribe [:document/ignored-keys])
         ignored? (contains? ignored-keys key)
         [x1 y1 _x2 _y2] bounds
         [w h] (bounds/->dimensions bounds)
-        pointer-handler #(pointer/event-handler % {:type :element
-                                                   :tag :move
+        pointer-handler #(pointer/event-handler % {:tag :move
                                                    :key key})
         rect-attrs {:x x1
                     :y y1
@@ -239,12 +237,13 @@
     [label text [x y]]))
 
 (defn bounding-box
-  [bounds dashed?]
+  [bounds el dashed?]
   (let [zoom @(rf/subscribe [:document/zoom])
         [x1 y1 _x2 _y2] bounds
         [width height] (bounds/->dimensions bounds)
         stroke-width (/ 2 zoom)
         stroke-dasharray (/ dash-size zoom)
+        pointer-handler #(pointer/event-handler % el)
         attrs {:x x1
                :y y1
                :width width
@@ -253,8 +252,12 @@
                :stroke-width stroke-width
                :fill "transparent"}]
 
-    [:g {:style {:pointer-events "none"}}
-     [:rect (merge attrs {:stroke accent})]
+    [:g {:style (when dashed? {:pointer-events "none"})}
+     [:rect (merge attrs {:stroke accent
+                          :on-pointer-up pointer-handler
+                          :on-pointer-down pointer-handler
+                          :on-pointer-move pointer-handler
+                          :on-double-click pointer-handler})]
      (when dashed?
        [:rect (merge attrs {:stroke accent-inverted
                             :stroke-dasharray stroke-dasharray})])]))
