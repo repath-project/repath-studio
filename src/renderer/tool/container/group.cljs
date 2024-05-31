@@ -11,7 +11,7 @@
 
 (defmethod tool/properties :g
   []
-  {:description "The <g> SVG element is a container used to group other 
+  {:description "The <g> SVG element is a container used to group other
                  SVG elements."
    :attrs [:transform]})
 

@@ -102,7 +102,7 @@
         timeline? @(rf/subscribe [:panel/visible? :timeline])
         loading? @(rf/subscribe [:worker/loading?])]
     [:<>
-     [:div.toolbar.bg-primary
+     [:div.toolbar.bg-primary.mt-px
       [color-v/picker]
       [:div.grow.text-xs.truncate.mx-1
        @(rf/subscribe [:message])]
