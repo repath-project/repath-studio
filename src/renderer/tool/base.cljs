@@ -53,6 +53,7 @@
 (defmulti render-edit "Renders the edit overlay of the element." :tag)
 ;; REVIEW: Is there a way to avoid passing all elements?
 (defmulti bounds "Returns the local bounds of the element." (fn [el _elements] (:tag el)))
+(defmulti support "Calculates the support point of the element for the given direction." (fn [el _direction] (:tag el)))
 (defmulti translate "Translates the element by a given offset." (fn [el _offset] (:tag el)))
 (defmulti position "Moves the element to a given global position." (fn [el _position] (:tag el)))
 (defmulti scale "Scales the element by a given ratio and pivot-point." (fn [el _ration _pivot-point] (:tag el)))
