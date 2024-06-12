@@ -130,9 +130,9 @@
         db)))) ; REVIEW
 
 (defn finalize
-  "Pushes changes to the zip-tree.
-   Explicitly adding states, allows canceling actions before adding the state 
-   to history. We also avoid the need of throttling in consecutive actions 
+  "Pushes changes to history.
+   Explicitly adding states, allows canceling actions before adding the state
+   to history. We also avoid the need of throttling in consecutive actions
    (move, color pick etc)"
   [db explanation & more]
   (let [current-position (current-position db)
