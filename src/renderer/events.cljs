@@ -218,3 +218,8 @@
  (fn [id]
    (when-let [element (if id (.getElementById js/document id) (dom/canvas-element))]
      (js/setTimeout #(.focus element)))))
+
+(rf/reg-event-fx
+ :focus
+ (fn [_ [_ id]]
+   {:focus id}))

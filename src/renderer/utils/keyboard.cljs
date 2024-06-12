@@ -33,11 +33,11 @@
                                    (.-shiftKey e) (conj :shift))}]))
 
 (defn input-key-down-handler
-  "Generic on-key-down handler for input elements that dispatches an event `f` 
-   in order to update a db value on keyboard enter, or reset to the initial 
+  "Generic on-key-down handler for input elements that dispatches an event `f`
+   in order to update a db value on keyboard enter, or reset to the initial
    value `v` on escape.
 
-   We need this to avoid updating the canvas with incomplete values while the 
+   We need this to avoid updating the canvas with incomplete values while the
    user is typing, and also avoid polluting the history stack.
 
    The `default-value` attribute should be used to update the value reactively."
@@ -161,19 +161,19 @@
                 [[:element/select-all]
                  [{:keyCode (key-codes "A")
                    :ctrlKey true}]]
-                [[:menubar/focus "file"]
+                [[:focus "file"]
                  [{:keyCode (key-codes "F")
                    :altKey true}]]
-                [[:menubar/focus "edit"]
+                [[:focus "edit"]
                  [{:keyCode (key-codes "E")
                    :altKey true}]]
-                [[:menubar/focus "object"]
+                [[:focus "object"]
                  [{:keyCode (key-codes "O")
                    :altKey true}]]
-                [[:menubar/focus "view"]
+                [[:focus "view"]
                  [{:keyCode (key-codes "V")
                    :altKey true}]]
-                [[:menubar/focus "help"]
+                [[:focus "help"]
                  [{:keyCode (key-codes "H")
                    :altKey true}]]
                 [[:element/move-up]
