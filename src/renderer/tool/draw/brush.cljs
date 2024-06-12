@@ -2,7 +2,7 @@
   "https://github.com/steveruizok/perfect-freehand"
   (:require
    ["perfect-freehand" :refer [getStroke]]
-   ["svg-path-bbox" :as svg-path-bbox]
+   ["svg-path-bbox" :refer [svgPathBbox]]
    [clojure.core.matrix :as mat]
    [clojure.core.matrix.stats :as mat.stats]
    [renderer.attribute.color :as attr.color]
@@ -170,7 +170,7 @@
   [{:keys [attrs]}]
   (-> (::points attrs)
       (points->path (select-keys attrs options))
-      svg-path-bbox
+      svgPathBbox
       js->clj))
 
 (defmethod tool/translate :brush

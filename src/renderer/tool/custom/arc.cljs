@@ -1,6 +1,6 @@
 (ns renderer.tool.custom.arc
   (:require
-   ["svg-path-bbox" :as svg-path-bbox]
+   ["svg-path-bbox" :refer [svgPathBbox]]
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
    [renderer.attribute.angle :as angle]
@@ -55,7 +55,7 @@
 
 (defmethod tool/bounds :arc
   [element]
-  (let [[left top right bottom] (js->clj (svg-path-bbox (tool/path element)))]
+  (let [[left top right bottom] (js->clj (svgPathBbox (tool/path element)))]
     [left top right bottom]))
 
 (defmethod tool/area :arc

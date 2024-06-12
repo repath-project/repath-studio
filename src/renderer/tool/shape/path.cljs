@@ -2,7 +2,7 @@
   "https://www.w3.org/TR/SVG/paths.html#PathElement"
   (:require
    ["paper" :refer [Path]]
-   ["svg-path-bbox" :as svg-path-bbox]
+   ["svg-path-bbox" :refer [svgPathBbox]]
    ["svgpath" :as svgpath]
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
@@ -33,7 +33,7 @@
 (defmethod tool/properties :path
   []
   {; :icon "bezier-curve"
-   :description "The <path> SVG element is the generic element to define a shape. 
+   :description "The <path> SVG element is the generic element to define a shape.
                  All the basic shapes can be created with a path element."
    :attrs [:stroke-width
            :fill
@@ -66,7 +66,7 @@
 
 (defmethod tool/bounds :path
   [{{:keys [d]} :attrs}]
-  (let [[left top right bottom] (js->clj (svg-path-bbox d))]
+  (let [[left top right bottom] (js->clj (svgPathBbox d))]
     [left top right bottom]))
 
 (defmethod tool/render-edit :path
