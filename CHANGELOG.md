@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.11 (2024-06-19)
+
+**Removed**
+
+- Image triangulation
+
 ## 0.2.10 (2024-06-19)
 
 **Added**
