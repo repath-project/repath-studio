@@ -75,8 +75,7 @@
 
 (defn form-input
   [{:keys [key value disabled? placeholder on-wheel]}]
-  [:div.relative.flex.form-input
-   {:style {:flex "1 0 70px"}}
+  [:div.relative.flex.form-input.flex-1
    [:input {:key value
             :id (name key)
             :default-value value
@@ -218,7 +217,7 @@
   (let [property @(rf/subscribe [:webref-css-property k])]
     [:<>
      [label tag k]
-     [:div.flex.h-full.overflow-visible
+     [:div.flex.h-full.overflow-visible.mr-px
       [hierarchy/form-element k v locked? (when property (:initial property))]]]))
 
 (defn tag-info
