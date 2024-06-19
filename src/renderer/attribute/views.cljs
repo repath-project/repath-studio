@@ -74,12 +74,13 @@
                        :element/preview-attr) k new-v])))))
 
 (defn form-input
-  [{:keys [key value disabled? placeholder on-wheel]}]
+  [{:keys [key value disabled? placeholder on-wheel class]}]
   [:div.relative.flex.form-input.flex-1
    [:input {:key value
             :id (name key)
             :default-value value
             :disabled disabled?
+            :class class
             :placeholder (if value placeholder "multiple")
             :on-wheel on-wheel
             :on-blur #(on-change-handler % key value)
@@ -103,6 +104,7 @@
                 :value v
                 :disabled? (:disabled attrs)
                 :placeholder initial
+                :class "w-20"
                 :on-wheel (fn [e]
                             (if (pos? (.-deltaY e))
                               (rf/dispatch [:element/update-attr k - (:step attrs)])
