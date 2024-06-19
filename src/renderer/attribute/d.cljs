@@ -101,7 +101,8 @@
   [v]
   (let [path (-> v svgpath)
         segments (.-segments path)]
-    [:div.flex.flex-col.p-4
+    [:div.flex.flex-col.p-4.overflow-y-auto
+     {:style {:max-height "50vh"}}
      (map-indexed (fn [i segment]
                     (let [command (first segment)
                           {:keys [label url]} (->command command)]
