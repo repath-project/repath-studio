@@ -220,10 +220,7 @@
   []
   [{:key :trace
     :label "Trace"
-    :action [:element/trace]}
-   {:key :trianlgulate
-    :label "Trianlgulate"
-    :action [:element/triangulate]}])
+    :action [:element/trace]}])
 
 (defn object-menu
   []

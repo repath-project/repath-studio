@@ -23,7 +23,7 @@
   {:target :browser
    :output-dir "resources/public/js"
    :compiler-options
-   {;; Optimizations only apply when using the release command. 
+   {;; Optimizations only apply when using the release command.
     ;; Development builds are never optimized by the Closure Compiler.
     ;; https://shadow-cljs.github.io/docs/UsersGuide.html#Optimization
     :optimizations :simple
@@ -62,11 +62,6 @@
 
     :trace
     {:init-fn worker.trace/init
-     :web-worker true
-     :depends-on #{:shared}}
-
-    :triangulate
-    {:init-fn worker.triangulate/init
      :web-worker true
      :depends-on #{:shared}}}}
 

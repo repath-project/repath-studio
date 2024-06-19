@@ -393,9 +393,3 @@
  (fn [{:keys [db]} [_]]
    (let [images (h/filter-by-tag db :image)]
      {::->svg [images "Tracing" "trace.js"]})))
-
-(rf/reg-event-fx
- :element/triangulate
- (fn [{:keys [db]} [_]]
-   (let [images (h/filter-by-tag db :image)]
-     {::->svg [images "Triangulating" "triangulate.js"]})))
