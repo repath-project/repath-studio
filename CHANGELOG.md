@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.2.10 (2024-06-19)
+
+**Added**
+
+- Various icons
+
+**Removed**
+
+- kibit development dependency
+
+**Changed**
+
+- Project name
+- Simplify light theme
+
+**Fixed**
+
+- Selection on animate
+- Paste in place selection
+- Parent of pasted elements
+- Saved document subs
+- Popover arrow
+- Attribute grid styles
+
 ## 0.2.9 (2024-04-22)
 
 **Added**
@@ -130,13 +154,13 @@
 
 - Enhance home page
 - Enhance undo/redo styles
-  
+
 **Fixed**
 
 - Document title
 
 ## 0.2.3 (2024-03-01)
-  
+
 **Fixed**
 
 - Electron log
@@ -154,7 +178,7 @@
 
 - Url handling
 - Refactor element to path
-  
+
 **Fixed**
 
 - History tree rendering
@@ -165,7 +189,7 @@
 **Changed**
 
 - Logo
-  
+
 **Fixed**
 
 - Resizable panels
@@ -309,7 +333,7 @@ Too many fixes to list.
 - hide browser compatibility data
 - mouse event simplified
 - button styles
-- dropper tool 
+- dropper tool
 - image tool
 - packages upgraded
 
