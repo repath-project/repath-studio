@@ -1,7 +1,7 @@
 (ns renderer.color.views
   (:require
    ["@radix-ui/react-popover" :as Popover]
-   ["@re-path/react-color" :refer [PhotoshopPicker]]
+   ["@repath-project/react-color" :refer [PhotoshopPicker]]
    [i18n :refer [t]]
    [re-frame.core :as rf]
    [renderer.color.db :as color.db]

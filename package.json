@@ -72,7 +72,7 @@
     "@radix-ui/react-slider": "1.1.2",
     "@radix-ui/react-switch": "1.0.3",
     "@radix-ui/react-tooltip": "1.0.7",
-    "@re-path/react-color": "2.19.4",
+    "@repath-project/react-color": "2.19.4",
     "@sentry/react": "8.9.2",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",

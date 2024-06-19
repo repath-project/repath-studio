@@ -2,5 +2,5 @@
 
 ## Reporting a Vulnerability
 
-Please [open a security advisory](https://github.com/re-path/studio/security/advisories/new) or send a detailed mail to contact@repath.studio to report security vulnerabilities.
+Please [open a security advisory](https://github.com/repath-project/repath-studio/security/advisories/new) or send a detailed mail to contact@repath.studio to report security vulnerabilities.
 Even when unsure whether the bug in question is an exploitable vulnerability, it is recommended to use the above methods and not discuss the issue anywhere else.

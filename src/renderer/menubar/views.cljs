@@ -447,10 +447,10 @@
            {:key :source-code
             :label "Source Code"
             :icon "commit"
-            :action [:window/open-remote-url "https://github.com/re-path/studio"]}
+            :action [:window/open-remote-url "https://github.com/repath-project/repath-studio"]}
            {:key :license
             :label "License"
-            :action [:window/open-remote-url "https://github.com/re-path/studio/blob/main/LICENSE"]}
+            :action [:window/open-remote-url "https://github.com/repath-project/repath-studio/blob/main/LICENSE"]}
            {:key :changelog
             :icon "list"
             :label "Changelog"
@@ -460,7 +460,7 @@
            {:key :submit-issue
             :icon "warning"
             :label "Submit an issue"
-            :action [:window/open-remote-url "https://github.com/re-path/studio/issues/new/choose"]}
+            :action [:window/open-remote-url "https://github.com/repath-project/repath-studio/issues/new/choose"]}
            {:key :divider-3
             :type :separator}
            {:key :about

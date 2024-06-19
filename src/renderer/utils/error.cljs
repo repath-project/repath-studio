@@ -26,7 +26,7 @@
                      [:p.text-error (str error)]
                      [:a.button.bg-primary.px-2.w-full.rounded
                       {:target "_blank"
-                       :href (str "https://github.com/re-path/studio/issues/new?"
+                       :href (str "https://github.com/repath-project/repath-studio/issues/new?"
                                   "&title=" error
                                   "&template=bug_report.md")}
                       "Submit error report"]]]))

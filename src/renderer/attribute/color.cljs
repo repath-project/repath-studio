@@ -2,7 +2,7 @@
   "https://developer.mozilla.org/en-US/docs/Web/SVG/Content_type#color"
   (:require
    ["@radix-ui/react-popover" :as Popover]
-   ["@re-path/react-color" :refer [ChromePicker]]
+   ["@repath-project/react-color" :refer [ChromePicker]]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.attribute.views :as v]))

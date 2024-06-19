@@ -49,7 +49,7 @@
          :target "_blank"}
         "Website"]
        [:a.text-lg.block
-        {:href "https://github.com/re-path/studio"
+        {:href "https://github.com/repath-project/repath-studio"
          :target "_blank"}
         "Source Code"]
        [:a.text-lg.block
