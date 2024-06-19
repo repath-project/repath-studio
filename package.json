@@ -1,5 +1,5 @@
 {
-  "name": "repath.studio",
+  "name": "repath-studio",
   "description": "Vector Graphics Manipulation Tool",
   "repository": "https://github.com/sprocketc/repath-studio",
   "author": "Konstantinos Kaloutas",
@@ -39,7 +39,7 @@
         "ext": "rps",
         "name": "Repath Studio File",
         "role": "Editor",
-        "mimeType": "application/repath.studio"
+        "mimeType": "application/repath-studio"
       }
     ],
     "publish": [
