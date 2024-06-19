@@ -16,8 +16,10 @@
     background-color: var(--overlay);
   }
 
-  &:hover {
-    color: var(--font-color-active)
+  &:hover,
+  &:focus {
+    color: var(--font-color-active);
+    background-color: var(--overlay);
   }
 }
 
