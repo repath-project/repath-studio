@@ -51,7 +51,7 @@
 
 (defn ghost-element
   "Renders a ghost element on top of the actual element to ensure that the user
-   can interact it."
+   can interact with it."
   [{:keys [attrs tag content] :as el}]
   (let [pointer-handler #(pointer/event-handler % el)
         zoom @(rf/subscribe [:document/zoom])
