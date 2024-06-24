@@ -50,13 +50,13 @@
        :on-click #(rf/dispatch [:element/set-attr k random-seed])}
       [comp/icon "refresh"]]]))
 
-(defmethod attr.hierarchy/description :x
-  []
-  "Horizontal coordinate of the blob's center.")
+#_(defmethod attr.hierarchy/description :x
+    []
+    "Horizontal coordinate of the blob's center.")
 
-(defmethod attr.hierarchy/description :y
-  []
-  "Vertical coordinate of the blob's center.")
+#_(defmethod attr.hierarchy/description :y
+    []
+    "Vertical coordinate of the blob's center.")
 
 (defmethod attr.hierarchy/description :seed
   []
