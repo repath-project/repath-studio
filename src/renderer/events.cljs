@@ -96,6 +96,36 @@
  (fn [db [_]]
    (update db :grid? not)))
 
+(rf/reg-event-db
+ :panel/toggle
+ [local-storage/persist
+  (rf/path :panel)]
+ (fn [db [_ key]]
+   (update-in db [key :visible?] not)))
+
+(rf/reg-event-fx
+ :theme/init-mode
+ (fn [{:keys [db]} _]
+   (let [mode (-> db :theme :mode name)]
+     {:set-attribute [js/window.document.documentElement "data-theme" mode]
+      :send-to-main {:action "setThemeMode" :data mode}})))
+
+(rf/reg-event-fx
+ :theme/set-mode
+ local-storage/persist
+ (fn [{:keys [db]} [_ mode]]
+   {:db (assoc-in db [:theme :mode] mode)
+    :dispatch [:theme/init-mode]}))
+
+(rf/reg-event-fx
+ :theme/cycle-mode
+ (fn [{:keys [db]} [_]]
+   (let [mode (case (-> db :theme :mode)
+                ;; TODO: Support system mode.
+                :dark :light
+                :light :dark)]
+     {:dispatch [:theme/set-mode mode]})))
+
 (rf/reg-event-fx
  :pointer-event
  (fn [{:keys [db]} [_ {:keys [button buttons modifiers data-transfer pointer-pos delta element] :as e}]]
@@ -163,7 +193,7 @@
 
             db)
       :fx [(when (= (:type e) :drop)
-             [::drop [adjusted-pointer-pos data-transfer]])]})))
+             [:drop [adjusted-pointer-pos data-transfer]])]})))
 
 (rf/reg-event-db
  :keyboard-event
@@ -198,7 +228,7 @@
      (js/window.api.send "toMain" (clj->js data)))))
 
 (rf/reg-fx
- ::drop
+ :drop
  (fn [[position data-transfer]]
    (drop/items! position (.-items data-transfer))
    (drop/files! position (.-files data-transfer))))
@@ -223,3 +253,8 @@
  :focus
  (fn [_ [_ id]]
    {:focus id}))
+
+(rf/reg-fx
+ :set-attribute
+ (fn [[el attr val]]
+   (.setAttribute el attr val)))

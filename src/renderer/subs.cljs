@@ -142,6 +142,16 @@
  :grid?
  :-> :grid?)
 
+(rf/reg-sub
+ :panel/visible?
+ (fn [db [_ key]]
+   (-> db :panel key :visible?)))
+
+(rf/reg-sub
+ :theme/mode
+ (fn [db _]
+   (-> db :theme :mode)))
+
 #_(rf/reg-sub
    :font-options
    :<- [:system-fonts]

@@ -1,9 +1,7 @@
 (ns renderer.db
   (:require
    [renderer.document.db]
-   [renderer.panel.db]
    [renderer.snap.db]
-   [renderer.theme.db]
    [renderer.timeline.db]
    [renderer.window.db]))
 
@@ -22,9 +20,9 @@
    [:system-fonts vector?]
    [:debug-info? boolean?]
    [:pen-mode? boolean?]
-   [:panel [:map-of :key renderer.panel.db/panel]]
+   [:panel [:map-of :key [:map [:visible? boolean?]]]]
    [:window renderer.window.db/window]
-   [:theme [:mode renderer.theme.db/modes]]
+   [:theme [:mode [:enum :dark :light :system]]]
    [:timeline renderer.timeline.db/timeline]])
 
 (def default
