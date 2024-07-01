@@ -6,7 +6,7 @@
    [re-frame.registrar]
    [renderer.attribute.views :as attr]
    [renderer.codemirror.views :as cm]
-   [renderer.components :as comp]
+   #_[renderer.components :as comp]
    [renderer.debug :as debug]
    [renderer.dialog.views :as dialog]
    [renderer.document.views :as doc]
@@ -16,7 +16,6 @@
    [renderer.notification.views :as notification]
    [renderer.reepl.views :as repl]
    [renderer.rulers.views :as rulers]
-   [renderer.timeline.views :as timeline]
    [renderer.toolbar.object :as toolbar.object]
    [renderer.toolbar.status :as toolbar.status]
    [renderer.toolbar.tools :as toolbar.tools]
@@ -32,14 +31,14 @@
       (when rulers?
         [:div.flex
          [:div.bg-primary {:style {:width "23px" :height "23px"}}
-          [comp/toggle-icon-button
-           {:active? @(rf/subscribe [:rulers-locked?])
-            :active-icon "lock"
-            :active-text "unlock"
-            :inactive-icon "unlock"
-            :inactive-text "lock"
-            :class "small"
-            :action #(rf/dispatch [:toggle-rulers-locked])}]]
+          #_[comp/toggle-icon-button
+             {:active? @(rf/subscribe [:rulers-locked?])
+              :active-icon "lock"
+              :active-text "unlock"
+              :inactive-icon "unlock"
+              :inactive-text "lock"
+              :class "small"
+              :action #(rf/dispatch [:toggle-rulers-locked])}]]
          [:div.w-full.ml-px.bg-primary
           [rulers/ruler {:orientation :horizontal :size 23}]]])]
      [:div.flex.flex-1.relative
