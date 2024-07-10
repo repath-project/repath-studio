@@ -18,9 +18,10 @@
 (defmethod tool/properties :line
   []
   {:icon "line-alt"
-   :description "The <line> element is an SVG basic shape used to create a line 
+   :description "The <line> element is an SVG basic shape used to create a line
                  connecting two points."
-   :attrs [:stroke-width
+   :attrs [:stroke
+           :stroke-width
            :stroke-linecap
            :stroke-dasharray
            :opacity]})
