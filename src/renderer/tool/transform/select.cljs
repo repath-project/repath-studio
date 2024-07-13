@@ -240,7 +240,7 @@
                 history.h/swap
                 (element.h/translate offset)
                 (snap.h/snap element.h/translate)
-                (h/set-cursor "default")))
+                (h/set-cursor "move")))
 
           :clone
           (if alt-key?

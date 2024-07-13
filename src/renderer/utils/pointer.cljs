@@ -62,6 +62,7 @@
                                      :pointer-pos [(.-pageX e) (.-pageY e)]
                                      :pressure (.-pressure e)
                                      :pointer-type (.-pointerType e)
+                                     :pointer-id (.-pointerId e)
                                      :primary? (.-isPrimary e)
                                      :altitude (.-altitudeAngle e)
                                      :azimuth (.-azimuthAngle e)

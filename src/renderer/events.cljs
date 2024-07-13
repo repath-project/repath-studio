@@ -192,8 +192,14 @@
               (frame-h/pan db delta))
 
             db)
-      :fx [(when (= (:type e) :drop)
-             [:drop [adjusted-pointer-pos data-transfer]])]})))
+      :fx [(case (:type e)
+             :drop
+             [:drop [adjusted-pointer-pos data-transfer]]
+
+             :pointerdown
+             [:set-pointer-capture (:pointer-id e)]
+
+             nil)]})))
 
 (rf/reg-event-db
  :keyboard-event
@@ -232,6 +238,13 @@
  (fn [[position data-transfer]]
    (drop/items! position (.-items data-transfer))
    (drop/files! position (.-files data-transfer))))
+
+
+(rf/reg-fx
+ :set-pointer-capture
+ (fn [pointer-id]
+   (when-let [canvas (dom/canvas-element)]
+     (.setPointerCapture canvas pointer-id))))
 
 (rf/reg-fx
  :clipboard-write
