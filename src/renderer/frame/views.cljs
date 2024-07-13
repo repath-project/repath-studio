@@ -45,10 +45,10 @@
                    :overflow "hidden"
                    :user-select "none"
                    :margin 0
-                   :font-family "-apple-system, BlinkMacSystemFont, 
-                                'Segoe UI (Custom)', 'Roboto', 
-                                'Helvetica Neue', 'Open Sans (Custom)', 
-                                system-ui, sans-serif, 'Apple Color Emoji', 
+                   :font-family "-apple-system, BlinkMacSystemFont,
+                                'Segoe UI (Custom)', 'Roboto',
+                                'Helvetica Neue', 'Open Sans (Custom)',
+                                system-ui, sans-serif, 'Apple Color Emoji',
                                 'Segoe UI Emoji'"}}]])
 
 (def resize-observer
@@ -61,7 +61,7 @@
        (rf/dispatch-sync [:frame/resize dom-rect])))))
 
 (defn main
-  "Our canvas is wrapped within an iframe element that hosts anything 
+  "Our canvas is wrapped within an iframe element that hosts anything
    that needs to be rendered.
    https://github.com/ryanseddon/react-frame-component
    https://medium.com/@ryanseddon/rendering-to-iframes-in-react-d1cb92274f86"
