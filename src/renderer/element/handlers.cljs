@@ -424,7 +424,7 @@
   (let [svgs (reverse (root-svgs db))
         pointer-pos (:adjusted-pointer-pos db)]
     (or
-     (some #(when (bounds/contained-point? (:bounds %) pointer-pos) %) svgs)
+     (some #(when (bounds/contain-point? (:bounds %) pointer-pos) %) svgs)
      (element db :canvas))))
 
 (defn translate
@@ -501,7 +501,7 @@
         el-bounds (tool/bounds el)]
     (or
      (some #(when (bounds/contained? el-bounds (:bounds %)) %) svgs)
-     (some #(when (bounds/intersected? el-bounds (:bounds %)) %) svgs)
+     (some #(when (bounds/intersect? el-bounds (:bounds %)) %) svgs)
      (element db :canvas))))
 
 (defn create

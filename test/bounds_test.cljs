@@ -10,11 +10,11 @@
     (is (= (bounds/union [11 11 11 11] [0 0 0 0]) [0 0 11 11]))))
 
 
-(deftest test-intersected?
+(deftest test-intersect?
   (testing "bounds are intesrecting"
-    (is (= (bounds/intersected? [0 0 10 10] [11 11 20 20]) false))
-    (is (= (bounds/intersected? [0 0 10 10] [9 9 20 20]) true))
-    (is (= (bounds/intersected? [0 0 10 10] [10 10 11 11]) true))))
+    (is (= (bounds/intersect? [0 0 10 10] [11 11 20 20]) false))
+    (is (= (bounds/intersect? [0 0 10 10] [9 9 20 20]) true))
+    (is (= (bounds/intersect? [0 0 10 10] [10 10 11 11]) true))))
 
 (deftest test-contained?
   (testing "bounds are contained"
@@ -22,13 +22,13 @@
     (is (= (bounds/contained? [5 5 10 10] [0 0 20 20]) true))
     (is (= (bounds/contained? [0 0 10 10] [1 1 10 10]) false))))
 
-(deftest test-contained-point?
+(deftest test-contain-point?
   (testing "bounds contain point"
-    (is (= (bounds/contained-point? [0 0 10 10] [0 0]) true))
-    (is (= (bounds/contained-point? [0 0 10 10] [5 5]) true))
-    (is (= (bounds/contained-point? [0 0 10 10] [10 10]) true))
-    (is (= (bounds/contained-point? [0 0 10 10] [-5 5]) false))
-    (is (= (bounds/contained-point? [0 0 10 10] [5 -5]) false))))
+    (is (= (bounds/contain-point? [0 0 10 10] [0 0]) true))
+    (is (= (bounds/contain-point? [0 0 10 10] [5 5]) true))
+    (is (= (bounds/contain-point? [0 0 10 10] [10 10]) true))
+    (is (= (bounds/contain-point? [0 0 10 10] [-5 5]) false))
+    (is (= (bounds/contain-point? [0 0 10 10] [5 -5]) false))))
 
 (deftest test-center
   (testing "center of bounds"

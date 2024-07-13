@@ -3,7 +3,7 @@
    [clojure.core.matrix :as mat]))
 
 (defn from-bbox
-  "Experimental way of getting the bounds of uknown or complicated elements 
+  "Experimental way of getting the bounds of uknown or complicated elements
    using the getBBox method.
    https://developer.mozilla.org/en-US/docs/Web/API/SVGGraphicsElement/getBBox"
   [el]
@@ -30,7 +30,7 @@
   (let [[x1 y1 _x2 _y2] bounds]
     (mat/add [x1 y1] (mat/div (->dimensions bounds) 2))))
 
-(defn intersected?
+(defn intersect?
   [a-bounds b-bounds]
   (when (and a-bounds b-bounds)
     (let [[a-left a-top a-right a-bottom] a-bounds
@@ -50,7 +50,7 @@
            (< a-right b-right)
            (< a-bottom b-bottom)))))
 
-(defn contained-point?
+(defn contain-point?
   [[left top right bottom] [x y]]
   (and (<= left x)
        (<= top y)
