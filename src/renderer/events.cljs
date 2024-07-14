@@ -197,7 +197,7 @@
              [:drop [adjusted-pointer-pos data-transfer]]
 
              :pointerdown
-             [:set-pointer-capture (:pointer-id e)]
+             [:set-pointer-capture [(:target e) (:pointer-id e)]]
 
              nil)]})))
 
@@ -242,9 +242,8 @@
 
 (rf/reg-fx
  :set-pointer-capture
- (fn [pointer-id]
-   (when-let [canvas (dom/canvas-element)]
-     (.setPointerCapture canvas pointer-id))))
+ (fn [[target pointer-id]]
+   (.setPointerCapture target pointer-id)))
 
 (rf/reg-fx
  :clipboard-write
