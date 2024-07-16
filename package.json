@@ -60,7 +60,7 @@
   },
   "main": "resources/main.js",
   "devDependencies": {
-    "@mdn/browser-compat-data": "5.5.38",
+    "@mdn/browser-compat-data": "5.5.39",
     "@playwright/test": "1.45.1",
     "@radix-ui/react-context-menu": "2.2.1",
     "@radix-ui/react-dialog": "1.1.1",
@@ -73,7 +73,7 @@
     "@radix-ui/react-switch": "1.1.0",
     "@radix-ui/react-tooltip": "1.1.2",
     "@repath-project/react-color": "2.19.4",
-    "@sentry/react": "8.16.0",
+    "@sentry/react": "8.17.0",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "@xzdarcy/react-timeline-editor": "0.1.9",
@@ -84,7 +84,7 @@
     "cmdk": "1.0.0",
     "codemirror": "5.65.15",
     "create-react-class": "15.7.0",
-    "electron": "31.2.0",
+    "electron": "31.2.1",
     "electron-builder": "24.13.3",
     "highlight.js": "11.10.0",
     "imagetracerjs": "1.2.6",
@@ -113,11 +113,11 @@
     "svg-path-bbox": "2.0.0",
     "svgo": "3.3.2",
     "svgpath": "2.6.0",
-    "tailwindcss": "3.4.4"
+    "tailwindcss": "3.4.5"
   },
   "dependencies": {
-    "@sentry/electron": "5.1.0",
-    "@webref/css": "6.13.0",
+    "@sentry/electron": "5.2.0",
+    "@webref/css": "6.13.1",
     "electron-extension-installer": "1.2.0",
     "electron-log": "5.1.5",
     "electron-reloader": "1.2.3",
