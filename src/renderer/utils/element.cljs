@@ -88,7 +88,7 @@
                             (filter #(not (get-in (val %) deprecated-path)))
                             (into {}))]
     (-> filtered-attrs
-        (dissoc :__compat :lang :tabindex)
+        (dissoc :__compat :systemLanguage)
         keys
         (zipmap (repeat "")))))
 
