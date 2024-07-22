@@ -1,4 +1,4 @@
-(ns renderer.attribute.utils
+(ns renderer.utils.attribute
   (:require
    [clojure.string :as str]
    [renderer.utils.units :as units]))

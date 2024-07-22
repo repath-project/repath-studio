@@ -5,9 +5,9 @@
    [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.attribute.utils :as utils]
    [renderer.attribute.views :as v]
    [renderer.components :as comp]
+   [renderer.utils.attribute :as utils.attr]
    [renderer.utils.vec :as vec]))
 
 (defmethod hierarchy/description :points
@@ -43,7 +43,7 @@
                               :className "popover-content"
                               :align "end"}
           (when state-default?
-            (let [points (utils/points->vec v)]
+            (let [points (utils.attr/points->vec v)]
               [:div.flex.flex-col.py-4.pr-2.overflow-y-auto
                {:style {:max-height "50vh"}}
                (map-indexed (fn [index [x y]]

@@ -3,8 +3,8 @@
    ["js-beautify" :as js-beautify]
    [kdtree]
    [re-frame.core :as rf]
-   [renderer.attribute.utils :as attr.utils]
    [renderer.tool.base :as tool]
+   [renderer.utils.attribute :as utils.attr]
    [renderer.utils.element :as utils.el]
    [renderer.utils.map :as map]
    [renderer.element.handlers :as h]))
@@ -106,7 +106,7 @@
                                 :attrs
                                 (.indexOf k)))
                           attrs))]
-     (sort-by (fn [[k _]] (.indexOf attr.utils/order k)) attrs))))
+     (sort-by (fn [[k _]] (.indexOf utils.attr/order k)) attrs))))
 
 (rf/reg-sub
  :element/bounds
