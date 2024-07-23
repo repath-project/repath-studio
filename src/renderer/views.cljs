@@ -6,7 +6,7 @@
    [re-frame.registrar]
    [renderer.attribute.views :as attr]
    [renderer.codemirror.views :as cm]
-   #_[renderer.components :as comp]
+   [renderer.components :as comp]
    [renderer.debug :as debug]
    [renderer.dialog.views :as dialog]
    [renderer.document.views :as doc]
@@ -25,7 +25,8 @@
 (defn frame-panel
   []
   (let [rulers? @(rf/subscribe [:rulers?])
-        read-only? @(rf/subscribe [:document/read-only?])]
+        read-only? @(rf/subscribe [:document/read-only?])
+        loading? @(rf/subscribe [:worker/loading?])]
     [:div.flex.flex-col.flex-1.h-full
      [:div.mb-px [toolbar.tools/root]
       (when rulers?
@@ -54,6 +55,14 @@
            [:<>
             [debug/info]
             [debug/fps]]))
+       [:div.absolute.bottom-0.left-0.flex.pointer-events-none.w-full.p-2
+        {:style {:color "#555"}}
+        [:div.grow.text-xs.truncate.flex.items-end
+         @(rf/subscribe [:message])]
+        (when loading?
+          [:span.icon-button.relative
+           {:style {:fill "#555"}}
+           [comp/icon "spinner" {:class "loading"}]])]
        (when @(rf/subscribe [:backdrop?])
          [:div.absolute.inset-0
           {:on-click #(rf/dispatch [:set-backdrop false])}])]]]))

@@ -99,18 +99,10 @@
 
 (defn root []
   (let [zoom @(rf/subscribe [:document/zoom])
-        timeline? @(rf/subscribe [:panel/visible? :timeline])
-        loading? @(rf/subscribe [:worker/loading?])]
+        timeline? @(rf/subscribe [:panel/visible? :timeline])]
     [:<>
      [:div.toolbar.bg-primary.mt-px
       [color-v/picker]
-      [:div.grow.text-xs.truncate.mx-1
-       @(rf/subscribe [:message])]
-      (when loading?
-        [:<>
-         [:span.icon-button.relative
-          [comp/icon "spinner" {:class "loading"}]]
-         [:span.v-divider]])
       (into [:<>]
             (map (fn [{:keys [title active? icon action]}]
                    [comp/radio-icon-button {:title title
