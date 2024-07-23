@@ -139,9 +139,10 @@
     [:div.tree-sidebar.overflow-hidden
      {:on-pointer-up #(rf/dispatch [:element/deselect-all])}
      [:div.v-scroll.h-full
-      {:on-pointer-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
-      [:ul (map (fn [el] [item el 1 elements hovered-keys collapsed-keys])
-                (reverse canvas-children))]]]))
+      [:ul
+       {:on-pointer-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
+       (map (fn [el] [item el 1 elements hovered-keys collapsed-keys])
+            (reverse canvas-children))]]]))
 
 (defn inner-sidebar []
   (let [state @(rf/subscribe [:state])
