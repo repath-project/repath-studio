@@ -114,59 +114,28 @@
      [toolbar.status/root]
      [repl/root]]))
 
-(defn tree-panel
-  []
-  (when @(rf/subscribe [:panel/visible? :tree])
-    [:<>
-     [:> Panel
-      {:id "tree-panel"
-       :class "flex flex-col"
-       :defaultSize 5
-       :style {:min-width "227px"}}
-      [doc/actions]
-      [tree/root]]
-     [:> PanelResizeHandle
-      {:id "tree-resize-handle"
-       :className "resize-handle"}]]))
-
 (defn root
   []
   [:> Tooltip/Provider
    [:div.flex.flex-col.flex-1.h-screen
     [win/app-header]
     (if (seq @(rf/subscribe [:documents]))
-      [:> PanelGroup
-       {:direction "horizontal"
-        :id "root-group"
-        :autoSaveId "root-group"}
-       [tree-panel]
-       [:> Panel
-        {:id "main-panel"
-         :order 2}
-        [:div.flex.flex-col.flex-1.overflow-hidden.h-full
-         [doc/tab-bar]
-         [:> PanelGroup
-          {:direction "horizontal"
-           :id "center-group"
-           :autoSaveId "center-group"}
-          [:> Panel
-           {:id "center-panel"
-            :minSize 10
-            :order 1}
-           [:div.flex.h-full.flex-col
-            [editor]]]
-          (when @(rf/subscribe [:panel/visible? :properties])
-            [:<>
-             [:> PanelResizeHandle
-              {:id "properties-resize-handle"
-               :className "resize-handle"}]
-             [:> Panel
-              {:id "properties-panel"
-               :order 2
-               :defaultSize 5
-               :style {:min-width "300px"}}
-              [attr/form]]])
-          [toolbar.object/root]]]]]
+      [:div.flex.h-full.flex-1
+       (when @(rf/subscribe [:panel/visible? :tree])
+         [:div.flex.flex-col
+          {:style {:width "227px"}}
+          [doc/actions]
+          [tree/root]])
+       [:div.flex.flex-col.flex-1.overflow-hidden.h-full
+        [doc/tab-bar]
+        [:div.flex.h-full.flex-1
+         [:div.flex.h-full.flex-col.flex-1
+          [editor]]
+         (when @(rf/subscribe [:panel/visible? :properties])
+           [:div.flex
+            {:style {:width "300px"}}
+            [attr/form]])
+         [toolbar.object/root]]]]
       [home/panel])]
    [dialog/root]
    [notification/main]])
