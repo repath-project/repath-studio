@@ -129,7 +129,7 @@
    [:div.flex.flex-col.flex-1.h-screen
     [win/app-header]
     (if (seq @(rf/subscribe [:documents]))
-      [:div.flex.h-full.flex-1
+      [:div.flex.h-full.flex-1.overflow-hidden
        (when @(rf/subscribe [:panel/visible? :tree])
          [:div.flex.flex-col
           {:style {:width "227px"}}
