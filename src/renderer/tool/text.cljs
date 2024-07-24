@@ -4,6 +4,7 @@
    [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
+   [renderer.element.events :as-alias element.e]
    [renderer.element.handlers :as element.h]
    [renderer.handlers :as h]
    [renderer.history.handlers :as history.h]
@@ -68,7 +69,7 @@
 
 (defn set-text-and-select-element
   [e el-k]
-  (rf/dispatch [:element/set-prop el-k :content (get-text e)])
+  (rf/dispatch [::element.e/set-prop el-k :content (get-text e)])
   (rf/dispatch [:set-tool :select]))
 
 (defn key-down-handler
@@ -78,7 +79,7 @@
     (set-text-and-select-element e key)
     (.requestAnimationFrame
      js/window
-     #(rf/dispatch-sync [:element/preview-prop el-k :content (get-text e)]))))
+     #(rf/dispatch-sync [::element.e/preview-prop el-k :content (get-text e)]))))
 
 (defmethod tool/render-edit :text
   [{:keys [attrs key content] :as el}]

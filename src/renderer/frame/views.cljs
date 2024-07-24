@@ -7,6 +7,8 @@
    [reagent.core :as ra]
    [reagent.dom.server :as server]
    [renderer.components :as comp]
+   [renderer.element.subs :as-alias element.s]
+   [renderer.frame.events :as-alias frame.e]
    [renderer.tool.base :as tool]
    [renderer.utils.pointer :as pointer]))
 
@@ -58,7 +60,7 @@
                         (.find (fn [] true))
                         (.. -target getBoundingClientRect toJSON)
                         (js->clj :keywordize-keys true))]
-       (rf/dispatch-sync [:frame/resize dom-rect])))))
+       (rf/dispatch-sync [::frame.e/resize dom-rect])))))
 
 (defn main
   "Our canvas is wrapped within an iframe element that hosts anything
@@ -76,7 +78,7 @@
 
       :reagent-render
       (fn []
-        (let [canvas @(rf/subscribe [:element/canvas])
+        (let [canvas @(rf/subscribe [::element.s/canvas])
               {:keys [x y]} @(rf/subscribe [:dom-rect])
              ;; This is a different browsing context inside an iframe.
              ;; We need to simulate the events to the parent window.

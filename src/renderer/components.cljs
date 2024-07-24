@@ -5,6 +5,9 @@
    ["@radix-ui/react-switch" :as Switch]
    ["react-svg" :refer [ReactSVG]]
    [re-frame.core :as rf]
+   [renderer.document.events :as-alias document.e]
+   [renderer.document.subs :as-alias document.s]
+   [renderer.element.events :as-alias element.e]
    [renderer.utils.keyboard :as keyb]))
 
 (defn icon
@@ -73,8 +76,8 @@
                        :inactive-icon "chevron-down"
                        :inactive-text "collapse"
                        :action #(rf/dispatch (if collapsed?
-                                               [:document/expand-el el-k]
-                                               [:document/collapse-el el-k]))}])
+                                               [::document.e/expand-el el-k]
+                                               [::document.e/collapse-el el-k]))}])
 
 
 (defn radio-icon-button
@@ -141,29 +144,29 @@
 (def element-menu
   ;; TODO: Add and group actions
   [{:label "Cut"
-    :action [:element/cut]}
+    :action [::element.e/cut]}
    {:label "Copy"
-    :action [:element/copy]}
+    :action [::element.e/copy]}
    {:label "Paste"
-    :action [:element/paste]}
+    :action [::element.e/paste]}
    {:type :separator}
    {:label "Raise"
-    :action [:element/raise]}
+    :action [::element.e/raise]}
    {:label "Lower"
-    :action [:element/lower]}
+    :action [::element.e/lower]}
    {:label "Raise to top"
-    :action [:element/raise-to-top]}
+    :action [::element.e/raise-to-top]}
    {:label "Lower to bottom"
-    :action [:element/lower-to-bottom]}
+    :action [::element.e/lower-to-bottom]}
    {:type :separator}
    {:label "Animate"
-    :action [:element/animate :animate {}]}
+    :action [::element.e/animate :animate {}]}
    {:label "Animate Transform"
-    :action [:element/animate :animateTransform {}]}
+    :action [::element.e/animate :animateTransform {}]}
    {:label "Animate Motion"
-    :action [:element/animate :animateMotion {}]}
+    :action [::element.e/animate :animateMotion {}]}
    {:type :separator}
    {:label "Duplicate in position"
-    :action [:element/duplicate-in-place]}
+    :action [::element.e/duplicate-in-place]}
    {:label "Delete"
-    :action [:element/delete]}])
+    :action [::element.e/delete]}])

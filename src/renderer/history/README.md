@@ -15,7 +15,7 @@ https://github.com/day8/re-frame-undo/blob/master/src/day8/re_frame/undo.cljs
 ## What we currently do
 
 - Each document has a dedicated `:history` map.
-- We explicitly call a `finalize` function when we need to push a new state to history. This allows us to avoid throttling or debouncing specific actions. We can also easily cancel an operation by swapping the current state with the last history point (see `:history/cancel`). We are modifying our db and call finalize when we are done.
+- We explicitly call a `finalize` function when we need to push a new state to history. This allows us to avoid throttling or debouncing specific actions. We can also easily cancel an operation by swapping the current state with the last history point (see `renderer.history.events/cancel`). We are modifying our db and call finalize when we are done.
 - Our state is normalized to easily access specific points in history. We can then look for a specific state on our tree by id and then retrieve its data with a simple `get-in`.
 - All changes under [:documents :document-key :elements] should be considered undoable and part of the file history.
 
@@ -24,11 +24,11 @@ The end result on our db looks like this
 :history {:position :6
           :states {:907fdbc9-d2ad-4697-bea3-9aa5e2c46054 {...}
                    :ed0cce51-d00e-43e0-a06a-04c72ccce98f {:elements {...} ; Our actual state
-                                                          :explanation "Set x to 500.3" 
+                                                          :explanation "Set x to 500.3"
                                                           :id ed0cce51-d00e-43e0-a06a-04c72ccce98f
                                                           :timestamp 1647882725718
                                                           :index 2
                                                           :parent :907fdbc9-d2ad-4697-bea3-9aa5e2c46054
                                                           :children [cded6d1d-619f-4974-af95-8313cefd6f87]}
-                   :cded6d1d-619f-4974-af95-8313cefd6f87 {...}}}  
+                   :cded6d1d-619f-4974-af95-8313cefd6f87 {...}}}
 ```

@@ -4,7 +4,9 @@
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
    [reagent.core :as ra]
+   [renderer.document.subs :as-alias document.s]
    [renderer.element.handlers :as element.h]
+   [renderer.element.subs :as-alias element.s]
    [renderer.handlers :as h]
    [renderer.history.handlers :as history.h]
    [renderer.tool.base :as tool]
@@ -54,7 +56,7 @@
    can interact with it."
   [{:keys [attrs tag content] :as el}]
   (let [pointer-handler #(pointer/event-handler % el)
-        zoom @(rf/subscribe [:document/zoom])
+        zoom @(rf/subscribe [::document.s/zoom])
         stroke-width (max (:stroke-width attrs) (/ 20 zoom))]
     [tag
      (merge (dissoc attrs :style)
@@ -109,6 +111,6 @@
 
 (defmethod tool/render ::tool/renderable
   [{:keys [children] :as el}]
-  (let [child-elements @(rf/subscribe [:element/filter-visible children])
+  (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
         state @(rf/subscribe [:state])]
     [render-to-dom el child-elements (= state :default)]))

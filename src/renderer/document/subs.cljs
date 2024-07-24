@@ -1,26 +1,27 @@
 (ns renderer.document.subs
   (:require
    [re-frame.core :as rf]
-   [renderer.document.handlers :as h]))
+   [renderer.document.handlers :as h]
+   [renderer.timeline.subs :as-alias timeline.s]))
 
 (rf/reg-sub
- :document/recent
+ ::recent
  :-> :recent)
 
 (rf/reg-sub
- :document/recent?
- :<- [:document/recent]
+ ::recent?
+ :<- [::recent]
  (fn [recent _]
    (seq recent)))
 
 (rf/reg-sub
- :document/recent-disabled?
- :<- [:document/recent?]
+ ::recent-disabled?
+ :<- [::recent?]
  (fn [recent? _]
    (not recent?)))
 
 (rf/reg-sub
- :document/active
+ ::active
  :<- [:documents]
  :<- [:active-document]
  (fn [[documents active-document] _]
@@ -28,108 +29,108 @@
      (active-document documents))))
 
 (rf/reg-sub
- :document/document
+ ::document
  :<- [:documents]
  (fn [documents [_ k]]
    (get documents k)))
 
 (rf/reg-sub
- :document/zoom
- :<- [:document/active]
+ ::zoom
+ :<- [::active]
  :-> :zoom)
 
 (rf/reg-sub
- :document/rotate
- :<- [:document/active]
+ ::rotate
+ :<- [::active]
  :-> :rotate)
 
 (rf/reg-sub
- :document/fill
- :<- [:document/active]
+ ::fill
+ :<- [::active]
  :-> :fill)
 
 (rf/reg-sub
- :document/stroke
- :<- [:document/active]
+ ::stroke
+ :<- [::active]
  :-> :stroke)
 
 (rf/reg-sub
- :document/pan
- :<- [:document/active]
+ ::pan
+ :<- [::active]
  :-> :pan)
 
 (rf/reg-sub
- :document/title
- :<- [:document/active]
+ ::title
+ :<- [::active]
  :-> :title)
 
 (rf/reg-sub
- :document/path
- :<- [:document/active]
+ ::path
+ :<- [::active]
  :-> :path)
 
 (rf/reg-sub
- :document/title-bar
- :<- [:document/title]
- :<- [:document/path]
+ ::title-bar
+ :<- [::title]
+ :<- [::path]
  (fn [[title path] _]
    (let [title (or path title)]
      (when title (str title " - ")) "Repath Studio")))
 
 (rf/reg-sub
- :document/elements
- :<- [:document/active]
+ ::elements
+ :<- [::active]
  :-> :elements)
 
 (rf/reg-sub
- :document/temp-element
- :<- [:document/active]
+ ::temp-element
+ :<- [::active]
  :-> :temp-element)
 
 (rf/reg-sub
- :document/filter
- :<- [:document/active]
+ ::filter
+ :<- [::active]
  :-> :filter)
 
 (rf/reg-sub
- :document/filter-active?
- :<- [:document/filter]
+ ::filter-active?
+ :<- [::filter]
  (fn [filter [_ k]]
    (= filter k)))
 
 (rf/reg-sub
- :document/hovered-keys
- :<- [:document/active]
+ ::hovered-keys
+ :<- [::active]
  :-> :hovered-keys)
 
 (rf/reg-sub
- :document/collapsed-keys
- :<- [:document/active]
+ ::collapsed-keys
+ :<- [::active]
  :-> :collapsed-keys)
 
 (rf/reg-sub
- :document/ignored-keys
- :<- [:document/active]
+ ::ignored-keys
+ :<- [::active]
  :-> :ignored-keys)
 
 (rf/reg-sub
- :document/save
- :<- [:document/active]
+ ::save
+ :<- [::active]
  :-> :save)
 
 (rf/reg-sub
- :document/read-only?
- :<- [:timeline/time]
+ ::read-only?
+ :<- [::timeline.s/time]
  (fn [time _]
    (pos? time)))
 
 (rf/reg-sub
- :document/saved?
+ ::saved?
  (fn [db [_ k]]
    (h/saved? db k)))
 
 (rf/reg-sub
- :document/active-saved?
+ ::active-saved?
  (fn [{:keys [active-document] :as db} [_]]
    (when active-document
      (h/saved? db active-document))))

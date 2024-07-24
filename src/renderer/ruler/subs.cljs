@@ -1,10 +1,12 @@
-(ns renderer.rulers.subs
+(ns renderer.ruler.subs
   (:require
-   [re-frame.core :as rf]))
+   [re-frame.core :as rf]
+   [renderer.document.subs :as-alias document.s]
+   [renderer.frame.subs :as-alias frame.s]))
 
 (rf/reg-sub
- :rulers/step
- :<- [:document/zoom]
+ ::step
+ :<- [::document.s/zoom]
  (fn [zoom _]
    ;; Any attemt to ingeniously produce this mapping was proven inferior.
    ;; Simply returning a fixed step depending on the zoom range works fine.
@@ -26,9 +28,9 @@
      0.1)))
 
 (rf/reg-sub
- :rulers/steps-coll
- :<- [:rulers/step]
- :<- [:frame/viewbox]
+ ::steps-coll
+ :<- [::step]
+ :<- [::frame.s/viewbox]
  (fn [[ruler-step [x y width height]] [_ orientation]]
    (let [sections 10]
      (range (- (+ (* sections ruler-step)

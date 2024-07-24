@@ -6,28 +6,32 @@
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [renderer.components :as comp]
-   [renderer.history.views :as history]))
+   [renderer.document.events :as-alias document.e]
+   [renderer.document.subs :as-alias document.s]
+   [renderer.history.events :as-alias history.e]
+   [renderer.history.subs :as-alias history.s]
+   [renderer.history.views :as history.v]))
 
 (defn actions []
-  (let [undos? @(rf/subscribe [:history/undos?])
-        redos? @(rf/subscribe [:history/redos?])]
+  (let [undos? @(rf/subscribe [::history.s/undos?])
+        redos? @(rf/subscribe [::history.s/redos?])]
     [:div.toolbar
 
      [comp/icon-button
       "file"
       {:title "New"
-       :on-click #(rf/dispatch [:document/new])}]
+       :on-click #(rf/dispatch [::document.e/new])}]
 
      [comp/icon-button
       "folder"
       {:title "Open"
-       :on-click #(rf/dispatch [:document/open])}]
+       :on-click #(rf/dispatch [::document.e/open])}]
 
      [comp/icon-button
       "save"
       {:title "Save"
-       :on-click #(rf/dispatch [:document/save])
-       :disabled @(rf/subscribe [:document/active-saved?])}]
+       :on-click #(rf/dispatch [::document.e/save])
+       :disabled @(rf/subscribe [::document.s/active-saved?])}]
 
      [:span.v-divider]
 
@@ -36,12 +40,12 @@
        :style {:margin-right 0
                :width "auto"
                :display "flex"}
-       :on-click #(rf/dispatch [:history/undo])
+       :on-click #(rf/dispatch [::history.e/undo])
        :disabled (not undos?)}
       [renderer.components/icon "undo"]
-      [history/select
+      [history.v/select
        "Undo stack"
-       @(rf/subscribe [:history/undos])
+       @(rf/subscribe [::history.s/undos])
        (not undos?)]]
 
      [:button.icon-button.items-center.px-1.gap-1
@@ -49,12 +53,12 @@
        :style {:margin-right 0
                :width "auto"
                :display "flex"}
-       :on-click #(rf/dispatch [:history/redo])
+       :on-click #(rf/dispatch [::history.e/redo])
        :disabled (not redos?)}
       [renderer.components/icon "redo"]
-      [history/select
+      [history.v/select
        "Redo stack"
-       @(rf/subscribe [:history/redos])
+       @(rf/subscribe [::history.s/redos])
        (not redos?)]]]))
 
 (defn close-button
@@ -65,43 +69,43 @@
     :on-pointer-down #(.stopPropagation %)
     :on-pointer-up (fn [e]
                      (.stopPropagation e)
-                     (rf/dispatch [:document/close key true]))}
+                     (rf/dispatch [::document.e/close key true]))}
    [comp/icon "times"]
    (when-not saved?
      [comp/icon "dot" {:class "icon dot"}])])
 
 (defn context-menu
   [key]
-  (let [document @(rf/subscribe [:document/document key])
+  (let [document @(rf/subscribe [::document.s/document key])
         path (:path document)
         document-tabs @(rf/subscribe [:document-tabs])]
     [{:label "Close"
-      :action [:document/close key true]}
+      :action [::document.e/close key true]}
      {:label "Close others"
-      :action [:document/close-others]
+      :action [::document.e/close-others]
       :disabled? (empty? (rest document-tabs))}
      {:label "Close all"
-      :action [:document/close-all]}
+      :action [::document.e/close-all]}
      {:label "Close saved"
-      :action [:document/close-saved]}
+      :action [::document.e/close-saved]}
      {:type :separator}
      {:label "Open containing directory"
-      :action [:document/open-directory path]
+      :action [::document.e/open-directory path]
       :disabled? (not (and path platform/electron?))}]))
 
 (defn tab
   [key document active?]
   (ra/with-let [dragged-over? (ra/atom false)]
-    (let [saved? @(rf/subscribe [:document/saved? key])]
+    (let [saved? @(rf/subscribe [::document.s/saved? key])]
       [:> ContextMenu/Root
        [:> ContextMenu/Trigger
         [:div.document-tab
          {:class [(when active? "active")
                   (when saved? "saved")]
-          :on-wheel #(rf/dispatch [:document/scroll (.-deltaY %)])
+          :on-wheel #(rf/dispatch [::document.e/scroll (.-deltaY %)])
           :on-pointer-down #(case (.-buttons %)
-                              4 (rf/dispatch [:document/close key true])
-                              1 (rf/dispatch [:document/set-active key])
+                              4 (rf/dispatch [::document.e/close key true])
+                              1 (rf/dispatch [::document.e/set-active key])
                               nil)
           :draggable true
           :on-drag-start #(.setData (.-dataTransfer %) "key" (name key))
@@ -111,7 +115,7 @@
           :on-drop (fn [evt]
                      (.preventDefault evt)
                      (reset! dragged-over? false)
-                     (rf/dispatch [:document/swap-position
+                     (rf/dispatch [::document.e/swap-position
                                    (-> (.getData (.-dataTransfer evt) "key")
                                        keyword)
                                    key]))}
@@ -146,9 +150,9 @@
          {:class "menu-content rounded"}
          (for [item [{:label "Close all"
                       :key :close-all
-                      :action [:document/close-all]}
+                      :action [::document.e/close-all]}
                      {:label "Close saved"
                       :key :close-saved
-                      :action [:document/close-saved]}]]
+                      :action [::document.e/close-saved]}]]
            ^{:key (:key item)} [comp/dropdown-menu-item item])
          [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]]]]))

@@ -2,7 +2,9 @@
   "https://www.w3.org/TR/SVG/struct.html#SVGElement"
   (:require
    [re-frame.core :as rf]
+   [renderer.document.subs :as-alias document.s]
    [renderer.element.handlers :as element.h]
+   [renderer.element.subs :as-alias element.s]
    [renderer.tool.base :as tool]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
@@ -12,9 +14,9 @@
 (defmethod tool/properties :svg
   []
   {:icon "svg"
-   :description "The svg element is a container that defines a new coordinate 
-                 system and viewport. It is used as the outermost element of 
-                 SVG documents, but it can also be used to embed an SVG fragment 
+   :description "The svg element is a container that defines a new coordinate
+                 system and viewport. It is used as the outermost element of
+                 SVG documents, but it can also be used to embed an SVG fragment
                  inside an SVG or HTML document."
    :attrs [:overflow]})
 
@@ -35,11 +37,11 @@
 
 (defmethod tool/render :svg
   [{:keys [attrs children tag] :as el}]
-  (let [child-elements @(rf/subscribe [:element/filter-visible children])
+  (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
         rect-attrs (select-keys attrs [:x :y :width :height])
         text-attrs (select-keys attrs [:x :y])
-        filter @(rf/subscribe [:document/filter])
-        zoom @(rf/subscribe [:document/zoom])
+        filter @(rf/subscribe [::document.s/filter])
+        zoom @(rf/subscribe [::document.s/zoom])
         pointer-handler #(pointer/event-handler % el)]
     [:g
      [:text
@@ -86,7 +88,7 @@
 
 (defmethod tool/render-to-string :svg
   [{:keys [attrs children]}]
-  (let [child-elements @(rf/subscribe [:element/filter-visible children])
+  (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
         attrs (->> (dissoc attrs :fill)
                    (remove #(empty? (str (second %))))
                    (into {}))]

@@ -3,6 +3,7 @@
    ["js-beautify" :as js-beautify]
    [kdtree]
    [re-frame.core :as rf]
+   [renderer.document.subs :as-alias document.s]
    [renderer.tool.base :as tool]
    [renderer.utils.attribute :as utils.attr]
    [renderer.utils.element :as utils.el]
@@ -10,85 +11,85 @@
    [renderer.element.handlers :as h]))
 
 (rf/reg-sub
- :element/canvas
- :<- [:document/elements]
+ ::canvas
+ :<- [::document.s/elements]
  :-> :canvas)
 
 (rf/reg-sub
- :element/canvas-children
- :<- [:document/elements]
- :<- [:element/canvas]
+ ::canvas-children
+ :<- [::document.s/elements]
+ :<- [::canvas]
  (fn [[elements canvas] _]
    (mapv elements (:children canvas))))
 
 (rf/reg-sub
- :element/xml
- :<- [:element/canvas-children]
+ ::xml
+ :<- [::canvas-children]
  (fn [canvas-children _]
    (-> (h/->string canvas-children)
        (js-beautify/html #js {:indent_size 2}))))
 
 (rf/reg-sub
- :element/filter-visible
- :<- [:document/elements]
+ ::filter-visible
+ :<- [::document.s/elements]
  (fn [elements [_ ks]]
    (filter :visible? (mapv #(% elements) ks))))
 
 (rf/reg-sub
- :element/selected
- :<- [:document/elements]
+ ::selected
+ :<- [::document.s/elements]
  (fn [elements _]
    (filter :selected? (vals elements))))
 
 (rf/reg-sub
- :element/selected-descendant-keys
+ ::selected-descendant-keys
  (fn [db _]
    (h/descendant-keys db)))
 
 (rf/reg-sub
- :element/non-selected-visible
- :<- [:document/elements]
- :<- [:element/selected-descendant-keys]
+ ::non-selected-visible
+ :<- [::document.s/elements]
+ :<- [::selected-descendant-keys]
  (fn [[elements selected-descendant-keys] _]
    (filter #(and (not (:selected? %))
                  (not (contains? selected-descendant-keys (:key %)))
                  (:visible? %)) (vals elements))))
 
 (rf/reg-sub
- :element/hovered
- :<- [:document/elements]
- :<- [:document/hovered-keys]
+ ::hovered
+ :<- [::document.s/elements]
+ :<- [::document.s/hovered-keys]
  (fn [[elements hovered-keys] _]
    (vals (select-keys elements hovered-keys))))
 
 (rf/reg-sub
- :element/selected-tags
- :<- [:element/selected]
+ ::selected-tags
+ :<- [::selected]
  (fn [selected-elements _]
    (reduce #(conj %1 (:tag %2)) #{} selected-elements)))
 
 (rf/reg-sub
- :element/selected?
- :<- [:element/selected]
+ ::selected?
+ :<- [::selected]
  (fn [selected-elements _]
    (seq selected-elements)))
 
 (rf/reg-sub
- :element/selected-locked?
- :<- [:element/selected]
+ ::selected-locked?
+ :<- [::selected]
  (fn [selected-elements _]
    (not-any? #(not (:locked? %)) selected-elements)))
 
 (rf/reg-sub
- :element/multiple-selected?
- :<- [:element/selected]
+ ::multiple-selected?
+ :<- [::selected]
  (fn [selected-elements _]
    (seq (rest selected-elements))))
 
 (rf/reg-sub
- :element/selected-attrs
- :<- [:element/selected]
- :<- [:element/multiple-selected?]
+ ::selected-attrs
+ :<- [::selected]
+ :<- [::multiple-selected?]
  (fn [[selected-elements multiple-selected?] _]
    (let [attrs (utils.el/attributes (first selected-elements))
          attrs (if multiple-selected?
@@ -109,30 +110,30 @@
      (sort-by (fn [[k _]] (.indexOf utils.attr/order k)) attrs))))
 
 (rf/reg-sub
- :element/bounds
- :<- [:element/selected]
+ ::bounds
+ :<- [::selected]
  (fn [selected-elements _]
    (utils.el/bounds selected-elements)))
 
 (rf/reg-sub
- :element/area
- :<- [:element/selected]
+ ::area
+ :<- [::selected]
  (fn [selected-elements _]
    (reduce  #(+ %1 (tool/area %2)) 0 selected-elements)))
 
 (rf/reg-sub
- :element/ancestor-keys
+ ::ancestor-keys
  (fn [db _]
    (h/ancestor-keys db)))
 
 (rf/reg-sub
- :element/top-level?
- :<- [:element/ancestor-keys]
+ ::top-level?
+ :<- [::ancestor-keys]
  (fn [ancestor-keys _]
    (empty? (disj ancestor-keys :canvas))))
 
-(rf/reg-sub
- :element/visible
- :<- [:document/elements]
- (fn [elements _]
-   (filter :visible? (vals elements))))
+#_(rf/reg-sub
+   ::visible
+   :<- [::document.s/elements]
+   (fn [elements _]
+     (filter :visible? (vals elements))))

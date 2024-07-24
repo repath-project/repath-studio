@@ -1,14 +1,18 @@
-(ns renderer.rulers.views
+(ns renderer.ruler.views
   (:require
    [re-frame.core :as rf]
    [clojure.string :as str]
-   [clojure.core.matrix :as mat]))
+   [clojure.core.matrix :as mat]
+   [renderer.document.subs :as-alias document.s]
+   [renderer.element.subs :as-alias element.s]
+   [renderer.frame.subs :as-alias frame.s]
+   [renderer.ruler.subs :as-alias ruler.s]))
 
 (defn bounds
   [orientation size]
-  (when-let [bounds @(rf/subscribe [:element/bounds])]
-    (let [zoom @(rf/subscribe [:document/zoom])
-          pan @(rf/subscribe [:document/pan])
+  (when-let [bounds @(rf/subscribe [::element.s/bounds])]
+    (let [zoom @(rf/subscribe [::document.s/zoom])
+          pan @(rf/subscribe [::document.s/pan])
           [x1 y1 x2 y2] (map #(* % zoom) bounds)]
       (if (= orientation :vertical)
         [:rect {:x 0
@@ -63,9 +67,9 @@
 
 (defn base-lines
   [orientation size]
-  (let [[x y] @(rf/subscribe [:frame/viewbox])
-        zoom @(rf/subscribe [:document/zoom])
-        steps-coll @(rf/subscribe [:rulers/steps-coll orientation])]
+  (let [[x y] @(rf/subscribe [::frame.s/viewbox])
+        zoom @(rf/subscribe [::document.s/zoom])
+        steps-coll @(rf/subscribe [::ruler.s/steps-coll orientation])]
     (into [:g]
           (map-indexed
            (fn [i step]
@@ -107,10 +111,10 @@
 
 (defn grid-lines
   [orientation]
-  (let [zoom @(rf/subscribe [:document/zoom])
-        [x y width height] @(rf/subscribe [:frame/viewbox])
+  (let [zoom @(rf/subscribe [::document.s/zoom])
+        [x y width height] @(rf/subscribe [::frame.s/viewbox])
         [width height] (mat/add [width height] [x y])
-        steps-coll @(rf/subscribe [:rulers/steps-coll orientation])
+        steps-coll @(rf/subscribe [::ruler.s/steps-coll orientation])
         vertical? (= orientation :vertical)]
     (into [:g]
           (map-indexed

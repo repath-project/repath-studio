@@ -2,6 +2,7 @@
   "https://www.w3.org/TR/SVG/struct.html#TermContainerElement"
   (:require
    [re-frame.core :as rf]
+   [renderer.element.subs :as-alias element.s]
    [renderer.tool.base :as tool]
    [renderer.tool.container.canvas]
    [renderer.tool.container.group]
@@ -20,13 +21,13 @@
 
 (defmethod tool/render ::tool/container
   [{:keys [children tag attrs]}]
-  (let [child-elements @(rf/subscribe [:element/filter-visible children])]
+  (let [child-elements @(rf/subscribe [::element.s/filter-visible children])]
     [tag attrs (for [el child-elements]
                  ^{:key (:key el)} [tool/render el])]))
 
 (defmethod tool/render-to-string ::tool/container
   [{:keys [tag attrs title children]}]
-  (let [child-elements @(rf/subscribe [:element/filter-visible children])
+  (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
         attrs (->> (dissoc attrs :style)
                    (remove #(empty? (str (second %))))
                    (into {}))]

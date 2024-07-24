@@ -5,7 +5,8 @@
    ["@repath-project/react-color" :refer [ChromePicker]]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.attribute.views :as v]))
+   [renderer.attribute.views :as v]
+   [renderer.element.events :as-alias element.e]))
 
 (derive :stroke ::color)
 (derive :fill ::color)
@@ -32,5 +33,5 @@
        :align "end"}
       [:> ChromePicker
        {:color (or v "")
-        :on-change-complete #(rf/dispatch [:element/set-attr k (.-hex %)])
-        :on-change #(rf/dispatch [:element/preview-attr k (.-hex %)])}]]]]])
+        :on-change-complete #(rf/dispatch [::element.e/set-attr k (.-hex %)])
+        :on-change #(rf/dispatch [::element.e/preview-attr k (.-hex %)])}]]]]])

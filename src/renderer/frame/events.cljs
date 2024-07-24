@@ -6,50 +6,50 @@
    [renderer.frame.handlers :as h]))
 
 (rf/reg-event-db
- :frame/resize
+ ::resize
  (fn [db [_ dom-rect]]
    (-> db
        (h/recenter-to-dom-rect dom-rect)
        (assoc :dom-rect dom-rect))))
 
 (rf/reg-event-db
- :frame/center
+ ::center
  (fn [db [_]]
    (h/pan-to-element db)))
 
 (rf/reg-event-db
- :frame/focus-selection
+ ::focus-selection
  (fn [db [_ zoom]]
    (h/focus-selection db zoom)))
 
 (rf/reg-event-fx
- :frame/set-zoom
+ ::set-zoom
  (fn [{:keys [db]} [_ zoom]]
    (let [current-zoom (get-in db [:documents (:active-document db) :zoom])]
      {:db (h/zoom db (/ zoom current-zoom))
       :focus nil})))
 
 (rf/reg-event-fx
- :frame/zoom-in
+ ::zoom-in
  (fn [{:keys [db]} [_ _]]
    {:db (h/zoom db (/ 1 (:zoom-sensitivity db)))
     :focus nil}))
 
 (rf/reg-event-fx
- :frame/zoom-out
+ ::zoom-out
  (fn [{:keys [db]} [_ _]]
    {:db (h/zoom db (:zoom-sensitivity db))
     :focus nil}))
 
 (rf/reg-event-db
- :frame/pan-to-bounds
+ ::pan-to-bounds
  (fn [db [_ bounds]]
    (cond-> db
      (= (:state db) :default)
      (h/pan-to-bounds bounds))))
 
 (rf/reg-event-fx
- :frame/pan-to-element
+ ::pan-to-element
  (fn [{:keys [db]} [_ key]]
    {:fx
     (let [{:keys [dom-rect active-document]} db
@@ -65,4 +65,4 @@
       (for [i (range (inc frames))]
         (let [bounds (mat/add viewbox (mat/mul diff (/ i frames)))]
           [:dispatch-later {:ms (* i 10) ; TODO: Easing and canceling.
-                            :dispatch [:frame/pan-to-bounds bounds]}])))}))
+                            :dispatch [::pan-to-bounds bounds]}])))}))

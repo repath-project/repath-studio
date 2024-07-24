@@ -5,11 +5,12 @@
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.attribute.views :as v]
    [renderer.components :as comp]
+   [renderer.element.events :as-alias element.e]
    [renderer.utils.file :as file]))
 
 (defmethod hierarchy/description :href
   []
-  "The href attribute defines a link to a resource as a reference URL. 
+  "The href attribute defines a link to a resource as a reference URL.
    The exact meaning of that link depends on the context of each element using it.")
 
 (defn update-href!
@@ -18,7 +19,7 @@
     (.addEventListener
      reader
      "load"
-     #(rf/dispatch [:element/set-attr :href (.-result reader)]))
+     #(rf/dispatch [::element.e/set-attr :href (.-result reader)]))
     (.readAsDataURL reader file)))
 
 (defmethod hierarchy/form-element :href

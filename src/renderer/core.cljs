@@ -14,26 +14,35 @@
    [reagent.dom :as ra.dom]
    [renderer.attribute.core]
    [renderer.db]
-   [renderer.dialog.core]
-   [renderer.document.core]
-   [renderer.element.core]
+   [renderer.dialog.events]
+   [renderer.dialog.subs]
+   [renderer.document.events :as document.e]
+   [renderer.document.subs]
+   [renderer.element.events]
+   [renderer.element.subs]
    [renderer.events]
-   [renderer.frame.core]
-   [renderer.history.core]
+   [renderer.frame.events]
+   [renderer.frame.subs]
+   [renderer.history.events]
+   [renderer.history.subs]
    [renderer.notification.core]
    [renderer.reepl.core]
    [renderer.reepl.replumb :as replumb]
-   [renderer.rulers.core]
-   [renderer.snap.core]
+   [renderer.ruler.subs]
+   [renderer.snap.events]
+   [renderer.snap.subs]
    [renderer.subs]
-   [renderer.timeline.core]
+   [renderer.timeline.events]
+   [renderer.timeline.subs]
    [renderer.tool.core]
    [renderer.utils.dom :as dom]
    [renderer.utils.error :as error]
    [renderer.utils.keyboard :as keyb]
    [renderer.views :as v]
-   [renderer.window.core]
-   [renderer.worker.core]
+   [renderer.window.events :as window.e]
+   [renderer.window.subs]
+   [renderer.worker.events]
+   [renderer.worker.subs]
    [replumb.repl :as repl]
    [shadow.cljs.bootstrap.browser :as bootstrap]
    [user]))
@@ -74,14 +83,14 @@
    (fn [data]
      (case (.-action data)
        "fontsLoaded" (js/console.log "fontsLoaded")
-       "windowMaximized" (rf/dispatch [:window/set-maximized? true])
-       "windowUnmaximized" (rf/dispatch [:window/set-maximized? false])
-       "windowEnteredFullscreen" (rf/dispatch [:window/set-fullscreen? true])
-       "windowLeavedFullscreen" (rf/dispatch [:window/set-fullscreen? false])
-       "windowMinimized" (rf/dispatch [:window/set-minimized? true])
-       "windowRestored" (rf/dispatch [:window/set-minimized? false])
-       "fileLoaded" (rf/dispatch [:document/load (edn/read-string (.-data data))])
-       "fileSaved" (rf/dispatch [:document/saved (edn/read-string (.-data data))])))))
+       "windowMaximized" (rf/dispatch [::window.e/set-maximized? true])
+       "windowUnmaximized" (rf/dispatch [::window.e/set-maximized? false])
+       "windowEnteredFullscreen" (rf/dispatch [::window.e/set-fullscreen? true])
+       "windowLeavedFullscreen" (rf/dispatch [::window.e/set-fullscreen? false])
+       "windowMinimized" (rf/dispatch [::window.e/set-minimized? true])
+       "windowRestored" (rf/dispatch [::window.e/set-minimized? false])
+       "fileLoaded" (rf/dispatch [::document.e/load (edn/read-string (.-data data))])
+       "fileSaved" (rf/dispatch [::document.e/saved (edn/read-string (.-data data))])))))
 
 (defn load-system-fonts!
   []
@@ -110,7 +119,7 @@
   (rf/dispatch-sync [:initialize-db])
   (rf/dispatch-sync [:load-local-db])
   (rf/dispatch-sync [:theme/init-mode])
-  (rf/dispatch-sync [:document/new])
+  (rf/dispatch-sync [::document.e/new])
   (rf/dispatch-sync [:set-tool :select])
 
   (rf/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])
@@ -128,6 +137,6 @@
         (init-api!))
     (.addEventListener js/document
                        "fullscreenchange"
-                       #(rf/dispatch [:window/set-fullscreen? (boolean (.-fullscreenElement js/document))])))
+                       #(rf/dispatch [:window.e/set-fullscreen? (boolean (.-fullscreenElement js/document))])))
 
   (mount-root))

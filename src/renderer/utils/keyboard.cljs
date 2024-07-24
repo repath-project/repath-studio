@@ -1,7 +1,13 @@
 (ns renderer.utils.keyboard
   (:require
    [clojure.set :as set]
-   [re-frame.core :as rf])
+   [re-frame.core :as rf]
+   [renderer.dialog.events :as-alias dialog.e]
+   [renderer.document.events :as-alias document.e]
+   [renderer.history.events :as-alias history.e]
+   [renderer.element.events :as-alias element.e]
+   [renderer.frame.events :as-alias frame.e]
+   [renderer.window.events :as-alias window.e])
   (:import
    [goog.events KeyCodes]))
 
@@ -52,25 +58,25 @@
       nil)))
 
 (def keydown-rules
-  {:event-keys [[[:element/raise]
+  {:event-keys [[[::element.e/raise]
                  [{:keyCode (key-codes "PAGE_UP")}]]
-                [[:element/lower]
+                [[::element.e/lower]
                  [{:keyCode (key-codes "PAGE_DOWN")}]]
-                [[:element/raise-to-top]
+                [[::element.e/raise-to-top]
                  [{:keyCode (key-codes "HOME")}]]
-                [[:element/lower-to-bottom]
+                [[::element.e/lower-to-bottom]
                  [{:keyCode (key-codes "END")}]]
-                [[:frame/focus-selection :original]
+                [[::frame.e/focus-selection :original]
                  [{:keyCode (key-codes "ONE")}]]
-                [[:frame/focus-selection :fit]
+                [[::frame.e/focus-selection :fit]
                  [{:keyCode (key-codes "TWO")}]]
-                [[:frame/focus-selection :fill]
+                [[::frame.e/focus-selection :fill]
                  [{:keyCode (key-codes "THREE")}]]
-                [[:frame/zoom-in]
+                [[::frame.e/zoom-in]
                  [{:keyCode (key-codes "EQUALS")}]]
-                [[:frame/zoom-out]
+                [[::frame.e/zoom-out]
                  [{:keyCode (key-codes "DASH")}]]
-                [[:element/->path]
+                [[::element.e/->path]
                  [{:keyCode (key-codes "P")
                    :ctrlKey true
                    :shiftKey true}]]
@@ -80,85 +86,85 @@
                 [[:panel/toggle :properties]
                  [{:keyCode (key-codes "P")
                    :ctrlKey true}]]
-                [[:element/stroke->path]
+                [[::element.e/stroke->path]
                  [{:keyCode (key-codes "P")
                    :ctrlKey true
                    :altKey true}]]
-                [[:element/copy]
+                [[::element.e/copy]
                  [{:keyCode (key-codes "C")
                    :ctrlKey true}]]
-                [[:element/paste-styles]
+                [[::element.e/paste-styles]
                  [{:keyCode (key-codes "V")
                    :ctrlKey true
                    :shiftKey true}]]
-                [[:element/paste-in-place]
+                [[::element.e/paste-in-place]
                  [{:keyCode (key-codes "V")
                    :ctrlKey true
                    :altKey true}]]
-                [[:element/paste]
+                [[::element.e/paste]
                  [{:keyCode (key-codes "V")
                    :ctrlKey true}]]
-                [[:element/cut]
+                [[::element.e/cut]
                  [{:keyCode (key-codes "X")
                    :ctrlKey true}]]
                 [[:toggle-debug-info]
                  [{:keyCode (key-codes "D")
                    :ctrlKey true
                    :shiftKey true}]]
-                [[:element/duplicate-in-place]
+                [[::element.e/duplicate-in-place]
                  [{:keyCode (key-codes "D")
                    :ctrlKey true}]]
-                [[:element/bool-operation :exclude]
+                [[::element.e/bool-operation :exclude]
                  [{:keyCode (key-codes "E")
                    :ctrlKey true}]]
-                [[:element/bool-operation :unite]
+                [[::element.e/bool-operation :unite]
                  [{:keyCode (key-codes "U")
                    :ctrlKey true}]]
-                [[:element/bool-operation :intersect]
+                [[::element.e/bool-operation :intersect]
                  [{:keyCode (key-codes "I")
                    :ctrlKey true}]]
-                [[:element/bool-operation :subtract]
+                [[::element.e/bool-operation :subtract]
                  [{:keyCode (key-codes "BACKSLASH")
                    :ctrlKey true}]]
-                [[:element/bool-operation :divide]
+                [[::element.e/bool-operation :divide]
                  [{:keyCode (key-codes "SLASH")
                    :ctrlKey true}]]
-                [[:element/ungroup]
+                [[::element.e/ungroup]
                  [{:keyCode (key-codes "G")
                    :ctrlKey true
                    :shiftKey true}]]
-                [[:element/group]
+                [[::element.e/group]
                  [{:keyCode (key-codes "G")
                    :ctrlKey true}]]
-                [[:element/unlock]
+                [[::element.e/unlock]
                  [{:keyCode (key-codes "L")
                    :ctrlKey true
                    :shiftKey true}]]
-                [[:element/lock]
+                [[::element.e/lock]
                  [{:keyCode (key-codes "L")
                    :ctrlKey true}]]
-                [[:element/delete]
+                [[::element.e/delete]
                  [{:keyCode (key-codes "DELETE")}]
                  [{:keyCode (key-codes "BACKSPACE")}]]
-                [[:document/new]
+                [[::document.e/new]
                  [{:keyCode (key-codes "N")
                    :ctrlKey true}]]
-                [[:history/cancel]
+                [[::history.e/cancel]
                  [{:keyCode (key-codes "ESC")}]]
-                [[:history/redo]
+                [[::history.e/redo]
                  [{:keyCode (key-codes "Z")
                    :ctrlKey true
                    :shiftKey true}]
                  [{:keyCode (key-codes "Y")
                    :ctrlKey true}]]
-                [[:history/undo]
+                [[::history.e/undo]
                  [{:keyCode (key-codes "Z")
                    :ctrlKey true}]]
-                [[:element/select-same-tags]
+                [[::element.e/select-same-tags]
                  [{:keyCode (key-codes "A")
                    :ctrlKey true
                    :shiftKey true}]]
-                [[:element/select-all]
+                [[::element.e/select-all]
                  [{:keyCode (key-codes "A")
                    :ctrlKey true}]]
                 [[:focus "file"]
@@ -176,41 +182,41 @@
                 [[:focus "help"]
                  [{:keyCode (key-codes "H")
                    :altKey true}]]
-                [[:element/move-up]
+                [[::element.e/move-up]
                  [{:keyCode (key-codes "UP")}]]
-                [[:element/move-down]
+                [[::element.e/move-down]
                  [{:keyCode (key-codes "DOWN")}]]
-                [[:element/move-left]
+                [[::element.e/move-left]
                  [{:keyCode (key-codes "LEFT")}]]
-                [[:element/move-right]
+                [[::element.e/move-right]
                  [{:keyCode (key-codes "RIGHT")}]]
-                [[:window/close]
+                [[::window.e/close]
                  [{:keyCode (key-codes "Q")
                    :ctrlKey true}]]
-                [[:document/open]
+                [[::document.e/open]
                  [{:keyCode (key-codes "O")
                    :ctrlKey true}]]
-                [[:document/save-as]
+                [[::document.e/save-as]
                  [{:keyCode (key-codes "S")
                    :ctrlKey true
                    :shiftKey true}]]
-                [[:document/save]
+                [[::document.e/save]
                  [{:keyCode (key-codes "S")
                    :ctrlKey true}]]
-                [[:document/close-active]
+                [[::document.e/close-active]
                  [{:keyCode (key-codes "W")
                    :ctrlKey true}]]
-                [[:document/close-all]
+                [[::document.e/close-all]
                  [{:keyCode (key-codes "W")
                    :ctrlKey true
                    :altKey true}]]
-                [[:document/close-others]
+                [[::document.e/close-others]
                  [{:keyCode (key-codes "W")
                    :ctrlKey true
                    :shiftKey true}]]
-                [[:window/toggle-fullscreen]
+                [[::window.e/toggle-fullscreen]
                  [{:keyCode (key-codes "F11")}]]
-                [[:dialog/cmdk]
+                [[::dialog.e/cmdk]
                  [{:keyCode (key-codes "F1")}]
                  [{:keyCode (key-codes "K")
                    :ctrlKey true}]]

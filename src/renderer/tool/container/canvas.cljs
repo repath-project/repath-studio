@@ -3,10 +3,14 @@
   (:require
    [clojure.string :as str]
    [re-frame.core :as rf]
-   [renderer.rulers.views :as rulers]
+   [renderer.document.subs :as-alias document.s]
+   [renderer.element.subs :as-alias element.s]
+   [renderer.frame.subs :as-alias frame.s]
+   [renderer.ruler.views :as ruler.v]
    [renderer.menubar.filters :as filters]
    [renderer.tool.base :as tool]
    [renderer.tool.overlay :as overlay]
+   [renderer.snap.subs :as-alias snap.s]
    [renderer.utils.keyboard :as keyb]
    [renderer.utils.pointer :as pointer]))
 
@@ -19,27 +23,27 @@
 
 (defmethod tool/render :canvas
   [{:keys [attrs children] :as element}]
-  (let [_ @(rf/subscribe [:snap/in-viewport-tree])
-        child-elements @(rf/subscribe [:element/filter-visible children])
-        viewbox @(rf/subscribe [:frame/viewbox])
+  (let [_ @(rf/subscribe [::snap.s/in-viewport-tree])
+        child-elements @(rf/subscribe [::element.s/filter-visible children])
+        viewbox @(rf/subscribe [::frame.s/viewbox])
         {:keys [width height]} @(rf/subscribe [:dom-rect])
-        hovered-elements @(rf/subscribe [:element/hovered])
-        selected-elements @(rf/subscribe [:element/selected])
-        bounds @(rf/subscribe [:element/bounds])
-        temp-element @(rf/subscribe [:document/temp-element])
-        elements-area @(rf/subscribe [:element/area])
-        read-only? @(rf/subscribe [:document/read-only?])
+        hovered-elements @(rf/subscribe [::element.s/hovered])
+        selected-elements @(rf/subscribe [::element.s/selected])
+        bounds @(rf/subscribe [::element.s/bounds])
+        temp-element @(rf/subscribe [::document.s/temp-element])
+        elements-area @(rf/subscribe [::element.s/area])
+        read-only? @(rf/subscribe [::document.s/read-only?])
         cursor @(rf/subscribe [:cursor])
         tool @(rf/subscribe [:tool])
         primary-tool @(rf/subscribe [:primary-tool])
-        rotate @(rf/subscribe [:document/rotate])
+        rotate @(rf/subscribe [::document.s/rotate])
         grid? @(rf/subscribe [:grid?])
         state @(rf/subscribe [:state])
         pointer-handler #(pointer/event-handler % element)
         pivot-point @(rf/subscribe [:pivot-point])
-        snapping-points @(rf/subscribe [:snap/points])
-        snap? @(rf/subscribe [:snap/enabled?])
-        nearest-neighbor @(rf/subscribe [:snap/nearest-neighbor])
+        snapping-points @(rf/subscribe [::snap.s/points])
+        snap? @(rf/subscribe [::snap.s/enabled?])
+        nearest-neighbor @(rf/subscribe [::snap.s/nearest-neighbor])
         debug? @(rf/subscribe [:debug-info?])
         select? (or (= tool :select)
                     (= primary-tool :select))]
@@ -48,7 +52,7 @@
                   :on-double-click pointer-handler
                   :on-key-up keyb/event-handler
                   :on-key-down keyb/event-handler
-                  :tab-index 0 ; Enable keyboard events 
+                  :tab-index 0 ; Enable keyboard events
                   :viewBox (str/join " " viewbox)
                   :on-drop pointer-handler
                   :on-drag-over #(.preventDefault %)
@@ -109,4 +113,4 @@
      (when (and snap? nearest-neighbor)
        [overlay/times (:point nearest-neighbor)])
 
-     (when grid? [rulers/grid])]))
+     (when grid? [ruler.v/grid])]))

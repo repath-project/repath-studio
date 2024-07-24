@@ -3,6 +3,7 @@
   (:require
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
+   [renderer.document.subs :as-alias document.s]
    [renderer.tool.base :as tool]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
@@ -11,11 +12,11 @@
    [renderer.utils.units :as units]))
 
 ;; The iframe is isolated so we don't have access to the css vars of the parent.
-;; We are currently using hardcoded values, but we hould be able to set those 
+;; We are currently using hardcoded values, but we hould be able to set those
 ;; vars in the nested document if we have to.
 (def accent-inverted "#fff")
 (def accent "#e93976")
-(def font-mono "'Consolas (Custom)', 'Bitstream Vera Sans Mono', monospace, 
+(def font-mono "'Consolas (Custom)', 'Bitstream Vera Sans Mono', monospace,
                 'Apple Color Emoji', 'Segoe UI Emoji'")
 
 (def handle-size 12)
@@ -24,7 +25,7 @@
 (defn point-of-interest
   "Simple dot used for debugging purposes."
   [[x y] & children]
-  (let [zoom @(rf/subscribe [:document/zoom])]
+  (let [zoom @(rf/subscribe [::document.s/zoom])]
     (into [:circle {:cx x
                     :cy y
                     :stroke-width 0
@@ -33,7 +34,7 @@
 
 (defn circle-handle
   [{:keys [x y key] :as el} & children]
-  (let [zoom @(rf/subscribe [:document/zoom])
+  (let [zoom @(rf/subscribe [::document.s/zoom])
         clicked-element @(rf/subscribe [:clicked-element])
         pointer-handler #(pointer/event-handler % el)]
     [:circle {:key key
@@ -53,9 +54,9 @@
 
 (defn square-handle
   [{:keys [x y key cursor] :as el} & children]
-  (let [zoom @(rf/subscribe [:document/zoom])
+  (let [zoom @(rf/subscribe [::document.s/zoom])
         clicked-element @(rf/subscribe [:clicked-element])
-        hovered-keys @(rf/subscribe [:document/hovered-keys])
+        hovered-keys @(rf/subscribe [::document.s/hovered-keys])
         size (/ handle-size zoom)
         stroke-width (/ 1 zoom)
         pointer-handler #(pointer/event-handler % el)
@@ -80,7 +81,7 @@
   ([x1 y1 x2 y2]
    (line x1 y1 x2 y2 true))
   ([x1 y1 x2 y2 dashed?]
-   (let [zoom @(rf/subscribe [:document/zoom])
+   (let [zoom @(rf/subscribe [::document.s/zoom])
          stroke-width (/ 1 zoom)
          stroke-dasharray (/ 5 zoom)
          attrs {:x1 x1
@@ -99,7 +100,7 @@
   ([[x y]]
    (cross x y))
   ([x y]
-   (let [zoom @(rf/subscribe [:document/zoom])
+   (let [zoom @(rf/subscribe [::document.s/zoom])
          size (/ handle-size zoom)]
      [:g
       [line (- x (/ size 2)) y (+ x (/ size 2)) y false]
@@ -107,7 +108,7 @@
 
 (defn arc
   [[x y] radius start-degrees size-degrees]
-  (let [zoom @(rf/subscribe [:document/zoom])
+  (let [zoom @(rf/subscribe [::document.s/zoom])
         stroke-width (/ 1 zoom)
         radius (/ radius zoom)
         end-degrees (+ start-degrees size-degrees)
@@ -130,7 +131,7 @@
   ([[x y]]
    (times x y))
   ([x y]
-   (let [zoom @(rf/subscribe [:document/zoom])
+   (let [zoom @(rf/subscribe [::document.s/zoom])
          size (/ handle-size zoom)
          mid (/ size Math/PI)]
      [:g
@@ -148,7 +149,7 @@
 
 (defn min-bounds
   [bounds]
-  (let [zoom @(rf/subscribe [:document/zoom])
+  (let [zoom @(rf/subscribe [::document.s/zoom])
         dimensions (bounds/->dimensions bounds)
         [w h] dimensions
         min-size (/ (* handle-size 2) zoom)]
@@ -159,9 +160,9 @@
                                0 (/ (- min-size h) 2)]))))
 (defn wrapping-bounding-box
   [bounds]
-  (let [zoom @(rf/subscribe [:document/zoom])
+  (let [zoom @(rf/subscribe [::document.s/zoom])
         key :bounding-box
-        ignored-keys @(rf/subscribe [:document/ignored-keys])
+        ignored-keys @(rf/subscribe [::document.s/ignored-keys])
         ignored? (contains? ignored-keys key)
         [x1 y1 _x2 _y2] bounds
         [w h] (bounds/->dimensions bounds)
@@ -200,7 +201,7 @@
 
 (defn label
   [text position anchor]
-  (let [zoom @(rf/subscribe [:document/zoom])
+  (let [zoom @(rf/subscribe [::document.s/zoom])
         [x y] position
         font-size (/ 10 zoom)
         padding (/ 8 zoom)
@@ -230,7 +231,7 @@
 
 (defn size
   [bounds]
-  (let [zoom @(rf/subscribe [:document/zoom])
+  (let [zoom @(rf/subscribe [::document.s/zoom])
         [x1 _ x2 y2] bounds
         x (+ x1 (/ (- x2 x1) 2))
         y (+ y2 (/ (+ (/ handle-size 2) 15) zoom))
@@ -240,7 +241,7 @@
 
 (defn bounding-box
   [bounds dashed?]
-  (let [zoom @(rf/subscribe [:document/zoom])
+  (let [zoom @(rf/subscribe [::document.s/zoom])
         [x1 y1 _x2 _y2] bounds
         [width height] (bounds/->dimensions bounds)
         stroke-width (/ 2 zoom)
@@ -285,7 +286,7 @@
 (defn area
   [area bounds]
   (when area
-    (let [zoom @(rf/subscribe [:document/zoom])
+    (let [zoom @(rf/subscribe [::document.s/zoom])
           [x1 y1 x2 _y2] bounds
           x (+ x1 (/ (- x2 x1) 2))
           y (+ y1 (/ (- -15 (/ handle-size 2)) zoom))

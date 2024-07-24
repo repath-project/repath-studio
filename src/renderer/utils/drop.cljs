@@ -3,6 +3,7 @@
    [clojure.string :as str]
    [hickory.zip]
    [re-frame.core :as rf]
+   [renderer.element.events :as-alias element.e]
    [renderer.utils.file :as file]))
 
 (defn add-image!
@@ -27,7 +28,7 @@
                                   :height height
                                   :href data-url}}]
                   (.remove img)
-                  (rf/dispatch [:element/add el]))))
+                  (rf/dispatch [::element.e/add el]))))
         (set! (.-src img) data-url)))
     (.readAsDataURL reader file)))
 
@@ -37,9 +38,9 @@
     (.addEventListener
      reader
      "load"
-     #(rf/dispatch [:element/import-svg {:svg (.-result reader)
-                                         :name (.-name file)
-                                         :position position}]))
+     #(rf/dispatch [::element.e/import-svg {:svg (.-result reader)
+                                            :name (.-name file)
+                                            :position position}]))
     (.readAsText reader file)))
 
 (defn files!
@@ -57,7 +58,7 @@
 
 (defn add-text!
   [item [x y]]
-  (.getAsString item #(rf/dispatch [:element/add
+  (.getAsString item #(rf/dispatch [::element.e/add
                                     {:type :element
                                      :tag :text
                                      :content %

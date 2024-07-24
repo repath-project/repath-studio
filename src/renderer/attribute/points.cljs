@@ -7,6 +7,7 @@
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.attribute.views :as v]
    [renderer.components :as comp]
+   [renderer.element.events :as-alias element.e]
    [renderer.utils.attribute :as utils.attr]
    [renderer.utils.vec :as vec]))
 
@@ -20,7 +21,7 @@
 (defn remove-nth
   [points i]
   (let [points (str/join " " (flatten (vec/remove-nth points i)))]
-    (rf/dispatch [:element/set-attr :points points])))
+    (rf/dispatch [::element.e/set-attr :points points])))
 
 (defmethod hierarchy/form-element :points
   [k v disabled?]

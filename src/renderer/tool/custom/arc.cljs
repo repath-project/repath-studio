@@ -5,7 +5,9 @@
    [re-frame.core :as rf]
    [renderer.attribute.angle :as angle]
    [renderer.attribute.hierarchy :as hierarchy]
+   [renderer.document.subs :as-alias document.s]
    [renderer.element.handlers :as element.h]
+   [renderer.element.subs :as-alias element.s]
    [renderer.tool.base :as tool]
    [renderer.tool.overlay :as overlay]
    [renderer.utils.math :as math]
@@ -82,7 +84,7 @@
 
 (defmethod tool/render :arc
   [{:keys [attrs children] :as element}]
-  (let [child-elements @(rf/subscribe [:element/filter-visible children])
+  (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
         pointer-handler #(pointer/event-handler % element)]
     [:path (merge {:d (tool/path element)
                    :on-pointer-up pointer-handler
@@ -100,7 +102,7 @@
   [{:keys [attrs key]}]
   (let [{:keys [cx cy rx ry ::start-deg ::end-deg]} attrs
         [cx cy rx ry] (mapv units/unit->px [cx cy rx ry])
-        active-page @(rf/subscribe [:element/active-page])
+        active-page @(rf/subscribe [::element.s/active-page])
         x1 (+ cx (math/angle-dx start-deg rx))
         y1 (+ cy (math/angle-dy start-deg ry))
         x2 (+ cx (math/angle-dx end-deg rx))
@@ -109,7 +111,7 @@
                   units/unit->px
                   [(-> active-page :attrs :x) (-> active-page :attrs :y)])
         [[cx cy] [x1 y1] [x2 y2]] (mat/add page-pos [[cx cy] [x1 y1] [x2 y2]])
-        zoom @(rf/subscribe [:document/zoom])]
+        zoom @(rf/subscribe [::document.s/zoom])]
     [:g
      [overlay/times cx cy]
      [overlay/line cx cy (+ cx rx) cy]

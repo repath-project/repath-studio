@@ -9,7 +9,9 @@
    [renderer.attribute.length :as length]
    [renderer.attribute.views :as attr.v]
    [renderer.components :as comp]
+   [renderer.element.events :as-alias element.e]
    [renderer.element.handlers :as element.h]
+   [renderer.element.subs :as-alias element.s]
    [renderer.tool.base :as tool]
    [renderer.tool.overlay :as overlay]
    [renderer.utils.element :as element]
@@ -47,7 +49,7 @@
       {:title "Generate random seed"
        :style {:flex "0 0 26px"
                :height "100%"}
-       :on-click #(rf/dispatch [:element/set-attr k random-seed])}
+       :on-click #(rf/dispatch [::element.e/set-attr k random-seed])}
       [comp/icon "refresh"]]]))
 
 #_(defmethod attr.hierarchy/description :x
@@ -128,7 +130,7 @@
 
 (defmethod tool/render :blob
   [{:keys [attrs children] :as element}]
-  (let [child-elements @(rf/subscribe [:element/filter-visible children])
+  (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
         pointer-handler #(pointer/event-handler % element)]
     [:path (merge {:d (tool/path element)
                    :on-pointer-up pointer-handler

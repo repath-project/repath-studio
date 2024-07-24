@@ -61,10 +61,10 @@
  (fn [db [_]]
    (dissoc db :restored?)))
 
-(rf/reg-event-db
- :set-lang
- (fn [db [_ lang]]
-   (assoc db :lang lang)))
+#_(rf/reg-event-db
+   :set-lang
+   (fn [db [_ lang]]
+     (assoc db :lang lang)))
 
 (rf/reg-event-db
  :set-repl-mode
@@ -86,10 +86,10 @@
  (fn [db [_]]
    (update db :rulers? not)))
 
-(rf/reg-event-db
- :toggle-rulers-locked
- (fn [db [_]]
-   (update db :rulers-locked? not)))
+#_(rf/reg-event-db
+   :toggle-rulers-locked
+   (fn [db [_]]
+     (update db :rulers-locked? not)))
 
 (rf/reg-event-db
  :toggle-grid

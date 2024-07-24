@@ -6,7 +6,9 @@
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
    [reagent.core :as ra]
-   [renderer.components :as comp]))
+   [renderer.components :as comp]
+   [renderer.history.events :as-alias history.e]
+   [renderer.history.subs :as-alias history.s]))
 
 (defn select-options
   [history-list]
@@ -20,7 +22,7 @@
 (defn select
   [label options disabled?]
   [:> Select/Root
-   {:onValueChange #(rf/dispatch [:history/move (keyword %)])
+   {:onValueChange #(rf/dispatch [::history.e/move (keyword %)])
     :disabled disabled?}
    [:> Select/Trigger
     {:aria-label label
@@ -57,7 +59,7 @@
         stroke (if (.-saved datum) "var(--accent)" (.-color datum))]
     (ra/as-element
      [:circle
-      {:on-click #(rf/dispatch [:history/move (keyword (.-id datum))])
+      {:on-click #(rf/dispatch [::history.e/move (keyword (.-id datum))])
        :cx "0"
        :cy "0"
        :stroke stroke
@@ -71,8 +73,8 @@
   [target]
   (let [translate (.-translate target)
         zoom (.-zoom target)]
-    (rf/dispatch [:history/tree-view-updated zoom [(.-x translate)
-                                                   (.-y translate)]])))
+    (rf/dispatch [::history.e/tree-view-updated zoom [(.-x translate)
+                                                      (.-y translate)]])))
 
 (defn center
   [ref]
@@ -82,9 +84,9 @@
 
 (defn tree
   [ref]
-  (let [tree-data @(rf/subscribe [:history/tree-data])
-        zoom @(rf/subscribe [:history/zoom])
-        [x y] @(rf/subscribe [:history/translate])
+  (let [tree-data @(rf/subscribe [::history.s/tree-data])
+        zoom @(rf/subscribe [::history.s/zoom])
+        [x y] @(rf/subscribe [::history.s/translate])
         el (.-current ref)
         translate #js {:x (or x (when el (/ (.-clientWidth el) 2)))
                        :y (or y (when el (/ (.-clientHeight el) 2)))}]
@@ -106,10 +108,10 @@
     [:div.flex.flex-col.h-full
      [:div.flex.p-1
       [:button.button.flex-1
-       {:on-click #(rf/dispatch [:history/tree-view-updated 0.5 (center ref)])}
+       {:on-click #(rf/dispatch [::history.e/tree-view-updated 0.5 (center ref)])}
        "Center view"]
       [:button.button.flex-1
-       {:on-click #(rf/dispatch [:history/clear])}
+       {:on-click #(rf/dispatch [::history.e/clear])}
        "Clear history"]]
      [:div.flex-1 {:ref ref}
       [tree ref]]]))

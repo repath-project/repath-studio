@@ -4,6 +4,11 @@
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [renderer.components :as comp]
+   [renderer.document.events :as-alias document.e]
+   [renderer.document.subs :as-alias document.s]
+   [renderer.element.events :as-alias element.e]
+   [renderer.element.subs :as-alias element.s]
+   [renderer.frame.events :as-alias frame.e]
    [renderer.utils.dom :as dom]
    [renderer.utils.keyboard :as keyb]))
 
@@ -17,7 +22,7 @@
      :inactive-icon "eye-closed"
      :inactive-text "show"
      :class (when visible? "list-item-action")
-     :action #(rf/dispatch [:element/toggle-prop key :visible?])}]
+     :action #(rf/dispatch [::element.e/toggle-prop key :visible?])}]
    [comp/toggle-icon-button
     {:active? locked?
      :active-icon "lock"
@@ -25,11 +30,11 @@
      :inactive-icon "unlock"
      :inactive-text "lock"
      :class (when-not locked? "list-item-action")
-     :action #(rf/dispatch [:element/toggle-prop key :locked?])}]])
+     :action #(rf/dispatch [::element.e/toggle-prop key :locked?])}]])
 
 (defn- set-item-name
   [e k]
-  (rf/dispatch [:element/set-prop k :name (.. e -target -value)]))
+  (rf/dispatch [::element.e/set-prop k :name (.. e -target -value)]))
 
 (defn label
   [{:keys [key name visible? tag]}]
@@ -59,7 +64,7 @@
                        (.getData "key")
                        keyword)]
     (.preventDefault e)
-    (rf/dispatch [:element/set-parent parent-key k])))
+    (rf/dispatch [::element.e/set-parent parent-key k])))
 
 (defn padding
   [depth children?]
@@ -73,32 +78,32 @@
     (case (.-key e)
       "ArrowUp"
       (do (.stopPropagation e)
-          (rf/dispatch [:element/select-up ctrl?]))
+          (rf/dispatch [::element.e/select-up ctrl?]))
 
       "ArrowDown"
       (do (.stopPropagation e)
-          (rf/dispatch [:element/select-down ctrl?]))
+          (rf/dispatch [::element.e/select-down ctrl?]))
 
       "ArrowLeft"
       (do (.stopPropagation e)
-          (rf/dispatch [:document/collapse-el el-k]))
+          (rf/dispatch [::document.e/collapse-el el-k]))
 
       "ArrowRight"
       (do (.stopPropagation e)
-          (rf/dispatch [:document/expand-el el-k]))
+          (rf/dispatch [::document.e/expand-el el-k]))
 
       nil)))
 
 (defn list-item-button
   [{:keys [key selected? children] :as el} depth hovered? collapsed?]
-  (let [multiple-selected? @(rf/subscribe [:element/multiple-selected?])]
+  (let [multiple-selected? @(rf/subscribe [::element.s/multiple-selected?])]
     [:div.button.list-item-button
      {:class [(when selected? "selected")
               (when hovered? "hovered")]
       :tab-index 0
       :role "menuitem"
-      :on-double-click #(rf/dispatch [:frame/pan-to-element key])
-      :on-pointer-enter #(rf/dispatch [:document/set-hovered-keys #{key}])
+      :on-double-click #(rf/dispatch [::frame.e/pan-to-element key])
+      :on-pointer-enter #(rf/dispatch [::document.e/set-hovered-keys #{key}])
       :ref (fn [this]
              (when (and this selected? hovered? (not multiple-selected?))
                (dom/scroll-into-view! this)))
@@ -106,15 +111,15 @@
       :draggable true
       :on-drag-start #(-> (.-dataTransfer %)
                           (.setData "key" (name key)))
-      :on-drag-enter #(rf/dispatch [:document/set-hovered-keys #{key}])
+      :on-drag-enter #(rf/dispatch [::document.e/set-hovered-keys #{key}])
       :on-drag-over #(.preventDefault %)
       :on-drop #(drop-handler % key)
       :on-pointer-down (fn [e]
                          (when (= (.-button e) 2)
-                           (rf/dispatch [:element/select key (.-ctrlKey e)])))
+                           (rf/dispatch [::element.e/select key (.-ctrlKey e)])))
       :on-pointer-up (fn [e]
                        (.stopPropagation e)
-                       (rf/dispatch [:element/select key (.-ctrlKey e)]))
+                       (rf/dispatch [::element.e/select key (.-ctrlKey e)]))
       :style {:padding-left (padding depth (seq children))}}
      [:div.flex.items-center.content-between.w-full
       (when (seq children)
@@ -134,20 +139,20 @@
 
 (defn inner-sidebar-render
   [canvas-children elements]
-  (let [hovered-keys @(rf/subscribe [:document/hovered-keys])
-        collapsed-keys @(rf/subscribe [:document/collapsed-keys])]
+  (let [hovered-keys @(rf/subscribe [::document.s/hovered-keys])
+        collapsed-keys @(rf/subscribe [::document.s/collapsed-keys])]
     [:div.tree-sidebar.overflow-hidden
-     {:on-pointer-up #(rf/dispatch [:element/deselect-all])}
+     {:on-pointer-up #(rf/dispatch [::element.e/deselect-all])}
      [:div.v-scroll.h-full
       [:ul
-       {:on-pointer-leave #(rf/dispatch [:document/set-hovered-keys #{}])}
+       {:on-pointer-leave #(rf/dispatch [::document.e/set-hovered-keys #{}])}
        (map (fn [el] [item el 1 elements hovered-keys collapsed-keys])
             (reverse canvas-children))]]]))
 
 (defn inner-sidebar []
   (let [state @(rf/subscribe [:state])
-        canvas-children @(rf/subscribe [:element/canvas-children])
-        elements @(rf/subscribe [:document/elements])]
+        canvas-children @(rf/subscribe [::element.s/canvas-children])
+        elements @(rf/subscribe [::document.s/elements])]
     (if (= state :default)
       [inner-sidebar-render canvas-children elements]
       (ra/with-let [canvas-children canvas-children

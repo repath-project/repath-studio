@@ -3,11 +3,13 @@
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    [re-frame.core :as rf]
    [renderer.components :as comp]
-   [renderer.snap.db :as snap.db]))
+   [renderer.snap.db :as snap.db]
+   [renderer.snap.events :as-alias snap.e]
+   [renderer.snap.subs :as-alias snap.s]))
 
 (defn options-dropdown
   []
-  (let [options @(rf/subscribe [:snap/options])]
+  (let [options @(rf/subscribe [::snap.s/options])]
     [:> DropdownMenu/Root
      [:> DropdownMenu/Trigger
       {:aria-label "Snap"
@@ -31,7 +33,7 @@
           {:class "menu-checkbox-item inset"
            :on-click #(.stopPropagation %)
            :onSelect #(do (.preventDefault %)
-                          (rf/dispatch [:snap/toggle-option option]))
+                          (rf/dispatch [::snap.e/toggle-option option]))
            :checked (contains? options option)}
           [:> DropdownMenu/ItemIndicator
            {:class "menu-item-indicator"}
@@ -42,10 +44,10 @@
   []
   [:button.icon-button.items-center.px-1.gap-1
    {:title "Snap"
-    :class (when @(rf/subscribe [:snap/enabled?]) "selected")
+    :class (when @(rf/subscribe [::snap.s/enabled?]) "selected")
     :style {:margin-right 0
             :width "auto"
             :display "flex"}
-    :on-click #(rf/dispatch [:snap/toggle])}
+    :on-click #(rf/dispatch [::snap.e/toggle])}
    [renderer.components/icon "magnet"]
    [options-dropdown]])

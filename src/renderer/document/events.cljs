@@ -6,9 +6,11 @@
    [promesa.core :as p]
    [re-frame.core :as rf]
    [re-frame.interceptor :refer [->interceptor get-effect get-coeffect assoc-coeffect assoc-effect]]
+   [renderer.dialog.events :as-alias dialog.e]
    [renderer.document.db :as db]
    [renderer.document.handlers :as h]
    [renderer.element.handlers :as element.h]
+   [renderer.frame.events :as-alias frame.e]
    [renderer.history.handlers :as history.h]
    [renderer.utils.file :as file]
    [renderer.utils.local-storage :as local-storage]
@@ -36,25 +38,25 @@
                   (assoc-effect :db (assoc-in original-db [:documents (:active-document original-db)] db))))))))
 
 (rf/reg-event-db
- :document/set-hovered-keys
+ ::set-hovered-keys
  active-document-path
  (fn [db [_ ks]]
    (assoc db :hovered-keys ks)))
 
 (rf/reg-event-db
- :document/collapse-el
+ ::collapse-el
  active-document-path
  (fn [db [_ el-k]]
    (update db :collapsed-keys conj el-k)))
 
 (rf/reg-event-db
- :document/expand-el
+ ::expand-el
  active-document-path
  (fn [db [_ el-k]]
    (update db :collapsed-keys disj el-k)))
 
 (rf/reg-event-db
- :document/toggle-filter
+ ::toggle-filter
  active-document-path
  (fn [db [_ k]]
    (if (= (:filter db) k)
@@ -62,13 +64,13 @@
      (assoc db :filter k))))
 
 (rf/reg-event-db
- :document/set-temp-element
+ ::set-temp-element
  active-document-path
  (fn [db [_ el]]
    (assoc db :temp-element el)))
 
 (rf/reg-event-db
- :document/swap-colors
+ ::swap-colors
  active-document-path
  (fn [db [_]]
    (assoc db
@@ -76,43 +78,43 @@
           :stroke (:fill db))))
 
 (rf/reg-event-db
- :document/set-fill
+ ::set-fill
  (fn [{active-document :active-document :as db} [_ fill]]
    (-> db
        (assoc-in [:documents active-document :fill] fill)
        (element.h/set-attr :fill fill))))
 
 (rf/reg-event-db
- :document/set-stroke
+ ::set-stroke
  (fn [{active-document :active-document :as db} [_ stroke]]
    (-> db
        (assoc-in [:documents active-document :stroke] stroke)
        (element.h/set-attr :stroke stroke))))
 
 (rf/reg-event-fx
- :document/close
+ ::close
  (fn [{:keys [db]} [_ k confirm?]]
    (if (or (h/saved? db k) (not confirm?))
      {:db (h/close db k)}
-     {:fx [[:dispatch [:document/set-active k]]
-           [:dispatch [:dialog/save k]]]})))
+     {:fx [[:dispatch [::set-active k]]
+           [:dispatch [::dialog.e/save k]]]})))
 
 (rf/reg-event-fx
- :document/close-active
+ ::close-active
  (fn [{:keys [db]} [_]]
    (let [active-document (:active-document db)]
      (if (h/saved? db active-document)
        {:db (h/close db active-document)}
-       {:dispatch [:dialog/save active-document]}))))
+       {:dispatch [::dialog.e/save active-document]}))))
 
 (rf/reg-event-db
- :document/close-saved
+ ::close-saved
  (fn [db [_]]
    (let [saved (filter #(h/saved? db %) (:document-tabs db))]
      (reduce h/close db saved))))
 
 (rf/reg-event-db
- :document/close-others
+ ::close-others
  (fn [db [_ key]]
    (-> db
        (assoc :document-tabs [key]
@@ -120,14 +122,14 @@
        (assoc-in [:documents key] (get-in db [:documents key])))))
 
 (rf/reg-event-db
- :document/close-all
+ ::close-all
  (fn [db [_]]
    (-> db
        (assoc :document-tabs [])
        (dissoc :active-document :documents))))
 
 (rf/reg-event-db
- :document/scroll
+ ::scroll
  (fn [db [_ direction]]
    (let [document-tabs (:document-tabs db)
          index (.indexOf document-tabs (:active-document db))
@@ -138,7 +140,7 @@
        db))))
 
 (rf/reg-event-db
- :document/swap-position
+ ::swap-position
  (fn [db [_ dragged-key swapped-key]]
    (let [document-tabs (:document-tabs db)
          dragged-index (.indexOf document-tabs dragged-key)
@@ -146,14 +148,14 @@
      (assoc db :document-tabs (vec/swap document-tabs dragged-index swapped-index)))))
 
 (rf/reg-event-fx
- :document/new
+ ::new
  (fn [{:keys [db]} [_]]
    {:db (-> db
             (h/create-tab db/default-document)
             (element.h/create {:tag :svg
                                :attrs {:width "800" :height "600"}})
             (history.h/finalize "Create document"))
-    :fx [[:dispatch [:frame/center]]
+    :fx [[:dispatch [::frame.e/center]]
          [:focus nil]]}))
 
 (def file-picker-options
@@ -166,19 +168,19 @@
    (file/open! file-picker-options)))
 
 (rf/reg-event-fx
- :document/open
+ ::open
  (fn [_ [_ file-path]]
    (if platform/electron?
      {:send-to-main {:action "openDocument" :data file-path}}
      {::open nil})))
 
 (rf/reg-event-fx
- :document/open-directory
+ ::open-directory
  (fn [_ [_ path]]
    {:send-to-main {:action "openDirectory" :data path}}))
 
 (rf/reg-event-fx
- :document/load
+ ::load
  local-storage/persist
  (fn [{:keys [db]} [_ document]]
    (let [open-key (h/search-by-path db (:path document))
@@ -196,7 +198,7 @@
             :always
             (-> (h/add-recent (:path document))
                 (assoc :active-document (:key document))))
-      :fx [[:dispatch [:frame/center]]
+      :fx [[:dispatch [::frame.e/center]]
            [:focus nil]]})))
 
 (rf/reg-fx
@@ -209,7 +211,7 @@
         (.then (.write writable (pr-str (dissoc data :closing? :path)))
                (let [document (assoc data :title (.-name file-handle))]
                  (.close writable)
-                 (rf/dispatch [:document/saved document]))))))))
+                 (rf/dispatch [::saved document]))))))))
 
 (defn save-format
   [db]
@@ -220,7 +222,7 @@
       (dissoc :history)))
 
 (rf/reg-event-fx
- :document/save
+ ::save
  (fn [{:keys [db]} [_]]
    (let [document (save-format db)]
      (if platform/electron?
@@ -241,13 +243,13 @@
      (js/window.URL.revokeObjectURL url))))
 
 (rf/reg-event-fx
- :document/download
+ ::download
  (fn [{:keys [db]} [_]]
    (let [document (save-format db)]
      {::download (pr-str document)})))
 
 (rf/reg-event-fx
- :document/save-and-close
+ ::save-and-close
  (fn [{:keys [db]} [_]]
    (let [document (-> (save-format db)
                       (assoc :closing? true))]
@@ -256,7 +258,7 @@
        {::save-as document}))))
 
 (rf/reg-event-fx
- :document/save-as
+ ::save-as
  (fn [{:keys [db]} [_]]
    (let [document (save-format db)]
      (if platform/electron?
@@ -264,7 +266,7 @@
        {::save-as document}))))
 
 (rf/reg-event-db
- :document/saved
+ ::saved
  (fn [db [_ document]]
    ;; Update only the path, the title and the saved position of the document.
    ;; Any other changes that could happen while saving should be preserved.
@@ -280,12 +282,12 @@
        (update-in [:documents (:key document)] merge updates)))))
 
 (rf/reg-event-db
- :document/clear-recent
+ ::clear-recent
  local-storage/persist
  (fn [db [_]]
    (assoc db :recent [])))
 
 (rf/reg-event-db
- :document/set-active
+ ::set-active
  (fn [db [_ document-id]]
    (assoc db :active-document document-id)))

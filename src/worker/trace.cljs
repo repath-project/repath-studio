@@ -2,7 +2,7 @@
   (:require
    ["imagetracerjs" :as ImageTracer]))
 
-(defn init []
+(defn ^:export init []
   (js/self.addEventListener
    "message"
    (fn [^js e]

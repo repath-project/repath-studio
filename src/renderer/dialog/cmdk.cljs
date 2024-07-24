@@ -5,6 +5,7 @@
    [i18n :refer [t]]
    [re-frame.core :as rf]
    [renderer.components :as comp]
+   [renderer.dialog.events :as-alias dialog.e]
    [renderer.menubar.views :as menubar]))
 
 (defn item
@@ -13,7 +14,7 @@
     [:> Command/CommandItem
      {:key key
       :on-select (fn []
-                   (rf/dispatch [:dialog/close false])
+                   (rf/dispatch [::dialog.e/close false])
                    (rf/dispatch action))}
      [:div.w-7.h-7.mr-2.rounded.line-height-6.flex.justify-center.items-center
       {:class (when icon "overlay")}

@@ -7,7 +7,8 @@
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.attribute.views :as v]
-   [renderer.components :as comp]))
+   [renderer.components :as comp]
+   [renderer.element.events :as-alias element.e]))
 
 (defmethod hierarchy/description :d
   []
@@ -42,7 +43,7 @@
 (defn remove-segment-by-index
   [path i]
   (set! (.-segments path) (.splice (.-segments path) i 1))
-  (rf/dispatch [:element/set-attr :p (.toString path)]))
+  (rf/dispatch [::element.e/set-attr :p (.toString path)]))
 
 (defmulti segment-form (fn [segment _] (keyword (str/lower-case (first segment)))))
 

@@ -2,17 +2,18 @@
   "https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary"
   (:require
    [re-frame.core :as rf]
-   [reagent.core :as ra]))
+   [reagent.core :as ra]
+   [renderer.history.events :as-alias history.e]))
 
 (def error-message
   "Your last action was canceled due to the following error:")
 
-(defn pretty-stacktrace
-  [stack]
-  (str "<details>
+#_(defn pretty-stacktrace
+    [stack]
+    (str "<details>
         <summary>Stacktrace</summary>"
-       (.-componentStack stack)
-       "</details>"))
+         (.-componentStack stack)
+         "</details>"))
 
 (defn boundary
   []
@@ -34,7 +35,7 @@
     ;; Try to revert to a working state
     ;; https://react.dev/reference/react/Component#static-getderivedstatefromerror
     :get-derived-state-from-error
-    #(rf/dispatch-sync [:history/restore])
+    #(rf/dispatch-sync [::history.e/restore])
 
     :reagent-render
     (fn [children]

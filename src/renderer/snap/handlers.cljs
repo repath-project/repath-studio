@@ -4,6 +4,7 @@
    [kdtree]
    [re-frame.core :as rf]
    [renderer.element.handlers :as element.h]
+   [renderer.snap.subs :as-alias snap.s]
    [renderer.utils.element :as utils.el]))
 
 (defn base-points
@@ -34,7 +35,7 @@
   [db]
   (let [base-points (base-points db)
         ;; FIXME: Subscription in event.
-        tree @(rf/subscribe [:snap/in-viewport-tree])]
+        tree @(rf/subscribe [::snap.s/in-viewport-tree])]
     (map #(let [nearest-neighbor (kdtree/nearest-neighbor tree %)]
             (when nearest-neighbor
               (assoc nearest-neighbor :base-point %))) base-points)))

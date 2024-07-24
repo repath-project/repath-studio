@@ -7,12 +7,12 @@
  :-> :worker)
 
 (rf/reg-sub
- :worker/tasks
+ ::tasks
  :<- [:worker]
  :-> :tasks)
 
 (rf/reg-sub
- :worker/loading?
- :<- [:worker/tasks]
+ ::loading?
+ :<- [::tasks]
  (fn [tasks]
    (seq tasks)))

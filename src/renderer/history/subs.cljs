@@ -1,45 +1,46 @@
 (ns renderer.history.subs
   (:require
    [re-frame.core :as rf]
+   [renderer.document.subs :as-alias document.s]
    [renderer.history.handlers :as h]))
 
 (rf/reg-sub
- :history/history
+ ::history
  (fn [db _]
    (h/history db)))
 
 (rf/reg-sub
- :history/undos?
- :<- [:history/history]
+ ::undos?
+ :<- [::history]
  (fn [history _]
    (h/undos? history)))
 
 (rf/reg-sub
- :history/redos?
- :<- [:history/history]
+ ::redos?
+ :<- [::history]
  (fn [history _]
    (h/redos? history)))
 
 (rf/reg-sub
- :history/undos
- :<- [:history/history]
+ ::undos
+ :<- [::history]
  (fn [history _]
    (h/undos history)))
 
 (rf/reg-sub
- :history/redos
- :<- [:history/history]
+ ::redos
+ :<- [::history]
  (fn [history _]
    (h/redos history)))
 
 (rf/reg-sub
- :history/zoom
- :<- [:history/history]
+ ::zoom
+ :<- [::history]
  :-> :zoom)
 
 (rf/reg-sub
- :history/translate
- :<- [:history/history]
+ ::translate
+ :<- [::history]
  :-> :translate)
 
 (defn state->d3-data
@@ -56,9 +57,9 @@
          :children (apply array (map #(state->d3-data history % save) (:children state)))}))
 
 (rf/reg-sub
- :history/tree-data
- :<- [:history/history]
- :<- [:document/save]
+ ::tree-data
+ :<- [::history]
+ :<- [::document.s/save]
  (fn [[history save] _]
    (let [root (:id (first (sort-by :index (vals (:states history)))))]
      (state->d3-data history root save))))

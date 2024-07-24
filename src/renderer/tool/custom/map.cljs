@@ -2,6 +2,9 @@
   (:require
    [re-frame.core :as rf]
    [reagent.core :as ra]
+   [renderer.document.events :as-alias document.e]
+   [renderer.document.subs :as-alias document.s]
+   [renderer.element.subs :as-alias element.s]
    [renderer.tool.base :as tool]
    [renderer.utils.pointer :as pointer]))
 
@@ -27,8 +30,8 @@
                :y (min pos-y offset-y)
                :width (abs (- pos-x offset-x))
                :height (abs (- pos-y offset-y))}]
-    (rf/dispatch [:document/set-temp-element {:type tool
-                                              :attrs attrs}])))
+    (rf/dispatch [::document.e/set-temp-element {:type tool
+                                                 :attrs attrs}])))
 
 (defn ->href [image]
   (->> image
@@ -73,5 +76,5 @@
 
 (defmethod tool/render :map
   [{:keys [children] :as element}]
-  (let [child-elements @(rf/subscribe [:element/filter-visible children])]
+  (let [child-elements @(rf/subscribe [::element.s/filter-visible children])]
     [render-map element child-elements]))

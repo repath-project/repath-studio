@@ -11,8 +11,8 @@
 (defonce mac?
   (and electron? (= js/window.api.platform "darwin")))
 
-(defonce windows?
-  (and electron? (= js/window.api.platform "win32")))
+#_(defonce windows?
+    (and electron? (= js/window.api.platform "win32")))
 
-(defonce linux?
-  (and electron? (= js/window.api.platform "linux")))
+#_(defonce linux?
+    (and electron? (= js/window.api.platform "linux")))

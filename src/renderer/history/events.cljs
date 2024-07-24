@@ -6,49 +6,49 @@
    [renderer.handlers :as handlers]))
 
 (rf/reg-event-db
- :history/undo
+ ::undo
  (fn [db _]
    (h/undo db 1)))
 
 (rf/reg-event-db
- :history/redo
+ ::redo
  (fn [db _]
    (h/redo db 1)))
 
 (rf/reg-event-db
- :history/undo-by
+ ::undo-by
  (fn [db [_ n]]
    (h/undo db n)))
 
 (rf/reg-event-db
- :history/redo-by
+ ::redo-by
  (fn [db [_ n]]
    (h/redo db n)))
 
-(rf/reg-event-db
- :history/swap
- (fn [db _]
-   (h/swap db)))
+#_(rf/reg-event-db
+   ::swap
+   (fn [db _]
+     (h/swap db)))
 
 (rf/reg-event-db
- :history/move
+ ::move
  (fn [db [_ id]]
    (h/move db id)))
 
 (rf/reg-event-db
- :history/clear
+ ::clear
  (fn [db _]
    (h/clear db)))
 
 (rf/reg-event-db
- :history/tree-view-updated
+ ::tree-view-updated
  (fn [db [_ zoom translate]]
    (-> db
        (h/set-zoom zoom)
        (h/set-translate translate))))
 
 (rf/reg-event-db
- :history/cancel
+ ::cancel
  (fn [db _]
    (cond-> db
      :always (-> (dissoc :pointer-offset)
@@ -68,7 +68,7 @@
      (handlers/set-tool :select)))) ; FIXME
 
 (rf/reg-event-fx
- :history/restore
+ ::restore
  (fn [{:keys [db]} _]
    {:db (if (:restored? db)
           (-> db

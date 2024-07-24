@@ -5,64 +5,68 @@
    [clojure.math]
    [config]
    [re-frame.core :as rf]
-   [re-frame.db :as db]))
+   [re-frame.db :as db]
+   [renderer.document.events :as-alias document.e]
+   [renderer.element.events :as-alias element.e]
+   [renderer.history.events :as-alias history.e]
+   [renderer.window.events :as-alias window.e]))
 
 (defn ^:export translate
   "Moves the selected elements."
   ([offset]
-   (rf/dispatch [:element/translate offset]))
+   (rf/dispatch [::element.e/translate offset]))
   ([x y]
    (translate [x y])))
 
 (defn ^:export position
   "Moves the selected elements."
   ([position]
-   (rf/dispatch [:element/position position]))
+   (rf/dispatch [::element.e/position position]))
   ([x y]
    (position [x y])))
 
 (defn ^:export scale
   "Scales the selected elements."
   ([ratio]
-   (rf/dispatch [:element/scale (if (number? ratio) [ratio ratio] ratio)]))
+   (rf/dispatch [::element.e/scale (if (number? ratio) [ratio ratio] ratio)]))
   ([x y]
-   (rf/dispatch [:element/scale [x y]])))
+   (rf/dispatch [::element.e/scale [x y]])))
 
 (defn ^:export fill
   "Fills the selected elements."
   [color]
-  (rf/dispatch [:element/fill color]))
+  (rf/dispatch [::element.e/fill color]))
 
 (defn ^:export delete
   "Deletes the selected elements."
   []
-  (rf/dispatch [:element/delete]))
+  (rf/dispatch [::element.e/delete]))
 
 (defn ^:export copy
   "Copies the selected elements."
   []
-  (rf/dispatch [:element/copy]))
+  (rf/dispatch [::element.e/copy]))
 
 (defn ^:export paste
   "Pastes the selected elements."
   []
-  (rf/dispatch [:element/paste]))
+  (rf/dispatch [::element.e/paste]))
 
 (defn ^:export paste-in-place
   "Pastes the selected elements in place."
   []
-  (rf/dispatch [:element/paste-in-place]))
+  (rf/dispatch [::element.e/paste-in-place]))
 
 (defn ^:export duplicate
   "Duplicates the selected elements."
   []
-  (rf/dispatch [:element/duplicate-in-place]))
+  (rf/dispatch [::element.e/duplicate-in-place]))
 
 (defn ^:export create
   "Creates a new element."
   [el]
-  (apply #(rf/dispatch [:element/add {:tag (key %)
-                                      :attrs (val %)}]) el))
+  (apply #(rf/dispatch [::element.e/add {:tag (key %)
+                                         :attrs (val %)}]) el))
 
 (defn ^:export circle
   "Creates a circle."
@@ -120,17 +124,17 @@
 (defn ^:export set-attr
   "Sets the attribute of the selected elements."
   [k v]
-  (rf/dispatch [:element/set-attr k v]))
+  (rf/dispatch [::element.e/set-attr k v]))
 
 (defn ^:export set-fill
   "Sets the fill color of the editor."
   [color]
-  (rf/dispatch [:document/set-fill color]))
+  (rf/dispatch [::document.e/set-fill color]))
 
 (defn ^:export set-stroke
   "Sets the stroke color of the editor."
   [color]
-  (rf/dispatch [:document/set-stroke color]))
+  (rf/dispatch [::document.e/set-stroke color]))
 
 (defn ^:export db
   []
@@ -147,49 +151,49 @@
 (defn ^:export raise
   "Raises the selected elements."
   []
-  (rf/dispatch [:element/raise]))
+  (rf/dispatch [::element.e/raise]))
 
 (defn ^:export lower
   "Lowers the selected elements."
   []
-  (rf/dispatch [:element/lower]))
+  (rf/dispatch [::element.e/lower]))
 
 (defn ^:export group
   "Groups the selected elements."
   []
-  (rf/dispatch [:element/group]))
+  (rf/dispatch [::element.e/group]))
 
 (defn ^:export ungroup
   "Ungroups the selected elements."
   []
-  (rf/dispatch [:element/ungroup]))
+  (rf/dispatch [::element.e/ungroup]))
 
 (defn ^:export select-all
   "Selects all elements."
   []
-  (rf/dispatch [:element/select-all]))
+  (rf/dispatch [::element.e/select-all]))
 
 (defn ^:export deselect-all
   "Deselects all elements."
   []
-  (rf/dispatch [:element/deselect-all]))
+  (rf/dispatch [::element.e/deselect-all]))
 
 (defn ^:export ->path
   "Converts the selected elements to paths."
   []
-  (rf/dispatch [:element/->path]))
+  (rf/dispatch [::element.e/->path]))
 
 (defn ^:export stroke->path
   "Converts the selected elements' stroke to paths."
   []
-  (rf/dispatch [:element/stroke->path]))
+  (rf/dispatch [::element.e/stroke->path]))
 
 (defn ^:export align
   "Aligns the selected elements to the provided direction.
    Accepted directions
    :left :right :top :bottom :center-vertical :center-horizontal"
   [direction]
-  (rf/dispatch [:element/align direction]))
+  (rf/dispatch [::element.e/align direction]))
 
 (defn ^:export al
   "Aligns the selected elements to the left."
@@ -228,52 +232,52 @@
   ([attrs]
    (animate :animate attrs))
   ([tag attrs]
-   (rf/dispatch [:element/animate tag attrs])))
+   (rf/dispatch [::element.e/animate tag attrs])))
 
 (defn ^:export undo
   "Goes back in history."
   ([]
-   (rf/dispatch [:history/undo]))
+   (rf/dispatch [::history.e/undo]))
   ([steps]
-   (rf/dispatch [:history/undo-by steps])))
+   (rf/dispatch [::history.e/undo-by steps])))
 
 (defn ^:export redo
   "Goes forward in history."
   ([]
-   (rf/dispatch [:history/redo]))
+   (rf/dispatch [::history.e/redo]))
   ([steps]
-   (rf/dispatch [:history/redo-by steps])))
+   (rf/dispatch [::history.e/redo-by steps])))
 
 (defn ^:export unite
   "Unites the selected elements."
   []
-  (rf/dispatch [:element/bool-operation :unite]))
+  (rf/dispatch [::element.e/bool-operation :unite]))
 
 (defn ^:export intersect
   "Intersects the selected elements."
   []
-  (rf/dispatch [:element/bool-operation :intersect]))
+  (rf/dispatch [::element.e/bool-operation :intersect]))
 
 (defn ^:export subtract
   "Subtracts the selected elements."
   []
-  (rf/dispatch [:element/bool-operation :subtract]))
+  (rf/dispatch [::element.e/bool-operation :subtract]))
 
 (defn ^:export exclude
   "Excludes the selected elements."
   []
-  (rf/dispatch [:element/bool-operation :exclude]))
+  (rf/dispatch [::element.e/bool-operation :exclude]))
 
 ;; divide already refers to cljs.core/divide
 (defn ^:export devide
   "Divides the selected elements."
   []
-  (rf/dispatch [:element/bool-operation :divide]))
+  (rf/dispatch [::element.e/bool-operation :divide]))
 
 (defn ^:export exit
   "Closes the application."
   []
-  (rf/dispatch [:window/close]))
+  (rf/dispatch [::window.e/close]))
 
 (defn ^:export help
   "Lists available functions."

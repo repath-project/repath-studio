@@ -6,13 +6,16 @@
    [re-frame.registrar]
    [renderer.color.views :as color-v]
    [renderer.components :as comp]
+   [renderer.document.subs :as-alias document.s]
+   [renderer.frame.events :as-alias frame.e]
+   [renderer.frame.subs :as-alias frame.s]
    [renderer.snap.views :as snap.v]
    [renderer.timeline.views :as timeline.v]
    [renderer.utils.keyboard :as keyb]
    [renderer.utils.units :as units]))
 
 (defn coordinates []
-  (let [[x y] @(rf/subscribe [:frame/adjusted-pointer-pos])]
+  (let [[x y] @(rf/subscribe [::frame.s/adjusted-pointer-pos])]
     [:div.flex.flex-col.font-mono.leading-tight
      {:style {:min-width "90px"}}
      [:div.flex.justify-between
@@ -23,24 +26,24 @@
 (def zoom-menu
   [{:label "Set to 50%"
     :key "50"
-    :action [:frame/set-zoom 0.5]}
+    :action [::frame.e/set-zoom 0.5]}
    {:label "Set to 100%"
     :key "100"
-    :action [:frame/set-zoom 1]}
+    :action [::frame.e/set-zoom 1]}
    {:label "Set to 200%"
     :key "200"
-    :action [:frame/set-zoom 2]}
+    :action [::frame.e/set-zoom 2]}
    {:key :divider-1
     :type :separator}
    {:label "Focus selected"
     :key "center-selected"
-    :action [:frame/focus-selection :original]}
+    :action [::frame.e/focus-selection :original]}
    {:label "Fit selected"
     :key "fit-selected"
-    :action [:frame/focus-selection :fit]}
+    :action [::frame.e/focus-selection :fit]}
    {:label "Fill selected"
     :key "fill-selected"
-    :action [:frame/focus-selection :fill]}])
+    :action [::frame.e/focus-selection :fill]}])
 
 (def view-radio-buttons
   [{:title "Timeline"
@@ -69,7 +72,7 @@
   (let [new-v (-> (.. e -target -value) (js/parseFloat) (/ 100))]
     (if (js/isNaN new-v)
       (set! (.. e -target -value) v)
-      (rf/dispatch [:frame/set-zoom new-v]))))
+      (rf/dispatch [::frame.e/set-zoom new-v]))))
 
 (defn zoom-decimal-points
   [zoom]
@@ -94,11 +97,11 @@
       :on-blur #(set-zoom % value)
       :on-key-down #(keyb/input-key-down-handler % value set-zoom % value)
       :on-wheel #(rf/dispatch (if (pos? (.-deltaY %))
-                                [:frame/zoom-out]
-                                [:frame/zoom-in]))}]))
+                                [::frame.e/zoom-out]
+                                [::frame.e/zoom-in]))}]))
 
 (defn root []
-  (let [zoom @(rf/subscribe [:document/zoom])
+  (let [zoom @(rf/subscribe [::document.s/zoom])
         timeline? @(rf/subscribe [:panel/visible? :timeline])]
     [:<>
      [:div.toolbar.bg-primary.mt-px
@@ -115,13 +118,13 @@
        [:button.button.overlay.px-2.font-mono.rounded
         {:class (when (<= zoom 0.01) "disabled")
          :title "Zoom out"
-         :on-click #(rf/dispatch [:frame/zoom-out])}
+         :on-click #(rf/dispatch [::frame.e/zoom-out])}
         [comp/icon "minus" {:class "icon small"}]]
 
        [:button.button.overlay.px-2.font-mono.rounded
         {:class (when (>= zoom 100) "disabled")
          :title "Zoom in"
-         :on-click #(rf/dispatch [:frame/zoom-in])}
+         :on-click #(rf/dispatch [::frame.e/zoom-in])}
         [comp/icon "plus" {:class "icon small"}]]
        [zoom-input zoom]
        [:div.pr-2.overlay.flex.items-center "%"]

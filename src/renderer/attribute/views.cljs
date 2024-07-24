@@ -9,6 +9,8 @@
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.components :as comp]
+   [renderer.element.events :as-alias element.e]
+   [renderer.element.subs :as-alias element.s]
    [renderer.tool.base :as tool]
    [renderer.utils.keyboard :as keyb]
    [renderer.utils.spec :as spec]))
@@ -70,8 +72,8 @@
    (let [new-v (.. event -target -value)]
      (when-not (= new-v old-v)
        (rf/dispatch [(if finalize?
-                       :element/set-attr
-                       :element/preview-attr) k new-v])))))
+                       ::element.e/set-attr
+                       ::element.e/preview-attr) k new-v])))))
 
 (defn form-input
   [{:keys [key value disabled? placeholder on-wheel class]}]
@@ -88,7 +90,7 @@
    (when-not (or (empty? (str value)) disabled?)
      [:button.button.ml-px.bg-primary.text-muted.absolute.h-full.right-0.clear-input-button.hover:bg-transparent
       {:style {:width "26px"}
-       :on-pointer-down #(rf/dispatch [:element/remove-attr key])}
+       :on-pointer-down #(rf/dispatch [::element.e/remove-attr key])}
       [comp/icon "times" {:class "icon small"}]])])
 
 (defmethod hierarchy/form-element :default
@@ -107,14 +109,14 @@
                 :class "w-20"
                 :on-wheel (fn [e]
                             (if (pos? (.-deltaY e))
-                              (rf/dispatch [:element/update-attr k - (:step attrs)])
-                              (rf/dispatch [:element/update-attr k + (:step attrs)])))}]
+                              (rf/dispatch [::element.e/update-attr k - (:step attrs)])
+                              (rf/dispatch [::element.e/update-attr k + (:step attrs)])))}]
    [:div.ml-px.px-1.w-full.bg-primary
     [:> Slider/Root
      (merge attrs {:class "slider-root"
                    :value [(if (= "" v) initial v)]
-                   :onValueChange (fn [[v]] (rf/dispatch [:element/preview-attr k v]))
-                   :onValueCommit (fn [[v]] (rf/dispatch [:element/set-attr k v]))})
+                   :onValueChange (fn [[v]] (rf/dispatch [::element.e/preview-attr k v]))
+                   :onValueCommit (fn [[v]] (rf/dispatch [::element.e/set-attr k v]))})
      [:> Slider/Track {:class "slider-track"}
       [:> Slider/Range {:class "slider-range"}]]
      [:> Slider/Thumb {:class "slider-thumb"}]]]])
@@ -129,7 +131,7 @@
      :placeholder initial}]
    [:> Select/Root
     {:value value
-     :onValueChange #(rf/dispatch [:element/set-attr key %])
+     :onValueChange #(rf/dispatch [::element.e/set-attr key %])
      :disabled disabled?}
     [:> Select/Trigger
      {:class "select-trigger ml-px h-full"
@@ -248,10 +250,10 @@
 
 (defn form
   []
-  (let [selected-elements @(rf/subscribe [:element/selected])
-        selected-tags @(rf/subscribe [:element/selected-tags])
-        selected-attrs @(rf/subscribe [:element/selected-attrs])
-        locked? @(rf/subscribe [:element/selected-locked?])
+  (let [selected-elements @(rf/subscribe [::element.s/selected])
+        selected-tags @(rf/subscribe [::element.s/selected-tags])
+        selected-attrs @(rf/subscribe [::element.s/selected-attrs])
+        locked? @(rf/subscribe [::element.s/selected-locked?])
         tag (first selected-tags)]
     [:div.w-full.ml-px.v-scroll.flex.flex-col.h-full
      (when (seq selected-elements)

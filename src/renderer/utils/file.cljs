@@ -1,7 +1,8 @@
 (ns renderer.utils.file
   (:require
    [clojure.edn :as edn]
-   [re-frame.core :as rf]))
+   [re-frame.core :as rf]
+   [renderer.document.events :as-alias document.e]))
 
 (defn legacy-open!
   [cb]
@@ -21,7 +22,7 @@
                          edn/read-string
                          (assoc :title (.-name file)
                                 :path (.-path file)))]
-        (rf/dispatch [:document/load document])))
+        (rf/dispatch [::document.e/load document])))
     (.readAsText reader file)))
 
 (defn open!

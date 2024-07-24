@@ -4,19 +4,19 @@
    [re-frame.core :as rf]))
 
 (rf/reg-event-db
- :window/set-maximized?
+ ::set-maximized?
  (rf/path :window)
  (fn [db [_ state]]
    (assoc db :maximized? state)))
 
 (rf/reg-event-db
- :window/set-fullscreen?
+ ::set-fullscreen?
  (rf/path :window)
  (fn [db [_ state]]
    (assoc db :fullscreen? state)))
 
 (rf/reg-event-db
- :window/set-minimized?
+ ::set-minimized?
  (rf/path :window)
  (fn [db [_ state]]
    (assoc db :minimized? state)))
@@ -39,29 +39,29 @@
    (.open js/window url)))
 
 (rf/reg-event-fx
- :window/close
+ ::close
  (fn [_ _]
    {::close nil}))
 
 (rf/reg-event-fx
- :window/toggle-maximized
+ ::toggle-maximized
  (fn [_ _]
    {:send-to-main {:action "windowToggleMaximized"}}))
 
 (rf/reg-event-fx
- :window/toggle-fullscreen
+ ::toggle-fullscreen
  (fn [_ _]
    (if platform/electron?
      {:send-to-main {:action "windowToggleFullscreen"}}
      {::toggle-fullscreen nil})))
 
 (rf/reg-event-fx
- :window/minimize
+ ::minimize
  (fn [_ _]
    {:send-to-main {:action "windowMinimize"}}))
 
 (rf/reg-event-fx
- :window/open-remote-url
+ ::open-remote-url
  (fn [_ [_ url]]
    (if platform/electron?
      {:send-to-main {:action "openRemoteUrl" :data url}}

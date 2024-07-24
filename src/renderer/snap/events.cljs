@@ -3,12 +3,12 @@
    [re-frame.core :as rf]))
 
 (rf/reg-event-db
- :snap/toggle
+ ::toggle
  (fn [db [_]]
    (update-in db [:snap :enabled?] not)))
 
 (rf/reg-event-db
- :snap/toggle-option
+ ::toggle-option
  (fn [{:keys [snap] :as db} [_ option]]
    (if (contains? (:options snap) option)
      (update-in db [:snap :options] disj option)

@@ -47,9 +47,9 @@
     (:active-document db) ; TODO: Create an interceptor to avoid this.
     (assoc-in (element.h/path db) (:elements (state (history db))))))
 
-(defn preview
-  [db position]
-  (assoc-in db (element.h/path db) (:elements (state (history db) position))))
+#_(defn preview
+    [db position]
+    (assoc-in db (element.h/path db) (:elements (state (history db) position))))
 
 (defn move
   [db position]

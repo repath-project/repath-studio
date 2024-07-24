@@ -2,6 +2,8 @@
   "https://www.w3.org/TR/SVG/struct.html#GElement"
   (:require
    [re-frame.core :as rf]
+   [renderer.document.subs :as-alias document.s]
+   [renderer.element.subs :as-alias element.s]
    [renderer.tool.base :as tool]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
@@ -21,8 +23,8 @@
 
 (defmethod tool/render :g
   [{:keys [attrs children bounds] :as element}]
-  (let [child-elements @(rf/subscribe [:element/filter-visible children])
-        ignored-keys @(rf/subscribe [:document/ignored-keys])
+  (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
+        ignored-keys @(rf/subscribe [::document.s/ignored-keys])
         ignored? (contains? ignored-keys (:key element))
         [x1 y1 _x2 _y2] bounds
         [width height] (bounds/->dimensions bounds)

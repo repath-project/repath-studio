@@ -9,24 +9,27 @@
    [renderer.components :as comp]
    [renderer.debug :as debug]
    [renderer.dialog.views :as dialog]
+   [renderer.document.subs :as-alias document.s]
    [renderer.document.views :as doc]
+   [renderer.element.subs :as-alias element.s]
    [renderer.frame.views :as frame]
    [renderer.history.views :as history]
    [renderer.home :as home]
    [renderer.notification.views :as notification]
    [renderer.reepl.views :as repl]
-   [renderer.rulers.views :as rulers]
+   [renderer.ruler.views :as ruler.v]
    [renderer.toolbar.object :as toolbar.object]
    [renderer.toolbar.status :as toolbar.status]
    [renderer.toolbar.tools :as toolbar.tools]
    [renderer.tree.views :as tree]
-   [renderer.window.views :as win]))
+   [renderer.window.views :as win]
+   [renderer.worker.subs :as-alias worker.s]))
 
 (defn frame-panel
   []
   (let [rulers? @(rf/subscribe [:rulers?])
-        read-only? @(rf/subscribe [:document/read-only?])
-        loading? @(rf/subscribe [:worker/loading?])]
+        read-only? @(rf/subscribe [::document.s/read-only?])
+        loading? @(rf/subscribe [::worker.s/loading?])]
     [:div.flex.flex-col.flex-1.h-full
      [:div.mb-px [toolbar.tools/root]
       (when rulers?
@@ -41,12 +44,12 @@
               :class "small"
               :action #(rf/dispatch [:toggle-rulers-locked])}]]
          [:div.w-full.ml-px.bg-primary
-          [rulers/ruler {:orientation :horizontal :size 23}]]])]
+          [ruler.v/ruler {:orientation :horizontal :size 23}]]])]
      [:div.flex.flex-1.relative
       [:<>
        (when rulers?
          [:div.bg-primary.mr-px
-          [rulers/ruler {:orientation :vertical :size 22}]])]
+          [ruler.v/ruler {:orientation :vertical :size 22}]])]
       [:div.relative.grow.flex
        [frame/main]
        (if read-only?
@@ -92,7 +95,7 @@
           [history/root]]]])
 
      (when @(rf/subscribe [:panel/visible? :xml])
-       (let [xml @(rf/subscribe [:element/xml])]
+       (let [xml @(rf/subscribe [::element.s/xml])]
          [:<>
           [:> PanelResizeHandle
            {:id "xml-resize-handle"
