@@ -7,7 +7,10 @@
    ["mdn-data" :as mdn] ;; deprecating in favor of w3c/webref
    ["opentype.js" :as opentype]
    ["os" :as os]
+   ["pyodide" :refer [loadPyodide]]
    [config]))
+
+(def pyodide (atom nil))
 
 (defn text->path
   "https://github.com/opentypejs/opentype.js#loading-a-font-synchronously-nodejs"
@@ -21,6 +24,7 @@
    :receive (fn [channel f]
               ;; Strip event (_) as it includes `sender`
               (.on ipcRenderer channel (fn [_ args] (f args))))
+   :runPython #(.runPython ^js @pyodide %)
    :mdn mdn
    :webrefCss css
    :platform (.platform os)
@@ -33,7 +37,8 @@
 (defn ^:export init []
   ;; https://docs.sentry.io/platforms/javascript/guides/electron/#configuring-the-client
   #_(.init Sentry (clj->js config/sentry-options))
-  ;; Expose protected methods that allow the renderer process to use the 
+  (.then (loadPyodide) #(reset! pyodide %))
+  ;; Expose protected methods that allow the renderer process to use the
   ;; ipcRenderer without exposing the entire object
   ;; https://www.electronjs.org/docs/api/context-bridge
   (.exposeInMainWorld contextBridge "api" (clj->js api)))

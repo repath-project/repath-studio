@@ -21,13 +21,20 @@
 (defn root
   []
   [reepl/repl
-   :execute #(replumb/run-repl (if (= @(rf/subscribe [:repl-mode]) :cljs) %1 (str "(js/eval \"" %1 "\")")) {:warning-as-error true} %2)
-   :complete-word replumb/process-apropos
-   :get-docs replumb/process-doc
+   :execute #(replumb/run-repl (case @(rf/subscribe [:repl-mode])
+                                 :cljs %1
+                                 :js (str "(js/eval \"" %1 "\")")
+                                 :py (str "(js/window.api.runPython \"" %1 "\")"))
+                               {:warning-as-error true} %2)
+   :complete-word (fn [text] (replumb/process-apropos @(rf/subscribe [:repl-mode]) text))
+   :get-docs (if (= @(rf/subscribe [:repl-mode]) :cljs) replumb/process-doc #())
    :state repl-state
    :show-value-opts
    {:showers [show-devtools/show-devtools
               (partial show-function/show-fn-with-docs maybe-fn-docs)]}
-   :js-cm-opts {:mode (if (= @(rf/subscribe [:repl-mode]) :cljs) "clojure" "javascript")
+   :js-cm-opts {:mode (case
+                       :cljs "clojure"
+                       :js "javascript"
+                       :py "python")
                 :keyMap "default"
                 :showCursorWhenSelecting true}])

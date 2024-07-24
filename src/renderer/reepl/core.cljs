@@ -3,6 +3,7 @@
    ["react-resizable-panels" :refer [Panel PanelResizeHandle]]
    [cljs.reader]
    [cljs.tools.reader]
+   [platform]
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [renderer.components :as comp]
@@ -91,7 +92,8 @@
        cm-opts)]
      [:div.self-start.h-full.flex.items-center
       (repl-mode-button :cljs)
-      (repl-mode-button :js)]
+      (repl-mode-button :js)
+      (when platform/electron? (repl-mode-button :py))]
      [comp/toggle-icon-button
       {:active? repl-history?
        :active-icon "chevron-down"
