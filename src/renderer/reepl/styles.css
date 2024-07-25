@@ -1,7 +1,0 @@
-.repl-item {
-  @apply font-mono p-0.5 flex text-xs min-h-4;
-}
-
-.function {
-  @apply inline-block shrink-0 box-border;
-}

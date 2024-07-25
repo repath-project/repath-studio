@@ -141,11 +141,11 @@
        [:div.flex.flex-col.flex-1.overflow-hidden.h-full
         [doc/tab-bar]
         [:div.flex.h-full.flex-1
-         [:div.flex.h-full.flex-col.flex-1
+         [:div.flex.h-full.flex-col.flex-1.overflow-hidden
           [editor]]
          (when @(rf/subscribe [:panel-visible? :properties])
            [:div.flex
-            {:style {:width "300px"}}
+            {:style {:flex "0 0 300px"}}
             [attr/form]])
          [toolbar.object/root]]]]
       [home/panel])]

@@ -62,3 +62,14 @@
                   0
                   (dec pos))]
     (assoc db :hist-pos new-pos)))
+
+;; TODO: is there a macro or something that could do this cleaner?
+(defn make-handlers
+  [state]
+  {:add-input (partial swap! state add-input)
+   :add-result (partial swap! state add-result)
+   :go-up (partial swap! state go-up)
+   :go-down (partial swap! state go-down)
+   :clear-items (partial swap! state clear-items)
+   :set-text (partial swap! state set-text)
+   :add-log (partial swap! state add-log)})

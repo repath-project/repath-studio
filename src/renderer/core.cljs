@@ -27,7 +27,6 @@
    [renderer.history.subs]
    [renderer.notification.events]
    [renderer.notification.subs]
-   [renderer.reepl.core]
    [renderer.reepl.replumb :as replumb]
    [renderer.ruler.subs]
    [renderer.snap.events]

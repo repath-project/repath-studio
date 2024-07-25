@@ -9,6 +9,7 @@
    ["codemirror/mode/clojure/clojure.js"]
    ["codemirror/mode/javascript/javascript.js"]
    ["react" :as react]
+   [cljs.tools.reader :as reader]
    [clojure.string :as str]
    [reagent.core :as r]))
 
@@ -29,6 +30,50 @@
                  :ch (- cno (count back))}
      :end #js {:line lno
                :ch (+ cno (count forward))}}))
+
+(defn is-valid-cljs?
+  [source]
+  (try
+    (fn []
+      (reader/read-string source)
+      true)
+    (catch js/Error _
+      false)))
+
+(def default-opts
+  {:style {:height "auto"
+           :flex 1}
+
+   :should-go-up
+   (fn [_source inst]
+     (let [pos (.getCursor inst)]
+       (= 0 (.-line pos))))
+
+   :should-go-down
+   (fn [_source inst]
+     (let [pos (.getCursor inst)
+           last-line (.lastLine inst)]
+       (= last-line (.-line pos))))
+
+   ;; TODO: if the cursor is inside a list, and the function doesn't have enought
+   ;; arguments yet, then return false
+   ;; e.g. (map |) <- map needs at least one argument.
+   :should-eval
+   (fn [source inst evt]
+     (if (.-shiftKey evt)
+       false
+       (if (.-metaKey evt)
+         true
+         (let [lines (.lineCount inst)
+               in-place (or (= 1 lines)
+                            (let [pos (.getCursor inst)
+                                  last-line (dec lines)]
+                              (and
+                               (= last-line (.-line pos))
+                               (= (.-ch pos)
+                                  (count (.getLine inst last-line))))))]
+           (and in-place
+                (is-valid-cljs? source))))))})
 
 (defn cm-current-word
   "Find the current 'word' according to CodeMirror's `wordChars' list"
@@ -148,21 +193,22 @@
 
   :on-cm-init (fn [cm] -> nil)
     called with the CodeMirror instance, for whatever extra fiddling you want to do."
-  [value-atom {:keys [style
-                      on-change
-                      on-eval
-                      on-up
-                      on-down
-                      complete-atom
-                      complete-word
-                      should-go-up
-                      should-go-down
-                      should-eval
-                      js-cm-opts
-                      on-cm-init]}]
-
+  [value-atom options]
   (let [cm (atom nil)
-        ref (react/createRef)]
+        ref (react/createRef)
+        options (merge default-opts options)
+        {:keys [style
+                on-change
+                on-eval
+                on-up
+                on-down
+                complete-atom
+                complete-word
+                should-go-up
+                should-go-down
+                should-eval
+                js-cm-opts
+                on-cm-init]} options]
     (r/create-class
      {:component-did-mount
       (fn [_this]
