@@ -221,7 +221,7 @@
   (let [property @(rf/subscribe [:webref-css-property k])]
     [:<>
      [label tag k]
-     [:div.flex.h-full.overflow-visible.mr-px
+     [:div.flex.h-full.overflow-visible
       [hierarchy/form-element k v locked? (when property (:initial property))]]]))
 
 (defn tag-info
