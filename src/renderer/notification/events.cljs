@@ -6,21 +6,21 @@
    [renderer.utils.vec :as vec]))
 
 (rf/reg-event-db
- :notification/add
+ ::add
  (fn [db [_ notification]]
    (h/add db notification)))
 
 (rf/reg-event-db
- :notification/unavailable-feature
+ ::unavailable-feature
  (fn [db [_ feature compatibility-url]]
    (h/add db (v/unavailable-feature feature compatibility-url))))
 
 (rf/reg-event-db
- :notification/remove
+ ::remove
  (fn [db [_ i]]
    (update db :notifications vec/remove-nth i)))
 
 (rf/reg-event-db
- :notification/clear-all
+ ::clear-all
  (fn [db [_]]
    (assoc db :notifications [])))

@@ -3,7 +3,8 @@
   (:require
    [re-frame.core :as rf]
    [reagent.core :as ra]
-   [renderer.history.events :as-alias history.e]))
+   [renderer.history.events :as-alias history.e]
+   [renderer.notification.events :as-alias notification.e]))
 
 (def error-message
   "Your last action was canceled due to the following error:")
@@ -15,22 +16,25 @@
          (.-componentStack stack)
          "</details>"))
 
+(defn notification
+  [error]
+  [:div
+   [:h2.mb-4.font-bold error-message]
+   [:p.text-error error]
+   [:a.button.bg-primary.px-2.w-full.rounded
+    {:target "_blank"
+     :href (str "https://github.com/repath-project/repath-studio/issues/new?"
+                "&title=" error
+                "&template=bug_report.md")}
+    "Submit error report"]])
+
 (defn boundary
   []
   (ra/create-class
    {;;https://react.dev/reference/react/Component#componentdidcatch
     :component-did-catch
     (fn [_this error _info]
-      (rf/dispatch [:notification/add
-                    [:div
-                     [:h2.mb-4.font-bold error-message]
-                     [:p.text-error (str error)]
-                     [:a.button.bg-primary.px-2.w-full.rounded
-                      {:target "_blank"
-                       :href (str "https://github.com/repath-project/repath-studio/issues/new?"
-                                  "&title=" error
-                                  "&template=bug_report.md")}
-                      "Submit error report"]]]))
+      (rf/dispatch [::notification.e/add [notification (str error)]]))
 
     ;; Try to revert to a working state
     ;; https://react.dev/reference/react/Component#static-getderivedstatefromerror

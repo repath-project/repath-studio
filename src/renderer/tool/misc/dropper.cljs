@@ -4,6 +4,7 @@
    [renderer.document.events :as-alias document.e]
    [renderer.element.events :as-alias element.e]
    [renderer.handlers :as h]
+   [renderer.notification.events :as-alias notification.e]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
    [renderer.tool.base :as tool]))
@@ -26,7 +27,7 @@
                      (rf/dispatch [::document.e/set-fill (.-sRGBHex result)])
                      (rf/dispatch [:set-tool :select])))
             (.catch (fn [error]
-                      (rf/dispatch [:notification/add
+                      (rf/dispatch [::notification.e/add
                                     [:div
                                      [:h2.pb-4.font-bold "EyeDropper cannot be activated."]
                                      [:div.text-error (str error)]]])

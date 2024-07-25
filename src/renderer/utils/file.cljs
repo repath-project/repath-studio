@@ -2,7 +2,8 @@
   (:require
    [clojure.edn :as edn]
    [re-frame.core :as rf]
-   [renderer.document.events :as-alias document.e]))
+   [renderer.document.events :as-alias document.e]
+   [renderer.notification.events :as-alias notification.e]))
 
 (defn legacy-open!
   [cb]
@@ -42,6 +43,6 @@
   (if (.-showSaveFilePicker js/window)
     (.then (.showSaveFilePicker js/window (clj->js file-picker-options)) cb)
     (rf/dispatch
-     [:notification/unavailable-feature
+     [::notification.e/unavailable-feature
       "Save File Picker"
       "https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker#browser_compatibility"])))
