@@ -1,5 +1,6 @@
 .dialog-content {
-  @apply fixed bg-secondary rounded-lg overflow-hidden shadow-xl border border-default;;
+  @apply fixed bg-secondary rounded-lg overflow-hidden shadow-xl border border-default;
+  ;
   width: 500px;
   left: 50%;
   top: 50%;
@@ -9,10 +10,6 @@
 .dialog-cmdk-content {
   top: 33px;
   transform: translate(-50%, 0);
-}
-
-.dialog-overlay {
-  @apply backdrop;
 }
 
 [cmdk-item],
