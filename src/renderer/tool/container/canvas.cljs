@@ -37,7 +37,7 @@
         tool @(rf/subscribe [:tool])
         primary-tool @(rf/subscribe [:primary-tool])
         rotate @(rf/subscribe [::document.s/rotate])
-        grid? @(rf/subscribe [:grid?])
+        grid? @(rf/subscribe [:grid-visible?])
         state @(rf/subscribe [:state])
         pointer-handler #(pointer/event-handler % element)
         pivot-point @(rf/subscribe [:pivot-point])

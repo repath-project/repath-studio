@@ -80,10 +80,10 @@
                  [{:keyCode (key-codes "P")
                    :ctrlKey true
                    :shiftKey true}]]
-                [[:panel/toggle :tree]
+                [[:toggle-panel :tree]
                  [{:keyCode (key-codes "T")
                    :ctrlKey true}]]
-                [[:panel/toggle :properties]
+                [[:toggle-panel :properties]
                  [{:keyCode (key-codes "P")
                    :ctrlKey true}]]
                 [[::element.e/stroke->path]

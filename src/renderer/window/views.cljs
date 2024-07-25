@@ -52,7 +52,7 @@
      [:div.flex.h-full.flex-1.drag]
      [button {:action [:theme/cycle-mode]
               :title "Theme mode"
-              :icon (name @(rf/subscribe [:theme/mode]))
+              :icon (name @(rf/subscribe [:theme-mode]))
               :class "bg-primary"}]
      (when (and platform/electron? (not fullscreen?) (not platform/mac?))
        (into [:div.text-right]

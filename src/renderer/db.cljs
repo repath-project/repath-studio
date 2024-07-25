@@ -11,8 +11,8 @@
    [:pointer-pos [:tuple double? double?]]
    [:zoom-sensitivity double?]
    [:state keyword?]
-   [:grid? boolean?]
-   [:rulers? boolean?]
+   [:grid-visible? boolean?]
+   [:rulers-visible? boolean?]
    [:snap renderer.snap.db/snap]
    [:rulers-locked? boolean?]
    [:documents [:map-of :uuid renderer.document.db/document]]
@@ -38,8 +38,8 @@
    :debug-info? false
    :pen-mode? false
    :rulers-locked? false
-   :grid? false
-   :rulers? true
+   :grid-visible? false
+   :rulers-visible? true
    :snap {:enabled? true
           :threshold 100
           :options #{:centers :midpoints :corners :nodes}}

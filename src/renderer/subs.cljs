@@ -135,20 +135,20 @@
  :-> :rulers-locked?)
 
 (rf/reg-sub
- :rulers?
- :-> :rulers?)
+ :rulers-visible?
+ :-> :rulers-visible?)
 
 (rf/reg-sub
- :grid?
- :-> :grid?)
+ :grid-visible?
+ :-> :grid-visible?)
 
 (rf/reg-sub
- :panel/visible?
+ :panel-visible?
  (fn [db [_ key]]
    (-> db :panel key :visible?)))
 
 (rf/reg-sub
- :theme/mode
+ :theme-mode
  (fn [db _]
    (-> db :theme :mode)))
 

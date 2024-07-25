@@ -111,7 +111,7 @@
      [snap-controls]
      [comp/icon-button "times"
       {:title "Hide timeline"
-       :on-click #(rf/dispatch [:panel/toggle :timeline])}]]))
+       :on-click #(rf/dispatch [:toggle-panel :timeline])}]]))
 
 (defn register-listeners
   [timeline-ref]
@@ -152,7 +152,7 @@
   []
   (let [time @(rf/subscribe [::timeline.s/time])
         end @(rf/subscribe [::timeline.s/end])
-        timeline? @(rf/subscribe [:panel/visible? :timeline])]
+        timeline? @(rf/subscribe [:panel-visible? :timeline])]
     [:div.h-px.block
      {:style {:width (str (* (/ time end) 100) "%")
               :background (when-not (or (zero? time) (zero? end) timeline?)

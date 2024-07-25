@@ -352,38 +352,38 @@
     :type :checkbox
     :icon "tree"
     :label "Element tree"
-    :checked? [:panel/visible? :tree]
-    :action [:panel/toggle :tree]}
+    :checked? [:panel-visible? :tree]
+    :action [:toggle-panel :tree]}
    {:key :toggle-props
     :type :checkbox
     :icon "properties"
     :label "Properties"
-    :checked? [:panel/visible? :properties]
-    :action [:panel/toggle :properties]}
+    :checked? [:panel-visible? :properties]
+    :action [:toggle-panel :properties]}
    {:key :toggle-xml
     :label "XML view"
     :type :checkbox
     :icon "code"
-    :checked? [:panel/visible? :xml]
-    :action [:panel/toggle :xml]}
+    :checked? [:panel-visible? :xml]
+    :action [:toggle-panel :xml]}
    {:key :toggle-history
     :label "History tree"
     :icon "history"
     :type :checkbox
-    :checked? [:panel/visible? :history]
-    :action [:panel/toggle :history]}
+    :checked? [:panel-visible? :history]
+    :action [:toggle-panel :history]}
    {:key :toggle-command-history
     :type :checkbox
     :label "Shell history"
     :icon "shell"
-    :checked? [:panel/visible? :repl-history]
-    :action [:panel/toggle :repl-history]}
+    :checked? [:panel-visible? :repl-history]
+    :action [:toggle-panel :repl-history]}
    {:key :toggle-timeline-panel
     :type :checkbox
     :label "Timeline editor"
     :icon "timeline"
-    :checked? [:panel/visible? :timeline]
-    :action [:panel/toggle :timeline]}
+    :checked? [:panel-visible? :timeline]
+    :action [:toggle-panel :timeline]}
    {:key :divider-2
     :type :separator}])
 
@@ -406,13 +406,13 @@
             :type :checkbox
             :label "Grid"
             :icon "grid"
-            :checked? [:grid?]
+            :checked? [:grid-visible?]
             :action [:toggle-grid]}
            {:key :toggle-rulers
             :type :checkbox
             :label "Rulers"
             :icon "ruler-combined"
-            :checked? [:rulers?]
+            :checked? [:rulers-visible?]
             :action [:toggle-rulers]}
            {:key :toggle-debug-info
             :type :checkbox

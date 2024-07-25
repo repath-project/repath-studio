@@ -27,7 +27,7 @@
 
 (defn frame-panel
   []
-  (let [rulers? @(rf/subscribe [:rulers?])
+  (let [rulers? @(rf/subscribe [:rulers-visible?])
         read-only? @(rf/subscribe [::document.s/read-only?])
         loading? @(rf/subscribe [::worker.s/loading?])]
     [:div.flex.flex-col.flex-1.h-full
@@ -82,7 +82,7 @@
       {:id "frame-panel"
        :order 1}
       [frame-panel]]
-     (when @(rf/subscribe [:panel/visible? :history])
+     (when @(rf/subscribe [:panel-visible? :history])
        [:<>
         [:> PanelResizeHandle
          {:id "history-resize-handle"
@@ -94,7 +94,7 @@
          [:div.v-scroll.p-1.bg-primary.h-full.ml-px
           [history/root]]]])
 
-     (when @(rf/subscribe [:panel/visible? :xml])
+     (when @(rf/subscribe [:panel-visible? :xml])
        (let [xml @(rf/subscribe [::element.s/xml])]
          [:<>
           [:> PanelResizeHandle
@@ -111,8 +111,8 @@
 
 (defn editor
   []
-  (let [timeline? @(rf/subscribe [:panel/visible? :timeline])
-        repl-history? @(rf/subscribe [:panel/visible? :repl-history])]
+  (let [timeline? @(rf/subscribe [:panel-visible? :timeline])
+        repl-history? @(rf/subscribe [:panel-visible? :repl-history])]
     [:> PanelGroup
      ;; REVIEW: We need to rerender the group to properly resize the panels.
      {:key (str timeline? repl-history?)
@@ -133,7 +133,7 @@
     [win/app-header]
     (if (seq @(rf/subscribe [:documents]))
       [:div.flex.h-full.flex-1.overflow-hidden
-       (when @(rf/subscribe [:panel/visible? :tree])
+       (when @(rf/subscribe [:panel-visible? :tree])
          [:div.flex.flex-col
           {:style {:width "227px"}}
           [doc/actions]
@@ -143,7 +143,7 @@
         [:div.flex.h-full.flex-1
          [:div.flex.h-full.flex-col.flex-1
           [editor]]
-         (when @(rf/subscribe [:panel/visible? :properties])
+         (when @(rf/subscribe [:panel-visible? :properties])
            [:div.flex
             {:style {:width "300px"}}
             [attr/form]])

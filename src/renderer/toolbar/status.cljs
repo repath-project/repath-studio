@@ -47,25 +47,25 @@
 
 (def view-radio-buttons
   [{:title "Timeline"
-    :active? [:panel/visible? :timeline]
+    :active? [:panel-visible? :timeline]
     :icon "timeline"
-    :action [:panel/toggle :timeline]}
+    :action [:toggle-panel :timeline]}
    {:title "Grid"
-    :active? [:grid?]
+    :active? [:grid-visible?]
     :icon "grid"
     :action [:toggle-grid]}
    {:title "Rulers"
-    :active? [:rulers?]
+    :active? [:rulers-visible?]
     :icon "ruler-combined"
     :action [:toggle-rulers]}
    {:title "History"
-    :active? [:panel/visible? :history]
+    :active? [:panel-visible? :history]
     :icon "history"
-    :action [:panel/toggle :history]}
+    :action [:toggle-panel :history]}
    {:title "XML"
-    :active? [:panel/visible? :xml]
+    :active? [:panel-visible? :xml]
     :icon "code"
-    :action [:panel/toggle :xml]}])
+    :action [:toggle-panel :xml]}])
 
 (defn set-zoom
   [e v]
@@ -102,7 +102,7 @@
 
 (defn root []
   (let [zoom @(rf/subscribe [::document.s/zoom])
-        timeline? @(rf/subscribe [:panel/visible? :timeline])]
+        timeline? @(rf/subscribe [:panel-visible? :timeline])]
     [:<>
      [:div.toolbar.bg-primary.mt-px
       [color-v/picker]

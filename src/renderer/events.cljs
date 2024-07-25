@@ -84,7 +84,7 @@
 (rf/reg-event-db
  :toggle-rulers
  (fn [db [_]]
-   (update db :rulers? not)))
+   (update db :rulers-visible? not)))
 
 #_(rf/reg-event-db
    :toggle-rulers-locked
@@ -94,10 +94,10 @@
 (rf/reg-event-db
  :toggle-grid
  (fn [db [_]]
-   (update db :grid? not)))
+   (update db :grid-visible? not)))
 
 (rf/reg-event-db
- :panel/toggle
+ :toggle-panel
  [local-storage/persist
   (rf/path :panel)]
  (fn [db [_ key]]
