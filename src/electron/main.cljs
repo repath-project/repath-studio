@@ -24,9 +24,9 @@
       (.then (fn [name] (js/console.log "Added Extension: " name)))
       (.catch (fn [err] (js/console.log "An error occurred: " err)))))
 
-(defn send-to-renderer
+(defn send-to-renderer!
   ([action]
-   (send-to-renderer action nil))
+   (send-to-renderer! action nil))
   ([action data]
    (-> (.-webContents ^js @main-window)
        (.send "fromMain" (clj->js {:action action
@@ -42,7 +42,7 @@
   [url]
   (contains? allowed-urls (.-host url)))
 
-(defn open-external
+(defn open-external!
   [url]
   (let [url-parsed (js/URL. url)]
     (when (and (= (.-protocol url-parsed) "https:") (allowed-url? url-parsed))
@@ -55,14 +55,14 @@
     "windowToggleMaximized" (if (.isMaximized ^js @main-window) (.unmaximize ^js @main-window) (.maximize ^js @main-window))
     "windowToggleFullscreen" (.setFullScreen ^js @main-window (not (.isFullScreen ^js @main-window)))
     "setThemeMode" (set! (.. nativeTheme -themeSource) (.-data args))
-    "openRemoteUrl" (open-external (.-data args))
+    "openRemoteUrl" (open-external! (.-data args))
     ;; https://www.electronjs.org/docs/api/clipboard#clipboardwritedata-type
     "writeToClipboard" (.write clipboard (.-data args))
     "openDirectory" (.showItemInFolder shell (.-data args))
-    "openDocument" (p/let [documents (file/open @main-window (.-data args))] (doseq [document documents] (send-to-renderer "fileLoaded" document)))
-    "saveDocument" (p/let [document (file/save @main-window (.-data args))] (send-to-renderer "fileSaved" document))
-    "saveDocumentAs" (p/let [document (file/save-as @main-window (.-data args))] (send-to-renderer "fileSaved" document))
-    "export" (file/export @main-window (.-data args))))
+    "openDocument" (p/let [documents (file/open! @main-window (.-data args))] (doseq [document documents] (send-to-renderer! "fileLoaded" document)))
+    "saveDocument" (p/let [document (file/save! @main-window (.-data args))] (send-to-renderer! "fileSaved" document))
+    "saveDocumentAs" (p/let [document (file/save-as! @main-window (.-data args))] (send-to-renderer! "fileSaved" document))
+    "export" (file/export! @main-window (.-data args))))
 
 (defn register-window-events!
   []
@@ -77,7 +77,7 @@
      ["leave-full-screen" "windowLeavedFullscreen"]
      ["minimize" "windowMinimized"]
      ["restore" "windowRestored"]]]
-    (.on ^js @main-window window-event #(send-to-renderer action))))
+    (.on ^js @main-window window-event #(send-to-renderer! action))))
 
 (defn register-web-contents-events!
   []
@@ -88,10 +88,10 @@
     (.on (.-webContents ^js @main-window) web-contents-event f))
   ;; Forward popups
   (.setWindowOpenHandler (.-webContents ^js @main-window) (fn [handler]
-                                                            (open-external (.-url handler))
+                                                            (open-external! (.-url handler))
                                                             #js {:action "deny"})))
 
-(defn init-main-window
+(defn init-main-window!
   []
   (let [win-state (window-state-keeper #js {:defaultWidth 1920
                                             :defaultHeight 1080})]
@@ -115,12 +115,12 @@
            (fn []
              (.show ^js @main-window)
              (.manage win-state ^js @main-window)
-             (send-to-renderer (if (.isMaximized ^js @main-window)
-                                 "windowMaximized"
-                                 "windowUnmaximized"))
-             (send-to-renderer (if (.isFullScreen ^js @main-window)
-                                 "windowEnteredFullscreen"
-                                 "windowLeavedFullscreen"))
+             (send-to-renderer! (if (.isMaximized ^js @main-window)
+                                  "windowMaximized"
+                                  "windowUnmaximized"))
+             (send-to-renderer! (if (.isFullScreen ^js @main-window)
+                                  "windowEnteredFullscreen"
+                                  "windowLeavedFullscreen"))
              (.hide ^js @loading-window)
              (.close ^js @loading-window)))
 
@@ -138,7 +138,7 @@
 
     #_(.checkForUpdatesAndNotify updater)))
 
-(defn init-loading-window []
+(defn init-loading-window! []
   (set! (.-allowRendererProcessReuse app) false)
   (reset! loading-window
           (BrowserWindow.
@@ -148,7 +148,7 @@
                 :icon (.join path js/__dirname "/public/img/icon.png")
                 :show false
                 :frame false}))
-  (.once ^js @loading-window "show" init-main-window)
+  (.once ^js @loading-window "show" init-main-window!)
   (.loadURL ^js @loading-window (.join path "file://" js/__dirname "/public/loading.html"))
   (.once ^js (.-webContents @loading-window) "did-finish-load" #(.show ^js @loading-window)))
 
@@ -157,4 +157,4 @@
   (.initialize log)
   (.on app "window-all-closed" #(when-not (= js/process.platform "darwin")
                                   (.quit app)))
-  (.on app "ready" init-loading-window))
+  (.on app "ready" init-loading-window!))

@@ -19,24 +19,24 @@
                  :path file-path
                  :title (.basename path file-path))))
 
-(defn- write-file
+(defn- write-file!
   [file-path data]
   (.writeFileSync fs file-path (pr-str (dissoc data :closing? :path)) "utf-8")
   (p/resolved (serialize-document data file-path)))
 
-(defn- read-file
+(defn- read-file!
   [file-path]
   (let [data (.readFileSync fs file-path "utf-8")
         document (edn/read-string data)]
     (serialize-document document file-path)))
 
-(defn save-dialog
+(defn save-dialog!
   [window options]
   (p/let [file (.showSaveDialog dialog window (clj->js options))
           file (get (js->clj file) "filePath")]
     (p/resolved file)))
 
-(defn save-as
+(defn save-as!
   [window data]
   (let [document (edn/read-string data)
         file-path (:path document)
@@ -44,31 +44,31 @@
         dialog-options (cond-> dialog-options
                          (and directory (.existsSync fs directory))
                          (assoc :defaultPath directory))]
-    (p/let [file (save-dialog window dialog-options)]
-      (write-file file document))))
+    (p/let [file (save-dialog! window dialog-options)]
+      (write-file! file document))))
 
-(defn save
+(defn save!
   [window data]
   (let [document (edn/read-string data)
         file-path (:path document)]
     (if (and file-path (.existsSync fs file-path))
-      (write-file file-path document)
-      (save-as window data))))
+      (write-file! file-path document)
+      (save-as! window data))))
 
-(defn open
+(defn open!
   [window file-path]
   (if (and file-path (.existsSync fs file-path))
-    [(read-file file-path)]
+    [(read-file! file-path)]
     (p/let [files (.showOpenDialog dialog window (clj->js dialog-options))
             file-paths (get (js->clj files) "filePaths")]
-      (p/resolved (map read-file file-paths)))))
+      (p/resolved (map read-file! file-paths)))))
 
 (def export-options
   {:defaultPath (.getPath app "pictures")
    :filters [{:name "svg"
               :extensions ["svg" "svgo"]}]})
 
-(defn export
+(defn export!
   [window data]
-  (p/let [file (save-dialog window export-options)]
+  (p/let [file (save-dialog! window export-options)]
     (.writeFileSync fs file data "utf-8")))
