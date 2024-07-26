@@ -128,8 +128,6 @@
            (fn []
              (.show ^js @main-window)
              (.manage win-state ^js @main-window)
-             (load-system-fonts!)
-             (load-webref!)
              (send-to-renderer! (if (.isMaximized ^js @main-window)
                                   "windowMaximized"
                                   "windowUnmaximized"))
@@ -138,6 +136,11 @@
                                   "windowLeavedFullscreen"))
              (.hide ^js @loading-window)
              (.close ^js @loading-window)))
+
+    (.on ^js @main-window "ready-to-show"
+         (fn []
+           (load-system-fonts!)
+           (load-webref!)))
 
     (.loadURL ^js @main-window (if config/debug?
                                  "http://localhost:8080"
