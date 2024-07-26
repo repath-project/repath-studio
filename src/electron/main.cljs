@@ -1,12 +1,14 @@
 (ns electron.main
   (:require
    #_["@sentry/electron/main" :as sentry-electron-main]
+   ["@webref/css" :as css]
    ["electron-extension-installer" :refer [REACT_DEVELOPER_TOOLS installExtension]]
    ["electron-log/main" :as log]
    ["electron-reloader"]
    #_["electron-updater" :as updater]
    ["electron-window-state" :as window-state-keeper]
    ["electron" :refer [app shell ipcMain BrowserWindow clipboard nativeTheme]]
+   ["font-scanner" :as fontManager]
    ["os" :as os]
    ["path" :as path]
    [config]
@@ -79,6 +81,17 @@
      ["restore" "windowRestored"]]]
     (.on ^js @main-window window-event #(send-to-renderer! action))))
 
+(defn load-system-fonts!
+  "https://github.com/axosoft/font-scanner#getavailablefonts"
+  []
+  (let [fonts (.getAvailableFontsSync fontManager)]
+    (send-to-renderer! "fontsLoaded" fonts)))
+
+(defn load-webref!
+  []
+  (p/let [files (.listAll css)]
+    (send-to-renderer! "webrefLoaded" files)))
+
 (defn register-web-contents-events!
   []
   (doseq
@@ -115,6 +128,8 @@
            (fn []
              (.show ^js @main-window)
              (.manage win-state ^js @main-window)
+             (load-system-fonts!)
+             (load-webref!)
              (send-to-renderer! (if (.isMaximized ^js @main-window)
                                   "windowMaximized"
                                   "windowUnmaximized"))

@@ -3,12 +3,12 @@
    #_["@sentry/electron/renderer" :as sentry-electron-renderer]
    #_["@sentry/react" :as sentry-react]
    ["electron-log/renderer"]
+   ["mdn-data" :as mdn] ;; deprecating in favor of w3c/webref
    ["paper" :refer [paper]]
    [cljs.reader :as edn]
    [config]
    [devtools.core :as devtools]
    [platform]
-   [promesa.core :as p]
    [re-frame.core :as rf]
    [re-pressed.core :as rp]
    [reagent.dom :as ra.dom]
@@ -82,7 +82,8 @@
    "fromMain"
    (fn [data]
      (case (.-action data)
-       "fontsLoaded" (js/console.log "fontsLoaded")
+       "fontsLoaded" (rf/dispatch [:set-system-fonts (js->clj (.-data data) :keywordize-keys true)])
+       "webrefLoaded" (rf/dispatch [:set-webref-css (js->clj (.-data data) :keywordize-keys true)])
        "windowMaximized" (rf/dispatch [::window.e/set-maximized? true])
        "windowUnmaximized" (rf/dispatch [::window.e/set-maximized? false])
        "windowEnteredFullscreen" (rf/dispatch [::window.e/set-fullscreen? true])
@@ -92,15 +93,6 @@
        "fileLoaded" (rf/dispatch [::document.e/load (edn/read-string (.-data data))])
        "fileSaved" (rf/dispatch [::document.e/saved (edn/read-string (.-data data))])))))
 
-(defn load-system-fonts!
-  []
-  (let [fonts (js->clj js/window.api.systemFonts :keywordize-keys true)]
-    (rf/dispatch-sync [:set-system-fonts fonts])))
-
-(defn load-webref!
-  []
-  (p/let [files (js/window.api.webrefCss.listAll)]
-    (rf/dispatch-sync [:set-webref-css (js->clj files :keywordize-keys true)])))
 
 (defn ^:export init []
   #_(if platform/electron?
@@ -121,6 +113,7 @@
   (rf/dispatch-sync [:theme/init-mode])
   (rf/dispatch-sync [::document.e/new])
   (rf/dispatch-sync [:set-tool :select])
+  (rf/dispatch-sync [:set-mdn (js->clj mdn :keywordize-keys true)])
 
   (rf/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])
   (rf/dispatch-sync [::rp/set-keydown-rules keyb/keydown-rules])
@@ -131,10 +124,7 @@
   (.setup paper) ; REVIEW
 
   (if platform/electron?
-    (do (load-system-fonts!)
-        (load-webref!)
-        (rf/dispatch-sync [:set-mdn (js->clj js/window.api.mdn :keywordize-keys true)])
-        (init-api!))
+    (init-api!)
     (.addEventListener js/document
                        "fullscreenchange"
                        #(rf/dispatch [:window.e/set-fullscreen? (boolean (.-fullscreenElement js/document))])))

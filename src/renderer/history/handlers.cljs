@@ -104,7 +104,7 @@
   [db [x y]]
   (assoc-in db (conj (history-path db) :translate) [x y]))
 
-(defn create-state
+(defn- create-state
   [db id explanation]
   {:explanation explanation
    :elements (element.h/elements db)
@@ -114,7 +114,7 @@
    :parent (:position (history db))
    :children []})
 
-(defn update-ancestors
+(defn- update-ancestors
   "Makes all ancestors of the active branch the rightmost element.
    This ensures that when users remain in the latest branch when they undo/redo."
   [db]
