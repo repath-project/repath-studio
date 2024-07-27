@@ -8,8 +8,10 @@
    [renderer.document.events :as-alias document.e]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.events :as-alias element.e]
+   [renderer.element.subs :as-alias element.s]
    [renderer.frame.events :as-alias frame.e]
    [renderer.history.events :as-alias history.e]
+   [renderer.history.subs :as-alias history.s]
    [renderer.window.events :as-alias window.e]
    [renderer.window.subs :as-alias window.s]))
 
@@ -47,7 +49,7 @@
            {:key :recent
             :label "Recent"
             :type :sub-menu
-            :disabled? [::document.s/recent-disabled?]
+            :disabled? (not @(rf/subscribe [::document.s/recent?]))
             :items (recent-submenu)}
            {:key :divider-2
             :type :separator}
@@ -55,26 +57,31 @@
             :label "Save"
             :icon "save"
             :action [::document.e/save]
-            :disabled? [::document.s/active-saved?]}
+            :disabled? (or (not @(rf/subscribe [::document.s/documents?]))
+                           @(rf/subscribe [::document.s/active-saved?]))}
            {:key :save-as
             :label "Save as…"
             :icon "save-as"
-            :action [::document.e/save-as]}
+            :action [::document.e/save-as]
+            :disabled? (not @(rf/subscribe [::document.s/documents?]))}
            {:key :download
             :icon "download"
             :label "Download"
+            :disabled? (not @(rf/subscribe [::document.s/documents?]))
             :action [::document.e/download]}
            {:key :divider-3
             :type :separator}
            {:key :export
             :label "Export as SVG"
             :icon "export"
+            :disabled? (not @(rf/subscribe [::document.s/documents?]))
             :action [::element.e/export]}
            {:key :divider-4
             :type :separator}
            {:key :close
             :label "Close"
             :icon "times"
+            :disabled? (not @(rf/subscribe [::document.s/documents?]))
             :action [::document.e/close-active]}
            {:key :exit
             :label "Exit"
@@ -86,22 +93,27 @@
   {:key :edit
    :label "Edit"
    :type :root
+   :disabled? (not @(rf/subscribe [::document.s/documents?]))
    :items [{:key :undo
             :label "Undo"
             :icon "undo"
+            :disabled? (not @(rf/subscribe [::history.s/undos?]))
             :action [::history.e/undo]}
            {:key :redo
             :label "Redo"
             :icon "redo"
+            :disabled? (not @(rf/subscribe [::history.s/redos?]))
             :action [::history.e/redo]}
            {:key :divider-1
             :type :separator}
            {:key :cut
             :label "Cut"
+            :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/cut]}
            {:key :copy
             :icon "copy"
             :label "Copy"
+            :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/copy]}
            {:key :paste
             :label "Paste"
@@ -120,6 +132,7 @@
            {:key :duplicate
             :icon "copy"
             :label "Duplicate"
+            :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/duplicate-in-place]}
            {:key :divider-3
             :type :separator}
@@ -130,6 +143,7 @@
            {:key :deselect-all
             :icon "deselect-all"
             :label "Deselect all"
+            :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/deselect-all]}
            {:key :invert-selection
             :label "Invert selection"
@@ -137,12 +151,14 @@
            {:key :select-same-tags
             :icon "select-same"
             :label "Select same tags"
+            :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/select-same-tags]}
            {:key :divider-4
             :type :separator}
            {:key :delete
             :icon "delete"
             :label "Delete"
+            :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/delete]}]})
 
 (defn align-submenu
@@ -150,6 +166,7 @@
   [{:key :align-left
     :label "Left"
     :icon "objects-align-left"
+    :disabled @(rf/subscribe [::element.s/top-level?])
     :action [::element.e/align :left]}
    {:key :align-center-horizontally
     :label "Center horizontally"
@@ -235,63 +252,77 @@
   {:key :object
    :label "Object"
    :type :root
+   :disabled? (not @(rf/subscribe [::document.s/documents?]))
    :items [{:key :to-path
             :label "Object to path"
+            :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/->path]}
            {:key :stroke-to-path
             :label "Stroke to path"
+            :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/stroke->path]}
            {:key :divider-1
             :type :separator}
            {:key :group
             :label "Group"
             :icon "group"
+            :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/group]}
            {:key :ungroup
             :label "Ungroup"
             :icon "ungroup"
+            :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/ungroup]}
            {:key :divider-2
             :type :separator}
            {:key :lock
             :label "Lock"
             :icon "lock"
+            :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/lock]}
            {:key :unlock
             :label "Unlock"
             :icon "unlock"
+            :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/unlock]}
            {:key :divider-3
             :type :separator}
            {:key :path
             :label "Align"
             :type :sub-menu
+            :disabled? @(rf/subscribe [::element.s/top-level?])
             :items (align-submenu)}
            {:key :boolean
             :label "Animate"
             :type :sub-menu
+            :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :items (animate-submenu)}
            {:key :boolean
             :label "Boolean operation"
             :type :sub-menu
+            :disabled? (not @(rf/subscribe [::element.s/multiple-selected?]))
             :items (boolean-submenu)}
            {:key :divider-4
             :type :separator}
            {:key :raise
             :label "Raise"
             :icon "bring-forward"
+            :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/raise]}
            {:key :lower
             :label "Lower"
             :icon "send-backward"
+            :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/lower]}
            {:key :raise-to-top
             :label "Raise to top"
             :icon "bring-front"
+            :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/raise-to-top]}
            {:key :lower-to-bottom
             :label "Lower to bottom"
             :icon "send-back"
+            :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/lower-to-bottom]}
            {:key :divider-5
             :type :separator}
@@ -392,6 +423,7 @@
   {:key :view
    :label "View"
    :type :root
+   :disabled? (not @(rf/subscribe [::document.s/documents?]))
    :items [{:key :zoom
             :label "Zoom"
             :type :sub-menu
@@ -497,7 +529,7 @@
   [:> Menubar/Sub
    [:> Menubar/SubTrigger
     {:class "sub-menu-item menu-item"
-     :disabled (when disabled? @(rf/subscribe disabled?))}
+     :disabled disabled?}
     label
     [:div.right-slot.sub-menu-chevron
      [comp/icon "chevron-right" {:class "icon small"}]]]
@@ -509,11 +541,12 @@
           (map menu-item items))]])
 
 (defmethod menu-item :root
-  [{:keys [label items key action]}]
+  [{:keys [label items key action disabled?]}]
   [:> Menubar/Menu
    [:> Menubar/Trigger
     {:class "menubar-trigger"
      :id (name key)
+     :disabled disabled?
      :on-click (when action #(rf/dispatch action))
      :on-key-down (fn [e]
                     ; FIXME: Doesn't work when the menu content is open.
@@ -534,7 +567,7 @@
    {:class "menu-item"
     :onSelect #(do (rf/dispatch action)
                    (rf/dispatch [:focus nil]))
-    :disabled (when disabled? @(rf/subscribe disabled?))}
+    :disabled disabled?}
    label
    [:div.right-slot
     [comp/shortcuts action]]])

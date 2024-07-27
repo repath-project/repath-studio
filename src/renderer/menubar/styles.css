@@ -47,7 +47,7 @@
   user-select: none;
 }
 
-.sub-menu-tem  {
+.sub-menu-tem {
   padding-right: 15px !important;
 }
 
@@ -67,9 +67,14 @@
 .menu-item[data-disabled],
 .menu-sub-trigger[data-disabled],
 .menu-checkbox-item[data-disabled],
-.menu-radio-item[data-disabled] {
-  color: var(--font-color-muted);
+.menu-radio-item[data-disabled],
+.menubar-trigger[data-disabled] {
+  color: var(--font-color-disabled);
   pointer-events: none;
+
+  .right-slot {
+    @apply opacity-50;
+  }
 }
 
 .menu-item-indicator {
@@ -95,7 +100,7 @@
   color: inherit;
 }
 
-[data-highlighted] > .right-slot {
+[data-highlighted]>.right-slot {
   color: var(--font-color-active);
 }
 

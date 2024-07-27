@@ -9,16 +9,16 @@
  :-> :recent)
 
 (rf/reg-sub
+ ::documents?
+ :<- [:documents]
+ (fn [documents _]
+   (seq documents)))
+
+(rf/reg-sub
  ::recent?
  :<- [::recent]
  (fn [recent _]
    (seq recent)))
-
-(rf/reg-sub
- ::recent-disabled?
- :<- [::recent?]
- (fn [recent? _]
-   (not recent?)))
 
 (rf/reg-sub
  ::active
