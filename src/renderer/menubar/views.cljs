@@ -346,7 +346,7 @@
            :checked? [::document.s/filter-active? id]
            :action [::document.e/toggle-filter id]}) filters/accessibility))
 
-(defn panels-submenu
+(defn panel-submenu
   []
   [{:key :toggle-tree
     :type :checkbox
@@ -397,7 +397,7 @@
             :type :sub-menu
             :items (zoom-submenu)}
            {:key :a11y
-            :label "Accessibility filters"
+            :label "Accessibility filter"
             :type :sub-menu
             :items (a11y-submenu)}
            {:key :divider-1
@@ -421,10 +421,10 @@
             :action [:toggle-debug-info]}
            {:key :divider-2
             :type :separator}
-           {:key :panels
-            :label "Panels"
+           {:key :panel
+            :label "Panel"
             :type :sub-menu
-            :items (panels-submenu)}
+            :items (panel-submenu)}
            {:key :divider-3
             :type :separator}
            {:key :toggle-fullscreen
