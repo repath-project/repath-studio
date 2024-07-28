@@ -118,12 +118,10 @@
    (let [to-be-closed (disj (set (keys (:documents db))) k)]
      {:fx (mapv (fn [k] [:dispatch [::close k true]]) to-be-closed)})))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::close-all
- (fn [db [_]]
-   (-> db
-       (assoc :document-tabs [])
-       (dissoc :active-document :documents))))
+ (fn [{:keys [db]} [_]]
+   {:fx (mapv (fn [k] [:dispatch [::close k true]]) (keys (:documents db)))}))
 
 (rf/reg-event-db
  ::scroll
