@@ -133,10 +133,10 @@
    (let [document-tabs (:document-tabs db)
          index (.indexOf document-tabs (:active-document db))
          scrolled-index (if (pos? direction) (inc index) (dec index))]
-     (if (and (nat-int? scrolled-index)
-              (< scrolled-index (count document-tabs)))
-       (assoc db :active-document (get document-tabs scrolled-index))
-       db))))
+     (cond-> db
+       (and (nat-int? scrolled-index)
+            (< scrolled-index (count document-tabs)))
+       (h/set-active (get document-tabs scrolled-index))))))
 
 (rf/reg-event-db
  ::swap-position
@@ -196,7 +196,7 @@
 
             :always
             (-> (h/add-recent (:path document))
-                (assoc :active-document (:key document))))
+                (h/set-active (:key document))))
       :fx [[:dispatch [::frame.e/center]]
            [:focus nil]]})))
 
@@ -283,4 +283,4 @@
 (rf/reg-event-db
  ::set-active
  (fn [db [_ document-id]]
-   (assoc db :active-document document-id)))
+   (h/set-active db document-id)))

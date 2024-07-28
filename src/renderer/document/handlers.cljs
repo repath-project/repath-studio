@@ -26,6 +26,10 @@
     file-path
     (update :recent #(-> % (conj file-path) distinct))))
 
+(defn set-active
+  [db k]
+  (assoc db :active-document k))
+
 (defn search-by-path
   [{:keys [documents]} file-path]
   (some #(when (and file-path (= (:path %) file-path)) (:key %)) (vals documents)))
