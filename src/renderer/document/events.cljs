@@ -112,13 +112,11 @@
    (let [saved (filter #(h/saved? db %) (:document-tabs db))]
      (reduce h/close db saved))))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::close-others
- (fn [db [_ key]]
-   (-> db
-       (assoc :document-tabs [key]
-              :active-document key)
-       (assoc-in [:documents key] (get-in db [:documents key])))))
+ (fn [{:keys [db]} [_ k]]
+   (let [to-be-closed (disj (set (keys (:documents db))) k)]
+     {:fx (mapv (fn [k] [:dispatch [::close k true]]) to-be-closed)})))
 
 (rf/reg-event-db
  ::close-all

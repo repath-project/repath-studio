@@ -210,10 +210,6 @@
                  [{:keyCode (key-codes "W")
                    :ctrlKey true
                    :altKey true}]]
-                [[::document.e/close-others]
-                 [{:keyCode (key-codes "W")
-                   :ctrlKey true
-                   :shiftKey true}]]
                 [[::window.e/toggle-fullscreen]
                  [{:keyCode (key-codes "F11")}]]
                 [[::dialog.e/cmdk]

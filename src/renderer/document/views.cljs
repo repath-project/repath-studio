@@ -82,7 +82,7 @@
     [{:label "Close"
       :action [::document.e/close key true]}
      {:label "Close others"
-      :action [::document.e/close-others]
+      :action [::document.e/close-others key]
       :disabled? (empty? (rest document-tabs))}
      {:label "Close all"
       :action [::document.e/close-all]}
