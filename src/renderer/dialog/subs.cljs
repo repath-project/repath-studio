@@ -3,5 +3,5 @@
    [re-frame.core :as rf]))
 
 (rf/reg-sub
- ::dialog
- :-> :dialog)
+ ::dialogs
+ :-> :dialogs)
