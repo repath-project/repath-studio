@@ -195,7 +195,7 @@
                      (= (:key clicked-element) key))]
     [:> HoverCard/Root
      [:> HoverCard/Trigger
-      [:label.max-w-full.text-ellipsis
+      [:label.w-28.truncate
        {:for (name key)
         :class (when active? "text-active")} key]]
      [:> HoverCard/Portal
