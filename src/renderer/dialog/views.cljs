@@ -78,10 +78,10 @@
      {:open (seq dialogs)
       :on-open-change #(rf/dispatch [::dialog.e/close])}
      [:> Dialog/Portal
-      [:<>
-       [:> Dialog/Overlay {:class "backdrop"}]
-       (for [dialog dialogs]
-         [:> Dialog/Content
-          (merge {:class "dialog-content"}
-                 (:attrs dialog))
-          (:content dialog)])]]]))
+      [:> Dialog/Overlay {:class "backdrop"}]
+      (into [:<>]
+            (for [dialog dialogs]
+              [:> Dialog/Content
+               (merge {:class "dialog-content"}
+                      (:attrs dialog))
+               (:content dialog)]))]]))
