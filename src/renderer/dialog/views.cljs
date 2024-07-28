@@ -79,9 +79,7 @@
       :on-open-change #(rf/dispatch [::dialog.e/close])}
      [:> Dialog/Portal
       [:> Dialog/Overlay {:class "backdrop"}]
-      (into [:<>]
-            (for [dialog dialogs]
-              [:> Dialog/Content
-               (merge {:class "dialog-content"}
-                      (:attrs dialog))
-               (:content dialog)]))]]))
+      [:> Dialog/Content
+       (merge {:class "dialog-content"}
+              (:attrs (last dialogs)))
+       (:content (last dialogs))]]]))

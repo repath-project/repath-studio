@@ -32,6 +32,7 @@
    :state :default
    :documents {}
    :document-tabs []
+   :dialogs []
    :recent []
    :system-fonts []
    :notifications []

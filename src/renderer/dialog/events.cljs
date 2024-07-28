@@ -15,11 +15,11 @@
  (fn [db [_]]
    (update db :dialogs conj {:content [v/about]})))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::save
- (fn [db [_ k]]
-   (update db :dialogs conj {:content [v/save k]
-                             :attrs {:onOpenAutoFocus #(.preventDefault %)}})))
+ (fn [{:keys [db]} [_ k]]
+   {:db (update db :dialogs conj {:content [v/save k]
+                                  :attrs {:onOpenAutoFocus #(.preventDefault %)}})}))
 
 #_(rf/reg-event-db
    ::confirmation
