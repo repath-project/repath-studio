@@ -1,6 +1,5 @@
 (ns renderer.document.events
   (:require
-   [config]
    #_[de-dupe.core :as dd]
    [platform]
    [promesa.core :as p]
@@ -234,13 +233,7 @@
 (rf/reg-fx
  ::download
  (fn [data]
-   (let [blob (js/Blob. [data])
-         url (js/URL.createObjectURL blob)
-         a (js/document.createElement "a")]
-     (.setAttribute a "href" url)
-     (.setAttribute a "download" (str "document." config/ext))
-     (.click a)
-     (js/window.URL.revokeObjectURL url))))
+   (file/download! data)))
 
 (rf/reg-event-fx
  ::download

@@ -1,9 +1,20 @@
 (ns renderer.utils.file
   (:require
    [clojure.edn :as edn]
+   [config :as config]
    [re-frame.core :as rf]
    [renderer.document.events :as-alias document.e]
    [renderer.notification.events :as-alias notification.e]))
+
+(defn download!
+  [data]
+  (let [blob (js/Blob. [data])
+        url (js/URL.createObjectURL blob)
+        a (js/document.createElement "a")]
+    (.setAttribute a "href" url)
+    (.setAttribute a "download" (str "document." config/ext))
+    (.click a)
+    (js/window.URL.revokeObjectURL url)))
 
 (defn legacy-open!
   [cb]
