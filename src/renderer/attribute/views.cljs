@@ -203,7 +203,7 @@
        {:side "left"
         :class "popover-content"
         :align "start"}
-       [:div.p-6
+       [:div.p-5
         [:h2.mb-4.text-lg key]
         (when (get-method hierarchy/description key)
           [:p (hierarchy/description key)])
@@ -236,7 +236,7 @@
       {:sideOffset 5
        :class "popover-content"
        :align "end"}
-      [:div.p-6
+      [:div.p-5
        [:h2.mb-4.text-lg tag]
        (when-let [description (:description (tool/properties tag))]
          [:p description])

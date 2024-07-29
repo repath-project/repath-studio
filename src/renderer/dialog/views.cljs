@@ -19,7 +19,7 @@
 
 (defn about
   []
-  [:div.p-4
+  [:div.p-5
    [:div.flex.gap-3.items-start.pb-2
     [:div
      [:div  [:strong "Version: "] config/version]
@@ -49,7 +49,7 @@
 (defn save
   [k]
   (let [document @(rf/subscribe [::document.s/document k])]
-    [:div.p-4
+    [:div.p-5
      [:p
       "Your changes to " [:strong (:title document)]
       " will be lost if you close the document without saving."]
@@ -77,13 +77,12 @@
      [:> Dialog/Portal
       [:> Dialog/Overlay {:class "backdrop"}]
       [:> Dialog/Content
-
        (merge {:class "dialog-content"
                :on-key-down #(.stopPropagation %)}
               (:attrs (last dialogs)))
        (when-let [title (:title (last dialogs))]
          [:> Dialog/Title
-          {:class "text-xl px-4 pt-4"}
+          {:class "text-xl px-5 pt-5"}
           title])
        [:> Dialog/Description
         {:class "m-0"}
