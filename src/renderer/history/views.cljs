@@ -7,6 +7,7 @@
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [renderer.components :as comp]
+   [renderer.dialog.events :as-alias dialog.e]
    [renderer.history.events :as-alias history.e]
    [renderer.history.subs :as-alias history.s]))
 
@@ -111,7 +112,11 @@
        {:on-click #(rf/dispatch [::history.e/tree-view-updated 0.5 (center ref)])}
        "Center view"]
       [:button.button.flex-1
-       {:on-click #(rf/dispatch [::history.e/clear])}
+       {:on-click #(rf/dispatch [::dialog.e/confirmation
+                                 {:title "This action cannot be undone."
+                                  :description "Are you sure you wish to clear the document history?"
+                                  :confirm-label "Clear history"
+                                  :action [::history.e/clear]}])}
        "Clear history"]]
      [:div.flex-1 {:ref ref}
       [tree ref]]]))

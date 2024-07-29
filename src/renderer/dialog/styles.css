@@ -1,7 +1,8 @@
 .dialog-content {
   @apply fixed bg-secondary rounded-lg overflow-hidden shadow-xl border border-default;
-  ;
+
   width: 500px;
+  max-width: 90%;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);

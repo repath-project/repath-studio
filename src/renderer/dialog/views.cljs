@@ -22,29 +22,28 @@
   [:div.p-5
    [:div.flex.gap-3.items-start.pb-2
     [:div
-     [:div  [:strong "Version: "] config/version]
-     [:div  [:strong "Browser: "] platform/user-agent]]]
+     [:div [:strong "Version: "] config/version]
+     [:div [:strong "Browser: "] platform/user-agent]]]
    [:button.button.px-2.bg-primary.rounded.w-full
     {:auto-focus true
      :on-click #(rf/dispatch [::dialog.e/close])}
     "OK"]
    [close-button]])
 
-#_(defn confirmation
-    [{:keys [title description action]}]
-    [:div.p-4
-     [:h1.text-3xl.mb-2.font-light title]
-     [:div description]
-     [:div.flex.justify-end
-      [:button.button.px-2.bg-primary.rounded
-       {:on-click #(rf/dispatch [::dialog.e/close])}
-       "No"]
-      [:button.button.px-2.bg-primary.rounded
-       {:auto-focus true
-        :on-click #(do (rf/dispatch [::dialog.e/close])
-                       (rf/dispatch action))}
-       "Yes"]]
-     [close-button]])
+(defn confirmation
+  [{:keys [description action confirm-label cancel-label]}]
+  [:div.p-5
+   [:p description]
+   [:div.flex.gap-2.flex-wrap
+    [:button.button.px-2.bg-primary.rounded.flex-1
+     {:on-click #(rf/dispatch [::dialog.e/close])}
+     (or cancel-label "Cancel")]
+    [:button.button.px-2.bg-primary.rounded.flex-1
+     {:auto-focus true
+      :on-click #(do (rf/dispatch [::dialog.e/close])
+                     (rf/dispatch action))}
+     (or confirm-label "OK")]]
+   [close-button]])
 
 (defn save
   [k]
@@ -53,7 +52,7 @@
      [:p
       "Your changes to " [:strong (:title document)]
       " will be lost if you close the document without saving."]
-     [:div.flex.gap-2
+     [:div.flex.gap-2.flex-wrap
       [:button.button.px-2.bg-primary.rounded.flex-1
        {:on-click #(do (rf/dispatch [::dialog.e/close])
                        (rf/dispatch [::document.e/close k false]))}

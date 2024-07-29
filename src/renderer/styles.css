@@ -107,7 +107,7 @@
   }
 
   .button {
-    @apply inline-block relative cursor-pointer text-center outline-none;
+    @apply inline-block relative cursor-pointer text-center outline-none text-nowrap;
     background-color: transparent;
     color: var(--font-color);
     fill: var(--font-color);
@@ -203,8 +203,8 @@ label {
   width: auto;
 
   &:hover {
-      color: var(--font-color-hovered);
-      cursor: pointer;
+    color: var(--font-color-hovered);
+    cursor: pointer;
   }
 }
 
@@ -392,14 +392,13 @@ pre {
 .fps-wrapper {
   @apply drop-shadow-md;
 
-  > div {
-    @apply absolute top-2 left-auto right-2 overflow-hidden font-sans text-sm
-    px-2 py-1.5 bg-white text-gray-500 !important;
+  >div {
+    @apply absolute top-2 left-auto right-2 overflow-hidden font-sans text-sm px-2 py-1.5 bg-white text-gray-500 !important;
 
-    > div {
+    >div {
       @apply left-0 right-0 bottom-0 bg-white !important;
 
-      > div {
+      >div {
         background-color: var(--accent) !important;
       }
     }
@@ -421,19 +420,22 @@ pre {
   &[data-state='open'][data-side='top'] {
     animation-name: slideDownAndFade;
   }
+
   &[data-state='open'][data-side='right'] {
     animation-name: slideLeftAndFade;
   }
+
   &[data-state='open'][data-side='bottom'] {
     animation-name: slideUpAndFade;
   }
+
   &[data-state='open'][data-side='left'] {
     animation-name: slideRightAndFade;
   }
 }
 
 .popover-arrow,
-.menu-arrow  {
+.menu-arrow {
   fill: var(--bg-secondary);
 }
 
