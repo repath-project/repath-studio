@@ -4,21 +4,21 @@
    [renderer.utils.vec :as vec]))
 
 (defn close
-  [{:keys [active-document document-tabs] :as db} key]
-  (let [index (.indexOf document-tabs key)
-        active-document (if (= active-document key)
+  [{:keys [active-document document-tabs] :as db} k]
+  (let [index (.indexOf document-tabs k)
+        active-document (if (= active-document k)
                           (get document-tabs (if (zero? index)
                                                (inc index)
                                                (dec index)))
                           active-document)]
     (-> db
-        (update :document-tabs #(filterv (complement #{key}) %))
+        (update :document-tabs #(filterv (complement #{k}) %))
         (assoc :active-document active-document)
-        (update :documents dissoc key))))
+        (update :documents dissoc k))))
 
 (defn expand-el
-  [{:keys [active-document] :as db} el-k]
-  (update-in db [:documents active-document :collapsed-keys] disj el-k))
+  [{:keys [active-document] :as db} k]
+  (update-in db [:documents active-document :collapsed-keys] disj k))
 
 (defn add-recent
   [db file-path]

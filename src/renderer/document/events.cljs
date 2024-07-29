@@ -31,7 +31,7 @@
                     new-db-store (pop db-store)
                     context' (-> (assoc context db-store-key new-db-store)
                                  (assoc-coeffect :db original-db))
-                    db           (get-effect context :db ::not-found)]
+                    db (get-effect context :db ::not-found)]
                 (cond-> context'
                   (not= db ::not-found)
                   (assoc-effect :db (assoc-in original-db [:documents (:active-document original-db)] db))))))))
@@ -45,14 +45,14 @@
 (rf/reg-event-db
  ::collapse-el
  active-document-path
- (fn [db [_ el-k]]
-   (update db :collapsed-keys conj el-k)))
+ (fn [db [_ k]]
+   (update db :collapsed-keys conj k)))
 
 (rf/reg-event-db
  ::expand-el
  active-document-path
- (fn [db [_ el-k]]
-   (update db :collapsed-keys disj el-k)))
+ (fn [db [_ k]]
+   (update db :collapsed-keys disj k)))
 
 (rf/reg-event-db
  ::toggle-filter
@@ -257,7 +257,7 @@
 (rf/reg-event-db
  ::saved
  (fn [db [_ document]]
-   ;; Update only the path, the title and the saved position of the document.
+   ;; Update the path, the title and the saved position of the document.
    ;; Any other changes that could happen while saving should be preserved.
    (let [updates (select-keys document [:path :title :save])]
      (cond-> db
@@ -278,5 +278,5 @@
 
 (rf/reg-event-db
  ::set-active
- (fn [db [_ document-id]]
-   (h/set-active db document-id)))
+ (fn [db [_ k]]
+   (h/set-active db k)))
