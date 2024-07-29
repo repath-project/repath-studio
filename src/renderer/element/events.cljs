@@ -333,7 +333,6 @@
        h/ungroup
        (history.h/finalize "Ungroup selection"))))
 
-#_:clj-kondo/ignore
 (rf/reg-event-db
  ::manipulate-path
  (fn [db [_ action]]
