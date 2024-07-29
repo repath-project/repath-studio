@@ -61,7 +61,7 @@
   },
   "main": "resources/main.js",
   "devDependencies": {
-    "@mdn/browser-compat-data": "5.5.41",
+    "@mdn/browser-compat-data": "5.5.42",
     "@playwright/test": "1.45.3",
     "@radix-ui/react-context-menu": "2.2.1",
     "@radix-ui/react-dialog": "1.1.1",
