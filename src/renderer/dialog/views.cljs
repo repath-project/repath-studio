@@ -22,7 +22,6 @@
   [:div.p-4
    [:div.flex.gap-3.items-start.pb-2
     [:div
-     [:h1.text-3xl.font-light.mb-2 "Repath Studio"]
      [:div  [:strong "Version: "] config/version]
      [:div  [:strong "Browser: "] platform/user-agent]]]
    [:button.button.px-2.bg-primary.rounded.w-full
@@ -51,8 +50,6 @@
   [k]
   (let [document @(rf/subscribe [::document.s/document k])]
     [:div.p-4
-     [:h1.text-xl.mb-2
-      "Do you want to save your changes?"]
      [:p
       "Your changes to " [:strong (:title document)]
       " will be lost if you close the document without saving."]
@@ -80,6 +77,14 @@
      [:> Dialog/Portal
       [:> Dialog/Overlay {:class "backdrop"}]
       [:> Dialog/Content
-       (merge {:class "dialog-content"}
+
+       (merge {:class "dialog-content"
+               :on-key-down #(.stopPropagation %)}
               (:attrs (last dialogs)))
-       (:content (last dialogs))]]]))
+       (when-let [title (:title (last dialogs))]
+         [:> Dialog/Title
+          {:class "text-xl px-4 pt-4"}
+          title])
+       [:> Dialog/Description
+        {:class "m-0"}
+        (:content (last dialogs))]]]]))

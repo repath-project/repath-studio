@@ -13,12 +13,14 @@
 (rf/reg-event-db
  ::about
  (fn [db [_]]
-   (update db :dialogs conj {:content [v/about]})))
+   (update db :dialogs conj {:title "Repath Studio"
+                             :content [v/about]})))
 
 (rf/reg-event-fx
  ::save
  (fn [{:keys [db]} [_ k]]
-   {:db (update db :dialogs conj {:content [v/save k]
+   {:db (update db :dialogs conj {:title "Do you want to save your changes?"
+                                  :content [v/save k]
                                   :attrs {:onOpenAutoFocus #(.preventDefault %)}})}))
 
 #_(rf/reg-event-db

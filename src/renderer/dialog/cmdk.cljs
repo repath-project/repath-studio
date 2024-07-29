@@ -40,7 +40,8 @@
 (defn root
   []
   [:> Command/Command
-   {:on-key-down #(when-not (= (.-key %) "Escape") (.stopPropagation %))}
+   {:label "Command Menu"
+    :on-key-down #(when-not (= (.-key %) "Escape") (.stopPropagation %))}
    [:> Command/CommandInput
     {:placeholder (t [:cmdk/search-command "Search for a command"])}]
    [:> Command/CommandList
