@@ -29,7 +29,7 @@
   ([db]
    (get-in db (path db)))
   ([db keys]
-   (vals (select-keys (elements db) (vec keys)))))
+   (select-keys (elements db) (vec keys))))
 
 (defn element
   [db k]
@@ -125,7 +125,7 @@
    nested elements."
   [db el]
   (let [ancestors (-> db (ancestor-keys el) reverse)]
-    (conj (mapv #(index db %) (elements db ancestors))
+    (conj (mapv #(index db %) (vals (elements db ancestors)))
           (index db el))))
 
 #_(defn element-by-index
@@ -154,7 +154,7 @@
 
 (defn top-selected-ancestors
   [db]
-  (elements db (top-ancestor-keys db)))
+  (vals (elements db (top-ancestor-keys db))))
 
 (defn clear-temp
   [db]
