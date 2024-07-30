@@ -132,8 +132,3 @@
  (fn [ancestor-keys _]
    (empty? (disj (set ancestor-keys) :canvas))))
 
-#_(rf/reg-sub
-   ::visible
-   :<- [::document.s/elements]
-   (fn [elements _]
-     (filter :visible? (vals elements))))
