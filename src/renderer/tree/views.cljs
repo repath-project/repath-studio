@@ -8,6 +8,7 @@
    [renderer.document.subs :as-alias document.s]
    [renderer.element.events :as-alias element.e]
    [renderer.element.subs :as-alias element.s]
+   [renderer.element.views :as element.v]
    [renderer.frame.events :as-alias frame.e]
    [renderer.tree.events :as-alias e]
    [renderer.utils.dom :as dom]
@@ -149,4 +150,4 @@
            {:class "menu-content context-menu-content"
             :on-close-auto-focus #(.preventDefault %)}]
           (map (fn [item] [comp/context-menu-item item])
-               comp/element-menu))]])
+               element.v/context-menu))]])

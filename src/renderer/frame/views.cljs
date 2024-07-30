@@ -8,6 +8,7 @@
    [reagent.dom.server :as server]
    [renderer.components :as comp]
    [renderer.element.subs :as-alias element.s]
+   [renderer.element.views :as element.v]
    [renderer.frame.events :as-alias frame.e]
    [renderer.tool.base :as tool]
    [renderer.utils.pointer :as pointer]))
@@ -107,4 +108,4 @@
                      :on-close-auto-focus #(.preventDefault %)
                      :style {:margin-left (str x "px")
                              :margin-top (str y "px")}}]
-                   (map comp/context-menu-item comp/element-menu))]]]))})))
+                   (map comp/context-menu-item element.v/context-menu))]]]))})))
