@@ -52,10 +52,8 @@
   (set (map :key (selected db))))
 
 (defn children
-  ([db]
-   (reduce #(set/union %1 (set (children db %2))) #{} (set (selected-keys db))))
-  ([db k]
-   (:children (element db k))))
+  [db k]
+  (:children (element db k)))
 
 (defn update-bounds
   [db k]
@@ -349,9 +347,10 @@
 
 (defn delete
   ([db]
-   (reduce delete db (set/union (set (selected-keys db)) (children db))))
+   (reduce delete db (selected-keys db)))
   ([db k]
-   (let [el (element db k)]
+   (let [el (element db k)
+         db (if (element/root? el) db (reduce delete db (:children el)))]
      (cond-> db
        (not (element/root? el))
        (-> (update-prop (:parent el) :children vec/remove-nth (index db k))
