@@ -71,11 +71,11 @@
             :action [::document.e/download]}
            {:key :divider-3
             :type :separator}
-           {:key :export
+           {:key :export-svg
             :label "Export as SVG"
             :icon "export"
             :disabled? (not @(rf/subscribe [::document.s/documents?]))
-            :action [::element.e/export]}
+            :action [::element.e/export-svg]}
            {:key :divider-4
             :type :separator}
            {:key :close

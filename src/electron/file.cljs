@@ -66,7 +66,7 @@
 (def export-options
   {:defaultPath (.getPath app "pictures")
    :filters [{:name "svg"
-              :extensions ["svg" "svgo"]}]})
+              :extensions ["svg"]}]})
 
 (defn export!
   [window data]

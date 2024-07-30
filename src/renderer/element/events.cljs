@@ -165,23 +165,23 @@
 
 (rf/reg-fx
  ::export
- (fn [data]
+ (fn [data options]
    (file/save!
-    {:startIn "pictures"
-     :types [{:accept {"image/svg+xml" [".svg" ".svgo"]}}]}
+    options
     (fn [^js/FileSystemFileHandle file-handle]
       (p/let [writable (.createWritable file-handle)]
         (.then (.write writable data) (.close writable)))))))
 
 (rf/reg-event-fx
- ::export
+ ::export-svg
  (fn [{:keys [db]} _]
    (let [xml (-> db
                  h/root-children
                  h/->string)]
      (if platform/electron?
        {:send-to-main {:action "export" :data xml}}
-       {::export xml}))))
+       {::export [xml {:startIn "pictures"
+                       :types [{:accept {"image/svg+xml" [".svg"]}}]}]}))))
 
 (rf/reg-event-db
  ::paste
