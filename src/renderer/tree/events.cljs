@@ -1,11 +1,9 @@
 (ns renderer.tree.events
   (:require
-   [re-frame.core :as rf]
-   [renderer.document.events :as-alias document.e]
-   [renderer.element.events :as-alias element.e]))
+   [re-frame.core :as rf]))
 
 (rf/reg-fx
- ::focus-item
+ ::focus
  (fn [[k direction]]
    (let [list-elements (.from js/Array (.querySelectorAll js/document ".tree-sidebar .list-item-button"))
          current-el (first (.querySelectorAll js/document (str ".tree-sidebar [data-id='" (name k) "']")))
@@ -18,22 +16,11 @@
      (.focus element))))
 
 (rf/reg-event-fx
- ::key-down
- (fn [_ [_ key el-k multi?]]
-   (case key
-     "ArrowUp"
-     {::focus-item [el-k :up]}
+ ::focus-up
+ (fn [_ [_ k]]
+   {::focus [k :up]}))
 
-     "ArrowDown"
-     {::focus-item [el-k :down]}
-
-     "ArrowLeft"
-     {:dispatch [::document.e/collapse-el el-k]}
-
-     "ArrowRight"
-     {:dispatch [::document.e/expand-el el-k]}
-
-     "Enter"
-     {:dispatch [::element.e/select el-k multi?]}
-
-     nil)))
+(rf/reg-event-fx
+ ::focus-down
+ (fn [_ [_ k]]
+   {::focus [k :down]}))
