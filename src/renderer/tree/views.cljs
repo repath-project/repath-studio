@@ -73,31 +73,6 @@
     (- (* depth collapse-button-width)
        (if children? collapse-button-width 0))))
 
-(defn key-down-handler
-  [e k]
-  (case (.-key e)
-    "ArrowUp"
-    (do (.stopPropagation e)
-        (rf/dispatch [::e/focus-up k]))
-
-    "ArrowDown"
-    (do (.stopPropagation e)
-        (rf/dispatch [::e/focus-down k]))
-
-    "ArrowLeft"
-    (do (.stopPropagation e)
-        (rf/dispatch [::document.e/collapse-el k]))
-
-    "ArrowRight"
-    (do (.stopPropagation e)
-        (rf/dispatch [::document.e/expand-el k]))
-
-    "Enter"
-    (do (.stopPropagation e)
-        (rf/dispatch [::element.e/select k (.-ctrlKey e)]))
-
-    nil))
-
 (defn list-item-button
   [{:keys [key selected? children] :as el} depth hovered? collapsed?]
   (let [multiple-selected? @(rf/subscribe [::element.s/multiple-selected?])]
@@ -112,16 +87,16 @@
       :ref (fn [this]
              (when (and this selected? hovered? (not multiple-selected?))
                (dom/scroll-into-view! this)))
-      :on-key-down #(key-down-handler % key)
+      :on-key-down #(do (.stopPropagation %)
+                        (rf/dispatch [::e/key-down (.-key %) key (.-ctrlKey %)]))
       :draggable true
       :on-drag-start #(-> (.-dataTransfer %)
                           (.setData "key" (name key)))
       :on-drag-enter #(rf/dispatch [::document.e/set-hovered-keys #{key}])
       :on-drag-over #(.preventDefault %)
       :on-drop #(drop-handler % key)
-      :on-pointer-down (fn [e]
-                         (when (= (.-button e) 2)
-                           (rf/dispatch [::element.e/select key (.-ctrlKey e)])))
+      :on-pointer-down #(when (= (.-button %) 2)
+                          (rf/dispatch [::element.e/select key (.-ctrlKey %)]))
       :on-pointer-up (fn [e]
                        (.stopPropagation e)
                        (rf/dispatch [::element.e/select key (.-ctrlKey e)]))
