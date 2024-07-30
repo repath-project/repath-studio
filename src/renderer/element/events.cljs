@@ -82,7 +82,7 @@
 (rf/reg-event-db
  ::update-attr
  (fn [db [_ k f & more]]
-   (-> (reduce #(apply h/update-attr %1 %2 k f more) db (h/selected db))
+   (-> (reduce #(apply h/update-attr %1 %2 k f more) db (h/selected-keys db))
        (history.h/finalize "Update " (name k)))))
 
 (rf/reg-event-db

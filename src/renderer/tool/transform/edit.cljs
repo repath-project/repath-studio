@@ -21,8 +21,7 @@
       (h/set-cursor "default")
       (h/set-message
        [:div
-        [:div "Drag a handle to modify your shape, or click on an element 
-              to change selection."]
+        [:div "Drag a handle to modify your shape, or click on an element to change selection."]
         [:div "Hold " [:strong "Ctrl"] " to restrict direction."]])))
 
 (defmethod tool/pointer-down :edit
@@ -51,23 +50,22 @@
   (h/set-state db :edit))
 
 (defn snap-handler
-  [db offset el k]
-  (element.h/update-el db el tool/edit offset k))
+  [db offset el-k handle-k]
+  (element.h/update-el db el-k tool/edit offset handle-k))
 
 (defmethod tool/drag :edit
   [{:keys [adjusted-pointer-offset adjusted-pointer-pos clicked-element] :as db} e]
   (let [pointer-offset (mat/sub adjusted-pointer-pos adjusted-pointer-offset)
         db (history.h/swap db)
-        el-key (:element clicked-element)
-        el (element.h/element db el-key)
+        el-k (:element clicked-element)
         pointer-offset (if (pointer/ctrl? e)
                          (pointer/lock-direction pointer-offset)
                          pointer-offset)]
 
     (cond-> db
-      el-key
-      (-> (element.h/update-el el tool/edit pointer-offset (:key clicked-element))
-          (snap.h/snap snap-handler el (:key clicked-element))))))
+      el-k
+      (-> (element.h/update-el el-k tool/edit pointer-offset (:key clicked-element))
+          (snap.h/snap snap-handler el-k (:key clicked-element))))))
 
 (defmethod tool/drag-end :edit
   [db]

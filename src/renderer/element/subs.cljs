@@ -130,7 +130,7 @@
  ::top-level?
  :<- [::ancestor-keys]
  (fn [ancestor-keys _]
-   (empty? (disj ancestor-keys :canvas))))
+   (empty? (disj (set ancestor-keys) :canvas))))
 
 #_(rf/reg-sub
    ::visible

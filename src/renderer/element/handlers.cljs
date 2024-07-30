@@ -28,29 +28,20 @@
 (defn elements
   ([db]
    (get-in db (path db)))
-  ([db keys]
-   (select-keys (elements db) (vec keys))))
+  ([db ks]
+   (select-keys (elements db) (vec ks))))
 
 (defn element
   [db k]
   (get (elements db) k))
 
-(defn update-bounds
-  [db el-k]
-  (if (= el-k :canvas)
-    db
-    (as-> db db
-      (update-in db (conj (path db) el-k) #(assoc % :bounds (if (= (:tag %) :g)
-                                                              (tool/bounds % (elements db))
-                                                              (element/adjusted-bounds % (elements db)))))
-      (reduce #(update-bounds %1 %2) db (:children (element db el-k))))))
+(defn tag
+  [db k]
+  (:tag (element db k)))
 
-(defn update-el
-  [db el f & more]
-  (if (:locked? el)
-    db
-    (-> (apply update-in db (conj (path db) (:key el)) f more)
-        (update-bounds (:key el)))))
+(defn locked?
+  [db k]
+  (:locked? (element db k)))
 
 (defn selected
   [db]
@@ -59,6 +50,29 @@
 (defn selected-keys
   [db]
   (set (map :key (selected db))))
+
+(defn children
+  ([db]
+   (reduce #(set/union %1 (set (children db %2))) #{} (set (selected-keys db))))
+  ([db k]
+   (:children (element db k))))
+
+(defn update-bounds
+  [db k]
+  (if (= k :canvas)
+    db
+    (as-> db db
+      (update-in db (conj (path db) k) #(assoc % :bounds (if (= (:tag %) :g)
+                                                           (tool/bounds % (elements db))
+                                                           (element/adjusted-bounds % (elements db)))))
+      (reduce #(update-bounds %1 %2) db (children db k)))))
+
+(defn update-el
+  [db k f & more]
+  (if (locked? db k)
+    db
+    (-> (apply update-in db (conj (path db) k) f more)
+        (update-bounds k))))
 
 (defn single? [coll]
   (and (seq coll)
@@ -70,29 +84,28 @@
         parents (set (map :parent selected))]
     (and (single? parents)
          (= (count selected)
-            (count (:children (element db (first parents))))))))
+            (count (children db (first parents)))))))
 
 (defn parent
   ([db]
-   (let [selected (selected db)]
+   (let [selected-ks (selected-keys db)]
      (or (parent db (if (siblings-selected? db)
-                      (parent db (first selected))
-                      (first selected)))
+                      (parent db (first selected-ks))
+                      (first selected-ks)))
          (element db :canvas))))
-  ([db el]
-   (when-let [parent (:parent el)]
-     (element db parent))))
+  ([db k]
+   (when-let [parent-k (:parent (element db k))]
+     (element db parent-k))))
 
 (defn siblings
   ([db]
    (:children (parent db)))
-  ([db el]
-   (:children (parent db el))))
+  ([db k]
+   (:children (parent db k))))
 
 (defn root-children
   [db]
-  (->> (element db :canvas)
-       :children
+  (->> (children db :canvas)
        (mapv (elements db))))
 
 (defn root-svgs
@@ -103,49 +116,49 @@
 
 (defn ancestor-keys
   ([db]
-   (reduce #(set/union %1 (ancestor-keys db %2)) #{} (selected db)))
-  ([db el]
-   (loop [parent-key (:parent el)
-          parent-keys #{}]
-     (if parent-key
+   (reduce #(conj %1 (ancestor-keys db %2)) [] (selected-keys db)))
+  ([db k]
+   (loop [parent-k (:parent (element db k))
+          parent-ks []]
+     (if parent-k
        (recur
-        (:parent (element db parent-key))
-        (conj parent-keys parent-key))
-       parent-keys))))
+        (:parent (element db parent-k))
+        (conj parent-ks parent-k))
+       parent-ks))))
 
 (defn index
-  [db el]
-  (when-let [siblings (siblings db el)]
-    (.indexOf siblings (:key el))))
+  [db k]
+  (when-let [siblings (siblings db k)]
+    (.indexOf siblings k)))
 
 (defn index-tree-path
   "Returns a sequence that represents the index tree path of an element.
    For example, the seventh element of the second page on the canvas
    will return [2 7]. This is useful when we need to figure out the index of
    nested elements."
-  [db el]
-  (let [ancestors (-> db (ancestor-keys el) reverse)]
-    (conj (mapv #(index db %) (vals (elements db ancestors)))
-          (index db el))))
+  [db k]
+  (let [ancestors (reverse (ancestor-keys db k))]
+    (conj (mapv #(index db %) ancestors)
+          (index db k))))
 
 #_(defn element-by-index
-    [db index-vec]
+    [db i]
     (loop [element (element db :canvas)
-           i 0]
-      (if (= (count index-vec) i)
+           index 0]
+      (if (= i index)
         element
-        (recur (get (:children element) index) (inc i)))))
+        (recur (get (:children element) index) (inc index)))))
 
 (defn descendant-keys
   ([db]
-   (reduce #(set/union %1 (descendant-keys db %2)) #{} (selected db)))
-  ([db el]
-   (loop [children (set (:children el))
+   (reduce #(set/union %1 (descendant-keys db %2)) #{} (selected-keys db)))
+  ([db k]
+   (loop [children-set (set (children db k))
           child-keys #{}]
-     (if (seq children)
+     (if (seq children-set)
        (recur
-        (reduce #(set/union %1 (:children (element db %2))) #{} children)
-        (set/union child-keys children))
+        (reduce #(set/union %1 (children db %2)) #{} children-set)
+        (set/union child-keys children-set))
        child-keys))))
 
 (defn top-ancestor-keys
@@ -193,16 +206,16 @@
    (reduce #(remove-attr %1 %2 k) db (selected-keys db)))
   ([db el-k k]
    (cond-> db
-     (not (:locked? (element db el-k)))
+     (not (locked? db el-k))
      (update-prop el-k :attrs dissoc k))))
 
 (defn set-attr
   ([db k v]
    (reduce #(set-attr %1 %2 k v) db (selected-keys db)))
   ([db el-k k v]
-   (let [attr-path (conj (path db) el-k :attrs k)
-         el (element db el-k)]
-     (if (and (not (:locked? el)) (element/supports-attr? el k))
+   (let [attr-path (conj (path db) el-k :attrs k)]
+     (if (and (not (locked? db k))
+              (element/supports-attr? (element db el-k) k))
        (if (str/blank? v)
          (remove-attr db el-k k)
          (-> db
@@ -211,16 +224,16 @@
        db))))
 
 (defn update-attr
-  [db el k f & more]
-  (if (element/supports-attr? el k)
-    (apply update-el db el hierarchy/update-attr k f more)
+  [db el-k k f & more]
+  (if (element/supports-attr? (element db el-k) k)
+    (apply update-el db el-k hierarchy/update-attr k f more)
     db))
 
 (defn deselect
   ([db]
    (reduce deselect db (keys (elements db))))
-  ([db key]
-   (set-prop db key :selected? false)))
+  ([db k]
+   (set-prop db k :selected? false)))
 
 (defn expand-ancestors
   [db k]
@@ -245,7 +258,7 @@
 (defn select-all
   [db]
   (reduce select (deselect db) (or (siblings db)
-                                   (:children (element db :canvas)))))
+                                   (children db :canvas))))
 
 (defn selected-tags
   [db]
@@ -273,29 +286,29 @@
 
 (defn selected-sorted-keys
   [db]
-  (set (map :key (selected-sorted db))))
+  (mapv :key (selected-sorted db)))
 
 (defn top-selected-sorted-keys
   [db]
-  (set (map :key (top-selected-sorted db))))
+  (mapv :key (top-selected-sorted db)))
 
 (defn select-up
   ([db multi?]
-   (select-up db (last (top-selected-sorted db)) multi?))
-  ([db el multi?]
-   (let [i (index db el)]
-     (select db (if (= i (dec (count (siblings db el))))
-                  (:parent el)
-                  (get (siblings db el) (inc i))) multi?))))
+   (select-up db (last (top-selected-sorted-keys db)) multi?))
+  ([db k multi?]
+   (let [i (index db k)]
+     (select db (if (= i (dec (count (siblings db k))))
+                  (:parent (element db k))
+                  (get (siblings db k) (inc i))) multi?))))
 
 (defn select-down
   ([db multi?]
-   (select-down db (first (top-selected-sorted db)) multi?))
-  ([db el multi?]
-   (let [i (index db el)]
+   (select-down db (first (top-selected-sorted-keys db)) multi?))
+  ([db k multi?]
+   (let [i (index db k)]
      (select db (if (zero? i)
-                  (:parent el)
-                  (get (siblings db el) (dec i))) multi?))))
+                  (:parent (element db k))
+                  (get (siblings db k) (dec i))) multi?))))
 
 (defn invert-selection
   [db]
@@ -331,14 +344,14 @@
 (defn lock
   ([db]
    (reduce lock db (selected-keys db)))
-  ([db el-k]
-   (set-prop db el-k :locked? true)))
+  ([db k]
+   (set-prop db k :locked? true)))
 
 (defn unlock
   ([db]
    (reduce unlock db (selected-keys db)))
-  ([db el-k]
-   (set-prop db el-k :locked? false)))
+  ([db k]
+   (set-prop db k :locked? false)))
 
 (defn bounds
   [db]
@@ -354,70 +367,66 @@
 
 (defn delete
   ([db]
-   (reduce delete db (selected-keys db)))
+   (reduce delete db (set/union (set (selected-keys db)) (children db))))
   ([db k]
-   (let [el (element db k)
-         ;; OPTIMIZE: No need to recur to delete all children
-         db (if (element/root? el) db (reduce delete db (:children el)))]
+   (let [el (element db k)]
      (cond-> db
        (not (element/root? el))
-       (-> (assoc-in
-            (conj (path db) (:parent el) :children)
-            (vec (remove #{k} (siblings db el))))
+       (-> (update-prop (:parent el) :children vec/remove-nth (index db k))
            (update-in (path db) dissoc k)
-           (document.h/expand-el (:key el)))))))
+           (document.h/expand-el k))))))
 
 (defn update-index
-  [db el f & more]
-  (let [siblings (siblings db el)
-        index (index db el)
+  [db k f & more]
+  (let [siblings (siblings db k)
+        index (index db k)
         new-index (apply f index more)]
     (cond-> db
       (<= 0 new-index (-> siblings count dec))
-      (update-prop (:parent el) :children vec/move index new-index))))
+      (update-prop (:key (parent db k)) :children vec/move index new-index))))
 
 (defn raise
   ([db]
-   (reduce raise db (selected db)))
-  ([db el]
-   (update-index db el inc)))
+   (reduce raise db (selected-sorted-keys db)))
+  ([db k]
+   (update-index db k inc)))
 
 (defn lower
   ([db]
-   (reduce lower db (selected db)))
-  ([db el]
-   (update-index db el dec)))
+   (reduce lower db (selected-sorted-keys db)))
+  ([db k]
+   (update-index db k dec)))
 
 (defn lower-to-bottom
   ([db]
-   (reduce lower-to-bottom db (selected db)))
-  ([db el]
-   (update-index db el (fn [_] 0))))
+   (reduce lower-to-bottom db (selected-sorted-keys db)))
+  ([db k]
+   (update-index db k (fn [_] 0))))
 
 (defn raise-to-top
   ([db]
-   (reduce raise-to-top db (selected db)))
-  ([db el]
-   (update-index db el #(-> (siblings db el) count dec))))
+   (reduce raise-to-top db (selected-sorted-keys db)))
+  ([db k]
+   (update-index db k #(-> (siblings db k) count dec))))
 
 (defn set-parent
   ([db k]
    (reduce #(set-parent %1 %2 k) db (selected-sorted-keys db)))
-  ([db el-k k]
+  ([db el-k parent-k]
    (let [el (element db el-k)]
      (cond-> db
-       (and el (not= el-k k) (not (:locked? el)))
+       (and el (not= el-k parent-k) (not (locked? db parent-k)))
        (-> (update-prop (:parent el) :children #(vec (remove #{el-k} %)))
-           (update-prop k :children conj el-k)
-           (set-prop el-k :parent k))))))
+           (update-prop parent-k :children conj el-k)
+           (set-prop el-k :parent parent-k))))))
 
 (defn set-parent-at-index
-  [db element-key parent-key index]
-  (let [siblings (:children (element db parent-key))
+  [db el-k parent-k i]
+  (let [siblings (:children (element db parent-k))
         last-index (count siblings)]
     (-> db
-        (set-parent element-key parent-key)
-        (update-prop parent-key :children vec/move last-index index))))
+        (set-parent el-k parent-k)
+        (update-prop parent-k :children vec/move last-index i))))
 
 (defn hovered-svg
   [db]
@@ -429,65 +438,67 @@
 
 (defn translate
   ([db offset]
-   (reduce (fn [db el]
-             (cond-> db
-               :always
-               (translate el offset)
+   (reduce (fn [db k]
+             (let [parent-container (element/parent-container (elements db) (element db k))
+                   hovered-svg-k (:key (hovered-svg db))]
+               (cond-> db
+                 :always
+                 (translate k offset)
 
-               ;; TODO: Enhance auto switching parents.
-               (and (= :canvas (:parent el))
-                    (not (element/svg? el))
-                    (single? (selected db)))
-               (-> (set-parent (:key (hovered-svg db)))
-                   (translate el (mat/mul (take 2 (:bounds (hovered-svg db)))
-                                          -1)))))
+                 (and (single? (selected db))
+                      (not= (:key (parent db k)) hovered-svg-k)
+                      (not (element/svg? (element db k))))
+                 (-> (set-parent hovered-svg-k)
+                     ;; FIXME: Handle nested containers.
+                     (translate k (take 2 (:bounds parent-container)))
+                     (translate k (mat/mul (take 2 (:bounds (hovered-svg db))) -1))))))
            db
-           (top-selected-ancestors db)))
-  ([db el offset]
-   (update-el db el tool/translate offset)))
+           (top-ancestor-keys db)))
+  ([db k offset]
+   (update-el db k tool/translate offset)))
 
 (defn position
   ([db pos]
-   (reduce #(position %1 %2 pos) db (top-selected-ancestors db)))
-  ([db el pos]
-   (update-el db el tool/position pos)))
+   (reduce #(position %1 %2 pos) db (top-ancestor-keys db)))
+  ([db k pos]
+   (update-el db k tool/position pos)))
 
 (defn scale
   ([db ratio pivot-point]
-   (reduce #(scale %1 %2 ratio pivot-point) db (selected db)))
-  ([db el ratio pivot-point]
-   (update-el db el tool/scale ratio (let [[x1 y1] (:bounds el)]
-                                       (mat/sub pivot-point [x1 y1])))))
+   (reduce #(scale %1 %2 ratio pivot-point) db (selected-keys db)))
+  ([db k ratio pivot-point]
+   (update-el db k tool/scale ratio (let [[x1 y1] (:bounds (element db k))]
+                                      (mat/sub pivot-point [x1 y1])))))
 
 (defn align
   ([db direction]
-   (reduce #(align %1 %2 direction) db (selected db)))
-  ([db el direction]
-   (let [bounds (:bounds el)
+   (reduce #(align %1 %2 direction) db (selected-keys db)))
+  ([db k direction]
+   (let [bounds (:bounds (element db k))
          center (bounds/center bounds)
-         parent-bounds (:bounds (parent db el))
+         parent-bounds (:bounds (parent db k))
          parent-center (bounds/center parent-bounds)
          [cx cy] (mat/sub parent-center center)
          [x1 y1 x2 y2] (mat/sub parent-bounds bounds)]
-     (translate db el (case direction
-                        :top [0 y1]
-                        :center-vertical [0 cy]
-                        :bottom [0 y2]
-                        :left [x1 0]
-                        :center-horizontal [cx 0]
-                        :right [x2 0])))))
+     (translate db k (case direction
+                       :top [0 y1]
+                       :center-vertical [0 cy]
+                       :bottom [0 y2]
+                       :left [x1 0]
+                       :center-horizontal [cx 0]
+                       :right [x2 0])))))
 
 (defn ->path
   ([db]
-   (reduce ->path db (selected db)))
-  ([db el]
-   (update-el db el element/->path)))
+   (reduce ->path db (selected-keys db)))
+  ([db k]
+   (update-el db k element/->path)))
 
 (defn stroke->path
   ([db]
-   (reduce stroke->path db (selected db)))
-  ([db el]
-   (update-el db el element/stroke->path)))
+   (reduce stroke->path db (selected-keys db)))
+  ([db k]
+   (update-el db k element/stroke->path)))
 
 (def default-props
   {:type :element
@@ -496,19 +507,18 @@
    :children []})
 
 (defn overlapping-svg
-  [db el]
-  (let [svgs (reverse (root-svgs db)) ; Reverse to select top svgs first.
-        el-bounds (tool/bounds el)]
+  [db bounds]
+  (let [svgs (reverse (root-svgs db))] ; Reverse to select top svgs first.
     (or
-     (some #(when (bounds/contained? el-bounds (:bounds %)) %) svgs)
-     (some #(when (bounds/intersect? el-bounds (:bounds %)) %) svgs)
+     (some #(when (bounds/contained? bounds (:bounds %)) %) svgs)
+     (some #(when (bounds/intersect? bounds (:bounds %)) %) svgs)
      (element db :canvas))))
 
 (defn create
   [db el]
   (if (element/supported? el)
     (let [key (uuid/generate)
-          page (overlapping-svg db el)
+          page (overlapping-svg db (tool/bounds el))
           parent (or (:parent el) (if (element/svg? el) :canvas (:key page)))
           children (vals (select-keys (elements db) (:children el)))
           [x1 y1] (tool/bounds (element db parent))
@@ -628,56 +638,51 @@
        (reduce (fn [db attr]
                  (cond-> db
                    (attr attrs)
-                   (update-attr el attr #(if % (-> attrs attr) disj))))
+                   (update-attr (:key el) attr #(if % (-> attrs attr) disj))))
                db style-attrs)) db)))
+
+(defn inherit-attrs
+  [db source-el k]
+  (reduce
+   (fn [db attr]
+     (let [source-attr (-> source-el :attrs attr)
+           get-value (fn [v] (if (empty? (str v)) source-attr v))]
+       (cond-> db
+         source-attr
+         (update-attr k attr get-value)))) db spec/presentation-attrs))
 
 (defn group
   [db]
-  (reduce (fn [db key]
-            (set-parent db key (-> db selected-keys first)))
+  (reduce (fn [db key] (set-parent db key (-> db selected-keys first)))
           (add db {:tag :g
                    :parent (:key (parent db))})
           (top-selected-sorted-keys db)))
 
-(defn inherit-attrs
-  [db source-el target-el-k]
-  (reduce
-   (fn [db attr]
-     (let [source-attr (-> source-el :attrs attr)]
-       (cond-> db
-         source-attr
-         (update-attr (element db target-el-k)
-                      attr
-                      (fn [v]
-                        (if (empty? (str v))
-                          source-attr
-                          v)))))) db spec/presentation-attrs))
-
 (defn ungroup
   ([db]
-   (reduce ungroup db (selected db)))
-  ([db el]
+   (reduce ungroup db (selected-keys db)))
+  ([db k]
    (cond-> db
-     (and (not (:locked? el)) (= (:tag el) :g))
+     (and (not (locked? db k)) (= (tag db k) :g))
      (as-> db db
-       (let [i (index db el)]
+       (let [i (index db k)]
          (reduce
           (fn [db el-k]
             (-> db
-                (set-parent-at-index el-k (:parent el) i)
+                (set-parent-at-index el-k (:parent (element db k)) i)
                 ;; Group attributes are inherited by its children,
                 ;; so we need to maintain the presentation attrs.
-                (inherit-attrs el el-k)))
-          db (reverse (:children el))))
-       (delete db (:key el))))))
+                (inherit-attrs (element db k) el-k)))
+          db (reverse (children db k))))
+       (delete db k)))))
 
 (defn manipulate-path
   ([db action]
-   (reduce #(manipulate-path %1 %2 action) db (selected db)))
-  ([db el action]
+   (reduce #(manipulate-path %1 %2 action) db (selected-keys db)))
+  ([db k action]
    (cond-> db
-     (= (:tag el) :path)
-     (update-el el path/manipulate action))))
+     (= (tag db k) :path)
+     (update-el k path/manipulate action))))
 
 (defn ->string
   [elements]
