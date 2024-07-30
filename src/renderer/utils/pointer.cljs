@@ -11,6 +11,10 @@
   [e]
   (contains? (:modifiers e) :shift))
 
+(defn alt?
+  [e]
+  (contains? (:modifiers e) :alt))
+
 (defn significant-drag?
   [pointer-pos pointer-offset]
   (let [threshold 1]
