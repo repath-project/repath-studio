@@ -8,9 +8,11 @@
    (let [list-elements (.from js/Array (.querySelectorAll js/document ".tree-sidebar .list-item-button"))
          current-el (first (.querySelectorAll js/document (str ".tree-sidebar [data-id='" (name k) "']")))
          i (.indexOf list-elements current-el)
-         element (get list-elements (case direction
-                                      :up (if (zero? i) (dec (count list-elements)) (dec i))
-                                      :down (if (< i (dec (count list-elements))) (inc i) 0)))]
+         max-i (dec (count list-elements))
+         updated-i (case direction
+                     :up (if (zero? i) max-i (dec i))
+                     :down (if (< i max-i) (inc i) 0))
+         element (get list-elements updated-i)]
      (.focus element))))
 
 (rf/reg-event-fx
@@ -19,6 +21,6 @@
    {::focus [k :up]}))
 
 (rf/reg-event-fx
- ::focus-up
+ ::focus-down
  (fn [_ [_ k]]
    {::focus [k :down]}))
