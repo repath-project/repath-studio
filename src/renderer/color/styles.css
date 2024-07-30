@@ -21,7 +21,7 @@
 .chrome-picker,
 .photoshop-picker {
   background: transparent !important;
-  box-shadow: none  !important;
+  box-shadow: none !important;
   color: var(--font-color) !important;
 
   div {
@@ -50,21 +50,22 @@
     line-height: 12px !important;
   }
 
-  > div {
+  >div {
     background: transparent !important;
   }
 
-  > div:last-child > div:last-child > div:last-child > div:last-child {
-    > div:nth-child(1),
-    > div:nth-child(2) {
+  >div:last-child>div:last-child>div:last-child>div:last-child {
+
+    >div:nth-child(1),
+    >div:nth-child(2) {
       display: none !important;
     }
 
-    > div:nth-child(3)  {
+    >div:nth-child(3) {
       @apply bg-primary w-full !important;
       padding-top: 9px !important;
 
-      > div:last-child {
+      >div:last-child {
         right: 5px !important;
         top: 7px !important;
 
@@ -80,7 +81,7 @@
     margin-left: 30px !important;
   }
 
-  > div:first-of-type {
+  >div:first-of-type {
     display: none;
   }
 }
