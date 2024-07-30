@@ -157,7 +157,7 @@
   (let [pointer-handler #(pointer/event-handler % element)]
     [:path (merge {:d (points->path (::points attrs)
                                     (merge (select-keys attrs options)
-                                           {:simulatePressure false}))
+                                           {:simulatePressure true}))
                    :on-pointer-up pointer-handler
                    :on-pointer-down pointer-handler
                    :on-pointer-move pointer-handler
