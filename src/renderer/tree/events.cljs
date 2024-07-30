@@ -14,11 +14,11 @@
      (.focus element))))
 
 (rf/reg-event-fx
- ::select-up
+ ::focus-up
  (fn [_ [_ k]]
    {::focus [k :up]}))
 
 (rf/reg-event-fx
- ::select-down
+ ::focus-up
  (fn [_ [_ k]]
    {::focus [k :down]}))

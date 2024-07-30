@@ -78,11 +78,11 @@
   (case (.-key e)
     "ArrowUp"
     (do (.stopPropagation e)
-        (rf/dispatch [::e/select-up k]))
+        (rf/dispatch [::e/focus-up k]))
 
     "ArrowDown"
     (do (.stopPropagation e)
-        (rf/dispatch [::e/select-down k]))
+        (rf/dispatch [::e/focus-down k]))
 
     "ArrowLeft"
     (do (.stopPropagation e)
