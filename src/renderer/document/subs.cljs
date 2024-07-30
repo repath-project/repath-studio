@@ -75,7 +75,7 @@
  :<- [::path]
  (fn [[title path] _]
    (let [title (or path title)]
-     (when title (str title " - ")) "Repath Studio")))
+     (str (when title (str title " - ")) "Repath Studio"))))
 
 (rf/reg-sub
  ::elements

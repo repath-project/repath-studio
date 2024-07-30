@@ -34,10 +34,19 @@
   [{:keys [documents]} file-path]
   (some #(when (and file-path (= (:path %) file-path)) (:key %)) (vals documents)))
 
+(defn new-title
+  [{:keys [documents]}]
+  (let [existing-titles (set (map :title (vals documents)))]
+    (loop [i 1]
+      (let [title (str "Untitled-" i)]
+        (if (not (contains? existing-titles title))
+          title
+          (recur (inc i)))))))
+
 (defn create-tab
   [db document]
   (let [key (or (:key document) (uuid/generate))
-        title (or (:title document) (str "Untitled-" (-> db :documents count inc)))
+        title (or (:title document) (new-title db))
         active-index (.indexOf (:document-tabs db) (:active-document db))
         document (merge document {:key key :title title})]
     (-> db
