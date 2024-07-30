@@ -19,20 +19,6 @@
        (history.h/finalize "Select element"))))
 
 (rf/reg-event-db
- ::select-up
- (fn [db [_ multi?]]
-   (-> db
-       (h/select-up multi?)
-       (history.h/finalize "Select up"))))
-
-(rf/reg-event-db
- ::select-down
- (fn [db [_ multi?]]
-   (-> db
-       (h/select-down multi?)
-       (history.h/finalize "Select down"))))
-
-(rf/reg-event-db
  ::toggle-prop
  (fn [db [_ key prop]]
    (-> db

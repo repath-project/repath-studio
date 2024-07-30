@@ -9,6 +9,7 @@
    [renderer.element.events :as-alias element.e]
    [renderer.element.subs :as-alias element.s]
    [renderer.frame.events :as-alias frame.e]
+   [renderer.tree.events :as-alias e]
    [renderer.utils.dom :as dom]
    [renderer.utils.keyboard :as keyb]))
 
@@ -73,26 +74,29 @@
        (if children? collapse-button-width 0))))
 
 (defn key-down-handler
-  [e el-k]
-  (let [ctrl? (.-ctrlKey e)]
-    (case (.-key e)
-      "ArrowUp"
-      (do (.stopPropagation e)
-          (rf/dispatch [::element.e/select-up ctrl?]))
+  [e k]
+  (case (.-key e)
+    "ArrowUp"
+    (do (.stopPropagation e)
+        (rf/dispatch [::e/select-up k]))
 
-      "ArrowDown"
-      (do (.stopPropagation e)
-          (rf/dispatch [::element.e/select-down ctrl?]))
+    "ArrowDown"
+    (do (.stopPropagation e)
+        (rf/dispatch [::e/select-down k]))
 
-      "ArrowLeft"
-      (do (.stopPropagation e)
-          (rf/dispatch [::document.e/collapse-el el-k]))
+    "ArrowLeft"
+    (do (.stopPropagation e)
+        (rf/dispatch [::document.e/collapse-el k]))
 
-      "ArrowRight"
-      (do (.stopPropagation e)
-          (rf/dispatch [::document.e/expand-el el-k]))
+    "ArrowRight"
+    (do (.stopPropagation e)
+        (rf/dispatch [::document.e/expand-el k]))
 
-      nil)))
+    "Enter"
+    (do (.stopPropagation e)
+        (rf/dispatch [::element.e/select k (.-ctrlKey e)]))
+
+    nil))
 
 (defn list-item-button
   [{:keys [key selected? children] :as el} depth hovered? collapsed?]
@@ -101,6 +105,7 @@
      {:class [(when selected? "selected")
               (when hovered? "hovered")]
       :tab-index 0
+      :data-id key
       :role "menuitem"
       :on-double-click #(rf/dispatch [::frame.e/pan-to-element key])
       :on-pointer-enter #(rf/dispatch [::document.e/set-hovered-keys #{key}])

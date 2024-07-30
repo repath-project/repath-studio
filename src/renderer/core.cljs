@@ -35,6 +35,7 @@
    [renderer.timeline.events]
    [renderer.timeline.subs]
    [renderer.tool.core]
+   [renderer.tree.events]
    [renderer.utils.dom :as dom]
    [renderer.utils.error :as error]
    [renderer.utils.keyboard :as keyb]

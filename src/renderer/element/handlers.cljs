@@ -292,24 +292,6 @@
   [db]
   (mapv :key (top-selected-sorted db)))
 
-(defn select-up
-  ([db multi?]
-   (select-up db (last (top-selected-sorted-keys db)) multi?))
-  ([db k multi?]
-   (let [i (index db k)]
-     (select db (if (= i (dec (count (siblings db k))))
-                  (:parent (element db k))
-                  (get (siblings db k) (inc i))) multi?))))
-
-(defn select-down
-  ([db multi?]
-   (select-down db (first (top-selected-sorted-keys db)) multi?))
-  ([db k multi?]
-   (let [i (index db k)]
-     (select db (if (zero? i)
-                  (:parent (element db k))
-                  (get (siblings db k) (dec i))) multi?))))
-
 (defn invert-selection
   [db]
   (reduce (fn [db {:keys [key tag]}]
