@@ -16,7 +16,7 @@ In addition to the [idiomatic names](https://guide.clojure.style/#idiomatic-name
 we use the following conventions
 
 - e - event
-- el - element
+- el, els - element
 - attr, attrs - attribute, attributes
 - prop, props - property, properties
 
@@ -27,16 +27,17 @@ We also use the following namespace aliases
 - h - handlers
 - s - subs
 
-If the namespace belongs to a different module, we use `module.v`.
+If the namespace belongs to a dedicated module, we use `module.v`.
 
 ## App structure
 
 Main structure
 <pre>
 src\
-├── renderer\     <--- <a href="https://www.electronjs.org/docs/latest/tutorial/process-model#the-renderer-process">renderer process</a>
-├── main.cljs     <--- <a href="https://www.electronjs.org/docs/latest/tutorial/process-model#the-main-process">main process</a>
-└── preload.cljs  <--- <a href="https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts">preload script</a>
+├── renderer\     <--- [Renderer Process](https://www.electronjs.org/docs/latest/tutorial/process-model#the-renderer-process</a>
+├── electron\     <--- [Main Process](https://www.electronjs.org/docs/latest/tutorial/process-model#the-main-process),[Preload script](https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts)
+├── lang\         <--- Translation files
+└── worker\       <--- [Web Workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API)
 </pre>
 
 We are trying to split our code under renderer into relatively independent modules,
@@ -59,6 +60,6 @@ module\
 
 ```
 Ctrl+Shift+I Toggle devtools
-Ctrl+Shift+H Toggle 10x
+Ctrl+Shift+X Toggle 10x
 Ctrl+R Reload app
 ```
