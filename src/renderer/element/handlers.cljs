@@ -427,6 +427,7 @@
                  (translate k offset)
 
                  (and (single? (selected db))
+                      (= (:state db) :move)
                       (not= (:key (parent db k)) hovered-svg-k)
                       (not (element/svg? (element db k))))
                  (-> (set-parent hovered-svg-k)
