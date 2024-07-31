@@ -426,8 +426,9 @@
                  :always
                  (translate k offset)
 
+                 ;; REVIEW: Move this part to select tools?
                  (and (single? (selected db))
-                      (= (:state db) :move)
+                      (contains? #{:move :clone} (:state db))
                       (not= (:key (parent db k)) hovered-svg-k)
                       (not (element/svg? (element db k))))
                  (-> (set-parent hovered-svg-k)
