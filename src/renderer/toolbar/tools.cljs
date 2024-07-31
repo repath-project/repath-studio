@@ -38,7 +38,7 @@
 (def groups
   [[:select :edit :pan :zoom]
    [:svg]
-   [:circle :ellipse :rect :line :polyline :polygon :text]
+   [:circle :ellipse :rect :line :polyline :polygon :image :text]
    [:blob]
    [:brush :pen]
    [:dropper :fill :measure]])

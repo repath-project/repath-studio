@@ -12,11 +12,11 @@
 (defmethod tool/properties :image
   []
   {:icon "image"
-   :description "The <image> SVG element includes images inside SVG documents. 
+   :description "The <image> SVG element includes images inside SVG documents.
                  It can display raster image files or other SVG files."
    :attrs [:href]})
 
-(defmethod tool/pointer-down :image
+(defmethod tool/pointer-up :image
   [{:keys [adjusted-pointer-pos] :as db}]
   (file/open!
    {:startIn "pictures"
