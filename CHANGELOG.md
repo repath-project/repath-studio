@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.2.12 (2024-07-31)
+
+**Added**
+
+- Multiple dialogs support
+- Disabled state of menubar items
+- Stroke attribute to line
+
+**Removed**
+
+- Resize handles of tree and properties panel
+- Ruler lock button
+
+**Changed**
+
+- Enhance item tree arrow handling
+- Enhance untitled document handling
+- Enhance dialog a11y
+- Enhance closing multiple unsaved documents
+- Move status text to canvas
+- Use setPointerCapture to maintain cursor styles
+
+**Fixed**
+
+- Brush pressure
+- Window document title
+- Parent element after boolean operation
+- Element tree overflow
+- Pointer leave on element tree
+
 ## 0.2.11 (2024-06-19)
 
 **Removed**
