@@ -16,6 +16,7 @@
       [x1 y1 x2 y2])))
 
 (defn union
+  "Calculates the bounds that contain an arbitrary set of bounds."
   [& bounds]
   (concat (apply map min (map #(take 2 %) bounds))
           (apply map max (map #(drop 2 %) bounds))))
@@ -26,11 +27,13 @@
   (mat/sub [x2 y2] [x1 y1]))
 
 (defn center
+  "Calculates the center of bounds."
   [bounds]
-  (let [[x1 y1 _x2 _y2] bounds]
-    (mat/add [x1 y1] (mat/div (->dimensions bounds) 2))))
+  (mat/add (take 2 bounds)
+           (mat/div (->dimensions bounds) 2)))
 
 (defn intersect?
+  "Tests whether the provided set of bounds intersect."
   [a-bounds b-bounds]
   (when (and a-bounds b-bounds)
     (let [[a-left a-top a-right a-bottom] a-bounds
@@ -41,6 +44,7 @@
                (< b-bottom a-top))))))
 
 (defn contained?
+  "Tests whether `bounds-a` fully contain `bounds-b`."
   [a-bounds b-bounds]
   (when (and a-bounds b-bounds)
     (let [[a-left a-top a-right a-bottom] a-bounds
@@ -51,6 +55,7 @@
            (< a-bottom b-bottom)))))
 
 (defn contain-point?
+  "Tests whether the provided bounds contain a point."
   [[left top right bottom] [x y]]
   (and (<= left x)
        (<= top y)

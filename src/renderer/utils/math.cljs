@@ -22,6 +22,7 @@
   (mod angle (* 2 Math/PI)))
 
 (defn angle
+  "Calculates the angle between two points."
   [x1 y1 x2 y2]
   (-> (Math/atan2 (- y2 y1) (- x2 x1))
       normalize-angle
