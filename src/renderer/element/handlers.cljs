@@ -347,7 +347,7 @@
 
 (defn delete
   ([db]
-   (reduce delete db (selected-keys db)))
+   (reduce delete db (reverse (selected-sorted-keys db))))
   ([db k]
    (let [el (element db k)
          db (if (element/root? el) db (reduce delete db (:children el)))]
