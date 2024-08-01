@@ -1,13 +1,13 @@
 (ns renderer.tool.misc.measure
   (:require
    [clojure.core.matrix :as mat]
-   [goog.math]
    [re-frame.core :as rf]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.handlers :as element.h]
    [renderer.handlers :as handlers]
    [renderer.tool.base :as tool]
    [renderer.tool.overlay :as overlay]
+   [renderer.utils.math :as math]
    [renderer.utils.units :as units]))
 
 (derive :measure ::tool/tool)
@@ -53,7 +53,7 @@
   [{:keys [attrs key hypotenuse]}]
   (let [{:keys [x1 x2 y1 y2]} attrs
         [x1 y1 x2 y2] (map units/unit->px [x1 y1 x2 y2])
-        angle (goog.math/angle x1 y1 x2 y2)
+        angle (math/angle x1 y1 x2 y2)
         zoom @(rf/subscribe [::document.s/zoom])
         straight? (< angle 180)
         straight-angle (if straight? angle (- angle 360))]
