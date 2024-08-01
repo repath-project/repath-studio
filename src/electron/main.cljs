@@ -47,24 +47,52 @@
 (defn open-external!
   [url]
   (let [url-parsed (js/URL. url)]
-    (when (and (= (.-protocol url-parsed) "https:") (allowed-url? url-parsed))
+    (when (and (= (.-protocol url-parsed) "https:")
+               (allowed-url? url-parsed))
       (.openExternal shell url-parsed.href))))
 
 (defn to-main-api
   [args]
   (case (.-action args)
-    "windowMinimize" (.minimize ^js @main-window)
-    "windowToggleMaximized" (if (.isMaximized ^js @main-window) (.unmaximize ^js @main-window) (.maximize ^js @main-window))
-    "windowToggleFullscreen" (.setFullScreen ^js @main-window (not (.isFullScreen ^js @main-window)))
-    "setThemeMode" (set! (.. nativeTheme -themeSource) (.-data args))
-    "openRemoteUrl" (open-external! (.-data args))
+    "windowMinimize"
+    (.minimize ^js @main-window)
+
+    "windowToggleMaximized"
+    (if (.isMaximized ^js @main-window)
+      (.unmaximize ^js @main-window)
+      (.maximize ^js @main-window))
+
+    "windowToggleFullscreen"
+    (.setFullScreen ^js @main-window (not (.isFullScreen ^js @main-window)))
+
+    "setThemeMode"
+    (set! (.. nativeTheme -themeSource) (.-data args))
+
+    "openRemoteUrl"
+    (open-external! (.-data args))
+
     ;; https://www.electronjs.org/docs/api/clipboard#clipboardwritedata-type
-    "writeToClipboard" (.write clipboard (.-data args))
-    "openDirectory" (.showItemInFolder shell (.-data args))
-    "openDocument" (p/let [documents (file/open! @main-window (.-data args))] (doseq [document documents] (send-to-renderer! "fileLoaded" document)))
-    "saveDocument" (p/let [document (file/save! @main-window (.-data args))] (send-to-renderer! "fileSaved" document))
-    "saveDocumentAs" (p/let [document (file/save-as! @main-window (.-data args))] (send-to-renderer! "fileSaved" document))
-    "export" (file/export! @main-window (.-data args))))
+    "writeToClipboard"
+    (.write clipboard (.-data args))
+
+    "openDirectory"
+    (.showItemInFolder shell (.-data args))
+
+    "openDocument"
+    (p/let [documents (file/open! @main-window (.-data args))]
+      (doseq [document documents]
+        (send-to-renderer! "fileLoaded" document)))
+
+    "saveDocument"
+    (p/let [document (file/save! @main-window (.-data args))]
+      (send-to-renderer! "fileSaved" document))
+
+    "saveDocumentAs"
+    (p/let [document (file/save-as! @main-window (.-data args))]
+      (send-to-renderer! "fileSaved" document))
+
+    "export"
+    (file/export! @main-window (.-data args))))
 
 (defn register-window-events!
   []
