@@ -327,10 +327,6 @@
        (h/manipulate-path action)
        (history.h/finalize (str/capitalize (name action)) "path"))))
 
-(defn wrap-svg
-  [s [w h]]
-  (str "<svg width='" w "' height='" h "'>" s "</svg>"))
-
 (defn clipboard-data
   [db]
   (let [selected-elements (h/top-selected-sorted db)
@@ -340,7 +336,7 @@
       (not (and (h/single? selected-elements)
                 (or (element/svg? (first selected-elements))
                     (element/root? (first selected-elements)))))
-      (wrap-svg dimensions))))
+      (element/wrap-to-svg dimensions))))
 
 (rf/reg-event-fx
  ::copy

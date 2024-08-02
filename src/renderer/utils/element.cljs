@@ -145,3 +145,7 @@
                :tag :path)
         (assoc-in [:attrs :d] new-d)
         (assoc-in [:attrs :fill] (:stroke attrs)))))
+
+(defn wrap-to-svg
+  [s [w h]]
+  (str "<svg width='" w "' height='" h "'>" s "</svg>"))
