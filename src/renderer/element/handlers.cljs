@@ -235,8 +235,7 @@
 
 (defn expand-ancestors
   [db k]
-  (->> (element db k)
-       (ancestor-keys db)
+  (->> (ancestor-keys db k)
        (reduce document.h/expand-el db)))
 
 (defn select
