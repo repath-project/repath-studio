@@ -155,7 +155,7 @@
 
 (def file-picker-options
   {:startIn "documents"
-   :types [{:accept {"application/repath.studio" [".rps"]}}]})
+   :types [{:accept {"application/repath-studio" [".rps"]}}]})
 
 (rf/reg-fx
  ::open
