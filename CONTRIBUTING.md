@@ -34,10 +34,10 @@ If the namespace belongs to a dedicated module, we use `module.v`.
 Main structure
 <pre>
 src\
-├── renderer\     <--- [Renderer Process](https://www.electronjs.org/docs/latest/tutorial/process-model#the-renderer-process)
-├── electron\     <--- [Main Process](https://www.electronjs.org/docs/latest/tutorial/process-model#the-main-process),[Preload script](https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts)
+├── renderer\     <--- <a href ="https://www.electronjs.org/docs/latest/tutorial/process-model#the-renderer-process">Renderer Process</a>
+├── electron\     <--- <a href ="https://www.electronjs.org/docs/latest/tutorial/process-model#the-main-process">Main Process</a> & <a href="https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts">Preload script</a>
 ├── lang\         <--- Translation files
-└── worker\       <--- [Web Workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API)
+└── worker\       <--- <a href ="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API">Web Workers</a>
 </pre>
 
 We are trying to split our code under renderer into relatively independent modules,
