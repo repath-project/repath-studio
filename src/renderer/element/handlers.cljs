@@ -275,11 +275,11 @@
 
 (defn selected-sorted
   [db]
-  (sort-by #(index-tree-path db %) (selected db)))
+  (sort-by #(index-tree-path db (:key %)) (selected db)))
 
 (defn top-selected-sorted
   [db]
-  (sort-by #(index-tree-path db %) (top-selected-ancestors db)))
+  (sort-by #(index-tree-path db (:key %)) (top-selected-ancestors db)))
 
 (defn selected-sorted-keys
   [db]
