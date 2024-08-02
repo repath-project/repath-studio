@@ -247,13 +247,19 @@
 
 (rf/reg-fx
  :clipboard-write
- (fn [text-html]
-   (js/navigator.clipboard.write
-    (clj->js [(js/ClipboardItem.
-               #js {"text/html" (when text-html
-                                  (js/Blob.
-                                   [text-html]
-                                   #js {:type ["text/html"]}))})]))))
+ (fn [[data]]
+   (when data
+     (js/navigator.clipboard.write
+      (array (js/ClipboardItem.
+              (let [blob-array (js-obj)]
+                (doseq
+                 [[type data]
+                  [["image/svg+xml" data]
+                   ["text/html" data]
+                   ["text/plain" data]]]
+                  (when (.supports js/ClipboardItem type)
+                    (aset blob-array type (js/Blob. (array data) #js {:type type}))))
+                blob-array)))))))
 
 (rf/reg-fx
  :focus

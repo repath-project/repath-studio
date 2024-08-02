@@ -7,6 +7,7 @@
    [renderer.element.handlers :as h]
    [renderer.history.handlers :as history.h]
    [renderer.utils.bounds :as bounds]
+   [renderer.utils.element :as element]
    [renderer.utils.file :as file]
    [renderer.utils.units :as units]
    [renderer.worker.events :as-alias worker.e]))
@@ -326,24 +327,34 @@
        (h/manipulate-path action)
        (history.h/finalize (str/capitalize (name action)) "path"))))
 
+(defn wrap-svg
+  [s [w h]]
+  (str "<svg width='" w "' height='" h "'>" s "</svg>"))
+
+(defn clipboard-data
+  [db]
+  (let [selected-elements (h/top-selected-sorted db)
+        dimensions (bounds/->dimensions (h/bounds db))
+        s (h/->string selected-elements)]
+    (cond-> s
+      (not (and (h/single? selected-elements)
+                (element/svg? (first selected-elements))))
+      (wrap-svg dimensions))))
+
 (rf/reg-event-fx
  ::copy
  (fn [{:keys [db]} [_]]
-   (let [selected-elements (h/selected db)
-         text-html (h/->string selected-elements)]
-     {:db (h/copy db)
-      :clipboard-write [text-html]})))
+   {:db (h/copy db)
+    :clipboard-write [(clipboard-data db)]}))
 
 (rf/reg-event-fx
  ::cut
  (fn [{:keys [db]} [_]]
-   (let [selected-elements (h/selected db)
-         text-html (h/->string selected-elements)]
-     {:db (-> db
-              h/copy
-              h/delete
-              (history.h/finalize "Cut selection"))
-      :clipboard-write [text-html]})))
+   {:db (-> db
+            h/copy
+            h/delete
+            (history.h/finalize "Cut selection"))
+    :clipboard-write [(clipboard-data db)]}))
 
 (rf/reg-fx
  ::->svg
