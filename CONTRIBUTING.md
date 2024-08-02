@@ -34,7 +34,7 @@ If the namespace belongs to a dedicated module, we use `module.v`.
 Main structure
 <pre>
 src\
-├── renderer\     <--- [Renderer Process](https://www.electronjs.org/docs/latest/tutorial/process-model#the-renderer-process</a>
+├── renderer\     <--- [Renderer Process](https://www.electronjs.org/docs/latest/tutorial/process-model#the-renderer-process)
 ├── electron\     <--- [Main Process](https://www.electronjs.org/docs/latest/tutorial/process-model#the-main-process),[Preload script](https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts)
 ├── lang\         <--- Translation files
 └── worker\       <--- [Web Workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API)
