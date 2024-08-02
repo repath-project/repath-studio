@@ -338,7 +338,8 @@
         s (h/->string selected-elements)]
     (cond-> s
       (not (and (h/single? selected-elements)
-                (element/svg? (first selected-elements))))
+                (or (element/svg? (first selected-elements))
+                    (element/root? (first selected-elements)))))
       (wrap-svg dimensions))))
 
 (rf/reg-event-fx

@@ -114,3 +114,12 @@
        [overlay/times (:point nearest-neighbor)])
 
      (when grid? [ruler.v/grid])]))
+
+(defmethod tool/render-to-string :canvas
+  [{:keys [attrs children]}]
+  (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
+        attrs (->> (dissoc attrs :fill)
+                   (remove #(empty? (str (second %))))
+                   (into {}))]
+    (->> (doall (map tool/render-to-string (merge child-elements)))
+         (into [:svg attrs]))))
