@@ -94,6 +94,13 @@
        "fileLoaded" (rf/dispatch [::document.e/load (edn/read-string (.-data data))])
        "fileSaved" (rf/dispatch [::document.e/saved (edn/read-string (.-data data))])))))
 
+(defn handle-system-theme!
+  []
+  (let [query (.matchMedia js/window "(prefers-color-scheme: dark)")
+        get-theme (fn [query] (if (.-matches query) :dark :light))]
+    (rf/dispatch [:set-native-theme (get-theme query)])
+    (.addListener query #(rf/dispatch [:set-native-theme (get-theme %)]))))
+
 
 (defn ^:export init []
   #_(if platform/electron?
@@ -111,7 +118,7 @@
 
   (rf/dispatch-sync [:initialize-db])
   (rf/dispatch-sync [:load-local-db])
-  (rf/dispatch-sync [:theme/init-mode])
+  (rf/dispatch-sync [:init-theme-mode])
   (rf/dispatch-sync [::document.e/new])
   (rf/dispatch-sync [:set-tool :select])
   (rf/dispatch-sync [:set-mdn (js->clj mdn :keywordize-keys true)])
@@ -121,6 +128,8 @@
 
   (.addEventListener js/document "keydown" keyb/event-handler)
   (.addEventListener js/document "keyup" keyb/event-handler)
+
+  (handle-system-theme!)
 
   (.setup paper) ; REVIEW
 

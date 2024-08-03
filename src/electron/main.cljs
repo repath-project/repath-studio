@@ -65,9 +65,6 @@
     "windowToggleFullscreen"
     (.setFullScreen ^js @main-window (not (.isFullScreen ^js @main-window)))
 
-    "setThemeMode"
-    (set! (.. nativeTheme -themeSource) (.-data args))
-
     "openRemoteUrl"
     (open-external! (.-data args))
 

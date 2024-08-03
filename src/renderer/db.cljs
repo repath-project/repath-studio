@@ -22,7 +22,8 @@
    [:pen-mode? boolean?]
    [:panel [:map-of :key [:map [:visible? boolean?]]]]
    [:window renderer.window.db/window]
-   [:theme [:mode [:enum :dark :light :system]]]
+   [:theme [:mode [:enum :dark :light :system]
+            :native [:enum :dark :light]]]
    [:timeline renderer.timeline.db/timeline]])
 
 (def default

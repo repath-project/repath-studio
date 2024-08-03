@@ -38,7 +38,8 @@
 (defn app-header
   []
   (let [fullscreen? @(rf/subscribe [::window.s/fullscreen?])
-        maximized? @(rf/subscribe [::window.s/maximized?])]
+        maximized? @(rf/subscribe [::window.s/maximized?])
+        theme-mode (name @(rf/subscribe [:theme-mode]))]
     [:div.flex.items-center.relative
      (when-not (or fullscreen? platform/mac?)
        [app-icon])
@@ -50,9 +51,9 @@
        :style {:z-index -1}}
       @(rf/subscribe [::document.s/title-bar])]
      [:div.flex.h-full.flex-1.drag]
-     [button {:action [:theme/cycle-mode]
-              :title "Theme mode"
-              :icon (name @(rf/subscribe [:theme-mode]))
+     [button {:action [:cycle-theme-mode]
+              :title (str "Theme mode - " theme-mode)
+              :icon theme-mode
               :class "bg-primary"}]
      (when (and platform/electron? (not fullscreen?) (not platform/mac?))
        (into [:div.text-right]

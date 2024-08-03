@@ -103,28 +103,40 @@
  (fn [db [_ key]]
    (update-in db [key :visible?] not)))
 
-(rf/reg-event-fx
- :theme/init-mode
- (fn [{:keys [db]} _]
-   (let [mode (-> db :theme :mode name)]
-     {:set-attribute [js/window.document.documentElement "data-theme" mode]
-      :send-to-main {:action "setThemeMode" :data mode}})))
+(rf/reg-fx
+ :set-document-theme-attr
+ (fn [[mode]]
+   (.setAttribute js/window.document.documentElement "data-theme" mode)))
 
 (rf/reg-event-fx
- :theme/set-mode
+ :init-theme-mode
+ (fn [{:keys [db]} _]
+   (let [mode (-> db :theme :mode)
+         mode (if (= mode :system) (-> db :theme :native) mode)]
+     {:set-document-theme-attr [(name mode)]})))
+
+(rf/reg-event-fx
+ :set-native-theme
+ local-storage/persist
+ (fn [{:keys [db]} [_ mode]]
+   {:db (assoc-in db [:theme :native] mode)
+    :dispatch [:init-theme-mode]}))
+
+(rf/reg-event-fx
+ :set-theme-mode
  local-storage/persist
  (fn [{:keys [db]} [_ mode]]
    {:db (assoc-in db [:theme :mode] mode)
-    :dispatch [:theme/init-mode]}))
+    :dispatch [:init-theme-mode]}))
 
 (rf/reg-event-fx
- :theme/cycle-mode
+ :cycle-theme-mode
  (fn [{:keys [db]} [_]]
    (let [mode (case (-> db :theme :mode)
-                ;; TODO: Support system mode.
                 :dark :light
-                :light :dark)]
-     {:dispatch [:theme/set-mode mode]})))
+                :light :system
+                :system :dark)]
+     {:dispatch [:set-theme-mode mode]})))
 
 (rf/reg-event-fx
  :pointer-event
@@ -272,7 +284,3 @@
  (fn [_ [_ id]]
    {:focus id}))
 
-(rf/reg-fx
- :set-attribute
- (fn [[el attr val]]
-   (.setAttribute el attr val)))
