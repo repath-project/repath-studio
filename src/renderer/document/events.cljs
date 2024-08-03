@@ -1,6 +1,5 @@
 (ns renderer.document.events
   (:require
-   #_[de-dupe.core :as dd]
    [platform]
    [promesa.core :as p]
    [re-frame.core :as rf]
@@ -180,9 +179,7 @@
  (fn [{:keys [db]} [_ document]]
    (let [open-key (h/search-by-path db (:path document))
          document (-> document
-                      (assoc :key (or open-key (uuid/generate)))
-                      ;; FIXME: Contains cached values after expand.
-                      #_(update-in document [:history :states] dd/expand))]
+                      (assoc :key (or open-key (uuid/generate))))]
      {:db (cond-> db
             (not open-key)
             (-> (h/create-tab document)
@@ -213,7 +210,6 @@
   (-> db
       (get-in [:documents (:active-document db)])
       (assoc :save (history.h/current-position db))
-      #_(update-in [:history :states] dd/de-dupe-eq)
       (dissoc :history)))
 
 (rf/reg-event-fx
