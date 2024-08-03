@@ -1,6 +1,6 @@
 (ns renderer.snap.subs
   (:require
-   [kdtree]
+   [kdtree :as kdtree]
    [re-frame.core :as rf]
    [renderer.element.subs :as-alias element.s]
    [renderer.frame.subs :as-alias frame.s]

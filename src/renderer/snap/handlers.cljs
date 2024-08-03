@@ -1,7 +1,7 @@
 (ns renderer.snap.handlers
   (:require
    [clojure.core.matrix :as mat]
-   [kdtree]
+   [kdtree :as kdtree]
    [re-frame.core :as rf]
    [renderer.element.handlers :as element.h]
    [renderer.snap.subs :as-alias snap.s]

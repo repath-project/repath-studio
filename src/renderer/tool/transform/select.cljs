@@ -2,7 +2,6 @@
 (ns renderer.tool.transform.select
   (:require
    [clojure.core.matrix :as mat]
-   [kdtree]
    [renderer.element.handlers :as element.h]
    [renderer.handlers :as h]
    [renderer.history.handlers :as history.h]

@@ -1,7 +1,6 @@
 (ns renderer.element.subs
   (:require
    ["js-beautify" :as js-beautify]
-   [kdtree]
    [re-frame.core :as rf]
    [renderer.document.subs :as-alias document.s]
    [renderer.tool.base :as tool]
