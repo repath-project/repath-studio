@@ -137,6 +137,6 @@
     (init-api!)
     (.addEventListener js/document
                        "fullscreenchange"
-                       #(rf/dispatch [:window.e/set-fullscreen? (boolean (.-fullscreenElement js/document))])))
+                       #(rf/dispatch [::window.e/set-fullscreen? (boolean (.-fullscreenElement js/document))])))
 
   (mount-root))
