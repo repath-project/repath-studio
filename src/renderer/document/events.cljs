@@ -2,13 +2,12 @@
   (:require
    [cljs.reader :as edn]
    [platform]
-   [promesa.core :as p]
    [re-frame.core :as rf]
    [re-frame.interceptor :refer [->interceptor get-effect get-coeffect assoc-coeffect assoc-effect]]
    [renderer.dialog.events :as-alias dialog.e]
    [renderer.document.handlers :as h]
+   [renderer.document.effects :as fx]
    [renderer.frame.events :as-alias frame.e]
-   [renderer.utils.file :as file]
    [renderer.utils.local-storage :as local-storage]
    [renderer.utils.vec :as vec]))
 
@@ -141,14 +140,7 @@
     :fx [[:dispatch [::frame.e/center]]
          [:focus nil]]}))
 
-(def file-picker-options
-  {:startIn "documents"
-   :types [{:accept {"application/repath-studio" [".rps"]}}]})
 
-(rf/reg-fx
- ::open
- (fn []
-   (file/open! file-picker-options)))
 
 (rf/reg-event-fx
  ::open
@@ -157,7 +149,7 @@
      {:ipc-invoke ["open-documents"
                    file-path
                    #(rf/dispatch [::load (mapv edn/read-string %)])]}
-     {::open nil})))
+     {::fx/open nil})))
 
 (rf/reg-event-fx
  ::open-directory
@@ -172,21 +164,6 @@
     :fx [[:dispatch [::frame.e/center]]
          [:focus nil]]}))
 
-(rf/reg-fx
- ::save-as
- (fn [data]
-   (file/save!
-    file-picker-options
-    (fn [^js/FileSystemFileHandle file-handle]
-      (p/let [writable (.createWritable file-handle)]
-        (.then (.write writable (pr-str (dissoc data :path)))
-               (let [title (.-name file-handle)
-                     document (assoc data :title title)]
-                 (.close writable)
-                 (rf/dispatch [::saved {:key (:key document)
-                                        :title title
-                                        :save (:save document)}]))))))))
-
 (rf/reg-event-fx
  ::save
  (fn [{:keys [db]} [_]]
@@ -197,18 +174,13 @@
                      #(rf/dispatch [::saved (edn/read-string %)])]}
        ;; The path is not available when we use web APIs for security reasons,
        ;; so we always dispatch save-as.
-       {::save-as document}))))
-
-(rf/reg-fx
- ::download
- (fn [data]
-   (file/download! data)))
+       {::fx/save-as document}))))
 
 (rf/reg-event-fx
  ::download
  (fn [{:keys [db]} [_]]
    (let [document (h/save-format db)]
-     {::download (pr-str document)})))
+     {::fx/download (pr-str document)})))
 
 (rf/reg-event-fx
  ::save-and-close
@@ -219,7 +191,7 @@
                      (pr-str document)
                      #(do (rf/dispatch [::saved (edn/read-string %)])
                           (rf/dispatch [::close (:key document) false]))]}
-       {::save-as document}))))
+       {::fx/save-as document}))))
 
 (rf/reg-event-fx
  ::save-as
@@ -229,7 +201,7 @@
        {:ipc-invoke ["save-document-as"
                      (pr-str document)
                      #(rf/dispatch [::saved (edn/read-string %)])]}
-       {::save-as document}))))
+       {::fx/save-as document}))))
 
 (rf/reg-event-db
  ::saved

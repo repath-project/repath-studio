@@ -5,7 +5,6 @@
    ["electron-log/renderer"]
    ["mdn-data" :as mdn] ;; deprecating in favor of w3c/webref
    ["paper" :refer [paper]]
-   [cljs.reader :as edn]
    [config]
    [devtools.core :as devtools]
    [platform]

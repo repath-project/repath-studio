@@ -15,17 +15,21 @@ We try to follow the [Clojure Style Guide](https://guide.clojure.style/) as much
 In addition to the [idiomatic names](https://guide.clojure.style/#idiomatic-names),
 we use the following conventions
 
-- e - event
-- el, els - element
-- attr, attrs - attribute, attributes
-- prop, props - property, properties
+<pre>
+e           -> event
+el, els     -> element, elements
+attr, attrs -> attribute, attributes
+prop, props -> property, properties
+</pre>
 
 We also use the following namespace aliases
-
-- v - views
-- e - events
-- h - handlers
-- s - subs
+<pre>
+v  -> views
+e  -> events
+h  -> handlers
+s  -> subs
+fx -> effects
+</pre>
 
 If the namespace belongs to a dedicated module, we use `module.v`.
 
@@ -52,6 +56,7 @@ module\
 ├── events.cljs   <--- event handlers
 ├── subs.cljs     <--- subscription handlers
 ├── handlers.cljs <--- helper functions for db transformations
+├── effects.cljs  <--- effect handlers
 ├── styles.css    <--- styles
 └── README.md     <--- documentation
 </pre>

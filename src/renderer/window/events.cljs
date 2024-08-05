@@ -1,7 +1,8 @@
 (ns renderer.window.events
   (:require
    [platform]
-   [re-frame.core :as rf]))
+   [re-frame.core :as rf]
+   [renderer.window.effects :as fx]))
 
 (rf/reg-event-db
  ::set-maximized?
@@ -21,27 +22,10 @@
  (fn [db [_ state]]
    (assoc db :minimized? state)))
 
-(rf/reg-fx
- ::close
- (fn [_]
-   (.close js/window)))
-
-(rf/reg-fx
- ::toggle-fullscreen
- (fn [_]
-   (if (.-fullscreenElement js/document)
-     (.exitFullscreen js/document)
-     (.. js/document -documentElement requestFullscreen))))
-
-(rf/reg-fx
- ::open-remote-url
- (fn [url]
-   (.open js/window url)))
-
 (rf/reg-event-fx
  ::close
  (fn [_ _]
-   {::close nil}))
+   {::fx/close nil}))
 
 (rf/reg-event-fx
  ::toggle-maximized
@@ -53,7 +37,7 @@
  (fn [_ _]
    (if platform/electron?
      {:ipc-send ["window-toggle-fullscreen"]}
-     {::toggle-fullscreen nil})))
+     {::fx/toggle-fullscreen nil})))
 
 (rf/reg-event-fx
  ::minimize
@@ -65,4 +49,4 @@
  (fn [_ [_ url]]
    (if platform/electron?
      {:ipc-send ["open-remote-url" url]}
-     {::open-remote-url url})))
+     {::fx/open-remote-url url})))

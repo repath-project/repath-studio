@@ -36,11 +36,11 @@
   [db k]
   (assoc db :active-document k))
 
-(defn search-by-path
+(defn- search-by-path
   [{:keys [documents]} file-path]
   (some #(when (and file-path (= (:path %) file-path)) (:key %)) (vals documents)))
 
-(defn new-title
+(defn- new-title
   [{:keys [documents]}]
   (let [existing-titles (set (map :title (vals documents)))]
     (loop [i 1]

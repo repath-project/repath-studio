@@ -1,17 +1,7 @@
 (ns renderer.timeline.events
   (:require
    [re-frame.core :as rf]
-   [renderer.utils.dom :as dom]))
-
-(rf/reg-fx
- ::set-current-time
- (fn [time]
-   (doall (map #(.setCurrentTime % time) (dom/svg-elements)))))
-
-(rf/reg-fx
- ::pause-animations
- (fn []
-   (doall (map #(.pauseAnimations %) (dom/svg-elements)))))
+   [renderer.timeline.effects :as fx]))
 
 (rf/reg-event-db
  ::pause
@@ -47,5 +37,5 @@
  ::set-time
  (fn [{:keys [db]} [_ time]]
    {:db (assoc-in db [:timeline :time] time)
-    ::set-current-time time
-    ::pause-animations nil}))
+    ::fx/set-current-time time
+    ::fx/pause-animations nil}))
