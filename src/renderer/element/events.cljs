@@ -166,7 +166,7 @@
                  h/root-children
                  h/->string)]
      (if platform/electron?
-       {:send-to-main {:action "export" :data xml}}
+       {:send-to-main ["export" xml]}
        {::export [xml {:startIn "pictures"
                        :types [{:accept {"image/svg+xml" [".svg"]}}]}]}))))
 

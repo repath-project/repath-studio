@@ -77,22 +77,21 @@
   (print "You can create or modify shapes using the command line.")
   (print "Type (help) to see a list of commands."))
 
-(defn init-api!
+(defn register-events!
   []
-  (js/window.api.receive
-   "fromMain"
-   (fn [data]
-     (case (.-action data)
-       "fontsLoaded" (rf/dispatch [:set-system-fonts (js->clj (.-data data) :keywordize-keys true)])
-       "webrefLoaded" (rf/dispatch [:set-webref-css (js->clj (.-data data) :keywordize-keys true)])
-       "windowMaximized" (rf/dispatch [::window.e/set-maximized? true])
-       "windowUnmaximized" (rf/dispatch [::window.e/set-maximized? false])
-       "windowEnteredFullscreen" (rf/dispatch [::window.e/set-fullscreen? true])
-       "windowLeavedFullscreen" (rf/dispatch [::window.e/set-fullscreen? false])
-       "windowMinimized" (rf/dispatch [::window.e/set-minimized? true])
-       "windowRestored" (rf/dispatch [::window.e/set-minimized? false])
-       "fileLoaded" (rf/dispatch [::document.e/load (edn/read-string (.-data data))])
-       "fileSaved" (rf/dispatch [::document.e/saved (edn/read-string (.-data data))])))))
+  (doseq
+   [[e f]
+    [["fonts-loaded" #(rf/dispatch [:set-system-fonts (js->clj % :keywordize-keys true)])]
+     ["webref-loaded" #(rf/dispatch [:set-webref-css (js->clj % :keywordize-keys true)])]
+     ["window-maximized" #(rf/dispatch [::window.e/set-maximized? true])]
+     ["window-unmaximized" #(rf/dispatch [::window.e/set-maximized? false])]
+     ["window-entered-fullscreen" #(rf/dispatch [::window.e/set-fullscreen? true])]
+     ["window-leaved-fullscreen" #(rf/dispatch [::window.e/set-fullscreen? false])]
+     ["window-minimized" #(rf/dispatch [::window.e/set-minimized? true])]
+     ["window-restored" #(rf/dispatch [::window.e/set-minimized? false])]
+     ["file-loaded" #(rf/dispatch [::document.e/load (edn/read-string %)])]
+     ["file-saved" #(rf/dispatch [::document.e/saved (edn/read-string %)])]]]
+    (js/window.api.on e f)))
 
 (defn handle-system-theme!
   []
@@ -134,7 +133,7 @@
   (.setup paper) ; REVIEW
 
   (if platform/electron?
-    (init-api!)
+    (register-events!)
     (.addEventListener js/document
                        "fullscreenchange"
                        #(rf/dispatch [::window.e/set-fullscreen? (boolean (.-fullscreenElement js/document))])))

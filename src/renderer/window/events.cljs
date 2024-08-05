@@ -46,23 +46,23 @@
 (rf/reg-event-fx
  ::toggle-maximized
  (fn [_ _]
-   {:send-to-main {:action "windowToggleMaximized"}}))
+   {:send-to-main ["window-toggle-maximized" nil]}))
 
 (rf/reg-event-fx
  ::toggle-fullscreen
  (fn [_ _]
    (if platform/electron?
-     {:send-to-main {:action "windowToggleFullscreen"}}
+     {:send-to-main ["window-toggle-fullscreen" nil]}
      {::toggle-fullscreen nil})))
 
 (rf/reg-event-fx
  ::minimize
  (fn [_ _]
-   {:send-to-main {:action "windowMinimize"}}))
+   {:send-to-main ["window-minimize" nil]}))
 
 (rf/reg-event-fx
  ::open-remote-url
  (fn [_ [_ url]]
    (if platform/electron?
-     {:send-to-main {:action "openRemoteUrl" :data url}}
+     {:send-to-main ["open-remote-url" url]}
      {::open-remote-url url})))

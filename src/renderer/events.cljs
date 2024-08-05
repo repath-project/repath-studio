@@ -241,9 +241,9 @@
 
 (rf/reg-fx
  :send-to-main
- (fn [data]
+ (fn [[channel data]]
    (when platform/electron?
-     (js/window.api.send "toMain" (clj->js data)))))
+     (js/window.api.send channel (clj->js data)))))
 
 (rf/reg-fx
  :drop

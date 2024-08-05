@@ -165,13 +165,13 @@
  ::open
  (fn [_ [_ file-path]]
    (if platform/electron?
-     {:send-to-main {:action "openDocument" :data file-path}}
+     {:send-to-main ["open-document" file-path]}
      {::open nil})))
 
 (rf/reg-event-fx
  ::open-directory
  (fn [_ [_ path]]
-   {:send-to-main {:action "openDirectory" :data path}}))
+   {:send-to-main ["open-directory" path]}))
 
 (rf/reg-event-fx
  ::load
@@ -217,7 +217,7 @@
  (fn [{:keys [db]} [_]]
    (let [document (save-format db)]
      (if platform/electron?
-       {:send-to-main {:action "saveDocument" :data (pr-str document)}}
+       {:send-to-main ["save-document" (pr-str document)]}
        ;; The path is not available when we use web APIs for security reasons,
        ;; so we always dispatch save-as.
        {::save-as document}))))
@@ -239,7 +239,7 @@
    (let [document (-> (save-format db)
                       (assoc :closing? true))]
      (if platform/electron?
-       {:send-to-main {:action "saveDocument" :data (pr-str document)}}
+       {:send-to-main ["save-document" (pr-str document)]}
        {::save-as document}))))
 
 (rf/reg-event-fx
@@ -247,7 +247,7 @@
  (fn [{:keys [db]} [_]]
    (let [document (save-format db)]
      (if platform/electron?
-       {:send-to-main {:action "saveDocumentAs" :data (pr-str document)}}
+       {:send-to-main ["save-document-as" (pr-str document)]}
        {::save-as document}))))
 
 (rf/reg-event-db

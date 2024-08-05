@@ -7,7 +7,7 @@
    ["electron-reloader"]
    #_["electron-updater" :as updater]
    ["electron-window-state" :as window-state-keeper]
-   ["electron" :refer [app shell ipcMain BrowserWindow clipboard nativeTheme]]
+   ["electron" :refer [app shell ipcMain BrowserWindow]]
    ["font-scanner" :as fontManager]
    ["os" :as os]
    ["path" :as path]
@@ -27,12 +27,10 @@
       (.catch (fn [err] (js/console.log "An error occurred: " err)))))
 
 (defn send-to-renderer!
-  ([action]
-   (send-to-renderer! action nil))
-  ([action data]
-   (-> (.-webContents ^js @main-window)
-       (.send "fromMain" (clj->js {:action action
-                                   :data data})))))
+  ([channel]
+   (send-to-renderer! channel nil))
+  ([channel data]
+   (.send (.-webContents ^js @main-window) channel (clj->js data))))
 
 (defonce allowed-urls
   #{"repath.studio"
@@ -51,71 +49,71 @@
                (allowed-url? url-parsed))
       (.openExternal shell url-parsed.href))))
 
-(defn to-main-api
-  [args]
-  (case (.-action args)
-    "windowMinimize"
-    (.minimize ^js @main-window)
+(defn register-ipc-events!
+  []
+  (doseq
+   [[e f]
+    [["window-minimize"
+      #(.minimize ^js @main-window)]
 
-    "windowToggleMaximized"
-    (if (.isMaximized ^js @main-window)
-      (.unmaximize ^js @main-window)
-      (.maximize ^js @main-window))
+     ["window-toggle-maximized"
+      #(if (.isMaximized ^js @main-window)
+         (.unmaximize ^js @main-window)
+         (.maximize ^js @main-window))]
 
-    "windowToggleFullscreen"
-    (.setFullScreen ^js @main-window (not (.isFullScreen ^js @main-window)))
+     ["window-toggle-fullscreen"
+      #(.setFullScreen ^js @main-window (not (.isFullScreen ^js @main-window)))]
 
-    "openRemoteUrl"
-    (open-external! (.-data args))
+     ["open-remote-url"
+      #(open-external! %)]
 
-    ;; https://www.electronjs.org/docs/api/clipboard#clipboardwritedata-type
-    "writeToClipboard"
-    (.write clipboard (.-data args))
+     ["open-directory"
+      #(.showItemInFolder shell %)]
 
-    "openDirectory"
-    (.showItemInFolder shell (.-data args))
+     ["open-document"
+      #(p/let [documents (file/open! @main-window %)]
+         (doseq [document documents]
+           (send-to-renderer! "file-loaded" document)))]
 
-    "openDocument"
-    (p/let [documents (file/open! @main-window (.-data args))]
-      (doseq [document documents]
-        (send-to-renderer! "fileLoaded" document)))
+     ["save-document"
+      #(p/let [document (file/save! @main-window %)]
+         (send-to-renderer! "file-saved" document))]
 
-    "saveDocument"
-    (p/let [document (file/save! @main-window (.-data args))]
-      (send-to-renderer! "fileSaved" document))
+     ["save-document-as"
+      #(p/let [document (file/save-as! @main-window %)]
+         (send-to-renderer! "file-saved" document))]
 
-    "saveDocumentAs"
-    (p/let [document (file/save-as! @main-window (.-data args))]
-      (send-to-renderer! "fileSaved" document))
-
-    "export"
-    (file/export! @main-window (.-data args))))
+     ["export"
+      #(file/export! @main-window %)]]]
+    (.on ipcMain e #(f %2))))
 
 (defn register-window-events!
   []
   (doseq
-   [[window-event action]
-    [;; Event "resized" is more suitable, but it's not supported on linux
+   [[window-event f]
+    [["maximize" #(send-to-renderer! "window-maximized")]
+     ["unmaximize" #(send-to-renderer! "window-unmaximized")]
+     ["enter-full-screen" #(send-to-renderer! "window-entered-fullscreen")]
+     ["leave-full-screen" #(send-to-renderer! "window-leaved-fullscreen")]
+     ["minimize" #(send-to-renderer! "window-minimized")]
+     ["restore" #(send-to-renderer! "window-restored")]
+     ;; Event "resized" is more suitable, but it's not supported on linux
      ;; https://www.electronjs.org/docs/latest/api/browser-window#event-resized-macos-windows
-     ["resize" #(if (.isMaximized ^js @main-window) "windowMaximized" "windowUnmaximized")]
-     ["maximize" "windowMaximized"]
-     ["unmaximize" "windowUnmaximized"]
-     ["enter-full-screen" "windowEnteredFullscreen"]
-     ["leave-full-screen" "windowLeavedFullscreen"]
-     ["minimize" "windowMinimized"]
-     ["restore" "windowRestored"]]]
-    (.on ^js @main-window window-event #(send-to-renderer! action))))
+     ["resize" #(send-to-renderer! (if (.isMaximized ^js @main-window)
+                                     "window-maximized"
+                                     "window-unmaximized"))]]]
+    (.on ^js @main-window window-event f)))
 
 (defn load-system-fonts!
   "https://github.com/axosoft/font-scanner#getavailablefonts"
   []
   (let [fonts (.getAvailableFontsSync fontManager)]
-    (send-to-renderer! "fontsLoaded" fonts)))
+    (send-to-renderer! "fonts-loaded" fonts)))
 
 (defn load-webref!
   []
   (p/let [files (.listAll css)]
-    (send-to-renderer! "webrefLoaded" files)))
+    (send-to-renderer! "webref-loaded" files)))
 
 (defn register-web-contents-events!
   []
@@ -154,11 +152,11 @@
              (.show ^js @main-window)
              (.manage win-state ^js @main-window)
              (send-to-renderer! (if (.isMaximized ^js @main-window)
-                                  "windowMaximized"
-                                  "windowUnmaximized"))
+                                  "window-maximized"
+                                  "window-unmaximized"))
              (send-to-renderer! (if (.isFullScreen ^js @main-window)
-                                  "windowEnteredFullscreen"
-                                  "windowLeavedFullscreen"))
+                                  "window-entered-fullscreen"
+                                  "window-leaved-fullscreen"))
              (.hide ^js @loading-window)
              (.close ^js @loading-window)))
 
@@ -176,7 +174,7 @@
       #_(.openDevTools (.-webContents ^js @main-window)))
 
     (register-web-contents-events!)
-    (.on ipcMain "toMain" #(to-main-api %2))
+    (register-ipc-events!)
     (register-window-events!)
 
     #_(.checkForUpdatesAndNotify updater)))
