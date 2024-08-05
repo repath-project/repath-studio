@@ -21,9 +21,9 @@
   []
   [:div.p-5
    [:div.flex.gap-3.items-start.pb-2
-    [:div
-     [:div [:strong "Version: "] config/version]
-     [:div [:strong "Browser: "] platform/user-agent]]]
+    [:p
+     [:span.block [:strong "Version: "] config/version]
+     [:span.block [:strong "Browser: "] platform/user-agent]]]
    [:button.button.px-2.bg-primary.rounded.w-full
     {:auto-focus true
      :on-click #(rf/dispatch [::dialog.e/close])}
