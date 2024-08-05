@@ -12,8 +12,7 @@
    ["os" :as os]
    ["path" :as path]
    [config]
-   [electron.file :as file]
-   [promesa.core :as p]))
+   [electron.file :as file]))
 
 (defonce main-window (atom nil))
 (defonce loading-window (atom nil))
@@ -49,43 +48,30 @@
                (allowed-url? url-parsed))
       (.openExternal shell url-parsed.href))))
 
-(defn register-ipc-events!
+(defn register-ipc-on-events!
   []
   (doseq
    [[e f]
-    [["window-minimize"
-      #(.minimize ^js @main-window)]
-
-     ["window-toggle-maximized"
-      #(if (.isMaximized ^js @main-window)
-         (.unmaximize ^js @main-window)
-         (.maximize ^js @main-window))]
-
-     ["window-toggle-fullscreen"
-      #(.setFullScreen ^js @main-window (not (.isFullScreen ^js @main-window)))]
-
-     ["open-remote-url"
-      #(open-external! %)]
-
-     ["open-directory"
-      #(.showItemInFolder shell %)]
-
-     ["open-document"
-      #(p/let [documents (file/open! @main-window %)]
-         (doseq [document documents]
-           (send-to-renderer! "file-loaded" document)))]
-
-     ["save-document"
-      #(p/let [document (file/save! @main-window %)]
-         (send-to-renderer! "file-saved" document))]
-
-     ["save-document-as"
-      #(p/let [document (file/save-as! @main-window %)]
-         (send-to-renderer! "file-saved" document))]
-
-     ["export"
-      #(file/export! @main-window %)]]]
+    [["open-remote-url" #(open-external! %)]
+     ["open-directory" #(.showItemInFolder shell %)]
+     ["window-minimize" #(.minimize ^js @main-window)]
+     ["window-toggle-fullscreen" #(.setFullScreen ^js @main-window (not (.isFullScreen ^js @main-window)))]
+     ["window-toggle-maximized" #(if (.isMaximized ^js @main-window)
+                                   (.unmaximize ^js @main-window)
+                                   (.maximize ^js @main-window))]]]
     (.on ipcMain e #(f %2))))
+
+(defn register-ipc-handle-events!
+  []
+  (doseq
+   [[e f]
+    [["open-documents" #(file/open! @main-window %)]
+     ["save-document" #(file/save! @main-window %)]
+     ["save-document-as" #(file/save-as! @main-window %)]
+     ["export" #(file/export! @main-window %)]
+     ["load-webref" #(.listAll css)]
+     ["load-system-fonts" #(.getAvailableFonts fontManager)]]]
+    (.handle ipcMain e #(f %2))))
 
 (defn register-window-events!
   []
@@ -103,17 +89,6 @@
                                      "window-maximized"
                                      "window-unmaximized"))]]]
     (.on ^js @main-window window-event f)))
-
-(defn load-system-fonts!
-  "https://github.com/axosoft/font-scanner#getavailablefonts"
-  []
-  (let [fonts (.getAvailableFontsSync fontManager)]
-    (send-to-renderer! "fonts-loaded" fonts)))
-
-(defn load-webref!
-  []
-  (p/let [files (.listAll css)]
-    (send-to-renderer! "webref-loaded" files)))
 
 (defn register-web-contents-events!
   []
@@ -160,11 +135,6 @@
              (.hide ^js @loading-window)
              (.close ^js @loading-window)))
 
-    (.on ^js @main-window "ready-to-show"
-         (fn []
-           (load-system-fonts!)
-           (load-webref!)))
-
     (.loadURL ^js @main-window (if config/debug?
                                  "http://localhost:8080"
                                  (.join path "file://" js/__dirname "/public/index.html")))
@@ -174,7 +144,8 @@
       #_(.openDevTools (.-webContents ^js @main-window)))
 
     (register-web-contents-events!)
-    (register-ipc-events!)
+    (register-ipc-on-events!)
+    (register-ipc-handle-events!)
     (register-window-events!)
 
     #_(.checkForUpdatesAndNotify updater)))
@@ -196,6 +167,5 @@
 (defn ^:export init []
   #_(sentry-electron-main/init (clj->js config/sentry-options))
   (.initialize log)
-  (.on app "window-all-closed" #(when-not (= js/process.platform "darwin")
-                                  (.quit app)))
+  (.on app "window-all-closed" #(when-not (= js/process.platform "darwin") (.quit app)))
   (.on app "ready" init-loading-window!))

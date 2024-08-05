@@ -1,18 +1,15 @@
 (ns renderer.document.events
   (:require
+   [cljs.reader :as edn]
    [platform]
    [promesa.core :as p]
    [re-frame.core :as rf]
    [re-frame.interceptor :refer [->interceptor get-effect get-coeffect assoc-coeffect assoc-effect]]
    [renderer.dialog.events :as-alias dialog.e]
-   [renderer.document.db :as db]
    [renderer.document.handlers :as h]
-   [renderer.element.handlers :as element.h]
    [renderer.frame.events :as-alias frame.e]
-   [renderer.history.handlers :as history.h]
    [renderer.utils.file :as file]
    [renderer.utils.local-storage :as local-storage]
-   [renderer.utils.uuid :as uuid]
    [renderer.utils.vec :as vec]))
 
 (def active-document-path
@@ -77,17 +74,13 @@
 
 (rf/reg-event-db
  ::set-fill
- (fn [{active-document :active-document :as db} [_ fill]]
-   (-> db
-       (assoc-in [:documents active-document :fill] fill)
-       (element.h/set-attr :fill fill))))
+ (fn [db [_ fill]]
+   (h/set-global-attr db :fill fill)))
 
 (rf/reg-event-db
  ::set-stroke
- (fn [{active-document :active-document :as db} [_ stroke]]
-   (-> db
-       (assoc-in [:documents active-document :stroke] stroke)
-       (element.h/set-attr :stroke stroke))))
+ (fn [db [_ stroke]]
+   (h/set-global-attr db :stroke stroke)))
 
 (rf/reg-event-fx
  ::close
@@ -144,11 +137,7 @@
 (rf/reg-event-fx
  ::new
  (fn [{:keys [db]} [_]]
-   {:db (-> db
-            (h/create-tab db/default-document)
-            (element.h/create {:tag :svg
-                               :attrs {:width "800" :height "600"}})
-            (history.h/finalize "Create document"))
+   {:db (h/new db)
     :fx [[:dispatch [::frame.e/center]]
          [:focus nil]]}))
 
@@ -165,33 +154,23 @@
  ::open
  (fn [_ [_ file-path]]
    (if platform/electron?
-     {:send-to-main ["open-document" file-path]}
+     {:ipc-invoke ["open-documents"
+                   file-path
+                   #(rf/dispatch [::load (mapv edn/read-string %)])]}
      {::open nil})))
 
 (rf/reg-event-fx
  ::open-directory
  (fn [_ [_ path]]
-   {:send-to-main ["open-directory" path]}))
+   {:ipc-send ["open-directory" path]}))
 
 (rf/reg-event-fx
  ::load
  local-storage/persist
- (fn [{:keys [db]} [_ document]]
-   (let [open-key (h/search-by-path db (:path document))
-         document (-> document
-                      (assoc :key (or open-key (uuid/generate))))]
-     {:db (cond-> db
-            (not open-key)
-            (-> (h/create-tab document)
-                (history.h/finalize "Load document")
-                (update-in [:documents (:key document)]
-                           #(assoc % :save (-> % :history :position))))
-
-            :always
-            (-> (h/add-recent (:path document))
-                (h/set-active (:key document))))
-      :fx [[:dispatch [::frame.e/center]]
-           [:focus nil]]})))
+ (fn [{:keys [db]} [_ documents]]
+   {:db (reduce h/load db documents)
+    :fx [[:dispatch [::frame.e/center]]
+         [:focus nil]]}))
 
 (rf/reg-fx
  ::save-as
@@ -200,24 +179,22 @@
     file-picker-options
     (fn [^js/FileSystemFileHandle file-handle]
       (p/let [writable (.createWritable file-handle)]
-        (.then (.write writable (pr-str (dissoc data :closing? :path)))
-               (let [document (assoc data :title (.-name file-handle))]
+        (.then (.write writable (pr-str (dissoc data :path)))
+               (let [title (.-name file-handle)
+                     document (assoc data :title title)]
                  (.close writable)
-                 (rf/dispatch [::saved document]))))))))
-
-(defn save-format
-  [db]
-  (-> db
-      (get-in [:documents (:active-document db)])
-      (assoc :save (history.h/current-position db))
-      (dissoc :history)))
+                 (rf/dispatch [::saved {:key (:key document)
+                                        :title title
+                                        :save (:save document)}]))))))))
 
 (rf/reg-event-fx
  ::save
  (fn [{:keys [db]} [_]]
-   (let [document (save-format db)]
+   (let [document (h/save-format db)]
      (if platform/electron?
-       {:send-to-main ["save-document" (pr-str document)]}
+       {:ipc-invoke ["save-document"
+                     (pr-str document)
+                     #(rf/dispatch [::saved (edn/read-string %)])]}
        ;; The path is not available when we use web APIs for security reasons,
        ;; so we always dispatch save-as.
        {::save-as document}))))
@@ -230,41 +207,38 @@
 (rf/reg-event-fx
  ::download
  (fn [{:keys [db]} [_]]
-   (let [document (save-format db)]
+   (let [document (h/save-format db)]
      {::download (pr-str document)})))
 
 (rf/reg-event-fx
  ::save-and-close
  (fn [{:keys [db]} [_]]
-   (let [document (-> (save-format db)
-                      (assoc :closing? true))]
+   (let [document (h/save-format db)]
      (if platform/electron?
-       {:send-to-main ["save-document" (pr-str document)]}
+       {:ipc-invoke ["save-document"
+                     (pr-str document)
+                     #(do (rf/dispatch [::saved (edn/read-string %)])
+                          (rf/dispatch [::close (:key document) false]))]}
        {::save-as document}))))
 
 (rf/reg-event-fx
  ::save-as
  (fn [{:keys [db]} [_]]
-   (let [document (save-format db)]
+   (let [document (h/save-format db)]
      (if platform/electron?
-       {:send-to-main ["save-document-as" (pr-str document)]}
+       {:ipc-invoke ["save-document-as"
+                     (pr-str document)
+                     #(rf/dispatch [::saved (edn/read-string %)])]}
        {::save-as document}))))
 
 (rf/reg-event-db
  ::saved
- (fn [db [_ document]]
+ (fn [db [_ document-info]]
    ;; Update the path, the title and the saved position of the document.
    ;; Any other changes that could happen while saving should be preserved.
-   (let [updates (select-keys document [:path :title :save])]
-     (cond-> db
-       :always
-       (h/add-recent (:path updates))
-
-       (:closing? document)
-       (h/close (:key document))
-
-       (not (:closing? document))
-       (update-in [:documents (:key document)] merge updates)))))
+   (-> db
+       (update-in [:documents (:key document-info)] merge document-info)
+       (h/add-recent (:path document-info)))))
 
 (rf/reg-event-db
  ::clear-recent

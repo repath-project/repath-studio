@@ -15,11 +15,11 @@
     (.toPathData path)))
 
 (defonce api
-  {:send (fn [channel args] (.send ipcRenderer channel args))
-   :invoke (fn [channel args] (.invoke ipcRenderer channel args))
-   ;; Strip event as it includes `sender`
+  {;; Strip event as it includes `sender`
    ;; https://www.electronjs.org/docs/latest/api/ipc-renderer#ipcrendereronchannel-listener
    :on (fn [channel f] (.on ipcRenderer channel (fn [_e args] (f args))))
+   :send (fn [channel args] (.send ipcRenderer channel args))
+   :invoke (fn [channel args] (.invoke ipcRenderer channel args))
    :platform (.platform os)
    :findFonts (fn [descriptor] (.findFontsSync fontManager descriptor))
    :textToPath (fn [s options]

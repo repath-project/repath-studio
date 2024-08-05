@@ -77,21 +77,16 @@
   (print "You can create or modify shapes using the command line.")
   (print "Type (help) to see a list of commands."))
 
-(defn register-events!
+(defn register-ipc-on-events!
   []
   (doseq
-   [[e f]
-    [["fonts-loaded" #(rf/dispatch [:set-system-fonts (js->clj % :keywordize-keys true)])]
-     ["webref-loaded" #(rf/dispatch [:set-webref-css (js->clj % :keywordize-keys true)])]
-     ["window-maximized" #(rf/dispatch [::window.e/set-maximized? true])]
+   [[channel f]
+    [["window-maximized" #(rf/dispatch [::window.e/set-maximized? true])]
      ["window-unmaximized" #(rf/dispatch [::window.e/set-maximized? false])]
      ["window-entered-fullscreen" #(rf/dispatch [::window.e/set-fullscreen? true])]
      ["window-leaved-fullscreen" #(rf/dispatch [::window.e/set-fullscreen? false])]
-     ["window-minimized" #(rf/dispatch [::window.e/set-minimized? true])]
-     ["window-restored" #(rf/dispatch [::window.e/set-minimized? false])]
-     ["file-loaded" #(rf/dispatch [::document.e/load (edn/read-string %)])]
-     ["file-saved" #(rf/dispatch [::document.e/saved (edn/read-string %)])]]]
-    (js/window.api.on e f)))
+     ["window-minimized" #(rf/dispatch [::window.e/set-minimized? true])]]]
+    (js/window.api.on channel f)))
 
 (defn handle-system-theme!
   []
@@ -133,7 +128,9 @@
   (.setup paper) ; REVIEW
 
   (if platform/electron?
-    (register-events!)
+    (do (register-ipc-on-events!)
+        (rf/dispatch [:load-system-fonts])
+        (rf/dispatch [:load-webref]))
     (.addEventListener js/document
                        "fullscreenchange"
                        #(rf/dispatch [::window.e/set-fullscreen? (boolean (.-fullscreenElement js/document))])))

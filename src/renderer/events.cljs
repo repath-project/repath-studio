@@ -2,6 +2,7 @@
   (:require
    [malli.core :as ma]
    [platform]
+   [promesa.core :as p]
    [re-frame.core :as rf]
    [renderer.db :as db]
    [renderer.handlers :as h]
@@ -240,10 +241,17 @@
      db)))
 
 (rf/reg-fx
- :send-to-main
+ :ipc-send
  (fn [[channel data]]
    (when platform/electron?
      (js/window.api.send channel (clj->js data)))))
+
+(rf/reg-fx
+ :ipc-invoke
+ (fn [[channel data f]]
+   (when platform/electron?
+     (p/let [result (js/window.api.invoke channel (clj->js data))]
+       (f result)))))
 
 (rf/reg-fx
  :drop
@@ -284,3 +292,16 @@
  (fn [_ [_ id]]
    {:focus id}))
 
+(rf/reg-event-fx
+ :load-system-fonts
+ (fn [_ [_ file-path]]
+   {:ipc-invoke ["load-system-fonts"
+                 file-path
+                 #(rf/dispatch [:set-system-fonts (js->clj % :keywordize-keys true)])]}))
+
+(rf/reg-event-fx
+ :load-webref
+ (fn [_ [_ file-path]]
+   {:ipc-invoke ["load-webref"
+                 file-path
+                 #(rf/dispatch [:set-webref-css (js->clj % :keywordize-keys true)])]}))

@@ -9,7 +9,6 @@
    [hickory.zip]
    [reagent.dom.server :as dom.server]
    [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.document.handlers :as document.h]
    [renderer.tool.base :as tool]
    [renderer.tool.shape.path :as path]
    [renderer.utils.bounds :as bounds]
@@ -233,10 +232,14 @@
   ([db k]
    (set-prop db k :selected? false)))
 
+(defn expand
+  [{:keys [active-document] :as db} k]
+  (update-in db [:documents active-document :collapsed-keys] disj k))
+
 (defn expand-ancestors
   [db k]
   (->> (ancestor-keys db k)
-       (reduce document.h/expand-el db)))
+       (reduce expand db)))
 
 (defn select
   ([db k]
@@ -354,7 +357,7 @@
        (not (element/root? el))
        (-> (update-prop (:parent el) :children vec/remove-nth (index db k))
            (update-in (path db) dissoc k)
-           (document.h/expand-el k))))))
+           (expand k))))))
 
 (defn update-index
   [db k f & more]

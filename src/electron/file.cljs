@@ -21,8 +21,9 @@
 
 (defn- write-file!
   [file-path data]
-  (.writeFileSync fs file-path (pr-str (dissoc data :closing? :path)) "utf-8")
-  (p/resolved (serialize-document data file-path)))
+  (.writeFileSync fs file-path (pr-str (dissoc data :path)) "utf-8")
+  (p/resolved (serialize-document {:key (:key data)
+                                   :save (:save data)} file-path)))
 
 (defn- read-file!
   [file-path]
@@ -58,10 +59,10 @@
 (defn open!
   [window file-path]
   (if (and file-path (.existsSync fs file-path))
-    [(read-file! file-path)]
+    (array (read-file! file-path))
     (p/let [files (.showOpenDialog dialog window (clj->js dialog-options))
             file-paths (get (js->clj files) "filePaths")]
-      (p/resolved (map read-file! file-paths)))))
+      (p/resolved (clj->js (mapv read-file! file-paths))))))
 
 (def export-options
   {:defaultPath (.getPath app "pictures")
@@ -71,4 +72,7 @@
 (defn export!
   [window data]
   (p/let [file (save-dialog! window export-options)]
-    (.writeFileSync fs file data "utf-8")))
+    (.writeFile fs file data "utf-8" (fn [err]
+                                       (if err
+                                         (p/rejected err)
+                                         (p/resolved data))))))
