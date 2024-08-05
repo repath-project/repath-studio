@@ -25,7 +25,7 @@
   (p/resolved (serialize-document {:key (:key data)
                                    :save (:save data)} file-path)))
 
-(defn- read-file!
+(defn- read!
   [file-path]
   (let [data (.readFileSync fs file-path "utf-8")
         document (edn/read-string data)]
@@ -59,10 +59,10 @@
 (defn open!
   [window file-path]
   (if (and file-path (.existsSync fs file-path))
-    (array (read-file! file-path))
+    (array (read! file-path))
     (p/let [files (.showOpenDialog dialog window (clj->js dialog-options))
             file-paths (get (js->clj files) "filePaths")]
-      (p/resolved (clj->js (mapv read-file! file-paths))))))
+      (p/resolved (clj->js (mapv read! file-paths))))))
 
 (def export-options
   {:defaultPath (.getPath app "pictures")
