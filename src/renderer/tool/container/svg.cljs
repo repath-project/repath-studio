@@ -6,8 +6,7 @@
    [renderer.element.handlers :as element.h]
    [renderer.element.subs :as-alias element.s]
    [renderer.tool.base :as tool]
-   [renderer.utils.pointer :as pointer]
-   [renderer.utils.units :as units]))
+   [renderer.utils.pointer :as pointer]))
 
 (derive :svg ::tool/container)
 
@@ -80,11 +79,6 @@
          :on-double-click pointer-handler})]
       (for [element (merge child-elements)]
         [tool/render element])]]))
-
-(defmethod tool/bounds :svg
-  [{{:keys [x y width height]} :attrs}]
-  (let [[x y width height] (mapv units/unit->px [x y width height])]
-    [x y (+ x width) (+ y height)]))
 
 (defmethod tool/render-to-string :svg
   [{:keys [attrs children]}]
