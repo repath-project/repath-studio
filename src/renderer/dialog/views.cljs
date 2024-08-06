@@ -128,7 +128,7 @@
               (:attrs (last dialogs)))
        (when-let [title (:title (last dialogs))]
          [:> Dialog/Title
-          {:class "text-xl px-5 pt-5"}
+          {:class "text-xl pl-5 pr-10 pt-5"}
           title])
        [:> Dialog/Description
         {:class "m-0"}
