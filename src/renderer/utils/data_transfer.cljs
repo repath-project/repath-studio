@@ -57,13 +57,13 @@
         (file/read! file)))))
 
 (defn add-text!
-  [item [x y]]
-  (.getAsString item #(rf/dispatch [::element.e/add
-                                    {:type :element
-                                     :tag :text
-                                     :content %
-                                     :attrs {:x x
-                                             :y y}}])))
+  [s [x y]]
+  (rf/dispatch [::element.e/add
+                {:type :element
+                 :tag :text
+                 :content s
+                 :attrs {:x x
+                         :y y}}]))
 
 (defn items!
   "https://developer.mozilla.org/en-US/docs/Web/API/DataTransferItem"
