@@ -1,8 +1,7 @@
 (ns renderer.dialog.events
   (:require
    [re-frame.core :as rf]
-   [renderer.dialog.views :as v]
-   [renderer.dialog.cmdk :as cmdk]))
+   [renderer.dialog.views :as v]))
 
 (defn create
   [db dialog]
@@ -11,7 +10,7 @@
 (rf/reg-event-db
  ::cmdk
  (fn [db [_]]
-   (create db {:content [cmdk/root]
+   (create db {:content [v/cmdk]
                :attrs {:class "dialog-content dialog-cmdk-content"}})))
 
 (rf/reg-event-db

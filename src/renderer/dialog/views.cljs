@@ -1,14 +1,18 @@
 (ns renderer.dialog.views
   (:require
    ["@radix-ui/react-dialog" :as Dialog]
-   [config]
-   [platform]
+   ["cmdk" :as Command]
+   [clojure.string :as str]
+   [config :as config]
+   [i18n :refer [t]]
+   [platform :as platform]
    [re-frame.core :as rf]
    [renderer.components :as comp]
    [renderer.dialog.events :as-alias dialog.e]
    [renderer.dialog.subs :as-alias dialog.s]
    [renderer.document.events :as-alias document.e]
-   [renderer.document.subs :as-alias document.s]))
+   [renderer.document.subs :as-alias document.s]
+   [renderer.menubar.views :as menubar]))
 
 (defn close-button
   []
@@ -66,6 +70,49 @@
                        (rf/dispatch [::document.e/save-and-close]))}
        "Save"]]
      [close-button]]))
+
+(defn cmdk-item
+  [{:keys [label action key icon type]}]
+  (when-not (= type :separator)
+    [:> Command/CommandItem
+     {:key key
+      :on-select (fn []
+                   (rf/dispatch [::dialog.e/close false])
+                   (rf/dispatch action))}
+     [:div.w-7.h-7.mr-2.rounded.line-height-6.flex.justify-center.items-center
+      {:class (when icon "overlay")}
+      (when icon [comp/icon icon {:class "icon"}])]
+     label
+     [:div.right-slot
+      [comp/shortcuts action]]]))
+
+(defn cmdk-group-inner
+  [items label]
+  (for [i items]
+    ^{:key key}
+    (if-not (:items i)
+      [cmdk-item (update i :label #(str/join " - " (remove nil? [label %])))]
+      (cmdk-group-inner (:items i) (:label i)))))
+
+(defn cmdk-group
+  [{:keys [label items]}]
+  [:> Command/CommandGroup
+   {:heading label}
+   (cmdk-group-inner items nil)])
+
+(defn cmdk
+  []
+  [:> Command/Command
+   {:label "Command Menu"
+    :on-key-down #(when-not (= (.-key %) "Escape") (.stopPropagation %))}
+   [:> Command/CommandInput
+    {:placeholder (t [:cmdk/search-command "Search for a command"])}]
+   [:> Command/CommandList
+    [:> Command/CommandEmpty
+     (t [:cmdk/no-results "No results found."])]
+    (for [i (menubar/root-menu)]
+      ^{:key (:key i)}
+      [cmdk-group i])]])
 
 (defn root
   []
