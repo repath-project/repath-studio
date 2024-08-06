@@ -17,9 +17,18 @@
                  SVG elements."
    :attrs [:transform]})
 
+(defn- translate
+  [transform [x y]]
+  (let [g (js/document.createElementNS "http://www.w3.org/2000/svg" "g")
+        _ (.setAttributeNS g nil "transform" (or transform ""))
+        m (.consolidate (.. g -transform -baseVal))
+        matrix (if m (.-matrix m) (js/DOMMatrixReadOnly.))
+        matrix (.translate matrix x y)]
+    (.toString matrix)))
+
 (defmethod tool/translate :g
-  [el [_x _y]]
-  el) ; TODO
+  [el offset]
+  (update-in el [:attrs :transform] translate offset))
 
 (defmethod tool/render :g
   [{:keys [attrs children bounds] :as element}]

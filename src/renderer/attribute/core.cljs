@@ -9,4 +9,5 @@
    [renderer.attribute.range]
    [renderer.attribute.stroke-linecap]
    [renderer.attribute.stroke-linejoin]
-   [renderer.attribute.style]))
+   [renderer.attribute.style]
+   [renderer.attribute.transform]))
