@@ -3,8 +3,8 @@
    [platform :as platform]
    [promesa.core :as p]
    [re-frame.core :as rf]
-   [renderer.utils.dom :as dom]
-   [renderer.utils.drop :as drop]))
+   [renderer.utils.data-transfer :as data-transfer]
+   [renderer.utils.dom :as dom]))
 
 (rf/reg-fx
  :set-document-theme-attr
@@ -25,11 +25,10 @@
        (f result)))))
 
 (rf/reg-fx
- :drop
+ :data-transfer
  (fn [[position data-transfer]]
-   (drop/items! position (.-items data-transfer))
-   (drop/files! position (.-files data-transfer))))
-
+   (data-transfer/items! position (.-items data-transfer))
+   (data-transfer/files! position (.-files data-transfer))))
 
 (rf/reg-fx
  :set-pointer-capture

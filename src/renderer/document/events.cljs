@@ -140,8 +140,6 @@
     :fx [[:dispatch [::frame.e/center]]
          [:focus nil]]}))
 
-
-
 (rf/reg-event-fx
  ::open
  (fn [_ [_ file-path]]

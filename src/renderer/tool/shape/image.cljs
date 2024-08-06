@@ -3,7 +3,7 @@
   (:require
    [re-frame.core :as rf]
    [renderer.tool.base :as tool]
-   [renderer.utils.drop :as drop]
+   [renderer.utils.data-transfer :as data-transfer]
    [renderer.utils.file :as file]))
 
 (derive :image ::tool/graphics)
@@ -25,5 +25,5 @@
                       "image/bmp" [".fmp"]}}]}
    (fn [file]
      (rf/dispatch [:set-tool :select])
-     (drop/add-image! file adjusted-pointer-pos)))
+     (data-transfer/add-image! file adjusted-pointer-pos)))
   db)

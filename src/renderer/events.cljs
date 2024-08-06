@@ -199,7 +199,7 @@
             db)
       :fx [(case (:type e)
              :drop
-             [:drop [adjusted-pointer-pos data-transfer]]
+             [:data-transfer [adjusted-pointer-pos data-transfer]]
 
              :pointerdown
              [:set-pointer-capture [(:target e) (:pointer-id e)]]
