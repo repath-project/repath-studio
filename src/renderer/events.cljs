@@ -102,36 +102,6 @@
    (update-in db [key :visible?] not)))
 
 (rf/reg-event-fx
- :init-theme-mode
- (fn [{:keys [db]} _]
-   (let [mode (-> db :theme :mode)
-         mode (if (= mode :system) (-> db :theme :native) mode)]
-     {:set-document-theme-attr [(name mode)]})))
-
-(rf/reg-event-fx
- :set-native-theme
- local-storage/persist
- (fn [{:keys [db]} [_ mode]]
-   {:db (assoc-in db [:theme :native] mode)
-    :dispatch [:init-theme-mode]}))
-
-(rf/reg-event-fx
- :set-theme-mode
- local-storage/persist
- (fn [{:keys [db]} [_ mode]]
-   {:db (assoc-in db [:theme :mode] mode)
-    :dispatch [:init-theme-mode]}))
-
-(rf/reg-event-fx
- :cycle-theme-mode
- (fn [{:keys [db]} [_]]
-   (let [mode (case (-> db :theme :mode)
-                :dark :light
-                :light :system
-                :system :dark)]
-     {:dispatch [:set-theme-mode mode]})))
-
-(rf/reg-event-fx
  :pointer-event
  (fn [{:keys [db]} [_ {:keys [button buttons modifiers data-transfer pointer-pos delta element] :as e}]]
    (let [{:keys [pointer-offset tool dom-rect drag? primary-tool]} db

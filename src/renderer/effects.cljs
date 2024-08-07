@@ -7,11 +7,6 @@
    [renderer.utils.dom :as dom]))
 
 (rf/reg-fx
- :set-document-theme-attr
- (fn [[mode]]
-   (.setAttribute js/window.document.documentElement "data-theme" mode)))
-
-(rf/reg-fx
  :ipc-send
  (fn [[channel data]]
    (when platform/electron?

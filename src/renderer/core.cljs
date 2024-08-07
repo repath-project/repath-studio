@@ -31,6 +31,8 @@
    [renderer.snap.events]
    [renderer.snap.subs]
    [renderer.subs]
+   [renderer.theme.events :as theme.e]
+   [renderer.theme.subs]
    [renderer.timeline.events]
    [renderer.timeline.subs]
    [renderer.tool.core]
@@ -91,8 +93,8 @@
   []
   (let [query (.matchMedia js/window "(prefers-color-scheme: dark)")
         get-theme (fn [query] (if (.-matches query) :dark :light))]
-    (rf/dispatch [:set-native-theme (get-theme query)])
-    (.addListener query #(rf/dispatch [:set-native-theme (get-theme %)]))))
+    (rf/dispatch [::theme.e/set-native-mode (get-theme query)])
+    (.addListener query #(rf/dispatch [::theme.e/set-native-mode (get-theme %)]))))
 
 
 (defn ^:export init []
@@ -111,7 +113,7 @@
 
   (rf/dispatch-sync [:initialize-db])
   (rf/dispatch-sync [:load-local-db])
-  (rf/dispatch-sync [:init-theme-mode])
+  (rf/dispatch-sync [::theme.e/init-mode])
   (rf/dispatch-sync [::document.e/new])
   (rf/dispatch-sync [:set-tool :select])
   (rf/dispatch-sync [:set-mdn (js->clj mdn :keywordize-keys true)])

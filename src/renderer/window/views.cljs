@@ -5,6 +5,8 @@
    [renderer.components :as comp]
    [renderer.document.subs :as-alias document.s]
    [renderer.menubar.views :as menubar]
+   [renderer.theme.events :as-alias theme.e]
+   [renderer.theme.subs :as-alias theme.s]
    [renderer.window.events :as-alias window.e]
    [renderer.window.subs :as-alias window.s]))
 
@@ -39,7 +41,7 @@
   []
   (let [fullscreen? @(rf/subscribe [::window.s/fullscreen?])
         maximized? @(rf/subscribe [::window.s/maximized?])
-        theme-mode (name @(rf/subscribe [:theme-mode]))]
+        theme-mode (name @(rf/subscribe [::theme.s/mode]))]
     [:div.flex.items-center.relative
      (when-not (or fullscreen? platform/mac?)
        [app-icon])
@@ -51,7 +53,7 @@
        :style {:z-index -1}}
       @(rf/subscribe [::document.s/title-bar])]
      [:div.flex.h-full.flex-1.drag]
-     [button {:action [:cycle-theme-mode]
+     [button {:action [::theme.e/cycle-mode]
               :title (str "Theme mode - " theme-mode)
               :icon theme-mode
               :class "bg-primary"}]
