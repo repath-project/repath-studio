@@ -13,7 +13,7 @@
    [renderer.utils.element :as element]
    [renderer.utils.units :as units]))
 
-(derive :text ::tool/renderable)
+(derive :text ::tool/shape)
 
 (defmethod tool/properties :text
   []

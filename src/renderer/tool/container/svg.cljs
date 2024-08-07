@@ -79,12 +79,3 @@
          :on-double-click pointer-handler})]
       (for [element (merge child-elements)]
         [tool/render element])]]))
-
-(defmethod tool/render-to-string :svg
-  [{:keys [attrs children]}]
-  (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
-        attrs (->> (dissoc attrs :fill)
-                   (remove #(empty? (str (second %))))
-                   (into {}))]
-    (->> (doall (map tool/render-to-string (merge child-elements)))
-         (into [:svg attrs]))))
