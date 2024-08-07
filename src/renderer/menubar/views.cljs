@@ -108,6 +108,7 @@
             :type :separator}
            {:key :cut
             :label "Cut"
+            :icon "cut"
             :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/cut]}
            {:key :copy
@@ -147,6 +148,7 @@
             :action [::element.e/deselect-all]}
            {:key :invert-selection
             :label "Invert selection"
+            :icon "invert-selection"
             :action [::element.e/invert-selection]}
            {:key :select-same-tags
             :icon "select-same"
@@ -230,21 +232,26 @@
   []
   [{:key :simplify
     :label "Simplify"
+    :icon "bezier-curve"
     :action [::element.e/manipulate-path :simplify]}
    {:key :smooth
     :label "Smooth"
+    :icon "bezier-curve"
     :action [::element.e/manipulate-path :smooth]}
    {:key :flatten
     :label "Flatten"
+    :icon "bezier-curve"
     :action [::element.e/manipulate-path :flatten]}
    {:key :reverse
     :label "Reverse"
+    :icon "bezier-curve"
     :action [::element.e/manipulate-path :reverse]}])
 
 (defn image-submenu
   []
   [{:key :trace
     :label "Trace"
+    :icon "image"
     :action [::element.e/trace]}])
 
 (defn object-menu
@@ -255,10 +262,12 @@
    :disabled? (not @(rf/subscribe [::document.s/documents?]))
    :items [{:key :to-path
             :label "Object to path"
+            :icon "bezier-curve"
             :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/->path]}
            {:key :stroke-to-path
             :label "Stroke to path"
+            :icon "bezier-curve"
             :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/stroke->path]}
            {:key :divider-1
@@ -349,12 +358,15 @@
     :type :separator}
    {:label "Set to 50%"
     :key "50"
+    :icon "magnifier"
     :action [::frame.e/set-zoom 0.5]}
    {:label "Set to 100%"
     :key "100"
+    :icon "magnifier"
     :action [::frame.e/set-zoom 1]}
    {:label "Set to 200%"
     :key "200"
+    :icon "magnifier"
     :action [::frame.e/set-zoom 2]}
    {:key :divider-2
     :type :separator}
