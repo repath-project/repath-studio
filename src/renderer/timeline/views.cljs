@@ -109,7 +109,7 @@
      [:span.font-mono.px-2 time-formatted]
      [:span.v-divider]
      [snap-controls]
-     [comp/icon-button "times"
+     [comp/icon-button "window-close"
       {:title "Hide timeline"
        :on-click #(rf/dispatch [:toggle-panel :timeline])}]]))
 

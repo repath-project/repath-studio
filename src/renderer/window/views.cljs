@@ -26,7 +26,7 @@
     :icon (if maximized? "window-restore" "window-maximize")}
    {:action [::window.e/close]
     :title "Close"
-    :icon "times"}])
+    :icon "window-close"}])
 
 (defn app-icon
   []

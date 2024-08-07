@@ -91,7 +91,7 @@
      [:button.button.ml-px.bg-primary.text-muted.absolute.h-full.right-0.clear-input-button.hover:bg-transparent
       {:style {:width "26px"}
        :on-pointer-down #(rf/dispatch [::element.e/remove-attr key])}
-      [comp/icon "times" {:class "icon small"}]])])
+      [comp/icon "times"]])])
 
 (defmethod hierarchy/form-element :default
   [k v disabled?]

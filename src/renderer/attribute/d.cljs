@@ -118,7 +118,7 @@
                            "(Relative)" "(Absolute)")]
                         [:button.icon-button.small.bg-transparent.text-muted
                          {:on-click #(remove-segment-by-index path i)}
-                         [comp/icon "times" {:class "icon small"}]]]
+                         [comp/icon "times"]]]
                        [segment-form segment i]])) segments)]))
 
 (defmethod hierarchy/form-element :d

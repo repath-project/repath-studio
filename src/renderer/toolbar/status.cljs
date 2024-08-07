@@ -119,13 +119,13 @@
         {:class (when (<= zoom 0.01) "disabled")
          :title "Zoom out"
          :on-click #(rf/dispatch [::frame.e/zoom-out])}
-        [comp/icon "minus" {:class "icon small"}]]
+        [comp/icon "minus"]]
 
        [:button.button.overlay.px-2.font-mono.rounded
         {:class (when (>= zoom 100) "disabled")
          :title "Zoom in"
          :on-click #(rf/dispatch [::frame.e/zoom-in])}
-        [comp/icon "plus" {:class "icon small"}]]
+        [comp/icon "plus"]]
        [zoom-input zoom]
        [:div.pr-2.overlay.flex.items-center "%"]
 
@@ -134,7 +134,7 @@
          {:class "button flex items-center justify-center overlay px-2 font-mono rounded"
           :side "top"}
          [:div.flex.items-center
-          [comp/icon "chevron-up" {:class "icon small"}]]]
+          [comp/icon "chevron-up"]]]
 
         [:> DropdownMenu/Portal
          [:> DropdownMenu/Content

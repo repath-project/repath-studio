@@ -58,5 +58,5 @@
                                 {:key (str "y-" index v) :default-value y}]
                                [:button.button.bg-transparent.text-muted.h-full
                                 {:on-click #(remove-nth points index)}
-                                [comp/icon "times" {:class "icon small"}]]]) points)]))
+                                [comp/icon "times"]]]) points)]))
           [:> Popover/Arrow {:class "popover-arrow"}]]]])]))

@@ -80,7 +80,7 @@
             :type :separator}
            {:key :close
             :label "Close"
-            :icon "times"
+            :icon "window-close"
             :disabled? (not @(rf/subscribe [::document.s/documents?]))
             :action [::document.e/close-active]}
            {:key :exit
