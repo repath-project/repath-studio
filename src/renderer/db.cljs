@@ -2,6 +2,7 @@
   (:require
    [renderer.document.db]
    [renderer.snap.db]
+   [renderer.theme.db]
    [renderer.timeline.db]
    [renderer.window.db]))
 
@@ -22,8 +23,7 @@
    [:pen-mode? boolean?]
    [:panel [:map-of :key [:map [:visible? boolean?]]]]
    [:window renderer.window.db/window]
-   [:theme [:mode [:enum :dark :light :system]
-            :native [:enum :dark :light]]]
+   [:theme renderer.theme.db/theme]
    [:timeline renderer.timeline.db/timeline]])
 
 (def default

@@ -2,7 +2,6 @@
   (:require
    [re-frame.core :as rf]))
 
-
 (rf/reg-fx
  ::focus
  (fn [[k direction]]
