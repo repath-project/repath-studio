@@ -1,6 +1,7 @@
 (ns renderer.document.db
   (:require
-   [renderer.element.db]))
+   [renderer.element.db]
+   [renderer.history.db]))
 
 (def document
   [:map
@@ -13,7 +14,7 @@
    [:stroke string?]
    [:zoom double?]
    [:rotate double?]
-   [:history map?]
+   [:history renderer.history.db/history]
    [:pan [:tuple double? double?]]
    [:elements [:map-of keyword? renderer.element.db/element]]])
 

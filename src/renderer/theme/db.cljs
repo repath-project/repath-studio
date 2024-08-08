@@ -3,4 +3,4 @@
 (def theme
   [:map
    [:mode [:enum :dark :light :system]]
-   [:native [:enum :dark :light]]])
+   [:native {:optional true} [:enum :dark :light]]])
