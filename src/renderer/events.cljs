@@ -6,21 +6,24 @@
    [renderer.effects]
    [renderer.handlers :as h]
    [renderer.frame.handlers :as frame-h]
+   [renderer.notification.events :as-alias notification.e]
    [renderer.tool.base :as tool]
    [renderer.utils.local-storage :as local-storage]
    [renderer.utils.pointer :as pointer]))
 
-(defn check-and-throw
+(defn check-schema
   "Throws an exception if `db` doesn't match the Spec"
   [spec db]
   (when-not (ma/validate spec db)
-    (js/console.log (ex-info (str "spec check failed: " (ma/explain spec db)) {}))
+    (rf/dispatch [::notification.e/add [:div
+                                        [:h2.mb-4.font-bold "Spec check failed"]
+                                        [:p.text-error #_(str (ma/explain spec db))]]])
     db))
 
 #_:clj-kondo/ignore
-(def schema-valdator (rf/after (partial check-and-throw db/app)))
+(def schema-valdator (rf/after (partial check-schema db/app)))
 
-#_(rf/reg-global-interceptor schema-valdator)
+(rf/reg-global-interceptor schema-valdator)
 
 (rf/reg-event-db
  :initialize-db

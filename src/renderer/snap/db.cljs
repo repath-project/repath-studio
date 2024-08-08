@@ -7,4 +7,4 @@
   [:map
    [:enabled? boolean?]
    [:threshold double?]
-   [:options options]])
+   [:options [:set options]]])

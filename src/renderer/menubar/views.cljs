@@ -598,5 +598,5 @@
          {:class "menubar-root"
           :on-key-down #(when-not (= (.-key %) "Escape")
                           (.stopPropagation %)) ; FIXME: Esc global action also triggered.
-          :onValueChange #(rf/dispatch [:set-backdrop (seq %)])}]
+          :onValueChange #(rf/dispatch [:set-backdrop (boolean (seq %))])}]
         (map menu-item (root-menu))))

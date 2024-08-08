@@ -6,8 +6,9 @@
   [:multi {:dispatch :tag}
    [::ma/default
     [:map
-     [:key uuid?]
+     [:key keyword?]
      [:type [:enum :element :handle]]
      [:visible? boolean?]
      [:selected? boolean?]
-     [:attrs [:map-of :uuid string?]]]]])
+     [:content string?]
+     [:attrs [:map-of keyword? string?]]]]])

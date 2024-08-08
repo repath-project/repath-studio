@@ -1,5 +1,6 @@
 (ns renderer.db
   (:require
+   [renderer.dialog.db]
    [renderer.document.db]
    [renderer.snap.db]
    [renderer.theme.db]
@@ -16,12 +17,19 @@
    [:rulers-visible? boolean?]
    [:snap renderer.snap.db/snap]
    [:rulers-locked? boolean?]
-   [:documents [:map-of :uuid renderer.document.db/document]]
-   [:document-tabs [:vector uuid?]]
+   [:dialogs [:vector renderer.dialog.db/dialog]]
+   [:documents [:map-of keyword? map?]]
+   [:document-tabs [:vector keyword?]]
+   [:recent [:vector string?]]
    [:system-fonts vector?]
+   [:notifications vector?]
    [:debug-info? boolean?]
    [:pen-mode? boolean?]
-   [:panel [:map-of :key [:map [:visible? boolean?]]]]
+   [:backdrop? boolean?]
+   [:lang keyword?]
+   [:repl-mode keyword?]
+   [:worker [:map [:tasks set?]]]
+   [:panel [:map-of keyword? [:map [:visible? boolean?]]]]
    [:window renderer.window.db/window]
    [:theme renderer.theme.db/theme]
    [:timeline renderer.timeline.db/timeline]])
@@ -39,6 +47,7 @@
    :notifications []
    :debug-info? false
    :pen-mode? false
+   :backdrop? false
    :rulers-locked? false
    :grid-visible? false
    :rulers-visible? true
@@ -48,8 +57,7 @@
    :lang :en-US
    :repl-mode :cljs
    :theme {:mode :dark}
-   :worker {:tasks {}}
-   :cmdk {:visible? false}
+   :worker {:tasks #{}}
    :panel {:tree {:visible? true}
            :properties {:visible? true}
            :timeline {:visible? false}
