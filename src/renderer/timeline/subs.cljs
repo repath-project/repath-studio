@@ -9,7 +9,8 @@
  ::animations
  :<- [::document.s/elements]
  (fn [elements]
-   (filter #(contains? (descendants ::tool/animation) (:tag %)) (vals elements))))
+   (filter #(contains? (descendants ::tool/animation) (:tag %))
+           (vals elements))))
 
 (defn effect-id
   [el]

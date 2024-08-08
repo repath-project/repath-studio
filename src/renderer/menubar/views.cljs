@@ -492,24 +492,29 @@
            {:key :website
             :label "Website"
             :icon "earth"
-            :action [::window.e/open-remote-url "https://repath.studio/"]}
+            :action [::window.e/open-remote-url
+                     "https://repath.studio/"]}
            {:key :source-code
             :label "Source Code"
             :icon "commit"
-            :action [::window.e/open-remote-url "https://github.com/repath-project/repath-studio"]}
+            :action [::window.e/open-remote-url
+                     "https://github.com/repath-project/repath-studio"]}
            {:key :license
             :label "License"
-            :action [::window.e/open-remote-url "https://github.com/repath-project/repath-studio/blob/main/LICENSE"]}
+            :action [::window.e/open-remote-url
+                     "https://github.com/repath-project/repath-studio/blob/main/LICENSE"]}
            {:key :changelog
             :icon "list"
             :label "Changelog"
-            :action [::window.e/open-remote-url "https://repath.studio/roadmap/changelog/"]}
+            :action [::window.e/open-remote-url
+                     "https://repath.studio/roadmap/changelog/"]}
            {:key :divider-2
             :type :separator}
            {:key :submit-issue
             :icon "warning"
             :label "Submit an issue"
-            :action [::window.e/open-remote-url "https://github.com/repath-project/repath-studio/issues/new/choose"]}
+            :action [::window.e/open-remote-url
+                     "https://github.com/repath-project/repath-studio/issues/new/choose"]}
            {:key :divider-3
             :type :separator}
            {:key :about
@@ -597,6 +602,7 @@
   (into [:> Menubar/Root
          {:class "menubar-root"
           :on-key-down #(when-not (= (.-key %) "Escape")
-                          (.stopPropagation %)) ; FIXME: Esc global action also triggered.
+                          ; FIXME: Esc global action also triggered.
+                          (.stopPropagation %))
           :onValueChange #(rf/dispatch [:set-backdrop (boolean (seq %))])}]
         (map menu-item (root-menu))))
