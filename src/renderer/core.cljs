@@ -82,11 +82,11 @@
   []
   (doseq
    [[channel f]
-    [["window-maximized" #(rf/dispatch [::window.e/set-maximized? true])]
-     ["window-unmaximized" #(rf/dispatch [::window.e/set-maximized? false])]
-     ["window-entered-fullscreen" #(rf/dispatch [::window.e/set-fullscreen? true])]
-     ["window-leaved-fullscreen" #(rf/dispatch [::window.e/set-fullscreen? false])]
-     ["window-minimized" #(rf/dispatch [::window.e/set-minimized? true])]]]
+    [["window-maximized" #(rf/dispatch [::window.e/set-maximized true])]
+     ["window-unmaximized" #(rf/dispatch [::window.e/set-maximized false])]
+     ["window-entered-fullscreen" #(rf/dispatch [::window.e/set-fullscreen true])]
+     ["window-leaved-fullscreen" #(rf/dispatch [::window.e/set-fullscreen false])]
+     ["window-minimized" #(rf/dispatch [::window.e/set-minimized true])]]]
     (js/window.api.on channel f)))
 
 (defn handle-system-theme!
@@ -134,6 +134,6 @@
         (rf/dispatch [:load-webref]))
     (.addEventListener js/document
                        "fullscreenchange"
-                       #(rf/dispatch [::window.e/set-fullscreen? (boolean (.-fullscreenElement js/document))])))
+                       #(rf/dispatch [::window.e/set-fullscreen (boolean (.-fullscreenElement js/document))])))
 
   (mount-root))

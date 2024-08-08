@@ -5,19 +5,19 @@
    [renderer.window.effects :as fx]))
 
 (rf/reg-event-db
- ::set-maximized?
+ ::set-maximized
  (rf/path :window)
  (fn [db [_ state]]
    (assoc db :maximized? state)))
 
 (rf/reg-event-db
- ::set-fullscreen?
+ ::set-fullscreen
  (rf/path :window)
  (fn [db [_ state]]
    (assoc db :fullscreen? state)))
 
 (rf/reg-event-db
- ::set-minimized?
+ ::set-minimized
  (rf/path :window)
  (fn [db [_ state]]
    (assoc db :minimized? state)))

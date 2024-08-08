@@ -56,13 +56,13 @@
 
 (defn update-bounds
   [db k]
-  (if (= k :canvas)
-    db
-    (as-> db db
-      (update-in db (conj (path db) k) #(assoc % :bounds (if (= (:tag %) :g)
-                                                           (tool/bounds % (elements db))
-                                                           (element/adjusted-bounds % (elements db)))))
-      (reduce #(update-bounds %1 %2) db (children db k)))))
+  (let [update #(assoc % :bounds (if (= (:tag %) :g)
+                                   (tool/bounds % (elements db))
+                                   (element/adjusted-bounds % (elements db))))]
+    (if (= k :canvas)
+      db
+      (-> (reduce update-bounds db (children db k))
+          (update-in (conj (path db) k) update)))))
 
 (defn update-el
   [db k f & more]
