@@ -3,7 +3,7 @@
    ["electron" :refer [app dialog]]
    ["fs" :as fs]
    ["path" :as path]
-   [config]
+   [config :as config]
    [clojure.edn :as edn]
    [promesa.core :as p]))
 

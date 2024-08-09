@@ -11,7 +11,7 @@
    ["font-scanner" :as fontManager]
    ["os" :as os]
    ["path" :as path]
-   [config]
+   [config :as config]
    [electron.file :as file]))
 
 (defonce main-window (atom nil))

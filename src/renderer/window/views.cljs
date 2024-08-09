@@ -1,6 +1,6 @@
 (ns renderer.window.views
   (:require
-   [platform]
+   [platform :as platform]
    [re-frame.core :as rf]
    [renderer.components :as comp]
    [renderer.document.subs :as-alias document.s]

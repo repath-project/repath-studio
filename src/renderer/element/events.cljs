@@ -1,7 +1,7 @@
 (ns renderer.element.events
   (:require
    [clojure.string :as str]
-   [platform]
+   [platform :as platform]
    [re-frame.core :as rf]
    [renderer.element.handlers :as h]
    [renderer.history.handlers :as history.h]

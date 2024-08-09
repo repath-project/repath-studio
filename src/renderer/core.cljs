@@ -5,9 +5,8 @@
    ["electron-log/renderer"]
    ["mdn-data" :as mdn] ;; deprecating in favor of w3c/webref
    ["paper" :refer [paper]]
-   [config]
    [devtools.core :as devtools]
-   [platform]
+   [platform :as platform]
    [re-frame.core :as rf]
    [re-pressed.core :as rp]
    [reagent.dom :as ra.dom]

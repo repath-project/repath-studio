@@ -4,8 +4,7 @@
    ["electron" :refer [contextBridge ipcRenderer]]
    ["font-scanner" :as fontManager]
    ["opentype.js" :as opentype]
-   ["os" :as os]
-   [config]))
+   ["os" :as os]))
 
 (defn text->path
   "https://github.com/opentypejs/opentype.js#loading-a-font-synchronously-nodejs"

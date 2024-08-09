@@ -1,6 +1,6 @@
 (ns renderer.window.events
   (:require
-   [platform]
+   [platform :as platform]
    [re-frame.core :as rf]
    [renderer.window.effects :as fx]))
 

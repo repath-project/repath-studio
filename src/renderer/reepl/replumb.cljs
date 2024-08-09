@@ -5,12 +5,12 @@
    [cljs.tools.reader.reader-types :refer [string-push-back-reader]]
    [cljs.tools.reader]
    [clojure.string :as str]
-   [config]
+   [config :as config]
    [re-frame.registrar]
    [replumb.ast :as ast]
    [replumb.core :as replumb]
    [replumb.doc-maps :as docs]
-   [replumb.repl]
+   [replumb.repl :as repl]
    #_[shadow.cljs.bootstrap.browser :as bootstrap])
   (:import goog.net.XhrIo))
 
@@ -36,7 +36,7 @@
           #_(fn [& a] nil)
           fetch-file!)
          {:warning-as-error true
-          ;; :verbose config/debug?
+          :verbose config/debug?
           ;; :load-fn! (fn [z cb])
           :no-pr-str-on-value true}))
 cljs.js/*load-fn*
@@ -66,16 +66,16 @@ cljs.js/*load-fn*
          ")"))))
 
 #_(defn jsc-run [source cb]
-    (jsc/eval-str replumb.repl/st
+    (jsc/eval-str repl/st
                   source
                   'stuff
                   {:eval jsc/js-eval
-                   :ns (replumb.repl/current-ns)
-                   :load (partial bootstrap/load replumb.repl/st)
+                   :ns (repl/current-ns)
+                   :load (partial bootstrap/load repl/st)
                    :context :statement
                    :def-emits-var true}
                   (fn [result]
-                    (swap! replumb.repl/app-env assoc :current-ns (:ns result))
+                    (swap! repl/app-env assoc :current-ns (:ns result))
                     (if (contains? result :error)
                       (cb false (:error result))
                       (cb true (aget js/window "last_repl_value"))))))
@@ -216,7 +216,7 @@ cljs.js/*load-fn*
 
 (defn get-matching-ns-interns [[name ns] matches? only-ns]
   (let [ns-name (str ns)
-        publics (keys (ast/ns-publics @replumb.repl/st ns))
+        publics (keys (ast/ns-publics @repl/st ns))
         publics (if (empty? publics)
                   (get-from-js-ns ns)
                   publics)]
@@ -258,7 +258,7 @@ cljs.js/*load-fn*
                    ;; TODO: find out what these t_cljs$core things are... seem to be nil
                    (= -1 (.indexOf (str %) "t_cljs$core"))
                    (< -1 (.indexOf (str %) text)))
-        current-ns (replumb.repl/current-ns)
+        current-ns (repl/current-ns)
         replace-name (fn [sym]
                        (if (or
                             (= (namespace sym) "cljs.core")
@@ -266,7 +266,7 @@ cljs.js/*load-fn*
                          (name sym)
                          (str sym)))
         requires (:requires
-                  (ast/namespace @replumb.repl/st current-ns))
+                  (ast/namespace @repl/st current-ns))
         only-ns (when only-ns
                   (or (str (get requires (symbol only-ns)))
                       only-ns))
@@ -334,12 +334,12 @@ cljs.js/*load-fn*
     (docs/special-doc-map sym) (get-doc (docs/special-doc sym))
     (docs/repl-special-doc-map sym) (get-doc (docs/repl-special-doc sym))
     (ast/namespace
-     @replumb.repl/st sym) (get-doc
+     @repl/st sym) (get-doc
                             (select-keys
-                             (ast/namespace @replumb.repl/st sym)
+                             (ast/namespace @repl/st sym)
                              [:name :doc]))
     :else (get-doc
-           (replumb.repl/get-var
+           (repl/get-var
             nil
             sym))))
 

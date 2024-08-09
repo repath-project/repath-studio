@@ -1,7 +1,7 @@
 (ns renderer.document.events
   (:require
    [cljs.reader :as edn]
-   [platform]
+   [platform :as platform]
    [re-frame.core :as rf]
    [re-frame.interceptor :refer [->interceptor get-effect get-coeffect assoc-coeffect assoc-effect]]
    [renderer.dialog.events :as-alias dialog.e]

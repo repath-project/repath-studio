@@ -2,7 +2,7 @@
   (:require
    ["@radix-ui/react-context-menu" :as ContextMenu]
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
-   [platform]
+   [platform :as platform]
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [renderer.components :as comp]

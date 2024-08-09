@@ -3,7 +3,7 @@
    [ajax.core]
    [clojure.string :as str]
    [clojure.math]
-   [config]
+   [config :as config]
    [re-frame.core :as rf]
    [re-frame.db :as db]
    [renderer.document.events :as-alias document.e]

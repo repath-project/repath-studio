@@ -4,8 +4,6 @@
    ["@radix-ui/react-select" :as Select]
    ["@radix-ui/react-slider" :as Slider]
    [clojure.string :as str]
-   [config]
-   [platform]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.components :as comp]
