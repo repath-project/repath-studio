@@ -2,8 +2,6 @@
   (:require
    ["react" :as react]
    ["react-resizable-panels" :refer [Panel PanelResizeHandle]]
-   [cljs.reader]
-   [cljs.tools.reader]
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [renderer.components :as comp]

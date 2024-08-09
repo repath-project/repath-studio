@@ -9,7 +9,7 @@
    ["codemirror/mode/clojure/clojure.js"]
    ["codemirror/mode/javascript/javascript.js"]
    ["react" :as react]
-   [cljs.tools.reader :as reader]
+   [clojure.edn :as edn]
    [clojure.string :as str]
    [reagent.core :as r]))
 
@@ -35,7 +35,7 @@
   [source]
   (try
     (fn []
-      (reader/read-string source)
+      (edn/read-string source)
       true)
     (catch js/Error _
       false)))
