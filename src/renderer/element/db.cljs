@@ -7,8 +7,11 @@
    [::ma/default
     [:map
      [:key keyword?]
+     [:parent {:optional true} keyword?]
      [:type [:enum :element :handle]]
      [:visible? boolean?]
-     [:selected? boolean?]
-     [:content string?]
-     [:attrs [:map-of keyword? string?]]]]])
+     [:locked? {:optional true} boolean?]
+     [:selected? {:optional true} boolean?]
+     [:bounds {:optional true} [:tuple double? double? double? double?]]
+     [:content {:optional true} string?]
+     [:attrs {:optional true} map?]]]])

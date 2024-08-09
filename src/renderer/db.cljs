@@ -18,7 +18,7 @@
    [:snap renderer.snap.db/snap]
    [:rulers-locked? boolean?]
    [:dialogs [:vector renderer.dialog.db/dialog]]
-   [:documents [:map-of keyword? map?]]
+   [:documents [:map-of keyword? renderer.document.db/document]]
    [:document-tabs [:vector keyword?]]
    [:recent [:vector string?]]
    [:system-fonts vector?]

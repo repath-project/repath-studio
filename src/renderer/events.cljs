@@ -1,6 +1,8 @@
 (ns renderer.events
   (:require
+   [clojure.data :as data]
    [malli.core :as ma]
+   [malli.error :as ma.error]
    [re-frame.core :as rf]
    [renderer.db :as db]
    [renderer.effects]
@@ -11,16 +13,33 @@
    [renderer.utils.local-storage :as local-storage]
    [renderer.utils.pointer :as pointer]))
 
-(defn check-schema
-  "Throws an exception if `db` doesn't match the Spec"
-  [spec db]
-  (when-not (ma/validate spec db)
-    (rf/dispatch [::notification.e/add [:div
-                                        [:h2.mb-4.font-bold "Spec check failed"]
-                                        [:p.text-error #_(str (ma/explain spec db))]]])
-    db))
+(def last-state (atom nil))
 
-#_:clj-kondo/ignore
+(defn check-and-throw
+  "Throws an exception if `db` doesn't match the Spec"
+  [event schema state]
+  (when-not (ma/validate schema state)
+    (js/console.error (str "Event: " (first event)))
+    (throw (js/Error. (str "Spec check failed: " (-> (ma/explain schema state)
+                                                     ma.error/humanize
+                                                     str))))))
+
+(defn check-schema [schema state event]
+  (if @last-state
+    (let [[prev current _] (data/diff @last-state state)
+          changed-keys (set (concat (keys prev) (keys current)))]
+      (reset! last-state state)
+      (when (seq changed-keys)
+        (let [schema* (->> schema
+                           rest
+                           (filter (fn [[schema-key & _]] (changed-keys schema-key)))
+                           (cons :map)
+                           vec)]
+          (check-and-throw event schema* state))))
+    (do
+      (reset! last-state state)
+      (check-and-throw event schema state))))
+
 (def schema-valdator (rf/after (partial check-schema db/app)))
 
 (rf/reg-global-interceptor schema-valdator)

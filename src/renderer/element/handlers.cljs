@@ -303,12 +303,14 @@
 
 (defn hover
   [db k]
-  (update-in db [:documents (:active-document db) :hovered-keys] conj k))
+  (cond-> db
+    k
+    (update-in [:documents (:active-document db) :hovered-keys] conj k)))
 
 (defn ignore
   [db k]
   (cond-> db
-    (:active-document db)
+    (and (:active-document db) k)
     (update-in [:documents (:active-document db) :ignored-keys] conj k)))
 
 (defn clear-hovered
@@ -508,7 +510,7 @@
           children (vals (select-keys (elements db) (:children el)))
           [x1 y1] (tool/bounds (element db parent))
           children (concat children (:content el))
-          new-el (map/deep-merge el default-props {:key key :parent parent})
+          new-el (merge el default-props {:key key :parent parent})
           add-children (fn [db children]
                          (reduce #(cond-> %1
                                     (element/supported? %2)

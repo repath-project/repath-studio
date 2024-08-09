@@ -106,13 +106,15 @@
 
 (defn- create-state
   [db id explanation]
-  {:explanation explanation
-   :elements (element.h/elements db)
-   :timestamp (.now js/Date)
-   :index (state-count db)
-   :id id
-   :parent (:position (history db))
-   :children []})
+  (let [state {:explanation explanation
+               :elements (element.h/elements db)
+               :timestamp (.now js/Date)
+               :index (state-count db)
+               :id id
+               :children []}]
+    (cond-> state
+      (current-position db)
+      (assoc :parent (current-position db)))))
 
 (defn- update-ancestors
   "Makes all ancestors of the active branch the rightmost element.

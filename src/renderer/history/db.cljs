@@ -4,12 +4,12 @@
 
 (def state
   [:map
-   [:explenation string?]
+   [:explanation string?]
    [:timestamp double?]
    [:index integer?]
    [:id keyword?]
    [:elements [:map-of keyword? renderer.element.db/element]]
-   [:parent keyword?]
+   [:parent {:optional true} keyword?]
    [:children [:vector keyword?]]])
 
 (def history

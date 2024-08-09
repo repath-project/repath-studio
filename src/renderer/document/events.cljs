@@ -35,7 +35,7 @@
  ::set-hovered-keys
  active-document-path
  (fn [db [_ ks]]
-   (assoc db :hovered-keys ks)))
+   (assoc db :hovered-keys (->> ks (remove nil?) (set)))))
 
 (rf/reg-event-db
  ::collapse-el
