@@ -76,7 +76,7 @@
   [e el-k]
   (.stopPropagation e)
   (if (contains? #{"Enter" "Escape"} (.-code e))
-    (set-text-and-select-element e key)
+    (set-text-and-select-element e el-k)
     (.requestAnimationFrame
      js/window
      #(rf/dispatch-sync [::element.e/preview-prop el-k :content (get-text e)]))))
