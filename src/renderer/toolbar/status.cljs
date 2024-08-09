@@ -48,7 +48,7 @@
 (def view-radio-buttons
   [{:title "Timeline"
     :active? [:panel-visible? :timeline]
-    :icon "timeline"
+    :icon "animation"
     :action [:toggle-panel :timeline]}
    {:title "Grid"
     :active? [:grid-visible?]

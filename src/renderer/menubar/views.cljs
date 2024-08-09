@@ -220,11 +220,14 @@
   []
   [{:key :animate
     :label "Animate"
+    :icon "animation"
     :action [::element.e/animate :animate {}]}
    {:key :animate-transform
     :label "Animate Transform"
+    :icon "animation"
     :action [::element.e/animate :animateTransform {}]}
    {:key :animate-motion
+    :icon "animation"
     :label "Animate Motion"
     :action [::element.e/animate :animateMotion {}]}])
 
