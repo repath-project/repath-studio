@@ -11,7 +11,6 @@
    [re-pressed.core :as rp]
    [reagent.dom :as ra.dom]
    [renderer.attribute.core]
-   [renderer.db]
    [renderer.dialog.events]
    [renderer.dialog.subs]
    [renderer.document.events :as document.e]
