@@ -10,22 +10,22 @@
    [renderer.element.handlers :as h]))
 
 (rf/reg-sub
- ::canvas
- :<- [::document.s/elements]
- :-> :canvas)
+ ::root
+ (fn [db _]
+   (h/root db)))
 
 (rf/reg-sub
- ::canvas-children
+ ::root-children
  :<- [::document.s/elements]
- :<- [::canvas]
- (fn [[elements canvas] _]
-   (mapv elements (:children canvas))))
+ :<- [::root]
+ (fn [[elements root] _]
+   (mapv elements (:children root))))
 
 (rf/reg-sub
  ::xml
- :<- [::canvas-children]
- (fn [canvas-children _]
-   (-> (h/->string canvas-children)
+ :<- [::root-children]
+ (fn [root-children _]
+   (-> (h/->string root-children)
        (js-beautify/html #js {:indent_size 2}))))
 
 (rf/reg-sub
@@ -127,7 +127,8 @@
 
 (rf/reg-sub
  ::top-level?
+ :<- [::root]
  :<- [::ancestor-keys]
- (fn [ancestor-keys _]
-   (empty? (disj (set ancestor-keys) :canvas))))
+ (fn [[root ancestor-keys] _]
+   (empty? (disj (set ancestor-keys) (:key root)))))
 

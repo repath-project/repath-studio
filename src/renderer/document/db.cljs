@@ -1,7 +1,8 @@
 (ns renderer.document.db
   (:require
    [renderer.element.db]
-   [renderer.history.db]))
+   [renderer.history.db]
+   [renderer.utils.uuid :as uuid]))
 
 (def document
   [:map
@@ -18,19 +19,21 @@
    [:pan [:tuple double? double?]]
    [:elements [:map-of keyword? renderer.element.db/element]]])
 
-(def default-document
-  {:hovered-keys #{}
-   :collapsed-keys #{}
-   :ignored-keys #{}
-   :fill "white"
-   :stroke "black"
-   :zoom 1
-   :rotate 0
-   :pan [0 0]
-   :history {:zoom 0.5}
-   :elements {:canvas {:key :canvas
-                       :visible? true
-                       :tag :canvas
-                       :type :element
-                       :attrs {:fill "#eeeeee"}
-                       :children []}}})
+(defn create-document
+  []
+  (let [id (uuid/generate)]
+    {:hovered-keys #{}
+     :collapsed-keys #{}
+     :ignored-keys #{}
+     :fill "white"
+     :stroke "black"
+     :zoom 1
+     :rotate 0
+     :pan [0 0]
+     :history {:zoom 0.5}
+     :elements {id {:key id
+                    :visible? true
+                    :tag :canvas
+                    :type :element
+                    :attrs {:fill "#eeeeee"}
+                    :children []}}}))

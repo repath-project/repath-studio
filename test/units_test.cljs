@@ -22,7 +22,7 @@
   (testing "match unit"
     (are [x y] (= x y)
       "px" (units/match-unit "5px")
-          ;; TODO: The following case should not work. We need to adjust the regex.
+      ;; TODO: The following case should not work. We need to adjust the regex.
       "px" (units/match-unit "5 px")
       "px" (units/match-unit "5454px")
       "px" (units/match-unit "px")

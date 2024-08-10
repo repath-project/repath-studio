@@ -13,7 +13,6 @@
    [renderer.tool.shape.path :as path]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
-   [renderer.utils.map :as map]
    [renderer.utils.uuid :as uuid]
    [renderer.utils.vec :as vec]
    [renderer.utils.spec :as spec]))
@@ -38,6 +37,10 @@
   [db k]
   (:tag (element db k)))
 
+(defn root
+  [db]
+  (some #(when (element/root? %) %) (vals (elements db))))
+
 (defn locked?
   [db k]
   (:locked? (element db k)))
@@ -56,13 +59,15 @@
 
 (defn update-bounds
   [db k]
-  (let [update #(assoc % :bounds (if (= (:tag %) :g)
-                                   (tool/bounds % (elements db))
-                                   (element/adjusted-bounds % (elements db))))]
-    (if (= k :canvas)
+  (let [el (element db k)
+        bounds (element/adjusted-bounds el (elements db))
+        update #(assoc % :bounds bounds)]
+    (if-not bounds
       db
-      (-> (reduce update-bounds db (children db k))
-          (update-in (conj (path db) k) update)))))
+      (if (element/root? el)
+        db
+        (-> (reduce update-bounds db (children db k))
+            (update-in (conj (path db) k) update))))))
 
 (defn update-el
   [db k f & more]
@@ -89,7 +94,7 @@
      (or (parent db (if (siblings-selected? db)
                       (parent db (first selected-ks))
                       (first selected-ks)))
-         (element db :canvas))))
+         (root db))))
   ([db k]
    (when-let [parent-k (:parent (element db k))]
      (element db parent-k))))
@@ -102,7 +107,7 @@
 
 (defn root-children
   [db]
-  (->> (children db :canvas)
+  (->> (children db (:key (root db)))
        (mapv (elements db))))
 
 (defn root-svgs
@@ -140,7 +145,7 @@
 
 #_(defn element-by-index
     [db i]
-    (loop [element (element db :canvas)
+    (loop [element (root db)
            index 0]
       (if (= i index)
         element
@@ -258,7 +263,7 @@
 (defn select-all
   [db]
   (reduce select (deselect db) (or (siblings db)
-                                   (children db :canvas))))
+                                   (children db (:key (root db))))))
 
 (defn selected-tags
   [db]
@@ -419,7 +424,7 @@
         pointer-pos (:adjusted-pointer-pos db)]
     (or
      (some #(when (bounds/contain-point? (:bounds %) pointer-pos) %) svgs)
-     (element db :canvas))))
+     (root db))))
 
 (defn translate
   ([db offset]
@@ -499,14 +504,14 @@
     (or
      (some #(when (bounds/contained? bounds (:bounds %)) %) svgs)
      (some #(when (bounds/intersect? bounds (:bounds %)) %) svgs)
-     (element db :canvas))))
+     (root db))))
 
 (defn create
   [db el]
   (if (element/supported? el)
     (let [key (uuid/generate)
           page (overlapping-svg db (tool/bounds el))
-          parent (or (:parent el) (if (element/svg? el) :canvas (:key page)))
+          parent (or (:parent el) (if (element/svg? el) (:key (root db)) (:key page)))
           children (vals (select-keys (elements db) (:children el)))
           [x1 y1] (tool/bounds (element db parent))
           children (concat children (:content el))
@@ -591,7 +596,7 @@
             (add (assoc el :parent (:key parent)))
             (position (mat/add pointer-pos offset)))
 
-        (not= :canvas (:key parent))
+        (not= (:key (root db)) (:key parent))
         (translate [(- s-x1) (- s-y1)])) (selected-keys db)))))
 
 (defn duplicate-in-place

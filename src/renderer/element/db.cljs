@@ -12,6 +12,7 @@
      [:visible? boolean?]
      [:locked? {:optional true} boolean?]
      [:selected? {:optional true} boolean?]
+     [:children [:vector keyword?]]
      [:bounds {:optional true} [:tuple double? double? double? double?]]
      [:content {:optional true} string?]
      [:attrs {:optional true} map?]]]])

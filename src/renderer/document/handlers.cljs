@@ -63,7 +63,7 @@
 (defn new
   [db]
   (-> db
-      (create-tab db/default-document)
+      (create-tab (db/create-document))
       (element.h/create {:tag :svg
                          :attrs {:width "800" :height "600"}})
       (history.h/finalize "Create document")))

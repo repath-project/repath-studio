@@ -143,7 +143,7 @@
                  (mapv (fn [key] (get elements key)) (reverse children)))])]))
 
 (defn inner-sidebar-render
-  [canvas-children elements]
+  [root-children elements]
   (let [hovered-keys @(rf/subscribe [::document.s/hovered-keys])
         collapsed-keys @(rf/subscribe [::document.s/collapsed-keys])]
     [:div.tree-sidebar.overflow-hidden
@@ -152,17 +152,17 @@
       [:ul
        {:on-pointer-leave #(rf/dispatch [::document.e/set-hovered-keys #{}])}
        (map (fn [el] [item el 1 elements hovered-keys collapsed-keys])
-            (reverse canvas-children))]]]))
+            (reverse root-children))]]]))
 
 (defn inner-sidebar []
   (let [state @(rf/subscribe [:state])
-        canvas-children @(rf/subscribe [::element.s/canvas-children])
+        root-children @(rf/subscribe [::element.s/root-children])
         elements @(rf/subscribe [::document.s/elements])]
     (if (= state :default)
-      [inner-sidebar-render canvas-children elements]
-      (ra/with-let [canvas-children canvas-children
+      [inner-sidebar-render root-children elements]
+      (ra/with-let [root-children root-children
                     elements elements]
-        [inner-sidebar-render canvas-children elements]))))
+        [inner-sidebar-render root-children elements]))))
 
 (defn root
   []

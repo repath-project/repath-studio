@@ -59,7 +59,7 @@
 
 (defn pan-to-element
   ([db]
-   (pan-to-element db (-> (element.h/element db :canvas) :children first)))
+   (pan-to-element db (-> db element.h/root :children first)))
   ([db key]
    (let [element (element.h/element db key)
          el-bounds (:bounds element)]
