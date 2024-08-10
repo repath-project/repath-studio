@@ -11,7 +11,7 @@
    [renderer.utils.attribute :as utils.attr]
    [renderer.utils.vec :as vec]))
 
-(defmethod hierarchy/description :points
+(defmethod hierarchy/description [:default :points]
   []
   "The points attribute defines a list of points. Each point is defined by a
    pair of number representing a X and a Y coordinate in the user coordinate
@@ -23,8 +23,8 @@
   (let [points (str/join " " (flatten (vec/remove-nth points i)))]
     (rf/dispatch [::element.e/set-attr :points points])))
 
-(defmethod hierarchy/form-element :points
-  [k v disabled?]
+(defmethod hierarchy/form-element [:default :points]
+  [_ k v disabled?]
   (let [state-default? (= @(rf/subscribe [:state]) :default)]
     [:<>
      [v/form-input

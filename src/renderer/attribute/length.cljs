@@ -28,8 +28,8 @@
 (derive :rx ::positive-length)
 (derive :ry ::positive-length)
 
-(defmethod hierarchy/form-element ::length
-  [k v disabled? initial]
+(defmethod hierarchy/form-element [:default ::length]
+  [_ k v disabled? initial]
   [:div.flex.w-full
    [v/form-input
     {:key k

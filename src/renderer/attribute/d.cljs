@@ -10,7 +10,7 @@
    [renderer.components :as comp]
    [renderer.element.events :as-alias element.e]))
 
-(defmethod hierarchy/description :d
+(defmethod hierarchy/description [:default :d]
   []
   "The d attribute defines a path to be drawn.")
 
@@ -121,8 +121,8 @@
                          [comp/icon "times"]]]
                        [segment-form segment i]])) segments)]))
 
-(defmethod hierarchy/form-element :d
-  [k v disabled?]
+(defmethod hierarchy/form-element [:default :d]
+  [_ k v disabled?]
   (let [state-default? (= @(rf/subscribe [:state]) :default)]
     [:<>
      [v/form-input

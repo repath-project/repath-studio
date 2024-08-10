@@ -3,13 +3,13 @@
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.attribute.views :as v]))
 
-(defmethod hierarchy/description :stroke-linejoin
+(defmethod hierarchy/description [:default :stroke-linejoin]
   []
-  "The stroke-linejoin attribute is a presentation attribute defining the shape 
+  "The stroke-linejoin attribute is a presentation attribute defining the shape
    to be used at the corners of paths when they are stroked.")
 
-(defmethod hierarchy/form-element :stroke-linejoin
-  [k v disabled? initial]
+(defmethod hierarchy/form-element [:default :stroke-linejoin]
+  [_ k v disabled? initial]
   [v/select-input {:key k
                    :value v
                    :disabled? disabled?

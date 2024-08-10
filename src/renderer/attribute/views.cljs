@@ -92,7 +92,7 @@
       [comp/icon "times"]])])
 
 (defmethod hierarchy/form-element :default
-  [k v disabled?]
+  [_ k v disabled?]
   [form-input {:key k
                :value v
                :disabled? disabled?}])
@@ -185,42 +185,45 @@
       [:p (str/join " | " style-declaration)]])])
 
 (defn label
-  [tag key]
+  [tag k]
   (let [clicked-element @(rf/subscribe [:clicked-element])
-        webref-property @(rf/subscribe [:webref-css-property key])
-        css-property  @(rf/subscribe [:css-property key])
+        webref-property @(rf/subscribe [:webref-css-property k])
+        css-property  @(rf/subscribe [:css-property k])
+        dispatch-tag (if (contains? (methods hierarchy/description) [tag k]) tag :default)
         active? (and (= (:type clicked-element) :handle)
                      (= (:key clicked-element) key))]
     [:> HoverCard/Root
      [:> HoverCard/Trigger
       [:label.w-28.truncate
-       {:for (name key)
-        :class (when active? "text-active")} key]]
+       {:for (name k)
+        :class (when active? "text-active")} k]]
      [:> HoverCard/Portal
       [:> HoverCard/Content
        {:side "left"
         :class "popover-content"
         :align "start"}
        [:div.p-5
-        [:h2.mb-4.text-lg key]
-        (when (get-method hierarchy/description key)
-          [:p (hierarchy/description key)])
+        [:h2.mb-4.text-lg k]
+        (when (get-method hierarchy/description [dispatch-tag k])
+          [:p (hierarchy/description dispatch-tag k)])
         (when webref-property [property-list webref-property])
         (when css-property
           [:<>
            [:h3.font-bold "Syntax"]
            [:p (:syntax css-property)]])
 
-        [caniusethis {:tag tag :attr key}]]
+        [caniusethis {:tag tag :attr k}]]
        [:> HoverCard/Arrow {:class "popover-arrow"}]]]]))
 
 (defn row
   [k v locked? tag]
-  (let [property @(rf/subscribe [:webref-css-property k])]
+  (let [property @(rf/subscribe [:webref-css-property k])
+        initial (when property (:initial property))
+        dispatch-tag (if (contains? (methods hierarchy/form-element) [tag k]) tag :default)]
     [:<>
      [label tag k]
      [:div.flex.h-full.overflow-visible
-      [hierarchy/form-element k v locked? (when property (:initial property))]]]))
+      [hierarchy/form-element dispatch-tag k v locked? initial]]]))
 
 (defn tag-info
   [tag]

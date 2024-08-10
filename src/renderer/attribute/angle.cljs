@@ -6,8 +6,8 @@
    [renderer.attribute.views :as v]
    [renderer.components :as comp]))
 
-(defmethod hierarchy/form-element ::angle
-  [k v disabled? initial]
+(defmethod hierarchy/form-element [:default ::angle]
+  [_ k v disabled? initial]
   [:<>
    [v/form-input
     {:key k

@@ -8,7 +8,7 @@
    [renderer.element.events :as-alias element.e]
    [renderer.utils.file :as file]))
 
-(defmethod hierarchy/description :href
+(defmethod hierarchy/description [:default :href]
   []
   "The href attribute defines a link to a resource as a reference URL.
    The exact meaning of that link depends on the context of each element using it.")
@@ -22,8 +22,8 @@
      #(rf/dispatch [::element.e/set-attr :href (.-result reader)]))
     (.readAsDataURL reader file)))
 
-(defmethod hierarchy/form-element :href
-  [k v disabled?]
+(defmethod hierarchy/form-element [:default :href]
+  [_ k v disabled?]
   (let [state-default? (= @(rf/subscribe [:state]) :default)]
     [:<>
      [v/form-input

@@ -3,13 +3,13 @@
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.attribute.views :as v]))
 
-(defmethod hierarchy/description :stroke-linecap
+(defmethod hierarchy/description [:default :stroke-linecap]
   []
-  "The stroke-linecap attribute is a presentation attribute defining the shape 
+  "The stroke-linecap attribute is a presentation attribute defining the shape
    to be used at the end of open subpaths when they are stroked.")
 
-(defmethod hierarchy/form-element :stroke-linecap
-  [k v disabled? initial]
+(defmethod hierarchy/form-element [:default :stroke-linecap]
+  [_ k v disabled? initial]
   [v/select-input {:key k
                    :value v
                    :disabled? disabled?

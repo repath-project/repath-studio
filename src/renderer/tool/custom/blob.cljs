@@ -23,22 +23,22 @@
 
 (derive :size ::length/length)
 
-(defmethod attr.hierarchy/form-element :extraPoints
-  [k v disabled?]
+(defmethod attr.hierarchy/form-element [:blob :extraPoints]
+  [_ k v disabled?]
   [attr.v/range-input k v {:min 0
                            :max 50
                            :step 1
                            :disabled disabled?} 0])
 
-(defmethod attr.hierarchy/form-element :randomness
-  [k v disabled?]
+(defmethod attr.hierarchy/form-element [:blob :randomness]
+  [_ k v disabled?]
   [attr.v/range-input k v {:min 0
                            :max 50
                            :step 1
                            :disabled disabled?} 0])
 
-(defmethod attr.hierarchy/form-element :seed
-  [k v disabled?]
+(defmethod attr.hierarchy/form-element [:blob :seed]
+  [_ k v disabled?]
   (let [random-seed (rand-int 1000000)]
     [:<>
      [attr.v/form-input {:key k
@@ -52,27 +52,27 @@
        :on-click #(rf/dispatch [::element.e/set-attr k random-seed])}
       [comp/icon "refresh"]]]))
 
-#_(defmethod attr.hierarchy/description :x
+(defmethod attr.hierarchy/description [:blob :x]
     []
     "Horizontal coordinate of the blob's center.")
 
-#_(defmethod attr.hierarchy/description :y
+(defmethod attr.hierarchy/description [:blob :y]
     []
     "Vertical coordinate of the blob's center.")
 
-(defmethod attr.hierarchy/description :seed
+(defmethod attr.hierarchy/description [:blob :seed]
   []
   "A given seed will always produce the same blob.")
 
-(defmethod attr.hierarchy/description :extraPoints
+(defmethod attr.hierarchy/description [:blob :extraPoints]
   []
   "The actual number of points will be `3 + extraPoints`.")
 
-(defmethod attr.hierarchy/description :randomness
+(defmethod attr.hierarchy/description [:blob :randomness]
   []
   "Increases the amount of variation in point position.")
 
-(defmethod attr.hierarchy/description :size
+(defmethod attr.hierarchy/description [:blob :size]
   []
   "The size of the bounding box.")
 

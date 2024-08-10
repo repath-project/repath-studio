@@ -53,36 +53,36 @@
 (derive ::smoothing ::attr.range/range)
 (derive ::streamline ::attr.range/range)
 
-(defmethod attr.hierarchy/form-element ::size
-  [k v disabled?]
+(defmethod attr.hierarchy/form-element [:brush ::size]
+  [_ k v disabled?]
   [attr.v/range-input k v {:disabled disabled?
                            :min 1
                            :max 100
                            :step 1}])
 
-(defmethod attr.hierarchy/form-element ::points
-  [value]
+(defmethod attr.hierarchy/form-element [:brush ::points]
+  [_ value]
   [:input {:value value
            :disabled true
            :placeholder (when-not value "multiple")}])
 
-(defmethod attr.hierarchy/description ::points
+(defmethod attr.hierarchy/description [:brush ::points]
   []
   "Input points recorded from a user's mouse movement.")
 
-(defmethod attr.hierarchy/description ::size
+(defmethod attr.hierarchy/description [:brush ::size]
   []
   "The base size (diameter) of the stroke.")
 
-(defmethod attr.hierarchy/description ::thinning
+(defmethod attr.hierarchy/description [:brush ::thinning]
   []
   "The effect of pressure on the stroke's size.")
 
-(defmethod attr.hierarchy/description ::smoothing
+(defmethod attr.hierarchy/description [:brush ::smoothing]
   []
   "How much to soften the stroke's edges.")
 
-(defmethod attr.hierarchy/description ::streamline
+(defmethod attr.hierarchy/description [:brush ::streamline]
   []
   "How much to streamline the stroke.")
 

@@ -4,7 +4,7 @@
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.element.events :as-alias element.e]))
 
-(defmethod hierarchy/description :transform
+(defmethod hierarchy/description [:default :transform]
   []
   "The transform attribute defines a list of transform definitions that are
    applied to an element and the element's children.")

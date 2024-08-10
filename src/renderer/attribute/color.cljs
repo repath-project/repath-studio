@@ -12,8 +12,8 @@
 (derive :fill ::color)
 (derive :color ::color)
 
-(defmethod hierarchy/form-element ::color
-  [k v disabled? initial]
+(defmethod hierarchy/form-element [:default ::color]
+  [_ k v disabled? initial]
   [:<>
    [v/form-input
     {:key k
