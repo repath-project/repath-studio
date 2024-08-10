@@ -61,7 +61,7 @@
         furute-zoom (min width-ratio height-ratio)]
     (-> db
         element.h/clear-temp
-        (assoc :cursor "zoom-in")
+        (assoc :cursor (if (pointer/shift? e) "zoom-out" "zoom-in"))
         (frame/zoom (if (pointer/shift? e)
                       zoom-sensitivity
                       (/ furute-zoom current-zoom)))
