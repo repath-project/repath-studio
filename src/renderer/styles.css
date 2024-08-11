@@ -143,6 +143,12 @@
     }
   }
 
+
+  .button-link {
+    @apply text-lg text-accent inline-block text-left text-wrap break-all;
+  }
+
+
   .backdrop {
     @apply absolute inset-0 flex items-center justify-center;
     background-color: var(--backdrop);
