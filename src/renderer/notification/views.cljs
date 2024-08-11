@@ -1,8 +1,8 @@
 (ns renderer.notification.views
   (:require
    [re-frame.core :as rf]
-   [renderer.components :as comp]
-   [renderer.notification.events :as-alias notification.e]))
+   [renderer.notification.events :as-alias notification.e]
+   [renderer.ui :as ui]))
 
 (defn unavailable-feature
   [feature compatibility-url]
@@ -23,7 +23,7 @@
         [:div.relative.flex.bg-secondary.w-80.p-4.mb-2.rounded.shadow-md.border.border-default
          {:key index}
          (:content notification)
-         [comp/icon-button
+         [ui/icon-button
           "times"
           {:aria-label "Close"
            :class "close-button small"

@@ -4,13 +4,13 @@
    ["@repath-project/react-color" :refer [PhotoshopPicker]]
    [i18n :refer [t]]
    [re-frame.core :as rf]
-   #_[renderer.color.db :as color.db]
+   [renderer.color.db :as color.db]
    [renderer.document.events :as-alias document.e]
    [renderer.document.subs :as-alias document.s]
-   [renderer.components :as comp]
+   [renderer.ui :as ui]
    [renderer.element.events :as-alias element.e]))
 
-#_(defn drip [color]
+(defn drip [color]
     [:button.button.color-drip
      {:key (keyword (str color))
       :on-click (fn []
@@ -19,13 +19,13 @@
       :style {:background-color color}}
      (when (= color "transparent")
        [:div.bg-primary.text-error.relative
-        [comp/icon "times"]])])
+        [ui/icon "times"]])])
 
-#_(defn swatch [colors]
+(defn swatch [colors]
     [:div.flex (map drip colors)])
 
-#_(defn palette []
-    (into [:div.flex.flex-col.palette] (map swatch color.db/default-palette)))
+(defn palette []
+  (into [:div.flex.flex-col.palette] (map swatch color.db/default-palette)))
 
 (defn get-hex
   [color-object]
@@ -62,7 +62,7 @@
        :on-click (fn [e]
                    (.stopPropagation e)
                    (rf/dispatch [::document.e/swap-colors]))}
-      [renderer.components/icon "swap-horizontal"]]
+      [ui/icon "swap-horizontal"]]
 
      [:> Popover/Root {:modal true}
       [:> Popover/Trigger {:as-child true}

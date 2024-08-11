@@ -1,14 +1,14 @@
 (ns renderer.timeline.views
   (:require
-   ["@xzdarcy/react-timeline-editor" :refer [Timeline]]
    ["@radix-ui/react-select" :as Select]
+   ["@xzdarcy/react-timeline-editor" :refer [Timeline]]
    ["react" :as react]
    [re-frame.core :as rf]
    [reagent.core :as ra]
-   [renderer.components :as comp]
    [renderer.element.events :as-alias element.e]
    [renderer.timeline.events :as-alias timeline.e]
-   [renderer.timeline.subs :as-alias timeline.s]))
+   [renderer.timeline.subs :as-alias timeline.s]
+   [renderer.ui :as ui]))
 
 (def speed-options
   [{:id :0.25
@@ -43,13 +43,13 @@
          {:style {:min-width "50px"}}
          [:span (str speed "x")]
          [:> Select/Icon {:class "select-icon"}
-          [comp/icon "chevron-down" {:class "icon small"}]]]]]
+          [ui/icon "chevron-down" {:class "icon small"}]]]]]
       [:> Select/Portal
        [:> Select/Content
         {:class "menu-content rounded select-content"
          :style {:min-width "auto"}}
         [:> Select/ScrollUpButton {:class "select-scroll-button"}
-         [comp/icon "chevron-up"]]
+         [ui/icon "chevron-up"]]
         [:> Select/Viewport {:class "select-viewport"}
          [:> Select/Group
           (for [{:keys [id value label]} speed-options]
@@ -60,19 +60,19 @@
              [:> Select/ItemText label]])]]
         [:> Select/ScrollDownButton
          {:class "select-scroll-button"}
-         [comp/icon "chevron-down"]]]]]]))
+         [ui/icon "chevron-down"]]]]]]))
 
 (defn snap-controls
   []
   (let [grid-snap? @(rf/subscribe [::timeline.s/grid-snap?])
         guide-snap? @(rf/subscribe [::timeline.s/guide-snap?])]
     [:div.grow
-     [comp/switch
+     [ui/switch
       {:id "grid-snap"
        :label "Grid snap"
        :default-checked? grid-snap?
        :on-checked-change #(rf/dispatch [::timeline.e/set-grid-snap %])}]
-     [comp/switch
+     [ui/switch
       {:id "guide-snap"
        :label "Guide snap"
        :default-checked? guide-snap?
@@ -86,10 +86,10 @@
         replay? @(rf/subscribe [::timeline.s/replay?])
         end @(rf/subscribe [::timeline.s/end])]
     [:div.toolbar.bg-primary
-     [comp/icon-button "go-to-start"
+     [ui/icon-button "go-to-start"
       {:on-click #(.setTime (.-current timeline-ref) 0)
        :disabled (zero? time)}]
-     [comp/radio-icon-button
+     [ui/radio-icon-button
       {:title (if paused? "Play" "Pause")
        :class (when (pos? time) "border border-accent")
        :active? (not paused?)
@@ -97,10 +97,10 @@
        :action #(if paused?
                   (.play (.-current timeline-ref) #js {:autoEnd true})
                   (.pause (.-current timeline-ref)))}]
-     [comp/icon-button "go-to-end"
+     [ui/icon-button "go-to-end"
       {:on-click #(.setTime (.-current timeline-ref) end)
        :disabled (>= time end)}]
-     [comp/radio-icon-button
+     [ui/radio-icon-button
       {:title "Replay"
        :active? replay?
        :icon "refresh"
@@ -109,7 +109,7 @@
      [:span.font-mono.px-2 time-formatted]
      [:span.v-divider]
      [snap-controls]
-     [comp/icon-button "window-close"
+     [ui/icon-button "window-close"
       {:title "Hide timeline"
        :on-click #(rf/dispatch [:toggle-panel :timeline])}]]))
 

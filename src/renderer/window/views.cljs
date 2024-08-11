@@ -2,11 +2,11 @@
   (:require
    [platform :as platform]
    [re-frame.core :as rf]
-   [renderer.components :as comp]
    [renderer.document.subs :as-alias document.s]
    [renderer.menubar.views :as menubar]
    [renderer.theme.events :as-alias theme.e]
    [renderer.theme.subs :as-alias theme.s]
+   [renderer.ui :as ui]
    [renderer.window.events :as-alias window.e]
    [renderer.window.subs :as-alias window.s]))
 
@@ -16,7 +16,7 @@
    {:class ["px-3" class]
     :title title
     :on-click #(rf/dispatch action)}
-   [comp/icon icon]])
+   [ui/icon icon]])
 
 (defn window-control-buttons
   [maximized?]

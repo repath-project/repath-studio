@@ -6,10 +6,10 @@
    [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.components :as comp]
    [renderer.element.events :as-alias element.e]
    [renderer.element.subs :as-alias element.s]
    [renderer.tool.base :as tool]
+   [renderer.ui :as ui]
    [renderer.utils.keyboard :as keyb]
    [renderer.utils.spec :as spec]))
 
@@ -17,7 +17,7 @@
   [browser version-added]
   [:div.text-center.flex-1
    [:div.flex-1 {:title browser}
-    [comp/icon (name browser)]]
+    [ui/icon (name browser)]]
    (case version-added
      true [:div.support-cell.success "all"]
      false [:div.support-cell.error "x"]
@@ -89,7 +89,7 @@
      [:button.button.ml-px.bg-primary.text-muted.absolute.h-full.right-0.clear-input-button.hover:bg-transparent
       {:style {:width "26px"}
        :on-pointer-down #(rf/dispatch [::element.e/remove-attr key])}
-      [comp/icon "times"]])])
+      [ui/icon "times"]])])
 
 (defmethod hierarchy/form-element :default
   [_ k v disabled?]
@@ -140,20 +140,20 @@
               :height "26px"}}
      [:> Select/Value ""]
      [:> Select/Icon
-      [comp/icon "chevron-down" {:class "icon small"}]]]
+      [ui/icon "chevron-down" {:class "icon small"}]]]
     [:> Select/Portal
      [:> Select/Content {:class "menu-content rounded select-content"}
       [:> Select/ScrollUpButton {:class "select-scroll-button"}
-       [comp/icon "chevron-up"]]
+       [ui/icon "chevron-up"]]
       [:> Select/Viewport {:class "select-viewport"}
        (for [item items]
          ^{:key item}
          [:> Select/Item {:value (:value item) :class "menu-item "}
           (when (:icon item)
-            [:div.absolute.left-2 [comp/icon (:icon item)]])
+            [:div.absolute.left-2 [ui/icon (:icon item)]])
           [:> Select/ItemText (:label item)]])]
       [:> Select/ScrollDownButton {:class "select-scroll-button"}
-       [comp/icon "chevron-down"]]]]]])
+       [ui/icon "chevron-down"]]]]]])
 
 (defn property-list
   [property]
@@ -231,7 +231,7 @@
    [:> HoverCard/Root
     [:> HoverCard/Trigger {:asChild true}
      [:span.pb-px
-      [comp/icon-button "info" {:title "MDN Info"}]]]
+      [ui/icon-button "info" {:title "MDN Info"}]]]
     [:> HoverCard/Portal
      [:> HoverCard/Content
       {:sideOffset 5

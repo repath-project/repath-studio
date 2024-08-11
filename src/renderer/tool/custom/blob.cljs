@@ -8,15 +8,15 @@
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.attribute.length :as length]
    [renderer.attribute.views :as attr.v]
-   [renderer.components :as comp]
    [renderer.element.events :as-alias element.e]
    [renderer.element.handlers :as element.h]
    [renderer.element.subs :as-alias element.s]
    [renderer.tool.base :as tool]
    [renderer.tool.overlay :as overlay]
+   [renderer.ui :as ui]
+   [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
    [renderer.utils.pointer :as pointer]
-   [renderer.utils.bounds :as bounds]
    [renderer.utils.units :as units]))
 
 (derive :blob ::tool/renderable)
@@ -50,7 +50,7 @@
        :style {:flex "0 0 26px"
                :height "100%"}
        :on-click #(rf/dispatch [::element.e/set-attr k random-seed])}
-      [comp/icon "refresh"]]]))
+      [ui/icon "refresh"]]]))
 
 (defmethod attr.hierarchy/description [:blob :x]
     []

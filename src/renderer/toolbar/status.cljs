@@ -4,12 +4,12 @@
    ["react-resizable-panels" :refer [Panel PanelResizeHandle]]
    [re-frame.core :as rf]
    [renderer.color.views :as color-v]
-   [renderer.components :as comp]
    [renderer.document.subs :as-alias document.s]
    [renderer.frame.events :as-alias frame.e]
    [renderer.frame.subs :as-alias frame.s]
    [renderer.snap.views :as snap.v]
    [renderer.timeline.views :as timeline.v]
+   [renderer.ui :as ui]
    [renderer.utils.keyboard :as keyb]
    [renderer.utils.units :as units]))
 
@@ -107,7 +107,7 @@
       [color-v/picker]
       (into [:<>]
             (map (fn [{:keys [title active? icon action]}]
-                   [comp/radio-icon-button {:title title
+                   [ui/radio-icon-button {:title title
                                             :active? @(rf/subscribe active?)
                                             :icon icon
                                             :action #(rf/dispatch action)}])
@@ -118,13 +118,13 @@
         {:class (when (<= zoom 0.01) "disabled")
          :title "Zoom out"
          :on-click #(rf/dispatch [::frame.e/zoom-out])}
-        [comp/icon "minus"]]
+        [ui/icon "minus"]]
 
        [:button.button.overlay.px-2.font-mono.rounded
         {:class (when (>= zoom 100) "disabled")
          :title "Zoom in"
          :on-click #(rf/dispatch [::frame.e/zoom-in])}
-        [comp/icon "plus"]]
+        [ui/icon "plus"]]
        [zoom-input zoom]
        [:div.pr-2.overlay.flex.items-center "%"]
 
@@ -133,7 +133,7 @@
          {:class "button flex items-center justify-center overlay px-2 font-mono rounded"
           :side "top"}
          [:div.flex.items-center
-          [comp/icon "chevron-up"]]]
+          [ui/icon "chevron-up"]]]
 
         [:> DropdownMenu/Portal
          [:> DropdownMenu/Content
@@ -141,7 +141,7 @@
            :side "top"
            :align "end"}
           (for [item zoom-menu]
-            ^{:key (:key item)} [comp/dropdown-menu-item item])
+            ^{:key (:key item)} [ui/dropdown-menu-item item])
           [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]]]
       [coordinates]]
      [timeline.v/time-bar]

@@ -5,29 +5,29 @@
    [platform :as platform]
    [re-frame.core :as rf]
    [reagent.core :as ra]
-   [renderer.components :as comp]
    [renderer.document.events :as-alias document.e]
    [renderer.document.subs :as-alias document.s]
    [renderer.history.events :as-alias history.e]
    [renderer.history.subs :as-alias history.s]
-   [renderer.history.views :as history.v]))
+   [renderer.history.views :as history.v]
+   [renderer.ui :as ui]))
 
 (defn actions []
   (let [undos? @(rf/subscribe [::history.s/undos?])
         redos? @(rf/subscribe [::history.s/redos?])]
     [:div.toolbar
 
-     [comp/icon-button
+     [ui/icon-button
       "file"
       {:title "New"
        :on-click #(rf/dispatch [::document.e/new])}]
 
-     [comp/icon-button
+     [ui/icon-button
       "folder"
       {:title "Open"
        :on-click #(rf/dispatch [::document.e/open])}]
 
-     [comp/icon-button
+     [ui/icon-button
       "save"
       {:title "Save"
        :on-click #(rf/dispatch [::document.e/save])
@@ -42,7 +42,7 @@
                :display "flex"}
        :on-click #(rf/dispatch [::history.e/undo])
        :disabled (not undos?)}
-      [renderer.components/icon "undo"]
+      [ui/icon "undo"]
       [history.v/select
        "Undo stack"
        @(rf/subscribe [::history.s/undos])
@@ -55,7 +55,7 @@
                :display "flex"}
        :on-click #(rf/dispatch [::history.e/redo])
        :disabled (not redos?)}
-      [renderer.components/icon "redo"]
+      [ui/icon "redo"]
       [history.v/select
        "Redo stack"
        @(rf/subscribe [::history.s/redos])
@@ -70,9 +70,9 @@
     :on-pointer-up (fn [e]
                      (.stopPropagation e)
                      (rf/dispatch [::document.e/close key true]))}
-   [comp/icon "times"]
+   [ui/icon "times"]
    (when-not saved?
-     [comp/icon "dot" {:class "icon dot"}])])
+     [ui/icon "dot" {:class "icon dot"}])])
 
 (defn context-menu
   [key]
@@ -127,7 +127,7 @@
          [:> ContextMenu/Content
           {:class "menu-content context-menu-content"}]
          (map (fn [item]
-                [comp/context-menu-item item])
+                [ui/context-menu-item item])
               (context-menu key)))]])))
 
 (defn tab-bar []
@@ -144,7 +144,7 @@
        [:> DropdownMenu/Trigger
         {:as-child true}
         [:button.button.flex.items-center.justify-center.aria-expanded:overlay.px-2.font-mono.rounded
-         [comp/icon "ellipsis-h"]]]
+         [ui/icon "ellipsis-h"]]]
        [:> DropdownMenu/Portal
         [:> DropdownMenu/Content
          {:class "menu-content rounded"}
@@ -154,5 +154,5 @@
                      {:label "Close saved"
                       :key :close-saved
                       :action [::document.e/close-saved]}]]
-           ^{:key (:key item)} [comp/dropdown-menu-item item])
+           ^{:key (:key item)} [ui/dropdown-menu-item item])
          [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]]]]))

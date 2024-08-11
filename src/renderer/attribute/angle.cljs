@@ -4,7 +4,7 @@
    ["@radix-ui/react-popover" :as Popover]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.attribute.views :as v]
-   [renderer.components :as comp]))
+   [renderer.ui :as ui]))
 
 (defmethod hierarchy/form-element [:default ::angle]
   [_ k v disabled? initial]
@@ -18,7 +18,7 @@
     [:> Popover/Trigger {:asChild true}
      [:button.button.ml-px.bg-primary.text-muted.h-full
       {:style {:width "26px"}}
-      [comp/icon "degrees" {:class "icon small"}]]]
+      [ui/icon "degrees" {:class "icon small"}]]]
     [:> Popover/Portal
      [:> Popover/Content
       {:sideOffset 5

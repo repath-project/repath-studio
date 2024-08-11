@@ -2,10 +2,10 @@
   (:require
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    [re-frame.core :as rf]
-   [renderer.components :as comp]
    [renderer.snap.db :as snap.db]
    [renderer.snap.events :as-alias snap.e]
-   [renderer.snap.subs :as-alias snap.s]))
+   [renderer.snap.subs :as-alias snap.s]
+   [renderer.ui :as ui]))
 
 (defn options-dropdown
   []
@@ -18,7 +18,7 @@
                :width "16px"
                :margin 0}}
       [:div.h-full.hover:pb-1.flex.items-center
-       [comp/icon "chevron-up" {:class "icon small"}]]]
+       [ui/icon "chevron-up" {:class "icon small"}]]]
      [:> DropdownMenu/Portal
       [:> DropdownMenu/Content
        {:side "top"
@@ -37,7 +37,7 @@
            :checked (contains? options option)}
           [:> DropdownMenu/ItemIndicator
            {:class "menu-item-indicator"}
-           [comp/icon "checkmark"]]
+           [ui/icon "checkmark"]]
           (name option)])]]]))
 
 (defn root
@@ -49,5 +49,5 @@
             :width "auto"
             :display "flex"}
     :on-click #(rf/dispatch [::snap.e/toggle])}
-   [renderer.components/icon "magnet"]
+   [ui/icon "magnet"]
    [options-dropdown]])

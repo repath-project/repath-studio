@@ -7,8 +7,8 @@
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.attribute.views :as v]
-   [renderer.components :as comp]
-   [renderer.element.events :as-alias element.e]))
+   [renderer.element.events :as-alias element.e]
+   [renderer.ui :as ui]))
 
 (defmethod hierarchy/description [:default :d]
   []
@@ -118,7 +118,7 @@
                            "(Relative)" "(Absolute)")]
                         [:button.icon-button.small.bg-transparent.text-muted
                          {:on-click #(remove-segment-by-index path i)}
-                         [comp/icon "times"]]]
+                         [ui/icon "times"]]]
                        [segment-form segment i]])) segments)]))
 
 (defmethod hierarchy/form-element [:default :d]
@@ -136,7 +136,7 @@
         [:> Popover/Trigger {:asChild true}
          [:button.ml-px.inline-block.bg-primary.text-muted.h-full
           {:style {:flex "0 0 26px"}}
-          [comp/icon "pencil" {:class "icon small"}]]]
+          [ui/icon "pencil" {:class "icon small"}]]]
         [:> Popover/Portal
          [:> Popover/Content {:sideOffset 5
                               :className "popover-content"

@@ -1,4 +1,6 @@
-(ns renderer.components
+(ns renderer.ui
+  "A collection of stateless reusable ui components.
+   Avoid using subscriptions here as much as possible."
   (:require
    ["@radix-ui/react-context-menu" :as ContextMenu]
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
@@ -17,10 +19,10 @@
           attrs)])
 
 (defn icon-button
-  [icon props]
+  [icon-name props]
   [:button.icon-button
    props
-   [renderer.components/icon icon]])
+   [icon icon-name]])
 
 (defn switch
   [{:keys [id label default-checked? on-checked-change]}]
@@ -85,7 +87,7 @@
    {:title title
     :class [class (when active? "selected")]
     :on-click action}
-   [renderer.components/icon icon]])
+   [renderer.ui/icon icon]])
 
 (defn context-menu-item
   [{:keys [type label action checked? disabled?]}]

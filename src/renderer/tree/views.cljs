@@ -3,7 +3,6 @@
    ["@radix-ui/react-context-menu" :as ContextMenu]
    [re-frame.core :as rf]
    [reagent.core :as ra]
-   [renderer.components :as comp]
    [renderer.document.events :as-alias document.e]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.events :as-alias element.e]
@@ -11,13 +10,14 @@
    [renderer.element.views :as element.v]
    [renderer.frame.events :as-alias frame.e]
    [renderer.tree.events :as-alias e]
+   [renderer.ui :as ui]
    [renderer.utils.dom :as dom]
    [renderer.utils.keyboard :as keyb]))
 
 (defn item-buttons
   [{:keys [key locked? visible?]}]
   [:<>
-   [comp/toggle-icon-button
+   [ui/toggle-icon-button
     {:active? visible?
      :active-icon "eye"
      :active-text "hide"
@@ -25,7 +25,7 @@
      :inactive-text "show"
      :class (when visible? "list-item-action")
      :action #(rf/dispatch [::element.e/toggle-prop key :visible?])}]
-   [comp/toggle-icon-button
+   [ui/toggle-icon-button
     {:active? locked?
      :active-icon "lock"
      :active-text "unlock"
@@ -128,7 +128,7 @@
       :style {:padding-left (padding depth (seq children))}}
      [:div.flex.items-center.content-between.w-full
       (when (seq children)
-        [comp/toggle-collapsed-button key collapsed?])
+        [ui/toggle-collapsed-button key collapsed?])
       [:div.flex-1.overflow-hidden [label el]]
       [item-buttons el]]]))
 
@@ -173,5 +173,5 @@
     (into [:> ContextMenu/Content
            {:class "menu-content context-menu-content"
             :on-close-auto-focus #(.preventDefault %)}]
-          (map (fn [item] [comp/context-menu-item item])
+          (map (fn [item] [ui/context-menu-item item])
                element.v/context-menu))]])

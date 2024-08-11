@@ -3,8 +3,8 @@
    ["@radix-ui/react-tooltip" :as Tooltip]
    [clojure.string :as str]
    [re-frame.core :as rf]
-   [renderer.components :as comp]
-   [renderer.tool.base :as tool]))
+   [renderer.tool.base :as tool]
+   [renderer.ui :as ui]))
 
 (defn button
   [type]
@@ -16,7 +16,7 @@
       [:> Tooltip/Root
        [:> Tooltip/Trigger {:asChild true}
         [:span
-         [comp/radio-icon-button
+         [ui/radio-icon-button
           {:active? selected?
            :class (when primary? "outline-shadow")
            :icon (:icon (tool/properties type))

@@ -1,15 +1,15 @@
 (ns renderer.history.views
   (:require
    ["@radix-ui/react-select" :as Select]
-   ["react-d3-tree" :refer [Tree]]
    ["react" :as react]
+   ["react-d3-tree" :refer [Tree]]
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
    [reagent.core :as ra]
-   [renderer.components :as comp]
    [renderer.dialog.events :as-alias dialog.e]
    [renderer.history.events :as-alias history.e]
-   [renderer.history.subs :as-alias history.s]))
+   [renderer.history.subs :as-alias history.s]
+   [renderer.ui :as ui]))
 
 (defn select-options
   [history-list]
@@ -34,7 +34,7 @@
     [:div.h-full.hover:pt-1.flex.items-center
      [:> Select/Value ""]
      [:> Select/Icon
-      [comp/icon "chevron-down" {:class "icon small"}]]]]
+      [ui/icon "chevron-down" {:class "icon small"}]]]]
    [:> Select/Portal
     [:> Select/Content
      {:side "top"
@@ -43,13 +43,13 @@
       :position "popper"
       :class "menu-content rounded select-content"}
      [:> Select/ScrollUpButton {:class "select-scroll-button"}
-      [comp/icon "chevron-up"]]
+      [ui/icon "chevron-up"]]
      [:> Select/Viewport {:class "select-viewport"}
       [:> Select/Group
        (select-options options)]]
      [:> Select/ScrollDownButton
       {:class "select-scroll-button"}
-      [comp/icon "chevron-down"]]]]])
+      [ui/icon "chevron-down"]]]]])
 
 (defn node
   "https://bkrem.github.io/react-d3-tree/docs/interfaces/_src_tree_types_.treeprops.html#rendercustomnodeelement"

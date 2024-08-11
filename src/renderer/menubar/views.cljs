@@ -2,8 +2,6 @@
   (:require
    ["@radix-ui/react-menubar" :as Menubar]
    [re-frame.core :as rf]
-   [renderer.components :as comp]
-   [renderer.menubar.filters :as filters]
    [renderer.dialog.events :as-alias dialog.e]
    [renderer.document.events :as-alias document.e]
    [renderer.document.subs :as-alias document.s]
@@ -12,6 +10,8 @@
    [renderer.frame.events :as-alias frame.e]
    [renderer.history.events :as-alias history.e]
    [renderer.history.subs :as-alias history.s]
+   [renderer.menubar.filters :as filters]
+   [renderer.ui :as ui]
    [renderer.window.events :as-alias window.e]
    [renderer.window.subs :as-alias window.s]))
 
@@ -539,10 +539,10 @@
     :checked @(rf/subscribe checked?)}
    [:> Menubar/ItemIndicator
     {:class "menu-item-indicator"}
-    [comp/icon "checkmark"]]
+    [ui/icon "checkmark"]]
    label
    [:div.right-slot
-    [comp/shortcuts action]]])
+    [ui/shortcuts action]]])
 
 (defmethod menu-item :sub-menu
   [{:keys [label items disabled?]}]
@@ -552,7 +552,7 @@
      :disabled disabled?}
     label
     [:div.right-slot.sub-menu-chevron
-     [comp/icon "chevron-right" {:class "icon small"}]]]
+     [ui/icon "chevron-right" {:class "icon small"}]]]
    [:> Menubar/Portal
     (into [:> Menubar/SubContent
            {:class "menu-content"
@@ -590,7 +590,7 @@
     :disabled disabled?}
    label
    [:div.right-slot
-    [comp/shortcuts action]]])
+    [ui/shortcuts action]]])
 
 (defn root-menu
   []

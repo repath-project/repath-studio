@@ -7,19 +7,19 @@
    [i18n :refer [t]]
    [platform :as platform]
    [re-frame.core :as rf]
-   [renderer.components :as comp]
    [renderer.dialog.events :as-alias dialog.e]
    [renderer.dialog.subs :as-alias dialog.s]
    [renderer.document.events :as-alias document.e]
    [renderer.document.subs :as-alias document.s]
-   [renderer.menubar.views :as menubar]))
+   [renderer.menubar.views :as menubar]
+   [renderer.ui :as ui]))
 
 (defn close-button
   []
   [:> Dialog/Close
    {:class "close-button small"
     :aria-label "Close"}
-   [comp/icon "times"]])
+   [ui/icon "times"]])
 
 (defn about
   []
@@ -81,10 +81,10 @@
                    (rf/dispatch action))}
      [:div.w-7.h-7.mr-2.rounded.line-height-6.flex.justify-center.items-center
       {:class (when icon "overlay")}
-      (when icon [comp/icon icon {:class "icon"}])]
+      (when icon [ui/icon icon {:class "icon"}])]
      label
      [:div.right-slot
-      [comp/shortcuts action]]]))
+      [ui/shortcuts action]]]))
 
 (defn cmdk-group-inner
   [items label]

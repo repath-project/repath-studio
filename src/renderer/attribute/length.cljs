@@ -4,8 +4,8 @@
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.attribute.views :as v]
-   [renderer.components :as comp]
    [renderer.element.events :as-alias element.e]
+   [renderer.ui :as ui]
    [renderer.utils.units :as units]))
 
 (derive :x ::length)
@@ -44,11 +44,11 @@
     [:button.button.ml-px.bg-primary.text-muted.h-full
      {:style {:width "26px"}
       :on-pointer-down #(rf/dispatch [::element.e/update-attr k - 1])}
-     [comp/icon "minus"]]
+     [ui/icon "minus"]]
     [:button.button.ml-px.bg-primary.text-muted.h-full
      {:style {:width "26px"}
       :on-click #(rf/dispatch [::element.e/update-attr k + 1])}
-     [comp/icon "plus"]]]])
+     [ui/icon "plus"]]]])
 
 (defmethod hierarchy/update-attr ::length
   [element attribute f & more]

@@ -5,7 +5,6 @@
    [re-frame.core :as rf]
    [renderer.attribute.views :as attr.v]
    [renderer.codemirror.views :as cm.v]
-   [renderer.components :as comp]
    [renderer.debug :as debug]
    [renderer.dialog.events :as-alias dialog.e]
    [renderer.dialog.views :as dialog.v]
@@ -22,6 +21,7 @@
    [renderer.toolbar.status :as toolbar.status]
    [renderer.toolbar.tools :as toolbar.tools]
    [renderer.tree.views :as tree.v]
+   [renderer.ui :as ui]
    [renderer.window.views :as window.v]
    [renderer.worker.subs :as-alias worker.s]))
 
@@ -35,7 +35,7 @@
       (when rulers?
         [:div.flex
          [:div.bg-primary {:style {:width "23px" :height "23px"}}
-          #_[comp/toggle-icon-button
+          #_[ui/toggle-icon-button
              {:active? @(rf/subscribe [:rulers-locked?])
               :active-icon "lock"
               :active-text "unlock"
@@ -65,7 +65,7 @@
         (when loading?
           [:span.icon-button.relative
            {:style {:fill "#555"}}
-           [comp/icon "spinner" {:class "loading"}]])]
+           [ui/icon "spinner" {:class "loading"}]])]
        (when @(rf/subscribe [:backdrop?])
          [:div.absolute.inset-0
           {:on-click #(rf/dispatch [:set-backdrop false])}])]]]))
@@ -142,13 +142,13 @@
        [:div
         [:button.text-lg.text-accent.mr-2
          {:on-click #(rf/dispatch [::document.e/new])} "New"]
-        [comp/shortcuts [::document.e/new]]]
+        [ui/shortcuts [::document.e/new]]]
 
        [:div
         [:button.text-lg.text-accent.mr-2
          {:on-click #(rf/dispatch [::document.e/open])}
          "Open"]
-        [comp/shortcuts [::document.e/open]]]
+        [ui/shortcuts [::document.e/open]]]
 
        [:h2.mb-3.mt-8.text-2xl
         {:class (when-not (seq recent) "text-muted")}
@@ -166,7 +166,7 @@
         [:button.text-lg.text-accent.mr-2
          {:on-click #(rf/dispatch [::dialog.e/cmdk])}
          "Command panel"]
-        [comp/shortcuts [::dialog.e/cmdk]]]
+        [ui/shortcuts [::dialog.e/cmdk]]]
        [:a.text-lg.block
         {:href "https://repath.studio/"
          :target "_blank"}

@@ -1,16 +1,16 @@
 (ns renderer.frame.views
   (:require
    ["@radix-ui/react-context-menu" :as ContextMenu]
-   ["react-frame-component" :default Frame :refer [useFrame]]
    ["react" :as react]
+   ["react-frame-component" :default Frame :refer [useFrame]]
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [reagent.dom.server :as server]
-   [renderer.components :as comp]
    [renderer.element.subs :as-alias element.s]
    [renderer.element.views :as element.v]
    [renderer.frame.events :as-alias frame.e]
    [renderer.tool.base :as tool]
+   [renderer.ui :as ui]
    [renderer.utils.pointer :as pointer]))
 
 (defn pointer-handler
@@ -108,4 +108,4 @@
                      :on-close-auto-focus #(.preventDefault %)
                      :style {:margin-left (str x "px")
                              :margin-top (str y "px")}}]
-                   (map comp/context-menu-item element.v/context-menu))]]]))})))
+                   (map ui/context-menu-item element.v/context-menu))]]]))})))

@@ -6,8 +6,8 @@
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.attribute.views :as v]
-   [renderer.components :as comp]
    [renderer.element.events :as-alias element.e]
+   [renderer.ui :as ui]
    [renderer.utils.attribute :as utils.attr]
    [renderer.utils.vec :as vec]))
 
@@ -38,7 +38,7 @@
         [:> Popover/Trigger {:asChild true}
          [:button.ml-px.inline-block.bg-primary.text-muted
           {:style {:flex "0 0 26px"}}
-          [comp/icon "pencil" {:class "icon small"}]]]
+          [ui/icon "pencil" {:class "icon small"}]]]
         [:> Popover/Portal
          [:> Popover/Content {:sideOffset 5
                               :className "popover-content"
@@ -58,5 +58,5 @@
                                 {:key (str "y-" index v) :default-value y}]
                                [:button.button.bg-transparent.text-muted.h-full
                                 {:on-click #(remove-nth points index)}
-                                [comp/icon "times"]]]) points)]))
+                                [ui/icon "times"]]]) points)]))
           [:> Popover/Arrow {:class "popover-arrow"}]]]])]))

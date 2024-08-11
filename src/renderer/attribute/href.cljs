@@ -4,8 +4,8 @@
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.attribute.views :as v]
-   [renderer.components :as comp]
    [renderer.element.events :as-alias element.e]
+   [renderer.ui :as ui]
    [renderer.utils.file :as file]))
 
 (defmethod hierarchy/description [:default :href]
@@ -44,4 +44,4 @@
                    (fn [file]
                      (rf/dispatch [:set-tool :select])
                      (update-href! file)))}
-      [comp/icon "folder"]]]))
+      [ui/icon "folder"]]]))
