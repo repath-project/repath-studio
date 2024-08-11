@@ -6,7 +6,7 @@
 (def document
   [:map
    [:key keyword?]
-   [:title string?]
+   [:title [string? {:min 1}]]
    [:hovered-keys [:set {:default #{}} keyword?]]
    [:collapsed-keys [:set {:default #{}} keyword?]]
    [:ignored-keys [:set {:default #{}} keyword?]]

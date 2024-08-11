@@ -11,7 +11,7 @@
   [:map
    [:tool [keyword? {:default :select}]]
    [:pointer-pos [:tuple {:default [0 0]} double? double?]]
-   [:zoom-sensitivity [double? {:default 0.75}]]
+   [:zoom-sensitivity [:and {:default 0.75} double? pos?]]
    [:state [keyword? {:default :default}]]
    [:grid-visible? [boolean? {:default false}]]
    [:rulers-visible? [boolean? {:default true}]]

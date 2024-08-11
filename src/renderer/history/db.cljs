@@ -6,7 +6,7 @@
   [:map
    [:explanation string?]
    [:timestamp double?]
-   [:index integer?]
+   [:index [:and integer? [:or zero? pos?]]]
    [:id keyword?]
    [:elements [:map-of keyword? element.db/element]]
    [:parent {:optional true} keyword?]
@@ -14,6 +14,6 @@
 
 (def history
   [:map {:default {}}
-   [:zoom [double? {:default 0.5}]]
+   [:zoom {:optional true} [double? {:default 0.5}]]
    [:position keyword?]
    [:states [:map-of {:default {}} keyword? state]]])
