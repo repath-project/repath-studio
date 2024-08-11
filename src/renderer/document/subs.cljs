@@ -6,7 +6,8 @@
 
 (rf/reg-sub
  ::recent
- :-> :recent)
+ (fn [db _]
+   (-> db :recent reverse)))
 
 (rf/reg-sub
  ::documents?

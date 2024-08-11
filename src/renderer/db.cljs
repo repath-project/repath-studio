@@ -20,7 +20,7 @@
    [:dialogs [:vector {:default []} dialog.db/dialog]]
    [:documents [:map-of {:default {}} keyword? document.db/document]]
    [:document-tabs [:vector {:default []} keyword?]]
-   [:recent [:vector {:default []} string?]]
+   [:recent [:vector {:max 10 :default []} string?]]
    [:system-fonts {:optional true} vector?]
    [:notifications [vector? {:default []}]]
    [:debug-info? [boolean? {:default false}]]
