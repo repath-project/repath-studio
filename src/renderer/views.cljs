@@ -3,26 +3,26 @@
    ["@radix-ui/react-tooltip" :as Tooltip]
    ["react-resizable-panels" :refer [Panel PanelGroup PanelResizeHandle]]
    [re-frame.core :as rf]
-   [re-frame.registrar]
-   [renderer.attribute.views :as attr]
-   [renderer.codemirror.views :as cm]
+   [renderer.attribute.views :as attr.v]
+   [renderer.codemirror.views :as cm.v]
    [renderer.components :as comp]
    [renderer.debug :as debug]
-   [renderer.dialog.views :as dialog]
+   [renderer.dialog.events :as-alias dialog.e]
+   [renderer.dialog.views :as dialog.v]
    [renderer.document.subs :as-alias document.s]
-   [renderer.document.views :as doc]
+   [renderer.document.events :as-alias document.e]
+   [renderer.document.views :as document.v]
    [renderer.element.subs :as-alias element.s]
-   [renderer.frame.views :as frame]
-   [renderer.history.views :as history]
-   [renderer.home :as home]
+   [renderer.frame.views :as frame.v]
+   [renderer.history.views :as history.v]
    [renderer.notification.views :as notification]
-   [renderer.reepl.views :as repl]
+   [renderer.reepl.views :as repl.v]
    [renderer.ruler.views :as ruler.v]
    [renderer.toolbar.object :as toolbar.object]
    [renderer.toolbar.status :as toolbar.status]
    [renderer.toolbar.tools :as toolbar.tools]
-   [renderer.tree.views :as tree]
-   [renderer.window.views :as win]
+   [renderer.tree.views :as tree.v]
+   [renderer.window.views :as window.v]
    [renderer.worker.subs :as-alias worker.s]))
 
 (defn frame-panel
@@ -51,7 +51,7 @@
          [:div.bg-primary.mr-px
           [ruler.v/ruler {:orientation :vertical :size 22}]])]
       [:div.relative.grow.flex
-       [frame/main]
+       [frame.v/main]
        (if read-only?
          [:div.absolute.inset-0.border-4.border-accent]
          (when @(rf/subscribe [:debug-info?])
@@ -92,7 +92,7 @@
                    :minSize 5
                    :order 2}
          [:div.v-scroll.p-1.bg-primary.h-full.ml-px
-          [history/root]]]])
+          [history.v/root]]]])
 
      (when @(rf/subscribe [:panel-visible? :xml])
        (let [xml @(rf/subscribe [::element.s/xml])]
@@ -105,7 +105,7 @@
                      :minSize 5
                      :order 3}
            [:div.v-scroll.p-1.h-full.bg-primary.ml-px
-            [cm/editor xml
+            [cm.v/editor xml
              {:options {:mode "text/xml"
                         :readOnly true}}]]]]))]]])
 
@@ -124,30 +124,87 @@
                 :order 1}
       [center-top-group]]
      [toolbar.status/root]
-     [repl/root]]))
+     [repl.v/root]]))
+
+(defn home []
+  (let [recent @(rf/subscribe [::document.s/recent])]
+    [:div.flex.overflow-auto.flex-1.min-h-full.justify-center
+     [:div.bg-primary.w-full.self-center.justify-between.p-12.flex.max-w-screen-xl
+      [:div
+       [:h1.text-4xl.mb-1.font-light
+        "Repath Studio"]
+
+       [:p.text-xl.text-muted.font-bold
+        "Scalable Vector Graphics Manipulation"]
+
+       [:h2.mb-3.mt-8.text-2xl "Start"]
+
+       [:div
+        [:button.text-lg.text-accent.mr-2
+         {:on-click #(rf/dispatch [::document.e/new])} "New"]
+        [comp/shortcuts [::document.e/new]]]
+
+       [:div
+        [:button.text-lg.text-accent.mr-2
+         {:on-click #(rf/dispatch [::document.e/open])}
+         "Open"]
+        [comp/shortcuts [::document.e/open]]]
+
+       [:h2.mb-3.mt-8.text-2xl
+        {:class (when-not (seq recent) "text-muted")}
+        "Recent"]
+
+       (for [file-path (take 2 recent)]
+         ^{:key file-path}
+         [:button.text-lg.text-accent.block
+          {:on-click #(rf/dispatch [::document.e/open file-path])}
+          file-path])
+
+       [:h2.mb-3.mt-8.text-2xl "Help"]
+
+       [:div
+        [:button.text-lg.text-accent.mr-2
+         {:on-click #(rf/dispatch [::dialog.e/cmdk])}
+         "Command panel"]
+        [comp/shortcuts [::dialog.e/cmdk]]]
+       [:a.text-lg.block
+        {:href "https://repath.studio/"
+         :target "_blank"}
+        "Website"]
+       [:a.text-lg.block
+        {:href "https://github.com/repath-project/repath-studio"
+         :target "_blank"}
+        "Source Code"]
+       [:a.text-lg.block
+        {:href "https://repath.studio/roadmap/changelog/"
+         :target "_blank"}
+        "Changelog"]]
+
+      [:div
+       [:img {:src "img/icon.svg"}]]]]))
 
 (defn root
   []
   [:> Tooltip/Provider
    [:div.flex.flex-col.flex-1.h-screen
-    [win/app-header]
+    [window.v/app-header]
     (if (seq @(rf/subscribe [:documents]))
       [:div.flex.h-full.flex-1.overflow-hidden
        (when @(rf/subscribe [:panel-visible? :tree])
          [:div.flex.flex-col
           {:style {:width "227px"}}
-          [doc/actions]
-          [tree/root]])
+          [document.v/actions]
+          [tree.v/root]])
        [:div.flex.flex-col.flex-1.overflow-hidden.h-full
-        [doc/tab-bar]
+        [document.v/tab-bar]
         [:div.flex.h-full.flex-1
          [:div.flex.h-full.flex-col.flex-1.overflow-hidden
           [editor]]
          (when @(rf/subscribe [:panel-visible? :properties])
            [:div.flex
             {:style {:flex "0 0 300px"}}
-            [attr/form]])
+            [attr.v/form]])
          [toolbar.object/root]]]]
-      [home/panel])]
-   [dialog/root]
+      [home])]
+   [dialog.v/root]
    [notification/main]])
