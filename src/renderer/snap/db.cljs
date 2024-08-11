@@ -4,7 +4,7 @@
   [:enum :centers :midpoints :corners :nodes])
 
 (def snap
-  [:map
-   [:enabled? boolean?]
-   [:threshold double?]
-   [:options [:set options]]])
+  [:map {:default {}}
+   [:enabled? [boolean? {:default true}]]
+   [:threshold [double? {:default 100}]]
+   [:options [:set {:default (set (rest options))} options]]])

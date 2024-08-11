@@ -2,6 +2,7 @@
   (:require
    [malli.core :as m]
    [malli.error :as me]
+   [malli.transform :as mt]
    [re-frame.core :as rf]
    [renderer.db :as db]
    [renderer.effects]
@@ -30,7 +31,7 @@
 (rf/reg-event-db
  :initialize-db
  (fn [_ _]
-   db/default))
+   (m/decode db/app {} mt/default-value-transformer)))
 
 (rf/reg-event-db
  :load-local-db

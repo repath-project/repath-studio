@@ -1,6 +1,6 @@
 (ns renderer.history.db
   (:require
-   [renderer.element.db]))
+   [renderer.element.db :as element.db]))
 
 (def state
   [:map
@@ -8,7 +8,7 @@
    [:timestamp double?]
    [:index integer?]
    [:id keyword?]
-   [:elements [:map-of keyword? renderer.element.db/element]]
+   [:elements [:map-of keyword? element.db/element]]
    [:parent {:optional true} keyword?]
    [:children [:vector keyword?]]])
 
