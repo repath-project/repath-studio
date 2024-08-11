@@ -96,8 +96,8 @@
 (rf/reg-sub
  ::filter-active?
  :<- [::filter]
- (fn [filter [_ k]]
-   (= filter k)))
+ (fn [active-filter [_ k]]
+   (= active-filter k)))
 
 (rf/reg-sub
  ::hovered-keys
@@ -122,8 +122,8 @@
 (rf/reg-sub
  ::read-only?
  :<- [::timeline.s/time]
- (fn [time _]
-   (pos? time)))
+ (fn [t _]
+   (pos? t)))
 
 (rf/reg-sub
  ::saved?

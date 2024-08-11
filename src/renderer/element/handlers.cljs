@@ -16,9 +16,9 @@
    [renderer.tool.shape.path :as path]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
+   [renderer.utils.spec :as spec]
    [renderer.utils.uuid :as uuid]
-   [renderer.utils.vec :as vec]
-   [renderer.utils.spec :as spec]))
+   [renderer.utils.vec :as vec]))
 
 (defn path
   ([db]
@@ -64,13 +64,13 @@
   [db k]
   (let [el (element db k)
         bounds (element/adjusted-bounds el (elements db))
-        update #(assoc % :bounds bounds)]
+        assoc-bounds #(assoc % :bounds bounds)]
     (if-not bounds
       db
       (if (element/root? el)
         db
         (-> (reduce update-bounds db (children db k))
-            (update-in (conj (path db) k) update))))))
+            (update-in (conj (path db) k) assoc-bounds))))))
 
 (defn update-el
   [db k f & more]
@@ -85,11 +85,11 @@
 
 (defn siblings-selected?
   [db]
-  (let [selected (selected db)
-        parents (set (map :parent selected))]
-    (and (single? parents)
-         (= (count selected)
-            (count (children db (first parents)))))))
+  (let [selected-els (selected db)
+        parent-els (set (map :parent selected-els))]
+    (and (single? parent-els)
+         (= (count selected-els)
+            (count (children db (first parent-els)))))))
 
 (defn parent
   ([db]
@@ -351,10 +351,10 @@
 
 (defn copy
   [db]
-  (let [elements (top-selected-sorted db)]
+  (let [els (top-selected-sorted db)]
     (cond-> db
-      (seq elements)
-      (assoc :copied-elements elements
+      (seq els)
+      (assoc :copied-elements els
              :copied-bounds (bounds db)))))
 
 (defn delete
@@ -372,11 +372,11 @@
 (defn update-index
   [db k f & more]
   (let [siblings (siblings db k)
-        index (index db k)
-        new-index (apply f index more)]
+        i (index db k)
+        new-index (apply f i more)]
     (cond-> db
       (<= 0 new-index (-> siblings count dec))
-      (update-prop (:key (parent db k)) :children vec/move index new-index))))
+      (update-prop (:key (parent db k)) :children vec/move i new-index))))
 
 (defn raise
   ([db]
@@ -559,8 +559,8 @@
   [db operation]
   (let [selected-elements (top-selected-sorted db)
         attrs (-> selected-elements first element/->path :attrs)
-        new-path (reduce (fn [path el]
-                           (let [path-a (Path. path)
+        new-path (reduce (fn [p el]
+                           (let [path-a (Path. p)
                                  path-b (-> el element/->path :attrs :d Path.)]
                              (-> (bool path-a path-b operation)
                                  .exportSVG
@@ -582,24 +582,24 @@
 
 (defn paste
   ([db]
-   (let [parent (hovered-svg db)]
-     (reduce #(paste %1 %2 parent) (deselect db) (:copied-elements db))))
-  ([db el parent]
+   (let [parent-el (hovered-svg db)]
+     (reduce #(paste %1 %2 parent-el) (deselect db) (:copied-elements db))))
+  ([db el parent-el]
    (let [center (bounds/center (:copied-bounds db))
          el-center (bounds/center (:bounds el))
          offset (mat/sub el-center center)
          el (dissoc el :bounds)
-         [s-x1 s-y1] (:bounds parent)
+         [s-x1 s-y1] (:bounds parent-el)
          pointer-pos (:adjusted-pointer-pos db)]
      (reduce
       select
       (cond-> db
         :always
         (-> deselect
-            (add (assoc el :parent (:key parent)))
+            (add (assoc el :parent (:key parent-el)))
             (position (mat/add pointer-pos offset)))
 
-        (not= (:key (root db)) (:key parent))
+        (not= (:key (root db)) (:key parent-el))
         (translate [(- s-x1) (- s-y1)])) (selected-keys db)))))
 
 (defn duplicate-in-place
@@ -648,7 +648,7 @@
 
 (defn group
   [db]
-  (reduce (fn [db key] (set-parent db key (-> db selected-keys first)))
+  (reduce (fn [db k] (set-parent db k (-> db selected-keys first)))
           (add db {:tag :g
                    :parent (:key (parent db))})
           (top-selected-sorted-keys db)))

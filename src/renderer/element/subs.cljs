@@ -3,11 +3,11 @@
    ["js-beautify" :as js-beautify]
    [re-frame.core :as rf]
    [renderer.document.subs :as-alias document.s]
+   [renderer.element.handlers :as h]
    [renderer.tool.base :as tool]
    [renderer.utils.attribute :as utils.attr]
    [renderer.utils.element :as utils.el]
-   [renderer.utils.map :as map]
-   [renderer.element.handlers :as h]))
+   [renderer.utils.map :as map]))
 
 (rf/reg-sub
  ::root

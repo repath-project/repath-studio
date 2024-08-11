@@ -140,7 +140,7 @@
      [list-item-button el depth hovered? collapsed?]
      (when (and has-children? (not collapsed?))
        [:ul (map (fn [el] [item el (inc depth) elements hovered-keys collapsed-keys])
-                 (mapv (fn [key] (get elements key)) (reverse children)))])]))
+                 (mapv (fn [k] (get elements k)) (reverse children)))])]))
 
 (defn inner-sidebar-render
   [root-children elements]
@@ -173,5 +173,5 @@
     (into [:> ContextMenu/Content
            {:class "menu-content context-menu-content"
             :on-close-auto-focus #(.preventDefault %)}]
-          (map (fn [item] [ui/context-menu-item item])
+          (map (fn [menu-item] [ui/context-menu-item menu-item])
                element.v/context-menu))]])

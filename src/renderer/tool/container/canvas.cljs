@@ -6,11 +6,11 @@
    [renderer.document.subs :as-alias document.s]
    [renderer.element.subs :as-alias element.s]
    [renderer.frame.subs :as-alias frame.s]
-   [renderer.ruler.views :as ruler.v]
    [renderer.menubar.filters :as filters]
+   [renderer.ruler.views :as ruler.v]
+   [renderer.snap.subs :as-alias snap.s]
    [renderer.tool.base :as tool]
    [renderer.tool.overlay :as overlay]
-   [renderer.snap.subs :as-alias snap.s]
    [renderer.utils.keyboard :as keyb]
    [renderer.utils.pointer :as pointer]))
 
@@ -83,12 +83,12 @@
              [overlay/bounding-box (:bounds el) true])
 
            (when (and (pos? elements-area) (= state :scale))
-             [overlay/area elements-area bounds])
+             [overlay/area-label elements-area bounds])
 
            (when (not-empty (remove zero? bounds))
              [:<>
               [overlay/wrapping-bounding-box bounds]
-              (when (= state :scale) [overlay/size bounds])
+              (when (= state :scale) [overlay/size-label bounds])
               [overlay/bounding-handles bounds]])
 
            (when (and select? pivot-point)

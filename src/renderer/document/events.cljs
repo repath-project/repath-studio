@@ -5,8 +5,8 @@
    [re-frame.core :as rf]
    [re-frame.interceptor :refer [->interceptor get-effect get-coeffect assoc-coeffect assoc-effect]]
    [renderer.dialog.events :as-alias dialog.e]
-   [renderer.document.handlers :as h]
    [renderer.document.effects :as fx]
+   [renderer.document.handlers :as h]
    [renderer.frame.events :as-alias frame.e]
    [renderer.utils.local-storage :as local-storage]
    [renderer.utils.vec :as vec]))

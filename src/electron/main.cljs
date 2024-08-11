@@ -2,12 +2,12 @@
   (:require
    #_["@sentry/electron/main" :as sentry-electron-main]
    ["@webref/css" :as css]
+   ["electron" :refer [app shell ipcMain BrowserWindow]]
    ["electron-extension-installer" :refer [REACT_DEVELOPER_TOOLS installExtension]]
    ["electron-log/main" :as log]
    ["electron-reloader"]
    #_["electron-updater" :as updater]
    ["electron-window-state" :as window-state-keeper]
-   ["electron" :refer [app shell ipcMain BrowserWindow]]
    ["font-scanner" :as fontManager]
    ["os" :as os]
    ["path" :as path]
@@ -22,7 +22,7 @@
   (-> (installExtension
        extension
        #js {:loadExtensionOptions {:allowFileAccess true}})
-      (.then (fn [name] (js/console.log "Added Extension: " name)))
+      (.then (fn [extension] (js/console.log "Added Extension: " extension)))
       (.catch (fn [err] (js/console.log "An error occurred: " err)))))
 
 (defn send-to-renderer!

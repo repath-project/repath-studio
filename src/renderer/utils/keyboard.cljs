@@ -4,9 +4,9 @@
    [re-frame.core :as rf]
    [renderer.dialog.events :as-alias dialog.e]
    [renderer.document.events :as-alias document.e]
-   [renderer.history.events :as-alias history.e]
    [renderer.element.events :as-alias element.e]
    [renderer.frame.events :as-alias frame.e]
+   [renderer.history.events :as-alias history.e]
    [renderer.window.events :as-alias window.e])
   (:import
    [goog.events KeyCodes]))

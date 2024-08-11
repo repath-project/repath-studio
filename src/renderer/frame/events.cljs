@@ -26,19 +26,19 @@
  ::set-zoom
  (fn [{:keys [db]} [_ zoom]]
    (let [current-zoom (get-in db [:documents (:active-document db) :zoom])]
-     {:db (h/zoom db (/ zoom current-zoom))
+     {:db (h/zoom-by db (/ zoom current-zoom))
       :focus nil})))
 
 (rf/reg-event-fx
  ::zoom-in
  (fn [{:keys [db]} [_ _]]
-   {:db (h/zoom db (/ 1 (:zoom-sensitivity db)))
+   {:db (h/zoom-by db (/ 1 (:zoom-sensitivity db)))
     :focus nil}))
 
 (rf/reg-event-fx
  ::zoom-out
  (fn [{:keys [db]} [_ _]]
-   {:db (h/zoom db (:zoom-sensitivity db))
+   {:db (h/zoom-by db (:zoom-sensitivity db))
     :focus nil}))
 
 (rf/reg-event-db
@@ -50,10 +50,10 @@
 
 (rf/reg-event-fx
  ::pan-to-element
- (fn [{:keys [db]} [_ key]]
+ (fn [{:keys [db]} [_ k]]
    {:fx
     (let [{:keys [dom-rect active-document]} db
-          element (element.h/element db key)
+          element (element.h/element db k)
           el-bounds (:bounds element)
           zoom (get-in db [:documents active-document :zoom])
           {:keys [width height]} dom-rect

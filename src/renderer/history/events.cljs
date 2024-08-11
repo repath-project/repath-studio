@@ -2,8 +2,8 @@
   (:require
    [re-frame.core :as rf]
    [renderer.element.handlers :as element.h]
-   [renderer.history.handlers :as h]
-   [renderer.handlers :as handlers]))
+   [renderer.handlers :as handlers]
+   [renderer.history.handlers :as h]))
 
 (rf/reg-event-db
  ::undo

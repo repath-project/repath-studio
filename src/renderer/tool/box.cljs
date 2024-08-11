@@ -6,8 +6,8 @@
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.tool.base :as tool]
    [renderer.tool.overlay :as overlay]
-   [renderer.utils.units :as units]
-   [renderer.utils.bounds :as bounds]))
+   [renderer.utils.bounds :as bounds]
+   [renderer.utils.units :as units]))
 
 (derive ::tool/box ::tool/renderable)
 

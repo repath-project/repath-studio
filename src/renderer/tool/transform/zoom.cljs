@@ -1,7 +1,7 @@
 (ns renderer.tool.transform.zoom
   (:require
    [renderer.element.handlers :as element.h]
-   [renderer.frame.handlers :as frame]
+   [renderer.frame.handlers :as frame.h]
    [renderer.handlers :as handlers]
    [renderer.tool.base :as tool]
    [renderer.tool.overlay :as overlay]
@@ -62,14 +62,14 @@
     (-> db
         element.h/clear-temp
         (assoc :cursor (if (pointer/shift? e) "zoom-out" "zoom-in"))
-        (frame/zoom (if (pointer/shift? e)
-                      zoom-sensitivity
-                      (/ furute-zoom current-zoom)))
-        (frame/pan-to-bounds [pos-x pos-y offset-x offset-y]))))
+        (frame.h/zoom-by (if (pointer/shift? e)
+                           zoom-sensitivity
+                           (/ furute-zoom current-zoom)))
+        (frame.h/pan-to-bounds [pos-x pos-y offset-x offset-y]))))
 
 (defmethod tool/pointer-up :zoom
   [db e]
   (let [factor (if (pointer/shift? e)
                  (:zoom-sensitivity db)
                  (/ 1 (:zoom-sensitivity db)))]
-    (frame/zoom-in-pointer-position db factor)))
+    (frame.h/zoom-in-pointer-position db factor)))

@@ -144,8 +144,8 @@
 
 (rf/reg-sub
  :panel-visible?
- (fn [db [_ key]]
-   (-> db :panel key :visible?)))
+ (fn [db [_ k]]
+   (-> db :panel k :visible?)))
 
 #_(rf/reg-sub
    :font-options

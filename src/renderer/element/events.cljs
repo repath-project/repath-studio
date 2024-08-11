@@ -3,10 +3,10 @@
    [clojure.string :as str]
    [platform :as platform]
    [re-frame.core :as rf]
+   [renderer.element.effects :as fx]
    [renderer.element.handlers :as h]
    [renderer.history.handlers :as history.h]
    [renderer.utils.bounds :as bounds]
-   [renderer.element.effects :as fx]
    [renderer.utils.element :as element]
    [renderer.worker.events :as-alias worker.e]))
 
@@ -19,10 +19,10 @@
 
 (rf/reg-event-db
  ::toggle-prop
- (fn [db [_ key prop]]
+ (fn [db [_ el-k k]]
    (-> db
-       (h/toggle-prop key prop)
-       (history.h/finalize "Toggle " (name prop)))))
+       (h/toggle-prop el-k k)
+       (history.h/finalize "Toggle " (name k)))))
 
 (rf/reg-event-db
  ::preview-prop

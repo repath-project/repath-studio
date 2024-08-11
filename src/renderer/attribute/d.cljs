@@ -37,8 +37,8 @@
        :url "https://svgwg.org/svg2-draft/paths.html#PathDataClosePathCommand"}})
 
 (defn ->command
-  [char]
-  (get path-commands (keyword (str/lower-case char))))
+  [c]
+  (get path-commands (keyword (str/lower-case c))))
 
 (defn remove-segment-by-index
   [path i]

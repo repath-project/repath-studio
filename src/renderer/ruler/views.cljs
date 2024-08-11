@@ -1,14 +1,14 @@
 (ns renderer.ruler.views
   (:require
-   [re-frame.core :as rf]
-   [clojure.string :as str]
    [clojure.core.matrix :as mat]
+   [clojure.string :as str]
+   [re-frame.core :as rf]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.subs :as-alias element.s]
    [renderer.frame.subs :as-alias frame.s]
    [renderer.ruler.subs :as-alias ruler.s]))
 
-(defn bounds
+(defn bounds-rect
   [orientation size]
   (when-let [bounds @(rf/subscribe [::element.s/bounds])]
     (let [zoom @(rf/subscribe [::document.s/zoom])
@@ -105,7 +105,7 @@
   [{:keys [orientation size]}]
   [:svg {:width  (if (= orientation :vertical) size "100%")
          :height (if (= orientation :vertical) "100%" size)}
-   [bounds orientation size]
+   [bounds-rect orientation size]
    [base-lines orientation size]
    [pointer orientation size]])
 

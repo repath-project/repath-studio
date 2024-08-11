@@ -7,8 +7,8 @@
    [renderer.color.db :as color.db]
    [renderer.document.events :as-alias document.e]
    [renderer.document.subs :as-alias document.s]
-   [renderer.ui :as ui]
-   [renderer.element.events :as-alias element.e]))
+   [renderer.element.events :as-alias element.e]
+   [renderer.ui :as ui]))
 
 (defn drip [color]
     [:button.button.color-drip
@@ -24,6 +24,7 @@
 (defn swatch [colors]
     [:div.flex (map drip colors)])
 
+#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defn palette []
   (into [:div.flex.flex-col.palette] (map swatch color.db/default-palette)))
 

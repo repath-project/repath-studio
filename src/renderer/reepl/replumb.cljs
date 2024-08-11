@@ -2,8 +2,8 @@
   (:require
    [cljs.js :as jsc]
    [cljs.tagged-literals :as tags]
-   [cljs.tools.reader.reader-types :refer [string-push-back-reader]]
    [cljs.tools.reader]
+   [cljs.tools.reader.reader-types :refer [string-push-back-reader]]
    [clojure.string :as str]
    [replumb.ast :as ast]
    [replumb.core :as replumb]

@@ -12,10 +12,10 @@
    [renderer.utils.keyboard :as keyb]))
 
 (defn icon
-  [icon attrs]
+  [icon-name attrs]
   [:> ReactSVG
    (merge {:class "icon"
-           :src (str "icons/" icon ".svg")}
+           :src (str "icons/" icon-name ".svg")}
           attrs)])
 
 (defn icon-button
@@ -48,9 +48,9 @@
 
 (defn shortcuts
   [event]
-  (let [shortcuts @(rf/subscribe [:event-shortcuts event])]
-    (when (seq shortcuts)
-      (->> shortcuts
+  (let [event-shortcuts @(rf/subscribe [:event-shortcuts event])]
+    (when (seq event-shortcuts)
+      (->> event-shortcuts
            (map format-shortcut)
            (interpose [:span])
            (into [:span.inline-flex.text-muted {:class "gap-1.5"}])))))

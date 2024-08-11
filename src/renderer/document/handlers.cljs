@@ -55,14 +55,14 @@
 
 (defn create-tab
   [db document]
-  (let [key (or (:key document) (uuid/generate))
+  (let [k (or (:key document) (uuid/generate))
         title (or (:title document) (new-title db))
         active-index (.indexOf (:document-tabs db) (:active-document db))
-        document (merge document {:key key :title title})]
+        document (merge document {:key k :title title})]
     (-> db
-        (assoc-in [:documents key] document)
-        (assoc :active-document key)
-        (update :document-tabs #(vec/add % (inc active-index) key)))))
+        (assoc-in [:documents k] document)
+        (assoc :active-document k)
+        (update :document-tabs #(vec/add % (inc active-index) k)))))
 
 (defn new
   [db]

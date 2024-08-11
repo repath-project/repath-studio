@@ -1,13 +1,14 @@
 (ns renderer.events
   (:require
+   [config :as config]
    [malli.core :as m]
    [malli.error :as me]
    [malli.transform :as mt]
    [re-frame.core :as rf]
    [renderer.db :as db]
    [renderer.effects]
-   [renderer.handlers :as h]
    [renderer.frame.handlers :as frame-h]
+   [renderer.handlers :as h]
    [renderer.notification.events :as-alias notification.e]
    [renderer.tool.base :as tool]
    [renderer.utils.local-storage :as local-storage]
@@ -26,7 +27,8 @@
 
 (def schema-valdator (rf/after (partial check-and-throw)))
 
-(rf/reg-global-interceptor schema-valdator)
+(when config/debug?
+  (rf/reg-global-interceptor schema-valdator))
 
 (rf/reg-event-db
  :initialize-db
@@ -104,14 +106,14 @@
  :toggle-panel
  [local-storage/persist
   (rf/path :panel)]
- (fn [db [_ key]]
-   (update-in db [key :visible?] not)))
+ (fn [db [_ k]]
+   (update-in db [k :visible?] not)))
 
 (rf/reg-event-fx
  :pointer-event
  (fn [{:keys [db]} [_ {:keys [button buttons modifiers data-transfer pointer-pos delta element] :as e}]]
    (let [{:keys [pointer-offset tool dom-rect drag? primary-tool]} db
-         adjusted-pointer-pos (frame-h/adjusted-pointer-pos db pointer-pos)]
+         adjusted-pointer-pos (frame-h/adjust-pointer-pos db pointer-pos)]
      {:db (case (:type e)
             :pointermove
             (if (= buttons :right)
@@ -170,7 +172,7 @@
                     factor (Math/pow (inc (/ (- 1 (:zoom-sensitivity db)) 100))
                                      (- delta-y))]
                 (frame-h/zoom-in-pointer-position db factor))
-              (frame-h/pan db delta))
+              (frame-h/pan-by db delta))
 
             db)
       :fx [(case (:type e)

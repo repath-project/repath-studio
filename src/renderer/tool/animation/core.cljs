@@ -3,10 +3,10 @@
   (:require
    [re-frame.core :as rf]
    [renderer.element.subs :as-alias element.s]
-   [renderer.tool.base :as tool]
+   [renderer.tool.animation.animate]
    [renderer.tool.animation.animate-motion]
    [renderer.tool.animation.animate-transform]
-   [renderer.tool.animation.animate]))
+   [renderer.tool.base :as tool]))
 
 (derive ::tool/animation ::tool/descriptive)
 

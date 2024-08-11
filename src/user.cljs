@@ -1,8 +1,8 @@
 (ns user
   (:require
    [ajax.core]
-   [clojure.string :as str]
    [clojure.math]
+   [clojure.string :as str]
    [config :as config]
    [re-frame.core :as rf]
    [re-frame.db :as db]
@@ -20,8 +20,8 @@
 
 (defn ^:export position
   "Moves the selected elements."
-  ([position]
-   (rf/dispatch [::element.e/position position]))
+  ([pos]
+   (rf/dispatch [::element.e/position pos]))
   ([x y]
    (position [x y])))
 

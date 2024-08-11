@@ -229,7 +229,7 @@
              :font-family font-mono
              :font-size font-size} text]]))
 
-(defn size
+(defn size-label
   [bounds]
   (let [zoom @(rf/subscribe [::document.s/zoom])
         [x1 _ x2 y2] bounds
@@ -277,13 +277,13 @@
 
 (defn centroid
   [el]
-  (when-let [centroid (tool/centroid el)]
+  (when-let [pos (tool/centroid el)]
     (let [offset (element/offset el)
-          centroid (mat/add offset centroid)]
-      [point-of-interest centroid
+          pos (mat/add offset pos)]
+      [point-of-interest pos
        [:title "Centroid"]])))
 
-(defn area
+(defn area-label
   [area bounds]
   (when area
     (let [zoom @(rf/subscribe [::document.s/zoom])

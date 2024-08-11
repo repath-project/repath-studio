@@ -6,7 +6,7 @@
    [renderer.utils.math :as math]
    [renderer.utils.pointer :as pointer]))
 
-(defn pan
+(defn pan-by
   [{:keys [active-document] :as db} offset]
   (let [zoom (get-in db [:documents active-document :zoom])]
     (update-in db
@@ -19,24 +19,24 @@
   (let [zoom (get-in db [:documents active-document :zoom])
         updated-zoom (math/clamp (* zoom factor) 0.01 100)
         updated-factor (/ updated-zoom zoom)
-        pan (get-in db [:documents active-document :pan])
-        updated-pan (mat/sub (mat/div pan updated-factor)
+        current-pan (get-in db [:documents active-document :pan])
+        updated-pan (mat/sub (mat/div current-pan updated-factor)
                              (mat/sub (mat/div pos updated-factor)
                                       pos))]
     (-> db
         (assoc-in [:documents active-document :zoom] updated-zoom)
         (assoc-in [:documents active-document :pan] updated-pan))))
 
-(defn adjusted-pointer-pos
-  [{:keys [active-document] :as db} pointer-pos]
+(defn adjust-pointer-pos
+  [{:keys [active-document] :as db} pos]
   (let [{:keys [zoom pan]} (get-in db [:documents active-document])]
-    (pointer/adjust-position zoom pan pointer-pos)))
+    (pointer/adjust-position zoom pan pos)))
 
 (defn zoom-in-pointer-position
   [{:keys [adjusted-pointer-pos] :as db} factor]
   (zoom-in-position db factor adjusted-pointer-pos))
 
-(defn zoom
+(defn zoom-by
   [{:keys [active-document dom-rect] :as db} factor]
   (let [{:keys [zoom pan]} (get-in db [:documents active-document])
         {:keys [width height]} dom-rect
@@ -60,22 +60,22 @@
 (defn pan-to-element
   ([db]
    (pan-to-element db (-> db element.h/root :children first)))
-  ([db key]
-   (let [element (element.h/element db key)
+  ([db k]
+   (let [element (element.h/element db k)
          el-bounds (:bounds element)]
      (cond-> db
        el-bounds
        (pan-to-bounds el-bounds)))))
 
 (defn focus-selection
-  [{:keys [active-document dom-rect] :as db} zoom]
+  [{:keys [active-document dom-rect] :as db} zoom-type]
   (if-let [bounds (element.h/bounds db)]
     (let [[width height] (bounds/->dimensions bounds)
           width-ratio (/ (:width dom-rect) width)
           height-ratio (/ (:height dom-rect) height)]
       (-> db
           (assoc-in [:documents active-document :zoom]
-                    (case zoom
+                    (case zoom-type
                       :original 1
                       :fit (min width-ratio height-ratio)
                       :fill (max width-ratio height-ratio)))
@@ -99,11 +99,11 @@
 
 (defn pan-out-of-canvas
   [db {:keys [width height]} [x y] [offset-x offset-y]]
-  (pan db [(calc-pan-offset x offset-x width)
-           (calc-pan-offset y offset-y height)]))
+  (pan-by db [(calc-pan-offset x offset-x width)
+              (calc-pan-offset y offset-y height)]))
 
 (defn recenter-to-dom-rect
   [{dom-rect :dom-rect :as db} updated-dom-rect]
   (let [offset (select-keys (merge-with - dom-rect updated-dom-rect)
                             [:width :height])]
-    (pan db (mat/div [(:width offset) (:height offset)] 2))))
+    (pan-by db (mat/div [(:width offset) (:height offset)] 2))))

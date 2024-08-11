@@ -6,7 +6,7 @@
   "Experimental way of getting the bounds of uknown or complicated elements
    using the getBBox method.
    https://developer.mozilla.org/en-US/docs/Web/API/SVGGraphicsElement/getBBox"
-  [el]
+  [^js/Element el]
   (when (.-getBBox el)
     (let [bounds (.getBBox el)
           x1 (.-x bounds)

@@ -1,8 +1,8 @@
 (ns renderer.worker.events
   (:require
    [re-frame.core :as rf]
-   [renderer.worker.effects :as fx]
-   [renderer.utils.uuid :as uuid]))
+   [renderer.utils.uuid :as uuid]
+   [renderer.worker.effects :as fx]))
 
 (rf/reg-event-fx
  ::create

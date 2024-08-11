@@ -6,7 +6,7 @@
   [:map
    [:explanation string?]
    [:timestamp double?]
-   [:index [:and integer? [:or zero? pos?]]]
+   [:index [:or pos-int? zero?]]
    [:id keyword?]
    [:elements [:map-of keyword? element.db/element]]
    [:parent {:optional true} keyword?]

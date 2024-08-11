@@ -1,12 +1,12 @@
 (ns renderer.reepl.show-devtools
   (:require
+   [clojure.string :as str]
    [devtools.formatters.core :as devtools]
-   [reagent.core :as r]
-   [clojure.string :as str]))
+   [reagent.core :as r]))
 
 (defn js-array?
-  [val]
-  (= js/Array (type val)))
+  [v]
+  (= js/Array (type v)))
 
 (defn parse-style
   [raw]
@@ -16,10 +16,10 @@
                  [(keyword k) v])) (str/split raw ";"))))
 
 (defn show-el
-  [val show-value]
-  (let [type (first val)
-        opts (second val)
-        children (drop 2 val)]
+  [v show-value]
+  (let [type (first v)
+        opts (second v)
+        children (drop 2 v)]
     (if (= "object" type)
       [show-value (.-object opts) (.-config opts)]
       (into
@@ -27,7 +27,7 @@
        (map #(if-not (js-array? %) % (show-el % show-value)) children)))))
 
 (defn openable
-  [header val config show-value]
+  [header v config show-value]
   (let [open (r/atom false)]
     (fn [_ _]
       (let [is-open @open]
@@ -38,14 +38,14 @@
            (if is-open "▼" "▶")]
           (show-el header show-value)]
          (when is-open
-           (show-el (devtools/body-api-call val config) show-value))]))))
+           (show-el (devtools/body-api-call v config) show-value))]))))
 
 ;; see https://docs.google.com/document/d/1FTascZXT9cxfetuPRT2eXPQKXui4nWFivUnS_335T3U/preview
 (defn show-devtools
-  [val config show-value]
-  (when-not (var? val)
+  [v config show-value]
+  (when-not (var? v)
     (let [header (try
-                   (devtools/header-api-call val config)
+                   (devtools/header-api-call v config)
                    (catch js/Error e
                      e))]
       (cond
@@ -56,7 +56,7 @@
         [:div.inline-flex "Error expanding lazy value"]
 
         :else
-        (if-not (devtools/has-body-api-call val config)
+        (if-not (devtools/has-body-api-call v config)
           [:div.inline-flex (show-el header show-value)]
-          [openable header val config show-value])))))
-          
+          [openable header v config show-value])))))
+

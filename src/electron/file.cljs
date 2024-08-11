@@ -3,8 +3,8 @@
    ["electron" :refer [app dialog]]
    ["fs" :as fs]
    ["path" :as path]
-   [config :as config]
    [clojure.edn :as edn]
+   [config :as config]
    [promesa.core :as p]))
 
 (def dialog-options
@@ -41,10 +41,10 @@
   (let [document (edn/read-string data)
         file-path (:path document)
         directory (and file-path (.dirname path file-path))
-        dialog-options (cond-> dialog-options
-                         (and directory (.existsSync fs directory))
-                         (assoc :defaultPath directory))]
-    (p/let [file (save-dialog! window dialog-options)]
+        options (cond-> dialog-options
+                  (and directory (.existsSync fs directory))
+                  (assoc :defaultPath directory))]
+    (p/let [file (save-dialog! window options)]
       (write-file! file document))))
 
 (defn save!

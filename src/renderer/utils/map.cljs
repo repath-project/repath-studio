@@ -1,5 +1,6 @@
 (ns renderer.utils.map)
 
+#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defn deep-merge
   [a & more]
   (if (map? a)
