@@ -5,8 +5,6 @@
    [cljs.tools.reader.reader-types :refer [string-push-back-reader]]
    [cljs.tools.reader]
    [clojure.string :as str]
-   [config :as config]
-   [re-frame.registrar]
    [replumb.ast :as ast]
    [replumb.core :as replumb]
    [replumb.doc-maps :as docs]

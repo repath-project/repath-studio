@@ -3,7 +3,6 @@
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    ["react-resizable-panels" :refer [Panel PanelResizeHandle]]
    [re-frame.core :as rf]
-   [re-frame.registrar]
    [renderer.color.views :as color-v]
    [renderer.components :as comp]
    [renderer.document.subs :as-alias document.s]

@@ -1,7 +1,6 @@
 (ns renderer.toolbar.object
   (:require
    [re-frame.core :as rf]
-   [re-frame.registrar]
    [renderer.element.events :as-alias element.e]
    [renderer.element.subs :as-alias element.s]
    [renderer.toolbar.views :as v]))

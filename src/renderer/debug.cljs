@@ -2,7 +2,6 @@
   (:require
    ["react-fps" :refer [FpsView]]
    [re-frame.core :as rf]
-   [re-frame.registrar]
    [renderer.document.subs :as-alias document.s]
    [renderer.frame.subs :as-alias frame.s]
    [renderer.snap.subs :as-alias snap.s]

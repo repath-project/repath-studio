@@ -3,7 +3,6 @@
    ["@radix-ui/react-tooltip" :as Tooltip]
    [clojure.string :as str]
    [re-frame.core :as rf]
-   [re-frame.registrar]
    [renderer.components :as comp]
    [renderer.tool.base :as tool]))
 
