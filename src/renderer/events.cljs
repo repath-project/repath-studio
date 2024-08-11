@@ -1,7 +1,7 @@
 (ns renderer.events
   (:require
-   [malli.core :as ma]
-   [malli.error :as ma.error]
+   [malli.core :as m]
+   [malli.error :as me]
    [re-frame.core :as rf]
    [renderer.db :as db]
    [renderer.effects]
@@ -12,15 +12,15 @@
    [renderer.utils.local-storage :as local-storage]
    [renderer.utils.pointer :as pointer]))
 
-(def valid? (ma/validator db/app))
+(def valid? (m/validator db/app))
 
 (defn check-and-throw
   "Throws an exception if `db` doesn't match the Spec"
   [state event]
   (when-not (valid? state)
     (js/console.error (str "Event: " (first event)))
-    (throw (js/Error. (str "Spec check failed: " (-> (ma/explain db/app state)
-                                                     ma.error/humanize
+    (throw (js/Error. (str "Spec check failed: " (-> (m/explain db/app state)
+                                                     me/humanize
                                                      str))))))
 
 (def schema-valdator (rf/after (partial check-and-throw)))

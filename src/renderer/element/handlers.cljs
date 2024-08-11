@@ -7,8 +7,11 @@
    [clojure.zip :as zip]
    [hickory.core :as hickory]
    [hickory.zip]
+   [malli.core :as m]
+   [malli.transform :as mt]
    [reagent.dom.server :as dom.server]
    [renderer.attribute.hierarchy :as hierarchy]
+   [renderer.element.db :as db]
    [renderer.tool.base :as tool]
    [renderer.tool.shape.path :as path]
    [renderer.utils.bounds :as bounds]
@@ -492,12 +495,6 @@
   ([db k]
    (update-el db k element/stroke->path)))
 
-(def default-props
-  {:type :element
-   :visible? true
-   :locked? false
-   :children []})
-
 (defn overlapping-svg
   [db bounds]
   (let [svgs (reverse (root-svgs db))] ; Reverse to select top svgs first.
@@ -511,21 +508,27 @@
   (if (element/supported? el)
     (let [key (uuid/generate)
           page (overlapping-svg db (tool/bounds el))
-          parent (or (:parent el) (if (element/svg? el) (:key (root db)) (:key page)))
+          parent (when-not (element/root? el)
+                  (or (:parent el)
+                      (if (element/svg? el) (:key (root db)) (:key page))))
           children (vals (select-keys (elements db) (:children el)))
           [x1 y1] (tool/bounds (element db parent))
           children (concat children (:content el))
-          new-el (merge el default-props {:key key :parent parent})
+          defaults (m/decode db/element {} mt/default-value-transformer)
+          new-el (merge el defaults {:key key})
+          new-el (cond-> new-el parent (assoc :parent parent))
           add-children (fn [db children]
                          (reduce #(cond-> %1
                                     (element/supported? %2)
                                     (create (assoc %2 :parent key))) db children))]
       (cond-> db
         :always
-        (-> (assoc-in (conj (path db) key) new-el)
-            (update-prop (:parent new-el) :children #(vec (conj % key))))
+        (assoc-in (conj (path db) key) new-el)
 
-        (not (or (element/svg? new-el) (:parent el)))
+        (:parent new-el)
+        (update-prop (:parent new-el) :children #(vec (conj % key)))
+
+        (not (or (element/svg? new-el) (element/root? new-el) (:parent el)))
         (translate [(- x1) (- y1)])
 
         :always

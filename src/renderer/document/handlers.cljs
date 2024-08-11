@@ -1,5 +1,7 @@
 (ns renderer.document.handlers
   (:require
+   [malli.core :as m]
+   [malli.transform :as mt]
    [renderer.document.db :as db]
    [renderer.element.handlers :as element.h]
    [renderer.history.handlers :as history.h]
@@ -62,11 +64,12 @@
 
 (defn new
   [db]
-  (-> db
-      (create-tab (db/create-document))
-      (element.h/create {:tag :svg
-                         :attrs {:width "800" :height "600"}})
-      (history.h/finalize "Create document")))
+  (let [document (m/decode db/document {} mt/default-value-transformer)]
+    (-> db
+        (create-tab document)
+        (element.h/create {:tag :canvas :attrs {:fill "#eeeeee"}})
+        (element.h/create {:tag :svg :attrs {:width "800" :height "600"}})
+        (history.h/finalize "Create document"))))
 
 (defn set-global-attr
   [{active-document :active-document :as db} k v]

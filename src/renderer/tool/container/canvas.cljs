@@ -14,7 +14,7 @@
    [renderer.utils.keyboard :as keyb]
    [renderer.utils.pointer :as pointer]))
 
-(derive :canvas ::tool/tool)
+(derive :canvas ::tool/element)
 
 (defmethod tool/properties :canvas
   []

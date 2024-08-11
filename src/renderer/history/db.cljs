@@ -13,7 +13,7 @@
    [:children [:vector keyword?]]])
 
 (def history
-  [:map
-   [:zoom double?]
+  [:map {:default {}}
+   [:zoom [double? {:default 0.5}]]
    [:position keyword?]
-   [:states [:map-of keyword? state]]])
+   [:states [:map-of {:default {}} keyword? state]]])
