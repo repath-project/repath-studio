@@ -32,7 +32,9 @@
   [db file-path]
   (cond-> db
     file-path
-    (update :recent #(vec (take-last 10 (-> % (conj file-path) distinct))))))
+    (update :recent #(->> (conj (filterv (complement #{file-path}) %) file-path)
+                          (take-last 10)
+                          vec))))
 
 (defn set-active
   [db k]
