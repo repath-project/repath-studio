@@ -128,7 +128,7 @@
 
 (defn home []
   (let [recent @(rf/subscribe [::document.s/recent])]
-    [:div.flex.overflow-auto.flex-1.min-h-full.justify-center
+    [:div.flex.overflow-auto.flex-1.min-h-full.justify-center.px-4
      [:div.bg-primary.w-full.self-center.justify-between.p-12.flex.max-w-screen-xl
       [:div
        [:h1.text-4xl.mb-1.font-light
@@ -180,7 +180,7 @@
          :target "_blank"}
         "Changelog"]]
 
-      [:div
+      [:div.hidden.lg:block
        [:img {:src "img/icon.svg"}]]]]))
 
 (defn root
