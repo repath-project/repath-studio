@@ -28,7 +28,7 @@
    [:backdrop? [boolean? {:default false}]]
    [:lang [keyword? {:default :en-US}]]
    [:repl-mode [keyword? {:default :cljs}]]
-   [:worker [:map {:default {:tasks #{}}} [:tasks set?]]]
+   [:worker [:map {:default {:tasks {}}} [:tasks map?]]]
    [:window window.db/window]
    [:theme theme.db/theme]
    [:timeline timeline.db/timeline]

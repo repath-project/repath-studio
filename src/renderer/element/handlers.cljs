@@ -509,14 +509,16 @@
     (let [key (uuid/generate)
           page (overlapping-svg db (tool/bounds el))
           parent (when-not (element/root? el)
-                  (or (:parent el)
-                      (if (element/svg? el) (:key (root db)) (:key page))))
+                   (or (:parent el)
+                       (if (element/svg? el) (:key (root db)) (:key page))))
           children (vals (select-keys (elements db) (:children el)))
           [x1 y1] (tool/bounds (element db parent))
           children (concat children (:content el))
           defaults (m/decode db/element {} mt/default-value-transformer)
           new-el (merge el defaults {:key key})
-          new-el (cond-> new-el parent (assoc :parent parent))
+          new-el (cond-> new-el
+                   parent (assoc :parent parent)
+                   (not (string? (:content new-el))) (dissoc :content))
           add-children (fn [db children]
                          (reduce #(cond-> %1
                                     (element/supported? %2)

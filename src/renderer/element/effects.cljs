@@ -2,6 +2,7 @@
   (:require
    [promesa.core :as p]
    [re-frame.core :as rf]
+   [renderer.element.events :as-alias element.e]
    [renderer.utils.file :as file]
    [renderer.utils.units :as units]
    [renderer.worker.events :as-alias worker.e]))
@@ -40,6 +41,6 @@
                                           :position [x y]}
                                    :callback (fn [e]
                                                (let [data (js->clj (.. e -data) :keywordize-keys true)]
-                                                 (rf/dispatch [::import-traced-image data])
+                                                 (rf/dispatch [::element.e/import-traced-image data])
                                                  (rf/dispatch [::worker.e/completed (keyword (:id data))])))}]))))
        (set! (.-src image) data-url)))))

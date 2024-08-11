@@ -274,12 +274,12 @@
        (h/import-svg data)
        (history.h/finalize "Import svg"))))
 
-#_(rf/reg-event-db
-   ::import-traced-image
-   (fn [db [_ data]]
-     (-> db
-         (h/import-svg data)
-         (history.h/finalize "Trace image"))))
+(rf/reg-event-db
+ ::import-traced-image
+ (fn [db [_ data]]
+   (-> db
+       (h/import-svg data)
+       (history.h/finalize "Trace image"))))
 
 (rf/reg-event-db
  ::animate
