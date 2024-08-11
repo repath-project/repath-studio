@@ -112,7 +112,7 @@
    [:> Panel
     {:id "repl-panel"
      :minSize 10
-     :defaultSize 10
+     :defaultSize 20
      :order 3}
     [repl-items items (assoc show-value-opts :set-text set-text)]]])
 

@@ -153,6 +153,6 @@
        [:> Panel
         {:id "timeline-panel"
          :minSize 10
-         :defaultSize 10
+         :defaultSize 20
          :order 2}
         [timeline.v/root]])]))
