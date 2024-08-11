@@ -131,5 +131,5 @@
           {:class "text-xl pl-5 pr-10 pt-5"}
           title])
        [:> Dialog/Description
-        {:class "m-0"}
-        (:content (last dialogs))]]]]))
+        {:as-child true}
+        [:div (:content (last dialogs))]]]]]))
