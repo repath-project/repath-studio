@@ -11,6 +11,7 @@
 (defn save-format
   [db]
   (-> db
+      element.h/deselect
       (get-in [:documents (:active-document db)])
       (assoc :save (history.h/current-position db))
       (dissoc :history)))
