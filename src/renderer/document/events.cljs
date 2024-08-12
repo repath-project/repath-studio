@@ -182,13 +182,13 @@
 
 (rf/reg-event-fx
  ::save-and-close
- (fn [{:keys [db]} [_]]
-   (let [document (h/save-format db)]
+ (fn [{:keys [db]} [_ k]]
+   (let [document (h/save-format db k)]
      (if platform/electron?
        {:ipc-invoke ["save-document"
                      (pr-str document)
                      #(do (rf/dispatch [::saved (edn/read-string %)])
-                          (rf/dispatch [::close (:key document) false]))]}
+                          (rf/dispatch [::close k false]))]}
        {::fx/save-as document}))))
 
 (rf/reg-event-fx
@@ -203,12 +203,12 @@
 
 (rf/reg-event-db
  ::saved
- (fn [db [_ document-info]]
+ (fn [db [_ {:keys [path] :as document-info}]]
    ;; Update the path, the title and the saved position of the document.
    ;; Any other changes that could happen while saving should be preserved.
    (-> db
-       (update-in [:documents (:key document-info)] merge document-info)
-       (h/add-recent (:path document-info)))))
+       (update-in [:documents (h/search-by-path db path)] merge document-info)
+       (h/add-recent path))))
 
 (rf/reg-event-db
  ::clear-recent

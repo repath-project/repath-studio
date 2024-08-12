@@ -1,5 +1,6 @@
 (ns renderer.document.handlers
   (:require
+   [config :as config]
    [malli.core :as m]
    [malli.transform :as mt]
    [renderer.document.db :as db]
@@ -9,12 +10,18 @@
    [renderer.utils.vec :as vec]))
 
 (defn save-format
-  [db]
-  (-> db
-      element.h/deselect
-      (get-in [:documents (:active-document db)])
-      (assoc :save (history.h/current-position db))
-      (dissoc :history)))
+  ([db]
+  (save-format db (:active-document db)))
+  ([db k]
+   (let [document (-> db
+                      (get-in [:documents k])
+                      (select-keys [:elements :path])
+                      (assoc :save (history.h/current-position db)
+                             :version config/version))]
+
+   (reduce #(update-in %1 [:elements %2] dissoc :selected?)
+           document
+           (keys (:elements document))))))
 
 (defn close
   [{:keys [active-document document-tabs] :as db} k]
@@ -41,7 +48,7 @@
   [db k]
   (assoc db :active-document k))
 
-(defn- search-by-path
+(defn search-by-path
   [{:keys [documents]} file-path]
   (some #(when (and file-path (= (:path %) file-path)) (:key %)) (vals documents)))
 
@@ -65,14 +72,15 @@
         (assoc :active-document k)
         (update :document-tabs #(vec/add % (inc active-index) k)))))
 
+(def default (m/decode db/document {} mt/default-value-transformer))
+
 (defn new
   [db]
-  (let [document (m/decode db/document {} mt/default-value-transformer)]
-    (-> db
-        (create-tab document)
-        (element.h/create {:tag :canvas :attrs {:fill "#eeeeee"}})
-        (element.h/create {:tag :svg :attrs {:width "800" :height "600"}})
-        (history.h/finalize "Create document"))))
+  (-> db
+      (create-tab default)
+      (element.h/create {:tag :canvas :attrs {:fill "#eeeeee"}})
+      (element.h/create {:tag :svg :attrs {:width "800" :height "600"}})
+      (history.h/finalize "Create document")))
 
 (defn set-global-attr
   [{active-document :active-document :as db} k v]
@@ -83,7 +91,7 @@
 (defn load
   [db document]
   (let [open-key (search-by-path db (:path document))
-        document (-> document
+        document (-> (merge default document)
                      (assoc :key (or open-key (uuid/generate))))]
     (cond-> db
       (not open-key)

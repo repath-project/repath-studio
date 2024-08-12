@@ -67,7 +67,7 @@
       [:button.button.px-2.bg-primary.rounded.flex-1
        {:auto-focus true
         :on-click #(do (rf/dispatch [::dialog.e/close])
-                       (rf/dispatch [::document.e/save-and-close]))}
+                       (rf/dispatch [::document.e/save-and-close k]))}
        "Save"]]
      [close-button]]))
 
