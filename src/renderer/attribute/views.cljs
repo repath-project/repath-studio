@@ -32,36 +32,33 @@
     (for [[browser {:keys [version_added]}] support-data]
       ^{:key browser} [browser-support browser version_added])]])
 
-(defn mdn-button
-  [mdn_url attr]
+(defn info-button
+  [url label]
   [:a.button.px-3.bg-primary.grow
-   {:href (or mdn_url
-              (str "https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/"
-                   (name attr)))
+   {:href url
     :target "_blank"}
-   "Learn more"])
+   label])
 
-(defn spec-button
-  [url]
-  [:a.button.px-3.grow
-   {:href (if (vector? url) (first url) url)
-    :target "_blank"}
-   "Specification"])
+(defn construct-mdn-url
+  [attr]
+  (str "https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/" attr))
 
 (defn caniusethis
   [{:keys [tag attr]}]
   (let [data (if attr (bcd/conmpatibility tag attr) (bcd/conmpatibility tag))
         support-data (:support data)
-        animation? (isa? tag ::tool/animation)]
-    (when (or support-data animation?)
-      [:div.flex.flex-col
-       (when (some :version_added (vals support-data))
-         [browser-compatibility support-data])
-       [:div.flex.gap-2
-        (when (or data (:mdn_url data) animation?)
-          [mdn-button (:mdn_url data) attr])
-        (when (:spec_url data)
-          [spec-button (:spec_url data)])]])))
+        webref-property (when attr @(rf/subscribe [:webref-css-property attr]))
+        css-property  (when attr @(rf/subscribe [:css-property attr]))
+        spec-url (or (:spec_url data) (:href webref-property) (:href css-property))
+        spec-url (if (vector? spec-url) (first spec-url) spec-url)
+        mdn-url (or (:mdn_url css-property) (:mdn_url data))
+        mdn-url (or mdn-url (when data (construct-mdn-url (name attr))))]
+    [:div.flex.flex-col
+     (when (some :version_added (vals support-data))
+       [browser-compatibility support-data])
+     [:div.flex.gap-2
+      (when mdn-url [info-button mdn-url "Learn more"])
+      (when spec-url [info-button spec-url "Specification"])]]))
 
 (defn on-change-handler
   ([event k old-v]
@@ -129,33 +126,33 @@
      :disabled? disabled?
      :placeholder initial}]
    (when (seq items)
-    [:> Select/Root
-     {:value value
-      :onValueChange #(rf/dispatch [::element.e/set-attr key %])
-      :disabled disabled?}
-     [:> Select/Trigger
-      {:class "select-trigger ml-px h-full"
-       :aria-label (name key)
-       :style {:background "var(--bg-primary)"
-               :border-radius 0
-               :width "26px"
-               :height "26px"}}
-      [:> Select/Value ""]
-      [:> Select/Icon
-       [ui/icon "chevron-down" {:class "icon small"}]]]
-     [:> Select/Portal
-      [:> Select/Content {:class "menu-content rounded select-content"}
-       [:> Select/ScrollUpButton {:class "select-scroll-button"}
-        [ui/icon "chevron-up"]]
-       [:> Select/Viewport {:class "select-viewport"}
-        (for [item items]
-          ^{:key item}
-          [:> Select/Item {:value (:value item) :class "menu-item "}
-           (when (:icon item)
-             [:div.absolute.left-2 [ui/icon (:icon item)]])
-           [:> Select/ItemText (:label item)]])]
-       [:> Select/ScrollDownButton {:class "select-scroll-button"}
-        [ui/icon "chevron-down"]]]]])])
+     [:> Select/Root
+      {:value value
+       :onValueChange #(rf/dispatch [::element.e/set-attr key %])
+       :disabled disabled?}
+      [:> Select/Trigger
+       {:class "select-trigger ml-px h-full"
+        :aria-label (name key)
+        :style {:background "var(--bg-primary)"
+                :border-radius 0
+                :width "26px"
+                :height "26px"}}
+       [:> Select/Value ""]
+       [:> Select/Icon
+        [ui/icon "chevron-down" {:class "icon small"}]]]
+      [:> Select/Portal
+       [:> Select/Content {:class "menu-content rounded select-content"}
+        [:> Select/ScrollUpButton {:class "select-scroll-button"}
+         [ui/icon "chevron-up"]]
+        [:> Select/Viewport {:class "select-viewport"}
+         (for [item items]
+           ^{:key item}
+           [:> Select/Item {:value (:value item) :class "menu-item "}
+            (when (:icon item)
+              [:div.absolute.left-2 [ui/icon (:icon item)]])
+            [:> Select/ItemText (:label item)]])]
+        [:> Select/ScrollDownButton {:class "select-scroll-button"}
+         [ui/icon "chevron-down"]]]]])])
 
 (defn property-list
   [property]
@@ -208,13 +205,16 @@
         [:h2.mb-4.text-lg k]
         (when (get-method hierarchy/description [dispatch-tag k])
           [:p (hierarchy/description dispatch-tag k)])
-        (when webref-property [property-list webref-property])
-        (when css-property
+        (when (bcd/conmpatibility tag k)
           [:<>
-           [:h3.font-bold "Syntax"]
-           [:p (:syntax css-property)]])
+           (when webref-property
+             [property-list webref-property])
+           (when css-property
+             [:<>
+              [:h3.font-bold "Syntax"]
+              [:p (:syntax css-property)]])
 
-        [caniusethis {:tag tag :attr k}]]
+           [caniusethis {:tag tag :attr k}]])]
        [:> HoverCard/Arrow {:class "popover-arrow"}]]]]))
 
 (defn row

@@ -31,11 +31,15 @@
   ([channel data]
    (.send (.-webContents ^js @main-window) channel (clj->js data))))
 
-(defonce allowed-urls
+(def allowed-urls
   #{"repath.studio"
     "github.com"
     "developer.mozilla.org"
-    "svgwg.org"})
+    "svgwg.org"
+    "fxtf.org"
+    "drafts.fxtf.org"
+    "csswg.org"
+    "drafts.csswg.org"})
 
 (defn allowed-url?
   [url]

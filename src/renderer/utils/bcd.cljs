@@ -3,6 +3,8 @@
    https://github.com/mdn/browser-compat-data"
   (:require ["@mdn/browser-compat-data" :as bcd]))
 
+(js/console.log bcd)
+
 (def svg
   (js->clj (.-svg bcd) :keywordize-keys true))
 
@@ -11,4 +13,5 @@
   ([tag]
    (-> svg :elements tag :__compat))
   ([tag attr]
-   (-> svg :elements tag attr :__compat)))
+   (or (-> svg :elements tag attr :__compat)
+       (-> svg :global_attributes attr :__compat))))
