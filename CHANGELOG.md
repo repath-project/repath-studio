@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.2.13 (2024-08-13)
+
+**Added**
+
+- Copy to system clipboard
+- System theme option
+- Spec validation
+- Various icons
+- Per tag attribute dispatch
+- Font family attribute search
+- Font weight attribute dropdown
+
+**Changed**
+
+- Small icons eliminated
+- Minor mobile fixes
+- Default panel sizes
+- Document saved info
+- Enhance attribute info card
+
+**Fixed**
+
+- Deleting nested selected elements
+- Group index
+- Fullscreen event listener
+- String drop to canvas
+- Dialog markup
+- Recent documents order
+- Image trace
+- Initial value and disabled state of attribute
+
 ## 0.2.12 (2024-07-31)
 
 **Added**
