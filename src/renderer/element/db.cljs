@@ -10,7 +10,7 @@
      [:parent {:optional true} keyword?]
      [:type [:enum {:default :element} :element :handle]]
      [:visible? [boolean? {:default true}]]
-     [:locked? {:optional true} boolean?]
+     [:locked? {:optional true} [:maybe boolean?]]
      [:selected? {:optional true} boolean?]
      [:children [:vector {:default []} keyword?]]
      [:bounds {:optional true} [:tuple double? double? double? double?]]
