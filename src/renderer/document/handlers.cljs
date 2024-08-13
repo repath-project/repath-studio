@@ -6,6 +6,9 @@
    [renderer.document.db :as db]
    [renderer.element.handlers :as element.h]
    [renderer.history.handlers :as history.h]
+   [renderer.notification.handlers :as notification.h]
+   [renderer.notification.views :as notification.v]
+   [renderer.utils.spec :as spec]
    [renderer.utils.uuid :as uuid]
    [renderer.utils.vec :as vec]))
 
@@ -93,16 +96,18 @@
   (let [open-key (search-by-path db (:path document))
         document (-> (merge default document)
                      (assoc :key (or open-key (uuid/generate))))]
-    (cond-> db
-      (not open-key)
-      (-> (create-tab document)
-          (history.h/finalize "Load document")
-          (update-in [:documents (:key document)]
-                     #(assoc % :save (-> % :history :position))))
+    (if (db/valid? document)
+     (cond-> db
+       (not open-key)
+       (-> (create-tab (dissoc document :save))
+           (history.h/finalize "Load document"))
 
-      :always
-      (-> (add-recent (:path document))
-          (set-active (:key document))))))
+       :always
+       (-> (add-recent (:path document))
+           (set-active (:key document))))
+
+      (notification.h/add db
+       [notification.v/spec-failed "Load document" (spec/explain document db/document)]))))
 
 (defn saved?
   [db k]

@@ -15,5 +15,5 @@
 (def history
   [:map {:default {}}
    [:zoom {:optional true} [double? {:default 0.5}]]
-   [:position keyword?]
+   [:position {:optional true} keyword?]
    [:states [:map-of {:default {}} keyword? state]]])

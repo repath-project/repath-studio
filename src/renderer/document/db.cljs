@@ -1,5 +1,6 @@
 (ns renderer.document.db
   (:require
+   [malli.core :as m]
    [renderer.element.db :as element.db]
    [renderer.history.db :as history.db]))
 
@@ -17,6 +18,8 @@
    [:history history.db/history]
    [:pan [:tuple {:default [0 0]} double? double?]]
    [:elements element.db/elements]])
+
+(def valid? (m/validator document))
 
 (def documents
   [:map-of {:default {}} keyword? document])
