@@ -94,7 +94,7 @@
 (rf/reg-event-db
  :toggle-panel
  [local-storage/persist
-  (rf/path :panel)]
+  (rf/path :panels)]
  (fn [db [_ k]]
    (update-in db [k :visible?] not)))
 

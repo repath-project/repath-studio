@@ -8,15 +8,40 @@
    [renderer.timeline.db :as timeline.db]
    [renderer.window.db :as window.db]))
 
+(def point
+  [:tuple {:default [0 0]} number? number?])
+
+(def panels
+  [:map-of {:default {:tree {:visible? true}
+                      :properties {:visible? true}
+                      :timeline {:visible? false}
+                      :xml {:visible? false}
+                      :repl-history {:visible? false}}}
+   keyword? [:map [:visible? boolean?]]])
+
+(def dom-rect
+ [:map {:closed true}
+  [:x number?]
+  [:y number?]
+  [:width number?]
+  [:height number?]
+  [:top number?]
+  [:right number?]
+  [:bottom number?]
+  [:left number?]])
+
 (def app
   [:map
    [:tool [keyword? {:default :select}]]
-   [:pointer-pos [:tuple {:default [0 0]} double? double?]]
+   [:pointer-pos point]
+   [:adjusted-pointer-pos point]
    [:zoom-sensitivity [:and {:default 0.75} double? pos?]]
    [:state [keyword? {:default :default}]]
    [:grid-visible? [boolean? {:default false}]]
    [:rulers-visible? [boolean? {:default true}]]
    [:snap snap.db/snap]
+   [:cursor [string? {:default "default"}]]
+   [:dom-rect {:optional true} dom-rect]
    [:rulers-locked? [boolean? {:default false}]]
    [:dialogs [:vector {:default []} dialog.db/dialog]]
    [:documents document.db/documents]
@@ -33,11 +58,6 @@
    [:window window.db/window]
    [:theme theme.db/theme]
    [:timeline timeline.db/timeline]
-   [:panel [:map-of {:default {:tree {:visible? true}
-                               :properties {:visible? true}
-                               :timeline {:visible? false}
-                               :xml {:visible? false}
-                               :repl-history {:visible? false}}}
-            keyword? [:map [:visible? boolean?]]]]])
+   [:panels panels]])
 
 (def valid? (m/validator app))
