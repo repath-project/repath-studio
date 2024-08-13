@@ -34,7 +34,7 @@
           #_(fn [& a] nil)
           fetch-file!)
          {:warning-as-error true
-          :verbose false ; config/debug?
+          :verbose false
           ;; :load-fn! (fn [z cb])
           :no-pr-str-on-value true}))
 cljs.js/*load-fn*

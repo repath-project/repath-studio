@@ -235,7 +235,7 @@
 (defn root
   []
   [repl
-   :execute #(replumb/run-repl (if (= @(rf/subscribe [:repl-mode]) :cljs) %1 (str "(js/eval \"" %1 "\")")) {:warning-as-error true} %2)
+   :execute #(replumb/run-repl (if (= @(rf/subscribe [:repl-mode]) :cljs) %1 (str "(js/eval \"" %1 "\")")) {:verbose @(rf/subscribe [:debug-info?])} %2)
    :complete-word (fn [text] (replumb/process-apropos @(rf/subscribe [:repl-mode]) text))
    :get-docs replumb/process-doc
    :state state
