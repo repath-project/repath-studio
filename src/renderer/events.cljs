@@ -2,7 +2,6 @@
   (:require
    [config :as config]
    [malli.core :as m]
-   [malli.error :as me]
    [malli.transform :as mt]
    [re-frame.core :as rf]
    [renderer.db :as db]
@@ -14,21 +13,11 @@
    [renderer.utils.local-storage :as local-storage]
    [renderer.utils.pointer :as pointer]))
 
-(def valid? (m/validator db/app))
-
-(defn check-and-throw
-  "Throws an exception if `db` doesn't match the Spec"
-  [state event]
-  (when-not (valid? state)
-    (js/console.error (str "Event: " (first event)))
-    (throw (js/Error. (str "Spec check failed: " (-> (m/explain db/app state)
-                                                     me/humanize
-                                                     str))))))
-
-(def schema-valdator (rf/after (partial check-and-throw)))
+(def schema-validator
+  (rf/after (partial h/check-and-throw)))
 
 (when config/debug?
-  (rf/reg-global-interceptor schema-valdator))
+  (rf/reg-global-interceptor schema-validator))
 
 (rf/reg-event-db
  :initialize-db

@@ -14,6 +14,13 @@
     [:a {:href compatibility-url}
      "browser compatibility table."]]])
 
+(defn spec-failed
+  [event error]
+  [:div
+   [:h2.mb-4.font-bold "Spec check failed"]
+   [:p "Event: " event]
+   [:p.text-error error]])
+
 (defn main
   []
   (let [notifications @(rf/subscribe [:notifications])]

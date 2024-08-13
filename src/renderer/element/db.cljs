@@ -16,3 +16,8 @@
      [:bounds {:optional true} [:tuple double? double? double? double?]]
      [:content {:optional true} string?]
      [:attrs {:optional true} map?]]]])
+
+(def elements
+  [:map-of {:default {}} keyword? element])
+
+(def valid? (m/validator elements))

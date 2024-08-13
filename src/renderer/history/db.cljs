@@ -8,7 +8,7 @@
    [:timestamp double?]
    [:index [:or pos-int? zero?]]
    [:id keyword?]
-   [:elements [:map-of keyword? element.db/element]]
+   [:elements element.db/elements]
    [:parent {:optional true} keyword?]
    [:children [:vector keyword?]]])
 

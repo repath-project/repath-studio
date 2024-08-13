@@ -4,9 +4,9 @@
    ["paperjs-offset" :refer [PaperOffset]]
    [clojure.core.matrix :as mat]
    [renderer.tool.base :as tool]
+   [renderer.utils.bcd :as bcd]
    [renderer.utils.bounds :as bounds]
-   [renderer.utils.map :as map]
-   [renderer.utils.spec :as spec]))
+   [renderer.utils.map :as map]))
 
 (defn root?
   [el]
@@ -97,10 +97,10 @@
   (merge
    (when tag
      (merge (when (isa? tag ::tool/element)
-              (merge (attrs-map (tag (:elements spec/svg)))
-                     (zipmap spec/core-attrs (repeat ""))))
+              (merge (attrs-map (tag (:elements bcd/svg)))
+                     (zipmap bcd/core-attrs (repeat ""))))
             (when (contains? #{:animateMotion :animateTransform} tag)
-              (attrs-map (:animate (:elements spec/svg))))
+              (attrs-map (:animate (:elements bcd/svg))))
             (zipmap (:attrs (tool/properties tag)) (repeat ""))))
    attrs))
 

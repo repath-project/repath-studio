@@ -1,6 +1,10 @@
 (ns renderer.history.handlers
   (:require
+   [renderer.element.db :as element.db]
    [renderer.element.handlers :as element.h]
+   [renderer.notification.handlers :as notification.h]
+   [renderer.notification.views :as notification.v]
+   [renderer.utils.spec :as spec]
    [renderer.utils.uuid :as uuid]
    [renderer.utils.vec :as vec]))
 
@@ -138,17 +142,25 @@
    (move, color pick etc)"
   [db explanation & more]
   (let [current-position (current-position db)
-        id (uuid/generate)]
-    (cond-> db
-      (not= (element.h/elements db) (:elements (state (history db))))
-      (cond->
-       :always (-> (assoc-in (conj (history-path db) :position) id)
-                   (assoc-in (conj (history-path db) :states id)
-                             (create-state db id (apply str explanation more))))
+        id (uuid/generate)
+        explanation (apply str explanation more)
+        elements (element.h/elements db)]
 
-       current-position
-       (-> (update-in (conj (history-path db) :states current-position :children) conj id)
-           update-ancestors)))))
+    (if (element.db/valid? elements)
+      (cond-> db
+        (not= elements (:elements (state (history db))))
+        (cond->
+         :always (-> (assoc-in (conj (history-path db) :position) id)
+                     (assoc-in (conj (history-path db) :states id)
+                               (create-state db id explanation)))
+
+         current-position
+         (-> (update-in (conj (history-path db) :states current-position :children) conj id)
+             update-ancestors)))
+
+      (-> (swap db)
+          (notification.h/add
+           [notification.v/spec-failed explanation (spec/explain elements element.db/elements)])))))
 
 (defn clear
   [db]

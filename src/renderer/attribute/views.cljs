@@ -10,8 +10,8 @@
    [renderer.element.subs :as-alias element.s]
    [renderer.tool.base :as tool]
    [renderer.ui :as ui]
-   [renderer.utils.keyboard :as keyb]
-   [renderer.utils.spec :as spec]))
+   [renderer.utils.bcd :as bcd]
+   [renderer.utils.keyboard :as keyb]))
 
 (defn browser-support
   [browser version-added]
@@ -50,7 +50,7 @@
 
 (defn caniusethis
   [{:keys [tag attr]}]
-  (let [data (if attr (spec/compat-data tag attr) (spec/compat-data tag))
+  (let [data (if attr (bcd/conmpatibility tag attr) (bcd/conmpatibility tag))
         support-data (:support data)
         animation? (isa? tag ::tool/animation)]
     (when (or support-data animation?)

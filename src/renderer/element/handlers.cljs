@@ -14,9 +14,9 @@
    [renderer.element.db :as db]
    [renderer.tool.base :as tool]
    [renderer.tool.shape.path :as path]
+   [renderer.utils.bcd :as bcd]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
-   [renderer.utils.spec :as spec]
    [renderer.utils.uuid :as uuid]
    [renderer.utils.vec :as vec]))
 
@@ -631,7 +631,7 @@
    ;; TODO: Merge attributes from multiple selected elements.
    (if (= 1 (count copied-elements))
      (let [attrs (:attrs (first copied-elements))
-           style-attrs (disj spec/presentation-attrs :transform)]
+           style-attrs (disj bcd/presentation-attrs :transform)]
        (reduce (fn [db attr]
                  (cond-> db
                    (attr attrs)
@@ -646,7 +646,7 @@
            get-value (fn [v] (if (empty? (str v)) source-attr v))]
        (cond-> db
          source-attr
-         (update-attr k attr get-value)))) db spec/presentation-attrs))
+         (update-attr k attr get-value)))) db bcd/presentation-attrs))
 
 (defn group
   [db]

@@ -1,6 +1,8 @@
 (ns renderer.handlers
   (:require
-   [renderer.tool.base :as tool]))
+   [renderer.db :as db]
+   [renderer.tool.base :as tool]
+   [renderer.utils.spec :as spec]))
 
 (defn set-state
   [db state]
@@ -17,6 +19,13 @@
 (defn set-tool
   [db tool]
   (-> db
-      (tool/deactivate)
+      tool/deactivate
       (assoc :tool tool)
-      (tool/activate)))
+      tool/activate))
+
+(defn check-and-throw
+  "Throws an exception if `db` doesn't match the Spec"
+  [db event]
+  (when-not (db/valid? db)
+    (js/console.error (str "Event: " (first event)))
+    (throw (js/Error. (str "Spec check failed: " (spec/explain db db/app))))))

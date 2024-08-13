@@ -16,4 +16,7 @@
    [:rotate [double? {:default 0}]]
    [:history history.db/history]
    [:pan [:tuple {:default [0 0]} double? double?]]
-   [:elements [:map-of {:default {}} keyword? element.db/element]]])
+   [:elements element.db/elements]])
+
+(def documents
+  [:map-of {:default {}} keyword? document])

@@ -1,5 +1,6 @@
 (ns renderer.db
   (:require
+   [malli.core :as m]
    [renderer.dialog.db :as dialog.db]
    [renderer.document.db :as document.db]
    [renderer.snap.db :as snap.db]
@@ -18,7 +19,7 @@
    [:snap snap.db/snap]
    [:rulers-locked? [boolean? {:default false}]]
    [:dialogs [:vector {:default []} dialog.db/dialog]]
-   [:documents [:map-of {:default {}} keyword? document.db/document]]
+   [:documents document.db/documents]
    [:document-tabs [:vector {:default []} keyword?]]
    [:recent [:vector {:max 10 :default []} string?]]
    [:system-fonts {:optional true} vector?]
@@ -38,3 +39,5 @@
                                :xml {:visible? false}
                                :repl-history {:visible? false}}}
             keyword? [:map [:visible? boolean?]]]]])
+
+(def valid? (m/validator app))
