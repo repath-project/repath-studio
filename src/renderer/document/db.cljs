@@ -20,6 +20,3 @@
    [:elements element.db/elements]])
 
 (def valid? (m/validator document))
-
-(def documents
-  [:map-of {:default {}} keyword? document])

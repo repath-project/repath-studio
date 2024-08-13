@@ -45,7 +45,7 @@
    [:dom-rect {:optional true} dom-rect]
    [:rulers-locked? [boolean? {:default false}]]
    [:dialogs [:vector {:default []} dialog.db/dialog]]
-   [:documents document.db/documents]
+   [:documents [:map-of {:default {}} keyword? document.db/document]]
    [:document-tabs [:vector {:default []} keyword?]]
    [:recent [:vector {:max 10 :default []} string?]]
    [:system-fonts {:optional true} vector?]
