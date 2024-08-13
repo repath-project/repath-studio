@@ -92,10 +92,11 @@
       [ui/icon "times"]])])
 
 (defmethod hierarchy/form-element :default
-  [_ k v disabled?]
+  [_ k v disabled? initial]
   [form-input {:key k
                :value v
-               :disabled? disabled?}])
+               :disabled? disabled?
+               :placeholder (if v initial "multiple")}])
 
 (defn range-input
   [k v attrs initial]
