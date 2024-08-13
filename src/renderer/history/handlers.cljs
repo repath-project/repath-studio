@@ -1,5 +1,6 @@
 (ns renderer.history.handlers
   (:require
+   [malli.core :as m]
    [renderer.element.db :as element.db]
    [renderer.element.handlers :as element.h]
    [renderer.notification.handlers :as notification.h]
@@ -135,6 +136,8 @@
           (recur parent (update-in db children-path vec/move index new-index)))
         db)))) ; REVIEW
 
+(def valid-elements? (m/validator element.db/elements))
+
 (defn finalize
   "Pushes changes to history.
    Explicitly adding states, allows canceling actions before adding the state
@@ -145,8 +148,7 @@
         id (uuid/generate)
         explanation (apply str explanation more)
         elements (element.h/elements db)]
-
-    (if (element.db/valid? elements)
+    (if (valid-elements? elements)
       (cond-> db
         (not= elements (:elements (state (history db))))
         (cond->

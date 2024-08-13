@@ -12,11 +12,14 @@
    [reagent.dom.server :as dom.server]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.element.db :as db]
+   [renderer.notification.handlers :as notification.h]
+   [renderer.notification.views :as notification.v]
    [renderer.tool.base :as tool]
    [renderer.tool.shape.path :as path]
    [renderer.utils.attribute :as attr]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
+   [renderer.utils.spec :as spec]
    [renderer.utils.uuid :as uuid]
    [renderer.utils.vec :as vec]))
 
@@ -507,7 +510,6 @@
 
 (defn create
   [db el]
-  (if (element/supported? el)
     (let [key (uuid/generate)
           page (overlapping-svg db (tool/bounds el))
           parent (when-not (element/root? el)
@@ -523,24 +525,29 @@
                    (not (string? (:content new-el))) (dissoc :content))
           add-children (fn [db children]
                          (reduce #(cond-> %1
-                                    (element/supported? %2)
+                                    (db/valid-tag? (:tag %2))
                                     (create (assoc %2 :parent key))) db children))]
-      (cond-> db
-        :always
-        (assoc-in (conj (path db) key) new-el)
+        (if (db/valid? new-el)
+          (cond-> db
+            :always
+            (assoc-in (conj (path db) key) new-el)
 
-        (:parent new-el)
-        (update-prop (:parent new-el) :children #(vec (conj % key)))
+            (:parent new-el)
+            (update-prop (:parent new-el) :children #(vec (conj % key)))
 
-        (not (or (element/svg? new-el) (element/root? new-el) (:parent el)))
-        (translate [(- x1) (- y1)])
+            (not (or (element/svg? new-el) (element/root? new-el) (:parent el)))
+            (translate [(- x1) (- y1)])
 
-        :always
-        (update-bounds key)
+            :always
+            (update-bounds key)
 
-        children
-        (add-children children)))
-    db))
+            children
+            (add-children children))
+          (notification.h/add db [notification.v/spec-failed
+                                  "Invalid element"
+                                  (spec/explain new-el db/element)]))
+
+    ))
 
 (defn add
   ([db]

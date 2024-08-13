@@ -22,11 +22,6 @@
   #_(isa? (:tag el) ::tool/container)
   (or (svg? el) (root? el))) ; FIXME
 
-(defn supported?
-  [el]
-  (and (map? el)
-       (keyword? (:tag el))
-       (contains? (descendants ::tool/element) (:tag el))))
 
 (defn parent-container
   [elements el]
