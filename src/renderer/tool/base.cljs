@@ -4,6 +4,7 @@
   [tool]
   (isa? tool ::tool))
 
+(derive ::element ::tool)
 (derive ::renderable ::element)
 (derive ::shape ::renderable)
 (derive ::graphics ::renderable)
