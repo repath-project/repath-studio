@@ -26,6 +26,6 @@
 (defn check-and-throw
   "Throws an exception if `db` doesn't match the Spec"
   [db event]
-  (when-not (db/valid? db)
+  (when (and (:debug-info? db) (not (db/valid? db)))
     (js/console.error (str "Event: " (first event)))
     (throw (js/Error. (str "Spec check failed: " (spec/explain db db/app))))))
