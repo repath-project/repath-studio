@@ -464,8 +464,8 @@
   ([db ratio pivot-point]
    (reduce #(scale %1 %2 ratio pivot-point) db (selected-keys db)))
   ([db k ratio pivot-point]
-   (update-el db k tool/scale ratio (let [[x1 y1] (:bounds (element db k))]
-                                      (mat/sub pivot-point [x1 y1])))))
+     (let [pivot-point (->> (element db k) :bounds (take 2) (mat/sub pivot-point))]
+       (update-el db k tool/scale ratio pivot-point))))
 
 (defn align
   ([db direction]
