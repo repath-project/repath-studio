@@ -1,6 +1,7 @@
 (ns renderer.attribute.href
   "https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/href"
   (:require
+   [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.attribute.views :as v]
@@ -24,16 +25,19 @@
 
 (defmethod hierarchy/form-element [:default :href]
   [_ k v disabled?]
-  (let [state-default? (= @(rf/subscribe [:state]) :default)]
+  (let [state-default? (= @(rf/subscribe [:state]) :default)
+        data-url? (str/starts-with? v "data:")]
     [:<>
      [v/form-input
       {:key k
-       :value (if state-default? v "waiting")
+       :value (if data-url? "data-url" v)
        :disabled? (or disabled?
+                      data-url?
                       (not v)
                       (not state-default?))}]
      [:button.button.ml-px.inline-block.bg-primary.text-muted
       {:title "Select file"
+       :disabled disabled?
        :style {:flex "0 0 26px"
                :height "100%"}
        :on-click #(file/open!
