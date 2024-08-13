@@ -31,6 +31,6 @@
                      :disabled? disabled?
                      :initial initial
                      :default-value "butt"
-                     :items (mapv #(do {:key (keyword %)
+                     :items (mapv #(do {:key %
                                         :label (str % " - " (-> % name-mapping))
-                                        :value %}) weights)}]))
+                                        :value (str %)}) weights)}]))

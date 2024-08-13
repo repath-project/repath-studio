@@ -138,6 +138,7 @@
           (filter #(contains? families (:family %)))
           (map :weight)
           distinct
+          sort
           vec))))
 
 
