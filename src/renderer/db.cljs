@@ -6,6 +6,7 @@
    [renderer.snap.db :as snap.db]
    [renderer.theme.db :as theme.db]
    [renderer.timeline.db :as timeline.db]
+   [renderer.tool.base :as tool]
    [renderer.window.db :as window.db]))
 
 (def point
@@ -32,7 +33,7 @@
 
 (def app
   [:map
-   [:tool [keyword? {:default :select}]]
+   [:tool [:fn {:default :select} tool/valid?]]
    [:pointer-pos point]
    [:adjusted-pointer-pos point]
    [:zoom-sensitivity [:and {:default 0.75} double? pos?]]

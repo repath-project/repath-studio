@@ -1,5 +1,9 @@
 (ns renderer.tool.base)
 
+(defn valid?
+  [tool]
+  (isa? tool ::tool))
+
 (derive ::renderable ::element)
 (derive ::shape ::renderable)
 (derive ::graphics ::renderable)
