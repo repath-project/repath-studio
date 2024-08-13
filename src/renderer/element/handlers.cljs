@@ -63,7 +63,9 @@
 (defn update-bounds
   [db k]
   (let [el (element db k)
-        bounds (element/adjusted-bounds el (elements db))
+        bounds (if (= (:tag el) :g)
+                 (element/bounds (elements db (:children el))) ; FIXME
+                 (element/adjusted-bounds el (elements db)))
         assoc-bounds #(assoc % :bounds bounds)]
     (if-not bounds
       db

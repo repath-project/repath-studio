@@ -51,7 +51,3 @@
              :on-pointer-down pointer-handler
              :on-pointer-move pointer-handler}]]))
 
-(defmethod tool/bounds :g
-  [el elements]
-  (let [children (vals (select-keys elements (:children el)))]
-    (element/bounds children)))
