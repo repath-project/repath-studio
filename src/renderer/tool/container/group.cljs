@@ -6,7 +6,6 @@
    [renderer.element.subs :as-alias element.s]
    [renderer.tool.base :as tool]
    [renderer.utils.bounds :as bounds]
-   [renderer.utils.element :as element]
    [renderer.utils.pointer :as pointer]))
 
 (derive :g ::tool/container)
