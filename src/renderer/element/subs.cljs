@@ -126,6 +126,22 @@
    (h/ancestor-keys db)))
 
 (rf/reg-sub
+ ::font-weights
+ :<- [::selected]
+ :<- [:system-fonts]
+ (fn [[selected-elements system-fonts] _]
+   (let [families (->> selected-elements
+                       (map #(-> % :attrs :font-family))
+                       (remove nil?)
+                       set)]
+     (->> system-fonts
+          (filter #(contains? families (:family %)))
+          (map :weight)
+          distinct
+          vec))))
+
+
+(rf/reg-sub
  ::top-level?
  :<- [::root]
  :<- [::ancestor-keys]

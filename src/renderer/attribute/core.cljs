@@ -3,6 +3,7 @@
    [renderer.attribute.color]
    [renderer.attribute.d]
    [renderer.attribute.font-family]
+   [renderer.attribute.font-weight]
    [renderer.attribute.href]
    [renderer.attribute.length]
    [renderer.attribute.overflow]

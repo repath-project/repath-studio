@@ -127,33 +127,34 @@
      :value value
      :disabled? disabled?
      :placeholder initial}]
-   [:> Select/Root
-    {:value value
-     :onValueChange #(rf/dispatch [::element.e/set-attr key %])
-     :disabled disabled?}
-    [:> Select/Trigger
-     {:class "select-trigger ml-px h-full"
-      :aria-label (name key)
-      :style {:background "var(--bg-primary)"
-              :border-radius 0
-              :width "26px"
-              :height "26px"}}
-     [:> Select/Value ""]
-     [:> Select/Icon
-      [ui/icon "chevron-down" {:class "icon small"}]]]
-    [:> Select/Portal
-     [:> Select/Content {:class "menu-content rounded select-content"}
-      [:> Select/ScrollUpButton {:class "select-scroll-button"}
-       [ui/icon "chevron-up"]]
-      [:> Select/Viewport {:class "select-viewport"}
-       (for [item items]
-         ^{:key item}
-         [:> Select/Item {:value (:value item) :class "menu-item "}
-          (when (:icon item)
-            [:div.absolute.left-2 [ui/icon (:icon item)]])
-          [:> Select/ItemText (:label item)]])]
-      [:> Select/ScrollDownButton {:class "select-scroll-button"}
-       [ui/icon "chevron-down"]]]]]])
+   (when (seq items)
+    [:> Select/Root
+     {:value value
+      :onValueChange #(rf/dispatch [::element.e/set-attr key %])
+      :disabled disabled?}
+     [:> Select/Trigger
+      {:class "select-trigger ml-px h-full"
+       :aria-label (name key)
+       :style {:background "var(--bg-primary)"
+               :border-radius 0
+               :width "26px"
+               :height "26px"}}
+      [:> Select/Value ""]
+      [:> Select/Icon
+       [ui/icon "chevron-down" {:class "icon small"}]]]
+     [:> Select/Portal
+      [:> Select/Content {:class "menu-content rounded select-content"}
+       [:> Select/ScrollUpButton {:class "select-scroll-button"}
+        [ui/icon "chevron-up"]]
+       [:> Select/Viewport {:class "select-viewport"}
+        (for [item items]
+          ^{:key item}
+          [:> Select/Item {:value (:value item) :class "menu-item "}
+           (when (:icon item)
+             [:div.absolute.left-2 [ui/icon (:icon item)]])
+           [:> Select/ItemText (:label item)]])]
+       [:> Select/ScrollDownButton {:class "select-scroll-button"}
+        [ui/icon "chevron-down"]]]]])])
 
 (defn property-list
   [property]
