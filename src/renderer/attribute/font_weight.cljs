@@ -30,7 +30,7 @@
                      :value v
                      :disabled? disabled?
                      :initial initial
-                     :default-value "butt"
+                     :default-value "400"
                      :items (mapv #(do {:key %
                                         :label (str % " - " (-> % name-mapping))
                                         :value (str %)}) weights)}]))

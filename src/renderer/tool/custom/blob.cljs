@@ -47,6 +47,7 @@
                          :placeholder 0}]
      [:button.button.ml-px.inline-block.bg-primary.text-muted
       {:title "Generate random seed"
+       :disabled disabled?
        :style {:flex "0 0 26px"
                :height "100%"}
        :on-click #(rf/dispatch [::element.e/set-attr k random-seed])}

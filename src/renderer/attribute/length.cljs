@@ -43,10 +43,12 @@
    [:div.flex
     [:button.button.ml-px.bg-primary.text-muted.h-full
      {:style {:width "26px"}
+      :disabled disabled?
       :on-pointer-down #(rf/dispatch [::element.e/update-attr k - 1])}
      [ui/icon "minus"]]
     [:button.button.ml-px.bg-primary.text-muted.h-full
      {:style {:width "26px"}
+      :disabled disabled?
       :on-click #(rf/dispatch [::element.e/update-attr k + 1])}
      [ui/icon "plus"]]]])
 

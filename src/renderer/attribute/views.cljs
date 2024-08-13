@@ -111,6 +111,7 @@
     [:> Slider/Root
      (merge attrs {:class "slider-root"
                    :value [(if (= "" v) initial v)]
+                   :disabled (:disabled attrs)
                    :onValueChange (fn [[v]] (rf/dispatch [::element.e/preview-attr k v]))
                    :onValueCommit (fn [[v]] (rf/dispatch [::element.e/set-attr k v]))})
      [:> Slider/Track {:class "slider-track"}
@@ -118,7 +119,7 @@
      [:> Slider/Thumb {:class "slider-thumb"}]]]])
 
 (defn select-input
-  [{:keys [key value disabled? items initial]}]
+  [{:keys [key value disabled? items initial default-value]}]
   [:div.flex.w-full
    [form-input
     {:key key
@@ -127,7 +128,7 @@
      :placeholder initial}]
    (when (seq items)
      [:> Select/Root
-      {:value value
+      {:value (if (empty? value) default-value value)
        :onValueChange #(rf/dispatch [::element.e/set-attr key %])
        :disabled disabled?}
       [:> Select/Trigger
