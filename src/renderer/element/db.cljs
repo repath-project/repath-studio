@@ -22,7 +22,8 @@
      [:children [:vector {:default []} keyword?]]
      [:bounds {:optional true} [:tuple double? double? double? double?]]
      [:content {:optional true} string?]
-     [:attrs {:optional true} [:map-of keyword? [:or string? number?]]]]]])
+     ;; REVIEW: Attribute type should probably be a string.
+     [:attrs {:optional true} [:map-of keyword? [:or string? number? vector?]]]]]])
 
 (def elements
   [:map-of {:default {}} keyword? element])
