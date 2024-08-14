@@ -226,7 +226,7 @@
   ([db el-k k v]
    (let [attr-path (conj (path db) el-k :attrs k)]
      (if (and (not (locked? db k))
-              (element/supports-attr? (element db el-k) k))
+              (element/supported-attr? (element db el-k) k))
        (if (str/blank? v)
          (remove-attr db el-k k)
          (-> db
@@ -236,7 +236,7 @@
 
 (defn update-attr
   [db el-k k f & more]
-  (if (element/supports-attr? (element db el-k) k)
+  (if (element/supported-attr? (element db el-k) k)
     (apply update-el db el-k hierarchy/update-attr k f more)
     db))
 
@@ -511,45 +511,43 @@
 
 (defn create
   [db el]
-    (let [key (uuid/generate)
-          page (overlapping-svg db (tool/bounds el))
-          parent (when-not (element/root? el)
-                   (or (:parent el)
-                       (if (element/svg? el) (:key (root db)) (:key page))))
-          children (vals (select-keys (elements db) (:children el)))
-          [x1 y1] (tool/bounds (element db parent))
-          children (concat children (:content el))
-          defaults (m/decode db/element {} mt/default-value-transformer)
-          new-el (merge el defaults {:key key})
-          new-el (cond-> new-el
-                   parent (assoc :parent parent)
-                   (not (string? (:content new-el))) (dissoc :content))
-          add-children (fn [db children]
-                         (reduce #(cond-> %1
-                                    (db/tag? (:tag %2))
-                                    (create (assoc %2 :parent key))) db children))
-          new-el (map/remove-nils new-el)]
-        (if (db/valid? new-el)
-          (cond-> db
-            :always
-            (assoc-in (conj (path db) key) new-el)
+  (let [key (uuid/generate)
+        page (overlapping-svg db (tool/bounds el))
+        parent (when-not (element/root? el)
+                 (or (:parent el)
+                     (if (element/svg? el) (:key (root db)) (:key page))))
+        children (vals (select-keys (elements db) (:children el)))
+        [x1 y1] (tool/bounds (element db parent))
+        children (concat children (:content el))
+        defaults (m/decode db/element {} mt/default-value-transformer)
+        new-el (merge el defaults {:key key})
+        new-el (cond-> new-el
+                 parent (assoc :parent parent)
+                 (not (string? (:content new-el))) (dissoc :content))
+        add-children (fn [db children]
+                       (reduce #(cond-> %1
+                                  (db/tag? (:tag %2))
+                                  (create (assoc %2 :parent key))) db children))
+        new-el (map/remove-nils new-el)]
+    (if (db/valid? new-el)
+      (cond-> db
+        :always
+        (assoc-in (conj (path db) key) new-el)
 
-            (:parent new-el)
-            (update-prop (:parent new-el) :children #(vec (conj % key)))
+        (:parent new-el)
+        (update-prop (:parent new-el) :children #(vec (conj % key)))
 
-            (not (or (element/svg? new-el) (element/root? new-el) (:parent el)))
-            (translate [(- x1) (- y1)])
+        (not (or (element/svg? new-el) (element/root? new-el) (:parent el)))
+        (translate [(- x1) (- y1)])
 
-            :always
-            (update-bounds key)
+        :always
+        (update-bounds key)
 
-            children
-            (add-children children))
-          (notification.h/add db [notification.v/spec-failed
-                                  "Invalid element"
-                                  (spec/explain new-el db/element)]))
-
-    ))
+        children
+        (add-children children))
+      (notification.h/add db [notification.v/spec-failed
+                              "Invalid element"
+                              (spec/explain new-el db/element)]))))
 
 (defn add
   ([db]

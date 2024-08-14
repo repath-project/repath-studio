@@ -100,7 +100,7 @@
             (zipmap (:attrs (tool/properties tag)) (repeat ""))))
    attrs))
 
-(defn supports-attr?
+(defn supported-attr?
   [el k]
   (-> el attributes k))
 

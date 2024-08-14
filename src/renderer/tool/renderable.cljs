@@ -12,6 +12,7 @@
    [renderer.tool.base :as tool]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.dom :as dom]
+   [renderer.utils.element :as element]
    [renderer.utils.pointer :as pointer]))
 
 (defmethod tool/activate ::tool/renderable
@@ -34,15 +35,16 @@
         (history.h/finalize "Create " (name (:tag temp-element))))))
 
 (defmethod tool/bounds ::tool/renderable
-  [{:keys [tag attrs content]}]
+  [{:keys [tag attrs content] :as el} ]
   (when-let [svg (dom/canvas-element)]
-    (let [el (js/document.createElementNS "http://www.w3.org/2000/svg" (name tag))]
+    (let [dom-el (js/document.createElementNS "http://www.w3.org/2000/svg" (name tag))]
       (doseq [[k v] attrs]
-        (.setAttributeNS el nil (name k) v))
-      (.appendChild svg el)
-      (set! (.-innerHTML el) (if (empty? content) "\u00a0" content))
-      (let [bounds (bounds/from-bbox el)]
-        (.remove el)
+        (when (element/supported-attr? (dissoc el :attrs) k)
+          (.setAttributeNS dom-el nil (name k) v)))
+      (.appendChild svg dom-el)
+      (set! (.-innerHTML dom-el) (if (empty? content) "\u00a0" content))
+      (let [bounds (bounds/from-bbox dom-el)]
+        (.remove dom-el)
         bounds))))
 
 (defmethod tool/position ::tool/renderable
