@@ -22,7 +22,6 @@
   #_(isa? (:tag el) ::tool/container)
   (or (svg? el) (root? el))) ; FIXME
 
-
 (defn parent-container
   [elements el]
   (loop [parent (:parent el)]
