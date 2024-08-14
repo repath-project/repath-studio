@@ -69,8 +69,11 @@
 
 (defn set-text-and-select-element
   [e el-k]
-  (rf/dispatch [::element.e/set-prop el-k :content (get-text e)])
-  (rf/dispatch [:set-tool :select]))
+  (let [s (get-text e)]
+    (rf/dispatch (if (empty? s)
+                   [::element.e/delete]
+                   [::element.e/set-prop el-k :content s]))
+    (rf/dispatch [:set-tool :select])))
 
 (defn key-down-handler
   [e el-k]
