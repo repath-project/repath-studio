@@ -1,14 +1,16 @@
-(ns renderer.utils.map)
-
-#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
-(defn deep-merge
-  [a & more]
-  (if (map? a)
-    (apply merge-with deep-merge a more)
-    (apply merge-with deep-merge more)))
+(ns renderer.utils.map
+  (:require
+   [clojure.set :as set]))
 
 (defn merge-common-with
-  [f a b]
-  (merge-with f
-              (select-keys a (keys b))
-              (select-keys b (keys a))))
+  "Equivelent to merge-with for common keys across all maps."
+  [f & maps]
+  (let [common-keys (->> maps (apply (comp keys set)) set/intersection)]
+    (apply merge-with f (map #(select-keys % common-keys) maps))))
+
+(defn remove-nils
+  "Removes nil values from maps (should be used sparingly)."
+  [a]
+  (->> a
+       (remove (comp nil? val))
+       (into {})))

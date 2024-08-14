@@ -19,6 +19,7 @@
    [renderer.utils.attribute :as attr]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
+   [renderer.utils.map :as map]
    [renderer.utils.spec :as spec]
    [renderer.utils.uuid :as uuid]
    [renderer.utils.vec :as vec]))
@@ -525,8 +526,9 @@
                    (not (string? (:content new-el))) (dissoc :content))
           add-children (fn [db children]
                          (reduce #(cond-> %1
-                                    (db/valid-tag? (:tag %2))
-                                    (create (assoc %2 :parent key))) db children))]
+                                    (db/tag? (:tag %2))
+                                    (create (assoc %2 :parent key))) db children))
+          new-el (map/remove-nils new-el)]
         (if (db/valid? new-el)
           (cond-> db
             :always

@@ -4,7 +4,7 @@
    [renderer.tool.base :as tool]))
 
 
-(defn valid-tag?
+(defn tag?
   [tag]
   (contains? (descendants ::tool/element) tag))
 
@@ -13,16 +13,16 @@
    [::m/default
     [:map
      [:key keyword?]
-     [:tag [:fn valid-tag?]]
+     [:tag [:fn tag?]]
      [:parent {:optional true} keyword?]
      [:type [:enum {:default :element} :element :handle]]
      [:visible? [boolean? {:default true}]]
-     [:locked? {:optional true} [:maybe boolean?]]
+     [:locked? {:optional true} boolean?]
      [:selected? {:optional true} boolean?]
-     [:children {:optional true} [:vector {:default []} keyword?]]
+     [:children [:vector {:default []} keyword?]]
      [:bounds {:optional true} [:tuple double? double? double? double?]]
      [:content {:optional true} string?]
-     [:attrs {:optional true} map?]]]])
+     [:attrs {:optional true} [:map-of keyword? [:or string? number?]]]]]])
 
 (def elements
   [:map-of {:default {}} keyword? element])
