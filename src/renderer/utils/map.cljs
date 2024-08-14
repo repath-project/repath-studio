@@ -5,7 +5,7 @@
 (defn merge-common-with
   "Equivelent to merge-with for common keys across all maps."
   [f & maps]
-  (let [common-keys (->> maps (apply (comp keys set)) set/intersection)]
+  (let [common-keys (apply set/intersection (map (comp set keys) maps))]
     (apply merge-with f (map #(select-keys % common-keys) maps))))
 
 (defn remove-nils
