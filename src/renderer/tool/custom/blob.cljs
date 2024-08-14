@@ -54,12 +54,12 @@
       [ui/icon "refresh"]]]))
 
 (defmethod attr.hierarchy/description [:blob :x]
-    []
-    "Horizontal coordinate of the blob's center.")
+  []
+  "Horizontal coordinate of the blob's center.")
 
 (defmethod attr.hierarchy/description [:blob :y]
-    []
-    "Vertical coordinate of the blob's center.")
+  []
+  "Vertical coordinate of the blob's center.")
 
 (defmethod attr.hierarchy/description [:blob :seed]
   []
