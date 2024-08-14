@@ -127,7 +127,7 @@
     (.textToPath
      js/window.api
      content
-     #js {:font-url (.-path (first (.findFonts js/window.api font-descriptor)))
+     #js {:font-url (.-path (.findFont js/window.api font-descriptor))
           :x (js/parseFloat (:x attrs))
           :y (js/parseFloat (:y attrs))
           :font-size (js/parseFloat (or (:font-size attrs) 16))}))) ; FIXME

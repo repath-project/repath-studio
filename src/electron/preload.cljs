@@ -20,9 +20,8 @@
    :send (fn [channel args] (.send ipcRenderer channel args))
    :invoke (fn [channel args] (.invoke ipcRenderer channel args))
    :platform (.platform os)
-   :findFonts (fn [descriptor] (.findFontsSync fontManager descriptor))
-   :textToPath (fn [s options]
-                 (text->path s (js->clj options :keywordize-keys true)))})
+   :findFont (fn [descriptor] (.findFontSync fontManager descriptor))
+   :textToPath (fn [s options] (text->path s (js->clj options :keywordize-keys true)))})
 
 (defn ^:export init []
   ;; https://docs.sentry.io/platforms/javascript/guides/electron/#configuring-the-client
