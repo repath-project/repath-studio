@@ -37,7 +37,7 @@
         [x1 y1 _x2 _y2] bounds
         [width height] (bounds/->dimensions bounds)
         pointer-handler #(pointer/event-handler % element)]
-    [:g attrs
+    [:g (dissoc attrs :style) ; TODO: Handle this properly.
      (map (fn [element] [tool/render element]) (merge child-elements))
      [:rect {:x x1
              :y y1
