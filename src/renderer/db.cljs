@@ -41,6 +41,7 @@
    [:grid-visible? [boolean? {:default false}]]
    [:rulers-visible? [boolean? {:default true}]]
    [:snap snap.db/snap]
+   [:restored? {:optional true} boolean?]
    [:cursor [string? {:default "default"}]]
    [:dom-rect {:optional true} dom-rect]
    [:rulers-locked? [boolean? {:default false}]]

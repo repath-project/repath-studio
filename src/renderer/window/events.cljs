@@ -34,7 +34,7 @@
           state
           (assoc :focused-once? true))
     :fx [(when-not (:focused-once? db)
-           [:dispatch-later {:ms 0 :dispatch [::frame.e/center]}])]}))
+           [:dispatch-later {:ms 10 :dispatch [::frame.e/center]}])]}))
 
 (rf/reg-event-fx
  ::close
