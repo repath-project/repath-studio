@@ -1,5 +1,6 @@
 (ns renderer.views
   (:require
+   ["@radix-ui/react-select" :as Select]
    ["@radix-ui/react-tooltip" :as Tooltip]
    ["react-resizable-panels" :refer [Panel PanelGroup PanelResizeHandle]]
    [re-frame.core :as rf]
@@ -126,6 +127,19 @@
      [toolbar.status/root]
      [repl.v/root]]))
 
+(def paper-size
+  {0 [2384 3370]
+   1 [1684 2384]
+   2 [1191 1684]
+   3 [842 1191]
+   4 [595 842]
+   5 [420 595]
+   6 [298 420]
+   7 [210 298]
+   8 [147 210]
+   9 [105 147]
+   10 [74 105]})
+
 (defn home []
   (let [recent @(rf/subscribe [::document.s/recent])]
     [:div.flex.overflow-auto.flex-1.min-h-full.justify-center.px-4
@@ -142,7 +156,32 @@
        [:div
         [:button.button-link.mr-2
          {:on-click #(rf/dispatch [::document.e/new])} "New"]
-        [ui/shortcuts [::document.e/new]]]
+        [ui/shortcuts [::document.e/new]]
+
+        [:span.mx-3 "or"]
+
+        [:> Select/Root
+         {:onValueChange #(rf/dispatch [::document.e/new-from-template (get paper-size %)])}
+         [:> Select/Trigger
+          {:class "select-trigger"
+           :aria-label "Select size"}
+          [:div.flex.items-center
+           [:> Select/Value {:placeholder "Select template"}]
+           [:> Select/Icon
+            [ui/icon "chevron-down" {:class "icon small ml-2"}]]]]
+         [:> Select/Portal
+          [:> Select/Content
+           {:class "menu-content rounded select-content"
+            :style {:min-width "auto"}}
+
+           [:> Select/Viewport {:class "select-viewport"}
+            [:> Select/Group
+             (for [[key _size] (sort paper-size)]
+               ^{:key key}
+               [:> Select/Item
+                {:value key
+                 :class "menu-item select-item"}
+                [:> Select/ItemText (str "A" key)]])]]]]]]
 
        [:div
         [:button.button-link.mr-2

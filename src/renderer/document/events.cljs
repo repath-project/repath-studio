@@ -136,8 +136,15 @@
 (rf/reg-event-fx
  ::new
  (fn [{:keys [db]} [_]]
-   {:db (h/new db)
-    :fx [[:dispatch [::frame.e/center]]
+   {:db (h/create db)
+    :fx [[:dispatch-later {:ms 10 :dispatch [::frame.e/center]}]
+         [:focus nil]]}))
+
+(rf/reg-event-fx
+ ::new-from-template
+ (fn [{:keys [db]} [_ size]]
+   {:db (h/create db size)
+    :fx [[:dispatch-later {:ms 10 :dispatch [::frame.e/center]}]
          [:focus nil]]}))
 
 (rf/reg-event-fx

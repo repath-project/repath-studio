@@ -14,7 +14,7 @@
 
 (defn save-format
   ([db]
-  (save-format db (:active-document db)))
+   (save-format db (:active-document db)))
   ([db k]
    (let [document (-> db
                       (get-in [:documents k])
@@ -22,9 +22,9 @@
                       (assoc :save (history.h/current-position db)
                              :version config/version))]
 
-   (reduce #(update-in %1 [:elements %2] dissoc :selected?)
-           document
-           (keys (:elements document))))))
+     (reduce #(update-in %1 [:elements %2] dissoc :selected?)
+             document
+             (keys (:elements document))))))
 
 (defn close
   [{:keys [active-document document-tabs] :as db} k]
@@ -77,13 +77,15 @@
 
 (def default (m/decode db/document {} mt/default-value-transformer))
 
-(defn new
-  [db]
-  (-> db
-      (create-tab default)
-      (element.h/create {:tag :canvas :attrs {:fill "#eeeeee"}})
-      (element.h/create {:tag :svg :attrs {:width "800" :height "600"}})
-      (history.h/finalize "Create document")))
+(defn create
+  ([db]
+   (create db [800 600]))
+  ([db [w h]]
+   (-> db
+       (create-tab default)
+       (element.h/create {:tag :canvas :attrs {:fill "#eeeeee"}})
+       (element.h/create {:tag :svg :attrs {:width w :height h}})
+       (history.h/finalize "Create document"))))
 
 (defn set-global-attr
   [{active-document :active-document :as db} k v]
@@ -97,16 +99,17 @@
         document (-> (merge default document)
                      (assoc :key (or open-key (uuid/generate))))]
     (if (db/valid? document)
-     (cond-> db
-       (not open-key)
-       (-> (create-tab (dissoc document :save))
-           (history.h/finalize "Load document"))
+      (cond-> db
+        (not open-key)
+        (-> (create-tab (dissoc document :save))
+            (history.h/finalize "Load document"))
 
-       :always
-       (-> (add-recent (:path document))
-           (set-active (:key document))))
+        :always
+        (-> (add-recent (:path document))
+            (set-active (:key document))))
 
-      (notification.h/add db
+      (notification.h/add
+       db
        [notification.v/spec-failed "Load document" (spec/explain document db/document)]))))
 
 (defn saved?
