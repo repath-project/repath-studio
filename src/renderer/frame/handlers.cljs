@@ -101,9 +101,3 @@
   [db {:keys [width height]} [x y] [offset-x offset-y]]
   (pan-by db [(calc-pan-offset x offset-x width)
               (calc-pan-offset y offset-y height)]))
-
-(defn recenter-to-dom-rect
-  [{dom-rect :dom-rect :as db} updated-dom-rect]
-  (let [offset (select-keys (merge-with - dom-rect updated-dom-rect)
-                            [:width :height])]
-    (pan-by db (mat/div [(:width offset) (:height offset)] 2))))

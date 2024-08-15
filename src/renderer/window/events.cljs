@@ -23,18 +23,11 @@
  (fn [db [_ state]]
    (assoc db :minimized? state)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::set-focused
  (rf/path :window)
- (fn [{:keys [db]} [_ state]]
-   {:db (cond-> db
-          :always
-          (assoc :focused? state)
-
-          state
-          (assoc :focused-once? true))
-    :fx [(when-not (:focused-once? db)
-           [:dispatch-later {:ms 10 :dispatch [::frame.e/center]}])]}))
+ (fn [db [_ state]]
+   (assoc db :focused? state)))
 
 (rf/reg-event-fx
  ::close

@@ -13,7 +13,7 @@
    [renderer.attribute.core]
    [renderer.dialog.events]
    [renderer.dialog.subs]
-   [renderer.document.events :as document.e]
+   [renderer.document.events]
    [renderer.document.subs]
    [renderer.element.events]
    [renderer.element.subs]
@@ -112,8 +112,6 @@
   (rf/dispatch-sync [:initialize-db])
   (rf/dispatch-sync [:load-local-db])
   (rf/dispatch-sync [::theme.e/init-mode])
-  (rf/dispatch-sync [::document.e/new])
-  (rf/dispatch-sync [:set-tool :select])
   (rf/dispatch-sync [:set-mdn (js->clj mdn :keywordize-keys true)])
 
   (rf/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])
