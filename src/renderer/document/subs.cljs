@@ -74,10 +74,11 @@
  ::title-bar
  :<- [::title]
  :<- [::path]
+ :<- [::active]
  :<- [::active-saved?]
- (fn [[title path saved?] _]
+ (fn [[title path active saved?] _]
    (let [title (or path title)]
-     (str (when (not saved?) "• ")
+     (str (when (and active (not saved?)) "• ")
           (when title (str title " - "))
           "Repath Studio"))))
 
