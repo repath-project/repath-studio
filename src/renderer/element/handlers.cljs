@@ -100,9 +100,7 @@
 (defn parent
   ([db]
    (let [selected-ks (selected-keys db)]
-     (or (parent db (if (siblings-selected? db)
-                      (parent db (first selected-ks))
-                      (first selected-ks)))
+     (or (parent db (first selected-ks))
          (root db))))
   ([db k]
    (when-let [parent-k (:parent (element db k))]
@@ -271,8 +269,9 @@
 
 (defn select-all
   [db]
-  (reduce select (deselect db) (or (siblings db)
-                                   (children db (:key (root db))))))
+  (reduce select (deselect db) (if (siblings-selected? db)
+                                 (children db (:key (parent db (:key (parent db)))))
+                                 (siblings db))))
 
 (defn selected-tags
   [db]
