@@ -4,6 +4,8 @@
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
    [renderer.document.subs :as-alias document.s]
+   [renderer.frame.subs :as-alias frame.s]
+   [renderer.snap.subs :as-alias snap.s]
    [renderer.tool.base :as tool]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
@@ -292,3 +294,29 @@
           y (+ y1 (/ (- -15 (/ handle-size 2)) zoom))
           text (str (units/->fixed area) " px²")]
       [label text [x y]])))
+
+(defn debug-rows
+  []
+  [["Dom rect" @(rf/subscribe [:dom-rect])]
+   ["Viewbox" (str (mapv units/->fixed @(rf/subscribe [::frame.s/viewbox])))]
+   ["Pointer position" (str @(rf/subscribe [:pointer-pos]))]
+   ["Adjusted pointer position"
+    (str (mapv units/->fixed @(rf/subscribe [:adjusted-pointer-pos])))]
+   ["Pointer offset" (str @(rf/subscribe [:pointer-offset]))]
+   ["Adjusted pointer offset"
+    (str (mapv units/->fixed @(rf/subscribe [:adjusted-pointer-offset])))]
+   ["Pointer drag?" (str @(rf/subscribe [:drag?]))]
+   ["Pan" (str (mapv units/->fixed @(rf/subscribe [::document.s/pan])))]
+   ["Active tool" @(rf/subscribe [:tool])]
+   ["Primary tool" @(rf/subscribe [:primary-tool])]
+   ["State"  @(rf/subscribe [:state])]
+   ["Clicked element" (:key @(rf/subscribe [:clicked-element]))]
+   ["Ignored elements" @(rf/subscribe [::document.s/ignored-keys])]
+   ["Snap" (map (fn [[k v]] (str k " - " v)) @(rf/subscribe [::snap.s/nearest-neighbor]))]])
+
+(defn debug-info
+  []
+  (into [:div.absolute.top-1.left-2.pointer-events-none
+         {:style {:color "#555"}}]
+        (for [[label v] (debug-rows)]
+          [:div [:strong.mr-1 label] v])))

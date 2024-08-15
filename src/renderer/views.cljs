@@ -5,7 +5,6 @@
    [re-frame.core :as rf]
    [renderer.attribute.views :as attr.v]
    [renderer.codemirror.views :as cm.v]
-   [renderer.debug :as debug]
    [renderer.dialog.events :as-alias dialog.e]
    [renderer.dialog.views :as dialog.v]
    [renderer.document.events :as-alias document.e]
@@ -17,6 +16,7 @@
    [renderer.notification.views :as notification]
    [renderer.reepl.views :as repl.v]
    [renderer.ruler.views :as ruler.v]
+   [renderer.tool.overlay :as overlay]
    [renderer.toolbar.object :as toolbar.object]
    [renderer.toolbar.status :as toolbar.status]
    [renderer.toolbar.tools :as toolbar.tools]
@@ -56,8 +56,8 @@
          [:div.absolute.inset-0.border-4.border-accent]
          (when @(rf/subscribe [:debug-info?])
            [:<>
-            [debug/info]
-            [debug/fps]]))
+            [overlay/debug-info]
+            [ui/fps]]))
        [:div.absolute.bottom-0.left-0.flex.pointer-events-none.w-full.p-2
         {:style {:color "#555"}}
         [:div.grow.text-xs.truncate.flex.items-end

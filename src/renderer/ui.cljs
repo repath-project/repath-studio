@@ -5,11 +5,17 @@
    ["@radix-ui/react-context-menu" :as ContextMenu]
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    ["@radix-ui/react-switch" :as Switch]
+   ["react-fps" :refer [FpsView]]
    ["react-svg" :refer [ReactSVG]]
    [re-frame.core :as rf]
    [renderer.document.events :as-alias document.e]
    [renderer.document.subs :as-alias document.s]
    [renderer.utils.keyboard :as keyb]))
+
+(defn fps
+  []
+  [:div.fps-wrapper
+   [:> FpsView #js {:width 240 :height 180}]])
 
 (defn icon
   [icon-name attrs]
