@@ -153,12 +153,13 @@
 
        [:h2.mb-3.mt-8.text-2xl "Start"]
 
-       [:div
-        [:button.button-link.mr-2
+       [:div.flex.items-center.gap-2
+        [ui/icon "file"]
+        [:button.button-link
          {:on-click #(rf/dispatch [::document.e/new])} "New"]
         [ui/shortcuts [::document.e/new]]
 
-        [:span.mx-3 "or"]
+        [:span "or"]
 
         [:> Select/Root
          {:onValueChange #(rf/dispatch [::document.e/new-from-template (get paper-size %)])}
@@ -183,8 +184,9 @@
                  :class "menu-item select-item"}
                 [:> Select/ItemText (str "A" key)]])]]]]]]
 
-       [:div
-        [:button.button-link.mr-2
+       [:div.flex.items-center.gap-2
+        [ui/icon "folder"]
+        [:button.button-link
          {:on-click #(rf/dispatch [::document.e/open])}
          "Open"]
         [ui/shortcuts [::document.e/open]]]
@@ -195,7 +197,8 @@
 
        (for [file-path (take 2 recent)]
          ^{:key file-path}
-         [:div
+         [:div.flex.items-center.gap-2
+          [ui/icon "folder"]
           [:button.button-link
            {:on-click #(rf/dispatch [::document.e/open file-path])}
            file-path]])
@@ -203,22 +206,30 @@
        [:h2.mb-3.mt-8.text-2xl "Help"]
 
        [:div
-        [:button.button-link.mr-2
-         {:on-click #(rf/dispatch [::dialog.e/cmdk])}
-         "Command panel"]
-        [ui/shortcuts [::dialog.e/cmdk]]]
-       [:a.text-lg.block
-        {:href "https://repath.studio/"
-         :target "_blank"}
-        "Website"]
-       [:a.text-lg.block
-        {:href "https://github.com/repath-project/repath-studio"
-         :target "_blank"}
-        "Source Code"]
-       [:a.text-lg.block
-        {:href "https://repath.studio/roadmap/changelog/"
-         :target "_blank"}
-        "Changelog"]]
+        [:div.flex.items-center.gap-2
+         [ui/icon "command"]
+         [:button.button-link
+          {:on-click #(rf/dispatch [::dialog.e/cmdk])}
+          "Command panel"]
+         [ui/shortcuts [::dialog.e/cmdk]]]]
+       [:div.flex.items-center.gap-2
+        [ui/icon "earth"]
+        [:a.text-lg.block
+         {:href "https://repath.studio/"
+          :target "_blank"}
+         "Website"]]
+       [:div.flex.items-center.gap-2
+        [ui/icon "commit"]
+        [:a.text-lg.block
+         {:href "https://github.com/repath-project/repath-studio"
+          :target "_blank"}
+         "Source Code"]]
+       [:div.flex.items-center.gap-2
+        [ui/icon "list"]
+        [:a.text-lg.block
+         {:href "https://repath.studio/roadmap/changelog/"
+          :target "_blank"}
+         "Changelog"]]]
 
       [:div.hidden.lg:block
        [:img {:src "img/icon.svg"}]]]]))
