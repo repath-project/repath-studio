@@ -90,22 +90,19 @@
  :<- [::selected]
  :<- [::multiple-selected?]
  (fn [[selected-elements multiple-selected?] _]
-   (let [attrs (utils.el/attributes (first selected-elements))
+   (let [attrs (->> selected-elements
+                    (map utils.el/attributes)
+                    (apply map/merge-common-with
+                           (fn [v1 v2] (if (= v1 v2) v1 nil))))
          attrs (if multiple-selected?
-                 (reduce
-                  #(map/merge-common-with (fn [v1 v2] (if (= v1 v2) v1 nil))
-                                          %1
-                                          (utils.el/attributes %2))
-                  (dissoc attrs :id)
-                  (rest selected-elements))
-
+                 (dissoc attrs :id)
                  (sort-by (fn [[k _]]
                             (-> (first selected-elements)
                                 :tag
                                 tool/properties
                                 :attrs
                                 (.indexOf k)))
-                          attrs))]
+                          (utils.el/attributes (first selected-elements))))]
      (sort-by (fn [[k _]] (.indexOf utils.attr/order k)) attrs))))
 
 (rf/reg-sub
