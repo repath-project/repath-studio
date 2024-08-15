@@ -8,6 +8,15 @@
   [tag]
   (contains? (descendants ::tool/element) tag))
 
+(def bounds
+  [:tuple double? double? double? double?])
+
+(def attr
+  [:multi {:dispatch :tag}
+   [::m/default
+    ;; REVIEW: Attribute type should probably be a string.
+    [:or string? number? vector?]]])
+
 (def element
   [:multi {:dispatch :tag}
    [::m/default
@@ -20,10 +29,9 @@
      [:locked? {:optional true} boolean?]
      [:selected? {:optional true} boolean?]
      [:children [:vector {:default []} keyword?]]
-     [:bounds {:optional true} [:tuple double? double? double? double?]]
+     [:bounds {:optional true} bounds]
      [:content {:optional true} string?]
-     ;; REVIEW: Attribute type should probably be a string.
-     [:attrs {:optional true} [:map-of keyword? [:or string? number? vector?]]]]]])
+     [:attrs {:optional true} [:map-of keyword? attr]]]]])
 
 (def elements
   [:map-of {:default {}} keyword? element])
