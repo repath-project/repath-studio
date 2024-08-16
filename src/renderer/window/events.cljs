@@ -25,11 +25,10 @@
 
 (rf/reg-event-fx
  ::set-focused
- (rf/path :window)
- (fn [db [_ focused?]]
-   {:db (assoc db :focused? focused?)
+ (fn [{:keys [db]} [_ focused?]]
+   {:db (assoc-in db [:window :focused?] focused?)
     :fx [(when (and focused?
-                    (not (-> db :documents (:active-document db) :focused?)))
+                    (not (get-in db [:documents (:active-document db) :focused?])))
            [:dispatch [::frame.e/focus-selection :original]])]}))
 
 (rf/reg-event-fx
