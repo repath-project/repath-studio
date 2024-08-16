@@ -37,7 +37,7 @@
    [:pointer-pos point]
    [:adjusted-pointer-pos point]
    [:adjusted-pointer-offset point]
-   [:zoom-sensitivity [:and {:default 0.75} double? pos?]]
+   [:zoom-sensitivity [:and {:default 0.75} number? pos?]]
    [:state [keyword? {:default :default}]]
    [:grid-visible? [boolean? {:default false}]]
    [:rulers-visible? [boolean? {:default true}]]

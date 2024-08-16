@@ -9,7 +9,7 @@
   (contains? (descendants ::tool/element) tag))
 
 (def bounds
-  [:tuple double? double? double? double?])
+  [:tuple number? number? number? number?])
 
 (def attr
   [:multi {:dispatch :tag}
@@ -18,20 +18,18 @@
     [:or string? number? vector?]]])
 
 (def element
-  [:multi {:dispatch :tag}
-   [::m/default
-    [:map
-     [:key keyword?]
-     [:tag [:fn tag?]]
-     [:parent {:optional true} keyword?]
-     [:type [:enum {:default :element} :element :handle]]
-     [:visible? [boolean? {:default true}]]
-     [:locked? {:optional true} boolean?]
-     [:selected? {:optional true} boolean?]
-     [:children [:vector {:default []} keyword?]]
-     [:bounds {:optional true} bounds]
-     [:content {:optional true} string?]
-     [:attrs {:optional true} [:map-of keyword? attr]]]]])
+  [:map
+   [:key keyword?]
+   [:tag [:fn tag?]]
+   [:parent {:optional true} keyword?]
+   [:type [:enum {:default :element} :element :handle]]
+   [:visible? [boolean? {:default true}]]
+   [:locked? {:optional true} boolean?]
+   [:selected? {:optional true} boolean?]
+   [:children [:vector {:default []} keyword?]]
+   [:bounds {:optional true} bounds]
+   [:content {:optional true} string?]
+   [:attrs {:optional true} [:map-of keyword? attr]]])
 
 (def elements
   [:map-of {:default {}} keyword? element])

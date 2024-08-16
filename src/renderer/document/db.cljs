@@ -13,10 +13,10 @@
    [:ignored-keys [:set {:default #{}} keyword?]]
    [:fill [string? {:default "white"}]]
    [:stroke [string? {:default "black"}]]
-   [:zoom [double? {:default 1}]]
-   [:rotate [double? {:default 0}]]
+   [:zoom [number? {:default 1}]]
+   [:rotate [number? {:default 0}]]
    [:history history.db/history]
-   [:pan [:tuple {:default [0 0]} double? double?]]
+   [:pan [:tuple {:default [0 0]} number? number?]]
    [:elements element.db/elements]
    [:focused? {:optional true} boolean?]])
 
