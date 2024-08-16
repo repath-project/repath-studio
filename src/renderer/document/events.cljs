@@ -137,14 +137,14 @@
  ::new
  (fn [{:keys [db]} [_]]
    {:db (h/create db)
-    :fx [[:dispatch-later {:ms 10 :dispatch [::frame.e/center]}]
+    :fx [[:dispatch {:ms 10 :dispatch [::frame.e/focus-selection :original]}]
          [:focus nil]]}))
 
 (rf/reg-event-fx
  ::new-from-template
  (fn [{:keys [db]} [_ size]]
    {:db (h/create db size)
-    :fx [[:dispatch-later {:ms 10 :dispatch [::frame.e/center]}]
+    :fx [[:dispatch-later {:ms 10 :dispatch [::frame.e/focus-selection :original]}]
          [:focus nil]]}))
 
 (rf/reg-event-fx
@@ -166,7 +166,7 @@
  local-storage/persist
  (fn [{:keys [db]} [_ documents]]
    {:db (reduce h/load db documents)
-    :fx [[:dispatch [::frame.e/center]]
+    :fx [[:dispatch [::frame.e/focus-selection :original]]
          [:focus nil]]}))
 
 (rf/reg-event-fx

@@ -3,7 +3,8 @@
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
    [renderer.element.handlers :as element.h]
-   [renderer.frame.handlers :as h]))
+   [renderer.frame.handlers :as h]
+   [renderer.utils.element :as element]))
 
 (rf/reg-event-db
  ::resize
@@ -11,14 +12,10 @@
    (assoc db :dom-rect dom-rect)))
 
 (rf/reg-event-db
- ::center
- (fn [db [_]]
-   (h/pan-to-element db)))
-
-(rf/reg-event-db
  ::focus-selection
- (fn [db [_ zoom]]
-   (h/focus-selection db zoom)))
+ (fn [db [_ focus-type]]
+   (h/focus-bounds db focus-type (or (element.h/bounds db)
+                                     (element/bounds (element.h/root-children db))))))
 
 (rf/reg-event-fx
  ::set-zoom

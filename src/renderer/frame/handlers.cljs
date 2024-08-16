@@ -67,20 +67,20 @@
        el-bounds
        (pan-to-bounds el-bounds)))))
 
-(defn focus-selection
-  [{:keys [active-document dom-rect] :as db} zoom-type]
-  (if-let [bounds (element.h/bounds db)]
-    (let [[width height] (bounds/->dimensions bounds)
-          width-ratio (/ (:width dom-rect) width)
-          height-ratio (/ (:height dom-rect) height)]
-      (-> db
-          (assoc-in [:documents active-document :zoom]
-                    (case zoom-type
-                      :original 1
-                      :fit (min width-ratio height-ratio)
-                      :fill (max width-ratio height-ratio)))
-          (pan-to-bounds bounds)))
-    db))
+(defn focus-bounds
+  [{:keys [active-document dom-rect] :as db} focus-type bounds]
+  (let [zoom (-> db :documents active-document :zoom)
+        [width height] (bounds/->dimensions bounds)
+        width-ratio (/ (:width dom-rect) width)
+        height-ratio (/ (:height dom-rect) height)
+        min-zoom (min width-ratio height-ratio)]
+    (-> db
+        (assoc-in [:documents active-document :zoom]
+                  (case focus-type
+                    :original (if (< (* min-zoom 0.9) zoom) (* min-zoom 0.9) zoom)
+                    :fit min-zoom
+                    :fill (max width-ratio height-ratio)))
+        (pan-to-bounds bounds))))
 
 (defn calc-pan-offset
   [position offset size]
