@@ -9,7 +9,9 @@
 (rf/reg-event-db
  ::resize
  (fn [db [_ dom-rect]]
-   (assoc db :dom-rect dom-rect)))
+   (-> db
+       (h/recenter-to-dom-rect dom-rect)
+       (assoc :dom-rect dom-rect))))
 
 (rf/reg-event-db
  ::focus-selection
