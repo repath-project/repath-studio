@@ -176,7 +176,7 @@
  (fn [_ [_ path]]
    {:ipc-send ["open-directory" path]}))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::load
  [local-storage/persist
   focus-canvas]
