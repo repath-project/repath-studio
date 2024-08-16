@@ -13,7 +13,7 @@
    [renderer.attribute.core]
    [renderer.dialog.events]
    [renderer.dialog.subs]
-   [renderer.document.events]
+   [renderer.document.events :as document.e]
    [renderer.document.subs]
    [renderer.element.events]
    [renderer.element.subs]
@@ -111,6 +111,7 @@
 
   (rf/dispatch-sync [:initialize-db])
   (rf/dispatch-sync [:load-local-db])
+  (rf/dispatch-sync [::document.e/init])
   (rf/dispatch-sync [::theme.e/init-mode])
   (rf/dispatch-sync [:set-mdn (js->clj mdn :keywordize-keys true)])
 

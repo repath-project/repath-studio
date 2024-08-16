@@ -92,12 +92,16 @@
 (rf/reg-event-db
  ::deselect-all
  (fn [db _]
-   (-> db h/deselect (history.h/finalize "Deselect all"))))
+   (-> db
+       h/deselect
+       (history.h/finalize "Deselect all"))))
 
 (rf/reg-event-db
  ::select-all
  (fn [db _]
-   (-> db h/select-all (history.h/finalize "Select all"))))
+   (-> db
+       h/select-all
+       (history.h/finalize "Select all"))))
 
 (rf/reg-event-db
  ::select-same-tags

@@ -79,7 +79,7 @@
 
 (defn create
   ([db]
-   (create db [800 600]))
+   (create db [595 842]))
   ([db [w h]]
    (-> db
        (create-tab default)

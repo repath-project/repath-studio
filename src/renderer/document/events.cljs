@@ -134,10 +134,18 @@
      (assoc db :document-tabs (vec/swap document-tabs dragged-index swapped-index)))))
 
 (rf/reg-event-fx
+ ::init
+ (fn [{:keys [db]} [_]]
+   {:db (cond-> db (not (:active-document db)) h/create)
+    :fx [(when-not (:active-document db)
+           [:dispatch-later {:ms 10 :dispatch [::frame.e/focus-selection :original]}])
+         [:focus nil]]}))
+
+(rf/reg-event-fx
  ::new
  (fn [{:keys [db]} [_]]
    {:db (h/create db)
-    :fx [[:dispatch {:ms 10 :dispatch [::frame.e/focus-selection :original]}]
+    :fx [[:dispatch-later {:ms 10 :dispatch [::frame.e/focus-selection :original]}]
          [:focus nil]]}))
 
 (rf/reg-event-fx
