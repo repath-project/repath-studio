@@ -17,13 +17,33 @@
    :id :focus-canvas
    :after (fn [context]
             (-> context
-                (assoc-in [:effects :dispatch] ^:flush-dom [::frame.e/focus-selection :original])
-                (assoc-in [:effects :focus] nil)))))
+                (assoc-in [:effects :focus] nil)
+                (assoc-in [:effects :dispatch] ^:flush-dom [::frame.e/focus-selection :original])))))
 
 (def active-document-path
   (let [db-store-key :re-frame-path/db-store]
     (->interceptor
      :id :active-document-path
+     :before (fn [context]
+               (let [original-db (get-coeffect context :db)]
+                 (-> context
+                     (update db-store-key conj original-db)
+                     (assoc-coeffect :db (get-in original-db [:documents (:active-document original-db)])))))
+     :after (fn [context]
+              (let [db-store (db-store-key context)
+                    original-db (peek db-store)
+                    new-db-store (pop db-store)
+                    context' (-> (assoc context db-store-key new-db-store)
+                                 (assoc-coeffect :db original-db))
+                    db (get-effect context :db ::not-found)]
+                (cond-> context'
+                  (not= db ::not-found)
+                  (assoc-effect :db (assoc-in original-db [:documents (:active-document original-db)] db))))))))
+
+(def document?
+  (let [db-store-key :re-frame-path/db-store]
+    (->interceptor
+     :id :document?
      :before (fn [context]
                (let [original-db (get-coeffect context :db)]
                  (-> context
