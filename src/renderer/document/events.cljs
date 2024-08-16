@@ -16,8 +16,13 @@
   (rf/->interceptor
    :id :focus-canvas
    :after (fn [context]
-            (assoc-in context [:effects :fx] [[:dispatch ^:flush-dom [::frame.e/focus-selection :original]]
-                                              [:focus nil]]))))
+            (let [db (get-effect context :db ::not-found)
+                  active-document (:active-document db)]
+              (assoc-in context
+                        [:effects :fx]
+                        [(when-not (-> db :documents active-document :focused?)
+                           [:dispatch [::frame.e/focus-selection :original]])
+                         [:focus nil]])))))
 
 (def active-document-path
   (let [db-store-key :re-frame-path/db-store]
@@ -236,10 +241,8 @@
  (fn [db [_]]
    (assoc db :recent [])))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::set-active
- (fn [{:keys [db]} [_ k]]
-   {:db (h/set-active db k)
-    :fx [(when-not (-> db :documents k :focused?)
-           [:dispatch [::frame.e/focus-selection :original]])
-           [:focus nil]]}))
+ focus-canvas
+ (fn [db [_ k]]
+   (h/set-active db k)))
