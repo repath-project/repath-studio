@@ -11,6 +11,15 @@
    [renderer.utils.local-storage :as local-storage]
    [renderer.utils.vec :as vec]))
 
+
+(def focus-canvas
+  (rf/->interceptor
+   :id :focus-canvas
+   :after (fn [context]
+            (-> context
+                (assoc-in [:effects :dispatch] ^:flush-dom [::frame.e/focus-selection :original])
+                (assoc-in [:effects :focus] nil)))))
+
 (def active-document-path
   (let [db-store-key :re-frame-path/db-store]
     (->interceptor
@@ -133,25 +142,25 @@
          swapped-index (.indexOf document-tabs swapped-key)]
      (assoc db :document-tabs (vec/swap document-tabs dragged-index swapped-index)))))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::init
- (fn [{:keys [db]} [_]]
-   {:db (cond-> db (not (:active-document db)) h/create)
-    :fx [[:dispatch [::frame.e/focus-selection :original]]]}))
+ focus-canvas
+ (fn [db [_]]
+   (cond-> db
+     (not (:active-document db))
+     h/create)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::new
- (fn [{:keys [db]} [_]]
-   {:db (h/create db)
-    :fx [[:dispatch [::frame.e/focus-selection :original]]
-         [:focus nil]]}))
+ focus-canvas
+ (fn [db [_]]
+   (h/create db)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::new-from-template
- (fn [{:keys [db]} [_ size]]
-   {:db (h/create db size)
-    :fx [[:dispatch [::frame.e/focus-selection :original]]
-         [:focus nil]]}))
+ focus-canvas
+ (fn [db [_ size]]
+   (h/create db size)))
 
 (rf/reg-event-fx
  ::open
@@ -169,11 +178,10 @@
 
 (rf/reg-event-fx
  ::load
- local-storage/persist
- (fn [{:keys [db]} [_ documents]]
-   {:db (reduce h/load db documents)
-    :fx [[:dispatch [::frame.e/focus-selection :original]]
-         [:focus nil]]}))
+ [local-storage/persist
+  focus-canvas]
+ (fn [db [_ documents]]
+   (reduce h/load db documents)))
 
 (rf/reg-event-fx
  ::save
@@ -232,4 +240,7 @@
 (rf/reg-event-fx
  ::set-active
  (fn [{:keys [db]} [_ k]]
-   {:db (h/set-active db k)}))
+   {:db (h/set-active db k)
+    :fx [(when-not (-> db :documents k :focused?)
+           [:dispatch [::frame.e/focus-selection :original]])
+           [:focus nil]]}))
