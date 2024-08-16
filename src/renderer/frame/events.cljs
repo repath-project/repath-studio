@@ -3,8 +3,7 @@
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
    [renderer.element.handlers :as element.h]
-   [renderer.frame.handlers :as h]
-   [renderer.utils.element :as element]))
+   [renderer.frame.handlers :as h]))
 
 (rf/reg-event-db
  ::resize
@@ -14,13 +13,17 @@
        (assoc :dom-rect dom-rect))))
 
 (rf/reg-event-db
- ::focus-selection
- (fn [{:keys [active-document] :as db} [_ focus-type]]
+ ::focus-document
+ (fn [{:keys [active-document] :as db} [_ _]]
    (cond-> db
      (-> db :window :focused?)
-     (-> (h/focus-bounds focus-type (or (element.h/bounds db)
-                                        (element/bounds (element.h/root-children db))))
+     (-> (h/focus-bounds :original)
          (assoc-in [:documents active-document :focused?] true)))))
+
+(rf/reg-event-db
+ ::focus-selection
+ (fn [db [_ focus-type]]
+   (h/focus-bounds db focus-type)))
 
 (rf/reg-event-fx
  ::set-zoom

@@ -1,7 +1,9 @@
 (ns renderer.frame.handlers
   (:require
    [clojure.core.matrix :as mat]
+   [renderer.element.handlers :as element.h]
    [renderer.utils.bounds :as bounds]
+   [renderer.utils.element :as element]
    [renderer.utils.math :as math]
    [renderer.utils.pointer :as pointer]))
 
@@ -63,19 +65,22 @@
     (assoc-in db [:documents active-document :pan] pan)))
 
 (defn focus-bounds
-  [{:keys [active-document dom-rect] :as db} focus-type bounds]
-  (let [zoom (-> db :documents active-document :zoom)
-        [width height] (bounds/->dimensions bounds)
-        width-ratio (/ (:width dom-rect) width)
-        height-ratio (/ (:height dom-rect) height)
-        min-zoom (min width-ratio height-ratio)]
-    (-> db
-        (assoc-in [:documents active-document :zoom]
-                  (case focus-type
-                    :original (if (< (* min-zoom 0.9) zoom) (* min-zoom 0.9) zoom)
-                    :fit min-zoom
-                    :fill (max width-ratio height-ratio)))
-        (pan-to-bounds bounds))))
+  ([db focus-type]
+   (focus-bounds db focus-type (or (element.h/bounds db)
+                                   (element/bounds (element.h/root-children db)))))
+  ([{:keys [active-document dom-rect] :as db} focus-type bounds]
+   (let [zoom (-> db :documents active-document :zoom)
+         [width height] (bounds/->dimensions bounds)
+         width-ratio (/ (:width dom-rect) width)
+         height-ratio (/ (:height dom-rect) height)
+         min-zoom (min width-ratio height-ratio)]
+     (-> db
+         (assoc-in [:documents active-document :zoom]
+                   (case focus-type
+                     :original (if (< (* min-zoom 0.9) zoom) (* min-zoom 0.9) zoom)
+                     :fit min-zoom
+                     :fill (max width-ratio height-ratio)))
+         (pan-to-bounds bounds)))))
 
 (defn calc-pan-offset
   [position offset size]

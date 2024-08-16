@@ -21,7 +21,7 @@
               (assoc-in context
                         [:effects :fx]
                         [(when-not (-> db :documents active-document :focused?)
-                           [:dispatch [::frame.e/focus-selection :original]])
+                           [:dispatch [::frame.e/focus-document :original]])
                          [:focus nil]])))))
 
 (def active-document-path

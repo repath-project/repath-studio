@@ -29,7 +29,7 @@
    {:db (assoc-in db [:window :focused?] focused?)
     :fx [(when (and focused?
                     (not (get-in db [:documents (:active-document db) :focused?])))
-           [:dispatch [::frame.e/focus-selection :original]])]}))
+           [:dispatch [::frame.e/focus-document]])]}))
 
 (rf/reg-event-fx
  ::close
