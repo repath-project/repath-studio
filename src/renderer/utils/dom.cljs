@@ -8,10 +8,21 @@
   []
   (.getElementById js/document "frame"))
 
-(defn canvas-document
+(defn canvas-window
   []
   (when-let [frame (frame-element)]
-    (.. frame -contentWindow -document)))
+    (.-contentWindow frame )))
+
+(defn canvas-document
+  []
+  (when-let [window (canvas-window)]
+    (.-document window)))
+
+(defn focused?
+  []
+  (or (.hasFocus js/document)
+      (when-let [document (canvas-document)]
+        (.hasFocus document))))
 
 (defn svg-elements
   []

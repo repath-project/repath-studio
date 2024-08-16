@@ -137,22 +137,21 @@
  ::init
  (fn [{:keys [db]} [_]]
    {:db (cond-> db (not (:active-document db)) h/create)
-    :fx [(when-not (:active-document db)
-           [:dispatch-later {:ms 10 :dispatch [::frame.e/focus-selection :original]}])
+    :fx [[:dispatch [::frame.e/focus-selection :original]]
          [:focus nil]]}))
 
 (rf/reg-event-fx
  ::new
  (fn [{:keys [db]} [_]]
    {:db (h/create db)
-    :fx [[:dispatch-later {:ms 10 :dispatch [::frame.e/focus-selection :original]}]
+    :fx [[:dispatch [::frame.e/focus-selection :original]]
          [:focus nil]]}))
 
 (rf/reg-event-fx
  ::new-from-template
  (fn [{:keys [db]} [_ size]]
    {:db (h/create db size)
-    :fx [[:dispatch-later {:ms 10 :dispatch [::frame.e/focus-selection :original]}]
+    :fx [[:dispatch [::frame.e/focus-selection :original]]
          [:focus nil]]}))
 
 (rf/reg-event-fx
@@ -231,7 +230,7 @@
  (fn [db [_]]
    (assoc db :recent [])))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::set-active
- (fn [db [_ k]]
-   (h/set-active db k)))
+ (fn [{:keys [db]} [_ k]]
+   {:db (h/set-active db k)}))

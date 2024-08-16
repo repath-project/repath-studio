@@ -57,16 +57,6 @@
              [x1 y1])]
     (assoc-in db [:documents active-document :pan] pan)))
 
-(defn pan-to-element
-  ([db]
-   (pan-to-element db (-> db element.h/root :children first)))
-  ([db k]
-   (let [element (element.h/element db k)
-         el-bounds (:bounds element)]
-     (cond-> db
-       el-bounds
-       (pan-to-bounds el-bounds)))))
-
 (defn focus-bounds
   [{:keys [active-document dom-rect] :as db} focus-type bounds]
   (let [zoom (-> db :documents active-document :zoom)

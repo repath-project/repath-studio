@@ -111,6 +111,7 @@
 
   (rf/dispatch-sync [:initialize-db])
   (rf/dispatch-sync [:load-local-db])
+  (rf/dispatch-sync [::window.e/set-focused (dom/focused?)])
   (rf/dispatch-sync [::document.e/init])
   (rf/dispatch-sync [::theme.e/init-mode])
   (rf/dispatch-sync [:set-mdn (js->clj mdn :keywordize-keys true)])
@@ -122,7 +123,7 @@
   (.addEventListener js/document "keyup" keyb/event-handler)
 
   (.addEventListener js/window "focus" #(rf/dispatch-sync [::window.e/set-focused true]))
-  (.addEventListener js/window "blur" #(rf/dispatch-sync [::window.e/set-focused false]))
+  (.addEventListener js/window "blur" #(rf/dispatch-sync [::window.e/set-focused (dom/focused?)]))
 
   (handle-system-theme!)
 

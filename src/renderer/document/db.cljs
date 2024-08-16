@@ -17,6 +17,7 @@
    [:rotate [double? {:default 0}]]
    [:history history.db/history]
    [:pan [:tuple {:default [0 0]} double? double?]]
-   [:elements element.db/elements]])
+   [:elements element.db/elements]
+   [:focused? {:optional true} boolean?]])
 
 (def valid? (m/validator document))

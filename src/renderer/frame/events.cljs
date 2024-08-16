@@ -13,9 +13,12 @@
 
 (rf/reg-event-db
  ::focus-selection
- (fn [db [_ focus-type]]
-   (h/focus-bounds db focus-type (or (element.h/bounds db)
-                                     (element/bounds (element.h/root-children db))))))
+ (fn [{:keys [active-document] :as db} [_ focus-type]]
+   (cond-> db
+     (-> db :window :focused?)
+     (-> (h/focus-bounds focus-type (or (element.h/bounds db)
+                                        (element/bounds (element.h/root-children db))))
+         (assoc-in [:documents active-document :focused?] true)))))
 
 (rf/reg-event-fx
  ::set-zoom

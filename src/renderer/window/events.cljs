@@ -23,11 +23,14 @@
  (fn [db [_ state]]
    (assoc db :minimized? state)))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::set-focused
  (rf/path :window)
- (fn [db [_ state]]
-   (assoc db :focused? state)))
+ (fn [db [_ focused?]]
+   {:db (assoc db :focused? focused?)
+    :fx [(when (and focused?
+                    (not (-> db :documents (:active-document db) :focused?)))
+           [:dispatch [::frame.e/focus-selection :original]])]}))
 
 (rf/reg-event-fx
  ::close
