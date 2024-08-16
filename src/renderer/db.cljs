@@ -36,6 +36,7 @@
    [:tool [:fn {:default :select} tool/valid?]]
    [:pointer-pos point]
    [:adjusted-pointer-pos point]
+   [:adjusted-pointer-offset point]
    [:zoom-sensitivity [:and {:default 0.75} double? pos?]]
    [:state [keyword? {:default :default}]]
    [:grid-visible? [boolean? {:default false}]]

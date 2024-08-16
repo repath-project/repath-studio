@@ -137,8 +137,7 @@
  ::init
  (fn [{:keys [db]} [_]]
    {:db (cond-> db (not (:active-document db)) h/create)
-    :fx [[:dispatch [::frame.e/focus-selection :original]]
-         [:focus nil]]}))
+    :fx [[:dispatch [::frame.e/focus-selection :original]]]}))
 
 (rf/reg-event-fx
  ::new
