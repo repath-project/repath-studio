@@ -7,22 +7,14 @@
    [renderer.dialog.events :as-alias dialog.e]
    [renderer.document.effects :as fx]
    [renderer.document.handlers :as h]
-   [renderer.frame.events :as-alias frame.e]
+   [renderer.frame.events :refer [focus-canvas]]
    [renderer.utils.local-storage :as local-storage]
    [renderer.utils.vec :as vec]))
 
-
-(def focus-canvas
+(def center
   (rf/->interceptor
-   :id :focus-canvas
-   :after (fn [context]
-            (let [db (get-effect context :db ::not-found)
-                  active-document (:active-document db)]
-              (assoc-in context
-                        [:effects :fx]
-                        [(when-not (-> db :documents active-document :focused?)
-                           [:dispatch [::frame.e/focus-document :original]])
-                         [:focus nil]])))))
+   :id :center
+   :after (fn [context] (assoc-in context [:effects :dispatch] [::center :original]))))
 
 (def active-document-path
   (let [db-store-key :re-frame-path/db-store]
@@ -149,21 +141,28 @@
 
 (rf/reg-event-db
  ::init
- focus-canvas
+ center
  (fn [db [_]]
    (cond-> db
      (not (:active-document db))
      h/create)))
 
 (rf/reg-event-db
+ ::center
+ (fn [db [_]]
+   (h/center db)))
+
+(rf/reg-event-db
  ::new
- focus-canvas
+ [center
+  focus-canvas]
  (fn [db [_]]
    (h/create db)))
 
 (rf/reg-event-db
  ::new-from-template
- focus-canvas
+ [center
+  focus-canvas]
  (fn [db [_ size]]
    (h/create db size)))
 
@@ -184,7 +183,8 @@
 (rf/reg-event-db
  ::load
  [local-storage/persist
-  focus-canvas]
+  [center
+   focus-canvas]]
  (fn [db [_ documents]]
    (reduce h/load db documents)))
 
@@ -244,6 +244,7 @@
 
 (rf/reg-event-db
  ::set-active
- focus-canvas
+ [center
+  focus-canvas]
  (fn [db [_ k]]
    (h/set-active db k)))

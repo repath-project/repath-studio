@@ -2,7 +2,7 @@
   (:require
    [platform :as platform]
    [re-frame.core :as rf]
-   [renderer.frame.events :as-alias frame.e]
+   [renderer.document.handlers :as document.h]
    [renderer.window.effects :as fx]))
 
 (rf/reg-event-db
@@ -23,13 +23,12 @@
  (fn [db [_ state]]
    (assoc db :minimized? state)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::set-focused
- (fn [{:keys [db]} [_ focused?]]
-   {:db (assoc-in db [:window :focused?] focused?)
-    :fx [(when (and focused?
-                    (not (get-in db [:documents (:active-document db) :focused?])))
-           [:dispatch [::frame.e/focus-document]])]}))
+ (fn [db [_ focused?]]
+   (-> db
+       (assoc-in [:window :focused?] focused?)
+       document.h/center)))
 
 (rf/reg-event-fx
  ::close

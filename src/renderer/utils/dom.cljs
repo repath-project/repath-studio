@@ -8,30 +8,30 @@
   []
   (.getElementById js/document "frame"))
 
-(defn canvas-window
+(defn frame-window
   []
   (when-let [frame (frame-element)]
     (.-contentWindow frame )))
 
-(defn canvas-document
+(defn frame-document
   []
-  (when-let [window (canvas-window)]
+  (when-let [window (frame-window)]
     (.-document window)))
 
 (defn focused?
   []
   (or (.hasFocus js/document)
-      (when-let [document (canvas-document)]
+      (when-let [document (frame-document)]
         (.hasFocus document))))
 
 (defn svg-elements
   []
-  (when-let [document (canvas-document)]
+  (when-let [document (frame-document)]
     (.querySelectorAll document "svg")))
 
 (defn canvas-element
   []
-  (when-let [document (canvas-document)]
+  (when-let [document (frame-document)]
     (.getElementById document "canvas")))
 
 (defn scroll-into-view!

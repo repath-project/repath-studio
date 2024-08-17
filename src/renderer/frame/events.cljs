@@ -2,8 +2,14 @@
   (:require
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
+   [renderer.document.events :as-alias document.e]
    [renderer.element.handlers :as element.h]
    [renderer.frame.handlers :as h]))
+
+(def focus-canvas
+  (rf/->interceptor
+   :id :focus-canvas
+   :after (fn [context] (assoc-in context [:effects :focus] nil))))
 
 (rf/reg-event-db
  ::resize
@@ -13,36 +19,28 @@
        (assoc :dom-rect dom-rect))))
 
 (rf/reg-event-db
- ::focus-document
- (fn [{:keys [active-document] :as db} [_ _]]
-   (cond-> db
-     (-> db :window :focused?)
-     (-> (h/focus-bounds :original)
-         (assoc-in [:documents active-document :focused?] true)))))
-
-(rf/reg-event-db
  ::focus-selection
  (fn [db [_ focus-type]]
    (h/focus-bounds db focus-type)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::set-zoom
- (fn [{:keys [db]} [_ zoom]]
+ focus-canvas
+ (fn [db [_ zoom]]
    (let [current-zoom (get-in db [:documents (:active-document db) :zoom])]
-     {:db (h/zoom-by db (/ zoom current-zoom))
-      :focus nil})))
+     (h/zoom-by db (/ zoom current-zoom)))))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::zoom-in
- (fn [{:keys [db]} [_ _]]
-   {:db (h/zoom-by db (/ 1 (:zoom-sensitivity db)))
-    :focus nil}))
+ focus-canvas
+ (fn [db [_ _]]
+   (h/zoom-by db (/ 1 (:zoom-sensitivity db)))))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::zoom-out
- (fn [{:keys [db]} [_ _]]
-   {:db (h/zoom-by db (:zoom-sensitivity db))
-    :focus nil}))
+ focus-canvas
+ (fn [db [_ _]]
+   (h/zoom-by db (:zoom-sensitivity db))))
 
 (rf/reg-event-db
  ::pan-to-bounds

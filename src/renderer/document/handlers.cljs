@@ -5,6 +5,7 @@
    [malli.transform :as mt]
    [renderer.document.db :as db]
    [renderer.element.handlers :as element.h]
+   [renderer.frame.handlers :as frame.h]
    [renderer.history.handlers :as history.h]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
@@ -47,6 +48,16 @@
                           (take-last 10)
                           vec))))
 
+(defn center
+  [{:keys [active-document] :as db}]
+  (cond-> db
+    (and active-document
+         (-> db :dom-rect)
+         (-> db :window :focused?)
+         (not (get-in db [:documents (:active-document db) :focused?])))
+    (-> (frame.h/focus-bounds :original)
+        (assoc-in [:documents active-document :focused?] true))))
+
 (defn set-active
   [db k]
   (assoc db :active-document k))
@@ -85,6 +96,7 @@
        (create-tab default)
        (element.h/create {:tag :canvas :attrs {:fill "#eeeeee"}})
        (element.h/create {:tag :svg :attrs {:width w :height h}})
+       center
        (history.h/finalize "Create document"))))
 
 (defn set-global-attr
@@ -102,6 +114,7 @@
       (cond-> db
         (not open-key)
         (-> (create-tab (dissoc document :save))
+            center
             (history.h/finalize "Load document"))
 
         :always
