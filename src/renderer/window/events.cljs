@@ -2,7 +2,7 @@
   (:require
    [platform :as platform]
    [re-frame.core :as rf]
-   [renderer.document.handlers :as document.h]
+   [renderer.document.events :as document.e]
    [renderer.window.effects :as fx]))
 
 (rf/reg-event-db
@@ -25,10 +25,9 @@
 
 (rf/reg-event-db
  ::set-focused
+ document.e/center
  (fn [db [_ focused?]]
-   (-> db
-       (assoc-in [:window :focused?] focused?)
-       document.h/center)))
+   (assoc-in db [:window :focused?] focused?)))
 
 (rf/reg-event-fx
  ::close
