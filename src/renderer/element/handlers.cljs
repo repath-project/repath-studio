@@ -316,9 +316,7 @@
 
 (defn hover
   [db k]
-  (cond-> db
-    k
-    (update-in [:documents (:active-document db) :hovered-keys] conj k)))
+  (update-in db [:documents (:active-document db) :hovered-keys] conj k))
 
 (defn ignore
   [db k]

@@ -69,8 +69,10 @@
 
     :always
     (-> element.h/clear-hovered
-        (element.h/hover (:key element))
-        (assoc :cursor (if element "move" "default")))))
+        (assoc :cursor (if element "move" "default")))
+
+    (:key element)
+    (element.h/hover (:key element))))
 
 (defmethod tool/key-down :select
   [db e]

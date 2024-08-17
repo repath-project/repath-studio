@@ -41,9 +41,9 @@
 
 (defmethod tool/pointer-move :edit
   [db {:keys [element]}]
-  (-> db
-      element.h/clear-hovered
-      (element.h/hover (:key element))))
+  (cond-> (element.h/clear-hovered db)
+    (:key element)
+    (element.h/hover (:key element))))
 
 (defmethod tool/drag-start :edit
   [db]
