@@ -14,7 +14,7 @@
 (def center
   (rf/->interceptor
    :id :center
-   :after (fn [context] (assoc-in context [:effects :dispatch] [::center :original]))))
+   :after (fn [context] (assoc-in context [:effects :dispatch-later] {:ms 10 :dispatch [::center]}))))
 
 (def active-document-path
   (let [db-store-key :re-frame-path/db-store]
