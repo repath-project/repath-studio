@@ -43,7 +43,7 @@
    [:rulers-visible? [boolean? {:default true}]]
    [:snap snap.db/snap]
    [:restored? {:optional true} boolean?]
-   [:active-document {:optional true} keyword?]
+   [:active-document {:optional true} [:maybe keyword?]]
    [:cursor [string? {:default "default"}]]
    [:dom-rect {:optional true} dom-rect]
    [:rulers-locked? [boolean? {:default false}]]
