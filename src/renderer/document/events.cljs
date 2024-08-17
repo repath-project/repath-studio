@@ -119,13 +119,14 @@
 (rf/reg-event-fx
  ::close-others
  (fn [{:keys [db]} [_ k]]
-   (let [to-be-closed (disj (set (keys (:documents db))) k)]
+   (let [to-be-closed (disj (sorted-set (:document-tabs db)) k)]
      {:fx (mapv (fn [k] [:dispatch [::close k true]]) to-be-closed)})))
 
 (rf/reg-event-fx
  ::close-all
  (fn [{:keys [db]} [_]]
-   {:fx (mapv (fn [k] [:dispatch [::close k true]]) (keys (:documents db)))}))
+   {:db (h/set-active db (last (:document-tabs db)))
+    :fx (mapv (fn [k] [:dispatch [::close k true]]) (:document-tabs db))}))
 
 (rf/reg-event-db
  ::scroll
