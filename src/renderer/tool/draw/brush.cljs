@@ -2,7 +2,6 @@
   "https://github.com/steveruizok/perfect-freehand"
   (:require
    ["perfect-freehand" :refer [getStroke]]
-   ["svg-path-bbox" :refer [svgPathBbox]]
    [clojure.core.matrix :as mat]
    [clojure.core.matrix.stats :as mat.stats]
    [renderer.attribute.hierarchy :as attr.hierarchy]
@@ -164,11 +163,12 @@
                       (assoc :fill (:stroke attrs))))]))
 
 (defmethod tool/bounds :brush
-  [{:keys [attrs]}]
-  (-> (:points attrs)
-      (points->path (select-keys attrs options))
-      svgPathBbox
-      js->clj))
+  [{{:keys [points]} :attrs}]
+  (let [x1 (apply min (map #(units/unit->px (first %)) points))
+        y1 (apply min (map #(units/unit->px (second %)) points))
+        x2 (apply max (map #(units/unit->px (first %)) points))
+        y2 (apply max (map #(units/unit->px (second %)) points))]
+    [x1 y1 x2 y2]))
 
 (defmethod tool/translate :brush
   [el [x y]]
