@@ -7,7 +7,6 @@
    [renderer.element.handlers :as h]
    [renderer.history.handlers :as history.h]
    [renderer.utils.bounds :as bounds]
-   [renderer.utils.element :as element]
    [renderer.worker.events :as-alias worker.e]))
 
 (rf/reg-event-db
