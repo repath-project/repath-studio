@@ -69,8 +69,7 @@
    (focus-bounds db focus-type (or (element.h/bounds db)
                                    (element/bounds (element.h/root-children db)))))
   ([{:keys [active-document dom-rect] :as db} focus-type bounds]
-   (let [zoom (-> db :documents active-document :zoom)
-         [width height] (bounds/->dimensions bounds)
+   (let [[width height] (bounds/->dimensions bounds)
          width-ratio (/ (:width dom-rect) width)
          height-ratio (/ (:height dom-rect) height)
          min-zoom (min width-ratio height-ratio)]
