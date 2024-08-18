@@ -9,7 +9,7 @@
 
 (rf/reg-fx
  ::export
- (fn [data options]
+ (fn [[data options]]
    (file/save!
     options
     (fn [^js/FileSystemFileHandle file-handle]

@@ -155,8 +155,7 @@
 (rf/reg-event-fx
  ::export-svg
  (fn [{:keys [db]} _]
-   (let [selected (h/top-selected-sorted db)
-         els (if (seq selected) selected (h/root-children db))
+   (let [els (h/root-children db)
          svg (h/->svg els)]
      (if platform/electron?
        {:ipc-invoke ["export" svg]}
@@ -166,8 +165,7 @@
 (rf/reg-event-fx
  ::print
  (fn [{:keys [db]} _]
-   (let [selected (h/top-selected-sorted db)
-         els (if (seq selected) selected (h/root-children db))
+   (let [els (h/root-children db)
          svg (h/->svg els)]
      {::fx/print svg})))
 
