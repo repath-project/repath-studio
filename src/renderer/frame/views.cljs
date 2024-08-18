@@ -47,6 +47,7 @@
                    :height "100%"
                    :overflow "hidden"
                    :user-select "none"
+                   :touch-action "none"
                    :margin 0
                    :font-family "-apple-system, BlinkMacSystemFont,
                                 'Segoe UI (Custom)', 'Roboto',
