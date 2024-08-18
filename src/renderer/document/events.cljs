@@ -154,15 +154,13 @@
 
 (rf/reg-event-db
  ::new
- [center
-  focus-canvas]
+ [center focus-canvas]
  (fn [db [_]]
    (h/create db)))
 
 (rf/reg-event-db
  ::new-from-template
- [center
-  focus-canvas]
+ [center focus-canvas]
  (fn [db [_ size]]
    (h/create db size)))
 
@@ -182,9 +180,7 @@
 
 (rf/reg-event-db
  ::load
- [local-storage/persist
-  [center
-   focus-canvas]]
+ [center focus-canvas local-storage/persist]
  (fn [db [_ documents]]
    (reduce h/load db documents)))
 
@@ -244,7 +240,6 @@
 
 (rf/reg-event-db
  ::set-active
- [center
-  focus-canvas]
+ [center focus-canvas]
  (fn [db [_ k]]
    (h/set-active db k)))

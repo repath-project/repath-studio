@@ -49,6 +49,7 @@
                           vec))))
 
 (defn center
+  "Centers the contents of the document to the current view."
   [{:keys [active-document] :as db}]
   (cond-> db
     (and active-document
