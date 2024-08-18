@@ -11,11 +11,12 @@
    [renderer.timeline.views :as timeline.v]
    [renderer.ui :as ui]
    [renderer.utils.keyboard :as keyb]
-   [renderer.utils.units :as units]))
+   [renderer.utils.units :as units]
+   [renderer.worker.subs :as-alias worker.s]))
 
 (defn coordinates []
   (let [[x y] @(rf/subscribe [::frame.s/adjusted-pointer-pos])]
-    [:div.flex.flex-col.font-mono.leading-tight
+    [:div.flex.flex-col.font-mono.leading-tight.hidden.xl:block
      {:style {:min-width "90px"}}
      [:div.flex.justify-between
       [:span.mr-1 "X:"] [:span (units/->fixed x)]]
@@ -83,7 +84,7 @@
 (defn zoom-input
   [zoom]
   (let [value (units/->fixed (* 100 zoom) (zoom-decimal-points zoom))]
-    [:input.overlay.text-right.flex
+    [:input.overlay.text-right.flex.hidden.md:block
      {:key zoom
       :aria-label "Zoom"
       :type "number"
@@ -101,16 +102,25 @@
 
 (defn root []
   (let [zoom @(rf/subscribe [::document.s/zoom])
-        timeline? @(rf/subscribe [:panel-visible? :timeline])]
+        timeline? @(rf/subscribe [:panel-visible? :timeline])
+        message @(rf/subscribe [:message])
+        loading? @(rf/subscribe [::worker.s/loading?])]
     [:<>
      [:div.toolbar.bg-primary.mt-px
       [color-v/picker]
+      [:div.grow
+       [:div.text-xs.truncate.hidden.2xl:block
+        {:class "px-0.5"}
+        message]]
+      (when loading?
+        [:span.icon-button.relative
+         [ui/icon "spinner" {:class "loading"}]])
       (into [:<>]
             (map (fn [{:keys [title active? icon action]}]
                    [ui/radio-icon-button {:title title
-                                            :active? @(rf/subscribe active?)
-                                            :icon icon
-                                            :action #(rf/dispatch action)}])
+                                          :active? @(rf/subscribe active?)
+                                          :icon icon
+                                          :action #(rf/dispatch action)}])
                  view-radio-buttons))
       [snap.v/root]
       [:div.button-group
@@ -126,7 +136,7 @@
          :on-click #(rf/dispatch [::frame.e/zoom-in])}
         [ui/icon "plus"]]
        [zoom-input zoom]
-       [:div.pr-2.overlay.flex.items-center "%"]
+       [:div.pr-2.overlay.flex.items-center.hidden.md:flex "%"]
 
        [:> DropdownMenu/Root
         [:> DropdownMenu/Trigger

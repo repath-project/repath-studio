@@ -114,6 +114,7 @@
   (rf/dispatch-sync [::window.e/set-focused (dom/focused?)])
   (rf/dispatch-sync [::document.e/init])
   (rf/dispatch-sync [::theme.e/init-mode])
+  (rf/dispatch-sync [:set-tool :select])
   (rf/dispatch-sync [:set-mdn (js->clj mdn :keywordize-keys true)])
 
   (rf/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])

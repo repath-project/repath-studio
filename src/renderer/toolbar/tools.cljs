@@ -44,6 +44,6 @@
 
 (defn root
   []
-  (into [:div.justify-center.flex-wrap.bg-primary.toolbar]
+  (into [:div.justify-center.bg-primary.toolbar.overflow-x-auto.md:overflow-hidden.md:flex-wrap]
         (interpose [:span.v-divider]
                    (map group groups))))

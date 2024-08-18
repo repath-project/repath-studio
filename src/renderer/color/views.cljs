@@ -36,7 +36,7 @@
   []
   (let [fill @(rf/subscribe [::document.s/fill])
         stroke @(rf/subscribe [::document.s/stroke])]
-    [:div.grow.flex
+    [:div.flex
      [:> Popover/Root {:modal true}
       [:> Popover/Trigger {:as-child true}
        [:button.button.color-rect.relative {:style {:background stroke}}

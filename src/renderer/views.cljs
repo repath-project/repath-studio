@@ -23,14 +23,12 @@
    [renderer.toolbar.tools :as toolbar.tools]
    [renderer.tree.views :as tree.v]
    [renderer.ui :as ui]
-   [renderer.window.views :as window.v]
-   [renderer.worker.subs :as-alias worker.s]))
+   [renderer.window.views :as window.v]))
 
 (defn frame-panel
   []
   (let [rulers? @(rf/subscribe [:rulers-visible?])
-        read-only? @(rf/subscribe [::document.s/read-only?])
-        loading? @(rf/subscribe [::worker.s/loading?])]
+        read-only? @(rf/subscribe [::document.s/read-only?])]
     [:div.flex.flex-col.flex-1.h-full
      [:div.mb-px [toolbar.tools/root]
       (when rulers?
@@ -59,14 +57,6 @@
            [:<>
             [overlay/debug-info]
             [ui/fps]]))
-       [:div.absolute.bottom-0.left-0.flex.pointer-events-none.w-full.p-2
-        {:style {:color "#555"}}
-        [:div.grow.text-xs.truncate.flex.items-end
-         @(rf/subscribe [:message])]
-        (when loading?
-          [:span.icon-button.relative
-           {:style {:fill "#555"}}
-           [ui/icon "spinner" {:class "loading"}]])]
        (when @(rf/subscribe [:backdrop?])
          [:div.absolute.inset-0
           {:on-click #(rf/dispatch [:set-backdrop false])}])]]]))
@@ -242,17 +232,17 @@
     (if (seq @(rf/subscribe [:documents]))
       [:div.flex.h-full.flex-1.overflow-hidden
        (when @(rf/subscribe [:panel-visible? :tree])
-         [:div.flex.flex-col
+         [:div.flex.flex-col.hidden.md:block
           {:style {:width "227px"}}
           [document.v/actions]
           [tree.v/root]])
        [:div.flex.flex-col.flex-1.overflow-hidden.h-full
         [document.v/tab-bar]
-        [:div.flex.h-full.flex-1
+        [:div.flex.h-full.flex-1.overflow-hidden
          [:div.flex.h-full.flex-col.flex-1.overflow-hidden
           [editor]]
          (when @(rf/subscribe [:panel-visible? :properties])
-           [:div.flex
+           [:div.flex.hidden.md:block
             {:style {:flex "0 0 300px"}}
             [attr.v/form]])
          [toolbar.object/root]]]]
