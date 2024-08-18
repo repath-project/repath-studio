@@ -6,7 +6,7 @@
    ["electron-extension-installer" :refer [REACT_DEVELOPER_TOOLS installExtension]]
    ["electron-log/main" :as log]
    ["electron-reloader"]
-   #_["electron-updater" :as updater]
+   ["electron-updater" :as updater]
    ["electron-window-state" :as window-state-keeper]
    ["font-scanner" :as fontManager]
    ["os" :as os]
@@ -152,7 +152,8 @@
     (register-ipc-handle-events!)
     (register-window-events!)
 
-    #_(.checkForUpdatesAndNotify updater)))
+    (when (not= (.platform os) "linux")
+      (.checkForUpdatesAndNotify updater))))
 
 (defn init-loading-window! []
   (set! (.-allowRendererProcessReuse app) false)
