@@ -21,8 +21,8 @@
       (h/set-cursor "default")
       (h/set-message
        [:div
-        [:div "Drag a handle to modify your shape, or click on an element to change selection."]
-        [:div "Hold " [:strong "Ctrl"] " to restrict direction."]])))
+        [:div "Drag a handle to modify your shape, or click on an element to change selection. "]
+        [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction."]])))
 
 (defmethod tool/pointer-down :edit
   [db {:keys [element]}]

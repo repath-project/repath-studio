@@ -35,9 +35,7 @@
   [db]
   (-> db
       (assoc :cursor "text")
-      (h/set-message
-       [:div
-        [:div "Click to enter your text."]])))
+      (h/set-message "Click to enter your text.")))
 
 (defmethod tool/pointer-up :text
   [{:keys [adjusted-pointer-offset] :as db}]

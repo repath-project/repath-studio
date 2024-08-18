@@ -32,7 +32,7 @@
                                      [:h2.pb-4.font-bold "EyeDropper cannot be activated."]
                                      [:div.text-error (str error)]]])
                       (rf/dispatch [:set-tool :select]))))
-        (h/set-message db [:div "Click anywhere to pick a color."]))
+        (h/set-message db "Click anywhere to pick a color."))
     (-> db
         (notification.h/add
          (notification.v/unavailable-feature

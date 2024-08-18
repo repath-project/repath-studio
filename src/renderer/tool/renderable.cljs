@@ -19,7 +19,7 @@
   [db]
   (-> db
       (assoc :cursor "crosshair")
-      (h/set-message [:div "Click and drag to create an element."])))
+      (h/set-message "Click and drag to create an element.")))
 
 (defmethod tool/drag-start ::tool/renderable
   [db]

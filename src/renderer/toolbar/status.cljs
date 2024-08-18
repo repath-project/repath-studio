@@ -109,8 +109,7 @@
      [:div.toolbar.bg-primary.mt-px
       [color-v/picker]
       [:div.grow
-       [:div.text-xs.truncate.hidden.2xl:block
-        {:class "px-0.5"}
+       [:div.text-xs.px-1.hidden.2xl:block
         message]]
       (when loading?
         [:span.icon-button.relative

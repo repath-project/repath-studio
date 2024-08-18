@@ -20,9 +20,7 @@
   (-> db
       (h/set-state :default)
       (h/set-cursor "grab")
-      (h/set-message
-       [:div
-        [:div "Click and drag to pan."]])))
+      (h/set-message "Click and drag to pan.")))
 
 (defmethod tool/pointer-up :pan
   [db]

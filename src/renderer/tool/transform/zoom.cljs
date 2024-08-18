@@ -20,7 +20,7 @@
       (handlers/set-message
        [:div
         [:div "Click or select an area to zoom in."]
-        [:div "Hold " [:strong "Shift"] " to zoom out."]])))
+        [:div "Hold " [:span.shortcut-key "⇧"] " to zoom out."]])))
 
 (defmethod tool/key-down :zoom
   [db e]

@@ -36,7 +36,7 @@
   [db]
   (-> db
       (assoc :cursor "crosshair")
-      (h/set-message [:div "Click and drag to draw."])))
+      (h/set-message "Click and drag to draw.")))
 
 (defmethod tool/deactivate :measure
   [db]

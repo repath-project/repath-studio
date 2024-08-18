@@ -2,6 +2,7 @@
 (ns renderer.tool.transform.select
   (:require
    [clojure.core.matrix :as mat]
+   [clojure.string :as str]
    [renderer.element.handlers :as element.h]
    [renderer.handlers :as h]
    [renderer.history.handlers :as history.h]
@@ -23,28 +24,28 @@
 (defmethod message :default
   [_]
   [:div
-   [:div "Click or click and drag to select."]
+   [:div "Click or click and drag to select. "]
    [:div
-    "Hold " [:strong "Shift"] " to add or remove elements to selection and "
-    [:strong "Alt"] " while dragging to select intersecting elements."]])
+    "Hold " [:span.shortcut-key "⇧"] " to add or remove elements to selection and "
+    [:span.shortcut-key "Alt"] " while dragging to select intersecting elements."]])
 
 (defmethod message :move
   [offset]
   [:div
-   [:div "Moving by " (str (mapv units/->fixed offset))]
-   [:div "Hold " [:strong "Ctrl"] " to restrict direction, and " [:strong "Alt"] " to clone."]])
+   [:div "Moving by [" (str/join " " (mapv units/->fixed offset)) "]."]
+   [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction, and " [:span.shortcut-key "Alt"] " to clone."]])
 
 (defmethod message :clone
   [offset]
   [:div
-   [:div "Cloning to " (str (mapv units/->fixed offset))]
-   [:div "Hold " [:strong "Ctrl"] " to restrict direction. or release " [:strong "Alt"] " to move."]])
+   [:div "Cloning to [" (str/join " " (mapv units/->fixed offset)) "]."]
+   [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction. or release " [:span.shortcut-key "Alt"] " to move."]])
 
 (defmethod message :scale
   [ratio]
   [:div
-   [:div "Scaling by " (str (mapv units/->fixed (distinct ratio)))]
-   [:div "Hold " [:strong "Ctrl"] " to lock proportions, and " [:strong "Shift"] " to scale in position."]])
+   [:div "Scaling by [" (str/join " " (mapv units/->fixed (distinct ratio))) "]."]
+   [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions, and " [:span.shortcut-key "⇧"] " to scale in position."]])
 
 (defn hovered?
   [db el intersecting?]

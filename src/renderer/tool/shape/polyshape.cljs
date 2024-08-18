@@ -19,10 +19,7 @@
   [db]
   (-> db
       (assoc :cursor "crosshair")
-      (h/set-message
-       [:div
-        [:div "Click to add points."]
-        [:div "Double click to finalize the shape."]])))
+      (h/set-message "Click to add points. Double click to finalize the shape.")))
 
 (defn create-polyline
   [{:keys [active-document tool] :as db} points]
