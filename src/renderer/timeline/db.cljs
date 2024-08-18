@@ -2,9 +2,9 @@
 
 (def timeline
   [:map {:default {}}
-   [:time [number? {:default 0}]]
-   [:speed [number? {:default 1}]]
-   [:replay? [boolean? {:default false}]]
-   [:grid-snap? [boolean? {:default false}]]
-   [:guide-snap? [boolean? {:default true}]]
-   [:paused? [boolean? {:default false}]]])
+   [:time {:default 0} number?]
+   [:speed {:default 1} number?]
+   [:replay? {:default false} boolean?]
+   [:grid-snap? {:default false} boolean?]
+   [:guide-snap? {:default true} boolean?]
+   [:paused? {:default false} boolean?]])

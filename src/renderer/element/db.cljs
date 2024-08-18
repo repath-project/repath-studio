@@ -5,31 +5,29 @@
 
 
 (defn tag?
-  [tag]
-  (contains? (descendants ::tool/element) tag))
+  [k]
+  (contains? (descendants ::tool/element) k))
+
+(def tag
+  [:fn {:error/fn (fn [{:keys [value]} _] (str value ", is not a supported tag"))}
+   tag?])
 
 (def bounds
   [:tuple number? number? number? number?])
 
-(def attr
-  [:multi {:dispatch :tag}
-   [::m/default
-    ;; REVIEW: Attribute type should probably be a string.
-    [:or string? number? vector?]]])
-
 (def element
   [:map
    [:key keyword?]
-   [:tag [:fn tag?]]
+   [:tag tag]
    [:parent {:optional true} keyword?]
-   [:type [:enum {:default :element} :element :handle]]
-   [:visible? [boolean? {:default true}]]
+   [:type {:default :element} [:enum :element :handle]]
+   [:visible? {:default true} boolean?]
    [:locked? {:optional true} boolean?]
    [:selected? {:optional true} boolean?]
-   [:children [:vector {:default []} keyword?]]
+   [:children {:default []} [:vector keyword?]]
    [:bounds {:optional true} bounds]
    [:content {:optional true} string?]
-   [:attrs {:optional true} [:map-of keyword? attr]]])
+   [:attrs {:optional true} [:map-of keyword? [:or string? number? vector?]]]])
 
 (def elements
   [:map-of {:default {}} keyword? element])

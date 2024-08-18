@@ -2,7 +2,7 @@
 
 (def window
   [:map {:default {}}
-   [:maximized? [boolean? {:default true}]]
-   [:minimized? [boolean? {:default false}]]
-   [:fullscreen? [boolean? {:default false}]]
-   [:focused? [boolean? {:default false}]]])
+   [:maximized? {:default true} boolean?]
+   [:minimized? {:default false} boolean?]
+   [:fullscreen? {:default false} boolean?]
+   [:focused? {:default false} boolean?]])
