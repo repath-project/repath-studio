@@ -78,6 +78,12 @@
             :action [::element.e/export-svg]}
            {:key :divider-4
             :type :separator}
+            {:key :print
+            :label "Print"
+            :disabled? (not @(rf/subscribe [::document.s/documents?]))
+            :action [::element.e/print]}
+           {:key :divider-5
+            :type :separator}
            {:key :close
             :label "Close"
             :icon "window-close"

@@ -4,7 +4,8 @@
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [renderer.history.events :as-alias history.e]
-   [renderer.notification.events :as-alias notification.e]))
+   [renderer.notification.events :as-alias notification.e]
+   [renderer.window.events :as-alias window.e]))
 
 (def error-message
   "Your last action was canceled due to the following error:")
@@ -18,15 +19,15 @@
 
 (defn notification
   [error]
-  [:div
+  (let [url (str "https://github.com/repath-project/repath-studio/issues/new?"
+                 "&title=" error
+                 "&template=bug_report.md")]
+    [:div
    [:h2.mb-4.font-bold error-message]
    [:p.text-error error]
-   [:a.button.bg-primary.px-2.w-full.rounded
-    {:target "_blank"
-     :href (str "https://github.com/repath-project/repath-studio/issues/new?"
-                "&title=" error
-                "&template=bug_report.md")}
-    "Submit error report"]])
+   [:button.button.bg-primary.px-2.w-full.rounded
+    {:on-click #(rf/dispatch [::window.e/open-remote-url url])}
+    "Submit error report"]]))
 
 (defn boundary
   []

@@ -2,7 +2,8 @@
   (:require
    [re-frame.core :as rf]
    [renderer.notification.events :as-alias notification.e]
-   [renderer.ui :as ui]))
+   [renderer.ui :as ui]
+   [renderer.window.events :as-alias window.e]))
 
 (defn unavailable-feature
   [feature compatibility-url]
@@ -11,7 +12,8 @@
    [:div
     "Your browser does not support this API."
     "You can check the "
-    [:a {:href compatibility-url}
+    [:button.button-link
+     {:on-click #(rf/dispatch [::window.e/open-remote-url compatibility-url])}
      "browser compatibility table."]]])
 
 (defn spec-failed

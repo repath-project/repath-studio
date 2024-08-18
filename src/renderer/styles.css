@@ -146,6 +146,9 @@
 
   .button-link {
     @apply text-lg text-accent inline-block text-left text-wrap break-all;
+
+    font-size: inherit;
+    line-height: inherit;
   }
 
 

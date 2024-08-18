@@ -23,6 +23,7 @@
    [renderer.toolbar.tools :as toolbar.tools]
    [renderer.tree.views :as tree.v]
    [renderer.ui :as ui]
+   [renderer.window.events :as-alias window.e]
    [renderer.window.views :as window.v]))
 
 (defn frame-panel
@@ -145,7 +146,7 @@
 
        [:div.flex.items-center.gap-2
         [ui/icon "file"]
-        [:button.button-link
+        [:button.button-link.text-lg
          {:on-click #(rf/dispatch [::document.e/new])} "New"]
         [ui/shortcuts [::document.e/new]]
 
@@ -176,7 +177,7 @@
 
        [:div.flex.items-center.gap-2
         [ui/icon "folder"]
-        [:button.button-link
+        [:button.button-link.text-lg
          {:on-click #(rf/dispatch [::document.e/open])}
          "Open"]
         [ui/shortcuts [::document.e/open]]]
@@ -189,7 +190,7 @@
          ^{:key file-path}
          [:div.flex.items-center.gap-2
           [ui/icon "folder"]
-          [:button.button-link
+          [:button.button-link.text-lg
            {:on-click #(rf/dispatch [::document.e/open file-path])}
            file-path]])
 
@@ -198,27 +199,27 @@
        [:div
         [:div.flex.items-center.gap-2
          [ui/icon "command"]
-         [:button.button-link
+         [:button.button-link.text-lg
           {:on-click #(rf/dispatch [::dialog.e/cmdk])}
           "Command panel"]
          [ui/shortcuts [::dialog.e/cmdk]]]]
        [:div.flex.items-center.gap-2
         [ui/icon "earth"]
-        [:a.text-lg.block
-         {:href "https://repath.studio/"
-          :target "_blank"}
+        [:button.button-link.text-lg
+         {:on-click #(rf/dispatch [::window.e/open-remote-url
+                                   "https://repath.studio/"])}
          "Website"]]
        [:div.flex.items-center.gap-2
         [ui/icon "commit"]
-        [:a.text-lg.block
-         {:href "https://github.com/repath-project/repath-studio"
-          :target "_blank"}
+        [:button.button-link.text-lg
+         {:on-click #(rf/dispatch [::window.e/open-remote-url
+                                   "https://github.com/repath-project/repath-studio"])}
          "Source Code"]]
        [:div.flex.items-center.gap-2
         [ui/icon "list"]
-        [:a.text-lg.block
-         {:href "https://repath.studio/roadmap/changelog/"
-          :target "_blank"}
+        [:button.button-link.text-lg
+         {:on-click #(rf/dispatch [::window.e/open-remote-url
+                                   "https://repath.studio/roadmap/changelog/"])}
          "Changelog"]]]
 
       [:div.hidden.lg:block

@@ -155,13 +155,21 @@
 (rf/reg-event-fx
  ::export-svg
  (fn [{:keys [db]} _]
-   (let [xml (-> db
-                 h/root-children
-                 h/->string)]
+   (let [selected (h/top-selected-sorted db)
+         els (if (seq selected) selected (h/root-children db))
+         svg (h/->svg els)]
      (if platform/electron?
-       {:ipc-invoke ["export" xml]}
-       {::fx/export [xml {:startIn "pictures"
+       {:ipc-invoke ["export" svg]}
+       {::fx/export [svg {:startIn "pictures"
                           :types [{:accept {"image/svg+xml" [".svg"]}}]}]}))))
+
+(rf/reg-event-fx
+ ::print
+ (fn [{:keys [db]} _]
+   (let [selected (h/top-selected-sorted db)
+         els (if (seq selected) selected (h/root-children db))
+         svg (h/->svg els)]
+     {::fx/print svg})))
 
 (rf/reg-event-db
  ::paste
@@ -320,22 +328,11 @@
        (h/manipulate-path action)
        (history.h/finalize (str/capitalize (name action)) "path"))))
 
-(defn clipboard-data
-  [db]
-  (let [selected-elements (h/top-selected-sorted db)
-        dimensions (bounds/->dimensions (h/bounds db))
-        s (h/->string selected-elements)]
-    (cond-> s
-      (not (and (h/single? selected-elements)
-                (or (element/svg? (first selected-elements))
-                    (element/root? (first selected-elements)))))
-      (element/wrap-to-svg dimensions))))
-
 (rf/reg-event-fx
  ::copy
  (fn [{:keys [db]} [_]]
    {:db (h/copy db)
-    :clipboard-write [(clipboard-data db)]}))
+    :clipboard-write [(h/->svg (h/top-selected-sorted db))]}))
 
 (rf/reg-event-fx
  ::cut
@@ -344,7 +341,7 @@
             h/copy
             h/delete
             (history.h/finalize "Cut selection"))
-    :clipboard-write [(clipboard-data db)]}))
+    :clipboard-write [(h/->svg (h/top-selected-sorted db))]}))
 
 (rf/reg-event-fx
  ::trace

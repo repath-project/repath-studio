@@ -11,7 +11,8 @@
    [renderer.tool.base :as tool]
    [renderer.ui :as ui]
    [renderer.utils.bcd :as bcd]
-   [renderer.utils.keyboard :as keyb]))
+   [renderer.utils.keyboard :as keyb]
+   [renderer.window.events :as-alias window.e]))
 
 (defn browser-support
   [browser version-added]
@@ -34,9 +35,8 @@
 
 (defn info-button
   [url label]
-  [:a.button.px-3.bg-primary.grow
-   {:href url
-    :target "_blank"}
+  [:button.button.px-3.bg-primary.grow
+   {:on-click #(rf/dispatch [::window.e/open-remote-url url])}
    label])
 
 (defn construct-mdn-url
@@ -246,9 +246,8 @@
          [:p description])
        [caniusethis {:tag tag}]
        (when-let [url (:url (tool/properties tag))]
-         [:a.button.px-3.bg-primary.w-full
-          {:href url
-           :target "_blank"}
+         [:button.button.px-3.bg-primary.w-full
+          {:on-click #(rf/dispatch [::window.e/open-remote-url url])}
           "Learn more"])]
       [:> HoverCard/Arrow {:class "popover-arrow"}]]]]])
 

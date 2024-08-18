@@ -17,6 +17,15 @@
         (.then (.write writable data) (.close writable)))))))
 
 (rf/reg-fx
+ ::print
+ (fn [svg]
+   (let [print-window (.open js/window)
+         document (.-document print-window)]
+     (.write document svg)
+     (.print print-window)
+     (.close print-window))))
+
+(rf/reg-fx
  ::->svg
  (fn [[elements action worker]]
    (doseq [el elements]

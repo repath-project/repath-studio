@@ -713,3 +713,12 @@
                 (update :attrs dissoc :desc :version :xmlns)
                 (assoc-in [:attrs :x] x)
                 (assoc-in [:attrs :y] y)))))
+
+(defn ->svg
+  [els]
+  (let [dimensions (bounds/->dimensions (element/bounds els))
+        s (->string els)]
+    (cond-> s
+      (not (and (single? els)
+                (element/svg? (first els))))
+      (element/wrap-to-svg dimensions))))

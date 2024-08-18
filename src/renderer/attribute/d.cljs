@@ -8,7 +8,8 @@
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.attribute.views :as v]
    [renderer.element.events :as-alias element.e]
-   [renderer.ui :as ui]))
+   [renderer.ui :as ui]
+   [renderer.window.events :as-alias window.e]))
 
 (defmethod hierarchy/description [:default :d]
   []
@@ -113,7 +114,9 @@
                        [:div.flex.items-center.justify-between.mb-1
                         [:span
                          [:span.bg-primary.p-1 (first segment)]
-                         [:a.p-1.text-inherit {:href url :target "_blank"} label]
+                         [:button.p-1.text-inherit
+                          {:on-click #(rf/dispatch [::window.e/open-remote-url url])}
+                          label]
                          (if (= command (str/lower-case command))
                            "(Relative)" "(Absolute)")]
                         [:button.icon-button.small.bg-transparent.text-muted

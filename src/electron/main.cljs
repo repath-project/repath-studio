@@ -100,11 +100,7 @@
    [[web-contents-event f]
     [["will-frame-navigate" #(.preventDefault %)] ;; Prevent navigation
      ["closed" #(reset! main-window nil)]]]
-    (.on (.-webContents ^js @main-window) web-contents-event f))
-  ;; Forward popups
-  (.setWindowOpenHandler (.-webContents ^js @main-window) (fn [handler]
-                                                            (open-external! (.-url handler))
-                                                            #js {:action "deny"})))
+    (.on (.-webContents ^js @main-window) web-contents-event f)))
 
 (defn init-main-window!
   []
