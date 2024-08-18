@@ -51,8 +51,8 @@
         css-property  (when attr @(rf/subscribe [:css-property attr]))
         spec-url (or (:spec_url data) (:href webref-property) (:href css-property))
         spec-url (if (vector? spec-url) (first spec-url) spec-url)
-        mdn-url (or (:mdn_url css-property) (:mdn_url data))
-        mdn-url (or mdn-url (when data (construct-mdn-url (name attr))))]
+        ;; mdn-url (or (:mdn_url css-property) (:mdn_url data)) ; REVIEW
+        mdn-url (or (:mdn_url data) (when data (construct-mdn-url (name attr))))]
     [:div.flex.flex-col
      (when (some :version_added (vals support-data))
        [browser-compatibility support-data])

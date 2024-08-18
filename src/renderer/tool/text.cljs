@@ -3,7 +3,7 @@
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
    [re-frame.core :as rf]
-   [renderer.attribute.hierarchy :as hierarchy]
+   [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.events :as-alias element.e]
    [renderer.element.handlers :as element.h]
    [renderer.handlers :as h]
@@ -60,8 +60,16 @@
 (defmethod tool/translate :text
   [el [x y]]
   (-> el
-      (hierarchy/update-attr :x + x)
-      (hierarchy/update-attr :y + y)))
+      (attr.hierarchy/update-attr :x + x)
+      (attr.hierarchy/update-attr :y + y)))
+
+(defmethod tool/scale :text
+  [el ratio pivot-point]
+  (let [offset (mat/sub pivot-point (mat/mul pivot-point ratio))
+        ratio (apply min ratio)]
+    (-> el
+        (attr.hierarchy/update-attr :font-size * ratio)
+        (tool/translate offset))))
 
 (defn get-text
   [e]
