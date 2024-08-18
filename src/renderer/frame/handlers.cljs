@@ -77,7 +77,7 @@
      (-> db
          (assoc-in [:documents active-document :zoom]
                    (case focus-type
-                     :original (if (< (* min-zoom 0.9) zoom) (* min-zoom 0.9) zoom)
+                     :original (min (* min-zoom 0.9) 1)
                      :fit min-zoom
                      :fill (max width-ratio height-ratio)))
          (pan-to-bounds bounds)))))
