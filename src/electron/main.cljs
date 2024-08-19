@@ -12,8 +12,7 @@
    ["os" :as os]
    ["path" :as path]
    [config :as config]
-   [electron.file :as file]
-   [electron.printer :as printer]))
+   [electron.file :as file]))
 
 (defonce main-window (atom nil))
 (defonce loading-window (atom nil))
@@ -74,7 +73,7 @@
      ["save-document" #(file/save! @main-window %)]
      ["save-document-as" #(file/save-as! @main-window %)]
      ["export" #(file/export! @main-window %)]
-     ["print" #(printer/send! %)]
+     ["print" #(file/print! %)]
      ["load-webref" #(.listAll css)]
      ["load-system-fonts" #(.getAvailableFonts fontManager)]]]
     (.handle ipcMain e #(f %2))))

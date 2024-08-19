@@ -1,6 +1,6 @@
 (ns electron.file
   (:require
-   ["electron" :refer [app dialog]]
+   ["electron" :refer [app dialog BrowserWindow]]
    ["fs" :as fs]
    ["path" :as path]
    [clojure.edn :as edn]
@@ -75,3 +75,19 @@
                                        (if err
                                          (p/rejected err)
                                          (p/resolved data))))))
+
+(defn print!
+  [content]
+  (let [window (BrowserWindow.
+                #js {:show false
+                     :frame false})]
+    (.on (.-webContents window) "did-finish-load"
+         #(.print
+           (.-webContents window)
+           #js {}
+           (fn [success, error]
+             (if success
+               (p/resolved nil)
+               (p/rejected error)))))
+
+    (.loadURL window (str "data:text/html;charset=utf-8," content))))
