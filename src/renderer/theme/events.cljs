@@ -26,10 +26,11 @@
 
 (rf/reg-event-fx
  ::cycle-mode
+ local-storage/persist
  (fn [{:keys [db]} [_]]
    (let [mode (case (-> db :theme :mode)
                 :dark :light
                 :light :system
                 :system :dark)]
      {:db (assoc-in db [:theme :mode] mode)
-      :dispatch [::set-mode mode]})))
+      :dispatch [::set-document-attr]})))
