@@ -1,6 +1,7 @@
 (ns renderer.tool.container.core
   "https://www.w3.org/TR/SVG/struct.html#TermContainerElement"
   (:require
+   ["style-to-object" :default parse]
    [re-frame.core :as rf]
    [renderer.element.subs :as-alias element.s]
    [renderer.tool.base :as tool]
@@ -28,7 +29,7 @@
 (defmethod tool/render-to-string ::tool/container
   [{:keys [tag attrs title children]}]
   (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
-        attrs (->> (dissoc attrs :style)
+        attrs (->> (update attrs :style parse)
                    (remove #(empty? (str (second %))))
                    (into {}))]
     (-> [tag

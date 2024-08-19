@@ -1,6 +1,7 @@
 (ns renderer.tool.container.group
   "https://www.w3.org/TR/SVG/struct.html#GElement"
   (:require
+   ["style-to-object" :default parse]
    [re-frame.core :as rf]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.subs :as-alias element.s]
@@ -37,7 +38,7 @@
         [x1 y1 _x2 _y2] bounds
         [width height] (bounds/->dimensions bounds)
         pointer-handler #(pointer/event-handler % element)]
-    [:g (dissoc attrs :style) ; TODO: Handle this properly.
+    [:g (update attrs :style parse)
      (map (fn [element] [tool/render element]) (merge child-elements))
      [:rect {:x x1
              :y y1

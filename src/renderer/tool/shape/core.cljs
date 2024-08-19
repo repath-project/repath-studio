@@ -1,6 +1,7 @@
 (ns renderer.tool.shape.core
   "https://www.w3.org/TR/SVG/shapes.html#TermShapeElement"
   (:require
+   ["style-to-object" :default parse]
    [re-frame.core :as rf]
    [renderer.element.subs :as-alias element.s]
    [renderer.tool.base :as tool]
@@ -19,7 +20,7 @@
 (defmethod tool/render-to-string ::tool/shape
   [{:keys [tag attrs title children content]}]
   (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
-        attrs (->> (dissoc attrs :style)
+        attrs (->> (update attrs :style parse)
                    (remove #(empty? (str (second %))))
                    (into {}))]
     (-> [tag
