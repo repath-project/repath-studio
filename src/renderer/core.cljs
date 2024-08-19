@@ -29,6 +29,7 @@
    [renderer.snap.events]
    [renderer.snap.subs]
    [renderer.subs]
+   [renderer.theme.effects :as theme.fx]
    [renderer.theme.events :as theme.e]
    [renderer.theme.subs]
    [renderer.timeline.events]
@@ -87,14 +88,6 @@
      ["window-minimized" #(rf/dispatch [::window.e/set-minimized true])]]]
     (js/window.api.on channel f)))
 
-(defn handle-system-theme!
-  []
-  (let [query (.matchMedia js/window "(prefers-color-scheme: dark)")
-        get-theme (fn [query] (if (.-matches query) :dark :light))]
-    (rf/dispatch [::theme.e/set-native-mode (get-theme query)])
-    (.addListener query #(rf/dispatch [::theme.e/set-native-mode (get-theme %)]))))
-
-
 (defn ^:export init []
   #_(if platform/electron?
       (sentry-electron-renderer/init (clj->js config/sentry-options) sentry-react/init)
@@ -113,7 +106,8 @@
   (rf/dispatch-sync [:load-local-db])
   (rf/dispatch-sync [::window.e/set-focused (dom/focused?)])
   (rf/dispatch-sync [::document.e/init])
-  (rf/dispatch-sync [::theme.e/init-mode])
+  (rf/dispatch-sync [::theme.e/set-native-mode (theme.fx/native theme.fx/native-query)])
+  (rf/dispatch-sync [::theme.e/add-native-sistener])
   (rf/dispatch-sync [:set-tool :select])
   (rf/dispatch-sync [:set-mdn (js->clj mdn :keywordize-keys true)])
 
@@ -125,8 +119,6 @@
 
   (.addEventListener js/window "focus" #(rf/dispatch-sync [::window.e/set-focused true]))
   (.addEventListener js/window "blur" #(rf/dispatch-sync [::window.e/set-focused (dom/focused?)]))
-
-  (handle-system-theme!)
 
   (.setup paper) ; REVIEW
 

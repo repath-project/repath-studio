@@ -6,7 +6,12 @@
    [renderer.utils.local-storage :as local-storage]))
 
 (rf/reg-event-fx
- ::init-mode
+ ::add-native-sistener
+ (fn [_ _]
+   {::fx/add-native-sistener [::set-native-mode]}))
+
+(rf/reg-event-fx
+ ::set-document-attr
  (fn [{:keys [db]} _]
    (let [mode (-> db :theme :mode)
          mode (if (= mode :system) (-> db :theme :native) mode)]
@@ -17,14 +22,7 @@
  local-storage/persist
  (fn [{:keys [db]} [_ mode]]
    {:db (assoc-in db [:theme :native] mode)
-    :dispatch [::init-mode]}))
-
-(rf/reg-event-fx
- ::set-mode
- local-storage/persist
- (fn [{:keys [db]} [_ mode]]
-   {:db (assoc-in db [:theme :mode] mode)
-    :dispatch [::init-mode]}))
+    :dispatch [::set-document-attr]}))
 
 (rf/reg-event-fx
  ::cycle-mode
@@ -33,4 +31,5 @@
                 :dark :light
                 :light :system
                 :system :dark)]
-     {:dispatch [::set-mode mode]})))
+     {:db (assoc-in db [:theme :mode] mode)
+      :dispatch [::set-mode mode]})))
