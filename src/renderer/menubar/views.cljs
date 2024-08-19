@@ -80,6 +80,7 @@
             :type :separator}
             {:key :print
             :label "Print"
+             :icon "printer"
             :disabled? (not @(rf/subscribe [::document.s/documents?]))
             :action [::element.e/print]}
            {:key :divider-5
@@ -381,12 +382,15 @@
     :type :separator}
    {:label "Focus selected"
     :key "focus-selected"
+    :icon "focus"
     :action [::frame.e/focus-selection :original]}
    {:label "Fit selected"
     :key "fit-selected"
+    :icon "focus"
     :action [::frame.e/focus-selection :fit]}
    {:label "Fill selected"
     :key "fill-selected"
+    :icon "focus"
     :action [::frame.e/focus-selection :fill]}])
 
 (defn a11y-submenu
@@ -395,6 +399,7 @@
           {:key id
            :label (name id)
            :type :checkbox
+           :icon "a11y"
            :checked? [::document.s/filter-active? id]
            :action [::document.e/toggle-filter id]}) filters/accessibility))
 
@@ -470,6 +475,7 @@
            {:key :toggle-debug-info
             :type :checkbox
             :label "Debug info"
+            :icon "bug"
             :checked? [:debug-info?]
             :action [:toggle-debug-info]}
            {:key :divider-2
@@ -510,6 +516,7 @@
                      "https://github.com/repath-project/repath-studio"]}
            {:key :license
             :label "License"
+            :icon "lgpl"
             :action [::window.e/open-remote-url
                      "https://github.com/repath-project/repath-studio/blob/main/LICENSE"]}
            {:key :changelog
