@@ -6,6 +6,7 @@
    [renderer.element.effects :as fx]
    [renderer.element.handlers :as h]
    [renderer.history.handlers :as history.h]
+   [renderer.notification.events :as-alias notification.e]
    [renderer.utils.bounds :as bounds]
    [renderer.worker.events :as-alias worker.e]))
 
@@ -166,7 +167,9 @@
  (fn [{:keys [db]} _]
    (let [els (h/root-children db)
          svg (h/->svg els)]
-     {::fx/print svg})))
+     (if platform/electron?
+       {:ipc-invoke ["print" svg #(when % (rf/dispatch [::notification.e/add %]))]}
+       {::fx/print svg}))))
 
 (rf/reg-event-db
  ::paste
