@@ -32,20 +32,20 @@
 (defmethod message :move
   [offset]
   [:<>
-   [:div "Moving by [" (str/join " " (mapv units/->fixed offset)) "]."]
-   [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction, and " [:span.shortcut-key "Alt"] " to clone."]])
+   [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction, and " [:span.shortcut-key "Alt"] " to clone."]
+   [:div "Moving by [" (str/join " " (mapv units/->fixed offset)) "]."]])
 
 (defmethod message :clone
   [offset]
   [:<>
-   [:div "Cloning to [" (str/join " " (mapv units/->fixed offset)) "]."]
-   [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction. or release " [:span.shortcut-key "Alt"] " to move."]])
+   [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction. or release " [:span.shortcut-key "Alt"] " to move."]
+   [:div "Cloning to [" (str/join " " (mapv units/->fixed offset)) "]."]])
 
 (defmethod message :scale
   [ratio]
   [:<>
-   [:div "Scaling by [" (str/join " " (mapv units/->fixed (distinct ratio))) "]."]
-   [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions, and " [:span.shortcut-key "⇧"] " to scale in position."]])
+   [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions, and " [:span.shortcut-key "⇧"] " to scale in position."]
+   [:div "Scaling by [" (str/join " " (mapv units/->fixed (distinct ratio))) "]."]])
 
 (defn hovered?
   [db el intersecting?]
