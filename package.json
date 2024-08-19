@@ -97,6 +97,7 @@
     "mdn-data": "2.9.0",
     "paper": "0.12.18",
     "paperjs-offset": "1.0.8",
+    "path-browserify": "1.0.1",
     "perfect-freehand": "1.2.2",
     "postcss": "8.4.41",
     "postcss-cli": "11.0.0",

@@ -2,6 +2,7 @@
   (:require
    ["@radix-ui/react-select" :as Select]
    ["@radix-ui/react-tooltip" :as Tooltip]
+   ["path-browserify" :as path]
    ["react-resizable-panels" :refer [Panel PanelGroup PanelResizeHandle]]
    [re-frame.core :as rf]
    [renderer.attribute.views :as attr.v]
@@ -192,7 +193,8 @@
           [ui/icon "folder"]
           [:button.button-link.text-lg
            {:on-click #(rf/dispatch [::document.e/open file-path])}
-           file-path]])
+           (.basename path file-path)]
+          [:span.text-lg.text-muted (.dirname path file-path)]])
 
        [:h2.mb-3.mt-8.text-2xl "Help"]
 
