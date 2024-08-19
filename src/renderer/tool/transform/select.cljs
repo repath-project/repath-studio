@@ -23,7 +23,7 @@
 
 (defmethod message :default
   [_]
-  [:div
+  [:<>
    [:div "Click or click and drag to select. "]
    [:div
     "Hold " [:span.shortcut-key "⇧"] " to add or remove elements to selection and "
@@ -31,19 +31,19 @@
 
 (defmethod message :move
   [offset]
-  [:div
+  [:<>
    [:div "Moving by [" (str/join " " (mapv units/->fixed offset)) "]."]
    [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction, and " [:span.shortcut-key "Alt"] " to clone."]])
 
 (defmethod message :clone
   [offset]
-  [:div
+  [:<>
    [:div "Cloning to [" (str/join " " (mapv units/->fixed offset)) "]."]
    [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction. or release " [:span.shortcut-key "Alt"] " to move."]])
 
 (defmethod message :scale
   [ratio]
-  [:div
+  [:<>
    [:div "Scaling by [" (str/join " " (mapv units/->fixed (distinct ratio))) "]."]
    [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions, and " [:span.shortcut-key "⇧"] " to scale in position."]])
 

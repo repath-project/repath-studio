@@ -109,7 +109,7 @@
      [:div.toolbar.bg-primary.mt-px
       [color-v/picker]
       [:div.grow
-       [:div.text-xs.px-1.hidden.2xl:block
+       [:div.px-1.hidden.2xl:flex.gap-1.flex-wrap.leading-tight
         message]]
       (when loading?
         [:span.icon-button.relative

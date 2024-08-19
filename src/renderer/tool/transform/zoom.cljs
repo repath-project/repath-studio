@@ -18,7 +18,7 @@
   (-> db
       (assoc :cursor "zoom-in")
       (handlers/set-message
-       [:div
+       [:<>
         [:div "Click or select an area to zoom in."]
         [:div "Hold " [:span.shortcut-key "⇧"] " to zoom out."]])))
 

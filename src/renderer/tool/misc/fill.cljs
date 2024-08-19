@@ -15,7 +15,7 @@
   [db]
   (-> db
       (assoc :cursor "crosshair")
-      (handlers/set-message  [:div "Click on an element to fill."])))
+      (handlers/set-message "Click on an element to fill.")))
 
 (defmethod tool/translate :fill [])
 

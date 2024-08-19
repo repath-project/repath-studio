@@ -20,7 +20,7 @@
   [db]
   (-> db
       (assoc :cursor "crosshair")
-      (handlers/set-message  [:div "Click and drag to measure a distance."])))
+      (handlers/set-message  "Click and drag to measure a distance.")))
 
 (defmethod tool/deactivate :measure
   [db]
