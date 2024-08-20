@@ -53,7 +53,7 @@
          [:div.bg-primary.mr-px
           [ruler.v/ruler {:orientation :vertical :size 22}]])]
       [:div.relative.grow.flex
-       [frame.v/main]
+       [frame.v/root]
        (if read-only?
          [:div.absolute.inset-0.border-4.border-accent]
          (when @(rf/subscribe [:debug-info?])

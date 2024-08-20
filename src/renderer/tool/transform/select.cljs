@@ -214,7 +214,7 @@
           :select
           (-> db
               (element.h/set-temp (select-rect db alt-key?))
-              (element.h/clear-hovered)
+              element.h/clear-hovered
               (reduce-by-area (pointer/alt? e) element.h/hover))
 
           :move

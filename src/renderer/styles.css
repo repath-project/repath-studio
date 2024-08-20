@@ -107,7 +107,7 @@
   }
 
   .button {
-    @apply inline-block relative cursor-pointer text-center outline-none text-nowrap;
+    @apply relative cursor-pointer text-center outline-none text-nowrap;
     background-color: transparent;
     color: var(--font-color);
     fill: var(--font-color);
@@ -160,7 +160,7 @@
 }
 
 body {
-  @apply h-dvh m-0 p-0 bg-secondary overflow-hidden select-none;
+  @apply absolute inset-0 m-0 p-0 bg-secondary overflow-hidden select-none;
   font-family: var(--font-sans);
   font-size: var(--font-size);
   color: var(--font-color);

@@ -49,6 +49,7 @@
   [{:title "Timeline"
     :active? [:panel-visible? :timeline]
     :icon "animation"
+    :class "hidden sm:inline-block"
     :action [:toggle-panel :timeline]}
    {:title "Grid"
     :active? [:grid-visible?]
@@ -61,8 +62,10 @@
    {:title "History"
     :active? [:panel-visible? :history]
     :icon "history"
+    :class "hidden sm:inline-block"
     :action [:toggle-panel :history]}
    {:title "XML"
+    :class "hidden sm:inline-block"
     :active? [:panel-visible? :xml]
     :icon "code"
     :action [:toggle-panel :xml]}])
@@ -115,10 +118,11 @@
         [:span.icon-button.relative
          [ui/icon "spinner" {:class "loading"}]])
       (into [:<>]
-            (map (fn [{:keys [title active? icon action]}]
+            (map (fn [{:keys [title active? icon action class]}]
                    [ui/radio-icon-button {:title title
                                           :active? @(rf/subscribe active?)
                                           :icon icon
+                                          :class class
                                           :action #(rf/dispatch action)}])
                  view-radio-buttons))
       [snap.v/root]

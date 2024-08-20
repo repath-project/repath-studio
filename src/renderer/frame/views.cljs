@@ -64,7 +64,7 @@
                         (js->clj :keywordize-keys true))]
        (rf/dispatch-sync [::frame.e/resize dom-rect])))))
 
-(defn main
+(defn root
   "Our canvas is wrapped within an iframe element that hosts anything
    that needs to be rendered.
    https://github.com/ryanseddon/react-frame-component
