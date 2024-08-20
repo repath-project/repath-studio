@@ -193,18 +193,17 @@
            "Open"]
           [ui/shortcuts [::document.e/open]]]
 
-         [:h2.mb-3.mt-8.text-2xl
-          {:class (when-not (seq recent) "text-muted")}
-          "Recent"]
+         (when (seq recent)
+           [:<> [:h2.mb-3.mt-8.text-2xl "Recent"]
 
-         (for [file-path (take 2 recent)]
-           ^{:key file-path}
-           [:div.flex.items-center.gap-x-2.flex-wrap
-            [ui/icon "folder"]
-            [:button.button-link.text-lg
-             {:on-click #(rf/dispatch [::document.e/open file-path])}
-             (.basename path file-path)]
-            [:span.text-lg.text-muted (.dirname path file-path)]])
+            (for [file-path (take 2 recent)]
+              ^{:key file-path}
+              [:div.flex.items-center.gap-x-2.flex-wrap
+               [ui/icon "folder"]
+               [:button.button-link.text-lg
+                {:on-click #(rf/dispatch [::document.e/open file-path])}
+                (.basename path file-path)]
+               [:span.text-lg.text-muted (.dirname path file-path)]])])
 
          [:h2.mb-3.mt-8.text-2xl "Help"]
 
