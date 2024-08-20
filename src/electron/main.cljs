@@ -127,14 +127,17 @@
            (fn []
              (.show ^js @main-window)
              (.manage win-state ^js @main-window)
-             (send-to-renderer! (if (.isMaximized ^js @main-window)
-                                  "window-maximized"
-                                  "window-unmaximized"))
-             (send-to-renderer! (if (.isFullScreen ^js @main-window)
-                                  "window-entered-fullscreen"
-                                  "window-leaved-fullscreen"))
              (.hide ^js @loading-window)
              (.close ^js @loading-window)))
+
+    (.on ^js @main-window "ready-to-show"
+         (fn []
+           (send-to-renderer! (if (.isMaximized ^js @main-window)
+                                "window-maximized"
+                                "window-unmaximized"))
+           (send-to-renderer! (if (.isFullScreen ^js @main-window)
+                                "window-entered-fullscreen"
+                                "window-leaved-fullscreen"))))
 
     (.loadURL ^js @main-window (if config/debug?
                                  "http://localhost:8080"
