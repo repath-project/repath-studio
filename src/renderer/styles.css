@@ -172,17 +172,20 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  @apply w-2 h-2;
 }
 
-::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-thumb {
+  @apply overlay rounded-full;
+}
+
 ::-webkit-scrollbar-corner {
-  @apply overlay;
+  @apply bg-transparent;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  @apply bg-transparent hover:overlay;
+
 }
 
 p {
@@ -233,12 +236,6 @@ label {
 
 .success {
   background: var(--background-success)
-}
-
-.v-scroll {
-  @apply box-border overflow-y-auto;
-
-  /* scrollbar-gutter: stable; */
 }
 
 a {
@@ -519,9 +516,8 @@ pre {
 }
 
 .loading {
-  position: absolute;
-  top: 50%;
-  left: 50%;
+  @apply absolute top-1/2 left-1/2;
+
   margin: -9px 0 0 -9px;
   animation: spin 4s linear infinite;
 }

@@ -99,6 +99,18 @@
 
     nil))
 
+(defn toggle-collapsed-button
+  [k collapsed?]
+  [ui/toggle-icon-button {:active? collapsed?
+                          :active-icon "chevron-right"
+                          :active-text "expand"
+                          :class "small"
+                          :inactive-icon "chevron-down"
+                          :inactive-text "collapse"
+                          :action #(rf/dispatch (if collapsed?
+                                                  [::document.e/expand-el k]
+                                                  [::document.e/collapse-el k]))}])
+
 (defn list-item-button
   [{:keys [key selected? children] :as el} depth hovered? collapsed?]
   (let [multiple-selected? @(rf/subscribe [::element.s/multiple-selected?])]
@@ -128,7 +140,7 @@
       :style {:padding-left (padding depth (seq children))}}
      [:div.flex.items-center.content-between.w-full
       (when (seq children)
-        [ui/toggle-collapsed-button key collapsed?])
+        [toggle-collapsed-button key collapsed?])
       [:div.flex-1.overflow-hidden [label el]]
       [item-buttons el]]]))
 
@@ -146,13 +158,13 @@
   [root-children elements]
   (let [hovered-keys @(rf/subscribe [::document.s/hovered-keys])
         collapsed-keys @(rf/subscribe [::document.s/collapsed-keys])]
-    [:div.tree-sidebar.overflow-hidden
+    [:div.tree-sidebar
      {:on-pointer-up #(rf/dispatch [::element.e/deselect-all])}
-     [:div.v-scroll.h-full
-      [:ul
-       {:on-pointer-leave #(rf/dispatch [::document.e/set-hovered-keys #{}])}
-       (map (fn [el] [item el 1 elements hovered-keys collapsed-keys])
-            (reverse root-children))]]]))
+      [ui/scroll-area
+       [:ul
+        {:on-pointer-leave #(rf/dispatch [::document.e/set-hovered-keys #{}])}
+        (map (fn [el] [item el 1 elements hovered-keys collapsed-keys])
+             (reverse root-children))]]]))
 
 (defn inner-sidebar []
   (let [state @(rf/subscribe [:state])

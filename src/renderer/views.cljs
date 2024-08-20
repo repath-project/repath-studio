@@ -32,7 +32,8 @@
   (let [rulers? @(rf/subscribe [:rulers-visible?])
         read-only? @(rf/subscribe [::document.s/read-only?])]
     [:div.flex.flex-col.flex-1.h-full
-     [:div.mb-px [toolbar.tools/root]
+     [:div.mb-px
+      [ui/scroll-area [toolbar.tools/root]]
       (when rulers?
         [:div.flex
          [:div.bg-primary {:style {:width "23px" :height "23px"}}
@@ -84,7 +85,7 @@
                    :defaultSize 30
                    :minSize 5
                    :order 2}
-         [:div.v-scroll.p-1.bg-primary.h-full.ml-px
+         [:div.bg-primary.h-full.ml-px
           [history.v/root]]]])
 
      (when @(rf/subscribe [:panel-visible? :xml])
@@ -97,10 +98,13 @@
                      :defaultSize 30
                      :minSize 5
                      :order 3}
-           [:div.v-scroll.p-1.h-full.bg-primary.ml-px
-            [cm.v/editor xml
-             {:options {:mode "text/xml"
-                        :readOnly true}}]]]]))]]])
+
+            [:div.h-full.bg-primary.ml-px.flex
+             [ui/scroll-area
+              [:div.p-1
+               [cm.v/editor xml
+                {:options {:mode "text/xml"
+                           :readOnly true}}]]]]]]))]]])
 
 (defn editor
   []
@@ -134,7 +138,7 @@
 
 (defn home []
   (let [recent @(rf/subscribe [::document.s/recent])]
-    [:div.flex.overflow-auto.flex-1.min-h-full.justify-center.px-4
+    [:div.flex.flex-1.min-h-full.justify-center.px-4
      [:div.bg-primary.w-full.self-center.justify-between.p-6.lg:p-12.flex.max-w-screen-xl
       [:div.overflow-hidden
        [:h1.text-4xl.mb-1.font-light
@@ -230,12 +234,12 @@
 (defn root
   []
   [:> Tooltip/Provider
-   [:div.flex.flex-col.flex-1.h-screen
+   [:div.flex.flex-col.flex-1.h-screen.overflow-hidden
     [window.v/app-header]
     (if (seq @(rf/subscribe [:documents]))
       [:div.flex.h-full.flex-1.overflow-hidden
        (when @(rf/subscribe [:panel-visible? :tree])
-         [:div.flex.flex-col.hidden.md:block
+         [:div.flex-col.hidden.md:flex.overflow-hidden
           {:style {:width "227px"}}
           [document.v/actions]
           [tree.v/root]])
@@ -245,10 +249,11 @@
          [:div.flex.h-full.flex-col.flex-1.overflow-hidden
           [editor]]
          (when @(rf/subscribe [:panel-visible? :properties])
-           [:div.flex.hidden.md:block
+           [:div.hidden.md:flex
             {:style {:flex "0 0 300px"}}
             [attr.v/form]])
-         [toolbar.object/root]]]]
-      [home])]
+         [:div.bg-primary.ml-px.flex
+          [ui/scroll-area [toolbar.object/root]]]]]]
+      [ui/scroll-area [home]])]
    [dialog.v/root]
    [notification/main]])

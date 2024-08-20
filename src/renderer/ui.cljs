@@ -4,12 +4,11 @@
   (:require
    ["@radix-ui/react-context-menu" :as ContextMenu]
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
+   ["@radix-ui/react-scroll-area" :as ScrollArea]
    ["@radix-ui/react-switch" :as Switch]
    ["react-fps" :refer [FpsView]]
    ["react-svg" :refer [ReactSVG]]
    [re-frame.core :as rf]
-   [renderer.document.events :as-alias document.e]
-   [renderer.document.subs :as-alias document.s]
    [renderer.utils.keyboard :as keyb]))
 
 (defn fps
@@ -74,19 +73,6 @@
                              (action))})
    [icon (if active? active-icon inactive-icon)]])
 
-(defn toggle-collapsed-button
-  [k collapsed?]
-  [toggle-icon-button {:active? collapsed?
-                       :active-icon "chevron-right"
-                       :active-text "expand"
-                       :class "small"
-                       :inactive-icon "chevron-down"
-                       :inactive-text "collapse"
-                       :action #(rf/dispatch (if collapsed?
-                                               [::document.e/expand-el k]
-                                               [::document.e/collapse-el k]))}])
-
-
 (defn radio-icon-button
   [{:keys [active? icon title action class]}]
   [:button.icon-button.radio-icon-button
@@ -147,3 +133,27 @@
      label
      [:div.right-slot
       [shortcuts action]]]))
+
+(defn scroll-area
+  [& more]
+  (let [children (if (map? (first more)) (rest more) more)]
+    [:> ScrollArea/Root
+     {:class "overflow-hidden w-full"}
+     (into
+      [:> ScrollArea/Viewport
+       {:ref (:ref (first more))
+        :class "w-full h-full"}] children)
+
+     [:> ScrollArea/Scrollbar
+      {:class "flex touch-none p-0.5 select-none hover:overlay w-2.5"
+       :orientation "vertical"}
+      [:> ScrollArea/Thumb
+       {:class "relative flex-1 overlay rounded-full"}]]
+
+     [:> ScrollArea/Scrollbar
+      {:class "flex touch-none p-0.5 select-none hover:overlay flex-col h-2.5"
+       :orientation "horizontal"}
+      [:> ScrollArea/Thumb
+       {:class "relative flex-1 overlay rounded-full"}]]
+
+     [:> ScrollArea/Corner]]))

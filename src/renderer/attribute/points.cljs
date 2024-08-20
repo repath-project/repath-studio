@@ -45,18 +45,20 @@
                               :align "end"}
           (when state-default?
             (let [points (utils.attr/points->vec v)]
-              [:div.flex.flex-col.py-4.pr-2.overflow-y-auto
+              [:div.flex.overflow-hidden
                {:style {:max-height "50vh"}}
-               (map-indexed (fn [index [x y]]
-                              ^{:key (str "point-" index)}
-                              [:div.grid.grid-flow-col.gap-px.mt-px
-                               {:style {:grid-template-columns "minmax(0, 40px) 3fr 3fr 26px"}}
-                               [:label.px-1.bg-transparent index]
-                               [:input.bg-transparent
-                                {:key (str "x-" index v) :default-value x}]
-                               [:input.bg-transparent
-                                {:key (str "y-" index v) :default-value y}]
-                               [:button.button.bg-transparent.text-muted.h-full
-                                {:on-click #(remove-nth points index)}
-                                [ui/icon "times"]]]) points)]))
+               [ui/scroll-area
+                [:div.p-4.flex.flex-col
+                 (map-indexed (fn [index [x y]]
+                                ^{:key (str "point-" index)}
+                                [:div.grid.grid-flow-col.gap-px.mt-px
+                                 {:style {:grid-template-columns "minmax(0, 40px) 3fr 3fr 26px"}}
+                                 [:label.px-1.bg-transparent index]
+                                 [:input.bg-transparent
+                                  {:key (str "x-" index v) :default-value x}]
+                                 [:input.bg-transparent
+                                  {:key (str "y-" index v) :default-value y}]
+                                 [:button.button.bg-transparent.text-muted.h-full.rounded
+                                  {:on-click #(remove-nth points index)}
+                                  [ui/icon "times"]]]) points)]]]))
           [:> Popover/Arrow {:class "popover-arrow"}]]]])]))

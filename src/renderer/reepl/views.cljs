@@ -98,10 +98,12 @@
           (dom/scroll-to-bottom! el)))
       :reagent-render
       (fn [items opts]
-        (into
-         [:div.flex-1.border-b.border-default.h-full.overflow-y-auto.overflow-x-hidden.p-1
-          {:ref ref}]
-         (map (fn [i] [:div.font-mono.p-1.flex.text-xs.min-h-4 (item i opts)]) items)))})))
+        [:div.flex-1.border-b.border-default.h-full.overflow-hidden.flex
+         [ui/scroll-area
+          {:ref ref}
+          (into
+           [:div.p-1]
+           (map (fn [i] [:div.font-mono.p-1.flex.text-xs.min-h-4 (item i opts)]) items))]])})))
 
 (defn repl-items-panel
   [items show-value-opts set-text]

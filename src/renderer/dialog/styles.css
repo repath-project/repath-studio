@@ -22,13 +22,7 @@
   }
 }
 
-[cmdk-input] {
-  @apply p-3 bg-secondary text-sm;
-  border-bottom: 1px solid var(--border-color)
-}
-
 [cmdk-list] {
-  @apply p-1 overflow-auto;
   max-height: 50vh;
 }
 
