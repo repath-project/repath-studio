@@ -85,7 +85,7 @@
 
 (defn calc-pan-offset
   [position offset size]
-  (let [threshold 100
+  (let [threshold 50
         step 15]
     (cond
       (and (< position threshold)
