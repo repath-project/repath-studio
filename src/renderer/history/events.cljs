@@ -72,8 +72,8 @@
  (fn [{:keys [db]} _]
    {:db (if (:restored? db)
           (-> db
-              (h/mark-restored)
-              (h/undo 1)
+              h/mark-restored
+              h/undo
               (dissoc :restored?))
           (-> db
               element.h/clear-hovered

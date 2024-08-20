@@ -69,7 +69,7 @@
 
 (defn set-zoom
   [e v]
-  (let [new-v (-> (.. e -target -value) (js/parseFloat) (/ 100))]
+  (let [new-v (-> (.. e -target -value) js/parseFloat (/ 100))]
     (if (js/isNaN new-v)
       (set! (.. e -target -value) v)
       (rf/dispatch [::frame.e/set-zoom new-v]))))
