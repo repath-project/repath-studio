@@ -140,14 +140,6 @@
      (assoc db :document-tabs (vec/swap document-tabs dragged-index swapped-index)))))
 
 (rf/reg-event-db
- ::init
- center
- (fn [db [_]]
-   (cond-> db
-     (not (:active-document db))
-     h/create)))
-
-(rf/reg-event-db
  ::center
  (fn [db [_]]
    (h/center db)))
