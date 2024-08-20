@@ -16,21 +16,24 @@
 
 (defn suggestions-list
   [suggestions]
-  [:div.flex.flex-col.p-1
+  [:div.flex.flex-col
    [:> Command/Command
     {:label "Command Menu"
      :on-key-down #(when-not (= (.-key %) "Escape") (.stopPropagation %))}
     [:> Command/CommandInput
-     {:placeholder "Search for a font"}]
-    [:> Command/CommandList
-     [:> Command/CommandEmpty
-      "No fonts found."]
-     (for [item suggestions]
-       ^{:key item}
-       [:> Command/CommandItem
-        {:key key
-         :on-select #(rf/dispatch [::element.e/set-attr :font-family item])}
-        item])]]])
+     {:class "p-2 text-sm bg-secondary border-b border-default"
+      :placeholder "Search for a font"}]
+    [ui/scroll-area
+     [:> Command/CommandList
+      {:class "p-1"}
+      [:> Command/CommandEmpty
+       "No fonts found."]
+      (for [item suggestions]
+        ^{:key item}
+        [:> Command/CommandItem
+         {:key key
+          :on-select #(rf/dispatch [::element.e/set-attr :font-family item])}
+         item])]]]])
 
 (defmethod hierarchy/form-element [:default :font-family]
   [_ k v disabled?]
