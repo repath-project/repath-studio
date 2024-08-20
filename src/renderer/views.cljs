@@ -142,7 +142,7 @@
      [:div.self-center.justify-between.overflow-hidden.flex.h-full.sm:h-auto
       [ui/scroll-area
        [:div.bg-primary.p-6.lg:p-12.flex.max-w-screen-xl.w-full.gap-8
-        [:div
+        [:div.flex-1
          [:h1.text-4xl.mb-1.font-light
           "Repath Studio"]
 
@@ -234,7 +234,7 @@
                                      "https://repath.studio/roadmap/changelog/"])}
            "Changelog"]]]
 
-        [:div.hidden.lg:block
+        [:div.hidden.lg:block.flex-1
          [:img {:src "img/icon.svg"}]]]]]]))
 
 (defn root
