@@ -138,8 +138,8 @@
 
 (defn home []
   (let [recent @(rf/subscribe [::document.s/recent])]
-    [:div.flex.flex-1.min-h-full.justify-center.p-4.overflow-hidden
-     [:div.self-center.justify-between.overflow-hidden.flex.h-full.sm:h-auto
+    [:div.flex.flex-1.min-h-full.justify-center.p-2.overflow-hidden
+     [:div.self-center.justify-between.overflow-hidden.flex.h-full.md:h-auto.w-full.lg:w-auto
       [ui/scroll-area
        [:div.bg-primary.p-6.lg:p-12.flex.max-w-screen-xl.w-full.gap-8
         [:div.flex-1
@@ -233,7 +233,7 @@
                                      "https://repath.studio/roadmap/changelog/"])}
            "Changelog"]]]
 
-        [:div.hidden.lg:block.flex-1
+        [:div.hidden.md:block.flex-1
          [:img {:src "img/icon.svg"}]]]]]]))
 
 (defn root
