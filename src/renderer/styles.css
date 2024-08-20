@@ -160,13 +160,9 @@
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  background: var(--bg-secondary) !important;
-  overflow: hidden;
+  @apply h-dvh m-0 p-0 bg-secondary overflow-hidden select-none;
   font-family: var(--font-sans);
   font-size: var(--font-size);
-  user-select: none;
   color: var(--font-color);
   fill: var(--font-color);
 }
