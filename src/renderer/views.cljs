@@ -175,6 +175,10 @@
 
              [:> Select/Viewport {:class "select-viewport"}
               [:> Select/Group
+               [:> Select/Item
+                {:value :empty-canvas
+                 :class "menu-item select-item"}
+                [:> Select/ItemText "Empty canvas"]]
                (for [[key _size] (sort paper-size)]
                  ^{:key key}
                  [:> Select/Item

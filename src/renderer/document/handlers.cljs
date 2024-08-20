@@ -92,13 +92,18 @@
 (defn create
   ([db]
    (create db [595 842]))
-  ([db [w h]]
-   (-> db
-       (create-tab default)
-       (element.h/create {:tag :canvas :attrs {:fill "#eeeeee"}})
-       (element.h/create {:tag :svg :attrs {:width w :height h}})
-       center
-       (history.h/finalize "Create document"))))
+  ([db size]
+   (cond-> db
+     :always
+     (-> (create-tab default)
+         (element.h/create {:tag :canvas :attrs {:fill "#eeeeee"}}))
+
+     size
+     (-> (element.h/create {:tag :svg :attrs {:width (first size) :height (second size)}})
+         center)
+
+     :always
+     (history.h/finalize "Create document"))))
 
 (defn set-global-attr
   [{active-document :active-document :as db} k v]
