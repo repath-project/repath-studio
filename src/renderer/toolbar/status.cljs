@@ -112,7 +112,8 @@
      [:div.toolbar.bg-primary.mt-px
       [color-v/picker]
       [:div.grow
-       [:div.px-1.hidden.2xl:flex.gap-1.flex-wrap.leading-tight
+       [:div.px-1.hidden.2xl:flex.gap-1.flex-wrap.leading-tight.truncate
+        {:style {:max-height "33px"}}
         message]]
       (when loading?
         [:span.icon-button.relative
