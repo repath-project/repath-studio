@@ -39,6 +39,7 @@
 
 (rf/reg-event-db
  ::center
+ local-storage/persist
  (fn [db [_]]
    (h/center db)))
 
