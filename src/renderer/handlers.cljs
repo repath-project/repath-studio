@@ -16,6 +16,10 @@
   [db message]
   (assoc db :message message))
 
+(defn add-fx
+  [db effect]
+  (update db :fx conj effect))
+
 (defn set-tool
   [db tool]
   (-> db

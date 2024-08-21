@@ -2,7 +2,6 @@
   (:require
    [platform :as platform]
    [re-frame.core :as rf]
-   [renderer.document.events :as document.e]
    [renderer.window.effects :as fx]))
 
 (rf/reg-event-db
@@ -13,7 +12,7 @@
 
 (rf/reg-event-db
  ::set-fullscreen
- (rf/path :window)
+  (rf/path :window)
  (fn [db [_ state]]
    (assoc db :fullscreen? state)))
 
@@ -25,7 +24,6 @@
 
 (rf/reg-event-db
  ::set-focused
- document.e/center
  (fn [db [_ focused?]]
    (assoc-in db [:window :focused?] focused?)))
 

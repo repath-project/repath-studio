@@ -66,6 +66,7 @@
    [:window window.db/window]
    [:theme theme.db/theme]
    [:timeline timeline.db/timeline]
-   [:panels panels]])
+   [:panels panels]
+   [:fx {:default []} vector?]])
 
 (def valid? (m/validator app))

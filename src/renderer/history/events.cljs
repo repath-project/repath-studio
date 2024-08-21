@@ -3,25 +3,30 @@
    [re-frame.core :as rf]
    [renderer.element.handlers :as element.h]
    [renderer.handlers :as handlers]
-   [renderer.history.handlers :as h]))
+   [renderer.history.handlers :as h]
+   [renderer.utils.local-storage :as local-storage]))
 
 (rf/reg-event-db
  ::undo
+ local-storage/persist
  (fn [db _]
-   (h/undo db 1)))
+   (h/undo db)))
 
 (rf/reg-event-db
  ::redo
+ local-storage/persist
  (fn [db _]
-   (h/redo db 1)))
+   (h/redo db)))
 
 (rf/reg-event-db
  ::undo-by
+ local-storage/persist
  (fn [db [_ n]]
    (h/undo db n)))
 
 (rf/reg-event-db
  ::redo-by
+ local-storage/persist
  (fn [db [_ n]]
    (h/redo db n)))
 
@@ -32,11 +37,13 @@
 
 (rf/reg-event-db
  ::move
+ local-storage/persist
  (fn [db [_ id]]
    (h/move db id)))
 
 (rf/reg-event-db
  ::clear
+ local-storage/persist
  (fn [db _]
    (h/clear db)))
 
@@ -69,6 +76,7 @@
 
 (rf/reg-event-fx
  ::restore
+ local-storage/persist
  (fn [{:keys [db]} _]
    {:db (if (:restored? db)
           (-> db

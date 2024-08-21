@@ -11,11 +11,6 @@
    [renderer.utils.local-storage :as local-storage]
    [renderer.utils.vec :as vec]))
 
-(def center
-  (rf/->interceptor
-   :id :center
-   :after (fn [context] (assoc-in context [:effects :dispatch-later] {:ms 10 :dispatch [::center]}))))
-
 (def active-document-path
   (let [db-store-key :re-frame-path/db-store]
     (->interceptor
@@ -44,19 +39,19 @@
 
 (rf/reg-event-db
  ::collapse-el
- active-document-path
+ [local-storage/persist active-document-path]
  (fn [db [_ k]]
    (update db :collapsed-keys conj k)))
 
 (rf/reg-event-db
  ::expand-el
- active-document-path
+ [local-storage/persist active-document-path]
  (fn [db [_ k]]
    (update db :collapsed-keys disj k)))
 
 (rf/reg-event-db
  ::toggle-filter
- active-document-path
+ [local-storage/persist active-document-path]
  (fn [db [_ k]]
    (if (= (:filter db) k)
      (dissoc db :filter)
@@ -70,7 +65,7 @@
 
 (rf/reg-event-db
  ::swap-colors
- active-document-path
+ [local-storage/persist active-document-path]
  (fn [db [_]]
    (assoc db
           :fill (:stroke db)
@@ -78,16 +73,19 @@
 
 (rf/reg-event-db
  ::set-fill
+ local-storage/persist
  (fn [db [_ fill]]
    (h/set-global-attr db :fill fill)))
 
 (rf/reg-event-db
  ::set-stroke
+ local-storage/persist
  (fn [db [_ stroke]]
    (h/set-global-attr db :stroke stroke)))
 
 (rf/reg-event-fx
  ::close
+ local-storage/persist
  (fn [{:keys [db]} [_ k confirm?]]
    (if (or (h/saved? db k) (not confirm?))
      {:db (h/close db k)}
@@ -96,6 +94,7 @@
 
 (rf/reg-event-fx
  ::close-active
+ local-storage/persist
  (fn [{:keys [db]} [_]]
    (let [active-document (:active-document db)]
      (if (h/saved? db active-document)
@@ -104,6 +103,7 @@
 
 (rf/reg-event-db
  ::close-saved
+ local-storage/persist
  (fn [db [_]]
    (let [saved (filter #(h/saved? db %) (:document-tabs db))]
      (reduce h/close db saved))))
@@ -122,6 +122,7 @@
 
 (rf/reg-event-db
  ::scroll
+ local-storage/persist
  (fn [db [_ direction]]
    (let [document-tabs (:document-tabs db)
          index (.indexOf document-tabs (:active-document db))
@@ -133,6 +134,7 @@
 
 (rf/reg-event-db
  ::swap-position
+ local-storage/persist
  (fn [db [_ dragged-key swapped-key]]
    (let [document-tabs (:document-tabs db)
          dragged-index (.indexOf document-tabs dragged-key)
@@ -140,24 +142,20 @@
      (assoc db :document-tabs (vec/swap document-tabs dragged-index swapped-index)))))
 
 (rf/reg-event-db
- ::center
- (fn [db [_]]
-   (h/center db)))
-
-(rf/reg-event-db
  ::new
- [center focus-canvas]
+ [focus-canvas local-storage/persist]
  (fn [db [_]]
    (h/create db)))
 
 (rf/reg-event-db
  ::new-from-template
- [center focus-canvas]
+ [focus-canvas]
  (fn [db [_ size]]
    (h/create db size)))
 
 (rf/reg-event-fx
  ::open
+ local-storage/persist
  (fn [_ [_ file-path]]
    (if platform/electron?
      {:ipc-invoke ["open-documents"
@@ -172,7 +170,7 @@
 
 (rf/reg-event-db
  ::load
- [center focus-canvas local-storage/persist]
+ [focus-canvas local-storage/persist]
  (fn [db [_ documents]]
    (reduce h/load db documents)))
 
@@ -217,6 +215,7 @@
 
 (rf/reg-event-db
  ::saved
+ local-storage/persist
  (fn [db [_ {:keys [path] :as document-info}]]
    ;; Update the path, the title and the saved position of the document.
    ;; Any other changes that could happen while saving should be preserved.
@@ -232,6 +231,6 @@
 
 (rf/reg-event-db
  ::set-active
- [center focus-canvas]
+ local-storage/persist
  (fn [db [_ k]]
    (h/set-active db k)))

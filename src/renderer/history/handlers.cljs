@@ -3,6 +3,7 @@
    [malli.core :as m]
    [renderer.element.db :as element.db]
    [renderer.element.handlers :as element.h]
+   [renderer.handlers :as h]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
    [renderer.utils.spec :as spec]
@@ -158,8 +159,10 @@
 
          current-position
          (-> (update-in (conj (history-path db) :states current-position :children) conj id)
-             update-ancestors)))
+             update-ancestors)
 
+         :always
+         (h/add-fx [:local-storage-persist db])))
       (-> (swap db)
           (notification.h/add
            [notification.v/spec-failed explanation (spec/explain elements element.db/elements)])))))

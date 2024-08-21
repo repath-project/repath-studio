@@ -4,7 +4,8 @@
    [promesa.core :as p]
    [re-frame.core :as rf]
    [renderer.utils.data-transfer :as data-transfer]
-   [renderer.utils.dom :as dom]))
+   [renderer.utils.dom :as dom]
+   [renderer.utils.local-storage :as local-storage]))
 
 (rf/reg-fx
  :ipc-send
@@ -29,6 +30,11 @@
  :set-pointer-capture
  (fn [[target pointer-id]]
    (.setPointerCapture target pointer-id)))
+
+(rf/reg-fx
+ :local-storage-persist
+ (fn [db]
+   (local-storage/->store! db)))
 
 (rf/reg-fx
  :clipboard-write

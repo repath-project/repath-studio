@@ -36,4 +36,6 @@
 
 (defmethod tool/drag-end :pan
   [db]
-  (assoc db :cursor "grab"))
+  (-> db
+      (assoc :cursor "grab")
+      (h/add-fx [:local-storage-persist db])))
