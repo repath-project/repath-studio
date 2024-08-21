@@ -11,6 +11,11 @@
    [renderer.utils.local-storage :as local-storage]
    [renderer.utils.vec :as vec]))
 
+(def center
+  (rf/->interceptor
+   :id :center
+   :after (fn [context] (assoc-in context [:effects :dispatch-later] {:ms 10 :dispatch [::center]}))))
+
 (def active-document-path
   (let [db-store-key :re-frame-path/db-store]
     (->interceptor
@@ -30,6 +35,12 @@
                 (cond-> context'
                   (not= db ::not-found)
                   (assoc-effect :db (assoc-in original-db [:documents (:active-document original-db)] db))))))))
+
+
+(rf/reg-event-db
+ ::center
+ (fn [db [_]]
+   (h/center db)))
 
 (rf/reg-event-db
  ::set-hovered-keys
@@ -143,13 +154,13 @@
 
 (rf/reg-event-db
  ::new
- [focus-canvas local-storage/persist]
+ [center focus-canvas local-storage/persist]
  (fn [db [_]]
    (h/create db)))
 
 (rf/reg-event-db
  ::new-from-template
- [focus-canvas]
+ [center focus-canvas]
  (fn [db [_ size]]
    (h/create db size)))
 
@@ -170,7 +181,7 @@
 
 (rf/reg-event-db
  ::load
- [focus-canvas local-storage/persist]
+ [center focus-canvas local-storage/persist]
  (fn [db [_ documents]]
    (reduce h/load db documents)))
 
