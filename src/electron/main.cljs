@@ -46,7 +46,7 @@
   []
   (doseq
    [[e f]
-    [["open-remote-url" #(open-external! %)]
+    [["open-remote-url" open-external!]
      ["open-directory" #(.showItemInFolder shell %)]
      ["window-minimize" #(.minimize ^js @main-window)]
      ["window-toggle-fullscreen" #(.setFullScreen ^js @main-window (not (.isFullScreen ^js @main-window)))]
@@ -59,11 +59,11 @@
   []
   (doseq
    [[e f]
-    [["open-documents" #(file/open! @main-window %)]
-     ["save-document" #(file/save! @main-window %)]
-     ["save-document-as" #(file/save-as! @main-window %)]
-     ["export" #(file/export! @main-window %)]
-     ["print" #(file/print! %)]
+    [["open-documents" file/open!]
+     ["save-document" file/save!]
+     ["save-document-as" file/save-as!]
+     ["export" file/export!]
+     ["print" file/print!]
      ["load-webref" #(.listAll css)]
      ["load-system-fonts" #(.getAvailableFonts fontManager)]]]
     (.handle ipcMain e #(f %2))))

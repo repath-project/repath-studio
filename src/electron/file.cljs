@@ -31,35 +31,35 @@
     (serialize-document document file-path)))
 
 (defn save-dialog!
-  [window options]
-  (p/let [file (.showSaveDialog dialog window (clj->js options))
+  [options]
+  (p/let [file (.showSaveDialog dialog (clj->js options))
           file (get (js->clj file) "filePath")]
     (p/resolved file)))
 
 (defn save-as!
-  [window data]
+  [data]
   (let [document (edn/read-string data)
         file-path (:path document)
         directory (and file-path (.dirname path file-path))
         options (cond-> dialog-options
                   (and directory (.existsSync fs directory))
                   (assoc :defaultPath directory))]
-    (p/let [file (save-dialog! window options)]
+    (p/let [file (save-dialog! options)]
       (write-file! file document))))
 
 (defn save!
-  [window data]
+  [data]
   (let [document (edn/read-string data)
         file-path (:path document)]
     (if (and file-path (.existsSync fs file-path))
       (write-file! file-path document)
-      (save-as! window data))))
+      (save-as! data))))
 
 (defn open!
-  [window file-path]
+  [file-path]
   (if (and file-path (.existsSync fs file-path))
     (array (read! file-path))
-    (p/let [files (.showOpenDialog dialog window (clj->js dialog-options))
+    (p/let [files (.showOpenDialog dialog (clj->js dialog-options))
             file-paths (get (js->clj files) "filePaths")]
       (p/resolved (clj->js (mapv read! file-paths))))))
 
@@ -69,8 +69,8 @@
               :extensions ["svg"]}]})
 
 (defn export!
-  [window data]
-  (p/let [file (save-dialog! window export-options)]
+  [data]
+  (p/let [file (save-dialog! export-options)]
     (.writeFile fs file data "utf-8" (fn [err]
                                        (if err
                                          (p/rejected err)
