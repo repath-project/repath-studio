@@ -8,7 +8,7 @@
 (rf/reg-event-db
  ::add
  (fn [db [_ notification]]
-   (h/add db notification)))
+   (cond-> db notification (h/add notification))))
 
 (rf/reg-event-db
  ::unavailable-feature

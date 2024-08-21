@@ -158,7 +158,8 @@
    (let [els (h/root-children db)
          svg (h/->svg els)]
      (if platform/electron?
-       {:ipc-invoke ["export" svg]}
+       {:ipc-invoke {:channel "export"
+                     :data svg}}
        {::fx/export [svg {:startIn "pictures"
                           :types [{:accept {"image/svg+xml" [".svg"]}}]}]}))))
 
@@ -168,7 +169,9 @@
    (let [els (h/root-children db)
          svg (h/->svg els)]
      (if platform/electron?
-       {:ipc-invoke ["print" svg #(when % (rf/dispatch [::notification.e/add %]))]}
+       {:ipc-invoke {:channel "print"
+                     :data svg
+                     :on-resolution ::notification.e/add}}
        {::fx/print svg}))))
 
 (rf/reg-event-db

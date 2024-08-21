@@ -15,10 +15,11 @@
 
 (rf/reg-fx
  :ipc-invoke
- (fn [[channel data f]]
+ (fn [{:keys [channel data formatter on-resolution]}]
    (when platform/electron?
      (p/let [result (js/window.api.invoke channel (clj->js data))]
-       (f result)))))
+       (when on-resolution
+         (rf/dispatch [on-resolution (cond-> result formatter formatter)]))))))
 
 (rf/reg-fx
  :data-transfer

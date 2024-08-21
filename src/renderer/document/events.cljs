@@ -170,9 +170,10 @@
  local-storage/persist
  (fn [_ [_ file-path]]
    (if platform/electron?
-     {:ipc-invoke ["open-documents"
-                   file-path
-                   #(rf/dispatch [::load (mapv edn/read-string %)])]}
+     {:ipc-invoke {:channel "open-documents"
+                   :data file-path
+                   :on-resolution ::load
+                   :formatter #(mapv edn/read-string %)}}
      {::fx/open nil})))
 
 (rf/reg-event-fx
@@ -191,9 +192,10 @@
  (fn [{:keys [db]} [_]]
    (let [document (h/save-format db)]
      (if platform/electron?
-       {:ipc-invoke ["save-document"
-                     (pr-str document)
-                     #(rf/dispatch [::saved (edn/read-string %)])]}
+       {:ipc-invoke {:channel "save-document"
+                     :data (pr-str document)
+                     :on-resolution ::saved
+                     :formatter edn/read-string}}
        ;; The path is not available when we use web APIs for security reasons,
        ;; so we always dispatch save-as.
        {::fx/save-as document}))))
@@ -209,10 +211,12 @@
  (fn [{:keys [db]} [_ k]]
    (let [document (h/save-format db k)]
      (if platform/electron?
-       {:ipc-invoke ["save-document"
-                     (pr-str document)
-                     #(do (rf/dispatch [::saved (edn/read-string %)])
-                          (rf/dispatch [::close k false]))]}
+       {:ipc-invoke {:channel "save-document"
+                     :data (pr-str document)
+                     :on-resolution ::close
+                     :formatter #(-> % edn/read-string :key)}
+
+        #_(rf/dispatch [::close k false])}
        {::fx/save-as document}))))
 
 (rf/reg-event-fx
@@ -220,9 +224,10 @@
  (fn [{:keys [db]} [_]]
    (let [document (h/save-format db)]
      (if platform/electron?
-       {:ipc-invoke ["save-document-as"
-                     (pr-str document)
-                     #(rf/dispatch [::saved (edn/read-string %)])]}
+       {:ipc-invoke {:channel "save-document-as"
+                     :data (pr-str document)
+                     :on-resolution ::saved
+                     :formatter edn/read-string}}
        {::fx/save-as document}))))
 
 (rf/reg-event-db

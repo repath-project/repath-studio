@@ -226,13 +226,15 @@
 (rf/reg-event-fx
  :load-system-fonts
  (fn [_ [_ file-path]]
-   {:ipc-invoke ["load-system-fonts"
-                 file-path
-                 #(rf/dispatch [:set-system-fonts (js->clj % :keywordize-keys true)])]}))
+   {:ipc-invoke {:channel "load-system-fonts"
+                 :data file-path
+                 :on-resolution :set-system-fonts
+                 :formatter #(js->clj % :keywordize-keys true)}}))
 
 (rf/reg-event-fx
  :load-webref
  (fn [_ [_ file-path]]
-   {:ipc-invoke ["load-webref"
-                 file-path
-                 #(rf/dispatch [:set-webref-css (js->clj % :keywordize-keys true)])]}))
+   {:ipc-invoke {:channel "load-webref"
+                 :data file-path
+                 :on-resolution :set-webref-css
+                 :formatter #(js->clj % :keywordize-keys true)}}))
