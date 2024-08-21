@@ -89,7 +89,7 @@
   []
   (doseq
    [[web-contents-event f]
-    [["will-frame-navigate" #(.preventDefault %)] ;; Prevent navigation
+    [["will-frame-navigate" #(.preventDefault %)]
      ["closed" #(reset! main-window nil)]]]
     (.on (.-webContents ^js @main-window) web-contents-event f)))
 
