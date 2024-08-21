@@ -49,23 +49,25 @@
   [{:title "Timeline"
     :active? [:panel-visible? :timeline]
     :icon "animation"
-    :class "hidden sm:inline-block"
+    :class "hidden sm:inline-block shrink-0"
     :action [:toggle-panel :timeline]}
    {:title "Grid"
     :active? [:grid-visible?]
     :icon "grid"
+    :class "shrink-0"
     :action [:toggle-grid]}
    {:title "Rulers"
     :active? [:rulers-visible?]
     :icon "ruler-combined"
+    :class "shrink-0"
     :action [:toggle-rulers]}
    {:title "History"
     :active? [:panel-visible? :history]
     :icon "history"
-    :class "hidden sm:inline-block"
+    :class "hidden sm:inline-block shrink-0"
     :action [:toggle-panel :history]}
    {:title "XML"
-    :class "hidden sm:inline-block"
+    :class "hidden sm:inline-block shrink-0"
     :active? [:panel-visible? :xml]
     :icon "code"
     :action [:toggle-panel :xml]}])
