@@ -17,35 +17,35 @@
   [db]
   (get-in db (history-path db)))
 
-(defn current-position
+(defn position
   [db]
   (:position (history db)))
 
 (defn mark-restored
   [db]
-  (assoc-in db (conj (history-path db) :states (current-position db) :restored?) true))
+  (assoc-in db (conj (history-path db) :states (position db) :restored?) true))
 
 (defn state
-  ([history]
-   (state history (:position history)))
-  ([history position]
-   (get-in history [:states position])))
+  ([active-history]
+   (state active-history (:position active-history)))
+  ([active-history current-position]
+   (get-in active-history [:states current-position])))
 
 (defn previous-position
-  [history]
-  (-> history state :parent))
+  [active-history]
+  (-> active-history state :parent))
 
 (defn next-position
-  [history]
-  (-> history state :children last))
+  [active-history]
+  (-> active-history state :children last))
 
 (defn undos?
-  [history]
-  (boolean (previous-position history)))
+  [active-history]
+  (boolean (previous-position active-history)))
 
 (defn redos?
-  [history]
-  (boolean (next-position history)))
+  [active-history]
+  (boolean (next-position active-history)))
 
 (defn swap
   [db]
@@ -81,22 +81,22 @@
      db)))
 
 (defn accumulate
-  [history f]
-  (loop [current-state (state history)
+  [active-history f]
+  (loop [current-state (state active-history)
          stack []]
-    (if-let [position (f current-state)]
-      (let [accumulated-state (state history position)
+    (if-let [current-position (f current-state)]
+      (let [accumulated-state (state active-history current-position)
             accumulated-state (dissoc accumulated-state :elements)]
         (recur accumulated-state (conj stack accumulated-state)))
       stack)))
 
 (defn undos
-  [history]
-  (accumulate history :parent))
+  [active-history]
+  (accumulate active-history :parent))
 
 (defn redos
-  [history]
-  (accumulate history (fn [state] (-> state :children last))))
+  [active-history]
+  (accumulate active-history (fn [state] (-> state :children last))))
 
 (defn state-count
   [db]
@@ -112,15 +112,15 @@
 
 (defn- create-state
   [db id explanation]
-  (let [state {:explanation explanation
-               :elements (element.h/elements db)
-               :timestamp (.now js/Date) ; REVIEW
-               :index (state-count db)
-               :id id
-               :children []}]
-    (cond-> state
-      (current-position db)
-      (assoc :parent (current-position db)))))
+  (let [new-state {:explanation explanation
+                   :elements (element.h/elements db)
+                   :timestamp (.now js/Date) ; REVIEW
+                   :index (state-count db)
+                   :id id
+                   :children []}]
+    (cond-> new-state
+      (position db)
+      (assoc :parent (position db)))))
 
 (defn- update-ancestors
   "Makes all ancestors of the active branch the rightmost element.
@@ -145,7 +145,7 @@
    to history. We also avoid the need of throttling in consecutive actions
    (move, color pick etc)"
   [db explanation & more]
-  (let [current-position (current-position db)
+  (let [current-position (position db)
         id (uuid/generate)
         explanation (apply str explanation more)
         elements (element.h/elements db)]

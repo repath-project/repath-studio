@@ -42,17 +42,17 @@
 
 (defn bounds
   [elements]
-  (let [bounds (->> elements
-                    (map :bounds)
-                    (remove nil?))]
-    (when (seq bounds)
-      (apply bounds/union bounds))))
+  (let [el-bounds (->> elements
+                       (map :bounds)
+                       (remove nil?))]
+    (when (seq el-bounds)
+      (apply bounds/union el-bounds))))
 
 (defn offset
   [el]
-  (let [bounds (:bounds el)
+  (let [el-bounds (:bounds el)
         local-bounds (tool/bounds el)]
-    (take 2 (mat/sub bounds local-bounds))))
+    (take 2 (mat/sub el-bounds local-bounds))))
 
 (defn snapping-points
   [element options]

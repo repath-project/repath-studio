@@ -7,32 +7,32 @@
    [renderer.ui :as ui]))
 
 (defn button
-  [type]
-  (let [tool @(rf/subscribe [:tool])
+  [tool]
+  (let [active-tool @(rf/subscribe [:tool])
         primary-tool @(rf/subscribe [:primary-tool])
-        selected? (= tool type)
-        primary? (= primary-tool type)]
-    (when (:icon (tool/properties type))
+        selected? (= active-tool tool)
+        primary? (= primary-tool tool)]
+    (when (:icon (tool/properties tool))
       [:> Tooltip/Root
        [:> Tooltip/Trigger {:asChild true}
         [:span
          [ui/radio-icon-button
           {:active? selected?
            :class (when primary? "outline-shadow")
-           :icon (:icon (tool/properties type))
-           :action #(rf/dispatch [:set-tool type])}]]]
+           :icon (:icon (tool/properties tool))
+           :action #(rf/dispatch [:set-tool tool])}]]]
        [:> Tooltip/Portal
         [:> Tooltip/Content
          {:class "tooltip-content"
           :sideOffset 5
           :side "top"}
          [:div.flex.gap-2.items-center
-          (str/capitalize (name type))]]]])))
+          (str/capitalize (name tool))]]]])))
 
 (defn group
-  [group]
+  [items]
   (into [:div.flex.gap-1]
-        (map button group)))
+        (map button items)))
 
 (def groups
   [[:select :edit :pan :zoom]

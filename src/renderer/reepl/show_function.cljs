@@ -12,33 +12,33 @@
       demunge))
 
 (defn get-cljs-arities
-  [fn]
+  [f]
   (map
-   #(aget fn %)
-   (filter #(.startsWith % cljs-fn-prefix) (js->clj (js/Object.keys fn)))))
+   #(aget f %)
+   (filter #(.startsWith % cljs-fn-prefix) (js->clj (js/Object.keys f)))))
 
 (defn get-fn-summary
-  [fn]
-  (let [source (str fn)
+  [f]
+  (let [source (str f)
         args (second (re-find #"\(([^\)]+)\)" source))]
     (map demunge
          (str/split args \,))))
 
 (defn get-function-forms
-  [fn]
-  (let [arities (get-cljs-arities fn)
+  [f]
+  (let [arities (get-cljs-arities f)
         arities (if (empty? arities)
-                  [fn]
+                  [f]
                   arities)]
     (map get-fn-summary
          arities)))
 
 (defn get-fn-name
-  [fn]
-  (let [parts (.split (.-name fn) \$)]
+  [f]
+  (let [parts (.split (.-name f) \$)]
     (cond
-      (empty? (.-name fn)) "*anonymous*"
-      (= 1 (count parts)) (.-name fn)
+      (empty? (.-name f)) "*anonymous*"
+      (= 1 (count parts)) (.-name f)
       :else (recover-cljs-name parts))))
 
 (defn str-fn-forms
@@ -46,14 +46,14 @@
   (str \[ (str/join "] [" (map (partial str/join " ") forms)) \]))
 
 (defn show-fn-with-docs
-  [get-doc fn _ _]
-  (when (= js/Function (type fn))
-    (let [docs (get-doc (symbol (get-fn-name fn)))
-          is-native-fn (.match (str fn) #"\{ \[native code\] \}$")]
+  [get-doc f _ _]
+  (when (= js/Function (type f))
+    (let [docs (get-doc (symbol (get-fn-name f)))
+          is-native-fn (.match (str f) #"\{ \[native code\] \}$")]
       [:div.inline-block.shrink-0.box-border
        (if docs
          [:span.function-docs docs]
          [:<>
-          [:span.function-head "fn " (get-fn-name fn)]
-          [:span.function-arities (str-fn-forms (get-function-forms fn))]
+          [:span.function-head "fn " (get-fn-name f)]
+          [:span.function-arities (str-fn-forms (get-function-forms f))]
           [:span.function-body (when is-native-fn "[native code]")]])])))
