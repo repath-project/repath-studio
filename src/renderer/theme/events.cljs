@@ -6,9 +6,9 @@
    [renderer.utils.local-storage :as local-storage]))
 
 (rf/reg-event-fx
- ::add-native-sistener
+ ::add-native-listener
  (fn [_ _]
-   {::fx/add-native-sistener [::set-native-mode]}))
+   {::fx/add-native-listener [::set-native-mode]}))
 
 (rf/reg-event-fx
  ::set-document-attr

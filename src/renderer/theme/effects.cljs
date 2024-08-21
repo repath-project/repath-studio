@@ -14,6 +14,6 @@
    (.setAttribute js/window.document.documentElement "data-theme" mode)))
 
 (rf/reg-fx
- ::add-native-sistener
+ ::add-native-listener
  (fn [[e]]
    (.addListener native-query #(rf/dispatch [e (native %)]))))
