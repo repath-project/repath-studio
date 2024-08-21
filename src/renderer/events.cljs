@@ -42,6 +42,11 @@
  (fn [db _]
    db))
 
+(rf/reg-event-fx
+ :local-storage-persist
+ (fn [{:keys [db]} _]
+   {:local-storage-persist db}))
+
 (rf/reg-event-db
  :set-system-fonts
  (fn [db [_ fonts]]

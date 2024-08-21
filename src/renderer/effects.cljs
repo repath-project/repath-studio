@@ -33,8 +33,8 @@
 
 (rf/reg-fx
  :local-storage-persist
- (fn [db]
-   (local-storage/->store! db)))
+ (fn [data]
+   (local-storage/->store! data)))
 
 (rf/reg-fx
  :clipboard-write

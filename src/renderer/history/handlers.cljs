@@ -114,7 +114,7 @@
   [db id explanation]
   (let [state {:explanation explanation
                :elements (element.h/elements db)
-               :timestamp (.now js/Date)
+               :timestamp (.now js/Date) ; REVIEW
                :index (state-count db)
                :id id
                :children []}]
@@ -162,7 +162,7 @@
              update-ancestors)
 
          :always
-         (h/add-fx [:local-storage-persist db])))
+         (h/add-fx [:dispatch [:local-storage-persist]])))
       (-> (swap db)
           (notification.h/add
            [notification.v/spec-failed explanation (spec/explain elements element.db/elements)])))))
