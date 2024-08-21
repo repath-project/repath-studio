@@ -39,7 +39,6 @@
 
 (rf/reg-event-db
  ::center
- local-storage/persist
  (fn [db [_]]
    (h/center db)))
 
@@ -161,7 +160,7 @@
 
 (rf/reg-event-db
  ::new-from-template
- [center focus-canvas]
+ [center focus-canvas local-storage/persist]
  (fn [db [_ size]]
    (h/create db size)))
 
