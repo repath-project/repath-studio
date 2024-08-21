@@ -3,7 +3,6 @@
    #_["@sentry/electron/main" :as sentry-electron-main]
    ["@webref/css" :as css]
    ["electron" :refer [app shell ipcMain BrowserWindow]]
-   ["electron-extension-installer" :refer [REACT_DEVELOPER_TOOLS installExtension]]
    ["electron-log/main" :as log]
    ["electron-reloader"]
    ["electron-updater" :as updater]
@@ -16,14 +15,6 @@
 
 (defonce main-window (atom nil))
 (defonce loading-window (atom nil))
-
-(defn add-extension
-  [extension]
-  (-> (installExtension
-       extension
-       #js {:loadExtensionOptions {:allowFileAccess true}})
-      (.then (fn [extension] (js/console.log "Added Extension: " extension)))
-      (.catch (fn [err] (js/console.log "An error occurred: " err)))))
 
 (defn send-to-renderer!
   ([channel]
@@ -142,10 +133,6 @@
     (.loadURL ^js @main-window (if config/debug?
                                  "http://localhost:8080"
                                  (.join path "file://" js/__dirname "/public/index.html")))
-
-    (when config/debug?
-      (add-extension REACT_DEVELOPER_TOOLS)
-      #_(.openDevTools (.-webContents ^js @main-window)))
 
     (register-web-contents-events!)
     (register-ipc-on-events!)
