@@ -20,7 +20,7 @@
    (let [document (-> db
                       (get-in [:documents k])
                       (select-keys [:elements :path :key])
-                      (assoc :save (history.h/current-position db)
+                      (assoc :save (history.h/position db)
                              :version config/version))]
 
      (reduce #(update-in %1 [:elements %2] dissoc :selected?)
