@@ -1,6 +1,5 @@
 (ns electron.main
   (:require
-   #_["@sentry/electron/main" :as sentry-electron-main]
    ["@webref/css" :as css]
    ["electron" :refer [app shell ipcMain BrowserWindow]]
    ["electron-log/main" :as log]
@@ -157,7 +156,6 @@
   (.once ^js (.-webContents @loading-window) "did-finish-load" #(.show ^js @loading-window)))
 
 (defn ^:export init []
-  #_(sentry-electron-main/init (clj->js config/sentry-options))
   (.initialize log)
   (.on app "window-all-closed" #(when-not (= js/process.platform "darwin") (.quit app)))
   (.on app "ready" init-loading-window!))

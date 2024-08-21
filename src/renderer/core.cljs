@@ -1,7 +1,5 @@
 (ns renderer.core
   (:require
-   #_["@sentry/electron/renderer" :as sentry-electron-renderer]
-   #_["@sentry/react" :as sentry-react]
    ["electron-log/renderer"]
    ["mdn-data" :as mdn] ;; deprecating in favor of w3c/webref
    ["paper" :refer [paper]]
@@ -90,10 +88,6 @@
     (js/window.api.on channel f)))
 
 (defn ^:export init []
-  #_(if platform/electron?
-      (sentry-electron-renderer/init (clj->js config/sentry-options) sentry-react/init)
-      (sentry-react/init (clj->js config/sentry-options)))
-
   (js/console.log (str "%c" easter-egg) "color: #e93976")
 
   (devtools/set-pref!
