@@ -216,11 +216,11 @@
 (rf/reg-event-db
  ::saved
  local-storage/persist
- (fn [db [_ {:keys [path] :as document-info}]]
+ (fn [db [_ {:keys [path key] :as document-info}]]
    ;; Update the path, the title and the saved position of the document.
    ;; Any other changes that could happen while saving should be preserved.
    (-> db
-       (update-in [:documents (h/search-by-path db path)] merge document-info)
+       (update-in [:documents key] merge document-info)
        (h/add-recent path))))
 
 (rf/reg-event-db

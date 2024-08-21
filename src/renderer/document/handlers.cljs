@@ -19,7 +19,7 @@
   ([db k]
    (let [document (-> db
                       (get-in [:documents k])
-                      (select-keys [:elements :path])
+                      (select-keys [:elements :path :key])
                       (assoc :save (history.h/current-position db)
                              :version config/version))]
 

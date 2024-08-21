@@ -2,6 +2,7 @@
   (:require
    [promesa.core :as p]
    [re-frame.core :as rf]
+   [renderer.document.events :as-alias document.e]
    [renderer.utils.file :as file]))
 
 (def file-picker-options
@@ -29,6 +30,6 @@
                (let [title (.-name file-handle)
                      document (assoc data :title title)]
                  (.close writable)
-                 (rf/dispatch [::saved {:key (:key document)
-                                        :title title
-                                        :save (:save document)}]))))))))
+                 (rf/dispatch [::document.e/saved {:key (:key document)
+                                                   :title title
+                                                   :save (:save document)}]))))))))
