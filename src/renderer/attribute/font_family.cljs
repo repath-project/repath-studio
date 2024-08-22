@@ -31,7 +31,7 @@
       (for [item suggestions]
         ^{:key item}
         [:> Command/CommandItem
-         {:key key
+         {:key item
           :on-select #(rf/dispatch [::element.e/set-attr :font-family item])}
          item])]]]])
 

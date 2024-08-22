@@ -44,20 +44,21 @@
                :x2 pos-x
                :y2 pos-y
                :stroke "gray"}]
-    (element.h/set-temp db {:type :overlay
+    (element.h/set-temp db {:id :mesure
+                            :type :overlay
                             :tag :measure
                             :attrs attrs
                             :hypotenuse hypotenuse})))
 
 (defmethod tool/render :measure
-  [{:keys [attrs key hypotenuse]}]
+  [{:keys [attrs id hypotenuse]}]
   (let [{:keys [x1 x2 y1 y2]} attrs
         [x1 y1 x2 y2] (map units/unit->px [x1 y1 x2 y2])
         angle (math/angle x1 y1 x2 y2)
         zoom @(rf/subscribe [::document.s/zoom])
         straight? (< angle 180)
         straight-angle (if straight? angle (- angle 360))]
-    [:g {:key key}
+    [:g {:key (name id)}
      [overlay/cross x1 y1]
      [overlay/cross x2 y2]
 

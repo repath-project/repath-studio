@@ -4,6 +4,7 @@
    ["@radix-ui/react-tooltip" :as Tooltip]
    ["path-browserify" :as path]
    ["react-resizable-panels" :refer [Panel PanelGroup PanelResizeHandle]]
+   [config :as config]
    [re-frame.core :as rf]
    [renderer.attribute.views :as attr.v]
    [renderer.codemirror.views :as cm.v]
@@ -143,8 +144,7 @@
       [ui/scroll-area
        [:div.bg-primary.p-6.lg:p-12.flex.max-w-screen-xl.w-full.gap-8
         [:div.flex-1
-         [:h1.text-4xl.mb-1.font-light
-          "Repath Studio"]
+         [:h1.text-4xl.mb-1.font-light config/app-name]
 
          [:p.text-xl.text-muted.font-bold
           "Scalable Vector Graphics Manipulation"]
@@ -179,12 +179,12 @@
                 {:value :empty-canvas
                  :class "menu-item select-item"}
                 [:> Select/ItemText "Empty canvas"]]
-               (for [[key _size] (sort paper-size)]
-                 ^{:key key}
+               (for [[k _v] (sort paper-size)]
+                 ^{:key k}
                  [:> Select/Item
-                  {:value key
+                  {:value k
                    :class "menu-item select-item"}
-                  [:> Select/ItemText (str "A" key)]])]]]]]]
+                  [:> Select/ItemText (str "A" k)]])]]]]]]
 
          [:div.flex.items-center.gap-2
           [ui/icon "folder"]

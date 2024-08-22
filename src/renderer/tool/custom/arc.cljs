@@ -15,8 +15,8 @@
    [renderer.utils.units :as units]))
 
 (derive :arc ::tool/custom)
-(derive ::start-deg ::angle/angle)
-(derive ::end-deg ::angle/angle)
+(derive :start-deg ::angle/angle)
+(derive :end-deg ::angle/angle)
 
 (defmethod tool/properties :arc
   []
@@ -26,8 +26,8 @@
            :cy
            :rx
            :ry
-           ::start-deg
-           ::end-deg
+           :start-deg
+           :end-deg
            :stroke-width
            :opacity
            :fill
@@ -42,8 +42,8 @@
         [pos-x pos-y] adjusted-pointer-pos
         attrs {:cx offset-x
                :cy offset-y
-               ::start-deg 90
-               ::end-deg 180
+               :start-deg 90
+               :end-deg 180
                :fill fill
                :stroke stroke
                :rx (abs (- pos-x offset-x))
@@ -65,7 +65,7 @@
   (* Math/PI (Math/pow (units/unit->px r) 2)))
 
 (defmethod tool/path :arc
-  [{{:keys [cx cy rx ry ::start-deg ::end-deg]} :attrs}]
+  [{{:keys [cx cy rx ry start-deg end-deg]} :attrs}]
   (let [[cx cy rx ry] (map units/unit->px [cx cy rx ry])
         x1 (+ cx (math/angle-dx start-deg rx))
         y1 (+ cy (math/angle-dy start-deg ry))
@@ -99,8 +99,8 @@
                                       :stroke-dasharray])) child-elements]))
 
 (defmethod tool/render-edit :arc
-  [{:keys [attrs key]}]
-  (let [{:keys [cx cy rx ry ::start-deg ::end-deg]} attrs
+  [{:keys [attrs id]}]
+  (let [{:keys [cx cy rx ry start-deg end-deg]} attrs
         [cx cy rx ry] (mapv units/unit->px [cx cy rx ry])
         active-page @(rf/subscribe [::element.s/active-page])
         x1 (+ cx (math/angle-dx start-deg rx))
@@ -127,8 +127,8 @@
                 :stroke "#555"
                 :stroke-width (/ 1 zoom)}]
      (map (fn [handle] [overlay/circle-handle handle])
-          [{:x x1 :y y1 :key ::start-deg :type :handle :tag :edit :element key}
-           {:x x2 :y y2 :key ::end-deg :type :handle :tag :edit :element key}])
+          [{:x x1 :y y1 :id :start-deg :type :handle :tag :edit :element id}
+           {:x x2 :y y2 :id :end-deg :type :handle :tag :edit :element id}])
      (map (fn [handle] [overlay/square-handle handle])
-          [{:x (+ cx rx) :y cy :key :rx :type :handle :tag :edit :element key}
-           {:x cx :y (- cy ry) :key :ry :type :handle :tag :edit :element key}])]))
+          [{:x (+ cx rx) :y cy :id :rx :type :handle :tag :edit :element id}
+           {:x cx :y (- cy ry) :id :ry :type :handle :tag :edit :element id}])]))

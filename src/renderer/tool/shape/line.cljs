@@ -100,7 +100,7 @@
                    "L" x2 y2])))
 
 (defmethod tool/render-edit :line
-  [{:keys [attrs key] :as el}]
+  [{:keys [attrs id] :as el}]
   (let [offset (element/offset el)
         {:keys [x1 y1 x2 y2]} attrs
         [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])
@@ -109,25 +109,25 @@
     [:g
      {:key ::edit-handles}
      (map (fn [handle]
+            ^{:key (:id handle)}
             [overlay/square-handle handle
-             ^{:key (:key handle)}
-             [:title (name (:key handle))]])
+             [:title {:key (str (:id handle) "-title")} (name (:id handle))]])
           [{:x x1
             :y y1
-            :key (keyword (:key el) :starting-point)
+            :id :starting-point
             :type :handle
             :tag :edit
-            :element key}
+            :element id}
            {:x x2
             :y y2
-            :key (keyword (:key el) :ending-point)
+            :id :ending-point
             :type :handle
             :tag :edit
-            :element key}])]))
+            :element id}])]))
 
 (defmethod tool/edit :line
   [el [x y] handle]
-  (case (keyword (name handle))
+  (case handle
     :starting-point
     (-> el
         (hierarchy/update-attr :x1 + x)

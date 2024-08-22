@@ -33,18 +33,16 @@
 
 (defn nearest-neighbors
   [db]
-  (let [base-points (base-points db)
-        ;; FIXME: Subscription in event.
-        tree @(rf/subscribe [::snap.s/in-viewport-tree])]
+  (let [tree @(rf/subscribe [::snap.s/in-viewport-tree])] ; FIXME: Subscription in event.
     (map #(let [nearest-neighbor (kdtree/nearest-neighbor tree %)]
             (when nearest-neighbor
-              (assoc nearest-neighbor :base-point %))) base-points)))
+              (assoc nearest-neighbor :base-point %))) (base-points db))))
 
 (defn nearest-neighbor
   [{:keys [active-document snap] :as db}]
   (let [threshold (:threshold snap)
         nearest-neighbors (nearest-neighbors db)
-        threshold (/ threshold (-> db :documents active-document :zoom))
+        threshold (/ threshold (get-in db [:documents active-document :zoom]))
         nearest-neighbor (reduce
                           (fn [nearest-neighbor neighbor]
                             (if (< (:dist-squared neighbor)

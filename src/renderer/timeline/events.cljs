@@ -35,7 +35,7 @@
 
 (rf/reg-event-fx
  ::set-time
- (fn [{:keys [db]} [_ time]]
-   {:db (assoc-in db [:timeline :time] time)
-    ::fx/set-current-time time
+ (fn [{:keys [db]} [_ t]]
+   {:db (assoc-in db [:timeline :time] t)
+    ::fx/set-current-time t
     ::fx/pause-animations nil}))

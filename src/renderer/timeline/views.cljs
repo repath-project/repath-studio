@@ -80,7 +80,7 @@
 
 (defn toolbar
   [timeline-ref]
-  (let [time @(rf/subscribe [::timeline.s/time])
+  (let [t @(rf/subscribe [::timeline.s/time])
         time-formatted @(rf/subscribe [::timeline.s/time-formatted])
         paused? @(rf/subscribe [::timeline.s/paused?])
         replay? @(rf/subscribe [::timeline.s/replay?])
@@ -88,10 +88,10 @@
     [:div.toolbar.bg-primary
      [ui/icon-button "go-to-start"
       {:on-click #(.setTime (.-current timeline-ref) 0)
-       :disabled (zero? time)}]
+       :disabled (zero? t)}]
      [ui/radio-icon-button
       {:title (if paused? "Play" "Pause")
-       :class (when (pos? time) "border border-accent")
+       :class (when (pos? t) "border border-accent")
        :active? (not paused?)
        :icon (if paused? "play" "pause")
        :action #(if paused?
@@ -99,7 +99,7 @@
                   (.pause (.-current timeline-ref)))}]
      [ui/icon-button "go-to-end"
       {:on-click #(.setTime (.-current timeline-ref) end)
-       :disabled (>= time end)}]
+       :disabled (>= t end)}]
      [ui/radio-icon-button
       {:title "Replay"
        :active? replay?
@@ -150,12 +150,12 @@
 
 (defn time-bar
   []
-  (let [time @(rf/subscribe [::timeline.s/time])
+  (let [t @(rf/subscribe [::timeline.s/time])
         end @(rf/subscribe [::timeline.s/end])
         timeline? @(rf/subscribe [:panel-visible? :timeline])]
     [:div.h-px.block
-     {:style {:width (str (* (/ time end) 100) "%")
-              :background (when-not (or (zero? time) (zero? end) timeline?)
+     {:style {:width (str (* (/ t end) 100) "%")
+              :background (when-not (or (zero? t) (zero? end) timeline?)
                             "var(--accent)")}}]))
 
 (defn root

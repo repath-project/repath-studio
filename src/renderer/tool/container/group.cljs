@@ -33,8 +33,8 @@
 (defmethod tool/render :g
   [{:keys [attrs children bounds] :as element}]
   (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
-        ignored-keys @(rf/subscribe [::document.s/ignored-keys])
-        ignored? (contains? ignored-keys (:key element))
+        ignored-ids @(rf/subscribe [::document.s/ignored-ids])
+        ignored? (contains? ignored-ids (:id element))
         [x1 y1 _x2 _y2] bounds
         [width height] (bounds/->dimensions bounds)
         pointer-handler #(pointer/event-handler % element)]

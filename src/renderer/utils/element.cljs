@@ -121,10 +121,10 @@
   [{:keys [attrs] :as el}]
   (let [d (tool/path el)
         paper-path (Path. d)
-        offset (or (:stroke-width attrs) 1)
+        el-offset (or (:stroke-width attrs) 1)
         stroke-path (PaperOffset.offsetStroke
                      paper-path
-                     (/ offset 2)
+                     (/ el-offset 2)
                      #js {:cap (or (:stroke-linecap attrs) "butt")
                           :join (or (:stroke-linejoin attrs) "miter")})
         new-d (.getAttribute (.exportSVG stroke-path) "d")]

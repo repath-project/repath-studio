@@ -62,27 +62,27 @@
        (not redos?)]]]))
 
 (defn close-button
-  [k saved?]
+  [id saved?]
   [:button.close-document-button.small.hover:bg-transparent
-   {:key k
+   {:key (name id)
     :title "Close document"
     :on-pointer-down #(.stopPropagation %)
     :on-pointer-up (fn [e]
                      (.stopPropagation e)
-                     (rf/dispatch [::document.e/close k true]))}
+                     (rf/dispatch [::document.e/close id true]))}
    [ui/icon "times"]
    (when-not saved?
      [ui/icon "dot" {:class "icon dot"}])])
 
 (defn context-menu
-  [k]
-  (let [document @(rf/subscribe [::document.s/document k])
+  [id]
+  (let [document @(rf/subscribe [::document.s/document id])
         path (:path document)
         document-tabs @(rf/subscribe [:document-tabs])]
     [{:label "Close"
-      :action [::document.e/close k true]}
+      :action [::document.e/close id true]}
      {:label "Close others"
-      :action [::document.e/close-others k]
+      :action [::document.e/close-others id]
       :disabled? (empty? (rest document-tabs))}
      {:label "Close all"
       :action [::document.e/close-all]}
@@ -94,9 +94,9 @@
       :disabled? (not (and path platform/electron?))}]))
 
 (defn tab
-  [k document active?]
+  [id document active?]
   (ra/with-let [dragged-over? (ra/atom false)]
-    (let [saved? @(rf/subscribe [::document.s/saved? k])]
+    (let [saved? @(rf/subscribe [::document.s/saved? id])]
       [:> ContextMenu/Root
        [:> ContextMenu/Trigger
         [:div.document-tab
@@ -104,11 +104,11 @@
                   (when saved? "saved")]
           :on-wheel #(rf/dispatch [::document.e/scroll (.-deltaY %)])
           :on-pointer-down #(case (.-buttons %)
-                              4 (rf/dispatch [::document.e/close k true])
-                              1 (rf/dispatch [::document.e/set-active k])
+                              4 (rf/dispatch [::document.e/close id true])
+                              1 (rf/dispatch [::document.e/set-active id])
                               nil)
           :draggable true
-          :on-drag-start #(.setData (.-dataTransfer %) "key" (name k))
+          :on-drag-start #(.setData (.-dataTransfer %) "id" (name id))
           :on-drag-over #(.preventDefault %)
           :on-drag-enter #(reset! dragged-over? true)
           :on-drag-leave #(reset! dragged-over? false)
@@ -116,19 +116,20 @@
                      (.preventDefault evt)
                      (reset! dragged-over? false)
                      (rf/dispatch [::document.e/swap-position
-                                   (-> (.getData (.-dataTransfer evt) "key")
+                                   (-> (.-dataTransfer evt)
+                                       (.getData "id")
                                        keyword)
-                                   k]))}
+                                   id]))}
          [:span.truncate.pointer-events-none
           (:title document)]
-         [close-button k saved?]]]
+         [close-button id saved?]]]
        [:> ContextMenu/Portal
         (into
          [:> ContextMenu/Content
           {:class "menu-content context-menu-content"}]
          (map (fn [item]
                 [ui/context-menu-item item])
-              (context-menu k)))]])))
+              (context-menu id)))]])))
 
 (defn tab-bar []
   (let [documents @(rf/subscribe [:documents])
@@ -136,9 +137,9 @@
         active-document @(rf/subscribe [:active-document])]
     [:div.flex.drag.justify-between
      [:div.flex.flex-1.overflow-hidden
-      (for [document document-tabs]
-        ^{:key document}
-        [tab document (document documents) (= document active-document)])]
+      (for [document-id document-tabs]
+        ^{:key (str document-id)}
+        [tab document-id (get documents document-id) (= document-id active-document)])]
      [:div.toolbar
       [:> DropdownMenu/Root
        [:> DropdownMenu/Trigger

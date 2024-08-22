@@ -15,7 +15,7 @@
 (defmethod tool/properties :circle
   []
   {:icon "circle-alt"
-   :description "The <circle> SVG element is an SVG basic shape, used to draw 
+   :description "The <circle> SVG element is an SVG basic shape, used to draw
                  circles based on a center point and a radius."
    :attrs [:stroke-width
            :opacity
@@ -71,12 +71,12 @@
 
 (defmethod tool/edit :circle
   [el [x _y] handle]
-  (case (keyword (name handle))
+  (case handle
     :r (attr.hierarchy/update-attr el :r #(abs (+ % x)))
     el))
 
 (defmethod tool/render-edit :circle
-  [{:keys [key] :as el}]
+  [{:keys [id] :as el}]
   (let [bounds (:bounds el)
         [cx cy] (bounds/center bounds)
         r (/ (first (bounds/->dimensions bounds)) 2)]
@@ -86,9 +86,8 @@
      [overlay/times cx cy]
      [overlay/square-handle {:x (+ cx r)
                              :y cy
-                             :key (keyword (:key el) :r)
+                             :id :r
                              :type :handle
                              :tag :edit
-                             :element key}
-      ^{:key (keyword (:key el) :r)}
-      [:title "r"]]]))
+                             :element id}
+      [:title {:key "r-title"} "r"]]]))

@@ -35,16 +35,16 @@
                     :r (/ 3 zoom)}] children)))
 
 (defn circle-handle
-  [{:keys [x y key] :as el} & children]
+  [{:keys [x y id] :as el} & children]
   (let [zoom @(rf/subscribe [::document.s/zoom])
         clicked-element @(rf/subscribe [:clicked-element])
         pointer-handler #(pointer/event-handler % el)]
-    [:circle {:key key
+    [:circle {:key (name id)
               :cx x
               :cy y
               :stroke accent
               :stroke-width (/ 1 zoom)
-              :fill (if (= (:key clicked-element) key)
+              :fill (if (= (:key clicked-element) id)
                       accent
                       accent-inverted)
               :r (/ 4 zoom)
@@ -55,25 +55,23 @@
               :on-scroll pointer-handler} children]))
 
 (defn square-handle
-  [{:keys [x y key cursor] :as el} & children]
+  [{:keys [x y id cursor] :as el} & children]
   (let [zoom @(rf/subscribe [::document.s/zoom])
         clicked-element @(rf/subscribe [:clicked-element])
-        hovered-keys @(rf/subscribe [::document.s/hovered-keys])
+        hovered-ids @(rf/subscribe [::document.s/hovered-ids])
         size (/ handle-size zoom)
         stroke-width (/ 1 zoom)
         pointer-handler #(pointer/event-handler % el)
-        clicked? (= (:key clicked-element) key)
-        active? (or clicked? (contains? hovered-keys key))]
-    [:rect {:key key
-            :id (name key)
-            :fill (if active? accent accent-inverted)
+        clicked? (= (:id clicked-element) id)
+        active? (or clicked? (contains? hovered-ids id))]
+    [:rect {:fill (if active? accent accent-inverted)
             :stroke (if active? accent "#777")
             :stroke-width stroke-width
             :x (- x (/ size 2))
             :y (- y (/ size 2))
             :width size
             :height size
-            :cursor (if (or clicked? (not cursor)) "default" cursor)
+            :cursor (if (or active? (not cursor)) "default" cursor)
             :on-pointer-up pointer-handler
             :on-pointer-down pointer-handler
             :on-pointer-move pointer-handler
@@ -145,8 +143,9 @@
        (- x mid) (+ y mid) false]])))
 
 (defn scale-handler
-  [attrs]
-  [square-handle (merge attrs {:type :handle
+  [props]
+  ^{:key (name (:id props))}
+  [square-handle (merge props {:type :handle
                                :tag :scale})])
 
 (defn min-bounds
@@ -163,14 +162,14 @@
 (defn wrapping-bounding-box
   [bounds]
   (let [zoom @(rf/subscribe [::document.s/zoom])
-        key :bounding-box
-        ignored-keys @(rf/subscribe [::document.s/ignored-keys])
-        ignored? (contains? ignored-keys key)
+        id :bounding-box
+        ignored-ids @(rf/subscribe [::document.s/ignored-ids])
+        ignored? (contains? ignored-ids id)
         [x1 y1 _x2 _y2] bounds
         [w h] (bounds/->dimensions bounds)
         pointer-handler #(pointer/event-handler % {:type :element
                                                    :tag :move
-                                                   :key key})
+                                                   :id id})
         rect-attrs {:x x1
                     :y y1
                     :width w
@@ -192,14 +191,14 @@
         [w h] (bounds/->dimensions bounds)]
     [:g {:key :bounding-handles}
      (map scale-handler
-          [{:x x1 :y y1 :key :top-left :cursor "nwse-resize"}
-           {:x x2 :y y1 :key :top-right :cursor "nesw-resize"}
-           {:x x1 :y y2 :key :bottom-left :cursor "nesw-resize"}
-           {:x x2 :y y2 :key :bottom-right :cursor "nwse-resize"}
-           {:x (+ x1 (/ w 2)) :y y1 :key :top-middle :cursor "ns-resize"}
-           {:x x2 :y (+ y1 (/ h 2)) :key :middle-right :cursor "ew-resize"}
-           {:x x1 :y (+ y1 (/ h 2)) :key :middle-left :cursor "ew-resize"}
-           {:x (+ x1 (/ w 2)) :y y2 :key :bottom-middle :cursor "ns-resize"}])]))
+          [{:x x1 :y y1 :id :top-left :cursor "nwse-resize"}
+           {:x x2 :y y1 :id :top-right :cursor "nesw-resize"}
+           {:x x1 :y y2 :id :bottom-left :cursor "nesw-resize"}
+           {:x x2 :y y2 :id :bottom-right :cursor "nwse-resize"}
+           {:x (+ x1 (/ w 2)) :y y1 :id :top-middle :cursor "ns-resize"}
+           {:x x2 :y (+ y1 (/ h 2)) :id :middle-right :cursor "ew-resize"}
+           {:x x1 :y (+ y1 (/ h 2)) :id :middle-left :cursor "ew-resize"}
+           {:x (+ x1 (/ w 2)) :y y2 :id :bottom-middle :cursor "ns-resize"}])]))
 
 (defn label
   [text position anchor]
@@ -310,13 +309,13 @@
    ["Active tool" @(rf/subscribe [:tool])]
    ["Primary tool" @(rf/subscribe [:primary-tool])]
    ["State"  @(rf/subscribe [:state])]
-   ["Clicked element" (:key @(rf/subscribe [:clicked-element]))]
-   ["Ignored elements" @(rf/subscribe [::document.s/ignored-keys])]
+   ["Clicked element" (:id @(rf/subscribe [:clicked-element]))]
+   ["Ignored elements" @(rf/subscribe [::document.s/ignored-ids])]
    ["Snap" (map (fn [[k v]] (str k " - " v)) @(rf/subscribe [::snap.s/nearest-neighbor]))]])
 
 (defn debug-info
   []
   (into [:div.absolute.top-1.left-2.pointer-events-none
          {:style {:color "#555"}}]
-        (for [[label v] (debug-rows)]
-          [:div [:strong.mr-1 label] v])))
+        (for [[s v] (debug-rows)]
+          [:div [:strong.mr-1 s] v])))

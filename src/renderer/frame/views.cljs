@@ -80,7 +80,7 @@
 
       :reagent-render
       (fn []
-        (let [root @(rf/subscribe [::element.s/root])
+        (let [root-el @(rf/subscribe [::element.s/root])
               {:keys [x y]} @(rf/subscribe [:dom-rect])
              ;; This is a different browsing context inside an iframe.
              ;; We need to simulate the events to the parent window.
@@ -98,11 +98,11 @@
                      :id "frame"
                      :title "main canvas"
                      :ref ref
-                     :style {:background (-> root :attrs :fill)}}
+                     :style {:background (-> root-el :attrs :fill)}}
            [:f> inner-component]
            [:> ContextMenu/Root
             [:> ContextMenu/Trigger
-             [tool/render root]]
+             [tool/render root-el]]
             [:> ContextMenu/Portal
              (into [:> ContextMenu/Content
                     {:class "menu-content context-menu-content"

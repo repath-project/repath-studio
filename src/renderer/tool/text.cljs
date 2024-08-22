@@ -82,16 +82,16 @@
     (rf/dispatch [:set-tool :select])))
 
 (defn key-down-handler
-  [e el-k]
+  [e id]
   (.stopPropagation e)
   (if (contains? #{"Enter" "Escape"} (.-code e))
-    (set-text-and-select-element e el-k)
+    (set-text-and-select-element e id)
     (.requestAnimationFrame
      js/window
-     #(rf/dispatch-sync [::element.e/preview-prop el-k :content (get-text e)]))))
+     #(rf/dispatch-sync [::element.e/preview-prop id :content (get-text e)]))))
 
 (defmethod tool/render-edit :text
-  [{:keys [attrs key content] :as el}]
+  [{:keys [attrs id content] :as el}]
   (let [offset (element/offset el)
         el-bounds (tool/bounds el)
         [x y] (mat/add (take 2 el-bounds) offset)
@@ -102,14 +102,14 @@
                      :width (+ width 20)
                      :height height}
      [:input
-      {:key key
+      {:key (name id)
        :default-value content
        :auto-focus true
        :on-focus #(.. % -target select)
        :on-pointer-down #(.stopPropagation %)
        :on-pointer-up #(.stopPropagation %)
-       :on-blur #(set-text-and-select-element % key)
-       :on-key-down #(key-down-handler % key)
+       :on-blur #(set-text-and-select-element % id)
+       :on-key-down #(key-down-handler % id)
        :style {:color "transparent"
                :caret-color (or fill "black")
                :display "block"

@@ -190,7 +190,7 @@
     element))
 
 (defmethod tool/render-edit :blob
-  [{:keys [attrs key] :as el}]
+  [{:keys [attrs id] :as el}]
   (let [{:keys [x y size]} attrs
         [x y size] (mapv units/unit->px [x y size])
         offset (element/offset el)
@@ -201,9 +201,9 @@
      [overlay/square-handle
       {:type :handle
        :tag :edit
-       :element key
+       :element id
        :x x2
        :y y2
-       :key :size}]
+       :id :size}]
      [overlay/times
       [x1 y1]]]))

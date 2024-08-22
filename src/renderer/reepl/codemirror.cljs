@@ -118,14 +118,14 @@
     should we be going in reverse
   initial-active
     if false, then we return not-active when wrapping around"
-  [count current go-back? initial-active]
+  [n current go-back? initial-active]
   (if go-back?
     (if (>= 0 current)
       (if initial-active
-        [true (dec count)]
+        [true (dec n)]
         [false 0])
       [true (dec current)])
-    (if (>= current (dec count))
+    (if (>= current (dec n))
       (if initial-active
         [true 0]
         [false 0])

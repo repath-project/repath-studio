@@ -12,7 +12,7 @@
    [renderer.color.effects]
    [renderer.dialog.events]
    [renderer.dialog.subs]
-   [renderer.document.events]
+   [renderer.document.events :as document.e]
    [renderer.document.subs]
    [renderer.element.events]
    [renderer.element.subs]
@@ -108,6 +108,8 @@
 
   (rf/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])
   (rf/dispatch-sync [::rp/set-keydown-rules keyb/keydown-rules])
+
+  (rf/dispatch [::document.e/init])
 
   (.addEventListener js/document "keydown" keyb/event-handler)
   (.addEventListener js/document "keyup" keyb/event-handler)

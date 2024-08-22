@@ -10,11 +10,11 @@
 
 (def document
   [:map
-   [:key keyword?]
+   [:id uuid?]
    [:title {:min 1} string?]
-   [:hovered-keys {:default #{}} [:set keyword?]]
-   [:collapsed-keys {:default #{}} [:set keyword?]]
-   [:ignored-keys {:default #{}} [:set keyword?]]
+   [:hovered-ids {:default #{}} [:set keyword?]]
+   [:collapsed-ids {:default #{}} [:set keyword?]]
+   [:ignored-ids {:default #{}} [:set keyword?]]
    [:fill {:default "white"} string?]
    [:stroke {:default "black"} string?]
    [:zoom {:default 1} zoom]

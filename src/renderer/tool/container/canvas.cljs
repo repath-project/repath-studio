@@ -27,7 +27,7 @@
         child-elements @(rf/subscribe [::element.s/filter-visible children])
         viewbox @(rf/subscribe [::frame.s/viewbox])
         {:keys [width height]} @(rf/subscribe [:dom-rect])
-        hovered-elements @(rf/subscribe [::element.s/hovered])
+        hovered-ids @(rf/subscribe [::element.s/hovered])
         selected-elements @(rf/subscribe [::element.s/selected])
         bounds @(rf/subscribe [::element.s/bounds])
         temp-element @(rf/subscribe [::document.s/temp-element])
@@ -63,7 +63,7 @@
                   :style {:outline 0
                           :background (:fill attrs)}}
      (for [el child-elements]
-       ^{:key (str (:key el))} [tool/render el])
+       ^{:key (name (:id el))} [tool/render el])
 
      [:defs
       (map (fn [{:keys [id tag attrs]}]
@@ -75,11 +75,11 @@
         (when (and select? (contains? #{:default :select :scale} state))
           [:<>
            (for [el selected-elements]
-             ^{:key (str (:key el) "-bounds")}
+             ^{:key (str (:id el) "-bounds")}
              [overlay/bounding-box (:bounds el) false])
 
-           (for [el hovered-elements]
-             ^{:key (str (:key el) "-bounds")}
+           (for [el hovered-ids]
+             ^{:key (str (:id el) "-bounds")}
              [overlay/bounding-box (:bounds el) true])
 
            (when (and (pos? elements-area) (= state :scale))
@@ -97,10 +97,10 @@
         (when (or (= tool :edit)
                   (= primary-tool :edit))
           (for [el selected-elements]
-            ^{:key (str (:key el) "-edit-points")}
+            ^{:key (str (name (:id el)) "-edit-points")}
             [:g
              [tool/render-edit el]
-             ^{:key (str (:key el) "-centroid")}
+             ^{:key (str (:id el) "-centroid")}
              [overlay/centroid el]]))
 
         [tool/render temp-element]])

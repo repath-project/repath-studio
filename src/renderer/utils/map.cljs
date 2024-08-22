@@ -10,7 +10,7 @@
 
 (defn remove-nils
   "Removes nil values from maps (should be used sparingly)."
-  [a]
-  (->> a
+  [m]
+  (->> m
        (remove (comp nil? val))
        (into {})))

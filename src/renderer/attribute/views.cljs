@@ -267,8 +267,8 @@
           [:h1.self-center.flex-1.text-lg.p-1
            (if (empty? (rest selected-elements))
              (let [el (first selected-elements)
-                   name (:name el)]
-               (if (empty? name) tag name))
+                   el-label (:label el)]
+               (if (empty? el-label) tag el-label))
              (str (count selected-elements) " elements"))]
           (when (empty? (rest selected-tags))
             [tag-info tag])]

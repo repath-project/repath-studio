@@ -5,8 +5,8 @@
 
 (rf/reg-fx
  ::set-current-time
- (fn [time]
-   (doall (map #(.setCurrentTime % time) (dom/svg-elements)))))
+ (fn [t]
+   (doall (map #(.setCurrentTime % t) (dom/svg-elements)))))
 
 (rf/reg-fx
  ::pause-animations

@@ -1,5 +1,6 @@
 (ns renderer.dialog.events
   (:require
+   [config :as config]
    [re-frame.core :as rf]
    [renderer.dialog.views :as v]))
 
@@ -16,7 +17,7 @@
 (rf/reg-event-db
  ::about
  (fn [db [_]]
-   (create db {:title "Repath Studio"
+   (create db {:title config/app-name
                :content [v/about]})))
 
 (rf/reg-event-fx

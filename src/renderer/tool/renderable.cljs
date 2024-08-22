@@ -107,7 +107,7 @@
           (when title [:title title])
           content
           (for [child child-elements]
-            ^{:key (:key child)} [tool/render child])]
+            ^{:key (name (:id child))} [tool/render child])]
 
          (when default-state? [ghost-element el])])})))
 

@@ -35,11 +35,11 @@
                             :attrs attrs})))
 
 (defmethod tool/render :svg
-  [{:keys [attrs children tag] :as el}]
-  (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
+  [{:keys [attrs children tag id] :as el}]
+  (let [child-els @(rf/subscribe [::element.s/filter-visible children])
         rect-attrs (select-keys attrs [:x :y :width :height])
         text-attrs (select-keys attrs [:x :y])
-        filter @(rf/subscribe [::document.s/filter])
+        active-filter @(rf/subscribe [::document.s/filter])
         zoom @(rf/subscribe [::document.s/zoom])
         pointer-handler #(pointer/event-handler % el)]
     [:g
@@ -65,8 +65,8 @@
         :always
         (dissoc :style)
 
-        filter
-        (assoc :filter (str "url(#" (name filter) ")")))
+        active-filter
+        (assoc :filter (str "url(#" (name active-filter) ")")))
       [:rect
        (merge
         rect-attrs
@@ -77,5 +77,5 @@
          :on-pointer-down #(when (= (.-button %) 2)
                              (pointer/event-handler % el))
          :on-double-click pointer-handler})]
-      (for [element (merge child-elements)]
-        [tool/render element])]]))
+      (for [el (merge child-els)]
+        ^{:key (name id)} [tool/render el])]]))

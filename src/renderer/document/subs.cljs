@@ -1,5 +1,6 @@
 (ns renderer.document.subs
   (:require
+   [config :as config]
    [re-frame.core :as rf]
    [renderer.document.handlers :as h]
    [renderer.timeline.subs :as-alias timeline.s]))
@@ -27,7 +28,7 @@
  :<- [:active-document]
  (fn [[documents active-document] _]
    (when active-document
-     (active-document documents))))
+     (get documents active-document))))
 
 (rf/reg-sub
  ::document
@@ -80,7 +81,7 @@
    (let [title (or path title)]
      (str (when (and active (not saved?)) "• ")
           (when title (str title " - "))
-          "Repath Studio"))))
+          config/app-name))))
 
 (rf/reg-sub
  ::elements
@@ -104,19 +105,19 @@
    (= active-filter k)))
 
 (rf/reg-sub
- ::hovered-keys
+ ::hovered-ids
  :<- [::active]
- :-> :hovered-keys)
+ :-> :hovered-ids)
 
 (rf/reg-sub
- ::collapsed-keys
+ ::collapsed-ids
  :<- [::active]
- :-> :collapsed-keys)
+ :-> :collapsed-ids)
 
 (rf/reg-sub
- ::ignored-keys
+ ::ignored-ids
  :<- [::active]
- :-> :ignored-keys)
+ :-> :ignored-ids)
 
 (rf/reg-sub
  ::save
@@ -131,8 +132,8 @@
 
 (rf/reg-sub
  ::saved?
- (fn [db [_ k]]
-   (h/saved? db k)))
+ (fn [db [_ id]]
+   (h/saved? db id)))
 
 (rf/reg-sub
  ::active-saved?

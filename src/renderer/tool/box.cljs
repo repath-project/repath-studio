@@ -29,7 +29,7 @@
 
 (defmethod tool/edit ::tool/box
   [el [x y] handle]
-  (case (keyword (name handle))
+  (case handle
     :position
     (-> el
         (hierarchy/update-attr :width #(max 0 (- % x)))
@@ -48,16 +48,16 @@
   (let [el-bounds (:bounds el)
         [x y] el-bounds
         [width height] (bounds/->dimensions el-bounds)]
-    [:g {:key ::edit-handles}
-     (map (fn [handle]
-            (let [handle (merge handle {:type :handle
-                                        :tag :edit
-                                        :key (keyword (:key el) (:key handle))
-                                        :element (:key el)})]
-              [overlay/square-handle handle
-               ^{:key (:key handle)} [:title (name (:key handle))]]))
-          [{:x x :y y :key (keyword (:key el) :position)}
-           {:x (+ x width) :y (+ y height) :key (keyword (:key el) :size)}])]))
+    [:g
+     (for [handle [{:x x :y y :id :position}
+                   {:x (+ x width) :y (+ y height) :id :size}]]
+       (let [handle (merge handle {:type :handle
+                                   :tag :edit
+                                   :element (:id el)})]
+         ^{:key (:id handle)}
+         [overlay/square-handle handle
+          ^{:key (str (:id handle) "-title")}
+          [:title (name (:id handle))]]))]))
 
 (defmethod tool/bounds ::tool/box
   [{{:keys [x y width height]} :attrs}]

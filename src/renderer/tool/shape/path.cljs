@@ -70,20 +70,20 @@
     [left top right bottom]))
 
 (defmethod tool/render-edit :path
-  [{:keys [attrs key] :as el} zoom]
+  [{:keys [attrs id] :as el} zoom]
   (let [handle-size (/ 8 zoom)
         stroke-width (/ 1 zoom)
         offset (element/offset el)
         segments (-> attrs :d svgpath .-segments)
         square-handle (fn [i [x y]]
-                        [overlay/square-handle {:key (str i)
+                        [overlay/square-handle {:id (str i)
                                                 :x x
                                                 :y y
                                                 :size handle-size
                                                 :stroke-width stroke-width
                                                 :type :handle
                                                 :tag :edit
-                                                :element key}])]
+                                                :element id}])]
     [:g {:key ::edit-handles}
      (map-indexed (fn [i segment]
                     (case (-> segment first str/lower-case)

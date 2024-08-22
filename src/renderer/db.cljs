@@ -33,11 +33,11 @@
 
 (def tool
   [:fn {:error/fn (fn [{:keys [value]} _] (str value ", is not a supported tool"))}
-   tool/valid?])
+   tool/tool?])
 
 (def app
   [:map
-   [:tool {:default :select}  tool]
+   [:tool {:default :select} tool]
    [:pointer-pos point]
    [:adjusted-pointer-pos point]
    [:adjusted-pointer-offset point]
@@ -67,6 +67,7 @@
    [:theme theme.db/theme]
    [:timeline timeline.db/timeline]
    [:panels panels]
+   [:version {:optional true} string?]
    [:fx {:default []} vector?]])
 
 (def valid? (m/validator app))

@@ -2,9 +2,8 @@
   "Interceptor that persists part of app-db to local storage
    https://github.com/akiroz/re-frame-storage"
   (:require
-   [akiroz.re-frame.storage :refer [persist-db-keys ->store]]))
-
-(def store-key :repath)
+   [akiroz.re-frame.storage :as rf.storage]
+   [config :as config]))
 
 (def persistent-keys
   "Top level keys that should be persisted"
@@ -15,11 +14,16 @@
    :recent
    :document-tabs
    :documents
-   :active-document])
+   :active-document
+   :version])
 
 (def persist
-  (persist-db-keys store-key persistent-keys))
+  (rf.storage/persist-db-keys config/app-key persistent-keys))
 
 (defn ->store!
   [db]
-  (->store store-key (select-keys db persistent-keys)))
+  (rf.storage/->store config/app-key (select-keys db persistent-keys)))
+
+(defn clear!
+  []
+  (rf.storage/->store config/app-key {}))

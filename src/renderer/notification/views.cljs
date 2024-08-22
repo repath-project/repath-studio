@@ -37,10 +37,10 @@
           {:aria-label "Close"
            :class "close-button small"
            :on-click #(rf/dispatch [::notification.e/remove index])}]
-         (when-let [count (:count notification)]
+         (when-let [n (:count notification)]
            [:div.absolute.error.left-0.top-0.px-1.py-0.5.rounded
             {:class "-translate-x-1/2 -translate-y-1/2"}
-            (inc count)])])
+            (inc n)])])
       notifications)
 
      (when (second notifications)

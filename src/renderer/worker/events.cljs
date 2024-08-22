@@ -7,7 +7,7 @@
 (rf/reg-event-fx
  ::create
  (fn [{:keys [db]} [_ {:keys [action] :as options}]]
-   (let [task-id (uuid/generate)]
+   (let [task-id (uuid/generate-unique #(get-in db [:worker :tasks %]))]
      {:db (assoc-in db [:worker :tasks task-id] action)
       ::fx/post (assoc-in options [:data :id] task-id)})))
 

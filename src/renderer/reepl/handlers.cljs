@@ -30,8 +30,8 @@
                           :value value}))
 
 (defn add-log
-  [db val]
-  (update db :items conj {:type :log :value val}))
+  [db v]
+  (update db :items conj {:type :log :value v}))
 
 (defn set-text
   [db text]

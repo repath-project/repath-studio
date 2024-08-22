@@ -1,6 +1,6 @@
 (ns renderer.tool.base)
 
-(defn valid?
+(defn tool?
   [tool]
   (isa? tool ::tool))
 

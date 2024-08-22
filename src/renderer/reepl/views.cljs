@@ -152,8 +152,8 @@
       items)]))
 
 (defn maybe-fn-docs
-  [fn]
-  (let [doc (replumb/doc-from-sym fn)]
+  [f]
+  (let [doc (replumb/doc-from-sym f)]
     (when (:forms doc)
       (with-out-str
         (replumb/print-doc doc)))))

@@ -42,7 +42,7 @@
   [db]
   (element.h/clear-temp db))
 
-(defonce options
+(defonce option-keys
   [:size :thinning :smoothing :streamline])
 
 (derive :thinning ::attr.range/range)
@@ -152,7 +152,7 @@
   [{:keys [attrs] :as element}]
   (let [pointer-handler #(pointer/event-handler % element)]
     [:path (merge {:d (points->path (:points attrs)
-                                    (merge (select-keys attrs options)
+                                    (merge (select-keys attrs option-keys)
                                            {:simulatePressure true}))
                    :on-pointer-up pointer-handler
                    :on-pointer-down pointer-handler
@@ -202,10 +202,10 @@
 
 (defmethod tool/path :brush
   [{:keys [attrs]}]
-  (points->path (:points attrs) (select-keys attrs options)))
+  (points->path (:points attrs) (select-keys attrs option-keys)))
 
 (defmethod tool/render-edit :brush
-  [{:keys [attrs key] :as el} zoom]
+  [{:keys [attrs id] :as el} zoom]
   (let [handle-size (/ 8 zoom)
         stroke-width (/ 1 zoom)
         offset (element/offset el)]
@@ -213,12 +213,12 @@
      (map-indexed (fn [index [x y]]
                     (let [[x y] (mapv units/unit->px [x y])
                           [x y] (mat/add offset [x y])]
-                      [overlay/square-handle {:key (str index)
+                      [overlay/square-handle {:id index
                                               :x x
                                               :y y
                                               :size handle-size
                                               :stroke-width stroke-width
                                               :type :handle
                                               :tag :edit
-                                              :element key}]))
+                                              :element id}]))
                   (:points attrs))]))

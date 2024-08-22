@@ -1,5 +1,6 @@
 (ns renderer.events
   (:require
+   [akiroz.re-frame.storage :as rf.storage]
    [config :as config]
    [malli.core :as m]
    [malli.transform :as mt]
@@ -21,26 +22,40 @@
 
 (def custom-fx
   (rf/->interceptor
-     :id :custom-fx
-     :after (fn [context]
-              (let [db (rf/get-effect context :db ::not-found)]
-                (cond-> context
-                  (not= db ::not-found)
-                  (-> (rf/assoc-effect :fx (apply conj (or (:fx (rf/get-effect context)) []) (:fx db)))
-                      (rf/assoc-effect :db (assoc db :fx []))))))))
+   :id :custom-fx
+   :after (fn [context]
+            (let [db (rf/get-effect context :db ::not-found)]
+              (cond-> context
+                (not= db ::not-found)
+                (-> (rf/assoc-effect :fx (apply conj (or (:fx (rf/get-effect context)) []) (:fx db)))
+                    (rf/assoc-effect :db (assoc db :fx []))))))))
 
 (rf/reg-global-interceptor custom-fx)
+
+(rf.storage/reg-co-fx! :repath-studio {:cofx :store})
 
 (rf/reg-event-db
  :initialize-db
  (fn [_ _]
-   (m/decode db/app {} mt/default-value-transformer)))
+   (-> db/app
+       (m/decode {} mt/default-value-transformer)
+       (assoc :version config/version))))
 
-(rf/reg-event-db
+(defn compatible-versions?
+  [v1 v2]
+  (let [reg #"(\d+\.)?(\d+\.)"]
+    (when (and (string? v1) (string? v2))
+     (= (re-find reg v1) (re-find reg v2)))))
+
+(rf/reg-event-fx
  :load-local-db
- local-storage/persist
- (fn [db _]
-   db))
+ [(rf/inject-cofx :store)]
+ (fn [{:keys [db store]} _]
+     (print store)
+   (let [compatible? (compatible-versions? (:version db) (:version store))]
+     {:db (cond-> db compatible? (merge db store))
+      ;; TODO: Introduce migrations to handle this gracefully.
+      :fx [(when-not compatible? [:local-storage-clear nil])]})))
 
 (rf/reg-event-fx
  :local-storage-persist

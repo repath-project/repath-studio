@@ -32,7 +32,7 @@
  ::filter-visible
  :<- [::document.s/elements]
  (fn [elements [_ ks]]
-   (filter :visible? (mapv #(% elements) ks))))
+   (filter :visible? (mapv #(get elements %) ks))))
 
 (rf/reg-sub
  ::selected
@@ -41,25 +41,25 @@
    (filter :selected? (vals elements))))
 
 (rf/reg-sub
- ::selected-descendant-keys
+ ::selected-descendant-ids
  (fn [db _]
-   (h/descendant-keys db)))
+   (h/descendant-ids db)))
 
 (rf/reg-sub
  ::non-selected-visible
  :<- [::document.s/elements]
- :<- [::selected-descendant-keys]
- (fn [[elements selected-descendant-keys] _]
+ :<- [::selected-descendant-ids]
+ (fn [[elements selected-descendant-ids] _]
    (filter #(and (not (:selected? %))
-                 (not (contains? selected-descendant-keys (:key %)))
+                 (not (contains? selected-descendant-ids (:id %)))
                  (:visible? %)) (vals elements))))
 
 (rf/reg-sub
  ::hovered
  :<- [::document.s/elements]
- :<- [::document.s/hovered-keys]
- (fn [[elements hovered-keys] _]
-   (vals (select-keys elements hovered-keys))))
+ :<- [::document.s/hovered-ids]
+ (fn [[elements hovered-ids] _]
+   (vals (select-keys elements hovered-ids))))
 
 (rf/reg-sub
  ::selected-tags
@@ -96,14 +96,14 @@
                            (fn [v1 v2] (if (= v1 v2) v1 nil))))
          attrs (if multiple-selected?
                  (dissoc attrs :id)
-                 (sort-by (fn [[k _]]
+                 (sort-by (fn [[id _]]
                             (-> (first selected-elements)
                                 :tag
                                 tool/properties
                                 :attrs
-                                (.indexOf k)))
+                                (.indexOf id)))
                           (utils.el/attributes (first selected-elements))))]
-     (sort-by (fn [[k _]] (.indexOf utils.attr/order k)) attrs))))
+     (sort-by (fn [[id _]] (.indexOf utils.attr/order id)) attrs))))
 
 (rf/reg-sub
  ::bounds
@@ -118,9 +118,9 @@
    (reduce  #(+ %1 (tool/area %2)) 0 selected-elements)))
 
 (rf/reg-sub
- ::ancestor-keys
+ ::ancestor-ids
  (fn [db _]
-   (h/ancestor-keys db)))
+   (h/ancestor-ids db)))
 
 (rf/reg-sub
  ::font-weights
@@ -142,7 +142,7 @@
 (rf/reg-sub
  ::top-level?
  :<- [::root]
- :<- [::ancestor-keys]
- (fn [[root ancestor-keys] _]
-   (empty? (disj (set ancestor-keys) (:key root)))))
+ :<- [::ancestor-ids]
+ (fn [[root ancestor-ids] _]
+   (empty? (disj (set ancestor-ids) (:id root)))))
 

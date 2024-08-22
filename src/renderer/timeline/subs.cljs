@@ -21,9 +21,9 @@
   (let [start (or (:begin attrs) 0)
         _dur (or (:dur attrs) 0)
         end (or (:end attrs) nil)]
-    {:id (:key el)
+    {:id (:id el)
      :selected (:selected? el)
-     :actions [{:id (name (:key el))
+     :actions [{:id (name (:id el))
                 :selected (:selected? el)
                 :disable (:locked? el)
                 :movable (not (:locked? el))
@@ -70,11 +70,11 @@
 (rf/reg-sub
  ::time-formatted
  :<- [::time]
- (fn [time]
-   (let [min (-> time (/ 60) pad-2)
-         sec (-> time (rem 60) pad-2)
-         ms (-> time (rem 1) (* 100) pad-2 (str/replace "0." ""))]
-     (str min ":"  sec ":" ms))))
+ (fn [t]
+   (let [m (-> t (/ 60) pad-2)
+         s (-> t (rem 60) pad-2)
+         ms (-> t (rem 1) (* 100) pad-2 (str/replace "0." ""))]
+     (str m ":"  s ":" ms))))
 
 (rf/reg-sub
  ::paused?

@@ -54,15 +54,15 @@
     (assoc-in (element.h/path db) (:elements (state (history db))))))
 
 #_(defn preview
-    [db position]
-    (assoc-in db (element.h/path db) (:elements (state (history db) position))))
+    [db pos]
+    (assoc-in db (element.h/path db) (:elements (state (history db) pos))))
 
 (defn move
-  [db position]
+  [db pos]
   (-> db
-      (assoc-in (conj (history-path db) :position) position)
+      (assoc-in (conj (history-path db) :position) pos)
       swap
-      (update-in (conj (history-path db) :states position) dissoc :restored?)))
+      (update-in (conj (history-path db) :states pos) dissoc :restored?)))
 
 (defn undo
   ([db]
@@ -96,7 +96,7 @@
 
 (defn redos
   [active-history]
-  (accumulate active-history (fn [state] (-> state :children last))))
+  (accumulate active-history (fn [current-state] (-> current-state :children last))))
 
 (defn state-count
   [db]
@@ -146,7 +146,7 @@
    (move, color pick etc)"
   [db explanation & more]
   (let [current-position (position db)
-        id (uuid/generate)
+        id (uuid/generate-unique #(state (history-path db) %))
         explanation (apply str explanation more)
         elements (element.h/elements db)]
     (if (valid-elements? elements)

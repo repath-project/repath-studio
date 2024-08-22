@@ -27,9 +27,6 @@
     (fn [^js/FileSystemFileHandle file-handle]
       (p/let [writable (.createWritable file-handle)]
         (.then (.write writable (pr-str (dissoc data :path)))
-               (let [title (.-name file-handle)
-                     document (assoc data :title title)]
+               (let [info (assoc data :title (.-name file-handle))]
                  (.close writable)
-                 (rf/dispatch [::document.e/saved {:key (:key document)
-                                                   :title title
-                                                   :save (:save document)}]))))))))
+                 (rf/dispatch [::document.e/saved (select-keys info [:id :title :save])]))))))))

@@ -21,10 +21,10 @@
 (derive :symbol ::tool/container)
 
 (defmethod tool/render ::tool/container
-  [{:keys [children tag attrs]}]
+  [{:keys [children tag attrs id]}]
   (let [child-elements @(rf/subscribe [::element.s/filter-visible children])]
     [tag attrs (for [el child-elements]
-                 ^{:key (:key el)} [tool/render el])]))
+                 ^{:key id} [tool/render el])]))
 
 (defmethod tool/render-to-string ::tool/container
   [{:keys [tag attrs title children]}]

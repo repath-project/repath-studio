@@ -47,13 +47,13 @@
   [history id save]
   (let [states (:states history)
         {:keys [index restored?] :as state} (get states id)
-        count (count states)]
+        n (count states)]
     #js {:name (:explanation state)
          :id id
          :saved (= id save)
          :active (= id (:position history))
          :restored restored?
-         :color (str "hsla(" (+ (* (/ 100 count) index) 20) ",40%,60%,1)")
+         :color (str "hsla(" (+ (* (/ 100 n) index) 20) ",40%,60%,1)")
          :children (apply array (map #(state->d3-data history % save) (:children state)))}))
 
 (rf/reg-sub

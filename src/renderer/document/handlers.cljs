@@ -16,10 +16,10 @@
 (defn save-format
   ([db]
    (save-format db (:active-document db)))
-  ([db k]
+  ([db id]
    (let [document (-> db
-                      (get-in [:documents k])
-                      (select-keys [:elements :path :key])
+                      (get-in [:documents id])
+                      (select-keys [:elements :path :id])
                       (assoc :save (history.h/position db)
                              :version config/version))]
 
@@ -28,17 +28,17 @@
              (keys (:elements document))))))
 
 (defn close
-  [{:keys [active-document document-tabs] :as db} k]
-  (let [index (.indexOf document-tabs k)
-        active-document (if (= active-document k)
+  [{:keys [active-document document-tabs] :as db} id]
+  (let [index (.indexOf document-tabs id)
+        active-document (if (= active-document id)
                           (get document-tabs (if (zero? index)
                                                (inc index)
                                                (dec index)))
                           active-document)]
     (-> db
-        (update :document-tabs #(filterv (complement #{k}) %))
+        (update :document-tabs #(filterv (complement #{id}) %))
         (assoc :active-document active-document)
-        (update :documents dissoc k))))
+        (update :documents dissoc id))))
 
 (defn add-recent
   [db file-path]
@@ -65,7 +65,7 @@
 
 (defn search-by-path
   [{:keys [documents]} file-path]
-  (some #(when (and file-path (= (:path %) file-path)) (:key %)) (vals documents)))
+  (some #(when (and file-path (= (:path %) file-path)) (:id %)) (vals documents)))
 
 (defn- new-title
   [{:keys [documents]}]
@@ -78,14 +78,14 @@
 
 (defn create-tab
   [db document]
-  (let [k (or (:key document) (uuid/generate))
+  (let [id (or (:id document) (uuid/generate-unique #(get-in db [:documents %])))
         title (or (:title document) (new-title db))
         active-index (.indexOf (:document-tabs db) (:active-document db))
-        document (merge document {:key k :title title})]
+        document (merge document {:id id :title title})]
     (-> db
-        (assoc-in [:documents k] document)
-        (assoc :active-document k)
-        (update :document-tabs #(vec/add % (inc active-index) k)))))
+        (assoc-in [:documents id] document)
+        (assoc :active-document id)
+        (update :document-tabs #(vec/add % (inc active-index) id)))))
 
 (def default (m/decode db/document {} mt/default-value-transformer))
 
@@ -113,27 +113,27 @@
 
 (defn load
   [db document]
-  (let [open-key (search-by-path db (:path document))
+  (let [open-id (search-by-path db (:path document))
         document (-> (merge default document)
-                     (assoc :key (or open-key (uuid/generate))))]
+                     (assoc :id (or open-id (uuid/generate-unique #(get-in db [:documents %])))))]
     (if (db/valid? document)
       (cond-> db
-        (not open-key)
+        (not open-id)
         (-> (create-tab (dissoc document :save))
             center
             (history.h/finalize "Load document"))
 
         :always
         (-> (add-recent (:path document))
-            (set-active (:key document))))
+            (set-active (:id document))))
 
       (notification.h/add
        db
        [notification.v/spec-failed "Load document" (spec/explain document db/document)]))))
 
 (defn saved?
-  [db k]
-  (let [document (-> db :documents k)]
+  [db id]
+  (let [document (get-in db [:documents id])]
     (or (= (:save document)
            (get-in document [:history :position]))
         (and (not (:save document))

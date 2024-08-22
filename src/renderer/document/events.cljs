@@ -44,22 +44,22 @@
    (h/center db)))
 
 (rf/reg-event-db
- ::set-hovered-keys
+ ::set-hovered-ids
  active-document-path
  (fn [db [_ ks]]
-   (assoc db :hovered-keys (->> ks (remove nil?) (set)))))
+   (assoc db :hovered-ids (->> ks (remove nil?) (set)))))
 
 (rf/reg-event-db
  ::collapse-el
  [local-storage/persist active-document-path]
  (fn [db [_ k]]
-   (update db :collapsed-keys conj k)))
+   (update db :collapsed-ids conj k)))
 
 (rf/reg-event-db
  ::expand-el
  [local-storage/persist active-document-path]
  (fn [db [_ k]]
-   (update db :collapsed-keys disj k)))
+   (update db :collapsed-ids disj k)))
 
 (rf/reg-event-db
  ::toggle-filter
@@ -98,12 +98,11 @@
 (rf/reg-event-fx
  ::close
  local-storage/persist
- (fn [{:keys [db]} [_ k confirm?]]
-   (if (or (h/saved? db k) (not confirm?))
-     {:db (h/close db k)}
-     {:dispatch-n [[::set-active k]
-                   [::dialog.e/save k]]})))
-
+ (fn [{:keys [db]} [_ id confirm?]]
+   (if (or (h/saved? db id) (not confirm?))
+     {:db (h/close db id)}
+     {:dispatch-n [[::set-active id]
+                   [::dialog.e/save id]]})))
 (rf/reg-event-fx
  ::close-active
  local-storage/persist
@@ -158,6 +157,14 @@
  [center focus-canvas local-storage/persist]
  (fn [db [_]]
    (h/create db)))
+
+(rf/reg-event-db
+ ::init
+ [center focus-canvas local-storage/persist]
+ (fn [db [_]]
+   (cond-> db
+     (not (:active-document db))
+     h/create)))
 
 (rf/reg-event-db
  ::new-from-template
@@ -231,11 +238,11 @@
 (rf/reg-event-db
  ::saved
  local-storage/persist
- (fn [db [_ {:keys [path key] :as document-info}]]
+ (fn [db [_ {:keys [path id] :as document-info}]]
    ;; Update the path, the title and the saved position of the document.
    ;; Any other changes that could happen while saving should be preserved.
    (-> db
-       (update-in [:documents key] merge document-info)
+       (update-in [:documents id] merge document-info)
        (h/add-recent path))))
 
 (rf/reg-event-fx

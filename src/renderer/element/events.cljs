@@ -27,13 +27,13 @@
 (rf/reg-event-db
  ::preview-prop
  (fn [db [_ el-k k v]]
-   (h/set-prop db el-k k v)))
+   (h/assoc-prop db el-k k v)))
 
 (rf/reg-event-db
  ::set-prop
  (fn [db [_ el-k k v]]
    (-> db
-       (h/set-prop el-k k v)
+       (h/assoc-prop el-k k v)
        (history.h/finalize "Set " (name k)))))
 
 (rf/reg-event-db
@@ -67,7 +67,7 @@
 (rf/reg-event-db
  ::update-attr
  (fn [db [_ k f & more]]
-   (-> (reduce #(apply h/update-attr %1 %2 k f more) db (h/selected-keys db))
+   (-> (reduce #(apply h/update-attr %1 %2 k f more) db (h/selected-ids db))
        (history.h/finalize "Update " (name k)))))
 
 (rf/reg-event-db
@@ -305,10 +305,10 @@
 
 (rf/reg-event-db
  ::set-parent
- (fn [db  [_ element-key parent-key]]
+ (fn [db  [_ parent-id id]]
    (-> db
-       (h/set-parent element-key parent-key)
-       (history.h/finalize "Set parent of selection"))))
+       (h/set-parent parent-id id)
+       (history.h/finalize "Set parent"))))
 
 (rf/reg-event-db
  ::group

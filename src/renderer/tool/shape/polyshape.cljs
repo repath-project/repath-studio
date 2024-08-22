@@ -103,23 +103,24 @@
                      (str/join " ")))))
 
 (defmethod tool/render-edit ::tool/polyshape
-  [{:keys [attrs key] :as el} zoom]
+  [{:keys [attrs id] :as el} zoom]
   (let [{:keys [points]} attrs
         handle-size (/ 8 zoom)
         stroke-width (/ 1 zoom)
         offset (element/offset el)]
-    [:g {:key ::edit-handles}
+    [:g
      (map-indexed (fn [index [x y]]
                     (let [[x y] (mapv units/unit->px [x y])
                           [x y] (mat/add offset [x y])]
-                      [overlay/square-handle {:key (str index)
+                      ^{:key (str index)}
+                      [overlay/square-handle {:id (str index)
                                               :x x
                                               :y y
                                               :size handle-size
                                               :stroke-width stroke-width
                                               :type :handle
                                               :tag :edit
-                                              :element key}]))
+                                              :element id}]))
                   (utils.attr/points->vec points))]))
 
 (defmethod tool/edit ::tool/polyshape

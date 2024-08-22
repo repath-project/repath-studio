@@ -11,9 +11,9 @@
 (derive ::tool/animation ::tool/descriptive)
 
 (defmethod tool/render ::tool/animation
-  [{:keys [children tag attrs]}]
+  [{:keys [children tag attrs id]}]
   (let [child-elements @(rf/subscribe [::element.s/filter-visible children])]
     [tag
      attrs
      (for [el child-elements]
-       ^{:key (:key el)} [tool/render el])]))
+       ^{:key (name id)} [tool/render el])]))

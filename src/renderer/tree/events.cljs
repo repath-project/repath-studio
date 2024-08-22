@@ -5,10 +5,10 @@
 
 (rf/reg-event-fx
  ::focus-up
- (fn [_ [_ k]]
-   {::fx/focus [k :up]}))
+ (fn [_ [_ id]]
+   {::fx/focus [id :up]}))
 
 (rf/reg-event-fx
  ::focus-down
- (fn [_ [_ k]]
-   {::fx/focus [k :down]}))
+ (fn [_ [_ id]]
+   {::fx/focus [id :down]}))

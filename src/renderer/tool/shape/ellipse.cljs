@@ -76,13 +76,13 @@
 
 (defmethod tool/edit :ellipse
   [el [x y] handle]
-  (case (keyword (name handle))
+  (case handle
     :rx (hierarchy/update-attr el :rx #(abs (+ % x)))
     :ry (hierarchy/update-attr el :ry #(abs (- % y)))
     el))
 
 (defmethod tool/render-edit :ellipse
-  [{:keys [key] :as el}]
+  [{:keys [id] :as el}]
   (let [bounds (:bounds el)
         [cx cy] (bounds/center bounds)
         [rx ry] (mat/div (bounds/->dimensions bounds) 2)]
@@ -93,11 +93,13 @@
      [overlay/line cx cy cx (- cy ry)]
      [overlay/label (str (units/->fixed ry)) [cx (- cy (/ ry 2))]]
      (map (fn [handle]
-            [overlay/square-handle (merge handle
-                                          {:type :handle
-                                           :tag :edit
-                                           :element key})
-             ^{:key (:key handle)}
-             [:title (name (:key handle))]])
-          [{:x (+ cx rx) :y cy :key (keyword (:key el) :rx)}
-           {:x cx :y (- cy ry) :key (keyword (:key el) :ry)}])]))
+            ^{:key (:id handle)}
+            [overlay/square-handle
+             (merge handle {:type :handle
+                            :tag :edit
+                            :element id})
+             [:title
+              {:key (str (:id handle) "-title")}
+              (name (:id handle))]])
+          [{:x (+ cx rx) :y cy :id :rx}
+           {:x cx :y (- cy ry) :id :ry}])]))

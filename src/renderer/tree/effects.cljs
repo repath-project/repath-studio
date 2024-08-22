@@ -4,9 +4,9 @@
 
 (rf/reg-fx
  ::focus
- (fn [[k direction]]
+ (fn [[id direction]]
    (let [list-elements (.from js/Array (.querySelectorAll js/document ".tree-sidebar .list-item-button"))
-         current-el (first (.querySelectorAll js/document (str ".tree-sidebar [data-id='" (name k) "']")))
+         current-el (first (.querySelectorAll js/document (str ".tree-sidebar [data-id='" (name id) "']")))
          i (.indexOf list-elements current-el)
          max-i (dec (count list-elements))
          updated-i (case direction

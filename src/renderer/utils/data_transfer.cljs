@@ -21,7 +21,7 @@
                       height (.-height img)
                       el {:type :element
                           :tag :image
-                          :name (.-name file)
+                          :label (.-name file)
                           :attrs {:x (- x (/ width 2))
                                   :y (- y (/ height 2))
                                   :width width
@@ -39,7 +39,7 @@
      reader
      "load"
      #(rf/dispatch [::element.e/import-svg {:svg (.-result reader)
-                                            :name (.-name file)
+                                            :label (.-name file)
                                             :position position}]))
     (.readAsText reader file)))
 

@@ -35,41 +35,41 @@
     (-> db
         element.h/clear-ignored
         (dissoc :clicked-element)
-        (element.h/select (:key element) (pointer/shift? e))
+        (element.h/select (:id element) (pointer/shift? e))
         (history.h/finalize "Select element"))
     (dissoc db :clicked-element)))
 
 (defmethod tool/pointer-move :edit
   [db {:keys [element]}]
   (cond-> (element.h/clear-hovered db)
-    (:key element)
-    (element.h/hover (:key element))))
+    (:id element)
+    (element.h/hover (:id element))))
 
 (defmethod tool/drag-start :edit
   [db]
   (h/set-state db :edit))
 
 (defn snap-handler
-  [db offset el-k handle-k]
-  (element.h/update-el db el-k tool/edit offset handle-k))
+  [db offset el-id handle-id]
+  (element.h/update-el db el-id tool/edit offset handle-id))
 
 (defmethod tool/drag :edit
   [{:keys [adjusted-pointer-offset adjusted-pointer-pos clicked-element] :as db} e]
   (let [pointer-offset (mat/sub adjusted-pointer-pos adjusted-pointer-offset)
         db (history.h/swap db)
-        el-k (:element clicked-element)
+        id (:element clicked-element)
         pointer-offset (if (pointer/ctrl? e)
                          (pointer/lock-direction pointer-offset)
                          pointer-offset)]
 
     (cond-> db
-      el-k
-      (-> (element.h/update-el el-k tool/edit pointer-offset (:key clicked-element))
-          (snap.h/snap snap-handler el-k (:key clicked-element))))))
+      id
+      (-> (element.h/update-el id tool/edit pointer-offset (:id clicked-element))
+          (snap.h/snap snap-handler id (:id clicked-element))))))
 
 (defmethod tool/drag-end :edit
   [db]
   (-> db
       (h/set-state :default)
       (dissoc :clicked-element)
-      (history.h/finalize "Edit " (-> db :clicked-element :key name))))
+      (history.h/finalize "Edit")))

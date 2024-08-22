@@ -14,7 +14,7 @@
 (defn select-options
   [history-list]
   (for [{:keys [id explanation]} history-list]
-    ^{:key id}
+    ^{:key (name id)}
     [:> Select/Item
      {:value (name id)
       :class "menu-item select-item"}
@@ -53,8 +53,8 @@
 
 (defn node
   "https://bkrem.github.io/react-d3-tree/docs/interfaces/_src_tree_types_.treeprops.html#rendercustomnodeelement"
-  [^js/CustomNodeElementProps node]
-  (let [datum (.-nodeDatum node)
+  [^js/CustomNodeElementProps props]
+  (let [datum (.-nodeDatum props)
         fill (if (.-restored datum) "black"
                  (if (.-active datum) "var(--accent)" (.-color datum)))
         stroke (if (.-saved datum) "var(--accent)" (.-color datum))]

@@ -60,7 +60,7 @@
   (reduce (fn [db el]
             (cond-> db
               (hovered? db el intersecting?)
-              (f (:key el)))) db (filter :visible? (vals (element.h/elements db)))))
+              (f (:id el)))) db (filter :visible? (vals (element.h/elements db)))))
 
 (defmethod tool/pointer-move :select
   [db {:keys [element] :as e}]
@@ -72,8 +72,8 @@
     (-> element.h/clear-hovered
         (assoc :cursor (if element "move" "default")))
 
-    (:key element)
-    (element.h/hover (:key element))))
+    (:id element)
+    (element.h/hover (:id element))))
 
 (defmethod tool/key-down :select
   [db e]
@@ -100,7 +100,7 @@
     (-> db
         element.h/clear-ignored
         (dissoc :clicked-element)
-        (element.h/select (:key element) (pointer/shift? e))
+        (element.h/select (:id element) (pointer/shift? e))
         (history.h/finalize "Select element"))
     (dissoc db :clicked-element)))
 
@@ -108,8 +108,8 @@
   [db {:keys [element]}]
   (if (= (:tag element) :g)
     (-> db
-        (element.h/ignore (:key element))
-        (element.h/deselect (:key element)))
+        (element.h/ignore (:id element))
+        (element.h/deselect (:id element)))
     (h/set-tool db :edit)))
 
 (defmethod tool/activate :select
@@ -145,7 +145,7 @@
 
     (-> (cond-> db
           (and (:clicked-element db) (not (-> db :clicked-element :selected?)))
-          (-> (element.h/select (-> db :clicked-element :key) (pointer/shift? e))
+          (-> (element.h/select (-> db :clicked-element :id) (pointer/shift? e))
               (history.h/finalize "Select element")))
         (h/set-state :move))))
 
@@ -174,7 +174,7 @@
    □----------□--------- ■ :bottom-right (active handle)
    "
   [db [x y] lock-ratio? in-place?]
-  (let [handle (-> db :clicked-element :key)
+  (let [handle (-> db :clicked-element :id)
         bounds (element.h/bounds db)
         dimensions (bounds/->dimensions bounds)
         [x1 y1 x2 y2] bounds

@@ -17,8 +17,9 @@
 
 (def element
   [:map
-   [:key keyword?]
+   [:id keyword?]
    [:tag tag]
+   [:label {:optional true} string?]
    [:parent {:optional true} keyword?]
    [:type {:default :element} [:enum :element :handle]]
    [:visible? {:default true} boolean?]

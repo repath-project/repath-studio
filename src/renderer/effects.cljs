@@ -38,6 +38,11 @@
    (local-storage/->store! data)))
 
 (rf/reg-fx
+ :local-storage-clear
+ (fn []
+   (local-storage/clear!)))
+
+(rf/reg-fx
  :clipboard-write
  (fn [[data]]
    (when data
