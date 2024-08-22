@@ -51,7 +51,7 @@
                               nearest-neighbor))
                           (first nearest-neighbors)
                           (rest nearest-neighbors))]
-    (when (< (:dist-squared nearest-neighbor) threshold)
+    (when (< (:dist-squared nearest-neighbor) (Math/pow threshold 2))
       nearest-neighbor)))
 
 (defn snap-to-offset

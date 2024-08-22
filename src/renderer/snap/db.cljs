@@ -6,5 +6,5 @@
 (def snap
   [:map {:default {}}
    [:enabled? {:default true} boolean?]
-   [:threshold {:default 100} number?]
+   [:threshold {:default 15} number?]
    [:options {:default (set (rest options))} [:set options]]])
