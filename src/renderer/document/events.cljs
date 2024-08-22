@@ -214,9 +214,7 @@
        {:ipc-invoke {:channel "save-document"
                      :data (pr-str document)
                      :on-resolution ::close-saved
-                     :formatter edn/read-string}
-
-        #_(rf/dispatch [::close k false])}
+                     :formatter edn/read-string}}
        {::fx/save-as document}))))
 
 (rf/reg-event-fx
