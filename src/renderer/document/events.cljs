@@ -7,8 +7,8 @@
    [renderer.dialog.events :as-alias dialog.e]
    [renderer.document.effects :as fx]
    [renderer.document.handlers :as h]
-   [renderer.element.events :as element.e]
    [renderer.frame.events :refer [focus-canvas]]
+   [renderer.history.handlers :as history.h]
    [renderer.utils.local-storage :as local-storage]
    [renderer.utils.vec :as vec]))
 
@@ -87,21 +87,18 @@
 (rf/reg-event-db
  ::set-fill
  local-storage/persist
- (fn [db [_ fill]]
-   (h/set-global-attr db :fill fill)))
-
-(rf/reg-event-db
- ::set-and-apply-fill
- local-storage/persist
- (fn [{:keys [db]} [_ color]]
-   {:db (h/set-global-attr db :fill color)
-    :dispatch [::element.e/fill color]}))
+ (fn [db [_ color]]
+   (-> db
+       (h/set-global-attr :fill color)
+       (history.h/finalize "Set fill"))))
 
 (rf/reg-event-db
  ::set-stroke
  local-storage/persist
- (fn [db [_ stroke]]
-   (h/set-global-attr db :stroke stroke)))
+ (fn [db [_ color]]
+   (-> db
+       (h/set-global-attr :stroke color)
+       (history.h/finalize "Set stroke"))))
 
 (rf/reg-event-fx
  ::close

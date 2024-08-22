@@ -18,4 +18,4 @@
   [db]
   (-> db
       (h/set-message "Click anywhere to pick a color.")
-      (h/add-fx [::color.fx/dropper {:on-succcess ::document.e/set-and-apply-fill}])))
+      (h/add-fx [::color.fx/dropper {:on-success ::document.e/set-fill}])))

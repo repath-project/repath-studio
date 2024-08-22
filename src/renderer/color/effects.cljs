@@ -9,7 +9,9 @@
    (if (.-EyeDropper js/window)
      (-> (js/EyeDropper.)
          (.open)
-         (.then (fn [^js/Object color] (rf/dispatch [on-success (.-sRGBHex color)])))
+         (.then (fn [^js/Object color]
+                  (rf/dispatch [on-success (.-sRGBHex color)])
+                  (rf/dispatch [:set-tool :select])))
          (.catch (fn [error]
                     (rf/dispatch [::notification.e/add
                                   [:div
