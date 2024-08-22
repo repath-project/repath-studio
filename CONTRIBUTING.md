@@ -20,6 +20,7 @@ e           -> event
 el, els     -> element, elements
 attr, attrs -> attribute, attributes
 prop, props -> property, properties
+w, h        -> width, height
 </pre>
 
 We also use the following namespace aliases
