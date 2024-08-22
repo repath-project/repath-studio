@@ -87,7 +87,7 @@
      {:label "Close all"
       :action [::document.e/close-all]}
      {:label "Close saved"
-      :action [::document.e/close-saved]}
+      :action [::document.e/close-all-saved]}
      {:type :separator}
      {:label "Open containing directory"
       :action [::document.e/open-directory path]
@@ -152,7 +152,7 @@
                       :key :close-all
                       :action [::document.e/close-all]}
                      {:label "Close saved"
-                      :key :close-saved
-                      :action [::document.e/close-saved]}]]
+                      :key :close-all-saved
+                      :action [::document.e/close-all-saved]}]]
            ^{:key (:key item)} [ui/dropdown-menu-item item])
          [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]]]]))

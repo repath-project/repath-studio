@@ -101,8 +101,8 @@
  (fn [{:keys [db]} [_ k confirm?]]
    (if (or (h/saved? db k) (not confirm?))
      {:db (h/close db k)}
-     {:fx [[:dispatch [::set-active k]]
-           [:dispatch [::dialog.e/save k]]]})))
+     {:dispatch-n [[::set-active k]
+                   [::dialog.e/save k]]})))
 
 (rf/reg-event-fx
  ::close-active
@@ -114,7 +114,7 @@
        {:dispatch [::dialog.e/save active-document]}))))
 
 (rf/reg-event-db
- ::close-saved
+ ::close-all-saved
  local-storage/persist
  (fn [db [_]]
    (let [saved (filter #(h/saved? db %) (:document-tabs db))]
@@ -213,8 +213,8 @@
      (if platform/electron?
        {:ipc-invoke {:channel "save-document"
                      :data (pr-str document)
-                     :on-resolution ::close
-                     :formatter #(-> % edn/read-string :key)}
+                     :on-resolution ::close-saved
+                     :formatter edn/read-string}
 
         #_(rf/dispatch [::close k false])}
        {::fx/save-as document}))))
@@ -239,6 +239,12 @@
    (-> db
        (update-in [:documents key] merge document-info)
        (h/add-recent path))))
+
+(rf/reg-event-fx
+ ::close-saved
+ (fn [_ [_ document-info]]
+   {:dispatch-n [[::saved document-info]
+                 [::close (:key document-info) false]]}))
 
 (rf/reg-event-db
  ::clear-recent
