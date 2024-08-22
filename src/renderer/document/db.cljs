@@ -10,7 +10,7 @@
 
 (def document
   [:map
-   [:id uuid?]
+   [:id keyword?]
    [:title {:min 1} string?]
    [:hovered-ids {:default #{}} [:set keyword?]]
    [:collapsed-ids {:default #{}} [:set keyword?]]
