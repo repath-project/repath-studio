@@ -89,22 +89,18 @@
      [ui/icon-button "go-to-start"
       {:on-click #(.setTime (.-current timeline-ref) 0)
        :disabled (zero? t)}]
-     [ui/radio-icon-button
+     [ui/radio-icon-button (if paused? "play" "pause") (not paused?)
       {:title (if paused? "Play" "Pause")
        :class (when (pos? t) "border border-accent")
-       :active? (not paused?)
-       :icon (if paused? "play" "pause")
-       :action #(if paused?
-                  (.play (.-current timeline-ref) #js {:autoEnd true})
-                  (.pause (.-current timeline-ref)))}]
+       :on-click #(if paused?
+                    (.play (.-current timeline-ref) #js {:autoEnd true})
+                    (.pause (.-current timeline-ref)))}]
      [ui/icon-button "go-to-end"
       {:on-click #(.setTime (.-current timeline-ref) end)
        :disabled (>= t end)}]
-     [ui/radio-icon-button
+     [ui/radio-icon-button "refresh" replay?
       {:title "Replay"
-       :active? replay?
-       :icon "refresh"
-       :action #(rf/dispatch [::timeline.e/toggle-replay])}]
+       :on-click #(rf/dispatch [::timeline.e/toggle-replay])}]
      [speed-select timeline-ref]
      [:span.font-mono.px-2 time-formatted]
      [:span.v-divider]

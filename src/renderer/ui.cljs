@@ -74,12 +74,10 @@
    [icon (if active? active-icon inactive-icon)]])
 
 (defn radio-icon-button
-  [{:keys [active? icon title action class]}]
+  [icon-name active? props]
   [:button.icon-button.radio-icon-button
-   {:title title
-    :class [class (when active? "selected")]
-    :on-click action}
-   [renderer.ui/icon icon]])
+   (assoc props :class [(:class props) (when active? "selected")])
+   [renderer.ui/icon icon-name]])
 
 (defn context-menu-item
   [{:keys [type label action checked? disabled?]}]

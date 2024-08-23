@@ -16,11 +16,9 @@
       [:> Tooltip/Root
        [:> Tooltip/Trigger {:asChild true}
         [:span
-         [ui/radio-icon-button
-          {:active? selected?
-           :class (when primary? "outline-shadow")
-           :icon (:icon (tool/properties tool))
-           :action #(rf/dispatch [:set-tool tool])}]]]
+         [ui/radio-icon-button (:icon (tool/properties tool)) selected?
+          {:class (when primary? "outline-shadow")
+           :on-click #(rf/dispatch [:set-tool tool])}]]]
        [:> Tooltip/Portal
         [:> Tooltip/Content
          {:class "tooltip-content"

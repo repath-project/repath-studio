@@ -122,11 +122,10 @@
          [ui/icon "spinner" {:class "loading"}]])
       (into [:<>]
             (map (fn [{:keys [title active? icon action class]}]
-                   [ui/radio-icon-button {:title title
-                                          :active? @(rf/subscribe active?)
-                                          :icon icon
-                                          :class class
-                                          :action #(rf/dispatch action)}])
+                   [ui/radio-icon-button icon @(rf/subscribe active?)
+                    {:title title
+                     :class class
+                     :on-click #(rf/dispatch action)}])
                  view-radio-buttons))
       [snap.v/root]
       [:div.button-group
