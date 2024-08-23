@@ -17,7 +17,8 @@
 (def schema-validator
   (rf/after (partial h/check-and-throw)))
 
-(when config/debug?
+(comment
+  ;; Enable full db validation for debugging.
   (rf/reg-global-interceptor schema-validator))
 
 (def custom-fx
