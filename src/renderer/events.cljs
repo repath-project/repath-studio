@@ -165,7 +165,7 @@
               (-> (assoc :primary-tool tool)
                   (h/set-tool :pan))
 
-              (and (= button :right) (not= (:key element) :bounding-box))
+              (and (= button :right) (not= (:id element) :bounding-box))
               (tool/pointer-up e)
 
               :always
