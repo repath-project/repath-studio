@@ -14,6 +14,7 @@
     "shadow:build": "npx shadow-cljs release main preload renderer bootstrap",
     "shadow:watch": "npx shadow-cljs watch main preload renderer bootstrap browser-test karma-test",
     "dev": "npm run postcss:watch & npm run shadow:watch",
+    "local-ssl-proxy": "npx local-ssl-proxy --source 3000 --target 8080",
     "build": "npm run postcss:build & npm run shadow:build",
     "electron": "npx electron .",
     "dist": "npx electron-builder",

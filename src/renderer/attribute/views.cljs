@@ -148,7 +148,7 @@
         [:> Select/Viewport {:class "select-viewport"}
          (for [item items]
            ^{:key item}
-           [:> Select/Item {:value (:value item) :class "menu-item "}
+           [:> Select/Item {:value (:value item) :class "menu-item"}
             (when (:icon item)
               [:div.absolute.left-2 [ui/icon (:icon item)]])
             [:> Select/ItemText (:label item)]])]
