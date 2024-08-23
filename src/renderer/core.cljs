@@ -105,6 +105,7 @@
   (rf/dispatch-sync [::theme.e/set-document-attr]) ; Required to avoid blinking on init.
   (rf/dispatch-sync [:set-tool :select])
   (rf/dispatch-sync [:set-mdn (js->clj mdn :keywordize-keys true)])
+  (rf/dispatch-sync [:load-system-fonts])
 
   (rf/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])
   (rf/dispatch-sync [::rp/set-keydown-rules keyb/keydown-rules])
@@ -121,7 +122,6 @@
 
   (if platform/electron?
     (do (register-ipc-on-events!)
-        (rf/dispatch [:load-system-fonts])
         (rf/dispatch [:load-webref]))
     (.addEventListener js/document
                        "fullscreenchange"

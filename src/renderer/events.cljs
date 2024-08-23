@@ -4,6 +4,7 @@
    [config :as config]
    [malli.core :as m]
    [malli.transform :as mt]
+   [platform :as platform]
    [re-frame.core :as rf]
    [renderer.db :as db]
    [renderer.effects]
@@ -46,7 +47,7 @@
   [v1 v2]
   (let [reg #"(\d+\.)?(\d+\.)"]
     (when (and (string? v1) (string? v2))
-     (= (re-find reg v1) (re-find reg v2)))))
+      (= (re-find reg v1) (re-find reg v2)))))
 
 (rf/reg-event-fx
  :load-local-db
@@ -241,10 +242,12 @@
 (rf/reg-event-fx
  :load-system-fonts
  (fn [_ [_ file-path]]
-   {:ipc-invoke {:channel "load-system-fonts"
-                 :data file-path
-                 :on-resolution :set-system-fonts
-                 :formatter #(js->clj % :keywordize-keys true)}}))
+   (if platform/electron?
+     {:ipc-invoke {:channel "load-system-fonts"
+                   :data file-path
+                   :on-resolution :set-system-fonts
+                   :formatter #(js->clj % :keywordize-keys true)}}
+     {:load-system-fonts nil})))
 
 (rf/reg-event-fx
  :load-webref

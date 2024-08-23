@@ -63,3 +63,10 @@
  (fn [id]
    (when-let [element (if id (.getElementById js/document id) (dom/canvas-element))]
      (js/setTimeout #(.focus element)))))
+
+(rf/reg-fx
+ :load-system-fonts
+ (fn []
+   (p/let [fonts (.queryLocalFonts js/window)]
+     (rf/dispatch [:set-system-fonts (js->clj fonts :keywordize-keys true)]))))
+
