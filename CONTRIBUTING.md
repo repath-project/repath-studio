@@ -21,6 +21,8 @@ el, els     -> element, elements
 attr, attrs -> attribute, attributes
 prop, props -> property, properties
 w, h        -> width, height
+t           -> time
+h, m, s, ms -> hours, minutes, seconds, milliseconds
 </pre>
 
 We also use the following namespace aliases
