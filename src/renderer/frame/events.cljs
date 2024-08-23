@@ -55,10 +55,10 @@
 
 (rf/reg-event-fx
  ::pan-to-element
- (fn [{:keys [db]} [_ k]]
+ (fn [{:keys [db]} [_ id]]
    {:fx
     (let [{:keys [dom-rect active-document]} db
-          element (element.h/element db k)
+          element (element.h/element db id)
           el-bounds (:bounds element)
           zoom (get-in db [:documents active-document :zoom])
           {:keys [width height]} dom-rect

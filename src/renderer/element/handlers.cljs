@@ -664,20 +664,20 @@
 (defn ungroup
   ([db]
    (reduce ungroup db (selected-ids db)))
-  ([db k]
+  ([db id]
    (cond-> db
-     (and (not (locked? db k)) (= (:tag (element db k)) :g))
+     (and (not (locked? db id)) (= (:tag (element db id)) :g))
      (as-> db db
-       (let [i (index db k)]
+       (let [i (index db id)]
          (reduce
-          (fn [db el-k]
+          (fn [db child-id]
             (-> db
-                (set-parent-at-index el-k (:parent (element db k)) i)
+                (set-parent-at-index child-id (:parent (element db id)) i)
                 ;; Group attributes are inherited by its children,
                 ;; so we need to maintain the presentation attrs.
-                (inherit-attrs (element db k) el-k)))
-          db (reverse (children db k))))
-       (delete db k)))))
+                (inherit-attrs (element db id) child-id)))
+          db (reverse (children db id))))
+       (delete db id)))))
 
 (defn manipulate-path
   ([db action]

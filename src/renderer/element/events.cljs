@@ -12,28 +12,28 @@
 
 (rf/reg-event-db
  ::select
- (fn [db [_ el-k multi?]]
+ (fn [db [_ id multi?]]
    (-> db
-       (h/select el-k multi?)
+       (h/select id multi?)
        (history.h/finalize "Select element"))))
 
 (rf/reg-event-db
  ::toggle-prop
- (fn [db [_ el-k k]]
+ (fn [db [_ id k]]
    (-> db
-       (h/toggle-prop el-k k)
+       (h/toggle-prop id k)
        (history.h/finalize "Toggle " (name k)))))
 
 (rf/reg-event-db
  ::preview-prop
- (fn [db [_ el-k k v]]
-   (h/assoc-prop db el-k k v)))
+ (fn [db [_ id k v]]
+   (h/assoc-prop db id k v)))
 
 (rf/reg-event-db
  ::set-prop
- (fn [db [_ el-k k v]]
+ (fn [db [_ id k v]]
    (-> db
-       (h/assoc-prop el-k k v)
+       (h/assoc-prop id k v)
        (history.h/finalize "Set " (name k)))))
 
 (rf/reg-event-db
