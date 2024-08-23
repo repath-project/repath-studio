@@ -67,8 +67,8 @@
 (rf/reg-fx
  :load-system-fonts
  (fn []
-   (when-let [queery-fonts (.queryLocalFonts js/window)]
-     (p/let [fonts queery-fonts]
+   (when-not (undefined? js/window.queryLocalFonts)
+     (p/let [fonts (.queryLocalFonts js/window)]
        (rf/dispatch [:set-system-fonts
                      (mapv (fn [^js/FontData font-data]
                              (into {} [[:postscriptName (.-postscriptName font-data)]
