@@ -2,7 +2,7 @@
   (:require
    ["@radix-ui/react-context-menu" :as ContextMenu]
    ["react" :as react]
-   ["react-frame-component" :default Frame :refer [useFrame]]
+   ["react-frame-component" :default Frame]
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [reagent.dom.server :as server]
@@ -16,27 +16,6 @@
 (defn pointer-handler
   [e]
   (pointer/event-handler e nil))
-
-(defn inner-component
-  "We need access to the iframe's window to add the pointer move listener.
-   This is required in order to track pointer movement outside of our canvas.
-   https://github.com/ryanseddon/react-frame-component#accessing-the-iframes-window-and-document
-   https://github.com/reagent-project/reagent/blob/master/doc/ReactFeatures.md#function-components"
-  []
-  (let [frame-window (.-window (useFrame))]
-    (ra/create-class
-     {:component-did-mount
-      (fn []
-        (doseq
-         [event ["pointermove" "pointerup" "wheel"]]
-          (.addEventListener frame-window event pointer-handler #js {:passive false})))
-
-      :component-will-unmount
-      #(doseq
-        [event ["pointermove" "pointerup" "wheel"]]
-         (.removeEventListener frame-window event pointer-handler))
-
-      :reagent-render #()})))
 
 (defn markup
   "https://github.com/ryanseddon/react-frame-component#initialcontent"
@@ -73,10 +52,20 @@
   (let [ref (react/createRef)]
     (ra/create-class
      {:component-did-mount
-      #(.observe resize-observer (.-current ref))
+      #(do (.observe resize-observer (.-current ref))
+           ;; We need access to the iframe's window to add the pointer move listener.
+           ;; This is required in order to track pointer movement outside of our canvas.
+           (doseq [event ["pointermove" "pointerup" "wheel"]]
+             (.addEventListener (.. ref -current -contentWindow)
+                                event pointer-handler
+                                #js {:passive false})))
 
       :component-will-unmount
-      #(.disconnect resize-observer)
+      #(do (.disconnect resize-observer)
+           (doseq [event ["pointermove" "pointerup" "wheel"]]
+             (.removeEventListener (.. ref -current -contentWindow)
+                                   event
+                                   pointer-handler)))
 
       :reagent-render
       (fn []
@@ -94,12 +83,10 @@
                      :mount-target "body"
                      :class "overflow-hidden flex-1 border-0"
                      :on-key-down on-keyboard-event
-                     :on-key-up on-keyboard-event
                      :id "frame"
                      :title "main canvas"
                      :ref ref
                      :style {:background (-> root-el :attrs :fill)}}
-           [:f> inner-component]
            [:> ContextMenu/Root
             [:> ContextMenu/Trigger
              [tool/render root-el]]
