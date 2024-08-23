@@ -5,6 +5,8 @@
    [re-frame.core :as rf]
    [re-frame.interceptor :refer [->interceptor get-effect get-coeffect assoc-coeffect assoc-effect]]
    [renderer.dialog.events :as-alias dialog.e]
+   [renderer.dialog.handlers :as dialog.h]
+   [renderer.dialog.views :as dialog.v]
    [renderer.document.effects :as fx]
    [renderer.document.handlers :as h]
    [renderer.frame.events :refer [focus-canvas]]
@@ -47,28 +49,28 @@
 (rf/reg-event-db
  ::set-hovered-ids
  active-document-path
- (fn [db [_ ks]]
-   (assoc db :hovered-ids (->> ks (remove nil?) (set)))))
+ (fn [db [_ ids]]
+   (assoc db :hovered-ids (->> ids (remove nil?) (set)))))
 
 (rf/reg-event-db
  ::collapse-el
  [local-storage/persist active-document-path]
- (fn [db [_ k]]
-   (update db :collapsed-ids conj k)))
+ (fn [db [_ id]]
+   (update db :collapsed-ids conj id)))
 
 (rf/reg-event-db
  ::expand-el
  [local-storage/persist active-document-path]
- (fn [db [_ k]]
-   (update db :collapsed-ids disj k)))
+ (fn [db [_ id]]
+   (update db :collapsed-ids disj id)))
 
 (rf/reg-event-db
  ::toggle-filter
  [local-storage/persist active-document-path]
- (fn [db [_ k]]
-   (if (= (:filter db) k)
+ (fn [db [_ id]]
+   (if (= (:filter db) id)
      (dissoc db :filter)
-     (assoc db :filter k))))
+     (assoc db :filter id))))
 
 (rf/reg-event-db
  ::set-temp-element
@@ -100,22 +102,22 @@
        (h/set-global-attr :stroke color)
        (history.h/finalize "Set stroke"))))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::close
  local-storage/persist
- (fn [{:keys [db]} [_ id confirm?]]
+ (fn [db [_ id confirm?]]
    (if (or (h/saved? db id) (not confirm?))
-     {:db (h/close db id)}
-     {:dispatch-n [[::set-active id]
-                   [::dialog.e/save id]]})))
+     (h/close db id)
+     (-> db
+         (h/set-active id)
+         (dialog.h/create {:title "Do you want to save your changes?"
+                           :content [dialog.v/save (get-in db [:documents id])]
+                           :attrs {:onOpenAutoFocus #(.preventDefault %)}})))))
 (rf/reg-event-fx
  ::close-active
  local-storage/persist
  (fn [{:keys [db]} [_]]
-   (let [active-document (:active-document db)]
-     (if (h/saved? db active-document)
-       {:db (h/close db active-document)}
-       {:dispatch [::dialog.e/save active-document]}))))
+   {:dispatch [::close (:active-document db) true]}))
 
 (rf/reg-event-db
  ::close-all-saved
@@ -126,15 +128,15 @@
 
 (rf/reg-event-fx
  ::close-others
- (fn [{:keys [db]} [_ k]]
-   (let [to-be-closed (disj (sorted-set (:document-tabs db)) k)]
-     {:fx (mapv (fn [k] [:dispatch [::close k true]]) to-be-closed)})))
+ (fn [{:keys [db]} [_ id]]
+   (let [to-be-closed (disj (sorted-set (:document-tabs db)) id)]
+     {:fx (mapv (fn [id] [:dispatch [::close id true]]) to-be-closed)})))
 
 (rf/reg-event-fx
  ::close-all
  (fn [{:keys [db]} [_]]
    {:db (h/set-active db (last (:document-tabs db)))
-    :fx (mapv (fn [k] [:dispatch [::close k true]]) (:document-tabs db))}))
+    :fx (mapv (fn [id] [:dispatch [::close id true]]) (:document-tabs db))}))
 
 (rf/reg-event-db
  ::scroll
@@ -220,8 +222,8 @@
 
 (rf/reg-event-fx
  ::save-and-close
- (fn [{:keys [db]} [_ k]]
-   (let [document (h/save-format db k)]
+ (fn [{:keys [db]} [_ id]]
+   (let [document (h/save-format db id)]
      (if platform/electron?
        {:ipc-invoke {:channel "save-document"
                      :data (pr-str document)
@@ -265,5 +267,5 @@
 (rf/reg-event-db
  ::set-active
  local-storage/persist
- (fn [db [_ k]]
-   (h/set-active db k)))
+ (fn [db [_ id]]
+   (h/set-active db id)))

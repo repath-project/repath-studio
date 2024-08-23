@@ -50,26 +50,25 @@
    [close-button]])
 
 (defn save
-  [k]
-  (let [document @(rf/subscribe [::document.s/document k])]
-    [:div.p-5
-     [:p
-      "Your changes to " [:strong (:title document)]
-      " will be lost if you close the document without saving."]
-     [:div.flex.gap-2.flex-wrap
-      [:button.button.px-2.bg-primary.rounded.flex-1
-       {:on-click #(do (rf/dispatch [::dialog.e/close])
-                       (rf/dispatch [::document.e/close k false]))}
-       "Don't save"]
-      [:button.button.px-2.bg-primary.rounded.flex-1
-       {:on-click #(rf/dispatch [::dialog.e/close])}
-       "Cancel"]
-      [:button.button.px-2.bg-primary.rounded.flex-1
-       {:auto-focus true
-        :on-click #(do (rf/dispatch [::dialog.e/close])
-                       (rf/dispatch [::document.e/save-and-close k]))}
-       "Save"]]
-     [close-button]]))
+  [{:keys [id title]}]
+  [:div.p-5
+   [:p
+    "Your changes to " [:strong title]
+    " will be lost if you close the document without saving."]
+   [:div.flex.gap-2.flex-wrap
+    [:button.button.px-2.bg-primary.rounded.flex-1
+     {:on-click #(do (rf/dispatch [::dialog.e/close])
+                     (rf/dispatch [::document.e/close id false]))}
+     "Don't save"]
+    [:button.button.px-2.bg-primary.rounded.flex-1
+     {:on-click #(rf/dispatch [::dialog.e/close])}
+     "Cancel"]
+    [:button.button.px-2.bg-primary.rounded.flex-1
+     {:auto-focus true
+      :on-click #(do (rf/dispatch [::dialog.e/close])
+                     (rf/dispatch [::document.e/save-and-close id]))}
+     "Save"]]
+   [close-button]])
 
 (defn cmdk-item
   [{:keys [label action key icon type]}]

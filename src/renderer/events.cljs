@@ -51,7 +51,6 @@
  :load-local-db
  [(rf/inject-cofx :store)]
  (fn [{:keys [db store]} _]
-     (print store)
    (let [compatible? (compatible-versions? (:version db) (:version store))]
      {:db (cond-> db compatible? (merge db store))
       ;; TODO: Introduce migrations to handle this gracefully.
