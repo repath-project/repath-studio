@@ -6,7 +6,6 @@
    ["react-resizable-panels" :refer [Panel PanelGroup PanelResizeHandle]]
    [config :as config]
    [re-frame.core :as rf]
-   [renderer.attribute.views :as attr.v]
    [renderer.codemirror.views :as cm.v]
    [renderer.dialog.events :as-alias dialog.e]
    [renderer.dialog.views :as dialog.v]
@@ -19,6 +18,7 @@
    [renderer.notification.views :as notification]
    [renderer.reepl.views :as repl.v]
    [renderer.ruler.views :as ruler.v]
+   [renderer.tool.base :as tool]
    [renderer.tool.overlay :as overlay]
    [renderer.toolbar.object :as toolbar.object]
    [renderer.toolbar.status :as toolbar.status]
@@ -256,7 +256,9 @@
          (when @(rf/subscribe [:panel-visible? :properties])
            [:div.hidden.md:flex
             {:style {:flex "0 0 300px"}}
-            [attr.v/form]])
+            [:div.ml-px.flex.flex-col.h-full.w-full
+             [ui/scroll-area (tool/right-panel @(rf/subscribe [:tool]))]
+             [:div.bg-primary.grow.w-full.flex]]])
          [:div.bg-primary.ml-px.flex
           [ui/scroll-area [toolbar.object/root]]]]]]
       [home])]

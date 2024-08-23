@@ -73,3 +73,7 @@
 (defmethod translate :default [element] element)
 (defmethod position :default [element] element)
 (defmethod edit :default [element] element)
+
+;; Right panel multimethod.
+(defmulti right-panel keyword)
+

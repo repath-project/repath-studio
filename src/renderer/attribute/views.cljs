@@ -258,21 +258,19 @@
         selected-attrs @(rf/subscribe [::element.s/selected-attrs])
         locked? @(rf/subscribe [::element.s/selected-locked?])
         tag (first selected-tags)]
+    (when (seq selected-elements)
+      [:div.w-full.overflow-hidden
+       [:div.flex.bg-primary.py-4.pl-4.pr-2
+        [:h1.self-center.flex-1.text-lg.p-1
+         (if (empty? (rest selected-elements))
+           (let [el (first selected-elements)
+                 el-label (:label el)]
+             (if (empty? el-label) tag el-label))
+           (str (count selected-elements) " elements"))]
+        (when (empty? (rest selected-tags))
+          [tag-info tag])]
+       [:div.attribute-grid
+        (for [[k v] selected-attrs]
+          ^{:key k} [row k v locked? tag])]])))
 
-    [:div.ml-px.flex.flex-col.h-full.w-full
-     [ui/scroll-area
-      (when (seq selected-elements)
-        [:div.w-full.overflow-hidden
-         [:div.flex.bg-primary.py-4.pl-4.pr-2
-          [:h1.self-center.flex-1.text-lg.p-1
-           (if (empty? (rest selected-elements))
-             (let [el (first selected-elements)
-                   el-label (:label el)]
-               (if (empty? el-label) tag el-label))
-             (str (count selected-elements) " elements"))]
-          (when (empty? (rest selected-tags))
-            [tag-info tag])]
-         [:div.attribute-grid
-          (for [[k v] selected-attrs]
-            ^{:key k} [row k v locked? tag])]])]
-     [:div.bg-primary.grow.w-full.flex]]))
+(defmethod tool/right-panel :default [] [form])
