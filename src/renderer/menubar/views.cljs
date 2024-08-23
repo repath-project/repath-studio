@@ -18,153 +18,153 @@
 (defn recent-submenu
   []
   (let [recent @(rf/subscribe [::document.s/recent])
-        recent-items (mapv (fn [path] {:key (keyword path)
+        recent-items (mapv (fn [path] {:id (keyword path)
                                        :label path
                                        :icon "folder"
                                        :action [::document.e/open path]}) recent)]
     (cond-> recent-items
       (seq recent-items)
-      (concat [{:key :divider-1
+      (concat [{:id :divider-1
                 :type :separator}
-               {:key :clear-recent
+               {:id :clear-recent
                 :label "Clear recent"
                 :icon "delete"
                 :action [::document.e/clear-recent]}]))))
 
 (defn file-menu
   []
-  {:key :file
+  {:id :file
    :label "File"
    :type :root
-   :items [{:key :new-file
+   :items [{:id :new-file
             :label "New"
             :icon "file"
             :action [::document.e/new]}
-           {:key :divider-1
+           {:id :divider-1
             :type :separator}
-           {:key :open-file
+           {:id :open-file
             :label "Open…"
             :icon "folder"
             :action [::document.e/open]}
-           {:key :recent
+           {:id :recent
             :label "Recent"
             :type :sub-menu
             :disabled? (not @(rf/subscribe [::document.s/recent?]))
             :items (recent-submenu)}
-           {:key :divider-2
+           {:id :divider-2
             :type :separator}
-           {:key :save
+           {:id :save
             :label "Save"
             :icon "save"
             :action [::document.e/save]
             :disabled? (or (not @(rf/subscribe [::document.s/documents?]))
                            @(rf/subscribe [::document.s/active-saved?]))}
-           {:key :save-as
+           {:id :save-as
             :label "Save as…"
             :icon "save-as"
             :action [::document.e/save-as]
             :disabled? (not @(rf/subscribe [::document.s/documents?]))}
-           {:key :download
+           {:id :download
             :icon "download"
             :label "Download"
             :disabled? (not @(rf/subscribe [::document.s/documents?]))
             :action [::document.e/download]}
-           {:key :divider-3
+           {:id :divider-3
             :type :separator}
-           {:key :export-svg
+           {:id :export-svg
             :label "Export as SVG"
             :icon "export"
             :disabled? (not @(rf/subscribe [::document.s/documents?]))
             :action [::element.e/export-svg]}
-           {:key :divider-4
+           {:id :divider-4
             :type :separator}
-            {:key :print
+           {:id :print
             :label "Print"
-             :icon "printer"
+            :icon "printer"
             :disabled? (not @(rf/subscribe [::document.s/documents?]))
             :action [::element.e/print]}
-           {:key :divider-5
+           {:id :divider-5
             :type :separator}
-           {:key :close
+           {:id :close
             :label "Close"
             :icon "window-close"
             :disabled? (not @(rf/subscribe [::document.s/documents?]))
             :action [::document.e/close-active]}
-           {:key :exit
+           {:id :exit
             :label "Exit"
             :icon "exit"
             :action [::window.e/close]}]})
 
 (defn edit-menu
   []
-  {:key :edit
+  {:id :edit
    :label "Edit"
    :type :root
    :disabled? (not @(rf/subscribe [::document.s/documents?]))
-   :items [{:key :undo
+   :items [{:id :undo
             :label "Undo"
             :icon "undo"
             :disabled? (not @(rf/subscribe [::history.s/undos?]))
             :action [::history.e/undo]}
-           {:key :redo
+           {:id :redo
             :label "Redo"
             :icon "redo"
             :disabled? (not @(rf/subscribe [::history.s/redos?]))
             :action [::history.e/redo]}
-           {:key :divider-1
+           {:id :divider-1
             :type :separator}
-           {:key :cut
+           {:id :cut
             :label "Cut"
             :icon "cut"
             :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/cut]}
-           {:key :copy
+           {:id :copy
             :icon "copy"
             :label "Copy"
             :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/copy]}
-           {:key :paste
+           {:id :paste
             :label "Paste"
             :icon "paste"
             :action [::element.e/paste]}
-           {:key :paste-in-place
+           {:id :paste-in-place
             :icon "paste"
             :label "Paste in place"
             :action [::element.e/paste-in-place]}
-           {:key :paste-styles
+           {:id :paste-styles
             :icon "paste"
             :label "Paste styles"
             :action [::element.e/paste-styles]}
-           {:key :divider-2
+           {:id :divider-2
             :type :separator}
-           {:key :duplicate
+           {:id :duplicate
             :icon "copy"
             :label "Duplicate"
             :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/duplicate-in-place]}
-           {:key :divider-3
+           {:id :divider-3
             :type :separator}
-           {:key :select-all
+           {:id :select-all
             :icon "select-all"
             :label "Select all"
             :action [::element.e/select-all]}
-           {:key :deselect-all
+           {:id :deselect-all
             :icon "deselect-all"
             :label "Deselect all"
             :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/deselect-all]}
-           {:key :invert-selection
+           {:id :invert-selection
             :label "Invert selection"
             :icon "invert-selection"
             :action [::element.e/invert-selection]}
-           {:key :select-same-tags
+           {:id :select-same-tags
             :icon "select-same"
             :label "Select same tags"
             :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/select-same-tags]}
-           {:key :divider-4
+           {:id :divider-4
             :type :separator}
-           {:key :delete
+           {:id :delete
             :icon "delete"
             :label "Delete"
             :disabled? (not @(rf/subscribe [::element.s/selected?]))
@@ -172,231 +172,231 @@
 
 (defn align-submenu
   []
-  [{:key :align-left
+  [{:id :align-left
     :label "Left"
     :icon "objects-align-left"
     :disabled @(rf/subscribe [::element.s/top-level?])
     :action [::element.e/align :left]}
-   {:key :align-center-horizontally
+   {:id :align-center-horizontally
     :label "Center horizontally"
     :icon "objects-align-center-horizontal"
     :action [::element.e/align :center-horizontal]}
-   {:key :align-right
+   {:id :align-right
     :label "Right"
     :icon "objects-align-right"
     :action [::element.e/align :right]}
-   {:key :divider-1
+   {:id :divider-1
     :type :separator}
-   {:key :align-top
+   {:id :align-top
     :label "Top"
     :icon "objects-align-top"
     :action [::element.e/align :top]}
-   {:key :align-center-vertically
+   {:id :align-center-vertically
     :label "Center vertically"
     :icon "objects-align-center-vertical"
     :action [::element.e/align :center-vertical]}
-   {:key :align-bottom
+   {:id :align-bottom
     :label "Bottom"
     :icon "objects-align-bottom"
     :action [::element.e/align :bottom]}])
 
 (defn boolean-submenu
   []
-  [{:key :exclude
+  [{:id :exclude
     :label "Exclude"
     :icon "exclude"
     :action [::element.e/bool-operation :exclude]}
-   {:key :unite
+   {:id :unite
     :label "Unite"
     :icon "unite"
     :action [::element.e/bool-operation :unite]}
-   {:key :intersect
+   {:id :intersect
     :label "Intersect"
     :icon "intersect"
     :action [::element.e/bool-operation :intersect]}
-   {:key :subtract
+   {:id :subtract
     :label "Subtract"
     :icon "subtract"
     :action [::element.e/bool-operation :subtract]}
-   {:key :divide
+   {:id :divide
     :label "Divide"
     :icon "divide"
     :action [::element.e/bool-operation :divide]}])
 
 (defn animate-submenu
   []
-  [{:key :animate
+  [{:id :animate
     :label "Animate"
     :icon "animation"
     :action [::element.e/animate :animate {}]}
-   {:key :animate-transform
+   {:id :animate-transform
     :label "Animate Transform"
     :icon "animation"
     :action [::element.e/animate :animateTransform {}]}
-   {:key :animate-motion
+   {:id :animate-motion
     :icon "animation"
     :label "Animate Motion"
     :action [::element.e/animate :animateMotion {}]}])
 
 (defn path-submenu
   []
-  [{:key :simplify
+  [{:id :simplify
     :label "Simplify"
     :icon "bezier-curve"
     :action [::element.e/manipulate-path :simplify]}
-   {:key :smooth
+   {:id :smooth
     :label "Smooth"
     :icon "bezier-curve"
     :action [::element.e/manipulate-path :smooth]}
-   {:key :flatten
+   {:id :flatten
     :label "Flatten"
     :icon "bezier-curve"
     :action [::element.e/manipulate-path :flatten]}
-   {:key :reverse
+   {:id :reverse
     :label "Reverse"
     :icon "bezier-curve"
     :action [::element.e/manipulate-path :reverse]}])
 
 (defn image-submenu
   []
-  [{:key :trace
+  [{:id :trace
     :label "Trace"
     :icon "image"
     :action [::element.e/trace]}])
 
 (defn object-menu
   []
-  {:key :object
+  {:id :object
    :label "Object"
    :type :root
    :disabled? (not @(rf/subscribe [::document.s/documents?]))
-   :items [{:key :to-path
+   :items [{:id :to-path
             :label "Object to path"
             :icon "bezier-curve"
             :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/->path]}
-           {:key :stroke-to-path
+           {:id :stroke-to-path
             :label "Stroke to path"
             :icon "bezier-curve"
             :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/stroke->path]}
-           {:key :divider-1
+           {:id :divider-1
             :type :separator}
-           {:key :group
+           {:id :group
             :label "Group"
             :icon "group"
             :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/group]}
-           {:key :ungroup
+           {:id :ungroup
             :label "Ungroup"
             :icon "ungroup"
             :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/ungroup]}
-           {:key :divider-2
+           {:id :divider-2
             :type :separator}
-           {:key :lock
+           {:id :lock
             :label "Lock"
             :icon "lock"
             :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/lock]}
-           {:key :unlock
+           {:id :unlock
             :label "Unlock"
             :icon "unlock"
             :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/unlock]}
-           {:key :divider-3
+           {:id :divider-3
             :type :separator}
-           {:key :path
+           {:id :path
             :label "Align"
             :type :sub-menu
             :disabled? @(rf/subscribe [::element.s/top-level?])
             :items (align-submenu)}
-           {:key :boolean
+           {:id :boolean
             :label "Animate"
             :type :sub-menu
             :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :items (animate-submenu)}
-           {:key :boolean
+           {:id :boolean
             :label "Boolean operation"
             :type :sub-menu
             :disabled? (not @(rf/subscribe [::element.s/multiple-selected?]))
             :items (boolean-submenu)}
-           {:key :divider-4
+           {:id :divider-4
             :type :separator}
-           {:key :raise
+           {:id :raise
             :label "Raise"
             :icon "bring-forward"
             :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/raise]}
-           {:key :lower
+           {:id :lower
             :label "Lower"
             :icon "send-backward"
             :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/lower]}
-           {:key :raise-to-top
+           {:id :raise-to-top
             :label "Raise to top"
             :icon "bring-front"
             :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/raise-to-top]}
-           {:key :lower-to-bottom
+           {:id :lower-to-bottom
             :label "Lower to bottom"
             :icon "send-back"
             :disabled? (not @(rf/subscribe [::element.s/selected?]))
             :action [::element.e/lower-to-bottom]}
-           {:key :divider-5
+           {:id :divider-5
             :type :separator}
-           {:key :image
+           {:id :image
             :type :sub-menu
             :label "Image"
             :items (image-submenu)}
-           {:key :path
+           {:id :path
             :label "Path"
             :type :sub-menu
             :items (path-submenu)}]})
 
 (defn zoom-submenu
   []
-  [{:key :zoom-in
+  [{:id :zoom-in
     :label "In"
     :icon "zoom-in"
     :action [::frame.e/zoom-in]}
-   {:key :zoom-out
+   {:id :zoom-out
     :label "Out"
     :icon "zoom-out"
     :action [::frame.e/zoom-out]}
-   {:key :divider-1
+   {:id :divider-1
     :type :separator}
    {:label "Set to 50%"
-    :key "50"
+    :id "50"
     :icon "magnifier"
     :action [::frame.e/set-zoom 0.5]}
    {:label "Set to 100%"
-    :key "100"
+    :id "100"
     :icon "magnifier"
     :action [::frame.e/set-zoom 1]}
    {:label "Set to 200%"
-    :key "200"
+    :id "200"
     :icon "magnifier"
     :action [::frame.e/set-zoom 2]}
-   {:key :divider-2
+   {:id :divider-2
     :type :separator}
    {:label "Focus selected"
-    :key "focus-selected"
+    :id "focus-selected"
     :icon "focus"
     :action [::frame.e/focus-selection :original]}
    {:label "Fit selected"
-    :key "fit-selected"
+    :id "fit-selected"
     :icon "focus"
     :action [::frame.e/focus-selection :fit]}
    {:label "Fill selected"
-    :key "fill-selected"
+    :id "fill-selected"
     :icon "focus"
     :action [::frame.e/focus-selection :fill]}])
 
 (defn a11y-submenu
   []
   (mapv (fn [{:keys [id]}]
-          {:key id
+          {:id id
            :label (name id)
            :type :checkbox
            :icon "a11y"
@@ -405,88 +405,88 @@
 
 (defn panel-submenu
   []
-  [{:key :toggle-tree
+  [{:id :toggle-tree
     :type :checkbox
     :icon "tree"
     :label "Element tree"
     :checked? [:panel-visible? :tree]
     :action [:toggle-panel :tree]}
-   {:key :toggle-props
+   {:id :toggle-props
     :type :checkbox
     :icon "properties"
     :label "Properties"
     :checked? [:panel-visible? :properties]
     :action [:toggle-panel :properties]}
-   {:key :toggle-xml
+   {:id :toggle-xml
     :label "XML view"
     :type :checkbox
     :icon "code"
     :checked? [:panel-visible? :xml]
     :action [:toggle-panel :xml]}
-   {:key :toggle-history
+   {:id :toggle-history
     :label "History tree"
     :icon "history"
     :type :checkbox
     :checked? [:panel-visible? :history]
     :action [:toggle-panel :history]}
-   {:key :toggle-command-history
+   {:id :toggle-command-history
     :type :checkbox
     :label "Shell history"
     :icon "shell"
     :checked? [:panel-visible? :repl-history]
     :action [:toggle-panel :repl-history]}
-   {:key :toggle-timeline-panel
+   {:id :toggle-timeline-panel
     :type :checkbox
     :label "Timeline editor"
     :icon "timeline"
     :checked? [:panel-visible? :timeline]
     :action [:toggle-panel :timeline]}
-   {:key :divider-2
+   {:id :divider-2
     :type :separator}])
 
 (defn view-menu
   []
-  {:key :view
+  {:id :view
    :label "View"
    :type :root
    :disabled? (not @(rf/subscribe [::document.s/documents?]))
-   :items [{:key :zoom
+   :items [{:id :zoom
             :label "Zoom"
             :type :sub-menu
             :items (zoom-submenu)}
-           {:key :a11y
+           {:id :a11y
             :label "Accessibility filter"
             :type :sub-menu
             :items (a11y-submenu)}
-           {:key :divider-1
+           {:id :divider-1
             :type :separator}
-           {:key :toggle-grid
+           {:id :toggle-grid
             :type :checkbox
             :label "Grid"
             :icon "grid"
             :checked? [:grid-visible?]
             :action [:toggle-grid]}
-           {:key :toggle-rulers
+           {:id :toggle-rulers
             :type :checkbox
             :label "Rulers"
             :icon "ruler-combined"
             :checked? [:rulers-visible?]
             :action [:toggle-rulers]}
-           {:key :toggle-debug-info
+           {:id :toggle-debug-info
             :type :checkbox
             :label "Debug info"
             :icon "bug"
             :checked? [:debug-info?]
             :action [:toggle-debug-info]}
-           {:key :divider-2
+           {:id :divider-2
             :type :separator}
-           {:key :panel
+           {:id :panel
             :label "Panel"
             :type :sub-menu
             :items (panel-submenu)}
-           {:key :divider-3
+           {:id :divider-3
             :type :separator}
-           {:key :toggle-fullscreen
+           {:id :toggle-fullscreen
             :label "Fullscreen"
             :icon "arrow-minimize"
             :type :checkbox
@@ -495,45 +495,45 @@
 
 (defn help-menu
   []
-  {:key :help
+  {:id :help
    :label "Help"
    :type :root
-   :items [{:key :cmdk
+   :items [{:id :cmdk
             :label "Command panel"
             :icon "command"
             :action [::dialog.e/cmdk]}
-           {:key :divider-1
+           {:id :divider-1
             :type :separator}
-           {:key :website
+           {:id :website
             :label "Website"
             :icon "earth"
             :action [::window.e/open-remote-url
                      "https://repath.studio/"]}
-           {:key :source-code
+           {:id :source-code
             :label "Source Code"
             :icon "commit"
             :action [::window.e/open-remote-url
                      "https://github.com/repath-project/repath-studio"]}
-           {:key :license
+           {:id :license
             :label "License"
             :icon "lgpl"
             :action [::window.e/open-remote-url
                      "https://github.com/repath-project/repath-studio/blob/main/LICENSE"]}
-           {:key :changelog
+           {:id :changelog
             :icon "list"
             :label "Changelog"
             :action [::window.e/open-remote-url
                      "https://repath.studio/roadmap/changelog/"]}
-           {:key :divider-2
+           {:id :divider-2
             :type :separator}
-           {:key :submit-issue
+           {:id :submit-issue
             :icon "warning"
             :label "Submit an issue"
             :action [::window.e/open-remote-url
                      "https://github.com/repath-project/repath-studio/issues/new/choose"]}
-           {:key :divider-3
+           {:id :divider-3
             :type :separator}
-           {:key :about
+           {:id :about
             :icon "info"
             :label "About"
             :action [::dialog.e/about]}]})
@@ -574,11 +574,11 @@
           (map menu-item items))]])
 
 (defmethod menu-item :root
-  [{:keys [label items key action disabled?]}]
+  [{:keys [label items id action disabled?]}]
   [:> Menubar/Menu
    [:> Menubar/Trigger
     {:class "menubar-trigger"
-     :id (name key)
+     :id (name id)
      :disabled disabled?
      :on-click (when action #(rf/dispatch action))
      :on-key-down (fn [e]

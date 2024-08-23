@@ -50,12 +50,12 @@
       (array (js/ClipboardItem.
               (let [blob-array (js-obj)]
                 (doseq
-                 [[type data]
+                 [[data-type data]
                   [["image/svg+xml" data]
                    ["text/html" data]
                    ["text/plain" data]]]
-                  (when (.supports js/ClipboardItem type)
-                    (aset blob-array type (js/Blob. (array data) #js {:type type}))))
+                  (when (.supports js/ClipboardItem data-type)
+                    (aset blob-array data-type (js/Blob. (array data) #js {:type data-type}))))
                 blob-array)))))))
 
 (rf/reg-fx

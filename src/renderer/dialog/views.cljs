@@ -71,11 +71,10 @@
    [close-button]])
 
 (defn cmdk-item
-  [{:keys [label action key icon type]}]
+  [{:keys [label action icon type]}]
   (when-not (= type :separator)
     [:> Command/CommandItem
-     {:key key
-      :on-select (fn []
+     {:on-select (fn []
                    (rf/dispatch [::dialog.e/close false])
                    (rf/dispatch action))}
      [:div.w-7.h-7.mr-2.rounded.line-height-6.flex.justify-center.items-center
@@ -88,10 +87,9 @@
 (defn cmdk-group-inner
   [items label]
   (for [i items]
-    ^{:key key}
     (if-not (:items i)
-      [cmdk-item (update i :label #(str/join " - " (remove nil? [label %])))]
-      (cmdk-group-inner (:items i) (:label i)))))
+      ^{:key (name (:id i))} [cmdk-item (update i :label #(str/join " - " (remove nil? [label %])))]
+      ^{:key (:label i)} (cmdk-group-inner (:items i) (:label i)))))
 
 (defn cmdk-group
   [{:keys [label items]}]
@@ -113,7 +111,7 @@
      [:> Command/CommandEmpty
       (t [:cmdk/no-results "No results found."])]
      (for [i (menubar/root-menu)]
-       ^{:key (:key i)}
+       ^{:key (name (:id i))}
        [cmdk-group i])]]])
 
 (defn root
@@ -130,8 +128,9 @@
               (:attrs (last dialogs)))
        (when-let [title (:title (last dialogs))]
          [:> Dialog/Title
-          {:class "text-xl pl-5 pr-10 pt-5"}
-          title])
+          (cond->> title
+            (string? title)
+            (into [:div.text-xl.pl-5.pr-10.pt-5]))])
        [:> Dialog/Description
         {:as-child true}
         [:div (:content (last dialogs))]]]]]))

@@ -25,24 +25,24 @@
 
 (def zoom-menu
   [{:label "Set to 50%"
-    :key "50"
+    :id "50"
     :action [::frame.e/set-zoom 0.5]}
    {:label "Set to 100%"
-    :key "100"
+    :id "100"
     :action [::frame.e/set-zoom 1]}
    {:label "Set to 200%"
-    :key "200"
+    :id "200"
     :action [::frame.e/set-zoom 2]}
-   {:key :divider-1
+   {:id :divider-1
     :type :separator}
    {:label "Focus selected"
-    :key "center-selected"
+    :id "center-selected"
     :action [::frame.e/focus-selection :original]}
    {:label "Fit selected"
-    :key "fit-selected"
+    :id "fit-selected"
     :action [::frame.e/focus-selection :fit]}
    {:label "Fill selected"
-    :key "fill-selected"
+    :id "fill-selected"
     :action [::frame.e/focus-selection :fill]}])
 
 (def view-radio-buttons
@@ -156,7 +156,7 @@
            :side "top"
            :align "end"}
           (for [item zoom-menu]
-            ^{:key (:key item)} [ui/dropdown-menu-item item])
+            ^{:key (:id item)} [ui/dropdown-menu-item item])
           [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]]]
       [coordinates]]
      [timeline.v/time-bar]

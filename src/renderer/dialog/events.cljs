@@ -8,7 +8,8 @@
 (rf/reg-event-db
  ::cmdk
  (fn [db [_]]
-   (h/create db {:content [v/cmdk]
+   (h/create db {:title [:div.sr-only "Command panel"]
+                 :content [v/cmdk]
                  :attrs {:class "dialog-content dialog-cmdk-content"}})))
 
 (rf/reg-event-db
