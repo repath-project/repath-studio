@@ -67,6 +67,12 @@
 (rf/reg-fx
  :load-system-fonts
  (fn []
-   (p/let [fonts (.queryLocalFonts js/window)]
-     (rf/dispatch [:set-system-fonts (js->clj fonts :keywordize-keys true)]))))
+   (when-let [queery-fonts (.queryLocalFonts js/window)]
+     (p/let [fonts queery-fonts]
+       (rf/dispatch [:set-system-fonts
+                     (mapv (fn [^js/FontData font-data]
+                             (into {} [[:postscriptName (.-postscriptName font-data)]
+                                       [:fullName (.-fullName ^js font-data)]
+                                       [:family (.-family ^js font-data)]
+                                       [:style (.-style ^js font-data)]])) fonts)])))))
 

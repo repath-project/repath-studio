@@ -134,6 +134,7 @@
      (->> system-fonts
           (filter #(contains? families (:family %)))
           (map :weight)
+          (remove nil?)
           distinct
           sort
           vec))))

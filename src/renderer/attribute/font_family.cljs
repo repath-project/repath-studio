@@ -31,8 +31,7 @@
       (for [item suggestions]
         ^{:key item}
         [:> Command/CommandItem
-         {:key item
-          :on-select #(rf/dispatch [::element.e/set-attr :font-family item])}
+         {:on-select #(rf/dispatch [::element.e/set-attr :font-family item])}
          item])]]]])
 
 (defmethod hierarchy/form-element [:default :font-family]
