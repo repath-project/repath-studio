@@ -283,10 +283,10 @@
 
 (defn select-same-tags
   [db]
-  (let [selected-tags (selected-tags db)]
+  (let [tags (selected-tags db)]
     (reduce (fn [db {:keys [id tag]}]
               (cond-> db
-                (contains? selected-tags tag)
+                (contains? tags tag)
                 (select id))) (deselect db) (vals (elements db)))))
 
 (defn selected-sorted
@@ -513,18 +513,18 @@
         parent-el (when-not (element/root? el)
                     (or (:parent el)
                         (if (element/svg? el) (:id (root db)) (:id page))))
-        children (vals (select-keys (elements db) (:children el)))
+        child-els (vals (select-keys (elements db) (:children el)))
         [x1 y1] (tool/bounds (element db parent-el))
-        children (concat children (:content el))
+        child-els (concat child-els (:content el))
         defaults (m/decode db/element {} mt/default-value-transformer)
         new-el (merge el defaults {:id id})
         new-el (cond-> new-el
                  parent-el (assoc :parent parent-el)
                  (not (string? (:content new-el))) (dissoc :content))
-        add-children (fn [db children]
+        add-children (fn [db child-els]
                        (reduce #(cond-> %1
                                   (db/tag? (:tag %2))
-                                  (create (assoc %2 :parent id))) db children))
+                                  (create (assoc %2 :parent id))) db child-els))
         new-el (map/remove-nils new-el)]
     (if (db/valid? new-el)
       (cond-> db
@@ -540,8 +540,8 @@
         :always
         (update-bounds id)
 
-        children
-        (add-children children))
+        child-els
+        (add-children child-els))
       (notification.h/add db [notification.v/spec-failed
                               "Invalid element"
                               (spec/explain new-el db/element)]))))
