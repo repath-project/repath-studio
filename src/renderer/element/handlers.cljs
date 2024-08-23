@@ -411,7 +411,7 @@
   ([db parent-id id]
    (let [el (element db id)]
      (cond-> db
-       (and el (not= id parent-id) (not (locked? db parent-id)))
+       (and el (not= id parent-id) (not (locked? db id)))
        (-> (update-prop (:parent el) :children #(vec (remove #{id} %)))
            (update-prop parent-id :children conj id)
            (assoc-prop id :parent parent-id))))))
