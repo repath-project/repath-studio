@@ -35,7 +35,7 @@
                             :attrs attrs})))
 
 (defmethod tool/render :svg
-  [{:keys [attrs children tag id] :as el}]
+  [{:keys [attrs children tag] :as el}]
   (let [child-els @(rf/subscribe [::element.s/filter-visible children])
         rect-attrs (select-keys attrs [:x :y :width :height])
         text-attrs (select-keys attrs [:x :y])
