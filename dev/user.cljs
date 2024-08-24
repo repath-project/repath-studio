@@ -1,5 +1,7 @@
 (ns user
   (:require
+   [clojure.pprint :refer (pprint)]
+   [clojure.string :as str]
    [malli.core :as m]
    [re-frame.core :as rf]
    [renderer.db :as renderer.db]
@@ -24,7 +26,11 @@
               context))))
 
 (comment
+  (pprint (str/trim "This line suppresses some clj-kondo warnings."))
+
   ;; Enable full db validation for debugging.
   (rf/reg-global-interceptor schema-validator)
+
   (rf/clear-global-interceptor :schema-validator)
+
   )
