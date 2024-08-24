@@ -6,10 +6,8 @@
    [renderer.theme.db :as theme.db]
    [renderer.timeline.db :as timeline.db]
    [renderer.tool.base :as tool]
+   [renderer.utils.math :as math]
    [renderer.window.db :as window.db]))
-
-(def point
-  [:tuple {:default [0 0]} number? number?])
 
 (def panels
   [:map-of {:default {:tree {:visible? true}
@@ -37,9 +35,9 @@
 (def app
   [:map
    [:tool {:default :select} tool]
-   [:pointer-pos point]
-   [:adjusted-pointer-pos point]
-   [:adjusted-pointer-offset point]
+   [:pointer-pos math/point]
+   [:adjusted-pointer-pos math/point]
+   [:adjusted-pointer-offset math/point]
    [:zoom-sensitivity {:default 0.75} [:and number? pos?]]
    [:state {:default :default} keyword?]
    [:grid-visible? {:default false} boolean?]

@@ -1,9 +1,14 @@
-(ns user
+(ns renderer.dev-preload
+  "ClojureScript Function Instrumentation
+   https://github.com/metosin/malli/blob/master/docs/clojurescript-function-instrumentation.md"
+  {:dev/always true}
   (:require
    [clojure.pprint :refer (pprint)]
    [clojure.string :as str]
    [malli.core :as m]
+   [malli.dev.cljs :as dev]
    [re-frame.core :as rf]
+   [renderer.core]
    [renderer.db :as renderer.db]
    [renderer.utils.spec :as spec]))
 
@@ -28,6 +33,12 @@
 (comment
   ;; Enable full db validation for debugging.
   (rf/reg-global-interceptor schema-validator)
+
   (rf/clear-global-interceptor :schema-validator)
+
+
+  (dev/start!)
+
+  (dev/stop!)
 
   (pprint (str/trim "This line suppresses some clj-kondo warnings.")))

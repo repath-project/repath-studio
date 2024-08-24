@@ -1,8 +1,8 @@
 (ns renderer.element.db
   (:require
    [malli.core :as m]
-   [renderer.tool.base :as tool]))
-
+   [renderer.tool.base :as tool]
+   [renderer.utils.bounds :as bounds]))
 
 (defn tag?
   [k]
@@ -11,9 +11,6 @@
 (def tag
   [:fn {:error/fn (fn [{:keys [value]} _] (str value ", is not a supported tag"))}
    tag?])
-
-(def bounds
-  [:tuple number? number? number? number?])
 
 (def element
   [:map
@@ -26,7 +23,7 @@
    [:locked? {:optional true} boolean?]
    [:selected? {:optional true} boolean?]
    [:children {:default []} [:vector keyword?]]
-   [:bounds {:optional true} bounds]
+   [:bounds {:optional true} bounds/bounds]
    [:content {:optional true} string?]
    [:attrs {:optional true} [:map-of keyword? [:or string? number? vector?]]]])
 

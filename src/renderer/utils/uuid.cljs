@@ -1,13 +1,15 @@
-(ns renderer.utils.uuid)
+(ns renderer.utils.uuid
+  (:require
+   [malli.experimental :as mx]))
 
-(defn generate
+(mx/defn generate :- keyword?
   []
   (-> (random-uuid)
       str
       keyword))
 
-(defn generate-unique
-  [existing?]
+(mx/defn generate-unique :- keyword?
+  [existing? :- fn?]
   (loop [id (generate)]
     (if-not (existing? id)
       id

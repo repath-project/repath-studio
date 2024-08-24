@@ -82,10 +82,10 @@
              ^{:key (str (:id el) "-bounds")}
              [overlay/bounding-box (:bounds el) true])
 
-           (when (and (pos? elements-area) (= state :scale))
+           (when (and (pos? elements-area) (= state :scale) (seq bounds))
              [overlay/area-label elements-area bounds])
 
-           (when (not-empty (remove zero? bounds))
+           (when (seq bounds)
              [:<>
               [overlay/wrapping-bounding-box bounds]
               (when (= state :scale) [overlay/size-label bounds])

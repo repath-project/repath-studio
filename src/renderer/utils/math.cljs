@@ -1,29 +1,38 @@
 (ns renderer.utils.math
   (:require
-   [clojure.math :as math]))
+   [clojure.math :as math]
+   [malli.experimental :as mx]))
 
-(defn clamp
+(def point
+  [:tuple {:default [0 0]} number? number?])
+
+(mx/defn clamp :- number?
   "Clamps a number within the provided bounds."
-  [x minimum maximum]
+  [x :- number?
+   minimum :- number?
+   maximum :- number?]
   (min (max x minimum) maximum))
 
-(defn angle-dx
-  [degrees radius]
+(mx/defn angle-dx :- number?
+  [degrees :- number?
+   radius :- number? ]
   (* radius (Math/cos (math/to-radians degrees))))
 
-(defn angle-dy
-  [degrees radius]
+(mx/defn angle-dy :- number?
+  [degrees :- number?
+   radius :- number?]
   (* radius (Math/sin (math/to-radians degrees))))
 
-(defn normalize-angle
+(mx/defn normalize-angle :- number?
   "Normalizes an angle to be in range [0-360). Angles outside this range will
    be normalized to be the equivalent angle with that range."
-  [angle]
+  [angle :- number?]
   (mod angle (* 2 Math/PI)))
 
-(defn angle
+(mx/defn angle :- number?
   "Calculates the angle between two points."
-  [x1 y1 x2 y2]
+  [[x1 y1] :- point
+   [x2 y2] :- point]
   (-> (Math/atan2 (- y2 y1) (- x2 x1))
       normalize-angle
       math/to-degrees))
