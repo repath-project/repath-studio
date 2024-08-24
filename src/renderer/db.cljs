@@ -1,6 +1,5 @@
 (ns renderer.db
   (:require
-   [malli.core :as m]
    [renderer.dialog.db :as dialog.db]
    [renderer.document.db :as document.db]
    [renderer.snap.db :as snap.db]

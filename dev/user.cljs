@@ -26,11 +26,8 @@
               context))))
 
 (comment
-  (pprint (str/trim "This line suppresses some clj-kondo warnings."))
-
   ;; Enable full db validation for debugging.
   (rf/reg-global-interceptor schema-validator)
-
   (rf/clear-global-interceptor :schema-validator)
 
-  )
+  (pprint (str/trim "This line suppresses some clj-kondo warnings.")))
