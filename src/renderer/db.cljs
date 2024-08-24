@@ -70,4 +70,3 @@
    [:version {:optional true} string?]
    [:fx {:default []} vector?]])
 
-(def valid? (m/validator app))

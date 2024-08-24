@@ -15,13 +15,6 @@
    [renderer.utils.local-storage :as local-storage]
    [renderer.utils.pointer :as pointer]))
 
-(def schema-validator
-  (rf/after (partial h/check-and-throw)))
-
-(comment
-  ;; Enable full db validation for debugging.
-  (rf/reg-global-interceptor schema-validator))
-
 (def custom-fx
   (rf/->interceptor
    :id :custom-fx
