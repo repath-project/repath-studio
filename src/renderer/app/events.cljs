@@ -1,6 +1,5 @@
 (ns renderer.app.events
   (:require
-   [akiroz.re-frame.storage :as rf.storage]
    [config :as config]
    [malli.core :as m]
    [malli.transform :as mt]
@@ -27,8 +26,6 @@
                     (rf/assoc-effect :db (assoc db :fx []))))))))
 
 (rf/reg-global-interceptor custom-fx)
-
-(rf.storage/reg-co-fx! :repath-studio {:cofx :store})
 
 (rf/reg-event-db
  ::initialize-db

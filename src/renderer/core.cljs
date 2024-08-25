@@ -85,7 +85,7 @@
      ["window-entered-fullscreen" #(rf/dispatch [::window.e/set-fullscreen true])]
      ["window-leaved-fullscreen" #(rf/dispatch [::window.e/set-fullscreen false])]
      ["window-minimized" #(rf/dispatch [::window.e/set-minimized true])]
-     ["window-loaded" #(rf/dispatch [::document.e/center])]]]
+     ["window-loaded" #(rf/dispatch-sync [::document.e/center])]]]
     (js/window.api.on channel f)))
 
 (defn ^:export init []

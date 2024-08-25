@@ -1,11 +1,15 @@
 (ns renderer.app.effects
   (:require
+   [akiroz.re-frame.storage :as rf.storage]
+   [config :as config]
    [promesa.core :as p]
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.e]
    [renderer.utils.data-transfer :as data-transfer]
    [renderer.utils.dom :as dom]
    [renderer.utils.local-storage :as local-storage]))
+
+(rf.storage/reg-co-fx! config/app-key {:cofx :store})
 
 (rf/reg-fx
  ::data-transfer
