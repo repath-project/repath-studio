@@ -9,16 +9,10 @@
    [renderer.dialog.views :as dialog.v]
    [renderer.document.effects :as fx]
    [renderer.document.handlers :as h]
-   [renderer.frame.events :refer [focus-canvas]]
    [renderer.history.handlers :as history.h]
    [renderer.utils.local-storage :as local-storage]
    [renderer.utils.vec :as vec]
    [renderer.window.effects :as-alias window.fx]))
-
-(def center
-  (rf/->interceptor
-   :id :center
-   :after (fn [context] (assoc-in context [:effects :dispatch-later] {:ms 10 :dispatch [::center]}))))
 
 (def active-document-path
   (let [db-store-key :re-frame-path/db-store]
@@ -162,13 +156,13 @@
 
 (rf/reg-event-db
  ::new
- [center focus-canvas local-storage/persist]
+ local-storage/persist
  (fn [db [_]]
    (h/create db)))
 
 (rf/reg-event-db
  ::init
- [center focus-canvas local-storage/persist]
+ local-storage/persist
  (fn [db [_]]
    (cond-> db
      (not (:active-document db))
@@ -176,7 +170,7 @@
 
 (rf/reg-event-db
  ::new-from-template
- [center focus-canvas local-storage/persist]
+ local-storage/persist
  (fn [db [_ size]]
    (h/create db size)))
 
@@ -185,10 +179,10 @@
  local-storage/persist
  (fn [_ [_ file-path]]
    (if platform/electron?
-     {:ipc-invoke {:channel "open-documents"
-                   :data file-path
-                   :on-resolution ::load
-                   :formatter #(mapv edn/read-string %)}}
+     {::window.fx/ipc-invoke {:channel "open-documents"
+                              :data file-path
+                              :on-resolution ::load
+                              :formatter #(mapv edn/read-string %)}}
      {::fx/open nil})))
 
 (rf/reg-event-fx
@@ -198,9 +192,10 @@
 
 (rf/reg-event-db
  ::load
- [center focus-canvas local-storage/persist]
+ local-storage/persist
  (fn [db [_ documents]]
-   (reduce h/load db documents)))
+   (-> (reduce h/load db documents)
+       h/center)))
 
 (rf/reg-event-fx
  ::save

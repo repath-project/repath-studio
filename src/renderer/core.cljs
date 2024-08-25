@@ -84,7 +84,8 @@
      ["window-unmaximized" #(rf/dispatch [::window.e/set-maximized false])]
      ["window-entered-fullscreen" #(rf/dispatch [::window.e/set-fullscreen true])]
      ["window-leaved-fullscreen" #(rf/dispatch [::window.e/set-fullscreen false])]
-     ["window-minimized" #(rf/dispatch [::window.e/set-minimized true])]]]
+     ["window-minimized" #(rf/dispatch [::window.e/set-minimized true])]
+     ["window-loaded" #(rf/dispatch [::document.e/center])]]]
     (js/window.api.on channel f)))
 
 (defn ^:export init []
@@ -111,7 +112,6 @@
   (rf/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])
   (rf/dispatch-sync [::rp/set-keydown-rules keyb/keydown-rules])
 
-
   (.addEventListener js/document "keydown" keyb/event-handler)
   (.addEventListener js/document "keyup" keyb/event-handler)
 
@@ -123,8 +123,9 @@
   (if platform/electron?
     (do (register-ipc-on-events!)
         (rf/dispatch [::app.e/load-webref]))
-    (.addEventListener js/document
-                       "fullscreenchange"
-                       #(rf/dispatch [::window.e/set-fullscreen (boolean (.-fullscreenElement js/document))])))
+    (do (rf/dispatch [::document.e/center])
+        (.addEventListener js/document
+                           "fullscreenchange"
+                           #(rf/dispatch [::window.e/set-fullscreen (boolean (.-fullscreenElement js/document))]))))
 
   (mount-root))

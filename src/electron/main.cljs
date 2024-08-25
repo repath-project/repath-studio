@@ -128,7 +128,8 @@
                                 "window-unmaximized"))
            (send-to-renderer! (if (.isFullScreen ^js @main-window)
                                 "window-entered-fullscreen"
-                                "window-leaved-fullscreen"))))
+                                "window-leaved-fullscreen"))
+           (send-to-renderer! "window-loaded")))
 
     (.loadURL ^js @main-window (if config/debug?
                                  "http://localhost:8080"

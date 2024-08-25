@@ -96,10 +96,13 @@
    (cond-> db
      :always
      (-> (create-tab default)
-         (element.h/create {:tag :canvas :attrs {:fill "#eeeeee"}}))
+         (element.h/create {:tag :canvas
+                            :attrs {:fill "#eeeeee"}}))
 
      size
-     (-> (element.h/create {:tag :svg :attrs {:width (first size) :height (second size)}})
+     (-> (element.h/create {:tag :svg
+                        :attrs {:width (first size)
+                                :height (second size)}})
          center)
 
      :always

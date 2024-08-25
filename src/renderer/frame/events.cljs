@@ -8,11 +8,6 @@
    [renderer.frame.handlers :as h]
    [renderer.utils.local-storage :as local-storage]))
 
-(def focus-canvas
-  (rf/->interceptor
-   :id ::focus-canvas
-   :after (fn [context] (assoc-in context [:effects ::app.fx/focus] nil))))
-
 (rf/reg-event-db
  ::resize
  local-storage/persist
