@@ -115,8 +115,8 @@
   (.addEventListener js/document "keydown" keyb/event-handler)
   (.addEventListener js/document "keyup" keyb/event-handler)
 
-  (.addEventListener js/window "focus" #(rf/dispatch-sync [::window.e/set-focused true]))
-  (.addEventListener js/window "blur" #(rf/dispatch-sync [::window.e/set-focused (dom/focused?)]))
+  (.addEventListener js/window "focus" #(rf/dispatch [::window.e/set-focused true]))
+  (.addEventListener js/window "blur" #(rf/dispatch [::window.e/set-focused (dom/focused?)]))
 
   (.setup paper) ; REVIEW
 

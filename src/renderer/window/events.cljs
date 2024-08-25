@@ -28,7 +28,7 @@
  (fn [db [_ focused?]]
    (-> db
        (assoc-in [:window :focused?] focused?)
-      document.h/center)))
+       document.h/center)))
 
 (rf/reg-event-fx
  ::close
