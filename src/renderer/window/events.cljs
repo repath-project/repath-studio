@@ -33,6 +33,19 @@
    {::fx/close nil}))
 
 (rf/reg-event-fx
+ ::relaunch
+ (fn [_ _]
+   (if platform/electron?
+     {:ipc-send ["relaunch"]}
+     {::fx/relaunch nil})))
+
+(rf/reg-event-fx
+ ::clear-local-storage-and-relaunch
+ (fn [_ _]
+   {:fx [[:local-storage-clear nil]
+         [:dispatch [::relaunch]]]}))
+
+(rf/reg-event-fx
  ::toggle-maximized
  (fn [_ _]
    {:ipc-send ["window-toggle-maximized"]}))

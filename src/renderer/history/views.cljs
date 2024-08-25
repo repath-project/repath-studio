@@ -55,18 +55,16 @@
   "https://bkrem.github.io/react-d3-tree/docs/interfaces/_src_tree_types_.treeprops.html#rendercustomnodeelement"
   [^js/CustomNodeElementProps props]
   (let [datum (.-nodeDatum props)
-        fill (if (.-restored datum) "black"
-                 (if (.-active datum) "var(--accent)" (.-color datum)))
-        stroke (if (.-saved datum) "var(--accent)" (.-color datum))]
+        color (if (.-active datum) "var(--accent)" (.-color datum))]
     (ra/as-element
      [:circle
       {:on-click #(rf/dispatch [::history.e/move (keyword (.-id datum))])
        :cx "0"
        :cy "0"
-       :stroke stroke
+       :stroke color
        :stroke-width 4
        :r 18
-       :ref #(when % (.setAttribute % "fill" fill))}
+       :ref #(when % (.setAttribute % "fill" color))}
       [:title (.-name datum)]])))
 
 (defn on-update

@@ -8,6 +8,11 @@
    (.close js/window)))
 
 (rf/reg-fx
+ ::relaunch
+ (fn [_]
+   (.reload js/window.location)))
+
+(rf/reg-fx
  ::toggle-fullscreen
  (fn [_]
    (if (.-fullscreenElement js/document)

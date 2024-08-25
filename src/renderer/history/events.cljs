@@ -74,23 +74,3 @@
      (= (:state db) :default)
      (handlers/set-tool :select)))) ; FIXME
 
-(rf/reg-event-fx
- ::restore
- local-storage/persist
- (fn [{:keys [db]} _]
-   {:db (if (:restored? db)
-          (-> db
-              h/mark-restored
-              h/undo
-              (dissoc :restored?))
-          (-> db
-              element.h/clear-hovered
-              (handlers/set-tool :select)
-              (dissoc :pointer-offset)
-              (dissoc :clicked-element)
-              (dissoc :drag?)
-              (assoc :state :default)
-              (assoc :restored? true)
-              element.h/clear-temp
-              h/swap))
-    :dispatch ^:flush-dom [:clear-restored]}))

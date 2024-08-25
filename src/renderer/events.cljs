@@ -77,11 +77,6 @@
    {:db (h/set-tool db tool)
     :focus nil}))
 
-(rf/reg-event-db
- :clear-restored
- (fn [db [_]]
-   (dissoc db :restored?)))
-
 #_(rf/reg-event-db
    :set-lang
    (fn [db [_ lang]]

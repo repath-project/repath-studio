@@ -43,7 +43,6 @@
    [:grid-visible? {:default false} boolean?]
    [:rulers-visible? {:default true} boolean?]
    [:snap snap.db/snap]
-   [:restored? {:optional true} boolean?]
    [:active-document {:optional true} [:maybe keyword?]]
    [:cursor {:default "default"} string?]
    [:dom-rect {:optional true} dom-rect]

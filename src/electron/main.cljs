@@ -46,7 +46,8 @@
   []
   (doseq
    [[e f]
-    [["open-remote-url" open-external!]
+    [["relaunch" #(do (.relaunch app) (.exit app))]
+     ["open-remote-url" open-external!]
      ["open-directory" #(.showItemInFolder shell %)]
      ["window-minimize" #(.minimize ^js @main-window)]
      ["window-toggle-fullscreen" #(.setFullScreen ^js @main-window (not (.isFullScreen ^js @main-window)))]
