@@ -52,6 +52,11 @@
       ;; TODO: Introduce migrations to handle this gracefully.
       :fx [(when-not compatible? [::fx/local-storage-clear nil])]})))
 
+(rf/reg-event-fx
+ ::local-storage-persist
+ (fn [{:keys [db]} _]
+   {::fx/local-storage-persist db}))
+
 (rf/reg-event-db
  ::set-system-fonts
  (fn [db [_ fonts]]

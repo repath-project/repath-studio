@@ -1,7 +1,7 @@
 (ns renderer.tool.transform.pan
   (:require
    [clojure.core.matrix :as mat]
-   [renderer.app.effects :as-alias app.fx]
+   [renderer.app.events :as-alias app.e]
    [renderer.app.handlers :as app.h]
    [renderer.frame.handlers :as frame.h]
    [renderer.tool.base :as tool]))
@@ -39,4 +39,4 @@
   [db]
   (-> db
       (assoc :cursor "grab")
-      (app.h/add-fx [::app.fx/local-storage-persist nil])))
+      (app.h/add-fx [:dispatch [::app.e/local-storage-persist]])))

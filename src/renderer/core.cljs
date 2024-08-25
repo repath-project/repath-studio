@@ -99,6 +99,7 @@
 
   (rf/dispatch-sync [::app.e/initialize-db])
   (rf/dispatch-sync [::app.e/load-local-db])
+  (rf/dispatch-sync [::document.e/init])
   (rf/dispatch-sync [::window.e/set-focused (dom/focused?)])
   (rf/dispatch-sync [::theme.e/set-native-mode (theme.fx/native theme.fx/native-query)])
   (rf/dispatch-sync [::theme.e/add-native-listener])
@@ -110,7 +111,6 @@
   (rf/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])
   (rf/dispatch-sync [::rp/set-keydown-rules keyb/keydown-rules])
 
-  (rf/dispatch [::document.e/init])
 
   (.addEventListener js/document "keydown" keyb/event-handler)
   (.addEventListener js/document "keyup" keyb/event-handler)

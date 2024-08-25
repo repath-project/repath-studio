@@ -1,7 +1,7 @@
 (ns renderer.history.handlers
   (:require
    [malli.core :as m]
-   [renderer.app.effects :as-alias app.fx]
+   [renderer.app.events :as-alias app.e]
    [renderer.app.handlers :as app.h]
    [renderer.element.db :as element.db]
    [renderer.element.handlers :as element.h]
@@ -158,7 +158,7 @@
              update-ancestors)
 
          :always
-         (app.h/add-fx [::app.fx/local-storage-persist nil])))
+         (app.h/add-fx [:dispatch [::app.e/local-storage-persist]])))
       (-> (swap db)
           (notification.h/add
            [notification.v/spec-failed explanation (spec/explain elements element.db/elements)])))))

@@ -42,7 +42,7 @@
     [:> Switch/Thumb {:class "switch-thumb"}]]])
 
 (defn format-shortcut
-  [[shortcut]] ; REVIEW
+  [[shortcut]]
   (->> (cond-> []
          (:ctrlKey shortcut) (conj "Ctrl")
          (:shiftKey shortcut) (conj "⇧")
