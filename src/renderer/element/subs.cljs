@@ -2,6 +2,7 @@
   (:require
    ["js-beautify" :as js-beautify]
    [re-frame.core :as rf]
+   [renderer.app.subs :as-alias app.s]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.handlers :as h]
    [renderer.tool.base :as tool]
@@ -125,7 +126,7 @@
 (rf/reg-sub
  ::font-weights
  :<- [::selected]
- :<- [:system-fonts]
+ :<- [::app.s/system-fonts]
  (fn [[selected-elements system-fonts] _]
    (let [families (->> selected-elements
                        (map #(-> % :attrs :font-family))
