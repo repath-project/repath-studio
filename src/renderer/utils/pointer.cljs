@@ -1,7 +1,8 @@
 (ns renderer.utils.pointer
   (:require
    [clojure.core.matrix :as mat]
-   [re-frame.core :as rf]))
+   [re-frame.core :as rf]
+   [renderer.app.events :as-alias app.e]))
 
 (defn ctrl?
   [e]
@@ -61,24 +62,24 @@
             (= (.-pointerType e) "touch"))
     (.preventDefault e))
 
-  (rf/dispatch-sync [:pointer-event {:element el
-                                     :target (.-target e)
-                                     :type (keyword (.-type e))
-                                     :pointer-pos [(.-pageX e) (.-pageY e)]
-                                     :pressure (.-pressure e)
-                                     :pointer-type (.-pointerType e)
-                                     :pointer-id (.-pointerId e)
-                                     :primary? (.-isPrimary e)
-                                     :altitude (.-altitudeAngle e)
-                                     :azimuth (.-azimuthAngle e)
-                                     :twist (.-twist e)
-                                     :tilt [(.-tiltX e) (.-tiltY e)]
-                                     :data-transfer (.-dataTransfer e)
-                                     :button (get button (.-button e))
-                                     :buttons (get button (.-buttons e))
-                                     :delta [(.-deltaX e) (.-deltaY e)]
-                                     :modifiers (cond-> #{}
-                                                  (.-altKey e) (conj :alt)
-                                                  (.-ctrlKey e) (conj :ctrl)
-                                                  (.-metaKey e) (conj :meta)
-                                                  (.-shiftKey e) (conj :shift))}]))
+  (rf/dispatch-sync [::app.e/pointer-event {:element el
+                                            :target (.-target e)
+                                            :type (keyword (.-type e))
+                                            :pointer-pos [(.-pageX e) (.-pageY e)]
+                                            :pressure (.-pressure e)
+                                            :pointer-type (.-pointerType e)
+                                            :pointer-id (.-pointerId e)
+                                            :primary? (.-isPrimary e)
+                                            :altitude (.-altitudeAngle e)
+                                            :azimuth (.-azimuthAngle e)
+                                            :twist (.-twist e)
+                                            :tilt [(.-tiltX e) (.-tiltY e)]
+                                            :data-transfer (.-dataTransfer e)
+                                            :button (get button (.-button e))
+                                            :buttons (get button (.-buttons e))
+                                            :delta [(.-deltaX e) (.-deltaY e)]
+                                            :modifiers (cond-> #{}
+                                                         (.-altKey e) (conj :alt)
+                                                         (.-ctrlKey e) (conj :ctrl)
+                                                         (.-metaKey e) (conj :meta)
+                                                         (.-shiftKey e) (conj :shift))}]))

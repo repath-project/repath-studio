@@ -1,49 +1,35 @@
-(ns renderer.effects
+(ns renderer.app.effects
   (:require
-   [platform :as platform]
    [promesa.core :as p]
    [re-frame.core :as rf]
+   [renderer.app.events :as-alias app.e]
    [renderer.utils.data-transfer :as data-transfer]
    [renderer.utils.dom :as dom]
    [renderer.utils.local-storage :as local-storage]))
 
 (rf/reg-fx
- :ipc-send
- (fn [[channel data]]
-   (when platform/electron?
-     (js/window.api.send channel (clj->js data)))))
-
-(rf/reg-fx
- :ipc-invoke
- (fn [{:keys [channel data formatter on-resolution]}]
-   (when platform/electron?
-     (p/let [result (js/window.api.invoke channel (clj->js data))]
-       (when on-resolution
-         (rf/dispatch [on-resolution (cond-> result formatter formatter)]))))))
-
-(rf/reg-fx
- :data-transfer
+ ::data-transfer
  (fn [[position data-transfer]]
    (data-transfer/items! position (.-items data-transfer))
    (data-transfer/files! position (.-files data-transfer))))
 
 (rf/reg-fx
- :set-pointer-capture
+ ::set-pointer-capture
  (fn [[target pointer-id]]
    (.setPointerCapture target pointer-id)))
 
 (rf/reg-fx
- :local-storage-persist
+ ::local-storage-persist
  (fn [data]
    (local-storage/->store! data)))
 
 (rf/reg-fx
- :local-storage-clear
+ ::local-storage-clear
  (fn []
    (local-storage/clear!)))
 
 (rf/reg-fx
- :clipboard-write
+ ::clipboard-write
  (fn [[data]]
    (when data
      (js/navigator.clipboard.write
@@ -59,17 +45,17 @@
                 blob-array)))))))
 
 (rf/reg-fx
- :focus
+ ::focus
  (fn [id]
    (when-let [element (if id (.getElementById js/document id) (dom/canvas-element))]
      (js/setTimeout #(.focus element)))))
 
 (rf/reg-fx
- :load-system-fonts
+ ::load-system-fonts
  (fn []
    (when-not (undefined? js/window.queryLocalFonts)
      (p/let [fonts (.queryLocalFonts js/window)]
-       (rf/dispatch [:set-system-fonts
+       (rf/dispatch [::app.e/set-system-fonts
                      (mapv (fn [^js/FontData font-data]
                              (into {} [[:postscriptName (.-postscriptName font-data)]
                                        [:fullName (.-fullName ^js font-data)]

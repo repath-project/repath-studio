@@ -3,6 +3,7 @@
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
    [re-frame.core :as rf]
+   [renderer.app.subs :as-alias app.s]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.subs :as-alias element.s]
    [renderer.frame.subs :as-alias frame.s]
@@ -28,7 +29,7 @@
 
 (defn pointer
   [orientation size]
-  (let [[x y] @(rf/subscribe [:pointer-pos])
+  (let [[x y] @(rf/subscribe [::app.s/pointer-pos])
         pointer-size (/ size 5)
         size-diff (- size pointer-size)]
     [:polygon {:points (str/join " " (if (= orientation :vertical)

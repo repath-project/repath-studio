@@ -2,6 +2,7 @@
   "https://www.w3.org/TR/SVG/embedded.html#ImageElement"
   (:require
    [re-frame.core :as rf]
+   [renderer.app.events :as-alias app.e]
    [renderer.tool.base :as tool]
    [renderer.utils.data-transfer :as data-transfer]
    [renderer.utils.file :as file]))
@@ -24,6 +25,6 @@
                       "image/jpeg" [".jpeg" ".jpg"]
                       "image/bmp" [".fmp"]}}]}
    (fn [file]
-     (rf/dispatch [:set-tool :select])
+     (rf/dispatch [::app.e/set-tool :select])
      (data-transfer/add-image! file adjusted-pointer-pos)))
   db)

@@ -4,6 +4,8 @@
    ["react-resizable-panels" :refer [Panel PanelResizeHandle]]
    [re-frame.core :as rf]
    [reagent.core :as ra]
+   [renderer.app.events :as-alias app.e]
+   [renderer.app.subs :as-alias app.s]
    [renderer.reepl.codemirror :as codemirror]
    [renderer.reepl.db :as db]
    [renderer.reepl.handlers :as h]
@@ -20,12 +22,12 @@
 
 (defn mode-button
   [mode]
-  (let [repl-mode @(rf/subscribe [:repl-mode])
+  (let [repl-mode @(rf/subscribe [::app.s/repl-mode])
         active? (= repl-mode mode)]
     [:button.button.rounded.px-1.leading-none.text-2xs.h-4
      {:class [(when active? "selected")
               "m-0.5"]
-      :on-click #(rf/dispatch [:set-repl-mode mode])}
+      :on-click #(rf/dispatch [::app.e/set-repl-mode mode])}
      mode]))
 
 (defn repl-input
@@ -38,7 +40,7 @@
                        :complete-word
                        :on-change]))]}
   (let [{:keys [_pos _count _text]} @state
-        repl-history? @(rf/subscribe [:panel-visible? :repl-history])]
+        repl-history? @(rf/subscribe [::app.s/panel-visible? :repl-history])]
     [:div.flex.p-0.5.items-center.m-1
      [:div.flex.text-xs.self-start {:class "m-0.5"} (replumb.core/get-prompt)]
      ^{:key (str (hash (:js-cm-opts cm-opts)))}
@@ -55,7 +57,7 @@
         :inactive-icon "chevron-up"
         :inactive-text "Show command output"
         :class "my-0.5 ml-0.5"
-        :action #(rf/dispatch [:toggle-panel :repl-history])}
+        :action #(rf/dispatch [::app.e/toggle-panel :repl-history])}
        {:style {:height "16px"}}]]]))
 
 (defmulti item (fn [item _opts] (:type item)))
@@ -209,7 +211,7 @@
 
     (set-print! add-log)
     [:<>
-     (when @(rf/subscribe [:panel-visible? :repl-history])
+     (when @(rf/subscribe [::app.s/panel-visible? :repl-history])
        [repl-items-panel @items show-value-opts set-text])
 
      [:div.relative.whitespace-pre-wrap.font-mono
@@ -237,13 +239,13 @@
 (defn root
   []
   [repl
-   :execute #(replumb/run-repl (if (= @(rf/subscribe [:repl-mode]) :cljs) %1 (str "(js/eval \"" %1 "\")")) {:verbose @(rf/subscribe [:debug-info?])} %2)
-   :complete-word (fn [text] (replumb/process-apropos @(rf/subscribe [:repl-mode]) text))
+   :execute #(replumb/run-repl (if (= @(rf/subscribe [::app.s/repl-mode]) :cljs) %1 (str "(js/eval \"" %1 "\")")) {:verbose @(rf/subscribe [::app.s/debug-info?])} %2)
+   :complete-word (fn [text] (replumb/process-apropos @(rf/subscribe [::app.s/repl-mode]) text))
    :get-docs replumb/process-doc
    :state state
    :show-value-opts
    {:showers [show-devtools/show-devtools
               (partial show-function/show-fn-with-docs maybe-fn-docs)]}
-   :js-cm-opts {:mode (if (= @(rf/subscribe [:repl-mode]) :cljs) "clojure" "javascript")
+   :js-cm-opts {:mode (if (= @(rf/subscribe [::app.s/repl-mode]) :cljs) "clojure" "javascript")
                 :keyMap "default"
                 :showCursorWhenSelecting true}])

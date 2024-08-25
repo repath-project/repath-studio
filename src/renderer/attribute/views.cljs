@@ -5,6 +5,7 @@
    ["@radix-ui/react-slider" :as Slider]
    [clojure.string :as str]
    [re-frame.core :as rf]
+   [renderer.app.subs :as-alias app.s]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.element.events :as-alias element.e]
    [renderer.element.subs :as-alias element.s]
@@ -47,8 +48,8 @@
   [{:keys [tag attr]}]
   (let [data (if attr (bcd/conmpatibility tag attr) (bcd/conmpatibility tag))
         support-data (:support data)
-        webref-property (when attr @(rf/subscribe [:webref-css-property attr]))
-        css-property  (when attr @(rf/subscribe [:css-property attr]))
+        webref-property (when attr @(rf/subscribe [::app.s/webref-css-property attr]))
+        css-property  (when attr @(rf/subscribe [::app.s/css-property attr]))
         spec-url (or (:spec_url data) (:href webref-property) (:href css-property))
         spec-url (if (vector? spec-url) (first spec-url) spec-url)
         ;; mdn-url (or (:mdn_url css-property) (:mdn_url data)) ; REVIEW
@@ -186,9 +187,9 @@
 
 (defn label
   [tag k]
-  (let [clicked-element @(rf/subscribe [:clicked-element])
-        webref-property @(rf/subscribe [:webref-css-property k])
-        css-property  @(rf/subscribe [:css-property k])
+  (let [clicked-element @(rf/subscribe [::app.s/clicked-element])
+        webref-property @(rf/subscribe [::app.s/webref-css-property k])
+        css-property  @(rf/subscribe [::app.s/css-property k])
         dispatch-tag (if (contains? (methods hierarchy/description) [tag k]) tag :default)
         active? (and (= (:type clicked-element) :handle)
                      (= (:key clicked-element) key))]
@@ -220,7 +221,7 @@
 
 (defn row
   [k v locked? tag]
-  (let [property @(rf/subscribe [:webref-css-property k])
+  (let [property @(rf/subscribe [::app.s/webref-css-property k])
         initial (when property (:initial property))
         dispatch-tag (if (contains? (methods hierarchy/form-element) [tag k]) tag :default)]
     [:<>

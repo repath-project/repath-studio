@@ -3,6 +3,7 @@
   (:require
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
+   [renderer.app.subs :as-alias app.s]
    [renderer.document.subs :as-alias document.s]
    [renderer.frame.subs :as-alias frame.s]
    [renderer.snap.subs :as-alias snap.s]
@@ -37,7 +38,7 @@
 (defn circle-handle
   [{:keys [x y id] :as el} & children]
   (let [zoom @(rf/subscribe [::document.s/zoom])
-        clicked-element @(rf/subscribe [:clicked-element])
+        clicked-element @(rf/subscribe [::app.s/clicked-element])
         pointer-handler #(pointer/event-handler % el)]
     [:circle {:key (name id)
               :cx x
@@ -57,7 +58,7 @@
 (defn square-handle
   [{:keys [x y id cursor] :as el} & children]
   (let [zoom @(rf/subscribe [::document.s/zoom])
-        clicked-element @(rf/subscribe [:clicked-element])
+        clicked-element @(rf/subscribe [::app.s/clicked-element])
         hovered-ids @(rf/subscribe [::document.s/hovered-ids])
         size (/ handle-size zoom)
         stroke-width (/ 1 zoom)
@@ -296,20 +297,20 @@
 
 (defn debug-rows
   []
-  [["Dom rect" @(rf/subscribe [:dom-rect])]
+  [["Dom rect" @(rf/subscribe [::app.s/dom-rect])]
    ["Viewbox" (str (mapv units/->fixed @(rf/subscribe [::frame.s/viewbox])))]
-   ["Pointer position" (str @(rf/subscribe [:pointer-pos]))]
+   ["Pointer position" (str @(rf/subscribe [::app.s/pointer-pos]))]
    ["Adjusted pointer position"
-    (str (mapv units/->fixed @(rf/subscribe [:adjusted-pointer-pos])))]
-   ["Pointer offset" (str @(rf/subscribe [:pointer-offset]))]
+    (str (mapv units/->fixed @(rf/subscribe [::app.s/adjusted-pointer-pos])))]
+   ["Pointer offset" (str @(rf/subscribe [::app.s/pointer-offset]))]
    ["Adjusted pointer offset"
-    (str (mapv units/->fixed @(rf/subscribe [:adjusted-pointer-offset])))]
-   ["Pointer drag?" (str @(rf/subscribe [:drag?]))]
+    (str (mapv units/->fixed @(rf/subscribe [::app.s/adjusted-pointer-offset])))]
+   ["Pointer drag?" (str @(rf/subscribe [::app.s/drag?]))]
    ["Pan" (str (mapv units/->fixed @(rf/subscribe [::document.s/pan])))]
-   ["Active tool" @(rf/subscribe [:tool])]
-   ["Primary tool" @(rf/subscribe [:primary-tool])]
-   ["State"  @(rf/subscribe [:state])]
-   ["Clicked element" (:id @(rf/subscribe [:clicked-element]))]
+   ["Active tool" @(rf/subscribe [::app.s/tool])]
+   ["Primary tool" @(rf/subscribe [::app.s/primary-tool])]
+   ["State"  @(rf/subscribe [::app.s/state])]
+   ["Clicked element" (:id @(rf/subscribe [::app.s/clicked-element]))]
    ["Ignored elements" @(rf/subscribe [::document.s/ignored-ids])]
    ["Snap" (map (fn [[k v]] (str k " - " v)) @(rf/subscribe [::snap.s/nearest-neighbor]))]])
 

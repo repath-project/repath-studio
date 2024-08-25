@@ -3,6 +3,8 @@
   (:require
    [clojure.string :as str]
    [re-frame.core :as rf]
+   [renderer.app.events :as-alias app.e]
+   [renderer.app.subs :as-alias app.s]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.attribute.views :as v]
    [renderer.element.events :as-alias element.e]
@@ -25,7 +27,7 @@
 
 (defmethod hierarchy/form-element [:default :href]
   [_ k v disabled?]
-  (let [state-default? (= @(rf/subscribe [:state]) :default)
+  (let [state-default? (= @(rf/subscribe [::app.s/state]) :default)
         data-url? (str/starts-with? v "data:")]
     [:<>
      [v/form-input
@@ -46,6 +48,6 @@
                                       "image/jpeg" [".jpeg" ".jpg"]
                                       "image/bmp" [".fmp"]}}]}
                    (fn [file]
-                     (rf/dispatch [:set-tool :select])
+                     (rf/dispatch [::app.e/set-tool :select])
                      (update-href! file)))}
       [ui/icon "folder"]]]))

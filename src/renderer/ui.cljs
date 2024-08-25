@@ -9,6 +9,7 @@
    ["react-fps" :refer [FpsView]]
    ["react-svg" :refer [ReactSVG]]
    [re-frame.core :as rf]
+   [renderer.app.subs :as-alias app.s]
    [renderer.utils.keyboard :as keyb]))
 
 (defn fps
@@ -53,7 +54,7 @@
 
 (defn shortcuts
   [event]
-  (let [event-shortcuts @(rf/subscribe [:event-shortcuts event])]
+  (let [event-shortcuts @(rf/subscribe [::app.s/event-shortcuts event])]
     (when (seq event-shortcuts)
       (->> event-shortcuts
            (map format-shortcut)

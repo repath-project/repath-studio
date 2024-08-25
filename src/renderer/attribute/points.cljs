@@ -4,6 +4,7 @@
    ["@radix-ui/react-popover" :as Popover]
    [clojure.string :as str]
    [re-frame.core :as rf]
+   [renderer.app.subs :as-alias app.s]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.attribute.views :as v]
    [renderer.element.events :as-alias element.e]
@@ -25,7 +26,7 @@
 
 (defmethod hierarchy/form-element [:default :points]
   [_ k v disabled?]
-  (let [state-default? (= @(rf/subscribe [:state]) :default)]
+  (let [state-default? (= @(rf/subscribe [::app.s/state]) :default)]
     [:<>
      [v/form-input
       {:key k

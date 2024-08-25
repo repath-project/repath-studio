@@ -12,7 +12,8 @@
    [renderer.frame.events :refer [focus-canvas]]
    [renderer.history.handlers :as history.h]
    [renderer.utils.local-storage :as local-storage]
-   [renderer.utils.vec :as vec]))
+   [renderer.utils.vec :as vec]
+   [renderer.window.effects :as-alias window.fx]))
 
 (def center
   (rf/->interceptor
@@ -206,10 +207,10 @@
  (fn [{:keys [db]} [_]]
    (let [document (h/save-format db)]
      (if platform/electron?
-       {:ipc-invoke {:channel "save-document"
-                     :data (pr-str document)
-                     :on-resolution ::saved
-                     :formatter edn/read-string}}
+       {::window.fx/ipc-invoke {:channel "save-document"
+                                :data (pr-str document)
+                                :on-resolution ::saved
+                                :formatter edn/read-string}}
        ;; The path is not available when we use web APIs for security reasons,
        ;; so we always dispatch save-as.
        {::fx/save-as document}))))
@@ -225,10 +226,10 @@
  (fn [{:keys [db]} [_ id]]
    (let [document (h/save-format db id)]
      (if platform/electron?
-       {:ipc-invoke {:channel "save-document"
-                     :data (pr-str document)
-                     :on-resolution ::close-saved
-                     :formatter edn/read-string}}
+       {::window.fx/ipc-invoke {:channel "save-document"
+                                :data (pr-str document)
+                                :on-resolution ::close-saved
+                                :formatter edn/read-string}}
        {::fx/save-as document}))))
 
 (rf/reg-event-fx
@@ -236,10 +237,10 @@
  (fn [{:keys [db]} [_]]
    (let [document (h/save-format db)]
      (if platform/electron?
-       {:ipc-invoke {:channel "save-document-as"
-                     :data (pr-str document)
-                     :on-resolution ::saved
-                     :formatter edn/read-string}}
+       {::window.fx/ipc-invoke {:channel "save-document-as"
+                                :data (pr-str document)
+                                :on-resolution ::saved
+                                :formatter edn/read-string}}
        {::fx/save-as document}))))
 
 (rf/reg-event-db

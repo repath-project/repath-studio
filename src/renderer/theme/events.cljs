@@ -1,7 +1,6 @@
 (ns renderer.theme.events
   (:require
    [re-frame.core :as rf]
-   [renderer.effects]
    [renderer.theme.effects :as fx]
    [renderer.utils.local-storage :as local-storage]))
 

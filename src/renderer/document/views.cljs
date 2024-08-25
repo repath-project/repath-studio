@@ -5,6 +5,7 @@
    [platform :as platform]
    [re-frame.core :as rf]
    [reagent.core :as ra]
+   [renderer.app.subs :as-alias app.s]
    [renderer.document.events :as-alias document.e]
    [renderer.document.subs :as-alias document.s]
    [renderer.history.events :as-alias history.e]
@@ -78,7 +79,7 @@
   [id]
   (let [document @(rf/subscribe [::document.s/document id])
         path (:path document)
-        document-tabs @(rf/subscribe [:document-tabs])]
+        document-tabs @(rf/subscribe [::app.s/document-tabs])]
     [{:label "Close"
       :action [::document.e/close id true]}
      {:label "Close others"
@@ -132,9 +133,9 @@
               (context-menu id)))]])))
 
 (defn tab-bar []
-  (let [documents @(rf/subscribe [:documents])
-        document-tabs @(rf/subscribe [:document-tabs])
-        active-document @(rf/subscribe [:active-document])]
+  (let [documents @(rf/subscribe [::app.s/documents])
+        document-tabs @(rf/subscribe [::app.s/document-tabs])
+        active-document @(rf/subscribe [::app.s/active-document])]
     [:div.flex.drag.justify-between
      [:div.flex.flex-1.overflow-hidden
       (for [document-id document-tabs]

@@ -1,4 +1,4 @@
-(ns renderer.events
+(ns renderer.app.events
   (:require
    [akiroz.re-frame.storage :as rf.storage]
    [config :as config]
@@ -6,18 +6,19 @@
    [malli.transform :as mt]
    [platform :as platform]
    [re-frame.core :as rf]
-   [renderer.db :as db]
-   [renderer.effects]
+   [renderer.app.db :as db]
+   [renderer.app.effects :as fx]
    [renderer.frame.handlers :as frame-h]
    [renderer.handlers :as h]
    [renderer.notification.events :as-alias notification.e]
    [renderer.tool.base :as tool]
    [renderer.utils.local-storage :as local-storage]
-   [renderer.utils.pointer :as pointer]))
+   [renderer.utils.pointer :as pointer]
+   [renderer.window.effects :as-alias window.fx]))
 
 (def custom-fx
   (rf/->interceptor
-   :id :custom-fx
+   :id ::custom-fx
    :after (fn [context]
             (let [db (rf/get-effect context :db ::not-found)]
               (cond-> context
@@ -30,7 +31,7 @@
 (rf.storage/reg-co-fx! :repath-studio {:cofx :store})
 
 (rf/reg-event-db
- :initialize-db
+ ::initialize-db
  (fn [_ _]
    (-> db/app
        (m/decode {} mt/default-value-transformer)
@@ -43,39 +44,34 @@
       (= (re-find reg v1) (re-find reg v2)))))
 
 (rf/reg-event-fx
- :load-local-db
+ ::load-local-db
  [(rf/inject-cofx :store)]
  (fn [{:keys [db store]} _]
    (let [compatible? (compatible-versions? (:version db) (:version store))]
      {:db (cond-> db compatible? (merge db store))
       ;; TODO: Introduce migrations to handle this gracefully.
-      :fx [(when-not compatible? [:local-storage-clear nil])]})))
-
-(rf/reg-event-fx
- :local-storage-persist
- (fn [{:keys [db]} _]
-   {:local-storage-persist db}))
+      :fx [(when-not compatible? [::fx/local-storage-clear nil])]})))
 
 (rf/reg-event-db
- :set-system-fonts
+ ::set-system-fonts
  (fn [db [_ fonts]]
    (assoc db :system-fonts fonts)))
 
 (rf/reg-event-db
- :set-webref-css
+ ::set-webref-css
  (fn [db [_ webref-css]]
    (assoc db :webref-css webref-css)))
 
 (rf/reg-event-db
- :set-mdn
+ ::set-mdn
  (fn [db [_ mdn]]
    (assoc db :mdn mdn)))
 
 (rf/reg-event-fx
- :set-tool
+ ::set-tool
  (fn [{:keys [db]} [_ tool]]
    {:db (h/set-tool db tool)
-    :focus nil}))
+    ::fx/focus nil}))
 
 #_(rf/reg-event-db
    :set-lang
@@ -83,46 +79,46 @@
      (assoc db :lang lang)))
 
 (rf/reg-event-db
- :set-repl-mode
+ ::set-repl-mode
  (fn [db [_ mode]]
    (assoc db :repl-mode mode)))
 
 (rf/reg-event-db
- :toggle-debug-info
+ ::toggle-debug-info
  (fn [db [_]]
    (update db :debug-info? not)))
 
 (rf/reg-event-db
- :set-backdrop
- (fn [db [_ backdrop?]]
-   (assoc db :backdrop? backdrop?)))
+ ::set-backdrop
+ (fn [db [_ visible?]]
+   (assoc db :backdrop? visible?)))
 
 (rf/reg-event-db
- :toggle-rulers
+ ::toggle-rulers
  local-storage/persist
  (fn [db [_]]
    (update db :rulers-visible? not)))
 
 #_(rf/reg-event-db
-   :toggle-rulers-locked
+   ::toggle-rulers-locked
    (fn [db [_]]
      (update db :rulers-locked? not)))
 
 (rf/reg-event-db
- :toggle-grid
+ ::toggle-grid
  local-storage/persist
  (fn [db [_]]
    (update db :grid-visible? not)))
 
 (rf/reg-event-db
- :toggle-panel
+ ::toggle-panel
  [local-storage/persist
   (rf/path :panels)]
  (fn [db [_ k]]
    (update-in db [k :visible?] not)))
 
 (rf/reg-event-fx
- :pointer-event
+ ::pointer-event
  (fn [{:keys [db]} [_ {:keys [button buttons modifiers data-transfer pointer-pos delta element] :as e}]]
    (let [{:keys [pointer-offset tool dom-rect drag? primary-tool]} db
          adjusted-pointer-pos (frame-h/adjust-pointer-pos db pointer-pos)]
@@ -189,10 +185,10 @@
             db)
       :fx [(case (:type e)
              :drop
-             [:data-transfer [adjusted-pointer-pos data-transfer]]
+             [::fx/data-transfer [adjusted-pointer-pos data-transfer]]
 
              :pointerdown
-             [:set-pointer-capture [(:target e) (:pointer-id e)]]
+             [::fx/set-pointer-capture [(:target e) (:pointer-id e)]]
 
              nil)]})))
 
@@ -223,24 +219,24 @@
      db)))
 
 (rf/reg-event-fx
- :focus
+ ::focus
  (fn [_ [_ id]]
-   {:focus id}))
+   {::fx/focus id}))
 
 (rf/reg-event-fx
- :load-system-fonts
+ ::load-system-fonts
  (fn [_ [_ file-path]]
    (if platform/electron?
-     {:ipc-invoke {:channel "load-system-fonts"
-                   :data file-path
-                   :on-resolution :set-system-fonts
-                   :formatter #(js->clj % :keywordize-keys true)}}
-     {:load-system-fonts nil})))
+     {::window.fx/ipc-invoke {:channel "load-system-fonts"
+                              :data file-path
+                              :on-resolution ::set-system-fonts
+                              :formatter #(js->clj % :keywordize-keys true)}}
+     {::fx/load-system-fonts nil})))
 
 (rf/reg-event-fx
- :load-webref
+ ::load-webref
  (fn [_ [_ file-path]]
-   {:ipc-invoke {:channel "load-webref"
-                 :data file-path
-                 :on-resolution :set-webref-css
-                 :formatter #(js->clj % :keywordize-keys true)}}))
+   {::window.fx/ipc-invoke {:channel "load-webref"
+                            :data file-path
+                            :on-resolution ::set-webref-css
+                            :formatter #(js->clj % :keywordize-keys true)}}))

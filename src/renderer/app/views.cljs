@@ -1,4 +1,4 @@
-(ns renderer.views
+(ns renderer.app.views
   (:require
    ["@radix-ui/react-select" :as Select]
    ["@radix-ui/react-tooltip" :as Tooltip]
@@ -6,6 +6,8 @@
    ["react-resizable-panels" :refer [Panel PanelGroup PanelResizeHandle]]
    [config :as config]
    [re-frame.core :as rf]
+   [renderer.app.events :as e]
+   [renderer.app.subs :as-alias app.s]
    [renderer.codemirror.views :as cm.v]
    [renderer.dialog.events :as-alias dialog.e]
    [renderer.dialog.views :as dialog.v]
@@ -30,7 +32,7 @@
 
 (defn frame-panel
   []
-  (let [rulers? @(rf/subscribe [:rulers-visible?])
+  (let [rulers? @(rf/subscribe [::app.s/rulers-visible?])
         read-only? @(rf/subscribe [::document.s/read-only?])]
     [:div.flex.flex-col.flex-1.h-full
      [:div.mb-px
@@ -39,13 +41,13 @@
         [:div.flex
          [:div.bg-primary {:style {:width "23px" :height "23px"}}
           #_[ui/toggle-icon-button
-             {:active? @(rf/subscribe [:rulers-locked?])
+             {:active? @(rf/subscribe [::app.s/rulers-locked?])
               :active-icon "lock"
               :active-text "unlock"
               :inactive-icon "unlock"
               :inactive-text "lock"
               :class "small"
-              :action #(rf/dispatch [:toggle-rulers-locked])}]]
+              :action #(rf/dispatch [::e/toggle-rulers-locked])}]]
          [:div.w-full.ml-px.bg-primary
           [ruler.v/ruler {:orientation :horizontal :size 23}]]])]
      [:div.flex.flex-1.relative
@@ -57,13 +59,13 @@
        [frame.v/root]
        (if read-only?
          [:div.absolute.inset-0.border-4.border-accent]
-         (when @(rf/subscribe [:debug-info?])
+         (when @(rf/subscribe [::app.s/debug-info?])
            [:<>
             [overlay/debug-info]
             [ui/fps]]))
-       (when @(rf/subscribe [:backdrop?])
+       (when @(rf/subscribe [::app.s/backdrop?])
          [:div.absolute.inset-0
-          {:on-click #(rf/dispatch [:set-backdrop false])}])]]]))
+          {:on-click #(rf/dispatch [::e/set-backdrop false])}])]]]))
 
 (defn center-top-group
   []
@@ -77,7 +79,7 @@
       {:id "frame-panel"
        :order 1}
       [frame-panel]]
-     (when @(rf/subscribe [:panel-visible? :history])
+     (when @(rf/subscribe [::app.s/panel-visible? :history])
        [:<>
         [:> PanelResizeHandle
          {:id "history-resize-handle"
@@ -89,7 +91,7 @@
          [:div.bg-primary.h-full.ml-px
           [history.v/root]]]])
 
-     (when @(rf/subscribe [:panel-visible? :xml])
+     (when @(rf/subscribe [::app.s/panel-visible? :xml])
        (let [xml @(rf/subscribe [::element.s/xml])]
          [:<>
           [:> PanelResizeHandle
@@ -109,8 +111,8 @@
 
 (defn editor
   []
-  (let [timeline? @(rf/subscribe [:panel-visible? :timeline])
-        repl-history? @(rf/subscribe [:panel-visible? :repl-history])]
+  (let [timeline? @(rf/subscribe [::app.s/panel-visible? :timeline])
+        repl-history? @(rf/subscribe [::app.s/panel-visible? :repl-history])]
     [:> PanelGroup
      ;; REVIEW: We need to rerender the group to properly resize the panels.
      {:key (str timeline? repl-history?)
@@ -241,9 +243,9 @@
   [:> Tooltip/Provider
    [:div.flex.flex-col.flex-1.h-screen.overflow-hidden
     [window.v/app-header]
-    (if (seq @(rf/subscribe [:documents]))
+    (if (seq @(rf/subscribe [::app.s/documents]))
       [:div.flex.h-full.flex-1.overflow-hidden
-       (when @(rf/subscribe [:panel-visible? :tree])
+       (when @(rf/subscribe [::app.s/panel-visible? :tree])
          [:div.flex-col.hidden.md:flex.overflow-hidden
           {:style {:width "227px"}}
           [document.v/actions]
@@ -253,11 +255,11 @@
         [:div.flex.h-full.flex-1.overflow-hidden
          [:div.flex.h-full.flex-col.flex-1.overflow-hidden
           [editor]]
-         (when @(rf/subscribe [:panel-visible? :properties])
+         (when @(rf/subscribe [::app.s/panel-visible? :properties])
            [:div.hidden.md:flex
             {:style {:flex "0 0 300px"}}
             [:div.ml-px.flex.flex-col.h-full.w-full
-             [ui/scroll-area (tool/right-panel @(rf/subscribe [:tool]))]
+             [ui/scroll-area (tool/right-panel @(rf/subscribe [::app.s/tool]))]
              [:div.bg-primary.grow.w-full.flex]]])
          [:div.bg-primary.ml-px.flex
           [ui/scroll-area [toolbar.object/root]]]]]]

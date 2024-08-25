@@ -3,11 +3,13 @@
    [clojure.string :as str]
    [platform :as platform]
    [re-frame.core :as rf]
+   [renderer.app.effects :as-alias app.fx]
    [renderer.element.effects :as fx]
    [renderer.element.handlers :as h]
    [renderer.history.handlers :as history.h]
    [renderer.notification.events :as-alias notification.e]
    [renderer.utils.bounds :as bounds]
+   [renderer.window.effects :as-alias window.fx]
    [renderer.worker.events :as-alias worker.e]))
 
 (rf/reg-event-db
@@ -158,8 +160,8 @@
    (let [els (h/root-children db)
          svg (h/->svg els)]
      (if platform/electron?
-       {:ipc-invoke {:channel "export"
-                     :data svg}}
+       {::window.fx/ipc-invoke {:channel "export"
+                                :data svg}}
        {::fx/export [svg {:startIn "pictures"
                           :types [{:accept {"image/svg+xml" [".svg"]}}]}]}))))
 
@@ -169,9 +171,9 @@
    (let [els (h/root-children db)
          svg (h/->svg els)]
      (if platform/electron?
-       {:ipc-invoke {:channel "print"
-                     :data svg
-                     :on-resolution ::notification.e/add}}
+       {::window.fx/ipc-invoke {:channel "print"
+                                :data svg
+                                :on-resolution ::notification.e/add}}
        {::fx/print svg}))))
 
 (rf/reg-event-db
@@ -335,7 +337,7 @@
  ::copy
  (fn [{:keys [db]} [_]]
    {:db (h/copy db)
-    :clipboard-write [(h/->svg (h/top-selected-sorted db))]}))
+    ::app.fx/clipboard-write [(h/->svg (h/top-selected-sorted db))]}))
 
 (rf/reg-event-fx
  ::cut
@@ -344,7 +346,7 @@
             h/copy
             h/delete
             (history.h/finalize "Cut selection"))
-    :clipboard-write [(h/->svg (h/top-selected-sorted db))]}))
+    ::app.fx/clipboard-write [(h/->svg (h/top-selected-sorted db))]}))
 
 (rf/reg-event-fx
  ::trace

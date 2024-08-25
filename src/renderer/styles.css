@@ -167,10 +167,6 @@ body {
   fill: var(--font-color);
 }
 
-#app {
-  @apply absolute inset-0 overflow-hidden;
-}
-
 ::-webkit-scrollbar {
   @apply w-2 h-2;
 }

@@ -2,6 +2,7 @@
   (:require
    [config :as config]
    [re-frame.core :as rf]
+   [renderer.app.subs :as-alias app.s]
    [renderer.document.handlers :as h]
    [renderer.timeline.subs :as-alias timeline.s]))
 
@@ -12,7 +13,7 @@
 
 (rf/reg-sub
  ::documents?
- :<- [:documents]
+ :<- [::app.s/documents]
  (fn [documents _]
    (seq documents)))
 
@@ -24,15 +25,15 @@
 
 (rf/reg-sub
  ::active
- :<- [:documents]
- :<- [:active-document]
+ :<- [::app.s/documents]
+ :<- [::app.s/active-document]
  (fn [[documents active-document] _]
    (when active-document
      (get documents active-document))))
 
 (rf/reg-sub
  ::document
- :<- [:documents]
+ :<- [::app.s/documents]
  (fn [documents [_ k]]
    (get documents k)))
 

@@ -5,6 +5,7 @@
    ["react" :as react]
    [re-frame.core :as rf]
    [reagent.core :as ra]
+   [renderer.app.subs :as-alias app.s]
    [renderer.element.events :as-alias element.e]
    [renderer.timeline.events :as-alias timeline.e]
    [renderer.timeline.subs :as-alias timeline.s]
@@ -107,7 +108,7 @@
      [snap-controls]
      [ui/icon-button "window-close"
       {:title "Hide timeline"
-       :on-click #(rf/dispatch [:toggle-panel :timeline])}]]))
+       :on-click #(rf/dispatch [:e/toggle-panel :timeline])}]]))
 
 (defn register-listeners
   [timeline-ref]
@@ -148,7 +149,7 @@
   []
   (let [t @(rf/subscribe [::timeline.s/time])
         end @(rf/subscribe [::timeline.s/end])
-        timeline? @(rf/subscribe [:panel-visible? :timeline])]
+        timeline? @(rf/subscribe [::app.s/panel-visible? :timeline])]
     [:div.h-px.block
      {:style {:width (str (* (/ t end) 100) "%")
               :background (when-not (or (zero? t) (zero? end) timeline?)

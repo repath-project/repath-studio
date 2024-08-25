@@ -3,6 +3,7 @@
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
    [re-frame.core :as rf]
+   [renderer.app.events :as-alias app.e]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.events :as-alias element.e]
    [renderer.element.handlers :as element.h]
@@ -79,7 +80,7 @@
     (rf/dispatch (if (empty? s)
                    [::element.e/delete]
                    [::element.e/set-prop el-k :content s]))
-    (rf/dispatch [:set-tool :select])))
+    (rf/dispatch [::app.e/set-tool :select])))
 
 (defn key-down-handler
   [e id]

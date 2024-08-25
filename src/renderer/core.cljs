@@ -8,6 +8,9 @@
    [re-frame.core :as rf]
    [re-pressed.core :as rp]
    [reagent.dom :as ra.dom]
+   [renderer.app.events :as app.e]
+   [renderer.app.subs]
+   [renderer.app.views :as app.v]
    [renderer.attribute.core]
    [renderer.color.effects]
    [renderer.dialog.events]
@@ -16,7 +19,6 @@
    [renderer.document.subs]
    [renderer.element.events]
    [renderer.element.subs]
-   [renderer.events]
    [renderer.frame.events]
    [renderer.frame.subs]
    [renderer.history.events]
@@ -27,7 +29,6 @@
    [renderer.ruler.subs]
    [renderer.snap.events]
    [renderer.snap.subs]
-   [renderer.subs]
    [renderer.theme.effects :as theme.fx]
    [renderer.theme.events :as theme.e]
    [renderer.theme.subs]
@@ -38,7 +39,6 @@
    [renderer.utils.dom :as dom]
    [renderer.utils.error :as error]
    [renderer.utils.keyboard :as keyb]
-   [renderer.views :as v]
    [renderer.window.events :as window.e]
    [renderer.window.subs]
    [renderer.worker.events]
@@ -66,7 +66,7 @@
   (rf/clear-subscription-cache!)
   (let [root-el (dom/root-element)]
     (ra.dom/unmount-component-at-node root-el)
-    (ra.dom/render [error/boundary [v/root]] root-el)))
+    (ra.dom/render [error/boundary [app.v/root]] root-el)))
 
 (defn bootstrap-cb
   []
@@ -97,15 +97,15 @@
   ;; https://code.thheller.com/blog/shadow-cljs/2017/10/14/bootstrap-support.html
   (bootstrap/init repl/st {:path "js/bootstrap" :load-on-init '[user]} bootstrap-cb)
 
-  (rf/dispatch-sync [:initialize-db])
-  (rf/dispatch-sync [:load-local-db])
+  (rf/dispatch-sync [::app.e/initialize-db])
+  (rf/dispatch-sync [::app.e/load-local-db])
   (rf/dispatch-sync [::window.e/set-focused (dom/focused?)])
   (rf/dispatch-sync [::theme.e/set-native-mode (theme.fx/native theme.fx/native-query)])
   (rf/dispatch-sync [::theme.e/add-native-listener])
   (rf/dispatch-sync [::theme.e/set-document-attr]) ; Required to avoid blinking on init.
-  (rf/dispatch-sync [:set-tool :select])
-  (rf/dispatch-sync [:set-mdn (js->clj mdn :keywordize-keys true)])
-  (rf/dispatch-sync [:load-system-fonts])
+  (rf/dispatch-sync [::app.e/set-tool :select])
+  (rf/dispatch-sync [::app.e/set-mdn (js->clj mdn :keywordize-keys true)])
+  (rf/dispatch-sync [::app.e/load-system-fonts])
 
   (rf/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])
   (rf/dispatch-sync [::rp/set-keydown-rules keyb/keydown-rules])
@@ -122,7 +122,7 @@
 
   (if platform/electron?
     (do (register-ipc-on-events!)
-        (rf/dispatch [:load-webref]))
+        (rf/dispatch [::app.e/load-webref]))
     (.addEventListener js/document
                        "fullscreenchange"
                        #(rf/dispatch [::window.e/set-fullscreen (boolean (.-fullscreenElement js/document))])))

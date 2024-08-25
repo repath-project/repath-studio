@@ -2,6 +2,8 @@
   (:require
    ["@radix-ui/react-menubar" :as Menubar]
    [re-frame.core :as rf]
+   [renderer.app.events :as-alias app.e]
+   [renderer.app.subs :as-alias app.s]
    [renderer.dialog.events :as-alias dialog.e]
    [renderer.document.events :as-alias document.e]
    [renderer.document.subs :as-alias document.s]
@@ -409,38 +411,38 @@
     :type :checkbox
     :icon "tree"
     :label "Element tree"
-    :checked? [:panel-visible? :tree]
-    :action [:toggle-panel :tree]}
+    :checked? [::app.s/panel-visible? :tree]
+    :action [::app.e/toggle-panel :tree]}
    {:id :toggle-props
     :type :checkbox
     :icon "properties"
     :label "Properties"
-    :checked? [:panel-visible? :properties]
-    :action [:toggle-panel :properties]}
+    :checked? [::app.s/panel-visible? :properties]
+    :action [::app.e/toggle-panel :properties]}
    {:id :toggle-xml
     :label "XML view"
     :type :checkbox
     :icon "code"
-    :checked? [:panel-visible? :xml]
-    :action [:toggle-panel :xml]}
+    :checked? [::app.s/panel-visible? :xml]
+    :action [::app.e/toggle-panel :xml]}
    {:id :toggle-history
     :label "History tree"
     :icon "history"
     :type :checkbox
-    :checked? [:panel-visible? :history]
-    :action [:toggle-panel :history]}
+    :checked? [::app.s/panel-visible? :history]
+    :action [::app.e/toggle-panel :history]}
    {:id :toggle-command-history
     :type :checkbox
     :label "Shell history"
     :icon "shell"
-    :checked? [:panel-visible? :repl-history]
-    :action [:toggle-panel :repl-history]}
+    :checked? [::app.s/panel-visible? :repl-history]
+    :action [::app.e/toggle-panel :repl-history]}
    {:id :toggle-timeline-panel
     :type :checkbox
     :label "Timeline editor"
     :icon "timeline"
-    :checked? [:panel-visible? :timeline]
-    :action [:toggle-panel :timeline]}
+    :checked? [::app.s/panel-visible? :timeline]
+    :action [::app.e/toggle-panel :timeline]}
    {:id :divider-2
     :type :separator}])
 
@@ -464,20 +466,20 @@
             :type :checkbox
             :label "Grid"
             :icon "grid"
-            :checked? [:grid-visible?]
-            :action [:toggle-grid]}
+            :checked? [::app.s/grid-visible?]
+            :action [::app.e/toggle-grid]}
            {:id :toggle-rulers
             :type :checkbox
             :label "Rulers"
             :icon "ruler-combined"
-            :checked? [:rulers-visible?]
-            :action [:toggle-rulers]}
+            :checked? [::app.s/rulers-visible?]
+            :action [::app.e/toggle-rulers]}
            {:id :toggle-debug-info
             :type :checkbox
             :label "Debug info"
             :icon "bug"
-            :checked? [:debug-info?]
-            :action [:toggle-debug-info]}
+            :checked? [::app.s/debug-info?]
+            :action [::app.e/toggle-debug-info]}
            {:id :divider-2
             :type :separator}
            {:id :panel
@@ -599,7 +601,7 @@
   [:> Menubar/Item
    {:class "menu-item"
     :onSelect #(do (rf/dispatch action)
-                   (rf/dispatch [:focus nil]))
+                   (rf/dispatch [::app.e/focus nil]))
     :disabled disabled?}
    label
    [:div.right-slot
@@ -620,5 +622,5 @@
           :on-key-down #(when-not (= (.-key %) "Escape")
                           ; FIXME: Esc global action also triggered.
                           (.stopPropagation %))
-          :onValueChange #(rf/dispatch [:set-backdrop (boolean (seq %))])}]
+          :onValueChange #(rf/dispatch [::app.e/set-backdrop (boolean (seq %))])}]
         (map menu-item (root-menu))))

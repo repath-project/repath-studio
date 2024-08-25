@@ -3,6 +3,7 @@
    https://github.com/taoensso/tempura"
   (:require
    [re-frame.core :as rf]
+   [renderer.app.subs :as-alias app.s]
    [taoensso.tempura :refer [tr] :refer-macros [load-resource-at-compile-time]]))
 
 (def dictionary
@@ -14,8 +15,8 @@
 (def opts {:dict dictionary})
 
 (defn t
-  "Custom translation function. 
+  "Custom translation function.
    Should be called in a reactive context."
   [& more]
-  (let [lang @(rf/subscribe [:lang])]
+  (let [lang @(rf/subscribe [::app.s/lang])]
     (apply tr opts [lang] more)))

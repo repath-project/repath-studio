@@ -3,6 +3,7 @@
   (:require
    [clojure.string :as str]
    [re-frame.core :as rf]
+   [renderer.app.subs :as-alias app.s]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.subs :as-alias element.s]
    [renderer.frame.subs :as-alias frame.s]
@@ -26,25 +27,25 @@
   (let [_ @(rf/subscribe [::snap.s/in-viewport-tree])
         child-elements @(rf/subscribe [::element.s/filter-visible children])
         viewbox @(rf/subscribe [::frame.s/viewbox])
-        {:keys [width height]} @(rf/subscribe [:dom-rect])
+        {:keys [width height]} @(rf/subscribe [::app.s/dom-rect])
         hovered-ids @(rf/subscribe [::element.s/hovered])
         selected-elements @(rf/subscribe [::element.s/selected])
         bounds @(rf/subscribe [::element.s/bounds])
         temp-element @(rf/subscribe [::document.s/temp-element])
         elements-area @(rf/subscribe [::element.s/area])
         read-only? @(rf/subscribe [::document.s/read-only?])
-        cursor @(rf/subscribe [:cursor])
-        tool @(rf/subscribe [:tool])
-        primary-tool @(rf/subscribe [:primary-tool])
+        cursor @(rf/subscribe [::app.s/cursor])
+        tool @(rf/subscribe [::app.s/tool])
+        primary-tool @(rf/subscribe [::app.s/primary-tool])
         rotate @(rf/subscribe [::document.s/rotate])
-        grid? @(rf/subscribe [:grid-visible?])
-        state @(rf/subscribe [:state])
+        grid? @(rf/subscribe [::app.s/grid-visible?])
+        state @(rf/subscribe [::app.s/state])
         pointer-handler #(pointer/event-handler % element)
-        pivot-point @(rf/subscribe [:pivot-point])
+        pivot-point @(rf/subscribe [::app.s/pivot-point])
         snapping-points @(rf/subscribe [::snap.s/points])
         snap? @(rf/subscribe [::snap.s/enabled?])
         nearest-neighbor @(rf/subscribe [::snap.s/nearest-neighbor])
-        debug? @(rf/subscribe [:debug-info?])
+        debug? @(rf/subscribe [::app.s/debug-info?])
         select? (or (= tool :select)
                     (= primary-tool :select))]
     [:svg#canvas {:on-pointer-up pointer-handler

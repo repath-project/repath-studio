@@ -17,14 +17,14 @@
   (let [message (if (string? @error) @error (.-message @error))
         stack (when-not (string? @error) (.-stack @error))]
     [:div.flex.w-full.h-full.justify-center.items-center
-     [:div.w-full.max-w-lg.bg-primary.p-8.m-2
+     [:div.w-full.max-w-md.bg-primary.p-8.m-2
       [:div.text-xl.pr-10.pb-5 "The following unhandled error was thrown"]
 
       [:p.text-error message]
       (when stack
         [:details.mb-5
          [:summary "Stacktrace"]
-         stack])
+         [:pre.border.mt-2.p-2.border-default.text-wrap.text-2xs stack]])
 
       [:p "Please consider submitting an error report to improve your experience."]
 
@@ -32,12 +32,12 @@
        {:on-click #(rf/dispatch [::window.e/open-remote-url (submit-error-url message)])}
        "Submit an error report"]
 
-      [:p "You can try to undo your last action in order recover to a previous working state."]
+      [:p "You can try to undo your last action in order to recover to a previous working state."]
 
       [:button.button.px-2.rounded.w-full.mb-5.overlay
        {:on-click #(do (rf/dispatch-sync [::history.e/undo])
                        (reset! error nil))}
-       "Undo your last action to recover"]
+       "Undo your last action"]
 
       [:p "If undoing did't work, you can try restarting the application."]
 

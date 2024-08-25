@@ -4,6 +4,7 @@
    ["@radix-ui/react-popover" :as Popover]
    ["cmdk" :as Command]
    [re-frame.core :as rf]
+   [renderer.app.subs :as-alias app.s]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.attribute.views :as v]
    [renderer.element.events :as-alias element.e]
@@ -36,7 +37,7 @@
 
 (defmethod hierarchy/form-element [:default :font-family]
   [_ k v disabled?]
-  (let [suggestions @(rf/subscribe [:font-options])]
+  (let [suggestions @(rf/subscribe [::app.s/font-options])]
     [:<>
      [v/form-input
       {:key k

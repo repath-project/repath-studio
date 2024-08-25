@@ -3,6 +3,7 @@
    ["@radix-ui/react-context-menu" :as ContextMenu]
    [re-frame.core :as rf]
    [reagent.core :as ra]
+   [renderer.app.subs :as-alias app.s]
    [renderer.document.events :as-alias document.e]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.events :as-alias element.e]
@@ -167,7 +168,7 @@
          ^{:key (name (:id el))} [item el 1 elements hovered-ids collapsed-ids])]]]))
 
 (defn inner-sidebar []
-  (let [state @(rf/subscribe [:state])
+  (let [state @(rf/subscribe [::app.s/state])
         root-children @(rf/subscribe [::element.s/root-children])
         elements @(rf/subscribe [::document.s/elements])]
     (if (= state :default)

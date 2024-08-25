@@ -2,6 +2,7 @@
   (:require
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
+   [renderer.app.subs :as-alias app.s]
    [renderer.document.subs :as-alias document.s]
    [renderer.utils.pointer :as pointer]))
 
@@ -9,7 +10,7 @@
  ::viewbox
  :<- [::document.s/zoom]
  :<- [::document.s/pan]
- :<- [:dom-rect]
+ :<- [::app.s/dom-rect]
  (fn [[zoom pan {:keys [width height]}] _]
    (let [[x y] pan
          [width height] (mat/div [width height] zoom)]
@@ -19,6 +20,6 @@
  ::adjusted-pointer-pos
  :<- [::document.s/zoom]
  :<- [::document.s/pan]
- :<- [:pointer-pos]
+ :<- [::app.s/pointer-pos]
  (fn [[zoom pan pointer-pos] _]
    (pointer/adjust-position zoom pan pointer-pos)))

@@ -1,4 +1,4 @@
-(ns renderer.db
+(ns renderer.app.db
   (:require
    [renderer.dialog.db :as dialog.db]
    [renderer.document.db :as document.db]

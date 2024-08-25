@@ -2,6 +2,7 @@
   (:require
    [clojure.set :as set]
    [re-frame.core :as rf]
+   [renderer.app.events :as-alias app.e]
    [renderer.dialog.events :as-alias dialog.e]
    [renderer.document.events :as-alias document.e]
    [renderer.element.events :as-alias element.e]
@@ -80,10 +81,10 @@
                  [{:keyCode (key-codes "P")
                    :ctrlKey true
                    :shiftKey true}]]
-                [[:toggle-panel :tree]
+                [[::app.e/toggle-panel :tree]
                  [{:keyCode (key-codes "T")
                    :ctrlKey true}]]
-                [[:toggle-panel :properties]
+                [[::app.e/toggle-panel :properties]
                  [{:keyCode (key-codes "P")
                    :ctrlKey true}]]
                 [[::element.e/stroke->path]
@@ -107,7 +108,7 @@
                 [[::element.e/cut]
                  [{:keyCode (key-codes "X")
                    :ctrlKey true}]]
-                [[:toggle-debug-info]
+                [[::app.e/toggle-debug-info]
                  [{:keyCode (key-codes "D")
                    :ctrlKey true
                    :shiftKey true}]]
@@ -167,19 +168,19 @@
                 [[::element.e/select-all]
                  [{:keyCode (key-codes "A")
                    :ctrlKey true}]]
-                [[:focus "file"]
+                [[::app.e/focus "file"]
                  [{:keyCode (key-codes "F")
                    :altKey true}]]
-                [[:focus "edit"]
+                [[::app.e/focus "edit"]
                  [{:keyCode (key-codes "E")
                    :altKey true}]]
-                [[:focus "object"]
+                [[::app.e/focus "object"]
                  [{:keyCode (key-codes "O")
                    :altKey true}]]
-                [[:focus "view"]
+                [[::app.e/focus "view"]
                  [{:keyCode (key-codes "V")
                    :altKey true}]]
-                [[:focus "help"]
+                [[::app.e/focus "help"]
                  [{:keyCode (key-codes "H")
                    :altKey true}]]
                 [[::element.e/move-up]
@@ -216,23 +217,23 @@
                  [{:keyCode (key-codes "F1")}]
                  [{:keyCode (key-codes "K")
                    :ctrlKey true}]]
-                [[:set-tool :edit]
+                [[::app.e/set-tool :edit]
                  [{:keyCode (key-codes "E")}]]
-                [[:set-tool :circle]
+                [[::app.e/set-tool :circle]
                  [{:keyCode (key-codes "C")}]]
-                [[:set-tool :line]
+                [[::app.e/set-tool :line]
                  [{:keyCode (key-codes "L")}]]
-                [[:set-tool :text]
+                [[::app.e/set-tool :text]
                  [{:keyCode (key-codes "T")}]]
-                [[:set-tool :pan]
+                [[::app.e/set-tool :pan]
                  [{:keyCode (key-codes "P")}]]
-                [[:set-tool :zoom]
+                [[::app.e/set-tool :zoom]
                  [{:keyCode (key-codes "Z")}]]
-                [[:set-tool :rect]
+                [[::app.e/set-tool :rect]
                  [{:keyCode (key-codes "R")}]]
-                [[:set-tool :select]
+                [[::app.e/set-tool :select]
                  [{:keyCode (key-codes "S")}]]
-                [[:set-tool :fill]
+                [[::app.e/set-tool :fill]
                  [{:keyCode (key-codes "F")}]]]
 
    :clear-keys []

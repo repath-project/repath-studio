@@ -2,6 +2,7 @@
   (:require
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
+   [renderer.app.effects :as-alias app.fx]
    [renderer.document.events :as-alias document.e]
    [renderer.element.handlers :as element.h]
    [renderer.frame.handlers :as h]
@@ -9,8 +10,8 @@
 
 (def focus-canvas
   (rf/->interceptor
-   :id :focus-canvas
-   :after (fn [context] (assoc-in context [:effects :focus] nil))))
+   :id ::focus-canvas
+   :after (fn [context] (assoc-in context [:effects ::app.fx/focus] nil))))
 
 (rf/reg-event-db
  ::resize

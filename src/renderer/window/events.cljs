@@ -36,35 +36,35 @@
  ::relaunch
  (fn [_ _]
    (if platform/electron?
-     {:ipc-send ["relaunch"]}
+     {::fx/ipc-send ["relaunch"]}
      {::fx/relaunch nil})))
 
 (rf/reg-event-fx
  ::clear-local-storage-and-relaunch
  (fn [_ _]
-   {:fx [[:local-storage-clear nil]
+   {:fx [[::fx/local-storage-clear nil]
          [:dispatch [::relaunch]]]}))
 
 (rf/reg-event-fx
  ::toggle-maximized
  (fn [_ _]
-   {:ipc-send ["window-toggle-maximized"]}))
+   {::fx/ipc-send ["window-toggle-maximized"]}))
 
 (rf/reg-event-fx
  ::toggle-fullscreen
  (fn [_ _]
    (if platform/electron?
-     {:ipc-send ["window-toggle-fullscreen"]}
+     {::fx/ipc-send ["window-toggle-fullscreen"]}
      {::fx/toggle-fullscreen nil})))
 
 (rf/reg-event-fx
  ::minimize
  (fn [_ _]
-   {:ipc-send ["window-minimize"]}))
+   {::fx/ipc-send ["window-minimize"]}))
 
 (rf/reg-event-fx
  ::open-remote-url
  (fn [_ [_ url]]
    (if platform/electron?
-     {:ipc-send ["open-remote-url" url]}
+     {::fx/ipc-send ["open-remote-url" url]}
      {::fx/open-remote-url url})))

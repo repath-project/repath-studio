@@ -4,6 +4,7 @@
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
    [reagent.core :as ra]
+   [renderer.app.subs :as-alias app.s]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.handlers :as element.h]
    [renderer.element.subs :as-alias element.s]
@@ -114,5 +115,5 @@
 (defmethod tool/render ::tool/renderable
   [{:keys [children] :as el}]
   (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
-        state @(rf/subscribe [:state])]
+        state @(rf/subscribe [::app.s/state])]
     [render-to-dom el child-elements (= state :default)]))

@@ -3,6 +3,8 @@
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    ["react-resizable-panels" :refer [Panel PanelResizeHandle]]
    [re-frame.core :as rf]
+   [renderer.app.events :as-alias app.e]
+   [renderer.app.subs :as-alias app.s]
    [renderer.color.views :as color-v]
    [renderer.document.subs :as-alias document.s]
    [renderer.frame.events :as-alias frame.e]
@@ -47,30 +49,30 @@
 
 (def view-radio-buttons
   [{:title "Timeline"
-    :active? [:panel-visible? :timeline]
+    :active? [::app.s/panel-visible? :timeline]
     :icon "animation"
     :class "hidden sm:inline-block shrink-0"
-    :action [:toggle-panel :timeline]}
+    :action [::app.e/toggle-panel :timeline]}
    {:title "Grid"
-    :active? [:grid-visible?]
+    :active? [::app.s/grid-visible?]
     :icon "grid"
     :class "shrink-0"
-    :action [:toggle-grid]}
+    :action [::app.e/toggle-grid]}
    {:title "Rulers"
-    :active? [:rulers-visible?]
+    :active? [::app.s/rulers-visible?]
     :icon "ruler-combined"
     :class "shrink-0"
-    :action [:toggle-rulers]}
+    :action [::app.e/toggle-rulers]}
    {:title "History"
-    :active? [:panel-visible? :history]
+    :active? [::app.s/panel-visible? :history]
     :icon "history"
     :class "hidden sm:inline-block shrink-0"
-    :action [:toggle-panel :history]}
+    :action [::app.e/toggle-panel :history]}
    {:title "XML"
     :class "hidden sm:inline-block shrink-0"
-    :active? [:panel-visible? :xml]
+    :active? [::app.s/panel-visible? :xml]
     :icon "code"
-    :action [:toggle-panel :xml]}])
+    :action [::app.e/toggle-panel :xml]}])
 
 (defn set-zoom
   [e v]
@@ -107,8 +109,8 @@
 
 (defn root []
   (let [zoom @(rf/subscribe [::document.s/zoom])
-        timeline? @(rf/subscribe [:panel-visible? :timeline])
-        message @(rf/subscribe [:message])
+        timeline? @(rf/subscribe [::app.s/panel-visible? :timeline])
+        message @(rf/subscribe [::app.s/message])
         loading? @(rf/subscribe [::worker.s/loading?])]
     [:<>
      [:div.toolbar.bg-primary.mt-px

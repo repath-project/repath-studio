@@ -6,6 +6,7 @@
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [reagent.dom.server :as server]
+   [renderer.app.subs :as-alias app.s]
    [renderer.element.subs :as-alias element.s]
    [renderer.element.views :as element.v]
    [renderer.frame.events :as-alias frame.e]
@@ -81,7 +82,7 @@
       :reagent-render
       (fn []
         (let [root-el @(rf/subscribe [::element.s/root])
-              {:keys [x y]} @(rf/subscribe [:dom-rect])
+              {:keys [x y]} @(rf/subscribe [::app.s/dom-rect])
              ;; This is a different browsing context inside an iframe.
              ;; We need to simulate the events to the parent window.
               on-keyboard-event (fn [e]
