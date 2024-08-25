@@ -25,10 +25,10 @@
 
 (rf/reg-event-db
  ::set-focused
- (fn [db [_ focused?]]
-   (-> db
-       (assoc-in [:window :focused?] focused?)
-       document.h/center)))
+ (fn [db [_ state]]
+   (cond-> db
+       :always (assoc-in [:window :focused?] state)
+       state document.h/center)))
 
 (rf/reg-event-fx
  ::close
