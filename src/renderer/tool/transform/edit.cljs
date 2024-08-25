@@ -1,8 +1,8 @@
 (ns renderer.tool.transform.edit
   (:require
    [clojure.core.matrix :as mat]
+   [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
-   [renderer.handlers :as h]
    [renderer.history.handlers :as history.h]
    [renderer.snap.handlers :as snap.h]
    [renderer.tool.base :as tool]
@@ -17,9 +17,9 @@
 (defmethod tool/activate :edit
   [db]
   (-> db
-      (h/set-state :default)
-      (h/set-cursor "default")
-      (h/set-message
+      (app.h/set-state :default)
+      (app.h/set-cursor "default")
+      (app.h/set-message
        [:<>
         [:div "Drag a handle to modify your shape, or click on an element to change selection. "]
         [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction."]])))
@@ -47,7 +47,7 @@
 
 (defmethod tool/drag-start :edit
   [db]
-  (h/set-state db :edit))
+  (app.h/set-state db :edit))
 
 (defn snap-handler
   [db offset el-id handle-id]
@@ -70,6 +70,6 @@
 (defmethod tool/drag-end :edit
   [db]
   (-> db
-      (h/set-state :default)
+      (app.h/set-state :default)
       (dissoc :clicked-element)
       (history.h/finalize "Edit")))

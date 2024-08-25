@@ -3,8 +3,8 @@
   (:require
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
+   [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
-   [renderer.handlers :as h]
    [renderer.history.handlers :as history.h]
    [renderer.snap.handlers :as snap.h]
    [renderer.tool.base :as tool]
@@ -110,14 +110,14 @@
     (-> db
         (element.h/ignore (:id element))
         (element.h/deselect (:id element)))
-    (h/set-tool db :edit)))
+    (app.h/set-tool db :edit)))
 
 (defmethod tool/activate :select
   [db]
   (-> db
-      (h/set-state :default)
-      (h/set-cursor "default")
-      (h/set-message (message nil :default))))
+      (app.h/set-state :default)
+      (app.h/set-cursor "default")
+      (app.h/set-message (message nil :default))))
 
 (defmethod tool/deactivate :select
   [db]
@@ -135,19 +135,19 @@
   [db e]
   (case (-> db :clicked-element :tag)
     :canvas
-    (h/set-state db :select)
+    (app.h/set-state db :select)
 
     :scale
-    (h/set-state db :scale)
+    (app.h/set-state db :scale)
 
     :move
-    (h/set-state db :move)
+    (app.h/set-state db :move)
 
     (-> (cond-> db
           (and (:clicked-element db) (not (-> db :clicked-element :selected?)))
           (-> (element.h/select (-> db :clicked-element :id) (pointer/shift? e))
               (history.h/finalize "Select element")))
-        (h/set-state :move))))
+        (app.h/set-state :move))))
 
 (defn lock-ratio
   [[x y] handle]
@@ -196,7 +196,7 @@
         ratio (mapv #(max 0 %) ratio)]
     (-> db
         (assoc :pivot-point pivot-point)
-        (h/set-message (message ratio :scale))
+        (app.h/set-message (message ratio :scale))
         (element.h/scale ratio pivot-point))))
 
 (defmethod tool/drag :select
@@ -209,7 +209,7 @@
         alt-key? (pointer/alt? e)
         db (-> db
                element.h/clear-ignored
-               (h/set-message (message offset state)))]
+               (app.h/set-message (message offset state)))]
     (-> (case state
           :select
           (-> db
@@ -219,12 +219,12 @@
 
           :move
           (if alt-key?
-            (h/set-state db :clone)
+            (app.h/set-state db :clone)
             (-> db
                 history.h/swap
                 (element.h/translate offset)
                 (snap.h/snap element.h/translate)
-                (h/set-cursor "default")))
+                (app.h/set-cursor "default")))
 
           :clone
           (if alt-key?
@@ -232,14 +232,14 @@
                 history.h/swap
                 (element.h/duplicate offset)
                 (snap.h/snap element.h/translate)
-                (h/set-cursor "copy"))
-            (h/set-state db :move))
+                (app.h/set-cursor "copy"))
+            (app.h/set-state db :move))
 
           :scale
           (cond-> db
             :always
             (-> history.h/swap
-                (h/set-cursor "default")
+                (app.h/set-cursor "default")
                 (offset-scale offset (pointer/ctrl? e) (pointer/shift? e)))
 
             (not (pointer/ctrl? e))
@@ -258,7 +258,7 @@
         :scale (history.h/finalize db "Scale selection")
         :clone (history.h/finalize db "Clone selection")
         :default db)
-      (h/set-state :default)
+      (app.h/set-state :default)
       element.h/clear-hovered
       (dissoc :clicked-element :pivot-point)
-      (h/set-message (message nil :default))))
+      (app.h/set-message (message nil :default))))

@@ -4,11 +4,11 @@
    ["perfect-freehand" :refer [getStroke]]
    [clojure.core.matrix :as mat]
    [clojure.core.matrix.stats :as mat.stats]
+   [renderer.app.handlers :as app.h]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.attribute.range :as attr.range]
    [renderer.attribute.views :as attr.v]
    [renderer.element.handlers :as element.h]
-   [renderer.handlers :as h]
    [renderer.history.handlers :as history.h]
    [renderer.tool.base :as tool]
    [renderer.tool.overlay :as overlay]
@@ -36,7 +36,7 @@
   [db]
   (-> db
       (assoc :cursor "crosshair")
-      (h/set-message "Click and drag to draw.")))
+      (app.h/set-message "Click and drag to draw.")))
 
 (defmethod tool/deactivate :measure
   [db]
@@ -197,7 +197,7 @@
   [db]
   (-> db
       element.h/add
-      (h/set-state :default)
+      (app.h/set-state :default)
       (history.h/finalize "Draw line")))
 
 (defmethod tool/path :brush

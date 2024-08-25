@@ -1,8 +1,8 @@
 (ns renderer.tool.draw.pen
   (:require
    [clojure.string :as str]
+   [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
-   [renderer.handlers :as h]
    [renderer.history.handlers :as history]
    [renderer.tool.base :as tool]
    [renderer.tool.shape.path :as path]
@@ -42,5 +42,5 @@
     (-> db
         (element.h/set-temp path)
         element.h/add
-        (h/set-state :default)
+        (app.h/set-state :default)
         (history/finalize "Draw line"))))

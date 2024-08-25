@@ -2,9 +2,9 @@
   (:require
    [malli.core :as m]
    [renderer.app.effects :as-alias app.fx]
+   [renderer.app.handlers :as app.h]
    [renderer.element.db :as element.db]
    [renderer.element.handlers :as element.h]
-   [renderer.handlers :as h]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
    [renderer.utils.spec :as spec]
@@ -158,7 +158,7 @@
              update-ancestors)
 
          :always
-         (h/add-fx [::app.fx/local-storage-persist nil])))
+         (app.h/add-fx [::app.fx/local-storage-persist nil])))
       (-> (swap db)
           (notification.h/add
            [notification.v/spec-failed explanation (spec/explain elements element.db/elements)])))))

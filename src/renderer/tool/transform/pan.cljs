@@ -2,8 +2,8 @@
   (:require
    [clojure.core.matrix :as mat]
    [renderer.app.effects :as-alias app.fx]
+   [renderer.app.handlers :as app.h]
    [renderer.frame.handlers :as frame.h]
-   [renderer.handlers :as h]
    [renderer.tool.base :as tool]))
 
 (derive :pan ::tool/tool)
@@ -19,9 +19,9 @@
 (defmethod tool/activate :pan
   [db]
   (-> db
-      (h/set-state :default)
-      (h/set-cursor "grab")
-      (h/set-message "Click and drag to pan.")))
+      (app.h/set-state :default)
+      (app.h/set-cursor "grab")
+      (app.h/set-message "Click and drag to pan.")))
 
 (defmethod tool/pointer-up :pan
   [db]
@@ -39,4 +39,4 @@
   [db]
   (-> db
       (assoc :cursor "grab")
-      (h/add-fx [::app.fx/local-storage-persist nil])))
+      (app.h/add-fx [::app.fx/local-storage-persist nil])))

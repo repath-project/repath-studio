@@ -1,8 +1,8 @@
 (ns renderer.history.events
   (:require
    [re-frame.core :as rf]
+   [renderer.app.handlers :as handlers]
    [renderer.element.handlers :as element.h]
-   [renderer.handlers :as handlers]
    [renderer.history.handlers :as h]
    [renderer.utils.local-storage :as local-storage]))
 

@@ -8,8 +8,8 @@
    [re-frame.core :as rf]
    [renderer.app.db :as db]
    [renderer.app.effects :as fx]
-   [renderer.frame.handlers :as frame-h]
-   [renderer.handlers :as h]
+   [renderer.app.handlers :as h]
+   [renderer.frame.handlers :as frame.h]
    [renderer.notification.events :as-alias notification.e]
    [renderer.tool.base :as tool]
    [renderer.utils.local-storage :as local-storage]
@@ -121,7 +121,7 @@
  ::pointer-event
  (fn [{:keys [db]} [_ {:keys [button buttons modifiers data-transfer pointer-pos delta element] :as e}]]
    (let [{:keys [pointer-offset tool dom-rect drag? primary-tool]} db
-         adjusted-pointer-pos (frame-h/adjust-pointer-pos db pointer-pos)]
+         adjusted-pointer-pos (frame.h/adjust-pointer-pos db pointer-pos)]
      {:db (case (:type e)
             :pointermove
             (if (= buttons :right)
@@ -130,7 +130,7 @@
                     (if (pointer/significant-drag? pointer-pos pointer-offset)
                       (cond-> db
                         (not= tool :pan)
-                        (frame-h/pan-out-of-canvas dom-rect
+                        (frame.h/pan-out-of-canvas dom-rect
                                                    pointer-pos
                                                    pointer-offset)
 
@@ -179,8 +179,8 @@
               (let [delta-y (second delta)
                     factor (Math/pow (inc (/ (- 1 (:zoom-sensitivity db)) 100))
                                      (- delta-y))]
-                (frame-h/zoom-in-pointer-position db factor))
-              (frame-h/pan-by db delta))
+                (frame.h/zoom-in-pointer-position db factor))
+              (frame.h/pan-by db delta))
 
             db)
       :fx [(case (:type e)

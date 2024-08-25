@@ -1,7 +1,7 @@
 (ns renderer.tool.misc.fill
   (:require
+   [renderer.app.handlers :as handlers]
    [renderer.element.handlers :as element.h]
-   [renderer.handlers :as handlers]
    [renderer.history.handlers :as history]
    [renderer.tool.base :as tool]))
 

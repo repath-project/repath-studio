@@ -4,10 +4,10 @@
    [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.e]
+   [renderer.app.handlers :as app.h]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.events :as-alias element.e]
    [renderer.element.handlers :as element.h]
-   [renderer.handlers :as h]
    [renderer.history.handlers :as history.h]
    [renderer.tool.base :as tool]
    [renderer.utils.bounds :as bounds]
@@ -36,7 +36,7 @@
   [db]
   (-> db
       (assoc :cursor "text")
-      (h/set-message "Click to enter your text.")))
+      (app.h/set-message "Click to enter your text.")))
 
 (defmethod tool/pointer-up :text
   [{:keys [adjusted-pointer-offset] :as db}]
@@ -49,8 +49,8 @@
                         :tag :text
                         :attrs attrs})
         (history.h/finalize "Create text")
-        (h/set-tool :edit)
-        (h/set-state :edit)))) ; FIXME: Merge create and edit history action.
+        (app.h/set-tool :edit)
+        (app.h/set-state :edit)))) ; FIXME: Merge create and edit history action.
 
 (defmethod tool/drag-end :text
   [db e]

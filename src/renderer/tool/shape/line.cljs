@@ -3,9 +3,9 @@
   (:require
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
+   [renderer.app.handlers :as app.h]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.element.handlers :as element.h]
-   [renderer.handlers :as h]
    [renderer.history.handlers :as history]
    [renderer.tool.base :as tool]
    [renderer.tool.overlay :as overlay]
@@ -55,11 +55,11 @@
   (if (element.h/get-temp db)
     (-> db
         element.h/add
-        (h/set-tool :select)
-        (h/set-state :default)
+        (app.h/set-tool :select)
+        (app.h/set-state :default)
         (history/finalize "Create line"))
     (-> db
-        (h/set-state :create)
+        (app.h/set-state :create)
         create-line)))
 
 (defmethod tool/pointer-down :line

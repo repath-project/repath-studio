@@ -2,9 +2,9 @@
   (:require
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
+   [renderer.app.handlers :as handlers]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.handlers :as element.h]
-   [renderer.handlers :as handlers]
    [renderer.tool.base :as tool]
    [renderer.tool.overlay :as overlay]
    [renderer.utils.math :as math]

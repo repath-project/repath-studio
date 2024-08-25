@@ -4,8 +4,8 @@
   (:require
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
+   [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
-   [renderer.handlers :as h]
    [renderer.history.handlers :as history]
    [renderer.tool.base :as tool]
    [renderer.tool.overlay :as overlay]
@@ -19,7 +19,7 @@
   [db]
   (-> db
       (assoc :cursor "crosshair")
-      (h/set-message "Click to add points. Double click to finalize the shape.")))
+      (app.h/set-message "Click to add points. Double click to finalize the shape.")))
 
 (defn create-polyline
   [{:keys [active-document tool] :as db} points]
@@ -41,7 +41,7 @@
   (if (element.h/get-temp db)
     (add-point db adjusted-pointer-pos)
     (-> db
-        (h/set-state :create)
+        (app.h/set-state :create)
         (create-polyline adjusted-pointer-pos))))
 
 (defmethod tool/drag-end ::tool/polyshape
@@ -49,7 +49,7 @@
   (if (element.h/get-temp db)
     (add-point db adjusted-pointer-pos)
     (-> db
-        (h/set-state :create)
+        (app.h/set-state :create)
         (create-polyline adjusted-pointer-pos))))
 
 (defmethod tool/pointer-move ::tool/polyshape
@@ -69,8 +69,8 @@
       (update-in [:documents active-document :temp-element :attrs :points]
                  #(str/join " " (apply concat (drop-last 2 (utils.attr/points->vec %)))))
       element.h/add
-      (h/set-tool :select)
-      (h/set-state :default)
+      (app.h/set-tool :select)
+      (app.h/set-state :default)
       (history/finalize "Create " (name (:tool db)))))
 
 (defmethod tool/translate ::tool/polyshape

@@ -4,11 +4,11 @@
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
    [reagent.core :as ra]
+   [renderer.app.handlers :as app.h]
    [renderer.app.subs :as-alias app.s]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.handlers :as element.h]
    [renderer.element.subs :as-alias element.s]
-   [renderer.handlers :as h]
    [renderer.history.handlers :as history.h]
    [renderer.tool.base :as tool]
    [renderer.utils.bounds :as bounds]
@@ -20,19 +20,19 @@
   [db]
   (-> db
       (assoc :cursor "crosshair")
-      (h/set-message "Click and drag to create an element.")))
+      (app.h/set-message "Click and drag to create an element.")))
 
 (defmethod tool/drag-start ::tool/renderable
   [db]
-  (h/set-state db :create))
+  (app.h/set-state db :create))
 
 (defmethod tool/drag-end ::tool/renderable
   [db]
   (let [temp-element (get-in db [:documents (:active-document db) :temp-element])]
     (-> db
         element.h/add
-        (h/set-tool :select)
-        (h/set-state :default)
+        (app.h/set-tool :select)
+        (app.h/set-state :default)
         (history.h/finalize "Create " (name (:tag temp-element))))))
 
 (defmethod tool/bounds ::tool/renderable
