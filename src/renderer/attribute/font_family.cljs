@@ -4,6 +4,7 @@
    ["@radix-ui/react-popover" :as Popover]
    ["cmdk" :as Command]
    [re-frame.core :as rf]
+   [renderer.app.events :as-alias app.e]
    [renderer.app.subs :as-alias app.s]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.attribute.views :as v]
@@ -28,7 +29,7 @@
      [:> Command/CommandList
       {:class "p-1"}
       [:> Command/CommandEmpty
-       "No fonts found."]
+       "No local fonts found."]
       (for [item suggestions]
         ^{:key item}
         [:> Command/CommandItem
@@ -43,15 +44,17 @@
       {:key k
        :value v
        :disabled? disabled?}]
-     (when (seq suggestions)
-       [:> Popover/Root {:modal true}
-        [:> Popover/Trigger {:asChild true}
-         [:button.ml-px.inline-block.bg-primary.text-muted.h-full
-          {:style {:flex "0 0 26px"}}
-          [ui/icon "magnifier" {:class "icon small"}]]]
-        [:> Popover/Portal
-         [:> Popover/Content {:sideOffset 5
-                              :className "popover-content"
-                              :align "end"}
-          [suggestions-list suggestions]
-          [:> Popover/Arrow {:class "popover-arrow"}]]]])]))
+     [:> Popover/Root {:modal true
+                       :onOpenChange (fn [state]
+                                       (when (and state (empty? suggestions))
+                                         (rf/dispatch-sync [::app.e/load-system-fonts])))}
+      [:> Popover/Trigger {:asChild true}
+       [:button.ml-px.inline-block.bg-primary.text-muted.h-full
+        {:style {:flex "0 0 26px"}}
+        [ui/icon "magnifier" {:class "icon small"}]]]
+      [:> Popover/Portal
+       [:> Popover/Content {:sideOffset 5
+                            :className "popover-content"
+                            :align "end"}
+        [suggestions-list suggestions]
+        [:> Popover/Arrow {:class "popover-arrow"}]]]]]))
