@@ -72,9 +72,8 @@
   [db id]
   (let [el (element db id)
         bounds (if (= (:tag el) :g)
-                 (->> (children db id)
-                      (map #(element/adjusted-bounds % (elements db)))
-                      (apply bounds/union))
+                 (let [b (map #(element/adjusted-bounds % (elements db)) (children db id))]
+                   (when (seq b) (apply bounds/union b)))
                  (element/adjusted-bounds el (elements db)))
         assoc-bounds #(assoc % :bounds bounds)]
     (if (or (not bounds) (element/root? el))
@@ -660,10 +659,10 @@
 
 (defn group
   [db]
-  (reduce (fn [db id] (set-parent db (-> db selected-ids first) id))
-          (add db {:tag :g
-                   :parent (:id (parent db))})
-          (top-selected-sorted-ids db)))
+  (->> (top-selected-sorted-ids db)
+       (reduce (fn [db id] (set-parent db (-> db selected-ids first) id))
+               (add db {:tag :g
+                        :parent (:id (parent db))}))))
 
 (defn ungroup
   ([db]
