@@ -14,13 +14,6 @@
    [renderer.menubar.views :as menubar]
    [renderer.ui :as ui]))
 
-(defn close-button
-  []
-  [:> Dialog/Close
-   {:class "close-button small"
-    :aria-label "Close"}
-   [ui/icon "times"]])
-
 (defn about
   []
   [:div.p-5
@@ -31,8 +24,7 @@
    [:button.button.px-2.bg-primary.rounded.w-full
     {:auto-focus true
      :on-click #(rf/dispatch [::dialog.e/close])}
-    "OK"]
-   [close-button]])
+    "OK"]])
 
 (defn confirmation
   [{:keys [description action confirm-label cancel-label]}]
@@ -46,8 +38,7 @@
      {:auto-focus true
       :on-click #(do (rf/dispatch [::dialog.e/close])
                      (rf/dispatch action))}
-     (or confirm-label "OK")]]
-   [close-button]])
+     (or confirm-label "OK")]]])
 
 (defn save
   [{:keys [id title]}]
@@ -67,8 +58,7 @@
      {:auto-focus true
       :on-click #(do (rf/dispatch [::dialog.e/close])
                      (rf/dispatch [::document.e/save-and-close id]))}
-     "Save"]]
-   [close-button]])
+     "Save"]]])
 
 (defn cmdk-item
   [{:keys [label action icon type]}]
@@ -131,6 +121,11 @@
           (cond->> title
             (string? title)
             (into [:div.text-xl.pl-5.pr-10.pt-5]))])
+       (when (:close-button? (last dialogs))
+         [:> Dialog/Close
+          {:class "close-button small"
+           :aria-label "Close"}
+          [ui/icon "times"]])
        [:> Dialog/Description
         {:as-child true}
         [:div (:content (last dialogs))]]]]]))

@@ -16,7 +16,7 @@
         primary? (= primary-tool tool)]
     (when (:icon (tool/properties tool))
       [:> Tooltip/Root
-       [:> Tooltip/Trigger {:asChild true}
+       [:> Tooltip/Trigger {:as-child true}
         [:span
          [ui/radio-icon-button (:icon (tool/properties tool)) selected?
           {:class (when primary? "outline-shadow")

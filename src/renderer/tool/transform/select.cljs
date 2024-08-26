@@ -51,9 +51,10 @@
   [db el intersecting?]
   (let [{{:keys [x y width height]} :attrs} (element.h/get-temp db)
         selection-bounds [x y (+ x width) (+ y height)]]
-    (if intersecting?
-      (bounds/intersect? (:bounds el) selection-bounds)
-      (bounds/contained? (:bounds el) selection-bounds))))
+    (when-let [el-bounds (:bounds el)]
+      (if intersecting?
+        (bounds/intersect? el-bounds selection-bounds)
+        (bounds/contained? el-bounds selection-bounds)))))
 
 (defn reduce-by-area
   [db intersecting? f]

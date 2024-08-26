@@ -44,7 +44,7 @@
 
                        :renderer {:entries [renderer.core]
                                   :depends-on #{:shared}
-                                  :preloads [renderer.dev-preload
+                                  :preloads [renderer.dev
                                              malli.dev.cljs-kondo-preload]
                                   :init-fn renderer.core/init}
 

@@ -4,7 +4,6 @@
    [clojure.core.matrix :as mat]
    [clojure.set :as set]
    [clojure.string :as str]
-   [clojure.zip :as zip]
    [hickory.core :as hickory]
    [hickory.zip]
    [malli.core :as m]
@@ -19,6 +18,7 @@
    [renderer.utils.attribute :as attr]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
+   [renderer.utils.hiccup :as hiccup]
    [renderer.utils.map :as map]
    [renderer.utils.spec :as spec]
    [renderer.utils.uuid :as uuid]
@@ -693,21 +693,12 @@
                dom.server/render-to-static-markup
                (str "\n" %)) "" els))
 
-(defn find-svg
-  [zipper]
-  (loop [loc zipper]
-    (if (zip/end? loc)
-      (zip/root loc)
-      (if (= (:tag (zip/node loc)) :svg)
-        (zip/node loc)
-        (recur (zip/next loc))))))
-
 (defn import-svg
   [db {:keys [svg label pos]}]
   (let [[x y] pos
         hickory (hickory/as-hickory (hickory/parse svg))
         zipper (hickory.zip/hickory-zip hickory)
-        svg (find-svg zipper)]
+        svg (hiccup/find-svg zipper)]
     (add db (-> svg
                 (assoc :label label)
                 (update :attrs dissoc :desc :version :xmlns)

@@ -1,11 +1,10 @@
-(ns renderer.dev-preload
+(ns renderer.dev
   "ClojureScript Function Instrumentation
    https://github.com/metosin/malli/blob/master/docs/clojurescript-function-instrumentation.md"
   {:dev/always true}
   (:require
    [clojure.pprint :refer (pprint)]
    [clojure.string :as str]
-   [malli.core :as m]
    [malli.dev.cljs :as dev]
    [re-frame.core :as rf]
    [renderer.app.db :as app.db]
@@ -15,13 +14,13 @@
 (defn check-and-throw
   "Throws an exception if `db` doesn't match the Spec"
   [db event]
-  (when (not (m/validator app.db/app))
+  (when (not (app.db/valid? db))
     (js/console.error (str "Event: " (first event)))
     (throw (js/Error. (str "Spec check failed: " (spec/explain db app.db/app))))))
 
 (def schema-validator
   (rf/->interceptor
-   :id :schema-validator
+   :id ::schema-validator
    :after (fn [context]
             (let [db (if (contains? (rf/get-effect context) :db)
                        (rf/get-effect context :db)
@@ -34,7 +33,7 @@
   ;; Enable full db validation for debugging.
   (rf/reg-global-interceptor schema-validator)
 
-  (rf/clear-global-interceptor :schema-validator)
+  (rf/clear-global-interceptor ::schema-validator)
 
 
   (dev/start!)

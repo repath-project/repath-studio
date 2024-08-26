@@ -21,8 +21,8 @@
 (defn focused?
   []
   (or (.hasFocus js/document)
-      (when-let [document (frame-document)]
-        (.hasFocus document))))
+      (and (frame-document)
+           (.hasFocus (frame-document)))))
 
 (defn svg-elements
   []

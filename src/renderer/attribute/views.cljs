@@ -233,7 +233,7 @@
   [tag]
   [:div.py-px
    [:> HoverCard/Root
-    [:> HoverCard/Trigger {:asChild true}
+    [:> HoverCard/Trigger {:as-child true}
      [:span.pb-px
       [ui/icon-button "info" {:title "MDN Info"}]]]
     [:> HoverCard/Portal

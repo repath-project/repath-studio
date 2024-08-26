@@ -106,6 +106,7 @@
      (-> db
          (h/set-active id)
          (dialog.h/create {:title "Do you want to save your changes?"
+                           :close-button? true
                            :content [dialog.v/save (get-in db [:documents id])]
                            :attrs {:onOpenAutoFocus #(.preventDefault %)}})))))
 (rf/reg-event-fx

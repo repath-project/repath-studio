@@ -44,7 +44,8 @@
   [elements]
   (let [el-bounds (->> elements
                        (map :bounds)
-                       (remove nil?))]
+                       (remove nil?)
+                       (remove #(= % [nil nil nil nil])))]
     (when (seq el-bounds)
       (apply bounds/union el-bounds))))
 
@@ -56,25 +57,26 @@
 
 (defn snapping-points
   [element options]
-  (let [[x1 y1 x2 y2] (:bounds element)
-        [cx cy] (bounds/center [x1 y1 x2 y2])]
-    (concat (when (:corners options)
-              [[x1 y1]
-               [x1 y2]
-               [x2 y1]
-               [x2 y2]])
+  (when-let [bounds (:bounds element)]
+    (let [[x1 y1 x2 y2] bounds
+          [cx cy] (bounds/center bounds)]
+      (concat (when (:corners options)
+                [[x1 y1]
+                 [x1 y2]
+                 [x2 y1]
+                 [x2 y2]])
 
-            (when (:centers options)
-              [[cx cy]])
+              (when (:centers options)
+                [[cx cy]])
 
-            (when (:midpoints options)
-              [[x1 cy]
-               [x2 cy]
-               [cx y1]
-               [cx y2]])
+              (when (:midpoints options)
+                [[x1 cy]
+                 [x2 cy]
+                 [cx y1]
+                 [cx y2]])
 
-            (when :nodes
-              (tool/snapping-points element)))))
+              (when :nodes
+                (tool/snapping-points element))))))
 
 (defn- attrs-map
   [attrs]

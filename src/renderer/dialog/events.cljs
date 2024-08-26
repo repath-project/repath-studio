@@ -16,13 +16,15 @@
  ::about
  (fn [db [_]]
    (h/create db {:title config/app-name
+                 :close-button? true
                  :content [v/about]})))
 
 (rf/reg-event-db
  ::confirmation
  (fn [db [_ data]]
    (h/create db {:title (:title data)
-                 :content [v/confirmation data]})))
+                 :close-button? true
+                 :content (v/confirmation data)})))
 
 (rf/reg-event-db
  ::close

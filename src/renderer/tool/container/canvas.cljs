@@ -76,12 +76,14 @@
         (when (and select? (contains? #{:default :select :scale} state))
           [:<>
            (for [el selected-elements]
-             ^{:key (str (:id el) "-bounds")}
-             [overlay/bounding-box (:bounds el) false])
+             (when (:bounds el)
+               ^{:key (str (:id el) "-bounds")}
+               [overlay/bounding-box (:bounds el) false]))
 
            (for [el hovered-ids]
-             ^{:key (str (:id el) "-bounds")}
-             [overlay/bounding-box (:bounds el) true])
+             (when (:bounds el)
+               ^{:key (str (:id el) "-bounds")}
+               [overlay/bounding-box (:bounds el) true]))
 
            (when (and (pos? elements-area) (= state :scale) (seq bounds))
              [overlay/area-label elements-area bounds])

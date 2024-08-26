@@ -21,7 +21,7 @@
      :disabled? disabled?
      :placeholder initial}]
    [:> Popover/Root {:modal true}
-    [:> Popover/Trigger {:asChild true}
+    [:> Popover/Trigger {:as-child true}
      [:button.button.color-drip.ml-px.inline-block
       {:style {:flex "0 0 26px"
                :border "5px solid var(--bg-primary)"

@@ -1,11 +1,13 @@
 (ns renderer.app.db
   (:require
+   [malli.core :as m]
    [renderer.dialog.db :as dialog.db]
    [renderer.document.db :as document.db]
    [renderer.snap.db :as snap.db]
    [renderer.theme.db :as theme.db]
    [renderer.timeline.db :as timeline.db]
    [renderer.tool.base :as tool]
+   [renderer.utils.hiccup :as hiccup]
    [renderer.utils.math :as math]
    [renderer.window.db :as window.db]))
 
@@ -64,5 +66,8 @@
    [:timeline timeline.db/timeline]
    [:panels panels]
    [:version {:optional true} string?]
-   [:fx {:default []} vector?]])
+   [:fx {:default []} vector?]
+   [:message {:optional true} hiccup/hiccup]])
 
+
+(def valid? (m/validator app))

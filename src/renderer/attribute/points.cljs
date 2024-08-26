@@ -36,7 +36,7 @@
                       (not state-default?))}]
      (when v
        [:> Popover/Root {:modal true}
-        [:> Popover/Trigger {:asChild true}
+        [:> Popover/Trigger {:as-child true}
          [:button.ml-px.inline-block.bg-primary.text-muted
           {:style {:flex "0 0 26px"}}
           [ui/icon "pencil" {:class "icon small"}]]]
