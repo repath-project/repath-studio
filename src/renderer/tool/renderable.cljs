@@ -97,7 +97,7 @@
 
       :reagent-render
       (fn
-        [{:keys [attrs tag title content] :as el} child-elements default-state?]
+        [{:keys [attrs tag title content] :as el} child-els default-state?]
         [:<>
          [tag (->> (-> attrs
                        (dissoc :style)
@@ -107,13 +107,13 @@
                    (into {}))
           (when title [:title title])
           content
-          (for [child child-elements]
+          (for [child child-els]
             ^{:key (name (:id child))} [tool/render child])]
 
          (when default-state? [ghost-element el])])})))
 
 (defmethod tool/render ::tool/renderable
   [{:keys [children] :as el}]
-  (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
+  (let [child-els @(rf/subscribe [::element.s/filter-visible children])
         state @(rf/subscribe [::app.s/state])]
-    [render-to-dom el child-elements (= state :default)]))
+    [render-to-dom el child-els (= state :default)]))

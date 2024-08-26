@@ -77,9 +77,9 @@
 (defn cmdk-group-inner
   [items label]
   (for [i items]
-    (if-not (:items i)
-      ^{:key (name (:id i))} [cmdk-item (update i :label #(str/join " - " (remove nil? [label %])))]
-      ^{:key (:label i)} (cmdk-group-inner (:items i) (:label i)))))
+    (if (:items i)
+      (cmdk-group-inner (:items i) (:label i))
+      ^{:key (:id i)} [cmdk-item (update i :label #(str/join " - " (remove nil? [label %])))])))
 
 (defn cmdk-group
   [{:keys [label items]}]

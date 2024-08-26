@@ -31,15 +31,16 @@
   (update-in el [:attrs :transform] translate offset))
 
 (defmethod tool/render :g
-  [{:keys [attrs children bounds] :as element}]
-  (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
+  [{:keys [attrs children bounds] :as el}]
+  (let [child-els @(rf/subscribe [::element.s/filter-visible children])
         ignored-ids @(rf/subscribe [::document.s/ignored-ids])
-        ignored? (contains? ignored-ids (:id element))
+        ignored? (contains? ignored-ids (:id el))
         [x1 y1 _x2 _y2] bounds
         [width height] (bounds/->dimensions bounds)
-        pointer-handler #(pointer/event-handler % element)]
+        pointer-handler #(pointer/event-handler % el)]
     [:g (update attrs :style parse)
-     (map (fn [element] [tool/render element]) (merge child-elements))
+     (for [child child-els]
+       ^{:key (name (:id child))} [tool/render child])
      [:rect {:x x1
              :y y1
              :width width
