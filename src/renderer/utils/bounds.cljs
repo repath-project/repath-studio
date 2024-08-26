@@ -21,7 +21,7 @@
 
 (mx/defn union :- bounds
   "Calculates the bounds that contain an arbitrary set of bounds."
-  [& bounds :- [cat bounds]]
+  [& bounds :- [:* bounds]]
   (vec (concat (apply map min (map #(take 2 %) bounds))
                (apply map max (map #(drop 2 %) bounds)))))
 
