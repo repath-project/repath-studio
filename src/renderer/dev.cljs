@@ -29,14 +29,13 @@
               (check-and-throw db event)
               context))))
 
+(dev/start!)
+
 (comment
   ;; Enable full db validation for debugging.
   (rf/reg-global-interceptor schema-validator)
 
   (rf/clear-global-interceptor ::schema-validator)
-
-
-  (dev/start!)
 
   (dev/stop!)
 
