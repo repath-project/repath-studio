@@ -264,4 +264,6 @@
  ::set-active
  local-storage/persist
  (fn [db [_ id]]
-   (h/set-active db id)))
+   (-> db
+       (h/set-active id)
+       h/center)))
