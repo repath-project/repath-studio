@@ -42,10 +42,7 @@
 
 (defn bounds
   [elements]
-  (let [el-bounds (->> elements
-                       (map :bounds)
-                       (remove nil?)
-                       (remove #(= % [nil nil nil nil])))]
+  (let [el-bounds (->> elements (map :bounds) (remove nil?))]
     (when (seq el-bounds)
       (apply bounds/union el-bounds))))
 

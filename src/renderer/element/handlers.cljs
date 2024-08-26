@@ -60,23 +60,27 @@
   [db]
   (set (map :id (selected db))))
 
-(defn children
+(defn children-ids
   [db id]
   (:children (element db id)))
+
+(defn children
+  [db id]
+  (vals (elements db (children-ids db id))))
 
 (defn update-bounds
   [db id]
   (let [el (element db id)
         bounds (if (= (:tag el) :g)
-                 (element/bounds (elements db (:children el))) ; FIXME
+                 (->> (children db id)
+                      (map #(element/adjusted-bounds % (elements db)))
+                      (apply bounds/union))
                  (element/adjusted-bounds el (elements db)))
         assoc-bounds #(assoc % :bounds bounds)]
-    (if-not bounds
+    (if (or (not bounds) (element/root? el))
       db
-      (if (element/root? el)
-        db
-        (-> (reduce update-bounds db (children db id))
-            (update-in (conj (path db) id) assoc-bounds))))))
+      (-> (reduce update-bounds db (children-ids db id))
+          (update-in (conj (path db) id) assoc-bounds)))))
 
 (defn update-el
   [db id f & more]
@@ -95,7 +99,7 @@
         parent-els (set (map :parent selected-els))]
     (and (single? parent-els)
          (= (count selected-els)
-            (count (children db (first parent-els)))))))
+            (count (children-ids db (first parent-els)))))))
 
 (defn parent
   ([db]
@@ -114,7 +118,7 @@
 
 (defn root-children
   [db]
-  (->> (children db (:id (root db)))
+  (->> (children-ids db (:id (root db)))
        (mapv (elements db))))
 
 (defn root-svgs
@@ -162,11 +166,11 @@
   ([db]
    (reduce #(set/union %1 (descendant-ids db %2)) #{} (selected-ids db)))
   ([db id]
-   (loop [children-set (set (children db id))
+   (loop [children-set (set (children-ids db id))
           child-keys #{}]
      (if (seq children-set)
        (recur
-        (reduce #(set/union %1 (children db %2)) #{} children-set)
+        (reduce #(set/union %1 (children-ids db %2)) #{} children-set)
         (set/union child-keys children-set))
        child-keys))))
 
@@ -270,7 +274,7 @@
 (defn select-all
   [db]
   (reduce select (deselect db) (if (siblings-selected? db)
-                                 (children db (:id (parent db (:id (parent db)))))
+                                 (children-ids db (:id (parent db (:id (parent db)))))
                                  (siblings db))))
 
 (defn selected-tags
@@ -676,7 +680,7 @@
                 ;; Group attributes are inherited by its children,
                 ;; so we need to maintain the presentation attrs.
                 (inherit-attrs (element db id) child-id)))
-          db (reverse (children db id))))
+          db (reverse (children-ids db id))))
        (delete db id)))))
 
 (defn manipulate-path

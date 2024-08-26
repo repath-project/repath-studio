@@ -27,28 +27,34 @@
     (.toString matrix)))
 
 (defmethod tool/translate :g
-  [el offset]
-  (update-in el [:attrs :transform] translate offset))
+  [el _offset]
+  el
+  #_(update-in el [:attrs :transform] translate offset))
 
 (defmethod tool/render :g
   [{:keys [attrs children bounds] :as el}]
-  (let [child-els @(rf/subscribe [::element.s/filter-visible children])
-        ignored-ids @(rf/subscribe [::document.s/ignored-ids])
-        ignored? (contains? ignored-ids (:id el))
-        [x1 y1 _x2 _y2] bounds
-        [width height] (bounds/->dimensions bounds)
-        pointer-handler #(pointer/event-handler % el)]
+  (let [child-els @(rf/subscribe [::element.s/filter-visible children])]
     [:g (update attrs :style parse)
      (for [child child-els]
        ^{:key (name (:id child))} [tool/render child])
-     [:rect {:x x1
-             :y y1
-             :width width
-             :height height
-             :fill "transparent"
-             :pointer-events (when ignored? "none")
-             :on-double-click pointer-handler
-             :on-pointer-up pointer-handler
-             :on-pointer-down pointer-handler
-             :on-pointer-move pointer-handler}]]))
+     (when bounds
+       (let [ignored-ids @(rf/subscribe [::document.s/ignored-ids])
+             ignored? (contains? ignored-ids (:id el))
+             [x1 y1 _x2 _y2] bounds
+             [width height] (bounds/->dimensions bounds)
+             pointer-handler #(pointer/event-handler % el)
+             zoom @(rf/subscribe [::document.s/zoom])
+             stroke-width (max (:stroke-width attrs) (/ 20 zoom))]
+         [:rect {:x x1
+                 :y y1
+                 :width width
+                 :height height
+                 :fill "transparent"
+                 :stroke "transparent"
+                 :stroke-width stroke-width
+                 :pointer-events (when ignored? "none")
+                 :on-double-click pointer-handler
+                 :on-pointer-up pointer-handler
+                 :on-pointer-down pointer-handler
+                 :on-pointer-move pointer-handler}]))]))
 
