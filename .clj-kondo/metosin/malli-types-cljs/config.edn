@@ -50,4 +50,15 @@
                                                                                                    :min-arity 1}}},
                                                             remove-nils {:arities {1 {:args [:map], :ret :map}}}},
                                         renderer.utils.uuid {generate {:arities {0 {:args [], :ret :keyword}}},
-                                                             generate-unique {:arities {1 {:args [:fn], :ret :keyword}}}}}}}}
+                                                             generate-unique {:arities {1 {:args [:fn], :ret :keyword}}}},
+                                        renderer.utils.vec {remove-nth {:arities {2 {:args [:vector :number],
+                                                                                     :ret :vector}}},
+                                                            add {:arities {3 {:args [:vector :any :any], :ret :vector}}},
+                                                            move {:arities {3 {:args [:vector :number :number],
+                                                                               :ret :vector}}},
+                                                            swap {:arities {3 {:args [:vector :number :number],
+                                                                               :ret :vector}}}},
+                                        renderer.utils.attribute {points->vec {:arities {1 {:args [:string],
+                                                                                            :ret :vector}}},
+                                                                  points->px {:arities {1 {:args [:string],
+                                                                                           :ret :vector}}}}}}}}

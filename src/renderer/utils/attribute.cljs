@@ -1,6 +1,7 @@
 (ns renderer.utils.attribute
   (:require
    [clojure.string :as str]
+   [malli.experimental :as mx]
    [renderer.utils.units :as units]))
 
 (def core
@@ -50,16 +51,16 @@
    :id :class :tabindex
    :style])
 
-(defn points->vec
-  [points]
+(mx/defn points->vec :- vector?
+  [points :- string?]
   (as-> points p
     (str/triml p)
     (str/split p #"\s*[\s,]\s*")
     (partition 2 p)
     (vec p))) ; OPTIMIZE
 
-(defn points->px
-  [points]
+(mx/defn points->px :- vector?
+  [points :- string?]
   (as-> points p
     (str/triml p)
     (str/split p #"\s*[\s,]\s*")

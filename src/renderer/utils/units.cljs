@@ -41,7 +41,7 @@
   (second (re-matches #"[\d.\-\+]*\s*(.*)" s)))
 
 (mx/defn parse-unit :- [:tuple number? string?]
-  [v :- [:or string? number?]]
+  [v :- [:or string? number? nil?]]
   (let [s (str/trim (str v))
         n (js/parseFloat s 10)
         unit (match-unit s)]
@@ -57,7 +57,7 @@
   (/ n (multiplier unit)))
 
 (mx/defn unit->px :- number?
-  [v :- [:or string? number?]]
+  [v :- [:or string? number? nil?]]
   (let [[n unit] (parse-unit v)]
     (if (empty? unit)
       n
