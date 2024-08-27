@@ -64,6 +64,18 @@ module\
 └── README.md     <--- documentation
 </pre>
 
+## Re-frame related recommendations
+
+Avoid chaining events to create new ones. Always prefer composing pure functions that directly transform the db. That is the whole purpose of `handlers` namespace.
+
+Use interceptors sparingly. Although they look (and probably are) ingenious, it is hard to write and reason with them. Doing things explicitly, is usually easier to grasp and maintain.
+
+## Spec
+
+We use [malli](https://github.com/metosin/malli) to describe the shape of our app db and selectively validate incoming data (e.g. file loading). We also use this spec to generate default values. You can optionally enable full db validation on dev mode (see `renderer.dev` namespace).
+
+Function [inline schemas](https://github.com/metosin/malli/blob/master/docs/function-schemas.md#function-inline-schemas) are used selectively on critical namespaces, like `renderer.utils.bounds`. Instrumentation is enabled by default on dev environment only.
+
 ## Useful development shortcuts
 
 ```

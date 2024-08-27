@@ -47,7 +47,7 @@
 (defn swap
   [db]
   (cond-> db
-    (:active-document db) ; TODO: Create an interceptor to avoid this.
+    (:active-document db)
     (assoc-in (element.h/path db) (:elements (state (history db))))))
 
 #_(defn preview
