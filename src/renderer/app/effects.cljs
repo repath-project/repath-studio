@@ -4,7 +4,7 @@
    [config :as config]
    [promesa.core :as p]
    [re-frame.core :as rf]
-   [renderer.app.events :as-alias app.e]
+   [renderer.app.events :as-alias e]
    [renderer.utils.data-transfer :as data-transfer]
    [renderer.utils.dom :as dom]
    [renderer.utils.local-storage :as local-storage]))
@@ -59,7 +59,7 @@
  (fn []
    (when-not (undefined? js/window.queryLocalFonts)
      (p/let [fonts (.queryLocalFonts js/window)]
-       (rf/dispatch [::app.e/set-system-fonts
+       (rf/dispatch [::e/set-system-fonts
                      (mapv (fn [^js/FontData font-data]
                              (into {} [[:postscriptName (.-postscriptName font-data)]
                                        [:fullName (.-fullName ^js font-data)]

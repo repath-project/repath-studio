@@ -4,9 +4,8 @@ Thank you for your interest in actively participating in the project's developme
 Please read the [Contributor Covenant Code of Conduct](https://github.com/repath-project/repath-studio/blob/main/CODE_OF_CONDUCT.md)
 and the [Contributor License Agreement](cla.md) first.
 
-The project is based on [re-frame](https://github.com/day8/re-frame/),
-a framework for building Modern Web Apps in ClojureScript.
-You should probably take a look at their [exceptional documentation](https://day8.github.io/re-frame/re-frame/).
+The project is written in [ClojureScript](https://clojurescript.org/) - a compiler for [Clojure](https://clojure.org/) that targets JavaScript, and is based on [re-frame](https://github.com/day8/re-frame/) - a framework for building Modern Web Apps in ClojureScript.
+You should probably take a look at their [exceptional documentation](https://day8.github.io/re-frame/re-frame/) first.
 
 ## Style Guide
 
@@ -64,11 +63,13 @@ module\
 └── README.md     <--- documentation
 </pre>
 
-## Re-frame related recommendations
+## Re-frame recommendations
 
 Avoid chaining events to create new ones. Always prefer composing pure functions that directly transform the db. That is the whole purpose of `handlers` namespace.
 
 Use interceptors sparingly. Although they look (and probably are) ingenious, it is hard to write and reason with them. Doing things explicitly, is usually easier to grasp and maintain.
+
+Always use auto-qualified keywords (e.g. `::copy`) for subscriptions, events and effects. You can use `as-alias` to require those namespaces without evaluating the registrations multiple times.
 
 ## Spec
 
