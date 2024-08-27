@@ -8,7 +8,7 @@
   [:map {:closed true}
    [:id keyword?]
    [:title {:min 1} string?]
-   [:path {:optional true} string?]
+   [:path {:optional true} [:maybe string?]]
    [:save {:optional true} keyword?]
    [:version {:optional true} string?]
    [:hovered-ids {:default #{}} [:set keyword?]]
