@@ -26,7 +26,9 @@
 
 (defmethod tool/pointer-down :edit
   [db {:keys [element]}]
-  (assoc db :clicked-element element))
+  (cond-> db
+    element
+    (assoc :clicked-element element)))
 
 (defmethod tool/pointer-up :edit
   [db {:keys [element] :as e}]

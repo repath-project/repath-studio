@@ -9,9 +9,12 @@
    (fn [x] (and (number? x) (<= 0.01 x 100)))])
 
 (def document
-  [:map
+  [:map {:closed true}
    [:id keyword?]
    [:title {:min 1} string?]
+   [:path {:optional true} string?]
+   [:save {:optional true} keyword?]
+   [:version {:optional true} string?]
    [:hovered-ids {:default #{}} [:set keyword?]]
    [:collapsed-ids {:default #{}} [:set keyword?]]
    [:ignored-ids {:default #{}} [:set keyword?]]

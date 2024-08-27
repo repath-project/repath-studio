@@ -90,9 +90,12 @@
 
 (defmethod tool/pointer-down :select
   [db {:keys [element]}]
-  (-> db
-      (assoc :clicked-element element)
-      (element.h/ignore :bounding-box)))
+  (cond-> db
+    element
+    (assoc :clicked-element element)
+
+    :always
+    (element.h/ignore :bounding-box)))
 
 (defmethod tool/pointer-up :select
   [db {:keys [element] :as e}]

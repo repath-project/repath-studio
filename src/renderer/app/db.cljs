@@ -3,10 +3,12 @@
    [malli.core :as m]
    [renderer.dialog.db :as dialog.db]
    [renderer.document.db :as document.db]
+   [renderer.element.db :as element.db]
    [renderer.snap.db :as snap.db]
    [renderer.theme.db :as theme.db]
    [renderer.timeline.db :as timeline.db]
    [renderer.tool.base :as tool]
+   [renderer.utils.bounds :as bounds]
    [renderer.utils.hiccup :as hiccup]
    [renderer.utils.math :as math]
    [renderer.window.db :as window.db]))
@@ -35,11 +37,14 @@
    tool/tool?])
 
 (def app
-  [:map
+  [:map {:closed true}
    [:tool {:default :select} tool]
+   [:primary-tool {:optional true} tool]
    [:pointer-pos math/point]
+   [:pointer-offset {:optional true} math/point]
    [:adjusted-pointer-pos math/point]
-   [:adjusted-pointer-offset math/point]
+   [:adjusted-pointer-offset {:optional true} math/point]
+   [:drag? {:optional true} boolean?]
    [:zoom-sensitivity {:default 0.75} [:and number? pos?]]
    [:state {:default :default} keyword?]
    [:grid-visible? {:default false} boolean?]
@@ -67,7 +72,14 @@
    [:panels panels]
    [:version {:optional true} string?]
    [:fx {:default []} vector?]
-   [:message {:optional true} hiccup/hiccup]])
+   [:pivot-point {:optional true} math/point]
+   [:clicked-element {:optional true} element.db/element]
+   [:copied-bounds {:optional true} bounds/bounds]
+   [:copied-elements {:optional true} [:cat element.db/element]]
+   [:mdn {:optional true} map?]
+   [:webref-css {:optional true} map?]
+   [:message {:optional true} hiccup/hiccup]
+   [:re-pressed.core/keydown any?]])
 
 
 (def valid? (m/validator app))

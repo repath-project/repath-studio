@@ -519,7 +519,7 @@
         child-els (vals (select-keys (elements db) (:children el)))
         [x1 y1] (tool/bounds (element db parent-el))
         child-els (concat child-els (:content el))
-        defaults (m/decode db/element {} mt/default-value-transformer)
+        defaults (m/decode db/element {:type :element} mt/default-value-transformer)
         new-el (merge el defaults {:id id})
         new-el (cond-> new-el
                  parent-el (assoc :parent parent-el)

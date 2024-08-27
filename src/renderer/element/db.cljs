@@ -13,19 +13,26 @@
    tag?])
 
 (def element
-  [:map
-   [:id keyword?]
-   [:tag tag]
-   [:label {:optional true} string?]
-   [:parent {:optional true} keyword?]
-   [:type {:default :element} [:enum :element :handle]]
-   [:visible? {:default true} boolean?]
-   [:locked? {:optional true} boolean?]
-   [:selected? {:optional true} boolean?]
-   [:children {:default []} [:vector keyword?]]
-   [:bounds {:optional true} bounds/bounds]
-   [:content {:optional true} string?]
-   [:attrs {:optional true} [:map-of keyword? [:or string? number? vector?]]]])
+  [:multi {:dispatch :type}
+   [:element [:map {:closed true}
+              [:id keyword?]
+              [:tag tag]
+              [:label {:optional true} string?]
+              [:parent {:optional true} keyword?]
+              [:type [:= :element]]
+              [:visible? {:default true} boolean?]
+              [:locked? {:optional true} boolean?]
+              [:selected? {:optional true} boolean?]
+              [:children {:default []} [:vector keyword?]]
+              [:bounds {:optional true} bounds/bounds]
+              [:content {:optional true} string?]
+              [:attrs {:optional true} [:map-of keyword? [:or string? number? vector?]]]]]
+   [:handle [:map {:closed true}
+             [:id keyword?]
+             [:tag [:enum :move :scale :edit]]
+             [:type [:= :handle]]
+             [:element {:optional true} keyword?]]]
+   [::m/default [:= :element]]])
 
 (def elements
   [:map-of {:default {}} keyword? element])
