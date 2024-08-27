@@ -100,7 +100,7 @@
                  (sort-by (fn [[id _]]
                             (-> (first selected-elements)
                                 :tag
-                                tool/properties
+                                (tool/properties)
                                 :attrs
                                 (.indexOf id)))
                           (utils.el/attributes (first selected-elements))))]
@@ -136,9 +136,9 @@
           (filter #(contains? families (:family %)))
           (map :weight)
           (remove nil?)
-          distinct
-          sort
-          vec))))
+          (distinct)
+          (sort)
+          (vec)))))
 
 
 (rf/reg-sub

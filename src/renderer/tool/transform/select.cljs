@@ -67,10 +67,10 @@
   [db {:keys [element] :as e}]
   (cond-> db
     (not (pointer/shift? e))
-    element.h/clear-ignored
+    (element.h/clear-ignored)
 
     :always
-    (-> element.h/clear-hovered
+    (-> (element.h/clear-hovered)
         (assoc :cursor (if element "move" "default")))
 
     (:id element)
@@ -86,7 +86,7 @@
   [db e]
   (cond-> db
     (not (pointer/shift? e))
-    element.h/clear-ignored))
+    (element.h/clear-ignored)))
 
 (defmethod tool/pointer-down :select
   [db {:keys [element]}]
@@ -208,23 +208,23 @@
         ctrl? (pointer/ctrl? e)
         offset (cond-> offset
                  (and ctrl? (not= state :scale))
-                 pointer/lock-direction)
+                 (pointer/lock-direction))
         alt-key? (pointer/alt? e)
         db (-> db
-               element.h/clear-ignored
+               (element.h/clear-ignored)
                (app.h/set-message (message offset state)))]
     (-> (case state
           :select
           (-> db
               (element.h/set-temp (select-rect db alt-key?))
-              element.h/clear-hovered
+              (element.h/clear-hovered)
               (reduce-by-area (pointer/alt? e) element.h/hover))
 
           :move
           (if alt-key?
             (app.h/set-state db :clone)
             (-> db
-                history.h/swap
+                (history.h/swap)
                 (element.h/translate offset)
                 (snap.h/snap element.h/translate)
                 (app.h/set-cursor "default")))
@@ -232,7 +232,7 @@
           :clone
           (if alt-key?
             (-> db
-                history.h/swap
+                (history.h/swap)
                 (element.h/duplicate offset)
                 (snap.h/snap element.h/translate)
                 (app.h/set-cursor "copy"))
@@ -262,6 +262,6 @@
         :clone (history.h/finalize db "Clone selection")
         :default db)
       (app.h/set-state :default)
-      element.h/clear-hovered
+      (element.h/clear-hovered)
       (dissoc :clicked-element :pivot-point)
       (app.h/set-message (message nil :default))))

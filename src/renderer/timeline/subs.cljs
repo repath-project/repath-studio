@@ -38,7 +38,7 @@
  (fn [animations]
    (->> animations
         (mapv animation->timeline-row)
-        clj->js)))
+        (clj->js))))
 
 (rf/reg-sub
  ::end
@@ -56,7 +56,7 @@
  (fn [animations]
    (->> animations
         (reduce #(assoc %1 (effect-id %2) (animation->effect %2)) {})
-        clj->js)))
+        (clj->js))))
 
 (defn pad-2
   [n]

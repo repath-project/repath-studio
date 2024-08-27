@@ -331,7 +331,7 @@
   [db]
   (cond-> db
     (:active-document db)
-    (assoc-in  [:documents (:active-document db) :hovered-ids] #{})))
+    (assoc-in [:documents (:active-document db) :hovered-ids] #{})))
 
 (defn clear-ignored
   [db]
@@ -553,7 +553,7 @@
   ([db]
    (-> db
        (add (get-temp db))
-       clear-temp))
+       (clear-temp)))
   ([db el]
    (create (deselect db) (assoc el :selected? true))))
 
@@ -574,12 +574,12 @@
                            (let [path-a (Path. p)
                                  path-b (-> el element/->path :attrs :d Path.)]
                              (-> (bool path-a path-b operation)
-                                 .exportSVG
+                                 (.exportSVG)
                                  (.getAttribute "d"))))
                          (:d attrs)
                          (rest selected-elements))]
     (-> db
-        delete
+        (delete)
         (add {:type :element
               :tag :path
               :parent (-> selected-elements first :parent)
@@ -606,7 +606,7 @@
       select
       (cond-> db
         :always
-        (-> deselect
+        (-> (deselect)
             (add (assoc el :parent (:id parent-el)))
             (position (mat/add pointer-pos offset)))
 
@@ -622,7 +622,7 @@
 (defn duplicate
   [db offset]
   (-> db
-      duplicate-in-place
+      (duplicate-in-place)
       (translate offset)))
 
 (defn animate

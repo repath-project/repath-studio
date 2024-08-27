@@ -58,7 +58,7 @@
   [db pos]
   (-> db
       (assoc-in (conj (history-path db) :position) pos)
-      swap))
+      (swap)))
 
 (defn undo
   ([db]
@@ -155,7 +155,7 @@
 
          current-position
          (-> (update-in (conj (history-path db) :states current-position :children) conj id)
-             update-ancestors)
+             (update-ancestors))
 
          :always
          (app.h/add-fx [:dispatch [::app.e/local-storage-persist]])))

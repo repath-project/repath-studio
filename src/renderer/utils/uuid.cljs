@@ -5,8 +5,8 @@
 (mx/defn generate :- keyword?
   []
   (-> (random-uuid)
-      str
-      keyword))
+      (str)
+      (keyword)))
 
 (mx/defn generate-unique :- keyword?
   [existing? :- fn?]

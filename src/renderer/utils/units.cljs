@@ -67,7 +67,7 @@
    (->fixed v 2))
   ([v digits]
    (-> v
-       js/parseFloat
+       (js/parseFloat)
        (.toFixed digits))))
 
 (defn transform
@@ -76,6 +76,6 @@
   [v f & more]
   (let [[n unit] (parse-unit v)]
     (-> (apply f (->px n unit) more)
-        ->fixed
+        (->fixed)
         (->unit unit)
         (str (when (valid-unit? unit) unit)))))

@@ -267,4 +267,4 @@
  (fn [db [_ id]]
    (-> db
        (h/set-active id)
-       h/center)))
+       (h/center))))

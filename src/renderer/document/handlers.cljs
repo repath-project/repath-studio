@@ -46,7 +46,7 @@
     file-path
     (update :recent #(->> (conj (filterv (complement #{file-path}) %) file-path)
                           (take-last 10)
-                          vec))))
+                          (vec)))))
 
 (defn center
   "Centers the contents of the document to the current view."
@@ -101,9 +101,9 @@
 
      size
      (-> (element.h/create {:tag :svg
-                        :attrs {:width (first size)
-                                :height (second size)}})
-         center)
+                            :attrs {:width (first size)
+                                    :height (second size)}})
+         (center))
 
      :always
      (history.h/finalize "Create document"))))
@@ -123,7 +123,7 @@
       (cond-> db
         (not open-id)
         (-> (create-tab (dissoc document :save))
-            center
+            (center)
             (history.h/finalize "Load document"))
 
         :always

@@ -61,8 +61,8 @@
      :always (-> (dissoc :pointer-offset)
                  (dissoc :drag?)
                  (assoc :state :default)
-                 element.h/clear-temp
-                 h/swap)
+                 (element.h/clear-temp)
+                 (h/swap))
 
      (and (= (:tool db) :select) (= (:state db) :default))
      (-> element.h/deselect

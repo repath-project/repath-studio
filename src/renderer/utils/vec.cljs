@@ -23,7 +23,7 @@
       v
       (-> (remove-nth v i-1)
           (add i-2 el)
-          vec))))
+          (vec)))))
 
 (defn swap
   "Swaps the position of two elements by index."

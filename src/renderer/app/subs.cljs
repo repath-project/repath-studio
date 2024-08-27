@@ -145,4 +145,4 @@
  (fn [system-fonts _]
    (->> system-fonts
         (map :family)
-        distinct)))
+        (distinct))))

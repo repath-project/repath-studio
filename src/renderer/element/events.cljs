@@ -42,14 +42,14 @@
  ::lock
  (fn [db _]
    (-> db
-       h/lock
+       (h/lock)
        (history.h/finalize "Lock selection"))))
 
 (rf/reg-event-db
  ::unlock
  (fn [db _]
    (-> db
-       h/unlock
+       (h/unlock)
        (history.h/finalize "Unlock selection"))))
 
 (rf/reg-event-db
@@ -88,63 +88,63 @@
  ::delete
  (fn [db _]
    (-> db
-       h/delete
+       (h/delete)
        (history.h/finalize "Delete selection"))))
 
 (rf/reg-event-db
  ::deselect-all
  (fn [db _]
    (-> db
-       h/deselect
+       (h/deselect)
        (history.h/finalize "Deselect all"))))
 
 (rf/reg-event-db
  ::select-all
  (fn [db _]
    (-> db
-       h/select-all
+       (h/select-all)
        (history.h/finalize "Select all"))))
 
 (rf/reg-event-db
  ::select-same-tags
  (fn [db _]
    (-> db
-       h/select-same-tags
+       (h/select-same-tags)
        (history.h/finalize "Select same tags"))))
 
 (rf/reg-event-db
  ::invert-selection
  (fn [db _]
    (-> db
-       h/invert-selection
+       (h/invert-selection)
        (history.h/finalize "Invert selection"))))
 
 (rf/reg-event-db
  ::raise
  (fn [db _]
    (-> db
-       h/raise
+       (h/raise)
        (history.h/finalize "Raise selection"))))
 
 (rf/reg-event-db
  ::lower
  (fn [db _]
    (-> db
-       h/lower
+       (h/lower)
        (history.h/finalize "Lower selection"))))
 
 (rf/reg-event-db
  ::raise-to-top
  (fn [db _]
    (-> db
-       h/raise-to-top
+       (h/raise-to-top)
        (history.h/finalize "Raise selection to top"))))
 
 (rf/reg-event-db
  ::lower-to-bottom
  (fn [db _]
    (-> db
-       h/lower-to-bottom
+       (h/lower-to-bottom)
        (history.h/finalize "Lower selection to bottom"))))
 
 (rf/reg-event-db
@@ -187,21 +187,21 @@
  ::paste-in-place
  (fn [db _]
    (-> db
-       h/paste-in-place
+       (h/paste-in-place)
        (history.h/finalize "Paste selection in place"))))
 
 (rf/reg-event-db
  ::paste-styles
  (fn [db _]
    (-> db
-       h/paste-styles
+       (h/paste-styles)
        (history.h/finalize "Paste styles to selection"))))
 
 (rf/reg-event-db
  ::duplicate-in-place
  (fn [db [_]]
    (-> db
-       h/duplicate-in-place
+       (h/duplicate-in-place)
        (history.h/finalize "Duplicate selection"))))
 
 (rf/reg-event-db
@@ -259,14 +259,14 @@
  ::->path
  (fn [db  _]
    (-> db
-       h/->path
+       (h/->path)
        (history.h/finalize "Convert selection to path"))))
 
 (rf/reg-event-db
  ::stroke->path
  (fn [db  _]
    (-> db
-       h/stroke->path
+       (h/stroke->path)
        (history.h/finalize "Convert selection's stroke to path"))))
 
 (rf/reg-event-db
@@ -316,7 +316,7 @@
  ::group
  (fn [db  _]
    (-> db
-       h/group
+       (h/group)
        (history.h/finalize "Group selection"))))
 
 (rf/reg-event-db
@@ -343,8 +343,8 @@
  ::cut
  (fn [{:keys [db]} [_]]
    {:db (-> db
-            h/copy
-            h/delete
+            (h/copy)
+            (h/delete)
             (history.h/finalize "Cut selection"))
     ::app.fx/clipboard-write [(h/->svg (h/top-selected-sorted db))]}))
 

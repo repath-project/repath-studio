@@ -21,7 +21,7 @@
 (defn set-tool
   [db tool]
   (-> db
-      tool/deactivate
+      (tool/deactivate)
       (assoc :tool tool)
-      tool/activate))
+      (tool/activate)))
 

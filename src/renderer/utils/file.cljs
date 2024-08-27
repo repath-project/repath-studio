@@ -31,7 +31,7 @@
      reader
      "load"
      #(let [document (-> (.. % -target -result)
-                         edn/read-string
+                         (edn/read-string)
                          (assoc :title (.-name file)
                                 :path (.-path file)))]
         (rf/dispatch [::document.e/load [document]])))
