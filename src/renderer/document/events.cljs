@@ -253,7 +253,7 @@
  ::close-saved
  (fn [_ [_ document-info]]
    {:dispatch-n [[::saved document-info]
-                 [::close (:key document-info) false]]}))
+                 [::close (:id document-info) false]]}))
 
 (rf/reg-event-db
  ::clear-recent
