@@ -43,6 +43,10 @@
                                                               unit->key {:arities {1 {:args [:string], :ret :keyword}}},
                                                               ->px {:arities {2 {:args [:number :string], :ret :number}}},
                                                               parse-unit {:arities {1 {:args [:any], :ret :seqable}}}},
+                                        renderer.utils.attribute {points->vec {:arities {1 {:args [:string],
+                                                                                            :ret :vector}}},
+                                                                  points->px {:arities {1 {:args [:string],
+                                                                                           :ret :vector}}}},
                                         renderer.utils.map {merge-common-with {:arities {:varargs {:args [:fn
                                                                                                           {:op :rest,
                                                                                                            :spec :map}],
@@ -57,8 +61,4 @@
                                                             move {:arities {3 {:args [:vector :number :number],
                                                                                :ret :vector}}},
                                                             swap {:arities {3 {:args [:vector :number :number],
-                                                                               :ret :vector}}}},
-                                        renderer.utils.attribute {points->vec {:arities {1 {:args [:string],
-                                                                                            :ret :vector}}},
-                                                                  points->px {:arities {1 {:args [:string],
-                                                                                           :ret :vector}}}}}}}}
+                                                                               :ret :vector}}}}}}}}
