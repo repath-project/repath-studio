@@ -76,6 +76,7 @@
         offset (element/offset el)
         segments (-> attrs :d svgpath .-segments)
         square-handle (fn [i [x y]]
+                        ^{:key i}
                         [overlay/square-handle {:id (keyword (str i))
                                                 :x x
                                                 :y y
