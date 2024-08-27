@@ -131,9 +131,7 @@
         (assoc :attrs (attributes {:tag :path
                                    :attrs (map/merge-common-with
                                            str
-                                           (dissoc (:attrs el)
-                                                   :stroke
-                                                   :stroke-width)
+                                           (dissoc (:attrs el) :stroke :stroke-width)
                                            (attributes {:tag :path
                                                         :attrs {}}))})
                :tag :path)

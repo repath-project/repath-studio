@@ -4,10 +4,6 @@
    [renderer.element.db :as element.db]
    [renderer.history.db :as history.db]))
 
-(def zoom
-  [:fn {:error/fn (fn [{:keys [value]} _] (str value ", should be between 0.1 and 1000"))}
-   (fn [x] (and (number? x) (<= 0.01 x 100)))])
-
 (def document
   [:map {:closed true}
    [:id keyword?]
@@ -20,9 +16,10 @@
    [:ignored-ids {:default #{}} [:set keyword?]]
    [:fill {:default "white"} string?]
    [:stroke {:default "black"} string?]
-   [:zoom {:default 1} zoom]
+   [:zoom {:default 1} [:and number? [:>= 0.01] [:<= 100]]]
    [:rotate {:default 0} number?]
    [:history history.db/history]
+   [:temp-element {:optional true} any?] ; REVIEW
    [:pan {:default [0 0]} [:tuple number? number?]]
    [:elements element.db/elements]
    [:focused? {:optional true} boolean?]])

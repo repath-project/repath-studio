@@ -76,7 +76,7 @@
         offset (element/offset el)
         segments (-> attrs :d svgpath .-segments)
         square-handle (fn [i [x y]]
-                        [overlay/square-handle {:id (str i)
+                        [overlay/square-handle {:id (keyword (str i))
                                                 :x x
                                                 :y y
                                                 :size handle-size
@@ -111,10 +111,9 @@
 
 (defmethod tool/edit :path
   [el offset handle]
-  (cond-> el
-    (not (keyword? handle))
-    (update-in
-     [:attrs :d]
-     #(-> (svgpath %)
-          (translate-segment (int handle) offset)
-          .toString))))
+  (update-in
+   el
+   [:attrs :d]
+   #(-> (svgpath %)
+        (translate-segment (js/parseInt (name handle)) offset)
+        .toString)))

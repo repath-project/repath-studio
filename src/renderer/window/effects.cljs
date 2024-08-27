@@ -1,6 +1,5 @@
 (ns renderer.window.effects
   (:require
-   [platform :as platform]
    [promesa.core :as p]
    [re-frame.core :as rf]))
 

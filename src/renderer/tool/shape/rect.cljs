@@ -37,7 +37,7 @@
                :height (if lock-ratio? (min width height) height)
                :fill fill
                :stroke stroke}]
-    (element.h/set-temp db {:type :element
+    (element.h/set-temp db {:type :temp
                             :tag :rect
                             :attrs attrs})))
 

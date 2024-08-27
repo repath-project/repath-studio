@@ -113,7 +113,7 @@
                     (let [[x y] (mapv units/unit->px [x y])
                           [x y] (mat/add offset [x y])]
                       ^{:key (str index)}
-                      [overlay/square-handle {:id (str index)
+                      [overlay/square-handle {:id (keyword (str index))
                                               :x x
                                               :y y
                                               :size handle-size
@@ -125,18 +125,17 @@
 
 (defmethod tool/edit ::tool/polyshape
   [el [x y] handle]
-  (cond-> el
-    (not (keyword? handle))
-    (update-in
-     [:attrs :points]
-     #(str/join " "
-                (-> (utils.attr/points->vec %1)
-                    (update (int handle)
-                            (fn [point]
-                              (list
-                               (units/transform (first point) + x)
-                               (units/transform (second point) + y))))
-                    flatten)))))
+  (update-in
+   el
+   [:attrs :points]
+   #(str/join " "
+              (-> (utils.attr/points->vec %1)
+                  (update (js/parseInt (name handle))
+                          (fn [point]
+                            (list
+                             (units/transform (first point) + x)
+                             (units/transform (second point) + y))))
+                  flatten))))
 
 (defmethod tool/bounds ::tool/polyshape
   [{{:keys [points]} :attrs}]

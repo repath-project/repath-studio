@@ -31,6 +31,11 @@
              [:id keyword?]
              [:tag [:enum :move :scale :edit]]
              [:type [:= :handle]]
+             [:cursor {:optional true} string?]
+             [:x {:optional true} number?]
+             [:y {:optional true} number?]
+             [:size {:optional true} number?]
+             [:stroke-width {:optional true} number?]
              [:element {:optional true} keyword?]]]
    [::m/default [:= :element]]])
 

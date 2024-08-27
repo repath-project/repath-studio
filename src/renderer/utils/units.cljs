@@ -1,10 +1,11 @@
 (ns renderer.utils.units
   (:require
-   [clojure.string :as str]))
+   [clojure.string :as str]
+   [malli.experimental :as mx]))
 
 (def ppi 96)
 
-(def units
+(def unit-to-pixel-map
   ;; TODO: Find an agnostix way to handle percentages (we need to pass a base).
   {:px 1
    :ch 8
@@ -18,62 +19,65 @@
    :pc (/ ppi 6)
    :% 1})
 
-(defn unit->key
+(mx/defn unit->key :- keyword?
   "Converts the string unit to a lower-cased keyword."
-  [s]
+  [s :- string?]
   (keyword (str/lower-case s)))
 
-(defn valid-unit?
-  [s]
-  (contains? units (unit->key s)))
+(mx/defn valid-unit? :- boolean?
+  [s :- string?]
+  (contains? unit-to-pixel-map (unit->key s)))
 
-(defn multiplier
+(mx/defn multiplier :- number?
   "Returns the multiplier by unit.
    If the unit is invalid, it fallbacks to :px (1)"
-  [s]
-  (get units (if (valid-unit? s)
-               (unit->key s)
-               :px)))
+  [s :- string?]
+  (get unit-to-pixel-map (if (valid-unit? s)
+                           (unit->key s)
+                           :px)))
 
-(defn match-unit
-  [s]
+(mx/defn match-unit :- string?
+  [s :- string?]
   (second (re-matches #"[\d.\-\+]*\s*(.*)" s)))
 
-(defn parse-unit
-  [s]
-  (let [s (str/trim (str s))
+(mx/defn parse-unit :- [:tuple number? string?]
+  [v :- [:or string? number?]]
+  (let [s (str/trim (str v))
         n (js/parseFloat s 10)
         unit (match-unit s)]
     [(if (js/isNaN n) 0 n)
      unit]))
 
-(defn ->px
-  [number unit]
-  (* number (multiplier unit)))
+(mx/defn ->px :- number?
+  [n :- number? unit :- string?]
+  (* n (multiplier unit)))
 
-(defn ->unit
-  [number unit]
-  (/ number (multiplier unit)))
+(mx/defn ->unit :- number?
+  [n :- number? unit :- string?]
+  (/ n (multiplier unit)))
 
-(defn unit->px
-  [v]
+(mx/defn unit->px :- number?
+  [v :- [:or string? number?]]
   (let [[n unit] (parse-unit v)]
     (if (empty? unit)
       n
       (if (valid-unit? unit) (->px n unit) 0))))
 
-(defn ->fixed
-  ([v]
-   (->fixed v 2))
-  ([v digits]
-   (-> v
-       (js/parseFloat)
-       (.toFixed digits))))
+(mx/defn ->fixed :- number?
+  ([n :- number?]
+   (->fixed n 2))
+  ([n :- number? digits  :- number?]
+   (->fixed n digits 10))
+  ([n :- number? digits :- number? base :- number?]
+   (let [pow (Math/pow base digits)]
+     (-> (* n pow)
+         (Math/round)
+         (/ pow)))))
 
-(defn transform
+(mx/defn transform :- string?
   "Converts a value to pixels, applies a function and converts the result
    back to the original unit."
-  [v f & more]
+  [v f :- fn? & more]
   (let [[n unit] (parse-unit v)]
     (-> (apply f (->px n unit) more)
         (->fixed)
