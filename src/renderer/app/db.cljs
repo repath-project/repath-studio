@@ -40,9 +40,9 @@
   [:map {:closed true}
    [:tool {:default :select} tool]
    [:primary-tool {:optional true} tool]
-   [:pointer-pos math/point]
+   [:pointer-pos {:default [0 0]} math/point]
    [:pointer-offset {:optional true} math/point]
-   [:adjusted-pointer-pos math/point]
+   [:adjusted-pointer-pos {:default [0 0]} math/point]
    [:adjusted-pointer-offset {:optional true} math/point]
    [:drag? {:optional true} boolean?]
    [:zoom-sensitivity {:default 0.75} [:and number? pos?]]

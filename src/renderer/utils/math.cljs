@@ -4,7 +4,7 @@
    [malli.experimental :as mx]))
 
 (def point
-  [:tuple {:default [0 0]} number? number?])
+  [:tuple number? number?])
 
 (mx/defn clamp :- number?
   "Clamps a number within the provided bounds."
