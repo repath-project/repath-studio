@@ -29,13 +29,11 @@
 (rf/reg-fx
  ::ipc-send
  (fn [[channel data]]
-   (when platform/electron?
-     (js/window.api.send channel (clj->js data)))))
+   (js/window.api.send channel (clj->js data))))
 
 (rf/reg-fx
  ::ipc-invoke
  (fn [{:keys [channel data formatter on-resolution]}]
-   (when platform/electron?
-     (p/let [result (js/window.api.invoke channel (clj->js data))]
-       (when on-resolution
-         (rf/dispatch [on-resolution (cond-> result formatter formatter)]))))))
+   (p/let [result (js/window.api.invoke channel (clj->js data))]
+     (when on-resolution
+       (rf/dispatch [on-resolution (cond-> result formatter formatter)])))))

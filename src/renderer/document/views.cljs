@@ -80,19 +80,20 @@
   (let [document @(rf/subscribe [::document.s/document id])
         path (:path document)
         document-tabs @(rf/subscribe [::app.s/document-tabs])]
-    [{:label "Close"
-      :action [::document.e/close id true]}
-     {:label "Close others"
-      :action [::document.e/close-others id]
-      :disabled? (empty? (rest document-tabs))}
-     {:label "Close all"
-      :action [::document.e/close-all]}
-     {:label "Close saved"
-      :action [::document.e/close-all-saved]}
-     {:type :separator}
-     {:label "Open containing directory"
-      :action [::document.e/open-directory path]
-      :disabled? (not (and path platform/electron?))}]))
+    (cond-> [{:label "Close"
+              :action [::document.e/close id true]}
+             {:label "Close others"
+              :action [::document.e/close-others id]
+              :disabled? (empty? (rest document-tabs))}
+             {:label "Close all"
+              :action [::document.e/close-all]}
+             {:label "Close saved"
+              :action [::document.e/close-all-saved]}]
+      platform/electron?
+      (concat [{:type :separator}
+               {:label "Open containing directory"
+                :action [::document.e/open-directory path]
+                :disabled? (not (and path platform/electron?))}]))))
 
 (defn tab
   [id document active?]
