@@ -6,7 +6,7 @@
 
 (def bounds [:tuple number? number? number? number?])
 
-(mx/defn from-bbox :- bounds
+(mx/defn from-bbox :- [:maybe bounds]
   "Experimental way of getting the bounds of uknown or complicated elements
    using the getBBox method.
    https://developer.mozilla.org/en-US/docs/Web/API/SVGGraphicsElement/getBBox"

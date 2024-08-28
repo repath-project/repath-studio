@@ -62,17 +62,40 @@
   [db id]
   (:children (element db id)))
 
-(defn children
+(defn parent
+  ([db]
+   (let [selected-ks (selected-ids db)]
+     (or (parent db (first selected-ks))
+         (root db))))
+  ([db k]
+   (when-let [parent-k (:parent (element db k))]
+     (element db parent-k))))
+
+(defn parent-container
   [db id]
-  (vals (elements db (children-ids db id))))
+  (loop [parent-el (parent db id)]
+    (when parent-el
+      (if (element/container? parent-el)
+        parent-el
+        (recur (parent db (:id parent-el)))))))
+
+(defn adjusted-bounds
+  [db id]
+  (when-let [bounds (tool/bounds (element db id))]
+    (if-let [container (parent-container db id)]
+      (let [[offset-x offset-y _ _] (tool/bounds container)
+            [x1 y1 x2 y2] bounds]
+        [(+ x1 offset-x) (+ y1 offset-y)
+         (+ x2 offset-x) (+ y2 offset-y)])
+      bounds)))
 
 (defn update-bounds
   [db id]
   (let [el (element db id)
         bounds (if (= (:tag el) :g)
-                 (let [b (map #(element/adjusted-bounds % (elements db)) (children db id))]
+                 (let [b (map #(adjusted-bounds db %) (children-ids db id))]
                    (when (seq b) (apply bounds/union b)))
-                 (element/adjusted-bounds el (elements db)))
+                 (adjusted-bounds db id))
         assoc-bounds #(assoc % :bounds bounds)]
     (if (or (not bounds) (element/root? el))
       db
@@ -97,15 +120,6 @@
     (and (single? parent-els)
          (= (count selected-els)
             (count (children-ids db (first parent-els)))))))
-
-(defn parent
-  ([db]
-   (let [selected-ks (selected-ids db)]
-     (or (parent db (first selected-ks))
-         (root db))))
-  ([db k]
-   (when-let [parent-k (:parent (element db k))]
-     (element db parent-k))))
 
 (defn siblings
   ([db]
@@ -436,7 +450,7 @@
 (defn translate
   ([db offset]
    (reduce (fn [db id]
-             (let [parent-container (element/parent-container (elements db) (element db id))
+             (let [container (parent-container db id)
                    hovered-svg-k (:id (hovered-svg db))]
                (cond-> db
                  :always
@@ -449,7 +463,7 @@
                       (not (element/svg? (element db id))))
                  (-> (set-parent hovered-svg-k)
                      ;; FIXME: Handle nested containers.
-                     (translate id (take 2 (:bounds parent-container)))
+                     (translate id (take 2 (:bounds container)))
                      (translate id (mat/mul (take 2 (:bounds (hovered-svg db))) -1))))))
            db
            (top-ancestor-ids db)))
@@ -507,27 +521,35 @@
      (some #(when (bounds/intersect? el-bounds (:bounds %)) %) svgs)
      (root db))))
 
+(defn create-parent-id
+  [db el]
+  (cond-> el
+    (not (element/root? el))
+    (assoc :parent (or (:parent el)
+                       (:id (if (element/svg? el)
+                              (root db)
+                              (overlapping-svg db (tool/bounds el))))))))
+
 (defn create
   [db el]
   (let [id (uuid/generate-unique #(element db %))
-        page (overlapping-svg db (tool/bounds el))
-        parent-el (when-not (element/root? el)
-                    (or (:parent el)
-                        (if (element/svg? el) (:id (root db)) (:id page))))
+        new-el (create-parent-id db el)
         child-els (vals (select-keys (elements db) (:children el)))
-        [x1 y1] (tool/bounds (element db parent-el))
+        [x1 y1] (tool/bounds (element db (:parent el)))
         child-els (concat child-els (:content el))
         defaults db/default
-        new-el (merge el defaults {:id id})
-        new-el (cond-> new-el
-                 parent-el (assoc :parent parent-el)
-                 (not (string? (:content new-el))) (dissoc :content))
+        new-el (merge new-el defaults {:id id})
+        new-el (cond-> new-el (not (string? (:content new-el))) (dissoc :content))
         add-children (fn [db child-els]
                        (reduce #(cond-> %1
                                   (db/tag? (:tag %2))
                                   (create (assoc %2 :parent id))) db child-els))
         new-el (map/remove-nils new-el)]
-    (if (db/valid? new-el)
+    (if-not (db/valid? new-el)
+      (notification.h/add db [notification.v/spec-failed
+                              "Invalid element"
+                              (spec/explain new-el db/element)])
+
       (cond-> db
         :always
         (assoc-in (conj (path db) id) new-el)
@@ -542,10 +564,7 @@
         (update-bounds id)
 
         child-els
-        (add-children child-els))
-      (notification.h/add db [notification.v/spec-failed
-                              "Invalid element"
-                              (spec/explain new-el db/element)]))))
+        (add-children child-els)))))
 
 (defn add
   ([db]

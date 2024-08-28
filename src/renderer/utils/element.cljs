@@ -22,24 +22,6 @@
   #_(isa? (:tag el) ::tool/container)
   (or (svg? el) (root? el))) ; FIXME
 
-(defn parent-container
-  [elements el]
-  (loop [parent (:parent el)]
-    (when-let [parent-element (get elements parent)]
-      (if (container? parent-element)
-        parent-element
-        (recur (:parent parent-element))))))
-
-(defn adjusted-bounds
-  [element elements]
-  (when-let [bounds (tool/bounds element elements)]
-    (if-let [container (parent-container elements element)]
-      (let [[offset-x offset-y _ _] (tool/bounds container elements)
-            [x1 y1 x2 y2] bounds]
-        [(+ x1 offset-x) (+ y1 offset-y)
-         (+ x2 offset-x) (+ y2 offset-y)])
-      bounds)))
-
 (defn bounds
   [elements]
   (let [el-bounds (->> elements (map :bounds) (remove nil?))]
