@@ -15,10 +15,10 @@
    [renderer.utils.vec :as vec]
    [renderer.window.effects :as-alias window.fx]))
 
-(def active-document-path
+(def active-path
   (let [db-store-key :re-frame-path/db-store]
     (->interceptor
-     :id :active-document-path
+     :id ::active-path
      :before (fn [context]
                (let [original-db (get-coeffect context :db)]
                  (-> context
@@ -37,8 +37,9 @@
 
 (def focus-canvas
   (rf/->interceptor
-   :id :focus-canvas
-   :after (fn [context] (assoc-effect context :fx [[:dispatch-later {:ms 100 :dispatch [::app.e/focus nil]}]] ))))
+   :id ::focus-canvas
+   :after (fn [context]
+            (assoc-effect context :fx [[:dispatch-later {:ms 100 :dispatch [::app.e/focus nil]}]]))))
 
 (rf/reg-event-db
  ::center
@@ -48,25 +49,25 @@
 
 (rf/reg-event-db
  ::set-hovered-ids
- active-document-path
+ active-path
  (fn [db [_ ids]]
    (assoc db :hovered-ids (->> ids (remove nil?) (set)))))
 
 (rf/reg-event-db
  ::collapse-el
- [local-storage/persist active-document-path]
+ [local-storage/persist active-path]
  (fn [db [_ id]]
    (update db :collapsed-ids conj id)))
 
 (rf/reg-event-db
  ::expand-el
- [local-storage/persist active-document-path]
+ [local-storage/persist active-path]
  (fn [db [_ id]]
    (update db :collapsed-ids disj id)))
 
 (rf/reg-event-db
  ::toggle-filter
- [local-storage/persist active-document-path]
+ [local-storage/persist active-path]
  (fn [db [_ id]]
    (if (= (:filter db) id)
      (dissoc db :filter)
@@ -74,13 +75,13 @@
 
 (rf/reg-event-db
  ::set-temp-element
- active-document-path
+ active-path
  (fn [db [_ el]]
    (assoc db :temp-element el)))
 
 (rf/reg-event-db
  ::swap-colors
- [local-storage/persist active-document-path]
+ [local-storage/persist active-path]
  (fn [db [_]]
    (assoc db
           :fill (:stroke db)
