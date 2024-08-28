@@ -39,8 +39,8 @@
   (get (elements db) id))
 
 #_(defn tag
-  [db k]
-  (:tag (element db k)))
+    [db k]
+    (:tag (element db k)))
 
 (defn root
   [db]
@@ -477,11 +477,14 @@
    (update-el db id tool/position pos)))
 
 (defn scale
-  ([db ratio pivot-point]
-   (reduce #(scale %1 %2 ratio pivot-point) db (selected-ids db)))
-  ([db id ratio pivot-point]
-   (let [pivot-point (->> (element db id) :bounds (take 2) (mat/sub pivot-point))]
-     (update-el db id tool/scale ratio pivot-point))))
+  [db ratio pivot-point recur?]
+  (reduce
+   (fn [db el]
+     (let [pivot-point (->> (element db el) :bounds (take 2) (mat/sub pivot-point))]
+       (update-el db el tool/scale ratio pivot-point)))
+   db
+   (cond-> (selected-ids db)
+     recur? (concat (descendant-ids db)))))
 
 (defn align
   ([db direction]

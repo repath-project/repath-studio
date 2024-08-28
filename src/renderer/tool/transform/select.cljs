@@ -44,7 +44,7 @@
 (defmethod message :scale
   [ratio]
   [:<>
-   [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions, and " [:span.shortcut-key "⇧"] " to scale in position."]
+   [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions, " [:span.shortcut-key "⇧"] " to scale in position, " [:span.shortcut-key "Alt"] " to also scale children."]
    [:div "Scaling by [" (str/join " " (mapv units/->fixed (distinct ratio))) "]."]])
 
 (defn hovered?
@@ -176,7 +176,7 @@
    |      |            ↖ │
    □----------□--------- ■ :bottom-right (active handle)
    "
-  [db [x y] lock-ratio? in-place?]
+  [db [x y] lock-ratio? in-place? recur?]
   (let [handle (-> db :clicked-element :id)
         bounds (element.h/bounds db)
         dimensions (bounds/->dimensions bounds)
@@ -200,7 +200,7 @@
     (-> db
         (assoc :pivot-point pivot-point)
         (app.h/set-message (message ratio :scale))
-        (element.h/scale ratio pivot-point))))
+        (element.h/scale ratio pivot-point recur?))))
 
 (defmethod tool/drag :select
   [{:keys [state adjusted-pointer-offset adjusted-pointer-pos] :as db} e]
@@ -243,10 +243,10 @@
             :always
             (-> history.h/swap
                 (app.h/set-cursor "default")
-                (offset-scale offset (pointer/ctrl? e) (pointer/shift? e)))
+                (offset-scale offset (pointer/ctrl? e) (pointer/shift? e) (pointer/alt? e)))
 
             (not (pointer/ctrl? e))
-            (snap.h/snap offset-scale false (pointer/shift? e)))
+            (snap.h/snap offset-scale false (pointer/shift? e) (pointer/alt? e)))
 
           :default db))))
 

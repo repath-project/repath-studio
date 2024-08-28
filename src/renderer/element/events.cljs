@@ -224,7 +224,7 @@
    (let [bounds (h/bounds db)
          pivot-point (bounds/center bounds)]
      (-> db
-         (h/scale ratio pivot-point)
+         (h/scale ratio pivot-point true)
          (history.h/finalize "Scale selection")))))
 
 (rf/reg-event-db
