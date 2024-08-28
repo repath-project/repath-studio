@@ -25,8 +25,11 @@
         (app.h/set-message "Click anywhere to pick a color.")
         (app.h/add-fx [::color.fx/dropper {:on-success ::set-fill-and-deactivate}]))
     (-> db
-        (notification.h/add [notification.v/unavailable-feature "EyeDropper" "https://developer.mozilla.org/en-US/docs/Web/API/EyeDropper_API#browser_compatibility"])
-        (app.h/set-tool :select))))
+        (app.h/set-tool :select)
+        (notification.h/add
+         [notification.v/unavailable-feature
+          "EyeDropper"
+          "https://developer.mozilla.org/en-US/docs/Web/API/EyeDropper_API#browser_compatibility"]))))
 
 (rf/reg-event-fx
  ::set-fill-and-deactivate
