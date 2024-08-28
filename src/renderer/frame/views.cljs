@@ -13,8 +13,7 @@
    [renderer.frame.events :as-alias frame.e]
    [renderer.tool.base :as tool]
    [renderer.ui :as ui]
-   [renderer.utils.pointer :as pointer]
-   [renderer.window.events :as-alias window.e]))
+   [renderer.utils.pointer :as pointer]))
 
 (defn pointer-handler
   [e]
@@ -32,8 +31,7 @@
       (fn []
         (doseq
          [event ["pointermove" "pointerup" "wheel"]]
-          (.addEventListener frame-window event pointer-handler #js {:passive false})
-          (.addEventListener frame-window "focus" #(rf/dispatch [::window.e/set-focused true]))))
+          (.addEventListener frame-window event pointer-handler #js {:passive false})))
 
       :component-will-unmount
       #(doseq
