@@ -46,7 +46,7 @@
        "Restart the application"]
 
       [:p "If you keep getting tha same error after restarting, try clearing your local storage and restart.
-            Please not that by doing so, you will loose any unsaved changes, and also your local app settings."]
+            Please note that by doing so, you will loose any unsaved changes, and also your local app settings."]
 
       [:button.button.px-2.rounded.w-full.warning
        {:on-click #(rf/dispatch-sync [::window.e/clear-local-storage-and-relaunch])}
