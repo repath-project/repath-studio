@@ -13,7 +13,7 @@
  local-storage/persist
  (fn [db [_ dom-rect]]
    (-> db
-       (h/recenter-to-dom-rect dom-rect)
+       #_(h/recenter-to-dom-rect dom-rect)
        (assoc :dom-rect dom-rect))))
 
 (rf/reg-event-db

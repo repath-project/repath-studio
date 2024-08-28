@@ -4,6 +4,7 @@
    [platform :as platform]
    [re-frame.core :as rf]
    [re-frame.interceptor :refer [->interceptor get-effect get-coeffect assoc-coeffect assoc-effect]]
+   [renderer.app.events :as-alias app.e]
    [renderer.dialog.events :as-alias dialog.e]
    [renderer.dialog.handlers :as dialog.h]
    [renderer.dialog.views :as dialog.v]
@@ -34,6 +35,10 @@
                   (not= db ::not-found)
                   (assoc-effect :db (assoc-in original-db [:documents (:active-document original-db)] db))))))))
 
+(def focus-canvas
+  (rf/->interceptor
+   :id :focus-canvas
+   :after (fn [context] (assoc-effect context :fx [[:dispatch-later {:ms 100 :dispatch [::app.e/focus nil]}]] ))))
 
 (rf/reg-event-db
  ::center
@@ -157,13 +162,13 @@
 
 (rf/reg-event-db
  ::new
- local-storage/persist
+ [local-storage/persist focus-canvas]
  (fn [db [_]]
    (h/create db)))
 
 (rf/reg-event-db
  ::init
- local-storage/persist
+ [local-storage/persist focus-canvas]
  (fn [db [_]]
    (cond-> db
      (not (:active-document db))
@@ -193,7 +198,7 @@
 
 (rf/reg-event-db
  ::load
- local-storage/persist
+ [local-storage/persist focus-canvas]
  (fn [db [_ documents]]
    (-> (reduce h/load db documents)
        h/center)))
