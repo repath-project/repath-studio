@@ -538,7 +538,7 @@
   (let [id (uuid/generate-unique #(element db %))
         new-el (create-parent-id db el)
         child-els (vals (select-keys (elements db) (:children el)))
-        [x1 y1] (tool/bounds (element db (:parent el)))
+        [x1 y1] (tool/bounds (element db (:parent new-el)))
         child-els (concat child-els (:content el))
         defaults db/default
         new-el (merge new-el defaults {:id id})
