@@ -43,11 +43,6 @@
  :-> :zoom)
 
 (rf/reg-sub
- ::focused?
- :<- [::active]
- :-> :focused?)
-
-(rf/reg-sub
  ::rotate
  :<- [::active]
  :-> :rotate)

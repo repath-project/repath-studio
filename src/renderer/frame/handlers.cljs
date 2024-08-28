@@ -15,11 +15,11 @@
                mat/add
                (mat/div offset zoom))))
 
-#_(defn recenter-to-dom-rect
-    [{dom-rect :dom-rect :as db} updated-dom-rect]
-    (let [offset (select-keys (merge-with - dom-rect updated-dom-rect)
-                              [:width :height])]
-      (pan-by db (mat/div [(:width offset) (:height offset)] 2))))
+(defn recenter-to-dom-rect
+  [{dom-rect :dom-rect :as db} updated-dom-rect]
+  (let [offset (select-keys (merge-with - dom-rect updated-dom-rect)
+                            [:width :height])]
+    (pan-by db (mat/div [(:width offset) (:height offset)] 2))))
 
 (defn zoom-in-position
   [{:keys [active-document] :as db} factor pos]

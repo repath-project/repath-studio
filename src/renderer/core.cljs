@@ -100,8 +100,8 @@
 
   (rf/dispatch-sync [::app.e/initialize-db])
   (rf/dispatch-sync [::app.e/load-local-db])
-  (rf/dispatch-sync [::document.e/init])
   (rf/dispatch-sync [::window.e/set-focused (dom/focused?)])
+  (rf/dispatch-sync [::document.e/init])
   (rf/dispatch-sync [::theme.e/set-native-mode (theme.fx/native theme.fx/native-query)])
   (rf/dispatch-sync [::theme.e/add-native-listener])
   (rf/dispatch-sync [::theme.e/set-document-attr]) ; Required to avoid blinking on init.

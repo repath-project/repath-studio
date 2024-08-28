@@ -84,7 +84,6 @@
       (fn []
         (let [root-el @(rf/subscribe [::element.s/root])
               {:keys [x y]} @(rf/subscribe [::app.s/dom-rect])
-              focused? @(rf/subscribe [::document.s/focused?])
              ;; This is a different browsing context inside an iframe.
              ;; We need to simulate the events to the parent window.
               on-keyboard-event (fn [e]
@@ -105,7 +104,7 @@
            [:f> inner-component]
            [:> ContextMenu/Root
             [:> ContextMenu/Trigger
-             (when focused? [tool/render root-el])]
+             [tool/render root-el]]
             [:> ContextMenu/Portal
              (into [:> ContextMenu/Content
                     {:class "menu-content context-menu-content"
