@@ -116,15 +116,17 @@
 
 (rf/reg-event-fx
  ::pointer-event
- (fn [{:keys [db]} [_ {:keys [button buttons modifiers data-transfer pointer-pos delta element] :as e}]]
-   (let [{:keys [pointer-offset tool dom-rect drag? primary-tool]} db
+ (fn [{:keys [db]}
+      [_ {:as e
+          :keys [button buttons modifiers data-transfer pointer-pos delta element]}]]
+   (let [{:keys [pointer-offset tool dom-rect drag? primary-tool drag-threshold]} db
          adjusted-pointer-pos (frame.h/adjust-pointer-pos db pointer-pos)]
      {:db (case (:type e)
             :pointermove
             (if (= buttons :right)
               db
               (-> (if pointer-offset
-                    (if (pointer/significant-drag? pointer-pos pointer-offset)
+                    (if (pointer/significant-drag? pointer-pos pointer-offset drag-threshold)
                       (cond-> db
                         (not= tool :pan)
                         (frame.h/pan-out-of-canvas dom-rect

@@ -3,38 +3,39 @@
    ["paper" :refer [Path]]
    ["paperjs-offset" :refer [PaperOffset]]
    [clojure.core.matrix :as mat]
+   [malli.experimental :as mx]
    [renderer.tool.base :as tool]
    [renderer.utils.attribute :as attr]
    [renderer.utils.bcd :as bcd]
    [renderer.utils.bounds :as bounds]
-   [renderer.utils.map :as map]))
+   [renderer.utils.map :as map]
+   [renderer.utils.math :as math]))
 
-(defn root?
+(mx/defn root? :- boolean?
   [el]
   (= :canvas (:tag el)))
 
-(defn svg?
+(mx/defn svg? :- boolean?
   [el]
   (= :svg (:tag el)))
 
-(defn container?
+(mx/defn container? :- boolean?
   [el]
-  #_(isa? (:tag el) ::tool/container)
-  (or (svg? el) (root? el))) ; FIXME
+  (or (svg? el) (root? el)))
 
-(defn bounds
+(mx/defn bounds :- [:maybe bounds/bounds]
   [elements]
   (let [el-bounds (->> elements (map :bounds) (remove nil?))]
     (when (seq el-bounds)
       (apply bounds/union el-bounds))))
 
-(defn offset
+(mx/defn offset :- math/point
   [el]
   (let [el-bounds (:bounds el)
         local-bounds (tool/bounds el)]
     (take 2 (mat/sub el-bounds local-bounds))))
 
-(defn snapping-points
+(mx/defn snapping-points
   [element options]
   (when-let [bounds (:bounds element)]
     (let [[x1 y1 x2 y2] bounds

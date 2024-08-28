@@ -1,8 +1,10 @@
 (ns renderer.utils.pointer
   (:require
    [clojure.core.matrix :as mat]
+   [malli.experimental :as mx]
    [re-frame.core :as rf]
-   [renderer.app.events :as-alias app.e]))
+   [renderer.app.events :as-alias app.e]
+   [renderer.utils.math :as math]))
 
 (defn ctrl?
   [e]
@@ -16,30 +18,28 @@
   [e]
   (contains? (:modifiers e) :alt))
 
-(defn significant-drag?
-  [pointer-pos pointer-offset]
-  (let [threshold 1]
-    (when (and (vector? pointer-pos) (vector? pointer-offset))
-      (> (apply max (map abs (mat/sub pointer-pos pointer-offset)))
-         threshold))))
+(mx/defn significant-drag? :- boolean?
+  [position :- math/point, offset :- math/point, threshold :- number?]
+  (> (apply max (map abs (mat/sub position offset)))
+     threshold))
 
-(defn adjust-position
-  [zoom pan pointer-pos]
+(mx/defn adjust-position :- math/point
+  [zoom :- number?, pan :- math/point, pointer-pos :- math/point]
   (-> pointer-pos
       (mat/div zoom)
       (mat/add pan)))
 
 (def button
   "https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button"
-  [:left
-   :middle
-   :right
-   :back
-   :forward])
+  {0 :left
+   1 :middle
+   2 :right
+   3 :back
+   4 :forward})
 
-(defn lock-direction
+(mx/defn lock-direction :- math/point
   "Locks pointer movement to the axis with the biggest offset"
-  [[x y]]
+  [[x y] :- math/point]
   (if (> (abs x) (abs y))
     [x 0]
     [0 y]))
