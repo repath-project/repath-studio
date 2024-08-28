@@ -1,6 +1,8 @@
 (ns renderer.app.db
   (:require
+   [config :as config]
    [malli.core :as m]
+   [malli.transform :as mt]
    [renderer.dialog.db :as dialog.db]
    [renderer.document.db :as document.db]
    [renderer.element.db :as element.db]
@@ -81,5 +83,6 @@
    [:message {:optional true} hiccup/hiccup]
    [:re-pressed.core/keydown any?]])
 
-
 (def valid? (m/validator app))
+
+(def default (m/decode app {:version config/version} mt/default-value-transformer))

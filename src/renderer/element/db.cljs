@@ -1,6 +1,7 @@
 (ns renderer.element.db
   (:require
    [malli.core :as m]
+   [malli.transform :as mt]
    [renderer.tool.base :as tool]
    [renderer.utils.bounds :as bounds]))
 
@@ -43,3 +44,5 @@
   [:map-of {:default {}} keyword? element])
 
 (def valid? (m/validator element))
+
+(def default (m/decode element {:type :element} mt/default-value-transformer))

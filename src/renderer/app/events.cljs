@@ -1,8 +1,5 @@
 (ns renderer.app.events
   (:require
-   [config :as config]
-   [malli.core :as m]
-   [malli.transform :as mt]
    [platform :as platform]
    [re-frame.core :as rf]
    [renderer.app.db :as db]
@@ -30,9 +27,7 @@
 (rf/reg-event-db
  ::initialize-db
  (fn [_ _]
-   (-> db/app
-       (m/decode {} mt/default-value-transformer)
-       (assoc :version config/version))))
+   db/default))
 
 (defn compatible-versions?
   [v1 v2]

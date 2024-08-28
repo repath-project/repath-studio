@@ -38,7 +38,7 @@
 
 (mx/defn intersect? :- boolean?
   "Tests whether the provided set of bounds intersect."
-  [[a-left a-top a-right a-bottom] :- bounds
+  [[a-left a-top a-right a-bottom] :- bounds,
    [b-left b-top b-right b-bottom] :- bounds]
   (not (or (> b-left a-right)
            (< b-right a-left)
@@ -47,7 +47,7 @@
 
 (mx/defn contained? :- boolean?
   "Tests whether `bounds-a` fully contain `bounds-b`."
-  [[a-left a-top a-right a-bottom] :- bounds
+  [[a-left a-top a-right a-bottom] :- bounds,
    [b-left b-top b-right b-bottom] :- bounds]
   (and (> a-left b-left)
        (> a-top b-top)
@@ -56,7 +56,7 @@
 
 (mx/defn contain-point? :- boolean?
   "Tests whether the provided bounds contain a point."
-  [[left top right bottom] :- bounds
+  [[left top right bottom] :- bounds,
    [x y] :- math/point]
   (and (<= left x)
        (<= top y)

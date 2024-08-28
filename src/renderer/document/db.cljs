@@ -1,6 +1,7 @@
 (ns renderer.document.db
   (:require
    [malli.core :as m]
+   [malli.transform :as mt]
    [renderer.element.db :as element.db]
    [renderer.history.db :as history.db]))
 
@@ -26,4 +27,5 @@
 
 (def valid? (m/validator document))
 
+(def default (m/decode document {} mt/default-value-transformer))
 

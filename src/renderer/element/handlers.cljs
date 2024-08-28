@@ -6,8 +6,6 @@
    [clojure.string :as str]
    [hickory.core :as hickory]
    [hickory.zip]
-   [malli.core :as m]
-   [malli.transform :as mt]
    [reagent.dom.server :as dom.server]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.element.db :as db]
@@ -519,7 +517,7 @@
         child-els (vals (select-keys (elements db) (:children el)))
         [x1 y1] (tool/bounds (element db parent-el))
         child-els (concat child-els (:content el))
-        defaults (m/decode db/element {:type :element} mt/default-value-transformer)
+        defaults db/default
         new-el (merge el defaults {:id id})
         new-el (cond-> new-el
                  parent-el (assoc :parent parent-el)

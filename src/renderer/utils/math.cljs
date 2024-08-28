@@ -8,19 +8,15 @@
 
 (mx/defn clamp :- number?
   "Clamps a number within the provided bounds."
-  [x :- number?
-   minimum :- number?
-   maximum :- number?]
+  [x :- number?, minimum :- number?, maximum :- number?]
   (min (max x minimum) maximum))
 
 (mx/defn angle-dx :- number?
-  [degrees :- number?
-   radius :- number?]
+  [degrees :- number?, radius :- number?]
   (* radius (Math/cos (math/to-radians degrees))))
 
 (mx/defn angle-dy :- number?
-  [degrees :- number?
-   radius :- number?]
+  [degrees :- number?, radius :- number?]
   (* radius (Math/sin (math/to-radians degrees))))
 
 (mx/defn normalize-angle :- number?
@@ -31,8 +27,7 @@
 
 (mx/defn angle :- number?
   "Calculates the angle between two points."
-  [[x1 y1] :- point
-   [x2 y2] :- point]
+  [[x1 y1] :- point, [x2 y2] :- point]
   (-> (Math/atan2 (- y2 y1) (- x2 x1))
       (normalize-angle)
       (math/to-degrees)))

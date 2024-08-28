@@ -1,8 +1,6 @@
 (ns renderer.document.handlers
   (:require
    [config :as config]
-   [malli.core :as m]
-   [malli.transform :as mt]
    [renderer.document.db :as db]
    [renderer.element.handlers :as element.h]
    [renderer.frame.handlers :as frame.h]
@@ -87,15 +85,13 @@
         (assoc :active-document id)
         (update :document-tabs #(vec/add % (inc active-index) id)))))
 
-(def default (m/decode db/document {} mt/default-value-transformer))
-
 (defn create
   ([db]
    (create db [595 842]))
   ([db size]
    (cond-> db
      :always
-     (-> (create-tab default)
+     (-> (create-tab db/default)
          (element.h/create {:tag :canvas
                             :attrs {:fill "#eeeeee"}}))
 
@@ -117,7 +113,7 @@
 (defn load
   [db document]
   (let [open-id (search-by-path db (:path document))
-        document (-> (merge default document)
+        document (-> (merge db/default document)
                      (assoc :id (or open-id (uuid/generate-unique #(get-in db [:documents %])))))]
     (if (db/valid? document)
       (cond-> db
@@ -130,9 +126,8 @@
         (-> (add-recent (:path document))
             (set-active (:id document))))
 
-      (notification.h/add
-       db
-       [notification.v/spec-failed "Load document" (spec/explain document db/document)]))))
+      (let [explanation (spec/explain document db/document)]
+        (notification.h/add db [notification.v/spec-failed "Load document" explanation])))))
 
 (defn saved?
   [db id]
