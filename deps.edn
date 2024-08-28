@@ -1,14 +1,11 @@
 {:paths ["src" "test"]
  :deps {akiroz.re-frame/storage {:mvn/version "0.1.4"}
         binaryage/devtools {:mvn/version "1.0.7"}
-        cider/cider-nrepl {:mvn/version "0.49.3"}
         cljs-ajax/cljs-ajax {:mvn/version "0.8.4"}
         clj-kdtree/clj-kdtree {:git/url "https://github.com/abscondment/clj-kdtree.git"
                                :sha "5ec321c5e8006db00fa8b45a8ed9eb0b8f3dd56d"
                                :deps/manifest :deps}
-        com.cognitect/transit-cljs {:mvn/version "0.8.280"}
         com.taoensso/tempura {:mvn/version "1.5.4"}
-        day8.re-frame/re-frame-10x {:mvn/version "1.9.9"}
         day8.re-frame/tracing {:mvn/version "0.6.2"}
         day8/shadow-git-inject {:mvn/version "0.0.5"}
         funcool/promesa {:mvn/version "11.0.678"}
@@ -20,4 +17,7 @@
         re-pressed/re-pressed {:mvn/version "0.3.2"}
         reagent/reagent {:mvn/version "1.2.0"}
         replumb/replumb {:mvn/version "0.2.4"}
-        thheller/shadow-cljs {:mvn/version "2.28.14"}}}
+        thheller/shadow-cljs {:mvn/version "2.28.14"}}
+ :aliases
+ {:dev {:extra-deps {cider/cider-nrepl {:mvn/version "0.49.3"}
+                     day8.re-frame/re-frame-10x {:mvn/version "1.9.9"}}}}}

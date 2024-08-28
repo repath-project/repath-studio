@@ -1,4 +1,4 @@
-{:deps true
+{:deps {:aliases [:dev]}
 
  :build-defaults {:build-hooks [(shadow-git-inject.core/hook)]}
 
