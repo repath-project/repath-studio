@@ -65,7 +65,7 @@
                                                                union {:arities {:varargs {:args [{:op :rest,
                                                                                                   :spec :seqable}],
                                                                                           :ret :seqable,
-                                                                                          :min-arity 0}}},
+                                                                                          :min-arity 1}}},
                                                                ->dimensions {:arities {1 {:args [:seqable],
                                                                                           :ret :seqable}}},
                                                                center {:arities {1 {:args [:seqable], :ret :seqable}}},
