@@ -62,19 +62,29 @@
 ██████╔╝░░░██║░░░╚██████╔╝██████╔╝██║╚█████╔╝
 ╚═════╝░░░░╚═╝░░░░╚═════╝░╚═════╝░╚═╝░╚════╝░")
 
-(defn ^:dev/after-load mount-root []
+(defn ^:dev/after-load mount-root! []
   (rf/clear-subscription-cache!)
   (let [root-el (dom/root-element)]
     (ra.dom/unmount-component-at-node root-el)
     (ra.dom/render [error/boundary [app.v/root]] root-el)))
 
-(defn bootstrap-cb
+(defn bootstrap-cb!
   []
   (replumb/run-repl "(in-ns 'user)" identity)
   (print "Welcome to your REPL!")
   (print "")
   (print "You can create or modify shapes using the command line.")
   (print "Type (help) to see a list of commands."))
+
+(defn add-listeners!
+  []
+  (.addEventListener js/window "focus" (rf/dispatch [::window.e/set-focused true]))
+  (.addEventListener js/window "blur" (rf/dispatch [::window.e/set-focused (dom/focused?)]))
+  (.addEventListener js/document "keydown" keyb/event-handler)
+  (.addEventListener js/document "keyup" keyb/event-handler)
+  (.addEventListener js/document "fullscreenchange" #(rf/dispatch [::window.e/set-fullscreen (boolean (.-fullscreenElement js/document))]))
+
+  (rf/dispatch [::document.e/center]))
 
 (defn register-ipc-on-events!
   []
@@ -85,10 +95,10 @@
      ["window-entered-fullscreen" #(rf/dispatch [::window.e/set-fullscreen true])]
      ["window-leaved-fullscreen" #(rf/dispatch [::window.e/set-fullscreen false])]
      ["window-minimized" #(rf/dispatch [::window.e/set-minimized true])]
-     ["window-loaded" #(rf/dispatch-sync [::document.e/center])]]]
+     ["window-loaded" add-listeners!]]]
     (js/window.api.on channel f)))
 
-(defn ^:export init []
+(defn ^:export init! []
   (js/console.log (str "%c" easter-egg) "color: #e93976")
 
   (devtools/set-pref!
@@ -96,36 +106,25 @@
    (str "filter:invert(1);" (:cljs-land-style (devtools/get-prefs))))
 
   ;; https://code.thheller.com/blog/shadow-cljs/2017/10/14/bootstrap-support.html
-  (bootstrap/init repl/st {:path "js/bootstrap" :load-on-init '[user]} bootstrap-cb)
+  (bootstrap/init repl/st {:path "js/bootstrap" :load-on-init '[user]} bootstrap-cb!)
 
   (rf/dispatch-sync [::app.e/initialize-db])
   (rf/dispatch-sync [::app.e/load-local-db])
-  (rf/dispatch-sync [::window.e/set-focused (dom/focused?)])
   (rf/dispatch-sync [::document.e/init])
   (rf/dispatch-sync [::theme.e/set-native-mode (theme.fx/native theme.fx/native-query)])
   (rf/dispatch-sync [::theme.e/add-native-listener])
-  (rf/dispatch-sync [::theme.e/set-document-attr]) ; Required to avoid blinking on init.
+  (rf/dispatch-sync [::theme.e/set-document-attr])
   (rf/dispatch-sync [::app.e/set-tool :select])
   (rf/dispatch-sync [::app.e/set-mdn (js->clj mdn :keywordize-keys true)])
+  (rf/dispatch-sync [::app.e/load-webref])
   (rf/dispatch-sync [::app.e/load-system-fonts])
-
   (rf/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])
   (rf/dispatch-sync [::rp/set-keydown-rules keyb/keydown-rules])
 
-  (.addEventListener js/document "keydown" keyb/event-handler)
-  (.addEventListener js/document "keyup" keyb/event-handler)
-
-  (.addEventListener js/window "focus" #(rf/dispatch [::window.e/set-focused true]))
-  (.addEventListener js/window "blur" #(rf/dispatch [::window.e/set-focused (dom/focused?)]))
-
-  (.setup paper) ; REVIEW
+  (.setup paper)
 
   (if platform/electron?
-    (do (register-ipc-on-events!)
-        (rf/dispatch [::app.e/load-webref]))
-    (do (rf/dispatch [::document.e/center])
-        (.addEventListener js/document
-                           "fullscreenchange"
-                           #(rf/dispatch [::window.e/set-fullscreen (boolean (.-fullscreenElement js/document))]))))
+    (register-ipc-on-events!)
+    (add-listeners!))
 
-  (mount-root))
+  (mount-root!))

@@ -2,7 +2,7 @@
   (:require
    [re-frame.core :as rf]
    [renderer.app.events :refer [persist]]
-   [renderer.theme.effects :as fx]))
+   [renderer.theme.effects :as-alias fx]))
 
 (rf/reg-event-fx
  ::add-native-listener

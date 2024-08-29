@@ -157,7 +157,7 @@
   (.loadURL ^js @loading-window (.join path "file://" js/__dirname "/public/loading.html"))
   (.once ^js (.-webContents @loading-window) "did-finish-load" #(.show ^js @loading-window)))
 
-(defn ^:export init []
+(defn ^:export init! []
   (.initialize log)
   (.on app "window-all-closed" #(when-not (= js/process.platform "darwin") (.quit app)))
   (.on app "ready" init-loading-window!))

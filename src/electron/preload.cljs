@@ -22,7 +22,7 @@
    :findFont (fn [descriptor] (.findFontSync fontManager descriptor))
    :textToPath (fn [s options] (text->path s (js->clj options :keywordize-keys true)))})
 
-(defn ^:export init []
+(defn ^:export init! []
   ;; Expose protected methods that allow the renderer process to use the
   ;; ipcRenderer without exposing the entire object
   ;; https://www.electronjs.org/docs/api/context-bridge

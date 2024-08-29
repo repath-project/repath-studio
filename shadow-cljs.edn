@@ -8,11 +8,11 @@
  :builds
  {:main {:target :node-script
          :output-to "resources/main.js"
-         :main electron.main/init}
+         :main electron.main/init!}
 
   :preload {:target :node-script
             :output-to "resources/preload.js"
-            :main electron.preload/init
+            :main electron.preload/init!
             :hashbang false}
 
   :renderer {:target :browser
@@ -46,9 +46,9 @@
                                   :depends-on #{:shared}
                                   :preloads [renderer.dev
                                              malli.dev.cljs-kondo-preload]
-                                  :init-fn renderer.core/init}
+                                  :init-fn renderer.core/init!}
 
-                       :trace {:init-fn worker.trace/init
+                       :trace {:init-fn worker.trace/init!
                                :web-worker true
                                :depends-on #{:shared}}}}
 
