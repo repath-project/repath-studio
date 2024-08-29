@@ -1,6 +1,49 @@
 # Changelog
 
-## 0.2.13 (2024-08-13)
+## 0.3.0 (2024-08-29)
+
+**Added**
+
+- System font select on supported browsers
+- Auto center on resize
+- Document templates and icons to home
+- Print document
+- Missing icons
+- Scaling children while holding alt
+- Persist documents on local storage
+- Version to db and clear storage on incompatible versions
+
+**Removed**
+
+- Sentry integration
+
+**Changed**
+
+- [BREAKING]: Use :id instead of :key to avoid shadowing
+- Enhance image performance
+- Scrollbars
+- Enhance mobile view
+- Enhance tool messages
+- Enhance recent view on home
+- Reduce auto-pan threshold
+- Update CONTRIBUTING
+- Enhance error handling
+
+**Fixed**
+
+- Auto center on load
+- Attributes of multiple selected elements
+- Select all
+- Title-bar saved indicator
+- Brush bounds
+- Style attribute on render to string
+- Eye dropper tool
+- Dynamic snap threshold based on zoom level
+- Dialog title accessibility
+- Set parent locked condition
+- Group element bounds
+
+# 0.2.13 (2024-08-13)
 
 **Added**
 
