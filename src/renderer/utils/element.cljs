@@ -4,6 +4,8 @@
    ["paperjs-offset" :refer [PaperOffset]]
    [clojure.core.matrix :as mat]
    [malli.experimental :as mx]
+   [renderer.element.db :as element.db]
+   [renderer.snap.db :as snap.db]
    [renderer.tool.base :as tool]
    [renderer.utils.attribute :as attr]
    [renderer.utils.bcd :as bcd]
@@ -12,15 +14,15 @@
    [renderer.utils.math :as math]))
 
 (mx/defn root? :- boolean?
-  [el]
+  [el :- element.db/element]
   (= :canvas (:tag el)))
 
 (mx/defn svg? :- boolean?
-  [el]
+  [el :- element.db/element]
   (= :svg (:tag el)))
 
 (mx/defn container? :- boolean?
-  [el]
+  [el :- element.db/element]
   (or (svg? el) (root? el)))
 
 (mx/defn bounds :- [:maybe bounds/bounds]
@@ -30,35 +32,35 @@
       (apply bounds/union el-bounds))))
 
 (mx/defn offset :- math/point
-  [el]
+  [el :- element.db/element]
   (let [el-bounds (:bounds el)
         local-bounds (tool/bounds el)]
-    (take 2 (mat/sub el-bounds local-bounds))))
+    (vec (take 2 (mat/sub el-bounds local-bounds)))))
 
-(mx/defn snapping-points
-  [element options]
-  (when-let [bounds (:bounds element)]
-    (let [[x1 y1 x2 y2] bounds
-          [cx cy] (bounds/center bounds)]
-      (concat (when (:corners options)
-                [[x1 y1]
-                 [x1 y2]
-                 [x2 y1]
-                 [x2 y2]])
+(mx/defn snapping-points :- [:* math/point]
+  [element :- element.db/element, options :- [:set snap.db/options]]
+  (let [points (or (tool/snapping-points element) [])]
+   (if-let [bounds (:bounds element)]
+     (let [[x1 y1 x2 y2] bounds
+           [cx cy] (bounds/center bounds)]
+       (cond-> points
+         (:corners options)
+         (into [[x1 y1]
+                [x1 y2]
+                [x2 y1]
+                [x2 y2]])
 
-              (when (:centers options)
-                [[cx cy]])
+         (:centers options)
+         (into [[cx cy]])
 
-              (when (:midpoints options)
-                [[x1 cy]
-                 [x2 cy]
-                 [cx y1]
-                 [cx y2]])
+         (:midpoints options)
+         (into [[x1 cy]
+                [x2 cy]
+                [cx y1]
+                [cx y2]])))
+     points)))
 
-              (when :nodes
-                (tool/snapping-points element))))))
-
-(defn- attrs-map
+(mx/defn attrs-map :- element.db/attrs
   [attrs]
   (let [deprecated-path [:__compat :status :deprecated]
         filtered-attrs (->> attrs
@@ -66,11 +68,11 @@
                             (into {}))]
     (-> filtered-attrs
         (dissoc :__compat :systemLanguage)
-        keys
+        (keys)
         (zipmap (repeat "")))))
 
-(defn attributes
-  [{:keys [tag attrs]}]
+(mx/defn attributes :- element.db/attrs
+  [{:keys [tag attrs]} :- element.db/element]
   (merge
    (when tag
      (merge (when (isa? tag ::tool/element)
@@ -81,12 +83,12 @@
             (zipmap (:attrs (tool/properties tag)) (repeat ""))))
    attrs))
 
-(defn supported-attr?
-  [el k]
-  (-> el attributes k))
+(mx/defn supported-attr? :- boolean?
+  [el :- element.db/element, k :- keyword?]
+  (-> el attributes k boolean))
 
-(defn ->path
-  [el]
+(mx/defn ->path  :- element.db/element
+  [el :- element.db/element]
   (cond-> el
     (get-method tool/path (:tag el))
     (-> (assoc :attrs (attributes
@@ -99,8 +101,8 @@
                :tag :path)
         (assoc-in [:attrs :d] (tool/path el)))))
 
-(defn stroke->path
-  [{:keys [attrs] :as el}]
+(mx/defn stroke->path :- element.db/element
+  [{:keys [attrs] :as el} :- element.db/element]
   (let [d (tool/path el)
         paper-path (Path. d)
         el-offset (or (:stroke-width attrs) 1)
@@ -121,6 +123,6 @@
         (assoc-in [:attrs :d] new-d)
         (assoc-in [:attrs :fill] (:stroke attrs)))))
 
-(defn wrap-to-svg
-  [s [w h]]
+(mx/defn wrap-to-svg :- string?
+  [s :- string?, [w h]]
   (str "<svg width='" w "' height='" h "'>" s "</svg>"))

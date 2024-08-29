@@ -57,7 +57,7 @@
     (str/triml p)
     (str/split p #"\s*[\s,]\s*")
     (partition 2 p)
-    (vec p))) ; OPTIMIZE
+    (mapv vec p))) ; OPTIMIZE
 
 (mx/defn points->px :- vector?
   [points :- string?]
@@ -66,4 +66,4 @@
     (str/split p #"\s*[\s,]\s*")
     (map units/unit->px p)
     (partition 2 p)
-    (vec p)))
+    (mapv vec p)))

@@ -13,6 +13,9 @@
   [:fn {:error/fn (fn [{:keys [value]} _] (str value ", is not a supported tag"))}
    tag?])
 
+(def attrs
+  [:map-of keyword? [:or string? number? vector?]])
+
 (def handle
   [:map {:closed true}
    [:id keyword?]
@@ -27,22 +30,24 @@
 
 (def element
   [:map {:closed true}
-   [:id keyword?]
+   [:id {:optional true} keyword?]
    [:tag tag]
    [:label {:optional true} string?]
    [:parent {:optional true} keyword?]
-   [:type {:default :element} [:= :element]]
-   [:visible? {:default true} boolean?]
+   [:type {:optional true} [:= :element]]
+   [:visible? {:optional true} boolean?]
    [:locked? {:optional true} boolean?]
    [:selected? {:optional true} boolean?]
-   [:children {:default []} [:vector keyword?]]
+   [:children {:default [] :optional true} [:vector keyword?]]
    [:bounds {:optional true} bounds/bounds]
    [:content {:optional true} string?]
-   [:attrs {:optional true} [:map-of keyword? [:or string? number? vector?]]]])
+   [:attrs {:optional true} attrs]])
 
 (def elements
   [:map-of {:default {}} keyword? element])
 
 (def valid? (m/validator element))
 
-(def default (m/decode element {} mt/default-value-transformer))
+(def default (m/decode element {:type :element
+                                :visible? true
+                                :children []} mt/default-value-transformer))

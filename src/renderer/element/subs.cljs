@@ -91,20 +91,21 @@
  :<- [::selected]
  :<- [::multiple-selected?]
  (fn [[selected-elements multiple-selected?] _]
-   (let [attrs (->> selected-elements
-                    (map utils.el/attributes)
-                    (apply map/merge-common-with
-                           (fn [v1 v2] (if (= v1 v2) v1 nil))))
-         attrs (if multiple-selected?
-                 (dissoc attrs :id)
-                 (sort-by (fn [[id _]]
-                            (-> (first selected-elements)
-                                :tag
-                                (tool/properties)
-                                :attrs
-                                (.indexOf id)))
-                          (utils.el/attributes (first selected-elements))))]
-     (sort-by (fn [[id _]] (.indexOf utils.attr/order id)) attrs))))
+   (when (seq selected-elements)
+     (let [attrs (->> selected-elements
+                      (map utils.el/attributes)
+                      (apply map/merge-common-with
+                             (fn [v1 v2] (if (= v1 v2) v1 nil))))
+           attrs (if multiple-selected?
+                   (dissoc attrs :id)
+                   (sort-by (fn [[id _]]
+                              (-> (first selected-elements)
+                                  :tag
+                                  (tool/properties)
+                                  :attrs
+                                  (.indexOf id)))
+                            (utils.el/attributes (first selected-elements))))]
+       (sort-by (fn [[id _]] (.indexOf utils.attr/order id)) attrs)))))
 
 (rf/reg-sub
  ::bounds
