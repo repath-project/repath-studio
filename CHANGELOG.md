@@ -43,7 +43,7 @@
 - Set parent locked condition
 - Group element bounds
 
-# 0.2.13 (2024-08-13)
+## 0.2.13 (2024-08-13)
 
 **Added**
 
