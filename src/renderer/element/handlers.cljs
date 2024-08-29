@@ -6,7 +6,6 @@
    [clojure.string :as str]
    [hickory.core :as hickory]
    [hickory.zip]
-   [reagent.dom.server :as dom.server]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.element.db :as db]
    [renderer.notification.handlers :as notification.h]
@@ -109,15 +108,12 @@
     (-> (apply update-in db (conj (path db) id) f more)
         (update-bounds id))))
 
-(defn single? [coll]
-  (and (seq coll)
-       (empty? (rest coll))))
-
 (defn siblings-selected?
   [db]
   (let [selected-els (selected db)
         parent-els (set (map :parent selected-els))]
-    (and (single? parent-els)
+    (and (seq parent-els)
+         (empty? (rest parent-els))
          (= (count selected-els)
             (count (children-ids db (first parent-els)))))))
 
@@ -457,7 +453,8 @@
                  (translate id offset)
 
                  ;; REVIEW: Move this part to select tools?
-                 (and (single? (selected db))
+                 (and (seq (selected db))
+                      (empty? (rest (selected db)))
                       (contains? #{:move :clone} (:state db))
                       (not= (:id (parent db id)) hovered-svg-k)
                       (not (element/svg? (element db id))))
@@ -710,12 +707,6 @@
      (= (:tag (element db id)) :path)
      (update-el id path/manipulate action))))
 
-(defn ->string
-  [els]
-  (reduce #(-> (tool/render-to-string %2)
-               dom.server/render-to-static-markup
-               (str "\n" %)) "" els))
-
 (defn import-svg
   [db {:keys [svg label pos]}]
   (let [[x y] pos
@@ -728,11 +719,3 @@
                 (assoc-in [:attrs :x] x)
                 (assoc-in [:attrs :y] y)))))
 
-(defn ->svg
-  [els]
-  (let [dimensions (bounds/->dimensions (element/bounds els))
-        s (->string els)]
-    (cond-> s
-      (not (and (single? els)
-                (element/svg? (first els))))
-      (element/wrap-to-svg dimensions))))

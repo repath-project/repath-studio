@@ -9,7 +9,7 @@
    [:enabled? {:default true} boolean?]
    [:threshold {:default 15} number?]
    [:nearest-neighbor {:optional true} [:map
-                                        [:point math/point]
-                                        [:base-point math/point]
+                                        [:point math/vec2d]
+                                        [:base-point math/vec2d]
                                         [:dist-squared number?]]]
    [:options {:default (set (rest options))} [:set options]]])

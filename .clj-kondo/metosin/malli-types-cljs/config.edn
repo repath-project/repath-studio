@@ -138,11 +138,10 @@
                                                                                                  :selected? :boolean},
                                                                                            :req {:tag :any}}],
                                                                                    :ret :boolean}}},
-                                                                wrap-to-svg {:arities {2 {:args [:string
-                                                                                                 [:seqable
-                                                                                                  :seqable
-                                                                                                  :seqable]],
+                                                                wrap-to-svg {:arities {2 {:args [:string :seqable],
                                                                                           :ret :string}}},
+                                                                ->svg {:arities {1 {:args [:any], :ret :string}}},
+                                                                ->string {:arities {1 {:args [:any], :ret :string}}},
                                                                 bounds {:arities {1 {:args [:any],
                                                                                      :ret :nilable/seqable}}},
                                                                 container? {:arities {1 {:args [{:op :keys,

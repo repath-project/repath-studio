@@ -9,6 +9,7 @@
    [renderer.history.handlers :as history.h]
    [renderer.notification.events :as-alias notification.e]
    [renderer.utils.bounds :as bounds]
+   [renderer.utils.element :as element]
    [renderer.window.effects :as-alias window.fx]
    [renderer.worker.events :as-alias worker.e]))
 
@@ -158,7 +159,7 @@
  ::export-svg
  (fn [{:keys [db]} _]
    (let [els (h/root-children db)
-         svg (h/->svg els)]
+         svg (element/->svg els)]
      (if platform/electron?
        {::window.fx/ipc-invoke {:channel "export"
                                 :data svg}}
@@ -169,7 +170,7 @@
  ::print
  (fn [{:keys [db]} _]
    (let [els (h/root-children db)
-         svg (h/->svg els)]
+         svg (element/->svg els)]
      (if platform/electron?
        {::window.fx/ipc-invoke {:channel "print"
                                 :data svg
@@ -337,7 +338,7 @@
  ::copy
  (fn [{:keys [db]} [_]]
    {:db (h/copy db)
-    ::app.fx/clipboard-write [(h/->svg (h/top-selected-sorted db))]}))
+    ::app.fx/clipboard-write [(element/->svg (h/top-selected-sorted db))]}))
 
 (rf/reg-event-fx
  ::cut
@@ -346,7 +347,7 @@
             (h/copy)
             (h/delete)
             (history.h/finalize "Cut selection"))
-    ::app.fx/clipboard-write [(h/->svg (h/top-selected-sorted db))]}))
+    ::app.fx/clipboard-write [(element/->svg (h/top-selected-sorted db))]}))
 
 (rf/reg-event-fx
  ::trace

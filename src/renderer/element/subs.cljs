@@ -8,7 +8,7 @@
    [renderer.tool.base :as tool]
    [renderer.utils.attribute :as utils.attr]
    [renderer.utils.element :as utils.el]
-   [renderer.utils.map :as map]))
+   [renderer.utils.map :as utils.map]))
 
 (rf/reg-sub
  ::root
@@ -26,7 +26,7 @@
  ::xml
  :<- [::root-children]
  (fn [root-children _]
-   (-> (h/->string root-children)
+   (-> (utils.el/->string root-children)
        (js-beautify/html #js {:indent_size 2}))))
 
 (rf/reg-sub
@@ -94,7 +94,7 @@
    (when (seq selected-elements)
      (let [attrs (->> selected-elements
                       (map utils.el/attributes)
-                      (apply map/merge-common-with
+                      (apply utils.map/merge-common-with
                              (fn [v1 v2] (if (= v1 v2) v1 nil))))
            attrs (if multiple-selected?
                    (dissoc attrs :id)

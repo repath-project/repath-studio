@@ -4,6 +4,7 @@
    ["paperjs-offset" :refer [PaperOffset]]
    [clojure.core.matrix :as mat]
    [malli.experimental :as mx]
+   [reagent.dom.server :as dom.server]
    [renderer.element.db :as element.db]
    [renderer.snap.db :as snap.db]
    [renderer.tool.base :as tool]
@@ -31,34 +32,34 @@
     (when (seq el-bounds)
       (apply bounds/union el-bounds))))
 
-(mx/defn offset :- math/point
+(mx/defn offset :- math/vec2d
   [el :- element.db/element]
   (let [el-bounds (:bounds el)
         local-bounds (tool/bounds el)]
     (vec (take 2 (mat/sub el-bounds local-bounds)))))
 
-(mx/defn snapping-points :- [:* math/point]
+(mx/defn snapping-points :- [:* math/vec2d]
   [element :- element.db/element, options :- [:set snap.db/options]]
   (let [points (or (tool/snapping-points element) [])]
-   (if-let [bounds (:bounds element)]
-     (let [[x1 y1 x2 y2] bounds
-           [cx cy] (bounds/center bounds)]
-       (cond-> points
-         (:corners options)
-         (into [[x1 y1]
-                [x1 y2]
-                [x2 y1]
-                [x2 y2]])
+    (if-let [bounds (:bounds element)]
+      (let [[x1 y1 x2 y2] bounds
+            [cx cy] (bounds/center bounds)]
+        (cond-> points
+          (:corners options)
+          (into [[x1 y1]
+                 [x1 y2]
+                 [x2 y1]
+                 [x2 y2]])
 
-         (:centers options)
-         (into [[cx cy]])
+          (:centers options)
+          (into [[cx cy]])
 
-         (:midpoints options)
-         (into [[x1 cy]
-                [x2 cy]
-                [cx y1]
-                [cx y2]])))
-     points)))
+          (:midpoints options)
+          (into [[x1 cy]
+                 [x2 cy]
+                 [cx y1]
+                 [cx y2]])))
+      points)))
 
 (mx/defn attrs-map :- element.db/attrs
   [attrs]
@@ -124,5 +125,21 @@
         (assoc-in [:attrs :fill] (:stroke attrs)))))
 
 (mx/defn wrap-to-svg :- string?
-  [s :- string?, [w h]]
+  [s :- string?, [w h] :- math/vec2d]
   (str "<svg width='" w "' height='" h "'>" s "</svg>"))
+
+(mx/defn ->string :- string?
+  [els]
+  (reduce #(-> (tool/render-to-string %2)
+               (dom.server/render-to-static-markup)
+               (str "\n" %)) "" els))
+
+(mx/defn ->svg :- string?
+  [els]
+  (let [dimensions (bounds/->dimensions (bounds els))
+        s (->string els)]
+    (cond-> s
+      (not (and (seq els)
+                (empty? (rest els))
+                (svg? (first els))))
+      (wrap-to-svg dimensions))))

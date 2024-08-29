@@ -16,6 +16,6 @@
 (def history
   [:map {:default {} :closed true}
    [:zoom {:optional true :default 0.5} number?]
-   [:translate {:optional true} math/point]
+   [:translate {:optional true} math/vec2d]
    [:position {:optional true} keyword?]
    [:states {:default {}} [:map-of keyword? state]]])
