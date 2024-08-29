@@ -1,8 +1,8 @@
 (ns renderer.theme.events
   (:require
    [re-frame.core :as rf]
-   [renderer.theme.effects :as fx]
-   [renderer.utils.local-storage :as local-storage]))
+   [renderer.app.events :refer [persist]]
+   [renderer.theme.effects :as fx]))
 
 (rf/reg-event-fx
  ::add-native-listener
@@ -18,14 +18,14 @@
 
 (rf/reg-event-fx
  ::set-native-mode
- local-storage/persist
+ persist
  (fn [{:keys [db]} [_ mode]]
    {:db (assoc-in db [:theme :native] mode)
     :dispatch [::set-document-attr]}))
 
 (rf/reg-event-fx
  ::cycle-mode
- local-storage/persist
+ persist
  (fn [{:keys [db]} [_]]
    (let [mode (case (-> db :theme :mode)
                 :dark :light

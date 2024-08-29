@@ -89,9 +89,9 @@
 (def default (m/decode app {:version config/version} mt/default-value-transformer))
 
 (def persistent-keys
-  "Top level keys that should be persisted"
+  "Top level keys that should be persisted to lcoal storage."
   (->> app
-       m/children
+       (m/children)
        (filter (fn [[_key props]] (:persisted props)))
        (map first)))
 
