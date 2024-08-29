@@ -1,5 +1,7 @@
 (ns renderer.app.events
   (:require
+   [akiroz.re-frame.storage :as rf.storage]
+   [config :as config]
    [platform :as platform]
    [re-frame.core :as rf]
    [renderer.app.db :as db]
@@ -8,7 +10,6 @@
    [renderer.frame.handlers :as frame.h]
    [renderer.notification.events :as-alias notification.e]
    [renderer.tool.base :as tool]
-   [renderer.utils.local-storage :as local-storage]
    [renderer.utils.pointer :as pointer]
    [renderer.window.effects :as-alias window.fx]))
 
@@ -23,6 +24,9 @@
                     (rf/assoc-effect :db (assoc db :fx []))))))))
 
 (rf/reg-global-interceptor custom-fx)
+
+(def persist
+  (rf.storage/persist-db-keys config/app-key db/persistent-keys))
 
 (rf/reg-event-db
  ::initialize-db
@@ -92,7 +96,7 @@
 
 (rf/reg-event-db
  ::toggle-rulers
- local-storage/persist
+ persist
  (fn [db [_]]
    (update db :rulers-visible? not)))
 
@@ -103,14 +107,13 @@
 
 (rf/reg-event-db
  ::toggle-grid
- local-storage/persist
+ persist
  (fn [db [_]]
    (update db :grid-visible? not)))
 
 (rf/reg-event-db
  ::toggle-panel
- [local-storage/persist
-  (rf/path :panels)]
+ [persist (rf/path :panels)]
  (fn [db [_ k]]
    (update-in db [k :visible?] not)))
 

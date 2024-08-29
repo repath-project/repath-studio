@@ -4,10 +4,10 @@
    [config :as config]
    [promesa.core :as p]
    [re-frame.core :as rf]
+   [renderer.app.db :as db]
    [renderer.app.events :as-alias e]
    [renderer.utils.data-transfer :as data-transfer]
-   [renderer.utils.dom :as dom]
-   [renderer.utils.local-storage :as local-storage]))
+   [renderer.utils.dom :as dom]))
 
 (rf.storage/reg-co-fx! config/app-key {:cofx :store})
 
@@ -25,12 +25,12 @@
 (rf/reg-fx
  ::local-storage-persist
  (fn [data]
-   (local-storage/->store! data)))
+   (rf.storage/->store config/app-key (select-keys data db/persistent-keys))))
 
 (rf/reg-fx
  ::local-storage-clear
  (fn []
-   (local-storage/clear!)))
+   (rf.storage/->store config/app-key {})))
 
 (rf/reg-fx
  ::clipboard-write

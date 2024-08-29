@@ -1,32 +1,32 @@
 (ns renderer.history.events
   (:require
    [re-frame.core :as rf]
+   [renderer.app.events :refer [persist]]
    [renderer.app.handlers :as handlers]
    [renderer.element.handlers :as element.h]
-   [renderer.history.handlers :as h]
-   [renderer.utils.local-storage :as local-storage]))
+   [renderer.history.handlers :as h]))
 
 (rf/reg-event-db
  ::undo
- local-storage/persist
+ persist
  (fn [db _]
    (h/undo db)))
 
 (rf/reg-event-db
  ::redo
- local-storage/persist
+ persist
  (fn [db _]
    (h/redo db)))
 
 (rf/reg-event-db
  ::undo-by
- local-storage/persist
+ persist
  (fn [db [_ n]]
    (h/undo db n)))
 
 (rf/reg-event-db
  ::redo-by
- local-storage/persist
+ persist
  (fn [db [_ n]]
    (h/redo db n)))
 
@@ -37,13 +37,13 @@
 
 (rf/reg-event-db
  ::move
- local-storage/persist
+ persist
  (fn [db [_ id]]
    (h/move db id)))
 
 (rf/reg-event-db
  ::clear
- local-storage/persist
+ persist
  (fn [db _]
    (h/clear db)))
 

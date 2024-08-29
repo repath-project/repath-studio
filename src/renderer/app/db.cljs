@@ -24,15 +24,15 @@
    keyword? [:map [:visible? boolean?]]])
 
 (def dom-rect
- [:map {:closed true}
-  [:x number?]
-  [:y number?]
-  [:width number?]
-  [:height number?]
-  [:top number?]
-  [:right number?]
-  [:bottom number?]
-  [:left number?]])
+  [:map {:closed true}
+   [:x number?]
+   [:y number?]
+   [:width number?]
+   [:height number?]
+   [:top number?]
+   [:right number?]
+   [:bottom number?]
+   [:left number?]])
 
 (def tool
   [:fn {:error/fn (fn [{:keys [value]} _] (str value ", is not a supported tool"))}
@@ -49,17 +49,17 @@
    [:drag? {:optional true} boolean?]
    [:zoom-sensitivity {:default 0.75} [:and number? pos?]]
    [:state {:default :default} keyword?]
-   [:grid-visible? {:default false} boolean?]
-   [:rulers-visible? {:default true} boolean?]
+   [:grid-visible? {:default false :persisted true} boolean?]
+   [:rulers-visible? {:default true :persisted true} boolean?]
    [:snap snap.db/snap]
-   [:active-document {:optional true} [:maybe keyword?]]
+   [:active-document {:optional true :persisted true} [:maybe keyword?]]
    [:cursor {:default "default"} string?]
    [:dom-rect {:optional true} dom-rect]
    [:rulers-locked? {:default false} boolean?]
    [:dialogs {:default []} [:vector dialog.db/dialog]]
-   [:documents {:default {}} [:map-of keyword? document.db/document]]
-   [:document-tabs {:default []} [:vector keyword?]]
-   [:recent {:max 10 :default []} [:vector string?]]
+   [:documents {:default {} :persisted true} [:map-of keyword? document.db/document]]
+   [:document-tabs {:default [] :persisted true} [:vector keyword?]]
+   [:recent {:max 10 :default [] :persisted true} [:vector string?]]
    [:drag-threshold {:default 1} number?]
    [:system-fonts {:optional true} vector?]
    [:notifications {:default []} vector?]
@@ -70,10 +70,10 @@
    [:repl-mode {:default :cljs} keyword?]
    [:worker {:default {:tasks {}}} [:map [:tasks map?]]]
    [:window window.db/window]
-   [:theme theme.db/theme]
+   [:theme {:persisted true} theme.db/theme]
    [:timeline timeline.db/timeline]
-   [:panels panels]
-   [:version {:optional true} string?]
+   [:panels {:persisted true} panels]
+   [:version {:optional true :persisted true} string?]
    [:fx {:default []} vector?]
    [:pivot-point {:optional true} math/point]
    [:clicked-element {:optional true} [:or element.db/element element.db/handle]]
@@ -87,3 +87,12 @@
 (def valid? (m/validator app))
 
 (def default (m/decode app {:version config/version} mt/default-value-transformer))
+
+(def persistent-keys
+  "Top level keys that should be persisted"
+  (->> app
+       m/children
+       (filter (fn [[_key props]] (:persisted props)))
+       (map first)))
+
+

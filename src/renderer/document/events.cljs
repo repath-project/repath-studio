@@ -4,14 +4,13 @@
    [platform :as platform]
    [re-frame.core :as rf]
    [re-frame.interceptor :refer [->interceptor get-effect get-coeffect assoc-coeffect assoc-effect]]
-   [renderer.app.events :as-alias app.e]
+   [renderer.app.events :as-alias app.e :refer [persist]]
    [renderer.dialog.events :as-alias dialog.e]
    [renderer.dialog.handlers :as dialog.h]
    [renderer.dialog.views :as dialog.v]
    [renderer.document.effects :as fx]
    [renderer.document.handlers :as h]
    [renderer.history.handlers :as history.h]
-   [renderer.utils.local-storage :as local-storage]
    [renderer.utils.vec :as vec]
    [renderer.window.effects :as-alias window.fx]))
 
@@ -43,7 +42,7 @@
 
 (rf/reg-event-db
  ::center
- local-storage/persist
+ persist
  (fn [db [_]]
    (h/center db)))
 
@@ -55,19 +54,19 @@
 
 (rf/reg-event-db
  ::collapse-el
- [local-storage/persist active-path]
+ [persist active-path]
  (fn [db [_ id]]
    (update db :collapsed-ids conj id)))
 
 (rf/reg-event-db
  ::expand-el
- [local-storage/persist active-path]
+ [persist active-path]
  (fn [db [_ id]]
    (update db :collapsed-ids disj id)))
 
 (rf/reg-event-db
  ::toggle-filter
- [local-storage/persist active-path]
+ [persist active-path]
  (fn [db [_ id]]
    (if (= (:filter db) id)
      (dissoc db :filter)
@@ -81,7 +80,7 @@
 
 (rf/reg-event-db
  ::swap-colors
- [local-storage/persist active-path]
+ [persist active-path]
  (fn [db [_]]
    (assoc db
           :fill (:stroke db)
@@ -89,7 +88,7 @@
 
 (rf/reg-event-db
  ::set-fill
- local-storage/persist
+ persist
  (fn [db [_ color]]
    (-> db
        (h/set-global-attr :fill color)
@@ -97,7 +96,7 @@
 
 (rf/reg-event-db
  ::set-stroke
- local-storage/persist
+ persist
  (fn [db [_ color]]
    (-> db
        (h/set-global-attr :stroke color)
@@ -105,7 +104,7 @@
 
 (rf/reg-event-db
  ::close
- local-storage/persist
+ persist
  (fn [db [_ id confirm?]]
    (if (or (h/saved? db id) (not confirm?))
      (h/close db id)
@@ -117,13 +116,13 @@
                            :attrs {:onOpenAutoFocus #(.preventDefault %)}})))))
 (rf/reg-event-fx
  ::close-active
- local-storage/persist
+ persist
  (fn [{:keys [db]} [_]]
    {:dispatch [::close (:active-document db) true]}))
 
 (rf/reg-event-db
  ::close-all-saved
- local-storage/persist
+ persist
  (fn [db [_]]
    (let [saved (filter #(h/saved? db %) (:document-tabs db))]
      (reduce h/close db saved))))
@@ -142,7 +141,7 @@
 
 (rf/reg-event-db
  ::scroll
- local-storage/persist
+ persist
  (fn [db [_ direction]]
    (let [document-tabs (:document-tabs db)
          index (.indexOf document-tabs (:active-document db))
@@ -154,7 +153,7 @@
 
 (rf/reg-event-db
  ::swap-position
- local-storage/persist
+ persist
  (fn [db [_ dragged-key swapped-key]]
    (let [document-tabs (:document-tabs db)
          dragged-index (.indexOf document-tabs dragged-key)
@@ -163,13 +162,13 @@
 
 (rf/reg-event-db
  ::new
- [local-storage/persist focus-canvas]
+ [persist focus-canvas]
  (fn [db [_]]
    (h/create db)))
 
 (rf/reg-event-db
  ::init
- [local-storage/persist focus-canvas]
+ [persist focus-canvas]
  (fn [db [_]]
    (cond-> db
      (not (:active-document db))
@@ -177,13 +176,13 @@
 
 (rf/reg-event-db
  ::new-from-template
- local-storage/persist
+ persist
  (fn [db [_ size]]
    (h/create db size)))
 
 (rf/reg-event-fx
  ::open
- local-storage/persist
+ persist
  (fn [_ [_ file-path]]
    (if platform/electron?
      {::window.fx/ipc-invoke {:channel "open-documents"
@@ -199,7 +198,7 @@
 
 (rf/reg-event-db
  ::load
- [local-storage/persist focus-canvas]
+ [persist focus-canvas]
  (fn [db [_ documents]]
    (-> (reduce h/load db documents)
        h/center)))
@@ -247,7 +246,7 @@
 
 (rf/reg-event-db
  ::saved
- local-storage/persist
+ persist
  (fn [db [_ {:keys [path id] :as document-info}]]
    ;; Update the path, the title and the saved position of the document.
    ;; Any other changes that could happen while saving should be preserved.
@@ -263,13 +262,13 @@
 
 (rf/reg-event-db
  ::clear-recent
- local-storage/persist
+ persist
  (fn [db [_]]
    (assoc db :recent [])))
 
 (rf/reg-event-db
  ::set-active
- local-storage/persist
+ persist
  (fn [db [_ id]]
    (-> db
        (h/set-active id)

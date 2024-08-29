@@ -3,14 +3,14 @@
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
    [renderer.app.effects :as-alias app.fx]
+   [renderer.app.events :refer [persist]]
    [renderer.document.events :as-alias document.e]
    [renderer.element.handlers :as element.h]
-   [renderer.frame.handlers :as h]
-   [renderer.utils.local-storage :as local-storage]))
+   [renderer.frame.handlers :as h]))
 
 (rf/reg-event-db
  ::resize
- local-storage/persist
+ persist
  (fn [db [_ dom-rect]]
    (-> db
        #_(h/recenter-to-dom-rect dom-rect)
@@ -18,32 +18,32 @@
 
 (rf/reg-event-db
  ::focus-selection
- local-storage/persist
+ persist
  (fn [db [_ focus-type]]
    (h/focus-bounds db focus-type)))
 
 (rf/reg-event-db
  ::set-zoom
- local-storage/persist
+ persist
  (fn [db [_ zoom]]
    (let [current-zoom (get-in db [:documents (:active-document db) :zoom])]
      (h/zoom-by db (/ zoom current-zoom)))))
 
 (rf/reg-event-db
  ::zoom-in
- local-storage/persist
+ persist
  (fn [db [_ _]]
    (h/zoom-by db (/ 1 (:zoom-sensitivity db)))))
 
 (rf/reg-event-db
  ::zoom-out
- local-storage/persist
+ persist
  (fn [db [_ _]]
    (h/zoom-by db (:zoom-sensitivity db))))
 
 (rf/reg-event-db
  ::pan-to-bounds
- local-storage/persist
+ persist
  (fn [db [_ bounds]]
    (cond-> db
      (= (:state db) :default)
