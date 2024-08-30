@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.0 (2024-08-30)
+
+**Added**
+
+- Document migrations
+
+**Changed**
+
+- **[BREAKING]**: Switch to uuids
+
+
 ## 0.3.0 (2024-08-29)
 
 **Added**
@@ -19,7 +30,7 @@
 
 **Changed**
 
-- [BREAKING]: Use :id instead of :key to avoid shadowing
+- **[BREAKING]**: Use `:id` instead of `:key` to avoid shadowing
 - Enhance image performance
 - Scrollbars
 - Enhance mobile view
