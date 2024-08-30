@@ -1,13 +1,13 @@
 (ns renderer.document.handlers
   (:require
    [config :as config]
+   [malli.error :as me]
    [renderer.document.db :as db]
    [renderer.element.handlers :as element.h]
    [renderer.frame.handlers :as frame.h]
    [renderer.history.handlers :as history.h]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
-   [renderer.utils.spec :as spec]
    [renderer.utils.uuid :as uuid]
    [renderer.utils.vec :as vec]))
 
@@ -126,7 +126,7 @@
         (-> (add-recent (:path document))
             (set-active (:id document))))
 
-      (let [explanation (spec/explain document db/document)]
+      (let [explanation (-> document db/explain me/humanize str)]
         (notification.h/add db [notification.v/spec-failed "Load document" explanation])))))
 
 (defn saved?

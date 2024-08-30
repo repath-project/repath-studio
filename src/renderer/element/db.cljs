@@ -48,6 +48,10 @@
 
 (def valid? (m/validator element))
 
+(def explain (m/explainer element))
+
+(def explain-elements (m/explainer elements))
+
 (def default (m/decode element {:type :element
                                 :visible? true
                                 :children []} mt/default-value-transformer))

@@ -27,5 +27,7 @@
 
 (def valid? (m/validator document))
 
+(def explain (m/explainer document))
+
 (def default (m/decode document {} mt/default-value-transformer))
 

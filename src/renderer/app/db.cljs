@@ -86,6 +86,8 @@
 
 (def valid? (m/validator app))
 
+(def explain (m/explainer app))
+
 (def default (m/decode app {:version config/version} mt/default-value-transformer))
 
 (def persistent-keys

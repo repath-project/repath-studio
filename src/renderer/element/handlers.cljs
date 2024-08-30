@@ -6,6 +6,7 @@
    [clojure.string :as str]
    [hickory.core :as hickory]
    [hickory.zip]
+   [malli.error :as me]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.element.db :as db]
    [renderer.notification.handlers :as notification.h]
@@ -17,7 +18,6 @@
    [renderer.utils.element :as element]
    [renderer.utils.hiccup :as hiccup]
    [renderer.utils.map :as map]
-   [renderer.utils.spec :as spec]
    [renderer.utils.uuid :as uuid]
    [renderer.utils.vec :as vec]))
 
@@ -548,7 +548,7 @@
     (if-not (db/valid? new-el)
       (notification.h/add db [notification.v/spec-failed
                               "Invalid element"
-                              (spec/explain new-el db/element)])
+                              (-> db/explain new-el me/humanize str)])
 
       (cond-> db
         :always

@@ -1,13 +1,13 @@
 (ns renderer.history.handlers
   (:require
    [malli.core :as m]
+   [malli.error :as me]
    [renderer.app.events :as-alias app.e]
    [renderer.app.handlers :as app.h]
    [renderer.element.db :as element.db]
    [renderer.element.handlers :as element.h]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
-   [renderer.utils.spec :as spec]
    [renderer.utils.uuid :as uuid]
    [renderer.utils.vec :as vec]))
 
@@ -161,7 +161,9 @@
          (app.h/add-fx [:dispatch [::app.e/local-storage-persist]])))
       (-> (swap db)
           (notification.h/add
-           [notification.v/spec-failed explanation (spec/explain elements element.db/elements)])))))
+           [notification.v/spec-failed
+            explanation
+            (-> elements element.db/explain-elements me/humanize str)])))))
 
 (defn clear
   [db]

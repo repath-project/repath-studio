@@ -8,15 +8,14 @@
    [malli.dev.cljs :as dev]
    [re-frame.core :as rf]
    [renderer.app.db :as app.db]
-   [renderer.core]
-   [renderer.utils.spec :as spec]))
+   [renderer.core]))
 
 (defn check-and-throw
   "Throws an exception if `db` doesn't match the Spec"
   [db event]
   (when (not (app.db/valid? db))
     (js/console.error (str "Event: " (first event)))
-    (throw (js/Error. (str "Spec check failed: " (spec/explain db app.db/app))))))
+    (throw (js/Error. (str "Spec check failed: " (app.db/explain db))))))
 
 (def schema-validator
   (rf/->interceptor
