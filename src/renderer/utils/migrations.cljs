@@ -6,31 +6,31 @@
 (def key->uuid (comp uuid name))
 
 (def migrations
-  [[[0 3] (fn [document]
-            (-> document
-                (set/rename-keys {:key :id})
-                (update :elements
-                        update-vals
-                        #(-> %
-                             (set/rename-keys {:key :id})
-                             (map/remove-nils)))))]
-
-   [[0 4] (fn [document]
-            (cond-> document
-              (:id document)
-              (update :id key->uuid)
-
-              (:save document)
-              (assoc :save (random-uuid))
-
-              :always
-              (-> (update :elements update-keys key->uuid)
+  [[[0 3 0] (fn [document]
+              (-> document
+                  (set/rename-keys {:key :id})
                   (update :elements
                           update-vals
-                          #(cond-> %
-                             :always
-                             (-> (update :id key->uuid)
-                                 (update :children (fn [ks] (mapv key->uuid ks))))
+                          #(-> %
+                               (set/rename-keys {:key :id})
+                               (map/remove-nils)))))]
 
-                             (:parent %)
-                             (update :parent key->uuid))))))]])
+   [[0 4 0] (fn [document]
+              (cond-> document
+                (:id document)
+                (update :id key->uuid)
+
+                (:save document)
+                (assoc :save (random-uuid))
+
+                :always
+                (-> (update :elements update-keys key->uuid)
+                    (update :elements
+                            update-vals
+                            #(cond-> %
+                               :always
+                               (-> (update :id key->uuid)
+                                   (update :children (fn [ks] (mapv key->uuid ks))))
+
+                               (:parent %)
+                               (update :parent key->uuid))))))]])

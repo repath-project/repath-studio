@@ -199,7 +199,10 @@
                                                               unit->key {:arities {1 {:args [:string], :ret :keyword}}},
                                                               ->px {:arities {2 {:args [:number :string], :ret :number}}},
                                                               parse-unit {:arities {1 {:args [:any], :ret :seqable}}}},
-                                        renderer.utils.pointer {significant-drag? {:arities {3 {:args [:seqable
+                                        renderer.utils.pointer {ctrl? {:arities {1 {:args [:any], :ret :boolean}}},
+                                                                shift? {:arities {1 {:args [:any], :ret :boolean}}},
+                                                                alt? {:arities {1 {:args [:any], :ret :boolean}}},
+                                                                significant-drag? {:arities {3 {:args [:seqable
                                                                                                        :seqable
                                                                                                        :number],
                                                                                                 :ret :boolean}}},
@@ -231,14 +234,19 @@
                                                                                                    :min-arity 1}}},
                                                             remove-nils {:arities {1 {:args [:map], :ret :map}}}},
                                         renderer.utils.compatibility {version->table {:arities {1 {:args [:nilable/string],
-                                                                                                   :ret {:op :keys,
-                                                                                                         :req {:major :any,
-                                                                                                               :minor :any,
-                                                                                                               :patch :any},
-                                                                                                         :nilable true}}}},
+                                                                                                   :ret :nilable/seqable}}},
                                                                       compatible? {:arities {:varargs {:args [{:op :rest,
                                                                                                                :spec :nilable/string}],
                                                                                                        :ret :boolean,
                                                                                                        :min-arity 0}}},
+                                                                      requires-migration? {:arities {2 {:args [:map
+                                                                                                               :seqable],
+                                                                                                        :ret :boolean}}},
                                                                       migrate-document {:arities {1 {:args [:map],
-                                                                                                     :ret :map}}}}}}}}
+                                                                                                     :ret {:op :keys,
+                                                                                                           :opt {:path :nilable/string,
+                                                                                                                 :save :any,
+                                                                                                                 :version :string},
+                                                                                                           :req {:id :any,
+                                                                                                                 :title :string,
+                                                                                                                 :elements :map}}}}}}}}}}

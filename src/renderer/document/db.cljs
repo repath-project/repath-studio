@@ -2,6 +2,7 @@
   (:require
    [malli.core :as m]
    [malli.transform :as mt]
+   [malli.util :as mu]
    [renderer.element.db :as element.db]
    [renderer.history.db :as history.db]))
 
@@ -24,6 +25,8 @@
    [:pan {:default [0 0]} [:tuple number? number?]]
    [:elements element.db/elements]
    [:focused? {:optional true} boolean?]])
+
+(def persisted (mu/select-keys document [:id :title :path :save :version :elements]))
 
 (def valid? (m/validator document))
 

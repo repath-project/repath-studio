@@ -112,8 +112,7 @@
 (defn load
   [db document]
   (let [open-document-id (search-by-path db (:path document))
-        compatible? (compatibility/compatible? (:version db) (:version document))
-        migrated-document (cond-> document (not compatible?) (compatibility/migrate-document))
+        migrated-document (compatibility/migrate-document document)
         migrated? (not= document migrated-document)
         document (-> (merge db/default migrated-document)
                      (assoc :id (or open-document-id (random-uuid))))]

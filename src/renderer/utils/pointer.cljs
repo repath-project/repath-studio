@@ -6,15 +6,15 @@
    [renderer.app.events :as-alias app.e]
    [renderer.utils.math :as math]))
 
-(defn ctrl?
+(mx/defn ctrl? :- boolean?
   [e]
   (contains? (:modifiers e) :ctrl))
 
-(defn shift?
+(mx/defn shift? :- boolean?
   [e]
   (contains? (:modifiers e) :shift))
 
-(defn alt?
+(mx/defn alt? :- boolean?
   [e]
   (contains? (:modifiers e) :alt))
 
