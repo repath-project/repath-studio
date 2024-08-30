@@ -8,11 +8,11 @@
 (def migrations
   [[[0 3] (fn [document]
             (-> document
-                (set/rename-keys {:id :key})
+                (set/rename-keys {:key :id})
                 (update :elements
                         update-vals
                         #(-> %
-                             (set/rename-keys {:id :key})
+                             (set/rename-keys {:key :id})
                              (map/remove-nils)))))]
 
    [[0 4] (fn [document]
