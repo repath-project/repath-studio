@@ -78,4 +78,4 @@
                              (pointer/event-handler % el))
          :on-double-click pointer-handler})]
       (for [el (merge child-els)]
-        ^{:key (name (:id el))} [tool/render el])]]))
+        ^{:key (:id el)} [tool/render el])]]))

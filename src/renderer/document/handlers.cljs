@@ -1,6 +1,5 @@
 (ns renderer.document.handlers
   (:require
-   [config :as config]
    [malli.error :as me]
    [renderer.document.db :as db]
    [renderer.element.handlers :as element.h]
@@ -8,7 +7,7 @@
    [renderer.history.handlers :as history.h]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
-   [renderer.utils.uuid :as uuid]
+   [renderer.utils.compatibility :as compatibility]
    [renderer.utils.vec :as vec]))
 
 (defn save-format
@@ -19,7 +18,7 @@
                       (get-in [:documents id])
                       (select-keys [:elements :path :id])
                       (assoc :save (history.h/position db)
-                             :version config/version))]
+                             :version (:version db)))]
 
      (reduce #(update-in %1 [:elements %2] dissoc :selected?)
              document
@@ -76,7 +75,7 @@
 
 (defn create-tab
   [db document]
-  (let [id (or (:id document) (uuid/generate-unique #(get-in db [:documents %])))
+  (let [id (or (:id document) (random-uuid))
         title (or (:title document) (new-title db))
         active-index (.indexOf (:document-tabs db) (:active-document db))
         document (merge document {:id id :title title})]
@@ -112,13 +111,16 @@
 
 (defn load
   [db document]
-  (let [open-id (search-by-path db (:path document))
-        document (-> (merge db/default document)
-                     (assoc :id (or open-id (uuid/generate-unique #(get-in db [:documents %])))))]
+  (let [open-document-id (search-by-path db (:path document))
+        compatible? (compatibility/compatible? (:version db) (:version document))
+        migrated-document (cond-> document (not compatible?) (compatibility/migrate-document))
+        migrated? (not= document migrated-document)
+        document (-> (merge db/default migrated-document)
+                     (assoc :id (or open-document-id (random-uuid))))]
     (if (db/valid? document)
       (cond-> db
-        (not open-id)
-        (-> (create-tab (dissoc document :save))
+        (not open-document-id)
+        (-> (create-tab (cond-> document (not migrated?) (dissoc :save)))
             (center)
             (history.h/finalize "Load document"))
 

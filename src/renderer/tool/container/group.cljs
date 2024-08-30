@@ -36,7 +36,7 @@
   (let [child-els @(rf/subscribe [::element.s/filter-visible children])]
     [:g (update attrs :style parse)
      (for [child child-els]
-       ^{:key (name (:id child))} [tool/render child])
+       ^{:key (:id child)} [tool/render child])
      (when bounds
        (let [ignored-ids @(rf/subscribe [::document.s/ignored-ids])
              ignored? (contains? ignored-ids (:id el))

@@ -26,25 +26,25 @@
    [:y {:optional true} number?]
    [:size {:optional true} number?]
    [:stroke-width {:optional true} number?]
-   [:element {:optional true} keyword?]])
+   [:element {:optional true} uuid?]])
 
 (def element
   [:map {:closed true}
-   [:id {:optional true} keyword?]
+   [:id {:optional true} uuid?]
    [:tag tag]
    [:label {:optional true} string?]
-   [:parent {:optional true} keyword?]
+   [:parent {:optional true} uuid?]
    [:type {:optional true} [:= :element]]
    [:visible? {:optional true} boolean?]
    [:locked? {:optional true} boolean?]
    [:selected? {:optional true} boolean?]
-   [:children {:default [] :optional true} [:vector keyword?]]
+   [:children {:default [] :optional true} [:vector uuid?]]
    [:bounds {:optional true} bounds/bounds]
    [:content {:optional true} string?]
    [:attrs {:optional true} attrs]])
 
 (def elements
-  [:map-of {:default {}} keyword? element])
+  [:map-of {:default {}} uuid? element])
 
 (def valid? (m/validator element))
 

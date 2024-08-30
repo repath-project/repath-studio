@@ -58,7 +58,7 @@
         zoom @(rf/subscribe [::document.s/zoom])
         straight? (< angle 180)
         straight-angle (if straight? angle (- angle 360))]
-    [:g {:key (name id)}
+    [:g {:key id}
      [overlay/cross x1 y1]
      [overlay/cross x2 y2]
 

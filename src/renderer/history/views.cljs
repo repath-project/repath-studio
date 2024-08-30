@@ -14,16 +14,16 @@
 (defn select-options
   [history-list]
   (for [{:keys [id explanation]} history-list]
-    ^{:key (name id)}
+    ^{:key id}
     [:> Select/Item
-     {:value (name id)
+     {:value (str id)
       :class "menu-item select-item"}
      [:> Select/ItemText explanation]]))
 
 (defn select
   [label options disabled?]
   [:> Select/Root
-   {:onValueChange #(rf/dispatch [::history.e/move (keyword %)])
+   {:onValueChange #(rf/dispatch [::history.e/move (uuid %)])
     :disabled disabled?}
    [:> Select/Trigger
     {:aria-label label

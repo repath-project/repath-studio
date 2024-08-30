@@ -103,7 +103,7 @@
                      :width (+ width 20)
                      :height height}
      [:input
-      {:key (name id)
+      {:key id
        :default-value content
        :auto-focus true
        :on-focus #(.. % -target select)

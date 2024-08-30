@@ -40,7 +40,7 @@
   (let [zoom @(rf/subscribe [::document.s/zoom])
         clicked-element @(rf/subscribe [::app.s/clicked-element])
         pointer-handler #(pointer/event-handler % el)]
-    [:circle {:key (name id)
+    [:circle {:key id
               :cx x
               :cy y
               :stroke accent
@@ -145,7 +145,7 @@
 
 (defn scale-handler
   [props]
-  ^{:key (name (:id props))}
+  ^{:key (:id props)}
   [square-handle (merge props {:type :handle
                                :tag :scale})])
 

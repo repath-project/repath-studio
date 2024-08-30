@@ -10,6 +10,7 @@
    [renderer.frame.handlers :as frame.h]
    [renderer.notification.events :as-alias notification.e]
    [renderer.tool.base :as tool]
+   [renderer.utils.compatibility :as compatibility]
    [renderer.utils.pointer :as pointer]
    [renderer.window.effects :as-alias window.fx]))
 
@@ -25,27 +26,19 @@
 
 (rf/reg-global-interceptor custom-fx)
 
-(def persist
-  (rf.storage/persist-db-keys config/app-key db/persistent-keys))
+(def persist (rf.storage/persist-db-keys config/app-key db/persistent-keys))
 
 (rf/reg-event-db
  ::initialize-db
  (fn [_ _]
    db/default))
 
-(defn compatible-versions?
-  [v1 v2]
-  (let [reg #"(\d+\.)?(\d+\.)"]
-    (when (and (string? v1) (string? v2))
-      (= (re-find reg v1) (re-find reg v2)))))
-
 (rf/reg-event-fx
  ::load-local-db
  [(rf/inject-cofx :store)]
  (fn [{:keys [db store]} _]
-   (let [compatible? (compatible-versions? (:version db) (:version store))]
+   (let [compatible? (compatibility/compatible? (:version db) (:version store))]
      {:db (cond-> db compatible? (merge db store))
-      ;; TODO: Introduce migrations to handle this gracefully.
       :fx [(when-not compatible? [::fx/local-storage-clear nil])]})))
 
 (rf/reg-event-fx

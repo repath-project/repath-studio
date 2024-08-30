@@ -65,7 +65,7 @@
 (defn close-button
   [id saved?]
   [:button.close-document-button.small.hover:bg-transparent
-   {:key (name id)
+   {:key id
     :title "Close document"
     :on-pointer-down #(.stopPropagation %)
     :on-pointer-up (fn [e]
@@ -110,7 +110,7 @@
                               1 (rf/dispatch [::document.e/set-active id])
                               nil)
           :draggable true
-          :on-drag-start #(.setData (.-dataTransfer %) "id" (name id))
+          :on-drag-start #(.setData (.-dataTransfer %) "id" (str id))
           :on-drag-over #(.preventDefault %)
           :on-drag-enter #(reset! dragged-over? true)
           :on-drag-leave #(reset! dragged-over? false)
@@ -120,7 +120,7 @@
                      (rf/dispatch [::document.e/swap-position
                                    (-> (.-dataTransfer evt)
                                        (.getData "id")
-                                       keyword)
+                                       uuid)
                                    id]))}
          [:span.truncate.pointer-events-none
           (:title document)]

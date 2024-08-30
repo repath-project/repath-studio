@@ -18,7 +18,6 @@
    [renderer.utils.element :as element]
    [renderer.utils.hiccup :as hiccup]
    [renderer.utils.map :as map]
-   [renderer.utils.uuid :as uuid]
    [renderer.utils.vec :as vec]))
 
 (defn path
@@ -532,7 +531,7 @@
 
 (defn create
   [db el]
-  (let [id (uuid/generate-unique #(element db %))
+  (let [id (random-uuid)
         new-el (create-parent-id db el)
         child-els (vals (select-keys (elements db) (:children el)))
         [x1 y1] (tool/bounds (element db (:parent new-el)))
@@ -548,7 +547,7 @@
     (if-not (db/valid? new-el)
       (notification.h/add db [notification.v/spec-failed
                               "Invalid element"
-                              (-> db/explain new-el me/humanize str)])
+                              (-> new-el db/explain me/humanize str)])
 
       (cond-> db
         :always

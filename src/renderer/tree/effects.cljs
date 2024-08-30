@@ -6,7 +6,7 @@
  ::focus
  (fn [[id direction]]
    (let [list-elements (.from js/Array (.querySelectorAll js/document ".tree-sidebar .list-item-button"))
-         current-el (first (.querySelectorAll js/document (str ".tree-sidebar [data-id='" (name id) "']")))
+         current-el (first (.querySelectorAll js/document (str ".tree-sidebar [data-id='" (str id) "']")))
          i (.indexOf list-elements current-el)
          max-i (dec (count list-elements))
          updated-i (case direction

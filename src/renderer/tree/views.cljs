@@ -65,7 +65,7 @@
   [e parent-id]
   (let [id (-> (.-dataTransfer e)
                (.getData "id")
-               keyword)]
+               uuid)]
     (.preventDefault e)
     (rf/dispatch [::element.e/set-parent parent-id id])))
 
@@ -119,7 +119,7 @@
      {:class [(when selected? "selected")
               (when hovered? "hovered")]
       :tab-index 0
-      :data-id (name id)
+      :data-id (str id)
       :role "menuitem"
       :on-double-click #(rf/dispatch [::frame.e/pan-to-element id])
       :on-pointer-enter #(rf/dispatch [::document.e/set-hovered-ids #{id}])
@@ -129,7 +129,7 @@
       :on-key-down #(key-down-handler % id)
       :draggable true
       :on-drag-start #(-> (.-dataTransfer %)
-                          (.setData "id" (name id)))
+                          (.setData "id" (str id)))
       :on-drag-enter #(rf/dispatch [::document.e/set-hovered-ids #{id}])
       :on-drag-over #(.preventDefault %)
       :on-drop #(drop-handler % id)
@@ -153,7 +153,7 @@
      [list-item-button el depth hovered? collapsed?]
      (when (and has-children? (not collapsed?))
        [:ul (for [el (mapv (fn [k] (get elements k)) (reverse children))]
-              ^{:key (name (:id el))} [item el (inc depth) elements hovered-ids collapsed-ids])])]))
+              ^{:key (:id el)} [item el (inc depth) elements hovered-ids collapsed-ids])])]))
 
 (defn inner-sidebar-render
   [root-children elements]
@@ -165,7 +165,7 @@
       [:ul
        {:on-pointer-leave #(rf/dispatch [::document.e/set-hovered-ids #{}])}
        (for [el (reverse root-children)]
-         ^{:key (name (:id el))} [item el 1 elements hovered-ids collapsed-ids])]]]))
+         ^{:key (:id el)} [item el 1 elements hovered-ids collapsed-ids])]]]))
 
 (defn inner-sidebar []
   (let [state @(rf/subscribe [::app.s/state])

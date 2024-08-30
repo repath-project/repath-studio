@@ -7,14 +7,14 @@
 
 (def document
   [:map {:closed true}
-   [:id keyword?]
+   [:id uuid?]
    [:title {:min 1} string?]
    [:path {:optional true} [:maybe string?]]
-   [:save {:optional true} keyword?]
+   [:save {:optional true} uuid?]
    [:version {:optional true} string?]
-   [:hovered-ids {:default #{}} [:set keyword?]]
-   [:collapsed-ids {:default #{}} [:set keyword?]]
-   [:ignored-ids {:default #{}} [:set keyword?]]
+   [:hovered-ids {:default #{}} [:set [:or keyword? uuid?]]]
+   [:collapsed-ids {:default #{}} [:set uuid?]]
+   [:ignored-ids {:default #{}} [:set [:or keyword? uuid?]]]
    [:fill {:default "white"} string?]
    [:stroke {:default "black"} string?]
    [:zoom {:default 1} [:and number? [:>= 0.01] [:<= 100]]]

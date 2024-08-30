@@ -16,4 +16,4 @@
     [tag
      attrs
      (for [el child-elements]
-       ^{:key (name id)} [tool/render el])]))
+       ^{:key id} [tool/render el])]))

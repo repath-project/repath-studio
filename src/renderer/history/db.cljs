@@ -8,14 +8,14 @@
    [:explanation string?]
    [:timestamp number?]
    [:index [:or pos-int? zero?]]
-   [:id keyword?]
+   [:id uuid?]
    [:elements element.db/elements]
-   [:parent {:optional true} keyword?]
-   [:children [:vector keyword?]]])
+   [:parent {:optional true} uuid?]
+   [:children [:vector uuid?]]])
 
 (def history
   [:map {:default {} :closed true}
    [:zoom {:optional true :default 0.5} number?]
    [:translate {:optional true} math/vec2d]
-   [:position {:optional true} keyword?]
-   [:states {:default {}} [:map-of keyword? state]]])
+   [:position {:optional true} uuid?]
+   [:states {:default {}} [:map-of uuid? state]]])

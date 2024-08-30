@@ -101,7 +101,7 @@
      [:> Command/CommandEmpty
       (t [:cmdk/no-results "No results found."])]
      (for [i (menubar/root-menu)]
-       ^{:key (name (:id i))}
+       ^{:key (:id i)}
        [cmdk-group i])]]])
 
 (defn root

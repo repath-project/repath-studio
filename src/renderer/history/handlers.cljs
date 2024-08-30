@@ -8,7 +8,6 @@
    [renderer.element.handlers :as element.h]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
-   [renderer.utils.uuid :as uuid]
    [renderer.utils.vec :as vec]))
 
 (defn history-path [db]
@@ -142,7 +141,7 @@
    (move, color pick etc)"
   [db explanation & more]
   (let [current-position (position db)
-        id (uuid/generate-unique #(state (history-path db) %))
+        id (random-uuid)
         explanation (apply str explanation more)
         elements (element.h/elements db)]
     (if (valid-elements? elements)

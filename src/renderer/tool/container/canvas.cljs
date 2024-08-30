@@ -64,7 +64,7 @@
                   :style {:outline 0
                           :background (:fill attrs)}}
      (for [el child-elements]
-       ^{:key (name (:id el))} [tool/render el])
+       ^{:key (:id el)} [tool/render el])
 
      [:defs
       (map (fn [{:keys [id tag attrs]}]
@@ -100,7 +100,7 @@
         (when (or (= tool :edit)
                   (= primary-tool :edit))
           (for [el selected-elements]
-            ^{:key (str (name (:id el)) "-edit-points")}
+            ^{:key (str (:id el) "-edit-points")}
             [:g
              [tool/render-edit el]
              ^{:key (str (:id el) "-centroid")}
