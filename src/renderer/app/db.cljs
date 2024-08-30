@@ -82,7 +82,7 @@
    [:mdn {:optional true} map?]
    [:webref-css {:optional true} map?]
    [:message {:optional true} hiccup/hiccup]
-   [:re-pressed.core/keydown any?]])
+   [:re-pressed.core/keydown {:optional true} any?]])
 
 (def valid? (m/validator app))
 

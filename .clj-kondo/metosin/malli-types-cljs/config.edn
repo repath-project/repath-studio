@@ -235,10 +235,6 @@
                                                             remove-nils {:arities {1 {:args [:map], :ret :map}}}},
                                         renderer.utils.compatibility {version->table {:arities {1 {:args [:nilable/string],
                                                                                                    :ret :nilable/seqable}}},
-                                                                      compatible? {:arities {:varargs {:args [{:op :rest,
-                                                                                                               :spec :nilable/string}],
-                                                                                                       :ret :boolean,
-                                                                                                       :min-arity 0}}},
                                                                       requires-migration? {:arities {2 {:args [:map
                                                                                                                :seqable],
                                                                                                         :ret :boolean}}},

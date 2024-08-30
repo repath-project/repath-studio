@@ -19,11 +19,6 @@
        (take 3)
        (mapv js/parseInt)))
 
-(mx/defn compatible? :- boolean?
-  [& versions :- [:* [:maybe [:re ver-regex]]]]
-  (apply = (map #(when-let [version (version->table %)]
-                   (take 2 version)) versions)))
-
 (mx/defn requires-migration? :- boolean?
   [document :- map?, [m-major m-minor m-patch] :- ver]
   (let [[major minor patch] (version->table (:version document))]

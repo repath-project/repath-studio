@@ -2,6 +2,7 @@
   (:require
    [akiroz.re-frame.storage :as rf.storage]
    [config :as config]
+   [malli.error :as me]
    [platform :as platform]
    [re-frame.core :as rf]
    [renderer.app.db :as db]
@@ -9,8 +10,9 @@
    [renderer.app.handlers :as h]
    [renderer.frame.handlers :as frame.h]
    [renderer.notification.events :as-alias notification.e]
+   [renderer.notification.handlers :as notification.h]
+   [renderer.notification.views :as notification.v]
    [renderer.tool.base :as tool]
-   [renderer.utils.compatibility :as compatibility]
    [renderer.utils.pointer :as pointer]
    [renderer.window.effects :as-alias window.fx]))
 
@@ -37,8 +39,14 @@
  ::load-local-db
  [(rf/inject-cofx :store)]
  (fn [{:keys [db store]} _]
-   (let [compatible? (compatibility/compatible? (:version db) (:version store))]
-     {:db (cond-> db compatible? (merge db store))
+   (let [merged (merge db store)
+         compatible? (db/valid? merged)]
+     {:db (if compatible?
+            merged
+            (notification.h/add db
+                                [notification.v/spec-failed
+                                 "Invalid local db"
+                                 (-> merged db/explain me/humanize str)]))
       :fx [(when-not compatible? [::fx/local-storage-clear nil])]})))
 
 (rf/reg-event-fx
