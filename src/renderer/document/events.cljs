@@ -73,12 +73,6 @@
      (assoc db :filter id))))
 
 (rf/reg-event-db
- ::set-temp-element
- active-path
- (fn [db [_ el]]
-   (assoc db :temp-element el)))
-
-(rf/reg-event-db
  ::swap-colors
  [persist active-path]
  (fn [db [_]]

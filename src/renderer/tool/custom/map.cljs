@@ -4,6 +4,7 @@
    [reagent.core :as ra]
    [renderer.document.events :as-alias document.e]
    [renderer.document.subs :as-alias document.s]
+   [renderer.element.handlers :as element.h]
    [renderer.element.subs :as-alias element.s]
    [renderer.tool.base :as tool]
    [renderer.utils.pointer :as pointer]))
@@ -23,15 +24,14 @@
            :height]})
 
 (defmethod tool/drag :map
-  [{:keys [adjusted-pointer-pos tool adjusted-pointer-offset]}]
+  [{:keys [adjusted-pointer-pos tool adjusted-pointer-offset] :as db}]
   (let [[offset-x offset-y] adjusted-pointer-offset
-        [pos-x pos-y] adjusted-pointer-pos
-        attrs {:x (min pos-x offset-x)
-               :y (min pos-y offset-y)
-               :width (abs (- pos-x offset-x))
-               :height (abs (- pos-y offset-y))}]
-    (rf/dispatch [::document.e/set-temp-element {:type tool
-                                                 :attrs attrs}])))
+        [pos-x pos-y] adjusted-pointer-pos]
+    (element.h/set-temp db {:type tool
+                            :attrs {:x (min pos-x offset-x)
+                                    :y (min pos-y offset-y)
+                                    :width (abs (- pos-x offset-x))
+                                    :height (abs (- pos-y offset-y))}})))
 
 (defn ->href [image]
   (->> image
