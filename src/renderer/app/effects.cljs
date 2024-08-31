@@ -11,6 +11,11 @@
 
 (rf.storage/reg-co-fx! config/app-key {:cofx :store})
 
+(rf/reg-cofx
+ ::now
+ (fn [coeffects _]
+   (assoc coeffects :now (.now js/Date))))
+
 (rf/reg-fx
  ::data-transfer
  (fn [[position data-transfer]]

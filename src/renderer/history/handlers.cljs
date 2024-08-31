@@ -106,10 +106,10 @@
   (assoc-in db (conj (history-path db) :translate) [x y]))
 
 (defn- create-state
-  [db id explanation]
+  [db now id explanation]
   (let [new-state {:explanation explanation
                    :elements (element.h/elements db)
-                   :timestamp (.now js/Date) ; REVIEW
+                   :timestamp now
                    :index (state-count db)
                    :id id
                    :children []}]
@@ -139,7 +139,7 @@
    Explicitly adding states, allows canceling actions before adding the state
    to history. We also avoid the need of throttling in consecutive actions
    (move, color pick etc)"
-  [db explanation & more]
+  [db now explanation & more]
   (let [current-position (position db)
         id (random-uuid)
         explanation (apply str explanation more)
@@ -150,7 +150,7 @@
         (cond->
          :always (-> (assoc-in (conj (history-path db) :position) id)
                      (assoc-in (conj (history-path db) :states id)
-                               (create-state db id explanation)))
+                               (create-state db now id explanation)))
 
          current-position
          (-> (update-in (conj (history-path db) :states current-position :children) conj id)
@@ -165,7 +165,7 @@
             (-> elements element.db/explain-elements me/humanize str)])))))
 
 (defn clear
-  [db]
+  [db now]
   (-> db
       (update-in [:documents (:active-document db) :history] dissoc :states :position)
-      (finalize "Clear history")))
+      (finalize  now "Clear history")))

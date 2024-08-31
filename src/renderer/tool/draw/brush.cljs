@@ -194,11 +194,11 @@
                           (mat/add point [x y 0]))) %))))
 
 (defmethod tool/drag-end :brush
-  [db]
+  [db _e now]
   (-> db
       element.h/add
       (app.h/set-state :default)
-      (history.h/finalize "Draw line")))
+      (history.h/finalize now "Draw line")))
 
 (defmethod tool/path :brush
   [{:keys [attrs]}]

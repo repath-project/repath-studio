@@ -85,9 +85,9 @@
         (update :document-tabs #(vec/add % (inc active-index) id)))))
 
 (defn create
-  ([db]
-   (create db [595 842]))
-  ([db size]
+  ([db now]
+   (create db now [595 842]))
+  ([db now size]
    (cond-> db
      :always
      (-> (create-tab db/default)
@@ -101,7 +101,7 @@
          (center))
 
      :always
-     (history.h/finalize "Create document"))))
+     (history.h/finalize now "Create document"))))
 
 (defn set-global-attr
   [{active-document :active-document :as db} k v]
@@ -110,7 +110,7 @@
       (element.h/set-attr k v)))
 
 (defn load
-  [db document]
+  [db document now]
   (let [open-document-id (search-by-path db (:path document))
         migrated-document (compatibility/migrate-document document)
         migrated? (not= document migrated-document)
@@ -121,7 +121,7 @@
         (not open-document-id)
         (-> (create-tab (cond-> document (not migrated?) (dissoc :save)))
             (center)
-            (history.h/finalize "Load document"))
+            (history.h/finalize now "Load document"))
 
         :always
         (-> (add-recent (:path document))

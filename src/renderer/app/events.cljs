@@ -43,10 +43,9 @@
          compatible? (db/valid? merged)]
      {:db (if compatible?
             merged
-            (notification.h/add db
-                                [notification.v/spec-failed
-                                 "Invalid local db"
-                                 (-> merged db/explain me/humanize str)]))
+            (notification.h/add db [notification.v/spec-failed
+                                    "Invalid local db"
+                                    (-> merged db/explain me/humanize str)]))
       :fx [(when-not compatible? [::fx/local-storage-clear nil])]})))
 
 (rf/reg-event-fx
@@ -120,7 +119,8 @@
 
 (rf/reg-event-fx
  ::pointer-event
- (fn [{:keys [db]}
+ (rf/inject-cofx ::fx/now)
+ (fn [{:keys [db now]}
       [_ {:as e
           :keys [button buttons modifiers data-transfer pointer-pos delta element]}]]
    (let [{:keys [pointer-offset tool dom-rect drag? primary-tool drag-threshold]} db
@@ -138,11 +138,11 @@
                                                    pointer-offset)
 
                         (not drag?)
-                        (-> (tool/drag-start e)
+                        (-> (tool/drag-start e now)
                             (assoc :drag? true))
 
                         :always
-                        (tool/drag e))
+                        (tool/drag e now))
                       db)
                     (tool/pointer-move db e))
                   (assoc :pointer-pos pointer-pos
@@ -155,17 +155,17 @@
                   (h/set-tool :pan))
 
               (and (= button :right) (not= (:id element) :bounding-box))
-              (tool/pointer-up e)
+              (tool/pointer-up e now)
 
               :always
-              (-> (tool/pointer-down e)
+              (-> (tool/pointer-down e now)
                   (assoc :pointer-offset pointer-pos
                          :adjusted-pointer-offset adjusted-pointer-pos)))
 
             :pointerup
             (cond-> (if drag?
-                      (tool/drag-end db e)
-                      (cond-> db (not= button :right) (tool/pointer-up e)))
+                      (tool/drag-end db e now)
+                      (cond-> db (not= button :right) (tool/pointer-up e now)))
               (and primary-tool (= button :middle))
               (-> (h/set-tool primary-tool)
                   (dissoc :primary-tool))
@@ -175,7 +175,7 @@
                   (update :snap dissoc :nearest-neighbor)))
 
             :dblclick
-            (tool/double-click db e)
+            (tool/double-click db e now)
 
             :wheel
             (if (some modifiers [:ctrl :alt])

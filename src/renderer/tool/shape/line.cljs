@@ -51,22 +51,22 @@
     (element.h/get-temp db) (update-line-end)))
 
 (defmethod tool/pointer-up :line
-  [db]
+  [db _e now]
   (if (element.h/get-temp db)
     (-> db
         element.h/add
         (app.h/set-tool :select)
         (app.h/set-state :default)
-        (history/finalize "Create line"))
+        (history/finalize now "Create line"))
     (-> db
         (app.h/set-state :create)
         create-line)))
 
 (defmethod tool/pointer-down :line
-  [db]
+  [db _e now]
   (cond-> db
     (element.h/get-temp db)
-    (history/finalize "Create line")))
+    (history/finalize now "Create line")))
 
 (defmethod tool/drag :line
   [db]

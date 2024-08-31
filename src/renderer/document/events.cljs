@@ -3,7 +3,8 @@
    [cljs.reader :as edn]
    [platform :as platform]
    [re-frame.core :as rf]
-   [re-frame.interceptor :refer [->interceptor get-effect get-coeffect assoc-coeffect assoc-effect]]
+   [re-frame.interceptor :refer [->interceptor get-effect get-coeffect assoc-coeffect assoc-effect update-effect]]
+   [renderer.app.effects :as-alias app.fx]
    [renderer.app.events :as-alias app.e :refer [persist]]
    [renderer.dialog.events :as-alias dialog.e]
    [renderer.dialog.handlers :as dialog.h]
@@ -80,21 +81,21 @@
           :fill (:stroke db)
           :stroke (:fill db))))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::set-fill
- persist
- (fn [db [_ color]]
-   (-> db
-       (h/set-global-attr :fill color)
-       (history.h/finalize "Set fill"))))
+ [(rf/inject-cofx ::app.fx/now) persist]
+ (fn [{:keys [db now]} [_ color]]
+   {:db (-> db
+            (h/set-global-attr :fill color)
+            (history.h/finalize now "Set fill"))}))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::set-stroke
- persist
- (fn [db [_ color]]
-   (-> db
-       (h/set-global-attr :stroke color)
-       (history.h/finalize "Set stroke"))))
+ [(rf/inject-cofx ::app.fx/now) persist]
+ (fn [{:keys [db now]} [_ color]]
+   {:db (-> db
+            (h/set-global-attr :stroke color)
+            (history.h/finalize now "Set stroke"))}))
 
 (rf/reg-event-db
  ::close
@@ -154,25 +155,25 @@
          swapped-index (.indexOf document-tabs swapped-key)]
      (assoc db :document-tabs (vec/swap document-tabs dragged-index swapped-index)))))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::new
- [persist focus-canvas]
- (fn [db [_]]
-   (h/create db)))
+ [(rf/inject-cofx ::app.fx/now) persist focus-canvas]
+ (fn [{:keys [db now]} [_]]
+   {:db (h/create db now)}))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::init
- [persist focus-canvas]
- (fn [db [_]]
-   (cond-> db
-     (not (:active-document db))
-     h/create)))
+ [(rf/inject-cofx ::app.fx/now) persist focus-canvas]
+ (fn [{:keys [db now]} [_]]
+   {:db (cond-> db
+          (not (:active-document db))
+          (h/create now))}))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::new-from-template
- persist
- (fn [db [_ size]]
-   (h/create db size)))
+ [(rf/inject-cofx ::app.fx/now) persist focus-canvas]
+ (fn [{:keys [db now]} [_ size]]
+   {:db (h/create db now size)}))
 
 (rf/reg-event-fx
  ::open
@@ -190,12 +191,13 @@
  (fn [_ [_ path]]
    {:ipc-send ["open-directory" path]}))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::load
- [persist focus-canvas]
- (fn [db [_ documents]]
-   (-> (reduce h/load db documents)
-       h/center)))
+ [(rf/inject-cofx ::app.fx/now) persist focus-canvas]
+ (fn [{:keys [db now]} [_ documents]]
+   {:db (->> documents
+             (reduce #(h/load %1 %2 now) db)
+             (h/center))}))
 
 (rf/reg-event-fx
  ::save
