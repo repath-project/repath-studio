@@ -102,12 +102,12 @@
                      :minSize 5
                      :order 3}
 
-            [:div.h-full.bg-primary.ml-px.flex
-             [ui/scroll-area
-              [:div.p-1
-               [cm.v/editor xml
-                {:options {:mode "text/xml"
-                           :readOnly true}}]]]]]]))]]])
+           [:div.h-full.bg-primary.ml-px.flex
+            [ui/scroll-area
+             [:div.p-1
+              [cm.v/editor xml
+               {:options {:mode "text/xml"
+                          :readOnly true}}]]]]]]))]]])
 
 (defn editor
   []
