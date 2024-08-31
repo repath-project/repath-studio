@@ -58,7 +58,9 @@
         color (if (.-active datum) "var(--accent)" (.-color datum))]
     (ra/as-element
      [:circle
-      {:on-click #(rf/dispatch [::history.e/move (keyword (.-id datum))])
+      {:on-click #(rf/dispatch [::history.e/move (uuid (.-id datum))])
+       :on-pointer-enter #(rf/dispatch [::history.e/preview (uuid (.-id datum))])
+       :on-pointer-leave #(rf/dispatch [::history.e/swap (uuid (.-id datum))])
        :cx "0"
        :cy "0"
        :stroke color
@@ -85,10 +87,10 @@
   [ref]
   (let [tree-data @(rf/subscribe [::history.s/tree-data])
         zoom @(rf/subscribe [::history.s/zoom])
+        dom-el (.-current ref)
         [x y] @(rf/subscribe [::history.s/translate])
-        el (.-current ref)
-        translate #js {:x (or x (when el (/ (.-clientWidth el) 2)))
-                       :y (or y (when el (/ (.-clientHeight el) 2)))}]
+        translate #js {:x (or x (when dom-el (/ (.-clientWidth dom-el) 2)))
+                       :y (or y (when dom-el (/ (.-clientHeight dom-el) 2)))}]
     [:> Tree
      {:data tree-data
       :collapsible false

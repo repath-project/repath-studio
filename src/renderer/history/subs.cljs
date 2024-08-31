@@ -49,7 +49,7 @@
         {:keys [index] :as state} (get states id)
         n (count states)]
     #js {:name (:explanation state)
-         :id id
+         :id (str id)
          :saved (= id save)
          :active (= id (:position history))
          :color (str "hsla(" (+ (* (/ 100 n) index) 20) ",40%,60%,1)")

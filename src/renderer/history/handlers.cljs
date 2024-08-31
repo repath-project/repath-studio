@@ -49,9 +49,9 @@
     (:active-document db)
     (assoc-in (element.h/path db) (:elements (state (history db))))))
 
-#_(defn preview
-    [db pos]
-    (assoc-in db (element.h/path db) (:elements (state (history db) pos))))
+(defn preview
+  [db pos]
+  (assoc-in db (element.h/path db) (:elements (state (history db) pos))))
 
 (defn move
   [db pos]

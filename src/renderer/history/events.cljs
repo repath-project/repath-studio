@@ -31,10 +31,15 @@
  (fn [db [_ n]]
    (h/redo db n)))
 
-#_(rf/reg-event-db
-   ::swap
-   (fn [db _]
-     (h/swap db)))
+(rf/reg-event-db
+ ::swap
+ (fn [db _]
+   (h/swap db)))
+
+(rf/reg-event-db
+ ::preview
+ (fn [db [_ pos]]
+   (h/preview db pos)))
 
 (rf/reg-event-db
  ::move
