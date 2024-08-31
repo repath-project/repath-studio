@@ -3,7 +3,7 @@
    [cljs.reader :as edn]
    [platform :as platform]
    [re-frame.core :as rf]
-   [re-frame.interceptor :refer [->interceptor get-effect get-coeffect assoc-coeffect assoc-effect update-effect]]
+   [re-frame.interceptor :refer [->interceptor get-effect get-coeffect assoc-coeffect assoc-effect]]
    [renderer.app.effects :as-alias app.fx]
    [renderer.app.events :as-alias app.e :refer [persist]]
    [renderer.dialog.events :as-alias dialog.e]
@@ -157,21 +157,30 @@
 
 (rf/reg-event-fx
  ::new
- [(rf/inject-cofx ::app.fx/now) persist focus-canvas]
- (fn [{:keys [db now]} [_]]
-   {:db (h/create db now)}))
+ [(rf/inject-cofx ::app.fx/now)
+  (rf/inject-cofx ::app.fx/random-uuid)
+  persist
+  focus-canvas]
+ (fn [{:keys [db now random-uuid]} [_]]
+   {:db (h/create db now random-uuid)}))
 
 (rf/reg-event-fx
  ::init
- [(rf/inject-cofx ::app.fx/now) persist focus-canvas]
- (fn [{:keys [db now]} [_]]
+ [(rf/inject-cofx ::app.fx/now)
+  (rf/inject-cofx ::app.fx/random-uuid)
+  persist
+  focus-canvas]
+ (fn [{:keys [db now random-uuid]} [_]]
    {:db (cond-> db
           (not (:active-document db))
-          (h/create now))}))
+          (h/create now random-uuid))}))
 
 (rf/reg-event-fx
  ::new-from-template
- [(rf/inject-cofx ::app.fx/now) persist focus-canvas]
+ [(rf/inject-cofx ::app.fx/now)
+  (rf/inject-cofx ::app.fx/random-uuid)
+  persist
+  focus-canvas]
  (fn [{:keys [db now]} [_ size]]
    {:db (h/create db now size)}))
 
@@ -193,10 +202,13 @@
 
 (rf/reg-event-fx
  ::load
- [(rf/inject-cofx ::app.fx/now) persist focus-canvas]
- (fn [{:keys [db now]} [_ documents]]
+ [(rf/inject-cofx ::app.fx/now)
+  (rf/inject-cofx ::app.fx/random-uuid)
+  persist
+  focus-canvas]
+ (fn [{:keys [db now random-uuid]} [_ documents]]
    {:db (->> documents
-             (reduce #(h/load %1 %2 now) db)
+             (reduce #(h/load %1 %2 now random-uuid) db)
              (h/center))}))
 
 (rf/reg-event-fx

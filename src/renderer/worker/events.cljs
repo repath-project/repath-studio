@@ -1,14 +1,15 @@
 (ns renderer.worker.events
   (:require
    [re-frame.core :as rf]
+   [renderer.app.effects :as-alias app.fx]
    [renderer.worker.effects :as fx]))
 
 (rf/reg-event-fx
  ::create
- (fn [{:keys [db]} [_ {:keys [action] :as options}]]
-   (let [task-id (random-uuid)]
-     {:db (assoc-in db [:worker :tasks task-id] action)
-      ::fx/post (assoc-in options [:data :id] task-id)})))
+ [(rf/inject-cofx ::app.fx/random-uuid)]
+ (fn [{:keys [db random-uuid]} [_ {:keys [action] :as options}]]
+   {:db (assoc-in db [:worker :tasks random-uuid] action)
+    ::fx/post (assoc-in options [:data :id] random-uuid)}))
 
 (rf/reg-event-db
  ::completed

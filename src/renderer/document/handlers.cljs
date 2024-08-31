@@ -74,8 +74,8 @@
           (recur (inc i)))))))
 
 (defn create-tab
-  [db document]
-  (let [id (or (:id document) (random-uuid))
+  [db document id]
+  (let [id (or (:id document) id)
         title (or (:title document) (new-title db))
         active-index (.indexOf (:document-tabs db) (:active-document db))
         document (merge document {:id id :title title})]
@@ -85,12 +85,12 @@
         (update :document-tabs #(vec/add % (inc active-index) id)))))
 
 (defn create
-  ([db now]
-   (create db now [595 842]))
-  ([db now size]
+  ([db now id]
+   (create db now id [595 842]))
+  ([db now id size]
    (cond-> db
      :always
-     (-> (create-tab db/default)
+     (-> (create-tab db/default id)
          (element.h/create {:tag :canvas
                             :attrs {:fill "#eeeeee"}}))
 
@@ -110,16 +110,16 @@
       (element.h/set-attr k v)))
 
 (defn load
-  [db document now]
+  [db document now id]
   (let [open-document-id (search-by-path db (:path document))
         migrated-document (compatibility/migrate-document document)
         migrated? (not= document migrated-document)
         document (-> (merge db/default migrated-document)
-                     (assoc :id (or open-document-id (random-uuid))))]
+                     (assoc :id (or open-document-id id)))]
     (if (db/valid? document)
       (cond-> db
         (not open-document-id)
-        (-> (create-tab (cond-> document (not migrated?) (dissoc :save)))
+        (-> (create-tab (cond-> document (not migrated?) (dissoc :save)) id)
             (center)
             (history.h/finalize now "Load document"))
 

@@ -16,6 +16,11 @@
  (fn [coeffects _]
    (assoc coeffects :now (.now js/Date))))
 
+(rf/reg-cofx
+ ::random-uuid
+ (fn [coeffects _]
+   (assoc coeffects :random-uuid (random-uuid))))
+
 (rf/reg-fx
  ::data-transfer
  (fn [[position data-transfer]]
