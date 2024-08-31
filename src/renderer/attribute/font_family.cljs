@@ -33,7 +33,11 @@
         ^{:key item}
         [:> Command/CommandItem
          {:on-select #(rf/dispatch [::element.e/set-attr :font-family item])}
-         item])]]]])
+         [:div.flex.justify-between.items-center.w-full.gap-2
+          [:div item]
+          [:div.leading-none.overlay.text-active.p-2.rounded
+           {:style {:font-family item}}
+           "Lorem ipsum"]]])]]]])
 
 (defmethod hierarchy/form-element [:default :font-family]
   [_ k v disabled?]

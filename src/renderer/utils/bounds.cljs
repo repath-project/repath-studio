@@ -56,8 +56,7 @@
 
 (mx/defn contain-point? :- boolean?
   "Tests whether the provided bounds contain a point."
-  [[left top right bottom] :- bounds,
-   [x y] :- math/vec2d]
+  [[left top right bottom] :- bounds, [x y] :- math/vec2d]
   (and (<= left x)
        (<= top y)
        (>= right x)
