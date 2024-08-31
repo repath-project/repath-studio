@@ -35,7 +35,7 @@
          {:on-select #(rf/dispatch [::element.e/set-attr :font-family item])}
          [:div.flex.justify-between.items-center.w-full.gap-2
           [:div item]
-          [:div.leading-none.overlay.text-active.p-2.rounded
+          [:div.leading-none.text-muted
            {:style {:font-family item}}
            "Lorem ipsum"]]])]]]])
 
