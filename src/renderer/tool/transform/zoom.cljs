@@ -60,7 +60,7 @@
         current-zoom (get-in db [:documents active-document :zoom])
         furute-zoom (min width-ratio height-ratio)]
     (-> db
-        element.h/clear-temp
+        (element.h/clear-temp)
         (assoc :cursor (if (pointer/shift? e) "zoom-out" "zoom-in"))
         (frame.h/zoom-by (if (pointer/shift? e)
                            zoom-sensitivity

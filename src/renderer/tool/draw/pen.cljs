@@ -41,6 +41,6 @@
                  (path/manipulate :simplify))]
     (-> db
         (element.h/set-temp path)
-        element.h/add
+        (element.h/add)
         (app.h/set-state :default)
         (history/finalize "Draw line"))))

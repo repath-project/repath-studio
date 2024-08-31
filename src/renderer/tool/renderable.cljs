@@ -28,15 +28,14 @@
 
 (defmethod tool/drag-end ::tool/renderable
   [db]
-  (let [temp-element (get-in db [:documents (:active-document db) :temp-element])]
-    (-> db
-        element.h/add
-        (app.h/set-tool :select)
-        (app.h/set-state :default)
-        (history.h/finalize "Create " (name (:tag temp-element))))))
+  (-> db
+      (element.h/add)
+      (app.h/set-tool :select)
+      (app.h/set-state :default)
+      (history.h/finalize "Create " (name (:tag (element.h/get-temp db))))))
 
 (defmethod tool/bounds ::tool/renderable
-  [{:keys [tag attrs content] :as el} ]
+  [{:keys [tag attrs content] :as el}]
   (when-let [svg (dom/canvas-element)]
     (let [dom-el (js/document.createElementNS "http://www.w3.org/2000/svg" (name tag))]
       (doseq [[k v] attrs]
