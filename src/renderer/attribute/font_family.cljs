@@ -20,8 +20,7 @@
   [suggestions]
   [:div.flex.flex-col
    [:> Command/Command
-    {:label "Command Menu"
-     :on-key-down #(when-not (= (.-key %) "Escape") (.stopPropagation %))}
+    {:label "Command Menu"}
     [:> Command/CommandInput
      {:class "p-2 text-sm bg-secondary border-b border-default"
       :placeholder "Search for a font"}]
@@ -44,17 +43,19 @@
       {:key k
        :value v
        :disabled? disabled?}]
-     [:> Popover/Root {:modal true
-                       :onOpenChange (fn [state]
-                                       (when (and state (empty? suggestions))
-                                         (rf/dispatch-sync [::app.e/load-system-fonts])))}
+     [:> Popover/Root
+      {:modal true
+       :onOpenChange (fn [state]
+                       (when (and state (empty? suggestions))
+                         (rf/dispatch-sync [::app.e/load-system-fonts])))}
       [:> Popover/Trigger {:as-child true}
        [:button.ml-px.inline-block.bg-primary.text-muted.h-full
         {:style {:flex "0 0 26px"}}
         [ui/icon "magnifier" {:class "icon small"}]]]
       [:> Popover/Portal
-       [:> Popover/Content {:sideOffset 5
-                            :className "popover-content"
-                            :align "end"}
+       [:> Popover/Content
+        {:sideOffset 5
+         :className "popover-content"
+         :align "end"}
         [suggestions-list suggestions]
         [:> Popover/Arrow {:class "popover-arrow"}]]]]]))

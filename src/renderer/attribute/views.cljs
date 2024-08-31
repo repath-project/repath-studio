@@ -143,7 +143,9 @@
        [:> Select/Icon
         [ui/icon "chevron-down" {:class "icon small"}]]]
       [:> Select/Portal
-       [:> Select/Content {:class "menu-content rounded select-content"}
+       [:> Select/Content
+        {:class "menu-content rounded select-content"
+         :on-key-down #(.stopPropagation %)}
         [:> Select/ScrollUpButton {:class "select-scroll-button"}
          [ui/icon "chevron-up"]]
         [:> Select/Viewport {:class "select-viewport"}
