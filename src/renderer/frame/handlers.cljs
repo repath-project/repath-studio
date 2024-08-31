@@ -8,20 +8,18 @@
    [renderer.utils.pointer :as pointer]))
 
 (defn pan-by
-  [{:keys [active-document] :as db} offset]
-  (let [zoom (get-in db [:documents active-document :zoom])]
-    (update-in db
-               [:documents active-document :pan]
-               mat/add
-               (mat/div offset zoom))))
+  ([{:keys [active-document] :as db} offset]
+   (pan-by db offset active-document))
+  ([db offset id]
+   (let [zoom (get-in db [:documents id :zoom])]
+     (update-in db [:documents id :pan] mat/add (mat/div offset zoom)))))
 
 (defn recenter-to-dom-rect
   [{:keys [dom-rect] :as db} updated-dom-rect]
-  (let [offset (select-keys (merge-with - dom-rect updated-dom-rect)
-                            [:width :height])]
-    (cond-> db
-      (-> db :window :focused?)
-      (pan-by (mat/div [(:width offset) (:height offset)] 2)))))
+  (let [offset (select-keys (merge-with - dom-rect updated-dom-rect) [:width :height])]
+    (if-not (-> db :window :focused?)
+      db
+      (reduce #(pan-by %1 (mat/div [(:width offset) (:height offset)] 2) %2) db (:document-tabs db)))))
 
 (defn zoom-in-position
   [{:keys [active-document] :as db} factor pos]
