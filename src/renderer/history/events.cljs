@@ -4,7 +4,8 @@
    [renderer.app.events :refer [persist]]
    [renderer.app.handlers :as handlers]
    [renderer.element.handlers :as element.h]
-   [renderer.history.handlers :as h]))
+   [renderer.history.handlers :as h]
+   [renderer.tool.base :as tool]))
 
 (rf/reg-event-db
  ::undo
@@ -58,14 +59,13 @@
  ::cancel
  (fn [db _]
    (cond-> db
-     :always (-> (dissoc :pointer-offset)
-                 (dissoc :drag?)
-                 (assoc :state :default)
+     :always (-> (dissoc :drag? :pointer-offset)
+                 (tool/activate (:tool db))
                  (element.h/clear-temp)
                  (h/swap))
 
      (and (= (:tool db) :select) (= (:state db) :default))
-     (-> element.h/deselect
+     (-> (element.h/deselect)
          (h/finalize "Deselect all"))
 
      (= (:state db) :select)
