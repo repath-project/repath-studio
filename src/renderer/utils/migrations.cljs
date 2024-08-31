@@ -21,7 +21,7 @@
                 (update :id key->uuid)
 
                 (:save document)
-                (assoc :save (random-uuid))
+                (update :save key->uuid)
 
                 :always
                 (-> (update :elements update-keys key->uuid)
