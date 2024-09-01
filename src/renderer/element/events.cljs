@@ -320,20 +320,25 @@
             (history.h/finalize now "Create " (name (:tag el))))}))
 
 (rf/reg-event-fx
- ::import-svg
+ ::import
  [(rf/inject-cofx ::app.fx/now)]
- (fn [{:keys [db now]} [_ data]]
+ (fn [{:keys [db now]} [_ data msg]]
    {:db (-> db
             (h/import-svg data)
-            (history.h/finalize now "Import svg"))}))
+            (assoc :loading? false)
+            (history.h/finalize now msg))}))
+
+(rf/reg-event-fx
+ ::import-svg
+ (fn [{:keys [db]} [_ data]]
+   {:db (assoc db :loading? true)
+    :dispatch ^:flush-dom [::import data "Import svg"]}))
 
 (rf/reg-event-fx
  ::import-traced-image
- [(rf/inject-cofx ::app.fx/now)]
- (fn [{:keys [db now]} [_ data]]
-   {:db (-> db
-            (h/import-svg data)
-            (history.h/finalize now "Trace image"))}))
+ (fn [{:keys [db]} [_ data]]
+   {:db (assoc db :loading? true)
+    :dispatch ^:flush-dom [::import data "Trace image"]}))
 
 (rf/reg-event-fx
  ::animate

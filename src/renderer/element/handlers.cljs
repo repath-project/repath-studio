@@ -532,23 +532,20 @@
 (defn create
   [db el]
   (let [id (random-uuid)
-        new-el (create-parent-id db el)
-        child-els (vals (select-keys (elements db) (:children el)))
+        new-el (->> (cond-> el (not (string? (:content el))) (dissoc :content))
+                    (map/remove-nils)
+                    (create-parent-id db)
+                    (merge db/default {:id id}))
+        child-els (-> (elements db (:children el)) vals (concat (:content el)))
         [x1 y1] (tool/bounds (element db (:parent new-el)))
-        child-els (concat child-els (:content el))
-        defaults db/default
-        new-el (merge new-el defaults {:id id})
-        new-el (cond-> new-el (not (string? (:content new-el))) (dissoc :content))
         add-children (fn [db child-els]
                        (reduce #(cond-> %1
                                   (db/tag? (:tag %2))
-                                  (create (assoc %2 :parent id))) db child-els))
-        new-el (map/remove-nils new-el)]
+                                  (create (assoc %2 :parent id))) db child-els))]
     (if-not (db/valid? new-el)
       (notification.h/add db [notification.v/spec-failed
                               "Invalid element"
                               (-> new-el db/explain me/humanize str)])
-
       (cond-> db
         :always
         (assoc-in (conj (path db) id) new-el)
@@ -707,8 +704,8 @@
      (update-el id path/manipulate action))))
 
 (defn import-svg
-  [db {:keys [svg label pos]}]
-  (let [[x y] pos
+  [db {:keys [svg label position]}]
+  (let [[x y] position
         hickory (hickory/as-hickory (hickory/parse svg))
         zipper (hickory.zip/hickory-zip hickory)
         svg (hiccup/find-svg zipper)]
