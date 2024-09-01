@@ -534,8 +534,8 @@
   (let [id (random-uuid)
         new-el (->> (cond-> el (not (string? (:content el))) (dissoc :content))
                     (map/remove-nils)
-                    (create-parent-id db)
-                    (merge db/default {:id id}))
+                    (create-parent-id db))
+        new-el (merge new-el db/default {:id id})
         child-els (-> (elements db (:children el)) vals (concat (:content el)))
         [x1 y1] (tool/bounds (element db (:parent new-el)))
         add-children (fn [db child-els]
