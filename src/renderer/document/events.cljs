@@ -168,8 +168,8 @@
   focus-canvas]
  (fn [{:keys [db now guid]} [_]]
    {:db (-> db
-            (h/create)
             (h/create-tab db/default guid)
+            (h/create-canvas)
             (history.h/finalize now guid "Create document"))}))
 
 (rf/reg-event-fx
@@ -181,8 +181,8 @@
  (fn [{:keys [db now guid]} [_]]
    {:db (cond-> db
           (not (:active-document db))
-          (-> (h/create)
-              (h/create-tab db/default guid)
+          (-> (h/create-tab db/default guid)
+              (h/create-canvas)
               (history.h/finalize now guid "Init document")))}))
 
 (rf/reg-event-fx
@@ -193,8 +193,8 @@
   focus-canvas]
  (fn [{:keys [db now guid]} [_ size]]
    {:db (-> db
-            (h/create size)
             (h/create-tab db/default guid)
+            (h/create-canvas size)
             (history.h/finalize now guid "Create document from template"))}))
 
 (rf/reg-event-fx

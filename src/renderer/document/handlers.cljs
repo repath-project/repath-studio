@@ -84,9 +84,9 @@
         (assoc :active-document id)
         (update :document-tabs #(vec/add % (inc active-index) id)))))
 
-(defn create
+(defn create-canvas
   ([db]
-   (create db [595 842]))
+   (create-canvas db [595 842]))
   ([db size]
    (cond-> db
      :always
