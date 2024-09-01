@@ -1,6 +1,7 @@
 (ns renderer.frame.subs
   (:require
    [clojure.core.matrix :as mat]
+   [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.s]
    [renderer.document.subs :as-alias document.s]
@@ -15,6 +16,12 @@
    (let [[x y] pan
          [width height] (mat/div [width height] zoom)]
      [x y width height])))
+
+(rf/reg-sub
+ ::viewbox-attr
+ :<- [::viewbox]
+ (fn [viewbox _]
+   (str/join " " viewbox)))
 
 (rf/reg-sub
  ::adjusted-pointer-pos

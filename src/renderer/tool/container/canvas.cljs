@@ -1,7 +1,6 @@
 (ns renderer.tool.container.canvas
   "The main SVG element that hosts all pages."
   (:require
-   [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.s]
    [renderer.document.subs :as-alias document.s]
@@ -26,7 +25,7 @@
   [{:keys [attrs children] :as element}]
   (let [_ @(rf/subscribe [::snap.s/in-viewport-tree])
         child-elements @(rf/subscribe [::element.s/filter-visible children])
-        viewbox @(rf/subscribe [::frame.s/viewbox])
+        viewbox-attr @(rf/subscribe [::frame.s/viewbox-attr])
         {:keys [width height]} @(rf/subscribe [::app.s/dom-rect])
         hovered-ids @(rf/subscribe [::element.s/hovered])
         selected-elements @(rf/subscribe [::element.s/selected])
@@ -54,7 +53,7 @@
                   :on-key-up keyb/event-handler
                   :on-key-down keyb/event-handler
                   :tab-index 0 ; Enable keyboard events
-                  :viewBox (str/join " " viewbox)
+                  :viewBox viewbox-attr
                   :on-drop pointer-handler
                   :on-drag-over #(.preventDefault %)
                   :width width
