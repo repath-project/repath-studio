@@ -17,9 +17,9 @@
    (assoc coeffects :now (.now js/Date))))
 
 (rf/reg-cofx
- ::random-uuid
+ ::guid
  (fn [coeffects _]
-   (assoc coeffects :random-uuid (random-uuid))))
+   (assoc coeffects :guid (random-uuid))))
 
 (rf/reg-fx
  ::data-transfer

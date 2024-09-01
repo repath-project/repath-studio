@@ -27,12 +27,12 @@
   (app.h/set-state db :create))
 
 (defmethod tool/drag-end ::tool/renderable
-  [db _e now]
+  [db _e now guid]
   (-> db
       (element.h/add)
       (app.h/set-tool :select)
       (app.h/set-state :default)
-      (history.h/finalize now "Create " (name (:tag (element.h/get-temp db))))))
+      (history.h/finalize now guid "Create " (name (:tag (element.h/get-temp db))))))
 
 (defmethod tool/bounds ::tool/renderable
   [{:keys [tag attrs content] :as el}]

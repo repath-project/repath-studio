@@ -39,7 +39,7 @@
       (app.h/set-message "Click to enter your text.")))
 
 (defmethod tool/pointer-up :text
-  [{:keys [adjusted-pointer-offset] :as db} _e now]
+  [{:keys [adjusted-pointer-offset] :as db} _e now guid]
   (let [[offset-x offset-y] adjusted-pointer-offset
         attrs {:x offset-x
                :y offset-y}]
@@ -48,7 +48,7 @@
         (element.h/add {:type :element
                         :tag :text
                         :attrs attrs})
-        (history.h/finalize now "Create text")
+        (history.h/finalize now guid "Create text")
         (app.h/set-tool :edit)
         (app.h/set-state :edit)))) ; FIXME: Merge create and edit history action.
 

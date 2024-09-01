@@ -6,10 +6,10 @@
 
 (rf/reg-event-fx
  ::create
- [(rf/inject-cofx ::app.fx/random-uuid)]
- (fn [{:keys [db random-uuid]} [_ {:keys [action] :as options}]]
-   {:db (assoc-in db [:worker :tasks random-uuid] action)
-    ::fx/post (assoc-in options [:data :id] random-uuid)}))
+ [(rf/inject-cofx ::app.fx/guid)]
+ (fn [{:keys [db guid]} [_ {:keys [action] :as options}]]
+   {:db (assoc-in db [:worker :tasks guid] action)
+    ::fx/post (assoc-in options [:data :id] guid)}))
 
 (rf/reg-event-db
  ::completed

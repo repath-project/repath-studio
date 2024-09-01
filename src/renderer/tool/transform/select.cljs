@@ -98,13 +98,13 @@
     (element.h/ignore :bounding-box)))
 
 (defmethod tool/pointer-up :select
-  [db {:keys [element] :as e} now]
+  [db {:keys [element] :as e} now guid]
   (if-not (and (= (:button e) :right)
                (:selected? element))
     (-> db
         (dissoc :clicked-element)
         (element.h/select (:id element) (pointer/shift? e))
-        (history.h/finalize now "Select element"))
+        (history.h/finalize now guid "Select element"))
     (dissoc db :clicked-element)))
 
 (defmethod tool/double-click :select
@@ -135,7 +135,7 @@
       (not intersecting?) (assoc-in [:attrs :fill] "transparent"))))
 
 (defmethod tool/drag-start :select
-  [db e now]
+  [db e now guid]
   (case (-> db :clicked-element :tag)
     :canvas
     (app.h/set-state db :select)
@@ -149,7 +149,7 @@
     (-> (cond-> db
           (and (:clicked-element db) (not (-> db :clicked-element :selected?)))
           (-> (element.h/select (-> db :clicked-element :id) (pointer/shift? e))
-              (history.h/finalize now "Select element")))
+              (history.h/finalize now guid "Select element")))
         (app.h/set-state :move))))
 
 (defn lock-ratio
@@ -251,15 +251,15 @@
           :default db))))
 
 (defmethod tool/drag-end :select
-  [db e now]
+  [db e now guid]
   (-> (case (:state db)
         :select (-> (cond-> db (not (pointer/shift? e)) element.h/deselect)
                     (reduce-by-area (pointer/alt? e) element.h/select)
                     element.h/clear-temp
-                    (history.h/finalize now "Modify selection"))
-        :move (history.h/finalize db now "Move selection")
-        :scale (history.h/finalize db now "Scale selection")
-        :clone (history.h/finalize db now "Clone selection")
+                    (history.h/finalize now guid "Modify selection"))
+        :move (history.h/finalize db now guid "Move selection")
+        :scale (history.h/finalize db now guid "Scale selection")
+        :clone (history.h/finalize db now guid "Clone selection")
         :default db)
       (app.h/set-state :default)
       (element.h/clear-hovered)

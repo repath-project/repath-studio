@@ -101,7 +101,7 @@
          (center))
 
      :always
-     (history.h/finalize now "Create document"))))
+     (history.h/finalize now id "Create document"))))
 
 (defn set-global-attr
   [{active-document :active-document :as db} k v]
@@ -121,7 +121,7 @@
         (not open-document-id)
         (-> (create-tab (cond-> document (not migrated?) (dissoc :save)) id)
             (center)
-            (history.h/finalize now "Load document"))
+            (history.h/finalize now id "Load document"))
 
         :always
         (-> (add-recent (:path document))

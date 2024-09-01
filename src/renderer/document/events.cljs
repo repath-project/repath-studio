@@ -83,19 +83,23 @@
 
 (rf/reg-event-fx
  ::set-fill
- [(rf/inject-cofx ::app.fx/now) persist]
- (fn [{:keys [db now]} [_ color]]
+ [(rf/inject-cofx ::app.fx/now)
+  (rf/inject-cofx ::app.fx/guid)
+  persist]
+ (fn [{:keys [db now guid]} [_ color]]
    {:db (-> db
             (h/set-global-attr :fill color)
-            (history.h/finalize now "Set fill"))}))
+            (history.h/finalize now guid guid "Set fill"))}))
 
 (rf/reg-event-fx
  ::set-stroke
- [(rf/inject-cofx ::app.fx/now) persist]
- (fn [{:keys [db now]} [_ color]]
+ [(rf/inject-cofx ::app.fx/now)
+  (rf/inject-cofx ::app.fx/guid)
+  persist]
+ (fn [{:keys [db now guid]} [_ color]]
    {:db (-> db
             (h/set-global-attr :stroke color)
-            (history.h/finalize now "Set stroke"))}))
+            (history.h/finalize now guid guid "Set stroke"))}))
 
 (rf/reg-event-db
  ::close
@@ -158,31 +162,31 @@
 (rf/reg-event-fx
  ::new
  [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/random-uuid)
+  (rf/inject-cofx ::app.fx/guid)
   persist
   focus-canvas]
- (fn [{:keys [db now random-uuid]} [_]]
-   {:db (h/create db now random-uuid)}))
+ (fn [{:keys [db now guid]} [_]]
+   {:db (h/create db now guid)}))
 
 (rf/reg-event-fx
  ::init
  [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/random-uuid)
+  (rf/inject-cofx ::app.fx/guid)
   persist
   focus-canvas]
- (fn [{:keys [db now random-uuid]} [_]]
+ (fn [{:keys [db now guid]} [_]]
    {:db (cond-> db
           (not (:active-document db))
-          (h/create now random-uuid))}))
+          (h/create now guid))}))
 
 (rf/reg-event-fx
  ::new-from-template
  [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/random-uuid)
+  (rf/inject-cofx ::app.fx/guid)
   persist
   focus-canvas]
- (fn [{:keys [db now]} [_ size]]
-   {:db (h/create db now size)}))
+ (fn [{:keys [db now guid]} [_ size]]
+   {:db (h/create db now guid size)}))
 
 (rf/reg-event-fx
  ::open
@@ -203,12 +207,12 @@
 (rf/reg-event-fx
  ::load
  [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/random-uuid)
+  (rf/inject-cofx ::app.fx/guid)
   persist
   focus-canvas]
- (fn [{:keys [db now random-uuid]} [_ documents]]
+ (fn [{:keys [db now guid]} [_ documents]]
    {:db (->> documents
-             (reduce #(h/load %1 %2 now random-uuid) db)
+             (reduce #(h/load %1 %2 now guid) db)
              (h/center))}))
 
 (rf/reg-event-fx

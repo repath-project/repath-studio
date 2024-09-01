@@ -119,8 +119,9 @@
 
 (rf/reg-event-fx
  ::pointer-event
- (rf/inject-cofx ::fx/now)
- (fn [{:keys [db now]}
+ [(rf/inject-cofx ::fx/now)
+  (rf/inject-cofx ::fx/guid)]
+ (fn [{:keys [db now guid]}
       [_ {:as e
           :keys [button buttons modifiers data-transfer pointer-pos delta element]}]]
    (let [{:keys [pointer-offset tool dom-rect drag? primary-tool drag-threshold]} db
@@ -138,11 +139,11 @@
                                                    pointer-offset)
 
                         (not drag?)
-                        (-> (tool/drag-start e now)
+                        (-> (tool/drag-start e now guid)
                             (assoc :drag? true))
 
                         :always
-                        (tool/drag e now))
+                        (tool/drag e now guid))
                       db)
                     (tool/pointer-move db e))
                   (assoc :pointer-pos pointer-pos
@@ -155,17 +156,17 @@
                   (h/set-tool :pan))
 
               (and (= button :right) (not= (:id element) :bounding-box))
-              (tool/pointer-up e now)
+              (tool/pointer-up e now guid)
 
               :always
-              (-> (tool/pointer-down e now)
+              (-> (tool/pointer-down e now guid)
                   (assoc :pointer-offset pointer-pos
                          :adjusted-pointer-offset adjusted-pointer-pos)))
 
             :pointerup
             (cond-> (if drag?
-                      (tool/drag-end db e now)
-                      (cond-> db (not= button :right) (tool/pointer-up e now)))
+                      (tool/drag-end db e now guid)
+                      (cond-> db (not= button :right) (tool/pointer-up e now guid)))
               (and primary-tool (= button :middle))
               (-> (h/set-tool primary-tool)
                   (dissoc :primary-tool))
@@ -175,7 +176,7 @@
                   (update :snap dissoc :nearest-neighbor)))
 
             :dblclick
-            (tool/double-click db e now)
+            (tool/double-click db e now guid)
 
             :wheel
             (if (some modifiers [:ctrl :alt])

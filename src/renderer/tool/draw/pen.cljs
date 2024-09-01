@@ -34,7 +34,7 @@
                                       :fill "transparent"}}))))
 
 (defmethod tool/drag-end :pen
-  [db _e  now]
+  [db _e  now guid]
   (let [path (-> (element.h/get-temp db)
                  (element/->path)
                  (path/manipulate :smooth)
@@ -43,4 +43,4 @@
         (element.h/set-temp path)
         (element.h/add)
         (app.h/set-state :default)
-        (history/finalize now "Draw line"))))
+        (history/finalize now guid "Draw line"))))

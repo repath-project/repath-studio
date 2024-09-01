@@ -139,9 +139,8 @@
    Explicitly adding states, allows canceling actions before adding the state
    to history. We also avoid the need of throttling in consecutive actions
    (move, color pick etc)"
-  [db now explanation & more]
+  [db now id explanation & more]
   (let [current-position (position db)
-        id (random-uuid)
         explanation (apply str explanation more)
         elements (element.h/elements db)]
     (if (valid-elements? elements)
@@ -165,7 +164,5 @@
             (-> elements element.db/explain-elements me/humanize str)])))))
 
 (defn clear
-  [db now]
-  (-> db
-      (update-in [:documents (:active-document db) :history] dissoc :states :position)
-      (finalize  now "Clear history")))
+  [db]
+  (update-in db [:documents (:active-document db) :history] dissoc :states :position))

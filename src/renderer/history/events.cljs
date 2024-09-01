@@ -50,9 +50,13 @@
 
 (rf/reg-event-fx
  ::clear
- [(rf/inject-cofx ::app.fx/now) persist]
- (fn [{:keys [db now]} _]
-   {:db (h/clear db now)}))
+ [(rf/inject-cofx ::app.fx/now)
+  (rf/inject-cofx ::app.fx/guid)
+  persist]
+ (fn [{:keys [db now guid]} _]
+   {:db (-> db
+            (h/clear)
+            (h/finalize now guid "Clear history"))}))
 
 (rf/reg-event-db
  ::tree-view-updated
@@ -63,8 +67,9 @@
 
 (rf/reg-event-fx
  ::cancel
- [(rf/inject-cofx ::app.fx/now)]
- (fn [{:keys [db now]} _]
+ [(rf/inject-cofx ::app.fx/now)
+  (rf/inject-cofx ::app.fx/guid)]
+ (fn [{:keys [db now guid]} _]
    {:db (cond-> db
           :always (-> (dissoc :drag? :pointer-offset)
                       (tool/activate (:tool db))
@@ -73,7 +78,7 @@
 
           (and (= (:tool db) :select) (= (:state db) :default))
           (-> (element.h/deselect)
-              (h/finalize now "Deselect all"))
+              (h/finalize now guid "Deselect all"))
 
           (= (:state db) :select)
           (element.h/clear-hovered)
