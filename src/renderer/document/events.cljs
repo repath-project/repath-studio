@@ -9,6 +9,7 @@
    [renderer.dialog.events :as-alias dialog.e]
    [renderer.dialog.handlers :as dialog.h]
    [renderer.dialog.views :as dialog.v]
+   [renderer.document.db :as db]
    [renderer.document.effects :as fx]
    [renderer.document.handlers :as h]
    [renderer.history.handlers :as history.h]
@@ -166,7 +167,10 @@
   persist
   focus-canvas]
  (fn [{:keys [db now guid]} [_]]
-   {:db (h/create db now guid)}))
+   {:db (-> db
+            (h/create)
+            (h/create-tab db/default guid)
+            (history.h/finalize now guid "Create document"))}))
 
 (rf/reg-event-fx
  ::init
@@ -177,7 +181,9 @@
  (fn [{:keys [db now guid]} [_]]
    {:db (cond-> db
           (not (:active-document db))
-          (h/create now guid))}))
+          (-> (h/create)
+              (h/create-tab db/default guid)
+              (history.h/finalize now guid "Init document")))}))
 
 (rf/reg-event-fx
  ::new-from-template
@@ -186,7 +192,10 @@
   persist
   focus-canvas]
  (fn [{:keys [db now guid]} [_ size]]
-   {:db (h/create db now guid size)}))
+   {:db (-> db
+            (h/create size)
+            (h/create-tab db/default guid)
+            (history.h/finalize now guid "Create document from template"))}))
 
 (rf/reg-event-fx
  ::open
