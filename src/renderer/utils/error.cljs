@@ -35,21 +35,21 @@
       [:p "You can try to undo your last action in order to recover to a previous working state."]
 
       [:button.button.px-2.rounded.w-full.mb-5.overlay
-       {:on-click #(do (rf/dispatch-sync [::history.e/undo])
+       {:on-click #(do (rf/dispatch [::history.e/undo])
                        (reset! error nil))}
        "Undo your last action"]
 
       [:p "If undoing did't work, you can try restarting the application."]
 
       [:button.button.px-2.rounded.w-full.mb-5.overlay
-       {:on-click #(rf/dispatch-sync [::window.e/relaunch])}
+       {:on-click #(rf/dispatch [::window.e/relaunch])}
        "Restart the application"]
 
       [:p "If you keep getting tha same error after restarting, try clearing your local storage and restart.
             Please note that by doing so, you will loose any unsaved changes, and also your local app settings."]
 
       [:button.button.px-2.rounded.w-full.warning
-       {:on-click #(rf/dispatch-sync [::window.e/clear-local-storage-and-relaunch])}
+       {:on-click #(rf/dispatch [::window.e/clear-local-storage-and-relaunch])}
        "Clear local storage and restart"]]]))
 
 (defn boundary

@@ -51,7 +51,7 @@
       {:modal true
        :onOpenChange (fn [state]
                        (when (and state (empty? suggestions))
-                         (rf/dispatch-sync [::app.e/load-system-fonts])))}
+                         (rf/dispatch [::app.e/load-system-fonts])))}
       [:> Popover/Trigger {:as-child true}
        [:button.ml-px.inline-block.bg-primary.text-muted.h-full
         {:style {:flex "0 0 26px"}}
