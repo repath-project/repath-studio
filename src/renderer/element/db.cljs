@@ -3,8 +3,7 @@
    [malli.core :as m]
    [malli.transform :as mt]
    [renderer.tool.base :as tool]
-   [renderer.utils.bounds :as bounds]
-   [renderer.utils.hiccup :as hiccup]))
+   [renderer.utils.bounds :as bounds]))
 
 (defn tag?
   [k]
@@ -15,7 +14,7 @@
    tag?])
 
 (def attrs
-  [:map-of keyword? any?])
+  [:map-of keyword? [:or string? number? vector? nil?]])
 
 (def handle
   [:map {:closed true}
@@ -41,7 +40,7 @@
    [:selected? {:optional true} boolean?]
    [:children {:default [] :optional true} [:vector uuid?]]
    [:bounds {:optional true} bounds/bounds]
-   [:content {:optional true} [:or string?]]
+   [:content {:optional true} string?]
    [:attrs {:optional true} attrs]])
 
 (def elements
