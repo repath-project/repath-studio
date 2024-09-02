@@ -32,7 +32,7 @@
 
 (rf/reg-event-db
  ::set-prop
- [(history.h/finalized #(str "Set " (name (last %))))]
+ [(history.h/finalized #(str "Set " (name (get % 2))))]
  (fn [db [_ id k v]]
    (h/assoc-prop db id k v)))
 
@@ -50,7 +50,7 @@
 
 (rf/reg-event-db
  ::set-attr
- [(history.h/finalized #(str "Set " (name (last %))))]
+ [(history.h/finalized #(str "Set " (name (second %))))]
  (fn [db [_ k v]]
    (h/set-attr db k v)))
 
@@ -73,7 +73,7 @@
 
 (rf/reg-event-fx
  ::fill
- [(history.h/finalized #(str "Fill " (last %)))]
+ [(history.h/finalized "Fill")]
  (fn [db [_ color]]
    (h/set-attr db :fill color)))
 
@@ -238,9 +238,10 @@
 (rf/reg-event-db
  ::bool-operation
  [(history.h/finalized #(-> % last name str/capitalize))]
- (fn [db  [_ operation]]
-   (if (seq (rest (h/selected db)))
-     (h/bool-operation db operation) db)))
+ (fn [db [_ operation]]
+   (cond-> db
+     (seq (rest (h/selected db)))
+     (h/bool-operation operation))))
 
 (rf/reg-event-db
  ::add
