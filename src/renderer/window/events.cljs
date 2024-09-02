@@ -2,6 +2,7 @@
   (:require
    [platform :as platform]
    [re-frame.core :as rf]
+   [renderer.app.effects :as app.fx]
    [renderer.document.handlers :as document.h]
    [renderer.window.effects :as fx]))
 
@@ -13,7 +14,7 @@
 
 (rf/reg-event-db
  ::set-fullscreen
-  (rf/path :window)
+ (rf/path :window)
  (fn [db [_ state]]
    (assoc db :fullscreen? state)))
 
@@ -27,8 +28,8 @@
  ::set-focused
  (fn [db [_ state]]
    (cond-> db
-       :always (assoc-in [:window :focused?] state)
-       state document.h/center)))
+     :always (assoc-in [:window :focused?] state)
+     state document.h/center)))
 
 (rf/reg-event-fx
  ::close
@@ -45,7 +46,7 @@
 (rf/reg-event-fx
  ::clear-local-storage-and-relaunch
  (fn [_ _]
-   {:fx [[::fx/local-storage-clear nil]
+   {:fx [[::app.fx/local-storage-clear nil]
          [:dispatch [::relaunch]]]}))
 
 (rf/reg-event-fx
