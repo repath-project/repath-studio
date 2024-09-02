@@ -107,22 +107,26 @@
 (rf/reg-event-db
  ::raise
  [(history.h/finalized "Raise selection")]
- h/raise)
+ (fn [db]
+   (h/raise db)))
 
 (rf/reg-event-db
  ::lower
  [(history.h/finalized "Lower selection")]
- h/lower)
+ (fn [db]
+   (h/lower db)))
 
 (rf/reg-event-db
  ::raise-to-top
  [(history.h/finalized "Raise selection to top")]
- h/raise-to-top)
+ (fn [db]
+   (h/raise-to-top db)))
 
 (rf/reg-event-db
  ::lower-to-bottom
  [(history.h/finalized "Lower selection to bottom")]
- h/lower-to-bottom)
+ (fn [db]
+   (h/lower-to-bottom db)))
 
 (rf/reg-event-db
  ::align
@@ -155,22 +159,26 @@
 (rf/reg-event-db
  ::paste
  [(history.h/finalized "Paste selection")]
- h/paste)
+ (fn [db]
+   (h/paste db)))
 
 (rf/reg-event-db
  ::paste-in-place
  [(history.h/finalized "Paste selection in place")]
- h/paste-in-place)
+ (fn [db]
+   (h/paste-in-place db)))
 
 (rf/reg-event-db
  ::paste-styles
  [(history.h/finalized "Paste styles to selection")]
- h/paste-styles)
+ (fn [db]
+   (h/paste-styles db)))
 
 (rf/reg-event-db
  ::duplicate-in-place
  [(history.h/finalized "Duplicate selection")]
- h/duplicate-in-place)
+ (fn [db]
+   (h/duplicate-in-place db)))
 
 (rf/reg-event-db
  ::translate
@@ -218,12 +226,14 @@
 (rf/reg-event-db
  ::->path
  [(history.h/finalized "Convert selection to path")]
- h/->path)
+ (fn [db]
+   (h/->path db)))
 
 (rf/reg-event-db
  ::stroke->path
  [(history.h/finalized "Convert selection's stroke to path")]
- h/stroke->path)
+ (fn [db]
+   (h/stroke->path db)))
 
 (rf/reg-event-db
  ::bool-operation
@@ -278,7 +288,8 @@
 (rf/reg-event-db
  ::ungroup
  [(history.h/finalized "Ungroup selection")]
- h/ungroup)
+ (fn [db]
+   (h/ungroup db)))
 
 (rf/reg-event-db
  ::manipulate-path
