@@ -164,15 +164,16 @@
                       explanation (cond
                                     (fn? explanation) (explanation (rf/get-coeffect context :event))
                                     (string? explanation) explanation
-                                    (nil? explanation) (:explanation db))]
-                  (-> context
-                      (rf/assoc-effect :db (cond-> db
-                                             :always (-> (dissoc :explanation)
-                                                         (assoc-in (conj (history-path db) :position) id)
-                                                         (assoc-in (conj (history-path db) :states id)
-                                                                   (create-state db (.now js/Date) id explanation)))
+                                    (nil? explanation) (:explanation db))
+                      db (cond-> db
+                           :always (-> (dissoc :explanation)
+                                       (assoc-in (conj (history-path db) :position) id)
+                                       (assoc-in (conj (history-path db) :states id)
+                                                 (create-state db (.now js/Date) id explanation)))
 
-                                             current-position
-                                             (-> (update-in (conj (history-path db) :states current-position :children) conj id)
-                                                 (update-ancestors))))
-                      (rf/assoc-effect :dispatch [::app.e/local-storage-persist]))))))))
+                           current-position
+                           (-> (update-in (conj (history-path db) :states current-position :children) conj id)
+                               (update-ancestors)))]
+                  (-> context
+                      (rf/assoc-effect :db db)
+                      (rf/assoc-effect ::app.fx/local-storage-persist db))))))))
