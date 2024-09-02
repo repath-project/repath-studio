@@ -219,7 +219,9 @@
             (-> db
                 (history.h/swap)
                 (cond->
-                 (and (:clicked-element db) (not (-> db :clicked-element :selected?)))
+                 (and (:clicked-element db)
+                      (not (-> db :clicked-element :selected?))
+                      (not= (-> db :clicked-element :id) :bounding-box))
                   (-> (element.h/select (-> db :clicked-element :id) (pointer/shift? e))))
                 (element.h/translate offset)
                 (snap.h/snap element.h/translate)
