@@ -356,6 +356,7 @@
   ([db]
    (reduce unlock db (selected-ids db)))
   ([db id]
+   (print id)
    (assoc-prop db id :locked? false)))
 
 (defn bounds

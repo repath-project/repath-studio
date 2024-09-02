@@ -2,6 +2,7 @@
   (:require
    [malli.core :as m]
    [malli.error :as me]
+   [re-frame.core :as rf]
    [renderer.app.events :as-alias app.e]
    [renderer.app.handlers :as app.h]
    [renderer.element.db :as element.db]
@@ -93,6 +94,10 @@
   [active-history]
   (accumulate active-history (fn [current-state] (-> current-state :children last))))
 
+(defn clear
+  [db]
+  (update-in db (history-path db) dissoc :states :position))
+
 (defn state-count
   [db]
   (-> (history db) :states count))
@@ -163,6 +168,24 @@
             explanation
             (-> elements element.db/explain-elements me/humanize str)])))))
 
-(defn clear
-  [db]
-  (update-in db [:documents (:active-document db) :history] dissoc :states :position))
+(defn finalized
+  [explanation]
+  (rf/->interceptor
+   :id ::finalized
+   :before (fn [context]
+             (-> context
+                 (rf/assoc-coeffect :now (.now js/Date))
+                 (rf/assoc-coeffect :guid (random-uuid))))
+   :after (fn [context]
+            (let [db (rf/get-effect context :db ::not-found)
+                  explanation (cond
+                                (fn? explanation) (explanation (rf/get-coeffect context :event))
+                                (string? explanation) explanation
+                                (nil? explanation) "")]
+              (cond-> context
+                (not= db ::not-found)
+                (-> (rf/assoc-effect :db (finalize db
+                                                   (-> context :coeffects :now)
+                                                   (-> context :coeffects :guid)
+                                                   explanation))
+                    (rf/assoc-effect :fx [[:dispatch [::app.e/local-storage-persist]]])))))))

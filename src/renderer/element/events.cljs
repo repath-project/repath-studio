@@ -13,80 +13,58 @@
    [renderer.window.effects :as-alias window.fx]
    [renderer.worker.events :as-alias worker.e]))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::select
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} [_ id multi?]]
-   {:db (-> db
-            (h/select id multi?)
-            (history.h/finalize now guid "Select element"))}))
+ [(history.h/finalized "Select element")]
+ (fn [db [_ id multi?]]
+   (h/select db id multi?)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::toggle-prop
- (rf/inject-cofx ::app.fx/now)
- (fn [{:keys [db now guid]} [_ id k]]
-   {:db (-> db
-            (h/toggle-prop id k)
-            (history.h/finalize now guid "Toggle " (name k)))}))
+ [(history.h/finalized #(str "Toggle " (name (last %))))]
+ (fn [db [_ id k]]
+   (h/toggle-prop db id k)))
 
 (rf/reg-event-db
  ::preview-prop
  (fn [db [_ id k v]]
    (h/assoc-prop db id k v)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::set-prop
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} [_ id k v]]
-   {:db (-> db
-            (h/assoc-prop id k v)
-            (history.h/finalize now guid "Set " (name k)))}))
+ [(history.h/finalized #(str "Set " (name (last %))))]
+ (fn [db [_ id k v]]
+   (h/assoc-prop db id k v)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::lock
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} _]
-   {:db (-> db
-            (h/lock)
-            (history.h/finalize now guid "Lock selection"))}))
+ [(history.h/finalized "Lock selection")]
+ (fn [db]
+   (h/lock db)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::unlock
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} _]
-   {:db (-> db
-            (h/unlock)
-            (history.h/finalize now guid "Unlock selection"))}))
+ [(history.h/finalized "Unlock selection")]
+ (fn [db]
+   (h/unlock db)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::set-attr
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} [_ k v]]
-   {:db (-> db
-            (h/set-attr k v)
-            (history.h/finalize now guid "Set " (name k)))}))
+ [(history.h/finalized #(str "Set " (name (last %))))]
+ (fn [db [_ k v]]
+   (h/set-attr db k v)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::remove-attr
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} [_ k]]
-   {:db (-> db
-            (h/remove-attr k)
-            (history.h/finalize now guid "Remove " (name k)))}))
+ [(history.h/finalized #(str "Remove " (name (last %))))]
+ (fn [db [_ k]]
+   (h/remove-attr db k)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::update-attr
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} [_ k f & more]]
-   {:db (-> (reduce #(apply h/update-attr %1 %2 k f more) db (h/selected-ids db))
-            (history.h/finalize now guid "Update " (name k)))}))
+ [(history.h/finalized #(str "Update " (name (second %))))]
+ (fn [db [_ k f & more]]
+   (reduce #(apply h/update-attr %1 %2 k f more) db (h/selected-ids db))))
 
 (rf/reg-event-db
  ::preview-attr
@@ -95,102 +73,62 @@
 
 (rf/reg-event-fx
  ::fill
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} [_ color]]
-   {:db (-> db
-            (h/set-attr :fill color)
-            (history.h/finalize now guid "Fill color"))}))
+ [(history.h/finalized #(str "Fill " (last %)))]
+ (fn [db [_ color]]
+   (h/set-attr db :fill color)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::delete
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} _]
-   {:db (-> db
-            (h/delete)
-            (history.h/finalize now guid "Delete selection"))}))
+ [(history.h/finalized "Delete selection")]
+ (fn [db]
+   (h/delete db)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::deselect-all
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} _]
-   {:db (-> db
-            (h/deselect)
-            (history.h/finalize now guid "Deselect all"))}))
+ [(history.h/finalized "Deselect all")]
+ (fn [db]
+   (h/deselect db)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::select-all
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} _]
-   {:db (-> db
-            (h/select-all)
-            (history.h/finalize now guid "Select all"))}))
+ [(history.h/finalized "Select all")]
+ h/select-all)
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::select-same-tags
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} _]
-   {:db (-> db
-            (h/select-same-tags)
-            (history.h/finalize now guid "Select same tags"))}))
+ [(history.h/finalized "Select same tags")]
+ h/select-same-tags)
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::invert-selection
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} _]
-   {:db (-> db
-            (h/invert-selection)
-            (history.h/finalize now guid "Invert selection"))}))
+ [(history.h/finalized "Invert selection")]
+ h/invert-selection)
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::raise
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} _]
-   {:db (-> db
-            (h/raise)
-            (history.h/finalize now guid "Raise selection"))}))
+ [(history.h/finalized "Raise selection")]
+ h/raise)
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::lower
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} _]
-   {:db (-> db
-            (h/lower)
-            (history.h/finalize now guid "Lower selection"))}))
+ [(history.h/finalized "Lower selection")]
+ h/lower)
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::raise-to-top
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} _]
-   {:db (-> db
-            (h/raise-to-top)
-            (history.h/finalize now guid "Raise selection to top"))}))
+ [(history.h/finalized "Raise selection to top")]
+ h/raise-to-top)
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::lower-to-bottom
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} _]
-   {:db (-> db
-            (h/lower-to-bottom)
-            (history.h/finalize now guid "Lower selection to bottom"))}))
+ [(history.h/finalized "Lower selection to bottom")]
+ h/lower-to-bottom)
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::align
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} [_ direction]]
-   {:db (-> db
-            (h/align direction)
-            (history.h/finalize now guid "Align " (name direction)))}))
+ [(history.h/finalized #(str "Update " (name (last %))))]
+ (fn [db [_ direction]]
+   (h/align db direction)))
 
 (rf/reg-event-fx
  ::export-svg
@@ -214,153 +152,99 @@
                                 :on-resolution ::notification.e/add}}
        {::fx/print svg}))))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::paste
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} _]
-   {:db (-> db
-            h/paste
-            (history.h/finalize now guid "Paste selection"))}))
+ [(history.h/finalized "Paste selection")]
+ h/paste)
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::paste-in-place
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} _]
-   {:db (-> db
-            (h/paste-in-place)
-            (history.h/finalize now guid "Paste selection in place"))}))
+ [(history.h/finalized "Paste selection in place")]
+ h/paste-in-place)
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::paste-styles
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} _]
-   {:db (-> db
-            (h/paste-styles)
-            (history.h/finalize now guid "Paste styles to selection"))}))
+ [(history.h/finalized "Paste styles to selection")]
+ h/paste-styles)
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::duplicate-in-place
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} [_]]
-   {:db (-> db
-            (h/duplicate-in-place)
-            (history.h/finalize now guid "Duplicate selection"))}))
+ [(history.h/finalized "Duplicate selection")]
+ h/duplicate-in-place)
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::translate
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} [_ offset]]
-   {:db (-> db
-            (h/translate offset)
-            (history.h/finalize now guid "Move selection"))}))
+ [(history.h/finalized "Move selection")]
+ (fn [db [_ offset]]
+   (h/translate db offset)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::position
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} [_ position]]
-   {:db (-> db
-            (h/position position)
-            (history.h/finalize now guid "Position selection"))}))
+ [(history.h/finalized "Position selection")]
+ (fn [db [_ position]]
+   (h/position db position)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::scale
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} [_ ratio]]
-   {:db (let [bounds (h/bounds db)
-              pivot-point (bounds/center bounds)]
-          (-> db
-              (h/scale ratio pivot-point true)
-              (history.h/finalize now guid "Scale selection")))}))
+ [(history.h/finalized "Scale selection")]
+ (fn [db [_ ratio]]
+   (let [pivot-point (-> db h/bounds bounds/center)]
+     (h/scale db ratio pivot-point true))))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::move-up
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} [_]]
-   {:db (-> db
-            (h/translate [0 -1])
-            (history.h/finalize now guid "Move selection up"))}))
+ [(history.h/finalized "Move selection up")]
+ (fn [db _]
+   (h/translate db [0 -1])))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::move-down
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} [_]]
-   {:db (-> db
-            (h/translate [0 1])
-            (history.h/finalize now guid "Move selection down"))}))
+ [(history.h/finalized "Move selection down")]
+ (fn [db _]
+   (h/translate db [0 1])))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::move-left
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} [_]]
-   {:db (-> db
-            (h/translate [-1 0])
-            (history.h/finalize now guid "Move selection left"))}))
+ [(history.h/finalized "Move selection left")]
+ (fn [db _]
+   (h/translate db [-1 0])))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::move-right
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} [_]]
-   {:db (-> db
-            (h/translate [1 0])
-            (history.h/finalize now guid "Move selection right"))}))
+ [(history.h/finalized "Move selection right")]
+ (fn [db [_]]
+   (h/translate db [1 0])))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::->path
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]}  _]
-   {:db (-> db
-            (h/->path)
-            (history.h/finalize now guid "Convert selection to path"))}))
+ [(history.h/finalized "Convert selection to path")]
+ h/->path)
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::stroke->path
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]}  _]
-   {:db (-> db
-            (h/stroke->path)
-            (history.h/finalize now guid "Convert selection's stroke to path"))}))
+ [(history.h/finalized "Convert selection's stroke to path")]
+ h/stroke->path)
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::bool-operation
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]}  [_ operation]]
-   {:db (if (seq (rest (h/selected db)))
-          (-> db
-              (h/bool-operation operation)
-              (history.h/finalize now guid (-> operation name str/capitalize))) db)}))
+ [(history.h/finalized #(-> % last name str/capitalize))]
+ (fn [db  [_ operation]]
+   (if (seq (rest (h/selected db)))
+     (h/bool-operation db operation) db)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::add
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} [_ el]]
-   {:db (-> db
-            (h/add el)
-            (history.h/finalize now guid "Create " (name (:tag el))))}))
+ [(history.h/finalized #(str "Create " (-> % last :tag name)))]
+ (fn [db [_ el]]
+   (h/add db el)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::import
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} [_ data msg]]
-   {:db (-> db
-            (h/import-svg data)
-            (assoc :loading? false)
-            (history.h/finalize now guid msg))}))
+ [(history.h/finalized #(last %))]
+ (fn [db [_ data _msg]]
+   (-> db
+       (h/import-svg data)
+       (assoc :loading? false))))
 
 (rf/reg-event-fx
  ::import-svg
@@ -376,63 +260,43 @@
 
 (rf/reg-event-fx
  ::animate
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} [_ tag attrs]]
-   {:db (-> db
-            (h/animate tag attrs)
-            (history.h/finalize now guid (name tag)))}))
+ [(history.h/finalized #(-> % second name))]
+ (fn [db [_ tag attrs]]
+   (h/animate db tag attrs)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::set-parent
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]}  [_ parent-id id]]
-   {:db (-> db
-            (h/set-parent parent-id id)
-            (history.h/finalize now guid "Set parent"))}))
+ [(history.h/finalized "Set parent")]
+ (fn [db [_ parent-id id]]
+   (h/set-parent db parent-id id)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::group
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]}  _]
-   {:db (-> db
-            (h/group)
-            (history.h/finalize now guid "Group selection"))}))
+ [(history.h/finalized "Group selection")]
+ h/group)
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::ungroup
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]}  _]
-   {:db (-> db
-            h/ungroup
-            (history.h/finalize now guid "Ungroup selection"))}))
+ [(history.h/finalized "Ungroup selection")]
+ h/ungroup)
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::manipulate-path
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} [_ action]]
-   {:db (-> db
-            (h/manipulate-path action)
-            (history.h/finalize now guid (str/capitalize (name action)) "path"))}))
+ [(history.h/finalized #(-> % last name str/capitalize (str " path")))]
+ (fn [db [_ action]]
+   (h/manipulate-path db action)))
 
 (rf/reg-event-fx
  ::copy
- (fn [{:keys [db]} [_]]
+ (fn [{:keys [db]} _]
    {:db (h/copy db)
     ::app.fx/clipboard-write [(element/->svg (h/top-selected-sorted db))]}))
 
 (rf/reg-event-fx
  ::cut
- (rf/inject-cofx ::app.fx/now)
- (fn [{:keys [db now guid]} [_]]
-   {:db (-> db
-            (h/copy)
-            (h/delete)
-            (history.h/finalize now guid "Cut selection"))
+ [(history.h/finalized "Cut selection")]
+ (fn [db _]
+   {:db (-> db h/copy h/delete)
     ::app.fx/clipboard-write [(element/->svg (h/top-selected-sorted db))]}))
 
 (rf/reg-event-fx

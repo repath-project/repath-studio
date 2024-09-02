@@ -106,7 +106,7 @@
       (element.h/set-attr k v)))
 
 (defn load
-  [db document now id]
+  [db document id]
   (let [open-document-id (search-by-path db (:path document))
         migrated-document (compatibility/migrate-document document)
         migrated? (not= document migrated-document)
@@ -116,8 +116,7 @@
       (cond-> db
         (not open-document-id)
         (-> (create-tab (cond-> document (not migrated?) (dissoc :save)) id)
-            (center)
-            (history.h/finalize now id "Load document"))
+            (center))
 
         :always
         (-> (add-recent (:path document))

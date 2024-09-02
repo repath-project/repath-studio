@@ -44,13 +44,13 @@
 
 (rf/reg-event-db
  ::center
- persist
+ [persist]
  (fn [db [_]]
    (h/center db)))
 
 (rf/reg-event-db
  ::set-hovered-ids
- active-path
+ [active-path]
  (fn [db [_ ids]]
    (assoc db :hovered-ids (->> ids (remove nil?) (set)))))
 
@@ -82,29 +82,21 @@
           :fill (:stroke db)
           :stroke (:fill db))))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::set-fill
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)
-  persist]
- (fn [{:keys [db now guid]} [_ color]]
-   {:db (-> db
-            (h/set-global-attr :fill color)
-            (history.h/finalize now guid guid "Set fill"))}))
+ [(history.h/finalized "Set fill")]
+ (fn [db [_ color]]
+   (h/set-global-attr db :fill color)))
 
 (rf/reg-event-fx
  ::set-stroke
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)
-  persist]
- (fn [{:keys [db now guid]} [_ color]]
-   {:db (-> db
-            (h/set-global-attr :stroke color)
-            (history.h/finalize now guid guid "Set stroke"))}))
+ [(history.h/finalized "Set stroke")]
+ (fn [db [_ color]]
+   (h/set-global-attr db :stroke color)))
 
 (rf/reg-event-db
  ::close
- persist
+ [persist]
  (fn [db [_ id confirm?]]
    (if (or (h/saved? db id) (not confirm?))
      (h/close db id)
@@ -116,13 +108,13 @@
                            :attrs {:onOpenAutoFocus #(.preventDefault %)}})))))
 (rf/reg-event-fx
  ::close-active
- persist
+ [persist]
  (fn [{:keys [db]} [_]]
    {:dispatch [::close (:active-document db) true]}))
 
 (rf/reg-event-db
  ::close-all-saved
- persist
+ [persist]
  (fn [db [_]]
    (let [saved (filter #(h/saved? db %) (:document-tabs db))]
      (reduce h/close db saved))))
@@ -141,7 +133,7 @@
 
 (rf/reg-event-db
  ::scroll
- persist
+ [persist]
  (fn [db [_ direction]]
    (let [document-tabs (:document-tabs db)
          index (.indexOf document-tabs (:active-document db))
@@ -153,7 +145,7 @@
 
 (rf/reg-event-db
  ::swap-position
- persist
+ [persist]
  (fn [db [_ dragged-key swapped-key]]
    (let [document-tabs (:document-tabs db)
          dragged-index (.indexOf document-tabs dragged-key)
@@ -162,44 +154,38 @@
 
 (rf/reg-event-fx
  ::new
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)
-  persist
+ [(rf/inject-cofx ::app.fx/guid)
+  (history.h/finalized "Create document")
   focus-canvas]
- (fn [{:keys [db now guid]} [_]]
+ (fn [{:keys [db guid]} [_]]
    {:db (-> db
             (h/create-tab db/default guid)
-            (h/create-canvas)
-            (history.h/finalize now guid "Create document"))}))
+            (h/create-canvas))}))
 
 (rf/reg-event-fx
  ::init
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)
-  persist
+ [(rf/inject-cofx ::app.fx/guid)
+  (history.h/finalized "Create document")
   focus-canvas]
- (fn [{:keys [db now guid]} [_]]
+ (fn [{:keys [db guid]} [_]]
    {:db (cond-> db
           (not (:active-document db))
           (-> (h/create-tab db/default guid)
-              (h/create-canvas)
-              (history.h/finalize now guid "Init document")))}))
+              (h/create-canvas)))}))
 
 (rf/reg-event-fx
  ::new-from-template
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)
-  persist
+ [(rf/inject-cofx ::app.fx/guid)
+  (history.h/finalized "Create document from template")
   focus-canvas]
- (fn [{:keys [db now guid]} [_ size]]
+ (fn [{:keys [db guid]} [_ size]]
    {:db (-> db
             (h/create-tab db/default guid)
-            (h/create-canvas size)
-            (history.h/finalize now guid "Create document from template"))}))
+            (h/create-canvas size))}))
 
 (rf/reg-event-fx
  ::open
- persist
+ [persist]
  (fn [_ [_ file-path]]
    (if platform/electron?
      {::window.fx/ipc-invoke {:channel "open-documents"
@@ -215,13 +201,12 @@
 
 (rf/reg-event-fx
  ::load
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)
-  persist
+ [(rf/inject-cofx ::app.fx/guid)
+  (history.h/finalized "Load document")
   focus-canvas]
- (fn [{:keys [db now guid]} [_ documents]]
+ (fn [{:keys [db guid]} [_ documents]]
    {:db (->> documents
-             (reduce #(h/load %1 %2 now guid) db)
+             (reduce #(h/load %1 %2 guid) db)
              (h/center))}))
 
 (rf/reg-event-fx
@@ -267,7 +252,7 @@
 
 (rf/reg-event-db
  ::saved
- persist
+ [persist]
  (fn [db [_ {:keys [path id] :as document-info}]]
    ;; Update the path, the title and the saved position of the document.
    ;; Any other changes that could happen while saving should be preserved.
@@ -283,13 +268,13 @@
 
 (rf/reg-event-db
  ::clear-recent
- persist
+ [persist]
  (fn [db [_]]
    (assoc db :recent [])))
 
 (rf/reg-event-db
  ::set-active
- persist
+ [persist]
  (fn [db [_ id]]
    (-> db
        (h/set-active id)

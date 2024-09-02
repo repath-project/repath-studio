@@ -1,7 +1,6 @@
 (ns renderer.history.events
   (:require
    [re-frame.core :as rf]
-   [renderer.app.effects :as app.fx]
    [renderer.app.events :refer [persist]]
    [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
@@ -48,15 +47,11 @@
  (fn [db [_ id]]
    (h/move db id)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::clear
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)
-  persist]
- (fn [{:keys [db now guid]} _]
-   {:db (-> db
-            (h/clear)
-            (h/finalize now guid "Clear history"))}))
+ [(h/finalized "Clear history")]
+ (fn [db _]
+   (h/clear db)))
 
 (rf/reg-event-db
  ::tree-view-updated
@@ -65,24 +60,22 @@
        (h/set-zoom zoom)
        (h/set-translate translate))))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::cancel
- [(rf/inject-cofx ::app.fx/now)
-  (rf/inject-cofx ::app.fx/guid)]
- (fn [{:keys [db now guid]} _]
-   {:db (cond-> db
-          :always (-> (dissoc :drag? :pointer-offset)
-                      (tool/activate (:tool db))
-                      (element.h/clear-temp)
-                      (h/swap))
+ [(h/finalized "Deselect all")]
+ (fn [db _]
+   (cond-> db
+     :always (-> (dissoc :drag? :pointer-offset :clicked-element)
+                 (tool/activate (:tool db))
+                 (element.h/clear-temp)
+                 (h/swap))
 
-          (and (= (:tool db) :select) (= (:state db) :default))
-          (-> (element.h/deselect)
-              (h/finalize now guid "Deselect all"))
+     (and (= (:tool db) :select) (= (:state db) :default))
+     (element.h/deselect)
 
-          (= (:state db) :select)
-          (element.h/clear-hovered)
+     (= (:state db) :select)
+     (element.h/clear-hovered)
 
-          (= (:state db) :default)
-          (app.h/set-tool :select))})) ; FIXME
+     (= (:state db) :default)
+     (app.h/set-tool :select))))
 
