@@ -15,7 +15,7 @@ https://github.com/day8/re-frame-undo/blob/master/src/day8/re_frame/undo.cljs
 ## What we currently do
 
 - Each document has a dedicated `:history` map.
-- We explicitly call a `finalize` function when we need to push a new state to history. This allows us to avoid throttling or debouncing specific actions. We can also easily cancel an operation by swapping the current state with the last history point (see `renderer.history.events/cancel`). We are modifying our db and call finalize when we are done.
+- We can also cancel an operation by swapping the current state with the last history point (see `renderer.history.handlers/swap`).
 - Our state is normalized to easily access specific points in history. We can then look for a specific state on our tree by id and then retrieve its data with a simple `get-in`.
 - All changes under [:documents :document-key :elements] should be considered undoable and part of the file history.
 

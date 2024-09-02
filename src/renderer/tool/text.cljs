@@ -8,7 +8,6 @@
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.events :as-alias element.e]
    [renderer.element.handlers :as element.h]
-   [renderer.history.handlers :as history.h]
    [renderer.tool.base :as tool]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
@@ -39,18 +38,18 @@
       (app.h/set-message "Click to enter your text.")))
 
 (defmethod tool/pointer-up :text
-  [{:keys [adjusted-pointer-offset] :as db} _e now guid]
+  [{:keys [adjusted-pointer-offset] :as db} _e]
   (let [[offset-x offset-y] adjusted-pointer-offset
         attrs {:x offset-x
                :y offset-y}]
     (-> db
-        element.h/deselect
+        (element.h/deselect)
         (element.h/add {:type :element
                         :tag :text
                         :attrs attrs})
-        (history.h/finalize now guid "Create text")
         (app.h/set-tool :edit)
-        (app.h/set-state :edit)))) ; FIXME: Merge create and edit history action.
+        (app.h/set-state :edit)
+        (app.h/explain "Create text")))) ; FIXME: Merge create and edit history action.
 
 (defmethod tool/drag-end :text
   [db e]

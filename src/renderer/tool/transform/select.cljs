@@ -98,13 +98,13 @@
     (element.h/ignore :bounding-box)))
 
 (defmethod tool/pointer-up :select
-  [db {:keys [element] :as e} now guid]
+  [db {:keys [element] :as e}]
   (if-not (and (= (:button e) :right)
                (:selected? element))
     (-> db
         (dissoc :clicked-element)
         (element.h/select (:id element) (pointer/shift? e))
-        (history.h/finalize now guid "Select element"))
+        (app.h/explain "Select element"))
     (dissoc db :clicked-element)))
 
 (defmethod tool/double-click :select
@@ -135,7 +135,7 @@
       (not intersecting?) (assoc-in [:attrs :fill] "transparent"))))
 
 (defmethod tool/drag-start :select
-  [db e now guid]
+  [db _e]
   (case (-> db :clicked-element :tag)
     :canvas
     (app.h/set-state db :select)
@@ -143,14 +143,7 @@
     :scale
     (app.h/set-state db :scale)
 
-    :move
-    (app.h/set-state db :move)
-
-    (-> (cond-> db
-          (and (:clicked-element db) (not (-> db :clicked-element :selected?)))
-          (-> (element.h/select (-> db :clicked-element :id) (pointer/shift? e))
-              (history.h/finalize now guid "Select element")))
-        (app.h/set-state :move))))
+    (app.h/set-state db :move)))
 
 (defn lock-ratio
   [[x y] handle]
@@ -225,6 +218,9 @@
             (app.h/set-state db :clone)
             (-> db
                 (history.h/swap)
+                (cond->
+                 (and (:clicked-element db) (not (-> db :clicked-element :selected?)))
+                  (-> (element.h/select (-> db :clicked-element :id) (pointer/shift? e))))
                 (element.h/translate offset)
                 (snap.h/snap element.h/translate)
                 (app.h/set-cursor "default")))
@@ -241,7 +237,7 @@
           :scale
           (cond-> db
             :always
-            (-> history.h/swap
+            (-> (history.h/swap)
                 (app.h/set-cursor "default")
                 (offset-scale offset (pointer/ctrl? e) (pointer/shift? e) (pointer/alt? e)))
 
@@ -251,15 +247,15 @@
           :default db))))
 
 (defmethod tool/drag-end :select
-  [db e now guid]
+  [db e]
   (-> (case (:state db)
         :select (-> (cond-> db (not (pointer/shift? e)) element.h/deselect)
                     (reduce-by-area (pointer/alt? e) element.h/select)
                     element.h/clear-temp
-                    (history.h/finalize now guid "Modify selection"))
-        :move (history.h/finalize db now guid "Move selection")
-        :scale (history.h/finalize db now guid "Scale selection")
-        :clone (history.h/finalize db now guid "Clone selection")
+                    (app.h/explain "Modify selection"))
+        :move (app.h/explain db "Move selection")
+        :scale (app.h/explain db "Scale selection")
+        :clone (app.h/explain db "Clone selection")
         :default db)
       (app.h/set-state :default)
       (element.h/clear-hovered)

@@ -14,6 +14,10 @@
   [db message]
   (assoc db :message message))
 
+(defn explain
+  [db message & rest]
+  (assoc db :explanation (apply str message rest)))
+
 (defn add-fx
   [db effect]
   (update db :fx conj effect))

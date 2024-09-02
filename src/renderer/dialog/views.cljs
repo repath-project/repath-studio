@@ -91,7 +91,7 @@
   []
   [:> Command/Command
    {:label "Command Menu"
-    :on-key-down #(when-not (= (.-key %) "Escape") (.stopPropagation %))}
+    :on-key-down #(.stopPropagation %)}
    [:> Command/CommandInput
     {:class "p-3 bg-secondary text-sm border-b border-default"
      :placeholder (t [:cmdk/search-command "Search for a command"])}]

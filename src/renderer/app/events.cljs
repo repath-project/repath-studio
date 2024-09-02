@@ -9,6 +9,7 @@
    [renderer.app.effects :as fx]
    [renderer.app.handlers :as h]
    [renderer.frame.handlers :as frame.h]
+   [renderer.history.handlers :as history.h]
    [renderer.notification.events :as-alias notification.e]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
@@ -23,7 +24,7 @@
             (let [db (rf/get-effect context :db ::not-found)]
               (cond-> context
                 (not= db ::not-found)
-                (-> (rf/assoc-effect :fx (:fx db))
+                (-> (rf/assoc-effect :fx (apply conj (or (:fx (rf/get-effect context)) []) (:fx db)))
                     (rf/assoc-effect :db (assoc db :fx []))))))))
 
 (rf/reg-global-interceptor custom-fx)
@@ -119,9 +120,8 @@
 
 (rf/reg-event-fx
  ::pointer-event
- [(rf/inject-cofx ::fx/now)
-  (rf/inject-cofx ::fx/guid)]
- (fn [{:keys [db now guid]}
+ [(history.h/finalize nil)]
+ (fn [{:keys [db]}
       [_ {:as e
           :keys [button buttons modifiers data-transfer pointer-pos delta element]}]]
    (let [{:keys [pointer-offset tool dom-rect drag? primary-tool drag-threshold]} db
@@ -139,11 +139,11 @@
                                                    pointer-offset)
 
                         (not drag?)
-                        (-> (tool/drag-start e now guid)
+                        (-> (tool/drag-start e)
                             (assoc :drag? true))
 
                         :always
-                        (tool/drag e now guid))
+                        (tool/drag e))
                       db)
                     (tool/pointer-move db e))
                   (assoc :pointer-pos pointer-pos
@@ -156,17 +156,17 @@
                   (h/set-tool :pan))
 
               (and (= button :right) (not= (:id element) :bounding-box))
-              (tool/pointer-up e now guid)
+              (tool/pointer-up e)
 
               :always
-              (-> (tool/pointer-down e now guid)
+              (-> (tool/pointer-down e)
                   (assoc :pointer-offset pointer-pos
                          :adjusted-pointer-offset adjusted-pointer-pos)))
 
             :pointerup
             (cond-> (if drag?
-                      (tool/drag-end db e now guid)
-                      (cond-> db (not= button :right) (tool/pointer-up e now guid)))
+                      (tool/drag-end db e)
+                      (cond-> db (not= button :right) (tool/pointer-up e)))
               (and primary-tool (= button :middle))
               (-> (h/set-tool primary-tool)
                   (dissoc :primary-tool))
@@ -176,7 +176,7 @@
                   (update :snap dissoc :nearest-neighbor)))
 
             :dblclick
-            (tool/double-click db e now guid)
+            (tool/double-click db e)
 
             :wheel
             (if (some modifiers [:ctrl :alt])
@@ -197,7 +197,7 @@
              nil)]})))
 
 (rf/reg-event-db
- :keyboard-event
+ ::keyboard-event
  (fn [{:keys [tool] :as db} [_ {:keys [type code] :as e}]]
    (case type
      :keydown

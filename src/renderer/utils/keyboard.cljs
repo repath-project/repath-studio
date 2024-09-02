@@ -27,7 +27,7 @@
   "https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
    https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/"
   [^js/KeyboardEvent e]
-  (rf/dispatch-sync [:keyboard-event
+  (rf/dispatch-sync [::app.e/keyboard-event
                      {:target (.-target e)
                       :type (keyword (.-type e))
                       :code (.-code e)

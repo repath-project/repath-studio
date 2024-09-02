@@ -85,19 +85,25 @@
         (update :document-tabs #(vec/add % (inc active-index) id)))))
 
 (defn create-canvas
-  ([db]
-   (create-canvas db [595 842]))
-  ([db size]
-   (cond-> db
-     :always
-     (element.h/create {:tag :canvas
-                        :attrs {:fill "#eeeeee"}})
+  [db size]
+  (cond-> db
+    :always
+    (element.h/create {:tag :canvas
+                       :attrs {:fill "#eeeeee"}})
 
-     size
-     (-> (element.h/create {:tag :svg
-                            :attrs {:width (first size)
-                                    :height (second size)}})
-         (center)))))
+    size
+    (-> (element.h/create {:tag :svg
+                           :attrs {:width (first size)
+                                   :height (second size)}})
+        (center))))
+
+(defn create
+  ([db guid]
+   (create db guid [595 842]))
+  ([db guid size]
+   (-> db
+       (create-tab db/default guid)
+       (create-canvas size))))
 
 (defn set-global-attr
   [{active-document :active-document :as db} k v]

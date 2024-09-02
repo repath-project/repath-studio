@@ -619,8 +619,6 @@
   []
   (into [:> Menubar/Root
          {:class "menubar-root"
-          :on-key-down #(when-not (= (.-key %) "Escape")
-                          ; FIXME: Esc global action also triggered.
-                          (.stopPropagation %))
+          :on-key-down #(.stopPropagation %) ; FIXME: Esc global action also triggered.
           :onValueChange #(rf/dispatch [::app.e/set-backdrop (boolean (seq %))])}]
         (map menu-item (root-menu))))

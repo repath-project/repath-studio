@@ -9,7 +9,6 @@
    [renderer.attribute.range :as attr.range]
    [renderer.attribute.views :as attr.v]
    [renderer.element.handlers :as element.h]
-   [renderer.history.handlers :as history.h]
    [renderer.tool.base :as tool]
    [renderer.tool.overlay :as overlay]
    [renderer.utils.bounds :as bounds]
@@ -143,10 +142,10 @@
 (defn points->path
   [points options]
   (-> points
-      clj->js
+      (clj->js)
       (getStroke (clj->js options))
-      js->clj
-      get-svg-path-from-stroke))
+      (js->clj)
+      (get-svg-path-from-stroke)))
 
 (defmethod tool/render :brush
   [{:keys [attrs] :as element}]
@@ -194,11 +193,11 @@
                           (mat/add point [x y 0]))) %))))
 
 (defmethod tool/drag-end :brush
-  [db _e now guid]
+  [db _e]
   (-> db
-      element.h/add
+      (element.h/add)
       (app.h/set-state :default)
-      (history.h/finalize now guid "Draw line")))
+      (app.h/explain "Draw line")))
 
 (defmethod tool/path :brush
   [{:keys [attrs]}]

@@ -3,7 +3,6 @@
    [clojure.string :as str]
    [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
-   [renderer.history.handlers :as history]
    [renderer.tool.base :as tool]
    [renderer.tool.shape.path :as path]
    [renderer.utils.element :as element]))
@@ -34,7 +33,7 @@
                                       :fill "transparent"}}))))
 
 (defmethod tool/drag-end :pen
-  [db _e  now guid]
+  [db _e]
   (let [path (-> (element.h/get-temp db)
                  (element/->path)
                  (path/manipulate :smooth)
@@ -43,4 +42,4 @@
         (element.h/set-temp path)
         (element.h/add)
         (app.h/set-state :default)
-        (history/finalize now guid "Draw line"))))
+        (app.h/explain "Draw line"))))

@@ -67,6 +67,7 @@
    [:pen-mode? {:default false} boolean?]
    [:backdrop? {:default false} boolean?]
    [:loading? {:default false} boolean?]
+   [:explanation {:optional true} string?]
    [:lang {:default :en-US} keyword?]
    [:repl-mode {:default :cljs} keyword?]
    [:worker {:default {:tasks {}}} [:map [:tasks map?]]]

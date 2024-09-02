@@ -3,8 +3,8 @@
    [malli.core :as m]
    [malli.error :as me]
    [re-frame.core :as rf]
+   [renderer.app.effects :as app.fx]
    [renderer.app.events :as-alias app.e]
-   [renderer.app.handlers :as app.h]
    [renderer.element.db :as element.db]
    [renderer.element.handlers :as element.h]
    [renderer.notification.handlers :as notification.h]
@@ -140,52 +140,39 @@
 (def valid-elements? (m/validator element.db/elements))
 
 (defn finalize
-  "Pushes changes to history.
-   Explicitly adding states, allows canceling actions before adding the state
-   to history. We also avoid the need of throttling in consecutive actions
-   (move, color pick etc)"
-  [db now id explanation & more]
-  (let [current-position (position db)
-        explanation (apply str explanation more)
-        elements (element.h/elements db)]
-    (if (valid-elements? elements)
-      (cond-> db
-        (not= elements (:elements (state (history db))))
-        (cond->
-         :always (-> (assoc-in (conj (history-path db) :position) id)
-                     (assoc-in (conj (history-path db) :states id)
-                               (create-state db now id explanation)))
-
-         current-position
-         (-> (update-in (conj (history-path db) :states current-position :children) conj id)
-             (update-ancestors))
-
-         :always
-         (app.h/add-fx [:dispatch [::app.e/local-storage-persist]])))
-      (-> (swap db)
-          (notification.h/add
-           [notification.v/spec-failed
-            explanation
-            (-> elements element.db/explain-elements me/humanize str)])))))
-
-(defn finalized
+  "Pushes changes to history."
   [explanation]
   (rf/->interceptor
-   :id ::finalized
-   :before (fn [context]
-             (-> context
-                 (rf/assoc-coeffect :now (.now js/Date))
-                 (rf/assoc-coeffect :guid (random-uuid))))
+   :id ::finalize
    :after (fn [context]
             (let [db (rf/get-effect context :db ::not-found)
-                  explanation (cond
-                                (fn? explanation) (explanation (rf/get-coeffect context :event))
-                                (string? explanation) explanation
-                                (nil? explanation) "")]
-              (cond-> context
-                (not= db ::not-found)
-                (-> (rf/assoc-effect :db (finalize db
-                                                   (-> context :coeffects :now)
-                                                   (-> context :coeffects :guid)
-                                                   explanation))
-                    (rf/assoc-effect :fx [[:dispatch [::app.e/local-storage-persist]]])))))))
+                  elements (element.h/elements db)]
+              (cond
+                (or (not (or explanation (:explanation db)))
+                    (= elements (:elements (state (history db)))))
+                context
+
+                (not (valid-elements? elements))
+                (-> db swap (notification.h/add
+                             [notification.v/spec-failed
+                              explanation
+                              (-> elements element.db/explain-elements me/humanize str)]))
+
+                :else
+                (let [current-position (position db)
+                      id (random-uuid)
+                      explanation (cond
+                                    (fn? explanation) (explanation (rf/get-coeffect context :event))
+                                    (string? explanation) explanation
+                                    (nil? explanation) (:explanation db))]
+                  (-> context
+                      (rf/assoc-effect :db (cond-> db
+                                             :always (-> (dissoc :explanation)
+                                                         (assoc-in (conj (history-path db) :position) id)
+                                                         (assoc-in (conj (history-path db) :states id)
+                                                                   (create-state db (.now js/Date) id explanation)))
+
+                                             current-position
+                                             (-> (update-in (conj (history-path db) :states current-position :children) conj id)
+                                                 (update-ancestors))))
+                      (rf/assoc-effect :dispatch [::app.e/local-storage-persist]))))))))

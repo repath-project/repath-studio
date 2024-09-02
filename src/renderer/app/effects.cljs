@@ -12,11 +12,6 @@
 (rf.storage/reg-co-fx! config/app-key {:cofx :store})
 
 (rf/reg-cofx
- ::now
- (fn [coeffects _]
-   (assoc coeffects :now (.now js/Date))))
-
-(rf/reg-cofx
  ::guid
  (fn [coeffects _]
    (assoc coeffects :guid (random-uuid))))

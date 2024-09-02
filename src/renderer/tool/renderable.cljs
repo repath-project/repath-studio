@@ -9,7 +9,6 @@
    [renderer.document.subs :as-alias document.s]
    [renderer.element.handlers :as element.h]
    [renderer.element.subs :as-alias element.s]
-   [renderer.history.handlers :as history.h]
    [renderer.tool.base :as tool]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.dom :as dom]
@@ -27,12 +26,12 @@
   (app.h/set-state db :create))
 
 (defmethod tool/drag-end ::tool/renderable
-  [db _e now guid]
+  [db _e]
   (-> db
       (element.h/add)
       (app.h/set-tool :select)
       (app.h/set-state :default)
-      (history.h/finalize now guid "Create " (name (:tag (element.h/get-temp db))))))
+      (app.h/explain "Create " (name (:tag (element.h/get-temp db))))))
 
 (defmethod tool/bounds ::tool/renderable
   [{:keys [tag attrs content] :as el}]

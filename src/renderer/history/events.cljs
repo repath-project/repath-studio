@@ -9,32 +9,31 @@
 
 (rf/reg-event-db
  ::undo
- persist
+ [persist]
  (fn [db _]
    (h/undo db)))
 
 (rf/reg-event-db
  ::redo
- persist
+ [persist]
  (fn [db _]
    (h/redo db)))
 
 (rf/reg-event-db
  ::undo-by
- persist
+ [persist]
  (fn [db [_ n]]
    (h/undo db n)))
 
 (rf/reg-event-db
  ::redo-by
- persist
+ [persist]
  (fn [db [_ n]]
    (h/redo db n)))
 
 (rf/reg-event-db
  ::swap
- (fn [db _]
-   (h/swap db)))
+ h/swap)
 
 (rf/reg-event-db
  ::preview
@@ -43,15 +42,14 @@
 
 (rf/reg-event-db
  ::move
- persist
+ [persist]
  (fn [db [_ id]]
    (h/move db id)))
 
 (rf/reg-event-db
  ::clear
- [(h/finalized "Clear history")]
- (fn [db _]
-   (h/clear db)))
+ [(h/finalize "Clear history")]
+ h/clear)
 
 (rf/reg-event-db
  ::tree-view-updated
@@ -62,7 +60,7 @@
 
 (rf/reg-event-db
  ::cancel
- [(h/finalized "Deselect all")]
+ [(h/finalize "Deselect all")]
  (fn [db _]
    (cond-> db
      :always (-> (dissoc :drag? :pointer-offset :clicked-element)
@@ -70,12 +68,16 @@
                  (element.h/clear-temp)
                  (h/swap))
 
-     (and (= (:tool db) :select) (= (:state db) :default))
+     (and (= (:tool db) :select)
+          (= (:state db) :default))
      (element.h/deselect)
 
      (= (:state db) :select)
      (element.h/clear-hovered)
 
      (= (:state db) :default)
-     (app.h/set-tool :select))))
+     (app.h/set-tool :select)
+
+     :always
+     (app.h/set-state :default))))
 

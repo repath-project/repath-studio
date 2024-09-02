@@ -31,14 +31,14 @@
     (assoc :clicked-element element)))
 
 (defmethod tool/pointer-up :edit
-  [db {:keys [element] :as e} now guid]
+  [db {:keys [element] :as e}]
   (if-not (and (= (:button e) :right)
                (:selected? element))
     (-> db
         element.h/clear-ignored
         (dissoc :clicked-element)
         (element.h/select (:id element) (pointer/shift? e))
-        (history.h/finalize now guid "Select element"))
+        (app.h/explain "Select element"))
     (dissoc db :clicked-element)))
 
 (defmethod tool/pointer-move :edit
@@ -70,8 +70,8 @@
           (snap.h/snap snap-handler id (:id clicked-element))))))
 
 (defmethod tool/drag-end :edit
-  [db _e now guid]
+  [db _e]
   (-> db
       (app.h/set-state :default)
       (dissoc :clicked-element)
-      (history.h/finalize now guid "Edit")))
+      (app.h/explain "Edit")))

@@ -6,7 +6,6 @@
    [clojure.string :as str]
    [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
-   [renderer.history.handlers :as history]
    [renderer.tool.base :as tool]
    [renderer.tool.overlay :as overlay]
    [renderer.utils.attribute :as utils.attr]
@@ -64,14 +63,14 @@
                                       adjusted-pointer-pos)))) db))
 
 (defmethod tool/double-click ::tool/polyshape
-  [{:keys [active-document] :as db} _e now]
+  [{:keys [active-document] :as db} _e]
   (-> db
       (update-in [:documents active-document :temp-element :attrs :points]
                  #(str/join " " (apply concat (drop-last 2 (utils.attr/points->vec %)))))
       element.h/add
       (app.h/set-tool :select)
       (app.h/set-state :default)
-      (history/finalize now "Create " (name (:tool db)))))
+      (app.h/explain "Create " (name (:tool db)))))
 
 (defmethod tool/translate ::tool/polyshape
   [el [x y]]

@@ -3,13 +3,11 @@
    [cljs.reader :as edn]
    [platform :as platform]
    [re-frame.core :as rf]
-   [re-frame.interceptor :refer [->interceptor get-effect get-coeffect assoc-coeffect assoc-effect]]
    [renderer.app.effects :as-alias app.fx]
    [renderer.app.events :as-alias app.e :refer [persist]]
    [renderer.dialog.events :as-alias dialog.e]
    [renderer.dialog.handlers :as dialog.h]
    [renderer.dialog.views :as dialog.v]
-   [renderer.document.db :as db]
    [renderer.document.effects :as fx]
    [renderer.document.handlers :as h]
    [renderer.history.handlers :as history.h]
@@ -18,35 +16,34 @@
 
 (def active-path
   (let [db-store-key :re-frame-path/db-store]
-    (->interceptor
+    (rf/->interceptor
      :id ::active-path
      :before (fn [context]
-               (let [original-db (get-coeffect context :db)]
+               (let [original-db (rf/get-coeffect context :db)]
                  (-> context
                      (update db-store-key conj original-db)
-                     (assoc-coeffect :db (get-in original-db [:documents (:active-document original-db)])))))
+                     (rf/assoc-coeffect :db (get-in original-db [:documents (:active-document original-db)])))))
      :after (fn [context]
               (let [db-store (db-store-key context)
                     original-db (peek db-store)
                     new-db-store (pop db-store)
                     context' (-> (assoc context db-store-key new-db-store)
-                                 (assoc-coeffect :db original-db))
-                    db (get-effect context :db ::not-found)]
+                                 (rf/assoc-coeffect :db original-db))
+                    db (rf/get-effect context :db ::not-found)]
                 (cond-> context'
                   (not= db ::not-found)
-                  (assoc-effect :db (assoc-in original-db [:documents (:active-document original-db)] db))))))))
+                  (rf/assoc-effect :db (assoc-in original-db [:documents (:active-document original-db)] db))))))))
 
 (def focus-canvas
   (rf/->interceptor
    :id ::focus-canvas
    :after (fn [context]
-            (assoc-effect context :fx [[:dispatch-later {:ms 100 :dispatch [::app.e/focus nil]}]]))))
+            (rf/assoc-effect context :fx [[:dispatch-later {:ms 100 :dispatch [::app.e/focus nil]}]]))))
 
 (rf/reg-event-db
  ::center
  [persist]
- (fn [db [_]]
-   (h/center db)))
+ h/center)
 
 (rf/reg-event-db
  ::set-hovered-ids
@@ -56,19 +53,22 @@
 
 (rf/reg-event-db
  ::collapse-el
- [persist active-path]
+ [persist
+  active-path]
  (fn [db [_ id]]
    (update db :collapsed-ids conj id)))
 
 (rf/reg-event-db
  ::expand-el
- [persist active-path]
+ [persist
+  active-path]
  (fn [db [_ id]]
    (update db :collapsed-ids disj id)))
 
 (rf/reg-event-db
  ::toggle-filter
- [persist active-path]
+ [persist
+  active-path]
  (fn [db [_ id]]
    (if (= (:filter db) id)
      (dissoc db :filter)
@@ -76,7 +76,8 @@
 
 (rf/reg-event-db
  ::swap-colors
- [persist active-path]
+ [persist
+  active-path]
  (fn [db [_]]
    (assoc db
           :fill (:stroke db)
@@ -84,13 +85,13 @@
 
 (rf/reg-event-db
  ::set-fill
- [(history.h/finalized "Set fill")]
+ [(history.h/finalize "Set fill")]
  (fn [db [_ color]]
    (h/set-global-attr db :fill color)))
 
 (rf/reg-event-fx
  ::set-stroke
- [(history.h/finalized "Set stroke")]
+ [(history.h/finalize "Set stroke")]
  (fn [db [_ color]]
    (h/set-global-attr db :stroke color)))
 
@@ -155,33 +156,28 @@
 (rf/reg-event-fx
  ::new
  [(rf/inject-cofx ::app.fx/guid)
-  (history.h/finalized "Create document")
+  (history.h/finalize "Create document")
   focus-canvas]
  (fn [{:keys [db guid]} [_]]
-   {:db (-> db
-            (h/create-tab db/default guid)
-            (h/create-canvas))}))
+   {:db (h/create db guid)}))
 
 (rf/reg-event-fx
  ::init
  [(rf/inject-cofx ::app.fx/guid)
-  (history.h/finalized "Create document")
+  (history.h/finalize "Create document")
   focus-canvas]
  (fn [{:keys [db guid]} [_]]
    {:db (cond-> db
           (not (:active-document db))
-          (-> (h/create-tab db/default guid)
-              (h/create-canvas)))}))
+          (h/create guid))}))
 
 (rf/reg-event-fx
  ::new-from-template
  [(rf/inject-cofx ::app.fx/guid)
-  (history.h/finalized "Create document from template")
+  (history.h/finalize "Create document from template")
   focus-canvas]
  (fn [{:keys [db guid]} [_ size]]
-   {:db (-> db
-            (h/create-tab db/default guid)
-            (h/create-canvas size))}))
+   {:db (h/create db guid size)}))
 
 (rf/reg-event-fx
  ::open
@@ -202,7 +198,7 @@
 (rf/reg-event-fx
  ::load
  [(rf/inject-cofx ::app.fx/guid)
-  (history.h/finalized "Load document")
+  (history.h/finalize "Load document")
   focus-canvas]
  (fn [{:keys [db guid]} [_ documents]]
    {:db (->> documents

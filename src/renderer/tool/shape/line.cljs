@@ -6,7 +6,6 @@
    [renderer.app.handlers :as app.h]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.element.handlers :as element.h]
-   [renderer.history.handlers :as history]
    [renderer.tool.base :as tool]
    [renderer.tool.overlay :as overlay]
    [renderer.utils.bounds :as bounds]
@@ -51,22 +50,27 @@
     (element.h/get-temp db) (update-line-end)))
 
 (defmethod tool/pointer-up :line
-  [db _e now guid]
-  (if (element.h/get-temp db)
+  [db _e]
+  (cond
+    (element.h/get-temp db)
     (-> db
-        element.h/add
+        (element.h/add)
         (app.h/set-tool :select)
         (app.h/set-state :default)
-        (history/finalize now guid "Create line"))
+        (app.h/explain "Create line"))
+
+    (:pointer-offset db)
     (-> db
         (app.h/set-state :create)
-        create-line)))
+        (create-line))
+
+    :else db))
 
 (defmethod tool/pointer-down :line
-  [db _e now guid]
+  [db _e]
   (cond-> db
     (element.h/get-temp db)
-    (history/finalize now guid "Create line")))
+    (app.h/explain "Create line")))
 
 (defmethod tool/drag :line
   [db]
