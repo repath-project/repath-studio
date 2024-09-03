@@ -14,14 +14,12 @@
 (rf/reg-sub
  ::documents?
  :<- [::app.s/documents]
- (fn [documents _]
-   (seq documents)))
+ seq)
 
 (rf/reg-sub
  ::recent?
  :<- [::recent]
- (fn [recent _]
-   (seq recent)))
+ seq)
 
 (rf/reg-sub
  ::active

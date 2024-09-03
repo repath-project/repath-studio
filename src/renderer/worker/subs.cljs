@@ -14,5 +14,4 @@
 (rf/reg-sub
  ::loading?
  :<- [::tasks]
- (fn [tasks]
-   (seq tasks)))
+ seq)

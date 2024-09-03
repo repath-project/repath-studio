@@ -12,8 +12,7 @@
 
 (rf/reg-sub
  ::root
- (fn [db _]
-   (h/root db)))
+ h/root)
 
 (rf/reg-sub
  ::root-children
@@ -71,8 +70,7 @@
 (rf/reg-sub
  ::selected?
  :<- [::selected]
- (fn [selected-elements _]
-   (seq selected-elements)))
+ seq)
 
 (rf/reg-sub
  ::selected-locked?
@@ -110,8 +108,7 @@
 (rf/reg-sub
  ::bounds
  :<- [::selected]
- (fn [selected-elements _]
-   (utils.el/bounds selected-elements)))
+ utils.el/bounds)
 
 (rf/reg-sub
  ::area

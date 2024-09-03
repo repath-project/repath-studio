@@ -13,20 +13,17 @@
 (rf/reg-sub
  ::enabled?
  :<- [::snap]
- (fn [snap _]
-   (:enabled? snap)))
+ :-> :enabled?)
 
 (rf/reg-sub
  ::options
  :<- [::snap]
- (fn [snap _]
-   (:options snap)))
+ :-> :options)
 
 (rf/reg-sub
  ::nearest-neighbor
  :<- [::snap]
- (fn [snap _]
-   (:nearest-neighbor snap)))
+ :-> :nearest-neighbor)
 
 (rf/reg-sub
  ::points
@@ -42,8 +39,7 @@
 (rf/reg-sub
  ::tree
  :<- [::points]
- (fn [snapping-points _]
-   (kdtree/build-tree snapping-points)))
+ kdtree/build-tree)
 
 (rf/reg-sub
  ::in-viewport-tree

@@ -63,9 +63,13 @@
   (-> n str js/parseInt str (.padStart 2 "0")))
 
 (rf/reg-sub
+ ::timeline
+ :-> :timeline)
+
+(rf/reg-sub
  ::time
- (fn [db _]
-   (-> db :timeline :time)))
+ :<- [::timeline]
+ :-> :time)
 
 (rf/reg-sub
  ::time-formatted
@@ -78,25 +82,25 @@
 
 (rf/reg-sub
  ::paused?
- (fn [db _]
-   (-> db :timeline :paused?)))
+ :<- [::timeline]
+ :-> :paused?)
 
 (rf/reg-sub
  ::grid-snap?
- (fn [db _]
-   (-> db :timeline :grid-snap?)))
+ :<- [::timeline]
+ :-> :grid-snap?)
 
 (rf/reg-sub
  ::guide-snap?
- (fn [db _]
-   (-> db :timeline :guide-snap?)))
+ :<- [::timeline]
+ :-> :guide-snap?)
 
 (rf/reg-sub
  ::replay?
- (fn [db _]
-   (-> db :timeline :replay?)))
+ :<- [::timeline]
+ :-> :replay?)
 
 (rf/reg-sub
  ::speed
- (fn [db _]
-   (-> db :timeline :speed)))
+ :<- [::timeline]
+ :-> :speed)

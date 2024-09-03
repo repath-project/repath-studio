@@ -6,32 +6,27 @@
 
 (rf/reg-sub
  ::history
- (fn [db _]
-   (h/history db)))
+ h/history)
 
 (rf/reg-sub
  ::undos?
  :<- [::history]
- (fn [history _]
-   (h/undos? history)))
+ h/undos?)
 
 (rf/reg-sub
  ::redos?
  :<- [::history]
- (fn [history _]
-   (h/redos? history)))
+ h/redos?)
 
 (rf/reg-sub
  ::undos
  :<- [::history]
- (fn [history _]
-   (h/undos history)))
+ h/undos)
 
 (rf/reg-sub
  ::redos
  :<- [::history]
- (fn [history _]
-   (h/redos history)))
+ h/redos)
 
 (rf/reg-sub
  ::zoom
