@@ -169,6 +169,7 @@
         [x1 y1 _x2 _y2] bounds
         [w h] (bounds/->dimensions bounds)
         pointer-handler #(pointer/event-handler % {:type :handle
+                                                   :tag :move
                                                    :id id})
         rect-attrs {:x x1
                     :y y1
