@@ -10,7 +10,7 @@
    [renderer.dialog.views :as dialog.v]
    [renderer.document.effects :as fx]
    [renderer.document.handlers :as h]
-   [renderer.history.handlers :as history.h]
+   [renderer.history.handlers :refer [finalize]]
    [renderer.utils.extra :refer [partial-right]]
    [renderer.utils.vec :as vec]
    [renderer.window.effects :as-alias window.fx]))
@@ -86,13 +86,13 @@
 
 (rf/reg-event-db
  ::set-fill
- [(history.h/finalize "Set fill")]
+ [(finalize "Set fill")]
  (fn [db [_ color]]
    (h/set-global-attr db :fill color)))
 
 (rf/reg-event-fx
  ::set-stroke
- [(history.h/finalize "Set stroke")]
+ [(finalize "Set stroke")]
  (fn [db [_ color]]
    (h/set-global-attr db :stroke color)))
 
@@ -157,7 +157,7 @@
 (rf/reg-event-fx
  ::new
  [(rf/inject-cofx ::app.fx/guid)
-  (history.h/finalize "Create document")
+  (finalize "Create document")
   focus-canvas]
  (fn [{:keys [db guid]} [_]]
    {:db (h/create db guid)}))
@@ -165,7 +165,7 @@
 (rf/reg-event-fx
  ::init
  [(rf/inject-cofx ::app.fx/guid)
-  (history.h/finalize "Create document")
+  (finalize "Create document")
   focus-canvas]
  (fn [{:keys [db guid]} [_]]
    {:db (cond-> db
@@ -175,7 +175,7 @@
 (rf/reg-event-fx
  ::new-from-template
  [(rf/inject-cofx ::app.fx/guid)
-  (history.h/finalize "Create document from template")
+  (finalize "Create document from template")
   focus-canvas]
  (fn [{:keys [db guid]} [_ size]]
    {:db (h/create db guid size)}))
@@ -199,7 +199,7 @@
 (rf/reg-event-fx
  ::load
  [(rf/inject-cofx ::app.fx/guid)
-  (history.h/finalize "Load document")
+  (finalize "Load document")
   focus-canvas]
  (fn [{:keys [db guid]} [_ documents]]
    {:db (->> documents

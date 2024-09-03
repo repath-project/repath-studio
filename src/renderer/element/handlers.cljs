@@ -533,7 +533,7 @@
 
 (defn create
   [db el]
-  (let [id (random-uuid)
+  (let [id (random-uuid) ; Hard to use a coeffect because of the recursion.
         new-el (->> (cond-> el (not (string? (:content el))) (dissoc :content))
                     (map/remove-nils)
                     (create-parent-id db))
