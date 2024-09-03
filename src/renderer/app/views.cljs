@@ -112,20 +112,16 @@
 
 (defn editor
   []
-  (let [timeline? @(rf/subscribe [::app.s/panel-visible? :timeline])
-        repl-history? @(rf/subscribe [::app.s/panel-visible? :repl-history])]
-    [:> PanelGroup
-     ;; REVIEW: We need to rerender the group to properly resize the panels.
-     {:key (str timeline? repl-history?)
-      :direction "vertical"
-      :id "editor-group"
-      :autoSaveId "editor-group"}
-     [:> Panel {:id "editor-panel"
-                :minSize 20
-                :order 1}
-      [center-top-group]]
-     [toolbar.status/root]
-     [repl.v/root]]))
+  [:> PanelGroup
+   {:direction "vertical"
+    :id "editor-group"
+    :autoSaveId "editor-group"}
+   [:> Panel {:id "editor-panel"
+              :minSize 20
+              :order 1}
+    [center-top-group]]
+   [toolbar.status/root]
+   [repl.v/root]])
 
 (def paper-size
   {0 [2384 3370]
