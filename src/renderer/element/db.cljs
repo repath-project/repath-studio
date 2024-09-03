@@ -3,7 +3,7 @@
    [malli.core :as m]
    [malli.transform :as mt]
    [renderer.tool.base :as tool]
-   [renderer.utils.bounds :as bounds]))
+   [renderer.utils.bounds :refer [bounds]]))
 
 (defn tag?
   [k]
@@ -13,8 +13,11 @@
   [:fn {:error/fn (fn [{:keys [value]} _] (str value ", is not a supported tag"))}
    tag?])
 
+(def attr
+  [:or string? number? vector? nil?])
+
 (def attrs
-  [:map-of keyword? [:or string? number? vector? nil?]])
+  [:map-of keyword? attr])
 
 (def handle
   [:map {:closed true}
@@ -39,7 +42,7 @@
    [:locked? {:optional true} boolean?]
    [:selected? {:optional true} boolean?]
    [:children {:default [] :optional true} [:vector uuid?]]
-   [:bounds {:optional true} bounds/bounds]
+   [:bounds {:optional true} bounds]
    [:content {:optional true} string?]
    [:attrs {:optional true} attrs]])
 

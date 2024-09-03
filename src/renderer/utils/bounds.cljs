@@ -2,7 +2,7 @@
   (:require
    [clojure.core.matrix :as mat]
    [malli.experimental :as mx]
-   [renderer.utils.math :as math]))
+   [renderer.utils.math :refer [vec2d]]))
 
 (def bounds [:tuple number? number? number? number?])
 
@@ -30,7 +30,7 @@
   [[x1 y1 x2 y2] :- bounds]
   (mat/sub [x2 y2] [x1 y1]))
 
-(mx/defn center :- math/vec2d
+(mx/defn center :- vec2d
   "Calculates the center of bounds."
   [b :- bounds]
   (mat/add (take 2 b)
@@ -56,7 +56,7 @@
 
 (mx/defn contain-point? :- boolean?
   "Tests whether the provided bounds contain a point."
-  [[left top right bottom] :- bounds, [x y] :- math/vec2d]
+  [[left top right bottom] :- bounds, [x y] :- vec2d]
   (and (<= left x)
        (<= top y)
        (>= right x)

@@ -5,45 +5,45 @@
    [clojure.core.matrix :as mat]
    [malli.experimental :as mx]
    [reagent.dom.server :as dom.server]
-   [renderer.element.db :as element.db]
+   [renderer.element.db :refer [element attrs]]
    [renderer.snap.db :as snap.db]
    [renderer.tool.base :as tool]
    [renderer.utils.attribute :as attr]
    [renderer.utils.bcd :as bcd]
-   [renderer.utils.bounds :as bounds]
+   [renderer.utils.bounds :as utils.bounds :refer [bounds]]
    [renderer.utils.map :as map]
-   [renderer.utils.math :as math]))
+   [renderer.utils.math :refer [vec2d]]))
 
 (mx/defn root? :- boolean?
-  [el :- element.db/element]
+  [el :- element]
   (= :canvas (:tag el)))
 
 (mx/defn svg? :- boolean?
-  [el :- element.db/element]
+  [el :- element]
   (= :svg (:tag el)))
 
 (mx/defn container? :- boolean?
-  [el :- element.db/element]
+  [el :- element]
   (or (svg? el) (root? el)))
 
-(mx/defn bounds :- [:maybe bounds/bounds]
+(mx/defn united-bounds :- [:maybe bounds]
   [elements]
   (let [el-bounds (->> elements (map :bounds) (remove nil?))]
     (when (seq el-bounds)
-      (apply bounds/union el-bounds))))
+      (apply utils.bounds/union el-bounds))))
 
-(mx/defn offset :- math/vec2d
-  [el :- element.db/element]
+(mx/defn offset :- vec2d
+  [el :- element]
   (let [el-bounds (:bounds el)
         local-bounds (tool/bounds el)]
     (vec (take 2 (mat/sub el-bounds local-bounds)))))
 
-(mx/defn snapping-points :- [:* math/vec2d]
-  [element :- element.db/element, options :- [:set snap.db/options]]
-  (let [points (or (tool/snapping-points element) [])]
-    (if-let [bounds (:bounds element)]
+(mx/defn snapping-points :- [:* vec2d]
+  [el :- element, options :- [:set snap.db/options]]
+  (let [points (or (tool/snapping-points el) [])]
+    (if-let [bounds (:bounds el)]
       (let [[x1 y1 x2 y2] bounds
-            [cx cy] (bounds/center bounds)]
+            [cx cy] (utils.bounds/center bounds)]
         (cond-> points
           (:corners options)
           (into [[x1 y1]
@@ -61,7 +61,7 @@
                  [cx y2]])))
       points)))
 
-(mx/defn attrs-map :- element.db/attrs
+(mx/defn attrs-map :- attrs
   [attrs]
   (let [deprecated-path [:__compat :status :deprecated]
         filtered-attrs (->> attrs
@@ -72,8 +72,8 @@
         (keys)
         (zipmap (repeat "")))))
 
-(mx/defn attributes :- element.db/attrs
-  [{:keys [tag attrs]} :- element.db/element]
+(mx/defn attributes :- attrs
+  [{:keys [tag attrs]} :- element]
   (merge
    (when tag
      (merge (when (isa? tag ::tool/element)
@@ -85,11 +85,11 @@
    attrs))
 
 (mx/defn supported-attr? :- boolean?
-  [el :- element.db/element, k :- keyword?]
+  [el :- element, k :- keyword?]
   (-> el attributes k boolean))
 
-(mx/defn ->path  :- element.db/element
-  [el :- element.db/element]
+(mx/defn ->path  :- element
+  [el :- element]
   (cond-> el
     (get-method tool/path (:tag el))
     (-> (assoc :attrs (attributes
@@ -102,8 +102,8 @@
                :tag :path)
         (assoc-in [:attrs :d] (tool/path el)))))
 
-(mx/defn stroke->path :- element.db/element
-  [{:keys [attrs] :as el} :- element.db/element]
+(mx/defn stroke->path :- element
+  [{:keys [attrs] :as el} :- element]
   (let [d (tool/path el)
         paper-path (Path. d)
         el-offset (or (:stroke-width attrs) 1)
@@ -125,7 +125,7 @@
         (assoc-in [:attrs :fill] (:stroke attrs)))))
 
 (mx/defn wrap-to-svg :- string?
-  [s :- string?, [w h] :- math/vec2d]
+  [s :- string?, [w h] :- vec2d]
   (str "<svg width='" w "' height='" h "'>" s "</svg>"))
 
 (mx/defn ->string :- string?
@@ -135,8 +135,8 @@
                (str "\n" %)) "" els))
 
 (mx/defn ->svg :- string?
-  [els]
-  (let [dimensions (bounds/->dimensions (bounds els))
+  [els :- [:* element]]
+  (let [dimensions (utils.bounds/->dimensions (united-bounds els))
         s (->string els)]
     (cond-> s
       (not (and (seq els)

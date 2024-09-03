@@ -1,7 +1,7 @@
 (ns renderer.history.db
   (:require
-   [renderer.element.db :as element.db]
-   [renderer.utils.math :as math]))
+   [renderer.element.db :refer [elements]]
+   [renderer.utils.math :refer [vec2d]]))
 
 (def state
   [:map {:closed true}
@@ -9,13 +9,13 @@
    [:timestamp number?]
    [:index [:or pos-int? zero?]]
    [:id uuid?]
-   [:elements element.db/elements]
+   [:elements elements]
    [:parent {:optional true} uuid?]
    [:children [:vector uuid?]]])
 
 (def history
   [:map {:default {} :closed true}
    [:zoom {:optional true :default 0.5} number?]
-   [:translate {:optional true} math/vec2d]
+   [:translate {:optional true} vec2d]
    [:position {:optional true} uuid?]
    [:states {:default {}} [:map-of uuid? state]]])

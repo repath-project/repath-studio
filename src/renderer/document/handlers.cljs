@@ -1,7 +1,9 @@
 (ns renderer.document.handlers
   (:require
    [malli.error :as me]
-   [renderer.document.db :as db]
+   [malli.experimental :as mx]
+   [renderer.document.db :as db :refer [document]]
+   [renderer.element.db :as element.db :refer [attr]]
    [renderer.element.handlers :as element.h]
    [renderer.frame.handlers :as frame.h]
    [renderer.history.handlers :as history.h]
@@ -10,10 +12,10 @@
    [renderer.utils.compatibility :as compatibility]
    [renderer.utils.vec :as vec]))
 
-(defn save-format
+(mx/defn save-format :- document
   ([db]
    (save-format db (:active-document db)))
-  ([db id]
+  ([db, id :- uuid?]
    (let [document (-> db
                       (get-in [:documents id])
                       (select-keys [:elements :path :id])
@@ -24,8 +26,8 @@
              document
              (keys (:elements document))))))
 
-(defn close
-  [{:keys [active-document document-tabs] :as db} id]
+(mx/defn close
+  [{:keys [active-document document-tabs] :as db}, id :- uuid?]
   (let [index (.indexOf document-tabs id)
         active-document (if (= active-document id)
                           (get document-tabs (if (zero? index)
@@ -37,15 +39,15 @@
         (assoc :active-document active-document)
         (update :documents dissoc id))))
 
-(defn add-recent
-  [db file-path]
+(mx/defn add-recent
+  [db, file-path :- string?]
   (cond-> db
     file-path
     (update :recent #(->> (conj (filterv (complement #{file-path}) %) file-path)
                           (take-last 10)
                           (vec)))))
 
-(defn center
+(mx/defn center
   "Centers the contents of the document to the current view."
   [{:keys [active-document] :as db}]
   (cond-> db
@@ -56,15 +58,15 @@
     (-> (frame.h/focus-bounds :original)
         (assoc-in [:documents active-document :focused?] true))))
 
-(defn set-active
-  [db k]
-  (assoc db :active-document k))
+(mx/defn set-active
+  [db, id :- uuid?]
+  (assoc db :active-document id))
 
-(defn search-by-path
-  [{:keys [documents]} file-path]
+(mx/defn search-by-path
+  [{:keys [documents]}, file-path :- string?]
   (some #(when (and file-path (= (:path %) file-path)) (:id %)) (vals documents)))
 
-(defn- new-title
+(mx/defn new-title :- string?
   [{:keys [documents]}]
   (let [existing-titles (set (map :title (vals documents)))]
     (loop [i 1]
@@ -73,8 +75,8 @@
           title
           (recur (inc i)))))))
 
-(defn create-tab
-  [db document id]
+(mx/defn create-tab
+  [db, document :- document, id :- uuid?]
   (let [id (or (:id document) id)
         title (or (:title document) (new-title db))
         active-index (.indexOf (:document-tabs db) (:active-document db))
@@ -84,8 +86,8 @@
         (assoc :active-document id)
         (update :document-tabs #(vec/add % (inc active-index) id)))))
 
-(defn create-canvas
-  [db size]
+(mx/defn create-canvas
+  [db, size :- [:maybe [:tuple number? number?]]]
   (cond-> db
     :always
     (element.h/create {:tag :canvas
@@ -97,22 +99,24 @@
                                    :height (second size)}})
         (center))))
 
-(defn create
-  ([db guid]
+(mx/defn create
+  ([db, guid :- uuid?]
    (create db guid [595 842]))
-  ([db guid size]
+  ([db, guid :- uuid?, size :- [:tuple number? number?]]
    (-> db
        (create-tab db/default guid)
        (create-canvas size))))
 
-(defn set-global-attr
-  [{active-document :active-document :as db} k v]
+(mx/defn set-global-attr
+  [{active-document :active-document :as db},
+   k :- keyword?,
+   v :- attr]
   (-> db
       (assoc-in [:documents active-document k] v)
       (element.h/set-attr k v)))
 
-(defn load
-  [db document id]
+(mx/defn load
+  [db, document :- document, id :- uuid?]
   (let [open-document-id (search-by-path db (:path document))
         migrated-document (compatibility/migrate-document document)
         migrated? (not= document migrated-document)
@@ -131,10 +135,10 @@
       (let [explanation (-> document db/explain me/humanize str)]
         (notification.h/add db [notification.v/spec-failed "Load document" explanation])))))
 
-(defn saved?
-  [db id]
+(mx/defn saved? :- boolean?
+  [db, id :- uuid?]
   (let [document (get-in db [:documents id])]
-    (or (= (:save document)
-           (get-in document [:history :position]))
-        (and (not (:save document))
-             (empty? (rest (get-in document [:history :states])))))))
+    (boolean (or (= (:save document)
+                    (get-in document [:history :position]))
+                 (and (not (:save document))
+                      (empty? (rest (get-in document [:history :states]))))))))

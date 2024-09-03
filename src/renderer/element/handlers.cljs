@@ -361,7 +361,7 @@
 
 (defn bounds
   [db]
-  (element/bounds (selected db)))
+  (element/united-bounds (selected db)))
 
 (defn copy
   [db]

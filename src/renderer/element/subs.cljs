@@ -108,7 +108,7 @@
 (rf/reg-sub
  ::bounds
  :<- [::selected]
- utils.el/bounds)
+ utils.el/united-bounds)
 
 (rf/reg-sub
  ::area
