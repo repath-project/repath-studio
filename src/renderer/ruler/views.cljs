@@ -5,38 +5,25 @@
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.s]
    [renderer.document.subs :as-alias document.s]
-   [renderer.element.subs :as-alias element.s]
    [renderer.frame.subs :as-alias frame.s]
    [renderer.ruler.subs :as-alias ruler.s]))
 
 (defn bounds-rect
-  [orientation size]
-  (when-let [bounds @(rf/subscribe [::element.s/bounds])]
-    (let [zoom @(rf/subscribe [::document.s/zoom])
-          pan @(rf/subscribe [::document.s/pan])
-          [x1 y1 x2 y2] (map #(* % zoom) bounds)]
-      (if (= orientation :vertical)
-        [:rect {:x 0
-                :y (- y1 (* (second pan) zoom))
-                :width size
-                :height (- y2 y1)
-                :fill "var(--overlay)"}]
-        [:rect {:x (- x1 (* (first pan) zoom))
-                :y 0
-                :width (- x2 x1)
-                :height size
-                :fill "var(--overlay)"}]))))
+  [orientation]
+  (when-let [attrs @(rf/subscribe [::ruler.s/bounds-rect-attrs orientation])]
+    [:rect (merge attrs {:fill "var(--overlay)"})]))
 
 (defn pointer
-  [orientation size]
+  [orientation]
   (let [[x y] @(rf/subscribe [::app.s/pointer-pos])
-        pointer-size (/ size 5)
-        size-diff (- size pointer-size)]
+        ruler-size @(rf/subscribe [::app.s/ruler-size])
+        pointer-size (/ ruler-size 5)
+        size-diff (- ruler-size pointer-size)]
     [:polygon {:points (str/join " " (if (= orientation :vertical)
-                                       [size "," y
+                                       [ruler-size "," y
                                         size-diff "," (- y pointer-size)
                                         size-diff "," (+ y pointer-size)]
-                                       [x "," size
+                                       [x "," ruler-size
                                         (- x pointer-size) "," size-diff
                                         (+ x pointer-size) "," size-diff]))
                :fill "var(--font-color"}]))
@@ -67,10 +54,11 @@
    (if vertical? (reverse text) text)])
 
 (defn base-lines
-  [orientation size]
+  [orientation]
   (let [[x y] @(rf/subscribe [::frame.s/viewbox])
         zoom @(rf/subscribe [::document.s/zoom])
-        steps-coll @(rf/subscribe [::ruler.s/steps-coll orientation])]
+        steps-coll @(rf/subscribe [::ruler.s/steps-coll orientation])
+        ruler-size @(rf/subscribe [::app.s/ruler-size])]
     (into [:g]
           (map-indexed
            (fn [i step]
@@ -85,30 +73,31 @@
                  [:<>
                   [line {:orientation orientation
                          :adjusted-step adjusted-step
-                         :size size
+                         :size ruler-size
                          :starting-point 0}]
                   [label vertical? adjusted-step font-size text]]
 
                  (and (odd? i) (zero? (rem i 5)))
                  [line {:orientation orientation
                         :adjusted-step adjusted-step
-                        :size size
-                        :starting-point (/ size 1.6)}]
+                        :size ruler-size
+                        :starting-point (/ ruler-size 1.6)}]
 
                  :else
                  [line {:orientation orientation
                         :adjusted-step adjusted-step
-                        :size size
-                        :starting-point (/ size 1.3)}])))
+                        :size ruler-size
+                        :starting-point (/ ruler-size 1.3)}])))
            steps-coll))))
 
 (defn ruler
-  [{:keys [orientation size]}]
-  [:svg {:width  (if (= orientation :vertical) size "100%")
-         :height (if (= orientation :vertical) "100%" size)}
-   [bounds-rect orientation size]
-   [base-lines orientation size]
-   [pointer orientation size]])
+  [{:keys [orientation]}]
+  (let [ruler-size @(rf/subscribe [::app.s/ruler-size])]
+    [:svg {:width  (if (= orientation :vertical) ruler-size "100%")
+           :height (if (= orientation :vertical) "100%" ruler-size)}
+     [bounds-rect orientation]
+     [base-lines orientation]
+     [pointer orientation]]))
 
 (defn grid-lines
   [orientation]

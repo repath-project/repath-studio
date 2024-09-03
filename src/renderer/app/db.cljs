@@ -61,6 +61,7 @@
    [:document-tabs {:default [] :persisted true} [:vector uuid?]]
    [:recent {:max 10 :default [] :persisted true} [:vector string?]]
    [:drag-threshold {:default 1} number?]
+   [:ruler-size {:default 23} number?]
    [:system-fonts {:optional true} vector?]
    [:notifications {:default []} vector?]
    [:debug-info? {:default false} boolean?]

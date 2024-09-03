@@ -33,13 +33,14 @@
 (defn frame-panel
   []
   (let [rulers? @(rf/subscribe [::app.s/rulers-visible?])
-        read-only? @(rf/subscribe [::document.s/read-only?])]
+        read-only? @(rf/subscribe [::document.s/read-only?])
+        ruler-size @(rf/subscribe [::app.s/ruler-size])]
     [:div.flex.flex-col.flex-1.h-full
      [:div.mb-px
       [ui/scroll-area [toolbar.tools/root]]
       (when rulers?
-        [:div.flex
-         [:div.bg-primary {:style {:width "23px" :height "23px"}}
+        [:div.flex.gap-px
+         [:div.bg-primary {:style {:width ruler-size :height ruler-size}}
           #_[ui/toggle-icon-button
              {:active? @(rf/subscribe [::app.s/rulers-locked?])
               :active-icon "lock"
@@ -48,13 +49,13 @@
               :inactive-text "lock"
               :class "small"
               :action #(rf/dispatch [::e/toggle-rulers-locked])}]]
-         [:div.w-full.ml-px.bg-primary
-          [ruler.v/ruler {:orientation :horizontal :size 23}]]])]
+         [:div.bg-primary.flex-1
+          [ruler.v/ruler {:orientation :horizontal}]]])]
      [:div.flex.flex-1.relative
       [:<>
        (when rulers?
          [:div.bg-primary.mr-px
-          [ruler.v/ruler {:orientation :vertical :size 22}]])]
+          [ruler.v/ruler {:orientation :vertical}]])]
       [:div.relative.grow.flex
        [frame.v/root]
        (if read-only?

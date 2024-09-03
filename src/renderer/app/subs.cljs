@@ -35,6 +35,10 @@
  :-> :drag?)
 
 (rf/reg-sub
+ ::ruler-size
+ :-> :ruler-size)
+
+(rf/reg-sub
  ::loading?
  :-> :loading?)
 
