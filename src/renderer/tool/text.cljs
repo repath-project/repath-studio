@@ -48,8 +48,7 @@
                         :tag :text
                         :attrs attrs})
         (app.h/set-tool :edit)
-        (app.h/set-state :edit)
-        (app.h/explain "Create text")))) ; FIXME: Merge create and edit history action.
+        (app.h/set-state :create))))
 
 (defmethod tool/drag-end :text
   [db e]
