@@ -195,6 +195,14 @@
         (app.h/set-message (message ratio :scale))
         (element.h/scale ratio pivot-point recur?))))
 
+(defn select-element
+  [db multi?]
+  (cond-> db
+    (and (:clicked-element db)
+         (not (-> db :clicked-element :selected?))
+         (not= (-> db :clicked-element :id) :bounding-box))
+    (-> (element.h/select (-> db :clicked-element :id) multi?))))
+
 (defmethod tool/drag :select
   [{:keys [state adjusted-pointer-offset adjusted-pointer-pos] :as db} e]
   (let [offset (mat/sub adjusted-pointer-pos adjusted-pointer-offset)
@@ -218,11 +226,7 @@
             (app.h/set-state db :clone)
             (-> db
                 (history.h/swap)
-                (cond->
-                 (and (:clicked-element db)
-                      (not (-> db :clicked-element :selected?))
-                      (not= (-> db :clicked-element :id) :bounding-box))
-                  (-> (element.h/select (-> db :clicked-element :id) (pointer/shift? e))))
+                (select-element (pointer/shift? e))
                 (element.h/translate offset)
                 (snap.h/snap element.h/translate)
                 (app.h/set-cursor "default")))
@@ -231,6 +235,7 @@
           (if alt-key?
             (-> db
                 (history.h/swap)
+                (select-element (pointer/shift? e))
                 (element.h/duplicate offset)
                 (snap.h/snap element.h/translate)
                 (app.h/set-cursor "copy"))
