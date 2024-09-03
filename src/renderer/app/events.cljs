@@ -191,13 +191,10 @@
              [::fx/data-transfer [adjusted-pointer-pos data-transfer]]
 
              :pointermove
-             [::fx/set-pointer-capture [(:pointer-id e) nil]]
-
-             :pointerdown
-             [::fx/set-pointer-capture [(:pointer-id e) (:target e)]]
+             [::fx/set-pointer-capture (:pointer-id e)]
 
              :pointerup
-             [::fx/release-pointer-capture [(:pointer-id e) nil]]
+             [::fx/release-pointer-capture (:pointer-id e)]
 
              nil)]})))
 
