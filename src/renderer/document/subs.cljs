@@ -126,8 +126,7 @@
 (rf/reg-sub
  ::read-only?
  :<- [::timeline.s/time]
- (fn [t _]
-   (pos? t)))
+ pos?)
 
 (rf/reg-sub
  ::saved?

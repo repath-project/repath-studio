@@ -135,7 +135,7 @@
               new-index (dec (count (:children parent)))
               children-path (conj (history-path db) :states parent-id :children)]
           (recur parent (update-in db children-path vec/move index new-index)))
-        db)))) ; REVIEW
+        db))))
 
 (def valid-elements? (m/validator element.db/elements))
 

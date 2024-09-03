@@ -73,11 +73,11 @@
   (str/replace (.. e -target -value) " " "\u00a0")) ; REVIEW
 
 (defn set-text-and-select-element
-  [e el-k]
+  [e id]
   (let [s (get-text e)]
     (rf/dispatch (if (empty? s)
                    [::element.e/delete]
-                   [::element.e/set-prop el-k :content s]))
+                   [::element.e/set-prop id :content s]))
     (rf/dispatch [::app.e/set-tool :select])))
 
 (defn key-down-handler

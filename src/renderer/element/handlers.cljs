@@ -452,7 +452,7 @@
                  :always
                  (translate id offset)
 
-                 ;; REVIEW: Move this part to select tools?
+                 ;; REVIEW: Move this part to select tool?
                  (and (seq (selected db))
                       (empty? (rest (selected db)))
                       (contains? #{:move :clone} (:state db))

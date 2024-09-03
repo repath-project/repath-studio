@@ -138,102 +138,103 @@
 
 (defn home []
   (let [recent @(rf/subscribe [::document.s/recent])]
-    [:div.flex.flex-1.min-h-full.justify-center.p-2.overflow-hidden
-     [:div.self-center.justify-between.overflow-hidden.flex.h-full.md:h-auto.w-full.lg:w-auto
-      [ui/scroll-area
-       [:div.bg-primary.p-6.lg:p-12.flex.max-w-screen-xl.w-full.gap-8
-        [:div.flex-1
-         [:h1.text-4xl.mb-1.font-light config/app-name]
+    [:div.flex.overflow-hidden.md:overflow-visible
+     [ui/scroll-area
+      [:div.flex.min-h-full.justify-center.p-2.md:h-screen
+       [:div.self-center.justify-between.flex.h-full.md:h-auto.w-full.lg:w-auto
+        [:div.bg-primary.p-6.lg:p-12.flex.max-w-screen-xl.w-full.gap-8
+         [:div.flex-1
+          [:h1.text-4xl.mb-1.font-light config/app-name]
 
-         [:p.text-xl.text-muted.font-bold
-          "Scalable Vector Graphics Manipulation"]
+          [:p.text-xl.text-muted.font-bold
+           "Scalable Vector Graphics Manipulation"]
 
-         [:h2.mb-3.mt-8.text-2xl "Start"]
+          [:h2.mb-3.mt-8.text-2xl "Start"]
 
-         [:div.flex.items-center.gap-2.flex-wrap
-          [ui/icon "file"]
-          [:button.button-link.text-lg
-           {:on-click #(rf/dispatch [::document.e/new])} "New"]
-          [ui/shortcuts [::document.e/new]]
-
-          [:span "or"]
-
-          [:> Select/Root
-           {:onValueChange #(rf/dispatch [::document.e/new-from-template (get paper-size %)])}
-           [:> Select/Trigger
-            {:class "select-trigger"
-             :aria-label "Select size"}
-            [:div.flex.items-center
-             [:> Select/Value {:placeholder "Select template"}]
-             [:> Select/Icon
-              [ui/icon "chevron-down" {:class "icon small ml-2"}]]]]
-           [:> Select/Portal
-            [:> Select/Content
-             {:class "menu-content rounded select-content"
-              :style {:min-width "auto"}}
-
-             [:> Select/Viewport {:class "select-viewport"}
-              [:> Select/Group
-               [:> Select/Item
-                {:value :empty-canvas
-                 :class "menu-item select-item"}
-                [:> Select/ItemText "Empty canvas"]]
-               (for [[k _v] (sort paper-size)]
-                 ^{:key k}
-                 [:> Select/Item
-                  {:value k
-                   :class "menu-item select-item"}
-                  [:> Select/ItemText (str "A" k)]])]]]]]]
-
-         [:div.flex.items-center.gap-2
-          [ui/icon "folder"]
-          [:button.button-link.text-lg
-           {:on-click #(rf/dispatch [::document.e/open])}
-           "Open"]
-          [ui/shortcuts [::document.e/open]]]
-
-         (when (seq recent)
-           [:<> [:h2.mb-3.mt-8.text-2xl "Recent"]
-
-            (for [file-path (take 2 recent)]
-              ^{:key file-path}
-              [:div.flex.items-center.gap-x-2.flex-wrap
-               [ui/icon "folder"]
-               [:button.button-link.text-lg
-                {:on-click #(rf/dispatch [::document.e/open file-path])}
-                (.basename path file-path)]
-               [:span.text-lg.text-muted (.dirname path file-path)]])])
-
-         [:h2.mb-3.mt-8.text-2xl "Help"]
-
-         [:div
-          [:div.flex.items-center.gap-2
-           [ui/icon "command"]
+          [:div.flex.items-center.gap-2.flex-wrap
+           [ui/icon "file"]
            [:button.button-link.text-lg
-            {:on-click #(rf/dispatch [::dialog.e/cmdk])}
-            "Command panel"]
-           [ui/shortcuts [::dialog.e/cmdk]]]]
-         [:div.flex.items-center.gap-2
-          [ui/icon "earth"]
-          [:button.button-link.text-lg
-           {:on-click #(rf/dispatch [::window.e/open-remote-url
-                                     "https://repath.studio/"])}
-           "Website"]]
-         [:div.flex.items-center.gap-2
-          [ui/icon "commit"]
-          [:button.button-link.text-lg
-           {:on-click #(rf/dispatch [::window.e/open-remote-url
-                                     "https://github.com/repath-project/repath-studio"])}
-           "Source Code"]]
-         [:div.flex.items-center.gap-2
-          [ui/icon "list"]
-          [:button.button-link.text-lg
-           {:on-click #(rf/dispatch [::window.e/open-remote-url
-                                     "https://repath.studio/roadmap/changelog/"])}
-           "Changelog"]]]
+            {:on-click #(rf/dispatch [::document.e/new])} "New"]
+           [ui/shortcuts [::document.e/new]]
 
-        [:div.hidden.md:block.flex-1
-         [:img {:src "img/icon.svg"}]]]]]]))
+           [:span "or"]
+
+           [:> Select/Root
+            {:onValueChange #(rf/dispatch [::document.e/new-from-template (get paper-size %)])}
+            [:> Select/Trigger
+             {:class "select-trigger"
+              :aria-label "Select size"}
+             [:div.flex.items-center
+              [:> Select/Value {:placeholder "Select template"}]
+              [:> Select/Icon
+               [ui/icon "chevron-down" {:class "icon small ml-2"}]]]]
+            [:> Select/Portal
+             [:> Select/Content
+              {:class "menu-content rounded select-content"
+               :style {:min-width "auto"}}
+
+              [:> Select/Viewport {:class "select-viewport"}
+               [:> Select/Group
+                [:> Select/Item
+                 {:value :empty-canvas
+                  :class "menu-item select-item"}
+                 [:> Select/ItemText "Empty canvas"]]
+                (for [[k _v] (sort paper-size)]
+                  ^{:key k}
+                  [:> Select/Item
+                   {:value k
+                    :class "menu-item select-item"}
+                   [:> Select/ItemText (str "A" k)]])]]]]]]
+
+          [:div.flex.items-center.gap-2
+           [ui/icon "folder"]
+           [:button.button-link.text-lg
+            {:on-click #(rf/dispatch [::document.e/open])}
+            "Open"]
+           [ui/shortcuts [::document.e/open]]]
+
+          (when (seq recent)
+            [:<> [:h2.mb-3.mt-8.text-2xl "Recent"]
+
+             (for [file-path (take 2 recent)]
+               ^{:key file-path}
+               [:div.flex.items-center.gap-x-2.flex-wrap
+                [ui/icon "folder"]
+                [:button.button-link.text-lg
+                 {:on-click #(rf/dispatch [::document.e/open file-path])}
+                 (.basename path file-path)]
+                [:span.text-lg.text-muted (.dirname path file-path)]])])
+
+          [:h2.mb-3.mt-8.text-2xl "Help"]
+
+          [:div
+           [:div.flex.items-center.gap-2
+            [ui/icon "command"]
+            [:button.button-link.text-lg
+             {:on-click #(rf/dispatch [::dialog.e/cmdk])}
+             "Command panel"]
+            [ui/shortcuts [::dialog.e/cmdk]]]]
+          [:div.flex.items-center.gap-2
+           [ui/icon "earth"]
+           [:button.button-link.text-lg
+            {:on-click #(rf/dispatch [::window.e/open-remote-url
+                                      "https://repath.studio/"])}
+            "Website"]]
+          [:div.flex.items-center.gap-2
+           [ui/icon "commit"]
+           [:button.button-link.text-lg
+            {:on-click #(rf/dispatch [::window.e/open-remote-url
+                                      "https://github.com/repath-project/repath-studio"])}
+            "Source Code"]]
+          [:div.flex.items-center.gap-2
+           [ui/icon "list"]
+           [:button.button-link.text-lg
+            {:on-click #(rf/dispatch [::window.e/open-remote-url
+                                      "https://repath.studio/roadmap/changelog/"])}
+            "Changelog"]]]
+
+         [:div.hidden.md:block.flex-1
+          [:img {:src "img/icon.svg"}]]]]]]]))
 
 (defn root
   []
