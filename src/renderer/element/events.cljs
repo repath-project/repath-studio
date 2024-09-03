@@ -303,14 +303,14 @@
  ::copy
  (fn [{:keys [db]} _]
    {:db (h/copy db)
-    ::app.fx/clipboard-write [(element/->svg (h/top-selected-sorted db))]}))
+    ::app.fx/clipboard-write (element/->svg (h/top-selected-sorted db))}))
 
 (rf/reg-event-fx
  ::cut
  [(finalize "Cut selection")]
  (fn [{:keys [db]} _]
    {:db (-> db h/copy h/delete)
-    ::app.fx/clipboard-write [(element/->svg (h/top-selected-sorted db))]}))
+    ::app.fx/clipboard-write (element/->svg (h/top-selected-sorted db))}))
 
 (rf/reg-event-fx
  ::trace

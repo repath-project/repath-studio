@@ -23,7 +23,7 @@
 
 (defmethod tool/render :canvas
   [{:keys [attrs children] :as element}]
-  (let [_ @(rf/subscribe [::snap.s/in-viewport-tree])
+  (let [_ @(rf/subscribe [::snap.s/in-viewport-tree]) ; TODO: Remove this.
         child-elements @(rf/subscribe [::element.s/filter-visible children])
         viewbox-attr @(rf/subscribe [::frame.s/viewbox-attr])
         {:keys [width height]} @(rf/subscribe [::app.s/dom-rect])
@@ -45,8 +45,7 @@
         snap? @(rf/subscribe [::snap.s/enabled?])
         nearest-neighbor @(rf/subscribe [::snap.s/nearest-neighbor])
         debug? @(rf/subscribe [::app.s/debug-info?])
-        select? (or (= tool :select)
-                    (= primary-tool :select))]
+        select? (or (= tool :select) (= primary-tool :select))]
     [:svg#canvas {:on-pointer-up pointer-handler
                   :on-pointer-down pointer-handler
                   :on-double-click pointer-handler

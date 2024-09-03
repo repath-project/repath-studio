@@ -24,8 +24,13 @@
 
 (rf/reg-fx
  ::set-pointer-capture
- (fn [[target pointer-id]]
-   (.setPointerCapture target pointer-id)))
+ (fn [pointer-id]
+   (.setPointerCapture (dom/canvas-element) pointer-id)))
+
+(rf/reg-fx
+ ::release-pointer-capture
+ (fn [pointer-id]
+   (.releasePointerCapture (dom/canvas-element) pointer-id)))
 
 (rf/reg-fx
  ::local-storage-persist
@@ -39,7 +44,7 @@
 
 (rf/reg-fx
  ::clipboard-write
- (fn [[data]]
+ (fn [data]
    (when data
      (js/navigator.clipboard.write
       (array (js/ClipboardItem.

@@ -10,10 +10,10 @@
 
 (rf/reg-fx
  ::set-document-attr
- (fn [[mode]]
+ (fn [mode]
    (.setAttribute js/window.document.documentElement "data-theme" mode)))
 
 (rf/reg-fx
  ::add-native-listener
- (fn [[e]]
+ (fn [e]
    (.addListener native-query #(rf/dispatch [e (native %)]))))

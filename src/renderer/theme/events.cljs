@@ -7,14 +7,14 @@
 (rf/reg-event-fx
  ::add-native-listener
  (fn [_ _]
-   {::fx/add-native-listener [::set-native-mode]}))
+   {::fx/add-native-listener ::set-native-mode}))
 
 (rf/reg-event-fx
  ::set-document-attr
  (fn [{:keys [db]} _]
    (let [mode (-> db :theme :mode)
          mode (if (= mode :system) (-> db :theme :native) mode)]
-     {::fx/set-document-attr [(name mode)]})))
+     {::fx/set-document-attr (name mode)})))
 
 (rf/reg-event-fx
  ::set-native-mode

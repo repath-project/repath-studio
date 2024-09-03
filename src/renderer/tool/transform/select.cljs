@@ -1,4 +1,3 @@
-
 (ns renderer.tool.transform.select
   (:require
    [clojure.core.matrix :as mat]
@@ -258,7 +257,7 @@
   (-> (case (:state db)
         :select (-> (cond-> db (not (pointer/shift? e)) element.h/deselect)
                     (reduce-by-area (pointer/alt? e) element.h/select)
-                    element.h/clear-temp
+                    (element.h/clear-temp)
                     (app.h/explain "Modify selection"))
         :move (app.h/explain db "Move selection")
         :scale (app.h/explain db "Scale selection")
