@@ -270,7 +270,7 @@
    {:db (assoc db :loading? true)
     :dispatch ^:flush-dom [::import data "Trace image"]}))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::animate
  [(finalize #(-> % second name))]
  (fn [db [_ tag attrs]]
