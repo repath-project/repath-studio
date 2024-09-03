@@ -24,13 +24,13 @@
 
 (rf/reg-fx
  ::set-pointer-capture
- (fn [pointer-id]
-   (.setPointerCapture (dom/canvas-element) pointer-id)))
+ (fn [[pointer-id target]]
+   (.setPointerCapture (or target (dom/canvas-element)) pointer-id)))
 
 (rf/reg-fx
  ::release-pointer-capture
- (fn [pointer-id]
-   (.releasePointerCapture (dom/canvas-element) pointer-id)))
+ (fn [[pointer-id target]]
+   (.releasePointerCapture (or target (dom/canvas-element)) pointer-id)))
 
 (rf/reg-fx
  ::local-storage-persist
