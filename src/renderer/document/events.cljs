@@ -11,6 +11,7 @@
    [renderer.document.effects :as fx]
    [renderer.document.handlers :as h]
    [renderer.history.handlers :as history.h]
+   [renderer.utils.extra :refer [partial-right]]
    [renderer.utils.vec :as vec]
    [renderer.window.effects :as-alias window.fx]))
 
@@ -202,7 +203,7 @@
   focus-canvas]
  (fn [{:keys [db guid]} [_ documents]]
    {:db (->> documents
-             (reduce #(h/load %1 %2 guid) db)
+             (reduce (partial-right h/load guid) db)
              (h/center))}))
 
 (rf/reg-event-fx

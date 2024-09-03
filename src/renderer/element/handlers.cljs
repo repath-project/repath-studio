@@ -16,6 +16,7 @@
    [renderer.utils.attribute :as attr]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
+   [renderer.utils.extra :refer [partial-right]]
    [renderer.utils.hiccup :as hiccup]
    [renderer.utils.map :as map]
    [renderer.utils.vec :as vec]))
@@ -36,9 +37,9 @@
   [db id]
   (get (elements db) id))
 
-#_(defn tag
-    [db k]
-    (:tag (element db k)))
+(defn tag
+  [db id]
+  (:tag (element db id)))
 
 (defn root
   [db]
@@ -213,7 +214,7 @@
 
 (defn assoc-prop
   ([db k v]
-   (reduce #(assoc-prop %1 %2 k v) db (selected-ids db)))
+   (reduce (partial-right assoc-prop k v) db (selected-ids db)))
   ([db id k v]
    (-> (if (str/blank? v)
          (update-in db (conj (path db) id) dissoc k)
@@ -222,7 +223,7 @@
 
 (defn remove-attr
   ([db k]
-   (reduce #(remove-attr %1 %2 k) db (selected-ids db)))
+   (reduce (partial-right remove-attr k) db (selected-ids db)))
   ([db id k]
    (cond-> db
      (not (locked? db id))
@@ -230,7 +231,7 @@
 
 (defn set-attr
   ([db k v]
-   (reduce #(set-attr %1 %2 k v) db (selected-ids db)))
+   (reduce (partial-right set-attr k v) db (selected-ids db)))
   ([db id k v]
    (let [attr-path (conj (path db) id :attrs k)]
      (if (and (not (locked? db k))
@@ -469,7 +470,7 @@
 
 (defn position
   ([db pos]
-   (reduce #(position %1 %2 pos) db (top-ancestor-ids db)))
+   (reduce (partial-right position pos) db (top-ancestor-ids db)))
   ([db id pos]
    (update-el db id tool/position pos)))
 
@@ -485,7 +486,7 @@
 
 (defn align
   ([db direction]
-   (reduce #(align %1 %2 direction) db (selected-ids db)))
+   (reduce (partial-right align direction) db (selected-ids db)))
   ([db id direction]
    (let [el-bounds (:bounds (element db id))
          center (bounds/center el-bounds)
@@ -608,7 +609,7 @@
 (defn paste
   ([db]
    (let [parent-el (hovered-svg db)]
-     (reduce #(paste %1 %2 parent-el) (deselect db) (:copied-elements db))))
+     (reduce (partial-right paste parent-el) (deselect db) (:copied-elements db))))
   ([db el parent-el]
    (let [center (bounds/center (:copied-bounds db))
          el-center (bounds/center (:bounds el))
@@ -641,7 +642,7 @@
 
 (defn animate
   ([db tag attrs]
-   (reduce #(animate %1 %2 tag attrs) (deselect db) (selected db)))
+   (reduce (partial-right animate tag attrs) (deselect db) (selected db)))
   ([db el tag attrs]
    (reduce select (add db {:tag tag
                            :attrs attrs
@@ -683,7 +684,7 @@
    (reduce ungroup db (selected-ids db)))
   ([db id]
    (cond-> db
-     (and (not (locked? db id)) (= (:tag (element db id)) :g))
+     (and (not (locked? db id)) (= (tag db id) :g))
      (as-> db db
        (let [i (index db id)]
          (reduce
@@ -698,10 +699,10 @@
 
 (defn manipulate-path
   ([db action]
-   (reduce #(manipulate-path %1 %2 action) db (selected-ids db)))
+   (reduce (partial-right manipulate-path action) db (selected-ids db)))
   ([db id action]
    (cond-> db
-     (= (:tag (element db id)) :path)
+     (= (tag db id) :path)
      (update-el id path/manipulate action))))
 
 (defn import-svg

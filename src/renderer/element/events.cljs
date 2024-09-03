@@ -10,6 +10,7 @@
    [renderer.notification.events :as-alias notification.e]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
+   [renderer.utils.extra :refer [partial-right]]
    [renderer.window.effects :as-alias window.fx]
    [renderer.worker.events :as-alias worker.e]))
 
@@ -64,7 +65,7 @@
  ::update-attr
  [(history.h/finalize #(str "Update " (name (second %))))]
  (fn [db [_ k f & more]]
-   (reduce #(apply h/update-attr %1 %2 k f more) db (h/selected-ids db))))
+   (reduce (apply partial-right h/update-attr k f more) db (h/selected-ids db))))
 
 (rf/reg-event-db
  ::preview-attr
