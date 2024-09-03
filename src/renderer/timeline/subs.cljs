@@ -14,7 +14,7 @@
 
 (defn effect-id
   [el]
-  (str "effect" (name (:key el))))
+  (str "effect" (str (:id el))))
 
 (defn animation->timeline-row
   [{:keys [attrs] :as el}]
@@ -23,7 +23,7 @@
         end (or (:end attrs) nil)]
     {:id (:id el)
      :selected (:selected? el)
-     :actions [{:id (name (:id el))
+     :actions [{:id (str (:id el))
                 :selected (:selected? el)
                 :disable (:locked? el)
                 :movable (not (:locked? el))
