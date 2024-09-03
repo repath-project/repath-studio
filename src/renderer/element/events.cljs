@@ -307,7 +307,7 @@
 (rf/reg-event-fx
  ::cut
  [(history.h/finalize "Cut selection")]
- (fn [db _]
+ (fn [{:keys [db]} _]
    {:db (-> db h/copy h/delete)
     ::app.fx/clipboard-write [(element/->svg (h/top-selected-sorted db))]}))
 
