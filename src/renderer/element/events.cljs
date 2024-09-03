@@ -85,6 +85,12 @@
    (h/delete db)))
 
 (rf/reg-event-db
+ ::delete-by-id
+ [(finalize "Delete element")]
+ (fn [db [_ id]]
+   (h/delete db id)))
+
+(rf/reg-event-db
  ::deselect-all
  [(finalize "Deselect all")]
  (fn [db]

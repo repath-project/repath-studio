@@ -76,7 +76,7 @@
   [e id]
   (let [s (get-text e)]
     (rf/dispatch (if (empty? s)
-                   [::element.e/delete]
+                   [::element.e/delete-by-id id]
                    [::element.e/set-prop id :content s]))
     (rf/dispatch [::app.e/set-tool :select])))
 
