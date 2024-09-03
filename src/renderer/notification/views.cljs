@@ -2,6 +2,7 @@
   (:require
    [re-frame.core :as rf]
    [renderer.notification.events :as-alias notification.e]
+   [renderer.notification.subs :as-alias notification.s]
    [renderer.ui :as ui]
    [renderer.window.events :as-alias window.e]))
 
@@ -19,13 +20,13 @@
 (defn spec-failed
   [event error]
   [:div
-   [:h2.mb-4.font-bold "Spec check failed"]
+   [:h2.mb-4.font-bold "Validation error"]
    [:p "Event: " event]
    [:p.text-error error]])
 
 (defn main
   []
-  (let [notifications @(rf/subscribe [:notifications])]
+  (let [notifications @(rf/subscribe [::notification.s/notifications])]
     [:div.fixed.flex.flex-col.m-4.right-0.bottom-0.gap-2.items-end
      (map-indexed
       (fn [index notification]
