@@ -576,17 +576,12 @@
           (map menu-item items))]])
 
 (defmethod menu-item :root
-  [{:keys [label items id action disabled?]}]
+  [{:keys [label items id disabled?]}]
   [:> Menubar/Menu
    [:> Menubar/Trigger
     {:class "menubar-trigger"
      :id (name id)
-     :disabled disabled?
-     :on-click (when action #(rf/dispatch action))
-     :on-key-down (fn [e]
-                    ; FIXME: Doesn't work when the menu content is open.
-                    (when (contains? #{"Enter" "Space"} (.-key e))
-                      (rf/dispatch action)))}
+     :disabled disabled?}
     label]
    [:> Menubar/Portal
     (into [:> Menubar/Content
