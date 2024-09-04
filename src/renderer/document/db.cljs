@@ -3,7 +3,7 @@
    [malli.core :as m]
    [malli.transform :as mt]
    [malli.util :as mu]
-   [renderer.element.db :refer [Elements]]
+   [renderer.element.db :refer [Element]]
    [renderer.history.db :refer [History]]))
 
 (def Document
@@ -23,7 +23,7 @@
    [:history History]
    [:temp-element {:optional true} any?] ; REVIEW
    [:pan {:default [0 0]} [:tuple number? number?]]
-   [:elements Elements]
+   [:elements [:map-of {:default {}} uuid? Element]]
    [:focused? {:optional true} boolean?]])
 
 (def Persisted (mu/select-keys Document [:id :title :path :save :version :elements]))

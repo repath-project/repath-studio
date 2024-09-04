@@ -5,7 +5,7 @@
    [re-frame.core :as rf]
    [renderer.app.effects :as app.fx]
    [renderer.app.events :as-alias app.e]
-   [renderer.element.db :as element.db]
+   [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.h]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
@@ -137,7 +137,9 @@
           (recur parent (update-in db children-path vec/move index new-index)))
         db))))
 
-(def valid-elements? (m/validator element.db/Elements))
+(def valid-elements? (m/validator [:map-of uuid? Element]))
+
+(def explain-elements (m/explainer [:map-of uuid? Element]))
 
 (defn finalize
   "Pushes changes to history."
@@ -156,7 +158,7 @@
                 (-> db swap (notification.h/add
                              [notification.v/spec-failed
                               explanation
-                              (-> elements element.db/explain-elements me/humanize str)]))
+                              (-> elements explain-elements me/humanize str)]))
 
                 :else
                 (let [current-position (position db)

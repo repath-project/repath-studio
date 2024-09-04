@@ -1,6 +1,6 @@
 (ns renderer.history.db
   (:require
-   [renderer.element.db :refer [Elements]]
+   [renderer.element.db :refer [Element]]
    [renderer.utils.math :refer [Vec2D]]))
 
 (def State
@@ -9,7 +9,7 @@
    [:timestamp number?]
    [:index [:or pos-int? zero?]]
    [:id uuid?]
-   [:elements Elements]
+   [:elements [:map-of uuid? Element]]
    [:parent {:optional true} uuid?]
    [:children [:vector uuid?]]])
 

@@ -5,7 +5,7 @@
    [clojure.core.matrix :as mat]
    [malli.experimental :as mx]
    [reagent.dom.server :as dom.server]
-   [renderer.element.db :refer [Element Attrs]]
+   [renderer.element.db :refer [Element Attr]]
    [renderer.snap.db :as snap.db]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.attribute :as attr]
@@ -61,7 +61,7 @@
                  [cx y2]])))
       points)))
 
-(mx/defn attrs-map :- Attrs
+(mx/defn attrs-map :- [:map-of keyword? Attr]
   [attrs]
   (let [deprecated-path [:__compat :status :deprecated]
         filtered-attrs (->> attrs
@@ -72,7 +72,7 @@
         (keys)
         (zipmap (repeat "")))))
 
-(mx/defn attributes :- Attrs
+(mx/defn attributes :- [:map-of keyword? Attr]
   [{:keys [tag attrs]} :- Element]
   (merge
    (when tag

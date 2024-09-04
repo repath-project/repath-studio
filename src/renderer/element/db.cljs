@@ -14,10 +14,7 @@
    tag?])
 
 (def Attr
-  [:or string? number? vector? nil?])
-
-(def Attrs
-  [:map-of keyword? Attr])
+  [:or string? number? vector? nil?]) ; REVIEW
 
 (def Handle
   [:map {:closed true}
@@ -44,16 +41,11 @@
    [:children {:default [] :optional true} [:vector uuid?]]
    [:bounds {:optional true} Bounds]
    [:content {:optional true} string?]
-   [:attrs {:optional true} Attrs]])
-
-(def Elements
-  [:map-of {:default {}} uuid? Element])
+   [:attrs {:optional true} [:map-of keyword? Attr]]])
 
 (def valid? (m/validator Element))
 
 (def explain (m/explainer Element))
-
-(def explain-elements (m/explainer Element))
 
 (def default (m/decode Element {:type :element
                                 :visible? true
