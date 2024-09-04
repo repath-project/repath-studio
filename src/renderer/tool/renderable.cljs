@@ -9,23 +9,23 @@
    [renderer.document.subs :as-alias document.s]
    [renderer.element.handlers :as element.h]
    [renderer.element.subs :as-alias element.s]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.dom :as dom]
    [renderer.utils.element :as element]
    [renderer.utils.pointer :as pointer]))
 
-(defmethod tool/activate ::tool/renderable
+(defmethod tool.hierarchy/activate ::tool.hierarchy/renderable
   [db]
   (-> db
       (assoc :cursor "crosshair")
       (app.h/set-message "Click and drag to create an element.")))
 
-(defmethod tool/drag-start ::tool/renderable
+(defmethod tool.hierarchy/drag-start ::tool.hierarchy/renderable
   [db]
   (app.h/set-state db :create))
 
-(defmethod tool/drag-end ::tool/renderable
+(defmethod tool.hierarchy/drag-end ::tool.hierarchy/renderable
   [db _e]
   (-> db
       (element.h/add)
@@ -33,7 +33,7 @@
       (app.h/set-state :default)
       (app.h/explain "Create " (name (:tag (element.h/get-temp db))))))
 
-(defmethod tool/bounds ::tool/renderable
+(defmethod tool.hierarchy/bounds ::tool.hierarchy/renderable
   [{:keys [tag attrs content] :as el}]
   (when-let [svg (dom/canvas-element)]
     (let [dom-el (js/document.createElementNS "http://www.w3.org/2000/svg" (name tag))]
@@ -46,11 +46,11 @@
         (.remove dom-el)
         bounds))))
 
-(defmethod tool/position ::tool/renderable
+(defmethod tool.hierarchy/position ::tool.hierarchy/renderable
   [el position]
-  (let [center (bounds/center (tool/bounds el))
+  (let [center (bounds/center (tool.hierarchy/bounds el))
         offset (mat/sub position center)]
-    (tool/translate el offset)))
+    (tool.hierarchy/translate el offset)))
 
 (defn ghost-element
   "Renders a ghost element on top of the actual element to ensure that the user
@@ -106,11 +106,11 @@
           (when title [:title title])
           content
           (for [child child-els]
-            ^{:key (:id child)} [tool/render child])]
+            ^{:key (:id child)} [tool.hierarchy/render child])]
 
          (when default-state? [ghost-element el])])})))
 
-(defmethod tool/render ::tool/renderable
+(defmethod tool.hierarchy/render ::tool.hierarchy/renderable
   [{:keys [children] :as el}]
   (let [child-els @(rf/subscribe [::element.s/filter-visible children])
         state @(rf/subscribe [::app.s/state])]

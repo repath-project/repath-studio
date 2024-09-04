@@ -6,15 +6,15 @@
    [clojure.string :as str]
    [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.overlay :as overlay]
    [renderer.utils.attribute :as utils.attr]
    [renderer.utils.element :as element]
    [renderer.utils.units :as units]))
 
-(derive ::tool/polyshape ::tool/shape)
+(derive ::tool.hierarchy/polyshape ::tool.hierarchy/shape)
 
-(defmethod tool/activate ::tool/polyshape
+(defmethod tool.hierarchy/activate ::tool.hierarchy/polyshape
   [db]
   (-> db
       (assoc :cursor "crosshair")
@@ -35,7 +35,7 @@
              [:documents active-document :temp-element :attrs :points]
              #(str % " " (str/join " " point))))
 
-(defmethod tool/pointer-up ::tool/polyshape
+(defmethod tool.hierarchy/pointer-up ::tool.hierarchy/polyshape
   [{:keys [adjusted-pointer-pos] :as db}]
   (if (element.h/get-temp db)
     (add-point db adjusted-pointer-pos)
@@ -43,7 +43,7 @@
         (app.h/set-state :create)
         (create-polyline adjusted-pointer-pos))))
 
-(defmethod tool/drag-end ::tool/polyshape
+(defmethod tool.hierarchy/drag-end ::tool.hierarchy/polyshape
   [{:keys [adjusted-pointer-pos] :as db}]
   (if (element.h/get-temp db)
     (add-point db adjusted-pointer-pos)
@@ -51,7 +51,7 @@
         (app.h/set-state :create)
         (create-polyline adjusted-pointer-pos))))
 
-(defmethod tool/pointer-move ::tool/polyshape
+(defmethod tool.hierarchy/pointer-move ::tool.hierarchy/polyshape
   [{:keys [active-document adjusted-pointer-pos] :as db}]
   (if-let [points (get-in db [:documents active-document :temp-element :attrs :points])]
     (let [point-vector (utils.attr/points->vec points)]
@@ -62,7 +62,7 @@
                                                       point-vector))
                                       adjusted-pointer-pos)))) db))
 
-(defmethod tool/double-click ::tool/polyshape
+(defmethod tool.hierarchy/double-click ::tool.hierarchy/polyshape
   [{:keys [active-document] :as db} _e]
   (-> db
       (update-in [:documents active-document :temp-element :attrs :points]
@@ -72,7 +72,7 @@
       (app.h/set-state :default)
       (app.h/explain "Create " (name (:tool db)))))
 
-(defmethod tool/translate ::tool/polyshape
+(defmethod tool.hierarchy/translate ::tool.hierarchy/polyshape
   [el [x y]]
   (update-in el
              [:attrs :points]
@@ -84,9 +84,9 @@
                                    (units/transform (second point) + y))) [])
                    (str/join " "))))
 
-(defmethod tool/scale ::tool/polyshape
+(defmethod tool.hierarchy/scale ::tool.hierarchy/polyshape
   [el ratio pivot-point]
-  (let [bounds-start (take 2 (tool/bounds el))
+  (let [bounds-start (take 2 (tool.hierarchy/bounds el))
         pivot-point (mat/sub pivot-point (mat/mul pivot-point ratio))]
     (update-in el
                [:attrs :points]
@@ -101,7 +101,7 @@
                                        (units/transform point-y + y)))) [])
                      (str/join " ")))))
 
-(defmethod tool/render-edit ::tool/polyshape
+(defmethod tool.hierarchy/render-edit ::tool.hierarchy/polyshape
   [{:keys [attrs id] :as el} zoom]
   (let [{:keys [points]} attrs
         handle-size (/ 8 zoom)
@@ -123,7 +123,7 @@
                                               :element id}]))
                   (utils.attr/points->vec points))]))
 
-(defmethod tool/edit ::tool/polyshape
+(defmethod tool.hierarchy/edit ::tool.hierarchy/polyshape
   [el [x y] handle]
   (update-in
    el
@@ -137,7 +137,7 @@
                              (units/transform (second point) + y))))
                   flatten))))
 
-(defmethod tool/bounds ::tool/polyshape
+(defmethod tool.hierarchy/bounds ::tool.hierarchy/polyshape
   [{{:keys [points]} :attrs}]
   (let [points-v (utils.attr/points->vec points)
         x1 (apply min (map #(units/unit->px (first %)) points-v))
@@ -158,17 +158,17 @@
                   0
                   vertices) 2)))
 
-(defmethod tool/area ::tool/polyshape
+(defmethod tool.hierarchy/area ::tool.hierarchy/polyshape
   [{{:keys [points]} :attrs}]
   (let [points-v (utils.attr/points->px points)]
     (calc-polygon-area points-v)))
 
-(defmethod tool/centroid ::tool/polyshape
+(defmethod tool.hierarchy/centroid ::tool.hierarchy/polyshape
   [{{:keys [points]} :attrs}]
   (let [points-v (utils.attr/points->px points)]
     (mat/div (reduce mat/add [0 0] points-v)
              (count points-v))))
 
-(defmethod tool/snapping-points ::tool/polyshape
+(defmethod tool.hierarchy/snapping-points ::tool.hierarchy/polyshape
   [{{:keys [points]} :attrs}]
   (utils.attr/points->px points))

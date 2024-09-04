@@ -9,19 +9,19 @@
    [renderer.menubar.filters :as filters]
    [renderer.ruler.views :as ruler.v]
    [renderer.snap.subs :as-alias snap.s]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.overlay :as overlay]
    [renderer.utils.keyboard :as keyb]
    [renderer.utils.pointer :as pointer]))
 
-(derive :canvas ::tool/element)
+(derive :canvas ::tool.hierarchy/element)
 
-(defmethod tool/properties :canvas
+(defmethod tool.hierarchy/properties :canvas
   []
   {:description "The canvas is the main SVG container that hosts all elements."
    :attrs [:fill]})
 
-(defmethod tool/render :canvas
+(defmethod tool.hierarchy/render :canvas
   [{:keys [attrs children] :as element}]
   (let [_ @(rf/subscribe [::snap.s/in-viewport-tree]) ; TODO: Remove this.
         child-elements @(rf/subscribe [::element.s/filter-visible children])
@@ -62,7 +62,7 @@
                   :style {:outline 0
                           :background (:fill attrs)}}
      (for [el child-elements]
-       ^{:key (:id el)} [tool/render el])
+       ^{:key (:id el)} [tool.hierarchy/render el])
 
      [:defs
       (map (fn [{:keys [id tag attrs]}]
@@ -100,11 +100,11 @@
           (for [el selected-elements]
             ^{:key (str (:id el) "-edit-points")}
             [:g
-             [tool/render-edit el]
+             [tool.hierarchy/render-edit el]
              ^{:key (str (:id el) "-centroid")}
              [overlay/centroid el]]))
 
-        [tool/render temp-element]])
+        [tool.hierarchy/render temp-element]])
 
      (when debug?
        [into [:g]
@@ -116,11 +116,11 @@
 
      (when grid? [ruler.v/grid])]))
 
-(defmethod tool/render-to-string :canvas
+(defmethod tool.hierarchy/render-to-string :canvas
   [{:keys [attrs children]}]
   (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
         attrs (->> (dissoc attrs :fill)
                    (remove #(empty? (str (second %))))
                    (into {}))]
-    (->> (doall (map tool/render-to-string (merge child-elements)))
+    (->> (doall (map tool.hierarchy/render-to-string (merge child-elements)))
          (into [:svg attrs]))))

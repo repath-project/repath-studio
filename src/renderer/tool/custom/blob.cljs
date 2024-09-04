@@ -11,7 +11,7 @@
    [renderer.element.events :as-alias element.e]
    [renderer.element.handlers :as element.h]
    [renderer.element.subs :as-alias element.s]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.overlay :as overlay]
    [renderer.ui :as ui]
    [renderer.utils.bounds :as bounds]
@@ -19,7 +19,7 @@
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
 
-(derive :blob ::tool/renderable)
+(derive :blob ::tool.hierarchy/renderable)
 
 (derive :size ::length/length)
 
@@ -77,7 +77,7 @@
   []
   "The size of the bounding box.")
 
-(defmethod tool/properties :blob
+(defmethod tool.hierarchy/properties :blob
   []
   {:icon "blob"
    :description "Vector based blob."
@@ -94,7 +94,7 @@
            :stroke-width
            :opacity]})
 
-(defmethod tool/drag-start :blob
+(defmethod tool.hierarchy/drag-start :blob
   [{:keys [adjusted-pointer-offset
            active-document
            adjusted-pointer-pos] :as db}]
@@ -112,7 +112,7 @@
                                     :fill fill
                                     :stroke stroke}})))
 
-(defmethod tool/drag :blob
+(defmethod tool.hierarchy/drag :blob
   [{:keys [adjusted-pointer-offset adjusted-pointer-pos] :as db}]
   (let [[offset-x offset-y] adjusted-pointer-offset
         radius (mat/distance adjusted-pointer-pos adjusted-pointer-offset)
@@ -122,19 +122,19 @@
                  (assoc-in [:attrs :size] (* radius 2)))]
     (element.h/set-temp db temp)))
 
-(defmethod tool/scale :blob
+(defmethod tool.hierarchy/scale :blob
   [el ratio pivot-point]
   (let [offset (mat/sub pivot-point (mat/mul pivot-point ratio))
         ratio (apply min ratio)]
     (-> el
         (attr.hierarchy/update-attr :size * ratio)
-        (tool/translate offset))))
+        (tool.hierarchy/translate offset))))
 
-(defmethod tool/render :blob
+(defmethod tool.hierarchy/render :blob
   [{:keys [attrs children] :as element}]
   (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
         pointer-handler #(pointer/event-handler % element)]
-    [:path (merge {:d (tool/path element)
+    [:path (merge {:d (tool.hierarchy/path element)
                    :on-pointer-up pointer-handler
                    :on-pointer-down pointer-handler
                    :on-pointer-move pointer-handler}
@@ -145,32 +145,32 @@
                                       :class
                                       :opacity])) child-elements]))
 
-(defmethod tool/translate :blob
+(defmethod tool.hierarchy/translate :blob
   [element [x y]]
   (-> element
       (attr.hierarchy/update-attr :x + x)
       (attr.hierarchy/update-attr :y + y)))
 
-(defmethod tool/position :blob
+(defmethod tool.hierarchy/position :blob
   [el [x y]]
-  (let [dimensions (bounds/->dimensions (tool/bounds el))
+  (let [dimensions (bounds/->dimensions (tool.hierarchy/bounds el))
         [cx cy] (mat/div dimensions 2)]
     (-> el
         (assoc-in [:attrs :x] (- x cx))
         (assoc-in [:attrs :y] (- y cy)))))
 
-(defmethod tool/bounds :blob
+(defmethod tool.hierarchy/bounds :blob
   [{:keys [attrs]}]
   (let [{:keys [x y size]} attrs
         [x y size] (mapv units/unit->px [x y size])]
     [x y (+ x size) (+ y size)]))
 
-(defmethod tool/centroid :blob
+(defmethod tool.hierarchy/centroid :blob
   [{{:keys [x y size]} :attrs}]
   (let [[x y size] (mapv units/unit->px [x y size])]
     (mat/add [x y] (/ size 2))))
 
-(defmethod tool/path :blob
+(defmethod tool.hierarchy/path :blob
   [{:keys [attrs]}]
   (let [[x y] (mapv units/unit->px [(:x attrs) (:y attrs)])
         options (->> [:seed :extraPoints :randomness :size]
@@ -183,14 +183,14 @@
         (.translate x y)
         .toString)))
 
-(defmethod tool/edit :blob
+(defmethod tool.hierarchy/edit :blob
   [element [x y] handle]
   (case handle
     :size
     (attr.hierarchy/update-attr element :size #(max 0 (+ % (min x y))))
     element))
 
-(defmethod tool/render-edit :blob
+(defmethod tool.hierarchy/render-edit :blob
   [{:keys [attrs id] :as el}]
   (let [{:keys [x y size]} attrs
         [x y size] (mapv units/unit->px [x y size])

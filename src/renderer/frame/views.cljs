@@ -11,7 +11,7 @@
    [renderer.element.subs :as-alias element.s]
    [renderer.element.views :as element.v]
    [renderer.frame.events :as-alias frame.e]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.ui :as ui]
    [renderer.utils.pointer :as pointer]))
 
@@ -104,7 +104,7 @@
            [:f> inner-component]
            [:> ContextMenu/Root
             [:> ContextMenu/Trigger
-             [tool/render root-el]]
+             [tool.hierarchy/render root-el]]
             [:> ContextMenu/Portal
              (into [:> ContextMenu/Content
                     {:class "menu-content context-menu-content"

@@ -7,15 +7,15 @@
    [renderer.element.handlers :as element.h]
    [renderer.history.handlers :as history.h]
    [renderer.snap.handlers :as snap.h]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.overlay :as overlay]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
 
-(derive :select ::tool/tool)
+(derive :select ::tool.hierarchy/tool)
 
-(defmethod tool/properties :select
+(defmethod tool.hierarchy/properties :select
   []
   {:icon "pointer-alt"})
 
@@ -63,7 +63,7 @@
               (hovered? db el intersecting?)
               (f (:id el)))) db (filter :visible? (vals (element.h/elements db)))))
 
-(defmethod tool/pointer-move :select
+(defmethod tool.hierarchy/pointer-move :select
   [db {:keys [element] :as e}]
   (cond-> db
     (not (pointer/shift? e))
@@ -76,19 +76,19 @@
     (:id element)
     (element.h/hover (:id element))))
 
-(defmethod tool/key-down :select
+(defmethod tool.hierarchy/key-down :select
   [db e]
   (cond-> db
     (pointer/shift? e)
     (element.h/ignore :bounding-box)))
 
-(defmethod tool/key-up :select
+(defmethod tool.hierarchy/key-up :select
   [db e]
   (cond-> db
     (not (pointer/shift? e))
     (element.h/clear-ignored)))
 
-(defmethod tool/pointer-down :select
+(defmethod tool.hierarchy/pointer-down :select
   [db {:keys [element]}]
   (cond-> db
     element
@@ -97,7 +97,7 @@
     :always
     (element.h/ignore :bounding-box)))
 
-(defmethod tool/pointer-up :select
+(defmethod tool.hierarchy/pointer-up :select
   [db {:keys [element] :as e}]
   (if-not (and (= (:button e) :right)
                (:selected? element))
@@ -107,7 +107,7 @@
         (app.h/explain "Select element"))
     (dissoc db :clicked-element)))
 
-(defmethod tool/double-click :select
+(defmethod tool.hierarchy/double-click :select
   [db {:keys [element]}]
   (if (= (:tag element) :g)
     (-> db
@@ -115,14 +115,14 @@
         (element.h/deselect (:id element)))
     (app.h/set-tool db :edit)))
 
-(defmethod tool/activate :select
+(defmethod tool.hierarchy/activate :select
   [db]
   (-> db
       (app.h/set-state :default)
       (app.h/set-cursor "default")
       (app.h/set-message (message nil :default))))
 
-(defmethod tool/deactivate :select
+(defmethod tool.hierarchy/deactivate :select
   [db]
   (element.h/clear-ignored db))
 
@@ -134,7 +134,7 @@
     (cond-> (overlay/select-box adjusted-pointer-pos adjusted-pointer-offset zoom)
       (not intersecting?) (assoc-in [:attrs :fill] "transparent"))))
 
-(defmethod tool/drag-start :select
+(defmethod tool.hierarchy/drag-start :select
   [db e]
   "Releasing the pointer capture fixes an issue with touch devices.
    Without this, the event will be dropped, althougn touch-action is set to none.
@@ -168,8 +168,7 @@
    |      |        ↖     │
    |      y          ↖   │
    |      |            ↖ │
-   □----------□--------- ■ :bottom-right (active handle)
-   "
+   □----------□--------- ■ :bottom-right (active handle)"
   [db [x y] lock-ratio? in-place? recur?]
   (let [handle (-> db :clicked-element :id)
         bounds (element.h/bounds db)
@@ -188,7 +187,7 @@
         pivot-point (if in-place? [cx cy] pivot-point)
         offset (cond-> offset in-place? (mat/mul 2))
         ratio (mat/div (mat/add dimensions offset) dimensions)
-        lock-ratio? (or lock-ratio? (every? #(-> % :tag tool/properties :locked-ratio?) (element.h/selected db)))
+        lock-ratio? (or lock-ratio? (every? #(-> % :tag tool.hierarchy/properties :locked-ratio?) (element.h/selected db)))
         ratio (cond-> ratio lock-ratio? (lock-ratio handle))
         ;; TODO: Handle negative/inverted ratio.
         ratio (mapv #(max 0 %) ratio)]
@@ -205,7 +204,7 @@
          (not= (-> db :clicked-element :id) :bounding-box))
     (-> (element.h/select (-> db :clicked-element :id) multi?))))
 
-(defmethod tool/drag :select
+(defmethod tool.hierarchy/drag :select
   [{:keys [state adjusted-pointer-offset adjusted-pointer-pos] :as db} e]
   (let [offset (mat/sub adjusted-pointer-pos adjusted-pointer-offset)
         ctrl? (pointer/ctrl? e)
@@ -216,46 +215,46 @@
         db (-> db
                (element.h/clear-ignored)
                (app.h/set-message (message offset state)))]
-    (-> (case state
-          :select
-          (-> db
-              (element.h/set-temp (select-rect db alt-key?))
-              (element.h/clear-hovered)
-              (reduce-by-area (pointer/alt? e) element.h/hover))
+    (case state
+      :select
+      (-> db
+          (element.h/set-temp (select-rect db alt-key?))
+          (element.h/clear-hovered)
+          (reduce-by-area (pointer/alt? e) element.h/hover))
 
-          :move
-          (if alt-key?
-            (app.h/set-state db :clone)
-            (-> db
-                (history.h/swap)
-                (select-element (pointer/shift? e))
-                (element.h/translate offset)
-                (snap.h/snap element.h/translate)
-                (app.h/set-cursor "default")))
+      :move
+      (if alt-key?
+        (app.h/set-state db :clone)
+        (-> db
+            (history.h/swap)
+            (select-element (pointer/shift? e))
+            (element.h/translate offset)
+            (snap.h/snap element.h/translate)
+            (app.h/set-cursor "default")))
 
-          :clone
-          (if alt-key?
-            (-> db
-                (history.h/swap)
-                (select-element (pointer/shift? e))
-                (element.h/duplicate offset)
-                (snap.h/snap element.h/translate)
-                (app.h/set-cursor "copy"))
-            (app.h/set-state db :move))
+      :clone
+      (if alt-key?
+        (-> db
+            (history.h/swap)
+            (select-element (pointer/shift? e))
+            (element.h/duplicate offset)
+            (snap.h/snap element.h/translate)
+            (app.h/set-cursor "copy"))
+        (app.h/set-state db :move))
 
-          :scale
-          (cond-> db
-            :always
-            (-> (history.h/swap)
-                (app.h/set-cursor "default")
-                (offset-scale offset (pointer/ctrl? e) (pointer/shift? e) (pointer/alt? e)))
+      :scale
+      (cond-> db
+        :always
+        (-> (history.h/swap)
+            (app.h/set-cursor "default")
+            (offset-scale offset (pointer/ctrl? e) (pointer/shift? e) (pointer/alt? e)))
 
-            (not (pointer/ctrl? e))
-            (snap.h/snap offset-scale false (pointer/shift? e) (pointer/alt? e)))
+        (not (pointer/ctrl? e))
+        (snap.h/snap offset-scale false (pointer/shift? e) (pointer/alt? e)))
 
-          :default db))))
+      :default db)))
 
-(defmethod tool/drag-end :select
+(defmethod tool.hierarchy/drag-end :select
   [db e]
   (-> (case (:state db)
         :select (-> (cond-> db (not (pointer/shift? e)) element.h/deselect)

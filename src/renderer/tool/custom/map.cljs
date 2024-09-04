@@ -6,13 +6,13 @@
    [renderer.document.subs :as-alias document.s]
    [renderer.element.handlers :as element.h]
    [renderer.element.subs :as-alias element.s]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.pointer :as pointer]))
 
-(derive :map ::tool/box)
-(derive :map ::tool/custom)
+(derive :map ::tool.hierarchy/box)
+(derive :map ::tool.hierarchy/custom)
 
-(defmethod tool/properties :map
+(defmethod tool.hierarchy/properties :map
   []
   {:icon "map"
    :attrs [:lat
@@ -23,7 +23,7 @@
            :width
            :height]})
 
-(defmethod tool/drag :map
+(defmethod tool.hierarchy/drag :map
   [{:keys [adjusted-pointer-pos tool adjusted-pointer-offset] :as db}]
   (let [[offset-x offset-y] adjusted-pointer-offset
         [pos-x pos-y] adjusted-pointer-pos]
@@ -74,7 +74,7 @@
                   :on-pointer-move #(pointer/event-handler % element)}
                  (select-keys attrs [:x :y :width :height :id :class]))])})))
 
-(defmethod tool/render :map
+(defmethod tool.hierarchy/render :map
   [{:keys [children] :as element}]
   (let [child-elements @(rf/subscribe [::element.s/filter-visible children])]
     [render-map element child-elements]))

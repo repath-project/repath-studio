@@ -6,12 +6,12 @@
    ["svgpath" :as svgpath]
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.overlay :as overlay]
    [renderer.utils.element :as element]
    [renderer.utils.units :as units]))
 
-(derive :path ::tool/shape)
+(derive :path ::tool.hierarchy/shape)
 
 (defn manipulate-paper-path
   [path action options]
@@ -30,7 +30,7 @@
                                       (.exportSVG)
                                       (.getAttribute "d"))))
 
-(defmethod tool/properties :path
+(defmethod tool.hierarchy/properties :path
   []
   {; :icon "bezier-curve"
    :description "The <path> SVG element is the generic element to define a shape.
@@ -41,7 +41,7 @@
            :stroke-linejoin
            :opacity]})
 
-(defmethod tool/translate :path
+(defmethod tool.hierarchy/translate :path
   [el [x y]]
   (assoc-in el [:attrs :d] (-> (:attrs el)
                                :d
@@ -49,10 +49,10 @@
                                (.translate x y)
                                .toString)))
 
-(defmethod tool/scale :path
+(defmethod tool.hierarchy/scale :path
   [el ratio pivot-point]
   (let [[scale-x scale-y] ratio
-        [x y] (tool/bounds el)
+        [x y] (tool.hierarchy/bounds el)
         [x y] (mat/sub (mat/add [x y]
                                 (mat/sub pivot-point
                                          (mat/mul pivot-point ratio)))
@@ -64,12 +64,12 @@
                                  (.translate x y)
                                  .toString))))
 
-(defmethod tool/bounds :path
+(defmethod tool.hierarchy/bounds :path
   [{{:keys [d]} :attrs}]
   (let [[left top right bottom] (js->clj (svgPathBbox d))]
     [left top right bottom]))
 
-(defmethod tool/render-edit :path
+(defmethod tool.hierarchy/render-edit :path
   [{:keys [attrs id] :as el} zoom]
   (let [handle-size (/ 8 zoom)
         stroke-width (/ 1 zoom)
@@ -110,7 +110,7 @@
     (aset (.-segments path) i segment)
     path))
 
-(defmethod tool/edit :path
+(defmethod tool.hierarchy/edit :path
   [el offset handle]
   (update-in
    el

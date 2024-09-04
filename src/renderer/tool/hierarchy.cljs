@@ -1,4 +1,4 @@
-(ns renderer.tool.base)
+(ns renderer.tool.hierarchy)
 
 (defn tool?
   [tool]

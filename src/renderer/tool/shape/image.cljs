@@ -3,21 +3,21 @@
   (:require
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.e]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.data-transfer :as data-transfer]
    [renderer.utils.file :as file]))
 
-(derive :image ::tool/graphics)
-(derive :image ::tool/box)
+(derive :image ::tool.hierarchy/graphics)
+(derive :image ::tool.hierarchy/box)
 
-(defmethod tool/properties :image
+(defmethod tool.hierarchy/properties :image
   []
   {:icon "image"
    :description "The <image> SVG element includes images inside SVG documents.
                  It can display raster image files or other SVG files."
    :attrs [:href]})
 
-(defmethod tool/pointer-up :image
+(defmethod tool.hierarchy/pointer-up :image
   [{:keys [adjusted-pointer-pos] :as db}]
   (file/open!
    {:startIn "pictures"

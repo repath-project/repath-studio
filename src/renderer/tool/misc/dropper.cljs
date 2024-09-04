@@ -8,16 +8,16 @@
    [renderer.notification.events :as-alias notification.e]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
-   [renderer.tool.base :as tool]))
+   [renderer.tool.hierarchy :as tool.hierarchy]))
 
-(derive :dropper ::tool/tool)
+(derive :dropper ::tool.hierarchy/tool)
 
-(defmethod tool/properties :dropper
+(defmethod tool.hierarchy/properties :dropper
   []
   {:icon "eye-dropper"
    :description "Pick a color from your document."})
 
-(defmethod tool/activate :dropper
+(defmethod tool.hierarchy/activate :dropper
   [db]
   (if (.-EyeDropper js/window)
     (-> db

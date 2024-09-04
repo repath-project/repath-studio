@@ -4,38 +4,38 @@
    [renderer.app.events :as-alias app.e]
    [renderer.app.handlers :as app.h]
    [renderer.frame.handlers :as frame.h]
-   [renderer.tool.base :as tool]))
+   [renderer.tool.hierarchy :as tool.hierarchy]))
 
-(derive :pan ::tool/tool)
+(derive :pan ::tool.hierarchy/tool)
 
-(defmethod tool/properties :pan
+(defmethod tool.hierarchy/properties :pan
   []
   {:icon "hand"})
 
-(defmethod tool/activate :pan
+(defmethod tool.hierarchy/activate :pan
   [db]
   (assoc db :cursor "grab"))
 
-(defmethod tool/activate :pan
+(defmethod tool.hierarchy/activate :pan
   [db]
   (-> db
       (app.h/set-state :default)
       (app.h/set-cursor "grab")
       (app.h/set-message "Click and drag to pan.")))
 
-(defmethod tool/pointer-up :pan
+(defmethod tool.hierarchy/pointer-up :pan
   [db]
   (assoc db :cursor "grab"))
 
-(defmethod tool/pointer-down :pan
+(defmethod tool.hierarchy/pointer-down :pan
   [db]
   (assoc db :cursor "grabbing"))
 
-(defmethod tool/drag :pan
+(defmethod tool.hierarchy/drag :pan
   [db e]
   (frame.h/pan-by db (mat/sub (:pointer-pos db) (:pointer-pos e))))
 
-(defmethod tool/drag-end :pan
+(defmethod tool.hierarchy/drag-end :pan
   [db]
   (-> db
       (assoc :cursor "grab")

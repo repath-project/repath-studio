@@ -9,16 +9,16 @@
    [renderer.attribute.range :as attr.range]
    [renderer.attribute.views :as attr.v]
    [renderer.element.handlers :as element.h]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.overlay :as overlay]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
 
-(derive :brush ::tool/renderable)
+(derive :brush ::tool.hierarchy/renderable)
 
-(defmethod tool/properties :brush
+(defmethod tool.hierarchy/properties :brush
   []
   {:icon "brush"
    :description "Draw pressure-sensitive freehand lines using perfect-freehand."
@@ -31,7 +31,7 @@
            :smoothing
            :streamline]})
 
-(defmethod tool/activate :brush
+(defmethod tool.hierarchy/activate :brush
   [db]
   (-> db
       (assoc :cursor "none")
@@ -77,7 +77,7 @@
   []
   "How much to streamline the stroke.")
 
-(defmethod tool/pointer-move :brush
+(defmethod tool.hierarchy/pointer-move :brush
   [{:keys [adjusted-pointer-pos] :as db} {:keys [pressure]}]
   (let [[x y] adjusted-pointer-pos
         r (* (/ 16 2) (if (zero? pressure) 1 pressure))
@@ -89,7 +89,7 @@
                                     :r r
                                     :fill stroke}})))
 
-(defmethod tool/drag :brush
+(defmethod tool.hierarchy/drag :brush
   [{:keys [active-document
            adjusted-pointer-pos] :as db} {:keys [pressure]}]
   (let [stroke (get-in db [:documents active-document :stroke])
@@ -143,7 +143,7 @@
       (js->clj)
       (get-svg-path-from-stroke)))
 
-(defmethod tool/render :brush
+(defmethod tool.hierarchy/render :brush
   [{:keys [attrs] :as element}]
   (let [pointer-handler #(pointer/event-handler % element)]
     [:path (merge {:d (points->path (:points attrs)
@@ -157,7 +157,7 @@
                       (select-keys [:id :class :opacity])
                       (assoc :fill (:stroke attrs))))]))
 
-(defmethod tool/bounds :brush
+(defmethod tool.hierarchy/bounds :brush
   [{{:keys [points]} :attrs}]
   (let [x1 (apply min (map #(units/unit->px (first %)) points))
         y1 (apply min (map #(units/unit->px (second %)) points))
@@ -165,21 +165,21 @@
         y2 (apply max (map #(units/unit->px (second %)) points))]
     [x1 y1 x2 y2]))
 
-(defmethod tool/translate :brush
+(defmethod tool.hierarchy/translate :brush
   [el [x y]]
   (update-in el
              [:attrs :points]
              #(mapv (fn [point] (mat/add point [x y 0])) %)))
 
-(defmethod tool/position :brush
+(defmethod tool.hierarchy/position :brush
   [el position]
-  (let [center (bounds/center (tool/bounds el))
+  (let [center (bounds/center (tool.hierarchy/bounds el))
         offset (mat/sub position center)]
-    (tool/translate el offset)))
+    (tool.hierarchy/translate el offset)))
 
-(defmethod tool/scale :brush
+(defmethod tool.hierarchy/scale :brush
   [el ratio pivot-point]
-  (let [bounds-start (take 2 (tool/bounds el))
+  (let [bounds-start (take 2 (tool.hierarchy/bounds el))
         pivot-point (mat/sub pivot-point (mat/mul pivot-point ratio))]
     (update-in el
                [:attrs :points]
@@ -188,18 +188,18 @@
                               [x y] (mat/add pivot-point (mat/sub rel-point (mat/mul rel-point ratio)))]
                           (mat/add point [x y 0]))) %))))
 
-(defmethod tool/drag-end :brush
+(defmethod tool.hierarchy/drag-end :brush
   [db _e]
   (-> db
       (element.h/add)
       (app.h/set-state :default)
       (app.h/explain "Draw line")))
 
-(defmethod tool/path :brush
+(defmethod tool.hierarchy/path :brush
   [{:keys [attrs]}]
   (points->path (:points attrs) (select-keys attrs option-keys)))
 
-(defmethod tool/render-edit :brush
+(defmethod tool.hierarchy/render-edit :brush
   [{:keys [attrs id] :as el} zoom]
   (let [handle-size (/ 8 zoom)
         stroke-width (/ 1 zoom)

@@ -5,12 +5,12 @@
    [renderer.document.subs :as-alias document.s]
    [renderer.element.handlers :as element.h]
    [renderer.element.subs :as-alias element.s]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.pointer :as pointer]))
 
-(derive :svg ::tool/container)
+(derive :svg ::tool.hierarchy/container)
 
-(defmethod tool/properties :svg
+(defmethod tool.hierarchy/properties :svg
   []
   {:icon "svg"
    :description "The svg element is a container that defines a new coordinate
@@ -19,7 +19,7 @@
                  inside an SVG or HTML document."
    :attrs [:overflow]})
 
-(defmethod tool/drag :svg
+(defmethod tool.hierarchy/drag :svg
   [{:keys [adjusted-pointer-pos adjusted-pointer-offset] :as db} e]
   (let [[offset-x offset-y] adjusted-pointer-offset
         [pos-x pos-y] adjusted-pointer-pos
@@ -34,7 +34,7 @@
                             :type :element
                             :attrs attrs})))
 
-(defmethod tool/render :svg
+(defmethod tool.hierarchy/render :svg
   [{:keys [attrs children tag] :as el}]
   (let [child-els @(rf/subscribe [::element.s/filter-visible children])
         rect-attrs (select-keys attrs [:x :y :width :height])
@@ -78,4 +78,4 @@
                              (pointer/event-handler % el))
          :on-double-click pointer-handler})]
       (for [el (merge child-els)]
-        ^{:key (:id el)} [tool/render el])]]))
+        ^{:key (:id el)} [tool.hierarchy/render el])]]))

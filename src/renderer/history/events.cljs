@@ -5,7 +5,7 @@
    [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
    [renderer.history.handlers :as h]
-   [renderer.tool.base :as tool]))
+   [renderer.tool.hierarchy :as tool.hierarchy]))
 
 (rf/reg-event-db
  ::undo
@@ -64,7 +64,7 @@
  (fn [db _]
    (cond-> db
      :always (-> (dissoc :drag? :pointer-offset :clicked-element)
-                 (tool/activate (:tool db))
+                 (tool.hierarchy/activate (:tool db))
                  (element.h/clear-temp)
                  (h/swap))
 

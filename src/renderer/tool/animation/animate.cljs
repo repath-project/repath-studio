@@ -1,13 +1,13 @@
 (ns renderer.tool.animation.animate
   "https://svgwg.org/specs/animations/#AnimateElement"
   (:require
-   [renderer.tool.base :as tool]))
+   [renderer.tool.hierarchy :as tool.hierarchy]))
 
-(derive :animate ::tool/animation)
+(derive :animate ::tool.hierarchy/animation)
 
-(defmethod tool/properties :animate
+(defmethod tool.hierarchy/properties :animate
   []
-  {:description "The SVG <animate> element provides a way to animate an 
+  {:description "The SVG <animate> element provides a way to animate an
                  attribute of an element over time."
    :attrs [:href
            :attributeName

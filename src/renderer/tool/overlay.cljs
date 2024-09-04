@@ -7,7 +7,7 @@
    [renderer.document.subs :as-alias document.s]
    [renderer.frame.subs :as-alias frame.s]
    [renderer.snap.subs :as-alias snap.s]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
    [renderer.utils.math :as math]
@@ -278,7 +278,7 @@
 
 (defn centroid
   [el]
-  (when-let [pos (tool/centroid el)]
+  (when-let [pos (tool.hierarchy/centroid el)]
     (let [offset (element/offset el)
           pos (mat/add offset pos)]
       [point-of-interest pos

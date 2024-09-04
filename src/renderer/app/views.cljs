@@ -20,7 +20,7 @@
    [renderer.notification.views :as notification]
    [renderer.reepl.views :as repl.v]
    [renderer.ruler.views :as ruler.v]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.overlay :as overlay]
    [renderer.toolbar.object :as toolbar.object]
    [renderer.toolbar.status :as toolbar.status]
@@ -257,7 +257,7 @@
            [:div.hidden.md:flex
             {:style {:flex "0 0 300px"}}
             [:div.ml-px.flex.flex-col.h-full.w-full
-             [ui/scroll-area (tool/right-panel @(rf/subscribe [::app.s/tool]))]
+             [ui/scroll-area (tool.hierarchy/right-panel @(rf/subscribe [::app.s/tool]))]
              [:div.bg-primary.grow.w-full.flex]]])
          [:div.bg-primary.ml-px.flex
           [ui/scroll-area [toolbar.object/root]]]]]]

@@ -5,7 +5,7 @@
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.e]
    [renderer.app.subs :as-alias app.s]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.ui :as ui]))
 
 (defn button
@@ -14,11 +14,11 @@
         primary-tool @(rf/subscribe [::app.s/primary-tool])
         selected? (= active-tool tool)
         primary? (= primary-tool tool)]
-    (when (:icon (tool/properties tool))
+    (when (:icon (tool.hierarchy/properties tool))
       [:> Tooltip/Root
        [:> Tooltip/Trigger {:as-child true}
         [:span
-         [ui/radio-icon-button (:icon (tool/properties tool)) selected?
+         [ui/radio-icon-button (:icon (tool.hierarchy/properties tool)) selected?
           {:class (when primary? "outline-shadow")
            :on-click #(rf/dispatch [::app.e/set-tool tool])}]]]
        [:> Tooltip/Portal

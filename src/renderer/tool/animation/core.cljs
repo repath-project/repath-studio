@@ -6,14 +6,14 @@
    [renderer.tool.animation.animate]
    [renderer.tool.animation.animate-motion]
    [renderer.tool.animation.animate-transform]
-   [renderer.tool.base :as tool]))
+   [renderer.tool.hierarchy :as tool.hierarchy]))
 
-(derive ::tool/animation ::tool/descriptive)
+(derive ::tool.hierarchy/animation ::tool.hierarchy/descriptive)
 
-(defmethod tool/render ::tool/animation
+(defmethod tool.hierarchy/render ::tool.hierarchy/animation
   [{:keys [children tag attrs id]}]
   (let [child-elements @(rf/subscribe [::element.s/filter-visible children])]
     [tag
      attrs
      (for [el child-elements]
-       ^{:key id} [tool/render el])]))
+       ^{:key id} [tool.hierarchy/render el])]))

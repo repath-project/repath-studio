@@ -8,14 +8,14 @@
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.events :as-alias element.e]
    [renderer.element.handlers :as element.h]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
    [renderer.utils.units :as units]))
 
-(derive :text ::tool/shape)
+(derive :text ::tool.hierarchy/shape)
 
-(defmethod tool/properties :text
+(defmethod tool.hierarchy/properties :text
   []
   {:icon "text"
    :description "The SVG <text> element draws a graphics element consisting
@@ -31,13 +31,13 @@
            :stroke-width
            :opacity]})
 
-(defmethod tool/activate :text
+(defmethod tool.hierarchy/activate :text
   [db]
   (-> db
       (assoc :cursor "text")
       (app.h/set-message "Click to enter your text.")))
 
-(defmethod tool/pointer-up :text
+(defmethod tool.hierarchy/pointer-up :text
   [{:keys [adjusted-pointer-offset] :as db} _e]
   (let [[offset-x offset-y] adjusted-pointer-offset
         attrs {:x offset-x
@@ -50,23 +50,23 @@
         (app.h/set-tool :edit)
         (app.h/set-state :create))))
 
-(defmethod tool/drag-end :text
+(defmethod tool.hierarchy/drag-end :text
   [db e]
-  (tool/pointer-up db e))
+  (tool.hierarchy/pointer-up db e))
 
-(defmethod tool/translate :text
+(defmethod tool.hierarchy/translate :text
   [el [x y]]
   (-> el
       (attr.hierarchy/update-attr :x + x)
       (attr.hierarchy/update-attr :y + y)))
 
-(defmethod tool/scale :text
+(defmethod tool.hierarchy/scale :text
   [el ratio pivot-point]
   (let [offset (mat/sub pivot-point (mat/mul pivot-point ratio))
         ratio (apply min ratio)]
     (-> el
         (attr.hierarchy/update-attr :font-size * ratio)
-        (tool/translate offset))))
+        (tool.hierarchy/translate offset))))
 
 (defn get-text
   [e]
@@ -89,10 +89,10 @@
      js/window
      #(rf/dispatch-sync [::element.e/preview-prop id :content (get-text e)]))))
 
-(defmethod tool/render-edit :text
+(defmethod tool.hierarchy/render-edit :text
   [{:keys [attrs id content] :as el}]
   (let [offset (element/offset el)
-        el-bounds (tool/bounds el)
+        el-bounds (tool.hierarchy/bounds el)
         [x y] (mat/add (take 2 el-bounds) offset)
         [width height] (bounds/->dimensions el-bounds)
         {:keys [fill font-family font-size font-weight]} attrs]
@@ -124,7 +124,7 @@
                             (str (units/unit->px font-size) "px"))
                :font-weight (if (empty? font-weight) "inherit" font-weight)}}]]))
 
-(defmethod tool/path :text
+(defmethod tool.hierarchy/path :text
   [{:keys [attrs content]}]
   (let [font-descriptor #js {:family (:font-family attrs)
                              :weight (js/parseInt (:font-weight attrs))

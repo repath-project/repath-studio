@@ -5,34 +5,34 @@
    [renderer.app.handlers :as handlers]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.handlers :as element.h]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.overlay :as overlay]
    [renderer.utils.math :as math]
    [renderer.utils.units :as units]))
 
-(derive :measure ::tool/tool)
+(derive :measure ::tool.hierarchy/tool)
 
-(defmethod tool/properties :measure
+(defmethod tool.hierarchy/properties :measure
   []
   {:icon "ruler-triangle"})
 
-(defmethod tool/activate :measure
+(defmethod tool.hierarchy/activate :measure
   [db]
   (-> db
       (assoc :cursor "crosshair")
       (handlers/set-message  "Click and drag to measure a distance.")))
 
-(defmethod tool/deactivate :measure
+(defmethod tool.hierarchy/deactivate :measure
   [db]
   (element.h/clear-temp db))
 
-(defmethod tool/pointer-up :measure
+(defmethod tool.hierarchy/pointer-up :measure
   [db]
   (element.h/clear-temp db))
 
-(defmethod tool/drag-end :measure  [db] db)
+(defmethod tool.hierarchy/drag-end :measure  [db] db)
 
-(defmethod tool/drag :measure
+(defmethod tool.hierarchy/drag :measure
   [{:keys [adjusted-pointer-offset adjusted-pointer-pos] :as db}]
   (let [[offset-x offset-y] adjusted-pointer-offset
         [pos-x pos-y] adjusted-pointer-pos
@@ -50,7 +50,7 @@
                             :attrs attrs
                             :hypotenuse hypotenuse})))
 
-(defmethod tool/render :measure
+(defmethod tool.hierarchy/render :measure
   [{:keys [attrs id hypotenuse]}]
   (let [{:keys [x1 x2 y1 y2]} attrs
         [x1 y1 x2 y2] (map units/unit->px [x1 y1 x2 y2])

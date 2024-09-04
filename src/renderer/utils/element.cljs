@@ -7,7 +7,7 @@
    [reagent.dom.server :as dom.server]
    [renderer.element.db :refer [element attrs]]
    [renderer.snap.db :as snap.db]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.attribute :as attr]
    [renderer.utils.bcd :as bcd]
    [renderer.utils.bounds :as utils.bounds :refer [bounds]]
@@ -35,12 +35,12 @@
 (mx/defn offset :- vec2d
   [el :- element]
   (let [el-bounds (:bounds el)
-        local-bounds (tool/bounds el)]
+        local-bounds (tool.hierarchy/bounds el)]
     (vec (take 2 (mat/sub el-bounds local-bounds)))))
 
 (mx/defn snapping-points :- [:* vec2d]
   [el :- element, options :- [:set snap.db/options]]
-  (let [points (or (tool/snapping-points el) [])]
+  (let [points (or (tool.hierarchy/snapping-points el) [])]
     (if-let [bounds (:bounds el)]
       (let [[x1 y1 x2 y2] bounds
             [cx cy] (utils.bounds/center bounds)]
@@ -76,12 +76,12 @@
   [{:keys [tag attrs]} :- element]
   (merge
    (when tag
-     (merge (when (isa? tag ::tool/element)
+     (merge (when (isa? tag ::tool.hierarchy/element)
               (merge (attrs-map (tag (:elements bcd/svg)))
                      (zipmap attr/core (repeat ""))))
             (when (contains? #{:animateMotion :animateTransform} tag)
               (attrs-map (:animate (:elements bcd/svg))))
-            (zipmap (:attrs (tool/properties tag)) (repeat ""))))
+            (zipmap (:attrs (tool.hierarchy/properties tag)) (repeat ""))))
    attrs))
 
 (mx/defn supported-attr? :- boolean?
@@ -91,7 +91,7 @@
 (mx/defn ->path  :- element
   [el :- element]
   (cond-> el
-    (get-method tool/path (:tag el))
+    (get-method tool.hierarchy/path (:tag el))
     (-> (assoc :attrs (attributes
                        {:tag :path
                         :attrs (map/merge-common-with
@@ -100,11 +100,11 @@
                                 (attributes {:tag :path
                                              :attrs {}}))})
                :tag :path)
-        (assoc-in [:attrs :d] (tool/path el)))))
+        (assoc-in [:attrs :d] (tool.hierarchy/path el)))))
 
 (mx/defn stroke->path :- element
   [{:keys [attrs] :as el} :- element]
-  (let [d (tool/path el)
+  (let [d (tool.hierarchy/path el)
         paper-path (Path. d)
         el-offset (or (:stroke-width attrs) 1)
         stroke-path (PaperOffset.offsetStroke
@@ -130,7 +130,7 @@
 
 (mx/defn ->string :- string?
   [els]
-  (reduce #(-> (tool/render-to-string %2)
+  (reduce #(-> (tool.hierarchy/render-to-string %2)
                (dom.server/render-to-static-markup)
                (str "\n" %)) "" els))
 

@@ -9,7 +9,7 @@
    [renderer.snap.db :refer [snap]]
    [renderer.theme.db :refer [theme]]
    [renderer.timeline.db :refer [timeline]]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.bounds :refer [bounds]]
    [renderer.utils.hiccup :refer [hiccup]]
    [renderer.utils.math :refer [vec2d]]
@@ -36,7 +36,7 @@
 
 (def tool
   [:fn {:error/fn (fn [{:keys [value]} _] (str value ", is not a supported tool"))}
-   tool/tool?])
+   tool.hierarchy/tool?])
 
 (def app
   [:map {:closed true}

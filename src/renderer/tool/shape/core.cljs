@@ -4,7 +4,7 @@
    ["style-to-object" :default parse]
    [re-frame.core :as rf]
    [renderer.element.subs :as-alias element.s]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.shape.circle]
    [renderer.tool.shape.ellipse]
    [renderer.tool.shape.image]
@@ -15,9 +15,9 @@
    [renderer.tool.shape.polyshape]
    [renderer.tool.shape.rect]))
 
-(derive ::tool/shape ::tool/graphics)
+(derive ::tool.hierarchy/shape ::tool.hierarchy/graphics)
 
-(defmethod tool/render-to-string ::tool/shape
+(defmethod tool.hierarchy/render-to-string ::tool.hierarchy/shape
   [{:keys [tag attrs title children content]}]
   (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
         attrs (->> (update attrs :style parse)
@@ -27,4 +27,4 @@
          attrs
          (when title [:title title])
          content
-         (doall (map tool/render-to-string child-elements))])))
+         (doall (map tool.hierarchy/render-to-string child-elements))])))

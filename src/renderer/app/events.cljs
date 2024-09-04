@@ -13,7 +13,7 @@
    [renderer.notification.events :as-alias notification.e]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.pointer :as pointer]
    [renderer.window.effects :as-alias window.fx]))
 
@@ -138,13 +138,13 @@
                                                    pointer-offset)
 
                         (not drag?)
-                        (-> (tool/drag-start e)
+                        (-> (tool.hierarchy/drag-start e)
                             (assoc :drag? true))
 
                         :always
-                        (tool/drag e))
+                        (tool.hierarchy/drag e))
                       db)
-                    (tool/pointer-move db e))
+                    (tool.hierarchy/pointer-move db e))
                   (assoc :pointer-pos pointer-pos
                          :adjusted-pointer-pos adjusted-pointer-pos)))
 
@@ -155,17 +155,17 @@
                   (h/set-tool :pan))
 
               (and (= button :right) (not= (:id element) :bounding-box))
-              (tool/pointer-up e)
+              (tool.hierarchy/pointer-up e)
 
               :always
-              (-> (tool/pointer-down e)
+              (-> (tool.hierarchy/pointer-down e)
                   (assoc :pointer-offset pointer-pos
                          :adjusted-pointer-offset adjusted-pointer-pos)))
 
             :pointerup
             (cond-> (if drag?
-                      (tool/drag-end db e)
-                      (cond-> db (not= button :right) (tool/pointer-up e)))
+                      (tool.hierarchy/drag-end db e)
+                      (cond-> db (not= button :right) (tool.hierarchy/pointer-up e)))
               (and primary-tool (= button :middle))
               (-> (h/set-tool primary-tool)
                   (dissoc :primary-tool))
@@ -175,7 +175,7 @@
                   (update :snap dissoc :nearest-neighbor)))
 
             :dblclick
-            (tool/double-click db e)
+            (tool.hierarchy/double-click db e)
 
             :wheel
             (if (some modifiers [:ctrl :alt])
@@ -212,7 +212,7 @@
            (h/set-tool :pan))
 
        :always
-       (tool/key-down e))
+       (tool.hierarchy/key-down e))
 
      :keyup
      (cond-> db
@@ -222,7 +222,7 @@
            (dissoc :primary-tool))
 
        :always
-       (tool/key-up e))
+       (tool.hierarchy/key-up e))
 
      db)))
 

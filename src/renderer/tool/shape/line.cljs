@@ -6,15 +6,15 @@
    [renderer.app.handlers :as app.h]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.element.handlers :as element.h]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.overlay :as overlay]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
    [renderer.utils.units :as units]))
 
-(derive :line ::tool/shape)
+(derive :line ::tool.hierarchy/shape)
 
-(defmethod tool/properties :line
+(defmethod tool.hierarchy/properties :line
   []
   {:icon "line-alt"
    :description "The <line> element is an SVG basic shape used to create a line
@@ -44,12 +44,12 @@
                  (assoc-in [:attrs :y2] (second adjusted-pointer-pos)))]
     (element.h/set-temp db temp)))
 
-(defmethod tool/pointer-move :line
+(defmethod tool.hierarchy/pointer-move :line
   [db]
   (cond-> db
     (element.h/get-temp db) (update-line-end)))
 
-(defmethod tool/pointer-up :line
+(defmethod tool.hierarchy/pointer-up :line
   [db _e]
   (cond
     (element.h/get-temp db)
@@ -66,17 +66,17 @@
 
     :else db))
 
-(defmethod tool/pointer-down :line
+(defmethod tool.hierarchy/pointer-down :line
   [db _e]
   (cond-> db
     (element.h/get-temp db)
     (app.h/explain "Create line")))
 
-(defmethod tool/drag :line
+(defmethod tool.hierarchy/drag :line
   [db]
   (create-line db))
 
-(defmethod tool/translate :line
+(defmethod tool.hierarchy/translate :line
   [el [x y]]
   (-> el
       (hierarchy/update-attr :x1 + x)
@@ -84,26 +84,26 @@
       (hierarchy/update-attr :x2 + x)
       (hierarchy/update-attr :y2 + y)))
 
-(defmethod tool/scale :line
+(defmethod tool.hierarchy/scale :line
   [el ratio pivot-point]
   (let [{:keys [x1 y1 x2 y2]} (:attrs el)
         [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])
-        dimentions (bounds/->dimensions (tool/bounds el))
+        dimentions (bounds/->dimensions (tool.hierarchy/bounds el))
         [x y] (mat/sub dimentions (mat/mul dimentions ratio))
         pivot-diff (mat/sub pivot-point dimentions)
         offset (mat/sub pivot-diff (mat/mul pivot-diff ratio))]
     (-> el
         (hierarchy/update-attr (if (< x1 x2) :x1 :x2) + x)
         (hierarchy/update-attr (if (< y1 y2) :y1 :y2) + y)
-        (tool/translate offset))))
+        (tool.hierarchy/translate offset))))
 
-(defmethod tool/path :line
+(defmethod tool.hierarchy/path :line
   [{{:keys [x1 y1 x2 y2]} :attrs}]
   (let [[x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])]
     (str/join " " ["M" x1 y1
                    "L" x2 y2])))
 
-(defmethod tool/render-edit :line
+(defmethod tool.hierarchy/render-edit :line
   [{:keys [attrs id] :as el}]
   (let [offset (element/offset el)
         {:keys [x1 y1 x2 y2]} attrs
@@ -129,7 +129,7 @@
             :tag :edit
             :element id}])]))
 
-(defmethod tool/edit :line
+(defmethod tool.hierarchy/edit :line
   [el [x y] handle]
   (case handle
     :starting-point
@@ -143,7 +143,7 @@
         (hierarchy/update-attr :y2 + y))
     el))
 
-(defmethod tool/bounds :line
+(defmethod tool.hierarchy/bounds :line
   [{{:keys [x1 y1 x2 y2]} :attrs}]
   (let [[x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])]
     [(min x1 x2) (min y1 y2) (max x1 x2) (max y1 y2)]))

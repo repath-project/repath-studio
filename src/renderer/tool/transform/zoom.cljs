@@ -4,17 +4,17 @@
    [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
    [renderer.frame.handlers :as frame.h]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.overlay :as overlay]
    [renderer.utils.pointer :as pointer]))
 
-(derive :zoom ::tool/tool)
+(derive :zoom ::tool.hierarchy/tool)
 
-(defmethod tool/properties :zoom
+(defmethod tool.hierarchy/properties :zoom
   []
   {:icon "magnifier"})
 
-(defmethod tool/activate :zoom
+(defmethod tool.hierarchy/activate :zoom
   [db]
   (-> db
       (assoc :cursor "zoom-in")
@@ -23,30 +23,30 @@
         [:div "Click or select an area to zoom in."]
         [:div "Hold " [:span.shortcut-key "⇧"] " to zoom out."]])))
 
-(defmethod tool/key-down :zoom
+(defmethod tool.hierarchy/key-down :zoom
   [db e]
   (cond-> db
     (pointer/shift? e)
     (assoc :cursor "zoom-out")))
 
-(defmethod tool/key-up :zoom
+(defmethod tool.hierarchy/key-up :zoom
   [db e]
   (cond-> db
     (not (pointer/shift? e))
     (assoc :cursor "zoom-in")))
 
-(defmethod tool/drag-start :zoom
+(defmethod tool.hierarchy/drag-start :zoom
   [db]
   (assoc db :cursor "default"))
 
-(defmethod tool/drag :zoom
+(defmethod tool.hierarchy/drag :zoom
   [{:keys [adjusted-pointer-offset adjusted-pointer-pos active-document] :as db}]
   (element.h/set-temp db (overlay/select-box
                           adjusted-pointer-pos
                           adjusted-pointer-offset
                           (get-in db [:documents active-document :zoom]))))
 
-(defmethod tool/drag-end :zoom
+(defmethod tool.hierarchy/drag-end :zoom
   [{:keys [active-document
            dom-rect
            adjusted-pointer-offset
@@ -69,7 +69,7 @@
         (frame.h/pan-to-bounds [pos-x pos-y offset-x offset-y])
         (app.h/add-fx [:dispatch [::app.e/local-storage-persist]]))))
 
-(defmethod tool/pointer-up :zoom
+(defmethod tool.hierarchy/pointer-up :zoom
   [db e]
   (let [factor (if (pointer/shift? e)
                  (:zoom-sensitivity db)

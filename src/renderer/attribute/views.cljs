@@ -9,7 +9,7 @@
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.element.events :as-alias element.e]
    [renderer.element.subs :as-alias element.s]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.ui :as ui]
    [renderer.utils.bcd :as bcd]
    [renderer.utils.keyboard :as keyb]
@@ -245,10 +245,10 @@
        :align "end"}
       [:div.p-5
        [:h2.mb-4.text-lg tag]
-       (when-let [description (:description (tool/properties tag))]
+       (when-let [description (:description (tool.hierarchy/properties tag))]
          [:p description])
        [caniusethis {:tag tag}]
-       (when-let [url (:url (tool/properties tag))]
+       (when-let [url (:url (tool.hierarchy/properties tag))]
          [:button.button.px-3.bg-primary.w-full
           {:on-click #(rf/dispatch [::window.e/open-remote-url url])}
           "Learn more"])]
@@ -276,4 +276,4 @@
         (for [[k v] selected-attrs]
           ^{:key k} [row k v locked? tag])]])))
 
-(defmethod tool/right-panel :default [] [form])
+(defmethod tool.hierarchy/right-panel :default [] [form])

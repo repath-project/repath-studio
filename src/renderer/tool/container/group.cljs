@@ -5,13 +5,13 @@
    [re-frame.core :as rf]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.subs :as-alias element.s]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.pointer :as pointer]))
 
-(derive :g ::tool/container)
+(derive :g ::tool.hierarchy/container)
 
-(defmethod tool/properties :g
+(defmethod tool.hierarchy/properties :g
   []
   {:description "The <g> SVG element is a container used to group other
                  SVG elements."
@@ -26,17 +26,17 @@
         matrix (.translate matrix x y)]
     (.toString matrix)))
 
-(defmethod tool/translate :g
+(defmethod tool.hierarchy/translate :g
   [el _offset]
   el
   #_(update-in el [:attrs :transform] translate offset))
 
-(defmethod tool/render :g
+(defmethod tool.hierarchy/render :g
   [{:keys [attrs children bounds] :as el}]
   (let [child-els @(rf/subscribe [::element.s/filter-visible children])]
     [:g (update attrs :style parse)
      (for [child child-els]
-       ^{:key (:id child)} [tool/render child])
+       ^{:key (:id child)} [tool.hierarchy/render child])
      (when bounds
        (let [ignored-ids @(rf/subscribe [::document.s/ignored-ids])
              ignored? (contains? ignored-ids (:id el))

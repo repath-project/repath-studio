@@ -4,21 +4,21 @@
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
    [renderer.attribute.angle :as angle]
-   [renderer.attribute.hierarchy :as hierarchy]
+   [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.handlers :as element.h]
    [renderer.element.subs :as-alias element.s]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.overlay :as overlay]
    [renderer.utils.math :as math]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
 
-(derive :arc ::tool/custom)
+(derive :arc ::tool.hierarchy/custom)
 (derive :start-deg ::angle/angle)
 (derive :end-deg ::angle/angle)
 
-(defmethod tool/properties :arc
+(defmethod tool.hierarchy/properties :arc
   []
   {:icon "arc"
    :description "Draw arcs"
@@ -35,7 +35,7 @@
            :stroke-linecap
            :stroke-dasharray]})
 
-(defmethod tool/drag :arc
+(defmethod tool.hierarchy/drag :arc
   [{:keys [adjusted-pointer-offset active-document adjusted-pointer-pos] :as db}]
   (let [{:keys [stroke fill]} (get-in db [:documents active-document])
         [offset-x offset-y] adjusted-pointer-offset
@@ -50,21 +50,21 @@
                :ry (abs (- pos-y offset-y))}]
     (element.h/set-temp db {:type :element :tag :arc :attrs attrs})))
 
-(defmethod tool/translate :arc
+(defmethod tool.hierarchy/translate :arc
   [element [x y]] (-> element
-                      (hierarchy/update-attr :cx + x)
-                      (hierarchy/update-attr :cy + y)))
+                      (attr.hierarchy/update-attr :cx + x)
+                      (attr.hierarchy/update-attr :cy + y)))
 
-(defmethod tool/bounds :arc
+(defmethod tool.hierarchy/bounds :arc
   [element]
-  (let [[left top right bottom] (js->clj (svgPathBbox (tool/path element)))]
+  (let [[left top right bottom] (js->clj (svgPathBbox (tool.hierarchy/path element)))]
     [left top right bottom]))
 
-(defmethod tool/area :arc
+(defmethod tool.hierarchy/area :arc
   [{{:keys [r]} :attrs}]
   (* Math/PI (Math/pow (units/unit->px r) 2)))
 
-(defmethod tool/path :arc
+(defmethod tool.hierarchy/path :arc
   [{{:keys [cx cy rx ry start-deg end-deg]} :attrs}]
   (let [[cx cy rx ry] (map units/unit->px [cx cy rx ry])
         x1 (+ cx (math/angle-dx start-deg rx))
@@ -75,18 +75,18 @@
     (str "M" x1 "," y1 " "
          "A" rx "," ry " 0 " (if (>= diff-deg 180) 1 0) ",1 " x2 "," y2)))
 
-(defmethod tool/edit :arc
+(defmethod tool.hierarchy/edit :arc
   [element [x y] handle]
   (case handle
-    :rx (hierarchy/update-attr element :rx #(abs (+ % x)))
-    :ry (hierarchy/update-attr element :ry #(abs (- % y)))
+    :rx (attr.hierarchy/update-attr element :rx #(abs (+ % x)))
+    :ry (attr.hierarchy/update-attr element :ry #(abs (- % y)))
     element))
 
-(defmethod tool/render :arc
+(defmethod tool.hierarchy/render :arc
   [{:keys [attrs children] :as element}]
   (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
         pointer-handler #(pointer/event-handler % element)]
-    [:path (merge {:d (tool/path element)
+    [:path (merge {:d (tool.hierarchy/path element)
                    :on-pointer-up pointer-handler
                    :on-pointer-down pointer-handler
                    :on-pointer-move pointer-handler
@@ -98,7 +98,7 @@
                                       :stroke-linecap
                                       :stroke-dasharray])) child-elements]))
 
-(defmethod tool/render-edit :arc
+(defmethod tool.hierarchy/render-edit :arc
   [{:keys [attrs id]}]
   (let [{:keys [cx cy rx ry start-deg end-deg]} attrs
         [cx cy rx ry] (mapv units/unit->px [cx cy rx ry])

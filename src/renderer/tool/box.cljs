@@ -3,47 +3,47 @@
    :x :y :width :height attributes (e.g. rect, svg, image)."
   (:require
    [clojure.core.matrix :as mat]
-   [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.tool.base :as tool]
+   [renderer.attribute.hierarchy :as attr.hierarchy]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.overlay :as overlay]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.units :as units]))
 
-(derive ::tool/box ::tool/renderable)
+(derive ::tool.hierarchy/box ::tool.hierarchy/renderable)
 
-(defmethod tool/translate ::tool/box
+(defmethod tool.hierarchy/translate ::tool.hierarchy/box
   [el [x y]]
   (-> el
-      (hierarchy/update-attr :x + x)
-      (hierarchy/update-attr :y + y)))
+      (attr.hierarchy/update-attr :x + x)
+      (attr.hierarchy/update-attr :y + y)))
 
 
-(defmethod tool/scale ::tool/box
+(defmethod tool.hierarchy/scale ::tool.hierarchy/box
   [el ratio pivot-point]
   (let [[x y] ratio
         offset (mat/sub pivot-point (mat/mul pivot-point ratio))]
     (-> el
-        (hierarchy/update-attr :width * x)
-        (hierarchy/update-attr :height * y)
-        (tool/translate offset))))
+        (attr.hierarchy/update-attr :width * x)
+        (attr.hierarchy/update-attr :height * y)
+        (tool.hierarchy/translate offset))))
 
-(defmethod tool/edit ::tool/box
+(defmethod tool.hierarchy/edit ::tool.hierarchy/box
   [el [x y] handle]
   (case handle
     :position
     (-> el
-        (hierarchy/update-attr :width #(max 0 (- % x)))
-        (hierarchy/update-attr :height #(max 0 (- % y)))
-        (tool/translate [x y]))
+        (attr.hierarchy/update-attr :width #(max 0 (- % x)))
+        (attr.hierarchy/update-attr :height #(max 0 (- % y)))
+        (tool.hierarchy/translate [x y]))
 
     :size
     (-> el
-        (hierarchy/update-attr :width #(max 0 (+ % x)))
-        (hierarchy/update-attr :height #(max 0 (+ % y))))
+        (attr.hierarchy/update-attr :width #(max 0 (+ % x)))
+        (attr.hierarchy/update-attr :height #(max 0 (+ % y))))
 
     el))
 
-(defmethod tool/render-edit ::tool/box
+(defmethod tool.hierarchy/render-edit ::tool.hierarchy/box
   [el]
   (let [el-bounds (:bounds el)
         [x y] el-bounds
@@ -60,11 +60,11 @@
           ^{:key (str (:id handle) "-title")}
           [:title (name (:id handle))]]))]))
 
-(defmethod tool/bounds ::tool/box
+(defmethod tool.hierarchy/bounds ::tool.hierarchy/box
   [{{:keys [x y width height]} :attrs}]
   (let [[x y width height] (mapv units/unit->px [x y width height])]
     [x y (+ x width) (+ y height)]))
 
-(defmethod tool/area ::tool/box
+(defmethod tool.hierarchy/area ::tool.hierarchy/box
   [{{:keys [width height]} :attrs}]
   (apply * (map units/unit->px [width height])))

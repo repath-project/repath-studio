@@ -3,17 +3,17 @@
   (:require
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
-   [renderer.attribute.hierarchy :as hierarchy]
+   [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.handlers :as element.h]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.overlay :as overlay]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
 
-(derive :ellipse ::tool/shape)
+(derive :ellipse ::tool.hierarchy/shape)
 
-(defmethod tool/properties :ellipse
+(defmethod tool.hierarchy/properties :ellipse
   []
   {:icon "ellipse-alt"
    :description "The <ellipse> element is an SVG basic shape, used to create
@@ -25,7 +25,7 @@
            :stroke
            :stroke-dasharray]})
 
-(defmethod tool/drag :ellipse
+(defmethod tool.hierarchy/drag :ellipse
   [{:keys [adjusted-pointer-offset active-document adjusted-pointer-pos] :as db} e]
   (let [{:keys [stroke fill]} (get-in db [:documents active-document])
         [offset-x offset-y] adjusted-pointer-offset
@@ -43,29 +43,29 @@
                             :tag :ellipse
                             :attrs attrs})))
 
-(defmethod tool/translate :ellipse
+(defmethod tool.hierarchy/translate :ellipse
   [el [x y]]
   (-> el
-      (hierarchy/update-attr :cx + x)
-      (hierarchy/update-attr :cy + y)))
+      (attr.hierarchy/update-attr :cx + x)
+      (attr.hierarchy/update-attr :cy + y)))
 
-(defmethod tool/scale :ellipse
+(defmethod tool.hierarchy/scale :ellipse
   [el ratio pivot-point]
   (let [[x y] ratio
-        dimentions (bounds/->dimensions (tool/bounds el))
+        dimentions (bounds/->dimensions (tool.hierarchy/bounds el))
         pivot-point (mat/sub pivot-point (mat/div dimentions 2))
         offset (mat/sub pivot-point (mat/mul pivot-point ratio))]
     (-> el
-        (hierarchy/update-attr :rx * x)
-        (hierarchy/update-attr :ry * y)
-        (tool/translate offset))))
+        (attr.hierarchy/update-attr :rx * x)
+        (attr.hierarchy/update-attr :ry * y)
+        (tool.hierarchy/translate offset))))
 
-(defmethod tool/bounds :ellipse
+(defmethod tool.hierarchy/bounds :ellipse
   [{{:keys [cx cy rx ry]} :attrs}]
   (let [[cx cy rx ry] (map units/unit->px [cx cy rx ry])]
     [(- cx rx) (- cy ry) (+ cx rx) (+ cy ry)]))
 
-(defmethod tool/path :ellipse
+(defmethod tool.hierarchy/path :ellipse
   [{{:keys [cx cy rx ry]} :attrs}]
   (let [[cx cy rx ry] (mapv units/unit->px [cx cy rx ry])]
     (str/join " " ["M" (+ cx rx) cy
@@ -74,14 +74,14 @@
                    "A" rx ry 0 0 1 (+ cx rx) cy
                    "z"])))
 
-(defmethod tool/edit :ellipse
+(defmethod tool.hierarchy/edit :ellipse
   [el [x y] handle]
   (case handle
-    :rx (hierarchy/update-attr el :rx #(abs (+ % x)))
-    :ry (hierarchy/update-attr el :ry #(abs (- % y)))
+    :rx (attr.hierarchy/update-attr el :rx #(abs (+ % x)))
+    :ry (attr.hierarchy/update-attr el :ry #(abs (- % y)))
     el))
 
-(defmethod tool/render-edit :ellipse
+(defmethod tool.hierarchy/render-edit :ellipse
   [{:keys [id] :as el}]
   (let [bounds (:bounds el)
         [cx cy] (bounds/center bounds)

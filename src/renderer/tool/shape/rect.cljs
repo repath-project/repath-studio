@@ -3,14 +3,14 @@
   (:require
    [clojure.string :as str]
    [renderer.element.handlers :as element.h]
-   [renderer.tool.base :as tool]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
 
-(derive :rect ::tool/box)
-(derive :rect ::tool/shape)
+(derive :rect ::tool.hierarchy/box)
+(derive :rect ::tool.hierarchy/shape)
 
-(defmethod tool/properties :rect
+(defmethod tool.hierarchy/properties :rect
   []
   {:icon "rectangle-alt"
    :description "The <rect> element is a basic SVG shape that draws rectangles,
@@ -23,7 +23,7 @@
            :stroke-dasharray
            :stroke-linejoin]})
 
-(defmethod tool/drag :rect
+(defmethod tool.hierarchy/drag :rect
   [{:keys [adjusted-pointer-offset active-document adjusted-pointer-pos] :as db} e]
   (let [{:keys [stroke fill]} (get-in db [:documents active-document])
         [offset-x offset-y] adjusted-pointer-offset
@@ -41,7 +41,7 @@
                             :tag :rect
                             :attrs attrs})))
 
-(defmethod tool/path :rect
+(defmethod tool.hierarchy/path :rect
   [{{:keys [x y width height rx ry]} :attrs}]
   (let [[x y width height] (mapv units/unit->px [x y width height])
         rx (units/unit->px (if (and (not rx) ry) ry rx))

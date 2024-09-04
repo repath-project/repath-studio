@@ -1,6 +1,6 @@
 (ns renderer.app.handlers
   (:require
-   [renderer.tool.base :as tool]))
+   [renderer.tool.hierarchy :as tool.hierarchy]))
 
 (defn set-state
   [db state]
@@ -25,7 +25,7 @@
 (defn set-tool
   [db tool]
   (-> db
-      (tool/deactivate)
+      (tool.hierarchy/deactivate)
       (assoc :tool tool)
-      (tool/activate)))
+      (tool.hierarchy/activate)))
 

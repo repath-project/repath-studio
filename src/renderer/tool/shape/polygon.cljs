@@ -1,10 +1,10 @@
 (ns renderer.tool.shape.polygon
   "https://www.w3.org/TR/SVG/shapes.html#PolygonElement"
-  (:require [renderer.tool.base :as tool]))
+  (:require [renderer.tool.hierarchy :as tool.hierarchy]))
 
-(derive :polygon ::tool/polyshape)
+(derive :polygon ::tool.hierarchy/polyshape)
 
-(defmethod tool/properties :polygon
+(defmethod tool.hierarchy/properties :polygon
   []
   {:icon "polygon-alt"
    :description "The <polyline> SVG element is an SVG basic shape that creates
@@ -17,6 +17,6 @@
            :stroke-dasharray
            :opacity]})
 
-(defmethod tool/path :polygon
+(defmethod tool.hierarchy/path :polygon
   [{{:keys [points]} :attrs}]
   (str "M" points "z"))
