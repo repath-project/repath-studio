@@ -41,12 +41,6 @@
    (filter :selected? (vals elements))))
 
 (rf/reg-sub
- ::selected-ids
- :<- [::document.s/elements]
- (fn [elements _]
-   (keys (filter :selected? elements))))
-
-(rf/reg-sub
  ::selected-descendant-ids
  (fn [db _]
    (h/descendant-ids db)))
