@@ -594,10 +594,12 @@
                          (rest selected-elements))]
     (-> db
         (delete)
-        (add {:type :element
-              :tag :path
-              :parent (-> selected-elements first :parent)
-              :attrs (merge attrs {:d new-path})}))))
+        (cond->
+          (seq new-path)
+          (add {:type :element
+                :tag :path
+                :parent (-> selected-elements first :parent)
+                :attrs (merge attrs {:d new-path})})))))
 
 (defn paste-in-place
   ([db]
