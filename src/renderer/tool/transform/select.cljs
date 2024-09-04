@@ -136,14 +136,14 @@
 
 (defmethod tool/drag-start :select
   [db e]
+  "Releasing the pointer capture fixes an issue with touch devices.
+   Without this, the event will be dropped, althougn touch-action is set to none.
+
+   REVIEW: Requires further investigation."
   (let [db (app.h/add-fx db [::app.fx/release-pointer-capture [(:target e) (:pointer-id e)]])]
     (case (-> db :clicked-element :tag)
-      :canvas
-      (app.h/set-state db :select)
-
-      :scale
-      (app.h/set-state db :scale)
-
+      :canvas (app.h/set-state db :select)
+      :scale (app.h/set-state db :scale)
       (app.h/set-state db :move))))
 
 (defn lock-ratio
