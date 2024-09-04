@@ -82,6 +82,7 @@
   {:icon "blob"
    :description "Vector based blob."
    :url "https://blobs.dev/"
+   :locked-ratio? true
    :attrs [:x
            :y
            :seed

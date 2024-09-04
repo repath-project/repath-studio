@@ -188,6 +188,7 @@
         pivot-point (if in-place? [cx cy] pivot-point)
         offset (cond-> offset in-place? (mat/mul 2))
         ratio (mat/div (mat/add dimensions offset) dimensions)
+        lock-ratio? (or lock-ratio? (every? #(-> % :tag tool/properties :locked-ratio?) (element.h/selected db)))
         ratio (cond-> ratio lock-ratio? (lock-ratio handle))
         ;; TODO: Handle negative/inverted ratio.
         ratio (mapv #(max 0 %) ratio)]
