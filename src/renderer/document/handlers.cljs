@@ -108,7 +108,7 @@
        (create-canvas size))))
 
 (mx/defn set-global-attr
-  [{active-document :active-document :as db},
+  [{:keys [active-document] :as db},
    k :- keyword?,
    v :- element.db/Attr]
   (-> db

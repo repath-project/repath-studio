@@ -41,14 +41,14 @@
       (when rulers?
         [:div.flex.gap-px
          [:div.bg-primary {:style {:width ruler-size :height ruler-size}}
-          #_[ui/toggle-icon-button
-             {:active? @(rf/subscribe [::app.s/rulers-locked?])
-              :active-icon "lock"
-              :active-text "unlock"
-              :inactive-icon "unlock"
-              :inactive-text "lock"
-              :class "small"
-              :action #(rf/dispatch [::e/toggle-rulers-locked])}]]
+          [ui/toggle-icon-button
+           {:active? @(rf/subscribe [::app.s/rulers-locked?])
+            :active-icon "lock"
+            :active-text "unlock"
+            :inactive-icon "unlock"
+            :inactive-text "lock"
+            :class "small hidden"
+            :action #(rf/dispatch [::e/toggle-rulers-locked])}]]
          [:div.bg-primary.flex-1
           [ruler.v/ruler {:orientation :horizontal}]]])]
      [:div.flex.flex-1.relative

@@ -13,8 +13,6 @@
    [renderer.notification.events :as-alias notification.e]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
-   [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.pointer :as pointer]
    [renderer.window.effects :as-alias window.fx]))
 
 (def custom-fx
@@ -100,10 +98,10 @@
  (fn [db [_]]
    (update db :rulers-visible? not)))
 
-#_(rf/reg-event-db
-   ::toggle-rulers-locked
-   (fn [db [_]]
-     (update db :rulers-locked? not)))
+(rf/reg-event-db
+ ::toggle-rulers-locked
+ (fn [db [_]]
+   (update db :rulers-locked? not)))
 
 (rf/reg-event-db
  ::toggle-grid
@@ -121,73 +119,9 @@
  ::pointer-event
  [(history.h/finalize nil)]
  (fn [{:keys [db]}
-      [_ {:as e
-          :keys [button buttons modifiers data-transfer pointer-pos delta element]}]]
-   (let [{:keys [pointer-offset tool dom-rect drag? primary-tool drag-threshold]} db
-         adjusted-pointer-pos (frame.h/adjust-pointer-pos db pointer-pos)]
-     {:db (case (:type e)
-            :pointermove
-            (if (= buttons :right)
-              db
-              (-> (if pointer-offset
-                    (if (pointer/significant-drag? pointer-pos pointer-offset drag-threshold)
-                      (cond-> db
-                        (not= tool :pan)
-                        (frame.h/pan-out-of-canvas dom-rect
-                                                   pointer-pos
-                                                   pointer-offset)
-
-                        (not drag?)
-                        (-> (tool.hierarchy/drag-start e)
-                            (assoc :drag? true))
-
-                        :always
-                        (tool.hierarchy/drag e))
-                      db)
-                    (tool.hierarchy/pointer-move db e))
-                  (assoc :pointer-pos pointer-pos
-                         :adjusted-pointer-pos adjusted-pointer-pos)))
-
-            :pointerdown
-            (cond-> db
-              (= button :middle)
-              (-> (assoc :primary-tool tool)
-                  (h/set-tool :pan))
-
-              (and (= button :right) (not= (:id element) :bounding-box))
-              (tool.hierarchy/pointer-up e)
-
-              :always
-              (-> (tool.hierarchy/pointer-down e)
-                  (assoc :pointer-offset pointer-pos
-                         :adjusted-pointer-offset adjusted-pointer-pos)))
-
-            :pointerup
-            (cond-> (if drag?
-                      (tool.hierarchy/drag-end db e)
-                      (cond-> db (not= button :right) (tool.hierarchy/pointer-up e)))
-              (and primary-tool (= button :middle))
-              (-> (h/set-tool primary-tool)
-                  (dissoc :primary-tool))
-
-              :always
-              (-> (dissoc :pointer-offset :drag?)
-                  (update :snap dissoc :nearest-neighbor)))
-
-            :dblclick
-            (tool.hierarchy/double-click db e)
-
-            :wheel
-            (if (some modifiers [:ctrl :alt])
-              (let [delta-y (second delta)
-                    factor (Math/pow (inc (/ (- 1 (:zoom-sensitivity db)) 100))
-                                     (- delta-y))]
-                (-> db
-                    (frame.h/zoom-in-pointer-position factor)
-                    (h/add-fx [:dispatch [::local-storage-persist]])))
-              (frame.h/pan-by db delta))
-
-            db)
+      [_ {:as e :keys [data-transfer pointer-pos]}]]
+   (let [adjusted-pointer-pos (frame.h/adjust-pointer-pos db pointer-pos)]
+     {:db (h/pointer-handler db e adjusted-pointer-pos)
       :fx [(case (:type e)
              :drop
              [::fx/data-transfer [adjusted-pointer-pos data-transfer]]
@@ -202,29 +136,8 @@
 
 (rf/reg-event-db
  ::keyboard-event
- (fn [{:keys [tool] :as db} [_ {:keys [type code] :as e}]]
-   (case type
-     :keydown
-     (cond-> db
-       (and (= code "Space")
-            (not= tool :pan))
-       (-> (assoc :primary-tool tool)
-           (h/set-tool :pan))
-
-       :always
-       (tool.hierarchy/key-down e))
-
-     :keyup
-     (cond-> db
-       (and (= code "Space")
-            (:primary-tool db))
-       (-> (h/set-tool (:primary-tool db))
-           (dissoc :primary-tool))
-
-       :always
-       (tool.hierarchy/key-up e))
-
-     db)))
+ (fn [db [_ e]]
+   (h/key-handler db e)))
 
 (rf/reg-event-fx
  ::focus

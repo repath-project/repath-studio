@@ -130,9 +130,9 @@
  ::lang
  :-> :lang)
 
-#_(rf/reg-sub
-   ::rulers-locked?
-   :-> :rulers-locked?)
+(rf/reg-sub
+ ::rulers-locked?
+ :-> :rulers-locked?)
 
 (rf/reg-sub
  ::rulers-visible?
