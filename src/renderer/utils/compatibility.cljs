@@ -29,7 +29,7 @@
              (= minor m-minor)
              (< patch m-patch)))))
 
-(mx/defn migrate-document :- document.db/persisted
+(mx/defn migrate-document :- document.db/Persisted
   [document :- map?]
   (reduce (fn [document [m-ver f]]
             (cond-> document

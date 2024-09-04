@@ -3,23 +3,23 @@
    [malli.core :as m]
    [malli.transform :as mt]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.bounds :refer [bounds]]))
+   [renderer.utils.bounds :refer [Bounds]]))
 
 (defn tag?
   [k]
   (contains? (descendants ::tool.hierarchy/element) k))
 
-(def tag
+(def Tag
   [:fn {:error/fn (fn [{:keys [value]} _] (str value ", is not a supported tag"))}
    tag?])
 
-(def attr
+(def Attr
   [:or string? number? vector? nil?])
 
-(def attrs
-  [:map-of keyword? attr])
+(def Attrs
+  [:map-of keyword? Attr])
 
-(def handle
+(def Handle
   [:map {:closed true}
    [:id keyword?]
    [:tag [:enum :move :scale :edit]]
@@ -31,10 +31,10 @@
    [:stroke-width {:optional true} number?]
    [:element {:optional true} uuid?]])
 
-(def element
+(def Element
   [:map {:closed true}
    [:id {:optional true} uuid?]
-   [:tag tag]
+   [:tag Tag]
    [:label {:optional true} string?]
    [:parent {:optional true} uuid?]
    [:type {:optional true} [:= :element]]
@@ -42,19 +42,19 @@
    [:locked? {:optional true} boolean?]
    [:selected? {:optional true} boolean?]
    [:children {:default [] :optional true} [:vector uuid?]]
-   [:bounds {:optional true} bounds]
+   [:bounds {:optional true} Bounds]
    [:content {:optional true} string?]
-   [:attrs {:optional true} attrs]])
+   [:attrs {:optional true} Attrs]])
 
-(def elements
-  [:map-of {:default {}} uuid? element])
+(def Elements
+  [:map-of {:default {}} uuid? Element])
 
-(def valid? (m/validator element))
+(def valid? (m/validator Element))
 
-(def explain (m/explainer element))
+(def explain (m/explainer Element))
 
-(def explain-elements (m/explainer elements))
+(def explain-elements (m/explainer Element))
 
-(def default (m/decode element {:type :element
+(def default (m/decode Element {:type :element
                                 :visible? true
                                 :children []} mt/default-value-transformer))

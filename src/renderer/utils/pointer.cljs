@@ -19,12 +19,12 @@
   (contains? (:modifiers e) :alt))
 
 (mx/defn significant-drag? :- boolean?
-  [position :- math/vec2d, offset :- math/vec2d, threshold :- number?]
+  [position :- math/Vec2D, offset :- math/Vec2D, threshold :- number?]
   (> (apply max (map abs (mat/sub position offset)))
      threshold))
 
-(mx/defn adjust-position :- math/vec2d
-  [zoom :- number?, pan :- math/vec2d, pointer-pos :- math/vec2d]
+(mx/defn adjust-position :- math/Vec2D
+  [zoom :- number?, pan :- math/Vec2D, pointer-pos :- math/Vec2D]
   (-> pointer-pos
       (mat/div zoom)
       (mat/add pan)))
@@ -37,9 +37,9 @@
    3 :back
    4 :forward})
 
-(mx/defn lock-direction :- math/vec2d
+(mx/defn lock-direction :- math/Vec2D
   "Locks pointer movement to the axis with the biggest offset"
-  [[x y] :- math/vec2d]
+  [[x y] :- math/Vec2D]
   (if (> (abs x) (abs y))
     [x 0]
     [0 y]))

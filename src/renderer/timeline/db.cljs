@@ -1,6 +1,6 @@
 (ns renderer.timeline.db)
 
-(def timeline
+(def Timeline
   [:map {:default {} :closed true}
    [:time {:default 0} number?]
    [:speed {:default 1} number?]

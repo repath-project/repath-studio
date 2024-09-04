@@ -2,7 +2,7 @@
   (:require
    [clojure.zip :as zip]))
 
-(def hiccup
+(def Hiccup
   [:schema {:registry {"hiccup" [:orn
                                  [:node [:catn
                                          [:name keyword?]

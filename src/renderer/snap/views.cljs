@@ -27,7 +27,7 @@
         :alignOffset -5
         :position "popper"
         :class "menu-content rounded select-content"}
-       (for [option (rest snap.db/options)]
+       (for [option (rest snap.db/Options)]
          ^{:key option}
          [:> DropdownMenu/CheckboxItem
           {:class "menu-checkbox-item inset"

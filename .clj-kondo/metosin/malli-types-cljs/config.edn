@@ -199,7 +199,8 @@
                                                                                                         :seqable],
                                                                                                  :ret :any}}},
                                                                  pan-by {:arities {2 {:args [:any :seqable], :ret :any},
-                                                                                   3 {:args [:any :any :any], :ret :any}}},
+                                                                                   3 {:args [:any :seqable :any],
+                                                                                      :ret :any}}},
                                                                  adjust-pointer-pos {:arities {2 {:args [:any :seqable],
                                                                                                   :ret :any}}},
                                                                  calc-pan-offset {:arities {3 {:args [:number

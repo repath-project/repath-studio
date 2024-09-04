@@ -3,15 +3,15 @@
    [clojure.core.matrix :as mat]
    [malli.experimental :as mx]
    [renderer.element.handlers :as element.h]
-   [renderer.utils.bounds :as utils.bounds :refer [bounds]]
+   [renderer.utils.bounds :as utils.bounds :refer [Bounds]]
    [renderer.utils.element :as element]
-   [renderer.utils.math :as math :refer [vec2d]]
+   [renderer.utils.math :as math :refer [Vec2D]]
    [renderer.utils.pointer :as pointer]))
 
 (mx/defn pan-by
-  ([{:keys [active-document] :as db}, offset :- vec2d]
+  ([{:keys [active-document] :as db}, offset :- Vec2D]
    (pan-by db offset active-document))
-  ([db offset id]
+  ([db, offset :- Vec2D, id  :- uuid?]
    (let [zoom (get-in db [:documents id :zoom])]
      (update-in db [:documents id :pan] mat/add (mat/div offset zoom)))))
 
@@ -23,7 +23,7 @@
       (reduce #(pan-by %1 (mat/div [(:width offset) (:height offset)] 2) %2) db (:document-tabs db)))))
 
 (mx/defn zoom-in-position
-  [{:keys [active-document] :as db}, factor :- number?, pos :- vec2d]
+  [{:keys [active-document] :as db}, factor :- number?, pos :- Vec2D]
   (let [zoom (get-in db [:documents active-document :zoom])
         updated-zoom (math/clamp (* zoom factor) 0.01 100)
         updated-factor (/ updated-zoom zoom)
@@ -36,12 +36,12 @@
         (assoc-in [:documents active-document :pan] updated-pan))))
 
 (mx/defn adjust-pointer-pos
-  [{:keys [active-document] :as db}, pos :- vec2d]
+  [{:keys [active-document] :as db}, pos :- Vec2D]
   (let [{:keys [zoom pan]} (get-in db [:documents active-document])]
     (pointer/adjust-position zoom pan pos)))
 
 (mx/defn zoom-in-pointer-position
-  [{:keys [adjusted-pointer-pos] :as db} factor :- number?]
+  [{:keys [adjusted-pointer-pos] :as db}, factor :- number?]
   (zoom-in-position db factor adjusted-pointer-pos))
 
 (mx/defn zoom-by
@@ -52,7 +52,7 @@
     (zoom-in-position db factor position)))
 
 (mx/defn pan-to-bounds
-  [{:keys [active-document dom-rect] :as db}, bounds :- bounds]
+  [{:keys [active-document dom-rect] :as db}, bounds :- Bounds]
   (let [zoom (get-in db [:documents active-document :zoom])
         [x1 y1] bounds
         pan (mat/add
@@ -100,6 +100,6 @@
       :else 0)))
 
 (mx/defn pan-out-of-canvas
-  [db, {:keys [width height]}, [x y] :- vec2d, [offset-x offset-y] :- vec2d]
+  [db, {:keys [width height]}, [x y] :- Vec2D, [offset-x offset-y] :- Vec2D]
   (pan-by db [(calc-pan-offset x offset-x width)
               (calc-pan-offset y offset-y height)]))

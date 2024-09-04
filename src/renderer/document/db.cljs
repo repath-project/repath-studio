@@ -3,10 +3,10 @@
    [malli.core :as m]
    [malli.transform :as mt]
    [malli.util :as mu]
-   [renderer.element.db :refer [elements]]
-   [renderer.history.db :refer [history]]))
+   [renderer.element.db :refer [Elements]]
+   [renderer.history.db :refer [History]]))
 
-(def document
+(def Document
   [:map {:closed true}
    [:id {:optional true} uuid?]
    [:title {:optional true :min 1} string?]
@@ -20,17 +20,17 @@
    [:stroke {:default "black"} string?]
    [:zoom {:default 1} [:and number? [:>= 0.01] [:<= 100]]]
    [:rotate {:default 0} number?]
-   [:history history]
+   [:history History]
    [:temp-element {:optional true} any?] ; REVIEW
    [:pan {:default [0 0]} [:tuple number? number?]]
-   [:elements elements]
+   [:elements Elements]
    [:focused? {:optional true} boolean?]])
 
-(def persisted (mu/select-keys document [:id :title :path :save :version :elements]))
+(def Persisted (mu/select-keys Document [:id :title :path :save :version :elements]))
 
-(def valid? (m/validator document))
+(def valid? (m/validator Document))
 
-(def explain (m/explainer document))
+(def explain (m/explainer Document))
 
-(def default (m/decode document {} mt/default-value-transformer))
+(def default (m/decode Document {} mt/default-value-transformer))
 

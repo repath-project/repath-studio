@@ -2,11 +2,11 @@
   (:require
    [clojure.core.matrix :as mat]
    [malli.experimental :as mx]
-   [renderer.utils.math :refer [vec2d]]))
+   [renderer.utils.math :refer [Vec2D]]))
 
-(def bounds [:tuple number? number? number? number?])
+(def Bounds [:tuple number? number? number? number?])
 
-(mx/defn from-bbox :- [:maybe bounds]
+(mx/defn from-bbox :- [:maybe Bounds]
   "Experimental way of getting the bounds of uknown or complicated elements
    using the getBBox method.
    https://developer.mozilla.org/en-US/docs/Web/API/SVGGraphicsElement/getBBox"
@@ -19,27 +19,27 @@
           y2 (+ y1 (.-height b))]
       [x1 y1 x2 y2])))
 
-(mx/defn union :- bounds
+(mx/defn union :- Bounds
   "Calculates the bounds that contain an arbitrary set of bounds."
-  [& bounds :- [:+ bounds]]
+  [& bounds :- [:+ Bounds]]
   (vec (concat (apply map min (map #(take 2 %) bounds))
                (apply map max (map #(drop 2 %) bounds)))))
 
 (mx/defn ->dimensions :- [:tuple number? number?]
   "Converts bounds to [width heigh]"
-  [[x1 y1 x2 y2] :- bounds]
+  [[x1 y1 x2 y2] :- Bounds]
   (mat/sub [x2 y2] [x1 y1]))
 
-(mx/defn center :- vec2d
+(mx/defn center :- Vec2D
   "Calculates the center of bounds."
-  [b :- bounds]
+  [b :- Bounds]
   (mat/add (take 2 b)
            (mat/div (->dimensions b) 2)))
 
 (mx/defn intersect? :- boolean?
   "Tests whether the provided set of bounds intersect."
-  [[a-left a-top a-right a-bottom] :- bounds,
-   [b-left b-top b-right b-bottom] :- bounds]
+  [[a-left a-top a-right a-bottom] :- Bounds,
+   [b-left b-top b-right b-bottom] :- Bounds]
   (not (or (> b-left a-right)
            (< b-right a-left)
            (> b-top a-bottom)
@@ -47,8 +47,8 @@
 
 (mx/defn contained? :- boolean?
   "Tests whether `bounds-a` fully contain `bounds-b`."
-  [[a-left a-top a-right a-bottom] :- bounds,
-   [b-left b-top b-right b-bottom] :- bounds]
+  [[a-left a-top a-right a-bottom] :- Bounds,
+   [b-left b-top b-right b-bottom] :- Bounds]
   (and (> a-left b-left)
        (> a-top b-top)
        (< a-right b-right)
@@ -56,7 +56,7 @@
 
 (mx/defn contain-point? :- boolean?
   "Tests whether the provided bounds contain a point."
-  [[left top right bottom] :- bounds, [x y] :- vec2d]
+  [[left top right bottom] :- Bounds, [x y] :- Vec2D]
   (and (<= left x)
        (<= top y)
        (>= right x)

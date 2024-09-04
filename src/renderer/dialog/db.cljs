@@ -1,10 +1,10 @@
 (ns renderer.dialog.db
   (:require
-   [renderer.utils.hiccup :refer [hiccup]]))
+   [renderer.utils.hiccup :refer [Hiccup]]))
 
-(def dialog
+(def Dialog
   [:map
-   [:title {:optional true} hiccup]
+   [:title {:optional true} Hiccup]
    [:content {:optional true} any?]
    [:close-button? {:optional true} boolean?]
    [:attrs {:optional true} [:map [:as-child {:optional true :default false} boolean?]

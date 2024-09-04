@@ -137,7 +137,7 @@
           (recur parent (update-in db children-path vec/move index new-index)))
         db))))
 
-(def valid-elements? (m/validator element.db/elements))
+(def valid-elements? (m/validator element.db/Elements))
 
 (defn finalize
   "Pushes changes to history."
