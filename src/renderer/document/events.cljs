@@ -90,7 +90,7 @@
  (fn [db [_ color]]
    (h/set-global-attr db :fill color)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::set-stroke
  [(finalize "Set stroke")]
  (fn [db [_ color]]

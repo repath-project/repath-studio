@@ -48,10 +48,10 @@
       [:> Popover/Portal
        [:> Popover/Content
         {:class "popover-content color-picker-lg"
-         :align "start"}
+         :align "start"
+         :side "top"}
         [:> PhotoshopPicker
          {:color stroke
-          :header nil
           :on-change-complete #(rf/dispatch [::element.e/set-attr :stroke (get-hex %)])
           :on-change #(rf/dispatch [::document.e/set-stroke (get-hex %)])}]
         [:> Popover/Arrow {:class "popover-arrow"}]]]]
@@ -71,7 +71,8 @@
       [:> Popover/Portal
        [:> Popover/Content
         {:class "popover-content color-picker-lg"
-         :align "start"}
+         :align "start"
+         :side "top"}
         [:> PhotoshopPicker
          {:color fill
           :on-change-complete #(rf/dispatch [::element.e/set-attr :fill (get-hex %)])
