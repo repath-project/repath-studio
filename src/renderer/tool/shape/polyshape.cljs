@@ -118,6 +118,7 @@
                                               :size handle-size
                                               :stroke-width stroke-width
                                               :type :handle
+                                              :cursor "move"
                                               :tag :edit
                                               :element id}]))
                   (utils.attr/points->vec points))]))

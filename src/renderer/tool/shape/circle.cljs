@@ -90,5 +90,6 @@
                              :id :r
                              :type :handle
                              :tag :edit
+                             :cursor "move"
                              :element id}
       [:title {:key "r-title"} "r"]]]))

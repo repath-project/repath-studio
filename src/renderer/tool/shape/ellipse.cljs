@@ -97,6 +97,7 @@
             [overlay/square-handle
              (merge handle {:type :handle
                             :tag :edit
+                            :cursor "move"
                             :element id})
              [:title
               {:key (str (:id handle) "-title")}

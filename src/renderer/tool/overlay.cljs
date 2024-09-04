@@ -56,15 +56,14 @@
               :on-scroll pointer-handler} children]))
 
 (defn square-handle
-  [{:keys [x y id cursor] :as el} & children]
+  [{:keys [x y id cursor element] :as el} & children]
   (let [zoom @(rf/subscribe [::document.s/zoom])
         clicked-element @(rf/subscribe [::app.s/clicked-element])
-        hovered-ids @(rf/subscribe [::document.s/hovered-ids])
         size (/ handle-size zoom)
         stroke-width (/ 1 zoom)
         pointer-handler #(pointer/event-handler % el)
-        clicked? (= (:id clicked-element) id)
-        active? (or clicked? (contains? hovered-ids id))]
+        active? (and (= (:id clicked-element) id)
+                     (= (:element clicked-element) element))]
     [:rect {:fill (if active? accent accent-inverted)
             :stroke (if active? accent "#777")
             :stroke-width stroke-width

@@ -53,6 +53,7 @@
                    {:x (+ x width) :y (+ y height) :id :size}]]
        (let [handle (merge handle {:type :handle
                                    :tag :edit
+                                   :cursor "move"
                                    :element (:id el)})]
          ^{:key (:id handle)}
          [overlay/square-handle handle
