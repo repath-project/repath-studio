@@ -182,7 +182,9 @@
               (let [delta-y (second delta)
                     factor (Math/pow (inc (/ (- 1 (:zoom-sensitivity db)) 100))
                                      (- delta-y))]
-                (frame.h/zoom-in-pointer-position db factor))
+                (-> db
+                    (frame.h/zoom-in-pointer-position factor)
+                    (h/add-fx [:dispatch [::local-storage-persist]])))
               (frame.h/pan-by db delta))
 
             db)

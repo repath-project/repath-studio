@@ -1,6 +1,7 @@
 (ns renderer.tool.transform.zoom
   (:require
-   [renderer.app.handlers :as handlers]
+   [renderer.app.events :as-alias app.e]
+   [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
    [renderer.frame.handlers :as frame.h]
    [renderer.tool.base :as tool]
@@ -17,7 +18,7 @@
   [db]
   (-> db
       (assoc :cursor "zoom-in")
-      (handlers/set-message
+      (app.h/set-message
        [:<>
         [:div "Click or select an area to zoom in."]
         [:div "Hold " [:span.shortcut-key "⇧"] " to zoom out."]])))
@@ -65,11 +66,14 @@
         (frame.h/zoom-by (if (pointer/shift? e)
                            zoom-sensitivity
                            (/ furute-zoom current-zoom)))
-        (frame.h/pan-to-bounds [pos-x pos-y offset-x offset-y]))))
+        (frame.h/pan-to-bounds [pos-x pos-y offset-x offset-y])
+        (app.h/add-fx [:dispatch [::app.e/local-storage-persist]]))))
 
 (defmethod tool/pointer-up :zoom
   [db e]
   (let [factor (if (pointer/shift? e)
                  (:zoom-sensitivity db)
                  (/ 1 (:zoom-sensitivity db)))]
-    (frame.h/zoom-in-pointer-position db factor)))
+    (-> db
+        (frame.h/zoom-in-pointer-position  factor)
+        (app.h/add-fx [:dispatch [::app.e/local-storage-persist]]))))
