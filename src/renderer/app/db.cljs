@@ -34,14 +34,14 @@
    [:bottom number?]
    [:left number?]])
 
-(def tool
+(def Tool
   [:fn {:error/fn (fn [{:keys [value]} _] (str value ", is not a supported tool"))}
    tool.hierarchy/tool?])
 
 (def App
   [:map {:closed true}
-   [:tool {:default :select} tool]
-   [:primary-tool {:optional true} tool]
+   [:tool {:default :select} Tool]
+   [:primary-tool {:optional true} Tool]
    [:pointer-pos {:default [0 0]} Vec2D]
    [:pointer-offset {:optional true} Vec2D]
    [:adjusted-pointer-pos {:default [0 0]} Vec2D]
