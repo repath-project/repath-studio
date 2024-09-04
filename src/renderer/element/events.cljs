@@ -22,7 +22,7 @@
 
 (rf/reg-event-db
  ::toggle-prop
- [(finalize #(str "Toggle " (name (last %))))]
+ [(finalize #(str "Toggle " (name (get % 2))))]
  (fn [db [_ id k]]
    (h/toggle-prop db id k)))
 
@@ -57,7 +57,7 @@
 
 (rf/reg-event-db
  ::remove-attr
- [(finalize #(str "Remove " (name (last %))))]
+ [(finalize #(str "Remove " (name (second %))))]
  (fn [db [_ k]]
    (h/remove-attr db k)))
 
@@ -137,7 +137,7 @@
 
 (rf/reg-event-db
  ::align
- [(finalize #(str "Update " (name (last %))))]
+ [(finalize #(str "Update " (name (second %))))]
  (fn [db [_ direction]]
    (h/align db direction)))
 
@@ -244,7 +244,7 @@
 
 (rf/reg-event-db
  ::bool-operation
- [(finalize #(-> % last name str/capitalize))]
+ [(finalize #(-> % second name str/capitalize))]
  (fn [db [_ operation]]
    (cond-> db
      (seq (rest (h/selected db)))
@@ -252,13 +252,13 @@
 
 (rf/reg-event-db
  ::add
- [(finalize #(str "Create " (-> % last :tag name)))]
+ [(finalize #(str "Create " (-> % second :tag name)))]
  (fn [db [_ el]]
    (h/add db el)))
 
 (rf/reg-event-db
  ::import
- [(finalize #(last %))]
+ [(finalize #(get % 2))]
  (fn [db [_ data _msg]]
    (-> db
        (h/import-svg data)
@@ -301,7 +301,7 @@
 
 (rf/reg-event-db
  ::manipulate-path
- [(finalize #(-> % last name str/capitalize (str " path")))]
+ [(finalize #(-> % second name str/capitalize (str " path")))]
  (fn [db [_ action]]
    (h/manipulate-path db action)))
 
