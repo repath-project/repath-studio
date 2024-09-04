@@ -1,5 +1,8 @@
-(ns renderer.dialog.handlers)
+(ns renderer.dialog.handlers
+  (:require
+   [malli.experimental :as mx]
+   [renderer.dialog.db :refer [Dialog]]))
 
-(defn create
-  [db dialog]
+(mx/defn create
+  [db, dialog :- Dialog]
   (update db :dialogs conj dialog))

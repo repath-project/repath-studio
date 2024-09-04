@@ -2,6 +2,7 @@
   (:require
    [malli.core :as m]
    [malli.error :as me]
+   [malli.experimental :as mx]
    [re-frame.core :as rf]
    [renderer.app.effects :as app.fx]
    [renderer.app.events :as-alias app.e]
@@ -9,6 +10,7 @@
    [renderer.element.handlers :as element.h]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
+   [renderer.utils.math :refer [Vec2D]]
    [renderer.utils.vec :as vec]))
 
 (defn history-path [db]
@@ -22,10 +24,10 @@
   [db]
   (:position (history db)))
 
-(defn state
+(mx/defn state
   ([active-history]
    (state active-history (:position active-history)))
-  ([active-history current-position]
+  ([active-history, current-position :- uuid?]
    (get-in active-history [:states current-position])))
 
 (defn previous-position
@@ -50,34 +52,34 @@
     (:active-document db)
     (assoc-in (element.h/path db) (:elements (state (history db))))))
 
-(defn preview
-  [db pos]
+(mx/defn preview
+  [db, pos :- uuid?]
   (assoc-in db (element.h/path db) (:elements (state (history db) pos))))
 
-(defn move
-  [db pos]
+(mx/defn move
+  [db, pos :- uuid?]
   (-> db
       (assoc-in (conj (history-path db) :position) pos)
       (swap)))
 
-(defn undo
+(mx/defn undo
   ([db]
    (undo db 1))
-  ([db n]
+  ([db, n :- int?]
    (if (and (pos? n) (undos? (history db)))
      (recur (move db (previous-position (history db))) (dec n))
      db)))
 
-(defn redo
+(mx/defn redo
   ([db]
    (redo db 1))
-  ([db n]
+  ([db, n :- int?]
    (if (and (pos? n) (redos? (history db)))
      (recur (move db (next-position (history db))) (dec n))
      db)))
 
-(defn accumulate
-  [active-history f]
+(mx/defn accumulate
+  [active-history, f :- [:or fn? keyword?]]
   (loop [current-state (state active-history)
          stack []]
     (if-let [current-position (f current-state)]
@@ -102,16 +104,16 @@
   [db]
   (-> (history db) :states count))
 
-(defn set-zoom
-  [db zoom]
+(mx/defn set-zoom
+  [db, zoom :- number?]
   (assoc-in db (conj (history-path db) :zoom) zoom))
 
-(defn set-translate
-  [db [x y]]
+(mx/defn set-translate
+  [db, [x y] :- Vec2D]
   (assoc-in db (conj (history-path db) :translate) [x y]))
 
-(defn- create-state
-  [db now id explanation]
+(mx/defn create-state
+  [db, now :- int?, id :- uuid?, explanation :- string?]
   (let [new-state {:explanation explanation
                    :elements (element.h/elements db)
                    :timestamp now
