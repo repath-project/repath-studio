@@ -1,6 +1,4 @@
 (ns renderer.dev
-  "ClojureScript Function Instrumentation
-   https://github.com/metosin/malli/blob/master/docs/clojurescript-function-instrumentation.md"
   {:dev/always true}
   (:require
    [clojure.pprint :refer (pprint)]
@@ -29,13 +27,13 @@
               context))))
 
 (comment
-  ;; Enable full db validation for debugging.
+  ;; Enable full db validation
   (rf/reg-global-interceptor schema-validator)
-
   (rf/clear-global-interceptor ::schema-validator)
 
+  ;; Enable function instrumentation
+  ;; https://github.com/metosin/malli/blob/master/docs/clojurescript-function-instrumentation.md
   (dev/start!)
-
   (dev/stop!)
 
   (pprint (str/trim "This line suppresses some clj-kondo warnings.")))

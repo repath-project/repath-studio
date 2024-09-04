@@ -2,7 +2,7 @@
   (:require
    [malli.error :as me]
    [malli.experimental :as mx]
-   [renderer.document.db :as db :refer [document]]
+   [renderer.document.db :as db :refer [persisted, document]]
    [renderer.element.db :as element.db :refer [attr]]
    [renderer.element.handlers :as element.h]
    [renderer.frame.handlers :as frame.h]
@@ -12,7 +12,7 @@
    [renderer.utils.compatibility :as compatibility]
    [renderer.utils.vec :as vec]))
 
-(mx/defn save-format :- document
+(mx/defn save-format :- persisted
   ([db]
    (save-format db (:active-document db)))
   ([db, id :- uuid?]
