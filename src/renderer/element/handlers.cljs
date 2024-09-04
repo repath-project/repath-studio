@@ -273,7 +273,7 @@
    (if (element db id)
      (if-not multi?
        (-> db
-           deselect
+           (deselect)
            (select id))
        (toggle-prop db id :selected?))
      (deselect db))))

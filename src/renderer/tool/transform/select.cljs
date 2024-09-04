@@ -2,6 +2,7 @@
   (:require
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
+   [renderer.app.effects :as app.fx]
    [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
    [renderer.history.handlers :as history.h]
@@ -134,15 +135,16 @@
       (not intersecting?) (assoc-in [:attrs :fill] "transparent"))))
 
 (defmethod tool/drag-start :select
-  [db _e]
-  (case (-> db :clicked-element :tag)
-    :canvas
-    (app.h/set-state db :select)
+  [db e]
+  (let [db (app.h/add-fx db [::app.fx/release-pointer-capture [(:target e) (:pointer-id e)]])]
+    (case (-> db :clicked-element :tag)
+      :canvas
+      (app.h/set-state db :select)
 
-    :scale
-    (app.h/set-state db :scale)
+      :scale
+      (app.h/set-state db :scale)
 
-    (app.h/set-state db :move)))
+      (app.h/set-state db :move))))
 
 (defn lock-ratio
   [[x y] handle]
