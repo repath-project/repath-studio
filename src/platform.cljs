@@ -2,6 +2,9 @@
   (:require
    [clojure.string :as str]))
 
+(defonce system-language
+  (keyword (.-language js/navigator)))
+
 (defonce user-agent
   (.-userAgent js/navigator))
 

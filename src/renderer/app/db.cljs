@@ -69,7 +69,7 @@
    [:backdrop? {:default false} boolean?]
    [:loading? {:default false} boolean?]
    [:explanation {:optional true} string?]
-   [:lang {:default :en-US :persited true} keyword?]
+   [:lang {:default :asds :persited true} keyword?]
    [:repl-mode {:default :cljs} keyword?]
    [:worker {:default {:tasks {}}} [:map [:tasks map?]]]
    [:window Window]

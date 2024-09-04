@@ -2,6 +2,7 @@
   (:require
    [akiroz.re-frame.storage :as rf.storage]
    [config :as config]
+   [i18n :as i18n]
    [malli.error :as me]
    [platform :as platform]
    [re-frame.core :as rf]
@@ -72,10 +73,12 @@
    {:db (h/set-tool db tool)
     ::fx/focus nil}))
 
-#_(rf/reg-event-db
-   :set-lang
-   (fn [db [_ lang]]
-     (assoc db :lang lang)))
+(rf/reg-event-db
+ ::set-lang
+ (fn [db [_ lang]]
+   (cond-> db
+     (get i18n/dictionary lang)
+     (assoc :lang lang))))
 
 (rf/reg-event-db
  ::set-repl-mode

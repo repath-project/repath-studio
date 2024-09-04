@@ -109,6 +109,7 @@
   (bootstrap/init repl/st {:path "js/bootstrap" :load-on-init '[user]} bootstrap-cb!)
 
   (rf/dispatch-sync [::app.e/initialize-db])
+  (rf/dispatch-sync [::app.e/set-lang platform/system-language])
   (rf/dispatch-sync [::app.e/load-local-db])
   (rf/dispatch-sync [::document.e/init])
   (rf/dispatch-sync [::theme.e/set-native-mode (theme.fx/native theme.fx/native-query)])
