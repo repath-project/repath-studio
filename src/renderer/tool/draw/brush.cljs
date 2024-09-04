@@ -34,12 +34,8 @@
 (defmethod tool/activate :brush
   [db]
   (-> db
-      (assoc :cursor "crosshair")
+      (assoc :cursor "none")
       (app.h/set-message "Click and drag to draw.")))
-
-(defmethod tool/deactivate :measure
-  [db]
-  (element.h/clear-temp db))
 
 (defonce option-keys
   [:size :thinning :smoothing :streamline])
