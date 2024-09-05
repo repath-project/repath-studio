@@ -123,19 +123,10 @@
  [(history.h/finalize nil)]
  (fn [{:keys [db]}
       [_ {:as e :keys [data-transfer pointer-pos]}]]
-   (let [adjusted-pointer-pos (frame.h/adjust-pointer-pos db pointer-pos)]
-     {:db (h/pointer-handler db e adjusted-pointer-pos)
-      :fx [(case (:type e)
-             :drop
-             [::fx/data-transfer [adjusted-pointer-pos data-transfer]]
-
-             :pointerdown
-             [::fx/set-pointer-capture [(:target e) (:pointer-id e)]]
-
-             :pointerup
-             [::fx/release-pointer-capture [(:target e) (:pointer-id e)]]
-
-             nil)]})))
+   {:db (h/pointer-handler db e)
+    :fx [(when (= (:type e) :drop)
+           [::fx/data-transfer [(frame.h/adjust-pointer-pos db pointer-pos)
+                                data-transfer]])]}))
 
 (rf/reg-event-db
  ::keyboard-event
