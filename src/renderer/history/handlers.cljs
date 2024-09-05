@@ -127,17 +127,17 @@
       (assoc :parent (position db)))))
 
 (defn cancel
-  [{:keys [state tool] :as db}]
+  [db]
   (cond-> db
     :always (-> (dissoc :drag? :pointer-offset :clicked-element)
-                (tool.hierarchy/activate tool)
+                (tool.hierarchy/activate (:tool db))
                 (element.h/clear-temp)
                 (swap))
 
-    (= state :select)
+    (= (:state db) :select)
     (element.h/clear-hovered)
 
-    (= state :default)
+    (= (:state db) :default)
     (app.h/set-tool :select)
 
     :always

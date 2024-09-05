@@ -19,8 +19,8 @@
   (assoc db :message message))
 
 (defn explain
-  [db & rest]
-  (assoc db :explanation (apply str rest)))
+  [db & more]
+  (assoc db :explanation (apply str more)))
 
 (defn add-fx
   [db effect]
@@ -95,15 +95,15 @@
             factor (Math/pow (inc (/ (- 1 (:zoom-sensitivity db)) 100))
                              (- delta-y))]
         (-> db
-            (frame.h/zoom-in-pointer-position factor)
+            (frame.h/zoom-at-pointer factor)
             (add-fx [:dispatch [::local-storage-persist]])))
       (frame.h/pan-by db delta))
 
     db))
 
 (defn key-handler
-  [{:keys [tool] :as db} {:keys [type code] :as e}]
-  (case type
+  [{:keys [tool] :as db} {:keys [code] :as e}]
+  (case (:type e)
     :keydown
     (cond-> db
       (and (= code "Space")

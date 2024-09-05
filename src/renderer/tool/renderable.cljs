@@ -46,7 +46,7 @@
         (.remove dom-el)
         bounds))))
 
-(defmethod tool.hierarchy/position ::tool.hierarchy/renderable
+(defmethod tool.hierarchy/place ::tool.hierarchy/renderable
   [el position]
   (let [center (bounds/center (tool.hierarchy/bounds el))
         offset (mat/sub position center)]

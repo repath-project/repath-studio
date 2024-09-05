@@ -194,10 +194,10 @@
    (h/translate db offset)))
 
 (rf/reg-event-db
- ::position
- [(finalize "Position selection")]
+ ::place
+ [(finalize "Place selection")]
  (fn [db [_ position]]
-   (h/position db position)))
+   (h/place db position)))
 
 (rf/reg-event-db
  ::scale

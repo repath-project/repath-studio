@@ -151,7 +151,7 @@
       (attr.hierarchy/update-attr :x + x)
       (attr.hierarchy/update-attr :y + y)))
 
-(defmethod tool.hierarchy/position :blob
+(defmethod tool.hierarchy/place :blob
   [el [x y]]
   (let [dimensions (bounds/->dimensions (tool.hierarchy/bounds el))
         [cx cy] (mat/div dimensions 2)]

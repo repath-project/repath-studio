@@ -58,7 +58,7 @@
 (defmulti render-edit "Renders the edit overlay of the element." :tag)
 (defmulti bounds "Returns the local bounds of the element." :tag)
 (defmulti translate "Translates the element by a given offset." (fn [el _offset] (:tag el)))
-(defmulti position "Moves the element to a given global position." (fn [el _position] (:tag el)))
+(defmulti place "Moves the element to a given global position." (fn [el _position] (:tag el)))
 (defmulti scale "Scales the element by a given ratio and pivot-point." (fn [el _ration _pivot-point] (:tag el)))
 (defmulti edit "Edits the element by a given offset and handle." (fn [el _offset _handle] (:tag el)))
 
@@ -71,7 +71,7 @@
 (defmethod snapping-points :default [])
 (defmethod scale :default [element] element)
 (defmethod translate :default [element] element)
-(defmethod position :default [element] element)
+(defmethod place :default [element] element)
 (defmethod edit :default [element] element)
 
 ;; Right panel multimethod.

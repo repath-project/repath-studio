@@ -67,7 +67,7 @@
     (cond-> db
       id
       (-> (element.h/update-el id tool.hierarchy/edit pointer-offset (:id clicked-element))
-          (snap.h/snap snap-handler id (:id clicked-element))))))
+          (snap.h/snap-with snap-handler id (:id clicked-element))))))
 
 (defmethod tool.hierarchy/drag-end :edit
   [db _e]

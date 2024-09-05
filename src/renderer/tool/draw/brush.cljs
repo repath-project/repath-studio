@@ -171,7 +171,7 @@
              [:attrs :points]
              #(mapv (fn [point] (mat/add point [x y 0])) %)))
 
-(defmethod tool.hierarchy/position :brush
+(defmethod tool.hierarchy/place :brush
   [el position]
   (let [center (bounds/center (tool.hierarchy/bounds el))
         offset (mat/sub position center)]

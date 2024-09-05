@@ -44,7 +44,7 @@
 (defmethod message :scale
   [ratio]
   [:<>
-   [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions, " [:span.shortcut-key "⇧"] " to scale in position, " [:span.shortcut-key "Alt"] " to also scale children."]
+   [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions, " [:span.shortcut-key "⇧"] " to scale in place, " [:span.shortcut-key "Alt"] " to also scale children."]
    [:div "Scaling by [" (str/join " " (mapv units/->fixed (distinct ratio))) "]."]])
 
 (defn hovered?
@@ -229,7 +229,7 @@
             (history.h/swap)
             (select-element (pointer/shift? e))
             (element.h/translate offset)
-            (snap.h/snap element.h/translate)
+            (snap.h/snap-with element.h/translate)
             (app.h/set-cursor "default")))
 
       :clone
@@ -238,7 +238,7 @@
             (history.h/swap)
             (select-element (pointer/shift? e))
             (element.h/duplicate offset)
-            (snap.h/snap element.h/translate)
+            (snap.h/snap-with element.h/translate)
             (app.h/set-cursor "copy"))
         (app.h/set-state db :move))
 
@@ -250,7 +250,7 @@
             (offset-scale offset (pointer/ctrl? e) (pointer/shift? e) (pointer/alt? e)))
 
         (not (pointer/ctrl? e))
-        (snap.h/snap offset-scale false (pointer/shift? e) (pointer/alt? e)))
+        (snap.h/snap-with offset-scale false (pointer/shift? e) (pointer/alt? e)))
 
       :default db)))
 

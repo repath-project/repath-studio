@@ -28,7 +28,7 @@
    {:label "Animate Motion"
     :action [::element.e/animate :animateMotion {}]}
    {:type :separator}
-   {:label "Duplicate in position"
+   {:label "Duplicate in place"
     :action [::element.e/duplicate-in-place]}
    {:label "Delete"
     :action [::element.e/delete]}])

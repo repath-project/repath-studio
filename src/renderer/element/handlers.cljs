@@ -37,10 +37,6 @@
   [db id]
   (get (elements db) id))
 
-(defn tag
-  [db id]
-  (:tag (element db id)))
-
 (defn root
   [db]
   (some #(when (element/root? %) %) (vals (elements db))))
@@ -467,11 +463,11 @@
   ([db id offset]
    (update-el db id tool.hierarchy/translate offset)))
 
-(defn position
+(defn place
   ([db pos]
-   (reduce (partial-right position pos) db (top-ancestor-ids db)))
+   (reduce (partial-right place pos) db (top-ancestor-ids db)))
   ([db id pos]
-   (update-el db id tool.hierarchy/position pos)))
+   (update-el db id tool.hierarchy/place pos)))
 
 (defn scale
   [db ratio pivot-point recur?]
@@ -624,7 +620,7 @@
         :always
         (-> (deselect)
             (add (assoc el :parent (:id parent-el)))
-            (position (mat/add pointer-pos offset)))
+            (place (mat/add pointer-pos offset)))
 
         (not= (:id (root db)) (:id parent-el))
         (translate [(- s-x1) (- s-y1)])) (selected-ids db)))))
@@ -685,7 +681,7 @@
    (reduce ungroup db (selected-ids db)))
   ([db id]
    (cond-> db
-     (and (not (locked? db id)) (= (tag db id) :g))
+     (and (not (locked? db id)) (= (:tag (element db id)) :g))
      (as-> db db
        (let [i (index db id)]
          (reduce
@@ -703,7 +699,7 @@
    (reduce (partial-right manipulate-path action) db (selected-ids db)))
   ([db id action]
    (cond-> db
-     (= (tag db id) :path)
+     (= (:tag (element db id)) :path)
      (update-el id path/manipulate action))))
 
 (defn import-svg

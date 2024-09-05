@@ -22,7 +22,7 @@
       db
       (reduce #(pan-by %1 (mat/div [(:width offset) (:height offset)] 2) %2) db (:document-tabs db)))))
 
-(mx/defn zoom-in-position
+(mx/defn zoom-in-place
   [{:keys [active-document] :as db}, factor :- number?, pos :- Vec2D]
   (let [zoom (get-in db [:documents active-document :zoom])
         updated-zoom (math/clamp (* zoom factor) 0.01 100)
@@ -40,16 +40,16 @@
   (let [{:keys [zoom pan]} (get-in db [:documents active-document])]
     (pointer/adjust-position zoom pan pos)))
 
-(mx/defn zoom-in-pointer-position
+(mx/defn zoom-at-pointer
   [{:keys [adjusted-pointer-pos] :as db}, factor :- number?]
-  (zoom-in-position db factor adjusted-pointer-pos))
+  (zoom-in-place db factor adjusted-pointer-pos))
 
 (mx/defn zoom-by
   [{:keys [active-document dom-rect] :as db}, factor :- number?]
   (let [{:keys [zoom pan]} (get-in db [:documents active-document])
         {:keys [width height]} dom-rect
         position (mat/add pan (mat/div [width height] 2 zoom))]
-    (zoom-in-position db factor position)))
+    (zoom-in-place db factor position)))
 
 (mx/defn pan-to-bounds
   [{:keys [active-document dom-rect] :as db}, bounds :- Bounds]

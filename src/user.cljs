@@ -18,12 +18,12 @@
   ([x y]
    (translate [x y])))
 
-(defn ^:export position
+(defn ^:export place
   "Moves the selected elements."
   ([pos]
-   (rf/dispatch [::element.e/position pos]))
+   (rf/dispatch [::element.e/place pos]))
   ([x y]
-   (position [x y])))
+   (place [x y])))
 
 (defn ^:export scale
   "Scales the selected elements."

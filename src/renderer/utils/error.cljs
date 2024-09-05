@@ -15,7 +15,7 @@
 
 (defn message
   [error]
-  (let [message (if (string? @error) @error (.-message @error))
+  (let [error-message (if (string? @error) @error (.-message @error))
         stack (when-not (string? @error) (.-stack @error))]
     [:div.flex.max-h-screen.overflow-hidden
      [ui/scroll-area
@@ -23,7 +23,7 @@
        [:div.w-full.max-w-md.bg-primary.p-8.m-2
         [:div.text-xl.pr-10.pb-5 "The following unhandled error was thrown"]
 
-        [:p.text-error message]
+        [:p.text-error error-message]
         (when stack
           [:details.mb-5
            [:summary "Stacktrace"]
@@ -33,7 +33,7 @@
         [:p "Please consider submitting an error report to improve your experience."]
 
         [:button.button.px-2.rounded.w-full.mb-5.border.border-default.hover:bg-transparent
-         {:on-click #(rf/dispatch [::window.e/open-remote-url (submit-error-url message)])}
+         {:on-click #(rf/dispatch [::window.e/open-remote-url (submit-error-url error-message)])}
          "Submit an error report"]
 
         [:p "You can try to undo your last action in order to recover to a previous working state."]
