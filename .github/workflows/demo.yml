@@ -38,6 +38,11 @@ jobs:
         uses: DeLaGuardo/setup-clojure@12.5
         with:
           cli: 1.11.4.1474
+      - name: Lint
+        uses: DeLaGuardo/clojure-lint-action@v1
+        with:
+          clj-kondo-args: --lint src/**/*.cljs
+          github_token: ${{ secrets.GITHUB_TOKEN }}
       - run: npm ci && npm run build
       - name: Setup Pages
         uses: actions/configure-pages@v5
