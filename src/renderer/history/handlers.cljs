@@ -163,9 +163,9 @@
 
 (def explain-elements (m/explainer [:map-of uuid? Element]))
 
-(defn finalize
+(mx/defn finalize
   "Pushes changes to history."
-  [explanation]
+  [explanation :- [:or nil? string? fn?]]
   (rf/->interceptor
    :id ::finalize
    :after (fn [context]

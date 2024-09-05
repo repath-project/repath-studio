@@ -308,15 +308,19 @@
 (rf/reg-event-fx
  ::copy
  (fn [{:keys [db]} _]
-   {:db (h/copy db)
-    ::app.fx/clipboard-write (element/->svg (h/top-selected-sorted db))}))
+   (let [els (h/top-selected-sorted db)]
+     {:db (h/copy db)
+      :fx [(when (seq els)
+             [::app.fx/clipboard-write (element/->svg els)])]})))
 
 (rf/reg-event-fx
  ::cut
  [(finalize "Cut selection")]
  (fn [{:keys [db]} _]
-   {:db (-> db h/copy h/delete)
-    ::app.fx/clipboard-write (element/->svg (h/top-selected-sorted db))}))
+   (let [els (h/top-selected-sorted db)]
+     {:db (-> db h/copy h/delete)
+      :fx [(when (seq els)
+             [::app.fx/clipboard-write (element/->svg els)])]})))
 
 (rf/reg-event-fx
  ::trace

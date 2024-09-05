@@ -27,7 +27,7 @@
   (or (svg? el) (root? el)))
 
 (mx/defn united-bounds :- [:maybe Bounds]
-  [elements]
+  [elements :- [:cat Element]]
   (let [el-bounds (->> elements (map :bounds) (remove nil?))]
     (when (seq el-bounds)
       (apply utils.bounds/union el-bounds))))
@@ -129,17 +129,15 @@
   (str "<svg width='" w "' height='" h "'>" s "</svg>"))
 
 (mx/defn ->string :- string?
-  [els]
+  [els :- [:cat Element]]
   (reduce #(-> (tool.hierarchy/render-to-string %2)
                (dom.server/render-to-static-markup)
                (str "\n" %)) "" els))
 
 (mx/defn ->svg :- string?
-  [els :- [:* Element]]
-  (let [dimensions (utils.bounds/->dimensions (united-bounds els))
-        s (->string els)]
-    (cond-> s
-      (not (and (seq els)
-                (empty? (rest els))
-                (svg? (first els))))
-      (wrap-to-svg dimensions))))
+  [els :- [:cat Element]]
+  (cond-> (->string els)
+    (not (and (seq els)
+              (empty? (rest els))
+              (svg? (first els))))
+    (wrap-to-svg (utils.bounds/->dimensions (united-bounds els)))))

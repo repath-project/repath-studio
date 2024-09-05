@@ -2,6 +2,7 @@
   (:require
    [clojure.core.matrix :as mat]
    [malli.experimental :as mx]
+   [renderer.app.db :refer [DomRect]]
    [renderer.element.handlers :as element.h]
    [renderer.utils.bounds :as utils.bounds :refer [Bounds]]
    [renderer.utils.element :as element]
@@ -16,7 +17,7 @@
      (update-in db [:documents id :pan] mat/add (mat/div offset zoom)))))
 
 (mx/defn recenter-to-dom-rect
-  [{:keys [dom-rect] :as db}, updated-dom-rect]
+  [{:keys [dom-rect] :as db}, updated-dom-rect :- DomRect]
   (let [offset (select-keys (merge-with - dom-rect updated-dom-rect) [:width :height])]
     (if-not (-> db :window :focused?)
       db
@@ -84,7 +85,7 @@
                      :fill (max width-ratio height-ratio)))
          (pan-to-bounds bounds)))))
 
-(mx/defn calc-pan-offset
+(mx/defn axis-offset :- number?
   [position :- number?, offset :- number?, size :- number?]
   (let [threshold 50
         step 15]
@@ -100,6 +101,9 @@
       :else 0)))
 
 (mx/defn pan-out-of-canvas
-  [db, {:keys [width height]}, [x y] :- Vec2D, [offset-x offset-y] :- Vec2D]
-  (pan-by db [(calc-pan-offset x offset-x width)
-              (calc-pan-offset y offset-y height)]))
+  [db,
+   {:keys [width height]} :- DomRect,
+   [x y] :- Vec2D,
+   [offset-x offset-y] :- Vec2D]
+  (pan-by db [(axis-offset x offset-x width)
+              (axis-offset y offset-y height)]))
