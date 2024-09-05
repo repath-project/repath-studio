@@ -25,7 +25,7 @@
   (vec (concat (apply map min (map #(take 2 %) bounds))
                (apply map max (map #(drop 2 %) bounds)))))
 
-(mx/defn ->dimensions :- [:tuple number? number?]
+(mx/defn ->dimensions :- Vec2D
   "Converts bounds to [width heigh]"
   [[x1 y1 x2 y2] :- Bounds]
   (mat/sub [x2 y2] [x1 y1]))

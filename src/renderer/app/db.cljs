@@ -82,7 +82,7 @@
    [:pivot-point {:optional true} Vec2D]
    [:clicked-element {:optional true} [:or Element Handle]]
    [:copied-bounds {:optional true} Bounds]
-   [:copied-elements {:optional true} [:cat Element]]
+   [:copied-elements {:optional true} [:* Element]]
    [:mdn {:optional true} map?]
    [:webref-css {:optional true} map?]
    [:message {:optional true} Hiccup]

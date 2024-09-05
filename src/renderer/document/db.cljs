@@ -4,7 +4,8 @@
    [malli.transform :as mt]
    [malli.util :as mu]
    [renderer.element.db :refer [Element]]
-   [renderer.history.db :refer [History]]))
+   [renderer.history.db :refer [History]]
+   [renderer.utils.math :refer [Vec2D]]))
 
 (def Document
   [:map {:closed true}
@@ -22,7 +23,7 @@
    [:rotate {:default 0} number?]
    [:history History]
    [:temp-element {:optional true} any?] ; REVIEW
-   [:pan {:default [0 0]} [:tuple number? number?]]
+   [:pan {:default [0 0]} Vec2D]
    [:elements [:map-of {:default {}} uuid? Element]]
    [:focused? {:optional true} boolean?]])
 
