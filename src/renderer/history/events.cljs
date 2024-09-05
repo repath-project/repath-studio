@@ -2,10 +2,8 @@
   (:require
    [re-frame.core :as rf]
    [renderer.app.events :refer [persist]]
-   [renderer.app.handlers :as app.h]
-   [renderer.element.handlers :as element.h]
-   [renderer.history.handlers :as h]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.element.events :as-alias element.e]
+   [renderer.history.handlers :as h]))
 
 (rf/reg-event-db
  ::undo
@@ -58,26 +56,11 @@
        (h/set-zoom zoom)
        (h/set-translate translate))))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::cancel
- [(h/finalize "Deselect all")]
- (fn [db _]
-   (cond-> db
-     :always (-> (dissoc :drag? :pointer-offset :clicked-element)
-                 (tool.hierarchy/activate (:tool db))
-                 (element.h/clear-temp)
-                 (h/swap))
-
-     (and (= (:tool db) :select)
-          (= (:state db) :default))
-     (element.h/deselect)
-
-     (= (:state db) :select)
-     (element.h/clear-hovered)
-
-     (= (:state db) :default)
-     (app.h/set-tool :select)
-
-     :always
-     (app.h/set-state :default))))
+ (fn [{:keys [db]} _]
+   (if (and (= (:tool db) :select)
+            (= (:state db) :default))
+     {:dispatch [::element.e/deselect-all]}
+     {:db (h/cancel db)})))
 

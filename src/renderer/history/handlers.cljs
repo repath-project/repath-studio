@@ -6,10 +6,12 @@
    [re-frame.core :as rf]
    [renderer.app.effects :as app.fx]
    [renderer.app.events :as-alias app.e]
+   [renderer.app.handlers :as app.h]
    [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.h]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.math :refer [Vec2D]]
    [renderer.utils.vec :as vec]))
 
@@ -123,6 +125,23 @@
     (cond-> new-state
       (position db)
       (assoc :parent (position db)))))
+
+(defn cancel
+  [{:keys [state tool] :as db}]
+  (cond-> db
+    :always (-> (dissoc :drag? :pointer-offset :clicked-element)
+                (tool.hierarchy/activate tool)
+                (element.h/clear-temp)
+                (swap))
+
+    (= state :select)
+    (element.h/clear-hovered)
+
+    (= state :default)
+    (app.h/set-tool :select)
+
+    :always
+    (app.h/set-state :default)))
 
 (defn- update-ancestors
   "Makes all ancestors of the active branch the rightmost element.
