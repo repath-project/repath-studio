@@ -39,9 +39,7 @@ jobs:
         uses: DeLaGuardo/setup-clojure@12.5
         with:
           cli: 1.11.4.1474
-
-      - name: Install clj-kondo
-        uses: DeLaGuardo/setup-clj-kondo@master
+          clj-kondo: 2024.08.29
 
       - name: Lint
         run: clj-kondo --lint src/**/*.cljs
