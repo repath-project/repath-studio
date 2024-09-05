@@ -27,7 +27,7 @@
    [:elements [:map-of {:default {}} uuid? Element]]
    [:focused? {:optional true} boolean?]])
 
-(def Persisted (mu/select-keys Document [:id :title :path :save :version :elements]))
+(def PersistedDocument (mu/select-keys Document [:id :title :path :save :version :elements]))
 
 (def valid? (m/validator Document))
 

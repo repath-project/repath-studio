@@ -2,7 +2,7 @@
   (:require
    [malli.error :as me]
    [malli.experimental :as mx]
-   [renderer.document.db :as db]
+   [renderer.document.db :as db :refer [Document PersistedDocument]]
    [renderer.element.db :as element.db]
    [renderer.element.handlers :as element.h]
    [renderer.frame.handlers :as frame.h]
@@ -12,7 +12,7 @@
    [renderer.utils.compatibility :as compatibility]
    [renderer.utils.vec :as vec]))
 
-(mx/defn save-format :- db/Persisted
+(mx/defn save-format :- PersistedDocument
   ([db]
    (save-format db (:active-document db)))
   ([db, id :- uuid?]
@@ -76,7 +76,7 @@
           (recur (inc i)))))))
 
 (mx/defn create-tab
-  [db, document :- db/Document, id :- uuid?]
+  [db, document :- Document, id :- uuid?]
   (let [id (or (:id document) id)
         title (or (:title document) (new-title db))
         active-index (.indexOf (:document-tabs db) (:active-document db))
@@ -116,7 +116,7 @@
       (element.h/set-attr k v)))
 
 (mx/defn load
-  [db, document :- db/Document, id :- uuid?]
+  [db, document :- Document, id :- uuid?]
   (let [open-document-id (search-by-path db (:path document))
         migrated-document (compatibility/migrate-document document)
         migrated? (not= document migrated-document)

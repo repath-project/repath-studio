@@ -1,7 +1,7 @@
 (ns renderer.utils.compatibility
   (:require
    [malli.experimental :as mx]
-   [renderer.document.db :as document.db]
+   [renderer.document.db :refer [PersistedDocument]]
    [renderer.utils.migrations :as migrations]))
 
 ;; https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
@@ -29,7 +29,7 @@
              (= minor m-minor)
              (< patch m-patch)))))
 
-(mx/defn migrate-document :- document.db/Persisted
+(mx/defn migrate-document :- PersistedDocument
   [document :- map?]
   (reduce (fn [document [m-ver f]]
             (cond-> document
