@@ -4,7 +4,7 @@
    [renderer.utils.hiccup :refer [Hiccup]]))
 
 (mx/defn add
-  [db, notification :- [Hiccup]]
+  [db, notification :- Hiccup]
   (let [notifications (:notifications db)]
     (if (= notification (-> notifications peek :content))
       (assoc db :notifications

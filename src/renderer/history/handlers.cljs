@@ -9,6 +9,7 @@
    [renderer.app.handlers :as app.h]
    [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.h]
+   [renderer.history.db :refer [State]]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
    [renderer.tool.hierarchy :as tool.hierarchy]
@@ -22,21 +23,21 @@
   [db]
   (get-in db (history-path db)))
 
-(defn position
+(mx/defn position :- [:maybe uuid?]
   [db]
   (:position (history db)))
 
-(mx/defn state
+(mx/defn state :- [:maybe State]
   ([active-history]
    (state active-history (:position active-history)))
-  ([active-history, current-position :- uuid?]
+  ([active-history, current-position :- [:maybe uuid?]]
    (get-in active-history [:states current-position])))
 
-(defn previous-position
+(mx/defn previous-position :- [:maybe uuid?]
   [active-history]
   (-> active-history state :parent))
 
-(defn next-position
+(mx/defn next-position :- [:maybe uuid?]
   [active-history]
   (-> active-history state :children last))
 
@@ -114,7 +115,7 @@
   [db, [x y] :- Vec2D]
   (assoc-in db (conj (history-path db) :translate) [x y]))
 
-(mx/defn create-state
+(mx/defn create-state :- State
   [db, now :- int?, id :- uuid?, explanation :- string?]
   (let [new-state {:explanation explanation
                    :elements (element.h/elements db)

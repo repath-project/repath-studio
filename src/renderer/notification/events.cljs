@@ -13,7 +13,7 @@
 (rf/reg-event-db
  ::unavailable-feature
  (fn [db [_ feature compatibility-url]]
-   (h/add db (v/unavailable-feature feature compatibility-url))))
+   (h/add db [v/unavailable-feature feature compatibility-url])))
 
 (rf/reg-event-db
  ::remove
