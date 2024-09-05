@@ -4,7 +4,7 @@
    [malli.experimental :as mx]
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.e]
-   [renderer.utils.math :as math]))
+   [renderer.utils.math :refer [Vec2D]]))
 
 (mx/defn ctrl? :- boolean?
   [e]
@@ -19,12 +19,12 @@
   (contains? (:modifiers e) :alt))
 
 (mx/defn significant-drag? :- boolean?
-  [position :- math/Vec2D, offset :- math/Vec2D, threshold :- number?]
+  [position :- Vec2D, offset :- Vec2D, threshold :- number?]
   (> (apply max (map abs (mat/sub position offset)))
      threshold))
 
-(mx/defn adjust-position :- math/Vec2D
-  [zoom :- number?, pan :- math/Vec2D, pointer-pos :- math/Vec2D]
+(mx/defn adjust-position :- Vec2D
+  [zoom :- number?, pan :- Vec2D, pointer-pos :- Vec2D]
   (-> pointer-pos
       (mat/div zoom)
       (mat/add pan)))
@@ -37,9 +37,9 @@
    3 :back
    4 :forward})
 
-(mx/defn lock-direction :- math/Vec2D
+(mx/defn lock-direction :- Vec2D
   "Locks pointer movement to the axis with the biggest offset"
-  [[x y] :- math/Vec2D]
+  [[x y] :- Vec2D]
   (if (> (abs x) (abs y))
     [x 0]
     [0 y]))
