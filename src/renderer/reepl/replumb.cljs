@@ -243,7 +243,7 @@ cljs.js/*load-fn*
     (->> possibles
          (filter #(not= -1 (.indexOf % completing)))
          (sort (partial compare-completion text))
-         (map #(-> [nil (prefix %) (prefix %)])))))
+         (map #(vector nil (prefix %) (prefix %))))))
 
 ;; TODO: fuzzy-match if there are no normal matches
 (defn cljs-completion
@@ -277,13 +277,13 @@ cljs.js/*load-fn*
                   (sort-by second (partial compare-ns current-ns))
                   (mapcat #(get-matching-ns-interns % matches? only-ns))
                   ;; [qualified symbol, show text, replace text]
-                  (map #(-> [% (str %) (replace-name %) (name %)]))
+                  (map #(vector % (str %) (replace-name %) (name %)))
                   (sort-by #(get % 3) (partial compare-completion text)))]
     (vec (concat
           ;; TODO: make this configurable
           (take 75 defs)
           (map
-           #(-> [% (str %) (str %)])
+           #(vector % (str %) (str %))
            (filter matches? names))))))
 
 (defn process-apropos

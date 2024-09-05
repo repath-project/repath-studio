@@ -141,11 +141,11 @@
 (defn completion-list
   [docs {:keys [pos list active? show-all?]} set-active]
   (let [items (map-indexed
-               #(-> [completion-item
-                     (get %2 2)
-                     (= %1 pos)
-                     active?
-                     (partial set-active %1)]) list)]
+               #(vector completion-item
+                        (get %2 2)
+                        (= %1 pos)
+                        active?
+                        (partial set-active %1)) list)]
     [:div.absolute.bottom-full.left-0.w-full.text-xs.mb-px
      (when docs [:div.bg-primary.drop-shadow.p-4.absolute.bottom-full docs])
      (into
