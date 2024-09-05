@@ -34,23 +34,30 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
+
       - name: Install clojure tools
         uses: DeLaGuardo/setup-clojure@12.5
         with:
           cli: 1.11.4.1474
+
+      - name: Install clj-kondo
+        uses: DeLaGuardo/setup-clj-kondo@master
+
       - name: Lint
-        uses: DeLaGuardo/clojure-lint-action@v1
-        with:
-          clj-kondo-args: --lint src/**/*.cljs
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-      - run: npm ci && npm run build
+        run: clj-kondo --lint src/**/*.cljs
+
+      - name: Install packages and build
+        run: npm ci && npm run build
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository
           path: './resources/public'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
