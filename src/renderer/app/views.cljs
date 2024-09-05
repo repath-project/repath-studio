@@ -140,7 +140,7 @@
   (let [recent @(rf/subscribe [::document.s/recent])]
     [:div.flex.overflow-hidden.md:overflow-visible
      [ui/scroll-area
-      [:div.flex.min-h-full.justify-center.p-2.md:h-screen
+      [:div.flex.min-h-full.justify-center.p-2.md:h-dvh
        [:div.self-center.justify-between.flex.h-full.md:h-auto.w-full.lg:w-auto
         [:div.bg-primary.p-6.lg:p-12.flex.max-w-screen-xl.w-full.gap-8
          [:div.flex-1
@@ -239,7 +239,7 @@
 (defn root
   []
   [:> Tooltip/Provider
-   [:div.flex.flex-col.flex-1.h-screen.overflow-hidden
+   [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden
     [window.v/app-header]
     (if (seq @(rf/subscribe [::app.s/documents]))
       [:div.flex.h-full.flex-1.overflow-hidden

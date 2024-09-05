@@ -17,7 +17,7 @@
   [error]
   (let [error-message (if (string? @error) @error (.-message @error))
         stack (when-not (string? @error) (.-stack @error))]
-    [:div.flex.max-h-screen.overflow-hidden
+    [:div.flex.max-h-dvh.overflow-hidden
      [ui/scroll-area
       [:div.flex.w-full.justify-center.items-center
        [:div.w-full.max-w-md.bg-primary.p-8.m-2
