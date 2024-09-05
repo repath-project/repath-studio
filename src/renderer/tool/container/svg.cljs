@@ -77,5 +77,5 @@
          :on-pointer-down #(when (= (.-button %) 2)
                              (pointer/event-handler % el))
          :on-double-click pointer-handler})]
-      (for [el (merge child-els)]
+      (for [el child-els]
         ^{:key (:id el)} [tool.hierarchy/render el])]]))

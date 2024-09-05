@@ -333,9 +333,9 @@ cljs.js/*load-fn*
     (docs/repl-special-doc-map sym) (get-doc (docs/repl-special-doc sym))
     (ast/namespace
      @repl/st sym) (get-doc
-                            (select-keys
-                             (ast/namespace @repl/st sym)
-                             [:name :doc]))
+                    (select-keys
+                     (ast/namespace @repl/st sym)
+                     [:name :doc]))
     :else (get-doc
            (repl/get-var
             nil

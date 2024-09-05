@@ -122,5 +122,5 @@
         attrs (->> (dissoc attrs :fill)
                    (remove #(empty? (str (second %))))
                    (into {}))]
-    (->> (doall (map tool.hierarchy/render-to-string (merge child-elements)))
+    (->> (doall (map tool.hierarchy/render-to-string child-elements))
          (into [:svg attrs]))))

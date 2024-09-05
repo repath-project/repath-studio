@@ -23,8 +23,8 @@
         attrs (->> (update attrs :style parse)
                    (remove #(empty? (str (second %))))
                    (into {}))]
-    (-> [tag
-         attrs
-         (when title [:title title])
-         content
-         (doall (map tool.hierarchy/render-to-string child-elements))])))
+    [tag
+     attrs
+     (when title [:title title])
+     content
+     (doall (map tool.hierarchy/render-to-string child-elements))]))
