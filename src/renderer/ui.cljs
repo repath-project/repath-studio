@@ -8,8 +8,10 @@
    ["@radix-ui/react-switch" :as Switch]
    ["react-fps" :refer [FpsView]]
    ["react-svg" :refer [ReactSVG]]
+   [malli.experimental :as mx]
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.s]
+   [renderer.utils.hiccup :refer [Props]]
    [renderer.utils.keyboard :as keyb]))
 
 (defn fps
@@ -17,15 +19,15 @@
   [:div.fps-wrapper
    [:> FpsView #js {:width 240 :height 180}]])
 
-(defn icon
-  [icon-name attrs]
+(mx/defn icon
+  [icon-name :- string?, props :- Props]
   [:> ReactSVG
    (merge {:class "icon"
            :src (str "icons/" icon-name ".svg")}
-          attrs)])
+          props)])
 
-(defn icon-button
-  [icon-name props]
+(mx/defn icon-button
+  [icon-name :- string?, props :- Props]
   [:button.icon-button
    props
    [icon icon-name]])
@@ -52,8 +54,8 @@
        (interpose [:span {:class "px-0.5"} "+"])
        (into [:span])))
 
-(defn shortcuts
-  [event]
+(mx/defn shortcuts
+  [event :- vector?]
   (let [event-shortcuts @(rf/subscribe [::app.s/event-shortcuts event])]
     (when (seq event-shortcuts)
       (->> event-shortcuts
@@ -61,11 +63,11 @@
            (interpose [:span])
            (into [:span.inline-flex.text-muted {:class "gap-1.5"}])))))
 
-(defn toggle-icon-button
+(mx/defn toggle-icon-button
   [{:keys [active? active-icon inactive-icon active-text inactive-text action class]}
-   attrs]
+   props :- Props]
   [:button.icon-button
-   (merge attrs
+   (merge props
           {:class class
            :title (if active? active-text inactive-text)
            :on-double-click #(.stopPropagation %)
@@ -74,8 +76,8 @@
                              (action))})
    [icon (if active? active-icon inactive-icon)]])
 
-(defn radio-icon-button
-  [icon-name active? & {:keys [class] :as props}]
+(mx/defn radio-icon-button
+  [icon-name :- string?, active? :- boolean?, & {:keys [class] :as props} :- Props]
   [:button.icon-button.radio-icon-button
    (assoc props :class [class (when active? "selected")])
    [renderer.ui/icon icon-name]])

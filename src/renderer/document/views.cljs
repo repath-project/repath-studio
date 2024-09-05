@@ -2,6 +2,7 @@
   (:require
    ["@radix-ui/react-context-menu" :as ContextMenu]
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
+   [malli.experimental :as mx]
    [platform :as platform]
    [re-frame.core :as rf]
    [reagent.core :as ra]
@@ -13,7 +14,8 @@
    [renderer.history.views :as history.v]
    [renderer.ui :as ui]))
 
-(defn actions []
+(defn actions
+  []
   (let [undos? @(rf/subscribe [::history.s/undos?])
         redos? @(rf/subscribe [::history.s/redos?])]
     [:div.toolbar
@@ -62,8 +64,8 @@
        @(rf/subscribe [::history.s/redos])
        (not redos?)]]]))
 
-(defn close-button
-  [id saved?]
+(mx/defn close-button
+  [id :- uuid?, saved? :- boolean?]
   [:button.close-document-button.small.hover:bg-transparent
    {:key id
     :title "Close document"
@@ -75,8 +77,8 @@
    (when-not saved?
      [ui/icon "dot" {:class "icon dot"}])])
 
-(defn context-menu
-  [id]
+(mx/defn context-menu
+  [id :- uuid?]
   (let [document @(rf/subscribe [::document.s/document id])
         path (:path document)
         document-tabs @(rf/subscribe [::app.s/document-tabs])]
@@ -95,8 +97,8 @@
                 :action [::document.e/open-directory path]
                 :disabled? (not (and path platform/electron?))}]))))
 
-(defn tab
-  [id document active?]
+(mx/defn tab
+  [id :- uuid?, title :- string?, active? :- boolean?]
   (ra/with-let [dragged-over? (ra/atom false)]
     (let [saved? @(rf/subscribe [::document.s/saved? id])]
       [:> ContextMenu/Root
@@ -122,8 +124,7 @@
                                        (.getData "id")
                                        uuid)
                                    id]))}
-         [:span.truncate.pointer-events-none
-          (:title document)]
+         [:span.truncate.pointer-events-none title]
          [close-button id saved?]]]
        [:> ContextMenu/Portal
         (into
@@ -133,7 +134,8 @@
                 [ui/context-menu-item item])
               (context-menu id)))]])))
 
-(defn tab-bar []
+(defn tab-bar
+  []
   (let [documents @(rf/subscribe [::app.s/documents])
         document-tabs @(rf/subscribe [::app.s/document-tabs])
         active-document @(rf/subscribe [::app.s/active-document])]
@@ -141,7 +143,7 @@
      [:div.flex.flex-1.overflow-hidden
       (for [document-id document-tabs]
         ^{:key (str document-id)}
-        [tab document-id (get documents document-id) (= document-id active-document)])]
+        [tab document-id (:title (get documents document-id)) (= document-id active-document)])]
      [:div.toolbar
       [:> DropdownMenu/Root
        [:> DropdownMenu/Trigger

@@ -1,6 +1,7 @@
 (ns renderer.app.handlers
   (:require
    [malli.experimental :as mx]
+   [renderer.app.db :refer [Tool]]
    [renderer.app.events :as-alias e]
    [renderer.frame.handlers :as frame.h]
    [renderer.tool.hierarchy :as tool.hierarchy]
@@ -28,7 +29,7 @@
   (update db :fx conj effect))
 
 (mx/defn set-tool
-  [db, tool :- keyword?]
+  [db, tool :- Tool]
   (-> db
       (tool.hierarchy/deactivate)
       (assoc :tool tool)

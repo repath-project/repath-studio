@@ -2,11 +2,13 @@
   (:require
    [clojure.zip :as zip]))
 
+(def Props [:? [:map-of keyword? any?]])
+
 (def Hiccup
   [:schema {:registry {"hiccup" [:orn
                                  [:node [:catn
                                          [:name keyword?]
-                                         [:props [:? [:map-of keyword? any?]]]
+                                         [:props Props]
                                          [:children [:* [:schema [:ref "hiccup"]]]]]]
                                  [:primitive [:orn
                                               [:nil nil?]

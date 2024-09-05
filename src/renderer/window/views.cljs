@@ -1,5 +1,6 @@
 (ns renderer.window.views
   (:require
+   [malli.experimental :as mx]
    [platform :as platform]
    [re-frame.core :as rf]
    [renderer.document.subs :as-alias document.s]
@@ -18,8 +19,8 @@
     :on-click #(rf/dispatch action)}
    [ui/icon icon]])
 
-(defn window-control-buttons
-  [maximized?]
+(mx/defn window-control-buttons
+  [maximized? :- boolean?]
   [{:action [::window.e/minimize]
     :title "Minimize"
     :icon "window-minimize"}
