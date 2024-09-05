@@ -35,12 +35,6 @@
                   (not= db ::not-found)
                   (rf/assoc-effect :db (assoc-in original-db [:documents (:active-document original-db)] db))))))))
 
-(def focus-canvas
-  (rf/->interceptor
-   :id ::focus-canvas
-   :after (fn [context]
-            (rf/assoc-effect context :fx [[:dispatch-later {:ms 100 :dispatch [::app.e/focus nil]}]]))))
-
 (rf/reg-event-db
  ::center
  [persist]
@@ -157,16 +151,14 @@
 (rf/reg-event-fx
  ::new
  [(rf/inject-cofx ::app.fx/guid)
-  (finalize "Create document")
-  focus-canvas]
+  (finalize "Create document")]
  (fn [{:keys [db guid]} [_]]
    {:db (h/create db guid)}))
 
 (rf/reg-event-fx
  ::init
  [(rf/inject-cofx ::app.fx/guid)
-  (finalize "Create document")
-  focus-canvas]
+  (finalize "Create document")]
  (fn [{:keys [db guid]} [_]]
    {:db (cond-> db
           (not (:active-document db))
@@ -175,8 +167,7 @@
 (rf/reg-event-fx
  ::new-from-template
  [(rf/inject-cofx ::app.fx/guid)
-  (finalize "Create document from template")
-  focus-canvas]
+  (finalize "Create document from template")]
  (fn [{:keys [db guid]} [_ size]]
    {:db (h/create db guid size)}))
 
@@ -199,8 +190,7 @@
 (rf/reg-event-fx
  ::load
  [(rf/inject-cofx ::app.fx/guid)
-  (finalize "Load document")
-  focus-canvas]
+  (finalize "Load document")]
  (fn [{:keys [db guid]} [_ documents]]
    {:db (->> documents
              (reduce (partial-right h/load guid) db)
