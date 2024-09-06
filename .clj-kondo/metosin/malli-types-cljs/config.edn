@@ -195,7 +195,7 @@
                                                                                              {:op :rest, :spec :map}],
                                                                                       :ret :any,
                                                                                       :min-arity 1}}},
-                                                     switch {:arities {1 {:args [:any], :ret :any}}},
+                                                     shortcuts {:arities {1 {:args [:vector], :ret :any}}},
                                                      toggle-icon-button {:arities {:varargs {:args [:any
                                                                                                     {:op :rest,
                                                                                                      :spec :map}],
@@ -206,8 +206,7 @@
                                                                                                    {:op :rest,
                                                                                                     :spec :map}],
                                                                                             :ret :any,
-                                                                                            :min-arity 2}}},
-                                                     shortcuts {:arities {1 {:args [:vector], :ret :any}}}},
+                                                                                            :min-arity 2}}}},
                                         renderer.utils.attribute {points->vec {:arities {1 {:args [:string],
                                                                                             :ret :vector}}},
                                                                   points->px {:arities {1 {:args [:string],

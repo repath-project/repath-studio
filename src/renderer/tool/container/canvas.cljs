@@ -48,6 +48,7 @@
         select? (or (= tool :select) (= primary-tool :select))]
     [:svg#canvas {:on-pointer-up pointer-handler
                   :on-pointer-down pointer-handler
+                  :on-pointer-move pointer-handler
                   :on-double-click pointer-handler
                   :on-key-up keyb/event-handler
                   :on-key-down keyb/event-handler

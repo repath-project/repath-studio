@@ -124,9 +124,18 @@
  (fn [{:keys [db]}
       [_ {:as e :keys [data-transfer pointer-pos]}]]
    {:db (h/pointer-handler db e)
-    :fx [(when (= (:type e) :drop)
+    :fx [(case (:type e)
+           :drop
            [::fx/data-transfer [(frame.h/adjust-pointer-pos db pointer-pos)
-                                data-transfer]])]}))
+                                data-transfer]]
+
+           :pointerdown
+           [::fx/set-pointer-capture [(:target e) (:pointer-id e)]]
+
+           :pointerup
+           [::fx/release-pointer-capture [(:target e) (:pointer-id e)]]
+
+           nil)]}))
 
 (rf/reg-event-db
  ::keyboard-event
