@@ -1,13 +1,14 @@
 (ns renderer.notification.views
   (:require
+   [malli.experimental :as mx]
    [re-frame.core :as rf]
    [renderer.notification.events :as-alias notification.e]
    [renderer.notification.subs :as-alias notification.s]
    [renderer.ui :as ui]
    [renderer.window.events :as-alias window.e]))
 
-(defn unavailable-feature
-  [feature compatibility-url]
+(mx/defn unavailable-feature
+  [feature :- string?, compatibility-url :- string?]
   [:div
    [:h2.pb-4.font-bold feature " is unavailable."]
    [:div
@@ -17,8 +18,8 @@
      {:on-click #(rf/dispatch [::window.e/open-remote-url compatibility-url])}
      "browser compatibility table."]]])
 
-(defn spec-failed
-  [event error]
+(mx/defn spec-failed
+  [event :- string?, error :- string?]
   [:div
    [:h2.mb-4.font-bold "Validation error"]
    [:p "Event: " event]

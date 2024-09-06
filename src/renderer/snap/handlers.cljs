@@ -2,10 +2,19 @@
   (:require
    [clojure.core.matrix :as mat]
    [kdtree :as kdtree]
+   [malli.experimental :as mx]
    [re-frame.core :as rf]
    [renderer.element.handlers :as element.h]
+   [renderer.snap.db :refer [SnapOption]]
    [renderer.snap.subs :as-alias snap.s]
-   [renderer.utils.element :as utils.el]))
+   [renderer.utils.element :as utils.el]
+   [renderer.utils.math :refer [Vec2D]]))
+
+(mx/defn toggle-option
+  [{:keys [snap] :as db}, option :- SnapOption]
+  (if (contains? (:options snap) option)
+    (update-in db [:snap :options] disj option)
+    (update-in db [:snap :options] conj option)))
 
 (defn base-points
   [{:keys [snap
@@ -54,12 +63,12 @@
     (when (< (:dist-squared nearest-neighbor) (Math/pow threshold 2))
       nearest-neighbor)))
 
-(defn snap-to-offset
-  [db f offset more]
+(mx/defn snap-to-offset
+  [db, f :- fn?, offset :- Vec2D, more :- any?]
   (apply f db offset more))
 
-(defn snap-with
-  [{:keys [snap] :as db} f & more]
+(mx/defn snap-with
+  [{:keys [snap] :as db}, f :- fn?, & more :- any?]
   (let [{:keys [point base-point] :as nearest-neighbor} (find-nearest-neighbor db)]
     (cond-> db
       :always

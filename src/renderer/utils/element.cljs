@@ -6,7 +6,7 @@
    [malli.experimental :as mx]
    [reagent.dom.server :as dom.server]
    [renderer.element.db :refer [Element Attr]]
-   [renderer.snap.db :as snap.db]
+   [renderer.snap.db :refer [SnapOption]]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.attribute :as attr]
    [renderer.utils.bcd :as bcd]
@@ -39,7 +39,7 @@
     (vec (take 2 (mat/sub el-bounds local-bounds)))))
 
 (mx/defn snapping-points :- [:* Vec2D]
-  [el :- Element, options :- [:set snap.db/Options]]
+  [el :- Element, options :- [:set SnapOption]]
   (let [points (or (tool.hierarchy/snapping-points el) [])]
     (if-let [bounds (:bounds el)]
       (let [[x1 y1 x2 y2] bounds

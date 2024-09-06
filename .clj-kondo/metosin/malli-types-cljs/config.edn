@@ -479,6 +479,13 @@
                                                                                                                    :on-pointer-down-outside :fn,
                                                                                                                    :on-interact-outside :fn}}}}],
                                                                                        :ret :any}}}},
+                                        renderer.ruler.subs {foo {:arities {2 {:args [[:seqable
+                                                                                       :seqable
+                                                                                       :seqable
+                                                                                       :seqable
+                                                                                       :seqable]
+                                                                                      [:seqable :seqable :seqable]],
+                                                                               :ret :any}}}},
                                         renderer.document.views {close-button {:arities {2 {:args [:any :boolean],
                                                                                             :ret :any}}},
                                                                  context-menu {:arities {1 {:args [:any], :ret :any}}},
@@ -490,6 +497,28 @@
                                                                                                    :ret :map,
                                                                                                    :min-arity 1}}},
                                                             remove-nils {:arities {1 {:args [:map], :ret :map}}}},
+                                        renderer.snap.handlers {snap-to-offset {:arities {4 {:args [:any
+                                                                                                    :fn
+                                                                                                    :seqable
+                                                                                                    :any],
+                                                                                             :ret :any}}},
+                                                                snap-with {:arities {3 {:args [:any :fn :any],
+                                                                                        :ret :any}}}},
+                                        renderer.ruler.views {bounds-rect {:arities {1 {:args [:keyword], :ret :any}}},
+                                                              pointer {:arities {1 {:args [:keyword], :ret :any}}},
+                                                              label {:arities {4 {:args [:keyword
+                                                                                         :number
+                                                                                         :number
+                                                                                         :string],
+                                                                                  :ret :any}}},
+                                                              base-lines {:arities {1 {:args [:keyword], :ret :any}}},
+                                                              grid-lines {:arities {1 {:args [:keyword], :ret :any}}},
+                                                              ruler {:arities {1 {:args [:keyword], :ret :any}}}},
+                                        renderer.notification.views {unavailable-feature {:arities {2 {:args [:string
+                                                                                                              :string],
+                                                                                                       :ret :any}}},
+                                                                     spec-failed {:arities {2 {:args [:string :string],
+                                                                                               :ret :any}}}},
                                         renderer.utils.compatibility {version->table {:arities {1 {:args [:nilable/string],
                                                                                                    :ret :nilable/seqable}}},
                                                                       requires-migration? {:arities {2 {:args [:map

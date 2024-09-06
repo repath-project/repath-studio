@@ -1,7 +1,8 @@
 (ns renderer.snap.events
   (:require
    [re-frame.core :as rf]
-   [renderer.app.events :refer [persist]]))
+   [renderer.app.events :refer [persist]]
+   [renderer.snap.handlers :as h]))
 
 (rf/reg-event-db
  ::toggle
@@ -12,7 +13,5 @@
 (rf/reg-event-db
  ::toggle-option
  [persist]
- (fn [{:keys [snap] :as db} [_ option]]
-   (if (contains? (:options snap) option)
-     (update-in db [:snap :options] disj option)
-     (update-in db [:snap :options] conj option))))
+ (fn [db [_ option]]
+   (h/toggle-option db option)))

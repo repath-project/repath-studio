@@ -2,19 +2,21 @@
   (:require
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
+   [malli.experimental :as mx]
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.s]
    [renderer.document.subs :as-alias document.s]
    [renderer.frame.subs :as-alias frame.s]
+   [renderer.ruler.db :refer [Direction]]
    [renderer.ruler.subs :as-alias ruler.s]))
 
-(defn bounds-rect
-  [orientation]
+(mx/defn bounds-rect
+  [orientation :- Direction]
   (when-let [attrs @(rf/subscribe [::ruler.s/bounds-rect-attrs orientation])]
     [:rect (merge attrs {:fill "var(--overlay)"})]))
 
-(defn pointer
-  [orientation]
+(mx/defn pointer
+  [orientation :- Direction]
   (let [[x y] @(rf/subscribe [::app.s/pointer-pos])
         ruler-size @(rf/subscribe [::app.s/ruler-size])
         pointer-size (/ ruler-size 5)
@@ -42,19 +44,23 @@
             :y2 size
             :stroke "var(--font-color-muted)"})])
 
-(defn label
-  [vertical? step font-size text]
-  [:text {:x (if vertical? 19 (+ step 4))
-          :y (if vertical? (- step 8) (+ font-size 1))
-          :writing-mode (when vertical? "vertical-rl")
-          :fill "var(--font-color)"
-          :font-size font-size
-          :rotate (when vertical? 180)
-          :font-family "var(--font-mono"}
-   (if vertical? (reverse text) text)])
+(mx/defn label
+  [orientation :- Direction,
+   step :- number?,
+   font-size :- number?,
+   text :- string?]
+  (let [vertical? (= orientation :vertical)]
+    [:text {:x (if vertical? 19 (+ step 4))
+            :y (if vertical? (- step 8) (+ font-size 1))
+            :writing-mode (when vertical? "vertical-rl")
+            :fill "var(--font-color)"
+            :font-size font-size
+            :rotate (when vertical? 180)
+            :font-family "var(--font-mono"}
+     (if vertical? (reverse text) text)]))
 
-(defn base-lines
-  [orientation]
+(mx/defn base-lines
+  [orientation :- Direction]
   (let [[x y] @(rf/subscribe [::frame.s/viewbox])
         zoom @(rf/subscribe [::document.s/zoom])
         steps-coll @(rf/subscribe [::ruler.s/steps-coll orientation])
@@ -75,7 +81,7 @@
                          :adjusted-step adjusted-step
                          :size ruler-size
                          :starting-point 0}]
-                  [label vertical? adjusted-step font-size text]]
+                  [label orientation adjusted-step font-size text]]
 
                  (and (odd? i) (zero? (rem i 5)))
                  [line {:orientation orientation
@@ -90,8 +96,8 @@
                         :starting-point (/ ruler-size 1.3)}])))
            steps-coll))))
 
-(defn ruler
-  [{:keys [orientation]}]
+(mx/defn ruler
+  [orientation :- Direction]
   (let [ruler-size @(rf/subscribe [::app.s/ruler-size])]
     [:svg {:width  (if (= orientation :vertical) ruler-size "100%")
            :height (if (= orientation :vertical) "100%" ruler-size)}
@@ -99,8 +105,8 @@
      [base-lines orientation]
      [pointer orientation]]))
 
-(defn grid-lines
-  [orientation]
+(mx/defn grid-lines
+  [orientation :- Direction]
   (let [zoom @(rf/subscribe [::document.s/zoom])
         [x y width height] @(rf/subscribe [::frame.s/viewbox])
         [width height] (mat/add [width height] [x y])

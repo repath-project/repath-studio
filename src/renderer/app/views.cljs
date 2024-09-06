@@ -50,12 +50,12 @@
             :class "small hidden"
             :action #(rf/dispatch [::e/toggle-rulers-locked])}]]
          [:div.bg-primary.flex-1
-          [ruler.v/ruler {:orientation :horizontal}]]])]
+          [ruler.v/ruler :horizontal]]])]
      [:div.flex.flex-1.relative
       [:<>
        (when rulers?
          [:div.bg-primary.mr-px
-          [ruler.v/ruler {:orientation :vertical}]])]
+          [ruler.v/ruler :vertical]])]
       [:div.relative.grow.flex
        [frame.v/root]
        (if read-only?

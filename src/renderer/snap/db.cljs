@@ -1,7 +1,7 @@
 (ns renderer.snap.db
   (:require [renderer.utils.math :refer [Vec2D]]))
 
-(def Options
+(def SnapOption
   [:enum :centers :midpoints :corners :nodes])
 
 (def Snap
@@ -12,4 +12,4 @@
                                         [:point Vec2D]
                                         [:base-point Vec2D]
                                         [:dist-squared number?]]]
-   [:options {:default (set (rest Options))} [:set Options]]])
+   [:options {:default (set (rest SnapOption))} [:set SnapOption]]])

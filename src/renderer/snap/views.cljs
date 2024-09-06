@@ -2,7 +2,7 @@
   (:require
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    [re-frame.core :as rf]
-   [renderer.snap.db :as snap.db]
+   [renderer.snap.db :refer [SnapOption]]
    [renderer.snap.events :as-alias snap.e]
    [renderer.snap.subs :as-alias snap.s]
    [renderer.ui :as ui]))
@@ -27,7 +27,7 @@
         :alignOffset -5
         :position "popper"
         :class "menu-content rounded select-content"}
-       (for [option (rest snap.db/Options)]
+       (for [option (rest SnapOption)]
          ^{:key option}
          [:> DropdownMenu/CheckboxItem
           {:class "menu-checkbox-item inset"
