@@ -1,7 +1,6 @@
 (ns renderer.tool.transform.select
   (:require
    [clojure.core.matrix :as mat]
-   [clojure.string :as str]
    [renderer.app.effects :as app.fx]
    [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
@@ -11,8 +10,7 @@
    [renderer.tool.overlay :as overlay]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
-   [renderer.utils.pointer :as pointer]
-   [renderer.utils.units :as units]))
+   [renderer.utils.pointer :as pointer]))
 
 (derive :select ::tool.hierarchy/tool)
 
@@ -20,33 +18,27 @@
   []
   {:icon "pointer-alt"})
 
-(defmulti message (fn [_offset state] state))
+(defn message
+  [state]
+  (case state
+    :move
+    [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction, and "
+     [:span.shortcut-key "Alt"] " to clone."]
 
-(defmethod message :default
-  [_]
-  [:<>
-   [:div "Click or click and drag to select. "]
-   [:div
-    "Hold " [:span.shortcut-key "⇧"] " to add or remove elements to selection and "
-    [:span.shortcut-key "Alt"] " while dragging to select intersecting elements."]])
+    :clone
+    [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction. or release "
+     [:span.shortcut-key "Alt"] " to move."]
 
-(defmethod message :move
-  [offset]
-  [:<>
-   [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction, and " [:span.shortcut-key "Alt"] " to clone."]
-   [:div "Moving by [" (str/join " " (mapv units/->fixed offset)) "]."]])
+    :scale
+    [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions, "
+     [:span.shortcut-key "⇧"] " to scale in place, " [:span.shortcut-key "Alt"] " to also scale children."]
 
-(defmethod message :clone
-  [offset]
-  [:<>
-   [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction. or release " [:span.shortcut-key "Alt"] " to move."]
-   [:div "Cloning to [" (str/join " " (mapv units/->fixed offset)) "]."]])
-
-(defmethod message :scale
-  [ratio]
-  [:<>
-   [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions, " [:span.shortcut-key "⇧"] " to scale in place, " [:span.shortcut-key "Alt"] " to also scale children."]
-   [:div "Scaling by [" (str/join " " (mapv units/->fixed (distinct ratio))) "]."]])
+    :default
+    [:<>
+     [:div "Click or click and drag to select. "]
+     [:div
+      "Hold " [:span.shortcut-key "⇧"] " to add or remove elements to selection and "
+      [:span.shortcut-key "Alt"] " while dragging to select intersecting elements."]]))
 
 (defn hovered?
   [db el intersecting?]
@@ -125,7 +117,7 @@
   (-> db
       (app.h/set-state :default)
       (app.h/set-cursor "default")
-      (app.h/set-message (message nil :default))))
+      (app.h/set-message (message :default))))
 
 (defmethod tool.hierarchy/deactivate :select
   [db]
@@ -198,7 +190,7 @@
         ratio (mapv #(max 0 %) ratio)]
     (-> db
         (assoc :pivot-point pivot-point)
-        (app.h/set-message (message ratio :scale))
+        (app.h/set-message (message :scale))
         (element.h/scale ratio pivot-point recur?))))
 
 (defn select-element
@@ -219,7 +211,7 @@
         alt-key? (pointer/alt? e)
         db (-> db
                (element.h/clear-ignored)
-               (app.h/set-message (message offset state)))]
+               (app.h/set-message (message state)))]
     (case state
       :select
       (-> db
@@ -273,4 +265,4 @@
       (app.h/set-state :default)
       (element.h/clear-hovered)
       (dissoc :clicked-element :pivot-point)
-      (app.h/set-message (message nil :default))))
+      (app.h/set-message (message :default))))
