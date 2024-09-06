@@ -50,17 +50,17 @@
    [:drag? {:optional true} boolean?]
    [:zoom-sensitivity {:default 0.75} [:and number? pos?]]
    [:state {:default :default} keyword?]
-   [:grid-visible? {:default false :persisted true} boolean?]
-   [:rulers-visible? {:default true :persisted true} boolean?]
-   [:snap {:persisted true} Snap]
-   [:active-document {:optional true :persisted true} [:maybe uuid?]]
+   [:grid-visible? {:default false :persist true} boolean?]
+   [:rulers-visible? {:default true :persist true} boolean?]
+   [:snap {:persist true} Snap]
+   [:active-document {:optional true :persist true} [:maybe uuid?]]
    [:cursor {:default "default"} string?]
    [:dom-rect {:optional true} DomRect]
    [:rulers-locked? {:default false} boolean?]
    [:dialogs {:default []} [:vector Dialog]]
-   [:documents {:default {} :persisted true} [:map-of uuid? Document]]
-   [:document-tabs {:default [] :persisted true} [:vector uuid?]]
-   [:recent {:max 10 :default [] :persisted true} [:vector string?]]
+   [:documents {:default {} :persist true} [:map-of uuid? Document]]
+   [:document-tabs {:default [] :persist true} [:vector uuid?]]
+   [:recent {:max 10 :default [] :persist true} [:vector string?]]
    [:drag-threshold {:default 1} number?]
    [:ruler-size {:default 23} number?]
    [:system-fonts {:optional true} vector?]
@@ -70,14 +70,14 @@
    [:backdrop? {:default false} boolean?]
    [:loading? {:default false} boolean?]
    [:explanation {:optional true} string?]
-   [:lang {:default :asds :persited true} keyword?]
+   [:lang {:default :asds :persist true} keyword?]
    [:repl-mode {:default :cljs} keyword?]
    [:worker {:default {:tasks {}}} [:map [:tasks map?]]]
    [:window Window]
-   [:theme {:persisted true} Theme]
+   [:theme {:persist true} Theme]
    [:timeline Timeline]
-   [:panels {:persisted true} Panels]
-   [:version {:optional true :persisted true} string?]
+   [:panels {:persist true} Panels]
+   [:version {:optional true :persist true} string?]
    [:fx {:default []} vector?]
    [:pivot-point {:optional true} Vec2D]
    [:clicked-element {:optional true} [:or Element Handle]]
@@ -98,7 +98,7 @@
   "Top level keys that should be persisted to lcoal storage."
   (->> App
        (m/children)
-       (filter (fn [[_key props]] (:persisted props)))
+       (filter (fn [[_key props]] (:persist props)))
        (map first)))
 
 
