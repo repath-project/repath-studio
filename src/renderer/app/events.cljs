@@ -3,7 +3,6 @@
    [akiroz.re-frame.storage :as rf.storage]
    [config :as config]
    [i18n :as i18n]
-   [malli.error :as me]
    [platform :as platform]
    [re-frame.core :as rf]
    [renderer.app.db :as db]
@@ -12,8 +11,6 @@
    [renderer.frame.handlers :as frame.h]
    [renderer.history.handlers :as history.h]
    [renderer.notification.events :as-alias notification.e]
-   [renderer.notification.handlers :as notification.h]
-   [renderer.notification.views :as notification.v]
    [renderer.window.effects :as-alias window.fx]))
 
 (def custom-fx
@@ -42,9 +39,7 @@
    (let [merged (merge db store)]
      (if (db/valid? merged)
        {:db merged}
-       {:db (notification.h/add db [notification.v/spec-failed
-                                    "Invalid local db"
-                                    (-> merged db/explain me/humanize str)])
+       {:db db
         ::fx/local-storage-clear nil}))))
 
 (rf/reg-event-fx
