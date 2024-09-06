@@ -19,6 +19,8 @@
   [db]
   (-> db
       (assoc :cursor "crosshair")
+      (dissoc :drag? :pointer-offset :clicked-element)
+      (element.h/clear-temp)
       (app.h/set-message "Click and drag to create an element.")))
 
 (defmethod tool.hierarchy/drag-start ::tool.hierarchy/renderable

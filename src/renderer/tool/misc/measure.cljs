@@ -22,10 +22,6 @@
       (assoc :cursor "crosshair")
       (handlers/set-message  "Click and drag to measure a distance.")))
 
-(defmethod tool.hierarchy/deactivate :measure
-  [db]
-  (element.h/clear-temp db))
-
 (defmethod tool.hierarchy/pointer-up :measure
   [db]
   (element.h/clear-temp db))
