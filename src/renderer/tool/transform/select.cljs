@@ -53,7 +53,7 @@
 
     :default
     [:<>
-     [:div "Click on an element or click and drag to select an area."]
+     [:div "Click to select an element or click and drag to select by area."]
      [:div
       "Hold " [:span.shortcut-key "⇧"] " to add or remove elements to selection."]]))
 
