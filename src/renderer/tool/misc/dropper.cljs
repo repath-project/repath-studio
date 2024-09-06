@@ -39,8 +39,9 @@
 
 (rf/reg-event-fx
  ::display-error-and-deactivate
- (fn [_ [_ error]]
+ (fn [_ [_ _error]]
    {:fx [[:dispatch [::app.e/set-tool :select]]
-         [:dispatch [::notification.e/add [:div
-                                           [:h2.pb-4.font-bold "EyeDropper cannot be activated."]
-                                           [:div.text-error (str error)]]]]]}))
+         ;; REVIEW: Canceling also returns an error.
+         #_[:dispatch [::notification.e/add [:div
+                                             [:h2.pb-4.font-bold "EyeDropper cannot be activated."]
+                                             [:div.text-error (str error)]]]]]}))
