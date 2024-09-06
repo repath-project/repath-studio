@@ -55,15 +55,12 @@
 (mx/defn pan-to-bounds
   [{:keys [active-document dom-rect] :as db}, bounds :- Bounds]
   (let [zoom (get-in db [:documents active-document :zoom])
+        rect-dimentions [(:width dom-rect) (:height dom-rect)]
         [x1 y1] bounds
-        pan (mat/add
-             (mat/div
-              (mat/sub
-               (utils.bounds/->dimensions bounds)
-               (mat/div [(:width dom-rect) (:height dom-rect)]
-                        zoom))
-              2)
-             [x1 y1])]
+        pan (-> (utils.bounds/->dimensions bounds)
+                (mat/sub (mat/div rect-dimentions zoom))
+                (mat/div 2)
+                (mat/add [x1 y1]))]
     (assoc-in db [:documents active-document :pan] pan)))
 
 (mx/defn focus-bounds

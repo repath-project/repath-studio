@@ -479,13 +479,6 @@
                                                                                                                    :on-pointer-down-outside :fn,
                                                                                                                    :on-interact-outside :fn}}}}],
                                                                                        :ret :any}}}},
-                                        renderer.ruler.subs {foo {:arities {2 {:args [[:seqable
-                                                                                       :seqable
-                                                                                       :seqable
-                                                                                       :seqable
-                                                                                       :seqable]
-                                                                                      [:seqable :seqable :seqable]],
-                                                                               :ret :any}}}},
                                         renderer.document.views {close-button {:arities {2 {:args [:any :boolean],
                                                                                             :ret :any}}},
                                                                  context-menu {:arities {1 {:args [:any], :ret :any}}},
@@ -497,7 +490,9 @@
                                                                                                    :ret :map,
                                                                                                    :min-arity 1}}},
                                                             remove-nils {:arities {1 {:args [:map], :ret :map}}}},
-                                        renderer.snap.handlers {snap-to-offset {:arities {4 {:args [:any
+                                        renderer.snap.handlers {toggle-option {:arities {2 {:args [:any :keyword],
+                                                                                            :ret :any}}},
+                                                                snap-to-offset {:arities {4 {:args [:any
                                                                                                     :fn
                                                                                                     :seqable
                                                                                                     :any],
@@ -512,8 +507,8 @@
                                                                                          :string],
                                                                                   :ret :any}}},
                                                               base-lines {:arities {1 {:args [:keyword], :ret :any}}},
-                                                              grid-lines {:arities {1 {:args [:keyword], :ret :any}}},
-                                                              ruler {:arities {1 {:args [:keyword], :ret :any}}}},
+                                                              ruler {:arities {1 {:args [:keyword], :ret :any}}},
+                                                              grid-lines {:arities {1 {:args [:keyword], :ret :any}}}},
                                         renderer.notification.views {unavailable-feature {:arities {2 {:args [:string
                                                                                                               :string],
                                                                                                        :ret :any}}},

@@ -278,7 +278,7 @@
 
 (rf/reg-event-db
  ::animate
- [(finalize #(-> % second name))]
+ [(finalize (comp str/capitalize name second))]
  (fn [db [_ tag attrs]]
    (h/animate db tag attrs)))
 
