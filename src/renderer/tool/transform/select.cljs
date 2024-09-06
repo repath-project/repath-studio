@@ -1,8 +1,10 @@
 (ns renderer.tool.transform.select
   (:require
    [clojure.core.matrix :as mat]
+   [malli.experimental :as mx]
    [renderer.app.effects :as app.fx]
    [renderer.app.handlers :as app.h]
+   [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.h]
    [renderer.history.handlers :as history.h]
    [renderer.snap.handlers :as snap.h]
@@ -10,7 +12,19 @@
    [renderer.tool.overlay :as overlay]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
+   [renderer.utils.hiccup :refer [Hiccup]]
+   [renderer.utils.math :refer [Vec2D]]
    [renderer.utils.pointer :as pointer]))
+
+(def State [:enum :default :move :clone :scale])
+
+(def ScaleHandle [:enum
+                  :middle-right
+                  :middle-left
+                  :top-middle :bottom-middle
+                  :top-right :top-left
+                  :bottom-right
+                  :bottom-left])
 
 (derive :select ::tool.hierarchy/tool)
 
@@ -18,8 +32,8 @@
   []
   {:icon "pointer-alt"})
 
-(defn message
-  [state]
+(mx/defn message :- Hiccup
+  [state :- State]
   (case state
     :move
     [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction, and "
@@ -33,15 +47,18 @@
     [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions, "
      [:span.shortcut-key "⇧"] " to scale in place, " [:span.shortcut-key "Alt"] " to also scale children."]
 
+    :select
+    [:div
+     "Hold " [:span.shortcut-key "Alt"] " while dragging to select intersecting elements."]
+
     :default
     [:<>
-     [:div "Click or click and drag to select. "]
+     [:div "Click on an element or click and drag to select an area."]
      [:div
-      "Hold " [:span.shortcut-key "⇧"] " to add or remove elements to selection and "
-      [:span.shortcut-key "Alt"] " while dragging to select intersecting elements."]]))
+      "Hold " [:span.shortcut-key "⇧"] " to add or remove elements to selection."]]))
 
-(defn hovered?
-  [db el intersecting?]
+(mx/defn hovered? :- boolean?
+  [db, el :- Element, intersecting? :- boolean?]
   (let [{{:keys [x y width height]} :attrs} (element.h/get-temp db)
         selection-bounds [x y (+ x width) (+ y height)]]
     (when-let [el-bounds (:bounds el)]
@@ -49,8 +66,8 @@
         (bounds/intersect? el-bounds selection-bounds)
         (bounds/contained? el-bounds selection-bounds)))))
 
-(defn reduce-by-area
-  [db intersecting? f]
+(mx/defn reduce-by-area
+  [db, intersecting? :- boolean?, f :- fn?]
   (reduce (fn [db el]
             (cond-> db
               (hovered? db el intersecting?)
@@ -143,8 +160,8 @@
       :scale (app.h/set-state db :scale)
       (app.h/set-state db :move))))
 
-(defn lock-ratio
-  [[x y] handle]
+(mx/defn lock-ratio :- Vec2D
+  [[x y] :- Vec2D, handle :- ScaleHandle]
   (let [[x y] (condp contains? handle
                 #{:middle-right :middle-left} [x x]
                 #{:top-middle :bottom-middle} [y y]
@@ -152,7 +169,7 @@
         ratio (if (< (abs x) (abs y)) x y)]
     [ratio ratio]))
 
-(defn offset-scale
+(mx/defn offset-scale
   "Converts the x/y pointer offset to a scale ratio and a pivot point,
    to decouple this from the scaling method of the elements.
 
@@ -166,7 +183,7 @@
    |      y          ↖   │
    |      |            ↖ │
    □----------□--------- ■ :bottom-right (active handle)"
-  [db [x y] lock-ratio? in-place? recur?]
+  [db, [x y] :- Vec2D, lock-ratio? :- boolean?, in-place? :- boolean?, recur? :- boolean?]
   (let [handle (-> db :clicked-element :id)
         bounds (element.h/bounds db)
         dimensions (bounds/->dimensions bounds)
@@ -193,8 +210,8 @@
         (app.h/set-message (message :scale))
         (element.h/scale ratio pivot-point recur?))))
 
-(defn select-element
-  [db multi?]
+(mx/defn select-element
+  [db, multi? :- boolean?]
   (cond-> db
     (and (:clicked-element db)
          (not (-> db :clicked-element :selected?))

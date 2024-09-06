@@ -39,6 +39,8 @@
   [:fn {:error/fn (fn [{:keys [value]} _] (str value ", is not a supported tool"))}
    tool.hierarchy/tool?])
 
+(def State [:enum :default :move :clone :scale :select :create :edit])
+
 (def App
   [:map {:closed true}
    [:tool {:default :select} Tool]
@@ -49,7 +51,7 @@
    [:adjusted-pointer-offset {:optional true} Vec2D]
    [:drag? {:optional true} boolean?]
    [:zoom-sensitivity {:default 0.75} [:and number? pos?]]
-   [:state {:default :default} keyword?]
+   [:state {:default :default} State]
    [:grid-visible? {:default false :persist true} boolean?]
    [:rulers-visible? {:default true :persist true} boolean?]
    [:snap {:persist true} Snap]

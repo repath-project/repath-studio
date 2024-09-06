@@ -465,6 +465,40 @@
                                                                                    2 {:args [:any :int], :ret :any}}},
                                                                    preview {:arities {2 {:args [:any :any], :ret :any}}},
                                                                    position {:arities {1 {:args [:any], :ret :any}}}},
+                                        renderer.tool.transform.select {message {:arities {1 {:args [:keyword],
+                                                                                              :ret :any}}},
+                                                                        hovered? {:arities {3 {:args [:any
+                                                                                                      {:op :keys,
+                                                                                                       :opt {:children :vector,
+                                                                                                             :visible? :boolean,
+                                                                                                             :parent :any,
+                                                                                                             :content :string,
+                                                                                                             :type :any,
+                                                                                                             :bounds :seqable,
+                                                                                                             :label :string,
+                                                                                                             :id :any,
+                                                                                                             :locked? :boolean,
+                                                                                                             :attrs :map,
+                                                                                                             :selected? :boolean},
+                                                                                                       :req {:tag :any}}
+                                                                                                      :boolean],
+                                                                                               :ret :boolean}}},
+                                                                        reduce-by-area {:arities {3 {:args [:any
+                                                                                                            :boolean
+                                                                                                            :fn],
+                                                                                                     :ret :any}}},
+                                                                        lock-ratio {:arities {2 {:args [:seqable
+                                                                                                        :keyword],
+                                                                                                 :ret :seqable}}},
+                                                                        offset-scale {:arities {5 {:args [:any
+                                                                                                          :seqable
+                                                                                                          :boolean
+                                                                                                          :boolean
+                                                                                                          :boolean],
+                                                                                                   :ret :any}}},
+                                                                        select-element {:arities {2 {:args [:any
+                                                                                                            :boolean],
+                                                                                                     :ret :any}}}},
                                         renderer.dialog.handlers {create {:arities {2 {:args [:any
                                                                                               {:op :keys,
                                                                                                :opt {:title :any,
