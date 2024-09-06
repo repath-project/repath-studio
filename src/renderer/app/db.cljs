@@ -70,7 +70,7 @@
    [:backdrop? {:default false} boolean?]
    [:loading? {:default false} boolean?]
    [:explanation {:optional true} string?]
-   [:lang {:default :asds :persist true} keyword?]
+   [:lang {:default :en-Us :persist true} keyword?]
    [:repl-mode {:default :cljs} keyword?]
    [:worker {:default {:tasks {}}} [:map [:tasks map?]]]
    [:window Window]
@@ -95,10 +95,8 @@
 (def default (m/decode App {:version config/version} mt/default-value-transformer))
 
 (def persistent-keys
-  "Top level keys that should be persisted to lcoal storage."
+  "Top level keys that should be persisted to local storage."
   (->> App
        (m/children)
-       (filter (fn [[_key props]] (:persist props)))
+       (filter (comp :persist second))
        (map first)))
-
-

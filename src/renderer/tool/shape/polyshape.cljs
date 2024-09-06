@@ -67,7 +67,7 @@
   (-> db
       (update-in [:documents active-document :temp-element :attrs :points]
                  #(str/join " " (apply concat (drop-last 2 (utils.attr/points->vec %)))))
-      element.h/add
+      (element.h/add)
       (app.h/set-tool :select)
       (app.h/set-state :default)
       (app.h/explain "Create " (name (:tool db)))))
@@ -77,7 +77,7 @@
   (update-in el
              [:attrs :points]
              #(->> %
-                   utils.attr/points->vec
+                   (utils.attr/points->vec)
                    (reduce (fn [points point]
                              (conj points
                                    (units/transform (first point) + x)

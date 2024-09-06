@@ -10,6 +10,7 @@
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.overlay :as overlay]
    [renderer.utils.bounds :as bounds]
+   [renderer.utils.element :as element]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
 
@@ -71,7 +72,9 @@
 
     :always
     (-> (element.h/clear-hovered)
-        (assoc :cursor (if element "move" "default")))
+        (assoc :cursor (if (and element (not (element/root? element)))
+                         "move"
+                         "default")))
 
     (:id element)
     (element.h/hover (:id element))))

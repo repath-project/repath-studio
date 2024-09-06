@@ -11,4 +11,4 @@
 (defmethod hierarchy/update-attr :font-size
   [el attribute f & more]
   (let [font-size (js/parseFloat (or (-> el :attrs attribute) 16))]
-    (assoc-in el [:attrs attribute] (apply f font-size more))))
+    (assoc-in el [:attrs attribute] (str (apply f font-size more)))))

@@ -176,12 +176,12 @@
         options (->> [:seed :extraPoints :randomness :size]
                      (select-keys attrs)
                      (reduce (fn [options [k v]] (assoc options k (int v))) {})
-                     clj->js)]
+                     (clj->js))]
     (-> blobs
         (.svgPath options)
-        svgpath
+        (svgpath)
         (.translate x y)
-        .toString)))
+        (.toString))))
 
 (defmethod tool.hierarchy/edit :blob
   [element [x y] handle]
@@ -207,5 +207,4 @@
        :x x2
        :y y2
        :id :size}]
-     [overlay/times
-      [x1 y1]]]))
+     [overlay/times [x1 y1]]]))

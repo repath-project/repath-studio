@@ -90,8 +90,7 @@
                                     :fill stroke}})))
 
 (defmethod tool.hierarchy/drag :brush
-  [{:keys [active-document
-           adjusted-pointer-pos] :as db} {:keys [pressure]}]
+  [{:keys [active-document adjusted-pointer-pos] :as db} {:keys [pressure]}]
   (let [stroke (get-in db [:documents active-document :stroke])
         point (conj adjusted-pointer-pos pressure)]
     (if (get-in db [:documents active-document :temp-element :attrs :points])

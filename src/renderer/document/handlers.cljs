@@ -1,9 +1,11 @@
 (ns renderer.document.handlers
   (:require
+   [malli.core :as m]
    [malli.error :as me]
    [malli.experimental :as mx]
+   [malli.transform :as mt]
    [renderer.document.db :as db :refer [Document PersistedDocument]]
-   [renderer.element.db :as element.db]
+   [renderer.element.db :refer [Attr]]
    [renderer.element.handlers :as element.h]
    [renderer.frame.handlers :as frame.h]
    [renderer.history.handlers :as history.h]
@@ -18,12 +20,11 @@
   ([db, id :- uuid?]
    (let [document (-> db
                       (get-in [:documents id])
-                      (select-keys [:elements :path :id])
                       (assoc :save (history.h/position db)
                              :version (:version db)))]
 
      (reduce #(update-in %1 [:elements %2] dissoc :selected?)
-             document
+             (m/decode PersistedDocument document mt/strip-extra-keys-transformer)
              (keys (:elements document))))))
 
 (mx/defn close
@@ -110,7 +111,7 @@
 (mx/defn set-global-attr
   [{:keys [active-document] :as db},
    k :- keyword?,
-   v :- element.db/Attr]
+   v :- Attr]
   (-> db
       (assoc-in [:documents active-document k] v)
       (element.h/set-attr k v)))
