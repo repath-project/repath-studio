@@ -38,7 +38,7 @@ jobs:
       - name: Install clojure tools
         uses: DeLaGuardo/setup-clojure@12.5
         with:
-          cli: 1.11.4.1474
+          cli: 1.12.0.1479
           clj-kondo: 2024.08.29
 
       - name: Lint
