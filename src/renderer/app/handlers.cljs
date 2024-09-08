@@ -42,25 +42,23 @@
   (let [adjusted-pointer-pos (frame.h/adjust-pointer-pos db pointer-pos)]
     (case (:type e)
       :pointermove
-      (if (= buttons :right)
-        db
-        (-> (if pointer-offset
-              (if (pointer/significant-drag? pointer-pos pointer-offset drag-threshold)
-                (cond-> db
-                  (not= tool :pan)
-                  (frame.h/pan-out-of-canvas dom-rect pointer-pos pointer-offset)
+      (-> (if pointer-offset
+            (if (pointer/significant-drag? pointer-pos pointer-offset drag-threshold)
+              (cond-> db
+                (not= tool :pan)
+                (frame.h/pan-out-of-canvas dom-rect pointer-pos pointer-offset)
 
-                  (not drag?)
-                  (-> (tool.hierarchy/drag-start e)
-                      (add-fx [::fx/set-pointer-capture (:pointer-id e)])
-                      (assoc :drag? true))
+                (not drag?)
+                (-> (tool.hierarchy/drag-start e)
+                    (add-fx [::fx/set-pointer-capture (:pointer-id e)])
+                    (assoc :drag? true))
 
-                  :always
-                  (tool.hierarchy/drag e))
-                db)
-              (tool.hierarchy/pointer-move db e))
-            (assoc :pointer-pos pointer-pos
-                   :adjusted-pointer-pos adjusted-pointer-pos)))
+                :always
+                (tool.hierarchy/drag e))
+              db)
+            (tool.hierarchy/pointer-move db e))
+          (assoc :pointer-pos pointer-pos
+                 :adjusted-pointer-pos adjusted-pointer-pos))
 
       :pointerdown
       (cond-> db
@@ -68,10 +66,12 @@
         (-> (assoc :primary-tool tool)
             (set-tool :pan))
 
+        (not= buttons :right)
+        (assoc :pointer-offset pointer-pos
+               :adjusted-pointer-offset adjusted-pointer-pos)
+
         :always
-        (-> (tool.hierarchy/pointer-down e)
-            (assoc :pointer-offset pointer-pos
-                   :adjusted-pointer-offset adjusted-pointer-pos)))
+        (tool.hierarchy/pointer-down e))
 
       :pointerup
       (cond-> (if drag?

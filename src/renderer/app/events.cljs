@@ -126,12 +126,9 @@
  (fn [{:keys [db]}
       [_ {:as e :keys [data-transfer pointer-pos]}]]
    {:db (h/pointer-handler db e)
-    :fx [(case (:type e)
-           :drop
+    :fx [(when (= (:type e) :drop)
            [::fx/data-transfer [(frame.h/adjust-pointer-pos db pointer-pos)
-                                data-transfer]]
-
-           nil)]}))
+                                data-transfer]])]}))
 
 (rf/reg-event-db
  ::keyboard-event
