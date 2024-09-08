@@ -2,6 +2,7 @@
   (:require
    [malli.experimental :as mx]
    [renderer.app.db :refer [Tool]]
+   [renderer.app.effects :as-alias fx]
    [renderer.app.events :as-alias e]
    [renderer.frame.handlers :as frame.h]
    [renderer.tool.hierarchy :as tool.hierarchy]
@@ -37,7 +38,7 @@
 
 (defn pointer-handler
   [{:as db :keys [pointer-offset tool dom-rect drag? primary-tool drag-threshold]}
-   {:as e :keys [button buttons modifiers pointer-pos delta element]}]
+   {:as e :keys [button buttons modifiers pointer-pos delta]}]
   (let [adjusted-pointer-pos (frame.h/adjust-pointer-pos db pointer-pos)]
     (case (:type e)
       :pointermove
@@ -51,6 +52,7 @@
 
                   (not drag?)
                   (-> (tool.hierarchy/drag-start e)
+                      (add-fx [::fx/set-pointer-capture (:pointer-id e)])
                       (assoc :drag? true))
 
                   :always
@@ -66,9 +68,6 @@
         (-> (assoc :primary-tool tool)
             (set-tool :pan))
 
-        (and (= button :right) (not= (:id element) :bounding-box))
-        (tool.hierarchy/pointer-up e)
-
         :always
         (-> (tool.hierarchy/pointer-down e)
             (assoc :pointer-offset pointer-pos
@@ -76,7 +75,8 @@
 
       :pointerup
       (cond-> (if drag?
-                (tool.hierarchy/drag-end db e)
+                (-> (tool.hierarchy/drag-end db e)
+                    (add-fx [::fx/release-pointer-capture (:pointer-id e)]))
                 (cond-> db (not= button :right) (tool.hierarchy/pointer-up e)))
         (and primary-tool (= button :middle))
         (-> (set-tool primary-tool)

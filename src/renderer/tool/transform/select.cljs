@@ -2,7 +2,6 @@
   (:require
    [clojure.core.matrix :as mat]
    [malli.experimental :as mx]
-   [renderer.app.effects :as app.fx]
    [renderer.app.handlers :as app.h]
    [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.h]
@@ -103,23 +102,23 @@
     (element.h/clear-ignored)))
 
 (defmethod tool.hierarchy/pointer-down :select
-  [db {:keys [element]}]
+  [db {:keys [button element] :as e}]
   (cond-> db
     element
     (assoc :clicked-element element)
+
+    (and (= button :right) (not= (:id element) :bounding-box))
+    (element.h/select (:id element) (pointer/shift? e))
 
     :always
     (element.h/ignore :bounding-box)))
 
 (defmethod tool.hierarchy/pointer-up :select
   [db {:keys [element] :as e}]
-  (if-not (and (= (:button e) :right)
-               (:selected? element))
-    (-> db
-        (dissoc :clicked-element)
-        (element.h/select (:id element) (pointer/shift? e))
-        (app.h/explain "Select element"))
-    (dissoc db :clicked-element)))
+  (-> db
+      (dissoc :clicked-element)
+      (element.h/select (:id element) (pointer/shift? e))
+      (app.h/explain (if (:selected? element) "Deselect element" "Select element"))))
 
 (defmethod tool.hierarchy/double-click :select
   [db {:keys [element]}]
@@ -149,16 +148,11 @@
       (not intersecting?) (assoc-in [:attrs :fill] "transparent"))))
 
 (defmethod tool.hierarchy/drag-start :select
-  [db e]
-  "Releasing the pointer capture fixes an issue with touch devices.
-   Without this, the event will be dropped, althougn touch-action is set to none.
-
-   REVIEW: Requires further investigation."
-  (let [db (app.h/add-fx db [::app.fx/release-pointer-capture [(:target e) (:pointer-id e)]])]
-    (case (-> db :clicked-element :tag)
-      :canvas (app.h/set-state db :select)
-      :scale (app.h/set-state db :scale)
-      (app.h/set-state db :move))))
+  [db _e]
+  (case (-> db :clicked-element :tag)
+    :canvas (app.h/set-state db :select)
+    :scale (app.h/set-state db :scale)
+    (app.h/set-state db :move)))
 
 (mx/defn lock-ratio :- Vec2D
   [[x y] :- Vec2D, handle :- ScaleHandle]

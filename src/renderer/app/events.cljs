@@ -131,12 +131,6 @@
            [::fx/data-transfer [(frame.h/adjust-pointer-pos db pointer-pos)
                                 data-transfer]]
 
-           :pointerdown
-           [::fx/set-pointer-capture [(:target e) (:pointer-id e)]]
-
-           :pointerup
-           [::fx/release-pointer-capture [(:target e) (:pointer-id e)]]
-
            nil)]}))
 
 (rf/reg-event-db
