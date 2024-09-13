@@ -531,8 +531,12 @@
                                                                                                     :seqable
                                                                                                     :any],
                                                                                              :ret :any}}},
-                                                                snap-with {:arities {3 {:args [:any :fn :any],
-                                                                                        :ret :any}}}},
+                                                                snap-with {:arities {:varargs {:args [:any
+                                                                                                      :any
+                                                                                                      {:op :rest,
+                                                                                                       :spec :any}],
+                                                                                               :ret :any,
+                                                                                               :min-arity 2}}}},
                                         renderer.ruler.views {bounds-rect {:arities {1 {:args [:keyword], :ret :any}}},
                                                               pointer {:arities {1 {:args [:keyword], :ret :any}}},
                                                               label {:arities {4 {:args [:keyword

@@ -68,7 +68,7 @@
   (apply f db offset more))
 
 (mx/defn snap-with
-  [{:keys [snap] :as db}, f :- fn?, & more :- any?]
+  [{:keys [snap] :as db} f & more]
   (let [{:keys [point base-point] :as nearest-neighbor} (find-nearest-neighbor db)]
     (cond-> db
       :always
