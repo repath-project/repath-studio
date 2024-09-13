@@ -34,7 +34,7 @@
                          (edn/read-string)
                          (assoc :title (.-name file)
                                 :path (.-path file)))]
-        (rf/dispatch [::document.e/load [document]])))
+        (rf/dispatch [::document.e/load document])))
     (.readAsText reader file)))
 
 (defn open!

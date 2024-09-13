@@ -178,7 +178,7 @@
    (if platform/electron?
      {::window.fx/ipc-invoke {:channel "open-documents"
                               :data file-path
-                              :on-resolution ::load
+                              :on-resolution ::load-multiple
                               :formatter #(mapv edn/read-string %)}}
      {::fx/open nil})))
 
@@ -191,10 +191,15 @@
  ::load
  [(rf/inject-cofx ::app.fx/guid)
   (finalize "Load document")]
- (fn [{:keys [db guid]} [_ documents]]
-   {:db (->> documents
-             (reduce (partial-right h/load guid) db)
-             (h/center))}))
+ (fn [{:keys [db guid]} [_ document]]
+   {:db (-> db
+            (h/load document guid)
+            (h/center))}))
+
+(rf/reg-event-fx
+ ::load-multiple
+ (fn [_ [_ documents]]
+   {:fx (mapv #(vector :dispatch [::load %]) documents)}))
 
 (rf/reg-event-fx
  ::save
