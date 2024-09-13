@@ -123,8 +123,8 @@
    (->> keydown-rules
         :event-keys
         (filter #(= (first %) event))
-        first
-        rest)))
+        (first)
+        (rest))))
 
 (rf/reg-sub
  ::lang

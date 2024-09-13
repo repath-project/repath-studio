@@ -3,6 +3,7 @@
    [config :as config]
    [malli.core :as m]
    [malli.transform :as mt]
+   [i18n :as i18n]
    [renderer.dialog.db :refer [Dialog]]
    [renderer.document.db :refer [Document]]
    [renderer.element.db :refer [Element Handle]]
@@ -36,8 +37,12 @@
    [:left number?]])
 
 (def Tool
-  [:fn {:error/fn (fn [{:keys [value]} _] (str value ", is not a supported tool"))}
+  [:fn {:error/fn (fn [{:keys [value]} _] (str value " is not a supported tool"))}
    tool.hierarchy/tool?])
+
+(def Lang
+  [:fn {:error/fn (fn [{:keys [value]} _] (str value " is not a supported language"))}
+   i18n/lang?])
 
 (def State [:enum :default :move :clone :scale :select :create :edit])
 
@@ -72,7 +77,7 @@
    [:backdrop? {:default false} boolean?]
    [:loading? {:default false} boolean?]
    [:explanation {:optional true} string?]
-   [:lang {:default :en-Us :persist true} keyword?]
+   [:lang {:default :en-Us :persist true} Lang]
    [:repl-mode {:default :cljs} keyword?]
    [:worker {:default {:tasks {}}} [:map [:tasks map?]]]
    [:window Window]

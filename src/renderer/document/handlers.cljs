@@ -12,6 +12,7 @@
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
    [renderer.utils.compatibility :as compatibility]
+   [renderer.utils.math :refer [Vec2D]]
    [renderer.utils.vec :as vec]))
 
 (mx/defn save-format :- PersistedDocument
@@ -88,7 +89,7 @@
         (update :document-tabs #(vec/add % (inc active-index) id)))))
 
 (mx/defn create-canvas
-  [db, size :- [:maybe [:tuple number? number?]]]
+  [db, size :- [:maybe Vec2D]]
   (cond-> db
     :always
     (element.h/create {:tag :canvas
@@ -103,7 +104,7 @@
 (mx/defn create
   ([db, guid :- uuid?]
    (create db guid [595 842]))
-  ([db, guid :- uuid?, size :- [:tuple number? number?]]
+  ([db, guid :- uuid?, size :- Vec2D]
    (-> db
        (create-tab db/default guid)
        (create-canvas size))))

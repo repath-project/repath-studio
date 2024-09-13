@@ -12,6 +12,10 @@
   {:en-US (load-resource-at-compile-time "lang/en-US.edn")
    :el-GR (load-resource-at-compile-time "lang/el-GR.edn")})
 
+(defn lang?
+  [lang]
+  (contains? dictionary lang))
+
 (def opts {:dict dictionary})
 
 (defn t

@@ -79,7 +79,7 @@
  ::set-lang
  (fn [db [_ lang]]
    (cond-> db
-     (get i18n/dictionary lang)
+     (i18n/lang? lang)
      (assoc :lang lang))))
 
 (rf/reg-event-db
