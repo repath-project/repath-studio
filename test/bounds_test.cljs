@@ -24,14 +24,14 @@
       true (bounds/contained? [5 5 10 10] [0 0 20 20])
       false (bounds/contained? [0 0 10 10] [1 1 10 10]))))
 
-(deftest test-contain-point?
+(deftest test-contained-point?
   (testing "bounds contain point"
     (are [x y] (= x y)
-      true (bounds/contain-point? [0 0 10 10] [0 0])
-      true (bounds/contain-point? [0 0 10 10] [5 5])
-      true (bounds/contain-point? [0 0 10 10] [10 10])
-      false (bounds/contain-point? [0 0 10 10] [-5 5])
-      false (bounds/contain-point? [0 0 10 10] [5 -5]))))
+      true (bounds/contained-point? [0 0 10 10] [0 0])
+      true (bounds/contained-point? [0 0 10 10] [5 5])
+      true (bounds/contained-point? [0 0 10 10] [10 10])
+      false (bounds/contained-point? [0 0 10 10] [-5 5])
+      false (bounds/contained-point? [0 0 10 10] [5 -5]))))
 
 (deftest test-center
   (testing "center of bounds"

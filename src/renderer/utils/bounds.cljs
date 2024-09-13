@@ -54,7 +54,7 @@
        (< a-right b-right)
        (< a-bottom b-bottom)))
 
-(mx/defn contain-point? :- boolean?
+(mx/defn contained-point? :- boolean?
   "Tests whether the provided bounds contain a point."
   [[left top right bottom] :- Bounds, [x y] :- Vec2D]
   (and (<= left x)

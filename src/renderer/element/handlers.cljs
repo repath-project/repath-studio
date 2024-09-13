@@ -436,7 +436,7 @@
   (let [svgs (reverse (root-svgs db))
         pointer-pos (:adjusted-pointer-pos db)]
     (or
-     (some #(when (bounds/contain-point? (:bounds %) pointer-pos) %) svgs)
+     (some #(when (bounds/contained-point? (:bounds %) pointer-pos) %) svgs)
      (root db))))
 
 (defn translate

@@ -414,8 +414,8 @@
                                                                                         :ret :boolean}}},
                                                                contained? {:arities {2 {:args [:seqable :seqable],
                                                                                         :ret :boolean}}},
-                                                               contain-point? {:arities {2 {:args [:seqable :seqable],
-                                                                                            :ret :boolean}}}},
+                                                               contained-point? {:arities {2 {:args [:seqable :seqable],
+                                                                                              :ret :boolean}}}},
                                         renderer.history.handlers {finalize {:arities {1 {:args [:any], :ret :any}}},
                                                                    create-state {:arities {4 {:args [:any
                                                                                                      :int
