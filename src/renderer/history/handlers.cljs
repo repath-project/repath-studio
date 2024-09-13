@@ -43,7 +43,7 @@
 
 (defn undos?
   [active-history]
-  (boolean (previous-position active-history)))
+  (contains? (state active-history) :parent))
 
 (defn redos?
   [active-history]
