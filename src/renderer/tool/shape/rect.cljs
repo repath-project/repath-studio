@@ -2,6 +2,7 @@
   "https://www.w3.org/TR/SVG/shapes.html#RectElement"
   (:require
    [clojure.string :as str]
+   [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.pointer :as pointer]
@@ -37,9 +38,11 @@
                :height (if lock-ratio? (min width height) height)
                :fill fill
                :stroke stroke}]
-    (element.h/set-temp db {:type :element
-                            :tag :rect
-                            :attrs attrs})))
+    (-> db
+        (app.h/set-message [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions."])
+        (element.h/set-temp {:type :element
+                             :tag :rect
+                             :attrs attrs}))))
 
 (defmethod tool.hierarchy/path :rect
   [{{:keys [x y width height rx ry]} :attrs}]

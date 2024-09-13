@@ -3,6 +3,7 @@
   (:require
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
+   [renderer.app.handlers :as app.h]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.handlers :as element.h]
    [renderer.tool.hierarchy :as tool.hierarchy]
@@ -39,9 +40,11 @@
                :stroke stroke
                :rx (if lock-ratio? (min rx ry) rx)
                :ry (if lock-ratio? (min rx ry) ry)}]
-    (element.h/set-temp db {:type :element
-                            :tag :ellipse
-                            :attrs attrs})))
+    (-> db
+        (app.h/set-message [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions."])
+        (element.h/set-temp {:type :element
+                             :tag :ellipse
+                             :attrs attrs}))))
 
 (defmethod tool.hierarchy/translate :ellipse
   [el [x y]]
