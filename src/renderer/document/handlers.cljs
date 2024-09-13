@@ -140,6 +140,6 @@
 (mx/defn saved? :- boolean?
   [db, id :- uuid?]
   (let [document (get-in db [:documents id])]
-    (or (= (:save document) (get-in document [:history :position]))
-        (and (not (:save document))
-             (empty? (rest (get-in document [:history :states])))))))
+    (or (and (not (:save document))
+             (zero? (:index (history.h/state (history.h/history db)))))
+        (= (:save document) (get-in document [:history :position])))))

@@ -199,7 +199,7 @@
 (rf/reg-event-fx
  ::load-multiple
  (fn [_ [_ documents]]
-   {:fx (mapv #(vector :dispatch [::load %]) documents)}))
+   {:dispatch-n (mapv #(vector ::load %) documents)}))
 
 (rf/reg-event-fx
  ::save
