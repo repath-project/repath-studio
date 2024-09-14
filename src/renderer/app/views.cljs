@@ -196,7 +196,7 @@
           (when (seq recent)
             [:<> [:h2.mb-3.mt-8.text-2xl "Recent"]
 
-             (for [file-path (take 2 recent)]
+             (for [file-path (take 5 recent)]
                ^{:key file-path}
                [:div.flex.items-center.gap-x-2.flex-wrap
                 [ui/icon "folder"]
