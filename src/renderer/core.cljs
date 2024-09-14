@@ -115,7 +115,6 @@
   (rf/dispatch-sync [::theme.e/set-native-mode (theme.fx/native theme.fx/native-query)])
   (rf/dispatch-sync [::theme.e/add-native-listener])
   (rf/dispatch-sync [::theme.e/set-document-attr])
-  (rf/dispatch-sync [::app.e/set-tool :select])
   (rf/dispatch-sync [::app.e/set-mdn (js->clj mdn :keywordize-keys true)])
   (rf/dispatch-sync [::app.e/load-webref])
   (rf/dispatch-sync [::app.e/load-system-fonts])
