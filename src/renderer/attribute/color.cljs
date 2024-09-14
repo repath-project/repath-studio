@@ -13,11 +13,13 @@
 (derive :color ::color)
 
 (defmethod hierarchy/form-element [:default ::color]
-  [_ k v attrs]
+  [_ k v {:keys [disabled] :as attrs}]
   [:<>
    [v/form-input k v attrs]
    [:> Popover/Root {:modal true}
-    [:> Popover/Trigger {:as-child true}
+    [:> Popover/Trigger
+     {:as-child true
+      :disabled disabled}
      [:button.button.color-drip.ml-px.inline-block
       {:style {:flex "0 0 26px"
                :border "5px solid var(--bg-primary)"

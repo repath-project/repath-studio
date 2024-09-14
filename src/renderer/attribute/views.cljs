@@ -72,7 +72,7 @@
                        ::element.e/preview-attr) k new-v])))))
 
 (defn form-input
-  [k v {:keys [disabled? placeholder] :as attrs}]
+  [k v {:keys [disabled placeholder] :as attrs}]
   [:div.relative.flex.form-input.flex-1
    [:input (merge attrs
                   {:key v
@@ -81,7 +81,7 @@
                    :placeholder (if v placeholder "multiple")
                    :on-blur #(on-change-handler % k v)
                    :on-key-down #(keyb/input-key-down-handler % v on-change-handler k v)})]
-   (when-not (or (empty? (str v)) disabled?)
+   (when-not (or (empty? (str v)) disabled)
      [:button.button.ml-px.bg-primary.text-muted.absolute.h-full.right-0.clear-input-button.hover:bg-transparent
       {:style {:width "26px"}
        :on-pointer-down #(rf/dispatch [::element.e/remove-attr k])}
