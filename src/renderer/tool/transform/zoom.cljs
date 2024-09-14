@@ -14,14 +14,16 @@
   []
   {:icon "magnifier"})
 
+
+(defmethod tool.hierarchy/help [:zoom :default]
+  []
+  [:<>
+   [:div "Click or select an area to zoom in."]
+   [:div "Hold " [:span.shortcut-key "⇧"] " to zoom out."]])
+
 (defmethod tool.hierarchy/activate :zoom
   [db]
-  (-> db
-      (assoc :cursor "zoom-in")
-      (app.h/set-message
-       [:<>
-        [:div "Click or select an area to zoom in."]
-        [:div "Hold " [:span.shortcut-key "⇧"] " to zoom out."]])))
+  (assoc db :cursor "zoom-in"))
 
 (defmethod tool.hierarchy/key-down :zoom
   [db e]

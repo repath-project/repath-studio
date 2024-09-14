@@ -19,6 +19,10 @@
                  inside an SVG or HTML document."
    :attrs [:overflow]})
 
+(defmethod tool.hierarchy/help [:svg :create]
+  []
+  [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions."])
+
 (defmethod tool.hierarchy/drag :svg
   [{:keys [adjusted-pointer-pos adjusted-pointer-offset] :as db} e]
   (let [[offset-x offset-y] adjusted-pointer-offset

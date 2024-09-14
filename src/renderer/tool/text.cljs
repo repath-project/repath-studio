@@ -32,11 +32,13 @@
            :stroke-width
            :opacity]})
 
+(defmethod tool.hierarchy/help [:text :default]
+  []
+  "Click to enter your text.")
+
 (defmethod tool.hierarchy/activate :text
   [db]
-  (-> db
-      (assoc :cursor "text")
-      (app.h/set-message "Click to enter your text.")))
+  (assoc db :cursor "text"))
 
 (defmethod tool.hierarchy/pointer-up :text
   [{:keys [adjusted-pointer-offset] :as db} _e]

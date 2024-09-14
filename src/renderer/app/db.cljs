@@ -13,7 +13,6 @@
    [renderer.timeline.db :refer [Timeline]]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.bounds :refer [Bounds]]
-   [renderer.utils.hiccup :refer [Hiccup]]
    [renderer.utils.math :refer [Vec2D]]
    [renderer.window.db :refer [Window]]))
 
@@ -92,7 +91,6 @@
    [:copied-elements {:optional true} [:* Element]]
    [:mdn {:optional true} map?]
    [:webref-css {:optional true} map?]
-   [:message {:optional true} Hiccup]
    [:re-pressed.core/keydown {:optional true} any?]])
 
 (def valid? (m/validator App))

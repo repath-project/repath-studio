@@ -2,7 +2,6 @@
   (:require
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
-   [renderer.app.handlers :as handlers]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.handlers :as element.h]
    [renderer.tool.hierarchy :as tool.hierarchy]
@@ -16,11 +15,13 @@
   []
   {:icon "ruler-triangle"})
 
+(defmethod tool.hierarchy/help [:measure :default]
+  []
+  "Click and drag to measure a distance.")
+
 (defmethod tool.hierarchy/activate :measure
   [db]
-  (-> db
-      (assoc :cursor "crosshair")
-      (handlers/set-message  "Click and drag to measure a distance.")))
+  (assoc db :cursor "crosshair"))
 
 (defmethod tool.hierarchy/pointer-up :measure
   [db]

@@ -10,11 +10,14 @@
   []
   {:icon "fill"})
 
+
+(defmethod tool.hierarchy/help [:fill :default]
+  []
+  "Click on an element to fill.")
+
 (defmethod tool.hierarchy/activate :fill
   [db]
-  (-> db
-      (assoc :cursor "crosshair")
-      (app.h/set-message "Click on an element to fill.")))
+  (assoc db :cursor "crosshair"))
 
 (defmethod tool.hierarchy/translate :fill [])
 

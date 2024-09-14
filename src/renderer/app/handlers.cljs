@@ -6,7 +6,6 @@
    [renderer.app.events :as-alias e]
    [renderer.frame.handlers :as frame.h]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.hiccup :refer [Hiccup]]
    [renderer.utils.pointer :as pointer]))
 
 (mx/defn set-state
@@ -16,10 +15,6 @@
 (mx/defn set-cursor
   [db, cursor :- string?]
   (assoc db :cursor cursor))
-
-(mx/defn set-message
-  [db, message :- Hiccup]
-  (assoc db :message message))
 
 (defn explain
   [db & more]

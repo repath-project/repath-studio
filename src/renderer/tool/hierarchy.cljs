@@ -32,6 +32,7 @@
 (defmulti activate :tool)
 (defmulti deactivate :tool)
 (defmulti properties keyword)
+(defmulti help (fn [tool state] [tool state]))
 
 (defmethod pointer-down :default [db _e] db)
 (defmethod pointer-up :default [db _e] db)
@@ -45,6 +46,7 @@
 (defmethod activate :default [db] (assoc db :cursor "default"))
 (defmethod deactivate :default [db] (assoc db :cursor "default"))
 (defmethod properties :default [])
+(defmethod help :default [_tool _state] "")
 
 ;; Element multimethods.
 ;; The context of the element methods should be limited to the element.

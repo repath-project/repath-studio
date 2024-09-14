@@ -3,7 +3,6 @@
   (:require
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
-   [renderer.app.handlers :as app.h]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.handlers :as element.h]
    [renderer.tool.hierarchy :as tool.hierarchy]
@@ -26,6 +25,10 @@
            :stroke
            :stroke-dasharray]})
 
+(defmethod tool.hierarchy/help [:ellipse :create]
+  []
+  [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions."])
+
 (defmethod tool.hierarchy/drag :ellipse
   [{:keys [adjusted-pointer-offset active-document adjusted-pointer-pos] :as db} e]
   (let [{:keys [stroke fill]} (get-in db [:documents active-document])
@@ -40,11 +43,9 @@
                :stroke stroke
                :rx (if lock-ratio? (min rx ry) rx)
                :ry (if lock-ratio? (min rx ry) ry)}]
-    (-> db
-        (app.h/set-message [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions."])
-        (element.h/set-temp {:type :element
-                             :tag :ellipse
-                             :attrs attrs}))))
+    (element.h/set-temp db {:type :element
+                            :tag :ellipse
+                            :attrs attrs})))
 
 (defmethod tool.hierarchy/translate :ellipse
   [el [x y]]

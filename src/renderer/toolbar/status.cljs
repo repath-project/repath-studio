@@ -110,7 +110,7 @@
 (defn root []
   (let [zoom @(rf/subscribe [::document.s/zoom])
         timeline? @(rf/subscribe [::app.s/panel-visible? :timeline])
-        message @(rf/subscribe [::app.s/message])
+        help-message @(rf/subscribe [::app.s/help])
         loading? @(rf/subscribe [::worker.s/loading?])]
     [:<>
      [:div.toolbar.bg-primary.mt-px
@@ -118,7 +118,7 @@
       [:div.grow
        [:div.px-1.hidden.2xl:flex.gap-1.flex-wrap.leading-none.truncate
         {:style {:max-height "33px"}}
-        message]]
+        help-message]]
       (when loading?
         [:span.icon-button.relative
          [ui/icon "spinner" {:class "loading"}]])

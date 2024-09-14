@@ -15,13 +15,16 @@
    [renderer.utils.element :as element]
    [renderer.utils.pointer :as pointer]))
 
+(defmethod tool.hierarchy/help [::tool.hierarchy/renderable :default]
+  []
+  "Click and drag to create an element.")
+
 (defmethod tool.hierarchy/activate ::tool.hierarchy/renderable
   [db]
   (-> db
       (assoc :cursor "crosshair")
       (dissoc :drag? :pointer-offset :clicked-element)
-      (element.h/clear-temp)
-      (app.h/set-message "Click and drag to create an element.")))
+      (element.h/clear-temp)))
 
 (defmethod tool.hierarchy/drag-start ::tool.hierarchy/renderable
   [db]

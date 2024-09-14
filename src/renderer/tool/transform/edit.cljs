@@ -14,15 +14,19 @@
   []
   {:icon "edit"})
 
+(defmethod tool.hierarchy/help [:edit :default]
+  []
+  "Drag a handle to modify your shape, or click on an element to change selection.")
+
+(defmethod tool.hierarchy/help [:edit :edit]
+  []
+  [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction."])
+
 (defmethod tool.hierarchy/activate :edit
   [db]
   (-> db
       (app.h/set-state :default)
-      (app.h/set-cursor "default")
-      (app.h/set-message
-       [:<>
-        [:div "Drag a handle to modify your shape, or click on an element to change selection. "]
-        [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction."]])))
+      (app.h/set-cursor "default")))
 
 (defmethod tool.hierarchy/pointer-down :edit
   [db {:keys [element]}]

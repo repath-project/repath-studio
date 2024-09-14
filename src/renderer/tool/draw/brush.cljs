@@ -31,11 +31,14 @@
            :smoothing
            :streamline]})
 
+
+(defmethod tool.hierarchy/help [:brush :default]
+  []
+  "Click and drag to draw.")
+
 (defmethod tool.hierarchy/activate :brush
   [db]
-  (-> db
-      (assoc :cursor "none")
-      (app.h/set-message "Click and drag to draw.")))
+  (assoc db :cursor "none"))
 
 (defonce option-keys
   [:size :thinning :smoothing :streamline])

@@ -14,11 +14,13 @@
 
 (derive ::tool.hierarchy/polyshape ::tool.hierarchy/shape)
 
+(defmethod tool.hierarchy/help [::tool.hierarchy/polyshape :default]
+  []
+  "Click to add more points. Double click to finalize the shape.")
+
 (defmethod tool.hierarchy/activate ::tool.hierarchy/polyshape
   [db]
-  (-> db
-      (assoc :cursor "crosshair")
-      (app.h/set-message "Click to add points. Double click to finalize the shape.")))
+  (assoc db :cursor "crosshair"))
 
 (defn create-polyline
   [{:keys [active-document tool] :as db} points]

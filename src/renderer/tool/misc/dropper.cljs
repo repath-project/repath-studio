@@ -17,13 +17,15 @@
   {:icon "eye-dropper"
    :description "Pick a color from your document."})
 
+(defmethod tool.hierarchy/help [:dropper :default]
+  []
+  "Click anywhere to pick a color.")
+
 (defmethod tool.hierarchy/activate :dropper
   [db]
   (if (.-EyeDropper js/window)
-    (-> db
-        (app.h/set-message "Click anywhere to pick a color.")
-        (app.h/add-fx [::color.fx/dropper {:on-success ::set-fill-and-deactivate
-                                           :on-error ::display-error-and-deactivate}]))
+    (app.h/add-fx db [::color.fx/dropper {:on-success ::set-fill-and-deactivate
+                                          :on-error ::display-error-and-deactivate}])
     (-> db
         (app.h/set-tool :select)
         (notification.h/add

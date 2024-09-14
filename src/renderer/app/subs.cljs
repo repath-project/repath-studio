@@ -1,6 +1,7 @@
 (ns renderer.app.subs
   (:require
-   [re-frame.core :as rf]))
+   [re-frame.core :as rf]
+   [renderer.tool.hierarchy :as tool.hierarchy]))
 
 (rf/reg-sub
  ::tool
@@ -51,8 +52,12 @@
  :-> :state)
 
 (rf/reg-sub
- ::message
- :-> :message)
+ ::help
+ :<- [::tool]
+ :<- [::state]
+ (fn [[tool state] _]
+   (let [dispatch-state (if (contains? (methods tool.hierarchy/help) [tool state]) state :default)]
+     (tool.hierarchy/help tool dispatch-state))))
 
 (rf/reg-sub
  ::active-document

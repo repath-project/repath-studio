@@ -16,12 +16,15 @@
   [db]
   (assoc db :cursor "grab"))
 
+(defmethod tool.hierarchy/help [:pan :default]
+  []
+  "Click and drag to pan.")
+
 (defmethod tool.hierarchy/activate :pan
   [db]
   (-> db
       (app.h/set-state :default)
-      (app.h/set-cursor "grab")
-      (app.h/set-message "Click and drag to pan.")))
+      (app.h/set-cursor "grab")))
 
 (defmethod tool.hierarchy/pointer-up :pan
   [db]

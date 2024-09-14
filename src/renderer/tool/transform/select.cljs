@@ -11,11 +11,8 @@
    [renderer.tool.overlay :as overlay]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
-   [renderer.utils.hiccup :refer [Hiccup]]
    [renderer.utils.math :refer [Vec2D]]
    [renderer.utils.pointer :as pointer]))
-
-(def State [:enum :default :move :clone :scale])
 
 (def ScaleHandle [:enum
                   :middle-right
@@ -31,30 +28,30 @@
   []
   {:icon "pointer-alt"})
 
-(mx/defn message :- Hiccup
-  [state :- State]
-  (case state
-    :move
-    [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction, and "
-     [:span.shortcut-key "Alt"] " to clone."]
+(defmethod tool.hierarchy/help [:select :default]
+  []
+  [:<>
+   [:div "Click to select an element or click and drag to select by area."]
+   [:div "Hold " [:span.shortcut-key "⇧"] " to add or remove elements to selection."]])
 
-    :clone
-    [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction. or release "
-     [:span.shortcut-key "Alt"] " to move."]
+(defmethod tool.hierarchy/help [:select :select]
+  []
+  [:div "Hold " [:span.shortcut-key "Alt"] " while dragging to select intersecting elements."])
 
-    :scale
-    [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions, "
-     [:span.shortcut-key "⇧"] " to scale in place, " [:span.shortcut-key "Alt"] " to also scale children."]
+(defmethod tool.hierarchy/help [:select :move]
+  []
+  [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction, and "
+   [:span.shortcut-key "Alt"] " to clone."])
 
-    :select
-    [:div
-     "Hold " [:span.shortcut-key "Alt"] " while dragging to select intersecting elements."]
+(defmethod tool.hierarchy/help [:select :clone]
+  []
+  [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction. or release "
+   [:span.shortcut-key "Alt"] " to move."])
 
-    :default
-    [:<>
-     [:div "Click to select an element or click and drag to select by area."]
-     [:div
-      "Hold " [:span.shortcut-key "⇧"] " to add or remove elements to selection."]]))
+(defmethod tool.hierarchy/help [:select :scale]
+  []
+  [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions, "
+   [:span.shortcut-key "⇧"] " to scale in place, " [:span.shortcut-key "Alt"] " to also scale children."])
 
 (mx/defn hovered? :- boolean?
   [db, el :- Element, intersecting? :- boolean?]
@@ -130,8 +127,7 @@
   [db]
   (-> db
       (app.h/set-state :default)
-      (app.h/set-cursor "default")
-      (app.h/set-message (message :default))))
+      (app.h/set-cursor "default")))
 
 (defmethod tool.hierarchy/deactivate :select
   [db]
@@ -199,7 +195,6 @@
         ratio (mapv #(max 0 %) ratio)]
     (-> db
         (assoc :pivot-point pivot-point)
-        (app.h/set-message (message :scale))
         (element.h/scale ratio pivot-point recur?))))
 
 (mx/defn select-element
@@ -218,9 +213,7 @@
                  (and ctrl? (not= state :scale))
                  (pointer/lock-direction))
         alt-key? (pointer/alt? e)
-        db (-> db
-               (element.h/clear-ignored)
-               (app.h/set-message (message state)))]
+        db (element.h/clear-ignored db)]
     (case state
       :select
       (-> db
@@ -273,5 +266,4 @@
         :default db)
       (app.h/set-state :default)
       (element.h/clear-hovered)
-      (dissoc :clicked-element :pivot-point)
-      (app.h/set-message (message :default))))
+      (dissoc :clicked-element :pivot-point)))

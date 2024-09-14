@@ -213,7 +213,6 @@
                                                                                            :ret :vector}}}},
                                         renderer.app.handlers {set-state {:arities {2 {:args [:any :keyword], :ret :any}}},
                                                                set-cursor {:arities {2 {:args [:any :string], :ret :any}}},
-                                                               set-message {:arities {2 {:args [:any :any], :ret :any}}},
                                                                set-tool {:arities {2 {:args [:any :any], :ret :any}}}},
                                         renderer.utils.math {clamp {:arities {3 {:args [:number :number :number],
                                                                                  :ret :number}}},
@@ -465,9 +464,7 @@
                                                                                    2 {:args [:any :int], :ret :any}}},
                                                                    preview {:arities {2 {:args [:any :any], :ret :any}}},
                                                                    position {:arities {1 {:args [:any], :ret :any}}}},
-                                        renderer.tool.transform.select {message {:arities {1 {:args [:keyword],
-                                                                                              :ret :any}}},
-                                                                        hovered? {:arities {3 {:args [:any
+                                        renderer.tool.transform.select {hovered? {:arities {3 {:args [:any
                                                                                                       {:op :keys,
                                                                                                        :opt {:children :vector,
                                                                                                              :visible? :boolean,

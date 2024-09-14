@@ -2,7 +2,6 @@
   "https://www.w3.org/TR/SVG/shapes.html#RectElement"
   (:require
    [clojure.string :as str]
-   [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.pointer :as pointer]
@@ -24,6 +23,10 @@
            :stroke-dasharray
            :stroke-linejoin]})
 
+(defmethod tool.hierarchy/help [:rect :create]
+  []
+  [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions."])
+
 (defmethod tool.hierarchy/drag :rect
   [{:keys [adjusted-pointer-offset active-document adjusted-pointer-pos] :as db} e]
   (let [{:keys [stroke fill]} (get-in db [:documents active-document])
@@ -38,11 +41,9 @@
                :height (if lock-ratio? (min width height) height)
                :fill fill
                :stroke stroke}]
-    (-> db
-        (app.h/set-message [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions."])
-        (element.h/set-temp {:type :element
-                             :tag :rect
-                             :attrs attrs}))))
+    (element.h/set-temp db {:type :element
+                            :tag :rect
+                            :attrs attrs})))
 
 (defmethod tool.hierarchy/path :rect
   [{{:keys [x y width height rx ry]} :attrs}]
