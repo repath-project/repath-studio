@@ -4,6 +4,7 @@
    [platform :as platform]
    [re-frame.core :as rf]
    [renderer.app.effects :as-alias app.fx]
+   [renderer.app.events :as-alias app.e]
    [renderer.element.effects :as fx]
    [renderer.element.handlers :as h]
    [renderer.history.handlers :refer [finalize]]
@@ -66,6 +67,12 @@
  [(finalize #(str "Update " (name (second %))))]
  (fn [db [_ k f & more]]
    (reduce (apply partial-right h/update-attr k f more) db (h/selected-ids db))))
+
+(rf/reg-event-fx
+ ::update-attr-and-focus
+ (fn [_ [_ k f & more]]
+   {:fx [[:dispatch (apply vector ::update-attr k f more)]
+         [:dispatch ^:flush-dom [::app.e/focus (name k)]]]}))
 
 (rf/reg-event-db
  ::preview-attr

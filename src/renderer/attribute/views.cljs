@@ -99,9 +99,10 @@
                     :placeholder placeholder
                     :class "w-20"
                     :on-wheel (fn [e]
-                                (if (pos? (.-deltaY e))
-                                  (rf/dispatch [::element.e/update-attr k - step])
-                                  (rf/dispatch [::element.e/update-attr k + step])))}]
+                                (when (= (.-target e) (.-activeElement js/document))
+                                  (if (pos? (.-deltaY e))
+                                    (rf/dispatch [::element.e/update-attr-and-focus k - step])
+                                    (rf/dispatch [::element.e/update-attr-and-focus k + step]))))}]
    [:div.ml-px.px-1.w-full.bg-primary
     [:> Slider/Root
      (merge attrs {:class "slider-root"

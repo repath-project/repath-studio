@@ -35,9 +35,10 @@
     {:disabled disabled
      :placeholder (if v placeholder "multiple")
      :on-wheel (fn [e]
-                 (if (pos? (.-deltaY e))
-                   (rf/dispatch [::element.e/update-attr k - 1])
-                   (rf/dispatch [::element.e/update-attr k + 1])))}]
+                 (when (= (.-target e) (.-activeElement js/document))
+                   (if (pos? (.-deltaY e))
+                     (rf/dispatch [::element.e/update-attr-and-focus k - 1])
+                     (rf/dispatch [::element.e/update-attr-and-focus k + 1]))))}]
    [:div.flex
     [:button.button.ml-px.bg-primary.text-muted.h-full
      {:style {:width "26px"}
