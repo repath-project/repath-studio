@@ -148,30 +148,34 @@
          [ui/icon "chevron-down"]]]]])])
 
 (defn property-list
-  [property]
+  [webref-property css-property]
   [:<>
-   (when-let [applies-to (:appliesTo property)]
+   (when-let [applies-to (or (:appliesTo webref-property)
+                             (:appliesto css-property))]
      [:<>
       [:h3.font-bold "Applies to"]
       [:p applies-to]])
-   (when-let [computed-value (:computedValue property)]
+   (when-let [computed-value (or (:computedValue webref-property)
+                                 (:computed css-property))]
      (when-not (= computed-value "as specified")
        [:<>
         [:h3.font-bold "Computed value"]
         [:p
          computed-value
-         (when-let [percentages (:percentages property)]
+         (when-let [percentages (or (:percentages webref-property)
+                                    (:percentages css-property))]
            (when-not (= percentages "N/A")
              (str " (percentages " percentages ")")))]]))
-   (when-let [animatable (:animatable property)]
+   (when-let [animatable (:animatable webref-property)]
      [:<>
       [:h3.font-bold "Animatable"]
       [:p animatable]])
-   (when-let [animation-type (:animationType property)]
+   (when-let [animation-type (or (:animationType webref-property)
+                                 (:animationType css-property))]
      [:<>
       [:h3.font-bold "Animation Type"]
-      [:p animation-type]])
-   (when-let [style-declaration (:styleDeclaration property)]
+      [:p (cond->> animation-type (vector? animation-type) (str/join " "))]])
+   (when-let [style-declaration (:styleDeclaration webref-property)]
      [:<>
       [:h3.font-bold "Style declaration"]
       [:p (str/join " | " style-declaration)]])])
@@ -200,8 +204,8 @@
           [:p (hierarchy/description dispatch-tag k)])
         (when (bcd/conmpatibility tag k)
           [:<>
-           (when webref-property
-             [property-list webref-property])
+           (when (or webref-property css-property)
+             [property-list webref-property css-property])
            (when css-property
              [:<>
               [:h3.font-bold "Syntax"]
