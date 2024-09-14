@@ -1,9 +1,9 @@
 (ns renderer.app.db
   (:require
    [config :as config]
+   [i18n :as i18n]
    [malli.core :as m]
    [malli.transform :as mt]
-   [i18n :as i18n]
    [renderer.dialog.db :refer [Dialog]]
    [renderer.document.db :refer [Document]]
    [renderer.element.db :refer [Element Handle]]

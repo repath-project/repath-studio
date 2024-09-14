@@ -11,7 +11,6 @@
    [renderer.document.effects :as fx]
    [renderer.document.handlers :as h]
    [renderer.history.handlers :refer [finalize]]
-   [renderer.utils.extra :refer [partial-right]]
    [renderer.utils.vec :as vec]
    [renderer.window.effects :as-alias window.fx]))
 
