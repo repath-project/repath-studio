@@ -213,8 +213,9 @@
 
 (defn row
   [k v locked? tag]
-  (let [property @(rf/subscribe [::app.s/webref-css-property k])
-        initial (when property (:initial property))
+  (let [webref-property @(rf/subscribe [::app.s/webref-css-property k])
+        css-property  @(rf/subscribe [::app.s/css-property k])
+        initial (or (:initial webref-property) (:initial css-property))
         dispatch-tag (if (contains? (methods hierarchy/form-element) [tag k]) tag :default)]
     [:<>
      [label tag k]
