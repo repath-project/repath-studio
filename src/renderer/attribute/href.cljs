@@ -26,20 +26,18 @@
     (.readAsDataURL reader file)))
 
 (defmethod hierarchy/form-element [:default :href]
-  [_ k v disabled?]
+  [_ k v {:keys [disabled]}]
   (let [state-default? (= @(rf/subscribe [::app.s/state]) :default)
         data-url? (str/starts-with? v "data:")]
     [:<>
-     [v/form-input
-      {:key k
-       :value (if data-url? "data-url" v)
-       :disabled? (or disabled?
-                      data-url?
-                      (not v)
-                      (not state-default?))}]
+     [v/form-input k (if data-url? "data-url" v)
+      {:disabled (or disabled
+                     data-url?
+                     (not v)
+                     (not state-default?))}]
      [:button.button.ml-px.inline-block.bg-primary.text-muted
       {:title "Select file"
-       :disabled disabled?
+       :disabled disabled
        :style {:flex "0 0 26px"
                :height "100%"}
        :on-click #(file/open!

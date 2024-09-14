@@ -40,13 +40,10 @@
            "Lorem ipsum"]]])]]]])
 
 (defmethod hierarchy/form-element [:default :font-family]
-  [_ k v disabled?]
+  [_ k v attrs]
   (let [suggestions @(rf/subscribe [::app.s/font-options])]
     [:<>
-     [v/form-input
-      {:key k
-       :value v
-       :disabled? disabled?}]
+     [v/form-input k v attrs]
      [:> Popover/Root
       {:modal true
        :onOpenChange (fn [state]

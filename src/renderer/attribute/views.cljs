@@ -72,47 +72,41 @@
                        ::element.e/preview-attr) k new-v])))))
 
 (defn form-input
-  [{:keys [key value disabled? placeholder on-wheel class]}]
+  [k v {:keys [disabled? placeholder] :as attrs}]
   [:div.relative.flex.form-input.flex-1
-   [:input {:key value
-            :id (name key)
-            :default-value value
-            :disabled disabled?
-            :class class
-            :placeholder (if value placeholder "multiple")
-            :on-wheel on-wheel
-            :on-blur #(on-change-handler % key value)
-            :on-key-down #(keyb/input-key-down-handler % value on-change-handler key value)}]
-   (when-not (or (empty? (str value)) disabled?)
+   [:input (merge attrs
+                  {:key v
+                   :id (name k)
+                   :default-value v
+                   :placeholder (if v placeholder "multiple")
+                   :on-blur #(on-change-handler % k v)
+                   :on-key-down #(keyb/input-key-down-handler % v on-change-handler k v)})]
+   (when-not (or (empty? (str v)) disabled?)
      [:button.button.ml-px.bg-primary.text-muted.absolute.h-full.right-0.clear-input-button.hover:bg-transparent
       {:style {:width "26px"}
-       :on-pointer-down #(rf/dispatch [::element.e/remove-attr key])}
+       :on-pointer-down #(rf/dispatch [::element.e/remove-attr k])}
       [ui/icon "times"]])])
 
 (defmethod hierarchy/form-element :default
-  [_ k v disabled? initial]
-  [form-input {:key k
-               :value v
-               :disabled? disabled?
-               :placeholder (if v initial "multiple")}])
+  [_ k v {:keys [disabled placeholder]}]
+  [form-input k v {:disabled disabled
+                   :placeholder (if v placeholder "multiple")}])
 
 (defn range-input
-  [k v attrs initial]
+  [k v {:keys [placeholder disabled step] :as attrs}]
   [:div.flex.w-full
-   [form-input {:key k
-                :value v
-                :disabled? (:disabled attrs)
-                :placeholder initial
-                :class "w-20"
-                :on-wheel (fn [e]
-                            (if (pos? (.-deltaY e))
-                              (rf/dispatch [::element.e/update-attr k - (:step attrs)])
-                              (rf/dispatch [::element.e/update-attr k + (:step attrs)])))}]
+   [form-input k v {:disabled disabled
+                    :placeholder placeholder
+                    :class "w-20"
+                    :on-wheel (fn [e]
+                                (if (pos? (.-deltaY e))
+                                  (rf/dispatch [::element.e/update-attr k - step])
+                                  (rf/dispatch [::element.e/update-attr k + step])))}]
    [:div.ml-px.px-1.w-full.bg-primary
     [:> Slider/Root
      (merge attrs {:class "slider-root"
-                   :value [(if (= "" v) initial v)]
-                   :disabled (:disabled attrs)
+                   :value [(if (= "" v) placeholder v)]
+                   :disabled disabled
                    :onValueChange (fn [[v]] (rf/dispatch [::element.e/preview-attr k v]))
                    :onValueCommit (fn [[v]] (rf/dispatch [::element.e/set-attr k v]))})
      [:> Slider/Track {:class "slider-track"}
@@ -120,21 +114,17 @@
      [:> Slider/Thumb {:class "slider-thumb"}]]]])
 
 (defn select-input
-  [{:keys [key value disabled? items initial default-value]}]
+  [k v {:keys [disabled items default-value] :as attrs}]
   [:div.flex.w-full
-   [form-input
-    {:key key
-     :value value
-     :disabled? disabled?
-     :placeholder initial}]
+   [form-input k v (select-keys attrs [:disabled :placeholder])]
    (when (seq items)
      [:> Select/Root
-      {:value (if (empty? value) default-value value)
-       :onValueChange #(rf/dispatch [::element.e/set-attr key %])
-       :disabled disabled?}
+      {:value (if (empty? v) default-value v)
+       :onValueChange #(rf/dispatch [::element.e/set-attr k %])
+       :disabled disabled}
       [:> Select/Trigger
        {:class "select-trigger ml-px h-full"
-        :aria-label (name key)
+        :aria-label (name k)
         :style {:background "var(--bg-primary)"
                 :border-radius 0
                 :width "26px"
@@ -229,7 +219,8 @@
     [:<>
      [label tag k]
      [:div.flex.h-full.overflow-visible
-      [hierarchy/form-element dispatch-tag k v locked? initial]]]))
+      [hierarchy/form-element dispatch-tag k v {:disabled locked?
+                                                :placeholder initial}]]]))
 
 (defn tag-info
   [tag]

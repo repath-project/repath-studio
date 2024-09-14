@@ -45,17 +45,16 @@
 (derive :streamline ::attr.range/range)
 
 (defmethod attr.hierarchy/form-element [:brush :size]
-  [_ k v disabled?]
-  [attr.v/range-input k v {:disabled disabled?
-                           :min 1
-                           :max 100
-                           :step 1}])
+  [_ k v attrs]
+  [attr.v/range-input k v (merge attrs {:min 1
+                                        :max 100
+                                        :step 1})])
 
 (defmethod attr.hierarchy/form-element [:brush :points]
-  [_ value]
-  [:input {:value value
+  [_ _k v]
+  [:input {:value v
            :disabled true
-           :placeholder (when-not value "multiple")}])
+           :placeholder (when-not v "multiple")}])
 
 (defmethod attr.hierarchy/description [:brush ::points]
   []

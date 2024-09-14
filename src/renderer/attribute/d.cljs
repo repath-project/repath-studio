@@ -128,15 +128,13 @@
                          [segment-form segment i]])) segments)]]]))
 
 (defmethod hierarchy/form-element [:default :d]
-  [_ k v disabled?]
+  [_ k v {:keys [disabled]}]
   (let [state-default? (= @(rf/subscribe [::app.s/state]) :default)]
     [:<>
-     [v/form-input
-      {:key k
-       :value (if state-default? v "waiting")
-       :disabled? (or disabled?
-                      (not v)
-                      (not state-default?))}]
+     [v/form-input k (if state-default? v "waiting")
+      {:disabled (or disabled
+                     (not v)
+                     (not state-default?))}]
      (when v
        [:> Popover/Root {:modal true}
         [:> Popover/Trigger {:as-child true}

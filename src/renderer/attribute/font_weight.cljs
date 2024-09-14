@@ -24,13 +24,10 @@
    900 "Black (Heavy)"})
 
 (defmethod hierarchy/form-element [:default :font-weight]
-  [_ k v disabled? initial]
+  [_ k v attrs]
   (let [weights @(rf/subscribe [::element.s/font-weights])]
-    [v/select-input {:key k
-                     :value v
-                     :disabled? disabled?
-                     :initial initial
-                     :default-value "400"
-                     :items (mapv #(do {:key %
-                                        :label (str % " - " (-> % name-mapping))
-                                        :value (str %)}) weights)}]))
+    [v/select-input k v (merge attrs
+                               {:default-value "400"
+                                :items (mapv #(do {:key %
+                                                   :label (str % " - " (-> % name-mapping))
+                                                   :value (str %)}) weights)})]))

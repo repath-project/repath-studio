@@ -10,11 +10,9 @@
    implemented yet.")
 
 (defmethod hierarchy/form-element [:default :overflow]
-  [_ k v disabled? _initial]
-  [v/select-input
-   {:key k
-    :value v
-    :disabled? disabled?
+  [_ k v {:keys [disabled]}]
+  [v/select-input k v
+   {:disabled disabled
     ;; Although the initial value for overflow is auto, it is overwritten
     ;; in the User Agent style sheet for the <svg> element when it is not
     ;; the root element of a stand-alone document, the <pattern> element,

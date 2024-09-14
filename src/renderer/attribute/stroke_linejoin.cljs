@@ -9,18 +9,14 @@
    to be used at the corners of paths when they are stroked.")
 
 (defmethod hierarchy/form-element [:default :stroke-linejoin]
-  [_ k v disabled? initial]
-  [v/select-input {:key k
-                   :value v
-                   :disabled? disabled?
-                   :initial initial
-                   :default-value "miter"
-                   :items [{:key :bevel
-                            :value "bevel"
-                            :label "Bevel"}
-                           {:key :miter
-                            :value "miter"
-                            :label "Miter"}
-                           {:key :round
-                            :value "round"
-                            :label "Round"}]}])
+  [_ k v attrs]
+  [v/select-input k v (merge attrs {:default-value "miter"
+                                    :items [{:key :bevel
+                                             :value "bevel"
+                                             :label "Bevel"}
+                                            {:key :miter
+                                             :value "miter"
+                                             :label "Miter"}
+                                            {:key :round
+                                             :value "round"
+                                             :label "Round"}]})])

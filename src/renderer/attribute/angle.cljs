@@ -7,13 +7,9 @@
    [renderer.ui :as ui]))
 
 (defmethod hierarchy/form-element [:default ::angle]
-  [_ k v disabled? initial]
+  [_ k v attrs]
   [:<>
-   [v/form-input
-    {:key k
-     :value v
-     :disabled? disabled?
-     :placeholder initial}]
+   [v/form-input k v attrs]
    [:> Popover/Root {:modal true}
     [:> Popover/Trigger {:as-child true}
      [:button.button.ml-px.bg-primary.text-muted.h-full

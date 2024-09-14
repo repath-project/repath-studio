@@ -25,15 +25,15 @@
     (rf/dispatch [::element.e/set-attr :points points])))
 
 (defmethod hierarchy/form-element [:default :points]
-  [_ k v disabled?]
+  [_ k v {:keys [disabled]}]
   (let [state-default? (= @(rf/subscribe [::app.s/state]) :default)]
     [:<>
      [v/form-input
-      {:key k
-       :value (if state-default? v "waiting")
-       :disabled? (or disabled?
-                      (not v)
-                      (not state-default?))}]
+      k
+      (if state-default? v "waiting")
+      {:disabled (or disabled
+                     (not v)
+                     (not state-default?))}]
      (when v
        [:> Popover/Root {:modal true}
         [:> Popover/Trigger {:as-child true}

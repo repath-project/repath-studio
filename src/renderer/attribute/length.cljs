@@ -29,13 +29,11 @@
 (derive :ry ::positive-length)
 
 (defmethod hierarchy/form-element [:default ::length]
-  [_ k v disabled? initial]
+  [_ k v {:keys [disabled placeholder]}]
   [:div.flex.w-full
-   [v/form-input
-    {:key k
-     :value v
-     :disabled? disabled?
-     :placeholder (if v initial "multiple")
+   [v/form-input k v
+    {:disabled disabled
+     :placeholder (if v placeholder "multiple")
      :on-wheel (fn [e]
                  (if (pos? (.-deltaY e))
                    (rf/dispatch [::element.e/update-attr k - 1])
@@ -43,12 +41,12 @@
    [:div.flex
     [:button.button.ml-px.bg-primary.text-muted.h-full
      {:style {:width "26px"}
-      :disabled disabled?
+      :disabled disabled
       :on-pointer-down #(rf/dispatch [::element.e/update-attr k - 1])}
      [ui/icon "minus"]]
     [:button.button.ml-px.bg-primary.text-muted.h-full
      {:style {:width "26px"}
-      :disabled disabled?
+      :disabled disabled
       :on-click #(rf/dispatch [::element.e/update-attr k + 1])}
      [ui/icon "plus"]]]])
 

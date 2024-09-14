@@ -24,30 +24,27 @@
 (derive :size ::length/length)
 
 (defmethod attr.hierarchy/form-element [:blob :extraPoints]
-  [_ k v disabled?]
-  [attr.v/range-input k v {:min 0
-                           :max 50
-                           :step 1
-                           :disabled disabled?} 0])
+  [_ k v attrs]
+  [attr.v/range-input k v (merge attrs {:min 0
+                                        :max 50
+                                        :step 1
+                                        :placeholder 0})])
 
 (defmethod attr.hierarchy/form-element [:blob :randomness]
-  [_ k v disabled?]
-  [attr.v/range-input k v {:min 0
-                           :max 50
-                           :step 1
-                           :disabled disabled?} 0])
+  [_ k v attrs]
+  [attr.v/range-input k v (merge attrs {:min 0
+                                        :max 50
+                                        :step 1
+                                        :placeholder 0})])
 
 (defmethod attr.hierarchy/form-element [:blob :seed]
-  [_ k v disabled?]
+  [_ k v {:keys [disabled] :as attrs}]
   (let [random-seed (rand-int 1000000)]
     [:<>
-     [attr.v/form-input {:key k
-                         :value v
-                         :disabled? disabled?
-                         :placeholder 0}]
+     [attr.v/form-input k v (merge attrs {:placeholder 0})]
      [:button.button.ml-px.inline-block.bg-primary.text-muted
       {:title "Generate random seed"
-       :disabled disabled?
+       :disabled disabled
        :style {:flex "0 0 26px"
                :height "100%"}
        :on-click #(rf/dispatch [::element.e/set-attr k random-seed])}

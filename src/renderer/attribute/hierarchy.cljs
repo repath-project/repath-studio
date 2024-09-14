@@ -1,9 +1,8 @@
 (ns renderer.attribute.hierarchy)
 
-(defmulti update-attr (fn [_ attr] attr))
-;; TODO: Convert positional arguments to map.
-(defmulti description (fn [tag attr] [tag attr]))
-(defmulti form-element (fn [tag attr _v _disabled? _initial] [tag attr]))
+(defmulti update-attr (fn [_ k] k))
+(defmulti description (fn [tag k] [tag k]))
+(defmulti form-element (fn [tag k _v _attrs] [tag k]))
 
 (defmethod update-attr :default
   [el attr f & more]
