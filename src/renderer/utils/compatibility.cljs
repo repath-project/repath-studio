@@ -5,12 +5,12 @@
    [renderer.utils.migrations :as migrations]))
 
 ;; https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
-(def ver-regex #"(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$")
+(def ver-regex
+  #"(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$")
 
-(def ver
-  [:tuple int? int? int?])
+(def Version [:tuple int? int? int?])
 
-(mx/defn version->table :- [:maybe ver]
+(mx/defn version->table :- [:maybe Version]
   [s :- [:maybe [:re ver-regex]]]
   (->> s
        (str)
@@ -20,7 +20,7 @@
        (mapv js/parseInt)))
 
 (mx/defn requires-migration? :- boolean?
-  [document :- map?, [m-major m-minor m-patch] :- ver]
+  [document :- map?, [m-major m-minor m-patch] :- Version]
   (let [[major minor patch] (version->table (:version document))]
     (or (< major m-major)
         (and (= major m-major)
