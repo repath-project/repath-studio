@@ -484,6 +484,7 @@ pre {
 
 .slider-root {
   @apply relative flex items-center select-none w-full touch-none h-full;
+
 }
 
 .slider-track {
@@ -504,6 +505,11 @@ pre {
   &:focus {
     @apply outline-none;
     box-shadow: 0 0 0 4px var(--border-color);
+  }
+
+
+  &[data-disabled] {
+    background-color: var(--font-color-disabled);
   }
 }
 

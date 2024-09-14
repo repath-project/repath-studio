@@ -106,7 +106,6 @@
     [:> Slider/Root
      (merge attrs {:class "slider-root"
                    :value [(if (= "" v) placeholder v)]
-                   :disabled disabled
                    :onValueChange (fn [[v]] (rf/dispatch [::element.e/preview-attr k v]))
                    :onValueCommit (fn [[v]] (rf/dispatch [::element.e/set-attr k v]))})
      [:> Slider/Track {:class "slider-track"}
