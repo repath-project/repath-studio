@@ -80,9 +80,7 @@
 
     :always
     (-> (element.h/clear-hovered)
-        (assoc :cursor (if (and element
-                                (= (:type element) :element)
-                                (not (element/root? element)))
+        (assoc :cursor (if (and element (not (element/root? element)))
                          "move"
                          "default")))
 
