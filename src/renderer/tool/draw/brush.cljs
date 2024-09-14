@@ -205,10 +205,11 @@
   (let [handle-size (/ 8 zoom)
         stroke-width (/ 1 zoom)
         offset (element/offset el)]
-    [:g {:key ::edit-handles}
+    [:g
      (map-indexed (fn [index [x y]]
                     (let [[x y] (mapv units/unit->px [x y])
                           [x y] (mat/add offset [x y])]
+                      ^{:key index}
                       [overlay/square-handle {:id index
                                               :x x
                                               :y y

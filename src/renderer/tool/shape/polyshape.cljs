@@ -113,7 +113,7 @@
      (map-indexed (fn [index [x y]]
                     (let [[x y] (mapv units/unit->px [x y])
                           [x y] (mat/add offset [x y])]
-                      ^{:key (str index)}
+                      ^{:key index}
                       [overlay/square-handle {:id (keyword (str index))
                                               :x x
                                               :y y
