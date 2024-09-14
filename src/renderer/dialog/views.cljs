@@ -61,8 +61,8 @@
      "Save"]]])
 
 (defn cmdk-item
-  [{:keys [label action icon type]}]
-  (when-not (= type :separator)
+  [{:keys [label action icon] :as attrs}]
+  (when-not (= (:type attrs) :separator)
     [:> Command/CommandItem
      {:on-select (fn []
                    (rf/dispatch [::dialog.e/close false])

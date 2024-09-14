@@ -1,6 +1,6 @@
 {:linters {:unsorted-required-namespaces {:level :warning}
            :single-key-in {:level :warning}
-           ;; :shadowed-var {:level :warning}
+           :shadowed-var {:level :warning}
            :docstring-leading-trailing-whitespace {:level :warning}
            :used-underscored-binding {:level :warning}
            :unused-value {:level :warning}

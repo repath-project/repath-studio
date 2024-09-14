@@ -187,20 +187,20 @@ cljs.js/*load-fn*
     :else (compare ns1 ns2)))
 
 (defn get-from-js-ns
-  "Use js introspection to get a list of interns in a namespaces
+  "Use js introspection to get a list of interns in a namespace.
 
   This is pretty dependent on cljs runtime internals, so it may break in the
   future (although I think it's fairly unlikely). It takes advantage of the fact
   that the ns `something.other.thing' is available as an object on
   `window.something.other.thing', and Object.keys gets all the variables in that
   namespace."
-  [ns]
+  [ns*]
 
-  (let [parts (map munge (.split (str ns) "."))
-        ns (reduce aget js/window parts)]
-    (if-not ns
+  (let [parts (map munge (.split (str ns*) "."))
+        ns* (reduce aget js/window parts)]
+    (if-not ns*
       []
-      (map demunge (js/Object.keys ns)))))
+      (map demunge (js/Object.keys ns*)))))
 
 (defn dedup-requires
   "Takes a map of {require-name ns-name} and dedups multiple keys that have the
@@ -212,16 +212,16 @@ cljs.js/*load-fn*
                [result seen]
                [(assoc result k v) (conj seen v)])) [{} #{}] requires)))
 
-(defn get-matching-ns-interns [[name ns] matches? only-ns]
-  (let [ns-name (str ns)
-        publics (keys (ast/ns-publics @repl/st ns))
+(defn get-matching-ns-interns [[name* ns*] matches? only-ns]
+  (let [ns-name* (str ns*)
+        publics (keys (ast/ns-publics @repl/st ns*))
         publics (if (empty? publics)
-                  (get-from-js-ns ns)
+                  (get-from-js-ns ns*)
                   publics)]
     (if-not (or (nil? only-ns)
-                (= only-ns ns-name))
+                (= only-ns ns-name*))
       []
-      (sort (map #(symbol name (str %))
+      (sort (map #(symbol name* (str %))
                  (filter matches?
                          publics))))))
 
@@ -237,11 +237,11 @@ cljs.js/*load-fn*
 (defn js-completion
   [mode text]
   (let [parts (vec (.split text "."))
-        completing (or (last parts) "")
+        completion (or (last parts) "")
         prefix #(str (when (= mode :cljs) "js/") (str/join "." (conj (vec (butlast parts)) %)))
         possibles (js-attrs (reduce aget js/window (butlast parts)))]
     (->> possibles
-         (filter #(not= -1 (.indexOf % completing)))
+         (filter #(not= -1 (.indexOf % completion)))
          (sort (partial compare-completion text))
          (map #(vector nil (prefix %) (prefix %))))))
 
@@ -309,7 +309,7 @@ cljs.js/*load-fn*
 ;; Copied & modified from cljs.repl/print-doc
 (defn get-doc
   [m]
-  (merge {:name (str (when-let [ns (:ns m)] (str ns "/")) (:name m))
+  (merge {:name (str (when (:ns m) (str (:ns m) "/")) (:name m))
           :type (cond
                   (:protocol m) :protocol
                   (:special-form m) :special-form
@@ -362,9 +362,9 @@ cljs.js/*load-fn*
     (println)
     (println (:doc doc)))
   (when (:methods doc)
-    (doseq [[name {:keys [doc arglists]}] (:methods doc)]
+    (doseq [[name* {:keys [doc arglists]}] (:methods doc)]
       (println)
-      (println " " name)
+      (println " " name*)
       (println " " arglists)
       (when doc
         (println " " doc)))))

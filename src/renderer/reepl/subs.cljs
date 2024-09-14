@@ -10,8 +10,8 @@
   [db]
   (let [idx (reaction (:hist-pos @db))
         history (reaction (:history @db))]
-    (reaction (let [items @history
-                    pos (- (count items) @idx 1)]
+    (reaction (let [history @history
+                    pos (- (count history) @idx 1)]
                 {:pos pos
-                 :count (count items)
-                 :text (get items pos)}))))
+                 :count (count history)
+                 :text (get history pos)}))))

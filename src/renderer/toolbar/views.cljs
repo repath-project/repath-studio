@@ -5,8 +5,8 @@
    [renderer.ui :as ui]))
 
 (defn button
-  [{:keys [title icon disabled? action type]}]
-  (if (= type :divider)
+  [{:keys [title icon disabled? action] :as attrs}]
+  (if (= (:type attrs) :divider)
     [:span.h-divider]
     [:> Tooltip/Root
      [:> Tooltip/Trigger

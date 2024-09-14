@@ -60,7 +60,7 @@
         :action #(rf/dispatch [::app.e/toggle-panel :repl-history])}
        {:style {:height "16px"}}]]]))
 
-(defmulti item (fn [item _opts] (:type item)))
+(defmulti item (fn [i _opts] (:type i)))
 
 (defmethod item :input
   [{:keys [_num text]} opts]
@@ -139,13 +139,13 @@
          text])})))
 
 (defn completion-list
-  [docs {:keys [pos list active? show-all?]} set-active]
+  [docs {:keys [pos words active? show-all?]} set-active]
   (let [items (map-indexed
                #(vector completion-item
                         (get %2 2)
                         (= %1 pos)
                         active?
-                        (partial set-active %1)) list)]
+                        (partial set-active %1)) words)]
     [:div.absolute.bottom-full.left-0.w-full.text-xs.mb-px
      (when docs [:div.bg-primary.drop-shadow.p-4.absolute.bottom-full docs])
      (into
@@ -194,9 +194,9 @@
                 items (s/items state)
                 complete-atom (ra/atom nil)
                 docs (reaction
-                      (let [{:keys [pos list] :as state} @complete-atom]
+                      (let [{:keys [pos words] :as state} @complete-atom]
                         (when state
-                          (let [sym (first (get list pos))]
+                          (let [sym (first (get words pos))]
                             (when (symbol? sym)
                               (get-docs sym))))))
                 submit (fn [text]

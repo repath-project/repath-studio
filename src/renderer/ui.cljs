@@ -83,8 +83,8 @@
    [renderer.ui/icon icon-name]])
 
 (defn context-menu-item
-  [{:keys [type label action checked? disabled?]}]
-  (case type
+  [{:keys [label action checked? disabled?] :as attrs}]
+  (case (:type attrs)
     :separator
     [:> ContextMenu/Separator {:class "menu-separator"}]
 
@@ -110,8 +110,8 @@
       [shortcuts action]]]))
 
 (defn dropdown-menu-item
-  [{:keys [type label action checked?]}]
-  (case type
+  [{:keys [label action checked?] :as attrs}]
+  (case (:type attrs)
     :separator
     [:> DropdownMenu/Separator {:class "menu-separator"}]
 

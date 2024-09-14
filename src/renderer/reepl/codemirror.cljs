@@ -89,23 +89,23 @@
 (defn repl-hint
   "Get a new completion state."
   [complete-word cm _options]
-  (let [range (cm-current-word cm)
+  (let [result (cm-current-word cm)
         text (.getRange cm
-                        (:start range)
-                        (:end range))
+                        (:start result)
+                        (:end result))
         words (when-not (empty? text)
                 (vec (complete-word text)))
         ;; Remove core duplicates
         words (vec (remove #(str/includes? (second %) "cljs.core") words))]
     (when-not (empty? words)
-      {:list words
+      {:words words
        :num (count words)
        :active? (= (get (first words) 2) text)
        :show-all? false
        :initial-text text
        :pos 0
-       :from (:start range)
-       :to (:end range)})))
+       :from (:start result)
+       :to (:end result)})))
 
 (defn cycle-pos
   "Cycle through positions. Returns [active? new-pos].
@@ -144,18 +144,18 @@
   evt
     the triggering event. it will be `.preventDefault'd if there are completions
     to cycle through."
-  [{:keys [num pos active? from to list initial-text] :as state}
+  [{:keys [num pos active? from to words initial-text] :as state}
    go-back? cm evt]
-  (when (and state (or (< 1 (count list))
-                       (and (< 0 (count list))
-                            (not= initial-text (get (first list) 2)))))
+  (when (and state (or (< 1 (count words))
+                       (and (< 0 (count words))
+                            (not= initial-text (get (first words) 2)))))
     (.preventDefault evt)
-    (let [initial-active (= initial-text (get (first list) 2))
+    (let [initial-active (= initial-text (get (first words) 2))
           [active? pos] (if active?
                           (cycle-pos num pos go-back? initial-active)
                           [true (if go-back? (dec num) pos)])
           text (if active?
-                 (get (get list pos) 2)
+                 (get (get words pos) 2)
                  initial-text)]
       ;; TODO: don't replaceRange here, instead watch the state atom and react to
       ;; that.

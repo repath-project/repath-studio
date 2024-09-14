@@ -17,13 +17,12 @@
 
 (defn show-el
   [v show-value]
-  (let [type (first v)
-        opts (second v)
+  (let [opts (second v)
         children (drop 2 v)]
-    (if (= "object" type)
+    (if (= "object" (first v))
       [show-value (.-object opts) (.-config opts)]
       (into
-       [(keyword type) {:style (when opts (parse-style (.-style opts)))}]
+       [(keyword (first v)) {:style (when opts (parse-style (.-style opts)))}]
        (map #(if-not (js-array? %) % (show-el % show-value)) children)))))
 
 (defn openable
