@@ -63,23 +63,12 @@
       n
       (if (valid-unit? unit) (->px n unit) 0))))
 
-(mx/defn ->fixed :- number?
-  ([n :- number?]
-   (->fixed n 2))
-  ([n :- number? digits  :- number?]
-   (->fixed n digits 10))
-  ([n :- number? digits :- number? base :- number?]
-   (let [pow (Math/pow base digits)]
-     (-> (* n pow)
-         (Math/round)
-         (/ pow)))))
-
 (mx/defn transform :- string?
   "Converts a value to pixels, applies a function and converts the result
    back to the original unit."
   [v f :- fn? & more]
   (let [[n unit] (parse-unit v)]
     (-> (apply f (->px n unit) more)
-        (->fixed)
+        (.toFixed 2)
         (->unit unit)
         (str (when (valid-unit? unit) unit)))))

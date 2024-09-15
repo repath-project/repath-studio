@@ -279,8 +279,6 @@
                                                                                :ret :vector}}}},
                                         renderer.utils.units {->fixed {:arities {1 {:args [:number], :ret :number},
                                                                                  2 {:args [:number :number],
-                                                                                    :ret :number},
-                                                                                 3 {:args [:number :number :number],
                                                                                     :ret :number}}},
                                                               match-unit {:arities {1 {:args [:string], :ret :string}}},
                                                               unit->px {:arities {1 {:args [:any], :ret :number}}},

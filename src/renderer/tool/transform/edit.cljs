@@ -39,7 +39,7 @@
   (if-not (and (= (:button e) :right)
                (:selected? element))
     (-> db
-        element.h/clear-ignored
+        (element.h/clear-ignored)
         (dissoc :clicked-element)
         (element.h/select (:id element) (pointer/shift? e))
         (app.h/explain "Select element"))

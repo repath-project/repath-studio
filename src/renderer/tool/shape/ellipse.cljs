@@ -93,9 +93,9 @@
     [:g ::edit-handles
      [overlay/times cx cy]
      [overlay/line cx cy (+ cx rx) cy]
-     [overlay/label (str (units/->fixed rx)) [(+ cx (/ rx 2)) cy]]
+     [overlay/label (str (.toFixed rx 2)) [(+ cx (/ rx 2)) cy]]
      [overlay/line cx cy cx (- cy ry)]
-     [overlay/label (str (units/->fixed ry)) [cx (- cy (/ ry 2))]]
+     [overlay/label (str (.toFixed ry 2)) [cx (- cy (/ ry 2))]]
      (map (fn [handle]
             ^{:key (:id handle)}
             [overlay/square-handle

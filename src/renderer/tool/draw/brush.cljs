@@ -120,10 +120,10 @@
             b (nth points 1)
             c (nth points 2)
             d (str
-               "M" (units/->fixed (first a)) "," (units/->fixed (second a))
-               " Q" (units/->fixed (first b)) "," (units/->fixed (second b))
-               " " (units/->fixed (mat.stats/mean [(first b) (first c)])) ","
-               (units/->fixed (mat.stats/mean [(second b) (second c)])) " T")]
+               "M" (.toFixed (first a) 2) "," (.toFixed (second a) 2)
+               " Q" (.toFixed (first b) 2) "," (.toFixed (second b) 2)
+               " " (.toFixed (mat.stats/mean [(first b) (first c)]) 2) ","
+               (.toFixed (mat.stats/mean [(second b) (second c)]) 2) " T")]
         (reduce-kv
          (fn [result index]
            (if (or (= len (inc index)) (< index 2))
@@ -131,9 +131,9 @@
              (let [a (nth points index)
                    b (nth points (inc index))]
                (str result
-                    (units/->fixed (mat.stats/mean [(first a) (first b)]))
+                    (.toFixed (mat.stats/mean [(first a) (first b)]) 2)
                     ","
-                    (units/->fixed (mat.stats/mean [(second a) (second b)]))
+                    (.toFixed (mat.stats/mean [(second a) (second b)]) 2)
                     " ")))) d points)))))
 
 (defn points->path

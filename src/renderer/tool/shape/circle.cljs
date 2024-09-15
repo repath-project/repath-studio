@@ -83,7 +83,7 @@
         r (/ (first (bounds/->dimensions bounds)) 2)]
     [:g
      [overlay/line cx cy (+ cx r) cy]
-     [overlay/label (str (units/->fixed r)) [(+ cx (/ r 2)) cy]]
+     [overlay/label (str (.toFixed r 2)) [(+ cx (/ r 2)) cy]]
      [overlay/times cx cy]
      [overlay/square-handle {:x (+ cx r)
                              :y cy

@@ -13,7 +13,6 @@
    [renderer.timeline.views :as timeline.v]
    [renderer.ui :as ui]
    [renderer.utils.keyboard :as keyb]
-   [renderer.utils.units :as units]
    [renderer.worker.subs :as-alias worker.s]))
 
 (defn coordinates []
@@ -21,9 +20,9 @@
     [:div.flex-col.font-mono.leading-tight.hidden.xl:flex
      {:style {:min-width "90px"}}
      [:div.flex.justify-between
-      [:span.mr-1 "X:"] [:span (units/->fixed x)]]
+      [:span.mr-1 "X:"] [:span (.toFixed x 2)]]
      [:div.flex.justify-between
-      [:span.mr-1 "Y:"] [:span (units/->fixed y)]]]))
+      [:span.mr-1 "Y:"] [:span (.toFixed y 2)]]]))
 
 (def zoom-menu
   [{:label "Set to 50%"
@@ -90,7 +89,7 @@
 
 (defn zoom-input
   [zoom]
-  (let [value (units/->fixed (* 100 zoom) (zoom-decimal-points zoom))]
+  (let [value (.toFixed (* 100 zoom) (zoom-decimal-points zoom) 2)]
     [:input.overlay.text-right.hidden.md:flex
      {:key zoom
       :aria-label "Zoom"

@@ -11,8 +11,7 @@
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
    [renderer.utils.math :as math]
-   [renderer.utils.pointer :as pointer]
-   [renderer.utils.units :as units]))
+   [renderer.utils.pointer :as pointer]))
 
 ;; The iframe is isolated so we don't have access to the css vars of the parent.
 ;; We are currently using hardcoded values, but we hould be able to set those
@@ -237,7 +236,7 @@
         x (+ x1 (/ (- x2 x1) 2))
         y (+ y2 (/ (+ (/ handle-size 2) 15) zoom))
         [width height] (bounds/->dimensions bounds)
-        text (str (units/->fixed width) " x " (units/->fixed height))]
+        text (str (.toFixed width 2) " x " (.toFixed height 2))]
     [label text [x y]]))
 
 (defn bounding-box
@@ -291,27 +290,30 @@
           [x1 y1 x2 _y2] bounds
           x (+ x1 (/ (- x2 x1) 2))
           y (+ y1 (/ (- -15 (/ handle-size 2)) zoom))
-          text (str (units/->fixed area) " px²")]
+          text (str (.toFixed area 2) " px²")]
       [label text [x y]])))
 
 (defn debug-rows
   []
   [["Dom rect" @(rf/subscribe [::app.s/dom-rect])]
-   ["Viewbox" (str (mapv units/->fixed @(rf/subscribe [::frame.s/viewbox])))]
+   ["Viewbox" (str (mapv #(.toFixed % 2) @(rf/subscribe [::frame.s/viewbox])))]
    ["Pointer position" (str @(rf/subscribe [::app.s/pointer-pos]))]
    ["Adjusted pointer position"
-    (str (mapv units/->fixed @(rf/subscribe [::app.s/adjusted-pointer-pos])))]
+    (str (mapv #(.toFixed % 2) @(rf/subscribe [::app.s/adjusted-pointer-pos])))]
    ["Pointer offset" (str @(rf/subscribe [::app.s/pointer-offset]))]
    ["Adjusted pointer offset"
-    (str (mapv units/->fixed @(rf/subscribe [::app.s/adjusted-pointer-offset])))]
+    (str (mapv #(.toFixed % 2) @(rf/subscribe [::app.s/adjusted-pointer-offset])))]
    ["Pointer drag?" (str @(rf/subscribe [::app.s/drag?]))]
-   ["Pan" (str (mapv units/->fixed @(rf/subscribe [::document.s/pan])))]
+   ["Pan" (str (mapv #(.toFixed % 2) @(rf/subscribe [::document.s/pan])))]
    ["Active tool" @(rf/subscribe [::app.s/tool])]
    ["Primary tool" @(rf/subscribe [::app.s/primary-tool])]
    ["State"  @(rf/subscribe [::app.s/state])]
    ["Clicked element" (:id @(rf/subscribe [::app.s/clicked-element]))]
    ["Ignored elements" @(rf/subscribe [::document.s/ignored-ids])]
-   ["Snap" (map (fn [[k v]] (str k " - " v)) @(rf/subscribe [::snap.s/nearest-neighbor]))]])
+   ["Snap" (map (fn [[k v]]
+                  (str k " - " (if (number? v)
+                                 (.toFixed v 2)
+                                 (mapv #(.toFixed % 2) v)))) @(rf/subscribe [::snap.s/nearest-neighbor]))]])
 
 (defn debug-info
   []

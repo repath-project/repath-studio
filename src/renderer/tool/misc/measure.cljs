@@ -65,10 +65,10 @@
      [overlay/line x1 y1 (+ x1 (/ 30 zoom)) y1]
 
      [overlay/label
-      (str (units/->fixed straight-angle) "°")
+      (str (.toFixed straight-angle 2) "°")
       [(+ x1 (/ 40 zoom)) y1]
       "start"]
 
      [overlay/label
-      (str (units/->fixed hypotenuse))
+      (str (.toFixed hypotenuse 2))
       [(/ (+ x1 x2) 2) (/ (+ y1 y2) 2)]]]))
