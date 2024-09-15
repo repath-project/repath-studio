@@ -17,7 +17,7 @@
     ;; in the User Agent style sheet for the <svg> element when it is not
     ;; the root element of a stand-alone document, the <pattern> element,
     ;; and the <marker> element to be hidden by default.
-    :initial "hidden"
+    :placeholder "hidden"
     :default-value "hidden"
     :items [{:key :visible
              :value "visible"
