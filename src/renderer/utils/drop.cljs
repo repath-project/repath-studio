@@ -1,10 +1,26 @@
-(ns renderer.utils.data-transfer
+(ns renderer.utils.drop
   (:require
    [clojure.string :as str]
    [hickory.zip]
    [re-frame.core :as rf]
+   [renderer.app.events :as-alias app.e]
    [renderer.element.events :as-alias element.e]
    [renderer.utils.file :as file]))
+
+(defn event-handler
+  "Gathers drop event props.
+   https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/drop_event"
+  [^js/PointerEvent e]
+  (.stopPropagation e)
+  (.preventDefault e)
+
+  (rf/dispatch-sync [::app.e/drop-event {:pointer-pos [(.-pageX e) (.-pageY e)]
+                                         :data-transfer (.-dataTransfer e)
+                                         :modifiers (cond-> #{}
+                                                      (.-altKey e) (conj :alt)
+                                                      (.-ctrlKey e) (conj :ctrl)
+                                                      (.-metaKey e) (conj :meta)
+                                                      (.-shiftKey e) (conj :shift))}]))
 
 (defn add-image!
   [^js/File file [x y]]

@@ -120,15 +120,21 @@
  (fn [db [_ k]]
    (update-in db [k :visible?] not)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::pointer-event
  [(history.h/finalize nil)]
- (fn [{:keys [db]}
-      [_ {:as e :keys [data-transfer pointer-pos]}]]
-   {:db (h/pointer-handler db e)
-    :fx [(when (= (:type e) :drop)
-           [::fx/data-transfer [(frame.h/adjust-pointer-pos db pointer-pos)
-                                data-transfer]])]}))
+ (fn [db [_ e]]
+   (h/pointer-handler db e)))
+
+(rf/reg-event-db
+ ::wheel-event
+ (fn [db [_ e]]
+   (h/wheel-handler db e)))
+
+(rf/reg-event-fx
+ ::drop-event
+ (fn [{:keys [db]} [_ {:keys [data-transfer pointer-pos]}]]
+   {::fx/data-transfer [(frame.h/adjust-pointer-pos db pointer-pos) data-transfer]}))
 
 (rf/reg-event-db
  ::keyboard-event

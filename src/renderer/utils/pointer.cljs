@@ -14,7 +14,7 @@
   [:map {:closed true}
    [:element [:maybe [:or Element Handle]]]
    [:target any?]
-   [:type string?]
+   [:type [:enum "dblclick" "pointerover" "pointerenter" "pointerdown" "pointermove" "pointerrawupdate" "pointerup" "pointercancel" "pointerout" "pointerleave" "gotpointercapture" "lostpointercapture"]]
    [:pointer-pos [:maybe Vec2D]]
    [:pressure [:maybe number?]]
    [:pointer-type [:maybe [:enum "mouse" "pen" "touch"]]]
@@ -24,7 +24,6 @@
    [:azimuth [:maybe number?]]
    [:twist [:maybe number?]]
    [:tilt [:maybe Vec2D]]
-   [:data-transfer any?]
    [:button [:maybe PointerButton]]
    [:buttons [:maybe PointerButton]]
    [:delta [:maybe Vec2D]]
@@ -82,9 +81,7 @@
   [^js/PointerEvent e el]
   (.stopPropagation e)
   ;; Disable zoom and drop handling on canvas.
-  (when (or (and (.-ctrlKey e) (.-deltaY e))
-            (= (.-type e) "drop")
-            (= (.-pointerType e) "touch"))
+  (when (= (.-pointerType e) "touch")
     (.preventDefault e))
 
   (rf/dispatch-sync [::app.e/pointer-event {:element el
@@ -100,11 +97,8 @@
                                             :twist (.-twist e)
                                             :tilt (when (and (.-tiltX e) (.-tiltY e))
                                                     [(.-tiltX e) (.-tiltY e)])
-                                            :data-transfer (.-dataTransfer e)
                                             :button (button->key (.-button e))
                                             :buttons (button->key (.-buttons e))
-                                            :delta (when (and (.-deltaX e) (.-deltaY e))
-                                                     [(.-deltaX e) (.-deltaY e)])
                                             :modifiers (cond-> #{}
                                                          (.-altKey e) (conj :alt)
                                                          (.-ctrlKey e) (conj :ctrl)

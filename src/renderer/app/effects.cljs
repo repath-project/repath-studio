@@ -6,8 +6,8 @@
    [re-frame.core :as rf]
    [renderer.app.db :as db]
    [renderer.app.events :as-alias e]
-   [renderer.utils.data-transfer :as data-transfer]
-   [renderer.utils.dom :as dom]))
+   [renderer.utils.dom :as dom]
+   [renderer.utils.drop :as drop]))
 
 (rf.storage/reg-co-fx! config/app-key {:cofx :store})
 
@@ -19,8 +19,8 @@
 (rf/reg-fx
  ::data-transfer
  (fn [[position data-transfer]]
-   (data-transfer/items! position (.-items data-transfer))
-   (data-transfer/files! position (.-files data-transfer))))
+   (drop/items! position (.-items data-transfer))
+   (drop/files! position (.-files data-transfer))))
 
 (rf/reg-fx
  ::set-pointer-capture

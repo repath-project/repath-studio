@@ -7,7 +7,8 @@
    [renderer.frame.handlers :as frame.h]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.keyboard :refer [KeyboardEvent]]
-   [renderer.utils.pointer :as pointer :refer [PointerEvent]]))
+   [renderer.utils.pointer :as pointer :refer [PointerEvent]]
+   [renderer.utils.wheel :refer [WheelEvent]]))
 
 (mx/defn set-state
   [db, state :- State]
@@ -34,7 +35,7 @@
 
 (mx/defn pointer-handler
   [{:as db :keys [pointer-offset tool dom-rect drag? primary-tool drag-threshold]}
-   {:as e :keys [button buttons modifiers pointer-pos delta]} :- PointerEvent]
+   {:as e :keys [button buttons pointer-pos]} :- PointerEvent]
   (let [adjusted-pointer-pos (frame.h/adjust-pointer-pos db pointer-pos)]
     (case (:type e)
       "pointermove"
@@ -82,20 +83,21 @@
         (-> (dissoc :pointer-offset :drag?)
             (update :snap dissoc :nearest-neighbor)))
 
-      "dblclick"
+      "dblclick" ; TODO: Not a pointer event. Move to another handler or dispatch on delta time.
       (tool.hierarchy/double-click db e)
 
-      "wheel"
-      (if (some modifiers [:ctrl :alt])
-        (let [delta-y (second delta)
-              factor (Math/pow (inc (/ (- 1 (:zoom-sensitivity db)) 100))
-                               (- delta-y))]
-          (-> db
-              (frame.h/zoom-at-pointer factor)
-              (add-fx [:dispatch [::e/local-storage-persist]])))
-        (frame.h/pan-by db delta))
-
       db)))
+
+(mx/defn wheel-handler
+  [db, {:keys [modifiers delta]} :- WheelEvent]
+  (if (some modifiers [:ctrl :alt])
+    (let [delta-y (second delta)
+          factor (Math/pow (inc (/ (- 1 (:zoom-sensitivity db)) 100))
+                           (- delta-y))]
+      (-> db
+          (frame.h/zoom-at-pointer factor)
+          (add-fx [:dispatch [::e/local-storage-persist]])))
+    (frame.h/pan-by db delta)))
 
 (mx/defn key-handler
   [{:keys [tool] :as db}, e :- KeyboardEvent]

@@ -11,6 +11,7 @@
    [renderer.snap.subs :as-alias snap.s]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.overlay :as overlay]
+   [renderer.utils.drop :as drop]
    [renderer.utils.keyboard :as keyb]
    [renderer.utils.pointer :as pointer]))
 
@@ -49,12 +50,11 @@
     [:svg#canvas {:on-pointer-up pointer-handler
                   :on-pointer-down pointer-handler
                   :on-pointer-move pointer-handler
-                  :on-double-click pointer-handler
                   :on-key-up keyb/event-handler
                   :on-key-down keyb/event-handler
                   :tab-index 0 ; Enable keyboard events
                   :viewBox viewbox-attr
-                  :on-drop pointer-handler
+                  :on-drop drop/event-handler
                   :on-drag-over #(.preventDefault %)
                   :width width
                   :height height

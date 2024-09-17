@@ -13,11 +13,8 @@
    [renderer.frame.events :as-alias frame.e]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.ui :as ui]
-   [renderer.utils.pointer :as pointer]))
-
-(defn pointer-handler
-  [e]
-  (pointer/event-handler e nil))
+   [renderer.utils.pointer :as pointer]
+   [renderer.utils.wheel :as wheel]))
 
 (defn inner-component
   "We need access to the iframe's window to add the pointer move listener.
@@ -30,13 +27,16 @@
      {:component-did-mount
       (fn []
         (doseq
-         [event ["pointermove" "pointerup" "wheel"]]
-          (.addEventListener frame-window event pointer-handler #js {:passive false})))
+         [event ["pointermove" "pointerup"]]
+          (.addEventListener frame-window event pointer/event-handler))
+        (.addEventListener frame-window "wheel" wheel/event-handler #js {:passive false}))
 
       :component-will-unmount
-      #(doseq
-        [event ["pointermove" "pointerup" "wheel"]]
-         (.removeEventListener frame-window event pointer-handler))
+      (fn []
+        (doseq
+         [event ["pointermove" "pointerup"]]
+          (.removeEventListener frame-window event pointer/event-handler))
+        (.removeEventListener frame-window "wheel" wheel/event-handler))
 
       :reagent-render #()})))
 

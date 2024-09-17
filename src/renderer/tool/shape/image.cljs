@@ -4,7 +4,7 @@
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.e]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.data-transfer :as data-transfer]
+   [renderer.utils.drop :as drop]
    [renderer.utils.file :as file]))
 
 (derive :image ::tool.hierarchy/graphics)
@@ -26,5 +26,5 @@
                       "image/bmp" [".fmp"]}}]}
    (fn [file]
      (rf/dispatch [::app.e/set-tool :select])
-     (data-transfer/add-image! file adjusted-pointer-pos)))
+     (drop/add-image! file adjusted-pointer-pos)))
   db)

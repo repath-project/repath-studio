@@ -219,7 +219,6 @@
                                                                                                      :req {:buttons :nilable/keyword,
                                                                                                            :pressure :nilable/number,
                                                                                                            :element :any,
-                                                                                                           :data-transfer :any,
                                                                                                            :button :nilable/keyword,
                                                                                                            :type :string,
                                                                                                            :pointer-pos :nilable/seqable,
@@ -234,6 +233,15 @@
                                                                                                            :primary? :boolean,
                                                                                                            :altitude :nilable/number}}],
                                                                                              :ret :any}}},
+                                                               wheel-handler {:arities {2 {:args [:any
+                                                                                                  {:op :keys,
+                                                                                                   :req {:element :any,
+                                                                                                         :target :any,
+                                                                                                         :type :any,
+                                                                                                         :pointer-pos :nilable/seqable,
+                                                                                                         :delta :nilable/seqable,
+                                                                                                         :modifiers :set}}],
+                                                                                           :ret :any}}},
                                                                key-handler {:arities {2 {:args [:any
                                                                                                 {:op :keys,
                                                                                                  :req {:target :any,
