@@ -5,7 +5,7 @@
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.e]
    [renderer.element.db :refer [Element Handle]]
-   [renderer.utils.keyboard :refer [ModifierKey]]
+   [renderer.utils.keyboard :refer [ModifierKey modifiers]]
    [renderer.utils.math :refer [Vec2D]]))
 
 (def PointerButton [:enum :left :middle :right :back :forward])
@@ -17,17 +17,11 @@
    [:type [:enum "pointerover" "pointerenter" "pointerdown" "pointermove" "pointerrawupdate" "pointerup" "pointercancel" "pointerout" "pointerleave" "gotpointercapture" "lostpointercapture"]]
    [:pointer-pos [:maybe Vec2D]]
    [:pressure [:maybe number?]]
-   [:pointer-type [:maybe [:enum "mouse" "pen" "touch"]]]
+   [:pointer-type [:enum "mouse" "pen" "touch"]]
    [:pointer-id number?]
    [:primary? boolean?]
-   [:altitude [:maybe number?]]
-   [:azimuth [:maybe number?]]
-   [:twist [:maybe number?]]
-   [:tilt-x [:maybe number?]]
-   [:tilt-y [:maybe number?]]
    [:button [:maybe PointerButton]]
    [:buttons [:maybe PointerButton]]
-   [:delta [:maybe Vec2D]]
    [:modifiers [:set ModifierKey]]])
 
 (mx/defn ctrl? :- boolean?
@@ -93,15 +87,6 @@
                                             :pointer-type (.-pointerType e)
                                             :pointer-id (.-pointerId e)
                                             :primary? (.-isPrimary e)
-                                            :altitude (.-altitudeAngle e)
-                                            :azimuth (.-azimuthAngle e)
-                                            :twist (.-twist e)
-                                            :tilt-x (.-tiltX e)
-                                            :tilt-y (.-tiltY e)
                                             :button (button->key (.-button e))
                                             :buttons (button->key (.-buttons e))
-                                            :modifiers (cond-> #{}
-                                                         (.-altKey e) (conj :alt)
-                                                         (.-ctrlKey e) (conj :ctrl)
-                                                         (.-metaKey e) (conj :meta)
-                                                         (.-shiftKey e) (conj :shift))}]))
+                                            :modifiers (modifiers e)}]))

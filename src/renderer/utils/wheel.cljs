@@ -2,7 +2,7 @@
   (:require
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.e]
-   [renderer.utils.keyboard :refer [ModifierKey]]
+   [renderer.utils.keyboard :refer [ModifierKey modifiers]]
    [renderer.utils.math :refer [Vec2D]]))
 
 (def WheelEvent
@@ -18,7 +18,7 @@
 (defn event-handler
   "Gathers wheel event props.
    https://developer.mozilla.org/en-US/docs/Web/API/WheelEvent"
-  [^js/PointerEvent e]
+  [^js/WheelEvent e]
   (.stopPropagation e)
 
   (when (.-ctrlKey e) (.preventDefault e)) ; Disable wheel zoom on canvas.
@@ -29,8 +29,4 @@
                                           :delta-x (.-deltaX e)
                                           :delta-y (.-deltaY e)
                                           :delta-z (.-deltaZ e)
-                                          :modifiers (cond-> #{}
-                                                       (.-altKey e) (conj :alt)
-                                                       (.-ctrlKey e) (conj :ctrl)
-                                                       (.-metaKey e) (conj :meta)
-                                                       (.-shiftKey e) (conj :shift))}]))
+                                          :modifiers (modifiers e)}]))

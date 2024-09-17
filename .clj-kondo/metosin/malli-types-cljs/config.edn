@@ -216,23 +216,17 @@
                                                                set-tool {:arities {2 {:args [:any :any], :ret :any}}},
                                                                pointer-handler {:arities {3 {:args [:any
                                                                                                     {:op :keys,
-                                                                                                     :req {:tilt-y :nilable/number,
-                                                                                                           :buttons :nilable/keyword,
+                                                                                                     :req {:buttons :nilable/keyword,
                                                                                                            :pressure :nilable/number,
                                                                                                            :element :any,
-                                                                                                           :tilt-x :nilable/number,
                                                                                                            :button :nilable/keyword,
                                                                                                            :type :string,
                                                                                                            :pointer-pos :nilable/seqable,
-                                                                                                           :twist :nilable/number,
                                                                                                            :pointer-id :number,
-                                                                                                           :azimuth :nilable/number,
                                                                                                            :modifiers :set,
-                                                                                                           :pointer-type :nilable/string,
-                                                                                                           :delta :nilable/seqable,
+                                                                                                           :pointer-type :string,
                                                                                                            :target :any,
-                                                                                                           :primary? :boolean,
-                                                                                                           :altitude :nilable/number}}
+                                                                                                           :primary? :boolean}}
                                                                                                     :number],
                                                                                              :ret :any}}},
                                                                wheel-handler {:arities {2 {:args [:any
@@ -572,7 +566,8 @@
                                                                                                :ret :any,
                                                                                                :min-arity 2}}}},
                                         renderer.utils.keyboard {key-code->key {:arities {1 {:args [:number],
-                                                                                             :ret :nilable/string}}}},
+                                                                                             :ret :nilable/string}}},
+                                                                 modifiers {:arities {1 {:args [:any], :ret :set}}}},
                                         renderer.ruler.views {bounds-rect {:arities {1 {:args [:keyword], :ret :any}}},
                                                               pointer {:arities {1 {:args [:keyword], :ret :any}}},
                                                               label {:arities {4 {:args [:keyword

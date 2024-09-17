@@ -34,6 +34,14 @@
   [key-code :- number?]
   (get key-chars key-code))
 
+(mx/defn modifiers :- set?
+  [e]
+  (cond-> #{}
+    (.-altKey e) (conj :alt)
+    (.-ctrlKey e) (conj :ctrl)
+    (.-metaKey e) (conj :meta)
+    (.-shiftKey e) (conj :shift)))
+
 (defn event-handler
   "https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
    https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/"
@@ -44,11 +52,7 @@
                       :code (.-code e)
                       :key-code (.-keyCode e)
                       :key (.-key e)
-                      :modifiers (cond-> #{}
-                                   (.-altKey e) (conj :alt)
-                                   (.-ctrlKey e) (conj :ctrl)
-                                   (.-metaKey e) (conj :meta)
-                                   (.-shiftKey e) (conj :shift))}]))
+                      :modifiers (modifiers e)}]))
 
 (defn input-key-down-handler
   "Generic on-key-down handler for input elements that dispatches an event `f`
