@@ -1,15 +1,16 @@
 (ns renderer.app.handlers
   (:require
    [malli.experimental :as mx]
-   [renderer.app.db :refer [Tool]]
+   [renderer.app.db :refer [Tool State]]
    [renderer.app.effects :as-alias fx]
    [renderer.app.events :as-alias e]
    [renderer.frame.handlers :as frame.h]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.pointer :as pointer]))
+   [renderer.utils.keyboard :refer [KeyboardEvent]]
+   [renderer.utils.pointer :as pointer :refer [PointerEvent]]))
 
 (mx/defn set-state
-  [db, state :- keyword?]
+  [db, state :- State]
   (assoc db :state state))
 
 (mx/defn set-cursor
@@ -31,12 +32,12 @@
       (assoc :tool tool)
       (tool.hierarchy/activate)))
 
-(defn pointer-handler
+(mx/defn pointer-handler
   [{:as db :keys [pointer-offset tool dom-rect drag? primary-tool drag-threshold]}
-   {:as e :keys [button buttons modifiers pointer-pos delta]}]
+   {:as e :keys [button buttons modifiers pointer-pos delta]} :- PointerEvent]
   (let [adjusted-pointer-pos (frame.h/adjust-pointer-pos db pointer-pos)]
     (case (:type e)
-      :pointermove
+      "pointermove"
       (-> (if pointer-offset
             (if (pointer/significant-drag? pointer-pos pointer-offset drag-threshold)
               (cond-> db
@@ -55,7 +56,7 @@
           (assoc :pointer-pos pointer-pos
                  :adjusted-pointer-pos adjusted-pointer-pos))
 
-      :pointerdown
+      "pointerdown"
       (cond-> db
         (= button :middle)
         (-> (assoc :primary-tool tool)
@@ -68,7 +69,7 @@
         :always
         (tool.hierarchy/pointer-down e))
 
-      :pointerup
+      "pointerup"
       (cond-> (if drag?
                 (-> (tool.hierarchy/drag-end db e)
                     (add-fx [::fx/release-pointer-capture (:pointer-id e)]))
@@ -81,10 +82,10 @@
         (-> (dissoc :pointer-offset :drag?)
             (update :snap dissoc :nearest-neighbor)))
 
-      :dblclick
+      "dblclick"
       (tool.hierarchy/double-click db e)
 
-      :wheel
+      "wheel"
       (if (some modifiers [:ctrl :alt])
         (let [delta-y (second delta)
               factor (Math/pow (inc (/ (- 1 (:zoom-sensitivity db)) 100))
@@ -96,12 +97,12 @@
 
       db)))
 
-(defn key-handler
-  [{:keys [tool] :as db} {:keys [code] :as e}]
+(mx/defn key-handler
+  [{:keys [tool] :as db}, e :- KeyboardEvent]
   (case (:type e)
-    :keydown
+    "keydown"
     (cond-> db
-      (and (= code "Space")
+      (and (= (:code e) "Space")
            (not= tool :pan))
       (-> (assoc :primary-tool tool)
           (set-tool :pan))
@@ -109,9 +110,9 @@
       :always
       (tool.hierarchy/key-down e))
 
-    :keyup
+    "keyup"
     (cond-> db
-      (and (= code "Space")
+      (and (= (:code e) "Space")
            (:primary-tool db))
       (-> (set-tool (:primary-tool db))
           (dissoc :primary-tool))

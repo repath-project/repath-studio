@@ -49,7 +49,7 @@
          (:ctrlKey shortcut) (conj "Ctrl")
          (:shiftKey shortcut) (conj "⇧")
          (:altKey shortcut) (conj "Alt")
-         :always (conj (keyb/code->key (:keyCode shortcut))))
+         :always (conj (keyb/key-code->key (:keyCode shortcut))))
        (map #(into [:span.shortcut-key] %))
        (interpose [:span {:class "px-0.5"} "+"])
        (into [:span])))

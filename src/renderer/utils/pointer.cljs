@@ -4,7 +4,31 @@
    [malli.experimental :as mx]
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.e]
+   [renderer.element.db :refer [Element Handle]]
+   [renderer.utils.keyboard :refer [ModifierKey]]
    [renderer.utils.math :refer [Vec2D]]))
+
+(def PointerButton [:enum :left :middle :right :back :forward])
+
+(def PointerEvent
+  [:map {:closed true}
+   [:element [:maybe [:or Element Handle]]]
+   [:target any?]
+   [:type string?]
+   [:pointer-pos [:maybe Vec2D]]
+   [:pressure [:maybe number?]]
+   [:pointer-type [:maybe [:enum "mouse" "pen" "touch"]]]
+   [:pointer-id number?]
+   [:primary? boolean?]
+   [:altitude [:maybe number?]]
+   [:azimuth [:maybe number?]]
+   [:twist [:maybe number?]]
+   [:tilt [:maybe Vec2D]]
+   [:data-transfer any?]
+   [:button [:maybe PointerButton]]
+   [:buttons [:maybe PointerButton]]
+   [:delta [:maybe Vec2D]]
+   [:modifiers [:set ModifierKey]]])
 
 (mx/defn ctrl? :- boolean?
   [e]
@@ -29,13 +53,14 @@
       (mat/div zoom)
       (mat/add pan)))
 
-(def button
+(mx/defn button->key :- [:maybe PointerButton]
   "https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button"
-  {0 :left
-   1 :middle
-   2 :right
-   3 :back
-   4 :forward})
+  [button :- number?]
+  (get {0 :left
+        1 :middle
+        2 :right
+        3 :back
+        4 :forward} button))
 
 (mx/defn lock-direction :- Vec2D
   "Locks pointer movement to the axis with the biggest offset"
@@ -64,7 +89,7 @@
 
   (rf/dispatch-sync [::app.e/pointer-event {:element el
                                             :target (.-target e)
-                                            :type (keyword (.-type e))
+                                            :type (.-type e)
                                             :pointer-pos [(.-pageX e) (.-pageY e)]
                                             :pressure (.-pressure e)
                                             :pointer-type (.-pointerType e)
@@ -73,11 +98,13 @@
                                             :altitude (.-altitudeAngle e)
                                             :azimuth (.-azimuthAngle e)
                                             :twist (.-twist e)
-                                            :tilt [(.-tiltX e) (.-tiltY e)]
+                                            :tilt (when (and (.-tiltX e) (.-tiltY e))
+                                                    [(.-tiltX e) (.-tiltY e)])
                                             :data-transfer (.-dataTransfer e)
-                                            :button (get button (.-button e))
-                                            :buttons (get button (.-buttons e))
-                                            :delta [(.-deltaX e) (.-deltaY e)]
+                                            :button (button->key (.-button e))
+                                            :buttons (button->key (.-buttons e))
+                                            :delta (when (and (.-deltaX e) (.-deltaY e))
+                                                     [(.-deltaX e) (.-deltaY e)])
                                             :modifiers (cond-> #{}
                                                          (.-altKey e) (conj :alt)
                                                          (.-ctrlKey e) (conj :ctrl)

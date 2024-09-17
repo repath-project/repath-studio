@@ -91,33 +91,33 @@
     [{:title "Distribute spacing horizontally"
       :icon "distribute-spacing-horizontal"
       :disabled? true
-      :action [::element.e/raise]}
+      :action [::element.e/istribute-spacing :horizontal]}
      {:title "Distribute spacing vertically"
       :icon "distribute-spacing-vertical"
       :disabled? true
-      :action [::element.e/lower]}])
+      :action [::element.e/distribute-spacing :vertical]}])
 
 #_(defn rotate-actions
     []
     [{:title "Rotate 90° clockwise"
       :icon "rotate-clockwise"
       :disabled? true
-      :action [::element.e/raise]}
+      :action [::element.e/rotate -90]}
      {:title "Rotate 90° counterclockwise"
       :icon "rotate-counterclockwise"
       :disabled? true
-      :action [::element.e/lower]}])
+      :action [::element.e/rotate 90]}])
 
 #_(defn flip-actions
     []
     [{:title "Flip horizontally"
       :icon "flip-horizontal"
       :disabled? true
-      :action [::element.e/raise]}
+      :action [::element.e/flip :horizontal]}
      {:title "Flip vertically"
       :icon "flip-vertical"
       :disabled? true
-      :action [::element.e/lower]}])
+      :action [::element.e/flip :vertical]}])
 
 (defn root
   []
@@ -130,6 +130,6 @@
                         (boolean-actions (not multiple-selected?))]]
     (->> object-actions
          (interpose [{:type :divider}])
-         flatten
+         (flatten)
          (map v/button)
          (into [:div.flex.flex-col.text-center.flex-0.ml-px.toolbar]))))

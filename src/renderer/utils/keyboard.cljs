@@ -1,6 +1,7 @@
 (ns renderer.utils.keyboard
   (:require
    [clojure.set :as set]
+   [malli.experimental :as mx]
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.e]
    [renderer.dialog.events :as-alias dialog.e]
@@ -12,6 +13,16 @@
   (:import
    [goog.events KeyCodes]))
 
+(def ModifierKey [:enum :alt :ctrl :meta :shift])
+
+(def KeyboardEvent [:map {:closed true}
+                    [:target any?]
+                    [:type [:enum "keydown" "keypress" "keyup"]]
+                    [:code string?]
+                    [:key-code number?]
+                    [:key string?]
+                    [:modifiers [:set ModifierKey]]])
+
 (def key-codes
   "https://google.github.io/closure-library/api/goog.events.KeyCodes.html"
   (js->clj KeyCodes))
@@ -19,9 +30,9 @@
 (def key-chars
   (set/map-invert key-codes))
 
-(defn code->key
-  [code]
-  (get key-chars code))
+(mx/defn key-code->key :- [:maybe string?]
+  [key-code :- number?]
+  (get key-chars key-code))
 
 (defn event-handler
   "https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
@@ -29,7 +40,7 @@
   [^js/KeyboardEvent e]
   (rf/dispatch-sync [::app.e/keyboard-event
                      {:target (.-target e)
-                      :type (keyword (.-type e))
+                      :type (.-type e)
                       :code (.-code e)
                       :key-code (.-keyCode e)
                       :key (.-key e)

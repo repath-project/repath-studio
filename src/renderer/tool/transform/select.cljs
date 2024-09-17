@@ -57,10 +57,11 @@
   [db, el :- Element, intersecting? :- boolean?]
   (let [{{:keys [x y width height]} :attrs} (element.h/get-temp db)
         selection-bounds [x y (+ x width) (+ y height)]]
-    (when-let [el-bounds (:bounds el)]
+    (if-let [el-bounds (:bounds el)]
       (if intersecting?
         (bounds/intersect? el-bounds selection-bounds)
-        (bounds/contained? el-bounds selection-bounds)))))
+        (bounds/contained? el-bounds selection-bounds))
+      false)))
 
 (mx/defn reduce-by-area
   [db, intersecting? :- boolean?, f :- fn?]
@@ -144,11 +145,11 @@
       (not intersecting?) (assoc-in [:attrs :fill] "transparent"))))
 
 (defmethod tool.hierarchy/drag-start :select
-  [db _e]
-  (case (-> db :clicked-element :tag)
-    :canvas (app.h/set-state db :select)
-    :scale (app.h/set-state db :scale)
-    (app.h/set-state db :move)))
+  [{:keys [clicked-element] :as db} _e]
+  (app.h/set-state db (case (:tag clicked-element)
+                        :canvas :select
+                        :scale :scale
+                        :move)))
 
 (mx/defn lock-ratio :- Vec2D
   [[x y] :- Vec2D, handle :- ScaleHandle]
