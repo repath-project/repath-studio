@@ -133,9 +133,10 @@
    (h/wheel-handler db e)))
 
 (rf/reg-event-fx
- ::drop-event
- (fn [{:keys [db]} [_ {:keys [data-transfer pointer-pos]}]]
-   {::fx/data-transfer [(frame.h/adjust-pointer-pos db pointer-pos) data-transfer]}))
+ ::drag-event
+ (fn [{:keys [db]} [_ {:keys [data-transfer pointer-pos] :as e}]]
+   (when (= (:type e) "drop")
+     {::fx/data-transfer [(frame.h/adjust-pointer-pos db pointer-pos) data-transfer]})))
 
 (rf/reg-event-db
  ::keyboard-event

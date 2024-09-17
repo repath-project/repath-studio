@@ -9,12 +9,13 @@
 
 (defn event-handler
   "Gathers drop event props.
-   https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/drop_event"
-  [^js/PointerEvent e]
+   https://developer.mozilla.org/en-US/docs/Web/API/DragEvent"
+  [^js/DragEvent e]
   (.stopPropagation e)
   (.preventDefault e)
 
-  (rf/dispatch-sync [::app.e/drop-event {:pointer-pos [(.-pageX e) (.-pageY e)]
+  (rf/dispatch-sync [::app.e/drag-event {:type (.-type e)
+                                         :pointer-pos [(.-pageX e) (.-pageY e)]
                                          :data-transfer (.-dataTransfer e)}]))
 
 (defn add-image!
