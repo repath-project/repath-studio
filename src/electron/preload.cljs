@@ -1,4 +1,5 @@
 (ns electron.preload
+  "https://www.electronjs.org/docs/latest/tutorial/tutorial-preload"
   (:require
    ["electron" :refer [contextBridge ipcRenderer]]
    ["font-scanner" :as fontManager]

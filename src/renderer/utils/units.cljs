@@ -70,5 +70,6 @@
   (let [[n unit] (parse-unit v)]
     (-> (apply f (->px n unit) more)
         (.toFixed 2)
+        (js/parseFloat)
         (->unit unit)
         (str (when (valid-unit? unit) unit)))))

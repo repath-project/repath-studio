@@ -1,4 +1,5 @@
 (ns electron.main
+  "https://www.electronjs.org/docs/latest/tutorial/process-model#the-main-process"
   (:require
    ["@webref/css" :as css]
    ["electron" :refer [app shell ipcMain BrowserWindow]]
