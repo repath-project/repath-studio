@@ -80,7 +80,7 @@
    pointer movement."
   [^js/PointerEvent e el]
   (.stopPropagation e)
-  ;; Disable zoom and drop handling on canvas.
+
   (when (= (.-pointerType e) "touch")
     (.preventDefault e))
 
