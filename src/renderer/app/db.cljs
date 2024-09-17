@@ -55,6 +55,8 @@
    [:adjusted-pointer-offset {:optional true} Vec2D]
    [:drag? {:optional true} boolean?]
    [:zoom-sensitivity {:default 0.75} [:and number? pos?]]
+   [:event-time {:optional true} number?]
+   [:double-click-delta {:default 250} [:and number? pos?]]
    [:state {:default :default} State]
    [:grid-visible? {:default false :persist true} boolean?]
    [:rulers-visible? {:default true :persist true} boolean?]

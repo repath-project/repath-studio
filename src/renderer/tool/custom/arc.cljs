@@ -89,8 +89,7 @@
     [:path (merge {:d (tool.hierarchy/path element)
                    :on-pointer-up pointer-handler
                    :on-pointer-down pointer-handler
-                   :on-pointer-move pointer-handler
-                   :on-double-click pointer-handler}
+                   :on-pointer-move pointer-handler}
                   (select-keys attrs [:stroke-width
                                       :opacity
                                       :fill

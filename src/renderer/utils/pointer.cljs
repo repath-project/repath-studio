@@ -14,7 +14,7 @@
   [:map {:closed true}
    [:element [:maybe [:or Element Handle]]]
    [:target any?]
-   [:type [:enum "dblclick" "pointerover" "pointerenter" "pointerdown" "pointermove" "pointerrawupdate" "pointerup" "pointercancel" "pointerout" "pointerleave" "gotpointercapture" "lostpointercapture"]]
+   [:type [:enum "pointerover" "pointerenter" "pointerdown" "pointermove" "pointerrawupdate" "pointerup" "pointercancel" "pointerout" "pointerleave" "gotpointercapture" "lostpointercapture"]]
    [:pointer-pos [:maybe Vec2D]]
    [:pressure [:maybe number?]]
    [:pointer-type [:maybe [:enum "mouse" "pen" "touch"]]]
@@ -23,7 +23,8 @@
    [:altitude [:maybe number?]]
    [:azimuth [:maybe number?]]
    [:twist [:maybe number?]]
-   [:tilt [:maybe Vec2D]]
+   [:tilt-x [:maybe number?]]
+   [:tilt-y [:maybe number?]]
    [:button [:maybe PointerButton]]
    [:buttons [:maybe PointerButton]]
    [:delta [:maybe Vec2D]]
@@ -95,8 +96,8 @@
                                             :altitude (.-altitudeAngle e)
                                             :azimuth (.-azimuthAngle e)
                                             :twist (.-twist e)
-                                            :tilt (when (and (.-tiltX e) (.-tiltY e))
-                                                    [(.-tiltX e) (.-tiltY e)])
+                                            :tilt-x (.-tiltX e)
+                                            :tilt-y (.-tiltY e)
                                             :button (button->key (.-button e))
                                             :buttons (button->key (.-buttons e))
                                             :modifiers (cond-> #{}

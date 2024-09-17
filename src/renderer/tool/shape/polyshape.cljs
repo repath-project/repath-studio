@@ -68,7 +68,11 @@
   [{:keys [active-document] :as db} _e]
   (-> db
       (update-in [:documents active-document :temp-element :attrs :points]
-                 #(str/join " " (apply concat (drop-last 2 (utils.attr/points->vec %)))))
+                 #(->> %
+                       (utils.attr/points->vec)
+                       (drop-last)
+                       (apply concat)
+                       (str/join " ")))
       (element.h/add)
       (app.h/set-tool :select)
       (app.h/set-state :default)

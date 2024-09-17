@@ -34,8 +34,9 @@
       (tool.hierarchy/activate)))
 
 (mx/defn pointer-handler
-  [{:as db :keys [pointer-offset tool dom-rect drag? primary-tool drag-threshold]}
-   {:as e :keys [button buttons pointer-pos]} :- PointerEvent]
+  [{:as db :keys [pointer-offset tool dom-rect drag? primary-tool drag-threshold event-time double-click-delta]}
+   {:as e :keys [button buttons pointer-pos]} :- PointerEvent
+   now :- number?]
   (let [adjusted-pointer-pos (frame.h/adjust-pointer-pos db pointer-pos)]
     (case (:type e)
       "pointermove"
@@ -74,7 +75,13 @@
       (cond-> (if drag?
                 (-> (tool.hierarchy/drag-end db e)
                     (add-fx [::fx/release-pointer-capture (:pointer-id e)]))
-                (cond-> db (not= button :right) (tool.hierarchy/pointer-up e)))
+                (if (= button :right)
+                  db
+                  (if (> (- now event-time) double-click-delta)
+                    (-> db
+                        (assoc :event-time now)
+                        (tool.hierarchy/pointer-up e))
+                    (tool.hierarchy/double-click db e))))
         (and primary-tool (= button :middle))
         (-> (set-tool primary-tool)
             (dissoc :primary-tool))
@@ -83,21 +90,17 @@
         (-> (dissoc :pointer-offset :drag?)
             (update :snap dissoc :nearest-neighbor)))
 
-      "dblclick" ; TODO: Not a pointer event. Move to another handler or dispatch on delta time.
-      (tool.hierarchy/double-click db e)
-
       db)))
 
 (mx/defn wheel-handler
-  [db, {:keys [modifiers delta]} :- WheelEvent]
+  [db, {:keys [modifiers delta-x delta-y]} :- WheelEvent]
   (if (some modifiers [:ctrl :alt])
-    (let [delta-y (second delta)
-          factor (Math/pow (inc (/ (- 1 (:zoom-sensitivity db)) 100))
+    (let [factor (Math/pow (inc (/ (- 1 (:zoom-sensitivity db)) 100))
                            (- delta-y))]
       (-> db
           (frame.h/zoom-at-pointer factor)
           (add-fx [:dispatch [::e/local-storage-persist]])))
-    (frame.h/pan-by db delta)))
+    (frame.h/pan-by db [delta-x delta-y])))
 
 (mx/defn key-handler
   [{:keys [tool] :as db}, e :- KeyboardEvent]

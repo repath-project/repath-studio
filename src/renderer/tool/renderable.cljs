@@ -69,7 +69,6 @@
             {:on-pointer-up pointer-handler
              :on-pointer-down pointer-handler
              :on-pointer-move pointer-handler
-             :on-double-click pointer-handler
              :shape-rendering "optimizeSpeed"
              :fill "transparent"
              :stroke "transparent"

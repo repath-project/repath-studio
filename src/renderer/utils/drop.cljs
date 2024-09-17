@@ -15,12 +15,7 @@
   (.preventDefault e)
 
   (rf/dispatch-sync [::app.e/drop-event {:pointer-pos [(.-pageX e) (.-pageY e)]
-                                         :data-transfer (.-dataTransfer e)
-                                         :modifiers (cond-> #{}
-                                                      (.-altKey e) (conj :alt)
-                                                      (.-ctrlKey e) (conj :ctrl)
-                                                      (.-metaKey e) (conj :meta)
-                                                      (.-shiftKey e) (conj :shift))}]))
+                                         :data-transfer (.-dataTransfer e)}]))
 
 (defn add-image!
   [^js/File file [x y]]

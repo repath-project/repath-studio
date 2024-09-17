@@ -124,7 +124,9 @@
     (-> db
         (element.h/ignore (:id element))
         (element.h/deselect (:id element)))
-    (app.h/set-tool db :edit)))
+    (cond-> db
+      (not= :canvas (:tag element))
+      (app.h/set-tool :edit))))
 
 (defmethod tool.hierarchy/activate :select
   [db]

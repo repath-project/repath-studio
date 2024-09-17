@@ -53,7 +53,6 @@
                  :stroke "transparent"
                  :stroke-width stroke-width
                  :pointer-events (when ignored? "none")
-                 :on-double-click pointer-handler
                  :on-pointer-up pointer-handler
                  :on-pointer-down pointer-handler
                  :on-pointer-move pointer-handler}]))]))

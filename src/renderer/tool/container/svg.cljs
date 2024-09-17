@@ -79,7 +79,6 @@
          :fill "white"
          :on-pointer-up pointer-handler
          :on-pointer-down #(when (= (.-button %) 2)
-                             (pointer/event-handler % el))
-         :on-double-click pointer-handler})]
+                             (pointer/event-handler % el))})]
       (for [el child-els]
         ^{:key (:id el)} [tool.hierarchy/render el])]]))

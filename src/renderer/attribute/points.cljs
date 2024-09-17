@@ -28,12 +28,7 @@
   [_ k v {:keys [disabled]}]
   (let [state-default? (= @(rf/subscribe [::app.s/state]) :default)]
     [:<>
-     [v/form-input
-      k
-      (if state-default? v "waiting")
-      {:disabled (or disabled
-                     (not v)
-                     (not state-default?))}]
+     [v/form-input k (if state-default? v "waiting") {:disabled (or disabled (not v) (not state-default?))}]
      (when v
        [:> Popover/Root {:modal true}
         [:> Popover/Trigger {:as-child true}
@@ -41,9 +36,10 @@
           {:style {:flex "0 0 26px"}}
           [ui/icon "pencil" {:class "icon small"}]]]
         [:> Popover/Portal
-         [:> Popover/Content {:sideOffset 5
-                              :className "popover-content"
-                              :align "end"}
+         [:> Popover/Content
+          {:sideOffset 5
+           :className "popover-content"
+           :align "end"}
           (when state-default?
             (let [points (utils.attr/points->vec v)]
               [:div.flex.overflow-hidden

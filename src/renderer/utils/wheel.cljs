@@ -10,7 +10,9 @@
    [:target any?]
    [:type [:= "wheel"]]
    [:pointer-pos [:maybe Vec2D]]
-   [:delta [:maybe Vec2D]]
+   [:delta-x [:maybe number?]]
+   [:delta-y [:maybe number?]]
+   [:delta-z [:maybe number?]]
    [:modifiers [:set ModifierKey]]])
 
 (defn event-handler
@@ -24,7 +26,9 @@
   (rf/dispatch-sync [::app.e/wheel-event {:target (.-target e)
                                           :type (.-type e)
                                           :pointer-pos [(.-pageX e) (.-pageY e)]
-                                          :delta [(.-deltaX e) (.-deltaY e)]
+                                          :delta-x (.-deltaX e)
+                                          :delta-y (.-deltaY e)
+                                          :delta-z (.-deltaZ e)
                                           :modifiers (cond-> #{}
                                                        (.-altKey e) (conj :alt)
                                                        (.-ctrlKey e) (conj :ctrl)

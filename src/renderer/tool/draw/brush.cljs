@@ -152,8 +152,7 @@
                                            {:simulatePressure true}))
                    :on-pointer-up pointer-handler
                    :on-pointer-down pointer-handler
-                   :on-pointer-move pointer-handler
-                   :on-double-click pointer-handler}
+                   :on-pointer-move pointer-handler}
                   (-> attrs
                       (select-keys [:id :class :opacity])
                       (assoc :fill (:stroke attrs))))]))

@@ -120,11 +120,12 @@
  (fn [db [_ k]]
    (update-in db [k :visible?] not)))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::pointer-event
- [(history.h/finalize nil)]
- (fn [db [_ e]]
-   (h/pointer-handler db e)))
+ [(rf/inject-cofx ::fx/now)
+  (history.h/finalize nil)]
+ (fn [{:keys [db now]} [_ e]]
+   {:db (h/pointer-handler db e now)}))
 
 (rf/reg-event-db
  ::wheel-event
