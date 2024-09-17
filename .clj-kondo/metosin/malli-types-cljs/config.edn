@@ -235,8 +235,7 @@
                                                                                              :ret :any}}},
                                                                wheel-handler {:arities {2 {:args [:any
                                                                                                   {:op :keys,
-                                                                                                   :req {:element :any,
-                                                                                                         :target :any,
+                                                                                                   :req {:target :any,
                                                                                                          :type :any,
                                                                                                          :pointer-pos :nilable/seqable,
                                                                                                          :delta :nilable/seqable,
