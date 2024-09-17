@@ -48,12 +48,11 @@
   [{:keys [tag attr]}]
   (let [data (if attr (bcd/conmpatibility tag attr) (bcd/conmpatibility tag))
         support-data (:support data)
-        webref-property (when attr @(rf/subscribe [::app.s/webref-css-property attr]))
-        css-property  (when attr @(rf/subscribe [::app.s/css-property attr]))
-        spec-url (or (:spec_url data) (:href webref-property) (:href css-property))
+        property  (when attr @(rf/subscribe [::app.s/property attr]))
+        spec-url (or (:spec_url data) (:href property))
         spec-url (if (vector? spec-url) (first spec-url) spec-url)
-        ;; mdn-url (or (:mdn_url css-property) (:mdn_url data)) ; REVIEW
-        mdn-url (or (:mdn_url data) (when data (construct-mdn-url (name attr))))]
+        mdn-url (or (when data (or (:mdn_url data) (construct-mdn-url (name attr))))
+                    (:mdn_url property))]
     [:div.flex.flex-col
      (when (some :version_added (vals support-data))
        [browser-compatibility support-data])
@@ -149,43 +148,42 @@
          [ui/icon "chevron-down"]]]]])])
 
 (defn property-list
-  [webref-property css-property]
+  [property]
   [:<>
-   (when-let [applies-to (or (:appliesTo webref-property)
-                             (:appliesto css-property))]
+   (when-let [applies-to (:appliesTo property)]
      [:<>
       [:h3.font-bold "Applies to"]
       [:p applies-to]])
-   (when-let [computed-value (or (:computedValue webref-property)
-                                 (:computed css-property))]
+   (when-let [computed-value (:computedValue property)]
      (when-not (= computed-value "as specified")
        [:<>
         [:h3.font-bold "Computed value"]
         [:p
          computed-value
-         (when-let [percentages (or (:percentages webref-property)
-                                    (:percentages css-property))]
+         (when-let [percentages (:percentages property)]
            (when-not (= percentages "N/A")
              (str " (percentages " percentages ")")))]]))
-   (when-let [animatable (:animatable webref-property)]
+   (when-let [animatable (:animatable property)]
      [:<>
       [:h3.font-bold "Animatable"]
       [:p animatable]])
-   (when-let [animation-type (or (:animationType webref-property)
-                                 (:animationType css-property))]
+   (when-let [animation-type (:animationType property)]
      [:<>
       [:h3.font-bold "Animation Type"]
       [:p (cond->> animation-type (vector? animation-type) (str/join " "))]])
-   (when-let [style-declaration (:styleDeclaration webref-property)]
+   (when-let [style-declaration (:styleDeclaration property)]
      [:<>
       [:h3.font-bold "Style declaration"]
-      [:p (str/join " | " style-declaration)]])])
+      [:p (str/join " | " style-declaration)]])
+   (when-let [syntax (:syntax property)]
+     [:<>
+      [:h3.font-bold "Syntax"]
+      [:p syntax]])])
 
 (defn label
   [tag k]
   (let [clicked-element @(rf/subscribe [::app.s/clicked-element])
-        webref-property @(rf/subscribe [::app.s/webref-css-property k])
-        css-property  @(rf/subscribe [::app.s/css-property k])
+        property  @(rf/subscribe [::app.s/property k])
         dispatch-tag (if (contains? (methods hierarchy/description) [tag k]) tag :default)
         active? (and (= (:type clicked-element) :handle)
                      (= (:key clicked-element) key))]
@@ -205,21 +203,14 @@
           [:p (hierarchy/description dispatch-tag k)])
         (when (bcd/conmpatibility tag k)
           [:<>
-           (when (or webref-property css-property)
-             [property-list webref-property css-property])
-           (when css-property
-             [:<>
-              [:h3.font-bold "Syntax"]
-              [:p (:syntax css-property)]])
-
+           (when property [property-list property])
            [caniusethis {:tag tag :attr k}]])]
        [:> HoverCard/Arrow {:class "popover-arrow"}]]]]))
 
 (defn row
   [k v locked? tag]
-  (let [webref-property @(rf/subscribe [::app.s/webref-css-property k])
-        css-property  @(rf/subscribe [::app.s/css-property k])
-        initial (or (:initial webref-property) (:initial css-property))
+  (let [property @(rf/subscribe [::app.s/property k])
+        initial (:initial property)
         dispatch-tag (if (contains? (methods hierarchy/form-element) [tag k]) tag :default)]
     [:<>
      [label tag k]

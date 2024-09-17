@@ -84,22 +84,25 @@
  :-> :webref-css)
 
 (rf/reg-sub
- ::webref-css-property
- :<- [::webref-css]
- (fn [webref-css [_ property]]
-   (some
-    #(when (= (:name %) (name property)) %)
-    (flatten (map (fn [[_ item]] (:properties item)) webref-css)))))
-
-(rf/reg-sub
  ::mdn
  :-> :mdn)
 
 (rf/reg-sub
- ::css-property
+ ::property
+ :<- [::webref-css]
  :<- [::mdn]
- (fn [mdn [_ property]]
-   (get-in mdn [:css :properties property])))
+ (fn [[webref-css mdn] [_ property]]
+   ;; Mdn is deprecated in favor of w3c/webref, but w3c/webref is not available in browsers.
+   ;; The data is similar but not exactly the same, so we merge them below.
+   (let [webref-css-property (some
+                              #(when (= (:name %) (name property)) %)
+                              (flatten (map (fn [[_ item]] (:properties item)) webref-css)))
+         css-property (get-in mdn [:css :properties property])
+         css-property (update-keys css-property #(case %
+                                                   :appliesto :appliesTo
+                                                   :computed :computedValue
+                                                   %))]
+     (merge css-property webref-css-property))))
 
 (rf/reg-sub
  ::backdrop?

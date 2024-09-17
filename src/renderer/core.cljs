@@ -1,7 +1,7 @@
 (ns renderer.core
   (:require
    ["electron-log/renderer"]
-   ["mdn-data" :as mdn] ;; deprecating in favor of w3c/webref
+   ["mdn-data" :as mdn]
    ["paper" :refer [paper]]
    [devtools.core :as devtools]
    [platform :as platform]
