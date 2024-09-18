@@ -23,6 +23,8 @@
                      :firefox_android :firefox
                      :chrome_android :chrome
                      :opera_android :opera
+                     :safari_ios :safari
+                     :webview_ios :safari
                      browser))]]
    (case version-added
      true [:div.support-cell.success "all"]
