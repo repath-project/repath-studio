@@ -2,8 +2,11 @@
 
  :build-defaults {:build-hooks [(shadow-git-inject.core/hook)]}
 
- :dev-http {8290 "target/browser-test"
-            8080 "resources/public"}
+ :dev-http {8080 "resources/public"
+            8081 "target/browser-test"
+            8082 ["portfolio/resources/public"
+                  "resources/public/css"
+                  "classpath:public"]}
 
  :builds
  {:main {:target :node-script
@@ -64,4 +67,8 @@
 
   :karma-test {:target :karma
                :ns-regexp "-test$"
-               :output-to "target/karma-test.js"}}}
+               :output-to "target/karma-test.js"}
+
+  :portfolio {:target :browser
+              :modules {:scenes {:init-fn portfolio/init!}}
+              :output-dir "portfolio/resources/public/js"}}}

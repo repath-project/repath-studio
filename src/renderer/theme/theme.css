@@ -35,6 +35,7 @@
   --text-success: #63c263;
 }
 
+&.light,
 [data-theme='light'] {
   --bg-secondary: #eee;
   --bg-primary: #fff;
