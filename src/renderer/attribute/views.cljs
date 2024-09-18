@@ -19,7 +19,11 @@
   [browser version-added]
   [:div.text-center.flex-1
    [:div.flex-1 {:title browser}
-    [ui/icon (name browser)]]
+    [ui/icon (name (case browser
+                     :firefox_android :firefox
+                     :chrome_android :chrome
+                     :opera_android :opera
+                     browser))]]
    (case version-added
      true [:div.support-cell.success "all"]
      false [:div.support-cell.error "x"]
