@@ -13,10 +13,6 @@
   }
 }
 
-.support-cell {
-  @apply text-2xs p-px m-px;
-}
-
 .form-input {
   .clear-input-button {
     visibility: hidden;

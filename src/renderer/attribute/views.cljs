@@ -18,7 +18,7 @@
 (defn browser-support
   [browser version-added]
   [:div.text-center.flex-1
-   [:div.flex-1 {:title browser}
+   [:div {:title browser}
     [ui/icon (name (case browser
                      :firefox_android :firefox
                      :chrome_android :chrome
@@ -26,17 +26,18 @@
                      :safari_ios :safari
                      :webview_ios :safari
                      browser))]]
-   (case version-added
-     true [:div.support-cell.success "all"]
-     false [:div.support-cell.error "x"]
-     nil [:div.support-cell.warning "?"]
-     [:div.support-cell.success (str "≥" version-added)])])
+   [:div.text-2xs.mt-1
+    (case version-added
+      true [:div.success "all"]
+      false [:div.error "x"]
+      nil [:div.warning "?"]
+      [:div.success (str "≥" version-added)])]])
 
 (defn browser-compatibility
   [support-data]
   [:<>
    [:h4.font-bold.mb-1 "Browser compatibility"]
-   [:div.flex.mb-4
+   [:div.flex.mb-4.gap-px
     (for [[browser {:keys [version_added]}] support-data]
       ^{:key browser} [browser-support browser version_added])]])
 
