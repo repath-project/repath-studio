@@ -18,22 +18,20 @@
 (defn item-buttons
   [{:keys [id locked? visible?]}]
   [:<>
-   [ui/toggle-icon-button
-    {:active? visible?
-     :active-icon "eye"
-     :active-text "hide"
-     :inactive-icon "eye-closed"
-     :inactive-text "show"
-     :class (when visible? "list-item-action")
-     :action #(rf/dispatch [::element.e/toggle-prop id :visible?])}]
-   [ui/toggle-icon-button
-    {:active? locked?
-     :active-icon "lock"
-     :active-text "unlock"
-     :inactive-icon "unlock"
-     :inactive-text "lock"
-     :class (when-not locked? "list-item-action")
-     :action #(rf/dispatch [::element.e/toggle-prop id :locked?])}]])
+   [ui/icon-button
+    (if visible? "eye" "eye-closed")
+    {:class (when visible? "list-item-action")
+     :title (if visible? "hide" "show")
+     :on-double-click #(.stopPropagation %)
+     :on-click #(do (.stopPropagation %)
+                    (rf/dispatch [::element.e/toggle-prop id :visible?]))}]
+   [ui/icon-button
+    (if locked? "lock" "unlock")
+    {:class (when-not locked? "list-item-action")
+     :title (if visible? "unlock" "lock")
+     :on-double-click #(.stopPropagation %)
+     :on-click #(do (.stopPropagation %)
+                    (rf/dispatch [::element.e/toggle-prop id :locked?]))}]])
 
 (defn- set-item-label
   [e k]
@@ -101,16 +99,14 @@
     nil))
 
 (defn toggle-collapsed-button
-  [k collapsed?]
-  [ui/toggle-icon-button {:active? collapsed?
-                          :active-icon "chevron-right"
-                          :active-text "expand"
-                          :class "small"
-                          :inactive-icon "chevron-down"
-                          :inactive-text "collapse"
-                          :action #(rf/dispatch (if collapsed?
-                                                  [::document.e/expand-el k]
-                                                  [::document.e/collapse-el k]))}])
+  [id collapsed?]
+  [ui/icon-button
+   (if collapsed? "chevron-right" "chevron-down")
+   {:class "small"
+    :title (if collapsed? "expand" "collapse")
+    :on-click #(rf/dispatch (if collapsed?
+                              [::document.e/expand-el id]
+                              [::document.e/collapse-el id]))}])
 
 (defn list-item-button
   [{:keys [id selected? children] :as el} depth hovered? collapsed?]
@@ -135,9 +131,9 @@
       :on-drop #(drop-handler % id)
       :on-pointer-down #(when (= (.-button %) 2)
                           (rf/dispatch [::element.e/select id (.-ctrlKey %)]))
-      :on-pointer-up (fn [e]
-                       (.stopPropagation e)
-                       (rf/dispatch [::element.e/select id (.-ctrlKey e)]))
+      :on-click (fn [e]
+                  (.stopPropagation e)
+                  (rf/dispatch [::element.e/select id (.-ctrlKey e)]))
       :style {:padding-left (padding depth (seq children))}}
      [:div.flex.items-center.content-between.w-full
       (when (seq children)

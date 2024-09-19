@@ -34,28 +34,25 @@
   []
   (let [rulers? @(rf/subscribe [::app.s/rulers-visible?])
         read-only? @(rf/subscribe [::document.s/read-only?])
-        ruler-size @(rf/subscribe [::app.s/ruler-size])]
+        ruler-size @(rf/subscribe [::app.s/ruler-size])
+        rulers-locked? @(rf/subscribe [::app.s/rulers-locked?])]
     [:div.flex.flex-col.flex-1.h-full
      [:div.mb-px
       [ui/scroll-area [toolbar.tools/root]]
       (when rulers?
         [:div.flex.gap-px
          [:div.bg-primary {:style {:width ruler-size :height ruler-size}}
-          [ui/toggle-icon-button
-           {:active? @(rf/subscribe [::app.s/rulers-locked?])
-            :active-icon "lock"
-            :active-text "unlock"
-            :inactive-icon "unlock"
-            :inactive-text "lock"
-            :class "small hidden"
-            :action #(rf/dispatch [::e/toggle-rulers-locked])}]]
+          [ui/icon-button
+           (if rulers-locked? "lock" "unlock")
+           {:class "small hidden"
+            :title (if rulers-locked? "unlock" "lock")
+            :on-click #(rf/dispatch [::e/toggle-rulers-locked])}]]
          [:div.bg-primary.flex-1
           [ruler.v/ruler :horizontal]]])]
      [:div.flex.flex-1.relative
-      [:<>
-       (when rulers?
-         [:div.bg-primary.mr-px
-          [ruler.v/ruler :vertical]])]
+      (when rulers?
+        [:div.bg-primary.mr-px
+         [ruler.v/ruler :vertical]])
       [:div.relative.grow.flex
        [frame.v/root]
        (if read-only?

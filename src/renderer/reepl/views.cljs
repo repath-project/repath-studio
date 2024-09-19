@@ -50,15 +50,12 @@
       (mode-button :cljs)
       (mode-button :js)]
      [:div.self-start.flex
-      [ui/toggle-icon-button
-       {:active? repl-history?
-        :active-icon "chevron-down"
-        :active-text "Hide command output"
-        :inactive-icon "chevron-up"
-        :inactive-text "Show command output"
-        :class "my-0.5 ml-0.5"
-        :action #(rf/dispatch [::app.e/toggle-panel :repl-history])}
-       {:style {:height "16px"}}]]]))
+      [ui/icon-button
+       (if repl-history? "chevron-down" "chevron-up")
+       {:class "my-0.5 ml-0.5"
+        :style {:height "16px"}
+        :title (if repl-history? "Hide command output" "Show command output")
+        :on-click #(rf/dispatch [::app.e/toggle-panel :repl-history])}]]]))
 
 (defmulti item (fn [i _opts] (:type i)))
 

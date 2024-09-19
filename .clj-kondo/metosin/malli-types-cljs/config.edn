@@ -196,11 +196,6 @@
                                                                                       :ret :any,
                                                                                       :min-arity 1}}},
                                                      shortcuts {:arities {1 {:args [:vector], :ret :any}}},
-                                                     toggle-icon-button {:arities {:varargs {:args [:any
-                                                                                                    {:op :rest,
-                                                                                                     :spec :map}],
-                                                                                             :ret :any,
-                                                                                             :min-arity 1}}},
                                                      radio-icon-button {:arities {:varargs {:args [:string
                                                                                                    :boolean
                                                                                                    {:op :rest,

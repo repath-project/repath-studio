@@ -63,19 +63,6 @@
            (interpose [:span])
            (into [:span.inline-flex.text-muted {:class "gap-1.5"}])))))
 
-(mx/defn toggle-icon-button
-  [{:keys [active? active-icon inactive-icon active-text inactive-text action class]}
-   props :- Props]
-  [:button.icon-button
-   (merge props
-          {:class class
-           :title (if active? active-text inactive-text)
-           :on-double-click #(.stopPropagation %)
-           :on-pointer-up #(when action
-                             (.stopPropagation %)
-                             (action))})
-   [icon (if active? active-icon inactive-icon)]])
-
 (mx/defn radio-icon-button
   [icon-name :- string?, active? :- boolean?, & {:keys [class] :as props} :- Props]
   [:button.icon-button.radio-icon-button
