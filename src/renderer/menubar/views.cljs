@@ -567,7 +567,7 @@
      :disabled disabled?}
     label
     [:div.right-slot.sub-menu-chevron
-     [ui/icon "chevron-right" {:class "icon small"}]]]
+     [ui/icon "chevron-right" {:class "small"}]]]
    [:> Menubar/Portal
     (into [:> Menubar/SubContent
            {:class "menu-content"

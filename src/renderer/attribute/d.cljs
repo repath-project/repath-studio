@@ -140,7 +140,7 @@
         [:> Popover/Trigger {:as-child true}
          [:button.ml-px.inline-block.bg-primary.text-muted.h-full
           {:style {:flex "0 0 26px"}}
-          [ui/icon "pencil" {:class "icon small"}]]]
+          [ui/icon "pencil" {:class "small"}]]]
         [:> Popover/Portal
          [:> Popover/Content {:sideOffset 5
                               :className "popover-content"

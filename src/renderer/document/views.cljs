@@ -75,7 +75,7 @@
                      (rf/dispatch [::document.e/close id true]))}
    [ui/icon "times"]
    (when-not saved?
-     [ui/icon "dot" {:class "icon dot"}])])
+     [ui/icon "dot" {:class "dot"}])])
 
 (mx/defn context-menu
   [id :- uuid?]

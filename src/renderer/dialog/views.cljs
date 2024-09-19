@@ -69,7 +69,7 @@
                    (rf/dispatch action))}
      [:div.w-7.h-7.mr-2.rounded.line-height-6.flex.justify-center.items-center
       {:class (when icon "overlay")}
-      (when icon [ui/icon icon {:class "icon"}])]
+      (when icon [ui/icon icon])]
      label
      [:div.right-slot
       [ui/shortcuts action]]]))

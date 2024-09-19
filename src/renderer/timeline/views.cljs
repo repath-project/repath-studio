@@ -45,7 +45,7 @@
          {:style {:min-width "50px"}}
          [:span (str speed "x")]
          [:> Select/Icon {:class "select-icon"}
-          [ui/icon "chevron-down" {:class "icon small"}]]]]]
+          [ui/icon "chevron-down" {:class "small"}]]]]]
       [:> Select/Portal
        [:> Select/Content
         {:class "menu-content rounded select-content"

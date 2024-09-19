@@ -22,9 +22,8 @@
 (mx/defn icon
   [icon-name :- string?, props :- Props]
   [:> ReactSVG
-   (merge {:class "icon"
-           :src (str "icons/" icon-name ".svg")}
-          props)])
+   (merge props {:class ["icon" (:class props)]
+                 :src (str "icons/" icon-name ".svg")})])
 
 (mx/defn icon-button
   [icon-name :- string?, props :- Props]

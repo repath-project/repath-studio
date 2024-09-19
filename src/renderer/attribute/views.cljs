@@ -137,7 +137,7 @@
                 :height "26px"}}
        [:> Select/Value ""]
        [:> Select/Icon
-        [ui/icon "chevron-down" {:class "icon small"}]]]
+        [ui/icon "chevron-down" {:class "small"}]]]
       [:> Select/Portal
        [:> Select/Content
         {:class "menu-content rounded select-content"

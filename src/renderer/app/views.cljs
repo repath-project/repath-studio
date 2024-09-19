@@ -164,7 +164,7 @@
              [:div.flex.items-center
               [:> Select/Value {:placeholder "Select template"}]
               [:> Select/Icon
-               [ui/icon "chevron-down" {:class "icon small ml-2"}]]]]
+               [ui/icon "chevron-down" {:class "small ml-2"}]]]]
             [:> Select/Portal
              [:> Select/Content
               {:class "menu-content rounded select-content"

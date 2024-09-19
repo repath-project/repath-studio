@@ -52,7 +52,7 @@
       [:> Popover/Trigger {:as-child true}
        [:button.ml-px.inline-block.bg-primary.text-muted.h-full
         {:style {:flex "0 0 26px"}}
-        [ui/icon "magnifier" {:class "icon small"}]]]
+        [ui/icon "magnifier" {:class "small"}]]]
       [:> Popover/Portal
        [:> Popover/Content
         {:sideOffset 5

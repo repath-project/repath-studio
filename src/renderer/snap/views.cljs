@@ -18,7 +18,7 @@
                :width "16px"
                :margin 0}}
       [:div.h-full.hover:pb-1.flex.items-center
-       [ui/icon "chevron-up" {:class "icon small"}]]]
+       [ui/icon "chevron-up" {:class "small"}]]]
      [:> DropdownMenu/Portal
       [:> DropdownMenu/Content
        {:side "top"
