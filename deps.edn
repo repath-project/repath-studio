@@ -1,4 +1,4 @@
-{:paths ["src" "resources"]
+{:paths ["src"]
  :deps {akiroz.re-frame/storage {:mvn/version "0.1.4"}
         binaryage/devtools {:mvn/version "1.0.7"}
         cljs-ajax/cljs-ajax {:mvn/version "0.8.4"}
