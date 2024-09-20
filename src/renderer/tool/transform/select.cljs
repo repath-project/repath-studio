@@ -115,6 +115,7 @@
   [db {:keys [element] :as e}]
   (-> db
       (dissoc :clicked-element)
+      (element.h/clear-ignored :bounding-box)
       (element.h/select (:id element) (pointer/shift? e))
       (app.h/explain (if (:selected? element) "Deselect element" "Select element"))))
 

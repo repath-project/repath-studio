@@ -338,10 +338,14 @@
     (assoc-in [:documents (:active-document db) :hovered-ids] #{})))
 
 (defn clear-ignored
-  [db]
-  (cond-> db
-    (:active-document db)
-    (assoc-in [:documents (:active-document db) :ignored-ids] #{})))
+  ([db]
+   (cond-> db
+     (:active-document db)
+     (assoc-in [:documents (:active-document db) :ignored-ids] #{})))
+  ([db id]
+   (cond-> db
+     (:active-document db)
+     (update-in [:documents (:active-document db) :ignored-ids] disj id))))
 
 (defn lock
   ([db]
