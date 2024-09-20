@@ -52,9 +52,9 @@
 (rf/reg-event-db
  ::tree-view-updated
  (fn [db [_ zoom translate]]
-   (-> db
-       (h/set-zoom zoom)
-       (h/set-translate translate))))
+   (cond-> db
+       zoom (h/set-zoom zoom)
+       translate (h/set-translate translate))))
 
 (rf/reg-event-fx
  ::cancel

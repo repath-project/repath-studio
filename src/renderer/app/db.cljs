@@ -21,6 +21,7 @@
                       :properties {:visible? true}
                       :timeline {:visible? false}
                       :xml {:visible? false}
+                      :history {:visible? false}
                       :repl-history {:visible? false}}}
    keyword? [:map [:visible? boolean?]]])
 

@@ -9,7 +9,7 @@
    [renderer.app.handlers :as app.h]
    [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.h]
-   [renderer.history.db :refer [State]]
+   [renderer.history.db :refer [HistoryState]]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
    [renderer.tool.hierarchy :as tool.hierarchy]
@@ -27,7 +27,7 @@
   [db]
   (:position (history db)))
 
-(mx/defn state :- [:maybe State]
+(mx/defn state :- [:maybe HistoryState]
   ([active-history]
    (state active-history (:position active-history)))
   ([active-history, current-position :- [:maybe uuid?]]
@@ -115,7 +115,7 @@
   [db, [x y] :- Vec2D]
   (assoc-in db (conj (history-path db) :translate) [x y]))
 
-(mx/defn create-state :- State
+(mx/defn create-state :- HistoryState
   [db, now :- int?, id :- uuid?, explanation :- string?]
   (let [new-state {:explanation explanation
                    :elements (element.h/elements db)

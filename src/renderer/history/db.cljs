@@ -3,7 +3,7 @@
    [renderer.element.db :refer [Element]]
    [renderer.utils.math :refer [Vec2D]]))
 
-(def State
+(def HistoryState
   [:map {:closed true}
    [:explanation string?]
    [:timestamp number?]
@@ -18,4 +18,4 @@
    [:zoom {:optional true :default 0.5} number?]
    [:translate {:optional true} Vec2D]
    [:position {:optional true} uuid?]
-   [:states {:default {}} [:map-of uuid? State]]])
+   [:states {:default {}} [:map-of uuid? HistoryState]]])

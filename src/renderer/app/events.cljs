@@ -39,15 +39,15 @@
  ::load-local-db
  [(rf/inject-cofx :store)]
  (fn [{:keys [db store]} _]
-   (let [merged (merge db store)]
-     (if (db/valid? merged)
-       {:db merged}
+   (let [app-db (merge db store)]
+     (if (db/valid? app-db)
+       {:db app-db}
        {::fx/local-storage-clear nil
         :db (cond-> db
               config/debug?
               (notification.h/add [notification.v/spec-failed
                                    "Invalid local db"
-                                   (-> merged db/explain me/humanize str)]))}))))
+                                   (-> app-db db/explain me/humanize str)]))}))))
 
 (rf/reg-event-fx
  ::local-storage-persist
