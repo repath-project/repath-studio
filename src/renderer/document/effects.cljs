@@ -29,4 +29,4 @@
         (.then (.write writable (pr-str (dissoc data :path)))
                (let [info (assoc data :title (.-name file-handle))]
                  (.close writable)
-                 (rf/dispatch [::document.e/saved (select-keys info [:id :title :save])]))))))))
+                 (rf/dispatch [::document.e/saved (select-keys info [:id :title])]))))))))

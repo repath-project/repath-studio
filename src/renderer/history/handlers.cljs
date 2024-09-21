@@ -16,7 +16,8 @@
    [renderer.utils.math :refer [Vec2D]]
    [renderer.utils.vec :as vec]))
 
-(defn history-path [db]
+(defn history-path
+  [db]
   [:documents (:active-document db) :history])
 
 (defn history

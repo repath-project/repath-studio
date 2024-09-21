@@ -10,7 +10,8 @@
    [renderer.dialog.views :as dialog.v]
    [renderer.document.effects :as fx]
    [renderer.document.handlers :as h]
-   [renderer.history.handlers :refer [finalize]]
+   [renderer.history.handlers :as history.h :refer [finalize]]
+   [renderer.utils.compatibility :as compatibility]
    [renderer.utils.vec :as vec]
    [renderer.window.effects :as-alias window.fx]))
 
@@ -191,9 +192,11 @@
  [(rf/inject-cofx ::app.fx/guid)
   (finalize "Load document")]
  (fn [{:keys [db guid]} [_ document]]
-   {:db (-> db
-            (h/load document guid)
-            (h/center))}))
+   (let [migrated-document (compatibility/migrate-document document)
+         migrated? (not= document migrated-document)
+         document (assoc document :id guid)]
+     {:db (h/load db document)
+      :dispatch (when (not migrated?) [::saved document])})))
 
 (rf/reg-event-fx
  ::load-multiple
@@ -245,11 +248,10 @@
  ::saved
  [persist]
  (fn [db [_ {:keys [path id] :as document-info}]]
-   ;; Update the path, the title and the saved position of the document.
-   ;; Any other changes that could happen while saving should be preserved.
-   (-> db
-       (update-in [:documents id] merge document-info)
-       (h/add-recent path))))
+   (let [position (get-in db [:documents id :history :position])]
+     (-> db
+         (update-in [:documents id] merge (assoc document-info :save position))
+         (h/add-recent path)))))
 
 (rf/reg-event-fx
  ::close-saved

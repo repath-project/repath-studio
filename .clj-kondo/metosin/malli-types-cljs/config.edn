@@ -326,7 +326,7 @@
                                                                     create-canvas {:arities {2 {:args [:any
                                                                                                        :nilable/seqable],
                                                                                                 :ret :any}}},
-                                                                    load {:arities {3 {:args [:any
+                                                                    load {:arities {2 {:args [:any
                                                                                               {:op :keys,
                                                                                                :opt {:id :any,
                                                                                                      :title :string,
@@ -348,8 +348,7 @@
                                                                                                                :req {:states :map}},
                                                                                                      :elements :map,
                                                                                                      :rotate :number,
-                                                                                                     :collapsed-ids :set}}
-                                                                                              :any],
+                                                                                                     :collapsed-ids :set}}],
                                                                                        :ret :any}}},
                                                                     add-recent {:arities {2 {:args [:any :string],
                                                                                              :ret :any}}},
@@ -367,7 +366,7 @@
                                                                     new-title {:arities {1 {:args [:any], :ret :string}}},
                                                                     close {:arities {2 {:args [:any :any], :ret :any}}},
                                                                     center {:arities {1 {:args [:any], :ret :any}}},
-                                                                    create-tab {:arities {3 {:args [:any
+                                                                    create-tab {:arities {2 {:args [:any
                                                                                                     {:op :keys,
                                                                                                      :opt {:id :any,
                                                                                                            :title :string,
@@ -389,15 +388,13 @@
                                                                                                                      :req {:states :map}},
                                                                                                            :elements :map,
                                                                                                            :rotate :number,
-                                                                                                           :collapsed-ids :set}}
-                                                                                                    :any],
+                                                                                                           :collapsed-ids :set}}],
                                                                                              :ret :any}}},
                                                                     save-format {:arities {1 {:args [:any],
                                                                                               :ret {:op :keys,
                                                                                                     :opt {:id :any,
                                                                                                           :title :string,
                                                                                                           :path :nilable/string,
-                                                                                                          :save :any,
                                                                                                           :version :string},
                                                                                                     :req {:elements :map}}},
                                                                                            2 {:args [:any :any],
@@ -405,7 +402,6 @@
                                                                                                     :opt {:id :any,
                                                                                                           :title :string,
                                                                                                           :path :nilable/string,
-                                                                                                          :save :any,
                                                                                                           :version :string},
                                                                                                     :req {:elements :map}}}}}},
                                         renderer.utils.pointer {ctrl? {:arities {1 {:args [:any], :ret :boolean}}},
@@ -588,6 +584,5 @@
                                                                                                            :opt {:id :any,
                                                                                                                  :title :string,
                                                                                                                  :path :nilable/string,
-                                                                                                                 :save :any,
                                                                                                                  :version :string},
                                                                                                            :req {:elements :map}}}}}}}}}}

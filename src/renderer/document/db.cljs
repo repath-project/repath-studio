@@ -11,7 +11,7 @@
    [:id {:optional true :persist true} uuid?]
    [:title {:optional true :min 1 :persist true} string?]
    [:path {:optional true :persist true} [:maybe string?]]
-   [:save {:optional true :persist true} uuid?]
+   [:save {:optional true} uuid?]
    [:version {:optional true :persist true} string?]
    [:hovered-ids {:default #{}} [:set [:or keyword? uuid?]]]
    [:collapsed-ids {:default #{}} [:set uuid?]]

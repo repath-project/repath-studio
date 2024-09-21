@@ -8,10 +8,8 @@
    [renderer.element.db :refer [Attr]]
    [renderer.element.handlers :as element.h]
    [renderer.frame.handlers :as frame.h]
-   [renderer.history.handlers :as history.h]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
-   [renderer.utils.compatibility :as compatibility]
    [renderer.utils.math :refer [Vec2D]]
    [renderer.utils.vec :as vec]))
 
@@ -21,8 +19,7 @@
   ([db, id :- uuid?]
    (let [document (-> db
                       (get-in [:documents id])
-                      (assoc :save (history.h/position db)
-                             :version (:version db)))]
+                      (assoc :version (:version db)))]
 
      (reduce #(update-in %1 [:elements %2] dissoc :selected?)
              (m/decode PersistedDocument document mt/strip-extra-keys-transformer)
@@ -78,11 +75,11 @@
           (recur (inc i)))))))
 
 (mx/defn create-tab
-  [db, document :- Document, id :- uuid?]
-  (let [id (or (:id document) id)
-        title (or (:title document) (new-title db))
-        active-index (.indexOf (:document-tabs db) (:active-document db))
-        document (merge document {:id id :title title})]
+  [db, {:keys [id] :as document} :- Document]
+  (let [active-index (.indexOf (:document-tabs db) (:active-document db))
+        document (cond-> document
+                   (not (:title document))
+                   (assoc :title (new-title db)))]
     (-> db
         (assoc-in [:documents id] document)
         (assoc :active-document id)
@@ -106,7 +103,7 @@
    (create db guid [595 842]))
   ([db, guid :- uuid?, size :- Vec2D]
    (-> db
-       (create-tab db/default guid)
+       (create-tab (assoc db/default :id guid))
        (create-canvas size))))
 
 (mx/defn set-global-attr
@@ -118,16 +115,16 @@
       (element.h/set-attr k v)))
 
 (mx/defn load
-  [db, document :- Document, id :- uuid?]
+  [db, document :- Document]
   (let [open-document-id (search-by-path db (:path document))
-        migrated-document (compatibility/migrate-document document)
-        migrated? (not= document migrated-document)
-        document (-> (merge db/default migrated-document)
-                     (assoc :id (or open-document-id id)))]
+        document (merge db/default document)
+        document (cond-> document
+                   open-document-id
+                   (assoc :id open-document-id))]
     (if (db/valid? document)
       (cond-> db
         (not open-document-id)
-        (-> (create-tab (cond-> document (not migrated?) (dissoc :save)) id)
+        (-> (create-tab document)
             (center))
 
         :always
