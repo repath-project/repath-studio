@@ -21,8 +21,8 @@
 
 (defn- write-file!
   [file-path data]
-  (.writeFileSync fs file-path (pr-str (dissoc data :path)) "utf-8")
-  (p/resolved (serialize-document (select-keys data [:id :save]) file-path)))
+  (.writeFileSync fs file-path (pr-str (dissoc data :path :id)) "utf-8")
+  (p/resolved (serialize-document (select-keys data [:id]) file-path)))
 
 (defn- read!
   [file-path]
@@ -43,7 +43,10 @@
         directory (and file-path (.dirname path file-path))
         options (cond-> dialog-options
                   (and directory (.existsSync fs directory))
-                  (assoc :defaultPath directory))]
+                  (assoc :defaultPath directory)
+
+                  :always
+                  (update :defaultPath #(.join path % (:title document))) )]
     (p/let [file (save-dialog! options)]
       (write-file! file document))))
 
