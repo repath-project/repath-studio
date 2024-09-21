@@ -10,7 +10,7 @@
    [renderer.app.effects :as fx]
    [renderer.app.handlers :as h]
    [renderer.frame.handlers :as frame.h]
-   [renderer.history.handlers :as history.h]
+   [renderer.history.handlers :as history.h :refer [finalize]]
    [renderer.notification.events :as-alias notification.e]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
@@ -28,7 +28,22 @@
 
 (rf/reg-global-interceptor custom-fx)
 
-(def persist (rf.storage/persist-db-keys config/app-key db/persistent-keys))
+(defn persist-db-keys
+  "This is a modified version of akiroz.re-frame.storage/persist-db-keys
+   The before key is removed and we are dropping the rest of the history states
+   to get performance to an acceptable level and minimize resource allocation."
+  [store-key db-keys]
+  (rf.storage/register-store store-key)
+  (rf/->interceptor
+   :id (keyword (str (apply str (sort db-keys)) "->" store-key))
+   :after (fn [context]
+            (when-let [value (some-> (get-in context [:effects :db])
+                                     (history.h/drop-rest)
+                                     (select-keys db-keys))]
+              (rf.storage/->store store-key value))
+            context)))
+
+(def persist (persist-db-keys config/app-key db/persistent-keys))
 
 (rf/reg-event-db
  ::initialize-db
@@ -50,9 +65,9 @@
                                    (-> app-db db/explain me/humanize str)]))}))))
 
 (rf/reg-event-fx
- ::local-storage-persist
+ ::persist
  (fn [{:keys [db]} _]
-   {::fx/local-storage-persist db}))
+   {::fx/persist db}))
 
 (rf/reg-event-db
  ::set-system-fonts
@@ -123,7 +138,7 @@
 (rf/reg-event-fx
  ::pointer-event
  [(rf/inject-cofx ::fx/now)
-  (history.h/finalize nil)]
+  (finalize nil)]
  (fn [{:keys [db now]} [_ e]]
    {:db (h/pointer-handler db e now)}))
 

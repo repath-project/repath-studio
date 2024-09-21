@@ -99,7 +99,7 @@
                            (- delta-y))]
       (-> db
           (frame.h/zoom-at-pointer factor)
-          (add-fx [:dispatch [::e/local-storage-persist]])))
+          (add-fx [:dispatch [::e/persist]])))
     (frame.h/pan-by db [delta-x delta-y])))
 
 (mx/defn key-handler

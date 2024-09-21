@@ -4,7 +4,7 @@
    [malli.error :as me]
    [malli.experimental :as mx]
    [re-frame.core :as rf]
-   [renderer.app.effects :as app.fx]
+   [renderer.app.effects :as-alias app.fx]
    [renderer.app.events :as-alias app.e]
    [renderer.app.handlers :as app.h]
    [renderer.element.db :refer [Element]]
@@ -54,6 +54,17 @@
   (cond-> db
     (:active-document db)
     (assoc-in (element.h/path db) (:elements (state (history db))))))
+
+(defn drop-rest
+  ([db]
+   (reduce drop-rest db (:document-tabs db)))
+  ([db document-id]
+   (let [pos (get-in db [:documents document-id :history :position])]
+     (cond-> db
+       pos
+       (-> (update-in [:documents document-id :history :states] select-keys [pos])
+           (assoc-in [:documents document-id :history :states pos :index] 0)
+           (update-in [:documents document-id :history :states pos] dissoc :parent))))))
 
 (mx/defn preview
   [db, pos :- uuid?]
@@ -200,4 +211,4 @@
                                (update-ancestors)))]
                   (-> context
                       (rf/assoc-effect :db db)
-                      (rf/assoc-effect ::app.fx/local-storage-persist db))))))))
+                      (rf/assoc-effect ::app.fx/persist db))))))))

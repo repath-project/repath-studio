@@ -42,4 +42,4 @@
   [db _e]
   (-> db
       (assoc :cursor "grab")
-      (app.h/add-fx [:dispatch [::app.e/local-storage-persist]])))
+      (app.h/add-fx [:dispatch [::app.e/persist]])))

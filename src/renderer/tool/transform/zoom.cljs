@@ -69,7 +69,7 @@
                            zoom-sensitivity
                            (/ furute-zoom current-zoom)))
         (frame.h/pan-to-bounds [pos-x pos-y offset-x offset-y])
-        (app.h/add-fx [:dispatch [::app.e/local-storage-persist]]))))
+        (app.h/add-fx [:dispatch [::app.e/persist]]))))
 
 (defmethod tool.hierarchy/pointer-up :zoom
   [db e]
@@ -78,4 +78,4 @@
                  (/ 1 (:zoom-sensitivity db)))]
     (-> db
         (frame.h/zoom-at-pointer  factor)
-        (app.h/add-fx [:dispatch [::app.e/local-storage-persist]]))))
+        (app.h/add-fx [:dispatch [::app.e/persist]]))))

@@ -6,6 +6,7 @@
    [re-frame.core :as rf]
    [renderer.app.db :as db]
    [renderer.app.events :as-alias e]
+   [renderer.history.handlers :as history.h]
    [renderer.utils.dom :as dom]
    [renderer.utils.drop :as drop]))
 
@@ -38,9 +39,11 @@
    (.releasePointerCapture (dom/canvas-element) pointer-id)))
 
 (rf/reg-fx
- ::local-storage-persist
+ ::persist
  (fn [data]
-   (rf.storage/->store config/app-key (select-keys data db/persistent-keys))))
+   (rf.storage/->store config/app-key (-> data
+                                          (history.h/drop-rest)
+                                          (select-keys db/persistent-keys)))))
 
 (rf/reg-fx
  ::local-storage-clear

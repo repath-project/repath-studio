@@ -18,7 +18,8 @@
 
 (mx/defn recenter-to-dom-rect
   [{:keys [dom-rect] :as db}, updated-dom-rect :- DomRect]
-  (let [offset (select-keys (merge-with - dom-rect updated-dom-rect) [:width :height])]
+  (let [offset (-> (merge-with - dom-rect updated-dom-rect)
+                   (select-keys [:width :height]))]
     (if-not (-> db :window :focused?)
       db
       (reduce #(pan-by %1 (mat/div [(:width offset) (:height offset)] 2) %2) db (:document-tabs db)))))
