@@ -1,7 +1,7 @@
 (ns renderer.history.events
   (:require
    [re-frame.core :as rf]
-   [renderer.app.events :refer [persist]]
+   [renderer.app.effects :refer [persist]]
    [renderer.element.events :as-alias element.e]
    [renderer.history.handlers :as h]))
 

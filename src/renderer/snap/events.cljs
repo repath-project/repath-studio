@@ -1,7 +1,7 @@
 (ns renderer.snap.events
   (:require
    [re-frame.core :as rf]
-   [renderer.app.events :refer [persist]]
+   [renderer.app.effects :refer [persist]]
    [renderer.snap.handlers :as h]))
 
 (rf/reg-event-db

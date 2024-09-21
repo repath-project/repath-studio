@@ -1,13 +1,12 @@
 (ns renderer.app.events
   (:require
-   [akiroz.re-frame.storage :as rf.storage]
    [config :as config]
    [i18n :as i18n]
    [malli.error :as me]
    [platform :as platform]
    [re-frame.core :as rf]
    [renderer.app.db :as db]
-   [renderer.app.effects :as fx]
+   [renderer.app.effects :as fx :refer [persist]]
    [renderer.app.handlers :as h]
    [renderer.frame.handlers :as frame.h]
    [renderer.history.handlers :as history.h :refer [finalize]]
@@ -27,23 +26,6 @@
                     (rf/assoc-effect :db (assoc db :fx []))))))))
 
 (rf/reg-global-interceptor custom-fx)
-
-(defn persist-db-keys
-  "This is a modified version of akiroz.re-frame.storage/persist-db-keys
-   The before key is removed and we are dropping the rest of the history states
-   to get performance to an acceptable level and minimize resource allocation."
-  [store-key db-keys]
-  (rf.storage/register-store store-key)
-  (rf/->interceptor
-   :id (keyword (str (apply str (sort db-keys)) "->" store-key))
-   :after (fn [context]
-            (when-let [value (some-> (get-in context [:effects :db])
-                                     (history.h/drop-rest)
-                                     (select-keys db-keys))]
-              (rf.storage/->store store-key value))
-            context)))
-
-(def persist (persist-db-keys config/app-key db/persistent-keys))
 
 (rf/reg-event-db
  ::initialize-db

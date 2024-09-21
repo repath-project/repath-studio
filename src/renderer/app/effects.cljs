@@ -12,6 +12,23 @@
 
 (rf.storage/reg-co-fx! config/app-key {:cofx :store})
 
+(defn persist!
+  [data]
+  (rf.storage/->store config/app-key (-> data
+                                         (history.h/drop-rest)
+                                         (select-keys db/persistent-keys))))
+
+(def persist
+  "This is a modified version of akiroz.re-frame.storage/persist-db-keys
+   The before key is removed and we are dropping the rest of the history states
+   to get performance to an acceptable level and minimize resource allocation."
+  (rf/->interceptor
+   :id ::persist
+   :after (fn [context]
+            (when-let [data (get-in context [:effects :db])]
+              (persist! data))
+            context)))
+
 (rf/reg-cofx
  ::guid
  (fn [coeffects _]
@@ -41,9 +58,7 @@
 (rf/reg-fx
  ::persist
  (fn [data]
-   (rf.storage/->store config/app-key (-> data
-                                          (history.h/drop-rest)
-                                          (select-keys db/persistent-keys)))))
+   (persist! data)))
 
 (rf/reg-fx
  ::local-storage-clear
