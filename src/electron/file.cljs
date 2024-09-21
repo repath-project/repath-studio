@@ -21,7 +21,7 @@
 
 (defn- write-file!
   [file-path data]
-  (.writeFileSync fs file-path (pr-str (dissoc data :path :id)) "utf-8")
+  (.writeFileSync fs file-path (pr-str (dissoc data :path :id :title)) "utf-8")
   (p/resolved (serialize-document (select-keys data [:id]) file-path)))
 
 (defn- read!

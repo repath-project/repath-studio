@@ -26,7 +26,7 @@
     file-picker-options
     (fn [^js/FileSystemFileHandle file-handle]
       (p/let [writable (.createWritable file-handle)]
-        (.then (.write writable (pr-str (dissoc data :path)))
-               (let [info (assoc data :title (.-name file-handle))]
-                 (.close writable)
-                 (rf/dispatch [::document.e/saved (select-keys info [:id :title])]))))))))
+        (.then (.write writable (pr-str (dissoc data :path :id :title)))
+               (.close writable)
+               (rf/dispatch [::document.e/saved {:id (:id data)
+                                                 :title (.-name file-handle)}])))))))

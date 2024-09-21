@@ -219,7 +219,7 @@
 (rf/reg-event-fx
  ::download
  (fn [{:keys [db]} [_]]
-   (let [document (h/save-format db)]
+   (let [document (-> db h/save-format (dissoc :path :id :title))]
      {::fx/download (pr-str document)})))
 
 (rf/reg-event-fx
