@@ -15,18 +15,6 @@
    [renderer.notification.views :as notification.v]
    [renderer.window.effects :as-alias window.fx]))
 
-(def custom-fx
-  (rf/->interceptor
-   :id ::custom-fx
-   :after (fn [context]
-            (let [db (rf/get-effect context :db ::not-found)]
-              (cond-> context
-                (not= db ::not-found)
-                (-> (rf/assoc-effect :fx (apply conj (or (:fx (rf/get-effect context)) []) (:fx db)))
-                    (rf/assoc-effect :db (assoc db :fx []))))))))
-
-(rf/reg-global-interceptor custom-fx)
-
 (rf/reg-event-db
  ::initialize-db
  (fn [_ _]
