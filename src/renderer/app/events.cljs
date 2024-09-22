@@ -101,7 +101,8 @@
 
 (rf/reg-event-db
  ::toggle-panel
- [persist (rf/path :panels)]
+ [persist
+  (rf/path :panels)]
  (fn [db [_ k]]
    (update-in db [k :visible?] not)))
 

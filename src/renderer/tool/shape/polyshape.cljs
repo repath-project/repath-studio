@@ -78,16 +78,18 @@
       (app.h/set-state :default)
       (app.h/explain "Create " (name (:tool db)))))
 
+(defn translate
+  [[offset-x offset-y] points [point-x point-y]]
+  (conj points
+        (units/transform point-x + offset-x)
+        (units/transform point-y + offset-y)))
+
 (defmethod tool.hierarchy/translate ::tool.hierarchy/polyshape
-  [el [x y]]
+  [el offset]
   (update-in el
              [:attrs :points]
-             #(->> %
-                   (utils.attr/points->vec)
-                   (reduce (fn [points point]
-                             (conj points
-                                   (units/transform (first point) + x)
-                                   (units/transform (second point) + y))) [])
+             #(->> (utils.attr/points->vec %)
+                   (reduce (partial translate offset) [])
                    (str/join " "))))
 
 (defmethod tool.hierarchy/scale ::tool.hierarchy/polyshape
@@ -96,15 +98,11 @@
         pivot-point (mat/sub pivot-point (mat/mul pivot-point ratio))]
     (update-in el
                [:attrs :points]
-               #(->> %
-                     utils.attr/points->vec
+               #(->> (utils.attr/points->vec %)
                      (reduce (fn [points point]
-                               (let [[point-x point-y] point
-                                     rel-point (mat/sub (take 2 bounds-start) point)
-                                     [x y] (mat/add pivot-point (mat/sub rel-point (mat/mul rel-point ratio)))]
-                                 (conj points
-                                       (units/transform point-x + x)
-                                       (units/transform point-y + y)))) [])
+                               (let [rel-point (mat/sub (take 2 bounds-start) point)
+                                     offset (mat/add pivot-point (mat/sub rel-point (mat/mul rel-point ratio)))]
+                                 (translate offset points point))) [])
                      (str/join " ")))))
 
 (defmethod tool.hierarchy/render-edit ::tool.hierarchy/polyshape

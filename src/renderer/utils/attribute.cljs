@@ -51,19 +51,21 @@
    :id :class :tabindex
    :style])
 
+
+(defn str->seq
+  [s]
+  (-> s str/trim (str/split #"\s*[\s,]\s*")))
+
 (mx/defn points->vec :- vector?
   [points :- string?]
-  (-> points
-      (str/triml)
-      (str/split #"\s*[\s,]\s*")
-      (->> (partition 2)
-           (mapv vec)))) ; OPTIMIZE
+  (into [] (partition-all 2) (str->seq points)))
+
+(def partition-to-px
+  (comp
+   (map units/unit->px)
+   (partition-all 2)
+   (map vec)))
 
 (mx/defn points->px :- vector?
   [points :- string?]
-  (-> points
-      (str/triml)
-      (str/split #"\s*[\s,]\s*")
-      (->> (map units/unit->px)
-           (partition 2)
-           (mapv vec))))
+  (into [] partition-to-px (str->seq points)))
