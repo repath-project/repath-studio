@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [macos-13, ubuntu-latest, windows-latest]
 
     steps:
       - name: Check out Git repository
@@ -38,10 +38,6 @@ jobs:
         uses: DeLaGuardo/setup-clojure@12.5
         with:
           cli: 1.12.0.1479
-
-      # Required by font-scaner but removed in python 3.12
-      - name: Install python distutils
-        run: pip install setuptools
 
       - name: Electron Builder Action
         uses: samuelmeuli/action-electron-builder@v1.6.0
