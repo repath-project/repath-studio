@@ -138,7 +138,4 @@
   [db, id :- uuid?]
   (let [document (get-in db [:documents id])
         history-position (get-in document [:history :position])]
-    (or (= (:save document) history-position)
-        (and (not (:save document))
-             (not (:path document))
-             (zero? (get-in db [:documents id :history :states history-position :index]))))))
+    (= (:save document) history-position)))
