@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.4.2 (2024-09-22)
+
+**Added**
+
+- Font preview on font select
+- Persisting snap options
+- System language
+- Initial attr value for browsers
+- Portfolio
+- Default document title on save dialog
+
+**Removed**
+
+- Dropper error message
+- Id, title and saved from saved documents
+
+**Changed**
+
+- Enhance brush cursor
+- Enhance square-handle styles
+- Simplify select messages
+- Enhance attribute info on browsers
+- Persist the last history state only
+- Performance enhancements
+
+**Fixed**
+
+- Document migration
+- Local storage clear and relaunch
+- Mobile pointer events
+- Deleting text element when there is no content
+- Avoid creating empty paths after bool operation
+- Persist on canvas zoom
+- Mobile app height
+- Clearing temp element on deactivation
+- Multiple file load
+- Saved indicator
+- Disabled state on attributes
+- Minor icon issues
+
 ## 0.4.1 (2024-08-30)
 
 **Added**
@@ -8,8 +48,7 @@
 
 **Changed**
 
-- **[BREAKING]**: Switch to uuids
-
+- Switch to uuids
 
 ## 0.3.0 (2024-08-29)
 
@@ -30,7 +69,7 @@
 
 **Changed**
 
-- **[BREAKING]**: Use `:id` instead of `:key` to avoid shadowing
+- Use `:id` instead of `:key` to avoid shadowing
 - Enhance image performance
 - Scrollbars
 - Enhance mobile view
