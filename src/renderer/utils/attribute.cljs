@@ -63,8 +63,7 @@
 (def partition-to-px
   (comp
    (map units/unit->px)
-   (partition-all 2)
-   (map vec)))
+   (partition-all 2)))
 
 (mx/defn points->px :- vector?
   [points :- string?]

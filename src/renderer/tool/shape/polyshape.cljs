@@ -81,15 +81,15 @@
 (defn translate
   [[offset-x offset-y] points [point-x point-y]]
   (conj points
-        (units/transform point-x + offset-x)
-        (units/transform point-y + offset-y)))
+        (when point-x (units/transform point-x + offset-x))
+        (when point-y (units/transform point-y + offset-y))))
 
 (defmethod tool.hierarchy/translate ::tool.hierarchy/polyshape
   [el offset]
   (update-in el
              [:attrs :points]
-             #(->> (utils.attr/points->vec %)
-                   (reduce (partial translate offset) [])
+             #(->> (utils.attr/str->seq %)
+                   (transduce (partition-all 2) (partial translate offset) [])
                    (str/join " "))))
 
 (defmethod tool.hierarchy/scale ::tool.hierarchy/polyshape
@@ -98,11 +98,13 @@
         pivot-point (mat/sub pivot-point (mat/mul pivot-point ratio))]
     (update-in el
                [:attrs :points]
-               #(->> (utils.attr/points->vec %)
-                     (reduce (fn [points point]
-                               (let [rel-point (mat/sub (take 2 bounds-start) point)
-                                     offset (mat/add pivot-point (mat/sub rel-point (mat/mul rel-point ratio)))]
-                                 (translate offset points point))) [])
+               #(->> (utils.attr/str->seq %)
+                     (transduce
+                      utils.attr/partition-to-px
+                      (fn [points point]
+                        (let [rel-point (mat/sub (take 2 bounds-start) point)
+                              offset (mat/add pivot-point (mat/sub rel-point (mat/mul rel-point ratio)))]
+                          (translate offset points point))) [])
                      (str/join " ")))))
 
 (defmethod tool.hierarchy/render-edit ::tool.hierarchy/polyshape
@@ -132,14 +134,14 @@
   (update-in
    el
    [:attrs :points]
-   #(str/join " "
-              (-> (utils.attr/points->vec %1)
-                  (update (js/parseInt (name handle))
-                          (fn [point]
-                            (list
-                             (units/transform (first point) + x)
-                             (units/transform (second point) + y))))
-                  flatten))))
+   #(-> (utils.attr/points->vec %1)
+        (update (js/parseInt (name handle))
+                (fn [point]
+                  (list
+                   (units/transform (first point) + x)
+                   (units/transform (second point) + y))))
+        (flatten)
+        (->> (str/join " ")))))
 
 (defmethod tool.hierarchy/bounds ::tool.hierarchy/polyshape
   [{{:keys [points]} :attrs}]
