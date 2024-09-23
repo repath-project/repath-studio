@@ -39,9 +39,11 @@ jobs:
         with:
           cli: 1.12.0.1479
 
-      # Required by font-scaner but removed in python 3.12
-      - name: Install python distutils
-        run: brew install python-setuptools
+      - name: Install python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python my_script.py
 
       - name: Electron Builder Action
         uses: samuelmeuli/action-electron-builder@v1.6.0
