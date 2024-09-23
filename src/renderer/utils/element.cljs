@@ -129,13 +129,13 @@
   (str "<svg width='" w "' height='" h "'>" s "</svg>"))
 
 (mx/defn ->string :- string?
-  [els :- [:* Element]]
+  [els]
   (reduce #(-> (tool.hierarchy/render-to-string %2)
                (dom.server/render-to-static-markup)
                (str "\n" %)) "" els))
 
 (mx/defn ->svg :- string?
-  [els :- [:* Element]]
+  [els]
   (cond-> (->string els)
     (not (and (seq els)
               (empty? (rest els))

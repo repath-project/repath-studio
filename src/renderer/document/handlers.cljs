@@ -115,7 +115,7 @@
       (element.h/set-attr k v)))
 
 (mx/defn load
-  [db, document :- Document]
+  [db, document]
   (let [open-document-id (search-by-path db (:path document))
         document (merge db/default document)
         document (cond-> document
