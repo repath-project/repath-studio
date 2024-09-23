@@ -43,7 +43,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: python my_script.py
 
       - name: Electron Builder Action
         uses: samuelmeuli/action-electron-builder@v1.6.0
