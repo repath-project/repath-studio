@@ -267,11 +267,11 @@
        (assoc-prop id :selected? true)))
   ([db id multi?]
    (if (element db id)
-     (if-not multi?
+     (if multi?
+       (toggle-prop db id :selected?)
        (-> db
            (deselect)
-           (select id))
-       (toggle-prop db id :selected?))
+           (select id)))
      (deselect db))))
 
 (defn select-all

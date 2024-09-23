@@ -55,12 +55,13 @@
   "https://bkrem.github.io/react-d3-tree/docs/interfaces/_src_tree_types_.treeprops.html#rendercustomnodeelement"
   [^js/CustomNodeElementProps props]
   (let [datum (.-nodeDatum props)
+        id (uuid (.-id datum))
         color (if (.-active datum) "var(--accent)" (.-color datum))]
     (ra/as-element
      [:circle
-      {:on-click #(rf/dispatch [::history.e/move (uuid (.-id datum))])
-       :on-pointer-enter #(rf/dispatch [::history.e/preview (uuid (.-id datum))])
-       :on-pointer-leave #(rf/dispatch [::history.e/swap (uuid (.-id datum))])
+      {:on-click #(rf/dispatch [::history.e/move id])
+       :on-pointer-enter #(rf/dispatch [::history.e/preview id])
+       :on-pointer-leave #(rf/dispatch [::history.e/swap id])
        :cx "0"
        :cy "0"
        :stroke color

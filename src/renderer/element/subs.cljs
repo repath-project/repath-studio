@@ -129,7 +129,7 @@
    (let [families (->> selected-elements
                        (map #(-> % :attrs :font-family))
                        (remove nil?)
-                       set)]
+                       (set))]
      (->> system-fonts
           (filter #(contains? families (:family %)))
           (map :weight)
