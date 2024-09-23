@@ -56,10 +56,10 @@
     (:active-document db)
     (assoc-in (element.h/path db) (:elements (state (history db))))))
 
-(defn drop-rest
+(mx/defn drop-rest
   ([db]
    (reduce drop-rest db (:document-tabs db)))
-  ([db document-id]
+  ([db, document-id :- uuid?]
    (let [pos (get-in db [:documents document-id :history :position])]
      (cond-> db
        pos

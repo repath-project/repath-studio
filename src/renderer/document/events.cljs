@@ -41,10 +41,16 @@
  h/center)
 
 (rf/reg-event-db
- ::set-hovered-ids
+ ::set-hovered-id
  [active-path]
- (fn [db [_ ids]]
-   (assoc db :hovered-ids (->> ids (remove nil?) (set)))))
+ (fn [db [_ id]]
+   (assoc db :hovered-ids #{id})))
+
+(rf/reg-event-db
+ ::clear-hovered
+ [active-path]
+ (fn [db [_]]
+   (assoc db :hovered-ids #{})))
 
 (rf/reg-event-db
  ::collapse-el
@@ -102,6 +108,7 @@
                            :close-button? true
                            :content [dialog.v/save (get-in db [:documents id])]
                            :attrs {:onOpenAutoFocus #(.preventDefault %)}})))))
+
 (rf/reg-event-fx
  ::close-active
  [persist]
@@ -112,8 +119,7 @@
  ::close-all-saved
  [persist]
  (fn [db [_]]
-   (let [saved (filter #(h/saved? db %) (:document-tabs db))]
-     (reduce h/close db saved))))
+   (reduce h/close db (h/saved-ids db))))
 
 (rf/reg-event-fx
  ::close-others

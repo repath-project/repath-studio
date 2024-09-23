@@ -70,7 +70,7 @@
   (let [existing-titles (set (map :title (vals documents)))]
     (loop [i 1]
       (let [title (str "Untitled-" i)]
-        (if (not (contains? existing-titles title))
+        (if-not (contains? existing-titles title)
           title
           (recur (inc i)))))))
 
@@ -139,3 +139,7 @@
   (let [document (get-in db [:documents id])
         history-position (get-in document [:history :position])]
     (= (:save document) history-position)))
+
+(mx/defn saved-ids :- sequential?
+  [db]
+  (filter #(saved? db %) (:document-tabs db)))

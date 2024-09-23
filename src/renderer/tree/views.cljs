@@ -118,7 +118,7 @@
       :data-id (str id)
       :role "menuitem"
       :on-double-click #(rf/dispatch [::frame.e/pan-to-element id])
-      :on-pointer-enter #(rf/dispatch [::document.e/set-hovered-ids #{id}])
+      :on-pointer-enter #(rf/dispatch [::document.e/set-hovered-id id])
       :ref (fn [this]
              (when (and this selected? hovered? (not multiple-selected?))
                (dom/scroll-into-view! this)))
@@ -126,7 +126,7 @@
       :draggable true
       :on-drag-start #(-> (.-dataTransfer %)
                           (.setData "id" (str id)))
-      :on-drag-enter #(rf/dispatch [::document.e/set-hovered-ids #{id}])
+      :on-drag-enter #(rf/dispatch [::document.e/set-hovered-id id])
       :on-drag-over #(.preventDefault %)
       :on-drop #(drop-handler % id)
       :on-pointer-down #(when (= (.-button %) 2)
@@ -159,7 +159,7 @@
      {:on-pointer-up #(rf/dispatch [::element.e/deselect-all])}
      [ui/scroll-area
       [:ul
-       {:on-pointer-leave #(rf/dispatch [::document.e/set-hovered-ids #{}])}
+       {:on-pointer-leave #(rf/dispatch [::document.e/clear-hovered])}
        (for [el (reverse root-children)]
          ^{:key (:id el)} [item el 1 elements hovered-ids collapsed-ids])]]]))
 
