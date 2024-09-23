@@ -126,9 +126,7 @@
 
 (defn root-svgs
   [db]
-  (->> db
-       root-children
-       (filter element/svg?)))
+  (->> db root-children (filter element/svg?)))
 
 (defn ancestor-ids
   ([db]
@@ -269,9 +267,7 @@
    (if (element db id)
      (if multi?
        (toggle-prop db id :selected?)
-       (-> db
-           (deselect)
-           (select id)))
+       (-> db deselect (select id)))
      (deselect db))))
 
 (defn select-all
@@ -565,9 +561,9 @@
 
 (defn add
   ([db]
-   (-> db
-       (add (get-temp db))
-       (clear-temp)))
+   (->> (get-temp db)
+        (add db)
+        (clear-temp)))
   ([db el]
    (create (deselect db) (assoc el :selected? true))))
 
@@ -592,14 +588,12 @@
                                  (.getAttribute "d"))))
                          (:d attrs)
                          (rest selected-elements))]
-    (-> db
-        (delete)
-        (cond->
-         (seq new-path)
-          (add {:type :element
-                :tag :path
-                :parent (-> selected-elements first :parent)
-                :attrs (merge attrs {:d new-path})})))))
+    (cond-> (delete db)
+      (seq new-path)
+      (add {:type :element
+            :tag :path
+            :parent (-> selected-elements first :parent)
+            :attrs (merge attrs {:d new-path})}))))
 
 (defn paste-in-place
   ([db]

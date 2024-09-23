@@ -4,7 +4,13 @@
    [malli.experimental :as mx]
    [renderer.utils.math :refer [Vec2D]]))
 
-(def Bounds [:tuple number? number? number? number?])
+(def Bounds
+  "Coordinates that define a bounding box."
+  [:tuple
+   [number? {:title "left"}]
+   [number? {:title "top"}]
+   [number? {:title "right"}]
+   [number? {:title "bottom"}]])
 
 (mx/defn from-bbox :- [:maybe Bounds]
   "Experimental way of getting the bounds of uknown or complicated elements
