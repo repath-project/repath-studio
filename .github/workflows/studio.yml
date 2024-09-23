@@ -41,7 +41,7 @@ jobs:
 
       # Required by font-scaner but removed in python 3.12
       - name: Install python distutils
-        run: python3 -m pip install setuptools
+        run: brew install python-setuptools
 
       - name: Electron Builder Action
         uses: samuelmeuli/action-electron-builder@v1.6.0
