@@ -131,9 +131,9 @@
       :on-drop #(drop-handler % id)
       :on-pointer-down #(when (= (.-button %) 2)
                           (rf/dispatch [::element.e/select id (.-ctrlKey %)]))
-      :on-click (fn [e]
-                  (.stopPropagation e)
-                  (rf/dispatch [::element.e/select id (.-ctrlKey e)]))
+      :on-pointer-up (fn [e]
+                       (.stopPropagation e)
+                       (rf/dispatch [::element.e/select id (.-ctrlKey e)]))
       :style {:padding-left (padding depth (seq children))}}
      [:div.flex.items-center.content-between.w-full
       (when (seq children)
