@@ -6,11 +6,9 @@
    [malli.transform :as mt]
    [renderer.document.db :as db :refer [Document PersistedDocument]]
    [renderer.element.db :refer [Attr]]
-   [renderer.element.handlers :as element.h]
    [renderer.frame.handlers :as frame.h]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
-   [renderer.utils.math :refer [Vec2D]]
    [renderer.utils.vec :as vec]))
 
 (mx/defn save-format :- PersistedDocument
@@ -83,34 +81,11 @@
         (assoc :active-document id)
         (update :document-tabs #(vec/add % (inc active-index) id)))))
 
-(mx/defn create-canvas
-  [db, size :- [:maybe Vec2D]]
-  (cond-> db
-    :always
-    (element.h/create {:tag :canvas
-                       :attrs {:fill "#eeeeee"}})
-
-    size
-    (-> (element.h/create {:tag :svg
-                           :attrs {:width (first size)
-                                   :height (second size)}})
-        (center))))
-
-(mx/defn create
-  ([db, guid :- uuid?]
-   (create db guid [595 842]))
-  ([db, guid :- uuid?, size :- Vec2D]
-   (-> db
-       (create-tab (assoc db/default :id guid))
-       (create-canvas size))))
-
-(mx/defn set-global-attr
+(mx/defn assoc-attr
   [{:keys [active-document] :as db},
    k :- keyword?,
    v :- Attr]
-  (-> db
-      (assoc-in [:documents active-document k] v)
-      (element.h/set-attr k v)))
+  (assoc-in db [:documents active-document k] v))
 
 (mx/defn load
   [db, document]

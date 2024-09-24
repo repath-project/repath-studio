@@ -293,9 +293,6 @@
                                                               parse-unit {:arities {1 {:args [:any], :ret :seqable}}}},
                                         renderer.document.handlers {search-by-path {:arities {2 {:args [:any :string],
                                                                                                  :ret :any}}},
-                                                                    create-canvas {:arities {2 {:args [:any
-                                                                                                       :nilable/seqable],
-                                                                                                :ret :any}}},
                                                                     load {:arities {2 {:args [:any :any], :ret :any}}},
                                                                     saved-ids {:arities {1 {:args [:any],
                                                                                             :ret :sequential}}},
@@ -303,15 +300,10 @@
                                                                                              :ret :any}}},
                                                                     set-active {:arities {2 {:args [:any :any],
                                                                                              :ret :any}}},
-                                                                    set-global-attr {:arities {3 {:args [:any
-                                                                                                         :keyword
-                                                                                                         :any],
-                                                                                                  :ret :any}}},
                                                                     saved? {:arities {2 {:args [:any :any],
                                                                                          :ret :boolean}}},
-                                                                    create {:arities {2 {:args [:any :any], :ret :any},
-                                                                                      3 {:args [:any :any :seqable],
-                                                                                         :ret :any}}},
+                                                                    assoc-attr {:arities {3 {:args [:any :keyword :any],
+                                                                                             :ret :any}}},
                                                                     new-title {:arities {1 {:args [:any], :ret :string}}},
                                                                     close {:arities {2 {:args [:any :any], :ret :any}}},
                                                                     center {:arities {1 {:args [:any], :ret :any}}},

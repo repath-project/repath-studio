@@ -8,8 +8,10 @@
    [renderer.dialog.events :as-alias dialog.e]
    [renderer.dialog.handlers :as dialog.h]
    [renderer.dialog.views :as dialog.v]
+   [renderer.document.db :as db]
    [renderer.document.effects :as fx]
    [renderer.document.handlers :as h]
+   [renderer.element.handlers :as element.h]
    [renderer.history.handlers :as history.h :refer [finalize]]
    [renderer.utils.compatibility :as compatibility]
    [renderer.utils.dom :as dom]
@@ -89,13 +91,17 @@
  ::set-fill
  [(finalize "Set fill")]
  (fn [db [_ color]]
-   (h/set-global-attr db :fill color)))
+   (-> db
+       (h/assoc-attr :fill color)
+       (element.h/set-attr :fill color))))
 
 (rf/reg-event-db
  ::set-stroke
  [(finalize "Set stroke")]
  (fn [db [_ color]]
-   (h/set-global-attr db :stroke color)))
+   (-> db
+       (h/assoc-attr :stroke color)
+       (element.h/set-attr :stroke color))))
 
 (rf/reg-event-db
  ::close
@@ -155,28 +161,37 @@
          swapped-index (.indexOf document-tabs swapped-key)]
      (assoc db :document-tabs (vec/swap document-tabs dragged-index swapped-index)))))
 
+(defn- create
+  ([db, guid]
+   (create db guid [595 842]))
+  ([db guid size]
+   (-> db
+       (h/create-tab (assoc db/default :id guid))
+       (element.h/create-default-canvas size)
+       (h/center))))
+
 (rf/reg-event-fx
  ::new
  [(rf/inject-cofx ::app.fx/guid)
   (finalize "Create document")]
  (fn [{:keys [db guid]} [_]]
-   {:db (h/create db guid)}))
+   {:db (create db guid)}))
 
 (rf/reg-event-fx
  ::init
  [(rf/inject-cofx ::app.fx/guid)
-  (finalize "Create document")]
+  (finalize "Init document")]
  (fn [{:keys [db guid]} [_]]
    {:db (cond-> db
           (not (:active-document db))
-          (h/create guid))}))
+          (create guid))}))
 
 (rf/reg-event-fx
  ::new-from-template
  [(rf/inject-cofx ::app.fx/guid)
   (finalize "Create document from template")]
  (fn [{:keys [db guid]} [_ size]]
-   {:db (h/create db guid size)}))
+   {:db (create db guid size)}))
 
 (rf/reg-event-fx
  ::open

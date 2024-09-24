@@ -522,6 +522,18 @@
         child-els
         (add-children child-els)))))
 
+(defn create-default-canvas
+  [db size]
+  (cond-> db
+    :always
+    (create {:tag :canvas
+             :attrs {:fill "#eeeeee"}})
+
+    size
+    (-> (create {:tag :svg
+                 :attrs {:width (first size)
+                         :height (second size)}}))))
+
 (defn add
   ([db]
    (->> (get-temp db)
