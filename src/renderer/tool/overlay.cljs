@@ -38,7 +38,7 @@
   [{:keys [x y id] :as el} & children]
   (let [zoom @(rf/subscribe [::document.s/zoom])
         clicked-element @(rf/subscribe [::app.s/clicked-element])
-        pointer-handler #(pointer/event-handler % el)]
+        pointer-handler #(pointer/event-handler! % el)]
     [:circle {:key id
               :cx x
               :cy y
@@ -60,7 +60,7 @@
         clicked-element @(rf/subscribe [::app.s/clicked-element])
         size (/ handle-size zoom)
         stroke-width (/ 1 zoom)
-        pointer-handler #(pointer/event-handler % el)
+        pointer-handler #(pointer/event-handler! % el)
         active? (and (= (:id clicked-element) id)
                      (= (:element clicked-element) element))]
     [:rect {:fill (if active? accent accent-inverted)
@@ -166,9 +166,9 @@
         ignored? (contains? ignored-ids id)
         [x1 y1 _x2 _y2] bounds
         [w h] (bounds/->dimensions bounds)
-        pointer-handler #(pointer/event-handler % {:type :handle
-                                                   :tag :move
-                                                   :id id})
+        pointer-handler #(pointer/event-handler! % {:type :handle
+                                                    :tag :move
+                                                    :id id})
         rect-attrs {:x x1
                     :y y1
                     :width w

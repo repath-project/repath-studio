@@ -13,6 +13,7 @@
    [renderer.frame.events :as-alias frame.e]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.ui :as ui]
+   [renderer.utils.dom :as dom]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.wheel :as wheel]))
 
@@ -28,14 +29,14 @@
       (fn []
         (doseq
          [event ["pointermove" "pointerup"]]
-          (.addEventListener frame-window event pointer/event-handler))
+          (.addEventListener frame-window event pointer/event-handler!))
         (.addEventListener frame-window "wheel" wheel/event-handler #js {:passive false}))
 
       :component-will-unmount
       (fn []
         (doseq
          [event ["pointermove" "pointerup"]]
-          (.removeEventListener frame-window event pointer/event-handler))
+          (.removeEventListener frame-window event pointer/event-handler!))
         (.removeEventListener frame-window "wheel" wheel/event-handler))
 
       :reagent-render #()})))
@@ -108,7 +109,7 @@
             [:> ContextMenu/Portal
              (into [:> ContextMenu/Content
                     {:class "menu-content context-menu-content"
-                     :on-close-auto-focus #(.preventDefault %)
+                     :on-close-auto-focus dom/prevent-default!
                      :style {:margin-left (str x "px")
                              :margin-top (str y "px")}}]
                    (map ui/context-menu-item element.v/context-menu))]]]))})))

@@ -42,7 +42,7 @@
     (.-metaKey e) (conj :meta)
     (.-shiftKey e) (conj :shift)))
 
-(defn event-handler
+(defn event-handler!
   "https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
    https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/"
   [^js/KeyboardEvent e]
@@ -54,7 +54,7 @@
                       :key (.-key e)
                       :modifiers (modifiers e)}]))
 
-(defn input-key-down-handler
+(defn input-key-down-handler!
   "Generic on-key-down handler for input elements that dispatches an event `f`
    in order to update a db value on keyboard enter, or reset to the initial
    value `v` on escape.

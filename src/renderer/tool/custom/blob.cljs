@@ -130,7 +130,7 @@
 (defmethod tool.hierarchy/render :blob
   [{:keys [attrs children] :as element}]
   (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
-        pointer-handler #(pointer/event-handler % element)]
+        pointer-handler #(pointer/event-handler! % element)]
     [:path (merge {:d (tool.hierarchy/path element)
                    :on-pointer-up pointer-handler
                    :on-pointer-down pointer-handler

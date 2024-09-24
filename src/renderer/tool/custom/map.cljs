@@ -69,9 +69,9 @@
       (fn [{:keys [attrs] :as element} _child-elements]
         [:image (merge
                  {:href @image
-                  :on-pointer-up   #(pointer/event-handler % element)
-                  :on-pointer-down #(pointer/event-handler % element)
-                  :on-pointer-move #(pointer/event-handler % element)}
+                  :on-pointer-up #(pointer/event-handler! % element)
+                  :on-pointer-down #(pointer/event-handler! % element)
+                  :on-pointer-move #(pointer/event-handler! % element)}
                  (select-keys attrs [:x :y :width :height :id :class]))])})))
 
 (defmethod tool.hierarchy/render :map

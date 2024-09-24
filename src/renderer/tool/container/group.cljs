@@ -42,7 +42,7 @@
              ignored? (contains? ignored-ids (:id el))
              [x1 y1 _x2 _y2] bounds
              [width height] (bounds/->dimensions bounds)
-             pointer-handler #(pointer/event-handler % el)
+             pointer-handler #(pointer/event-handler! % el)
              zoom @(rf/subscribe [::document.s/zoom])
              stroke-width (max (:stroke-width attrs) (/ 20 zoom))]
          [:rect {:x x1

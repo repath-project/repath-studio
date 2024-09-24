@@ -63,7 +63,7 @@
     [x 0]
     [0 y]))
 
-(defn event-handler
+(defn event-handler!
   "Gathers pointer event props.
    https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent
 

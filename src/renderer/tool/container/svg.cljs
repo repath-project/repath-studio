@@ -45,7 +45,7 @@
         text-attrs (select-keys attrs [:x :y])
         active-filter @(rf/subscribe [::document.s/filter])
         zoom @(rf/subscribe [::document.s/zoom])
-        pointer-handler #(pointer/event-handler % el)]
+        pointer-handler #(pointer/event-handler! % el)]
     [:g
      [:text
       (merge
@@ -79,6 +79,6 @@
          :fill "white"
          :on-pointer-up pointer-handler
          :on-pointer-down #(when (= (.-button %) 2)
-                             (pointer/event-handler % el))})]
+                             (pointer/event-handler! % el))})]
       (for [el child-els]
         ^{:key (:id el)} [tool.hierarchy/render el])]]))

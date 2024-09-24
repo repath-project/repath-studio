@@ -15,42 +15,50 @@
    [renderer.utils.dom :as dom]
    [renderer.utils.keyboard :as keyb]))
 
-(defn item-buttons
-  [{:keys [id locked? visible?]}]
-  [:<>
-   [ui/icon-button
-    (if visible? "eye" "eye-closed")
-    {:class (when visible? "list-item-action")
-     :title (if visible? "hide" "show")
-     :on-double-click #(.stopPropagation %)
-     :on-pointer-up #(.stopPropagation %)
-     :on-click #(do (.stopPropagation %)
-                    (rf/dispatch [::element.e/toggle-prop id :visible?]))}]
-   [ui/icon-button
-    (if locked? "lock" "unlock")
-    {:class (when-not locked? "list-item-action")
-     :title (if visible? "unlock" "lock")
-     :on-double-click #(.stopPropagation %)
-     :on-pointer-up #(.stopPropagation %)
-     :on-click #(do (.stopPropagation %)
-                    (rf/dispatch [::element.e/toggle-prop id :locked?]))}]])
+(defn lock-button
+  [id locked?]
+  [ui/icon-button
+   (if locked? "lock" "unlock")
+   {:class (when-not locked? "list-item-action")
+    :title (if locked? "unlock" "lock")
+    :on-double-click dom/stop-propagation!
+    :on-pointer-up dom/stop-propagation!
+    :on-click (fn [e]
+                (.stopPropagation e)
+                (rf/dispatch [::element.e/toggle-prop id :locked?]))}])
 
-(defn- set-item-label
-  [e k]
-  (rf/dispatch [::element.e/set-prop k :label (.. e -target -value)]))
+(defn visibility-button
+  [id visible?]
+  [ui/icon-button
+   (if visible? "eye" "eye-closed")
+   {:class (when visible? "list-item-action")
+    :title (if visible? "hide" "show")
+    :on-double-click dom/stop-propagation!
+    :on-pointer-up dom/stop-propagation!
+    :on-click (fn [e]
+                (.stopPropagation e)
+                (rf/dispatch [::element.e/toggle-prop id :visible?]))}])
+
+(defn set-item-label!
+  [e id]
+  (rf/dispatch [::element.e/set-prop id :label (.. e -target -value)]))
+
+(defn item-input
+  [{:keys [id label tag]} on-blur]
+  [:input.list-item-input
+   {:default-value label
+    :placeholder tag
+    :auto-focus true
+    :on-key-down #(keyb/input-key-down-handler! % label set-item-label! id)
+    :on-blur on-blur}])
 
 (defn item-label
-  [{:keys [id label visible? tag]}]
+  [{:keys [id label visible? tag] :as el}]
   (ra/with-let [edit-mode? (ra/atom false)]
     (if @edit-mode?
-      [:input.list-item-input
-       {:default-value label
-        :placeholder tag
-        :auto-focus true
-        :on-key-down #(keyb/input-key-down-handler % label set-item-label id)
-        :on-blur (fn [e]
-                   (reset! edit-mode? false)
-                   (set-item-label e id))}]
+      [item-input el (fn [e]
+                       (reset! edit-mode? false)
+                       (set-item-label! e id))]
       [:div.flex
        [:div.truncate
         {:class [(when-not visible? "opacity-60")
@@ -61,42 +69,47 @@
                             (reset! edit-mode? true))}
         (if (empty? label) tag label)]])))
 
-(defn drop-handler
+(defn drop-handler!
   [e parent-id]
   (let [id (-> (.-dataTransfer e)
                (.getData "id")
                uuid)]
     (.preventDefault e)
     (rf/dispatch [::element.e/set-parent parent-id id])))
-
 (defn padding
   [depth children?]
   (let [collapse-button-width 22]
     (- (* depth collapse-button-width)
        (if children? collapse-button-width 0))))
 
-(defn key-down-handler
-  [e id]
+(def last-focused-id (ra/atom nil))
+
+(defn set-last-focused-id!
+  [id]
+  (reset! last-focused-id id))
+
+(defn key-down-handler!
+  [e]
   (case (.-key e)
     "ArrowUp"
     (do (.stopPropagation e)
-        (rf/dispatch [::e/focus-up id]))
+        (rf/dispatch [::e/focus-up @last-focused-id]))
 
     "ArrowDown"
     (do (.stopPropagation e)
-        (rf/dispatch [::e/focus-down id]))
+        (rf/dispatch [::e/focus-down @last-focused-id]))
 
     "ArrowLeft"
     (do (.stopPropagation e)
-        (rf/dispatch [::document.e/collapse-el id]))
+        (rf/dispatch [::document.e/collapse-el @last-focused-id]))
 
     "ArrowRight"
     (do (.stopPropagation e)
-        (rf/dispatch [::document.e/expand-el id]))
+        (rf/dispatch [::document.e/expand-el @last-focused-id]))
 
     "Enter"
     (do (.stopPropagation e)
-        (rf/dispatch [::element.e/select id (.-ctrlKey e)]))
+        (rf/dispatch [::element.e/select @last-focused-id (.-ctrlKey e)]))
 
     nil))
 
@@ -111,43 +124,41 @@
                               [::document.e/expand-el id]
                               [::document.e/collapse-el id]))}])
 
-(def last-focused-id (ra/atom nil))
-
 (defn list-item-button
-  [{:keys [id selected? children] :as el} depth hovered? collapsed?]
-  (let [multiple-selected? @(rf/subscribe [::element.s/multiple-selected?])]
-    [:div.button.list-item-button
-     {:class [(when selected? "selected")
-              (when hovered? "hovered")]
-      :tab-index 0
-      :data-id (str id)
-      :role "menuitem"
-      :on-double-click #(rf/dispatch [::frame.e/pan-to-element id])
-      :on-pointer-enter #(rf/dispatch [::document.e/set-hovered-id id])
-      :ref (fn [this]
-             (when (and this selected? hovered? (not multiple-selected?))
-               (dom/scroll-into-view! this)))
-      :on-key-down #(key-down-handler % id)
-      :draggable true
-      :on-drag-start #(-> (.-dataTransfer %)
-                          (.setData "id" (str id)))
-      :on-drag-enter #(rf/dispatch [::document.e/set-hovered-id id])
-      :on-drag-over #(.preventDefault %)
-      :on-drop #(drop-handler % id)
-      :on-pointer-down #(when (= (.-button %) 2)
-                          (rf/dispatch [::element.e/select id (.-ctrlKey %)]))
-      :on-pointer-up (fn [e]
-                       (.stopPropagation e)
-                       (if (.-shiftKey e)
-                         (rf/dispatch-sync [::e/select-range @last-focused-id id])
-                         (do (rf/dispatch [::element.e/select id (.-ctrlKey e)])
-                             (reset! last-focused-id id))))
-      :style {:padding-left (padding depth (seq children))}}
-     [:div.flex.items-center.content-between.w-full
-      (when (seq children)
-        [toggle-collapsed-button id collapsed?])
-      [:div.flex-1.overflow-hidden [item-label el]]
-      [item-buttons el]]]))
+  [{:keys [id selected? children locked? visible?] :as el} depth hovered? collapsed?]
+  [:div.button.list-item-button
+   {:class [(when selected? "selected")
+            (when hovered? "hovered")]
+    :tab-index 0
+    :data-id (str id)
+    :role "menuitem"
+    :on-double-click #(rf/dispatch [::frame.e/pan-to-element id])
+    :on-pointer-enter #(rf/dispatch [::document.e/set-hovered-id id])
+    :ref (fn [this]
+           (when (and this selected? hovered?)
+             (dom/scroll-into-view! this)
+             (set-last-focused-id! (.getAttribute this "data-id"))))
+    :draggable true
+    :on-drag-start #(-> (.-dataTransfer %)
+                        (.setData "id" (str id)))
+    :on-drag-enter #(rf/dispatch [::document.e/set-hovered-id id])
+    :on-drag-over dom/prevent-default!
+    :on-drop #(drop-handler! % id)
+    :on-pointer-down #(when (= (.-button %) 2)
+                        (rf/dispatch [::element.e/select id (.-ctrlKey %)]))
+    :on-pointer-up (fn [e]
+                     (.stopPropagation e)
+                     (if (.-shiftKey e)
+                       (rf/dispatch-sync [::e/select-range @last-focused-id id])
+                       (do (rf/dispatch [::element.e/select id (.-ctrlKey e)])
+                           (reset! last-focused-id id))))
+    :style {:padding-left (padding depth (seq children))}}
+   [:div.flex.items-center.content-between.w-full
+    (when (seq children)
+      [toggle-collapsed-button id collapsed?])
+    [:div.flex-1.overflow-hidden [item-label el]]
+    [lock-button id locked?]
+    [visibility-button id visible?]]])
 
 (defn item [{:keys [selected? children id] :as el} depth elements hovered-ids collapsed-ids]
   (let [has-children? (seq children)
@@ -164,7 +175,8 @@
   (let [hovered-ids @(rf/subscribe [::document.s/hovered-ids])
         collapsed-ids @(rf/subscribe [::document.s/collapsed-ids])]
     [:div.tree-sidebar
-     {:on-pointer-up #(rf/dispatch [::element.e/deselect-all])}
+     {:on-key-down key-down-handler!
+      :on-pointer-up #(rf/dispatch [::element.e/deselect-all])}
      [ui/scroll-area
       [:ul
        {:on-pointer-leave #(rf/dispatch [::document.e/clear-hovered])}
@@ -189,6 +201,6 @@
    [:> ContextMenu/Portal
     (into [:> ContextMenu/Content
            {:class "menu-content context-menu-content"
-            :on-close-auto-focus #(.preventDefault %)}]
+            :on-close-auto-focus dom/prevent-default!}]
           (map (fn [menu-item] [ui/context-menu-item menu-item])
                element.v/context-menu))]])

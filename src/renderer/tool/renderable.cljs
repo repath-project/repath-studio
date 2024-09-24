@@ -40,7 +40,7 @@
 
 (defmethod tool.hierarchy/bounds ::tool.hierarchy/renderable
   [{:keys [tag attrs content] :as el}]
-  (when-let [svg (dom/canvas-element)]
+  (when-let [svg (dom/canvas-element!)]
     (let [dom-el (js/document.createElementNS "http://www.w3.org/2000/svg" (name tag))]
       (doseq [[k v] attrs]
         (when (element/supported-attr? (dissoc el :attrs) k)
@@ -61,7 +61,7 @@
   "Renders a ghost element on top of the actual element to ensure that the user
    can interact with it."
   [{:keys [attrs tag content] :as el}]
-  (let [pointer-handler #(pointer/event-handler % el)
+  (let [pointer-handler #(pointer/event-handler! % el)
         zoom @(rf/subscribe [::document.s/zoom])
         stroke-width (max (:stroke-width attrs) (/ 20 zoom))]
     [tag

@@ -12,7 +12,8 @@
    [renderer.history.events :as-alias history.e]
    [renderer.history.subs :as-alias history.s]
    [renderer.history.views :as history.v]
-   [renderer.ui :as ui]))
+   [renderer.ui :as ui]
+   [renderer.utils.dom :as dom]))
 
 (defn actions
   []
@@ -113,7 +114,7 @@
                               nil)
           :draggable true
           :on-drag-start #(.setData (.-dataTransfer %) "id" (str id))
-          :on-drag-over #(.preventDefault %)
+          :on-drag-over dom/prevent-default!
           :on-drag-enter #(reset! dragged-over? true)
           :on-drag-leave #(reset! dragged-over? false)
           :on-drop (fn [evt]

@@ -1,37 +1,45 @@
 (ns renderer.utils.dom)
 
-(defn root-element
+(defn prevent-default!
+  [e]
+  (.preventDefault e))
+
+(defn stop-propagation!
+  [e]
+  (.stopPropagation e))
+
+(defn root-element!
   []
   (.getElementById js/document "app"))
 
-(defn frame-element
+(defn frame-element!
   []
   (.getElementById js/document "frame"))
 
-(defn frame-window
+(defn frame-window!
   []
-  (when-let [frame (frame-element)]
-    (.-contentWindow frame )))
+  (when-let [frame (frame-element!)]
+    (.-contentWindow frame)))
 
-(defn frame-document
+(defn frame-document!
   []
-  (when-let [window (frame-window)]
+  (when-let [window (frame-window!)]
     (.-document window)))
 
-(defn focused?
+(defn focused!?
   []
   (or (.hasFocus js/document)
-      (and (frame-document)
-           (.hasFocus (frame-document)))))
+      (and (frame-document!)
+           (.hasFocus (frame-document!)))))
 
-(defn svg-elements
+(defn svg-elements!
   []
-  (when-let [document (frame-document)]
+  (when-let [document (frame-document!)]
     (.querySelectorAll document "svg")))
 
-(defn canvas-element
+(defn canvas-element!
   []
-  (when-let [document (frame-document)]
+  (when-let [document (frame-document!)]
     (.getElementById document "canvas")))
 
 (defn scroll-into-view!

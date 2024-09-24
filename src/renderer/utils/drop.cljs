@@ -7,7 +7,7 @@
    [renderer.element.events :as-alias element.e]
    [renderer.utils.file :as file]))
 
-(defn event-handler
+(defn event-handler!
   "Gathers drop event props.
    https://developer.mozilla.org/en-US/docs/Web/API/DragEvent"
   [^js/DragEvent e]

@@ -67,9 +67,9 @@
       (when mdn-url [info-button mdn-url "Learn more"])
       (when spec-url [info-button spec-url "Specification"])]]))
 
-(defn on-change-handler
+(defn on-change-handler!
   ([event k old-v]
-   (on-change-handler event k old-v true))
+   (on-change-handler! event k old-v true))
   ([event k old-v finalize?]
    (let [new-v (.. event -target -value)]
      (when-not (= new-v old-v)
@@ -85,8 +85,8 @@
                    :id (name k)
                    :default-value v
                    :placeholder (if v placeholder "multiple")
-                   :on-blur #(on-change-handler % k v)
-                   :on-key-down #(keyb/input-key-down-handler % v on-change-handler k v)})]
+                   :on-blur #(on-change-handler! % k v)
+                   :on-key-down #(keyb/input-key-down-handler! % v on-change-handler! k v)})]
    (when-not (or (empty? (str v)) disabled)
      [:button.button.ml-px.bg-primary.text-muted.absolute.h-full.right-0.clear-input-button.hover:bg-transparent
       {:style {:width "26px"}

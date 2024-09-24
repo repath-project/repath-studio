@@ -11,6 +11,7 @@
    [renderer.snap.subs :as-alias snap.s]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.overlay :as overlay]
+   [renderer.utils.dom :as dom]
    [renderer.utils.drop :as drop]
    [renderer.utils.keyboard :as keyb]
    [renderer.utils.pointer :as pointer]))
@@ -40,7 +41,7 @@
         rotate @(rf/subscribe [::document.s/rotate])
         grid? @(rf/subscribe [::app.s/grid-visible?])
         state @(rf/subscribe [::app.s/state])
-        pointer-handler #(pointer/event-handler % element)
+        pointer-handler #(pointer/event-handler! % element)
         pivot-point @(rf/subscribe [::app.s/pivot-point])
         snapping-points @(rf/subscribe [::snap.s/points])
         snap? @(rf/subscribe [::snap.s/enabled?])
@@ -50,12 +51,12 @@
     [:svg#canvas {:on-pointer-up pointer-handler
                   :on-pointer-down pointer-handler
                   :on-pointer-move pointer-handler
-                  :on-key-up keyb/event-handler
-                  :on-key-down keyb/event-handler
+                  :on-key-up keyb/event-handler!
+                  :on-key-down keyb/event-handler!
                   :tab-index 0 ; Enable keyboard events
                   :viewBox viewbox-attr
-                  :on-drop drop/event-handler
-                  :on-drag-over #(.preventDefault %)
+                  :on-drop drop/event-handler!
+                  :on-drag-over dom/prevent-default!
                   :width width
                   :height height
                   :transform (str "rotate(" rotate ")")

@@ -146,7 +146,7 @@
 
 (defmethod tool.hierarchy/render :brush
   [{:keys [attrs] :as element}]
-  (let [pointer-handler #(pointer/event-handler % element)]
+  (let [pointer-handler #(pointer/event-handler! % element)]
     [:path (merge {:d (points->path (:points attrs)
                                     (merge (select-keys attrs option-keys)
                                            {:simulatePressure true}))

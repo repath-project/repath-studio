@@ -60,12 +60,12 @@
 (rf/reg-fx
  ::set-pointer-capture
  (fn [pointer-id]
-   (.setPointerCapture (dom/canvas-element) pointer-id)))
+   (.setPointerCapture (dom/canvas-element!) pointer-id)))
 
 (rf/reg-fx
  ::release-pointer-capture
  (fn [pointer-id]
-   (.releasePointerCapture (dom/canvas-element) pointer-id)))
+   (.releasePointerCapture (dom/canvas-element!) pointer-id)))
 
 (rf/reg-fx
  ::persist
@@ -96,7 +96,7 @@
 (rf/reg-fx
  ::focus
  (fn [id]
-   (when-let [element (if id (.getElementById js/document id) (dom/canvas-element))]
+   (when-let [element (if id (.getElementById js/document id) (dom/canvas-element!))]
      (js/setTimeout #(.focus element)))))
 
 (rf/reg-fx

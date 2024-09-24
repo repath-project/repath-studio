@@ -12,6 +12,7 @@
    [renderer.document.handlers :as h]
    [renderer.history.handlers :as history.h :refer [finalize]]
    [renderer.utils.compatibility :as compatibility]
+   [renderer.utils.dom :as dom]
    [renderer.utils.vec :as vec]
    [renderer.window.effects :as-alias window.fx]))
 
@@ -107,7 +108,7 @@
          (dialog.h/create {:title "Do you want to save your changes?"
                            :close-button? true
                            :content [dialog.v/save (get-in db [:documents id])]
-                           :attrs {:onOpenAutoFocus #(.preventDefault %)}})))))
+                           :attrs {:onOpenAutoFocus dom/prevent-default!}})))))
 
 (rf/reg-event-fx
  ::close-active
