@@ -14,7 +14,7 @@
     [:button.button.color-drip
      {:key (keyword (str color))
       :on-click (fn []
-                  (rf/dispatch [::document.e/set-fill color])
+                  (rf/dispatch [::document.e/set-attr :fill color])
                   (rf/dispatch [::element.e/set-attr :fill color]))
       :style {:background-color color}}
      (when (= color "transparent")
@@ -53,7 +53,8 @@
         [:> PhotoshopPicker
          {:color stroke
           :on-change-complete #(rf/dispatch [::element.e/set-attr :stroke (get-hex %)])
-          :on-change #(rf/dispatch [::document.e/set-stroke (get-hex %)])}]
+          :on-change #(do (rf/dispatch [::document.e/set-attr :stroke (get-hex %)])
+                          (rf/dispatch [::element.e/preview-attr :stroke (get-hex %)]))}]
         [:> Popover/Arrow {:class "popover-arrow"}]]]]
 
      [:button.icon-button
@@ -76,5 +77,6 @@
         [:> PhotoshopPicker
          {:color fill
           :on-change-complete #(rf/dispatch [::element.e/set-attr :fill (get-hex %)])
-          :on-change #(rf/dispatch [::document.e/set-fill (get-hex %)])}]
+          :on-change #(do (rf/dispatch [::document.e/set-attr :fill (get-hex %)])
+                          (rf/dispatch [::element.e/preview-attr :fill (get-hex %)]))}]
         [:> Popover/Arrow {:class "popover-arrow"}]]]]]))

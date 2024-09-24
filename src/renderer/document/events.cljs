@@ -88,20 +88,9 @@
           :stroke (:fill db))))
 
 (rf/reg-event-db
- ::set-fill
- [(finalize "Set fill")]
- (fn [db [_ color]]
-   (-> db
-       (h/assoc-attr :fill color)
-       (element.h/set-attr :fill color))))
-
-(rf/reg-event-db
- ::set-stroke
- [(finalize "Set stroke")]
- (fn [db [_ color]]
-   (-> db
-       (h/assoc-attr :stroke color)
-       (element.h/set-attr :stroke color))))
+ ::set-attr
+ (fn [db [_ k v]]
+   (h/assoc-attr db k v)))
 
 (rf/reg-event-db
  ::close

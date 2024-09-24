@@ -129,12 +129,12 @@
 (defn ^:export set-fill
   "Sets the fill color of the editor."
   [color]
-  (rf/dispatch [::document.e/set-fill color]))
+  (rf/dispatch [::document.e/set-attr :fill color]))
 
 (defn ^:export set-stroke
   "Sets the stroke color of the editor."
   [color]
-  (rf/dispatch [::document.e/set-stroke color]))
+  (rf/dispatch [::document.e/set-attr :stroke color]))
 
 (defn ^:export db
   []

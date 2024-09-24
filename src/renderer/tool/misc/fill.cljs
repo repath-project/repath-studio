@@ -10,7 +10,6 @@
   []
   {:icon "fill"})
 
-
 (defmethod tool.hierarchy/help [:fill :default]
   []
   "Click on an element to fill.")
