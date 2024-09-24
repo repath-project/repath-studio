@@ -154,14 +154,6 @@
     (conj (mapv #(index db %) ancestor-els)
           (index db id))))
 
-#_(defn element-by-index
-    [db i]
-    (loop [element (root db)
-           index 0]
-      (if (= i index)
-        element
-        (recur (get (:children element) index) (inc index)))))
-
 (defn descendant-ids
   ([db]
    (reduce #(set/union %1 (descendant-ids db %2)) #{} (selected-ids db)))
@@ -270,6 +262,10 @@
        (update-prop db id :selected? not)
        (-> db deselect (select id)))
      (deselect db))))
+
+(defn select-ids
+  [db ids]
+  (reduce (partial-right assoc-prop :selected? true) (deselect db) ids))
 
 (defn select-all
   [db]

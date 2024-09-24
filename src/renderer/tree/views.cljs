@@ -23,6 +23,7 @@
     {:class (when visible? "list-item-action")
      :title (if visible? "hide" "show")
      :on-double-click #(.stopPropagation %)
+     :on-pointer-up #(.stopPropagation %)
      :on-click #(do (.stopPropagation %)
                     (rf/dispatch [::element.e/toggle-prop id :visible?]))}]
    [ui/icon-button
@@ -30,6 +31,7 @@
     {:class (when-not locked? "list-item-action")
      :title (if visible? "unlock" "lock")
      :on-double-click #(.stopPropagation %)
+     :on-pointer-up #(.stopPropagation %)
      :on-click #(do (.stopPropagation %)
                     (rf/dispatch [::element.e/toggle-prop id :locked?]))}]])
 
@@ -104,9 +106,12 @@
    (if collapsed? "chevron-right" "chevron-down")
    {:class "small"
     :title (if collapsed? "expand" "collapse")
+    :on-pointer-up #(.stopPropagation %)
     :on-click #(rf/dispatch (if collapsed?
                               [::document.e/expand-el id]
                               [::document.e/collapse-el id]))}])
+
+(def last-focused-id (ra/atom nil))
 
 (defn list-item-button
   [{:keys [id selected? children] :as el} depth hovered? collapsed?]
@@ -133,7 +138,10 @@
                           (rf/dispatch [::element.e/select id (.-ctrlKey %)]))
       :on-pointer-up (fn [e]
                        (.stopPropagation e)
-                       (rf/dispatch [::element.e/select id (.-ctrlKey e)]))
+                       (if (.-shiftKey e)
+                         (rf/dispatch-sync [::e/select-range @last-focused-id id])
+                         (do (rf/dispatch [::element.e/select id (.-ctrlKey e)])
+                             (reset! last-focused-id id))))
       :style {:padding-left (padding depth (seq children))}}
      [:div.flex.items-center.content-between.w-full
       (when (seq children)

@@ -22,6 +22,12 @@
    (h/select db id multi?)))
 
 (rf/reg-event-db
+ ::select-ids
+ [(finalize "Select ids")]
+ (fn [db [_ ids]]
+   (h/select-ids db ids)))
+
+(rf/reg-event-db
  ::toggle-prop
  [(finalize #(str "Toggle " (name (get % 2))))]
  (fn [db [_ id k]]
