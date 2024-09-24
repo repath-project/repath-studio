@@ -43,22 +43,18 @@
   [e id]
   (rf/dispatch [::element.e/set-prop id :label (.. e -target -value)]))
 
-(defn item-input
-  [{:keys [id label tag]} on-blur]
-  [:input.list-item-input
-   {:default-value label
-    :placeholder tag
-    :auto-focus true
-    :on-key-down #(keyb/input-key-down-handler! % label set-item-label! id)
-    :on-blur on-blur}])
-
 (defn item-label
-  [{:keys [id label visible? tag] :as el}]
+  [{:keys [id label visible? tag]}]
   (ra/with-let [edit-mode? (ra/atom false)]
     (if @edit-mode?
-      [item-input el (fn [e]
-                       (reset! edit-mode? false)
-                       (set-item-label! e id))]
+      [:input.list-item-input
+       {:default-value label
+        :placeholder tag
+        :auto-focus true
+        :on-key-down #(keyb/input-key-down-handler! % label set-item-label! id)
+        :on-blur (fn [e]
+                   (reset! edit-mode? false)
+                   (set-item-label! e id))}]
       [:div.flex
        [:div.truncate
         {:class [(when-not visible? "opacity-60")
