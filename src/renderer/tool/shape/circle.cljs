@@ -34,7 +34,7 @@
                :fill fill
                :stroke stroke
                :r radius}]
-    (element.h/set-temp db {:type :element :tag :circle :attrs attrs})))
+    (element.h/assoc-temp db {:type :element :tag :circle :attrs attrs})))
 
 (defmethod tool.hierarchy/translate :circle
   [el [x y]]

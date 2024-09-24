@@ -27,11 +27,11 @@
   [{:keys [adjusted-pointer-pos tool adjusted-pointer-offset] :as db}]
   (let [[offset-x offset-y] adjusted-pointer-offset
         [pos-x pos-y] adjusted-pointer-pos]
-    (element.h/set-temp db {:type tool
-                            :attrs {:x (min pos-x offset-x)
-                                    :y (min pos-y offset-y)
-                                    :width (abs (- pos-x offset-x))
-                                    :height (abs (- pos-y offset-y))}})))
+    (element.h/assoc-temp db {:type tool
+                              :attrs {:x (min pos-x offset-x)
+                                      :y (min pos-y offset-y)
+                                      :width (abs (- pos-x offset-x))
+                                      :height (abs (- pos-y offset-y))}})))
 
 (defn ->href [image]
   (->> image

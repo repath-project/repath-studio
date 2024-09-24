@@ -17,10 +17,8 @@
   ([db]
    (save-format db (:active-document db)))
   ([db, id :- uuid?]
-   (let [document (-> db
-                      (get-in [:documents id])
+   (let [document (-> (get-in db [:documents id])
                       (assoc :version (:version db)))]
-
      (reduce #(update-in %1 [:elements %2] dissoc :selected?)
              (m/decode PersistedDocument document mt/strip-extra-keys-transformer)
              (keys (:elements document))))))

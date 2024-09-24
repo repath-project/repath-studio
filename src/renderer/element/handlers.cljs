@@ -80,8 +80,7 @@
     (if-let [container (parent-container db id)]
       (let [[offset-x offset-y _ _] (tool.hierarchy/bounds container)
             [x1 y1 x2 y2] bounds]
-        [(+ x1 offset-x) (+ y1 offset-y)
-         (+ x2 offset-x) (+ y2 offset-y)])
+        [(+ x1 offset-x) (+ y1 offset-y) (+ x2 offset-x) (+ y2 offset-y)])
       bounds)))
 
 (defn update-bounds
@@ -147,9 +146,9 @@
 
 (defn index-tree-path
   "Returns a sequence that represents the index tree path of an element.
-   For example, the seventh element of the second page on the canvas
-   will return [2 7]. This is useful when we need to figure out the index of
-   nested elements."
+   For example, the seventh element of the second svg on the canvas will
+   return [2 7]. This is useful when we need to figure out the global index
+   of nested elements."
   [db id]
   (let [ancestor-els (reverse (ancestor-ids db id))]
     (conj (mapv #(index db %) ancestor-els)
@@ -183,13 +182,13 @@
   [db]
   (vals (elements db (top-ancestor-ids db))))
 
-(defn clear-temp
+(defn dissoc-temp
   [db]
   (cond-> db
     (:active-document db)
     (update-in [:documents (:active-document db)] dissoc :temp-element)))
 
-(defn set-temp
+(defn assoc-temp
   [db el]
   (assoc-in db [:documents (:active-document db) :temp-element] el))
 
@@ -202,10 +201,6 @@
   (-> (apply update-in db (conj (path db) id k) more)
       (update-bounds id)))
 
-(defn toggle-prop
-  [db id k]
-  (update-prop db id k not))
-
 (defn assoc-prop
   ([db k v]
    (reduce (partial-right assoc-prop k v) db (selected-ids db)))
@@ -215,27 +210,33 @@
          (assoc-in db (conj (path db) id k) v))
        (update-bounds id))))
 
-(defn remove-attr
+(defn dissoc-attr
   ([db k]
-   (reduce (partial-right remove-attr k) db (selected-ids db)))
+   (reduce (partial-right dissoc-attr k) db (selected-ids db)))
   ([db id k]
    (cond-> db
      (not (locked? db id))
      (update-prop id :attrs dissoc k))))
 
+(defn assoc-attr
+  ([db k v]
+   (reduce (partial-right assoc-attr k v) db (selected-ids db)))
+  ([db id k v]
+   (cond-> db
+     (not (locked? db id))
+     (-> (assoc-in (conj (path db) id :attrs k) v)
+         (update-bounds id)))))
+
 (defn set-attr
   ([db k v]
    (reduce (partial-right set-attr k v) db (selected-ids db)))
   ([db id k v]
-   (let [attr-path (conj (path db) id :attrs k)]
-     (if (and (not (locked? db k))
-              (element/supported-attr? (element db id) k))
-       (if (str/blank? v)
-         (remove-attr db id k)
-         (-> db
-             (assoc-in attr-path (str/trim (str v)))
-             (update-bounds id)))
-       db))))
+   (if (and (not (locked? db k))
+            (element/supported-attr? (element db id) k))
+     (if (str/blank? v)
+       (dissoc-attr db id k)
+       (assoc-attr db id k (str/trim (str v))))
+     db)))
 
 (defn update-attr
   [db id k f & more]
@@ -266,7 +267,7 @@
   ([db id multi?]
    (if (element db id)
      (if multi?
-       (toggle-prop db id :selected?)
+       (update-prop db id :selected? not)
        (-> db deselect (select id)))
      (deselect db))))
 
@@ -563,7 +564,7 @@
   ([db]
    (->> (get-temp db)
         (add db)
-        (clear-temp)))
+        (dissoc-temp)))
   ([db el]
    (create (deselect db) (assoc el :selected? true))))
 

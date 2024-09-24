@@ -41,9 +41,9 @@
                :height (if lock-ratio? (min width height) height)
                :fill fill
                :stroke stroke}]
-    (element.h/set-temp db {:type :element
-                            :tag :rect
-                            :attrs attrs})))
+    (element.h/assoc-temp db {:type :element
+                              :tag :rect
+                              :attrs attrs})))
 
 (defmethod tool.hierarchy/path :rect
   [{{:keys [x y width height rx ry]} :attrs}]

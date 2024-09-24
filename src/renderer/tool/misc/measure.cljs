@@ -25,7 +25,7 @@
 
 (defmethod tool.hierarchy/pointer-up :measure
   [db]
-  (element.h/clear-temp db))
+  (element.h/dissoc-temp db))
 
 (defmethod tool.hierarchy/drag-end :measure  [db] db)
 
@@ -41,11 +41,11 @@
                :x2 pos-x
                :y2 pos-y
                :stroke "gray"}]
-    (element.h/set-temp db {:id :mesure
-                            :type :overlay
-                            :tag :measure
-                            :attrs attrs
-                            :hypotenuse hypotenuse})))
+    (element.h/assoc-temp db {:id :mesure
+                              :type :overlay
+                              :tag :measure
+                              :attrs attrs
+                              :hypotenuse hypotenuse})))
 
 (defmethod tool.hierarchy/render :measure
   [{:keys [attrs id hypotenuse]}]

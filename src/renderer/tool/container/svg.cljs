@@ -34,9 +34,9 @@
                :y (min pos-y offset-y)
                :width (if lock-ratio? (min width height) width)
                :height (if lock-ratio? (min width height) height)}]
-    (element.h/set-temp db {:tag :svg
-                            :type :element
-                            :attrs attrs})))
+    (element.h/assoc-temp db {:tag :svg
+                              :type :element
+                              :attrs attrs})))
 
 (defmethod tool.hierarchy/render :svg
   [{:keys [attrs children tag] :as el}]

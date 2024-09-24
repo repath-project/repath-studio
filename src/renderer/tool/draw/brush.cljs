@@ -84,12 +84,12 @@
   (let [[x y] adjusted-pointer-pos
         r (* (/ 16 2) (if (zero? pressure) 1 pressure))
         stroke (get-in db [:documents (:active-document db) :stroke])]
-    (element.h/set-temp db {:type :element
-                            :tag :circle
-                            :attrs {:cx x
-                                    :cy y
-                                    :r r
-                                    :fill stroke}})))
+    (element.h/assoc-temp db {:type :element
+                              :tag :circle
+                              :attrs {:cx x
+                                      :cy y
+                                      :r r
+                                      :fill stroke}})))
 
 (defmethod tool.hierarchy/drag :brush
   [{:keys [active-document adjusted-pointer-pos] :as db} {:keys [pressure]}]
@@ -100,14 +100,14 @@
                  [:documents active-document :temp-element :attrs :points]
                  conj
                  point)
-      (element.h/set-temp db {:type :element
-                              :tag :brush
-                              :attrs {:points [point]
-                                      :stroke stroke
-                                      :size 16
-                                      :thinning 0.5
-                                      :smoothing 0.5
-                                      :streamline 0.5}}))))
+      (element.h/assoc-temp db {:type :element
+                                :tag :brush
+                                :attrs {:points [point]
+                                        :stroke stroke
+                                        :size 16
+                                        :thinning 0.5
+                                        :smoothing 0.5
+                                        :streamline 0.5}}))))
 
 (defn get-svg-path-from-stroke
   "Turns the points returned by getStroke into SVG path data.

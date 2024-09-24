@@ -48,7 +48,7 @@
                :stroke stroke
                :rx (abs (- pos-x offset-x))
                :ry (abs (- pos-y offset-y))}]
-    (element.h/set-temp db {:type :element :tag :arc :attrs attrs})))
+    (element.h/assoc-temp db {:type :element :tag :arc :attrs attrs})))
 
 (defmethod tool.hierarchy/translate :arc
   [element [x y]] (-> element

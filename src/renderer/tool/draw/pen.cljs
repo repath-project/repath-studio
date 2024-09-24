@@ -26,11 +26,11 @@
       (update-in db
                  [:documents active-document :temp-element :attrs :points]
                  #(str % " " (str/join " " adjusted-pointer-pos)))
-      (element.h/set-temp db {:type :element
-                              :tag :polyline
-                              :attrs {:points (str/join " " adjusted-pointer-pos)
-                                      :stroke stroke
-                                      :fill "transparent"}}))))
+      (element.h/assoc-temp db {:type :element
+                                :tag :polyline
+                                :attrs {:points (str/join " " adjusted-pointer-pos)
+                                        :stroke stroke
+                                        :fill "transparent"}}))))
 
 (defmethod tool.hierarchy/drag-end :pen
   [db _e]
@@ -39,7 +39,7 @@
                  (path/manipulate :smooth)
                  (path/manipulate :simplify))]
     (-> db
-        (element.h/set-temp path)
+        (element.h/assoc-temp path)
         (element.h/add)
         (app.h/set-state :default)
         (app.h/explain "Draw line"))))

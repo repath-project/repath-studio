@@ -25,11 +25,11 @@
 (defn create-polyline
   [{:keys [active-document tool] :as db} points]
   (let [{:keys [fill stroke]} (get-in db [:documents active-document])]
-    (element.h/set-temp db {:type :element
-                            :tag tool
-                            :attrs {:points (str/join " " points)
-                                    :stroke stroke
-                                    :fill fill}})))
+    (element.h/assoc-temp db {:type :element
+                              :tag tool
+                              :attrs {:points (str/join " " points)
+                                      :stroke stroke
+                                      :fill fill}})))
 
 (defn add-point
   [{:keys [active-document] :as db} point]

@@ -144,7 +144,7 @@
   (cond-> db
     :always (-> (dissoc :drag? :pointer-offset :clicked-element)
                 (tool.hierarchy/activate (:tool db))
-                (element.h/clear-temp)
+                (element.h/dissoc-temp)
                 (swap))
 
     (= (:state db) :select)

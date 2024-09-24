@@ -43,10 +43,10 @@
 
 (defmethod tool.hierarchy/drag :zoom
   [{:keys [adjusted-pointer-offset adjusted-pointer-pos active-document] :as db}]
-  (element.h/set-temp db (overlay/select-box
-                          adjusted-pointer-pos
-                          adjusted-pointer-offset
-                          (get-in db [:documents active-document :zoom]))))
+  (element.h/assoc-temp db (overlay/select-box
+                            adjusted-pointer-pos
+                            adjusted-pointer-offset
+                            (get-in db [:documents active-document :zoom]))))
 
 (defmethod tool.hierarchy/drag-end :zoom
   [{:keys [active-document
@@ -63,7 +63,7 @@
         current-zoom (get-in db [:documents active-document :zoom])
         furute-zoom (min width-ratio height-ratio)]
     (-> db
-        (element.h/clear-temp)
+        (element.h/dissoc-temp)
         (assoc :cursor (if (pointer/shift? e) "zoom-out" "zoom-in"))
         (frame.h/zoom-by (if (pointer/shift? e)
                            zoom-sensitivity

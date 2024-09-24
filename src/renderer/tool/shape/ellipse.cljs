@@ -43,9 +43,9 @@
                :stroke stroke
                :rx (if lock-ratio? (min rx ry) rx)
                :ry (if lock-ratio? (min rx ry) ry)}]
-    (element.h/set-temp db {:type :element
-                            :tag :ellipse
-                            :attrs attrs})))
+    (element.h/assoc-temp db {:type :element
+                              :tag :ellipse
+                              :attrs attrs})))
 
 (defmethod tool.hierarchy/translate :ellipse
   [el [x y]]

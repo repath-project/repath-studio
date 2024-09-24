@@ -35,14 +35,16 @@
                :x2 pos-x
                :y2 pos-y
                :stroke stroke}]
-    (element.h/set-temp db {:type :element :tag :line :attrs attrs})))
+    (element.h/assoc-temp db {:type :element
+                              :tag :line
+                              :attrs attrs})))
 
 (defn update-line-end
   [{:keys [adjusted-pointer-pos] :as db}]
   (let [temp (-> (element.h/get-temp db)
                  (assoc-in [:attrs :x2] (first adjusted-pointer-pos))
                  (assoc-in [:attrs :y2] (second adjusted-pointer-pos)))]
-    (element.h/set-temp db temp)))
+    (element.h/assoc-temp db temp)))
 
 (defmethod tool.hierarchy/pointer-move :line
   [db]

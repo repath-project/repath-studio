@@ -98,16 +98,16 @@
   (let [{:keys [stroke fill]} (get-in db [:documents active-document])
         [offset-x offset-y] adjusted-pointer-offset
         radius (mat/distance adjusted-pointer-pos adjusted-pointer-offset)]
-    (element.h/set-temp db {:type :element
-                            :tag :blob
-                            :attrs {:x (- offset-x radius)
-                                    :y (- offset-y radius)
-                                    :seed (rand-int 1000000)
-                                    :extraPoints 8
-                                    :randomness 4
-                                    :size (* radius 2)
-                                    :fill fill
-                                    :stroke stroke}})))
+    (element.h/assoc-temp db {:type :element
+                              :tag :blob
+                              :attrs {:x (- offset-x radius)
+                                      :y (- offset-y radius)
+                                      :seed (rand-int 1000000)
+                                      :extraPoints 8
+                                      :randomness 4
+                                      :size (* radius 2)
+                                      :fill fill
+                                      :stroke stroke}})))
 
 (defmethod tool.hierarchy/drag :blob
   [{:keys [adjusted-pointer-offset adjusted-pointer-pos] :as db}]
@@ -117,7 +117,7 @@
                  (assoc-in [:attrs :x] (- offset-x radius))
                  (assoc-in [:attrs :y] (- offset-y radius))
                  (assoc-in [:attrs :size] (* radius 2)))]
-    (element.h/set-temp db temp)))
+    (element.h/assoc-temp db temp)))
 
 (defmethod tool.hierarchy/scale :blob
   [el ratio pivot-point]

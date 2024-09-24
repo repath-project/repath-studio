@@ -223,7 +223,7 @@
     (case state
       :select
       (-> db
-          (element.h/set-temp (select-rect db alt-key?))
+          (element.h/assoc-temp (select-rect db alt-key?))
           (element.h/clear-hovered)
           (reduce-by-area (pointer/alt? e) element.h/hover))
 
@@ -264,7 +264,7 @@
   (-> (case (:state db)
         :select (-> (cond-> db (not (pointer/shift? e)) element.h/deselect)
                     (reduce-by-area (pointer/alt? e) element.h/select)
-                    (element.h/clear-temp)
+                    (element.h/dissoc-temp)
                     (app.h/explain "Modify selection"))
         :move (app.h/explain db "Move selection")
         :scale (app.h/explain db "Scale selection")

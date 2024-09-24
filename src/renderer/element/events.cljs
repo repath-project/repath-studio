@@ -25,7 +25,7 @@
  ::toggle-prop
  [(finalize #(str "Toggle " (name (get % 2))))]
  (fn [db [_ id k]]
-   (h/toggle-prop db id k)))
+   (h/update-prop db id k not)))
 
 (rf/reg-event-db
  ::preview-prop
@@ -60,7 +60,7 @@
  ::remove-attr
  [(finalize #(str "Remove " (name (second %))))]
  (fn [db [_ k]]
-   (h/remove-attr db k)))
+   (h/dissoc-attr db k)))
 
 (rf/reg-event-db
  ::update-attr
