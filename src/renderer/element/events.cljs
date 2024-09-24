@@ -23,7 +23,7 @@
 
 (rf/reg-event-db
  ::select-ids
- [(finalize "Select ids")]
+ [(finalize "Select elements")]
  (fn [db [_ ids]]
    (h/select-ids db ids)))
 
