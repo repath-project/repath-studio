@@ -83,7 +83,7 @@
         [(+ x1 offset-x) (+ y1 offset-y) (+ x2 offset-x) (+ y2 offset-y)])
       bounds)))
 
-(defn update-bounds
+(defn refresh-bounds
   [db id]
   (let [el (element db id)
         bounds (if (= (:tag el) :g)
@@ -93,7 +93,7 @@
         assoc-bounds #(assoc % :bounds bounds)]
     (if (or (not bounds) (element/root? el))
       db
-      (-> (reduce update-bounds db (children-ids db id))
+      (-> (reduce refresh-bounds db (children-ids db id))
           (update-in (conj (path db) id) assoc-bounds)))))
 
 (defn update-el
@@ -101,7 +101,7 @@
   (if (locked? db id)
     db
     (-> (apply update-in db (conj (path db) id) f more)
-        (update-bounds id))))
+        (refresh-bounds id))))
 
 (defn siblings-selected?
   [db]
@@ -199,7 +199,7 @@
 (defn update-prop
   [db id k & more]
   (-> (apply update-in db (conj (path db) id k) more)
-      (update-bounds id)))
+      (refresh-bounds id)))
 
 (defn assoc-prop
   ([db k v]
@@ -208,7 +208,7 @@
    (-> (if (str/blank? v)
          (update-in db (conj (path db) id) dissoc k)
          (assoc-in db (conj (path db) id k) v))
-       (update-bounds id))))
+       (refresh-bounds id))))
 
 (defn dissoc-attr
   ([db k]
@@ -225,7 +225,7 @@
    (cond-> db
      (not (locked? db id))
      (-> (assoc-in (conj (path db) id :attrs k) v)
-         (update-bounds id)))))
+         (refresh-bounds id)))))
 
 (defn set-attr
   ([db k v]
@@ -344,18 +344,6 @@
      (:active-document db)
      (update-in [:documents (:active-document db) :ignored-ids] disj id))))
 
-(defn lock
-  ([db]
-   (reduce lock db (selected-ids db)))
-  ([db id]
-   (assoc-prop db id :locked? true)))
-
-(defn unlock
-  ([db]
-   (reduce unlock db (selected-ids db)))
-  ([db id]
-   (assoc-prop db id :locked? false)))
-
 (defn bounds
   [db]
   (element/united-bounds (selected db)))
@@ -381,37 +369,15 @@
            (expand id))))))
 
 (defn update-index
-  [db id f & more]
-  (let [sibling-els (siblings db id)
-        i (index db id)
-        new-index (apply f i more)]
-    (cond-> db
-      (<= 0 new-index (-> sibling-els count dec))
-      (update-prop (:id (parent db id)) :children vec/move i new-index))))
-
-(defn raise
-  ([db]
-   (reduce raise db (selected-sorted-ids db)))
-  ([db id]
-   (update-index db id inc)))
-
-(defn lower
-  ([db]
-   (reduce lower db (selected-sorted-ids db)))
-  ([db id]
-   (update-index db id dec)))
-
-(defn lower-to-bottom
-  ([db]
-   (reduce lower-to-bottom db (selected-sorted-ids db)))
-  ([db id]
-   (update-index db id (fn [_] 0))))
-
-(defn raise-to-top
-  ([db]
-   (reduce raise-to-top db (selected-sorted-ids db)))
-  ([db id]
-   (update-index db id #(-> (siblings db id) count dec))))
+  ([db f]
+   (reduce (partial-right update-index f) db (selected-sorted-ids db)))
+  ([db id f]
+   (let [sibling-count (count (siblings db id))
+         i (index db id)
+         new-index (f i sibling-count)]
+     (cond-> db
+       (<= 0 new-index (dec sibling-count))
+       (update-prop (:id (parent db id)) :children vec/move i new-index)))))
 
 (defn set-parent
   ([db parent-id]
@@ -529,7 +495,7 @@
 
 (defn create
   [db el]
-  (let [id (random-uuid) ; Hard to use a coeffect because of the recursion.
+  (let [id (random-uuid) ; REVIEW: Hard to use a coeffect because of recursion.
         new-el (->> (cond-> el (not (string? (:content el))) (dissoc :content))
                     (map/remove-nils)
                     (create-parent-id db))
@@ -555,7 +521,7 @@
         (translate [(- x1) (- y1)])
 
         :always
-        (update-bounds id)
+        (refresh-bounds id)
 
         child-els
         (add-children child-els)))))
@@ -669,11 +635,12 @@
          (update-attr id attr get-value)))) db attr/presentation))
 
 (defn group
-  [db]
-  (->> (top-selected-sorted-ids db)
-       (reduce (fn [db id] (set-parent db (-> db selected-ids first) id))
-               (add db {:tag :g
-                        :parent (:id (parent db))}))))
+  ([db]
+   (group db (top-selected-sorted-ids db)))
+  ([db ids]
+   (reduce (fn [db id] (set-parent db (-> db selected-ids first) id))
+           (add db {:tag :g
+                    :parent (:id (parent db))}) ids)))
 
 (defn ungroup
   ([db]

@@ -42,13 +42,13 @@
  ::lock
  [(finalize "Lock selection")]
  (fn [db]
-   (h/lock db)))
+   (h/assoc-prop db :locked? true)))
 
 (rf/reg-event-db
  ::unlock
  [(finalize "Unlock selection")]
  (fn [db]
-   (h/unlock db)))
+   (h/assoc-prop db :locked? false)))
 
 (rf/reg-event-db
  ::set-attr
@@ -122,25 +122,25 @@
  ::raise
  [(finalize "Raise selection")]
  (fn [db]
-   (h/raise db)))
+   (h/update-index db inc)))
 
 (rf/reg-event-db
  ::lower
  [(finalize "Lower selection")]
  (fn [db]
-   (h/lower db)))
+   (h/update-index db dec)))
 
 (rf/reg-event-db
  ::raise-to-top
  [(finalize "Raise selection to top")]
  (fn [db]
-   (h/raise-to-top db)))
+   (h/update-index db (fn [_i sibling-count] (dec sibling-count)))))
 
 (rf/reg-event-db
  ::lower-to-bottom
  [(finalize "Lower selection to bottom")]
  (fn [db]
-   (h/lower-to-bottom db)))
+   (h/update-index db #(identity 0))))
 
 (rf/reg-event-db
  ::align

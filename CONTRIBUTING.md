@@ -11,6 +11,8 @@ You should probably take a look at their [exceptional documentation](https://day
 
 We try to follow the [Clojure Style Guide](https://guide.clojure.style/) as much as possible.
 
+An additional resource about [how to name Clojure functions by Stuart Sierra](https://stuartsierra.com/2016/01/09/how-to-name-clojure-functions).
+
 In addition to the [idiomatic names](https://guide.clojure.style/#idiomatic-names),
 we use the following conventions
 
