@@ -34,10 +34,10 @@
       (tool.hierarchy/activate)))
 
 (mx/defn pointer-handler
-  [{:as db :keys [pointer-offset tool dom-rect drag? primary-tool drag-threshold event-time double-click-delta]}
-   {:as e :keys [button buttons pointer-pos]} :- PointerEvent
-   now :- number?]
-  (let [adjusted-pointer-pos (frame.h/adjust-pointer-pos db pointer-pos)]
+  [db, e :- PointerEvent, now :- number?]
+  (let [{:keys [pointer-offset tool dom-rect drag? primary-tool drag-threshold]} db
+        {:keys [button buttons pointer-pos]} e
+        adjusted-pointer-pos (frame.h/adjust-pointer-pos db pointer-pos)]
     (case (:type e)
       "pointermove"
       (-> (if pointer-offset
@@ -77,7 +77,7 @@
                     (add-fx [::fx/release-pointer-capture (:pointer-id e)]))
                 (if (= button :right)
                   db
-                  (if (> (- now event-time) double-click-delta)
+                  (if (> (- now (:event-time db)) (:double-click-delta db))
                     (-> db
                         (assoc :event-time now)
                         (tool.hierarchy/pointer-up e))
