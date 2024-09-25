@@ -79,7 +79,7 @@
 
 (defn form-input
   [k v {:keys [disabled placeholder] :as attrs}]
-  [:div.relative.flex.form-input.flex-1.gap-px
+  [:div.relative.flex.form-input.flex-1
    [:input (merge attrs
                   {:key v
                    :id (name k)
@@ -221,13 +221,13 @@
         dispatch-tag (if (contains? (methods hierarchy/form-element) [tag k]) tag :default)]
     [:<>
      [label tag k]
-     [:div.flex.h-full.overflow-visible
+     [:div.flex.w-full
       [hierarchy/form-element dispatch-tag k v {:disabled locked?
                                                 :placeholder initial}]]]))
 
 (defn tag-info
   [tag]
-  [:div.py-px
+  [:div
    [:> HoverCard/Root
     [:> HoverCard/Trigger {:as-child true}
      [:span.pb-px
@@ -256,7 +256,7 @@
         locked? @(rf/subscribe [::element.s/selected-locked?])
         tag (first selected-tags)]
     (when (seq selected-elements)
-      [:div.w-full.overflow-hidden
+      [:div.w-full.pr-px
        [:div.flex.bg-primary.py-4.pl-4.pr-2
         [:h1.self-center.flex-1.text-lg.p-1
          (if (empty? (rest selected-elements))

@@ -246,7 +246,8 @@
 
 (defn root
   []
-  [:> Tooltip/Provider
+  (let [properties-panel? @(rf/subscribe [::app.s/panel-visible? :properties])]
+    [:> Tooltip/Provider
    [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden
     [window.v/app-header]
     (if (seq @(rf/subscribe [::app.s/documents]))
@@ -261,17 +262,19 @@
         [:div.flex.h-full.flex-1.gap-px.overflow-hidden
          [:div.flex.h-full.flex-col.flex-1.overflow-hidden
           [editor]]
-         (when @(rf/subscribe [::app.s/panel-visible? :properties])
-           [:div.hidden.md:flex
-            {:style {:flex "0 0 300px"}}
+         [:div.flex
+          {:style (when properties-panel? {:flex "0 0 330px"})}
+          (when properties-panel?
+           [:div.hidden.md:flex.w-full
             [:div.flex.flex-col.h-full.w-full
-             [ui/scroll-area (tool.hierarchy/right-panel @(rf/subscribe [::app.s/tool]))]
-             [:div.bg-primary.grow.w-full.flex]]])
+             [ui/scroll-area
+              (tool.hierarchy/right-panel @(rf/subscribe [::app.s/tool]))]
+             [:div.bg-primary.grow.flex.mr-px]]])
          [:div.bg-primary.flex
-          [ui/scroll-area [toolbar.object/root]]]]]]
+          [ui/scroll-area [toolbar.object/root]]]]]]]
       [home])]
    [dialog.v/root]
    [notification/main]
    (when @(rf/subscribe [::app.s/loading?])
      [:div.absolute.inset-0.backdrop
-      [:div.loader]])])
+      [:div.loader]])]))
