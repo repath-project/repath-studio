@@ -73,7 +73,8 @@
        [:> Popover/Content
         {:class "popover-content color-picker-lg"
          :align "start"
-         :side "top"}
+         :side "top"
+         :align-offset -54} ; REVIEW: Can we use collisionBoundary instead?
         [:> PhotoshopPicker
          {:color fill
           :on-change-complete #(rf/dispatch [::element.e/set-attr :fill (get-hex %)])
