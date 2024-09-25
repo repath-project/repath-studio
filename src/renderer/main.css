@@ -9,9 +9,12 @@
 @import "utilities";
 @import "components";
 @import "animations";
-@import "overrides";
+@import "loader";
 
 @import "theme/styles";
+@import "codemirror/styles";
+@import "dialog/styles";
+@import "history/styles";
 @import "color/styles";
 @import "menubar/styles";
 @import "timeline/styles";
@@ -84,3 +87,18 @@ pre {
   font-family: var(--font-mono);
 }
 
+.fps-wrapper {
+  @apply drop-shadow-md;
+
+  >div {
+    @apply absolute top-2 left-auto right-2 overflow-hidden font-sans text-sm px-2 py-1.5 bg-white text-gray-500 !important;
+
+    >div {
+      @apply left-0 right-0 bottom-0 bg-white !important;
+
+      >div {
+        background-color: var(--accent) !important;
+      }
+    }
+  }
+}

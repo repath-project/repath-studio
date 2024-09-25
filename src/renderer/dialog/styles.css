@@ -1,0 +1,16 @@
+[cmdk-item],
+[cmdk-empty] {
+  @apply flex p-2 rounded items-center text-sm;
+
+  &[data-selected="true"] {
+    @apply overlay;
+  }
+}
+
+[cmdk-list] {
+  max-height: 50vh;
+}
+
+[cmdk-group-heading] {
+  @apply p-2 text-muted uppercase font-bold text-2xs;
+}

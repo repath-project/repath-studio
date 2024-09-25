@@ -16,4 +16,70 @@
   flex: 1;
 }
 
+.chrome-picker,
+.photoshop-picker {
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--font-color) !important;
 
+  div {
+    border-width: 0 !important;
+    color: var(--font-color) !important;
+  }
+
+  svg {
+    fill: var(--font-color) !important;
+    background: transparent !important;
+    display: initial;
+  }
+
+  input {
+    color: var(--font-color) !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+}
+
+.photoshop-picker {
+  @apply pb-3;
+
+  label {
+    font-size: 12px !important;
+    line-height: 12px !important;
+  }
+
+  >div {
+    background: transparent !important;
+  }
+
+  >div:last-child>div:last-child>div:last-child>div:last-child {
+
+    >div:nth-child(1),
+    >div:nth-child(2) {
+      display: none !important;
+    }
+
+    >div:nth-child(3) {
+      @apply bg-primary w-full !important;
+      padding-top: 9px !important;
+
+      >div:last-child {
+        right: 5px !important;
+        top: 7px !important;
+
+        div {
+          margin-bottom: 2px;
+        }
+      }
+    }
+  }
+
+  input {
+    width: 70% !important;
+    margin-left: 30px !important;
+  }
+
+  >div:first-of-type {
+    display: none;
+  }
+}
