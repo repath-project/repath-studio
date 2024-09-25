@@ -37,8 +37,8 @@
         read-only? @(rf/subscribe [::document.s/read-only?])
         ruler-size @(rf/subscribe [::app.s/ruler-size])
         rulers-locked? @(rf/subscribe [::app.s/rulers-locked?])]
-    [:div.flex.flex-col.flex-1.h-full
-     [:div.mb-px
+    [:div.flex.flex-col.flex-1.h-full.gap-px
+     [:div
       [ui/scroll-area [toolbar.tools/root]]
       (when rulers?
         [:div.flex.gap-px
@@ -50,9 +50,9 @@
             :on-click #(rf/dispatch [::e/toggle-rulers-locked])}]]
          [:div.bg-primary.flex-1
           [ruler.v/ruler :horizontal]]])]
-     [:div.flex.flex-1.relative
+     [:div.flex.flex-1.relative.gap-px
       (when rulers?
-        [:div.bg-primary.mr-px
+        [:div.bg-primary
          [ruler.v/ruler :vertical]])
       [:div.relative.grow.flex
        [frame.v/root]
@@ -87,7 +87,7 @@
                    :defaultSize 30
                    :minSize 5
                    :order 2}
-         [:div.bg-primary.h-full.ml-px
+         [:div.bg-primary.h-full
           [history.v/root]]]])
 
      (when @(rf/subscribe [::app.s/panel-visible? :xml])
@@ -101,7 +101,7 @@
                      :minSize 5
                      :order 3}
 
-           [:div.h-full.bg-primary.ml-px.flex
+           [:div.h-full.bg-primary.flex
             [ui/scroll-area
              [:div.p-1
               [cm.v/editor xml
@@ -120,7 +120,6 @@
                 :order 1}
       [center-top-group]]
      [toolbar.status/root]
-     [timeline.v/time-bar]
      (when timeline?
        [:> PanelResizeHandle
         {:id "timeline-resize-handle"
@@ -253,7 +252,7 @@
    [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden
     [window.v/app-header]
     (if (seq @(rf/subscribe [::app.s/documents]))
-      [:div.flex.h-full.flex-1.overflow-hidden
+      [:div.flex.h-full.flex-1.overflow-hidden.gap-px
        (when @(rf/subscribe [::app.s/panel-visible? :tree])
          [:div.flex-col.hidden.md:flex.overflow-hidden
           {:style {:width "227px"}}
@@ -261,16 +260,16 @@
           [tree.v/root]])
        [:div.flex.flex-col.flex-1.overflow-hidden.h-full
         [document.v/tab-bar]
-        [:div.flex.h-full.flex-1.overflow-hidden
+        [:div.flex.h-full.flex-1.gap-px.overflow-hidden
          [:div.flex.h-full.flex-col.flex-1.overflow-hidden
           [editor]]
          (when @(rf/subscribe [::app.s/panel-visible? :properties])
            [:div.hidden.md:flex
             {:style {:flex "0 0 300px"}}
-            [:div.ml-px.flex.flex-col.h-full.w-full
+            [:div.flex.flex-col.h-full.w-full
              [ui/scroll-area (tool.hierarchy/right-panel @(rf/subscribe [::app.s/tool]))]
              [:div.bg-primary.grow.w-full.flex]]])
-         [:div.bg-primary.ml-px.flex
+         [:div.bg-primary.flex
           [ui/scroll-area [toolbar.object/root]]]]]]
       [home])]
    [dialog.v/root]

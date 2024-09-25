@@ -132,4 +132,4 @@
          (interpose [{:type :divider}])
          (flatten)
          (map v/button)
-         (into [:div.flex.flex-col.text-center.flex-0.ml-px.toolbar]))))
+         (into [:div.flex.flex-col.text-center.flex-0.toolbar]))))

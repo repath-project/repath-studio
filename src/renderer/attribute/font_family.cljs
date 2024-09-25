@@ -42,7 +42,7 @@
 (defmethod hierarchy/form-element [:default :font-family]
   [_ k v attrs]
   (let [suggestions @(rf/subscribe [::app.s/font-options])]
-    [:<>
+    [:div.flex.gap-px
      [v/form-input k v attrs]
      [:> Popover/Root
       {:modal true
@@ -50,7 +50,7 @@
                        (when (and state (empty? suggestions))
                          (rf/dispatch [::app.e/load-system-fonts])))}
       [:> Popover/Trigger {:as-child true}
-       [:button.ml-px.inline-block.bg-primary.text-muted.h-full
+       [:button.inline-block.bg-primary.text-muted.h-full
         {:style {:flex "0 0 26px"}}
         [ui/icon "magnifier" {:class "small"}]]]
       [:> Popover/Portal

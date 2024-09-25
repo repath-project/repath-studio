@@ -12,7 +12,7 @@
   (.from js/Array (.querySelectorAll js/document ".tree-sidebar .list-item-button")))
 
 (rf/reg-fx
- ::focus
+ ::focus-next
  (fn [[id direction]]
    (let [list-elements (get-list-elements!)
          current-el (first (query-by-id! id))

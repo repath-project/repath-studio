@@ -8,11 +8,11 @@
 
 (defmethod hierarchy/form-element [:default ::angle]
   [_ k v attrs]
-  [:<>
+  [:div.flex.gap-px
    [v/form-input k v attrs]
    [:> Popover/Root {:modal true}
     [:> Popover/Trigger {:as-child true}
-     [:button.button.ml-px.bg-primary.text-muted.h-full
+     [:button.button.bg-primary.text-muted.h-full
       {:style {:width "26px"}}
       [ui/icon "degrees" {:class "small"}]]]
     [:> Popover/Portal

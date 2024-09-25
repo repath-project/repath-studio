@@ -27,12 +27,12 @@
 (defmethod hierarchy/form-element [:default :points]
   [_ k v {:keys [disabled]}]
   (let [state-default? (= @(rf/subscribe [::app.s/state]) :default)]
-    [:<>
+    [:div.flex.gap-px
      [v/form-input k (if state-default? v "waiting") {:disabled (or disabled (not v) (not state-default?))}]
      (when v
        [:> Popover/Root {:modal true}
         [:> Popover/Trigger {:as-child true}
-         [:button.ml-px.inline-block.bg-primary.text-muted
+         [:button.inline-block.bg-primary.text-muted
           {:style {:flex "0 0 26px"}}
           [ui/icon "pencil" {:class "small"}]]]
         [:> Popover/Portal
@@ -45,10 +45,10 @@
               [:div.flex.overflow-hidden
                {:style {:max-height "50vh"}}
                [ui/scroll-area
-                [:div.p-4.flex.flex-col
+                [:div.p-4.flex.flex-col.gap-px
                  (map-indexed (fn [index [x y]]
                                 ^{:key (str "point-" index)}
-                                [:div.grid.grid-flow-col.gap-px.mt-px
+                                [:div.grid.grid-flow-col.gap-px
                                  {:style {:grid-template-columns "minmax(0, 40px) 3fr 3fr 26px"}}
                                  [:label.px-1.bg-transparent index]
                                  [:input.bg-transparent

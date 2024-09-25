@@ -130,7 +130,7 @@
 (defmethod hierarchy/form-element [:default :d]
   [_ k v {:keys [disabled]}]
   (let [state-default? (= @(rf/subscribe [::app.s/state]) :default)]
-    [:<>
+    [:div.flex.gap-px
      [v/form-input k (if state-default? v "waiting")
       {:disabled (or disabled
                      (not v)
@@ -138,7 +138,7 @@
      (when v
        [:> Popover/Root {:modal true}
         [:> Popover/Trigger {:as-child true}
-         [:button.ml-px.inline-block.bg-primary.text-muted.h-full
+         [:button.inline-block.bg-primary.text-muted.h-full
           {:style {:flex "0 0 26px"}}
           [ui/icon "pencil" {:class "small"}]]]
         [:> Popover/Portal

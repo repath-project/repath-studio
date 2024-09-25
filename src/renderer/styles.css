@@ -106,6 +106,15 @@
     }
   }
 
+  .form-input {
+    &:hover,
+    &:active {
+      .clear-input-button {
+        visibility: visible;
+      }
+    }
+  }
+
   .button {
     @apply relative cursor-pointer text-center outline-none text-nowrap;
     background-color: transparent;
@@ -118,7 +127,7 @@
     -webkit-app-region: no-drag;
 
     &:focus {
-      @apply outline outline-1 outline-offset-1 outline-accent;
+      @apply outline outline-1 outline-offset-0 outline-accent;
     }
 
     &:hover {
@@ -277,14 +286,14 @@ pre {
 }
 
 .button-group {
-  @apply flex;
+  @apply flex gap-px;
 
   .button,
   input {
-    @apply overlay m-0 ml-px rounded-none;
+    @apply overlay m-0 rounded-none;
 
     &:first-child {
-      @apply rounded-l ml-0;
+      @apply rounded-l;
     }
 
     &:last-child {
@@ -350,16 +359,24 @@ pre {
     transition: background-color .3s;
   }
 
-  &[data-panel-group-direction="vertical"]:after {
-    width: 100%;
-    top: -2px;
-    height: 5px;
+  &[data-panel-group-direction="vertical"] {
+    @apply h-px;
+
+    &:after {
+      @apply w-full h-1;
+
+      top: -50%;
+    }
   }
 
-  &[data-panel-group-direction="horizontal"]:after {
-    width: 5px;
-    left: -2px;
-    height: 100%;
+  &[data-panel-group-direction="horizontal"] {
+    @apply w-px;
+
+    &:after {
+      @apply h-full w-1;
+
+      left: -50%;
+    }
   }
 
   &[data-resize-handle-state="drag"] {

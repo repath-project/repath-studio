@@ -6,12 +6,12 @@
 (rf/reg-event-fx
  ::focus-up
  (fn [_ [_ id]]
-   {::fx/focus [id :up]}))
+   {::fx/focus-next [id :up]}))
 
 (rf/reg-event-fx
  ::focus-down
  (fn [_ [_ id]]
-   {::fx/focus [id :down]}))
+   {::fx/focus-next [id :down]}))
 
 (rf/reg-event-fx
  ::select-range

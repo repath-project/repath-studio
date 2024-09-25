@@ -14,13 +14,13 @@
 
 (defmethod hierarchy/form-element [:default ::color]
   [_ k v {:keys [disabled] :as attrs}]
-  [:<>
+  [:div.flex.gap-px
    [v/form-input k v attrs]
    [:> Popover/Root {:modal true}
     [:> Popover/Trigger
      {:as-child true
       :disabled disabled}
-     [:button.button.color-drip.ml-px.inline-block
+     [:button.button.color-drip.inline-block
       {:style {:flex "0 0 26px"
                :border "5px solid var(--bg-primary)"
                :background v}}]]

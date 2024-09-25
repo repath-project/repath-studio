@@ -79,7 +79,7 @@
 
 (defn form-input
   [k v {:keys [disabled placeholder] :as attrs}]
-  [:div.relative.flex.form-input.flex-1
+  [:div.relative.flex.form-input.flex-1.gap-px
    [:input (merge attrs
                   {:key v
                    :id (name k)
@@ -88,7 +88,7 @@
                    :on-blur #(on-change-handler! % k v)
                    :on-key-down #(keyb/input-key-down-handler! % v on-change-handler! k v)})]
    (when-not (or (empty? (str v)) disabled)
-     [:button.button.ml-px.bg-primary.text-muted.absolute.h-full.right-0.clear-input-button.hover:bg-transparent
+     [:button.button.bg-primary.text-muted.absolute.h-full.right-0.clear-input-button.hover:bg-transparent.invisible
       {:style {:width "26px"}
        :on-pointer-down #(rf/dispatch [::element.e/remove-attr k])}
       [ui/icon "times"]])])
@@ -100,7 +100,7 @@
 
 (defn range-input
   [k v {:keys [placeholder disabled step] :as attrs}]
-  [:div.flex.w-full
+  [:div.flex.w-full.gap-px
    [form-input k v {:disabled disabled
                     :placeholder placeholder
                     :class "w-20"
@@ -109,7 +109,7 @@
                                   (if (pos? (.-deltaY e))
                                     (rf/dispatch [::element.e/update-attr-and-focus k - step])
                                     (rf/dispatch [::element.e/update-attr-and-focus k + step]))))}]
-   [:div.ml-px.px-1.w-full.bg-primary
+   [:div.px-1.w-full.bg-primary
     [:> Slider/Root
      (merge attrs {:class "slider-root"
                    :value [(if (= "" v) placeholder v)]
@@ -121,7 +121,7 @@
 
 (defn select-input
   [k v {:keys [disabled items default-value] :as attrs}]
-  [:div.flex.w-full
+  [:div.flex.w-full.gap-px
    [form-input k v (select-keys attrs [:disabled :placeholder])]
    (when (seq items)
      [:> Select/Root
@@ -129,7 +129,7 @@
        :onValueChange #(rf/dispatch [::element.e/set-attr k %])
        :disabled disabled}
       [:> Select/Trigger
-       {:class "select-trigger ml-px h-full"
+       {:class "select-trigger h-full"
         :aria-label (name k)
         :style {:background "var(--bg-primary)"
                 :border-radius 0
@@ -266,7 +266,8 @@
            (str (count selected-elements) " elements"))]
         (when (empty? (rest selected-tags))
           [tag-info tag])]
-       [:div.attribute-grid
+       [:div.grid.grid-cols-2.grid-flow-row.my-px.w-full.gap-px
+        {:style {:grid-template-columns "minmax(100px, auto) 1fr"}}
         (for [[k v] selected-attrs]
           ^{:key k} [row k v locked? tag])]])))
 

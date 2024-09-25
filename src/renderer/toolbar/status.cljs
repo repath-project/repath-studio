@@ -9,6 +9,7 @@
    [renderer.frame.events :as-alias frame.e]
    [renderer.frame.subs :as-alias frame.s]
    [renderer.snap.views :as snap.v]
+   [renderer.timeline.views :as timeline.v]
    [renderer.ui :as ui]
    [renderer.utils.keyboard :as keyb]
    [renderer.worker.subs :as-alias worker.s]))
@@ -136,8 +137,9 @@
        :title "Zoom in"
        :on-click #(rf/dispatch [::frame.e/zoom-in])}
       [ui/icon "plus"]]
-     [zoom-input zoom]
-     [:div.pr-2.overlay.flex.items-center.hidden.md:flex "%"]
+     [:div.flex
+      [zoom-input zoom]
+      [:div.pr-2.overlay.flex.items-center.hidden.md:flex "%"]]
      [zoom-menu]]))
 
 (defn root []
@@ -145,7 +147,7 @@
         loading? @(rf/subscribe [::worker.s/loading?])
         fill @(rf/subscribe [::document.s/fill])
         stroke @(rf/subscribe [::document.s/stroke])]
-    [:div.toolbar.bg-primary.mt-px
+    [:div.toolbar.bg-primary.mt-px.relative
      [:div.flex
       [color.v/picker stroke :stroke]
       [color.v/swap-button]
@@ -167,4 +169,5 @@
                 view-radio-buttons))
      [snap.v/root]
      [zoom-button-group]
-     [coordinates]]))
+     [coordinates]
+     [timeline.v/time-bar]]))

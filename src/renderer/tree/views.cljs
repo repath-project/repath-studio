@@ -192,7 +192,8 @@
 (defn root
   []
   [:> ContextMenu/Root
-   [:> ContextMenu/Trigger {:class "flex h-full overflow-hidden"}
+   [:> ContextMenu/Trigger
+    {:class "flex h-full overflow-hidden"}
     [inner-sidebar]]
    [:> ContextMenu/Portal
     (into [:> ContextMenu/Content

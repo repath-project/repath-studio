@@ -40,9 +40,9 @@
 (defmethod attr.hierarchy/form-element [:blob :seed]
   [_ k v {:keys [disabled] :as attrs}]
   (let [random-seed (rand-int 1000000)]
-    [:<>
+    [:div.flex.flex-row.gap-px
      [attr.v/form-input k v (merge attrs {:placeholder 0})]
-     [:button.button.ml-px.inline-block.bg-primary.text-muted
+     [:button.button.inline-block.bg-primary.text-muted
       {:title "Generate random seed"
        :disabled disabled
        :style {:flex "0 0 26px"

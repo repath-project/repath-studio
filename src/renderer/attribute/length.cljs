@@ -30,7 +30,7 @@
 
 (defmethod hierarchy/form-element [:default ::length]
   [_ k v {:keys [disabled placeholder]}]
-  [:div.flex.w-full
+  [:div.flex.w-full.gap-px
    [v/form-input k v
     {:disabled disabled
      :placeholder (if v placeholder "multiple")
@@ -39,13 +39,13 @@
                    (if (pos? (.-deltaY e))
                      (rf/dispatch [::element.e/update-attr-and-focus k - 1])
                      (rf/dispatch [::element.e/update-attr-and-focus k + 1]))))}]
-   [:div.flex
-    [:button.button.ml-px.bg-primary.text-muted.h-full
+   [:div.flex.gap-px
+    [:button.button.bg-primary.text-muted.h-full
      {:style {:width "26px"}
       :disabled disabled
       :on-pointer-down #(rf/dispatch [::element.e/update-attr k - 1])}
      [ui/icon "minus"]]
-    [:button.button.ml-px.bg-primary.text-muted.h-full
+    [:button.button.bg-primary.text-muted.h-full
      {:style {:width "26px"}
       :disabled disabled
       :on-click #(rf/dispatch [::element.e/update-attr k + 1])}

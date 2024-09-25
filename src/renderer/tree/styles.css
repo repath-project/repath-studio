@@ -38,7 +38,7 @@
 }
 
 .tree-sidebar {
-  @apply flex flex-1 bg-primary mr-px h-full overflow-hidden;
+  @apply flex flex-1 bg-primary h-full overflow-hidden;
 
   &:hover {
     /* When the mouse is over the tree, ignore the hovered class if the element
