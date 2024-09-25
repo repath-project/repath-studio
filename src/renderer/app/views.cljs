@@ -59,9 +59,7 @@
        (if read-only?
          [:div.absolute.inset-0.border-4.border-accent]
          (when @(rf/subscribe [::app.s/debug-info?])
-           [:<>
-            [overlay/debug-info]
-            [ui/fps]]))
+           [overlay/debug-info]))
        (when @(rf/subscribe [::app.s/backdrop?])
          [:div.absolute.inset-0
           {:on-click #(rf/dispatch [::e/set-backdrop false])}])]]]))

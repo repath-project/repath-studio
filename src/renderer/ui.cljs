@@ -6,18 +6,12 @@
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    ["@radix-ui/react-scroll-area" :as ScrollArea]
    ["@radix-ui/react-switch" :as Switch]
-   ["react-fps" :refer [FpsView]]
    ["react-svg" :refer [ReactSVG]]
    [malli.experimental :as mx]
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.s]
    [renderer.utils.hiccup :refer [Props]]
    [renderer.utils.keyboard :as keyb]))
-
-(defn fps
-  []
-  [:div.fps-wrapper
-   [:> FpsView #js {:width 240 :height 180}]])
 
 (mx/defn icon
   [icon-name :- string?, props :- Props]
