@@ -1,0 +1,81 @@
+@layer utilities {
+  .bg-secondary {
+    background: var(--bg-secondary);
+  }
+
+  .bg-primary {
+    background: var(--bg-primary);
+  }
+
+  .bg-accent {
+    background: var(--accent);
+  }
+
+  .drag {
+    -webkit-app-region: drag;
+  }
+
+  .font-sans {
+    font-family: var(--font-sans);
+  }
+
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+
+  .overlay {
+    background-color: var(--overlay);
+  }
+
+  .overlay-2x {
+    background-color: var(--overlay-2x);
+  }
+
+  .text-color {
+    color: var(--font-color);
+  }
+
+  .text-muted {
+    color: var(--font-color-muted);
+  }
+
+  .text-error {
+    color: var(--text-error);
+  }
+
+  .text-warning {
+    color: var(--text-warning)
+  }
+
+  .text-success {
+    color: var(--text-success)
+  }
+
+  .text-disabled {
+    color: var(--font-color-disabled);
+  }
+
+  .text-accent {
+    color: var(--accent);
+  }
+
+  .text-active {
+    color: var(--font-color-active);
+  }
+
+  .border-default {
+    border-color: var(--border-color);
+  }
+
+  .border-accent {
+    border-color: var(--accent);
+  }
+
+  .outline-accent {
+    outline-color: var(--accent);
+  }
+
+  .outline-shadow {
+    box-shadow: inset 0 0 1px 1px var(--accent)
+  }
+}

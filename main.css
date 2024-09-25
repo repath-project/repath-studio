@@ -6,4 +6,4 @@
 @import "codemirror/addon/hint/show-hint.css";
 @import "codemirror/theme/tomorrow-night-eighties.css";
 
-@import-glob "src/renderer/**/*.css";
+@import "src/renderer/styles.css";
