@@ -1,0 +1,166 @@
+[cmdk-item],
+[cmdk-empty] {
+  @apply flex p-2 rounded items-center text-sm;
+
+  &[data-selected="true"] {
+    @apply overlay;
+  }
+}
+
+[cmdk-list] {
+  max-height: 50vh;
+}
+
+[cmdk-group-heading] {
+  @apply p-2 text-muted uppercase font-bold text-2xs;
+}
+
+
+.CodeMirror-selected {
+  @apply overlay !important;
+}
+
+.CodeMirror-cursor {
+  border-left: 1px solid var(--font-color) !important;
+  height: 16px !important;
+}
+
+.CodeMirror-matchingbracket {
+  @apply overlay !important;
+  text-decoration: none !important;
+}
+
+.CodeMirror-wrap {
+  @apply form-element p-0;
+
+  pre {
+    word-break: break-word !important;
+  }
+}
+
+.CodeMirror-gutters {
+  @apply bg-secondary !important;
+}
+
+.CodeMirror {
+  @apply font-mono h-auto z-0;
+  background: transparent !important;
+}
+
+.CodeMirror-sizer {
+  min-height: initial !important;
+}
+
+.CodeMirror-lines {
+  @apply p-0;
+}
+
+
+.chrome-picker,
+.photoshop-picker {
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--font-color) !important;
+
+  div {
+    border-width: 0 !important;
+    color: var(--font-color) !important;
+  }
+
+  svg {
+    fill: var(--font-color) !important;
+    background: transparent !important;
+    display: initial;
+  }
+
+  input {
+    color: var(--font-color) !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+}
+
+.photoshop-picker {
+  @apply pb-3;
+
+  label {
+    font-size: 12px !important;
+    line-height: 12px !important;
+  }
+
+  >div {
+    background: transparent !important;
+  }
+
+  >div:last-child>div:last-child>div:last-child>div:last-child {
+
+    >div:nth-child(1),
+    >div:nth-child(2) {
+      display: none !important;
+    }
+
+    >div:nth-child(3) {
+      @apply bg-primary w-full !important;
+      padding-top: 9px !important;
+
+      >div:last-child {
+        right: 5px !important;
+        top: 7px !important;
+
+        div {
+          margin-bottom: 2px;
+        }
+      }
+    }
+  }
+
+  input {
+    width: 70% !important;
+    margin-left: 30px !important;
+  }
+
+  >div:first-of-type {
+    display: none;
+  }
+}
+
+
+.rd3t-node,
+.rd3t-leaf-node {
+  circle {
+    transition: fill .3s;
+  }
+
+  &:hover {
+    circle {
+      stroke : var(--accent);
+    }
+  }
+}
+
+.rd3t-link {
+  stroke : var(--border-color) !important;
+  stroke-width: 3;
+}
+
+.rd3t-label__title {
+  font-weight: normal !important;
+  fill: inherit !important;
+}
+
+
+.fps-wrapper {
+  @apply drop-shadow-md;
+
+  >div {
+    @apply absolute top-2 left-auto right-2 overflow-hidden font-sans text-sm px-2 py-1.5 bg-white text-gray-500 !important;
+
+    >div {
+      @apply left-0 right-0 bottom-0 bg-white !important;
+
+      >div {
+        background-color: var(--accent) !important;
+      }
+    }
+  }
+}

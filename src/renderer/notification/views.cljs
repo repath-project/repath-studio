@@ -40,7 +40,7 @@
            :class "close-button small"
            :on-click #(rf/dispatch [::notification.e/remove index])}]
          (when-let [n (:count notification)]
-           [:div.absolute.error.left-0.top-0.px-1.py-0.5.rounded
+           [:div.absolute.bg-error.left-0.top-0.px-1.py-0.5.rounded
             {:class "-translate-x-1/2 -translate-y-1/2"}
             (inc n)])])
       notifications)

@@ -28,10 +28,10 @@
                      browser))]]
    [:div.text-2xs.mt-1
     (case version-added
-      true [:div.success "all"]
-      false [:div.error "x"]
-      nil [:div.warning "?"]
-      [:div.success (str "≥" version-added)])]])
+      true [:div.bg-success "all"]
+      false [:div.bg-error "x"]
+      nil [:div.bg-warning "?"]
+      [:div.bg-success (str "≥" version-added)])]])
 
 (defn browser-compatibility
   [support-data]

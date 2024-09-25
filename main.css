@@ -1,9 +1,0 @@
-@import 'tailwindcss/base.css';
-@import 'tailwindcss/components.css';
-@import 'tailwindcss/utilities.css';
-
-@import "codemirror/lib/codemirror.css";
-@import "codemirror/addon/hint/show-hint.css";
-@import "codemirror/theme/tomorrow-night-eighties.css";
-
-@import "src/renderer/styles.css";

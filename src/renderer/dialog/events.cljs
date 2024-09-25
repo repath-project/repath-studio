@@ -10,7 +10,9 @@
  (fn [db [_]]
    (h/create db {:title [:div.sr-only "Command panel"]
                  :content [v/cmdk]
-                 :attrs {:class "dialog-content dialog-cmdk-content"}})))
+                 :attrs {:class "dialog-content"
+                         :style {:top "33px"
+                                 :transform "translate(-50%, 0)"}}})))
 
 (rf/reg-event-db
  ::about

@@ -170,10 +170,6 @@
     border-top: 1px solid var(--border-color);
   }
 
-  .sidebar {
-    flex: 0 0 auto;
-  }
-
   .shortcut-key {
     @apply p-1 text-2xs overlay rounded font-bold text-muted uppercase;
   }
@@ -214,16 +210,6 @@
         background-color: var(--accent);
       }
     }
-  }
-
-  .drag-overlay {
-    position: absolute;
-    z-index: 1;
-    cursor: ew-resize;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
   }
 
   .popover-content {
@@ -352,5 +338,57 @@
 
     margin: -9px 0 0 -9px;
     animation: spin 4s linear infinite;
+  }
+
+  .dialog-content {
+    @apply fixed bg-secondary rounded-lg overflow-hidden shadow-xl border border-default;
+
+    width: 500px;
+    max-width: 90%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .tab {
+    @apply button flex items-center h-full text-left bg-primary gap-2 opacity-50 hover:bg-primary relative;
+
+    padding: 0 8px 0 16px;
+    flex: 0 1 130px;
+
+    .close {
+      @apply icon-button invisible relative;
+
+      .dot {
+        @apply absolute inset-0 bg-primary flex items-center;
+      }
+
+      &:hover {
+        .dot {
+          @apply hidden;
+        }
+      }
+    }
+
+    &:hover,
+    &.active,
+    &:not(.saved) {
+      .close {
+        @apply visible;
+      }
+    }
+
+    &:active {
+      @apply bg-primary;
+    }
+
+    &.active {
+      @apply opacity-100;
+    }
+  }
+
+  .select-trigger {
+    @apply button px-2 overlay rounded;
+    height: 33px;
   }
 }

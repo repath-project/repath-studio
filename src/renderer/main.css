@@ -1,12 +1,18 @@
+@import 'tailwindcss/base.css';
+@import 'tailwindcss/components.css';
+@import 'tailwindcss/utilities.css';
+
+@import "codemirror/lib/codemirror.css";
+@import "codemirror/addon/hint/show-hint.css";
+@import "codemirror/theme/tomorrow-night-eighties.css";
+
 @import "utilities";
 @import "components";
 @import "animations";
+@import "overrides";
+
 @import "theme/styles";
-@import "codemirror/styles";
 @import "color/styles";
-@import "dialog/styles";
-@import "document/styles";
-@import "history/styles";
 @import "menubar/styles";
 @import "timeline/styles";
 @import "tree/styles";
@@ -68,24 +74,6 @@ label {
   }
 }
 
-.select-trigger {
-  @apply button px-2 overlay rounded;
-  height: 33px;
-}
-
-
-.error {
-  background: var(--background-error);
-}
-
-.warning {
-  background: var(--background-warning)
-}
-
-.success {
-  background: var(--background-success)
-}
-
 a {
   color: var(--accent);
   cursor: pointer;
@@ -96,18 +84,3 @@ pre {
   font-family: var(--font-mono);
 }
 
-.fps-wrapper {
-  @apply drop-shadow-md;
-
-  >div {
-    @apply absolute top-2 left-auto right-2 overflow-hidden font-sans text-sm px-2 py-1.5 bg-white text-gray-500 !important;
-
-    >div {
-      @apply left-0 right-0 bottom-0 bg-white !important;
-
-      >div {
-        background-color: var(--accent) !important;
-      }
-    }
-  }
-}

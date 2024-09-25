@@ -9,8 +9,8 @@
   "scripts": {
     "upgrade": "npx npm-check-updates -u -x codemirror && npm install",
     "postinstall": "electron-builder install-app-deps",
-    "postcss:build": "npx postcss main.css -o resources/public/css/main.css --verbose",
-    "postcss:watch": "npx postcss main.css -o resources/public/css/main.css --verbose -w",
+    "postcss:build": "npx postcss src/renderer/main.css -o resources/public/css/main.css --verbose",
+    "postcss:watch": "npx postcss src/renderer/main.css -o resources/public/css/main.css --verbose -w",
     "shadow:build": "npx shadow-cljs release main preload renderer bootstrap",
     "shadow:watch": "npx shadow-cljs watch main preload renderer bootstrap browser-test karma-test",
     "dev": "npm run postcss:watch & npm run shadow:watch",

@@ -11,6 +11,18 @@
     background: var(--accent);
   }
 
+  .bg-error {
+    background: var(--background-error);
+  }
+
+  .bg-warning {
+    background: var(--background-warning)
+  }
+
+  .bg-success {
+    background: var(--background-success)
+  }
+
   .drag {
     -webkit-app-region: drag;
   }

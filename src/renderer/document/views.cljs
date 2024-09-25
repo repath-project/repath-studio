@@ -67,7 +67,7 @@
 
 (mx/defn close-button
   [id :- uuid?, saved? :- boolean?]
-  [:button.icon-button.invisible.relative.close-document-button.small
+  [:button.close.small
    {:key id
     :title "Close document"
     :on-pointer-down #(.stopPropagation %)
@@ -76,7 +76,7 @@
                      (rf/dispatch [::document.e/close id true]))}
    [ui/icon "times"]
    (when-not saved?
-     [ui/icon "dot" {:class "absolute inset-0 bg-primary flex items-center dot"}])])
+     [ui/icon "dot" {:class "dot"}])])
 
 (mx/defn context-menu
   [id :- uuid?]
@@ -104,7 +104,7 @@
     (let [saved? @(rf/subscribe [::document.s/saved? id])]
       [:> ContextMenu/Root
        [:> ContextMenu/Trigger
-        [:div.button.flex.items-center.h-full.text-left.bg-primary.gap-2.opacity-50.hover:bg-primary.relative.document-tab
+        [:div.tab
          {:class [(when active? "active")
                   (when saved? "saved")]
           :on-wheel #(rf/dispatch [::document.e/scroll (.-deltaY %)])
