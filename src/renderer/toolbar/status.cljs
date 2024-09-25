@@ -147,10 +147,10 @@
         stroke @(rf/subscribe [::document.s/stroke])]
     [:div.toolbar.bg-primary.mt-px
      [:div.flex
-      [color.v/picker fill :fill]
+      [color.v/picker stroke :stroke]
       [color.v/swap-button]
            ;; REVIEW: Can we replace alignOffset with collisionBoundary?
-      [color.v/picker stroke :stroke {:align-offset -54}]]
+      [color.v/picker fill :fill {:align-offset -54}]]
      [:div.grow
       [:div.px-1.hidden.2xl:flex.gap-1.flex-wrap.leading-none.truncate
        {:style {:max-height "33px"}}

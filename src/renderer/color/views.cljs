@@ -43,7 +43,13 @@
   [color attr props]
   [:> Popover/Root {:modal true}
    [:> Popover/Trigger {:as-child true}
-    [:button.button.color-rect.relative {:style {:background color}}]]
+    [:button.button.color-rect.relative {:style {:background color}}
+     (when (= attr :stroke)
+       [:div.color-rect.bg-primary.absolute
+        {:style {:width "13px"
+                 :height "13px"
+                 :bottom "9px"
+                 :right "9px"}}])]]
    [:> Popover/Portal
     [:> Popover/Content
      (merge {:class "popover-content color-picker-lg"
