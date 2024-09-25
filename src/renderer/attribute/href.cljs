@@ -29,7 +29,7 @@
   [_ k v {:keys [disabled]}]
   (let [state-default? (= @(rf/subscribe [::app.s/state]) :default)
         data-url? (str/starts-with? v "data:")]
-    [:div.flex.gap-px
+    [:div.flex.gap-px.w-full
      [v/form-input k (if data-url? "data-url" v)
       {:disabled (or disabled
                      data-url?

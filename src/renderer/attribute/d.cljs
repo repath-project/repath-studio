@@ -130,7 +130,7 @@
 (defmethod hierarchy/form-element [:default :d]
   [_ k v {:keys [disabled]}]
   (let [state-default? (= @(rf/subscribe [::app.s/state]) :default)]
-    [:div.flex.gap-px
+    [:div.flex.gap-px.w-full
      [v/form-input k (if state-default? v "waiting")
       {:disabled (or disabled
                      (not v)

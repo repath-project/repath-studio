@@ -14,7 +14,7 @@
 
 (defmethod hierarchy/form-element [:default ::color]
   [_ k v {:keys [disabled] :as attrs}]
-  [:div.flex.gap-px
+  [:div.flex.gap-px.w-full
    [v/form-input k v attrs]
    [:> Popover/Root {:modal true}
     [:> Popover/Trigger

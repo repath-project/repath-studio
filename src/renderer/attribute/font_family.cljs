@@ -42,7 +42,7 @@
 (defmethod hierarchy/form-element [:default :font-family]
   [_ k v attrs]
   (let [suggestions @(rf/subscribe [::app.s/font-options])]
-    [:div.flex.gap-px
+    [:div.flex.gap-px.w-full
      [v/form-input k v attrs]
      [:> Popover/Root
       {:modal true
