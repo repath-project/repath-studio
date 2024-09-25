@@ -20,6 +20,7 @@
    [renderer.notification.views :as notification]
    [renderer.reepl.views :as repl.v]
    [renderer.ruler.views :as ruler.v]
+   [renderer.timeline.views :as timeline.v]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.overlay :as overlay]
    [renderer.toolbar.object :as toolbar.object]
@@ -109,16 +110,29 @@
 
 (defn editor
   []
-  [:> PanelGroup
-   {:direction "vertical"
-    :id "editor-group"
-    :autoSaveId "editor-group"}
-   [:> Panel {:id "editor-panel"
-              :minSize 20
-              :order 1}
-    [center-top-group]]
-   [toolbar.status/root]
-   [repl.v/root]])
+  (let [timeline? @(rf/subscribe [::app.s/panel-visible? :timeline])]
+    [:> PanelGroup
+     {:direction "vertical"
+      :id "editor-group"
+      :autoSaveId "editor-group"}
+     [:> Panel {:id "editor-panel"
+                :minSize 20
+                :order 1}
+      [center-top-group]]
+     [toolbar.status/root]
+     [timeline.v/time-bar]
+     (when timeline?
+       [:> PanelResizeHandle
+        {:id "timeline-resize-handle"
+         :className "resize-handle"}])
+     (when timeline?
+       [:> Panel
+        {:id "timeline-panel"
+         :minSize 10
+         :defaultSize 20
+         :order 2}
+        [timeline.v/root]])
+     [repl.v/root]]))
 
 (def paper-size
   {0 [2384 3370]

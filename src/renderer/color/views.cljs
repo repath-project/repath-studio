@@ -6,7 +6,6 @@
    [re-frame.core :as rf]
    [renderer.color.db :as color.db]
    [renderer.document.events :as-alias document.e]
-   [renderer.document.subs :as-alias document.s]
    [renderer.element.events :as-alias element.e]
    [renderer.ui :as ui]))
 
@@ -32,52 +31,28 @@
   [color-object]
   (:hex (js->clj color-object :keywordize-keys true)))
 
-(defn picker
+(defn swap-button
   []
-  (let [fill @(rf/subscribe [::document.s/fill])
-        stroke @(rf/subscribe [::document.s/stroke])]
-    [:div.flex
-     [:> Popover/Root {:modal true}
-      [:> Popover/Trigger {:as-child true}
-       [:button.button.color-rect.relative {:style {:background stroke}}
-        [:div.color-rect.bg-primary.absolute
-         {:style {:width "13px"
-                  :height "13px"
-                  :bottom "9px"
-                  :right "9px"}}]]]
-      [:> Popover/Portal
-       [:> Popover/Content
-        {:class "popover-content color-picker-lg"
-         :align "start"
-         :side "top"}
-        [:> PhotoshopPicker
-         {:color stroke
-          :on-change-complete #(rf/dispatch [::element.e/set-attr :stroke (get-hex %)])
-          :on-change #(do (rf/dispatch [::document.e/set-attr :stroke (get-hex %)])
-                          (rf/dispatch [::element.e/preview-attr :stroke (get-hex %)]))}]
-        [:> Popover/Arrow {:class "popover-arrow"}]]]]
+  [:button.icon-button
+   {:title (t [:color/swap "Swap fill with stroke"])
+    :style {:width "21px" :background "transparent"}
+    :on-click #(rf/dispatch [::document.e/swap-colors])}
+   [ui/icon "swap-horizontal"]])
 
-     [:button.icon-button
-      {:title (t [:color/swap "Swap fill with stroke"])
-       :style {:width "21px"
-               :background "transparent"}
-       :on-click (fn [e]
-                   (.stopPropagation e)
-                   (rf/dispatch [::document.e/swap-colors]))}
-      [ui/icon "swap-horizontal"]]
+(defn picker
+  [color attr props]
+  [:> Popover/Root {:modal true}
+   [:> Popover/Trigger {:as-child true}
+    [:button.button.color-rect.relative {:style {:background color}}]]
+   [:> Popover/Portal
+    [:> Popover/Content
+     (merge {:class "popover-content color-picker-lg"
+             :align "start"
+             :side "top"} props)
+     [:> PhotoshopPicker
+      {:color color
+       :on-change-complete #(rf/dispatch [::element.e/set-attr attr (get-hex %)])
+       :on-change #(do (rf/dispatch [::document.e/set-attr attr (get-hex %)])
+                       (rf/dispatch [::element.e/preview-attr attr (get-hex %)]))}]
+     [:> Popover/Arrow {:class "popover-arrow"}]]]])
 
-     [:> Popover/Root {:modal true}
-      [:> Popover/Trigger {:as-child true}
-       [:button.button.color-rect {:style {:background fill}}]]
-      [:> Popover/Portal
-       [:> Popover/Content
-        {:class "popover-content color-picker-lg"
-         :align "start"
-         :side "top"
-         :align-offset -54} ; REVIEW: Can we use collisionBoundary instead?
-        [:> PhotoshopPicker
-         {:color fill
-          :on-change-complete #(rf/dispatch [::element.e/set-attr :fill (get-hex %)])
-          :on-change #(do (rf/dispatch [::document.e/set-attr :fill (get-hex %)])
-                          (rf/dispatch [::element.e/preview-attr :fill (get-hex %)]))}]
-        [:> Popover/Arrow {:class "popover-arrow"}]]]]]))

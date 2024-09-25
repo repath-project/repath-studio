@@ -1,16 +1,14 @@
 (ns renderer.toolbar.status
   (:require
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
-   ["react-resizable-panels" :refer [Panel PanelResizeHandle]]
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.e]
    [renderer.app.subs :as-alias app.s]
-   [renderer.color.views :as color-v]
+   [renderer.color.views :as color.v]
    [renderer.document.subs :as-alias document.s]
    [renderer.frame.events :as-alias frame.e]
    [renderer.frame.subs :as-alias frame.s]
    [renderer.snap.views :as snap.v]
-   [renderer.timeline.views :as timeline.v]
    [renderer.ui :as ui]
    [renderer.utils.keyboard :as keyb]
    [renderer.worker.subs :as-alias worker.s]))
@@ -24,7 +22,7 @@
      [:div.flex.justify-between
       [:span.mr-1 "Y:"] [:span (.toFixed y 2)]]]))
 
-(def zoom-menu
+(def zoom-options
   [{:label "Set to 50%"
     :id "50"
     :action [::frame.e/set-zoom 0.5]}
@@ -45,6 +43,23 @@
    {:label "Fill selected"
     :id "fill-selected"
     :action [::frame.e/focus-selection :fill]}])
+
+(defn zoom-menu
+  []
+  [:> DropdownMenu/Root
+   [:> DropdownMenu/Trigger
+    {:class "button flex items-center justify-center overlay px-2 font-mono rounded"
+     :side "top"}
+    [:div.flex.items-center
+     [ui/icon "chevron-up"]]]
+   [:> DropdownMenu/Portal
+    [:> DropdownMenu/Content
+     {:class "menu-content rounded"
+      :side "top"
+      :align "end"}
+     (for [item zoom-options]
+       ^{:key (:id item)} [ui/dropdown-menu-item item])
+     [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]])
 
 (def view-radio-buttons
   [{:title "Timeline"
@@ -106,69 +121,50 @@
                                 [::frame.e/zoom-out]
                                 [::frame.e/zoom-in]))}]))
 
+(defn zoom-button-group
+  []
+  (let [zoom @(rf/subscribe [::document.s/zoom])]
+    [:div.button-group
+     [:button.button.overlay.px-2.font-mono.rounded
+      {:class (when (<= zoom 0.01) "disabled")
+       :title "Zoom out"
+       :on-click #(rf/dispatch [::frame.e/zoom-out])}
+      [ui/icon "minus"]]
+
+     [:button.button.overlay.px-2.font-mono.rounded
+      {:class (when (>= zoom 100) "disabled")
+       :title "Zoom in"
+       :on-click #(rf/dispatch [::frame.e/zoom-in])}
+      [ui/icon "plus"]]
+     [zoom-input zoom]
+     [:div.pr-2.overlay.flex.items-center.hidden.md:flex "%"]
+     [zoom-menu]]))
+
 (defn root []
-  (let [zoom @(rf/subscribe [::document.s/zoom])
-        timeline? @(rf/subscribe [::app.s/panel-visible? :timeline])
-        help-message @(rf/subscribe [::app.s/help])
-        loading? @(rf/subscribe [::worker.s/loading?])]
-    [:<>
-     [:div.toolbar.bg-primary.mt-px
-      [color-v/picker]
-      [:div.grow
-       [:div.px-1.hidden.2xl:flex.gap-1.flex-wrap.leading-none.truncate
-        {:style {:max-height "33px"}}
-        help-message]]
-      (when loading?
-        [:span.icon-button.relative
-         [ui/icon "spinner" {:class "loading"}]])
-      (into [:<>]
-            (map (fn [{:keys [title active? icon action class]}]
-                   [ui/radio-icon-button icon @(rf/subscribe active?)
-                    {:title title
-                     :class class
-                     :on-click #(rf/dispatch action)}])
-                 view-radio-buttons))
-      [snap.v/root]
-      [:div.button-group
-       [:button.button.overlay.px-2.font-mono.rounded
-        {:class (when (<= zoom 0.01) "disabled")
-         :title "Zoom out"
-         :on-click #(rf/dispatch [::frame.e/zoom-out])}
-        [ui/icon "minus"]]
-
-       [:button.button.overlay.px-2.font-mono.rounded
-        {:class (when (>= zoom 100) "disabled")
-         :title "Zoom in"
-         :on-click #(rf/dispatch [::frame.e/zoom-in])}
-        [ui/icon "plus"]]
-       [zoom-input zoom]
-       [:div.pr-2.overlay.flex.items-center.hidden.md:flex "%"]
-
-       [:> DropdownMenu/Root
-        [:> DropdownMenu/Trigger
-         {:class "button flex items-center justify-center overlay px-2 font-mono rounded"
-          :side "top"}
-         [:div.flex.items-center
-          [ui/icon "chevron-up"]]]
-
-        [:> DropdownMenu/Portal
-         [:> DropdownMenu/Content
-          {:class "menu-content rounded"
-           :side "top"
-           :align "end"}
-          (for [item zoom-menu]
-            ^{:key (:id item)} [ui/dropdown-menu-item item])
-          [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]]]
-      [coordinates]]
-     [timeline.v/time-bar]
-     (when timeline?
-       [:> PanelResizeHandle
-        {:id "timeline-resize-handle"
-         :className "resize-handle"}])
-     (when timeline?
-       [:> Panel
-        {:id "timeline-panel"
-         :minSize 10
-         :defaultSize 20
-         :order 2}
-        [timeline.v/root]])]))
+  (let [help-message @(rf/subscribe [::app.s/help])
+        loading? @(rf/subscribe [::worker.s/loading?])
+        fill @(rf/subscribe [::document.s/fill])
+        stroke @(rf/subscribe [::document.s/stroke])]
+    [:div.toolbar.bg-primary.mt-px
+     [:div.flex
+      [color.v/picker fill :fill]
+      [color.v/swap-button]
+           ;; REVIEW: Can we replace alignOffset with collisionBoundary?
+      [color.v/picker stroke :stroke {:align-offset -54}]]
+     [:div.grow
+      [:div.px-1.hidden.2xl:flex.gap-1.flex-wrap.leading-none.truncate
+       {:style {:max-height "33px"}}
+       help-message]]
+     (when loading?
+       [:span.icon-button.relative
+        [ui/icon "spinner" {:class "loading"}]])
+     (into [:<>]
+           (map (fn [{:keys [title active? icon action class]}]
+                  [ui/radio-icon-button icon @(rf/subscribe active?)
+                   {:title title
+                    :class class
+                    :on-click #(rf/dispatch action)}])
+                view-radio-buttons))
+     [snap.v/root]
+     [zoom-button-group]
+     [coordinates]]))
