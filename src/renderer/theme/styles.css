@@ -6,6 +6,9 @@
     'Apple Color Emoji', 'Segoe UI Emoji';
   --font-size: 13px;
 
+  --button-size: 33px;
+  --button-size-sm: 22px;
+
   --bg-secondary: #222;
   --bg-primary: #2d2d2d;
 

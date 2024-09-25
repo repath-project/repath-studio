@@ -40,8 +40,8 @@
     fill: var(--font-color);
     font-family: var(--font-color);
     font-size: 1em;
-    height: 33px;
-    line-height: 33px;
+    height: var(--button-size);
+    line-height: var(--button-size);
     -webkit-app-region: no-drag;
 
     &:focus {
@@ -83,20 +83,6 @@
     backdrop-filter: blur(2px);
   }
 
-  .tooltip {
-    @apply absolute bg-secondary rounded;
-    z-index: 1;
-    margin: 8px;
-    line-height: 24px;
-    padding: 0 8px;
-  }
-
-  .disabled {
-    opacity: .5;
-    cursor: initial !important;
-    pointer-events: none;
-  }
-
   .icon {
     display: flex;
     justify-content: center;
@@ -133,14 +119,10 @@
   }
 
   .icon-button {
-    @apply button rounded;
-    width: 33px;
-    line-height: 33px;
+    @apply button button-size rounded;
 
     &.small {
-      width: 22px;
-      height: 22px;
-      line-height: 22px;
+      @apply button-size-sm;
       margin: 0 !important;
       border-radius: 2px !important;
     }
@@ -153,21 +135,12 @@
     }
   }
 
-  .collapse-button svg {
-    height: 10px;
-    width: 10px;
-  }
-
   .v-divider {
-    @apply mx-1;
-    height: 27px;
-    border-left: 1px solid var(--border-color);
+    @apply mx-1 border-l border-default h-6;
   }
 
   .h-divider {
-    @apply my-1;
-    width: 27px;
-    border-top: 1px solid var(--border-color);
+    @apply my-1 border-t border-default w-6;
   }
 
   .shortcut-key {
@@ -341,18 +314,14 @@
   }
 
   .dialog-content {
-    @apply fixed bg-secondary rounded-lg overflow-hidden shadow-xl border border-default;
-
+    @apply fixed bg-secondary rounded-lg overflow-hidden shadow-xl border border-default left-1/2 top-1/2;
     width: 500px;
     max-width: 90%;
-    left: 50%;
-    top: 50%;
     transform: translate(-50%, -50%);
   }
 
   .tab {
     @apply button flex items-center h-full text-left bg-primary gap-2 opacity-50 hover:bg-primary relative;
-
     padding: 0 8px 0 16px;
     flex: 0 1 130px;
 
@@ -389,6 +358,5 @@
 
   .select-trigger {
     @apply button px-2 overlay rounded;
-    height: 33px;
   }
 }

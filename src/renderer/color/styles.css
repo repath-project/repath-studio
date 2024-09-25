@@ -3,8 +3,7 @@
 }
 
 .color-rect {
-  width: 33px;
-  height: 33px;
+  @apply button-size;
   border: 1px solid var(--border-color);
 }
 

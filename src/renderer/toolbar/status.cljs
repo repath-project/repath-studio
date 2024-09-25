@@ -127,13 +127,13 @@
   (let [zoom @(rf/subscribe [::document.s/zoom])]
     [:div.button-group
      [:button.button.overlay.px-2.font-mono.rounded
-      {:class (when (<= zoom 0.01) "disabled")
+      {:disabled (<= zoom 0.01)
        :title "Zoom out"
        :on-click #(rf/dispatch [::frame.e/zoom-out])}
       [ui/icon "minus"]]
 
      [:button.button.overlay.px-2.font-mono.rounded
-      {:class (when (>= zoom 100) "disabled")
+      {:disabled (>= zoom 100)
        :title "Zoom in"
        :on-click #(rf/dispatch [::frame.e/zoom-in])}
       [ui/icon "plus"]]
@@ -155,7 +155,7 @@
       [color.v/picker fill :fill {:align-offset -54}]]
      [:div.grow
       [:div.px-1.hidden.2xl:flex.gap-1.flex-wrap.leading-none.truncate
-       {:style {:max-height "33px"}}
+       {:style {:max-height "var(--button-size)"}}
        help-message]]
      (when loading?
        [:span.icon-button.relative
