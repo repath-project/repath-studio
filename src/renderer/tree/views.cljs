@@ -85,27 +85,27 @@
   (reset! last-focused-id id))
 
 (defn key-down-handler!
-  [e]
+  [e id]
   (case (.-key e)
     "ArrowUp"
     (do (.stopPropagation e)
-        (rf/dispatch [::e/focus-up @last-focused-id]))
+        (rf/dispatch [::e/focus-up id]))
 
     "ArrowDown"
     (do (.stopPropagation e)
-        (rf/dispatch [::e/focus-down @last-focused-id]))
+        (rf/dispatch [::e/focus-down id]))
 
     "ArrowLeft"
     (do (.stopPropagation e)
-        (rf/dispatch [::document.e/collapse-el @last-focused-id]))
+        (rf/dispatch [::document.e/collapse-el id]))
 
     "ArrowRight"
     (do (.stopPropagation e)
-        (rf/dispatch [::document.e/expand-el @last-focused-id]))
+        (rf/dispatch [::document.e/expand-el id]))
 
     "Enter"
     (do (.stopPropagation e)
-        (rf/dispatch [::element.e/select @last-focused-id (.-ctrlKey e)]))
+        (rf/dispatch [::element.e/select id (.-ctrlKey e)]))
 
     nil))
 
@@ -135,6 +135,7 @@
              (dom/scroll-into-view! this)
              (set-last-focused-id! (.getAttribute this "data-id"))))
     :draggable true
+    :on-key-down #(key-down-handler! % id)
     :on-drag-start #(-> (.-dataTransfer %)
                         (.setData "id" (str id)))
     :on-drag-enter #(rf/dispatch [::document.e/set-hovered-id id])
@@ -171,8 +172,7 @@
   (let [hovered-ids @(rf/subscribe [::document.s/hovered-ids])
         collapsed-ids @(rf/subscribe [::document.s/collapsed-ids])]
     [:div.tree-sidebar
-     {:on-key-down key-down-handler!
-      :on-pointer-up #(rf/dispatch [::element.e/deselect-all])}
+     {:on-pointer-up #(rf/dispatch [::element.e/deselect-all])}
      [ui/scroll-area
       [:ul
        {:on-pointer-leave #(rf/dispatch [::document.e/clear-hovered])}
