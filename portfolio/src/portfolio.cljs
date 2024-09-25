@@ -10,12 +10,10 @@
    :background/options [{:id :light-mode
                          :title "Light mode"
                          :value {:background/background-color "#fff"
-                                 :background/document-class "light"
                                  :background/document-data {:theme "light"}}}
                         {:id :dark-mode
                          :title "Dark mode"
                          :value {:background/background-color "#111"
-                                 :background/document-class "dark"
                                  :background/document-data {:theme "dark"}}}]
    :background/default-option-id :dark-mode
    :viewport/defaults {:viewport/padding [0]
