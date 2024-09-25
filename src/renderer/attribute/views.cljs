@@ -256,7 +256,7 @@
         locked? @(rf/subscribe [::element.s/selected-locked?])
         tag (first selected-tags)]
     (when (seq selected-elements)
-      [:div.w-full.pr-px
+      [:div.pr-px
        [:div.flex.bg-primary.py-4.pl-4.pr-2
         [:h1.self-center.flex-1.text-lg.p-1
          (if (empty? (rest selected-elements))

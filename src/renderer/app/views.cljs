@@ -248,33 +248,32 @@
   []
   (let [properties-panel? @(rf/subscribe [::app.s/panel-visible? :properties])]
     [:> Tooltip/Provider
-   [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden
-    [window.v/app-header]
-    (if (seq @(rf/subscribe [::app.s/documents]))
-      [:div.flex.h-full.flex-1.overflow-hidden.gap-px
-       (when @(rf/subscribe [::app.s/panel-visible? :tree])
-         [:div.flex-col.hidden.md:flex.overflow-hidden
-          {:style {:width "227px"}}
-          [document.v/actions]
-          [tree.v/root]])
-       [:div.flex.flex-col.flex-1.overflow-hidden.h-full
-        [document.v/tab-bar]
-        [:div.flex.h-full.flex-1.gap-px.overflow-hidden
-         [:div.flex.h-full.flex-col.flex-1.overflow-hidden
-          [editor]]
-         [:div.flex
-          {:style (when properties-panel? {:flex "0 0 330px"})}
-          (when properties-panel?
-           [:div.hidden.md:flex.w-full
-            [:div.flex.flex-col.h-full.w-full
-             [ui/scroll-area
-              (tool.hierarchy/right-panel @(rf/subscribe [::app.s/tool]))]
-             [:div.bg-primary.grow.flex.mr-px]]])
-         [:div.bg-primary.flex
-          [ui/scroll-area [toolbar.object/root]]]]]]]
-      [home])]
-   [dialog.v/root]
-   [notification/main]
-   (when @(rf/subscribe [::app.s/loading?])
-     [:div.absolute.inset-0.backdrop
-      [:div.loader]])]))
+     [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden
+      [window.v/app-header]
+      (if (seq @(rf/subscribe [::app.s/documents]))
+        [:div.flex.h-full.flex-1.overflow-hidden.gap-px
+         (when @(rf/subscribe [::app.s/panel-visible? :tree])
+           [:div.flex-col.hidden.md:flex.overflow-hidden
+            {:style {:width "227px"}}
+            [document.v/actions]
+            [tree.v/root]])
+         [:div.flex.flex-col.flex-1.overflow-hidden.h-full
+          [document.v/tab-bar]
+          [:div.flex.h-full.flex-1.gap-px.overflow-hidden
+           [:div.flex.h-full.flex-col.flex-1.overflow-hidden
+            [editor]]
+           [:div.flex
+            (when properties-panel?
+              [:div.hidden.md:flex
+               [:div.flex.flex-col.h-full.w-80
+                [ui/scroll-area
+                 (tool.hierarchy/right-panel @(rf/subscribe [::app.s/tool]))]
+                [:div.bg-primary.grow.flex.mr-px]]])
+            [:div.bg-primary.flex
+             [ui/scroll-area [toolbar.object/root]]]]]]]
+        [home])]
+     [dialog.v/root]
+     [notification/main]
+     (when @(rf/subscribe [::app.s/loading?])
+       [:div.absolute.inset-0.backdrop
+        [:div.loader]])]))
