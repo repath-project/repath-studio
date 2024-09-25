@@ -517,9 +517,9 @@
                                                                                                        :ret :any}}},
                                                                      spec-failed {:arities {2 {:args [:string :string],
                                                                                                :ret :any}}}},
-                                        renderer.utils.compatibility {version->table {:arities {1 {:args [:nilable/string],
-                                                                                                   :ret :nilable/seqable}}},
-                                                                      requires-migration? {:arities {2 {:args [:map
+                                        renderer.utils.compatibility {version->vec {:arities {1 {:args [:string],
+                                                                                                 :ret :seqable}}},
+                                                                      requires-migration? {:arities {2 {:args [:seqable
                                                                                                                :seqable],
                                                                                                         :ret :boolean}}},
                                                                       migrate-document {:arities {1 {:args [:map],
