@@ -15,7 +15,7 @@
    [:delta-z [:maybe number?]]
    [:modifiers [:set ModifierKey]]])
 
-(defn event-handler
+(defn event-handler!
   "Gathers wheel event props.
    https://developer.mozilla.org/en-US/docs/Web/API/WheelEvent"
   [^js/WheelEvent e]

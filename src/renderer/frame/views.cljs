@@ -30,14 +30,14 @@
         (doseq
          [event ["pointermove" "pointerup"]]
           (.addEventListener frame-window event pointer/event-handler!))
-        (.addEventListener frame-window "wheel" wheel/event-handler #js {:passive false}))
+        (.addEventListener frame-window "wheel" wheel/event-handler! #js {:passive false}))
 
       :component-will-unmount
       (fn []
         (doseq
          [event ["pointermove" "pointerup"]]
           (.removeEventListener frame-window event pointer/event-handler!))
-        (.removeEventListener frame-window "wheel" wheel/event-handler))
+        (.removeEventListener frame-window "wheel" wheel/event-handler!))
 
       :reagent-render #()})))
 
