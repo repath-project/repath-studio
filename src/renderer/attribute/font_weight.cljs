@@ -25,7 +25,8 @@
 
 (defmethod hierarchy/form-element [:default :font-weight]
   [_ k v attrs]
-  (let [weights @(rf/subscribe [::element.s/font-weights])]
+  (let [weights @(rf/subscribe [::element.s/font-weights])
+        weights (if (seq weights) weights (sort (keys name-mapping)))]
     [v/select-input k v (merge attrs
                                {:default-value "400"
                                 :items (mapv #(do {:key %

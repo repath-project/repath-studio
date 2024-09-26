@@ -142,16 +142,20 @@
        [:> Select/Content
         {:class "menu-content rounded select-content"
          :on-key-down #(.stopPropagation %)}
-        [:> Select/ScrollUpButton {:class "select-scroll-button"}
+        [:> Select/ScrollUpButton
+         {:class "select-scroll-button"}
          [ui/icon "chevron-up"]]
-        [:> Select/Viewport {:class "select-viewport"}
+        [:> Select/Viewport
+         {:class "select-viewport"}
          (for [item items]
            ^{:key item}
-           [:> Select/Item {:value (:value item) :class "menu-item"}
+           [:> Select/Item
+            {:value (:value item) :class "menu-item"}
             (when (:icon item)
               [:div.absolute.left-2 [ui/icon (:icon item)]])
             [:> Select/ItemText (:label item)]])]
-        [:> Select/ScrollDownButton {:class "select-scroll-button"}
+        [:> Select/ScrollDownButton
+         {:class "select-scroll-button"}
          [ui/icon "chevron-down"]]]]])])
 
 (defn property-list
