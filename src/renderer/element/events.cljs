@@ -304,7 +304,8 @@
 (rf/reg-event-db
  ::group
  [(finalize "Group selection")]
- h/group)
+ (fn [db]
+   (h/group db)))
 
 (rf/reg-event-db
  ::ungroup
