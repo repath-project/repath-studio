@@ -43,6 +43,7 @@
                                                                                                       :req {:tag :any}}
                                                                                                      :keyword],
                                                                                               :ret :boolean}}},
+                                                                style->map {:arities {1 {:args [:map], :ret :any}}},
                                                                 ->path {:arities {1 {:args [{:op :keys,
                                                                                              :opt {:children :vector,
                                                                                                    :visible? :boolean,

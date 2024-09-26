@@ -17,7 +17,7 @@
   [:or string? number? vector? nil?]) ; REVIEW
 
 (def Attrs
-  [:map-of keyword? Attrs])
+  [:map-of keyword? Attr])
 
 (def Handle
   [:map {:closed true}
