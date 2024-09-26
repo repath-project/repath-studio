@@ -259,16 +259,15 @@
         selected-attrs @(rf/subscribe [::element.s/selected-attrs])
         locked? @(rf/subscribe [::element.s/selected-locked?])
         tag (first selected-tags)]
-    (when (seq selected-elements)
+    (when-first [el selected-elements]
       [:div.pr-px
        [:div.flex.bg-primary.py-4.pl-4.pr-2
         [:h1.self-center.flex-1.text-lg.p-1
-         (if (empty? (rest selected-elements))
-           (let [el (first selected-elements)
-                 el-label (:label el)]
+         (if-not (next selected-elements)
+           (let [el-label (:label el)]
              (if (empty? el-label) tag el-label))
            (str (count selected-elements) " elements"))]
-        (when (empty? (rest selected-tags))
+        (when-not (next selected-tags)
           [tag-info tag])]
        [:div.grid.grid-cols-2.grid-flow-row.my-px.w-full.gap-px
         {:style {:grid-template-columns "minmax(100px, auto) 1fr"}}
