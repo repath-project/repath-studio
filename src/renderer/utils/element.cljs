@@ -2,10 +2,11 @@
   (:require
    ["paper" :refer [Path]]
    ["paperjs-offset" :refer [PaperOffset]]
+   ["style-to-object" :default parse]
    [clojure.core.matrix :as mat]
    [malli.experimental :as mx]
    [reagent.dom.server :as dom.server]
-   [renderer.element.db :refer [Element Attr]]
+   [renderer.element.db :refer [Element Attrs]]
    [renderer.snap.db :refer [SnapOption]]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.attribute :as attr]
@@ -61,7 +62,7 @@
                  [cx y2]])))
       points)))
 
-(mx/defn attrs-map :- [:map-of keyword? Attr]
+(mx/defn attrs-map :- Attrs
   [attrs]
   (let [deprecated-path [:__compat :status :deprecated]
         filtered-attrs (->> attrs
@@ -72,7 +73,7 @@
         (keys)
         (zipmap (repeat "")))))
 
-(mx/defn attributes :- [:map-of keyword? Attr]
+(mx/defn attributes :- Attrs
   [{:keys [tag attrs]} :- Element]
   (merge
    (when tag
@@ -141,3 +142,11 @@
               (empty? (rest els))
               (svg? (first els))))
     (wrap-to-svg (utils.bounds/->dimensions (united-bounds els)))))
+
+(mx/defn style->map
+  "Conversts :style attribute to map.
+   Parsing might through an exception. When that hapens, we remove the attribute
+   because there is no other way to handle this gracefully."
+  [attrs :- Attrs]
+  (try (update attrs :style parse)
+       (catch :default _e (dissoc attrs :style))))

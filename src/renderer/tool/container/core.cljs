@@ -1,13 +1,13 @@
 (ns renderer.tool.container.core
   "https://www.w3.org/TR/SVG/struct.html#TermContainerElement"
   (:require
-   ["style-to-object" :default parse]
    [re-frame.core :as rf]
    [renderer.element.subs :as-alias element.s]
    [renderer.tool.container.canvas]
    [renderer.tool.container.group]
    [renderer.tool.container.svg]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.utils.element :as element]))
 
 (derive ::tool.hierarchy/container ::tool.hierarchy/box)
 
@@ -29,7 +29,7 @@
 (defmethod tool.hierarchy/render-to-string ::tool.hierarchy/container
   [{:keys [tag attrs title children]}]
   (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
-        attrs (->> (update attrs :style parse)
+        attrs (->> (element/style->map attrs)
                    (remove #(empty? (str (second %))))
                    (into {}))]
     [tag

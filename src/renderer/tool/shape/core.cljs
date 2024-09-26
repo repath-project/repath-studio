@@ -1,7 +1,6 @@
 (ns renderer.tool.shape.core
   "https://www.w3.org/TR/SVG/shapes.html#TermShapeElement"
   (:require
-   ["style-to-object" :default parse]
    [re-frame.core :as rf]
    [renderer.element.subs :as-alias element.s]
    [renderer.tool.hierarchy :as tool.hierarchy]
@@ -13,14 +12,15 @@
    [renderer.tool.shape.polygon]
    [renderer.tool.shape.polyline]
    [renderer.tool.shape.polyshape]
-   [renderer.tool.shape.rect]))
+   [renderer.tool.shape.rect]
+   [renderer.utils.element :as element]))
 
 (derive ::tool.hierarchy/shape ::tool.hierarchy/graphics)
 
 (defmethod tool.hierarchy/render-to-string ::tool.hierarchy/shape
   [{:keys [tag attrs title children content]}]
   (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
-        attrs (->> (update attrs :style parse)
+        attrs (->> (element/style->map attrs)
                    (remove #(empty? (str (second %))))
                    (into {}))]
     [tag

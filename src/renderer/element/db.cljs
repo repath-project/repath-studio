@@ -16,6 +16,9 @@
 (def Attr
   [:or string? number? vector? nil?]) ; REVIEW
 
+(def Attrs
+  [:map-of keyword? Attrs])
+
 (def Handle
   [:map {:closed true}
    [:id keyword?]
@@ -41,7 +44,7 @@
    [:children {:default [] :optional true} [:vector uuid?]]
    [:bounds {:optional true} Bounds]
    [:content {:optional true} string?]
-   [:attrs {:optional true} [:map-of keyword? Attr]]])
+   [:attrs {:optional true} Attrs]])
 
 (def valid? (m/validator Element))
 
