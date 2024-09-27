@@ -43,12 +43,9 @@
 
 (defn root
   []
-  [:button.icon-button.items-center.px-1.gap-1
+  [:button.icon-button.items-center.px-1.gap-1.w-auto.flex
    {:title "Snap"
     :class (when @(rf/subscribe [::snap.s/active]) "selected")
-    :style {:margin-right 0
-            :width "auto"
-            :display "flex"}
     :on-click #(rf/dispatch [::snap.e/toggle])}
    [ui/icon "magnet"]
    [options-dropdown]])

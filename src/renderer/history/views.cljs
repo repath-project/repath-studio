@@ -27,11 +27,8 @@
     :disabled disabled?}
    [:> Select/Trigger
     {:aria-label label
-     :as-child true
-     :style {:background "transparent"
-             :width "16px"
-             :margin 0}}
-    [:div.h-full.hover:pt-1.flex.items-center
+     :as-child true}
+    [:div.w-4.m-0.bg-transparent.h-full.hover:pt-1.flex.items-center
      [:> Select/Value ""]
      [:> Select/Icon
       [ui/icon "chevron-down"]]]]
