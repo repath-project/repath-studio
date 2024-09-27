@@ -5,7 +5,8 @@
    [renderer.snap.db :refer [SnapOption]]
    [renderer.snap.events :as-alias snap.e]
    [renderer.snap.subs :as-alias snap.s]
-   [renderer.ui :as ui]))
+   [renderer.ui :as ui]
+   [renderer.utils.dom :as dom]))
 
 (defn options-dropdown
   []
@@ -31,7 +32,7 @@
          ^{:key option}
          [:> DropdownMenu/CheckboxItem
           {:class "menu-checkbox-item inset"
-           :on-click #(.stopPropagation %)
+           :on-click dom/stop-propagation!
            :onSelect #(do (.preventDefault %)
                           (rf/dispatch [::snap.e/toggle-option option]))
            :checked (contains? options option)}

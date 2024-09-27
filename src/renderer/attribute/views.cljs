@@ -12,6 +12,7 @@
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.ui :as ui]
    [renderer.utils.bcd :as bcd]
+   [renderer.utils.dom :as dom]
    [renderer.utils.keyboard :as keyb]
    [renderer.window.events :as-alias window.e]))
 
@@ -141,7 +142,7 @@
       [:> Select/Portal
        [:> Select/Content
         {:class "menu-content rounded select-content"
-         :on-key-down #(.stopPropagation %)}
+         :on-key-down dom/stop-propagation!}
         [:> Select/ScrollUpButton
          {:class "select-scroll-button"}
          [ui/icon "chevron-up"]]

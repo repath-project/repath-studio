@@ -16,6 +16,7 @@
    [renderer.ruler.events :as-alias ruler.e]
    [renderer.ruler.subs :as-alias ruler.s]
    [renderer.ui :as ui]
+   [renderer.utils.dom :as dom]
    [renderer.window.events :as-alias window.e]
    [renderer.window.subs :as-alias window.s]))
 
@@ -617,6 +618,6 @@
   []
   (into [:> Menubar/Root
          {:class "menubar-root"
-          :on-key-down #(.stopPropagation %) ; FIXME: Esc global action also triggered.
+          :on-key-down dom/stop-propagation! ; FIXME: Esc global action also triggered.
           :on-value-change #(rf/dispatch [::app.e/set-backdrop (boolean (seq %))])}]
         (map menu-item (root-menu))))

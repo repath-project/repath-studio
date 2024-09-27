@@ -10,6 +10,7 @@
    [renderer.element.handlers :as element.h]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.bounds :as bounds]
+   [renderer.utils.dom :as dom]
    [renderer.utils.element :as element]
    [renderer.utils.units :as units]))
 
@@ -108,8 +109,8 @@
        :default-value content
        :auto-focus true
        :on-focus #(.. % -target select)
-       :on-pointer-down #(.stopPropagation %)
-       :on-pointer-up #(.stopPropagation %)
+       :on-pointer-down dom/stop-propagation!
+       :on-pointer-up dom/stop-propagation!
        :on-blur #(set-text-and-select-element % id)
        :on-key-down #(key-down-handler % id)
        :style {:color "transparent"

@@ -70,7 +70,7 @@
   [:button.close.small
    {:key id
     :title "Close document"
-    :on-pointer-down #(.stopPropagation %)
+    :on-pointer-down dom/stop-propagation!
     :on-pointer-up (fn [e]
                      (.stopPropagation e)
                      (rf/dispatch [::document.e/close id true]))}
