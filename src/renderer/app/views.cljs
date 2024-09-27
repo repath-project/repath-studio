@@ -19,6 +19,8 @@
    [renderer.history.views :as history.v]
    [renderer.notification.views :as notification]
    [renderer.reepl.views :as repl.v]
+   [renderer.ruler.events :as-alias ruler.e]
+   [renderer.ruler.subs :as-alias ruler.s]
    [renderer.ruler.views :as ruler.v]
    [renderer.timeline.views :as timeline.v]
    [renderer.tool.hierarchy :as tool.hierarchy]
@@ -33,34 +35,36 @@
 
 (defn frame-panel
   []
-  (let [rulers? @(rf/subscribe [::app.s/rulers-visible?])
-        read-only? @(rf/subscribe [::document.s/read-only?])
-        ruler-size @(rf/subscribe [::app.s/ruler-size])
-        rulers-locked? @(rf/subscribe [::app.s/rulers-locked?])]
+  (let [ruler-visible @(rf/subscribe [::ruler.s/visible])
+        read-only @(rf/subscribe [::document.s/read-only])
+        ruler-size @(rf/subscribe [::ruler.s/size])
+        ruler-locked @(rf/subscribe [::ruler.s/locked])]
     [:div.flex.flex-col.flex-1.h-full.gap-px
      [:div
       [ui/scroll-area [toolbar.tools/root]]
-      (when rulers?
+      (when ruler-visible
         [:div.flex.gap-px
-         [:div.bg-primary {:style {:width ruler-size :height ruler-size}}
+         [:div.bg-primary
+          {:style {:width ruler-size
+                   :height ruler-size}}
           [ui/icon-button
-           (if rulers-locked? "lock" "unlock")
+           (if ruler-locked "lock" "unlock")
            {:class "small hidden"
-            :title (if rulers-locked? "unlock" "lock")
-            :on-click #(rf/dispatch [::e/toggle-rulers-locked])}]]
+            :title (if ruler-locked "unlock" "lock")
+            :on-click #(rf/dispatch [::ruler.e/toggle-locked])}]]
          [:div.bg-primary.flex-1
           [ruler.v/ruler :horizontal]]])]
      [:div.flex.flex-1.relative.gap-px
-      (when rulers?
+      (when ruler-visible
         [:div.bg-primary
          [ruler.v/ruler :vertical]])
       [:div.relative.grow.flex
        [frame.v/root]
-       (if read-only?
+       (if read-only
          [:div.absolute.inset-0.border-4.border-accent]
-         (when @(rf/subscribe [::app.s/debug-info?])
+         (when @(rf/subscribe [::app.s/debug-info])
            [overlay/debug-info]))
-       (when @(rf/subscribe [::app.s/backdrop?])
+       (when @(rf/subscribe [::app.s/backdrop])
          [:div.absolute.inset-0
           {:on-click #(rf/dispatch [::e/set-backdrop false])}])]]]))
 
@@ -76,7 +80,7 @@
       {:id "frame-panel"
        :order 1}
       [frame-panel]]
-     (when @(rf/subscribe [::app.s/panel-visible? :history])
+     (when @(rf/subscribe [::app.s/panel-visible :history])
        [:<>
         [:> PanelResizeHandle
          {:id "history-resize-handle"
@@ -88,7 +92,7 @@
          [:div.bg-primary.h-full
           [history.v/root]]]])
 
-     (when @(rf/subscribe [::app.s/panel-visible? :xml])
+     (when @(rf/subscribe [::app.s/panel-visible :xml])
        (let [xml @(rf/subscribe [::element.s/xml])]
          [:<>
           [:> PanelResizeHandle
@@ -108,7 +112,7 @@
 
 (defn editor
   []
-  (let [timeline? @(rf/subscribe [::app.s/panel-visible? :timeline])]
+  (let [timeline-visible @(rf/subscribe [::app.s/panel-visible :timeline])]
     [:> PanelGroup
      {:direction "vertical"
       :id "editor-group"
@@ -118,11 +122,11 @@
                 :order 1}
       [center-top-group]]
      [toolbar.status/root]
-     (when timeline?
+     (when timeline-visible
        [:> PanelResizeHandle
         {:id "timeline-resize-handle"
          :className "resize-handle"}])
-     (when timeline?
+     (when timeline-visible
        [:> Panel
         {:id "timeline-panel"
          :minSize 10
@@ -246,34 +250,33 @@
 
 (defn root
   []
-  (let [properties-panel? @(rf/subscribe [::app.s/panel-visible? :properties])]
-    [:> Tooltip/Provider
-     [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden
-      [window.v/app-header]
-      (if (seq @(rf/subscribe [::app.s/documents]))
-        [:div.flex.h-full.flex-1.overflow-hidden.gap-px
-         (when @(rf/subscribe [::app.s/panel-visible? :tree])
-           [:div.flex-col.hidden.md:flex.overflow-hidden
-            {:style {:width "227px"}}
-            [document.v/actions]
-            [tree.v/root]])
-         [:div.flex.flex-col.flex-1.overflow-hidden.h-full
-          [document.v/tab-bar]
-          [:div.flex.h-full.flex-1.gap-px.overflow-hidden
-           [:div.flex.h-full.flex-col.flex-1.overflow-hidden
-            [editor]]
-           [:div.flex
-            (when properties-panel?
-              [:div.hidden.md:flex
-               [:div.flex.flex-col.h-full.w-80
-                [ui/scroll-area
-                 (tool.hierarchy/right-panel @(rf/subscribe [::app.s/tool]))]
-                [:div.bg-primary.grow.flex.mr-px]]])
-            [:div.bg-primary.flex
-             [ui/scroll-area [toolbar.object/root]]]]]]]
-        [home])]
-     [dialog.v/root]
-     [notification/main]
-     (when @(rf/subscribe [::app.s/loading?])
-       [:div.absolute.inset-0.backdrop
-        [:div.loader]])]))
+  [:> Tooltip/Provider
+   [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden
+    [window.v/app-header]
+    (if (seq @(rf/subscribe [::app.s/documents]))
+      [:div.flex.h-full.flex-1.overflow-hidden.gap-px
+       (when @(rf/subscribe [::app.s/panel-visible :tree])
+         [:div.flex-col.hidden.md:flex.overflow-hidden
+          {:style {:width "227px"}}
+          [document.v/actions]
+          [tree.v/root]])
+       [:div.flex.flex-col.flex-1.overflow-hidden.h-full
+        [document.v/tab-bar]
+        [:div.flex.h-full.flex-1.gap-px.overflow-hidden
+         [:div.flex.h-full.flex-col.flex-1.overflow-hidden
+          [editor]]
+         [:div.flex
+          (when @(rf/subscribe [::app.s/panel-visible :properties])
+            [:div.hidden.md:flex
+             [:div.flex.flex-col.h-full.w-80
+              [ui/scroll-area
+               (tool.hierarchy/right-panel @(rf/subscribe [::app.s/tool]))]
+              [:div.bg-primary.grow.flex.mr-px]]])
+          [:div.bg-primary.flex
+           [ui/scroll-area [toolbar.object/root]]]]]]]
+      [home])]
+   [dialog.v/root]
+   [notification/main]
+   (when @(rf/subscribe [::app.s/loading])
+     [:div.absolute.inset-0.backdrop
+      [:div.loader]])])

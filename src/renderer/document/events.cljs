@@ -101,7 +101,7 @@
      (-> db
          (h/set-active id)
          (dialog.h/create {:title "Do you want to save your changes?"
-                           :close-button? true
+                           :close-button true
                            :content [dialog.v/save (get-in db [:documents id])]
                            :attrs {:onOpenAutoFocus dom/prevent-default!}})))))
 
@@ -204,10 +204,10 @@
   (finalize "Load document")]
  (fn [{:keys [db guid]} [_ document]]
    (let [migrated-document (compatibility/migrate-document document)
-         migrated? (not= document migrated-document)
-         document (assoc document :id guid)]
+         migrated (not= document migrated-document)
+         document (assoc migrated-document :id guid)]
      {:db (h/load db document)
-      :dispatch (when (not migrated?) [::saved document])})))
+      :dispatch (when (not migrated) [::saved document])})))
 
 (rf/reg-event-fx
  ::load-multiple

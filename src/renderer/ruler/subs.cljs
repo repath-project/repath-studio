@@ -7,6 +7,25 @@
    [renderer.frame.subs :as-alias frame.s]))
 
 (rf/reg-sub
+ ::ruler
+ :-> :ruler)
+
+(rf/reg-sub
+ ::locked
+ :<- [::ruler]
+ :-> :locked)
+
+(rf/reg-sub
+ ::visible
+ :<- [::ruler]
+ :-> :visible)
+
+(rf/reg-sub
+ ::size
+ :<- [::ruler]
+ :-> :size)
+
+(rf/reg-sub
  ::step
  :<- [::document.s/zoom]
  (fn [zoom _]
@@ -46,7 +65,7 @@
  :<- [::document.s/zoom]
  :<- [::document.s/pan]
  :<- [::element.s/bounds]
- :<- [::app.s/ruler-size]
+ :<- [::size]
  (fn [[zoom pan bounds size] [_ orientation]]
    (let [[x1 y1 x2 y2] (map #(* % zoom) bounds)]
      (if (= orientation :vertical)

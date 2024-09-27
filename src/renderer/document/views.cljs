@@ -17,8 +17,8 @@
 
 (defn actions
   []
-  (let [undos? @(rf/subscribe [::history.s/undos?])
-        redos? @(rf/subscribe [::history.s/redos?])]
+  (let [some-undos @(rf/subscribe [::history.s/some-undos])
+        some-redos @(rf/subscribe [::history.s/some-redos])]
     [:div.toolbar
 
      [ui/icon-button
@@ -35,7 +35,7 @@
       "save"
       {:title "Save"
        :on-click #(rf/dispatch [::document.e/save])
-       :disabled @(rf/subscribe [::document.s/active-saved?])}]
+       :disabled @(rf/subscribe [::document.s/active-saved])}]
 
      [:span.v-divider]
 
@@ -45,12 +45,12 @@
                :width "auto"
                :display "flex"}
        :on-click #(rf/dispatch [::history.e/undo])
-       :disabled (not undos?)}
+       :disabled (not some-undos)}
       [ui/icon "undo"]
       [history.v/select
        "Undo stack"
        @(rf/subscribe [::history.s/undos])
-       (not undos?)]]
+       (not some-undos)]]
 
      [:button.icon-button.items-center.px-1.gap-1
       {:title "Redo"
@@ -58,15 +58,15 @@
                :width "auto"
                :display "flex"}
        :on-click #(rf/dispatch [::history.e/redo])
-       :disabled (not redos?)}
+       :disabled (not some-redos)}
       [ui/icon "redo"]
       [history.v/select
        "Redo stack"
        @(rf/subscribe [::history.s/redos])
-       (not redos?)]]]))
+       (not some-redos)]]]))
 
 (mx/defn close-button
-  [id :- uuid?, saved? :- boolean?]
+  [id :- uuid?, saved :- boolean?]
   [:button.close.small
    {:key id
     :title "Close document"
@@ -75,7 +75,7 @@
                      (.stopPropagation e)
                      (rf/dispatch [::document.e/close id true]))}
    [ui/icon "times"]
-   (when-not saved?
+   (when-not saved
      [ui/icon "dot" {:class "dot"}])])
 
 (mx/defn context-menu
@@ -99,14 +99,14 @@
                 :disabled? (not (and path platform/electron?))}]))))
 
 (mx/defn tab
-  [id :- uuid?, title :- string?, active? :- boolean?]
+  [id :- uuid?, title :- string?, active :- boolean?]
   (ra/with-let [dragged-over? (ra/atom false)]
-    (let [saved? @(rf/subscribe [::document.s/saved? id])]
+    (let [saved @(rf/subscribe [::document.s/saved id])]
       [:> ContextMenu/Root
        [:> ContextMenu/Trigger
         [:div.tab
-         {:class [(when active? "active")
-                  (when saved? "saved")]
+         {:class [(when active "active")
+                  (when saved "saved")]
           :on-wheel #(rf/dispatch [::document.e/scroll (.-deltaY %)])
           :on-pointer-down #(case (.-buttons %)
                               4 (rf/dispatch [::document.e/close id true])
@@ -126,7 +126,7 @@
                                        uuid)
                                    id]))}
          [:span.truncate.pointer-events-none title]
-         [close-button id saved?]]]
+         [close-button id saved]]]
        [:> ContextMenu/Portal
         (into
          [:> ContextMenu/Content

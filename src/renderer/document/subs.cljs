@@ -12,12 +12,12 @@
    (-> db :recent reverse)))
 
 (rf/reg-sub
- ::documents?
+ ::some-documents
  :<- [::app.s/documents]
  seq)
 
 (rf/reg-sub
- ::recent?
+ ::some-recent
  :<- [::recent]
  seq)
 
@@ -75,10 +75,10 @@
  :<- [::title]
  :<- [::path]
  :<- [::active]
- :<- [::active-saved?]
- (fn [[title path active saved?] _]
+ :<- [::active-saved]
+ (fn [[title path active saved] _]
    (let [title (or path title)]
-     (str (when (and active (not saved?)) "• ")
+     (str (when (and active (not saved)) "• ")
           (when title (str title " - "))
           config/app-name))))
 
@@ -98,7 +98,7 @@
  :-> :filter)
 
 (rf/reg-sub
- ::filter-active?
+ ::filter-active
  :<- [::filter]
  (fn [active-filter [_ k]]
    (= active-filter k)))
@@ -124,17 +124,17 @@
  :-> :save)
 
 (rf/reg-sub
- ::read-only?
+ ::read-only
  :<- [::timeline.s/time]
  pos?)
 
 (rf/reg-sub
- ::saved?
+ ::saved
  (fn [db [_ id]]
    (h/saved? db id)))
 
 (rf/reg-sub
- ::active-saved?
+ ::active-saved
  (fn [{:keys [active-document] :as db} [_]]
    (when active-document
      (h/saved? db active-document))))

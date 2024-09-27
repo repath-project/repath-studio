@@ -20,7 +20,7 @@
   [{:keys [dom-rect] :as db}, updated-dom-rect :- DomRect]
   (let [offset (-> (merge-with - dom-rect updated-dom-rect)
                    (select-keys [:width :height]))]
-    (if-not (-> db :window :focused?)
+    (if-not (-> db :window :focused)
       db
       (reduce #(pan-by %1 (mat/div [(:width offset) (:height offset)] 2) %2) db (:document-tabs db)))))
 

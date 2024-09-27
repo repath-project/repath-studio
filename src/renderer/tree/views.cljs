@@ -16,35 +16,35 @@
    [renderer.utils.keyboard :as keyb]))
 
 (defn lock-button
-  [id locked?]
+  [id locked]
   [ui/icon-button
-   (if locked? "lock" "unlock")
-   {:class (when-not locked? "list-item-action")
-    :title (if locked? "unlock" "lock")
+   (if locked "lock" "unlock")
+   {:class (when-not locked "list-item-action")
+    :title (if locked "unlock" "lock")
     :on-double-click dom/stop-propagation!
     :on-pointer-up dom/stop-propagation!
     :on-click (fn [e]
                 (.stopPropagation e)
-                (rf/dispatch [::element.e/toggle-prop id :locked?]))}])
+                (rf/dispatch [::element.e/toggle-prop id :locked]))}])
 
 (defn visibility-button
-  [id visible?]
+  [id visible]
   [ui/icon-button
-   (if visible? "eye" "eye-closed")
-   {:class (when visible? "list-item-action")
-    :title (if visible? "hide" "show")
+   (if visible "eye" "eye-closed")
+   {:class (when visible "list-item-action")
+    :title (if visible "hide" "show")
     :on-double-click dom/stop-propagation!
     :on-pointer-up dom/stop-propagation!
     :on-click (fn [e]
                 (.stopPropagation e)
-                (rf/dispatch [::element.e/toggle-prop id :visible?]))}])
+                (rf/dispatch [::element.e/toggle-prop id :visible]))}])
 
 (defn set-item-label!
   [e id]
   (rf/dispatch [::element.e/set-prop id :label (.. e -target -value)]))
 
 (defn item-label
-  [{:keys [id label visible? tag]}]
+  [{:keys [id label visible tag]}]
   (ra/with-let [edit-mode? (ra/atom false)]
     (if @edit-mode?
       [:input.list-item-input
@@ -57,7 +57,7 @@
                    (set-item-label! e id))}]
       [:div.flex
        [:div.truncate
-        {:class [(when-not visible? "opacity-60")
+        {:class [(when-not visible "opacity-60")
                  (when (= :svg tag) "font-bold")]
          :style {:cursor "text"}
          :on-double-click (fn [e]
@@ -110,28 +110,28 @@
     nil))
 
 (defn toggle-collapsed-button
-  [id collapsed?]
+  [id collapsed]
   [ui/icon-button
-   (if collapsed? "chevron-right" "chevron-down")
+   (if collapsed "chevron-right" "chevron-down")
    {:class "small"
-    :title (if collapsed? "expand" "collapse")
+    :title (if collapsed "expand" "collapse")
     :on-pointer-up #(.stopPropagation %)
-    :on-click #(rf/dispatch (if collapsed?
+    :on-click #(rf/dispatch (if collapsed
                               [::document.e/expand-el id]
                               [::document.e/collapse-el id]))}])
 
 (defn list-item-button
-  [{:keys [id selected? children locked? visible?] :as el} depth hovered? collapsed?]
+  [{:keys [id selected children locked visible] :as el} depth hovered collapsed]
   [:div.button.list-item-button
-   {:class [(when selected? "selected")
-            (when hovered? "hovered")]
+   {:class [(when selected "selected")
+            (when hovered "hovered")]
     :tab-index 0
     :data-id (str id)
     :role "menuitem"
     :on-double-click #(rf/dispatch [::frame.e/pan-to-element id])
     :on-pointer-enter #(rf/dispatch [::document.e/set-hovered-id id])
     :ref (fn [this]
-           (when (and this selected? hovered?)
+           (when (and this selected hovered)
              (dom/scroll-into-view! this)
              (set-last-focused-id! (.getAttribute this "data-id"))))
     :draggable true
@@ -152,18 +152,18 @@
     :style {:padding-left (padding depth (seq children))}}
    [:div.flex.items-center.content-between.w-full
     (when (seq children)
-      [toggle-collapsed-button id collapsed?])
+      [toggle-collapsed-button id collapsed])
     [:div.flex-1.overflow-hidden [item-label el]]
-    [lock-button id locked?]
-    [visibility-button id visible?]]])
+    [lock-button id locked]
+    [visibility-button id visible]]])
 
-(defn item [{:keys [selected? children id] :as el} depth elements hovered-ids collapsed-ids]
+(defn item [{:keys [selected children id] :as el} depth elements hovered-ids collapsed-ids]
   (let [has-children? (seq children)
-        collapsed? (contains? collapsed-ids id)
-        hovered? (contains? hovered-ids id)]
-    [:li {:class (when selected? "overlay")}
-     [list-item-button el depth hovered? collapsed?]
-     (when (and has-children? (not collapsed?))
+        collapsed (contains? collapsed-ids id)
+        hovered (contains? hovered-ids id)]
+    [:li {:class (when selected "overlay")}
+     [list-item-button el depth hovered collapsed]
+     (when (and has-children? (not collapsed))
        [:ul (for [el (mapv (fn [k] (get elements k)) (reverse children))]
               ^{:key (:id el)} [item el (inc depth) elements hovered-ids collapsed-ids])])]))
 

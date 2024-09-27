@@ -18,8 +18,8 @@
 (rf/reg-event-db
  ::select
  [(finalize "Select element")]
- (fn [db [_ id multi?]]
-   (h/select db id multi?)))
+ (fn [db [_ id multiple]]
+   (h/select db id multiple)))
 
 (rf/reg-event-db
  ::select-ids
@@ -48,13 +48,13 @@
  ::lock
  [(finalize "Lock selection")]
  (fn [db]
-   (h/assoc-prop db :locked? true)))
+   (h/assoc-prop db :locked true)))
 
 (rf/reg-event-db
  ::unlock
  [(finalize "Unlock selection")]
  (fn [db]
-   (h/assoc-prop db :locked? false)))
+   (h/assoc-prop db :locked false)))
 
 (rf/reg-event-db
  ::set-attr
@@ -275,18 +275,18 @@
  (fn [db [_ data _msg]]
    (-> db
        (h/import-svg data)
-       (assoc :loading? false))))
+       (assoc :loading false))))
 
 (rf/reg-event-fx
  ::import-svg
  (fn [{:keys [db]} [_ data]]
-   {:db (assoc db :loading? true)
+   {:db (assoc db :loading true)
     :dispatch ^:flush-dom [::import data "Import svg"]}))
 
 (rf/reg-event-fx
  ::import-traced-image
  (fn [{:keys [db]} [_ data]]
-   {:db (assoc db :loading? true)
+   {:db (assoc db :loading true)
     :dispatch ^:flush-dom [::import data "Trace image"]}))
 
 (rf/reg-event-db

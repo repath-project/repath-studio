@@ -34,20 +34,20 @@
         bounds @(rf/subscribe [::element.s/bounds])
         temp-element @(rf/subscribe [::document.s/temp-element])
         elements-area @(rf/subscribe [::element.s/area])
-        read-only? @(rf/subscribe [::document.s/read-only?])
+        read-only @(rf/subscribe [::document.s/read-only])
         cursor @(rf/subscribe [::app.s/cursor])
         tool @(rf/subscribe [::app.s/tool])
         primary-tool @(rf/subscribe [::app.s/primary-tool])
         rotate @(rf/subscribe [::document.s/rotate])
-        grid? @(rf/subscribe [::app.s/grid-visible?])
+        grid @(rf/subscribe [::app.s/grid])
         state @(rf/subscribe [::app.s/state])
         pointer-handler #(pointer/event-handler! % element)
         pivot-point @(rf/subscribe [::app.s/pivot-point])
         snapping-points @(rf/subscribe [::snap.s/points])
-        snap? @(rf/subscribe [::snap.s/enabled?])
+        snap-active @(rf/subscribe [::snap.s/active])
         nearest-neighbor @(rf/subscribe [::snap.s/nearest-neighbor])
-        debug? @(rf/subscribe [::app.s/debug-info?])
-        select? (or (= tool :select) (= primary-tool :select))]
+        debug @(rf/subscribe [::app.s/debug-info])
+        select-tool-active (or (= tool :select) (= primary-tool :select))]
     [:svg#canvas {:on-pointer-up pointer-handler
                   :on-pointer-down pointer-handler
                   :on-pointer-move pointer-handler
@@ -71,9 +71,9 @@
              [:filter {:id id :key id} [tag attrs]])
            filters/accessibility)]
 
-     (when-not read-only?
+     (when-not read-only
        [:<>
-        (when (and select? (contains? #{:default :select :scale} state))
+        (when (and select-tool-active (contains? #{:default :select :scale} state))
           [:<>
            (for [el selected-elements]
              (when (:bounds el)
@@ -94,7 +94,7 @@
               (when (= state :scale) [overlay/size-label bounds])
               [overlay/bounding-handles bounds]])
 
-           (when (and select? pivot-point)
+           (when (and select-tool-active pivot-point)
              [overlay/times pivot-point])])
 
         (when (or (= tool :edit)
@@ -108,15 +108,15 @@
 
         [tool.hierarchy/render temp-element]])
 
-     (when debug?
+     (when debug
        [into [:g]
         (for [snapping-point snapping-points]
           [overlay/point-of-interest snapping-point])])
 
-     (when (and snap? nearest-neighbor)
+     (when (and snap-active nearest-neighbor)
        [overlay/times (:point nearest-neighbor)])
 
-     (when grid? [ruler.v/grid])]))
+     (when grid [ruler.v/grid])]))
 
 (defmethod tool.hierarchy/render-to-string :canvas
   [{:keys [attrs children]}]

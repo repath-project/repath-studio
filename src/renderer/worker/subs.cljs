@@ -12,6 +12,6 @@
  :-> :tasks)
 
 (rf/reg-sub
- ::loading?
+ ::loading
  :<- [::tasks]
  seq)

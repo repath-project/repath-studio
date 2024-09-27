@@ -43,11 +43,11 @@
 
 (defn locked?
   [db id]
-  (:locked? (element db id)))
+  (:locked (element db id)))
 
 (defn selected
   [db]
-  (filter :selected? (vals (elements db))))
+  (filter :selected (vals (elements db))))
 
 (defn selected-ids
   [db]
@@ -240,7 +240,7 @@
   ([db]
    (reduce deselect db (keys (elements db))))
   ([db id]
-   (assoc-prop db id :selected? false)))
+   (assoc-prop db id :selected false)))
 
 (defn expand
   [{:keys [active-document] :as db} id]
@@ -255,17 +255,17 @@
   ([db id]
    (-> db
        (expand-ancestors id)
-       (assoc-prop id :selected? true)))
-  ([db id multi?]
+       (assoc-prop id :selected true)))
+  ([db id multiple]
    (if (element db id)
-     (if multi?
-       (update-prop db id :selected? not)
+     (if multiple
+       (update-prop db id :selected not)
        (-> db deselect (select id)))
      (deselect db))))
 
 (defn select-ids
   [db ids]
-  (reduce (partial-right assoc-prop :selected? true) (deselect db) ids))
+  (reduce (partial-right assoc-prop :selected true) (deselect db) ids))
 
 (defn select-all
   [db]
@@ -310,7 +310,7 @@
   (reduce (fn [db {:keys [id tag]}]
             (cond-> db
               (not (contains? #{:svg :canvas} tag))
-              (update-prop id :selected? not)))
+              (update-prop id :selected not)))
           db
           (vals (elements db))))
 
@@ -540,7 +540,7 @@
         (add db)
         (dissoc-temp)))
   ([db el]
-   (create (deselect db) (assoc el :selected? true))))
+   (create (deselect db) (assoc el :selected true))))
 
 (defn bool
   [path-a path-b operation]

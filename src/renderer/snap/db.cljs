@@ -6,7 +6,7 @@
 
 (def Snap
   [:map {:default {} :closed true}
-   [:enabled? {:default true} boolean?]
+   [:active {:default true} boolean?]
    [:threshold {:default 15} number?]
    [:nearest-neighbor {:optional true} [:map
                                         [:point Vec2D]

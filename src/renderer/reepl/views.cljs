@@ -23,9 +23,9 @@
 (defn mode-button
   [mode]
   (let [repl-mode @(rf/subscribe [::app.s/repl-mode])
-        active? (= repl-mode mode)]
+        active (= repl-mode mode)]
     [:button.button.rounded.px-1.leading-none.text-2xs.h-4
-     {:class [(when active? "selected")
+     {:class [(when active "selected")
               "m-0.5"]
       :on-click #(rf/dispatch [::app.e/set-repl-mode mode])}
      mode]))
@@ -40,7 +40,7 @@
                        :complete-word
                        :on-change]))]}
   (let [{:keys [_pos _count _text]} @state
-        repl-history? @(rf/subscribe [::app.s/panel-visible? :repl-history])]
+        repl-history? @(rf/subscribe [::app.s/panel-visible :repl-history])]
     [:div.flex.p-0.5.items-center.m-1
      [:div.flex.text-xs.self-start {:class "m-0.5"} (replumb.core/get-prompt)]
      ^{:key (str (hash (:js-cm-opts cm-opts)))}
@@ -118,36 +118,36 @@
     [repl-items items (assoc show-value-opts :set-text set-text)]]])
 
 (defn completion-item
-  [_text _selected? _active? _set-active]
+  [_text _selected _active _set-active]
   (let [ref (react/createRef)]
     (ra/create-class
      {:component-did-update
-      (fn [this [_ _ old-selected?]]
-        (let [[_ _ selected?] (ra/argv this)]
-          (when (and (not old-selected?)
-                     selected?)
+      (fn [this [_ _ old-selected]]
+        (let [[_ _ selected] (ra/argv this)]
+          (when (and (not old-selected)
+                     selected)
             (dom/scroll-into-view! (.-current ref)))))
       :reagent-render
-      (fn [text selected? active? set-active]
+      (fn [text selected active set-active]
         [:div.p-1.bg-secondary.text-nowrap
          {:on-click set-active
-          :class (and selected? (if active? "bg-accent" "bg-primary"))
+          :class (and selected (if active "bg-accent" "bg-primary"))
           :ref ref}
          text])})))
 
 (defn completion-list
-  [docs {:keys [pos words active? show-all?]} set-active]
+  [docs {:keys [pos words active show-all]} set-active]
   (let [items (map-indexed
                #(vector completion-item
                         (get %2 2)
                         (= %1 pos)
-                        active?
+                        active
                         (partial set-active %1)) words)]
     [:div.absolute.bottom-full.left-0.w-full.text-xs.mb-px
      (when docs [:div.bg-primary.drop-shadow.p-4.absolute.bottom-full docs])
      (into
       [:div.overflow-hidden.flex
-       {:class (when show-all? "flex-wrap")}]
+       {:class (when show-all "flex-wrap")}]
       items)]))
 
 (defn maybe-fn-docs
@@ -208,7 +208,7 @@
 
     (set-print! add-log)
     [:<>
-     (when @(rf/subscribe [::app.s/panel-visible? :repl-history])
+     (when @(rf/subscribe [::app.s/panel-visible :repl-history])
        [repl-items-panel @items show-value-opts set-text])
 
      [:div.relative.whitespace-pre-wrap.font-mono
@@ -217,7 +217,7 @@
        @complete-atom
         ;; TODO: this should also replace the text....
        identity
-       #_(swap! complete-atom assoc :pos % :active? true)]
+       #_(swap! complete-atom assoc :pos % :active true)]
       (let [_items @items] ; TODO: This needs to be removed
         [repl-input
          (s/current-text state)
@@ -236,7 +236,7 @@
 (defn root
   []
   [repl
-   :execute #(replumb/run-repl (if (= @(rf/subscribe [::app.s/repl-mode]) :cljs) %1 (str "(js/eval \"" %1 "\")")) {:verbose @(rf/subscribe [::app.s/debug-info?])} %2)
+   :execute #(replumb/run-repl (if (= @(rf/subscribe [::app.s/repl-mode]) :cljs) %1 (str "(js/eval \"" %1 "\")")) {:verbose @(rf/subscribe [::app.s/debug-info])} %2)
    :complete-word (fn [text] (replumb/process-apropos @(rf/subscribe [::app.s/repl-mode]) text))
    :get-docs replumb/process-doc
    :state state

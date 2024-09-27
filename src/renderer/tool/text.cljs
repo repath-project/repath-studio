@@ -22,7 +22,7 @@
                  of text. It's possible to apply a gradient, pattern,
                  clipping path, mask, or filter to <text>, like any other SVG
                  graphics element."
-   :locked-ratio? true
+   :ratio-locked true
    :attrs [:font-family
            :font-size
            :font-weight

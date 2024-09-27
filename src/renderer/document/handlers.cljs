@@ -17,7 +17,7 @@
   ([db, id :- uuid?]
    (let [document (-> (get-in db [:documents id])
                       (assoc :version (:version db)))]
-     (reduce #(update-in %1 [:elements %2] dissoc :selected?)
+     (reduce #(update-in %1 [:elements %2] dissoc :selected)
              (m/decode PersistedDocument document mt/strip-extra-keys-transformer)
              (keys (:elements document))))))
 
@@ -48,10 +48,10 @@
   (cond-> db
     (and active-document
          (-> db :dom-rect)
-         (-> db :window :focused?)
-         (not (get-in db [:documents (:active-document db) :focused?])))
+         (-> db :window :focused)
+         (not (get-in db [:documents (:active-document db) :focused])))
     (-> (frame.h/focus-bounds :original)
-        (assoc-in [:documents active-document :focused?] true))))
+        (assoc-in [:documents active-document :focused] true))))
 
 (mx/defn set-active
   [db, id :- uuid?]

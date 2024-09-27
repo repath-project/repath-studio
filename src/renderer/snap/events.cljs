@@ -8,7 +8,7 @@
  ::toggle
  [persist]
  (fn [db [_]]
-   (update-in db [:snap :enabled?] not)))
+   (update-in db [:snap :active] not)))
 
 (rf/reg-event-db
  ::toggle-option

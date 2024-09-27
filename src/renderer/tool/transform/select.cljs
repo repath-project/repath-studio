@@ -68,7 +68,7 @@
   (reduce (fn [db el]
             (cond-> db
               (hovered? db el intersecting?)
-              (f (:id el)))) db (filter :visible? (vals (element.h/elements db)))))
+              (f (:id el)))) db (filter :visible (vals (element.h/elements db)))))
 
 (defmethod tool.hierarchy/pointer-move :select
   [db {:keys [element] :as e}]
@@ -117,7 +117,7 @@
       (dissoc :clicked-element)
       (element.h/clear-ignored :bounding-box)
       (element.h/select (:id element) (pointer/shift? e))
-      (app.h/explain (if (:selected? element) "Deselect element" "Select element"))))
+      (app.h/explain (if (:selected element) "Deselect element" "Select element"))))
 
 (defmethod tool.hierarchy/double-click :select
   [db {:keys [element]}]
@@ -177,7 +177,7 @@
    |      y          ↖   │
    |      |            ↖ │
    □----------□--------- ■ :bottom-right (active handle)"
-  [db, [x y] :- Vec2D, lock-ratio? :- boolean?, in-place? :- boolean?, recur? :- boolean?]
+  [db, [x y] :- Vec2D, ratio-locked :- boolean?, in-place :- boolean?, recursive :- boolean?]
   (let [handle (-> db :clicked-element :id)
         bounds (element.h/bounds db)
         dimensions (bounds/->dimensions bounds)
@@ -192,24 +192,24 @@
                                :top-left [[(- x) (- y)] [x2 y2]]
                                :bottom-right [[x y] [x1 y1]]
                                :bottom-left [[(- x) y] [x2 y1]])
-        pivot-point (if in-place? [cx cy] pivot-point)
-        offset (cond-> offset in-place? (mat/mul 2))
+        pivot-point (if in-place [cx cy] pivot-point)
+        offset (cond-> offset in-place (mat/mul 2))
         ratio (mat/div (mat/add dimensions offset) dimensions)
-        lock-ratio? (or lock-ratio? (every? #(-> % :tag tool.hierarchy/properties :locked-ratio?) (element.h/selected db)))
-        ratio (cond-> ratio lock-ratio? (lock-ratio handle))
+        ratio-locked (or ratio-locked (every? #(-> % :tag tool.hierarchy/properties :ratio-locked) (element.h/selected db)))
+        ratio (cond-> ratio ratio-locked (lock-ratio handle))
         ;; TODO: Handle negative/inverted ratio.
         ratio (mapv #(max 0 %) ratio)]
     (-> db
         (assoc :pivot-point pivot-point)
-        (element.h/scale ratio pivot-point recur?))))
+        (element.h/scale ratio pivot-point recursive))))
 
 (mx/defn select-element
-  [db, multi? :- boolean?]
+  [db, multiple :- boolean?]
   (cond-> db
     (and (:clicked-element db)
-         (not (-> db :clicked-element :selected?))
+         (not (-> db :clicked-element :selected))
          (not= (-> db :clicked-element :id) :bounding-box))
-    (-> (element.h/select (-> db :clicked-element :id) multi?))))
+    (-> (element.h/select (-> db :clicked-element :id) multiple))))
 
 (defmethod tool.hierarchy/drag :select
   [{:keys [state adjusted-pointer-offset adjusted-pointer-pos] :as db} e]

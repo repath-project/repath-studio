@@ -32,16 +32,12 @@
  :-> :pivot-point)
 
 (rf/reg-sub
- ::drag?
- :-> :drag?)
+ ::drag
+ :-> :drag)
 
 (rf/reg-sub
- ::ruler-size
- :-> :ruler-size)
-
-(rf/reg-sub
- ::loading?
- :-> :loading?)
+ ::loading
+ :-> :loading)
 
 (rf/reg-sub
  ::cursor
@@ -107,12 +103,12 @@
      (merge css-property webref-css-property))))
 
 (rf/reg-sub
- ::backdrop?
- :-> :backdrop?)
+ ::backdrop
+ :-> :backdrop)
 
 (rf/reg-sub
- ::debug-info?
- :-> :debug-info?)
+ ::debug-info
+ :-> :debug-info)
 
 (rf/reg-sub
  ::clicked-element
@@ -141,21 +137,13 @@
  :-> :lang)
 
 (rf/reg-sub
- ::rulers-locked?
- :-> :rulers-locked?)
+ ::grid
+ :-> :grid)
 
 (rf/reg-sub
- ::rulers-visible?
- :-> :rulers-visible?)
-
-(rf/reg-sub
- ::grid-visible?
- :-> :grid-visible?)
-
-(rf/reg-sub
- ::panel-visible?
+ ::panel-visible
  (fn [db [_ k]]
-   (-> db :panels k :visible?)))
+   (-> db :panels k :visible)))
 
 (rf/reg-sub
  ::font-options

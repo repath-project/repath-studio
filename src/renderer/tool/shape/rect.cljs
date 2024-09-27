@@ -32,13 +32,13 @@
   (let [{:keys [stroke fill]} (get-in db [:documents active-document])
         [offset-x offset-y] adjusted-pointer-offset
         [pos-x pos-y] adjusted-pointer-pos
-        lock-ratio? (pointer/ctrl? e)
+        lock-ratio (pointer/ctrl? e)
         width (abs (- pos-x offset-x))
         height (abs (- pos-y offset-y))
         attrs {:x (min pos-x offset-x)
                :y (min pos-y offset-y)
-               :width (if lock-ratio? (min width height) width)
-               :height (if lock-ratio? (min width height) height)
+               :width (if lock-ratio (min width height) width)
+               :height (if lock-ratio (min width height) height)
                :fill fill
                :stroke stroke}]
     (element.h/assoc-temp db {:type :element

@@ -9,12 +9,12 @@
  h/history)
 
 (rf/reg-sub
- ::undos?
+ ::some-undos
  :<- [::history]
  h/undos?)
 
 (rf/reg-sub
- ::redos?
+ ::some-redos
  :<- [::history]
  h/redos?)
 

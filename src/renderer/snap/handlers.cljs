@@ -23,9 +23,9 @@
            clicked-element
            state] :as db}]
   (let [elements (element.h/elements db)
-        selected-visible (filter #(and (:visible? %)
-                                       (:selected? %)) (vals elements))]
-    (when (:enabled? snap)
+        selected-visible (filter #(and (:visible %)
+                                       (:selected %)) (vals elements))]
+    (when (:active snap)
       (cond
         (and (contains? #{:move :clone} state) (seq selected-visible))
         (reduce (fn [points element]
@@ -74,6 +74,6 @@
       :always
       (update :snap dissoc :nearest-neighbor)
 
-      (and (:enabled? snap) nearest-neighbor)
+      (and (:active snap) nearest-neighbor)
       (-> (assoc-in [:snap :nearest-neighbor] nearest-neighbor)
           (snap-to-offset f (mat/sub point base-point) more)))))

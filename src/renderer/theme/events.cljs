@@ -13,14 +13,14 @@
  ::set-document-attr
  (fn [{:keys [db]} _]
    (let [mode (-> db :theme :mode)
-         mode (if (= mode :system) (-> db :theme :native) mode)]
+         mode (if (= mode :system) (-> db :theme :native-mode) mode)]
      {::fx/set-document-attr (name mode)})))
 
 (rf/reg-event-fx
  ::set-native-mode
  persist
  (fn [{:keys [db]} [_ mode]]
-   {:db (assoc-in db [:theme :native] mode)
+   {:db (assoc-in db [:theme :native-mode] mode)
     :dispatch [::set-document-attr]}))
 
 (rf/reg-event-fx

@@ -37,7 +37,7 @@
 (defmethod tool.hierarchy/pointer-up :edit
   [db {:keys [element] :as e}]
   (if-not (and (= (:button e) :right)
-               (:selected? element))
+               (:selected element))
     (-> db
         (element.h/clear-ignored)
         (dissoc :clicked-element)

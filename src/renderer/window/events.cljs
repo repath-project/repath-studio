@@ -10,25 +10,25 @@
  ::set-maximized
  (rf/path :window)
  (fn [db [_ state]]
-   (assoc db :maximized? state)))
+   (assoc db :maximized state)))
 
 (rf/reg-event-db
  ::set-fullscreen
  (rf/path :window)
  (fn [db [_ state]]
-   (assoc db :fullscreen? state)))
+   (assoc db :fullscreen state)))
 
 (rf/reg-event-db
  ::set-minimized
  (rf/path :window)
  (fn [db [_ state]]
-   (assoc db :minimized? state)))
+   (assoc db :minimized state)))
 
 (rf/reg-event-db
  ::set-focused
  (fn [db [_ state]]
    (cond-> db
-     :always (assoc-in [:window :focused?] state)
+     :always (assoc-in [:window :focused] state)
      state document.h/center)))
 
 (rf/reg-event-fx

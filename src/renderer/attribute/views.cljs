@@ -196,13 +196,13 @@
   (let [clicked-element @(rf/subscribe [::app.s/clicked-element])
         property  @(rf/subscribe [::app.s/property k])
         dispatch-tag (if (contains? (methods hierarchy/description) [tag k]) tag :default)
-        active? (and (= (:type clicked-element) :handle)
+        active (and (= (:type clicked-element) :handle)
                      (= (:key clicked-element) key))]
     [:> HoverCard/Root
      [:> HoverCard/Trigger
       [:label.w-28.truncate
        {:for (name k)
-        :class (when active? "text-active")} k]]
+        :class (when active "text-active")} k]]
      [:> HoverCard/Portal
       [:> HoverCard/Content
        {:side "left"
@@ -219,14 +219,14 @@
        [:> HoverCard/Arrow {:class "popover-arrow"}]]]]))
 
 (defn row
-  [k v locked? tag]
+  [k v locked tag]
   (let [property @(rf/subscribe [::app.s/property k])
         initial (:initial property)
         dispatch-tag (if (contains? (methods hierarchy/form-element) [tag k]) tag :default)]
     [:<>
      [label tag k]
      [:div.flex.w-full
-      [hierarchy/form-element dispatch-tag k v {:disabled locked?
+      [hierarchy/form-element dispatch-tag k v {:disabled locked
                                                 :placeholder initial}]]]))
 
 (defn tag-info
@@ -257,7 +257,7 @@
   (let [selected-elements @(rf/subscribe [::element.s/selected])
         selected-tags @(rf/subscribe [::element.s/selected-tags])
         selected-attrs @(rf/subscribe [::element.s/selected-attrs])
-        locked? @(rf/subscribe [::element.s/selected-locked?])
+        locked @(rf/subscribe [::element.s/selected-locked])
         tag (first selected-tags)]
     (when-first [el selected-elements]
       [:div.pr-px
@@ -272,6 +272,6 @@
        [:div.grid.grid-cols-2.grid-flow-row.my-px.w-full.gap-px
         {:style {:grid-template-columns "minmax(100px, auto) 1fr"}}
         (for [[k v] selected-attrs]
-          ^{:key k} [row k v locked? tag])]])))
+          ^{:key k} [row k v locked tag])]])))
 
 (defmethod tool.hierarchy/right-panel :default [] [form])

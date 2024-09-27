@@ -38,9 +38,9 @@
    [:label {:optional true} string?]
    [:parent {:optional true} uuid?]
    [:type {:optional true} [:= :element]]
-   [:visible? {:optional true} boolean?]
-   [:locked? {:optional true} boolean?]
-   [:selected? {:optional true} boolean?]
+   [:visible {:optional true} boolean?]
+   [:locked {:optional true} boolean?]
+   [:selected {:optional true} boolean?]
    [:children {:default [] :optional true} [:vector uuid?]]
    [:bounds {:optional true} Bounds]
    [:content {:optional true} string?]
@@ -51,5 +51,5 @@
 (def explain (m/explainer Element))
 
 (def default (m/decode Element {:type :element
-                                :visible? true
+                                :visible true
                                 :children []} mt/default-value-transformer))

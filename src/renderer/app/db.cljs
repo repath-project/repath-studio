@@ -8,6 +8,7 @@
    [renderer.document.db :refer [Document]]
    [renderer.element.db :refer [Element Handle]]
    [renderer.notification.db :refer [Notification]]
+   [renderer.ruler.db :refer [Ruler]]
    [renderer.snap.db :refer [Snap]]
    [renderer.theme.db :refer [Theme]]
    [renderer.timeline.db :refer [Timeline]]
@@ -17,13 +18,13 @@
    [renderer.window.db :refer [Window]]))
 
 (def Panels
-  [:map-of {:default {:tree {:visible? true}
-                      :properties {:visible? true}
-                      :timeline {:visible? false}
-                      :xml {:visible? false}
-                      :history {:visible? false}
-                      :repl-history {:visible? false}}}
-   keyword? [:map [:visible? boolean?]]])
+  [:map-of {:default {:tree {:visible true}
+                      :properties {:visible true}
+                      :timeline {:visible false}
+                      :xml {:visible false}
+                      :history {:visible false}
+                      :repl-history {:visible false}}}
+   keyword? [:map [:visible boolean?]]])
 
 (def DomRect
   [:map {:closed true}
@@ -54,30 +55,28 @@
    [:pointer-offset {:optional true} Vec2D]
    [:adjusted-pointer-pos {:default [0 0]} Vec2D]
    [:adjusted-pointer-offset {:optional true} Vec2D]
-   [:drag? {:optional true} boolean?]
+   [:drag {:optional true} boolean?]
    [:zoom-sensitivity {:default 0.75} [:and number? pos?]]
    [:event-time {:optional true} number?]
    [:double-click-delta {:default 250} [:and number? pos?]]
    [:state {:default :default} State]
-   [:grid-visible? {:default false :persist true} boolean?]
-   [:rulers-visible? {:default true :persist true} boolean?]
+   [:grid {:default false :persist true} boolean?]
+   [:ruler {:persist true} Ruler]
    [:snap {:persist true} Snap]
    [:active-document {:optional true :persist true} [:maybe uuid?]]
    [:cursor {:default "default"} string?]
    [:dom-rect {:optional true} DomRect]
-   [:rulers-locked? {:default false} boolean?]
    [:dialogs {:default []} [:vector Dialog]]
    [:documents {:default {} :persist true} [:map-of uuid? Document]]
    [:document-tabs {:default [] :persist true} [:vector uuid?]]
    [:recent {:max 10 :default [] :persist true} [:vector string?]]
    [:drag-threshold {:default 1} number?]
-   [:ruler-size {:default 23} number?]
    [:system-fonts {:optional true} vector?]
    [:notifications {:default []} [:* Notification]]
-   [:debug-info? {:default false} boolean?]
-   [:pen-mode? {:default false} boolean?]
-   [:backdrop? {:default false} boolean?]
-   [:loading? {:default false} boolean?]
+   [:debug-info {:default false} boolean?]
+   [:pen-mode {:default false} boolean?]
+   [:backdrop {:default false} boolean?]
+   [:loading {:default false} boolean?]
    [:explanation {:optional true} string?]
    [:lang {:default :en-Us :persist true} Lang]
    [:repl-mode {:default :cljs} keyword?]

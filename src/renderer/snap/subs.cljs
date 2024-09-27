@@ -11,9 +11,9 @@
  :-> :snap)
 
 (rf/reg-sub
- ::enabled?
+ ::active
  :<- [::snap]
- :-> :enabled?)
+ :-> :active)
 
 (rf/reg-sub
  ::options
@@ -28,10 +28,10 @@
 (rf/reg-sub
  ::points
  :<- [::element.s/non-selected-visible]
- :<- [::enabled?]
+ :<- [::active]
  :<- [::options]
- (fn [[non-selected-visible-elements enabled? options] _]
-   (when enabled?
+ (fn [[non-selected-visible-elements active options] _]
+   (when active
      (reduce (fn [points element]
                (apply conj points (utils.el/snapping-points element options)))
              [] non-selected-visible-elements))))

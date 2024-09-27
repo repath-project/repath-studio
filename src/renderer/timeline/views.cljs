@@ -150,7 +150,7 @@
   []
   (let [t @(rf/subscribe [::timeline.s/time])
         end @(rf/subscribe [::timeline.s/end])
-        timeline? @(rf/subscribe [::app.s/panel-visible? :timeline])]
+        timeline? @(rf/subscribe [::app.s/panel-visible :timeline])]
     [:div.h-px.block.absolute.bottom-0.left-0
      {:style {:width (str (* (/ t end) 100) "%")
               :background (when-not (or (zero? t) (zero? end) timeline?)

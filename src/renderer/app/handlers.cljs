@@ -35,7 +35,7 @@
 
 (mx/defn pointer-handler
   [db, e :- PointerEvent, now :- number?]
-  (let [{:keys [pointer-offset tool dom-rect drag? primary-tool drag-threshold]} db
+  (let [{:keys [pointer-offset tool dom-rect drag primary-tool drag-threshold]} db
         {:keys [button buttons pointer-pos]} e
         adjusted-pointer-pos (frame.h/adjust-pointer-pos db pointer-pos)]
     (case (:type e)
@@ -46,10 +46,10 @@
                 (not= tool :pan)
                 (frame.h/pan-out-of-canvas dom-rect pointer-pos pointer-offset)
 
-                (not drag?)
+                (not drag)
                 (-> (tool.hierarchy/drag-start e)
                     (add-fx [::fx/set-pointer-capture (:pointer-id e)])
-                    (assoc :drag? true))
+                    (assoc :drag true))
 
                 :always
                 (tool.hierarchy/drag e))
@@ -72,7 +72,7 @@
         (tool.hierarchy/pointer-down e))
 
       "pointerup"
-      (cond-> (if drag?
+      (cond-> (if drag
                 (-> (tool.hierarchy/drag-end db e)
                     (add-fx [::fx/release-pointer-capture (:pointer-id e)]))
                 (if (= button :right)
@@ -87,7 +87,7 @@
             (dissoc :primary-tool))
 
         :always
-        (-> (dissoc :pointer-offset :drag?)
+        (-> (dissoc :pointer-offset :drag)
             (update :snap dissoc :nearest-neighbor)))
 
       db)))

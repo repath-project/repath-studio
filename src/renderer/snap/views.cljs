@@ -44,7 +44,7 @@
   []
   [:button.icon-button.items-center.px-1.gap-1
    {:title "Snap"
-    :class (when @(rf/subscribe [::snap.s/enabled?]) "selected")
+    :class (when @(rf/subscribe [::snap.s/active]) "selected")
     :style {:margin-right 0
             :width "auto"
             :display "flex"}

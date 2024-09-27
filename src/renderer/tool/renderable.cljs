@@ -23,7 +23,7 @@
   [db]
   (-> db
       (assoc :cursor "crosshair")
-      (dissoc :drag? :pointer-offset :clicked-element)
+      (dissoc :drag :pointer-offset :clicked-element)
       (element.h/dissoc-temp)))
 
 (defmethod tool.hierarchy/drag-start ::tool.hierarchy/renderable

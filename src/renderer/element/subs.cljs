@@ -32,13 +32,13 @@
  ::filter-visible
  :<- [::document.s/elements]
  (fn [elements [_ ks]]
-   (filter :visible? (mapv #(get elements %) ks))))
+   (filter :visible (mapv #(get elements %) ks))))
 
 (rf/reg-sub
  ::selected
  :<- [::document.s/elements]
  (fn [elements _]
-   (filter :selected? (vals elements))))
+   (filter :selected (vals elements))))
 
 (rf/reg-sub
  ::selected-descendant-ids
@@ -50,9 +50,9 @@
  :<- [::document.s/elements]
  :<- [::selected-descendant-ids]
  (fn [[elements selected-descendant-ids] _]
-   (filter #(and (not (:selected? %))
+   (filter #(and (not (:selected %))
                  (not (contains? selected-descendant-ids (:id %)))
-                 (:visible? %)) (vals elements))))
+                 (:visible %)) (vals elements))))
 
 (rf/reg-sub
  ::hovered
@@ -68,18 +68,18 @@
    (reduce #(conj %1 (:tag %2)) #{} selected-elements)))
 
 (rf/reg-sub
- ::selected?
+ ::some-selected
  :<- [::selected]
  seq)
 
 (rf/reg-sub
- ::selected-locked?
+ ::selected-locked
  :<- [::selected]
  (fn [selected-elements _]
-   (not-any? #(not (:locked? %)) selected-elements)))
+   (not-any? #(not (:locked %)) selected-elements)))
 
 (rf/reg-sub
- ::multiple-selected?
+ ::multiple-selected
  :<- [::selected]
  (fn [selected-elements _]
    (seq (rest selected-elements))))
@@ -87,14 +87,14 @@
 (rf/reg-sub
  ::selected-attrs
  :<- [::selected]
- :<- [::multiple-selected?]
- (fn [[selected-elements multiple-selected?] _]
+ :<- [::multiple-selected]
+ (fn [[selected-elements multiple-selected] _]
    (when (seq selected-elements)
      (let [attrs (->> selected-elements
                       (map utils.el/attributes)
                       (apply utils.map/merge-common-with
                              (fn [v1 v2] (if (= v1 v2) v1 nil))))
-           attrs (if multiple-selected?
+           attrs (if multiple-selected
                    (dissoc attrs :id)
                    (sort-by (fn [[id _]]
                               (-> (first selected-elements)
@@ -140,7 +140,7 @@
 
 
 (rf/reg-sub
- ::top-level?
+ ::every-top-level
  :<- [::root]
  :<- [::ancestor-ids]
  (fn [[root ancestor-ids] _]

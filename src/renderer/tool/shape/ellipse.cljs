@@ -34,15 +34,15 @@
   (let [{:keys [stroke fill]} (get-in db [:documents active-document])
         [offset-x offset-y] adjusted-pointer-offset
         [pos-x pos-y] adjusted-pointer-pos
-        lock-ratio? (pointer/ctrl? e)
+        lock-ratio (pointer/ctrl? e)
         rx (abs (- pos-x offset-x))
         ry (abs (- pos-y offset-y))
         attrs {:cx offset-x
                :cy offset-y
                :fill fill
                :stroke stroke
-               :rx (if lock-ratio? (min rx ry) rx)
-               :ry (if lock-ratio? (min rx ry) ry)}]
+               :rx (if lock-ratio (min rx ry) rx)
+               :ry (if lock-ratio (min rx ry) ry)}]
     (element.h/assoc-temp db {:type :element
                               :tag :ellipse
                               :attrs attrs})))

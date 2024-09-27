@@ -57,9 +57,9 @@
            (into [:span.inline-flex.text-muted {:class "gap-1.5"}])))))
 
 (mx/defn radio-icon-button
-  [icon-name :- string?, active? :- boolean?, & {:keys [class] :as props} :- Props]
+  [icon-name :- string?, active :- boolean?, & {:keys [class] :as props} :- Props]
   [:button.icon-button.radio-icon-button
-   (assoc props :class [class (when active? "selected")])
+   (assoc props :class [class (when active "selected")])
    [renderer.ui/icon icon-name]])
 
 (defn context-menu-item

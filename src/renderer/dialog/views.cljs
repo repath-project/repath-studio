@@ -121,7 +121,7 @@
           (cond->> title
             (string? title)
             (into [:div.text-xl.pl-5.pr-10.pt-5]))])
-       (when (:close-button? (last dialogs))
+       (when (:close-button (last dialogs))
          [:> Dialog/Close
           {:class "close-button small"
            :aria-label "Close"}

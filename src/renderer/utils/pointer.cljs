@@ -19,7 +19,7 @@
    [:pressure [:maybe number?]]
    [:pointer-type [:enum "mouse" "pen" "touch"]]
    [:pointer-id number?]
-   [:primary? boolean?]
+   [:primary boolean?]
    [:button [:maybe PointerButton]]
    [:buttons [:maybe PointerButton]]
    [:modifiers [:set ModifierKey]]])
@@ -86,7 +86,7 @@
                                             :pressure (.-pressure e)
                                             :pointer-type (.-pointerType e)
                                             :pointer-id (.-pointerId e)
-                                            :primary? (.-isPrimary e)
+                                            :primary (.-isPrimary e)
                                             :button (button->key (.-button e))
                                             :buttons (button->key (.-buttons e))
                                             :modifiers (modifiers e)}]))

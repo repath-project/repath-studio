@@ -61,16 +61,16 @@
         size (/ handle-size zoom)
         stroke-width (/ 1 zoom)
         pointer-handler #(pointer/event-handler! % el)
-        active? (and (= (:id clicked-element) id)
-                     (= (:element clicked-element) element))]
-    [:rect {:fill (if active? accent accent-inverted)
-            :stroke (if active? accent "#777")
+        active (and (= (:id clicked-element) id)
+                    (= (:element clicked-element) element))]
+    [:rect {:fill (if active accent accent-inverted)
+            :stroke (if active accent "#777")
             :stroke-width stroke-width
             :x (- x (/ size 2))
             :y (- y (/ size 2))
             :width size
             :height size
-            :cursor (if (or active? (not cursor)) "default" cursor)
+            :cursor (if (or active (not cursor)) "default" cursor)
             :on-pointer-up pointer-handler
             :on-pointer-down pointer-handler
             :on-pointer-move pointer-handler
@@ -303,7 +303,7 @@
    ["Pointer offset" (str @(rf/subscribe [::app.s/pointer-offset]))]
    ["Adjusted pointer offset"
     (str (mapv #(.toFixed % 2) @(rf/subscribe [::app.s/adjusted-pointer-offset])))]
-   ["Pointer drag?" (str @(rf/subscribe [::app.s/drag?]))]
+   ["Pointer drag?" (str @(rf/subscribe [::app.s/drag]))]
    ["Pan" (str (mapv #(.toFixed % 2) @(rf/subscribe [::document.s/pan])))]
    ["Active tool" @(rf/subscribe [::app.s/tool])]
    ["Primary tool" @(rf/subscribe [::app.s/primary-tool])]

@@ -8,6 +8,8 @@
    [renderer.document.subs :as-alias document.s]
    [renderer.frame.events :as-alias frame.e]
    [renderer.frame.subs :as-alias frame.s]
+   [renderer.ruler.events :as-alias ruler.e]
+   [renderer.ruler.subs :as-alias ruler.s]
    [renderer.snap.views :as snap.v]
    [renderer.timeline.views :as timeline.v]
    [renderer.ui :as ui]
@@ -64,28 +66,28 @@
 
 (def view-radio-buttons
   [{:title "Timeline"
-    :active? [::app.s/panel-visible? :timeline]
+    :active [::app.s/panel-visible :timeline]
     :icon "animation"
     :class "hidden sm:inline-block shrink-0"
     :action [::app.e/toggle-panel :timeline]}
    {:title "Grid"
-    :active? [::app.s/grid-visible?]
+    :active [::app.s/grid]
     :icon "grid"
     :class "shrink-0"
     :action [::app.e/toggle-grid]}
    {:title "Rulers"
-    :active? [::app.s/rulers-visible?]
+    :active [::ruler.s/visible]
     :icon "ruler-combined"
     :class "shrink-0"
-    :action [::app.e/toggle-rulers]}
+    :action [::ruler.e/toggle-visible]}
    {:title "History"
-    :active? [::app.s/panel-visible? :history]
+    :active [::app.s/panel-visible :history]
     :icon "history"
     :class "hidden sm:inline-block shrink-0"
     :action [::app.e/toggle-panel :history]}
    {:title "XML"
     :class "hidden sm:inline-block shrink-0"
-    :active? [::app.s/panel-visible? :xml]
+    :active [::app.s/panel-visible :xml]
     :icon "code"
     :action [::app.e/toggle-panel :xml]}])
 
@@ -144,7 +146,7 @@
 
 (defn root []
   (let [help-message @(rf/subscribe [::app.s/help])
-        loading? @(rf/subscribe [::worker.s/loading?])
+        loading @(rf/subscribe [::worker.s/loading])
         fill @(rf/subscribe [::document.s/fill])
         stroke @(rf/subscribe [::document.s/stroke])]
     [:div.toolbar.bg-primary.mt-px.relative
@@ -157,12 +159,12 @@
       [:div.px-1.hidden.2xl:flex.gap-1.flex-wrap.leading-none.truncate
        {:style {:max-height "var(--button-size)"}}
        help-message]]
-     (when loading?
+     (when loading
        [:span.icon-button.relative
         [ui/icon "spinner" {:class "loading"}]])
      (into [:<>]
-           (map (fn [{:keys [title active? icon action class]}]
-                  [ui/radio-icon-button icon @(rf/subscribe active?)
+           (map (fn [{:keys [title active icon action class]}]
+                  [ui/radio-icon-button icon @(rf/subscribe active)
                    {:title title
                     :class class
                     :on-click #(rf/dispatch action)}])

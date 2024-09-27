@@ -75,36 +75,25 @@
 (rf/reg-event-db
  ::toggle-debug-info
  (fn [db [_]]
-   (update db :debug-info? not)))
+   (update db :debug-info not)))
 
 (rf/reg-event-db
  ::set-backdrop
- (fn [db [_ visible?]]
-   (assoc db :backdrop? visible?)))
-
-(rf/reg-event-db
- ::toggle-rulers
- persist
- (fn [db [_]]
-   (update db :rulers-visible? not)))
-
-(rf/reg-event-db
- ::toggle-rulers-locked
- (fn [db [_]]
-   (update db :rulers-locked? not)))
+ (fn [db [_ visible]]
+   (assoc db :backdrop visible)))
 
 (rf/reg-event-db
  ::toggle-grid
  persist
  (fn [db [_]]
-   (update db :grid-visible? not)))
+   (update db :grid not)))
 
 (rf/reg-event-db
  ::toggle-panel
  [persist
   (rf/path :panels)]
  (fn [db [_ k]]
-   (update-in db [k :visible?] not)))
+   (update-in db [k :visible] not)))
 
 (rf/reg-event-fx
  ::pointer-event

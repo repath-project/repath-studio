@@ -18,7 +18,7 @@
 (mx/defn pointer
   [orientation :- Direction]
   (let [[x y] @(rf/subscribe [::app.s/pointer-pos])
-        ruler-size @(rf/subscribe [::app.s/ruler-size])
+        ruler-size @(rf/subscribe [::ruler.s/size])
         pointer-size (/ ruler-size 5)
         size-diff (- ruler-size pointer-size)]
     [:polygon {:points (str/join " " (if (= orientation :vertical)
@@ -49,29 +49,28 @@
    step :- number?,
    font-size :- number?,
    text :- string?]
-  (let [vertical? (= orientation :vertical)]
-    [:text {:x (if vertical? 19 (+ step 4))
-            :y (if vertical? (- step 8) (+ font-size 1))
-            :writing-mode (when vertical? "vertical-rl")
+  (let [vertical (= orientation :vertical)]
+    [:text {:x (if vertical 19 (+ step 4))
+            :y (if vertical (- step 8) (+ font-size 1))
+            :writing-mode (when vertical "vertical-rl")
             :fill "var(--font-color)"
             :font-size font-size
-            :rotate (when vertical? 180)
+            :rotate (when vertical 180)
             :font-family "var(--font-mono"}
-     (if vertical? (reverse text) text)]))
+     (if vertical (reverse text) text)]))
 
 (mx/defn base-lines
   [orientation :- Direction]
   (let [[x y] @(rf/subscribe [::frame.s/viewbox])
         zoom @(rf/subscribe [::document.s/zoom])
         steps-coll @(rf/subscribe [::ruler.s/steps-coll orientation])
-        ruler-size @(rf/subscribe [::app.s/ruler-size])]
+        ruler-size @(rf/subscribe [::ruler.s/size])]
     (into [:g]
           (map-indexed
            (fn [i step]
              (let [adjusted-step (* zoom step)
                    font-size 9
-                   vertical? (= orientation :vertical)
-                   text (-> (+ step (if vertical? y x))
+                   text (-> (+ step (if (= orientation :vertical) y x))
                             Math/round
                             str)]
                (cond
@@ -98,9 +97,10 @@
 
 (mx/defn ruler
   [orientation :- Direction]
-  (let [ruler-size @(rf/subscribe [::app.s/ruler-size])]
-    [:svg {:width  (if (= orientation :vertical) ruler-size "100%")
-           :height (if (= orientation :vertical) "100%" ruler-size)}
+  (let [ruler-size @(rf/subscribe [::ruler.s/size])
+        vertical (= orientation :vertical)]
+    [:svg {:width  (if vertical ruler-size "100%")
+           :height (if vertical "100%" ruler-size)}
      [bounds-rect orientation]
      [base-lines orientation]
      [pointer orientation]]))
@@ -111,7 +111,7 @@
         [x y width height] @(rf/subscribe [::frame.s/viewbox])
         [width height] (mat/add [width height] [x y])
         steps-coll @(rf/subscribe [::ruler.s/steps-coll orientation])
-        vertical? (= orientation :vertical)]
+        vertical (= orientation :vertical)]
     (into [:g]
           (map-indexed
            (fn [i step]
@@ -119,10 +119,10 @@
                    step-y (+ step y)
                    main? (zero? (rem i 10))]
                (when (or main? (< zoom 50))
-                 [:line {:x1 (if vertical? x step-x)
-                         :y1 (if vertical? step-y y)
-                         :x2 (if vertical? width step-x)
-                         :y2 (if vertical? step-y height)
+                 [:line {:x1 (if vertical x step-x)
+                         :y1 (if vertical step-y y)
+                         :x2 (if vertical width step-x)
+                         :y2 (if vertical step-y height)
                          :stroke-width (/ 1 zoom)
                          :opacity (if main? ".3"  ".1")
                          :stroke "#777"

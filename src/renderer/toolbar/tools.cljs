@@ -12,14 +12,14 @@
   [tool]
   (let [active-tool @(rf/subscribe [::app.s/tool])
         primary-tool @(rf/subscribe [::app.s/primary-tool])
-        selected? (= active-tool tool)
-        primary? (= primary-tool tool)]
+        active (= active-tool tool)
+        primary (= primary-tool tool)]
     (when (:icon (tool.hierarchy/properties tool))
       [:> Tooltip/Root
        [:> Tooltip/Trigger {:as-child true}
         [:span
-         [ui/radio-icon-button (:icon (tool.hierarchy/properties tool)) selected?
-          {:class (when primary? "outline-shadow")
+         [ui/radio-icon-button (:icon (tool.hierarchy/properties tool)) active
+          {:class (when primary "outline-shadow")
            :on-click #(rf/dispatch [::app.e/set-tool tool])}]]]
        [:> Tooltip/Portal
         [:> Tooltip/Content

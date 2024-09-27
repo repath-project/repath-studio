@@ -112,7 +112,7 @@
   (rf/dispatch-sync [::app.e/set-lang platform/system-language])
   (rf/dispatch-sync [::app.e/load-local-db])
   (rf/dispatch-sync [::document.e/init])
-  (rf/dispatch-sync [::theme.e/set-native-mode (theme.fx/native theme.fx/native-query)])
+  (rf/dispatch-sync [::theme.e/set-native-mode (theme.fx/native-mode! theme.fx/native-query!)])
   (rf/dispatch-sync [::theme.e/add-native-listener])
   (rf/dispatch-sync [::theme.e/set-document-attr])
   (rf/dispatch-sync [::app.e/set-mdn (js->clj mdn :keywordize-keys true)])

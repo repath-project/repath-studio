@@ -17,7 +17,7 @@
   {:icon "circle-alt"
    :description "The <circle> SVG element is an SVG basic shape, used to draw
                  circles based on a center point and a radius."
-   :locked-ratio? true
+   :ratio-locked true
    :attrs [:stroke-width
            :opacity
            :fill

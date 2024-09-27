@@ -24,7 +24,7 @@
    [:temp-element {:optional true} map?] ; REVIEW
    [:pan {:default [0 0]} Vec2D]
    [:elements {:default {} :persist true} [:map-of uuid? Element]]
-   [:focused? {:optional true} boolean?]])
+   [:focused {:optional true} boolean?]])
 
 (def PersistedDocument
   (->> Document
