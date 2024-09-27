@@ -356,7 +356,9 @@
     }
   }
 
-  .select-trigger {
-    @apply button px-2 overlay rounded;
+  .form-control-button {
+    @apply button bg-primary text-muted p-1 h-auto;
+    width: 26px;
+    height: 26px;
   }
 }

@@ -113,8 +113,7 @@
   [id collapsed]
   [ui/icon-button
    (if collapsed "chevron-right" "chevron-down")
-   {:class "small"
-    :title (if collapsed "expand" "collapse")
+   {:title (if collapsed "expand" "collapse")
     :on-pointer-up dom/stop-propagation!
     :on-click #(rf/dispatch (if collapsed
                               [::document.e/expand-el id]

@@ -24,38 +24,42 @@
   (let [points (str/join " " (flatten (vec/remove-nth points i)))]
     (rf/dispatch [::element.e/set-attr :points points])))
 
+(defn point-row
+  [i [x y] points]
+  [:div.grid.grid-flow-col.gap-px
+   {:style {:grid-template-columns "minmax(0, 40px) 3fr 3fr 26px"}}
+   [:label.px-1.bg-transparent i]
+   [:input.bg-transparent
+    {:key (str "x-" i) :default-value x}]
+   [:input.bg-transparent
+    {:key (str "y-" i) :default-value y}]
+   [:button.button.bg-transparent.text-muted.h-full.rounded
+    {:on-click #(remove-nth points i)}
+    [ui/icon "times"]]])
+
+(defn points-popover
+  [points]
+  [:> Popover/Root {:modal true}
+   [:> Popover/Trigger
+    {:class "form-control-button"}
+    [ui/icon "pencil"]]
+   [:> Popover/Portal
+    [:> Popover/Content
+     {:sideOffset 5
+      :className "popover-content"
+      :align "end"}
+     [:div.flex.overflow-hidden
+      {:style {:max-height "50vh"}}
+      [ui/scroll-area
+       [:div.p-4.flex.flex-col.gap-px
+        (map-indexed (fn [index point]
+                       ^{:key (str "point-" index)}
+                       [point-row index point points]) points)]]]
+     [:> Popover/Arrow {:class "popover-arrow"}]]]])
+
 (defmethod hierarchy/form-element [:default :points]
   [_ k v {:keys [disabled]}]
-  (let [state-default? (= @(rf/subscribe [::app.s/state]) :default)]
+  (let [state-default (= @(rf/subscribe [::app.s/state]) :default)]
     [:div.flex.gap-px.w-full
-     [v/form-input k (if state-default? v "waiting") {:disabled (or disabled (not v) (not state-default?))}]
-     (when v
-       [:> Popover/Root {:modal true}
-        [:> Popover/Trigger {:as-child true}
-         [:button.inline-block.bg-primary.text-muted
-          {:style {:flex "0 0 26px"}}
-          [ui/icon "pencil" {:class "small"}]]]
-        [:> Popover/Portal
-         [:> Popover/Content
-          {:sideOffset 5
-           :className "popover-content"
-           :align "end"}
-          (when state-default?
-            (let [points (utils.attr/points->vec v)]
-              [:div.flex.overflow-hidden
-               {:style {:max-height "50vh"}}
-               [ui/scroll-area
-                [:div.p-4.flex.flex-col.gap-px
-                 (map-indexed (fn [index [x y]]
-                                ^{:key (str "point-" index)}
-                                [:div.grid.grid-flow-col.gap-px
-                                 {:style {:grid-template-columns "minmax(0, 40px) 3fr 3fr 26px"}}
-                                 [:label.px-1.bg-transparent index]
-                                 [:input.bg-transparent
-                                  {:key (str "x-" index v) :default-value x}]
-                                 [:input.bg-transparent
-                                  {:key (str "y-" index v) :default-value y}]
-                                 [:button.button.bg-transparent.text-muted.h-full.rounded
-                                  {:on-click #(remove-nth points index)}
-                                  [ui/icon "times"]]]) points)]]]))
-          [:> Popover/Arrow {:class "popover-arrow"}]]]])]))
+     [v/form-input k (if state-default v "waiting") {:disabled (or disabled (not v) (not state-default))}]
+     (when v [points-popover (utils.attr/points->vec v)])]))

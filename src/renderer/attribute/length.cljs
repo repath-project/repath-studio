@@ -40,14 +40,12 @@
                      (rf/dispatch [::element.e/update-attr-and-focus k - 1])
                      (rf/dispatch [::element.e/update-attr-and-focus k + 1]))))}]
    [:div.flex.gap-px
-    [:button.button.bg-primary.text-muted.h-full
-     {:style {:width "26px"}
-      :disabled disabled
+    [:button.form-control-button
+     {:disabled disabled
       :on-pointer-down #(rf/dispatch [::element.e/update-attr k - 1])}
      [ui/icon "minus"]]
-    [:button.button.bg-primary.text-muted.h-full
-     {:style {:width "26px"}
-      :disabled disabled
+    [:button.form-control-button
+     {:disabled disabled
       :on-click #(rf/dispatch [::element.e/update-attr k + 1])}
      [ui/icon "plus"]]]])
 

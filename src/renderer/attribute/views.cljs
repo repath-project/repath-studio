@@ -130,15 +130,11 @@
        :onValueChange #(rf/dispatch [::element.e/set-attr k %])
        :disabled disabled}
       [:> Select/Trigger
-       {:class "select-trigger h-full"
-        :aria-label (name k)
-        :style {:background "var(--bg-primary)"
-                :border-radius 0
-                :width "26px"
-                :height "26px"}}
+       {:class "form-control-button"
+        :aria-label (name k)}
        [:> Select/Value ""]
        [:> Select/Icon
-        [ui/icon "chevron-down" {:class "small"}]]]
+        [ui/icon "chevron-down"]]]
       [:> Select/Portal
        [:> Select/Content
         {:class "menu-content rounded select-content"

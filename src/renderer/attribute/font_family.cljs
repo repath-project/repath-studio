@@ -49,10 +49,9 @@
        :onOpenChange (fn [state]
                        (when (and state (empty? suggestions))
                          (rf/dispatch [::app.e/load-system-fonts])))}
-      [:> Popover/Trigger {:as-child true}
-       [:button.inline-block.bg-primary.text-muted.h-full
-        {:style {:flex "0 0 26px"}}
-        [ui/icon "magnifier" {:class "small"}]]]
+      [:> Popover/Trigger
+       {:class "form-control-button"}
+       [ui/icon "magnifier"]]
       [:> Popover/Portal
        [:> Popover/Content
         {:sideOffset 5

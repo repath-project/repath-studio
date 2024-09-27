@@ -37,7 +37,7 @@
          [ui/icon-button
           "times"
           {:aria-label "Close"
-           :class "close-button small"
+           :class "close-button"
            :on-click #(rf/dispatch [::notification.e/remove index])}]
          (when-let [n (:count notification)]
            [:div.absolute.bg-error.left-0.top-0.px-1.py-0.5.rounded

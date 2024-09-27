@@ -137,10 +137,9 @@
                      (not state-default?))}]
      (when v
        [:> Popover/Root {:modal true}
-        [:> Popover/Trigger {:as-child true}
-         [:button.inline-block.bg-primary.text-muted.h-full
-          {:style {:flex "0 0 26px"}}
-          [ui/icon "pencil" {:class "small"}]]]
+        [:> Popover/Trigger
+         {:class "form-control-button"}
+         [ui/icon "pencil"]]
         [:> Popover/Portal
          [:> Popover/Content {:sideOffset 5
                               :className "popover-content"

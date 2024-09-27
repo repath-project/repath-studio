@@ -11,10 +11,9 @@
   [:div.flex.gap-px.w-full
    [v/form-input k v attrs]
    [:> Popover/Root {:modal true}
-    [:> Popover/Trigger {:as-child true}
-     [:button.button.bg-primary.text-muted.h-full
-      {:style {:width "26px"}}
-      [ui/icon "degrees" {:class "small"}]]]
+    [:> Popover/Trigger
+     {:class "form-control-button"}
+     [ui/icon "degrees"]]
     [:> Popover/Portal
      [:> Popover/Content
       {:sideOffset 5

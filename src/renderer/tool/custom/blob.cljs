@@ -42,11 +42,9 @@
   (let [random-seed (rand-int 1000000)]
     [:div.flex.flex-row.gap-px.w-full
      [attr.v/form-input k v (merge attrs {:placeholder 0})]
-     [:button.button.inline-block.bg-primary.text-muted
+     [:button.form-control-button
       {:title "Generate random seed"
        :disabled disabled
-       :style {:flex "0 0 26px"
-               :height "100%"}
        :on-click #(rf/dispatch [::element.e/set-attr k random-seed])}
       [ui/icon "refresh"]]]))
 

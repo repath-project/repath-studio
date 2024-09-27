@@ -174,12 +174,12 @@
            [:> Select/Root
             {:onValueChange #(rf/dispatch [::document.e/new-from-template (get paper-size %)])}
             [:> Select/Trigger
-             {:class "select-trigger"
+             {:class "button px-2 overlay rounded"
               :aria-label "Select size"}
-             [:div.flex.items-center
+             [:div.flex.items-center.gap-2
               [:> Select/Value {:placeholder "Select template"}]
               [:> Select/Icon
-               [ui/icon "chevron-down" {:class "small ml-2"}]]]]
+               [ui/icon "chevron-down"]]]]
             [:> Select/Portal
              [:> Select/Content
               {:class "menu-content rounded select-content"

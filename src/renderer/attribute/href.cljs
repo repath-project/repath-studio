@@ -35,11 +35,9 @@
                      data-url?
                      (not v)
                      (not state-default?))}]
-     [:button.button.inline-block.bg-primary.text-muted
+     [:button.form-control-button
       {:title "Select file"
        :disabled disabled
-       :style {:flex "0 0 26px"
-               :height "100%"}
        :on-click #(file/open!
                    {:startIn "pictures"
                     :types [{:accept {"image/png" [".png"]
