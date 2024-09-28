@@ -8,6 +8,7 @@
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.events :as-alias element.e]
    [renderer.element.handlers :as element.h]
+   [renderer.history.handlers :refer [finalize]]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.dom :as dom]
@@ -72,26 +73,29 @@
         (attr.hierarchy/update-attr :font-size * ratio)
         (tool.hierarchy/translate offset))))
 
-(defn get-text
+(defn get-text!
+  "Retrieves the input value and replaces spaces with no-break space to maintain
+   user intent."
   [e]
-  (str/replace (.. e -target -value) " " "\u00a0")) ; REVIEW
+  (str/replace (.. e -target -value) " " "\u00a0"))
 
-(defn set-text-and-select-element
-  [e id]
-  (let [s (get-text e)]
-    (rf/dispatch (if (empty? s)
-                   [::element.e/delete-by-id id]
-                   [::element.e/set-prop id :content s]))
-    (rf/dispatch [::app.e/set-tool :select])))
+(rf/reg-event-db
+ ::set-text
+ [(finalize #(if (empty? (get % 2))"Remove text" "Set text"))]
+ (fn [db [_ id s]]
+   (-> (if (empty? s)
+         (element.h/delete db id)
+         (element.h/assoc-prop db id :content s))
+       (app.h/set-tool :select))))
 
-(defn key-down-handler
+(defn key-down-handler!
   [e id]
   (.stopPropagation e)
-  (if (contains? #{"Enter" "Escape"} (.-code e))
-    (set-text-and-select-element e id)
-    (.requestAnimationFrame
-     js/window
-     #(rf/dispatch-sync [::element.e/preview-prop id :content (get-text e)]))))
+  (.requestAnimationFrame
+   js/window
+   #(rf/dispatch-sync (if (contains? #{"Enter" "Escape"} (.-code e))
+                        [::set-text id (get-text! e)]
+                        [::element.e/preview-prop id :content (get-text! e)]))))
 
 (defmethod tool.hierarchy/render-edit :text
   [{:keys [attrs id content] :as el}]
@@ -111,8 +115,8 @@
        :on-focus #(.. % -target select)
        :on-pointer-down dom/stop-propagation!
        :on-pointer-up dom/stop-propagation!
-       :on-blur #(set-text-and-select-element % id)
-       :on-key-down #(key-down-handler % id)
+       :on-blur #(rf/dispatch [::set-text id (get-text! %)])
+       :on-key-down #(key-down-handler! % id)
        :style {:color "transparent"
                :caret-color (or fill "black")
                :display "block"
