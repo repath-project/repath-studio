@@ -5,7 +5,7 @@
    [renderer.ui :as ui]))
 
 (defn button
-  [{:keys [title icon disabled? action] :as attrs}]
+  [{:keys [title icon disabled action] :as attrs}]
   (if (= (:type attrs) :divider)
     [:span.h-divider]
     [:> Tooltip/Root
@@ -14,7 +14,7 @@
       [:span.shadow-4
        [ui/icon-button
         icon
-        {:disabled disabled?
+        {:disabled disabled
          :on-click #(rf/dispatch action)}]]]
      [:> Tooltip/Portal
       [:> Tooltip/Content
