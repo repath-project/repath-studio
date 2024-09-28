@@ -14,10 +14,7 @@
     [:> DropdownMenu/Root
      [:> DropdownMenu/Trigger
       {:aria-label "Snap"
-       :as-child true
-       :style {:background "transparent"
-               :width "16px"
-               :margin 0}}
+       :as-child true}
       [:div.h-full.hover:pb-1.flex.items-center
        [ui/icon "chevron-up"]]]
      [:> DropdownMenu/Portal

@@ -17,7 +17,9 @@
 
 (defn actions
   []
-  (let [some-undos @(rf/subscribe [::history.s/some-undos])
+  (let [undos @(rf/subscribe [::history.s/undos])
+        redos @(rf/subscribe [::history.s/redos])
+        some-undos @(rf/subscribe [::history.s/some-undos])
         some-redos @(rf/subscribe [::history.s/some-redos])]
     [:div.toolbar
 
@@ -39,31 +41,19 @@
 
      [:span.v-divider]
 
-     [:button.icon-button.items-center.px-1.gap-1
+     [:button.icon-button.items-center.px-1.gap-1.flex.w-auto
       {:title "Undo"
-       :style {:margin-right 0
-               :width "auto"
-               :display "flex"}
        :on-click #(rf/dispatch [::history.e/undo])
        :disabled (not some-undos)}
       [ui/icon "undo"]
-      [history.v/select
-       "Undo stack"
-       @(rf/subscribe [::history.s/undos])
-       (not some-undos)]]
+      [history.v/select "Undo stack" undos (not some-undos)]]
 
-     [:button.icon-button.items-center.px-1.gap-1
+     [:button.icon-button.items-center.px-1.gap-1.flex.w-auto
       {:title "Redo"
-       :style {:margin-right 0
-               :width "auto"
-               :display "flex"}
        :on-click #(rf/dispatch [::history.e/redo])
        :disabled (not some-redos)}
       [ui/icon "redo"]
-      [history.v/select
-       "Redo stack"
-       @(rf/subscribe [::history.s/redos])
-       (not some-redos)]]]))
+      [history.v/select "Redo stack" redos (not some-redos)]]]))
 
 (mx/defn close-button
   [id :- uuid?, saved :- boolean?]
