@@ -26,6 +26,7 @@
    [renderer.notification.events]
    [renderer.notification.subs]
    [renderer.reepl.replumb :as replumb]
+   [renderer.ruler.events]
    [renderer.ruler.subs]
    [renderer.snap.events]
    [renderer.snap.subs]

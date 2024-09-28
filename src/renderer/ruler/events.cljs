@@ -5,11 +5,12 @@
 
   (rf/reg-event-db
    ::toggle-visible
-   persist
+   [persist]
    (fn [db [_]]
      (update-in db [:ruler :visible] not)))
 
   (rf/reg-event-db
    ::toggle-locked
+   [persist]
    (fn [db [_]]
      (update-in db [:ruler :locked] not)))
