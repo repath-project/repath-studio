@@ -242,9 +242,17 @@
   ([db id]
    (assoc-prop db id :selected false)))
 
+(defn collapse
+  ([db]
+   (reduce collapse db (keys (elements db))))
+  ([{:keys [active-document] :as db} id]
+   (update-in db [:documents active-document :collapsed-ids] conj id)))
+
 (defn expand
-  [{:keys [active-document] :as db} id]
-  (update-in db [:documents active-document :collapsed-ids] disj id))
+  ([db]
+   (reduce expand db (keys (elements db))))
+  ([{:keys [active-document] :as db} id]
+   (update-in db [:documents active-document :collapsed-ids] disj id)))
 
 (defn expand-ancestors
   [db id]

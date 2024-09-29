@@ -9,7 +9,7 @@
  [(rf/inject-cofx ::app.fx/guid)]
  (fn [{:keys [db guid]} [_ {:keys [action] :as options}]]
    {:db (assoc-in db [:worker :tasks guid] action)
-    ::fx/post (assoc-in options [:data :id] guid)}))
+    ::fx/post (assoc-in options [:data :id] (str guid))}))
 
 (rf/reg-event-db
  ::completed

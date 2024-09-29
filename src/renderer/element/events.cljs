@@ -275,6 +275,7 @@
  (fn [db [_ data _msg]]
    (-> db
        (h/import-svg data)
+       (h/collapse)
        (assoc :loading false))))
 
 (rf/reg-event-fx
