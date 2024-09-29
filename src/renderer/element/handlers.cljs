@@ -502,6 +502,7 @@
   (let [id (random-uuid) ; REVIEW: Hard to use a coeffect because of recursion.
         new-el (->> (cond-> el (not (string? (:content el))) (dissoc :content))
                     (map/remove-nils)
+                    (element/normalize-attrs)
                     (create-parent-id db))
         new-el (merge new-el db/default {:id id})
         child-els (-> (elements db (:children el)) vals (concat (:content el)))

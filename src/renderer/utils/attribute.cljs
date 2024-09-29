@@ -1,7 +1,11 @@
 (ns renderer.utils.attribute
   (:require
+   [camel-snake-kebab.core :as csk]
    [clojure.string :as str]
    [malli.experimental :as mx]
+   [renderer.element.db :refer [Attrs Tag]]
+   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.utils.bcd :as bcd]
    [renderer.utils.units :as units]))
 
 (def core
@@ -48,7 +52,7 @@
    :decoding
    :opacity
    :overflow
-   :id :class :tabindex
+   :id :class :tab-index
    :style])
 
 
@@ -68,3 +72,186 @@
 (mx/defn points->px :- vector?
   [points :- string?]
   (into [] partition-to-px (str->seq points)))
+
+(def camelcased
+  ["accentHeight"
+   "alignmentBaseline"
+   "allowReorder"
+   "arabicForm"
+   "attributeName"
+   "attributeType"
+   "autoReverse"
+   "baseFrequency"
+   "baseProfile"
+   "baselineShift"
+   "calcMode"
+   "capHeight"
+   "clipPath"
+   "clipPathUnits"
+   "clipRule"
+   "colorInterpolation"
+   "colorInterpolationFilters"
+   "colorProfile"
+   "colorRendering"
+   "contentScriptType"
+   "contentStyleType"
+   "diffuseConstant"
+   "dominantBaseline"
+   "edgeMode"
+   "enableBackground"
+   "externalResourcesRequired"
+   "fillOpacity"
+   "fillRule"
+   "filterRes"
+   "filterUnits"
+   "floodColor"
+   "floodOpacity"
+   "fontFamily"
+   "fontSize"
+   "fontSizeAdjust"
+   "fontStretch"
+   "fontStyle"
+   "fontVariant"
+   "fontWeight"
+   "glyphName"
+   "glyphOrientationHorizontal"
+   "glyphOrientationVertical"
+   "glyphRef"
+   "gradientTransform"
+   "gradientUnits"
+   "horizAdvX"
+   "horizOriginX"
+   "imageRendering"
+   "kernelMatrix"
+   "kernelUnitLength"
+   "keyPoints"
+   "keySplines"
+   "keyTimes"
+   "lengthAdjust"
+   "letterSpacing"
+   "lightingColor"
+   "limitingConeAngle"
+   "markerEnd"
+   "markerHeight"
+   "markerMid"
+   "markerStart"
+   "markerUnits"
+   "markerWidth"
+   "maskContentUnits"
+   "maskUnits"
+   "mathematical"
+   "numOctaves"
+   "overlinePosition"
+   "overlineThickness"
+   "paintOrder"
+   "pathLength"
+   "patternContentUnits"
+   "patternTransform"
+   "patternUnits"
+   "pointerEvents"
+   "pointsAtX"
+   "pointsAtY"
+   "pointsAtZ"
+   "preserveAlpha"
+   "preserveAspectRatio"
+   "primitiveUnits"
+   "refX"
+   "refY"
+   "renderingIntent"
+   "repeatCount"
+   "repeatDur"
+   "requiredExtensions"
+   "requiredFeatures"
+   "shapeRendering"
+   "specularConstant"
+   "specularExponent"
+   "spreadMethod"
+   "startOffset"
+   "stdDeviation"
+   "stitchTiles"
+   "stopColor"
+   "stopOpacity"
+   "strikethroughPosition"
+   "strikethroughThickness"
+   "strokeDasharray"
+   "strokeDashoffset"
+   "strokeLinecap"
+   "strokeLinejoin"
+   "strokeMiterlimit"
+   "strokeOpacity"
+   "strokeWidth"
+   "surfaceScale"
+   "systemLanguage"
+   "tableValues"
+   "targetX"
+   "targetY"
+   "textAnchor"
+   "textDecoration"
+   "textLength"
+   "textRendering"
+   "underlinePosition"
+   "underlineThickness"
+   "unicodeBidi"
+   "unicodeRange"
+   "unitsPerEm"
+   "vAlphabetic"
+   "vHanging"
+   "vIdeographic"
+   "vMathematical"
+   "vectorEffect"
+   "vertAdvY"
+   "vertOriginX"
+   "vertOriginY"
+   "viewBox"
+   "viewTarget"
+   "wordSpacing"
+   "writingMode"
+   "xChannelSelector"
+   "xHeight"
+   "xlinkActuate"
+   "xlinkArcrole"
+   "xlinkHref"
+   "xlinkRole"
+   "xlinkShow"
+   "xlinkTitle"
+   "xlinkType"
+   "xmlnsXlink"
+   "xmlBase"
+   "xmlLang"
+   "xmlSpace"
+   "yChannelSelector"
+   "zoomAndPan"])
+
+(def lowercase-attributes
+  (mapv str/lower-case camelcased))
+
+(mx/defn ->camel-case :- keyword?
+  [k :- keyword?]
+  (let [i (->> k name str/lower-case (.indexOf lowercase-attributes))]
+    (-> (if (= i -1) k (get camelcased i))
+        (csk/->camelCaseString)
+        (keyword))))
+
+(def ->camel-case-memo (memoize ->camel-case))
+
+(mx/defn ->map :- Attrs
+  [attrs :- Attrs]
+  (let [deprecated-path [:__compat :status :deprecated]
+        filtered-attrs (->> attrs
+                            (filter #(not (get-in (val %) deprecated-path)))
+                            (into {}))]
+    (-> filtered-attrs
+        (dissoc :__compat :systemLanguage)
+        (keys)
+        (zipmap (repeat "")))))
+
+(mx/defn defaults :- Attrs
+  [tag :- Tag]
+  (merge (when (isa? tag ::tool.hierarchy/element)
+           (merge (->map (tag (:elements bcd/svg)))
+                  (zipmap core (repeat ""))))
+         (when (contains? #{:animateMotion :animateTransform} tag)
+           (->map (:animate (:elements bcd/svg))))
+         (zipmap (:attrs (tool.hierarchy/properties tag)) (repeat ""))))
+
+(def defaults-memo (memoize defaults))
