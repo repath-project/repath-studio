@@ -55,7 +55,6 @@
    :id :class :tab-index
    :style])
 
-
 (defn str->seq
   [s]
   (-> s str/trim (str/split #"\s*[\s,]\s*")))
