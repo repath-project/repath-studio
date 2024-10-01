@@ -221,12 +221,12 @@
    "yChannelSelector"
    "zoomAndPan"])
 
-(def lowercase-attributes
+(def lowercased
   (mapv str/lower-case camelcased))
 
 (mx/defn ->camel-case :- keyword?
   [k :- keyword?]
-  (let [i (->> k name str/lower-case (.indexOf lowercase-attributes))]
+  (let [i (->> k name str/lower-case (.indexOf lowercased))]
     (-> (if (= i -1) k (get camelcased i))
         (csk/->camelCaseString)
         (keyword))))
