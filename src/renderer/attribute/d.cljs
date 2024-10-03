@@ -100,6 +100,25 @@
     [:input
      {:key (str "y-" i) :default-value (nth segment 7)}]]])
 
+(defn segment-row
+  [i segment path]
+  (let [command (first segment)
+        {:keys [label url]} (->command command)]
+    [:div.my-2
+     #_[:div (str/join " " segment)]
+     [:div.flex.items-center.justify-between.mb-1
+      [:span
+       [:span.bg-primary.p-1 (first segment)]
+       [:button.p-1.text-inherit
+        {:on-click #(rf/dispatch [::window.e/open-remote-url url])}
+        label]
+       (if (= command (str/lower-case command))
+         "(Relative)" "(Absolute)")]
+      [:button.icon-button.small.bg-transparent.text-muted
+       {:on-click #(remove-segment-by-index path i)}
+       [ui/icon "times"]]]
+     [segment-form segment i]]))
+
 (defn edit-form
   [v]
   (let [path (-> v svgpath)
@@ -109,32 +128,15 @@
      [ui/scroll-area
       [:div.p-4.flex.flex-col
        (map-indexed (fn [i segment]
-                      (let [command (first segment)
-                            {:keys [label url]} (->command command)]
-                        ^{:key (str "segment-" i)}
-                        [:div.my-2
-                         #_[:div (str/join " " segment)]
-                         [:div.flex.items-center.justify-between.mb-1
-                          [:span
-                           [:span.bg-primary.p-1 (first segment)]
-                           [:button.p-1.text-inherit
-                            {:on-click #(rf/dispatch [::window.e/open-remote-url url])}
-                            label]
-                           (if (= command (str/lower-case command))
-                             "(Relative)" "(Absolute)")]
-                          [:button.icon-button.small.bg-transparent.text-muted
-                           {:on-click #(remove-segment-by-index path i)}
-                           [ui/icon "times"]]]
-                         [segment-form segment i]])) segments)]]]))
+                      ^{:key (str "segment-" i)}
+                      [segment-row i segment path]) segments)]]]))
 
 (defmethod hierarchy/form-element [:default :d]
   [_ k v {:keys [disabled]}]
   (let [state-default? (= @(rf/subscribe [::app.s/state]) :default)]
     [:div.flex.gap-px.w-full
      [v/form-input k (if state-default? v "waiting")
-      {:disabled (or disabled
-                     (not v)
-                     (not state-default?))}]
+      {:disabled (or disabled (not v) (not state-default?))}]
      (when v
        [:> Popover/Root {:modal true}
         [:> Popover/Trigger
