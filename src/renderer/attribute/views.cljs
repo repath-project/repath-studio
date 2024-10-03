@@ -166,10 +166,12 @@
        [:<>
         [:h3.font-bold "Computed value"]
         [:p
-         computed-value
-         (when-let [percentages (:percentages property)]
-           (when-not (= percentages "N/A")
-             (str " (percentages " percentages ")")))]]))
+         computed-value]]))
+   (when-let [percentages (:percentages property)]
+     (when-not (= percentages "N/A")
+       [:<>
+        [:h3.font-bold "Percentages"]
+        [:p percentages]]))
    (when-let [animatable (:animatable property)]
      [:<>
       [:h3.font-bold "Animatable"]

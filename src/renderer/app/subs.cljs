@@ -1,5 +1,7 @@
 (ns renderer.app.subs
   (:require
+   [camel-snake-kebab.core :as csk]
+   [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.tool.hierarchy :as tool.hierarchy]))
 
@@ -95,12 +97,19 @@
    (let [webref-css-property (some
                               #(when (= (:name %) (name property)) %)
                               (flatten (map (fn [[_ item]] (:properties item)) webref-css)))
-         css-property (get-in mdn [:css :properties property])
-         css-property (update-keys css-property #(case %
-                                                   :appliesto :appliesTo
-                                                   :computed :computedValue
-                                                   %))]
-     (merge css-property webref-css-property))))
+         css-property (-> (get-in mdn [:css :properties property])
+                          (update-keys  #(case %
+                                           :appliesto :appliesTo
+                                           :computed :computedValue
+                                           %)))
+         enhance-readability (fn [property k]
+                               (cond-> property
+                                 (and (get property k) (string? (get property k)))
+                                 (update k #(-> % csk/->kebab-case-string (str/replace "-" " ")))))
+         css-property (reduce enhance-readability css-property [:appliesTo :computedValue :percentages])]
+     (-> css-property
+         (merge webref-css-property)
+         (enhance-readability :animationType)))))
 
 (rf/reg-sub
  ::backdrop
