@@ -3,6 +3,7 @@
    ["@radix-ui/react-hover-card" :as HoverCard]
    ["@radix-ui/react-select" :as Select]
    ["@radix-ui/react-slider" :as Slider]
+   [camel-snake-kebab.core :as csk]
    [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.s]
@@ -154,40 +155,18 @@
          {:class "select-scroll-button"}
          [ui/icon "chevron-down"]]]]])])
 
+(defn property-list-item
+  [property k]
+  (when-let [v (get property k)]
+    [:<>
+     [:h3.font-bold (-> k csk/->kebab-case-string (str/replace "-" " ") str/capitalize)]
+     [:p (cond->> v (vector? v) (str/join " | "))]]))
+
 (defn property-list
   [property]
-  [:<>
-   (when-let [applies-to (:appliesTo property)]
-     [:<>
-      [:h3.font-bold "Applies to"]
-      [:p applies-to]])
-   (when-let [computed-value (:computedValue property)]
-     (when-not (= computed-value "as specified")
-       [:<>
-        [:h3.font-bold "Computed value"]
-        [:p
-         computed-value]]))
-   (when-let [percentages (:percentages property)]
-     (when-not (= percentages "N/A")
-       [:<>
-        [:h3.font-bold "Percentages"]
-        [:p percentages]]))
-   (when-let [animatable (:animatable property)]
-     [:<>
-      [:h3.font-bold "Animatable"]
-      [:p animatable]])
-   (when-let [animation-type (:animationType property)]
-     [:<>
-      [:h3.font-bold "Animation Type"]
-      [:p (cond->> animation-type (vector? animation-type) (str/join " "))]])
-   (when-let [style-declaration (:styleDeclaration property)]
-     [:<>
-      [:h3.font-bold "Style declaration"]
-      [:p (str/join " | " style-declaration)]])
-   (when-let [syntax (:syntax property)]
-     [:<>
-      [:h3.font-bold "Syntax"]
-      [:p syntax]])])
+  (->> [:appliesTo :computedValue :percentages :animatable :animationType :styleDeclaration :syntax]
+       (map #(property-list-item property %))
+       (into [:<>])))
 
 (defn label
   [tag k]
