@@ -50,10 +50,21 @@
      [ui/icon "plus"]]]])
 
 (defmethod hierarchy/update-attr ::length
-  [element attribute f & more]
-  (update-in element [:attrs attribute] #(apply units/transform % f more)))
+  ([element attribute f arg1]
+   (update-in element [:attrs attribute] units/transform f arg1))
+  ([element attribute f arg1 arg2]
+   (update-in element [:attrs attribute] units/transform f arg1 arg2))
+  ([element attribute f arg1 arg2 arg3]
+   (update-in element [:attrs attribute] units/transform f arg1 arg2 arg3))
+  ([element attribute f arg1 arg2 arg3 & more]
+   (update-in element [:attrs attribute] #(apply units/transform % f arg1 arg2 arg3 more))))
 
 (defmethod hierarchy/update-attr ::positive-length
-  [element attribute f & more]
-  (update-in element [:attrs attribute]
-             #(units/transform % (fn [v] (max 0 (apply f v more))))))
+  ([element attribute f arg1]
+   (update-in element [:attrs attribute] units/transform (fn [v] (max 0 (f v arg1)))))
+  ([element attribute f arg1 arg2]
+   (update-in element [:attrs attribute] units/transform (fn [v] (max 0 (f v arg1 arg2)))))
+  ([element attribute f arg1 arg2 arg3]
+   (update-in element [:attrs attribute] units/transform (fn [v] (max 0 (f v arg1 arg2 arg3)))))
+  ([element attribute f arg1 arg2 arg3 & more]
+   (update-in element [:attrs attribute] units/transform (fn [v] (max 0 (apply f v arg1 arg2 arg3 more))))))

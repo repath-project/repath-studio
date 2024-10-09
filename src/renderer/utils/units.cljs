@@ -49,11 +49,11 @@
      unit]))
 
 (mx/defn ->px :- number?
-  [n :- number? unit :- string?]
+  [n :- number?, unit :- string?]
   (* n (multiplier unit)))
 
 (mx/defn ->unit :- number?
-  [n :- number? unit :- string?]
+  [n :- number?, unit :- string?]
   (/ n (multiplier unit)))
 
 (mx/defn unit->px :- number?
@@ -63,13 +63,34 @@
       n
       (if (valid-unit? unit) (->px n unit) 0))))
 
+(mx/defn ->fixed-unit :- string?
+  [n :- number?, unit :- string?]
+  (-> n
+      (.toFixed 2)
+      (js/parseFloat)
+      (->unit unit)
+      (str (when (valid-unit? unit) unit))))
+
 (mx/defn transform :- string?
   "Converts a value to pixels, applies a function and converts the result
    back to the original unit."
-  [v f :- fn? & more]
-  (let [[n unit] (parse-unit v)]
-    (-> (apply f (->px n unit) more)
-        (.toFixed 2)
-        (js/parseFloat)
-        (->unit unit)
-        (str (when (valid-unit? unit) unit)))))
+  ([v f]
+   (let [[n unit] (parse-unit v)]
+     (-> (f (->px n unit))
+         (->fixed-unit unit))))
+  ([v f arg1]
+   (let [[n unit] (parse-unit v)]
+     (-> (f (->px n unit) arg1)
+         (->fixed-unit unit))))
+  ([v f arg1 arg2]
+   (let [[n unit] (parse-unit v)]
+     (-> (f (->px n unit) arg1 arg2)
+         (->fixed-unit unit))))
+  ([v f arg1 arg2 arg3]
+   (let [[n unit] (parse-unit v)]
+     (-> (f (->px n unit) arg1 arg2 arg3)
+         (->fixed-unit unit))))
+  ([v f arg1 arg2 arg3 & more]
+   (let [[n unit] (parse-unit v)]
+     (-> (apply f (->px n unit) arg1 arg2 arg3 more)
+         (->fixed-unit unit)))))

@@ -312,14 +312,26 @@
                                                               multiplier {:arities {1 {:args [:string], :ret :number}}},
                                                               ->unit {:arities {2 {:args [:number :string],
                                                                                    :ret :number}}},
-                                                              transform {:arities {:varargs {:args [:any
-                                                                                                    :fn
+                                                              transform {:arities {2 {:args [:any :any], :ret :string},
+                                                                                   3 {:args [:any :any :any],
+                                                                                      :ret :string},
+                                                                                   4 {:args [:any :any :any :any],
+                                                                                      :ret :string},
+                                                                                   5 {:args [:any :any :any :any :any],
+                                                                                      :ret :string},
+                                                                                   :varargs {:args [:any
+                                                                                                    :any
+                                                                                                    :any
+                                                                                                    :any
+                                                                                                    :any
                                                                                                     {:op :rest,
                                                                                                      :spec :any}],
                                                                                              :ret :string,
-                                                                                             :min-arity 2}}},
+                                                                                             :min-arity 5}}},
                                                               unit->key {:arities {1 {:args [:string], :ret :keyword}}},
                                                               ->px {:arities {2 {:args [:number :string], :ret :number}}},
+                                                              ->fixed-unit {:arities {2 {:args [:number :string],
+                                                                                         :ret :string}}},
                                                               parse-unit {:arities {1 {:args [:any], :ret :seqable}}}},
                                         renderer.document.handlers {search-by-path {:arities {2 {:args [:any :string],
                                                                                                  :ret :any}}},
