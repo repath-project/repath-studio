@@ -59,9 +59,9 @@
                                  (fn []
                                    (.close writable-stream)
                                    (when on-success
-                                     (rf/dispatch [on-success (if formatter
-                                                                (formatter file-handle)
-                                                                file-handle)]))))))))
+                                     (rf/dispatch [on-success (cond-> file-handle
+                                                                formatter
+                                                                formatter)]))))))))
         (.catch #(rf/dispatch [::notification.e/exception %])))
     (rf/dispatch
      [::notification.e/unavailable-feature
