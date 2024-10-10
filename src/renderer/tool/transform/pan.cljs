@@ -14,7 +14,7 @@
 
 (defmethod tool.hierarchy/activate :pan
   [db]
-  (assoc db :cursor "grab"))
+  (app.h/set-cursor db "grab"))
 
 (defmethod tool.hierarchy/help [:pan :default]
   []
@@ -28,11 +28,11 @@
 
 (defmethod tool.hierarchy/pointer-up :pan
   [db]
-  (assoc db :cursor "grab"))
+  (app.h/set-cursor db "grab"))
 
 (defmethod tool.hierarchy/pointer-down :pan
   [db]
-  (assoc db :cursor "grabbing"))
+  (app.h/set-cursor db "grabbing"))
 
 (defmethod tool.hierarchy/drag :pan
   [db e]

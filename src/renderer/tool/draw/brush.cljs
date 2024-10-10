@@ -38,7 +38,7 @@
 
 (defmethod tool.hierarchy/activate :brush
   [db]
-  (assoc db :cursor "none"))
+  (app.h/set-cursor db "none"))
 
 (defonce option-keys
   [:size :thinning :smoothing :streamline])

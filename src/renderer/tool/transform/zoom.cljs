@@ -23,7 +23,7 @@
 
 (defmethod tool.hierarchy/activate :zoom
   [db]
-  (assoc db :cursor "zoom-in"))
+  (app.h/set-cursor db "zoom-in"))
 
 (defmethod tool.hierarchy/key-down :zoom
   [db e]
@@ -39,7 +39,7 @@
 
 (defmethod tool.hierarchy/drag-start :zoom
   [db]
-  (assoc db :cursor "default"))
+  (app.h/set-cursor db "default"))
 
 (defmethod tool.hierarchy/drag :zoom
   [{:keys [adjusted-pointer-offset adjusted-pointer-pos active-document] :as db}]

@@ -16,7 +16,7 @@
 
 (defmethod tool.hierarchy/activate :fill
   [db]
-  (assoc db :cursor "crosshair"))
+  (app.h/set-cursor db "crosshair"))
 
 (defmethod tool.hierarchy/translate :fill [])
 

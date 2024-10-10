@@ -20,7 +20,7 @@
 
 (defmethod tool.hierarchy/activate ::tool.hierarchy/polyshape
   [db]
-  (assoc db :cursor "crosshair"))
+  (app.h/set-cursor db "crosshair"))
 
 (defn create-polyline
   [{:keys [active-document tool] :as db} points]

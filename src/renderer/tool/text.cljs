@@ -40,7 +40,7 @@
 
 (defmethod tool.hierarchy/activate :text
   [db]
-  (assoc db :cursor "text"))
+  (app.h/set-cursor db "text"))
 
 (defmethod tool.hierarchy/pointer-up :text
   [{:keys [adjusted-pointer-offset] :as db} _e]

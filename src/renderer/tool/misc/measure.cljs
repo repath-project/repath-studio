@@ -2,6 +2,7 @@
   (:require
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
+   [renderer.app.handlers :as app.h]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.handlers :as element.h]
    [renderer.tool.hierarchy :as tool.hierarchy]
@@ -21,7 +22,7 @@
 
 (defmethod tool.hierarchy/activate :measure
   [db]
-  (assoc db :cursor "crosshair"))
+  (app.h/set-cursor db "crosshair"))
 
 (defmethod tool.hierarchy/pointer-up :measure
   [db]
