@@ -125,3 +125,8 @@
 (rf/reg-fx
  ::download
  file/download!)
+
+(rf/reg-fx
+ ::set-document-attr
+ (fn [[k v]]
+   (.setAttribute js/window.document.documentElement k v)))
