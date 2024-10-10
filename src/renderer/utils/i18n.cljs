@@ -1,4 +1,4 @@
-(ns i18n
+(ns renderer.utils.i18n
   "Internationalization namespace
    https://github.com/taoensso/tempura"
   (:require

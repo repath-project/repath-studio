@@ -1,9 +1,9 @@
 (ns renderer.window.events
   (:require
-   [platform :as platform]
    [re-frame.core :as rf]
    [renderer.app.effects :as app.fx]
    [renderer.document.handlers :as document.h]
+   [renderer.utils.system :as system]
    [renderer.window.effects :as fx]))
 
 (rf/reg-event-db
@@ -39,7 +39,7 @@
 (rf/reg-event-fx
  ::relaunch
  (fn [_ _]
-   (if platform/electron?
+   (if system/electron?
      {::fx/ipc-send ["relaunch"]}
      {::fx/relaunch nil})))
 
@@ -57,7 +57,7 @@
 (rf/reg-event-fx
  ::toggle-fullscreen
  (fn [_ _]
-   (if platform/electron?
+   (if system/electron?
      {::fx/ipc-send ["window-toggle-fullscreen"]}
      {::fx/toggle-fullscreen nil})))
 
@@ -69,6 +69,6 @@
 (rf/reg-event-fx
  ::open-remote-url
  (fn [_ [_ url]]
-   (if platform/electron?
+   (if system/electron?
      {::fx/ipc-send ["open-remote-url" url]}
      {::fx/open-remote-url url})))

@@ -2,13 +2,14 @@
   (:require
    [akiroz.re-frame.storage :as rf.storage]
    [config :as config]
-   [promesa.core :as p]
    [re-frame.core :as rf]
    [renderer.app.db :as db]
    [renderer.app.events :as-alias e]
    [renderer.history.handlers :as history.h]
+   [renderer.notification.events :as-alias notification.e]
    [renderer.utils.dom :as dom]
-   [renderer.utils.drop :as drop]))
+   [renderer.utils.drop :as drop]
+   [renderer.utils.file :as file]))
 
 (rf.storage/reg-co-fx! config/app-key {:cofx :store})
 
@@ -103,11 +104,24 @@
  ::load-system-fonts
  (fn []
    (when-not (undefined? js/window.queryLocalFonts)
-     (p/let [fonts (.queryLocalFonts js/window)]
-       (rf/dispatch [::e/set-system-fonts
-                     (mapv (fn [^js/FontData font-data]
-                             (into {} [[:postscriptName (.-postscriptName font-data)]
-                                       [:fullName (.-fullName ^js font-data)]
-                                       [:family (.-family ^js font-data)]
-                                       [:style (.-style ^js font-data)]])) fonts)])))))
+     (-> (.queryLocalFonts js/window)
+         (.then (fn [fonts]
+                  (let [->font-map (fn [^js font-data]
+                                     (into {} [[:postscriptName (.-postscriptName font-data)]
+                                               [:fullName (.-fullName font-data)]
+                                               [:family (.-family font-data)]
+                                               [:style (.-style font-data)]]))
+                        fonts (mapv ->font-map fonts)]
+                    (rf/dispatch [::e/set-system-fonts fonts]))))))))
 
+(rf/reg-fx
+ ::save
+ file/save!)
+
+(rf/reg-fx
+ ::open
+ file/open!)
+
+(rf/reg-fx
+ ::download
+ file/download!)

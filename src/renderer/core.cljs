@@ -4,7 +4,6 @@
    ["mdn-data" :as mdn]
    ["paper" :refer [paper]]
    [devtools.core :as devtools]
-   [platform :as platform]
    [re-frame.core :as rf]
    [re-pressed.core :as rp]
    [reagent.dom :as ra.dom]
@@ -40,6 +39,7 @@
    [renderer.utils.dom :as dom]
    [renderer.utils.error :as error]
    [renderer.utils.keyboard :as keyb]
+   [renderer.utils.system :as system]
    [renderer.window.events :as window.e]
    [renderer.window.subs]
    [renderer.worker.events]
@@ -110,7 +110,7 @@
   (bootstrap/init repl/st {:path "js/bootstrap" :load-on-init '[user]} bootstrap-cb!)
 
   (rf/dispatch-sync [::app.e/initialize-db])
-  (rf/dispatch-sync [::app.e/set-lang platform/system-language])
+  (rf/dispatch-sync [::app.e/set-lang system/language])
   (rf/dispatch-sync [::app.e/load-local-db])
   (rf/dispatch-sync [::document.e/init])
   (rf/dispatch-sync [::theme.e/set-native-mode (theme.fx/native-mode! theme.fx/native-query!)])
@@ -124,7 +124,7 @@
 
   (.setup paper)
 
-  (if platform/electron?
+  (if system/electron?
     (register-ipc-on-events!)
     (add-listeners!))
 

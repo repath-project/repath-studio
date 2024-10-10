@@ -1,29 +1,40 @@
 (ns renderer.notification.views
   (:require
-   [malli.experimental :as mx]
    [re-frame.core :as rf]
    [renderer.notification.events :as-alias notification.e]
    [renderer.notification.subs :as-alias notification.s]
    [renderer.ui :as ui]
    [renderer.window.events :as-alias window.e]))
 
-(mx/defn unavailable-feature
-  [feature :- string?, compatibility-url :- string?]
+(defn unavailable-feature
+  [feature compatibility-url]
   [:div
-   [:h2.pb-4.font-bold feature " is unavailable."]
-   [:div
+   [:h2.font-bold.text-error feature " is unavailable"]
+   [:div.mt-4
     "Your browser does not support this API."
     "You can check the "
     [:button.button-link
      {:on-click #(rf/dispatch [::window.e/open-remote-url compatibility-url])}
      "browser compatibility table."]]])
 
-(mx/defn spec-failed
-  [event :- string?, error :- string?]
+(defn generic-error
+  [{:keys [title message]}]
   [:div
-   [:h2.mb-4.font-bold "Validation error"]
-   [:p "Event: " event]
-   [:p.text-error error]])
+   [:h2.font-bold.text-error (or title "Error")]
+   (when message [:div.mt-4 message])])
+
+(defn exception
+  [^js/Error error]
+  (generic-error {:title (or (.-name error) "Error")
+                  :message (or (.-message error) (str error))}))
+
+(defn spec-failed
+  [event error]
+  [:div
+   [:h2.font-bold.text-error "Validation error"]
+   [:div.mt-4
+    [:p "Event: " event]
+    [:p error]]])
 
 (defn main
   []
@@ -37,7 +48,7 @@
          [ui/icon-button
           "times"
           {:aria-label "Close"
-           :class "close-button"
+           :class "icon-button absolute top-3 right-3 small"
            :on-click #(rf/dispatch [::notification.e/remove index])}]
          (when-let [n (:count notification)]
            [:div.absolute.bg-error.left-0.top-0.px-1.py-0.5.rounded

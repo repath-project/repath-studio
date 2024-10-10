@@ -1,7 +1,7 @@
 (ns renderer.window.effects
   (:require
-   [promesa.core :as p]
-   [re-frame.core :as rf]))
+   [re-frame.core :as rf]
+   [renderer.notification.events :as-alias notification.e]))
 
 (rf/reg-fx
  ::close
@@ -33,6 +33,7 @@
 (rf/reg-fx
  ::ipc-invoke
  (fn [{:keys [channel data formatter on-resolution]}]
-   (p/let [result (js/window.api.invoke channel (clj->js data))]
-     (when on-resolution
-       (rf/dispatch [on-resolution (cond-> result formatter formatter)])))))
+   (-> (js/window.api.invoke channel (clj->js data))
+       (.then #(when on-resolution
+                 (rf/dispatch [on-resolution (cond-> % formatter formatter)])))
+       (.catch #(rf/dispatch [::notification.e/exception %])))))

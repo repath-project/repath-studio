@@ -39,11 +39,11 @@
       {:title "Select file"
        :disabled disabled
        :on-click #(file/open!
-                   {:startIn "pictures"
-                    :types [{:accept {"image/png" [".png"]
-                                      "image/jpeg" [".jpeg" ".jpg"]
-                                      "image/bmp" [".fmp"]}}]}
-                   (fn [file]
-                     (rf/dispatch [::app.e/set-tool :select])
-                     (update-href! file)))}
+                   {:options {:startIn "pictures"
+                              :types [{:accept {"image/png" [".png"]
+                                                "image/jpeg" [".jpeg" ".jpg"]
+                                                "image/bmp" [".fmp"]}}]}
+                    :callback (fn [file]
+                                (rf/dispatch [::app.e/set-tool :select])
+                                (update-href! file))})}
       [ui/icon "folder"]]]))

@@ -2,12 +2,12 @@
   (:require
    ["@radix-ui/react-popover" :as Popover]
    ["@repath-project/react-color" :refer [PhotoshopPicker]]
-   [i18n :refer [t]]
    [re-frame.core :as rf]
    [renderer.color.db :as color.db]
    [renderer.document.events :as-alias document.e]
    [renderer.element.events :as-alias element.e]
-   [renderer.ui :as ui]))
+   [renderer.ui :as ui]
+   [renderer.utils.i18n :refer [t]]))
 
 (defn drip [color]
     [:button.button.color-drip

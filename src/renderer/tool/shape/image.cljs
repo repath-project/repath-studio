@@ -20,11 +20,11 @@
 (defmethod tool.hierarchy/pointer-up :image
   [{:keys [adjusted-pointer-pos] :as db}]
   (file/open!
-   {:startIn "pictures"
-    :types [{:accept {"image/png" [".png"]
-                      "image/jpeg" [".jpeg" ".jpg"]
-                      "image/bmp" [".fmp"]}}]}
-   (fn [file]
-     (rf/dispatch [::app.e/set-tool :select])
-     (drop/add-image! file adjusted-pointer-pos)))
+   {:options {:startIn "pictures"
+              :types [{:accept {"image/png" [".png"]
+                                "image/jpeg" [".jpeg" ".jpg"]
+                                "image/bmp" [".fmp"]}}]}
+    :callback (fn [file]
+                (rf/dispatch [::app.e/set-tool :select])
+                (drop/add-image! file adjusted-pointer-pos))})
   db)

@@ -4,8 +4,6 @@
    ["cmdk" :as Command]
    [clojure.string :as str]
    [config :as config]
-   [i18n :refer [t]]
-   [platform :as platform]
    [re-frame.core :as rf]
    [renderer.dialog.events :as-alias dialog.e]
    [renderer.dialog.subs :as-alias dialog.s]
@@ -13,7 +11,9 @@
    [renderer.document.subs :as-alias document.s]
    [renderer.menubar.views :as menubar]
    [renderer.ui :as ui]
-   [renderer.utils.dom :as dom]))
+   [renderer.utils.dom :as dom]
+   [renderer.utils.i18n :refer [t]]
+   [renderer.utils.system :as system]))
 
 (defn about
   []
@@ -21,7 +21,7 @@
    [:div.flex.gap-3.items-start.pb-2
     [:p
      [:span.block [:strong "Version: "] config/version]
-     [:span.block [:strong "Browser: "] platform/user-agent]]]
+     [:span.block [:strong "Browser: "] system/user-agent]]]
    [:button.button.px-2.bg-primary.rounded.w-full
     {:auto-focus true
      :on-click #(rf/dispatch [::dialog.e/close])}
@@ -124,7 +124,7 @@
             (into [:div.text-xl.pl-5.pr-10.pt-5]))])
        (when (:close-button (last dialogs))
          [:> Dialog/Close
-          {:class "close-button small"
+          {:class "icon-button absolute top-3 right-3 small"
            :aria-label "Close"}
           [ui/icon "times"]])
        [:> Dialog/Description

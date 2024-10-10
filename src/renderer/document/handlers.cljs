@@ -11,9 +11,9 @@
    [renderer.notification.views :as notification.v]
    [renderer.utils.vec :as vec]))
 
-(mx/defn save-format :- PersistedDocument
+(mx/defn persisted-format :- PersistedDocument
   ([db]
-   (save-format db (:active-document db)))
+   (persisted-format db (:active-document db)))
   ([db, id :- uuid?]
    (let [document (-> (get-in db [:documents id])
                       (assoc :version (:version db)))]
@@ -21,9 +21,16 @@
              (m/decode PersistedDocument document mt/strip-extra-keys-transformer)
              (keys (:elements document))))))
 
+(mx/defn save-format :- string?
+  [document :- PersistedDocument]
+  (-> document
+      (dissoc :path :id :title)
+      (pr-str)))
+
 (mx/defn close
-  [{:keys [active-document document-tabs] :as db}, id :- uuid?]
-  (let [index (.indexOf document-tabs id)
+  [db, id :- uuid?]
+  (let [{:keys [active-document document-tabs]} db
+        index (.indexOf document-tabs id)
         active-document (if (= active-document id)
                           (get document-tabs (if (zero? index)
                                                (inc index)
@@ -44,26 +51,28 @@
 
 (mx/defn center
   "Centers the contents of the document to the current view."
-  [{:keys [active-document] :as db}]
+  [db]
   (cond-> db
-    (and active-document
+    (and (:active-document db)
          (-> db :dom-rect)
          (-> db :window :focused)
          (not (get-in db [:documents (:active-document db) :focused])))
     (-> (frame.h/focus-bounds :original)
-        (assoc-in [:documents active-document :focused] true))))
+        (assoc-in [:documents (:active-document db) :focused] true))))
 
 (mx/defn set-active
   [db, id :- uuid?]
   (assoc db :active-document id))
 
 (mx/defn search-by-path
-  [{:keys [documents]}, file-path :- string?]
-  (some #(when (and file-path (= (:path %) file-path)) (:id %)) (vals documents)))
+  [db, path :- string?]
+  (let [documents (vals (:documents db))]
+    (some #(when (and path (= (:path %) path)) (:id %)) documents)))
 
 (mx/defn new-title :- string?
-  [{:keys [documents]}]
-  (let [existing-titles (set (map :title (vals documents)))]
+  [db]
+  (let [documents (vals (:documents db))
+        existing-titles (set (map :title documents))]
     (loop [i 1]
       (let [title (str "Untitled-" i)]
         (if-not (contains? existing-titles title)
@@ -71,8 +80,9 @@
           (recur (inc i)))))))
 
 (mx/defn create-tab
-  [db, {:keys [id] :as document} :- Document]
-  (let [active-index (.indexOf (:document-tabs db) (:active-document db))
+  [db, document :- Document]
+  (let [id (:id document)
+        active-index (.indexOf (:document-tabs db) (:active-document db))
         document (cond-> document
                    (not (:title document))
                    (assoc :title (new-title db)))]
@@ -82,10 +92,8 @@
         (update :document-tabs #(vec/add % (inc active-index) id)))))
 
 (mx/defn assoc-attr
-  [{:keys [active-document] :as db},
-   k :- keyword?,
-   v :- Attr]
-  (assoc-in db [:documents active-document k] v))
+  [db, k :- keyword?, v :- Attr]
+  (assoc-in db [:documents (:active-document db) k] v))
 
 (mx/defn load
   [db, document]
@@ -105,7 +113,7 @@
             (set-active (:id document))))
 
       (let [explanation (-> document db/explain me/humanize str)]
-        (notification.h/add db [notification.v/spec-failed "Load document" explanation])))))
+        (notification.h/add db (notification.v/spec-failed "Load document" explanation))))))
 
 (mx/defn saved? :- boolean?
   [db, id :- uuid?]

@@ -190,9 +190,9 @@
 
                 (not (valid-elements? elements))
                 (-> db swap (notification.h/add
-                             [notification.v/spec-failed
+                             (notification.v/spec-failed
                               explanation
-                              (-> elements explain-elements me/humanize str)]))
+                              (-> elements explain-elements me/humanize str))))
 
                 :else
                 (let [current-position (position db)

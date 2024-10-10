@@ -302,10 +302,6 @@
     }
   }
 
-  .close-button {
-    @apply icon-button absolute top-3 right-3 !important;
-  }
-
   .loading {
     @apply absolute top-1/2 left-1/2;
 

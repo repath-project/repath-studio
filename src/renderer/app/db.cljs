@@ -1,7 +1,6 @@
 (ns renderer.app.db
   (:require
    [config :as config]
-   [i18n :as i18n]
    [malli.core :as m]
    [malli.transform :as mt]
    [renderer.dialog.db :refer [Dialog]]
@@ -14,6 +13,7 @@
    [renderer.timeline.db :refer [Timeline]]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.bounds :refer [Bounds]]
+   [renderer.utils.i18n :as i18n]
    [renderer.utils.math :refer [Vec2D]]
    [renderer.window.db :refer [Window]]))
 

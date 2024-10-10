@@ -512,9 +512,9 @@
                                   (db/tag? (:tag %2))
                                   (create (assoc %2 :parent id))) db child-els))]
     (if-not (db/valid? new-el)
-      (notification.h/add db [notification.v/spec-failed
+      (notification.h/add db (notification.v/spec-failed
                               "Invalid element"
-                              (-> new-el db/explain me/humanize str)])
+                              (-> new-el db/explain me/humanize str)))
       (cond-> db
         :always
         (assoc-in (conj (path db) id) new-el)

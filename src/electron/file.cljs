@@ -4,8 +4,7 @@
    ["fs" :as fs]
    ["path" :as path]
    [clojure.edn :as edn]
-   [config :as config]
-   [promesa.core :as p]))
+   [config :as config]))
 
 (def dialog-options
   {:defaultPath (.getPath app "documents")
@@ -21,8 +20,9 @@
 
 (defn- write-file!
   [file-path data]
-  (.writeFileSync fs file-path (pr-str (dissoc data :path :id :title)) "utf-8")
-  (p/resolved (serialize-document (select-keys data [:id]) file-path)))
+  (let [document (pr-str (dissoc data :path :id :title))]
+    (.writeFileSync fs file-path document "utf-8")
+    (js/Promise.resolve (serialize-document (select-keys data [:id]) file-path))))
 
 (defn- read!
   [file-path]
@@ -32,9 +32,10 @@
 
 (defn save-dialog!
   [options]
-  (p/let [file (.showSaveDialog dialog (clj->js options))
-          file (get (js->clj file) "filePath")]
-    (p/resolved file)))
+  (-> (.showSaveDialog dialog (clj->js options))
+      (.then (fn [^js/Object result]
+               (when-not (.-canceled result)
+                 (-> result js->clj (get "filePath")))))))
 
 (defn save-as!
   [data]
@@ -46,9 +47,11 @@
                   (assoc :defaultPath directory)
 
                   :always
-                  (update :defaultPath #(.join path % (:title document))) )]
-    (p/let [file (save-dialog! options)]
-      (write-file! file document))))
+                  (update :defaultPath #(.join path % (:title document))))]
+    (-> (save-dialog! options)
+        (.then (fn [file-path]
+                 (when file-path
+                   (write-file! file-path document)))))))
 
 (defn save!
   [data]
@@ -62,9 +65,13 @@
   [file-path]
   (if (and file-path (.existsSync fs file-path))
     (array (read! file-path))
-    (p/let [files (.showOpenDialog dialog (clj->js dialog-options))
-            file-paths (get (js->clj files) "filePaths")]
-      (p/resolved (clj->js (mapv read! file-paths))))))
+    (-> (.showOpenDialog dialog (clj->js dialog-options))
+        (.then (fn [^js/Object result]
+                 (when-not (.-canceled result)
+                   (->> (get (js->clj result) "filePaths")
+                        (mapv read!)
+                        (clj->js)
+                        (js/Promise.resolve))))))))
 
 (def export-options
   {:defaultPath (.getPath app "pictures")
@@ -73,11 +80,13 @@
 
 (defn export!
   [data]
-  (p/let [file (save-dialog! export-options)]
-    (.writeFile fs file data "utf-8" (fn [err]
-                                       (if err
-                                         (p/rejected err)
-                                         (p/resolved data))))))
+  (-> (save-dialog! export-options)
+      (.then (fn [file-path]
+               (when file-path
+                 (.writeFile fs file-path data "utf-8" (fn [error]
+                                                         (if error
+                                                           (js/Promise.reject error)
+                                                           (js/Promise.resolve data)))))))))
 
 (defn print!
   [content]
@@ -90,7 +99,7 @@
            #js {}
            (fn [success, error]
              (if success
-               (p/resolved nil)
-               (p/rejected error)))))
+               (js/Promise.resolve nil)
+               (js/Promise.reject error)))))
 
     (.loadURL window (str "data:text/html;charset=utf-8," content))))

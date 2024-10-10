@@ -1,7 +1,6 @@
 (ns renderer.element.events
   (:require
    [clojure.string :as str]
-   [platform :as platform]
    [re-frame.core :as rf]
    [renderer.app.effects :as-alias app.fx]
    [renderer.app.events :as-alias app.e]
@@ -12,6 +11,7 @@
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
    [renderer.utils.extra :refer [partial-right]]
+   [renderer.utils.system :as system]
    [renderer.window.effects :as-alias window.fx]
    [renderer.worker.events :as-alias worker.e]))
 
@@ -153,18 +153,19 @@
  (fn [{:keys [db]} _]
    (let [els (h/root-children db)
          svg (element/->svg els)]
-     (if platform/electron?
+     (if system/electron?
        {::window.fx/ipc-invoke {:channel "export"
                                 :data svg}}
-       {::fx/export [svg {:startIn "pictures"
-                          :types [{:accept {"image/svg+xml" [".svg"]}}]}]}))))
+       {::app.fx/save [:data svg
+                       :options {:startIn "pictures"
+                                 :types [{:accept {"image/svg+xml" [".svg"]}}]}]}))))
 
 (rf/reg-event-fx
  ::print
  (fn [{:keys [db]} _]
    (let [els (h/root-children db)
          svg (element/->svg els)]
-     (if platform/electron?
+     (if system/electron?
        {::window.fx/ipc-invoke {:channel "print"
                                 :data svg
                                 :on-resolution ::notification.e/add}}

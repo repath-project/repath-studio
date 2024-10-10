@@ -3,7 +3,6 @@
    ["@radix-ui/react-context-menu" :as ContextMenu]
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    [malli.experimental :as mx]
-   [platform :as platform]
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [renderer.app.subs :as-alias app.s]
@@ -13,7 +12,8 @@
    [renderer.history.subs :as-alias history.s]
    [renderer.history.views :as history.v]
    [renderer.ui :as ui]
-   [renderer.utils.dom :as dom]))
+   [renderer.utils.dom :as dom]
+   [renderer.utils.system :as system]))
 
 (defn actions
   []
@@ -82,11 +82,11 @@
               :action [::document.e/close-all]}
              {:label "Close saved"
               :action [::document.e/close-all-saved]}]
-      platform/electron?
+      system/electron?
       (concat [{:type :separator}
                {:label "Open containing directory"
                 :action [::document.e/open-directory path]
-                :disabled? (not (and path platform/electron?))}]))))
+                :disabled? (not (and path system/electron?))}]))))
 
 (mx/defn tab
   [id :- uuid?, title :- string?, active :- boolean?]

@@ -1,7 +1,7 @@
 (ns renderer.document.events
   (:require
    [cljs.reader :as edn]
-   [platform :as platform]
+   [config :as config]
    [re-frame.core :as rf]
    [renderer.app.effects :as-alias app.fx :refer [persist]]
    [renderer.app.events :as-alias app.e]
@@ -9,14 +9,20 @@
    [renderer.dialog.handlers :as dialog.h]
    [renderer.dialog.views :as dialog.v]
    [renderer.document.db :as db]
-   [renderer.document.effects :as fx]
    [renderer.document.handlers :as h]
    [renderer.element.handlers :as element.h]
    [renderer.history.handlers :as history.h :refer [finalize]]
+   [renderer.notification.handlers :as notification.h]
+   [renderer.notification.views :as notification.v]
    [renderer.utils.compatibility :as compatibility]
    [renderer.utils.dom :as dom]
+   [renderer.utils.system :as system]
    [renderer.utils.vec :as vec]
    [renderer.window.effects :as-alias window.fx]))
+
+(def file-picker-options
+  {:startIn "documents"
+   :types [{:accept {"application/repath-studio" [".rps"]}}]})
 
 (def active-path
   (let [db-store-key :re-frame-path/db-store]
@@ -186,12 +192,16 @@
  ::open
  [persist]
  (fn [_ [_ file-path]]
-   (if platform/electron?
+   (if system/electron?
      {::window.fx/ipc-invoke {:channel "open-documents"
                               :data file-path
                               :on-resolution ::load-multiple
                               :formatter #(mapv edn/read-string %)}}
-     {::fx/open nil})))
+     {::app.fx/open {:options file-picker-options
+                     :on-success ::load
+                     :formatter #(-> (edn/read-string %)
+                                     (assoc :title (.-name %)
+                                            :path (.-path %)))}})))
 
 (rf/reg-event-fx
  ::open-directory
@@ -203,11 +213,14 @@
  [(rf/inject-cofx ::app.fx/guid)
   (finalize "Load document")]
  (fn [{:keys [db guid]} [_ document]]
-   (let [migrated-document (compatibility/migrate-document document)
-         migrated (not= document migrated-document)
-         document (assoc migrated-document :id guid)]
-     {:db (h/load db document)
-      :dispatch (when (not migrated) [::saved document])})))
+   (if (and document (map? document) (:elements document))
+     (let [migrated-document (compatibility/migrate-document document)
+           migrated (not= document migrated-document)
+           document (assoc migrated-document :id guid)]
+       {:db (h/load db document)
+        :dispatch (when (not migrated) [::saved document])})
+     {:db (notification.h/add db (notification.v/generic-error {:title (str "Error while loading " (:title document))
+                                                                :message "File appears to be unsupported or corrupted."}))})))
 
 (rf/reg-event-fx
  ::load-multiple
@@ -217,43 +230,54 @@
 (rf/reg-event-fx
  ::save
  (fn [{:keys [db]} [_]]
-   (let [document (h/save-format db)]
-     (if platform/electron?
+   (let [document (h/persisted-format db)]
+     (if system/electron?
        {::window.fx/ipc-invoke {:channel "save-document"
                                 :data (pr-str document)
                                 :on-resolution ::saved
                                 :formatter edn/read-string}}
-       ;; The path is not available when we use web APIs for security reasons,
-       ;; so we always dispatch save-as.
-       {::fx/save-as document}))))
+       {::app.fx/save {:data (h/save-format document)
+                       :options file-picker-options
+                       :formatter (fn [file] {:id (:id document)
+                                              :title (.-name file)})
+                       :on-success ::saved}}))))
 
 (rf/reg-event-fx
  ::download
  (fn [{:keys [db]} [_]]
-   (let [document (-> db h/save-format (dissoc :path :id :title))]
-     {::fx/download (pr-str document)})))
+   (let [document (h/persisted-format db)]
+     {::app.fx/download {:data (h/save-format document)
+                         :title (str "document." config/ext)}})))
 
 (rf/reg-event-fx
  ::save-and-close
  (fn [{:keys [db]} [_ id]]
-   (let [document (h/save-format db id)]
-     (if platform/electron?
+   (let [document (h/persisted-format db id)]
+     (if system/electron?
        {::window.fx/ipc-invoke {:channel "save-document"
                                 :data (pr-str document)
                                 :on-resolution ::close-saved
                                 :formatter edn/read-string}}
-       {::fx/save-as document}))))
+       {::app.fx/save {:data (h/save-format document)
+                       :options file-picker-options
+                       :formatter (fn [file] {:id id
+                                              :title (.-name file)})
+                       :on-success ::saved}}))))
 
 (rf/reg-event-fx
  ::save-as
  (fn [{:keys [db]} [_]]
-   (let [document (h/save-format db)]
-     (if platform/electron?
+   (let [document (h/persisted-format db)]
+     (if system/electron?
        {::window.fx/ipc-invoke {:channel "save-document-as"
                                 :data (pr-str document)
                                 :on-resolution ::saved
                                 :formatter edn/read-string}}
-       {::fx/save-as document}))))
+       {::app.fx/save {:data (h/save-format document)
+                       :options file-picker-options
+                       :formatter (fn [file] {:id (:id document)
+                                              :title (.-name file)})
+                       :on-success ::saved}}))))
 
 (rf/reg-event-db
  ::saved

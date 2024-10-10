@@ -1,13 +1,12 @@
 (ns renderer.window.views
   (:require
-   [malli.experimental :as mx]
-   [platform :as platform]
    [re-frame.core :as rf]
    [renderer.document.subs :as-alias document.s]
    [renderer.menubar.views :as menubar]
    [renderer.theme.events :as-alias theme.e]
    [renderer.theme.subs :as-alias theme.s]
    [renderer.ui :as ui]
+   [renderer.utils.system :as system]
    [renderer.window.events :as-alias window.e]
    [renderer.window.subs :as-alias window.s]))
 
@@ -19,8 +18,8 @@
     :on-click #(rf/dispatch action)}
    [ui/icon icon]])
 
-(mx/defn window-control-buttons
-  [maximized :- boolean?]
+(defn window-control-buttons
+  [maximized]
   [{:action [::window.e/minimize]
     :title "Minimize"
     :icon "window-minimize"}
@@ -44,10 +43,10 @@
         maximized @(rf/subscribe [::window.s/maximized])
         theme-mode (name @(rf/subscribe [::theme.s/mode]))]
     [:div.flex.items-center.relative
-     (when-not (or fullscreen platform/mac?)
+     (when-not (or fullscreen system/mac?)
        [app-icon])
      [:div.flex.relative.bg-secondary
-      {:class (when (and platform/mac? (not fullscreen)) "ml-16")}
+      {:class (when (and system/mac? (not fullscreen)) "ml-16")}
       [menubar/root]]
      [:div.absolute.hidden.md:flex.justify-center.drag.grow.h-full.items-center.pointer-events-none
       {:class "left-1/2 -translate-x-1/2"
@@ -58,7 +57,7 @@
               :title (str "Theme mode - " theme-mode)
               :icon theme-mode
               :class "bg-primary"}]
-     (when (and platform/electron? (not fullscreen) (not platform/mac?))
+     (when (and system/electron? (not fullscreen) (not system/mac?))
        (into [:div.text-right]
              (map button (window-control-buttons maximized))))
      (when fullscreen

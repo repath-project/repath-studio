@@ -31,9 +31,9 @@
     (-> db
         (app.h/set-tool :select)
         (notification.h/add
-         [notification.v/unavailable-feature
+         (notification.v/unavailable-feature
           "EyeDropper"
-          "https://developer.mozilla.org/en-US/docs/Web/API/EyeDropper_API#browser_compatibility"]))))
+          "https://developer.mozilla.org/en-US/docs/Web/API/EyeDropper_API#browser_compatibility")))))
 
 (rf/reg-event-db
  ::success
@@ -50,7 +50,4 @@
  (fn [db [_ error]]
    (-> db
        (app.h/set-tool :select)
-       (notification.h/add
-        [:div
-         [:h2.pb-4.font-bold "EyeDropper canceled"]
-         [:div.text-error (str error)]]))))
+       (notification.h/add (notification.v/exception error)))))

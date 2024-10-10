@@ -1,9 +1,7 @@
 (ns renderer.app.events
   (:require
    [config :as config]
-   [i18n :as i18n]
    [malli.error :as me]
-   [platform :as platform]
    [re-frame.core :as rf]
    [renderer.app.db :as db]
    [renderer.app.effects :as fx :refer [persist]]
@@ -13,6 +11,8 @@
    [renderer.notification.events :as-alias notification.e]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
+   [renderer.utils.i18n :as i18n]
+   [renderer.utils.system :as system]
    [renderer.window.effects :as-alias window.fx]))
 
 (rf/reg-event-db
@@ -30,9 +30,9 @@
        {::fx/local-storage-clear nil
         :db (cond-> db
               config/debug?
-              (notification.h/add [notification.v/spec-failed
+              (notification.h/add (notification.v/spec-failed
                                    "Invalid local db"
-                                   (-> app-db db/explain me/humanize str)]))}))))
+                                   (-> app-db db/explain me/humanize str))))}))))
 
 (rf/reg-event-fx
  ::persist
@@ -126,7 +126,7 @@
 (rf/reg-event-fx
  ::load-system-fonts
  (fn [_ [_ file-path]]
-   (if platform/electron?
+   (if system/electron?
      {::window.fx/ipc-invoke {:channel "load-system-fonts"
                               :data file-path
                               :on-resolution ::set-system-fonts
@@ -136,7 +136,8 @@
 (rf/reg-event-fx
  ::load-webref
  (fn [_ [_ file-path]]
-   {::window.fx/ipc-invoke {:channel "load-webref"
-                            :data file-path
-                            :on-resolution ::set-webref-css
-                            :formatter #(js->clj % :keywordize-keys true)}}))
+   (when system/electron?
+     {::window.fx/ipc-invoke {:channel "load-webref"
+                              :data file-path
+                              :on-resolution ::set-webref-css
+                              :formatter #(js->clj % :keywordize-keys true)}})))

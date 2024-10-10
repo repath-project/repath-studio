@@ -1,18 +1,17 @@
 (ns renderer.utils.file
   (:require
    [clojure.edn :as edn]
-   [config :as config]
    [re-frame.core :as rf]
    [renderer.document.events :as-alias document.e]
    [renderer.notification.events :as-alias notification.e]))
 
 (defn download!
-  [data]
+  [{:keys [data title]}]
   (let [blob (js/Blob. [data])
         url (js/URL.createObjectURL blob)
         a (js/document.createElement "a")]
     (.setAttribute a "href" url)
-    (.setAttribute a "download" (str "document." config/ext))
+    (.setAttribute a "download" title)
     (.click a)
     (js/window.URL.revokeObjectURL url)))
 
@@ -20,8 +19,8 @@
   [cb]
   (let [el (js/document.createElement "input")]
     (set! (.-type el) "file")
-    (.addEventListener el "change" #(do (.remove el)
-                                        (cb (first (.. % -target -files)))))
+    (.addEventListener el "change" (fn [e] (.remove el)
+                                           (cb (first (.. e -target -files)))))
     (.click el)))
 
 (defn read!
@@ -39,20 +38,31 @@
 
 (defn open!
   "https://developer.mozilla.org/en-US/docs/Web/API/Window/showOpenFilePicker"
-  ([file-picker-options]
-   (open! file-picker-options read!))
-  ([file-picker-options cb]
-   (if (.-showOpenFilePicker js/window)
-     (.then (.showOpenFilePicker js/window (clj->js file-picker-options))
-            (fn [[^js/FileSystemFileHandle file-handle]]
-              (.then (.getFile file-handle) cb)))
-     (legacy-open! cb))))
+  [{:keys [options callback]}]
+  (let [callback (or callback read!)]
+    (if (.-showOpenFilePicker js/window)
+    (-> (.showOpenFilePicker js/window (clj->js options))
+        (.then (fn [[^js/FileSystemFileHandle file-handle]]
+                 (.then (.getFile file-handle) callback)))
+        (.catch #(rf/dispatch [::notification.e/exception %])))
+    (legacy-open! callback))))
 
 (defn save!
   "https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker"
-  [file-picker-options cb]
+  [{:keys [options data on-success formatter]}]
   (if (.-showSaveFilePicker js/window)
-    (.then (.showSaveFilePicker js/window (clj->js file-picker-options)) cb)
+    (-> (.showSaveFilePicker js/window (clj->js options))
+        (.then (fn [^js/FileSystemFileHandle file-handle]
+                 (.then (.createWritable file-handle)
+                        (fn [^js/FileSystemWritableFileStream writable-stream]
+                          (.then (.write writable-stream data)
+                                 (fn []
+                                   (.close writable-stream)
+                                   (when on-success
+                                     (rf/dispatch [on-success (if formatter
+                                                                (formatter file-handle)
+                                                                file-handle)]))))))))
+        (.catch #(rf/dispatch [::notification.e/exception %])))
     (rf/dispatch
      [::notification.e/unavailable-feature
       "Save File Picker"
