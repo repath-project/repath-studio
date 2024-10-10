@@ -22,7 +22,7 @@
 (defmethod tool.hierarchy/activate ::tool.hierarchy/renderable
   [db]
   (-> db
-      (assoc :cursor "crosshair")
+      (app.h/set-cursor "crosshair")
       (dissoc :drag :pointer-offset :clicked-element)
       (element.h/dissoc-temp)))
 

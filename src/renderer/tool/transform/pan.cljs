@@ -41,5 +41,5 @@
 (defmethod tool.hierarchy/drag-end :pan
   [db _e]
   (-> db
-      (assoc :cursor "grab")
+      (app.h/set-cursor "grab")
       (app.h/add-fx [:dispatch [::app.e/persist]])))

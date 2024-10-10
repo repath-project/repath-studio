@@ -78,11 +78,11 @@
 
     :always
     (-> (element.h/clear-hovered)
-        (assoc :cursor (if (and element
-                                (or (= (:type element) :handle)
-                                    (not (element/root? element))))
-                         "move"
-                         "default")))
+        (app.h/set-cursor (if (and element
+                                   (or (= (:type element) :handle)
+                                       (not (element/root? element))))
+                            "move"
+                            "default")))
 
     (:id element)
     (element.h/hover (:id element))))

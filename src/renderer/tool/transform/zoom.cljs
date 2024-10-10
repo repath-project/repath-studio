@@ -29,13 +29,13 @@
   [db e]
   (cond-> db
     (pointer/shift? e)
-    (assoc :cursor "zoom-out")))
+    (app.h/set-cursor "zoom-out")))
 
 (defmethod tool.hierarchy/key-up :zoom
   [db e]
   (cond-> db
     (not (pointer/shift? e))
-    (assoc :cursor "zoom-in")))
+    (app.h/set-cursor "zoom-in")))
 
 (defmethod tool.hierarchy/drag-start :zoom
   [db]
@@ -64,7 +64,7 @@
         furute-zoom (min width-ratio height-ratio)]
     (-> db
         (element.h/dissoc-temp)
-        (assoc :cursor (if (pointer/shift? e) "zoom-out" "zoom-in"))
+        (app.h/set-cursor (if (pointer/shift? e) "zoom-out" "zoom-in"))
         (frame.h/zoom-by (if (pointer/shift? e)
                            zoom-sensitivity
                            (/ furute-zoom current-zoom)))
