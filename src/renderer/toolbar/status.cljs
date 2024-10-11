@@ -160,8 +160,8 @@
        {:style {:max-height "var(--button-size)"}}
        help-message]]
      (when loading
-       [:span.icon-button.relative
-        [ui/icon "spinner" {:class "loading"}]])
+       [:button.icon-button
+        [ui/loading-indicator]])
      (into [:<>]
            (map (fn [{:keys [title active icon action class]}]
                   [ui/radio-icon-button icon @(rf/subscribe active)

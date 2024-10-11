@@ -191,6 +191,9 @@
                                                                                              {:op :rest, :spec :map}],
                                                                                       :ret :any,
                                                                                       :min-arity 1}}},
+                                                     slider {:arities {:varargs {:args [{:op :rest, :spec :map}],
+                                                                                 :ret :any,
+                                                                                 :min-arity 0}}},
                                                      shortcuts {:arities {1 {:args [:vector], :ret :any}}},
                                                      radio-icon-button {:arities {:varargs {:args [:string
                                                                                                    :boolean

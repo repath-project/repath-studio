@@ -242,13 +242,6 @@
     }
   }
 
-  .loading {
-    @apply absolute top-1/2 left-1/2;
-
-    margin: -9px 0 0 -9px;
-    animation: spin 4s linear infinite;
-  }
-
   .dialog-content {
     @apply fixed bg-secondary rounded-lg overflow-hidden shadow-xl border border-default left-1/2 top-1/2;
     width: 500px;

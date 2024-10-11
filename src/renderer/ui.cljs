@@ -26,6 +26,11 @@
    props
    [icon icon-name]])
 
+(defn loading-indicator
+  []
+  [icon "spinner"
+   {:class "animate-spin"}])
+
 (defn switch
   [{:keys [id label default-checked? on-checked-change]}]
   [:span.inline-flex.items-center
@@ -39,8 +44,8 @@
      {:class "block bg-primary rounded-full shadow-sm w-5 h-5 will-change-transform
               transition-transform translate-x-0.5 data-[state=checked]:translate-x-[18px]"}]]])
 
-(defn slider
-  [props]
+(mx/defn slider
+  [props :- Props]
   [:> Slider/Root
    (merge {:class "relative flex items-center select-none w-full touch-none h-full"} props)
    [:> Slider/Track {:class "relative h-1 bg-secondary flex-1"}
