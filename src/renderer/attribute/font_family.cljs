@@ -50,7 +50,8 @@
                        (when (and state (empty? suggestions))
                          (rf/dispatch [::app.e/load-system-fonts])))}
       [:> Popover/Trigger
-       {:class "form-control-button"}
+       {:class "form-control-button"
+        :disabled (:disabled attrs)}
        [ui/icon "magnifier"]]
       [:> Popover/Portal
        [:> Popover/Content
