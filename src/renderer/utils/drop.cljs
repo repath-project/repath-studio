@@ -59,14 +59,18 @@
   "https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/files"
   [position files]
   (doseq [file files]
-    (case (.-type file)
-      "image/png" (add-image! file position)
-      "image/jpeg" (add-image! file position)
-      "image/bmp" (add-image! file position)
-      "image/gif" (add-image! file position)
-      "image/svg+xml" (add-svg! file position)
-      (when (= (last (str/split (.-name file) ".")) "rps")
-        (file/read! file)))))
+    (when-let [file-type (.-type file)]
+      (cond
+        (= file-type "image/svg+xml")
+        (add-svg! file position)
+
+        (contains? #{"image/jpeg" "image/png" "image/bmp" "image/gif"} file-type)
+        (add-image! file position)
+
+        :else
+        (let [extension (last (str/split (.-name file) "."))]
+          (when (= extension "rps")
+            (file/read! file)))))))
 
 (defn add-text!
   [s [x y]]

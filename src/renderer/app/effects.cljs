@@ -101,18 +101,11 @@
      (js/setTimeout #(.focus element)))))
 
 (rf/reg-fx
- ::load-system-fonts
- (fn []
+ ::query-local-fonts
+ (fn [{:keys [on-resolution formatter]}]
    (when-not (undefined? js/window.queryLocalFonts)
      (-> (.queryLocalFonts js/window)
-         (.then (fn [fonts]
-                  (let [->font-map (fn [^js font-data]
-                                     (into {} [[:postscriptName (.-postscriptName font-data)]
-                                               [:fullName (.-fullName font-data)]
-                                               [:family (.-family font-data)]
-                                               [:style (.-style font-data)]]))
-                        fonts (mapv ->font-map fonts)]
-                    (rf/dispatch [::e/set-system-fonts fonts]))))))))
+         (.then #(rf/dispatch [on-resolution (cond-> % formatter formatter)]))))))
 
 (rf/reg-fx
  ::save

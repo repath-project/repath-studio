@@ -123,6 +123,13 @@
  (fn [_ [_ id]]
    {::fx/focus id}))
 
+(defn ->font-map
+  [^js/FontData font-data]
+  (into {} [[:postscriptName (.-postscriptName font-data)]
+            [:fullName (.-fullName font-data)]
+            [:family (.-family font-data)]
+            [:style (.-style font-data)]]))
+
 (rf/reg-event-fx
  ::load-system-fonts
  (fn [_ [_ file-path]]
@@ -131,7 +138,8 @@
                               :data file-path
                               :on-resolution ::set-system-fonts
                               :formatter #(js->clj % :keywordize-keys true)}}
-     {::fx/load-system-fonts nil})))
+     {::fx/query-local-fonts {:on-resolution ::set-system-fonts
+                              :formatter #(mapv ->font-map %)}})))
 
 (rf/reg-event-fx
  ::load-webref
