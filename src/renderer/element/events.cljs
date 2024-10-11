@@ -270,20 +270,7 @@
  (fn [db [_ data _msg]]
    (-> db
        (h/import-svg data)
-       (h/collapse)
-       (assoc :loading false))))
-
-(rf/reg-event-fx
- ::import-svg
- (fn [{:keys [db]} [_ data]]
-   {:db (assoc db :loading true)
-    :dispatch ^:flush-dom [::import data "Import svg"]}))
-
-(rf/reg-event-fx
- ::import-traced-image
- (fn [{:keys [db]} [_ data]]
-   {:db (assoc db :loading true)
-    :dispatch ^:flush-dom [::import data "Trace image"]}))
+       (h/collapse))))
 
 (rf/reg-event-db
  ::animate

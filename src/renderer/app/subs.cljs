@@ -38,10 +38,6 @@
  :-> :drag)
 
 (rf/reg-sub
- ::loading
- :-> :loading)
-
-(rf/reg-sub
  ::cursor
  :-> :cursor)
 

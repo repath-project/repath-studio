@@ -276,7 +276,4 @@
            [ui/scroll-area [toolbar.object/root]]]]]]]
       [home])]
    [dialog.v/root]
-   [notification/main]
-   (when @(rf/subscribe [::app.s/loading])
-     [:div.absolute.inset-0.backdrop
-      [:div.loader]])])
+   [notification/main]])

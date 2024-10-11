@@ -47,6 +47,6 @@
                                 :position [x y]}
                          :callback (fn [e]
                                      (let [data (js->clj (.. e -data) :keywordize-keys true)]
-                                       (rf/dispatch [::element.e/import-traced-image data])
+                                       (rf/dispatch [::element.e/import data "Trace image"])
                                        (rf/dispatch [::worker.e/completed (uuid (:id data))])))}])))))))
 

@@ -76,7 +76,6 @@
    [:debug-info {:default false} boolean?]
    [:pen-mode {:default false} boolean?]
    [:backdrop {:default false} boolean?]
-   [:loading {:default false} boolean?]
    [:explanation {:optional true} string?]
    [:lang {:default :en-Us :persist true} Lang]
    [:repl-mode {:default :cljs} keyword?]
