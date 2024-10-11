@@ -35,6 +35,7 @@
   {; :icon "bezier-curve"
    :description "The <path> SVG element is the generic element to define a shape.
                  All the basic shapes can be created with a path element."
+   :icon "bezier-curve"
    :attrs [:stroke-width
            :fill
            :stroke

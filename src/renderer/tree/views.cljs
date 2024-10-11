@@ -1,6 +1,7 @@
 (ns renderer.tree.views
   (:require
    ["@radix-ui/react-context-menu" :as ContextMenu]
+   [clojure.string :as str]
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [renderer.app.subs :as-alias app.s]
@@ -10,6 +11,7 @@
    [renderer.element.subs :as-alias element.s]
    [renderer.element.views :as element.v]
    [renderer.frame.events :as-alias frame.e]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tree.events :as-alias e]
    [renderer.ui :as ui]
    [renderer.utils.dom :as dom]
@@ -45,11 +47,12 @@
 
 (defn item-label
   [{:keys [id label visible tag]}]
-  (ra/with-let [edit-mode? (ra/atom false)]
+  (ra/with-let [edit-mode? (ra/atom false)
+                tag-label (str/capitalize (name tag))]
     (if @edit-mode?
       [:input.list-item-input
        {:default-value label
-        :placeholder tag
+        :placeholder tag-label
         :auto-focus true
         :on-key-down #(keyb/input-key-down-handler! % label set-item-label! id)
         :on-blur (fn [e]
@@ -63,7 +66,7 @@
          :on-double-click (fn [e]
                             (.stopPropagation e)
                             (reset! edit-mode? true))}
-        (if (empty? label) tag label)]])))
+        (if (empty? label) tag-label label)]])))
 
 (defn drop-handler!
   [e parent-id]
@@ -120,7 +123,7 @@
                               [::document.e/collapse-el id]))}])
 
 (defn list-item-button
-  [{:keys [id selected children locked visible] :as el} depth hovered collapsed]
+  [{:keys [id selected children locked visible tag] :as el} depth hovered collapsed]
   [:div.button.list-item-button
    {:class [(when selected "selected")
             (when hovered "hovered")]
@@ -152,7 +155,13 @@
    [:div.flex.items-center.content-between.w-full
     (when (seq children)
       [toggle-collapsed-button id collapsed])
-    [:div.flex-1.overflow-hidden [item-label el]]
+    [:div.flex-1.overflow-hidden.flex.items-center
+     {:class "gap-1.5"}
+     ;; FIXME Replace should not be used here.
+     [ui/icon
+      (str/replace (:icon (tool.hierarchy/properties tag)) "-alt" "")
+      {:class (when-not visible "opacity-60")}]
+     [item-label el]]
     [lock-button id locked]
     [visibility-button id visible]]])
 
