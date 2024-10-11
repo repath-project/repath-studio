@@ -15,4 +15,4 @@
                                         [:point Vec2D]
                                         [:base-point Vec2D]
                                         [:dist-squared number?]]]
-   [:options {:default (set SnapOption)} [:set SnapOption]]])
+   [:options {:default (set snap-options)} [:set SnapOption]]])

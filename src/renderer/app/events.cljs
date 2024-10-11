@@ -31,7 +31,7 @@
         :db (cond-> db
               config/debug?
               (notification.h/add (notification.v/spec-failed
-                                   "Invalid local db"
+                                   "Invalid local configuration"
                                    (-> app-db db/explain me/humanize str))))}))))
 
 (rf/reg-event-fx
