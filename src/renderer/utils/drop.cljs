@@ -50,9 +50,9 @@
     (.addEventListener
      reader
      "load"
-     #(rf/dispatch [::element.e/import-svg {:svg (.-result reader)
-                                            :label (.-name file)
-                                            :position position}]))
+     #(rf/dispatch [::element.e/import {:svg (.-result reader)
+                                        :label (.-name file)
+                                        :position position} "Import svg"]))
     (.readAsText reader file)))
 
 (defn files!
