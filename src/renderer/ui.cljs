@@ -5,6 +5,7 @@
    ["@radix-ui/react-context-menu" :as ContextMenu]
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    ["@radix-ui/react-scroll-area" :as ScrollArea]
+   ["@radix-ui/react-slider" :as Slider]
    ["@radix-ui/react-switch" :as Switch]
    ["react-svg" :refer [ReactSVG]]
    [malli.experimental :as mx]
@@ -28,13 +29,23 @@
 (defn switch
   [{:keys [id label default-checked? on-checked-change]}]
   [:span.inline-flex.items-center
-   [:label.switch-label {:for id} label]
+   [:label.h-auto.bg-transparent {:for id} label]
    [:> Switch/Root
-    {:class "switch-root"
+    {:class "overlay relative rounded-full w-10 h-6 data-[state=checked]:bg-accent"
      :id id
      :default-checked default-checked?
      :on-checked-change on-checked-change}
-    [:> Switch/Thumb {:class "switch-thumb"}]]])
+    [:> Switch/Thumb
+     {:class "block bg-primary rounded-full shadow-sm w-5 h-5 will-change-transform
+              transition-transform translate-x-0.5 data-[state=checked]:translate-x-[18px]"}]]])
+
+(defn slider
+  [props]
+  [:> Slider/Root
+   (merge {:class "relative flex items-center select-none w-full touch-none h-full"} props)
+   [:> Slider/Track {:class "relative h-1 bg-secondary flex-1"}
+    [:> Slider/Range {:class "absolute h-full overlay"}]]
+   [:> Slider/Thumb {:class "slider-thumb"}]])
 
 (defn format-shortcut
   [[shortcut]]

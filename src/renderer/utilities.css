@@ -12,15 +12,15 @@
   }
 
   .bg-error {
-    background: var(--background-error);
+    background: var(--bg-error);
   }
 
   .bg-warning {
-    background: var(--background-warning)
+    background: var(--bg-warning)
   }
 
   .bg-success {
-    background: var(--background-success)
+    background: var(--bg-success)
   }
 
   .drag {
@@ -69,6 +69,10 @@
 
   .text-accent {
     color: var(--accent);
+  }
+
+  .text-accent-inverted {
+    color: var(--accent-inverted);
   }
 
   .text-active {

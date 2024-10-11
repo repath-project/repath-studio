@@ -29,9 +29,9 @@
 
   --border-color: rgba(255, 255, 255, .15);
 
-  --background-error: #962121;
-  --background-warning: #a56a00;
-  --background-success: #1c611c;
+  --bg-error: #962121;
+  --bg-warning: #a56a00;
+  --bg-success: #1c611c;
 
   --text-error: #f56464;
   --text-warning: #ffc252;
@@ -58,8 +58,7 @@
   --text-warning: #a56a00;
   --text-success: #1c611c;
 
-  --background-error: #f56464;
-  --background-warning: #ffc252;
-  --background-success: #63c263;
-
+  --bg-error: #f56464;
+  --bg-warning: #ffc252;
+  --bg-success: #63c263;
 }

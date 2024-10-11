@@ -2,7 +2,6 @@
   (:require
    ["@radix-ui/react-hover-card" :as HoverCard]
    ["@radix-ui/react-select" :as Select]
-   ["@radix-ui/react-slider" :as Slider]
    [camel-snake-kebab.core :as csk]
    [clojure.string :as str]
    [re-frame.core :as rf]
@@ -111,14 +110,10 @@
                                     (rf/dispatch [::element.e/update-attr-and-focus k - step])
                                     (rf/dispatch [::element.e/update-attr-and-focus k + step]))))}]
    [:div.px-1.w-full.bg-primary
-    [:> Slider/Root
-     (merge attrs {:class "slider-root"
-                   :value [(if (= "" v) placeholder v)]
-                   :onValueChange (fn [[v]] (rf/dispatch [::element.e/preview-attr k v]))
-                   :onValueCommit (fn [[v]] (rf/dispatch [::element.e/set-attr k v]))})
-     [:> Slider/Track {:class "slider-track"}
-      [:> Slider/Range {:class "slider-range"}]]
-     [:> Slider/Thumb {:class "slider-thumb"}]]]])
+    [ui/slider (merge attrs
+                      {:value [(if (= "" v) placeholder v)]
+                       :on-value-change (fn [[v]] (rf/dispatch [::element.e/preview-attr k v]))
+                       :on-value-commit (fn [[v]] (rf/dispatch [::element.e/set-attr k v]))})]]])
 
 (defn select-input
   [k v {:keys [disabled items default-value] :as attrs}]

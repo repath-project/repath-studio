@@ -59,14 +59,11 @@
     }
 
     &.selected {
-      @apply bg-accent !important;
-      color: var(--accent-inverted);
+      @apply bg-accent text-accent-inverted !important;
     }
 
     &:disabled {
-      cursor: initial;
-      pointer-events: none;
-      color: var(--font-color-disabled);
+      @apply cursor-default pointer-events-none text-disabled;
     }
   }
 
@@ -84,16 +81,10 @@
   }
 
   .icon {
-    display: flex;
-    justify-content: center;
-
-    div {
-      display: flex;
-      fill: inherit;
-    }
+    @apply flex justify-center;
 
     svg {
-      fill: currentColor;
+      @apply fill-current;
     }
   }
 
@@ -122,16 +113,13 @@
     @apply button button-size rounded;
 
     &.small {
-      @apply button-size-sm;
-      margin: 0 !important;
-      border-radius: 2px !important;
+      @apply button-size-sm rounded-sm m-0;
     }
   }
 
   .radio-icon-button {
     &.selected {
-      color: var(--accent-inverted);
-      background-color: var(--accent);
+      @apply bg-accent text-accent-inverted;
     }
   }
 
@@ -244,61 +232,13 @@
     }
   }
 
-  .switch-root {
-    @apply overlay relative rounded-full;
-    width: 42px;
-    height: 25px;
-
-    &[data-state='checked'] {
-      background-color: var(--accent);
-    }
-  }
-
-  .switch-thumb {
-    @apply block bg-primary rounded-full shadow-sm;
-    width: 21px;
-    height: 21px;
-    transition: transform 100ms;
-    transform: translateX(2px);
-    will-change: transform;
-
-    &[data-state='checked'] {
-      transform: translateX(19px);
-    }
-  }
-
-  .switch-label {
-    @apply h-auto;
-    background: transparent;
-  }
-
-  .slider-root {
-    @apply relative flex items-center select-none w-full touch-none h-full;
-  }
-
-  .slider-track {
-    @apply relative h-full bg-secondary flex-1;
-    height: 4px;
-  }
-
-  .slider-range {
-    @apply absolute h-full overlay;
-  }
-
   .slider-thumb {
-    @apply flex shadow h-full rounded-sm;
+    @apply flex shadow h-5 w-2 rounded-sm data-[disabled]:opacity-50;
     background-color: var(--font-color);
-    width: 8px;
-    height: 20px;
 
     &:focus {
       @apply outline-none;
       box-shadow: 0 0 0 4px var(--border-color);
-    }
-
-
-    &[data-disabled] {
-      background-color: var(--font-color-disabled);
     }
   }
 
