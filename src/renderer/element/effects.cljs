@@ -39,16 +39,14 @@
         data-url
         [width height]
         (fn [context]
-          (-> (.getImageData context 0 0 width height)
-              (.then (fn [image-data]
-                       (rf/dispatch [::worker.e/create
-                                     {:action action
-                                      :worker worker
-                                      :data {:name (:name el)
-                                             :image image-data
-                                             :position [x y]}
-                                      :callback (fn [e]
-                                                  (let [data (js->clj (.. e -data) :keywordize-keys true)]
-                                                    (rf/dispatch [::element.e/import-traced-image data])
-                                                    (rf/dispatch [::worker.e/completed (uuid (:id data))])))}]))))))))))
+          (rf/dispatch [::worker.e/create
+                        {:action action
+                         :worker worker
+                         :data {:name (:name el)
+                                :image (.getImageData context 0 0 width height)
+                                :position [x y]}
+                         :callback (fn [e]
+                                     (let [data (js->clj (.. e -data) :keywordize-keys true)]
+                                       (rf/dispatch [::element.e/import-traced-image data])
+                                       (rf/dispatch [::worker.e/completed (uuid (:id data))])))}])))))))
 
