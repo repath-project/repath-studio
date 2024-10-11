@@ -11,7 +11,6 @@
       worker
       "message"
       #(let [response-data (js->clj (.. % -data) :keywordize-keys true)]
-         (print response-data)
          (rf/dispatch [::worker.e/completed (uuid (:id response-data))])
          (rf/dispatch [on-resolution response-data])))
      (.postMessage worker (clj->js data)))))
