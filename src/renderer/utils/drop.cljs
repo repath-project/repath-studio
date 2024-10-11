@@ -52,7 +52,7 @@
      "load"
      #(rf/dispatch [::element.e/import {:svg (.-result reader)
                                         :label (.-name file)
-                                        :position position} "Import svg"]))
+                                        :position position}]))
     (.readAsText reader file)))
 
 (defn files!

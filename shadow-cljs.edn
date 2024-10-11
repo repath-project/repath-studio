@@ -52,9 +52,9 @@
                                              malli.dev.cljs-kondo-preload]
                                   :init-fn renderer.core/init!}
 
-                       :trace {:init-fn worker.trace/init!
-                               :web-worker true
-                               :depends-on #{:shared}}}}
+                       :worker {:init-fn worker.core/init!
+                                :web-worker true
+                                :depends-on #{:shared}}}}
 
   :bootstrap {:target :bootstrap
               :output-dir "resources/public/js/bootstrap"

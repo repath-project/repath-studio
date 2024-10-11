@@ -266,11 +266,9 @@
 
 (rf/reg-event-db
  ::import
- [(finalize #(get % 2))]
- (fn [db [_ data _msg]]
-   (-> db
-       (h/import-svg data)
-       (h/collapse))))
+ [(finalize "Import svg")]
+ (fn [db [_ data]]
+   (h/import-svg db data)))
 
 (rf/reg-event-db
  ::animate
@@ -323,4 +321,10 @@
  ::trace
  (fn [{:keys [db]} [_]]
    (let [images (h/filter-by-tag db :image)]
-     {::fx/->svg [images "Tracing" "trace.js"]})))
+     {::fx/trace images})))
+
+(rf/reg-event-db
+ ::traced
+ [(finalize "Trace image")]
+ (fn [db [_ data]]
+   (h/import-svg db data)))

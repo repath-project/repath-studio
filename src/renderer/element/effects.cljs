@@ -27,26 +27,23 @@
     (set! (.-src image) data-url)))
 
 (rf/reg-fx
- ::->svg
- (fn [[elements action worker]]
-   (doseq [el elements]
-     (let [data-url (-> el :attrs :href)
-           [x y] (:bounds el)
+ ::trace
+ (fn [images]
+   (doseq [image images]
+     (let [data-url (-> image :attrs :href)
+           [x y] (:bounds image)
            ;; TODO: Handle preserveAspectRatio.
-           width (units/unit->px (-> el :attrs :width))
-           height (units/unit->px (-> el :attrs :height))]
+           width (units/unit->px (-> image :attrs :width))
+           height (units/unit->px (-> image :attrs :height))]
        (data-url->canvas-context!
         data-url
         [width height]
         (fn [context]
-          (rf/dispatch [::worker.e/create
-                        {:action action
-                         :worker worker
-                         :data {:name (:name el)
-                                :image (.getImageData context 0 0 width height)
-                                :position [x y]}
-                         :callback (fn [e]
-                                     (let [data (js->clj (.. e -data) :keywordize-keys true)]
-                                       (rf/dispatch [::element.e/import data "Trace image"])
-                                       (rf/dispatch [::worker.e/completed (uuid (:id data))])))}])))))))
+          (rf/dispatch
+           [::worker.e/create
+            {:action "trace"
+             :data {:label (:label image)
+                    :image (.getImageData context 0 0 width height)
+                    :position [x y]}
+             :on-resolution ::element.e/traced}])))))))
 

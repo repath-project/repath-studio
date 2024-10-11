@@ -690,10 +690,12 @@
   (let [[x y] position
         hickory (hickory/as-hickory (hickory/parse svg))
         zipper (hickory.zip/hickory-zip hickory)
-        svg (hiccup/find-svg zipper)]
-    (add db (-> svg
+        svg (hiccup/find-svg zipper)
+        svg (-> svg
                 (assoc :label label)
                 (update :attrs dissoc :desc :version :xmlns)
                 (assoc-in [:attrs :x] x)
-                (assoc-in [:attrs :y] y)))))
+                (assoc-in [:attrs :y] y))]
+    (-> (add db svg)
+        (collapse))))
 
