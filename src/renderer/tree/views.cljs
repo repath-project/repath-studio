@@ -130,7 +130,7 @@
     :on-double-click #(rf/dispatch [::frame.e/pan-to-element id])
     :on-pointer-enter #(rf/dispatch [::document.e/set-hovered-id id])
     :ref (fn [this]
-           (when (and this selected hovered)
+           (when (and this selected)
              (dom/scroll-into-view! this)
              (set-last-focused-id! (.getAttribute this "data-id"))))
     :draggable true
