@@ -1,7 +1,6 @@
 (ns map-test
   (:require
    [cljs.test :refer-macros [deftest testing are]]
-   [renderer.tool.core]
    [renderer.utils.map :as map]))
 
 (deftest test-merge-common-with

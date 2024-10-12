@@ -1,7 +1,6 @@
 (ns vec-test
   (:require
    [cljs.test :refer-macros [deftest testing are]]
-   [renderer.tool.core]
    [renderer.utils.vec :as vec]))
 
 (deftest test-remove-nth

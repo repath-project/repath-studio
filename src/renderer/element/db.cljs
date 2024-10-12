@@ -2,12 +2,12 @@
   (:require
    [malli.core :as m]
    [malli.transform :as mt]
-   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.element.hierarchy :as hierarchy]
    [renderer.utils.bounds :refer [Bounds]]))
 
 (defn tag?
   [k]
-  (contains? (descendants ::tool.hierarchy/element) k))
+  (contains? (descendants ::hierarchy/element) k))
 
 (def Tag
   [:fn {:error/fn (fn [{:keys [value]} _] (str value ", is not a supported tag"))}

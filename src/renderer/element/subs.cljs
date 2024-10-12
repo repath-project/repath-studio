@@ -5,7 +5,7 @@
    [renderer.app.subs :as-alias app.s]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.handlers :as h]
-   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.element.hierarchy :as hierarchy]
    [renderer.utils.attribute :as utils.attr]
    [renderer.utils.element :as utils.el]
    [renderer.utils.map :as utils.map]))
@@ -99,7 +99,7 @@
                    (sort-by (fn [[id _]]
                               (-> (first selected-elements)
                                   :tag
-                                  (tool.hierarchy/properties)
+                                  (hierarchy/properties)
                                   :attrs
                                   (.indexOf id)))
                             (utils.el/attributes (first selected-elements))))]
@@ -114,7 +114,7 @@
  ::area
  :<- [::selected]
  (fn [selected-elements _]
-   (reduce  #(+ %1 (tool.hierarchy/area %2)) 0 selected-elements)))
+   (reduce  #(+ %1 (hierarchy/area %2)) 0 selected-elements)))
 
 (rf/reg-sub
  ::ancestor-ids

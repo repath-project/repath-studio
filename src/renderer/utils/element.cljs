@@ -7,8 +7,8 @@
    [malli.experimental :as mx]
    [reagent.dom.server :as dom.server]
    [renderer.element.db :refer [Element Attrs]]
+   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.snap.db :refer [SnapOption]]
-   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.attribute :as attr]
    [renderer.utils.bounds :as utils.bounds :refer [Bounds]]
    [renderer.utils.map :as map]
@@ -35,12 +35,12 @@
 (mx/defn offset :- Vec2D
   [el :- Element]
   (let [el-bounds (:bounds el)
-        local-bounds (tool.hierarchy/bounds el)]
+        local-bounds (element.hierarchy/bounds el)]
     (vec (take 2 (mat/sub el-bounds local-bounds)))))
 
 (mx/defn snapping-points :- [:* Vec2D]
   [el :- Element, options :- [:set SnapOption]]
-  (let [points (or (tool.hierarchy/snapping-points el) [])]
+  (let [points (or (element.hierarchy/snapping-points el) [])]
     (if-let [bounds (:bounds el)]
       (let [[x1 y1 x2 y2] bounds
             [cx cy] (utils.bounds/center bounds)]
@@ -79,14 +79,14 @@
 (mx/defn ->path  :- Element
   [el :- Element]
   (cond-> el
-    (get-method tool.hierarchy/path (:tag el))
+    (get-method element.hierarchy/path (:tag el))
     (-> (assoc :tag :path)
         (update :attrs #(map/merge-common-with str % (attr/defaults-memo :path)))
-        (assoc-in [:attrs :d] (tool.hierarchy/path el)))))
+        (assoc-in [:attrs :d] (element.hierarchy/path el)))))
 
 (mx/defn stroke->path :- Element
   [{:keys [attrs] :as el} :- Element]
-  (let [d (tool.hierarchy/path el)
+  (let [d (element.hierarchy/path el)
         paper-path (Path. d)
         el-offset (or (:stroke-width attrs) 1)
         stroke-path (PaperOffset.offsetStroke
@@ -108,7 +108,7 @@
 
 (mx/defn ->string :- string?
   [els]
-  (reduce #(-> (tool.hierarchy/render-to-string %2)
+  (reduce #(-> (element.hierarchy/render-to-string %2)
                (dom.server/render-to-static-markup)
                (str "\n" %)) "" els))
 

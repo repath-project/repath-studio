@@ -13,12 +13,13 @@
   (let [active-tool @(rf/subscribe [::app.s/tool])
         primary-tool @(rf/subscribe [::app.s/primary-tool])
         active (= active-tool tool)
-        primary (= primary-tool tool)]
-    (when (:icon (tool.hierarchy/properties tool))
+        primary (= primary-tool tool)
+        properties (tool.hierarchy/properties tool)]
+    (when (:icon properties)
       [:> Tooltip/Root
        [:> Tooltip/Trigger {:as-child true}
         [:span
-         [ui/radio-icon-button (:icon (tool.hierarchy/properties tool)) active
+         [ui/radio-icon-button (:icon properties) active
           {:class (when primary "outline-shadow")
            :on-click #(rf/dispatch [::app.e/set-tool tool])}]]]
        [:> Tooltip/Portal
@@ -27,7 +28,7 @@
           :sideOffset 5
           :side "top"}
          [:div.flex.gap-2.items-center
-          (str/capitalize (name tool))]]]])))
+          (or (:label properties) (str/capitalize (name tool)))]]]])))
 
 (defn group
   [items]

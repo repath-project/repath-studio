@@ -54,15 +54,16 @@ with some minor additions.
 
 <pre>
 module\
-├── core.cljs     <--- entry point
-├── db.cljs       <--- schema, validation
-├── views.cljs    <--- reagent views
-├── events.cljs   <--- event handlers
-├── subs.cljs     <--- subscription handlers
-├── handlers.cljs <--- helper functions for db transformations
-├── effects.cljs  <--- effect handlers
-├── styles.css    <--- styles
-└── README.md     <--- documentation
+├── core.cljs      <--- entry point
+├── db.cljs        <--- schema, validation
+├── views.cljs     <--- reagent views
+├── events.cljs    <--- event handlers
+├── subs.cljs      <--- subscription handlers
+├── handlers.cljs  <--- helper functions for db transformations
+├── effects.cljs   <--- effect handlers
+├── hierarchy.cljs <--- multimethods and hierarchies
+├── styles.css     <--- styles
+└── README.md      <--- documentation
 </pre>
 
 ## Re-frame recommendations

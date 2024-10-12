@@ -1,25 +1,7 @@
 (ns renderer.tool.hierarchy)
 
-(defn tool?
-  [tool]
-  (isa? tool ::tool))
-
 (derive ::element ::tool)
-(derive ::renderable ::element)
-(derive ::shape ::renderable)
-(derive ::graphics ::renderable)
-(derive ::gradient ::renderable)
-(derive ::descriptive ::renderable)
-(derive :foreignObject ::graphics)
-(derive :textPath ::graphics)
-(derive :tspan ::graphics)
-(derive :linearGradient ::gradient)
-(derive :radialGradient ::gradient)
-(derive :desc ::descriptive)
-(derive :metadata ::descriptive)
-(derive :title ::descriptive)
 
-;; Tool multimethods.
 (defmulti pointer-down (fn [db _e] (:tool db)))
 (defmulti pointer-move (fn [db _e] (:tool db)))
 (defmulti pointer-up (fn [db _e] (:tool db)))
@@ -33,6 +15,8 @@
 (defmulti deactivate :tool)
 (defmulti properties keyword)
 (defmulti help (fn [tool state] [tool state]))
+
+(defmulti right-panel keyword)
 
 (defmethod pointer-down :default [db _e] db)
 (defmethod pointer-up :default [db _e] db)
@@ -48,34 +32,4 @@
 (defmethod properties :default [])
 (defmethod help :default [_tool _state] "")
 
-;; Element multimethods.
-;; The context of the element methods should be limited to the element.
-;; Additional arguments should not include the global db.
-(defmulti render "Renders the element to dom." :tag)
-(defmulti render-to-string "Returns an SVG string of the element." :tag)
-(defmulti path "Converts the elemnt to path commands (d)." :tag)
-(defmulti area "Calculates the area enclosed by the shape." :tag)
-(defmulti centroid "Returns the elements' center of mass." :tag)
-(defmulti snapping-points "Returns additional snapping point for the element." :tag)
-(defmulti render-edit "Renders the edit overlay of the element." :tag)
-(defmulti bounds "Returns the local bounds of the element." :tag)
-(defmulti translate "Translates the element by a given offset." (fn [el _offset] (:tag el)))
-(defmulti place "Moves the element to a given global position." (fn [el _position] (:tag el)))
-(defmulti scale "Scales the element by a given ratio and pivot-point." (fn [el _ration _pivot-point] (:tag el)))
-(defmulti edit "Edits the element by a given offset and handle." (fn [el _offset _handle] (:tag el)))
-
-(defmethod render :default [])
-(defmethod render-to-string :default [element] [render element])
-(defmethod render-edit :default [])
-(defmethod bounds :default [])
-(defmethod area :default [])
-(defmethod centroid :default [])
-(defmethod snapping-points :default [])
-(defmethod scale :default [element] element)
-(defmethod translate :default [element] element)
-(defmethod place :default [element] element)
-(defmethod edit :default [element] element)
-
-;; Right panel multimethod.
-(defmulti right-panel keyword)
 

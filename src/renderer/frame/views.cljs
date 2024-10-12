@@ -8,10 +8,10 @@
    [reagent.dom.server :as server]
    [renderer.app.subs :as-alias app.s]
    [renderer.document.subs :as-alias document.s]
+   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.s]
    [renderer.element.views :as element.v]
    [renderer.frame.events :as-alias frame.e]
-   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.ui :as ui]
    [renderer.utils.dom :as dom]
    [renderer.utils.pointer :as pointer]
@@ -105,7 +105,7 @@
            [:f> inner-component]
            [:> ContextMenu/Root
             [:> ContextMenu/Trigger
-             [tool.hierarchy/render root-el]]
+             [element.hierarchy/render root-el]]
             [:> ContextMenu/Portal
              (into [:> ContextMenu/Content
                     {:class "menu-content context-menu-content"

@@ -1,10 +1,11 @@
 (ns renderer.app.handlers
   (:require
    [malli.experimental :as mx]
-   [renderer.app.db :refer [Tool State]]
+   [renderer.app.db :refer [State]]
    [renderer.app.effects :as-alias fx]
    [renderer.app.events :as-alias e]
    [renderer.frame.handlers :as frame.h]
+   [renderer.tool.db :refer [Tool]]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.keyboard :refer [KeyboardEvent]]
    [renderer.utils.pointer :as pointer :refer [PointerEvent]]

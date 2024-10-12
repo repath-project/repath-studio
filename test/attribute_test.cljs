@@ -36,7 +36,7 @@
 
 
 (deftest test-defaults
-  (testing "default tag attributed"
+  (testing "default tag attributes"
     (are [x y] (= x y)
       {:x ""
        :y ""

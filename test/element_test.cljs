@@ -1,7 +1,7 @@
 (ns element-test
   (:require
    [cljs.test :refer-macros [deftest testing are]]
-   [renderer.tool.core]
+   [renderer.element.impl.core]
    [renderer.utils.element :as element]))
 
 (deftest test-root?

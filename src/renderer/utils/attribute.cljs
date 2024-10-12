@@ -3,8 +3,8 @@
    [camel-snake-kebab.core :as csk]
    [clojure.string :as str]
    [malli.experimental :as mx]
-   [renderer.element.db :refer [Attrs Tag]]
-   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.element.db :as element.db :refer [Attrs Tag]]
+   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.utils.bcd :as bcd]
    [renderer.utils.units :as units]))
 
@@ -246,11 +246,11 @@
 
 (mx/defn defaults :- Attrs
   [tag :- Tag]
-  (merge (when (isa? tag ::tool.hierarchy/element)
-           (merge (->map (tag (:elements bcd/svg)))
+  (merge (when (element.db/tag? tag)
+           (merge (->map (or (tag (:elements  bcd/svg)) {}))
                   (zipmap core (repeat ""))))
          (when (contains? #{:animateMotion :animateTransform} tag)
            (->map (:animate (:elements bcd/svg))))
-         (zipmap (:attrs (tool.hierarchy/properties tag)) (repeat ""))))
+         (zipmap (:attrs (element.hierarchy/properties tag)) (repeat ""))))
 
 (def defaults-memo (memoize defaults))

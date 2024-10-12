@@ -9,16 +9,16 @@
    [malli.error :as me]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.db :as db]
+   [renderer.element.hierarchy :as hierarchy]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
-   [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.tool.shape.path :as path]
    [renderer.utils.attribute :as attr]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
    [renderer.utils.extra :refer [partial-right]]
    [renderer.utils.hiccup :as hiccup]
    [renderer.utils.map :as map]
+   [renderer.utils.path :as path]
    [renderer.utils.vec :as vec]))
 
 (defn path
@@ -76,9 +76,9 @@
 
 (defn adjusted-bounds
   [db id]
-  (when-let [bounds (tool.hierarchy/bounds (element db id))]
+  (when-let [bounds (hierarchy/bounds (element db id))]
     (if-let [container (parent-container db id)]
-      (let [[offset-x offset-y _ _] (tool.hierarchy/bounds container)
+      (let [[offset-x offset-y _ _] (hierarchy/bounds container)
             [x1 y1 x2 y2] bounds]
         [(+ x1 offset-x) (+ y1 offset-y) (+ x2 offset-x) (+ y2 offset-y)])
       bounds)))
@@ -432,20 +432,20 @@
            db
            (top-ancestor-ids db)))
   ([db id offset]
-   (update-el db id tool.hierarchy/translate offset)))
+   (update-el db id hierarchy/translate offset)))
 
 (defn place
   ([db pos]
    (reduce (partial-right place pos) db (top-ancestor-ids db)))
   ([db id pos]
-   (update-el db id tool.hierarchy/place pos)))
+   (update-el db id hierarchy/place pos)))
 
 (defn scale
   [db ratio pivot-point recur?]
   (reduce
    (fn [db el]
      (let [pivot-point (->> (element db el) :bounds (take 2) (mat/sub pivot-point))]
-       (update-el db el tool.hierarchy/scale ratio pivot-point)))
+       (update-el db el hierarchy/scale ratio pivot-point)))
    db
    (cond-> (selected-ids db)
      recur? (concat (descendant-ids db)))))
@@ -495,7 +495,7 @@
     (assoc :parent (or (:parent el)
                        (:id (if (element/svg? el)
                               (root db)
-                              (overlapping-svg db (tool.hierarchy/bounds el))))))))
+                              (overlapping-svg db (hierarchy/bounds el))))))))
 
 (defn create
   [db el]
@@ -506,7 +506,7 @@
                     (create-parent-id db))
         new-el (merge new-el db/default {:id id})
         child-els (-> (elements db (:children el)) vals (concat (:content el)))
-        [x1 y1] (tool.hierarchy/bounds (element db (:parent new-el)))
+        [x1 y1] (hierarchy/bounds (element db (:parent new-el)))
         add-children (fn [db child-els]
                        (reduce #(cond-> %1
                                   (db/tag? (:tag %2))

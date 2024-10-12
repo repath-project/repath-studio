@@ -8,10 +8,10 @@
    [renderer.document.events :as-alias document.e]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.events :as-alias element.e]
+   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.s]
    [renderer.element.views :as element.v]
    [renderer.frame.events :as-alias frame.e]
-   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tree.events :as-alias e]
    [renderer.ui :as ui]
    [renderer.utils.dom :as dom]
@@ -157,9 +157,8 @@
       [toggle-collapsed-button id collapsed])
     [:div.flex-1.overflow-hidden.flex.items-center
      {:class "gap-1.5"}
-     ;; FIXME Replace should not be used here.
      [ui/icon
-      (str/replace (:icon (tool.hierarchy/properties tag)) "-alt" "")
+      (:icon (element.hierarchy/properties tag))
       {:class (when-not visible "opacity-60")}]
      [item-label el]]
     [lock-button id locked]

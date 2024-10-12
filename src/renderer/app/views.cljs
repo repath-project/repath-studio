@@ -24,12 +24,12 @@
    [renderer.ruler.views :as ruler.v]
    [renderer.timeline.views :as timeline.v]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.tool.overlay :as overlay]
    [renderer.toolbar.object :as toolbar.object]
    [renderer.toolbar.status :as toolbar.status]
    [renderer.toolbar.tools :as toolbar.tools]
    [renderer.tree.views :as tree.v]
    [renderer.ui :as ui]
+   [renderer.utils.overlay :as overlay]
    [renderer.window.events :as-alias window.e]
    [renderer.window.views :as window.v]))
 

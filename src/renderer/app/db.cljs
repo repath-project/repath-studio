@@ -11,7 +11,7 @@
    [renderer.snap.db :refer [Snap]]
    [renderer.theme.db :refer [Theme]]
    [renderer.timeline.db :refer [Timeline]]
-   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.tool.db :refer [Tool]]
    [renderer.utils.bounds :refer [Bounds]]
    [renderer.utils.i18n :as i18n]
    [renderer.utils.math :refer [Vec2D]]
@@ -36,10 +36,6 @@
    [:right number?]
    [:bottom number?]
    [:left number?]])
-
-(def Tool
-  [:fn {:error/fn (fn [{:keys [value]} _] (str value " is not a supported tool"))}
-   tool.hierarchy/tool?])
 
 (def Lang
   [:fn {:error/fn (fn [{:keys [value]} _] (str value " is not a supported language"))}
