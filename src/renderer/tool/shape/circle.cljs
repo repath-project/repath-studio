@@ -25,12 +25,14 @@
            :stroke-dasharray]})
 
 (defmethod tool.hierarchy/drag :circle
-  [{:keys [adjusted-pointer-offset active-document adjusted-pointer-pos] :as db}]
-  (let [{:keys [stroke fill]} (get-in db [:documents active-document])
-        [offset-x offset-y] adjusted-pointer-offset
-        radius (mat/distance adjusted-pointer-pos adjusted-pointer-offset)
-        attrs {:cx offset-x
-               :cy offset-y
+  [db]
+  (let [offset (:adjusted-pointer-offset db)
+        position (:adjusted-pointer-pos db)
+        {:keys [stroke fill]} (get-in db [:documents (:active-document db)])
+        [x y] offset
+        radius (mat/distance position offset)
+        attrs {:cx x
+               :cy y
                :fill fill
                :stroke stroke
                :r radius}]
@@ -53,17 +55,22 @@
         (tool.hierarchy/translate offset))))
 
 (defmethod tool.hierarchy/bounds :circle
-  [{{:keys [cx cy r]} :attrs}]
-  (let [[cx cy r] (map units/unit->px [cx cy r])]
+  [el]
+  (let [{{:keys [cx cy r]} :attrs} el
+        [cx cy r] (map units/unit->px [cx cy r])]
     [(- cx r) (- cy r) (+ cx r) (+ cy r)]))
 
 (defmethod tool.hierarchy/area :circle
-  [{{:keys [r]} :attrs}]
-  (* Math/PI (Math/pow (units/unit->px r) 2)))
+  [el]
+  (-> (get-in el [:attrs :r])
+      (units/unit->px)
+      (Math/pow 2)
+      (* Math/PI)))
 
 (defmethod tool.hierarchy/path :circle
-  [{{:keys [cx cy r]} :attrs}]
-  (let [[cx cy r] (map units/unit->px [cx cy r])]
+  [el]
+  (let [{{:keys [cx cy r]} :attrs} el
+        [cx cy r] (map units/unit->px [cx cy r])]
     (str/join " " ["M" (+ cx r) cy
                    "A" r r 0 0 1 cx (+ cy r)
                    "A" r r 0 0 1 (- cx r) cy
@@ -77,7 +84,7 @@
     el))
 
 (defmethod tool.hierarchy/render-edit :circle
-  [{:keys [id] :as el}]
+  [el]
   (let [bounds (:bounds el)
         [cx cy] (bounds/center bounds)
         r (/ (first (bounds/->dimensions bounds)) 2)]
@@ -91,5 +98,5 @@
                              :type :handle
                              :tag :edit
                              :cursor "move"
-                             :element id}
+                             :element (:id el)}
       [:title {:key "r-title"} "r"]]]))

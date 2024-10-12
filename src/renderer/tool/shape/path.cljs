@@ -24,11 +24,11 @@
   path)
 
 (defn manipulate
-  [element action & more]
-  (update-in element [:attrs :d] #(-> (Path. %)
-                                      (manipulate-paper-path action more)
-                                      (.exportSVG)
-                                      (.getAttribute "d"))))
+  [el action & more]
+  (update-in el [:attrs :d] #(-> (Path. %)
+                                 (manipulate-paper-path action more)
+                                 (.exportSVG)
+                                 (.getAttribute "d"))))
 
 (defmethod tool.hierarchy/properties :path
   []
@@ -44,11 +44,9 @@
 
 (defmethod tool.hierarchy/translate :path
   [el [x y]]
-  (assoc-in el [:attrs :d] (-> (:attrs el)
-                               :d
-                               svgpath
-                               (.translate x y)
-                               .toString)))
+  (update-in el [:attrs :d] #(-> (svgpath %)
+                                 (.translate x y)
+                                 (.toString))))
 
 (defmethod tool.hierarchy/scale :path
   [el ratio pivot-point]
@@ -58,12 +56,10 @@
                                 (mat/sub pivot-point
                                          (mat/mul pivot-point ratio)))
                        (mat/mul ratio [x y]))]
-    (assoc-in el [:attrs :d] (-> (:attrs el)
-                                 :d
-                                 svgpath
-                                 (.scale scale-x scale-y)
-                                 (.translate x y)
-                                 .toString))))
+    (update-in el [:attrs :d] #(-> (svgpath %)
+                                   (.scale scale-x scale-y)
+                                   (.translate x y)
+                                   (.toString)))))
 
 (defmethod tool.hierarchy/bounds :path
   [{{:keys [d]} :attrs}]
@@ -71,21 +67,17 @@
     [left top right bottom]))
 
 (defmethod tool.hierarchy/render-edit :path
-  [{:keys [attrs id] :as el} zoom]
-  (let [handle-size (/ 8 zoom)
-        stroke-width (/ 1 zoom)
-        offset (element/offset el)
-        segments (-> attrs :d svgpath .-segments)
+  [el]
+  (let [offset (element/offset el)
+        segments (-> el :attrs :d svgpath .-segments)
         square-handle (fn [i [x y]]
                         ^{:key i}
                         [overlay/square-handle {:id (keyword (str i))
                                                 :x x
                                                 :y y
-                                                :size handle-size
-                                                :stroke-width stroke-width
                                                 :type :handle
                                                 :tag :edit
-                                                :element id}])]
+                                                :element (:id el)}])]
     [:g {:key ::edit-handles}
      (map-indexed (fn [i segment]
                     (case (-> segment first str/lower-case)
@@ -113,9 +105,7 @@
 
 (defmethod tool.hierarchy/edit :path
   [el offset handle]
-  (update-in
-   el
-   [:attrs :d]
-   #(-> (svgpath %)
-        (translate-segment (js/parseInt (name handle)) offset)
-        .toString)))
+  (let [index (js/parseInt (name handle))]
+    (update-in el [:attrs :d] #(-> (svgpath %)
+                                   (translate-segment index offset)
+                                   (.toString)))))

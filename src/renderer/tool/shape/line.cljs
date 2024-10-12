@@ -106,9 +106,9 @@
                    "L" x2 y2])))
 
 (defmethod tool.hierarchy/render-edit :line
-  [{:keys [attrs id] :as el}]
+  [el]
   (let [offset (element/offset el)
-        {:keys [x1 y1 x2 y2]} attrs
+        {{:keys [x1 y1 x2 y2]} :attrs} el
         [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])
         [x1 y1] (mat/add offset [x1 y1])
         [x2 y2] (mat/add offset [x2 y2])]
@@ -123,13 +123,13 @@
             :id :starting-point
             :type :handle
             :tag :edit
-            :element id}
+            :element (:id el)}
            {:x x2
             :y y2
             :id :ending-point
             :type :handle
             :tag :edit
-            :element id}])]))
+            :element (:id el)}])]))
 
 (defmethod tool.hierarchy/edit :line
   [el [x y] handle]
@@ -146,6 +146,7 @@
     el))
 
 (defmethod tool.hierarchy/bounds :line
-  [{{:keys [x1 y1 x2 y2]} :attrs}]
-  (let [[x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])]
+  [el]
+  (let [{{:keys [x1 y1 x2 y2]} :attrs} el
+        [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])]
     [(min x1 x2) (min y1 y2) (max x1 x2) (max y1 y2)]))

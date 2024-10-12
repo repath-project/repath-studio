@@ -18,5 +18,5 @@
            :opacity]})
 
 (defmethod tool.hierarchy/path :polygon
-  [{{:keys [points]} :attrs}]
-  (str "M" points "z"))
+  [el]
+  (str "M" (-> el :attrs :points) "z"))

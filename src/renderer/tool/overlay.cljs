@@ -35,8 +35,9 @@
                     :r (/ 3 zoom)}] children)))
 
 (defn circle-handle
-  [{:keys [x y id] :as el} & children]
-  (let [zoom @(rf/subscribe [::document.s/zoom])
+  [el & children]
+  (let [{:keys [x y id]} el
+        zoom @(rf/subscribe [::document.s/zoom])
         clicked-element @(rf/subscribe [::app.s/clicked-element])
         pointer-handler #(pointer/event-handler! % el)]
     [:circle {:key id
@@ -55,8 +56,9 @@
               :on-scroll pointer-handler} children]))
 
 (defn square-handle
-  [{:keys [x y id cursor element] :as el} & children]
-  (let [zoom @(rf/subscribe [::document.s/zoom])
+  [el & children]
+  (let [{:keys [x y id cursor element]} el
+        zoom @(rf/subscribe [::document.s/zoom])
         clicked-element @(rf/subscribe [::app.s/clicked-element])
         size (/ handle-size zoom)
         stroke-width (/ 1 zoom)
@@ -261,19 +263,17 @@
                             :stroke-dasharray stroke-dasharray})])]))
 
 (defn select-box
-  [adjusted-pointer-pos adjusted-pointer-offset zoom]
-  (let [[offset-x offset-y] adjusted-pointer-offset
-        [pos-x pos-y] adjusted-pointer-pos]
-    {:tag :rect :attrs {:x (min pos-x offset-x)
-                        :y (min pos-y offset-y)
-                        :width (abs (- pos-x offset-x))
-                        :height (abs (- pos-y offset-y))
-                        :shape-rendering "crispEdges"
-                        :fill-opacity ".1"
-                        :fill accent
-                        :stroke accent
-                        :stroke-opacity ".5"
-                        :stroke-width (/ 1 zoom)}}))
+  [[pos-x pos-y] [offset-x offset-y] zoom]
+  {:tag :rect :attrs {:x (min pos-x offset-x)
+                      :y (min pos-y offset-y)
+                      :width (abs (- pos-x offset-x))
+                      :height (abs (- pos-y offset-y))
+                      :shape-rendering "crispEdges"
+                      :fill-opacity ".1"
+                      :fill accent
+                      :stroke accent
+                      :stroke-opacity ".5"
+                      :stroke-width (/ 1 zoom)}})
 
 (defn centroid
   [el]

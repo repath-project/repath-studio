@@ -60,8 +60,9 @@
 (defn ghost-element
   "Renders a ghost element on top of the actual element to ensure that the user
    can interact with it."
-  [{:keys [attrs tag content] :as el}]
-  (let [pointer-handler #(pointer/event-handler! % el)
+  [el]
+  (let [{:keys [attrs tag content]} el
+        pointer-handler #(pointer/event-handler! % el)
         zoom @(rf/subscribe [::document.s/zoom])
         stroke-width (max (:stroke-width attrs) (/ 20 zoom))]
     [tag
@@ -115,7 +116,7 @@
          (when default-state? [ghost-element el])])})))
 
 (defmethod tool.hierarchy/render ::tool.hierarchy/renderable
-  [{:keys [children] :as el}]
-  (let [child-els @(rf/subscribe [::element.s/filter-visible children])
+  [el]
+  (let [child-els @(rf/subscribe [::element.s/filter-visible (:children el)])
         state @(rf/subscribe [::app.s/state])]
     [render-to-dom el child-els (= state :default)]))

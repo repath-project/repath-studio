@@ -61,10 +61,12 @@
           [:title (name (:id handle))]]))]))
 
 (defmethod tool.hierarchy/bounds ::tool.hierarchy/box
-  [{{:keys [x y width height]} :attrs}]
-  (let [[x y width height] (mapv units/unit->px [x y width height])]
+  [el]
+  (let [{{:keys [x y width height]} :attrs} el
+        [x y width height] (mapv units/unit->px [x y width height])]
     [x y (+ x width) (+ y height)]))
 
 (defmethod tool.hierarchy/area ::tool.hierarchy/box
-  [{{:keys [width height]} :attrs}]
-  (apply * (map units/unit->px [width height])))
+  [el]
+  (let [{{:keys [width height]} :attrs} el]
+    (apply * (map units/unit->px [width height]))))

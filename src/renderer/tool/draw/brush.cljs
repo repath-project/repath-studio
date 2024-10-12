@@ -80,8 +80,9 @@
   "How much to streamline the stroke.")
 
 (defmethod tool.hierarchy/pointer-move :brush
-  [{:keys [adjusted-pointer-pos] :as db} {:keys [pressure]}]
-  (let [[x y] adjusted-pointer-pos
+  [db e]
+  (let [pressure (:pressure e)
+        [x y] (:adjusted-pointer-pos db)
         r (* (/ 16 2) (if (zero? pressure) 1 pressure))
         stroke (get-in db [:documents (:active-document db) :stroke])]
     (element.h/assoc-temp db {:type :element
@@ -92,9 +93,11 @@
                                       :fill stroke}})))
 
 (defmethod tool.hierarchy/drag :brush
-  [{:keys [active-document adjusted-pointer-pos] :as db} {:keys [pressure]}]
-  (let [stroke (get-in db [:documents active-document :stroke])
-        point (conj adjusted-pointer-pos pressure)]
+  [db e]
+  (let [pressure (:pressure e)
+        active-document (:active-document db)
+        stroke (get-in db [:documents active-document :stroke])
+        point (conj (:adjusted-pointer-pos db) pressure)]
     (if (get-in db [:documents active-document :temp-element :attrs :points])
       (update-in db
                  [:documents active-document :temp-element :attrs :points]
@@ -145,8 +148,9 @@
       (get-svg-path-from-stroke)))
 
 (defmethod tool.hierarchy/render :brush
-  [{:keys [attrs] :as element}]
-  (let [pointer-handler #(pointer/event-handler! % element)]
+  [el]
+  (let [attrs (:attrs el)
+        pointer-handler #(pointer/event-handler! % el)]
     [:path (merge {:d (points->path (:points attrs)
                                     (merge (select-keys attrs option-keys)
                                            {:simulatePressure true}))
@@ -158,8 +162,9 @@
                       (assoc :fill (:stroke attrs))))]))
 
 (defmethod tool.hierarchy/bounds :brush
-  [{{:keys [points]} :attrs}]
-  (let [x1 (apply min (map #(units/unit->px (first %)) points))
+  [el]
+  (let [points (-> el :attrs :points)
+        x1 (apply min (map #(units/unit->px (first %)) points))
         y1 (apply min (map #(units/unit->px (second %)) points))
         x2 (apply max (map #(units/unit->px (first %)) points))
         y2 (apply max (map #(units/unit->px (second %)) points))]
@@ -196,25 +201,19 @@
       (app.h/explain "Draw line")))
 
 (defmethod tool.hierarchy/path :brush
-  [{:keys [attrs]}]
-  (points->path (:points attrs) (select-keys attrs option-keys)))
+  [el]
+  (points->path (-> el :attrs :points) (select-keys (:attrs el) option-keys)))
 
 (defmethod tool.hierarchy/render-edit :brush
-  [{:keys [attrs id] :as el} zoom]
-  (let [handle-size (/ 8 zoom)
-        stroke-width (/ 1 zoom)
-        offset (element/offset el)]
-    [:g
-     (map-indexed (fn [index [x y]]
-                    (let [[x y] (mapv units/unit->px [x y])
-                          [x y] (mat/add offset [x y])]
-                      ^{:key index}
-                      [overlay/square-handle {:id index
-                                              :x x
-                                              :y y
-                                              :size handle-size
-                                              :stroke-width stroke-width
-                                              :type :handle
-                                              :tag :edit
-                                              :element id}]))
-                  (:points attrs))]))
+  [el]
+  [:g (map-indexed (fn [index [x y]]
+                     (let [[x y] (mapv units/unit->px [x y])
+                           [x y] (mat/add (element/offset el) [x y])]
+                       ^{:key index}
+                       [overlay/square-handle {:id index
+                                               :x x
+                                               :y y
+                                               :type :handle
+                                               :tag :edit
+                                               :element (:id el)}]))
+                   (-> el :attrs :points))])

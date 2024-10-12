@@ -24,9 +24,9 @@
    :attrs [:fill]})
 
 (defmethod tool.hierarchy/render :canvas
-  [{:keys [attrs children] :as element}]
+  [el]
   (let [_ @(rf/subscribe [::snap.s/in-viewport-tree]) ; TODO: Remove this.
-        child-elements @(rf/subscribe [::element.s/filter-visible children])
+        child-elements @(rf/subscribe [::element.s/filter-visible (:children el)])
         viewbox-attr @(rf/subscribe [::frame.s/viewbox-attr])
         {:keys [width height]} @(rf/subscribe [::app.s/dom-rect])
         hovered-ids @(rf/subscribe [::element.s/hovered])
@@ -41,7 +41,7 @@
         rotate @(rf/subscribe [::document.s/rotate])
         grid @(rf/subscribe [::app.s/grid])
         state @(rf/subscribe [::app.s/state])
-        pointer-handler #(pointer/event-handler! % element)
+        pointer-handler #(pointer/event-handler! % el)
         pivot-point @(rf/subscribe [::app.s/pivot-point])
         snapping-points @(rf/subscribe [::snap.s/points])
         snap-active @(rf/subscribe [::snap.s/active])
@@ -62,7 +62,7 @@
                   :transform (str "rotate(" rotate ")")
                   :cursor cursor
                   :style {:outline 0
-                          :background (:fill attrs)}}
+                          :background (-> el :attrs :fill)}}
      (for [el child-elements]
        ^{:key (:id el)} [tool.hierarchy/render el])
 
@@ -119,9 +119,9 @@
      (when grid [ruler.v/grid])]))
 
 (defmethod tool.hierarchy/render-to-string :canvas
-  [{:keys [attrs children]}]
-  (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
-        attrs (->> (dissoc attrs :fill)
+  [el]
+  (let [child-elements @(rf/subscribe [::element.s/filter-visible (:children el)])
+        attrs (->> (dissoc (:attrs el) :fill)
                    (remove #(empty? (str (second %))))
                    (into {}))]
     (->> (doall (map tool.hierarchy/render-to-string child-elements))

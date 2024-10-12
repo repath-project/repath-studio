@@ -68,8 +68,7 @@
   [{:keys [active-document] :as db} _e]
   (-> db
       (update-in [:documents active-document :temp-element :attrs :points]
-                 #(->> %
-                       (utils.attr/points->vec)
+                 #(->> (utils.attr/points->vec %)
                        (drop-last)
                        (apply concat)
                        (str/join " ")))
@@ -108,40 +107,29 @@
                      (str/join " ")))))
 
 (defmethod tool.hierarchy/render-edit ::tool.hierarchy/polyshape
-  [{:keys [attrs id] :as el} zoom]
-  (let [{:keys [points]} attrs
-        handle-size (/ 8 zoom)
-        stroke-width (/ 1 zoom)
-        offset (element/offset el)]
-    [:g
-     (map-indexed (fn [index [x y]]
-                    (let [[x y] (mapv units/unit->px [x y])
-                          [x y] (mat/add offset [x y])]
-                      ^{:key index}
-                      [overlay/square-handle {:id (keyword (str index))
-                                              :x x
-                                              :y y
-                                              :size handle-size
-                                              :stroke-width stroke-width
-                                              :type :handle
-                                              :cursor "move"
-                                              :tag :edit
-                                              :element id}]))
-                  (utils.attr/points->vec points))]))
+  [el]
+  [:g (map-indexed (fn [index [x y]]
+                     (let [[x y] (mapv units/unit->px [x y])
+                           [x y] (mat/add (element/offset el) [x y])]
+                       ^{:key index}
+                       [overlay/square-handle {:id (keyword (str index))
+                                               :x x
+                                               :y y
+                                               :type :handle
+                                               :cursor "move"
+                                               :tag :edit
+                                               :element (:id el)}]))
+                   (utils.attr/points->vec (-> el :attrs :points)))])
 
 (defmethod tool.hierarchy/edit ::tool.hierarchy/polyshape
   [el [x y] handle]
-  (update-in
-   el
-   [:attrs :points]
-   #(-> (utils.attr/points->vec %1)
-        (update (js/parseInt (name handle))
-                (fn [point]
-                  (list
-                   (units/transform (first point) + x)
-                   (units/transform (second point) + y))))
-        (flatten)
-        (->> (str/join " ")))))
+  (let [index (js/parseInt (name handle))]
+    (update-in el [:attrs :points] #(-> (utils.attr/points->vec %)
+                                        (update index (fn [[px py]]
+                                                        (list (units/transform px + x)
+                                                              (units/transform py + y))))
+                                        (flatten)
+                                        (->> (str/join " "))))))
 
 (defmethod tool.hierarchy/bounds ::tool.hierarchy/polyshape
   [{{:keys [points]} :attrs}]
@@ -152,7 +140,8 @@
         y2 (apply max (map #(units/unit->px (second %)) points-v))]
     [x1 y1 x2 y2]))
 
-(defn calc-polygon-area [vertices]
+(defn calc-polygon-area
+  [vertices]
   (let [count-v (count vertices)]
     (/ (reduce-kv (fn [area index point]
                     (let [point-b (if (= index (dec count-v))

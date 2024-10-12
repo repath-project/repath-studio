@@ -30,13 +30,13 @@
   [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions."])
 
 (defmethod tool.hierarchy/drag :ellipse
-  [{:keys [adjusted-pointer-offset active-document adjusted-pointer-pos] :as db} e]
-  (let [{:keys [stroke fill]} (get-in db [:documents active-document])
-        [offset-x offset-y] adjusted-pointer-offset
-        [pos-x pos-y] adjusted-pointer-pos
+  [db e]
+  (let [{:keys [stroke fill]} (get-in db [:documents (:active-document db)])
+        [offset-x offset-y] (:adjusted-pointer-offset db)
+        [x y] (:adjusted-pointer-pos db)
         lock-ratio (pointer/ctrl? e)
-        rx (abs (- pos-x offset-x))
-        ry (abs (- pos-y offset-y))
+        rx (abs (- x offset-x))
+        ry (abs (- y offset-y))
         attrs {:cx offset-x
                :cy offset-y
                :fill fill
@@ -65,13 +65,15 @@
         (tool.hierarchy/translate offset))))
 
 (defmethod tool.hierarchy/bounds :ellipse
-  [{{:keys [cx cy rx ry]} :attrs}]
-  (let [[cx cy rx ry] (map units/unit->px [cx cy rx ry])]
+  [el]
+  (let [{{:keys [cx cy rx ry]} :attrs} el
+        [cx cy rx ry] (map units/unit->px [cx cy rx ry])]
     [(- cx rx) (- cy ry) (+ cx rx) (+ cy ry)]))
 
 (defmethod tool.hierarchy/path :ellipse
-  [{{:keys [cx cy rx ry]} :attrs}]
-  (let [[cx cy rx ry] (mapv units/unit->px [cx cy rx ry])]
+  [el]
+  (let [{{:keys [cx cy rx ry]} :attrs} el
+        [cx cy rx ry] (mapv units/unit->px [cx cy rx ry])]
     (str/join " " ["M" (+ cx rx) cy
                    "A" rx ry 0 0 1 cx (+ cy ry)
                    "A" rx ry 0 0 1 (- cx rx) cy
@@ -86,7 +88,7 @@
     el))
 
 (defmethod tool.hierarchy/render-edit :ellipse
-  [{:keys [id] :as el}]
+  [el]
   (let [bounds (:bounds el)
         [cx cy] (bounds/center bounds)
         [rx ry] (mat/div (bounds/->dimensions bounds) 2)]
@@ -102,7 +104,7 @@
              (merge handle {:type :handle
                             :tag :edit
                             :cursor "move"
-                            :element id})
+                            :element (:id el)})
              [:title
               {:key (str (:id handle) "-title")}
               (name (:id handle))]])

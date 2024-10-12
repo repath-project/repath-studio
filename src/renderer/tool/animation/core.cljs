@@ -11,8 +11,9 @@
 (derive ::tool.hierarchy/animation ::tool.hierarchy/descriptive)
 
 (defmethod tool.hierarchy/render ::tool.hierarchy/animation
-  [{:keys [children tag attrs id]}]
-  (let [child-elements @(rf/subscribe [::element.s/filter-visible children])]
+  [el]
+  (let [{:keys [children tag attrs id]} el
+        child-elements @(rf/subscribe [::element.s/filter-visible children])]
     [tag
      attrs
      (for [el child-elements]

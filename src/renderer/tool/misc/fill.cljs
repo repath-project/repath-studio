@@ -21,10 +21,11 @@
 (defmethod tool.hierarchy/translate :fill [])
 
 (defmethod tool.hierarchy/pointer-up :fill
-  [{active-document :active-document :as db} {:keys [element]}]
-  (let [color (get-in db [:documents active-document :fill])]
+  [db e]
+  (let [color (get-in db [:documents (:active-document db) :fill])
+        el-id (-> e :element :id)]
     (-> db
-        (element.h/set-attr (:id element) :fill color)
+        (element.h/set-attr el-id :fill color)
         (app.h/explain "Fill"))))
 
 (defmethod tool.hierarchy/drag-end :fill

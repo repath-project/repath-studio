@@ -98,8 +98,9 @@
                         [::element.e/preview-prop id :content (get-text! e)]))))
 
 (defmethod tool.hierarchy/render-edit :text
-  [{:keys [attrs id content] :as el}]
-  (let [offset (element/offset el)
+  [el]
+  (let [{:keys [attrs id content]} el
+        offset (element/offset el)
         el-bounds (tool.hierarchy/bounds el)
         [x y] (mat/add (take 2 el-bounds) offset)
         [width height] (bounds/->dimensions el-bounds)

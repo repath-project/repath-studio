@@ -35,21 +35,22 @@
     (assoc :clicked-element element)))
 
 (defmethod tool.hierarchy/pointer-up :edit
-  [db {:keys [element] :as e}]
+  [db e]
   (if-not (and (= (:button e) :right)
-               (:selected element))
+               (:selected (:element e)))
     (-> db
         (element.h/clear-ignored)
         (dissoc :clicked-element)
-        (element.h/select (:id element) (pointer/shift? e))
+        (element.h/select (-> e :element :id) (pointer/shift? e))
         (app.h/explain "Select element"))
     (dissoc db :clicked-element)))
 
 (defmethod tool.hierarchy/pointer-move :edit
-  [db {:keys [element]}]
-  (cond-> (element.h/clear-hovered db)
-    (:id element)
-    (element.h/hover (:id element))))
+  [db e]
+  (let [el-id (-> e :element :id)]
+    (cond-> (element.h/clear-hovered db)
+      el-id
+      (element.h/hover el-id))))
 
 (defmethod tool.hierarchy/drag-start :edit
   [db]
@@ -60,18 +61,19 @@
   (element.h/update-el db el-id tool.hierarchy/edit offset handle-id))
 
 (defmethod tool.hierarchy/drag :edit
-  [{:keys [adjusted-pointer-offset adjusted-pointer-pos clicked-element] :as db} e]
-  (let [pointer-offset (mat/sub adjusted-pointer-pos adjusted-pointer-offset)
+  [db e]
+  (let [clicked-element (:clicked-element db)
+        offset (mat/sub (:adjusted-pointer-pos db) (:adjusted-pointer-offset db))
         db (history.h/swap db)
-        id (:element clicked-element)
-        pointer-offset (if (pointer/ctrl? e)
-                         (pointer/lock-direction pointer-offset)
-                         pointer-offset)]
+        el-id (:element clicked-element)
+        offset (if (pointer/ctrl? e)
+                 (pointer/lock-direction offset)
+                 offset)]
 
     (cond-> db
-      id
-      (-> (element.h/update-el id tool.hierarchy/edit pointer-offset (:id clicked-element))
-          (snap.h/snap-with snap-handler id (:id clicked-element))))))
+      el-id
+      (-> (element.h/update-el el-id tool.hierarchy/edit offset (:id clicked-element))
+          (snap.h/snap-with snap-handler el-id (:id clicked-element))))))
 
 (defmethod tool.hierarchy/drag-end :edit
   [db _e]

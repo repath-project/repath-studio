@@ -28,15 +28,15 @@
   [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions."])
 
 (defmethod tool.hierarchy/drag :rect
-  [{:keys [adjusted-pointer-offset active-document adjusted-pointer-pos] :as db} e]
-  (let [{:keys [stroke fill]} (get-in db [:documents active-document])
-        [offset-x offset-y] adjusted-pointer-offset
-        [pos-x pos-y] adjusted-pointer-pos
+  [db e]
+  (let [{:keys [stroke fill]} (get-in db [:documents (:active-document db)])
+        [offset-x offset-y] (:adjusted-pointer-offset db)
+        [x y] (:adjusted-pointer-pos db)
         lock-ratio (pointer/ctrl? e)
-        width (abs (- pos-x offset-x))
-        height (abs (- pos-y offset-y))
-        attrs {:x (min pos-x offset-x)
-               :y (min pos-y offset-y)
+        width (abs (- x offset-x))
+        height (abs (- y offset-y))
+        attrs {:x (min x offset-x)
+               :y (min y offset-y)
                :width (if lock-ratio (min width height) width)
                :height (if lock-ratio (min width height) height)
                :fill fill
@@ -46,8 +46,9 @@
                               :attrs attrs})))
 
 (defmethod tool.hierarchy/path :rect
-  [{{:keys [x y width height rx ry]} :attrs}]
-  (let [[x y width height] (mapv units/unit->px [x y width height])
+  [el]
+  (let [{{:keys [x y width height rx ry]} :attrs} el
+        [x y width height] (mapv units/unit->px [x y width height])
         rx (units/unit->px (if (and (not rx) ry) ry rx))
         ry (units/unit->px (if (and (not ry) rx) rx ry))
         rx (if (> rx (/ width 2)) (/ width 2) rx)

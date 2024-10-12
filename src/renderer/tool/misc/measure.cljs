@@ -31,16 +31,16 @@
 (defmethod tool.hierarchy/drag-end :measure  [db] db)
 
 (defmethod tool.hierarchy/drag :measure
-  [{:keys [adjusted-pointer-offset adjusted-pointer-pos] :as db}]
-  (let [[offset-x offset-y] adjusted-pointer-offset
-        [pos-x pos-y] adjusted-pointer-pos
-        [adjacent opposite] (mat/sub adjusted-pointer-offset
-                                     adjusted-pointer-pos)
+  [db]
+  (let [{:keys [adjusted-pointer-offset adjusted-pointer-pos]} db
+        [offset-x offset-y] adjusted-pointer-offset
+        [x y] adjusted-pointer-pos
+        [adjacent opposite] (mat/sub adjusted-pointer-offset adjusted-pointer-pos)
         hypotenuse (Math/hypot adjacent opposite)
         attrs {:x1 offset-x
                :y1 offset-y
-               :x2 pos-x
-               :y2 pos-y
+               :x2 x
+               :y2 y
                :stroke "gray"}]
     (element.h/assoc-temp db {:id :mesure
                               :type :overlay

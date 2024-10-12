@@ -21,14 +21,16 @@
 (derive :symbol ::tool.hierarchy/container)
 
 (defmethod tool.hierarchy/render ::tool.hierarchy/container
-  [{:keys [children tag attrs id]}]
-  (let [child-elements @(rf/subscribe [::element.s/filter-visible children])]
+  [el]
+  (let [{:keys [children tag attrs id]} el
+        child-elements @(rf/subscribe [::element.s/filter-visible children])]
     [tag attrs (for [el child-elements]
                  ^{:key id} [tool.hierarchy/render el])]))
 
 (defmethod tool.hierarchy/render-to-string ::tool.hierarchy/container
-  [{:keys [tag attrs title children]}]
-  (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
+  [el]
+  (let [{:keys [tag attrs title children]} el
+        child-elements @(rf/subscribe [::element.s/filter-visible children])
         attrs (->> (element/style->map attrs)
                    (remove #(empty? (str (second %))))
                    (into {}))]

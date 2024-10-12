@@ -141,8 +141,8 @@
                                       :opacity])) child-elements]))
 
 (defmethod tool.hierarchy/translate :blob
-  [element [x y]]
-  (-> element
+  [el [x y]]
+  (-> el
       (attr.hierarchy/update-attr :x + x)
       (attr.hierarchy/update-attr :y + y)))
 
@@ -155,21 +155,23 @@
         (assoc-in [:attrs :y] (- y cy)))))
 
 (defmethod tool.hierarchy/bounds :blob
-  [{:keys [attrs]}]
-  (let [{:keys [x y size]} attrs
+  [el]
+  (let [{{:keys [x y size]} :attrs} el
         [x y size] (mapv units/unit->px [x y size])]
     [x y (+ x size) (+ y size)]))
 
 (defmethod tool.hierarchy/centroid :blob
-  [{{:keys [x y size]} :attrs}]
-  (let [[x y size] (mapv units/unit->px [x y size])]
+  [el]
+  (let [{{:keys [x y size]} :attrs} el
+        [x y size] (mapv units/unit->px [x y size])]
     (mat/add [x y] (/ size 2))))
 
 (defmethod tool.hierarchy/path :blob
-  [{:keys [attrs]}]
-  (let [[x y] (mapv units/unit->px [(:x attrs) (:y attrs)])
+  [el]
+  (let [{{:keys [x y]} :attrs} el
+        [x y] (mapv units/unit->px [x y])
         options (->> [:seed :extraPoints :randomness :size]
-                     (select-keys attrs)
+                     (select-keys (:attrs el))
                      (reduce (fn [options [k v]] (assoc options k (int v))) {})
                      (clj->js))]
     (-> blobs
@@ -179,15 +181,15 @@
         (.toString))))
 
 (defmethod tool.hierarchy/edit :blob
-  [element [x y] handle]
+  [el [x y] handle]
   (case handle
     :size
-    (attr.hierarchy/update-attr element :size #(max 0 (+ % (min x y))))
-    element))
+    (attr.hierarchy/update-attr el :size #(max 0 (+ % (min x y))))
+    el))
 
 (defmethod tool.hierarchy/render-edit :blob
-  [{:keys [attrs id] :as el}]
-  (let [{:keys [x y size]} attrs
+  [el]
+  (let [{{:keys [x y size]} :attrs} el
         [x y size] (mapv units/unit->px [x y size])
         offset (element/offset el)
         [x1 y1] (cond->> [x y] (not (element/svg? el)) (mat/add offset))
@@ -198,7 +200,7 @@
       {:type :handle
        :cursor "move"
        :tag :edit
-       :element id
+       :element (:id el)
        :x x2
        :y y2
        :id :size}]

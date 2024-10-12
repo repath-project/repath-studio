@@ -18,8 +18,9 @@
 (derive ::tool.hierarchy/shape ::tool.hierarchy/graphics)
 
 (defmethod tool.hierarchy/render-to-string ::tool.hierarchy/shape
-  [{:keys [tag attrs title children content]}]
-  (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
+  [el]
+  (let [{:keys [tag attrs title children content]} el
+        child-elements @(rf/subscribe [::element.s/filter-visible children])
         attrs (->> (element/style->map attrs)
                    (remove #(empty? (str (second %))))
                    (into {}))]

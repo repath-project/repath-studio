@@ -32,8 +32,9 @@
   #_(update-in el [:attrs :transform] translate offset))
 
 (defmethod tool.hierarchy/render :g
-  [{:keys [attrs children bounds] :as el}]
-  (let [child-els @(rf/subscribe [::element.s/filter-visible children])]
+  [el]
+  (let [{:keys [attrs children bounds]} el
+        child-els @(rf/subscribe [::element.s/filter-visible children])]
     [:g (element/style->map attrs)
      (for [child child-els]
        ^{:key (:id child)} [tool.hierarchy/render child])

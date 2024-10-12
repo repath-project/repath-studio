@@ -18,5 +18,5 @@
            :opacity]})
 
 (defmethod tool.hierarchy/path :polyline
-  [{{:keys [points]} :attrs}]
-  (str "M" points))
+  [el]
+  (str "M" (-> el :attrs :points)))

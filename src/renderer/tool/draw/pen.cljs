@@ -20,8 +20,9 @@
            :opacity]})
 
 (defmethod tool.hierarchy/drag :pen
-  [{:keys [active-document adjusted-pointer-pos] :as db}]
-  (let [stroke (get-in db [:documents active-document :stroke])]
+  [db]
+  (let [{:keys [active-document adjusted-pointer-pos]} db
+        stroke (get-in db [:documents active-document :stroke])]
     (if (get-in db [:documents active-document :temp-element :attrs :points])
       (update-in db
                  [:documents active-document :temp-element :attrs :points]

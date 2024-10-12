@@ -51,18 +51,21 @@
     (element.h/assoc-temp db {:type :element :tag :arc :attrs attrs})))
 
 (defmethod tool.hierarchy/translate :arc
-  [element [x y]] (-> element
-                      (attr.hierarchy/update-attr :cx + x)
-                      (attr.hierarchy/update-attr :cy + y)))
+  [el [x y]] (-> el
+                 (attr.hierarchy/update-attr :cx + x)
+                 (attr.hierarchy/update-attr :cy + y)))
 
 (defmethod tool.hierarchy/bounds :arc
-  [element]
-  (let [[left top right bottom] (js->clj (svgPathBbox (tool.hierarchy/path element)))]
+  [el]
+  (let [[left top right bottom] (js->clj (svgPathBbox (tool.hierarchy/path el)))]
     [left top right bottom]))
 
 (defmethod tool.hierarchy/area :arc
-  [{{:keys [r]} :attrs}]
-  (* Math/PI (Math/pow (units/unit->px r) 2)))
+  [el]
+  (-> (get-in el [:attrs :r])
+      (units/unit->px)
+      (Math/pow 2)
+      (* Math/PI)))
 
 (defmethod tool.hierarchy/path :arc
   [{{:keys [cx cy rx ry start-deg end-deg]} :attrs}]
@@ -76,30 +79,31 @@
          "A" rx "," ry " 0 " (if (>= diff-deg 180) 1 0) ",1 " x2 "," y2)))
 
 (defmethod tool.hierarchy/edit :arc
-  [element [x y] handle]
+  [el [x y] handle]
   (case handle
-    :rx (attr.hierarchy/update-attr element :rx #(abs (+ % x)))
-    :ry (attr.hierarchy/update-attr element :ry #(abs (- % y)))
-    element))
+    :rx (attr.hierarchy/update-attr el :rx #(abs (+ % x)))
+    :ry (attr.hierarchy/update-attr el :ry #(abs (- % y)))
+    el))
 
 (defmethod tool.hierarchy/render :arc
-  [{:keys [attrs children] :as element}]
-  (let [child-elements @(rf/subscribe [::element.s/filter-visible children])
-        pointer-handler #(pointer/event-handler! % element)]
-    [:path (merge {:d (tool.hierarchy/path element)
+  [el]
+  (let [children @(rf/subscribe [::element.s/filter-visible (:children el)])
+        pointer-handler #(pointer/event-handler! % el)]
+    [:path (merge {:d (tool.hierarchy/path el)
                    :on-pointer-up pointer-handler
                    :on-pointer-down pointer-handler
                    :on-pointer-move pointer-handler}
-                  (select-keys attrs [:stroke-width
-                                      :opacity
-                                      :fill
-                                      :stroke
-                                      :stroke-linecap
-                                      :stroke-dasharray])) child-elements]))
+                  (select-keys (:attrs el) [:stroke-width
+                                            :opacity
+                                            :fill
+                                            :stroke
+                                            :stroke-linecap
+                                            :stroke-dasharray])) children]))
 
 (defmethod tool.hierarchy/render-edit :arc
-  [{:keys [attrs id]}]
-  (let [{:keys [cx cy rx ry start-deg end-deg]} attrs
+  [el]
+  (let [{:keys [attrs id]} el
+        {:keys [cx cy rx ry start-deg end-deg]} attrs
         [cx cy rx ry] (mapv units/unit->px [cx cy rx ry])
         active-page @(rf/subscribe [::element.s/active-page])
         x1 (+ cx (math/angle-dx start-deg rx))

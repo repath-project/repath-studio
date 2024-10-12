@@ -42,33 +42,30 @@
   (app.h/set-cursor db "default"))
 
 (defmethod tool.hierarchy/drag :zoom
-  [{:keys [adjusted-pointer-offset adjusted-pointer-pos active-document] :as db}]
+  [db]
   (element.h/assoc-temp db (overlay/select-box
-                            adjusted-pointer-pos
-                            adjusted-pointer-offset
-                            (get-in db [:documents active-document :zoom]))))
+                            (:adjusted-pointer-pos db)
+                            (:adjusted-pointer-offset db)
+                            (get-in db [:documents (:active-document db) :zoom]))))
 
 (defmethod tool.hierarchy/drag-end :zoom
-  [{:keys [active-document
-           dom-rect
-           adjusted-pointer-offset
-           adjusted-pointer-pos
-           zoom-sensitivity] :as db} e]
-  (let [[offset-x offset-y] adjusted-pointer-offset
-        [pos-x pos-y] adjusted-pointer-pos
-        width (abs (- pos-x offset-x))
-        height (abs (- pos-y offset-y))
+  [db e]
+  (let [[offset-x offset-y] (:adjusted-pointer-offset db)
+        [x y] (:adjusted-pointer-pos db)
+        width (abs (- x offset-x))
+        height (abs (- y offset-y))
+        dom-rect (:dom-rect db)
         width-ratio (/ (:width dom-rect) width)
         height-ratio (/ (:height dom-rect) height)
-        current-zoom (get-in db [:documents active-document :zoom])
+        current-zoom (get-in db [:documents (:active-document db) :zoom])
         furute-zoom (min width-ratio height-ratio)]
     (-> db
         (element.h/dissoc-temp)
         (app.h/set-cursor (if (pointer/shift? e) "zoom-out" "zoom-in"))
         (frame.h/zoom-by (if (pointer/shift? e)
-                           zoom-sensitivity
+                           (:zoom-sensitivity db)
                            (/ furute-zoom current-zoom)))
-        (frame.h/pan-to-bounds [pos-x pos-y offset-x offset-y])
+        (frame.h/pan-to-bounds [x y offset-x offset-y])
         (app.h/add-fx [:dispatch [::app.e/persist]]))))
 
 (defmethod tool.hierarchy/pointer-up :zoom

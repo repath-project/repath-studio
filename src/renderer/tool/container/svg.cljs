@@ -24,14 +24,14 @@
   [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions."])
 
 (defmethod tool.hierarchy/drag :svg
-  [{:keys [adjusted-pointer-pos adjusted-pointer-offset] :as db} e]
-  (let [[offset-x offset-y] adjusted-pointer-offset
-        [pos-x pos-y] adjusted-pointer-pos
+  [db e]
+  (let [[offset-x offset-y] (:adjusted-pointer-offset db)
+        [x y] (:adjusted-pointer-pos db)
         lock-ratio (pointer/ctrl? e)
-        width (abs (- pos-x offset-x))
-        height (abs (- pos-y offset-y))
-        attrs {:x (min pos-x offset-x)
-               :y (min pos-y offset-y)
+        width (abs (- x offset-x))
+        height (abs (- y offset-y))
+        attrs {:x (min x offset-x)
+               :y (min y offset-y)
                :width (if lock-ratio (min width height) width)
                :height (if lock-ratio (min width height) height)}]
     (element.h/assoc-temp db {:tag :svg
@@ -39,8 +39,9 @@
                               :attrs attrs})))
 
 (defmethod tool.hierarchy/render :svg
-  [{:keys [attrs children tag] :as el}]
-  (let [child-els @(rf/subscribe [::element.s/filter-visible children])
+  [el]
+  (let [attrs (:attrs el)
+        child-els @(rf/subscribe [::element.s/filter-visible (:children el)])
         rect-attrs (select-keys attrs [:x :y :width :height])
         text-attrs (select-keys attrs [:x :y])
         active-filter @(rf/subscribe [::document.s/filter])
@@ -55,7 +56,7 @@
         :on-pointer-move pointer-handler
         :fill "#888"
         :font-family "monospace"
-        :font-size (/ 12 zoom)}) (or (:name el) (name tag))]
+        :font-size (/ 12 zoom)}) (or (:name el) (name (:tag el)))]
 
      [:rect
       (merge

@@ -78,9 +78,8 @@
 
     :always
     (-> (element.h/clear-hovered)
-        (app.h/set-cursor (if (and element
-                                   (or (= (:type element) :handle)
-                                       (not (element/root? element))))
+        (app.h/set-cursor (if (and element (or (= (:type element) :handle)
+                                               (not (element/root? element))))
                             "move"
                             "default")))
 
@@ -120,14 +119,15 @@
       (app.h/explain (if (:selected element) "Deselect element" "Select element"))))
 
 (defmethod tool.hierarchy/double-click :select
-  [db {:keys [element]}]
-  (if (= (:tag element) :g)
-    (-> db
-        (element.h/ignore (:id element))
-        (element.h/deselect (:id element)))
-    (cond-> db
-      (not= :canvas (:tag element))
-      (app.h/set-tool :edit))))
+  [db e]
+  (let [{{:keys [tag id]} :element} e]
+    (if (= tag :g)
+      (-> db
+          (element.h/ignore id)
+          (element.h/deselect id))
+      (cond-> db
+        (not= :canvas tag)
+        (app.h/set-tool :edit)))))
 
 (defmethod tool.hierarchy/activate :select
   [db]
@@ -140,11 +140,9 @@
   (element.h/clear-ignored db))
 
 (defn select-rect
-  [{:keys [adjusted-pointer-offset
-           adjusted-pointer-pos
-           active-document] :as db} intersecting?]
-  (let [zoom (get-in db [:documents active-document :zoom])]
-    (cond-> (overlay/select-box adjusted-pointer-pos adjusted-pointer-offset zoom)
+  [db intersecting?]
+  (let [zoom (get-in db [:documents (:active-document db) :zoom])]
+    (cond-> (overlay/select-box (:adjusted-pointer-pos db) (:adjusted-pointer-offset db) zoom)
       (not intersecting?) (assoc-in [:attrs :fill] "transparent"))))
 
 (defmethod tool.hierarchy/drag-start :select
@@ -212,15 +210,15 @@
     (-> (element.h/select (-> db :clicked-element :id) multiple))))
 
 (defmethod tool.hierarchy/drag :select
-  [{:keys [state adjusted-pointer-offset adjusted-pointer-pos] :as db} e]
-  (let [offset (mat/sub adjusted-pointer-pos adjusted-pointer-offset)
+  [db e]
+  (let [offset (mat/sub (:adjusted-pointer-pos db) (:adjusted-pointer-offset db))
         ctrl? (pointer/ctrl? e)
         offset (cond-> offset
-                 (and ctrl? (not= state :scale))
+                 (and ctrl? (not= (:state db) :scale))
                  (pointer/lock-direction))
         alt-key? (pointer/alt? e)
         db (element.h/clear-ignored db)]
-    (case state
+    (case (:state db)
       :select
       (-> db
           (element.h/assoc-temp (select-rect db alt-key?))

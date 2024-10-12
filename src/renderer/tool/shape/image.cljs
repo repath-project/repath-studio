@@ -18,7 +18,7 @@
    :attrs [:href]})
 
 (defmethod tool.hierarchy/pointer-up :image
-  [{:keys [adjusted-pointer-pos] :as db}]
+  [db]
   (file/open!
    {:options {:startIn "pictures"
               :types [{:accept {"image/png" [".png"]
@@ -26,5 +26,5 @@
                                 "image/bmp" [".fmp"]}}]}
     :callback (fn [file]
                 (rf/dispatch [::app.e/set-tool :select])
-                (drop/add-image! file adjusted-pointer-pos))})
+                (drop/add-image! file (:adjusted-pointer-pos db)))})
   db)
