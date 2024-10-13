@@ -26,6 +26,10 @@
   [el :- Element]
   (or (svg? el) (root? el)))
 
+(mx/defn ratio-locked? :- boolean?
+  [el :- Element]
+  (-> el element.hierarchy/properties :ratio-locked))
+
 (mx/defn united-bounds :- [:maybe Bounds]
   [elements :- [:sequential Element]]
   (let [el-bounds (->> elements (map :bounds) (remove nil?))]

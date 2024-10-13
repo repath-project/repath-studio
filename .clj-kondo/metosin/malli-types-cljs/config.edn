@@ -70,6 +70,20 @@
                                                                                                  :attrs :map,
                                                                                                  :visible :boolean},
                                                                                            :req {:tag :any}}}}},
+                                                                ratio-locked? {:arities {1 {:args [{:op :keys,
+                                                                                                    :opt {:children :vector,
+                                                                                                          :selected :boolean,
+                                                                                                          :parent :any,
+                                                                                                          :content :string,
+                                                                                                          :type :any,
+                                                                                                          :bounds :seqable,
+                                                                                                          :locked :boolean,
+                                                                                                          :label :string,
+                                                                                                          :id :any,
+                                                                                                          :attrs :map,
+                                                                                                          :visible :boolean},
+                                                                                                    :req {:tag :any}}],
+                                                                                            :ret :boolean}}},
                                                                 root? {:arities {1 {:args [{:op :keys,
                                                                                             :opt {:children :vector,
                                                                                                   :selected :boolean,
@@ -332,15 +346,17 @@
                                                                              lock-ratio {:arities {2 {:args [:seqable
                                                                                                              :keyword],
                                                                                                       :ret :seqable}}},
-                                                                             offset-scale {:arities {5 {:args [:any
+                                                                             offset-scale {:arities {3 {:args [:any
                                                                                                                :seqable
-                                                                                                               :boolean
-                                                                                                               :boolean
-                                                                                                               :boolean],
+                                                                                                               :any],
                                                                                                         :ret :any}}},
                                                                              select-element {:arities {2 {:args [:any
                                                                                                                  :boolean],
-                                                                                                          :ret :any}}}},
+                                                                                                          :ret :any}}},
+                                                                             scale {:arities {3 {:args [:any
+                                                                                                        :seqable
+                                                                                                        :any],
+                                                                                                 :ret :any}}}},
                                         renderer.utils.units {match-unit {:arities {1 {:args [:string], :ret :string}}},
                                                               unit->px {:arities {1 {:args [:any], :ret :number}}},
                                                               valid-unit? {:arities {1 {:args [:string], :ret :boolean}}},
@@ -538,11 +554,6 @@
                                                             remove-nils {:arities {1 {:args [:map], :ret :map}}}},
                                         renderer.snap.handlers {toggle-option {:arities {2 {:args [:any :keyword],
                                                                                             :ret :any}}},
-                                                                snap-to-offset {:arities {4 {:args [:any
-                                                                                                    :fn
-                                                                                                    :seqable
-                                                                                                    :any],
-                                                                                             :ret :any}}},
                                                                 snap-with {:arities {2 {:args [:any :any], :ret :any},
                                                                                      3 {:args [:any :any :any],
                                                                                         :ret :any},

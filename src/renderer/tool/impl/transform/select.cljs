@@ -5,7 +5,6 @@
    [renderer.app.handlers :as app.h]
    [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.h]
-   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.h]
    [renderer.snap.handlers :as snap.h]
    [renderer.tool.hierarchy :as hierarchy]
@@ -163,7 +162,7 @@
         ratio (if (< (abs x) (abs y)) x y)]
     [ratio ratio]))
 
-(mx/defn offset-scale
+(mx/defn scale
   "Converts the x/y pointer offset to a scale ratio and a pivot point,
    to decouple this from the scaling method of the elements.
 
@@ -177,8 +176,9 @@
    |      y          ↖   │
    |      |            ↖ │
    □----------□--------- ■ :bottom-right (active handle)"
-  [db, [x y] :- Vec2D, ratio-locked :- boolean?, in-place :- boolean?, recursive :- boolean?]
-  (let [handle (-> db :clicked-element :id)
+  [db, delta :- Vec2D, {:keys [ratio-locked in-place recursive]}]
+  (let [[x y] delta
+        handle (-> db :clicked-element :id)
         bounds (element.h/bounds db)
         dimensions (bounds/->dimensions bounds)
         [x1 y1 x2 y2] bounds
@@ -195,13 +195,13 @@
         pivot-point (if in-place [cx cy] pivot-point)
         offset (cond-> offset in-place (mat/mul 2))
         ratio (mat/div (mat/add dimensions offset) dimensions)
-        ratio-locked (or ratio-locked (every? #(-> % :tag element.hierarchy/properties :ratio-locked) (element.h/selected db)))
-        ratio (cond-> ratio ratio-locked (lock-ratio handle))
-        ;; TODO: Handle negative/inverted ratio.
-        ratio (mapv #(max 0 %) ratio)]
-    (-> db
-        (assoc :pivot-point pivot-point)
-        (element.h/scale ratio pivot-point recursive))))
+        ratio-locked (or ratio-locked (every? element/ratio-locked? (element.h/selected db)))
+        ratio (cond-> ratio ratio-locked (lock-ratio handle))]
+    ;; TODO: Enhance inverted ratio.
+    (cond-> db
+      (not-any? zero? ratio)
+      (-> (assoc :pivot-point pivot-point)
+          (element.h/scale (mapv abs ratio) pivot-point recursive)))))
 
 (mx/defn select-element
   [db, multiple :- boolean?]
@@ -213,14 +213,13 @@
 
 (defmethod hierarchy/drag :select
   [db e]
-  (let [offset (mat/sub (:adjusted-pointer-pos db) (:adjusted-pointer-offset db))
+  (let [delta (mat/sub (:adjusted-pointer-pos db) (:adjusted-pointer-offset db))
+        state (:state db)
         ctrl? (pointer/ctrl? e)
-        offset (cond-> offset
-                 (and ctrl? (not= (:state db) :scale))
-                 (pointer/lock-direction))
+        delta (cond-> delta (and ctrl? (not= state :scale)) pointer/lock-direction)
         alt-key? (pointer/alt? e)
         db (element.h/clear-ignored db)]
-    (case (:state db)
+    (case state
       :select
       (-> db
           (element.h/assoc-temp (select-rect db alt-key?))
@@ -233,7 +232,7 @@
         (-> db
             (history.h/swap)
             (select-element (pointer/shift? e))
-            (element.h/translate offset)
+            (element.h/translate delta)
             (snap.h/snap-with element.h/translate)
             (app.h/set-cursor "default")))
 
@@ -242,7 +241,7 @@
         (-> db
             (history.h/swap)
             (select-element (pointer/shift? e))
-            (element.h/duplicate offset)
+            (element.h/duplicate delta)
             (snap.h/snap-with element.h/translate)
             (app.h/set-cursor "copy"))
         (app.h/set-state db :move))
@@ -252,10 +251,14 @@
         :always
         (-> (history.h/swap)
             (app.h/set-cursor "default")
-            (offset-scale offset (pointer/ctrl? e) (pointer/shift? e) (pointer/alt? e)))
+            (scale delta {:ratio-locked (pointer/ctrl? e)
+                          :in-place (pointer/shift? e)
+                          :recursive (pointer/alt? e)}))
 
         (not (pointer/ctrl? e))
-        (snap.h/snap-with offset-scale false (pointer/shift? e) (pointer/alt? e)))
+        (snap.h/snap-with scale {:ratio-locked false
+                                 :in-place (pointer/shift? e)
+                                 :recursive (pointer/alt? e)}))
 
       :default db)))
 
