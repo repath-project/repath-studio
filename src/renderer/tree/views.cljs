@@ -8,13 +8,13 @@
    [renderer.document.events :as-alias document.e]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.events :as-alias element.e]
-   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.s]
    [renderer.element.views :as element.v]
    [renderer.frame.events :as-alias frame.e]
    [renderer.tree.events :as-alias e]
    [renderer.ui :as ui]
    [renderer.utils.dom :as dom]
+   [renderer.utils.element :as element]
    [renderer.utils.keyboard :as keyb]))
 
 (defn lock-button
@@ -123,7 +123,7 @@
                               [::document.e/collapse-el id]))}])
 
 (defn list-item-button
-  [{:keys [id selected children locked visible tag] :as el} depth hovered collapsed]
+  [{:keys [id selected children locked visible] :as el} depth hovered collapsed]
   [:div.button.list-item-button
    {:class [(when selected "selected")
             (when hovered "hovered")]
@@ -158,7 +158,7 @@
     [:div.flex-1.overflow-hidden.flex.items-center
      {:class "gap-1.5"}
      [ui/icon
-      (:icon (element.hierarchy/properties tag))
+      (:icon (element/properties el))
       {:class (when-not visible "opacity-60")}]
      [item-label el]]
     [lock-button id locked]

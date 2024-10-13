@@ -6,8 +6,8 @@
    [renderer.document.subs :as-alias document.s]
    [renderer.element.handlers :as h]
    [renderer.element.hierarchy :as hierarchy]
-   [renderer.utils.attribute :as utils.attr]
-   [renderer.utils.element :as utils.el]
+   [renderer.utils.attribute :as attr]
+   [renderer.utils.element :as element]
    [renderer.utils.map :as utils.map]))
 
 (rf/reg-sub
@@ -25,7 +25,7 @@
  ::xml
  :<- [::root-children]
  (fn [root-children _]
-   (-> (utils.el/->string root-children)
+   (-> (element/->string root-children)
        (js-beautify/html #js {:indent_size 2}))))
 
 (rf/reg-sub
@@ -91,24 +91,23 @@
  (fn [[selected-elements multiple-selected] _]
    (when (seq selected-elements)
      (let [attrs (->> selected-elements
-                      (map utils.el/attributes)
+                      (map element/attributes)
                       (apply utils.map/merge-common-with
                              (fn [v1 v2] (if (= v1 v2) v1 nil))))
            attrs (if multiple-selected
                    (dissoc attrs :id)
                    (sort-by (fn [[id _]]
                               (-> (first selected-elements)
-                                  :tag
-                                  (hierarchy/properties)
+                                  (element/properties)
                                   :attrs
                                   (.indexOf id)))
-                            (utils.el/attributes (first selected-elements))))]
-       (sort-by (fn [[id _]] (.indexOf utils.attr/order id)) attrs)))))
+                            (element/attributes (first selected-elements))))]
+       (sort-by (fn [[id _]] (.indexOf attr/order id)) attrs)))))
 
 (rf/reg-sub
  ::bounds
  :<- [::selected]
- utils.el/united-bounds)
+ element/united-bounds)
 
 (rf/reg-sub
  ::area

@@ -8,6 +8,7 @@
    [renderer.app.subs :as-alias app.s]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.element.events :as-alias element.e]
+   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.s]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.ui :as ui]
@@ -215,10 +216,10 @@
        :align "end"}
       [:div.p-5
        [:h2.mb-4.text-lg tag]
-       (when-let [description (:description (tool.hierarchy/properties tag))]
+       (when-let [description (:description (element.hierarchy/properties tag))]
          [:p description])
        [caniusethis {:tag tag}]
-       (when-let [url (:url (tool.hierarchy/properties tag))]
+       (when-let [url (:url (element.hierarchy/properties tag))]
          [:button.button.px-3.bg-primary.w-full
           {:on-click #(rf/dispatch [::window.e/open-remote-url url])}
           "Learn more"])]

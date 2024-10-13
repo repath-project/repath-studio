@@ -26,9 +26,13 @@
   [el :- Element]
   (or (svg? el) (root? el)))
 
+(mx/defn properties :- [:maybe map?]
+  [el :- Element]
+  (-> el :tag element.hierarchy/properties))
+
 (mx/defn ratio-locked? :- boolean?
   [el :- Element]
-  (-> el :tag element.hierarchy/properties :ratio-locked))
+  (-> el properties :ratio-locked))
 
 (mx/defn united-bounds :- [:maybe Bounds]
   [elements :- [:sequential Element]]
