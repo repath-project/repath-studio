@@ -5,6 +5,7 @@
    [renderer.app.handlers :as app.h]
    [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.h]
+   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.h]
    [renderer.snap.handlers :as snap.h]
    [renderer.tool.hierarchy :as hierarchy]
@@ -194,7 +195,7 @@
         pivot-point (if in-place [cx cy] pivot-point)
         offset (cond-> offset in-place (mat/mul 2))
         ratio (mat/div (mat/add dimensions offset) dimensions)
-        ratio-locked (or ratio-locked (every? #(-> % :tag hierarchy/properties :ratio-locked) (element.h/selected db)))
+        ratio-locked (or ratio-locked (every? #(-> % :tag element.hierarchy/properties :ratio-locked) (element.h/selected db)))
         ratio (cond-> ratio ratio-locked (lock-ratio handle))
         ;; TODO: Handle negative/inverted ratio.
         ratio (mapv #(max 0 %) ratio)]
