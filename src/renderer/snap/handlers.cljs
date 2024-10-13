@@ -24,7 +24,7 @@
       (cond
         (and (contains? #{:move :clone} (:state db)) (seq selected-visible))
         (reduce (fn [points element]
-                  (apply conj points (utils.el/snapping-points element (-> :snap :options))))
+                  (apply conj points (utils.el/snapping-points element (-> db :snap :options))))
                 [] selected-visible)
 
         (contains? #{:edit :scale} (:state db))
