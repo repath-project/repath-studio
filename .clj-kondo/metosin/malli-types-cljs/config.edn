@@ -543,12 +543,22 @@
                                                                                                     :seqable
                                                                                                     :any],
                                                                                              :ret :any}}},
-                                                                snap-with {:arities {:varargs {:args [:any
+                                                                snap-with {:arities {2 {:args [:any :any], :ret :any},
+                                                                                     3 {:args [:any :any :any],
+                                                                                        :ret :any},
+                                                                                     4 {:args [:any :any :any :any],
+                                                                                        :ret :any},
+                                                                                     5 {:args [:any :any :any :any :any],
+                                                                                        :ret :any},
+                                                                                     :varargs {:args [:any
+                                                                                                      :any
+                                                                                                      :any
+                                                                                                      :any
                                                                                                       :any
                                                                                                       {:op :rest,
                                                                                                        :spec :any}],
                                                                                                :ret :any,
-                                                                                               :min-arity 2}}}},
+                                                                                               :min-arity 5}}}},
                                         renderer.utils.keyboard {key-code->key {:arities {1 {:args [:number],
                                                                                              :ret :nilable/string}}},
                                                                  modifiers {:arities {1 {:args [:any], :ret :set}}}},

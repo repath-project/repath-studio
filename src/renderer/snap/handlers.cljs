@@ -7,8 +7,7 @@
    [renderer.element.handlers :as element.h]
    [renderer.snap.db :refer [SnapOption]]
    [renderer.snap.subs :as-alias snap.s]
-   [renderer.utils.element :as utils.el]
-   [renderer.utils.math :refer [Vec2D]]))
+   [renderer.utils.element :as utils.el]))
 
 (mx/defn toggle-option
   [db, option :- SnapOption]
@@ -58,17 +57,48 @@
     (when (< (:dist-squared nearest-neighbor) (Math/pow threshold 2))
       nearest-neighbor)))
 
-(mx/defn snap-to-offset
-  [db, f :- fn?, offset :- Vec2D, more :- any?]
-  (apply f db offset more))
-
-(mx/defn snap-with
-  [db f & more]
-  (let [{:keys [point base-point] :as nearest-neighbor} (find-nearest-neighbor db)]
+(defn update-nearest-neighbor
+  [db]
+  (let [nearest-neighbor (find-nearest-neighbor db)]
     (cond-> db
       :always
       (update :snap dissoc :nearest-neighbor)
 
       (and (-> db :snap :active) nearest-neighbor)
-      (-> (assoc-in [:snap :nearest-neighbor] nearest-neighbor)
-          (snap-to-offset f (mat/sub point base-point) more)))))
+      (assoc-in [:snap :nearest-neighbor] nearest-neighbor))))
+
+(defn nearest-neighbor
+  [db]
+  (get-in db [:snap :nearest-neighbor]))
+
+(defn nearest-delta
+  [db]
+  (let [{:keys [point base-point]} (nearest-neighbor db)]
+    (mat/sub point base-point)))
+
+(mx/defn snap-with
+  ([db f]
+   (let [db (update-nearest-neighbor db)]
+     (cond-> db
+       (nearest-neighbor db)
+       (f (nearest-delta db)))))
+  ([db f arg1]
+   (let [db (update-nearest-neighbor db)]
+     (cond-> db
+       (nearest-neighbor db)
+       (f (nearest-delta db) arg1))))
+  ([db f arg1 arg2]
+   (let [db (update-nearest-neighbor db)]
+     (cond-> db
+       (nearest-neighbor db)
+       (f (nearest-delta db) arg1 arg2))))
+  ([db f arg1 arg2 arg3]
+   (let [db (update-nearest-neighbor db)]
+     (cond-> db
+       (nearest-neighbor db)
+       (f (nearest-delta db) arg1 arg2 arg3))))
+  ([db f arg1 arg2 arg3 & more]
+   (let [db (update-nearest-neighbor db)]
+     (cond-> db
+       (nearest-neighbor db)
+       (apply f (nearest-delta db) arg1 arg2 arg3 more)))))
