@@ -28,7 +28,7 @@
 
 (mx/defn ratio-locked? :- boolean?
   [el :- Element]
-  (-> el element.hierarchy/properties :ratio-locked))
+  (-> el :tag element.hierarchy/properties :ratio-locked))
 
 (mx/defn united-bounds :- [:maybe Bounds]
   [elements :- [:sequential Element]]

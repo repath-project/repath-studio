@@ -195,7 +195,6 @@
         pivot-point (if in-place [cx cy] pivot-point)
         offset (cond-> offset in-place (mat/mul 2))
         ratio (mat/div (mat/add dimensions offset) dimensions)
-        ratio-locked (or ratio-locked (every? element/ratio-locked? (element.h/selected db)))
         ratio (cond-> ratio ratio-locked (lock-ratio handle))]
     ;; TODO: Enhance inverted ratio.
     (cond-> db
@@ -218,6 +217,7 @@
         ctrl? (pointer/ctrl? e)
         delta (cond-> delta (and ctrl? (not= state :scale)) pointer/lock-direction)
         alt-key? (pointer/alt? e)
+        ratio-locked? (or (pointer/ctrl? e) (element.h/ratio-locked? db))
         db (element.h/clear-ignored db)]
     (case state
       :select
@@ -251,11 +251,11 @@
         :always
         (-> (history.h/swap)
             (app.h/set-cursor "default")
-            (scale delta {:ratio-locked (pointer/ctrl? e)
+            (scale delta {:ratio-locked ratio-locked?
                           :in-place (pointer/shift? e)
                           :recursive (pointer/alt? e)}))
 
-        (not (pointer/ctrl? e))
+        (not ratio-locked?)
         (snap.h/snap-with scale {:ratio-locked false
                                  :in-place (pointer/shift? e)
                                  :recursive (pointer/alt? e)}))

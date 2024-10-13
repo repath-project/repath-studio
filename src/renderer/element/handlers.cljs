@@ -49,6 +49,10 @@
   [db]
   (filter :selected (vals (elements db))))
 
+(defn ratio-locked?
+  [db]
+  (every? element/ratio-locked? (selected db)))
+
 (defn selected-ids
   [db]
   (set (map :id (selected db))))
