@@ -44,15 +44,16 @@
 
 (defn event-handler!
   "https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
-   https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/"
+   https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/
+
+   To be used on keydown/keyup events."
   [^js/KeyboardEvent e]
-  (rf/dispatch-sync [::app.e/keyboard-event
-                     {:target (.-target e)
-                      :type (.-type e)
-                      :code (.-code e)
-                      :key-code (.-keyCode e)
-                      :key (.-key e)
-                      :modifiers (modifiers e)}]))
+  (rf/dispatch-sync [::app.e/keyboard-event {:target (.-target e)
+                                             :type (.-type e)
+                                             :code (.-code e)
+                                             :key-code (.-keyCode e)
+                                             :key (.-key e)
+                                             :modifiers (modifiers e)}]))
 
 (defn input-key-down-handler!
   "Generic on-key-down handler for input elements that dispatches an event `f`
