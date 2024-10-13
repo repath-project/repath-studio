@@ -19,8 +19,8 @@
   (app.h/set-cursor db "text"))
 
 (defmethod hierarchy/pointer-up :text
-  [{:keys [adjusted-pointer-offset] :as db} _e]
-  (let [[offset-x offset-y] adjusted-pointer-offset
+  [db _e]
+  (let [[offset-x offset-y] (:adjusted-pointer-offset db)
         attrs {:x offset-x
                :y offset-y}]
     (-> db

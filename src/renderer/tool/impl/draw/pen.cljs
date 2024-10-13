@@ -17,11 +17,10 @@
 (defmethod hierarchy/drag :pen
   [db]
   (let [{:keys [active-document adjusted-pointer-pos]} db
-        stroke (get-in db [:documents active-document :stroke])]
-    (if (get-in db [:documents active-document :temp-element :attrs :points])
-      (update-in db
-                 [:documents active-document :temp-element :attrs :points]
-                 #(str % " " (str/join " " adjusted-pointer-pos)))
+        stroke (get-in db [:documents active-document :stroke])
+        points-path [:documents active-document :temp-element :attrs :points]]
+    (if (get-in db points-path)
+      (update-in db points-path #(str % " " (str/join " " adjusted-pointer-pos)))
       (element.h/assoc-temp db {:type :element
                                 :tag :polyline
                                 :attrs {:points (str/join " " adjusted-pointer-pos)

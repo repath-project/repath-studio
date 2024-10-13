@@ -21,9 +21,10 @@
 
 (defmethod hierarchy/pointer-move :brush
   [db e]
-  (let [pressure (:pressure e)
-        [x y] (:adjusted-pointer-pos db)
-        r (* (/ 16 2) (if (zero? pressure) 1 pressure))
+  (let [[x y] (:adjusted-pointer-pos db)
+        pressure (:pressure e)
+        pressure (if (zero? pressure) 1 pressure)
+        r (* (/ 16 2) pressure)
         stroke (get-in db [:documents (:active-document db) :stroke])]
     (element.h/assoc-temp db {:type :element
                               :tag :circle
@@ -34,15 +35,12 @@
 
 (defmethod hierarchy/drag :brush
   [db e]
-  (let [pressure (:pressure e)
-        active-document (:active-document db)
+  (let [active-document (:active-document db)
         stroke (get-in db [:documents active-document :stroke])
-        point (conj (:adjusted-pointer-pos db) pressure)]
-    (if (get-in db [:documents active-document :temp-element :attrs :points])
-      (update-in db
-                 [:documents active-document :temp-element :attrs :points]
-                 conj
-                 point)
+        point (conj (:adjusted-pointer-pos db) (:pressure e))
+        points-path [:documents active-document :temp-element :attrs :points]]
+    (if (get-in db points-path)
+      (update-in db points-path conj point)
       (element.h/assoc-temp db {:type :element
                                 :tag :brush
                                 :attrs {:points [point]
