@@ -36,7 +36,7 @@
         :on-pointer-move pointer-handler
         :fill "#888"
         :font-family "monospace"
-        :font-size (/ 12 zoom)}) (or (:name el) (name (:tag el)))]
+        :font-size (/ 12 zoom)}) (or (:label el) (name (:tag el)))]
 
      [:rect
       (merge
