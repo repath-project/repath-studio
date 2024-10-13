@@ -2,23 +2,23 @@
   (:require
    [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.hierarchy :as hierarchy]))
 
-(derive :fill ::tool.hierarchy/tool)
+(derive :fill ::hierarchy/tool)
 
-(defmethod tool.hierarchy/properties :fill
+(defmethod hierarchy/properties :fill
   []
   {:icon "fill"})
 
-(defmethod tool.hierarchy/help [:fill :default]
+(defmethod hierarchy/help [:fill :default]
   []
   "Click on an element to fill.")
 
-(defmethod tool.hierarchy/activate :fill
+(defmethod hierarchy/activate :fill
   [db]
   (app.h/set-cursor db "crosshair"))
 
-(defmethod tool.hierarchy/pointer-up :fill
+(defmethod hierarchy/pointer-up :fill
   [db e]
   (let [color (get-in db [:documents (:active-document db) :fill])
         el-id (-> e :element :id)]
@@ -26,6 +26,6 @@
         (element.h/set-attr el-id :fill color)
         (app.h/explain "Fill"))))
 
-(defmethod tool.hierarchy/drag-end :fill
+(defmethod hierarchy/drag-end :fill
   [db e]
-  (tool.hierarchy/pointer-up db e))
+  (hierarchy/pointer-up db e))

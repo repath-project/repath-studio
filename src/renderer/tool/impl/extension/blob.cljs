@@ -2,14 +2,12 @@
   "Custom element for https://blobs.dev/"
   (:require
    [clojure.core.matrix :as mat]
-   [renderer.element.events :as-alias element.e]
    [renderer.element.handlers :as element.h]
-   [renderer.element.subs :as-alias element.s]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.hierarchy :as hierarchy]))
 
-(derive :blob ::tool.hierarchy/element)
+(derive :blob ::hierarchy/element)
 
-(defmethod tool.hierarchy/properties :blob
+(defmethod hierarchy/properties :blob
   []
   {:icon "blob"})
 
@@ -17,7 +15,7 @@
   [db]
   (mat/distance (:adjusted-pointer-pos db) (:adjusted-pointer-offset db)))
 
-(defmethod tool.hierarchy/drag-start :blob
+(defmethod hierarchy/drag-start :blob
   [db]
   (let [{:keys [stroke fill]} (get-in db [:documents (:active-document db)])
         [offset-x offset-y] (:adjusted-pointer-offset db)
@@ -33,7 +31,7 @@
                                       :fill fill
                                       :stroke stroke}})))
 
-(defmethod tool.hierarchy/drag :blob
+(defmethod hierarchy/drag :blob
   [db]
   (let [[offset-x offset-y] (:adjusted-pointer-offset db)
         radius (pointer-delta db)

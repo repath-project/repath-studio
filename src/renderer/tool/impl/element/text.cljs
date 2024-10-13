@@ -1,26 +1,24 @@
 (ns renderer.tool.impl.element.text
   (:require
-   [renderer.app.events :as-alias app.e]
    [renderer.app.handlers :as app.h]
-   [renderer.element.events :as-alias element.e]
    [renderer.element.handlers :as element.h]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.hierarchy :as hierarchy]))
 
-(derive :text ::tool.hierarchy/element)
+(derive :text ::hierarchy/element)
 
-(defmethod tool.hierarchy/properties :text
+(defmethod hierarchy/properties :text
   []
   {:icon "text"})
 
-(defmethod tool.hierarchy/help [:text :default]
+(defmethod hierarchy/help [:text :default]
   []
   "Click to enter your text.")
 
-(defmethod tool.hierarchy/activate :text
+(defmethod hierarchy/activate :text
   [db]
   (app.h/set-cursor db "text"))
 
-(defmethod tool.hierarchy/pointer-up :text
+(defmethod hierarchy/pointer-up :text
   [{:keys [adjusted-pointer-offset] :as db} _e]
   (let [[offset-x offset-y] adjusted-pointer-offset
         attrs {:x offset-x
@@ -33,6 +31,6 @@
         (app.h/set-tool :edit)
         (app.h/set-state :create))))
 
-(defmethod tool.hierarchy/drag-end :text
+(defmethod hierarchy/drag-end :text
   [db e]
-  (tool.hierarchy/pointer-up db e))
+  (hierarchy/pointer-up db e))

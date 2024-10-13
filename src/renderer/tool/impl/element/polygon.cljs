@@ -1,9 +1,9 @@
 (ns renderer.tool.impl.element.polygon
   "https://www.w3.org/TR/SVG/shapes.html#PolygonElement"
-  (:require [renderer.tool.hierarchy :as tool.hierarchy]))
+  (:require [renderer.tool.hierarchy :as hierarchy]))
 
-(derive :polygon ::tool.hierarchy/polyshape)
+(derive :polygon ::hierarchy/polyshape)
 
-(defmethod tool.hierarchy/properties :polygon
+(defmethod hierarchy/properties :polygon
   []
   {:icon "polygon-tool"})

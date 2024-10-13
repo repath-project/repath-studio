@@ -7,7 +7,7 @@
    [renderer.element.handlers :as element.h]
    [renderer.history.handlers :as history.h]
    [renderer.snap.handlers :as snap.h]
-   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
    [renderer.utils.math :refer [Vec2D]]
@@ -22,33 +22,33 @@
                   :bottom-right
                   :bottom-left])
 
-(derive :select ::tool.hierarchy/tool)
+(derive :select ::hierarchy/tool)
 
-(defmethod tool.hierarchy/properties :select
+(defmethod hierarchy/properties :select
   []
   {:icon "pointer"})
 
-(defmethod tool.hierarchy/help [:select :default]
+(defmethod hierarchy/help [:select :default]
   []
   [:<>
    [:div "Click to select an element or click and drag to select by area."]
    [:div "Hold " [:span.shortcut-key "⇧"] " to add or remove elements to selection."]])
 
-(defmethod tool.hierarchy/help [:select :select]
+(defmethod hierarchy/help [:select :select]
   []
   [:div "Hold " [:span.shortcut-key "Alt"] " while dragging to select intersecting elements."])
 
-(defmethod tool.hierarchy/help [:select :move]
+(defmethod hierarchy/help [:select :move]
   []
   [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction, and "
    [:span.shortcut-key "Alt"] " to clone."])
 
-(defmethod tool.hierarchy/help [:select :clone]
+(defmethod hierarchy/help [:select :clone]
   []
   [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction. or release "
    [:span.shortcut-key "Alt"] " to move."])
 
-(defmethod tool.hierarchy/help [:select :scale]
+(defmethod hierarchy/help [:select :scale]
   []
   [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions, "
    [:span.shortcut-key "⇧"] " to scale in place, " [:span.shortcut-key "Alt"] " to also scale children."])
@@ -70,7 +70,7 @@
               (hovered? db el intersecting?)
               (f (:id el)))) db (filter :visible (vals (element.h/elements db)))))
 
-(defmethod tool.hierarchy/pointer-move :select
+(defmethod hierarchy/pointer-move :select
   [db {:keys [element] :as e}]
   (cond-> db
     (not (pointer/shift? e))
@@ -86,19 +86,19 @@
     (:id element)
     (element.h/hover (:id element))))
 
-(defmethod tool.hierarchy/key-down :select
+(defmethod hierarchy/key-down :select
   [db e]
   (cond-> db
     (pointer/shift? e)
     (element.h/ignore :bounding-box)))
 
-(defmethod tool.hierarchy/key-up :select
+(defmethod hierarchy/key-up :select
   [db e]
   (cond-> db
     (not (pointer/shift? e))
     (element.h/clear-ignored)))
 
-(defmethod tool.hierarchy/pointer-down :select
+(defmethod hierarchy/pointer-down :select
   [db {:keys [button element] :as e}]
   (cond-> db
     element
@@ -110,7 +110,7 @@
     :always
     (element.h/ignore :bounding-box)))
 
-(defmethod tool.hierarchy/pointer-up :select
+(defmethod hierarchy/pointer-up :select
   [db {:keys [element] :as e}]
   (-> db
       (dissoc :clicked-element)
@@ -118,7 +118,7 @@
       (element.h/select (:id element) (pointer/shift? e))
       (app.h/explain (if (:selected element) "Deselect element" "Select element"))))
 
-(defmethod tool.hierarchy/double-click :select
+(defmethod hierarchy/double-click :select
   [db e]
   (let [{{:keys [tag id]} :element} e]
     (if (= tag :g)
@@ -129,13 +129,13 @@
         (not= :canvas tag)
         (app.h/set-tool :edit)))))
 
-(defmethod tool.hierarchy/activate :select
+(defmethod hierarchy/activate :select
   [db]
   (-> db
       (app.h/set-state :default)
       (app.h/set-cursor "default")))
 
-(defmethod tool.hierarchy/deactivate :select
+(defmethod hierarchy/deactivate :select
   [db]
   (element.h/clear-ignored db))
 
@@ -146,7 +146,7 @@
       (not intersecting?)
       (assoc-in [:attrs :fill] "transparent"))))
 
-(defmethod tool.hierarchy/drag-start :select
+(defmethod hierarchy/drag-start :select
   [{:keys [clicked-element] :as db} _e]
   (app.h/set-state db (case (:tag clicked-element)
                         :canvas :select
@@ -194,7 +194,7 @@
         pivot-point (if in-place [cx cy] pivot-point)
         offset (cond-> offset in-place (mat/mul 2))
         ratio (mat/div (mat/add dimensions offset) dimensions)
-        ratio-locked (or ratio-locked (every? #(-> % :tag tool.hierarchy/properties :ratio-locked) (element.h/selected db)))
+        ratio-locked (or ratio-locked (every? #(-> % :tag hierarchy/properties :ratio-locked) (element.h/selected db)))
         ratio (cond-> ratio ratio-locked (lock-ratio handle))
         ;; TODO: Handle negative/inverted ratio.
         ratio (mapv #(max 0 %) ratio)]
@@ -210,7 +210,7 @@
          (not= (-> db :clicked-element :id) :bounding-box))
     (-> (element.h/select (-> db :clicked-element :id) multiple))))
 
-(defmethod tool.hierarchy/drag :select
+(defmethod hierarchy/drag :select
   [db e]
   (let [offset (mat/sub (:adjusted-pointer-pos db) (:adjusted-pointer-offset db))
         ctrl? (pointer/ctrl? e)
@@ -258,7 +258,7 @@
 
       :default db)))
 
-(defmethod tool.hierarchy/drag-end :select
+(defmethod hierarchy/drag-end :select
   [db e]
   (-> (case (:state db)
         :select (-> (cond-> db (not (pointer/shift? e)) element.h/deselect)

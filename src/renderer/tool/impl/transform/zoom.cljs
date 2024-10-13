@@ -4,50 +4,50 @@
    [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
    [renderer.frame.handlers :as frame.h]
-   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.overlay :as overlay]
    [renderer.utils.pointer :as pointer]))
 
-(derive :zoom ::tool.hierarchy/tool)
+(derive :zoom ::hierarchy/tool)
 
-(defmethod tool.hierarchy/properties :zoom
+(defmethod hierarchy/properties :zoom
   []
   {:icon "magnifier"})
 
-(defmethod tool.hierarchy/help [:zoom :default]
+(defmethod hierarchy/help [:zoom :default]
   []
   [:<>
    [:div "Click or select an area to zoom in."]
    [:div "Hold " [:span.shortcut-key "⇧"] " to zoom out."]])
 
-(defmethod tool.hierarchy/activate :zoom
+(defmethod hierarchy/activate :zoom
   [db]
   (app.h/set-cursor db "zoom-in"))
 
-(defmethod tool.hierarchy/key-down :zoom
+(defmethod hierarchy/key-down :zoom
   [db e]
   (cond-> db
     (pointer/shift? e)
     (app.h/set-cursor "zoom-out")))
 
-(defmethod tool.hierarchy/key-up :zoom
+(defmethod hierarchy/key-up :zoom
   [db e]
   (cond-> db
     (not (pointer/shift? e))
     (app.h/set-cursor "zoom-in")))
 
-(defmethod tool.hierarchy/drag-start :zoom
+(defmethod hierarchy/drag-start :zoom
   [db]
   (app.h/set-cursor db "default"))
 
-(defmethod tool.hierarchy/drag :zoom
+(defmethod hierarchy/drag :zoom
   [db]
   (element.h/assoc-temp db (overlay/select-box
                             (:adjusted-pointer-pos db)
                             (:adjusted-pointer-offset db)
                             (get-in db [:documents (:active-document db) :zoom]))))
 
-(defmethod tool.hierarchy/drag-end :zoom
+(defmethod hierarchy/drag-end :zoom
   [db e]
   (let [[offset-x offset-y] (:adjusted-pointer-offset db)
         [x y] (:adjusted-pointer-pos db)
@@ -67,7 +67,7 @@
         (frame.h/pan-to-bounds [x y offset-x offset-y])
         (app.h/add-fx [:dispatch [::app.e/persist]]))))
 
-(defmethod tool.hierarchy/pointer-up :zoom
+(defmethod hierarchy/pointer-up :zoom
   [db e]
   (let [factor (if (pointer/shift? e)
                  (:zoom-sensitivity db)

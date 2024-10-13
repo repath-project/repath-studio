@@ -6,36 +6,36 @@
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.h]
    [renderer.snap.handlers :as snap.h]
-   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.pointer :as pointer]))
 
-(derive :edit ::tool.hierarchy/tool)
+(derive :edit ::hierarchy/tool)
 
-(defmethod tool.hierarchy/properties :edit
+(defmethod hierarchy/properties :edit
   []
   {:icon "edit"})
 
-(defmethod tool.hierarchy/help [:edit :default]
+(defmethod hierarchy/help [:edit :default]
   []
   "Drag a handle to modify your shape, or click on an element to change selection.")
 
-(defmethod tool.hierarchy/help [:edit :edit]
+(defmethod hierarchy/help [:edit :edit]
   []
   [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction."])
 
-(defmethod tool.hierarchy/activate :edit
+(defmethod hierarchy/activate :edit
   [db]
   (-> db
       (app.h/set-state :default)
       (app.h/set-cursor "default")))
 
-(defmethod tool.hierarchy/pointer-down :edit
+(defmethod hierarchy/pointer-down :edit
   [db {:keys [element]}]
   (cond-> db
     element
     (assoc :clicked-element element)))
 
-(defmethod tool.hierarchy/pointer-up :edit
+(defmethod hierarchy/pointer-up :edit
   [db e]
   (if-not (and (= (:button e) :right)
                (:selected (:element e)))
@@ -46,14 +46,14 @@
         (app.h/explain "Select element"))
     (dissoc db :clicked-element)))
 
-(defmethod tool.hierarchy/pointer-move :edit
+(defmethod hierarchy/pointer-move :edit
   [db e]
   (let [el-id (-> e :element :id)]
     (cond-> (element.h/clear-hovered db)
       el-id
       (element.h/hover el-id))))
 
-(defmethod tool.hierarchy/drag-start :edit
+(defmethod hierarchy/drag-start :edit
   [db]
   (app.h/set-state db :edit))
 
@@ -61,7 +61,7 @@
   [db offset el-id handle-id]
   (element.h/update-el db el-id element.hierarchy/edit offset handle-id))
 
-(defmethod tool.hierarchy/drag :edit
+(defmethod hierarchy/drag :edit
   [db e]
   (let [clicked-element (:clicked-element db)
         offset (mat/sub (:adjusted-pointer-pos db) (:adjusted-pointer-offset db))
@@ -76,7 +76,7 @@
       (-> (element.h/update-el el-id element.hierarchy/edit offset (:id clicked-element))
           (snap.h/snap-with snap-handler el-id (:id clicked-element))))))
 
-(defmethod tool.hierarchy/drag-end :edit
+(defmethod hierarchy/drag-end :edit
   [db _e]
   (-> db
       (app.h/set-state :default)

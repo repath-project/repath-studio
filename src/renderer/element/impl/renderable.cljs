@@ -13,6 +13,8 @@
    [renderer.utils.element :as element]
    [renderer.utils.pointer :as pointer]))
 
+(derive ::hierarchy/renderable ::hierarchy/element)
+
 (defmethod hierarchy/bounds ::hierarchy/renderable
   [{:keys [tag attrs content] :as el}]
   (when-let [svg (dom/canvas-element!)]

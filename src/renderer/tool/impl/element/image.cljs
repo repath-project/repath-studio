@@ -3,17 +3,17 @@
   (:require
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.e]
-   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.drop :as drop]
    [renderer.utils.file :as file]))
 
-(derive :image ::tool.hierarchy/element)
+(derive :image ::hierarchy/element)
 
-(defmethod tool.hierarchy/properties :image
+(defmethod hierarchy/properties :image
   []
   {:icon "image"})
 
-(defmethod tool.hierarchy/pointer-up :image
+(defmethod hierarchy/pointer-up :image
   [db]
   (file/open! {:options {:startIn "pictures"
                          :types [{:accept {"image/png" [".png"]

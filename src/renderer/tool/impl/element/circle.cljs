@@ -3,15 +3,15 @@
   (:require
    [clojure.core.matrix :as mat]
    [renderer.element.handlers :as element.h]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.hierarchy :as hierarchy]))
 
-(derive :circle ::tool.hierarchy/element)
+(derive :circle ::hierarchy/element)
 
-(defmethod tool.hierarchy/properties :circle
+(defmethod hierarchy/properties :circle
   []
   {:icon "circle-tool"})
 
-(defmethod tool.hierarchy/drag :circle
+(defmethod hierarchy/drag :circle
   [db]
   (let [offset (:adjusted-pointer-offset db)
         position (:adjusted-pointer-pos db)

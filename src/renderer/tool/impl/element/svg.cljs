@@ -1,23 +1,21 @@
 (ns renderer.tool.impl.element.svg
   "https://www.w3.org/TR/SVG/struct.html#SVGElement"
   (:require
-   [renderer.document.subs :as-alias document.s]
    [renderer.element.handlers :as element.h]
-   [renderer.element.subs :as-alias element.s]
-   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.pointer :as pointer]))
 
-(derive :svg ::tool.hierarchy/element)
+(derive :svg ::hierarchy/element)
 
-(defmethod tool.hierarchy/properties :svg
+(defmethod hierarchy/properties :svg
   []
   {:icon "svg"})
 
-(defmethod tool.hierarchy/help [:svg :create]
+(defmethod hierarchy/help [:svg :create]
   []
   [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions."])
 
-(defmethod tool.hierarchy/drag :svg
+(defmethod hierarchy/drag :svg
   [db e]
   (let [[offset-x offset-y] (:adjusted-pointer-offset db)
         [x y] (:adjusted-pointer-pos db)

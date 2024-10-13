@@ -1,7 +1,9 @@
 (ns renderer.tool.impl.element.core
   (:require
+   [renderer.app.handlers :as app.h]
+   [renderer.element.handlers :as element.h]
+   [renderer.tool.hierarchy :as hierarchy]
    [renderer.tool.impl.element.circle]
-   [renderer.tool.impl.element.element]
    [renderer.tool.impl.element.ellipse]
    [renderer.tool.impl.element.image]
    [renderer.tool.impl.element.line]
@@ -11,3 +13,28 @@
    [renderer.tool.impl.element.rect]
    [renderer.tool.impl.element.svg]
    [renderer.tool.impl.element.text]))
+
+(derive ::hierarchy/element ::hierarchy/tool)
+
+(defmethod hierarchy/help [::hierarchy/element :default]
+  []
+  "Click and drag to create an element.")
+
+(defmethod hierarchy/activate ::hierarchy/element
+  [db]
+  (-> db
+      (app.h/set-cursor "crosshair")
+      (dissoc :drag :pointer-offset :clicked-element)
+      (element.h/dissoc-temp)))
+
+(defmethod hierarchy/drag-start ::hierarchy/element
+  [db]
+  (app.h/set-state db :create))
+
+(defmethod hierarchy/drag-end ::hierarchy/element
+  [db _e]
+  (-> db
+      (element.h/add)
+      (app.h/set-tool :select)
+      (app.h/set-state :default)
+      (app.h/explain "Create " (name (:tag (element.h/get-temp db))))))

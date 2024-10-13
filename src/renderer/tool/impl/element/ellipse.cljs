@@ -2,20 +2,20 @@
   "https://www.w3.org/TR/SVG/shapes.html#EllipseElement"
   (:require
    [renderer.element.handlers :as element.h]
-   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.pointer :as pointer]))
 
-(derive :ellipse ::tool.hierarchy/element)
+(derive :ellipse ::hierarchy/element)
 
-(defmethod tool.hierarchy/properties :ellipse
+(defmethod hierarchy/properties :ellipse
   []
   {:icon "ellipse-tool"})
 
-(defmethod tool.hierarchy/help [:ellipse :create]
+(defmethod hierarchy/help [:ellipse :create]
   []
   [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions."])
 
-(defmethod tool.hierarchy/drag :ellipse
+(defmethod hierarchy/drag :ellipse
   [db e]
   (let [{:keys [stroke fill]} (get-in db [:documents (:active-document db)])
         [offset-x offset-y] (:adjusted-pointer-offset db)

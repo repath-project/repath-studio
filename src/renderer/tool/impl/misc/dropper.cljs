@@ -4,26 +4,23 @@
    [renderer.app.handlers :as app.h]
    [renderer.color.effects :as-alias color.fx]
    [renderer.document.handlers :as document.h]
-   [renderer.element.events :as-alias element.e]
    [renderer.element.handlers :as element.h]
    [renderer.history.handlers :refer [finalize]]
-   [renderer.notification.events :as-alias notification.e]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.hierarchy :as hierarchy]))
 
-(derive :dropper ::tool.hierarchy/tool)
+(derive :dropper ::hierarchy/tool)
 
-(defmethod tool.hierarchy/properties :dropper
+(defmethod hierarchy/properties :dropper
   []
-  {:icon "eye-dropper"
-   :description "Pick a color from your document."})
+  {:icon "eye-dropper"})
 
-(defmethod tool.hierarchy/help [:dropper :default]
+(defmethod hierarchy/help [:dropper :default]
   []
   "Click anywhere to pick a color.")
 
-(defmethod tool.hierarchy/activate :dropper
+(defmethod hierarchy/activate :dropper
   [db]
   (if (.-EyeDropper js/window)
     (app.h/add-fx db [::color.fx/dropper {:on-success ::success

@@ -2,32 +2,31 @@
   (:require
    [clojure.core.matrix :as mat]
    [renderer.app.handlers :as app.h]
-   [renderer.document.subs :as-alias document.s]
    [renderer.element.handlers :as element.h]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.hierarchy :as hierarchy]))
 
-(derive :measure ::tool.hierarchy/tool)
+(derive :measure ::hierarchy/tool)
 
-(defmethod tool.hierarchy/properties :measure
+(defmethod hierarchy/properties :measure
   []
   {:icon "ruler-triangle"})
 
-(defmethod tool.hierarchy/help [:measure :default]
+(defmethod hierarchy/help [:measure :default]
   []
   "Click and drag to measure a distance.")
 
-(defmethod tool.hierarchy/activate :measure
+(defmethod hierarchy/activate :measure
   [db]
   (app.h/set-cursor db "crosshair"))
 
-(defmethod tool.hierarchy/pointer-up :measure
+(defmethod hierarchy/pointer-up :measure
   [db]
   (element.h/dissoc-temp db))
 
-(defmethod tool.hierarchy/drag-end :measure
+(defmethod hierarchy/drag-end :measure
   [db] db)
 
-(defmethod tool.hierarchy/drag :measure
+(defmethod hierarchy/drag :measure
   [db]
   (let [{:keys [adjusted-pointer-offset adjusted-pointer-pos]} db
         [offset-x offset-y] adjusted-pointer-offset

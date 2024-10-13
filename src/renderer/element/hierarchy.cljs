@@ -1,8 +1,6 @@
 (ns renderer.element.hierarchy)
 
 ;; REVIEW: Is this type of complexity really needed?
-(derive ::renderable ::element)
-(derive ::shape ::renderable)
 (derive ::graphics ::renderable)
 (derive ::gradient ::renderable)
 (derive ::descriptive ::renderable)
@@ -27,7 +25,7 @@
 (defmulti place "Moves the element to a given global position." (fn [el _position] (:tag el)))
 (defmulti scale "Scales the element by a given ratio and pivot-point." (fn [el _ration _pivot-point] (:tag el)))
 (defmulti edit "Edits the element by a given offset and handle." (fn [el _offset _handle] (:tag el)))
-(defmulti properties keyword)
+(defmulti properties "Returns the properties of the element." keyword)
 
 (defmethod render :default [])
 (defmethod render-to-string :default [element] [render element])

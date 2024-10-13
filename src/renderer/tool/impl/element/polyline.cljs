@@ -1,9 +1,9 @@
 (ns renderer.tool.impl.element.polyline
   "https://www.w3.org/TR/SVG/shapes.html#PolylineElement"
-  (:require [renderer.tool.hierarchy :as tool.hierarchy]))
+  (:require [renderer.tool.hierarchy :as hierarchy]))
 
-(derive :polyline ::tool.hierarchy/polyshape)
+(derive :polyline ::hierarchy/polyshape)
 
-(defmethod tool.hierarchy/properties :polyline
+(defmethod hierarchy/properties :polyline
   []
   {:icon "polyline"})

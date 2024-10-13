@@ -1,7 +1,5 @@
 (ns renderer.tool.hierarchy)
 
-(derive ::element ::tool)
-
 (defmulti pointer-down (fn [db _e] (:tool db)))
 (defmulti pointer-move (fn [db _e] (:tool db)))
 (defmulti pointer-up (fn [db _e] (:tool db)))
@@ -13,8 +11,8 @@
 (defmulti key-down (fn [db _e] (:tool db)))
 (defmulti activate :tool)
 (defmulti deactivate :tool)
-(defmulti properties keyword)
-(defmulti help (fn [tool state] [tool state]))
+(defmulti properties "Returns the properties of the tool." keyword)
+(defmulti help "Returns the status bar help text." (fn [tool state] [tool state]))
 
 (defmulti right-panel keyword)
 

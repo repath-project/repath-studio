@@ -2,21 +2,21 @@
   "https://www.w3.org/TR/SVG/shapes.html#RectElement"
   (:require
    [renderer.element.handlers :as element.h]
-   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.pointer :as pointer]))
 
-(derive :rect ::tool.hierarchy/element)
+(derive :rect ::hierarchy/element)
 
-(defmethod tool.hierarchy/properties :rect
+(defmethod hierarchy/properties :rect
   []
   {:icon "rectangle-tool"
    :label "Rectangle"})
 
-(defmethod tool.hierarchy/help [:rect :create]
+(defmethod hierarchy/help [:rect :create]
   []
   [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions."])
 
-(defmethod tool.hierarchy/drag :rect
+(defmethod hierarchy/drag :rect
   [db e]
   (let [{:keys [stroke fill]} (get-in db [:documents (:active-document db)])
         [offset-x offset-y] (:adjusted-pointer-offset db)

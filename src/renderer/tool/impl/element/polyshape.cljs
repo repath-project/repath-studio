@@ -5,20 +5,20 @@
    [clojure.string :as str]
    [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
-   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.attribute :as utils.attr]))
 
-(derive ::tool.hierarchy/polyshape ::tool.hierarchy/element)
+(derive ::hierarchy/polyshape ::hierarchy/element)
 
 (defn points-path
   [db]
   [:documents (:active-document db) :temp-element :attrs :points])
 
-(defmethod tool.hierarchy/help [::tool.hierarchy/polyshape :default]
+(defmethod hierarchy/help [::hierarchy/polyshape :default]
   []
   "Click to add more points. Double click to finalize the shape.")
 
-(defmethod tool.hierarchy/activate ::tool.hierarchy/polyshape
+(defmethod hierarchy/activate ::hierarchy/polyshape
   [db]
   (app.h/set-cursor db "crosshair"))
 
@@ -35,7 +35,7 @@
   [db point]
   (update-in db (points-path db) #(str % " " (str/join " " point))))
 
-(defmethod tool.hierarchy/pointer-up ::tool.hierarchy/polyshape
+(defmethod hierarchy/pointer-up ::hierarchy/polyshape
   [db]
   (if (element.h/get-temp db)
     (add-point db (:adjusted-pointer-pos db))
@@ -43,7 +43,7 @@
         (app.h/set-state :create)
         (create-polyline (:adjusted-pointer-pos db)))))
 
-(defmethod tool.hierarchy/drag-end ::tool.hierarchy/polyshape
+(defmethod hierarchy/drag-end ::hierarchy/polyshape
   [db]
   (if (element.h/get-temp db)
     (add-point db (:adjusted-pointer-pos db))
@@ -51,7 +51,7 @@
         (app.h/set-state :create)
         (create-polyline (:adjusted-pointer-pos db)))))
 
-(defmethod tool.hierarchy/pointer-move ::tool.hierarchy/polyshape
+(defmethod hierarchy/pointer-move ::hierarchy/polyshape
   [db]
   (if-let [points (get-in db (points-path db))]
     (let [point-vector (utils.attr/points->vec points)]
@@ -62,7 +62,7 @@
                                                       point-vector))
                                       (:adjusted-pointer-pos db))))) db))
 
-(defmethod tool.hierarchy/double-click ::tool.hierarchy/polyshape
+(defmethod hierarchy/double-click ::hierarchy/polyshape
   [db _e]
   (-> db
       (update-in (points-path db) #(->> (utils.attr/points->vec %)

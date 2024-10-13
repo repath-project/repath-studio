@@ -3,18 +3,18 @@
    [clojure.string :as str]
    [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
-   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.element :as element]
    [renderer.utils.path :as path]))
 
-(derive :pen ::tool.hierarchy/element)
+(derive :pen ::hierarchy/element)
 
-(defmethod tool.hierarchy/properties :pen
+(defmethod hierarchy/properties :pen
   []
   {:icon "pencil"
    :description "Pencil tool"})
 
-(defmethod tool.hierarchy/drag :pen
+(defmethod hierarchy/drag :pen
   [db]
   (let [{:keys [active-document adjusted-pointer-pos]} db
         stroke (get-in db [:documents active-document :stroke])]
@@ -28,7 +28,7 @@
                                         :stroke stroke
                                         :fill "transparent"}}))))
 
-(defmethod tool.hierarchy/drag-end :pen
+(defmethod hierarchy/drag-end :pen
   [db _e]
   (let [path (-> (element.h/get-temp db)
                  (element/->path)
