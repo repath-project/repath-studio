@@ -10,23 +10,24 @@
    [renderer.utils.pointer :as pointer]))
 
 (mx/defn pan-by
-  ([{:keys [active-document] :as db}, offset :- Vec2D]
-   (pan-by db offset active-document))
+  ([db, offset :- Vec2D]
+   (pan-by db offset (:active-document db)))
   ([db, offset :- Vec2D, id  :- uuid?]
    (let [zoom (get-in db [:documents id :zoom])]
      (update-in db [:documents id :pan] mat/add (mat/div offset zoom)))))
 
 (mx/defn recenter-to-dom-rect
-  [{:keys [dom-rect] :as db}, updated-dom-rect :- DomRect]
-  (let [offset (-> (merge-with - dom-rect updated-dom-rect)
+  [db, updated-dom-rect :- DomRect]
+  (let [offset (-> (merge-with - (:dom-rect db) updated-dom-rect)
                    (select-keys [:width :height]))]
     (if-not (-> db :window :focused)
       db
       (reduce #(pan-by %1 (mat/div [(:width offset) (:height offset)] 2) %2) db (:document-tabs db)))))
 
 (mx/defn zoom-in-place
-  [{:keys [active-document] :as db}, factor :- number?, pos :- Vec2D]
-  (let [zoom (get-in db [:documents active-document :zoom])
+  [db, factor :- number?, pos :- Vec2D]
+  (let [active-document (:active-document db)
+        zoom (get-in db [:documents active-document :zoom])
         updated-zoom (math/clamp (* zoom factor) 0.01 100)
         updated-factor (/ updated-zoom zoom)
         current-pan (get-in db [:documents active-document :pan])
@@ -38,31 +39,31 @@
         (assoc-in [:documents active-document :pan] updated-pan))))
 
 (mx/defn adjust-pointer-pos
-  [{:keys [active-document] :as db}, pos :- Vec2D]
-  (let [{:keys [zoom pan]} (get-in db [:documents active-document])]
+  [db, pos :- Vec2D]
+  (let [{:keys [zoom pan]} (get-in db [:documents (:active-document db)])]
     (pointer/adjust-position zoom pan pos)))
 
 (mx/defn zoom-at-pointer
-  [{:keys [adjusted-pointer-pos] :as db}, factor :- number?]
-  (zoom-in-place db factor adjusted-pointer-pos))
+  [db, factor :- number?]
+  (zoom-in-place db factor (:adjusted-pointer-pos db)))
 
 (mx/defn zoom-by
-  [{:keys [active-document dom-rect] :as db}, factor :- number?]
-  (let [{:keys [zoom pan]} (get-in db [:documents active-document])
-        {:keys [width height]} dom-rect
+  [db, factor :- number?]
+  (let [{:keys [zoom pan]} (get-in db [:documents (:active-document db)])
+        {:keys [width height]} (:dom-rect db)
         position (mat/add pan (mat/div [width height] 2 zoom))]
     (zoom-in-place db factor position)))
 
 (mx/defn pan-to-bounds
-  [{:keys [active-document dom-rect] :as db}, bounds :- Bounds]
-  (let [zoom (get-in db [:documents active-document :zoom])
-        rect-dimentions [(:width dom-rect) (:height dom-rect)]
+  [db, bounds :- Bounds]
+  (let [zoom (get-in db [:documents (:active-document db) :zoom])
+        rect-dimentions [(-> db :dom-rect :width) (-> db :dom-rect :height)]
         [x1 y1] bounds
         pan (-> (utils.bounds/->dimensions bounds)
                 (mat/sub (mat/div rect-dimentions zoom))
                 (mat/div 2)
                 (mat/add [x1 y1]))]
-    (assoc-in db [:documents active-document :pan] pan)))
+    (assoc-in db [:documents (:active-document db) :pan] pan)))
 
 (mx/defn focus-bounds
   ([db, focus-type :- [:enum :original :fit :fill]]
@@ -99,9 +100,6 @@
       :else 0)))
 
 (mx/defn pan-out-of-canvas
-  [db,
-   {:keys [width height]} :- DomRect,
-   [x y] :- Vec2D,
-   [offset-x offset-y] :- Vec2D]
-  (pan-by db [(axis-offset x offset-x width)
-              (axis-offset y offset-y height)]))
+  [db, dom-rect :- DomRect, [x y] :- Vec2D, [offset-x offset-y] :- Vec2D]
+  (pan-by db [(axis-offset x offset-x (:width dom-rect))
+              (axis-offset y offset-y (:height dom-rect))]))

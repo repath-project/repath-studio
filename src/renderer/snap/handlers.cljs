@@ -11,34 +11,29 @@
    [renderer.utils.math :refer [Vec2D]]))
 
 (mx/defn toggle-option
-  [{:keys [snap] :as db}, option :- SnapOption]
-  (if (contains? (:options snap) option)
+  [db, option :- SnapOption]
+  (if (contains? (-> db :snap :options) option)
     (update-in db [:snap :options] disj option)
     (update-in db [:snap :options] conj option)))
 
 (defn base-points
-  [{:keys [snap
-           adjusted-pointer-pos
-           adjusted-pointer-offset
-           clicked-element
-           state] :as db}]
-  (let [elements (element.h/elements db)
-        selected-visible (filter #(and (:visible %)
-                                       (:selected %)) (vals elements))]
-    (when (:active snap)
+  [db]
+  (let [elements (vals (element.h/elements db))
+        selected-visible (filter #(and (:visible %) (:selected %)) elements)]
+    (when (-> db :snap :active)
       (cond
-        (and (contains? #{:move :clone} state) (seq selected-visible))
+        (and (contains? #{:move :clone} (:state db)) (seq selected-visible))
         (reduce (fn [points element]
-                  (apply conj points (utils.el/snapping-points element (:options snap))))
+                  (apply conj points (utils.el/snapping-points element (-> :snap :options))))
                 [] selected-visible)
 
-        (contains? #{:edit :scale} state)
-        [(mat/add [(:x clicked-element) (:y clicked-element)]
-                  (mat/sub adjusted-pointer-pos
-                           adjusted-pointer-offset))]
+        (contains? #{:edit :scale} (:state db))
+        [(mat/add [(-> db :clicked-element :x) (-> db :clicked-element :y)]
+                  (mat/sub (:adjusted-pointer-pos db)
+                           (:adjusted-pointer-offset db)))]
 
         :else
-        [adjusted-pointer-pos]))))
+        [(:adjusted-pointer-pos db)]))))
 
 (defn find-nearest-neighbors
   [db]
@@ -48,10 +43,10 @@
               (assoc nearest-neighbor :base-point %))) (base-points db))))
 
 (defn find-nearest-neighbor
-  [{:keys [active-document snap] :as db}]
-  (let [threshold (:threshold snap)
+  [db]
+  (let [threshold (-> db :snap :threshold)
         nearest-neighbors (find-nearest-neighbors db)
-        threshold (/ threshold (get-in db [:documents active-document :zoom]))
+        threshold (/ threshold (get-in db [:documents (:active-document db) :zoom]))
         nearest-neighbor (reduce
                           (fn [nearest-neighbor neighbor]
                             (if (< (:dist-squared neighbor)
@@ -68,12 +63,12 @@
   (apply f db offset more))
 
 (mx/defn snap-with
-  [{:keys [snap] :as db} f & more]
+  [db f & more]
   (let [{:keys [point base-point] :as nearest-neighbor} (find-nearest-neighbor db)]
     (cond-> db
       :always
       (update :snap dissoc :nearest-neighbor)
 
-      (and (:active snap) nearest-neighbor)
+      (and (-> db :snap :active) nearest-neighbor)
       (-> (assoc-in [:snap :nearest-neighbor] nearest-neighbor)
           (snap-to-offset f (mat/sub point base-point) more)))))

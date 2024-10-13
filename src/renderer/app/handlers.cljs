@@ -94,23 +94,23 @@
       db)))
 
 (mx/defn wheel-handler
-  [db, {:keys [modifiers delta-x delta-y]} :- WheelEvent]
-  (if (some modifiers [:ctrl :alt])
+  [db, e :- WheelEvent]
+  (if (some (:modifiers e) [:ctrl :alt])
     (let [factor (Math/pow (inc (/ (- 1 (:zoom-sensitivity db)) 100))
-                           (- delta-y))]
+                           (- (:delta-y e)))]
       (-> db
           (frame.h/zoom-at-pointer factor)
           (add-fx [:dispatch [::e/persist]])))
-    (frame.h/pan-by db [delta-x delta-y])))
+    (frame.h/pan-by db [(:delta-x e) (:delta-y e)])))
 
 (mx/defn key-handler
-  [{:keys [tool] :as db}, e :- KeyboardEvent]
+  [db, e :- KeyboardEvent]
   (case (:type e)
     "keydown"
     (cond-> db
       (and (= (:code e) "Space")
-           (not= tool :pan))
-      (-> (assoc :primary-tool tool)
+           (not= (:tool db) :pan))
+      (-> (assoc :primary-tool (:tool db))
           (set-tool :pan))
 
       :always
