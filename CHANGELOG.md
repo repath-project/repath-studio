@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.4.4 (2024-10-14)
+
+**Added**
+
+- Icons to element tree
+- Select element range on tree shift click
+- Default font weights
+
+**Removed**
+
+- Blocking loader
+
+**Changed**
+
+- Enhance performance
+- Enhance readability of attribute info
+- Enhance scale behavior
+
+**Fixed**
+
+- Multiselect on tree
+- Fill/stroke picker offset
+- Keyboard navigation on element tree
+- Form input width
+- Disabled state of font family popover
+
 ## 0.4.3 (2024-09-23)
 
 **Added**
