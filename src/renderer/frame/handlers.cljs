@@ -3,11 +3,19 @@
    [clojure.core.matrix :as mat]
    [malli.experimental :as mx]
    [renderer.app.db :refer [DomRect]]
+   [renderer.document.db :refer [ZoomFactor]]
    [renderer.element.handlers :as element.h]
    [renderer.utils.bounds :as utils.bounds :refer [Bounds]]
    [renderer.utils.element :as element]
    [renderer.utils.math :as math :refer [Vec2D]]
    [renderer.utils.pointer :as pointer]))
+
+(mx/defn viewbox
+  [zoom :- ZoomFactor, pan :- Vec2D, dom-rect :- DomRect]
+  (let [{:keys [width height]} dom-rect
+        [x y] pan
+        [width height] (mat/div [width height] zoom)]
+    [x y width height]))
 
 (mx/defn pan-by
   ([db, offset :- Vec2D]

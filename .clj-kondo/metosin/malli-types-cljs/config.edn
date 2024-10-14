@@ -322,6 +322,18 @@
                                                                  adjust-pointer-pos {:arities {2 {:args [:any :seqable],
                                                                                                   :ret :any}}},
                                                                  zoom-by {:arities {2 {:args [:any :number], :ret :any}}},
+                                                                 viewbox {:arities {3 {:args [:any
+                                                                                              :seqable
+                                                                                              {:op :keys,
+                                                                                               :req {:x :number,
+                                                                                                     :y :number,
+                                                                                                     :width :number,
+                                                                                                     :height :number,
+                                                                                                     :top :number,
+                                                                                                     :right :number,
+                                                                                                     :bottom :number,
+                                                                                                     :left :number}}],
+                                                                                       :ret :any}}},
                                                                  pan-to-bounds {:arities {2 {:args [:any :seqable],
                                                                                              :ret :any}}},
                                                                  zoom-at-pointer {:arities {2 {:args [:any :number],
@@ -360,17 +372,13 @@
                                                                              lock-ratio {:arities {2 {:args [:seqable
                                                                                                              :keyword],
                                                                                                       :ret :seqable}}},
-                                                                             offset-scale {:arities {3 {:args [:any
-                                                                                                               :seqable
-                                                                                                               :any],
-                                                                                                        :ret :any}}},
-                                                                             select-element {:arities {2 {:args [:any
-                                                                                                                 :boolean],
-                                                                                                          :ret :any}}},
                                                                              scale {:arities {3 {:args [:any
                                                                                                         :seqable
                                                                                                         :any],
-                                                                                                 :ret :any}}}},
+                                                                                                 :ret :any}}},
+                                                                             select-element {:arities {2 {:args [:any
+                                                                                                                 :boolean],
+                                                                                                          :ret :any}}}},
                                         renderer.utils.units {match-unit {:arities {1 {:args [:string], :ret :string}}},
                                                               unit->px {:arities {1 {:args [:any], :ret :number}}},
                                                               valid-unit? {:arities {1 {:args [:string], :ret :boolean}}},

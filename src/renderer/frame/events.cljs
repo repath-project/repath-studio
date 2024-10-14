@@ -53,14 +53,11 @@
  ::pan-to-element
  (fn [{:keys [db]} [_ id]]
    {:fx
-    (let [{:keys [dom-rect active-document]} db
-          element (element.h/element db id)
+    (let [element (element.h/element db id)
           el-bounds (:bounds element)
-          zoom (get-in db [:documents active-document :zoom])
-          {:keys [width height]} dom-rect
-          [x y] (get-in db [:documents active-document :pan])
-          [width height] (mat/div [width height] zoom)
-          viewbox [x y (+ x width) (+ y height)] ; TODO: Convert to flow.
+          zoom (get-in db [:documents (:active-document db) :zoom])
+          pan (get-in db [:documents (:active-document db) :pan])
+          viewbox (h/viewbox zoom pan (:dom-rect db))
           diff (mat/sub el-bounds viewbox)
           frames 30]
       (for [i (range (inc frames))]

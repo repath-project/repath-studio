@@ -6,6 +6,9 @@
    [renderer.history.db :refer [History]]
    [renderer.utils.math :refer [Vec2D]]))
 
+(def ZoomFactor
+  [:and number? [:>= 0.01] [:<= 100]])
+
 (def Document
   [:map {:closed true}
    [:id {:optional true :persist true} uuid?]
@@ -18,7 +21,7 @@
    [:ignored-ids {:default #{}} [:set [:or keyword? uuid?]]]
    [:fill {:default "white"} string?]
    [:stroke {:default "black"} string?]
-   [:zoom {:default 1} [:and number? [:>= 0.01] [:<= 100]]]
+   [:zoom {:default 1} ZoomFactor]
    [:rotate {:default 0} number?]
    [:history History]
    [:temp-element {:optional true} map?] ; REVIEW

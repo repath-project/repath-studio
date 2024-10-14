@@ -1,10 +1,10 @@
 (ns renderer.frame.subs
   (:require
-   [clojure.core.matrix :as mat]
    [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.s]
    [renderer.document.subs :as-alias document.s]
+   [renderer.frame.handlers :as h]
    [renderer.utils.pointer :as pointer]))
 
 (rf/reg-sub
@@ -12,10 +12,8 @@
  :<- [::document.s/zoom]
  :<- [::document.s/pan]
  :<- [::app.s/dom-rect]
- (fn [[zoom pan {:keys [width height]}] _]
-   (let [[x y] pan
-         [width height] (mat/div [width height] zoom)]
-     [x y width height])))
+ (fn [[zoom pan dom-rect] _]
+   (h/viewbox zoom pan dom-rect)))
 
 (rf/reg-sub
  ::viewbox-attr
