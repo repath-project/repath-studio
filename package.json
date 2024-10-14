@@ -63,7 +63,7 @@
   },
   "main": "resources/main.js",
   "devDependencies": {
-    "@mdn/browser-compat-data": "5.6.5",
+    "@mdn/browser-compat-data": "5.6.6",
     "@playwright/test": "1.48.0",
     "@radix-ui/react-context-menu": "2.2.2",
     "@radix-ui/react-dialog": "1.1.2",
@@ -85,8 +85,8 @@
     "cmdk": "1.0.0",
     "codemirror": "5.65.15",
     "create-react-class": "15.7.0",
-    "electron": "32.1.2",
-    "electron-builder": "25.1.7",
+    "electron": "32.2.0",
+    "electron-builder": "25.1.8",
     "highlight.js": "11.10.0",
     "imagetracerjs": "1.2.6",
     "js-beautify": "1.15.1",
@@ -118,7 +118,7 @@
     "tailwindcss": "3.4.13"
   },
   "dependencies": {
-    "@webref/css": "6.16.0",
+    "@webref/css": "6.16.1",
     "electron-log": "5.2.0",
     "electron-reloader": "1.2.3",
     "electron-updater": "6.3.9",
