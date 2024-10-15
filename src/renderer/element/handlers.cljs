@@ -287,7 +287,9 @@
 
 (defn selected-tags
   [db]
-  (reduce #(conj %1 (:tag %2)) #{} (selected db)))
+  (->> (selected db)
+       (map :tag)
+       (set)))
 
 (defn filter-by-tag
   [db tag]
@@ -296,10 +298,11 @@
 (defn select-same-tags
   [db]
   (let [tags (selected-tags db)]
-    (reduce (fn [db {:keys [id tag]}]
-              (cond-> db
-                (contains? tags tag)
-                (select id))) (deselect db) (vals (elements db)))))
+    (->> (elements db)
+         (vals)
+         (reduce (fn [db el] (cond-> db
+                               (contains? tags (:tag el))
+                               (select (:id el)))) db))))
 
 (defn selected-sorted
   [db]

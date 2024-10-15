@@ -65,7 +65,7 @@
  ::selected-tags
  :<- [::selected]
  (fn [selected-elements _]
-   (reduce #(conj %1 (:tag %2)) #{} selected-elements)))
+   (->> selected-elements (map :tag) set)))
 
 (rf/reg-sub
  ::some-selected
