@@ -182,15 +182,15 @@
 
 (defn coll->str
   [coll]
-  (str (mapv #(.toFixed % 2) coll)))
+  (str "[" (apply str (map #(.toFixed % 2) coll)) "]"))
 
 (defn debug-rows
   []
   [["Dom rect" @(rf/subscribe [::app.s/dom-rect])]
    ["Viewbox" (coll->str @(rf/subscribe [::frame.s/viewbox]))]
-   ["Pointer position" (str @(rf/subscribe [::app.s/pointer-pos]))]
+   ["Pointer position" (coll->str @(rf/subscribe [::app.s/pointer-pos]))]
    ["Adjusted pointer position" (coll->str @(rf/subscribe [::app.s/adjusted-pointer-pos]))]
-   ["Pointer offset" (str @(rf/subscribe [::app.s/pointer-offset]))]
+   ["Pointer offset" (coll->str @(rf/subscribe [::app.s/pointer-offset]))]
    ["Adjusted pointer offset" (coll->str @(rf/subscribe [::app.s/adjusted-pointer-offset]))]
    ["Pointer drag?" (str @(rf/subscribe [::app.s/drag]))]
    ["Pan" (coll->str @(rf/subscribe [::document.s/pan]))]

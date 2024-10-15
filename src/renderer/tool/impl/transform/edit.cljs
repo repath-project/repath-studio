@@ -30,10 +30,10 @@
       (app.h/set-cursor "default")))
 
 (defmethod hierarchy/pointer-down :edit
-  [db {:keys [element]}]
+  [db e]
   (cond-> db
-    element
-    (assoc :clicked-element element)))
+    (:element e)
+    (assoc :clicked-element (:element e))))
 
 (defmethod hierarchy/pointer-up :edit
   [db e]
