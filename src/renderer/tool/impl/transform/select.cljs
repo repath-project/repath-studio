@@ -141,10 +141,9 @@
 
 (defn select-rect
   [db intersecting?]
-  (let [zoom (get-in db [:documents (:active-document db) :zoom])]
-    (cond-> (overlay/select-box (:adjusted-pointer-pos db) (:adjusted-pointer-offset db) zoom)
-      (not intersecting?)
-      (assoc-in [:attrs :fill] "transparent"))))
+  (cond-> (overlay/select-box db)
+    (not intersecting?)
+    (assoc-in [:attrs :fill] "transparent")))
 
 (defmethod hierarchy/drag-start :select
   [db _e]

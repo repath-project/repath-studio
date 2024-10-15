@@ -273,6 +273,7 @@
                                         renderer.app.handlers {set-state {:arities {2 {:args [:any :keyword], :ret :any}}},
                                                                set-cursor {:arities {2 {:args [:any :string], :ret :any}}},
                                                                set-tool {:arities {2 {:args [:any :any], :ret :any}}},
+                                                               pointer-delta {:arities {1 {:args [:any], :ret :any}}},
                                                                pointer-handler {:arities {3 {:args [:any
                                                                                                     {:op :keys,
                                                                                                      :req {:buttons :nilable/keyword,
@@ -306,8 +307,7 @@
                                                                                                        :key-code :number,
                                                                                                        :key :string,
                                                                                                        :modifiers :set}}],
-                                                                                         :ret :any}}},
-                                                               pointer-delta {:arities {1 {:args [:any], :ret :any}}}},
+                                                                                         :ret :any}}}},
                                         renderer.utils.math {clamp {:arities {3 {:args [:number :number :number],
                                                                                  :ret :number}}},
                                                              angle-dx {:arities {2 {:args [:number :number],

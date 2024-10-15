@@ -42,10 +42,7 @@
 
 (defmethod hierarchy/drag :zoom
   [db]
-  (element.h/assoc-temp db (overlay/select-box
-                            (:adjusted-pointer-pos db)
-                            (:adjusted-pointer-offset db)
-                            (get-in db [:documents (:active-document db) :zoom]))))
+  (element.h/assoc-temp db (overlay/select-box db)))
 
 (defmethod hierarchy/drag-end :zoom
   [db e]

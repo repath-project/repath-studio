@@ -150,17 +150,21 @@
                             :stroke-dasharray stroke-dasharray})])]))
 
 (defn select-box
-  [[pos-x pos-y] [offset-x offset-y] zoom]
-  {:tag :rect :attrs {:x (min pos-x offset-x)
-                      :y (min pos-y offset-y)
-                      :width (abs (- pos-x offset-x))
-                      :height (abs (- pos-y offset-y))
-                      :shape-rendering "crispEdges"
-                      :fill-opacity ".1"
-                      :fill theme.db/accent
-                      :stroke theme.db/accent
-                      :stroke-opacity ".5"
-                      :stroke-width (/ 1 zoom)}})
+  [db]
+  (let [zoom (get-in db [:documents (:active-document db) :zoom])
+        [pos-x pos-y] (:adjusted-pointer-pos db)
+        [offset-x offset-y] (:adjusted-pointer-offset db)]
+    {:tag :rect
+     :attrs {:x (min pos-x offset-x)
+             :y (min pos-y offset-y)
+             :width (abs (- pos-x offset-x))
+             :height (abs (- pos-y offset-y))
+             :shape-rendering "crispEdges"
+             :fill-opacity ".1"
+             :fill theme.db/accent
+             :stroke theme.db/accent
+             :stroke-opacity ".5"
+             :stroke-width (/ 1 zoom)}}))
 
 (defn centroid
   [el]
