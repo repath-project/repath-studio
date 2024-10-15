@@ -306,7 +306,8 @@
                                                                                                        :key-code :number,
                                                                                                        :key :string,
                                                                                                        :modifiers :set}}],
-                                                                                         :ret :any}}}},
+                                                                                         :ret :any}}},
+                                                               pointer-delta {:arities {1 {:args [:any], :ret :any}}}},
                                         renderer.utils.math {clamp {:arities {3 {:args [:number :number :number],
                                                                                  :ret :number}}},
                                                              angle-dx {:arities {2 {:args [:number :number],
@@ -330,7 +331,9 @@
                                                                                                     :ret :any}}},
                                                                  focus-bounds {:arities {2 {:args [:any :keyword],
                                                                                             :ret :any},
-                                                                                         3 {:args [:any :any :any],
+                                                                                         3 {:args [:any
+                                                                                                   :keyword
+                                                                                                   :seqable],
                                                                                             :ret :any}}},
                                                                  zoom-in-place {:arities {3 {:args [:any
                                                                                                     :number

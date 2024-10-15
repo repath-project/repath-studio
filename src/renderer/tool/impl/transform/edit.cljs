@@ -64,10 +64,9 @@
 (defmethod hierarchy/drag :edit
   [db e]
   (let [clicked-element (:clicked-element db)
-        pointer-delta (mat/sub (:adjusted-pointer-pos db) (:adjusted-pointer-offset db))
         db (history.h/swap db)
         el-id (:element clicked-element)
-        delta (cond-> pointer-delta (pointer/ctrl? e) pointer/lock-direction)]
+        delta (cond-> (app.h/pointer-delta db) (pointer/ctrl? e) pointer/lock-direction)]
     (cond-> db
       el-id
       (-> (element.h/update-el el-id element.hierarchy/edit delta (:id clicked-element))

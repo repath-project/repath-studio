@@ -210,7 +210,7 @@
         ratio (mapv #(max % 0.01) ratio)]
     (-> db
         (assoc :pivot-point pivot-point)
-        (element.h/scale ratio pivot-point recursive))))
+        (element.h/scale ratio pivot-point in-place recursive))))
 
 (mx/defn select-element
   [db, multiple :- boolean?]
@@ -222,13 +222,14 @@
 
 (defmethod hierarchy/drag :select
   [db e]
-  (let [delta (mat/sub (:adjusted-pointer-pos db) (:adjusted-pointer-offset db))
-        state (:state db)
+  (let [state (:state db)
         ctrl? (pointer/ctrl? e)
-        delta (cond-> delta (and ctrl? (not= state :scale)) pointer/lock-direction)
         alt-key? (pointer/alt? e)
         ratio-locked? (or (pointer/ctrl? e) (element.h/ratio-locked? db))
-        db (element.h/clear-ignored db)]
+        db (element.h/clear-ignored db)
+        delta (cond-> (app.h/pointer-delta db)
+                (and ctrl? (not= state :scale))
+                pointer/lock-direction)]
     (case state
       :select
       (-> db

@@ -445,14 +445,20 @@
    (update-el db id hierarchy/place pos)))
 
 (defn scale
-  [db ratio pivot-point recur?]
-  (reduce
-   (fn [db el]
-     (let [pivot-point (->> (element db el) :bounds (take 2) (mat/sub pivot-point))]
-       (update-el db el hierarchy/scale ratio pivot-point)))
-   db
-   (cond-> (selected-ids db)
-     recur? (concat (descendant-ids db)))))
+  [db ratio pivot-point in-place recursive]
+  (let [ids-to-scale (cond-> (selected-ids db) recursive (set/union (descendant-ids db)))]
+    (reduce
+     (fn [db id]
+       (let [pivot-point (->> (element db id) :bounds (take 2) (mat/sub pivot-point))
+             db (update-el db id hierarchy/scale ratio pivot-point)]
+         (if in-place
+           (let [pointer-delta (mat/sub (:adjusted-pointer-pos db) (:adjusted-pointer-offset db))
+                 child-ids (set (children-ids db id))
+                 child-ids (set/intersection child-ids ids-to-scale)]
+             (reduce (partial-right translate pointer-delta) db child-ids))
+           db)))
+     db
+     ids-to-scale)))
 
 (defn align
   ([db direction]

@@ -1,5 +1,6 @@
 (ns renderer.app.handlers
   (:require
+   [clojure.core.matrix :as mat]
    [malli.experimental :as mx]
    [renderer.app.db :refer [State]]
    [renderer.app.effects :as-alias fx]
@@ -33,6 +34,10 @@
       (tool.hierarchy/deactivate)
       (assoc :tool tool)
       (tool.hierarchy/activate)))
+
+(mx/defn pointer-delta
+  [db]
+  (mat/sub (:adjusted-pointer-pos db) (:adjusted-pointer-offset db)))
 
 (mx/defn pointer-handler
   [db, e :- PointerEvent, now :- number?]

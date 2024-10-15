@@ -73,19 +73,21 @@
                 (mat/add [x1 y1]))]
     (assoc-in db [:documents (:active-document db) :pan] pan)))
 
+(def FocusType [:enum :original :fit :fill])
+
 (mx/defn focus-bounds
-  ([db, focus-type :- [:enum :original :fit :fill]]
+  ([db, focus-type :- FocusType]
    (cond-> db
      (:active-document db)
      (focus-bounds focus-type (or (element.h/bounds db)
                                   (element/united-bounds (element.h/root-children db))))))
-  ([{:keys [active-document dom-rect] :as db} focus-type bounds]
+  ([db, focus-type :- FocusType, bounds :- Bounds]
    (let [[width height] (utils.bounds/->dimensions bounds)
-         width-ratio (/ (:width dom-rect) width)
-         height-ratio (/ (:height dom-rect) height)
+         width-ratio (/ (-> db :dom-rect :width) width)
+         height-ratio (/ (-> db :dom-rect :height) height)
          min-zoom (min width-ratio height-ratio)]
      (-> db
-         (assoc-in [:documents active-document :zoom]
+         (assoc-in [:documents (:active-document db) :zoom]
                    (case focus-type
                      :original (min (* min-zoom 0.9) 1)
                      :fit min-zoom

@@ -4,6 +4,7 @@
    [kdtree :as kdtree]
    [malli.experimental :as mx]
    [re-frame.core :as rf]
+   [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
    [renderer.snap.db :refer [SnapOption]]
    [renderer.snap.subs :as-alias snap.s]
@@ -28,8 +29,7 @@
 
         (contains? #{:edit :scale} (:state db))
         [(mat/add [(-> db :clicked-element :x) (-> db :clicked-element :y)]
-                  (mat/sub (:adjusted-pointer-pos db)
-                           (:adjusted-pointer-offset db)))]
+                  (app.h/pointer-delta db))]
 
         :else
         [(:adjusted-pointer-pos db)]))))
