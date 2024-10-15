@@ -205,11 +205,12 @@
         offset (cond-> offset in-place (mat/mul 2))
         dimensions (bounds/->dimensions bounds)
         ratio (mat/div (mat/add dimensions offset) dimensions)
-        ratio (cond-> ratio ratio-locked (lock-ratio handle))]
+        ratio (cond-> ratio ratio-locked (lock-ratio handle))
+        ;; TODO: Handle negative ratio.
+        ratio (mapv #(max % 0.01) ratio)]
     (-> db
         (assoc :pivot-point pivot-point)
-        ;; TODO: Handle negative ratio.
-        (element.h/scale (mapv abs ratio) pivot-point recursive))))
+        (element.h/scale ratio pivot-point recursive))))
 
 (mx/defn select-element
   [db, multiple :- boolean?]
