@@ -92,8 +92,9 @@
            (when (seq bounds)
              [:<>
               [handle.v/wrapping-bounding-box bounds]
-              (when (= state :scale) [overlay/size-label bounds])
-              [handle.v/bounding-corners bounds]])
+              (if (= state :scale)
+                [overlay/size-label bounds]
+                [handle.v/bounding-corners bounds])])
 
            (when (and select-tool-active pivot-point)
              [overlay/times pivot-point])])
