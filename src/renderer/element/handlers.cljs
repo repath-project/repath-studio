@@ -445,7 +445,7 @@
    (update-el db id hierarchy/place pos)))
 
 (defn scale
-  [db ratio pivot-point in-place recursive]
+  [db ratio pivot-point {:keys [in-place recursive]}]
   (let [ids-to-scale (cond-> (selected-ids db) recursive (set/union (descendant-ids db)))]
     (reduce
      (fn [db id]

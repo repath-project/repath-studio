@@ -1,6 +1,5 @@
 (ns renderer.tool.impl.transform.edit
   (:require
-   [clojure.core.matrix :as mat]
    [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
    [renderer.element.hierarchy :as element.hierarchy]

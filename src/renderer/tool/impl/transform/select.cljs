@@ -197,7 +197,7 @@
       :bottom-left [[(- x) y] [x2 y1]])))
 
 (mx/defn scale
-  [db, offset :- Vec2D, {:keys [ratio-locked in-place recursive]}]
+  [db, offset :- Vec2D, {:keys [ratio-locked in-place] :as options}]
   (let [handle (-> db :clicked-element :id)
         bounds (element.h/bounds db)
         [offset pivot-point] (delta->scale-with-pivot-point handle offset bounds)
@@ -210,7 +210,7 @@
         ratio (mapv #(max % 0.01) ratio)]
     (-> db
         (assoc :pivot-point pivot-point)
-        (element.h/scale ratio pivot-point in-place recursive))))
+        (element.h/scale ratio pivot-point options))))
 
 (mx/defn select-element
   [db, multiple :- boolean?]
