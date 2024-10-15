@@ -231,7 +231,8 @@
         selected-tags @(rf/subscribe [::element.s/selected-tags])
         selected-attrs @(rf/subscribe [::element.s/selected-attrs])
         locked @(rf/subscribe [::element.s/selected-locked])
-        tag (first selected-tags)]
+        tag (first selected-tags)
+        multitag? (next selected-tags)]
     (when-first [el selected-elements]
       [:div.pr-px
        [:div.flex.bg-primary.py-4.pl-4.pr-2
@@ -239,8 +240,9 @@
          (if-not (next selected-elements)
            (let [el-label (:label el)]
              (if (empty? el-label) tag el-label))
-           (str (count selected-elements) " elements"))]
-        (when-not (next selected-tags)
+           (str/join " " [(count selected-elements)
+                          (if multitag? "elements" (name tag))]))]
+        (when-not multitag?
           [tag-info tag])]
        [:div.grid.grid-cols-2.grid-flow-row.my-px.w-full.gap-px
         {:style {:grid-template-columns "minmax(100px, auto) 1fr"}}
