@@ -281,9 +281,9 @@
 
 (defn select-all
   [db]
-  (reduce select (deselect db) (if (siblings-selected? db)
-                                 (children-ids db (:id (parent db (:id (parent db)))))
-                                 (siblings db))))
+  (reduce select db (if (siblings-selected? db)
+                      (children-ids db (:id (parent db (:id (parent db)))))
+                      (siblings db))))
 
 (defn selected-tags
   [db]
