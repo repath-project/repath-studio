@@ -5,8 +5,8 @@
    [clojure.core.matrix :as mat]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.hierarchy :as hierarchy]
+   [renderer.handle.views :as handle.v]
    [renderer.utils.bounds :as bounds]
-   [renderer.utils.overlay :as overlay]
    [renderer.utils.units :as units]))
 
 (derive ::hierarchy/box ::hierarchy/renderable)
@@ -51,11 +51,11 @@
      (for [handle [{:x x :y y :id :position}
                    {:x (+ x width) :y (+ y height) :id :size}]]
        (let [handle (merge handle {:type :handle
-                                   :tag :edit
+                                   :action :edit
                                    :cursor "move"
                                    :element (:id el)})]
          ^{:key (:id handle)}
-         [overlay/square-handle handle
+         [handle.v/square handle
           ^{:key (str (:id handle) "-title")}
           [:title (name (:id handle))]]))]))
 

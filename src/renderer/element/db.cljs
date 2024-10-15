@@ -19,18 +19,6 @@
 (def Attrs
   [:map-of keyword? Attr])
 
-(def Handle
-  [:map {:closed true}
-   [:id keyword?]
-   [:tag [:enum :move :scale :edit]]
-   [:type [:= :handle]]
-   [:cursor {:optional true} string?]
-   [:x {:optional true} number?]
-   [:y {:optional true} number?]
-   [:size {:optional true} number?]
-   [:stroke-width {:optional true} number?]
-   [:element {:optional true} uuid?]])
-
 (def Element
   [:map {:closed true}
    [:id {:optional true} uuid?]

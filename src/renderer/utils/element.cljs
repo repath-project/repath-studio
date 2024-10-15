@@ -30,7 +30,7 @@
   [el :- Element]
   (-> el :tag element.hierarchy/properties))
 
-(mx/defn ratio-locked? :- boolean?
+(mx/defn ratio-locked? :- [:maybe boolean?]
   [el :- Element]
   (-> el properties :ratio-locked))
 

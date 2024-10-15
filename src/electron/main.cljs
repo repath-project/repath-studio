@@ -80,8 +80,6 @@
      ["leave-full-screen" #(send-to-renderer! "window-leaved-fullscreen")]
      ["minimize" #(send-to-renderer! "window-minimized")]
      ["restore" #(send-to-renderer! "window-restored")]
-     ;; Event "resized" is more suitable, but it's not supported on linux
-     ;; https://www.electronjs.org/docs/latest/api/browser-window#event-resized-macos-windows
      ["resize" #(send-to-renderer! (if (.isMaximized ^js @main-window)
                                      "window-maximized"
                                      "window-unmaximized"))]]]

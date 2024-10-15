@@ -5,9 +5,9 @@
    [clojure.string :as str]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.hierarchy :as hierarchy]
+   [renderer.handle.views :as handle.v]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
-   [renderer.utils.overlay :as overlay]
    [renderer.utils.units :as units]))
 
 (derive :line ::hierarchy/shape)
@@ -62,19 +62,19 @@
      {:key ::edit-handles}
      (map (fn [handle]
             ^{:key (:id handle)}
-            [overlay/square-handle handle
+            [handle.v/square handle
              [:title {:key (str (:id handle) "-title")} (name (:id handle))]])
           [{:x x1
             :y y1
             :id :starting-point
             :type :handle
-            :tag :edit
+            :action :edit
             :element (:id el)}
            {:x x2
             :y y2
             :id :ending-point
             :type :handle
-            :tag :edit
+            :action :edit
             :element (:id el)}])]))
 
 (defmethod hierarchy/edit :line

@@ -5,9 +5,9 @@
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
    [renderer.element.hierarchy :as hierarchy]
+   [renderer.handle.views :as handle.v]
    [renderer.utils.attribute :as utils.attr]
    [renderer.utils.element :as element]
-   [renderer.utils.overlay :as overlay]
    [renderer.utils.units :as units]))
 
 (derive ::hierarchy/polyshape ::hierarchy/shape)
@@ -47,13 +47,13 @@
                      (let [[x y] (mapv units/unit->px [x y])
                            [x y] (mat/add (element/offset el) [x y])]
                        ^{:key index}
-                       [overlay/square-handle {:id (keyword (str index))
-                                               :x x
-                                               :y y
-                                               :type :handle
-                                               :cursor "move"
-                                               :tag :edit
-                                               :element (:id el)}]))
+                       [handle.v/square {:id (keyword (str index))
+                                         :x x
+                                         :y y
+                                         :type :handle
+                                         :cursor "move"
+                                         :action :edit
+                                         :element (:id el)}]))
                    (utils.attr/points->vec (-> el :attrs :points)))])
 
 (defmethod hierarchy/edit ::hierarchy/polyshape

@@ -8,7 +8,7 @@
    [renderer.history.handlers :as history.h]
    [renderer.snap.handlers :as snap.h]
    [renderer.tool.hierarchy :as hierarchy]
-   [renderer.utils.bounds :as bounds]
+   [renderer.utils.bounds :as bounds :refer [Bounds]]
    [renderer.utils.element :as element]
    [renderer.utils.math :refer [Vec2D]]
    [renderer.utils.overlay :as overlay]
@@ -147,11 +147,17 @@
       (assoc-in [:attrs :fill] "transparent"))))
 
 (defmethod hierarchy/drag-start :select
-  [{:keys [clicked-element] :as db} _e]
-  (app.h/set-state db (case (:tag clicked-element)
-                        :canvas :select
-                        :scale :scale
-                        :move)))
+  [db _e]
+  (let [{:keys [clicked-element]} db]
+    (app.h/set-state db (cond
+                          (= (:type clicked-element) :element)
+                          (if (= (:tag clicked-element) :canvas) :select :move)
+
+                          (= (:type clicked-element) :handle)
+                          (if (= (:action clicked-element) :scale) :scale :move)
+
+                          :else
+                          :default))))
 
 (mx/defn lock-ratio :- Vec2D
   [[x y] :- Vec2D, handle :- ScaleHandle]
@@ -162,45 +168,48 @@
         ratio (if (< (abs x) (abs y)) x y)]
     [ratio ratio]))
 
-(mx/defn scale
+(mx/defn delta->scale-with-pivot-point :- [:tuple Vec2D Vec2D]
   "Converts the x/y pointer offset to a scale ratio and a pivot point,
-   to decouple this from the scaling method of the elements.
+  to decouple this from the scaling method of the elements.
 
-   :pivot-point
-   + ─────────□──┬-------□
-   │             |       |
-   │             | ─ x ─ |
-   │             │       │
-   □ ─────────── ■       □
-   |      |        ↖     │
-   |      y          ↖   │
-   |      |            ↖ │
-   □----------□--------- ■ :bottom-right (active handle)"
-  [db, delta :- Vec2D, {:keys [ratio-locked in-place recursive]}]
-  (let [[x y] delta
-        handle (-> db :clicked-element :id)
-        bounds (element.h/bounds db)
-        dimensions (bounds/->dimensions bounds)
+     :pivot-point
+     + ─────────□──┬-------□
+     │             |       |
+     │             | ─ x ─ |
+     │             │       │
+     □ ─────────── ■       □
+     |      |        ↖     │
+     |      y          ↖   │
+     |      |            ↖ │
+     □----------□--------- ■ :bottom-right (active handle)"
+  [handle :- ScaleHandle, offset :- Vec2D, bounds :- Bounds]
+  (let [[x y] offset
         [x1 y1 x2 y2] bounds
-        [cx cy] (bounds/center bounds)
-        [offset pivot-point] (case handle
-                               :middle-right [[x 0] [x1 cy]]
-                               :middle-left [[(- x) 0] [x2 cy]]
-                               :top-middle [[0 (- y)] [cx y2]]
-                               :bottom-middle [[0 y] [cx y1]]
-                               :top-right [[x (- y)] [x1 y2]]
-                               :top-left [[(- x) (- y)] [x2 y2]]
-                               :bottom-right [[x y] [x1 y1]]
-                               :bottom-left [[(- x) y] [x2 y1]])
-        pivot-point (if in-place [cx cy] pivot-point)
+        [cx cy] (bounds/center bounds)]
+    (case handle
+      :middle-right [[x 0] [x1 cy]]
+      :middle-left [[(- x) 0] [x2 cy]]
+      :top-middle [[0 (- y)] [cx y2]]
+      :bottom-middle [[0 y] [cx y1]]
+      :top-right [[x (- y)] [x1 y2]]
+      :top-left [[(- x) (- y)] [x2 y2]]
+      :bottom-right [[x y] [x1 y1]]
+      :bottom-left [[(- x) y] [x2 y1]])))
+
+(mx/defn scale
+  [db, offset :- Vec2D, {:keys [ratio-locked in-place recursive]}]
+  (let [handle (-> db :clicked-element :id)
+        bounds (element.h/bounds db)
+        [offset pivot-point] (delta->scale-with-pivot-point handle offset bounds)
+        pivot-point (if in-place (bounds/center bounds) pivot-point)
         offset (cond-> offset in-place (mat/mul 2))
+        dimensions (bounds/->dimensions bounds)
         ratio (mat/div (mat/add dimensions offset) dimensions)
         ratio (cond-> ratio ratio-locked (lock-ratio handle))]
-    ;; TODO: Enhance inverted ratio.
-    (cond-> db
-      (not-any? zero? ratio)
-      (-> (assoc :pivot-point pivot-point)
-          (element.h/scale (mapv abs ratio) pivot-point recursive)))))
+    (-> db
+        (assoc :pivot-point pivot-point)
+        ;; TODO: Handle negative ratio.
+        (element.h/scale (mapv abs ratio) pivot-point recursive))))
 
 (mx/defn select-element
   [db, multiple :- boolean?]

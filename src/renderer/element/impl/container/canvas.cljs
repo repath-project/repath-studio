@@ -7,6 +7,7 @@
    [renderer.element.hierarchy :as hierarchy]
    [renderer.element.subs :as-alias element.s]
    [renderer.frame.subs :as-alias frame.s]
+   [renderer.handle.views :as handle.v]
    [renderer.menubar.filters :as filters]
    [renderer.ruler.views :as ruler.v]
    [renderer.snap.subs :as-alias snap.s]
@@ -90,9 +91,9 @@
 
            (when (seq bounds)
              [:<>
-              [overlay/wrapping-bounding-box bounds]
+              [handle.v/wrapping-bounding-box bounds]
               (when (= state :scale) [overlay/size-label bounds])
-              [overlay/bounding-handles bounds]])
+              [handle.v/bounding-corners bounds]])
 
            (when (and select-tool-active pivot-point)
              [overlay/times pivot-point])])

@@ -5,6 +5,7 @@
    [clojure.string :as str]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.hierarchy :as hierarchy]
+   [renderer.handle.views :as handle.v]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.overlay :as overlay]
    [renderer.utils.units :as units]))
@@ -77,11 +78,11 @@
      [overlay/line cx cy (+ cx r) cy]
      [overlay/label (str (.toFixed r 2)) [(+ cx (/ r 2)) cy]]
      [overlay/times cx cy]
-     [overlay/square-handle {:x (+ cx r)
-                             :y cy
-                             :id :r
-                             :type :handle
-                             :tag :edit
-                             :cursor "move"
-                             :element (:id el)}
+     [handle.v/square {:x (+ cx r)
+                       :y cy
+                       :id :r
+                       :type :handle
+                       :action :edit
+                       :cursor "move"
+                       :element (:id el)}
       [:title {:key "r-title"} "r"]]]))

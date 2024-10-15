@@ -8,9 +8,9 @@
    [renderer.attribute.impl.range :as attr.range]
    [renderer.attribute.views :as attr.v]
    [renderer.element.hierarchy :as hierarchy]
+   [renderer.handle.views :as handle.v]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
-   [renderer.utils.overlay :as overlay]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
 
@@ -159,10 +159,10 @@
                      (let [[x y] (mapv units/unit->px [x y])
                            [x y] (mat/add (element/offset el) [x y])]
                        ^{:key index}
-                       [overlay/square-handle {:id index
-                                               :x x
-                                               :y y
-                                               :type :handle
-                                               :tag :edit
-                                               :element (:id el)}]))
+                       [handle.v/square {:id index
+                                         :x x
+                                         :y y
+                                         :type :handle
+                                         :action :edit
+                                         :element (:id el)}]))
                    (-> el :attrs :points))])

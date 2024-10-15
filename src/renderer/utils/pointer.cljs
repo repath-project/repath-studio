@@ -4,7 +4,8 @@
    [malli.experimental :as mx]
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.e]
-   [renderer.element.db :refer [Element Handle]]
+   [renderer.element.db :refer [Element]]
+   [renderer.handle.db :refer [Handle]]
    [renderer.utils.keyboard :refer [ModifierKey modifiers]]
    [renderer.utils.math :refer [Vec2D]]))
 
