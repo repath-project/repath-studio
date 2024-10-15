@@ -452,6 +452,7 @@
        (let [pivot-point (->> (element db id) :bounds (take 2) (mat/sub pivot-point))
              db (update-el db id hierarchy/scale ratio pivot-point)]
          (if in-place
+           ;; FIXME: Handle locked ratio.
            (let [pointer-delta (mat/sub (:adjusted-pointer-pos db) (:adjusted-pointer-offset db))
                  child-ids (set (children-ids db id))
                  child-ids (set/intersection child-ids ids-to-scale)]
