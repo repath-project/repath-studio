@@ -11,7 +11,7 @@
 (defmethod hierarchy/properties :rect
   []
   {:icon "rectangle"
-   :label "rectangle"
+   :label "Rectangle"
    :description "The <rect> element is a basic SVG shape that draws rectangles,
                  defined by their position, width, and height. The rectangles
                  may have their corners rounded."

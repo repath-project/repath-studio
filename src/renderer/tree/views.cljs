@@ -8,6 +8,7 @@
    [renderer.document.events :as-alias document.e]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.events :as-alias element.e]
+   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.s]
    [renderer.element.views :as element.v]
    [renderer.frame.events :as-alias frame.e]
@@ -48,7 +49,8 @@
 (defn item-label
   [{:keys [id label visible tag]}]
   (ra/with-let [edit-mode? (ra/atom false)
-                tag-label (str/capitalize (name tag))]
+                properties (element.hierarchy/properties tag)
+                tag-label (or (:label properties) (str/capitalize (name tag)))]
     (if @edit-mode?
       [:input.list-item-input
        {:default-value label

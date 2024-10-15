@@ -234,7 +234,7 @@
 (def ->camel-case-memo (memoize ->camel-case))
 
 (mx/defn ->map :- Attrs
-  [attrs :- Attrs]
+  [attrs]
   (let [deprecated-path [:__compat :status :deprecated]
         filtered-attrs (->> attrs
                             (filter #(not (get-in (val %) deprecated-path)))

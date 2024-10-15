@@ -14,6 +14,7 @@
 (defmethod hierarchy/properties :g
   []
   {:icon "group"
+   :label "Group"
    :description "The <g> SVG element is a container used to group other
                  SVG elements."
    :attrs [:transform]})
