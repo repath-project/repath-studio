@@ -70,10 +70,10 @@
                             :attrs {:width 100 :height 100 :fill "white"}}])
      (is (= (-> @selected first :attrs :fill) "white"))
 
-     (rf/dispatch [::e/set-fill "red"])
+     (rf/dispatch [::e/set-attr :fill "red"])
      (is (= (-> @selected first :attrs :fill) "red"))
 
-     (rf/dispatch [::e/preview-stroke "yellow"])
+     (rf/dispatch [::e/preview-attr :fill "yellow"])
      (is (= (-> @selected first :attrs :fill) "yellow"))
 
      (rf/dispatch [::e/remove-attr :fill])
