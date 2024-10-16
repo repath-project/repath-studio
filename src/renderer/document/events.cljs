@@ -32,32 +32,32 @@
 (rf/reg-event-db
  ::set-hovered-id
  (fn [db [_ id]]
-   (h/assoc-attr db :hovered-ids #{id})))
+   (h/assoc-prop db :hovered-ids #{id})))
 
 (rf/reg-event-db
  ::clear-hovered
  (fn [db [_]]
-   (h/assoc-attr db :hovered-ids #{})))
+   (h/assoc-prop db :hovered-ids #{})))
 
 (rf/reg-event-db
  ::collapse-el
  [persist]
  (fn [db [_ id]]
-   (h/update-attr db :collapsed-ids conj id)))
+   (h/update-prop db :collapsed-ids conj id)))
 
 (rf/reg-event-db
  ::expand-el
  [persist]
  (fn [db [_ id]]
-   (h/update-attr db :collapsed-ids disj id)))
+   (h/update-prop db :collapsed-ids disj id)))
 
 (rf/reg-event-db
  ::toggle-filter
  [persist]
  (fn [db [_ id]]
    (if (= (:filter (h/active db)) id)
-     (update-in db [:documents (:active-document db)] dissoc :filter)
-     (assoc-in db [:documents (:active-document db) :filter] id))))
+     (h/update-prop db :filter dissoc)
+     (h/assoc-prop db :filter id))))
 
 (rf/reg-event-db
  ::swap-colors
