@@ -32,50 +32,50 @@
 (rf/reg-event-db
  ::set-hovered-id
  (fn [db [_ id]]
-   (h/assoc-prop db :hovered-ids #{id})))
+   (h/assoc-attr db :hovered-ids #{id})))
 
 (rf/reg-event-db
  ::clear-hovered
  (fn [db [_]]
-   (h/assoc-prop db :hovered-ids #{})))
+   (h/assoc-attr db :hovered-ids #{})))
 
 (rf/reg-event-db
  ::collapse-el
  [persist]
  (fn [db [_ id]]
-   (h/update-prop db :collapsed-ids conj id)))
+   (h/update-attr db :collapsed-ids conj id)))
 
 (rf/reg-event-db
  ::expand-el
  [persist]
  (fn [db [_ id]]
-   (h/update-prop db :collapsed-ids disj id)))
+   (h/update-attr db :collapsed-ids disj id)))
 
 (rf/reg-event-db
  ::toggle-filter
  [persist]
  (fn [db [_ id]]
-   (if (= (h/prop db :filter) id)
-     (h/dissoc-prop db :filter)
-     (h/assoc-prop db :filter id))))
+   (if (= (h/attr db :filter) id)
+     (h/dissoc-attr db :filter)
+     (h/assoc-attr db :filter id))))
 
 (rf/reg-event-db
  ::swap-colors
  [persist]
  (fn [db [_]]
    (-> db
-       (h/assoc-prop :fill (h/prop db :stroke))
-       (h/assoc-prop :stroke (h/prop db :fill)))))
+       (h/assoc-attr :fill (h/attr db :stroke))
+       (h/assoc-attr :stroke (h/attr db :fill)))))
 
 (rf/reg-event-db
  ::set-fill
  (fn [db [_ v]]
-   (h/assoc-prop db :fill v)))
+   (h/assoc-attr db :fill v)))
 
 (rf/reg-event-db
  ::set-stroke
  (fn [db [_ v]]
-   (h/assoc-prop db :fill v)))
+   (h/assoc-attr db :fill v)))
 
 (rf/reg-event-db
  ::close

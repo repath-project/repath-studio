@@ -2,6 +2,7 @@
   "Custom element for https://blobs.dev/"
   (:require
    [clojure.core.matrix :as mat]
+   [renderer.document.handlers :as document.h]
    [renderer.element.handlers :as element.h]
    [renderer.tool.hierarchy :as hierarchy]))
 
@@ -17,8 +18,7 @@
 
 (defmethod hierarchy/drag-start :blob
   [db]
-  (let [{:keys [stroke fill]} (get-in db [:documents (:active-document db)])
-        [offset-x offset-y] (:adjusted-pointer-offset db)
+  (let [[offset-x offset-y] (:adjusted-pointer-offset db)
         radius (pointer-delta db)]
     (element.h/assoc-temp db {:type :element
                               :tag :blob
@@ -28,8 +28,8 @@
                                       :extraPoints 8
                                       :randomness 4
                                       :size (* radius 2)
-                                      :fill fill
-                                      :stroke stroke}})))
+                                      :fill (document.h/attr db :fill)
+                                      :stroke (document.h/attr db :stroke)}})))
 
 (defmethod hierarchy/drag :blob
   [db]

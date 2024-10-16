@@ -2,6 +2,7 @@
   "https://github.com/steveruizok/perfect-freehand"
   (:require
    [renderer.app.handlers :as app.h]
+   [renderer.document.handlers :as document.h]
    [renderer.element.handlers :as element.h]
    [renderer.tool.hierarchy :as hierarchy]))
 
@@ -24,14 +25,13 @@
   (let [[x y] (:adjusted-pointer-pos db)
         pressure (:pressure e)
         pressure (if (zero? pressure) 1 pressure)
-        r (* (/ 16 2) pressure)
-        stroke (get-in db [:documents (:active-document db) :stroke])]
+        r (* (/ 16 2) pressure)]
     (element.h/assoc-temp db {:type :element
                               :tag :circle
                               :attrs {:cx x
                                       :cy y
                                       :r r
-                                      :fill stroke}})))
+                                      :fill (document.h/attr db :stroke)}})))
 
 (defmethod hierarchy/drag :brush
   [db e]

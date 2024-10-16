@@ -4,6 +4,7 @@
   (:require
    [clojure.string :as str]
    [renderer.app.handlers :as app.h]
+   [renderer.document.handlers :as document.h]
    [renderer.element.handlers :as element.h]
    [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.attribute :as utils.attr]))
@@ -24,12 +25,11 @@
 
 (defn create-polyline
   [db points]
-  (let [{:keys [fill stroke]} (get-in db [:documents (:active-document db)])]
-    (element.h/assoc-temp db {:type :element
-                              :tag (:tool db)
-                              :attrs {:points (str/join " " points)
-                                      :stroke stroke
-                                      :fill fill}})))
+  (element.h/assoc-temp db {:type :element
+                            :tag (:tool db)
+                            :attrs {:points (str/join " " points)
+                                    :stroke (document.h/attr db :stroke)
+                                    :fill (document.h/attr db :fill)}}))
 
 (defn add-point
   [db point]

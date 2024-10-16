@@ -2,6 +2,7 @@
   "https://www.w3.org/TR/SVG/shapes.html#LineElement"
   (:require
    [renderer.app.handlers :as app.h]
+   [renderer.document.handlers :as document.h]
    [renderer.element.handlers :as element.h]
    [renderer.tool.hierarchy :as tool.hierarchy]))
 
@@ -13,14 +14,13 @@
 
 (defn create-line
   [db]
-  (let [stroke (get-in db [:documents (:active-document db) :stroke])
-        [offset-x offset-y] (:adjusted-pointer-offset db)
+  (let [[offset-x offset-y] (:adjusted-pointer-offset db)
         [x y] (:adjusted-pointer-pos db)
         attrs {:x1 offset-x
                :y1 offset-y
                :x2 x
                :y2 y
-               :stroke stroke}]
+               :stroke (document.h/attr db :stroke)}]
     (element.h/assoc-temp db {:type :element
                               :tag :line
                               :attrs attrs})))

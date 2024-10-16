@@ -46,13 +46,18 @@
  :-> :rotate)
 
 (rf/reg-sub
- ::fill
+ ::attrs
  :<- [::active]
+ :-> :attrs)
+
+(rf/reg-sub
+ ::fill
+ :<- [::attrs]
  :-> :fill)
 
 (rf/reg-sub
  ::stroke
- :<- [::active]
+ :<- [::attrs]
  :-> :stroke)
 
 (rf/reg-sub

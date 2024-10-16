@@ -2,6 +2,7 @@
   (:require
    [clojure.string :as str]
    [renderer.app.handlers :as app.h]
+   [renderer.document.handlers :as document.h]
    [renderer.element.handlers :as element.h]
    [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.element :as element]
@@ -17,14 +18,13 @@
 (defmethod hierarchy/drag :pen
   [db]
   (let [{:keys [active-document adjusted-pointer-pos]} db
-        stroke (get-in db [:documents active-document :stroke])
         points-path [:documents active-document :temp-element :attrs :points]]
     (if (get-in db points-path)
       (update-in db points-path #(str % " " (str/join " " adjusted-pointer-pos)))
       (element.h/assoc-temp db {:type :element
                                 :tag :polyline
                                 :attrs {:points (str/join " " adjusted-pointer-pos)
-                                        :stroke stroke
+                                        :stroke (document.h/attr db :stroke)
                                         :fill "transparent"}}))))
 
 (defmethod hierarchy/drag-end :pen

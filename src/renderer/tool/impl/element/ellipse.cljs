@@ -1,6 +1,7 @@
 (ns renderer.tool.impl.element.ellipse
   "https://www.w3.org/TR/SVG/shapes.html#EllipseElement"
   (:require
+   [renderer.document.handlers :as document.h]
    [renderer.element.handlers :as element.h]
    [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.pointer :as pointer]))
@@ -17,16 +18,15 @@
 
 (defmethod hierarchy/drag :ellipse
   [db e]
-  (let [{:keys [stroke fill]} (get-in db [:documents (:active-document db)])
-        [offset-x offset-y] (:adjusted-pointer-offset db)
+  (let [[offset-x offset-y] (:adjusted-pointer-offset db)
         [x y] (:adjusted-pointer-pos db)
         lock-ratio (pointer/ctrl? e)
         rx (abs (- x offset-x))
         ry (abs (- y offset-y))
         attrs {:cx offset-x
                :cy offset-y
-               :fill fill
-               :stroke stroke
+               :fill (document.h/attr db :fill)
+               :stroke (document.h/attr db :stroke)
                :rx (if lock-ratio (min rx ry) rx)
                :ry (if lock-ratio (min rx ry) ry)}]
     (element.h/assoc-temp db {:type :element

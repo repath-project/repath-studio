@@ -19,15 +19,16 @@
    [:hovered-ids {:default #{}} [:set [:or keyword? uuid?]]]
    [:collapsed-ids {:default #{}} [:set uuid?]]
    [:ignored-ids {:default #{}} [:set [:or keyword? uuid?]]]
-   [:fill {:default "white"} string?]
-   [:stroke {:default "black"} string?]
    [:zoom {:default 1} ZoomFactor]
    [:rotate {:default 0} number?]
    [:history History]
    [:temp-element {:optional true} map?] ; REVIEW
    [:pan {:default [0 0]} Vec2D]
    [:elements {:default {} :persist true} [:map-of uuid? Element]]
-   [:focused {:optional true} boolean?]])
+   [:focused {:optional true} boolean?]
+   [:attrs {:default {}} [:map
+                          [:fill {:default "white"} string?]
+                          [:stroke {:default "black"} string?]]]])
 
 (def PersistedDocument
   (->> Document

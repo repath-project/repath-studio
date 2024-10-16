@@ -90,29 +90,29 @@
         (assoc :active-document id)
         (update :document-tabs #(vec/add % (inc active-index) id)))))
 
-(mx/defn prop
+(mx/defn attr
   [db, k :- keyword?]
-  (get-in db [:documents (:active-document db) k]))
+  (get-in db [:documents (:active-document db) :attrs k]))
 
-(mx/defn assoc-prop
+(mx/defn assoc-attr
   [db, k :- keyword?, v :- any?]
-  (assoc-in db [:documents (:active-document db) k] v))
+  (assoc-in db [:documents (:active-document db) :attrs k] v))
 
-(mx/defn dissoc-prop
+(mx/defn dissoc-attr
   [db, k :- keyword?]
-  (update-in db [:documents (:active-document db)] dissoc k))
+  (update-in db [:documents (:active-document db) :attrs] dissoc k))
 
-(mx/defn update-prop
+(mx/defn update-attr
   ([db, k :- keyword?, f]
-   (update-in db [:documents (:active-document db) k] f))
+   (update-in db [:documents (:active-document db) :attrs k] f))
   ([db, k :- keyword?, f arg1]
-   (update-in db [:documents (:active-document db) k] f arg1))
+   (update-in db [:documents (:active-document db) :attrs k] f arg1))
   ([db, k :- keyword?, f arg1 arg2]
-   (update-in db [:documents (:active-document db) k] f arg1 arg2))
+   (update-in db [:documents (:active-document db) :attrs k] f arg1 arg2))
   ([db, k :- keyword?, f arg1 arg2 arg3]
-   (update-in db [:documents (:active-document db) k] f arg1 arg2 arg3))
+   (update-in db [:documents (:active-document db) :attrs k] f arg1 arg2 arg3))
   ([db, k :- keyword?, f arg1 arg2 arg3 & more]
-   (apply update-in db [:documents (:active-document db) k] f arg1 arg2 arg3 more)))
+   (apply update-in db [:documents (:active-document db) :attrs k] f arg1 arg2 arg3 more)))
 
 (mx/defn load
   [db, document]
