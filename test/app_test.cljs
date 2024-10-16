@@ -41,7 +41,6 @@
      (rf/dispatch [::e/toggle-grid])
      (is @grid-visible))))
 
-
 (deftest panel
   (rf-test/run-test-sync
    (rf/dispatch [::e/initialize-db])
