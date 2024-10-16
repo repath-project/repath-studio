@@ -516,6 +516,7 @@
                                                                     new-title {:arities {1 {:args [:any], :ret :string}}},
                                                                     close {:arities {2 {:args [:any :any], :ret :any}}},
                                                                     center {:arities {1 {:args [:any], :ret :any}}},
+                                                                    active {:arities {1 {:args [:any], :ret :any}}},
                                                                     create-tab {:arities {2 {:args [:any
                                                                                                     {:op :keys,
                                                                                                      :opt {:id :any,
@@ -524,7 +525,8 @@
                                                                                                            :save :any,
                                                                                                            :version :string,
                                                                                                            :temp-element :map,
-                                                                                                           :focused :boolean},
+                                                                                                           :focused :boolean,
+                                                                                                           :filter :keyword},
                                                                                                      :req {:ignored-ids :set,
                                                                                                            :zoom :any,
                                                                                                            :hovered-ids :set,

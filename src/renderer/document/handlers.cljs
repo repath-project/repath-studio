@@ -10,6 +10,10 @@
    [renderer.notification.views :as notification.v]
    [renderer.utils.vec :as vec]))
 
+(mx/defn active
+  [db]
+  (get-in db [:documents (:active-document db)]))
+
 (mx/defn persisted-format :- PersistedDocument
   ([db]
    (persisted-format db (:active-document db)))

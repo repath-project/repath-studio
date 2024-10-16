@@ -55,9 +55,9 @@
  ::toggle-filter
  [persist]
  (fn [db [_ id]]
-   (if (= (h/attr db :filter) id)
-     (h/dissoc-attr db :filter)
-     (h/assoc-attr db :filter id))))
+   (if (= (:filter (h/active db)) id)
+     (update-in db [:documents (:active-document db)] dissoc :filter)
+     (assoc-in db [:documents (:active-document db) :filter] id))))
 
 (rf/reg-event-db
  ::swap-colors

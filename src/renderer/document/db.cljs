@@ -26,6 +26,7 @@
    [:pan {:default [0 0]} Vec2D]
    [:elements {:default {} :persist true} [:map-of uuid? Element]]
    [:focused {:optional true} boolean?]
+   [:filter {:optional true} keyword?]
    [:attrs {:default {}} [:map
                           [:fill {:default "white"} string?]
                           [:stroke {:default "black"} string?]]]])
