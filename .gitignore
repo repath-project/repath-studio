@@ -1,4 +1,4 @@
- 
+
 /.calva/
 /.cpcache/
 /.lsp/
@@ -22,13 +22,3 @@
 
 # Build
 /dist/
-
-# Playwright
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/

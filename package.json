@@ -21,8 +21,7 @@
     "dist": "npx electron-builder",
     "clean": "rm -rf resources/public/js/* && rm -rf target && rm -rf dist",
     "build-report": "npx shadow-cljs run shadow.cljs.build-report renderer target/build-report.html",
-    "ci": "npx shadow-cljs compile karma-test && npx karma start --single-run --reporters junit,dots",
-    "e2e": "playwright test"
+    "ci": "npx shadow-cljs compile karma-test && npx karma start --single-run --reporters junit,dots"
   },
   "keywords": [
     "clojurescript",
@@ -64,7 +63,6 @@
   "main": "resources/main.js",
   "devDependencies": {
     "@mdn/browser-compat-data": "5.6.7",
-    "@playwright/test": "1.48.0",
     "@radix-ui/react-context-menu": "2.2.2",
     "@radix-ui/react-dialog": "1.1.2",
     "@radix-ui/react-dropdown-menu": "2.1.2",
