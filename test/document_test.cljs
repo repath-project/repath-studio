@@ -26,6 +26,23 @@
    (rf/dispatch [::e/close (:id @(rf/subscribe [::s/active]) false)])
    (is (not @(rf/subscribe [::s/active])))))
 
+(deftest create
+  (rf-test/run-test-sync
+   (rf/dispatch [::app.e/initialize-db])
+   (rf/dispatch [::e/init])
+
+   (rf/dispatch [::e/new])
+   (is (= "• Untitled-2 - Repath Studio" @(rf/subscribe [::s/title-bar])))
+
+   (rf/dispatch [::e/new-from-template [800 600]])
+   (is (= "• Untitled-3 - Repath Studio" @(rf/subscribe [::s/title-bar])))
+   (is (= "800" (->>  @(rf/subscribe [::s/elements])
+                      (vals)
+                      (filter #(= (:tag %) :svg))
+                      (first)
+                      :attrs
+                      :width)))))
+
 (deftest colors
   (rf-test/run-test-sync
    (rf/dispatch [::app.e/initialize-db])

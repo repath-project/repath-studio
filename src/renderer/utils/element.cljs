@@ -78,7 +78,9 @@
 
 (mx/defn normalize-attrs :- Element
   [el :- Element]
-  (update el :attrs #(update-keys % attr/->camel-case-memo)))
+  (-> el
+      (update :attrs update-keys attr/->camel-case-memo)
+      (update :attrs update-vals str)))
 
 (mx/defn supported-attr? :- boolean?
   [el :- Element, k :- keyword?]
