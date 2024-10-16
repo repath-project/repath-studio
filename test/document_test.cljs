@@ -132,7 +132,7 @@
          id (:id @document)]
      (is (not @saved))
 
-     (rf/dispatch [::e/saved {:id id}])
+     (rf/dispatch [::e/saved @document])
      (is @saved)
 
      (is @(rf/subscribe [::s/saved id])))))
