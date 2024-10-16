@@ -56,7 +56,7 @@
  [persist]
  (fn [db [_ id]]
    (if (= (:filter (h/active db)) id)
-     (h/update-prop db :filter dissoc)
+     (update-in db [:documents (:active-document db)] dissoc :filter)
      (h/assoc-prop db :filter id))))
 
 (rf/reg-event-db
