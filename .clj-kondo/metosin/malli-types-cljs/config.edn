@@ -505,36 +505,6 @@
                                                                                                          :req {:elements :map}}}}},
                                                                     saved-ids {:arities {1 {:args [:any],
                                                                                             :ret :sequential}}},
-                                                                    update-attr {:arities {3 {:args [:any :keyword :any],
-                                                                                              :ret :any},
-                                                                                           4 {:args [:any
-                                                                                                     :keyword
-                                                                                                     :any
-                                                                                                     :any],
-                                                                                              :ret :any},
-                                                                                           5 {:args [:any
-                                                                                                     :keyword
-                                                                                                     :any
-                                                                                                     :any
-                                                                                                     :any],
-                                                                                              :ret :any},
-                                                                                           6 {:args [:any
-                                                                                                     :keyword
-                                                                                                     :any
-                                                                                                     :any
-                                                                                                     :any
-                                                                                                     :any],
-                                                                                              :ret :any},
-                                                                                           :varargs {:args [:any
-                                                                                                            :keyword
-                                                                                                            :any
-                                                                                                            :any
-                                                                                                            :any
-                                                                                                            :any
-                                                                                                            {:op :rest,
-                                                                                                             :spec :any}],
-                                                                                                     :ret :any,
-                                                                                                     :min-arity 6}}},
                                                                     add-recent {:arities {2 {:args [:any :string],
                                                                                              :ret :any}}},
                                                                     set-active {:arities {2 {:args [:any :any],

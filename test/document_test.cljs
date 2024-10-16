@@ -1,9 +1,10 @@
 (ns document-test
   (:require
-   [cljs.test :refer-macros [deftest are is]]
+   [cljs.test :refer-macros [deftest is]]
    [day8.re-frame.test :as rf-test]
    [re-frame.core :as rf]
    [renderer.app.events :as app.e]
+   [renderer.app.subs :as app.subs]
    [renderer.document.db :as db]
    [renderer.document.events :as e]
    [renderer.document.subs :as s]))
@@ -14,9 +15,7 @@
    (rf/dispatch [::e/init])
 
    (is (db/valid? @(rf/subscribe [::s/active])))
-   (are [v sub] (= v sub)
-     "• Untitled-1 - Repath Studio" @(rf/subscribe [::s/title-bar])
-     false @(rf/subscribe [::s/active-saved]))))
+   (is (= "• Untitled-1 - Repath Studio" @(rf/subscribe [::s/title-bar])))))
 
 (deftest close
   (rf-test/run-test-sync
@@ -24,6 +23,21 @@
    (rf/dispatch [::e/init])
 
    (rf/dispatch [::e/close (:id @(rf/subscribe [::s/active]) false)])
+   (is (not @(rf/subscribe [::s/active])))
+
+   (rf/dispatch [::e/new])
+   (rf/dispatch [::e/saved @(rf/subscribe [::s/active])])
+   (rf/dispatch [::e/close-active])
+   (is (not @(rf/subscribe [::s/active])))
+
+   (rf/dispatch [::e/new])
+   (rf/dispatch [::e/new])
+   (rf/dispatch [::e/saved @(rf/subscribe [::s/active])])
+   (rf/dispatch [::e/close-all-saved])
+   (is (= (count @(rf/subscribe [::app.subs/documents])) 1))
+
+   (rf/dispatch [::e/saved @(rf/subscribe [::s/active])])
+   (rf/dispatch [::e/close-all])
    (is (not @(rf/subscribe [::s/active])))))
 
 (deftest create
@@ -76,3 +90,49 @@
 
      (rf/dispatch [::e/toggle-filter :deuteranopia])
      (is (not @active-filter)))))
+
+
+(deftest collapse-expand
+  (rf-test/run-test-sync
+   (rf/dispatch [::app.e/initialize-db])
+   (rf/dispatch [::e/init])
+
+   (let [collapsed-ids (rf/subscribe [::s/collapsed-ids])
+         id (random-uuid)]
+     (is (empty? @collapsed-ids))
+
+     (rf/dispatch [::e/collapse-el id])
+     (is (= #{id} @collapsed-ids))
+
+     (rf/dispatch [::e/expand-el id])
+     (is (empty? @collapsed-ids)))))
+
+(deftest hover
+  (rf-test/run-test-sync
+   (rf/dispatch [::app.e/initialize-db])
+   (rf/dispatch [::e/init])
+
+   (let [hovered-ids (rf/subscribe [::s/hovered-ids])
+         id (random-uuid)]
+     (is (empty? @hovered-ids))
+
+     (rf/dispatch [::e/set-hovered-id id])
+     (is (= #{id} @hovered-ids))
+
+     (rf/dispatch [::e/clear-hovered])
+     (is (empty? @hovered-ids)))))
+
+(deftest save
+  (rf-test/run-test-sync
+   (rf/dispatch [::app.e/initialize-db])
+   (rf/dispatch [::e/init])
+
+   (let [saved (rf/subscribe [::s/active-saved])
+         document (rf/subscribe [::s/active])
+         id (:id @document)]
+     (is (not @saved))
+
+     (rf/dispatch [::e/saved {:id id}])
+     (is @saved)
+
+     (is @(rf/subscribe [::s/saved id])))))
