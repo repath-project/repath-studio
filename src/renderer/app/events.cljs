@@ -49,11 +49,6 @@
  (fn [db [_ webref-css]]
    (assoc db :webref-css webref-css)))
 
-(rf/reg-event-db
- ::set-mdn
- (fn [db [_ mdn]]
-   (assoc db :mdn mdn)))
-
 (rf/reg-event-fx
  ::set-tool
  (fn [{:keys [db]} [_ tool]]

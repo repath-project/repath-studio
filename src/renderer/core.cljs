@@ -1,7 +1,6 @@
 (ns renderer.core
   (:require
    ["electron-log/renderer"]
-   ["mdn-data" :as mdn]
    ["paper" :refer [paper]]
    [devtools.core :as devtools]
    [re-frame.core :as rf]
@@ -117,7 +116,6 @@
   (rf/dispatch-sync [::theme.e/set-native-mode (theme.fx/native-mode! theme.fx/native-query!)])
   (rf/dispatch-sync [::theme.e/add-native-listener])
   (rf/dispatch-sync [::theme.e/set-document-attr])
-  (rf/dispatch-sync [::app.e/set-mdn (js->clj mdn :keywordize-keys true)])
   (rf/dispatch-sync [::app.e/load-webref])
   (rf/dispatch-sync [::app.e/load-system-fonts])
   (rf/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])
