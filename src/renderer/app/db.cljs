@@ -6,6 +6,7 @@
    [renderer.dialog.db :refer [Dialog]]
    [renderer.document.db :refer [Document]]
    [renderer.element.db :refer [Element]]
+   [renderer.frame.db :refer [DomRect]]
    [renderer.handle.db :refer [Handle]]
    [renderer.notification.db :refer [Notification]]
    [renderer.ruler.db :refer [Ruler]]
@@ -26,17 +27,6 @@
                       :history {:visible false}
                       :repl-history {:visible false}}}
    keyword? [:map [:visible boolean?]]])
-
-(def DomRect
-  [:map {:closed true}
-   [:x number?]
-   [:y number?]
-   [:width number?]
-   [:height number?]
-   [:top number?]
-   [:right number?]
-   [:bottom number?]
-   [:left number?]])
 
 (def Lang
   [:fn {:error/fn (fn [{:keys [value]} _] (str value " is not a supported language"))}

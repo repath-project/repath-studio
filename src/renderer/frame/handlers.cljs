@@ -2,9 +2,9 @@
   (:require
    [clojure.core.matrix :as mat]
    [malli.experimental :as mx]
-   [renderer.app.db :refer [DomRect]]
    [renderer.document.db :refer [ZoomFactor]]
    [renderer.element.handlers :as element.h]
+   [renderer.frame.db :refer [DomRect]]
    [renderer.utils.bounds :as utils.bounds :refer [Bounds]]
    [renderer.utils.element :as element]
    [renderer.utils.math :as math :refer [Vec2D]]
