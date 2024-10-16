@@ -76,10 +76,11 @@
        [:<>
         (when (and select-tool-active (contains? #{:default :select :scale} state))
           [:<>
-           (for [el selected-elements]
-             (when (:bounds el)
-               ^{:key (str (:id el) "-bounds")}
-               [overlay/bounding-box (:bounds el) false]))
+           (when (not= state :scale)
+             (for [el selected-elements]
+               (when (:bounds el)
+                 ^{:key (str (:id el) "-bounds")}
+                 [overlay/bounding-box (:bounds el) false])))
 
            (for [el hovered-ids]
              (when (:bounds el)
