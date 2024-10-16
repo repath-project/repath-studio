@@ -1,4 +1,4 @@
-(ns extra-test
+(ns utils.extra-test
   (:require
    [cljs.test :refer-macros [deftest testing are]]
    [renderer.utils.extra :refer [partial-right]]))

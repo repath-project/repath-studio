@@ -5,7 +5,7 @@
    [clojure.string :as str]
    [config :as config]
    [re-frame.core :as rf]
-   [re-frame.db :as db]
+   [re-frame.db :as rf.db]
    [renderer.document.events :as-alias document.e]
    [renderer.element.events :as-alias element.e]
    [renderer.history.events :as-alias history.e]
@@ -138,7 +138,7 @@
 
 (defn ^:export db
   []
-  @db/app-db)
+  @rf.db/app-db)
 
 (defn ^:export document
   []

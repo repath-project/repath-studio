@@ -1,4 +1,4 @@
-(ns bounds-test
+(ns utils.bounds-test
   (:require
    [cljs.test :refer-macros [deftest testing are is]]
    [renderer.utils.bounds :as bounds]))

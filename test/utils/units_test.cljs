@@ -1,4 +1,4 @@
-(ns units-test
+(ns utils.units-test
   (:require
    [cljs.test :refer-macros [deftest testing are]]
    [renderer.utils.units :as units]))

@@ -1,4 +1,4 @@
-(ns compatibility-test
+(ns utils.compatibility-test
   (:require
    [cljs.test :refer-macros [deftest testing are]]
    [renderer.utils.compatibility :as compatibility]))

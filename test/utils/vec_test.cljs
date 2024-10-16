@@ -1,4 +1,4 @@
-(ns vec-test
+(ns utils.vec-test
   (:require
    [cljs.test :refer-macros [deftest testing are]]
    [renderer.utils.vec :as vec]))

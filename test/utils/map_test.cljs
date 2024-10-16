@@ -1,4 +1,4 @@
-(ns map-test
+(ns utils.map-test
   (:require
    [cljs.test :refer-macros [deftest testing are]]
    [renderer.utils.map :as map]))

@@ -1,4 +1,4 @@
-(ns attribute-test
+(ns utils.attribute-test
   (:require
    [cljs.test :refer-macros [deftest testing are]]
    [renderer.utils.attribute :as attr]))

@@ -7,6 +7,7 @@
                                :sha "5ec321c5e8006db00fa8b45a8ed9eb0b8f3dd56d"
                                :deps/manifest :deps}
         com.taoensso/tempura {:mvn/version "1.5.4"}
+        day8.re-frame/test {:mvn/version "0.1.5"}
         day8.re-frame/tracing {:mvn/version "0.6.2"}
         day8/shadow-git-inject {:mvn/version "0.0.5"}
         metosin/malli {:mvn/version "0.16.4"}
