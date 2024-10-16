@@ -17,3 +17,45 @@
    (are [v sub] (= v sub)
      "• Untitled-1 - Repath Studio" @(rf/subscribe [::s/title-bar])
      false @(rf/subscribe [::s/active-saved]))))
+
+(deftest close
+  (rf-test/run-test-sync
+   (rf/dispatch [::app.e/initialize-db])
+   (rf/dispatch [::e/init])
+
+   (rf/dispatch [::e/close (:id @(rf/subscribe [::s/active]) false)])
+   (is (not @(rf/subscribe [::s/active])))))
+
+(deftest colors
+  (rf-test/run-test-sync
+   (rf/dispatch [::app.e/initialize-db])
+   (rf/dispatch [::e/init])
+
+   (let [fill (rf/subscribe [::s/fill])
+         stroke (rf/subscribe [::s/stroke])]
+     (is (= @fill "white"))
+     (is (= @stroke "black"))
+
+     (rf/dispatch [::e/swap-colors])
+     (is (= @fill "black"))
+     (is (= @stroke "white"))
+
+     (rf/dispatch [::e/set-attr :fill "red"])
+     (is (= @fill "red")))))
+
+(deftest filters
+  (rf-test/run-test-sync
+   (rf/dispatch [::app.e/initialize-db])
+   (rf/dispatch [::e/init])
+
+   (let [active-filter (rf/subscribe [::s/filter])]
+     (is (not @active-filter))
+
+     (rf/dispatch [::e/toggle-filter :blur])
+     (is (= @active-filter :blur))
+
+     (rf/dispatch [::e/toggle-filter :deuteranopia])
+     (is (= @active-filter :deuteranopia))
+
+     (rf/dispatch [::e/toggle-filter :deuteranopia])
+     (is (not @active-filter)))))
