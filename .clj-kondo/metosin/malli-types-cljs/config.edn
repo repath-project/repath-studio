@@ -505,8 +505,6 @@
                                                                                                      :min-arity 6}}},
                                                                     add-recent {:arities {2 {:args [:any :string],
                                                                                              :ret :any}}},
-                                                                    dissoc-attr {:arities {2 {:args [:any :keyword],
-                                                                                              :ret :any}}},
                                                                     set-active {:arities {2 {:args [:any :any],
                                                                                              :ret :any}}},
                                                                     saved? {:arities {2 {:args [:any :any],

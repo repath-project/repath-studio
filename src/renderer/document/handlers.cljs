@@ -75,7 +75,7 @@
 (mx/defn new-title :- string?
   [db]
   (let [documents (vals (:documents db))
-        existing-titles (set (map :title documents))]
+        existing-titles (->> documents (map :title) set)]
     (loop [i 1]
       (let [title (str "Untitled-" i)]
         (if-not (contains? existing-titles title)
@@ -96,15 +96,11 @@
 
 (mx/defn attr
   [db, k :- keyword?]
-  (get-in db [:documents (:active-document db) :attrs k]))
+  (get-in (active db) [:attrs k]))
 
 (mx/defn assoc-attr
   [db, k :- keyword?, v :- any?]
   (assoc-in db [:documents (:active-document db) :attrs k] v))
-
-(mx/defn dissoc-attr
-  [db, k :- keyword?]
-  (update-in db [:documents (:active-document db) :attrs] dissoc k))
 
 (mx/defn update-attr
   ([db, k :- keyword?, f]
