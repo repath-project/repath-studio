@@ -7,6 +7,9 @@
 (def SnapOption
   (into [:enum] snap-options))
 
+(def SnapOptions
+  [:set SnapOption])
+
 (def Snap
   [:map {:default {} :closed true}
    [:active {:default true} boolean?]
@@ -15,4 +18,4 @@
                                         [:point Vec2D]
                                         [:base-point Vec2D]
                                         [:dist-squared number?]]]
-   [:options {:default (set snap-options)} [:set SnapOption]]])
+   [:options {:default (set snap-options)} SnapOptions]])

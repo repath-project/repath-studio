@@ -5,6 +5,8 @@
 (defmulti form-element (fn [tag k _v _attrs] [tag k]))
 
 (defmethod update-attr :default
+  ([el attr f]
+   (update-in el [:attrs attr] f))
   ([el attr f arg1]
    (update-in el [:attrs attr] f arg1))
   ([el attr f arg1 arg2]

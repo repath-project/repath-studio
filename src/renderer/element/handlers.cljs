@@ -101,11 +101,31 @@
           (update-in (conj (path db) id) assoc-bounds)))))
 
 (defn update-el
-  [db id f & more]
-  (if (locked? db id)
-    db
-    (-> (apply update-in db (conj (path db) id) f more)
-        (refresh-bounds id))))
+  ([db id f]
+   (if (locked? db id)
+     db
+     (-> (update-in db (conj (path db) id) f)
+         (refresh-bounds id))))
+  ([db id f arg1]
+   (if (locked? db id)
+     db
+     (-> (update-in db (conj (path db) id) f arg1)
+         (refresh-bounds id))))
+  ([db id f arg1 arg2]
+   (if (locked? db id)
+     db
+     (-> (update-in db (conj (path db) id) f arg1 arg2)
+         (refresh-bounds id))))
+  ([db id f arg1 arg2 arg3]
+   (if (locked? db id)
+     db
+     (-> (update-in db (conj (path db) id) f arg1 arg2 arg3)
+         (refresh-bounds id))))
+  ([db id f arg1 arg2 arg3 & more]
+   (if (locked? db id)
+     db
+     (-> (apply update-in db (conj (path db) id) f arg1 arg2 arg3 more)
+         (refresh-bounds id)))))
 
 (defn siblings-selected?
   [db]
@@ -188,14 +208,26 @@
   [db el]
   (assoc-in db [:documents (:active-document db) :temp-element] el))
 
-(defn get-temp
+(defn temp
   [db]
   (get-in db [:documents (:active-document db) :temp-element]))
 
 (defn update-prop
-  [db id k & more]
-  (-> (apply update-in db (conj (path db) id k) more)
-      (refresh-bounds id)))
+  ([db id k f]
+   (-> (update-in db (conj (path db) id k) f)
+       (refresh-bounds id)))
+  ([db id k f arg1]
+   (-> (update-in db (conj (path db) id k) f arg1)
+       (refresh-bounds id)))
+  ([db id k f arg1 arg2]
+   (-> (update-in db (conj (path db) id k) f arg1 arg2)
+       (refresh-bounds id)))
+  ([db id k f arg1 arg2 arg3]
+   (-> (update-in db (conj (path db) id k) f arg1 arg2 arg3)
+       (refresh-bounds id)))
+  ([db id k arg1 arg2 arg3 & more]
+   (-> (apply update-in db (conj (path db) id k) arg1 arg2 arg3 more)
+       (refresh-bounds id))))
 
 (defn assoc-prop
   ([db k v]
@@ -235,10 +267,26 @@
      db)))
 
 (defn update-attr
-  [db id k f & more]
-  (if (element/supported-attr? (element db id) k)
-    (apply update-el db id attr.hierarchy/update-attr k f more)
-    db))
+  ([db id k f]
+   (if (element/supported-attr? (element db id) k)
+     (update-el db id attr.hierarchy/update-attr k f)
+     db))
+  ([db id k f arg1]
+   (if (element/supported-attr? (element db id) k)
+     (update-el db id attr.hierarchy/update-attr k f arg1)
+     db))
+  ([db id k f arg1 arg2]
+   (if (element/supported-attr? (element db id) k)
+     (update-el db id attr.hierarchy/update-attr k f arg1 arg2)
+     db))
+  ([db id k f arg1 arg2 arg3]
+   (if (element/supported-attr? (element db id) k)
+     (update-el db id attr.hierarchy/update-attr k f arg1 arg2 arg3)
+     db))
+  ([db id k f arg1 arg2 arg3 & more]
+   (if (element/supported-attr? (element db id) k)
+     (apply update-el db id attr.hierarchy/update-attr k f arg1 arg2 arg3 more)
+     db)))
 
 (defn deselect
   ([db]
@@ -559,7 +607,7 @@
 
 (defn add
   ([db]
-   (->> (get-temp db)
+   (->> (temp db)
         (add db)
         (dissoc-temp)))
   ([db el]
@@ -644,10 +692,10 @@
 (defn paste-styles
   ([db]
    (reduce paste-styles db (selected db)))
-  ([{copied-elements :copied-elements :as db} el]
+  ([db el]
    ;; TODO: Merge attributes from multiple selected elements.
-   (if (= 1 (count copied-elements))
-     (let [attrs (:attrs (first copied-elements))
+   (if (= 1 (count (:copied-elements db)))
+     (let [attrs (-> db :copied-elements first :attrs)
            style-attrs (disj attr/presentation :transform)]
        (reduce (fn [db attr]
                  (cond-> db

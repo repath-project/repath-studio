@@ -272,6 +272,13 @@
                                                                   defaults {:arities {1 {:args [:any], :ret :map}}}},
                                         renderer.app.handlers {set-state {:arities {2 {:args [:any :keyword], :ret :any}}},
                                                                set-cursor {:arities {2 {:args [:any :string], :ret :any}}},
+                                                               explain {:arities {2 {:args [:any :string], :ret :any},
+                                                                                  :varargs {:args [:any
+                                                                                                   :any
+                                                                                                   {:op :rest,
+                                                                                                    :spec :any}],
+                                                                                            :ret :any,
+                                                                                            :min-arity 2}}},
                                                                set-tool {:arities {2 {:args [:any :any], :ret :any}}},
                                                                pointer-delta {:arities {1 {:args [:any], :ret :any}}},
                                                                pointer-handler {:arities {3 {:args [:any
@@ -446,8 +453,40 @@
                                                               ->fixed-unit {:arities {2 {:args [:number :string],
                                                                                          :ret :string}}},
                                                               parse-unit {:arities {1 {:args [:any], :ret :seqable}}}},
-                                        renderer.document.handlers {search-by-path {:arities {2 {:args [:any :string],
+                                        renderer.document.handlers {update-prop {:arities {3 {:args [:any :keyword :any],
+                                                                                              :ret :any},
+                                                                                           4 {:args [:any
+                                                                                                     :keyword
+                                                                                                     :any
+                                                                                                     :any],
+                                                                                              :ret :any},
+                                                                                           5 {:args [:any
+                                                                                                     :keyword
+                                                                                                     :any
+                                                                                                     :any
+                                                                                                     :any],
+                                                                                              :ret :any},
+                                                                                           6 {:args [:any
+                                                                                                     :keyword
+                                                                                                     :any
+                                                                                                     :any
+                                                                                                     :any
+                                                                                                     :any],
+                                                                                              :ret :any},
+                                                                                           :varargs {:args [:any
+                                                                                                            :keyword
+                                                                                                            :any
+                                                                                                            :any
+                                                                                                            :any
+                                                                                                            :any
+                                                                                                            {:op :rest,
+                                                                                                             :spec :any}],
+                                                                                                     :ret :any,
+                                                                                                     :min-arity 6}}},
+                                                                    search-by-path {:arities {2 {:args [:any :string],
                                                                                                  :ret :any}}},
+                                                                    assoc-prop {:arities {3 {:args [:any :keyword :any],
+                                                                                             :ret :any}}},
                                                                     load {:arities {2 {:args [:any :any], :ret :any}}},
                                                                     persisted-format {:arities {1 {:args [:any],
                                                                                                    :ret {:op :keys,
@@ -467,12 +506,12 @@
                                                                                             :ret :sequential}}},
                                                                     add-recent {:arities {2 {:args [:any :string],
                                                                                              :ret :any}}},
+                                                                    dissoc-prop {:arities {2 {:args [:any :keyword],
+                                                                                              :ret :any}}},
                                                                     set-active {:arities {2 {:args [:any :any],
                                                                                              :ret :any}}},
                                                                     saved? {:arities {2 {:args [:any :any],
                                                                                          :ret :boolean}}},
-                                                                    assoc-attr {:arities {3 {:args [:any :keyword :any],
-                                                                                             :ret :any}}},
                                                                     new-title {:arities {1 {:args [:any], :ret :string}}},
                                                                     close {:arities {2 {:args [:any :any], :ret :any}}},
                                                                     center {:arities {1 {:args [:any], :ret :any}}},
@@ -500,6 +539,7 @@
                                                                                                            :rotate :number,
                                                                                                            :collapsed-ids :set}}],
                                                                                              :ret :any}}},
+                                                                    prop {:arities {2 {:args [:any :keyword], :ret :any}}},
                                                                     save-format {:arities {1 {:args [{:op :keys,
                                                                                                       :opt {:id :any,
                                                                                                             :title :string,

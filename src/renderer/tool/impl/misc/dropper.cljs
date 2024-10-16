@@ -38,7 +38,7 @@
  (fn [db [_ ^js color]]
    (let [srgb (.-sRGBHex color)]
      (-> db
-         (document.h/assoc-attr :fill srgb)
+         (document.h/assoc-prop :fill srgb)
          (element.h/assoc-attr :fill srgb)
          (app.h/set-tool :select)))))
 

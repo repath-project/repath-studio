@@ -55,7 +55,7 @@
 
 (mx/defn hovered? :- boolean?
   [db, el :- Element, intersecting? :- boolean?]
-  (let [{{:keys [x y width height]} :attrs} (element.h/get-temp db)
+  (let [{{:keys [x y width height]} :attrs} (element.h/temp db)
         selection-bounds [x y (+ x width) (+ y height)]]
     (if-let [el-bounds (:bounds el)]
       (if intersecting?

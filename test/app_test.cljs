@@ -1,6 +1,6 @@
 (ns app-test
   (:require
-   [cljs.test :refer-macros [deftest are is]]
+   [cljs.test :refer-macros [deftest are]]
    [day8.re-frame.test :as rf-test]
    [re-frame.core :as rf]
    [renderer.app.events :as e]

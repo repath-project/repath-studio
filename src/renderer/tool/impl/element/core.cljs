@@ -37,4 +37,4 @@
       (element.h/add)
       (app.h/set-tool :select)
       (app.h/set-state :default)
-      (app.h/explain "Create " (name (:tag (element.h/get-temp db))))))
+      (app.h/explain "Create " (name (:tag (element.h/temp db))))))

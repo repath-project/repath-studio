@@ -37,7 +37,7 @@
 
 (defmethod hierarchy/pointer-up ::hierarchy/polyshape
   [db]
-  (if (element.h/get-temp db)
+  (if (element.h/temp db)
     (add-point db (:adjusted-pointer-pos db))
     (-> db
         (app.h/set-state :create)
@@ -45,7 +45,7 @@
 
 (defmethod hierarchy/drag-end ::hierarchy/polyshape
   [db]
-  (if (element.h/get-temp db)
+  (if (element.h/temp db)
     (add-point db (:adjusted-pointer-pos db))
     (-> db
         (app.h/set-state :create)

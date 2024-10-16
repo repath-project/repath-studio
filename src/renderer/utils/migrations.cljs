@@ -41,5 +41,3 @@
                                                                           :selected? :selected
                                                                           :locked? :locked
                                                                           %)))))]])
-
-

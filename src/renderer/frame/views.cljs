@@ -93,15 +93,16 @@
                                   (.dispatchEvent js/window.parent.document
                                                   (js/KeyboardEvent. (.-type e)
                                                                      e)))]
-          [:> Frame {:initial-content (server/render-to-static-markup [markup])
-                     :mount-target "body"
-                     :class "overflow-hidden flex-1 border-0"
-                     :on-key-down on-keyboard-event
-                     :on-key-up on-keyboard-event
-                     :id "frame"
-                     :title "main canvas"
-                     :ref ref
-                     :style {:background (-> root-el :attrs :fill)}}
+          [:> Frame
+           {:initial-content (server/render-to-static-markup [markup])
+            :mount-target "body"
+            :class "overflow-hidden flex-1 border-0"
+            :on-key-down on-keyboard-event
+            :on-key-up on-keyboard-event
+            :id "frame"
+            :title "main canvas"
+            :ref ref
+            :style {:background (-> root-el :attrs :fill)}}
            [:f> inner-component]
            [:> ContextMenu/Root
             [:> ContextMenu/Trigger

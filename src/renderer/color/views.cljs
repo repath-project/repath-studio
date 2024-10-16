@@ -10,18 +10,18 @@
    [renderer.utils.i18n :refer [t]]))
 
 (defn drip [color]
-    [:button.button.color-drip
-     {:key (keyword (str color))
-      :on-click (fn []
-                  (rf/dispatch [::document.e/set-attr :fill color])
-                  (rf/dispatch [::element.e/set-attr :fill color]))
-      :style {:background-color color}}
-     (when (= color "transparent")
-       [:div.bg-primary.text-error.relative
-        [ui/icon "times"]])])
+  [:button.button.color-drip
+   {:key (keyword (str color))
+    :on-click (fn []
+                (rf/dispatch [::document.e/set-fill color])
+                (rf/dispatch [::element.e/set-attr :fill color]))
+    :style {:background-color color}}
+   (when (= color "transparent")
+     [:div.bg-primary.text-error.relative
+      [ui/icon "times"]])])
 
 (defn swatch [colors]
-    [:div.flex (map drip colors)])
+  [:div.flex (map drip colors)])
 
 #_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defn palette []

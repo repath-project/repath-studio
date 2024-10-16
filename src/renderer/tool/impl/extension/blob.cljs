@@ -35,7 +35,7 @@
   [db]
   (let [[offset-x offset-y] (:adjusted-pointer-offset db)
         radius (pointer-delta db)
-        temp (-> (element.h/get-temp db)
+        temp (-> (element.h/temp db)
                  (assoc-in [:attrs :x] (- offset-x radius))
                  (assoc-in [:attrs :y] (- offset-y radius))
                  (assoc-in [:attrs :size] (* radius 2)))]

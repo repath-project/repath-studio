@@ -2,6 +2,7 @@
   (:require
    [malli.core :as m]
    [malli.transform :as mt]
+   [renderer.attribute.db :refer [Attr]]
    [renderer.element.hierarchy :as hierarchy]
    [renderer.utils.bounds :refer [Bounds]]))
 
@@ -12,9 +13,6 @@
 (def Tag
   [:fn {:error/fn (fn [{:keys [value]} _] (str value ", is not a supported tag"))}
    tag?])
-
-(def Attr
-  [:or string? number? vector? nil?]) ; REVIEW
 
 (def Attrs
   [:map-of keyword? Attr])

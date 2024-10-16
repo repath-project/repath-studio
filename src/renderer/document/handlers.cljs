@@ -5,7 +5,6 @@
    [malli.experimental :as mx]
    [malli.transform :as mt]
    [renderer.document.db :as db :refer [Document PersistedDocument]]
-   [renderer.element.db :refer [Attr]]
    [renderer.frame.handlers :as frame.h]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
@@ -91,9 +90,29 @@
         (assoc :active-document id)
         (update :document-tabs #(vec/add % (inc active-index) id)))))
 
-(mx/defn assoc-attr
-  [db, k :- keyword?, v :- Attr]
+(mx/defn prop
+  [db, k :- keyword?]
+  (get-in db [:documents (:active-document db) k]))
+
+(mx/defn assoc-prop
+  [db, k :- keyword?, v :- any?]
   (assoc-in db [:documents (:active-document db) k] v))
+
+(mx/defn dissoc-prop
+  [db, k :- keyword?]
+  (update-in db [:documents (:active-document db)] dissoc k))
+
+(mx/defn update-prop
+  ([db, k :- keyword?, f]
+   (update-in db [:documents (:active-document db) k] f))
+  ([db, k :- keyword?, f arg1]
+   (update-in db [:documents (:active-document db) k] f arg1))
+  ([db, k :- keyword?, f arg1 arg2]
+   (update-in db [:documents (:active-document db) k] f arg1 arg2))
+  ([db, k :- keyword?, f arg1 arg2 arg3]
+   (update-in db [:documents (:active-document db) k] f arg1 arg2 arg3))
+  ([db, k :- keyword?, f arg1 arg2 arg3 & more]
+   (apply update-in db [:documents (:active-document db) k] f arg1 arg2 arg3 more)))
 
 (mx/defn load
   [db, document]

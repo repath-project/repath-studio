@@ -20,9 +20,11 @@
   [db, cursor :- string?]
   (assoc db :cursor cursor))
 
-(defn explain
-  [db & more]
-  (assoc db :explanation (apply str more)))
+(mx/defn explain
+  ([db, explanation :- string?]
+   (assoc db :explanation explanation))
+  ([db explanation & more]
+   (assoc db :explanation (apply str explanation more))))
 
 (defn add-fx
   [db effect]

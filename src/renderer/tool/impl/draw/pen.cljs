@@ -29,7 +29,7 @@
 
 (defmethod hierarchy/drag-end :pen
   [db _e]
-  (let [path (-> (element.h/get-temp db)
+  (let [path (-> (element.h/temp db)
                  (element/->path)
                  (path/manipulate :smooth)
                  (path/manipulate :simplify))]

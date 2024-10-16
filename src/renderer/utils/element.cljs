@@ -8,7 +8,7 @@
    [reagent.dom.server :as dom.server]
    [renderer.element.db :refer [Element Attrs]]
    [renderer.element.hierarchy :as element.hierarchy]
-   [renderer.snap.db :refer [SnapOption]]
+   [renderer.snap.db :refer [SnapOptions]]
    [renderer.utils.attribute :as attr]
    [renderer.utils.bounds :as utils.bounds :refer [Bounds]]
    [renderer.utils.map :as map]
@@ -47,7 +47,7 @@
     (vec (take 2 (mat/sub el-bounds local-bounds)))))
 
 (mx/defn snapping-points :- [:* Vec2D]
-  [el :- Element, options :- [:set SnapOption]]
+  [el :- Element, options :- SnapOptions]
   (let [points (or (element.hierarchy/snapping-points el) [])]
     (if-let [bounds (:bounds el)]
       (let [[x1 y1 x2 y2] bounds

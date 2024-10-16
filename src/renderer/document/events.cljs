@@ -24,26 +24,6 @@
   {:startIn "documents"
    :types [{:accept {"application/repath-studio" [".rps"]}}]})
 
-(def active-path
-  (let [db-store-key :re-frame-path/db-store]
-    (rf/->interceptor
-     :id ::active-path
-     :before (fn [context]
-               (let [original-db (rf/get-coeffect context :db)]
-                 (-> context
-                     (update db-store-key conj original-db)
-                     (rf/assoc-coeffect :db (get-in original-db [:documents (:active-document original-db)])))))
-     :after (fn [context]
-              (let [db-store (db-store-key context)
-                    original-db (peek db-store)
-                    new-db-store (pop db-store)
-                    context' (-> (assoc context db-store-key new-db-store)
-                                 (rf/assoc-coeffect :db original-db))
-                    db (rf/get-effect context :db ::not-found)]
-                (cond-> context'
-                  (not= db ::not-found)
-                  (rf/assoc-effect :db (assoc-in original-db [:documents (:active-document original-db)] db))))))))
-
 (rf/reg-event-db
  ::center
  [persist]
@@ -51,52 +31,51 @@
 
 (rf/reg-event-db
  ::set-hovered-id
- [active-path]
  (fn [db [_ id]]
-   (assoc db :hovered-ids #{id})))
+   (h/assoc-prop db :hovered-ids #{id})))
 
 (rf/reg-event-db
  ::clear-hovered
- [active-path]
  (fn [db [_]]
-   (assoc db :hovered-ids #{})))
+   (h/assoc-prop db :hovered-ids #{})))
 
 (rf/reg-event-db
  ::collapse-el
- [persist
-  active-path]
+ [persist]
  (fn [db [_ id]]
-   (update db :collapsed-ids conj id)))
+   (h/update-prop db :collapsed-ids conj id)))
 
 (rf/reg-event-db
  ::expand-el
- [persist
-  active-path]
+ [persist]
  (fn [db [_ id]]
-   (update db :collapsed-ids disj id)))
+   (h/update-prop db :collapsed-ids disj id)))
 
 (rf/reg-event-db
  ::toggle-filter
- [persist
-  active-path]
+ [persist]
  (fn [db [_ id]]
-   (if (= (:filter db) id)
-     (dissoc db :filter)
-     (assoc db :filter id))))
+   (if (= (h/prop db :filter) id)
+     (h/dissoc-prop db :filter)
+     (h/assoc-prop db :filter id))))
 
 (rf/reg-event-db
  ::swap-colors
- [persist
-  active-path]
+ [persist]
  (fn [db [_]]
-   (assoc db
-          :fill (:stroke db)
-          :stroke (:fill db))))
+   (-> db
+       (h/assoc-prop :fill (h/prop db :stroke))
+       (h/assoc-prop :stroke (h/prop db :fill)))))
 
 (rf/reg-event-db
- ::set-attr
- (fn [db [_ k v]]
-   (h/assoc-attr db k v)))
+ ::set-fill
+ (fn [db [_ v]]
+   (h/assoc-prop db :fill v)))
+
+(rf/reg-event-db
+ ::set-stroke
+ (fn [db [_ v]]
+   (h/assoc-prop db :fill v)))
 
 (rf/reg-event-db
  ::close

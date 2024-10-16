@@ -40,7 +40,7 @@
      (is (= @fill "black"))
      (is (= @stroke "white"))
 
-     (rf/dispatch [::e/set-attr :fill "red"])
+     (rf/dispatch [::e/set-fill "red"])
      (is (= @fill "red")))))
 
 (deftest filters

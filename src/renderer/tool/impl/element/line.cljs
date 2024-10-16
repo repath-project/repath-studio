@@ -28,7 +28,7 @@
 (defn update-line-end
   [db]
   (let [[x y] (:adjusted-pointer-pos db)
-        temp (-> (element.h/get-temp db)
+        temp (-> (element.h/temp db)
                  (assoc-in [:attrs :x2] x)
                  (assoc-in [:attrs :y2] y))]
     (element.h/assoc-temp db temp)))
@@ -36,12 +36,12 @@
 (defmethod tool.hierarchy/pointer-move :line
   [db]
   (cond-> db
-    (element.h/get-temp db) (update-line-end)))
+    (element.h/temp db) (update-line-end)))
 
 (defmethod tool.hierarchy/pointer-up :line
   [db _e]
   (cond
-    (element.h/get-temp db)
+    (element.h/temp db)
     (-> db
         (element.h/add)
         (app.h/set-tool :select)
@@ -58,7 +58,7 @@
 (defmethod tool.hierarchy/pointer-down :line
   [db _e]
   (cond-> db
-    (element.h/get-temp db)
+    (element.h/temp db)
     (app.h/explain "Create line")))
 
 (defmethod tool.hierarchy/drag :line
