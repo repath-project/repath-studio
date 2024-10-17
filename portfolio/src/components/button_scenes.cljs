@@ -15,8 +15,8 @@
                            :on-click #(js/alert "Saved")}]])
 
 (defscene radio-icon-buttons
-  :params (atom false)
   :title "Radio icon buttons"
+  :params (atom false)
   [store]
   [:div.toolbar.bg-primary
    [ui/radio-icon-button "refresh" @store

@@ -15,7 +15,7 @@
     "shadow:watch": "npx shadow-cljs watch main preload renderer bootstrap browser-test karma-test",
     "dev": "npm run postcss:watch & npm run shadow:watch",
     "build": "npm run postcss:build & npm run shadow:build",
-    "portfolio": "npx shadow-cljs watch portfolio & npm run css:watch",
+    "portfolio": "npx shadow-cljs watch portfolio & npm run postcss:watch",
     "electron": "npx electron .",
     "dist": "npx electron-builder",
     "clean": "rm -rf resources/public/js/* && rm -rf target && rm -rf dist",

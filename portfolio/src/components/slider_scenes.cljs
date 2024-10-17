@@ -5,10 +5,10 @@
 
 (defscene slider
   :title "Deafult slider"
-  :param (atom [25])
+  :params (atom [25])
   [store]
   [:div.toolbar.bg-primary.flex.gap-2
-   [:div.w-64
+   [:div.w-64.h-8
     [ui/slider {:min 0
                 :max 50
                 :step 1
@@ -18,10 +18,10 @@
 
 (defscene slider-disabled
   :title "Disabled slider"
-  :param (atom [25])
+  :params (atom [25])
   [store]
   [:div.toolbar.bg-primary.flex.gap-2
-   [:div.w-64
+   [:div.w-64.h-8
     [ui/slider {:min 0
                 :max 50
                 :step 1

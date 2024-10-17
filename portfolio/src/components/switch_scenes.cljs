@@ -5,9 +5,9 @@
 
 (defscene switch
   :title "Default switch"
-  :param (atom true)
+  :params (atom true)
   [store]
-  [:div.toolbar.bg-primary.flex.gap-2
+  [:div.toolbar.bg-primary.flex.gap-2.h-10
    [ui/switch "Switch label" {:id "default-switch"
                               :default-checked @store
                               :on-checked-change (fn [v] (reset! store v))}]
@@ -15,9 +15,9 @@
 
 (defscene switch-disabled
   :title "Disabled switch"
-  :param (atom true)
+  :params (atom true)
   [store]
-  [:div.toolbar.bg-primary.flex.gap-2
+  [:div.toolbar.bg-primary.flex.gap-2.h-10
    [ui/switch "Switch label" {:id "disabled-switch"
                               :disabled true
                               :default-checked @store
@@ -26,9 +26,9 @@
 
 (defscene switch-custom
   :title "Custom color switch"
-  :param (atom true)
+  :params (atom true)
   [store]
-  [:div.toolbar.bg-primary.flex.gap-2
+  [:div.toolbar.bg-primary.flex.gap-2.h-10
    [ui/switch "Switch label" {:id "disabled-switch"
                               :class "data-[state=checked]:bg-white"
                               :default-checked @store
