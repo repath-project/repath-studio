@@ -44,8 +44,14 @@ jobs:
       - name: Lint
         run: clj-kondo --lint src/**/*.cljs
 
-      - name: Install packages and build
-        run: npm ci && npm run build
+      - name: Install packages
+        run: npm ci
+
+      - name: Test
+        run: npm run test
+
+      - name: Build
+        run: npm run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
