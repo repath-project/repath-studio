@@ -5,8 +5,7 @@
    [malli.experimental :as mx]
    [renderer.element.db :as element.db :refer [Attrs Tag]]
    [renderer.element.hierarchy :as element.hierarchy]
-   [renderer.utils.bcd :as bcd]
-   [renderer.utils.units :as units]))
+   [renderer.utils.bcd :as bcd]))
 
 (def core
   #{:id :class :style})
@@ -60,17 +59,10 @@
   (-> s str/trim (str/split #"\s*[\s,]\s*")))
 
 (mx/defn points->vec :- vector?
-  [points :- string?]
-  (into [] (partition-all 2) (str->seq points)))
-
-(def partition-to-px
-  (comp
-   (map units/unit->px)
-   (partition-all 2)))
-
-(mx/defn points->px :- vector?
-  [points :- string?]
-  (into [] partition-to-px (str->seq points)))
+  ([points :- string?]
+   (points->vec points 2))
+  ([points :- string?, step :- number?]
+   (into [] (partition-all step) (str->seq points))))
 
 (def camelcased
   ["accentHeight"

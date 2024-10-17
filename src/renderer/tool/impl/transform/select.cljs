@@ -5,6 +5,7 @@
    [renderer.app.handlers :as app.h]
    [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.h]
+   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.h]
    [renderer.snap.handlers :as snap.h]
    [renderer.tool.hierarchy :as hierarchy]
@@ -55,8 +56,7 @@
 
 (mx/defn hovered? :- boolean?
   [db, el :- Element, intersecting? :- boolean?]
-  (let [{{:keys [x y width height]} :attrs} (element.h/temp db)
-        selection-bounds [x y (+ x width) (+ y height)]]
+  (let [selection-bounds (element.hierarchy/bounds (element.h/temp db))]
     (if-let [el-bounds (:bounds el)]
       (if intersecting?
         (bounds/intersect? el-bounds selection-bounds)
@@ -232,7 +232,7 @@
     (case state
       :select
       (-> db
-          (element.h/assoc-temp (select-rect db alt-key?))
+          (element.h/set-temp (select-rect db alt-key?))
           (element.h/clear-hovered)
           (reduce-by-area (pointer/alt? e) element.h/hover))
 

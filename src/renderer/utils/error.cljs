@@ -49,12 +49,12 @@
          {:on-click #(rf/dispatch [::window.e/relaunch])}
          "Restart the application"]
 
-        [:p "If you keep getting tha same error after restarting, try clearing your local storage and restart.
-            Please note that by doing so, you will loose any unsaved changes, and also your local app settings."]
+        [:p "If you keep getting tha same error after restarting, try clearing your session and options data and restart.
+             Please note that by doing so, you will loose any unsaved changes and your local applicaiton settings."]
 
         [:button.button.px-2.rounded.w-full.bg-warning
          {:on-click #(rf/dispatch [::window.e/clear-local-storage-and-relaunch])}
-         "Clear local storage and restart"]]]]]))
+         "Clear data and restart"]]]]]))
 
 (defn boundary
   []

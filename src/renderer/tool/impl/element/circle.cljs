@@ -23,4 +23,4 @@
                :fill (document.h/attr db :fill)
                :stroke (document.h/attr db :stroke)
                :r radius}]
-    (element.h/assoc-temp db {:type :element :tag :circle :attrs attrs})))
+    (element.h/set-temp db {:type :element :tag :circle :attrs attrs})))

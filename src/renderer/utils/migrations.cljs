@@ -1,6 +1,8 @@
 (ns renderer.utils.migrations
   (:require
    [clojure.set :as set]
+   [clojure.string :as str]
+   [renderer.utils.element :as element]
    [renderer.utils.map :as map]))
 
 (def migrations
@@ -34,10 +36,19 @@
                                  (:parent %)
                                  (update :parent key->uuid)))))))]
 
-   [[0 5 0] (fn [document]
+   [[0 4 4] (fn [document]
               (update document :elements update-vals (fn [el]
                                                        (update-keys el #(case %
                                                                           :visible? :visible
                                                                           :selected? :selected
                                                                           :locked? :locked
-                                                                          %)))))]])
+                                                                          %)))))]
+
+   [[0 4 5] (fn [document]
+              (update document :elements update-vals (fn [el]
+                                                       (cond-> el
+                                                         (= (:tag el) :brush)
+                                                         (update-in [:attrs :points] #(str/join " " (flatten %)))
+
+                                                         :always
+                                                         element/normalize-attrs))))]])

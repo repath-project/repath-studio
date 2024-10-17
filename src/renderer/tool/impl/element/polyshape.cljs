@@ -7,7 +7,7 @@
    [renderer.document.handlers :as document.h]
    [renderer.element.handlers :as element.h]
    [renderer.tool.hierarchy :as hierarchy]
-   [renderer.utils.attribute :as utils.attr]))
+   [renderer.utils.attribute :as attr]))
 
 (derive ::hierarchy/polyshape ::hierarchy/element)
 
@@ -25,11 +25,11 @@
 
 (defn create-polyline
   [db points]
-  (element.h/assoc-temp db {:type :element
-                            :tag (:tool db)
-                            :attrs {:points (str/join " " points)
-                                    :stroke (document.h/attr db :stroke)
-                                    :fill (document.h/attr db :fill)}}))
+  (element.h/set-temp db {:type :element
+                          :tag (:tool db)
+                          :attrs {:points (str/join " " points)
+                                  :stroke (document.h/attr db :stroke)
+                                  :fill (document.h/attr db :fill)}}))
 
 (defn add-point
   [db point]
@@ -54,7 +54,7 @@
 (defmethod hierarchy/pointer-move ::hierarchy/polyshape
   [db]
   (if-let [points (get-in db (points-path db))]
-    (let [point-vector (utils.attr/points->vec points)]
+    (let [point-vector (attr/points->vec points)]
       (assoc-in db
                 (points-path db)
                 (str/join " " (concat (apply concat (if (second point-vector)
@@ -65,7 +65,7 @@
 (defmethod hierarchy/double-click ::hierarchy/polyshape
   [db _e]
   (-> db
-      (update-in (points-path db) #(->> (utils.attr/points->vec %)
+      (update-in (points-path db) #(->> (attr/points->vec %)
                                         (drop-last)
                                         (apply concat)
                                         (str/join " ")))

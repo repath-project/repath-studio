@@ -21,9 +21,9 @@
                :x2 x
                :y2 y
                :stroke (document.h/attr db :stroke)}]
-    (element.h/assoc-temp db {:type :element
-                              :tag :line
-                              :attrs attrs})))
+    (element.h/set-temp db {:type :element
+                            :tag :line
+                            :attrs attrs})))
 
 (defn update-line-end
   [db]
@@ -31,7 +31,7 @@
         temp (-> (element.h/temp db)
                  (assoc-in [:attrs :x2] x)
                  (assoc-in [:attrs :y2] y))]
-    (element.h/assoc-temp db temp)))
+    (element.h/set-temp db temp)))
 
 (defmethod tool.hierarchy/pointer-move :line
   [db]

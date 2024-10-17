@@ -20,16 +20,16 @@
   [db]
   (let [[offset-x offset-y] (:adjusted-pointer-offset db)
         radius (pointer-delta db)]
-    (element.h/assoc-temp db {:type :element
-                              :tag :blob
-                              :attrs {:x (- offset-x radius)
-                                      :y (- offset-y radius)
-                                      :seed (rand-int 1000000)
-                                      :extraPoints 8
-                                      :randomness 4
-                                      :size (* radius 2)
-                                      :fill (document.h/attr db :fill)
-                                      :stroke (document.h/attr db :stroke)}})))
+    (element.h/set-temp db {:type :element
+                            :tag :blob
+                            :attrs {:x (- offset-x radius)
+                                    :y (- offset-y radius)
+                                    :seed (rand-int 1000000)
+                                    :extraPoints 8
+                                    :randomness 4
+                                    :size (* radius 2)
+                                    :fill (document.h/attr db :fill)
+                                    :stroke (document.h/attr db :stroke)}})))
 
 (defmethod hierarchy/drag :blob
   [db]
@@ -39,4 +39,4 @@
                  (assoc-in [:attrs :x] (- offset-x radius))
                  (assoc-in [:attrs :y] (- offset-y radius))
                  (assoc-in [:attrs :size] (* radius 2)))]
-    (element.h/assoc-temp db temp)))
+    (element.h/set-temp db temp)))

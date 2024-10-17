@@ -77,10 +77,10 @@
     (merge (attr/defaults-memo tag))))
 
 (mx/defn normalize-attrs :- Element
-  [el :- Element]
-  (cond-> el
-    :always (update :attrs update-keys attr/->camel-case-memo)
-    (not= (:tag el) :brush) (update :attrs update-vals str)))
+  [el]
+  (-> el
+      (update :attrs update-keys attr/->camel-case-memo)
+      (update :attrs update-vals str)))
 
 (mx/defn supported-attr? :- boolean?
   [el :- Element, k :- keyword?]

@@ -4,11 +4,13 @@
    ["perfect-freehand" :refer [getStroke]]
    [clojure.core.matrix :as mat]
    [clojure.core.matrix.stats :as mat.stats]
+   [clojure.string :as str]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.attribute.impl.range :as attr.range]
    [renderer.attribute.views :as attr.v]
    [renderer.element.hierarchy :as hierarchy]
    [renderer.handle.views :as handle.v]
+   [renderer.utils.attribute :as attr]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
    [renderer.utils.pointer :as pointer]
@@ -95,9 +97,14 @@
                     (.toFixed (mat.stats/mean [(second a) (second b)]) 2)
                     " ")))) d points)))))
 
+(def partition-to-px
+  (comp
+   (map units/unit->px)
+   (partition-all 3)))
+
 (defn points->path
   [points options]
-  (-> points
+  (-> (into [] partition-to-px (attr/str->seq points))
       (clj->js)
       (getStroke (clj->js options))
       (js->clj)
@@ -106,10 +113,9 @@
 (defmethod hierarchy/render :brush
   [el]
   (let [attrs (:attrs el)
-        pointer-handler #(pointer/event-handler! % el)]
-    [:path (merge {:d (points->path (:points attrs)
-                                    (merge (select-keys attrs option-keys)
-                                           {:simulatePressure true}))
+        pointer-handler #(pointer/event-handler! % el)
+        options  (-> attrs (select-keys option-keys) (update-vals js/parseFloat))]
+    [:path (merge {:d (points->path (:points attrs) options)
                    :on-pointer-up pointer-handler
                    :on-pointer-down pointer-handler
                    :on-pointer-move pointer-handler}
@@ -117,20 +123,35 @@
                       (select-keys [:id :class :opacity])
                       (assoc :fill (:stroke attrs))))]))
 
+(defn points->vec
+  [points]
+  (attr/points->vec points 3))
+
 (defmethod hierarchy/bounds :brush
   [el]
-  (let [points (-> el :attrs :points)
+  (let [points (-> el :attrs :points points->vec)
         x1 (apply min (map #(units/unit->px (first %)) points))
         y1 (apply min (map #(units/unit->px (second %)) points))
         x2 (apply max (map #(units/unit->px (first %)) points))
         y2 (apply max (map #(units/unit->px (second %)) points))]
     [x1 y1 x2 y2]))
 
+(defn translate
+  [[offset-x offset-y] points point]
+  (let [[point-x point-y pressure] point]
+    (cond-> points
+      point
+      (conj (units/transform point-x + offset-x)
+            (units/transform point-y + offset-y)
+            pressure))))
+
 (defmethod hierarchy/translate :brush
-  [el [x y]]
+  [el offset]
   (update-in el
              [:attrs :points]
-             #(mapv (fn [point] (mat/add point [x y 0])) %)))
+             #(->> (attr/str->seq %)
+                   (transduce (partition-all 3) (partial translate offset) [])
+                   (str/join " "))))
 
 (defmethod hierarchy/place :brush
   [el position]
@@ -144,10 +165,12 @@
         pivot-point (mat/sub pivot-point (mat/mul pivot-point ratio))]
     (update-in el
                [:attrs :points]
-               #(mapv (fn [point]
-                        (let [rel-point (mat/sub (take 2 bounds-start) (take 2 point))
-                              [x y] (mat/add pivot-point (mat/sub rel-point (mat/mul rel-point ratio)))]
-                          (mat/add point [x y 0]))) %))))
+               #(->> (into [] partition-to-px (attr/str->seq %))
+                     (reduce (fn [points point]
+                               (let [rel-point (mat/sub bounds-start (take 2 point))
+                                     offset (mat/add pivot-point (mat/sub rel-point (mat/mul rel-point ratio)))]
+                                 (translate offset points point))) [])
+                     (str/join " ")))))
 
 (defmethod hierarchy/path :brush
   [el]
@@ -159,10 +182,10 @@
                      (let [[x y] (mapv units/unit->px [x y])
                            [x y] (mat/add (element/offset el) [x y])]
                        ^{:key index}
-                       [handle.v/square {:id index
+                       [handle.v/square {:id (keyword (str index))
                                          :x x
                                          :y y
                                          :type :handle
                                          :action :edit
                                          :element (:id el)}]))
-                   (-> el :attrs :points))])
+                   (-> el :attrs :points points->vec))])

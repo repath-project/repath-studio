@@ -42,7 +42,7 @@
 
 (defmethod hierarchy/drag :zoom
   [db]
-  (element.h/assoc-temp db (overlay/select-box db)))
+  (element.h/set-temp db (overlay/select-box db)))
 
 (defmethod hierarchy/drag-end :zoom
   [db e]

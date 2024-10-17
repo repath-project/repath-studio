@@ -26,6 +26,6 @@
                :y (min y offset-y)
                :width (if lock-ratio (min width height) width)
                :height (if lock-ratio (min width height) height)}]
-    (element.h/assoc-temp db {:tag :svg
-                              :type :element
-                              :attrs attrs})))
+    (element.h/set-temp db {:tag :svg
+                            :type :element
+                            :attrs attrs})))

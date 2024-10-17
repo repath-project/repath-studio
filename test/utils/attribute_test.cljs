@@ -15,13 +15,6 @@
       [["0" "12"] ["342.3" "4352345345"] ["454535" "34"]] (attr/points->vec "0 12 342.3 4352345345 454535 34")
       [["0" "12"] ["342.3" "4352345345"] ["454535" "34"] ["1"]] (attr/points->vec "0 12 342.3 4352345345 454535 34 1"))))
 
-(deftest test-points->px
-  (testing "string to pixel point vector conversion"
-    (are [x y] (= x y)
-      [[0 12] [342.3 4352345345] [454535 34]] (attr/points->px "0 12 342.3 4352345345 454535 34")
-      [[0 12] [342.3 4352345345] [454535 34] [1]] (attr/points->px "0 12 342.3 4352345345 454535 34 1")
-      [[0 12] [342.3 4352345345] [454535 34] [1]] (attr/points->px "0px 12PX 342.3 4352345345 454535 34 1"))))
-
 (deftest test->camel-case
   (testing "attribute key to camel-case conversion"
     (are [x y] (= x y)

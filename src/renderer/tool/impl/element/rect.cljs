@@ -30,6 +30,6 @@
                :height (if lock-ratio (min width height) height)
                :fill (document.h/attr db :fill)
                :stroke (document.h/attr db :stroke)}]
-    (element.h/assoc-temp db {:type :element
-                              :tag :rect
-                              :attrs attrs})))
+    (element.h/set-temp db {:type :element
+                            :tag :rect
+                            :attrs attrs})))

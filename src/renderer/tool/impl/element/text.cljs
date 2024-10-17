@@ -21,13 +21,13 @@
 (defmethod hierarchy/pointer-up :text
   [db _e]
   (let [[offset-x offset-y] (:adjusted-pointer-offset db)
-        attrs {:x offset-x
-               :y offset-y}]
+        el {:type :element
+            :tag :text
+            :attrs {:x offset-x
+                    :y offset-y}}]
     (-> db
         (element.h/deselect)
-        (element.h/add {:type :element
-                        :tag :text
-                        :attrs attrs})
+        (element.h/add el)
         (app.h/set-tool :edit)
         (app.h/set-state :create))))
 

@@ -38,8 +38,8 @@
                :x2 x
                :y2 y
                :stroke "gray"}]
-    (element.h/assoc-temp db {:id :mesure
-                              :type :overlay
-                              :tag :measure
-                              :attrs attrs
-                              :hypotenuse hypotenuse})))
+    (element.h/set-temp db {:id :mesure
+                            :type :overlay
+                            :tag :measure
+                            :attrs attrs
+                            :hypotenuse hypotenuse})))

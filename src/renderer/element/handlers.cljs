@@ -196,7 +196,9 @@
 
 (defn top-selected-ancestors
   [db]
-  (vals (elements db (top-ancestor-ids db))))
+  (->> (top-ancestor-ids db)
+       (elements db)
+       (vals)))
 
 (defn dissoc-temp
   [db]
@@ -204,9 +206,10 @@
     (:active-document db)
     (update-in [:documents (:active-document db)] dissoc :temp-element)))
 
-(defn assoc-temp
+(defn set-temp
   [db el]
-  (assoc-in db [:documents (:active-document db) :temp-element] el))
+  (->> (element/normalize-attrs el)
+       (assoc-in db [:documents (:active-document db) :temp-element])))
 
 (defn temp
   [db]

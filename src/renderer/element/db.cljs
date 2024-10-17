@@ -2,7 +2,6 @@
   (:require
    [malli.core :as m]
    [malli.transform :as mt]
-   [renderer.attribute.db :refer [Attr]]
    [renderer.element.hierarchy :as hierarchy]
    [renderer.utils.bounds :refer [Bounds]]))
 
@@ -15,7 +14,7 @@
    tag?])
 
 (def Attrs
-  [:map-of keyword? Attr])
+  [:map-of keyword? string?])
 
 (def Element
   [:map {:closed true}
