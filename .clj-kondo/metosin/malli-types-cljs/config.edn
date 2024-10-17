@@ -245,7 +245,12 @@
                                                                                                        :visible :boolean},
                                                                                                  :req {:tag :any}}],
                                                                                          :ret :boolean}}}},
-                                        renderer.ui {icon {:arities {:varargs {:args [:string {:op :rest, :spec :map}],
+                                        renderer.ui {merge-with-class {:arities {:varargs {:args [:any
+                                                                                                  {:op :rest,
+                                                                                                   :spec :map}],
+                                                                                           :ret :any,
+                                                                                           :min-arity 1}}},
+                                                     icon {:arities {:varargs {:args [:string {:op :rest, :spec :map}],
                                                                                :ret :any,
                                                                                :min-arity 1}}},
                                                      icon-button {:arities {:varargs {:args [:string
