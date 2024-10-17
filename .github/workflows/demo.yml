@@ -51,7 +51,7 @@ jobs:
         run: npm run test
 
       - name: Build
-        run: npm run build
+        run: npm run web:build
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
