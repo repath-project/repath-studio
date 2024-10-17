@@ -19,7 +19,7 @@
     "local-ssl-proxy": "npx local-ssl-proxy --source 3000 --target 8080",
     "dev": "npm run css:watch & npm run web:watch & npm run electron:watch",
     "build": "npm run css:build & npm run web:build & npm run electron:build",
-    "portfolio": "npx shadow-cljs watch portfolio & yarn postcss:watch",
+    "portfolio": "npx shadow-cljs watch portfolio & npm run css:watch",
     "electron": "npx electron .",
     "dist": "npx electron-builder",
     "clean": "rm -rf resources/public/js/* && rm -rf target && rm -rf dist",
