@@ -8,7 +8,10 @@
   [:div.toolbar.bg-primary
    [ui/icon-button "download" {:title "download"
                                :on-click #(js/alert "Downloaded")}]
+   [ui/icon-button "folder" {:title "open"
+                             :on-click #(js/alert "Opened")}]
    [ui/icon-button "save" {:title "save"
+                           :disabled true
                            :on-click #(js/alert "Saved")}]])
 
 (defscene radio-icon-buttons

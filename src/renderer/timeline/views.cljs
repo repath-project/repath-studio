@@ -70,14 +70,14 @@
         guide-snap? @(rf/subscribe [::timeline.s/guide-snap?])]
     [:div.grow
      [ui/switch
+      "Grid snap"
       {:id "grid-snap"
-       :label "Grid snap"
-       :default-checked? grid-snap?
+       :default-checked grid-snap?
        :on-checked-change #(rf/dispatch [::timeline.e/set-grid-snap %])}]
      [ui/switch
+      "Guide snap"
       {:id "guide-snap"
-       :label "Guide snap"
-       :default-checked? guide-snap?
+       :default-checked guide-snap?
        :on-checked-change #(rf/dispatch [::timeline.e/set-guide-snap %])}]]))
 
 (defn toolbar

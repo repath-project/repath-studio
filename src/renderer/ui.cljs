@@ -8,17 +8,23 @@
    ["@radix-ui/react-slider" :as Slider]
    ["@radix-ui/react-switch" :as Switch]
    ["react-svg" :refer [ReactSVG]]
+   ["tailwind-merge" :refer [twMerge]]
    [malli.experimental :as mx]
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.s]
    [renderer.utils.hiccup :refer [Props]]
    [renderer.utils.keyboard :as keyb]))
 
+(mx/defn merge-with-class
+  [classes props :- Props]
+  (merge {:class (twMerge classes (:class props))}
+         (dissoc props :class)))
+
 (mx/defn icon
   [icon-name :- string?, props :- Props]
   [:> ReactSVG
-   (merge props {:class ["icon" (:class props)]
-                 :src (str "icons/" icon-name ".svg")})])
+   (merge (merge-with-class "icon" props)
+          {:src (str "icons/" icon-name ".svg")})])
 
 (mx/defn icon-button
   [icon-name :- string?, props :- Props]
@@ -32,14 +38,11 @@
    {:class "animate-spin"}])
 
 (defn switch
-  [{:keys [id label default-checked? on-checked-change]}]
+  [label props]
   [:span.inline-flex.items-center
-   [:label.h-auto.bg-transparent {:for id} label]
+   [:label.h-auto.bg-transparent {:for (when (:id props) (:id props))} label]
    [:> Switch/Root
-    {:class "overlay relative rounded-full w-10 h-6 data-[state=checked]:bg-accent"
-     :id id
-     :default-checked default-checked?
-     :on-checked-change on-checked-change}
+    (merge-with-class "overlay relative rounded-full w-10 h-6 data-[state=checked]:bg-accent data-[disabled]:opacity-50" props)
     [:> Switch/Thumb
      {:class "block bg-primary rounded-full shadow-sm w-5 h-5 will-change-transform
               transition-transform translate-x-0.5 data-[state=checked]:translate-x-[18px]"}]]])
@@ -47,7 +50,7 @@
 (mx/defn slider
   [props :- Props]
   [:> Slider/Root
-   (merge {:class "relative flex items-center select-none w-full touch-none h-full"} props)
+   (merge-with-class "relative flex items-center select-none w-full touch-none h-full" props)
    [:> Slider/Track {:class "relative h-1 bg-secondary flex-1"}
     [:> Slider/Range {:class "absolute h-full overlay"}]]
    [:> Slider/Thumb {:class "slider-thumb"}]])
@@ -73,14 +76,14 @@
            (into [:span.inline-flex.text-muted {:class "gap-1.5"}])))))
 
 (mx/defn radio-icon-button
-  [icon-name :- string?, active :- boolean?, & {:keys [class] :as props} :- Props]
+  [icon-name :- string?, active :- boolean?, props :- Props]
   [:button.icon-button.radio-icon-button
-   (assoc props :class [class (when active "selected")])
+   (merge-with-class (when active "selected") props)
    [renderer.ui/icon icon-name]])
 
 (defn context-menu-item
-  [{:keys [label action checked? disabled?] :as attrs}]
-  (case (:type attrs)
+  [{:keys [label action checked? disabled?] :as props}]
+  (case (:type props)
     :separator
     [:> ContextMenu/Separator {:class "menu-separator"}]
 
@@ -106,8 +109,8 @@
       [shortcuts action]]]))
 
 (defn dropdown-menu-item
-  [{:keys [label action checked?] :as attrs}]
-  (case (:type attrs)
+  [{:keys [label action checked?] :as props}]
+  (case (:type props)
     :separator
     [:> DropdownMenu/Separator {:class "menu-separator"}]
 

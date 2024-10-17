@@ -167,3 +167,8 @@
      ^{:key icon-name}
      [:div {:title icon-name}
       [ui/icon icon-name]])])
+
+(defscene colored
+  :title "Colored icon"
+  [:div.flex.p-3
+   [ui/icon "download" {:class "text-accent"}]])

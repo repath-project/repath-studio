@@ -117,6 +117,7 @@
     "style-to-object": "1.0.8",
     "svg-path-bbox": "2.1.0",
     "svgpath": "2.6.0",
+    "tailwind-merge": "2.5.4",
     "tailwindcss": "3.4.14"
   },
   "dependencies": {

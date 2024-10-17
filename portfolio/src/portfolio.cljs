@@ -1,6 +1,7 @@
 (ns portfolio
   (:require [components.button-scenes]
             [components.icon-scenes]
+            [components.slider-scenes]
             [components.switch-scenes]
             [portfolio.ui :as ui]))
 
