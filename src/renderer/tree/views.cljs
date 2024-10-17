@@ -48,27 +48,27 @@
 
 (defn item-label
   [{:keys [id label visible tag]}]
-  (ra/with-let [edit-mode? (ra/atom false)
-                properties (element.hierarchy/properties tag)
-                tag-label (or (:label properties) (str/capitalize (name tag)))]
-    (if @edit-mode?
-      [:input.list-item-input
-       {:default-value label
-        :placeholder tag-label
-        :auto-focus true
-        :on-key-down #(keyb/input-key-down-handler! % label set-item-label! id)
-        :on-blur (fn [e]
-                   (reset! edit-mode? false)
-                   (set-item-label! e id))}]
-      [:div.flex
-       [:div.truncate
-        {:class [(when-not visible "opacity-60")
-                 (when (= :svg tag) "font-bold")]
-         :style {:cursor "text"}
-         :on-double-click (fn [e]
-                            (.stopPropagation e)
-                            (reset! edit-mode? true))}
-        (if (empty? label) tag-label label)]])))
+  (let [properties (element.hierarchy/properties tag)
+        tag-label (or (:label properties) (str/capitalize (name tag)))]
+    (ra/with-let [edit-mode? (ra/atom false)]
+      (if @edit-mode?
+        [:input.list-item-input
+         {:default-value label
+          :placeholder tag-label
+          :auto-focus true
+          :on-key-down #(keyb/input-key-down-handler! % label set-item-label! id)
+          :on-blur (fn [e]
+                     (reset! edit-mode? false)
+                     (set-item-label! e id))}]
+        [:div.flex
+         [:div.truncate
+          {:class [(when-not visible "opacity-60")
+                   (when (= :svg tag) "font-bold")]
+           :style {:cursor "text"}
+           :on-double-click (fn [e]
+                              (.stopPropagation e)
+                              (reset! edit-mode? true))}
+          (if (empty? label) tag-label label)]]))))
 
 (defn drop-handler!
   [e parent-id]
