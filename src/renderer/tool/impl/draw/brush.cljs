@@ -36,7 +36,6 @@
 (defmethod hierarchy/drag :brush
   [db e]
   (let [active-document (:active-document db)
-        stroke (get-in db [:documents active-document :stroke])
         point (conj (:adjusted-pointer-pos db) (:pressure e))
         points-path [:documents active-document :temp-element :attrs :points]]
     (if (get-in db points-path)
@@ -44,7 +43,7 @@
       (element.h/assoc-temp db {:type :element
                                 :tag :brush
                                 :attrs {:points [point]
-                                        :stroke stroke
+                                        :stroke (document.h/attr db :stroke)
                                         :size 16
                                         :thinning 0.5
                                         :smoothing 0.5
