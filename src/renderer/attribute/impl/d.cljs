@@ -133,10 +133,10 @@
 
 (defmethod hierarchy/form-element [:default :d]
   [_ k v {:keys [disabled]}]
-  (let [state-default? (= @(rf/subscribe [::app.s/state]) :default)]
+  (let [idle (= @(rf/subscribe [::app.s/state]) :idle)]
     [:div.flex.gap-px.w-full
-     [v/form-input k (if state-default? v "waiting")
-      {:disabled (or disabled (not v) (not state-default?))}]
+     [v/form-input k (if idle v "waiting")
+      {:disabled (or disabled (not v) (not idle))}]
      (when v
        [:> Popover/Root {:modal true}
         [:> Popover/Trigger
@@ -146,5 +146,5 @@
          [:> Popover/Content {:sideOffset 5
                               :className "popover-content"
                               :align "end"}
-          (when state-default? [edit-form v])
+          (when idle [edit-form v])
           [:> Popover/Arrow {:class "popover-arrow"}]]]])]))

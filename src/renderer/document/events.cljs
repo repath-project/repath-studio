@@ -196,8 +196,9 @@
      (let [migrated-document (compatibility/migrate-document document)
            migrated (not= document migrated-document)
            document (assoc migrated-document :id guid)]
-       {:db (h/load db document)
-        :dispatch (when (not migrated) [::saved document])})
+       (cond-> {:db (h/load db document)}
+         (not migrated)
+         (assoc :dispatch [::saved document])))
      {:db (notification.h/add db (notification.v/generic-error {:title (str "Error while loading " (:title document))
                                                                 :message "File appears to be unsupported or corrupted."}))})))
 
