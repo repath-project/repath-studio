@@ -227,6 +227,7 @@
               (cond-> db
                 :always
                 (element.h/translate id offset)
+
                 (and (seq (element.h/selected db))
                      (empty? (rest (element.h/selected db)))
                      (contains? #{:translate :clone} (:state db))

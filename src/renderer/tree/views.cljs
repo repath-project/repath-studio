@@ -44,11 +44,12 @@
 
 (defn set-item-label!
   [e id]
-  (rf/dispatch [::element.e/set-prop id :label (.. e -target -value)]))
+  (rf/dispatch-sync [::element.e/set-prop id :label (.. e -target -value)]))
 
 (defn item-label
-  [{:keys [id label visible tag]}]
-  (let [properties (element.hierarchy/properties tag)
+  [el]
+  (let [{:keys [id label visible tag]} el
+        properties (element.hierarchy/properties tag)
         tag-label (or (:label properties) (str/capitalize (name tag)))]
     (ra/with-let [edit-mode? (ra/atom false)]
       (if @edit-mode?
@@ -60,7 +61,7 @@
           :on-blur (fn [e]
                      (reset! edit-mode? false)
                      (set-item-label! e id))}]
-        [:div.flex
+        [:div.flex.w-full
          [:div.truncate
           {:class [(when-not visible "opacity-60")
                    (when (= :svg tag) "font-bold")]
@@ -77,11 +78,12 @@
                uuid)]
     (.preventDefault e)
     (rf/dispatch [::element.e/set-parent parent-id id])))
+
 (defn padding
-  [depth children?]
+  [depth has-children]
   (let [collapse-button-width 22]
     (- (* depth collapse-button-width)
-       (if children? collapse-button-width 0))))
+       (if has-children collapse-button-width 0))))
 
 (def last-focused-id (ra/atom nil))
 
@@ -125,68 +127,70 @@
                               [::document.e/collapse-el id]))}])
 
 (defn list-item-button
-  [{:keys [id selected children locked visible] :as el} depth hovered collapsed]
-  [:div.button.list-item-button
-   {:class [(when selected "selected")
-            (when hovered "hovered")]
-    :tab-index 0
-    :data-id (str id)
-    :role "menuitem"
-    :on-double-click #(rf/dispatch [::frame.e/pan-to-element id])
-    :on-pointer-enter #(rf/dispatch [::document.e/set-hovered-id id])
-    :ref (fn [this]
-           (when (and this selected)
-             (dom/scroll-into-view! this)
-             (set-last-focused-id! (.getAttribute this "data-id"))))
-    :draggable true
-    :on-key-down #(key-down-handler! % id)
-    :on-drag-start #(-> (.-dataTransfer %)
-                        (.setData "id" (str id)))
-    :on-drag-enter #(rf/dispatch [::document.e/set-hovered-id id])
-    :on-drag-over dom/prevent-default!
-    :on-drop #(drop-handler! % id)
-    :on-pointer-down #(when (= (.-button %) 2)
-                        (rf/dispatch [::element.e/select id (.-ctrlKey %)]))
-    :on-pointer-up (fn [e]
-                     (.stopPropagation e)
-                     (if (.-shiftKey e)
-                       (rf/dispatch-sync [::e/select-range @last-focused-id id])
-                       (do (rf/dispatch [::element.e/select id (.-ctrlKey e)])
-                           (reset! last-focused-id id))))
-    :style {:padding-left (padding depth (seq children))}}
-   [:div.flex.items-center.content-between.w-full
-    (when (seq children)
-      [toggle-collapsed-button id collapsed])
-    [:div.flex-1.overflow-hidden.flex.items-center
-     {:class "gap-1.5"}
-     [ui/icon
-      (:icon (element/properties el))
-      {:class (when-not visible "opacity-60")}]
-     [item-label el]]
-    [lock-button id locked]
-    [visibility-button id visible]]])
+  [el {:keys [depth collapsed hovered]}]
+  (let [{:keys [id selected children locked visible]} el]
+    [:div.button.list-item-button
+     {:class [(when selected "selected")
+              (when hovered "hovered")]
+      :tab-index 0
+      :data-id (str id)
+      :role "menuitem"
+      :on-double-click #(rf/dispatch [::frame.e/pan-to-element id])
+      :on-pointer-enter #(rf/dispatch [::document.e/set-hovered-id id])
+      :ref (fn [this]
+             (when (and this selected)
+               (dom/scroll-into-view! this)
+               (set-last-focused-id! (.getAttribute this "data-id"))))
+      :draggable true
+      :on-key-down #(key-down-handler! % id)
+      :on-drag-start #(-> % .-dataTransfer (.setData "id" (str id)))
+      :on-drag-enter #(rf/dispatch [::document.e/set-hovered-id id])
+      :on-drag-over dom/prevent-default!
+      :on-drop #(drop-handler! % id)
+      :on-pointer-down #(when (= (.-button %) 2)
+                          (rf/dispatch [::element.e/select id (.-ctrlKey %)]))
+      :on-pointer-up (fn [e]
+                       (.stopPropagation e)
+                       (if (.-shiftKey e)
+                         (rf/dispatch-sync [::e/select-range @last-focused-id id])
+                         (do (rf/dispatch [::element.e/select id (.-ctrlKey e)])
+                             (reset! last-focused-id id))))
+      :style {:padding-left (padding depth (seq children))}}
+     [:div.flex.items-center.content-between.w-full
+      (when (seq children)
+        [toggle-collapsed-button id collapsed])
+      [:div.flex-1.overflow-hidden.flex.items-center
+       {:class "gap-1.5"}
+       [ui/icon
+        (:icon (element/properties el))
+        {:class (when-not visible "opacity-60")}]
+       [item-label el]]
+      [lock-button id locked]
+      [visibility-button id visible]]]))
 
-(defn item [{:keys [selected children id] :as el} depth elements hovered-ids collapsed-ids]
-  (let [has-children? (seq children)
-        collapsed (contains? collapsed-ids id)
-        hovered (contains? hovered-ids id)]
+(defn item [el depth elements]
+  (let [{:keys [selected children id]} el
+        has-children (seq children)
+        hovered-ids @(rf/subscribe [::document.s/hovered-ids])
+        collapsed-ids @(rf/subscribe [::document.s/collapsed-ids])
+        collapsed (contains? collapsed-ids id)]
     [:li {:class (when selected "overlay")}
-     [list-item-button el depth hovered collapsed]
-     (when (and has-children? (not collapsed))
+     [list-item-button el {:depth depth
+                           :collapsed collapsed
+                           :hovered (contains? hovered-ids id)}]
+     (when (and has-children (not collapsed))
        [:ul (for [el (mapv (fn [k] (get elements k)) (reverse children))]
-              ^{:key (:id el)} [item el (inc depth) elements hovered-ids collapsed-ids])])]))
+              ^{:key (:id el)} [item el (inc depth) elements])])]))
 
 (defn inner-sidebar-render
   [root-children elements]
-  (let [hovered-ids @(rf/subscribe [::document.s/hovered-ids])
-        collapsed-ids @(rf/subscribe [::document.s/collapsed-ids])]
-    [:div.tree-sidebar
-     {:on-pointer-up #(rf/dispatch [::element.e/deselect-all])}
-     [ui/scroll-area
-      [:ul
-       {:on-pointer-leave #(rf/dispatch [::document.e/clear-hovered])}
-       (for [el (reverse root-children)]
-         ^{:key (:id el)} [item el 1 elements hovered-ids collapsed-ids])]]]))
+  [:div.tree-sidebar
+   {:on-pointer-up #(rf/dispatch [::element.e/deselect-all])}
+   [ui/scroll-area
+    [:ul {:on-pointer-leave #(rf/dispatch [::document.e/clear-hovered])
+          :style {:width "227px"}}
+     (for [el (reverse root-children)]
+       ^{:key (:id el)} [item el 1 elements])]]])
 
 (defn inner-sidebar []
   (let [state @(rf/subscribe [::app.s/state])
