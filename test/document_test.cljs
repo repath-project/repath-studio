@@ -12,8 +12,11 @@
 (deftest init
   (rf-test/run-test-sync
    (rf/dispatch [::app.e/initialize-db])
-   (rf/dispatch [::e/init])
+   (is (not @(rf/subscribe [::s/some-documents])))
+   (is (not @(rf/subscribe [::s/active])))
 
+   (rf/dispatch [::e/init])
+   (is @(rf/subscribe [::s/some-documents]))
    (is (db/valid? @(rf/subscribe [::s/active])))
    (is (= "• Untitled-1 - Repath Studio" @(rf/subscribe [::s/title-bar])))))
 
@@ -136,3 +139,30 @@
      (is @saved)
 
      (is @(rf/subscribe [::s/saved id])))))
+
+(deftest load
+  (rf-test/run-test-sync
+   (rf/dispatch [::app.e/initialize-db])
+   (rf/dispatch [::e/load {:version "100000.0.0" ; Skips migrations.
+                           :path "foo/bar/document.rps"
+                           :title "document.rps"
+                           :elements {}}])
+
+   (is @(rf/subscribe [::s/active-saved]))
+   (is (= "foo/bar/document.rps - Repath Studio" @(rf/subscribe [::s/title-bar])))))
+
+(deftest load-multiple
+  (rf-test/run-test-sync
+   (rf/dispatch [::app.e/initialize-db])
+   (rf/dispatch [::e/load-multiple [{:version "100000.0.0"
+                                     :path "foo/bar/document-1.rps"
+                                     :title "document-1.rps"
+                                     :elements {}}
+                                    {:version "100000.0.0"
+                                     :path "foo/bar/document-2.rps"
+                                     :title "document-2.rps"
+                                     :elements {}}]])
+
+   (is (= (:title @(rf/subscribe [::s/active])) "document-2.rps"))
+   (is (= @(rf/subscribe [::s/recent]) ["foo/bar/document-2.rps"
+                                        "foo/bar/document-1.rps"]))))
