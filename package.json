@@ -61,7 +61,7 @@
   },
   "main": "resources/main.js",
   "devDependencies": {
-    "@mdn/browser-compat-data": "5.6.7",
+    "@mdn/browser-compat-data": "5.6.8",
     "@radix-ui/react-context-menu": "2.2.2",
     "@radix-ui/react-dialog": "1.1.2",
     "@radix-ui/react-dropdown-menu": "2.1.2",
@@ -117,7 +117,7 @@
     "tailwindcss": "3.4.14"
   },
   "dependencies": {
-    "@webref/css": "6.16.1",
+    "@webref/css": "6.17.0",
     "electron-log": "5.2.0",
     "electron-reloader": "1.2.3",
     "electron-updater": "6.3.9",
