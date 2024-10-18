@@ -192,7 +192,7 @@
   (let [state @(rf/subscribe [::app.s/state])
         root-children @(rf/subscribe [::element.s/root-children])
         elements @(rf/subscribe [::document.s/elements])]
-    (if (= state :default)
+    (if (= state :idle)
       [inner-sidebar-render root-children elements]
       (ra/with-let [root-children root-children
                     elements elements]

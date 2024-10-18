@@ -11,7 +11,7 @@
    (rf/dispatch [::e/initialize-db])
 
    (are [v sub] (= v sub)
-     :select @(rf/subscribe [::s/tool])
+     :transform @(rf/subscribe [::s/tool])
      {} @(rf/subscribe [::s/documents])
      [] @(rf/subscribe [::s/document-tabs]))))
 
@@ -20,7 +20,7 @@
    (rf/dispatch [::e/initialize-db])
 
    (let [active-tool (rf/subscribe [::s/tool])]
-     (is (= @active-tool :select))
+     (is (= @active-tool :transform))
 
      (rf/dispatch [::e/set-tool :rect])
      (is (= @active-tool :rect)))))

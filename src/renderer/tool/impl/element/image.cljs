@@ -20,5 +20,5 @@
                                            "image/jpeg" [".jpeg" ".jpg"]
                                            "image/bmp" [".fmp"]}}]}
                :callback (fn [file]
-                           (rf/dispatch [::app.e/set-tool :select])
+                           (rf/dispatch [::app.e/set-tool :transform])
                            (drop/add-image! file (:adjusted-pointer-pos db)))}) db)

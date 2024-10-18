@@ -36,7 +36,7 @@
         (map button items)))
 
 (def groups
-  [[:select :edit :pan :zoom]
+  [[:transform :edit :pan :zoom]
    [:svg]
    [:circle :ellipse :rect :line :polyline :polygon :image :text]
    [:blob]

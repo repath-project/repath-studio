@@ -46,7 +46,7 @@
  [persist]
  (fn [db [_ bounds]]
    (cond-> db
-     (= (:state db) :default)
+     (= (:state db) :idle)
      (h/pan-to-bounds bounds))))
 
 (rf/reg-event-fx

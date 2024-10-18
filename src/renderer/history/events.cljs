@@ -53,14 +53,14 @@
  ::tree-view-updated
  (fn [db [_ zoom translate]]
    (cond-> db
-       zoom (h/set-zoom zoom)
-       translate (h/set-translate translate))))
+     zoom (h/set-zoom zoom)
+     translate (h/set-translate translate))))
 
 (rf/reg-event-fx
  ::cancel
  (fn [{:keys [db]} _]
-   (if (and (= (:tool db) :select)
-            (= (:state db) :default))
+   (if (and (= (:tool db) :transform)
+            (= (:state db) :idle))
      {:dispatch [::element.e/deselect-all]}
      {:db (h/cancel db)})))
 

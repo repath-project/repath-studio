@@ -16,7 +16,7 @@
 
 (derive ::hierarchy/element ::hierarchy/tool)
 
-(defmethod hierarchy/help [::hierarchy/element :default]
+(defmethod hierarchy/help [::hierarchy/element :idle]
   []
   "Click and drag to create an element.")
 
@@ -35,6 +35,6 @@
   [db _e]
   (-> db
       (element.h/add)
-      (app.h/set-tool :select)
-      (app.h/set-state :default)
+      (app.h/set-tool :transform)
+      (app.h/set-state :idle)
       (app.h/explain "Create " (name (:tag (element.h/temp db))))))

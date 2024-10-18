@@ -11,7 +11,7 @@
   []
   {:icon "ruler-triangle"})
 
-(defmethod hierarchy/help [:measure :default]
+(defmethod hierarchy/help [:measure :idle]
   []
   "Click and drag to measure a distance.")
 

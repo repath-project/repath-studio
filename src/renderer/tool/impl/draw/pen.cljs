@@ -36,5 +36,5 @@
     (-> db
         (element.h/set-temp path)
         (element.h/add)
-        (app.h/set-state :default)
+        (app.h/set-state :idle)
         (app.h/explain "Draw line"))))

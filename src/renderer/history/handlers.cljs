@@ -150,11 +150,11 @@
     (= (:state db) :select)
     (element.h/clear-hovered)
 
-    (= (:state db) :default)
-    (app.h/set-tool :select)
+    (= (:state db) :idle)
+    (app.h/set-tool :transform)
 
     :always
-    (app.h/set-state :default)))
+    (app.h/set-state :idle)))
 
 (defn- update-ancestors
   "Makes all ancestors of the active branch the rightmost element.

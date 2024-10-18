@@ -16,9 +16,11 @@
    [renderer.utils.keyboard :as keyb]))
 
 (mx/defn merge-with-class
-  [classes props :- Props]
-  (merge {:class (twMerge classes (:class props))}
-         (dissoc props :class)))
+  ([classes]
+   (merge-with-class classes {}))
+  ([classes props :- Props]
+   (merge {:class (twMerge classes (:class props))}
+          (dissoc props :class))))
 
 (mx/defn icon
   [icon-name :- string?, props :- Props]

@@ -44,6 +44,6 @@
                                                 "image/jpeg" [".jpeg" ".jpg"]
                                                 "image/bmp" [".fmp"]}}]}
                     :callback (fn [file]
-                                (rf/dispatch [::app.e/set-tool :select])
+                                (rf/dispatch [::app.e/set-tool :transform-active])
                                 (update-href! file))})}
       [ui/icon "folder"]]]))

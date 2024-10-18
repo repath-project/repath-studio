@@ -20,7 +20,7 @@
   (let [el (js/document.createElement "input")]
     (set! (.-type el) "file")
     (.addEventListener el "change" (fn [e] (.remove el)
-                                           (cb (first (.. e -target -files)))))
+                                     (cb (first (.. e -target -files)))))
     (.click el)))
 
 (defn read!
@@ -41,15 +41,15 @@
   [{:keys [options callback]}]
   (let [callback (or callback read!)]
     (if (.-showOpenFilePicker js/window)
-    (-> (.showOpenFilePicker js/window (clj->js options))
-        (.then (fn [[^js/FileSystemFileHandle file-handle]]
-                 (.then (.getFile file-handle) callback)))
-        (.catch #(rf/dispatch [::notification.e/exception %])))
-    (legacy-open! callback))))
+      (-> (.showOpenFilePicker js/window (clj->js options))
+          (.then (fn [[^js/FileSystemFileHandle file-handle]]
+                   (.then (.getFile file-handle) callback)))
+          (.catch #(rf/dispatch [::notification.e/exception %])))
+      (legacy-open! callback))))
 
 (defn save!
   "https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker"
-  [{:keys [options data on-success formatter]}]
+  [{:keys [options data on-resolution formatter]}]
   (if (.-showSaveFilePicker js/window)
     (-> (.showSaveFilePicker js/window (clj->js options))
         (.then (fn [^js/FileSystemFileHandle file-handle]
@@ -58,10 +58,10 @@
                           (.then (.write writable-stream data)
                                  (fn []
                                    (.close writable-stream)
-                                   (when on-success
-                                     (rf/dispatch [on-success (cond-> file-handle
-                                                                formatter
-                                                                formatter)]))))))))
+                                   (when on-resolution
+                                     (rf/dispatch [on-resolution (cond-> file-handle
+                                                                   formatter
+                                                                   formatter)]))))))))
         (.catch #(rf/dispatch [::notification.e/exception %])))
     (rf/dispatch
      [::notification.e/unavailable-feature

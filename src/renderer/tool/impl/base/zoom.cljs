@@ -1,4 +1,4 @@
-(ns renderer.tool.impl.transform.zoom
+(ns renderer.tool.impl.base.zoom
   (:require
    [renderer.app.events :as-alias app.e]
    [renderer.app.handlers :as app.h]
@@ -14,7 +14,7 @@
   []
   {:icon "magnifier"})
 
-(defmethod hierarchy/help [:zoom :default]
+(defmethod hierarchy/help [:zoom :idle]
   []
   [:<>
    [:div "Click or select an area to zoom in."]

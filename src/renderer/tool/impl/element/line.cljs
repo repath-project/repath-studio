@@ -44,8 +44,8 @@
     (element.h/temp db)
     (-> db
         (element.h/add)
-        (app.h/set-tool :select)
-        (app.h/set-state :default)
+        (app.h/set-tool :transform)
+        (app.h/set-state :idle)
         (app.h/explain "Create line"))
 
     (:pointer-offset db)

@@ -1,4 +1,4 @@
-(ns renderer.tool.impl.transform.pan
+(ns renderer.tool.impl.base.pan
   (:require
    [clojure.core.matrix :as mat]
    [renderer.app.events :as-alias app.e]
@@ -16,14 +16,14 @@
   [db]
   (app.h/set-cursor db "grab"))
 
-(defmethod hierarchy/help [:pan :default]
+(defmethod hierarchy/help [:pan :idle]
   []
   "Click and drag to pan.")
 
 (defmethod hierarchy/activate :pan
   [db]
   (-> db
-      (app.h/set-state :default)
+      (app.h/set-state :idle)
       (app.h/set-cursor "grab")))
 
 (defmethod hierarchy/pointer-up :pan

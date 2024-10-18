@@ -13,7 +13,7 @@
   []
   {:icon "brush"})
 
-(defmethod hierarchy/help [:brush :default]
+(defmethod hierarchy/help [:brush :idle]
   []
   "Click and drag to draw.")
 
@@ -54,5 +54,5 @@
   [db _e]
   (-> db
       (element.h/add)
-      (app.h/set-state :default)
+      (app.h/set-state :idle)
       (app.h/explain "Draw line")))

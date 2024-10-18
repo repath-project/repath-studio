@@ -233,7 +233,8 @@
                                                                                                        :visible :boolean},
                                                                                                  :req {:tag :any}}],
                                                                                          :ret :boolean}}}},
-                                        renderer.ui {merge-with-class {:arities {:varargs {:args [:any
+                                        renderer.ui {merge-with-class {:arities {1 {:args [:any], :ret :any},
+                                                                                 :varargs {:args [:any
                                                                                                   {:op :rest,
                                                                                                    :spec :map}],
                                                                                            :ret :any,
@@ -259,8 +260,6 @@
                                                                                             :ret :vector},
                                                                                          2 {:args [:string :number],
                                                                                             :ret :vector}}},
-                                                                  points->px {:arities {1 {:args [:string],
-                                                                                           :ret :vector}}},
                                                                   ->camel-case {:arities {1 {:args [:keyword],
                                                                                              :ret :keyword}}},
                                                                   ->map {:arities {1 {:args [:any], :ret :map}}},
@@ -310,6 +309,40 @@
                                                                                                        :key :string,
                                                                                                        :modifiers :set}}],
                                                                                          :ret :any}}}},
+                                        renderer.tool.impl.base.transform {hovered? {:arities {3 {:args [:any
+                                                                                                         {:op :keys,
+                                                                                                          :opt {:children :vector,
+                                                                                                                :selected :boolean,
+                                                                                                                :parent :any,
+                                                                                                                :content :string,
+                                                                                                                :type :any,
+                                                                                                                :bounds :seqable,
+                                                                                                                :locked :boolean,
+                                                                                                                :label :string,
+                                                                                                                :id :any,
+                                                                                                                :attrs :map,
+                                                                                                                :visible :boolean},
+                                                                                                          :req {:tag :any}}
+                                                                                                         :boolean],
+                                                                                                  :ret :boolean}}},
+                                                                           reduce-by-area {:arities {3 {:args [:any
+                                                                                                               :boolean
+                                                                                                               :fn],
+                                                                                                        :ret :any}}},
+                                                                           lock-ratio {:arities {2 {:args [:seqable
+                                                                                                           :keyword],
+                                                                                                    :ret :seqable}}},
+                                                                           delta->scale-with-pivot-point {:arities {3 {:args [:keyword
+                                                                                                                              :seqable
+                                                                                                                              :seqable],
+                                                                                                                       :ret :seqable}}},
+                                                                           scale {:arities {3 {:args [:any
+                                                                                                      :seqable
+                                                                                                      :any],
+                                                                                               :ret :any}}},
+                                                                           select-element {:arities {2 {:args [:any
+                                                                                                               :boolean],
+                                                                                                        :ret :any}}}},
                                         renderer.utils.math {clamp {:arities {3 {:args [:number :number :number],
                                                                                  :ret :number}}},
                                                              angle-dx {:arities {2 {:args [:number :number],
@@ -387,40 +420,6 @@
                                                                                :ret :vector}}},
                                                             swap {:arities {3 {:args [:vector :number :number],
                                                                                :ret :vector}}}},
-                                        renderer.tool.impl.transform.select {hovered? {:arities {3 {:args [:any
-                                                                                                           {:op :keys,
-                                                                                                            :opt {:children :vector,
-                                                                                                                  :selected :boolean,
-                                                                                                                  :parent :any,
-                                                                                                                  :content :string,
-                                                                                                                  :type :any,
-                                                                                                                  :bounds :seqable,
-                                                                                                                  :locked :boolean,
-                                                                                                                  :label :string,
-                                                                                                                  :id :any,
-                                                                                                                  :attrs :map,
-                                                                                                                  :visible :boolean},
-                                                                                                            :req {:tag :any}}
-                                                                                                           :boolean],
-                                                                                                    :ret :boolean}}},
-                                                                             reduce-by-area {:arities {3 {:args [:any
-                                                                                                                 :boolean
-                                                                                                                 :fn],
-                                                                                                          :ret :any}}},
-                                                                             lock-ratio {:arities {2 {:args [:seqable
-                                                                                                             :keyword],
-                                                                                                      :ret :seqable}}},
-                                                                             delta->scale-with-pivot-point {:arities {3 {:args [:keyword
-                                                                                                                                :seqable
-                                                                                                                                :seqable],
-                                                                                                                         :ret :seqable}}},
-                                                                             scale {:arities {3 {:args [:any
-                                                                                                        :seqable
-                                                                                                        :any],
-                                                                                                 :ret :any}}},
-                                                                             select-element {:arities {2 {:args [:any
-                                                                                                                 :boolean],
-                                                                                                          :ret :any}}}},
                                         renderer.utils.units {match-unit {:arities {1 {:args [:string], :ret :string}}},
                                                               unit->px {:arities {1 {:args [:any], :ret :number}}},
                                                               valid-unit? {:arities {1 {:args [:string], :ret :boolean}}},

@@ -48,7 +48,7 @@
         snap-active @(rf/subscribe [::snap.s/active])
         nearest-neighbor @(rf/subscribe [::snap.s/nearest-neighbor])
         debug @(rf/subscribe [::app.s/debug-info])
-        select-tool-active (or (= tool :select) (= primary-tool :select))]
+        transform-active (or (= tool :transform) (= primary-tool :transform))]
     [:svg#canvas {:on-pointer-up pointer-handler
                   :on-pointer-down pointer-handler
                   :on-pointer-move pointer-handler
@@ -74,7 +74,7 @@
 
      (when-not read-only
        [:<>
-        (when (and select-tool-active (contains? #{:default :select :scale} state))
+        (when (and transform-active (contains? #{:idle :select :scale} state))
           [:<>
            (when (not= state :scale)
              (for [el selected-elements]
@@ -97,7 +97,7 @@
                 [overlay/size-label bounds]
                 [handle.v/bounding-corners bounds])])
 
-           (when (and select-tool-active pivot-point)
+           (when (and transform-active pivot-point)
              [overlay/times pivot-point])])
 
         (when (or (= tool :edit)

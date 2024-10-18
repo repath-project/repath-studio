@@ -1,4 +1,4 @@
-(ns renderer.tool.impl.transform.edit
+(ns renderer.tool.impl.base.edit
   (:require
    [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
@@ -14,7 +14,7 @@
   []
   {:icon "edit"})
 
-(defmethod hierarchy/help [:edit :default]
+(defmethod hierarchy/help [:edit :idle]
   []
   "Drag a handle to modify your shape, or click on an element to change selection.")
 
@@ -25,7 +25,7 @@
 (defmethod hierarchy/activate :edit
   [db]
   (-> db
-      (app.h/set-state :default)
+      (app.h/set-state :idle)
       (app.h/set-cursor "default")))
 
 (defmethod hierarchy/pointer-down :edit
@@ -74,6 +74,6 @@
 (defmethod hierarchy/drag-end :edit
   [db _e]
   (-> db
-      (app.h/set-state :default)
+      (app.h/set-state :idle)
       (dissoc :clicked-element)
       (app.h/explain "Edit")))

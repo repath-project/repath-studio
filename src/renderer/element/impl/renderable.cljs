@@ -96,4 +96,4 @@
   [el]
   (let [child-els @(rf/subscribe [::element.s/filter-visible (:children el)])
         state @(rf/subscribe [::app.s/state])]
-    [render-to-dom el child-els (= state :default)]))
+    [render-to-dom el child-els (= state :idle)]))

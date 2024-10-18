@@ -177,7 +177,7 @@
                               :on-resolution ::load-multiple
                               :formatter #(mapv edn/read-string %)}}
      {::app.fx/open {:options file-picker-options
-                     :on-success ::load
+                     :on-resolution ::load
                      :formatter #(-> (edn/read-string %)
                                      (assoc :title (.-name %)
                                             :path (.-path %)))}})))
@@ -219,7 +219,7 @@
                        :options file-picker-options
                        :formatter (fn [file] {:id (:id document)
                                               :title (.-name file)})
-                       :on-success ::saved}}))))
+                       :on-resolution ::saved}}))))
 
 (rf/reg-event-fx
  ::download
@@ -241,7 +241,7 @@
                        :options file-picker-options
                        :formatter (fn [file] {:id id
                                               :title (.-name file)})
-                       :on-success ::saved}}))))
+                       :on-resolution ::saved}}))))
 
 (rf/reg-event-fx
  ::save-as
@@ -256,7 +256,7 @@
                        :options file-picker-options
                        :formatter (fn [file] {:id (:id document)
                                               :title (.-name file)})
-                       :on-success ::saved}}))))
+                       :on-resolution ::saved}}))))
 
 (rf/reg-event-db
  ::saved

@@ -10,7 +10,7 @@
   []
   {:icon "fill"})
 
-(defmethod hierarchy/help [:fill :default]
+(defmethod hierarchy/help [:fill :idle]
   []
   "Click on an element to fill.")
 

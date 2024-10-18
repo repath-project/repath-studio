@@ -15,7 +15,7 @@
   [db]
   [:documents (:active-document db) :temp-element :attrs :points])
 
-(defmethod hierarchy/help [::hierarchy/polyshape :default]
+(defmethod hierarchy/help [::hierarchy/polyshape :idle]
   []
   "Click to add more points. Double click to finalize the shape.")
 
@@ -70,6 +70,6 @@
                                         (apply concat)
                                         (str/join " ")))
       (element.h/add)
-      (app.h/set-tool :select)
-      (app.h/set-state :default)
+      (app.h/set-tool :transform)
+      (app.h/set-state :idle)
       (app.h/explain "Create " (name (:tool db)))))

@@ -10,7 +10,7 @@
   []
   {:icon "text"})
 
-(defmethod hierarchy/help [:text :default]
+(defmethod hierarchy/help [:text :idle]
   []
   "Click to enter your text.")
 

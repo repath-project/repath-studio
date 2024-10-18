@@ -16,7 +16,7 @@
   []
   {:icon "eye-dropper"})
 
-(defmethod hierarchy/help [:dropper :default]
+(defmethod hierarchy/help [:dropper :idle]
   []
   "Click anywhere to pick a color.")
 
@@ -26,7 +26,7 @@
     (app.h/add-fx db [::color.fx/dropper {:on-success ::success
                                           :on-error ::error}])
     (-> db
-        (app.h/set-tool :select)
+        (app.h/set-tool :transform)
         (notification.h/add
          (notification.v/unavailable-feature
           "EyeDropper"
@@ -40,11 +40,11 @@
      (-> db
          (document.h/assoc-attr :fill srgb)
          (element.h/assoc-attr :fill srgb)
-         (app.h/set-tool :select)))))
+         (app.h/set-tool :transform)))))
 
 (rf/reg-event-db
  ::error
  (fn [db [_ error]]
    (-> db
-       (app.h/set-tool :select)
+       (app.h/set-tool :transform)
        (notification.h/add (notification.v/exception error)))))

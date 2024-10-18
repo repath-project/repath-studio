@@ -1,7 +1,7 @@
 (ns renderer.handle.db)
 
 (def HandleAction
-  [:enum :move :scale :edit])
+  [:enum :translate :scale :edit])
 
 (def Handle
   [:map {:closed true}

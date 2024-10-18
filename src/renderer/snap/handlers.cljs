@@ -22,7 +22,7 @@
         selected-visible (filter #(and (:visible %) (:selected %)) elements)]
     (when (-> db :snap :active)
       (cond
-        (and (contains? #{:move :clone} (:state db)) (seq selected-visible))
+        (and (contains? #{:translate :clone} (:state db)) (seq selected-visible))
         (reduce (fn [points element]
                   (apply conj points (utils.el/snapping-points element (-> db :snap :options))))
                 [] selected-visible)

@@ -56,12 +56,12 @@
 
 (rf/reg-event-db
  ::set-text
- [(finalize #(if (empty? (get % 2))"Remove text" "Set text"))]
+ [(finalize #(if (empty? (get % 2)) "Remove text" "Set text"))]
  (fn [db [_ id s]]
    (-> (if (empty? s)
          (element.h/delete db id)
          (element.h/assoc-prop db id :content s))
-       (app.h/set-tool :select))))
+       (app.h/set-tool :transform))))
 
 (defn key-down-handler!
   [e id]

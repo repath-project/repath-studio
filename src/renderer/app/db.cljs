@@ -32,11 +32,11 @@
   [:fn {:error/fn (fn [{:keys [value]} _] (str value " is not a supported language"))}
    i18n/lang?])
 
-(def State [:enum :default :move :clone :scale :select :create :edit])
+(def State [:enum :idle :translate :clone :scale :select :create :edit])
 
 (def App
   [:map {:closed true}
-   [:tool {:default :select} Tool]
+   [:tool {:default :transform} Tool]
    [:primary-tool {:optional true} Tool]
    [:pointer-pos {:default [0 0]} Vec2D]
    [:pointer-offset {:optional true} Vec2D]
@@ -46,7 +46,7 @@
    [:zoom-sensitivity {:default 0.75} [:and number? pos?]]
    [:event-time {:optional true} number?]
    [:double-click-delta {:default 250} [:and number? pos?]]
-   [:state {:default :default} State]
+   [:state {:default :idle} State]
    [:grid {:default false :persist true} boolean?]
    [:ruler {:persist true} Ruler]
    [:snap {:persist true} Snap]

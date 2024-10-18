@@ -53,7 +53,7 @@
  (fn [[tool state] _]
    (let [dispatch-state (if (contains? (methods tool.hierarchy/help) [tool state])
                           state
-                          :default)]
+                          :idle)]
      (tool.hierarchy/help tool dispatch-state))))
 
 (rf/reg-sub

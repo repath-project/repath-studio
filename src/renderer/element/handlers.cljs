@@ -470,25 +470,7 @@
 
 (defn translate
   ([db offset]
-   (reduce (fn [db id]
-             (let [container (parent-container db id)
-                   hovered-svg-k (:id (hovered-svg db))]
-               (cond-> db
-                 :always
-                 (translate id offset)
-
-                 ;; REVIEW: Move this part to select tool?
-                 (and (seq (selected db))
-                      (empty? (rest (selected db)))
-                      (contains? #{:move :clone} (:state db))
-                      (not= (:id (parent db id)) hovered-svg-k)
-                      (not (element/svg? (element db id))))
-                 (-> (set-parent hovered-svg-k)
-                     ;; FIXME: Handle nested containers.
-                     (translate id (take 2 (:bounds container)))
-                     (translate id (mat/mul (take 2 (:bounds (hovered-svg db))) -1))))))
-           db
-           (top-ancestor-ids db)))
+   (reduce (partial-right translate offset) db (top-ancestor-ids db)))
   ([db id offset]
    (update-el db id hierarchy/translate offset)))
 

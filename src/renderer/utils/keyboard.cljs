@@ -247,7 +247,7 @@
                  [{:keyCode (key-codes "Z")}]]
                 [[::app.e/set-tool :rect]
                  [{:keyCode (key-codes "R")}]]
-                [[::app.e/set-tool :select]
+                [[::app.e/set-tool :transform]
                  [{:keyCode (key-codes "S")}]]
                 [[::app.e/set-tool :fill]
                  [{:keyCode (key-codes "F")}]]]
