@@ -27,7 +27,6 @@
       :viewBox (attr/->camel-case :viewbox)
       :glyphOrientationHorizontal (attr/->camel-case :Glyphorientationhorizontal))))
 
-
 (deftest test-defaults
   (testing "default tag attributes"
     (are [x y] (= x y)
