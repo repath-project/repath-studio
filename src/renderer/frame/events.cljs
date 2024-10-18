@@ -42,25 +42,14 @@
    (h/zoom-by db (:zoom-sensitivity db))))
 
 (rf/reg-event-db
- ::pan-to-bounds
- [persist]
- (fn [db [_ bounds]]
-   (cond-> db
-     (= (:state db) :idle)
-     (h/pan-to-bounds bounds))))
-
-(rf/reg-event-fx
  ::pan-to-element
- (fn [{:keys [db]} [_ id]]
-   {:fx
-    (let [element (element.h/element db id)
-          el-bounds (:bounds element)
-          zoom (get-in db [:documents (:active-document db) :zoom])
-          pan (get-in db [:documents (:active-document db) :pan])
-          viewbox (h/viewbox zoom pan (:dom-rect db))
-          diff (mat/sub el-bounds viewbox)
-          frames 30]
-      (for [i (range (inc frames))]
-        (let [bounds (mat/add viewbox (mat/mul diff (/ i frames)))]
-          [:dispatch-later {:ms (* i 10) ; TODO: Easing and canceling.
-                            :dispatch [::pan-to-bounds bounds]}])))}))
+ [persist]
+ (fn [db [_ id]]
+   (let [element (element.h/element db id)
+         el-bounds (:bounds element)
+         zoom (get-in db [:documents (:active-document db) :zoom])
+         pan (get-in db [:documents (:active-document db) :pan])
+         viewbox (h/viewbox zoom pan (:dom-rect db))
+         diff (mat/sub el-bounds viewbox)
+         bounds (mat/add viewbox diff)]
+     (h/pan-to-bounds db bounds))))
