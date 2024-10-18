@@ -251,28 +251,28 @@
 (defn ^:export unite
   "Unites the selected elements."
   []
-  (rf/dispatch [::element.e/bool-operation :unite]))
+  (rf/dispatch [::element.e/boolean-operation :unite]))
 
 (defn ^:export intersect
   "Intersects the selected elements."
   []
-  (rf/dispatch [::element.e/bool-operation :intersect]))
+  (rf/dispatch [::element.e/boolean-operation :intersect]))
 
 (defn ^:export subtract
   "Subtracts the selected elements."
   []
-  (rf/dispatch [::element.e/bool-operation :subtract]))
+  (rf/dispatch [::element.e/boolean-operation :subtract]))
 
 (defn ^:export exclude
   "Excludes the selected elements."
   []
-  (rf/dispatch [::element.e/bool-operation :exclude]))
+  (rf/dispatch [::element.e/boolean-operation :exclude]))
 
 ;; divide already refers to cljs.core/divide
 (defn ^:export devide
   "Divides the selected elements."
   []
-  (rf/dispatch [::element.e/bool-operation :divide]))
+  (rf/dispatch [::element.e/boolean-operation :divide]))
 
 (defn ^:export exit
   "Closes the application."

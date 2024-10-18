@@ -131,19 +131,19 @@
                 [[::element.e/duplicate-in-place]
                  [{:keyCode (key-codes "D")
                    :ctrlKey true}]]
-                [[::element.e/bool-operation :exclude]
+                [[::element.e/boolean-operation :exclude]
                  [{:keyCode (key-codes "E")
                    :ctrlKey true}]]
-                [[::element.e/bool-operation :unite]
+                [[::element.e/boolean-operation :unite]
                  [{:keyCode (key-codes "U")
                    :ctrlKey true}]]
-                [[::element.e/bool-operation :intersect]
+                [[::element.e/boolean-operation :intersect]
                  [{:keyCode (key-codes "I")
                    :ctrlKey true}]]
-                [[::element.e/bool-operation :subtract]
+                [[::element.e/boolean-operation :subtract]
                  [{:keyCode (key-codes "BACKSLASH")
                    :ctrlKey true}]]
-                [[::element.e/bool-operation :divide]
+                [[::element.e/boolean-operation :divide]
                  [{:keyCode (key-codes "SLASH")
                    :ctrlKey true}]]
                 [[::element.e/ungroup]

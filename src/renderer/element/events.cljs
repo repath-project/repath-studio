@@ -251,12 +251,12 @@
    (h/stroke->path db)))
 
 (rf/reg-event-db
- ::bool-operation
+ ::boolean-operation
  [(finalize #(-> % second name str/capitalize))]
  (fn [db [_ operation]]
    (cond-> db
      (seq (rest (h/selected db)))
-     (h/bool-operation operation))))
+     (h/boolean-operation operation))))
 
 (rf/reg-event-db
  ::add

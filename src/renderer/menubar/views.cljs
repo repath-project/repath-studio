@@ -210,23 +210,23 @@
   [{:id :exclude
     :label "Exclude"
     :icon "exclude"
-    :action [::element.e/bool-operation :exclude]}
+    :action [::element.e/boolean-operation :exclude]}
    {:id :unite
     :label "Unite"
     :icon "unite"
-    :action [::element.e/bool-operation :unite]}
+    :action [::element.e/boolean-operation :unite]}
    {:id :intersect
     :label "Intersect"
     :icon "intersect"
-    :action [::element.e/bool-operation :intersect]}
+    :action [::element.e/boolean-operation :intersect]}
    {:id :subtract
     :label "Subtract"
     :icon "subtract"
-    :action [::element.e/bool-operation :subtract]}
+    :action [::element.e/boolean-operation :subtract]}
    {:id :divide
     :label "Divide"
     :icon "divide"
-    :action [::element.e/bool-operation :divide]}])
+    :action [::element.e/boolean-operation :divide]}])
 
 (defn animate-submenu
   []

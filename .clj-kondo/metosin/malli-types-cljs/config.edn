@@ -447,6 +447,12 @@
                                                               ->fixed-unit {:arities {2 {:args [:number :string],
                                                                                          :ret :string}}},
                                                               parse-unit {:arities {1 {:args [:any], :ret :seqable}}}},
+                                        renderer.utils.path {manipulate {:arities {2 {:args [:string :keyword],
+                                                                                      :ret :string}}},
+                                                             boolean-operation {:arities {3 {:args [:string
+                                                                                                    :string
+                                                                                                    :keyword],
+                                                                                             :ret :string}}}},
                                         renderer.document.handlers {update-prop {:arities {3 {:args [:any :keyword :any],
                                                                                               :ret :any},
                                                                                            4 {:args [:any

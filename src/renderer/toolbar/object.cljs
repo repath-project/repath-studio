@@ -68,23 +68,23 @@
   [{:title "Unite"
     :icon "unite"
     :disabled disabled
-    :action [::element.e/bool-operation :unite]}
+    :action [::element.e/boolean-operation :unite]}
    {:title "Intersect"
     :icon "intersect"
     :disabled disabled
-    :action [::element.e/bool-operation :intersect]}
+    :action [::element.e/boolean-operation :intersect]}
    {:title "Subtract"
     :icon "subtract"
     :disabled disabled
-    :action [::element.e/bool-operation :subtract]}
+    :action [::element.e/boolean-operation :subtract]}
    {:title "Exclude"
     :icon "exclude"
     :disabled disabled
-    :action [::element.e/bool-operation :exclude]}
+    :action [::element.e/boolean-operation :exclude]}
    {:title "Divide"
     :icon "divide"
     :disabled disabled
-    :action [::element.e/bool-operation :divide]}])
+    :action [::element.e/boolean-operation :divide]}])
 
 #_(defn distribute-actions
     []

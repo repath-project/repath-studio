@@ -31,8 +31,8 @@
   [db _e]
   (let [path (-> (element.h/temp db)
                  (element/->path)
-                 (path/manipulate :smooth)
-                 (path/manipulate :simplify))]
+                 (update-in [:attrs :d] path/manipulate :smooth)
+                 (update-in [:attrs :d] path/manipulate :simplify))]
     (-> db
         (element.h/set-temp path)
         (element.h/add)

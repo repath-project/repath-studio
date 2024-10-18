@@ -1,6 +1,5 @@
 (ns renderer.element.handlers
   (:require
-   ["paper" :refer [Path]]
    [clojure.core.matrix :as mat]
    [clojure.set :as set]
    [clojure.string :as str]
@@ -598,25 +597,13 @@
   ([db el]
    (create (deselect db) (assoc el :selected true))))
 
-(defn bool
-  [path-a path-b operation]
-  (case operation
-    :unite (.unite path-a path-b)
-    :intersect (.intersect path-a path-b)
-    :subtract (.subtract path-a path-b)
-    :exclude (.exclude path-a path-b)
-    :divide (.divide path-a path-b)))
-
-(defn bool-operation
+(defn boolean-operation
   [db operation]
   (let [selected-elements (top-selected-sorted db)
         attrs (-> selected-elements first element/->path :attrs)
-        new-path (reduce (fn [p el]
-                           (let [path-a (Path. p)
-                                 path-b (-> el element/->path :attrs :d Path.)]
-                             (-> (bool path-a path-b operation)
-                                 (.exportSVG)
-                                 (.getAttribute "d"))))
+        new-path (reduce (fn [path-a el]
+                           (let [path-b (-> el element/->path :attrs :d)]
+                             (path/boolean-operation path-a path-b operation)))
                          (:d attrs)
                          (rest selected-elements))]
     (cond-> (delete db)
@@ -720,7 +707,8 @@
                 (set-parent-at-index child-id (:parent (element db id)) i)
                 ;; Group attributes are inherited by its children,
                 ;; so we need to maintain the presentation attrs.
-                (inherit-attrs (element db id) child-id)))
+                (inherit-attrs (element db id) child-id)
+                (select child-id)))
           db (reverse (children-ids db id))))
        (delete db id)))))
 
@@ -730,7 +718,7 @@
   ([db id action]
    (cond-> db
      (= (:tag (element db id)) :path)
-     (update-el id path/manipulate action))))
+     (update-attr id path/manipulate action))))
 
 (defn import-svg
   [db {:keys [svg label position]}]
