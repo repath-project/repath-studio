@@ -2,11 +2,14 @@
   (:require
    [clojure.string :as str]
    [hickory.zip]
+   [malli.core :as m]
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.e]
    [renderer.element.events :as-alias element.e]
-   [renderer.utils.file :as file]))
+   [renderer.utils.file :as file]
+   [renderer.utils.math :refer [Vec2D]]))
 
+(m/=> event-handler! [:-> any? nil?])
 (defn event-handler!
   "Gathers drop event props.
    https://developer.mozilla.org/en-US/docs/Web/API/DragEvent"
@@ -18,6 +21,7 @@
                                          :pointer-pos [(.-pageX e) (.-pageY e)]
                                          :data-transfer (.-dataTransfer e)}]))
 
+(m/=> add-image! [:-> any? Vec2D nil?])
 (defn add-image!
   [^js/File file [x y]]
   (let [reader (js/FileReader.)]
@@ -44,8 +48,10 @@
         (set! (.-src img) data-url)))
     (.readAsDataURL reader file)))
 
+(m/=> add-svg! [:-> any? Vec2D nil?])
 (defn add-svg!
   [^js/File file position]
+  (js/console.log file)
   (let [reader (js/FileReader.)]
     (.addEventListener
      reader
@@ -55,6 +61,7 @@
                                         :position position}]))
     (.readAsText reader file)))
 
+(m/=> files! [:-> Vec2D any? nil?])
 (defn files!
   "https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/files"
   [position files]
@@ -72,6 +79,7 @@
           (when (= extension "rps")
             (file/read! file)))))))
 
+(m/=> add-text! [:-> string? Vec2D nil?])
 (defn add-text!
   [s [x y]]
   (rf/dispatch [::element.e/add
@@ -81,6 +89,7 @@
                  :attrs {:x x
                          :y y}}]))
 
+(m/=> items! [:-> Vec2D any? nil?])
 (defn items!
   "https://developer.mozilla.org/en-US/docs/Web/API/DataTransferItem"
   [position items]

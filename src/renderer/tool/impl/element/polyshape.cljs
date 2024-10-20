@@ -72,4 +72,4 @@
       (element.h/add)
       (app.h/set-tool :transform)
       (app.h/set-state :idle)
-      (app.h/explain "Create " (name (:tool db)))))
+      (app.h/explain (str "Create " (name (:tool db))))))

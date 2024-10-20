@@ -1,9 +1,10 @@
 (ns renderer.utils.pointer
   (:require
    [clojure.core.matrix :as mat]
-   [malli.experimental :as mx]
+   [malli.core :as m]
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.e]
+   [renderer.document.db :refer [ZoomFactor]]
    [renderer.element.db :refer [Element]]
    [renderer.handle.db :refer [Handle]]
    [renderer.utils.keyboard :refer [ModifierKey modifiers]]
@@ -25,41 +26,48 @@
    [:buttons [:maybe PointerButton]]
    [:modifiers [:set ModifierKey]]])
 
-(mx/defn ctrl? :- boolean?
+(m/=> ctrl? [:-> map? boolean?])
+(defn ctrl?
   [e]
   (contains? (:modifiers e) :ctrl))
 
-(mx/defn shift? :- boolean?
+(m/=> shift? [:-> map? boolean?])
+(defn shift?
   [e]
   (contains? (:modifiers e) :shift))
 
-(mx/defn alt? :- boolean?
+(m/=> alt? [:-> map? boolean?])
+(defn alt?
   [e]
   (contains? (:modifiers e) :alt))
 
-(mx/defn significant-drag? :- boolean?
-  [position :- Vec2D, offset :- Vec2D, threshold :- number?]
+(m/=> significant-drag? [:-> Vec2D Vec2D number? boolean?])
+(defn significant-drag?
+  [position offset threshold]
   (> (apply max (map abs (mat/sub position offset)))
      threshold))
 
-(mx/defn adjust-position :- Vec2D
-  [zoom :- number?, pan :- Vec2D, pointer-pos :- Vec2D]
+(m/=> adjust-position [:-> ZoomFactor Vec2D Vec2D Vec2D])
+(defn adjust-position
+  [zoom pan pointer-pos]
   (-> pointer-pos
       (mat/div zoom)
       (mat/add pan)))
 
-(mx/defn button->key :- [:maybe PointerButton]
+(m/=> button->key [:-> [:enum 0 1 2 3 4] [:maybe PointerButton]])
+(defn button->key
   "https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button"
-  [button :- number?]
+  [button]
   (get {0 :left
         1 :middle
         2 :right
         3 :back
         4 :forward} button))
 
-(mx/defn lock-direction :- Vec2D
+(m/=> lock-direction [:-> Vec2D Vec2D])
+(defn lock-direction
   "Locks pointer movement to the axis with the biggest offset"
-  [[x y] :- Vec2D]
+  [[x y]]
   (if (> (abs x) (abs y))
     [x 0]
     [0 y]))

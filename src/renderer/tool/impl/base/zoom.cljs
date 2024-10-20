@@ -70,5 +70,5 @@
                  (:zoom-sensitivity db)
                  (/ 1 (:zoom-sensitivity db)))]
     (-> db
-        (frame.h/zoom-at-pointer  factor)
+        (frame.h/zoom-at-pointer factor)
         (app.h/add-fx [:dispatch [::app.e/persist]]))))

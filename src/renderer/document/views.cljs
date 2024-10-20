@@ -2,7 +2,6 @@
   (:require
    ["@radix-ui/react-context-menu" :as ContextMenu]
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
-   [malli.experimental :as mx]
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [renderer.app.subs :as-alias app.s]
@@ -55,8 +54,8 @@
       [ui/icon "redo"]
       [history.v/select "Redo stack" redos (not some-redos)]]]))
 
-(mx/defn close-button
-  [id :- uuid?, saved :- boolean?]
+(defn close-button
+  [id saved]
   [:button.close.small
    {:key id
     :title "Close document"
@@ -68,8 +67,8 @@
    (when-not saved
      [ui/icon "dot" {:class "dot"}])])
 
-(mx/defn context-menu
-  [id :- uuid?]
+(defn context-menu
+  [id]
   (let [document @(rf/subscribe [::document.s/document id])
         path (:path document)
         document-tabs @(rf/subscribe [::app.s/document-tabs])]
@@ -88,15 +87,15 @@
                 :action [::document.e/open-directory path]
                 :disabled? (not (and path system/electron?))}]))))
 
-(mx/defn tab
-  [id :- uuid?, title :- string?, active :- boolean?]
+(defn tab
+  [id title is-active]
   (ra/with-let [dragged-over? (ra/atom false)]
-    (let [saved @(rf/subscribe [::document.s/saved id])]
+    (let [is-saved @(rf/subscribe [::document.s/saved id])]
       [:> ContextMenu/Root
        [:> ContextMenu/Trigger
         [:div.tab
-         {:class [(when active "active")
-                  (when saved "saved")]
+         {:class [(when is-active "active")
+                  (when is-saved "saved")]
           :on-wheel #(rf/dispatch [::document.e/scroll (.-deltaY %)])
           :on-pointer-down #(case (.-buttons %)
                               4 (rf/dispatch [::document.e/close id true])
@@ -116,7 +115,7 @@
                                        uuid)
                                    id]))}
          [:span.truncate.pointer-events-none title]
-         [close-button id saved]]]
+         [close-button id is-saved]]]
        [:> ContextMenu/Portal
         (into
          [:> ContextMenu/Content

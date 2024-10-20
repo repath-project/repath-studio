@@ -1,33 +1,38 @@
 (ns renderer.utils.math
   (:require
    [clojure.math :as math]
-   [malli.experimental :as mx]))
+   [malli.core :as m]))
 
 (def Vec2D
   [:tuple number? number?])
 
-(mx/defn clamp :- number?
+(m/=> clamp [:-> number? number? number? number?])
+(defn clamp
   "Clamps a number within the provided bounds."
-  [x :- number?, minimum :- number?, maximum :- number?]
+  [x minimum maximum]
   (min (max x minimum) maximum))
 
-(mx/defn angle-dx :- number?
-  [degrees :- number?, radius :- number?]
+(m/=> angle-dx [:-> number? number? number?])
+(defn angle-dx
+  [degrees radius]
   (* radius (Math/cos (math/to-radians degrees))))
 
-(mx/defn angle-dy :- number?
-  [degrees :- number?, radius :- number?]
+(m/=> angle-dy [:-> number? number? number?])
+(defn angle-dy
+  [degrees radius]
   (* radius (Math/sin (math/to-radians degrees))))
 
-(mx/defn normalize-angle :- number?
+(m/=> normalize-angle [:-> number? number?])
+(defn normalize-angle
   "Normalizes an angle to be in range [0-360). Angles outside this range will
    be normalized to be the equivalent angle with that range."
-  [angle :- number?]
+  [angle]
   (mod angle (* 2 Math/PI)))
 
-(mx/defn angle :- number?
+(m/=> angle [:-> Vec2D Vec2D number?])
+(defn angle
   "Calculates the angle between two points."
-  [[x1 y1] :- Vec2D, [x2 y2] :- Vec2D]
+  [[x1 y1] [x2 y2]]
   (-> (Math/atan2 (- y2 y1) (- x2 x1))
       (normalize-angle)
       (math/to-degrees)))

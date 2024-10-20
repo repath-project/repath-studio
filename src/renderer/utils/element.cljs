@@ -4,7 +4,7 @@
    ["paperjs-offset" :refer [PaperOffset]]
    ["style-to-object" :default parse]
    [clojure.core.matrix :as mat]
-   [malli.experimental :as mx]
+   [malli.core :as m]
    [reagent.dom.server :as dom.server]
    [renderer.element.db :refer [Element Attrs]]
    [renderer.element.hierarchy :as element.hierarchy]
@@ -14,40 +14,48 @@
    [renderer.utils.map :as map]
    [renderer.utils.math :refer [Vec2D]]))
 
-(mx/defn root? :- boolean?
-  [el :- Element]
+(m/=> root? [:-> Element boolean?])
+(defn root?
+  [el]
   (= :canvas (:tag el)))
 
-(mx/defn svg? :- boolean?
-  [el :- Element]
+(m/=> svg? [:-> Element boolean?])
+(defn svg?
+  [el]
   (= :svg (:tag el)))
 
-(mx/defn container? :- boolean?
-  [el :- Element]
+(m/=> container? [:-> Element boolean?])
+(defn container?
+  [el]
   (or (svg? el) (root? el)))
 
-(mx/defn properties :- [:maybe map?]
-  [el :- Element]
+(m/=> properties [:-> Element [:maybe map?]])
+(defn properties
+  [el]
   (-> el :tag element.hierarchy/properties))
 
-(mx/defn ratio-locked? :- [:maybe boolean?]
-  [el :- Element]
-  (-> el properties :ratio-locked))
+(m/=> ratio-locked? [:-> Element boolean?])
+(defn ratio-locked?
+  [el]
+  (-> el properties :ratio-locked boolean))
 
-(mx/defn united-bounds :- [:maybe Bounds]
-  [elements :- [:sequential Element]]
+(m/=> united-bounds [:-> [:* Element] [:maybe Bounds]])
+(defn united-bounds
+  [elements]
   (let [el-bounds (->> elements (map :bounds) (remove nil?))]
     (when (seq el-bounds)
       (apply utils.bounds/union el-bounds))))
 
-(mx/defn offset :- Vec2D
-  [el :- Element]
+(m/=> offset [:-> Element Vec2D])
+(defn offset
+  [el]
   (let [el-bounds (:bounds el)
         local-bounds (element.hierarchy/bounds el)]
     (vec (take 2 (mat/sub el-bounds local-bounds)))))
 
-(mx/defn snapping-points :- [:* Vec2D]
-  [el :- Element, options :- SnapOptions]
+(m/=> snapping-points [:-> Element SnapOptions [:* Vec2D]])
+(defn snapping-points
+  [el options]
   (let [points (or (element.hierarchy/snapping-points el) [])]
     (if-let [bounds (:bounds el)]
       (let [[x1 y1 x2 y2] bounds
@@ -69,33 +77,38 @@
                  [cx y2]])))
       points)))
 
-(mx/defn attributes :- Attrs
+(m/=> attributes [:-> Element Attrs])
+(defn attributes
   "Returns existing attributes merged with defaults."
-  [{:keys [tag attrs]} :- Element]
+  [{:keys [tag attrs]}]
   (cond->> attrs
     tag
     (merge (attr/defaults-memo tag))))
 
-(mx/defn normalize-attrs :- Element
+(m/=> normalize-attrs [:-> map? Element])
+(defn normalize-attrs
   [el]
   (-> el
       (update :attrs update-keys attr/->camel-case-memo)
       (update :attrs update-vals str)))
 
-(mx/defn supported-attr? :- boolean?
-  [el :- Element, k :- keyword?]
+(m/=> supported-attr? [:-> Element keyword? boolean?])
+(defn supported-attr?
+  [el k]
   (-> el attributes k boolean))
 
-(mx/defn ->path  :- Element
-  [el :- Element]
+(m/=> ->path [:-> Element Element])
+(defn ->path
+  [el]
   (cond-> el
     (get-method element.hierarchy/path (:tag el))
     (-> (assoc :tag :path)
         (update :attrs #(map/merge-common-with str % (attr/defaults-memo :path)))
         (assoc-in [:attrs :d] (element.hierarchy/path el)))))
 
-(mx/defn stroke->path :- Element
-  [{:keys [attrs] :as el} :- Element]
+(m/=> stroke->path [:-> Element Element])
+(defn stroke->path
+  [{:keys [attrs] :as el}]
   (let [d (element.hierarchy/path el)
         paper-path (Path. d)
         el-offset (or (:stroke-width attrs) 1)
@@ -112,17 +125,20 @@
         (assoc-in [:attrs :d] new-d)
         (assoc-in [:attrs :fill] (:stroke attrs)))))
 
-(mx/defn wrap-to-svg :- string?
-  [s :- string?, [w h] :- Vec2D]
+(m/=> wrap-to-svg [:-> string? Vec2D string?])
+(defn wrap-to-svg
+  [s [w h]]
   (str "<svg width='" w "' height='" h "'>" s "</svg>"))
 
-(mx/defn ->string :- string?
+(m/=> ->string [:-> [:* Element] string?])
+(defn ->string
   [els]
   (reduce #(-> (element.hierarchy/render-to-string %2)
                (dom.server/render-to-static-markup)
                (str "\n" %)) "" els))
 
-(mx/defn ->svg :- string?
+(m/=> ->svg [:-> [:* Element] string?])
+(defn ->svg
   [els]
   (cond-> (->string els)
     (not (and (seq els)
@@ -130,10 +146,11 @@
               (svg? (first els))))
     (wrap-to-svg (utils.bounds/->dimensions (united-bounds els)))))
 
-(mx/defn style->map
+(m/=> style->map [:-> Attrs Attrs])
+(defn style->map
   "Conversts :style attribute to map.
    Parsing might through an exception. When that hapens, we remove the attribute
    because there is no other way to handle this gracefully."
-  [attrs :- Attrs]
+  [attrs]
   (try (update attrs :style parse)
        (catch :default _e (dissoc attrs :style))))

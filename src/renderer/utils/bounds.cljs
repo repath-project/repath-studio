@@ -1,8 +1,11 @@
 (ns renderer.utils.bounds
   (:require
    [clojure.core.matrix :as mat]
-   [malli.experimental :as mx]
+   [malli.core :as m]
    [renderer.utils.math :refer [Vec2D]]))
+
+(def JSElement
+  [:fn (fn [x] (instance? js/Element x))])
 
 (def Bounds
   "Coordinates that define a bounding box."
@@ -12,11 +15,12 @@
    [number? {:title "right"}]
    [number? {:title "bottom"}]])
 
-(mx/defn from-bbox :- [:maybe Bounds]
+(m/=> from-bbox [:-> JSElement [:maybe Bounds]])
+(defn from-bbox
   "Experimental way of getting the bounds of uknown or complicated elements
    using the getBBox method.
    https://developer.mozilla.org/en-US/docs/Web/API/SVGGraphicsElement/getBBox"
-  [^js/Element el]
+  [el]
   (when (.-getBBox el)
     (let [b (.getBBox el)
           x1 (.-x b)
@@ -25,44 +29,48 @@
           y2 (+ y1 (.-height b))]
       [x1 y1 x2 y2])))
 
-(mx/defn union :- Bounds
+(m/=> union [:-> [:+ Bounds] Bounds])
+(defn union
   "Calculates the bounds that contain an arbitrary set of bounds."
-  [& bounds :- [:+ Bounds]]
+  [& bounds]
   (vec (concat (apply map min (map #(take 2 %) bounds))
                (apply map max (map #(drop 2 %) bounds)))))
 
-(mx/defn ->dimensions :- Vec2D
+(m/=> ->dimensions [:-> Bounds Vec2D])
+(defn ->dimensions
   "Converts bounds to [width heigh]"
-  [[x1 y1 x2 y2] :- Bounds]
+  [[x1 y1 x2 y2]]
   (mat/sub [x2 y2] [x1 y1]))
 
-(mx/defn center :- Vec2D
+(m/=> center [:-> Bounds Vec2D])
+(defn center
   "Calculates the center of bounds."
-  [b :- Bounds]
+  [b]
   (mat/add (take 2 b)
            (mat/div (->dimensions b) 2)))
 
-(mx/defn intersect? :- boolean?
+(m/=> intersect? [:-> Bounds Bounds boolean?])
+(defn intersect?
   "Tests whether the provided set of bounds intersect."
-  [[a-left a-top a-right a-bottom] :- Bounds,
-   [b-left b-top b-right b-bottom] :- Bounds]
+  [[a-left a-top a-right a-bottom] [b-left b-top b-right b-bottom]]
   (not (or (> b-left a-right)
            (< b-right a-left)
            (> b-top a-bottom)
            (< b-bottom a-top))))
 
-(mx/defn contained? :- boolean?
+(m/=> contained? [:-> Bounds Bounds boolean?])
+(defn contained?
   "Tests whether `bounds-a` fully contain `bounds-b`."
-  [[a-left a-top a-right a-bottom] :- Bounds,
-   [b-left b-top b-right b-bottom] :- Bounds]
+  [[a-left a-top a-right a-bottom] [b-left b-top b-right b-bottom]]
   (and (> a-left b-left)
        (> a-top b-top)
        (< a-right b-right)
        (< a-bottom b-bottom)))
 
-(mx/defn contained-point? :- boolean?
+(m/=> contained-point? [:-> Bounds Vec2D boolean?])
+(defn contained-point?
   "Tests whether the provided bounds contain a point."
-  [[left top right bottom] :- Bounds, [x y] :- Vec2D]
+  [[left top right bottom] [x y]]
   (and (<= left x)
        (<= top y)
        (>= right x)

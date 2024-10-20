@@ -2,36 +2,42 @@
   (:require
    [malli.core :as m]
    [malli.error :as me]
-   [malli.experimental :as mx]
    [malli.transform :as mt]
+   [renderer.app.db :refer [App]]
    [renderer.document.db :as db :refer [Document PersistedDocument]]
    [renderer.frame.handlers :as frame.h]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
    [renderer.utils.vec :as vec]))
 
-(mx/defn active
+(m/=> active [:-> App Document])
+(defn active
   [db]
   (get-in db [:documents (:active-document db)]))
 
-(mx/defn persisted-format :- PersistedDocument
+(m/=> persisted-format [:function
+                        [:-> App PersistedDocument]
+                        [:-> App uuid? PersistedDocument]])
+(defn persisted-format
   ([db]
    (persisted-format db (:active-document db)))
-  ([db, id :- uuid?]
+  ([db id]
    (let [document (-> (get-in db [:documents id])
                       (assoc :version (:version db)))]
      (reduce #(update-in %1 [:elements %2] dissoc :selected)
              (m/decode PersistedDocument document mt/strip-extra-keys-transformer)
              (keys (:elements document))))))
 
-(mx/defn save-format :- string?
-  [document :- PersistedDocument]
+(m/=> save-format [:-> PersistedDocument string?])
+(defn save-format
+  [document]
   (-> document
       (dissoc :path :id :title)
       (pr-str)))
 
-(mx/defn close
-  [db, id :- uuid?]
+(m/=> close [:-> App uuid? App])
+(defn close
+  [db id]
   (let [{:keys [active-document document-tabs]} db
         index (.indexOf document-tabs id)
         active-document (if (= active-document id)
@@ -44,15 +50,17 @@
         (assoc :active-document active-document)
         (update :documents dissoc id))))
 
-(mx/defn add-recent
-  [db, file-path :- string?]
+(m/=> add-recent [:-> App string? App])
+(defn add-recent
+  [db, file-path]
   (cond-> db
     file-path
     (update :recent #(->> (conj (filterv (complement #{file-path}) %) file-path)
                           (take-last 10)
                           (vec)))))
 
-(mx/defn center
+(m/=> center [:-> App App])
+(defn center
   "Centers the contents of the document to the current view."
   [db]
   (cond-> db
@@ -63,16 +71,19 @@
     (-> (frame.h/focus-bounds :original)
         (assoc-in [:documents (:active-document db) :focused] true))))
 
-(mx/defn set-active
-  [db, id :- uuid?]
+(m/=> set-active [:-> App uuid? App])
+(defn set-active
+  [db id]
   (assoc db :active-document id))
 
-(mx/defn search-by-path
-  [db, path :- string?]
+(m/=> search-by-path [:-> App string? uuid?])
+(defn search-by-path
+  [db path]
   (let [documents (vals (:documents db))]
     (some #(when (and path (= (:path %) path)) (:id %)) documents)))
 
-(mx/defn new-title :- string?
+(m/=> new-title [:-> App string?])
+(defn new-title
   [db]
   (let [documents (vals (:documents db))
         existing-titles (->> documents (map :title) set)]
@@ -82,8 +93,9 @@
           title
           (recur (inc i)))))))
 
-(mx/defn create-tab
-  [db, document :- Document]
+(m/=> create-tab [:-> App Document App])
+(defn create-tab
+  [db document]
   (let [id (:id document)
         active-index (.indexOf (:document-tabs db) (:active-document db))
         document (cond-> document
@@ -94,32 +106,42 @@
         (assoc :active-document id)
         (update :document-tabs #(vec/add % (inc active-index) id)))))
 
-(mx/defn assoc-prop
-  [db, k :- keyword?, v :- any?]
+(m/=> assoc-prop [:-> App keyword? any? App])
+(defn assoc-prop
+  [db k v]
   (assoc-in db [:documents (:active-document db) k] v))
 
-(mx/defn update-prop
-  ([db, k :- keyword?, f]
+(m/=> update-prop [:function
+                   [:-> App keyword? fn? App]
+                   [:-> App keyword? fn? any? App]
+                   [:-> App keyword? fn? any? any? App]
+                   [:-> App keyword? fn? any? any? any? App]
+                   [:-> App keyword? fn? any? any? any? any? App]])
+(defn update-prop
+  ([db k f]
    (update-in db [:documents (:active-document db) k] f))
-  ([db, k :- keyword?, f arg1]
+  ([db k f arg1]
    (update-in db [:documents (:active-document db) k] f arg1))
-  ([db, k :- keyword?, f arg1 arg2]
+  ([db k f arg1 arg2]
    (update-in db [:documents (:active-document db) k] f arg1 arg2))
-  ([db, k :- keyword?, f arg1 arg2 arg3]
+  ([db k f arg1 arg2 arg3]
    (update-in db [:documents (:active-document db) k] f arg1 arg2 arg3))
-  ([db, k :- keyword?, f arg1 arg2 arg3 & more]
+  ([db k f arg1 arg2 arg3 & more]
    (apply update-in db [:documents (:active-document db) k] f arg1 arg2 arg3 more)))
 
-(mx/defn attr
-  [db, k :- keyword?]
+(m/=> attr [:-> App keyword? string?])
+(defn attr
+  [db k]
   (get-in (active db) [:attrs k]))
 
-(mx/defn assoc-attr
-  [db, k :- keyword?, v :- any?]
+(m/=> assoc-attr [:-> App keyword? string? App])
+(defn assoc-attr
+  [db k v]
   (assoc-in db [:documents (:active-document db) :attrs k] v))
 
-(mx/defn load
-  [db, document]
+(m/=> load [:-> App map? App])
+(defn load
+  [db document]
   (let [open-document-id (search-by-path db (:path document))
         document (merge db/default document)
         document (cond-> document
@@ -138,12 +160,14 @@
       (let [explanation (-> document db/explain me/humanize str)]
         (notification.h/add db (notification.v/spec-failed "Load document" explanation))))))
 
-(mx/defn saved? :- boolean?
-  [db, id :- uuid?]
+(m/=> saved? [:-> App uuid? boolean?])
+(defn saved?
+  [db id]
   (let [document (get-in db [:documents id])
         history-position (get-in document [:history :position])]
     (= (:save document) history-position)))
 
-(mx/defn saved-ids :- sequential?
+(m/=> saved-ids [:-> App sequential?])
+(defn saved-ids
   [db]
   (filter #(saved? db %) (:document-tabs db)))

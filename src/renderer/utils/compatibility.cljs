@@ -1,6 +1,6 @@
 (ns renderer.utils.compatibility
   (:require
-   [malli.experimental :as mx]
+   [malli.core :as m]
    [renderer.document.db :refer [PersistedDocument]]
    [renderer.utils.migrations :as migrations]))
 
@@ -14,15 +14,17 @@
    [number? {:title "minor"}]
    [number? {:title "patch"}]])
 
-(mx/defn version->vec :- Version
-  [s :- string?]
+(m/=> version->vec [:-> string? Version])
+(defn version->vec
+  [s]
   (->> (re-find ver-regex s)
        (rest)
        (take 3)
        (mapv js/parseInt)))
 
-(mx/defn requires-migration? :- boolean?
-  [document-version :- Version, migration-version :- Version]
+(m/=> requires-migration? [:-> Version Version boolean?])
+(defn requires-migration?
+  [document-version migration-version]
   (let [[m-major m-minor m-patch] migration-version
         [d-major d-minor d-patch] document-version]
     (or (< d-major m-major)
@@ -32,13 +34,15 @@
              (= d-minor m-minor)
              (< d-patch m-patch)))))
 
-(mx/defn migrate-document :- PersistedDocument
-  [document :- map?]
-  (reduce (fn [document [migration-version migration-f]]
-            (cond-> document
-              (:or (not (:version document))
-                   (requires-migration? (version->vec (:version document)) migration-version))
-              migration-f))
-          document
-          migrations/migrations))
+(m/=> migrate-document [:function
+                        [:-> map? PersistedDocument]
+                        [:-> map? PersistedDocument [:tuple Version fn?]]])
+(defn migrate-document
+  ([document]
+   (reduce migrate-document document migrations/migrations))
+  ([document [ver f]]
+   (cond-> document
+     (:or (not (:version document))
+          (requires-migration? (version->vec (:version document)) ver))
+     f)))
 

@@ -1,18 +1,20 @@
 (ns renderer.utils.map
   (:require
    [clojure.set :as set]
-   [malli.experimental :as mx]))
+   [malli.core :as m]))
 
-(mx/defn merge-common-with :- map?
+(m/=> merge-common-with [:-> fn? [:* map?] map?])
+(defn merge-common-with
   "Equivelent to merge-with for common keys across all maps."
-  [f :- fn? & maps :- [:* map?]]
+  [f & maps]
   (let [common-keys (apply set/intersection (map (comp set keys) maps))]
     (->> (apply merge-with f (map #(select-keys % common-keys) maps))
          (into {}))))
 
-(mx/defn remove-nils :- map?
+(m/=> remove-nils [:-> map? map?])
+(defn remove-nils
   "Removes nil values from maps (should be used sparingly)."
-  [m :- map?]
+  [m]
   (->> m
        (remove (comp nil? val))
        (into {})))

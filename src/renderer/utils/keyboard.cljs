@@ -1,7 +1,7 @@
 (ns renderer.utils.keyboard
   (:require
    [clojure.set :as set]
-   [malli.experimental :as mx]
+   [malli.core :as m]
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.e]
    [renderer.dialog.events :as-alias dialog.e]
@@ -30,11 +30,13 @@
 (def key-chars
   (set/map-invert key-codes))
 
-(mx/defn key-code->key :- [:maybe string?]
-  [key-code :- number?]
+(m/=> key-code->key [:-> number? [:maybe string?]])
+(defn key-code->key
+  [key-code]
   (get key-chars key-code))
 
-(mx/defn modifiers :- set?
+(m/=> key-code->key [:-> map? set?])
+(defn modifiers
   [e]
   (cond-> #{}
     (.-altKey e) (conj :alt)

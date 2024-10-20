@@ -1,8 +1,10 @@
 (ns renderer.dialog.handlers
   (:require
-   [malli.experimental :as mx]
+   [malli.core :as m]
+   [renderer.app.db :refer [App]]
    [renderer.dialog.db :refer [Dialog]]))
 
-(mx/defn create
-  [db, dialog :- Dialog]
+(m/=> set-state [:-> App Dialog App])
+(defn create
+  [db dialog]
   (update db :dialogs conj dialog))

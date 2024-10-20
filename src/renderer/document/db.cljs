@@ -27,9 +27,7 @@
    [:elements {:default {} :persist true} [:map-of uuid? Element]]
    [:focused {:optional true} boolean?]
    [:filter {:optional true} keyword?]
-   [:attrs {:default {}} [:map
-                          [:fill {:default "white"} string?]
-                          [:stroke {:default "black"} string?]]]])
+   [:attrs {:default {:fill "white" :stroke "black"}} [:map-of keyword? string?]]])
 
 (def PersistedDocument
   (->> Document

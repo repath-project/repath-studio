@@ -1,7 +1,7 @@
 (ns renderer.handle.views
   (:require
    [clojure.core.matrix :as mat]
-   [malli.experimental :as mx]
+   [malli.core :as m]
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.s]
    [renderer.document.subs :as-alias document.s]
@@ -10,32 +10,35 @@
    [renderer.snap.subs :as-alias snap.s]
    [renderer.theme.db :as theme.db]
    [renderer.utils.bounds :as bounds :refer [Bounds]]
+   [renderer.utils.hiccup :refer [Hiccup]]
    [renderer.utils.pointer :as pointer]))
 
 #_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
-(mx/defn circle
-  [el :- Handle & children]
+(m/=> circle [:-> Handle Hiccup Hiccup])
+(defn circle
+  [el & children]
   (let [{:keys [x y id]} el
         zoom @(rf/subscribe [::document.s/zoom])
         clicked-element @(rf/subscribe [::app.s/clicked-element])
         pointer-handler #(pointer/event-handler! % el)]
-    [:circle {:key id
-              :cx x
-              :cy y
-              :stroke theme.db/accent
-              :stroke-width (/ 1 zoom)
-              :fill (if (= (:key clicked-element) id)
-                      theme.db/accent
-                      theme.db/accent-inverted)
-              :r (/ 4 zoom)
-              :cursor "default"
-              :on-pointer-up pointer-handler
-              :on-pointer-down pointer-handler
-              :on-pointer-move pointer-handler
-              :on-scroll pointer-handler} children]))
+    (into [:circle {:key id
+                    :cx x
+                    :cy y
+                    :stroke theme.db/accent
+                    :stroke-width (/ 1 zoom)
+                    :fill (if (= (:key clicked-element) id)
+                            theme.db/accent
+                            theme.db/accent-inverted)
+                    :r (/ 4 zoom)
+                    :cursor "default"
+                    :on-pointer-up pointer-handler
+                    :on-pointer-down pointer-handler
+                    :on-pointer-move pointer-handler
+                    :on-scroll pointer-handler}] children)))
 
-(mx/defn square
-  [el :- Handle & children]
+(m/=> square [:-> Handle Hiccup Hiccup])
+(defn square
+  [el & children]
   (let [{:keys [x y id cursor element]} el
         zoom @(rf/subscribe [::document.s/zoom])
         clicked-element @(rf/subscribe [::app.s/clicked-element])
@@ -44,18 +47,18 @@
         pointer-handler #(pointer/event-handler! % el)
         active (and (= (:id clicked-element) id)
                     (= (:element clicked-element) element))]
-    [:rect {:fill (if active theme.db/accent theme.db/accent-inverted)
-            :stroke (if active theme.db/accent "#777")
-            :stroke-width stroke-width
-            :x (- x (/ size 2))
-            :y (- y (/ size 2))
-            :width size
-            :height size
-            :cursor (if (or active (not cursor)) "default" cursor)
-            :on-pointer-up pointer-handler
-            :on-pointer-down pointer-handler
-            :on-pointer-move pointer-handler
-            :on-scroll pointer-handler} children]))
+    (into [:rect {:fill (if active theme.db/accent theme.db/accent-inverted)
+                  :stroke (if active theme.db/accent "#777")
+                  :stroke-width stroke-width
+                  :x (- x (/ size 2))
+                  :y (- y (/ size 2))
+                  :width size
+                  :height size
+                  :cursor (if (or active (not cursor)) "default" cursor)
+                  :on-pointer-up pointer-handler
+                  :on-pointer-down pointer-handler
+                  :on-pointer-move pointer-handler
+                  :on-scroll pointer-handler}] children)))
 
 (defn scale
   [props]
@@ -63,8 +66,9 @@
   [square (merge props {:type :handle
                         :action :scale})])
 
-(mx/defn wrapping-bounding-box
-  [bounds :- Bounds]
+(m/=> wrapping-bounding-box [:-> Bounds Hiccup])
+(defn wrapping-bounding-box
+  [bounds]
   (let [zoom @(rf/subscribe [::document.s/zoom])
         id :bounding-box
         ignored-ids @(rf/subscribe [::document.s/ignored-ids])
@@ -88,8 +92,9 @@
                               :on-pointer-down pointer-handler
                               :on-pointer-move pointer-handler})]))
 
-(mx/defn min-bounds
-  [bounds :- Bounds]
+(m/=> min-bounds [:-> Bounds Hiccup])
+(defn min-bounds
+  [bounds]
   (let [zoom @(rf/subscribe [::document.s/zoom])
         dimensions (bounds/->dimensions bounds)
         [w h] dimensions
@@ -100,8 +105,9 @@
       (< h min-size) (mat/add [0 (- (/ (- min-size h) 2))
                                0 (/ (- min-size h) 2)]))))
 
-(mx/defn bounding-corners
-  [bounds :- Bounds]
+(m/=> bounding-corners [:-> Bounds Hiccup])
+(defn bounding-corners
+  [bounds]
   (let [bounds (min-bounds bounds)
         [x1 y1 x2 y2] bounds
         [w h] (bounds/->dimensions bounds)]

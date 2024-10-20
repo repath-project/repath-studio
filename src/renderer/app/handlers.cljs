@@ -1,48 +1,54 @@
 (ns renderer.app.handlers
   (:require
    [clojure.core.matrix :as mat]
-   [malli.experimental :as mx]
-   [renderer.app.db :refer [State]]
+   [malli.core :as m]
+   [renderer.app.db :refer [App State Cursor]]
    [renderer.app.effects :as-alias fx]
    [renderer.app.events :as-alias e]
    [renderer.frame.handlers :as frame.h]
    [renderer.tool.db :refer [Tool]]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.keyboard :refer [KeyboardEvent]]
+   [renderer.utils.math :refer [Vec2D]]
    [renderer.utils.pointer :as pointer :refer [PointerEvent]]
    [renderer.utils.wheel :refer [WheelEvent]]))
 
-(mx/defn set-state
-  [db, state :- State]
+(m/=> set-state [:-> App State App])
+(defn set-state
+  [db state]
   (assoc db :state state))
 
-(mx/defn set-cursor
-  [db, cursor :- string?]
+(m/=> set-cursor [:-> App Cursor App])
+(defn set-cursor
+  [db, cursor]
   (assoc db :cursor cursor))
 
-(mx/defn explain
-  ([db, explanation :- string?]
-   (assoc db :explanation explanation))
-  ([db explanation & more]
-   (assoc db :explanation (apply str explanation more))))
+(m/=> explain [:-> App string? App])
+(defn explain
+  [db explanation]
+  (assoc db :explanation explanation))
 
+(m/=> add-fx [:-> App vector? App])
 (defn add-fx
   [db effect]
   (update db :fx conj effect))
 
-(mx/defn set-tool
-  [db, tool :- Tool]
+(m/=> set-tool [:-> App Tool App])
+(defn set-tool
+  [db tool]
   (-> db
       (tool.hierarchy/deactivate)
       (assoc :tool tool)
       (tool.hierarchy/activate)))
 
-(mx/defn pointer-delta
+(m/=> pointer-delta [:-> App Vec2D])
+(defn pointer-delta
   [db]
   (mat/sub (:adjusted-pointer-pos db) (:adjusted-pointer-offset db)))
 
-(mx/defn pointer-handler
-  [db, e :- PointerEvent, now :- number?]
+(m/=> pointer-handler [:-> App PointerEvent number? App])
+(defn pointer-handler
+  [db e now]
   (let [{:keys [pointer-offset tool dom-rect drag primary-tool drag-threshold]} db
         {:keys [button buttons pointer-pos]} e
         adjusted-pointer-pos (frame.h/adjust-pointer-pos db pointer-pos)]
@@ -100,8 +106,9 @@
 
       db)))
 
-(mx/defn wheel-handler
-  [db, e :- WheelEvent]
+(m/=> wheel-handler [:-> App WheelEvent App])
+(defn wheel-handler
+  [db e]
   (if (some (:modifiers e) [:ctrl :alt])
     (let [factor (Math/pow (inc (/ (- 1 (:zoom-sensitivity db)) 100))
                            (- (:delta-y e)))]
@@ -110,8 +117,9 @@
           (add-fx [:dispatch [::e/persist]])))
     (frame.h/pan-by db [(:delta-x e) (:delta-y e)])))
 
-(mx/defn key-handler
-  [db, e :- KeyboardEvent]
+(m/=> key-handler [:-> App KeyboardEvent App])
+(defn key-handler
+  [db e]
   (case (:type e)
     "keydown"
     (cond-> db

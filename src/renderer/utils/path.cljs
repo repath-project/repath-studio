@@ -1,7 +1,7 @@
 (ns renderer.utils.path
   (:require
    ["paper" :refer [Path]]
-   [malli.experimental :as mx]))
+   [malli.core :as m]))
 
 (def PathBooleanOperation
   [:enum :unite :intersect :subtract :exclude :divide])
@@ -15,8 +15,9 @@
       (.exportSVG)
       (.getAttribute "d")))
 
-(mx/defn manipulate :- string?
-  [path :- string?, manipulation :- PathManipulation]
+(m/=> manipulate [:-> string? PathManipulation string?])
+(defn manipulate
+  [path manipulation]
   (let [path (Path. path)]
     (case manipulation
       :simplify (.simplify path)
@@ -25,8 +26,9 @@
       :reverse (.reverse path))
     (get-d path)))
 
-(mx/defn boolean-operation :- string?
-  [path-a :- string?, path-b  :- string?, operation :- PathBooleanOperation]
+(m/=> boolean-operation [:-> string? string? PathBooleanOperation string?])
+(defn boolean-operation
+  [path-a path-b operation]
   (let [path-a (Path. path-a)
         path-b (Path. path-b)]
     (get-d (case operation

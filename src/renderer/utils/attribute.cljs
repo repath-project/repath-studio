@@ -2,7 +2,7 @@
   (:require
    [camel-snake-kebab.core :as csk]
    [clojure.string :as str]
-   [malli.experimental :as mx]
+   [malli.core :as m]
    [renderer.element.db :as element.db :refer [Attrs Tag]]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.utils.bcd :as bcd]))
@@ -58,10 +58,13 @@
   [s]
   (-> s str/trim (str/split #"\s*[\s,]\s*")))
 
-(mx/defn points->vec :- vector?
-  ([points :- string?]
+(m/=> points->vec [:function
+                   [:-> string? vector?]
+                   [:-> string? pos-int? vector?]])
+(defn points->vec
+  ([points]
    (points->vec points 2))
-  ([points :- string?, step :- number?]
+  ([points step]
    (into [] (partition-all step) (str->seq points))))
 
 (def camelcased
@@ -216,8 +219,9 @@
 (def lowercased
   (mapv str/lower-case camelcased))
 
-(mx/defn ->camel-case :- keyword?
-  [k :- keyword?]
+(m/=> ->camel-case [:-> keyword? keyword?])
+(defn ->camel-case
+  [k]
   (let [i (->> k name str/lower-case (.indexOf lowercased))]
     (-> (if (= i -1) k (get camelcased i))
         (csk/->camelCaseString)
@@ -225,7 +229,8 @@
 
 (def ->camel-case-memo (memoize ->camel-case))
 
-(mx/defn ->map :- Attrs
+(m/=> ->attrs [:-> map? Attrs])
+(defn ->attrs
   [attrs]
   (let [deprecated-path [:__compat :status :deprecated]
         filtered-attrs (->> attrs
@@ -236,13 +241,14 @@
         (keys)
         (zipmap (repeat "")))))
 
-(mx/defn defaults :- Attrs
-  [tag :- Tag]
+(m/=> defaults [:-> Tag Attrs])
+(defn defaults
+  [tag]
   (merge (when (element.db/tag? tag)
-           (merge (->map (or (tag (:elements  bcd/svg)) {}))
+           (merge (->attrs (or (tag (:elements  bcd/svg)) {}))
                   (zipmap core (repeat ""))))
          (when (contains? #{:animateMotion :animateTransform} tag)
-           (->map (:animate (:elements bcd/svg))))
+           (->attrs (:animate (:elements bcd/svg))))
          (zipmap (:attrs (element.hierarchy/properties tag)) (repeat ""))))
 
 (def defaults-memo (memoize defaults))

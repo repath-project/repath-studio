@@ -1,25 +1,28 @@
 (ns renderer.utils.vec
   (:require
-   [malli.experimental :as mx]))
+   [malli.core :as m]))
 
-(mx/defn remove-nth :- vector?
+(m/=> remove-nth [:-> vector? number? vector?])
+(defn remove-nth
   "Removes element at index."
-  [v :- vector? i :- number?]
+  [v i]
   (into
    (subvec v 0 i)
    (subvec v (inc i))))
 
-(mx/defn add :- vector?
+(m/=> add [:-> vector? number? any? vector?])
+(defn add
   "Adds element to index."
-  [v :- vector? index el]
+  [v index el]
   (vec (concat
         (subvec v 0 index)
         [el]
         (subvec v index))))
 
-(mx/defn move :- vector?
+(m/=> move [:-> vector? number? number? vector?])
+(defn move
   "Moves element by index."
-  [v :- vector? i-1 :- number? i-2 :- number?]
+  [v i-1 i-2]
   (let [el (nth v i-1)]
     (if (= i-1 i-2)
       v
@@ -27,9 +30,10 @@
           (add i-2 el)
           (vec)))))
 
-(mx/defn swap :- vector?
+(m/=> swap [:-> vector? number? number? vector?])
+(defn swap
   "Swaps the position of two elements by index."
-  [v :- vector? i-1 :- number? i-2 :- number?]
+  [v i-1 i-2]
   (assoc v
          i-2 (v i-1)
          i-1 (v i-2)))

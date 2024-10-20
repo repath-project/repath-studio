@@ -5,6 +5,12 @@
    [renderer.document.events :as-alias document.e]
    [renderer.notification.events :as-alias notification.e]))
 
+#_(def JSFile
+    [:fn (fn [x]
+           (if-not (nil? x)
+             (identical? (.-constructor x) js/File)
+             false))])
+
 (defn download!
   [{:keys [data title]}]
   (let [blob (js/Blob. [data])

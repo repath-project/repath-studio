@@ -1,7 +1,8 @@
 (ns renderer.frame.handlers
   (:require
    [clojure.core.matrix :as mat]
-   [malli.experimental :as mx]
+   [malli.core :as m]
+   [renderer.app.db :refer [App]]
    [renderer.document.db :refer [ZoomFactor]]
    [renderer.element.handlers :as element.h]
    [renderer.frame.db :refer [DomRect]]
@@ -10,30 +11,43 @@
    [renderer.utils.math :as math :refer [Vec2D]]
    [renderer.utils.pointer :as pointer]))
 
-(mx/defn viewbox
-  [zoom :- ZoomFactor, pan :- Vec2D, dom-rect :- DomRect]
+(def Viewbox
+  [:tuple
+   [number? {:title "x"}]
+   [number? {:title "y"}]
+   [number? {:title "width"}]
+   [number? {:title "height"}]])
+
+(m/=> viewbox [:-> ZoomFactor Vec2D DomRect Viewbox])
+(defn viewbox
+  [zoom pan dom-rect]
   (let [{:keys [width height]} dom-rect
         [x y] pan
         [width height] (mat/div [width height] zoom)]
     [x y width height]))
 
-(mx/defn pan-by
-  ([db, offset :- Vec2D]
+(m/=> pan-by [:function
+              [:-> App Vec2D App]
+              [:-> App Vec2D uuid? App]])
+(defn pan-by
+  ([db offset]
    (pan-by db offset (:active-document db)))
-  ([db, offset :- Vec2D, id  :- uuid?]
+  ([db offset id]
    (let [zoom (get-in db [:documents id :zoom])]
      (update-in db [:documents id :pan] mat/add (mat/div offset zoom)))))
 
-(mx/defn recenter-to-dom-rect
-  [db, updated-dom-rect :- DomRect]
+(m/=> recenter-to-dom-rect [:-> App DomRect App])
+(defn recenter-to-dom-rect
+  [db updated-dom-rect]
   (let [offset (-> (merge-with - (:dom-rect db) updated-dom-rect)
                    (select-keys [:width :height]))]
     (if-not (-> db :window :focused)
       db
       (reduce #(pan-by %1 (mat/div [(:width offset) (:height offset)] 2) %2) db (:document-tabs db)))))
 
-(mx/defn zoom-in-place
-  [db, factor :- number?, pos :- Vec2D]
+(m/=> zoom-in-place [:-> App number? Vec2D App])
+(defn zoom-in-place
+  [db factor pos]
   (let [active-document (:active-document db)
         zoom (get-in db [:documents active-document :zoom])
         updated-zoom (math/clamp (* zoom factor) 0.01 100)
@@ -46,24 +60,28 @@
         (assoc-in [:documents active-document :zoom] updated-zoom)
         (assoc-in [:documents active-document :pan] updated-pan))))
 
-(mx/defn adjust-pointer-pos
-  [db, pos :- Vec2D]
+(m/=> adjust-pointer-pos [:-> App Vec2D Vec2D])
+(defn adjust-pointer-pos
+  [db pos]
   (let [{:keys [zoom pan]} (get-in db [:documents (:active-document db)])]
     (pointer/adjust-position zoom pan pos)))
 
-(mx/defn zoom-at-pointer
-  [db, factor :- number?]
+(m/=> zoom-at-pointer [:-> App number? App])
+(defn zoom-at-pointer
+  [db factor]
   (zoom-in-place db factor (:adjusted-pointer-pos db)))
 
-(mx/defn zoom-by
-  [db, factor :- number?]
+(m/=> zoom-by [:-> App number? App])
+(defn zoom-by
+  [db factor]
   (let [{:keys [zoom pan]} (get-in db [:documents (:active-document db)])
         {:keys [width height]} (:dom-rect db)
         position (mat/add pan (mat/div [width height] 2 zoom))]
     (zoom-in-place db factor position)))
 
-(mx/defn pan-to-bounds
-  [db, bounds :- Bounds]
+(m/=> pan-to-bounds [:-> App Bounds App])
+(defn pan-to-bounds
+  [db bounds]
   (let [zoom (get-in db [:documents (:active-document db) :zoom])
         rect-dimentions [(-> db :dom-rect :width) (-> db :dom-rect :height)]
         [x1 y1] bounds
@@ -75,13 +93,16 @@
 
 (def FocusType [:enum :original :fit :fill])
 
-(mx/defn focus-bounds
-  ([db, focus-type :- FocusType]
+(m/=> focus-bounds [:function
+                    [:-> App FocusType App]
+                    [:-> App FocusType Bounds App]])
+(defn focus-bounds
+  ([db focus-type]
    (cond-> db
      (:active-document db)
      (focus-bounds focus-type (or (element.h/bounds db)
                                   (element/united-bounds (element.h/root-children db))))))
-  ([db, focus-type :- FocusType, bounds :- Bounds]
+  ([db focus-type bounds]
    (let [[width height] (utils.bounds/->dimensions bounds)
          width-ratio (/ (-> db :dom-rect :width) width)
          height-ratio (/ (-> db :dom-rect :height) height)
@@ -94,8 +115,9 @@
                      :fill (max width-ratio height-ratio)))
          (pan-to-bounds bounds)))))
 
-(mx/defn axis-offset :- number?
-  [position :- number?, offset :- number?, size :- number?]
+(m/=> axis-offset [:-> number? number? number? number?])
+(defn axis-offset
+  [position offset size]
   (let [threshold 50
         step 15]
     (cond
@@ -109,7 +131,8 @@
 
       :else 0)))
 
-(mx/defn pan-out-of-canvas
-  [db, dom-rect :- DomRect, [x y] :- Vec2D, [offset-x offset-y] :- Vec2D]
+(m/=> pan-to-bounds [:-> App DomRect Vec2D Vec2D App])
+(defn pan-out-of-canvas
+  [db dom-rect [x y] [offset-x offset-y]]
   (pan-by db [(axis-offset x offset-x (:width dom-rect))
               (axis-offset y offset-y (:height dom-rect))]))
