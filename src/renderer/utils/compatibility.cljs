@@ -45,4 +45,3 @@
      (:or (not (:version document))
           (requires-migration? (version->vec (:version document)) ver))
      f)))
-

@@ -2,10 +2,8 @@
   (:require
    [clojure.core.matrix :as mat]
    [malli.core :as m]
+   [renderer.utils.dom :refer [DomElement]]
    [renderer.utils.math :refer [Vec2D]]))
-
-(def JSElement
-  [:fn (fn [x] (instance? js/Element x))])
 
 (def Bounds
   "Coordinates that define a bounding box."
@@ -15,7 +13,7 @@
    [number? {:title "right"}]
    [number? {:title "bottom"}]])
 
-(m/=> from-bbox [:-> JSElement [:maybe Bounds]])
+(m/=> from-bbox [:-> DomElement [:maybe Bounds]])
 (defn from-bbox
   "Experimental way of getting the bounds of uknown or complicated elements
    using the getBBox method.
