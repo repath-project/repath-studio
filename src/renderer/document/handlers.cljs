@@ -52,7 +52,7 @@
 
 (m/=> add-recent [:-> App string? App])
 (defn add-recent
-  [db, file-path]
+  [db file-path]
   (cond-> db
     file-path
     (update :recent #(->> (conj (filterv (complement #{file-path}) %) file-path)

@@ -21,7 +21,7 @@
   [db]
   [:documents (:active-document db) :history])
 
-(m/=> history [:-> App History])
+(m/=> history [:-> App [:maybe History]])
 (defn history
   [db]
   (get-in db (history-path db)))
@@ -53,12 +53,12 @@
 (m/=> undos? [:-> History boolean?])
 (defn undos?
   [active-history]
-  (contains? (state active-history) :parent))
+  (and active-history (contains? (state active-history) :parent)))
 
 (m/=> redos? [:-> History boolean?])
 (defn redos?
   [active-history]
-  (boolean (next-position active-history)))
+  (and active-history (next-position active-history)))
 
 (m/=> swap [:-> App App])
 (defn swap

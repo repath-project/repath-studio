@@ -4,7 +4,7 @@
    [renderer.app.db :refer [App]]
    [renderer.dialog.db :refer [Dialog]]))
 
-(m/=> set-state [:-> App Dialog App])
+(m/=> create [:-> App Dialog App])
 (defn create
   [db dialog]
   (update db :dialogs conj dialog))

@@ -65,9 +65,9 @@
         (bounds/contained? el-bounds selection-bounds))
       false)))
 
-(m/=> reduce-by-area [:-> App boolean? fn? [:* Element]])
+(m/=> reduce-by-area [:-> App boolean? fn? App])
 (defn reduce-by-area
-  [db, intersecting? f]
+  [db intersecting? f]
   (reduce (fn [db el]
             (cond-> db
               (hovered? db el intersecting?)

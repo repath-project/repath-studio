@@ -130,14 +130,14 @@
   [s [w h]]
   (str "<svg width='" w "' height='" h "'>" s "</svg>"))
 
-(m/=> ->string [:-> [:* Element] string?])
+(m/=> ->string [:-> [:sequential Element] string?])
 (defn ->string
   [els]
   (reduce #(-> (element.hierarchy/render-to-string %2)
                (dom.server/render-to-static-markup)
                (str "\n" %)) "" els))
 
-(m/=> ->svg [:-> [:* Element] string?])
+(m/=> ->svg [:-> [:sequential Element] string?])
 (defn ->svg
   [els]
   (cond-> (->string els)

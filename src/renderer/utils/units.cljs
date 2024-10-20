@@ -25,7 +25,7 @@
   [s]
   (keyword (str/lower-case s)))
 
-(m/=> unit->key [:-> string? boolean?])
+(m/=> valid-unit? [:-> string? boolean?])
 (defn valid-unit?
   [s]
   (contains? unit-to-pixel-map (unit->key s)))
