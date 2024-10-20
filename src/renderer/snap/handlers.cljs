@@ -2,16 +2,18 @@
   (:require
    [clojure.core.matrix :as mat]
    [kdtree :as kdtree]
-   [malli.experimental :as mx]
+   [malli.core :as m]
    [re-frame.core :as rf]
+   [renderer.app.db :refer [App]]
    [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
    [renderer.snap.db :refer [SnapOption]]
    [renderer.snap.subs :as-alias snap.s]
    [renderer.utils.element :as utils.el]))
 
-(mx/defn toggle-option
-  [db, option :- SnapOption]
+(m/=> toggle-option [:-> App SnapOption App])
+(defn toggle-option
+  [db option]
   (if (contains? (-> db :snap :options) option)
     (update-in db [:snap :options] disj option)
     (update-in db [:snap :options] conj option)))
@@ -76,7 +78,7 @@
   (let [{:keys [point base-point]} (nearest-neighbor db)]
     (mat/sub point base-point)))
 
-(mx/defn snap-with
+(defn snap-with
   ([db f]
    (let [db (update-nearest-neighbor db)]
      (cond-> db

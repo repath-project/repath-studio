@@ -43,13 +43,13 @@
  ::collapse-el
  [persist]
  (fn [db [_ id]]
-   (h/update-prop db :collapsed-ids conj id)))
+   (h/collapse-el db id)))
 
 (rf/reg-event-db
  ::expand-el
  [persist]
  (fn [db [_ id]]
-   (h/update-prop db :collapsed-ids disj id)))
+   (h/expand-el db id)))
 
 (rf/reg-event-db
  ::toggle-filter

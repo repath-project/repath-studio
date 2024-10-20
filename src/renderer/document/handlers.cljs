@@ -76,7 +76,7 @@
   [db id]
   (assoc db :active-document id))
 
-(m/=> search-by-path [:-> App string? uuid?])
+(m/=> search-by-path [:-> App string? [:maybe uuid?]])
 (defn search-by-path
   [db path]
   (let [documents (vals (:documents db))]
@@ -111,23 +111,15 @@
   [db k v]
   (assoc-in db [:documents (:active-document db) k] v))
 
-(m/=> update-prop [:function
-                   [:-> App keyword? fn? App]
-                   [:-> App keyword? fn? any? App]
-                   [:-> App keyword? fn? any? any? App]
-                   [:-> App keyword? fn? any? any? any? App]
-                   [:-> App keyword? fn? any? any? any? any? App]])
-(defn update-prop
-  ([db k f]
-   (update-in db [:documents (:active-document db) k] f))
-  ([db k f arg1]
-   (update-in db [:documents (:active-document db) k] f arg1))
-  ([db k f arg1 arg2]
-   (update-in db [:documents (:active-document db) k] f arg1 arg2))
-  ([db k f arg1 arg2 arg3]
-   (update-in db [:documents (:active-document db) k] f arg1 arg2 arg3))
-  ([db k f arg1 arg2 arg3 & more]
-   (apply update-in db [:documents (:active-document db) k] f arg1 arg2 arg3 more)))
+(m/=> collapse-el [:-> App uuid? App])
+(defn collapse-el
+  [db id]
+  (update-in db [:documents (:active-document db) :collapsed-ids] conj id))
+
+(m/=> expand-el [:-> App uuid? App])
+(defn expand-el
+  [db id]
+  (update-in db [:documents (:active-document db) :collapsed-ids] disj id))
 
 (m/=> attr [:-> App keyword? string?])
 (defn attr

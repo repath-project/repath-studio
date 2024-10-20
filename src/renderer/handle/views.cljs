@@ -6,15 +6,12 @@
    [renderer.app.subs :as-alias app.s]
    [renderer.document.subs :as-alias document.s]
    [renderer.frame.subs :as-alias frame.s]
-   [renderer.handle.db :refer [Handle]]
    [renderer.snap.subs :as-alias snap.s]
    [renderer.theme.db :as theme.db]
    [renderer.utils.bounds :as bounds :refer [Bounds]]
-   [renderer.utils.hiccup :refer [Hiccup]]
    [renderer.utils.pointer :as pointer]))
 
 #_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
-(m/=> circle [:-> Handle Hiccup Hiccup])
 (defn circle
   [el & children]
   (let [{:keys [x y id]} el
@@ -36,7 +33,6 @@
                     :on-pointer-move pointer-handler
                     :on-scroll pointer-handler}] children)))
 
-(m/=> square [:-> Handle Hiccup Hiccup])
 (defn square
   [el & children]
   (let [{:keys [x y id cursor element]} el
@@ -66,7 +62,6 @@
   [square (merge props {:type :handle
                         :action :scale})])
 
-(m/=> wrapping-bounding-box [:-> Bounds Hiccup])
 (defn wrapping-bounding-box
   [bounds]
   (let [zoom @(rf/subscribe [::document.s/zoom])
@@ -92,7 +87,7 @@
                               :on-pointer-down pointer-handler
                               :on-pointer-move pointer-handler})]))
 
-(m/=> min-bounds [:-> Bounds Hiccup])
+(m/=> min-bounds [:-> Bounds Bounds])
 (defn min-bounds
   [bounds]
   (let [zoom @(rf/subscribe [::document.s/zoom])
@@ -105,7 +100,6 @@
       (< h min-size) (mat/add [0 (- (/ (- min-size h) 2))
                                0 (/ (- min-size h) 2)]))))
 
-(m/=> bounding-corners [:-> Bounds Hiccup])
 (defn bounding-corners
   [bounds]
   (let [bounds (min-bounds bounds)

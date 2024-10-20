@@ -9,27 +9,25 @@
    ["@radix-ui/react-switch" :as Switch]
    ["react-svg" :refer [ReactSVG]]
    ["tailwind-merge" :refer [twMerge]]
-   [malli.experimental :as mx]
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.s]
-   [renderer.utils.hiccup :refer [Props]]
    [renderer.utils.keyboard :as keyb]))
 
-(mx/defn merge-with-class
+(defn merge-with-class
   ([classes]
    (merge-with-class classes {}))
-  ([classes props :- Props]
+  ([classes props]
    (merge {:class (twMerge classes (:class props))}
           (dissoc props :class))))
 
-(mx/defn icon
-  [icon-name :- string?, props :- Props]
+(defn icon
+  [icon-name props]
   [:> ReactSVG
    (merge (merge-with-class "icon" props)
           {:src (str "icons/" icon-name ".svg")})])
 
-(mx/defn icon-button
-  [icon-name :- string?, props :- Props]
+(defn icon-button
+  [icon-name props]
   [:button.icon-button
    props
    [icon icon-name]])
@@ -49,8 +47,8 @@
      {:class "block bg-primary rounded-full shadow-sm w-5 h-5 will-change-transform
               transition-transform translate-x-0.5 data-[state=checked]:translate-x-[18px]"}]]])
 
-(mx/defn slider
-  [props :- Props]
+(defn slider
+  [props]
   [:> Slider/Root
    (merge-with-class "relative flex items-center select-none w-full touch-none h-full" props)
    [:> Slider/Track {:class "relative h-1 bg-secondary flex-1"}
@@ -68,8 +66,8 @@
        (interpose [:span {:class "px-0.5"} "+"])
        (into [:span])))
 
-(mx/defn shortcuts
-  [event :- vector?]
+(defn shortcuts
+  [event]
   (let [event-shortcuts @(rf/subscribe [::app.s/event-shortcuts event])]
     (when (seq event-shortcuts)
       (->> event-shortcuts
@@ -77,8 +75,8 @@
            (interpose [:span])
            (into [:span.inline-flex.text-muted {:class "gap-1.5"}])))))
 
-(mx/defn radio-icon-button
-  [icon-name :- string?, active :- boolean?, props :- Props]
+(defn radio-icon-button
+  [icon-name active props]
   [:button.icon-button.radio-icon-button
    (merge-with-class (when active "selected") props)
    [renderer.ui/icon icon-name]])

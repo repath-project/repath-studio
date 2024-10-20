@@ -36,7 +36,7 @@
 
 (m/=> migrate-document [:function
                         [:-> map? PersistedDocument]
-                        [:-> map? PersistedDocument [:tuple Version fn?]]])
+                        [:-> map? [:tuple Version fn?] PersistedDocument]])
 (defn migrate-document
   ([document]
    (reduce migrate-document document migrations/migrations))

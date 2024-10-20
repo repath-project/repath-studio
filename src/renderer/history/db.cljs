@@ -9,7 +9,7 @@
    [:timestamp number?]
    [:index [:or pos-int? zero?]]
    [:id uuid?]
-   [:elements [:map-of uuid? Element]]
+   [:elements {:optional true} [:map-of uuid? Element]]
    [:parent {:optional true} uuid?]
    [:children [:vector uuid?]]])
 

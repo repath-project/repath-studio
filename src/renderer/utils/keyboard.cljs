@@ -35,7 +35,7 @@
   [key-code]
   (get key-chars key-code))
 
-(m/=> key-code->key [:-> map? set?])
+(m/=> modifiers [:-> any? set?])
 (defn modifiers
   [e]
   (cond-> #{}

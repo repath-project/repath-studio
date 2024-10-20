@@ -1,10 +1,12 @@
 (ns renderer.notification.handlers
   (:require
-   [malli.experimental :as mx]
+   [malli.core :as m]
+   [renderer.app.db :refer [App]]
    [renderer.utils.hiccup :refer [Hiccup]]))
 
-(mx/defn add
-  [db, notification :- Hiccup]
+(m/=> add [:-> App Hiccup App])
+(defn add
+  [db notification]
   (let [notifications (:notifications db)]
     (if (= notification (-> notifications peek :content))
       (assoc db :notifications

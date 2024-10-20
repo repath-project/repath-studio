@@ -51,7 +51,6 @@
 (m/=> add-svg! [:-> any? Vec2D nil?])
 (defn add-svg!
   [^js/File file position]
-  (js/console.log file)
   (let [reader (js/FileReader.)]
     (.addEventListener
      reader

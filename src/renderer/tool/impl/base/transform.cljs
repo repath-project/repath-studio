@@ -1,7 +1,8 @@
 (ns renderer.tool.impl.base.transform
   (:require
    [clojure.core.matrix :as mat]
-   [malli.experimental :as mx]
+   [malli.core :as m]
+   [renderer.app.db :refer [App]]
    [renderer.app.handlers :as app.h]
    [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.h]
@@ -54,8 +55,9 @@
   [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions, "
    [:span.shortcut-key "⇧"] " to scale in place, " [:span.shortcut-key "Alt"] " to also scale children."])
 
-(mx/defn hovered? :- boolean?
-  [db, el :- Element, intersecting? :- boolean?]
+(m/=> hovered? [:-> App Element boolean? boolean?])
+(defn hovered?
+  [db el intersecting?]
   (let [selection-bounds (element.hierarchy/bounds (element.h/temp db))]
     (if-let [el-bounds (:bounds el)]
       (if intersecting?
@@ -63,8 +65,9 @@
         (bounds/contained? el-bounds selection-bounds))
       false)))
 
-(mx/defn reduce-by-area
-  [db, intersecting? :- boolean?, f :- fn?]
+(m/=> reduce-by-area [:-> App boolean? fn? [:* Element]])
+(defn reduce-by-area
+  [db, intersecting? f]
   (reduce (fn [db el]
             (cond-> db
               (hovered? db el intersecting?)
@@ -158,8 +161,9 @@
                           :else
                           :idle))))
 
-(mx/defn lock-ratio :- Vec2D
-  [[x y] :- Vec2D, handle :- ScaleHandle]
+(m/=> lock-ratio [:-> Vec2D ScaleHandle Vec2D])
+(defn lock-ratio
+  [[x y] handle]
   (let [[x y] (condp contains? handle
                 #{:middle-right :middle-left} [x x]
                 #{:top-middle :bottom-middle} [y y]
@@ -167,7 +171,8 @@
         ratio (if (< (abs x) (abs y)) x y)]
     [ratio ratio]))
 
-(mx/defn delta->scale-with-pivot-point :- [:tuple Vec2D Vec2D]
+(m/=> delta->scale-with-pivot-point [:-> ScaleHandle Vec2D Bounds [:tuple Vec2D Vec2D]])
+(defn delta->scale-with-pivot-point
   "Converts the x/y pointer offset to a scale ratio and a pivot point,
   to decouple this from the scaling method of the elements.
 
@@ -181,7 +186,7 @@
      |      y          ↖   │
      |      |            ↖ │
      □----------□--------- ■ :bottom-right (active handle)"
-  [handle :- ScaleHandle, offset :- Vec2D, bounds :- Bounds]
+  [handle offset bounds]
   (let [[x y] offset
         [x1 y1 x2 y2] bounds
         [cx cy] (bounds/center bounds)]
@@ -195,8 +200,9 @@
       :bottom-right [[x y] [x1 y1]]
       :bottom-left [[(- x) y] [x2 y1]])))
 
-(mx/defn scale
-  [db, offset :- Vec2D, {:keys [ratio-locked in-place] :as options}]
+(m/=> scale [:-> App Vec2D map? App])
+(defn scale
+  [db offset {:keys [ratio-locked in-place] :as options}]
   (let [handle (-> db :clicked-element :id)
         bounds (element.h/bounds db)
         [offset pivot-point] (delta->scale-with-pivot-point handle offset bounds)
@@ -211,14 +217,16 @@
         (assoc :pivot-point pivot-point)
         (element.h/scale ratio pivot-point options))))
 
-(mx/defn select-element
-  [db, multiple :- boolean?]
+(m/=> select-element [:-> App boolean? App])
+(defn select-element
+  [db multiple]
   (cond-> db
     (and (:clicked-element db)
          (not (-> db :clicked-element :selected))
          (not= (-> db :clicked-element :id) :bounding-box))
     (-> (element.h/select (-> db :clicked-element :id) multiple))))
 
+(m/=> translate [:-> App Vec2D App])
 (defn translate
   [db offset]
   (reduce (fn [db id]

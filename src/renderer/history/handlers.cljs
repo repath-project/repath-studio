@@ -2,64 +2,78 @@
   (:require
    [malli.core :as m]
    [malli.error :as me]
-   [malli.experimental :as mx]
    [re-frame.core :as rf]
+   [renderer.app.db :refer [App]]
    [renderer.app.effects :as-alias app.fx]
    [renderer.app.events :as-alias app.e]
    [renderer.app.handlers :as app.h]
    [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.h]
-   [renderer.history.db :refer [HistoryState]]
+   [renderer.history.db :refer [History HistoryState]]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.math :refer [Vec2D]]
    [renderer.utils.vec :as vec]))
 
+(m/=> history-path [:-> App vector?])
 (defn history-path
   [db]
   [:documents (:active-document db) :history])
 
+(m/=> history [:-> App History])
 (defn history
   [db]
   (get-in db (history-path db)))
 
-(mx/defn position :- [:maybe uuid?]
+(m/=> position [:-> App [:maybe uuid?]])
+(defn position
   [db]
   (:position (history db)))
 
-(mx/defn state :- [:maybe HistoryState]
+(m/=> state [:function
+             [:-> [:maybe History] [:maybe HistoryState]]
+             [:-> [:maybe History] [:maybe uuid?] [:maybe HistoryState]]])
+(defn state
   ([active-history]
    (state active-history (:position active-history)))
-  ([active-history, current-position :- [:maybe uuid?]]
+  ([active-history current-position]
    (get-in active-history [:states current-position])))
 
-(mx/defn previous-position :- [:maybe uuid?]
+(m/=> previous-position [:-> History [:maybe uuid?]])
+(defn previous-position
   [active-history]
   (-> active-history state :parent))
 
-(mx/defn next-position :- [:maybe uuid?]
+(m/=> next-position [:-> History [:maybe uuid?]])
+(defn next-position
   [active-history]
   (-> active-history state :children last))
 
+(m/=> undos? [:-> History boolean?])
 (defn undos?
   [active-history]
   (contains? (state active-history) :parent))
 
+(m/=> redos? [:-> History boolean?])
 (defn redos?
   [active-history]
   (boolean (next-position active-history)))
 
+(m/=> swap [:-> App App])
 (defn swap
   [db]
   (cond-> db
     (:active-document db)
     (assoc-in (element.h/path db) (:elements (state (history db))))))
 
-(mx/defn drop-rest
+(m/=> drop-rest [:function
+                 [:-> App App]
+                 [:-> App uuid? App]])
+(defn drop-rest
   ([db]
    (reduce drop-rest db (:document-tabs db)))
-  ([db, document-id :- uuid?]
+  ([db document-id]
    (let [pos (get-in db [:documents document-id :history :position])]
      (cond-> db
        pos
@@ -67,34 +81,43 @@
            (assoc-in [:documents document-id :history :states pos :index] 0)
            (update-in [:documents document-id :history :states pos] dissoc :parent))))))
 
-(mx/defn preview
-  [db, pos :- uuid?]
+(m/=> preview [:-> App uuid? App])
+(defn preview
+  [db pos]
   (assoc-in db (element.h/path db) (:elements (state (history db) pos))))
 
-(mx/defn move
-  [db, pos :- uuid?]
+(m/=> move [:-> App uuid? App])
+(defn move
+  [db pos]
   (-> db
       (assoc-in (conj (history-path db) :position) pos)
       (swap)))
 
-(mx/defn undo
+(m/=> undo [:function
+            [:-> App App]
+            [:-> App pos-int? App]])
+(defn undo
   ([db]
    (undo db 1))
-  ([db, n :- int?]
+  ([db n]
    (if (and (pos? n) (undos? (history db)))
      (recur (move db (previous-position (history db))) (dec n))
      db)))
 
-(mx/defn redo
+(m/=> redo [:function
+            [:-> App App]
+            [:-> App pos-int? App]])
+(defn redo
   ([db]
    (redo db 1))
-  ([db, n :- int?]
+  ([db n]
    (if (and (pos? n) (redos? (history db)))
      (recur (move db (next-position (history db))) (dec n))
      db)))
 
-(mx/defn accumulate
-  [active-history, f :- [:or fn? keyword?]]
+(m/=> accumulate [:-> History [:or fn? keyword?] [:vector HistoryState]])
+(defn accumulate
+  [active-history f]
   (loop [current-state (state active-history)
          stack []]
     (if-let [current-position (f current-state)]
@@ -103,32 +126,39 @@
         (recur accumulated-state (conj stack accumulated-state)))
       stack)))
 
+(m/=> undos [:-> History [:vector HistoryState]])
 (defn undos
   [active-history]
   (accumulate active-history :parent))
 
+(m/=> redos [:-> History [:vector HistoryState]])
 (defn redos
   [active-history]
   (accumulate active-history (fn [current-state] (-> current-state :children last))))
 
+(m/=> clear [:-> App App])
 (defn clear
   [db]
   (update-in db (history-path db) dissoc :states :position))
 
+(m/=> state-count [:-> App int?])
 (defn state-count
   [db]
   (-> (history db) :states count))
 
-(mx/defn set-zoom
-  [db, zoom :- number?]
+(m/=> set-zoom [:-> App number? App])
+(defn set-zoom
+  [db, zoom]
   (assoc-in db (conj (history-path db) :zoom) zoom))
 
-(mx/defn set-translate
-  [db, [x y] :- Vec2D]
+(m/=> set-translate [:-> App Vec2D App])
+(defn set-translate
+  [db [x y]]
   (assoc-in db (conj (history-path db) :translate) [x y]))
 
-(mx/defn create-state :- HistoryState
-  [db, now :- int?, id :- uuid?, explanation :- string?]
+(m/=> create-state [:-> App int? uuid? string? HistoryState])
+(defn create-state
+  [db now id explanation]
   (let [new-state {:explanation explanation
                    :elements (element.h/elements db)
                    :timestamp now
@@ -139,6 +169,7 @@
       (position db)
       (assoc :parent (position db)))))
 
+(m/=> cancel [:-> App App])
 (defn cancel
   [db]
   (cond-> db
@@ -156,7 +187,8 @@
     :always
     (app.h/set-state :idle)))
 
-(defn- update-ancestors
+(m/=> update-ancestors [:-> App App])
+(defn update-ancestors
   "Makes all ancestors of the active branch the rightmost element.
    This ensures that when users remain in the latest branch when they undo/redo."
   [db]
@@ -175,9 +207,10 @@
 
 (def explain-elements (m/explainer [:map-of uuid? Element]))
 
-(mx/defn finalize
+(m/=> finalize [:-> [:or nil? string? fn?] any?])
+(defn finalize
   "Pushes changes to history."
-  [explanation :- [:or nil? string? fn?]]
+  [explanation]
   (rf/->interceptor
    :id ::finalize
    :after (fn [context]

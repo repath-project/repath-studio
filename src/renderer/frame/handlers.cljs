@@ -131,7 +131,7 @@
 
       :else 0)))
 
-(m/=> pan-to-bounds [:-> App DomRect Vec2D Vec2D App])
+(m/=> pan-out-of-canvas [:-> App DomRect Vec2D Vec2D App])
 (defn pan-out-of-canvas
   [db dom-rect [x y] [offset-x offset-y]]
   (pan-by db [(axis-offset x offset-x (:width dom-rect))

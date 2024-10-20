@@ -2,7 +2,7 @@
   (:require
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
-   [malli.experimental :as mx]
+   [malli.core :as m]
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.s]
    [renderer.document.subs :as-alias document.s]
@@ -10,13 +10,15 @@
    [renderer.ruler.db :refer [Direction]]
    [renderer.ruler.subs :as-alias ruler.s]))
 
-(mx/defn bounds-rect
-  [orientation :- Direction]
+(m/=> bounds-rect [:-> Direction any?])
+(defn bounds-rect
+  [orientation]
   (when-let [attrs @(rf/subscribe [::ruler.s/bounds-rect-attrs orientation])]
     [:rect (merge attrs {:fill "var(--overlay)"})]))
 
-(mx/defn pointer
-  [orientation :- Direction]
+(m/=> pointer [:-> Direction any?])
+(defn pointer
+  [orientation]
   (let [[x y] @(rf/subscribe [::app.s/pointer-pos])
         ruler-size @(rf/subscribe [::ruler.s/size])
         pointer-size (/ ruler-size 5)
@@ -30,6 +32,7 @@
                                         (+ x pointer-size) "," size-diff]))
                :fill "var(--font-color"}]))
 
+(m/=> line [:-> map? any?])
 (defn line
   [{:keys [orientation adjusted-step size starting-point]}]
   [:line (if (= orientation :vertical)
@@ -44,11 +47,9 @@
             :y2 size
             :stroke "var(--font-color-muted)"})])
 
-(mx/defn label
-  [orientation :- Direction,
-   step :- number?,
-   font-size :- number?,
-   text :- string?]
+(m/=> label [:-> Direction number? number? string? any?])
+(defn label
+  [orientation step font-size text]
   (let [vertical (= orientation :vertical)]
     [:text {:x (if vertical 19 (+ step 4))
             :y (if vertical (- step 8) (+ font-size 1))
@@ -59,8 +60,9 @@
             :font-family "var(--font-mono"}
      (if vertical (reverse text) text)]))
 
-(mx/defn base-lines
-  [orientation :- Direction]
+(m/=> base-lines [:-> Direction any?])
+(defn base-lines
+  [orientation]
   (let [[x y] @(rf/subscribe [::frame.s/viewbox])
         zoom @(rf/subscribe [::document.s/zoom])
         steps-coll @(rf/subscribe [::ruler.s/steps-coll orientation])
@@ -95,8 +97,9 @@
                         :starting-point (/ ruler-size 1.3)}])))
            steps-coll))))
 
-(mx/defn ruler
-  [orientation :- Direction]
+(m/=> ruler [:-> Direction any?])
+(defn ruler
+  [orientation]
   (let [ruler-size @(rf/subscribe [::ruler.s/size])
         vertical (= orientation :vertical)]
     [:svg {:width  (if vertical ruler-size "100%")
@@ -105,8 +108,9 @@
      [base-lines orientation]
      [pointer orientation]]))
 
-(mx/defn grid-lines
-  [orientation :- Direction]
+(m/=> grid-lines [:-> Direction any?])
+(defn grid-lines
+  [orientation]
   (let [zoom @(rf/subscribe [::document.s/zoom])
         [x y width height] @(rf/subscribe [::frame.s/viewbox])
         [width height] (mat/add [width height] [x y])

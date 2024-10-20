@@ -4,5 +4,5 @@
 
 (def Notification
   [:map {:closed true}
-   [:count int?]
+   [:count {:optional true} int?]
    [:content Hiccup]])

@@ -161,9 +161,8 @@
         [toggle-collapsed-button id collapsed])
       [:div.flex-1.overflow-hidden.flex.items-center
        {:class "gap-1.5"}
-       [ui/icon
-        (:icon (element/properties el))
-        {:class (when-not visible "opacity-60")}]
+       (when-let [icon (:icon (element/properties el))]
+         [ui/icon icon {:class (when-not visible "opacity-60")}])
        [item-label el]]
       [lock-button id locked]
       [visibility-button id visible]]]))

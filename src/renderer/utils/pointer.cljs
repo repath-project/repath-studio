@@ -54,7 +54,7 @@
       (mat/div zoom)
       (mat/add pan)))
 
-(m/=> button->key [:-> [:enum 0 1 2 3 4] [:maybe PointerButton]])
+(m/=> button->key [:-> [:enum -1 0 1 2 3 4] [:maybe PointerButton]])
 (defn button->key
   "https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button"
   [button]
