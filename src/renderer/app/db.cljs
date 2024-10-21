@@ -79,7 +79,7 @@
    [:clicked-element {:optional true} [:or Element Handle]]
    [:copied-bounds {:optional true} Bounds]
    [:copied-elements {:optional true} [:* Element]]
-   [:re-pressed.core/keydown {:optional true} any?]])
+   [:re-pressed.core/keydown {:optional true} map?]])
 
 (def valid? (m/validator App))
 

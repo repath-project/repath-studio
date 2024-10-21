@@ -107,7 +107,8 @@
 (rf/reg-sub
  ::bounds
  :<- [::selected]
- element/united-bounds)
+ (fn [selected-elements _]
+   (element/united-bounds selected-elements)))
 
 (rf/reg-sub
  ::area

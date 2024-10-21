@@ -4,10 +4,14 @@
    [malli.transform :as mt]
    [renderer.element.db :refer [Element]]
    [renderer.history.db :refer [History]]
+   [renderer.menubar.filters :as filters]
    [renderer.utils.math :refer [Vec2D]]))
 
 (def ZoomFactor
   [:and number? [:>= 0.01] [:<= 100]])
+
+(def A11yFilter
+  (into [:enum] (map :id filters/accessibility)))
 
 (def Document
   [:map {:closed true}
@@ -26,7 +30,7 @@
    [:pan {:default [0 0]} Vec2D]
    [:elements {:default {} :persist true} [:map-of uuid? Element]]
    [:focused {:optional true} boolean?]
-   [:filter {:optional true} keyword?]
+   [:filter {:optional true} A11yFilter]
    [:attrs {:default {:fill "white" :stroke "black"}} [:map-of keyword? string?]]])
 
 (def PersistedDocument

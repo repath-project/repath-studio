@@ -106,10 +106,10 @@
         (assoc :active-document id)
         (update :document-tabs #(vec/add % (inc active-index) id)))))
 
-(m/=> assoc-prop [:-> App keyword? any? App])
-(defn assoc-prop
-  [db k v]
-  (assoc-in db [:documents (:active-document db) k] v))
+(m/=> set-hovered-ids [:-> App [:set uuid?] App])
+(defn set-hovered-ids
+  [db ids]
+  (assoc-in db [:documents (:active-document db) :hovered-ids] ids))
 
 (m/=> collapse-el [:-> App uuid? App])
 (defn collapse-el

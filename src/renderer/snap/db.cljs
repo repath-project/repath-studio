@@ -10,12 +10,15 @@
 (def SnapOptions
   [:set SnapOption])
 
+(def NearestNeighbor
+  [:map
+   [:point Vec2D]
+   [:base-point Vec2D]
+   [:dist-squared number?]])
+
 (def Snap
   [:map {:default {} :closed true}
    [:active {:default true} boolean?]
    [:threshold {:default 15} number?]
-   [:nearest-neighbor {:optional true} [:map
-                                        [:point Vec2D]
-                                        [:base-point Vec2D]
-                                        [:dist-squared number?]]]
+   [:nearest-neighbor {:optional true} NearestNeighbor]
    [:options {:default (set snap-options)} SnapOptions]])

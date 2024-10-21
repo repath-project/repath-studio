@@ -76,14 +76,17 @@
   [db id]
   (:children (entity db id)))
 
+(m/=> parent [:function
+              [:-> App [:maybe Element]]
+              [:-> App uuid? [:maybe Element]]])
 (defn parent
   ([db]
    (let [selected-ks (selected-ids db)]
      (or (parent db (first selected-ks))
          (root db))))
-  ([db k]
-   (when-let [parent-k (:parent (entity db k))]
-     (entity db parent-k))))
+  ([db id]
+   (when-let [parent-id (:parent (entity db id))]
+     (entity db parent-id))))
 
 (m/=> parent-container [:-> App uuid? Element])
 (defn parent-container
@@ -155,23 +158,29 @@
          (= (count selected-els)
             (count (children-ids db (first parent-els)))))))
 
+(m/=> siblings [:function
+                [:-> App [:vector uuid?]]
+                [:-> App uuid? [:vector uuid?]]])
 (defn siblings
   ([db]
    (:children (parent db)))
   ([db id]
    (:children (parent db id))))
 
-(m/=> root-children [:-> App [:vector Element]])
+(m/=> root-children [:-> App [:sequential Element]])
 (defn root-children
   [db]
   (->> (children-ids db (:id (root db)))
        (mapv (entities db))))
 
-(m/=> root-svgs [:-> App [:vector Element]])
+(m/=> root-svgs [:-> App [:sequential Element]])
 (defn root-svgs
   [db]
   (->> db root-children (filter element/svg?)))
 
+(m/=> ancestor-ids [:function
+                    [:-> App [:sequential uuid?]]
+                    [:-> App uuid? [:sequential uuid?]]])
 (defn ancestor-ids
   ([db]
    (reduce #(conj %1 (ancestor-ids db %2)) [] (selected-ids db)))
@@ -232,13 +241,13 @@
     (:active-document db)
     (update-in [:documents (:active-document db)] dissoc :temp-element)))
 
-(m/=> set-temp [:-> App Element App])
+(m/=> set-temp [:-> App map? App])
 (defn set-temp
   [db el]
   (->> (element/normalize-attrs el)
        (assoc-in db [:documents (:active-document db) :temp-element])))
 
-(m/=> temp [:-> App Element])
+(m/=> temp [:-> App [:maybe Element]])
 (defn temp
   [db]
   (get-in db [:documents (:active-document db) :temp-element]))
@@ -418,12 +427,12 @@
           db
           (vals (entities db))))
 
-(m/=> hover [:-> App uuid? App])
+(m/=> hover [:-> App [:or uuid? keyword?] App])
 (defn hover
   [db id]
   (update-in db [:documents (:active-document db) :hovered-ids] conj id))
 
-(m/=> ignore [:-> App uuid? App])
+(m/=> ignore [:-> App [:or uuid? keyword?] App])
 (defn ignore
   [db id]
   (cond-> db
@@ -596,7 +605,7 @@
                     (element/normalize-attrs)
                     (create-parent-id db))
         new-el (merge new-el db/default {:id id})
-        child-els (-> (entities db (:children el)) vals (concat (:content el)))
+        child-els (when (:children el) (-> (entities db (:children el)) vals (concat (:content el))))
         [x1 y1] (hierarchy/bounds (entity db (:parent new-el)))
         add-children (fn [db child-els]
                        (reduce #(cond-> %1
@@ -686,11 +695,10 @@
         (not= (:id (root db)) (:id parent-el))
         (translate [(- s-x1) (- s-y1)])) (selected-ids db)))))
 
+(m/=> duplicate-in-place [:-> App App])
 (defn duplicate-in-place
-  ([db]
-   (reduce duplicate-in-place (deselect db) (top-selected-sorted db)))
-  ([db el]
-   (create db el)))
+  [db]
+  (reduce create (deselect db) (top-selected-sorted db)))
 
 (m/=> duplicate [:-> App Vec2D App])
 (defn duplicate
