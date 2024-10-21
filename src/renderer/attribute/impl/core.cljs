@@ -97,7 +97,7 @@
   []
   "The stroke attribute is a presentation attribute defining the color
    (or any SVG paint servers like gradients or patterns) used to paint
-   the outline of the shape;")
+   the outline of the shape.")
 
 (defmethod hierarchy/description [:default :fill]
   []
