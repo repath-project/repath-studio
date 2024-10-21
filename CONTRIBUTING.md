@@ -78,7 +78,7 @@ Always use auto-qualified keywords (e.g. `::copy`) for subscriptions, events and
 
 We use [malli](https://github.com/metosin/malli) to describe the shape of our app db and selectively validate incoming data (e.g. file loading). We also use this spec to generate default values. You can optionally enable full db validation on dev mode (see `renderer.dev` namespace).
 
-Function [inline schemas](https://github.com/metosin/malli/blob/master/docs/function-schemas.md#function-inline-schemas) are used selectively on critical namespaces, like `renderer.utils.bounds`. Instrumentation is enabled by default on dev environment only.
+[Flat arrow function schemas](https://github.com/metosin/malli/blob/master/docs/function-schemas.md#flat-arrow-function-schemas) are used selectively on critical namespaces, like `renderer.utils.bounds`. Runtime instrumentation can also be enabled on dev environment.
 
 ## Useful development shortcuts
 
