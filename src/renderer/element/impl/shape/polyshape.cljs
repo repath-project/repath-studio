@@ -33,7 +33,8 @@
              [:attrs :points]
              #(->> (attr/str->seq %)
                    (transduce (partition-all 2) (partial translate offset) [])
-                   (str/join " "))))
+                   (str/join " ")
+                   (str/trim))))
 
 (defmethod hierarchy/scale ::hierarchy/polyshape
   [el ratio pivot-point]
@@ -48,7 +49,8 @@
                         (let [rel-point (mat/sub bounds-start point)
                               offset (mat/add pivot-point (mat/sub rel-point (mat/mul rel-point ratio)))]
                           (translate offset points point))) [])
-                     (str/join " ")))))
+                     (str/join " ")
+                     (str/trim)))))
 
 (defmethod hierarchy/render-edit ::hierarchy/polyshape
   [el]
@@ -73,7 +75,8 @@
                                                         (list (units/transform px + x)
                                                               (units/transform py + y))))
                                         (flatten)
-                                        (->> (str/join " "))))))
+                                        (->> (str/join " ")
+                                             (str/trim))))))
 
 (defmethod hierarchy/bounds ::hierarchy/polyshape
   [el]
