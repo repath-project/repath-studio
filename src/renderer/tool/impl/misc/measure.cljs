@@ -33,12 +33,11 @@
         [x y] adjusted-pointer-pos
         [adjacent opposite] (mat/sub adjusted-pointer-offset adjusted-pointer-pos)
         hypotenuse (Math/hypot adjacent opposite)]
-    (element.h/set-temp db {:id :mesure
-                            :type :overlay
+    (element.h/set-temp db {:type :element
                             :tag :measure
-                            :hypotenuse hypotenuse
                             :attrs {:x1 offset-x
                                     :y1 offset-y
                                     :x2 x
                                     :y2 y
+                                    :hypotenuse hypotenuse
                                     :stroke "gray"}})))

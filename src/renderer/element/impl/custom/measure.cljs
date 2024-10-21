@@ -11,8 +11,8 @@
 
 (defmethod hierarchy/render :measure
   [el]
-  (let [{:keys [attrs id hypotenuse]} el
-        {:keys [x1 x2 y1 y2]} attrs
+  (let [{:keys [attrs id]} el
+        {:keys [x1 x2 y1 y2 hypotenuse]} attrs
         [x1 y1 x2 y2] (map units/unit->px [x1 y1 x2 y2])
         angle (math/angle [x1 y1] [x2 y2])
         zoom @(rf/subscribe [::document.s/zoom])
@@ -33,5 +33,5 @@
       "start"]
 
      [overlay/label
-      (str (.toFixed hypotenuse 2))
+      (-> hypotenuse js/parseFloat (.toFixed 2) str)
       [(/ (+ x1 x2) 2) (/ (+ y1 y2) 2)]]]))
