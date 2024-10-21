@@ -1,7 +1,6 @@
 (ns electron.main
   "https://www.electronjs.org/docs/latest/tutorial/process-model#the-main-process"
   (:require
-   ["@webref/css" :as css]
    ["electron" :refer [app shell ipcMain BrowserWindow]]
    ["electron-log/main" :as log]
    ["electron-reloader"]
@@ -66,7 +65,6 @@
      ["save-document-as" file/save-as!]
      ["export" file/export!]
      ["print" file/print!]
-     ["load-webref" #(.listAll css)]
      ["load-system-fonts" #(.getAvailableFonts fontManager)]]]
     (.handle ipcMain e #(f %2))))
 

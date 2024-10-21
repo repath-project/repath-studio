@@ -79,7 +79,6 @@
    [:clicked-element {:optional true} [:or Element Handle]]
    [:copied-bounds {:optional true} Bounds]
    [:copied-elements {:optional true} [:* Element]]
-   [:webref-css {:optional true} map?]
    [:re-pressed.core/keydown {:optional true} any?]])
 
 (def valid? (m/validator App))

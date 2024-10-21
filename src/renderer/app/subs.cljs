@@ -1,8 +1,5 @@
 (ns renderer.app.subs
   (:require
-   ["mdn-data" :as mdn]
-   [camel-snake-kebab.core :as csk]
-   [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.tool.hierarchy :as tool.hierarchy]))
 
@@ -75,35 +72,6 @@
 (rf/reg-sub
  ::system-fonts
  :-> :system-fonts)
-
-(rf/reg-sub
- ::webref-css
- :-> :webref-css)
-
-(defonce mdn-data (js->clj mdn :keywordize-keys true))
-
-(rf/reg-sub
- ::property
- :<- [::webref-css]
- (fn [webref-css [_ property]]
-   ;; Mdn is deprecated in favor of w3c/webref, but w3c/webref is not available in browsers.
-   ;; The data is similar but not exactly the same, so we merge them below.
-   (let [webref-css-property (some
-                              #(when (= (:name %) (name property)) %)
-                              (flatten (map (fn [[_ item]] (:properties item)) webref-css)))
-         css-property (-> (get-in mdn-data [:css :properties property])
-                          (update-keys  #(case %
-                                           :appliesto :appliesTo
-                                           :computed :computedValue
-                                           %)))
-         enhance-readability (fn [property k]
-                               (cond-> property
-                                 (and (get property k) (string? (get property k)))
-                                 (update k #(-> % csk/->kebab-case-string (str/replace "-" " ")))))
-         css-property (reduce enhance-readability css-property [:appliesTo :computedValue :percentages])]
-     (-> css-property
-         (merge webref-css-property)
-         (enhance-readability :animationType)))))
 
 (rf/reg-sub
  ::backdrop

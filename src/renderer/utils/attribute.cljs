@@ -1,11 +1,27 @@
 (ns renderer.utils.attribute
   (:require
+   ["mdn-data" :as mdn]
    [camel-snake-kebab.core :as csk]
    [clojure.string :as str]
    [malli.core :as m]
    [renderer.element.db :as element.db :refer [Attrs Tag]]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.utils.bcd :as bcd]))
+
+(defonce mdn-data (js->clj mdn :keywordize-keys true))
+
+(defn- enhance-data-readability
+  [property k]
+  (cond-> property
+    (and (get property k) (string? (get property k)))
+    (update k #(-> % csk/->kebab-case-string (str/replace "-" " ")))))
+
+(defn property-data
+  [k]
+  (let [css-property (get-in mdn-data [:css :properties k])]
+    (reduce enhance-data-readability
+            css-property
+            [:appliesto :computed :percentages :animationType])))
 
 (def core
   #{:id :class :style})

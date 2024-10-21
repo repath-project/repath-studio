@@ -44,11 +44,6 @@
  (fn [db [_ fonts]]
    (assoc db :system-fonts fonts)))
 
-(rf/reg-event-db
- ::set-webref-css
- (fn [db [_ webref-css]]
-   (assoc db :webref-css webref-css)))
-
 (rf/reg-event-fx
  ::set-tool
  (fn [{:keys [db]} [_ tool]]
@@ -135,12 +130,3 @@
                               :formatter #(js->clj % :keywordize-keys true)}}
      {::fx/query-local-fonts {:on-resolution ::set-system-fonts
                               :formatter #(mapv ->font-map %)}})))
-
-(rf/reg-event-fx
- ::load-webref
- (fn [_ [_ file-path]]
-   (when system/electron?
-     {::window.fx/ipc-invoke {:channel "load-webref"
-                              :data file-path
-                              :on-resolution ::set-webref-css
-                              :formatter #(js->clj % :keywordize-keys true)}})))

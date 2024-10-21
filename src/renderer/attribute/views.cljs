@@ -12,6 +12,7 @@
    [renderer.element.subs :as-alias element.s]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.ui :as ui]
+   [renderer.utils.attribute :as attr]
    [renderer.utils.bcd :as bcd]
    [renderer.utils.dom :as dom]
    [renderer.utils.keyboard :as keyb]
@@ -57,7 +58,7 @@
   [{:keys [tag attr]}]
   (let [data (if attr (bcd/conmpatibility tag attr) (bcd/conmpatibility tag))
         support-data (:support data)
-        property  (when attr @(rf/subscribe [::app.s/property attr]))
+        property (when attr (attr/property-data attr))
         spec-url (or (:spec_url data) (:href property))
         spec-url (if (vector? spec-url) (first spec-url) spec-url)
         mdn-url (or (when data (or (:mdn_url data) (construct-mdn-url (name attr))))
@@ -160,17 +161,17 @@
 
 (defn property-list
   [property]
-  (->> [:appliesTo :computedValue :percentages :animatable :animationType :styleDeclaration :syntax]
+  (->> [:appliesto :computed :percentages :animatable :animationType :styleDeclaration :syntax]
        (map #(property-list-item property %))
        (into [:<>])))
 
 (defn label
   [tag k]
   (let [clicked-element @(rf/subscribe [::app.s/clicked-element])
-        property  @(rf/subscribe [::app.s/property k])
+        property (attr/property-data k)
         dispatch-tag (if (contains? (methods hierarchy/description) [tag k]) tag :default)
         active (and (= (:type clicked-element) :handle)
-                     (= (:key clicked-element) key))]
+                    (= (:key clicked-element) key))]
     [:> HoverCard/Root
      [:> HoverCard/Trigger
       [:label.w-28.truncate
@@ -193,7 +194,7 @@
 
 (defn row
   [k v locked tag]
-  (let [property @(rf/subscribe [::app.s/property k])
+  (let [property (attr/property-data k)
         initial (:initial property)
         dispatch-tag (if (contains? (methods hierarchy/form-element) [tag k]) tag :default)]
     [:<>
