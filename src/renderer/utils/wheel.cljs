@@ -2,12 +2,13 @@
   (:require
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.e]
+   [renderer.utils.dom :refer [DomElement]]
    [renderer.utils.keyboard :refer [ModifierKey modifiers]]
    [renderer.utils.math :refer [Vec2D]]))
 
 (def WheelEvent
   [:map {:closed true}
-   [:target any?]
+   [:target DomElement]
    [:type [:= "wheel"]]
    [:pointer-pos [:maybe Vec2D]]
    [:delta-x [:maybe number?]]
