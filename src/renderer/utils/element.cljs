@@ -152,5 +152,7 @@
    Parsing might through an exception. When that hapens, we remove the attribute
    because there is no other way to handle this gracefully."
   [attrs]
-  (try (update attrs :style parse)
+  (try (cond-> (update attrs :style parse)
+         (nil? (:style attrs))
+         (dissoc :style))
        (catch :default _e (dissoc attrs :style))))
