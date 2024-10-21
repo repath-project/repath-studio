@@ -9,7 +9,6 @@
    [renderer.element.events :as-alias element.e]
    [renderer.frame.events :as-alias frame.e]
    [renderer.history.events :as-alias history.e]
-   [renderer.utils.dom :refer [DomElement]]
    [renderer.window.events :as-alias window.e])
   (:import
    [goog.events KeyCodes]))
@@ -17,7 +16,7 @@
 (def ModifierKey [:enum :alt :ctrl :meta :shift])
 
 (def KeyboardEvent [:map {:closed true}
-                    [:target DomElement]
+                    [:target any?]
                     [:type [:enum "keydown" "keypress" "keyup"]]
                     [:code string?]
                     [:key-code number?]

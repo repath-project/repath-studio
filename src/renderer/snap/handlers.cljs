@@ -74,7 +74,7 @@
       (and (-> db :snap :active) nearest-neighbor)
       (assoc-in [:snap :nearest-neighbor] nearest-neighbor))))
 
-(m/=> nearest-neighbor [:-> App NearestNeighbor])
+(m/=> nearest-neighbor [:-> App [:maybe NearestNeighbor]])
 (defn nearest-neighbor
   [db]
   (get-in db [:snap :nearest-neighbor]))

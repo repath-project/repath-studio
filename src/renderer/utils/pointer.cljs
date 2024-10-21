@@ -7,7 +7,6 @@
    [renderer.document.db :refer [ZoomFactor]]
    [renderer.element.db :refer [Element]]
    [renderer.handle.db :refer [Handle]]
-   [renderer.utils.dom :refer [DomElement]]
    [renderer.utils.keyboard :refer [ModifierKey modifiers]]
    [renderer.utils.math :refer [Vec2D]]))
 
@@ -16,7 +15,7 @@
 (def PointerEvent
   [:map {:closed true}
    [:element [:maybe [:or Element Handle]]]
-   [:target DomElement]
+   [:target any?]
    [:type [:enum "pointerover" "pointerenter" "pointerdown" "pointermove" "pointerrawupdate" "pointerup" "pointercancel" "pointerout" "pointerleave" "gotpointercapture" "lostpointercapture"]]
    [:pointer-pos [:maybe Vec2D]]
    [:pressure [:maybe number?]]

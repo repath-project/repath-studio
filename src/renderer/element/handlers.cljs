@@ -183,7 +183,7 @@
                     [:-> App uuid? [:sequential uuid?]]])
 (defn ancestor-ids
   ([db]
-   (reduce #(conj %1 (ancestor-ids db %2)) [] (selected-ids db)))
+   (reduce #(concat %1 (ancestor-ids db %2)) [] (selected-ids db)))
   ([db id]
    (loop [parent-id (:parent (entity db id))
           parent-ids []]
@@ -299,7 +299,7 @@
   ([db k v]
    (reduce (partial-right set-attr k v) db (selected-ids db)))
   ([db id k v]
-   (if (and (not (locked? db k))
+   (if (and (not (locked? db id))
             (element/supported-attr? (entity db id) k))
      (if (str/blank? v)
        (dissoc-attr db id k)
@@ -605,7 +605,7 @@
                     (element/normalize-attrs)
                     (create-parent-id db))
         new-el (merge new-el db/default {:id id})
-        child-els (when (:children el) (-> (entities db (:children el)) vals (concat (:content el))))
+        child-els (-> (entities db (set (:children el))) vals (concat (:content el)))
         [x1 y1] (hierarchy/bounds (entity db (:parent new-el)))
         add-children (fn [db child-els]
                        (reduce #(cond-> %1
