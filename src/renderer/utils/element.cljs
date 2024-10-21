@@ -39,7 +39,7 @@
   [el]
   (-> el properties :ratio-locked boolean))
 
-(m/=> united-bounds [:-> sequential? [:maybe Bounds]])
+(m/=> united-bounds [:-> [:sequential Element] [:maybe Bounds]])
 (defn united-bounds
   [elements]
   (let [el-bounds (->> elements (map :bounds) (remove nil?))]

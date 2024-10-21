@@ -5,60 +5,76 @@
    [clojure.string :as str]
    [hickory.core :as hickory]
    [hickory.zip]
+   [malli.core :as m]
    [malli.error :as me]
+   [renderer.app.db :refer [App]]
    [renderer.attribute.hierarchy :as attr.hierarchy]
-   [renderer.element.db :as db]
+   [renderer.element.db :as db :refer [Element Tag]]
    [renderer.element.hierarchy :as hierarchy]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
    [renderer.utils.attribute :as attr]
-   [renderer.utils.bounds :as bounds]
+   [renderer.utils.bounds :as bounds :refer [Bounds]]
    [renderer.utils.element :as element]
    [renderer.utils.extra :refer [partial-right]]
    [renderer.utils.hiccup :as hiccup]
    [renderer.utils.map :as map]
+   [renderer.utils.math :refer [Vec2D]]
    [renderer.utils.path :as path]
    [renderer.utils.vec :as vec]))
 
+(m/=> path [:function
+            [:-> App vector?]
+            [:-> App uuid? vector?]])
 (defn path
   ([db]
    [:documents (:active-document db) :elements])
   ([db id]
    (conj (path db) id)))
 
-(defn elements
+(m/=> entities [:function
+                [:-> App [:map-of uuid? Element]]
+                [:-> App [:set uuid?] [:map-of uuid? Element]]])
+(defn entities
   ([db]
    (get-in db (path db)))
   ([db ids]
-   (select-keys (elements db) (vec ids))))
+   (select-keys (entities db) (vec ids))))
 
-(defn element
+(m/=> entity [:-> App uuid? Element])
+(defn entity
   [db id]
-  (get (elements db) id))
+  (get (entities db) id))
 
+(m/=> root [:-> App Element])
 (defn root
   [db]
-  (some #(when (element/root? %) %) (vals (elements db))))
+  (some #(when (element/root? %) %) (vals (entities db))))
 
+(m/=> locked? [:-> App uuid? boolean?])
 (defn locked?
   [db id]
-  (:locked (element db id)))
+  (-> db (entity id) :locked boolean))
 
+(m/=> selected [:-> App [:sequential Element]])
 (defn selected
   [db]
-  (filter :selected (vals (elements db))))
+  (filter :selected (vals (entities db))))
 
+(m/=> ratio-locked? [:-> App boolean?])
 (defn ratio-locked?
   [db]
   (every? element/ratio-locked? (selected db)))
 
+(m/=> selected-ids [:-> App [:set uuid?]])
 (defn selected-ids
   [db]
   (set (map :id (selected db))))
 
+(m/=> children-ids [:-> App uuid? [:vector uuid?]])
 (defn children-ids
   [db id]
-  (:children (element db id)))
+  (:children (entity db id)))
 
 (defn parent
   ([db]
@@ -66,9 +82,10 @@
      (or (parent db (first selected-ks))
          (root db))))
   ([db k]
-   (when-let [parent-k (:parent (element db k))]
-     (element db parent-k))))
+   (when-let [parent-k (:parent (entity db k))]
+     (entity db parent-k))))
 
+(m/=> parent-container [:-> App uuid? Element])
 (defn parent-container
   [db id]
   (loop [parent-el (parent db id)]
@@ -77,18 +94,20 @@
         parent-el
         (recur (parent db (:id parent-el)))))))
 
+(m/=> adjusted-bounds [:-> App uuid? [:maybe Bounds]])
 (defn adjusted-bounds
   [db id]
-  (when-let [bounds (hierarchy/bounds (element db id))]
+  (when-let [bounds (hierarchy/bounds (entity db id))]
     (if-let [container (parent-container db id)]
       (let [[offset-x offset-y _ _] (hierarchy/bounds container)
             [x1 y1 x2 y2] bounds]
         [(+ x1 offset-x) (+ y1 offset-y) (+ x2 offset-x) (+ y2 offset-y)])
       bounds)))
 
+(m/=> refresh-bounds [:-> App uuid? App])
 (defn refresh-bounds
   [db id]
-  (let [el (element db id)
+  (let [el (entity db id)
         bounds (if (= (:tag el) :g)
                  (let [b (map #(adjusted-bounds db %) (children-ids db id))]
                    (when (seq b) (apply bounds/union b)))
@@ -126,6 +145,7 @@
      (-> (apply update-in db (conj (path db) id) f arg1 arg2 arg3 more)
          (refresh-bounds id)))))
 
+(m/=> siblings-selected? [:-> App boolean?])
 (defn siblings-selected?
   [db]
   (let [selected-els (selected db)
@@ -141,11 +161,13 @@
   ([db id]
    (:children (parent db id))))
 
+(m/=> root-children [:-> App [:vector Element]])
 (defn root-children
   [db]
   (->> (children-ids db (:id (root db)))
-       (mapv (elements db))))
+       (mapv (entities db))))
 
+(m/=> root-svgs [:-> App [:vector Element]])
 (defn root-svgs
   [db]
   (->> db root-children (filter element/svg?)))
@@ -154,19 +176,21 @@
   ([db]
    (reduce #(conj %1 (ancestor-ids db %2)) [] (selected-ids db)))
   ([db id]
-   (loop [parent-id (:parent (element db id))
+   (loop [parent-id (:parent (entity db id))
           parent-ids []]
      (if parent-id
        (recur
-        (:parent (element db parent-id))
+        (:parent (entity db parent-id))
         (conj parent-ids parent-id))
        parent-ids))))
 
+(m/=> index [:-> App uuid? [:maybe int?]])
 (defn index
   [db id]
   (when-let [sibling-els (siblings db id)]
     (.indexOf sibling-els id)))
 
+(m/=> index-tree-path [:-> App uuid? [:sequential int?]])
 (defn index-tree-path
   "Returns a sequence that represents the index tree path of an element.
    For example, the seventh element of the second svg on the canvas will
@@ -185,31 +209,36 @@
           child-keys #{}]
      (if (seq children-set)
        (recur
-        (reduce #(set/union %1 (children-ids db %2)) #{} children-set)
+        (reduce #(set/union %1 (set (children-ids db %2))) #{} children-set)
         (set/union child-keys children-set))
        child-keys))))
 
+(m/=> top-ancestor-ids [:-> App [:set uuid?]])
 (defn top-ancestor-ids
   [db]
   (set/difference (selected-ids db) (descendant-ids db)))
 
+(m/=> top-selected-ancestors [:-> App [:sequential Element]])
 (defn top-selected-ancestors
   [db]
   (->> (top-ancestor-ids db)
-       (elements db)
+       (entities db)
        (vals)))
 
+(m/=> dissoc-temp [:-> App App])
 (defn dissoc-temp
   [db]
   (cond-> db
     (:active-document db)
     (update-in [:documents (:active-document db)] dissoc :temp-element)))
 
+(m/=> set-temp [:-> App Element App])
 (defn set-temp
   [db el]
   (->> (element/normalize-attrs el)
        (assoc-in db [:documents (:active-document db) :temp-element])))
 
+(m/=> temp [:-> App Element])
 (defn temp
   [db]
   (get-in db [:documents (:active-document db) :temp-element]))
@@ -262,7 +291,7 @@
    (reduce (partial-right set-attr k v) db (selected-ids db)))
   ([db id k v]
    (if (and (not (locked? db k))
-            (element/supported-attr? (element db id) k))
+            (element/supported-attr? (entity db id) k))
      (if (str/blank? v)
        (dissoc-attr db id k)
        (assoc-attr db id k (str/trim (str v))))
@@ -270,44 +299,45 @@
 
 (defn update-attr
   ([db id k f]
-   (if (element/supported-attr? (element db id) k)
+   (if (element/supported-attr? (entity db id) k)
      (update-el db id attr.hierarchy/update-attr k f)
      db))
   ([db id k f arg1]
-   (if (element/supported-attr? (element db id) k)
+   (if (element/supported-attr? (entity db id) k)
      (update-el db id attr.hierarchy/update-attr k f arg1)
      db))
   ([db id k f arg1 arg2]
-   (if (element/supported-attr? (element db id) k)
+   (if (element/supported-attr? (entity db id) k)
      (update-el db id attr.hierarchy/update-attr k f arg1 arg2)
      db))
   ([db id k f arg1 arg2 arg3]
-   (if (element/supported-attr? (element db id) k)
+   (if (element/supported-attr? (entity db id) k)
      (update-el db id attr.hierarchy/update-attr k f arg1 arg2 arg3)
      db))
   ([db id k f arg1 arg2 arg3 & more]
-   (if (element/supported-attr? (element db id) k)
+   (if (element/supported-attr? (entity db id) k)
      (apply update-el db id attr.hierarchy/update-attr k f arg1 arg2 arg3 more)
      db)))
 
 (defn deselect
   ([db]
-   (reduce deselect db (keys (elements db))))
+   (reduce deselect db (keys (entities db))))
   ([db id]
    (assoc-prop db id :selected false)))
 
 (defn collapse
   ([db]
-   (reduce collapse db (keys (elements db))))
+   (reduce collapse db (keys (entities db))))
   ([{:keys [active-document] :as db} id]
    (update-in db [:documents active-document :collapsed-ids] conj id)))
 
 (defn expand
   ([db]
-   (reduce expand db (keys (elements db))))
-  ([{:keys [active-document] :as db} id]
-   (update-in db [:documents active-document :collapsed-ids] disj id)))
+   (reduce expand db (keys (entities db))))
+  ([db id]
+   (update-in db [:documents (:active-document db) :collapsed-ids] disj id)))
 
+(m/=> expand-ancestors [:-> App uuid? App])
 (defn expand-ancestors
   [db id]
   (->> (ancestor-ids db id)
@@ -319,7 +349,7 @@
        (expand-ancestors id)
        (assoc-prop id :selected true)))
   ([db id multiple]
-   (if (element db id)
+   (if (entity db id)
      (if multiple
        (update-prop db id :selected not)
        (-> db deselect (select id)))
@@ -329,47 +359,56 @@
   [db ids]
   (reduce (partial-right assoc-prop :selected true) (deselect db) ids))
 
+(m/=> select-all [:-> App App])
 (defn select-all
   [db]
   (reduce select db (if (siblings-selected? db)
                       (children-ids db (:id (parent db (:id (parent db)))))
                       (siblings db))))
 
+(m/=> selected-tags [:-> App [:set Tag]])
 (defn selected-tags
   [db]
   (->> (selected db)
        (map :tag)
        (set)))
 
+(m/=> filter-by-tag [:-> App Tag [:sequential Element]])
 (defn filter-by-tag
   [db tag]
   (filter #(= tag (:tag %)) (selected db)))
 
+(m/=> select-same-tags [:-> App App])
 (defn select-same-tags
   [db]
   (let [tags (selected-tags db)]
-    (->> (elements db)
+    (->> (entities db)
          (vals)
          (reduce (fn [db el] (cond-> db
                                (contains? tags (:tag el))
                                (select (:id el)))) db))))
 
+(m/=> selected-sorted [:-> App [:sequential Element]])
 (defn selected-sorted
   [db]
   (sort-by #(index-tree-path db (:id %)) (selected db)))
 
+(m/=> top-selected-sorted [:-> App [:sequential Element]])
 (defn top-selected-sorted
   [db]
   (sort-by #(index-tree-path db (:id %)) (top-selected-ancestors db)))
 
+(m/=> selected-sorted-ids [:-> App [:vector uuid?]])
 (defn selected-sorted-ids
   [db]
   (mapv :id (selected-sorted db)))
 
+(m/=> top-selected-sorted-ids [:-> App [:vector uuid?]])
 (defn top-selected-sorted-ids
   [db]
   (mapv :id (top-selected-sorted db)))
 
+(m/=> invert-selection [:-> App App])
 (defn invert-selection
   [db]
   (reduce (fn [db {:keys [id tag]}]
@@ -377,18 +416,21 @@
               (not (contains? #{:svg :canvas} tag))
               (update-prop id :selected not)))
           db
-          (vals (elements db))))
+          (vals (entities db))))
 
+(m/=> hover [:-> App uuid? App])
 (defn hover
   [db id]
   (update-in db [:documents (:active-document db) :hovered-ids] conj id))
 
+(m/=> ignore [:-> App uuid? App])
 (defn ignore
   [db id]
   (cond-> db
     (and (:active-document db) id)
     (update-in [:documents (:active-document db) :ignored-ids] conj id)))
 
+(m/=> clear-hovered [:-> App App])
 (defn clear-hovered
   [db]
   (cond-> db
@@ -405,10 +447,12 @@
      (:active-document db)
      (update-in [:documents (:active-document db) :ignored-ids] disj id))))
 
+(m/=> bounds [:-> App [:maybe Bounds]])
 (defn bounds
   [db]
   (element/united-bounds (selected db)))
 
+(m/=> copy [:-> App App])
 (defn copy
   [db]
   (let [els (top-selected-sorted db)]
@@ -421,7 +465,7 @@
   ([db]
    (reduce delete db (reverse (selected-sorted-ids db))))
   ([db id]
-   (let [el (element db id)
+   (let [el (entity db id)
          db (if (element/root? el) db (reduce delete db (:children el)))]
      (cond-> db
        (not (element/root? el))
@@ -444,16 +488,17 @@
   ([db parent-id]
    (reduce #(set-parent %1 parent-id %2) db (selected-sorted-ids db)))
   ([db parent-id id]
-   (let [el (element db id)]
+   (let [el (entity db id)]
      (cond-> db
        (and el (not= id parent-id) (not (locked? db id)))
        (-> (update-prop (:parent el) :children #(vec (remove #{id} %)))
            (update-prop parent-id :children conj id)
            (assoc-prop id :parent parent-id))))))
 
+(m/=> set-parent-at-index [:-> App uuid? uuid? int? App])
 (defn set-parent-at-index
   [db id parent-id i]
-  (let [sibling-els (:children (element db parent-id))
+  (let [sibling-els (:children (entity db parent-id))
         last-index (count sibling-els)]
     (-> db
         (set-parent parent-id id)
@@ -484,7 +529,7 @@
   (let [ids-to-scale (cond-> (selected-ids db) recursive (set/union (descendant-ids db)))]
     (reduce
      (fn [db id]
-       (let [pivot-point (->> (element db id) :bounds (take 2) (mat/sub pivot-point))
+       (let [pivot-point (->> (entity db id) :bounds (take 2) (mat/sub pivot-point))
              db (update-el db id hierarchy/scale ratio pivot-point)]
          (if in-place
            ;; FIXME: Handle locked ratio.
@@ -500,7 +545,7 @@
   ([db direction]
    (reduce (partial-right align direction) db (selected-ids db)))
   ([db id direction]
-   (let [el-bounds (:bounds (element db id))
+   (let [el-bounds (:bounds (entity db id))
          center (bounds/center el-bounds)
          parent-bounds (:bounds (parent db id))
          parent-center (bounds/center parent-bounds)
@@ -551,8 +596,8 @@
                     (element/normalize-attrs)
                     (create-parent-id db))
         new-el (merge new-el db/default {:id id})
-        child-els (-> (elements db (:children el)) vals (concat (:content el)))
-        [x1 y1] (hierarchy/bounds (element db (:parent new-el)))
+        child-els (-> (entities db (:children el)) vals (concat (:content el)))
+        [x1 y1] (hierarchy/bounds (entity db (:parent new-el)))
         add-children (fn [db child-els]
                        (reduce #(cond-> %1
                                   (db/tag? (:tag %2))
@@ -647,6 +692,7 @@
   ([db el]
    (create db el)))
 
+(m/=> duplicate [:-> App Vec2D App])
 (defn duplicate
   [db offset]
   (-> db
@@ -698,16 +744,16 @@
    (reduce ungroup db (selected-ids db)))
   ([db id]
    (cond-> db
-     (and (not (locked? db id)) (= (:tag (element db id)) :g))
+     (and (not (locked? db id)) (= (:tag (entity db id)) :g))
      (as-> db db
        (let [i (index db id)]
          (reduce
           (fn [db child-id]
             (-> db
-                (set-parent-at-index child-id (:parent (element db id)) i)
+                (set-parent-at-index child-id (:parent (entity db id)) i)
                 ;; Group attributes are inherited by its children,
                 ;; so we need to maintain the presentation attrs.
-                (inherit-attrs (element db id) child-id)
+                (inherit-attrs (entity db id) child-id)
                 (select child-id)))
           db (reverse (children-ids db id))))
        (delete db id)))))
@@ -717,7 +763,7 @@
    (reduce (partial-right manipulate-path action) db (selected-ids db)))
   ([db id action]
    (cond-> db
-     (= (:tag (element db id)) :path)
+     (= (:tag (entity db id)) :path)
      (update-attr id path/manipulate action))))
 
 (defn import-svg

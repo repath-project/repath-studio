@@ -20,7 +20,7 @@
 
 (defn base-points
   [db]
-  (let [elements (vals (element.h/elements db))
+  (let [elements (vals (element.h/entities db))
         selected-visible (filter #(and (:visible %) (:selected %)) elements)]
     (when (-> db :snap :active)
       (cond

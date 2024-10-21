@@ -45,7 +45,7 @@
  ::pan-to-element
  [persist]
  (fn [db [_ id]]
-   (let [element (element.h/element db id)
+   (let [element (element.h/entity db id)
          el-bounds (:bounds element)
          zoom (get-in db [:documents (:active-document db) :zoom])
          pan (get-in db [:documents (:active-document db) :pan])

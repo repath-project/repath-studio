@@ -160,7 +160,7 @@
 (defn create-state
   [db now id explanation]
   (let [new-state {:explanation explanation
-                   :elements (element.h/elements db)
+                   :elements (element.h/entities db)
                    :timestamp now
                    :index (state-count db)
                    :id id
@@ -215,7 +215,7 @@
    :id ::finalize
    :after (fn [context]
             (let [db (rf/get-effect context :db ::not-found)
-                  elements (element.h/elements db)]
+                  elements (element.h/entities db)]
               (cond
                 (or (not (or explanation (:explanation db)))
                     (= elements (:elements (state (history db)))))

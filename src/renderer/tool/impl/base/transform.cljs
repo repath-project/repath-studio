@@ -71,7 +71,7 @@
   (reduce (fn [db el]
             (cond-> db
               (hovered? db el intersecting?)
-              (f (:id el)))) db (filter :visible (vals (element.h/elements db)))))
+              (f (:id el)))) db (filter :visible (vals (element.h/entities db)))))
 
 (defmethod hierarchy/pointer-move :transform
   [db {:keys [element] :as e}]
@@ -240,7 +240,7 @@
                      (empty? (rest (element.h/selected db)))
                      (contains? #{:translate :clone} (:state db))
                      (not= (:id (element.h/parent db id)) hovered-svg-k)
-                     (not (element/svg? (element.h/element db id))))
+                     (not (element/svg? (element.h/entity db id))))
                 (-> (element.h/set-parent hovered-svg-k)
                        ;; FIXME: Handle nested containers.
                     (element.h/translate id (take 2 (:bounds container)))
