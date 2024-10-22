@@ -4,9 +4,8 @@
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    [re-frame.core :as rf]
    [reagent.core :as ra]
-   [renderer.app.subs :as-alias app.s]
-   [renderer.document.events :as-alias document.e]
-   [renderer.document.subs :as-alias document.s]
+   [renderer.document.events :as-alias e]
+   [renderer.document.subs :as-alias s]
    [renderer.history.events :as-alias history.e]
    [renderer.history.subs :as-alias history.s]
    [renderer.history.views :as history.v]
@@ -25,18 +24,18 @@
      [ui/icon-button
       "file"
       {:title "New"
-       :on-click #(rf/dispatch [::document.e/new])}]
+       :on-click #(rf/dispatch [::e/new])}]
 
      [ui/icon-button
       "folder"
       {:title "Open"
-       :on-click #(rf/dispatch [::document.e/open])}]
+       :on-click #(rf/dispatch [::e/open])}]
 
      [ui/icon-button
       "save"
       {:title "Save"
-       :on-click #(rf/dispatch [::document.e/save])
-       :disabled @(rf/subscribe [::document.s/active-saved])}]
+       :on-click #(rf/dispatch [::e/save])
+       :disabled @(rf/subscribe [::s/active-saved])}]
 
      [:span.v-divider]
 
@@ -62,44 +61,44 @@
     :on-pointer-down dom/stop-propagation!
     :on-pointer-up (fn [e]
                      (.stopPropagation e)
-                     (rf/dispatch [::document.e/close id true]))}
+                     (rf/dispatch [::e/close id true]))}
    [ui/icon "times"]
    (when-not saved
      [ui/icon "dot" {:class "dot"}])])
 
 (defn context-menu
   [id]
-  (let [document @(rf/subscribe [::document.s/document id])
+  (let [document @(rf/subscribe [::s/entity id])
         path (:path document)
-        document-tabs @(rf/subscribe [::app.s/document-tabs])]
+        tabs @(rf/subscribe [::s/tabs])]
     (cond-> [{:label "Close"
-              :action [::document.e/close id true]}
+              :action [::e/close id true]}
              {:label "Close others"
-              :action [::document.e/close-others id]
-              :disabled? (empty? (rest document-tabs))}
+              :action [::e/close-others id]
+              :disabled? (empty? (rest tabs))}
              {:label "Close all"
-              :action [::document.e/close-all]}
+              :action [::e/close-all]}
              {:label "Close saved"
-              :action [::document.e/close-all-saved]}]
+              :action [::e/close-all-saved]}]
       system/electron?
       (concat [{:type :separator}
                {:label "Open containing directory"
-                :action [::document.e/open-directory path]
+                :action [::e/open-directory path]
                 :disabled? (not (and path system/electron?))}]))))
 
 (defn tab
   [id title is-active]
   (ra/with-let [dragged-over? (ra/atom false)]
-    (let [is-saved @(rf/subscribe [::document.s/saved id])]
+    (let [is-saved @(rf/subscribe [::s/saved id])]
       [:> ContextMenu/Root
        [:> ContextMenu/Trigger
         [:div.tab
          {:class [(when is-active "active")
                   (when is-saved "saved")]
-          :on-wheel #(rf/dispatch [::document.e/scroll (.-deltaY %)])
+          :on-wheel #(rf/dispatch [::e/cycle (.-deltaY %)])
           :on-pointer-down #(case (.-buttons %)
-                              4 (rf/dispatch [::document.e/close id true])
-                              1 (rf/dispatch [::document.e/set-active id])
+                              4 (rf/dispatch [::e/close id true])
+                              1 (rf/dispatch [::e/set-active id])
                               nil)
           :draggable true
           :on-drag-start #(.setData (.-dataTransfer %) "id" (str id))
@@ -109,7 +108,7 @@
           :on-drop (fn [evt]
                      (.preventDefault evt)
                      (reset! dragged-over? false)
-                     (rf/dispatch [::document.e/swap-position
+                     (rf/dispatch [::e/swap-position
                                    (-> (.-dataTransfer evt)
                                        (.getData "id")
                                        uuid)
@@ -126,14 +125,14 @@
 
 (defn tab-bar
   []
-  (let [documents @(rf/subscribe [::app.s/documents])
-        document-tabs @(rf/subscribe [::app.s/document-tabs])
-        active-document @(rf/subscribe [::app.s/active-document])]
+  (let [documents @(rf/subscribe [::s/entities])
+        tabs @(rf/subscribe [::s/tabs])
+        active-id @(rf/subscribe [::s/active-id])]
     [:div.flex.drag.justify-between
      [:div.flex.flex-1.gap-px.overflow-hidden
-      (for [document-id document-tabs]
+      (for [document-id tabs]
         ^{:key (str document-id)}
-        [tab document-id (:title (get documents document-id)) (= document-id active-document)])]
+        [tab document-id (:title (get documents document-id)) (= document-id active-id)])]
      [:div.toolbar
       [:> DropdownMenu/Root
        [:> DropdownMenu/Trigger
@@ -145,9 +144,9 @@
          {:class "menu-content rounded"}
          (for [item [{:label "Close all"
                       :key :close-all
-                      :action [::document.e/close-all]}
+                      :action [::e/close-all]}
                      {:label "Close saved"
                       :key :close-all-saved
-                      :action [::document.e/close-all-saved]}]]
+                      :action [::e/close-all-saved]}]]
            ^{:key (:key item)} [ui/dropdown-menu-item item])
          [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]]]]))

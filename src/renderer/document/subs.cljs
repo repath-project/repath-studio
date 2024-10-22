@@ -2,9 +2,21 @@
   (:require
    [config :as config]
    [re-frame.core :as rf]
-   [renderer.app.subs :as-alias app.s]
    [renderer.document.handlers :as h]
    [renderer.timeline.subs :as-alias timeline.s]))
+
+
+(rf/reg-sub
+ ::active-id
+ :-> :active-document)
+
+(rf/reg-sub
+ ::entities
+ :-> :documents)
+
+(rf/reg-sub
+ ::tabs
+ :-> :document-tabs)
 
 (rf/reg-sub
  ::recent
@@ -13,7 +25,7 @@
 
 (rf/reg-sub
  ::some-documents
- :<- [::app.s/documents]
+ :<- [::entities]
  seq)
 
 (rf/reg-sub
@@ -23,15 +35,15 @@
 
 (rf/reg-sub
  ::active
- :<- [::app.s/documents]
- :<- [::app.s/active-document]
+ :<- [::entities]
+ :<- [::active-id]
  (fn [[documents active-document] _]
    (when active-document
      (get documents active-document))))
 
 (rf/reg-sub
- ::document
- :<- [::app.s/documents]
+ ::entity
+ :<- [::entities]
  (fn [documents [_ k]]
    (get documents k)))
 

@@ -38,7 +38,7 @@
 
 (defn main
   []
-  (let [notifications @(rf/subscribe [::notification.s/notifications])]
+  (let [notifications @(rf/subscribe [::notification.s/entities])]
     [:div.fixed.flex.flex-col.m-4.right-0.bottom-0.gap-2.items-end
      (map-indexed
       (fn [index notification]
@@ -49,7 +49,7 @@
           "times"
           {:aria-label "Close"
            :class "icon-button absolute top-3 right-3 small"
-           :on-click #(rf/dispatch [::notification.e/remove index])}]
+           :on-click #(rf/dispatch [::notification.e/remove-nth index])}]
          (when-let [n (:count notification)]
            [:div.absolute.bg-error.left-0.top-0.px-1.py-0.5.rounded
             {:class "-translate-x-1/2 -translate-y-1/2"}

@@ -110,7 +110,7 @@
     :fx (mapv (fn [id] [:dispatch [::close id true]]) (:document-tabs db))}))
 
 (rf/reg-event-db
- ::scroll
+ ::cycle
  [persist]
  (fn [db [_ direction]]
    (let [document-tabs (:document-tabs db)

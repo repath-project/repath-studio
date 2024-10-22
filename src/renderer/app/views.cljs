@@ -253,7 +253,7 @@
   [:> Tooltip/Provider
    [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden
     [window.v/app-header]
-    (if (seq @(rf/subscribe [::app.s/documents]))
+    (if (seq @(rf/subscribe [::document.s/entities]))
       [:div.flex.h-full.flex-1.overflow-hidden.gap-px
        (when @(rf/subscribe [::app.s/panel-visible :tree])
          [:div.flex-col.hidden.md:flex.overflow-hidden

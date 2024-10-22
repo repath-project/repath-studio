@@ -21,7 +21,7 @@
    (h/add db (v/exception error))))
 
 (rf/reg-event-db
- ::remove
+ ::remove-nth
  (fn [db [_ i]]
    (update db :notifications vec/remove-nth i)))
 

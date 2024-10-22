@@ -54,18 +54,6 @@
      (tool.hierarchy/help tool dispatch-state))))
 
 (rf/reg-sub
- ::active-document
- :-> :active-document)
-
-(rf/reg-sub
- ::documents
- :-> :documents)
-
-(rf/reg-sub
- ::document-tabs
- :-> :document-tabs)
-
-(rf/reg-sub
  ::dom-rect
  :-> :dom-rect)
 

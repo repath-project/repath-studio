@@ -4,7 +4,8 @@
    [day8.re-frame.test :as rf-test]
    [re-frame.core :as rf]
    [renderer.app.events :as e]
-   [renderer.app.subs :as s]))
+   [renderer.app.subs :as s]
+   [renderer.document.subs :as document.s]))
 
 (deftest init
   (rf-test/run-test-sync
@@ -12,8 +13,8 @@
 
    (are [v sub] (= v sub)
      :transform @(rf/subscribe [::s/tool])
-     {} @(rf/subscribe [::s/documents])
-     [] @(rf/subscribe [::s/document-tabs]))))
+     {} @(rf/subscribe [::document.s/entities])
+     [] @(rf/subscribe [::document.s/tabs]))))
 
 (deftest tool
   (rf-test/run-test-sync

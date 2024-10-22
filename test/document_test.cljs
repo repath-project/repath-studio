@@ -4,7 +4,6 @@
    [day8.re-frame.test :as rf-test]
    [re-frame.core :as rf]
    [renderer.app.events :as app.e]
-   [renderer.app.subs :as app.subs]
    [renderer.document.db :as db]
    [renderer.document.events :as e]
    [renderer.document.subs :as s]))
@@ -37,7 +36,7 @@
    (rf/dispatch [::e/new])
    (rf/dispatch [::e/saved @(rf/subscribe [::s/active])])
    (rf/dispatch [::e/close-all-saved])
-   (is (= (count @(rf/subscribe [::app.subs/documents])) 1))
+   (is (= (count @(rf/subscribe [::s/entities])) 1))
 
    (rf/dispatch [::e/saved @(rf/subscribe [::s/active])])
    (rf/dispatch [::e/close-all])

@@ -103,7 +103,7 @@
 
 (defn root
   []
-  (let [dialogs @(rf/subscribe [::dialog.s/dialogs])]
+  (let [dialogs @(rf/subscribe [::dialog.s/entities])]
     [:> Dialog/Root
      {:open (seq dialogs)
       :on-open-change #(rf/dispatch [::dialog.e/close])}
