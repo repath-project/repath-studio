@@ -279,8 +279,8 @@
       (if alt-key?
         (-> db
             (history.h/swap)
-            (select-element (pointer/shift? e))
-            (element.h/duplicate delta)
+            (element.h/duplicate)
+            (translate delta)
             (snap.h/snap-with element.h/translate)
             (app.h/set-cursor "copy"))
         (app.h/set-state db :translate))

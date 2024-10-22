@@ -184,10 +184,10 @@
    (h/paste-styles db)))
 
 (rf/reg-event-db
- ::duplicate-in-place
+ ::duplicate
  [(finalize "Duplicate selection")]
  (fn [db]
-   (h/duplicate-in-place db)))
+   (h/duplicate db)))
 
 (rf/reg-event-db
  ::translate

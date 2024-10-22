@@ -147,7 +147,7 @@
             :icon "copy"
             :label "Duplicate"
             :disabled (not @(rf/subscribe [::element.s/some-selected]))
-            :action [::element.e/duplicate-in-place]}
+            :action [::element.e/duplicate]}
            {:id :divider-3
             :type :separator}
            {:id :select-all

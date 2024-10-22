@@ -130,7 +130,7 @@
                  [{:keyCode (key-codes "D")
                    :ctrlKey true
                    :shiftKey true}]]
-                [[::element.e/duplicate-in-place]
+                [[::element.e/duplicate]
                  [{:keyCode (key-codes "D")
                    :ctrlKey true}]]
                 [[::element.e/boolean-operation :exclude]

@@ -695,17 +695,10 @@
         (not= (:id (root db)) (:id parent-el))
         (translate [(- s-x1) (- s-y1)])) (selected-ids db)))))
 
-(m/=> duplicate-in-place [:-> App App])
-(defn duplicate-in-place
+(m/=> duplicate [:-> App App])
+(defn duplicate
   [db]
   (reduce create (deselect db) (top-selected-sorted db)))
-
-(m/=> duplicate [:-> App Vec2D App])
-(defn duplicate
-  [db offset]
-  (-> db
-      (duplicate-in-place)
-      (translate offset)))
 
 (defn animate
   ([db tag attrs]

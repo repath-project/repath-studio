@@ -60,7 +60,7 @@
 (defn ^:export duplicate
   "Duplicates the selected elements."
   []
-  (rf/dispatch [::element.e/duplicate-in-place]))
+  (rf/dispatch [::element.e/duplicate]))
 
 (defn ^:export create
   "Creates a new element."
