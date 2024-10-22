@@ -9,7 +9,7 @@
  ::cmdk
  (fn [db [_]]
    (h/create db {:title [:div.sr-only "Command panel"]
-                 :content [v/cmdk]
+                 :content (v/cmdk)
                  :attrs {:class "dialog-content"
                          :style {:top "33px"
                                  :transform "translate(-50%, 0)"}}})))
@@ -19,7 +19,7 @@
  (fn [db [_]]
    (h/create db {:title config/app-name
                  :close-button true
-                 :content [v/about]})))
+                 :content (v/about)})))
 
 (rf/reg-event-db
  ::confirmation
@@ -28,7 +28,9 @@
                  :close-button true
                  :content (v/confirmation data)})))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::close
- (fn [db [_]]
-   (update db :dialogs pop)))
+ (fn [{:keys [db]} [_ dispatch]]
+   (cond-> {:db (update db :dialogs pop)}
+     dispatch
+     (assoc :dispatch dispatch))))

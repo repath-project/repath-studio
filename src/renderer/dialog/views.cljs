@@ -37,8 +37,7 @@
      (or cancel-label "Cancel")]
     [:button.button.px-2.bg-primary.rounded.flex-1
      {:auto-focus true
-      :on-click #(do (rf/dispatch [::dialog.e/close])
-                     (rf/dispatch action))}
+      :on-click #(rf/dispatch [::dialog.e/close action])}
      (or confirm-label "OK")]]])
 
 (defn save
@@ -49,25 +48,21 @@
     " will be lost if you close the document without saving."]
    [:div.flex.gap-2.flex-wrap
     [:button.button.px-2.bg-primary.rounded.flex-1
-     {:on-click #(do (rf/dispatch [::dialog.e/close])
-                     (rf/dispatch [::document.e/close id false]))}
+     {:on-click #(rf/dispatch [::dialog.e/close [::document.e/close id false]])}
      "Don't save"]
     [:button.button.px-2.bg-primary.rounded.flex-1
      {:on-click #(rf/dispatch [::dialog.e/close])}
      "Cancel"]
     [:button.button.px-2.bg-primary.rounded.flex-1
      {:auto-focus true
-      :on-click #(do (rf/dispatch [::dialog.e/close])
-                     (rf/dispatch [::document.e/save-and-close id]))}
+      :on-click #(rf/dispatch [::dialog.e/close [::document.e/save-and-close id]])}
      "Save"]]])
 
 (defn cmdk-item
   [{:keys [label action icon] :as attrs}]
   (when-not (= (:type attrs) :separator)
     [:> Command/CommandItem
-     {:on-select (fn []
-                   (rf/dispatch [::dialog.e/close false])
-                   (rf/dispatch action))}
+     {:on-select #(rf/dispatch [::dialog.e/close action])}
      [:div.w-7.h-7.mr-2.rounded.line-height-6.flex.justify-center.items-center
       {:class (when icon "overlay")}
       (when icon [ui/icon icon])]
@@ -80,7 +75,8 @@
   (for [i items]
     (if (:items i)
       (cmdk-group-inner (:items i) (:label i))
-      ^{:key (:id i)} [cmdk-item (update i :label #(str/join " - " (remove nil? [label %])))])))
+      ^{:key (:id i)}
+      [cmdk-item (update i :label #(str/join " - " (remove nil? [label %])))])))
 
 (defn cmdk-group
   [{:keys [label items]}]
