@@ -9,6 +9,7 @@
    [renderer.app.events :as app.e]
    [renderer.app.subs]
    [renderer.app.views :as app.v]
+   [renderer.attribute.events]
    [renderer.attribute.impl.core]
    [renderer.color.effects]
    [renderer.color.events]

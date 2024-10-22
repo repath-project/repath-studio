@@ -2,6 +2,7 @@
   "https://developer.mozilla.org/en-US/docs/Web/SVG/Content_type#length"
   (:require
    [re-frame.core :as rf]
+   [renderer.attribute.events :as-alias e]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.attribute.views :as v]
    [renderer.element.events :as-alias element.e]
@@ -36,9 +37,7 @@
      :placeholder (if v placeholder "multiple")
      :on-wheel (fn [e]
                  (when (= (.-target e) (.-activeElement js/document))
-                   (if (pos? (.-deltaY e))
-                     (rf/dispatch [::element.e/update-attr-and-focus k - 1])
-                     (rf/dispatch [::element.e/update-attr-and-focus k + 1]))))}]
+                   (rf/dispatch [::e/update-and-focus k (if (pos? (.-deltaY e)) - +) 1])))}]
    [:div.flex.gap-px
     [:button.form-control-button
      {:disabled disabled

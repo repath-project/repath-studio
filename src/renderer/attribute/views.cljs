@@ -6,6 +6,7 @@
    [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.s]
+   [renderer.attribute.events :as-alias e]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.element.events :as-alias element.e]
    [renderer.element.hierarchy :as element.hierarchy]
@@ -108,9 +109,7 @@
                     :class "w-20"
                     :on-wheel (fn [e]
                                 (when (= (.-target e) (.-activeElement js/document))
-                                  (if (pos? (.-deltaY e))
-                                    (rf/dispatch [::element.e/update-attr-and-focus k - step])
-                                    (rf/dispatch [::element.e/update-attr-and-focus k + step]))))}]
+                                  (rf/dispatch [::e/update-and-focus k (if (pos? (.-deltaY e)) - +) step])))}]
    [:div.px-1.w-full.bg-primary
     [ui/slider (merge attrs
                       {:value [(if (= "" v) placeholder v)]
