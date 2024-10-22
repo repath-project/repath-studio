@@ -145,9 +145,11 @@
         (-> (create-tab document)
             (center))
 
+        (:path document)
+        (add-recent (:path document))
+
         :always
-        (-> (add-recent (:path document))
-            (set-active (:id document))))
+        (set-active (:id document)))
 
       (let [explanation (-> document db/explain me/humanize str)]
         (notification.h/add db (notification.v/spec-failed "Load document" explanation))))))

@@ -87,7 +87,7 @@
          (h/set-active id)
          (dialog.h/create {:title "Do you want to save your changes?"
                            :close-button true
-                           :content [dialog.v/save (get-in db [:documents id])]
+                           :content (dialog.v/save (get-in db [:documents id]))
                            :attrs {:onOpenAutoFocus dom/prevent-default!}})))))
 
 (rf/reg-event-fx
@@ -242,7 +242,7 @@
                        :options file-picker-options
                        :formatter (fn [file] {:id id
                                               :title (.-name file)})
-                       :on-resolution ::saved}}))))
+                       :on-resolution ::close-saved}}))))
 
 (rf/reg-event-fx
  ::save-as
@@ -262,11 +262,16 @@
 (rf/reg-event-db
  ::saved
  [persist]
- (fn [db [_ {:keys [path id] :as document-info}]]
-   (let [position (get-in db [:documents id :history :position])]
-     (-> db
+ (fn [db [_ document-info]]
+   (if document-info
+     (let [{:keys [path id]} document-info
+           position (get-in db [:documents id :history :position])]
+       (cond-> db
+         :always
          (update-in [:documents id] merge (assoc document-info :save position))
-         (h/add-recent path)))))
+
+         path
+         (h/add-recent path))) db)))
 
 (rf/reg-event-fx
  ::close-saved
