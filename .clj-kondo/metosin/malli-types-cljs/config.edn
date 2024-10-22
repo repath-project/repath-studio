@@ -6549,7 +6549,7 @@
                                                                                                     :pen-mode :boolean}}
                                                                                              :any],
                                                                                       :ret :vector}}},
-                                                                   duplicate {:arities {2 {:args [{:op :keys,
+                                                                   duplicate {:arities {1 {:args [{:op :keys,
                                                                                                    :opt {:explanation :string,
                                                                                                          :system-fonts :vector,
                                                                                                          :copied-bounds :seqable,
@@ -6622,8 +6622,7 @@
                                                                                                          :panels :map,
                                                                                                          :worker {:op :keys,
                                                                                                                   :req {:tasks :map}},
-                                                                                                         :pen-mode :boolean}}
-                                                                                                  :seqable],
+                                                                                                         :pen-mode :boolean}}],
                                                                                            :ret {:op :keys,
                                                                                                  :opt {:explanation :string,
                                                                                                        :system-fonts :vector,

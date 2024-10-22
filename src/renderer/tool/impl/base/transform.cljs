@@ -202,7 +202,7 @@
 
 (m/=> scale [:-> App Vec2D map? App])
 (defn scale
-  [db offset {:keys [ratio-locked in-place] :as options}]
+  [db offset {:keys [ratio-locked in-place recursive]}]
   (let [handle (-> db :clicked-element :id)
         bounds (element.h/bounds db)
         [offset pivot-point] (delta->scale-with-pivot-point handle offset bounds)
@@ -211,11 +211,11 @@
         dimensions (bounds/->dimensions bounds)
         ratio (mat/div (mat/add dimensions offset) dimensions)
         ratio (cond-> ratio ratio-locked (lock-ratio handle))
-        ;; TODO: Handle negative ratio.
+        ;; TODO: Handle negative ratio, and position on recursive scale.
         ratio (mapv #(max % 0.01) ratio)]
     (-> db
         (assoc :pivot-point pivot-point)
-        (element.h/scale ratio pivot-point options))))
+        (element.h/scale ratio pivot-point recursive))))
 
 (m/=> select-element [:-> App boolean? App])
 (defn select-element

@@ -19,7 +19,6 @@
    [renderer.utils.extra :refer [partial-right]]
    [renderer.utils.hiccup :as hiccup]
    [renderer.utils.map :as map]
-   [renderer.utils.math :refer [Vec2D]]
    [renderer.utils.path :as path]
    [renderer.utils.vec :as vec]))
 
@@ -534,19 +533,12 @@
    (update-el db id hierarchy/place pos)))
 
 (defn scale
-  [db ratio pivot-point {:keys [in-place recursive]}]
+  [db ratio pivot-point recursive]
   (let [ids-to-scale (cond-> (selected-ids db) recursive (set/union (descendant-ids db)))]
     (reduce
      (fn [db id]
-       (let [pivot-point (->> (entity db id) :bounds (take 2) (mat/sub pivot-point))
-             db (update-el db id hierarchy/scale ratio pivot-point)]
-         (if in-place
-           ;; FIXME: Handle locked ratio.
-           (let [pointer-delta (mat/sub (:adjusted-pointer-pos db) (:adjusted-pointer-offset db))
-                 child-ids (set (children-ids db id))
-                 child-ids (set/intersection child-ids ids-to-scale)]
-             (reduce (partial-right translate pointer-delta) db child-ids))
-           db)))
+       (let [pivot-point (->> (entity db id) :bounds (take 2) (mat/sub pivot-point))]
+         (update-el db id hierarchy/scale ratio pivot-point)))
      db
      ids-to-scale)))
 

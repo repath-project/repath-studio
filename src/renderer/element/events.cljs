@@ -206,7 +206,7 @@
  [(finalize "Scale selection")]
  (fn [db [_ ratio]]
    (let [pivot-point (-> db h/bounds bounds/center)]
-     (h/scale db ratio pivot-point {}))))
+     (h/scale db ratio pivot-point false))))
 
 (rf/reg-event-db
  ::move-up
