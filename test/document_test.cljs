@@ -74,8 +74,11 @@
      (is (= @fill "black"))
      (is (= @stroke "white"))
 
-     (rf/dispatch [::e/set-fill "red"])
-     (is (= @fill "red")))))
+     (rf/dispatch [::e/set-attr :fill "red"])
+     (is (= @fill "red"))
+
+     (rf/dispatch [::e/set-attr :stroke "yellow"])
+     (is (= @stroke "yellow")))))
 
 (deftest filters
   (rf-test/run-test-sync

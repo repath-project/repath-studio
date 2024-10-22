@@ -1,7 +1,3 @@
-.palette {
-  flex: 0 1 210px;
-}
-
 .color-rect {
   @apply button-size;
   border: 1px solid var(--border-color);

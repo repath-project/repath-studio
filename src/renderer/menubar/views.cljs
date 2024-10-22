@@ -12,6 +12,7 @@
    [renderer.frame.events :as-alias frame.e]
    [renderer.history.events :as-alias history.e]
    [renderer.history.subs :as-alias history.s]
+   [renderer.menubar.events :as-alias e]
    [renderer.menubar.filters :as filters]
    [renderer.ruler.events :as-alias ruler.e]
    [renderer.ruler.subs :as-alias ruler.s]
@@ -598,8 +599,7 @@
   [{:keys [label action disabled]}]
   [:> Menubar/Item
    {:class "menu-item"
-    :on-select #(do (rf/dispatch action)
-                    (rf/dispatch [::app.e/focus nil]))
+    :on-select #(rf/dispatch [::e/select-item action])
     :disabled disabled}
    label
    [:div.right-slot

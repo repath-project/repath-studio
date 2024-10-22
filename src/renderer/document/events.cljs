@@ -68,14 +68,9 @@
        (h/assoc-attr :stroke (h/attr db :fill)))))
 
 (rf/reg-event-db
- ::set-fill
- (fn [db [_ v]]
-   (h/assoc-attr db :fill v)))
-
-(rf/reg-event-db
- ::set-stroke
- (fn [db [_ v]]
-   (h/assoc-attr db :fill v)))
+ ::set-attr
+ (fn [db [_ k v]]
+   (h/assoc-attr db k v)))
 
 (rf/reg-event-db
  ::close
