@@ -16416,14 +16416,17 @@
                                         renderer.utils.keyboard {key-code->key {:arities {1 {:args [:number],
                                                                                              :ret :nilable/string}}},
                                                                  modifiers {:arities {1 {:args [:any], :ret :set}}}},
-                                        renderer.ruler.views {bounds-rect {:arities {0 {:args [], :ret :any}}},
-                                                              pointer {:arities {0 {:args [], :ret :any}}},
+                                        renderer.ruler.views {bounds-rect {:arities {1 {:args [:keyword], :ret :any}}},
+                                                              pointer {:arities {1 {:args [:keyword], :ret :any}}},
                                                               line {:arities {1 {:args [:map], :ret :any}}},
-                                                              label {:arities {3 {:args [:number :number :string],
+                                                              label {:arities {4 {:args [:keyword
+                                                                                         :number
+                                                                                         :number
+                                                                                         :string],
                                                                                   :ret :any}}},
-                                                              base-lines {:arities {0 {:args [], :ret :any}}},
-                                                              ruler {:arities {0 {:args [], :ret :any}}},
-                                                              grid-lines {:arities {0 {:args [], :ret :any}}}},
+                                                              base-lines {:arities {1 {:args [:keyword], :ret :any}}},
+                                                              ruler {:arities {1 {:args [:keyword], :ret :any}}},
+                                                              grid-lines {:arities {1 {:args [:keyword], :ret :any}}}},
                                         renderer.utils.compatibility {version->vec {:arities {1 {:args [:string],
                                                                                                  :ret :seqable}}},
                                                                       requires-migration? {:arities {2 {:args [:seqable

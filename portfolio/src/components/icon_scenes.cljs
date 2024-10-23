@@ -91,7 +91,6 @@
    "pencil"
    "play"
    "plus"
-   "pointer-tool"
    "pointer"
    "polygon-tool"
    "polygon"
@@ -141,12 +140,11 @@
 
 (defscene default
   :title "Default icons"
-  [ui/scroll-area
-   [:div.flex.gap-2.p-3
-    (for [icon-name default-icons]
-      ^{:key icon-name}
-      [:div {:title icon-name}
-       [ui/icon icon-name]])]])
+  [:div.flex.flex-wrap.gap-2.p-3
+   (for [icon-name default-icons]
+     ^{:key icon-name}
+     [:div {:title icon-name}
+      [ui/icon icon-name]])])
 
 (def branded-icons
   ["android_head"

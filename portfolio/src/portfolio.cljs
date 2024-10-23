@@ -3,7 +3,8 @@
             [components.icon-scenes]
             [components.slider-scenes]
             [components.switch-scenes]
-            [portfolio.ui :as ui]))
+            [portfolio.ui :as ui]
+            [sections.home-scenes]))
 
 (ui/start!
  {:config
@@ -19,7 +20,7 @@
    :background/default-option-id :dark-mode
    :viewport/defaults {:viewport/padding [0]
                        :viewport/width "100%"
-                       :viewport/height 41}
+                       :viewport/height "500px"}
    :canvas/gallery-defaults {:viewport/padding [0]
                              :viewport/width "100%"
                              :viewport/height 41}}})

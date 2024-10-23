@@ -150,10 +150,10 @@
    10 [74 105]})
 
 (defn home [recent-documents]
-  [:div.flex.overflow-hidden.md:overflow-visible
+  [:div.flex.overflow-hidden
    [ui/scroll-area
-    [:div.flex.min-h-full.justify-center.p-2.md:h-dvh
-     [:div.self-center.justify-between.flex.h-full.md:h-auto.w-full.lg:w-auto
+    [:div.flex.justify-center.p-2
+     [:div.justify-between.flex.w-full.lg:w-auto
       [:div.bg-primary.p-6.lg:p-12.flex.max-w-screen-xl.w-full.gap-8
        [:div.flex-1
         [:h1.text-4xl.mb-1.font-light config/app-name]
@@ -246,7 +246,7 @@
           "Changelog"]]]
 
        [:div.hidden.md:block.flex-1
-        [:img {:src "img/icon.svg"}]]]]]]])
+        [:img {:src "../img/icon.svg"}]]]]]]])
 
 (defn root
   []
@@ -256,7 +256,7 @@
         active-tool (rf/subscribe [::tool.s/active])
         recent-docs (rf/subscribe [::document.s/recent])]
     [:> Tooltip/Provider
-     [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden
+     [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden.justify-between
       [window.v/app-header]
       (if (seq @documents)
         [:div.flex.h-full.flex-1.overflow-hidden.gap-px
@@ -279,6 +279,7 @@
                 [:div.bg-primary.grow.flex.mr-px]]])
             [:div.bg-primary.flex
              [ui/scroll-area [toolbar.object/root]]]]]]]
-        [home @recent-docs])]
+        [home @recent-docs])
+      [:div]]
      [dialog.v/root]
      [notification/main]]))
