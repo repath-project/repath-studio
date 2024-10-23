@@ -1,5 +1,6 @@
 (ns renderer.tool.impl.misc.fill
   (:require
+   [renderer.document.handlers :as document.h]
    [renderer.element.handlers :as element.h]
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]))
@@ -20,7 +21,7 @@
 
 (defmethod hierarchy/pointer-up :fill
   [db e]
-  (let [color (get-in db [:documents (:active-document db) :fill])
+  (let [color (document.h/attr db :fill)
         el-id (-> e :element :id)]
     (-> db
         (element.h/set-attr el-id :fill color)
