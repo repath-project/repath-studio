@@ -36,3 +36,10 @@
 (deftest test-center
   (testing "center of bounds"
     (is (= (bounds/center [0 0 10 10]) [5 5]))))
+
+(deftest test-->snapping-points
+  (testing "snapping points of bounds"
+    (is (= (bounds/->snapping-points [0 0 10 10] #{:corners :centers :midpoints})
+           [[0 0] [0 10] [10 0] [10 10] [5 5] [0 5] [10 5] [5 0] [5 10]]))
+
+    (is (= (bounds/->snapping-points [0 0 10 10] #{}) []))))

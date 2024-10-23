@@ -57,25 +57,9 @@
 (defn snapping-points
   [el options]
   (let [points (or (element.hierarchy/snapping-points el) [])]
-    (if-let [bounds (:bounds el)]
-      (let [[x1 y1 x2 y2] bounds
-            [cx cy] (utils.bounds/center bounds)]
-        (cond-> points
-          (:corners options)
-          (into [[x1 y1]
-                 [x1 y2]
-                 [x2 y1]
-                 [x2 y2]])
-
-          (:centers options)
-          (into [[cx cy]])
-
-          (:midpoints options)
-          (into [[x1 cy]
-                 [x2 cy]
-                 [cx y1]
-                 [cx y2]])))
-      points)))
+    (cond-> points
+      (:bounds el)
+      (into (utils.bounds/->snapping-points (:bounds el) options)))))
 
 (m/=> attributes [:-> Element Attrs])
 (defn attributes

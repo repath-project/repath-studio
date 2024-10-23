@@ -32,8 +32,7 @@
  :<- [::options]
  (fn [[non-selected-visible-elements active options] _]
    (when active
-     (reduce (fn [points element]
-               (apply conj points (utils.el/snapping-points element options)))
+     (reduce (fn [points el] (into points (utils.el/snapping-points el options)))
              [] non-selected-visible-elements))))
 
 (rf/reg-sub

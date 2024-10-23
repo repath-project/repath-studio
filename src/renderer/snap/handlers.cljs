@@ -9,7 +9,8 @@
    [renderer.element.handlers :as element.h]
    [renderer.snap.db :refer [SnapOption NearestNeighbor]]
    [renderer.snap.subs :as-alias snap.s]
-   [renderer.utils.element :as utils.el]
+   [renderer.utils.bounds :as bounds]
+   [renderer.utils.element :as element]
    [renderer.utils.math :refer [Vec2D]]))
 
 (m/=> toggle-option [:-> App SnapOption App])
@@ -23,13 +24,17 @@
 (defn base-points
   [db]
   (let [elements (vals (element.h/entities db))
-        selected-visible (filter #(and (:visible %) (:selected %)) elements)]
+        selected (filter :selected elements)
+        selected-visible (filter :visible selected)
+        options (-> db :snap :options)]
     (when (-> db :snap :active)
       (cond
-        (and (contains? #{:translate :clone} (:state db)) (seq selected-visible))
-        (reduce (fn [points element]
-                  (apply conj points (utils.el/snapping-points element (-> db :snap :options))))
-                [] selected-visible)
+        (and (contains? #{:translate :clone} (:state db)) (seq selected))
+        (reduce (fn [points el] (into points (element/snapping-points el options)))
+                (if (seq (rest selected))
+                  (bounds/->snapping-points (element.h/bounds db) options)
+                  [])
+                selected-visible)
 
         (contains? #{:edit :scale} (:state db))
         [(mat/add [(-> db :clicked-element :x) (-> db :clicked-element :y)]

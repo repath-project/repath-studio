@@ -2,6 +2,7 @@
   (:require
    [clojure.core.matrix :as mat]
    [malli.core :as m]
+   [renderer.snap.db :refer [SnapOptions]]
    [renderer.utils.dom :refer [DomElement]]
    [renderer.utils.math :refer [Vec2D]]))
 
@@ -73,3 +74,24 @@
        (<= top y)
        (>= right x)
        (>= bottom y)))
+
+(m/=> ->snapping-points [:-> Bounds SnapOptions [:* Vec2D]])
+(defn ->snapping-points
+  [bounds options]
+  (let [[x1 y1 x2 y2] bounds
+        [cx cy] (center bounds)]
+    (cond-> []
+      (:corners options)
+      (into [[x1 y1]
+             [x1 y2]
+             [x2 y1]
+             [x2 y2]])
+
+      (:centers options)
+      (into [[cx cy]])
+
+      (:midpoints options)
+      (into [[x1 cy]
+             [x2 cy]
+             [cx y1]
+             [cx y2]]))))
