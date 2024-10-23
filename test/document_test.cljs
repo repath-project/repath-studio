@@ -1,6 +1,6 @@
 (ns document-test
   (:require
-   [cljs.test :refer-macros [deftest is]]
+   [cljs.test :refer-macros [deftest is testing]]
    [day8.re-frame.test :as rf-test]
    [re-frame.core :as rf]
    [renderer.app.events :as app.e]
@@ -24,23 +24,27 @@
    (rf/dispatch [::app.e/initialize-db])
    (rf/dispatch [::e/init])
 
-   (rf/dispatch [::e/close (:id @(rf/subscribe [::s/active]) false)])
-   (is (not @(rf/subscribe [::s/active])))
+   (testing "close"
+     (rf/dispatch [::e/close (:id @(rf/subscribe [::s/active]) false)])
+     (is (not @(rf/subscribe [::s/active]))))
 
-   (rf/dispatch [::e/new])
-   (rf/dispatch [::e/saved @(rf/subscribe [::s/active])])
-   (rf/dispatch [::e/close-active])
-   (is (not @(rf/subscribe [::s/active])))
+   (testing "close active"
+     (rf/dispatch [::e/new])
+     (rf/dispatch [::e/saved @(rf/subscribe [::s/active])])
+     (rf/dispatch [::e/close-active])
+     (is (not @(rf/subscribe [::s/active]))))
 
-   (rf/dispatch [::e/new])
-   (rf/dispatch [::e/new])
-   (rf/dispatch [::e/saved @(rf/subscribe [::s/active])])
-   (rf/dispatch [::e/close-all-saved])
-   (is (= (count @(rf/subscribe [::s/entities])) 1))
+   (testing "close all saved"
+     (rf/dispatch [::e/new])
+     (rf/dispatch [::e/new])
+     (rf/dispatch [::e/saved @(rf/subscribe [::s/active])])
+     (rf/dispatch [::e/close-all-saved])
+     (is (= (count @(rf/subscribe [::s/entities])) 1)))
 
-   (rf/dispatch [::e/saved @(rf/subscribe [::s/active])])
-   (rf/dispatch [::e/close-all])
-   (is (not @(rf/subscribe [::s/active])))))
+   (testing "close all"
+     (rf/dispatch [::e/saved @(rf/subscribe [::s/active])])
+     (rf/dispatch [::e/close-all])
+     (is (not @(rf/subscribe [::s/active]))))))
 
 (deftest create
   (rf-test/run-test-sync
@@ -66,18 +70,22 @@
 
    (let [fill (rf/subscribe [::s/fill])
          stroke (rf/subscribe [::s/stroke])]
-     (is (= @fill "white"))
-     (is (= @stroke "black"))
+     (testing "default color values"
+       (is (= @fill "white"))
+       (is (= @stroke "black")))
 
-     (rf/dispatch [::e/swap-colors])
-     (is (= @fill "black"))
-     (is (= @stroke "white"))
+     (testing "swap colors"
+       (rf/dispatch [::e/swap-colors])
+       (is (= @fill "black"))
+       (is (= @stroke "white")))
 
-     (rf/dispatch [::e/set-attr :fill "red"])
-     (is (= @fill "red"))
+     (testing "set fill"
+       (rf/dispatch [::e/set-attr :fill "red"])
+       (is (= @fill "red")))
 
-     (rf/dispatch [::e/set-attr :stroke "yellow"])
-     (is (= @stroke "yellow")))))
+     (testing "set stroke"
+       (rf/dispatch [::e/set-attr :stroke "yellow"])
+       (is (= @stroke "yellow"))))))
 
 (deftest filters
   (rf-test/run-test-sync
@@ -85,16 +93,20 @@
    (rf/dispatch [::e/init])
 
    (let [active-filter (rf/subscribe [::s/filter])]
-     (is (not @active-filter))
+     (testing "default state"
+       (is (not @active-filter)))
 
-     (rf/dispatch [::e/toggle-filter :blur])
-     (is (= @active-filter :blur))
+     (testing "enable filter"
+       (rf/dispatch [::e/toggle-filter :blur])
+       (is (= @active-filter :blur)))
 
-     (rf/dispatch [::e/toggle-filter :deuteranopia])
-     (is (= @active-filter :deuteranopia))
+     (testing "change active filter"
+       (rf/dispatch [::e/toggle-filter :deuteranopia])
+       (is (= @active-filter :deuteranopia)))
 
-     (rf/dispatch [::e/toggle-filter :deuteranopia])
-     (is (not @active-filter)))))
+     (testing "disable filter"
+       (rf/dispatch [::e/toggle-filter :deuteranopia])
+       (is (not @active-filter))))))
 
 
 (deftest collapse-expand
@@ -104,13 +116,16 @@
 
    (let [collapsed-ids (rf/subscribe [::s/collapsed-ids])
          id (random-uuid)]
-     (is (empty? @collapsed-ids))
+     (testing "default state"
+       (is (empty? @collapsed-ids)))
 
-     (rf/dispatch [::e/collapse-el id])
-     (is (= #{id} @collapsed-ids))
+     (testing "collapse"
+       (rf/dispatch [::e/collapse-el id])
+       (is (= #{id} @collapsed-ids)))
 
-     (rf/dispatch [::e/expand-el id])
-     (is (empty? @collapsed-ids)))))
+     (testing "expand"
+       (rf/dispatch [::e/expand-el id])
+       (is (empty? @collapsed-ids))))))
 
 (deftest hover
   (rf-test/run-test-sync
@@ -119,13 +134,16 @@
 
    (let [hovered-ids (rf/subscribe [::s/hovered-ids])
          id (random-uuid)]
-     (is (empty? @hovered-ids))
+     (testing "default state"
+       (is (empty? @hovered-ids)))
 
-     (rf/dispatch [::e/set-hovered-id id])
-     (is (= #{id} @hovered-ids))
+     (testing "hover"
+       (rf/dispatch [::e/set-hovered-id id])
+       (is (= #{id} @hovered-ids)))
 
-     (rf/dispatch [::e/clear-hovered])
-     (is (empty? @hovered-ids)))))
+     (testing "clear hovered"
+       (rf/dispatch [::e/clear-hovered])
+       (is (empty? @hovered-ids))))))
 
 (deftest save
   (rf-test/run-test-sync
@@ -135,12 +153,13 @@
    (let [saved (rf/subscribe [::s/active-saved])
          document (rf/subscribe [::s/active])
          id (:id @document)]
-     (is (not @saved))
+     (testing "default state"
+       (is (not @saved)))
 
-     (rf/dispatch [::e/saved @document])
-     (is @saved)
-
-     (is @(rf/subscribe [::s/saved id])))))
+     (testing "save"
+       (rf/dispatch [::e/saved @document])
+       (is @saved)
+       (is @(rf/subscribe [::s/saved id]))))))
 
 (deftest load
   (rf-test/run-test-sync

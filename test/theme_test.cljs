@@ -1,6 +1,6 @@
 (ns theme-test
   (:require
-   [cljs.test :refer-macros [deftest is]]
+   [cljs.test :refer-macros [deftest is testing]]
    [day8.re-frame.test :as rf-test]
    [re-frame.core :as rf]
    [renderer.app.events :as app.e]
@@ -13,13 +13,15 @@
    (rf/dispatch [::e/set-native-mode :light])
 
    (let [theme-mode (rf/subscribe [::s/mode])]
-     (is (= :dark @theme-mode))
+     (testing "default theme"
+       (is (= :dark @theme-mode)))
 
-     (rf/dispatch [::e/cycle-mode])
-     (is (= :light @theme-mode))
+     (testing "theme cycling"
+       (rf/dispatch [::e/cycle-mode])
+       (is (= :light @theme-mode))
 
-     (rf/dispatch [::e/cycle-mode])
-     (is (= :system @theme-mode))
+       (rf/dispatch [::e/cycle-mode])
+       (is (= :system @theme-mode))
 
-     (rf/dispatch [::e/cycle-mode])
-     (is (= :dark @theme-mode)))))
+       (rf/dispatch [::e/cycle-mode])
+       (is (= :dark @theme-mode))))))

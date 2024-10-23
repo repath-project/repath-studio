@@ -1,7 +1,7 @@
 (ns element-test
   (:require
    ["paper" :refer [paper]]
-   [cljs.test :refer-macros [deftest are is]]
+   [cljs.test :refer-macros [deftest are is testing]]
    [day8.re-frame.test :as rf-test]
    [re-frame.core :as rf]
    [renderer.app.events :as app.e]
@@ -19,10 +19,11 @@
 
    (let [root (rf/subscribe [::s/root])
          root-children (rf/subscribe [::s/root-children])]
-     (is (db/valid? @root))
-     (are [v sub] (= v sub)
-       :canvas (:tag @root)
-       :svg (-> @root-children first :tag)))))
+     (testing "default elements"
+       (is (db/valid? @root))
+       (are [v sub] (= v sub)
+         :canvas (:tag @root)
+         :svg (-> @root-children first :tag))))))
 
 (deftest select
   (rf-test/run-test-sync
@@ -30,22 +31,26 @@
    (rf/dispatch [::document.e/init])
 
    (let [selected (rf/subscribe [::s/selected])]
-     (is (empty? @selected))
+     (testing "default state"
+       (is (empty? @selected)))
 
-     (rf/dispatch [::e/select-all])
-     (is (= (count @selected) 1))
+     (testing "select all"
+       (rf/dispatch [::e/select-all])
+       (is (= (count @selected) 1)))
 
-     (rf/dispatch [::e/deselect-all])
-     (is (empty? @selected))
+     (testing "deselect all"
+       (rf/dispatch [::e/deselect-all])
+       (is (empty? @selected)))
 
-     (rf/dispatch [::e/add {:tag :rect
-                            :attrs {:width 100 :height 100}}])
-     (is (= :rect (-> @selected first :tag)))
+     (testing "select same tags"
+       (rf/dispatch [::e/add {:tag :rect
+                              :attrs {:width 100 :height 100}}])
+       (is (= :rect (-> @selected first :tag)))
 
-     (rf/dispatch [::e/add {:tag :rect
-                            :attrs {:width 100 :height 100}}])
-     (rf/dispatch [::e/select-same-tags])
-     (is (= (count @selected) 2)))))
+       (rf/dispatch [::e/add {:tag :rect
+                              :attrs {:width 100 :height 100}}])
+       (rf/dispatch [::e/select-same-tags])
+       (is (= (count @selected) 2))))))
 
 (deftest lock
   (rf-test/run-test-sync
@@ -55,13 +60,16 @@
    (let [selected (rf/subscribe [::s/selected])]
      (rf/dispatch [::e/add {:tag :rect
                             :attrs {:width 100 :height 100}}])
-     (is (not (-> @selected first :locked)))
+     (testing "default state"
+       (is (not (-> @selected first :locked))))
 
-     (rf/dispatch [::e/lock])
-     (is (-> @selected first :locked))
+     (testing "lock"
+       (rf/dispatch [::e/lock])
+       (is (-> @selected first :locked)))
 
-     (rf/dispatch [::e/unlock])
-     (is (not (-> @selected first :locked))))))
+     (testing "unlock"
+       (rf/dispatch [::e/unlock])
+       (is (not (-> @selected first :locked)))))))
 
 (deftest attribute
   (rf-test/run-test-sync
@@ -73,14 +81,17 @@
                             :attrs {:width 100 :height 100 :fill "white"}}])
      (is (= (-> @selected first :attrs :fill) "white"))
 
-     (rf/dispatch [::e/set-attr :fill "red"])
-     (is (= (-> @selected first :attrs :fill) "red"))
+     (testing "set attribute"
+       (rf/dispatch [::e/set-attr :fill "red"])
+       (is (= (-> @selected first :attrs :fill) "red")))
 
-     (rf/dispatch [::e/preview-attr :fill "yellow"])
-     (is (= (-> @selected first :attrs :fill) "yellow"))
+     (testing "preview attribute"
+       (rf/dispatch [::e/preview-attr :fill "yellow"])
+       (is (= (-> @selected first :attrs :fill) "yellow")))
 
-     (rf/dispatch [::e/remove-attr :fill])
-     (is (not (-> @selected first :attrs :fill))))))
+     (testing "remove attribute"
+       (rf/dispatch [::e/remove-attr :fill])
+       (is (not (-> @selected first :attrs :fill)))))))
 
 (deftest scale
   (rf-test/run-test-sync
@@ -186,9 +197,11 @@
                           :attrs {:x 100 :y 100 :width 100 :height 100}}])
    (let [selected (rf/subscribe [::s/selected])
          id (-> @selected first :id)]
-     (rf/dispatch [::e/group])
-     (is (= (-> @selected first :tag) :g))
-     (is (= (-> @selected first :children) [id]))
+     (testing "group"
+       (rf/dispatch [::e/group])
+       (is (= (-> @selected first :tag) :g))
+       (is (= (-> @selected first :children) [id])))
 
-     (rf/dispatch [::e/ungroup])
-     (is (= (-> @selected first :tag) :rect)))))
+     (testing "ungroup"
+       (rf/dispatch [::e/ungroup])
+       (is (= (-> @selected first :tag) :rect))))))

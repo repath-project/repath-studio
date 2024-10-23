@@ -265,3 +265,21 @@
            [0 0 50 50]))
 
     (is (thrown? js/Error (hierarchy/path svg-el)))))
+
+(deftest text
+  (let [text-el {:type :element
+                 :tag :text
+                 :content "My text"
+                 :attrs {:x "0"
+                         :y "0"
+                         :width "50"
+                         :height "50"}}]
+
+    (is (= (hierarchy/translate text-el [50 50])
+           {:type :element
+            :tag :text
+            :content "My text"
+            :attrs {:x "50"
+                    :y "50"
+                    :width "50"
+                    :height "50"}}))))
