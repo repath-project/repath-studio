@@ -5,7 +5,7 @@
 
 #_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defscene slider
-  :title "Deafult slider"
+  :title "Default slider"
   :params (atom [25])
   [store]
   [:div.toolbar.bg-primary.flex.gap-2
