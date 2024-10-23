@@ -37,6 +37,7 @@
    [renderer.theme.subs]
    [renderer.timeline.events]
    [renderer.timeline.subs]
+   [renderer.tool.effects]
    [renderer.tool.events]
    [renderer.tool.impl.core]
    [renderer.tool.subs]

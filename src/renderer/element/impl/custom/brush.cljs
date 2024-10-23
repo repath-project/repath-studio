@@ -11,7 +11,6 @@
    [renderer.element.hierarchy :as hierarchy]
    [renderer.handle.views :as handle.v]
    [renderer.utils.attribute :as attr]
-   [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.units :as units]))
@@ -152,12 +151,6 @@
              #(->> (attr/str->seq %)
                    (transduce (partition-all 3) (partial translate offset) [])
                    (str/join " "))))
-
-(defmethod hierarchy/place :brush
-  [el position]
-  (let [center (bounds/center (hierarchy/bounds el))
-        offset (mat/sub position center)]
-    (hierarchy/translate el offset)))
 
 (defmethod hierarchy/scale :brush
   [el ratio pivot-point]

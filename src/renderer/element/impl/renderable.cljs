@@ -1,7 +1,6 @@
 (ns renderer.element.impl.renderable
   (:require
    ["react" :as react]
-   [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [renderer.document.subs :as-alias document.s]
@@ -27,12 +26,6 @@
       (let [bounds (bounds/from-bbox dom-el)]
         (.remove dom-el)
         bounds))))
-
-(defmethod hierarchy/place ::hierarchy/renderable
-  [el position]
-  (let [center (bounds/center (hierarchy/bounds el))
-        offset (mat/sub position center)]
-    (hierarchy/translate el offset)))
 
 (defn ghost-element
   "Renders a ghost element on top of the actual element to ensure that the user

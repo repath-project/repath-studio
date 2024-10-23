@@ -19,6 +19,7 @@
    [renderer.utils.extra :refer [partial-right]]
    [renderer.utils.hiccup :as hiccup]
    [renderer.utils.map :as map]
+   [renderer.utils.math :as math :refer [Vec2D]]
    [renderer.utils.path :as path]
    [renderer.utils.vec :as vec]))
 
@@ -499,6 +500,7 @@
         (set-parent parent-id id)
         (update-prop parent-id :children vec/move last-index i))))
 
+(m/=> hovered-svg [:-> App Element])
 (defn hovered-svg
   [db]
   (let [svgs (reverse (root-svgs db))
@@ -507,18 +509,30 @@
      (some #(when (bounds/contained-point? (:bounds %) pointer-pos) %) svgs)
      (root db))))
 
+(m/=> translate [:function
+                 [:-> App Vec2D App]
+                 [:-> App uuid? Vec2D App]])
 (defn translate
+  "Moves elements by a given offset."
   ([db offset]
    (reduce (partial-right translate offset) db (top-ancestor-ids db)))
   ([db id offset]
    (update-el db id hierarchy/translate offset)))
 
+(m/=> place [:function
+             [:-> App Vec2D App]
+             [:-> App uuid? Vec2D App]])
 (defn place
-  ([db pos]
-   (reduce (partial-right place pos) db (top-ancestor-ids db)))
-  ([db id pos]
-   (update-el db id hierarchy/place pos)))
+  "Positions elements to a given global position."
+  ([db position]
+   (reduce (partial-right place position) db (top-ancestor-ids db)))
+  ([db id position]
+   (let [el (entity db id)
+         center (bounds/center (hierarchy/bounds el))
+         offset (mat/sub position center)]
+     (update-el db id hierarchy/translate offset))))
 
+(m/=> scale [:-> App Vec2D Vec2D boolean? App])
 (defn scale
   [db ratio pivot-point recursive]
   (let [ids-to-scale (cond-> (selected-ids db) recursive (set/union (descendant-ids db)))]
@@ -529,6 +543,12 @@
      db
      ids-to-scale)))
 
+(def Direction
+  [:enum :top :center-vertical :bottom :left :center-horizontal :right])
+
+(m/=> parent [:function
+              [:-> App Direction App]
+              [:-> App uuid? Direction App]])
 (defn align
   ([db direction]
    (reduce (partial-right align direction) db (selected-ids db)))
@@ -547,18 +567,27 @@
                         :center-horizontal [cx 0]
                         :right [x2 0])))))
 
+(m/=> ->path [:function
+              [:-> App App]
+              [:-> App uuid? App]])
 (defn ->path
+  "Converts elements to paths."
   ([db]
    (reduce ->path db (selected-ids db)))
   ([db id]
    (update-el db id element/->path)))
 
+(m/=> stroke->path [:function
+                    [:-> App App]
+                    [:-> App uuid? App]])
 (defn stroke->path
+  "Converts the stroke of elements to paths."
   ([db]
    (reduce stroke->path db (selected-ids db)))
   ([db id]
    (update-el db id element/stroke->path)))
 
+(m/=> overlapping-svg [:-> App Bounds App])
 (defn overlapping-svg
   [db el-bounds]
   (let [svgs (reverse (root-svgs db))] ; Reverse to select top svgs first.
@@ -567,22 +596,23 @@
      (some #(when (bounds/intersect? el-bounds (:bounds %)) %) svgs)
      (root db))))
 
-(defn create-parent-id
+(m/=> assoc-parent-id [:-> App Element Element])
+(defn assoc-parent-id
   [db el]
   (cond-> el
-    (not (element/root? el))
-    (assoc :parent (or (:parent el)
-                       (:id (if (element/svg? el)
-                              (root db)
-                              (overlapping-svg db (hierarchy/bounds el))))))))
+    (not (or (element/root? el) (:parent el)))
+    (assoc :parent (:id (if (element/svg? el)
+                          (root db)
+                          (overlapping-svg db (hierarchy/bounds el)))))))
 
+(m/=> create [:-> App map? App])
 (defn create
   [db el]
   (let [id (random-uuid) ; REVIEW: Hard to use a coeffect because of recursion.
         new-el (->> (cond-> el (not (string? (:content el))) (dissoc :content))
                     (map/remove-nils)
                     (element/normalize-attrs)
-                    (create-parent-id db))
+                    (assoc-parent-id db))
         new-el (merge new-el db/default {:id id})
         child-els (-> (entities db (set (:children el))) vals (concat (:content el)))
         [x1 y1] (hierarchy/bounds (entity db (:parent new-el)))
@@ -610,6 +640,7 @@
         child-els
         (add-children child-els)))))
 
+(m/=> create-default-canvas [:-> App Vec2D App])
 (defn create-default-canvas
   [db size]
   (cond-> db

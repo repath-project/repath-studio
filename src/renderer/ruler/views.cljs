@@ -7,16 +7,16 @@
    [renderer.app.subs :as-alias app.s]
    [renderer.document.subs :as-alias document.s]
    [renderer.frame.subs :as-alias frame.s]
-   [renderer.ruler.db :refer [Direction]]
+   [renderer.ruler.db :refer [Orientation]]
    [renderer.ruler.subs :as-alias ruler.s]))
 
-(m/=> bounds-rect [:-> Direction any?])
+(m/=> bounds-rect [:-> Orientation any?])
 (defn bounds-rect
   [orientation]
   (when-let [attrs @(rf/subscribe [::ruler.s/bounds-rect-attrs orientation])]
     [:rect (merge attrs {:fill "var(--overlay)"})]))
 
-(m/=> pointer [:-> Direction any?])
+(m/=> pointer [:-> Orientation any?])
 (defn pointer
   [orientation]
   (let [[x y] @(rf/subscribe [::app.s/pointer-pos])
@@ -47,7 +47,7 @@
             :y2 size
             :stroke "var(--font-color-muted)"})])
 
-(m/=> label [:-> Direction number? number? string? any?])
+(m/=> label [:-> Orientation number? number? string? any?])
 (defn label
   [orientation step font-size text]
   (let [vertical (= orientation :vertical)]
@@ -60,7 +60,7 @@
             :font-family "var(--font-mono"}
      (if vertical (reverse text) text)]))
 
-(m/=> base-lines [:-> Direction any?])
+(m/=> base-lines [:-> Orientation any?])
 (defn base-lines
   [orientation]
   (let [[x y] @(rf/subscribe [::frame.s/viewbox])
@@ -97,7 +97,7 @@
                         :starting-point (/ ruler-size 1.3)}])))
            steps-coll))))
 
-(m/=> ruler [:-> Direction any?])
+(m/=> ruler [:-> Orientation any?])
 (defn ruler
   [orientation]
   (let [ruler-size @(rf/subscribe [::ruler.s/size])
@@ -108,7 +108,7 @@
      [base-lines orientation]
      [pointer orientation]]))
 
-(m/=> grid-lines [:-> Direction any?])
+(m/=> grid-lines [:-> Orientation any?])
 (defn grid-lines
   [orientation]
   (let [zoom @(rf/subscribe [::document.s/zoom])

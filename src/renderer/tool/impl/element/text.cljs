@@ -28,6 +28,7 @@
     (-> db
         (element.h/deselect)
         (element.h/add el)
+        (h/explain "Create text")
         (h/activate :edit)
         (h/set-state :create))))
 

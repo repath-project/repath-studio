@@ -6,5 +6,5 @@
    [:locked {:default false} boolean?]
    [:size {:default 23} number?]])
 
-(def Direction
+(def Orientation
   [:enum :vertical :horizontal])
