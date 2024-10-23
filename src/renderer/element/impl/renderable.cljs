@@ -4,10 +4,10 @@
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
    [reagent.core :as ra]
-   [renderer.app.subs :as-alias app.s]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.hierarchy :as hierarchy]
    [renderer.element.subs :as-alias element.s]
+   [renderer.tool.subs :as-alias tool.s]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.dom :as dom]
    [renderer.utils.element :as element]
@@ -95,5 +95,5 @@
 (defmethod hierarchy/render ::hierarchy/renderable
   [el]
   (let [child-els @(rf/subscribe [::element.s/filter-visible (:children el)])
-        state @(rf/subscribe [::app.s/state])]
+        state @(rf/subscribe [::tool.s/state])]
     [render-to-dom el child-els (= state :idle)]))

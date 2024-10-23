@@ -5,10 +5,10 @@
    ["svgpath" :as svgpath]
    [clojure.string :as str]
    [re-frame.core :as rf]
-   [renderer.app.subs :as-alias app.s]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.attribute.views :as v]
    [renderer.element.events :as-alias element.e]
+   [renderer.tool.subs :as-alias tool.s]
    [renderer.ui :as ui]
    [renderer.window.events :as-alias window.e]))
 
@@ -133,7 +133,7 @@
 
 (defmethod hierarchy/form-element [:default :d]
   [_ k v {:keys [disabled]}]
-  (let [idle (= @(rf/subscribe [::app.s/state]) :idle)]
+  (let [idle (= @(rf/subscribe [::tool.s/state]) :idle)]
     [:div.flex.gap-px.w-full
      [v/form-input k (if idle v "waiting")
       {:disabled (or disabled (not v) (not idle))}]

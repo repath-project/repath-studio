@@ -5,9 +5,6 @@
    [re-frame.core :as rf]
    [renderer.app.db :as db]
    [renderer.app.effects :as fx :refer [persist]]
-   [renderer.app.handlers :as h]
-   [renderer.frame.handlers :as frame.h]
-   [renderer.history.handlers :as history.h :refer [finalize]]
    [renderer.notification.events :as-alias notification.e]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
@@ -44,12 +41,6 @@
  (fn [db [_ fonts]]
    (assoc db :system-fonts fonts)))
 
-(rf/reg-event-fx
- ::set-tool
- (fn [{:keys [db]} [_ tool]]
-   {:db (h/set-tool db tool)
-    ::fx/focus nil}))
-
 (rf/reg-event-db
  ::set-lang
  (fn [db [_ lang]]
@@ -84,29 +75,6 @@
   (rf/path :panels)]
  (fn [db [_ k]]
    (update-in db [k :visible] not)))
-
-(rf/reg-event-fx
- ::pointer-event
- [(rf/inject-cofx ::fx/now)
-  (finalize nil)]
- (fn [{:keys [db now]} [_ e]]
-   {:db (h/pointer-handler db e now)}))
-
-(rf/reg-event-db
- ::wheel-event
- (fn [db [_ e]]
-   (h/wheel-handler db e)))
-
-(rf/reg-event-fx
- ::drag-event
- (fn [{:keys [db]} [_ {:keys [data-transfer pointer-pos] :as e}]]
-   (when (= (:type e) "drop")
-     {::fx/data-transfer [(frame.h/adjust-pointer-pos db pointer-pos) data-transfer]})))
-
-(rf/reg-event-db
- ::keyboard-event
- (fn [db [_ e]]
-   (h/key-handler db e)))
 
 (rf/reg-event-fx
  ::focus

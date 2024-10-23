@@ -13,7 +13,7 @@
    [renderer.snap.db :refer [Snap]]
    [renderer.theme.db :refer [Theme]]
    [renderer.timeline.db :refer [Timeline]]
-   [renderer.tool.db :refer [Tool]]
+   [renderer.tool.db :refer [Tool State Cursor]]
    [renderer.utils.bounds :refer [Bounds]]
    [renderer.utils.i18n :as i18n]
    [renderer.utils.math :refer [Vec2D]]
@@ -32,10 +32,6 @@
   [:fn {:error/fn (fn [{:keys [value]} _] (str value " is not a supported language"))}
    i18n/lang?])
 
-(def State [:enum :idle :translate :clone :scale :select :create :edit])
-
-(def Cursor [:enum "auto" "default" "none" "context-menu" "help" "pointer" "progress" "wait" "cell" "crosshair" "text" "vertical-text" "alias" "copy" "move" "no-drop" "not-allowed" "grab" "grabbing" "e-resize" "n-resize" "ne-resize" "nw-resize" "s-resize" "se-resize" "sw-resize" "w-resize" "ew-resize" "ns-resize" "nesw-resize" "nwse-resize" "col-resize" "row-resize" "all-scroll" "zoom-in" "zoom-out"])
-
 (def App
   [:map {:closed true}
    [:tool {:default :transform} Tool]
@@ -53,7 +49,7 @@
    [:ruler {:persist true} Ruler]
    [:snap {:persist true} Snap]
    [:active-document {:optional true :persist true} [:maybe uuid?]]
-   [:cursor {:default "default"} string?]
+   [:cursor {:default "default"} Cursor]
    [:dom-rect {:optional true} DomRect]
    [:dialogs {:default []} [:vector Dialog]]
    [:documents {:default {} :persist true} [:map-of uuid? Document]]

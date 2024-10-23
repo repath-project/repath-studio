@@ -6,25 +6,29 @@
    [renderer.app.db :refer [App]]
    [renderer.app.effects :as-alias app.fx]
    [renderer.app.events :as-alias app.e]
-   [renderer.app.handlers :as app.h]
    [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.h]
    [renderer.history.db :refer [History HistoryState]]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
-   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.math :refer [Vec2D]]
    [renderer.utils.vec :as vec]))
 
-(m/=> history-path [:-> App vector?])
-(defn history-path
-  [db]
-  [:documents (:active-document db) :history])
+(m/=> path [:function
+            [:-> App vector?]
+            [:-> App keyword? vector?]])
+(defn path
+  ([db]
+   [:documents (:active-document db) :history])
+  ([db k]
+   (conj (path db) k))
+  ([db k & more]
+   (apply conj (path db) k more)))
 
 (m/=> history [:-> App [:maybe History]])
 (defn history
   [db]
-  (get-in db (history-path db)))
+  (get-in db (path db)))
 
 (m/=> position [:-> App [:maybe uuid?]])
 (defn position
@@ -90,7 +94,7 @@
 (defn move
   [db pos]
   (-> db
-      (assoc-in (conj (history-path db) :position) pos)
+      (assoc-in (path db :position) pos)
       (swap)))
 
 (m/=> undo [:function
@@ -139,7 +143,7 @@
 (m/=> clear [:-> App App])
 (defn clear
   [db]
-  (update-in db (history-path db) dissoc :states :position))
+  (update-in db (path db) dissoc :states :position))
 
 (m/=> state-count [:-> App int?])
 (defn state-count
@@ -149,12 +153,12 @@
 (m/=> set-zoom [:-> App number? App])
 (defn set-zoom
   [db, zoom]
-  (assoc-in db (conj (history-path db) :zoom) zoom))
+  (assoc-in db (path db :zoom) zoom))
 
 (m/=> set-translate [:-> App Vec2D App])
 (defn set-translate
   [db [x y]]
-  (assoc-in db (conj (history-path db) :translate) [x y]))
+  (assoc-in db (path db :translate) [x y]))
 
 (m/=> create-state [:-> App int? uuid? string? HistoryState])
 (defn create-state
@@ -169,24 +173,6 @@
       (position db)
       (assoc :parent (position db)))))
 
-(m/=> cancel [:-> App App])
-(defn cancel
-  [db]
-  (cond-> db
-    :always (-> (dissoc :drag :pointer-offset :clicked-element)
-                (tool.hierarchy/activate (:tool db))
-                (element.h/dissoc-temp)
-                (swap))
-
-    (= (:state db) :select)
-    (element.h/clear-hovered)
-
-    (= (:state db) :idle)
-    (app.h/set-tool :transform)
-
-    :always
-    (app.h/set-state :idle)))
-
 (m/=> update-ancestors [:-> App App])
 (defn update-ancestors
   "Makes all ancestors of the active branch the rightmost element.
@@ -199,7 +185,7 @@
       (if parent
         (let [index (.indexOf (:children parent) (:id node))
               new-index (dec (count (:children parent)))
-              children-path (conj (history-path db) :states parent-id :children)]
+              children-path (path db :states parent-id :children)]
           (recur parent (update-in db children-path vec/move index new-index)))
         db))))
 
@@ -236,12 +222,12 @@
                                     (nil? explanation) (:explanation db))
                       db (cond-> db
                            :always (-> (dissoc :explanation)
-                                       (assoc-in (conj (history-path db) :position) id)
-                                       (assoc-in (conj (history-path db) :states id)
+                                       (assoc-in (path db :position) id)
+                                       (assoc-in (path db :states id)
                                                  (create-state db (.now js/Date) id explanation)))
 
                            current-position
-                           (-> (update-in (conj (history-path db) :states current-position :children) conj id)
+                           (-> (update-in (path db :states current-position :children) conj id)
                                (update-ancestors)))]
                   (-> context
                       (rf/assoc-effect :db db)

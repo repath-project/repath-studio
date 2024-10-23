@@ -24,6 +24,7 @@
    [renderer.ruler.views :as ruler.v]
    [renderer.timeline.views :as timeline.v]
    [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.tool.subs :as-alias tool.s]
    [renderer.toolbar.object :as toolbar.object]
    [renderer.toolbar.status :as toolbar.status]
    [renderer.toolbar.tools :as toolbar.tools]
@@ -148,132 +149,136 @@
    9 [105 147]
    10 [74 105]})
 
-(defn home []
-  (let [recent @(rf/subscribe [::document.s/recent])]
-    [:div.flex.overflow-hidden.md:overflow-visible
-     [ui/scroll-area
-      [:div.flex.min-h-full.justify-center.p-2.md:h-dvh
-       [:div.self-center.justify-between.flex.h-full.md:h-auto.w-full.lg:w-auto
-        [:div.bg-primary.p-6.lg:p-12.flex.max-w-screen-xl.w-full.gap-8
-         [:div.flex-1
-          [:h1.text-4xl.mb-1.font-light config/app-name]
+(defn home [recent-documents]
+  [:div.flex.overflow-hidden.md:overflow-visible
+   [ui/scroll-area
+    [:div.flex.min-h-full.justify-center.p-2.md:h-dvh
+     [:div.self-center.justify-between.flex.h-full.md:h-auto.w-full.lg:w-auto
+      [:div.bg-primary.p-6.lg:p-12.flex.max-w-screen-xl.w-full.gap-8
+       [:div.flex-1
+        [:h1.text-4xl.mb-1.font-light config/app-name]
 
-          [:p.text-xl.text-muted.font-bold
-           "Scalable Vector Graphics Manipulation"]
+        [:p.text-xl.text-muted.font-bold
+         "Scalable Vector Graphics Manipulation"]
 
-          [:h2.mb-3.mt-8.text-2xl "Start"]
+        [:h2.mb-3.mt-8.text-2xl "Start"]
 
-          [:div.flex.items-center.gap-2.flex-wrap
-           [ui/icon "file"]
-           [:button.button-link.text-lg
-            {:on-click #(rf/dispatch [::document.e/new])} "New"]
-           [ui/shortcuts [::document.e/new]]
+        [:div.flex.items-center.gap-2.flex-wrap
+         [ui/icon "file"]
+         [:button.button-link.text-lg
+          {:on-click #(rf/dispatch [::document.e/new])} "New"]
+         [ui/shortcuts [::document.e/new]]
 
-           [:span "or"]
+         [:span "or"]
 
-           [:> Select/Root
-            {:onValueChange #(rf/dispatch [::document.e/new-from-template (get paper-size %)])}
-            [:> Select/Trigger
-             {:class "button px-2 overlay rounded"
-              :aria-label "Select size"}
-             [:div.flex.items-center.gap-2
-              [:> Select/Value {:placeholder "Select template"}]
-              [:> Select/Icon
-               [ui/icon "chevron-down"]]]]
-            [:> Select/Portal
-             [:> Select/Content
-              {:class "menu-content rounded select-content"
-               :style {:min-width "auto"}}
-
-              [:> Select/Viewport {:class "select-viewport"}
-               [:> Select/Group
-                [:> Select/Item
-                 {:value :empty-canvas
-                  :class "menu-item select-item"}
-                 [:> Select/ItemText "Empty canvas"]]
-                (for [[k _v] (sort paper-size)]
-                  ^{:key k}
-                  [:> Select/Item
-                   {:value k
-                    :class "menu-item select-item"}
-                   [:> Select/ItemText (str "A" k)]])]]]]]]
-
-          [:div.flex.items-center.gap-2
-           [ui/icon "folder"]
-           [:button.button-link.text-lg
-            {:on-click #(rf/dispatch [::document.e/open])}
-            "Open"]
-           [ui/shortcuts [::document.e/open]]]
-
-          (when (seq recent)
-            [:<> [:h2.mb-3.mt-8.text-2xl "Recent"]
-
-             (for [file-path (take 5 recent)]
-               ^{:key file-path}
-               [:div.flex.items-center.gap-x-2.flex-wrap
-                [ui/icon "folder"]
-                [:button.button-link.text-lg
-                 {:on-click #(rf/dispatch [::document.e/open file-path])}
-                 (.basename path file-path)]
-                [:span.text-lg.text-muted (.dirname path file-path)]])])
-
-          [:h2.mb-3.mt-8.text-2xl "Help"]
-
-          [:div
+         [:> Select/Root
+          {:onValueChange #(rf/dispatch [::document.e/new-from-template (get paper-size %)])}
+          [:> Select/Trigger
+           {:class "button px-2 overlay rounded"
+            :aria-label "Select size"}
            [:div.flex.items-center.gap-2
-            [ui/icon "command"]
-            [:button.button-link.text-lg
-             {:on-click #(rf/dispatch [::dialog.e/cmdk])}
-             "Command panel"]
-            [ui/shortcuts [::dialog.e/cmdk]]]]
-          [:div.flex.items-center.gap-2
-           [ui/icon "earth"]
-           [:button.button-link.text-lg
-            {:on-click #(rf/dispatch [::window.e/open-remote-url
-                                      "https://repath.studio/"])}
-            "Website"]]
-          [:div.flex.items-center.gap-2
-           [ui/icon "commit"]
-           [:button.button-link.text-lg
-            {:on-click #(rf/dispatch [::window.e/open-remote-url
-                                      "https://github.com/repath-project/repath-studio"])}
-            "Source Code"]]
-          [:div.flex.items-center.gap-2
-           [ui/icon "list"]
-           [:button.button-link.text-lg
-            {:on-click #(rf/dispatch [::window.e/open-remote-url
-                                      "https://repath.studio/roadmap/changelog/"])}
-            "Changelog"]]]
+            [:> Select/Value {:placeholder "Select template"}]
+            [:> Select/Icon
+             [ui/icon "chevron-down"]]]]
+          [:> Select/Portal
+           [:> Select/Content
+            {:class "menu-content rounded select-content"
+             :style {:min-width "auto"}}
 
-         [:div.hidden.md:block.flex-1
-          [:img {:src "img/icon.svg"}]]]]]]]))
+            [:> Select/Viewport {:class "select-viewport"}
+             [:> Select/Group
+              [:> Select/Item
+               {:value :empty-canvas
+                :class "menu-item select-item"}
+               [:> Select/ItemText "Empty canvas"]]
+              (for [[k _v] (sort paper-size)]
+                ^{:key k}
+                [:> Select/Item
+                 {:value k
+                  :class "menu-item select-item"}
+                 [:> Select/ItemText (str "A" k)]])]]]]]]
+
+        [:div.flex.items-center.gap-2
+         [ui/icon "folder"]
+         [:button.button-link.text-lg
+          {:on-click #(rf/dispatch [::document.e/open])}
+          "Open"]
+         [ui/shortcuts [::document.e/open]]]
+
+        (when (seq recent-documents)
+          [:<> [:h2.mb-3.mt-8.text-2xl "Recent"]
+
+           (for [file-path (take 5 recent-documents)]
+             ^{:key file-path}
+             [:div.flex.items-center.gap-x-2.flex-wrap
+              [ui/icon "folder"]
+              [:button.button-link.text-lg
+               {:on-click #(rf/dispatch [::document.e/open file-path])}
+               (.basename path file-path)]
+              [:span.text-lg.text-muted (.dirname path file-path)]])])
+
+        [:h2.mb-3.mt-8.text-2xl "Help"]
+
+        [:div
+         [:div.flex.items-center.gap-2
+          [ui/icon "command"]
+          [:button.button-link.text-lg
+           {:on-click #(rf/dispatch [::dialog.e/cmdk])}
+           "Command panel"]
+          [ui/shortcuts [::dialog.e/cmdk]]]]
+        [:div.flex.items-center.gap-2
+         [ui/icon "earth"]
+         [:button.button-link.text-lg
+          {:on-click #(rf/dispatch [::window.e/open-remote-url
+                                    "https://repath.studio/"])}
+          "Website"]]
+        [:div.flex.items-center.gap-2
+         [ui/icon "commit"]
+         [:button.button-link.text-lg
+          {:on-click #(rf/dispatch [::window.e/open-remote-url
+                                    "https://github.com/repath-project/repath-studio"])}
+          "Source Code"]]
+        [:div.flex.items-center.gap-2
+         [ui/icon "list"]
+         [:button.button-link.text-lg
+          {:on-click #(rf/dispatch [::window.e/open-remote-url
+                                    "https://repath.studio/roadmap/changelog/"])}
+          "Changelog"]]]
+
+       [:div.hidden.md:block.flex-1
+        [:img {:src "img/icon.svg"}]]]]]]])
 
 (defn root
   []
-  [:> Tooltip/Provider
-   [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden
-    [window.v/app-header]
-    (if (seq @(rf/subscribe [::document.s/entities]))
-      [:div.flex.h-full.flex-1.overflow-hidden.gap-px
-       (when @(rf/subscribe [::app.s/panel-visible :tree])
-         [:div.flex-col.hidden.md:flex.overflow-hidden
-          {:style {:width "227px"}}
-          [document.v/actions]
-          [tree.v/root]])
-       [:div.flex.flex-col.flex-1.overflow-hidden.h-full
-        [document.v/tab-bar]
-        [:div.flex.h-full.flex-1.gap-px.overflow-hidden
-         [:div.flex.h-full.flex-col.flex-1.overflow-hidden
-          [editor]]
-         [:div.flex
-          (when @(rf/subscribe [::app.s/panel-visible :properties])
-            [:div.hidden.md:flex
-             [:div.flex.flex-col.h-full.w-80
-              [ui/scroll-area
-               (tool.hierarchy/right-panel @(rf/subscribe [::app.s/tool]))]
-              [:div.bg-primary.grow.flex.mr-px]]])
-          [:div.bg-primary.flex
-           [ui/scroll-area [toolbar.object/root]]]]]]]
-      [home])]
-   [dialog.v/root]
-   [notification/main]])
+  (let [documents (rf/subscribe [::document.s/entities])
+        tree-visible (rf/subscribe [::app.s/panel-visible :tree])
+        properties-visible (rf/subscribe [::app.s/panel-visible :properties])
+        active-tool (rf/subscribe [::tool.s/active])
+        recent-docs (rf/subscribe [::document.s/recent])]
+    [:> Tooltip/Provider
+     [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden
+      [window.v/app-header]
+      (if (seq @documents)
+        [:div.flex.h-full.flex-1.overflow-hidden.gap-px
+         (when @tree-visible
+           [:div.flex-col.hidden.md:flex.overflow-hidden
+            {:style {:width "227px"}}
+            [document.v/actions]
+            [tree.v/root]])
+         [:div.flex.flex-col.flex-1.overflow-hidden.h-full
+          [document.v/tab-bar]
+          [:div.flex.h-full.flex-1.gap-px.overflow-hidden
+           [:div.flex.h-full.flex-col.flex-1.overflow-hidden
+            [editor]]
+           [:div.flex
+            (when @properties-visible
+              [:div.hidden.md:flex
+               [:div.flex.flex-col.h-full.w-80
+                [ui/scroll-area
+                 (tool.hierarchy/right-panel @active-tool)]
+                [:div.bg-primary.grow.flex.mr-px]]])
+            [:div.bg-primary.flex
+             [ui/scroll-area [toolbar.object/root]]]]]]]
+        [home @recent-docs])]
+     [dialog.v/root]
+     [notification/main]]))

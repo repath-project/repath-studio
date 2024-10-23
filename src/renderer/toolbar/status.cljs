@@ -12,6 +12,7 @@
    [renderer.ruler.subs :as-alias ruler.s]
    [renderer.snap.views :as snap.v]
    [renderer.timeline.views :as timeline.v]
+   [renderer.tool.subs :as-alias tool.s]
    [renderer.ui :as ui]
    [renderer.utils.keyboard :as keyb]
    [renderer.worker.subs :as-alias worker.s]))
@@ -145,7 +146,7 @@
      [zoom-menu]]))
 
 (defn root []
-  (let [help-message @(rf/subscribe [::app.s/help])
+  (let [help-message @(rf/subscribe [::tool.s/help])
         loading @(rf/subscribe [::worker.s/loading])
         fill @(rf/subscribe [::document.s/fill])
         stroke @(rf/subscribe [::document.s/stroke])]

@@ -3,15 +3,15 @@
    ["@radix-ui/react-tooltip" :as Tooltip]
    [clojure.string :as str]
    [re-frame.core :as rf]
-   [renderer.app.events :as-alias app.e]
-   [renderer.app.subs :as-alias app.s]
+   [renderer.tool.events :as-alias tool.e]
    [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.tool.subs :as-alias tool.s]
    [renderer.ui :as ui]))
 
 (defn button
   [tool]
-  (let [active-tool @(rf/subscribe [::app.s/tool])
-        primary-tool @(rf/subscribe [::app.s/primary-tool])
+  (let [active-tool @(rf/subscribe [::tool.s/active])
+        primary-tool @(rf/subscribe [::tool.s/primary])
         active (= active-tool tool)
         primary (= primary-tool tool)
         properties (tool.hierarchy/properties tool)]
@@ -21,7 +21,7 @@
         [:span
          [ui/radio-icon-button (:icon properties) active
           {:class (when primary "outline-shadow")
-           :on-click #(rf/dispatch [::app.e/set-tool tool])}]]]
+           :on-click #(rf/dispatch [::tool.e/activate tool])}]]]
        [:> Tooltip/Portal
         [:> Tooltip/Content
          {:class "tooltip-content"

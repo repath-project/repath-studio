@@ -4,7 +4,7 @@
    [re-frame.core :as rf]
    [renderer.app.effects :as-alias app.fx]
    [renderer.app.events :as-alias app.e]
-   [renderer.element.effects :as fx]
+   [renderer.element.effects :as-alias fx]
    [renderer.element.handlers :as h]
    [renderer.history.handlers :refer [finalize]]
    [renderer.notification.events :as-alias notification.e]

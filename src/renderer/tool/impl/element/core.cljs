@@ -1,7 +1,6 @@
 (ns renderer.tool.impl.element.core
   (:require
-   [renderer.app.handlers :as app.h]
-   [renderer.element.handlers :as element.h]
+   [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]
    [renderer.tool.impl.element.circle]
    [renderer.tool.impl.element.ellipse]
@@ -23,18 +22,18 @@
 (defmethod hierarchy/activate ::hierarchy/element
   [db]
   (-> db
-      (app.h/set-cursor "crosshair")
+      (h/set-cursor "crosshair")
       (dissoc :drag :pointer-offset :clicked-element)
-      (element.h/dissoc-temp)))
+      (h/dissoc-temp)))
 
 (defmethod hierarchy/drag-start ::hierarchy/element
   [db]
-  (app.h/set-state db :create))
+  (h/set-state db :create))
 
 (defmethod hierarchy/drag-end ::hierarchy/element
   [db _e]
   (-> db
-      (element.h/add)
-      (app.h/set-tool :transform)
-      (app.h/set-state :idle)
-      (app.h/explain (str "Create " (name (:tag (element.h/temp db)))))))
+      (h/create-temp-element)
+      (h/activate :transform)
+      (h/set-state :idle)
+      (h/explain (str "Create " (name (:tag (h/temp db)))))))

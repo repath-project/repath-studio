@@ -1,7 +1,7 @@
 (ns renderer.tool.impl.element.svg
   "https://www.w3.org/TR/SVG/struct.html#SVGElement"
   (:require
-   [renderer.element.handlers :as element.h]
+   [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.pointer :as pointer]))
 
@@ -26,6 +26,6 @@
                :y (min y offset-y)
                :width (if lock-ratio (min width height) width)
                :height (if lock-ratio (min width height) height)}]
-    (element.h/set-temp db {:tag :svg
-                            :type :element
-                            :attrs attrs})))
+    (h/set-temp db {:tag :svg
+                    :type :element
+                    :attrs attrs})))

@@ -2,7 +2,7 @@
   "https://www.w3.org/TR/SVG/shapes.html#RectElement"
   (:require
    [renderer.document.handlers :as document.h]
-   [renderer.element.handlers :as element.h]
+   [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.pointer :as pointer]))
 
@@ -30,6 +30,6 @@
                :height (if lock-ratio (min width height) height)
                :fill (document.h/attr db :fill)
                :stroke (document.h/attr db :stroke)}]
-    (element.h/set-temp db {:type :element
-                            :tag :rect
-                            :attrs attrs})))
+    (h/set-temp db {:type :element
+                    :tag :rect
+                    :attrs attrs})))

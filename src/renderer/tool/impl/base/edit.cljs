@@ -1,10 +1,10 @@
 (ns renderer.tool.impl.base.edit
   (:require
-   [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.h]
    [renderer.snap.handlers :as snap.h]
+   [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.pointer :as pointer]))
 
@@ -25,8 +25,8 @@
 (defmethod hierarchy/activate :edit
   [db]
   (-> db
-      (app.h/set-state :idle)
-      (app.h/set-cursor "default")))
+      (h/set-state :idle)
+      (h/set-cursor "default")))
 
 (defmethod hierarchy/pointer-down :edit
   [db e]
@@ -42,7 +42,7 @@
         (element.h/clear-ignored)
         (dissoc :clicked-element)
         (element.h/select (-> e :element :id) (pointer/shift? e))
-        (app.h/explain "Select element"))
+        (h/explain "Select element"))
     (dissoc db :clicked-element)))
 
 (defmethod hierarchy/pointer-move :edit
@@ -54,7 +54,7 @@
 
 (defmethod hierarchy/drag-start :edit
   [db]
-  (app.h/set-state db :edit))
+  (h/set-state db :edit))
 
 (defn snap-handler
   [db offset el-id handle-id]
@@ -65,7 +65,7 @@
   (let [clicked-element (:clicked-element db)
         db (history.h/swap db)
         el-id (:element clicked-element)
-        delta (cond-> (app.h/pointer-delta db) (pointer/ctrl? e) pointer/lock-direction)]
+        delta (cond-> (h/pointer-delta db) (pointer/ctrl? e) pointer/lock-direction)]
     (cond-> db
       el-id
       (-> (element.h/update-el el-id element.hierarchy/edit delta (:id clicked-element))
@@ -74,6 +74,6 @@
 (defmethod hierarchy/drag-end :edit
   [db _e]
   (-> db
-      (app.h/set-state :idle)
+      (h/set-state :idle)
       (dissoc :clicked-element)
-      (app.h/explain "Edit")))
+      (h/explain "Edit")))

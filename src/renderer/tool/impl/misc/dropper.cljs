@@ -1,13 +1,13 @@
 (ns renderer.tool.impl.misc.dropper
   (:require
    [re-frame.core :as rf]
-   [renderer.app.handlers :as app.h]
    [renderer.color.effects :as-alias color.fx]
    [renderer.document.handlers :as document.h]
    [renderer.element.handlers :as element.h]
    [renderer.history.handlers :refer [finalize]]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
+   [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]))
 
 (derive :dropper ::hierarchy/tool)
@@ -23,10 +23,10 @@
 (defmethod hierarchy/activate :dropper
   [db]
   (if (.-EyeDropper js/window)
-    (app.h/add-fx db [::color.fx/dropper {:on-success ::success
-                                          :on-error ::error}])
+    (h/add-fx db [::color.fx/dropper {:on-success ::success
+                                      :on-error ::error}])
     (-> db
-        (app.h/set-tool :transform)
+        (h/activate :transform)
         (notification.h/add
          (notification.v/unavailable-feature
           "EyeDropper"
@@ -36,15 +36,15 @@
  ::success
  [(finalize "Pick color")]
  (fn [db [_ ^js color]]
-   (let [srgb (.-sRGBHex color)]
+   (let [srgb-color (.-sRGBHex color)]
      (-> db
-         (document.h/assoc-attr :fill srgb)
-         (element.h/assoc-attr :fill srgb)
-         (app.h/set-tool :transform)))))
+         (document.h/assoc-attr :fill srgb-color)
+         (element.h/assoc-attr :fill srgb-color)
+         (h/activate :transform)))))
 
 (rf/reg-event-db
  ::error
  (fn [db [_ error]]
    (-> db
-       (app.h/set-tool :transform)
+       (h/activate :transform)
        (notification.h/add (notification.v/exception error)))))

@@ -4,8 +4,8 @@
    [hickory.zip]
    [malli.core :as m]
    [re-frame.core :as rf]
-   [renderer.app.events :as-alias app.e]
    [renderer.element.events :as-alias element.e]
+   [renderer.tool.events :as-alias tool.e]
    [renderer.utils.file :as file]
    [renderer.utils.math :refer [Vec2D]]))
 
@@ -17,9 +17,9 @@
   (.stopPropagation e)
   (.preventDefault e)
 
-  (rf/dispatch-sync [::app.e/drag-event {:type (.-type e)
-                                         :pointer-pos [(.-pageX e) (.-pageY e)]
-                                         :data-transfer (.-dataTransfer e)}]))
+  (rf/dispatch-sync [::tool.e/drag-event {:type (.-type e)
+                                          :pointer-pos [(.-pageX e) (.-pageY e)]
+                                          :data-transfer (.-dataTransfer e)}]))
 
 (m/=> add-image! [:-> any? Vec2D nil?])
 (defn add-image!

@@ -4,7 +4,6 @@
    [clojure.string :as str]
    [re-frame.core :as rf]
    [reagent.core :as ra]
-   [renderer.app.subs :as-alias app.s]
    [renderer.document.events :as-alias document.e]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.events :as-alias element.e]
@@ -12,6 +11,7 @@
    [renderer.element.subs :as-alias element.s]
    [renderer.element.views :as element.v]
    [renderer.frame.events :as-alias frame.e]
+   [renderer.tool.subs :as-alias tool.s]
    [renderer.tree.events :as-alias e]
    [renderer.ui :as ui]
    [renderer.utils.dom :as dom]
@@ -192,7 +192,7 @@
        ^{:key (:id el)} [item el 1 elements])]]])
 
 (defn inner-sidebar []
-  (let [state @(rf/subscribe [::app.s/state])
+  (let [state @(rf/subscribe [::tool.s/state])
         root-children @(rf/subscribe [::element.s/root-children])
         elements @(rf/subscribe [::document.s/elements])]
     (if (= state :idle)

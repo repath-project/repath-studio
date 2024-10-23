@@ -5,7 +5,6 @@
    [renderer.document.handlers :as h]
    [renderer.timeline.subs :as-alias timeline.s]))
 
-
 (rf/reg-sub
  ::active-id
  :-> :active-document)

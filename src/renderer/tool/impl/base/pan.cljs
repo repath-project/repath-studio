@@ -2,8 +2,8 @@
   (:require
    [clojure.core.matrix :as mat]
    [renderer.app.events :as-alias app.e]
-   [renderer.app.handlers :as app.h]
    [renderer.frame.handlers :as frame.h]
+   [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]))
 
 (derive :pan ::hierarchy/tool)
@@ -14,7 +14,7 @@
 
 (defmethod hierarchy/activate :pan
   [db]
-  (app.h/set-cursor db "grab"))
+  (h/set-cursor db "grab"))
 
 (defmethod hierarchy/help [:pan :idle]
   []
@@ -23,16 +23,16 @@
 (defmethod hierarchy/activate :pan
   [db]
   (-> db
-      (app.h/set-state :idle)
-      (app.h/set-cursor "grab")))
+      (h/set-state :idle)
+      (h/set-cursor "grab")))
 
 (defmethod hierarchy/pointer-up :pan
   [db]
-  (app.h/set-cursor db "grab"))
+  (h/set-cursor db "grab"))
 
 (defmethod hierarchy/pointer-down :pan
   [db]
-  (app.h/set-cursor db "grabbing"))
+  (h/set-cursor db "grabbing"))
 
 (defmethod hierarchy/drag :pan
   [db e]
@@ -41,5 +41,5 @@
 (defmethod hierarchy/drag-end :pan
   [db _e]
   (-> db
-      (app.h/set-cursor "grab")
-      (app.h/add-fx [:dispatch [::app.e/persist]])))
+      (h/set-cursor "grab")
+      (h/add-fx [:dispatch [::app.e/persist]])))

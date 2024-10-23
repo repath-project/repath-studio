@@ -26,7 +26,7 @@
    [:zoom {:default 1} ZoomFactor]
    [:rotate {:default 0} number?]
    [:history History]
-   [:temp-element {:optional true} map?] ; REVIEW
+   [:temp-element {:optional true} Element]
    [:pan {:default [0 0]} Vec2D]
    [:elements {:default {} :persist true} [:map-of uuid? Element]]
    [:focused {:optional true} boolean?]

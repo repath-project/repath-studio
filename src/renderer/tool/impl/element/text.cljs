@@ -1,7 +1,7 @@
 (ns renderer.tool.impl.element.text
   (:require
-   [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
+   [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]))
 
 (derive :text ::hierarchy/element)
@@ -16,7 +16,7 @@
 
 (defmethod hierarchy/activate :text
   [db]
-  (app.h/set-cursor db "text"))
+  (h/set-cursor db "text"))
 
 (defmethod hierarchy/pointer-up :text
   [db _e]
@@ -28,8 +28,8 @@
     (-> db
         (element.h/deselect)
         (element.h/add el)
-        (app.h/set-tool :edit)
-        (app.h/set-state :create))))
+        (h/activate :edit)
+        (h/set-state :create))))
 
 (defmethod hierarchy/drag-end :text
   [db e]

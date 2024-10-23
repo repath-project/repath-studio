@@ -24,12 +24,17 @@
 
 (m/=> path [:function
             [:-> App vector?]
-            [:-> App uuid? vector?]])
+            [:-> App uuid? vector?]
+            [:-> App uuid? keyword? vector?]])
 (defn path
   ([db]
    [:documents (:active-document db) :elements])
   ([db id]
-   (conj (path db) id)))
+   (conj (path db) id))
+  ([db id k]
+   (conj (path db) id k))
+  ([db id k & more]
+   (apply conj (path db) id k more)))
 
 (m/=> entities [:function
                 [:-> App [:map-of uuid? Element]]
@@ -118,36 +123,36 @@
     (if (or (not bounds) (element/root? el))
       db
       (-> (reduce refresh-bounds db (children-ids db id))
-          (update-in (conj (path db) id) assoc-bounds)))))
+          (update-in (path db id) assoc-bounds)))))
 
 (defn update-el
   ([db id f]
    (if (locked? db id)
      db
-     (-> (update-in db (conj (path db) id) f)
+     (-> (update-in db (path db id) f)
          (refresh-bounds id))))
   ([db id f arg1]
    (if (locked? db id)
      db
-     (-> (update-in db (conj (path db) id) f arg1)
+     (-> (update-in db (path db id) f arg1)
          (refresh-bounds id))))
   ([db id f arg1 arg2]
    (if (locked? db id)
      db
-     (-> (update-in db (conj (path db) id) f arg1 arg2)
+     (-> (update-in db (path db id) f arg1 arg2)
          (refresh-bounds id))))
   ([db id f arg1 arg2 arg3]
    (if (locked? db id)
      db
-     (-> (update-in db (conj (path db) id) f arg1 arg2 arg3)
+     (-> (update-in db (path db id) f arg1 arg2 arg3)
          (refresh-bounds id))))
   ([db id f arg1 arg2 arg3 & more]
    (if (locked? db id)
      db
-     (-> (apply update-in db (conj (path db) id) f arg1 arg2 arg3 more)
+     (-> (apply update-in db (path db id) f arg1 arg2 arg3 more)
          (refresh-bounds id)))))
 
-(m/=> siblings-selected? [:-> App boolean?])
+(m/=> siblings-selected? [:-> App [:maybe boolean?]])
 (defn siblings-selected?
   [db]
   (let [selected-els (selected db)
@@ -233,39 +238,21 @@
        (entities db)
        (vals)))
 
-(m/=> dissoc-temp [:-> App App])
-(defn dissoc-temp
-  [db]
-  (cond-> db
-    (:active-document db)
-    (update-in [:documents (:active-document db)] dissoc :temp-element)))
-
-(m/=> set-temp [:-> App map? App])
-(defn set-temp
-  [db el]
-  (->> (element/normalize-attrs el)
-       (assoc-in db [:documents (:active-document db) :temp-element])))
-
-(m/=> temp [:-> App [:maybe Element]])
-(defn temp
-  [db]
-  (get-in db [:documents (:active-document db) :temp-element]))
-
 (defn update-prop
   ([db id k f]
-   (-> (update-in db (conj (path db) id k) f)
+   (-> (update-in db (path db id k) f)
        (refresh-bounds id)))
   ([db id k f arg1]
-   (-> (update-in db (conj (path db) id k) f arg1)
+   (-> (update-in db (path db id k) f arg1)
        (refresh-bounds id)))
   ([db id k f arg1 arg2]
-   (-> (update-in db (conj (path db) id k) f arg1 arg2)
+   (-> (update-in db (path db id k) f arg1 arg2)
        (refresh-bounds id)))
   ([db id k f arg1 arg2 arg3]
-   (-> (update-in db (conj (path db) id k) f arg1 arg2 arg3)
+   (-> (update-in db (path db id k) f arg1 arg2 arg3)
        (refresh-bounds id)))
   ([db id k arg1 arg2 arg3 & more]
-   (-> (apply update-in db (conj (path db) id k) arg1 arg2 arg3 more)
+   (-> (apply update-in db (path db id k) arg1 arg2 arg3 more)
        (refresh-bounds id))))
 
 (defn assoc-prop
@@ -273,8 +260,8 @@
    (reduce (partial-right assoc-prop k v) db (selected-ids db)))
   ([db id k v]
    (-> (if (str/blank? v)
-         (update-in db (conj (path db) id) dissoc k)
-         (assoc-in db (conj (path db) id k) v))
+         (update-in db (path db id) dissoc k)
+         (assoc-in db (path db id k) v))
        (refresh-bounds id))))
 
 (defn dissoc-attr
@@ -291,7 +278,7 @@
   ([db id k v]
    (cond-> db
      (not (locked? db id))
-     (-> (assoc-in (conj (path db) id :attrs k) v)
+     (-> (assoc-in (path db id :attrs k) v)
          (refresh-bounds id)))))
 
 (defn set-attr
@@ -609,7 +596,7 @@
                               (-> new-el db/explain me/humanize str)))
       (cond-> db
         :always
-        (assoc-in (conj (path db) id) new-el)
+        (assoc-in (path db id) new-el)
 
         (:parent new-el)
         (update-prop (:parent new-el) :children #(vec (conj % id)))
@@ -636,12 +623,8 @@
                          :height (second size)}}))))
 
 (defn add
-  ([db]
-   (->> (temp db)
-        (add db)
-        (dissoc-temp)))
-  ([db el]
-   (create (deselect db) (assoc el :selected true))))
+  [db el]
+  (create (deselect db) (assoc el :selected true)))
 
 (defn boolean-operation
   [db operation]

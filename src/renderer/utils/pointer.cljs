@@ -3,10 +3,10 @@
    [clojure.core.matrix :as mat]
    [malli.core :as m]
    [re-frame.core :as rf]
-   [renderer.app.events :as-alias app.e]
    [renderer.document.db :refer [ZoomFactor]]
    [renderer.element.db :refer [Element]]
    [renderer.handle.db :refer [Handle]]
+   [renderer.tool.events :as-alias tool.e]
    [renderer.utils.keyboard :refer [ModifierKey modifiers]]
    [renderer.utils.math :refer [Vec2D]]))
 
@@ -40,12 +40,6 @@
 (defn alt?
   [e]
   (contains? (:modifiers e) :alt))
-
-(m/=> significant-drag? [:-> Vec2D Vec2D number? boolean?])
-(defn significant-drag?
-  [position offset threshold]
-  (> (apply max (map abs (mat/sub position offset)))
-     threshold))
 
 (m/=> adjust-position [:-> ZoomFactor Vec2D Vec2D Vec2D])
 (defn adjust-position
@@ -88,14 +82,14 @@
   (when (= (.-pointerType e) "touch")
     (.preventDefault e))
 
-  (rf/dispatch-sync [::app.e/pointer-event {:element el
-                                            :target (.-target e)
-                                            :type (.-type e)
-                                            :pointer-pos [(.-pageX e) (.-pageY e)]
-                                            :pressure (.-pressure e)
-                                            :pointer-type (.-pointerType e)
-                                            :pointer-id (.-pointerId e)
-                                            :primary (.-isPrimary e)
-                                            :button (button->key (.-button e))
-                                            :buttons (button->key (.-buttons e))
-                                            :modifiers (modifiers e)}]))
+  (rf/dispatch-sync [::tool.e/pointer-event {:element el
+                                             :target (.-target e)
+                                             :type (.-type e)
+                                             :pointer-pos [(.-pageX e) (.-pageY e)]
+                                             :pressure (.-pressure e)
+                                             :pointer-type (.-pointerType e)
+                                             :pointer-id (.-pointerId e)
+                                             :primary (.-isPrimary e)
+                                             :button (button->key (.-button e))
+                                             :buttons (button->key (.-buttons e))
+                                             :modifiers (modifiers e)}]))

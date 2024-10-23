@@ -3,7 +3,7 @@
   (:require
    [clojure.core.matrix :as mat]
    [renderer.document.handlers :as document.h]
-   [renderer.element.handlers :as element.h]
+   [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]))
 
 (derive :circle ::hierarchy/element)
@@ -23,4 +23,4 @@
                :fill (document.h/attr db :fill)
                :stroke (document.h/attr db :stroke)
                :r radius}]
-    (element.h/set-temp db {:type :element :tag :circle :attrs attrs})))
+    (h/set-temp db {:type :element :tag :circle :attrs attrs})))

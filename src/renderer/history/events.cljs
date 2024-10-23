@@ -56,11 +56,4 @@
      zoom (h/set-zoom zoom)
      translate (h/set-translate translate))))
 
-(rf/reg-event-fx
- ::cancel
- (fn [{:keys [db]} _]
-   (if (and (= (:tool db) :transform)
-            (= (:state db) :idle))
-     {:dispatch [::element.e/deselect-all]}
-     {:db (h/cancel db)})))
 

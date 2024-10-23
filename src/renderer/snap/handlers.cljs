@@ -5,10 +5,10 @@
    [malli.core :as m]
    [re-frame.core :as rf]
    [renderer.app.db :refer [App]]
-   [renderer.app.handlers :as app.h]
    [renderer.element.handlers :as element.h]
    [renderer.snap.db :refer [SnapOption NearestNeighbor]]
    [renderer.snap.subs :as-alias snap.s]
+   [renderer.tool.handlers :as tool.h]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
    [renderer.utils.math :refer [Vec2D]]))
@@ -38,7 +38,7 @@
 
         (contains? #{:edit :scale} (:state db))
         [(mat/add [(-> db :clicked-element :x) (-> db :clicked-element :y)]
-                  (app.h/pointer-delta db))]
+                  (tool.h/pointer-delta db))]
 
         :else
         [(:adjusted-pointer-pos db)]))))

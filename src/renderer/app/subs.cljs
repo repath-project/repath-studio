@@ -1,15 +1,6 @@
 (ns renderer.app.subs
   (:require
-   [re-frame.core :as rf]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
-
-(rf/reg-sub
- ::tool
- :-> :tool)
-
-(rf/reg-sub
- ::primary-tool
- :-> :primary-tool)
+   [re-frame.core :as rf]))
 
 (rf/reg-sub
  ::pointer-pos
@@ -26,32 +17,6 @@
 (rf/reg-sub
  ::adjusted-pointer-offset
  :-> :adjusted-pointer-offset)
-
-(rf/reg-sub
- ::pivot-point
- :-> :pivot-point)
-
-(rf/reg-sub
- ::drag
- :-> :drag)
-
-(rf/reg-sub
- ::cursor
- :-> :cursor)
-
-(rf/reg-sub
- ::state
- :-> :state)
-
-(rf/reg-sub
- ::help
- :<- [::tool]
- :<- [::state]
- (fn [[tool state] _]
-   (let [dispatch-state (if (contains? (methods tool.hierarchy/help) [tool state])
-                          state
-                          :idle)]
-     (tool.hierarchy/help tool dispatch-state))))
 
 (rf/reg-sub
  ::dom-rect

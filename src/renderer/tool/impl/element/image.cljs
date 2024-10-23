@@ -2,7 +2,7 @@
   "https://www.w3.org/TR/SVG/embedded.html#ImageElement"
   (:require
    [re-frame.core :as rf]
-   [renderer.app.events :as-alias app.e]
+   [renderer.tool.events :as-alias tool.e]
    [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.drop :as drop]
    [renderer.utils.file :as file]))
@@ -20,5 +20,5 @@
                                            "image/jpeg" [".jpeg" ".jpg"]
                                            "image/bmp" [".fmp"]}}]}
                :callback (fn [file]
-                           (rf/dispatch [::app.e/set-tool :transform])
+                           (rf/dispatch [::tool.e/activate :transform])
                            (drop/add-image! file (:adjusted-pointer-pos db)))}) db)

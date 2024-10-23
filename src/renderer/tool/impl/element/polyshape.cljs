@@ -3,9 +3,8 @@
    attributes and hehavior"
   (:require
    [clojure.string :as str]
-   [renderer.app.handlers :as app.h]
    [renderer.document.handlers :as document.h]
-   [renderer.element.handlers :as element.h]
+   [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.attribute :as attr]))
 
@@ -21,15 +20,15 @@
 
 (defmethod hierarchy/activate ::hierarchy/polyshape
   [db]
-  (app.h/set-cursor db "crosshair"))
+  (h/set-cursor db "crosshair"))
 
 (defn create-polyline
   [db points]
-  (element.h/set-temp db {:type :element
-                          :tag (:tool db)
-                          :attrs {:points (str/join " " points)
-                                  :stroke (document.h/attr db :stroke)
-                                  :fill (document.h/attr db :fill)}}))
+  (h/set-temp db {:type :element
+                  :tag (:tool db)
+                  :attrs {:points (str/join " " points)
+                          :stroke (document.h/attr db :stroke)
+                          :fill (document.h/attr db :fill)}}))
 
 (defn add-point
   [db point]
@@ -37,18 +36,18 @@
 
 (defmethod hierarchy/pointer-up ::hierarchy/polyshape
   [db]
-  (if (element.h/temp db)
+  (if (h/temp db)
     (add-point db (:adjusted-pointer-pos db))
     (-> db
-        (app.h/set-state :create)
+        (h/set-state :create)
         (create-polyline (:adjusted-pointer-pos db)))))
 
 (defmethod hierarchy/drag-end ::hierarchy/polyshape
   [db]
-  (if (element.h/temp db)
+  (if (h/temp db)
     (add-point db (:adjusted-pointer-pos db))
     (-> db
-        (app.h/set-state :create)
+        (h/set-state :create)
         (create-polyline (:adjusted-pointer-pos db)))))
 
 (defmethod hierarchy/pointer-move ::hierarchy/polyshape
@@ -69,7 +68,7 @@
                                         (drop-last)
                                         (apply concat)
                                         (str/join " ")))
-      (element.h/add)
-      (app.h/set-tool :transform)
-      (app.h/set-state :idle)
-      (app.h/explain (str "Create " (name (:tool db))))))
+      (h/create-temp-element)
+      (h/activate :transform)
+      (h/set-state :idle)
+      (h/explain (str "Create " (name (:tool db))))))

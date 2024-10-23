@@ -3,11 +3,11 @@
   (:require
    [clojure.string :as str]
    [re-frame.core :as rf]
-   [renderer.app.events :as-alias app.e]
-   [renderer.app.subs :as-alias app.s]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.attribute.views :as v]
    [renderer.element.events :as-alias element.e]
+   [renderer.tool.events :as-alias tool.e]
+   [renderer.tool.subs :as-alias tool.s]
    [renderer.ui :as ui]
    [renderer.utils.file :as file]))
 
@@ -27,7 +27,7 @@
 
 (defmethod hierarchy/form-element [:default :href]
   [_ k v {:keys [disabled]}]
-  (let [state-default? (= @(rf/subscribe [::app.s/state]) :idle)
+  (let [state-default? (= @(rf/subscribe [::tool.s/state]) :idle)
         data-url? (str/starts-with? v "data:")]
     [:div.flex.gap-px.w-full
      [v/form-input k (if data-url? "data-url" v)
@@ -44,6 +44,6 @@
                                                 "image/jpeg" [".jpeg" ".jpg"]
                                                 "image/bmp" [".fmp"]}}]}
                     :callback (fn [file]
-                                (rf/dispatch [::app.e/set-tool :transform-active])
+                                (rf/dispatch [::tool.e/activate :transform])
                                 (update-href! file))})}
       [ui/icon "folder"]]]))

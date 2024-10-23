@@ -4,10 +4,10 @@
    ["@radix-ui/react-popover" :as Popover]
    [clojure.string :as str]
    [re-frame.core :as rf]
-   [renderer.app.subs :as-alias app.s]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.attribute.views :as v]
    [renderer.element.events :as-alias element.e]
+   [renderer.tool.subs :as-alias tool.s]
    [renderer.ui :as ui]
    [renderer.utils.attribute :as utils.attr]
    [renderer.utils.vec :as vec]))
@@ -59,7 +59,7 @@
 
 (defmethod hierarchy/form-element [:default :points]
   [_ k v {:keys [disabled]}]
-  (let [state-idle (= @(rf/subscribe [::app.s/state]) :idle)]
+  (let [state-idle (= @(rf/subscribe [::tool.s/state]) :idle)]
     [:div.flex.gap-px.w-full
      [v/form-input k (if state-idle v "waiting") {:disabled (or disabled (not v) (not state-idle))}]
      (when v [points-popover (utils.attr/points->vec v)])]))

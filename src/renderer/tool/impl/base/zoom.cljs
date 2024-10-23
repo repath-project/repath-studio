@@ -1,9 +1,8 @@
 (ns renderer.tool.impl.base.zoom
   (:require
    [renderer.app.events :as-alias app.e]
-   [renderer.app.handlers :as app.h]
-   [renderer.element.handlers :as element.h]
    [renderer.frame.handlers :as frame.h]
+   [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.overlay :as overlay]
    [renderer.utils.pointer :as pointer]))
@@ -22,27 +21,27 @@
 
 (defmethod hierarchy/activate :zoom
   [db]
-  (app.h/set-cursor db "zoom-in"))
+  (h/set-cursor db "zoom-in"))
 
 (defmethod hierarchy/key-down :zoom
   [db e]
   (cond-> db
     (pointer/shift? e)
-    (app.h/set-cursor "zoom-out")))
+    (h/set-cursor "zoom-out")))
 
 (defmethod hierarchy/key-up :zoom
   [db e]
   (cond-> db
     (not (pointer/shift? e))
-    (app.h/set-cursor "zoom-in")))
+    (h/set-cursor "zoom-in")))
 
 (defmethod hierarchy/drag-start :zoom
   [db]
-  (app.h/set-cursor db "default"))
+  (h/set-cursor db "default"))
 
 (defmethod hierarchy/drag :zoom
   [db]
-  (element.h/set-temp db (overlay/select-box db)))
+  (h/set-temp db (overlay/select-box db)))
 
 (defmethod hierarchy/drag-end :zoom
   [db e]
@@ -56,13 +55,13 @@
         current-zoom (get-in db [:documents (:active-document db) :zoom])
         furute-zoom (min width-ratio height-ratio)]
     (-> db
-        (element.h/dissoc-temp)
-        (app.h/set-cursor (if (pointer/shift? e) "zoom-out" "zoom-in"))
+        (h/dissoc-temp)
+        (h/set-cursor (if (pointer/shift? e) "zoom-out" "zoom-in"))
         (frame.h/zoom-by (if (pointer/shift? e)
                            (:zoom-sensitivity db)
                            (/ furute-zoom current-zoom)))
         (frame.h/pan-to-bounds [x y offset-x offset-y])
-        (app.h/add-fx [:dispatch [::app.e/persist]]))))
+        (h/add-fx [:dispatch [::app.e/persist]]))))
 
 (defmethod hierarchy/pointer-up :zoom
   [db e]
@@ -71,4 +70,4 @@
                  (/ 1 (:zoom-sensitivity db)))]
     (-> db
         (frame.h/zoom-at-pointer factor)
-        (app.h/add-fx [:dispatch [::app.e/persist]]))))
+        (h/add-fx [:dispatch [::app.e/persist]]))))

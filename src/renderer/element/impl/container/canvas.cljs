@@ -11,6 +11,7 @@
    [renderer.menubar.filters :as filters]
    [renderer.ruler.views :as ruler.v]
    [renderer.snap.subs :as-alias snap.s]
+   [renderer.tool.subs :as-alias tool.s]
    [renderer.utils.dom :as dom]
    [renderer.utils.drop :as drop]
    [renderer.utils.keyboard :as keyb]
@@ -36,14 +37,14 @@
         temp-element @(rf/subscribe [::document.s/temp-element])
         elements-area @(rf/subscribe [::element.s/area])
         read-only @(rf/subscribe [::document.s/read-only])
-        cursor @(rf/subscribe [::app.s/cursor])
-        tool @(rf/subscribe [::app.s/tool])
-        primary-tool @(rf/subscribe [::app.s/primary-tool])
+        cursor @(rf/subscribe [::tool.s/cursor])
+        tool @(rf/subscribe [::tool.s/active])
+        primary-tool @(rf/subscribe [::tool.s/primary])
         rotate @(rf/subscribe [::document.s/rotate])
         grid @(rf/subscribe [::app.s/grid])
-        state @(rf/subscribe [::app.s/state])
+        state @(rf/subscribe [::tool.s/state])
         pointer-handler #(pointer/event-handler! % el)
-        pivot-point @(rf/subscribe [::app.s/pivot-point])
+        pivot-point @(rf/subscribe [::tool.s/pivot-point])
         snapping-points @(rf/subscribe [::snap.s/points])
         snap-active @(rf/subscribe [::snap.s/active])
         nearest-neighbor @(rf/subscribe [::snap.s/nearest-neighbor])

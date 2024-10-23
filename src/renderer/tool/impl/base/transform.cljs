@@ -3,12 +3,12 @@
    [clojure.core.matrix :as mat]
    [malli.core :as m]
    [renderer.app.db :refer [App]]
-   [renderer.app.handlers :as app.h]
    [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.h]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.h]
    [renderer.snap.handlers :as snap.h]
+   [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.bounds :as bounds :refer [Bounds]]
    [renderer.utils.element :as element]
@@ -58,7 +58,7 @@
 (m/=> hovered? [:-> App Element boolean? boolean?])
 (defn hovered?
   [db el intersecting?]
-  (let [selection-bounds (element.hierarchy/bounds (element.h/temp db))]
+  (let [selection-bounds (element.hierarchy/bounds (h/temp db))]
     (if-let [el-bounds (:bounds el)]
       (if intersecting?
         (bounds/intersect? el-bounds selection-bounds)
@@ -81,10 +81,10 @@
 
     :always
     (-> (element.h/clear-hovered)
-        (app.h/set-cursor (if (and element (or (= (:type element) :handle)
-                                               (not (element/root? element))))
-                            "move"
-                            "default")))
+        (h/set-cursor (if (and element (or (= (:type element) :handle)
+                                           (not (element/root? element))))
+                        "move"
+                        "default")))
 
     (:id element)
     (element.h/hover (:id element))))
@@ -119,7 +119,7 @@
       (dissoc :clicked-element)
       (element.h/clear-ignored :bounding-box)
       (element.h/select (:id element) (pointer/shift? e))
-      (app.h/explain (if (:selected element) "Deselect element" "Select element"))))
+      (h/explain (if (:selected element) "Deselect element" "Select element"))))
 
 (defmethod hierarchy/double-click :transform
   [db e]
@@ -130,13 +130,13 @@
           (element.h/deselect id))
       (cond-> db
         (not= :canvas tag)
-        (app.h/set-tool :edit)))))
+        (h/activate :edit)))))
 
 (defmethod hierarchy/activate :transform
   [db]
   (-> db
-      (app.h/set-state :idle)
-      (app.h/set-cursor "default")))
+      (h/set-state :idle)
+      (h/set-cursor "default")))
 
 (defmethod hierarchy/deactivate :transform
   [db]
@@ -151,15 +151,15 @@
 (defmethod hierarchy/drag-start :transform
   [db _e]
   (let [{:keys [clicked-element]} db]
-    (app.h/set-state db (cond
-                          (= (:type clicked-element) :element)
-                          (if (= (:tag clicked-element) :canvas) :select :translate)
+    (h/set-state db (cond
+                      (= (:type clicked-element) :element)
+                      (if (= (:tag clicked-element) :canvas) :select :translate)
 
-                          (= (:type clicked-element) :handle)
-                          (if (= (:action clicked-element) :scale) :scale :translate)
+                      (= (:type clicked-element) :handle)
+                      (if (= (:action clicked-element) :scale) :scale :translate)
 
-                          :else
-                          :idle))))
+                      :else
+                      :idle))))
 
 (m/=> lock-ratio [:-> Vec2D ScaleHandle Vec2D])
 (defn lock-ratio
@@ -255,25 +255,25 @@
         alt-key? (pointer/alt? e)
         ratio-locked? (or (pointer/ctrl? e) (element.h/ratio-locked? db))
         db (element.h/clear-ignored db)
-        delta (cond-> (app.h/pointer-delta db)
+        delta (cond-> (h/pointer-delta db)
                 (and ctrl? (not= state :scale))
                 pointer/lock-direction)]
     (case state
       :select
       (-> db
-          (element.h/set-temp (select-rect db alt-key?))
+          (h/set-temp (select-rect db alt-key?))
           (element.h/clear-hovered)
           (reduce-by-area (pointer/alt? e) element.h/hover))
 
       :translate
       (if alt-key?
-        (app.h/set-state db :clone)
+        (h/set-state db :clone)
         (-> db
             (history.h/swap)
             (select-element (pointer/shift? e))
             (translate delta)
             (snap.h/snap-with translate)
-            (app.h/set-cursor "default")))
+            (h/set-cursor "default")))
 
       :clone
       (if alt-key?
@@ -282,14 +282,14 @@
             (element.h/duplicate)
             (translate delta)
             (snap.h/snap-with element.h/translate)
-            (app.h/set-cursor "copy"))
-        (app.h/set-state db :translate))
+            (h/set-cursor "copy"))
+        (h/set-state db :translate))
 
       :scale
       (cond-> db
         :always
         (-> (history.h/swap)
-            (app.h/set-cursor "default")
+            (h/set-cursor "default")
             (scale delta {:ratio-locked ratio-locked?
                           :in-place (pointer/shift? e)
                           :recursive (pointer/alt? e)}))
@@ -306,12 +306,12 @@
   (-> (case (:state db)
         :select (-> (cond-> db (not (pointer/shift? e)) element.h/deselect)
                     (reduce-by-area (pointer/alt? e) element.h/select)
-                    (element.h/dissoc-temp)
-                    (app.h/explain "Modify selection"))
-        :translate (app.h/explain db "Move selection")
-        :scale (app.h/explain db "Scale selection")
-        :clone (app.h/explain db "Clone selection")
+                    (h/dissoc-temp)
+                    (h/explain "Modify selection"))
+        :translate (h/explain db "Move selection")
+        :scale (h/explain db "Scale selection")
+        :clone (h/explain db "Clone selection")
         :idle db)
-      (app.h/set-state :idle)
+      (h/set-state :idle)
       (element.h/clear-hovered)
       (dissoc :clicked-element :pivot-point)))

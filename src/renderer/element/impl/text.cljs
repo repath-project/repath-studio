@@ -4,12 +4,12 @@
    [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.e]
-   [renderer.app.handlers :as app.h]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.events :as-alias element.e]
    [renderer.element.handlers :as element.h]
    [renderer.element.hierarchy :as hierarchy]
    [renderer.history.handlers :refer [finalize]]
+   [renderer.tool.handlers :as h]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.dom :as dom]
    [renderer.utils.element :as element]
@@ -61,7 +61,7 @@
    (-> (if (empty? s)
          (element.h/delete db id)
          (element.h/assoc-prop db id :content s))
-       (app.h/set-tool :transform))))
+       (h/activate :transform))))
 
 (defn key-down-handler!
   [e id]

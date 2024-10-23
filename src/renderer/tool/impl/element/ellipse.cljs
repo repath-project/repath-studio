@@ -2,7 +2,7 @@
   "https://www.w3.org/TR/SVG/shapes.html#EllipseElement"
   (:require
    [renderer.document.handlers :as document.h]
-   [renderer.element.handlers :as element.h]
+   [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.pointer :as pointer]))
 
@@ -29,6 +29,6 @@
                :stroke (document.h/attr db :stroke)
                :rx (if lock-ratio (min rx ry) rx)
                :ry (if lock-ratio (min rx ry) ry)}]
-    (element.h/set-temp db {:type :element
-                            :tag :ellipse
-                            :attrs attrs})))
+    (h/set-temp db {:type :element
+                    :tag :ellipse
+                    :attrs attrs})))

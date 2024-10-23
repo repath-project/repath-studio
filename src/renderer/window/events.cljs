@@ -1,7 +1,7 @@
 (ns renderer.window.events
   (:require
    [re-frame.core :as rf]
-   [renderer.app.effects :as app.fx]
+   [renderer.app.effects :as-alias app.fx]
    [renderer.document.handlers :as document.h]
    [renderer.utils.system :as system]
    [renderer.window.effects :as fx]))

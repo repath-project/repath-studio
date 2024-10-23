@@ -9,6 +9,7 @@
    [renderer.element.events :as-alias element.e]
    [renderer.frame.events :as-alias frame.e]
    [renderer.history.events :as-alias history.e]
+   [renderer.tool.events :as-alias tool.e]
    [renderer.window.events :as-alias window.e])
   (:import
    [goog.events KeyCodes]))
@@ -50,12 +51,12 @@
 
    To be used on keydown/keyup events."
   [^js/KeyboardEvent e]
-  (rf/dispatch-sync [::app.e/keyboard-event {:target (.-target e)
-                                             :type (.-type e)
-                                             :code (.-code e)
-                                             :key-code (.-keyCode e)
-                                             :key (.-key e)
-                                             :modifiers (modifiers e)}]))
+  (rf/dispatch-sync [::tool.e/keyboard-event {:target (.-target e)
+                                              :type (.-type e)
+                                              :code (.-code e)
+                                              :key-code (.-keyCode e)
+                                              :key (.-key e)
+                                              :modifiers (modifiers e)}]))
 
 (defn input-key-down-handler!
   "Generic on-key-down handler for input elements that dispatches an event `f`
@@ -168,7 +169,7 @@
                 [[::document.e/new]
                  [{:keyCode (key-codes "N")
                    :ctrlKey true}]]
-                [[::history.e/cancel]
+                [[::tool.e/cancel]
                  [{:keyCode (key-codes "ESC")}]]
                 [[::history.e/redo]
                  [{:keyCode (key-codes "Z")
@@ -235,23 +236,23 @@
                  [{:keyCode (key-codes "F1")}]
                  [{:keyCode (key-codes "K")
                    :ctrlKey true}]]
-                [[::app.e/set-tool :edit]
+                [[::tool.e/activate :edit]
                  [{:keyCode (key-codes "E")}]]
-                [[::app.e/set-tool :circle]
+                [[::tool.e/activate :circle]
                  [{:keyCode (key-codes "C")}]]
-                [[::app.e/set-tool :line]
+                [[::tool.e/activate :line]
                  [{:keyCode (key-codes "L")}]]
-                [[::app.e/set-tool :text]
+                [[::tool.e/activate :text]
                  [{:keyCode (key-codes "T")}]]
-                [[::app.e/set-tool :pan]
+                [[::tool.e/activate :pan]
                  [{:keyCode (key-codes "P")}]]
-                [[::app.e/set-tool :zoom]
+                [[::tool.e/activate :zoom]
                  [{:keyCode (key-codes "Z")}]]
-                [[::app.e/set-tool :rect]
+                [[::tool.e/activate :rect]
                  [{:keyCode (key-codes "R")}]]
-                [[::app.e/set-tool :transform]
+                [[::tool.e/activate :transform]
                  [{:keyCode (key-codes "S")}]]
-                [[::app.e/set-tool :fill]
+                [[::tool.e/activate :fill]
                  [{:keyCode (key-codes "F")}]]]
 
    :clear-keys []
