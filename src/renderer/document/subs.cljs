@@ -23,7 +23,7 @@
    (-> db :recent reverse)))
 
 (rf/reg-sub
- ::some-documents
+ ::some
  :<- [::entities]
  seq)
 

@@ -11,11 +11,11 @@
 (deftest init
   (rf-test/run-test-sync
    (rf/dispatch [::app.e/initialize-db])
-   (is (not @(rf/subscribe [::s/some-documents])))
+   (is (not @(rf/subscribe [::s/some])))
    (is (not @(rf/subscribe [::s/active])))
 
    (rf/dispatch [::e/init])
-   (is @(rf/subscribe [::s/some-documents]))
+   (is @(rf/subscribe [::s/some]))
    (is (db/valid? @(rf/subscribe [::s/active])))
    (is (= "• Untitled-1 - Repath Studio" @(rf/subscribe [::s/title-bar])))))
 

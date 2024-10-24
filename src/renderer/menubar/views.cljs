@@ -63,38 +63,38 @@
             :label "Save"
             :icon "save"
             :action [::document.e/save]
-            :disabled (or (not @(rf/subscribe [::document.s/some-documents]))
+            :disabled (or (not @(rf/subscribe [::document.s/some]))
                           @(rf/subscribe [::document.s/active-saved]))}
            {:id :save-as
             :label "Save as…"
             :icon "save-as"
             :action [::document.e/save-as]
-            :disabled (not @(rf/subscribe [::document.s/some-documents]))}
+            :disabled (not @(rf/subscribe [::document.s/some]))}
            {:id :download
             :icon "download"
             :label "Download"
-            :disabled (not @(rf/subscribe [::document.s/some-documents]))
+            :disabled (not @(rf/subscribe [::document.s/some]))
             :action [::document.e/download]}
            {:id :divider-3
             :type :separator}
            {:id :export-svg
             :label "Export as SVG"
             :icon "export"
-            :disabled (not @(rf/subscribe [::document.s/some-documents]))
+            :disabled (not @(rf/subscribe [::document.s/some]))
             :action [::element.e/export-svg]}
            {:id :divider-4
             :type :separator}
            {:id :print
             :label "Print"
             :icon "printer"
-            :disabled (not @(rf/subscribe [::document.s/some-documents]))
+            :disabled (not @(rf/subscribe [::document.s/some]))
             :action [::element.e/print]}
            {:id :divider-5
             :type :separator}
            {:id :close
             :label "Close"
             :icon "window-close"
-            :disabled (not @(rf/subscribe [::document.s/some-documents]))
+            :disabled (not @(rf/subscribe [::document.s/some]))
             :action [::document.e/close-active]}
            {:id :exit
             :label "Exit"
@@ -106,7 +106,7 @@
   {:id :edit
    :label "Edit"
    :type :root
-   :disabled (not @(rf/subscribe [::document.s/some-documents]))
+   :disabled (not @(rf/subscribe [::document.s/some]))
    :items [{:id :undo
             :label "Undo"
             :icon "undo"
@@ -275,7 +275,7 @@
   {:id :object
    :label "Object"
    :type :root
-   :disabled (not @(rf/subscribe [::document.s/some-documents]))
+   :disabled (not @(rf/subscribe [::document.s/some]))
    :items [{:id :to-path
             :label "Object to path"
             :icon "bezier-curve"
@@ -455,7 +455,7 @@
   {:id :view
    :label "View"
    :type :root
-   :disabled (not @(rf/subscribe [::document.s/some-documents]))
+   :disabled (not @(rf/subscribe [::document.s/some]))
    :items [{:id :zoom
             :label "Zoom"
             :type :sub-menu

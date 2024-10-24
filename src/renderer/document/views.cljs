@@ -106,13 +106,10 @@
           :on-drag-enter #(reset! dragged-over? true)
           :on-drag-leave #(reset! dragged-over? false)
           :on-drop (fn [evt]
-                     (.preventDefault evt)
-                     (reset! dragged-over? false)
-                     (rf/dispatch [::e/swap-position
-                                   (-> (.-dataTransfer evt)
-                                       (.getData "id")
-                                       uuid)
-                                   id]))}
+                     (let [dropped-id (-> (.-dataTransfer evt) (.getData "id") uuid)]
+                       (.preventDefault evt)
+                       (reset! dragged-over? false)
+                       (rf/dispatch [::e/swap-position dropped-id id])))}
          [:span.truncate.pointer-events-none title]
          [close-button id is-saved]]]
        [:> ContextMenu/Portal
