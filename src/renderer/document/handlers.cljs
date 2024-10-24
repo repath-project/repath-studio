@@ -82,9 +82,9 @@
 
 (m/=> search-by-path [:-> App string? [:maybe uuid?]])
 (defn search-by-path
-  [db path]
+  [db file-path]
   (let [documents (vals (:documents db))]
-    (some #(when (and path (= (:path %) path)) (:id %)) documents)))
+    (some #(when (and file-path (= (:path %) file-path)) (:id %)) documents)))
 
 (m/=> new-title [:-> App string?])
 (defn new-title
