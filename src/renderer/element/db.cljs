@@ -13,6 +13,9 @@
   [:fn {:error/fn (fn [{:keys [value]} _] (str value ", is not a supported tag"))}
    tag?])
 
+(def AnimationTag
+  [:enum :animate :animateTransform :animateMotion])
+
 (def Attrs
   [:map-of keyword? string?])
 

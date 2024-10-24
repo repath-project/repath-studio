@@ -25,7 +25,7 @@
  ::select-ids
  [(finalize "Select elements")]
  (fn [db [_ ids]]
-   (h/select-ids db ids)))
+   (reduce (partial-right h/assoc-prop :selected true) (h/deselect db) ids)))
 
 (rf/reg-event-db
  ::toggle-prop

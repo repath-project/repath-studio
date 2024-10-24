@@ -9,7 +9,7 @@
    [malli.error :as me]
    [renderer.app.db :refer [App]]
    [renderer.attribute.hierarchy :as attr.hierarchy]
-   [renderer.element.db :as db :refer [Element Tag Direction]]
+   [renderer.element.db :as db :refer [Element Tag AnimationTag Attrs Direction]]
    [renderer.element.hierarchy :as hierarchy]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
@@ -20,7 +20,7 @@
    [renderer.utils.hiccup :as hiccup]
    [renderer.utils.map :as map]
    [renderer.utils.math :as math :refer [Vec2D]]
-   [renderer.utils.path :as path]
+   [renderer.utils.path :as path :refer [PathManipulation PathBooleanOperation]]
    [renderer.utils.vec :as vec]))
 
 (defn path
@@ -186,6 +186,9 @@
     (conj (mapv #(index db %) ancestor-els)
           (index db id))))
 
+(m/=> descendant-ids [:function
+                      [:-> App [:set uuid?]]
+                      [:-> App uuid? [:set uuid?]]])
 (defn descendant-ids
   ([db]
    (reduce #(set/union %1 (descendant-ids db %2)) #{} (selected-ids db)))
@@ -215,6 +218,9 @@
   (-> (apply update-in db (path db id k) more)
       (refresh-bounds id)))
 
+(m/=> assoc-prop [:function
+                  [:-> App keyword? any? App]
+                  [:-> App uuid? keyword? any? App]])
 (defn assoc-prop
   ([db k v]
    (reduce (partial-right assoc-prop k v) db (selected-ids db)))
@@ -224,6 +230,9 @@
          (assoc-in db (path db id k) v))
        (refresh-bounds id))))
 
+(m/=> dissoc-attr [:function
+                   [:-> App keyword? App]
+                   [:-> App uuid? keyword? App]])
 (defn dissoc-attr
   ([db k]
    (reduce (partial-right dissoc-attr k) db (selected-ids db)))
@@ -232,6 +241,9 @@
      (not (locked? db id))
      (update-prop id :attrs dissoc k))))
 
+(m/=> assoc-attr [:function
+                  [:-> App keyword? string? App]
+                  [:-> App uuid? keyword? string? App]])
 (defn assoc-attr
   ([db k v]
    (reduce (partial-right assoc-attr k v) db (selected-ids db)))
@@ -241,6 +253,9 @@
      (-> (assoc-in (path db id :attrs k) v)
          (refresh-bounds id)))))
 
+(m/=> set-attr [:function
+                [:-> App keyword? string? App]
+                [:-> App uuid? keyword? string? App]])
 (defn set-attr
   ([db k v]
    (reduce (partial-right set-attr k v) db (selected-ids db)))
@@ -253,39 +268,32 @@
      db)))
 
 (defn update-attr
-  ([db id k f]
-   (if (element/supported-attr? (entity db id) k)
-     (update-el db id attr.hierarchy/update-attr k f)
-     db))
-  ([db id k f arg1]
-   (if (element/supported-attr? (entity db id) k)
-     (update-el db id attr.hierarchy/update-attr k f arg1)
-     db))
-  ([db id k f arg1 arg2]
-   (if (element/supported-attr? (entity db id) k)
-     (update-el db id attr.hierarchy/update-attr k f arg1 arg2)
-     db))
-  ([db id k f arg1 arg2 arg3]
-   (if (element/supported-attr? (entity db id) k)
-     (update-el db id attr.hierarchy/update-attr k f arg1 arg2 arg3)
-     db))
-  ([db id k f arg1 arg2 arg3 & more]
-   (if (element/supported-attr? (entity db id) k)
-     (apply update-el db id attr.hierarchy/update-attr k f arg1 arg2 arg3 more)
-     db)))
+  [db id k f & more]
+  (if (element/supported-attr? (entity db id) k)
+    (apply update-el db id attr.hierarchy/update-attr k f more)
+    db))
 
+(m/=> deselect [:function
+                [:-> App App]
+                [:-> App uuid? App]])
 (defn deselect
   ([db]
    (reduce deselect db (keys (entities db))))
   ([db id]
    (assoc-prop db id :selected false)))
 
+(m/=> collapse [:function
+                [:-> App App]
+                [:-> App uuid? App]])
 (defn collapse
   ([db]
    (reduce collapse db (keys (entities db))))
-  ([{:keys [active-document] :as db} id]
-   (update-in db [:documents active-document :collapsed-ids] conj id)))
+  ([db id]
+   (update-in db [:documents (:active-document db) :collapsed-ids] conj id)))
 
+(m/=> expand [:function
+              [:-> App App]
+              [:-> App uuid? App]])
 (defn expand
   ([db]
    (reduce expand db (keys (entities db))))
@@ -298,6 +306,9 @@
   (->> (ancestor-ids db id)
        (reduce expand db)))
 
+(m/=> select [:function
+              [:-> App uuid? App]
+              [:-> App uuid? boolean? App]])
 (defn select
   ([db id]
    (-> db
@@ -309,10 +320,6 @@
        (update-prop db id :selected not)
        (-> db deselect (select id)))
      (deselect db))))
-
-(defn select-ids
-  [db ids]
-  (reduce (partial-right assoc-prop :selected true) (deselect db) ids))
 
 (m/=> select-all [:-> App App])
 (defn select-all
@@ -392,6 +399,9 @@
     (:active-document db)
     (assoc-in [:documents (:active-document db) :hovered-ids] #{})))
 
+(m/=> clear-ignored [:function
+                     [:-> App App]
+                     [:-> App [:or uuid? keyword?] App]])
 (defn clear-ignored
   ([db]
    (cond-> db
@@ -416,6 +426,9 @@
       (assoc :copied-elements els
              :copied-bounds (bounds db)))))
 
+(m/=> delete [:function
+              [:-> App App]
+              [:-> App uuid? App]])
 (defn delete
   ([db]
    (reduce delete db (reverse (selected-sorted-ids db))))
@@ -439,6 +452,9 @@
        (<= 0 new-index (dec sibling-count))
        (update-prop (:id (parent db id)) :children vec/move i new-index)))))
 
+(m/=> set-parent [:function
+                  [:-> App uuid? App]
+                  [:-> App uuid? uuid? App]])
 (defn set-parent
   ([db parent-id]
    (reduce #(set-parent %1 parent-id %2) db (selected-sorted-ids db)))
@@ -502,9 +518,9 @@
      db
      ids-to-scale)))
 
-(m/=> parent [:function
-              [:-> App Direction App]
-              [:-> App uuid? Direction App]])
+(m/=> align [:function
+             [:-> App Direction App]
+             [:-> App uuid? Direction App]])
 (defn align
   ([db direction]
    (reduce (partial-right align direction) db (selected-ids db)))
@@ -543,7 +559,7 @@
   ([db id]
    (update-el db id element/stroke->path)))
 
-(m/=> overlapping-svg [:-> App Bounds App])
+(m/=> overlapping-svg [:-> App Bounds Element])
 (defn overlapping-svg
   [db el-bounds]
   (let [svgs (reverse (root-svgs db))] ; Reverse to select top svgs first.
@@ -613,6 +629,7 @@
   [db el]
   (create (deselect db) (assoc el :selected true)))
 
+(m/=> boolean-operation [:-> App PathBooleanOperation App])
 (defn boolean-operation
   [db operation]
   (let [selected-elements (top-selected-sorted db)
@@ -662,18 +679,24 @@
   [db]
   (reduce create (deselect db) (top-selected-sorted db)))
 
+(m/=> animate [:function
+               [:-> App AnimationTag App]
+               [:-> App AnimationTag map? App]
+               [:-> App uuid? AnimationTag map? App]])
 (defn animate
+  ([db tag]
+   (animate db tag {}))
   ([db tag attrs]
-   (reduce (partial-right animate tag attrs) (deselect db) (selected db)))
-  ([db el tag attrs]
+   (reduce (partial-right animate tag attrs) (deselect db) (selected-ids db)))
+  ([db id tag attrs]
    (reduce select (add db {:tag tag
                            :attrs attrs
-                           :parent (:id el)}) (selected-ids db))))
+                           :parent id}) (selected-ids db))))
 
 (defn paste-styles
   ([db]
-   (reduce paste-styles db (selected db)))
-  ([db el]
+   (reduce paste-styles db (selected-ids db)))
+  ([db id]
    ;; TODO: Merge attributes from multiple selected elements.
    (if (= 1 (count (:copied-elements db)))
      (let [attrs (-> db :copied-elements first :attrs)
@@ -681,7 +704,7 @@
        (reduce (fn [db attr]
                  (cond-> db
                    (attr attrs)
-                   (update-attr (:id el) attr #(if % (-> attrs attr) disj))))
+                   (update-attr id attr #(if % (-> attrs attr) disj))))
                db style-attrs)) db)))
 
 (defn inherit-attrs
@@ -694,6 +717,9 @@
          source-attr
          (update-attr id attr get-value)))) db attr/presentation))
 
+(m/=> group [:function
+             [:-> App App]
+             [:-> App [:sequential uuid?] App]])
 (defn group
   ([db]
    (group db (top-selected-sorted-ids db)))
@@ -702,6 +728,9 @@
            (add db {:tag :g
                     :parent (:id (parent db))}) ids)))
 
+(m/=> ungroup [:function
+               [:-> App App]
+               [:-> App uuid? App]])
 (defn ungroup
   ([db]
    (reduce ungroup db (selected-ids db)))
@@ -721,6 +750,9 @@
           db (reverse (children-ids db id))))
        (delete db id)))))
 
+(m/=> manipulate-path [:function
+                       [:-> App PathManipulation App]
+                       [:-> App uuid? PathManipulation App]])
 (defn manipulate-path
   ([db action]
    (reduce (partial-right manipulate-path action) db (selected-ids db)))
