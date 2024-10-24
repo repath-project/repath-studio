@@ -91,28 +91,8 @@
     (mat/sub point base-point)))
 
 (defn snap-with
-  ([db f]
-   (let [db (update-nearest-neighbor db)]
-     (cond-> db
-       (nearest-neighbor db)
-       (f (nearest-delta db)))))
-  ([db f arg1]
-   (let [db (update-nearest-neighbor db)]
-     (cond-> db
-       (nearest-neighbor db)
-       (f (nearest-delta db) arg1))))
-  ([db f arg1 arg2]
-   (let [db (update-nearest-neighbor db)]
-     (cond-> db
-       (nearest-neighbor db)
-       (f (nearest-delta db) arg1 arg2))))
-  ([db f arg1 arg2 arg3]
-   (let [db (update-nearest-neighbor db)]
-     (cond-> db
-       (nearest-neighbor db)
-       (f (nearest-delta db) arg1 arg2 arg3))))
-  ([db f arg1 arg2 arg3 & more]
-   (let [db (update-nearest-neighbor db)]
-     (cond-> db
-       (nearest-neighbor db)
-       (apply f (nearest-delta db) arg1 arg2 arg3 more)))))
+  [db f & more]
+  (let [db (update-nearest-neighbor db)]
+    (if (nearest-neighbor db)
+      (apply f db (nearest-delta db) more)
+      db)))

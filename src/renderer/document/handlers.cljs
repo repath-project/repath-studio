@@ -10,19 +10,9 @@
    [renderer.notification.views :as notification.v]
    [renderer.utils.vec :as vec]))
 
-(m/=> path [:function
-            [:-> App vector?]
-            [:-> App keyword? vector?]
-            [:-> App keyword? keyword? vector?]])
 (defn path
-  ([db]
-   [:documents (:active-document db)])
-  ([db arg1]
-   (conj (path db) arg1))
-  ([db arg1 arg2]
-   (conj (path db) arg1 arg2))
-  ([db arg1 arg2 & more]
-   (apply conj (path db) arg1 arg2 more)))
+  [db & more]
+  (apply conj [:documents (:active-document db)] more))
 
 (m/=> active [:-> App Document])
 (defn active

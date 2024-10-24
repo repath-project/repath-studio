@@ -71,35 +71,13 @@
       n
       (if (valid-unit? unit) (->px n unit) 0))))
 
-(m/=> ->fixed-unit [:-> number? string? string?])
-(defn ->fixed-unit
-  [n unit]
-  (-> n
-      (.toFixed 2)
-      (js/parseFloat)
-      (->unit unit)
-      (str (when (valid-unit? unit) unit))))
-
 (defn transform
   "Converts a value to pixels, applies a function and converts the result
    back to the original unit."
-  ([v f]
+  ([v f & more]
    (let [[n unit] (parse-unit v)]
-     (-> (f (->px n unit))
-         (->fixed-unit unit))))
-  ([v f arg1]
-   (let [[n unit] (parse-unit v)]
-     (-> (f (->px n unit) arg1)
-         (->fixed-unit unit))))
-  ([v f arg1 arg2]
-   (let [[n unit] (parse-unit v)]
-     (-> (f (->px n unit) arg1 arg2)
-         (->fixed-unit unit))))
-  ([v f arg1 arg2 arg3]
-   (let [[n unit] (parse-unit v)]
-     (-> (f (->px n unit) arg1 arg2 arg3)
-         (->fixed-unit unit))))
-  ([v f arg1 arg2 arg3 & more]
-   (let [[n unit] (parse-unit v)]
-     (-> (apply f (->px n unit) arg1 arg2 arg3 more)
-         (->fixed-unit unit)))))
+     (-> (apply f (->px n unit) more)
+         (.toFixed 2)
+         (js/parseFloat)
+         (->unit unit)
+         (str (when (valid-unit? unit) unit))))))

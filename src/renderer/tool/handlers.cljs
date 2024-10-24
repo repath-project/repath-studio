@@ -42,7 +42,7 @@
 
 (m/=> set-cursor [:-> App Cursor App])
 (defn set-cursor
-  [db, cursor]
+  [db cursor]
   (assoc db :cursor cursor))
 
 (m/=> pointer-delta [:-> App Vec2D])

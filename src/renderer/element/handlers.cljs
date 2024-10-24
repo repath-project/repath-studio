@@ -23,19 +23,9 @@
    [renderer.utils.path :as path]
    [renderer.utils.vec :as vec]))
 
-(m/=> path [:function
-            [:-> App vector?]
-            [:-> App uuid? vector?]
-            [:-> App uuid? keyword? vector?]])
 (defn path
-  ([db]
-   [:documents (:active-document db) :elements])
-  ([db id]
-   (conj (path db) id))
-  ([db id k]
-   (conj (path db) id k))
-  ([db id k & more]
-   (apply conj (path db) id k more)))
+  [db & more]
+  (apply conj [:documents (:active-document db) :elements] more))
 
 (m/=> entities [:function
                 [:-> App [:map-of uuid? Element]]
@@ -127,31 +117,11 @@
           (update-in (path db id) assoc-bounds)))))
 
 (defn update-el
-  ([db id f]
-   (if (locked? db id)
-     db
-     (-> (update-in db (path db id) f)
-         (refresh-bounds id))))
-  ([db id f arg1]
-   (if (locked? db id)
-     db
-     (-> (update-in db (path db id) f arg1)
-         (refresh-bounds id))))
-  ([db id f arg1 arg2]
-   (if (locked? db id)
-     db
-     (-> (update-in db (path db id) f arg1 arg2)
-         (refresh-bounds id))))
-  ([db id f arg1 arg2 arg3]
-   (if (locked? db id)
-     db
-     (-> (update-in db (path db id) f arg1 arg2 arg3)
-         (refresh-bounds id))))
-  ([db id f arg1 arg2 arg3 & more]
-   (if (locked? db id)
-     db
-     (-> (apply update-in db (path db id) f arg1 arg2 arg3 more)
-         (refresh-bounds id)))))
+  [db id f & more]
+  (if (locked? db id)
+    db
+    (-> (apply update-in db (path db id) f more)
+        (refresh-bounds id))))
 
 (m/=> siblings-selected? [:-> App [:maybe boolean?]])
 (defn siblings-selected?
@@ -241,21 +211,9 @@
        (vals)))
 
 (defn update-prop
-  ([db id k f]
-   (-> (update-in db (path db id k) f)
-       (refresh-bounds id)))
-  ([db id k f arg1]
-   (-> (update-in db (path db id k) f arg1)
-       (refresh-bounds id)))
-  ([db id k f arg1 arg2]
-   (-> (update-in db (path db id k) f arg1 arg2)
-       (refresh-bounds id)))
-  ([db id k f arg1 arg2 arg3]
-   (-> (update-in db (path db id k) f arg1 arg2 arg3)
-       (refresh-bounds id)))
-  ([db id k arg1 arg2 arg3 & more]
-   (-> (apply update-in db (path db id k) arg1 arg2 arg3 more)
-       (refresh-bounds id))))
+  [db id k & more]
+  (-> (apply update-in db (path db id k) more)
+      (refresh-bounds id)))
 
 (defn assoc-prop
   ([db k v]

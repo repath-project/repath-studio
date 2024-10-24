@@ -14,16 +14,9 @@
    [renderer.utils.math :refer [Vec2D]]
    [renderer.utils.vec :as vec]))
 
-(m/=> path [:function
-            [:-> App vector?]
-            [:-> App keyword? vector?]])
 (defn path
-  ([db]
-   [:documents (:active-document db) :history])
-  ([db k]
-   (conj (path db) k))
-  ([db k & more]
-   (apply conj (path db) k more)))
+  [db & more]
+  (apply conj [:documents (:active-document db) :history] more))
 
 (m/=> history [:-> App [:maybe History]])
 (defn history
