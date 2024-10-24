@@ -36,11 +36,12 @@
 
 (defmethod hierarchy/pointer-up ::hierarchy/polyshape
   [db]
-  (if (h/temp db)
-    (add-point db (:adjusted-pointer-pos db))
-    (-> db
-        (h/set-state :create)
-        (create-polyline (:adjusted-pointer-pos db)))))
+  (let [point (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))]
+    (if (h/temp db)
+      (add-point db point)
+      (-> db
+          (h/set-state :create)
+          (create-polyline point)))))
 
 (defmethod hierarchy/drag-end ::hierarchy/polyshape
   [db]
@@ -52,14 +53,15 @@
 
 (defmethod hierarchy/pointer-move ::hierarchy/polyshape
   [db]
-  (if-let [points (get-in db (points-path db))]
-    (let [point-vector (attr/points->vec points)]
-      (assoc-in db
-                (points-path db)
-                (str/join " " (concat (apply concat (if (second point-vector)
-                                                      (drop-last point-vector)
-                                                      point-vector))
-                                      (:adjusted-pointer-pos db))))) db))
+  (let [point (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))]
+    (if-let [points (get-in db (points-path db))]
+      (let [point-vector (attr/points->vec points)]
+        (assoc-in db
+                  (points-path db)
+                  (str/join " " (concat (apply concat (if (second point-vector)
+                                                        (drop-last point-vector)
+                                                        point-vector))
+                                        point)))) db)))
 
 (defmethod hierarchy/double-click ::hierarchy/polyshape
   [db _e]

@@ -22,15 +22,17 @@
   [db]
   (h/dissoc-temp db))
 
-(defmethod hierarchy/drag-end :measure
-  [db] db)
+(defmethod hierarchy/drag-end :measure [db] db)
+
+(defmethod hierarchy/snapping-bases :measure
+  [db]
+  [(:adjusted-pointer-pos db)])
 
 (defmethod hierarchy/drag :measure
   [db]
-  (let [{:keys [adjusted-pointer-offset adjusted-pointer-pos]} db
-        [offset-x offset-y] adjusted-pointer-offset
-        [x y] adjusted-pointer-pos
-        [adjacent opposite] (mat/sub adjusted-pointer-offset adjusted-pointer-pos)
+  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
+        [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
+        [adjacent opposite] (mat/sub [offset-x offset-y] [x y])
         hypotenuse (Math/hypot adjacent opposite)]
     (h/set-temp db {:type :element
                     :tag :measure

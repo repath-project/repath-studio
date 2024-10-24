@@ -19,17 +19,15 @@
 
 (defmethod hierarchy/drag :rect
   [db e]
-  (let [[offset-x offset-y] (:adjusted-pointer-offset db)
-        [x y] (:adjusted-pointer-pos db)
-        lock-ratio (pointer/ctrl? e)
+  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
+        [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
         width (abs (- x offset-x))
-        height (abs (- y offset-y))
-        attrs {:x (min x offset-x)
-               :y (min y offset-y)
-               :width (if lock-ratio (min width height) width)
-               :height (if lock-ratio (min width height) height)
-               :fill (document.h/attr db :fill)
-               :stroke (document.h/attr db :stroke)}]
+        height (abs (- y offset-y))]
     (h/set-temp db {:type :element
                     :tag :rect
-                    :attrs attrs})))
+                    :attrs {:x (min x offset-x)
+                            :y (min y offset-y)
+                            :width (if (pointer/ctrl? e) (min width height) width)
+                            :height (if (pointer/ctrl? e) (min width height) height)
+                            :fill (document.h/attr db :fill)
+                            :stroke (document.h/attr db :stroke)}})))

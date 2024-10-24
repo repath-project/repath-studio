@@ -9,6 +9,7 @@
 (defmulti drag-end (fn [db _e] (:tool db)))
 (defmulti key-up (fn [db _e] (:tool db)))
 (defmulti key-down (fn [db _e] (:tool db)))
+(defmulti snapping-bases (fn [db _e] (:tool db)))
 (defmulti activate :tool)
 (defmulti deactivate :tool)
 (defmulti properties "Returns the properties of the tool." keyword)
@@ -28,6 +29,7 @@
 (defmethod activate :default [db] (assoc db :cursor "default"))
 (defmethod deactivate :default [db] (assoc db :cursor "default"))
 (defmethod properties :default [])
+(defmethod snapping-bases :default [])
 (defmethod help :default [_tool _state] "")
 
 

@@ -37,3 +37,7 @@
       (h/activate :transform)
       (h/set-state :idle)
       (h/explain (str "Create " (name (:tag (h/temp db)))))))
+
+(defmethod hierarchy/snapping-bases ::hierarchy/element
+  [db]
+  [(:adjusted-pointer-pos db)])

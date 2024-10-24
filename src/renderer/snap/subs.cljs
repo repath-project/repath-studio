@@ -22,7 +22,6 @@
 
 (rf/reg-sub
  ::nearest-neighbor
- :<- [::snap]
  :-> :nearest-neighbor)
 
 (rf/reg-sub

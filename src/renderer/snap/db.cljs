@@ -20,5 +20,4 @@
   [:map {:default {} :closed true}
    [:active {:default true} boolean?]
    [:threshold {:default 15} number?]
-   [:nearest-neighbor {:optional true} NearestNeighbor]
    [:options {:default (set snap-options)} SnapOptions]])

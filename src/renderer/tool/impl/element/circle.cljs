@@ -14,8 +14,8 @@
 
 (defmethod hierarchy/drag :circle
   [db]
-  (let [offset (:adjusted-pointer-offset db)
-        position (:adjusted-pointer-pos db)
+  (let [offset (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
+        position (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
         [x y] offset
         radius (mat/distance position offset)
         attrs {:cx x

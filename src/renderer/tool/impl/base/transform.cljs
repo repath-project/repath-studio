@@ -315,3 +315,21 @@
       (h/set-state :idle)
       (element.h/clear-hovered)
       (dissoc :clicked-element :pivot-point)))
+
+(defmethod hierarchy/snapping-bases :transform
+  [db]
+  (let [elements (vals (element.h/entities db))
+        selected (filter :selected elements)
+        selected-visible (filter :visible selected)
+        options (-> db :snap :options)]
+    (cond
+      (and (contains? #{:translate :clone} (:state db)) (seq selected))
+      (reduce (fn [points el] (into points (element/snapping-points el options)))
+              (if (seq (rest selected))
+                (bounds/->snapping-points (element.h/bounds db) options)
+                [])
+              selected-visible)
+
+      (= (:state db) :scale)
+      [(mat/add [(-> db :clicked-element :x) (-> db :clicked-element :y)]
+                (mat/sub (:adjusted-pointer-pos db) (:adjusted-pointer-offset db)))])))

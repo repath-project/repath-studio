@@ -5,12 +5,9 @@
    [malli.core :as m]
    [re-frame.core :as rf]
    [renderer.app.db :refer [App]]
-   [renderer.element.handlers :as element.h]
    [renderer.snap.db :refer [SnapOption NearestNeighbor]]
    [renderer.snap.subs :as-alias snap.s]
-   [renderer.tool.handlers :as tool.h]
-   [renderer.utils.bounds :as bounds]
-   [renderer.utils.element :as element]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.math :refer [Vec2D]]))
 
 (m/=> toggle-option [:-> App SnapOption App])
@@ -20,36 +17,14 @@
     (update-in db [:snap :options] disj option)
     (update-in db [:snap :options] conj option)))
 
-(m/=> base-points [:-> App [:vector Vec2D]])
-(defn base-points
-  [db]
-  (let [elements (vals (element.h/entities db))
-        selected (filter :selected elements)
-        selected-visible (filter :visible selected)
-        options (-> db :snap :options)]
-    (when (-> db :snap :active)
-      (cond
-        (and (contains? #{:translate :clone} (:state db)) (seq selected))
-        (reduce (fn [points el] (into points (element/snapping-points el options)))
-                (if (seq (rest selected))
-                  (bounds/->snapping-points (element.h/bounds db) options)
-                  [])
-                selected-visible)
-
-        (contains? #{:edit :scale} (:state db))
-        [(mat/add [(-> db :clicked-element :x) (-> db :clicked-element :y)]
-                  (tool.h/pointer-delta db))]
-
-        :else
-        [(:adjusted-pointer-pos db)]))))
-
 (m/=> find-nearest-neighbors [:-> App [:sequential NearestNeighbor]])
 (defn find-nearest-neighbors
   [db]
   (let [tree @(rf/subscribe [::snap.s/in-viewport-tree])] ; FIXME: Subscription in event.
     (map #(let [nearest-neighbor (kdtree/nearest-neighbor tree %)]
             (when nearest-neighbor
-              (assoc nearest-neighbor :base-point %))) (base-points db))))
+              (assoc nearest-neighbor :base-point %)))
+         (tool.hierarchy/snapping-bases db))))
 
 (m/=> find-nearest-neighbor [:-> App [:maybe NearestNeighbor]])
 (defn find-nearest-neighbor
@@ -74,25 +49,20 @@
   (let [nearest-neighbor (find-nearest-neighbor db)]
     (cond-> db
       :always
-      (update :snap dissoc :nearest-neighbor)
+      (dissoc :nearest-neighbor)
 
       (and (-> db :snap :active) nearest-neighbor)
-      (assoc-in [:snap :nearest-neighbor] nearest-neighbor))))
-
-(m/=> nearest-neighbor [:-> App [:maybe NearestNeighbor]])
-(defn nearest-neighbor
-  [db]
-  (get-in db [:snap :nearest-neighbor]))
+      (assoc :nearest-neighbor nearest-neighbor))))
 
 (m/=> nearest-delta [:-> App Vec2D])
 (defn nearest-delta
   [db]
-  (let [{:keys [point base-point]} (nearest-neighbor db)]
+  (let [{:keys [point base-point]} (:nearest-neighbor db)]
     (mat/sub point base-point)))
 
 (defn snap-with
   [db f & more]
   (let [db (update-nearest-neighbor db)]
-    (if (nearest-neighbor db)
+    (if (:nearest-neighbor db)
       (apply f db (nearest-delta db) more)
       db)))

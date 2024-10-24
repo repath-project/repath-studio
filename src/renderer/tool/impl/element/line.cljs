@@ -13,8 +13,8 @@
 
 (defn create-line
   [db]
-  (let [[offset-x offset-y] (:adjusted-pointer-offset db)
-        [x y] (:adjusted-pointer-pos db)
+  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
+        [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
         attrs {:x1 offset-x
                :y1 offset-y
                :x2 x
@@ -26,7 +26,7 @@
 
 (defn update-line-end
   [db]
-  (let [[x y] (:adjusted-pointer-pos db)
+  (let [[x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
         temp (-> (h/temp db)
                  (assoc-in [:attrs :x2] x)
                  (assoc-in [:attrs :y2] y))]
@@ -35,7 +35,8 @@
 (defmethod tool.hierarchy/pointer-move :line
   [db]
   (cond-> db
-    (h/temp db) (update-line-end)))
+    (h/temp db)
+    (update-line-end)))
 
 (defmethod tool.hierarchy/pointer-up :line
   [db _e]

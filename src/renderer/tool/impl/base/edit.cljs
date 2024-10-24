@@ -1,5 +1,6 @@
 (ns renderer.tool.impl.base.edit
   (:require
+   [clojure.core.matrix :as mat]
    [renderer.element.handlers :as element.h]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.h]
@@ -77,3 +78,9 @@
       (h/set-state :idle)
       (dissoc :clicked-element)
       (h/explain "Edit")))
+
+(defmethod hierarchy/snapping-bases :edit
+  [db]
+  (when (contains? #{:edit :scale} (:state db))
+    [(mat/add [(-> db :clicked-element :x) (-> db :clicked-element :y)]
+              (mat/sub (:adjusted-pointer-pos db) (:adjusted-pointer-offset db)))]))

@@ -8,6 +8,7 @@
    [renderer.element.handlers :as element.h]
    [renderer.frame.handlers :as frame.h]
    [renderer.history.handlers :as history.h]
+   [renderer.snap.handlers :as snap.h]
    [renderer.tool.db :refer [Tool State Cursor]]
    [renderer.tool.effects :as-alias fx]
    [renderer.tool.hierarchy :as hierarchy]
@@ -83,7 +84,7 @@
 (m/=> pointer-handler [:-> App PointerEvent number? App])
 (defn pointer-handler
   [db e now]
-  (let [{:keys [pointer-offset tool dom-rect drag primary-tool drag-threshold]} db
+  (let [{:keys [pointer-offset tool dom-rect drag primary-tool drag-threshold nearest-neighbor]} db
         {:keys [button buttons pointer-pos]} e
         adjusted-pointer-pos (frame.h/adjust-pointer-pos db pointer-pos)]
     (case (:type e)
@@ -103,6 +104,7 @@
                 (hierarchy/drag e))
               db)
             (hierarchy/pointer-move db e))
+          (snap.h/update-nearest-neighbor)
           (assoc :pointer-pos pointer-pos
                  :adjusted-pointer-pos adjusted-pointer-pos))
 
@@ -114,7 +116,8 @@
 
         (not= buttons :right)
         (assoc :pointer-offset pointer-pos
-               :adjusted-pointer-offset adjusted-pointer-pos)
+               :adjusted-pointer-offset adjusted-pointer-pos
+               :nearest-neighbor-offset (:point nearest-neighbor))
 
         :always
         (hierarchy/pointer-down e))
