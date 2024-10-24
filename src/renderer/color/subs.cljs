@@ -24,7 +24,6 @@
              #{}
              selected-elements)))
 
-
 #_(rf/reg-sub
    ::custom-fills
    :<- [::fills]

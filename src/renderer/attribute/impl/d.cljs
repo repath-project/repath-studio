@@ -69,7 +69,6 @@
 
 (defmethod segment-form :z [_segment _i])
 
-
 (defmethod segment-form :a
   [segment i]
   [:div

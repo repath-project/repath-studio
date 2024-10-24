@@ -1,5 +1,6 @@
 (ns renderer.reepl.replumb
   (:require
+   #_[shadow.cljs.bootstrap.browser :as bootstrap]
    [cljs.js :as jsc]
    [cljs.tagged-literals :as tags]
    [cljs.tools.reader]
@@ -8,8 +9,7 @@
    [replumb.ast :as ast]
    [replumb.core :as replumb]
    [replumb.doc-maps :as docs]
-   [replumb.repl :as repl]
-   #_[shadow.cljs.bootstrap.browser :as bootstrap])
+   [replumb.repl :as repl])
   (:import goog.net.XhrIo))
 
 (defn fetch-file!

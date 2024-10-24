@@ -299,7 +299,6 @@
             10
             {:fill (str "hsl(" (* x 10) " ,50% , 50%)")}))
 
-
   (ajax.core/GET
     "https://api.thecatapi.com/v1/images/search"
     {:response-format (ajax.core/json-response-format {:keywords? true})

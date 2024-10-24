@@ -108,7 +108,6 @@
        (rf/dispatch [::e/toggle-filter :deuteranopia])
        (is (not @active-filter))))))
 
-
 (deftest collapse-expand
   (rf-test/run-test-sync
    (rf/dispatch [::app.e/initialize-db])

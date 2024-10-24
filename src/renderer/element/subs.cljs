@@ -138,7 +138,6 @@
           (sort)
           (vec)))))
 
-
 (rf/reg-sub
  ::every-top-level
  :<- [::root]

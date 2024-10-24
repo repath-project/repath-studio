@@ -3,14 +3,14 @@
    [re-frame.core :as rf]
    [renderer.app.effects :as fx :refer [persist]]))
 
-  (rf/reg-event-db
-   ::toggle-visible
-   [persist]
-   (fn [db [_]]
-     (update-in db [:ruler :visible] not)))
+(rf/reg-event-db
+ ::toggle-visible
+ [persist]
+ (fn [db [_]]
+   (update-in db [:ruler :visible] not)))
 
-  (rf/reg-event-db
-   ::toggle-locked
-   [persist]
-   (fn [db [_]]
-     (update-in db [:ruler :locked] not)))
+(rf/reg-event-db
+ ::toggle-locked
+ [persist]
+ (fn [db [_]]
+   (update-in db [:ruler :locked] not)))

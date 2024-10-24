@@ -171,7 +171,6 @@
             (log (first args))
             (log args)))))
 
-
 (defn repl
   [& {:keys [execute
              complete-word

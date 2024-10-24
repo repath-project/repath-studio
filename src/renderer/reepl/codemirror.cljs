@@ -152,8 +152,8 @@
     (.preventDefault evt)
     (let [initial-active (= initial-text (get (first words) 2))
           [active pos] (if active
-                          (cycle-pos num pos go-back? initial-active)
-                          [true (if go-back? (dec num) pos)])
+                         (cycle-pos num pos go-back? initial-active)
+                         [true (if go-back? (dec num) pos)])
           text (if active
                  (get (get words pos) 2)
                  initial-text)]

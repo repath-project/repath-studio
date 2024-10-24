@@ -2,7 +2,6 @@
   (:require
    [renderer.element.events :as-alias element.e]))
 
-
 (def context-menu
   ;; TODO: Add and group actions
   [{:label "Cut"

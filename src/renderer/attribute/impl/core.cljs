@@ -143,12 +143,10 @@
   "The style attribute allows to style an element using CSS declarations.
    It functions identically to the style attribute in HTML.")
 
-
 (defmethod hierarchy/description [:default :href]
   []
   "The href attribute defines a link to a resource as a reference URL.
    The exact meaning of that link depends on the context of each element using it.")
-
 
 (defmethod hierarchy/description [:default :attributeName]
   []

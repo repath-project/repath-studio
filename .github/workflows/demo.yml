@@ -42,7 +42,7 @@ jobs:
           clj-kondo: 2024.09.27
 
       - name: Lint
-        run: clj-kondo --lint src/**/*.cljs
+        run: npm run lint
 
       - name: Install packages
         run: npm ci
