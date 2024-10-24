@@ -133,7 +133,8 @@
 (m/=> assoc-attr [:-> App keyword? string? App])
 (defn assoc-attr
   [db k v]
-  (assoc-in db (path db :collapsed-ids :attrs k) v))
+  (js/console.log (str (print (path db :attrs k))))
+  (assoc-in db (path db :attrs k) v))
 
 (m/=> load [:-> App map? App])
 (defn load
