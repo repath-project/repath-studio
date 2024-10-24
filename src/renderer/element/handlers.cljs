@@ -9,7 +9,7 @@
    [malli.error :as me]
    [renderer.app.db :refer [App]]
    [renderer.attribute.hierarchy :as attr.hierarchy]
-   [renderer.element.db :as db :refer [Element Tag AnimationTag Attrs Direction]]
+   [renderer.element.db :as db :refer [Element Tag AnimationTag Direction]]
    [renderer.element.hierarchy :as hierarchy]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
