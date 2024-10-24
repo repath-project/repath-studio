@@ -16,6 +16,9 @@
 (def Attrs
   [:map-of keyword? string?])
 
+(def Direction
+  [:enum :top :center-vertical :bottom :left :center-horizontal :right])
+
 (def Element
   [:map {:closed true}
    [:id {:optional true} uuid?]

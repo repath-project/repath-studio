@@ -5,18 +5,11 @@
    [renderer.app.db :refer [App]]
    [renderer.document.db :refer [ZoomFactor]]
    [renderer.element.handlers :as element.h]
-   [renderer.frame.db :refer [DomRect]]
+   [renderer.frame.db :refer [DomRect Viewbox FocusType]]
    [renderer.utils.bounds :as utils.bounds :refer [Bounds]]
    [renderer.utils.element :as element]
    [renderer.utils.math :as math :refer [Vec2D]]
    [renderer.utils.pointer :as pointer]))
-
-(def Viewbox
-  [:tuple
-   [number? {:title "x"}]
-   [number? {:title "y"}]
-   [number? {:title "width"}]
-   [number? {:title "height"}]])
 
 (m/=> viewbox [:-> ZoomFactor Vec2D DomRect Viewbox])
 (defn viewbox
@@ -90,8 +83,6 @@
                 (mat/div 2)
                 (mat/add [x1 y1]))]
     (assoc-in db [:documents (:active-document db) :pan] pan)))
-
-(def FocusType [:enum :original :fit :fill])
 
 (m/=> focus-bounds [:function
                     [:-> App FocusType App]

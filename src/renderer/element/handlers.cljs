@@ -9,7 +9,7 @@
    [malli.error :as me]
    [renderer.app.db :refer [App]]
    [renderer.attribute.hierarchy :as attr.hierarchy]
-   [renderer.element.db :as db :refer [Element Tag]]
+   [renderer.element.db :as db :refer [Element Tag Direction]]
    [renderer.element.hierarchy :as hierarchy]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
@@ -542,9 +542,6 @@
          (update-el db id hierarchy/scale ratio pivot-point)))
      db
      ids-to-scale)))
-
-(def Direction
-  [:enum :top :center-vertical :bottom :left :center-horizontal :right])
 
 (m/=> parent [:function
               [:-> App Direction App]

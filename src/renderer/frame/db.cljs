@@ -10,3 +10,12 @@
    [:right number?]
    [:bottom number?]
    [:left number?]])
+
+(def FocusType [:enum :original :fit :fill])
+
+(def Viewbox
+  [:tuple
+   [number? {:title "x"}]
+   [number? {:title "y"}]
+   [number? {:title "width"}]
+   [number? {:title "height"}]])
