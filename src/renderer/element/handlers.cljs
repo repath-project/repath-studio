@@ -200,6 +200,7 @@
 
 (m/=> index [:-> App uuid? [:maybe int?]])
 (defn index
+  "Returns the index of an element on its parent children vector."
   [db id]
   (when-let [sibling-els (siblings db id)]
     (.indexOf sibling-els id)))

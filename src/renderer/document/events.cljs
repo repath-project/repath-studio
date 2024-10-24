@@ -56,8 +56,8 @@
  [persist]
  (fn [db [_ id]]
    (if (= (:filter (h/active db)) id)
-     (update-in db [:documents (:active-document db)] dissoc :filter)
-     (assoc-in db [:documents (:active-document db) :filter] id))))
+     (update-in db (h/path db) dissoc :filter)
+     (assoc-in db (h/path db :filter) id))))
 
 (rf/reg-event-db
  ::swap-colors

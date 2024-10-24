@@ -10,10 +10,24 @@
    [renderer.notification.views :as notification.v]
    [renderer.utils.vec :as vec]))
 
+(m/=> path [:function
+            [:-> App vector?]
+            [:-> App keyword? vector?]
+            [:-> App keyword? keyword? vector?]])
+(defn path
+  ([db]
+   [:documents (:active-document db)])
+  ([db arg1]
+   (conj (path db) arg1))
+  ([db arg1 arg2]
+   (conj (path db) arg1 arg2))
+  ([db arg1 arg2 & more]
+   (apply conj (path db) arg1 arg2 more)))
+
 (m/=> active [:-> App Document])
 (defn active
   [db]
-  (get-in db [:documents (:active-document db)]))
+  (get-in db (path db)))
 
 (m/=> persisted-format [:function
                         [:-> App PersistedDocument]
@@ -67,9 +81,9 @@
     (and (:active-document db)
          (-> db :dom-rect)
          (-> db :window :focused)
-         (not (get-in db [:documents (:active-document db) :focused])))
+         (not (get-in db (path db :focused))))
     (-> (frame.h/focus-bounds :original)
-        (assoc-in [:documents (:active-document db) :focused] true))))
+        (assoc-in (path db :focused) true))))
 
 (m/=> set-active [:-> App uuid? App])
 (defn set-active
@@ -109,17 +123,17 @@
 (m/=> set-hovered-ids [:-> App [:set uuid?] App])
 (defn set-hovered-ids
   [db ids]
-  (assoc-in db [:documents (:active-document db) :hovered-ids] ids))
+  (assoc-in db (path db :hovered-ids) ids))
 
 (m/=> collapse-el [:-> App uuid? App])
 (defn collapse-el
   [db id]
-  (update-in db [:documents (:active-document db) :collapsed-ids] conj id))
+  (update-in db (path db :collapsed-ids) conj id))
 
 (m/=> expand-el [:-> App uuid? App])
 (defn expand-el
   [db id]
-  (update-in db [:documents (:active-document db) :collapsed-ids] disj id))
+  (update-in db (path db :collapsed-ids) disj id))
 
 (m/=> attr [:-> App keyword? string?])
 (defn attr
@@ -129,7 +143,7 @@
 (m/=> assoc-attr [:-> App keyword? string? App])
 (defn assoc-attr
   [db k v]
-  (assoc-in db [:documents (:active-document db) :attrs k] v))
+  (assoc-in db (path db :collapsed-ids :attrs k) v))
 
 (m/=> load [:-> App map? App])
 (defn load
