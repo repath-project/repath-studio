@@ -30,8 +30,7 @@
                     :cursor "default"
                     :on-pointer-up pointer-handler
                     :on-pointer-down pointer-handler
-                    :on-pointer-move pointer-handler
-                    :on-scroll pointer-handler}] children)))
+                    :on-pointer-move pointer-handler}] children)))
 
 (defn square
   [el & children]
@@ -53,8 +52,7 @@
                   :cursor (if (or active (not cursor)) "default" cursor)
                   :on-pointer-up pointer-handler
                   :on-pointer-down pointer-handler
-                  :on-pointer-move pointer-handler
-                  :on-scroll pointer-handler}] children)))
+                  :on-pointer-move pointer-handler}] children)))
 
 (defn scale
   [props]

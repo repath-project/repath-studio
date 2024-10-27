@@ -21,11 +21,8 @@
   [el]
   (let [{:keys [tag attrs title children content]} el
         child-elements @(rf/subscribe [::element.s/filter-visible children])
+        children (doall (map hierarchy/render-to-string child-elements))
         attrs (->> (element/style->map attrs)
                    (remove #(empty? (str (second %))))
                    (into {}))]
-    [tag
-     attrs
-     (when title [:title title])
-     content
-     (doall (map hierarchy/render-to-string child-elements))]))
+    [tag attrs (when title [:title title]) content children]))

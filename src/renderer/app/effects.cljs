@@ -14,10 +14,9 @@
 (rf.storage/reg-co-fx! config/app-key {:cofx :store})
 
 (defn persist!
-  [data]
-  (rf.storage/->store config/app-key (-> data
-                                         (history.h/drop-rest)
-                                         (select-keys db/persistent-keys))))
+  [db]
+  (let [data (-> db history.h/drop-rest (select-keys db/persistent-keys))]
+    (rf.storage/->store config/app-key data)))
 
 (def persist
   "This is a modified version of akiroz.re-frame.storage/persist-db-keys
@@ -48,8 +47,8 @@
 
 (rf/reg-fx
  ::persist
- (fn [data]
-   (persist! data)))
+ (fn [db]
+   (persist! db)))
 
 (rf/reg-fx
  ::local-storage-clear

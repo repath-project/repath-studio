@@ -81,7 +81,7 @@
    (let [zoom @(rf/subscribe [::document.s/zoom])
          size (/ theme.db/handle-size zoom)
          mid (/ size Math/PI)]
-     [:g
+     [:g {:style {:pointer-events "none"}}
       [line
        (- x mid) (- y mid)
        (+ x mid) (+ y mid) false]

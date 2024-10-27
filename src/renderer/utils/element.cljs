@@ -56,7 +56,8 @@
 (m/=> snapping-points [:-> Element SnapOptions [:* Vec2D]])
 (defn snapping-points
   [el options]
-  (let [points (or (element.hierarchy/snapping-points el) [])]
+  (let [points (or (when (contains? options :nodes)
+                     (element.hierarchy/snapping-points el)) [])]
     (cond-> points
       (:bounds el)
       (into (utils.bounds/->snapping-points (:bounds el) options)))))

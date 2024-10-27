@@ -24,7 +24,7 @@
 (defmulti translate "Translates the element by a given offset." (fn [el _offset] (:tag el)))
 (defmulti scale "Scales the element by a given ratio and pivot-point." (fn [el _ration _pivot-point] (:tag el)))
 (defmulti edit "Edits the element by a given offset and handle." (fn [el _offset _handle] (:tag el)))
-(defmulti properties "Returns the properties of the element." keyword)
+(defmulti properties "Returns the properties of the element." identity)
 
 (defmethod render :default [])
 (defmethod render-to-string :default [element] [render element])
