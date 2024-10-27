@@ -7,12 +7,11 @@
    [renderer.utils.element :as element]
    [renderer.utils.path :as path]))
 
-(derive :pen ::hierarchy/element)
+(derive :pen ::hierarchy/draw)
 
 (defmethod hierarchy/properties :pen
   []
-  {:icon "pencil"
-   :description "Pencil tool"})
+  {:icon "pencil"})
 
 (defmethod hierarchy/drag :pen
   [db]
@@ -35,5 +34,5 @@
     (-> db
         (h/set-temp path)
         (h/create-temp-element)
-        (h/set-state :idle)
+        (h/activate :transform)
         (h/explain "Draw line"))))

@@ -6,19 +6,11 @@
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]))
 
-(derive :brush ::hierarchy/element)
+(derive :brush ::hierarchy/draw)
 
 (defmethod hierarchy/properties :brush
   []
   {:icon "brush"})
-
-(defmethod hierarchy/help [:brush :idle]
-  []
-  "Click and drag to draw.")
-
-(defmethod hierarchy/activate :brush
-  [db]
-  (h/set-cursor db "none"))
 
 (defmethod hierarchy/pointer-move :brush
   [db e]
@@ -53,5 +45,5 @@
   [db _e]
   (-> db
       (h/create-temp-element)
-      (h/set-state :idle)
+      (h/activate :transform)
       (h/explain "Draw line")))
