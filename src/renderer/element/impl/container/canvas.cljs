@@ -27,8 +27,7 @@
 
 (defmethod hierarchy/render :canvas
   [el]
-  (let [_ @(rf/subscribe [::snap.s/in-viewport-tree]) ; TODO: Remove this.
-        child-elements @(rf/subscribe [::element.s/filter-visible (:children el)])
+  (let [child-elements @(rf/subscribe [::element.s/filter-visible (:children el)])
         viewbox-attr @(rf/subscribe [::frame.s/viewbox-attr])
         {:keys [width height]} @(rf/subscribe [::app.s/dom-rect])
         hovered-ids @(rf/subscribe [::element.s/hovered])
@@ -45,10 +44,8 @@
         state @(rf/subscribe [::tool.s/state])
         pointer-handler #(pointer/event-handler! % el)
         pivot-point @(rf/subscribe [::tool.s/pivot-point])
-        snapping-points @(rf/subscribe [::snap.s/points])
         snap-active @(rf/subscribe [::snap.s/active])
         nearest-neighbor @(rf/subscribe [::snap.s/nearest-neighbor])
-        debug @(rf/subscribe [::app.s/debug-info])
         transform-active (or (= tool :transform) (= primary-tool :transform))]
     [:svg#canvas {:on-pointer-up pointer-handler
                   :on-pointer-down pointer-handler
@@ -101,8 +98,9 @@
            (when (and transform-active pivot-point)
              [overlay/times pivot-point])])
 
-        (when (or (= tool :edit)
-                  (= primary-tool :edit))
+        (when (and (= state :idle)
+                   (or (= tool :edit)
+                       (= primary-tool :edit)))
           (for [el selected-elements]
             ^{:key (str (:id el) "-edit-points")}
             [:g
@@ -111,11 +109,6 @@
              [overlay/centroid el]]))
 
         [hierarchy/render temp-element]])
-
-     (when debug
-       [into [:g]
-        (for [snapping-point snapping-points]
-          [overlay/point-of-interest snapping-point])])
 
      (when (and snap-active nearest-neighbor)
        [overlay/times (:point nearest-neighbor)])

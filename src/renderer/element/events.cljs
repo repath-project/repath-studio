@@ -8,6 +8,7 @@
    [renderer.element.handlers :as h]
    [renderer.history.handlers :refer [finalize]]
    [renderer.notification.events :as-alias notification.e]
+   [renderer.snap.handlers :as snap.h]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
    [renderer.utils.extra :refer [partial-right]]
@@ -19,13 +20,15 @@
  ::select
  [(finalize "Select element")]
  (fn [db [_ id multiple]]
-   (h/select db id multiple)))
+   (-> (h/select db id multiple)
+       (snap.h/update-tree))))
 
 (rf/reg-event-db
  ::select-ids
  [(finalize "Select elements")]
  (fn [db [_ ids]]
-   (reduce (partial-right h/assoc-prop :selected true) (h/deselect db) ids)))
+   (-> (reduce (partial-right h/assoc-prop :selected true) (h/deselect db) ids)
+       (snap.h/update-tree))))
 
 (rf/reg-event-db
  ::toggle-prop

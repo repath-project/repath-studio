@@ -28,14 +28,6 @@
   [db explanation]
   (assoc db :explanation explanation))
 
-(m/=> activate [:-> App Tool App])
-(defn activate
-  [db tool]
-  (-> db
-      (hierarchy/deactivate)
-      (assoc :tool tool)
-      (hierarchy/activate)))
-
 (m/=> set-state [:-> App State App])
 (defn set-state
   [db state]
@@ -45,6 +37,17 @@
 (defn set-cursor
   [db cursor]
   (assoc db :cursor cursor))
+
+(m/=> activate [:-> App Tool App])
+(defn activate
+  [db tool]
+  (-> db
+      (hierarchy/deactivate)
+      (assoc :tool tool)
+      (set-state :idle)
+      (set-cursor "default")
+      (dissoc :drag :pointer-offset :clicked-element)
+      (hierarchy/activate)))
 
 (m/=> pointer-delta [:-> App Vec2D])
 (defn pointer-delta
@@ -86,7 +89,8 @@
   [db e now]
   (let [{:keys [pointer-offset tool dom-rect drag primary-tool drag-threshold nearest-neighbor]} db
         {:keys [button buttons pointer-pos]} e
-        adjusted-pointer-pos (frame.h/adjust-pointer-pos db pointer-pos)]
+        adjusted-pointer-pos (frame.h/adjust-pointer-pos db pointer-pos)
+        db (snap.h/update-nearest-neighbor db)]
     (case (:type e)
       "pointermove"
       (-> (if pointer-offset
@@ -104,7 +108,6 @@
                 (hierarchy/drag e))
               db)
             (hierarchy/pointer-move db e))
-          (snap.h/update-nearest-neighbor)
           (assoc :pointer-pos pointer-pos
                  :adjusted-pointer-pos adjusted-pointer-pos))
 
@@ -138,8 +141,7 @@
             (dissoc :primary-tool))
 
         :always
-        (-> (dissoc :pointer-offset :drag)
-            (update :snap dissoc :nearest-neighbor)))
+        (dissoc :pointer-offset :drag :nearest-neighbor))
 
       db)))
 
@@ -185,8 +187,7 @@
   [db]
   (cond-> db
     :always
-    (-> (dissoc :drag :pointer-offset :clicked-element)
-        (hierarchy/activate (:tool db))
+    (-> (activate (:tool db))
         (dissoc-temp)
         (history.h/swap))
 

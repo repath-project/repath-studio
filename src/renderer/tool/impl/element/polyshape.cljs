@@ -18,10 +18,6 @@
   []
   "Click to add more points. Double click to finalize the shape.")
 
-(defmethod hierarchy/activate ::hierarchy/polyshape
-  [db]
-  (h/set-cursor db "crosshair"))
-
 (defn create-polyline
   [db points]
   (h/set-temp db {:type :element
@@ -66,11 +62,6 @@
 (defmethod hierarchy/double-click ::hierarchy/polyshape
   [db _e]
   (-> db
-      (update-in (points-path db) #(->> (attr/points->vec %)
-                                        (drop-last)
-                                        (apply concat)
-                                        (str/join " ")))
       (h/create-temp-element)
       (h/activate :transform)
-      (h/set-state :idle)
       (h/explain (str "Create " (name (:tool db))))))

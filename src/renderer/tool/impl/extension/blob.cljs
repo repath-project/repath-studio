@@ -14,11 +14,12 @@
 
 (defn pointer-delta
   [db]
-  (mat/distance (:adjusted-pointer-pos db) (:adjusted-pointer-offset db)))
+  (mat/distance (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
+                (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))))
 
 (defmethod hierarchy/drag-start :blob
   [db]
-  (let [[offset-x offset-y] (:adjusted-pointer-offset db)
+  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
         radius (pointer-delta db)]
     (h/set-temp db {:type :element
                     :tag :blob
@@ -33,7 +34,7 @@
 
 (defmethod hierarchy/drag :blob
   [db]
-  (let [[offset-x offset-y] (:adjusted-pointer-offset db)
+  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
         radius (pointer-delta db)
         temp (-> (h/temp db)
                  (assoc-in [:attrs :x] (- offset-x radius))

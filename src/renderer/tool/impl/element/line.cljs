@@ -45,7 +45,6 @@
     (-> db
         (h/create-temp-element)
         (h/activate :transform)
-        (h/set-state :idle)
         (h/explain "Create line"))
 
     (:pointer-offset db)

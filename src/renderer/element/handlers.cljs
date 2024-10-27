@@ -775,3 +775,8 @@
     (-> (add db svg)
         (collapse))))
 
+(defn snapping-points
+  [db els]
+  (let [options (-> db :snap :options)]
+    (reduce (fn [points el]
+              (into points (element/snapping-points el options))) [] els)))

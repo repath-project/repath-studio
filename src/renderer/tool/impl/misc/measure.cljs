@@ -1,6 +1,7 @@
 (ns renderer.tool.impl.misc.measure
   (:require
    [clojure.core.matrix :as mat]
+   [renderer.element.handlers :as element.h]
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]))
 
@@ -18,7 +19,7 @@
   [db]
   (h/set-cursor db "crosshair"))
 
-(defmethod hierarchy/pointer-up :measure
+(defmethod hierarchy/deactivate :measure
   [db]
   (h/dissoc-temp db))
 
@@ -42,3 +43,8 @@
                             :y2 y
                             :hypotenuse hypotenuse
                             :stroke "gray"}})))
+
+(defmethod hierarchy/snapping-points :measure
+  [db]
+  (let [visible-elements (filter :visible (vals (element.h/entities db)))]
+    (element.h/snapping-points db visible-elements)))

@@ -1,5 +1,7 @@
 (ns renderer.tool.impl.element.core
   (:require
+   [renderer.element.handlers :as element.h]
+   [renderer.snap.handlers :as snap.h]
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]
    [renderer.tool.impl.element.circle]
@@ -21,10 +23,8 @@
 
 (defmethod hierarchy/activate ::hierarchy/element
   [db]
-  (-> db
-      (h/set-cursor "crosshair")
-      (dissoc :drag :pointer-offset :clicked-element)
-      (h/dissoc-temp)))
+  (-> (h/set-cursor db "crosshair")
+      (snap.h/update-tree)))
 
 (defmethod hierarchy/drag-start ::hierarchy/element
   [db]
@@ -35,9 +35,13 @@
   (-> db
       (h/create-temp-element)
       (h/activate :transform)
-      (h/set-state :idle)
       (h/explain (str "Create " (name (:tag (h/temp db)))))))
 
 (defmethod hierarchy/snapping-bases ::hierarchy/element
   [db]
   [(:adjusted-pointer-pos db)])
+
+(defmethod hierarchy/snapping-points ::hierarchy/element
+  [db]
+  (let [visible-elements (filter :visible (vals (element.h/entities db)))]
+    (element.h/snapping-points db visible-elements)))

@@ -7,6 +7,7 @@
    [renderer.element.handlers :as element.h]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.h]
+   [renderer.ruler.db :refer [Orientation]]
    [renderer.snap.handlers :as snap.h]
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]
@@ -119,6 +120,7 @@
       (dissoc :clicked-element)
       (element.h/clear-ignored :bounding-box)
       (element.h/select (:id element) (pointer/shift? e))
+      (snap.h/update-tree)
       (h/explain (if (:selected element) "Deselect element" "Select element"))))
 
 (defmethod hierarchy/double-click :transform
@@ -132,34 +134,16 @@
         (not= :canvas tag)
         (h/activate :edit)))))
 
-(defmethod hierarchy/activate :transform
-  [db]
-  (-> db
-      (h/set-state :idle)
-      (h/set-cursor "default")))
-
 (defmethod hierarchy/deactivate :transform
   [db]
-  (element.h/clear-ignored db))
+  (-> (element.h/clear-ignored db)
+      (dissoc :pivot-point)))
 
 (defn select-rect
   [db intersecting?]
   (cond-> (overlay/select-box db)
     (not intersecting?)
     (assoc-in [:attrs :fill] "transparent")))
-
-(defmethod hierarchy/drag-start :transform
-  [db _e]
-  (let [{:keys [clicked-element]} db]
-    (h/set-state db (cond
-                      (= (:type clicked-element) :element)
-                      (if (= (:tag clicked-element) :canvas) :select :translate)
-
-                      (= (:type clicked-element) :handle)
-                      (if (= (:action clicked-element) :scale) :scale :translate)
-
-                      :else
-                      :idle))))
 
 (m/=> lock-ratio [:-> Vec2D ScaleHandle Vec2D])
 (defn lock-ratio
@@ -217,36 +201,65 @@
         (assoc :pivot-point pivot-point)
         (element.h/scale ratio pivot-point recursive))))
 
+(defn selectable?
+  [clicked-element]
+  (and clicked-element
+       (not (:selected clicked-element))
+       (not= (:id clicked-element) :bounding-box)))
+
 (m/=> select-element [:-> App boolean? App])
 (defn select-element
   [db multiple]
   (cond-> db
-    (and (:clicked-element db)
-         (not (-> db :clicked-element :selected))
-         (not= (-> db :clicked-element :id) :bounding-box))
-    (-> (element.h/select (-> db :clicked-element :id) multiple))))
+    (selectable? (:clicked-element db))
+    (element.h/select (-> db :clicked-element :id) multiple)))
 
-(m/=> translate [:-> App Vec2D App])
+(m/=> translate [:-> App Vec2D [:maybe Orientation] App])
 (defn translate
-  [db offset]
-  (reduce (fn [db id]
-            (let [container (element.h/parent-container db id)
-                  hovered-svg-k (:id (element.h/hovered-svg db))]
-              (cond-> db
-                :always
-                (element.h/translate id offset)
+  [db offset axis]
+  (let [offset (if axis (case axis
+                          :vertical [(first offset) 0]
+                          :horizontal [0 (second offset)])
+                   offset)]
+    (reduce (fn [db id]
+              (let [container (element.h/parent-container db id)
+                    hovered-svg-k (:id (element.h/hovered-svg db))]
+                (cond-> db
+                  :always
+                  (element.h/translate id offset)
 
-                (and (seq (element.h/selected db))
-                     (empty? (rest (element.h/selected db)))
-                     (contains? #{:translate :clone} (:state db))
-                     (not= (:id (element.h/parent db id)) hovered-svg-k)
-                     (not (element/svg? (element.h/entity db id))))
-                (-> (element.h/set-parent hovered-svg-k)
+                  (and (seq (element.h/selected db))
+                       (empty? (rest (element.h/selected db)))
+                       (contains? #{:translate :clone} (:state db))
+                       (not= (:id (element.h/parent db id)) hovered-svg-k)
+                       (not (element/svg? (element.h/entity db id))))
+                  (-> (element.h/set-parent hovered-svg-k)
                        ;; FIXME: Handle nested containers.
-                    (element.h/translate id (take 2 (:bounds container)))
-                    (element.h/translate id (mat/mul (take 2 (:bounds (element.h/hovered-svg db))) -1))))))
-          db
-          (element.h/top-ancestor-ids db)))
+                      (element.h/translate id (take 2 (:bounds container)))
+                      (element.h/translate id (mat/mul (take 2 (:bounds (element.h/hovered-svg db))) -1))))))
+            db
+            (element.h/top-ancestor-ids db))))
+
+(defn drag-start->state
+  [clicked-element]
+  (cond
+    (= (:type clicked-element) :element)
+    (if (= (:tag clicked-element) :canvas) :select :translate)
+
+    (= (:type clicked-element) :handle)
+    (if (= (:action clicked-element) :scale) :scale :translate)
+
+    :else
+    :idle))
+
+(defmethod hierarchy/drag-start :transform
+  [db e]
+  (let [clicked-element (:clicked-element db)
+        state (drag-start->state clicked-element)]
+    (cond-> (h/set-state db state)
+      (selectable? clicked-element)
+      (-> (element.h/select (-> db :clicked-element :id) (pointer/shift? e))
+          (snap.h/update-tree)))))
 
 (defmethod hierarchy/drag :transform
   [db e]
@@ -255,33 +268,29 @@
         alt-key? (pointer/alt? e)
         ratio-locked? (or (pointer/ctrl? e) (element.h/ratio-locked? db))
         db (element.h/clear-ignored db)
-        delta (cond-> (h/pointer-delta db)
-                (and ctrl? (not= state :scale))
-                pointer/lock-direction)]
+        delta (h/pointer-delta db)
+        axis (when ctrl? (if (> (abs (first delta)) (abs (second delta))) :vertical :horizontal))]
     (case state
       :select
-      (-> db
+      (-> (element.h/clear-hovered db)
           (h/set-temp (select-rect db alt-key?))
-          (element.h/clear-hovered)
           (reduce-by-area (pointer/alt? e) element.h/hover))
 
       :translate
       (if alt-key?
         (h/set-state db :clone)
-        (-> db
-            (history.h/swap)
+        (-> (history.h/swap db)
             (select-element (pointer/shift? e))
-            (translate delta)
-            (snap.h/snap-with translate)
+            (translate delta axis)
+            (snap.h/snap-with translate axis)
             (h/set-cursor "default")))
 
       :clone
       (if alt-key?
-        (-> db
-            (history.h/swap)
+        (-> (history.h/swap db)
             (element.h/duplicate)
-            (translate delta)
-            (snap.h/snap-with element.h/translate)
+            (translate delta axis)
+            (snap.h/snap-with translate axis)
             (h/set-cursor "copy"))
         (h/set-state db :translate))
 
@@ -292,12 +301,10 @@
             (h/set-cursor "default")
             (scale delta {:ratio-locked ratio-locked?
                           :in-place (pointer/shift? e)
-                          :recursive (pointer/alt? e)}))
-
-        (not ratio-locked?)
-        (snap.h/snap-with scale {:ratio-locked false
-                                 :in-place (pointer/shift? e)
-                                 :recursive (pointer/alt? e)}))
+                          :recursive (pointer/alt? e)})
+            (snap.h/snap-with scale {:ratio-locked ratio-locked?
+                                     :in-place (pointer/shift? e)
+                                     :recursive (pointer/alt? e)})))
 
       :idle db)))
 
@@ -307,6 +314,7 @@
         :select (-> (cond-> db (not (pointer/shift? e)) element.h/deselect)
                     (reduce-by-area (pointer/alt? e) element.h/select)
                     (h/dissoc-temp)
+                    (snap.h/update-tree)
                     (h/explain "Modify selection"))
         :translate (h/explain db "Move selection")
         :scale (h/explain db "Scale selection")
@@ -320,16 +328,19 @@
   [db]
   (let [elements (vals (element.h/entities db))
         selected (filter :selected elements)
-        selected-visible (filter :visible selected)
         options (-> db :snap :options)]
     (cond
       (and (contains? #{:translate :clone} (:state db)) (seq selected))
-      (reduce (fn [points el] (into points (element/snapping-points el options)))
-              (if (seq (rest selected))
-                (bounds/->snapping-points (element.h/bounds db) options)
-                [])
-              selected-visible)
+      (cond-> (element.h/snapping-points db (filter :visible selected))
+        (seq (rest selected))
+        (into (bounds/->snapping-points (element.h/bounds db) options)))
 
       (= (:state db) :scale)
       [(mat/add [(-> db :clicked-element :x) (-> db :clicked-element :y)]
-                (mat/sub (:adjusted-pointer-pos db) (:adjusted-pointer-offset db)))])))
+                (h/pointer-delta db))])))
+
+(defmethod hierarchy/snapping-points :transform
+  [db]
+  (let [elements (vals (element.h/entities db))
+        non-selected-visible (filter #(and (not (:selected %)) (:visible %)) elements)]
+    (element.h/snapping-points db non-selected-visible)))

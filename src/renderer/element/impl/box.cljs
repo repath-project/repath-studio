@@ -69,3 +69,12 @@
   [el]
   (let [{{:keys [width height]} :attrs} el]
     (apply * (map units/unit->px [width height]))))
+
+(defmethod hierarchy/snapping-points ::hierarchy/box
+  [el]
+  (let [{{:keys [x y width height]} :attrs} el
+        [x y width height] (mapv units/unit->px [x y width height])]
+    [[x y]
+     [(+ x width) y]
+     [(+ x width) (+ y height)]
+     [x (+ y height)]]))

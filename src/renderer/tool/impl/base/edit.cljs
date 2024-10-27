@@ -23,12 +23,6 @@
   []
   [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction."])
 
-(defmethod hierarchy/activate :edit
-  [db]
-  (-> db
-      (h/set-state :idle)
-      (h/set-cursor "default")))
-
 (defmethod hierarchy/pointer-down :edit
   [db e]
   (cond-> db
@@ -43,6 +37,7 @@
         (element.h/clear-ignored)
         (dissoc :clicked-element)
         (element.h/select (-> e :element :id) (pointer/shift? e))
+        (snap.h/update-tree)
         (h/explain "Select element"))
     (dissoc db :clicked-element)))
 
@@ -57,30 +52,34 @@
   [db]
   (h/set-state db :edit))
 
-(defn snap-handler
-  [db offset el-id handle-id]
-  (element.h/update-el db el-id element.hierarchy/edit offset handle-id))
-
 (defmethod hierarchy/drag :edit
   [db e]
   (let [clicked-element (:clicked-element db)
         db (history.h/swap db)
         el-id (:element clicked-element)
-        delta (cond-> (h/pointer-delta db) (pointer/ctrl? e) pointer/lock-direction)]
+        handle-id (:id clicked-element)
+        delta (cond-> (mat/add (h/pointer-delta db) (snap.h/nearest-delta db))
+                (pointer/ctrl? e)
+                (pointer/lock-direction))]
     (cond-> db
       el-id
-      (-> (element.h/update-el el-id element.hierarchy/edit delta (:id clicked-element))
-          (snap.h/snap-with snap-handler el-id (:id clicked-element))))))
+      (-> (element.h/update-el el-id element.hierarchy/edit delta handle-id)))))
 
 (defmethod hierarchy/drag-end :edit
   [db _e]
   (-> db
       (h/set-state :idle)
       (dissoc :clicked-element)
+      (snap.h/update-tree)
       (h/explain "Edit")))
 
 (defmethod hierarchy/snapping-bases :edit
   [db]
-  (when (contains? #{:edit :scale} (:state db))
-    [(mat/add [(-> db :clicked-element :x) (-> db :clicked-element :y)]
-              (mat/sub (:adjusted-pointer-pos db) (:adjusted-pointer-offset db)))]))
+  [(when (:clicked-element db)
+     (mat/add [(-> db :clicked-element :x) (-> db :clicked-element :y)]
+              (h/pointer-delta db)))])
+
+(defmethod hierarchy/snapping-points :edit
+  [db]
+  (let [visible-elements (filter :visible (vals (element.h/entities db)))]
+    (element.h/snapping-points db visible-elements)))

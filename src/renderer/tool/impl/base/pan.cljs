@@ -3,6 +3,7 @@
    [clojure.core.matrix :as mat]
    [renderer.app.events :as-alias app.e]
    [renderer.frame.handlers :as frame.h]
+   [renderer.snap.handlers :as snap.h]
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]))
 
@@ -20,12 +21,6 @@
   []
   "Click and drag to pan.")
 
-(defmethod hierarchy/activate :pan
-  [db]
-  (-> db
-      (h/set-state :idle)
-      (h/set-cursor "grab")))
-
 (defmethod hierarchy/pointer-up :pan
   [db]
   (h/set-cursor db "grab"))
@@ -42,4 +37,5 @@
   [db _e]
   (-> db
       (h/set-cursor "grab")
+      (snap.h/update-tree)
       (h/add-fx [:dispatch [::app.e/persist]])))

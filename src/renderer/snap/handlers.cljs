@@ -3,8 +3,9 @@
    [clojure.core.matrix :as mat]
    [kdtree :as kdtree]
    [malli.core :as m]
-   [re-frame.core :as rf]
    [renderer.app.db :refer [App]]
+   [renderer.frame.db :refer [Viewbox]]
+   [renderer.frame.handlers :as frame.h]
    [renderer.snap.db :refer [SnapOption NearestNeighbor]]
    [renderer.snap.subs :as-alias snap.s]
    [renderer.tool.hierarchy :as tool.hierarchy]
@@ -17,48 +18,57 @@
     (update-in db [:snap :options] disj option)
     (update-in db [:snap :options] conj option)))
 
-(m/=> find-nearest-neighbors [:-> App [:sequential NearestNeighbor]])
-(defn find-nearest-neighbors
-  [db]
-  (let [tree @(rf/subscribe [::snap.s/in-viewport-tree])] ; FIXME: Subscription in event.
-    (map #(let [nearest-neighbor (kdtree/nearest-neighbor tree %)]
-            (when nearest-neighbor
-              (assoc nearest-neighbor :base-point %)))
-         (tool.hierarchy/snapping-bases db))))
+(m/=> in-viewport-tree [:-> any? Viewbox any?])
+(defn in-viewport-tree
+  [tree [x y width height]]
+  (->> [[x (+ x width)] [y (+ y height)]]
+       (kdtree/interval-search tree)
+       (kdtree/build-tree)))
 
-(m/=> find-nearest-neighbor [:-> App [:maybe NearestNeighbor]])
-(defn find-nearest-neighbor
+(defn create-tree
   [db]
-  (let [threshold (-> db :snap :threshold)
-        nearest-neighbors (find-nearest-neighbors db)
-        threshold (/ threshold (get-in db [:documents (:active-document db) :zoom]))
-        nearest-neighbor (reduce
-                          (fn [nearest-neighbor neighbor]
-                            (if (< (:dist-squared neighbor)
-                                   (:dist-squared nearest-neighbor))
-                              neighbor
-                              nearest-neighbor))
-                          (first nearest-neighbors)
-                          (rest nearest-neighbors))]
-    (when (< (:dist-squared nearest-neighbor) (Math/pow threshold 2))
-      nearest-neighbor)))
+  (let [zoom (get-in db [:documents (:active-document db) :zoom])
+        pan (get-in db [:documents (:active-document db) :pan])
+        viewbox (frame.h/viewbox zoom pan (:dom-rect db))]
+    (-> (tool.hierarchy/snapping-points db)
+        (kdtree/build-tree)
+        (in-viewport-tree viewbox))))
 
-(m/=> update-nearest-neighbor [:-> App App])
+(m/=> nearest-neighbors [:-> App [:sequential NearestNeighbor]])
+(defn nearest-neighbors
+  [db]
+  (map #(when-let [nneighbor (kdtree/nearest-neighbor (:kd-tree db) %)]
+          (assoc nneighbor :base-point %))
+       (tool.hierarchy/snapping-bases db)))
+
+(m/=> nearest-neighbor [:-> App [:maybe NearestNeighbor]])
+(defn nearest-neighbor
+  [db]
+  (when (-> db :snap :active)
+    (let [threshold (-> db :snap :threshold)
+          nneighbors (nearest-neighbors db)
+          threshold (/ threshold (get-in db [:documents (:active-document db) :zoom]))
+          nneighbor (apply min-key :dist-squared nneighbors)]
+      (when (< (:dist-squared nneighbor) (Math/pow threshold 2))
+        nneighbor))))
+
 (defn update-nearest-neighbor
   [db]
-  (let [nearest-neighbor (find-nearest-neighbor db)]
-    (cond-> db
-      :always
-      (dissoc :nearest-neighbor)
+  (assoc db :nearest-neighbor (nearest-neighbor db)))
 
-      (and (-> db :snap :active) nearest-neighbor)
-      (assoc :nearest-neighbor nearest-neighbor))))
+(defn update-tree
+  [db]
+  (cond-> db
+    (-> db :snap :active)
+    (assoc :kd-tree (create-tree db))))
 
 (m/=> nearest-delta [:-> App Vec2D])
 (defn nearest-delta
   [db]
-  (let [{:keys [point base-point]} (:nearest-neighbor db)]
-    (mat/sub point base-point)))
+  (if (:nearest-neighbor db)
+    (let [{:keys [point base-point]} (:nearest-neighbor db)]
+      (mat/sub point base-point))
+    [0 0]))
 
 (defn snap-with
   [db f & more]
@@ -66,3 +76,4 @@
     (if (:nearest-neighbor db)
       (apply f db (nearest-delta db) more)
       db)))
+

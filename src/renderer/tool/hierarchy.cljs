@@ -10,12 +10,13 @@
 (defmulti key-up (fn [db _e] (:tool db)))
 (defmulti key-down (fn [db _e] (:tool db)))
 (defmulti snapping-bases (fn [db _e] (:tool db)))
+(defmulti snapping-points (fn [db _e] (:tool db)))
 (defmulti activate :tool)
 (defmulti deactivate :tool)
-(defmulti properties "Returns the properties of the tool." keyword)
+(defmulti properties "Returns the properties of the tool." identity)
 (defmulti help "Returns the status bar help text." (fn [tool state] [tool state]))
 
-(defmulti right-panel keyword)
+(defmulti right-panel identity)
 
 (defmethod pointer-down :default [db _e] db)
 (defmethod pointer-up :default [db _e] db)
@@ -26,10 +27,11 @@
 (defmethod key-down :default [db _e] db)
 (defmethod drag :default [db e] (pointer-move db e))
 (defmethod drag-end :default [db e] (pointer-up db e))
-(defmethod activate :default [db] (assoc db :cursor "default"))
-(defmethod deactivate :default [db] (assoc db :cursor "default"))
+(defmethod activate :default [db] db)
+(defmethod deactivate :default [db] db)
 (defmethod properties :default [])
 (defmethod snapping-bases :default [])
+(defmethod snapping-points :default [])
 (defmethod help :default [_tool _state] "")
 
 

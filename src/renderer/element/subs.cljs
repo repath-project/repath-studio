@@ -41,20 +41,6 @@
    (filter :selected (vals elements))))
 
 (rf/reg-sub
- ::selected-descendant-ids
- (fn [db _]
-   (h/descendant-ids db)))
-
-(rf/reg-sub
- ::non-selected-visible
- :<- [::document.s/elements]
- :<- [::selected-descendant-ids]
- (fn [[elements selected-descendant-ids] _]
-   (filter #(and (not (:selected %))
-                 (not (contains? selected-descendant-ids (:id %)))
-                 (:visible %)) (vals elements))))
-
-(rf/reg-sub
  ::hovered
  :<- [::document.s/elements]
  :<- [::document.s/hovered-ids]
