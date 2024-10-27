@@ -217,10 +217,10 @@
 (m/=> translate [:-> App Vec2D [:maybe Orientation] App])
 (defn translate
   [db offset axis]
-  (let [offset (if axis (case axis
-                          :vertical [(first offset) 0]
-                          :horizontal [0 (second offset)])
-                   offset)]
+  (let [offset (case axis
+                 :vertical [(first offset) 0]
+                 :horizontal [0 (second offset)]
+                 offset)]
     (reduce (fn [db id]
               (let [container (element.h/parent-container db id)
                     hovered-svg-k (:id (element.h/hovered-svg db))]
@@ -314,7 +314,6 @@
         :select (-> (cond-> db (not (pointer/shift? e)) element.h/deselect)
                     (reduce-by-area (pointer/alt? e) element.h/select)
                     (h/dissoc-temp)
-                    (snap.h/update-tree)
                     (h/explain "Modify selection"))
         :translate (h/explain db "Move selection")
         :scale (h/explain db "Scale selection")
@@ -322,6 +321,7 @@
         :idle db)
       (h/set-state :idle)
       (element.h/clear-hovered)
+      (snap.h/update-tree)
       (dissoc :clicked-element :pivot-point)))
 
 (defmethod hierarchy/snapping-bases :transform

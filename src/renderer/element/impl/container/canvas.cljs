@@ -98,8 +98,7 @@
            (when (and transform-active pivot-point)
              [overlay/times pivot-point])])
 
-        (when (and (= state :idle)
-                   (or (= tool :edit)
+        (when (and (or (= tool :edit)
                        (= primary-tool :edit)))
           (for [el selected-elements]
             ^{:key (str (:id el) "-edit-points")}
