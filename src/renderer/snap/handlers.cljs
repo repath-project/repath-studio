@@ -41,20 +41,16 @@
           (assoc nneighbor :base-point %))
        (tool.hierarchy/snapping-bases db)))
 
-(m/=> nearest-neighbor [:-> App [:maybe NearestNeighbor]])
-(defn nearest-neighbor
+(defn update-nearest-neighbors
   [db]
-  (when (-> db :snap :active)
-    (let [threshold (-> db :snap :threshold)
-          nneighbors (nearest-neighbors db)
-          threshold (/ threshold (get-in db [:documents (:active-document db) :zoom]))
-          nneighbor (apply min-key :dist-squared nneighbors)]
-      (when (< (:dist-squared nneighbor) (Math/pow threshold 2))
-        nneighbor))))
-
-(defn update-nearest-neighbor
-  [db]
-  (assoc db :nearest-neighbor (nearest-neighbor db)))
+  (let [zoom (get-in db [:documents (:active-document db) :zoom])
+        threshold (-> db :snap :threshold)
+        threshold (Math/pow (/ threshold zoom) 2)
+        nneighbors (nearest-neighbors db)
+        nneighbors (filter #(< (:dist-squared %) threshold) nneighbors)]
+    (assoc db
+           :nearest-neighbors nneighbors
+           :nearest-neighbor (apply min-key :dist-squared nneighbors))))
 
 (defn update-tree
   [db]
@@ -72,7 +68,7 @@
 
 (defn snap-with
   [db f & more]
-  (let [db (update-nearest-neighbor db)]
+  (let [db (update-nearest-neighbors db)]
     (if (:nearest-neighbor db)
       (apply f db (nearest-delta db) more)
       db)))

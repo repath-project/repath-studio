@@ -18,8 +18,8 @@
 
 (defmethod hierarchy/drag :ellipse
   [db e]
-  (let [[offset-x offset-y] (:adjusted-pointer-offset db)
-        [x y] (:adjusted-pointer-pos db)
+  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
+        [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
         lock-ratio (pointer/ctrl? e)
         rx (abs (- x offset-x))
         ry (abs (- y offset-y))

@@ -61,6 +61,7 @@
                        [handle.v/square {:id (keyword (str index))
                                          :x x
                                          :y y
+                                         :label "point"
                                          :type :handle
                                          :cursor "move"
                                          :action :edit

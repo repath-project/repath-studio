@@ -11,7 +11,7 @@
    [renderer.document.db :as db]
    [renderer.document.handlers :as h]
    [renderer.element.handlers :as element.h]
-   [renderer.history.handlers :as history.h :refer [finalize]]
+   [renderer.history.handlers :as history.h]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
    [renderer.utils.compatibility :as compatibility]
@@ -142,25 +142,28 @@
 (rf/reg-event-fx
  ::new
  [(rf/inject-cofx ::app.fx/guid)
-  (finalize "Create document")]
+  persist]
  (fn [{:keys [db guid]} [_]]
-   {:db (create db guid)}))
+   {:db (-> (create db guid)
+            (history.h/finalize "Create document"))}))
 
 (rf/reg-event-fx
  ::init
  [(rf/inject-cofx ::app.fx/guid)
-  (finalize "Init document")]
+  persist]
  (fn [{:keys [db guid]} [_]]
    {:db (cond-> db
           (not (:active-document db))
-          (create guid))}))
+          (-> (create guid)
+              (history.h/finalize "Init document")))}))
 
 (rf/reg-event-fx
  ::new-from-template
  [(rf/inject-cofx ::app.fx/guid)
-  (finalize "Create document from template")]
+  persist]
  (fn [{:keys [db guid]} [_ size]]
-   {:db (create db guid size)}))
+   {:db (-> (create db guid size)
+            (history.h/finalize "Create document from template"))}))
 
 (rf/reg-event-fx
  ::open
@@ -185,17 +188,19 @@
 (rf/reg-event-fx
  ::load
  [(rf/inject-cofx ::app.fx/guid)
-  (finalize "Load document")]
+  persist]
  (fn [{:keys [db guid]} [_ document]]
-   (if (and document (map? document) (:elements document))
-     (let [migrated-document (compatibility/migrate-document document)
-           migrated (not= document migrated-document)
-           document (assoc migrated-document :id guid)]
-       (cond-> {:db (h/load db document)}
-         (not migrated)
-         (assoc :dispatch [::saved document])))
-     {:db (notification.h/add db (notification.v/generic-error {:title (str "Error while loading " (:title document))
-                                                                :message "File appears to be unsupported or corrupted."}))})))
+   {:db (if (and document (map? document) (:elements document))
+          (let [migrated-document (compatibility/migrate-document document)
+                migrated (not= document migrated-document)
+                document (assoc migrated-document :id guid)]
+            (-> (h/load db document)
+                (history.h/finalize "Load document")
+                (cond->
+                 (not migrated)
+                  (h/saved document))))
+          (notification.h/add db (notification.v/generic-error {:title (str "Error while loading " (:title document))
+                                                                :message "File appears to be unsupported or corrupted."})))}))
 
 (rf/reg-event-fx
  ::load-multiple
@@ -258,15 +263,9 @@
  ::saved
  [persist]
  (fn [db [_ document-info]]
-   (if document-info
-     (let [{:keys [path id]} document-info
-           position (get-in db [:documents id :history :position])]
-       (cond-> db
-         :always
-         (update-in [:documents id] merge (assoc document-info :save position))
-
-         path
-         (h/add-recent path))) db)))
+   (cond-> db
+     document-info
+     (h/saved document-info))))
 
 (rf/reg-event-fx
  ::close-saved

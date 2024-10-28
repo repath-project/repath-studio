@@ -3,7 +3,9 @@
    attributes and hehavior"
   (:require
    [clojure.string :as str]
+   [renderer.app.effects :as-alias app.fx]
    [renderer.document.handlers :as document.h]
+   [renderer.history.handlers :as history.h]
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.attribute :as attr]))
@@ -64,4 +66,5 @@
   (-> db
       (h/create-temp-element)
       (h/activate :transform)
-      (h/explain (str "Create " (name (:tool db))))))
+      (history.h/finalize (str "Create " (name (:tool db))))
+      (h/add-fx [::app.fx/persist])))

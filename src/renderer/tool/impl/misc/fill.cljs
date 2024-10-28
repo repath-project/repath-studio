@@ -1,7 +1,9 @@
 (ns renderer.tool.impl.misc.fill
   (:require
+   [renderer.app.effects :as-alias app.fx]
    [renderer.document.handlers :as document.h]
    [renderer.element.handlers :as element.h]
+   [renderer.history.handlers :as history.h]
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]))
 
@@ -25,7 +27,8 @@
         el-id (-> e :element :id)]
     (-> db
         (element.h/set-attr el-id :fill color)
-        (h/explain "Fill"))))
+        (history.h/finalize "Fill")
+        (h/add-fx [::app.fx/persist]))))
 
 (defmethod hierarchy/drag-end :fill
   [db e]

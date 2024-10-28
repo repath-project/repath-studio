@@ -1,12 +1,16 @@
 (ns renderer.snap.views
   (:require
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
+   [clojure.core.matrix :as mat]
+   [clojure.string :as str]
    [re-frame.core :as rf]
+   [renderer.document.subs :as-alias document.s]
    [renderer.snap.db :as snap.db]
    [renderer.snap.events :as-alias snap.e]
    [renderer.snap.subs :as-alias snap.s]
    [renderer.ui :as ui]
-   [renderer.utils.dom :as dom]))
+   [renderer.utils.dom :as dom]
+   [renderer.utils.overlay :as overlay]))
 
 (defn options-dropdown
   []
@@ -46,3 +50,16 @@
     :on-click #(rf/dispatch [::snap.e/toggle])}
    [ui/icon "magnet"]
    [options-dropdown]])
+
+(defn canvas-label
+  [nearest-neighbor]
+  (let [zoom @(rf/subscribe [::document.s/zoom])
+        margin (/ 15 zoom)
+        point-label (-> nearest-neighbor meta :label)
+        base-label (-> nearest-neighbor :base-point meta :label)
+        label (str/join " to " (remove nil? [base-label point-label]))
+        point (:point nearest-neighbor)]
+    [:<>
+     [overlay/times point]
+     (when (not-empty label)
+       [overlay/label label (mat/add point margin) "start"])]))

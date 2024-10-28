@@ -17,8 +17,8 @@
 
 (defmethod hierarchy/drag :svg
   [db e]
-  (let [[offset-x offset-y] (:adjusted-pointer-offset db)
-        [x y] (:adjusted-pointer-pos db)
+  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
+        [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
         lock-ratio (pointer/ctrl? e)
         width (abs (- x offset-x))
         height (abs (- y offset-y))

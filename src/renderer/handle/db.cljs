@@ -6,6 +6,7 @@
 (def Handle
   [:map {:closed true}
    [:id keyword?]
+   [:label {:optional true} string?]
    [:action HandleAction]
    [:type [:= :handle]]
    [:cursor {:optional true} string?]

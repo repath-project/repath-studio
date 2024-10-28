@@ -8,7 +8,7 @@
    [renderer.element.events :as-alias element.e]
    [renderer.element.handlers :as element.h]
    [renderer.element.hierarchy :as hierarchy]
-   [renderer.history.handlers :refer [finalize]]
+   [renderer.history.handlers :as history.h]
    [renderer.tool.handlers :as h]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.dom :as dom]
@@ -56,11 +56,12 @@
 
 (rf/reg-event-db
  ::set-text
- [(finalize #(if (empty? (get % 2)) "Remove text" "Set text"))]
  (fn [db [_ id s]]
    (-> (if (empty? s)
-         (element.h/delete db id)
-         (element.h/assoc-prop db id :content s))
+         (-> (element.h/delete db id)
+             (history.h/finalize "Remove text"))
+         (-> (element.h/assoc-prop db id :content s)
+             (history.h/finalize "Set text")))
        (h/activate :transform))))
 
 (defn key-down-handler!

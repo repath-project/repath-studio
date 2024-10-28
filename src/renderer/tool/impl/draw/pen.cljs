@@ -1,7 +1,9 @@
 (ns renderer.tool.impl.draw.pen
   (:require
    [clojure.string :as str]
+   [renderer.app.effects :as-alias app.fx]
    [renderer.document.handlers :as document.h]
+   [renderer.history.handlers :as history.h]
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.element :as element]
@@ -35,4 +37,5 @@
         (h/set-temp path)
         (h/create-temp-element)
         (h/activate :transform)
-        (h/explain "Draw line"))))
+        (history.h/finalize "Draw line")
+        (h/add-fx [::app.fx/persist]))))

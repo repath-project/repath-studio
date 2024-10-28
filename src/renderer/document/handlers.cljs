@@ -133,7 +133,6 @@
 (m/=> assoc-attr [:-> App keyword? string? App])
 (defn assoc-attr
   [db k v]
-  (js/console.log (str (print (path db :attrs k))))
   (assoc-in db (path db :attrs k) v))
 
 (m/=> load [:-> App map? App])
@@ -158,6 +157,17 @@
 
       (let [explanation (-> document db/explain me/humanize str)]
         (notification.h/add db (notification.v/spec-failed "Load document" explanation))))))
+
+(defn saved
+  [db document-info]
+  (let [{:keys [id]} document-info
+        position (get-in db [:documents id :history :position])]
+    (cond-> db
+      :always
+      (update-in [:documents id] merge (assoc document-info :save position))
+
+      (:path document-info)
+      (add-recent (:path document-info)))))
 
 (m/=> saved? [:-> App uuid? boolean?])
 (defn saved?

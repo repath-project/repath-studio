@@ -1,6 +1,6 @@
 (ns renderer.tool.impl.base.zoom
   (:require
-   [renderer.app.events :as-alias app.e]
+   [renderer.app.effects :as-alias app.fx]
    [renderer.frame.handlers :as frame.h]
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]
@@ -54,14 +54,13 @@
         height-ratio (/ (:height dom-rect) height)
         current-zoom (get-in db [:documents (:active-document db) :zoom])
         furute-zoom (min width-ratio height-ratio)]
-    (-> db
-        (h/dissoc-temp)
+    (-> (h/dissoc-temp db)
         (h/set-cursor (if (pointer/shift? e) "zoom-out" "zoom-in"))
         (frame.h/zoom-by (if (pointer/shift? e)
                            (:zoom-sensitivity db)
                            (/ furute-zoom current-zoom)))
         (frame.h/pan-to-bounds [x y offset-x offset-y])
-        (h/add-fx [:dispatch [::app.e/persist]]))))
+        (h/add-fx [::app.fx/persist]))))
 
 (defmethod hierarchy/pointer-up :zoom
   [db e]
@@ -70,4 +69,4 @@
                  (/ 1 (:zoom-sensitivity db)))]
     (-> db
         (frame.h/zoom-at-pointer factor)
-        (h/add-fx [:dispatch [::app.e/persist]]))))
+        (h/add-fx [::app.fx/persist]))))

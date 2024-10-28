@@ -25,8 +25,8 @@
   (rf/->interceptor
    :id ::persist
    :after (fn [context]
-            (when-let [data (get-in context [:effects :db])]
-              (persist! data))
+            (when-let [db (get-in context [:effects :db])]
+              (persist! db))
             context)))
 
 (rf/reg-cofx

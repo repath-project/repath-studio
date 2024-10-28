@@ -1,10 +1,11 @@
 (ns renderer.tool.impl.misc.dropper
   (:require
    [re-frame.core :as rf]
+   [renderer.app.effects :refer [persist]]
    [renderer.color.effects :as-alias color.fx]
    [renderer.document.handlers :as document.h]
    [renderer.element.handlers :as element.h]
-   [renderer.history.handlers :refer [finalize]]
+   [renderer.history.handlers :as history.h]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
    [renderer.tool.handlers :as h]
@@ -34,13 +35,14 @@
 
 (rf/reg-event-db
  ::success
- [(finalize "Pick color")]
+ [persist]
  (fn [db [_ ^js color]]
    (let [srgb-color (.-sRGBHex color)]
      (-> db
          (document.h/assoc-attr :fill srgb-color)
          (element.h/assoc-attr :fill srgb-color)
-         (h/activate :transform)))))
+         (h/activate :transform)
+         (history.h/finalize "Pick color")))))
 
 (rf/reg-event-db
  ::error

@@ -1,6 +1,8 @@
 (ns renderer.tool.impl.element.core
   (:require
+   [renderer.app.effects :as-alias app.fx]
    [renderer.element.handlers :as element.h]
+   [renderer.history.handlers :as history.h]
    [renderer.snap.handlers :as snap.h]
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]
@@ -35,11 +37,12 @@
   (-> db
       (h/create-temp-element)
       (h/activate :transform)
-      (h/explain (str "Create " (name (:tag (h/temp db)))))))
+      (history.h/finalize (str "Create " (name (:tag (h/temp db)))))
+      (h/add-fx [::app.fx/persist])))
 
 (defmethod hierarchy/snapping-bases ::hierarchy/element
   [db]
-  [(:adjusted-pointer-pos db)])
+  [(with-meta (:adjusted-pointer-pos db) {:label "element point"})])
 
 (defmethod hierarchy/snapping-points ::hierarchy/element
   [db]

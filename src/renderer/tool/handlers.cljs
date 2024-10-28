@@ -3,7 +3,7 @@
    [clojure.core.matrix :as mat]
    [malli.core :as m]
    [renderer.app.db :refer [App]]
-   [renderer.app.events :as-alias app.e]
+   [renderer.app.effects :as-alias app.fx]
    [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.h]
    [renderer.frame.handlers :as frame.h]
@@ -22,11 +22,6 @@
 (defn add-fx
   [db effect]
   (update db :fx conj effect))
-
-(m/=> explain [:-> App string? App])
-(defn explain
-  [db explanation]
-  (assoc db :explanation explanation))
 
 (m/=> set-state [:-> App State App])
 (defn set-state
@@ -90,7 +85,7 @@
   (let [{:keys [pointer-offset tool dom-rect drag primary-tool drag-threshold nearest-neighbor]} db
         {:keys [button buttons pointer-pos]} e
         adjusted-pointer-pos (frame.h/adjust-pointer-pos db pointer-pos)
-        db (snap.h/update-nearest-neighbor db)]
+        db (snap.h/update-nearest-neighbors db)]
     (case (:type e)
       "pointermove"
       (-> (if pointer-offset
@@ -179,7 +174,7 @@
                            (- (:delta-y e)))]
       (-> db
           (frame.h/zoom-at-pointer factor)
-          (add-fx [:dispatch [::app.e/persist]])))
+          (add-fx [::app.fx/persist])))
     (frame.h/pan-by db [(:delta-x e) (:delta-y e)])))
 
 (m/=> cancel [:-> App App])

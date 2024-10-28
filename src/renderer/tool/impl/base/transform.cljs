@@ -3,6 +3,7 @@
    [clojure.core.matrix :as mat]
    [malli.core :as m]
    [renderer.app.db :refer [App]]
+   [renderer.app.effects :as-alias app.fx]
    [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.h]
    [renderer.element.hierarchy :as element.hierarchy]
@@ -121,7 +122,7 @@
       (element.h/clear-ignored :bounding-box)
       (element.h/select (:id element) (pointer/shift? e))
       (snap.h/update-tree)
-      (h/explain (if (:selected element) "Deselect element" "Select element"))))
+      (history.h/finalize (if (:selected element) "Deselect element" "Select element"))))
 
 (defmethod hierarchy/double-click :transform
   [db e]
@@ -133,6 +134,10 @@
       (cond-> db
         (not= :canvas tag)
         (h/activate :edit)))))
+
+(defmethod hierarchy/activate :transform
+  [db]
+  (snap.h/update-tree db))
 
 (defmethod hierarchy/deactivate :transform
   [db]
@@ -155,8 +160,8 @@
         ratio (if (< (abs x) (abs y)) x y)]
     [ratio ratio]))
 
-(m/=> delta->scale-with-pivot-point [:-> ScaleHandle Vec2D Bounds [:tuple Vec2D Vec2D]])
-(defn delta->scale-with-pivot-point
+(m/=> delta->offset-with-pivot-point [:-> ScaleHandle Vec2D Bounds [:tuple Vec2D Vec2D]])
+(defn delta->offset-with-pivot-point
   "Converts the x/y pointer offset to a scale ratio and a pivot point,
   to decouple this from the scaling method of the elements.
 
@@ -189,7 +194,7 @@
   [db offset {:keys [ratio-locked in-place recursive]}]
   (let [handle (-> db :clicked-element :id)
         bounds (element.h/bounds db)
-        [offset pivot-point] (delta->scale-with-pivot-point handle offset bounds)
+        [offset pivot-point] (delta->offset-with-pivot-point handle offset bounds)
         pivot-point (if in-place (bounds/center bounds) pivot-point)
         offset (cond-> offset in-place (mat/mul 2))
         dimensions (bounds/->dimensions bounds)
@@ -205,7 +210,7 @@
   [clicked-element]
   (and clicked-element
        (not (:selected clicked-element))
-       (not= (:id clicked-element) :bounding-box)))
+       (not= (:type clicked-element) :handle)))
 
 (m/=> select-element [:-> App boolean? App])
 (defn select-element
@@ -295,16 +300,13 @@
         (h/set-state db :translate))
 
       :scale
-      (cond-> db
-        :always
-        (-> (history.h/swap)
+      (let [options {:ratio-locked ratio-locked?
+                     :in-place (pointer/shift? e)
+                     :recursive (pointer/alt? e)}]
+        (-> (history.h/swap db)
             (h/set-cursor "default")
-            (scale delta {:ratio-locked ratio-locked?
-                          :in-place (pointer/shift? e)
-                          :recursive (pointer/alt? e)})
-            (snap.h/snap-with scale {:ratio-locked ratio-locked?
-                                     :in-place (pointer/shift? e)
-                                     :recursive (pointer/alt? e)})))
+            (scale delta options)
+            (snap.h/snap-with scale options)))
 
       :idle db)))
 
@@ -314,15 +316,16 @@
         :select (-> (cond-> db (not (pointer/shift? e)) element.h/deselect)
                     (reduce-by-area (pointer/alt? e) element.h/select)
                     (h/dissoc-temp)
-                    (h/explain "Modify selection"))
-        :translate (h/explain db "Move selection")
-        :scale (h/explain db "Scale selection")
-        :clone (h/explain db "Clone selection")
+                    (history.h/finalize "Modify selection"))
+        :translate (history.h/finalize db "Move selection")
+        :scale (history.h/finalize db "Scale selection")
+        :clone (history.h/finalize db "Clone selection")
         :idle db)
       (h/set-state :idle)
       (element.h/clear-hovered)
       (snap.h/update-tree)
-      (dissoc :clicked-element :pivot-point)))
+      (dissoc :clicked-element :pivot-point)
+      (h/add-fx [::app.fx/persist])))
 
 (defmethod hierarchy/snapping-bases :transform
   [db]
@@ -330,14 +333,17 @@
         selected (filter :selected elements)
         options (-> db :snap :options)]
     (cond
-      (and (contains? #{:translate :clone} (:state db)) (seq selected))
+      (contains? #{:translate :clone} (:state db))
       (cond-> (element.h/snapping-points db (filter :visible selected))
         (seq (rest selected))
         (into (bounds/->snapping-points (element.h/bounds db) options)))
 
       (= (:state db) :scale)
-      [(mat/add [(-> db :clicked-element :x) (-> db :clicked-element :y)]
-                (h/pointer-delta db))])))
+      (when (:clicked-element db)
+        [(with-meta
+           (mat/add [(-> db :clicked-element :x) (-> db :clicked-element :y)]
+                    (h/pointer-delta db))
+           {:label (-> db :clicked-element :id name)})]))))
 
 (defmethod hierarchy/snapping-points :transform
   [db]

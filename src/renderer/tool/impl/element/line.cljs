@@ -1,7 +1,9 @@
 (ns renderer.tool.impl.element.line
   "https://www.w3.org/TR/SVG/shapes.html#LineElement"
   (:require
+   [renderer.app.effects :as-alias app.fx]
    [renderer.document.handlers :as document.h]
+   [renderer.history.handlers :as history.h]
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as tool.hierarchy]))
 
@@ -45,7 +47,8 @@
     (-> db
         (h/create-temp-element)
         (h/activate :transform)
-        (h/explain "Create line"))
+        (history.h/finalize "Create line")
+        (h/add-fx [::app.fx/persist]))
 
     (:pointer-offset db)
     (-> db
@@ -58,7 +61,8 @@
   [db _e]
   (cond-> db
     (h/temp db)
-    (h/explain "Create line")))
+    (-> (history.h/finalize "Create line")
+        (h/add-fx [::app.fx/persist]))))
 
 (defmethod tool.hierarchy/drag :line
   [db]

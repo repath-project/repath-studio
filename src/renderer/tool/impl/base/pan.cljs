@@ -1,7 +1,7 @@
 (ns renderer.tool.impl.base.pan
   (:require
    [clojure.core.matrix :as mat]
-   [renderer.app.events :as-alias app.e]
+   [renderer.app.effects :as-alias app.fx]
    [renderer.frame.handlers :as frame.h]
    [renderer.snap.handlers :as snap.h]
    [renderer.tool.handlers :as h]
@@ -38,4 +38,4 @@
   (-> db
       (h/set-cursor "grab")
       (snap.h/update-tree)
-      (h/add-fx [:dispatch [::app.e/persist]])))
+      (h/add-fx [::app.fx/persist])))

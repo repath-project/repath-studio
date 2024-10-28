@@ -1,6 +1,8 @@
 (ns renderer.tool.impl.element.text
   (:require
    [renderer.element.handlers :as element.h]
+   [renderer.history.handlers :as history.h]
+   [renderer.tool.app :as-alias app.fx]
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]))
 
@@ -20,7 +22,7 @@
 
 (defmethod hierarchy/pointer-up :text
   [db _e]
-  (let [[offset-x offset-y] (:adjusted-pointer-offset db)
+  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
         el {:type :element
             :tag :text
             :attrs {:x offset-x
@@ -28,7 +30,8 @@
     (-> db
         (element.h/deselect)
         (element.h/add el)
-        (h/explain "Create text")
+        (history.h/finalize "Create text")
+        (h/add-fx [::app.fx/persist])
         (h/activate :edit)
         (h/set-state :create))))
 

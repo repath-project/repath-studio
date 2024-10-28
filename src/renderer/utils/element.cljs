@@ -57,7 +57,8 @@
 (defn snapping-points
   [el options]
   (let [points (or (when (contains? options :nodes)
-                     (element.hierarchy/snapping-points el)) [])]
+                     (mapv #(mat/add % (offset el))
+                           (element.hierarchy/snapping-points el))) [])]
     (cond-> points
       (:bounds el)
       (into (utils.bounds/->snapping-points (:bounds el) options)))))

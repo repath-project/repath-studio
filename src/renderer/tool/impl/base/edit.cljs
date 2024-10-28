@@ -1,6 +1,7 @@
 (ns renderer.tool.impl.base.edit
   (:require
    [clojure.core.matrix :as mat]
+   [renderer.app.effects :as-alias app.fx]
    [renderer.element.handlers :as element.h]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.h]
@@ -38,7 +39,8 @@
         (dissoc :clicked-element)
         (element.h/select (-> e :element :id) (pointer/shift? e))
         (snap.h/update-tree)
-        (h/explain "Select element"))
+        (history.h/finalize "Select element")
+        (h/add-fx [::app.fx/persist]))
     (dissoc db :clicked-element)))
 
 (defmethod hierarchy/pointer-move :edit
@@ -71,13 +73,18 @@
       (h/set-state :idle)
       (dissoc :clicked-element)
       (snap.h/update-tree)
-      (h/explain "Edit")))
+      (history.h/finalize "Edit")
+      (h/add-fx [::app.fx/persist])))
 
 (defmethod hierarchy/snapping-bases :edit
   [db]
-  [(when (:clicked-element db)
-     (mat/add [(-> db :clicked-element :x) (-> db :clicked-element :y)]
-              (h/pointer-delta db)))])
+  (when-let [el (:clicked-element db)]
+    [(with-meta
+       (mat/add [(:x el) (:y el)]
+                (h/pointer-delta db))
+       {:label (when (= (:type el) :handle)
+                 (or (:label el)
+                     (name (:id el))))})]))
 
 (defmethod hierarchy/snapping-points :edit
   [db]

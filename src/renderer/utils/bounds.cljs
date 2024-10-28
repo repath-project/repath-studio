@@ -82,16 +82,16 @@
         [cx cy] (center bounds)]
     (cond-> []
       (:corners options)
-      (into [[x1 y1]
-             [x1 y2]
-             [x2 y1]
-             [x2 y2]])
+      (into [(with-meta [x1 y1] {:label "bounds corner"})
+             (with-meta [x1 y2] {:label "bounds corner"})
+             (with-meta [x2 y1] {:label "bounds corner"})
+             (with-meta [x2 y2] {:label "bounds corner"})])
 
       (:centers options)
-      (into [[cx cy]])
+      (into [(with-meta [cx cy] {:label "bounds center"})])
 
       (:midpoints options)
-      (into [[x1 cy]
-             [x2 cy]
-             [cx y1]
-             [cx y2]]))))
+      (into [(with-meta [x1 cy] {:label "bounds midpoint"})
+             (with-meta [x2 cy] {:label "bounds midpoint"})
+             (with-meta [cx y1] {:label "bounds midpoint"})
+             (with-meta [cx y2] {:label "bounds midpoint"})]))))

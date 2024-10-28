@@ -2,39 +2,40 @@
   (:require
    [clojure.string :as str]
    [re-frame.core :as rf]
-   [renderer.app.effects :as-alias app.fx]
-   [renderer.app.events :as-alias app.e]
+   [renderer.app.effects :as-alias app.fx :refer [persist]]
    [renderer.element.effects :as-alias fx]
    [renderer.element.handlers :as h]
-   [renderer.history.handlers :refer [finalize]]
+   [renderer.history.handlers :as history.h]
    [renderer.notification.events :as-alias notification.e]
    [renderer.snap.handlers :as snap.h]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
    [renderer.utils.extra :refer [partial-right]]
    [renderer.utils.system :as system]
-   [renderer.window.effects :as-alias window.fx]
-   [renderer.worker.events :as-alias worker.e]))
+   [renderer.window.effects :as-alias window.fx]))
 
 (rf/reg-event-db
  ::select
- [(finalize "Select element")]
+ [persist]
  (fn [db [_ id multiple]]
    (-> (h/select db id multiple)
-       (snap.h/update-tree))))
+       (snap.h/update-tree)
+       (history.h/finalize "Select element"))))
 
 (rf/reg-event-db
  ::select-ids
- [(finalize "Select elements")]
+ [persist]
  (fn [db [_ ids]]
    (-> (reduce (partial-right h/assoc-prop :selected true) (h/deselect db) ids)
-       (snap.h/update-tree))))
+       (snap.h/update-tree)
+       (history.h/finalize "Select elements"))))
 
 (rf/reg-event-db
  ::toggle-prop
- [(finalize #(str "Toggle " (name (get % 2))))]
+ [persist]
  (fn [db [_ id k]]
-   (h/update-prop db id k not)))
+   (-> (h/update-prop db id k not)
+       (history.h/finalize (str "Toggle " (name k))))))
 
 (rf/reg-event-db
  ::preview-prop
@@ -43,39 +44,45 @@
 
 (rf/reg-event-db
  ::set-prop
- [(finalize #(str "Set " (name (get % 2))))]
+ [persist]
  (fn [db [_ id k v]]
-   (h/assoc-prop db id k v)))
+   (-> (h/assoc-prop db id k v)
+       (history.h/finalize (str "Set " (name k))))))
 
 (rf/reg-event-db
  ::lock
- [(finalize "Lock selection")]
+ [persist]
  (fn [db]
-   (h/assoc-prop db :locked true)))
+   (-> (h/assoc-prop db :locked true)
+       (history.h/finalize "Lock selection"))))
 
 (rf/reg-event-db
  ::unlock
- [(finalize "Unlock selection")]
+ [persist]
  (fn [db]
-   (h/assoc-prop db :locked false)))
+   (-> (h/assoc-prop db :locked false)
+       (history.h/finalize "Unlock selection"))))
 
 (rf/reg-event-db
  ::set-attr
- [(finalize #(str "Set " (name (second %))))]
+ [persist]
  (fn [db [_ k v]]
-   (h/set-attr db k v)))
+   (-> (h/set-attr db k v)
+       (history.h/finalize (str "Set " (name k))))))
 
 (rf/reg-event-db
  ::remove-attr
- [(finalize #(str "Remove " (name (second %))))]
+ [persist]
  (fn [db [_ k]]
-   (h/dissoc-attr db k)))
+   (-> (h/dissoc-attr db k)
+       (history.h/finalize (str "Remove " (name k))))))
 
 (rf/reg-event-db
  ::update-attr
- [(finalize #(str "Update " (name (second %))))]
+ [persist]
  (fn [db [_ k f & more]]
-   (reduce (apply partial-right h/update-attr k f more) db (h/selected-ids db))))
+   (-> (reduce (apply partial-right h/update-attr k f more) db (h/selected-ids db))
+       (history.h/finalize (str "Update " (name k))))))
 
 (rf/reg-event-db
  ::preview-attr
@@ -84,66 +91,80 @@
 
 (rf/reg-event-fx
  ::fill
- [(finalize "Fill")]
+ [persist]
  (fn [db [_ color]]
-   (h/set-attr db :fill color)))
+   (-> (h/set-attr db :fill color)
+       (history.h/finalize "Fill"))))
 
 (rf/reg-event-db
  ::delete
- [(finalize "Delete selection")]
+ [persist]
  (fn [db]
-   (h/delete db)))
+   (-> (h/delete db)
+       (history.h/finalize "Delete selection"))))
 
 (rf/reg-event-db
  ::deselect-all
- [(finalize "Deselect all")]
+ [persist]
  (fn [db]
-   (h/deselect db)))
+   (-> (h/deselect db)
+       (history.h/finalize "Deselect all"))))
 
 (rf/reg-event-db
  ::select-all
- [(finalize "Select all")]
- h/select-all)
+ [persist]
+ (fn [db]
+   (-> (h/select-all db)
+       (history.h/finalize "Select all"))))
 
 (rf/reg-event-db
  ::select-same-tags
- [(finalize "Select same tags")]
- h/select-same-tags)
+ [persist]
+ (fn [db]
+   (-> (h/select-same-tags db)
+       (history.h/finalize "Select same tags"))))
 
 (rf/reg-event-db
  ::invert-selection
- [(finalize "Invert selection")]
- h/invert-selection)
+ [persist]
+ (fn [db]
+   (-> (h/invert-selection db)
+       (history.h/finalize "Invert selection"))))
 
 (rf/reg-event-db
  ::raise
- [(finalize "Raise selection")]
+ [persist]
  (fn [db]
-   (h/update-index db inc)))
+   (-> (h/update-index db inc)
+       (history.h/finalize "Raise selection"))))
 
 (rf/reg-event-db
  ::lower
- [(finalize "Lower selection")]
+ [persist]
  (fn [db]
-   (h/update-index db dec)))
+   (-> (h/update-index db dec)
+       (history.h/finalize "Lower selection"))))
 
 (rf/reg-event-db
  ::raise-to-top
- [(finalize "Raise selection to top")]
+ [persist]
  (fn [db]
-   (h/update-index db (fn [_i sibling-count] (dec sibling-count)))))
+   (-> (h/update-index db (fn [_i sibling-count] (dec sibling-count)))
+       (history.h/finalize "Raise selection to top"))))
 
 (rf/reg-event-db
  ::lower-to-bottom
- [(finalize "Lower selection to bottom")]
+ [persist]
  (fn [db]
-   (h/update-index db #(identity 0))))
+   (-> (h/update-index db #(identity 0))
+       (history.h/finalize "Lower selection to bottom"))))
 
 (rf/reg-event-db
  ::align
- [(finalize #(str "Update " (name (second %))))]
+ [persist]
  (fn [db [_ direction]]
-   (h/align db direction)))
+   (-> (h/align db direction)
+       (history.h/finalize (str "Update " direction)))))
 
 (rf/reg-event-fx
  ::export-svg
@@ -170,132 +191,153 @@
 
 (rf/reg-event-db
  ::paste
- [(finalize "Paste selection")]
+ [persist]
  (fn [db]
-   (h/paste db)))
+   (-> (h/paste db)
+       (history.h/finalize "Paste selection"))))
 
 (rf/reg-event-db
  ::paste-in-place
- [(finalize "Paste selection in place")]
+ [persist]
  (fn [db]
-   (h/paste-in-place db)))
+   (-> (h/paste-in-place db)
+       (history.h/finalize "Paste selection in place"))))
 
 (rf/reg-event-db
  ::paste-styles
- [(finalize "Paste styles to selection")]
+ [persist]
  (fn [db]
-   (h/paste-styles db)))
+   (-> (h/paste-styles db)
+       (history.h/finalize "Paste styles to selection"))))
 
 (rf/reg-event-db
  ::duplicate
- [(finalize "Duplicate selection")]
+ [persist]
  (fn [db]
-   (h/duplicate db)))
+   (-> (h/duplicate db)
+       (history.h/finalize "Duplicate selection"))))
 
 (rf/reg-event-db
  ::translate
- [(finalize "Move selection")]
+ [persist]
  (fn [db [_ offset]]
-   (h/translate db offset)))
+   (-> (h/translate db offset)
+       (history.h/finalize "Move selection"))))
 
 (rf/reg-event-db
  ::place
- [(finalize "Place selection")]
+ [persist]
  (fn [db [_ position]]
-   (h/place db position)))
+   (-> (h/place db position)
+       (history.h/finalize "Place selection"))))
 
 (rf/reg-event-db
  ::scale
- [(finalize "Scale selection")]
+ [persist]
  (fn [db [_ ratio]]
    (let [pivot-point (-> db h/bounds bounds/center)]
-     (h/scale db ratio pivot-point false))))
+     (-> (h/scale db ratio pivot-point false)
+         (history.h/finalize "Scale selection")))))
 
 (rf/reg-event-db
  ::move-up
- [(finalize "Move selection up")]
+ [persist]
  (fn [db _]
-   (h/translate db [0 -1])))
+   (-> (h/translate db [0 -1])
+       (history.h/finalize "Move selection up"))))
 
 (rf/reg-event-db
  ::move-down
- [(finalize "Move selection down")]
+ [persist]
  (fn [db _]
-   (h/translate db [0 1])))
+   (-> (h/translate db [0 1])
+       (history.h/finalize "Move selection down"))))
 
 (rf/reg-event-db
  ::move-left
- [(finalize "Move selection left")]
+ [persist]
  (fn [db _]
-   (h/translate db [-1 0])))
+   (-> (h/translate db [-1 0])
+       (history.h/finalize "Move selection left"))))
 
 (rf/reg-event-db
  ::move-right
- [(finalize "Move selection right")]
+ [persist]
  (fn [db [_]]
-   (h/translate db [1 0])))
+   (-> (h/translate db [1 0])
+       (history.h/finalize "Move selection right"))))
 
 (rf/reg-event-db
  ::->path
- [(finalize "Convert selection to path")]
+ [persist]
  (fn [db]
-   (h/->path db)))
+   (-> (h/->path db)
+       (history.h/finalize "Convert selection to path"))))
 
 (rf/reg-event-db
  ::stroke->path
- [(finalize "Convert selection's stroke to path")]
+ [persist]
  (fn [db]
-   (h/stroke->path db)))
+   (-> (h/stroke->path db)
+       (history.h/finalize "Convert selection's stroke to path"))))
 
 (rf/reg-event-db
  ::boolean-operation
- [(finalize #(-> % second name str/capitalize))]
+ [persist]
  (fn [db [_ operation]]
    (cond-> db
      (seq (rest (h/selected db)))
-     (h/boolean-operation operation))))
+     (-> (h/boolean-operation operation)
+         (history.h/finalize (str/capitalize (name operation)))))))
 
 (rf/reg-event-db
  ::add
- [(finalize #(str "Create " (-> % second :tag name)))]
+ [persist]
  (fn [db [_ el]]
-   (h/add db el)))
+   (-> (h/add db el)
+       (history.h/finalize (str "Create " (name (:tag el)))))))
 
 (rf/reg-event-db
  ::import
- [(finalize "Import svg")]
+ [persist]
  (fn [db [_ data]]
-   (h/import-svg db data)))
+   (-> (h/import-svg db data)
+       (history.h/finalize "Import svg"))))
 
 (rf/reg-event-db
  ::animate
- [(finalize (comp str/capitalize name second))]
+ [persist]
  (fn [db [_ tag attrs]]
-   (h/animate db tag attrs)))
+   (-> (h/animate db tag attrs)
+       (history.h/finalize (comp str/capitalize name second)))))
 
 (rf/reg-event-db
  ::set-parent
- [(finalize "Set parent")]
+ [persist]
  (fn [db [_ parent-id id]]
-   (h/set-parent db parent-id id)))
+   (-> (h/set-parent db parent-id id)
+       (history.h/finalize "Set parent"))))
 
 (rf/reg-event-db
  ::group
- [(finalize "Group selection")]
+ [persist]
  (fn [db]
-   (h/group db)))
+   (-> (h/group db)
+       (history.h/finalize "Group selection"))))
 
 (rf/reg-event-db
  ::ungroup
- [(finalize "Ungroup selection")]
+ [persist]
  (fn [db]
-   (h/ungroup db)))
+   (-> (h/ungroup db)
+       (history.h/finalize "Ungroup selection"))))
 
 (rf/reg-event-db
  ::manipulate-path
- [(finalize #(-> % second name str/capitalize (str " path")))]
+ [persist]
  (fn [db [_ action]]
-   (h/manipulate-path db action)))
+   (-> (h/manipulate-path db action)
+       (history.h/finalize (str (str/capitalize (name action)) " path")))))
 
 (rf/reg-event-fx
  ::copy
@@ -307,10 +349,12 @@
 
 (rf/reg-event-fx
  ::cut
- [(finalize "Cut selection")]
+ [persist]
  (fn [{:keys [db]} _]
    (let [els (h/top-selected-sorted db)]
-     {:db (-> db h/copy h/delete)
+     {:db (-> (h/copy db)
+              (h/delete)
+              (history.h/finalize "Cut selection"))
       :fx [(when (seq els)
              [::app.fx/clipboard-write (element/->svg els)])]})))
 
@@ -322,6 +366,7 @@
 
 (rf/reg-event-db
  ::traced
- [(finalize "Trace image")]
+ [persist]
  (fn [db [_ data]]
-   (h/import-svg db data)))
+   (-> (h/import-svg db data)
+       (history.h/finalize "Trace image"))))

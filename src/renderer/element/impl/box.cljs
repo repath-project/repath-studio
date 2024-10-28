@@ -48,8 +48,12 @@
         [x y] el-bounds
         [width height] (bounds/->dimensions el-bounds)]
     [:g
-     (for [handle [{:x x :y y :id :position}
-                   {:x (+ x width) :y (+ y height) :id :size}]]
+     (for [handle [{:x x
+                    :y y
+                    :id :position}
+                   {:x (+ x width)
+                    :y (+ y height)
+                    :id :size}]]
        (let [handle (merge handle {:type :handle
                                    :action :edit
                                    :cursor "move"
@@ -74,7 +78,7 @@
   [el]
   (let [{{:keys [x y width height]} :attrs} el
         [x y width height] (mapv units/unit->px [x y width height])]
-    [[x y]
-     [(+ x width) y]
-     [(+ x width) (+ y height)]
-     [x (+ y height)]]))
+    [(with-meta [x y] {:label "box corner"})
+     (with-meta [(+ x width) y]  {:label "box corner"})
+     (with-meta [(+ x width) (+ y height)] {:label "box corner"})
+     (with-meta [x (+ y height)] {:label "box corner"})]))

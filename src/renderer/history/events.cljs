@@ -46,8 +46,9 @@
 
 (rf/reg-event-db
  ::clear
- [(h/finalize "Clear history")]
- h/clear)
+ (fn [db _]
+   (-> (h/clear db)
+       (h/finalize "Clear history"))))
 
 (rf/reg-event-db
  ::tree-view-updated

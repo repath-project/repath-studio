@@ -101,5 +101,5 @@
   [el]
   (let [{{:keys [x1 y1 x2 y2]} :attrs} el
         [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])]
-    [[x1 y1]
-     [x2 y2]]))
+    [(with-meta [x1 y1] {:label "line start"})
+     (with-meta [x2 y2] {:label "line end"})]))

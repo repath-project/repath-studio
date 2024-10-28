@@ -21,4 +21,5 @@
                                            "image/bmp" [".fmp"]}}]}
                :callback (fn [file]
                            (rf/dispatch [::tool.e/activate :transform])
-                           (drop/add-image! file (:adjusted-pointer-pos db)))}) db)
+                           (drop/add-image! file (or (:point (:nearest-neighbor db))
+                                                     (:adjusted-pointer-pos db))))}) db)

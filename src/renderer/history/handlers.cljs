@@ -2,7 +2,6 @@
   (:require
    [malli.core :as m]
    [malli.error :as me]
-   [re-frame.core :as rf]
    [renderer.app.db :refer [App]]
    [renderer.app.effects :as-alias app.fx]
    [renderer.app.events :as-alias app.e]
@@ -186,42 +185,30 @@
 
 (def explain-elements (m/explainer [:map-of uuid? Element]))
 
-(m/=> finalize [:-> [:or nil? string? fn?] any?])
+(m/=> finalize [:-> App string? App])
 (defn finalize
   "Pushes changes to history."
-  [explanation]
-  (rf/->interceptor
-   :id ::finalize
-   :after (fn [context]
-            (let [db (rf/get-effect context :db ::not-found)
-                  elements (element.h/entities db)]
-              (cond
-                (or (not (or explanation (:explanation db)))
-                    (= elements (:elements (state (history db)))))
-                context
+  [db explanation]
+  (let [elements (element.h/entities db)]
+    (cond
+      (= elements (:elements (state (history db))))
+      db
 
-                (not (valid-elements? elements))
-                (-> db swap (notification.h/add
-                             (notification.v/spec-failed
-                              explanation
-                              (-> elements explain-elements me/humanize str))))
+      (not (valid-elements? elements))
+      (-> (swap db)
+          (notification.h/add
+           (notification.v/spec-failed
+            explanation
+            (-> elements explain-elements me/humanize str))))
 
-                :else
-                (let [current-position (position db)
-                      id (random-uuid)
-                      explanation (cond
-                                    (fn? explanation) (explanation (rf/get-coeffect context :event))
-                                    (string? explanation) explanation
-                                    (nil? explanation) (:explanation db))
-                      db (cond-> db
-                           :always (-> (dissoc :explanation)
-                                       (assoc-in (path db :position) id)
-                                       (assoc-in (path db :states id)
-                                                 (create-state db (.now js/Date) id explanation)))
-
-                           current-position
-                           (-> (update-in (path db :states current-position :children) conj id)
-                               (update-ancestors)))]
-                  (-> context
-                      (rf/assoc-effect :db db)
-                      (rf/assoc-effect ::app.fx/persist db))))))))
+      :else
+      (let [current-position (position db)
+            id (random-uuid)]
+        (-> db
+            (assoc-in (path db :position) id)
+            (assoc-in (path db :states id)
+                      (create-state db (.now js/Date) id explanation))
+            (cond->
+             current-position
+              (-> (update-in (path db :states current-position :children) conj id)
+                  (update-ancestors))))))))

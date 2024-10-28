@@ -31,11 +31,6 @@
                                    "Invalid local configuration"
                                    (-> app-db db/explain me/humanize str))))}))))
 
-(rf/reg-event-fx
- ::persist
- (fn [{:keys [db]} _]
-   {::fx/persist db}))
-
 (rf/reg-event-db
  ::set-system-fonts
  (fn [db [_ fonts]]

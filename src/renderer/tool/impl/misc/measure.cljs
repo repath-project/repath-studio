@@ -2,6 +2,7 @@
   (:require
    [clojure.core.matrix :as mat]
    [renderer.element.handlers :as element.h]
+   [renderer.snap.handlers :as snap.h]
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]))
 
@@ -17,17 +18,14 @@
 
 (defmethod hierarchy/activate :measure
   [db]
-  (h/set-cursor db "crosshair"))
+  (-> (h/set-cursor db "crosshair")
+      (snap.h/update-tree)))
 
 (defmethod hierarchy/deactivate :measure
   [db]
   (h/dissoc-temp db))
 
 (defmethod hierarchy/drag-end :measure [db] db)
-
-(defmethod hierarchy/snapping-bases :measure
-  [db]
-  [(:adjusted-pointer-pos db)])
 
 (defmethod hierarchy/drag :measure
   [db]
@@ -43,6 +41,12 @@
                             :y2 y
                             :hypotenuse hypotenuse
                             :stroke "gray"}})))
+
+(defmethod hierarchy/snapping-bases :measure
+  [db]
+  [(with-meta
+     (:adjusted-pointer-pos db)
+     {:label (str "measure " (if (h/temp db) "end" "start"))})])
 
 (defmethod hierarchy/snapping-points :measure
   [db]

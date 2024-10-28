@@ -11,6 +11,7 @@
    [renderer.menubar.filters :as filters]
    [renderer.ruler.views :as ruler.v]
    [renderer.snap.subs :as-alias snap.s]
+   [renderer.snap.views :as snap.v]
    [renderer.tool.subs :as-alias tool.s]
    [renderer.utils.dom :as dom]
    [renderer.utils.drop :as drop]
@@ -110,7 +111,7 @@
         [hierarchy/render temp-element]])
 
      (when (and snap-active nearest-neighbor)
-       [overlay/times (:point nearest-neighbor)])
+       [snap.v/canvas-label nearest-neighbor])
 
      (when grid [ruler.v/grid])]))
 

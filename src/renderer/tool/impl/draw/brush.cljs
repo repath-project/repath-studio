@@ -2,7 +2,9 @@
   "https://github.com/steveruizok/perfect-freehand"
   (:require
    [clojure.string :as str]
+   [renderer.app.effects :as-alias app.fx]
    [renderer.document.handlers :as document.h]
+   [renderer.history.handlers :as history.h]
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]))
 
@@ -46,4 +48,5 @@
   (-> db
       (h/create-temp-element)
       (h/activate :transform)
-      (h/explain "Draw line")))
+      (history.h/finalize "Draw line")
+      (h/add-fx [::app.fx/persist])))

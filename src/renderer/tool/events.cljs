@@ -4,7 +4,6 @@
    [renderer.app.effects :as-alias app.fx]
    [renderer.element.events :as element.e]
    [renderer.frame.handlers :as frame.h]
-   [renderer.history.handlers :refer [finalize]]
    [renderer.tool.handlers :as h]))
 
 (rf/reg-event-fx
@@ -15,8 +14,7 @@
 
 (rf/reg-event-fx
  ::pointer-event
- [(rf/inject-cofx ::app.fx/now)
-  (finalize nil)]
+ [(rf/inject-cofx ::app.fx/now)]
  (fn [{:keys [db now]} [_ e]]
    {:db (h/pointer-handler db e now)}))
 
