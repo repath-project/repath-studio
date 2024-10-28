@@ -19,7 +19,7 @@
                  SVG elements."
    :attrs [:transform]})
 
-(defn- translate
+(defn translate!
   [transform [x y]]
   (let [g (js/document.createElementNS "http://www.w3.org/2000/svg" "g")
         _ (.setAttributeNS g nil "transform" (or transform ""))
@@ -30,7 +30,7 @@
 
 (defmethod hierarchy/translate :g
   [el offset]
-  (update-in el [:attrs :transform] translate offset))
+  (update-in el [:attrs :transform] translate! offset))
 
 (defmethod hierarchy/render :g
   [el]
