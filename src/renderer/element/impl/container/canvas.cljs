@@ -47,6 +47,8 @@
         pivot-point @(rf/subscribe [::tool.s/pivot-point])
         snap-active @(rf/subscribe [::snap.s/active])
         nearest-neighbor @(rf/subscribe [::snap.s/nearest-neighbor])
+        snapped-el-id (-> nearest-neighbor meta :id)
+        snapped-el (when snapped-el-id @(rf/subscribe [::element.s/entity snapped-el-id]))
         transform-active (or (= tool :transform) (= primary-tool :transform))]
     [:svg#canvas {:on-pointer-up pointer-handler
                   :on-pointer-down pointer-handler
@@ -110,6 +112,8 @@
 
         [hierarchy/render temp-element]])
 
+     (when snapped-el
+       [overlay/bounding-box (:bounds snapped-el) true])
      (when (and snap-active nearest-neighbor)
        [snap.v/canvas-label nearest-neighbor])
 

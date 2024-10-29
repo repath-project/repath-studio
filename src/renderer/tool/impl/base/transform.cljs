@@ -121,7 +121,6 @@
       (dissoc :clicked-element)
       (element.h/clear-ignored :bounding-box)
       (element.h/select (:id element) (pointer/shift? e))
-      (snap.h/update-tree)
       (history.h/finalize (if (:selected element) "Deselect element" "Select element"))))
 
 (defmethod hierarchy/double-click :transform
@@ -134,10 +133,6 @@
       (cond-> db
         (not= :canvas tag)
         (h/activate :edit)))))
-
-(defmethod hierarchy/activate :transform
-  [db]
-  (snap.h/update-tree db))
 
 (defmethod hierarchy/deactivate :transform
   [db]
@@ -263,8 +258,7 @@
         state (drag-start->state clicked-element)]
     (cond-> (h/set-state db state)
       (selectable? clicked-element)
-      (-> (element.h/select (-> db :clicked-element :id) (pointer/shift? e))
-          (snap.h/update-tree)))))
+      (element.h/select (-> db :clicked-element :id) (pointer/shift? e)))))
 
 (defmethod hierarchy/drag :transform
   [db e]
@@ -333,17 +327,10 @@
         selected (filter :selected elements)
         options (-> db :snap :options)]
     (cond
-      (contains? #{:translate :clone} (:state db))
+      (not= (:state db) :idle)
       (cond-> (element.h/snapping-points db (filter :visible selected))
         (seq (rest selected))
-        (into (bounds/->snapping-points (element.h/bounds db) options)))
-
-      (= (:state db) :scale)
-      (when (:clicked-element db)
-        [(with-meta
-           (mat/add [(-> db :clicked-element :x) (-> db :clicked-element :y)]
-                    (h/pointer-delta db))
-           {:label (-> db :clicked-element :id name)})]))))
+        (into (bounds/->snapping-points (element.h/bounds db) options))))))
 
 (defmethod hierarchy/snapping-points :transform
   [db]

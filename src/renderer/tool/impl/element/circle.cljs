@@ -24,3 +24,9 @@
                :stroke (document.h/attr db :stroke)
                :r radius}]
     (h/set-temp db {:type :element :tag :circle :attrs attrs})))
+
+(defmethod hierarchy/snapping-bases :circle
+  [db]
+  [(with-meta
+     (:adjusted-pointer-pos db)
+     {:label (str (name (:tool db)) " " (if (h/temp db) "radius" "center"))})])

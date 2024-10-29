@@ -3,7 +3,6 @@
    [renderer.app.effects :as-alias app.fx]
    [renderer.element.handlers :as element.h]
    [renderer.history.handlers :as history.h]
-   [renderer.snap.handlers :as snap.h]
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]
    [renderer.tool.impl.element.circle]
@@ -25,8 +24,7 @@
 
 (defmethod hierarchy/activate ::hierarchy/element
   [db]
-  (-> (h/set-cursor db "crosshair")
-      (snap.h/update-tree)))
+  (h/set-cursor db "crosshair"))
 
 (defmethod hierarchy/drag-start ::hierarchy/element
   [db]
@@ -42,7 +40,9 @@
 
 (defmethod hierarchy/snapping-bases ::hierarchy/element
   [db]
-  [(with-meta (:adjusted-pointer-pos db) {:label "element point"})])
+  [(with-meta
+     (:adjusted-pointer-pos db)
+     {:label (str (name (:tool db)) " edge")})])
 
 (defmethod hierarchy/snapping-points ::hierarchy/element
   [db]

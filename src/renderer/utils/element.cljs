@@ -57,11 +57,12 @@
 (defn snapping-points
   [el options]
   (let [points (or (when (contains? options :nodes)
-                     (mapv #(with-meta (mat/add % (offset el)) (meta %))
+                     (mapv #(with-meta (mat/add % (offset el)) (merge (meta %) {:id (:id el)}))
                            (element.hierarchy/snapping-points el))) [])]
     (cond-> points
       (:bounds el)
-      (into (utils.bounds/->snapping-points (:bounds el) options)))))
+      (into (mapv #(with-meta % (merge (meta %) {:id (:id el)}))
+                  (utils.bounds/->snapping-points (:bounds el) options))))))
 
 (m/=> attributes [:-> Element Attrs])
 (defn attributes

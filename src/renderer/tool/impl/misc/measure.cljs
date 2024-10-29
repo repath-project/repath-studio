@@ -2,7 +2,6 @@
   (:require
    [clojure.core.matrix :as mat]
    [renderer.element.handlers :as element.h]
-   [renderer.snap.handlers :as snap.h]
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]))
 
@@ -18,8 +17,7 @@
 
 (defmethod hierarchy/activate :measure
   [db]
-  (-> (h/set-cursor db "crosshair")
-      (snap.h/update-tree)))
+  (h/set-cursor db "crosshair"))
 
 (defmethod hierarchy/deactivate :measure
   [db]

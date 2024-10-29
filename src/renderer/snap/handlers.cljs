@@ -52,6 +52,7 @@
            :nearest-neighbors nneighbors
            :nearest-neighbor (apply min-key :dist-squared nneighbors))))
 
+(m/=> update-tree [:-> App App])
 (defn update-tree
   [db]
   (cond-> db
@@ -72,4 +73,3 @@
     (if (:nearest-neighbor db)
       (apply f db (nearest-delta db) more)
       db)))
-

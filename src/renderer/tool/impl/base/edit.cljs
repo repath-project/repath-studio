@@ -38,7 +38,6 @@
         (element.h/clear-ignored)
         (dissoc :clicked-element)
         (element.h/select (-> e :element :id) (pointer/shift? e))
-        (snap.h/update-tree)
         (history.h/finalize "Select element")
         (h/add-fx [::app.fx/persist]))
     (dissoc db :clicked-element)))

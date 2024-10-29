@@ -22,6 +22,12 @@
    (mapv elements (:children root))))
 
 (rf/reg-sub
+ ::entity
+ :<- [::document.s/elements]
+ (fn [elements [_ id]]
+   (get elements id)))
+
+(rf/reg-sub
  ::xml
  :<- [::root-children]
  (fn [root-children _]
