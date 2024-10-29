@@ -27,8 +27,7 @@
         el-id (-> e :element :id)]
     (-> db
         (element.h/set-attr el-id :fill color)
-        (history.h/finalize "Fill")
-        (h/add-fx [::app.fx/persist]))))
+        (history.h/finalize "Fill"))))
 
 (defmethod hierarchy/drag-end :fill
   [db e]

@@ -66,5 +66,4 @@
   (-> db
       (h/create-temp-element)
       (h/activate :transform)
-      (history.h/finalize (str "Create " (name (:tool db))))
-      (h/add-fx [::app.fx/persist])))
+      (history.h/finalize (str "Create " (name (:tool db))))))

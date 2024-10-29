@@ -35,8 +35,7 @@
   (-> db
       (h/create-temp-element)
       (h/activate :transform)
-      (history.h/finalize (str "Create " (name (:tag (h/temp db)))))
-      (h/add-fx [::app.fx/persist])))
+      (history.h/finalize (str "Create " (name (:tag (h/temp db)))))))
 
 (defmethod hierarchy/snapping-bases ::hierarchy/element
   [db]

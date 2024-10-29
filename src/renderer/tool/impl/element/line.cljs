@@ -47,8 +47,7 @@
     (-> db
         (h/create-temp-element)
         (h/activate :transform)
-        (history.h/finalize "Create line")
-        (h/add-fx [::app.fx/persist]))
+        (history.h/finalize "Create line"))
 
     (:pointer-offset db)
     (-> db
@@ -61,8 +60,7 @@
   [db _e]
   (cond-> db
     (h/temp db)
-    (-> (history.h/finalize "Create line")
-        (h/add-fx [::app.fx/persist]))))
+    (history.h/finalize "Create line")))
 
 (defmethod tool.hierarchy/drag :line
   [db]

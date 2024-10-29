@@ -48,5 +48,4 @@
   (-> db
       (h/create-temp-element)
       (h/activate :transform)
-      (history.h/finalize "Draw line")
-      (h/add-fx [::app.fx/persist])))
+      (history.h/finalize "Draw line")))

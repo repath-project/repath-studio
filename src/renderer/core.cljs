@@ -22,6 +22,7 @@
    [renderer.element.subs]
    [renderer.frame.events]
    [renderer.frame.subs]
+   [renderer.history.effects]
    [renderer.history.events]
    [renderer.history.subs]
    [renderer.menubar.events]

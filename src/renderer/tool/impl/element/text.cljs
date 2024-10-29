@@ -31,7 +31,6 @@
         (element.h/deselect)
         (element.h/add el)
         (history.h/finalize "Create text")
-        (h/add-fx [::app.fx/persist])
         (h/activate :edit)
         (h/set-state :create))))
 

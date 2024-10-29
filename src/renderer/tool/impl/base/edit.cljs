@@ -38,8 +38,7 @@
         (element.h/clear-ignored)
         (dissoc :clicked-element)
         (element.h/select (-> e :element :id) (pointer/shift? e))
-        (history.h/finalize "Select element")
-        (h/add-fx [::app.fx/persist]))
+        (history.h/finalize "Select element"))
     (dissoc db :clicked-element)))
 
 (defmethod hierarchy/pointer-move :edit
@@ -72,8 +71,7 @@
       (h/set-state :idle)
       (dissoc :clicked-element)
       (snap.h/update-tree)
-      (history.h/finalize "Edit")
-      (h/add-fx [::app.fx/persist])))
+      (history.h/finalize "Edit")))
 
 (defmethod hierarchy/snapping-bases :edit
   [db]

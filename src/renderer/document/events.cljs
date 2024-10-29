@@ -141,16 +141,14 @@
 
 (rf/reg-event-fx
  ::new
- [(rf/inject-cofx ::app.fx/guid)
-  persist]
+ [(rf/inject-cofx ::app.fx/guid)]
  (fn [{:keys [db guid]} [_]]
    {:db (-> (create db guid)
             (history.h/finalize "Create document"))}))
 
 (rf/reg-event-fx
  ::init
- [(rf/inject-cofx ::app.fx/guid)
-  persist]
+ [(rf/inject-cofx ::app.fx/guid)]
  (fn [{:keys [db guid]} [_]]
    {:db (cond-> db
           (not (:active-document db))
@@ -159,15 +157,13 @@
 
 (rf/reg-event-fx
  ::new-from-template
- [(rf/inject-cofx ::app.fx/guid)
-  persist]
+ [(rf/inject-cofx ::app.fx/guid)]
  (fn [{:keys [db guid]} [_ size]]
    {:db (-> (create db guid size)
             (history.h/finalize "Create document from template"))}))
 
 (rf/reg-event-fx
  ::open
- [persist]
  (fn [_ [_ file-path]]
    (if system/electron?
      {::window.fx/ipc-invoke {:channel "open-documents"
@@ -187,18 +183,17 @@
 
 (rf/reg-event-fx
  ::load
- [(rf/inject-cofx ::app.fx/guid)
-  persist]
+ [(rf/inject-cofx ::app.fx/guid)]
  (fn [{:keys [db guid]} [_ document]]
    {:db (if (and document (map? document) (:elements document))
           (let [migrated-document (compatibility/migrate-document document)
                 migrated (not= document migrated-document)
                 document (assoc migrated-document :id guid)]
             (-> (h/load db document)
-                (history.h/finalize "Load document")
                 (cond->
                  (not migrated)
-                  (h/saved document))))
+                  (h/saved document))
+                (history.h/finalize "Load document")))
           (notification.h/add db (notification.v/generic-error {:title (str "Error while loading " (:title document))
                                                                 :message "File appears to be unsupported or corrupted."})))}))
 

@@ -1,7 +1,6 @@
 (ns renderer.tool.impl.misc.dropper
   (:require
    [re-frame.core :as rf]
-   [renderer.app.effects :refer [persist]]
    [renderer.color.effects :as-alias color.fx]
    [renderer.document.handlers :as document.h]
    [renderer.element.handlers :as element.h]
@@ -35,7 +34,6 @@
 
 (rf/reg-event-db
  ::success
- [persist]
  (fn [db [_ ^js color]]
    (let [srgb-color (.-sRGBHex color)]
      (-> db

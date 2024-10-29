@@ -318,8 +318,7 @@
       (h/set-state :idle)
       (element.h/clear-hovered)
       (snap.h/update-tree)
-      (dissoc :clicked-element :pivot-point)
-      (h/add-fx [::app.fx/persist])))
+      (dissoc :clicked-element :pivot-point)))
 
 (defmethod hierarchy/snapping-bases :transform
   [db]

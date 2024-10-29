@@ -18,14 +18,14 @@
 
 (rf/reg-event-fx
  ::set-native-mode
- persist
+ [persist]
  (fn [{:keys [db]} [_ mode]]
    {:db (assoc-in db [:theme :native-mode] mode)
     :dispatch [::set-document-attr]}))
 
 (rf/reg-event-fx
  ::cycle-mode
- persist
+ [persist]
  (fn [{:keys [db]} [_]]
    (let [mode (case (-> db :theme :mode)
                 :dark :light
