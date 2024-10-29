@@ -185,17 +185,16 @@
  ::load
  [(rf/inject-cofx ::app.fx/guid)]
  (fn [{:keys [db guid]} [_ document]]
-   {:db (if (and document (map? document) (:elements document))
-          (let [migrated-document (compatibility/migrate-document document)
-                migrated (not= document migrated-document)
-                document (assoc migrated-document :id guid)]
-            (-> (h/load db document)
-                (cond->
-                 (not migrated)
-                  (h/saved document))
-                (history.h/finalize "Load document")))
-          (notification.h/add db (notification.v/generic-error {:title (str "Error while loading " (:title document))
-                                                                :message "File appears to be unsupported or corrupted."})))}))
+   (if (and document (map? document) (:elements document))
+     (let [migrated-document (compatibility/migrate-document document)
+           migrated (not= document migrated-document)
+           document (assoc migrated-document :id guid)]
+       (cond-> {:db (-> (h/load db document)
+                        (history.h/finalize "Load document"))}
+         (not migrated)
+         (assoc :dispatch [::saved document])))
+     {:db (notification.h/add db (notification.v/generic-error {:title (str "Error while loading " (:title document))
+                                                                :message "File appears to be unsupported or corrupted."}))})))
 
 (rf/reg-event-fx
  ::load-multiple
@@ -258,9 +257,16 @@
  ::saved
  [persist]
  (fn [db [_ document-info]]
-   (cond-> db
-     document-info
-     (h/saved document-info))))
+   (if document-info
+     (let [{:keys [id]} document-info
+           position (get-in db [:documents id :history :position])]
+       (cond-> db
+         :always
+         (update-in [:documents id] merge (assoc document-info :save position))
+
+         (:path document-info)
+         (h/add-recent (:path document-info))))
+     db)))
 
 (rf/reg-event-fx
  ::close-saved

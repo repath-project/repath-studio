@@ -9,13 +9,13 @@
   (rf/->interceptor
    :id ::auto-persist
    :before (fn [context]
-             (let [db (rf/get-coeffect context :db)]
+             (when-let [db (rf/get-coeffect context :db)]
                (rf/assoc-coeffect context :history-position (history.h/position db))))
    :after (fn [context]
-            (let [db (rf/get-effect context :db)]
+            (when-let [db (rf/get-effect context :db)]
               (when (not= (history.h/position db)
                           (rf/get-coeffect context :history-position))
-                (app.fx/persist! db))
-              context))))
+                (app.fx/persist! db)))
+            context)))
 
 (rf/reg-global-interceptor auto-persist)
