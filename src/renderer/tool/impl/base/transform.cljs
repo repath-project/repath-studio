@@ -1,6 +1,7 @@
 (ns renderer.tool.impl.base.transform
   (:require
    [clojure.core.matrix :as mat]
+   [clojure.set :as set]
    [malli.core :as m]
    [renderer.app.db :refer [App]]
    [renderer.app.effects :as-alias app.fx]
@@ -333,6 +334,8 @@
 
 (defmethod hierarchy/snapping-points :transform
   [db]
-  (let [elements (vals (element.h/entities db))
-        non-selected-visible (filter #(and (not (:selected %)) (:visible %)) elements)]
+  (let [non-selected-ids (set/difference (set (keys (element.h/entities db)))
+                                         (element.h/selected-with-descendant-ids db))
+        non-selected (select-keys (element.h/entities db) (vec non-selected-ids))
+        non-selected-visible (filter :visible (vals non-selected))]
     (element.h/snapping-points db non-selected-visible)))

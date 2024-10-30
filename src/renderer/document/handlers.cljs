@@ -107,7 +107,7 @@
                    (assoc :title (new-title db)))]
     (-> db
         (assoc-in [:documents id] document)
-        (assoc :active-document id)
+        (set-active id)
         (update :document-tabs #(vec/add % (inc active-index) id)))))
 
 (m/=> set-hovered-ids [:-> App [:set uuid?] App])

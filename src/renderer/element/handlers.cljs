@@ -206,6 +206,11 @@
   [db]
   (set/difference (selected-ids db) (descendant-ids db)))
 
+(m/=> selected-with-descendant-ids [:-> App [:set uuid?]])
+(defn selected-with-descendant-ids
+  [db]
+  (set/union (selected-ids db) (descendant-ids db)))
+
 (m/=> top-selected-ancestors [:-> App [:sequential Element]])
 (defn top-selected-ancestors
   [db]

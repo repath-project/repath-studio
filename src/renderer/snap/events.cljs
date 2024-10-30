@@ -26,7 +26,9 @@
    :after (fn [context]
             (let [db (rf/get-effect context :db)]
               (cond-> context
-                (not= (element.h/selected-ids db) (rf/get-coeffect context :selected-ids))
+                (and (:active-document db)
+                     (not= (element.h/selected-ids db)
+                           (rf/get-coeffect context :selected-ids)))
                 (rf/assoc-effect :db (h/update-tree db)))))))
 
 (rf/reg-global-interceptor auto-update-tree)
