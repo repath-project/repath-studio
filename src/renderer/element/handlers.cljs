@@ -109,12 +109,11 @@
         bounds (if (= (:tag el) :g)
                  (let [b (map #(adjusted-bounds db %) (children-ids db id))]
                    (when (seq b) (apply bounds/union b)))
-                 (adjusted-bounds db id))
-        assoc-bounds #(assoc % :bounds bounds)]
+                 (adjusted-bounds db id))]
     (if (or (not bounds) (element/root? el))
       db
       (-> (reduce refresh-bounds db (children-ids db id))
-          (update-in (path db id) assoc-bounds)))))
+          (update-in (path db id) assoc :bounds bounds)))))
 
 (defn update-el
   [db id f & more]

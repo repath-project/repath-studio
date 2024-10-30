@@ -78,6 +78,7 @@
    [:copied-bounds {:optional true} Bounds]
    [:copied-elements {:optional true} [:* Element]]
    [:kd-tree {:optional true} any?]
+   [:snapping-points {:optional true} [:vector Vec2D]]
    [:re-pressed.core/keydown {:optional true} map?]])
 
 (def valid? (m/validator App))

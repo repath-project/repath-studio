@@ -25,14 +25,12 @@
        (kdtree/interval-search tree)
        (kdtree/build-tree)))
 
+(m/=> in-viewport-tree [:-> [:vector Vec2D] Viewbox any?])
 (defn create-tree
-  [db]
-  (let [zoom (get-in db [:documents (:active-document db) :zoom])
-        pan (get-in db [:documents (:active-document db) :pan])
-        viewbox (frame.h/viewbox zoom pan (:dom-rect db))]
-    (-> (tool.hierarchy/snapping-points db)
-        (kdtree/build-tree)
-        (in-viewport-tree viewbox))))
+  [points [x y width height]]
+  (->  (kdtree/build-tree points)
+       (kdtree/interval-search [[x (+ x width)] [y (+ y height)]])
+       (kdtree/build-tree)))
 
 (m/=> nearest-neighbors [:-> App [:sequential NearestNeighbor]])
 (defn nearest-neighbors
@@ -55,9 +53,15 @@
 (m/=> update-tree [:-> App App])
 (defn update-tree
   [db]
-  (cond-> db
-    (-> db :snap :active)
-    (assoc :kd-tree (create-tree db))))
+  (if (-> db :snap :active)
+    (let [zoom (get-in db [:documents (:active-document db) :zoom])
+          pan (get-in db [:documents (:active-document db) :pan])
+          viewbox (frame.h/viewbox zoom pan (:dom-rect db))
+          points (tool.hierarchy/snapping-points db)]
+      (assoc db
+             :snapping-points points
+             :kd-tree (create-tree points viewbox)))
+    (dissoc db :kd-tree)))
 
 (m/=> nearest-delta [:-> App Vec2D])
 (defn nearest-delta

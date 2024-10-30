@@ -9,13 +9,15 @@
  ::toggle
  [persist]
  (fn [db [_]]
-   (update-in db [:snap :active] not)))
+   (-> (update-in db [:snap :active] not)
+       (h/update-tree))))
 
 (rf/reg-event-db
  ::toggle-option
  [persist]
  (fn [db [_ option]]
-   (h/toggle-option db option)))
+   (-> (h/toggle-option db option)
+       (h/update-tree))))
 
 (def auto-update-tree
   (rf/->interceptor

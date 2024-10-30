@@ -2,6 +2,7 @@
   "Render functions for canvas overlay objects."
   (:require
    [clojure.core.matrix :as mat]
+   [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.s]
    [renderer.document.subs :as-alias document.s]
@@ -187,7 +188,7 @@
 
 (defn coll->str
   [coll]
-  (str "[" (apply str (map #(.toFixed % 2) coll)) "]"))
+  (str "[" (str/join " " (map #(.toFixed % 2) coll)) "]"))
 
 (defn debug-rows
   []
@@ -205,13 +206,15 @@
    ["Clicked element" (:id @(rf/subscribe [::app.s/clicked-element]))]
    ["Ignored elements" @(rf/subscribe [::document.s/ignored-ids])]
    ["Snap" (map (fn [[k v]]
-                  (str k " - " (if (number? v)
-                                 (.toFixed v 2)
-                                 (coll->str v)))) @(rf/subscribe [::snap.s/nearest-neighbor]))]])
+                  [:div (str (name k)
+                             " "
+                             (if (number? v)
+                               (.toFixed v 2)
+                               (coll->str v)))]) @(rf/subscribe [::snap.s/nearest-neighbor]))]])
 
 (defn debug-info
   []
   (into [:div.absolute.top-1.left-2.pointer-events-none
          {:style {:color "#555"}}]
         (for [[s v] (debug-rows)]
-          [:div [:strong.mr-1 s] v])))
+          [:div.flex [:strong.mr-1 s] [:div v]])))
