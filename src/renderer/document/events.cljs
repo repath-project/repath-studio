@@ -124,14 +124,14 @@
 (rf/reg-event-db
  ::swap-position
  [persist]
- (fn [db [_ dragged-key swapped-key]]
+ (fn [db [_ dragged-id swapped-id]]
    (let [document-tabs (:document-tabs db)
-         dragged-index (.indexOf document-tabs dragged-key)
-         swapped-index (.indexOf document-tabs swapped-key)]
-     (assoc db :document-tabs (vec/swap document-tabs dragged-index swapped-index)))))
+         dragged-i (.indexOf document-tabs dragged-id)
+         swapped-i (.indexOf document-tabs swapped-id)]
+     (assoc db :document-tabs (vec/swap document-tabs dragged-i swapped-i)))))
 
 (defn- create
-  ([db, guid]
+  ([db guid]
    (create db guid [595 842]))
   ([db guid size]
    (-> db
@@ -193,8 +193,11 @@
                         (history.h/finalize "Load document"))}
          (not migrated)
          (assoc :dispatch [::saved document])))
-     {:db (notification.h/add db (notification.v/generic-error {:title (str "Error while loading " (:title document))
-                                                                :message "File appears to be unsupported or corrupted."}))})))
+     {:db (notification.h/add
+           db
+           (notification.v/generic-error
+            {:title (str "Error while loading " (:title document))
+             :message "File appears to be unsupported or corrupted."}))})))
 
 (rf/reg-event-fx
  ::load-multiple

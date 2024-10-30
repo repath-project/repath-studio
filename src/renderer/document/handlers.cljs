@@ -19,6 +19,11 @@
   [db]
   (get-in db (path db)))
 
+(m/=> set-active [:-> App uuid? App])
+(defn set-active
+  [db id]
+  (assoc db :active-document id))
+
 (m/=> persisted-format [:function
                         [:-> App PersistedDocument]
                         [:-> App uuid? PersistedDocument]])
@@ -44,14 +49,14 @@
   [db id]
   (let [{:keys [active-document document-tabs]} db
         index (.indexOf document-tabs id)
-        active-document (if (= active-document id)
-                          (get document-tabs (if (zero? index)
-                                               (inc index)
-                                               (dec index)))
-                          active-document)]
+        active-id (if (= active-document id)
+                    (get document-tabs (if (zero? index)
+                                         (inc index)
+                                         (dec index)))
+                    active-document)]
     (-> db
         (update :document-tabs #(filterv (complement #{id}) %))
-        (assoc :active-document active-document)
+        (set-active active-id)
         (update :documents dissoc id))))
 
 (m/=> add-recent [:-> App string? App])
@@ -74,11 +79,6 @@
          (not (get-in db (path db :focused))))
     (-> (frame.h/focus-bounds :original)
         (assoc-in (path db :focused) true))))
-
-(m/=> set-active [:-> App uuid? App])
-(defn set-active
-  [db id]
-  (assoc db :active-document id))
 
 (m/=> search-by-path [:-> App string? [:maybe uuid?]])
 (defn search-by-path
