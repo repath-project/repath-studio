@@ -61,7 +61,7 @@
       (assoc db
              :snapping-points points
              :kd-tree (create-tree points viewbox)))
-    (dissoc db :kd-tree)))
+    (dissoc db :kd-tree :snapping-points)))
 
 (m/=> nearest-delta [:-> App Vec2D])
 (defn nearest-delta
