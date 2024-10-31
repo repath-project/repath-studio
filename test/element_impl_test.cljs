@@ -176,7 +176,10 @@
            [528 -370 941 -208]))
 
     (is (= (hierarchy/path polygon-el)
-           "M528 -305 718 -370 941 -208z"))))
+           "M528 -305 718 -370 941 -208z"))
+
+    (is (= (hierarchy/snapping-points polygon-el)
+           [[528 -305] [718 -370] [941 -208]]))))
 
 (deftest polyline
   (let [polyline-el {:type :element
@@ -202,7 +205,10 @@
            [528 -370 941 -208]))
 
     (is (= (hierarchy/path polyline-el)
-           "M528 -305 718 -370 941 -208"))))
+           "M528 -305 718 -370 941 -208"))
+
+    (is (= (hierarchy/snapping-points polyline-el)
+           [[528 -305] [718 -370] [941 -208]]))))
 
 (deftest path
   (let [path-el {:type :element
