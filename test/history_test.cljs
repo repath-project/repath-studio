@@ -21,7 +21,10 @@
 
    (testing "add action to history"
      (rf/dispatch [::element.e/add {:tag :rect
-                                    :attrs {:x 100 :y 100 :width 100 :height 100}}])
+                                    :attrs {:x 100
+                                            :y 100
+                                            :width 100
+                                            :height 100}}])
      (is @(rf/subscribe [::s/some-undos]))
      (is (= (count @(rf/subscribe [::s/undos])) 1))
      (is (not @(rf/subscribe [::s/some-redos])))
@@ -46,7 +49,10 @@
    (rf/dispatch [::app.e/initialize-db])
    (rf/dispatch [::document.e/init])
    (rf/dispatch [::element.e/add {:tag :rect
-                                  :attrs {:x 100 :y 100 :width 100 :height 100}}])
+                                  :attrs {:x 100
+                                          :y 100
+                                          :width 100
+                                          :height 100}}])
    (testing "clear history"
      (rf/dispatch [::e/clear])
      (is (not @(rf/subscribe [::s/some-undos])))

@@ -47,9 +47,7 @@
  (fn [db [_ id]]
    (let [element (element.h/entity db id)
          el-bounds (:bounds element)
-         zoom (get-in db [:documents (:active-document db) :zoom])
-         pan (get-in db [:documents (:active-document db) :pan])
-         viewbox (h/viewbox zoom pan (:dom-rect db))
+         viewbox (h/viewbox db)
          diff (mat/sub el-bounds viewbox)
          bounds (mat/add viewbox diff)]
      (h/pan-to-bounds db bounds))))

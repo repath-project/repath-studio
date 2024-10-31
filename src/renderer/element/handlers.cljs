@@ -629,6 +629,7 @@
                  :attrs {:width (first size)
                          :height (second size)}}))))
 
+(m/=> add [:-> App map? App])
 (defn add
   [db el]
   (create (deselect db) (assoc el :selected true)))

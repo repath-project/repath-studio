@@ -18,24 +18,17 @@
     (update-in db [:snap :options] disj option)
     (update-in db [:snap :options] conj option)))
 
-(m/=> in-viewport-tree [:-> any? Viewbox any?])
-(defn in-viewport-tree
+(m/=> viewport-tree [:-> any? Viewbox any?])
+(defn viewport-tree
   [tree [x y width height]]
   (->> [[x (+ x width)] [y (+ y height)]]
        (kdtree/interval-search tree)
        (kdtree/build-tree)))
 
-(m/=> in-viewport-tree [:-> [:vector Vec2D] Viewbox any?])
-(defn create-tree
-  [points [x y width height]]
-  (->  (kdtree/build-tree points)
-       (kdtree/interval-search [[x (+ x width)] [y (+ y height)]])
-       (kdtree/build-tree)))
-
 (m/=> nearest-neighbors [:-> App [:sequential NearestNeighbor]])
 (defn nearest-neighbors
   [db]
-  (map #(when-let [nneighbor (kdtree/nearest-neighbor (:kd-tree db) %)]
+  (map #(when-let [nneighbor (kdtree/nearest-neighbor (:viewbox-kdtree db) %)]
           (assoc nneighbor :base-point %))
        (tool.hierarchy/snapping-bases db)))
 
@@ -50,18 +43,23 @@
            :nearest-neighbors nneighbors
            :nearest-neighbor (apply min-key :dist-squared nneighbors))))
 
+(m/=> update-viewbox-tree [:-> App App])
+(defn update-viewbox-tree
+  [db]
+  (cond-> db
+    (:kdtree db)
+    (assoc :viewbox-kdtree (viewport-tree (:kdtree db) (frame.h/viewbox db)))))
+
 (m/=> update-tree [:-> App App])
 (defn update-tree
   [db]
   (if (-> db :snap :active)
-    (let [zoom (get-in db [:documents (:active-document db) :zoom])
-          pan (get-in db [:documents (:active-document db) :pan])
-          viewbox (frame.h/viewbox zoom pan (:dom-rect db))
-          points (tool.hierarchy/snapping-points db)]
-      (assoc db
-             :snapping-points points
-             :kd-tree (create-tree points viewbox)))
-    (dissoc db :kd-tree :snapping-points)))
+    (let [points (tool.hierarchy/snapping-points db)]
+      (-> (assoc db
+                 :snapping-points points
+                 :kdtree (kdtree/build-tree points))
+          (update-viewbox-tree)))
+    (dissoc db :kdtree :viewbox-kdtree :snapping-points)))
 
 (m/=> nearest-delta [:-> App Vec2D])
 (defn nearest-delta

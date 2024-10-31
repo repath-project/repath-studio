@@ -11,13 +11,19 @@
    [renderer.utils.math :as math :refer [Vec2D]]
    [renderer.utils.pointer :as pointer]))
 
-(m/=> viewbox [:-> ZoomFactor Vec2D DomRect Viewbox])
+(m/=> viewbox [:function
+               [:-> App Viewbox]
+               [:-> ZoomFactor Vec2D DomRect Viewbox]])
 (defn viewbox
-  [zoom pan dom-rect]
-  (let [{:keys [width height]} dom-rect
-        [x y] pan
-        [width height] (mat/div [width height] zoom)]
-    [x y width height]))
+  ([db]
+   (let [zoom (get-in db [:documents (:active-document db) :zoom])
+         pan (get-in db [:documents (:active-document db) :pan])]
+     (viewbox zoom pan (:dom-rect db))))
+  ([zoom pan dom-rect]
+   (let [{:keys [width height]} dom-rect
+         [x y] pan
+         [width height] (mat/div [width height] zoom)]
+     [x y width height])))
 
 (m/=> pan-by [:function
               [:-> App Vec2D App]

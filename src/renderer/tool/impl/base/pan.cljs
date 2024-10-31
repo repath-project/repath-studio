@@ -37,5 +37,5 @@
   [db _e]
   (-> db
       (h/set-cursor "grab")
-      (snap.h/update-tree)
+      (snap.h/update-viewbox-tree)
       (h/add-fx [::app.fx/persist])))
