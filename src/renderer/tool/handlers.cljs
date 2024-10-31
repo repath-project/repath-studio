@@ -170,13 +170,13 @@
 (m/=> wheel-handler [:-> App WheelEvent App])
 (defn wheel-handler
   [db e]
-  (if (some (:modifiers e) [:ctrl :alt])
-    (let [factor (Math/pow (inc (/ (- 1 (:zoom-sensitivity db)) 100))
-                           (- (:delta-y e)))]
-      (-> db
-          (frame.h/zoom-at-pointer factor)
-          (add-fx [::app.fx/persist])))
-    (frame.h/pan-by db [(:delta-x e) (:delta-y e)])))
+  (-> (if (some (:modifiers e) [:ctrl :alt])
+        (let [factor (Math/pow (inc (/ (- 1 (:zoom-sensitivity db)) 100))
+                               (- (:delta-y e)))]
+          (frame.h/zoom-at-pointer db factor))
+        (frame.h/pan-by db [(:delta-x e) (:delta-y e)]))
+      (snap.h/update-viewbox-tree)
+      (add-fx [::app.fx/persist])))
 
 (m/=> cancel [:-> App App])
 (defn cancel
