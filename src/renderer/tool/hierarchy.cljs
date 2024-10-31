@@ -13,6 +13,7 @@
 (defmulti snapping-points (fn [db _e] (:tool db)))
 (defmulti activate :tool)
 (defmulti deactivate :tool)
+(defmulti render identity)
 (defmulti properties "Returns the properties of the tool." identity)
 (defmulti help "Returns the status bar help text." (fn [tool state] [tool state]))
 
@@ -29,6 +30,7 @@
 (defmethod drag-end :default [db e] (pointer-up db e))
 (defmethod activate :default [db] db)
 (defmethod deactivate :default [db] db)
+(defmethod render :default [])
 (defmethod properties :default [])
 (defmethod snapping-bases :default [])
 (defmethod snapping-points :default [])

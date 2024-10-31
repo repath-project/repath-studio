@@ -3,16 +3,20 @@
    [clojure.core.matrix :as mat]
    [clojure.set :as set]
    [malli.core :as m]
+   [re-frame.core :as rf]
    [renderer.app.db :refer [App]]
    [renderer.app.effects :as-alias app.fx]
    [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.h]
    [renderer.element.hierarchy :as element.hierarchy]
+   [renderer.element.subs :as-alias element.s]
+   [renderer.handle.views :as handle.v]
    [renderer.history.handlers :as history.h]
    [renderer.ruler.db :refer [Orientation]]
    [renderer.snap.handlers :as snap.h]
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]
+   [renderer.tool.subs :as-alias s]
    [renderer.utils.bounds :as bounds :refer [Bounds]]
    [renderer.utils.element :as element]
    [renderer.utils.math :refer [Vec2D]]
@@ -257,7 +261,8 @@
   [db e]
   (let [clicked-element (:clicked-element db)
         state (drag-start->state clicked-element)]
-    (cond-> (h/set-state db state)
+    (cond-> (-> (h/set-state db state)
+                (element.h/clear-hovered))
       (selectable? clicked-element)
       (element.h/select (-> db :clicked-element :id) (pointer/shift? e)))))
 
@@ -339,3 +344,37 @@
         non-selected (select-keys (element.h/entities db) (vec non-selected-ids))
         non-selected-visible (filter :visible (vals non-selected))]
     (element.h/snapping-points db non-selected-visible)))
+
+(defmethod hierarchy/render :transform
+  []
+  (let [state @(rf/subscribe [::s/state])
+        selected-elements @(rf/subscribe [::element.s/selected])
+        bounds @(rf/subscribe [::element.s/bounds])
+        elements-area @(rf/subscribe [::element.s/area])
+        pivot-point @(rf/subscribe [::s/pivot-point])
+        hovered-ids @(rf/subscribe [::element.s/hovered])]
+    [:<>
+     (when (not= state :scale)
+       (for [el selected-elements]
+         (when (:bounds el)
+           ^{:key (str (:id el) "-bounds")}
+           [overlay/bounding-box (:bounds el) false])))
+
+     (for [el hovered-ids]
+       (when (:bounds el)
+         ^{:key (str (:id el) "-bounds")}
+         [overlay/bounding-box (:bounds el) true]))
+
+     (when (and (pos? elements-area) (= state :scale) (seq bounds))
+       [overlay/area-label elements-area bounds])
+
+     (when (seq bounds)
+       [:<>
+        [handle.v/wrapping-bounding-box bounds]
+        (if (= state :scale)
+          [overlay/size-label bounds]
+          (when (not= state :translate)
+            [handle.v/bounding-corners bounds]))])
+
+     (when pivot-point
+       [overlay/times pivot-point])]))

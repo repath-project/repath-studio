@@ -1,13 +1,16 @@
 (ns renderer.tool.impl.base.edit
   (:require
    [clojure.core.matrix :as mat]
+   [re-frame.core :as rf]
    [renderer.app.effects :as-alias app.fx]
    [renderer.element.handlers :as element.h]
    [renderer.element.hierarchy :as element.hierarchy]
+   [renderer.element.subs :as-alias element.s]
    [renderer.history.handlers :as history.h]
    [renderer.snap.handlers :as snap.h]
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]
+   [renderer.utils.overlay :as overlay]
    [renderer.utils.pointer :as pointer]))
 
 (derive :edit ::hierarchy/tool)
@@ -87,3 +90,13 @@
   [db]
   (let [visible-elements (filter :visible (vals (element.h/entities db)))]
     (element.h/snapping-points db visible-elements)))
+
+(defmethod hierarchy/render :edit
+  []
+  (let [selected-elements @(rf/subscribe [::element.s/selected])]
+    (for [el selected-elements]
+      ^{:key (str (:id el) "-edit-points")}
+      [:g
+       [element.hierarchy/render-edit el]
+       ^{:key (str (:id el) "-centroid")}
+       [overlay/centroid el]])))

@@ -4,6 +4,7 @@
    ["@radix-ui/react-tooltip" :as Tooltip]
    ["path-browserify" :as path]
    ["react-resizable-panels" :refer [Panel PanelGroup PanelResizeHandle]]
+   [clojure.string :as str]
    [config :as config]
    [re-frame.core :as rf]
    [renderer.app.events :as e]
@@ -15,6 +16,7 @@
    [renderer.document.subs :as-alias document.s]
    [renderer.document.views :as document.v]
    [renderer.element.subs :as-alias element.s]
+   [renderer.frame.subs :as-alias frame.s]
    [renderer.frame.views :as frame.v]
    [renderer.history.views :as history.v]
    [renderer.notification.views :as notification]
@@ -22,6 +24,7 @@
    [renderer.ruler.events :as-alias ruler.e]
    [renderer.ruler.subs :as-alias ruler.s]
    [renderer.ruler.views :as ruler.v]
+   [renderer.snap.subs :as-alias snap.s]
    [renderer.timeline.views :as timeline.v]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.subs :as-alias tool.s]
@@ -30,9 +33,41 @@
    [renderer.toolbar.tools :as toolbar.tools]
    [renderer.tree.views :as tree.v]
    [renderer.ui :as ui]
-   [renderer.utils.overlay :as overlay]
    [renderer.window.events :as-alias window.e]
    [renderer.window.views :as window.v]))
+
+(defn coll->str
+  [coll]
+  (str "[" (str/join " " (map #(.toFixed % 2) coll)) "]"))
+
+(defn debug-rows
+  []
+  [["Dom rect" @(rf/subscribe [::app.s/dom-rect])]
+   ["Viewbox" (coll->str @(rf/subscribe [::frame.s/viewbox]))]
+   ["Pointer position" (coll->str @(rf/subscribe [::app.s/pointer-pos]))]
+   ["Adjusted pointer position" (coll->str @(rf/subscribe [::app.s/adjusted-pointer-pos]))]
+   ["Pointer offset" (coll->str @(rf/subscribe [::app.s/pointer-offset]))]
+   ["Adjusted pointer offset" (coll->str @(rf/subscribe [::app.s/adjusted-pointer-offset]))]
+   ["Pointer drag?" (str @(rf/subscribe [::tool.s/drag]))]
+   ["Pan" (coll->str @(rf/subscribe [::document.s/pan]))]
+   ["Active tool" @(rf/subscribe [::tool.s/active])]
+   ["Primary tool" @(rf/subscribe [::tool.s/primary])]
+   ["State"  @(rf/subscribe [::tool.s/state])]
+   ["Clicked element" (:id @(rf/subscribe [::app.s/clicked-element]))]
+   ["Ignored elements" @(rf/subscribe [::document.s/ignored-ids])]
+   ["Snap" (map (fn [[k v]]
+                  [:div (str (name k)
+                             " "
+                             (if (number? v)
+                               (.toFixed v 2)
+                               (coll->str v)))]) @(rf/subscribe [::snap.s/nearest-neighbor]))]])
+
+(defn debug-info
+  []
+  (into [:div.absolute.top-1.left-2.pointer-events-none
+         {:style {:color "#555"}}]
+        (for [[s v] (debug-rows)]
+          [:div.flex [:strong.mr-1 s] [:div v]])))
 
 (defn frame-panel
   []
@@ -64,7 +99,7 @@
        (if read-only
          [:div.absolute.inset-0.border-4.border-accent]
          (when @(rf/subscribe [::app.s/debug-info])
-           [overlay/debug-info]))
+           [debug-info]))
        (when @(rf/subscribe [::app.s/backdrop])
          [:div.absolute.inset-0
           {:on-click #(rf/dispatch [::e/set-backdrop false])}])]]]))

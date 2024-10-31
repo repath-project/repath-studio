@@ -2,7 +2,6 @@
   "Render functions for canvas overlay objects."
   (:require
    [clojure.core.matrix :as mat]
-   [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.s]
    [renderer.document.subs :as-alias document.s]
@@ -185,36 +184,3 @@
           y (+ y1 (/ (- -15 (/ theme.db/handle-size 2)) zoom))
           text (str (.toFixed area 2) " px²")]
       [label text [x y]])))
-
-(defn coll->str
-  [coll]
-  (str "[" (str/join " " (map #(.toFixed % 2) coll)) "]"))
-
-(defn debug-rows
-  []
-  [["Dom rect" @(rf/subscribe [::app.s/dom-rect])]
-   ["Viewbox" (coll->str @(rf/subscribe [::frame.s/viewbox]))]
-   ["Pointer position" (coll->str @(rf/subscribe [::app.s/pointer-pos]))]
-   ["Adjusted pointer position" (coll->str @(rf/subscribe [::app.s/adjusted-pointer-pos]))]
-   ["Pointer offset" (coll->str @(rf/subscribe [::app.s/pointer-offset]))]
-   ["Adjusted pointer offset" (coll->str @(rf/subscribe [::app.s/adjusted-pointer-offset]))]
-   ["Pointer drag?" (str @(rf/subscribe [::tool.s/drag]))]
-   ["Pan" (coll->str @(rf/subscribe [::document.s/pan]))]
-   ["Active tool" @(rf/subscribe [::tool.s/active])]
-   ["Primary tool" @(rf/subscribe [::tool.s/primary])]
-   ["State"  @(rf/subscribe [::tool.s/state])]
-   ["Clicked element" (:id @(rf/subscribe [::app.s/clicked-element]))]
-   ["Ignored elements" @(rf/subscribe [::document.s/ignored-ids])]
-   ["Snap" (map (fn [[k v]]
-                  [:div (str (name k)
-                             " "
-                             (if (number? v)
-                               (.toFixed v 2)
-                               (coll->str v)))]) @(rf/subscribe [::snap.s/nearest-neighbor]))]])
-
-(defn debug-info
-  []
-  (into [:div.absolute.top-1.left-2.pointer-events-none
-         {:style {:color "#555"}}]
-        (for [[s v] (debug-rows)]
-          [:div.flex [:strong.mr-1 s] [:div v]])))
