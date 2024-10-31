@@ -2,6 +2,7 @@
   (:require
    [renderer.app.effects :as-alias app.fx]
    [renderer.frame.handlers :as frame.h]
+   [renderer.snap.handlers :as snap.h]
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.overlay :as overlay]
@@ -60,6 +61,7 @@
                            (:zoom-sensitivity db)
                            (/ furute-zoom current-zoom)))
         (frame.h/pan-to-bounds [x y offset-x offset-y])
+        (snap.h/update-viewbox-tree)
         (h/add-fx [::app.fx/persist]))))
 
 (defmethod hierarchy/pointer-up :zoom
@@ -69,4 +71,5 @@
                  (/ 1 (:zoom-sensitivity db)))]
     (-> db
         (frame.h/zoom-at-pointer factor)
+        (snap.h/update-viewbox-tree)
         (h/add-fx [::app.fx/persist]))))
