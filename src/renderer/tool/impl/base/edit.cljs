@@ -66,7 +66,7 @@
                 (pointer/lock-direction))]
     (cond-> db
       el-id
-      (-> (element.h/update-el el-id element.hierarchy/edit delta handle-id)))))
+      (element.h/update-el el-id element.hierarchy/edit delta handle-id))))
 
 (defmethod hierarchy/drag-end :edit
   [db _e]
@@ -94,10 +94,10 @@
 (defmethod hierarchy/render :edit
   []
   (let [selected-elements @(rf/subscribe [::element.s/selected])]
-    [:<>
+    [:g
      (for [el selected-elements]
        ^{:key (str (:id el) "-edit-points")}
        [:g
-        (element.hierarchy/render-edit el)
+        [element.hierarchy/render-edit el]
         ^{:key (str (:id el) "-centroid")}
         [overlay/centroid el]])]))
