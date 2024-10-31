@@ -94,9 +94,10 @@
 (defmethod hierarchy/render :edit
   []
   (let [selected-elements @(rf/subscribe [::element.s/selected])]
-    (for [el selected-elements]
-      ^{:key (str (:id el) "-edit-points")}
-      [:g
-       [element.hierarchy/render-edit el]
-       ^{:key (str (:id el) "-centroid")}
-       [overlay/centroid el]])))
+    [:<>
+     (for [el selected-elements]
+       ^{:key (str (:id el) "-edit-points")}
+       [:g
+        (element.hierarchy/render-edit el)
+        ^{:key (str (:id el) "-centroid")}
+        [overlay/centroid el]])]))
