@@ -293,6 +293,7 @@
       :clone
       (if alt-key?
         (-> (history.h/swap db)
+            (select-element (pointer/shift? e))
             (element.h/duplicate)
             (translate delta axis)
             (snap.h/snap-with translate axis)
