@@ -40,13 +40,12 @@
                             :hypotenuse hypotenuse
                             :stroke "gray"}})))
 
-(defmethod hierarchy/snapping-bases :measure
+(defmethod hierarchy/snapping-points :measure
   [db]
   [(with-meta
      (:adjusted-pointer-pos db)
      {:label (str "measure " (if (h/temp db) "end" "start"))})])
 
-(defmethod hierarchy/snapping-points :measure
+(defmethod hierarchy/snapping-elements :measure
   [db]
-  (let [visible-elements (filter :visible (vals (element.h/entities db)))]
-    (element.h/snapping-points db visible-elements)))
+  (filter :visible (vals (element.h/entities db))))

@@ -4,6 +4,7 @@
    [kdtree :as kdtree]
    [malli.core :as m]
    [renderer.app.db :refer [App]]
+   [renderer.element.handlers :as element.h]
    [renderer.frame.db :refer [Viewbox]]
    [renderer.frame.handlers :as frame.h]
    [renderer.snap.db :refer [SnapOption NearestNeighbor]]
@@ -30,7 +31,7 @@
   [db]
   (map #(when-let [nneighbor (kdtree/nearest-neighbor (:viewbox-kdtree db) %)]
           (assoc nneighbor :base-point %))
-       (tool.hierarchy/snapping-bases db)))
+       (tool.hierarchy/snapping-points db)))
 
 (defn update-nearest-neighbors
   [db]
@@ -52,7 +53,7 @@
 (defn update-tree
   [db]
   (if (-> db :snap :active)
-    (let [points (tool.hierarchy/snapping-points db)]
+    (let [points (element.h/snapping-points db (tool.hierarchy/snapping-elements db))]
       (-> (assoc db
                  :snapping-points points
                  :kdtree (kdtree/build-tree points))

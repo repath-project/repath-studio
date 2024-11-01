@@ -9,8 +9,8 @@
 (defmulti drag-end (fn [db _e] (:tool db)))
 (defmulti key-up (fn [db _e] (:tool db)))
 (defmulti key-down (fn [db _e] (:tool db)))
-(defmulti snapping-bases (fn [db _e] (:tool db)))
 (defmulti snapping-points (fn [db _e] (:tool db)))
+(defmulti snapping-elements (fn [db _e] (:tool db)))
 (defmulti activate :tool)
 (defmulti deactivate :tool)
 (defmulti render "Renders the tool helpers." identity)
@@ -32,8 +32,8 @@
 (defmethod deactivate :default [db] db)
 (defmethod render :default [])
 (defmethod properties :default [])
-(defmethod snapping-bases :default [])
 (defmethod snapping-points :default [])
+(defmethod snapping-elements :default [])
 (defmethod help :default [_tool _state] "")
 
 

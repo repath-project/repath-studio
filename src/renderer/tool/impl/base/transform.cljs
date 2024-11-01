@@ -327,7 +327,7 @@
       (snap.h/update-tree)
       (dissoc :clicked-element :pivot-point)))
 
-(defmethod hierarchy/snapping-bases :transform
+(defmethod hierarchy/snapping-points :transform
   [db]
   (let [elements (vals (element.h/entities db))
         selected (filter :selected elements)
@@ -338,13 +338,11 @@
         (seq (rest selected))
         (into (bounds/->snapping-points (element.h/bounds db) options))))))
 
-(defmethod hierarchy/snapping-points :transform
+(defmethod hierarchy/snapping-elements :transform
   [db]
-  (let [non-selected-ids (set/difference (set (keys (element.h/entities db)))
-                                         (element.h/selected-with-descendant-ids db))
-        non-selected (select-keys (element.h/entities db) (vec non-selected-ids))
-        non-selected-visible (filter :visible (vals non-selected))]
-    (element.h/snapping-points db non-selected-visible)))
+  (let [non-selected-ids (element.h/non-selected-ids db)
+        non-selected (select-keys (element.h/entities db) (vec non-selected-ids))]
+    (filter :visible (vals non-selected))))
 
 (defmethod hierarchy/render :transform
   []

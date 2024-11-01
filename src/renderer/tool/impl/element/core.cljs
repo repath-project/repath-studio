@@ -37,13 +37,12 @@
       (h/activate :transform)
       (history.h/finalize (str "Create " (name (:tag (h/temp db)))))))
 
-(defmethod hierarchy/snapping-bases ::hierarchy/element
+(defmethod hierarchy/snapping-points ::hierarchy/element
   [db]
   [(with-meta
      (:adjusted-pointer-pos db)
      {:label (str (name (:tool db)) " edge")})])
 
-(defmethod hierarchy/snapping-points ::hierarchy/element
+(defmethod hierarchy/snapping-elements ::hierarchy/element
   [db]
-  (let [visible-elements (filter :visible (vals (element.h/entities db)))]
-    (element.h/snapping-points db visible-elements)))
+  (filter :visible (vals (element.h/entities db))))

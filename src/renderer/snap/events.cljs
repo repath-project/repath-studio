@@ -24,14 +24,13 @@
    :id ::auto-update-tree
    :before (fn [context]
              (let [db (rf/get-coeffect context :db)]
-               (rf/assoc-coeffect context :selected-ids (element.h/selected-ids db))))
+               (rf/assoc-coeffect context :non-selected-ids (element.h/non-selected-ids db))))
    :after (fn [context]
             (let [db (rf/get-effect context :db)]
               (cond-> context
                 (and (:active-document db)
-                     (not= (:state db) :clone) ;; REVIEW: Can we decouple this from the state?
                      (not= (element.h/selected-ids db)
-                           (rf/get-coeffect context :selected-ids)))
+                           (rf/get-coeffect context :non-selected-ids)))
                 (rf/assoc-effect :db (h/update-tree db)))))))
 
 (rf/reg-global-interceptor auto-update-tree)

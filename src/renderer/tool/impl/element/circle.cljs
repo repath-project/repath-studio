@@ -25,7 +25,7 @@
                :r radius}]
     (h/set-temp db {:type :element :tag :circle :attrs attrs})))
 
-(defmethod hierarchy/snapping-bases :circle
+(defmethod hierarchy/snapping-points :circle
   [db]
   [(with-meta
      (:adjusted-pointer-pos db)

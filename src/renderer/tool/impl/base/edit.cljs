@@ -76,7 +76,7 @@
       (snap.h/update-tree)
       (history.h/finalize "Edit")))
 
-(defmethod hierarchy/snapping-bases :edit
+(defmethod hierarchy/snapping-points :edit
   [db]
   (when-let [el (:clicked-element db)]
     [(with-meta
@@ -86,10 +86,11 @@
                  (or (:label el)
                      (name (:id el))))})]))
 
-(defmethod hierarchy/snapping-points :edit
+(defmethod hierarchy/snapping-elements :edit
   [db]
-  (let [visible-elements (filter :visible (vals (element.h/entities db)))]
-    (element.h/snapping-points db visible-elements)))
+  (let [non-selected-ids (element.h/non-selected-ids db)
+        non-selected (select-keys (element.h/entities db) (vec non-selected-ids))]
+    (filter :visible (vals non-selected))))
 
 (defmethod hierarchy/render :edit
   []
