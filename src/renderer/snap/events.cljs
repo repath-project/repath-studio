@@ -29,6 +29,7 @@
             (let [db (rf/get-effect context :db)]
               (cond-> context
                 (and (:active-document db)
+                     (not= (:state db) :clone) ;; REVIEW: Can we decouple this from the state?
                      (not= (element.h/selected-ids db)
                            (rf/get-coeffect context :selected-ids)))
                 (rf/assoc-effect :db (h/update-tree db)))))))
