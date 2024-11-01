@@ -46,9 +46,7 @@
 (m/=> update-viewbox-tree [:-> App App])
 (defn update-viewbox-tree
   [db]
-  (cond-> db
-    (:kdtree db)
-    (assoc :viewbox-kdtree (viewport-tree (:kdtree db) (frame.h/viewbox db)))))
+  (assoc db :viewbox-kdtree (viewport-tree (:kdtree db) (frame.h/viewbox db))))
 
 (m/=> update-tree [:-> App App])
 (defn update-tree
