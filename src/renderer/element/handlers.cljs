@@ -632,7 +632,8 @@
 (m/=> add [:-> App map? App])
 (defn add
   [db el]
-  (create (deselect db) (assoc el :selected true)))
+  (-> (deselect db)
+      (create (assoc el :selected true))))
 
 (m/=> boolean-operation [:-> App PathBooleanOperation App])
 (defn boolean-operation

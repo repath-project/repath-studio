@@ -13,7 +13,7 @@
 (defmulti snapping-points (fn [db _e] (:tool db)))
 (defmulti activate :tool)
 (defmulti deactivate :tool)
-(defmulti render identity)
+(defmulti render "Renders the tool helpers." identity)
 (defmulti properties "Returns the properties of the tool." identity)
 (defmulti help "Returns the status bar help text." (fn [tool state] [tool state]))
 

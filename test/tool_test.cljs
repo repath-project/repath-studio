@@ -1,10 +1,12 @@
-(ns tool-tests
+(ns tool-test
   (:require
    [cljs.test :refer-macros [deftest is]]
    [day8.re-frame.test :as rf-test]
    [re-frame.core :as rf]
    [renderer.app.events :as app.e]
+   [renderer.document.events :as document.e]
    [renderer.tool.events :as e]
+   [renderer.tool.impl.core]
    [renderer.tool.subs :as s]))
 
 (deftest init
@@ -15,7 +17,8 @@
 
 (deftest activate
   (rf-test/run-test-sync
-   (rf/dispatch [::e/initialize-db])
+   (rf/dispatch [::app.e/initialize-db])
+   (rf/dispatch [::document.e/init])
 
    (let [active-tool (rf/subscribe [::s/active])]
      (is (= @active-tool :transform))
