@@ -6,14 +6,20 @@
 (deftest test-str->seq
   (testing "string to sequence conversion"
     (are [x y] (= x y)
-      ["0" "1"] (attr/str->seq "0 1")
-      ["0" "12" "342.3" "4352345345" "454535" "34"] (attr/str->seq "0 12 342.3 4352345345 454535 34"))))
+      ["0" "1"]
+      (attr/str->seq "0 1")
+
+      ["0" "12" "342.3" "4352345345" "454535" "34"]
+      (attr/str->seq "0 12 342.3 4352345345 454535 34"))))
 
 (deftest test-points->vec
   (testing "string to point vector conversion"
     (are [x y] (= x y)
-      [["0" "12"] ["342.3" "4352345345"] ["454535" "34"]] (attr/points->vec "0 12 342.3 4352345345 454535 34")
-      [["0" "12"] ["342.3" "4352345345"] ["454535" "34"] ["1"]] (attr/points->vec "0 12 342.3 4352345345 454535 34 1"))))
+      [["0" "12"] ["342.3" "4352345345"] ["454535" "34"]]
+      (attr/points->vec "0 12 342.3 4352345345 454535 34")
+
+      [["0" "12"] ["342.3" "4352345345"] ["454535" "34"] ["1"]]
+      (attr/points->vec "0 12 342.3 4352345345 454535 34 1"))))
 
 (deftest test->camel-case
   (testing "attribute key to camel-case conversion"
