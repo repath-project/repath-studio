@@ -1,7 +1,6 @@
 (ns renderer.tool.impl.base.transform
   (:require
    [clojure.core.matrix :as mat]
-   [clojure.set :as set]
    [malli.core :as m]
    [re-frame.core :as rf]
    [renderer.app.db :refer [App]]
