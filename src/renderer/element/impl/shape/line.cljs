@@ -97,9 +97,9 @@
         [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])]
     [(min x1 x2) (min y1 y2) (max x1 x2) (max y1 y2)]))
 
-(defmethod hierarchy/snapping-points :line
-  [el]
-  (let [{{:keys [x1 y1 x2 y2]} :attrs} el
-        [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])]
-    [(with-meta [x1 y1] {:label "line start"})
-     (with-meta [x2 y2] {:label "line end"})]))
+#_(defmethod hierarchy/snapping-points :line
+    [el]
+    (let [{{:keys [x1 y1 x2 y2]} :attrs} el
+          [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])]
+      [(with-meta [x1 y1] {:label "line start"})
+       (with-meta [x2 y2] {:label "line end"})]))

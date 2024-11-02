@@ -74,11 +74,11 @@
   (let [{{:keys [width height]} :attrs} el]
     (apply * (map units/unit->px [width height]))))
 
-(defmethod hierarchy/snapping-points ::hierarchy/box
-  [el]
-  (let [{{:keys [x y width height]} :attrs} el
-        [x y width height] (mapv units/unit->px [x y width height])]
-    [(with-meta [x y] {:label "box corner"})
-     (with-meta [(+ x width) y]  {:label "box corner"})
-     (with-meta [(+ x width) (+ y height)] {:label "box corner"})
-     (with-meta [x (+ y height)] {:label "box corner"})]))
+#_(defmethod hierarchy/snapping-points ::hierarchy/box
+    [el]
+    (let [{{:keys [x y width height]} :attrs} el
+          [x y width height] (mapv units/unit->px [x y width height])]
+      [(with-meta [x y] {:label "box corner"})
+       (with-meta [(+ x width) y]  {:label "box corner"})
+       (with-meta [(+ x width) (+ y height)] {:label "box corner"})
+       (with-meta [x (+ y height)] {:label "box corner"})]))
