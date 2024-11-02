@@ -29,7 +29,7 @@
             (let [db (rf/get-effect context :db)]
               (cond-> context
                 (and (:active-document db)
-                     (not= (element.h/selected-ids db)
+                     (not= (element.h/non-selected-ids db)
                            (rf/get-coeffect context :non-selected-ids)))
                 (rf/assoc-effect :db (h/update-tree db)))))))
 

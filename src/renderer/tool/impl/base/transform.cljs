@@ -323,7 +323,6 @@
         :idle db)
       (h/set-state :idle)
       (element.h/clear-hovered)
-      (snap.h/update-tree)
       (dissoc :clicked-element :pivot-point)))
 
 (defmethod hierarchy/snapping-points :transform

@@ -73,7 +73,6 @@
   (-> db
       (h/set-state :idle)
       (dissoc :clicked-element)
-      (snap.h/update-tree)
       (history.h/finalize "Edit")))
 
 (defmethod hierarchy/snapping-points :edit
