@@ -770,7 +770,7 @@
   ([db id action]
    (cond-> db
      (= (:tag (entity db id)) :path)
-     (update-attr id path/manipulate action))))
+     (update-attr id :d path/manipulate action))))
 
 (defn import-svg
   [db {:keys [svg label position]}]
