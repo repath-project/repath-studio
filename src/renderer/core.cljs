@@ -17,6 +17,7 @@
    [renderer.dialog.subs]
    [renderer.document.events :as document.e]
    [renderer.document.subs]
+   [renderer.element.effects]
    [renderer.element.events]
    [renderer.element.impl.core]
    [renderer.element.subs]
