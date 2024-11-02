@@ -32,6 +32,14 @@
   [db point]
   (update-in db (points-path db) #(str % " " (str/join " " point))))
 
+(defn drop-last-point
+  [db]
+  (let [points (get-in db (points-path db))
+        point-vector (attr/points->vec points)]
+    (assoc-in db
+              (points-path db)
+              (->> point-vector drop-last flatten (str/join " ")))))
+
 (defmethod hierarchy/pointer-up ::hierarchy/polyshape
   [db]
   (let [point (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))]
@@ -64,6 +72,7 @@
 (defmethod hierarchy/double-click ::hierarchy/polyshape
   [db _e]
   (-> db
+      (drop-last-point)
       (h/create-temp-element)
       (h/activate :transform)
       (history.h/finalize (str "Create " (name (:tool db))))))
