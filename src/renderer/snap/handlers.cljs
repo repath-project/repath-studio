@@ -7,6 +7,7 @@
    [renderer.element.handlers :as element.h]
    [renderer.frame.db :refer [Viewbox]]
    [renderer.frame.handlers :as frame.h]
+   [renderer.ruler.handlers :as ruler.h]
    [renderer.snap.db :refer [SnapOption NearestNeighbor]]
    [renderer.snap.subs :as-alias snap.s]
    [renderer.tool.hierarchy :as tool.hierarchy]
@@ -53,7 +54,10 @@
 (defn update-tree
   [db]
   (if (-> db :snap :active)
-    (let [points (element.h/snapping-points db (tool.hierarchy/snapping-elements db))]
+    (let [points (element.h/snapping-points db (tool.hierarchy/snapping-elements db))
+          points (cond-> points
+                   (contains? (-> db :snap :options) :grid)
+                   (into (ruler.h/steps-intersections db)))]
       (-> (assoc db
                  :snapping-points points
                  :kdtree (kdtree/build-tree points))

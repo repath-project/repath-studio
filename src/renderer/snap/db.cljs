@@ -2,7 +2,7 @@
   (:require [renderer.utils.math :refer [Vec2D]]))
 
 (def snap-options
-  [:centers :midpoints :corners :nodes])
+  [:centers :midpoints :corners :nodes #_:grid])
 
 (def SnapOption
   (into [:enum] snap-options))

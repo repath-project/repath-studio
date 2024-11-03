@@ -19073,6 +19073,11 @@
                                                                                               :ret :boolean}}},
                                                                ->snapping-points {:arities {2 {:args [:seqable :set],
                                                                                                :ret :seqable}}}},
+                                        renderer.ruler.handlers {step {:arities {1 {:args [:any], :ret :number}}},
+                                                                 steps-coll {:arities {3 {:args [:number
+                                                                                                 :seqable
+                                                                                                 :keyword],
+                                                                                          :ret :sequential}}}},
                                         renderer.history.handlers {state-count {:arities {1 {:args [{:op :keys,
                                                                                                      :opt {:system-fonts :vector,
                                                                                                            :copied-bounds :seqable,
