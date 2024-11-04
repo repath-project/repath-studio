@@ -263,7 +263,8 @@
     (cond-> (-> (h/set-state db state)
                 (element.h/clear-hovered))
       (selectable? clicked-element)
-      (element.h/select (-> db :clicked-element :id) (pointer/shift? e)))))
+      (-> (element.h/select (-> db :clicked-element :id) (pointer/shift? e))
+          (snap.h/rebuild-tree)))))
 
 (defmethod hierarchy/drag :transform
   [db e]

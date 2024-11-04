@@ -42,7 +42,7 @@
       (set-state :idle)
       (set-cursor "default")
       (dissoc :drag :pointer-offset :clicked-element)
-      (snap.h/update-tree)
+      (snap.h/rebuild-tree)
       (hierarchy/activate)))
 
 (m/=> pointer-delta [:-> App Vec2D])

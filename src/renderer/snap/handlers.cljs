@@ -50,8 +50,8 @@
   [db]
   (assoc db :viewbox-kdtree (viewport-tree (:kdtree db) (frame.h/viewbox db))))
 
-(m/=> update-tree [:-> App App])
-(defn update-tree
+(m/=> rebuild-tree [:-> App App])
+(defn rebuild-tree
   [db]
   (if (-> db :snap :active)
     (let [points (element.h/snapping-points db (tool.hierarchy/snapping-elements db))
@@ -63,6 +63,28 @@
                  :kdtree (kdtree/build-tree points))
           (update-viewbox-tree)))
     (dissoc db :kdtree :viewbox-kdtree :snapping-points)))
+
+(defn update-tree
+  [db f points]
+  (cond-> db
+    (not-empty points)
+    (-> (update :snapping-points conj points
+                :kdtree f points)
+        (update-viewbox-tree))))
+
+(m/=> insert-to-tree [:-> App [:set uuid?] App])
+(defn insert-to-tree
+  [db ids]
+  (let [points (->> (element.h/entities db ids)
+                    (element.h/snapping-points db))]
+    (update-tree db kdtree/insert points)))
+
+(m/=> delete-from-tree [:-> App [:set uuid?] App])
+(defn delete-from-tree
+  [db ids]
+  (let [points (->> (element.h/entities db ids)
+                    (element.h/snapping-points db))]
+    (update-tree db kdtree/delete points)))
 
 (m/=> nearest-delta [:-> App Vec2D])
 (defn nearest-delta
