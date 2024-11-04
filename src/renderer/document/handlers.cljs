@@ -82,7 +82,8 @@
          (-> db :window :focused)
          (not (get-in db (path db :focused))))
     (-> (frame.h/focus-bounds :original)
-        (assoc-in (path db :focused) true))))
+        (assoc-in (path db :focused) true)
+        (snap.h/update-viewbox-tree))))
 
 (m/=> search-by-path [:-> App string? [:maybe uuid?]])
 (defn search-by-path

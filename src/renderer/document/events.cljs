@@ -14,6 +14,7 @@
    [renderer.history.handlers :as history.h]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
+   [renderer.snap.handlers :as snap.h]
    [renderer.utils.compatibility :as compatibility]
    [renderer.utils.dom :as dom]
    [renderer.utils.system :as system]
@@ -150,9 +151,9 @@
  ::init
  [(rf/inject-cofx ::app.fx/guid)]
  (fn [{:keys [db guid]} [_]]
-   {:db (cond-> db
-          (not (:active-document db))
-          (-> (create guid)
+   {:db (if (:active-document db)
+          (snap.h/rebuild-tree db)
+          (-> (create db guid)
               (history.h/finalize "Init document")))}))
 
 (rf/reg-event-fx

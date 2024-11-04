@@ -6,7 +6,8 @@
    [renderer.app.events]
    [renderer.document.events :as-alias document.e]
    [renderer.element.handlers :as element.h]
-   [renderer.frame.handlers :as h]))
+   [renderer.frame.handlers :as h]
+   [renderer.snap.handlers :as snap.h]))
 
 (rf/reg-event-db
  ::resize
@@ -14,13 +15,15 @@
  (fn [db [_ dom-rect]]
    (-> db
        (h/recenter-to-dom-rect dom-rect)
-       (assoc :dom-rect dom-rect))))
+       (assoc :dom-rect dom-rect)
+       (snap.h/update-viewbox-tree))))
 
 (rf/reg-event-db
  ::focus-selection
  [persist]
  (fn [db [_ focus-type]]
-   (h/focus-bounds db focus-type)))
+   (-> (h/focus-bounds db focus-type)
+       (snap.h/update-viewbox-tree))))
 
 (rf/reg-event-db
  ::set-zoom
