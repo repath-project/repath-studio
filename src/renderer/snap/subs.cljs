@@ -9,10 +9,6 @@
  :-> :snap)
 
 (rf/reg-sub
- ::points
- :-> :snapping-points)
-
-(rf/reg-sub
  ::active
  :<- [::snap]
  :-> :active)

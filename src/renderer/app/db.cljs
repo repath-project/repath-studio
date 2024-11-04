@@ -79,7 +79,6 @@
    [:copied-elements {:optional true} [:* Element]]
    [:kdtree {:optional true} any?]
    [:viewbox-kdtree {:optional true} any?]
-   [:snapping-points {:optional true} [:vector Vec2D]]
    [:re-pressed.core/keydown {:optional true} map?]])
 
 (def valid? (m/validator App))

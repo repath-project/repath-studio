@@ -264,7 +264,7 @@
                 (element.h/clear-hovered))
       (selectable? clicked-element)
       (-> (element.h/select (-> db :clicked-element :id) (pointer/shift? e))
-          (snap.h/rebuild-tree)))))
+          (snap.h/delete-from-tree #{(-> db :clicked-element :id)})))))
 
 (defmethod hierarchy/drag :transform
   [db e]

@@ -42,9 +42,7 @@
         snap-active @(rf/subscribe [::snap.s/active])
         nearest-neighbor @(rf/subscribe [::snap.s/nearest-neighbor])
         snapped-el-id (-> nearest-neighbor meta :id)
-        snapped-el (when snapped-el-id @(rf/subscribe [::s/entity snapped-el-id]))
-        snapping-points @(rf/subscribe [::snap.s/points])
-        debug @(rf/subscribe [::app.s/debug-info])]
+        snapped-el (when snapped-el-id @(rf/subscribe [::s/entity snapped-el-id]))]
     [:svg#canvas {:on-pointer-up pointer-handler
                   :on-pointer-down pointer-handler
                   :on-pointer-move pointer-handler
@@ -71,11 +69,6 @@
        [:<>
         [tool.hierarchy/render (or primary-tool active-tool)]
         [hierarchy/render temp-element]])
-
-     (when debug
-       [into [:g]
-        (for [snapping-point snapping-points]
-          [overlay/point-of-interest snapping-point])])
 
      (when snap-active
        [:<>

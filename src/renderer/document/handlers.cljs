@@ -8,6 +8,7 @@
    [renderer.frame.handlers :as frame.h]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
+   [renderer.snap.handlers :as snap.h]
    [renderer.utils.vec :as vec]))
 
 (defn path
@@ -22,7 +23,10 @@
 (m/=> set-active [:-> App uuid? App])
 (defn set-active
   [db id]
-  (assoc db :active-document id))
+  (cond-> db
+    id
+    (-> (assoc :active-document id)
+        (snap.h/rebuild-tree))))
 
 (m/=> persisted-format [:function
                         [:-> App PersistedDocument]

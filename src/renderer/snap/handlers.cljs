@@ -58,31 +58,30 @@
           points (cond-> points
                    (contains? (-> db :snap :options) :grid)
                    (into (ruler.h/steps-intersections db)))]
-      (-> (assoc db
-                 :snapping-points points
-                 :kdtree (kdtree/build-tree points))
+      (-> (assoc db :kdtree (kdtree/build-tree points))
           (update-viewbox-tree)))
-    (dissoc db :kdtree :viewbox-kdtree :snapping-points)))
+    (dissoc db :kdtree :viewbox-kdtree)))
 
 (defn update-tree
   [db f points]
-  (cond-> db
-    (not-empty points)
-    (-> (update :snapping-points conj points
-                :kdtree f points)
-        (update-viewbox-tree))))
+  (if (:kdtree db)
+    (if (empty? points)
+      db
+      (-> (reduce #(update %1 :kdtree f %2) db points)
+          (update-viewbox-tree)))
+    (rebuild-tree db)))
 
 (m/=> insert-to-tree [:-> App [:set uuid?] App])
 (defn insert-to-tree
   [db ids]
-  (let [points (->> (element.h/entities db ids)
+  (let [points (->> (vals (element.h/entities db ids))
                     (element.h/snapping-points db))]
     (update-tree db kdtree/insert points)))
 
 (m/=> delete-from-tree [:-> App [:set uuid?] App])
 (defn delete-from-tree
   [db ids]
-  (let [points (->> (element.h/entities db ids)
+  (let [points (->> (vals (element.h/entities db ids))
                     (element.h/snapping-points db))]
     (update-tree db kdtree/delete points)))
 
