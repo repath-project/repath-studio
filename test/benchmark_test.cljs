@@ -7,7 +7,7 @@
    [renderer.app.events :as app.e]
    [renderer.document.events :as document.e]
    [renderer.element.events :as element.e]
-   [renderer.snap.events :as snap.e]))
+   [renderer.snap.events]))
 
 (defn bench
   "Returns the elapsed time of the event handling in milliseconds."
@@ -19,7 +19,7 @@
          end (.getTime (js/Date.))]
      (- end start))))
 
-(deftest test-pp-str
+(deftest polygons
   (rf-test/run-test-sync
    (rf/dispatch [::app.e/initialize-db])
    (rf/dispatch [::document.e/init])
@@ -32,11 +32,11 @@
    (testing "selecting elements"
      (is (> 1000 (bench [::element.e/select-all]))))
 
-   (testing "selecting elements with snap disabled"
-     (rf/dispatch [::snap.e/toggle])
-     (is (> 100 (bench [::element.e/select-all]))))
+   (testing "deselecting elements"
+     (is (> 1000 (bench [::element.e/deselect-all]))))
 
    (testing "moving elements"
+     (rf/dispatch [::element.e/select-all])
      (is (> 100 (bench [::element.e/translate [100 100]]))))
 
    (testing "scaling elements"
