@@ -21971,7 +21971,7 @@
                                                                                                               :worker {:op :keys,
                                                                                                                        :req {:tasks :map}},
                                                                                                               :pen-mode :boolean}}}}},
-                                                                rebuild-tree {:arities {1 {:args [{:op :keys,
+                                                                rebuild-tree {:arities {3 {:args [{:op :keys,
                                                                                                    :opt {:system-fonts :vector,
                                                                                                          :copied-bounds :seqable,
                                                                                                          :active-document :any,
@@ -22047,7 +22047,9 @@
                                                                                                          :panels :map,
                                                                                                          :worker {:op :keys,
                                                                                                                   :req {:tasks :map}},
-                                                                                                         :pen-mode :boolean}}],
+                                                                                                         :pen-mode :boolean}}
+                                                                                                  :fn
+                                                                                                  :vector],
                                                                                            :ret {:op :keys,
                                                                                                  :opt {:system-fonts :vector,
                                                                                                        :copied-bounds :seqable,

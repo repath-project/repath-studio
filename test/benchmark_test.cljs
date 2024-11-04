@@ -6,7 +6,8 @@
    [re-frame.core :as rf]
    [renderer.app.events :as app.e]
    [renderer.document.events :as document.e]
-   [renderer.element.events :as element.e]))
+   [renderer.element.events :as element.e]
+   [renderer.snap.events :as snap.e]))
 
 (defn bench
   "Returns the elapsed time of the event handling in milliseconds."
@@ -29,6 +30,10 @@
                                             :attrs {:points points}}] 20)))))
 
    (testing "selecting elements"
+     (is (> 1000 (bench [::element.e/select-all]))))
+
+   (testing "selecting elements with snap disabled"
+     (rf/dispatch [::snap.e/toggle])
      (is (> 100 (bench [::element.e/select-all]))))
 
    (testing "moving elements"
