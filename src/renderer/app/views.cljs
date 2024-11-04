@@ -282,7 +282,7 @@
           "Changelog"]]]
 
        [:div.hidden.md:block.flex-1
-        [:img {:src "../img/icon.svg"}]]]]]]])
+        [:img {:src "./img/icon.svg"}]]]]]]])
 
 (defn root
   []
