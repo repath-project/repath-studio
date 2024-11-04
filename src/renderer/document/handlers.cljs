@@ -23,10 +23,8 @@
 (m/=> set-active [:-> App uuid? App])
 (defn set-active
   [db id]
-  (cond-> db
-    id
-    (-> (assoc :active-document id)
-        (snap.h/rebuild-tree))))
+  (-> (assoc db :active-document id)
+      (snap.h/rebuild-tree)))
 
 (m/=> persisted-format [:function
                         [:-> App PersistedDocument]
@@ -58,9 +56,10 @@
                                          (inc index)
                                          (dec index)))
                     active-document)]
-    (-> db
+    (-> (if active-id
+          (set-active db active-id)
+          (dissoc db :active-document))
         (update :document-tabs #(filterv (complement #{id}) %))
-        (set-active active-id)
         (update :documents dissoc id))))
 
 (m/=> add-recent [:-> App string? App])
