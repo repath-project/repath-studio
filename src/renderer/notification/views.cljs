@@ -9,7 +9,7 @@
 (defn unavailable-feature
   [feature compatibility-url]
   [:div
-   [:h2.font-bold.text-error feature " is unavailable"]
+   [:h2.font-bold.text-error (str feature " is unavailable")]
    [:div.mt-4
     "Your browser does not support this API."
     "You can check the "
@@ -50,10 +50,10 @@
           {:aria-label "Close"
            :class "icon-button absolute top-3 right-3 small"
            :on-click #(rf/dispatch [::notification.e/remove-nth index])}]
-         (when-let [n (:count notification)]
+         (when (> (:count notification) 1)
            [:div.absolute.bg-error.left-0.top-0.px-1.py-0.5.rounded
             {:class "-translate-x-1/2 -translate-y-1/2"}
-            (inc n)])])
+            (:count notification)])])
       notifications)
 
      (when (second notifications)
