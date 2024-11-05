@@ -1,8 +1,6 @@
 (ns renderer.utils.file
   (:require
-   [clojure.edn :as edn]
    [re-frame.core :as rf]
-   [renderer.document.events :as-alias document.e]
    [renderer.notification.events :as-alias notification.e]))
 
 #_(def JSFile
@@ -29,33 +27,20 @@
                                      (cb (first (.. e -target -files)))))
     (.click el)))
 
-(defn read!
-  [^js/File file]
-  (let [reader (js/FileReader.)]
-    (.addEventListener
-     reader
-     "load"
-     #(let [document (-> (.. % -target -result)
-                         (edn/read-string)
-                         (assoc :title (.-name file)
-                                :path (.-path file)))]
-        (rf/dispatch [::document.e/load document])))
-    (.readAsText reader file)))
-
 (defn open!
   "https://developer.mozilla.org/en-US/docs/Web/API/Window/showOpenFilePicker"
-  [{:keys [options callback]}]
-  (let [callback (or callback read!)]
+  [{:keys [options on-error on-success]}]
+  (let [success-cb #(rf/dispatch (conj on-success %))]
     (if (.-showOpenFilePicker js/window)
       (-> (.showOpenFilePicker js/window (clj->js options))
           (.then (fn [[^js/FileSystemFileHandle file-handle]]
-                   (.then (.getFile file-handle) callback)))
-          (.catch #(rf/dispatch [::notification.e/exception %])))
-      (legacy-open! callback))))
+                   (.then (.getFile file-handle) success-cb)))
+          (.catch #(when on-error (rf/dispatch (conj on-error %)))))
+      (legacy-open! success-cb))))
 
 (defn save!
   "https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker"
-  [{:keys [options data on-resolution formatter]}]
+  [{:keys [options data on-success on-error formatter]}]
   (if (.-showSaveFilePicker js/window)
     (-> (.showSaveFilePicker js/window (clj->js options))
         (.then (fn [^js/FileSystemFileHandle file-handle]
@@ -64,11 +49,11 @@
                           (.then (.write writable-stream data)
                                  (fn []
                                    (.close writable-stream)
-                                   (when on-resolution
-                                     (rf/dispatch [on-resolution (cond-> file-handle
-                                                                   formatter
-                                                                   formatter)]))))))))
-        (.catch #(rf/dispatch [::notification.e/exception %])))
+                                   (when on-success
+                                     (rf/dispatch (conj on-success (cond-> file-handle
+                                                                     formatter
+                                                                     formatter))))))))))
+        (.catch #(when on-error (rf/dispatch (conj on-error %)))))
     (rf/dispatch
      [::notification.e/unavailable-feature
       "Save File Picker"

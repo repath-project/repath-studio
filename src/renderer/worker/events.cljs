@@ -13,7 +13,8 @@
                   (assoc-in [:data :id] (str guid))
                   (assoc-in [:data :action] (:action options)))}))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::completed
- (fn [db [_ id]]
-   (update-in db [:worker :tasks] dissoc id)))
+ (fn [{:keys [db]} [_ id on-success response-data]]
+   {:db (update-in db [:worker :tasks] dissoc id)
+    :dispatch (conj on-success response-data)}))

@@ -9,5 +9,5 @@
  (fn [{:keys [on-success on-error]}]
    (-> (js/EyeDropper.)
        (.open)
-       (.then (fn [color] (when on-success (rf/dispatch [on-success color]))))
-       (.catch (fn [error] (when on-error (rf/dispatch [on-error error])))))))
+       (.then (fn [color] (when on-success (rf/dispatch (conj on-success color)))))
+       (.catch (fn [error] (when on-error (rf/dispatch (conj on-error error))))))))

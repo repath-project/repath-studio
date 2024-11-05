@@ -4,9 +4,9 @@
    [hickory.zip]
    [malli.core :as m]
    [re-frame.core :as rf]
+   [renderer.document.events :as document.e]
    [renderer.element.events :as-alias element.e]
    [renderer.tool.events :as-alias tool.e]
-   [renderer.utils.file :as file]
    [renderer.utils.math :refer [Vec2D]]))
 
 (m/=> event-handler! [:-> any? nil?])
@@ -76,7 +76,7 @@
         :else
         (let [extension (last (str/split (.-name file) "."))]
           (when (= extension "rps")
-            (file/read! file)))))))
+            (rf/dispatch [::document.e/file-read file])))))))
 
 (m/=> add-text! [:-> string? Vec2D nil?])
 (defn add-text!

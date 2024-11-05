@@ -23,8 +23,8 @@
 (defmethod hierarchy/activate :dropper
   [db]
   (if (.-EyeDropper js/window)
-    (h/add-fx db [::color.fx/dropper {:on-success ::success
-                                      :on-error ::error}])
+    (h/add-fx db [::color.fx/dropper {:on-success [::success]
+                                      :on-error [::error]}])
     (-> db
         (h/activate :transform)
         (notification.h/add
@@ -45,6 +45,6 @@
 (rf/reg-event-db
  ::error
  (fn [db [_ error]]
-   (-> db
-       (h/activate :transform)
-       (notification.h/add (notification.v/exception error)))))
+   (cond-> (h/activate db :transform)
+     (not= (.-name error) "AbortError")
+     (notification.h/add (notification.v/exception error)))))

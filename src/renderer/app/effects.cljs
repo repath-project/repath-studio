@@ -8,7 +8,6 @@
    [renderer.history.handlers :as history.h]
    [renderer.notification.events :as-alias notification.e]
    [renderer.utils.dom :as dom]
-   [renderer.utils.drop :as drop]
    [renderer.utils.file :as file]))
 
 (rf.storage/reg-co-fx! config/app-key {:cofx :store})
@@ -38,12 +37,6 @@
  ::now
  (fn [coeffects _]
    (assoc coeffects :now (.now js/Date))))
-
-(rf/reg-fx
- ::data-transfer
- (fn [[position data-transfer]]
-   (drop/items! position (.-items data-transfer))
-   (drop/files! position (.-files data-transfer))))
 
 (rf/reg-fx
  ::persist
@@ -79,17 +72,18 @@
 
 (rf/reg-fx
  ::query-local-fonts
- (fn [{:keys [on-resolution formatter]}]
+ (fn [{:keys [on-success on-error formatter]}]
    (when-not (undefined? js/window.queryLocalFonts)
      (-> (.queryLocalFonts js/window)
-         (.then #(rf/dispatch [on-resolution (cond-> % formatter formatter)]))))))
+         (.then #(when on-success (rf/dispatch (conj on-success (cond-> % formatter formatter)))))
+         (.catch #(when on-error (rf/dispatch (conj on-error %))))))))
 
 (rf/reg-fx
- ::save
+ ::file-save
  file/save!)
 
 (rf/reg-fx
- ::open
+ ::file-open
  file/open!)
 
 (rf/reg-fx

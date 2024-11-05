@@ -150,10 +150,12 @@
          svg (element/->svg els)]
      (if system/electron?
        {::window.fx/ipc-invoke {:channel "export"
-                                :data svg}}
-       {::app.fx/save [:data svg
-                       :options {:startIn "pictures"
-                                 :types [{:accept {"image/svg+xml" [".svg"]}}]}]}))))
+                                :data svg
+                                :on-error [::notification.e/exception]}}
+       {::app.fx/file-save [:data svg
+                            :on-error [::notification.e/exception]
+                            :options {:startIn "pictures"
+                                      :types [{:accept {"image/svg+xml" [".svg"]}}]}]}))))
 
 (rf/reg-event-fx
  ::print
@@ -163,7 +165,8 @@
      (if system/electron?
        {::window.fx/ipc-invoke {:channel "print"
                                 :data svg
-                                :on-resolution ::notification.e/add}}
+                                :on-success [::notification.e/add]
+                                :on-error [::notification.e/exception]}}
        {::fx/print svg}))))
 
 (rf/reg-event-db

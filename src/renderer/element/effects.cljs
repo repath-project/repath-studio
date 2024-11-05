@@ -45,5 +45,5 @@
              :data {:label (:label image)
                     :image (.getImageData context 0 0 width height)
                     :position [x y]}
-             :on-resolution ::element.e/traced}])))))))
+             :on-success [::element.e/traced]}])))))))
 

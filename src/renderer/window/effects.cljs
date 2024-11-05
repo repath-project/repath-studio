@@ -32,8 +32,7 @@
 
 (rf/reg-fx
  ::ipc-invoke
- (fn [{:keys [channel data formatter on-resolution]}]
+ (fn [{:keys [channel data formatter on-success on-error]}]
    (-> (js/window.api.invoke channel (clj->js data))
-       (.then #(when on-resolution
-                 (rf/dispatch [on-resolution (cond-> % formatter formatter)])))
-       (.catch #(rf/dispatch [::notification.e/exception %])))))
+       (.then #(when on-success (rf/dispatch (conj on-success (cond-> % formatter formatter)))))
+       (.catch #(when on-error (rf/dispatch (conj on-error %)))))))

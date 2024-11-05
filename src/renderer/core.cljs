@@ -15,6 +15,7 @@
    [renderer.color.events]
    [renderer.dialog.events]
    [renderer.dialog.subs]
+   [renderer.document.effects]
    [renderer.document.events :as document.e]
    [renderer.document.subs]
    [renderer.element.effects]
@@ -124,14 +125,14 @@
   (rf/dispatch-sync [::theme.e/set-native-mode (theme.fx/native-mode! theme.fx/native-query!)])
   (rf/dispatch-sync [::theme.e/add-native-listener])
   (rf/dispatch-sync [::theme.e/set-document-attr])
-  (rf/dispatch-sync [::app.e/load-system-fonts])
   (rf/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])
   (rf/dispatch-sync [::rp/set-keydown-rules keyb/keydown-rules])
 
   (.setup paper)
 
   (if system/electron?
-    (register-ipc-on-events!)
+    (do (register-ipc-on-events!)
+        (rf/dispatch [::app.e/load-system-fonts]))
     (add-listeners!))
 
   (mount-root!))

@@ -90,16 +90,17 @@
 
 (defn print!
   [content]
-  (let [window (BrowserWindow.
-                #js {:show false
-                     :frame false})]
-    (.on (.-webContents window) "did-finish-load"
-         #(.print
-           (.-webContents window)
-           #js {}
-           (fn [success, error]
-             (if success
-               (js/Promise.resolve nil)
-               (js/Promise.reject error)))))
+  (let [window (BrowserWindow. #js {:show false
+                                    :frame false})]
+    (js/Promise.
+     (fn [res rej]
+       (.on (.-webContents window) "did-finish-load"
+            #(.print
+              (.-webContents window)
+              #js {}
+              (fn [success error]
+                (if success
+                  (res)
+                  (rej error)))))
 
-    (.loadURL window (str "data:text/html;charset=utf-8," content))))
+       (.loadURL window (str "data:text/html;charset=utf-8," content))))))

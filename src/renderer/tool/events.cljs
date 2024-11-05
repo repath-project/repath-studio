@@ -4,6 +4,7 @@
    [renderer.app.effects :as-alias app.fx]
    [renderer.element.events :as element.e]
    [renderer.frame.handlers :as frame.h]
+   [renderer.tool.effects :as-alias fx]
    [renderer.tool.handlers :as h]))
 
 (rf/reg-event-fx
@@ -27,7 +28,7 @@
  ::drag-event
  (fn [{:keys [db]} [_ {:keys [data-transfer pointer-pos] :as e}]]
    (when (= (:type e) "drop")
-     {::app.fx/data-transfer [(frame.h/adjust-pointer-pos db pointer-pos) data-transfer]})))
+     {::fx/data-transfer [(frame.h/adjust-pointer-pos db pointer-pos) data-transfer]})))
 
 (rf/reg-event-db
  ::keyboard-event

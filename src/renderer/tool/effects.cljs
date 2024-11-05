@@ -1,7 +1,8 @@
 (ns renderer.tool.effects
   (:require
    [re-frame.core :as rf]
-   [renderer.utils.dom :as dom]))
+   [renderer.utils.dom :as dom]
+   [renderer.utils.drop :as drop]))
 
 (rf/reg-fx
  ::set-pointer-capture
@@ -24,3 +25,9 @@
                     (rf/assoc-effect :db (assoc db :fx []))))))))
 
 (rf/reg-global-interceptor custom-fx)
+
+(rf/reg-fx
+ ::data-transfer
+ (fn [[position data-transfer]]
+   (drop/items! position (.-items data-transfer))
+   (drop/files! position (.-files data-transfer))))

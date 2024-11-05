@@ -9,7 +9,6 @@
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
    [renderer.utils.i18n :as i18n]
-   [renderer.utils.system :as system]
    [renderer.window.effects :as-alias window.fx]))
 
 (rf/reg-event-db
@@ -86,10 +85,20 @@
 (rf/reg-event-fx
  ::load-system-fonts
  (fn [_ [_ file-path]]
-   (if system/electron?
-     {::window.fx/ipc-invoke {:channel "load-system-fonts"
-                              :data file-path
-                              :on-resolution ::set-system-fonts
-                              :formatter #(js->clj % :keywordize-keys true)}}
-     {::fx/query-local-fonts {:on-resolution ::set-system-fonts
-                              :formatter #(mapv ->font-map %)}})))
+   {::window.fx/ipc-invoke {:channel "load-system-fonts"
+                            :data file-path
+                            :on-success [::set-system-fonts]
+                            :on-error [::notification.e/exception]
+                            :formatter #(js->clj % :keywordize-keys true)}}))
+
+(rf/reg-event-fx
+ ::query-local-fonts
+ (fn [_ _]
+   {::fx/query-local-fonts {:on-success [::set-system-fonts]
+                            :on-error [::notification.e/exception]
+                            :formatter #(mapv ->font-map %)}}))
+
+(rf/reg-event-fx
+ ::file-open
+ (fn [_ [_ options]]
+   {::fx/file-open options}))
