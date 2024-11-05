@@ -7,7 +7,6 @@
    [renderer.color.views :as color.v]
    [renderer.document.subs :as-alias document.s]
    [renderer.frame.events :as-alias frame.e]
-   [renderer.frame.subs :as-alias frame.s]
    [renderer.ruler.events :as-alias ruler.e]
    [renderer.ruler.subs :as-alias ruler.s]
    [renderer.snap.views :as snap.v]
@@ -18,7 +17,7 @@
    [renderer.worker.subs :as-alias worker.s]))
 
 (defn coordinates []
-  (let [[x y] @(rf/subscribe [::frame.s/adjusted-pointer-pos])]
+  (let [[x y] @(rf/subscribe [::app.s/adjusted-pointer-pos])]
     [:div.flex-col.font-mono.leading-tight.hidden.xl:flex
      {:style {:min-width "90px"}}
      [:div.flex.justify-between

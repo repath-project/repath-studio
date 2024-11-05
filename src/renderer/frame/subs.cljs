@@ -4,8 +4,7 @@
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.s]
    [renderer.document.subs :as-alias document.s]
-   [renderer.frame.handlers :as h]
-   [renderer.utils.pointer :as pointer]))
+   [renderer.frame.handlers :as h]))
 
 (rf/reg-sub
  ::viewbox
@@ -20,11 +19,3 @@
  :<- [::viewbox]
  (fn [viewbox _]
    (str/join " " viewbox)))
-
-(rf/reg-sub
- ::adjusted-pointer-pos
- :<- [::document.s/zoom]
- :<- [::document.s/pan]
- :<- [::app.s/pointer-pos]
- (fn [[zoom pan pointer-pos] _]
-   (pointer/adjust-position zoom pan pointer-pos)))
