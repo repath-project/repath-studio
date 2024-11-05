@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.4.5 (2024-11-05)
+
+**Added**
+
+- Snap while creating or measuring elements
+- Snap labels
+- Highlight snapped object
+
+**Changed**
+
+- Normalize all element attributes
+- Improve snap performance
+- Enhance readability of debug overlay
+- Hide bounding corner handles while scaling
+
+**Fixed**
+
+- Snap with locked proportions or restricted direction
+- Icon on home page
+- Path manipulation actions
+- Fill tool
+- Pan to element
+
 ## 0.4.4 (2024-10-14)
 
 **Added**
