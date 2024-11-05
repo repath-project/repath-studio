@@ -5,7 +5,6 @@
    [malli.core :as m]
    [renderer.app.db :refer [App]]
    [renderer.element.handlers :as element.h]
-   [renderer.frame.db :refer [Viewbox]]
    [renderer.frame.handlers :as frame.h]
    [renderer.ruler.handlers :as ruler.h]
    [renderer.snap.db :refer [SnapOption NearestNeighbor]]
@@ -19,13 +18,6 @@
   (if (contains? (-> db :snap :options) option)
     (update-in db [:snap :options] disj option)
     (update-in db [:snap :options] conj option)))
-
-(m/=> viewport-tree [:-> any? Viewbox any?])
-(defn viewport-tree
-  [tree [x y width height]]
-  (->> [[x (+ x width)] [y (+ y height)]]
-       (kdtree/interval-search tree)
-       (kdtree/build-tree)))
 
 (m/=> nearest-neighbors [:-> App [:sequential NearestNeighbor]])
 (defn nearest-neighbors
@@ -45,10 +37,13 @@
            :nearest-neighbors nneighbors
            :nearest-neighbor (apply min-key :dist-squared nneighbors))))
 
-(m/=> update-viewbox-tree [:-> App App])
-(defn update-viewbox-tree
+(m/=> update-viewport-tree [:-> App App])
+(defn update-viewport-tree
   [db]
-  (assoc db :viewbox-kdtree (viewport-tree (:kdtree db) (frame.h/viewbox db))))
+  (let [[x y width height] (frame.h/viewbox db)]
+    (assoc db :viewbox-kdtree  (->> [[x (+ x width)] [y (+ y height)]]
+                                    (kdtree/interval-search (:kdtree db))
+                                    (kdtree/build-tree)))))
 
 (m/=> rebuild-tree [:-> App App])
 (defn rebuild-tree
@@ -59,7 +54,7 @@
                    (contains? (-> db :snap :options) :grid)
                    (into (ruler.h/steps-intersections db)))]
       (-> (assoc db :kdtree (kdtree/build-tree points))
-          (update-viewbox-tree)))
+          (update-viewport-tree)))
     (dissoc db :kdtree :viewbox-kdtree)))
 
 (m/=> update-tree [:-> App fn? [:vector Vec2D] App])
@@ -69,7 +64,7 @@
     (if (empty? points)
       db
       (-> (reduce #(update %1 :kdtree f %2) db points)
-          (update-viewbox-tree)))
+          (update-viewport-tree)))
     (rebuild-tree db)))
 
 (m/=> insert-to-tree [:-> App [:set uuid?] App])

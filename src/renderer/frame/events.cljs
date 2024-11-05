@@ -16,14 +16,14 @@
    (-> db
        (h/recenter-to-dom-rect dom-rect)
        (assoc :dom-rect dom-rect)
-       (snap.h/update-viewbox-tree))))
+       (snap.h/update-viewport-tree))))
 
 (rf/reg-event-db
  ::focus-selection
  [persist]
  (fn [db [_ focus-type]]
    (-> (h/focus-bounds db focus-type)
-       (snap.h/update-viewbox-tree))))
+       (snap.h/update-viewport-tree))))
 
 (rf/reg-event-db
  ::set-zoom

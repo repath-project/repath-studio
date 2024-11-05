@@ -6,6 +6,7 @@
    [renderer.app.effects :as-alias app.fx]
    [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.h]
+   [renderer.frame.db :refer [DomRect]]
    [renderer.frame.handlers :as frame.h]
    [renderer.history.handlers :as history.h]
    [renderer.snap.handlers :as snap.h]
@@ -80,6 +81,34 @@
        (element.h/add db)
        (dissoc-temp)))
 
+(m/=> axis-offset [:-> number? number? number? number?])
+(defn axis-offset
+  [position offset size]
+  (let [threshold 50
+        step 15]
+    (cond
+      (and (< position threshold)
+           (< position offset))
+      (- step)
+
+      (and (> position (- size threshold))
+           (> position offset))
+      step
+
+      :else 0)))
+
+(m/=> pan-out-of-canvas [:-> App DomRect Vec2D Vec2D App])
+(defn pan-out-of-canvas
+  [db dom-rect pointer-pos pointer-offset]
+  (let [[x y] pointer-pos
+        [offset-x offset-y] pointer-offset
+        pan [(axis-offset x offset-x (:width dom-rect))
+             (axis-offset y offset-y (:height dom-rect))]]
+    (cond-> db
+      (not-every? zero? pan)
+      (-> (frame.h/pan-by pan)
+          (snap.h/update-viewport-tree))))) ; REVIEW: Can we improve performance?
+
 (m/=> pointer-handler [:-> App PointerEvent number? App])
 (defn pointer-handler
   [db e now]
@@ -93,7 +122,7 @@
             (if (significant-drag? pointer-pos pointer-offset drag-threshold)
               (cond-> db
                 (not= tool :pan)
-                (frame.h/pan-out-of-canvas dom-rect pointer-pos pointer-offset)
+                (pan-out-of-canvas dom-rect pointer-pos pointer-offset)
 
                 (not drag)
                 (-> (hierarchy/drag-start e)
@@ -175,7 +204,7 @@
                                (- (:delta-y e)))]
           (frame.h/zoom-at-pointer db factor))
         (frame.h/pan-by db [(:delta-x e) (:delta-y e)]))
-      (snap.h/update-viewbox-tree)
+      (snap.h/update-viewport-tree)
       (add-fx [::app.fx/persist])))
 
 (m/=> cancel [:-> App App])

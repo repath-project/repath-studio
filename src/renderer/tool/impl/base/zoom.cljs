@@ -61,7 +61,7 @@
                            (:zoom-sensitivity db)
                            (/ furute-zoom current-zoom)))
         (frame.h/pan-to-bounds [x y offset-x offset-y])
-        (snap.h/update-viewbox-tree)
+        (snap.h/update-viewport-tree)
         (h/add-fx [::app.fx/persist]))))
 
 (defmethod hierarchy/pointer-up :zoom
@@ -71,5 +71,5 @@
                  (/ 1 (:zoom-sensitivity db)))]
     (-> db
         (frame.h/zoom-at-pointer factor)
-        (snap.h/update-viewbox-tree)
+        (snap.h/update-viewport-tree)
         (h/add-fx [::app.fx/persist]))))

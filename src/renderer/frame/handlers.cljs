@@ -111,25 +111,3 @@
                      :fit min-zoom
                      :fill (max width-ratio height-ratio)))
          (pan-to-bounds bounds)))))
-
-(m/=> axis-offset [:-> number? number? number? number?])
-(defn axis-offset
-  [position offset size]
-  (let [threshold 50
-        step 15]
-    (cond
-      (and (< position threshold)
-           (< position offset))
-      (- step)
-
-      (and (> position (- size threshold))
-           (> position offset))
-      step
-
-      :else 0)))
-
-(m/=> pan-out-of-canvas [:-> App DomRect Vec2D Vec2D App])
-(defn pan-out-of-canvas
-  [db dom-rect [x y] [offset-x offset-y]]
-  (pan-by db [(axis-offset x offset-x (:width dom-rect))
-              (axis-offset y offset-y (:height dom-rect))]))

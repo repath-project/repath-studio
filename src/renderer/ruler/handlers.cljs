@@ -47,8 +47,7 @@
   "Returns the intersection points of the rulers."
   [db]
   (let [zoom (get-in db [:documents (:active-document db) :zoom])
-        pan (get-in db [:documents (:active-document db) :pan])
-        viewbox (frame.h/viewbox zoom pan (:dom-rect db))
+        viewbox (frame.h/viewbox db)
         ruler-step (step zoom)]
     (combo/cartesian-product (steps-coll ruler-step viewbox :vertical)
                              (steps-coll ruler-step viewbox :horizontal))))

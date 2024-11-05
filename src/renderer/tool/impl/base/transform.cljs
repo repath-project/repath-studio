@@ -306,8 +306,7 @@
                      :recursive (pointer/alt? e)}]
         (-> (history.h/swap db)
             (h/set-cursor "default")
-            (scale delta options)
-            (snap.h/snap-with scale options)))
+            (scale (mat/add delta (snap.h/nearest-delta db)) options)))
 
       :idle db)))
 
@@ -332,6 +331,13 @@
         selected (filter :selected elements)
         options (-> db :snap :options)]
     (cond
+      (= (:state db) :scale)
+      (when-let [el (:clicked-element db)]
+        [(with-meta
+           (mat/add [(:x el) (:y el)]
+                    (h/pointer-delta db))
+           {:label "scale handle"})])
+
       (not= (:state db) :idle)
       (cond-> (element.h/snapping-points db (filter :visible selected))
         (seq (rest selected))

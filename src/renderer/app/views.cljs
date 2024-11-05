@@ -55,13 +55,13 @@
    ["State"  @(rf/subscribe [::tool.s/state])]
    ["Clicked element" (:id @(rf/subscribe [::app.s/clicked-element]))]
    ["Ignored elements" @(rf/subscribe [::document.s/ignored-ids])]
-   ["Snapping-points" (count @(rf/subscribe [::snap.s/points]))]
-   ["Snap" (map (fn [[k v]]
-                  [:div (str (name k)
-                             " "
-                             (if (number? v)
-                               (.toFixed v 2)
-                               (coll->str v)))]) @(rf/subscribe [::snap.s/nearest-neighbor]))]])
+   ["Snap" (into (map (fn [[k v]]
+                        ^{:key k}
+                        [:div (str (name k)
+                                   " "
+                                   (if (number? v)
+                                     (.toFixed v 2)
+                                     (coll->str v)))]) @(rf/subscribe [::snap.s/nearest-neighbor])))]])
 
 (defn debug-info
   []
