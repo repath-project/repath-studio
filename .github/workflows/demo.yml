@@ -36,7 +36,7 @@ jobs:
           fetch-tags: true
 
       - name: Install clojure tools
-        uses: DeLaGuardo/setup-clojure@12.5
+        uses: DeLaGuardo/setup-clojure@12.6
         with:
           cli: 1.12.0.1479
           clj-kondo: 2024.09.27
