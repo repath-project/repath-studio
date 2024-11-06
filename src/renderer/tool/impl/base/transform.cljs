@@ -358,11 +358,10 @@
         pivot-point @(rf/subscribe [::s/pivot-point])
         hovered-ids @(rf/subscribe [::element.s/hovered])]
     [:<>
-     (when (not= state :scale)
-       (for [el selected-elements]
-         (when (:bounds el)
-           ^{:key (str (:id el) "-bounds")}
-           [overlay/bounding-box (:bounds el) false])))
+     (for [el selected-elements]
+       (when (:bounds el)
+         ^{:key (str (:id el) "-bounds")}
+         [overlay/bounding-box (:bounds el) false]))
 
      (for [el hovered-ids]
        (when (:bounds el)
@@ -375,10 +374,10 @@
      (when (seq bounds)
        [:<>
         [handle.v/wrapping-bounding-box bounds]
-        (if (= state :scale)
-          [overlay/size-label bounds]
-          (when (not= state :translate)
-            [handle.v/bounding-corners bounds]))])
+        (case state
+          :scale [overlay/size-label bounds]
+          :idle [handle.v/bounding-corners bounds]
+          nil)])
 
      (when pivot-point
        [overlay/times pivot-point])]))
