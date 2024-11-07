@@ -75,6 +75,7 @@
   [db]
   (get-in db [:documents (:active-document db) :temp-element]))
 
+(m/=> create-temp-element [:-> App App])
 (defn create-temp-element
   [db]
   (->> (temp db)

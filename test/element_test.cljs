@@ -171,27 +171,27 @@
      (is (= (-> @selected first :attrs :fill) "black"))
      (not (-> @selected first :attrs :stroke)))))
 
-#_(deftest boolean-operation
-    (rf-test/run-test-sync
-     (rf/dispatch [::app.e/initialize-db])
-     (rf/dispatch [::document.e/init])
-     (let [selected (rf/subscribe [::s/selected])]
-       (rf/dispatch [::e/add {:tag :rect
-                              :attrs {:x 100
-                                      :y 100
-                                      :width 100
-                                      :height 100
-                                      :fill "red"
-                                      :stroke "black"}}])
-       (rf/dispatch [::e/add {:tag :rect
-                              :attrs {:x 100
-                                      :y 100
-                                      :width 100
-                                      :height 100}}])
-       (rf/dispatch [::e/select-all])
-       (rf/dispatch [::e/boolean-operation :unite])
-       (is (= (-> @selected first :tag) :path))
-       (is (= (-> @selected first :attrs :fill) "red")))))
+(deftest boolean-operation
+  (rf-test/run-test-sync
+   (rf/dispatch [::app.e/initialize-db])
+   (rf/dispatch [::document.e/init])
+   (let [selected (rf/subscribe [::s/selected])]
+     (rf/dispatch [::e/add {:tag :rect
+                            :attrs {:x 100
+                                    :y 100
+                                    :width 100
+                                    :height 100
+                                    :fill "red"
+                                    :stroke "black"}}])
+     (rf/dispatch [::e/add {:tag :rect
+                            :attrs {:x 100
+                                    :y 100
+                                    :width 100
+                                    :height 100}}])
+     (rf/dispatch [::e/select-all])
+     (rf/dispatch [::e/boolean-operation :unite])
+     (is (= (-> @selected first :tag) :path))
+     (is (= (-> @selected first :attrs :fill) "red")))))
 
 (deftest import-svg
   (rf-test/run-test-sync

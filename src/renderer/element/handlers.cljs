@@ -133,8 +133,8 @@
             (count (children-ids db (first parent-els)))))))
 
 (m/=> siblings [:function
-                [:-> App [:vector uuid?]]
-                [:-> App uuid? [:vector uuid?]]])
+                [:-> App [:maybe [:vector uuid?]]]
+                [:-> App uuid? [:maybe [:vector uuid?]]]])
 (defn siblings
   ([db]
    (:children (parent db)))
@@ -182,8 +182,10 @@
    of nested elements."
   [db id]
   (let [ancestor-els (reverse (ancestor-ids db id))]
-    (conj (mapv #(index db %) ancestor-els)
-          (index db id))))
+    (->> (index db id)
+         (conj (map #(index db %) ancestor-els))
+         (remove nil?)
+         (vec))))
 
 (m/=> descendant-ids [:function
                       [:-> App [:set uuid?]]
@@ -658,12 +660,18 @@
                 :parent (-> selected-elements first :parent)
                 :attrs (merge attrs {:d new-path})})))))
 
+(m/=> paste-in-place [:function
+                      [:-> App App]
+                      [:-> App Element App]])
 (defn paste-in-place
   ([db]
    (reduce paste-in-place (deselect db) (:copied-elements db)))
   ([db el]
    (reduce select (add db el) (selected-ids db))))
 
+(m/=> paste [:function
+             [:-> App App]
+             [:-> App Element Element App]])
 (defn paste
   ([db]
    (let [parent-el (hovered-svg db)]
@@ -705,6 +713,9 @@
                            :attrs attrs
                            :parent id}) (selected-ids db))))
 
+(m/=> paste-styles [:function
+                    [:-> App App]
+                    [:-> App uuid? App]])
 (defn paste-styles
   ([db]
    (reduce paste-styles db (selected-ids db)))
@@ -719,6 +730,7 @@
                    (update-attr id attr #(if % (-> attrs attr) disj))))
                db style-attrs)) db)))
 
+(m/=> inherit-attrs [:-> App Element uuid? App])
 (defn inherit-attrs
   [db source-el id]
   (reduce
@@ -787,6 +799,7 @@
     (-> (add db svg)
         (collapse))))
 
+(m/=> snapping-points [:-> App [:maybe [:sequential Element]] [:vector Vec2D]])
 (defn snapping-points
   [db els]
   (let [options (-> db :snap :options)]

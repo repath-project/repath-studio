@@ -2,6 +2,7 @@
   "Internationalization namespace
    https://github.com/taoensso/tempura"
   (:require
+   [malli.core :as m]
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.s]
    [taoensso.tempura :refer [tr] :refer-macros [load-resource-at-compile-time]]))
@@ -12,6 +13,7 @@
   {:en-US (load-resource-at-compile-time "lang/en-US.edn")
    :el-GR (load-resource-at-compile-time "lang/el-GR.edn")})
 
+(m/=> lang? [:-> keyword? boolean?])
 (defn lang?
   [lang]
   (contains? dictionary lang))

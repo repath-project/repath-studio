@@ -9,6 +9,7 @@
 (def PathManipulation
   [:enum :simplify :smooth :flatten :reverse])
 
+(m/=> get-d [:-> any? string?])
 (defn get-d
   [paper-path]
   (-> paper-path

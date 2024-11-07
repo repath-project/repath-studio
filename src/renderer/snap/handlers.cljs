@@ -27,6 +27,7 @@
                (assoc nneighbor :base-point %)))
        (remove nil?)))
 
+(m/=> update-nearest-neighbors [:-> App App])
 (defn update-nearest-neighbors
   [db]
   (let [zoom (get-in db [:documents (:active-document db) :zoom])
