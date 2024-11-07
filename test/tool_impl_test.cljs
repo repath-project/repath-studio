@@ -3,12 +3,11 @@
    [cljs.test :refer-macros [deftest is]]
    [day8.re-frame.test :as rf-test]
    [re-frame.core :as rf]
-   [renderer.app.events :as app.e]
-   [renderer.document.events :as document.e]
-   [renderer.element.events :as element.e]
-   [renderer.tool.events :as e]
-   [renderer.tool.hierarchy :as hierarchy]
-   [renderer.tool.impl.core]))
+   [renderer.app.events :as-alias app.e]
+   [renderer.document.events :as-alias document.e]
+   [renderer.element.events :as-alias element.e]
+   [renderer.tool.events :as-alias e]
+   [renderer.tool.hierarchy :as hierarchy]))
 
 (deftest edit
   (rf-test/run-test-sync

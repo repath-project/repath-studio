@@ -14,8 +14,8 @@
 
 (defn persist!
   [db]
-  (let [data (-> db history.h/drop-rest (select-keys db/persistent-keys))]
-    (rf.storage/->store config/app-key data)))
+  (let [db (cond-> db (:active-document db) history.h/drop-rest)]
+    (rf.storage/->store config/app-key (select-keys db db/persistent-keys))))
 
 (def persist
   "This is a modified version of akiroz.re-frame.storage/persist-db-keys
@@ -94,3 +94,21 @@
  ::set-document-attr
  (fn [[k v]]
    (.setAttribute js/window.document.documentElement k v)))
+
+(defn check-and-throw
+  "Throws an exception if `db` doesn't match the Spec"
+  [db event]
+  (when (not (db/valid? db))
+    (js/console.error (str "Event: " (first event)))
+    (throw (js/Error. (str "Spec check failed: " (db/explain db))))))
+
+(def schema-validator
+  (rf/->interceptor
+   :id ::schema-validator
+   :after (fn [context]
+            (let [db (if (contains? (rf/get-effect context) :db)
+                       (rf/get-effect context :db)
+                       (rf/get-coeffect context :db))
+                  event (rf/get-coeffect context :event)]
+              (check-and-throw db event)
+              context))))

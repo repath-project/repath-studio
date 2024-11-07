@@ -228,19 +228,22 @@
     (reduce (fn [db id]
               (let [container (element.h/parent-container db id)
                     hovered-svg-k (:id (element.h/hovered-svg db))]
-                (cond-> db
-                  :always
-                  (element.h/translate id offset)
-
+                (cond-> (element.h/translate db id offset)
                   (and (seq (element.h/selected db))
                        (empty? (rest (element.h/selected db)))
                        (contains? #{:translate :clone} (:state db))
                        (not= (:id (element.h/parent db id)) hovered-svg-k)
                        (not (element/svg? (element.h/entity db id))))
-                  (-> (element.h/set-parent hovered-svg-k)
-                       ;; FIXME: Handle nested containers.
-                      (element.h/translate id (take 2 (:bounds container)))
-                      (element.h/translate id (mat/mul (take 2 (:bounds (element.h/hovered-svg db))) -1))))))
+                  (cond->
+                   :always
+                    (element.h/set-parent hovered-svg-k)
+
+                    ;; FIXME: Handle nested containers.
+                    (:bounds container)
+                    (element.h/translate id (vec (take 2 (:bounds container))))
+
+                    (:bounds (element.h/hovered-svg db))
+                    (element.h/translate id (mat/mul (take 2 (:bounds (element.h/hovered-svg db))) -1))))))
             db
             (element.h/top-ancestor-ids db))))
 

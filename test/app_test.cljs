@@ -3,8 +3,8 @@
    [cljs.test :refer-macros [deftest is]]
    [day8.re-frame.test :as rf-test]
    [re-frame.core :as rf]
-   [renderer.app.events :as e]
-   [renderer.app.subs :as s]))
+   [renderer.app.events :as-alias e]
+   [renderer.app.subs :as-alias s]))
 
 (deftest lang
   (rf-test/run-test-sync

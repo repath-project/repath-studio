@@ -28,15 +28,15 @@
   (apply conj [:documents (:active-document db) :elements] more))
 
 (m/=> entities [:function
-                [:-> App [:map-of uuid? Element]]
-                [:-> App [:set uuid?] [:map-of uuid? Element]]])
+                [:-> App [:maybe [:map-of uuid? Element]]]
+                [:-> App [:maybe [:set uuid?]] [:maybe [:map-of uuid? Element]]]])
 (defn entities
   ([db]
    (get-in db (path db)))
   ([db ids]
    (select-keys (entities db) (vec ids))))
 
-(m/=> entity [:-> App uuid? Element])
+(m/=> entity [:-> App [:maybe uuid?] [:maybe Element]])
 (defn entity
   [db id]
   (get (entities db) id))
@@ -73,7 +73,7 @@
 
 (m/=> parent [:function
               [:-> App [:maybe Element]]
-              [:-> App uuid? [:maybe Element]]])
+              [:-> App [:maybe uuid?] [:maybe Element]]])
 (defn parent
   ([db]
    (let [selected-ks (selected-ids db)]
@@ -210,7 +210,7 @@
   [db]
   (set/union (selected-ids db) (descendant-ids db)))
 
-(m/=> non-selected-ids [:-> App [:set uuid?]])
+(m/=> non-selected-ids [:-> App [:maybe [:set uuid?]]])
 (defn non-selected-ids
   [db]
   (set/difference (-> db entities keys set) (selected-with-descendant-ids db)))
@@ -263,8 +263,8 @@
          (refresh-bounds id)))))
 
 (m/=> set-attr [:function
-                [:-> App keyword? string? App]
-                [:-> App uuid? keyword? string? App]])
+                [:-> App keyword? any? App]
+                [:-> App uuid? keyword? any? App]])
 (defn set-attr
   ([db k v]
    (reduce (partial-right set-attr k v) db (selected-ids db)))
@@ -650,12 +650,13 @@
                              (path/boolean-operation path-a path-b operation)))
                          (:d attrs)
                          (rest selected-elements))]
-    (cond-> (delete db)
+    (cond-> db
       (seq new-path)
-      (add {:type :element
-            :tag :path
-            :parent (-> selected-elements first :parent)
-            :attrs (merge attrs {:d new-path})}))))
+      (-> (delete)
+          (add {:type :element
+                :tag :path
+                :parent (-> selected-elements first :parent)
+                :attrs (merge attrs {:d new-path})})))))
 
 (defn paste-in-place
   ([db]

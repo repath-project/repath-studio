@@ -49,12 +49,12 @@
 (m/=> undos? [:-> History boolean?])
 (defn undos?
   [active-history]
-  (and active-history (contains? (state active-history) :parent)))
+  (boolean (and active-history (:parent (state active-history)))))
 
 (m/=> redos? [:-> History boolean?])
 (defn redos?
   [active-history]
-  (and active-history (next-position active-history)))
+  (boolean (and active-history (next-position active-history))))
 
 (m/=> swap [:-> App App])
 (defn swap
@@ -135,7 +135,8 @@
 (m/=> clear [:-> App App])
 (defn clear
   [db]
-  (update-in db (path db) dissoc :states :position))
+  (-> (assoc-in db (path db :states) {})
+      (update-in (path db) dissoc :position)))
 
 (m/=> state-count [:-> App int?])
 (defn state-count

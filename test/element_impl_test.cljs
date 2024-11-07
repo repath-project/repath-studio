@@ -1,8 +1,7 @@
 (ns element-impl-test
   (:require
    [cljs.test :refer-macros [deftest is]]
-   [renderer.element.hierarchy :as hierarchy]
-   [renderer.element.impl.core]))
+   [renderer.element.hierarchy :as hierarchy]))
 
 (deftest circle
   (let [circle-el {:type :element

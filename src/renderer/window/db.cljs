@@ -1,7 +1,7 @@
 (ns renderer.window.db)
 
 (def Window
-  [:map {:default {}}
+  [:map {:closed true}
    [:maximized {:default true} boolean?]
    [:minimized {:default false} boolean?]
    [:fullscreen {:default false} boolean?]

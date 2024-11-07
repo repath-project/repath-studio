@@ -20,13 +20,7 @@
    [renderer.window.db :refer [Window]]))
 
 (def Panels
-  [:map-of {:default {:tree {:visible true}
-                      :properties {:visible true}
-                      :timeline {:visible false}
-                      :xml {:visible false}
-                      :history {:visible false}
-                      :repl-history {:visible false}}}
-   keyword? [:map [:visible boolean?]]])
+  [:map-of keyword? [:map [:visible boolean?]]])
 
 (def Lang
   [:fn {:error/fn (fn [{:keys [value]} _] (str value " is not a supported language"))}
@@ -40,8 +34,8 @@
    [:pointer-offset {:optional true} Vec2D]
    [:adjusted-pointer-pos {:default [0 0]} Vec2D]
    [:adjusted-pointer-offset {:optional true} Vec2D]
-   [:nearest-neighbor-offset {:optional true} Vec2D]
-   [:nearest-neighbor {:optional true} NearestNeighbor]
+   [:nearest-neighbor-offset {:optional true} [:maybe Vec2D]]
+   [:nearest-neighbor {:optional true} [:maybe NearestNeighbor]]
    [:nearest-neighbors {:optional true} [:sequential NearestNeighbor]]
    [:drag {:optional true} boolean?]
    [:zoom-sensitivity {:default 0.75} [:and number? pos?]]
@@ -49,8 +43,8 @@
    [:double-click-delta {:default 250} [:and number? pos?]]
    [:state {:default :idle} State]
    [:grid {:default false :persist true} boolean?]
-   [:ruler {:persist true} Ruler]
-   [:snap {:persist true} Snap]
+   [:ruler {:default {} :persist true} Ruler]
+   [:snap {:default {} :persist true} Snap]
    [:active-document {:optional true :persist true} [:maybe uuid?]]
    [:cursor {:default "default"} Cursor]
    [:dom-rect {:optional true} DomRect]
@@ -64,13 +58,18 @@
    [:debug-info {:default false} boolean?]
    [:pen-mode {:default false} boolean?]
    [:backdrop {:default false} boolean?]
-   [:lang {:default :en-Us :persist true} Lang]
+   [:lang {:default :en-US :persist true} Lang]
    [:repl-mode {:default :cljs} keyword?]
    [:worker {:default {:tasks {}}} [:map [:tasks map?]]]
-   [:window Window]
-   [:theme {:persist true} Theme]
-   [:timeline Timeline]
-   [:panels {:persist true} Panels]
+   [:window {:default {}} Window]
+   [:theme {:default {} :persist true} Theme]
+   [:timeline {:default {}} Timeline]
+   [:panels {:default {:tree {:visible true}
+                       :properties {:visible true}
+                       :timeline {:visible false}
+                       :xml {:visible false}
+                       :history {:visible false}
+                       :repl-history {:visible false}} :persist true} Panels]
    [:version {:optional true :persist true} string?]
    [:fx {:default []} vector?]
    [:pivot-point {:optional true} Vec2D]

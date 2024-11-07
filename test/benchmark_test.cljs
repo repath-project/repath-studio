@@ -3,11 +3,11 @@
    [cljs.test :refer-macros [deftest is testing]]
    [clojure.string :as str]
    [day8.re-frame.test :as rf-test]
+   [malli.instrument :as mi]
    [re-frame.core :as rf]
-   [renderer.app.events :as app.e]
-   [renderer.document.events :as document.e]
-   [renderer.element.events :as element.e]
-   [renderer.snap.events]))
+   [renderer.app.events :as-alias app.e]
+   [renderer.document.events :as-alias document.e]
+   [renderer.element.events :as-alias element.e]))
 
 (defn bench
   "Returns the elapsed time of the event handling in milliseconds."
@@ -23,6 +23,9 @@
   (rf-test/run-test-sync
    (rf/dispatch [::app.e/initialize-db])
    (rf/dispatch [::document.e/init])
+
+   ;; Istrumentation affects performance, so we disable it.
+   (mi/unstrument!)
 
    (testing "creating elements"
      (let [points (str/join " " (repeatedly 100 #(rand-int 1000)))]
@@ -40,4 +43,8 @@
      (is (> 100 (bench [::element.e/translate [100 100]]))))
 
    (testing "scaling elements"
-     (is (> 100 (bench [::element.e/scale [100 100]]))))))
+     (is (> 100 (bench [::element.e/scale [100 100]]))))
+
+   (mi/instrument!)))
+
+

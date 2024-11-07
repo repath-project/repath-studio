@@ -2,7 +2,9 @@
   (:require
    [cljs.reader :as edn]
    [config :as config]
+   [malli.core :as m]
    [re-frame.core :as rf]
+   [renderer.app.db :refer [App]]
    [renderer.app.effects :as-alias app.fx :refer [persist]]
    [renderer.app.events :as-alias app.e]
    [renderer.dialog.events :as-alias dialog.e]
@@ -19,6 +21,7 @@
    [renderer.snap.handlers :as snap.h]
    [renderer.utils.compatibility :as compatibility]
    [renderer.utils.dom :as dom]
+   [renderer.utils.math :refer [Vec2D]]
    [renderer.utils.system :as system]
    [renderer.utils.vec :as vec]
    [renderer.window.effects :as-alias window.fx]))
@@ -133,7 +136,10 @@
          swapped-i (.indexOf document-tabs swapped-id)]
      (assoc db :document-tabs (vec/swap document-tabs dragged-i swapped-i)))))
 
-(defn- create
+(m/=> create [:function
+              [:-> map? uuid? App]
+              [:-> map? uuid? Vec2D App]])
+(defn create
   ([db guid]
    (create db guid [595 842]))
   ([db guid size]

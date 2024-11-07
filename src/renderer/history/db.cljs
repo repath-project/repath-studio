@@ -14,7 +14,7 @@
    [:children [:vector uuid?]]])
 
 (def History
-  [:map {:default {} :closed true}
+  [:map {:closed true}
    [:zoom {:optional true :default 0.5} number?]
    [:translate {:optional true} Vec2D]
    [:position {:optional true} uuid?]

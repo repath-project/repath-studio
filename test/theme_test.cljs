@@ -3,9 +3,9 @@
    [cljs.test :refer-macros [deftest is testing]]
    [day8.re-frame.test :as rf-test]
    [re-frame.core :as rf]
-   [renderer.app.events :as app.e]
-   [renderer.theme.events :as e]
-   [renderer.theme.subs :as s]))
+   [renderer.app.events :as-alias app.e]
+   [renderer.theme.events :as-alias e]
+   [renderer.theme.subs :as-alias s]))
 
 (deftest mode
   (rf-test/run-test-sync

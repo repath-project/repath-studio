@@ -22,9 +22,10 @@
 (m/=> nearest-neighbors [:-> App [:sequential NearestNeighbor]])
 (defn nearest-neighbors
   [db]
-  (map #(when-let [nneighbor (kdtree/nearest-neighbor (:viewbox-kdtree db) %)]
-          (assoc nneighbor :base-point %))
-       (tool.hierarchy/snapping-points db)))
+  (->> (tool.hierarchy/snapping-points db)
+       (map #(when-let [nneighbor (kdtree/nearest-neighbor (:viewbox-kdtree db) %)]
+               (assoc nneighbor :base-point %)))
+       (remove nil?)))
 
 (defn update-nearest-neighbors
   [db]
@@ -67,14 +68,15 @@
           (update-viewport-tree)))
     (rebuild-tree db)))
 
-(m/=> insert-to-tree [:-> App [:set uuid?] App])
+(m/=> insert-to-tree [:-> App [:maybe [:set uuid?]] App])
 (defn insert-to-tree
   [db ids]
-  (let [points (->> (vals (element.h/entities db ids))
+  (let [points (->> (element.h/entities db ids)
+                    (vals)
                     (element.h/snapping-points db))]
     (update-tree db kdtree/insert points)))
 
-(m/=> delete-from-tree [:-> App [:set uuid?] App])
+(m/=> delete-from-tree [:-> App [:maybe [:set uuid?]] App])
 (defn delete-from-tree
   [db ids]
   (let [points (->> (vals (element.h/entities db ids))

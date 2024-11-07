@@ -3,9 +3,9 @@
    [cljs.test :refer-macros [deftest is testing]]
    [day8.re-frame.test :as rf-test]
    [re-frame.core :as rf]
-   [renderer.app.events :as app.e]
-   [renderer.notification.events :as e]
-   [renderer.notification.subs :as s]))
+   [renderer.app.events :as-alias app.e]
+   [renderer.notification.events :as-alias e]
+   [renderer.notification.subs :as-alias s]))
 
 (deftest add-and-remove
   (rf-test/run-test-sync

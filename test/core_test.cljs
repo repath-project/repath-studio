@@ -1,0 +1,37 @@
+(ns core-test
+  (:require
+   [malli.instrument :as mi]
+   [re-frame.core :as rf]
+   [renderer.app.effects :as app.fx]
+   [renderer.app.events]
+   [renderer.app.subs]
+   [renderer.dialog.events]
+   [renderer.document.effects]
+   [renderer.document.events]
+   [renderer.document.subs]
+   [renderer.element.effects]
+   [renderer.element.events]
+   [renderer.element.impl.core]
+   [renderer.element.subs]
+   [renderer.frame.events]
+   [renderer.frame.subs]
+   [renderer.history.effects]
+   [renderer.history.events]
+   [renderer.history.subs]
+   [renderer.notification.events]
+   [renderer.notification.subs]
+   [renderer.ruler.events]
+   [renderer.snap.events]
+   [renderer.theme.events]
+   [renderer.theme.subs]
+   [renderer.timeline.events]
+   [renderer.tool.events]
+   [renderer.tool.impl.core]
+   [renderer.tool.subs]
+   [renderer.tree.events]
+   [renderer.window.events]
+   [renderer.window.subs]
+   [renderer.worker.events]))
+
+(mi/instrument!)
+(rf/reg-global-interceptor app.fx/schema-validator)

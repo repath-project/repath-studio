@@ -12,13 +12,14 @@
    [renderer.utils.pointer :as pointer]))
 
 (m/=> viewbox [:function
-               [:-> App Viewbox]
-               [:-> ZoomFactor Vec2D DomRect Viewbox]])
+               [:-> App [:maybe Viewbox]]
+               [:-> ZoomFactor Vec2D DomRect [:maybe Viewbox]]])
 (defn viewbox
   ([db]
    (let [zoom (get-in db [:documents (:active-document db) :zoom])
          pan (get-in db [:documents (:active-document db) :pan])]
-     (viewbox zoom pan (:dom-rect db))))
+     (when-let [dom-rect (:dom-rect db)]
+       (viewbox zoom pan dom-rect))))
   ([zoom pan dom-rect]
    (let [{:keys [width height]} dom-rect
          [x y] pan

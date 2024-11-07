@@ -25,7 +25,7 @@
    [:ignored-ids {:default #{}} [:set [:or keyword? uuid?]]]
    [:zoom {:default 1} ZoomFactor]
    [:rotate {:default 0} number?]
-   [:history History]
+   [:history {:optional true} History]
    [:temp-element {:optional true} Element]
    [:pan {:default [0 0]} Vec2D]
    [:elements {:default {} :persist true} [:map-of uuid? Element]]

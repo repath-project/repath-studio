@@ -59,7 +59,7 @@
 
 (rf/reg-event-db
  ::toggle-grid
- persist
+ [persist]
  (fn [db [_]]
    (update db :grid not)))
 

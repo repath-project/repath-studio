@@ -3,12 +3,12 @@
    [cljs.test :refer-macros [deftest is testing]]
    [day8.re-frame.test :as rf-test]
    [re-frame.core :as rf]
-   [renderer.app.events :as app.e]
-   [renderer.document.events :as document.e]
-   [renderer.document.subs :as document.s]
-   [renderer.element.events :as element.e]
-   [renderer.frame.events :as e]
-   [renderer.frame.subs :as s]))
+   [renderer.app.events :as-alias app.e]
+   [renderer.document.events :as-alias document.e]
+   [renderer.document.subs :as-alias document.s]
+   [renderer.element.events :as-alias element.e]
+   [renderer.frame.events :as-alias e]
+   [renderer.frame.subs :as-alias s]))
 
 (deftest frame
   (rf-test/run-test-sync
@@ -50,8 +50,6 @@
              zoom (rf/subscribe [::document.s/zoom])
              pan (rf/subscribe [::document.s/pan])]
          (is (= @zoom 1))
-
-         (rf/dispatch [::element.e/select-all])
 
          (rf/dispatch [::e/focus-selection :original])
          (is (= @viewbox [-675.5 -51.5 1946 945]))

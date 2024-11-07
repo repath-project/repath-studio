@@ -26,22 +26,21 @@
    :id ::auto-rebuild-tree
    :before (fn [context]
              (let [db (rf/get-coeffect context :db)]
-               (rf/assoc-coeffect context :non-selected-ids (element.h/non-selected-ids db))))
+               (cond-> context
+                 (:active-document db)
+                 (rf/assoc-coeffect :non-selected-ids (element.h/non-selected-ids db)))))
    :after (fn [context]
-            (let [db (rf/get-effect context :db)
-                  previous-non-selected-ids (rf/get-coeffect context :non-selected-ids)
-                  non-selected-ids (element.h/non-selected-ids db)]
-              (cond
-                (and (:active-document db)
-                     (not= non-selected-ids previous-non-selected-ids))
-                (rf/assoc-effect
-                 context
-                 :db
-                 (-> db
-                     (h/insert-to-tree (set/difference non-selected-ids previous-non-selected-ids))
-                     (h/delete-from-tree (set/difference previous-non-selected-ids non-selected-ids))))
-
-                :else
+            (let [db (rf/get-effect context :db)]
+              (if (:active-document db)
+                (let [previous-non-selected-ids (rf/get-coeffect context :non-selected-ids)
+                      non-selected-ids (element.h/non-selected-ids db)]
+                  (cond-> context
+                    (not= non-selected-ids previous-non-selected-ids)
+                    (rf/assoc-effect
+                     :db
+                     (-> db
+                         (h/insert-to-tree (set/difference non-selected-ids previous-non-selected-ids))
+                         (h/delete-from-tree (set/difference previous-non-selected-ids non-selected-ids))))))
                 context)))))
 
 (rf/reg-global-interceptor auto-rebuild-tree)

@@ -1,7 +1,7 @@
 (ns renderer.ruler.db)
 
 (def Ruler
-  [:map {:default {} :closed true}
+  [:map {:closed true}
    [:visible {:default true} boolean?]
    [:locked {:default false} boolean?]
    [:size {:default 23} number?]])

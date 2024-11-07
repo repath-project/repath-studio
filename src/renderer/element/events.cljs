@@ -272,7 +272,7 @@
  ::animate
  (fn [db [_ tag attrs]]
    (-> (h/animate db tag attrs)
-       (history.h/finalize (comp str/capitalize name second)))))
+       (history.h/finalize (str/capitalize (name tag))))))
 
 (rf/reg-event-db
  ::set-parent

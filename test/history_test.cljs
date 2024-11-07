@@ -3,12 +3,12 @@
    [cljs.test :refer-macros [deftest is testing]]
    [day8.re-frame.test :as rf-test]
    [re-frame.core :as rf]
-   [renderer.app.events :as app.e]
-   [renderer.document.events :as document.e]
-   [renderer.element.events :as element.e]
-   [renderer.element.subs :as element.s]
-   [renderer.history.events :as e]
-   [renderer.history.subs :as s]))
+   [renderer.app.events :as-alias app.e]
+   [renderer.document.events :as-alias document.e]
+   [renderer.element.events :as-alias element.e]
+   [renderer.element.subs :as-alias element.s]
+   [renderer.history.events :as-alias e]
+   [renderer.history.subs :as-alias s]))
 
 (deftest undo-redo
   (rf-test/run-test-sync
