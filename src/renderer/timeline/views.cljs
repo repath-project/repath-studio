@@ -144,7 +144,7 @@
       :drag-line guide-snap?
       :auto-scroll true
       :getActionRender custom-renderer
-      :on-click-action #(rf/dispatch [::element.e/select (keyword (.. %2 -action -id))])}]))
+      :on-click-action #(rf/dispatch [::element.e/select (keyword (.. %2 -action -id)) false])}]))
 
 (defn time-bar
   []

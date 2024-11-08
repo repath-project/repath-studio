@@ -16,13 +16,13 @@
 (rf/reg-event-db
  ::select
  (fn [db [_ id multiple]]
-   (-> (h/select db id multiple)
-       (history.h/finalize "Select element"))))
+   (-> (h/toggle-selection db id multiple)
+       (history.h/finalize (if multiple "Modify selection" "Select element")))))
 
 (rf/reg-event-db
  ::select-ids
  (fn [db [_ ids]]
-   (-> (reduce (partial-right h/assoc-prop :selected true) (h/deselect db) ids)
+   (-> (reduce (partial-right h/assoc-prop :selected true) (h/deselect-all db) ids)
        (history.h/finalize "Select elements"))))
 
 (rf/reg-event-db
@@ -92,7 +92,7 @@
 (rf/reg-event-db
  ::deselect-all
  (fn [db]
-   (-> (h/deselect db)
+   (-> (h/deselect-all db)
        (history.h/finalize "Deselect all"))))
 
 (rf/reg-event-db

@@ -114,7 +114,7 @@
     (assoc :clicked-element element)
 
     (and (= button :right) (not= (:id element) :bounding-box))
-    (element.h/select (:id element) (pointer/shift? e))
+    (element.h/toggle-selection (:id element) (pointer/shift? e))
 
     :always
     (element.h/ignore :bounding-box)))
@@ -123,8 +123,8 @@
   [db {:keys [element] :as e}]
   (-> db
       (dissoc :clicked-element)
-      (element.h/clear-ignored :bounding-box)
-      (element.h/select (:id element) (pointer/shift? e))
+      (element.h/unignore :bounding-box)
+      (element.h/toggle-selection (:id element) (pointer/shift? e))
       (history.h/finalize (if (:selected element) "Deselect element" "Select element"))))
 
 (defmethod hierarchy/double-click :transform
@@ -216,7 +216,7 @@
   [db multiple]
   (cond-> db
     (selectable? (:clicked-element db))
-    (element.h/select (-> db :clicked-element :id) multiple)))
+    (element.h/toggle-selection (-> db :clicked-element :id) multiple)))
 
 (m/=> translate [:-> App Vec2D [:maybe Orientation] App])
 (defn translate
@@ -266,7 +266,7 @@
     (cond-> (-> (h/set-state db state)
                 (element.h/clear-hovered))
       (selectable? clicked-element)
-      (-> (element.h/select (-> db :clicked-element :id) (pointer/shift? e))
+      (-> (element.h/toggle-selection (-> db :clicked-element :id) (pointer/shift? e))
           (snap.h/delete-from-tree #{(-> db :clicked-element :id)})))))
 
 (defmethod hierarchy/drag :transform
@@ -316,7 +316,7 @@
 (defmethod hierarchy/drag-end :transform
   [db e]
   (-> (case (:state db)
-        :select (-> (cond-> db (not (pointer/shift? e)) element.h/deselect)
+        :select (-> (cond-> db (not (pointer/shift? e)) element.h/deselect-all)
                     (reduce-by-area (pointer/alt? e) element.h/select)
                     (h/dissoc-temp)
                     (history.h/finalize "Modify selection"))

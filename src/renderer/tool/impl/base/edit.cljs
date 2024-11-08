@@ -40,7 +40,7 @@
     (-> db
         (element.h/clear-ignored)
         (dissoc :clicked-element)
-        (element.h/select (-> e :element :id) (pointer/shift? e))
+        (element.h/toggle-selection (-> e :element :id) (pointer/shift? e))
         (history.h/finalize "Select element"))
     (dissoc db :clicked-element)))
 

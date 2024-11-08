@@ -54,7 +54,7 @@
 (m/=> selected [:-> App [:sequential Element]])
 (defn selected
   [db]
-  (filter :selected (vals (entities db))))
+  (->> db entities vals (filter :selected)))
 
 (m/=> ratio-locked? [:-> App boolean?])
 (defn ratio-locked?
@@ -64,7 +64,7 @@
 (m/=> selected-ids [:-> App [:set uuid?]])
 (defn selected-ids
   [db]
-  (set (map :id (selected db))))
+  (->> db selected (map :id) set))
 
 (m/=> children-ids [:-> App uuid? [:vector uuid?]])
 (defn children-ids
@@ -183,9 +183,9 @@
   (when-let [sibling-els (siblings db id)]
     (.indexOf sibling-els id)))
 
-(m/=> index-tree-path [:-> App uuid? [:sequential int?]])
-(defn index-tree-path
-  "Returns a sequence that represents the index tree path of an element.
+(m/=> index-path [:-> App uuid? [:sequential int?]])
+(defn index-path
+  "Returns a sequence that represents the index path of an element.
    For example, the seventh element of the second svg on the canvas will
    return [2 7]. This is useful when we need to figure out the global index
    of nested elements."
@@ -293,14 +293,15 @@
     (apply update-el db id attr.hierarchy/update-attr k f more)
     db))
 
-(m/=> deselect [:function
-                [:-> App App]
-                [:-> App uuid? App]])
+(m/=> deselect [:-> App uuid? App])
 (defn deselect
-  ([db]
-   (reduce deselect db (selected-ids db)))
-  ([db id]
-   (assoc-prop db id :selected false)))
+  [db id]
+  (assoc-prop db id :selected false))
+
+(m/=> deselect-all [:-> App App])
+(defn deselect-all
+  [db]
+  (reduce deselect db (selected-ids db)))
 
 (m/=> collapse [:-> App uuid? App])
 (defn collapse
@@ -323,20 +324,21 @@
   (->> (ancestor-ids db id)
        (reduce expand db)))
 
-(m/=> select [:function
-              [:-> App uuid? App]
-              [:-> App uuid? boolean? App]])
+(m/=> select [:-> App uuid? App])
 (defn select
-  ([db id]
-   (-> db
-       (expand-ancestors id)
-       (assoc-prop id :selected true)))
-  ([db id multiple]
-   (if (entity db id)
-     (if multiple
-       (update-prop db id :selected not)
-       (-> db deselect (select id)))
-     (deselect db))))
+  [db id]
+  (-> db
+      (expand-ancestors id)
+      (assoc-prop id :selected true)))
+
+(m/=> toggle-selection [:-> App uuid? boolean? App])
+(defn toggle-selection
+  [db id multiple]
+  (if (entity db id)
+    (if multiple
+      (update-prop db id :selected not)
+      (-> db deselect-all (select id)))
+    (deselect-all db)))
 
 (m/=> select-all [:-> App App])
 (defn select-all
@@ -370,12 +372,12 @@
 (m/=> selected-sorted [:-> App [:sequential Element]])
 (defn selected-sorted
   [db]
-  (sort-by #(index-tree-path db (:id %)) (selected db)))
+  (sort-by #(index-path db (:id %)) (selected db)))
 
 (m/=> top-selected-sorted [:-> App [:sequential Element]])
 (defn top-selected-sorted
   [db]
-  (sort-by #(index-tree-path db (:id %)) (top-selected-ancestors db)))
+  (sort-by #(index-path db (:id %)) (top-selected-ancestors db)))
 
 (m/=> selected-sorted-ids [:-> App [:vector uuid?]])
 (defn selected-sorted-ids
@@ -416,18 +418,19 @@
     (:active-document db)
     (assoc-in [:documents (:active-document db) :hovered-ids] #{})))
 
-(m/=> clear-ignored [:function
-                     [:-> App App]
-                     [:-> App [:or uuid? keyword?] App]])
+(m/=> unignore [:-> App [:or uuid? keyword?] App])
+(defn unignore
+  [db id]
+  (cond-> db
+    (:active-document db)
+    (update-in [:documents (:active-document db) :ignored-ids] disj id)))
+
+(m/=> clear-ignored [:-> App App])
 (defn clear-ignored
-  ([db]
-   (cond-> db
-     (:active-document db)
-     (assoc-in [:documents (:active-document db) :ignored-ids] #{})))
-  ([db id]
-   (cond-> db
-     (:active-document db)
-     (update-in [:documents (:active-document db) :ignored-ids] disj id))))
+  [db]
+  (cond-> db
+    (:active-document db)
+    (assoc-in [:documents (:active-document db) :ignored-ids] #{})))
 
 (m/=> bounds [:-> App [:maybe Bounds]])
 (defn bounds
@@ -474,8 +477,8 @@
                   [:-> App uuid? uuid? App]])
 (defn set-parent
   ([db parent-id]
-   (reduce #(set-parent %1 parent-id %2) db (selected-sorted-ids db)))
-  ([db parent-id id]
+   (reduce (partial-right set-parent parent-id) db (selected-sorted-ids db)))
+  ([db id parent-id]
    (let [el (entity db id)]
      (cond-> db
        (and el (not= id parent-id) (not (locked? db id)))
@@ -489,7 +492,7 @@
   (let [sibling-els (:children (entity db parent-id))
         last-index (count sibling-els)]
     (-> db
-        (set-parent parent-id id)
+        (set-parent id parent-id)
         (update-prop parent-id :children vec/move last-index i))))
 
 (m/=> hovered-svg [:-> App Element])
@@ -645,7 +648,7 @@
 (m/=> add [:-> App map? App])
 (defn add
   [db el]
-  (-> (deselect db)
+  (-> (deselect-all db)
       (create (assoc el :selected true))))
 
 (m/=> boolean-operation [:-> App PathBooleanOperation App])
@@ -671,7 +674,7 @@
                       [:-> App Element App]])
 (defn paste-in-place
   ([db]
-   (reduce paste-in-place (deselect db) (:copied-elements db)))
+   (reduce paste-in-place (deselect-all db) (:copied-elements db)))
   ([db el]
    (reduce select (add db el) (selected-ids db))))
 
@@ -681,7 +684,7 @@
 (defn paste
   ([db]
    (let [parent-el (hovered-svg db)]
-     (reduce (partial-right paste parent-el) (deselect db) (:copied-elements db))))
+     (reduce (partial-right paste parent-el) (deselect-all db) (:copied-elements db))))
   ([db el parent-el]
    (let [center (bounds/center (:copied-bounds db))
          el-center (bounds/center (:bounds el))
@@ -693,7 +696,7 @@
       select
       (cond-> db
         :always
-        (-> (deselect)
+        (-> (deselect-all)
             (add (assoc el :parent (:id parent-el)))
             (place (mat/add pointer-pos offset)))
 
@@ -703,7 +706,7 @@
 (m/=> duplicate [:-> App App])
 (defn duplicate
   [db]
-  (reduce create (deselect db) (top-selected-sorted db)))
+  (reduce create (deselect-all db) (top-selected-sorted db)))
 
 (m/=> animate [:function
                [:-> App AnimationTag App]
@@ -713,7 +716,7 @@
   ([db tag]
    (animate db tag {}))
   ([db tag attrs]
-   (reduce (partial-right animate tag attrs) (deselect db) (selected-ids db)))
+   (reduce (partial-right animate tag attrs) (deselect-all db) (selected-ids db)))
   ([db id tag attrs]
    (reduce select (add db {:tag tag
                            :attrs attrs
@@ -754,7 +757,7 @@
   ([db]
    (group db (top-selected-sorted-ids db)))
   ([db ids]
-   (reduce (fn [db id] (set-parent db (-> db selected-ids first) id))
+   (reduce (fn [db id] (set-parent db id (-> db selected-ids first)))
            (add db {:tag :g
                     :parent (:id (parent db))}) ids)))
 
