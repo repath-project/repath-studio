@@ -71,14 +71,23 @@
   [db id]
   (:children (entity db id)))
 
+(m/=> parent-ids [:-> App [:set uuid?]])
+(defn parent-ids
+  [db]
+  (->> (selected db)
+       (map :parent)
+       (remove nil?)
+       (set)))
+
 (m/=> parent [:function
               [:-> App [:maybe Element]]
               [:-> App [:maybe uuid?] [:maybe Element]]])
 (defn parent
   ([db]
-   (let [selected-ks (selected-ids db)]
-     (or (parent db (first selected-ks))
-         (root db))))
+   (let [ids (parent-ids db)]
+     (if (= (count ids) 1)
+       (entity db (first ids))
+       (root db))))
   ([db id]
    (when-let [parent-id (:parent (entity db id))]
      (entity db parent-id))))
@@ -160,12 +169,12 @@
    (reduce #(concat %1 (ancestor-ids db %2)) [] (selected-ids db)))
   ([db id]
    (loop [parent-id (:parent (entity db id))
-          parent-ids []]
+          ids []]
      (if parent-id
        (recur
         (:parent (entity db parent-id))
-        (conj parent-ids parent-id))
-       parent-ids))))
+        (conj ids parent-id))
+       ids))))
 
 (m/=> index [:-> App uuid? [:maybe int?]])
 (defn index
@@ -289,27 +298,24 @@
                 [:-> App uuid? App]])
 (defn deselect
   ([db]
-   (reduce deselect db (keys (entities db))))
+   (reduce deselect db (selected-ids db)))
   ([db id]
    (assoc-prop db id :selected false)))
 
-(m/=> collapse [:function
-                [:-> App App]
-                [:-> App uuid? App]])
+(m/=> collapse [:-> App uuid? App])
 (defn collapse
-  ([db]
-   (reduce collapse db (keys (entities db))))
-  ([db id]
-   (update-in db [:documents (:active-document db) :collapsed-ids] conj id)))
+  [db id]
+  (update-in db [:documents (:active-document db) :collapsed-ids] conj id))
 
-(m/=> expand [:function
-              [:-> App App]
-              [:-> App uuid? App]])
+(m/=> collapse-all [:-> App App])
+(defn collapse-all
+  [db]
+  (reduce collapse db (keys (entities db))))
+
+(m/=> expand [:-> App uuid? App])
 (defn expand
-  ([db]
-   (reduce expand db (keys (entities db))))
-  ([db id]
-   (update-in db [:documents (:active-document db) :collapsed-ids] disj id)))
+  [db id]
+  (update-in db [:documents (:active-document db) :collapsed-ids] disj id))
 
 (m/=> expand-ancestors [:-> App uuid? App])
 (defn expand-ancestors
@@ -797,7 +803,7 @@
                 (assoc-in [:attrs :x] x)
                 (assoc-in [:attrs :y] y))]
     (-> (add db svg)
-        (collapse))))
+        (collapse-all))))
 
 (m/=> snapping-points [:-> App [:maybe [:sequential Element]] [:vector Vec2D]])
 (defn snapping-points

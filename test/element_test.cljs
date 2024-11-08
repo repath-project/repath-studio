@@ -54,6 +54,46 @@
        (rf/dispatch [::e/select-same-tags])
        (is (= (count @selected) 2))))))
 
+(deftest visibility
+  (rf-test/run-test-sync
+   (rf/dispatch [::app.e/initialize-db])
+   (rf/dispatch [::document.e/init])
+
+   (let [selected (rf/subscribe [::s/selected])]
+     (rf/dispatch [::e/add {:tag :rect
+                            :attrs {:width 100
+                                    :height 100}}])
+     (testing "default state"
+       (is (-> @selected first :visible)))
+
+     (testing "toggle visibility"
+       (rf/dispatch [::e/toggle-prop (-> @selected first :id) :visible])
+       (is (not (-> @selected first :visible))))
+
+     (testing "revert visibility"
+       (rf/dispatch [::e/toggle-prop (-> @selected first :id) :visible])
+       (is (-> @selected first :visible))))))
+
+(deftest label
+  (rf-test/run-test-sync
+   (rf/dispatch [::app.e/initialize-db])
+   (rf/dispatch [::document.e/init])
+
+   (let [selected (rf/subscribe [::s/selected])]
+     (rf/dispatch [::e/add {:tag :rect
+                            :attrs {:width 100
+                                    :height 100}}])
+     (testing "default state"
+       (is (not (-> @selected first :label))))
+
+     (testing "set label"
+       (rf/dispatch [::e/set-prop (-> @selected first :id) :label "rect"])
+       (is (= (-> @selected first :label) "rect")))
+
+     (testing "clear label"
+       (rf/dispatch [::e/set-prop (-> @selected first :id) :label ""])
+       (is (not (-> @selected first :label)))))))
+
 (deftest lock
   (rf-test/run-test-sync
    (rf/dispatch [::app.e/initialize-db])
@@ -97,6 +137,23 @@
      (testing "remove attribute"
        (rf/dispatch [::e/remove-attr :fill])
        (is (not (-> @selected first :attrs :fill)))))))
+
+(deftest delete
+  (rf-test/run-test-sync
+   (rf/dispatch [::app.e/initialize-db])
+   (rf/dispatch [::document.e/init])
+
+   (let [selected (rf/subscribe [::s/selected])]
+     (rf/dispatch [::e/add {:tag :rect
+                            :attrs {:width 100
+                                    :height 100}}])
+
+     (testing "delete selection"
+       (let [id (-> @selected first :id)]
+         (is (uuid? id))
+         (rf/dispatch [::e/delete])
+         (is (empty? @selected))
+         (is (not @(rf/subscribe [::s/entity id]))))))))
 
 (deftest scale
   (rf-test/run-test-sync
