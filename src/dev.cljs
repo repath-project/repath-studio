@@ -1,12 +1,11 @@
-(ns renderer.dev
+(ns dev
   {:dev/always true}
   (:require
    [clojure.pprint :refer (pprint)]
    [clojure.string :as str]
    [malli.dev.cljs :as dev]
    [re-frame.core :as rf]
-   [renderer.app.effects :as app.fx]
-   [renderer.core]))
+   [renderer.app.effects :as app.fx]))
 
 (comment
   ;; Enable full db validation

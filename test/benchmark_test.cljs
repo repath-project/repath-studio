@@ -5,6 +5,7 @@
    [day8.re-frame.test :as rf-test]
    [malli.instrument :as mi]
    [re-frame.core :as rf]
+   [renderer.app.effects :as app.fx]
    [renderer.app.events :as-alias app.e]
    [renderer.document.events :as-alias document.e]
    [renderer.element.events :as-alias element.e]))
@@ -24,8 +25,9 @@
    (rf/dispatch [::app.e/initialize-db])
    (rf/dispatch [::document.e/init])
 
-   ;; Istrumentation affects performance, so we disable it.
+   ;; Istrumentation and db validation affects performance, so we disable it.
    (mi/unstrument!)
+   (rf/clear-global-interceptor ::app.fx/schema-validator)
 
    (testing "creating elements"
      (let [points (str/join " " (repeatedly 100 #(rand-int 1000)))]
@@ -45,6 +47,7 @@
    (testing "scaling elements"
      (is (> 100 (bench [::element.e/scale [100 100]]))))
 
-   (mi/instrument!)))
+   (mi/instrument!)
+   (rf/reg-global-interceptor app.fx/schema-validator)))
 
 

@@ -33,7 +33,8 @@
                                                         day8.re-frame.tracing.trace-enabled? true}}
 
                    :devtools {:preloads [devtools.preload
-                                         day8.re-frame-10x.preload.react-18]}}
+                                         day8.re-frame-10x.preload.react-18
+                                         dev]}}
 
              :release {:build-options {:ns-aliases {day8.re-frame.tracing
                                                     day8.re-frame.tracing-stubs}}}
@@ -42,8 +43,6 @@
 
                        :renderer {:entries [renderer.core]
                                   :depends-on #{:shared}
-                                  :preloads [renderer.dev
-                                             malli.dev.cljs-kondo-preload]
                                   :init-fn renderer.core/init!}
 
                        :worker {:init-fn worker.core/init!
