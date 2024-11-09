@@ -114,7 +114,7 @@
 (defn pointer-handler
   [db e now]
   (let [{:keys [pointer-offset tool dom-rect drag primary-tool drag-threshold nearest-neighbor]} db
-        {:keys [button buttons pointer-pos]} e
+        {:keys [button pointer-pos]} e
         adjusted-pointer-pos (frame.h/adjust-pointer-pos db pointer-pos)
         db (snap.h/update-nearest-neighbors db)]
     (case (:type e)
@@ -143,7 +143,7 @@
         (-> (assoc :primary-tool tool)
             (activate :pan))
 
-        (not= buttons :right)
+        (not= button :right)
         (assoc :pointer-offset pointer-pos
                :adjusted-pointer-offset adjusted-pointer-pos
                :nearest-neighbor-offset (:point nearest-neighbor))

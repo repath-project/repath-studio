@@ -23,7 +23,6 @@
    [:pointer-id number?]
    [:primary boolean?]
    [:button [:maybe PointerButton]]
-   [:buttons [:maybe PointerButton]]
    [:modifiers [:set ModifierKey]]])
 
 (m/=> ctrl? [:-> map? boolean?])
@@ -91,5 +90,4 @@
                                              :pointer-id (.-pointerId e)
                                              :primary (.-isPrimary e)
                                              :button (button->key (.-button e))
-                                             :buttons (button->key (.-buttons e))
                                              :modifiers (modifiers e)}]))
