@@ -84,9 +84,8 @@
 
 (rf/reg-event-fx
  ::load-system-fonts
- (fn [_ [_ file-path]]
+ (fn [_ _]
    {::window.fx/ipc-invoke {:channel "load-system-fonts"
-                            :data file-path
                             :on-success [::set-system-fonts]
                             :on-error [::notification.e/exception]
                             :formatter #(js->clj % :keywordize-keys true)}}))
