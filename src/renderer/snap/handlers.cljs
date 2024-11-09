@@ -42,16 +42,18 @@
 (m/=> update-viewport-tree [:-> App App])
 (defn update-viewport-tree
   [db]
-  (let [[x y width height] (frame.h/viewbox db)]
-    (assoc db :viewbox-kdtree  (->> [[x (+ x width)] [y (+ y height)]]
-                                    (kdtree/interval-search (:kdtree db))
-                                    (kdtree/build-tree)))))
+  (let [[x y width height] (frame.h/viewbox db)
+        boundaries [[x (+ x width)] [y (+ y height)]]]
+    (assoc db :viewbox-kdtree (-> (:kdtree db)
+                                  (kdtree/interval-search boundaries)
+                                  (kdtree/build-tree)))))
 
 (m/=> rebuild-tree [:-> App App])
 (defn rebuild-tree
   [db]
   (if (-> db :snap :active)
-    (let [points (element.h/snapping-points db (tool.hierarchy/snapping-elements db))
+    (let [elements (tool.hierarchy/snapping-elements db)
+          points (element.h/snapping-points db elements)
           points (cond-> points
                    (contains? (-> db :snap :options) :grid)
                    (into (ruler.h/steps-intersections db)))]
@@ -71,17 +73,16 @@
 
 (m/=> insert-to-tree [:-> App [:maybe [:set uuid?]] App])
 (defn insert-to-tree
-  [db ids]
-  (let [points (->> (element.h/entities db ids)
-                    (vals)
-                    (element.h/snapping-points db))]
+  [db element-ids]
+  (let [elements (vals (element.h/entities db element-ids))
+        points (element.h/snapping-points db elements)]
     (update-tree db kdtree/insert points)))
 
 (m/=> delete-from-tree [:-> App [:maybe [:set uuid?]] App])
 (defn delete-from-tree
-  [db ids]
-  (let [points (->> (vals (element.h/entities db ids))
-                    (element.h/snapping-points db))]
+  [db element-ids]
+  (let [elements (vals (element.h/entities db element-ids))
+        points (element.h/snapping-points db elements)]
     (update-tree db kdtree/delete points)))
 
 (m/=> nearest-delta [:-> App Vec2D])
