@@ -15,7 +15,7 @@
    [renderer.document.handlers :as h]
    [renderer.element.handlers :as element.h]
    [renderer.history.handlers :as history.h]
-   [renderer.notification.events :as notification.e]
+   [renderer.notification.events :as-alias notification.e]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
    [renderer.snap.handlers :as snap.h]
@@ -182,19 +182,12 @@
                               :formatter #(mapv edn/read-string %)}}
      {::app.fx/file-open {:options file-picker-options
                           :on-success [::file-read]
-                          :on-error [::file-error]}})))
+                          :on-error [::notification.e/exception]}})))
 
 (rf/reg-event-fx
  ::file-read
  (fn [_ [_ file]]
    {::fx/read file}))
-
-(rf/reg-event-fx
- ::file-error
- (fn [{:keys [db]} [_ ^js/Error error]]
-   (cond-> db
-     (not= (.-name error) "AbortError")
-     (notification.h/add (notification.v/exception error)))))
 
 (rf/reg-event-fx
  ::open-directory
@@ -239,7 +232,7 @@
                             :formatter (fn [file] {:id (:id document)
                                                    :title (.-name file)})
                             :on-success [::saved]
-                            :on-error [::file-error]}}))))
+                            :on-error [::notification.e/exception]}}))))
 
 (rf/reg-event-fx
  ::download
@@ -263,7 +256,7 @@
                             :formatter (fn [file] {:id id
                                                    :title (.-name file)})
                             :on-success [::close-saved]
-                            :on-error [::file-error]}}))))
+                            :on-error [::notification.e/exception]}}))))
 
 (rf/reg-event-fx
  ::save-as
@@ -280,7 +273,7 @@
                             :formatter (fn [file] {:id (:id document)
                                                    :title (.-name file)})
                             :on-success [::saved]
-                            :on-error [::file-error]}}))))
+                            :on-error [::notification.e/exception]}}))))
 
 (rf/reg-event-db
  ::saved

@@ -3,8 +3,7 @@
   (:require
    [re-frame.core :as rf]
    [renderer.app.effects :as-alias app.fx]
-   [renderer.notification.handlers :as notification.h]
-   [renderer.notification.views :as notification.v]
+   [renderer.notification.events :as-alias notification.e]
    [renderer.tool.handlers :as tool.h]
    [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.drop :as drop]))
@@ -23,7 +22,7 @@
                                                   "image/jpeg" [".jpeg" ".jpg"]
                                                   "image/bmp" [".fmp"]}}]}
                       :on-success [::success]
-                      :on-error [::error]}]))
+                      :on-error [::notification.e/exception]}]))
 
 (rf/reg-event-fx
  ::success
@@ -31,13 +30,6 @@
    {:db (tool.h/activate db :transform)
     ::add-image [file (or (:point (:nearest-neighbor db))
                           (:adjusted-pointer-pos db))]}))
-
-(rf/reg-event-db
- ::error
- (fn [db [_ error]]
-   (cond-> db
-     (not= (.-name error) "AbortError")
-     (notification.h/add (notification.v/exception error)))))
 
 (rf/reg-fx
  ::add-image

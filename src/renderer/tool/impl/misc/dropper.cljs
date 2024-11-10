@@ -45,6 +45,5 @@
 (rf/reg-event-db
  ::error
  (fn [db [_ error]]
-   (cond-> (h/activate db :transform)
-     (not= (.-name error) "AbortError")
-     (notification.h/add (notification.v/exception error)))))
+   (-> (h/activate db :transform)
+       (notification.h/add (notification.v/exception error)))))
