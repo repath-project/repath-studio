@@ -44,15 +44,112 @@
 
      (testing "select same tags"
        (rf/dispatch [::e/add {:tag :rect
-                              :attrs {:width 100
-                                      :height 100}}])
+                              :attrs {:width "100"
+                                      :height "100"}}])
        (is (= :rect (-> @selected first :tag)))
 
        (rf/dispatch [::e/add {:tag :rect
-                              :attrs {:width 100
-                                      :height 100}}])
+                              :attrs {:width "100"
+                                      :height "100"}}])
        (rf/dispatch [::e/select-same-tags])
        (is (= (count @selected) 2))))))
+
+(deftest index
+  (rf-test/run-test-sync
+   (rf/dispatch [::app.e/initialize-db])
+   (rf/dispatch [::document.e/new-from-template nil])
+
+   (rf/dispatch [::e/add {:tag :rect
+                          :attrs {:width "100"
+                                  :height "100"}}])
+   (rf/dispatch [::e/add {:tag :circle
+                          :attrs {:r "100"
+                                  :cx "100"
+                                  :cy "100"}}])
+
+   (rf/dispatch [::e/add {:tag :line
+                          :attrs {:x1 "0"
+                                  :y1 "0"
+                                  :x2 "50"
+                                  :y2 "50"}}])
+
+   (let [elements (rf/subscribe [::s/root-children])]
+     (testing "initial order"
+       (is (= (mapv :tag @elements) [:rect :circle :line])))
+
+     (testing "lower"
+       (rf/dispatch [::e/lower])
+       (is (= (mapv :tag @elements) [:rect :line :circle])))
+
+     (testing "raise"
+       (rf/dispatch [::e/raise])
+       (is (= (mapv :tag @elements) [:rect :circle :line])))
+
+     (testing "raise when already on top"
+       (rf/dispatch [::e/raise])
+       (is (= (mapv :tag @elements) [:rect :circle :line])))
+
+     (testing "lower to bottom"
+       (rf/dispatch [::e/lower-to-bottom])
+       (is (= (mapv :tag @elements) [:line :rect :circle])))
+
+     (testing "raise to top"
+       (rf/dispatch [::e/raise-to-top])
+       (is (= (mapv :tag @elements) [:rect :circle :line]))))))
+
+(deftest align
+  (rf-test/run-test-sync
+   (rf/dispatch [::app.e/initialize-db])
+   (rf/dispatch [::document.e/new-from-template [800 600]])
+
+   (rf/dispatch [::e/add {:tag :rect
+                          :attrs {:x "50"
+                                  :y "50"
+                                  :width "100"
+                                  :height "100"}}])
+
+   (let [elements (rf/subscribe [::s/selected])]
+     (testing "align left"
+       (rf/dispatch [::e/align :left])
+       (is (= (-> @elements first :attrs) {:x "0"
+                                           :y "50"
+                                           :width "100"
+                                           :height "100"})))
+
+     (testing "align top"
+       (rf/dispatch [::e/align :top])
+       (is (= (-> @elements first :attrs) {:x "0"
+                                           :y "0"
+                                           :width "100"
+                                           :height "100"})))
+
+     (testing "align right"
+       (rf/dispatch [::e/align :right])
+       (is (= (-> @elements first :attrs) {:x "700"
+                                           :y "0"
+                                           :width "100"
+                                           :height "100"})))
+
+     (testing "align bottom"
+       (rf/dispatch [::e/align :bottom])
+       (is (= (-> @elements first :attrs) {:x "700"
+                                           :y "500"
+                                           :width "100"
+                                           :height "100"})))
+
+     (testing "align center vertical"
+       (rf/dispatch [::e/align :center-vertical])
+       (is (= (-> @elements first :attrs) {:x "700"
+                                           :y "250"
+                                           :width "100"
+                                           :height "100"})))
+
+     (testing "align center horizontal"
+       (rf/dispatch [::e/align :center-horizontal])
+       (is (= (-> @elements first :attrs) {:x "350"
+                                           :y "250"
+                                           :width "100"
+                                           :height "100"}))))))
 
 (deftest visibility
   (rf-test/run-test-sync
@@ -61,8 +158,8 @@
 
    (let [selected (rf/subscribe [::s/selected])]
      (rf/dispatch [::e/add {:tag :rect
-                            :attrs {:width 100
-                                    :height 100}}])
+                            :attrs {:width "100"
+                                    :height "100"}}])
      (testing "default state"
        (is (-> @selected first :visible)))
 
@@ -81,8 +178,8 @@
 
    (let [selected (rf/subscribe [::s/selected])]
      (rf/dispatch [::e/add {:tag :rect
-                            :attrs {:width 100
-                                    :height 100}}])
+                            :attrs {:width "100"
+                                    :height "100"}}])
      (testing "default state"
        (is (not (-> @selected first :label))))
 
@@ -101,8 +198,8 @@
 
    (let [selected (rf/subscribe [::s/selected])]
      (rf/dispatch [::e/add {:tag :rect
-                            :attrs {:width 100
-                                    :height 100}}])
+                            :attrs {:width "100"
+                                    :height "100"}}])
      (testing "default state"
        (is (not (-> @selected first :locked))))
 
@@ -121,8 +218,8 @@
 
    (let [selected (rf/subscribe [::s/selected])]
      (rf/dispatch [::e/add {:tag :rect
-                            :attrs {:width 100
-                                    :height 100
+                            :attrs {:width "100"
+                                    :height "100"
                                     :fill "white"}}])
      (is (= (-> @selected first :attrs :fill) "white"))
 
@@ -145,8 +242,8 @@
 
    (let [selected (rf/subscribe [::s/selected])]
      (rf/dispatch [::e/add {:tag :rect
-                            :attrs {:width 100
-                                    :height 100}}])
+                            :attrs {:width "100"
+                                    :height "100"}}])
 
      (testing "delete selection"
        (let [id (-> @selected first :id)]
@@ -161,8 +258,8 @@
    (rf/dispatch [::document.e/init])
    (let [selected (rf/subscribe [::s/selected])]
      (rf/dispatch [::e/add {:tag :rect
-                            :attrs {:width 100
-                                    :height 100}}])
+                            :attrs {:width "100"
+                                    :height "100"}}])
      (rf/dispatch [::e/scale [2 4]])
      (is (= (-> @selected first :attrs :width) "200"))
      (is (= (-> @selected first :attrs :height) "400")))))
@@ -173,10 +270,10 @@
    (rf/dispatch [::document.e/init])
    (let [selected (rf/subscribe [::s/selected])]
      (rf/dispatch [::e/add {:tag :rect
-                            :attrs {:x 100
-                                    :y 100
-                                    :width 100
-                                    :height 100}}])
+                            :attrs {:x "100"
+                                    :y "100"
+                                    :width "100"
+                                    :height "100"}}])
      (rf/dispatch [::e/translate [50 100]])
      (is (= (-> @selected first :attrs :x) "150"))
      (is (= (-> @selected first :attrs :y) "200")))))
@@ -187,10 +284,10 @@
    (rf/dispatch [::document.e/init])
    (let [selected (rf/subscribe [::s/selected])]
      (rf/dispatch [::e/add {:tag :rect
-                            :attrs {:x 100
-                                    :y 100
-                                    :width 100
-                                    :height 100}}])
+                            :attrs {:x "100"
+                                    :y "100"
+                                    :width "100"
+                                    :height "100"}}])
      (rf/dispatch [::e/place [100 100]])
      (is (= (-> @selected first :attrs :x) "50"))
      (is (= (-> @selected first :attrs :y) "50")))))
@@ -201,10 +298,10 @@
    (rf/dispatch [::document.e/init])
    (let [selected (rf/subscribe [::s/selected])]
      (rf/dispatch [::e/add {:tag :rect
-                            :attrs {:x 100
-                                    :y 100
-                                    :width 100
-                                    :height 100
+                            :attrs {:x "100"
+                                    :y "100"
+                                    :width "100"
+                                    :height "100"
                                     :fill "red"}}])
      (rf/dispatch [::e/->path])
      (is (= (-> @selected first :tag) :path))
@@ -217,10 +314,10 @@
    (rf/dispatch [::document.e/init])
    (let [selected (rf/subscribe [::s/selected])]
      (rf/dispatch [::e/add {:tag :rect
-                            :attrs {:x 100
-                                    :y 100
-                                    :width 100
-                                    :height 100
+                            :attrs {:x "100"
+                                    :y "100"
+                                    :width "100"
+                                    :height "100"
                                     :fill "red"
                                     :stroke "black"}}])
      (rf/dispatch [::e/stroke->path])
@@ -234,17 +331,17 @@
    (rf/dispatch [::document.e/init])
    (let [selected (rf/subscribe [::s/selected])]
      (rf/dispatch [::e/add {:tag :rect
-                            :attrs {:x 100
-                                    :y 100
-                                    :width 100
-                                    :height 100
+                            :attrs {:x "100"
+                                    :y "100"
+                                    :width "100"
+                                    :height "100"
                                     :fill "red"
                                     :stroke "black"}}])
      (rf/dispatch [::e/add {:tag :rect
-                            :attrs {:x 100
-                                    :y 100
-                                    :width 100
-                                    :height 100}}])
+                            :attrs {:x "100"
+                                    :y "100"
+                                    :width "100"
+                                    :height "100"}}])
      (rf/dispatch [::e/select-all])
      (rf/dispatch [::e/boolean-operation :unite])
      (is (= (-> @selected first :tag) :path))
@@ -268,10 +365,10 @@
    (rf/dispatch [::app.e/initialize-db])
    (rf/dispatch [::document.e/init])
    (rf/dispatch [::e/add {:tag :rect
-                          :attrs {:x 100
-                                  :y 100
-                                  :width 100
-                                  :height 100}}])
+                          :attrs {:x "100"
+                                  :y "100"
+                                  :width "100"
+                                  :height "100"}}])
    (let [selected (rf/subscribe [::s/selected])
          id (-> @selected first :id)]
      (rf/dispatch [::e/animate :animate {}])
@@ -283,10 +380,10 @@
    (rf/dispatch [::app.e/initialize-db])
    (rf/dispatch [::document.e/init])
    (rf/dispatch [::e/add {:tag :rect
-                          :attrs {:x 100
-                                  :y 100
-                                  :width 100
-                                  :height 100}}])
+                          :attrs {:x "100"
+                                  :y "100"
+                                  :width "100"
+                                  :height "100"}}])
    (let [selected (rf/subscribe [::s/selected])
          id (-> @selected first :id)]
      (testing "group"

@@ -138,13 +138,12 @@
 
 (m/=> create [:function
               [:-> map? uuid? App]
-              [:-> map? uuid? Vec2D App]])
+              [:-> map? uuid? [:maybe Vec2D] App]])
 (defn create
   ([db guid]
    (create db guid [595 842]))
   ([db guid size]
-   (-> db
-       (h/create-tab (assoc db/default :id guid))
+   (-> (h/create-tab db (assoc db/default :id guid))
        (element.h/create-default-canvas size)
        (h/center))))
 

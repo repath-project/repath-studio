@@ -461,6 +461,9 @@
            (update-in (path db) dissoc id)
            (expand id))))))
 
+(m/=> update-index [:function
+                    [:-> App fn? App]
+                    [:-> App uuid? fn? App]])
 (defn update-index
   ([db f]
    (reduce (partial-right update-index f) db (selected-sorted-ids db)))
@@ -632,7 +635,7 @@
         child-els
         (add-children child-els)))))
 
-(m/=> create-default-canvas [:-> App Vec2D App])
+(m/=> create-default-canvas [:-> App [:maybe Vec2D] App])
 (defn create-default-canvas
   [db size]
   (cond-> db
