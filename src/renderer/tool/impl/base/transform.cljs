@@ -79,7 +79,7 @@
               (hovered? db el intersecting?)
               (f (:id el)))) db (filter :visible (vals (element.h/entities db)))))
 
-(defmethod hierarchy/pointer-move :transform
+(defmethod hierarchy/on-pointer-move :transform
   [db {:keys [element] :as e}]
   (cond-> db
     (not (pointer/shift? e))
@@ -95,19 +95,19 @@
     (:id element)
     (element.h/hover (:id element))))
 
-(defmethod hierarchy/key-down :transform
+(defmethod hierarchy/on-key-down :transform
   [db e]
   (cond-> db
     (pointer/shift? e)
     (element.h/ignore :bounding-box)))
 
-(defmethod hierarchy/key-up :transform
+(defmethod hierarchy/on-key-up :transform
   [db e]
   (cond-> db
     (not (pointer/shift? e))
     (element.h/clear-ignored)))
 
-(defmethod hierarchy/pointer-down :transform
+(defmethod hierarchy/on-pointer-down :transform
   [db {:keys [button element] :as e}]
   (cond-> db
     element
@@ -119,7 +119,7 @@
     :always
     (element.h/ignore :bounding-box)))
 
-(defmethod hierarchy/pointer-up :transform
+(defmethod hierarchy/on-pointer-up :transform
   [db {:keys [element] :as e}]
   (-> db
       (dissoc :clicked-element)
@@ -127,7 +127,7 @@
       (element.h/toggle-selection (:id element) (pointer/shift? e))
       (history.h/finalize (if (:selected element) "Deselect element" "Select element"))))
 
-(defmethod hierarchy/double-click :transform
+(defmethod hierarchy/on-double-click :transform
   [db e]
   (let [{{:keys [tag id]} :element} e]
     (if (= tag :g)
@@ -138,7 +138,7 @@
         (not= :canvas tag)
         (h/activate :edit)))))
 
-(defmethod hierarchy/deactivate :transform
+(defmethod hierarchy/on-deactivate :transform
   [db]
   (-> (element.h/clear-ignored db)
       (dissoc :pivot-point)))
@@ -259,7 +259,7 @@
     :else
     :idle))
 
-(defmethod hierarchy/drag-start :transform
+(defmethod hierarchy/on-drag-start :transform
   [db e]
   (let [clicked-element (:clicked-element db)
         state (drag-start->state clicked-element)]
@@ -269,7 +269,7 @@
       (-> (element.h/toggle-selection (-> db :clicked-element :id) (pointer/shift? e))
           (snap.h/delete-from-tree #{(-> db :clicked-element :id)})))))
 
-(defmethod hierarchy/drag :transform
+(defmethod hierarchy/on-drag :transform
   [db e]
   (let [state (:state db)
         ctrl? (pointer/ctrl? e)
@@ -313,7 +313,7 @@
 
       :idle db)))
 
-(defmethod hierarchy/drag-end :transform
+(defmethod hierarchy/on-drag-end :transform
   [db e]
   (-> (case (:state db)
         :select (-> (cond-> db (not (pointer/shift? e)) element.h/deselect-all)

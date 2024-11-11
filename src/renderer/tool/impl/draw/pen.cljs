@@ -15,7 +15,7 @@
   []
   {:icon "pencil"})
 
-(defmethod hierarchy/drag :pen
+(defmethod hierarchy/on-drag :pen
   [db]
   (let [{:keys [active-document adjusted-pointer-pos]} db
         points-path [:documents active-document :temp-element :attrs :points]]
@@ -27,7 +27,7 @@
                               :stroke (document.h/attr db :stroke)
                               :fill "transparent"}}))))
 
-(defmethod hierarchy/drag-end :pen
+(defmethod hierarchy/on-drag-end :pen
   [db _e]
   (let [path (-> (h/temp db)
                  (element/->path)

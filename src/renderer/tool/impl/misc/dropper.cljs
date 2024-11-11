@@ -20,7 +20,7 @@
   []
   "Click anywhere to pick a color.")
 
-(defmethod hierarchy/activate :dropper
+(defmethod hierarchy/on-activate :dropper
   [db]
   (if (.-EyeDropper js/window)
     (h/add-fx db [::color.fx/dropper {:on-success [::success]

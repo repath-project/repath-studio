@@ -27,13 +27,13 @@
   []
   [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction."])
 
-(defmethod hierarchy/pointer-down :edit
+(defmethod hierarchy/on-pointer-down :edit
   [db e]
   (cond-> db
     (:element e)
     (assoc :clicked-element (:element e))))
 
-(defmethod hierarchy/pointer-up :edit
+(defmethod hierarchy/on-pointer-up :edit
   [db e]
   (if-not (and (= (:button e) :right)
                (:selected (:element e)))
@@ -43,18 +43,18 @@
         (history.h/finalize "Select element"))
     (dissoc db :clicked-element)))
 
-(defmethod hierarchy/pointer-move :edit
+(defmethod hierarchy/on-pointer-move :edit
   [db e]
   (let [el-id (-> e :element :id)]
     (cond-> (element.h/clear-hovered db)
       el-id
       (element.h/hover el-id))))
 
-(defmethod hierarchy/drag-start :edit
+(defmethod hierarchy/on-drag-start :edit
   [db]
   (h/set-state db :edit))
 
-(defmethod hierarchy/drag :edit
+(defmethod hierarchy/on-drag :edit
   [db e]
   (let [clicked-element (:clicked-element db)
         db (history.h/swap db)
@@ -67,7 +67,7 @@
       el-id
       (element.h/update-el el-id element.hierarchy/edit delta handle-id))))
 
-(defmethod hierarchy/drag-end :edit
+(defmethod hierarchy/on-drag-end :edit
   [db _e]
   (-> (h/set-state db :idle)
       (dissoc :clicked-element)

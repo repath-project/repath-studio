@@ -13,7 +13,7 @@
   []
   {:icon "hand"})
 
-(defmethod hierarchy/activate :pan
+(defmethod hierarchy/on-activate :pan
   [db]
   (h/set-cursor db "grab"))
 
@@ -21,19 +21,19 @@
   []
   "Click and drag to pan.")
 
-(defmethod hierarchy/pointer-up :pan
+(defmethod hierarchy/on-pointer-up :pan
   [db]
   (h/set-cursor db "grab"))
 
-(defmethod hierarchy/pointer-down :pan
+(defmethod hierarchy/on-pointer-down :pan
   [db]
   (h/set-cursor db "grabbing"))
 
-(defmethod hierarchy/drag :pan
+(defmethod hierarchy/on-drag :pan
   [db e]
   (frame.h/pan-by db (mat/sub (:pointer-pos db) (:pointer-pos e))))
 
-(defmethod hierarchy/drag-end :pan
+(defmethod hierarchy/on-drag-end :pan
   [db _e]
   (-> (h/set-cursor db "grab")
       (snap.h/update-viewport-tree)

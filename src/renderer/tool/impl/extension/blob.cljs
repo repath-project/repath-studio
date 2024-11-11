@@ -17,7 +17,7 @@
   (mat/distance (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
                 (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))))
 
-(defmethod hierarchy/drag-start :blob
+(defmethod hierarchy/on-drag-start :blob
   [db]
   (let [[offset-x offset-y] (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
         radius (pointer-delta db)]
@@ -32,7 +32,7 @@
                             :fill (document.h/attr db :fill)
                             :stroke (document.h/attr db :stroke)}})))
 
-(defmethod hierarchy/drag :blob
+(defmethod hierarchy/on-drag :blob
   [db]
   (let [[offset-x offset-y] (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
         radius (pointer-delta db)

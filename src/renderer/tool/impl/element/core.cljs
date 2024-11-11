@@ -22,15 +22,15 @@
   []
   "Click and drag to create an element.")
 
-(defmethod hierarchy/activate ::hierarchy/element
+(defmethod hierarchy/on-activate ::hierarchy/element
   [db]
   (h/set-cursor db "crosshair"))
 
-(defmethod hierarchy/drag-start ::hierarchy/element
+(defmethod hierarchy/on-drag-start ::hierarchy/element
   [db]
   (h/set-state db :create))
 
-(defmethod hierarchy/drag-end ::hierarchy/element
+(defmethod hierarchy/on-drag-end ::hierarchy/element
   [db _e]
   (-> db
       (h/create-temp-element)

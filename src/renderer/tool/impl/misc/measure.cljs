@@ -15,17 +15,17 @@
   []
   "Click and drag to measure a distance.")
 
-(defmethod hierarchy/activate :measure
+(defmethod hierarchy/on-activate :measure
   [db]
   (h/set-cursor db "crosshair"))
 
-(defmethod hierarchy/deactivate :measure
+(defmethod hierarchy/on-deactivate :measure
   [db]
   (h/dissoc-temp db))
 
-(defmethod hierarchy/drag-end :measure [db] db)
+(defmethod hierarchy/on-drag-end :measure [db] db)
 
-(defmethod hierarchy/drag :measure
+(defmethod hierarchy/on-drag :measure
   [db]
   (let [[offset-x offset-y] (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
         [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))

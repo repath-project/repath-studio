@@ -14,7 +14,7 @@
   []
   {:icon "image"})
 
-(defmethod hierarchy/pointer-up :image
+(defmethod hierarchy/on-pointer-up :image
   [db]
   (tool.h/add-fx db [::app.fx/file-open
                      {:options {:startIn "pictures"

@@ -11,6 +11,6 @@
   []
   "Click and drag to draw.")
 
-(defmethod hierarchy/activate ::hierarchy/draw
+(defmethod hierarchy/on-activate ::hierarchy/draw
   [db]
   (h/set-cursor db "crosshair"))

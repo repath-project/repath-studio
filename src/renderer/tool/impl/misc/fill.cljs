@@ -17,17 +17,17 @@
   []
   "Click on an element to fill.")
 
-(defmethod hierarchy/activate :fill
+(defmethod hierarchy/on-activate :fill
   [db]
   (h/set-cursor db "crosshair"))
 
-(defmethod hierarchy/pointer-up :fill
+(defmethod hierarchy/on-pointer-up :fill
   [db e]
   (let [color (document.h/attr db :fill)
         el-id (-> e :element :id)]
     (-> (element.h/set-attr db el-id :fill color)
         (history.h/finalize "Fill"))))
 
-(defmethod hierarchy/drag-end :fill
+(defmethod hierarchy/on-drag-end :fill
   [db e]
-  (hierarchy/pointer-up db e))
+  (hierarchy/on-pointer-up db e))

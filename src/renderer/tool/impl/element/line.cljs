@@ -34,13 +34,13 @@
                  (assoc-in [:attrs :y2] y))]
     (h/set-temp db temp)))
 
-(defmethod tool.hierarchy/pointer-move :line
+(defmethod tool.hierarchy/on-pointer-move :line
   [db]
   (cond-> db
     (h/temp db)
     (update-line-end)))
 
-(defmethod tool.hierarchy/pointer-up :line
+(defmethod tool.hierarchy/on-pointer-up :line
   [db _e]
   (cond
     (h/temp db)
@@ -54,12 +54,12 @@
 
     :else db))
 
-(defmethod tool.hierarchy/pointer-down :line
+(defmethod tool.hierarchy/on-pointer-down :line
   [db _e]
   (cond-> db
     (h/temp db)
     (history.h/finalize "Create line")))
 
-(defmethod tool.hierarchy/drag :line
+(defmethod tool.hierarchy/on-drag :line
   [db]
   (create-line db))

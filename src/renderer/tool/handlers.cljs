@@ -38,13 +38,13 @@
 (defn activate
   [db tool]
   (-> db
-      (hierarchy/deactivate)
+      (hierarchy/on-deactivate)
       (assoc :tool tool)
       (set-state :idle)
       (set-cursor "default")
       (dissoc :drag :pointer-offset :clicked-element)
       (snap.h/rebuild-tree)
-      (hierarchy/activate)))
+      (hierarchy/on-activate)))
 
 (m/=> pointer-delta [:-> App Vec2D])
 (defn pointer-delta
@@ -126,14 +126,14 @@
                 (pan-out-of-canvas dom-rect pointer-pos pointer-offset)
 
                 (not drag)
-                (-> (hierarchy/drag-start e)
+                (-> (hierarchy/on-drag-start e)
                     (add-fx [::fx/set-pointer-capture (:pointer-id e)])
                     (assoc :drag true))
 
                 :always
-                (hierarchy/drag e))
+                (hierarchy/on-drag e))
               db)
-            (hierarchy/pointer-move db e))
+            (hierarchy/on-pointer-move db e))
           (assoc :pointer-pos pointer-pos
                  :adjusted-pointer-pos adjusted-pointer-pos))
 
@@ -149,19 +149,19 @@
                :nearest-neighbor-offset (:point nearest-neighbor))
 
         :always
-        (hierarchy/pointer-down e))
+        (hierarchy/on-pointer-down e))
 
       "pointerup"
       (cond-> (if drag
-                (-> (hierarchy/drag-end db e)
+                (-> (hierarchy/on-drag-end db e)
                     (add-fx [::fx/release-pointer-capture (:pointer-id e)]))
                 (if (= button :right)
                   db
                   (if (> (- now (:event-time db)) (:double-click-delta db))
                     (-> db
                         (assoc :event-time now)
-                        (hierarchy/pointer-up e))
-                    (hierarchy/double-click db e))))
+                        (hierarchy/on-pointer-up e))
+                    (hierarchy/on-double-click db e))))
         (and primary-tool (= button :middle))
         (-> (activate primary-tool)
             (dissoc :primary-tool))
@@ -183,7 +183,7 @@
           (activate :pan))
 
       :always
-      (hierarchy/key-down e))
+      (hierarchy/on-key-down e))
 
     "keyup"
     (cond-> db
@@ -193,7 +193,7 @@
           (dissoc :primary-tool))
 
       :always
-      (hierarchy/key-up e))
+      (hierarchy/on-key-up e))
 
     db))
 

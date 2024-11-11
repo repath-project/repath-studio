@@ -16,11 +16,11 @@
   []
   "Click to enter your text.")
 
-(defmethod hierarchy/activate :text
+(defmethod hierarchy/on-activate :text
   [db]
   (h/set-cursor db "text"))
 
-(defmethod hierarchy/pointer-up :text
+(defmethod hierarchy/on-pointer-up :text
   [db _e]
   (let [[offset-x offset-y] (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
         el {:type :element
@@ -33,6 +33,6 @@
         (h/activate :edit)
         (h/set-state :create))))
 
-(defmethod hierarchy/drag-end :text
+(defmethod hierarchy/on-drag-end :text
   [db e]
-  (hierarchy/pointer-up db e))
+  (hierarchy/on-pointer-up db e))

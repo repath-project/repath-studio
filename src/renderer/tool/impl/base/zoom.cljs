@@ -20,31 +20,31 @@
    [:div "Click or select an area to zoom in."]
    [:div "Hold " [:span.shortcut-key "⇧"] " to zoom out."]])
 
-(defmethod hierarchy/activate :zoom
+(defmethod hierarchy/on-activate :zoom
   [db]
   (h/set-cursor db "zoom-in"))
 
-(defmethod hierarchy/key-down :zoom
+(defmethod hierarchy/on-key-down :zoom
   [db e]
   (cond-> db
     (pointer/shift? e)
     (h/set-cursor "zoom-out")))
 
-(defmethod hierarchy/key-up :zoom
+(defmethod hierarchy/on-key-up :zoom
   [db e]
   (cond-> db
     (not (pointer/shift? e))
     (h/set-cursor "zoom-in")))
 
-(defmethod hierarchy/drag-start :zoom
+(defmethod hierarchy/on-drag-start :zoom
   [db]
   (h/set-cursor db "default"))
 
-(defmethod hierarchy/drag :zoom
+(defmethod hierarchy/on-drag :zoom
   [db]
   (h/set-temp db (overlay/select-box db)))
 
-(defmethod hierarchy/drag-end :zoom
+(defmethod hierarchy/on-drag-end :zoom
   [db e]
   (let [[offset-x offset-y] (:adjusted-pointer-offset db)
         [x y] (:adjusted-pointer-pos db)
@@ -64,7 +64,7 @@
         (snap.h/update-viewport-tree)
         (h/add-fx [::app.fx/persist]))))
 
-(defmethod hierarchy/pointer-up :zoom
+(defmethod hierarchy/on-pointer-up :zoom
   [db e]
   (let [factor (if (pointer/shift? e)
                  (:zoom-sensitivity db)

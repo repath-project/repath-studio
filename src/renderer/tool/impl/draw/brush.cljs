@@ -14,7 +14,7 @@
   []
   {:icon "brush"})
 
-(defmethod hierarchy/pointer-move :brush
+(defmethod hierarchy/on-pointer-move :brush
   [db e]
   (let [[x y] (:adjusted-pointer-pos db)
         pressure (:pressure e)
@@ -27,7 +27,7 @@
                             :r r
                             :fill (document.h/attr db :stroke)}})))
 
-(defmethod hierarchy/drag :brush
+(defmethod hierarchy/on-drag :brush
   [db e]
   (let [active-document (:active-document db)
         point (str/join " " (conj (:adjusted-pointer-pos db) (:pressure e)))
@@ -43,7 +43,7 @@
                               :smoothing 0.5
                               :streamline 0.5}}))))
 
-(defmethod hierarchy/drag-end :brush
+(defmethod hierarchy/on-drag-end :brush
   [db _e]
   (-> db
       (h/create-temp-element)

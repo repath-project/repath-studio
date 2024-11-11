@@ -40,7 +40,7 @@
               (points-path db)
               (->> point-vector drop-last flatten (str/join " ")))))
 
-(defmethod hierarchy/pointer-up ::hierarchy/polyshape
+(defmethod hierarchy/on-pointer-up ::hierarchy/polyshape
   [db]
   (let [point (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))]
     (if (h/temp db)
@@ -48,14 +48,14 @@
       (-> (h/set-state db :create)
           (create-polyline point)))))
 
-(defmethod hierarchy/drag-end ::hierarchy/polyshape
+(defmethod hierarchy/on-drag-end ::hierarchy/polyshape
   [db]
   (if (h/temp db)
     (add-point db (:adjusted-pointer-pos db))
     (-> (h/set-state db :create)
         (create-polyline (:adjusted-pointer-pos db)))))
 
-(defmethod hierarchy/pointer-move ::hierarchy/polyshape
+(defmethod hierarchy/on-pointer-move ::hierarchy/polyshape
   [db]
   (let [point (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))]
     (if-let [points (get-in db (points-path db))]
@@ -67,7 +67,7 @@
                                                         point-vector))
                                         point)))) db)))
 
-(defmethod hierarchy/double-click ::hierarchy/polyshape
+(defmethod hierarchy/on-double-click ::hierarchy/polyshape
   [db _e]
   (-> (drop-last-point db)
       (h/create-temp-element)
