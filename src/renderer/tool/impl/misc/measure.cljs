@@ -23,8 +23,6 @@
   [db]
   (h/dissoc-temp db))
 
-(defmethod hierarchy/on-drag-end :measure [db] db)
-
 (defmethod hierarchy/on-drag :measure
   [db]
   (let [[offset-x offset-y] (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))

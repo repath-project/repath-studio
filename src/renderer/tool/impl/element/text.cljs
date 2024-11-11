@@ -32,7 +32,3 @@
         (history.h/finalize "Create text")
         (h/activate :edit)
         (h/set-state :create))))
-
-(defmethod hierarchy/on-drag-end :text
-  [db e]
-  (hierarchy/on-pointer-up db e))

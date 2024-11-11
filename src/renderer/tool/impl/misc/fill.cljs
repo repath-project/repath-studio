@@ -28,6 +28,3 @@
     (-> (element.h/set-attr db el-id :fill color)
         (history.h/finalize "Fill"))))
 
-(defmethod hierarchy/on-drag-end :fill
-  [db e]
-  (hierarchy/on-pointer-up db e))
