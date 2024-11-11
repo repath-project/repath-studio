@@ -7,6 +7,7 @@
    [renderer.element.hierarchy :as hierarchy]
    [renderer.handle.views :as handle.v]
    [renderer.utils.bounds :as bounds]
+   [renderer.utils.element :as element]
    [renderer.utils.overlay :as overlay]
    [renderer.utils.units :as units]))
 
@@ -26,9 +27,8 @@
 
 (defmethod hierarchy/translate :circle
   [el [x y]]
-  (-> el
-      (attr.hierarchy/update-attr :cx + x)
-      (attr.hierarchy/update-attr :cy + y)))
+  (element/update-attrs-with el + [[:cx x]
+                                   [:cy y]]))
 
 (defmethod hierarchy/scale :circle
   [el ratio pivot-point]

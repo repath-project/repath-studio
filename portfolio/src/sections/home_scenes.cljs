@@ -7,7 +7,7 @@
 #_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defscene home
   :title "Home"
-  :params (atom ["asdsads"])
+  :params (atom ["path/to/file/name.rps"])
   [store]
   [:div.flex.flex-col.h-dvh.overflow-hidden
    [app.v/home @store]])

@@ -44,14 +44,12 @@
   [db _e]
   (cond
     (h/temp db)
-    (-> db
-        (h/create-temp-element)
+    (-> (h/create-temp-element db)
         (h/activate :transform)
         (history.h/finalize "Create line"))
 
     (:pointer-offset db)
-    (-> db
-        (h/set-state :create)
+    (-> (h/set-state db :create)
         (create-line))
 
     :else db))

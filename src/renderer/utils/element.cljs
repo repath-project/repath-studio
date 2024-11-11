@@ -6,6 +6,7 @@
    [clojure.core.matrix :as mat]
    [malli.core :as m]
    [reagent.dom.server :as dom.server]
+   [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.element.db :refer [Element Attrs]]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.snap.db :refer [SnapOptions]]
@@ -143,3 +144,9 @@
          (nil? (:style attrs))
          (dissoc :style))
        (catch :default _e (dissoc attrs :style))))
+
+(m/=> update-attrs-with [:-> Element fn? [:vector vector?] Element])
+(defn update-attrs-with
+  [el f attrs-map]
+  (reduce (fn [el [k & more]]
+            (apply attribute.hierarchy/update-attr el k f more)) el attrs-map))

@@ -37,8 +37,7 @@
   [db e]
   (if-not (and (= (:button e) :right)
                (:selected (:element e)))
-    (-> db
-        (element.h/clear-ignored)
+    (-> (element.h/clear-ignored db)
         (dissoc :clicked-element)
         (element.h/toggle-selection (-> e :element :id) (pointer/shift? e))
         (history.h/finalize "Select element"))
@@ -70,8 +69,7 @@
 
 (defmethod hierarchy/drag-end :edit
   [db _e]
-  (-> db
-      (h/set-state :idle)
+  (-> (h/set-state db :idle)
       (dissoc :clicked-element)
       (history.h/finalize "Edit")))
 

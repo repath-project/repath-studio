@@ -35,7 +35,6 @@
 
 (defmethod hierarchy/drag-end :pan
   [db _e]
-  (-> db
-      (h/set-cursor "grab")
+  (-> (h/set-cursor db "grab")
       (snap.h/update-viewport-tree)
       (h/add-fx [::app.fx/persist])))

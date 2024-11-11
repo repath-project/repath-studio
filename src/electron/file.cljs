@@ -9,7 +9,7 @@
 (def dialog-options
   {:defaultPath (.getPath app "documents")
    :properties ["multiSelections"]
-   :filters [{:name "rps"
+   :filters [{:name config/ext
               :extensions [config/ext]}]})
 
 (defn- serialize-document

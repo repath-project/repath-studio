@@ -114,9 +114,8 @@
 
 (defmethod hierarchy/translate :blob
   [el [x y]]
-  (-> el
-      (attr.hierarchy/update-attr :x + x)
-      (attr.hierarchy/update-attr :y + y)))
+  (element/update-attrs-with el + [[:x x]
+                                   [:y y]]))
 
 (defmethod hierarchy/bounds :blob
   [el]

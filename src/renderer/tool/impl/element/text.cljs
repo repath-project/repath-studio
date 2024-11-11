@@ -27,8 +27,7 @@
             :tag :text
             :attrs {:x offset-x
                     :y offset-y}}]
-    (-> db
-        (element.h/deselect-all)
+    (-> (element.h/deselect-all db)
         (element.h/add el)
         (history.h/finalize "Create text")
         (h/activate :edit)

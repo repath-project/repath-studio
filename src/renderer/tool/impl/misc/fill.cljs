@@ -25,8 +25,7 @@
   [db e]
   (let [color (document.h/attr db :fill)
         el-id (-> e :element :id)]
-    (-> db
-        (element.h/set-attr el-id :fill color)
+    (-> (element.h/set-attr db el-id :fill color)
         (history.h/finalize "Fill"))))
 
 (defmethod hierarchy/drag-end :fill

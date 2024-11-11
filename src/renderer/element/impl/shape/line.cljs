@@ -25,11 +25,10 @@
 
 (defmethod hierarchy/translate :line
   [el [x y]]
-  (-> el
-      (attr.hierarchy/update-attr :x1 + x)
-      (attr.hierarchy/update-attr :y1 + y)
-      (attr.hierarchy/update-attr :x2 + x)
-      (attr.hierarchy/update-attr :y2 + y)))
+  (element/update-attrs-with el + [[:x1 x]
+                                   [:y1 y]
+                                   [:x2 x]
+                                   [:y2 y]]))
 
 (defmethod hierarchy/scale :line
   [el ratio pivot-point]
@@ -81,14 +80,12 @@
   [el [x y] handle]
   (case handle
     :starting-point
-    (-> el
-        (attr.hierarchy/update-attr :x1 + x)
-        (attr.hierarchy/update-attr :y1 + y))
+    (element/update-attrs-with el + [[:x1 x]
+                                     [:y1 y]])
 
     :ending-point
-    (-> el
-        (attr.hierarchy/update-attr :x2 + x)
-        (attr.hierarchy/update-attr :y2 + y))
+    (element/update-attrs-with el + [[:x2 x]
+                                     [:y2 y]])
     el))
 
 (defmethod hierarchy/bounds :line

@@ -31,15 +31,24 @@
         rx (if (> rx (/ width 2)) (/ width 2) rx)
         ry (if (> ry (/ height 2)) (/ height 2) ry)
         curved? (and (> rx 0) (> ry 0))]
-    (->> ["M" (+ x rx) y
-          "H" (- (+ x width) rx)
-          (when curved? (str/join " " ["A" rx ry 0 0 1 (+ x width) (+ y ry)]))
-          "V" (- (+ y height) ry)
-          (when curved? (str/join " " ["A" rx ry 0 0 1 (- (+ x width) rx) (+ y height)]))
-          "H" (+ x rx)
-          (when curved? (str/join " " ["A" rx ry 0 0 1 x (- (+ y height) ry)]))
-          "V" (+ y ry)
-          (when curved? (str/join " " ["A" rx ry 0 0 1 (+ x rx) y]))
-          "z"]
-         (remove nil?)
-         (str/join " "))))
+    (cond-> []
+      :always (conj "M" (+ x rx) y
+                    "H" (- (+ x width) rx))
+
+      curved? (conj "A" rx ry 0 0 1 (+ x width) (+ y ry))
+
+      :always (conj "V" (- (+ y height) ry))
+
+      curved? (conj "A" rx ry 0 0 1 (- (+ x width) rx) (+ y height))
+
+      :always (conj "H" (+ x rx))
+
+      curved? (conj "A" rx ry 0 0 1 x (- (+ y height) ry))
+
+      :always (conj "V" (+ y ry))
+
+      curved? (conj "A" rx ry 0 0 1 (+ x rx) y)
+
+      :always (conj "z")
+
+      :always (->> (str/join " ")))))

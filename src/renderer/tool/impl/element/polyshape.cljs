@@ -45,16 +45,14 @@
   (let [point (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))]
     (if (h/temp db)
       (add-point db point)
-      (-> db
-          (h/set-state :create)
+      (-> (h/set-state db :create)
           (create-polyline point)))))
 
 (defmethod hierarchy/drag-end ::hierarchy/polyshape
   [db]
   (if (h/temp db)
     (add-point db (:adjusted-pointer-pos db))
-    (-> db
-        (h/set-state :create)
+    (-> (h/set-state db :create)
         (create-polyline (:adjusted-pointer-pos db)))))
 
 (defmethod hierarchy/pointer-move ::hierarchy/polyshape
@@ -71,8 +69,7 @@
 
 (defmethod hierarchy/double-click ::hierarchy/polyshape
   [db _e]
-  (-> db
-      (drop-last-point)
+  (-> (drop-last-point db)
       (h/create-temp-element)
       (h/activate :transform)
       (history.h/finalize (str "Create " (name (:tool db))))))

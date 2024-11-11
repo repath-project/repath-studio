@@ -7,15 +7,15 @@
    [renderer.element.hierarchy :as hierarchy]
    [renderer.handle.views :as handle.v]
    [renderer.utils.bounds :as bounds]
+   [renderer.utils.element :as element]
    [renderer.utils.units :as units]))
 
 (derive ::hierarchy/box ::hierarchy/renderable)
 
 (defmethod hierarchy/translate ::hierarchy/box
   [el [x y]]
-  (-> el
-      (attr.hierarchy/update-attr :x + x)
-      (attr.hierarchy/update-attr :y + y)))
+  (element/update-attrs-with el + [[:x x]
+                                   [:y y]]))
 
 (defmethod hierarchy/scale ::hierarchy/box
   [el ratio pivot-point]

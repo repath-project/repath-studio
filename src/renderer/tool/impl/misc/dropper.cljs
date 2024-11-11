@@ -25,8 +25,7 @@
   (if (.-EyeDropper js/window)
     (h/add-fx db [::color.fx/dropper {:on-success [::success]
                                       :on-error [::error]}])
-    (-> db
-        (h/activate :transform)
+    (-> (h/activate db :transform)
         (notification.h/add
          (notification.v/unavailable-feature
           "EyeDropper"
@@ -36,8 +35,7 @@
  ::success
  (fn [db [_ ^js color]]
    (let [srgb-color (.-sRGBHex color)]
-     (-> db
-         (document.h/assoc-attr :fill srgb-color)
+     (-> (document.h/assoc-attr db :fill srgb-color)
          (element.h/assoc-attr :fill srgb-color)
          (h/activate :transform)
          (history.h/finalize "Pick color")))))
