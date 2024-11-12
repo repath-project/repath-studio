@@ -52,10 +52,10 @@
         nil
 
         (instance? js/Error header)
-        [:div.inline-flex "Error expanding lazy value"]
+        [:div.inline-flex.text-error "Error expanding lazy value"]
 
         :else
         (if-not (devtools/has-body-api-call v config)
-          [:div.inline-flex (show-el header show-value)]
+          [:div.inline-flex.devtools (show-el header show-value)]
           [openable header v config show-value])))))
 

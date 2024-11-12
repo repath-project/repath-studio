@@ -2,7 +2,6 @@
   (:require
    ["electron-log/renderer"]
    ["paper" :refer [paper]]
-   [devtools.core :as devtools]
    [re-frame.core :as rf]
    [re-pressed.core :as rp]
    [reagent.dom :as ra.dom]
@@ -110,10 +109,6 @@
 
 (defn ^:export init! []
   (js/console.log (str "%c" easter-egg) "color: #e93976")
-
-  (devtools/set-pref!
-   :cljs-land-style
-   (str "filter:invert(1);" (:cljs-land-style (devtools/get-prefs))))
 
   ;; https://code.thheller.com/blog/shadow-cljs/2017/10/14/bootstrap-support.html
   (bootstrap/init repl/st {:path "js/bootstrap" :load-on-init '[user]} bootstrap-cb!)

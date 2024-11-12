@@ -9,10 +9,16 @@
   --button-size: 33px;
   --button-size-sm: 22px;
 
+  --backdrop: rgb(0 0 0 / 0.75);
+
+  .devtools * {
+    background: transparent !important;
+  }
+}
+
+[data-theme='dark'] {
   --bg-secondary: #222;
   --bg-primary: #2d2d2d;
-
-  --backdrop: rgb(0 0 0 / 0.75);
 
   --overlay: rgba(255, 255, 255, .1);
   --overlay-2x: rgba(255, 255, 255, .2);
@@ -36,7 +42,12 @@
   --text-error: #f56464;
   --text-warning: #ffc252;
   --text-success: #63c263;
+
+  .devtools {
+    filter:invert(1);
+  }
 }
+
 
 [data-theme='light'] {
   --bg-secondary: #eee;
