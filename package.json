@@ -22,7 +22,7 @@
     "lint": "clojure -M:lint -m clj-kondo.main --lint src test portfolio",
     "clean": "rm -rf resources/public/js/* && rm -rf target && rm -rf dist",
     "build-report": "npx shadow-cljs run shadow.cljs.build-report renderer target/build-report.html",
-    "test": "npx shadow-cljs compile karma-test && npx karma start --single-run --reporters junit,dots"
+    "test": "npx shadow-cljs compile karma-test && npx karma start --browsers ChromeHeadless --single-run --reporters junit,dots"
   },
   "keywords": [
     "clojurescript",
@@ -92,6 +92,7 @@
     "karma": "6.4.4",
     "karma-chrome-launcher": "3.2.0",
     "karma-cljs-test": "0.1.0",
+    "karma-electron": "7.3.0",
     "karma-junit-reporter": "2.0.1",
     "mdn-data": "2.12.2",
     "paper": "0.12.18",

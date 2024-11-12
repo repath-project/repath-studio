@@ -4,19 +4,33 @@ module.exports = function (config) {
   var junitOutputDir = process.env.CIRCLE_TEST_REPORTS || "target/junit"
 
   config.set({
-    browsers: ['ChromeHeadless'],
+    customLaunchers: {
+      CustomElectron: {
+        base: 'Electron',
+        require: __dirname + '/resources/main.js',
+        browserWindowOptions: {
+          webPreferences: {
+            preload: __dirname + '/resources/preload.js',
+            sandbox: false
+          }
+        }
+      }
+    },
+    browsers: ['ChromeHeadless', 'CustomElectron'],
     basePath: 'target',
     files: ['karma-test.js'],
     frameworks: ['cljs-test'],
     plugins: [
-        'karma-cljs-test',
-        'karma-chrome-launcher',
-        'karma-junit-reporter'
+      'karma-electron',
+      'karma-cljs-test',
+      'karma-chrome-launcher',
+      'karma-junit-reporter'
     ],
     colors: true,
     logLevel: config.LOG_INFO,
     client: {
-      args: ['shadow.test.karma.init']
+      args: ['shadow.test.karma.init'],
+      useIframe: false
     },
 
     // the default configuration
