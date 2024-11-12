@@ -115,6 +115,7 @@
 
   (rf/dispatch-sync [::app.e/initialize-db])
   (rf/dispatch-sync [::app.e/set-lang system/language])
+  (rf/dispatch-sync [::app.e/load-system-fonts])
   (rf/dispatch-sync [::app.e/load-local-db])
   (rf/dispatch-sync [::document.e/init])
   (rf/dispatch-sync [::theme.e/set-native-mode (theme.fx/native-mode! theme.fx/native-query!)])
@@ -126,8 +127,7 @@
   (.setup paper)
 
   (if system/electron?
-    (do (register-ipc-on-events!)
-        (rf/dispatch [::app.e/load-system-fonts]))
+    (register-ipc-on-events!)
     (add-listeners!))
 
   (mount-root!))

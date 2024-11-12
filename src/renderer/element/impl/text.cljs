@@ -13,6 +13,7 @@
    [renderer.utils.bounds :as bounds]
    [renderer.utils.dom :as dom]
    [renderer.utils.element :as element]
+   [renderer.utils.system :as system]
    [renderer.utils.units :as units]))
 
 (derive :text ::hierarchy/shape)
@@ -109,15 +110,17 @@
                             (str (units/unit->px font-size) "px"))
                :font-weight (if (empty? font-weight) "inherit" font-weight)}}]]))
 
-(defmethod hierarchy/path :text
-  [{:keys [attrs content]}]
-  (let [font-descriptor #js {:family (:font-family attrs)
-                             :weight (js/parseInt (:font-weight attrs))
-                             :italic (= (:font-style attrs) "italic")}]
-    (.textToPath
-     js/window.api
-     content
-     #js {:font-url (.-path (.findFont js/window.api font-descriptor))
-          :x (js/parseFloat (:x attrs))
-          :y (js/parseFloat (:y attrs))
-          :font-size (js/parseFloat (or (:font-size attrs) 16))}))) ; FIXME
+(when system/electron?
+  (defmethod hierarchy/path :text
+    [{:keys [attrs content]}]
+
+    (let [font-descriptor #js {:family (:font-family attrs)
+                               :weight (js/parseInt (:font-weight attrs))
+                               :italic (= (:font-style attrs) "italic")}]
+      (.textToPath
+       js/window.api
+       content
+       #js {:font-url (.-path (.findFont js/window.api font-descriptor))
+            :x (js/parseFloat (:x attrs))
+            :y (js/parseFloat (:y attrs))
+            :font-size (js/parseFloat (or (:font-size attrs) 16))})))) ; FIXME

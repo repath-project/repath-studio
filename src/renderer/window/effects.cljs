@@ -1,7 +1,8 @@
 (ns renderer.window.effects
   (:require
    [re-frame.core :as rf]
-   [renderer.notification.events :as-alias notification.e]))
+   [renderer.notification.events :as-alias notification.e]
+   [renderer.utils.system :as system]))
 
 (rf/reg-fx
  ::close
@@ -28,11 +29,13 @@
 (rf/reg-fx
  ::ipc-send
  (fn [[channel data]]
-   (js/window.api.send channel (clj->js data))))
+   (when system/electron?
+     (js/window.api.send channel (clj->js data)))))
 
 (rf/reg-fx
  ::ipc-invoke
  (fn [{:keys [channel data formatter on-success on-error]}]
-   (-> (js/window.api.invoke channel (clj->js data))
-       (.then #(when on-success (rf/dispatch (conj on-success (cond-> % formatter formatter)))))
-       (.catch #(when on-error (rf/dispatch (conj on-error %)))))))
+   (when system/electron?
+     (-> (js/window.api.invoke channel (clj->js data))
+         (.then #(when on-success (rf/dispatch (conj on-success (cond-> % formatter formatter)))))
+         (.catch #(when on-error (rf/dispatch (conj on-error %))))))))
