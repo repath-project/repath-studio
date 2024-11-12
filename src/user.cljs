@@ -120,14 +120,14 @@
             :attrs (merge {:points (str/join " " (flatten points))} attrs)})))
 
 (defn ^:export path
-  "Creates a path"
+  "Creates a path."
   ([path-commands]
    (path path-commands {:stroke "#000000"}))
   ([path-commands attrs]
    (create {:path (merge {:d (str/join " " (flatten path-commands))} attrs)})))
 
 (defn ^:export image
-  "Creates an image"
+  "Creates an image."
   ([[x y] width height href]
    (image [x y] width height href nil))
   ([[x y] width height href attrs]
@@ -139,7 +139,7 @@
                            :href href} attrs)})))
 
 (defn ^:export text
-  "Creates a text element"
+  "Creates a text element."
   ([[x y] content]
    (text [x y] content nil))
   ([[x y] content attrs]
@@ -228,7 +228,7 @@
   (align :left))
 
 (defn ^:export ar
-  "Aligns the selected elements to the right"
+  "Aligns the selected elements to the right."
   []
   (align :right))
 
