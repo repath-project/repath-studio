@@ -2,6 +2,7 @@
   (:require
    [malli.instrument :as mi]
    [re-frame.core :as rf]
+   [re-frame.subs :as rf.subs]
    [renderer.app.effects :as app.fx]
    [renderer.app.events]
    [renderer.app.subs]
@@ -33,5 +34,6 @@
    [renderer.window.subs]
    [renderer.worker.events]))
 
+(set! rf.subs/warn-when-not-reactive (constantly nil))
 (mi/instrument!)
 (rf/reg-global-interceptor app.fx/schema-validator)
