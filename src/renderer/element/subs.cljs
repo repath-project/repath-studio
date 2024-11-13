@@ -106,7 +106,7 @@
  ::area
  :<- [::selected]
  (fn [selected-elements _]
-   (reduce  #(+ %1 (hierarchy/area %2)) 0 selected-elements)))
+   (reduce #(+ %1 (hierarchy/area %2)) 0 selected-elements)))
 
 (rf/reg-sub
  ::ancestor-ids

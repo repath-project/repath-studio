@@ -3,7 +3,6 @@
   (:require
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
-   [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.hierarchy :as hierarchy]
    [renderer.handle.views :as handle.v]
    [renderer.utils.bounds :as bounds]
@@ -25,10 +24,7 @@
 
 (defmethod hierarchy/translate :line
   [el [x y]]
-  (element/update-attrs-with el + [[:x1 x]
-                                   [:y1 y]
-                                   [:x2 x]
-                                   [:y2 y]]))
+  (element/update-attrs-with el + [[:x1 x] [:y1 y] [:x2 x] [:y2 y]]))
 
 (defmethod hierarchy/scale :line
   [el ratio pivot-point]
@@ -38,9 +34,8 @@
         [x y] (mat/sub dimentions (mat/mul dimentions ratio))
         pivot-diff (mat/sub pivot-point dimentions)
         offset (mat/sub pivot-diff (mat/mul pivot-diff ratio))]
-    (-> el
-        (attr.hierarchy/update-attr (if (< x1 x2) :x1 :x2) + x)
-        (attr.hierarchy/update-attr (if (< y1 y2) :y1 :y2) + y)
+    (-> (element/update-attrs-with el + [[(if (< x1 x2) :x1 :x2) x]
+                                         [(if (< y1 y2) :y1 :y2) y]])
         (hierarchy/translate offset))))
 
 (defmethod hierarchy/path :line
@@ -80,12 +75,11 @@
   [el [x y] handle]
   (case handle
     :starting-point
-    (element/update-attrs-with el + [[:x1 x]
-                                     [:y1 y]])
+    (element/update-attrs-with el + [[:x1 x] [:y1 y]])
 
     :ending-point
-    (element/update-attrs-with el + [[:x2 x]
-                                     [:y2 y]])
+    (element/update-attrs-with el + [[:x2 x] [:y2 y]])
+
     el))
 
 (defmethod hierarchy/bounds :line

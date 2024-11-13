@@ -3,7 +3,6 @@
    :x :y :width :height attributes (e.g. rect, svg, image)."
   (:require
    [clojure.core.matrix :as mat]
-   [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.hierarchy :as hierarchy]
    [renderer.handle.views :as handle.v]
    [renderer.utils.bounds :as bounds]
@@ -14,31 +13,24 @@
 
 (defmethod hierarchy/translate ::hierarchy/box
   [el [x y]]
-  (element/update-attrs-with el + [[:x x]
-                                   [:y y]]))
+  (element/update-attrs-with el + [[:x x] [:y y]]))
 
 (defmethod hierarchy/scale ::hierarchy/box
   [el ratio pivot-point]
   (let [[x y] ratio
         offset (mat/sub pivot-point (mat/mul pivot-point ratio))]
-    (-> el
-        (attr.hierarchy/update-attr :width * x)
-        (attr.hierarchy/update-attr :height * y)
+    (-> (element/update-attrs-with el * [[:width x] [:height y]])
         (hierarchy/translate offset))))
 
 (defmethod hierarchy/edit ::hierarchy/box
   [el [x y] handle]
   (case handle
     :position
-    (-> el
-        (attr.hierarchy/update-attr :width #(max 0 (- % x)))
-        (attr.hierarchy/update-attr :height #(max 0 (- % y)))
+    (-> (element/update-attrs-with el (comp (partial max 0) -) [[:width x] [:height y]])
         (hierarchy/translate [x y]))
 
     :size
-    (-> el
-        (attr.hierarchy/update-attr :width #(max 0 (+ % x)))
-        (attr.hierarchy/update-attr :height #(max 0 (+ % y))))
+    (element/update-attrs-with el (comp (partial max 0) +) [[:width x] [:height y]])
 
     el))
 
