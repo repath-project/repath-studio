@@ -23,6 +23,7 @@
    [renderer.utils.path :as path :refer [PathManipulation PathBooleanOperation]]
    [renderer.utils.vec :as vec]))
 
+(m/=> path [:-> App [:* any?] vector?])
 (defn path
   [db & more]
   (apply conj [:documents (:active-document db) :elements] more))
@@ -124,6 +125,7 @@
       (-> (reduce refresh-bounds db (children-ids db id))
           (update-in (path db id) assoc :bounds bounds)))))
 
+(m/=> update-el [:-> App uuid? ifn? [:* any?] App])
 (defn update-el
   [db id f & more]
   (if (locked? db id)

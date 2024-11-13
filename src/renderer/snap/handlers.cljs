@@ -93,6 +93,7 @@
       (mat/sub point base-point))
     [0 0]))
 
+(m/=> snap-with [:-> App ifn? [:* any?] App])
 (defn snap-with
   [db f & more]
   (let [db (update-nearest-neighbors db)]

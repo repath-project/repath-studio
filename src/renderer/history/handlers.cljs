@@ -13,6 +13,7 @@
    [renderer.utils.math :refer [Vec2D]]
    [renderer.utils.vec :as vec]))
 
+(m/=> path [:-> App [:* any?] vector?])
 (defn path
   [db & more]
   (apply conj [:documents (:active-document db) :history] more))
