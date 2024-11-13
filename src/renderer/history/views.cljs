@@ -58,7 +58,7 @@
      [:circle
       {:on-click #(rf/dispatch [::history.e/move id])
        :on-pointer-enter #(rf/dispatch [::history.e/preview id])
-       :on-pointer-leave #(rf/dispatch [::history.e/swap id])
+       :on-pointer-leave #(rf/dispatch [::history.e/reset-state id])
        :cx "0"
        :cy "0"
        :stroke color

@@ -25,8 +25,8 @@
    (h/redo db n)))
 
 (rf/reg-event-db
- ::swap
- h/swap)
+ ::reset-state
+ h/reset-state)
 
 (rf/reg-event-db
  ::preview

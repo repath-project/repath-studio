@@ -57,7 +57,7 @@
 (defmethod hierarchy/on-drag :edit
   [db e]
   (let [clicked-element (:clicked-element db)
-        db (history.h/swap db)
+        db (history.h/reset-state db)
         el-id (:element clicked-element)
         handle-id (:id clicked-element)
         delta (cond-> (mat/add (h/pointer-delta db) (snap.h/nearest-delta db))

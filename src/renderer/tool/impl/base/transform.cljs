@@ -141,6 +141,7 @@
 (defmethod hierarchy/on-deactivate :transform
   [db]
   (-> (element.h/clear-ignored db)
+      (element.h/clear-hovered)
       (dissoc :pivot-point)))
 
 (defn select-rect
@@ -287,7 +288,7 @@
       :translate
       (if alt-key?
         (h/set-state db :clone)
-        (-> (history.h/swap db)
+        (-> (history.h/reset-state db)
             (select-element (pointer/shift? e))
             (translate delta axis)
             (snap.h/snap-with translate axis)
@@ -295,7 +296,7 @@
 
       :clone
       (if alt-key?
-        (-> (history.h/swap db)
+        (-> (history.h/reset-state db)
             (select-element (pointer/shift? e))
             (element.h/duplicate)
             (translate delta axis)
@@ -307,7 +308,7 @@
       (let [options {:ratio-locked ratio-locked?
                      :in-place (pointer/shift? e)
                      :recursive (pointer/alt? e)}]
-        (-> (history.h/swap db)
+        (-> (history.h/reset-state db)
             (h/set-cursor "default")
             (scale (mat/add delta (snap.h/nearest-delta db)) options)))
 

@@ -56,8 +56,8 @@
   [active-history]
   (boolean (and active-history (next-position active-history))))
 
-(m/=> swap [:-> App App])
-(defn swap
+(m/=> reset-state [:-> App App])
+(defn reset-state
   [db]
   (cond-> db
     (:active-document db)
@@ -87,7 +87,7 @@
   [db pos]
   (-> db
       (assoc-in (path db :position) pos)
-      (swap)))
+      (reset-state)))
 
 (m/=> undo [:function
             [:-> App App]
@@ -196,7 +196,7 @@
       db
 
       (not (valid-elements? elements))
-      (-> (swap db)
+      (-> (reset-state db)
           (notification.h/add
            (notification.v/spec-failed
             explanation

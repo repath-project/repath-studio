@@ -215,10 +215,7 @@
     :always
     (-> (activate (:tool db))
         (dissoc-temp)
-        (history.h/swap))
-
-    (= (:state db) :select)
-    (element.h/clear-hovered)
+        (history.h/reset-state))
 
     (= (:state db) :idle)
     (activate :transform)
