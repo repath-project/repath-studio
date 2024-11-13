@@ -213,7 +213,7 @@
                 [[::window.e/close]
                  [{:keyCode (key-codes "Q")
                    :ctrlKey true}]]
-                [[::document.e/open]
+                [[::document.e/open nil]
                  [{:keyCode (key-codes "O")
                    :ctrlKey true}]]
                 [[::document.e/save-as]

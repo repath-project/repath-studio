@@ -51,7 +51,7 @@
            {:id :open-file
             :label "Open…"
             :icon "folder"
-            :action [::document.e/open]}
+            :action [::document.e/open nil]}
            {:id :recent
             :label "Recent"
             :type :sub-menu

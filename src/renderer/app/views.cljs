@@ -237,9 +237,9 @@
         [:div.flex.items-center.gap-2
          [ui/icon "folder"]
          [:button.button-link.text-lg
-          {:on-click #(rf/dispatch [::document.e/open])}
+          {:on-click #(rf/dispatch [::document.e/open nil])}
           "Open"]
-         [ui/shortcuts [::document.e/open]]]
+         [ui/shortcuts [::document.e/open nil]]]
 
         (when (seq recent-documents)
           [:<> [:h2.mb-3.mt-8.text-2xl "Recent"]
