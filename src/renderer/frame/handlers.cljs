@@ -43,8 +43,8 @@
                    (select-keys [:width :height]))]
     (if-not (-> db :window :focused)
       db
-      (-> (:document-tabs db)
-          (reduce #(pan-by %1 (mat/div [(:width offset) (:height offset)] 2) %2) db)))))
+      (->> (:document-tabs db)
+           (reduce #(pan-by %1 (mat/div [(:width offset) (:height offset)] 2) %2) db)))))
 
 (m/=> zoom-in-place [:-> App number? Vec2D App])
 (defn zoom-in-place
