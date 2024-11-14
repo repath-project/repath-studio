@@ -1,19 +1,5 @@
 # Changelog
 
-## 0.4.6 (2024-11-14)
-
-**Removed**
-
-- Electron updater
-
-**Changed**
-
-- Various package upgrades
-
-**Fixed**
-
-- MacOS build
-
 ## 0.4.5 (2024-11-05)
 
 **Added**
