@@ -4,7 +4,6 @@
    ["electron" :refer [app shell ipcMain BrowserWindow]]
    ["electron-log/main" :as log]
    ["electron-reloader"]
-   ["electron-updater" :as updater]
    ["electron-window-state" :as window-state-keeper]
    ["font-scanner" :as fontManager]
    ["os" :as os]
@@ -135,10 +134,7 @@
     (register-web-contents-events!)
     (register-ipc-on-events!)
     (register-ipc-handle-events!)
-    (register-window-events!)
-
-    (when (not= (.platform os) "linux")
-      (.checkForUpdatesAndNotify updater))))
+    (register-window-events!)))
 
 (defn init-loading-window! []
   (set! (.-allowRendererProcessReuse app) false)
