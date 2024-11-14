@@ -71,20 +71,21 @@
   ([db]
    (reduce drop-rest db (:document-tabs db)))
   ([db document-id]
-   (let [pos (get-in db [:documents document-id :history :position])]
+   (let [pos (get-in db [:documents document-id :history :position])
+         states-path [:documents document-id :history :states]]
      (cond-> db
        pos
-       (-> (update-in [:documents document-id :history :states] select-keys [pos])
-           (assoc-in [:documents document-id :history :states pos :index] 0)
-           (update-in [:documents document-id :history :states pos] dissoc :parent))))))
+       (-> (update-in states-path select-keys [pos])
+           (assoc-in (conj states-path pos :index) 0)
+           (update-in (conj states-path pos) dissoc :parent))))))
 
 (m/=> preview [:-> App uuid? App])
 (defn preview
   [db pos]
-  (assoc-in db (element.h/path db) (:elements (state (history db) pos))))
+  (assoc-in db (element.h/path db) (-> db history (state  pos) :elements)))
 
-(m/=> move [:-> App uuid? App])
-(defn move
+(m/=> go-to [:-> App uuid? App])
+(defn go-to
   [db pos]
   (-> db
       (assoc-in (path db :position) pos)
@@ -98,7 +99,7 @@
    (undo db 1))
   ([db n]
    (if (and (pos? n) (undos? (history db)))
-     (recur (move db (previous-position (history db))) (dec n))
+     (recur (go-to db (previous-position (history db))) (dec n))
      db)))
 
 (m/=> redo [:function
@@ -109,7 +110,7 @@
    (redo db 1))
   ([db n]
    (if (and (pos? n) (redos? (history db)))
-     (recur (move db (next-position (history db))) (dec n))
+     (recur (go-to db (next-position (history db))) (dec n))
      db)))
 
 (m/=> accumulate [:-> History [:or fn? keyword?] [:vector HistoryState]])

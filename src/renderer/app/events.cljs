@@ -65,10 +65,9 @@
 
 (rf/reg-event-db
  ::toggle-panel
- [persist
-  (rf/path :panels)]
+ [persist]
  (fn [db [_ k]]
-   (update-in db [k :visible] not)))
+   (update-in db [:panels k :visible] not)))
 
 (rf/reg-event-fx
  ::focus

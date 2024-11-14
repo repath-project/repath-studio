@@ -13,14 +13,14 @@
 (rf.storage/reg-co-fx! config/app-key {:cofx :store})
 
 (defn persist!
+  "This is a modified version of akiroz.re-frame.storage/persist-db-keys
+   The before key is removed and we are dropping the rest of the history states
+   to get performance to an acceptable level and minimize resource allocation."
   [db]
   (let [db (cond-> db (:active-document db) history.h/drop-rest)]
     (rf.storage/->store config/app-key (select-keys db db/persistent-keys))))
 
 (def persist
-  "This is a modified version of akiroz.re-frame.storage/persist-db-keys
-   The before key is removed and we are dropping the rest of the history states
-   to get performance to an acceptable level and minimize resource allocation."
   (rf/->interceptor
    :id ::persist
    :after (fn [context]

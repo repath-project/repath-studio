@@ -23,7 +23,7 @@
 (defn select
   [label options disabled?]
   [:> Select/Root
-   {:onValueChange #(rf/dispatch [::history.e/move (uuid %)])
+   {:onValueChange #(rf/dispatch [::history.e/go-to (uuid %)])
     :disabled disabled?}
    [:> Select/Trigger
     {:aria-label label
@@ -56,7 +56,7 @@
         color (if (.-active datum) "var(--accent)" (.-color datum))]
     (ra/as-element
      [:circle
-      {:on-click #(rf/dispatch [::history.e/move id])
+      {:on-click #(rf/dispatch [::history.e/go-to id])
        :on-pointer-enter #(rf/dispatch [::history.e/preview id])
        :on-pointer-leave #(rf/dispatch [::history.e/reset-state id])
        :cx "0"

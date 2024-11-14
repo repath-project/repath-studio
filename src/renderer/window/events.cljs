@@ -8,21 +8,18 @@
 
 (rf/reg-event-db
  ::set-maximized
- (rf/path :window)
  (fn [db [_ state]]
-   (assoc db :maximized state)))
+   (assoc-in db [:window :maximized] state)))
 
 (rf/reg-event-db
  ::set-fullscreen
- (rf/path :window)
  (fn [db [_ state]]
-   (assoc db :fullscreen state)))
+   (assoc-in db [:window :fullscreen] state)))
 
 (rf/reg-event-db
  ::set-minimized
- (rf/path :window)
  (fn [db [_ state]]
-   (assoc db :minimized state)))
+   (assoc-in db [:window :minimized] state)))
 
 (rf/reg-event-db
  ::set-focused

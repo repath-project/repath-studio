@@ -98,8 +98,10 @@
   ([db focus-type]
    (cond-> db
      (:active-document db)
-     (focus-bounds focus-type (or (element.h/bounds db)
-                                  (element/united-bounds (element.h/root-children db))))))
+     (focus-bounds
+      focus-type
+      (or (element.h/bounds db)
+          (element/united-bounds (element.h/root-children db))))))
   ([db focus-type bounds]
    (let [[width height] (utils.bounds/->dimensions bounds)
          width-ratio (/ (-> db :dom-rect :width) width)

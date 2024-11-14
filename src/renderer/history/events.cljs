@@ -34,9 +34,9 @@
    (h/preview db pos)))
 
 (rf/reg-event-db
- ::move
+ ::go-to
  (fn [db [_ id]]
-   (h/move db id)))
+   (h/go-to db id)))
 
 (rf/reg-event-db
  ::clear

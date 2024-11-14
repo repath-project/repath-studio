@@ -6,6 +6,7 @@
    [renderer.history.handlers :as history.h]))
 
 (def auto-persist
+  "Persists the current state on history position changes."
   (rf/->interceptor
    :id ::auto-persist
    :before (fn [context]
