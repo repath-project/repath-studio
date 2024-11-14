@@ -13,7 +13,7 @@
 
 (m/=> viewbox [:function
                [:-> App [:maybe Viewbox]]
-               [:-> ZoomFactor Vec2D DomRect [:maybe Viewbox]]])
+               [:-> ZoomFactor Vec2D DomRect Viewbox]])
 (defn viewbox
   ([db]
    (let [zoom (get-in db [:documents (:active-document db) :zoom])
