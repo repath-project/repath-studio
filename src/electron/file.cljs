@@ -22,7 +22,9 @@
   [file-path data]
   (let [document (pr-str (dissoc data :path :id :title))]
     (.writeFileSync fs file-path document "utf-8")
-    (js/Promise.resolve (serialize-document (select-keys data [:id]) file-path))))
+    (-> (select-keys data [:id])
+        (serialize-document file-path)
+        (js/Promise.resolve))))
 
 (defn- read!
   [file-path]

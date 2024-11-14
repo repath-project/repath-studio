@@ -98,9 +98,9 @@
   ([db]
    (undo db 1))
   ([db n]
-   (if (and (pos? n) (undos? (history db)))
-     (recur (go-to db (previous-position (history db))) (dec n))
-     db)))
+   (if-not (and (pos? n) (undos? (history db)))
+     db
+     (recur (go-to db (previous-position (history db))) (dec n)))))
 
 (m/=> redo [:function
             [:-> App App]
@@ -109,9 +109,9 @@
   ([db]
    (redo db 1))
   ([db n]
-   (if (and (pos? n) (redos? (history db)))
-     (recur (go-to db (next-position (history db))) (dec n))
-     db)))
+   (if-not (and (pos? n) (redos? (history db)))
+     db
+     (recur (go-to db (next-position (history db))) (dec n)))))
 
 (m/=> accumulate [:-> History [:or fn? keyword?] [:vector HistoryState]])
 (defn accumulate
@@ -177,12 +177,12 @@
          db db]
     (let [parent-id (:parent node)
           parent (state (history db) parent-id)]
-      (if parent
+      (if-not parent
+        db
         (let [index (.indexOf (:children parent) (:id node))
               new-index (dec (count (:children parent)))
               children-path (path db :states parent-id :children)]
-          (recur parent (update-in db children-path vec/move index new-index)))
-        db))))
+          (recur parent (update-in db children-path vec/move index new-index)))))))
 
 (def valid-elements? (m/validator [:map-of uuid? Element]))
 

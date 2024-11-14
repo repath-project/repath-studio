@@ -50,8 +50,7 @@
   (let [s (str/trim (str v))
         n (js/parseFloat s 10)
         unit (match-unit s)]
-    [(if (js/isNaN n) 0 n)
-     unit]))
+    [(if (js/isNaN n) 0 n) unit]))
 
 (m/=> ->px [:-> number? string? number?])
 (defn ->px
