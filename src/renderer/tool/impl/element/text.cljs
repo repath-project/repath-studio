@@ -6,7 +6,7 @@
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]))
 
-(derive :text ::hierarchy/element)
+(derive :text ::hierarchy/tool)
 
 (defmethod hierarchy/properties :text
   []
