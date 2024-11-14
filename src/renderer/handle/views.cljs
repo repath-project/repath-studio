@@ -11,7 +11,6 @@
    [renderer.utils.bounds :as bounds :refer [Bounds]]
    [renderer.utils.pointer :as pointer]))
 
-#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defn circle
   [el & children]
   (let [{:keys [x y id]} el

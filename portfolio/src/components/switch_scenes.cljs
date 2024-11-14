@@ -3,7 +3,6 @@
    [portfolio.reagent-18 :refer-macros [defscene]]
    [renderer.ui :as ui]))
 
-#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defscene switch
   :title "Default switch"
   :params (atom true)
@@ -14,7 +13,6 @@
                               :on-checked-change (fn [v] (reset! store v))}]
    (str "Checked: " @store)])
 
-#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defscene switch-disabled
   :title "Disabled switch"
   :params (atom true)
@@ -26,7 +24,6 @@
                               :on-checked-change (fn [v] (reset! store v))}]
    (str "Checked: " @store)])
 
-#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defscene switch-custom
   :title "Custom color switch"
   :params (atom true)

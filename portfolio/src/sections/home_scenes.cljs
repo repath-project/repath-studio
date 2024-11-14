@@ -4,7 +4,6 @@
    [renderer.app.subs]
    [renderer.app.views :as app.v]))
 
-#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defscene home
   :title "Home"
   :params (atom ["path/to/file/name.rps"])

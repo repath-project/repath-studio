@@ -14,7 +14,6 @@
                            :disabled true
                            :on-click #(js/alert "Saved")}]])
 
-#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defscene radio-icon-buttons
   :title "Radio icon buttons"
   :params (atom false)

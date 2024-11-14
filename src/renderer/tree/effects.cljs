@@ -5,7 +5,7 @@
 
 (defn query-by-id!
   [id]
-  (.querySelectorAll js/document (str ".tree-sidebar [data-id='" (str id) "']")))
+  (.querySelectorAll js/document (str ".tree-sidebar [data-id='" id "']")))
 
 (defn get-list-elements!
   []

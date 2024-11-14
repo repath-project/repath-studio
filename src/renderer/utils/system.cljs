@@ -17,10 +17,8 @@
 (defonce mac?
   (= platform "darwin"))
 
-#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defonce windows?
   (= platform "win32"))
 
-#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defonce linux?
   (= platform "linux"))

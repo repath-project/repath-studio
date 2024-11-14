@@ -3,7 +3,6 @@
    [portfolio.reagent-18 :refer-macros [defscene]]
    [renderer.ui :as ui]))
 
-#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defscene slider
   :title "Default slider"
   :params (atom [25])
@@ -17,7 +16,6 @@
                 :on-value-change (fn [v] (reset! store v))}]]
    [:div (first @store)]])
 
-#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defscene slider-disabled
   :title "Disabled slider"
   :params (atom [25])

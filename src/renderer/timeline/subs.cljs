@@ -14,7 +14,7 @@
 
 (defn effect-id
   [el]
-  (str "effect" (str (:id el))))
+  (str "effect" (:id el)))
 
 (defn animation->timeline-row
   [{:keys [id attrs selected locked] :as el}]
