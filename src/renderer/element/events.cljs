@@ -276,8 +276,8 @@
 
 (rf/reg-event-db
  ::set-parent
- (fn [db [_ parent-id id]]
-   (-> (h/set-parent db parent-id id)
+ (fn [db [_ id parent-id]]
+   (-> (h/set-parent db id parent-id)
        (history.h/finalize "Set parent"))))
 
 (rf/reg-event-db

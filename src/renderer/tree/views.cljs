@@ -77,7 +77,7 @@
                (.getData "id")
                uuid)]
     (.preventDefault e)
-    (rf/dispatch [::element.e/set-parent parent-id id])))
+    (rf/dispatch [::element.e/set-parent id parent-id])))
 
 (defn padding
   [depth has-children]
