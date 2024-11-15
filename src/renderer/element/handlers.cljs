@@ -93,7 +93,7 @@
    (when-let [parent-id (:parent (entity db id))]
      (entity db parent-id))))
 
-(m/=> parent-container [:-> App uuid? Element])
+(m/=> parent-container [:-> App uuid? [:maybe Element]])
 (defn parent-container
   [db id]
   (loop [parent-el (parent db id)]
@@ -105,12 +105,15 @@
 (m/=> adjusted-bounds [:-> App uuid? [:maybe Bounds]])
 (defn adjusted-bounds
   [db id]
-  (when-let [bounds (hierarchy/bounds (entity db id))]
-    (if-let [container (parent-container db id)]
+  (loop [container (parent-container db id)
+         bounds (hierarchy/bounds (entity db id))]
+    (if-not (and container bounds)
+      bounds
       (let [[offset-x offset-y _ _] (hierarchy/bounds container)
             [x1 y1 x2 y2] bounds]
-        [(+ x1 offset-x) (+ y1 offset-y) (+ x2 offset-x) (+ y2 offset-y)])
-      bounds)))
+        (recur
+         (parent-container db (:id container))
+         [(+ x1 offset-x) (+ y1 offset-y) (+ x2 offset-x) (+ y2 offset-y)])))))
 
 (m/=> refresh-bounds [:-> App uuid? App])
 (defn refresh-bounds
