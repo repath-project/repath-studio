@@ -145,7 +145,7 @@
          (dissoc :style))
        (catch :default _e (dissoc attrs :style))))
 
-(m/=> update-attrs-with [:-> Element fn? [:vector vector?] Element])
+(m/=> update-attrs-with [:-> Element ifn? [:vector vector?] Element])
 (defn update-attrs-with
   [el f attrs-map]
   (reduce (fn [el [k & more]]

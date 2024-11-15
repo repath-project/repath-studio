@@ -3,7 +3,7 @@
    [clojure.set :as set]
    [malli.core :as m]))
 
-(m/=> merge-common-with [:-> fn? [:* map?] map?])
+(m/=> merge-common-with [:-> ifn? [:* map?] map?])
 (defn merge-common-with
   "Equivelent to merge-with for common keys across all maps."
   [f & maps]

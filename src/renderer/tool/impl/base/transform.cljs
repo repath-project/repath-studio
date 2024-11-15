@@ -71,7 +71,7 @@
         (bounds/contained? el-bounds selection-bounds))
       false)))
 
-(m/=> reduce-by-area [:-> App boolean? fn? App])
+(m/=> reduce-by-area [:-> App boolean? ifn? App])
 (defn reduce-by-area
   [db intersecting? f]
   (reduce (fn [db el]

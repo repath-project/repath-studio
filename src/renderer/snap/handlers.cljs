@@ -61,7 +61,7 @@
           (update-viewport-tree)))
     (dissoc db :kdtree :viewbox-kdtree)))
 
-(m/=> update-tree [:-> App fn? [:vector Vec2D] App])
+(m/=> update-tree [:-> App ifn? [:vector Vec2D] App])
 (defn update-tree
   [db f points]
   (if (:kdtree db)

@@ -464,8 +464,8 @@
            (expand id))))))
 
 (m/=> update-index [:function
-                    [:-> App fn? App]
-                    [:-> App uuid? fn? App]])
+                    [:-> App ifn? App]
+                    [:-> App uuid? ifn? App]])
 (defn update-index
   ([db f]
    (reduce (partial-right update-index f) db (selected-sorted-ids db)))

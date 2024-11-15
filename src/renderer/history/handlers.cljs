@@ -62,7 +62,7 @@
   [db]
   (cond-> db
     (:active-document db)
-    (assoc-in (element.h/path db) (:elements (state (history db))))))
+    (assoc-in (element.h/path db) (-> db history state :elements))))
 
 (m/=> drop-rest [:function
                  [:-> App App]
@@ -82,7 +82,7 @@
 (m/=> preview [:-> App uuid? App])
 (defn preview
   [db pos]
-  (assoc-in db (element.h/path db) (-> db history (state  pos) :elements)))
+  (assoc-in db (element.h/path db) (-> db history (state pos) :elements)))
 
 (m/=> go-to [:-> App uuid? App])
 (defn go-to
@@ -113,7 +113,7 @@
      db
      (recur (go-to db (next-position (history db))) (dec n)))))
 
-(m/=> accumulate [:-> History [:or fn? keyword?] [:vector HistoryState]])
+(m/=> accumulate [:-> History ifn? [:vector HistoryState]])
 (defn accumulate
   [active-history f]
   (loop [current-state (state active-history)
@@ -194,7 +194,7 @@
   [db explanation]
   (let [elements (element.h/entities db)]
     (cond
-      (= elements (:elements (state (history db))))
+      (= elements (-> db history state :elements))
       db
 
       (not (valid-elements? elements))
