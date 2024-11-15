@@ -375,6 +375,23 @@
      (is (= (-> @selected first :tag) :animate))
      (is (= (-> @selected first :parent) id)))))
 
+(deftest set-parent
+  (rf-test/run-test-sync
+   (rf/dispatch [::app.e/initialize-db])
+   (rf/dispatch [::document.e/init])
+   (rf/dispatch [::e/add {:tag :rect
+                          :attrs {:x "100"
+                                  :y "100"
+                                  :width "100"
+                                  :height "100"}}])
+   (let [selected (rf/subscribe [::s/selected])
+         id (-> @selected first :id)
+         root (rf/subscribe [::s/root])]
+     (is (not= (-> @selected first :parent) (:id @root)))
+
+     (rf/dispatch [::e/set-parent id (:id @root)])
+     (is (= (-> @selected first :parent) (:id @root))))))
+
 (deftest group
   (rf-test/run-test-sync
    (rf/dispatch [::app.e/initialize-db])
