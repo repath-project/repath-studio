@@ -6,7 +6,7 @@
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]))
 
-(derive :text ::hierarchy/tool)
+(derive :text ::hierarchy/element)
 
 (defmethod hierarchy/properties :text
   []
@@ -32,3 +32,7 @@
         (history.h/finalize "Create text")
         (h/activate :edit)
         (h/set-state :create))))
+
+(defmethod hierarchy/on-drag-end :text
+  [db e]
+  (hierarchy/on-pointer-up db e))
