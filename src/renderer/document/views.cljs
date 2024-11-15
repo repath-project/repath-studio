@@ -17,8 +17,8 @@
   []
   (let [undos @(rf/subscribe [::history.s/undos])
         redos @(rf/subscribe [::history.s/redos])
-        some-undos @(rf/subscribe [::history.s/some-undos])
-        some-redos @(rf/subscribe [::history.s/some-redos])]
+        undos? @(rf/subscribe [::history.s/undos?])
+        redos? @(rf/subscribe [::history.s/redos?])]
     [:div.toolbar
 
      [ui/icon-button
@@ -42,16 +42,16 @@
      [:button.icon-button.items-center.px-1.gap-1.flex.w-auto
       {:title "Undo"
        :on-click #(rf/dispatch [::history.e/undo])
-       :disabled (not some-undos)}
+       :disabled (not undos?)}
       [ui/icon "undo"]
-      [history.v/select "Undo stack" undos (not some-undos)]]
+      [history.v/select "Undo stack" undos (not undos?)]]
 
      [:button.icon-button.items-center.px-1.gap-1.flex.w-auto
       {:title "Redo"
        :on-click #(rf/dispatch [::history.e/redo])
-       :disabled (not some-redos)}
+       :disabled (not redos?)}
       [ui/icon "redo"]
-      [history.v/select "Redo stack" redos (not some-redos)]]]))
+      [history.v/select "Redo stack" redos (not redos?)]]]))
 
 (defn close-button
   [id saved]
@@ -145,5 +145,6 @@
                      {:label "Close saved"
                       :key :close-all-saved
                       :action [::e/close-all-saved]}]]
-           ^{:key (:key item)} [ui/dropdown-menu-item item])
+           ^{:key (:key item)}
+           [ui/dropdown-menu-item item])
          [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]]]]))

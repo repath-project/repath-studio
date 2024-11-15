@@ -110,12 +110,12 @@
    :items [{:id :undo
             :label "Undo"
             :icon "undo"
-            :disabled (not @(rf/subscribe [::history.s/some-undos]))
+            :disabled (not @(rf/subscribe [::history.s/undos?]))
             :action [::history.e/undo]}
            {:id :redo
             :label "Redo"
             :icon "redo"
-            :disabled (not @(rf/subscribe [::history.s/some-redos]))
+            :disabled (not @(rf/subscribe [::history.s/redos?]))
             :action [::history.e/redo]}
            {:id :divider-1
             :type :separator}

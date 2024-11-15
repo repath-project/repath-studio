@@ -16,8 +16,8 @@
    (rf/dispatch [::document.e/init])
 
    (testing "no undos/redos"
-     (is (not @(rf/subscribe [::s/some-undos])))
-     (is (not @(rf/subscribe [::s/some-redos]))))
+     (is (not @(rf/subscribe [::s/undos?])))
+     (is (not @(rf/subscribe [::s/redos?]))))
 
    (testing "add action to history"
      (rf/dispatch [::element.e/add {:tag :rect
@@ -25,23 +25,23 @@
                                             :y 100
                                             :width 100
                                             :height 100}}])
-     (is @(rf/subscribe [::s/some-undos]))
+     (is @(rf/subscribe [::s/undos?]))
      (is (= (count @(rf/subscribe [::s/undos])) 1))
-     (is (not @(rf/subscribe [::s/some-redos])))
+     (is (not @(rf/subscribe [::s/redos?])))
      (is (= (-> @(rf/subscribe [::element.s/selected]) first :tag) :rect)))
 
    (testing "undo"
      (rf/dispatch [::e/undo])
-     (is @(rf/subscribe [::s/some-redos]))
+     (is @(rf/subscribe [::s/redos?]))
      (is (= (count @(rf/subscribe [::s/redos])) 1))
-     (is (not @(rf/subscribe [::s/some-undos])))
+     (is (not @(rf/subscribe [::s/undos?])))
      (is (empty? @(rf/subscribe [::element.s/selected]))))
 
    (testing "redo"
      (rf/dispatch [::e/redo])
-     (is @(rf/subscribe [::s/some-undos]))
+     (is @(rf/subscribe [::s/undos?]))
      (is (= (count @(rf/subscribe [::s/undos])) 1))
-     (is (not @(rf/subscribe [::s/some-redos])))
+     (is (not @(rf/subscribe [::s/redos?])))
      (is (= (-> @(rf/subscribe [::element.s/selected]) first :tag) :rect)))))
 
 (deftest clear
@@ -55,5 +55,5 @@
                                           :height 100}}])
    (testing "clear history"
      (rf/dispatch [::e/clear])
-     (is (not @(rf/subscribe [::s/some-undos])))
-     (is (not @(rf/subscribe [::s/some-redos]))))))
+     (is (not @(rf/subscribe [::s/undos?])))
+     (is (not @(rf/subscribe [::s/redos?]))))))

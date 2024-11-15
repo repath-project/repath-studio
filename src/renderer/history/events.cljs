@@ -48,7 +48,8 @@
  ::tree-view-updated
  (fn [db [_ zoom translate]]
    (cond-> db
-     zoom (h/set-zoom zoom)
-     translate (h/set-translate translate))))
+     zoom
+     (h/set-zoom zoom)
 
-
+     translate
+     (h/set-translate translate))))
