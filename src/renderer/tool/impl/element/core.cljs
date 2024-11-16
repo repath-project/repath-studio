@@ -27,7 +27,7 @@
   (h/set-cursor db "crosshair"))
 
 (defmethod hierarchy/on-drag-start ::hierarchy/element
-  [db]
+  [db _e]
   (h/set-state db :create))
 
 (defmethod hierarchy/on-drag-end ::hierarchy/element

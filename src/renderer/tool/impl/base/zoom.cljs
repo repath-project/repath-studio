@@ -37,11 +37,11 @@
     (h/set-cursor "zoom-in")))
 
 (defmethod hierarchy/on-drag-start :zoom
-  [db]
+  [db _e]
   (h/set-cursor db "default"))
 
 (defmethod hierarchy/on-drag :zoom
-  [db]
+  [db _e]
   (h/set-temp db (overlay/select-box db)))
 
 (defmethod hierarchy/on-drag-end :zoom

@@ -15,7 +15,7 @@
   {:icon "image"})
 
 (defmethod hierarchy/on-pointer-up :image
-  [db]
+  [db _e]
   (tool.h/add-fx db [::app.fx/file-open
                      {:options {:startIn "pictures"
                                 :types [{:accept {"image/png" [".png"]

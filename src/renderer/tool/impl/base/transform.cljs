@@ -228,23 +228,24 @@
                  offset)]
     (reduce (fn [db id]
               (let [container (element.h/parent-container db id)
-                    hovered-svg-k (:id (element.h/hovered-svg db))]
+                    hovered-svg (element.h/hovered-svg db)]
                 (cond-> (element.h/translate db id offset)
                   (and (seq (element.h/selected db))
                        (empty? (rest (element.h/selected db)))
                        (contains? #{:translate :clone} (:state db))
-                       (not= (:id (element.h/parent db id)) hovered-svg-k)
+                       (not= (:id (element.h/parent db id)) (:id hovered-svg))
                        (not (element/svg? (element.h/entity db id))))
                   (cond->
                    :always
-                    (element.h/set-parent hovered-svg-k)
+                    (element.h/set-parent (:id hovered-svg))
 
                     ;; FIXME: Handle nested containers.
                     (:bounds container)
                     (element.h/translate id (vec (take 2 (:bounds container))))
 
-                    (:bounds (element.h/hovered-svg db))
-                    (element.h/translate id (mat/mul (take 2 (:bounds (element.h/hovered-svg db))) -1))))))
+                    (:bounds hovered-svg)
+                    (element.h/translate id (mat/mul (take 2 (:bounds hovered-svg))
+                                                     -1))))))
             db
             (element.h/top-ancestor-ids db))))
 
@@ -278,7 +279,10 @@
         ratio-locked? (or (pointer/ctrl? e) (element.h/ratio-locked? db))
         db (element.h/clear-ignored db)
         delta (h/pointer-delta db)
-        axis (when ctrl? (if (> (abs (first delta)) (abs (second delta))) :vertical :horizontal))]
+        axis (when ctrl?
+               (if (> (abs (first delta)) (abs (second delta)))
+                 :vertical
+                 :horizontal))]
     (case state
       :select
       (-> (element.h/clear-hovered db)

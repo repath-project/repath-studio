@@ -16,7 +16,7 @@
   {:icon "pencil"})
 
 (defmethod hierarchy/on-drag :pen
-  [db]
+  [db _e]
   (let [{:keys [active-document adjusted-pointer-pos]} db
         points-path [:documents active-document :temp-element :attrs :points]]
     (if (get-in db points-path)

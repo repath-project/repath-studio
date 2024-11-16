@@ -18,7 +18,7 @@
                 (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))))
 
 (defmethod hierarchy/on-drag-start :blob
-  [db]
+  [db _e]
   (let [[offset-x offset-y] (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
         radius (pointer-delta db)]
     (h/set-temp db {:type :element
@@ -33,7 +33,7 @@
                             :stroke (document.h/attr db :stroke)}})))
 
 (defmethod hierarchy/on-drag :blob
-  [db]
+  [db _e]
   (let [[offset-x offset-y] (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
         radius (pointer-delta db)
         temp (-> (h/temp db)

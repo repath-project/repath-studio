@@ -13,7 +13,7 @@
   {:icon "circle-tool"})
 
 (defmethod hierarchy/on-drag :circle
-  [db]
+  [db _e]
   (let [offset (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
         position (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
         [x y] offset

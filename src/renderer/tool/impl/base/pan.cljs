@@ -22,11 +22,11 @@
   "Click and drag to pan.")
 
 (defmethod hierarchy/on-pointer-up :pan
-  [db]
+  [db _e]
   (h/set-cursor db "grab"))
 
 (defmethod hierarchy/on-pointer-down :pan
-  [db]
+  [db _e]
   (h/set-cursor db "grabbing"))
 
 (defmethod hierarchy/on-drag :pan

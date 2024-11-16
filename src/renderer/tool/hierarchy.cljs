@@ -5,7 +5,7 @@
 (defmulti on-pointer-move (fn [db _e] (:tool db)))
 (defmulti on-double-click (fn [db _e] (:tool db)))
 (defmulti on-drag-start (fn [db _e] (:tool db)))
-(defmulti on-drag (fn [db _e _t] (:tool db)))
+(defmulti on-drag (fn [db _e] (:tool db)))
 (defmulti on-drag-end (fn [db _e] (:tool db)))
 (defmulti on-key-up (fn [db _e] (:tool db)))
 (defmulti on-key-down (fn [db _e] (:tool db)))
@@ -35,5 +35,3 @@
 (defmethod snapping-points :default [])
 (defmethod snapping-elements :default [])
 (defmethod help :default [_tool _state] "")
-
-

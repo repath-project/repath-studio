@@ -35,7 +35,7 @@
     (h/set-temp db temp)))
 
 (defmethod tool.hierarchy/on-pointer-move :line
-  [db]
+  [db _e]
   (cond-> db
     (h/temp db)
     (update-line-end)))
@@ -61,5 +61,5 @@
     (history.h/finalize "Create line")))
 
 (defmethod tool.hierarchy/on-drag :line
-  [db]
+  [db _e]
   (create-line db))

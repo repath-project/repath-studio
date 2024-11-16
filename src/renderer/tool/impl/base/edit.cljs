@@ -51,7 +51,7 @@
       (element.h/hover el-id))))
 
 (defmethod hierarchy/on-drag-start :edit
-  [db]
+  [db _e]
   (h/set-state db :edit))
 
 (defmethod hierarchy/on-drag :edit
