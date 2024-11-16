@@ -11,6 +11,9 @@
 
   --backdrop: rgb(0 0 0 / 0.75);
 
+  --accent: #e93976;
+  --accent-inverted: #fff;
+
   .devtools * {
     background: transparent !important;
   }
@@ -22,9 +25,6 @@
 
   --overlay: rgba(255, 255, 255, .1);
   --overlay-2x: rgba(255, 255, 255, .2);
-
-  --accent: #e93976;
-  --accent-inverted: #fff;
 
   --font-color: rgba(255, 255, 255, .7);
   --error-color: #f78484;
