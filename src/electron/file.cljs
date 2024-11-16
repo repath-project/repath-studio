@@ -21,10 +21,9 @@
 (defn- write-file!
   [file-path data]
   (let [document (pr-str (dissoc data :path :id :title))]
-    (.writeFileSync fs file-path document "utf-8")
-    (-> (select-keys data [:id])
-        (serialize-document file-path)
-        (js/Promise.resolve))))
+    (-> (.writeFile fs/promises file-path document "utf-8")
+        (.then #(-> (select-keys data [:id])
+                    (serialize-document file-path))))))
 
 (defn- read!
   [file-path]
@@ -85,10 +84,7 @@
   (-> (save-dialog! export-options)
       (.then (fn [file-path]
                (when file-path
-                 (.writeFile fs file-path data "utf-8" (fn [error]
-                                                         (if error
-                                                           (js/Promise.reject error)
-                                                           (js/Promise.resolve data)))))))))
+                 (.writeFile fs/promises file-path data "utf-8"))))))
 
 (defn print!
   [content]
