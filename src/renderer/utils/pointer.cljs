@@ -16,14 +16,25 @@
   [:map {:closed true}
    [:element [:maybe [:or Element Handle]]]
    [:target any?]
-   [:type [:enum "pointerover" "pointerenter" "pointerdown" "pointermove" "pointerrawupdate" "pointerup" "pointercancel" "pointerout" "pointerleave" "gotpointercapture" "lostpointercapture"]]
    [:pointer-pos [:maybe Vec2D]]
    [:pressure [:maybe number?]]
    [:pointer-type [:enum "mouse" "pen" "touch"]]
    [:pointer-id number?]
    [:primary boolean?]
    [:button [:maybe PointerButton]]
-   [:modifiers [:set ModifierKey]]])
+   [:modifiers [:set ModifierKey]]
+   [:type [:enum
+           "pointerover"
+           "pointerenter"
+           "pointerdown"
+           "pointermove"
+           "pointerrawupdate"
+           "pointerup"
+           "pointercancel"
+           "pointerout"
+           "pointerleave"
+           "gotpointercapture"
+           "lostpointercapture"]]])
 
 (m/=> ctrl? [:-> map? boolean?])
 (defn ctrl?
@@ -65,22 +76,22 @@
     [x 0]
     [0 y]))
 
+(m/=> event-handler! [:-> any? [:or Element Handle] nil?])
 (defn event-handler!
   "Gathers pointer event props.
    https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent
 
    Then dispathces the corresponding event.
-   https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/
-
-   Although the fps might drop because synced dispatch blocks the rendering,
-   the end result appears to be more responsive because it's synced with the
-   pointer movement."
+   https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/"
   [^js/PointerEvent e el]
   (.stopPropagation e)
 
   (when (= (.-pointerType e) "touch")
     (.preventDefault e))
 
+  ;; Although the fps might drop because synced dispatch blocks rendering,
+  ;; the end result appears to be more responsive because it's synced with the
+  ;; pointer movement.
   (rf/dispatch-sync [::tool.e/pointer-event {:element el
                                              :target (.-target e)
                                              :type (.-type e)

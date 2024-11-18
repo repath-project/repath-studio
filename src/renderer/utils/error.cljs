@@ -1,12 +1,14 @@
 (ns renderer.utils.error
   "https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary"
   (:require
+   [malli.core :as m]
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [renderer.history.events :as-alias history.e]
    [renderer.ui :as ui]
    [renderer.window.events :as-alias window.e]))
 
+(m/=> submit-error-url [:-> string? string?])
 (defn submit-error-url
   [message]
   (str "https://github.com/repath-project/repath-studio/issues/new?"

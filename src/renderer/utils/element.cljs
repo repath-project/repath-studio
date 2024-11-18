@@ -106,8 +106,7 @@
                      #js {:cap (or (:stroke-linecap attrs) "butt")
                           :join (or (:stroke-linejoin attrs) "miter")})
         new-d (.getAttribute (.exportSVG stroke-path) "d")]
-    (-> el
-        (assoc :tag :path)
+    (-> (assoc el :tag :path)
         (update :attrs dissoc :stroke :stroke-width)
         (update :attrs #(map/merge-common-with str % (attr/defaults-memo :path)))
         (assoc-in [:attrs :d] new-d)

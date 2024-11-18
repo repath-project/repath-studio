@@ -1,5 +1,6 @@
 (ns renderer.utils.wheel
   (:require
+   [malli.core :as m]
    [re-frame.core :as rf]
    [renderer.tool.events :as-alias tool.e]
    [renderer.utils.keyboard :refer [ModifierKey modifiers]]
@@ -15,6 +16,7 @@
    [:delta-z [:maybe number?]]
    [:modifiers [:set ModifierKey]]])
 
+(m/=> event-handler! [:-> any? nil?])
 (defn event-handler!
   "Gathers wheel event props.
    https://developer.mozilla.org/en-US/docs/Web/API/WheelEvent"
