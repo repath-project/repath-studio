@@ -6,7 +6,7 @@
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as attr.hierarchy]
-   [renderer.attribute.impl.length :as length]
+   [renderer.attribute.impl.length :as attr.length]
    [renderer.attribute.views :as attr.v]
    [renderer.element.events :as-alias element.e]
    [renderer.element.hierarchy :as hierarchy]
@@ -14,13 +14,13 @@
    [renderer.handle.views :as handle.v]
    [renderer.ui :as ui]
    [renderer.utils.element :as element]
+   [renderer.utils.length :as length]
    [renderer.utils.overlay :as overlay]
-   [renderer.utils.pointer :as pointer]
-   [renderer.utils.units :as units]))
+   [renderer.utils.pointer :as pointer]))
 
 (derive :blob ::hierarchy/renderable)
 
-(derive :size ::length/length)
+(derive :size ::attr.length/length)
 
 (defmethod attr.hierarchy/form-element [:blob :extraPoints]
   [_ k v attrs]
@@ -120,19 +120,19 @@
 (defmethod hierarchy/bounds :blob
   [el]
   (let [{{:keys [x y size]} :attrs} el
-        [x y size] (mapv units/unit->px [x y size])]
+        [x y size] (mapv length/unit->px [x y size])]
     [x y (+ x size) (+ y size)]))
 
 (defmethod hierarchy/centroid :blob
   [el]
   (let [{{:keys [x y size]} :attrs} el
-        [x y size] (mapv units/unit->px [x y size])]
+        [x y size] (mapv length/unit->px [x y size])]
     (mat/add [x y] (/ size 2))))
 
 (defmethod hierarchy/path :blob
   [el]
   (let [{{:keys [x y]} :attrs} el
-        [x y] (mapv units/unit->px [x y])
+        [x y] (mapv length/unit->px [x y])
         options (->> [:seed :extraPoints :randomness :size]
                      (select-keys (:attrs el))
                      (reduce (fn [options [k v]] (assoc options k (int v))) {})
@@ -153,7 +153,7 @@
 (defmethod hierarchy/render-edit :blob
   [el]
   (let [{{:keys [x y size]} :attrs} el
-        [x y size] (mapv units/unit->px [x y size])
+        [x y size] (mapv length/unit->px [x y size])
         offset (element/offset el)
         [x1 y1] (cond->> [x y] (not (element/svg? el)) (mat/add offset))
         [x2 y2] (mat/add [x1 y1] size)]

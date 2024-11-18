@@ -8,13 +8,13 @@
    [renderer.handle.views :as handle.v]
    [renderer.utils.attribute :as attr]
    [renderer.utils.element :as element]
-   [renderer.utils.units :as units]))
+   [renderer.utils.length :as length]))
 
 (derive ::hierarchy/polyshape ::hierarchy/shape)
 
 (def partition-to-px
   (comp
-   (map units/unit->px)
+   (map length/unit->px)
    (partition-all 2)))
 
 (defn points->px
@@ -24,8 +24,8 @@
 (defn translate
   [[offset-x offset-y] points [point-x point-y]]
   (conj points
-        (when point-x (units/transform point-x + offset-x))
-        (when point-y (units/transform point-y + offset-y))))
+        (when point-x (length/transform point-x + offset-x))
+        (when point-y (length/transform point-y + offset-y))))
 
 (defmethod hierarchy/translate ::hierarchy/polyshape
   [el offset]
@@ -55,7 +55,7 @@
 (defmethod hierarchy/render-edit ::hierarchy/polyshape
   [el]
   [:g (map-indexed (fn [index [x y]]
-                     (let [[x y] (mapv units/unit->px [x y])
+                     (let [[x y] (mapv length/unit->px [x y])
                            [x y] (mat/add (element/offset el) [x y])]
                        ^{:key index}
                        [handle.v/square {:id (keyword (str index))
@@ -73,8 +73,8 @@
   (let [index (js/parseInt (name handle))]
     (update-in el [:attrs :points] #(-> (attr/points->vec %)
                                         (update index (fn [[px py]]
-                                                        (list (units/transform px + x)
-                                                              (units/transform py + y))))
+                                                        (list (length/transform px + x)
+                                                              (length/transform py + y))))
                                         (flatten)
                                         (->> (str/join " ")
                                              (str/trim))))))
@@ -82,10 +82,10 @@
 (defmethod hierarchy/bounds ::hierarchy/polyshape
   [el]
   (let [points (-> el :attrs :points attr/points->vec)
-        x1 (apply min (map #(units/unit->px (first %)) points))
-        y1 (apply min (map #(units/unit->px (second %)) points))
-        x2 (apply max (map #(units/unit->px (first %)) points))
-        y2 (apply max (map #(units/unit->px (second %)) points))]
+        x1 (apply min (map #(length/unit->px (first %)) points))
+        y1 (apply min (map #(length/unit->px (second %)) points))
+        x2 (apply max (map #(length/unit->px (first %)) points))
+        y2 (apply max (map #(length/unit->px (second %)) points))]
     [x1 y1 x2 y2]))
 
 (defn calc-polygon-area

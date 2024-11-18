@@ -8,8 +8,8 @@
    [renderer.handle.views :as handle.v]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
-   [renderer.utils.overlay :as overlay]
-   [renderer.utils.units :as units]))
+   [renderer.utils.length :as length]
+   [renderer.utils.overlay :as overlay]))
 
 (derive :ellipse ::hierarchy/shape)
 
@@ -41,13 +41,13 @@
 (defmethod hierarchy/bounds :ellipse
   [el]
   (let [{{:keys [cx cy rx ry]} :attrs} el
-        [cx cy rx ry] (map units/unit->px [cx cy rx ry])]
+        [cx cy rx ry] (map length/unit->px [cx cy rx ry])]
     [(- cx rx) (- cy ry) (+ cx rx) (+ cy ry)]))
 
 (defmethod hierarchy/path :ellipse
   [el]
   (let [{{:keys [cx cy rx ry]} :attrs} el
-        [cx cy rx ry] (mapv units/unit->px [cx cy rx ry])]
+        [cx cy rx ry] (mapv length/unit->px [cx cy rx ry])]
     (str/join " " ["M" (+ cx rx) cy
                    "A" rx ry 0 0 1 cx (+ cy ry)
                    "A" rx ry 0 0 1 (- cx rx) cy

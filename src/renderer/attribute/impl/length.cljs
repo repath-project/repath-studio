@@ -7,7 +7,7 @@
    [renderer.attribute.views :as v]
    [renderer.element.events :as-alias element.e]
    [renderer.ui :as ui]
-   [renderer.utils.units :as units]))
+   [renderer.utils.length :as length]))
 
 (derive :x ::length)
 (derive :y ::length)
@@ -50,8 +50,8 @@
 
 (defmethod hierarchy/update-attr ::length
   [el k f & more]
-  (update-in el [:attrs k] #(apply units/transform % f more)))
+  (update-in el [:attrs k] #(apply length/transform % f more)))
 
 (defmethod hierarchy/update-attr ::positive-length
   [el k f & more]
-  (update-in el [:attrs k] units/transform (fn [v] (max 0 (apply f v more)))))
+  (update-in el [:attrs k] length/transform (fn [v] (max 0 (apply f v more)))))

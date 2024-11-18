@@ -3,9 +3,9 @@
    [re-frame.core :as rf]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.hierarchy :as hierarchy]
+   [renderer.utils.length :as length]
    [renderer.utils.math :as math]
-   [renderer.utils.overlay :as overlay]
-   [renderer.utils.units :as units]))
+   [renderer.utils.overlay :as overlay]))
 
 (derive :measure ::hierarchy/element)
 
@@ -13,7 +13,7 @@
   [el]
   (let [{:keys [attrs id]} el
         {:keys [x1 x2 y1 y2 hypotenuse]} attrs
-        [x1 y1 x2 y2] (map units/unit->px [x1 y1 x2 y2])
+        [x1 y1 x2 y2] (map length/unit->px [x1 y1 x2 y2])
         angle (math/angle [x1 y1] [x2 y2])
         zoom @(rf/subscribe [::document.s/zoom])
         straight? (< angle 180)

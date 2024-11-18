@@ -8,8 +8,8 @@
    [renderer.handle.views :as handle.v]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
-   [renderer.utils.overlay :as overlay]
-   [renderer.utils.units :as units]))
+   [renderer.utils.length :as length]
+   [renderer.utils.overlay :as overlay]))
 
 (derive :circle ::hierarchy/shape)
 
@@ -42,20 +42,20 @@
 (defmethod hierarchy/bounds :circle
   [el]
   (let [{{:keys [cx cy r]} :attrs} el
-        [cx cy r] (map units/unit->px [cx cy r])]
+        [cx cy r] (map length/unit->px [cx cy r])]
     [(- cx r) (- cy r) (+ cx r) (+ cy r)]))
 
 (defmethod hierarchy/area :circle
   [el]
   (-> (get-in el [:attrs :r])
-      (units/unit->px)
+      (length/unit->px)
       (Math/pow 2)
       (* Math/PI)))
 
 (defmethod hierarchy/path :circle
   [el]
   (let [{{:keys [cx cy r]} :attrs} el
-        [cx cy r] (map units/unit->px [cx cy r])]
+        [cx cy r] (map length/unit->px [cx cy r])]
     (str/join " " ["M" (+ cx r) cy
                    "A" r r 0 0 1 cx (+ cy r)
                    "A" r r 0 0 1 (- cx r) cy

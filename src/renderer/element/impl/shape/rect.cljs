@@ -3,7 +3,7 @@
   (:require
    [clojure.string :as str]
    [renderer.element.hierarchy :as hierarchy]
-   [renderer.utils.units :as units]))
+   [renderer.utils.length :as length]))
 
 (derive :rect ::hierarchy/box)
 (derive :rect ::hierarchy/shape)
@@ -25,9 +25,9 @@
 (defmethod hierarchy/path :rect
   [el]
   (let [{{:keys [x y width height rx ry]} :attrs} el
-        [x y width height] (mapv units/unit->px [x y width height])
-        rx (units/unit->px (if (and (not rx) ry) ry rx))
-        ry (units/unit->px (if (and (not ry) rx) rx ry))
+        [x y width height] (mapv length/unit->px [x y width height])
+        rx (length/unit->px (if (and (not rx) ry) ry rx))
+        ry (length/unit->px (if (and (not ry) rx) rx ry))
         rx (if (> rx (/ width 2)) (/ width 2) rx)
         ry (if (> ry (/ height 2)) (/ height 2) ry)
         curved? (and (> rx 0) (> ry 0))]

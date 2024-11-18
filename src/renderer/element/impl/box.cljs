@@ -7,7 +7,7 @@
    [renderer.handle.views :as handle.v]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
-   [renderer.utils.units :as units]))
+   [renderer.utils.length :as length]))
 
 (derive ::hierarchy/box ::hierarchy/renderable)
 
@@ -58,18 +58,18 @@
 (defmethod hierarchy/bounds ::hierarchy/box
   [el]
   (let [{{:keys [x y width height]} :attrs} el
-        [x y width height] (mapv units/unit->px [x y width height])]
+        [x y width height] (mapv length/unit->px [x y width height])]
     [x y (+ x width) (+ y height)]))
 
 (defmethod hierarchy/area ::hierarchy/box
   [el]
   (let [{{:keys [width height]} :attrs} el]
-    (apply * (map units/unit->px [width height]))))
+    (apply * (map length/unit->px [width height]))))
 
 #_(defmethod hierarchy/snapping-points ::hierarchy/box
     [el]
     (let [{{:keys [x y width height]} :attrs} el
-          [x y width height] (mapv units/unit->px [x y width height])]
+          [x y width height] (mapv length/unit->px [x y width height])]
       [(with-meta [x y] {:label "box corner"})
        (with-meta [(+ x width) y]  {:label "box corner"})
        (with-meta [(+ x width) (+ y height)] {:label "box corner"})

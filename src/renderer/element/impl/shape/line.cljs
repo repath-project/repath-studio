@@ -7,7 +7,7 @@
    [renderer.handle.views :as handle.v]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
-   [renderer.utils.units :as units]))
+   [renderer.utils.length :as length]))
 
 (derive :line ::hierarchy/shape)
 
@@ -29,7 +29,7 @@
 (defmethod hierarchy/scale :line
   [el ratio pivot-point]
   (let [{:keys [x1 y1 x2 y2]} (:attrs el)
-        [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])
+        [x1 y1 x2 y2] (mapv length/unit->px [x1 y1 x2 y2])
         dimentions (bounds/->dimensions (hierarchy/bounds el))
         [x y] (mat/sub dimentions (mat/mul dimentions ratio))
         pivot-diff (mat/sub pivot-point dimentions)
@@ -41,7 +41,7 @@
 (defmethod hierarchy/path :line
   [el]
   (let [{{:keys [x1 y1 x2 y2]} :attrs} el
-        [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])]
+        [x1 y1 x2 y2] (mapv length/unit->px [x1 y1 x2 y2])]
     (str/join " " ["M" x1 y1
                    "L" x2 y2])))
 
@@ -49,7 +49,7 @@
   [el]
   (let [offset (element/offset el)
         {{:keys [x1 y1 x2 y2]} :attrs} el
-        [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])
+        [x1 y1 x2 y2] (mapv length/unit->px [x1 y1 x2 y2])
         [x1 y1] (mat/add offset [x1 y1])
         [x2 y2] (mat/add offset [x2 y2])]
     [:g
@@ -85,12 +85,12 @@
 (defmethod hierarchy/bounds :line
   [el]
   (let [{{:keys [x1 y1 x2 y2]} :attrs} el
-        [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])]
+        [x1 y1 x2 y2] (mapv length/unit->px [x1 y1 x2 y2])]
     [(min x1 x2) (min y1 y2) (max x1 x2) (max y1 y2)]))
 
 #_(defmethod hierarchy/snapping-points :line
     [el]
     (let [{{:keys [x1 y1 x2 y2]} :attrs} el
-          [x1 y1 x2 y2] (mapv units/unit->px [x1 y1 x2 y2])]
+          [x1 y1 x2 y2] (mapv length/unit->px [x1 y1 x2 y2])]
       [(with-meta [x1 y1] {:label "line start"})
        (with-meta [x2 y2] {:label "line end"})]))

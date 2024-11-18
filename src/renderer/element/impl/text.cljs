@@ -13,8 +13,8 @@
    [renderer.utils.bounds :as bounds]
    [renderer.utils.dom :as dom]
    [renderer.utils.element :as element]
-   [renderer.utils.system :as system]
-   [renderer.utils.units :as units]))
+   [renderer.utils.length :as length]
+   [renderer.utils.system :as system]))
 
 (derive :text ::hierarchy/shape)
 
@@ -105,7 +105,7 @@
                :font-family (if (empty? font-family) "inherit" font-family)
                :font-size (if (empty? font-size)
                             "inherit"
-                            (str (units/unit->px font-size) "px"))
+                            (str (length/unit->px font-size) "px"))
                :font-weight (if (empty? font-weight) "inherit" font-weight)}}]]))
 
 (when system/electron?

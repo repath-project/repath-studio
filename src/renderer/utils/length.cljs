@@ -1,9 +1,12 @@
-(ns renderer.utils.units
+(ns renderer.utils.length
   (:require
-   [clojure.string :as str]
-   [malli.core :as m]))
+   [malli.core :as m]
+   [renderer.utils.unit :as unit]))
 
 (def ppi 96)
+
+(def units
+  #{"px" "ch" "ex" "em" "rem" "in" "cm" "mm" "pt" "pc" "%"})
 
 (def unit-to-pixel-map
   ;; TODO: Find an agnostix way to handle percentages (we need to pass a base).
@@ -19,16 +22,10 @@
    :pc (/ ppi 6)
    :% 1})
 
-(m/=> unit->key [:-> string? keyword?])
-(defn unit->key
-  "Converts the string unit to a lower-cased keyword."
-  [s]
-  (keyword (str/lower-case s)))
-
 (m/=> valid-unit? [:-> string? boolean?])
 (defn valid-unit?
   [s]
-  (contains? unit-to-pixel-map (unit->key s)))
+  (contains? units s))
 
 (m/=> multiplier [:-> string? number?])
 (defn multiplier
@@ -36,21 +33,8 @@
    If the unit is invalid, it fallbacks to :px (1)"
   [s]
   (get unit-to-pixel-map (if (valid-unit? s)
-                           (unit->key s)
+                           (unit/->key s)
                            :px)))
-
-(m/=> match-unit [:-> string? string?])
-(defn match-unit
-  [s]
-  (second (re-matches #"[\d.\-\+]*\s*(.*)" s)))
-
-(m/=> parse-unit [:-> [:or string? number? nil?] [:tuple number? string?]])
-(defn parse-unit
-  [v]
-  (let [s (str/trim (str v))
-        n (js/parseFloat s 10)
-        unit (match-unit s)]
-    [(if (js/isNaN n) 0 n) unit]))
 
 (m/=> ->px [:-> number? string? number?])
 (defn ->px
@@ -65,7 +49,7 @@
 (m/=> unit->px [:-> [:or string? number? nil?] number?])
 (defn unit->px
   [v]
-  (let [[n unit] (parse-unit v)]
+  (let [[n unit] (unit/parse v)]
     (if (empty? unit)
       n
       (if (valid-unit? unit) (->px n unit) 0))))
@@ -74,7 +58,7 @@
   "Converts a value to pixels, applies a function and converts the result
    back to the original unit."
   ([v f & more]
-   (let [[n unit] (parse-unit v)]
+   (let [[n unit] (unit/parse v)]
      (-> (apply f (->px n unit) more)
          (.toFixed 2)
          (js/parseFloat)

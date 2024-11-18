@@ -2,7 +2,7 @@
   (:require
    [re-frame.core :as rf]
    [renderer.element.events :as-alias element.e]
-   [renderer.utils.units :as units]
+   [renderer.utils.length :as length]
    [renderer.worker.events :as-alias worker.e]))
 
 (rf/reg-fx
@@ -33,8 +33,8 @@
      (let [data-url (-> image :attrs :href)
            [x y] (:bounds image)
            ;; TODO: Handle preserveAspectRatio.
-           width (units/unit->px (-> image :attrs :width))
-           height (units/unit->px (-> image :attrs :height))]
+           width (length/unit->px (-> image :attrs :width))
+           height (length/unit->px (-> image :attrs :height))]
        (data-url->canvas-context!
         data-url
         [width height]
@@ -46,4 +46,3 @@
                     :image (.getImageData context 0 0 width height)
                     :position [x y]}
              :on-success [::element.e/traced]}])))))))
-

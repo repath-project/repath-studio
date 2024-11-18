@@ -8,7 +8,7 @@
    [renderer.element.hierarchy :as hierarchy]
    [renderer.handle.views :as handle.v]
    [renderer.utils.element :as element]
-   [renderer.utils.units :as units]))
+   [renderer.utils.length :as length]))
 
 (derive :path ::hierarchy/shape)
 
@@ -63,12 +63,12 @@
      (map-indexed (fn [i segment]
                     (case (-> segment first str/lower-case)
                       "m"
-                      (let [[x y] (mapv units/unit->px [(second segment) (last segment)])
+                      (let [[x y] (mapv length/unit->px [(second segment) (last segment)])
                             [x y] (mat/add offset [x y])]
                         (square-handle i [x y]))
 
                       "l"
-                      (let [[x y] (mapv units/unit->px [(second segment) (last segment)])
+                      (let [[x y] (mapv length/unit->px [(second segment) (last segment)])
                             [x y] (mat/add offset [x y])]
                         (square-handle i [x y]))
 
@@ -79,8 +79,8 @@
   [path i [x y]]
   (let [segment (aget (.-segments path) i)
         segment (array (aget segment 0)
-                       (units/transform (aget segment 1) + x)
-                       (units/transform (aget segment 2) + y))]
+                       (length/transform (aget segment 1) + x)
+                       (length/transform (aget segment 2) + y))]
     (aset (.-segments path) i segment)
     path))
 

@@ -12,8 +12,8 @@
    [renderer.handle.views :as handle.v]
    [renderer.utils.attribute :as attr]
    [renderer.utils.element :as element]
-   [renderer.utils.pointer :as pointer]
-   [renderer.utils.units :as units]))
+   [renderer.utils.length :as length]
+   [renderer.utils.pointer :as pointer]))
 
 (derive :brush ::hierarchy/renderable)
 
@@ -98,7 +98,7 @@
 
 (def partition-to-px
   (comp
-   (map units/unit->px)
+   (map length/unit->px)
    (partition-all 3)))
 
 (defn points->path
@@ -129,10 +129,10 @@
 (defmethod hierarchy/bounds :brush
   [el]
   (let [points (-> el :attrs :points points->vec)
-        x1 (apply min (map #(units/unit->px (first %)) points))
-        y1 (apply min (map #(units/unit->px (second %)) points))
-        x2 (apply max (map #(units/unit->px (first %)) points))
-        y2 (apply max (map #(units/unit->px (second %)) points))]
+        x1 (apply min (map #(length/unit->px (first %)) points))
+        y1 (apply min (map #(length/unit->px (second %)) points))
+        x2 (apply max (map #(length/unit->px (first %)) points))
+        y2 (apply max (map #(length/unit->px (second %)) points))]
     [x1 y1 x2 y2]))
 
 (defn translate
@@ -140,8 +140,8 @@
   (let [[point-x point-y pressure] point]
     (cond-> points
       point
-      (conj (units/transform point-x + offset-x)
-            (units/transform point-y + offset-y)
+      (conj (length/transform point-x + offset-x)
+            (length/transform point-y + offset-y)
             pressure))))
 
 (defmethod hierarchy/translate :brush
@@ -172,7 +172,7 @@
 (defmethod hierarchy/render-edit :brush
   [el]
   [:g (map-indexed (fn [index [x y]]
-                     (let [[x y] (mapv units/unit->px [x y])
+                     (let [[x y] (mapv length/unit->px [x y])
                            [x y] (mat/add (element/offset el) [x y])]
                        ^{:key index}
                        [handle.v/square {:id (keyword (str index))
