@@ -17,8 +17,8 @@
 (defonce mac?
   (= platform "darwin"))
 
-(defonce windows?
-  (= platform "win32"))
+#_(defonce windows?
+    (= platform "win32"))
 
-(defonce linux?
-  (= platform "linux"))
+#_(defonce linux?
+    (= platform "linux"))

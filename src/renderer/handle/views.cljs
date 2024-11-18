@@ -11,25 +11,25 @@
    [renderer.utils.bounds :as bounds :refer [Bounds]]
    [renderer.utils.pointer :as pointer]))
 
-(defn circle
-  [el & children]
-  (let [{:keys [x y id]} el
-        zoom @(rf/subscribe [::document.s/zoom])
-        clicked-element @(rf/subscribe [::app.s/clicked-element])
-        pointer-handler #(pointer/event-handler! % el)]
-    (into [:circle {:key id
-                    :cx x
-                    :cy y
-                    :stroke theme.db/accent
-                    :stroke-width (/ 1 zoom)
-                    :fill (if (= (:key clicked-element) id)
-                            theme.db/accent
-                            theme.db/accent-inverted)
-                    :r (/ 4 zoom)
-                    :cursor "default"
-                    :on-pointer-up pointer-handler
-                    :on-pointer-down pointer-handler
-                    :on-pointer-move pointer-handler}] children)))
+#_(defn circle
+    [el & children]
+    (let [{:keys [x y id]} el
+          zoom @(rf/subscribe [::document.s/zoom])
+          clicked-element @(rf/subscribe [::app.s/clicked-element])
+          pointer-handler #(pointer/event-handler! % el)]
+      (into [:circle {:key id
+                      :cx x
+                      :cy y
+                      :stroke theme.db/accent
+                      :stroke-width (/ 1 zoom)
+                      :fill (if (= (:key clicked-element) id)
+                              theme.db/accent
+                              theme.db/accent-inverted)
+                      :r (/ 4 zoom)
+                      :cursor "default"
+                      :on-pointer-up pointer-handler
+                      :on-pointer-down pointer-handler
+                      :on-pointer-move pointer-handler}] children)))
 
 (defn square
   [el & children]

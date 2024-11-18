@@ -9,6 +9,7 @@
    [renderer.element.handlers :as element.h]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.s]
+   [renderer.handle.db :refer [Handle]]
    [renderer.handle.views :as handle.v]
    [renderer.history.handlers :as history.h]
    [renderer.ruler.db :refer [Orientation]]
@@ -189,10 +190,17 @@
       :bottom-right [[x y] [x1 y1]]
       :bottom-left [[(- x) y] [x2 y1]])))
 
-(m/=> scale [:-> App Vec2D map? App])
+(def ScaleOptions
+  [:map
+   [:ratio-locked boolean?]
+   [:in-place boolean?]
+   [:recursive boolean?]])
+
+(m/=> scale [:-> App Vec2D ScaleOptions App])
 (defn scale
-  [db offset {:keys [ratio-locked in-place recursive]}]
-  (let [handle (-> db :clicked-element :id)
+  [db offset options]
+  (let [{:keys [ratio-locked in-place recursive]} options
+        handle (-> db :clicked-element :id)
         bounds (element.h/bounds db)
         [offset pivot-point] (delta->offset-with-pivot-point handle offset bounds)
         pivot-point (if in-place (bounds/center bounds) pivot-point)
@@ -202,10 +210,10 @@
         ratio (cond-> ratio ratio-locked (lock-ratio handle))
         ;; TODO: Handle negative ratio, and position on recursive scale.
         ratio (mapv #(max % 0.01) ratio)]
-    (-> db
-        (assoc :pivot-point pivot-point)
+    (-> (assoc db :pivot-point pivot-point)
         (element.h/scale ratio pivot-point recursive))))
 
+(m/=> selectable? [:-> [:or Element Handle nil?] boolean?])
 (defn selectable?
   [clicked-element]
   (and clicked-element
