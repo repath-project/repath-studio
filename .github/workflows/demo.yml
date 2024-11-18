@@ -35,6 +35,9 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
+      - name: Typos
+        uses: crate-ci/typos@v1.27.3
+
       - name: Install clojure tools
         uses: DeLaGuardo/setup-clojure@13.0
         with:

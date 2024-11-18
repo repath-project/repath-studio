@@ -12,7 +12,7 @@
    (rf/dispatch [::app.e/initialize-db])
 
    (let [notifications (rf/subscribe [::s/entities])]
-     (testing "intial"
+     (testing "initial"
        (is (= @notifications [])))
 
      (testing "add"

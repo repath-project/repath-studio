@@ -11,7 +11,7 @@
 (defn step
   "Returns the grid step given a zoom level.
 
-   Any attemt to ingeniously produce this mapping was proven inferior.
+   Any attempt to ingeniously produce this mapping was proven inferior.
    Simply returning a fixed step depending on the zoom range works fine.
    Zoom levels outside of this range are considered invalid for now.
    Maybe we need to revisit this at some point."
@@ -33,7 +33,7 @@
 
 (m/=> steps-coll [:-> number? Viewbox Orientation [:sequential number?]])
 (defn steps-coll
-  "Returns a collection of steps per orientaion, contained on the given viewbox."
+  "Returns a collection of steps per orientation, contained on the given viewbox."
   [ruler-step viewbox orientation]
   (let [[x y width height] viewbox
         sections 10]

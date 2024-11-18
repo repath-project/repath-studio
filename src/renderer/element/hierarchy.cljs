@@ -15,7 +15,7 @@
 
 (defmulti render "Renders the element to dom." :tag)
 (defmulti render-to-string "Returns an SVG string of the element." :tag)
-(defmulti path "Converts the elemnt to path commands (d)." :tag)
+(defmulti path "Converts the element to path commands (d)." :tag)
 (defmulti area "Calculates the area enclosed by the shape." :tag)
 (defmulti centroid "Returns the elements' center of mass." :tag)
 (defmulti snapping-points "Returns additional snapping point for the element." :tag)
@@ -37,4 +37,3 @@
 (defmethod translate :default [element] element)
 (defmethod edit :default [element] element)
 (defmethod properties :default [])
-

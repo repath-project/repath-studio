@@ -54,12 +54,12 @@
         width-ratio (/ (:width dom-rect) width)
         height-ratio (/ (:height dom-rect) height)
         current-zoom (get-in db [:documents (:active-document db) :zoom])
-        furute-zoom (min width-ratio height-ratio)]
+        zoom (min width-ratio height-ratio)]
     (-> (h/dissoc-temp db)
         (h/set-cursor (if (pointer/shift? e) "zoom-out" "zoom-in"))
         (frame.h/zoom-by (if (pointer/shift? e)
                            (:zoom-sensitivity db)
-                           (/ furute-zoom current-zoom)))
+                           (/ zoom current-zoom)))
         (frame.h/pan-to-bounds [x y offset-x offset-y])
         (snap.h/update-viewport-tree)
         (h/add-fx [::app.fx/persist]))))

@@ -295,7 +295,7 @@
   []
   (rf/dispatch [::element.e/boolean-operation :exclude]))
 
-(defn ^:export devide
+(defn ^:export div
   "Divides the selected elements."
   []
   (rf/dispatch [::element.e/boolean-operation :divide]))

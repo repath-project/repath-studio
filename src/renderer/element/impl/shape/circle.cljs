@@ -31,8 +31,8 @@
 
 (defmethod hierarchy/scale :circle
   [el ratio pivot-point]
-  (let [dimentions (bounds/->dimensions (hierarchy/bounds el))
-        pivot-point (mat/sub pivot-point (mat/div dimentions 2))
+  (let [dimensions (bounds/->dimensions (hierarchy/bounds el))
+        pivot-point (mat/sub pivot-point (mat/div dimensions 2))
         offset (mat/sub pivot-point (mat/mul pivot-point ratio))
         ratio (apply min ratio)]
     (-> el

@@ -51,8 +51,8 @@
          {:on-click #(rf/dispatch [::window.e/relaunch])}
          "Restart the application"]
 
-        [:p "If you keep getting tha same error after restarting, try clearing your session and options data and restart.
-             Please note that by doing so, you will loose any unsaved changes and your local applicaiton settings."]
+        [:p "If you keep getting the same error after restarting, try clearing your session and options data and restart.
+             Please note that by doing so, you will loose any unsaved changes and your local application settings."]
 
         [:button.button.px-2.rounded.w-full.bg-warning
          {:on-click #(rf/dispatch [::window.e/clear-local-storage-and-relaunch])}

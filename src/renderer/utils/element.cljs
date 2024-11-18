@@ -135,8 +135,8 @@
 
 (m/=> style->map [:-> Attrs Attrs])
 (defn style->map
-  "Conversts :style attribute to map.
-   Parsing might through an exception. When that hapens, we remove the attribute
+  "Converts :style attribute to map.
+   Parsing might through an exception. When that happens, we remove the attribute
    because there is no other way to handle this gracefully."
   [attrs]
   (try (cond-> (update attrs :style parse)

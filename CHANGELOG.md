@@ -551,7 +551,7 @@ Too many fixes to list.
 - monospace font
 - drag page method
 - delete and ungroup methods
-- shorcuts order
+- shortcuts order
 - no accessibility filter selection
 - zoom validation
 

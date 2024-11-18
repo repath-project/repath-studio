@@ -30,9 +30,9 @@
   [el ratio pivot-point]
   (let [{:keys [x1 y1 x2 y2]} (:attrs el)
         [x1 y1 x2 y2] (mapv length/unit->px [x1 y1 x2 y2])
-        dimentions (bounds/->dimensions (hierarchy/bounds el))
-        [x y] (mat/sub dimentions (mat/mul dimentions ratio))
-        pivot-diff (mat/sub pivot-point dimentions)
+        dimensions (bounds/->dimensions (hierarchy/bounds el))
+        [x y] (mat/sub dimensions (mat/mul dimensions ratio))
+        pivot-diff (mat/sub pivot-point dimensions)
         offset (mat/sub pivot-diff (mat/mul pivot-diff ratio))]
     (-> (element/update-attrs-with el + [[(if (< x1 x2) :x1 :x2) x]
                                          [(if (< y1 y2) :y1 :y2) y]])

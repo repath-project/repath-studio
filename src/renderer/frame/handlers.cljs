@@ -84,10 +84,10 @@
 (defn pan-to-bounds
   [db bounds]
   (let [zoom (get-in db [:documents (:active-document db) :zoom])
-        rect-dimentions [(-> db :dom-rect :width) (-> db :dom-rect :height)]
+        rect-dimensions [(-> db :dom-rect :width) (-> db :dom-rect :height)]
         [x1 y1] bounds
         pan (-> (utils.bounds/->dimensions bounds)
-                (mat/sub (mat/div rect-dimentions zoom))
+                (mat/sub (mat/div rect-dimensions zoom))
                 (mat/div 2)
                 (mat/add [x1 y1]))]
     (assoc-in db [:documents (:active-document db) :pan] pan)))

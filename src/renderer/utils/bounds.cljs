@@ -16,7 +16,7 @@
 
 (m/=> from-bbox [:-> DomElement [:maybe Bounds]])
 (defn from-bbox
-  "Experimental way of getting the bounds of uknown or complicated elements
+  "Experimental way of getting the bounds of unknown or complicated elements
    using the getBBox method.
    https://developer.mozilla.org/en-US/docs/Web/API/SVGGraphicsElement/getBBox"
   [el]
@@ -37,7 +37,7 @@
 
 (m/=> ->dimensions [:-> Bounds Vec2D])
 (defn ->dimensions
-  "Converts bounds to [width heigh]"
+  "Converts bounds to [width height]"
   [[x1 y1 x2 y2]]
   (mat/sub [x2 y2] [x1 y1]))
 

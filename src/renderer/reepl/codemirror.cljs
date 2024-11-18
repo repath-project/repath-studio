@@ -55,7 +55,7 @@
            last-line (.lastLine inst)]
        (= last-line (.-line pos))))
 
-   ;; TODO: if the cursor is inside a list, and the function doesn't have enought
+   ;; TODO: if the cursor is inside a list, and the function doesn't have enough
    ;; arguments yet, then return false
    ;; e.g. (map |) <- map needs at least one argument.
    :should-eval
