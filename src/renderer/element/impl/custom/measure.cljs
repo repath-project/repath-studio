@@ -19,13 +19,13 @@
         straight? (< angle 180)
         straight-angle (if straight? angle (- angle 360))]
     [:g {:key id}
-     [overlay/cross x1 y1]
-     [overlay/cross x2 y2]
+     [overlay/cross [x1 y1]]
+     [overlay/cross [x2 y2]]
 
      [overlay/arc [x1 y1] 20 (if straight? 0 angle) (abs straight-angle)]
 
-     [overlay/line x1 y1 x2 y2 false]
-     [overlay/line x1 y1 (+ x1 (/ 30 zoom)) y1]
+     [overlay/line [x1 y1] [x2 y2] false]
+     [overlay/line [x1 y1] [(+ x1 (/ 30 zoom)) y1]]
 
      [overlay/label
       (str (.toFixed straight-angle 2) "°")

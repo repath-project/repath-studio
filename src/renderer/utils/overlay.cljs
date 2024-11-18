@@ -2,18 +2,23 @@
   "Render functions for canvas overlay objects."
   (:require
    [clojure.core.matrix :as mat]
+   [malli.core :as m]
    [re-frame.core :as rf]
+   [renderer.app.db :refer [App]]
    [renderer.app.subs :as-alias app.s]
    [renderer.document.subs :as-alias document.s]
+   [renderer.element.db :refer [Element]]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.frame.subs :as-alias frame.s]
    [renderer.snap.subs :as-alias snap.s]
    [renderer.theme.db :as theme.db]
    [renderer.tool.subs :as-alias tool.s]
-   [renderer.utils.bounds :as bounds]
+   [renderer.utils.bounds :as bounds :refer [Bounds]]
    [renderer.utils.element :as element]
-   [renderer.utils.math :as math]))
+   [renderer.utils.hiccup :refer [Hiccup]]
+   [renderer.utils.math :as math :refer [Vec2D]]))
 
+(m/=> point-of-interest [:-> Vec2D Hiccup any?])
 (defn point-of-interest
   "Simple dot used for debugging purposes."
   [[x y] & children]
@@ -24,10 +29,13 @@
                     :fill theme.db/accent
                     :r (/ 3 zoom)}] children)))
 
+(m/=> line [:function
+            [:-> Vec2D Vec2D any?]
+            [:-> Vec2D Vec2D boolean? any?]])
 (defn line
-  ([x1 y1 x2 y2]
-   (line x1 y1 x2 y2 true))
-  ([x1 y1 x2 y2 dashed?]
+  ([[x1 y1] [x2 y2]]
+   [line [x1 y1] [x2 y2] true])
+  ([[x1 y1] [x2 y2] dashed?]
    (let [zoom @(rf/subscribe [::document.s/zoom])
          stroke-width (/ 1 zoom)
          stroke-dasharray (/ 5 zoom)
@@ -43,16 +51,22 @@
                     {:stroke theme.db/accent
                      :stroke-dasharray (when dashed? stroke-dasharray)})]])))
 
+(m/=> cross [:-> Vec2D any?])
 (defn cross
-  ([[x y]]
-   (cross x y))
-  ([x y]
-   (let [zoom @(rf/subscribe [::document.s/zoom])
-         size (/ theme.db/handle-size zoom)]
-     [:g
-      [line (- x (/ size 2)) y (+ x (/ size 2)) y false]
-      [line x (- y (/ size 2)) x (+ y (/ size 2)) false]])))
+  [[x y]]
+  (let [zoom @(rf/subscribe [::document.s/zoom])
+        size (/ theme.db/handle-size zoom)]
+    [:g
+     [line
+      [(- x (/ size 2)) y]
+      [(+ x (/ size 2)) y]
+      false]
+     [line
+      [x (- y (/ size 2))]
+      [x (+ y (/ size 2))]
+      false]]))
 
+(m/=> arc [:-> Vec2D number? number? number? any?])
 (defn arc
   [[x y] radius start-degrees size-degrees]
   (let [zoom @(rf/subscribe [::document.s/zoom])
@@ -74,51 +88,57 @@
      [:path (merge {:stroke theme.db/accent
                     :stroke-dasharray stroke-dasharray} attrs)]]))
 
+(m/=> times [:-> Vec2D any?])
 (defn times
-  ([[x y]]
-   (times x y))
-  ([x y]
-   (let [zoom @(rf/subscribe [::document.s/zoom])
-         size (/ theme.db/handle-size zoom)
-         mid (/ size Math/PI)]
-     [:g {:style {:pointer-events "none"}}
-      [line
-       (- x mid) (- y mid)
-       (+ x mid) (+ y mid) false]
-      [line
-       (+ x mid) (- y mid)
-       (- x mid) (+ y mid) false]])))
-
-(defn label
-  [text position anchor]
+  [[x y]]
   (let [zoom @(rf/subscribe [::document.s/zoom])
-        [x y] position
-        font-size (/ 10 zoom)
-        padding (/ 8 zoom)
-        font-width (/ 6 zoom)
-        label-width (+ (* (count text) font-width)
-                       font-size)
-        label-height (+ font-size padding)
-        text-anchor (or anchor "middle")]
-    [:g
-     [:rect {:x (case text-anchor
-                  "start" (- x (/ padding 2))
-                  "middle" (- x (/ label-width 2))
-                  "end" (- x label-width (/ (- padding) 2)))
-             :y (- y  (/ label-height 2))
-             :fill theme.db/accent
-             :rx (/ 4 zoom)
-             :width label-width
-             :height label-height} text]
-     [:text {:x x
-             :y y
-             :fill theme.db/accent-inverted
-             :dominant-baseline "middle"
-             :text-anchor text-anchor
-             :width label-width
-             :font-family theme.db/font-mono
-             :font-size font-size} text]]))
+        size (/ theme.db/handle-size zoom)
+        mid (/ size Math/PI)]
+    [:g {:style {:pointer-events "none"}}
+     [line
+      [(- x mid) (- y mid)]
+      [(+ x mid) (+ y mid)]
+      false]
+     [line
+      [(+ x mid) (- y mid)]
+      [(- x mid) (+ y mid)]
+      false]]))
 
+(m/=> label [:function
+             [:-> string? Vec2D any?]
+             [:-> string? Vec2D [:enum "start" "middle" "end"] any?]])
+(defn label
+  ([text position]
+   [label text position "middle"])
+  ([text position text-anchor]
+   (let [zoom @(rf/subscribe [::document.s/zoom])
+         [x y] position
+         font-size (/ 10 zoom)
+         padding (/ 8 zoom)
+         font-width (/ 6 zoom)
+         label-width (+ (* (count text) font-width)
+                        font-size)
+         label-height (+ font-size padding)]
+     [:g
+      [:rect {:x (case text-anchor
+                   "start" (- x (/ padding 2))
+                   "middle" (- x (/ label-width 2))
+                   "end" (- x label-width (/ (- padding) 2)))
+              :y (- y  (/ label-height 2))
+              :fill theme.db/accent
+              :rx (/ 4 zoom)
+              :width label-width
+              :height label-height} text]
+      [:text {:x x
+              :y y
+              :fill theme.db/accent-inverted
+              :dominant-baseline "middle"
+              :text-anchor text-anchor
+              :width label-width
+              :font-family theme.db/font-mono
+              :font-size font-size} text]])))
+
+(m/=> size-label [:-> Bounds any?])
 (defn size-label
   [bounds]
   (let [zoom @(rf/subscribe [::document.s/zoom])
@@ -129,6 +149,7 @@
         text (str (.toFixed width 2) " x " (.toFixed height 2))]
     [label text [x y]]))
 
+(m/=> bounding-box [:-> Bounds boolean? any?])
 (defn bounding-box
   [bounds dashed?]
   (let [zoom @(rf/subscribe [::document.s/zoom])
@@ -150,6 +171,7 @@
        [:rect (merge attrs {:stroke theme.db/accent-inverted
                             :stroke-dasharray stroke-dasharray})])]))
 
+(m/=> select-box [:-> App any?])
 (defn select-box
   [db]
   (let [zoom (get-in db [:documents (:active-document db) :zoom])
@@ -167,6 +189,7 @@
              :stroke-opacity ".5"
              :stroke-width (/ 1 zoom)}}))
 
+(m/=> centroid [:-> Element any?])
 (defn centroid
   [el]
   (when-let [pos (element.hierarchy/centroid el)]
@@ -175,6 +198,7 @@
       [point-of-interest pos
        [:title "Centroid"]])))
 
+(m/=> area-label [:-> number? Bounds any?])
 (defn area-label
   [area bounds]
   (when area

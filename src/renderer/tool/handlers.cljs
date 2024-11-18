@@ -158,8 +158,7 @@
                 (if (= button :right)
                   db
                   (if (> (- now (:event-time db)) (:double-click-delta db))
-                    (-> db
-                        (assoc :event-time now)
+                    (-> (assoc db :event-time now)
                         (hierarchy/on-pointer-up e))
                     (hierarchy/on-double-click db e))))
         (and primary-tool (= button :middle))
@@ -222,4 +221,3 @@
 
     :always
     (set-state :idle)))
-

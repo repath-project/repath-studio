@@ -74,9 +74,9 @@
         [cx cy] (bounds/center bounds)
         r (/ (first (bounds/->dimensions bounds)) 2)]
     [:g
-     [overlay/line cx cy (+ cx r) cy]
+     [overlay/line [cx cy] [(+ cx r) cy]]
      [overlay/label (str (.toFixed r 2)) [(+ cx (/ r 2)) cy]]
-     [overlay/times cx cy]
+     [overlay/times [cx cy]]
      [handle.v/square {:x (+ cx r)
                        :y cy
                        :id :r

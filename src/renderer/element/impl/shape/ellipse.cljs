@@ -67,10 +67,10 @@
         [cx cy] (bounds/center bounds)
         [rx ry] (mat/div (bounds/->dimensions bounds) 2)]
     [:g ::edit-handles
-     [overlay/times cx cy]
-     [overlay/line cx cy (+ cx rx) cy]
+     [overlay/times [cx cy]]
+     [overlay/line [cx cy] [(+ cx rx) cy]]
      [overlay/label (str (.toFixed rx 2)) [(+ cx (/ rx 2)) cy]]
-     [overlay/line cx cy cx (- cy ry)]
+     [overlay/line [cx cy] [cx (- cy ry)]]
      [overlay/label (str (.toFixed ry 2)) [cx (- cy (/ ry 2))]]
      (map (fn [handle]
             ^{:key (:id handle)}
