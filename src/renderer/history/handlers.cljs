@@ -155,12 +155,12 @@
   [db [x y]]
   (assoc-in db (path db :translate) [x y]))
 
-(m/=> create-state [:-> App int? uuid? string? HistoryState])
+(m/=> create-state [:-> App uuid? string? HistoryState])
 (defn create-state
-  [db now id explanation]
+  [db id explanation]
   (let [new-state {:explanation explanation
                    :elements (element.h/entities db)
-                   :timestamp now
+                   :timestamp (.now js/Date) ; REVIEW; Sideffect
                    :index (state-count db)
                    :id id
                    :children []}]
@@ -210,7 +210,7 @@
         (-> db
             (assoc-in (path db :position) id)
             (assoc-in (path db :states id)
-                      (create-state db (.now js/Date) id explanation))
+                      (create-state db id explanation))
             (cond->
              current-position
               (-> (update-in (path db :states current-position :children) conj id)

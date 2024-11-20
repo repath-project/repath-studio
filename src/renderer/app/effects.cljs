@@ -12,21 +12,15 @@
 
 (rf.storage/reg-co-fx! config/app-key {:cofx :store})
 
-(defn persist!
-  "This is a modified version of akiroz.re-frame.storage/persist-db-keys
-   The before key is removed and we are dropping the rest of the history states
-   to get performance to an acceptable level and minimize resource allocation."
-  [db]
-  (let [db (cond-> db (:active-document db) history.h/drop-rest)]
-    (rf.storage/->store config/app-key (select-keys db db/persistent-keys))))
-
 (def persist
   (rf/->interceptor
    :id ::persist
    :after (fn [context]
-            (when-let [db (get-in context [:effects :db])]
-              (persist! db))
-            context)))
+            (let [db (rf/get-effect context :db)
+                  fx (rf/get-effect context :fx)]
+              (cond-> context
+                db
+                (rf/assoc-effect :fx (conj (or fx []) [::persist db])))))))
 
 (rf/reg-cofx
  ::guid
@@ -41,7 +35,8 @@
 (rf/reg-fx
  ::persist
  (fn [db]
-   (persist! db)))
+   (let [db (cond-> db (:active-document db) history.h/drop-rest)]
+     (rf.storage/->store config/app-key (select-keys db db/persistent-keys)))))
 
 (rf/reg-fx
  ::local-storage-clear
@@ -95,20 +90,21 @@
  (fn [[k v]]
    (.setAttribute js/window.document.documentElement k v)))
 
-(defn check-and-throw
-  "Throws an exception if `db` doesn't match the Spec"
-  [db event]
-  (when (not (db/valid? db))
-    (js/console.error (str "Event: " (first event)))
-    (throw (js/Error. (str "Spec check failed: " (db/explain db))))))
+(rf/reg-fx
+ ::validate-db
+ (fn [[db event]]
+   (when (not (db/valid? db))
+     (js/console.error (str "Event: " (first event)))
+     (throw (js/Error. (str "Spec check failed: " (db/explain db)))))))
 
 (def schema-validator
   (rf/->interceptor
    :id ::schema-validator
    :after (fn [context]
-            (let [db (if (contains? (rf/get-effect context) :db)
-                       (rf/get-effect context :db)
-                       (rf/get-coeffect context :db))
+            (let [db (or (rf/get-effect context :db)
+                         (rf/get-coeffect context :db))
+                  fx (rf/get-effect context :fx)
                   event (rf/get-coeffect context :event)]
-              (check-and-throw db event)
-              context))))
+              (cond-> context
+                db
+                (rf/assoc-effect :fx (conj (or fx []) [::validate-db [db event]])))))))

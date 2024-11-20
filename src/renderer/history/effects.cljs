@@ -9,16 +9,14 @@
   "Persists the current state on history position changes."
   (rf/->interceptor
    :id ::auto-persist
-   :before (fn [context]
-             (when-let [db (rf/get-coeffect context :db)]
-               (cond-> context
-                 (:active-document db)
-                 (rf/assoc-coeffect :history-position (history.h/position db)))))
    :after (fn [context]
-            (when-let [db (rf/get-effect context :db)]
-              (when-let [history-position (rf/get-coeffect context :history-position)]
-                (when (not= (history.h/position db) history-position)
-                  (app.fx/persist! db))))
-            context)))
+            (let [db (rf/get-effect context :db)
+                  fx (rf/get-effect context :fx)
+                  prev-position (when-let [db (rf/get-coeffect context :db)]
+                                  (when (:active-document db)
+                                    (history.h/position db)))]
+              (cond-> context
+                (and db (not= (history.h/position db) prev-position))
+                (rf/assoc-effect :fx (conj (or fx []) [::app.fx/persist db])))))))
 
 (rf/reg-global-interceptor auto-persist)

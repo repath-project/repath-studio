@@ -18,10 +18,11 @@
   (rf/->interceptor
    :id ::custom-fx
    :after (fn [context]
-            (let [db (rf/get-effect context :db ::not-found)]
+            (let [db (rf/get-effect context :db)
+                  fx (rf/get-effect context :fx)]
               (cond-> context
-                (not= db ::not-found)
-                (-> (rf/assoc-effect :fx (apply conj (or (:fx (rf/get-effect context)) []) (:fx db)))
+                db
+                (-> (rf/assoc-effect :fx (apply conj (or fx []) (:fx db)))
                     (rf/assoc-effect :db (assoc db :fx []))))))))
 
 (rf/reg-global-interceptor custom-fx)

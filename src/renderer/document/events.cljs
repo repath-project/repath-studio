@@ -93,7 +93,6 @@
 
 (rf/reg-event-fx
  ::close-active
- [persist]
  (fn [{:keys [db]} [_]]
    {:dispatch [::close (:active-document db) true]}))
 
@@ -308,4 +307,3 @@
    (-> db
        (h/set-active id)
        (h/center))))
-
