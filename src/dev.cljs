@@ -5,12 +5,12 @@
    [clojure.string :as str]
    [malli.dev.cljs :as dev]
    [re-frame.core :as rf]
-   [renderer.app.effects :as app.fx]))
+   [renderer.app.events :as app.e]))
 
 (comment
   ;; Enable full db validation
-  (rf/reg-global-interceptor app.fx/schema-validator)
-  (rf/clear-global-interceptor ::app.fx/schema-validator)
+  (rf/reg-global-interceptor app.e/schema-validator)
+  (rf/clear-global-interceptor ::app.e/schema-validator)
 
   ;; Enable function instrumentation
   ;; https://github.com/metosin/malli/blob/master/docs/clojurescript-function-instrumentation.md

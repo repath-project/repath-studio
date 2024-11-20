@@ -2,8 +2,7 @@
   (:require
    [clojure.core.matrix :as mat]
    [re-frame.core :as rf]
-   [renderer.app.effects :as-alias app.fx :refer [persist]]
-   [renderer.app.events]
+   [renderer.app.events :refer [persist]]
    [renderer.document.events :as-alias document.e]
    [renderer.element.handlers :as element.h]
    [renderer.frame.handlers :as h]

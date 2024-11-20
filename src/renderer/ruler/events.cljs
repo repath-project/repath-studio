@@ -1,7 +1,7 @@
 (ns renderer.ruler.events
   (:require
    [re-frame.core :as rf]
-   [renderer.app.effects :as fx :refer [persist]]))
+   [renderer.app.events :refer [persist]]))
 
 (rf/reg-event-db
  ::toggle-visible

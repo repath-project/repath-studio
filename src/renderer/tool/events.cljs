@@ -42,3 +42,14 @@
             (= (:state db) :idle))
      {:dispatch [::element.e/deselect-all]}
      {:db (h/cancel db)})))
+
+(rf/reg-global-interceptor
+ (rf/->interceptor
+  :id ::custom-fx
+  :after (fn [context]
+           (let [db (rf/get-effect context :db)
+                 fx (rf/get-effect context :fx)]
+             (cond-> context
+               db
+               (-> (rf/assoc-effect :fx (apply conj (or fx []) (:fx db)))
+                   (rf/assoc-effect :db (assoc db :fx []))))))))

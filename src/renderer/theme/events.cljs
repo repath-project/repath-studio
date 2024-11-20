@@ -1,7 +1,8 @@
 (ns renderer.theme.events
   (:require
    [re-frame.core :as rf]
-   [renderer.app.effects :as-alias app.fx :refer [persist]]
+   [renderer.app.effects :as-alias app.fx]
+   [renderer.app.events :refer [persist]]
    [renderer.theme.effects :as-alias fx]))
 
 (rf/reg-event-fx

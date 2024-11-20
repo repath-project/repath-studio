@@ -4,12 +4,22 @@
    [malli.error :as me]
    [re-frame.core :as rf]
    [renderer.app.db :as db]
-   [renderer.app.effects :as fx :refer [persist]]
+   [renderer.app.effects :as-alias fx]
    [renderer.notification.events :as-alias notification.e]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
    [renderer.utils.i18n :as i18n]
    [renderer.window.effects :as-alias window.fx]))
+
+(def persist
+  (rf/->interceptor
+   :id ::persist
+   :after (fn [context]
+            (let [db (rf/get-effect context :db)
+                  fx (rf/get-effect context :fx)]
+              (cond-> context
+                db
+                (rf/assoc-effect :fx (conj (or fx []) [::fx/persist db])))))))
 
 (rf/reg-event-db
  ::initialize-db
@@ -100,3 +110,15 @@
  ::file-open
  (fn [_ [_ options]]
    {::fx/file-open options}))
+
+(def schema-validator
+  (rf/->interceptor
+   :id ::schema-validator
+   :after (fn [context]
+            (let [db (or (rf/get-effect context :db)
+                         (rf/get-coeffect context :db))
+                  fx (rf/get-effect context :fx)
+                  event (rf/get-coeffect context :event)]
+              (cond-> context
+                db
+                (rf/assoc-effect :fx (conj (or fx []) [::fx/validate-db [db event]])))))))

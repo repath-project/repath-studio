@@ -12,16 +12,6 @@
 
 (rf.storage/reg-co-fx! config/app-key {:cofx :store})
 
-(def persist
-  (rf/->interceptor
-   :id ::persist
-   :after (fn [context]
-            (let [db (rf/get-effect context :db)
-                  fx (rf/get-effect context :fx)]
-              (cond-> context
-                db
-                (rf/assoc-effect :fx (conj (or fx []) [::persist db])))))))
-
 (rf/reg-cofx
  ::guid
  (fn [coeffects _]
@@ -96,15 +86,3 @@
    (when (not (db/valid? db))
      (js/console.error (str "Event: " (first event)))
      (throw (js/Error. (str "Spec check failed: " (db/explain db)))))))
-
-(def schema-validator
-  (rf/->interceptor
-   :id ::schema-validator
-   :after (fn [context]
-            (let [db (or (rf/get-effect context :db)
-                         (rf/get-coeffect context :db))
-                  fx (rf/get-effect context :fx)
-                  event (rf/get-coeffect context :event)]
-              (cond-> context
-                db
-                (rf/assoc-effect :fx (conj (or fx []) [::validate-db [db event]])))))))

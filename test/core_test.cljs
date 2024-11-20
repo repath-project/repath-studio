@@ -3,8 +3,8 @@
    [malli.instrument :as mi]
    [re-frame.core :as rf]
    [re-frame.subs :as rf.subs]
-   [renderer.app.effects :as app.fx]
-   [renderer.app.events]
+   [renderer.app.effects]
+   [renderer.app.events :as app.e]
    [renderer.app.subs]
    [renderer.dialog.events]
    [renderer.document.effects]
@@ -16,7 +16,6 @@
    [renderer.element.subs]
    [renderer.frame.events]
    [renderer.frame.subs]
-   [renderer.history.effects]
    [renderer.history.events]
    [renderer.history.subs]
    [renderer.notification.events]
@@ -36,4 +35,4 @@
 
 (set! rf.subs/warn-when-not-reactive (constantly nil))
 (mi/instrument!)
-(rf/reg-global-interceptor app.fx/schema-validator)
+(rf/reg-global-interceptor app.e/schema-validator)

@@ -14,19 +14,6 @@
  (fn [pointer-id]
    (.releasePointerCapture (dom/canvas-element!) pointer-id)))
 
-(def custom-fx
-  (rf/->interceptor
-   :id ::custom-fx
-   :after (fn [context]
-            (let [db (rf/get-effect context :db)
-                  fx (rf/get-effect context :fx)]
-              (cond-> context
-                db
-                (-> (rf/assoc-effect :fx (apply conj (or fx []) (:fx db)))
-                    (rf/assoc-effect :db (assoc db :fx []))))))))
-
-(rf/reg-global-interceptor custom-fx)
-
 (rf/reg-fx
  ::data-transfer
  (fn [[position data-transfer]]
