@@ -8,9 +8,11 @@
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.utils.bcd :as bcd]))
 
-(defonce mdn-data (js->clj mdn :keywordize-keys true))
+(def mdn-data
+  "https://github.com/mdn/data/blob/main/docs/updating_css_json.md"
+  (js->clj mdn :keywordize-keys true))
 
-(defn- enhance-data-readability
+(defn enhance-data-readability
   [property k]
   (cond-> property
     (and (get property k) (string? (get property k)))

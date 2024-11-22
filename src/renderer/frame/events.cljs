@@ -34,13 +34,13 @@
 (rf/reg-event-db
  ::zoom-in
  [persist]
- (fn [db [_ _]]
+ (fn [db [_]]
    (h/zoom-by db (/ 1 (:zoom-sensitivity db)))))
 
 (rf/reg-event-db
  ::zoom-out
  [persist]
- (fn [db [_ _]]
+ (fn [db [_]]
    (h/zoom-by db (:zoom-sensitivity db))))
 
 (rf/reg-event-db
