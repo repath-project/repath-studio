@@ -40,9 +40,17 @@
   [coll]
   (str "[" (str/join " " (map #(.toFixed % 2) coll)) "]"))
 
+(defn map->str
+  [m]
+  (interpose ", " (map (fn [[k v]]
+                         ^{:key k}
+                         [:span (str (name k)  ": " (if (number? v)
+                                                      (.toFixed v 2)
+                                                      (coll->str v)))]) m)))
+
 (defn debug-rows
   []
-  [["Dom rect" @(rf/subscribe [::app.s/dom-rect])]
+  [["Dom rect" (map->str @(rf/subscribe [::app.s/dom-rect]))]
    ["Viewbox" (coll->str @(rf/subscribe [::frame.s/viewbox]))]
    ["Pointer position" (coll->str @(rf/subscribe [::app.s/pointer-pos]))]
    ["Adjusted pointer position" (coll->str @(rf/subscribe [::app.s/adjusted-pointer-pos]))]
@@ -55,13 +63,7 @@
    ["State"  @(rf/subscribe [::tool.s/state])]
    ["Clicked element" (:id @(rf/subscribe [::app.s/clicked-element]))]
    ["Ignored elements" @(rf/subscribe [::document.s/ignored-ids])]
-   ["Snap" (into (map (fn [[k v]]
-                        ^{:key k}
-                        [:div (str (name k)
-                                   " "
-                                   (if (number? v)
-                                     (.toFixed v 2)
-                                     (coll->str v)))]) @(rf/subscribe [::snap.s/nearest-neighbor])))]])
+   ["Snap" (map->str @(rf/subscribe [::snap.s/nearest-neighbor]))]])
 
 (defn debug-info
   []

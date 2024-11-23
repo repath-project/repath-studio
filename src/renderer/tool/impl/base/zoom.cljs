@@ -69,7 +69,6 @@
   (let [factor (if (pointer/shift? e)
                  (:zoom-sensitivity db)
                  (/ 1 (:zoom-sensitivity db)))]
-    (-> db
-        (frame.h/zoom-at-pointer factor)
+    (-> (frame.h/zoom-at-pointer db factor)
         (snap.h/update-viewport-tree)
         (h/add-fx [::app.fx/persist]))))

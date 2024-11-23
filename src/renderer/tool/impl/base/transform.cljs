@@ -127,7 +127,9 @@
       (dissoc :clicked-element)
       (element.h/unignore :bounding-box)
       (element.h/toggle-selection (:id element) (pointer/shift? e))
-      (history.h/finalize (if (:selected element) "Deselect element" "Select element"))))
+      (history.h/finalize (if (:selected element)
+                            "Deselect element"
+                            "Select element"))))
 
 (defmethod hierarchy/on-double-click :transform
   [db e]
