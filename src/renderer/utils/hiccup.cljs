@@ -25,4 +25,3 @@
       (if (= (:tag (zip/node loc)) :svg)
         (zip/node loc)
         (recur (zip/next loc))))))
-

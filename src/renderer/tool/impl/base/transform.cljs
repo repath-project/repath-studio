@@ -60,7 +60,8 @@
 (defmethod hierarchy/help [:transform :scale]
   []
   [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions, "
-   [:span.shortcut-key "⇧"] " to scale in place, " [:span.shortcut-key "Alt"] " to also scale children."])
+   [:span.shortcut-key "⇧"] " to scale in place, "
+   [:span.shortcut-key "Alt"] " to also scale children."])
 
 (m/=> hovered? [:-> App Element boolean? boolean?])
 (defn hovered?

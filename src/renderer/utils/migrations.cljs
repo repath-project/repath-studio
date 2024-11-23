@@ -26,8 +26,7 @@
 
                   :always
                   (-> (update :elements update-keys key->uuid)
-                      (update :elements
-                              update-vals
+                      (update :elements update-vals
                               #(cond-> %
                                  :always
                                  (-> (update :id key->uuid)
@@ -37,18 +36,20 @@
                                  (update :parent key->uuid)))))))]
 
    [[0 4 4] (fn [document]
-              (update document :elements update-vals (fn [el]
-                                                       (update-keys el #(case %
-                                                                          :visible? :visible
-                                                                          :selected? :selected
-                                                                          :locked? :locked
-                                                                          %)))))]
+              (update document :elements update-vals
+                      (fn [el]
+                        (update-keys el #(case %
+                                           :visible? :visible
+                                           :selected? :selected
+                                           :locked? :locked
+                                           %)))))]
 
    [[0 4 5] (fn [document]
-              (update document :elements update-vals (fn [el]
-                                                       (cond-> el
-                                                         (= (:tag el) :brush)
-                                                         (update-in [:attrs :points] #(str/join " " (flatten %)))
+              (update document :elements update-vals
+                      (fn [el]
+                        (cond-> el
+                          (= (:tag el) :brush)
+                          (update-in [:attrs :points] #(str/join " " (flatten %)))
 
-                                                         :always
-                                                         element/normalize-attrs))))]])
+                          :always
+                          element/normalize-attrs))))]])

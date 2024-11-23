@@ -60,6 +60,12 @@
                                         :position position}]))
     (.readAsText reader file)))
 
+(def supported-image-types
+  #{"image/jpeg"
+    "image/png"
+    "image/bmp"
+    "image/gif"})
+
 (m/=> files! [:-> Vec2D any? nil?])
 (defn files!
   "https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/files"
@@ -70,7 +76,7 @@
         (= file-type "image/svg+xml")
         (add-svg! file position)
 
-        (contains? #{"image/jpeg" "image/png" "image/bmp" "image/gif"} file-type)
+        (contains? supported-image-types file-type)
         (add-image! file position)
 
         :else

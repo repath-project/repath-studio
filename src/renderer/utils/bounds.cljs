@@ -14,8 +14,8 @@
    [number? {:title "right"}]
    [number? {:title "bottom"}]])
 
-(m/=> from-bbox [:-> DomElement [:maybe Bounds]])
-(defn from-bbox
+(m/=> dom-el->bounds [:-> DomElement [:maybe Bounds]])
+(defn dom-el->bounds
   "Experimental way of getting the bounds of unknown or complicated elements
    using the getBBox method.
    https://developer.mozilla.org/en-US/docs/Web/API/SVGGraphicsElement/getBBox"

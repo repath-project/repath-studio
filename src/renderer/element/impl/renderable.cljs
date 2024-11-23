@@ -23,7 +23,7 @@
           (.setAttributeNS dom-el nil (name k) v)))
       (.appendChild svg dom-el)
       (set! (.-innerHTML dom-el) (if (empty? content) "\u00a0" content))
-      (let [bounds (bounds/from-bbox dom-el)]
+      (let [bounds (bounds/dom-el->bounds dom-el)]
         (.remove dom-el)
         bounds))))
 
