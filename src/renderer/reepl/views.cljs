@@ -15,7 +15,6 @@
    [renderer.reepl.show-value :refer [show-value]]
    [renderer.reepl.subs :as s]
    [renderer.ui :as ui]
-   [renderer.utils.dom :as dom]
    [replumb.core :as replumb.core])
   (:require-macros
    [reagent.ratom :refer [reaction]]))
@@ -89,12 +88,10 @@
     (ra/create-class
      {:component-did-mount
       (fn [_this]
-        (let [el (.-current ref)]
-          (dom/scroll-to-bottom! el)))
+        (rf/dispatch [::app.e/scroll-to-bottom (.-current ref)]))
       :component-did-update
       (fn [_this]
-        (let [el (.-current ref)]
-          (dom/scroll-to-bottom! el)))
+        (rf/dispatch [::app.e/scroll-to-bottom (.-current ref)]))
       :reagent-render
       (fn [items opts]
         [:div.flex-1.border-b.border-default.h-full.overflow-hidden.flex
@@ -126,7 +123,7 @@
         (let [[_ _ selected] (ra/argv this)]
           (when (and (not old-selected)
                      selected)
-            (dom/scroll-into-view! (.-current ref)))))
+            (rf/dispatch [::app.e/scroll-into-view (.-current ref)]))))
       :reagent-render
       (fn [text selected active set-active]
         [:div.p-1.bg-secondary.text-nowrap

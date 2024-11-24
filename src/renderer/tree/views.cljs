@@ -4,6 +4,7 @@
    [clojure.string :as str]
    [re-frame.core :as rf]
    [reagent.core :as ra]
+   [renderer.app.events :as-alias app.e]
    [renderer.document.events :as-alias document.e]
    [renderer.document.subs :as-alias document.s]
    [renderer.element.events :as-alias element.e]
@@ -139,7 +140,7 @@
       :on-pointer-enter #(rf/dispatch [::document.e/set-hovered-id id])
       :ref (fn [this]
              (when (and this selected)
-               (dom/scroll-into-view! this)
+               (rf/dispatch [::app.e/scroll-into-view this])
                (set-last-focused-id! (.getAttribute this "data-id"))))
       :draggable true
       :on-key-down #(key-down-handler! % id)

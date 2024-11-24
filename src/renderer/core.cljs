@@ -74,7 +74,7 @@
 
 (defn ^:dev/after-load mount-root! []
   (rf/clear-subscription-cache!)
-  (let [root-el (dom/root-element!)]
+  (let [root-el (.getElementById js/document "app")]
     (ra.dom/unmount-component-at-node root-el)
     (ra.dom/render [error/boundary [app.v/root]] root-el)))
 
@@ -88,11 +88,14 @@
 
 (defn add-listeners!
   []
-  (.addEventListener js/window "focus" (rf/dispatch [::window.e/set-focused true]))
-  (.addEventListener js/window "blur" (rf/dispatch [::window.e/set-focused (dom/focused!?)]))
   (.addEventListener js/document "keydown" keyb/event-handler!)
   (.addEventListener js/document "keyup" keyb/event-handler!)
   (.addEventListener js/document "fullscreenchange" #(rf/dispatch [::window.e/set-fullscreen (boolean (.-fullscreenElement js/document))]))
+  (.addEventListener js/window "focus" (rf/dispatch [::window.e/set-focused true]))
+  (.addEventListener js/window "blur" (rf/dispatch [::window.e/set-focused
+                                                    (or (.hasFocus js/document)
+                                                        (and (dom/frame-document!)
+                                                             (.hasFocus (dom/frame-document!))))]))
 
   (rf/dispatch [::document.e/center]))
 

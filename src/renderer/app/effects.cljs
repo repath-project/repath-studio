@@ -7,8 +7,7 @@
    [renderer.app.events :as-alias e]
    [renderer.history.handlers :as history.h]
    [renderer.notification.events :as-alias notification.e]
-   [renderer.utils.dom :as dom]
-   [renderer.utils.file :as file]))
+   [renderer.utils.dom :as dom]))
 
 (rf.storage/reg-co-fx! config/app-key {:cofx :store})
 
@@ -65,15 +64,54 @@
 
 (rf/reg-fx
  ::file-save
- file/save!)
+ (fn [{:keys [options data on-success on-error formatter]}]
+   (if (.-showSaveFilePicker js/window)
+     (-> (.showSaveFilePicker js/window (clj->js options))
+         (.then (fn [^js/FileSystemFileHandle file-handle]
+                  (.then (.createWritable file-handle)
+                         (fn [^js/FileSystemWritableFileStream writable-stream]
+                           (.then (.write writable-stream data)
+                                  (fn []
+                                    (.close writable-stream)
+                                    (when on-success
+                                      (rf/dispatch (conj on-success (cond-> file-handle
+                                                                      formatter
+                                                                      formatter))))))))))
+         (.catch #(when on-error (rf/dispatch (conj on-error %)))))
+     (rf/dispatch
+      [::notification.e/unavailable-feature
+       "Save File Picker"
+       "https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker#browser_compatibility"]))))
+
+(defn legacy-file-open!
+  [cb]
+  (let [el (js/document.createElement "input")]
+    (set! (.-type el) "file")
+    (.addEventListener el "change" (fn [e] (.remove el)
+                                     (cb (first (.. e -target -files)))))
+    (.click el)))
 
 (rf/reg-fx
  ::file-open
- file/open!)
+ (fn [{:keys [options on-error on-success]}]
+   (let [success-cb #(rf/dispatch (conj on-success %))]
+     (if (.-showOpenFilePicker js/window)
+       (-> (.showOpenFilePicker js/window (clj->js options))
+           (.then (fn [[^js/FileSystemFileHandle file-handle]]
+                    (.then (.getFile file-handle) success-cb)))
+           (.catch #(when on-error (rf/dispatch (conj on-error %)))))
+       (legacy-file-open! success-cb)))))
 
 (rf/reg-fx
  ::download
- file/download!)
+ (fn [{:keys [data title]}]
+   (let [blob (js/Blob. [data])
+         url (js/URL.createObjectURL blob)
+         a (js/document.createElement "a")]
+     (.setAttribute a "href" url)
+     (.setAttribute a "download" title)
+     (.click a)
+     (js/window.URL.revokeObjectURL url))))
 
 (rf/reg-fx
  ::set-document-attr
@@ -86,3 +124,13 @@
    (when (not (db/valid? db))
      (js/console.error (str "Event: " (first event)))
      (throw (js/Error. (str "Spec check failed: " (db/explain db)))))))
+
+(rf/reg-fx
+ ::scroll-into-view
+ (fn [el]
+   (.scrollIntoView el #js {:block "nearest"})))
+
+(rf/reg-fx
+ ::scroll-to-bottom
+ (fn [el]
+   (set! (.-scrollTop el) (.-scrollHeight el))))

@@ -122,3 +122,13 @@
               (cond-> context
                 db
                 (rf/assoc-effect :fx (conj (or fx []) [::fx/validate-db [db event]])))))))
+
+(rf/reg-event-fx
+ ::scroll-into-view
+ (fn [_ [_ el]]
+   {::fx/scroll-into-view el}))
+
+(rf/reg-event-fx
+ ::scroll-to-bottom
+ (fn [_ [_ el]]
+   {::fx/scroll-to-bottom el}))
