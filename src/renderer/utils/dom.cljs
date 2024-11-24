@@ -1,8 +1,5 @@
 (ns renderer.utils.dom)
 
-(def DomElement
-  [:fn (fn [x] (instance? js/Element x))])
-
 (defn prevent-default!
   [e]
   (.preventDefault e))

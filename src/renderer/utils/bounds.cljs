@@ -3,7 +3,6 @@
    [clojure.core.matrix :as mat]
    [malli.core :as m]
    [renderer.snap.db :refer [SnapOptions]]
-   [renderer.utils.dom :refer [DomElement]]
    [renderer.utils.math :refer [Vec2D]]))
 
 (def Bounds
@@ -14,7 +13,7 @@
    [number? {:title "right"}]
    [number? {:title "bottom"}]])
 
-(m/=> dom-el->bounds [:-> DomElement [:maybe Bounds]])
+(m/=> dom-el->bounds [:-> any? [:maybe Bounds]])
 (defn dom-el->bounds
   "Experimental way of getting the bounds of unknown or complicated elements
    using the getBBox method.
