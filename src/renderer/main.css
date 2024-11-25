@@ -12,9 +12,7 @@
 @import "overrides";
 
 @import "theme/styles";
-@import "history/styles";
 @import "menubar/styles";
-@import "timeline/styles";
 @import "tree/styles";
 
 body {

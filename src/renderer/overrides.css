@@ -1,3 +1,10 @@
+/*
+ Styles that override default css rules of third party components.
+ Prefer custom vies when possible, to avoid inflating this file.
+*/
+
+// react-color
+
 .chrome-picker,
 .photoshop-picker {
   background: transparent !important;
@@ -66,6 +73,8 @@
   }
 }
 
+// cmdk
+
 [cmdk-item],
 [cmdk-empty] {
   @apply flex p-2 rounded items-center text-sm;
@@ -82,6 +91,8 @@
 [cmdk-group-heading] {
   @apply p-2 text-muted uppercase font-bold text-2xs;
 }
+
+// codemirror
 
 .CodeMirror-selected {
   @apply overlay !important;
@@ -121,6 +132,80 @@
 .CodeMirror-lines {
   @apply p-0;
 }
+
+// react-timeline-editor
+
+.timeline-editor {
+  @apply bg-primary w-full min-h-0 h-full !important;
+  font-family: inherit !important;
+  color: var(--font-color-muted) !important;
+ }
+
+ .timeline-editor-action {
+  @apply overlay flex justify-around items-center pointer-events-none !important;
+
+  &-selected {
+    @apply border border-accent;
+    .timeline-editor-action-left-stretch::after {
+      border-left-color: var(--accent) !important;
+    }
+    .timeline-editor-action-right-stretch::after {
+      border-right-color: var(--accent) !important;
+    }
+  }
+}
+
+.timeline-editor-time-area .ReactVirtualized__Grid {
+  overflow: hidden !important;
+}
+
+.timeline-editor-cursor {
+  border-color: var(--accent) !important;
+}
+
+.timeline-editor-cursor-top path {
+  fill: var(--accent) !important;
+}
+
+.timeline-editor-time-unit {
+  border-color: var(--border-color) !important;
+}
+
+.timeline-editor-time-unit-scale {
+  color: var(--font-color-muted) !important;
+}
+
+.timeline-editor-edit-row {
+  background-image: linear-gradient(var(--bg-primary), var(--bg-primary)),
+                    linear-gradient(90deg, var(--border-color) 1px, transparent 0) !important;
+}
+
+// react-d3-tree
+
+.rd3t-node,
+.rd3t-leaf-node {
+  circle {
+    transition: fill .3s;
+  }
+
+  &:hover {
+    circle {
+      stroke : var(--accent);
+    }
+  }
+}
+
+.rd3t-link {
+  stroke : var(--border-color) !important;
+  stroke-width: 3;
+}
+
+.rd3t-label__title {
+  font-weight: normal !important;
+  fill: inherit !important;
+}
+
+// devtools
 
 .devtools * {
   background: transparent !important;
