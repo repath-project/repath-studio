@@ -3,7 +3,7 @@
  Prefer custom vies when possible, to avoid inflating this file.
 */
 
-// react-color
+/* react-color */
 
 .chrome-picker,
 .photoshop-picker {
@@ -73,7 +73,7 @@
   }
 }
 
-// cmdk
+/* cmdk */
 
 [cmdk-item],
 [cmdk-empty] {
@@ -92,7 +92,7 @@
   @apply p-2 text-muted uppercase font-bold text-2xs;
 }
 
-// codemirror
+/* codemirror */
 
 .CodeMirror-selected {
   @apply overlay !important;
@@ -133,7 +133,7 @@
   @apply p-0;
 }
 
-// react-timeline-editor
+/* react-timeline-editor */
 
 .timeline-editor {
   @apply bg-primary w-full min-h-0 h-full !important;
@@ -180,7 +180,7 @@
                     linear-gradient(90deg, var(--border-color) 1px, transparent 0) !important;
 }
 
-// react-d3-tree
+/* react-d3-tree */
 
 .rd3t-node,
 .rd3t-leaf-node {
@@ -205,7 +205,7 @@
   fill: inherit !important;
 }
 
-// devtools
+/* devtools */
 
 .devtools * {
   background: transparent !important;
