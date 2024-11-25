@@ -1,6 +1,6 @@
 (ns renderer.ui
   "A collection of stateless reusable ui components.
-   Avoid using subscriptions as much as possible to keep the components pure."
+   Avoid using subscriptions to keep the components pure."
   (:require
    ["@radix-ui/react-context-menu" :as ContextMenu]
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
