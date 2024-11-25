@@ -204,7 +204,7 @@
          [ui/icon "file"]
          [:button.button-link.text-lg
           {:on-click #(rf/dispatch [::document.e/new])} "New"]
-         [ui/shortcuts @(rf/subscribe [::app.s/event-shortcuts [::document.e/new]])]
+         [ui/shortcuts [::document.e/new]]
 
          [:span "or"]
 
@@ -240,7 +240,7 @@
          [:button.button-link.text-lg
           {:on-click #(rf/dispatch [::document.e/open nil])}
           "Open"]
-         [ui/shortcuts @(rf/subscribe [::app.s/event-shortcuts [::document.e/open nil]])]]
+         [ui/shortcuts [::document.e/open nil]]]
 
         (when (seq recent-documents)
           [:<> [:h2.mb-3.mt-8.text-2xl "Recent"]
@@ -262,7 +262,7 @@
           [:button.button-link.text-lg
            {:on-click #(rf/dispatch [::dialog.e/cmdk])}
            "Command panel"]
-          [ui/shortcuts @(rf/subscribe [::app.s/event-shortcuts [::dialog.e/cmdk]])]]]
+          [ui/shortcuts [::dialog.e/cmdk]]]]
         [:div.flex.items-center.gap-2
          [ui/icon "earth"]
          [:button.button-link.text-lg

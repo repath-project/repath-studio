@@ -19,6 +19,7 @@
    ["tailwind-merge" :refer [twMerge]]
    [re-frame.core :as rf]
    [reagent.core :as ra]
+   [renderer.app.subs :as-alias app.s]
    [renderer.utils.keyboard :as keyb]))
 
 (defn merge-with-class
@@ -74,11 +75,13 @@
        (into [:span])))
 
 (defn shortcuts
-  [v]
-  (when (seq v)
-    (->> (map format-shortcut v)
-         (interpose [:span])
-         (into [:span.inline-flex.text-muted {:class "gap-1.5"}]))))
+  [event]
+  (let [event-shortcuts @(rf/subscribe [::app.s/event-shortcuts event])]
+    (when (seq event-shortcuts)
+      (->> event-shortcuts
+           (map format-shortcut)
+           (interpose [:span])
+           (into [:span.inline-flex.text-muted {:class "gap-1.5"}])))))
 
 (defn radio-icon-button
   [icon-name active props]

@@ -69,7 +69,7 @@
       (when icon [ui/icon icon])]
      label
      [:div.right-slot
-      [ui/shortcuts @(rf/subscribe [::app.s/event-shortcuts action])]]]))
+      [ui/shortcuts action]]]))
 
 (defn cmdk-group-inner
   [items label]
