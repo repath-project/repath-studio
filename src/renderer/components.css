@@ -290,4 +290,41 @@
     width: 26px;
     height: 26px;
   }
+
+  .color-rect {
+    @apply button-size;
+    border: 1px solid var(--border-color);
+  }
+
+  .color-drip {
+    box-sizing: content-box;
+    width: 16px;
+    max-width: 16px;
+    height: 16px;
+    flex: 1;
+  }
+
+  .loader {
+    @apply inline-block absolute;
+    width: 24px;
+    height: 24px;
+    top: 50%;
+    left: 50%;
+    margin: -12px 0 0 -12px;
+
+    &:after,
+    &:before {
+      @apply absolute top-0 left-0;
+      content: '';
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--font-color);
+      animation: rotationBreak 3s ease-in-out infinite alternate;
+    }
+
+    &:after {
+      border-color: var(--accent);
+      animation-direction: alternate-reverse;
+    }
+  }
 }

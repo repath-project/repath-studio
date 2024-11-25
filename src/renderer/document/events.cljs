@@ -79,6 +79,13 @@
    (h/assoc-attr db k v)))
 
 (rf/reg-event-db
+ ::preview-attr
+ (fn [db [_ k v]]
+   (-> db
+       (h/assoc-attr k v)
+       (element.h/set-attr k v))))
+
+(rf/reg-event-db
  ::close
  [persist]
  (fn [db [_ id confirm?]]

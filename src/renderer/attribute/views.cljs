@@ -57,7 +57,7 @@
 
 (defn caniusethis
   [{:keys [tag attr]}]
-  (let [data (if attr (bcd/conmpatibility tag attr) (bcd/conmpatibility tag))
+  (let [data (if attr (bcd/compatibility tag attr) (bcd/compatibility tag))
         support-data (:support data)
         property (when attr (attr/property-data attr))
         spec-url (or (:spec_url data) (:href property))
@@ -185,7 +185,7 @@
         [:h2.mb-4.text-lg k]
         (when (get-method hierarchy/description [dispatch-tag k])
           [:p (hierarchy/description dispatch-tag k)])
-        (when (bcd/conmpatibility tag k)
+        (when (bcd/compatibility tag k)
           [:<>
            (when property [property-list property])
            [caniusethis {:tag tag :attr k}]])]

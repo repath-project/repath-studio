@@ -11,10 +11,10 @@
    [renderer.ruler.views :as ruler.v]
    [renderer.snap.subs :as-alias snap.s]
    [renderer.snap.views :as snap.v]
+   [renderer.tool.events :as-alias tool.e]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.subs :as-alias tool.s]
    [renderer.utils.dom :as dom]
-   [renderer.utils.drop :as drop]
    [renderer.utils.keyboard :as keyb]
    [renderer.utils.overlay :as overlay]
    [renderer.utils.pointer :as pointer]))
@@ -25,6 +25,17 @@
   []
   {:description "The canvas is the main SVG container that hosts all elements."
    :attrs [:fill]})
+
+(defn drop-handler!
+  "Gathers drop event props.
+   https://developer.mozilla.org/en-US/docs/Web/API/DragEvent"
+  [^js/DragEvent e]
+  (.stopPropagation e)
+  (.preventDefault e)
+
+  (rf/dispatch-sync [::tool.e/drag-event {:type (.-type e)
+                                          :pointer-pos [(.-pageX e) (.-pageY e)]
+                                          :data-transfer (.-dataTransfer e)}]))
 
 (defmethod hierarchy/render :canvas
   [el]
@@ -50,7 +61,7 @@
                   :on-key-down keyb/event-handler!
                   :tab-index 0 ; Enable keyboard events
                   :viewBox viewbox-attr
-                  :on-drop drop/event-handler!
+                  :on-drop drop-handler!
                   :on-drag-over dom/prevent-default!
                   :width width
                   :height height

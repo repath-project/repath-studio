@@ -61,11 +61,11 @@
         (assoc-in [:documents active-document :zoom] updated-zoom)
         (assoc-in [:documents active-document :pan] updated-pan))))
 
-(m/=> adjust-pointer-pos [:-> App Vec2D Vec2D])
-(defn adjust-pointer-pos
+(m/=> adjusted-pointer-pos [:-> App Vec2D Vec2D])
+(defn adjusted-pointer-pos
   [db pos]
   (let [{:keys [zoom pan]} (get-in db [:documents (:active-document db)])]
-    (pointer/adjust-position zoom pan pos)))
+    (pointer/adjusted-position zoom pan pos)))
 
 (m/=> zoom-at-pointer [:-> App number? App])
 (defn zoom-at-pointer

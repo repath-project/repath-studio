@@ -561,7 +561,7 @@
     [ui/icon "checkmark"]]
    label
    [:div.right-slot
-    [ui/shortcuts action]]])
+    [ui/shortcuts @(rf/subscribe [::app.s/event-shortcuts action])]]])
 
 (defmethod menu-item :sub-menu
   [{:keys [label items disabled]}]
@@ -603,7 +603,7 @@
     :disabled disabled}
    label
    [:div.right-slot
-    [ui/shortcuts action]]])
+    [ui/shortcuts @(rf/subscribe [::app.s/event-shortcuts action])]]])
 
 (defn root-menu
   []

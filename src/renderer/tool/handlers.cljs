@@ -115,7 +115,7 @@
   [db e now]
   (let [{:keys [pointer-offset tool dom-rect drag primary-tool drag-threshold nearest-neighbor]} db
         {:keys [button pointer-pos]} e
-        adjusted-pointer-pos (frame.h/adjust-pointer-pos db pointer-pos)
+        adjusted-pointer-pos (frame.h/adjusted-pointer-pos db pointer-pos)
         db (snap.h/update-nearest-neighbors db)]
     (case (:type e)
       "pointermove"

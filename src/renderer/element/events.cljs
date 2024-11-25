@@ -327,3 +327,8 @@
  (fn [db [_ data]]
    (-> (h/import-svg db data)
        (history.h/finalize "Trace image"))))
+
+(rf/reg-event-fx
+ ::add-image
+ (fn [_ [_ file position]]
+   {::fx/add-image [file position]}))

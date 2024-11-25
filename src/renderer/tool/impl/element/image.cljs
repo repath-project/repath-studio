@@ -3,10 +3,10 @@
   (:require
    [re-frame.core :as rf]
    [renderer.app.effects :as-alias app.fx]
+   [renderer.element.effects :as-alias element.fx]
    [renderer.notification.events :as-alias notification.e]
    [renderer.tool.handlers :as tool.h]
-   [renderer.tool.hierarchy :as hierarchy]
-   [renderer.utils.drop :as drop]))
+   [renderer.tool.hierarchy :as hierarchy]))
 
 (derive :image ::hierarchy/element)
 
@@ -20,7 +20,8 @@
                      {:options {:startIn "pictures"
                                 :types [{:accept {"image/png" [".png"]
                                                   "image/jpeg" [".jpeg" ".jpg"]
-                                                  "image/bmp" [".fmp"]}}]}
+                                                  "image/bmp" [".bmp"]
+                                                  "image/gif" [".gif"]}}]}
                       :on-success [::success]
                       :on-error [::notification.e/exception]}]))
 
@@ -28,10 +29,5 @@
  ::success
  (fn [{:keys [db]} [_ file]]
    {:db (tool.h/activate db :transform)
-    ::add-image [file (or (:point (:nearest-neighbor db))
-                          (:adjusted-pointer-pos db))]}))
-
-(rf/reg-fx
- ::add-image
- (fn [[file position]]
-   (drop/add-image! file position)))
+    ::element.fx/add-image [file (or (:point (:nearest-neighbor db))
+                                     (:adjusted-pointer-pos db))]}))

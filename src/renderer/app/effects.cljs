@@ -134,3 +134,11 @@
  ::scroll-to-bottom
  (fn [el]
    (set! (.-scrollTop el) (.-scrollHeight el))))
+
+(rf/reg-fx
+ ::eye-dropper
+ (fn [{:keys [on-success on-error]}]
+   (-> (js/EyeDropper.)
+       (.open)
+       (.then (fn [color] (when on-success (rf/dispatch (conj on-success color)))))
+       (.catch (fn [error] (when on-error (rf/dispatch (conj on-error error))))))))

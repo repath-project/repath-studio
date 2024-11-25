@@ -28,7 +28,7 @@
  ::drag-event
  (fn [{:keys [db]} [_ {:keys [data-transfer pointer-pos] :as e}]]
    (when (= (:type e) "drop")
-     {::fx/data-transfer [(frame.h/adjust-pointer-pos db pointer-pos) data-transfer]})))
+     {::fx/drop [(frame.h/adjusted-pointer-pos db pointer-pos) data-transfer]})))
 
 (rf/reg-event-db
  ::keyboard-event

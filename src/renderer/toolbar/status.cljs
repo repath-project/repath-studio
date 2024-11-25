@@ -4,8 +4,9 @@
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.e]
    [renderer.app.subs :as-alias app.s]
-   [renderer.color.views :as color.v]
+   [renderer.document.events :as-alias document.e]
    [renderer.document.subs :as-alias document.s]
+   [renderer.element.events :as-alias element.e]
    [renderer.frame.events :as-alias frame.e]
    [renderer.ruler.events :as-alias ruler.e]
    [renderer.ruler.subs :as-alias ruler.s]
@@ -13,6 +14,7 @@
    [renderer.timeline.views :as timeline.v]
    [renderer.tool.subs :as-alias tool.s]
    [renderer.ui :as ui]
+   [renderer.utils.i18n :refer [t]]
    [renderer.utils.keyboard :as keyb]
    [renderer.worker.subs :as-alias worker.s]))
 
@@ -148,13 +150,31 @@
   (let [help-message @(rf/subscribe [::tool.s/help])
         loading @(rf/subscribe [::worker.s/loading])
         fill @(rf/subscribe [::document.s/fill])
-        stroke @(rf/subscribe [::document.s/stroke])]
+        stroke @(rf/subscribe [::document.s/stroke])
+        get-hex #(:hex (js->clj % :keywordize-keys true))]
     [:div.toolbar.bg-primary.mt-px.relative
      [:div.flex
-      [color.v/picker stroke :stroke]
-      [color.v/swap-button]
+      [ui/color-picker
+       {:color fill
+        :on-change-complete #(rf/dispatch [::element.e/set-attr :fill (get-hex %)])
+        :on-change #(rf/dispatch [::document.e/preview-attr :fill (get-hex %)])}]
+
+      [:button.icon-button
+       {:title (t [:color/swap "Swap fill with stroke"])
+        :style {:width "21px" :background "transparent"}
+        :on-click #(rf/dispatch [::document.e/swap-colors])}
+       [ui/icon "swap-horizontal"]]
            ;; REVIEW: Can we replace alignOffset with collisionBoundary?
-      [color.v/picker fill :fill {:align-offset -54}]]
+      [ui/color-picker
+       {:color stroke
+        :on-change-complete #(rf/dispatch [::element.e/set-attr :stroke (get-hex %)])
+        :on-change #(rf/dispatch [::document.e/preview-attr :stroke (get-hex %)])
+        :align-offset -54}
+       [:div.color-rect.bg-primary.absolute
+        {:style {:width "13px"
+                 :height "13px"
+                 :bottom "9px"
+                 :right "9px"}}]]]
      [:div.grow
       [:div.px-1.hidden.2xl:flex.gap-1.flex-wrap.leading-none.truncate
        {:style {:max-height "var(--button-size)"}}

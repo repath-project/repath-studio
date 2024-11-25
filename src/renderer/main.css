@@ -9,13 +9,10 @@
 @import "utilities";
 @import "components";
 @import "animations";
-@import "loader";
+@import "overrides";
 
 @import "theme/styles";
-@import "codemirror/styles";
-@import "dialog/styles";
 @import "history/styles";
-@import "color/styles";
 @import "menubar/styles";
 @import "timeline/styles";
 @import "tree/styles";

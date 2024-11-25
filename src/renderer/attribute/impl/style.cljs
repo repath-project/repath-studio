@@ -2,11 +2,11 @@
   (:require
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.codemirror.views :as cm]
-   [renderer.element.events :as-alias element.e]))
+   [renderer.element.events :as-alias element.e]
+   [renderer.ui :as ui]))
 
 (defmethod hierarchy/form-element [:default :style]
   [_ k v {:keys [disabled]}]
   [:div.w-full.bg-primary.p-1
-   [cm/editor v {:options {:readOnly disabled}
-                 :on-blur #(rf/dispatch [::element.e/set-attr k %])}]])
+   [ui/cm-editor v {:options {:readOnly disabled}
+                    :on-blur #(rf/dispatch [::element.e/set-attr k %])}]])

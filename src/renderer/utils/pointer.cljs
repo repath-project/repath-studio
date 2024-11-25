@@ -51,8 +51,8 @@
   [e]
   (contains? (:modifiers e) :alt))
 
-(m/=> adjust-position [:-> ZoomFactor Vec2D Vec2D Vec2D])
-(defn adjust-position
+(m/=> adjusted-position [:-> ZoomFactor Vec2D Vec2D Vec2D])
+(defn adjusted-position
   [zoom pan pointer-pos]
   (-> pointer-pos
       (mat/div zoom)

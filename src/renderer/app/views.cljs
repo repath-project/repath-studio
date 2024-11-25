@@ -9,7 +9,6 @@
    [re-frame.core :as rf]
    [renderer.app.events :as e]
    [renderer.app.subs :as-alias app.s]
-   [renderer.codemirror.views :as cm.v]
    [renderer.dialog.events :as-alias dialog.e]
    [renderer.dialog.views :as dialog.v]
    [renderer.document.events :as-alias document.e]
@@ -145,7 +144,7 @@
            [:div.h-full.bg-primary.flex
             [ui/scroll-area
              [:div.p-1
-              [cm.v/editor xml
+              [ui/cm-editor xml
                {:options {:mode "text/xml"
                           :readOnly true}}]]]]]]))]]])
 
@@ -205,7 +204,7 @@
          [ui/icon "file"]
          [:button.button-link.text-lg
           {:on-click #(rf/dispatch [::document.e/new])} "New"]
-         [ui/shortcuts [::document.e/new]]
+         [ui/shortcuts @(rf/subscribe [::app.s/event-shortcuts [::document.e/new]])]
 
          [:span "or"]
 
@@ -241,7 +240,7 @@
          [:button.button-link.text-lg
           {:on-click #(rf/dispatch [::document.e/open nil])}
           "Open"]
-         [ui/shortcuts [::document.e/open nil]]]
+         [ui/shortcuts @(rf/subscribe [::app.s/event-shortcuts [::document.e/open nil]])]]
 
         (when (seq recent-documents)
           [:<> [:h2.mb-3.mt-8.text-2xl "Recent"]
@@ -263,7 +262,7 @@
           [:button.button-link.text-lg
            {:on-click #(rf/dispatch [::dialog.e/cmdk])}
            "Command panel"]
-          [ui/shortcuts [::dialog.e/cmdk]]]]
+          [ui/shortcuts @(rf/subscribe [::app.s/event-shortcuts [::dialog.e/cmdk]])]]]
         [:div.flex.items-center.gap-2
          [ui/icon "earth"]
          [:button.button-link.text-lg

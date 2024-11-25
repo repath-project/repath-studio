@@ -5,6 +5,7 @@
    [clojure.string :as str]
    [config :as config]
    [re-frame.core :as rf]
+   [renderer.app.subs :as-alias app.s]
    [renderer.dialog.events :as-alias dialog.e]
    [renderer.dialog.subs :as-alias dialog.s]
    [renderer.document.events :as-alias document.e]
@@ -68,7 +69,7 @@
       (when icon [ui/icon icon])]
      label
      [:div.right-slot
-      [ui/shortcuts action]]]))
+      [ui/shortcuts @(rf/subscribe [::app.s/event-shortcuts action])]]]))
 
 (defn cmdk-group-inner
   [items label]

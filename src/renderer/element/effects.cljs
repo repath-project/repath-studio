@@ -1,7 +1,7 @@
 (ns renderer.element.effects
   (:require
    [re-frame.core :as rf]
-   [renderer.element.events :as-alias element.e]
+   [renderer.element.events :as-alias e]
    [renderer.utils.length :as length]
    [renderer.worker.events :as-alias worker.e]))
 
@@ -45,4 +45,30 @@
              :data {:label (:label image)
                     :image (.getImageData context 0 0 width height)
                     :position [x y]}
-             :on-success [::element.e/traced]}])))))))
+             :on-success [::e/traced]}])))))))
+
+(rf/reg-fx
+ ::add-image
+ (fn [[^js/File file [x y]]]
+   (let [reader (js/FileReader.)]
+     (.addEventListener
+      reader
+      "load"
+      #(let [data-url (.-result reader)
+             img (js/document.createElement "img")]
+           ;; Get the image size onload.
+         (set! (.-onload img)
+               (fn []
+                 (let [width (.-width img)
+                       height (.-height img)]
+                   (.remove img)
+                   (rf/dispatch [::e/add {:type :element
+                                          :tag :image
+                                          :label (.-name file)
+                                          :attrs {:x (- x (/ width 2))
+                                                  :y (- y (/ height 2))
+                                                  :width width
+                                                  :height height
+                                                  :href data-url}}]))))
+         (set! (.-src img) data-url)))
+     (.readAsDataURL reader file))))
