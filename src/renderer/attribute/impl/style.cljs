@@ -8,5 +8,6 @@
 (defmethod hierarchy/form-element [:default :style]
   [_ k v {:keys [disabled]}]
   [:div.w-full.bg-primary.p-1
-   [ui/cm-editor v {:options {:readOnly disabled}
-                    :on-blur #(rf/dispatch [::element.e/set-attr k %])}]])
+   [ui/cm-editor v {:on-blur #(rf/dispatch [::element.e/set-attr k %])
+                    :options {:mode "css"
+                              :readOnly disabled}}]])

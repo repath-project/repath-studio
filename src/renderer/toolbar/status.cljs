@@ -157,7 +157,10 @@
       [ui/color-picker
        {:color fill
         :on-change-complete #(rf/dispatch [::element.e/set-attr :fill (get-hex %)])
-        :on-change #(rf/dispatch [::document.e/preview-attr :fill (get-hex %)])}]
+        :on-change #(rf/dispatch [::document.e/preview-attr :fill (get-hex %)])}
+
+       [:button.button.color-rect
+        {:style {:background fill}}]]
 
       [:button.icon-button
        {:title (t [:color/swap "Swap fill with stroke"])
@@ -170,11 +173,13 @@
         :on-change-complete #(rf/dispatch [::element.e/set-attr :stroke (get-hex %)])
         :on-change #(rf/dispatch [::document.e/preview-attr :stroke (get-hex %)])
         :align-offset -54}
-       [:div.color-rect.bg-primary.absolute
-        {:style {:width "13px"
-                 :height "13px"
-                 :bottom "9px"
-                 :right "9px"}}]]]
+       [:button.button.color-rect.relative
+        {:style {:background stroke}}
+        [:div.color-rect.bg-primary.absolute
+         {:style {:width "13px"
+                  :height "13px"
+                  :bottom "9px"
+                  :right "9px"}}]]]]
      [:div.grow
       [:div.px-1.hidden.2xl:flex.gap-1.flex-wrap.leading-none.truncate
        {:style {:max-height "var(--button-size)"}}

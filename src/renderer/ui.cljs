@@ -17,23 +17,22 @@
    ["react" :as react]
    ["react-svg" :refer [ReactSVG]]
    ["tailwind-merge" :refer [twMerge]]
+   [malli.core :as m]
    [re-frame.core :as rf]
    [reagent.core :as ra]
    [renderer.app.subs :as-alias app.s]
    [renderer.utils.keyboard :as keyb]))
 
 (defn merge-with-class
-  ([classes]
-   (merge-with-class classes {}))
-  ([classes props]
-   (merge {:class (twMerge classes (:class props))}
-          (dissoc props :class))))
+  [& maps]
+  (-> (apply merge maps)
+      (assoc :class (apply twMerge (map :class maps)))))
 
 (defn icon
   [icon-name props]
   [:> ReactSVG
-   (merge (merge-with-class "icon" props)
-          {:src (str "icons/" icon-name ".svg")})])
+   (merge-with-class {:class "icon"
+                      :src (str "icons/" icon-name ".svg")} props)])
 
 (defn icon-button
   [icon-name props]
@@ -49,7 +48,7 @@
    [:label.h-auto.bg-transparent {:for (when (:id props) (:id props))} label]
    [:> Switch/Root
     (merge-with-class
-     "overlay relative rounded-full w-10 h-6 data-[state=checked]:bg-accent data-[disabled]:opacity-50"
+     {:class "overlay relative rounded-full w-10 h-6 data-[state=checked]:bg-accent data-[disabled]:opacity-50"}
      props)
     [:> Switch/Thumb
      {:class "block bg-primary rounded-full shadow-sm w-5 h-5 will-change-transform
@@ -58,7 +57,9 @@
 (defn slider
   [props]
   [:> Slider/Root
-   (merge-with-class "relative flex items-center select-none w-full touch-none h-full" props)
+   (merge-with-class
+    {:class "relative flex items-center select-none w-full touch-none h-full"}
+    props)
    [:> Slider/Track {:class "relative h-1 bg-secondary flex-1"}
     [:> Slider/Range {:class "absolute h-full overlay"}]]
    [:> Slider/Thumb {:class "slider-thumb"}]])
@@ -86,7 +87,7 @@
 (defn radio-icon-button
   [icon-name active props]
   [:button.icon-button.radio-icon-button
-   (merge-with-class (when active "selected") props)
+   (merge-with-class {:class (when active "selected")} props)
    [renderer.ui/icon icon-name]])
 
 (defn context-menu-item
@@ -166,18 +167,23 @@
 
      [:> ScrollArea/Corner]]))
 
+(def ColorPickerProps [:map
+                       [:color string?]
+                       [:on-change {:optional true} ifn?]
+                       [:on-change-complete {:optional true} ifn?]])
+
+(m/=> color-picker [:-> ColorPickerProps any? any?])
 (defn color-picker
   [props & children]
   [:> Popover/Root {:modal true}
-   [:> Popover/Trigger {:as-child true}
-    (into [:button.button.color-rect.relative
-           {:style {:background (:color props)}}]
-          children)]
+   (into [:> Popover/Trigger {:as-child true}]
+         children)
    [:> Popover/Portal
     [:> Popover/Content
-     (merge {:class "popover-content color-picker-lg"
-             :align "start"
-             :side "top"} props)
+     {:class "popover-content max-w-fit"
+      :align "start"
+      :side "top"
+      :align-offset (:align-offset props)}
      [:> PhotoshopPicker props]
      [:> Popover/Arrow {:class "popover-arrow"}]]]])
 
@@ -190,8 +196,7 @@
    :autofocus false
    :extraKeys {"Ctrl-Space" "autocomplete"}
    :theme "tomorrow-night-eighties"
-   :autoCloseBrackets true
-   :mode "css"})
+   :autoCloseBrackets true})
 
 (defn cm-render-line
   "Line up wrapped text with the base indentation.
