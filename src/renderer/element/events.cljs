@@ -304,7 +304,8 @@
    (let [els (h/top-selected-sorted db)]
      {:db (h/copy db)
       :fx [(when (seq els)
-             [::app.fx/clipboard-write (element/->svg els)])]})))
+             [::app.fx/clipboard-write {:data (element/->svg els)
+                                        :on-error [::notification.e/exception]}])]})))
 
 (rf/reg-event-fx
  ::cut
@@ -314,7 +315,8 @@
               (h/delete)
               (history.h/finalize "Cut selection"))
       :fx [(when (seq els)
-             [::app.fx/clipboard-write (element/->svg els)])]})))
+             [::app.fx/clipboard-write {:data (element/->svg els)
+                                        :on-error [::notification.e/exception]}])]})))
 
 (rf/reg-event-fx
  ::trace

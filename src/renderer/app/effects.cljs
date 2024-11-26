@@ -34,25 +34,25 @@
 
 (rf/reg-fx
  ::clipboard-write
- (fn [data]
-   (when data
-     (js/navigator.clipboard.write
-      (array (js/ClipboardItem.
-              (let [blob-array (js-obj)]
-                (doseq
-                 [[data-type data]
-                  [["image/svg+xml" data]
-                   ["text/html" data]
-                   ["text/plain" data]]]
-                  (when (.supports js/ClipboardItem data-type)
-                    (aset blob-array data-type (js/Blob. (array data) #js {:type data-type}))))
-                blob-array)))))))
+ (fn [{:keys [data on-success on-error]}]
+   (-> (js/navigator.clipboard.write
+        (array (js/ClipboardItem.
+                (let [blob-array (js-obj)]
+                  (doseq
+                   [[data-type data]
+                    [["image/svg+xml" data]
+                     ["text/html" data]]]
+                    (when (.supports js/ClipboardItem data-type)
+                      (aset blob-array data-type (js/Blob. (array data) #js {:type data-type}))))
+                  blob-array))))
+       (.then (fn [] (when on-success (rf/dispatch on-success))))
+       (.catch (fn [error] (when on-error (rf/dispatch (conj on-error error))))))))
 
 (rf/reg-fx
  ::focus
  (fn [id]
    (when-let [element (if id (.getElementById js/document id) (dom/canvas-element!))]
-     (js/setTimeout #(.focus element)))))
+     (.focus element))))
 
 (rf/reg-fx
  ::query-local-fonts
