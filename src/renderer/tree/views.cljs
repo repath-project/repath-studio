@@ -15,7 +15,6 @@
    [renderer.tool.subs :as-alias tool.s]
    [renderer.tree.events :as-alias e]
    [renderer.ui :as ui]
-   [renderer.utils.dom :as dom]
    [renderer.utils.element :as element]
    [renderer.utils.keyboard :as keyb]))
 
@@ -25,8 +24,8 @@
    (if locked "lock" "unlock")
    {:class (when-not locked "list-item-action")
     :title (if locked "unlock" "lock")
-    :on-double-click dom/stop-propagation!
-    :on-pointer-up dom/stop-propagation!
+    :on-double-click #(.stopPropagation %)
+    :on-pointer-up #(.stopPropagation %)
     :on-click (fn [e]
                 (.stopPropagation e)
                 (rf/dispatch [::element.e/toggle-prop id :locked]))}])
@@ -37,8 +36,8 @@
    (if visible "eye" "eye-closed")
    {:class (when visible "list-item-action")
     :title (if visible "hide" "show")
-    :on-double-click dom/stop-propagation!
-    :on-pointer-up dom/stop-propagation!
+    :on-double-click #(.stopPropagation %)
+    :on-pointer-up #(.stopPropagation %)
     :on-click (fn [e]
                 (.stopPropagation e)
                 (rf/dispatch [::element.e/toggle-prop id :visible]))}])
@@ -122,7 +121,7 @@
   [ui/icon-button
    (if collapsed "chevron-right" "chevron-down")
    {:title (if collapsed "expand" "collapse")
-    :on-pointer-up dom/stop-propagation!
+    :on-pointer-up #(.stopPropagation %)
     :on-click #(rf/dispatch (if collapsed
                               [::document.e/expand-el id]
                               [::document.e/collapse-el id]))}])
@@ -146,7 +145,7 @@
       :on-key-down #(key-down-handler! % id)
       :on-drag-start #(-> % .-dataTransfer (.setData "id" (str id)))
       :on-drag-enter #(rf/dispatch [::document.e/set-hovered-id id])
-      :on-drag-over dom/prevent-default!
+      :on-drag-over #(.preventDefault %)
       :on-drop #(drop-handler! % id)
       :on-pointer-down #(when (= (.-button %) 2)
                           (rf/dispatch [::element.e/select id (.-ctrlKey %)]))
@@ -211,6 +210,6 @@
    [:> ContextMenu/Portal
     (into [:> ContextMenu/Content
            {:class "menu-content context-menu-content"
-            :on-close-auto-focus dom/prevent-default!}]
+            :on-close-auto-focus #(.preventDefault %)}]
           (map (fn [menu-item] [ui/context-menu-item menu-item])
                element.v/context-menu))]])

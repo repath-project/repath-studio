@@ -19,7 +19,6 @@
    [renderer.notification.views :as notification.v]
    [renderer.snap.handlers :as snap.h]
    [renderer.utils.compatibility :as compatibility]
-   [renderer.utils.dom :as dom]
    [renderer.utils.math :refer [Vec2D]]
    [renderer.utils.system :as system]
    [renderer.utils.vec :as vec]
@@ -95,7 +94,7 @@
          (dialog.h/create {:title "Do you want to save your changes?"
                            :close-button true
                            :content (dialog.v/save (get-in db [:documents id]))
-                           :attrs {:onOpenAutoFocus dom/prevent-default!}})))))
+                           :attrs {:onOpenAutoFocus #(.preventDefault %)}})))))
 
 (rf/reg-event-fx
  ::close-active

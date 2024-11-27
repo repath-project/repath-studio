@@ -3,7 +3,6 @@
    [clojure.core.matrix :as mat]
    [malli.core :as m]
    [renderer.snap.db :refer [SnapOptions]]
-   [renderer.utils.dom :refer [DomElement]]
    [renderer.utils.math :refer [Vec2D]]))
 
 (def Bounds
@@ -13,6 +12,9 @@
    [number? {:title "top"}]
    [number? {:title "right"}]
    [number? {:title "bottom"}]])
+
+(def DomElement
+  [:fn (fn [x] (instance? js/Element x))])
 
 (m/=> dom-el->bounds [:-> DomElement [:maybe Bounds]])
 (defn dom-el->bounds

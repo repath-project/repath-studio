@@ -14,7 +14,6 @@
    [renderer.tool.events :as-alias tool.e]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.subs :as-alias tool.s]
-   [renderer.utils.dom :as dom]
    [renderer.utils.keyboard :as keyb]
    [renderer.utils.overlay :as overlay]
    [renderer.utils.pointer :as pointer]))
@@ -62,7 +61,7 @@
                   :tab-index 0 ; Enable keyboard events
                   :viewBox viewbox-attr
                   :on-drop drop-handler!
-                  :on-drag-over dom/prevent-default!
+                  :on-drag-over #(.preventDefault %)
                   :width width
                   :height height
                   :transform (str "rotate(" rotate ")")

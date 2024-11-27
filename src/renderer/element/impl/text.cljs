@@ -11,7 +11,6 @@
    [renderer.history.handlers :as history.h]
    [renderer.tool.handlers :as h]
    [renderer.utils.bounds :as bounds]
-   [renderer.utils.dom :as dom]
    [renderer.utils.element :as element]
    [renderer.utils.length :as length]
    [renderer.utils.system :as system]))
@@ -89,8 +88,8 @@
        :default-value content
        :auto-focus true
        :on-focus #(.. % -target select)
-       :on-pointer-down dom/stop-propagation!
-       :on-pointer-up dom/stop-propagation!
+       :on-pointer-down #(.stopPropagation %)
+       :on-pointer-up #(.stopPropagation %)
        :on-blur #(rf/dispatch [::set-text id (get-text! %)])
        :on-key-down #(key-down-handler! % id)
        :style {:color "transparent"

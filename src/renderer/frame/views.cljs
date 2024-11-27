@@ -13,7 +13,6 @@
    [renderer.element.views :as element.v]
    [renderer.frame.events :as-alias frame.e]
    [renderer.ui :as ui]
-   [renderer.utils.dom :as dom]
    [renderer.utils.pointer :as pointer]
    [renderer.utils.wheel :as wheel]))
 
@@ -110,7 +109,7 @@
             [:> ContextMenu/Portal
              (into [:> ContextMenu/Content
                     {:class "menu-content context-menu-content"
-                     :on-close-auto-focus dom/prevent-default!
+                     :on-close-auto-focus #(.preventDefault %)
                      :style {:margin-left (str x "px")
                              :margin-top (str y "px")}}]
                    (map ui/context-menu-item element.v/context-menu))]]]))})))

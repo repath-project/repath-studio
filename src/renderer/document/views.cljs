@@ -10,7 +10,6 @@
    [renderer.history.subs :as-alias history.s]
    [renderer.history.views :as history.v]
    [renderer.ui :as ui]
-   [renderer.utils.dom :as dom]
    [renderer.utils.system :as system]))
 
 (defn actions
@@ -58,7 +57,7 @@
   [:button.close.small
    {:key id
     :title "Close document"
-    :on-pointer-down dom/stop-propagation!
+    :on-pointer-down #(.stopPropagation %)
     :on-pointer-up (fn [e]
                      (.stopPropagation e)
                      (rf/dispatch [::e/close id true]))}
@@ -102,7 +101,7 @@
                               nil)
           :draggable true
           :on-drag-start #(.setData (.-dataTransfer %) "id" (str id))
-          :on-drag-over dom/prevent-default!
+          :on-drag-over #(.preventDefault %)
           :on-drag-enter #(reset! dragged-over? true)
           :on-drag-leave #(reset! dragged-over? false)
           :on-drop (fn [evt]

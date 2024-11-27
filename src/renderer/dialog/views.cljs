@@ -12,7 +12,6 @@
    [renderer.document.subs :as-alias document.s]
    [renderer.menubar.views :as menubar]
    [renderer.ui :as ui]
-   [renderer.utils.dom :as dom]
    [renderer.utils.i18n :refer [t]]
    [renderer.utils.system :as system]))
 
@@ -89,7 +88,7 @@
   []
   [:> Command/Command
    {:label "Command Menu"
-    :on-key-down dom/stop-propagation!}
+    :on-key-down #(.stopPropagation %)}
    [:> Command/CommandInput
     {:class "p-3 bg-secondary text-sm border-b border-default"
      :placeholder (t [:cmdk/search-command "Search for a command"])}]
@@ -112,7 +111,7 @@
       [:> Dialog/Overlay {:class "backdrop"}]
       [:> Dialog/Content
        (merge {:class "dialog-content"
-               :on-key-down dom/stop-propagation!}
+               :on-key-down #(.stopPropagation %)}
               (:attrs (last dialogs)))
        (when-let [title (:title (last dialogs))]
          [:> Dialog/Title
