@@ -4,14 +4,11 @@
    [malli.transform :as mt]
    [renderer.element.db :refer [Element]]
    [renderer.history.db :refer [History]]
-   [renderer.menubar.filters :as filters]
+   [renderer.menubar.filters :refer [A11yFilter]]
    [renderer.utils.math :refer [Vec2D]]))
 
 (def ZoomFactor
   [:and number? [:>= 0.01] [:<= 100]])
-
-(def A11yFilter
-  (into [:enum] (map :id filters/accessibility)))
 
 (def Document
   [:map {:closed true}
@@ -44,4 +41,3 @@
 (def explain (m/explainer Document))
 
 (def default (m/decode Document {} mt/default-value-transformer))
-

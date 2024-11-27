@@ -154,12 +154,14 @@
   [property k]
   (when-let [v (get property k)]
     [:<>
-     [:h3.font-bold (-> k csk/->kebab-case-string (str/replace "-" " ") str/capitalize)]
+     [:h3.font-bold (if (= k :appliesto)
+                      "Applies to"
+                      (-> k csk/->kebab-case-string (str/replace "-" " ") str/capitalize))]
      [:p (cond->> v (vector? v) (str/join " | "))]]))
 
 (defn property-list
   [property]
-  (->> [:appliesto :computed :percentages :animatable :animationType :styleDeclaration :syntax]
+  (->> [:appliesto :computed :percentages :animatable :animationType :syntax]
        (map #(property-list-item property %))
        (into [:<>])))
 

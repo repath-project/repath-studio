@@ -22,7 +22,7 @@
 
 (rf/reg-global-interceptor
  (rf/->interceptor
-  :id ::auto-rebuild-tree
+  :id ::auto-update-tree
   :after (fn [context]
            (let [db (rf/get-effect context :db)]
              (if (:active-document db)
