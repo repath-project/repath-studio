@@ -35,7 +35,7 @@
 (defn ^:export fill
   "Fills the selected elements."
   [color]
-  (rf/dispatch [::element.e/fill color]))
+  (rf/dispatch [::element.e/set-attr :fill color]))
 
 (defn ^:export delete
   "Deletes the selected elements."

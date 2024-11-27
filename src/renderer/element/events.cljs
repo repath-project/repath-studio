@@ -78,12 +78,6 @@
  (fn [db [_ k v]]
    (h/set-attr db k v)))
 
-(rf/reg-event-fx
- ::fill
- (fn [db [_ color]]
-   (-> (h/set-attr db :fill color)
-       (history.h/finalize "Fill"))))
-
 (rf/reg-event-db
  ::delete
  (fn [db]
