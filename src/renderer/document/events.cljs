@@ -11,7 +11,6 @@
    [renderer.dialog.handlers :as dialog.h]
    [renderer.dialog.views :as dialog.v]
    [renderer.document.db :as db]
-   [renderer.document.effects :as-alias fx]
    [renderer.document.handlers :as h]
    [renderer.element.handlers :as element.h]
    [renderer.history.handlers :as history.h]
@@ -192,7 +191,13 @@
 (rf/reg-event-fx
  ::file-read
  (fn [_ [_ file]]
-   {::fx/read file}))
+   {::app.fx/file-read-as [file
+                           :text
+                           {"load" {:formatter #(-> (edn/read-string %)
+                                                    (assoc :title (.-name file)
+                                                           :path (.-path file)))
+                                    :on-fire [::load]}
+                            "error" {:on-fire [::notification.e/exception]}}]}))
 
 (rf/reg-event-fx
  ::open-directory

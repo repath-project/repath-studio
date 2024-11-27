@@ -352,9 +352,9 @@
    (rf/dispatch [::app.e/initialize-db])
    (rf/dispatch [::document.e/init])
    (let [selected (rf/subscribe [::s/selected])]
-     (rf/dispatch [::e/import {:svg "<svg x=\"100\" y=\"100\" width=\"200\" height=\"200\"></svg>"
-                               :label "filename.svg"
-                               :position [500 500]}])
+     (rf/dispatch [::e/import-svg {:svg "<svg x=\"100\" y=\"100\" width=\"200\" height=\"200\"></svg>"
+                                   :label "filename.svg"
+                                   :position [500 500]}])
      (is (= (-> @selected first :tag) :svg))
      (is (= (-> @selected first :label) "filename.svg"))
      (is (= (-> @selected first :attrs :x) "500"))

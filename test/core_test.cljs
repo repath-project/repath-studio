@@ -7,7 +7,6 @@
    [renderer.app.events :as app.e]
    [renderer.app.subs]
    [renderer.dialog.events]
-   [renderer.document.effects]
    [renderer.document.events]
    [renderer.document.subs]
    [renderer.element.effects]

@@ -3,10 +3,12 @@
   (:require
    [clojure.string :as str]
    [re-frame.core :as rf]
+   [renderer.app.effects :as-alias app.fx]
    [renderer.app.events :as app.e]
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.attribute.views :as v]
    [renderer.element.events :as-alias element.e]
+   [renderer.notification.events :as-alias notification.e]
    [renderer.tool.events :as-alias tool.e]
    [renderer.tool.handlers :as tool.h]
    [renderer.tool.subs :as-alias tool.s]
@@ -42,14 +44,7 @@
  ::success
  (fn [{:keys [db]} [_ file]]
    {:db (tool.h/activate db :transform)
-    ::update-href file}))
-
-(rf/reg-fx
- ::update-href
- (fn [^js/File file]
-   (let [reader (js/FileReader.)]
-     (.addEventListener
-      reader
-      "load"
-      #(rf/dispatch [::element.e/set-attr :href (.-result reader)]))
-     (.readAsDataURL reader file))))
+    ::app.fx/file-read-as [file
+                           :data-url
+                           {"load" {:on-fire [::element.e/set-attr :href]}
+                            "error" {:on-fire [::notification.e/exception]}}]}))

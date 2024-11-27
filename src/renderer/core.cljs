@@ -13,7 +13,6 @@
    [renderer.attribute.impl.core]
    [renderer.dialog.events]
    [renderer.dialog.subs]
-   [renderer.document.effects]
    [renderer.document.events :as document.e]
    [renderer.document.subs]
    [renderer.element.effects]

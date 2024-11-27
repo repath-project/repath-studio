@@ -29,5 +29,5 @@
  ::success
  (fn [{:keys [db]} [_ file]]
    {:db (tool.h/activate db :transform)
-    ::element.fx/add-image [file (or (:point (:nearest-neighbor db))
-                                     (:adjusted-pointer-pos db))]}))
+    ::element.fx/import-image [file (or (:point (:nearest-neighbor db))
+                                        (:adjusted-pointer-pos db))]}))

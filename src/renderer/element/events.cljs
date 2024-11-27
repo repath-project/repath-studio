@@ -3,6 +3,7 @@
    [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.app.effects :as-alias app.fx]
+   [renderer.document.events :as-alias document.e]
    [renderer.element.effects :as-alias fx]
    [renderer.element.handlers :as h]
    [renderer.history.handlers :as history.h]
@@ -263,7 +264,7 @@
        (history.h/finalize (str "Create " (name (:tag el)))))))
 
 (rf/reg-event-db
- ::import
+ ::import-svg
  (fn [db [_ data]]
    (-> (h/import-svg db data)
        (history.h/finalize "Import svg"))))
@@ -331,6 +332,23 @@
        (history.h/finalize "Trace image"))))
 
 (rf/reg-event-fx
- ::add-image
- (fn [_ [_ file position]]
-   {::fx/add-image [file position]}))
+ ::file-import-at
+ (fn [_ [_ position file]]
+   (when-let [file-type (.-type file)]
+     (cond
+       (= file-type "image/svg+xml")
+       {::app.fx/file-read-as [file
+                               :text
+                               {"load" {:formatter #(hash-map :svg %
+                                                              :label (.-name file)
+                                                              :position position)
+                                        :on-fire [::import-svg]}
+                                "error" {:on-fire [::notification.e/exception]}}]}
+
+       (contains? #{"image/jpeg" "image/png" "image/bmp" "image/gif"} file-type)
+       {::fx/import-image [file position]}
+
+       :else
+       (let [extension (last (str/split (.-name file) "."))]
+         (when (= extension "rps")
+           {:dispatch [::document.e/file-read file]}))))))

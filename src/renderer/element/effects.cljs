@@ -48,7 +48,7 @@
              :on-success [::e/traced]}])))))))
 
 (rf/reg-fx
- ::add-image
+ ::import-image
  (fn [[^js/File file [x y]]]
    (let [reader (js/FileReader.)]
      (.addEventListener

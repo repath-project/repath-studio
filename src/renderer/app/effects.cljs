@@ -103,6 +103,21 @@
        (legacy-file-open! success-cb)))))
 
 (rf/reg-fx
+ ::file-read-as
+ (fn [[^js/File file method events]]
+   (let [reader (js/FileReader.)]
+     (doseq
+      [[event {:keys [formatter on-fire]}] events]
+       (.addEventListener reader event
+                          #(rf/dispatch (conj on-fire
+                                              (cond-> (.-result reader)
+                                                formatter
+                                                formatter)))))
+     (case method
+       :data-url (.readAsDataURL reader file)
+       :text (.readAsText reader file)))))
+
+(rf/reg-fx
  ::download
  (fn [{:keys [data title]}]
    (let [blob (js/Blob. [data])
