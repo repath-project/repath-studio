@@ -156,7 +156,9 @@
     [:<>
      [:h3.font-bold (if (= k :appliesto)
                       "Applies to"
-                      (-> k csk/->kebab-case-string (str/replace "-" " ") str/capitalize))]
+                      (-> (csk/->kebab-case-string k)
+                          (str/replace "-" " ")
+                          (str/capitalize)))]
      [:p (cond->> v (vector? v) (str/join " | "))]]))
 
 (defn property-list

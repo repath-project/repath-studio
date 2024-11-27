@@ -14,7 +14,8 @@
                   (assoc-in [:data :action] (:action options)))}))
 
 (rf/reg-event-fx
- ::completed
- (fn [{:keys [db]} [_ id on-success response-data]]
-   {:db (update-in db [:worker :tasks] dissoc id)
-    :dispatch (conj on-success response-data)}))
+ ::message
+ (fn [{:keys [db]} [_ id event response-data]]
+   (cond-> {:db (update-in db [:worker :tasks] dissoc id)}
+     event
+     (assoc :dispatch (conj event response-data)))))
