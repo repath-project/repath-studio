@@ -19,7 +19,7 @@
    [renderer.tool.subs :as-alias s]
    [renderer.utils.bounds :as bounds :refer [Bounds]]
    [renderer.utils.element :as element]
-   [renderer.utils.math :refer [Vec2D]]
+   [renderer.utils.math :refer [Vec2]]
    [renderer.utils.overlay :as overlay]
    [renderer.utils.pointer :as pointer]))
 
@@ -154,7 +154,7 @@
     (not intersecting?)
     (assoc-in [:attrs :fill] "transparent")))
 
-(m/=> lock-ratio [:-> Vec2D ScaleHandle Vec2D])
+(m/=> lock-ratio [:-> Vec2 ScaleHandle Vec2])
 (defn lock-ratio
   [[x y] handle]
   (let [[x y] (condp contains? handle
@@ -164,7 +164,7 @@
         ratio (if (< (abs x) (abs y)) x y)]
     [ratio ratio]))
 
-(m/=> delta->offset-with-pivot-point [:-> ScaleHandle Vec2D Bounds [:tuple Vec2D Vec2D]])
+(m/=> delta->offset-with-pivot-point [:-> ScaleHandle Vec2 Bounds [:tuple Vec2 Vec2]])
 (defn delta->offset-with-pivot-point
   "Converts the x/y pointer offset to a scale ratio and a pivot point,
   to decouple this from the scaling method of the elements.
@@ -199,7 +199,7 @@
    [:in-place boolean?]
    [:recursive boolean?]])
 
-(m/=> scale [:-> App Vec2D ScaleOptions App])
+(m/=> scale [:-> App Vec2 ScaleOptions App])
 (defn scale
   [db offset options]
   (let [{:keys [ratio-locked in-place recursive]} options
@@ -230,7 +230,7 @@
     (selectable? (:clicked-element db))
     (element.h/toggle-selection (-> db :clicked-element :id) multiple)))
 
-(m/=> translate [:-> App Vec2D [:maybe Orientation] App])
+(m/=> translate [:-> App Vec2 [:maybe Orientation] App])
 (defn translate
   [db offset axis]
   (let [offset (case axis

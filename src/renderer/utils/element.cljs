@@ -13,7 +13,7 @@
    [renderer.utils.attribute :as attr]
    [renderer.utils.bounds :as utils.bounds :refer [Bounds]]
    [renderer.utils.map :as map]
-   [renderer.utils.math :refer [Vec2D]]))
+   [renderer.utils.math :refer [Vec2]]))
 
 (m/=> root? [:-> Element boolean?])
 (defn root?
@@ -47,14 +47,14 @@
     (when (seq el-bounds)
       (apply utils.bounds/union el-bounds))))
 
-(m/=> offset [:-> Element Vec2D])
+(m/=> offset [:-> Element Vec2])
 (defn offset
   [el]
   (let [el-bounds (:bounds el)
         local-bounds (element.hierarchy/bounds el)]
     (vec (take 2 (mat/sub el-bounds local-bounds)))))
 
-(m/=> snapping-points [:-> Element SnapOptions [:* Vec2D]])
+(m/=> snapping-points [:-> Element SnapOptions [:* Vec2]])
 (defn snapping-points
   [el options]
   (let [points (or (when (contains? options :nodes)
@@ -112,7 +112,7 @@
         (assoc-in [:attrs :d] new-d)
         (assoc-in [:attrs :fill] (:stroke attrs)))))
 
-(m/=> wrap-to-svg [:-> string? Vec2D string?])
+(m/=> wrap-to-svg [:-> string? Vec2 string?])
 (defn wrap-to-svg
   [s [w h]]
   (str "<svg width='" w "' height='" h "'>" s "</svg>"))

@@ -8,7 +8,7 @@
    [renderer.handle.db :refer [Handle]]
    [renderer.tool.events :as-alias tool.e]
    [renderer.utils.keyboard :refer [ModifierKey modifiers]]
-   [renderer.utils.math :refer [Vec2D]]))
+   [renderer.utils.math :refer [Vec2]]))
 
 (def PointerButton [:enum :left :middle :right :back :forward])
 
@@ -16,7 +16,7 @@
   [:map {:closed true}
    [:element [:maybe [:or Element Handle]]]
    [:target any?]
-   [:pointer-pos [:maybe Vec2D]]
+   [:pointer-pos [:maybe Vec2]]
    [:pressure [:maybe number?]]
    [:pointer-type [:enum "mouse" "pen" "touch"]]
    [:pointer-id number?]
@@ -51,7 +51,7 @@
   [e]
   (contains? (:modifiers e) :alt))
 
-(m/=> adjusted-position [:-> ZoomFactor Vec2D Vec2D Vec2D])
+(m/=> adjusted-position [:-> ZoomFactor Vec2 Vec2 Vec2])
 (defn adjusted-position
   [zoom pan pointer-pos]
   (-> pointer-pos
@@ -68,7 +68,7 @@
         3 :back
         4 :forward} button))
 
-(m/=> lock-direction [:-> Vec2D Vec2D])
+(m/=> lock-direction [:-> Vec2 Vec2])
 (defn lock-direction
   "Locks pointer movement to the axis with the biggest offset"
   [[x y]]

@@ -3,7 +3,7 @@
    [clojure.math :as math]
    [malli.core :as m]))
 
-(def Vec2D
+(def Vec2
   [:tuple number? number?])
 
 (m/=> clamp [:-> number? number? number? number?])
@@ -29,12 +29,10 @@
   [angle]
   (mod angle (* 2 Math/PI)))
 
-(m/=> angle [:-> Vec2D Vec2D number?])
+(m/=> angle [:-> Vec2 Vec2 number?])
 (defn angle
   "Calculates the angle between two points."
   [[x1 y1] [x2 y2]]
   (-> (Math/atan2 (- y2 y1) (- x2 x1))
       (normalize-angle)
       (math/to-degrees)))
-
-

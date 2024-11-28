@@ -4,13 +4,13 @@
    [re-frame.core :as rf]
    [renderer.tool.events :as-alias tool.e]
    [renderer.utils.keyboard :refer [ModifierKey modifiers]]
-   [renderer.utils.math :refer [Vec2D]]))
+   [renderer.utils.math :refer [Vec2]]))
 
 (def WheelEvent
   [:map {:closed true}
    [:target any?]
    [:type [:= "wheel"]]
-   [:pointer-pos [:maybe Vec2D]]
+   [:pointer-pos [:maybe Vec2]]
    [:delta-x [:maybe number?]]
    [:delta-y [:maybe number?]]
    [:delta-z [:maybe number?]]

@@ -16,7 +16,7 @@
    [renderer.tool.db :refer [Tool State Cursor]]
    [renderer.utils.bounds :refer [Bounds]]
    [renderer.utils.i18n :as i18n]
-   [renderer.utils.math :refer [Vec2D]]
+   [renderer.utils.math :refer [Vec2]]
    [renderer.window.db :refer [Window]]))
 
 (def Panels
@@ -30,11 +30,11 @@
   [:map {:closed true}
    [:tool {:default :transform} Tool]
    [:primary-tool {:optional true} Tool]
-   [:pointer-pos {:default [0 0]} Vec2D]
-   [:pointer-offset {:optional true} Vec2D]
-   [:adjusted-pointer-pos {:default [0 0]} Vec2D]
-   [:adjusted-pointer-offset {:optional true} Vec2D]
-   [:nearest-neighbor-offset {:optional true} [:maybe Vec2D]]
+   [:pointer-pos {:default [0 0]} Vec2]
+   [:pointer-offset {:optional true} Vec2]
+   [:adjusted-pointer-pos {:default [0 0]} Vec2]
+   [:adjusted-pointer-offset {:optional true} Vec2]
+   [:nearest-neighbor-offset {:optional true} [:maybe Vec2]]
    [:nearest-neighbor {:optional true} [:maybe NearestNeighbor]]
    [:nearest-neighbors {:optional true} [:sequential NearestNeighbor]]
    [:drag {:optional true} boolean?]
@@ -72,7 +72,7 @@
                        :repl-history {:visible false}} :persist true} Panels]
    [:version {:optional true :persist true} string?]
    [:fx {:default []} vector?]
-   [:pivot-point {:optional true} Vec2D]
+   [:pivot-point {:optional true} Vec2]
    [:clicked-element {:optional true} [:or Element Handle]]
    [:copied-bounds {:optional true} Bounds]
    [:copied-elements {:optional true} [:* Element]]

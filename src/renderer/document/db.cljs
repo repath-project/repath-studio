@@ -5,7 +5,7 @@
    [renderer.element.db :refer [Element]]
    [renderer.history.db :refer [History]]
    [renderer.menubar.filters :refer [A11yFilter]]
-   [renderer.utils.math :refer [Vec2D]]))
+   [renderer.utils.math :refer [Vec2]]))
 
 (def ZoomFactor
   [:and number? [:>= 0.01] [:<= 100]])
@@ -24,7 +24,7 @@
    [:rotate {:default 0} number?]
    [:history {:optional true} History]
    [:temp-element {:optional true} Element]
-   [:pan {:default [0 0]} Vec2D]
+   [:pan {:default [0 0]} Vec2]
    [:elements {:default {} :persist true} [:map-of uuid? Element]]
    [:focused {:optional true} boolean?]
    [:filter {:optional true} A11yFilter]

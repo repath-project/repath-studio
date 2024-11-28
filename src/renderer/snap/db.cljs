@@ -1,5 +1,5 @@
 (ns renderer.snap.db
-  (:require [renderer.utils.math :refer [Vec2D]]))
+  (:require [renderer.utils.math :refer [Vec2]]))
 
 (def snap-options
   [:centers :midpoints :corners :nodes #_:grid])
@@ -12,8 +12,8 @@
 
 (def NearestNeighbor
   [:map {:closed true}
-   [:point Vec2D]
-   [:base-point Vec2D]
+   [:point Vec2]
+   [:base-point Vec2]
    [:dist-squared number?]])
 
 (def Snap

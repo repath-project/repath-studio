@@ -16,9 +16,9 @@
    [renderer.utils.bounds :as bounds :refer [Bounds]]
    [renderer.utils.element :as element]
    [renderer.utils.hiccup :refer [Hiccup]]
-   [renderer.utils.math :as math :refer [Vec2D]]))
+   [renderer.utils.math :as math :refer [Vec2]]))
 
-(m/=> point-of-interest [:-> Vec2D Hiccup any?])
+(m/=> point-of-interest [:-> Vec2 Hiccup any?])
 (defn point-of-interest
   "Simple dot used for debugging purposes."
   [[x y] & children]
@@ -30,8 +30,8 @@
                     :r (/ 3 zoom)}] children)))
 
 (m/=> line [:function
-            [:-> Vec2D Vec2D any?]
-            [:-> Vec2D Vec2D boolean? any?]])
+            [:-> Vec2 Vec2 any?]
+            [:-> Vec2 Vec2 boolean? any?]])
 (defn line
   ([[x1 y1] [x2 y2]]
    [line [x1 y1] [x2 y2] true])
@@ -51,7 +51,7 @@
                     {:stroke theme.db/accent
                      :stroke-dasharray (when dashed? stroke-dasharray)})]])))
 
-(m/=> cross [:-> Vec2D any?])
+(m/=> cross [:-> Vec2 any?])
 (defn cross
   [[x y]]
   (let [zoom @(rf/subscribe [::document.s/zoom])
@@ -66,7 +66,7 @@
       [x (+ y (/ size 2))]
       false]]))
 
-(m/=> arc [:-> Vec2D number? number? number? any?])
+(m/=> arc [:-> Vec2 number? number? number? any?])
 (defn arc
   [[x y] radius start-degrees size-degrees]
   (let [zoom @(rf/subscribe [::document.s/zoom])
@@ -88,7 +88,7 @@
      [:path (merge {:stroke theme.db/accent
                     :stroke-dasharray stroke-dasharray} attrs)]]))
 
-(m/=> times [:-> Vec2D any?])
+(m/=> times [:-> Vec2 any?])
 (defn times
   [[x y]]
   (let [zoom @(rf/subscribe [::document.s/zoom])
@@ -105,8 +105,8 @@
       false]]))
 
 (m/=> label [:function
-             [:-> string? Vec2D any?]
-             [:-> string? Vec2D [:enum "start" "middle" "end"] any?]])
+             [:-> string? Vec2 any?]
+             [:-> string? Vec2 [:enum "start" "middle" "end"] any?]])
 (defn label
   ([text position]
    [label text position "middle"])

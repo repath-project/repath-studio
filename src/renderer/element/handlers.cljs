@@ -19,7 +19,7 @@
    [renderer.utils.extra :refer [partial-right]]
    [renderer.utils.hiccup :as hiccup]
    [renderer.utils.map :as map]
-   [renderer.utils.math :as math :refer [Vec2D]]
+   [renderer.utils.math :as math :refer [Vec2]]
    [renderer.utils.path :as path :refer [PathManipulation PathBooleanOperation]]
    [renderer.utils.vec :as vec]))
 
@@ -513,8 +513,8 @@
      (root db))))
 
 (m/=> translate [:function
-                 [:-> App Vec2D App]
-                 [:-> App uuid? Vec2D App]])
+                 [:-> App Vec2 App]
+                 [:-> App uuid? Vec2 App]])
 (defn translate
   "Moves elements by a given offset."
   ([db offset]
@@ -523,8 +523,8 @@
    (update-el db id hierarchy/translate offset)))
 
 (m/=> place [:function
-             [:-> App Vec2D App]
-             [:-> App uuid? Vec2D App]])
+             [:-> App Vec2 App]
+             [:-> App uuid? Vec2 App]])
 (defn place
   "Positions elements to a given global position."
   ([db position]
@@ -535,7 +535,7 @@
          offset (mat/sub position center)]
      (update-el db id hierarchy/translate offset))))
 
-(m/=> scale [:-> App Vec2D Vec2D boolean? App])
+(m/=> scale [:-> App Vec2 Vec2 boolean? App])
 (defn scale
   [db ratio pivot-point recursive]
   (let [ids-to-scale (cond-> (selected-ids db) recursive (set/union (descendant-ids db)))]
@@ -640,7 +640,7 @@
         child-els
         (add-children child-els)))))
 
-(m/=> create-default-canvas [:-> App [:maybe Vec2D] App])
+(m/=> create-default-canvas [:-> App [:maybe Vec2] App])
 (defn create-default-canvas
   [db size]
   (cond-> db
@@ -816,7 +816,7 @@
     (-> (add db svg)
         (collapse-all))))
 
-(m/=> snapping-points [:-> App [:maybe [:sequential Element]] [:vector Vec2D]])
+(m/=> snapping-points [:-> App [:maybe [:sequential Element]] [:vector Vec2]])
 (defn snapping-points
   [db els]
   (let [options (-> db :snap :options)]

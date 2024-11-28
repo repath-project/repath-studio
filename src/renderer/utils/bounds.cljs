@@ -3,7 +3,7 @@
    [clojure.core.matrix :as mat]
    [malli.core :as m]
    [renderer.snap.db :refer [SnapOptions]]
-   [renderer.utils.math :refer [Vec2D]]))
+   [renderer.utils.math :refer [Vec2]]))
 
 (def Bounds
   "Coordinates that define a bounding box."
@@ -37,13 +37,13 @@
   (vec (concat (apply map min (map #(take 2 %) bounds))
                (apply map max (map #(drop 2 %) bounds)))))
 
-(m/=> ->dimensions [:-> Bounds Vec2D])
+(m/=> ->dimensions [:-> Bounds Vec2])
 (defn ->dimensions
   "Converts bounds to [width height]"
   [[x1 y1 x2 y2]]
   (mat/sub [x2 y2] [x1 y1]))
 
-(m/=> center [:-> Bounds Vec2D])
+(m/=> center [:-> Bounds Vec2])
 (defn center
   "Calculates the center of bounds."
   [b]
@@ -68,7 +68,7 @@
        (< a-right b-right)
        (< a-bottom b-bottom)))
 
-(m/=> contained-point? [:-> Bounds Vec2D boolean?])
+(m/=> contained-point? [:-> Bounds Vec2 boolean?])
 (defn contained-point?
   "Tests whether the provided bounds contain a point."
   [[left top right bottom] [x y]]
@@ -77,7 +77,7 @@
        (>= right x)
        (>= bottom y)))
 
-(m/=> ->snapping-points [:-> Bounds SnapOptions [:* Vec2D]])
+(m/=> ->snapping-points [:-> Bounds SnapOptions [:* Vec2]])
 (defn ->snapping-points
   [bounds options]
   (let [[x1 y1 x2 y2] bounds

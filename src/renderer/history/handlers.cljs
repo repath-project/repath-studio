@@ -10,7 +10,7 @@
    [renderer.history.db :refer [History HistoryState]]
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
-   [renderer.utils.math :refer [Vec2D]]
+   [renderer.utils.math :refer [Vec2]]
    [renderer.utils.vec :as vec]))
 
 (m/=> path [:-> App [:* any?] vector?])
@@ -150,7 +150,7 @@
   [db, zoom]
   (assoc-in db (path db :zoom) zoom))
 
-(m/=> set-translate [:-> App Vec2D App])
+(m/=> set-translate [:-> App Vec2 App])
 (defn set-translate
   [db [x y]]
   (assoc-in db (path db :translate) [x y]))

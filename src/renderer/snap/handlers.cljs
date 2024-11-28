@@ -10,7 +10,7 @@
    [renderer.snap.db :refer [SnapOption NearestNeighbor]]
    [renderer.snap.subs :as-alias snap.s]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.math :refer [Vec2D]]))
+   [renderer.utils.math :refer [Vec2]]))
 
 (m/=> toggle-option [:-> App SnapOption App])
 (defn toggle-option
@@ -61,7 +61,7 @@
           (update-viewport-tree)))
     (dissoc db :kdtree :viewbox-kdtree)))
 
-(m/=> update-tree [:-> App ifn? [:vector Vec2D] App])
+(m/=> update-tree [:-> App ifn? [:vector Vec2] App])
 (defn update-tree
   [db f points]
   (if (:kdtree db)
@@ -85,7 +85,7 @@
         points (element.h/snapping-points db elements)]
     (update-tree db kdtree/delete points)))
 
-(m/=> nearest-delta [:-> App Vec2D])
+(m/=> nearest-delta [:-> App Vec2])
 (defn nearest-delta
   [db]
   (if (:nearest-neighbor db)

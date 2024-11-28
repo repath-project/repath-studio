@@ -19,7 +19,7 @@
    [renderer.notification.views :as notification.v]
    [renderer.snap.handlers :as snap.h]
    [renderer.utils.compatibility :as compatibility]
-   [renderer.utils.math :refer [Vec2D]]
+   [renderer.utils.math :refer [Vec2]]
    [renderer.utils.system :as system]
    [renderer.utils.vec :as vec]
    [renderer.window.effects :as-alias window.fx]))
@@ -142,7 +142,7 @@
 
 (m/=> create [:function
               [:-> map? uuid? App]
-              [:-> map? uuid? [:maybe Vec2D] App]])
+              [:-> map? uuid? [:maybe Vec2] App]])
 (defn create
   ([db guid]
    (create db guid [595 842]))

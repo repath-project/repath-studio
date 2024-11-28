@@ -8,12 +8,12 @@
    [renderer.frame.db :refer [DomRect Viewbox FocusType]]
    [renderer.utils.bounds :as utils.bounds :refer [Bounds]]
    [renderer.utils.element :as element]
-   [renderer.utils.math :as math :refer [Vec2D]]
+   [renderer.utils.math :as math :refer [Vec2]]
    [renderer.utils.pointer :as pointer]))
 
 (m/=> viewbox [:function
                [:-> App [:maybe Viewbox]]
-               [:-> ZoomFactor Vec2D DomRect Viewbox]])
+               [:-> ZoomFactor Vec2 DomRect Viewbox]])
 (defn viewbox
   ([db]
    (let [zoom (get-in db [:documents (:active-document db) :zoom])
@@ -27,8 +27,8 @@
      [x y width height])))
 
 (m/=> pan-by [:function
-              [:-> App Vec2D App]
-              [:-> App Vec2D uuid? App]])
+              [:-> App Vec2 App]
+              [:-> App Vec2 uuid? App]])
 (defn pan-by
   ([db offset]
    (pan-by db offset (:active-document db)))
@@ -46,7 +46,7 @@
       (->> (:document-tabs db)
            (reduce #(pan-by %1 (mat/div [(:width offset) (:height offset)] 2) %2) db)))))
 
-(m/=> zoom-in-place [:-> App number? Vec2D App])
+(m/=> zoom-in-place [:-> App number? Vec2 App])
 (defn zoom-in-place
   [db factor pos]
   (let [active-document (:active-document db)
@@ -61,7 +61,7 @@
         (assoc-in [:documents active-document :zoom] updated-zoom)
         (assoc-in [:documents active-document :pan] updated-pan))))
 
-(m/=> adjusted-pointer-pos [:-> App Vec2D Vec2D])
+(m/=> adjusted-pointer-pos [:-> App Vec2 Vec2])
 (defn adjusted-pointer-pos
   [db pos]
   (let [{:keys [zoom pan]} (get-in db [:documents (:active-document db)])]

@@ -15,7 +15,7 @@
    [renderer.tool.hierarchy :as hierarchy]
    [renderer.utils.element :as element]
    [renderer.utils.keyboard :refer [KeyboardEvent]]
-   [renderer.utils.math :as math :refer [Vec2D]]
+   [renderer.utils.math :as math :refer [Vec2]]
    [renderer.utils.pointer :as pointer :refer [PointerEvent]]
    [renderer.utils.wheel :refer [WheelEvent]]))
 
@@ -46,12 +46,12 @@
       (snap.h/rebuild-tree)
       (hierarchy/on-activate)))
 
-(m/=> pointer-delta [:-> App Vec2D])
+(m/=> pointer-delta [:-> App Vec2])
 (defn pointer-delta
   [db]
   (mat/sub (:adjusted-pointer-pos db) (:adjusted-pointer-offset db)))
 
-(m/=> significant-drag? [:-> Vec2D Vec2D number? boolean?])
+(m/=> significant-drag? [:-> Vec2 Vec2 number? boolean?])
 (defn significant-drag?
   [position offset threshold]
   (> (apply max (map abs (mat/sub position offset)))
@@ -98,7 +98,7 @@
 
       :else 0)))
 
-(m/=> pan-out-of-canvas [:-> App DomRect Vec2D Vec2D App])
+(m/=> pan-out-of-canvas [:-> App DomRect Vec2 Vec2 App])
 (defn pan-out-of-canvas
   [db dom-rect pointer-pos pointer-offset]
   (let [[x y] pointer-pos
