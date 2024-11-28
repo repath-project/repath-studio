@@ -25,7 +25,8 @@
  ::persist
  (fn [db]
    (let [db (cond-> db (:active-document db) history.h/drop-rest)]
-     (rf.storage/->store config/app-key (select-keys db db/persistent-keys)))))
+     (->> (select-keys db db/persistent-keys)
+          (rf.storage/->store config/app-key)))))
 
 (rf/reg-fx
  ::local-storage-clear

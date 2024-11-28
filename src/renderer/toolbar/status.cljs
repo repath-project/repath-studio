@@ -167,7 +167,7 @@
         :style {:width "21px" :background "transparent"}
         :on-click #(rf/dispatch [::document.e/swap-colors])}
        [ui/icon "swap-horizontal"]]
-           ;; REVIEW: Can we replace alignOffset with collisionBoundary?
+      ;; REVIEW: Can we replace alignOffset with collisionBoundary?
       [ui/color-picker
        {:color stroke
         :on-change-complete #(rf/dispatch [::element.e/set-attr :stroke (get-hex %)])

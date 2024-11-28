@@ -23,7 +23,8 @@
   [:map-of keyword? [:map [:visible boolean?]]])
 
 (def Lang
-  [:fn {:error/fn (fn [{:keys [value]} _] (str value " is not a supported language"))}
+  [:fn {:error/fn (fn [{:keys [value]} _]
+                    (str value " is not a supported language"))}
    i18n/lang?])
 
 (def App
