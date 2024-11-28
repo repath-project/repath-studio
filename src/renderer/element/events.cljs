@@ -326,8 +326,8 @@
        (history.h/finalize "Trace image"))))
 
 (rf/reg-event-fx
- ::file-import-at
- (fn [_ [_ position file]]
+ ::import-file
+ (fn [_ [_ file position]]
    (when-let [file-type (.-type file)]
      (cond
        (= file-type "image/svg+xml")

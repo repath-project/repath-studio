@@ -84,10 +84,10 @@
       (fn []
         (let [root-el @(rf/subscribe [::element.s/root])
               {:keys [x y]} @(rf/subscribe [::app.s/dom-rect])
-             ;; This is a different browsing context inside an iframe.
-             ;; We need to simulate the events to the parent window.
+              ;; This is a different browsing context inside an iframe.
+              ;; We need to simulate the events to the parent window.
               on-keyboard-event (fn [e]
-                                 ;; TODO: use re-pressed :prevent-default-keys
+                                  ;; TODO: use re-pressed :prevent-default-keys
                                   (.preventDefault e)
                                   (.dispatchEvent js/window.parent.document
                                                   (js/KeyboardEvent. (.-type e)

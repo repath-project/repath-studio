@@ -27,4 +27,4 @@
                                                                     :y y}}])))))
 
    (doseq [file (.-files data-transfer)]
-     (rf/dispatch [::element.e/file-import-at position file]))))
+     (rf/dispatch [::element.e/import-file file position]))))
