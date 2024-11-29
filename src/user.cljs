@@ -1,6 +1,5 @@
 (ns user
   (:require
-   [ajax.core]
    [clojure.math]
    [clojure.string :as str]
    [config :as config]
@@ -318,31 +317,26 @@
 
 (def ^:export version config/version)
 
-#_{:clj-kondo/ignore [:unresolved-var]}
 (comment
   (dotimes [x 25]
     (circle [(+ (* x 30) 40) (+ (* (js/Math.sin x) 10) 200)]
             10
             {:fill (str "hsl(" (* x 10) " ,50% , 50%)")}))
 
-  (ajax.core/GET
-    "https://api.thecatapi.com/v1/images/search"
-    {:response-format (ajax.core/json-response-format {:keywords? true})
-     :handler (fn [response]
-                (let [{:keys [width height url]} (first response)]
-                  (image 0 0 [width height] url)))})
+  (defn ^:export kitty [[x y] width height]
+    (-> (js/fetch "https://api.thecatapi.com/v1/images/search" #js{:method "GET"})
+        (.then (fn [response]
+                 (-> (.json response)
+                     (.then (fn [body]
+                              (let [body (js->clj body :keywordize-keys true)]
+                                (image [x y]
+                                       width
+                                       height
+                                       (:url (first body))
+                                       {:preserveAspectRatio "xMidYMid slice"})))))))))
 
-  (defn kitty [x y width height]
-    (ajax.core/GET
-      "https://api.thecatapi.com/v1/images/search"
-      {:response-format (ajax.core/json-response-format {:keywords? true})
-       :handler (fn [response]
-                  (image [x y]
-                         width
-                         height
-                         (:url (first response))
-                         {:preserveAspectRatio "xMidYMid slice"}))}))
+  (dotimes [x 5]
+    (dotimes [y 5]
+      (kitty [(* x 100) (* y 100)] 100 100)))
 
-  (dotimes [x 8]
-    (dotimes [y 6]
-      (kitty (* x 100) (* y 100) 100 100))))
+  #())
