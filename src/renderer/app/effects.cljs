@@ -24,7 +24,9 @@
 (rf/reg-fx
  ::persist
  (fn [db]
-   (let [db (cond-> db (:active-document db) history.h/drop-rest)]
+   (let [db (cond-> db
+              (:active-document db)
+              history.h/drop-rest)]
      (->> (select-keys db db/persistent-keys)
           (rf.storage/->store config/app-key)))))
 
@@ -46,8 +48,8 @@
                     (when (.supports js/ClipboardItem data-type)
                       (aset blob-array data-type (js/Blob. (array data) #js {:type data-type}))))
                   blob-array))))
-       (.then (fn [] (when on-success (rf/dispatch on-success))))
-       (.catch (fn [error] (when on-error (rf/dispatch (conj on-error error))))))))
+       (.then #(when on-success (rf/dispatch on-success)))
+       (.catch #(when on-error (rf/dispatch (conj on-error %)))))))
 
 (rf/reg-fx
  ::focus
@@ -156,5 +158,5 @@
  (fn [{:keys [on-success on-error]}]
    (-> (js/EyeDropper.)
        (.open)
-       (.then (fn [color] (when on-success (rf/dispatch (conj on-success color)))))
-       (.catch (fn [error] (when on-error (rf/dispatch (conj on-error error))))))))
+       (.then #(when on-success (rf/dispatch (conj on-success %))))
+       (.catch #(when on-error (rf/dispatch (conj on-error %)))))))
