@@ -83,13 +83,14 @@
 (defn form-input
   [k v {:keys [disabled placeholder] :as attrs}]
   [:div.relative.flex.form-input.flex-1
-   [:input (merge attrs
-                  {:key v
-                   :id (name k)
-                   :default-value v
-                   :placeholder (if v placeholder "multiple")
-                   :on-blur #(on-change-handler! % k v)
-                   :on-key-down #(keyb/input-key-down-handler! % v on-change-handler! k v)})]
+   [:input
+    (merge attrs
+           {:key v
+            :id (name k)
+            :default-value v
+            :placeholder (if v placeholder "multiple")
+            :on-blur #(on-change-handler! % k v)
+            :on-key-down #(keyb/input-key-down-handler! % v on-change-handler! k v)})]
    (when-not (or (empty? (str v)) disabled)
      [:button.button.bg-primary.text-muted.absolute.h-full.right-0.clear-input-button.hover:bg-transparent.invisible.p-1
       {:on-pointer-down #(rf/dispatch [::element.e/remove-attr k])}
@@ -110,10 +111,11 @@
                                 (when (= (.-target e) (.-activeElement js/document))
                                   (rf/dispatch [::e/update-and-focus k (if (pos? (.-deltaY e)) - +) step])))}]
    [:div.px-1.w-full.bg-primary
-    [ui/slider (merge attrs
-                      {:value [(if (= "" v) placeholder v)]
-                       :on-value-change (fn [[v]] (rf/dispatch [::element.e/preview-attr k v]))
-                       :on-value-commit (fn [[v]] (rf/dispatch [::element.e/set-attr k v]))})]]])
+    [ui/slider
+     (merge attrs
+            {:value [(if (= "" v) placeholder v)]
+             :on-value-change (fn [[v]] (rf/dispatch [::element.e/preview-attr k v]))
+             :on-value-commit (fn [[v]] (rf/dispatch [::element.e/set-attr k v]))})]]])
 
 (defn select-input
   [k v {:keys [disabled items default-value] :as attrs}]

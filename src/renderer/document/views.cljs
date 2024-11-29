@@ -127,8 +127,9 @@
     [:div.flex.drag.justify-between
      [:div.flex.flex-1.gap-px.overflow-hidden
       (for [document-id tabs]
-        ^{:key (str document-id)}
-        [tab document-id (:title (get documents document-id)) (= document-id active-id)])]
+        (let [title (:title (get documents document-id))
+              is-active (= document-id active-id)]
+          ^{:key (str document-id)} [tab document-id title is-active]))]
      [:div.toolbar
       [:> DropdownMenu/Root
        [:> DropdownMenu/Trigger

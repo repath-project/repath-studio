@@ -12,10 +12,8 @@
      [:> Tooltip/Trigger
       {:as-child true}
       [:span.shadow-4
-       [ui/icon-button
-        icon
-        {:disabled disabled
-         :on-click #(rf/dispatch action)}]]]
+       [ui/icon-button icon {:disabled disabled
+                             :on-click #(rf/dispatch action)}]]]
      [:> Tooltip/Portal
       [:> Tooltip/Content
        {:class "tooltip-content"

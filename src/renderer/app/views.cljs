@@ -209,7 +209,8 @@
          [:span "or"]
 
          [:> Select/Root
-          {:onValueChange #(rf/dispatch [::document.e/new-from-template (get paper-size %)])}
+          {:onValueChange #(rf/dispatch [::document.e/new-from-template
+                                         (get paper-size %)])}
           [:> Select/Trigger
            {:class "button px-2 overlay rounded"
             :aria-label "Select size"}
