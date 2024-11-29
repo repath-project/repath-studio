@@ -22,10 +22,11 @@
 (defmethod hierarchy/form-element [:default :href]
   [_ k v {:keys [disabled]}]
   (let [state-default? (= @(rf/subscribe [::tool.s/state]) :idle)
-        data-url? (str/starts-with? v "data:")]
+        data-url? (and v (str/starts-with? v "data:"))]
     [:div.flex.gap-px.w-full
      [v/form-input k (if data-url? "data-url" v)
-      {:disabled (or disabled
+      {:placeholder (when-not v "multiple")
+       :disabled (or disabled
                      data-url?
                      (not v)
                      (not state-default?))}]
