@@ -18,9 +18,8 @@
    [renderer.utils.hiccup :refer [Hiccup]]
    [renderer.utils.math :as math :refer [Vec2]]))
 
-(m/=> point-of-interest [:-> Vec2 Hiccup any?])
-(defn point-of-interest
-  "Simple dot used for debugging purposes."
+(m/=> dot [:-> Vec2 Hiccup any?])
+(defn dot
   [[x y] & children]
   (let [zoom @(rf/subscribe [::document.s/zoom])]
     (into [:circle {:cx x
@@ -144,7 +143,7 @@
   (let [zoom @(rf/subscribe [::document.s/zoom])
         [x1 y1 _x2 _y2] bounds
         [width height] (bounds/->dimensions bounds)
-        stroke-width (/ 2 zoom)
+        stroke-width (/ 1 zoom)
         stroke-dasharray (/ theme.db/dash-size zoom)
         attrs {:x x1
                :y y1
@@ -184,5 +183,5 @@
   (when-let [pos (element.hierarchy/centroid el)]
     (let [offset (element/offset el)
           pos (mat/add offset pos)]
-      [point-of-interest pos
+      [dot pos
        [:title "Centroid"]])))
