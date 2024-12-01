@@ -138,17 +138,6 @@
               :font-family theme.db/font-mono
               :font-size font-size} text]])))
 
-(m/=> size-label [:-> Bounds any?])
-(defn size-label
-  [bounds]
-  (let [zoom @(rf/subscribe [::document.s/zoom])
-        [x1 _ x2 y2] bounds
-        x (+ x1 (/ (- x2 x1) 2))
-        y (+ y2 (/ (+ (/ theme.db/handle-size 2) 15) zoom))
-        [width height] (bounds/->dimensions bounds)
-        text (str (.toFixed width 2) " x " (.toFixed height 2))]
-    [label text [x y]]))
-
 (m/=> bounding-box [:-> Bounds boolean? any?])
 (defn bounding-box
   [bounds dashed?]
@@ -197,14 +186,3 @@
           pos (mat/add offset pos)]
       [point-of-interest pos
        [:title "Centroid"]])))
-
-(m/=> area-label [:-> number? Bounds any?])
-(defn area-label
-  [area bounds]
-  (when area
-    (let [zoom @(rf/subscribe [::document.s/zoom])
-          [x1 y1 x2 _y2] bounds
-          x (+ x1 (/ (- x2 x1) 2))
-          y (+ y1 (/ (- -15 (/ theme.db/handle-size 2)) zoom))
-          text (str (.toFixed area 2) " px²")]
-      [label text [x y]])))

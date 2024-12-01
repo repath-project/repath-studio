@@ -6,7 +6,7 @@
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
    [renderer.element.hierarchy :as hierarchy]
-   [renderer.handle.views :as handle.v]
+   [renderer.tool.views :as tool.v]
    [renderer.utils.element :as element]
    [renderer.utils.length :as length]))
 
@@ -53,12 +53,12 @@
         segments (-> el :attrs :d svgpath .-segments)
         square-handle (fn [i [x y]]
                         ^{:key i}
-                        [handle.v/square {:id (keyword (str i))
-                                          :x x
-                                          :y y
-                                          :type :handle
-                                          :action :edit
-                                          :element (:id el)}])]
+                        [tool.v/square-handle {:id (keyword (str i))
+                                               :x x
+                                               :y y
+                                               :type :handle
+                                               :action :edit
+                                               :element (:id el)}])]
     [:g {:key ::edit-handles}
      (map-indexed (fn [i segment]
                     (case (-> segment first str/lower-case)

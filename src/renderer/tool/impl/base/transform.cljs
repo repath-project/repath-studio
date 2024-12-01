@@ -5,18 +5,20 @@
    [re-frame.core :as rf]
    [renderer.app.db :refer [App]]
    [renderer.app.effects :as-alias app.fx]
+   [renderer.document.subs :as-alias document.s]
    [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.h]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.s]
-   [renderer.handle.db :refer [Handle]]
-   [renderer.handle.views :as handle.v]
    [renderer.history.handlers :as history.h]
    [renderer.ruler.db :refer [Orientation]]
    [renderer.snap.handlers :as snap.h]
+   [renderer.theme.db :as theme.db]
+   [renderer.tool.db :refer [Handle]]
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]
    [renderer.tool.subs :as-alias s]
+   [renderer.tool.views :as tool.v]
    [renderer.utils.bounds :as bounds :refer [Bounds]]
    [renderer.utils.element :as element]
    [renderer.utils.math :refer [Vec2]]
@@ -368,6 +370,28 @@
         non-selected (select-keys (element.h/entities db) (vec non-selected-ids))]
     (filter :visible (vals non-selected))))
 
+(m/=> size-label [:-> Bounds any?])
+(defn size-label
+  [bounds]
+  (let [zoom @(rf/subscribe [::document.s/zoom])
+        [x1 _ x2 y2] bounds
+        x (+ x1 (/ (- x2 x1) 2))
+        y (+ y2 (/ (+ (/ theme.db/handle-size 2) 15) zoom))
+        [width height] (bounds/->dimensions bounds)
+        text (str (.toFixed width 2) " x " (.toFixed height 2))]
+    [overlay/label text [x y]]))
+
+(m/=> area-label [:-> number? Bounds any?])
+(defn area-label
+  [area bounds]
+  (when area
+    (let [zoom @(rf/subscribe [::document.s/zoom])
+          [x1 y1 x2 _y2] bounds
+          x (+ x1 (/ (- x2 x1) 2))
+          y (+ y1 (/ (- -15 (/ theme.db/handle-size 2)) zoom))
+          text (str (.toFixed area 2) " px²")]
+      [overlay/label text [x y]])))
+
 (defmethod hierarchy/render :transform
   []
   (let [state @(rf/subscribe [::s/state])
@@ -388,14 +412,14 @@
          [overlay/bounding-box (:bounds el) true]))
 
      (when (and (pos? elements-area) (= state :scale) (seq bounds))
-       [overlay/area-label elements-area bounds])
+       [area-label elements-area bounds])
 
      (when (seq bounds)
        [:<>
-        [handle.v/wrapping-bounding-box bounds]
+        [tool.v/wrapping-bounding-box bounds]
         (case state
-          :scale [overlay/size-label bounds]
-          :idle [handle.v/bounding-corners bounds]
+          :scale [size-label bounds]
+          :idle [tool.v/bounding-corners bounds]
           nil)])
 
      (when pivot-point

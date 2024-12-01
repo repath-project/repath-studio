@@ -5,7 +5,7 @@
    [re-frame.core :as rf]
    [renderer.document.db :refer [ZoomFactor]]
    [renderer.element.db :refer [Element]]
-   [renderer.handle.db :refer [Handle]]
+   [renderer.tool.db :refer [Handle]]
    [renderer.tool.events :as-alias tool.e]
    [renderer.utils.keyboard :refer [ModifierKey modifiers]]
    [renderer.utils.math :refer [Vec2]]))

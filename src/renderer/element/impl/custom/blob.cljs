@@ -11,7 +11,7 @@
    [renderer.element.events :as-alias element.e]
    [renderer.element.hierarchy :as hierarchy]
    [renderer.element.subs :as-alias element.s]
-   [renderer.handle.views :as handle.v]
+   [renderer.tool.views :as tool.v]
    [renderer.ui :as ui]
    [renderer.utils.element :as element]
    [renderer.utils.length :as length]
@@ -159,7 +159,7 @@
         [x2 y2] (mat/add [x1 y1] size)]
     [:<>
      [overlay/line [x1 y1] [x2 y2]]
-     [handle.v/square
+     [tool.v/square-handle
       {:type :handle
        :cursor "move"
        :action :edit

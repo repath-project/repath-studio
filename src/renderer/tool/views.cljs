@@ -1,4 +1,4 @@
-(ns renderer.handle.views
+(ns renderer.tool.views
   (:require
    [clojure.core.matrix :as mat]
    [malli.core :as m]
@@ -11,7 +11,7 @@
    [renderer.utils.bounds :as bounds :refer [Bounds]]
    [renderer.utils.pointer :as pointer]))
 
-#_(defn circle
+#_(defn circle-handle
     [el & children]
     (let [{:keys [x y id]} el
           zoom @(rf/subscribe [::document.s/zoom])
@@ -31,7 +31,7 @@
                       :on-pointer-down pointer-handler
                       :on-pointer-move pointer-handler}] children)))
 
-(defn square
+(defn square-handle
   [el & children]
   (let [{:keys [x y id cursor element]} el
         zoom @(rf/subscribe [::document.s/zoom])
@@ -53,11 +53,11 @@
                   :on-pointer-down pointer-handler
                   :on-pointer-move pointer-handler}] children)))
 
-(defn scale
+(defn scale-handle
   [props]
   ^{:key (:id props)}
-  [square (merge props {:type :handle
-                        :action :scale})])
+  [square-handle (merge props {:type :handle
+                               :action :scale})])
 
 (defn wrapping-bounding-box
   [bounds]
@@ -103,7 +103,7 @@
         [x1 y1 x2 y2] bounds
         [w h] (bounds/->dimensions bounds)]
     [:g {:key :bounding-corners}
-     (map scale
+     (map scale-handle
           [{:x x1 :y y1 :id :top-left :cursor "nwse-resize"}
            {:x x2 :y y1 :id :top-right :cursor "nesw-resize"}
            {:x x1 :y y2 :id :bottom-left :cursor "nesw-resize"}

@@ -9,7 +9,7 @@
    [renderer.attribute.impl.range :as attr.range]
    [renderer.attribute.views :as attr.v]
    [renderer.element.hierarchy :as hierarchy]
-   [renderer.handle.views :as handle.v]
+   [renderer.tool.views :as tool.v]
    [renderer.utils.attribute :as attr]
    [renderer.utils.element :as element]
    [renderer.utils.length :as length]
@@ -175,10 +175,10 @@
                      (let [[x y] (mapv length/unit->px [x y])
                            [x y] (mat/add (element/offset el) [x y])]
                        ^{:key index}
-                       [handle.v/square {:id (keyword (str index))
-                                         :x x
-                                         :y y
-                                         :type :handle
-                                         :action :edit
-                                         :element (:id el)}]))
+                       [tool.v/square-handle {:id (keyword (str index))
+                                              :x x
+                                              :y y
+                                              :type :handle
+                                              :action :edit
+                                              :element (:id el)}]))
                    (-> el :attrs :points points->vec))])

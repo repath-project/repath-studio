@@ -5,7 +5,7 @@
    [clojure.string :as str]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.hierarchy :as hierarchy]
-   [renderer.handle.views :as handle.v]
+   [renderer.tool.views :as tool.v]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
    [renderer.utils.length :as length]
@@ -74,7 +74,7 @@
      [overlay/label (str (.toFixed ry 2)) [cx (- cy (/ ry 2))]]
      (map (fn [handle]
             ^{:key (:id handle)}
-            [handle.v/square
+            [tool.v/square-handle
              (merge handle {:type :handle
                             :action :edit
                             :cursor "move"

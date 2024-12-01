@@ -4,7 +4,7 @@
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
    [renderer.element.hierarchy :as hierarchy]
-   [renderer.handle.views :as handle.v]
+   [renderer.tool.views :as tool.v]
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
    [renderer.utils.length :as length]))
@@ -56,7 +56,7 @@
      {:key ::edit-handles}
      (map (fn [handle]
             ^{:key (:id handle)}
-            [handle.v/square handle
+            [tool.v/square-handle handle
              [:title {:key (str (:id handle) "-title")} (name (:id handle))]])
           [{:x x1
             :y y1
