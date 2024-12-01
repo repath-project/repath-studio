@@ -25,7 +25,7 @@
    (rf/dispatch [::e/init])
 
    (testing "close"
-     (rf/dispatch [::e/close (:id @(rf/subscribe [::s/active]) false)])
+     (rf/dispatch [::e/close @(rf/subscribe [::s/active-id]) false])
      (is (not @(rf/subscribe [::s/active]))))
 
    (testing "close active"
@@ -34,7 +34,7 @@
      (rf/dispatch [::e/close-active])
      (is (not @(rf/subscribe [::s/active]))))
 
-   (testing "close all saved"
+   (testing "close saved"
      (rf/dispatch [::e/new])
      (rf/dispatch [::e/new])
      (rf/dispatch [::e/saved @(rf/subscribe [::s/active])])

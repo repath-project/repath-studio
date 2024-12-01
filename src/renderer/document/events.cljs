@@ -257,14 +257,14 @@
      (if system/electron?
        {::window.fx/ipc-invoke {:channel "save-document"
                                 :data (pr-str document)
-                                :on-success [::close-saved]
+                                :on-success [::mark-as-saved-and-close]
                                 :on-error [::notification.e/exception]
                                 :formatter edn/read-string}}
        {::app.fx/file-save {:data (h/save-format document)
                             :options file-picker-options
                             :formatter (fn [file] {:id id
                                                    :title (.-name file)})
-                            :on-success [::close-saved]
+                            :on-success [::mark-as-saved-and-close]
                             :on-error [::notification.e/exception]}}))))
 
 (rf/reg-event-fx
@@ -300,7 +300,7 @@
      db)))
 
 (rf/reg-event-fx
- ::close-saved
+ ::mark-as-saved-and-close
  (fn [_ [_ document-info]]
    {:dispatch-n [[::saved document-info]
                  [::close (:id document-info) false]]}))
