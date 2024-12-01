@@ -50,12 +50,7 @@
                    :overflow "hidden"
                    :user-select "none"
                    :touch-action "none"
-                   :margin 0
-                   :font-family "-apple-system, BlinkMacSystemFont,
-                                'Segoe UI (Custom)', 'Roboto',
-                                'Helvetica Neue', 'Open Sans (Custom)',
-                                system-ui, sans-serif, 'Apple Color Emoji',
-                                'Segoe UI Emoji'"}}]])
+                   :margin 0}}]])
 
 (def resize-observer
   (js/ResizeObserver.
