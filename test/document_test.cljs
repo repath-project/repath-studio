@@ -11,11 +11,11 @@
 (deftest init
   (rf-test/run-test-sync
    (rf/dispatch [::app.e/initialize-db])
-   (is (not @(rf/subscribe [::s/some])))
+   (is (not @(rf/subscribe [::s/entities?])))
    (is (not @(rf/subscribe [::s/active])))
 
    (rf/dispatch [::e/init])
-   (is @(rf/subscribe [::s/some]))
+   (is @(rf/subscribe [::s/entities?]))
    (is (db/valid? @(rf/subscribe [::s/active])))
    (is (= "• Untitled-1 - Repath Studio" @(rf/subscribe [::s/title-bar])))))
 
@@ -38,7 +38,7 @@
      (rf/dispatch [::e/new])
      (rf/dispatch [::e/new])
      (rf/dispatch [::e/saved @(rf/subscribe [::s/active])])
-     (rf/dispatch [::e/close-all-saved])
+     (rf/dispatch [::e/close-saved])
      (is (= (count @(rf/subscribe [::s/entities])) 1)))
 
    (testing "close all"
@@ -149,7 +149,7 @@
    (rf/dispatch [::app.e/initialize-db])
    (rf/dispatch [::e/init])
 
-   (let [saved (rf/subscribe [::s/active-saved])
+   (let [saved (rf/subscribe [::s/active-saved?])
          document (rf/subscribe [::s/active])
          id (:id @document)]
      (testing "default state"
@@ -158,7 +158,7 @@
      (testing "save"
        (rf/dispatch [::e/saved @document])
        (is @saved)
-       (is @(rf/subscribe [::s/saved id]))))))
+       (is @(rf/subscribe [::s/saved? id]))))))
 
 (deftest load
   (rf-test/run-test-sync
@@ -168,7 +168,7 @@
                            :title "document.rps"
                            :elements {}}])
 
-   (is @(rf/subscribe [::s/active-saved]))
+   (is @(rf/subscribe [::s/active-saved?]))
    (is (= "foo/bar/document.rps - Repath Studio" @(rf/subscribe [::s/title-bar])))))
 
 (deftest load-multiple

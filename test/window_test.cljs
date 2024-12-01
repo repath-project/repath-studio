@@ -11,16 +11,16 @@
   (rf-test/run-test-sync
    (rf/dispatch [::app.e/initialize-db])
    (rf/dispatch [::e/set-maximized false])
-   (is (not @(rf/subscribe [::s/maximized])))
+   (is (not @(rf/subscribe [::s/maximized?])))
 
    (rf/dispatch [::e/set-maximized true])
-   (is @(rf/subscribe [::s/maximized]))))
+   (is @(rf/subscribe [::s/maximized?]))))
 
 (deftest fullscreen
   (rf-test/run-test-sync
    (rf/dispatch [::app.e/initialize-db])
    (rf/dispatch [::e/set-fullscreen false])
-   (is (not @(rf/subscribe [::s/fullscreen])))
+   (is (not @(rf/subscribe [::s/fullscreen?])))
 
    (rf/dispatch [::e/set-fullscreen true])
-   (is @(rf/subscribe [::s/fullscreen]))))
+   (is @(rf/subscribe [::s/fullscreen?]))))

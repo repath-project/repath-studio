@@ -42,14 +42,14 @@
         viewbox-attr @(rf/subscribe [::frame.s/viewbox-attr])
         {:keys [width height]} @(rf/subscribe [::app.s/dom-rect])
         temp-element @(rf/subscribe [::document.s/temp-element])
-        read-only @(rf/subscribe [::document.s/read-only])
+        read-only? @(rf/subscribe [::document.s/read-only?])
         cursor @(rf/subscribe [::tool.s/cursor])
         active-tool @(rf/subscribe [::tool.s/active])
         primary-tool @(rf/subscribe [::tool.s/primary])
         rotate @(rf/subscribe [::document.s/rotate])
         grid @(rf/subscribe [::app.s/grid])
         pointer-handler #(pointer/event-handler! % el)
-        snap-active @(rf/subscribe [::snap.s/active])
+        snap? @(rf/subscribe [::snap.s/active?])
         nearest-neighbor @(rf/subscribe [::snap.s/nearest-neighbor])
         snapped-el-id (-> nearest-neighbor meta :id)
         snapped-el (when snapped-el-id @(rf/subscribe [::s/entity snapped-el-id]))]
@@ -75,12 +75,12 @@
       (map (fn [{:keys [id tag attrs]}] [:filter {:id id :key id} [tag attrs]])
            filters/accessibility)]
 
-     (when-not read-only
+     (when-not read-only?
        [:<>
         [tool.hierarchy/render (or primary-tool active-tool)]
         [hierarchy/render temp-element]])
 
-     (when snap-active
+     (when snap?
        [:<>
         (when snapped-el
           [overlay/bounding-box (:bounds snapped-el) true])

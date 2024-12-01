@@ -12,12 +12,12 @@
  :-> :ruler)
 
 (rf/reg-sub
- ::locked
+ ::locked?
  :<- [::ruler]
  :-> :locked)
 
 (rf/reg-sub
- ::visible
+ ::visible?
  :<- [::ruler]
  :-> :visible)
 

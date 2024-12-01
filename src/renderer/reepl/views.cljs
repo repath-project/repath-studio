@@ -39,7 +39,7 @@
                        :complete-word
                        :on-change]))]}
   (let [{:keys [_pos _count _text]} @state
-        repl-history? @(rf/subscribe [::app.s/panel-visible :repl-history])]
+        repl-history? @(rf/subscribe [::app.s/panel-visible? :repl-history])]
     [:div.flex.p-0.5.items-center.m-1
      [:div.flex.text-xs.self-start {:class "m-0.5"} (replumb.core/get-prompt)]
      ^{:key (str (hash (:js-cm-opts cm-opts)))}
@@ -204,7 +204,7 @@
 
     (set-print! add-log)
     [:<>
-     (when @(rf/subscribe [::app.s/panel-visible :repl-history])
+     (when @(rf/subscribe [::app.s/panel-visible? :repl-history])
        [repl-items-panel @items show-value-opts set-text])
 
      [:div.relative.whitespace-pre-wrap.font-mono

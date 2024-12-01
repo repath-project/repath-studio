@@ -34,7 +34,7 @@
       "save"
       {:title "Save"
        :on-click #(rf/dispatch [::e/save])
-       :disabled @(rf/subscribe [::s/active-saved])}]
+       :disabled @(rf/subscribe [::s/active-saved?])}]
 
      [:span.v-divider]
 
@@ -78,7 +78,7 @@
              {:label "Close all"
               :action [::e/close-all]}
              {:label "Close saved"
-              :action [::e/close-all-saved]}]
+              :action [::e/close-saved]}]
       system/electron?
       (concat [{:type :separator}
                {:label "Open containing directory"
@@ -86,14 +86,14 @@
                 :disabled? (not (and path system/electron?))}]))))
 
 (defn tab
-  [id title is-active]
+  [id title active?]
   (ra/with-let [dragged-over? (ra/atom false)]
-    (let [is-saved @(rf/subscribe [::s/saved id])]
+    (let [saved? @(rf/subscribe [::s/saved? id])]
       [:> ContextMenu/Root
        [:> ContextMenu/Trigger
         [:div.tab
-         {:class [(when is-active "active")
-                  (when is-saved "saved")]
+         {:class [(when active? "active")
+                  (when saved? "saved")]
           :on-wheel #(rf/dispatch [::e/cycle (.-deltaY %)])
           :on-pointer-down #(case (.-buttons %)
                               4 (rf/dispatch [::e/close id true])
@@ -110,7 +110,7 @@
                        (reset! dragged-over? false)
                        (rf/dispatch [::e/swap-position dropped-id id])))}
          [:span.truncate.pointer-events-none title]
-         [close-button id is-saved]]]
+         [close-button id saved?]]]
        [:> ContextMenu/Portal
         (into
          [:> ContextMenu/Content
@@ -128,8 +128,8 @@
      [:div.flex.flex-1.gap-px.overflow-hidden
       (for [document-id tabs]
         (let [title (:title (get documents document-id))
-              is-active (= document-id active-id)]
-          ^{:key (str document-id)} [tab document-id title is-active]))]
+              active? (= document-id active-id)]
+          ^{:key (str document-id)} [tab document-id title active?]))]
      [:div.toolbar
       [:> DropdownMenu/Root
        [:> DropdownMenu/Trigger
@@ -143,8 +143,8 @@
                       :key :close-all
                       :action [::e/close-all]}
                      {:label "Close saved"
-                      :key :close-all-saved
-                      :action [::e/close-all-saved]}]]
+                      :key :close-saved
+                      :action [::e/close-saved]}]]
            ^{:key (:key item)}
            [ui/dropdown-menu-item item])
          [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]]]]))

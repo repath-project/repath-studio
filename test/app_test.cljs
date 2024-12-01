@@ -26,7 +26,7 @@
   (rf-test/run-test-sync
    (rf/dispatch [::e/initialize-db])
 
-   (let [tree-visible (rf/subscribe [::s/panel-visible :tree])]
+   (let [tree-visible (rf/subscribe [::s/panel-visible? :tree])]
      (is @tree-visible)
 
      (rf/dispatch [::e/toggle-panel :tree])

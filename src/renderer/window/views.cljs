@@ -39,14 +39,14 @@
 
 (defn app-header
   []
-  (let [fullscreen @(rf/subscribe [::window.s/fullscreen])
-        maximized @(rf/subscribe [::window.s/maximized])
+  (let [fullscreen? @(rf/subscribe [::window.s/fullscreen?])
+        maximized? @(rf/subscribe [::window.s/maximized?])
         theme-mode (name @(rf/subscribe [::theme.s/mode]))]
     [:div.flex.items-center.relative
-     (when-not (or fullscreen system/mac?)
+     (when-not (or fullscreen? system/mac?)
        [app-icon])
      [:div.flex.relative.bg-secondary
-      {:class (when (and system/mac? (not fullscreen)) "ml-16")}
+      {:class (when (and system/mac? (not fullscreen?)) "ml-16")}
       [menubar/root]]
      [:div.absolute.hidden.md:flex.justify-center.drag.grow.h-full.items-center.pointer-events-none
       {:class "left-1/2 -translate-x-1/2"
@@ -57,9 +57,9 @@
               :title (str "Theme mode - " theme-mode)
               :icon theme-mode
               :class "bg-primary"}]
-     (when (and system/electron? (not fullscreen) (not system/mac?))
+     (when (and system/electron? (not fullscreen?) (not system/mac?))
        (into [:div.text-right]
-             (map button (window-control-buttons maximized))))
-     (when fullscreen
+             (map button (window-control-buttons maximized?))))
+     (when fullscreen?
        [button {:action [::window.e/toggle-fullscreen]
                 :icon "arrow-minimize"}])]))

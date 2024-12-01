@@ -54,7 +54,7 @@
            {:id :recent
             :label "Recent"
             :type :sub-menu
-            :disabled (not @(rf/subscribe [::document.s/some-recent]))
+            :disabled (not @(rf/subscribe [::document.s/recent?]))
             :items (recent-submenu)}
            {:id :divider-2
             :type :separator}
@@ -62,38 +62,38 @@
             :label "Save"
             :icon "save"
             :action [::document.e/save]
-            :disabled (or (not @(rf/subscribe [::document.s/some]))
-                          @(rf/subscribe [::document.s/active-saved]))}
+            :disabled (or (not @(rf/subscribe [::document.s/entities?]))
+                          @(rf/subscribe [::document.s/active-saved?]))}
            {:id :save-as
             :label "Save as…"
             :icon "save-as"
             :action [::document.e/save-as]
-            :disabled (not @(rf/subscribe [::document.s/some]))}
+            :disabled (not @(rf/subscribe [::document.s/entities?]))}
            {:id :download
             :icon "download"
             :label "Download"
-            :disabled (not @(rf/subscribe [::document.s/some]))
+            :disabled (not @(rf/subscribe [::document.s/entities?]))
             :action [::document.e/download]}
            {:id :divider-3
             :type :separator}
            {:id :export-svg
             :label "Export as SVG"
             :icon "export"
-            :disabled (not @(rf/subscribe [::document.s/some]))
+            :disabled (not @(rf/subscribe [::document.s/entities?]))
             :action [::element.e/export-svg]}
            {:id :divider-4
             :type :separator}
            {:id :print
             :label "Print"
             :icon "printer"
-            :disabled (not @(rf/subscribe [::document.s/some]))
+            :disabled (not @(rf/subscribe [::document.s/entities?]))
             :action [::element.e/print]}
            {:id :divider-5
             :type :separator}
            {:id :close
             :label "Close"
             :icon "window-close"
-            :disabled (not @(rf/subscribe [::document.s/some]))
+            :disabled (not @(rf/subscribe [::document.s/entities?]))
             :action [::document.e/close-active]}
            {:id :exit
             :label "Exit"
@@ -105,7 +105,7 @@
   {:id :edit
    :label "Edit"
    :type :root
-   :disabled (not @(rf/subscribe [::document.s/some]))
+   :disabled (not @(rf/subscribe [::document.s/entities?]))
    :items [{:id :undo
             :label "Undo"
             :icon "undo"
@@ -121,12 +121,12 @@
            {:id :cut
             :label "Cut"
             :icon "cut"
-            :disabled (not @(rf/subscribe [::element.s/some-selected]))
+            :disabled (not @(rf/subscribe [::element.s/some-selected?]))
             :action [::element.e/cut]}
            {:id :copy
             :icon "copy"
             :label "Copy"
-            :disabled (not @(rf/subscribe [::element.s/some-selected]))
+            :disabled (not @(rf/subscribe [::element.s/some-selected?]))
             :action [::element.e/copy]}
            {:id :paste
             :label "Paste"
@@ -145,7 +145,7 @@
            {:id :duplicate
             :icon "copy"
             :label "Duplicate"
-            :disabled (not @(rf/subscribe [::element.s/some-selected]))
+            :disabled (not @(rf/subscribe [::element.s/some-selected?]))
             :action [::element.e/duplicate]}
            {:id :divider-3
             :type :separator}
@@ -156,7 +156,7 @@
            {:id :deselect-all
             :icon "deselect-all"
             :label "Deselect all"
-            :disabled (not @(rf/subscribe [::element.s/some-selected]))
+            :disabled (not @(rf/subscribe [::element.s/some-selected?]))
             :action [::element.e/deselect-all]}
            {:id :invert-selection
             :label "Invert selection"
@@ -165,14 +165,14 @@
            {:id :select-same-tags
             :icon "select-same"
             :label "Select same tags"
-            :disabled (not @(rf/subscribe [::element.s/some-selected]))
+            :disabled (not @(rf/subscribe [::element.s/some-selected?]))
             :action [::element.e/select-same-tags]}
            {:id :divider-4
             :type :separator}
            {:id :delete
             :icon "delete"
             :label "Delete"
-            :disabled (not @(rf/subscribe [::element.s/some-selected]))
+            :disabled (not @(rf/subscribe [::element.s/some-selected?]))
             :action [::element.e/delete]}]})
 
 (defn align-submenu
@@ -274,40 +274,40 @@
   {:id :object
    :label "Object"
    :type :root
-   :disabled (not @(rf/subscribe [::document.s/some]))
+   :disabled (not @(rf/subscribe [::document.s/entities?]))
    :items [{:id :to-path
             :label "Object to path"
             :icon "bezier-curve"
-            :disabled (not @(rf/subscribe [::element.s/some-selected]))
+            :disabled (not @(rf/subscribe [::element.s/some-selected?]))
             :action [::element.e/->path]}
            {:id :stroke-to-path
             :label "Stroke to path"
             :icon "bezier-curve"
-            :disabled (not @(rf/subscribe [::element.s/some-selected]))
+            :disabled (not @(rf/subscribe [::element.s/some-selected?]))
             :action [::element.e/stroke->path]}
            {:id :divider-1
             :type :separator}
            {:id :group
             :label "Group"
             :icon "group"
-            :disabled (not @(rf/subscribe [::element.s/some-selected]))
+            :disabled (not @(rf/subscribe [::element.s/some-selected?]))
             :action [::element.e/group]}
            {:id :ungroup
             :label "Ungroup"
             :icon "ungroup"
-            :disabled (not @(rf/subscribe [::element.s/some-selected]))
+            :disabled (not @(rf/subscribe [::element.s/some-selected?]))
             :action [::element.e/ungroup]}
            {:id :divider-2
             :type :separator}
            {:id :lock
             :label "Lock"
             :icon "lock"
-            :disabled (not @(rf/subscribe [::element.s/some-selected]))
+            :disabled (not @(rf/subscribe [::element.s/some-selected?]))
             :action [::element.e/lock]}
            {:id :unlock
             :label "Unlock"
             :icon "unlock"
-            :disabled (not @(rf/subscribe [::element.s/some-selected]))
+            :disabled (not @(rf/subscribe [::element.s/some-selected?]))
             :action [::element.e/unlock]}
            {:id :divider-3
             :type :separator}
@@ -319,34 +319,34 @@
            {:id :boolean
             :label "Animate"
             :type :sub-menu
-            :disabled (not @(rf/subscribe [::element.s/some-selected]))
+            :disabled (not @(rf/subscribe [::element.s/some-selected?]))
             :items (animate-submenu)}
            {:id :boolean
             :label "Boolean operation"
             :type :sub-menu
-            :disabled (not @(rf/subscribe [::element.s/multiple-selected]))
+            :disabled (not @(rf/subscribe [::element.s/multiple-selected?]))
             :items (boolean-submenu)}
            {:id :divider-4
             :type :separator}
            {:id :raise
             :label "Raise"
             :icon "bring-forward"
-            :disabled (not @(rf/subscribe [::element.s/some-selected]))
+            :disabled (not @(rf/subscribe [::element.s/some-selected?]))
             :action [::element.e/raise]}
            {:id :lower
             :label "Lower"
             :icon "send-backward"
-            :disabled (not @(rf/subscribe [::element.s/some-selected]))
+            :disabled (not @(rf/subscribe [::element.s/some-selected?]))
             :action [::element.e/lower]}
            {:id :raise-to-top
             :label "Raise to top"
             :icon "bring-front"
-            :disabled (not @(rf/subscribe [::element.s/some-selected]))
+            :disabled (not @(rf/subscribe [::element.s/some-selected?]))
             :action [::element.e/raise-to-top]}
            {:id :lower-to-bottom
             :label "Lower to bottom"
             :icon "send-back"
-            :disabled (not @(rf/subscribe [::element.s/some-selected]))
+            :disabled (not @(rf/subscribe [::element.s/some-selected?]))
             :action [::element.e/lower-to-bottom]}
            {:id :divider-5
             :type :separator}
@@ -414,37 +414,37 @@
     :type :checkbox
     :icon "tree"
     :label "Element tree"
-    :checked @(rf/subscribe [::app.s/panel-visible :tree])
+    :checked @(rf/subscribe [::app.s/panel-visible? :tree])
     :action [::app.e/toggle-panel :tree]}
    {:id :toggle-props
     :type :checkbox
     :icon "properties"
     :label "Properties"
-    :checked @(rf/subscribe [::app.s/panel-visible :properties])
+    :checked @(rf/subscribe [::app.s/panel-visible? :properties])
     :action [::app.e/toggle-panel :properties]}
    {:id :toggle-xml
     :label "XML view"
     :type :checkbox
     :icon "code"
-    :checked @(rf/subscribe [::app.s/panel-visible :xml])
+    :checked @(rf/subscribe [::app.s/panel-visible? :xml])
     :action [::app.e/toggle-panel :xml]}
    {:id :toggle-history
     :label "History tree"
     :icon "history"
     :type :checkbox
-    :checked @(rf/subscribe [::app.s/panel-visible :history])
+    :checked @(rf/subscribe [::app.s/panel-visible? :history])
     :action [::app.e/toggle-panel :history]}
    {:id :toggle-command-history
     :type :checkbox
     :label "Shell history"
     :icon "shell"
-    :checked @(rf/subscribe [::app.s/panel-visible :repl-history])
+    :checked @(rf/subscribe [::app.s/panel-visible? :repl-history])
     :action [::app.e/toggle-panel :repl-history]}
    {:id :toggle-timeline-panel
     :type :checkbox
     :label "Timeline editor"
     :icon "timeline"
-    :checked @(rf/subscribe [::app.s/panel-visible :timeline])
+    :checked @(rf/subscribe [::app.s/panel-visible? :timeline])
     :action [::app.e/toggle-panel :timeline]}
    {:id :divider-2
     :type :separator}])
@@ -454,7 +454,7 @@
   {:id :view
    :label "View"
    :type :root
-   :disabled (not @(rf/subscribe [::document.s/some]))
+   :disabled (not @(rf/subscribe [::document.s/entities?]))
    :items [{:id :zoom
             :label "Zoom"
             :type :sub-menu
@@ -475,7 +475,7 @@
             :type :checkbox
             :label "Rulers"
             :icon "ruler-combined"
-            :checked @(rf/subscribe [::ruler.s/visible])
+            :checked @(rf/subscribe [::ruler.s/visible?])
             :action [::ruler.e/toggle-visible]}
            {:id :toggle-debug-info
             :type :checkbox
@@ -495,7 +495,7 @@
             :label "Fullscreen"
             :icon "arrow-minimize"
             :type :checkbox
-            :checked @(rf/subscribe [::window.s/fullscreen])
+            :checked @(rf/subscribe [::window.s/fullscreen?])
             :action [::window.e/toggle-fullscreen]}]})
 
 (defn help-menu

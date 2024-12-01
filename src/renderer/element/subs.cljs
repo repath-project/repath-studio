@@ -60,18 +60,18 @@
    (->> selected-elements (map :tag) set)))
 
 (rf/reg-sub
- ::some-selected
+ ::some-selected?
  :<- [::selected]
  seq)
 
 (rf/reg-sub
- ::selected-locked
+ ::selected-locked?
  :<- [::selected]
  (fn [selected-elements _]
    (not-any? #(not (:locked %)) selected-elements)))
 
 (rf/reg-sub
- ::multiple-selected
+ ::multiple-selected?
  :<- [::selected]
  (fn [selected-elements _]
    (seq (rest selected-elements))))
@@ -79,14 +79,14 @@
 (rf/reg-sub
  ::selected-attrs
  :<- [::selected]
- :<- [::multiple-selected]
- (fn [[selected-elements multiple-selected] _]
+ :<- [::multiple-selected?]
+ (fn [[selected-elements multiple-selected?] _]
    (when (seq selected-elements)
      (let [attrs (->> selected-elements
                       (map element/attributes)
                       (apply utils.map/merge-common-with
                              (fn [v1 v2] (if (= v1 v2) v1 nil))))
-           attrs (if multiple-selected
+           attrs (if multiple-selected?
                    (dissoc attrs :id)
                    (sort-by (fn [[id _]]
                               (-> (first selected-elements)
@@ -136,4 +136,3 @@
  :<- [::ancestor-ids]
  (fn [[root ancestor-ids] _]
    (empty? (disj (set ancestor-ids) (:id root)))))
-

@@ -9,7 +9,7 @@
  :-> :snap)
 
 (rf/reg-sub
- ::active
+ ::active?
  :<- [::snap]
  :-> :active)
 

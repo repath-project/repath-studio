@@ -56,7 +56,6 @@
       "load"
       #(let [data-url (.-result reader)
              img (js/document.createElement "img")]
-           ;; Get the image size onload.
          (set! (.-onload img)
                (fn []
                  (let [width (.-width img)

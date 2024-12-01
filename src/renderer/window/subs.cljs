@@ -7,11 +7,11 @@
  :-> :window)
 
 (rf/reg-sub
- ::maximized
+ ::maximized?
  :<- [::window]
  :-> :maximized)
 
 (rf/reg-sub
- ::fullscreen
+ ::fullscreen?
  :<- [::window]
  :-> :fullscreen)

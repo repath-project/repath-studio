@@ -68,7 +68,7 @@
 
 (def view-radio-buttons
   [{:title "Timeline"
-    :active [::app.s/panel-visible :timeline]
+    :active [::app.s/panel-visible? :timeline]
     :icon "animation"
     :class "hidden sm:inline-block shrink-0"
     :action [::app.e/toggle-panel :timeline]}
@@ -78,18 +78,18 @@
     :class "shrink-0"
     :action [::app.e/toggle-grid]}
    {:title "Rulers"
-    :active [::ruler.s/visible]
+    :active [::ruler.s/visible?]
     :icon "ruler-combined"
     :class "shrink-0"
     :action [::ruler.e/toggle-visible]}
    {:title "History"
-    :active [::app.s/panel-visible :history]
+    :active [::app.s/panel-visible? :history]
     :icon "history"
     :class "hidden sm:inline-block shrink-0"
     :action [::app.e/toggle-panel :history]}
    {:title "XML"
     :class "hidden sm:inline-block shrink-0"
-    :active [::app.s/panel-visible :xml]
+    :active [::app.s/panel-visible? :xml]
     :icon "code"
     :action [::app.e/toggle-panel :xml]}])
 

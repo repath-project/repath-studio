@@ -55,7 +55,7 @@
    ["Adjusted pointer position" (coll->str @(rf/subscribe [::app.s/adjusted-pointer-pos]))]
    ["Pointer offset" (coll->str @(rf/subscribe [::app.s/pointer-offset]))]
    ["Adjusted pointer offset" (coll->str @(rf/subscribe [::app.s/adjusted-pointer-offset]))]
-   ["Pointer drag?" (str @(rf/subscribe [::tool.s/drag]))]
+   ["Pointer drag?" (str @(rf/subscribe [::tool.s/drag?]))]
    ["Pan" (coll->str @(rf/subscribe [::document.s/pan]))]
    ["Active tool" @(rf/subscribe [::tool.s/active])]
    ["Primary tool" @(rf/subscribe [::tool.s/primary])]
@@ -73,32 +73,32 @@
 
 (defn frame-panel
   []
-  (let [ruler-visible @(rf/subscribe [::ruler.s/visible])
-        read-only @(rf/subscribe [::document.s/read-only])
+  (let [ruler-visible? @(rf/subscribe [::ruler.s/visible?])
+        read-only? @(rf/subscribe [::document.s/read-only?])
         ruler-size @(rf/subscribe [::ruler.s/size])
-        ruler-locked @(rf/subscribe [::ruler.s/locked])]
+        ruler-locked? @(rf/subscribe [::ruler.s/locked?])]
     [:div.flex.flex-col.flex-1.h-full.gap-px
      [:div
       [ui/scroll-area [toolbar.tools/root]]
-      (when ruler-visible
+      (when ruler-visible?
         [:div.flex.gap-px
          [:div.bg-primary
           {:style {:width ruler-size
                    :height ruler-size}}
           [ui/icon-button
-           (if ruler-locked "lock" "unlock")
+           (if ruler-locked? "lock" "unlock")
            {:class "small hidden"
-            :title (if ruler-locked "unlock" "lock")
+            :title (if ruler-locked? "unlock" "lock")
             :on-click #(rf/dispatch [::ruler.e/toggle-locked])}]]
          [:div.bg-primary.flex-1
           [ruler.v/ruler :horizontal]]])]
      [:div.flex.flex-1.relative.gap-px
-      (when ruler-visible
+      (when ruler-visible?
         [:div.bg-primary
          [ruler.v/ruler :vertical]])
       [:div.relative.grow.flex
        [frame.v/root]
-       (if read-only
+       (if read-only?
          [:div.absolute.inset-0.border-4.border-accent]
          (when @(rf/subscribe [::app.s/debug-info])
            [debug-info]))
@@ -118,7 +118,7 @@
       {:id "frame-panel"
        :order 1}
       [frame-panel]]
-     (when @(rf/subscribe [::app.s/panel-visible :history])
+     (when @(rf/subscribe [::app.s/panel-visible? :history])
        [:<>
         [:> PanelResizeHandle
          {:id "history-resize-handle"
@@ -130,7 +130,7 @@
          [:div.bg-primary.h-full
           [history.v/root]]]])
 
-     (when @(rf/subscribe [::app.s/panel-visible :xml])
+     (when @(rf/subscribe [::app.s/panel-visible? :xml])
        (let [xml @(rf/subscribe [::element.s/xml])]
          [:<>
           [:> PanelResizeHandle
@@ -150,7 +150,7 @@
 
 (defn editor
   []
-  (let [timeline-visible @(rf/subscribe [::app.s/panel-visible :timeline])]
+  (let [timeline-visible @(rf/subscribe [::app.s/panel-visible? :timeline])]
     [:> PanelGroup
      {:direction "vertical"
       :id "editor-group"
@@ -289,8 +289,8 @@
 (defn root
   []
   (let [documents (rf/subscribe [::document.s/entities])
-        tree-visible (rf/subscribe [::app.s/panel-visible :tree])
-        properties-visible (rf/subscribe [::app.s/panel-visible :properties])
+        tree-visible (rf/subscribe [::app.s/panel-visible? :tree])
+        properties-visible (rf/subscribe [::app.s/panel-visible? :properties])
         active-tool (rf/subscribe [::tool.s/active])
         recent-docs (rf/subscribe [::document.s/recent])]
     [:> Tooltip/Provider

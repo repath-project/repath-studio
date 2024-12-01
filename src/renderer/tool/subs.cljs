@@ -16,7 +16,7 @@
  :-> :pivot-point)
 
 (rf/reg-sub
- ::drag
+ ::drag?
  :-> :drag)
 
 (rf/reg-sub

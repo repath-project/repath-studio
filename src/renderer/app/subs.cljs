@@ -65,7 +65,7 @@
  :-> :grid)
 
 (rf/reg-sub
- ::panel-visible
+ ::panel-visible?
  (fn [db [_ k]]
    (-> db :panels k :visible)))
 

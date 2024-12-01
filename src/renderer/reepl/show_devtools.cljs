@@ -29,14 +29,14 @@
   [header v config show-value]
   (let [open (r/atom false)]
     (fn [_ _]
-      (let [is-open @open]
+      (let [open? @open]
         [:div.flex.flex-col
          [:div.flex
           [:div.flex.cursor-pointer.px-1
            {:on-click #(swap! open not)}
-           (if is-open "▼" "▶")]
+           (if open? "▼" "▶")]
           (show-el header show-value)]
-         (when is-open
+         (when open?
            (show-el (devtools/body-api-call v config) show-value))]))))
 
 ;; see https://docs.google.com/document/d/1FTascZXT9cxfetuPRT2eXPQKXui4nWFivUnS_335T3U/preview
@@ -58,4 +58,3 @@
         (if-not (devtools/has-body-api-call v config)
           [:div.inline-flex.devtools (show-el header show-value)]
           [openable header v config show-value])))))
-

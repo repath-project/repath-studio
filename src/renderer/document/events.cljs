@@ -102,7 +102,7 @@
    {:dispatch [::close (:active-document db) true]}))
 
 (rf/reg-event-db
- ::close-all-saved
+ ::close-saved
  [persist]
  (fn [db [_]]
    (reduce h/close db (h/saved-ids db))))

@@ -121,13 +121,13 @@
 
 (defn root
   []
-  (let [some-selected @(rf/subscribe [::element.s/some-selected])
-        multiple-selected @(rf/subscribe [::element.s/multiple-selected])
+  (let [some-selected? @(rf/subscribe [::element.s/some-selected?])
+        multiple-selected? @(rf/subscribe [::element.s/multiple-selected?])
         every-top-level @(rf/subscribe [::element.s/every-top-level])
-        object-actions [(index-actions (not some-selected))
-                        (group-actions (not some-selected))
+        object-actions [(index-actions (not some-selected?))
+                        (group-actions (not some-selected?))
                         (alignment-actions every-top-level)
-                        (boolean-actions (not multiple-selected))]]
+                        (boolean-actions (not multiple-selected?))]]
     (->> object-actions
          (interpose [{:type :divider}])
          (flatten)

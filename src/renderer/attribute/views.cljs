@@ -197,14 +197,14 @@
        [:> HoverCard/Arrow {:class "popover-arrow"}]]]]))
 
 (defn row
-  [k v locked tag]
+  [k v locked? tag]
   (let [property (attr/property-data k)
         initial (:initial property)
         dispatch-tag (if (contains? (methods hierarchy/form-element) [tag k]) tag :default)]
     [:<>
      [label tag k]
      [:div.flex.w-full
-      [hierarchy/form-element dispatch-tag k v {:disabled locked
+      [hierarchy/form-element dispatch-tag k v {:disabled locked?
                                                 :placeholder initial}]]]))
 
 (defn tag-info
@@ -235,7 +235,7 @@
   (let [selected-elements @(rf/subscribe [::element.s/selected])
         selected-tags @(rf/subscribe [::element.s/selected-tags])
         selected-attrs @(rf/subscribe [::element.s/selected-attrs])
-        locked @(rf/subscribe [::element.s/selected-locked])
+        locked? @(rf/subscribe [::element.s/selected-locked?])
         tag (first selected-tags)
         multitag? (next selected-tags)]
     (when-first [el selected-elements]
@@ -252,6 +252,6 @@
        [:div.grid.grid-cols-2.grid-flow-row.my-px.w-full.gap-px
         {:style {:grid-template-columns "minmax(100px, auto) 1fr"}}
         (for [[k v] selected-attrs]
-          ^{:key k} [row k v locked tag])]])))
+          ^{:key k} [row k v locked? tag])]])))
 
 (defmethod tool.hierarchy/right-panel :default [] [form])

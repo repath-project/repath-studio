@@ -23,12 +23,12 @@
    (-> db :recent reverse)))
 
 (rf/reg-sub
- ::some
+ ::entities?
  :<- [::entities]
  seq)
 
 (rf/reg-sub
- ::some-recent
+ ::recent?
  :<- [::recent]
  seq)
 
@@ -91,7 +91,7 @@
  :<- [::title]
  :<- [::path]
  :<- [::active]
- :<- [::active-saved]
+ :<- [::active-saved?]
  (fn [[title path active saved] _]
    (let [title (or path title)]
      (str (when (and active (not saved)) "• ")
@@ -140,17 +140,17 @@
  :-> :save)
 
 (rf/reg-sub
- ::read-only
+ ::read-only?
  :<- [::timeline.s/time]
  pos?)
 
 (rf/reg-sub
- ::saved
+ ::saved?
  (fn [db [_ id]]
    (h/saved? db id)))
 
 (rf/reg-sub
- ::active-saved
+ ::active-saved?
  (fn [{:keys [active-document] :as db} [_]]
    (when active-document
      (h/saved? db active-document))))

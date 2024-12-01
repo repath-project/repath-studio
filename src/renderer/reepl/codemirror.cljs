@@ -31,7 +31,7 @@
      :end #js {:line lno
                :ch (+ cno (count forward))}}))
 
-(defn is-valid-cljs?
+(defn valid-cljs?
   [source]
   (try
     (fn []
@@ -73,7 +73,7 @@
                                (= (.-ch pos)
                                   (count (.getLine inst last-line))))))]
            (and in-place
-                (is-valid-cljs? source))))))})
+                (valid-cljs? source))))))})
 
 (defn cm-current-word
   "Find the current 'word' according to CodeMirror's `wordChars' list"

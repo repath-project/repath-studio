@@ -174,4 +174,4 @@
 (m/=> saved-ids [:-> App sequential?])
 (defn saved-ids
   [db]
-  (filter #(saved? db %) (:document-tabs db)))
+  (filter (partial saved? db) (:document-tabs db)))

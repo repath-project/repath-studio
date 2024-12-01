@@ -3,14 +3,14 @@
    [clojure.string :as str]
    [re-frame.core :as rf]
    [renderer.document.subs :as-alias document.s]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.element.hierarchy :as element.hierarchy]))
 
 (rf/reg-sub
  ::animations
  :<- [::document.s/elements]
  (fn [elements]
-   (filter #(contains? (descendants ::tool.hierarchy/animation) (:tag %))
-           (vals elements))))
+   (->> (vals elements)
+        (filter #(contains? (descendants ::element.hierarchy/animation) (:tag %))))))
 
 (defn effect-id
   [el]

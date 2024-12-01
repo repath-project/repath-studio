@@ -49,11 +49,11 @@
   [get-doc f _ _]
   (when (= js/Function (type f))
     (let [docs (get-doc (symbol (get-fn-name f)))
-          is-native-fn (.match (str f) #"\{ \[native code\] \}$")]
+          native-fn? (.match (str f) #"\{ \[native code\] \}$")]
       [:div.inline-block.shrink-0.box-border
        (if docs
          [:span.function-docs docs]
          [:<>
           [:span.function-head "fn " (get-fn-name f)]
           [:span.function-arities (str-fn-forms (get-function-forms f))]
-          [:span.function-body (when is-native-fn "[native code]")]])])))
+          [:span.function-body (when native-fn? "[native code]")]])])))
