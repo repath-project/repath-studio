@@ -10,8 +10,9 @@
    [renderer.snap.handlers :as snap.h]
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]
-   [renderer.utils.overlay :as overlay]
-   [renderer.utils.pointer :as pointer]))
+   [renderer.utils.element :as element]
+   [renderer.utils.pointer :as pointer]
+   [renderer.utils.svg :as svg]))
 
 (derive :edit ::hierarchy/tool)
 
@@ -97,5 +98,8 @@
        ^{:key (str (:id el) "-edit-points")}
        [:g
         [element.hierarchy/render-edit el]
-        ^{:key (str (:id el) "-centroid")}
-        [overlay/centroid el]])]))
+        (when-let [pos (element.hierarchy/centroid el)]
+          (let [offset (element/offset el)
+                pos (mat/add offset pos)]
+            ^{:key (str (:id el) "-centroid")}
+            [svg/dot pos [:title "Centroid"]]))])]))

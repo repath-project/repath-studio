@@ -5,8 +5,8 @@
    [renderer.snap.handlers :as snap.h]
    [renderer.tool.handlers :as h]
    [renderer.tool.hierarchy :as hierarchy]
-   [renderer.utils.overlay :as overlay]
-   [renderer.utils.pointer :as pointer]))
+   [renderer.utils.pointer :as pointer]
+   [renderer.utils.svg :as svg]))
 
 (derive :zoom ::hierarchy/tool)
 
@@ -42,7 +42,7 @@
 
 (defmethod hierarchy/on-drag :zoom
   [db _e]
-  (h/set-temp db (overlay/select-box db)))
+  (h/set-temp db (svg/select-box db)))
 
 (defmethod hierarchy/on-drag-end :zoom
   [db e]

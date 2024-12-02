@@ -22,8 +22,8 @@
    [renderer.utils.bounds :as bounds :refer [Bounds]]
    [renderer.utils.element :as element]
    [renderer.utils.math :refer [Vec2]]
-   [renderer.utils.overlay :as overlay]
-   [renderer.utils.pointer :as pointer]))
+   [renderer.utils.pointer :as pointer]
+   [renderer.utils.svg :as svg]))
 
 (def ScaleHandle [:enum
                   :middle-right
@@ -152,7 +152,7 @@
 
 (defn select-rect
   [db intersecting?]
-  (cond-> (overlay/select-box db)
+  (cond-> (svg/select-box db)
     (not intersecting?)
     (assoc-in [:attrs :fill] "transparent")))
 
@@ -379,7 +379,7 @@
         y (+ y2 (/ (+ (/ theme.db/handle-size 2) 15) zoom))
         [width height] (bounds/->dimensions bounds)
         text (str (.toFixed width 2) " x " (.toFixed height 2))]
-    [overlay/label text [x y]]))
+    [svg/label text [x y]]))
 
 (m/=> area-label [:-> number? Bounds any?])
 (defn area-label
@@ -390,7 +390,7 @@
           x (+ x1 (/ (- x2 x1) 2))
           y (+ y1 (/ (- -15 (/ theme.db/handle-size 2)) zoom))
           text (str (.toFixed area 2) " px²")]
-      [overlay/label text [x y]])))
+      [svg/label text [x y]])))
 
 (defmethod hierarchy/render :transform
   []
@@ -404,12 +404,12 @@
      (for [el selected-elements]
        (when (:bounds el)
          ^{:key (str (:id el) "-bounds")}
-         [overlay/bounding-box (:bounds el) false]))
+         [svg/bounding-box (:bounds el) false]))
 
      (for [el hovered-ids]
        (when (:bounds el)
          ^{:key (str (:id el) "-bounds")}
-         [overlay/bounding-box (:bounds el) true]))
+         [svg/bounding-box (:bounds el) true]))
 
      (when (and (pos? elements-area) (= state :scale) (seq bounds))
        [area-label elements-area bounds])
@@ -423,4 +423,4 @@
           nil)])
 
      (when pivot-point
-       [overlay/times pivot-point])]))
+       [svg/times pivot-point])]))

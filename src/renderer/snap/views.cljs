@@ -9,7 +9,7 @@
    [renderer.snap.events :as-alias snap.e]
    [renderer.snap.subs :as-alias snap.s]
    [renderer.ui :as ui]
-   [renderer.utils.overlay :as overlay]))
+   [renderer.utils.svg :as svg]))
 
 (defn options-dropdown
   []
@@ -59,6 +59,6 @@
         label (str/join " to " (remove nil? [base-label point-label]))
         point (:point nearest-neighbor)]
     [:<>
-     [overlay/times point]
+     [svg/times point]
      (when (not-empty label)
-       [overlay/label label (mat/add point margin) "start"])]))
+       [svg/label label (mat/add point margin) "start"])]))

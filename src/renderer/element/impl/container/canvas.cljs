@@ -15,8 +15,8 @@
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.subs :as-alias tool.s]
    [renderer.utils.keyboard :as keyb]
-   [renderer.utils.overlay :as overlay]
-   [renderer.utils.pointer :as pointer]))
+   [renderer.utils.pointer :as pointer]
+   [renderer.utils.svg :as svg]))
 
 (derive :canvas ::hierarchy/element)
 
@@ -83,7 +83,7 @@
      (when snap?
        [:<>
         (when snapped-el
-          [overlay/bounding-box (:bounds snapped-el) true])
+          [svg/bounding-box (:bounds snapped-el) true])
         (when nearest-neighbor
           [snap.v/canvas-label nearest-neighbor])])
 

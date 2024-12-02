@@ -30,7 +30,7 @@
 
 (rf/reg-event-fx
  ::close
- (fn [{:keys [db]} [_ dispatch]]
+ (fn [{:keys [db]} [_ event]]
    (cond-> {:db (update db :dialogs pop)}
-     dispatch
-     (assoc :dispatch dispatch))))
+     event
+     (assoc :dispatch event))))

@@ -1,20 +1,12 @@
-(ns renderer.utils.overlay
+(ns renderer.utils.svg
   "Render functions for canvas overlay objects."
   (:require
-   [clojure.core.matrix :as mat]
    [malli.core :as m]
    [re-frame.core :as rf]
    [renderer.app.db :refer [App]]
-   [renderer.app.subs :as-alias app.s]
    [renderer.document.subs :as-alias document.s]
-   [renderer.element.db :refer [Element]]
-   [renderer.element.hierarchy :as element.hierarchy]
-   [renderer.frame.subs :as-alias frame.s]
-   [renderer.snap.subs :as-alias snap.s]
    [renderer.theme.db :as theme.db]
-   [renderer.tool.subs :as-alias tool.s]
    [renderer.utils.bounds :as bounds :refer [Bounds]]
-   [renderer.utils.element :as element]
    [renderer.utils.hiccup :refer [Hiccup]]
    [renderer.utils.math :as math :refer [Vec2]]))
 
@@ -176,12 +168,3 @@
              :stroke theme.db/accent
              :stroke-opacity ".5"
              :stroke-width (/ 1 zoom)}}))
-
-(m/=> centroid [:-> Element any?])
-(defn centroid
-  [el]
-  (when-let [pos (element.hierarchy/centroid el)]
-    (let [offset (element/offset el)
-          pos (mat/add offset pos)]
-      [dot pos
-       [:title "Centroid"]])))

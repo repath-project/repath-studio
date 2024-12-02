@@ -15,8 +15,8 @@
    [renderer.ui :as ui]
    [renderer.utils.element :as element]
    [renderer.utils.length :as length]
-   [renderer.utils.overlay :as overlay]
-   [renderer.utils.pointer :as pointer]))
+   [renderer.utils.pointer :as pointer]
+   [renderer.utils.svg :as svg]))
 
 (derive :blob ::hierarchy/renderable)
 
@@ -158,7 +158,7 @@
         [x1 y1] (cond->> [x y] (not (element/svg? el)) (mat/add offset))
         [x2 y2] (mat/add [x1 y1] size)]
     [:<>
-     [overlay/line [x1 y1] [x2 y2]]
+     [svg/line [x1 y1] [x2 y2]]
      [tool.v/square-handle
       {:type :handle
        :cursor "move"
@@ -167,4 +167,4 @@
        :x x2
        :y y2
        :id :size}]
-     [overlay/times [x1 y1]]]))
+     [svg/times [x1 y1]]]))

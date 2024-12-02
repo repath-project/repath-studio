@@ -9,7 +9,7 @@
    [renderer.utils.bounds :as bounds]
    [renderer.utils.element :as element]
    [renderer.utils.length :as length]
-   [renderer.utils.overlay :as overlay]))
+   [renderer.utils.svg :as svg]))
 
 (derive :circle ::hierarchy/shape)
 
@@ -74,14 +74,14 @@
         [cx cy] (bounds/center bounds)
         r (/ (first (bounds/->dimensions bounds)) 2)]
     [:g
-     [overlay/line [cx cy] [(+ cx r) cy]]
-     [overlay/label (str (.toFixed r 2)) [(+ cx (/ r 2)) cy]]
-     [overlay/times [cx cy]]
+     [svg/line [cx cy] [(+ cx r) cy]]
+     [svg/label (str (.toFixed r 2)) [(+ cx (/ r 2)) cy]]
+     [svg/times [cx cy]]
      [tool.v/square-handle {:x (+ cx r)
-                              :y cy
-                              :id :r
-                              :type :handle
-                              :action :edit
-                              :cursor "move"
-                              :element (:id el)}
+                            :y cy
+                            :id :r
+                            :type :handle
+                            :action :edit
+                            :cursor "move"
+                            :element (:id el)}
       [:title {:key "r-title"} "r"]]]))

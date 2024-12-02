@@ -5,7 +5,7 @@
    [renderer.element.hierarchy :as hierarchy]
    [renderer.utils.length :as length]
    [renderer.utils.math :as math]
-   [renderer.utils.overlay :as overlay]))
+   [renderer.utils.svg :as svg]))
 
 (derive :measure ::hierarchy/element)
 
@@ -19,19 +19,19 @@
         straight? (< angle 180)
         straight-angle (if straight? angle (- angle 360))]
     [:g {:key id}
-     [overlay/cross [x1 y1]]
-     [overlay/cross [x2 y2]]
+     [svg/cross [x1 y1]]
+     [svg/cross [x2 y2]]
 
-     [overlay/arc [x1 y1] 20 (if straight? 0 angle) (abs straight-angle)]
+     [svg/arc [x1 y1] 20 (if straight? 0 angle) (abs straight-angle)]
 
-     [overlay/line [x1 y1] [x2 y2] false]
-     [overlay/line [x1 y1] [(+ x1 (/ 30 zoom)) y1]]
+     [svg/line [x1 y1] [x2 y2] false]
+     [svg/line [x1 y1] [(+ x1 (/ 30 zoom)) y1]]
 
-     [overlay/label
+     [svg/label
       (str (.toFixed straight-angle 2) "°")
       [(+ x1 (/ 40 zoom)) y1]
       "start"]
 
-     [overlay/label
+     [svg/label
       (-> hypotenuse js/parseFloat (.toFixed 2) str)
       [(/ (+ x1 x2) 2) (/ (+ y1 y2) 2)]]]))
