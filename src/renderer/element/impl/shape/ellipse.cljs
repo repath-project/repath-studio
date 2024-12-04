@@ -54,6 +54,12 @@
                    "A" rx ry 0 0 1 (+ cx rx) cy
                    "z"])))
 
+(defmethod hierarchy/area :ellipse
+  [el]
+  (let [{{:keys [rx ry]} :attrs} el
+        [rx ry] (map length/unit->px [rx ry])]
+    (* Math/PI rx ry)))
+
 (defmethod hierarchy/edit :ellipse
   [el [x y] handle]
   (case handle
