@@ -39,7 +39,7 @@
 
 (m/=> ->dimensions [:-> Bounds Vec2])
 (defn ->dimensions
-  "Converts bounds to [width height]"
+  "Converts bounds to [width height]."
   [[x1 y1 x2 y2]]
   (mat/sub [x2 y2] [x1 y1]))
 
