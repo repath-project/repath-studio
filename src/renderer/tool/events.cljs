@@ -15,9 +15,9 @@
 
 (rf/reg-event-fx
  ::pointer-event
- [(rf/inject-cofx ::app.fx/now)]
- (fn [{:keys [db now]} [_ e]]
-   {:db (h/pointer-handler db e now)}))
+ [(rf/inject-cofx ::app.fx/timestamp)]
+ (fn [{:keys [db timestamp]} [_ e]]
+   {:db (h/pointer-handler db e timestamp)}))
 
 (rf/reg-event-db
  ::wheel-event

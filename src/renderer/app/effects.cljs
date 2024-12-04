@@ -17,9 +17,9 @@
    (assoc coeffects :guid (random-uuid))))
 
 (rf/reg-cofx
- ::now
+ ::timestamp
  (fn [coeffects _]
-   (assoc coeffects :now (.now js/Date))))
+   (assoc coeffects :timestamp (.now js/Date))))
 
 (rf/reg-fx
  ::persist

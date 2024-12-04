@@ -108,11 +108,12 @@
     (cond-> db
       (not-every? zero? pan)
       (-> (frame.h/pan-by pan)
-          (snap.h/update-viewport-tree))))) ; REVIEW: Can we improve performance?
+          ; REVIEW: Can we improve performance?
+          (snap.h/update-viewport-tree)))))
 
 (m/=> pointer-handler [:-> App PointerEvent number? App])
 (defn pointer-handler
-  [db e now]
+  [db e timestamp]
   (let [{:keys [pointer-offset tool dom-rect drag primary-tool drag-threshold nearest-neighbor]} db
         {:keys [button pointer-pos]} e
         adjusted-pointer-pos (frame.h/adjusted-pointer-pos db pointer-pos)
@@ -157,8 +158,8 @@
                     (add-fx [::fx/release-pointer-capture (:pointer-id e)]))
                 (if (= button :right)
                   db
-                  (if (> (- now (:event-time db)) (:double-click-delta db))
-                    (-> (assoc db :event-time now)
+                  (if (> (- timestamp (:event-time db)) (:double-click-delta db))
+                    (-> (assoc db :event-time timestamp)
                         (hierarchy/on-pointer-up e))
                     (hierarchy/on-double-click db e))))
         (and primary-tool (= button :middle))
