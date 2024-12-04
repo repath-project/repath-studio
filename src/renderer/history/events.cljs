@@ -27,7 +27,9 @@
 
 (rf/reg-event-db
  ::reset-state
- h/reset-state)
+ (fn [db _]
+   (-> (h/reset-state db)
+       (update-in [:documents (:active-document db)] dissoc :preview-label))))
 
 (rf/reg-event-db
  ::preview
@@ -37,7 +39,8 @@
 (rf/reg-event-db
  ::go-to
  (fn [db [_ id]]
-   (h/go-to db id)))
+   (-> (h/go-to db id)
+       (update-in [:documents (:active-document db)] dissoc :preview-label))))
 
 (rf/reg-event-db
  ::clear

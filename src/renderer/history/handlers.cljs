@@ -5,6 +5,7 @@
    [renderer.app.db :refer [App]]
    [renderer.app.effects :as-alias app.fx]
    [renderer.app.events :as-alias app.e]
+   [renderer.document.handlers :as document.h]
    [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.h]
    [renderer.history.db :refer [History HistoryState]]
@@ -82,7 +83,11 @@
 (m/=> preview [:-> App uuid? App])
 (defn preview
   [db pos]
-  (assoc-in db (element.h/path db) (-> db history (state pos) :elements)))
+  (let [preview-state (-> db history (state pos))
+        timestamp (-> preview-state :timestamp js/Date.)]
+    (-> db
+        (assoc-in (document.h/path db :preview-label) (str timestamp))
+        (assoc-in (element.h/path db) (:elements preview-state)))))
 
 (m/=> go-to [:-> App uuid? App])
 (defn go-to

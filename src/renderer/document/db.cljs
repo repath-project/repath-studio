@@ -28,7 +28,8 @@
    [:elements {:default {} :persist true} [:map-of uuid? Element]]
    [:focused {:optional true} boolean?]
    [:filter {:optional true} A11yFilter]
-   [:attrs {:default {:fill "white" :stroke "black"}} [:map-of keyword? string?]]])
+   [:attrs {:default {:fill "white" :stroke "black"}} [:map-of keyword? string?]]
+   [:preview-label {:optional true} string?]])
 
 (def PersistedDocument
   (->> Document

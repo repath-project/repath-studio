@@ -7,6 +7,9 @@ module.exports = {
       fontSize: {
         '2xs': ['10px', '14px'],
       },
+      transitionProperty: {
+        'fill': 'fill',
+      },
     },
   },
   plugins: [],

@@ -99,7 +99,10 @@
       [:div.relative.grow.flex
        [frame.v/root]
        (if read-only?
-         [:div.absolute.inset-0.border-4.border-accent]
+         [:div.absolute.inset-0.border-4.border-accent
+          (when-let [preview-label @(rf/subscribe [::document.s/preview-label])]
+            [:div.absolute.bg-accent.top-2.left-2.px-1.rounded.text-accent-inverted
+             preview-label])]
          (when @(rf/subscribe [::app.s/debug-info])
            [debug-info]))
        (when @(rf/subscribe [::app.s/backdrop])

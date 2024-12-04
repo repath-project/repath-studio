@@ -95,6 +95,10 @@
     box-shadow: inset 0 0 1px 1px var(--accent)
   }
 
+  .stroke-accent {
+    stroke: var(--accent);
+  }
+
   .button-size {
     width: var(--button-size);
     height: var(--button-size);

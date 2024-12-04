@@ -182,19 +182,6 @@
 
 /* react-d3-tree */
 
-.rd3t-node,
-.rd3t-leaf-node {
-  circle {
-    transition: fill .3s;
-  }
-
-  &:hover {
-    circle {
-      stroke : var(--accent);
-    }
-  }
-}
-
 .rd3t-link {
   stroke : var(--border-color) !important;
   stroke-width: 3;

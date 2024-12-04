@@ -140,9 +140,17 @@
  :-> :save)
 
 (rf/reg-sub
+ ::preview-label
+ :<- [::active]
+ :-> :preview-label)
+
+(rf/reg-sub
  ::read-only?
+ :<- [::preview-label]
  :<- [::timeline.s/time]
- pos?)
+ (fn [[preview-label current-time] _]
+   (or preview-label
+       (pos? current-time))))
 
 (rf/reg-sub
  ::saved?

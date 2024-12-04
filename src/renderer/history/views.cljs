@@ -52,19 +52,20 @@
   "https://bkrem.github.io/react-d3-tree/docs/interfaces/_src_tree_types_.treeprops.html#rendercustomnodeelement"
   [^js/CustomNodeElementProps props]
   (let [datum (.-nodeDatum props)
+        active? (.-active datum)
         id (uuid (.-id datum))
-        color (if (.-active datum) "var(--accent)" (.-color datum))]
+        color (if active? "var(--accent)" (.-color datum))]
     (ra/as-element
-     [:circle
+     [:circle.transition-fill.hover:stroke-accent
       {:on-click #(rf/dispatch [::history.e/go-to id])
-       :on-pointer-enter #(rf/dispatch [::history.e/preview id])
+       :on-pointer-enter #(when-not active? (rf/dispatch [::history.e/preview id]))
        :on-pointer-leave #(rf/dispatch [::history.e/reset-state id])
        :cx "0"
        :cy "0"
        :stroke color
        :stroke-width 4
-       :r 18
-       :ref #(when % (.setAttribute % "fill" color))}
+       :fill color
+       :r 18}
       [:title (.-name datum)]])))
 
 (defn on-update
