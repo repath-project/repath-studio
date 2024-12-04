@@ -23,7 +23,7 @@
    [renderer.utils.path :as path :refer [PathManipulation PathBooleanOperation]]
    [renderer.utils.vec :as vec]))
 
-(m/=> path [:-> App [:* any?] vector?])
+(m/=> path [:-> App [:* [:or keyword? uuid?]] vector?])
 (defn path
   [db & more]
   (apply conj [:documents (:active-document db) :elements] more))

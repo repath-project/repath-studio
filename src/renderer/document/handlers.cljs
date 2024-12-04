@@ -11,7 +11,7 @@
    [renderer.snap.handlers :as snap.h]
    [renderer.utils.vec :as vec]))
 
-(m/=> path [:-> App [:* keyword?] vector?])
+(m/=> path [:-> App [:* [:or keyword? uuid?]] vector?])
 (defn path
   [db & more]
   (apply conj [:documents (:active-document db)] more))

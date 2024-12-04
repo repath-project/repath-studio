@@ -76,8 +76,8 @@
    [:clicked-element {:optional true} [:or Element Handle]]
    [:copied-bounds {:optional true} Bounds]
    [:copied-elements {:optional true} [:* Element]]
-   [:kdtree {:optional true} any?]
-   [:viewbox-kdtree {:optional true} any?]
+   [:kdtree {:optional true} [:maybe map?]]
+   [:viewbox-kdtree {:optional true} [:maybe map?]]
    [:re-pressed.core/keydown {:optional true} map?]])
 
 (def valid? (m/validator App))
