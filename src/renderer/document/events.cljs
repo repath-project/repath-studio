@@ -215,11 +215,10 @@
                         (history.h/finalize "Load document"))}
          (not migrated)
          (assoc :dispatch [::saved document])))
-     {:db (notification.h/add
-           db
-           (notification.v/generic-error
-            {:title (str "Error while loading " (:title document))
-             :message "File appears to be unsupported or corrupted."}))})))
+     {:db (->> (notification.v/generic-error
+                {:title (str "Error while loading " (:title document))
+                 :message "File appears to be unsupported or corrupted."})
+               (notification.h/add db))})))
 
 (rf/reg-event-fx
  ::load-multiple

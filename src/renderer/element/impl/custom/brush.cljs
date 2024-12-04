@@ -113,7 +113,9 @@
   [el]
   (let [attrs (:attrs el)
         pointer-handler #(pointer/event-handler! % el)
-        options  (-> attrs (select-keys option-keys) (update-vals js/parseFloat))]
+        options (-> attrs
+                    (select-keys option-keys)
+                    (update-vals js/parseFloat))]
     [:path (merge {:d (points->path (:points attrs) options)
                    :on-pointer-up pointer-handler
                    :on-pointer-down pointer-handler
@@ -161,7 +163,10 @@
                #(->> (into [] partition-to-px (attr/str->seq %))
                      (reduce (fn [points point]
                                (let [rel-point (mat/sub bounds-start (take 2 point))
-                                     offset (mat/add pivot-point (mat/sub rel-point (mat/mul rel-point ratio)))]
+                                     offset (mat/add pivot-point
+                                                     (mat/sub rel-point
+                                                              (mat/mul rel-point
+                                                                       ratio)))]
                                  (translate offset points point))) [])
                      (str/join " ")))))
 

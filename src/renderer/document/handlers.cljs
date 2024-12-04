@@ -68,7 +68,8 @@
   [db file-path]
   (cond-> db
     file-path
-    (update :recent #(->> (conj (filterv (complement #{file-path}) %) file-path)
+    (update :recent #(->> file-path
+                          (conj (filterv (complement #{file-path}) %))
                           (take-last 10)
                           (vec)))))
 
@@ -162,7 +163,8 @@
         (set-active (:id document)))
 
       (let [explanation (-> document db/explain me/humanize str)]
-        (notification.h/add db (notification.v/spec-failed "Load document" explanation))))))
+        (->> (notification.v/spec-failed "Load document" explanation)
+             (notification.h/add db))))))
 
 (m/=> saved? [:-> App uuid? boolean?])
 (defn saved?

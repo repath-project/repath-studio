@@ -538,11 +538,16 @@
 (m/=> scale [:-> App Vec2 Vec2 boolean? App])
 (defn scale
   [db ratio pivot-point recursive]
-  (let [ids-to-scale (cond-> (selected-ids db) recursive (set/union (descendant-ids db)))]
+  (let [ids-to-scale (cond-> (selected-ids db)
+                       recursive
+                       (set/union (descendant-ids db)))]
     (reduce
      (fn [db id]
-       (let [pivot-point (->> (entity db id) :bounds (take 2) (mat/sub pivot-point))]
-         (update-el db id hierarchy/scale ratio pivot-point)))
+       (let [adjusted-pivot-point (->> (entity db id)
+                                       :bounds
+                                       (take 2)
+                                       (mat/sub pivot-point))]
+         (update-el db id hierarchy/scale ratio adjusted-pivot-point)))
      db
      ids-to-scale)))
 
@@ -609,21 +614,25 @@
 (defn create
   [db el]
   (let [id (random-uuid) ; REVIEW: Hard to use a coeffect because of recursion.
-        new-el (->> (cond-> el (not (string? (:content el))) (dissoc :content))
+        new-el (->> (cond-> el
+                      (not (string? (:content el)))
+                      (dissoc :content))
                     (map/remove-nils)
                     (element/normalize-attrs)
                     (assoc-parent-id db))
         new-el (merge new-el db/default {:id id})
-        child-els (-> (entities db (set (:children el))) vals (concat (:content el)))
+        child-els (-> (entities db (set (:children el)))
+                      (vals)
+                      (concat (:content el)))
         [x1 y1] (hierarchy/bounds (entity db (:parent new-el)))
         add-children (fn [db child-els]
                        (reduce #(cond-> %1
                                   (db/tag? (:tag %2))
                                   (create (assoc %2 :parent id))) db child-els))]
     (if-not (db/valid? new-el)
-      (notification.h/add db (notification.v/spec-failed
-                              "Invalid element"
-                              (-> new-el db/explain me/humanize str)))
+      (->> (-> new-el db/explain me/humanize str)
+           (notification.v/spec-failed "Invalid element")
+           (notification.h/add db))
       (cond-> db
         :always
         (assoc-in (path db id) new-el)
