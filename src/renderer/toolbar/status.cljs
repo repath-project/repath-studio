@@ -103,7 +103,7 @@
 (defn zoom-decimal-points
   [zoom]
   (condp > zoom
-    1 2
+    1  2
     10 1
     0))
 
