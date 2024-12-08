@@ -3,7 +3,7 @@
    [renderer.utils.hiccup :refer [Hiccup]]))
 
 (def Dialog
-  [:map
+  [:map {:closed true}
    [:title {:optional true} Hiccup]
    [:content {:optional true} any?]
    [:close-button {:optional true} boolean?]
