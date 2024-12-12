@@ -27,6 +27,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Scan code
         uses: clj-holmes/clj-holmes-action@53daa4da4ff495cccf791e4ba4222a8317ddae9e

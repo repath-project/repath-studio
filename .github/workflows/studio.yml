@@ -20,6 +20,7 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v4
         with:
+          persist-credentials: false
           fetch-depth: 0
           fetch-tags: true
 
