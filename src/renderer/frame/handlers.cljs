@@ -46,8 +46,8 @@
       (->> (:document-tabs db)
            (reduce #(pan-by %1 (mat/div [(:width offset) (:height offset)] 2) %2) db)))))
 
-(m/=> zoom-in-place [:-> App number? Vec2 App])
-(defn zoom-in-place
+(m/=> zoom-at-position [:-> App number? Vec2 App])
+(defn zoom-at-position
   [db factor pos]
   (let [active-document (:active-document db)
         zoom (get-in db [:documents active-document :zoom])
@@ -70,15 +70,15 @@
 (m/=> zoom-at-pointer [:-> App number? App])
 (defn zoom-at-pointer
   [db factor]
-  (zoom-in-place db factor (:adjusted-pointer-pos db)))
+  (zoom-at-position db factor (:adjusted-pointer-pos db)))
 
-(m/=> zoom-by [:-> App number? App])
-(defn zoom-by
+(m/=> zoom-in-place [:-> App number? App])
+(defn zoom-in-place
   [db factor]
   (let [{:keys [zoom pan]} (get-in db [:documents (:active-document db)])
         {:keys [width height]} (:dom-rect db)
         position (mat/add pan (mat/div [width height] 2 zoom))]
-    (zoom-in-place db factor position)))
+    (zoom-at-position db factor position)))
 
 (m/=> pan-to-bounds [:-> App Bounds App])
 (defn pan-to-bounds

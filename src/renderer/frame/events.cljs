@@ -29,19 +29,19 @@
  [persist]
  (fn [db [_ zoom]]
    (let [current-zoom (get-in db [:documents (:active-document db) :zoom])]
-     (h/zoom-by db (/ zoom current-zoom)))))
+     (h/zoom-in-place db (/ zoom current-zoom)))))
 
 (rf/reg-event-db
  ::zoom-in
  [persist]
  (fn [db [_]]
-   (h/zoom-by db (/ 1 (:zoom-sensitivity db)))))
+   (h/zoom-in-place db (/ 1 (:zoom-sensitivity db)))))
 
 (rf/reg-event-db
  ::zoom-out
  [persist]
  (fn [db [_]]
-   (h/zoom-by db (:zoom-sensitivity db))))
+   (h/zoom-in-place db (:zoom-sensitivity db))))
 
 (rf/reg-event-db
  ::pan-to-element
