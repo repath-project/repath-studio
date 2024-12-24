@@ -165,7 +165,7 @@
   [db id explanation]
   (let [new-state {:explanation explanation
                    :elements (element.h/entities db)
-                   :timestamp (.now js/Date) ; REVIEW; Sideffect
+                   :timestamp (.now js/Date) ; REVIEW: Sideffect
                    :index (state-count db)
                    :id id
                    :children []}]
