@@ -95,8 +95,8 @@
   .button-group {
     @apply flex gap-px;
 
-    .button,
-    input {
+    > .button,
+    > input {
       @apply overlay m-0 rounded-none;
 
       &:first-child {

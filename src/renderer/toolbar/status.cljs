@@ -110,7 +110,7 @@
 (defn zoom-input
   [zoom]
   (let [value (.toFixed (* 100 zoom) (zoom-decimal-points zoom) 2)]
-    [:input.overlay.text-right.hidden.md:flex
+    [:input.overlay.text-right
      {:key zoom
       :aria-label "Zoom"
       :type "number"
@@ -141,9 +141,9 @@
        :title "Zoom in"
        :on-click #(rf/dispatch [::frame.e/zoom-in])}
       [ui/icon "plus"]]
-     [:div.flex
+     [:div.flex.hidden.md:flex
       [zoom-input zoom]
-      [:div.pr-2.overlay.flex.items-center.hidden.md:flex "%"]]
+      [:div.pr-2.overlay.flex.items-center "%"]]
      [zoom-menu]]))
 
 (defn root []
