@@ -78,10 +78,8 @@
 
 (m/=> event-handler! [:-> any? [:or Element Handle] nil?])
 (defn event-handler!
-  "Gathers pointer event props.
+  "Gathers pointer event props and dispathces the corresponding event.
    https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent
-
-   Then dispathces the corresponding event.
    https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/"
   [^js/PointerEvent e el]
   (.stopPropagation e)
