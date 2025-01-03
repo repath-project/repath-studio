@@ -7,7 +7,7 @@
   "license": "AGPL-3.0",
   "version": "0.4.5",
   "scripts": {
-    "upgrade": "npx npm-check-updates -u -x 'codemirror'",
+    "upgrade": "npx npm-check-updates -u -x 'codemirror react react-dom'",
     "postinstall": "electron-builder install-app-deps",
     "postcss:build": "npx postcss src/renderer/main.css -o resources/public/css/main.css --verbose",
     "postcss:watch": "npx postcss src/renderer/main.css -o resources/public/css/main.css --verbose -w",
@@ -104,9 +104,9 @@
     "postcss-import": "16.1.0",
     "postcss-nested": "7.0.2",
     "puppeteer": "23.11.1",
-    "react": "19.0.0",
+    "react": "18.3.1",
     "react-d3-tree": "3.6.2",
-    "react-dom": "19.0.0",
+    "react-dom": "18.3.1",
     "react-frame-component": "5.2.7",
     "react-resizable-panels": "2.1.7",
     "react-svg": "16.2.0",
@@ -127,7 +127,7 @@
     "opentype.js": "1.3.4"
   },
   "overrides": {
-    "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   }
 }
