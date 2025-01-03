@@ -72,13 +72,14 @@
   ([db]
    (reduce drop-rest db (:document-tabs db)))
   ([db document-id]
-   (let [pos (get-in db [:documents document-id :history :position])
-         states-path [:documents document-id :history :states]]
+   (let [pos (get-in db [:documents document-id :history :position])]
      (cond-> db
        pos
-       (-> (update-in states-path select-keys [pos])
-           (assoc-in (conj states-path pos :index) 0)
-           (update-in (conj states-path pos) dissoc :parent))))))
+       (update-in [:documents document-id :history :states]
+                  #(-> (select-keys % [pos])
+                       (assoc-in [pos :index] 0)
+                       (assoc-in [pos :children] [])
+                       (update pos dissoc :parent)))))))
 
 (m/=> preview [:-> App uuid? App])
 (defn preview
