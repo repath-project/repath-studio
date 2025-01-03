@@ -156,7 +156,8 @@
  [(rf/inject-cofx ::app.fx/guid)]
  (fn [{:keys [db guid]} [_]]
    {:db (-> (create db guid)
-            (history.h/finalize "Create document"))}))
+            (history.h/finalize "Create document"))
+    :dispatch-later {:ms 1 :dispatch [::center]}}))
 
 (rf/reg-event-fx
  ::init
