@@ -14,6 +14,10 @@
   []
   {:icon "image"})
 
+(defmethod hierarchy/on-drag-end :image
+  [db e]
+  (hierarchy/on-pointer-up db e))
+
 (defmethod hierarchy/on-pointer-up :image
   [db _e]
   (tool.h/add-fx db [::app.fx/file-open

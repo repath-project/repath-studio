@@ -69,7 +69,7 @@
 ██████╔╝░░░██║░░░╚██████╔╝██████╔╝██║╚█████╔╝
 ╚═════╝░░░░╚═╝░░░░╚═════╝░╚═════╝░╚═╝░╚════╝░")
 
-(defn ^:dev/after-load mount-root! []
+(defn mount-root! []
   (rf/clear-subscription-cache!)
   (let [container (.getElementById js/document "app")
         root (ra.dom.client/create-root container)]
