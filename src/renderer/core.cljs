@@ -129,6 +129,6 @@
 
   (if system/electron?
     (register-ipc-on-events!)
-    (.addEventListener js/window "load" (add-listeners!)))
+    (add-listeners!))
 
   (mount-root!))
