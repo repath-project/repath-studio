@@ -69,4 +69,4 @@
                                    (h/position db)))]
              (cond-> context
                (and db (not= (h/position db) prev-position))
-               (rf/assoc-effect :fx (conj (or fx []) [::app.fx/persist])))))))
+               (rf/assoc-effect :fx (conj (or fx []) [::app.fx/persist db])))))))

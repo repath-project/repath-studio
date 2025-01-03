@@ -35,6 +35,6 @@
 
 (defmethod hierarchy/on-drag-end :pan
   [db _e]
-  (-> (h/set-cursor db "grab")
-      (snap.h/update-viewport-tree)
-      (h/add-fx [::app.fx/persist])))
+  (let [db (-> (h/set-cursor db "grab")
+               (snap.h/update-viewport-tree))]
+    (h/add-fx db [::app.fx/persist db])))
