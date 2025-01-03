@@ -19,7 +19,7 @@
                   fx (rf/get-effect context :fx)]
               (cond-> context
                 db
-                (rf/assoc-effect :fx (conj (or fx []) [::fx/persist db])))))))
+                (rf/assoc-effect :fx (conj (or fx []) [::fx/persist])))))))
 
 (rf/reg-event-db
  ::initialize-db
