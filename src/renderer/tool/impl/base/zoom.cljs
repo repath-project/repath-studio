@@ -54,21 +54,21 @@
         width-ratio (/ (:width dom-rect) width)
         height-ratio (/ (:height dom-rect) height)
         current-zoom (get-in db [:documents (:active-document db) :zoom])
-        zoom (min width-ratio height-ratio)
-        db (-> (h/dissoc-temp db)
-               (h/set-cursor (if (pointer/shift? e) "zoom-out" "zoom-in"))
-               (frame.h/zoom-in-place (if (pointer/shift? e)
-                                        (:zoom-sensitivity db)
-                                        (/ zoom current-zoom)))
-               (frame.h/pan-to-bounds [x y offset-x offset-y])
-               (snap.h/update-viewport-tree))]
-    (h/add-fx db [::app.fx/persist db])))
+        zoom (min width-ratio height-ratio)]
+    (-> (h/dissoc-temp db)
+        (h/set-cursor (if (pointer/shift? e) "zoom-out" "zoom-in"))
+        (frame.h/zoom-in-place (if (pointer/shift? e)
+                                 (:zoom-sensitivity db)
+                                 (/ zoom current-zoom)))
+        (frame.h/pan-to-bounds [x y offset-x offset-y])
+        (snap.h/update-viewport-tree)
+        (h/add-fx [::app.fx/persist]))))
 
 (defmethod hierarchy/on-pointer-up :zoom
   [db e]
   (let [factor (if (pointer/shift? e)
                  (:zoom-sensitivity db)
-                 (/ 1 (:zoom-sensitivity db)))
-        db (-> (frame.h/zoom-at-pointer db factor)
-               (snap.h/update-viewport-tree))]
-    (h/add-fx db [::app.fx/persist db])))
+                 (/ 1 (:zoom-sensitivity db)))]
+    (-> (frame.h/zoom-at-pointer db factor)
+        (snap.h/update-viewport-tree)
+        (h/add-fx [::app.fx/persist]))))

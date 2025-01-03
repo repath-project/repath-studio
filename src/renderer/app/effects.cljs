@@ -3,6 +3,7 @@
    [akiroz.re-frame.storage :as rf.storage]
    [config :as config]
    [re-frame.core :as rf]
+   [re-frame.db :as rf.db]
    [renderer.app.db :as db]
    [renderer.app.events :as-alias e]
    [renderer.history.handlers :as history.h]
@@ -23,8 +24,9 @@
 
 (rf/reg-fx
  ::persist
- (fn [db]
-   (let [db (cond-> db
+ (fn []
+   (let [db @rf.db/app-db
+         db (cond-> db
               (:active-document db)
               history.h/drop-rest)]
      (->> (select-keys db db/persistent-keys)
