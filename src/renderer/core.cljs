@@ -85,11 +85,9 @@
 
 (defn set-focused!
   []
-  (js/console.log "set-focused!")
-  (rf/dispatch [::window.e/set-focused
-                (or (.hasFocus js/document)
-                    (and (dom/frame-document!)
-                         (.hasFocus (dom/frame-document!))))]))
+  (rf/dispatch [::window.e/set-focused (or (.hasFocus js/document)
+                                           (and (dom/frame-document!)
+                                                (.hasFocus (dom/frame-document!))))]))
 
 (defn add-listeners!
   []
