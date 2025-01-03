@@ -3,6 +3,7 @@
    [clojure.core.matrix :as mat]
    [clojure.string :as str]
    [re-frame.core :as rf]
+   [renderer.app.effects :as-alias app.fx]
    [renderer.app.events :as-alias app.e]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.events :as-alias element.e]
@@ -52,15 +53,16 @@
   [e]
   (str/replace (.. e -target -value) " " "\u00a0"))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::set-text
- (fn [db [_ id s]]
-   (-> (if (empty? s)
-         (-> (element.h/delete db id)
-             (history.h/finalize "Remove text"))
-         (-> (element.h/assoc-prop db id :content s)
-             (history.h/finalize "Set text")))
-       (h/activate :transform))))
+ (fn [{:keys [db]} [_ id s]]
+   {:db (-> (if (empty? s)
+              (-> (element.h/delete db id)
+                  (history.h/finalize "Remove text"))
+              (-> (element.h/assoc-prop db id :content s)
+                  (history.h/finalize "Set text")))
+            (h/activate :transform))
+    ::app.fx/focus nil}))
 
 (defn key-down-handler!
   [e id]
