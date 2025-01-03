@@ -4,7 +4,7 @@
    ["paper" :refer [paper]]
    [re-frame.core :as rf]
    [re-pressed.core :as rp]
-   [reagent.dom :as ra.dom]
+   [reagent.dom.client :as ra.dom.client]
    [renderer.app.effects]
    [renderer.app.events :as app.e]
    [renderer.app.subs]
@@ -71,9 +71,9 @@
 
 (defn ^:dev/after-load mount-root! []
   (rf/clear-subscription-cache!)
-  (let [root-el (.getElementById js/document "app")]
-    (ra.dom/unmount-component-at-node root-el)
-    (ra.dom/render [error/boundary [app.v/root]] root-el)))
+  (let [container (.getElementById js/document "app")
+        root (ra.dom.client/create-root container)]
+    (ra.dom.client/render root [error/boundary [app.v/root]])))
 
 (defn bootstrap-cb!
   []
