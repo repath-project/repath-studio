@@ -169,18 +169,18 @@
 (m/=> delta->offset-with-pivot-point [:-> ScaleHandle Vec2 Bounds [:tuple Vec2 Vec2]])
 (defn delta->offset-with-pivot-point
   "Converts the x/y pointer offset to a scale ratio and a pivot point,
-  to decouple this from the scaling method of the elements.
+   to decouple this from the scaling method of the elements.
 
-     :pivot-point
-     + ─────────□──┬-------□
-     │             |       |
-     │             | ─ x ─ |
-     │             │       │
-     □ ─────────── ■       □
-     |      |        ↖     │
-     |      y          ↖   │
-     |      |            ↖ │
-     □----------□--------- ■ :bottom-right (active handle)"
+   :pivot-point
+   + ─────────□──┬-------□
+   │             |       |
+   │             | ─ x ─ |
+   │             │       │
+   □ ─────────── ■       □
+   |      |        ↖     │
+   |      y          ↖   │
+   |      |            ↖ │
+   □----------□--------- ■ :bottom-right (active handle)"
   [handle offset bounds]
   (let [[x y] offset
         [x1 y1 x2 y2] bounds
