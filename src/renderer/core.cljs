@@ -83,18 +83,20 @@
   (print "You can create or modify shapes using the command line.")
   (print "Type (help) to see a list of commands."))
 
+(defn set-focused!
+  []
+  (rf/dispatch [::window.e/set-focused (or (.hasFocus js/document)
+                                           (and (dom/frame-document!)
+                                                (.hasFocus (dom/frame-document!))))]))
+
 (defn add-listeners!
   []
   (.addEventListener js/document "keydown" keyb/event-handler!)
   (.addEventListener js/document "keyup" keyb/event-handler!)
-  (.addEventListener js/document "fullscreenchange" #(rf/dispatch [::window.e/set-fullscreen
-                                                                   (boolean (.-fullscreenElement js/document))]))
-
+  (.addEventListener js/document "fullscreenchange" #(rf/dispatch [::window.e/set-fullscreen (boolean (.-fullscreenElement js/document))]))
+  (.addEventListener js/document "DOMContentLoaded" set-focused!)
   (.addEventListener js/window "focus" (rf/dispatch [::window.e/set-focused true]))
-  (.addEventListener js/window "blur" (rf/dispatch [::window.e/set-focused
-                                                    (or (.hasFocus js/document)
-                                                        (and (dom/frame-document!)
-                                                             (.hasFocus (dom/frame-document!))))]))
+  (.addEventListener js/window "blur" (set-focused!))
 
   (rf/dispatch [::document.e/center]))
 
