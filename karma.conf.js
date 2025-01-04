@@ -5,6 +5,10 @@ module.exports = function (config) {
 
   config.set({
     customLaunchers: {
+      ChromeHeadlessNoSandbox: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox']
+      },
       CustomElectron: {
         base: 'Electron',
         require: __dirname + '/resources/main.js',
@@ -16,7 +20,7 @@ module.exports = function (config) {
         }
       }
     },
-    browsers: ['ChromeHeadless', 'CustomElectron'],
+    browsers: ['ChromeHeadlessNoSandbox', 'CustomElectron'],
     basePath: 'target',
     files: ['karma-test.js'],
     frameworks: ['cljs-test'],
