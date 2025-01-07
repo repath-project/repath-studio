@@ -74,7 +74,7 @@
     [["maximize" #(send-to-renderer! "window-maximized")]
      ["unmaximize" #(send-to-renderer! "window-unmaximized")]
      ["focus" #(send-to-renderer! "window-focused")]
-     ["blur" #(send-to-renderer! "window-blured")]
+     ["blur" #(send-to-renderer! "window-blurred")]
      ["enter-full-screen" #(send-to-renderer! "window-entered-fullscreen")]
      ["leave-full-screen" #(send-to-renderer! "window-leaved-fullscreen")]
      ["minimize" #(send-to-renderer! "window-minimized")]
