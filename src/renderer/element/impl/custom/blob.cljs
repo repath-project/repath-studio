@@ -117,7 +117,7 @@
   (element/update-attrs-with el + [[:x x]
                                    [:y y]]))
 
-(defmethod hierarchy/bounds :blob
+(defmethod hierarchy/bbox :blob
   [el]
   (let [{{:keys [x y size]} :attrs} el
         [x y size] (mapv length/unit->px [x y size])]

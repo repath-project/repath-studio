@@ -83,7 +83,7 @@
      (when snap?
        [:<>
         (when snapped-el
-          [svg/bounding-box (:bounds snapped-el) true])
+          [svg/bounding-box (:bbox snapped-el) true])
         (when nearest-neighbor
           [snap.v/canvas-label nearest-neighbor])])
 

@@ -128,14 +128,14 @@
   [points]
   (attr/points->vec points 3))
 
-(defmethod hierarchy/bounds :brush
+(defmethod hierarchy/bbox :brush
   [el]
   (let [points (-> el :attrs :points points->vec)
-        x1 (apply min (map #(length/unit->px (first %)) points))
-        y1 (apply min (map #(length/unit->px (second %)) points))
-        x2 (apply max (map #(length/unit->px (first %)) points))
-        y2 (apply max (map #(length/unit->px (second %)) points))]
-    [x1 y1 x2 y2]))
+        min-x (apply min (map #(length/unit->px (first %)) points))
+        min-y (apply min (map #(length/unit->px (second %)) points))
+        max-x (apply max (map #(length/unit->px (first %)) points))
+        max-y (apply max (map #(length/unit->px (second %)) points))]
+    [min-x min-y max-x max-y]))
 
 (defn translate
   [[offset-x offset-y] points point]
@@ -156,13 +156,13 @@
 
 (defmethod hierarchy/scale :brush
   [el ratio pivot-point]
-  (let [bounds-start (take 2 (hierarchy/bounds el))
+  (let [bbox-min (take 2 (hierarchy/bbox el))
         pivot-point (mat/sub pivot-point (mat/mul pivot-point ratio))]
     (update-in el
                [:attrs :points]
                #(->> (into [] partition-to-px (attr/str->seq %))
                      (reduce (fn [points point]
-                               (let [rel-point (mat/sub bounds-start (take 2 point))
+                               (let [rel-point (mat/sub bbox-min (take 2 point))
                                      offset (mat/add pivot-point
                                                      (mat/sub rel-point
                                                               (mat/mul rel-point

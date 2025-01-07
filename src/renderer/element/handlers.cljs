@@ -14,7 +14,7 @@
    [renderer.notification.handlers :as notification.h]
    [renderer.notification.views :as notification.v]
    [renderer.utils.attribute :as attr]
-   [renderer.utils.bounds :as bounds :refer [Bounds]]
+   [renderer.utils.bounds :as bounds :refer [BBox]]
    [renderer.utils.element :as element]
    [renderer.utils.extra :refer [partial-right]]
    [renderer.utils.hiccup :as hiccup]
@@ -102,31 +102,34 @@
         parent-el
         (recur (parent db (:id parent-el)))))))
 
-(m/=> adjusted-bounds [:-> App uuid? [:maybe Bounds]])
-(defn adjusted-bounds
+(m/=> adjusted-bbox [:-> App uuid? [:maybe BBox]])
+(defn adjusted-bbox
   [db id]
   (loop [container (parent-container db id)
-         bounds (hierarchy/bounds (entity db id))]
-    (if-not (and container bounds)
-      bounds
-      (let [[offset-x offset-y _ _] (hierarchy/bounds container)
-            [x1 y1 x2 y2] bounds]
+         bbox (hierarchy/bbox (entity db id))]
+    (if-not (and container bbox)
+      bbox
+      (let [[offset-x offset-y _ _] (hierarchy/bbox container)
+            [min-x min-y max-x max-y] bbox]
         (recur
          (parent-container db (:id container))
-         [(+ x1 offset-x) (+ y1 offset-y) (+ x2 offset-x) (+ y2 offset-y)])))))
+         [(+ min-x offset-x)
+          (+ min-y offset-y)
+          (+ max-x offset-x)
+          (+ max-y offset-y)])))))
 
-(m/=> refresh-bounds [:-> App uuid? App])
-(defn refresh-bounds
+(m/=> refresh-bbox [:-> App uuid? App])
+(defn refresh-bbox
   [db id]
   (let [el (entity db id)
-        bounds (if (= (:tag el) :g)
-                 (let [b (map #(adjusted-bounds db %) (children-ids db id))]
-                   (when (seq b) (apply bounds/union b)))
-                 (adjusted-bounds db id))]
-    (if (or (not bounds) (element/root? el))
+        bbox (if (= (:tag el) :g)
+               (let [b (map #(adjusted-bbox db %) (children-ids db id))]
+                 (when (seq b) (apply bounds/union b)))
+               (adjusted-bbox db id))]
+    (if (or (not bbox) (element/root? el))
       db
-      (-> (reduce refresh-bounds db (children-ids db id))
-          (update-in (path db id) assoc :bounds bounds)))))
+      (-> (reduce refresh-bbox db (children-ids db id))
+          (update-in (path db id) assoc :bbox bbox)))))
 
 (m/=> update-el [:-> App uuid? ifn? [:* any?] App])
 (defn update-el
@@ -134,7 +137,7 @@
   (if (locked? db id)
     db
     (-> (apply update-in db (path db id) f more)
-        (refresh-bounds id))))
+        (refresh-bbox id))))
 
 (m/=> siblings-selected? [:-> App [:maybe boolean?]])
 (defn siblings-selected?
@@ -241,7 +244,7 @@
 (defn update-prop
   [db id k & more]
   (-> (apply update-in db (path db id k) more)
-      (refresh-bounds id)))
+      (refresh-bbox id)))
 
 (m/=> assoc-prop [:function
                   [:-> App keyword? any? App]
@@ -253,7 +256,7 @@
    (-> (if (str/blank? v)
          (update-in db (path db id) dissoc k)
          (assoc-in db (path db id k) v))
-       (refresh-bounds id))))
+       (refresh-bbox id))))
 
 (m/=> dissoc-attr [:function
                    [:-> App keyword? App]
@@ -276,7 +279,7 @@
    (cond-> db
      (not (locked? db id))
      (-> (assoc-in (path db id :attrs k) v)
-         (refresh-bounds id)))))
+         (refresh-bbox id)))))
 
 (m/=> set-attr [:function
                 [:-> App keyword? any? App]
@@ -437,10 +440,10 @@
     (:active-document db)
     (assoc-in [:documents (:active-document db) :ignored-ids] #{})))
 
-(m/=> bounds [:-> App [:maybe Bounds]])
-(defn bounds
+(m/=> bbox [:-> App [:maybe BBox]])
+(defn bbox
   [db]
-  (element/united-bounds (selected db)))
+  (element/united-bbox (selected db)))
 
 (m/=> copy [:-> App App])
 (defn copy
@@ -449,7 +452,7 @@
     (cond-> db
       (seq els)
       (assoc :copied-elements els
-             :copied-bounds (bounds db)))))
+             :copied-bbox (bbox db)))))
 
 (m/=> delete [:function
               [:-> App App]
@@ -509,7 +512,7 @@
   (let [svgs (reverse (root-svgs db))
         pointer-pos (:adjusted-pointer-pos db)]
     (or
-     (some #(when (bounds/contained-point? (:bounds %) pointer-pos) %) svgs)
+     (some #(when (bounds/contained-point? (:bbox %) pointer-pos) %) svgs)
      (root db))))
 
 (m/=> translate [:function
@@ -531,7 +534,7 @@
    (reduce (partial-right place position) db (top-ancestor-ids db)))
   ([db id position]
    (let [el (entity db id)
-         center (bounds/center (hierarchy/bounds el))
+         center (bounds/center (hierarchy/bbox el))
          offset (mat/sub position center)]
      (update-el db id hierarchy/translate offset))))
 
@@ -544,7 +547,7 @@
     (reduce
      (fn [db id]
        (let [adjusted-pivot-point (->> (entity db id)
-                                       :bounds
+                                       :bbox
                                        (take 2)
                                        (mat/sub pivot-point))]
          (update-el db id hierarchy/scale ratio adjusted-pivot-point)))
@@ -558,19 +561,20 @@
   ([db direction]
    (reduce (partial-right align direction) db (selected-ids db)))
   ([db id direction]
-   (let [el-bounds (:bounds (entity db id))
-         center (bounds/center el-bounds)
-         parent-bounds (:bounds (parent db id))
-         parent-center (bounds/center parent-bounds)
+   (let [el-bbox (:bbox (entity db id))
+         center (bounds/center el-bbox)
+         parent-bbox (:bbox (parent db id))
+         parent-center (bounds/center parent-bbox)
          [cx cy] (mat/sub parent-center center)
-         [x1 y1 x2 y2] (mat/sub parent-bounds el-bounds)]
+         delta-bbox (mat/sub parent-bbox el-bbox)
+         [min-x-delta min-y-delta max-x-delta max-y-delta] delta-bbox]
      (translate db id (case direction
-                        :top [0 y1]
+                        :top [0 min-y-delta]
                         :center-vertical [0 cy]
-                        :bottom [0 y2]
-                        :left [x1 0]
+                        :bottom [0 max-y-delta]
+                        :left [min-x-delta 0]
                         :center-horizontal [cx 0]
-                        :right [x2 0])))))
+                        :right [max-x-delta 0])))))
 
 (m/=> ->path [:function
               [:-> App App]
@@ -592,13 +596,13 @@
   ([db id]
    (update-el db id element/stroke->path)))
 
-(m/=> overlapping-svg [:-> App Bounds Element])
+(m/=> overlapping-svg [:-> App BBox Element])
 (defn overlapping-svg
-  [db el-bounds]
+  [db el-bbox]
   (let [svgs (reverse (root-svgs db))] ; Reverse to select top svgs first.
     (or
-     (some #(when (bounds/contained? el-bounds (:bounds %)) %) svgs)
-     (some #(when (bounds/intersect? el-bounds (:bounds %)) %) svgs)
+     (some #(when (bounds/contained? el-bbox (:bbox %)) %) svgs)
+     (some #(when (bounds/intersect? el-bbox (:bbox %)) %) svgs)
      (root db))))
 
 (m/=> assoc-parent-id [:-> App Element Element])
@@ -608,7 +612,7 @@
     (not (or (element/root? el) (:parent el)))
     (assoc :parent (:id (if (element/svg? el)
                           (root db)
-                          (overlapping-svg db (hierarchy/bounds el)))))))
+                          (overlapping-svg db (hierarchy/bbox el)))))))
 
 (m/=> create [:-> App map? App])
 (defn create
@@ -624,7 +628,7 @@
         child-els (-> (entities db (set (:children el)))
                       (vals)
                       (concat (:content el)))
-        [x1 y1] (hierarchy/bounds (entity db (:parent new-el)))
+        [min-x min-y] (hierarchy/bbox (entity db (:parent new-el)))
         add-children (fn [db child-els]
                        (reduce #(cond-> %1
                                   (db/tag? (:tag %2))
@@ -641,10 +645,10 @@
         (update-prop (:parent new-el) :children #(vec (conj % id)))
 
         (not (or (element/svg? new-el) (element/root? new-el) (:parent el)))
-        (translate [(- x1) (- y1)])
+        (translate [(- min-x) (- min-y)])
 
         :always
-        (refresh-bounds id)
+        (refresh-bbox id)
 
         child-els
         (add-children child-els)))))
@@ -703,11 +707,11 @@
    (let [parent-el (hovered-svg db)]
      (reduce (partial-right paste parent-el) (deselect-all db) (:copied-elements db))))
   ([db el parent-el]
-   (let [center (bounds/center (:copied-bounds db))
-         el-center (bounds/center (:bounds el))
+   (let [center (bounds/center (:copied-bbox db))
+         el-center (bounds/center (:bbox el))
          offset (mat/sub el-center center)
-         el (dissoc el :bounds)
-         [s-x1 s-y1] (:bounds parent-el)
+         el (dissoc el :bbox)
+         [s-x1 s-y1] (:bbox parent-el)
          pointer-pos (:adjusted-pointer-pos db)]
      (reduce
       select

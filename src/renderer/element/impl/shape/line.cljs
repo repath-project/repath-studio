@@ -30,7 +30,7 @@
   [el ratio pivot-point]
   (let [{:keys [x1 y1 x2 y2]} (:attrs el)
         [x1 y1 x2 y2] (mapv length/unit->px [x1 y1 x2 y2])
-        dimensions (bounds/->dimensions (hierarchy/bounds el))
+        dimensions (bounds/->dimensions (hierarchy/bbox el))
         [x y] (mat/sub dimensions (mat/mul dimensions ratio))
         pivot-diff (mat/sub pivot-point dimensions)
         offset (mat/sub pivot-diff (mat/mul pivot-diff ratio))]
@@ -82,7 +82,7 @@
 
     el))
 
-(defmethod hierarchy/bounds :line
+(defmethod hierarchy/bbox :line
   [el]
   (let [{{:keys [x1 y1 x2 y2]} :attrs} el
         [x1 y1 x2 y2] (mapv length/unit->px [x1 y1 x2 y2])]

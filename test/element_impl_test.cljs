@@ -25,7 +25,7 @@
             :cy "50"
             :r "100"}))
 
-    (is (= (hierarchy/bounds circle-el)
+    (is (= (hierarchy/bbox circle-el)
            [-50 -50 50 50]))
 
     (is (= (hierarchy/path circle-el)
@@ -57,7 +57,7 @@
             :width "100"
             :height "100"}))
 
-    (is (= (hierarchy/bounds rect-el)
+    (is (= (hierarchy/bbox rect-el)
            [0 0 50 50]))
 
     (is (= (hierarchy/path rect-el)
@@ -89,7 +89,7 @@
             :rx "100"
             :ry "100"}))
 
-    (is (= (hierarchy/bounds ellipse-el)
+    (is (= (hierarchy/bbox ellipse-el)
            [-50 -50 50 50]))
 
     (is (= (hierarchy/path ellipse-el)
@@ -121,7 +121,7 @@
             :x2 "100"
             :y2 "100"}))
 
-    (is (= (hierarchy/bounds line-el)
+    (is (= (hierarchy/bbox line-el)
            [0 0 50 50]))
 
     (is (= (hierarchy/path line-el)
@@ -141,7 +141,7 @@
     (is (= (:attrs (hierarchy/scale polygon-el [2 2] [0 0]))
            {:points "528 -240 908 -370 1354 -46"}))
 
-    (is (= (hierarchy/bounds polygon-el)
+    (is (= (hierarchy/bbox polygon-el)
            [528 -370 941 -208]))
 
     (is (= (hierarchy/path polygon-el)
@@ -164,7 +164,7 @@
     (is (= (:attrs (hierarchy/scale polyline-el [2 2] [0 0]))
            {:points "528 -240 908 -370 1354 -46"}))
 
-    (is (= (hierarchy/bounds polyline-el)
+    (is (= (hierarchy/bbox polyline-el)
            [528 -370 941 -208]))
 
     (is (= (hierarchy/path polyline-el)
@@ -187,7 +187,7 @@
     (is (= (:attrs (hierarchy/scale path-el [2 2] [0 0]))
            {:d "M528-239L908-371 1354-45 798 23 800-151z"}))
 
-    (is (= (hierarchy/bounds path-el)
+    (is (= (hierarchy/bbox path-el)
            [528 -371 941 -174]))
 
     (is (thrown? js/Error (hierarchy/path path-el)))))
@@ -218,7 +218,7 @@
             :width "100"
             :height "100"}))
 
-    (is (= (hierarchy/bounds svg-el)
+    (is (= (hierarchy/bbox svg-el)
            [0 0 50 50]))
 
     (is (thrown? js/Error (hierarchy/path svg-el)))))

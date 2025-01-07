@@ -3,7 +3,7 @@
    [malli.core :as m]
    [malli.transform :as mt]
    [renderer.element.hierarchy :as hierarchy]
-   [renderer.utils.bounds :refer [Bounds]]))
+   [renderer.utils.bounds :refer [BBox]]))
 
 (defn tag?
   [k]
@@ -33,7 +33,7 @@
    [:locked {:optional true} boolean?]
    [:selected {:optional true} boolean?]
    [:children {:default [] :optional true} [:vector uuid?]]
-   [:bounds {:optional true} Bounds]
+   [:bbox {:optional true} BBox]
    [:content {:optional true} string?]
    [:attrs {:optional true} Attrs]])
 

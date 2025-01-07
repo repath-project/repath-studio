@@ -14,7 +14,7 @@
 
 (derive ::hierarchy/renderable ::hierarchy/element)
 
-(defmethod hierarchy/bounds ::hierarchy/renderable
+(defmethod hierarchy/bbox ::hierarchy/renderable
   [{:keys [tag attrs content] :as el}]
   (when-let [svg (dom/canvas-element!)]
     (let [dom-el (js/document.createElementNS "http://www.w3.org/2000/svg" (name tag))]
@@ -23,9 +23,9 @@
           (.setAttributeNS dom-el nil (name k) v)))
       (.appendChild svg dom-el)
       (set! (.-innerHTML dom-el) (if (empty? content) "\u00a0" content))
-      (let [bounds (bounds/dom-el->bounds dom-el)]
+      (let [bbox (bounds/dom-el->bbox dom-el)]
         (.remove dom-el)
-        bounds))))
+        bbox))))
 
 (defn ghost-element
   "Renders a ghost element on top of the actual element to ensure that the user

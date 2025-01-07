@@ -39,19 +39,19 @@
    (h/steps-coll step viewbox orientation)))
 
 (rf/reg-sub
- ::bounds-rect-attrs
+ ::bbox-rect-attrs
  :<- [::document.s/zoom]
  :<- [::document.s/pan]
- :<- [::element.s/bounds]
+ :<- [::element.s/bbox]
  :<- [::size]
- (fn [[zoom pan bounds size] [_ orientation]]
-   (let [[x1 y1 x2 y2] (map #(* % zoom) bounds)]
+ (fn [[zoom pan bbox size] [_ orientation]]
+   (let [[min-x min-y max-x max-y] (map #(* % zoom) bbox)]
      (if (= orientation :vertical)
        {:x 0
-        :y (- y1 (* (second pan) zoom))
+        :y (- min-y (* (second pan) zoom))
         :width size
-        :height (- y2 y1)}
-       {:x (- x1 (* (first pan) zoom))
+        :height (- max-y min-y)}
+       {:x (- min-x (* (first pan) zoom))
         :y 0
-        :width (- x2 x1)
+        :width (- max-x min-x)
         :height size}))))

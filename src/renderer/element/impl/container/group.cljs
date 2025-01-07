@@ -34,23 +34,23 @@
 
 (defmethod hierarchy/render :g
   [el]
-  (let [{:keys [attrs children bounds]} el
+  (let [{:keys [attrs children bbox]} el
         child-els @(rf/subscribe [::element.s/filter-visible children])]
     [:g (element/style->map attrs)
      (for [child child-els]
        ^{:key (:id child)} [hierarchy/render child])
-     (when bounds
+     (when bbox
        (let [ignored-ids @(rf/subscribe [::document.s/ignored-ids])
              ignored? (contains? ignored-ids (:id el))
-             [x1 y1 _x2 _y2] bounds
-             [width height] (bounds/->dimensions bounds)
+             [min-x min-y] bbox
+             [w h] (bounds/->dimensions bbox)
              pointer-handler #(pointer/event-handler! % el)
              zoom @(rf/subscribe [::document.s/zoom])
              stroke-width (max (:stroke-width attrs) (/ 20 zoom))]
-         [:rect {:x x1
-                 :y y1
-                 :width width
-                 :height height
+         [:rect {:x min-x
+                 :y min-y
+                 :width w
+                 :height h
                  :fill "transparent"
                  :stroke "transparent"
                  :stroke-width stroke-width
@@ -58,4 +58,3 @@
                  :on-pointer-up pointer-handler
                  :on-pointer-down pointer-handler
                  :on-pointer-move pointer-handler}]))]))
-

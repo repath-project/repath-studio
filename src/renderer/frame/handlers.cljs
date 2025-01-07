@@ -6,7 +6,7 @@
    [renderer.document.db :refer [ZoomFactor]]
    [renderer.element.handlers :as element.h]
    [renderer.frame.db :refer [DomRect Viewbox FocusType]]
-   [renderer.utils.bounds :as utils.bounds :refer [Bounds]]
+   [renderer.utils.bounds :as utils.bounds :refer [BBox]]
    [renderer.utils.element :as element]
    [renderer.utils.math :as math :refer [Vec2]]
    [renderer.utils.pointer :as pointer]))
@@ -23,8 +23,8 @@
   ([zoom pan dom-rect]
    (let [{:keys [width height]} dom-rect
          [x y] pan
-         [width height] (mat/div [width height] zoom)]
-     [x y width height])))
+         [w h] (mat/div [width height] zoom)]
+     [x y w h])))
 
 (m/=> pan-by [:function
               [:-> App Vec2 App]
@@ -80,33 +80,33 @@
         position (mat/add pan (mat/div [width height] 2 zoom))]
     (zoom-at-position db factor position)))
 
-(m/=> pan-to-bounds [:-> App Bounds App])
-(defn pan-to-bounds
-  [db bounds]
+(m/=> pan-to-bbox [:-> App BBox App])
+(defn pan-to-bbox
+  [db bbox]
   (let [zoom (get-in db [:documents (:active-document db) :zoom])
         rect-dimensions [(-> db :dom-rect :width) (-> db :dom-rect :height)]
-        [x1 y1] bounds
-        pan (-> (utils.bounds/->dimensions bounds)
+        [min-x min-y] bbox
+        pan (-> (utils.bounds/->dimensions bbox)
                 (mat/sub (mat/div rect-dimensions zoom))
                 (mat/div 2)
-                (mat/add [x1 y1]))]
+                (mat/add [min-x min-y]))]
     (assoc-in db [:documents (:active-document db) :pan] pan)))
 
-(m/=> focus-bounds [:function
-                    [:-> App FocusType App]
-                    [:-> App FocusType Bounds App]])
-(defn focus-bounds
+(m/=> focus-bbox [:function
+                  [:-> App FocusType App]
+                  [:-> App FocusType BBox App]])
+(defn focus-bbox
   ([db focus-type]
    (cond-> db
      (:active-document db)
-     (focus-bounds
+     (focus-bbox
       focus-type
-      (or (element.h/bounds db)
-          (element/united-bounds (element.h/root-children db))))))
-  ([db focus-type bounds]
-   (let [[width height] (utils.bounds/->dimensions bounds)
-         width-ratio (/ (-> db :dom-rect :width) width)
-         height-ratio (/ (-> db :dom-rect :height) height)
+      (or (element.h/bbox db)
+          (element/united-bbox (element.h/root-children db))))))
+  ([db focus-type bbox]
+   (let [[w h] (utils.bounds/->dimensions bbox)
+         width-ratio (/ (-> db :dom-rect :width) w)
+         height-ratio (/ (-> db :dom-rect :height) h)
          min-zoom (min width-ratio height-ratio)]
      (-> db
          (assoc-in [:documents (:active-document db) :zoom]
@@ -114,4 +114,4 @@
                      :original (min (* min-zoom 0.9) 1)
                      :fit min-zoom
                      :fill (max width-ratio height-ratio)))
-         (pan-to-bounds bounds)))))
+         (pan-to-bbox bbox)))))

@@ -8,7 +8,7 @@
    [renderer.frame.subs :as-alias frame.s]
    [renderer.snap.subs :as-alias snap.s]
    [renderer.theme.db :as theme.db]
-   [renderer.utils.bounds :as bounds :refer [Bounds]]
+   [renderer.utils.bounds :as bounds :refer [BBox]]
    [renderer.utils.pointer :as pointer]))
 
 #_(defn circle-handle
@@ -59,19 +59,19 @@
   [square-handle (merge props {:type :handle
                                :action :scale})])
 
-(defn wrapping-bounding-box
-  [bounds]
+(defn wrapping-bbox
+  [bbox]
   (let [zoom @(rf/subscribe [::document.s/zoom])
-        id :bounding-box
+        id :bbox
         ignored-ids @(rf/subscribe [::document.s/ignored-ids])
         ignored? (contains? ignored-ids id)
-        [x1 y1 _x2 _y2] bounds
-        [w h] (bounds/->dimensions bounds)
+        [min-x min-y] bbox
+        [w h] (bounds/->dimensions bbox)
         pointer-handler #(pointer/event-handler! % {:type :handle
                                                     :action :translate
                                                     :id id})
-        rect-attrs {:x x1
-                    :y y1
+        rect-attrs {:x min-x
+                    :y min-y
                     :width w
                     :height h
                     :stroke-width (/ 2 zoom)
@@ -84,31 +84,31 @@
                               :on-pointer-down pointer-handler
                               :on-pointer-move pointer-handler})]))
 
-(m/=> min-bounds [:-> Bounds Bounds])
-(defn min-bounds
-  [bounds]
+(m/=> min-bbox [:-> BBox BBox])
+(defn min-bbox
+  [bbox]
   (let [zoom @(rf/subscribe [::document.s/zoom])
-        dimensions (bounds/->dimensions bounds)
+        dimensions (bounds/->dimensions bbox)
         [w h] dimensions
         min-size (/ (* theme.db/handle-size 2) zoom)]
-    (cond-> bounds
+    (cond-> bbox
       (< w min-size) (mat/add [(- (/ (- min-size w) 2)) 0
                                (/ (- min-size w) 2) 0])
       (< h min-size) (mat/add [0 (- (/ (- min-size h) 2))
                                0 (/ (- min-size h) 2)]))))
 
 (defn bounding-corners
-  [bounds]
-  (let [bounds (min-bounds bounds)
-        [x1 y1 x2 y2] bounds
-        [w h] (bounds/->dimensions bounds)]
+  [bbox]
+  (let [bbox (min-bbox bbox)
+        [min-x min-y max-x max-y] bbox
+        [w h] (bounds/->dimensions bbox)]
     [:g {:key :bounding-corners}
      (map scale-handle
-          [{:x x1 :y y1 :id :top-left :cursor "nwse-resize"}
-           {:x x2 :y y1 :id :top-right :cursor "nesw-resize"}
-           {:x x1 :y y2 :id :bottom-left :cursor "nesw-resize"}
-           {:x x2 :y y2 :id :bottom-right :cursor "nwse-resize"}
-           {:x (+ x1 (/ w 2)) :y y1 :id :top-middle :cursor "ns-resize"}
-           {:x x2 :y (+ y1 (/ h 2)) :id :middle-right :cursor "ew-resize"}
-           {:x x1 :y (+ y1 (/ h 2)) :id :middle-left :cursor "ew-resize"}
-           {:x (+ x1 (/ w 2)) :y y2 :id :bottom-middle :cursor "ns-resize"}])]))
+          [{:x min-x :y min-y :id :top-left :cursor "nwse-resize"}
+           {:x max-x :y min-y :id :top-right :cursor "nesw-resize"}
+           {:x min-x :y max-y :id :bottom-left :cursor "nesw-resize"}
+           {:x max-x :y max-y :id :bottom-right :cursor "nwse-resize"}
+           {:x (+ min-x (/ w 2)) :y min-y :id :top-middle :cursor "ns-resize"}
+           {:x max-x :y (+ min-y (/ h 2)) :id :middle-right :cursor "ew-resize"}
+           {:x min-x :y (+ min-y (/ h 2)) :id :middle-left :cursor "ew-resize"}
+           {:x (+ min-x (/ w 2)) :y max-y :id :bottom-middle :cursor "ns-resize"}])]))

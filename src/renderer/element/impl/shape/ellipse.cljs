@@ -32,13 +32,13 @@
 (defmethod hierarchy/scale :ellipse
   [el ratio pivot-point]
   (let [[x y] ratio
-        dimensions (bounds/->dimensions (hierarchy/bounds el))
+        dimensions (bounds/->dimensions (hierarchy/bbox el))
         pivot-point (mat/sub pivot-point (mat/div dimensions 2))
         offset (mat/sub pivot-point (mat/mul pivot-point ratio))]
     (-> (element/update-attrs-with el * [[:rx x] [:ry y]])
         (hierarchy/translate offset))))
 
-(defmethod hierarchy/bounds :ellipse
+(defmethod hierarchy/bbox :ellipse
   [el]
   (let [{{:keys [cx cy rx ry]} :attrs} el
         [cx cy rx ry] (map length/unit->px [cx cy rx ry])]
@@ -69,9 +69,9 @@
 
 (defmethod hierarchy/render-edit :ellipse
   [el]
-  (let [bounds (:bounds el)
-        [cx cy] (bounds/center bounds)
-        [rx ry] (mat/div (bounds/->dimensions bounds) 2)]
+  (let [bbox (:bbox el)
+        [cx cy] (bounds/center bbox)
+        [rx ry] (mat/div (bounds/->dimensions bbox) 2)]
     [:g ::edit-handles
      [svg/times [cx cy]]
      [svg/line [cx cy] [(+ cx rx) cy]]

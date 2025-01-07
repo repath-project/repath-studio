@@ -60,7 +60,7 @@
         (frame.h/zoom-in-place (if (pointer/shift? e)
                                  (:zoom-sensitivity db)
                                  (/ zoom current-zoom)))
-        (frame.h/pan-to-bounds [x y offset-x offset-y])
+        (frame.h/pan-to-bbox [x y offset-x offset-y])
         (snap.h/update-viewport-tree)
         (h/add-fx [::app.fx/persist]))))
 

@@ -13,7 +13,7 @@
    [renderer.theme.db :refer [Theme]]
    [renderer.timeline.db :refer [Timeline]]
    [renderer.tool.db :refer [Handle Tool State Cursor]]
-   [renderer.utils.bounds :refer [Bounds]]
+   [renderer.utils.bounds :refer [BBox]]
    [renderer.utils.i18n :as i18n]
    [renderer.utils.math :refer [Vec2]]
    [renderer.window.db :refer [Window]]))
@@ -74,7 +74,7 @@
    [:fx {:default []} vector?]
    [:pivot-point {:optional true} Vec2]
    [:clicked-element {:optional true} [:or Element Handle]]
-   [:copied-bounds {:optional true} Bounds]
+   [:copied-bbox {:optional true} BBox]
    [:copied-elements {:optional true} [:* Element]]
    [:kdtree {:optional true} [:maybe map?]]
    [:viewbox-kdtree {:optional true} [:maybe map?]]

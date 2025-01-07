@@ -6,7 +6,7 @@
    [renderer.app.db :refer [App]]
    [renderer.document.subs :as-alias document.s]
    [renderer.theme.db :as theme.db]
-   [renderer.utils.bounds :as bounds :refer [Bounds]]
+   [renderer.utils.bounds :as bounds :refer [BBox]]
    [renderer.utils.hiccup :refer [Hiccup]]
    [renderer.utils.math :as math :refer [Vec2]]))
 
@@ -129,18 +129,18 @@
               :font-family theme.db/font-mono
               :font-size font-size} text]])))
 
-(m/=> bounding-box [:-> Bounds boolean? any?])
+(m/=> bounding-box [:-> BBox boolean? any?])
 (defn bounding-box
-  [bounds dashed?]
+  [bbox dashed?]
   (let [zoom @(rf/subscribe [::document.s/zoom])
-        [x1 y1 _x2 _y2] bounds
-        [width height] (bounds/->dimensions bounds)
+        [min-x min-y] bbox
+        [w h] (bounds/->dimensions bbox)
         stroke-width (/ 1 zoom)
         stroke-dasharray (/ theme.db/dash-size zoom)
-        attrs {:x x1
-               :y y1
-               :width width
-               :height height
+        attrs {:x min-x
+               :y min-y
+               :width w
+               :height h
                :shape-rendering "crispEdges"
                :stroke-width stroke-width
                :fill "transparent"}]

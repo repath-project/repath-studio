@@ -32,7 +32,7 @@
 (defmethod hierarchy/scale :path
   [el ratio pivot-point]
   (let [[scale-x scale-y] ratio
-        [x y] (hierarchy/bounds el)
+        [x y] (hierarchy/bbox el)
         [x y] (mat/sub (mat/add [x y]
                                 (mat/sub pivot-point
                                          (mat/mul pivot-point ratio)))
@@ -42,7 +42,7 @@
                                    (.translate x y)
                                    (.toString)))))
 
-(defmethod hierarchy/bounds :path
+(defmethod hierarchy/bbox :path
   [{{:keys [d]} :attrs}]
   (let [[left top right bottom] (js->clj (svgPathBbox d))]
     [left top right bottom]))

@@ -5,95 +5,96 @@
    [renderer.snap.db :refer [SnapOptions]]
    [renderer.utils.math :refer [Vec2]]))
 
-(def Bounds
+(def BBox
   "Coordinates that define a bounding box."
   [:tuple
-   [number? {:title "left"}]
-   [number? {:title "top"}]
-   [number? {:title "right"}]
-   [number? {:title "bottom"}]])
+   [number? {:title "min-x"}]
+   [number? {:title "min-y"}]
+   [number? {:title "max-x"}]
+   [number? {:title "max-y"}]])
 
 (def DomElement
   [:fn (fn [x] (instance? js/Element x))])
 
-(m/=> dom-el->bounds [:-> DomElement [:maybe Bounds]])
-(defn dom-el->bounds
+(m/=> dom-el->bbox [:-> DomElement [:maybe BBox]])
+(defn dom-el->bbox
   "Experimental way of getting the bounds of unknown or complicated elements
    using the getBBox method.
    https://developer.mozilla.org/en-US/docs/Web/API/SVGGraphicsElement/getBBox"
   [el]
   (when (.-getBBox el)
     (let [b (.getBBox el)
-          x1 (.-x b)
-          y1 (.-y b)
-          x2 (+ x1 (.-width b))
-          y2 (+ y1 (.-height b))]
-      [x1 y1 x2 y2])))
+          min-x (.-x b)
+          min-y (.-y b)
+          max-x (+ min-x (.-width b))
+          max-y (+ min-y (.-height b))]
+      [min-x min-y max-x max-y])))
 
-(m/=> union [:-> [:+ Bounds] Bounds])
+(m/=> union [:-> [:+ BBox] BBox])
 (defn union
-  "Calculates the bounds that contain an arbitrary set of bounds."
-  [& bounds]
-  (vec (concat (apply map min (map #(take 2 %) bounds))
-               (apply map max (map #(drop 2 %) bounds)))))
+  "Returns the bounding box that contain an arbitrary set of bounds."
+  [& bbox]
+  (vec (concat (apply map min (map #(take 2 %) bbox))
+               (apply map max (map #(drop 2 %) bbox)))))
 
-(m/=> ->dimensions [:-> Bounds Vec2])
+(m/=> ->dimensions [:-> BBox Vec2])
 (defn ->dimensions
-  "Converts bounds to [width height]."
-  [[x1 y1 x2 y2]]
-  (mat/sub [x2 y2] [x1 y1]))
+  "Converts a bounding box to [width height]."
+  [[min-x min-y max-x max-y]]
+  (mat/sub [max-x max-y] [min-x min-y]))
 
-(m/=> center [:-> Bounds Vec2])
+(m/=> center [:-> BBox Vec2])
 (defn center
   "Calculates the center of bounds."
-  [b]
-  (mat/add (take 2 b)
-           (mat/div (->dimensions b) 2)))
+  [bbox]
+  (mat/add (take 2 bbox)
+           (mat/div (->dimensions bbox) 2)))
 
-(m/=> intersect? [:-> Bounds Bounds boolean?])
+(m/=> intersect? [:-> BBox BBox boolean?])
 (defn intersect?
   "Tests whether the provided set of bounds intersect."
-  [[a-left a-top a-right a-bottom] [b-left b-top b-right b-bottom]]
-  (not (or (> b-left a-right)
-           (< b-right a-left)
-           (> b-top a-bottom)
-           (< b-bottom a-top))))
+  [[a-min-x a-min-y a-max-x a-max-y]
+   [b-min-x b-min-y b-max-x b-max-y]]
+  (not (or (> b-min-x a-max-x)
+           (< b-max-x a-min-x)
+           (> b-min-y a-max-y)
+           (< b-max-y a-min-y))))
 
-(m/=> contained? [:-> Bounds Bounds boolean?])
+(m/=> contained? [:-> BBox BBox boolean?])
 (defn contained?
   "Tests whether `bounds-a` fully contain `bounds-b`."
-  [[a-left a-top a-right a-bottom] [b-left b-top b-right b-bottom]]
-  (and (> a-left b-left)
-       (> a-top b-top)
-       (< a-right b-right)
-       (< a-bottom b-bottom)))
+  [[a-min-x a-min-y a-max-x a-max-y] [b-min-x b-min-y b-max-x b-max-y]]
+  (and (> a-min-x b-min-x)
+       (> a-min-y b-min-y)
+       (< a-max-x b-max-x)
+       (< a-max-y b-max-y)))
 
-(m/=> contained-point? [:-> Bounds Vec2 boolean?])
+(m/=> contained-point? [:-> BBox Vec2 boolean?])
 (defn contained-point?
   "Tests whether the provided bounds contain a point."
-  [[left top right bottom] [x y]]
-  (and (<= left x)
-       (<= top y)
-       (>= right x)
-       (>= bottom y)))
+  [[min-x min-y max-x b-max-y] [x y]]
+  (and (<= min-x x)
+       (<= min-y y)
+       (>= max-x x)
+       (>= b-max-y y)))
 
-(m/=> ->snapping-points [:-> Bounds SnapOptions [:* Vec2]])
+(m/=> ->snapping-points [:-> BBox SnapOptions [:* Vec2]])
 (defn ->snapping-points
-  [bounds options]
-  (let [[x1 y1 x2 y2] bounds
-        [cx cy] (center bounds)]
+  [bbox options]
+  (let [[min-x min-y max-x max-y] bbox
+        [cx cy] (center bbox)]
     (cond-> []
       (:corners options)
-      (into [(with-meta [x1 y1] {:label "bounds corner"})
-             (with-meta [x1 y2] {:label "bounds corner"})
-             (with-meta [x2 y1] {:label "bounds corner"})
-             (with-meta [x2 y2] {:label "bounds corner"})])
+      (into [(with-meta [min-x min-y] {:label "bounds corner"})
+             (with-meta [min-x max-y] {:label "bounds corner"})
+             (with-meta [max-x min-y] {:label "bounds corner"})
+             (with-meta [max-x max-y] {:label "bounds corner"})])
 
       (:centers options)
       (into [(with-meta [cx cy] {:label "bounds center"})])
 
       (:midpoints options)
-      (into [(with-meta [x1 cy] {:label "bounds midpoint"})
-             (with-meta [x2 cy] {:label "bounds midpoint"})
-             (with-meta [cx y1] {:label "bounds midpoint"})
-             (with-meta [cx y2] {:label "bounds midpoint"})]))))
+      (into [(with-meta [min-x cy] {:label "bounds midpoint"})
+             (with-meta [max-x cy] {:label "bounds midpoint"})
+             (with-meta [cx min-y] {:label "bounds midpoint"})
+             (with-meta [cx max-y] {:label "bounds midpoint"})]))))

@@ -11,7 +11,7 @@
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.snap.db :refer [SnapOptions]]
    [renderer.utils.attribute :as attr]
-   [renderer.utils.bounds :as utils.bounds :refer [Bounds]]
+   [renderer.utils.bounds :as utils.bounds :refer [BBox]]
    [renderer.utils.map :as map]
    [renderer.utils.math :refer [Vec2]]))
 
@@ -40,19 +40,19 @@
   [el]
   (-> el properties :ratio-locked boolean))
 
-(m/=> united-bounds [:-> [:sequential Element] [:maybe Bounds]])
-(defn united-bounds
+(m/=> united-bbox [:-> [:sequential Element] [:maybe BBox]])
+(defn united-bbox
   [elements]
-  (let [el-bounds (->> elements (map :bounds) (remove nil?))]
-    (when (seq el-bounds)
-      (apply utils.bounds/union el-bounds))))
+  (let [el-bbox (->> elements (map :bbox) (remove nil?))]
+    (when (seq el-bbox)
+      (apply utils.bounds/union el-bbox))))
 
 (m/=> offset [:-> Element Vec2])
 (defn offset
   [el]
-  (let [el-bounds (:bounds el)
-        local-bounds (element.hierarchy/bounds el)]
-    (vec (take 2 (mat/sub el-bounds local-bounds)))))
+  (let [el-bbox (:bbox el)
+        local-bbox (element.hierarchy/bbox el)]
+    (vec (take 2 (mat/sub el-bbox local-bbox)))))
 
 (m/=> snapping-points [:-> Element SnapOptions [:* Vec2]])
 (defn snapping-points
@@ -63,9 +63,9 @@
                               (merge (meta %) {:id (:id el)}))
                            (element.hierarchy/snapping-points el))) [])]
     (cond-> points
-      (:bounds el)
+      (:bbox el)
       (into (mapv #(with-meta % (merge (meta %) {:id (:id el)}))
-                  (utils.bounds/->snapping-points (:bounds el) options))))))
+                  (utils.bounds/->snapping-points (:bbox el) options))))))
 
 (m/=> attributes [:-> Element Attrs])
 (defn attributes
@@ -133,7 +133,7 @@
     (not (and (seq els)
               (empty? (rest els))
               (svg? (first els))))
-    (wrap-to-svg (utils.bounds/->dimensions (united-bounds els)))))
+    (wrap-to-svg (utils.bounds/->dimensions (united-bbox els)))))
 
 (m/=> style->map [:-> Attrs Attrs])
 (defn style->map

@@ -203,7 +203,7 @@
 (rf/reg-event-db
  ::scale
  (fn [db [_ ratio]]
-   (let [pivot-point (-> db h/bounds bounds/center)]
+   (let [pivot-point (-> db h/bbox bounds/center)]
      (-> (h/scale db ratio pivot-point false)
          (history.h/finalize "Scale selection")))))
 

@@ -21,7 +21,7 @@
  ::focus-selection
  [persist]
  (fn [db [_ focus-type]]
-   (-> (h/focus-bounds db focus-type)
+   (-> (h/focus-bbox db focus-type)
        (snap.h/update-viewport-tree))))
 
 (rf/reg-event-db
@@ -48,8 +48,8 @@
  [persist]
  (fn [db [_ id]]
    (let [element (element.h/entity db id)
-         el-bounds (:bounds element)
+         el-bbox (:bbox element)
          viewbox (h/viewbox db)
-         diff (mat/sub el-bounds viewbox)
-         bounds (mat/add viewbox diff)]
-     (h/pan-to-bounds db bounds))))
+         diff (mat/sub el-bbox viewbox)
+         bbox (mat/add viewbox diff)]
+     (h/pan-to-bbox db bbox))))

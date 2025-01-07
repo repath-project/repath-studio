@@ -38,7 +38,7 @@
 
 (defmethod hierarchy/scale ::hierarchy/polyshape
   [el ratio pivot-point]
-  (let [bounds-start (take 2 (hierarchy/bounds el))
+  (let [bounds-min (take 2 (hierarchy/bbox el))
         pivot-point (mat/sub pivot-point (mat/mul pivot-point ratio))]
     (update-in el
                [:attrs :points]
@@ -46,7 +46,7 @@
                      (transduce
                       partition-to-px
                       (fn [points point]
-                        (let [rel-point (mat/sub bounds-start point)
+                        (let [rel-point (mat/sub bounds-min point)
                               offset (mat/add pivot-point (mat/sub rel-point (mat/mul rel-point ratio)))]
                           (translate offset points point))) [])
                      (str/join " ")
@@ -79,14 +79,14 @@
                                         (->> (str/join " ")
                                              (str/trim))))))
 
-(defmethod hierarchy/bounds ::hierarchy/polyshape
+(defmethod hierarchy/bbox ::hierarchy/polyshape
   [el]
   (let [points (-> el :attrs :points attr/points->vec)
-        x1 (apply min (map #(length/unit->px (first %)) points))
-        y1 (apply min (map #(length/unit->px (second %)) points))
-        x2 (apply max (map #(length/unit->px (first %)) points))
-        y2 (apply max (map #(length/unit->px (second %)) points))]
-    [x1 y1 x2 y2]))
+        min-x (apply min (map #(length/unit->px (first %)) points))
+        min-y (apply min (map #(length/unit->px (second %)) points))
+        max-x (apply max (map #(length/unit->px (first %)) points))
+        max-y (apply max (map #(length/unit->px (second %)) points))]
+    [min-x min-y max-x max-y]))
 
 (defn calc-polygon-area
   [vertices]

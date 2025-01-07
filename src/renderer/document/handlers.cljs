@@ -82,7 +82,7 @@
          (-> db :dom-rect)
          (-> db :window :focused)
          (not (get-in db (path db :focused))))
-    (-> (frame.h/focus-bounds :original)
+    (-> (frame.h/focus-bbox :original)
         (assoc-in (path db :focused) true)
         (snap.h/update-viewport-tree))))
 

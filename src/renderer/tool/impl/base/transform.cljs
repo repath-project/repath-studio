@@ -19,7 +19,7 @@
    [renderer.tool.hierarchy :as hierarchy]
    [renderer.tool.subs :as-alias s]
    [renderer.tool.views :as tool.v]
-   [renderer.utils.bounds :as bounds :refer [Bounds]]
+   [renderer.utils.bounds :as bounds :refer [BBox]]
    [renderer.utils.element :as element]
    [renderer.utils.math :refer [Vec2]]
    [renderer.utils.pointer :as pointer]
@@ -68,11 +68,11 @@
 (m/=> hovered? [:-> App Element boolean? boolean?])
 (defn hovered?
   [db el intersecting?]
-  (let [selection-bounds (element.hierarchy/bounds (h/temp db))]
-    (if-let [el-bounds (:bounds el)]
+  (let [selection-bbox (element.hierarchy/bbox (h/temp db))]
+    (if-let [el-bbox (:bbox el)]
       (if intersecting?
-        (bounds/intersect? el-bounds selection-bounds)
-        (bounds/contained? el-bounds selection-bounds))
+        (bounds/intersect? el-bbox selection-bbox)
+        (bounds/contained? el-bbox selection-bbox))
       false)))
 
 (m/=> reduce-by-area [:-> App boolean? ifn? App])
@@ -103,7 +103,7 @@
   [db e]
   (cond-> db
     (pointer/shift? e)
-    (element.h/ignore :bounding-box)))
+    (element.h/ignore :bbox)))
 
 (defmethod hierarchy/on-key-up :transform
   [db e]
@@ -117,17 +117,17 @@
     element
     (assoc :clicked-element element)
 
-    (and (= button :right) (not= (:id element) :bounding-box))
+    (and (= button :right) (not= (:id element) :bbox))
     (element.h/toggle-selection (:id element) (pointer/shift? e))
 
     :always
-    (element.h/ignore :bounding-box)))
+    (element.h/ignore :bbox)))
 
 (defmethod hierarchy/on-pointer-up :transform
   [db {:keys [element] :as e}]
   (-> db
       (dissoc :clicked-element)
-      (element.h/unignore :bounding-box)
+      (element.h/unignore :bbox)
       (element.h/toggle-selection (:id element) (pointer/shift? e))
       (history.h/finalize (if (:selected element)
                             "Deselect element"
@@ -166,7 +166,7 @@
         ratio (if (< (abs x) (abs y)) x y)]
     [ratio ratio]))
 
-(m/=> delta->offset-with-pivot-point [:-> ScaleHandle Vec2 Bounds [:tuple Vec2 Vec2]])
+(m/=> delta->offset-with-pivot-point [:-> ScaleHandle Vec2 BBox [:tuple Vec2 Vec2]])
 (defn delta->offset-with-pivot-point
   "Converts the x/y pointer offset to a scale ratio and a pivot point,
    to decouple this from the scaling method of the elements.
@@ -181,19 +181,19 @@
    |      y          ↖   │
    |      |            ↖ │
    □----------□--------- ■ :bottom-right (active handle)"
-  [handle offset bounds]
+  [handle offset bbox]
   (let [[x y] offset
-        [x1 y1 x2 y2] bounds
-        [cx cy] (bounds/center bounds)]
+        [min-x min-y max-x max-y] bbox
+        [cx cy] (bounds/center bbox)]
     (case handle
-      :middle-right [[x 0] [x1 cy]]
-      :middle-left [[(- x) 0] [x2 cy]]
-      :top-middle [[0 (- y)] [cx y2]]
-      :bottom-middle [[0 y] [cx y1]]
-      :top-right [[x (- y)] [x1 y2]]
-      :top-left [[(- x) (- y)] [x2 y2]]
-      :bottom-right [[x y] [x1 y1]]
-      :bottom-left [[(- x) y] [x2 y1]])))
+      :middle-right [[x 0] [min-x cy]]
+      :middle-left [[(- x) 0] [max-x cy]]
+      :top-middle [[0 (- y)] [cx max-y]]
+      :bottom-middle [[0 y] [cx min-y]]
+      :top-right [[x (- y)] [min-x max-y]]
+      :top-left [[(- x) (- y)] [max-x max-y]]
+      :bottom-right [[x y] [min-x min-y]]
+      :bottom-left [[(- x) y] [max-x min-y]])))
 
 (def ScaleOptions
   [:map
@@ -206,11 +206,11 @@
   [db offset options]
   (let [{:keys [ratio-locked in-place recursive]} options
         handle (-> db :clicked-element :id)
-        bounds (element.h/bounds db)
-        [offset pivot-point] (delta->offset-with-pivot-point handle offset bounds)
-        pivot-point (if in-place (bounds/center bounds) pivot-point)
+        bbox (element.h/bbox db)
+        [offset pivot-point] (delta->offset-with-pivot-point handle offset bbox)
+        pivot-point (if in-place (bounds/center bbox) pivot-point)
         offset (cond-> offset in-place (mat/mul 2))
-        dimensions (bounds/->dimensions bounds)
+        dimensions (bounds/->dimensions bbox)
         ratio (mat/div (mat/add dimensions offset) dimensions)
         ratio (cond-> ratio ratio-locked (lock-ratio handle))
         ;; TODO: Handle negative ratio, and position on recursive scale.
@@ -253,11 +253,11 @@
                     (element.h/set-parent (:id hovered-svg))
 
                     ;; FIXME: Handle nested containers.
-                    (:bounds container)
-                    (element.h/translate id (vec (take 2 (:bounds container))))
+                    (:bbox container)
+                    (element.h/translate id (vec (take 2 (:bbox container))))
 
-                    (:bounds hovered-svg)
-                    (element.h/translate id (mat/mul (take 2 (:bounds hovered-svg))
+                    (:bbox hovered-svg)
+                    (element.h/translate id (mat/mul (take 2 (:bbox hovered-svg))
                                                      -1))))))
             db
             (element.h/top-ancestor-ids db))))
@@ -362,7 +362,7 @@
       (not= (:state db) :idle)
       (cond-> (element.h/snapping-points db (filter :visible selected))
         (seq (rest selected))
-        (into (bounds/->snapping-points (element.h/bounds db) options))))))
+        (into (bounds/->snapping-points (element.h/bbox db) options))))))
 
 (defmethod hierarchy/snapping-elements :transform
   [db]
@@ -370,25 +370,25 @@
         non-selected (select-keys (element.h/entities db) (vec non-selected-ids))]
     (filter :visible (vals non-selected))))
 
-(m/=> size-label [:-> Bounds any?])
+(m/=> size-label [:-> BBox any?])
 (defn size-label
-  [bounds]
+  [bbox]
   (let [zoom @(rf/subscribe [::document.s/zoom])
-        [x1 _ x2 y2] bounds
-        x (+ x1 (/ (- x2 x1) 2))
+        [min-x _min-y max-x y2] bbox
+        x (+ min-x (/ (- max-x min-x) 2))
         y (+ y2 (/ (+ (/ theme.db/handle-size 2) 15) zoom))
-        [width height] (bounds/->dimensions bounds)
-        text (str (.toFixed width 2) " x " (.toFixed height 2))]
+        [w h] (bounds/->dimensions bbox)
+        text (str (.toFixed w 2) " x " (.toFixed h 2))]
     [svg/label text [x y]]))
 
-(m/=> area-label [:-> number? Bounds any?])
+(m/=> area-label [:-> number? BBox any?])
 (defn area-label
-  [area bounds]
+  [area bbox]
   (when area
     (let [zoom @(rf/subscribe [::document.s/zoom])
-          [x1 y1 x2 _y2] bounds
-          x (+ x1 (/ (- x2 x1) 2))
-          y (+ y1 (/ (- -15 (/ theme.db/handle-size 2)) zoom))
+          [min-x min-y max-x] bbox
+          x (+ min-x (/ (- max-x min-x) 2))
+          y (+ min-y (/ (- -15 (/ theme.db/handle-size 2)) zoom))
           text (str (.toFixed area 2) " px²")]
       [svg/label text [x y]])))
 
@@ -396,30 +396,30 @@
   []
   (let [state @(rf/subscribe [::s/state])
         selected-elements @(rf/subscribe [::element.s/selected])
-        bounds @(rf/subscribe [::element.s/bounds])
+        bbox @(rf/subscribe [::element.s/bbox])
         elements-area @(rf/subscribe [::element.s/area])
         pivot-point @(rf/subscribe [::s/pivot-point])
         hovered-ids @(rf/subscribe [::element.s/hovered])]
     [:<>
      (for [el selected-elements]
-       (when (:bounds el)
-         ^{:key (str (:id el) "-bounds")}
-         [svg/bounding-box (:bounds el) false]))
+       (when (:bbox el)
+         ^{:key (str (:id el) "-bbox")}
+         [svg/bounding-box (:bbox el) false]))
 
      (for [el hovered-ids]
-       (when (:bounds el)
-         ^{:key (str (:id el) "-bounds")}
-         [svg/bounding-box (:bounds el) true]))
+       (when (:bbox el)
+         ^{:key (str (:id el) "-bbox")}
+         [svg/bounding-box (:bbox el) true]))
 
-     (when (and (pos? elements-area) (= state :scale) (seq bounds))
-       [area-label elements-area bounds])
+     (when (and (pos? elements-area) (= state :scale) (seq bbox))
+       [area-label elements-area bbox])
 
-     (when (seq bounds)
+     (when (seq bbox)
        [:<>
-        [tool.v/wrapping-bounding-box bounds]
+        [tool.v/wrapping-bbox bbox]
         (case state
-          :scale [size-label bounds]
-          :idle [tool.v/bounding-corners bounds]
+          :scale [size-label bbox]
+          :idle [tool.v/bounding-corners bbox]
           nil)])
 
      (when pivot-point

@@ -10,10 +10,10 @@
    [renderer.ruler.db :refer [Orientation]]
    [renderer.ruler.subs :as-alias ruler.s]))
 
-(m/=> bounds-rect [:-> Orientation any?])
-(defn bounds-rect
+(m/=> bbox-rect [:-> Orientation any?])
+(defn bbox-rect
   [orientation]
-  (when-let [attrs @(rf/subscribe [::ruler.s/bounds-rect-attrs orientation])]
+  (when-let [attrs @(rf/subscribe [::ruler.s/bbox-rect-attrs orientation])]
     [:rect (merge attrs {:fill "var(--overlay)"})]))
 
 (m/=> pointer [:-> Orientation any?])
@@ -104,7 +104,7 @@
         vertical (= orientation :vertical)]
     [:svg {:width  (if vertical ruler-size "100%")
            :height (if vertical "100%" ruler-size)}
-     [bounds-rect orientation]
+     [bbox-rect orientation]
      [base-lines orientation]
      [pointer orientation]]))
 
@@ -112,8 +112,8 @@
 (defn grid-lines
   [orientation]
   (let [zoom @(rf/subscribe [::document.s/zoom])
-        [x y width height] @(rf/subscribe [::frame.s/viewbox])
-        [width height] (mat/add [width height] [x y])
+        [x y w h] @(rf/subscribe [::frame.s/viewbox])
+        [w h] (mat/add [w h] [x y])
         steps-coll @(rf/subscribe [::ruler.s/steps-coll orientation])
         vertical (= orientation :vertical)]
     (into [:g]
@@ -125,8 +125,8 @@
                (when (or main? (< zoom 50))
                  [:line {:x1 (if vertical x step-x)
                          :y1 (if vertical step-y y)
-                         :x2 (if vertical width step-x)
-                         :y2 (if vertical step-y height)
+                         :x2 (if vertical w step-x)
+                         :y2 (if vertical step-y h)
                          :stroke-width (/ 1 zoom)
                          :opacity (if main? ".3"  ".1")
                          :stroke "#777"

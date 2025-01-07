@@ -15,14 +15,14 @@
      (.close print-window))))
 
 (defn data-url->canvas-context!
-  [data-url [width height] f]
+  [data-url [w h] f]
   (let [canvas (js/document.createElement "canvas")
         context (.getContext canvas "2d")
         image (js/Image.)]
     (set! (.-onload image)
-          #(do (set! (.-width canvas) width)
-               (set! (.-height canvas) height)
-               (.drawImage context image 0 0 width height)
+          #(do (set! (.-width canvas) w)
+               (set! (.-height canvas) h)
+               (.drawImage context image 0 0 w h)
                (f context)))
     (set! (.-src image) data-url)))
 
@@ -31,19 +31,19 @@
  (fn [images]
    (doseq [image images]
      (let [data-url (-> image :attrs :href)
-           [x y] (:bounds image)
+           [x y] (:bbox image)
            ;; TODO: Handle preserveAspectRatio.
-           width (length/unit->px (-> image :attrs :width))
-           height (length/unit->px (-> image :attrs :height))]
+           w (length/unit->px (-> image :attrs :width))
+           h (length/unit->px (-> image :attrs :height))]
        (data-url->canvas-context!
         data-url
-        [width height]
+        [w h]
         (fn [context]
           (rf/dispatch
            [::worker.e/create
             {:action "trace"
              :data {:label (:label image)
-                    :image (.getImageData context 0 0 width height)
+                    :image (.getImageData context 0 0 w h)
                     :position [x y]}
              :on-success [::e/traced]}])))))))
 
@@ -58,16 +58,16 @@
              img (js/document.createElement "img")]
          (set! (.-onload img)
                (fn []
-                 (let [width (.-width img)
-                       height (.-height img)]
+                 (let [w (.-width img)
+                       h (.-height img)]
                    (.remove img)
                    (rf/dispatch [::e/add {:type :element
                                           :tag :image
                                           :label (.-name file)
-                                          :attrs {:x (- x (/ width 2))
-                                                  :y (- y (/ height 2))
-                                                  :width width
-                                                  :height height
+                                          :attrs {:x (- x (/ w 2))
+                                                  :y (- y (/ h 2))
+                                                  :width w
+                                                  :height h
                                                   :href data-url}}]))))
          (set! (.-src img) data-url)))
      (.readAsDataURL reader file))))

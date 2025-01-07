@@ -77,14 +77,14 @@
   [el]
   (let [{:keys [attrs id content]} el
         offset (element/offset el)
-        el-bounds (hierarchy/bounds el)
-        [x y] (mat/add (take 2 el-bounds) offset)
-        [width height] (bounds/->dimensions el-bounds)
+        el-bbox (hierarchy/bbox el)
+        [x y] (mat/add (take 2 el-bbox) offset)
+        [w h] (bounds/->dimensions el-bbox)
         {:keys [fill font-family font-size font-weight]} attrs]
     [:foreignObject {:x x
                      :y y
-                     :width (+ width 20)
-                     :height height}
+                     :width (+ w 20)
+                     :height h}
      [:input
       {:key id
        :default-value content
@@ -97,8 +97,8 @@
        :style {:color "transparent"
                :caret-color (or fill "black")
                :display "block"
-               :width (+ width 15)
-               :height height
+               :width (+ w 15)
+               :height h
                :padding 0
                :border 0
                :outline "none"

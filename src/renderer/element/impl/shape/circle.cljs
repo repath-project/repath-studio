@@ -31,7 +31,7 @@
 
 (defmethod hierarchy/scale :circle
   [el ratio pivot-point]
-  (let [dimensions (bounds/->dimensions (hierarchy/bounds el))
+  (let [dimensions (bounds/->dimensions (hierarchy/bbox el))
         pivot-point (mat/sub pivot-point (mat/div dimensions 2))
         offset (mat/sub pivot-point (mat/mul pivot-point ratio))
         ratio (apply min ratio)]
@@ -39,7 +39,7 @@
         (attr.hierarchy/update-attr :r * ratio)
         (hierarchy/translate offset))))
 
-(defmethod hierarchy/bounds :circle
+(defmethod hierarchy/bbox :circle
   [el]
   (let [{{:keys [cx cy r]} :attrs} el
         [cx cy r] (map length/unit->px [cx cy r])]
@@ -70,9 +70,9 @@
 
 (defmethod hierarchy/render-edit :circle
   [el]
-  (let [bounds (:bounds el)
-        [cx cy] (bounds/center bounds)
-        r (/ (first (bounds/->dimensions bounds)) 2)]
+  (let [bbox (:bbox el)
+        [cx cy] (bounds/center bbox)
+        r (/ (first (bounds/->dimensions bbox)) 2)]
     [:g
      [svg/line [cx cy] [(+ cx r) cy]]
      [svg/label (str (.toFixed r 2)) [(+ cx (/ r 2)) cy]]

@@ -36,15 +36,15 @@
 
 (defmethod hierarchy/render-edit ::hierarchy/box
   [el]
-  (let [el-bounds (:bounds el)
-        [x y] el-bounds
-        [width height] (bounds/->dimensions el-bounds)]
+  (let [el-bbox (:bbox el)
+        [min-x min-y] el-bbox
+        [w h] (bounds/->dimensions el-bbox)]
     [:g
-     (for [handle [{:x x
-                    :y y
+     (for [handle [{:x min-x
+                    :y min-y
                     :id :position}
-                   {:x (+ x width)
-                    :y (+ y height)
+                   {:x (+ min-x w)
+                    :y (+ min-y h)
                     :id :size}]]
        (let [handle (merge handle {:type :handle
                                    :action :edit
@@ -55,7 +55,7 @@
           ^{:key (str (:id handle) "-title")}
           [:title (name (:id handle))]]))]))
 
-(defmethod hierarchy/bounds ::hierarchy/box
+(defmethod hierarchy/bbox ::hierarchy/box
   [el]
   (let [{{:keys [x y width height]} :attrs} el
         [x y width height] (mapv length/unit->px [x y width height])]
@@ -69,8 +69,8 @@
 #_(defmethod hierarchy/snapping-points ::hierarchy/box
     [el]
     (let [{{:keys [x y width height]} :attrs} el
-          [x y width height] (mapv length/unit->px [x y width height])]
+          [x y w h] (mapv length/unit->px [x y width height])]
       [(with-meta [x y] {:label "box corner"})
-       (with-meta [(+ x width) y]  {:label "box corner"})
-       (with-meta [(+ x width) (+ y height)] {:label "box corner"})
-       (with-meta [x (+ y height)] {:label "box corner"})]))
+       (with-meta [(+ x w) y]  {:label "box corner"})
+       (with-meta [(+ x w) (+ y h)] {:label "box corner"})
+       (with-meta [x (+ y h)] {:label "box corner"})]))

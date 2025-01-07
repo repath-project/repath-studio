@@ -97,10 +97,10 @@
        (sort-by (fn [[id _]] (.indexOf attr/order id)) attrs)))))
 
 (rf/reg-sub
- ::bounds
+ ::bbox
  :<- [::selected]
  (fn [selected-elements _]
-   (element/united-bounds selected-elements)))
+   (element/united-bbox selected-elements)))
 
 (rf/reg-sub
  ::area
