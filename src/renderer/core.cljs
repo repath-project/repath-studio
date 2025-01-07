@@ -106,6 +106,8 @@
    [[channel f]
     [["window-maximized" #(rf/dispatch [::window.e/set-maximized true])]
      ["window-unmaximized" #(rf/dispatch [::window.e/set-maximized false])]
+     ["window-focused" #(rf/dispatch [::window.e/set-focused true])]
+     ["window-blurred" #(rf/dispatch [::window.e/set-focused false])]
      ["window-entered-fullscreen" #(rf/dispatch [::window.e/set-fullscreen true])]
      ["window-leaved-fullscreen" #(rf/dispatch [::window.e/set-fullscreen false])]
      ["window-minimized" #(rf/dispatch [::window.e/set-minimized true])]

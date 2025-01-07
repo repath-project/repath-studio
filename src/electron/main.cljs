@@ -73,6 +73,8 @@
    [[window-event f]
     [["maximize" #(send-to-renderer! "window-maximized")]
      ["unmaximize" #(send-to-renderer! "window-unmaximized")]
+     ["focus" #(send-to-renderer! "window-focused")]
+     ["blur" #(send-to-renderer! "window-blured")]
      ["enter-full-screen" #(send-to-renderer! "window-entered-fullscreen")]
      ["leave-full-screen" #(send-to-renderer! "window-leaved-fullscreen")]
      ["minimize" #(send-to-renderer! "window-minimized")]
@@ -125,6 +127,9 @@
            (send-to-renderer! (if (.isFullScreen ^js @main-window)
                                 "window-entered-fullscreen"
                                 "window-leaved-fullscreen"))
+           (send-to-renderer! (if (.isFocused ^js @main-window)
+                                "window-focused"
+                                "window-blurred"))
            (send-to-renderer! "window-loaded")))
 
     (.loadURL ^js @main-window (if config/debug?
