@@ -79,12 +79,6 @@
     (.preventDefault e)
     (rf/dispatch [::element.e/set-parent id parent-id])))
 
-(defn padding
-  [depth has-children]
-  (let [collapse-button-width 22]
-    (- (* depth collapse-button-width)
-       (if has-children collapse-button-width 0))))
-
 (def last-focused-id (ra/atom nil))
 
 (defn set-last-focused-id!
@@ -116,7 +110,7 @@
 
     nil))
 
-(defn toggle-collapsed-button
+(defn collapse-button
   [id collapsed]
   [ui/icon-button
    (if collapsed "chevron-right" "chevron-down")
@@ -128,7 +122,9 @@
 
 (defn list-item-button
   [el {:keys [depth collapsed hovered]}]
-  (let [{:keys [id selected children locked visible]} el]
+  (let [{:keys [id selected children locked visible]} el
+        collapse-button-width 22
+        padding (* collapse-button-width (cond-> depth (seq children) dec))]
     [:div.button.list-item-button
      {:class [(when selected "selected")
               (when hovered "hovered")]
@@ -155,10 +151,10 @@
                          (rf/dispatch-sync [::e/select-range @last-focused-id id])
                          (do (rf/dispatch [::element.e/select id (.-ctrlKey e)])
                              (reset! last-focused-id id))))
-      :style {:padding-left (padding depth (seq children))}}
+      :style {:padding-left padding}}
      [:div.flex.items-center.content-between.w-full
       (when (seq children)
-        [toggle-collapsed-button id collapsed])
+        [collapse-button id collapsed])
       [:div.flex-1.overflow-hidden.flex.items-center
        {:class "gap-1.5"}
        (when-let [icon (:icon (element/properties el))]
