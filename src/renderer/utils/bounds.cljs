@@ -32,7 +32,7 @@
 
 (m/=> union [:-> [:+ BBox] BBox])
 (defn union
-  "Returns the bounding box that contain an arbitrary set of bounds."
+  "Returns the bounding box that contains the provided collection of bounds."
   [& bbox]
   (vec (concat (apply map min (map #(take 2 %) bbox))
                (apply map max (map #(drop 2 %) bbox)))))
@@ -45,7 +45,7 @@
 
 (m/=> center [:-> BBox Vec2])
 (defn center
-  "Calculates the center of bounds."
+  "Calculates the center of a bounding box."
   [bbox]
   (mat/add (take 2 bbox)
            (mat/div (->dimensions bbox) 2)))
@@ -71,7 +71,7 @@
 
 (m/=> contained-point? [:-> BBox Vec2 boolean?])
 (defn contained-point?
-  "Tests whether the provided bounds contain a point."
+  "Tests whether the provided bounding box contains a point."
   [[min-x min-y max-x b-max-y] [x y]]
   (and (<= min-x x)
        (<= min-y y)
