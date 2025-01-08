@@ -624,7 +624,9 @@
                     (map/remove-nils)
                     (element/normalize-attrs)
                     (assoc-parent-id db))
-        new-el (merge new-el db/default {:id id})
+        new-el (-> new-el
+                   (dissoc :locked)
+                   (merge db/default {:id id}))
         child-els (-> (entities db (set (:children el)))
                       (vals)
                       (concat (:content el)))
