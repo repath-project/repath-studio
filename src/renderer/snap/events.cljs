@@ -1,6 +1,6 @@
 (ns renderer.snap.events
   (:require
-   #_[clojure.set :as set]
+   [clojure.set :as set]
    [re-frame.core :as rf]
    [renderer.app.events :refer [persist]]
    [renderer.element.handlers :as element.h]
@@ -34,8 +34,7 @@
                    (not= non-selected-ids prev-non-selected-ids)
                    (rf/assoc-effect
                     :db
-                    (h/rebuild-tree db)
-                    #_(-> db
-                          (h/insert-to-tree (set/difference non-selected-ids prev-non-selected-ids))
-                          (h/delete-from-tree (set/difference prev-non-selected-ids non-selected-ids))))))
+                    (-> db
+                        (h/insert-to-tree (set/difference non-selected-ids prev-non-selected-ids))
+                        (h/delete-from-tree (set/difference prev-non-selected-ids non-selected-ids))))))
                context)))))
