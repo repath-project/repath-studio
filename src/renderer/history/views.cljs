@@ -38,7 +38,7 @@
       :sideOffset 5
       :alignOffset -24
       :position "popper"
-      :class "menu-content rounded select-content"}
+      :class "menu-content rounded-sm select-content"}
      [:> Select/ScrollUpButton {:class "select-scroll-button"}
       [ui/icon "chevron-up"]]
      [:> Select/Viewport {:class "select-viewport"}

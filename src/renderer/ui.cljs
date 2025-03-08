@@ -48,7 +48,7 @@
    [:label.h-auto.bg-transparent {:for (when (:id props) (:id props))} label]
    [:> Switch/Root
     (merge-with-class
-     {:class "overlay relative rounded-full w-10 h-6 data-[state=checked]:bg-accent data-[disabled]:opacity-50"}
+     {:class "overlay relative rounded-full w-10 h-6 data-[state=checked]:bg-accent data-disabled:opacity-50"}
      props)
     [:> Switch/Thumb
      {:class "block bg-primary rounded-full shadow-sm w-5 h-5 will-change-transform

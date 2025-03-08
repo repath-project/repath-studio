@@ -53,13 +53,13 @@
   []
   [:> DropdownMenu/Root
    [:> DropdownMenu/Trigger
-    {:class "button flex items-center justify-center overlay px-2 font-mono rounded"
+    {:class "button flex items-center justify-center overlay px-2 font-mono rounded-sm"
      :side "top"}
     [:div.flex.items-center
      [ui/icon "chevron-up"]]]
    [:> DropdownMenu/Portal
     [:> DropdownMenu/Content
-     {:class "menu-content rounded"
+     {:class "menu-content rounded-sm"
       :side "top"
       :align "end"}
      (for [item zoom-options]

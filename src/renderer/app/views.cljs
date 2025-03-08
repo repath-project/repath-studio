@@ -194,7 +194,8 @@
    [ui/scroll-area
     [:div.flex.justify-center.p-2
      [:div.justify-between.flex.w-full.lg:w-auto
-      [:div.bg-primary.p-6.lg:p-12.flex.max-w-screen-xl.w-full.gap-8
+      [:div.bg-primary.p-6.lg:p-12.flex.w-full.gap-8
+       {:class "max-w-(--breakpoint-xl)"}
        [:div.flex-1
         [:h1.text-4xl.mb-1.font-light config/app-name]
 
@@ -215,7 +216,7 @@
           {:onValueChange #(rf/dispatch [::document.e/new-from-template
                                          (get paper-size %)])}
           [:> Select/Trigger
-           {:class "button px-2 overlay rounded"
+           {:class "button px-2 overlay rounded-sm"
             :aria-label "Select size"}
            [:div.flex.items-center.gap-2
             [:> Select/Value {:placeholder "Select template"}]
@@ -223,7 +224,7 @@
              [ui/icon "chevron-down"]]]]
           [:> Select/Portal
            [:> Select/Content
-            {:class "menu-content rounded select-content"
+            {:class "menu-content rounded-sm select-content"
              :style {:min-width "auto"}}
 
             [:> Select/Viewport {:class "select-viewport"}

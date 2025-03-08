@@ -38,7 +38,7 @@
       {:value speed
        :onValueChange #(.setPlayRate (.-current editor-ref) %)}
       [:> Select/Trigger
-       {:class "button px-2 overlay rounded"
+       {:class "button px-2 overlay rounded-sm"
         :aria-label "No a11y filter"}
        [:> Select/Value {:placeholder "Filter"}
         [:div.flex.gap-1.justify-between.items-center
@@ -48,7 +48,7 @@
           [ui/icon "chevron-down"]]]]]
       [:> Select/Portal
        [:> Select/Content
-        {:class "menu-content rounded select-content"
+        {:class "menu-content rounded-sm select-content"
          :style {:min-width "auto"}}
         [:> Select/ScrollUpButton {:class "select-scroll-button"}
          [ui/icon "chevron-up"]]

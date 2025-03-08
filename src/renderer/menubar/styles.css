@@ -3,7 +3,7 @@
 }
 
 .menubar-trigger {
-  @apply px-3 py-1.5 flex rounded;
+  @apply px-3 py-1.5 flex rounded-sm;
   outline: none;
   user-select: none;
   line-height: 1;
@@ -25,7 +25,7 @@
 
 .menu-content,
 .menu-sub-content {
-  @apply bg-secondary drop-shadow-lg p-1 z-10 rounded;
+  @apply bg-secondary drop-shadow-lg p-1 z-10 rounded-sm;
   min-width: 200px;
   will-change: transform, opacity;
   border: 1px solid var(--border-color);

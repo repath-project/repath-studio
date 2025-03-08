@@ -17,7 +17,7 @@
   }
 
   &:focus {
-    @apply outline-none outline-shadow;
+    @apply outline-hidden outline-shadow;
   }
 
   &:active {
@@ -32,7 +32,7 @@
     background-color: transparent !important;
 
     &:focus {
-      @apply outline-none;
+      @apply outline-hidden;
     }
   }
 }

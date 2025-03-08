@@ -9,8 +9,8 @@
   "scripts": {
     "upgrade": "npx npm-check-updates -u -x 'codemirror'",
     "postinstall": "electron-builder install-app-deps",
-    "postcss:build": "npx postcss src/renderer/main.css -o resources/public/css/main.css --verbose",
-    "postcss:watch": "npx postcss src/renderer/main.css -o resources/public/css/main.css --verbose -w",
+    "postcss:build": "npx @tailwindcss/cli -i ./src/renderer/main.css -o ./resources/public/css/main.css",
+    "postcss:watch": "npx @tailwindcss/cli -i ./src/renderer/main.css -o ./resources/public/css/main.css --watch=always",
     "shadow:build": "npx shadow-cljs release main preload renderer bootstrap",
     "shadow:watch": "npx shadow-cljs watch main preload renderer bootstrap browser-test karma-test",
     "dev": "npm run postcss:watch & npm run shadow:watch",
@@ -76,6 +76,7 @@
     "@radix-ui/react-switch": "1.1.3",
     "@radix-ui/react-tooltip": "1.1.8",
     "@repath-project/react-color": "2.19.4",
+    "@tailwindcss/cli": "4.0.9",
     "@xzdarcy/react-timeline-editor": "0.1.9",
     "acorn": "8.14.0",
     "autoprefixer": "10.4.20",
@@ -99,10 +100,6 @@
     "paperjs-offset": "1.0.8",
     "path-browserify": "1.0.1",
     "perfect-freehand": "1.2.2",
-    "postcss": "8.5.3",
-    "postcss-cli": "11.0.0",
-    "postcss-import": "16.1.0",
-    "postcss-nested": "7.0.2",
     "puppeteer": "24.3.0",
     "react": "19.0.0",
     "react-d3-tree": "3.6.6",
@@ -116,8 +113,8 @@
     "style-to-object": "1.0.8",
     "svg-path-bbox": "2.1.0",
     "svgpath": "2.6.0",
-    "tailwind-merge": "2.6.0",
-    "tailwindcss": "3.4.17"
+    "tailwind-merge": "3.0.2",
+    "tailwindcss": "4.0.9"
   },
   "dependencies": {
     "electron-log": "5.3.1",
