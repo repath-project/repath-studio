@@ -7,7 +7,8 @@
 
 (defmethod hierarchy/properties :animate
   []
-  {:description "The SVG <animate> element provides a way to animate an
+  {:icon "animation"
+   :description "The SVG <animate> element provides a way to animate an
                  attribute of an element over time."
    :attrs [:href
            :attributeName

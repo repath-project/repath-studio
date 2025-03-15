@@ -7,7 +7,8 @@
 
 (defmethod hierarchy/properties :animateMotion
   []
-  {:description "The SVG <animateMotion> element let define how an element
+  {:icon "animation"
+   :description "The SVG <animateMotion> element let define how an element
                  moves along a motion path."
    :attrs [:keyPoints
            :path
