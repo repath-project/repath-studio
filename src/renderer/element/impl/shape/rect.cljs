@@ -1,5 +1,6 @@
 (ns renderer.element.impl.shape.rect
-  "https://www.w3.org/TR/SVG/shapes.html#RectElement"
+  "https://www.w3.org/TR/SVG/shapes.html#RectElement
+   https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/rect"
   (:require
    [clojure.string :as str]
    [renderer.element.hierarchy :as hierarchy]

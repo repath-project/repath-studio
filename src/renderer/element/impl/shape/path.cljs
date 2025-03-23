@@ -1,5 +1,6 @@
 (ns renderer.element.impl.shape.path
-  "https://www.w3.org/TR/SVG/paths.html#PathElement"
+  "https://www.w3.org/TR/SVG/paths.html#PathElement
+   https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/path"
   (:require
    ["svg-path-bbox" :refer [svgPathBbox]]
    ["svgpath" :as svgpath]

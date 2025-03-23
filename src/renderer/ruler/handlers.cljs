@@ -9,13 +9,12 @@
 
 (m/=> step [:-> ZoomFactor number?])
 (defn step
-  "Returns the grid step given a zoom level.
-
-   Any attempt to ingeniously produce this mapping was proven inferior.
-   Simply returning a fixed step depending on the zoom range works fine.
-   Zoom levels outside of this range are considered invalid for now.
-   Maybe we need to revisit this at some point."
+  "Returns the grid step given a zoom level."
   [zoom]
+  ;; Any attempt to ingeniously produce this mapping was proven inferior.
+  ;; Simply returning a fixed step depending on the zoom range works fine.
+  ;; Zoom levels outside of this range are considered invalid for now.
+  ;; Maybe we need to revisit this at some point.
   (condp > zoom
     0.001 2000
     0.025 1000

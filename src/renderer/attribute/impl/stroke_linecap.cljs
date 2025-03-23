@@ -1,4 +1,5 @@
 (ns renderer.attribute.impl.stroke-linecap
+  "https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/stroke-linecap"
   (:require
    [renderer.attribute.hierarchy :as hierarchy]
    [renderer.attribute.views :as v]))

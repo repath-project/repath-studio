@@ -1,5 +1,6 @@
 (ns renderer.element.impl.container.group
-  "https://www.w3.org/TR/SVG/struct.html#GElement"
+  "https://www.w3.org/TR/SVG/struct.html#GElement
+   https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/g"
   (:require
    [re-frame.core :as rf]
    [renderer.document.subs :as-alias document.s]

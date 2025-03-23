@@ -1,5 +1,6 @@
 (ns renderer.element.impl.shape.ellipse
-  "https://www.w3.org/TR/SVG/shapes.html#EllipseElement"
+  "https://www.w3.org/TR/SVG/shapes.html#EllipseElement
+   https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/ellipse"
   (:require
    [clojure.core.matrix :as mat]
    [clojure.string :as str]

@@ -1,5 +1,6 @@
 (ns renderer.element.impl.shape.image
-  "https://www.w3.org/TR/SVG/embedded.html#ImageElement"
+  "https://www.w3.org/TR/SVG/embedded.html#ImageElement
+   https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/image"
   (:require
    [renderer.app.events :as-alias app.e]
    [renderer.element.hierarchy :as hierarchy]))

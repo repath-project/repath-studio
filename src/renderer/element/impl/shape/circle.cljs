@@ -1,5 +1,6 @@
 (ns renderer.element.impl.shape.circle
-  "https://www.w3.org/TR/SVG/shapes.html#CircleElement"
+  "https://www.w3.org/TR/SVG/shapes.html#CircleElement
+   https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/circle"
   (:require
    [clojure.core.matrix :as mat]
    [clojure.string :as str]

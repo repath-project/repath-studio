@@ -1,4 +1,6 @@
 (ns renderer.element.impl.text
+  "https://www.w3.org/TR/SVG/text.html
+   https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/text"
   (:require
    [clojure.core.matrix :as mat]
    [clojure.string :as str]

@@ -1,5 +1,6 @@
 (ns renderer.element.impl.animation.animate-transform
-  "https://svgwg.org/specs/animations/#AnimateTransformElement"
+  "https://svgwg.org/specs/animations/#AnimateTransformElement
+   https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/animateTransform"
   (:require
    [renderer.element.hierarchy :as hierarchy]))
 
