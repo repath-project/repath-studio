@@ -70,10 +70,13 @@
 ╚═════╝░░░░╚═╝░░░░╚═════╝░╚═════╝░╚═╝░╚════╝░")
 
 (defn mount-root! []
-  (rf/clear-subscription-cache!)
   (let [container (.getElementById js/document "app")
         root (ra.dom.client/create-root container)]
-    (ra.dom.client/render root [error/boundary [app.v/root]])))
+    (ra.dom.client/render root [error/boundary [app.v/root]])
+
+    (defn ^:dev/after-load after-load []
+      (rf/clear-subscription-cache!)
+      (ra.dom.client/render root [error/boundary [app.v/root]]))))
 
 (defn bootstrap-cb!
   []
