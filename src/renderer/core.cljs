@@ -69,14 +69,17 @@
 ██████╔╝░░░██║░░░╚██████╔╝██████╔╝██║╚█████╔╝
 ╚═════╝░░░░╚═╝░░░░╚═════╝░╚═════╝░╚═╝░╚════╝░")
 
-(defn mount-root! []
-  (let [container (.getElementById js/document "app")
-        root (ra.dom.client/create-root container)]
-    (ra.dom.client/render root [error/boundary [app.v/root]])
+(def root-el (atom nil))
 
-    (defn ^:dev/after-load after-load []
-      (rf/clear-subscription-cache!)
-      (ra.dom.client/render root [error/boundary [app.v/root]]))))
+(defn ^:dev/after-load ^:export after-load []
+  (rf/clear-subscription-cache!)
+  (when @root-el
+    (ra.dom.client/render @root-el [error/boundary [app.v/root]])))
+
+(defn mount-root! []
+  (let [container (.getElementById js/document "app")]
+    (reset! root-el (ra.dom.client/create-root container))
+    (ra.dom.client/render @root-el [error/boundary [app.v/root]])))
 
 (defn bootstrap-cb!
   []
