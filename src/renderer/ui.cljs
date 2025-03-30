@@ -45,7 +45,7 @@
 (defn switch
   [label props]
   [:span.inline-flex.items-center
-   [:label.h-auto.bg-transparent {:for (when (:id props) (:id props))} label]
+   [:label.form-element.h-auto.bg-transparent {:for (when (:id props) (:id props))} label]
    [:> Switch/Root
     (merge-with-class
      {:class "overlay relative rounded-full w-10 h-6 data-[state=checked]:bg-accent data-disabled:opacity-50"}

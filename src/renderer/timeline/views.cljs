@@ -33,7 +33,7 @@
   [editor-ref]
   (let [speed @(rf/subscribe [::timeline.s/speed])]
     [:div.inline-flex.items-center
-     [:label "Speed"]
+     [:label.form-element "Speed"]
      [:> Select/Root
       {:value speed
        :onValueChange #(.setPlayRate (.-current editor-ref) %)}

@@ -53,7 +53,7 @@
         tag-label (or (:label properties) (str/capitalize (name tag)))]
     (ra/with-let [edit-mode? (ra/atom false)]
       (if @edit-mode?
-        [:input.list-item-input
+        [:input.form-element.list-item-input
          {:class (when (= :svg tag) "font-bold")
           :default-value label
           :placeholder tag-label

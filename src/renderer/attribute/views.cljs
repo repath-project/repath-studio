@@ -84,7 +84,7 @@
 (defn form-input
   [k v {:keys [disabled placeholder] :as attrs}]
   [:div.relative.flex.form-input.flex-1
-   [:input
+   [:input.form-element
     (merge attrs
            {:key v
             :id (name k)
@@ -179,7 +179,7 @@
                     (= (:key clicked-element) key))]
     [:> HoverCard/Root
      [:> HoverCard/Trigger
-      [:label.w-28.truncate
+      [:label.form-element.w-28.truncate
        {:for (name k)
         :class (when active "text-active")} k]]
      [:> HoverCard/Portal

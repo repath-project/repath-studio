@@ -110,7 +110,7 @@
 (defn zoom-input
   [zoom]
   (let [value (.toFixed (* 100 zoom) (zoom-decimal-points zoom) 2)]
-    [:input.overlay.text-right
+    [:input.form-element.overlay.text-right
      {:key zoom
       :aria-label "Zoom"
       :type "number"

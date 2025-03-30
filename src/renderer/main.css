@@ -40,7 +40,7 @@ p {
 }
 
 input {
-  @apply form-element font-mono appearance-none;
+  @apply font-mono appearance-none;
 
   &:focus {
     @apply outline-hidden;
@@ -53,12 +53,12 @@ input {
 }
 
 textarea {
-  @apply form-element w-full;
+  @apply w-full;
   resize: none;
 }
 
 label {
-  @apply form-element block text-right h-full text-muted overflow-hidden text-ellipsis w-auto;
+  @apply block text-right h-full text-muted overflow-hidden text-ellipsis w-auto;
 
   &:hover {
     color: var(--font-color-hovered);
