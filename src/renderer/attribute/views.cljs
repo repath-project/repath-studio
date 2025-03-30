@@ -40,9 +40,10 @@
   [support-data]
   [:<>
    [:h4.font-bold.mb-1 "Browser compatibility"]
-   [:div.flex.mb-4.gap-px
-    (for [[browser {:keys [version_added]}] support-data]
-      ^{:key browser} [browser-support browser version_added])]])
+   [ui/scroll-area
+    [:div.flex.mb-4.gap-px
+     (for [[browser {:keys [version_added]}] support-data]
+       ^{:key browser} [browser-support browser version_added])]]])
 
 (defn info-button
   [url label]
