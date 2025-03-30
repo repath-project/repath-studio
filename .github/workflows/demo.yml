@@ -40,9 +40,9 @@ jobs:
         uses: crate-ci/typos@v1.27.3
 
       - name: Install clojure tools
-        uses: DeLaGuardo/setup-clojure@13.1
+        uses: DeLaGuardo/setup-clojure@13.2
         with:
-          cli: 1.12.0.1517
+          cli: 1.12.0.1530
           clj-kondo: 2025.02.20
 
       - name: Lint

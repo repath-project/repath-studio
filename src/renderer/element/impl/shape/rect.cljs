@@ -1,5 +1,6 @@
 (ns renderer.element.impl.shape.rect
-  "https://www.w3.org/TR/SVG/shapes.html#RectElement"
+  "https://www.w3.org/TR/SVG/shapes.html#RectElement
+   https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/rect"
   (:require
    [clojure.string :as str]
    [renderer.element.hierarchy :as hierarchy]
@@ -34,21 +35,12 @@
     (cond-> []
       :always (conj "M" (+ x rx) y
                     "H" (- (+ x width) rx))
-
       curved? (conj "A" rx ry 0 0 1 (+ x width) (+ y ry))
-
       :always (conj "V" (- (+ y height) ry))
-
       curved? (conj "A" rx ry 0 0 1 (- (+ x width) rx) (+ y height))
-
       :always (conj "H" (+ x rx))
-
       curved? (conj "A" rx ry 0 0 1 x (- (+ y height) ry))
-
       :always (conj "V" (+ y ry))
-
       curved? (conj "A" rx ry 0 0 1 (+ x rx) y)
-
       :always (conj "z")
-
       :always (->> (str/join " ")))))

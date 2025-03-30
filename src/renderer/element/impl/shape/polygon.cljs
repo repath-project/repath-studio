@@ -1,5 +1,6 @@
 (ns renderer.element.impl.shape.polygon
-  "https://www.w3.org/TR/SVG/shapes.html#PolygonElement"
+  "https://www.w3.org/TR/SVG/shapes.html#PolygonElement
+   https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/polygon"
   (:require [renderer.element.hierarchy :as hierarchy]))
 
 (derive :polygon ::hierarchy/polyshape)

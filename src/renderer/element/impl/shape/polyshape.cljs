@@ -13,9 +13,8 @@
 (derive ::hierarchy/polyshape ::hierarchy/shape)
 
 (def partition-to-px
-  (comp
-   (map length/unit->px)
-   (partition-all 2)))
+  (comp (map length/unit->px)
+        (partition-all 2)))
 
 (defn points->px
   [points]

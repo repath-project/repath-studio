@@ -92,6 +92,16 @@
      ["closed" #(reset! main-window nil)]]]
     (.on (.-webContents ^js @main-window) web-contents-event f)))
 
+(defn handle-on-ready-to-show!
+  [^js window]
+  (doseq
+   [action
+    [(if (.isMaximized window) "window-maximized" "window-unmaximized")
+     (if (.isFullScreen window) "window-entered-fullscreen" "window-leaved-fullscreen")
+     (if (.isFocused window) "window-focused" "window-blurred")
+     "window-loaded"]]
+    (send-to-renderer! action)))
+
 (defn init-main-window!
   []
   (let [win-state (window-state-keeper #js {:defaultWidth 1920
@@ -112,29 +122,20 @@
                   #js {:sandbox false
                        :preload (.join path js/__dirname "preload.js")}}))
 
-    (.once ^js @main-window "ready-to-show"
+    (.once ^js @main-window
+           "ready-to-show"
            (fn []
              (.show ^js @main-window)
              (.manage win-state ^js @main-window)
              (.hide ^js @loading-window)
              (.close ^js @loading-window)))
 
-    (.on ^js @main-window "ready-to-show"
-         (fn []
-           (send-to-renderer! (if (.isMaximized ^js @main-window)
-                                "window-maximized"
-                                "window-unmaximized"))
-           (send-to-renderer! (if (.isFullScreen ^js @main-window)
-                                "window-entered-fullscreen"
-                                "window-leaved-fullscreen"))
-           (send-to-renderer! (if (.isFocused ^js @main-window)
-                                "window-focused"
-                                "window-blurred"))
-           (send-to-renderer! "window-loaded")))
+    (.on ^js @main-window "ready-to-show" #(handle-on-ready-to-show! @main-window))
 
-    (.loadURL ^js @main-window (if config/debug?
-                                 "http://localhost:8080"
-                                 (.join path "file://" js/__dirname "/public/index.html")))
+    (.loadURL ^js @main-window
+              (if config/debug?
+                "http://localhost:8080"
+                (.join path "file://" js/__dirname "/public/index.html")))
 
     (register-web-contents-events!)
     (register-ipc-on-events!)

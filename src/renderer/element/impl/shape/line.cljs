@@ -1,5 +1,6 @@
 (ns renderer.element.impl.shape.line
-  "https://www.w3.org/TR/SVG/shapes.html#LineElement"
+  "https://www.w3.org/TR/SVG/shapes.html#LineElement
+   https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/line"
   (:require
    [clojure.core.matrix :as mat]
    [clojure.string :as str]

@@ -44,9 +44,8 @@
         (array (js/ClipboardItem.
                 (let [blob-array (js-obj)]
                   (doseq
-                   [[data-type data]
-                    [["image/svg+xml" data]
-                     ["text/html" data]]]
+                   [[data-type data] [["image/svg+xml" data]
+                                      ["text/html" data]]]
                     (when (.supports js/ClipboardItem data-type)
                       (aset blob-array data-type (js/Blob. (array data) #js {:type data-type}))))
                   blob-array))))

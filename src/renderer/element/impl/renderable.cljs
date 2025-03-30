@@ -1,4 +1,5 @@
 (ns renderer.element.impl.renderable
+  "https://www.w3.org/TR/SVG/render.html#TermRenderableElement"
   (:require
    ["react" :as react]
    [re-frame.core :as rf]
