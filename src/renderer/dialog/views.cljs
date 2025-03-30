@@ -90,8 +90,7 @@
    {:label "Command Menu"
     :on-key-down #(.stopPropagation %)}
    [:> Command/CommandInput
-    {:class "p-3 bg-secondary text-sm border-b border-default"
-     :placeholder (t [:cmdk/search-command "Search for a command"])}]
+    {:placeholder (t [:cmdk/search-command "Search for a command"])}]
    [ui/scroll-area
     [:> Command/CommandList
      {:class "p-1"}

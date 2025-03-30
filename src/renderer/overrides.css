@@ -84,6 +84,10 @@
   }
 }
 
+[cmdk-input] {
+  @apply p-3 bg-secondary text-sm border-b border-default;
+}
+
 [cmdk-list] {
   max-height: 50vh;
 }
