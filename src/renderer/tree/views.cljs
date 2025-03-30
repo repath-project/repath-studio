@@ -22,7 +22,7 @@
   [id locked]
   [ui/icon-button
    (if locked "lock" "unlock")
-   {:class (when-not locked "list-item-action")
+   {:class ["list-item-action" (when-not locked "invisible")]
     :title (if locked "unlock" "lock")
     :on-double-click #(.stopPropagation %)
     :on-pointer-up #(.stopPropagation %)
@@ -34,7 +34,7 @@
   [id visible]
   [ui/icon-button
    (if visible "eye" "eye-closed")
-   {:class (when visible "list-item-action")
+   {:class ["list-item-action" (when-not visible "invisible")]
     :title (if visible "hide" "show")
     :on-double-click #(.stopPropagation %)
     :on-pointer-up #(.stopPropagation %)
@@ -115,6 +115,7 @@
   [ui/icon-button
    (if collapsed "chevron-right" "chevron-down")
    {:title (if collapsed "expand" "collapse")
+    :class "list-item-action"
     :on-pointer-up #(.stopPropagation %)
     :on-click #(rf/dispatch (if collapsed
                               [::document.e/expand-el id]
