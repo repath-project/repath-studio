@@ -9,7 +9,7 @@
   "scripts": {
     "upgrade": "npx npm-check-updates -u -x 'codemirror'",
     "postinstall": "electron-builder install-app-deps",
-    "tailwindcss:build": "npx @tailwindcss/cli -i ./src/renderer/main.css -o ./resources/public/css/main.css",
+    "tailwindcss:build": "npx @tailwindcss/cli -i ./src/renderer/main.css -o ./resources/public/css/main.css --minify",
     "tailwindcss:watch": "npx @tailwindcss/cli -i ./src/renderer/main.css -o ./resources/public/css/main.css --watch=always",
     "shadow:build": "npx shadow-cljs release main preload renderer bootstrap",
     "shadow:watch": "npx shadow-cljs watch main preload renderer bootstrap browser-test karma-test",
