@@ -54,7 +54,8 @@
     (ra/with-let [edit-mode? (ra/atom false)]
       (if @edit-mode?
         [:input.list-item-input
-         {:default-value label
+         {:class (when (= :svg tag) "font-bold")
+          :default-value label
           :placeholder tag-label
           :auto-focus true
           :on-key-down #(keyb/input-key-down-handler! % label set-item-label! id)
