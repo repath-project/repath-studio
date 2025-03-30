@@ -43,9 +43,9 @@
   [m]
   (interpose ", " (map (fn [[k v]]
                          ^{:key k}
-                         [:span (str (name k)  ": " (if (number? v)
-                                                      (.toFixed v 2)
-                                                      (coll->str v)))]) m)))
+                         [:span (str (name k) ": " (if (number? v)
+                                                     (.toFixed v 2)
+                                                     (coll->str v)))]) m)))
 
 (defn debug-rows
   []
