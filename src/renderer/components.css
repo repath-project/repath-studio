@@ -1,326 +1,327 @@
-@layer components {
-  .form-element {
-    @apply bg-primary border-0 w-full;
+@utility form-element {
+  @apply bg-primary border-0 w-full;
 
-    outline: none;
-    padding: 4px 12px;
-    box-sizing: border-box;
-    line-height: 18px;
-    font-size: 12px;
-    box-shadow: none !important;
-    color: var(--font-color) !important;
+  outline: none;
+  padding: 4px 12px;
+  box-sizing: border-box;
+  line-height: 18px;
+  font-size: 12px;
+  box-shadow: none !important;
+  color: var(--font-color) !important;
 
-    &:hover,
-    &:focus {
-      color: var(--font-color-active) !important;
+  &:hover,
+  &:focus {
+    color: var(--font-color-active) !important;
+  }
+
+  &::placeholder {
+    color: var(--font-color-disabled);
+  }
+
+  &:disabled {
+    color: var(--font-color-disabled);
+  }
+}
+
+@utility form-input {
+  &:hover,
+  &:active {
+    .clear-input-button {
+      visibility: visible;
+    }
+  }
+}
+
+@utility button {
+  @apply relative cursor-pointer text-center outline-hidden text-nowrap;
+  background-color: transparent;
+  color: var(--font-color);
+  fill: var(--font-color);
+  font-family: var(--font-color);
+  font-size: 1em;
+  height: var(--button-size);
+  line-height: var(--button-size);
+  -webkit-app-region: no-drag;
+
+  &:focus {
+    @apply outline outline-1 outline-offset-0 outline-accent;
+  }
+
+  &:hover {
+    @apply overlay outline-hidden cursor-pointer;
+    transition: all 75ms;
+    color: var(--font-color-hovered);
+  }
+
+  &:active {
+    @apply outline-hidden overlay-2x;
+  }
+
+  &.selected {
+    @apply bg-accent! text-accent-inverted!;
+  }
+
+  &:disabled {
+    @apply cursor-default pointer-events-none text-disabled;
+  }
+}
+
+@utility button-link {
+  @apply text-lg text-accent inline-block text-left text-wrap break-all hover:cursor-pointer;
+
+  font-size: inherit;
+  line-height: inherit;
+}
+
+@utility backdrop {
+  @apply absolute inset-0 flex items-center justify-center;
+  background-color: var(--backdrop);
+  backdrop-filter: blur(2px);
+}
+
+@utility icon {
+  @apply flex justify-center;
+
+  svg {
+    @apply fill-current;
+  }
+}
+
+@utility toolbar {
+  @apply flex gap-1 p-1 items-center;
+}
+
+@utility button-group {
+  @apply flex gap-px;
+
+  > .button,
+  > input {
+    @apply overlay m-0 rounded-none;
+
+    &:first-child {
+      @apply rounded-l;
     }
 
-    &::placeholder {
-      color: var(--font-color-disabled);
+    &:last-child {
+      @apply rounded-r;
     }
+  }
+}
 
-    &:disabled {
-      color: var(--font-color-disabled);
+@utility icon-button {
+  @apply button button-size rounded-sm;
+
+  &.small {
+    @apply button-size-sm rounded-xs m-0;
+  }
+}
+
+@utility radio-icon-button {
+  &.selected {
+    @apply bg-accent text-accent-inverted;
+  }
+}
+
+@utility v-divider {
+  @apply mx-1 border-l border-default h-6;
+}
+
+@utility h-divider {
+  @apply my-1 border-t border-default w-6;
+}
+
+@utility shortcut-key {
+  @apply p-1 text-2xs overlay rounded-sm font-bold text-muted uppercase;
+}
+
+@utility resize-handle {
+  @apply relative;
+
+  &:after {
+    content: '';
+    display: block;
+    z-index: 1;
+    position: absolute;
+    transition: background-color 0.3s;
+  }
+
+  &[data-panel-group-direction='vertical'] {
+    @apply h-px;
+
+    &:after {
+      @apply w-full h-1;
+
+      top: -50%;
     }
   }
 
-  .form-input {
-    &:hover,
-    &:active {
-      .clear-input-button {
-        visibility: visible;
-      }
+  &[data-panel-group-direction='horizontal'] {
+    @apply w-px;
+
+    &:after {
+      @apply h-full w-1;
+
+      left: -50%;
     }
   }
 
-  .button {
-    @apply relative cursor-pointer text-center outline-none text-nowrap;
-    background-color: transparent;
-    color: var(--font-color);
-    fill: var(--font-color);
-    font-family: var(--font-color);
-    font-size: 1em;
-    height: var(--button-size);
-    line-height: var(--button-size);
-    -webkit-app-region: no-drag;
+  &[data-resize-handle-state='drag'] {
+    &:after {
+      @apply bg-accent;
+    }
+  }
+}
 
-    &:focus {
-      @apply outline outline-1 outline-offset-0 outline-accent;
+@utility popover-content {
+  @apply bg-secondary drop-shadow-lg z-10 rounded-sm break-words;
+  max-width: 350px;
+  border: 1px solid var(--border-color);
+  animation-duration: 400ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+
+  &[data-state='open'][data-side='top'] {
+    animation-name: slideDownAndFade;
+  }
+
+  &[data-state='open'][data-side='right'] {
+    animation-name: slideLeftAndFade;
+  }
+
+  &[data-state='open'][data-side='bottom'] {
+    animation-name: slideUpAndFade;
+  }
+
+  &[data-state='open'][data-side='left'] {
+    animation-name: slideRightAndFade;
+  }
+}
+
+@utility popover-arrow {
+  fill: var(--bg-secondary);
+}
+
+@utility menu-arrow {
+  fill: var(--bg-secondary);
+}
+
+@utility tooltip-content {
+  @apply bg-secondary px-2 py-1 rounded-sm drop-shadow-md;
+  max-width: 300px;
+  border: 1px solid var(--border-color);
+  animation-duration: 200ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+
+  &[data-state='delayed-open'][data-side='top'] {
+    animation-name: slideDownAndFade;
+  }
+
+  &[data-state='delayed-open'][data-side='right'] {
+    animation-name: slideLeftAndFade;
+  }
+
+  &[data-state='delayed-open'][data-side='bottom'] {
+    animation-name: slideUpAndFade;
+  }
+
+  &[data-state='delayed-open'][data-side='left'] {
+    animation-name: slideRightAndFade;
+  }
+}
+
+@utility slider-thumb {
+  @apply flex shadow-sm h-5 w-2 rounded-xs data-disabled:opacity-50;
+  background-color: var(--font-color);
+
+  &:focus {
+    @apply outline-hidden;
+    box-shadow: 0 0 0 4px var(--border-color);
+  }
+}
+
+@utility dialog-content {
+  @apply fixed bg-secondary rounded-lg overflow-hidden shadow-xl border border-default left-1/2 top-1/2;
+  width: 500px;
+  max-width: 90%;
+  transform: translate(-50%, -50%);
+}
+
+@utility tab {
+  @apply button flex items-center h-full text-left bg-primary gap-2 opacity-50 hover:bg-primary relative;
+  padding: 0 8px 0 16px;
+  flex: 0 1 130px;
+
+  .close {
+    @apply icon-button invisible relative;
+
+    .dot {
+      @apply absolute inset-0 bg-primary flex items-center;
     }
 
     &:hover {
-      @apply overlay outline-none cursor-pointer;
-      transition: all 75ms;
-      color: var(--font-color-hovered);
-    }
-
-    &:active {
-      @apply outline-none overlay-2x;
-    }
-
-    &.selected {
-      @apply bg-accent text-accent-inverted !important;
-    }
-
-    &:disabled {
-      @apply cursor-default pointer-events-none text-disabled;
-    }
-  }
-
-  .button-link {
-    @apply text-lg text-accent inline-block text-left text-wrap break-all;
-
-    font-size: inherit;
-    line-height: inherit;
-  }
-
-  .backdrop {
-    @apply absolute inset-0 flex items-center justify-center;
-    background-color: var(--backdrop);
-    backdrop-filter: blur(2px);
-  }
-
-  .icon {
-    @apply flex justify-center;
-
-    svg {
-      @apply fill-current;
-    }
-  }
-
-  .toolbar {
-    @apply flex gap-1 p-1 items-center;
-  }
-
-  .button-group {
-    @apply flex gap-px;
-
-    > .button,
-    > input {
-      @apply overlay m-0 rounded-none;
-
-      &:first-child {
-        @apply rounded-l;
-      }
-
-      &:last-child {
-        @apply rounded-r;
-      }
-    }
-  }
-
-  .icon-button {
-    @apply button button-size rounded;
-
-    &.small {
-      @apply button-size-sm rounded-sm m-0;
-    }
-  }
-
-  .radio-icon-button {
-    &.selected {
-      @apply bg-accent text-accent-inverted;
-    }
-  }
-
-  .v-divider {
-    @apply mx-1 border-l border-default h-6;
-  }
-
-  .h-divider {
-    @apply my-1 border-t border-default w-6;
-  }
-
-  .shortcut-key {
-    @apply p-1 text-2xs overlay rounded font-bold text-muted uppercase;
-  }
-
-  .resize-handle {
-    @apply relative;
-
-    &:after {
-      content: "";
-      display: block;
-      z-index: 1;
-      position: absolute;
-      transition: background-color .3s;
-    }
-
-    &[data-panel-group-direction="vertical"] {
-      @apply h-px;
-
-      &:after {
-        @apply w-full h-1;
-
-        top: -50%;
-      }
-    }
-
-    &[data-panel-group-direction="horizontal"] {
-      @apply w-px;
-
-      &:after {
-        @apply h-full w-1;
-
-        left: -50%;
-      }
-    }
-
-    &[data-resize-handle-state="drag"] {
-      &:after {
-        background-color: var(--accent);
-      }
-    }
-  }
-
-  .popover-content {
-    @apply bg-secondary drop-shadow-lg z-10 rounded break-words;
-    max-width: 350px;
-    border: 1px solid var(--border-color);
-    animation-duration: 400ms;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: transform, opacity;
-
-    &[data-state='open'][data-side='top'] {
-      animation-name: slideDownAndFade;
-    }
-
-    &[data-state='open'][data-side='right'] {
-      animation-name: slideLeftAndFade;
-    }
-
-    &[data-state='open'][data-side='bottom'] {
-      animation-name: slideUpAndFade;
-    }
-
-    &[data-state='open'][data-side='left'] {
-      animation-name: slideRightAndFade;
-    }
-  }
-
-  .popover-arrow,
-  .menu-arrow {
-    fill: var(--bg-secondary);
-  }
-
-  .tooltip-content {
-    @apply bg-secondary px-2 py-1 rounded drop-shadow-md;
-    max-width: 300px;
-    border: 1px solid var(--border-color);
-    animation-duration: 200ms;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: transform, opacity;
-
-    &[data-state='delayed-open'][data-side='top'] {
-      animation-name: slideDownAndFade;
-    }
-
-    &[data-state='delayed-open'][data-side='right'] {
-      animation-name: slideLeftAndFade;
-    }
-
-    &[data-state='delayed-open'][data-side='bottom'] {
-      animation-name: slideUpAndFade;
-    }
-
-    &[data-state='delayed-open'][data-side='left'] {
-      animation-name: slideRightAndFade;
-    }
-  }
-
-  .slider-thumb {
-    @apply flex shadow h-5 w-2 rounded-sm data-[disabled]:opacity-50;
-    background-color: var(--font-color);
-
-    &:focus {
-      @apply outline-none;
-      box-shadow: 0 0 0 4px var(--border-color);
-    }
-  }
-
-  .dialog-content {
-    @apply fixed bg-secondary rounded-lg overflow-hidden shadow-xl border border-default left-1/2 top-1/2;
-    width: 500px;
-    max-width: 90%;
-    transform: translate(-50%, -50%);
-  }
-
-  .tab {
-    @apply button flex items-center h-full text-left bg-primary gap-2 opacity-50 hover:bg-primary relative;
-    padding: 0 8px 0 16px;
-    flex: 0 1 130px;
-
-    .close {
-      @apply icon-button invisible relative;
-
       .dot {
-        @apply absolute inset-0 bg-primary flex items-center;
-      }
-
-      &:hover {
-        .dot {
-          @apply hidden;
-        }
+        @apply hidden;
       }
     }
+  }
 
-    &:hover,
-    &.active,
-    &:not(.saved) {
-      .close {
-        @apply visible;
-      }
-    }
-
-    &:active {
-      @apply bg-primary;
-    }
-
-    &.active {
-      @apply opacity-100;
+  &:hover,
+  &.active,
+  &:not(.saved) {
+    .close {
+      @apply visible;
     }
   }
 
-  .form-control-button {
-    @apply button bg-primary text-muted p-1 h-auto;
-    width: 26px;
-    height: 26px;
+  &:active {
+    @apply bg-primary;
   }
 
-  .color-rect {
-    @apply button-size;
-    border: 1px solid var(--border-color);
+  &.active {
+    @apply opacity-100;
   }
+}
 
-  .color-drip {
-    box-sizing: content-box;
-    width: 16px;
-    max-width: 16px;
-    height: 16px;
-    flex: 1;
-  }
+@utility form-control-button {
+  @apply button bg-primary text-muted p-1 h-auto;
+  width: 26px;
+  height: 26px;
+}
 
-  .loader {
-    @apply inline-block absolute;
+@utility color-rect {
+  @apply button-size;
+  border: 1px solid var(--border-color);
+}
+
+@utility color-drip {
+  box-sizing: content-box;
+  width: 16px;
+  max-width: 16px;
+  height: 16px;
+  flex: 1;
+}
+
+@utility loader {
+  @apply inline-block absolute;
+  width: 24px;
+  height: 24px;
+  top: 50%;
+  left: 50%;
+  margin: -12px 0 0 -12px;
+
+  &:after,
+  &:before {
+    @apply absolute top-0 left-0;
+    content: '';
     width: 24px;
     height: 24px;
-    top: 50%;
-    left: 50%;
-    margin: -12px 0 0 -12px;
+    border: 2px solid var(--font-color);
+    animation: rotationBreak 3s ease-in-out infinite alternate;
+  }
 
-    &:after,
-    &:before {
-      @apply absolute top-0 left-0;
-      content: '';
-      width: 24px;
-      height: 24px;
-      border: 2px solid var(--font-color);
-      animation: rotationBreak 3s ease-in-out infinite alternate;
-    }
-
-    &:after {
-      border-color: var(--accent);
-      animation-direction: alternate-reverse;
-    }
+  &:after {
+    @apply border-accent;
+    animation-direction: alternate-reverse;
   }
 }

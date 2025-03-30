@@ -1,23 +1,19 @@
-@import 'tailwindcss/base.css';
-@import 'tailwindcss/components.css';
-@import 'tailwindcss/utilities.css';
+@import 'tailwindcss';
 
-@import "codemirror/lib/codemirror.css";
-@import "codemirror/addon/hint/show-hint.css";
-@import "codemirror/theme/tomorrow-night-eighties.css";
+@import 'codemirror/lib/codemirror.css';
+@import 'codemirror/addon/hint/show-hint.css';
+@import 'codemirror/theme/tomorrow-night-eighties.css';
 
-@import "utilities";
-@import "components";
-@import "animations";
-@import "overrides";
+@import './utilities.css';
+@import './components.css';
+@import './animations.css';
+@import './overrides.css';
 
-@import "theme/styles";
-@import "menubar/styles";
-@import "tree/styles";
+@import './theme/styles.css';
+@import './menubar/styles.css';
+@import './tree/styles.css';
 
 body {
-  @apply absolute inset-0 m-0 p-0 bg-secondary overflow-hidden select-none;
-  font-family: var(--font-sans);
   font-size: var(--font-size);
   color: var(--font-color);
   fill: var(--font-color);
@@ -44,10 +40,10 @@ p {
 }
 
 input {
-  @apply form-element font-mono appearance-none;
+  @apply font-mono appearance-none;
 
   &:focus {
-    @apply outline-none;
+    @apply outline-hidden;
   }
 
   &::-webkit-outer-spin-button,
@@ -57,13 +53,12 @@ input {
 }
 
 textarea {
-  @apply form-element w-full;
+  @apply w-full;
   resize: none;
 }
 
 label {
-  @apply form-element block text-right h-full text-muted overflow-hidden text-ellipsis;
-  width: auto;
+  @apply block text-right h-full text-muted overflow-hidden text-ellipsis w-auto;
 
   &:hover {
     color: var(--font-color-hovered);
@@ -72,11 +67,10 @@ label {
 }
 
 a {
-  color: var(--accent);
-  cursor: pointer;
+  @apply text-accent cursor-pointer;
   text-decoration: none;
 }
 
 pre {
-  font-family: var(--font-mono);
+  @apply font-mono;
 }

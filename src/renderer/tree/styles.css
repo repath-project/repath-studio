@@ -1,5 +1,7 @@
 .list-item-action {
-  visibility: hidden;
+  @apply mx-px shrink-0 bg-transparent text-inherit focus:outline-hidden;
+  height: 20px;
+  width: 20px;
 }
 
 .list-item-button {
@@ -17,23 +19,11 @@
   }
 
   &:focus {
-    @apply outline-none outline-shadow;
+    @apply outline-hidden outline-shadow;
   }
 
   &:active {
     @apply shadow-none;
-  }
-
-  .button {
-    @apply mx-px shrink-0;
-    height: 20px;
-    width: 20px;
-    color: inherit;
-    background-color: transparent !important;
-
-    &:focus {
-      @apply outline-none;
-    }
   }
 }
 

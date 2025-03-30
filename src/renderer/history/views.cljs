@@ -28,7 +28,8 @@
    [:> Select/Trigger
     {:aria-label label
      :as-child true}
-    [:div.w-4.m-0.bg-transparent.h-full.hover:pt-1.flex.items-center
+    [:div.w-4.m-0.bg-transparent.h-full.flex.items-center
+     {:class "hover:pt-1"}
      [:> Select/Value ""]
      [:> Select/Icon
       [ui/icon "chevron-down"]]]]
@@ -38,7 +39,7 @@
       :sideOffset 5
       :alignOffset -24
       :position "popper"
-      :class "menu-content rounded select-content"}
+      :class "menu-content rounded-sm select-content"}
      [:> Select/ScrollUpButton {:class "select-scroll-button"}
       [ui/icon "chevron-up"]]
      [:> Select/Viewport {:class "select-viewport"}
@@ -56,8 +57,9 @@
         id (uuid (.-id datum))
         color (if active? "var(--accent)" (.-color datum))]
     (ra/as-element
-     [:circle.transition-fill.hover:stroke-accent
-      {:on-click #(rf/dispatch [::history.e/go-to id])
+     [:circle.transition-fill
+      {:class "hover:stroke-accent"
+       :on-click #(rf/dispatch [::history.e/go-to id])
        :on-pointer-enter #(when-not active? (rf/dispatch [::history.e/preview id]))
        :on-pointer-leave #(rf/dispatch [::history.e/reset-state id])
        :cx "0"

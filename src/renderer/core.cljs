@@ -71,14 +71,10 @@
 
 (def root-el (atom nil))
 
-(defn ^:dev/after-load ^:export after-load []
-  (rf/clear-subscription-cache!)
-  (when @root-el
-    (ra.dom.client/render @root-el [error/boundary [app.v/root]])))
-
-(defn mount-root! []
+(defn ^:dev/after-load mount-root! []
   (let [container (.getElementById js/document "app")]
-    (reset! root-el (ra.dom.client/create-root container))
+    (rf/clear-subscription-cache!)
+    (when-not @root-el (reset! root-el (ra.dom.client/create-root container)))
     (ra.dom.client/render @root-el [error/boundary [app.v/root]])))
 
 (defn bootstrap-cb!

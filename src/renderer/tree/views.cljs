@@ -22,7 +22,7 @@
   [id locked]
   [ui/icon-button
    (if locked "lock" "unlock")
-   {:class (when-not locked "list-item-action")
+   {:class ["list-item-action" (when-not locked "invisible")]
     :title (if locked "unlock" "lock")
     :on-double-click #(.stopPropagation %)
     :on-pointer-up #(.stopPropagation %)
@@ -34,7 +34,7 @@
   [id visible]
   [ui/icon-button
    (if visible "eye" "eye-closed")
-   {:class (when visible "list-item-action")
+   {:class ["list-item-action" (when visible "invisible")]
     :title (if visible "hide" "show")
     :on-double-click #(.stopPropagation %)
     :on-pointer-up #(.stopPropagation %)
@@ -53,8 +53,9 @@
         tag-label (or (:label properties) (str/capitalize (name tag)))]
     (ra/with-let [edit-mode? (ra/atom false)]
       (if @edit-mode?
-        [:input.list-item-input
-         {:default-value label
+        [:input.form-element.list-item-input
+         {:class (when (= :svg tag) "font-bold")
+          :default-value label
           :placeholder tag-label
           :auto-focus true
           :on-key-down #(keyb/input-key-down-handler! % label set-item-label! id)
@@ -115,6 +116,7 @@
   [ui/icon-button
    (if collapsed "chevron-right" "chevron-down")
    {:title (if collapsed "expand" "collapse")
+    :class "list-item-action"
     :on-pointer-up #(.stopPropagation %)
     :on-click #(rf/dispatch (if collapsed
                               [::document.e/expand-el id]

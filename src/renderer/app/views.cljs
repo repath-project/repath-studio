@@ -43,9 +43,9 @@
   [m]
   (interpose ", " (map (fn [[k v]]
                          ^{:key k}
-                         [:span (str (name k)  ": " (if (number? v)
-                                                      (.toFixed v 2)
-                                                      (coll->str v)))]) m)))
+                         [:span (str (name k) ": " (if (number? v)
+                                                     (.toFixed v 2)
+                                                     (coll->str v)))]) m)))
 
 (defn debug-rows
   []
@@ -189,12 +189,15 @@
    9 [105 147]
    10 [74 105]})
 
-(defn home [recent-documents]
+(defn home
+  [recent-documents]
   [:div.flex.overflow-hidden
    [ui/scroll-area
     [:div.flex.justify-center.p-2
-     [:div.justify-between.flex.w-full.lg:w-auto
-      [:div.bg-primary.p-6.lg:p-12.flex.max-w-screen-xl.w-full.gap-8
+     [:div.justify-between.flex.w-full
+      {:class "lg:w-auto"}
+      [:div.bg-primary.p-6.flex.w-full.gap-8
+       {:class "lg:p-12 max-w-(--breakpoint-xl)"}
        [:div.flex-1
         [:h1.text-4xl.mb-1.font-light config/app-name]
 
@@ -215,7 +218,7 @@
           {:onValueChange #(rf/dispatch [::document.e/new-from-template
                                          (get paper-size %)])}
           [:> Select/Trigger
-           {:class "button px-2 overlay rounded"
+           {:class "button px-2 overlay rounded-sm"
             :aria-label "Select size"}
            [:div.flex.items-center.gap-2
             [:> Select/Value {:placeholder "Select template"}]
@@ -223,7 +226,7 @@
              [ui/icon "chevron-down"]]]]
           [:> Select/Portal
            [:> Select/Content
-            {:class "menu-content rounded select-content"
+            {:class "menu-content rounded-sm select-content"
              :style {:min-width "auto"}}
 
             [:> Select/Viewport {:class "select-viewport"}
@@ -286,7 +289,8 @@
                                     "https://repath.studio/roadmap/changelog/"])}
           "Changelog"]]]
 
-       [:div.hidden.md:block.flex-1
+       [:div.hidden.flex-1
+        {:class "md:block"}
         [:img {:src "./img/icon.svg"}]]]]]]])
 
 (defn root
@@ -302,8 +306,9 @@
       (if (seq @documents)
         [:div.flex.h-full.flex-1.overflow-hidden.gap-px
          (when @tree-visible
-           [:div.flex-col.hidden.md:flex.overflow-hidden
-            {:style {:width "227px"}}
+           [:div.flex-col.hidden.overflow-hidden
+            {:class "md:flex"
+             :style {:width "227px"}}
             [document.v/actions]
             [tree.v/root]])
          [:div.flex.flex-col.flex-1.overflow-hidden.h-full
@@ -313,7 +318,8 @@
             [editor]]
            [:div.flex
             (when @properties-visible
-              [:div.hidden.md:flex
+              [:div.hidden
+               {:class "md:flex"}
                [:div.flex.flex-col.h-full.w-80
                 [ui/scroll-area
                  (tool.hierarchy/right-panel @active-tool)]

@@ -138,7 +138,7 @@
          [ui/icon "ellipsis-h"]]]
        [:> DropdownMenu/Portal
         [:> DropdownMenu/Content
-         {:class "menu-content rounded"}
+         {:class "menu-content rounded-sm"}
          (for [item [{:label "Close all"
                       :key :close-all
                       :action [::e/close-all]}

@@ -28,10 +28,10 @@
   [i [x y] points]
   [:div.grid.grid-flow-col.gap-px
    {:style {:grid-template-columns "minmax(0, 40px) 3fr 3fr 26px"}}
-   [:label.px-1.bg-transparent i]
-   [:input.bg-transparent
+   [:label.form-element.px-1.bg-transparent i]
+   [:input.form-element.bg-transparent
     {:key (str "x-" i) :default-value x}]
-   [:input.bg-transparent
+   [:input.form-element.bg-transparent
     {:key (str "y-" i) :default-value y}]
    [:button.button.bg-transparent.text-muted.h-full.rounded
     {:on-click #(remove-nth points i)}

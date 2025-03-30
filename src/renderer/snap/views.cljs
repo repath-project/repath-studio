@@ -18,7 +18,8 @@
      [:> DropdownMenu/Trigger
       {:aria-label "Snap"
        :as-child true}
-      [:div.h-full.hover:pb-1.flex.items-center
+      [:div.h-full.flex.items-center
+       {:class "hover:pb-1"}
        [ui/icon "chevron-up"]]]
      [:> DropdownMenu/Portal
       [:> DropdownMenu/Content
@@ -27,7 +28,7 @@
         :sideOffset 5
         :alignOffset -5
         :position "popper"
-        :class "menu-content rounded select-content"}
+        :class "menu-content rounded-sm select-content"}
        (for [option snap.db/snap-options]
          ^{:key option}
          [:> DropdownMenu/CheckboxItem

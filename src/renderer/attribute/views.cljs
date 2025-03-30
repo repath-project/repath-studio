@@ -40,9 +40,10 @@
   [support-data]
   [:<>
    [:h4.font-bold.mb-1 "Browser compatibility"]
-   [:div.flex.mb-4.gap-px
-    (for [[browser {:keys [version_added]}] support-data]
-      ^{:key browser} [browser-support browser version_added])]])
+   [ui/scroll-area
+    [:div.flex.mb-4.gap-px
+     (for [[browser {:keys [version_added]}] support-data]
+       ^{:key browser} [browser-support browser version_added])]]])
 
 (defn info-button
   [url label]
@@ -83,7 +84,7 @@
 (defn form-input
   [k v {:keys [disabled placeholder] :as attrs}]
   [:div.relative.flex.form-input.flex-1
-   [:input
+   [:input.form-element
     (merge attrs
            {:key v
             :id (name k)
@@ -92,8 +93,9 @@
             :on-blur #(on-change-handler! % k v)
             :on-key-down #(keyb/input-key-down-handler! % v on-change-handler! k v)})]
    (when-not (or (empty? (str v)) disabled)
-     [:button.button.bg-primary.text-muted.absolute.h-full.right-0.clear-input-button.hover:bg-transparent.invisible.p-1
-      {:on-pointer-down #(rf/dispatch [::element.e/remove-attr k])}
+     [:button.button.bg-primary.text-muted.absolute.h-full.right-0.clear-input-button.invisible.p-1
+      {:class "hover:bg-transparent"
+       :on-pointer-down #(rf/dispatch [::element.e/remove-attr k])}
       [ui/icon "times"]])])
 
 (defmethod hierarchy/form-element :default
@@ -134,7 +136,7 @@
         [ui/icon "chevron-down"]]]
       [:> Select/Portal
        [:> Select/Content
-        {:class "menu-content rounded select-content"
+        {:class "menu-content rounded-sm select-content"
          :on-key-down #(.stopPropagation %)}
         [:> Select/ScrollUpButton
          {:class "select-scroll-button"}
@@ -178,7 +180,7 @@
                     (= (:key clicked-element) key))]
     [:> HoverCard/Root
      [:> HoverCard/Trigger
-      [:label.w-28.truncate
+      [:label.form-element.w-28.truncate
        {:for (name k)
         :class (when active "text-active")} k]]
      [:> HoverCard/Portal

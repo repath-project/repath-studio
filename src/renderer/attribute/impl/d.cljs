@@ -52,20 +52,20 @@
 (defmethod segment-form :default
   [segment i]
   [:div.grid.grid-cols-4.gap-px
-   [:label.px-1 "x"]
-   [:input
+   [:label.form-element.px-1 "x"]
+   [:input.form-element
     {:key (str "x-" i) :default-value (nth segment 1)}]
-   [:label.px-1 "y"]
-   [:input
+   [:label.form-element.px-1 "y"]
+   [:input.form-element
     {:key (str "y-" i) :default-value (nth segment 2)}]])
 
 (defmethod segment-form :h
   [segment i]
-  [:input {:key (str "width-" i) :default-value (nth segment 1)}])
+  [:input.form-element {:key (str "width-" i) :default-value (nth segment 1)}])
 
 (defmethod segment-form :v
   [segment i]
-  [:input {:key (str "height-" i) :default-value (nth segment 1)}])
+  [:input.form-element {:key (str "height-" i) :default-value (nth segment 1)}])
 
 (defmethod segment-form :z [_segment _i])
 
@@ -73,30 +73,30 @@
   [segment i]
   [:div
    [:div.grid.grid-cols-4.gap-px
-    [:label.px-1 "rx"]
-    [:input
+    [:label.form-element.px-1 "rx"]
+    [:input.form-element
      {:key (str "rx-" i) :default-value (nth segment 1)}]
-    [:label.px-1 "ry"]
-    [:input
+    [:label.form-element.px-1 "ry"]
+    [:input.form-element
      {:key (str "ry-" i) :default-value (nth segment 2)}]]
    [:div.grid.grid-cols-2.gap-px
-    [:label.px-1.text-nowrap "x-axis-rotation"]
-    [:input
+    [:label.form-element.px-1.text-nowrap "x-axis-rotation"]
+    [:input.form-element
      {:key (str "x-axis-rotation-" i) :default-value (nth segment 3)}]]
    [:div.grid.grid-cols-2.gap-px
-    [:label.px-1.text-nowrap "large-arc-flag"]
-    [:input
+    [:label.form-element.px-1.text-nowrap "large-arc-flag"]
+    [:input.form-element
      {:key (str "large-arc-flag-" i) :default-value (nth segment 4)}]]
    [:div.grid.grid-cols-2.gap-px
-    [:label.px-1.text-nowrap "sweep-flag"]
-    [:input
+    [:label.form-element.px-1.text-nowrap "sweep-flag"]
+    [:input.form-element
      {:key (str "sweep-flag" i) :default-value (nth segment 5)}]]
    [:div.grid.grid-cols-4.gap-px
-    [:label.px-1 "x"]
-    [:input
+    [:label.form-element.px-1 "x"]
+    [:input.form-element
      {:key (str "x-" i) :default-value (nth segment 6)}]
-    [:label.px-1. "y"]
-    [:input
+    [:label.form-element.px-1. "y"]
+    [:input.form-element
      {:key (str "y-" i) :default-value (nth segment 7)}]]])
 
 (defn segment-row

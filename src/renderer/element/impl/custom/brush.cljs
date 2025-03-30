@@ -45,9 +45,9 @@
 
 (defmethod attr.hierarchy/form-element [:brush :points]
   [_ _k v]
-  [:input {:value v
-           :disabled true
-           :placeholder (when-not v "multiple")}])
+  [:input.form-element {:value v
+                        :disabled true
+                        :placeholder (when-not v "multiple")}])
 
 (defmethod attr.hierarchy/description [:brush ::points]
   []
