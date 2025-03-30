@@ -93,8 +93,9 @@
             :on-blur #(on-change-handler! % k v)
             :on-key-down #(keyb/input-key-down-handler! % v on-change-handler! k v)})]
    (when-not (or (empty? (str v)) disabled)
-     [:button.button.bg-primary.text-muted.absolute.h-full.right-0.clear-input-button.hover:bg-transparent.invisible.p-1
-      {:on-pointer-down #(rf/dispatch [::element.e/remove-attr k])}
+     [:button.button.bg-primary.text-muted.absolute.h-full.right-0.clear-input-button.invisible.p-1
+      {:class "hover:bg-transparent"
+       :on-pointer-down #(rf/dispatch [::element.e/remove-attr k])}
       [ui/icon "times"]])])
 
 (defmethod hierarchy/form-element :default

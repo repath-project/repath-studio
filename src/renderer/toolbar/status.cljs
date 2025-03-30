@@ -20,8 +20,9 @@
 
 (defn coordinates []
   (let [[x y] @(rf/subscribe [::app.s/adjusted-pointer-pos])]
-    [:div.flex-col.font-mono.leading-tight.hidden.xl:flex
-     {:style {:min-width "90px"}}
+    [:div.flex-col.font-mono.leading-tight.hidden
+     {:class "xl:flex"
+      :style {:min-width "90px"}}
      [:div.flex.justify-between
       [:span.mr-1 "X:"] [:span (.toFixed x 2)]]
      [:div.flex.justify-between
@@ -141,7 +142,8 @@
        :title "Zoom in"
        :on-click #(rf/dispatch [::frame.e/zoom-in])}
       [ui/icon "plus"]]
-     [:div.flex.hidden.md:flex
+     [:div.flex.hidden
+      {:class "md:flex"}
       [zoom-input zoom]
       [:div.pr-2.overlay.flex.items-center "%"]]
      [zoom-menu]]))
@@ -181,8 +183,9 @@
                   :bottom "9px"
                   :right "9px"}}]]]]
      [:div.grow
-      [:div.px-1.hidden.2xl:flex.gap-1.flex-wrap.leading-none.truncate
-       {:style {:max-height "var(--button-size)"}}
+      [:div.px-1.hidden.gap-1.flex-wrap.leading-none.truncate
+       {:class "2xl:flex"
+        :style {:max-height "var(--button-size)"}}
        help-message]]
      (when loading
        [:button.icon-button

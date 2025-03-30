@@ -34,8 +34,9 @@
 
         [:p "Please consider submitting an error report to improve your experience."]
 
-        [:button.button.px-2.rounded.w-full.mb-5.border.border-default.hover:bg-transparent
-         {:on-click #(rf/dispatch [::window.e/open-remote-url
+        [:button.button.px-2.rounded.w-full.mb-5.border.border-default
+         {:class "hover:bg-transparent"
+          :on-click #(rf/dispatch [::window.e/open-remote-url
                                    (submit-error-url error-message)])}
          "Submit an error report"]
 

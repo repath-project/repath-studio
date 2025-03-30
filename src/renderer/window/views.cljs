@@ -48,8 +48,8 @@
      [:div.flex.relative.bg-secondary
       {:class (when (and system/mac? (not fullscreen?)) "ml-16")}
       [menubar/root]]
-     [:div.absolute.hidden.md:flex.justify-center.drag.grow.h-full.items-center.pointer-events-none
-      {:class "left-1/2 -translate-x-1/2"
+     [:div.absolute.hidden.justify-center.drag.grow.h-full.items-center.pointer-events-none
+      {:class "md:flex left-1/2 -translate-x-1/2"
        :style {:z-index -1}}
       @(rf/subscribe [::document.s/title-bar])]
      [:div.flex.h-full.flex-1.drag]
