@@ -34,7 +34,7 @@
   [id visible]
   [ui/icon-button
    (if visible "eye" "eye-closed")
-   {:class ["list-item-action" (when-not visible "invisible")]
+   {:class ["list-item-action" (when visible "invisible")]
     :title (if visible "hide" "show")
     :on-double-click #(.stopPropagation %)
     :on-pointer-up #(.stopPropagation %)
