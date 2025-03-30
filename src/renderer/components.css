@@ -67,7 +67,7 @@
 }
 
 @utility button-link {
-  @apply text-lg text-accent inline-block text-left text-wrap break-all;
+  @apply text-lg text-accent inline-block text-left text-wrap break-all hover:cursor-pointer;
 
   font-size: inherit;
   line-height: inherit;
