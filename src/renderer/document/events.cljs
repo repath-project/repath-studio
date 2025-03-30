@@ -314,6 +314,5 @@
  ::set-active
  [persist]
  (fn [db [_ id]]
-   (-> db
-       (h/set-active id)
+   (-> (h/set-active db id)
        (h/center))))
