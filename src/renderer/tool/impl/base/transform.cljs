@@ -223,7 +223,8 @@
   [clicked-element]
   (and clicked-element
        (not (:selected clicked-element))
-       (not= (:type clicked-element) :handle)))
+       (not= (:type clicked-element) :handle)
+       (not= (:tag clicked-element) :canvas)))
 
 (m/=> select-element [:-> App boolean? App])
 (defn select-element
