@@ -154,7 +154,7 @@
     [:div.h-px.block.absolute.bottom-0.left-0
      {:style {:width (str (* (/ t end) 100) "%")
               :background (when-not (or (zero? t) (zero? end) timeline?)
-                            "var(--accent)")}}]))
+                            "var(--color-accent)")}}]))
 
 (defn root
   []

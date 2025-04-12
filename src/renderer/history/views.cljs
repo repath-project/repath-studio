@@ -55,7 +55,7 @@
   (let [datum (.-nodeDatum props)
         active? (.-active datum)
         id (uuid (.-id datum))
-        color (if active? "var(--accent)" (.-color datum))]
+        color (if active? "var(--color-accent)" (.-color datum))]
     (ra/as-element
      [:circle.transition-fill
       {:class "hover:stroke-accent"
