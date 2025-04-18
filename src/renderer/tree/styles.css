@@ -5,7 +5,7 @@
 }
 
 .list-item-button {
-  @apply flex pr-1 items-center cursor-pointer transition-none text-start;
+  @apply flex pr-1 items-center transition-none text-start;
   &:hover {
     @apply overlay;
 

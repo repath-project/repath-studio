@@ -33,7 +33,7 @@
 }
 
 @utility button {
-  @apply relative cursor-pointer text-center outline-hidden text-nowrap;
+  @apply relative text-center text-nowrap;
   background-color: transparent;
   color: var(--font-color);
   fill: var(--font-color);
@@ -44,11 +44,11 @@
   -webkit-app-region: no-drag;
 
   &:focus {
-    @apply outline outline-1 outline-offset-0 outline-accent;
+    @apply outline outline-1 outline-offset-1 outline-accent;
   }
 
   &:hover {
-    @apply overlay outline-hidden cursor-pointer;
+    @apply overlay;
     transition: all 75ms;
     color: var(--font-color-hovered);
   }
