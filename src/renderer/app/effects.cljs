@@ -91,7 +91,8 @@
   [cb]
   (let [el (js/document.createElement "input")]
     (set! (.-type el) "file")
-    (.addEventListener el "change" (fn [e] (.remove el)
+    (.addEventListener el "change" (fn [e]
+                                     (.remove el)
                                      (cb (first (.. e -target -files)))))
     (.click el)))
 

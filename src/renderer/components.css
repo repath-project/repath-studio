@@ -44,7 +44,7 @@
   -webkit-app-region: no-drag;
 
   &:focus {
-    @apply outline outline-1 outline-offset-1 outline-accent;
+    @apply outline outline-offset-1 outline-accent;
   }
 
   &:hover {
