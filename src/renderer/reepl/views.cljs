@@ -128,7 +128,7 @@
       (fn [text selected active set-active]
         [:div.p-1.bg-secondary.text-nowrap
          {:on-click set-active
-          :class (and selected (if active "bg-accent" "bg-primary"))
+          :class (and selected (if active "bg-accent!" "bg-primary!"))
           :ref ref}
          text])})))
 
