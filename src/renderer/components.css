@@ -37,14 +37,13 @@
   background-color: transparent;
   color: var(--font-color);
   fill: var(--font-color);
-  font-family: var(--font-color);
   font-size: 1em;
   height: var(--button-size);
   line-height: var(--button-size);
   -webkit-app-region: no-drag;
 
   &:focus {
-    @apply outline outline-offset-1 outline-accent;
+    @apply outline outline-offset-0 outline-accent;
   }
 
   &:hover {
