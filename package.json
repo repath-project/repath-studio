@@ -85,7 +85,7 @@
     "cmdk": "1.1.1",
     "codemirror": "5.65.15",
     "create-react-class": "15.7.0",
-    "electron": "35.1.5",
+    "electron": "35.2.0",
     "electron-builder": "26.0.12",
     "highlight.js": "11.11.1",
     "imagetracerjs": "1.2.6",
