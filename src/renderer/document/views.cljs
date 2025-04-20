@@ -83,7 +83,7 @@
       (concat [{:type :separator}
                {:label "Open containing directory"
                 :action [::e/open-directory path]
-                :disabled? (not (and path system/electron?))}]))))
+                :disabled? (nil? path)}]))))
 
 (defn tab
   [id title active?]

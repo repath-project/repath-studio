@@ -74,9 +74,7 @@
 
 (defn drop-handler!
   [e parent-id]
-  (let [id (-> (.-dataTransfer e)
-               (.getData "id")
-               uuid)]
+  (let [id (-> (.-dataTransfer e) (.getData "id") uuid)]
     (.preventDefault e)
     (rf/dispatch [::element.e/set-parent id parent-id])))
 
