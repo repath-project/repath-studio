@@ -7,7 +7,7 @@
    [config :as config]))
 
 (def dialog-options
-  {:defaultPath (.getPath app "documents")
+  {:defaultPath (.getPath app config/default-path)
    :properties ["multiSelections"]
    :filters [{:name config/ext
               :extensions [config/ext]}]})

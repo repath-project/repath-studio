@@ -25,8 +25,8 @@
    [renderer.window.effects :as-alias window.fx]))
 
 (def file-picker-options
-  {:startIn "documents"
-   :types [{:accept {"application/repath-studio" [".rps"]}}]})
+  {:startIn config/default-path
+   :types [{:accept {config/mime-type [(str "." config/ext)]}}]})
 
 (rf/reg-event-db
  ::center

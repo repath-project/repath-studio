@@ -9,3 +9,7 @@
 (def app-key :repath-studio)
 
 (def app-name "Repath Studio")
+
+(def mime-type "application/x-repath-studio")
+
+(def default-path "documents")
