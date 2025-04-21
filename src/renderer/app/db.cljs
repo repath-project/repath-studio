@@ -86,7 +86,7 @@
 
 (def default (m/decode App {:version config/version} mt/default-value-transformer))
 
-(def persistent-keys
+(def persisted-keys
   "Top level keys that should be persisted to local storage."
   (->> App
        (m/children)

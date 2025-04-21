@@ -29,7 +29,7 @@
          db (cond-> db
               (:active-document db)
               history.h/drop-rest)]
-     (->> (select-keys db db/persistent-keys)
+     (->> (select-keys db db/persisted-keys)
           (rf.storage/->store config/app-key)))))
 
 (rf/reg-fx
