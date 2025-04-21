@@ -5,4 +5,7 @@
            :used-underscored-binding {:level :warning}
            :unused-value {:level :warning}
            :redundant-call {:level :warning}
-           :redundant-str-call {:level :warning}}}
+           :redundant-str-call {:level :warning}
+           :clojure-lsp/unused-public-var {:exclude-regex #{"components.*"
+                                                            "sections.*"}}}
+ :hooks {:analyze-call {malli.core/=> hooks/=>}}}
