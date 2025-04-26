@@ -21,6 +21,8 @@
 
   :renderer {:target :browser
              :output-dir "resources/public/js"
+             :js-options {:resolve {"fs" {:target :npm :require "graceful-fs"}
+                                    "stream" {:target :npm :require "stream-browserify"}}}
              :compiler-options {:optimizations :simple
                                 :silence-optimizations-warning true
                                 :output-wrapper false
@@ -57,11 +59,15 @@
   :browser-test {:target :browser-test
                  :ns-regexp "-test$"
                  :runner-ns shadow.test.browser
-                 :test-dir "target/browser-test"}
+                 :test-dir "target/browser-test"
+                 :js-options {:resolve {"fs" {:target :npm :require "graceful-fs"}
+                                        "stream" {:target :npm :require "stream-browserify"}}}}
 
   :karma-test {:target :karma
                :ns-regexp "-test$"
-               :output-to "target/karma-test.js"}
+               :output-to "target/karma-test.js"
+               :js-options {:resolve {"fs" {:target :npm :require "graceful-fs"}
+                                      "stream" {:target :npm :require "stream-browserify"}}}}
 
   :portfolio {:target :browser
               :modules {:scenes {:init-fn portfolio/init!}}
