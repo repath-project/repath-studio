@@ -71,4 +71,6 @@
 
   :portfolio {:target :browser
               :modules {:scenes {:init-fn portfolio/init!}}
-              :output-dir "portfolio/resources/public/js"}}}
+              :output-dir "portfolio/resources/public/js"
+              :js-options {:resolve {"fs" {:target :npm :require "graceful-fs"}
+                                     "stream" {:target :npm :require "stream-browserify"}}}}}}
