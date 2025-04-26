@@ -36,6 +36,12 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
+      - name: Prepare java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+
       - name: Typos
         uses: crate-ci/typos@v1.27.3
 
