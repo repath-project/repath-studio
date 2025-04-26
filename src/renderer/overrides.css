@@ -68,6 +68,11 @@
     margin-left: 30px !important;
   }
 
+  label {
+    width: 20% !important;
+    top: 5px !important;
+  }
+
   >div:first-of-type {
     display: none;
   }

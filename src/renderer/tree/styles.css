@@ -38,28 +38,3 @@
     }
   }
 }
-
-.list-item-input {
-  @apply mr-1 pl-0;
-  flex: 1 1 auto;
-  background: transparent;
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
-
-  &::placeholder {
-    color: var(--font-color);
-  }
-
-  &.text-muted::placeholder {
-    color: var(--font-color-disabled);
-  }
-
-  &.text-disabled::placeholder {
-    color: var(--font-color-disabled);
-  }
-
-  &:focus::placeholder {
-    color: var(--font-color-muted);
-  }
-}
