@@ -80,7 +80,6 @@
     "@xzdarcy/react-timeline-editor": "0.1.9",
     "acorn": "8.14.1",
     "assert": "2.1.0",
-    "autoprefixer": "10.4.21",
     "blobs": "2.3.0-beta.2",
     "buffer": "6.0.3",
     "cmdk": "1.1.1",
