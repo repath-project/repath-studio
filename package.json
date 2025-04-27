@@ -112,7 +112,7 @@
     "react-frame-component": "5.2.7",
     "react-resizable-panels": "2.1.8",
     "react-svg": "16.3.0",
-    "shadow-cljs": "3.0.2",
+    "shadow-cljs": "3.0.3",
     "snabbdom": "3.6.2",
     "source-map-support": "0.5.21",
     "stream-browserify": "3.0.0",
