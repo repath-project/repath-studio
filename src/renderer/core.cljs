@@ -74,7 +74,8 @@
 (defn ^:dev/after-load mount-root! []
   (let [container (.getElementById js/document "app")]
     (rf/clear-subscription-cache!)
-    (when-not @root-el (reset! root-el (ra.dom.client/create-root container)))
+    (when @root-el (ra.dom.client/unmount @root-el))
+    (reset! root-el (ra.dom.client/create-root container))
     (ra.dom.client/render @root-el [error/boundary [app.v/root]])))
 
 (defn bootstrap-cb!
