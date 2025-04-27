@@ -191,7 +191,7 @@
        [:div.p-5
         [:h2.mb-4.text-lg k]
         (when (get-method hierarchy/description [dispatch-tag k])
-          [:p (hierarchy/description dispatch-tag k)])
+          [:p.text-pretty (hierarchy/description dispatch-tag k)])
         (when (bcd/compatibility tag k)
           [:<>
            (when property [property-list property])
@@ -224,7 +224,7 @@
       [:div.p-5
        [:h2.mb-4.text-lg tag]
        (when-let [description (:description (element.hierarchy/properties tag))]
-         [:p description])
+         [:p.text-pretty description])
        [caniusethis {:tag tag}]
        (when-let [url (:url (element.hierarchy/properties tag))]
          [:button.button.px-3.bg-primary.w-full
