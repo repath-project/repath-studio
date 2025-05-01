@@ -74,12 +74,9 @@ npm run electron
 
 <section data-markdown>
     <div>
-        <a href="https://nlnet.nl/project/RepathStudio/">
-            <img src="https://nlnet.nl/logo/banner.svg" alt="Logo NLnet: abstract logo of four people seen from above" width="200px" style="margin-right: 20px;">
-        </a>
-        <a href="https://nlnet.nl/core">
-            <img src="https://nlnet.nl/image/logos/NGI0Core_tag.svg" alt="Logo NGI Zero: letterlogo shaped like a tag" width="250px">
-        </a>
+        <a href="https://nlnet.nl/project/RepathStudio/"><img src="https://nlnet.nl/logo/banner.svg" alt="Logo NLnet: abstract logo of four people seen from above" width="200px"></a>
+        &nbsp;&nbsp;
+        <a href="https://nlnet.nl/core"><img src="https://nlnet.nl/image/logos/NGI0Core_tag.svg" alt="Logo NGI Zero: letterlogo shaped like a tag" width="250px"></a>
     </div>
 </section>
 
