@@ -15,8 +15,7 @@
 
 ![Studio Screenshot](https://repath.studio/assets/images/studio.png)
 
-Repath Studio is a cross platform vector graphics editor, that combines procedural tooling with traditional design workflows. It includes an interactive shell, which allows evaluating code to generate shapes, or even extend the editor on the fly. Supporting multiple programming languages and enriching the existing API is planned. The tool relies heavily on the [SVG](https://developer.mozilla.org/en-US/docs/Web/SVG) specification, and aims to educate users about it. Creating and editing [SMIL](https://developer.mozilla.org/en-US/docs/Web/SVG/SVG_animation_with_SMIL) animations - an SVG extension – is an important aspect of the project, that is yet to be fully implemented. An advanced undo/redo mechanism is used to maintain a full history tree of actions in memory, so users will never lose their redo stack. We are exploring ways to persist this history to disk. Some built-in accessibility testing tools are already included, but we want to add more. Extensibility is also something that we want to enhance, in order to allow creating and sharing custom tools and workflows. Integrations with third party tools will also be investigated.
-
+Repath Studio is a cross platform vector graphics editor, that combines procedural tooling with traditional design workflows. It includes an interactive shell, which allows evaluating code to generate shapes, or even extend the editor on the fly. Supporting multiple programming languages and enriching the existing API is planned. The tool relies heavily on the [SVG](https://developer.mozilla.org/en-US/docs/Web/SVG) specification, and aims to educate users about it. Creating and editing [SMIL](https://developer.mozilla.org/en-US/docs/Web/SVG/SVG_animation_with_SMIL) animations - an SVG extension – is an important aspect of the project, that is yet to be fully implemented. An advanced undo/redo mechanism is used to maintain a full history tree of actions in memory, so users will never lose their redo stack.
 
 ### Why is this implemented as a web application?
 
@@ -74,12 +73,12 @@ npm run electron
 
 
 <section data-markdown>
-    <div style="display: flex; gap: 100px; align-items: center;">
+    <div>
         <a href="https://nlnet.nl/project/RepathStudio/">
-            <img src="https://nlnet.nl/logo/banner.svg" alt="Logo NLnet: abstract logo of four people seen from above" class="logocenter">
+            <img src="https://nlnet.nl/logo/banner.svg" alt="Logo NLnet: abstract logo of four people seen from above" width="200px" style="margin-right: 20px;">
         </a>
         <a href="https://nlnet.nl/core">
-            <img src="https://nlnet.nl/image/logos/NGI0Core_tag.svg" alt="Logo NGI Zero: letterlogo shaped like a tag">
+            <img src="https://nlnet.nl/image/logos/NGI0Core_tag.svg" alt="Logo NGI Zero: letterlogo shaped like a tag" width="250px">
         </a>
     </div>
 </section>
