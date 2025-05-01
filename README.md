@@ -15,18 +15,8 @@
 
 ![Studio Screenshot](https://repath.studio/assets/images/studio.png)
 
-<!-- sponsors --><!-- sponsors -->
+Repath Studio is a cross platform vector graphics editor, that combines procedural tooling with traditional design workflows. It includes an interactive shell, which allows evaluating code to generate shapes, or even extend the editor on the fly. Supporting multiple programming languages and enriching the existing API is planned. The tool relies heavily on the [SVG](https://developer.mozilla.org/en-US/docs/Web/SVG) specification, and aims to educate users about it. Creating and editing [SMIL](https://developer.mozilla.org/en-US/docs/Web/SVG/SVG_animation_with_SMIL) animations - an SVG extension – is an important aspect of the project, that is yet to be fully implemented. An advanced undo/redo mechanism is used to maintain a full history tree of actions in memory, so users will never lose their redo stack. We are exploring ways to persist this history to disk. Some built-in accessibility testing tools are already included, but we want to add more. Extensibility is also something that we want to enhance, in order to allow creating and sharing custom tools and workflows. Integrations with third party tools will also be investigated.
 
-## Main goals
-
-- Create a cross platform / open source vector graphics editor.
-- Rely heavily on the [SVG](https://developer.mozilla.org/en-US/docs/Web/SVG) specification.
-- Support [SMIL](https://developer.mozilla.org/en-US/docs/Web/SVG/SVG_animation_with_SMIL) animations - an extension of SVG allowing to animating SVG elements.
-- Include an interactive REPL - a shell which allows you to evaluate clojure code to generate shapes or even extend the editor on the fly.
-- Advanced undo/redo - maintain a history tree of all actions and never lose your redo stack.
-- Implement built-in accessibility testing features.
-
-## Rationale
 
 ### Why is this implemented as a web application?
 
@@ -61,13 +51,15 @@ We are currently trying to optimize for hundreds of elements per document. We ar
 - Java SDK (8+) [OpenJDK](https://openjdk.org/) or [Oracle](https://www.oracle.com/java/technologies/downloads/)
 - [Clojure](https://clojure.org/guides/install_clojure)
 
+### Shell instructions
+
 Clone the project.
 ```
 git clone https://github.com/repath-project/repath-studio.git
 ```
 Go into the directory.
 ```
-cd studio
+cd repath-studio
 ```
 Install the dependencies, build the app and watch the project files.
 ```
@@ -77,3 +69,19 @@ Run electron on a different terminal.
 ```
 npm run electron
 ```
+
+## Sponsors
+
+
+<section data-markdown>
+    <div style="display: flex; gap: 100px; align-items: center;">
+        <a href="https://nlnet.nl/project/RepathStudio/">
+            <img src="https://nlnet.nl/logo/banner.svg" alt="Logo NLnet: abstract logo of four people seen from above" class="logocenter">
+        </a>
+        <a href="https://nlnet.nl/core">
+            <img src="https://nlnet.nl/image/logos/NGI0Core_tag.svg" alt="Logo NGI Zero: letterlogo shaped like a tag">
+        </a>
+    </div>
+</section>
+
+<!-- sponsors --><!-- sponsors -->
