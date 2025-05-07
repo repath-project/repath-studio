@@ -24,9 +24,6 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Typos
-        uses: crate-ci/typos@v1.27.3
-
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v4
         with:
