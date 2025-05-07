@@ -154,16 +154,16 @@
         :class "w-full h-full"}] children)
 
      [:> ScrollArea/Scrollbar
-      {:class "flex touch-none p-0.5 select-none hover:overlay w-2.5"
+      {:class "flex touch-none p-0.5 select-none w-2.5"
        :orientation "vertical"}
       [:> ScrollArea/Thumb
        {:class "relative flex-1 overlay rounded-full"}]]
 
      [:> ScrollArea/Scrollbar
-      {:class "flex touch-none p-0.5 select-none hover:overlay flex-col h-2.5"
+      {:class "flex touch-none p-0.5 select-none flex-col h-2.5"
        :orientation "horizontal"}
       [:> ScrollArea/Thumb
-       {:class "relative flex-1 overlay rounded-full"}]]
+       {:class "relative flex-1 overlay hover:overlay-2x rounded-full"}]]
 
      [:> ScrollArea/Corner]]))
 
