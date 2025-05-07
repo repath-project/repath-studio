@@ -75,6 +75,8 @@
       (map (fn [{:keys [id tag attrs]}] [:filter {:id id :key id} [tag attrs]])
            filters/accessibility)]
 
+     (when grid [ruler.v/grid])
+
      (when-not read-only?
        [:<>
         [tool.hierarchy/render (or primary-tool active-tool)]
@@ -85,9 +87,7 @@
         (when snapped-el
           [svg/bounding-box (:bbox snapped-el) true])
         (when nearest-neighbor
-          [snap.v/canvas-label nearest-neighbor])])
-
-     (when grid [ruler.v/grid])]))
+          [snap.v/canvas-label nearest-neighbor])])]))
 
 (defmethod hierarchy/render-to-string :canvas
   [el]
