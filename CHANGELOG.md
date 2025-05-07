@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.4.6 (2025-5-7)
+
+**Added**
+
+- Clipboard-write error handling
+- Ellipse area method
+- Animation icons
+
+**Removed**
+
+- cljs-ajax dependency
+
+**Changed**
+
+- Stroke width of bounding box
+- Enhanced history preview
+- Unlock element on create/copy/duplicate
+- Svg tree label font weight
+
+**Fixed**
+
+- Recenter to dom rect
+- Adjusted bounds on nested containers
+- Multiple image selection error
+- Timeline animations
+- Saved and close event
+- Simplify history drop-rest
+- Persist effect
+- Image tool drag end
+- Browser compatibility overflow
+- Drag start on canvas
+- Grid index
+
 ## 0.4.5 (2024-11-05)
 
 **Added**
