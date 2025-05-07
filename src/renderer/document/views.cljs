@@ -4,6 +4,7 @@
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    [re-frame.core :as rf]
    [reagent.core :as ra]
+   [renderer.app.events :as-alias app.e]
    [renderer.document.events :as-alias e]
    [renderer.document.subs :as-alias s]
    [renderer.history.events :as-alias history.e]
@@ -108,7 +109,10 @@
                      (let [dropped-id (-> (.-dataTransfer evt) (.getData "id") uuid)]
                        (.preventDefault evt)
                        (reset! dragged-over? false)
-                       (rf/dispatch [::e/swap-position dropped-id id])))}
+                       (rf/dispatch [::e/swap-position dropped-id id])))
+          :ref (fn [this]
+                 (when (and this active?)
+                   (rf/dispatch [::app.e/scroll-into-view this])))}
          [:span.truncate.pointer-events-none title]
          [close-button id saved?]]]
        [:> ContextMenu/Portal
@@ -124,12 +128,15 @@
   (let [documents @(rf/subscribe [::s/entities])
         tabs @(rf/subscribe [::s/tabs])
         active-id @(rf/subscribe [::s/active-id])]
-    [:div.flex.drag.justify-between
-     [:div.flex.flex-1.gap-px.overflow-hidden
-      (for [document-id tabs]
-        (let [title (:title (get documents document-id))
-              active? (= document-id active-id)]
-          ^{:key (str document-id)} [tab document-id title active?]))]
+    [:div.flex.justify-between.gap-px
+     [ui/scroll-area
+      [:div.flex.flex-1.gap-px
+       {:class "h-[41px]"}
+       (for [document-id tabs]
+         (let [title (:title (get documents document-id))
+               active? (= document-id active-id)]
+           ^{:key (str document-id)} [tab document-id title active?]))
+       [:div.drag.flex-1]]]
      [:div.toolbar
       [:> DropdownMenu/Root
        [:> DropdownMenu/Trigger
