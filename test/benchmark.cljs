@@ -1,4 +1,4 @@
-(ns benchmark-test
+(ns benchmark
   (:require
    [cljs.test :refer-macros [deftest is testing]]
    [clojure.string :as str]
