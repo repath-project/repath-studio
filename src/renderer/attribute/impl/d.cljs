@@ -139,7 +139,8 @@
      (when v
        [:> Popover/Root {:modal true}
         [:> Popover/Trigger
-         {:class "form-control-button"}
+         {:title "Edit path"
+          :class "form-control-button"}
          [ui/icon "pencil"]]
         [:> Popover/Portal
          [:> Popover/Content {:sideOffset 5

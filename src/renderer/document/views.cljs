@@ -142,6 +142,7 @@
        [:> DropdownMenu/Trigger
         {:as-child true}
         [:button.button.flex.items-center.justify-center.aria-expanded:overlay.px-2.font-mono.rounded
+         {:aria-label "More document actions"}
          [ui/icon "ellipsis-h"]]]
        [:> DropdownMenu/Portal
         [:> DropdownMenu/Content

@@ -21,7 +21,8 @@
      {:as-child true
       :disabled disabled}
      [:button.button.color-drip.inline-block
-      {:style {:border "5px solid var(--bg-primary)"
+      {:title "Pick color"
+       :style {:border "5px solid var(--bg-primary)"
                :background v}}]]
     [:> Popover/Portal
      [:> Popover/Content

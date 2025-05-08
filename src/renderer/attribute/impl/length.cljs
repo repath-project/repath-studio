@@ -41,10 +41,12 @@
    [:div.flex.gap-px
     [:button.form-control-button
      {:disabled disabled
+      :title "Decrease"
       :on-pointer-down #(rf/dispatch [::element.e/update-attr k - 1])}
      [ui/icon "minus"]]
     [:button.form-control-button
      {:disabled disabled
+      :title "Increase"
       :on-click #(rf/dispatch [::element.e/update-attr k + 1])}
      [ui/icon "plus"]]]])
 

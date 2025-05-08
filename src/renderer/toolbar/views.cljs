@@ -13,6 +13,7 @@
       {:as-child true}
       [:span.shadow-4
        [ui/icon-button icon {:disabled disabled
+                             :aria-label title
                              :on-click #(rf/dispatch action)}]]]
      [:> Tooltip/Portal
       [:> Tooltip/Content

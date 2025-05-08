@@ -130,7 +130,7 @@
        :disabled disabled}
       [:> Select/Trigger
        {:class "form-control-button"
-        :aria-label (name k)}
+        :aria-label (str "Select " (name k))}
        [:> Select/Value ""]
        [:> Select/Icon
         [ui/icon "chevron-down"]]]

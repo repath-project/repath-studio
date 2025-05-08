@@ -50,7 +50,8 @@
                        (when (and state (empty? suggestions))
                          (rf/dispatch [::app.e/query-local-fonts])))}
       [:> Popover/Trigger
-       {:class "form-control-button"
+       {:title "Select font"
+        :class "form-control-button"
         :disabled (:disabled attrs)}
        [ui/icon "magnifier"]]
       [:> Popover/Portal

@@ -12,7 +12,8 @@
    [v/form-input k v attrs]
    [:> Popover/Root {:modal true}
     [:> Popover/Trigger
-     {:class "form-control-button"}
+     {:title "Pick angle"
+      :class "form-control-button"}
      [ui/icon "degrees"]]
     [:> Popover/Portal
      [:> Popover/Content

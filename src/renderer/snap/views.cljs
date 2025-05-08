@@ -16,10 +16,11 @@
   (let [options @(rf/subscribe [::snap.s/options])]
     [:> DropdownMenu/Root
      [:> DropdownMenu/Trigger
-      {:aria-label "Snap"
-       :as-child true}
+      {:as-child true}
       [:div.h-full.flex.items-center
-       {:class "hover:pb-1"}
+       {:role "button"
+        :title "Snap options"
+        :class "hover:pb-1"}
        [ui/icon "chevron-up"]]]
      [:> DropdownMenu/Portal
       [:> DropdownMenu/Content

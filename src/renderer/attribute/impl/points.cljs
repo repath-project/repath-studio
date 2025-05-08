@@ -41,7 +41,8 @@
   [points]
   [:> Popover/Root {:modal true}
    [:> Popover/Trigger
-    {:class "form-control-button"}
+    {:title "Edit points"
+     :class "form-control-button"}
     [ui/icon "pencil"]]
    [:> Popover/Portal
     [:> Popover/Content

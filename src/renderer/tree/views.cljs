@@ -131,7 +131,6 @@
               (when hovered "hovered")]
       :tab-index 0
       :data-id (str id)
-      :role "menuitem"
       :on-double-click #(rf/dispatch [::frame.e/pan-to-element id])
       :on-pointer-enter #(rf/dispatch [::document.e/set-hovered-id id])
       :ref (fn [this]
@@ -170,20 +169,23 @@
         hovered-ids @(rf/subscribe [::document.s/hovered-ids])
         collapsed-ids @(rf/subscribe [::document.s/collapsed-ids])
         collapsed (contains? collapsed-ids id)]
-    [:li {:class (when selected "overlay")}
+    [:li {:class (when selected "overlay")
+          :role "menuitem"}
      [list-item-button el {:depth depth
                            :collapsed collapsed
                            :hovered (contains? hovered-ids id)}]
      (when (and has-children (not collapsed))
-       [:ul (for [el (mapv (fn [k] (get elements k)) (reverse children))]
-              ^{:key (:id el)} [item el (inc depth) elements])])]))
+       [:ul {:role "menu"}
+        (for [el (mapv (fn [k] (get elements k)) (reverse children))]
+          ^{:key (:id el)} [item el (inc depth) elements])])]))
 
 (defn inner-sidebar-render
   [root-children elements]
   [:div.tree-sidebar
    {:on-pointer-up #(rf/dispatch [::element.e/deselect-all])}
    [ui/scroll-area
-    [:ul {:on-pointer-leave #(rf/dispatch [::document.e/clear-hovered])
+    [:ul {:role "menu"
+          :on-pointer-leave #(rf/dispatch [::document.e/clear-hovered])
           :style {:width "227px"}}
      (for [el (reverse root-children)]
        ^{:key (:id el)} [item el 1 elements])]]])

@@ -14,13 +14,15 @@
         primary-tool @(rf/subscribe [::tool.s/primary])
         active (= active-tool tool)
         primary (= primary-tool tool)
-        properties (tool.hierarchy/properties tool)]
+        properties (tool.hierarchy/properties tool)
+        label (or (:label properties) (str/capitalize (name tool)))]
     (when (:icon properties)
       [:> Tooltip/Root
        [:> Tooltip/Trigger {:as-child true}
         [:span
          [ui/radio-icon-button (:icon properties) active
           {:class (when primary "outline-shadow")
+           :aria-label (str "activate " label)
            :on-click #(rf/dispatch [::tool.e/activate tool])}]]]
        [:> Tooltip/Portal
         [:> Tooltip/Content
@@ -28,7 +30,8 @@
           :sideOffset 5
           :side "top"}
          [:div.flex.gap-2.items-center
-          (or (:label properties) (str/capitalize (name tool)))]]]])))
+          (or (:label properties)
+              (str/capitalize (name tool)))]]]])))
 
 (defn group
   [items]

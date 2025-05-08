@@ -54,7 +54,8 @@
   []
   [:> DropdownMenu/Root
    [:> DropdownMenu/Trigger
-    {:class "button flex items-center justify-center overlay px-2 font-mono rounded-sm"
+    {:title "Select zoom level"
+     :class "button flex items-center justify-center overlay px-2 font-mono rounded-sm"
      :side "top"}
     [:div.flex.items-center
      [ui/icon "chevron-up"]]]
@@ -162,7 +163,8 @@
         :on-change #(rf/dispatch [::document.e/preview-attr :fill (get-hex %)])}
 
        [:button.button.color-rect
-        {:style {:background fill}}]]
+        {:title "Pick fill color"
+         :style {:background fill}}]]
 
       [:button.icon-button
        {:title (t [:color/swap "Swap fill with stroke"])
@@ -176,7 +178,8 @@
         :on-change #(rf/dispatch [::document.e/preview-attr :stroke (get-hex %)])
         :align-offset -54}
        [:button.button.color-rect.relative
-        {:style {:background stroke}}
+        {:title "Pick stroke color"
+         :style {:background stroke}}
         [:div.color-rect.bg-primary.absolute
          {:style {:width "13px"
                   :height "13px"

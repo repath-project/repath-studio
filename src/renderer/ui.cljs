@@ -62,7 +62,8 @@
     props)
    [:> Slider/Track {:class "relative h-1 bg-secondary flex-1"}
     [:> Slider/Range {:class "absolute h-full overlay"}]]
-   [:> Slider/Thumb {:class "slider-thumb"}]])
+   [:> Slider/Thumb {:class "slider-thumb"
+                     :aria-label "Resize panel thumb"}]])
 
 (defn format-shortcut
   [[shortcut]]
