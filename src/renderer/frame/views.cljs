@@ -96,6 +96,7 @@
             :id "frame"
             :title "main canvas"
             :ref ref
+            :sandbox "allow-same-origin allow-scripts"
             :style {:background (-> root-el :attrs :fill)}}
            [:f> inner-component]
            [:> ContextMenu/Root
