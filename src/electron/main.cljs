@@ -31,14 +31,17 @@
     "drafts.csswg.org"})
 
 (defn allowed-url?
-  [url]
+  [^js/Url url]
   (contains? allowed-urls (.-host url)))
+
+(defn secure-url?
+  [^js/Url url]
+  (= (.-protocol url) "https:"))
 
 (defn open-external!
   [url]
   (let [url-parsed (js/URL. url)]
-    (when (and (= (.-protocol url-parsed) "https:")
-               (allowed-url? url-parsed))
+    (when (and (secure-url? url-parsed) (allowed-url? url-parsed))
       (.openExternal shell url-parsed.href))))
 
 (defn register-ipc-on-events!
