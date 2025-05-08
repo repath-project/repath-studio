@@ -10,5 +10,6 @@
   [_ k v {:keys [disabled]}]
   [:div.w-full.bg-primary.p-1
    [ui/cm-editor v {:on-blur #(rf/dispatch [::element.e/set-attr k %])
+                    :attrs {:id (name k)}
                     :options {:mode "css"
                               :readOnly disabled}}]])

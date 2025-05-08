@@ -33,12 +33,15 @@
   [editor-ref]
   (let [speed @(rf/subscribe [::timeline.s/speed])]
     [:div.inline-flex.items-center
-     [:label.form-element "Speed"]
+     [:label.form-element
+      {:for "animation-speed"}
+      "Speed"]
      [:> Select/Root
       {:value speed
        :onValueChange #(.setPlayRate (.-current editor-ref) %)}
       [:> Select/Trigger
        {:class "button px-2 overlay rounded-sm"
+        :id "animation-speed"
         :aria-label "No a11y filter"}
        [:> Select/Value {:placeholder "Filter"}
         [:div.flex.gap-1.justify-between.items-center

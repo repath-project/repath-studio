@@ -210,7 +210,7 @@
           (str (+ 4 off) "px"))))
 
 (defn cm-editor
-  [value {:keys [style options on-init on-blur]}]
+  [value {:keys [attrs options on-init on-blur]}]
   (let [cm (ra/atom nil)
         ref (react/createRef)]
     (ra/create-class
@@ -237,9 +237,7 @@
 
       :reagent-render
       (fn [value]
-        [:textarea {:value value
-                    :style style
-                    :on-blur #()
-                    :on-change #()
-                    :ref ref
-                    :aria-label "Command prompt"}])})))
+        [:textarea (merge {:value value
+                           :on-blur #()
+                           :on-change #()
+                           :ref ref} attrs)])})))
