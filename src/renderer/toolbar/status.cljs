@@ -156,7 +156,7 @@
         stroke @(rf/subscribe [::document.s/stroke])
         get-hex #(:hex (js->clj % :keywordize-keys true))]
     [:div.toolbar.bg-primary.mt-px.relative
-     [:div.flex
+     [:div.flex.gap-1
       [ui/color-picker
        {:color fill
         :on-change-complete #(rf/dispatch [::element.e/set-attr :fill (get-hex %)])
