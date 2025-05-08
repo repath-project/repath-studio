@@ -180,6 +180,7 @@
                     (= (:key clicked-element) key))]
     [:> HoverCard/Root
      [:> HoverCard/Trigger
+      {:as-child true}
       [:label.form-element.w-28.truncate
        {:for (name k)
         :class (when active "text-active")} k]]
