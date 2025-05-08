@@ -48,7 +48,7 @@
 
 (defn item-label
   [el]
-  (let [{:keys [id label visible tag]} el
+  (let [{:keys [id label visible selected tag]} el
         properties (element.hierarchy/properties tag)
         tag-label (or (:label properties) (str/capitalize (name tag)))]
     (ra/with-let [edit-mode? (ra/atom false)]
@@ -67,7 +67,7 @@
          [:div.truncate
           {:class [(when-not visible "opacity-60")
                    (when (= :svg tag) "font-bold")]
-           :style {:cursor "text"}
+           :style {:cursor (when selected "text")}
            :on-double-click (fn [e]
                               (.stopPropagation e)
                               (reset! edit-mode? true))}
