@@ -96,7 +96,9 @@
   []
   (.addEventListener js/document "keydown" keyb/event-handler!)
   (.addEventListener js/document "keyup" keyb/event-handler!)
-  (.addEventListener js/document "fullscreenchange" #(rf/dispatch [::window.e/set-fullscreen (boolean (.-fullscreenElement js/document))]))
+  (.addEventListener js/document "fullscreenchange"
+                     #(rf/dispatch [::window.e/set-fullscreen
+                                    (boolean (.-fullscreenElement js/document))]))
   (.addEventListener js/window "load" set-focused!)
   (.addEventListener js/window "focus" set-focused!)
   (.addEventListener js/window "blur" set-focused!)
