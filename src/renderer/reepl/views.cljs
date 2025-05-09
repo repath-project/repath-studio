@@ -46,8 +46,8 @@
      [codemirror/code-mirror (reaction (:text @state))
       (merge {:on-eval submit} cm-opts)]
      [:div.self-start.h-full.flex.items-center
-      (mode-button :cljs)
-      (mode-button :js)]
+      [mode-button :cljs]
+      [mode-button :js]]
      [:div.self-start.flex
       [ui/icon-button
        (if repl-history? "chevron-down" "chevron-up")

@@ -45,14 +45,18 @@
 (defn switch
   [label props]
   [:span.inline-flex.items-center
-   [:label.form-element.h-auto.bg-transparent {:for (when (:id props) (:id props))} label]
+   [:label.form-element.h-auto.bg-transparent
+    {:for (:id props)}
+    label]
    [:> Switch/Root
     (merge-with-class
-     {:class "overlay relative rounded-full w-10 h-6 data-[state=checked]:bg-accent data-disabled:opacity-50"}
+     {:class "overlay relative rounded-full w-10 h-6
+              data-[state=checked]:bg-accent data-disabled:opacity-50"}
      props)
     [:> Switch/Thumb
-     {:class "block bg-primary rounded-full shadow-sm w-5 h-5 will-change-transform
-              transition-transform translate-x-0.5 data-[state=checked]:translate-x-[18px]"}]]])
+     {:class "block bg-primary rounded-full shadow-sm w-5 h-5
+              will-change-transform transition-transform translate-x-0.5
+              data-[state=checked]:translate-x-[18px]"}]]])
 
 (defn slider
   [props]
@@ -203,7 +207,8 @@
   "Line up wrapped text with the base indentation.
    https://codemirror.net/demo/indentwrap.html"
   [editor line el]
-  (let [off (* (.countColumn codemirror (.-text line) nil (.getOption editor "tabSize"))
+  (let [tab-size (.getOption editor "tabSize")
+        off (* (.countColumn codemirror (.-text line) nil tab-size)
                (.defaultCharWidth editor))]
     (set! (.. el -style -textIndent)
           (str "-" off "px"))
