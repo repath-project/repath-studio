@@ -121,7 +121,8 @@
                   event (rf/get-coeffect context :event)]
               (cond-> context
                 db
-                (rf/assoc-effect :fx (conj (or fx []) [::fx/validate-db [db event]])))))))
+                (rf/assoc-effect :fx (conj (or fx [])
+                                           [::fx/validate-db [db event]])))))))
 
 (rf/reg-event-fx
  ::scroll-into-view
