@@ -2,7 +2,20 @@
   (:require
    [re-frame.core :as rf]
    [renderer.notification.events :as-alias notification.e]
+   [renderer.utils.dom :as dom]
    [renderer.utils.system :as system]))
+
+(rf/reg-cofx
+ ::focused
+ (fn [coeffects _]
+   (assoc coeffects :focused (or (.hasFocus js/document)
+                                 (and (dom/frame-document!)
+                                      (.hasFocus (dom/frame-document!)))))))
+
+(rf/reg-cofx
+ ::fullscreen
+ (fn [coeffects _]
+   (assoc coeffects :fullscreen (boolean (.-fullscreenElement js/document)))))
 
 (rf/reg-fx
  ::close
@@ -27,12 +40,12 @@
    (.open js/window url)))
 
 (rf/reg-fx
- ::add-window-listener
+ ::add-event-listener
  (fn [[channel listener formatter]]
    (.addEventListener js/window channel #(rf/dispatch-sync (conj listener (cond-> % formatter formatter))))))
 
 (rf/reg-fx
- ::add-document-listener
+ ::add-document-event-listener
  (fn [[channel listener formatter]]
    (.addEventListener js/document channel #(rf/dispatch (conj listener (cond-> % formatter formatter))))))
 

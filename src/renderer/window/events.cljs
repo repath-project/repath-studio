@@ -5,22 +5,9 @@
    [renderer.document.events :as-alias document.e]
    [renderer.document.handlers :as document.h]
    [renderer.tool.events :as-alias tool.e]
-   [renderer.utils.dom :as dom]
    [renderer.utils.keyboard :as keyboard]
    [renderer.utils.system :as system]
    [renderer.window.effects :as fx]))
-
-(rf/reg-cofx
- ::focused
- (fn [coeffects _]
-   (assoc coeffects :focused (or (.hasFocus js/document)
-                                 (and (dom/frame-document!)
-                                      (.hasFocus (dom/frame-document!)))))))
-
-(rf/reg-cofx
- ::fullscreen
- (fn [coeffects _]
-   (assoc coeffects :fullscreen (boolean (.-fullscreenElement js/document)))))
 
 (rf/reg-event-db
  ::set-maximized
@@ -46,7 +33,7 @@
 
 (rf/reg-event-fx
  ::update-focused
- [(rf/inject-cofx ::focused)]
+ [(rf/inject-cofx ::fx/focused)]
  (fn [{:keys [db focused]} _]
    {:db (cond-> (assoc-in db [:window :focused] focused)
           focused
@@ -54,7 +41,7 @@
 
 (rf/reg-event-fx
  ::update-fullscreen
- [(rf/inject-cofx ::fullscreen)]
+ [(rf/inject-cofx ::fx/fullscreen)]
  (fn [{:keys [db fullscreen]} _]
    {:db (assoc-in db [:window :focused] fullscreen)}))
 
@@ -103,12 +90,12 @@
 (rf/reg-event-fx
  ::add-listeners
  (fn [_ _]
-   {:fx [[::fx/add-document-listener ["keydown" [::tool.e/keyboard-event] keyboard/event-formatter]]
-         [::fx/add-document-listener ["keyup" [::tool.e/keyboard-event] keyboard/event-formatter]]
-         [::fx/add-document-listener ["fullscreenchange" [::update-fullscreen]]]
-         [::fx/add-window-listener ["load" [::update-focused]]]
-         [::fx/add-window-listener ["focus" [::update-focused]]]
-         [::fx/add-window-listener ["blur" [::update-focused]]]
+   {:fx [[::fx/add-document-event-listener ["keydown" [::tool.e/keyboard-event] keyboard/event-formatter]]
+         [::fx/add-document-event-listener ["keyup" [::tool.e/keyboard-event] keyboard/event-formatter]]
+         [::fx/add-document-event-listener ["fullscreenchange" [::update-fullscreen]]]
+         [::fx/add-event-listener ["load" [::update-focused]]]
+         [::fx/add-event-listener ["focus" [::update-focused]]]
+         [::fx/add-event-listener ["blur" [::update-focused]]]
          [:dispatch [::document.e/center]]]}))
 
 (rf/reg-event-fx
