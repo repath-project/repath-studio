@@ -95,8 +95,7 @@
          [::fx/add-document-event-listener ["fullscreenchange" [::update-fullscreen]]]
          [::fx/add-event-listener ["load" [::update-focused]]]
          [::fx/add-event-listener ["focus" [::update-focused]]]
-         [::fx/add-event-listener ["blur" [::update-focused]]]
-         [:dispatch [::document.e/center]]]}))
+         [::fx/add-event-listener ["blur" [::update-focused]]]]}))
 
 (rf/reg-event-fx
  ::register-listeners
