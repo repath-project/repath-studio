@@ -42,7 +42,7 @@
 (rf/reg-fx
  ::add-event-listener
  (fn [[channel listener formatter]]
-   (.addEventListener js/window channel #(rf/dispatch-sync (conj listener (cond-> % formatter formatter))))))
+   (.addEventListener js/window channel #(rf/dispatch (conj listener (cond-> % formatter formatter))))))
 
 (rf/reg-fx
  ::add-document-event-listener
