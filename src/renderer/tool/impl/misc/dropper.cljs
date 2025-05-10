@@ -1,33 +1,33 @@
 (ns renderer.tool.impl.misc.dropper
   (:require
    [re-frame.core :as rf]
-   [renderer.app.effects :as app.fx]
-   [renderer.document.handlers :as document.h]
-   [renderer.element.handlers :as element.h]
-   [renderer.history.handlers :as history.h]
-   [renderer.notification.handlers :as notification.h]
-   [renderer.notification.views :as notification.v]
-   [renderer.tool.handlers :as h]
-   [renderer.tool.hierarchy :as hierarchy]))
+   [renderer.app.effects :as app.effects]
+   [renderer.document.handlers :as document.handlers]
+   [renderer.element.handlers :as element.handlers]
+   [renderer.history.handlers :as history.handlers]
+   [renderer.notification.handlers :as notification.handlers]
+   [renderer.notification.views :as notification.views]
+   [renderer.tool.handlers :as tool.handlers]
+   [renderer.tool.hierarchy :as tool.hierarchy]))
 
-(derive :dropper ::hierarchy/tool)
+(derive :dropper ::tool.hierarchy/tool)
 
-(defmethod hierarchy/properties :dropper
+(defmethod tool.hierarchy/properties :dropper
   []
   {:icon "eye-dropper"})
 
-(defmethod hierarchy/help [:dropper :idle]
+(defmethod tool.hierarchy/help [:dropper :idle]
   []
   "Click anywhere to pick a color.")
 
-(defmethod hierarchy/on-activate :dropper
+(defmethod tool.hierarchy/on-activate :dropper
   [db]
   (if (.-EyeDropper js/window)
-    (h/add-fx db [::app.fx/eye-dropper {:on-success [::success]
-                                        :on-error [::error]}])
-    (-> (h/activate db :transform)
-        (notification.h/add
-         (notification.v/unavailable-feature
+    (tool.handlers/add-fx db [::app.effects/eye-dropper {:on-success [::success]
+                                                         :on-error [::error]}])
+    (-> (tool.handlers/activate db :transform)
+        (notification.handlers/add
+         (notification.views/unavailable-feature
           "EyeDropper"
           "https://developer.mozilla.org/en-US/docs/Web/API/EyeDropper_API#browser_compatibility")))))
 
@@ -35,13 +35,13 @@
  ::success
  (fn [db [_ ^js color]]
    (let [srgb-color (.-sRGBHex color)]
-     (-> (document.h/assoc-attr db :fill srgb-color)
-         (element.h/assoc-attr :fill srgb-color)
-         (h/activate :transform)
-         (history.h/finalize "Pick color")))))
+     (-> (document.handlers/assoc-attr db :fill srgb-color)
+         (element.handlers/assoc-attr :fill srgb-color)
+         (tool.handlers/activate :transform)
+         (history.handlers/finalize "Pick color")))))
 
 (rf/reg-event-db
  ::error
  (fn [db [_ error]]
-   (-> (h/activate db :transform)
-       (notification.h/add (notification.v/exception error)))))
+   (-> (tool.handlers/activate db :transform)
+       (notification.handlers/add (notification.views/exception error)))))

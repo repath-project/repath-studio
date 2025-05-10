@@ -3,17 +3,17 @@
    ["electron-log/renderer"]
    ["paper" :refer [paper]]
    [re-frame.core :as rf]
-   [re-pressed.core :as rp]
+   [re-pressed.core :as re-pressed]
    [reagent.dom.client :as ra.dom.client]
    [renderer.app.effects]
-   [renderer.app.events :as app.e]
+   [renderer.app.events :as app.events]
    [renderer.app.subs]
-   [renderer.app.views :as app.v]
+   [renderer.app.views :as app.views]
    [renderer.attribute.events]
    [renderer.attribute.impl.core]
    [renderer.dialog.events]
    [renderer.dialog.subs]
-   [renderer.document.events :as document.e]
+   [renderer.document.events :as document.events]
    [renderer.document.subs]
    [renderer.element.effects]
    [renderer.element.events]
@@ -33,7 +33,7 @@
    [renderer.snap.subs]
    [renderer.theme.db :as db]
    [renderer.theme.effects :as theme.fx]
-   [renderer.theme.events :as theme.e]
+   [renderer.theme.events :as theme.events]
    [renderer.theme.subs]
    [renderer.timeline.events]
    [renderer.timeline.subs]
@@ -42,14 +42,14 @@
    [renderer.tool.impl.core]
    [renderer.tool.subs]
    [renderer.tree.events]
-   [renderer.utils.error :as error]
-   [renderer.utils.keyboard :as keyb]
-   [renderer.utils.system :as system]
-   [renderer.window.events :as window.e]
+   [renderer.utils.error :as utils.error]
+   [renderer.utils.keyboard :as utils.keyboard]
+   [renderer.utils.system :as utils.system]
+   [renderer.window.events :as window.events]
    [renderer.window.subs]
    [renderer.worker.events]
    [renderer.worker.subs]
-   [replumb.repl :as repl]
+   [replumb.repl :as replumb.repl]
    [shadow.cljs.bootstrap.browser :as bootstrap]
    [user]))
 
@@ -75,7 +75,7 @@
     (rf/clear-subscription-cache!)
     (when @root-el (ra.dom.client/unmount @root-el))
     (reset! root-el (ra.dom.client/create-root container))
-    (ra.dom.client/render @root-el [error/boundary [app.v/root]])))
+    (ra.dom.client/render @root-el [utils.error/boundary [app.views/root]])))
 
 (defn bootstrap-cb!
   []
@@ -89,19 +89,19 @@
   (js/console.log (str "%c" easter-egg) (str "color: " renderer.theme.db/accent))
 
   ;; https://code.thheller.com/blog/shadow-cljs/2017/10/14/bootstrap-support.html
-  (bootstrap/init repl/st {:path "js/bootstrap" :load-on-init '[user]} bootstrap-cb!)
+  (bootstrap/init replumb.repl/st {:path "js/bootstrap" :load-on-init '[user]} bootstrap-cb!)
 
-  (rf/dispatch-sync [::app.e/initialize-db])
-  (rf/dispatch-sync [::app.e/set-lang system/language])
-  (rf/dispatch-sync [::app.e/load-system-fonts])
-  (rf/dispatch-sync [::app.e/load-local-db])
-  (rf/dispatch-sync [::document.e/init])
-  (rf/dispatch-sync [::theme.e/set-native-mode (theme.fx/native-mode! theme.fx/native-query!)])
-  (rf/dispatch-sync [::theme.e/add-native-listener])
-  (rf/dispatch-sync [::theme.e/set-document-attr])
-  (rf/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])
-  (rf/dispatch-sync [::rp/set-keydown-rules keyb/keydown-rules])
-  (rf/dispatch-sync [::window.e/register-listeners])
+  (rf/dispatch-sync [::app.events/initialize-db])
+  (rf/dispatch-sync [::app.events/set-lang utils.system/language])
+  (rf/dispatch-sync [::app.events/load-system-fonts])
+  (rf/dispatch-sync [::app.events/load-local-db])
+  (rf/dispatch-sync [::document.events/init])
+  (rf/dispatch-sync [::theme.events/set-native-mode (theme.fx/native-mode! theme.fx/native-query!)])
+  (rf/dispatch-sync [::theme.events/add-native-listener])
+  (rf/dispatch-sync [::theme.events/set-document-attr])
+  (rf/dispatch-sync [::re-pressed/add-keyboard-event-listener "keydown"])
+  (rf/dispatch-sync [::re-pressed/set-keydown-rules utils.keyboard/keydown-rules])
+  (rf/dispatch-sync [::window.events/register-listeners])
 
   (.setup paper)
 

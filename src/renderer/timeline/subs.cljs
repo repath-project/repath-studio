@@ -1,13 +1,13 @@
 (ns renderer.timeline.subs
   (:require
-   [clojure.string :as str]
+   [clojure.string :as string]
    [re-frame.core :as rf]
-   [renderer.document.subs :as-alias document.s]
+   [renderer.document.subs :as-alias document.subs]
    [renderer.element.hierarchy :as element.hierarchy]))
 
 (rf/reg-sub
  ::animations
- :<- [::document.s/elements]
+ :<- [::document.subs/elements]
  (fn [elements]
    (->> (vals elements)
         (filter #(contains? (descendants ::element.hierarchy/animation) (:tag %))))))
@@ -27,7 +27,7 @@
                 :selected selected
                 :disable locked
                 :movable (not locked)
-                :name (str/join " " [(name (:tag el)) (:attributeName attrs)])
+                :name (string/join " " [(name (:tag el)) (:attributeName attrs)])
                 :start start
                 :end end
                 :effectId (effect-id el)}]}))
@@ -77,7 +77,7 @@
  (fn [t]
    (let [m (-> t (/ 60) pad-2)
          s (-> t (rem 60) pad-2)
-         ms (-> t (rem 1) (* 100) pad-2 (str/replace "0." ""))]
+         ms (-> t (rem 1) (* 100) pad-2 (string/replace "0." ""))]
      (str m ":"  s ":" ms))))
 
 (rf/reg-sub

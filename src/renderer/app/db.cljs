@@ -2,7 +2,7 @@
   (:require
    [config :as config]
    [malli.core :as m]
-   [malli.transform :as mt]
+   [malli.transform :as m.transform]
    [renderer.dialog.db :refer [Dialog]]
    [renderer.document.db :refer [Document]]
    [renderer.element.db :refer [Element]]
@@ -14,7 +14,7 @@
    [renderer.timeline.db :refer [Timeline]]
    [renderer.tool.db :refer [Handle Tool State Cursor]]
    [renderer.utils.bounds :refer [BBox]]
-   [renderer.utils.i18n :as i18n]
+   [renderer.utils.i18n :as utils.i18n]
    [renderer.utils.math :refer [Vec2]]
    [renderer.window.db :refer [Window]]))
 
@@ -24,7 +24,7 @@
 (def Lang
   [:fn {:error/fn (fn [{:keys [value]} _]
                     (str value " is not a supported language"))}
-   i18n/lang?])
+   utils.i18n/lang?])
 
 (def App
   [:map {:closed true}
@@ -84,7 +84,8 @@
 
 (def explain (m/explainer App))
 
-(def default (m/decode App {:version config/version} mt/default-value-transformer))
+(def default
+  (m/decode App {:version config/version} malli.transform/default-value-transformer))
 
 (def persisted-keys
   "Top level keys that should be persisted to local storage."

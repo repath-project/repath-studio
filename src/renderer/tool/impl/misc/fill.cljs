@@ -1,30 +1,29 @@
 (ns renderer.tool.impl.misc.fill
   (:require
-   [renderer.app.effects :as-alias app.fx]
-   [renderer.document.handlers :as document.h]
-   [renderer.element.handlers :as element.h]
-   [renderer.history.handlers :as history.h]
-   [renderer.tool.handlers :as h]
-   [renderer.tool.hierarchy :as hierarchy]))
+   [renderer.app.effects :as-alias app.effects]
+   [renderer.document.handlers :as document.handlers]
+   [renderer.element.handlers :as element.handlers]
+   [renderer.history.handlers :as history.handlers]
+   [renderer.tool.handlers :as tool.handlers]
+   [renderer.tool.hierarchy :as tool.hierarchy]))
 
-(derive :fill ::hierarchy/tool)
+(derive :fill ::tool.hierarchy/tool)
 
-(defmethod hierarchy/properties :fill
+(defmethod tool.hierarchy/properties :fill
   []
   {:icon "fill"})
 
-(defmethod hierarchy/help [:fill :idle]
+(defmethod tool.hierarchy/help [:fill :idle]
   []
   "Click on an element to fill.")
 
-(defmethod hierarchy/on-activate :fill
+(defmethod tool.hierarchy/on-activate :fill
   [db]
-  (h/set-cursor db "crosshair"))
+  (tool.handlers/set-cursor db "crosshair"))
 
-(defmethod hierarchy/on-pointer-up :fill
+(defmethod tool.hierarchy/on-pointer-up :fill
   [db e]
-  (let [color (document.h/attr db :fill)
+  (let [color (document.handlers/attr db :fill)
         el-id (-> e :element :id)]
-    (-> (element.h/set-attr db el-id :fill color)
-        (history.h/finalize "Fill"))))
-
+    (-> (element.handlers/set-attr db el-id :fill color)
+        (history.handlers/finalize "Fill"))))

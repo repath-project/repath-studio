@@ -2,7 +2,7 @@
   (:require
    [malli.core :as m]
    [renderer.document.db :refer [PersistedDocument]]
-   [renderer.utils.migrations :as migrations]))
+   [renderer.utils.migration :as utils.migration]))
 
 (def ver-regex
   ;; https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
@@ -39,7 +39,7 @@
                         [:-> map? [:tuple Version ifn?] map?]])
 (defn migrate-document
   ([document]
-   (reduce migrate-document document migrations/migrations))
+   (reduce migrate-document document utils.migration/migrations))
   ([document [ver f]]
    (cond-> document
      (:or (not (:version document))

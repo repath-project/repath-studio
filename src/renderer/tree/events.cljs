@@ -1,19 +1,19 @@
 (ns renderer.tree.events
   (:require
    [re-frame.core :as rf]
-   [renderer.tree.effects :as fx]))
+   [renderer.tree.effects :as tree.effects]))
 
 (rf/reg-event-fx
  ::focus-up
  (fn [_ [_ id]]
-   {::fx/focus-next [id :up]}))
+   {::tree.effects/focus-next [id :up]}))
 
 (rf/reg-event-fx
  ::focus-down
  (fn [_ [_ id]]
-   {::fx/focus-next [id :down]}))
+   {::tree.effects/focus-next [id :down]}))
 
 (rf/reg-event-fx
  ::select-range
  (fn [_ [_ last-focused-id id]]
-   {::fx/select-range [last-focused-id id]}))
+   {::tree.effects/select-range [last-focused-id id]}))

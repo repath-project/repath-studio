@@ -1,29 +1,29 @@
 (ns renderer.notification.events
   (:require
    [re-frame.core :as rf]
-   [renderer.notification.handlers :as h]
-   [renderer.notification.views :as v]
-   [renderer.utils.vec :as vec]))
+   [renderer.notification.handlers :as notification.handlers]
+   [renderer.notification.views :as notification.views]
+   [renderer.utils.vec :as utils.vec]))
 
 (rf/reg-event-db
  ::add
  (fn [db [_ notification]]
-   (cond-> db notification (h/add notification))))
+   (cond-> db notification (notification.handlers/add notification))))
 
 (rf/reg-event-db
  ::unavailable-feature
  (fn [db [_ feature compatibility-url]]
-   (h/add db (v/unavailable-feature feature compatibility-url))))
+   (notification.handlers/add db (notification.views/unavailable-feature feature compatibility-url))))
 
 (rf/reg-event-db
  ::exception
  (fn [db [_ ^js/Error error]]
-   (h/add db (v/exception error))))
+   (notification.handlers/add db (notification.views/exception error))))
 
 (rf/reg-event-db
  ::remove-nth
  (fn [db [_ i]]
-   (update db :notifications vec/remove-nth i)))
+   (update db :notifications utils.vec/remove-nth i)))
 
 (rf/reg-event-db
  ::clear-all

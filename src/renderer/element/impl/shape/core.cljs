@@ -2,7 +2,7 @@
   "https://www.w3.org/TR/SVG/shapes.html#TermShapeElement"
   (:require
    [re-frame.core :as rf]
-   [renderer.element.hierarchy :as hierarchy]
+   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.impl.shape.circle]
    [renderer.element.impl.shape.ellipse]
    [renderer.element.impl.shape.image]
@@ -12,17 +12,17 @@
    [renderer.element.impl.shape.polyline]
    [renderer.element.impl.shape.polyshape]
    [renderer.element.impl.shape.rect]
-   [renderer.element.subs :as-alias element.s]
-   [renderer.utils.element :as element]))
+   [renderer.element.subs :as-alias element.subs]
+   [renderer.utils.element :as utils.element]))
 
-(derive ::hierarchy/shape ::hierarchy/graphics)
+(derive ::element.hierarchy/shape ::element.hierarchy/graphics)
 
-(defmethod hierarchy/render-to-string ::hierarchy/shape
+(defmethod element.hierarchy/render-to-string ::element.hierarchy/shape
   [el]
   (let [{:keys [tag attrs title children content]} el
-        child-elements @(rf/subscribe [::element.s/filter-visible children])
-        children (doall (map hierarchy/render-to-string child-elements))
-        attrs (->> (element/style->map attrs)
+        child-elements @(rf/subscribe [::element.subs/filter-visible children])
+        children (doall (map element.hierarchy/render-to-string child-elements))
+        attrs (->> (utils.element/style->map attrs)
                    (remove #(empty? (str (second %))))
                    (into {}))]
     [tag attrs (when title [:title title]) content children]))

@@ -1,10 +1,10 @@
 (ns renderer.tool.impl.element.core
   (:require
-   [renderer.app.effects :as-alias app.fx]
-   [renderer.element.handlers :as element.h]
-   [renderer.history.handlers :as history.h]
-   [renderer.tool.handlers :as h]
-   [renderer.tool.hierarchy :as hierarchy]
+   [renderer.app.effects :as-alias app.effects]
+   [renderer.element.handlers :as element.handlers]
+   [renderer.history.handlers :as history.handlers]
+   [renderer.tool.handlers :as tool.handlers]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.impl.element.circle]
    [renderer.tool.impl.element.ellipse]
    [renderer.tool.impl.element.image]
@@ -16,33 +16,33 @@
    [renderer.tool.impl.element.svg]
    [renderer.tool.impl.element.text]))
 
-(derive ::hierarchy/element ::hierarchy/tool)
+(derive ::tool.hierarchy/element ::tool.hierarchy/tool)
 
-(defmethod hierarchy/help [::hierarchy/element :idle]
+(defmethod tool.hierarchy/help [::tool.hierarchy/element :idle]
   []
   "Click and drag to create an element.")
 
-(defmethod hierarchy/on-activate ::hierarchy/element
+(defmethod tool.hierarchy/on-activate ::tool.hierarchy/element
   [db]
-  (h/set-cursor db "crosshair"))
+  (tool.handlers/set-cursor db "crosshair"))
 
-(defmethod hierarchy/on-drag-start ::hierarchy/element
+(defmethod tool.hierarchy/on-drag-start ::tool.hierarchy/element
   [db _e]
-  (h/set-state db :create))
+  (tool.handlers/set-state db :create))
 
-(defmethod hierarchy/on-drag-end ::hierarchy/element
+(defmethod tool.hierarchy/on-drag-end ::tool.hierarchy/element
   [db _e]
   (-> db
-      (h/create-temp-element)
-      (h/activate :transform)
-      (history.h/finalize (str "Create " (name (:tag (h/temp db)))))))
+      (tool.handlers/create-temp-element)
+      (tool.handlers/activate :transform)
+      (history.handlers/finalize (str "Create " (name (:tag (tool.handlers/temp db)))))))
 
-(defmethod hierarchy/snapping-points ::hierarchy/element
+(defmethod tool.hierarchy/snapping-points ::tool.hierarchy/element
   [db]
   [(with-meta
      (:adjusted-pointer-pos db)
      {:label (str (name (:tool db)) " edge")})])
 
-(defmethod hierarchy/snapping-elements ::hierarchy/element
+(defmethod tool.hierarchy/snapping-elements ::tool.hierarchy/element
   [db]
-  (filter :visible (vals (element.h/entities db))))
+  (filter :visible (vals (element.handlers/entities db))))

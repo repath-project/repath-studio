@@ -1,7 +1,7 @@
 (ns renderer.document.db
   (:require
    [malli.core :as m]
-   [malli.transform :as mt]
+   [malli.transform :as m.transform]
    [renderer.element.db :refer [Element]]
    [renderer.history.db :refer [History]]
    [renderer.menubar.filters :refer [A11yFilter]]
@@ -41,4 +41,4 @@
 
 (def explain (m/explainer Document))
 
-(def default (m/decode Document {} mt/default-value-transformer))
+(def default (m/decode Document {} malli.transform/default-value-transformer))

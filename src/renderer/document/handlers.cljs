@@ -1,15 +1,15 @@
 (ns renderer.document.handlers
   (:require
    [malli.core :as m]
-   [malli.error :as me]
-   [malli.transform :as mt]
+   [malli.error :as m.error]
+   [malli.transform :as m.transform]
    [renderer.app.db :refer [App]]
    [renderer.document.db :as db :refer [Document PersistedDocument]]
-   [renderer.frame.handlers :as frame.h]
-   [renderer.notification.handlers :as notification.h]
-   [renderer.notification.views :as notification.v]
-   [renderer.snap.handlers :as snap.h]
-   [renderer.utils.vec :as vec]))
+   [renderer.frame.handlers :as frame.handlers]
+   [renderer.notification.handlers :as notification.handlers]
+   [renderer.notification.views :as notification.views]
+   [renderer.snap.handlers :as snap.handlers]
+   [renderer.utils.vec :as utils.vec]))
 
 (m/=> path [:-> App [:* [:or keyword? uuid?]] vector?])
 (defn path
@@ -25,7 +25,7 @@
 (defn set-active
   [db id]
   (-> (assoc db :active-document id)
-      (snap.h/rebuild-tree)))
+      (snap.handlers/rebuild-tree)))
 
 (m/=> persisted-format [:function
                         [:-> App PersistedDocument]
@@ -37,7 +37,7 @@
    (let [document (-> (get-in db [:documents id])
                       (assoc :version (:version db)))]
      (reduce #(update-in %1 [:elements %2] dissoc :selected)
-             (m/decode PersistedDocument document mt/strip-extra-keys-transformer)
+             (m/decode PersistedDocument document malli.transform/strip-extra-keys-transformer)
              (keys (:elements document))))))
 
 (m/=> save-format [:-> PersistedDocument string?])
@@ -82,9 +82,9 @@
          (-> db :dom-rect)
          (-> db :window :focused)
          (not (get-in db (path db :focused))))
-    (-> (frame.h/focus-bbox :original)
+    (-> (frame.handlers/focus-bbox :original)
         (assoc-in (path db :focused) true)
-        (snap.h/update-viewport-tree))))
+        (snap.handlers/update-viewport-tree))))
 
 (m/=> search-by-path [:-> App string? [:maybe uuid?]])
 (defn search-by-path
@@ -115,7 +115,7 @@
     (-> db
         (assoc-in [:documents id] document)
         (set-active id)
-        (update :document-tabs #(vec/add % (inc active-index) id)))))
+        (update :document-tabs #(utils.vec/add % (inc active-index) id)))))
 
 (m/=> set-hovered-ids [:-> App [:set uuid?] App])
 (defn set-hovered-ids
@@ -162,9 +162,9 @@
         :always
         (set-active (:id document)))
 
-      (let [explanation (-> document db/explain me/humanize str)]
-        (->> (notification.v/spec-failed "Load document" explanation)
-             (notification.h/add db))))))
+      (let [explanation (-> document db/explain m.error/humanize str)]
+        (->> (notification.views/spec-failed "Load document" explanation)
+             (notification.handlers/add db))))))
 
 (m/=> saved? [:-> App uuid? boolean?])
 (defn saved?

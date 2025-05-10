@@ -1,15 +1,15 @@
 (ns notification-test
   (:require
    [cljs.test :refer-macros [deftest is testing]]
-   [day8.re-frame.test :as rf-test]
+   [day8.re-frame.test :as rf.test]
    [re-frame.core :as rf]
-   [renderer.app.events :as-alias app.e]
+   [renderer.app.events :as-alias app.events]
    [renderer.notification.events :as-alias e]
    [renderer.notification.subs :as-alias s]))
 
 (deftest add-and-remove
-  (rf-test/run-test-sync
-   (rf/dispatch [::app.e/initialize-db])
+  (rf.test/run-test-sync
+   (rf/dispatch [::app.events/initialize-db])
 
    (let [notifications (rf/subscribe [::s/entities])]
      (testing "initial"
@@ -42,8 +42,8 @@
        (is (= (count @notifications) 0))))))
 
 (deftest exception
-  (rf-test/run-test-sync
-   (rf/dispatch [::app.e/initialize-db])
+  (rf.test/run-test-sync
+   (rf/dispatch [::app.events/initialize-db])
 
    (let [notifications (rf/subscribe [::s/entities])]
      (testing "string exception"

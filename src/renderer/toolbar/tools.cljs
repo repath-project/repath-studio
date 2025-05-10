@@ -1,21 +1,21 @@
 (ns renderer.toolbar.tools
   (:require
    ["@radix-ui/react-tooltip" :as Tooltip]
-   [clojure.string :as str]
+   [clojure.string :as string]
    [re-frame.core :as rf]
-   [renderer.tool.events :as-alias tool.e]
+   [renderer.tool.events :as-alias tool.events]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.tool.subs :as-alias tool.s]
+   [renderer.tool.subs :as-alias tool.subs]
    [renderer.ui :as ui]))
 
 (defn button
   [tool]
-  (let [active-tool @(rf/subscribe [::tool.s/active])
-        primary-tool @(rf/subscribe [::tool.s/primary])
+  (let [active-tool @(rf/subscribe [::tool.subs/active])
+        primary-tool @(rf/subscribe [::tool.subs/primary])
         active (= active-tool tool)
         primary (= primary-tool tool)
         properties (tool.hierarchy/properties tool)
-        label (or (:label properties) (str/capitalize (name tool)))]
+        label (or (:label properties) (string/capitalize (name tool)))]
     (when (:icon properties)
       [:> Tooltip/Root
        [:> Tooltip/Trigger {:as-child true}
@@ -23,7 +23,7 @@
          [ui/radio-icon-button (:icon properties) active
           {:class (when primary "outline-shadow")
            :aria-label (str "activate " label)
-           :on-click #(rf/dispatch [::tool.e/activate tool])}]]]
+           :on-click #(rf/dispatch [::tool.events/activate tool])}]]]
        [:> Tooltip/Portal
         [:> Tooltip/Content
          {:class "tooltip-content"
@@ -31,7 +31,7 @@
           :side "top"}
          [:div.flex.gap-2.items-center
           (or (:label properties)
-              (str/capitalize (name tool)))]]]])))
+              (string/capitalize (name tool)))]]]])))
 
 (defn group
   [items]

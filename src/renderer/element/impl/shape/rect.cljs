@@ -2,14 +2,14 @@
   "https://www.w3.org/TR/SVG/shapes.html#RectElement
    https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/rect"
   (:require
-   [clojure.string :as str]
-   [renderer.element.hierarchy :as hierarchy]
-   [renderer.utils.length :as length]))
+   [clojure.string :as string]
+   [renderer.element.hierarchy :as element.hierarchy]
+   [renderer.utils.length :as utils.length]))
 
-(derive :rect ::hierarchy/box)
-(derive :rect ::hierarchy/shape)
+(derive :rect ::element.hierarchy/box)
+(derive :rect ::element.hierarchy/shape)
 
-(defmethod hierarchy/properties :rect
+(defmethod element.hierarchy/properties :rect
   []
   {:icon "rectangle"
    :label "Rectangle"
@@ -23,12 +23,12 @@
            :stroke-dasharray
            :stroke-linejoin]})
 
-(defmethod hierarchy/path :rect
+(defmethod element.hierarchy/path :rect
   [el]
   (let [{{:keys [x y width height rx ry]} :attrs} el
-        [x y width height] (mapv length/unit->px [x y width height])
-        rx (length/unit->px (if (and (not rx) ry) ry rx))
-        ry (length/unit->px (if (and (not ry) rx) rx ry))
+        [x y width height] (mapv utils.length/unit->px [x y width height])
+        rx (utils.length/unit->px (if (and (not rx) ry) ry rx))
+        ry (utils.length/unit->px (if (and (not ry) rx) rx ry))
         rx (if (> rx (/ width 2)) (/ width 2) rx)
         ry (if (> ry (/ height 2)) (/ height 2) ry)
         curved? (and (> rx 0) (> ry 0))]
@@ -43,4 +43,4 @@
       :always (conj "V" (+ y ry))
       curved? (conj "A" rx ry 0 0 1 (+ x rx) y)
       :always (conj "z")
-      :always (->> (str/join " ")))))
+      :always (->> (string/join " ")))))

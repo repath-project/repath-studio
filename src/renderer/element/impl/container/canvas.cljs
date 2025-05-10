@@ -2,25 +2,25 @@
   "The main SVG element that hosts all pages."
   (:require
    [re-frame.core :as rf]
-   [renderer.app.subs :as-alias app.s]
-   [renderer.document.subs :as-alias document.s]
-   [renderer.element.hierarchy :as hierarchy]
-   [renderer.element.subs :as-alias s]
-   [renderer.frame.subs :as-alias frame.s]
+   [renderer.app.subs :as-alias app.subs]
+   [renderer.document.subs :as-alias document.subs]
+   [renderer.element.hierarchy :as element.hierarchy]
+   [renderer.element.subs :as-alias element.subs]
+   [renderer.frame.subs :as-alias frame.subs]
    [renderer.menubar.filters :as filters]
-   [renderer.ruler.views :as ruler.v]
-   [renderer.snap.subs :as-alias snap.s]
-   [renderer.snap.views :as snap.v]
-   [renderer.tool.events :as-alias tool.e]
+   [renderer.ruler.views :as ruler.views]
+   [renderer.snap.subs :as-alias snap.subs]
+   [renderer.snap.views :as snap.views]
+   [renderer.tool.events :as-alias tool.events]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.tool.subs :as-alias tool.s]
-   [renderer.utils.keyboard :as keyb]
-   [renderer.utils.pointer :as pointer]
-   [renderer.utils.svg :as svg]))
+   [renderer.tool.subs :as-alias tool.subs]
+   [renderer.utils.keyboard :as utils.keyboard]
+   [renderer.utils.pointer :as utils.pointer]
+   [renderer.utils.svg :as utils.svg]))
 
-(derive :canvas ::hierarchy/element)
+(derive :canvas ::element.hierarchy/element)
 
-(defmethod hierarchy/properties :canvas
+(defmethod element.hierarchy/properties :canvas
   []
   {:description "The canvas is the main SVG container that hosts all elements."
    :attrs [:fill]})
@@ -32,28 +32,28 @@
   (.stopPropagation e)
   (.preventDefault e)
 
-  (rf/dispatch-sync [::tool.e/drag-event {:type (.-type e)
-                                          :pointer-pos [(.-pageX e) (.-pageY e)]
-                                          :data-transfer (.-dataTransfer e)}]))
+  (rf/dispatch-sync [::tool.events/drag-event {:type (.-type e)
+                                               :pointer-pos [(.-pageX e) (.-pageY e)]
+                                               :data-transfer (.-dataTransfer e)}]))
 
-(defmethod hierarchy/render :canvas
+(defmethod element.hierarchy/render :canvas
   [el]
-  (let [child-elements @(rf/subscribe [::s/filter-visible (:children el)])
-        viewbox-attr @(rf/subscribe [::frame.s/viewbox-attr])
-        {:keys [width height]} @(rf/subscribe [::app.s/dom-rect])
-        temp-element @(rf/subscribe [::document.s/temp-element])
-        read-only? @(rf/subscribe [::document.s/read-only?])
-        cursor @(rf/subscribe [::tool.s/cursor])
-        active-tool @(rf/subscribe [::tool.s/active])
-        primary-tool @(rf/subscribe [::tool.s/primary])
-        rotate @(rf/subscribe [::document.s/rotate])
-        grid @(rf/subscribe [::app.s/grid])
-        pointer-handler #(pointer/event-handler! % el)
-        snap? @(rf/subscribe [::snap.s/active?])
-        nearest-neighbor @(rf/subscribe [::snap.s/nearest-neighbor])
+  (let [child-elements @(rf/subscribe [::element.subs/filter-visible (:children el)])
+        viewbox-attr @(rf/subscribe [::frame.subs/viewbox-attr])
+        {:keys [width height]} @(rf/subscribe [::app.subs/dom-rect])
+        temp-element @(rf/subscribe [::document.subs/temp-element])
+        read-only? @(rf/subscribe [::document.subs/read-only?])
+        cursor @(rf/subscribe [::tool.subs/cursor])
+        active-tool @(rf/subscribe [::tool.subs/active])
+        primary-tool @(rf/subscribe [::tool.subs/primary])
+        rotate @(rf/subscribe [::document.subs/rotate])
+        grid @(rf/subscribe [::app.subs/grid])
+        pointer-handler #(utils.pointer/event-handler! % el)
+        snap? @(rf/subscribe [::snap.subs/active?])
+        nearest-neighbor @(rf/subscribe [::snap.subs/nearest-neighbor])
         snapped-el-id (-> nearest-neighbor meta :id)
-        snapped-el (when snapped-el-id @(rf/subscribe [::s/entity snapped-el-id]))
-        keyboard-handler #(rf/dispatch-sync [::tool.e/keyboard-event (keyb/event-formatter %)])]
+        snapped-el (when snapped-el-id @(rf/subscribe [::element.subs/entity snapped-el-id]))
+        keyboard-handler #(rf/dispatch-sync [::tool.events/keyboard-event (utils.keyboard/event-formatter %)])]
     [:svg#canvas {:on-pointer-up pointer-handler
                   :on-pointer-down pointer-handler
                   :on-pointer-move pointer-handler
@@ -70,31 +70,31 @@
                   :style {:outline 0
                           :background (-> el :attrs :fill)}}
      (for [el child-elements]
-       ^{:key (:id el)} [hierarchy/render el])
+       ^{:key (:id el)} [element.hierarchy/render el])
 
      [:defs
       (map (fn [{:keys [id tag attrs]}] [:filter {:id id :key id} [tag attrs]])
            filters/accessibility)]
 
-     (when grid [ruler.v/grid])
+     (when grid [ruler.views/grid])
 
      (when-not read-only?
        [:<>
         [tool.hierarchy/render (or primary-tool active-tool)]
-        [hierarchy/render temp-element]])
+        [element.hierarchy/render temp-element]])
 
      (when snap?
        [:<>
         (when snapped-el
-          [svg/bounding-box (:bbox snapped-el) true])
+          [utils.svg/bounding-box (:bbox snapped-el) true])
         (when nearest-neighbor
-          [snap.v/canvas-label nearest-neighbor])])]))
+          [snap.views/canvas-label nearest-neighbor])])]))
 
-(defmethod hierarchy/render-to-string :canvas
+(defmethod element.hierarchy/render-to-string :canvas
   [el]
-  (let [child-elements @(rf/subscribe [::s/filter-visible (:children el)])
+  (let [child-elements @(rf/subscribe [::element.subs/filter-visible (:children el)])
         attrs (->> (dissoc (:attrs el) :fill)
                    (remove #(empty? (str (second %))))
                    (into {}))]
-    (->> (doall (map hierarchy/render-to-string child-elements))
+    (->> (doall (map element.hierarchy/render-to-string child-elements))
          (into [:svg attrs]))))

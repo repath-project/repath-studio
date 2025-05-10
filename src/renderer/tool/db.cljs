@@ -1,9 +1,9 @@
 (ns renderer.tool.db
-  (:require [renderer.tool.hierarchy :as hierarchy]))
+  (:require [renderer.tool.hierarchy :as tool.hierarchy]))
 
 (defn tool?
   [tool]
-  (isa? tool ::hierarchy/tool))
+  (isa? tool ::tool.hierarchy/tool))
 
 (def Tool
   [:fn {:error/fn (fn [{:keys [value]} _] (str value " is not a supported tool"))}

@@ -1,7 +1,7 @@
 (ns renderer.tree.effects
   (:require
    [re-frame.core :as rf]
-   [renderer.element.events :as-alias element.e]))
+   [renderer.element.events :as-alias element.events]))
 
 (defn query-by-id!
   [id]
@@ -39,4 +39,4 @@
              ids (mapv #(-> (get list-elements %)
                             (.getAttribute "data-id")
                             (uuid)) index-range)]
-         (rf/dispatch [::element.e/select-ids ids]))))))
+         (rf/dispatch [::element.events/select-ids ids]))))))

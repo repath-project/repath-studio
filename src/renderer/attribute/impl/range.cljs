@@ -1,12 +1,12 @@
 (ns renderer.attribute.impl.range
   (:require
-   [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.attribute.views :as v]))
+   [renderer.attribute.hierarchy :as attribute.hierarchy]
+   [renderer.attribute.views :as attribute.views]))
 
 (derive :opacity ::range)
 
-(defmethod hierarchy/form-element [:default ::range]
+(defmethod attribute.hierarchy/form-element [:default ::range]
   [_ k v attrs]
-  [v/range-input k v (merge attrs {:min 0
-                                   :max 1
-                                   :step 0.01})])
+  [attribute.views/range-input k v (merge attrs {:min 0
+                                                 :max 1
+                                                 :step 0.01})])

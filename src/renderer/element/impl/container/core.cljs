@@ -2,36 +2,36 @@
   "https://www.w3.org/TR/SVG/struct.html#TermContainerElement"
   (:require
    [re-frame.core :as rf]
-   [renderer.element.hierarchy :as hierarchy]
+   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.impl.container.canvas]
    [renderer.element.impl.container.group]
    [renderer.element.impl.container.svg]
-   [renderer.element.subs :as-alias element.s]
-   [renderer.utils.element :as element]))
+   [renderer.element.subs :as-alias element.subs]
+   [renderer.utils.element :as utils.element]))
 
-(derive ::hierarchy/container ::hierarchy/box)
+(derive ::element.hierarchy/container ::element.hierarchy/box)
 
-(derive :a ::hierarchy/container)
-(derive :clipPath ::hierarchy/container)
-(derive :defs ::hierarchy/container)
-(derive :marker ::hierarchy/container)
-(derive :mask ::hierarchy/container)
-(derive :pattern ::hierarchy/container)
-(derive :switch ::hierarchy/container)
-(derive :symbol ::hierarchy/container)
+(derive :a ::element.hierarchy/container)
+(derive :clipPath ::element.hierarchy/container)
+(derive :defs ::element.hierarchy/container)
+(derive :marker ::element.hierarchy/container)
+(derive :mask ::element.hierarchy/container)
+(derive :pattern ::element.hierarchy/container)
+(derive :switch ::element.hierarchy/container)
+(derive :symbol ::element.hierarchy/container)
 
-(defmethod hierarchy/render ::hierarchy/container
+(defmethod element.hierarchy/render ::element.hierarchy/container
   [el]
   (let [{:keys [children tag attrs id]} el
-        child-elements @(rf/subscribe [::element.s/filter-visible children])]
+        child-elements @(rf/subscribe [::element.subs/filter-visible children])]
     [tag attrs (for [el child-elements]
-                 ^{:key id} [hierarchy/render el])]))
+                 ^{:key id} [element.hierarchy/render el])]))
 
-(defmethod hierarchy/render-to-string ::hierarchy/container
+(defmethod element.hierarchy/render-to-string ::element.hierarchy/container
   [el]
   (let [{:keys [tag attrs title children]} el
-        child-elements @(rf/subscribe [::element.s/filter-visible children])
-        attrs (->> (element/style->map attrs)
+        child-elements @(rf/subscribe [::element.subs/filter-visible children])
+        attrs (->> (utils.element/style->map attrs)
                    (remove #(empty? (str (second %))))
                    (into {}))]
-    [tag attrs (when title [:title title]) (map hierarchy/render-to-string child-elements)]))
+    [tag attrs (when title [:title title]) (map element.hierarchy/render-to-string child-elements)]))

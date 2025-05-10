@@ -3,28 +3,28 @@
   (:require
    ["react" :as react]
    [re-frame.core :as rf]
-   [reagent.core :as ra]
-   [renderer.document.subs :as-alias document.s]
-   [renderer.element.hierarchy :as hierarchy]
-   [renderer.element.subs :as-alias element.s]
-   [renderer.tool.subs :as-alias tool.s]
-   [renderer.utils.bounds :as bounds]
-   [renderer.utils.dom :as dom]
-   [renderer.utils.element :as element]
-   [renderer.utils.pointer :as pointer]))
+   [reagent.core :as reagent]
+   [renderer.document.subs :as-alias document.subs]
+   [renderer.element.hierarchy :as element.hierarchy]
+   [renderer.element.subs :as-alias element.subs]
+   [renderer.tool.subs :as-alias tool.subs]
+   [renderer.utils.bounds :as utils.bounds]
+   [renderer.utils.dom :as utils.dom]
+   [renderer.utils.element :as utils.element]
+   [renderer.utils.pointer :as utils.pointer]))
 
-(derive ::hierarchy/renderable ::hierarchy/element)
+(derive ::element.hierarchy/renderable ::element.hierarchy/element)
 
-(defmethod hierarchy/bbox ::hierarchy/renderable
+(defmethod element.hierarchy/bbox ::element.hierarchy/renderable
   [{:keys [tag attrs content] :as el}]
-  (when-let [svg (dom/canvas-element!)]
+  (when-let [svg (utils.dom/canvas-element!)]
     (let [dom-el (js/document.createElementNS "http://www.w3.org/2000/svg" (name tag))]
       (doseq [[k v] attrs]
-        (when (element/supported-attr? (dissoc el :attrs) k)
+        (when (utils.element/supported-attr? (dissoc el :attrs) k)
           (.setAttributeNS dom-el nil (name k) v)))
       (.appendChild svg dom-el)
       (set! (.-innerHTML dom-el) (if (empty? content) "\u00a0" content))
-      (let [bbox (bounds/dom-el->bbox dom-el)]
+      (let [bbox (utils.bounds/dom-el->bbox dom-el)]
         (.remove dom-el)
         bbox))))
 
@@ -33,8 +33,8 @@
    can interact with it."
   [el]
   (let [{:keys [attrs tag content]} el
-        pointer-handler #(pointer/event-handler! % el)
-        zoom @(rf/subscribe [::document.s/zoom])
+        pointer-handler #(utils.pointer/event-handler! % el)
+        zoom @(rf/subscribe [::document.subs/zoom])
         stroke-width (max (:stroke-width attrs) (/ 20 zoom))]
     [tag
      (merge (dissoc attrs :style)
@@ -52,7 +52,7 @@
    React expects a map, but we need to set a string to avoid serializing css."
   [el]
   (let [ref (react/createRef)]
-    (ra/create-class
+    (reagent/create-class
      {:display-name "element-renderer"
 
       :component-did-mount
@@ -65,7 +65,7 @@
       :component-did-update
       (fn
         [this _]
-        (let [new-argv (second (ra/argv this))
+        (let [new-argv (second (reagent/argv this))
               style (:style (into {} (:attrs (into {} new-argv))))]
           (.setAttribute (.-current ref) "style" style)))
 
@@ -82,12 +82,12 @@
           (when title [:title title])
           content
           (for [child child-els]
-            ^{:key (:id child)} [hierarchy/render child])]
+            ^{:key (:id child)} [element.hierarchy/render child])]
 
          (when default-state? [ghost-element el])])})))
 
-(defmethod hierarchy/render ::hierarchy/renderable
+(defmethod element.hierarchy/render ::element.hierarchy/renderable
   [el]
-  (let [child-els @(rf/subscribe [::element.s/filter-visible (:children el)])
-        state @(rf/subscribe [::tool.s/state])]
+  (let [child-els @(rf/subscribe [::element.subs/filter-visible (:children el)])
+        state @(rf/subscribe [::tool.subs/state])]
     [render-to-dom el child-els (= state :idle)]))

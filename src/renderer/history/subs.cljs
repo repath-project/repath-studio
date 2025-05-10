@@ -1,32 +1,32 @@
 (ns renderer.history.subs
   (:require
    [re-frame.core :as rf]
-   [renderer.document.subs :as-alias document.s]
-   [renderer.history.handlers :as h]))
+   [renderer.document.subs :as-alias document.subs]
+   [renderer.history.handlers :as history.handlers]))
 
 (rf/reg-sub
  ::history
- h/history)
+ history.handlers/history)
 
 (rf/reg-sub
  ::undos?
  :<- [::history]
- h/undos?)
+ history.handlers/undos?)
 
 (rf/reg-sub
  ::redos?
  :<- [::history]
- h/redos?)
+ history.handlers/redos?)
 
 (rf/reg-sub
  ::undos
  :<- [::history]
- h/undos)
+ history.handlers/undos)
 
 (rf/reg-sub
  ::redos
  :<- [::history]
- h/redos)
+ history.handlers/redos)
 
 (rf/reg-sub
  ::zoom
@@ -53,7 +53,7 @@
 (rf/reg-sub
  ::tree-data
  :<- [::history]
- :<- [::document.s/save]
+ :<- [::document.subs/save]
  (fn [[history save] _]
    (let [root (:id (first (sort-by :index (vals (:states history)))))]
      (state->d3-data history root save))))

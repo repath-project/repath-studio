@@ -1,15 +1,15 @@
 (ns renderer.worker.events
   (:require
    [re-frame.core :as rf]
-   [renderer.app.effects :as-alias app.fx]
-   [renderer.worker.effects :as fx]))
+   [renderer.app.effects :as-alias app.effects]
+   [renderer.worker.effects :as worker.effects]))
 
 (rf/reg-event-fx
  ::create
- [(rf/inject-cofx ::app.fx/guid)]
+ [(rf/inject-cofx ::app.effects/guid)]
  (fn [{:keys [db guid]} [_ options]]
    {:db (assoc-in db [:worker :tasks guid] (:action options))
-    ::fx/post (-> options
+    ::worker.effects/post (-> options
                   (assoc-in [:data :id] (str guid))
                   (assoc-in [:data :action] (:action options)))}))
 

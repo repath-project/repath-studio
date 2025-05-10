@@ -1,9 +1,9 @@
-(ns renderer.utils.migrations
+(ns renderer.utils.migration
   (:require
    [clojure.set :as set]
-   [clojure.string :as str]
-   [renderer.utils.element :as element]
-   [renderer.utils.map :as map]))
+   [clojure.string :as string]
+   [renderer.utils.element :as utils.element]
+   [renderer.utils.map :as utils.map]))
 
 (def migrations
   [[[0 3 0] (fn [document]
@@ -13,7 +13,7 @@
                           update-vals
                           #(-> %
                                (set/rename-keys {:key :id})
-                               (map/remove-nils)))))]
+                               (utils.map/remove-nils)))))]
 
    [[0 4 0] (fn [document]
               (let [key->uuid (comp uuid name)]
@@ -49,10 +49,10 @@
                       (fn [el]
                         (cond-> el
                           (= (:tag el) :brush)
-                          (update-in [:attrs :points] #(str/join " " (flatten %)))
+                          (update-in [:attrs :points] #(string/join " " (flatten %)))
 
                           :always
-                          element/normalize-attrs))))]
+                          utils.element/normalize-attrs))))]
 
    [[0 4 6] (fn [document]
               (update document :elements update-vals

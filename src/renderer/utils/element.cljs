@@ -3,16 +3,16 @@
    ["paper" :refer [Path]]
    ["paperjs-offset" :refer [PaperOffset]]
    ["style-to-object" :default parse]
-   [clojure.core.matrix :as mat]
+   [clojure.core.matrix :as matrix]
    [malli.core :as m]
    [reagent.dom.server :as dom.server]
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.element.db :refer [Element Attrs]]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.snap.db :refer [SnapOptions]]
-   [renderer.utils.attribute :as attr]
+   [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.bounds :as utils.bounds :refer [BBox]]
-   [renderer.utils.map :as map]
+   [renderer.utils.map :as utils.map]
    [renderer.utils.math :refer [Vec2]]))
 
 (m/=> root? [:-> Element boolean?])
@@ -52,14 +52,14 @@
   [el]
   (let [el-bbox (:bbox el)
         local-bbox (element.hierarchy/bbox el)]
-    (vec (take 2 (mat/sub el-bbox local-bbox)))))
+    (vec (take 2 (matrix/sub el-bbox local-bbox)))))
 
 (m/=> snapping-points [:-> Element SnapOptions [:* Vec2]])
 (defn snapping-points
   [el options]
   (let [points (or (when (contains? options :nodes)
                      (mapv #(with-meta
-                              (mat/add % (offset el))
+                              (matrix/add % (offset el))
                               (merge (meta %) {:id (:id el)}))
                            (element.hierarchy/snapping-points el))) [])]
     (cond-> points
@@ -73,13 +73,13 @@
   [{:keys [tag attrs]}]
   (cond->> attrs
     tag
-    (merge (attr/defaults-memo tag))))
+    (merge (utils.attribute/defaults-memo tag))))
 
 (m/=> normalize-attrs [:-> map? Element])
 (defn normalize-attrs
   [el]
   (-> el
-      (update :attrs update-keys attr/->camel-case-memo)
+      (update :attrs update-keys utils.attribute/->camel-case-memo)
       (update :attrs update-vals str)))
 
 (m/=> supported-attr? [:-> Element keyword? boolean?])
@@ -93,7 +93,7 @@
   (cond-> el
     (get-method element.hierarchy/path (:tag el))
     (-> (assoc :tag :path)
-        (update :attrs #(map/merge-common-with str % (attr/defaults-memo :path)))
+        (update :attrs #(utils.map/merge-common-with str % (utils.attribute/defaults-memo :path)))
         (assoc-in [:attrs :d] (element.hierarchy/path el)))))
 
 (m/=> stroke->path [:-> Element Element])
@@ -110,7 +110,7 @@
         new-d (.getAttribute (.exportSVG stroke-path) "d")]
     (-> (assoc el :tag :path)
         (update :attrs dissoc :stroke :stroke-width)
-        (update :attrs #(map/merge-common-with str % (attr/defaults-memo :path)))
+        (update :attrs #(utils.map/merge-common-with str % (utils.attribute/defaults-memo :path)))
         (assoc-in [:attrs :d] new-d)
         (assoc-in [:attrs :fill] (:stroke attrs)))))
 

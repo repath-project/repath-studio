@@ -1,10 +1,10 @@
 (ns renderer.tool.impl.element.line
   "https://www.w3.org/TR/SVG/shapes.html#LineElement"
   (:require
-   [renderer.app.effects :as-alias app.fx]
-   [renderer.document.handlers :as document.h]
-   [renderer.history.handlers :as history.h]
-   [renderer.tool.handlers :as h]
+   [renderer.app.effects :as-alias app.effects]
+   [renderer.document.handlers :as document.handlers]
+   [renderer.history.handlers :as history.handlers]
+   [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]))
 
 (derive :line ::tool.hierarchy/element)
@@ -21,35 +21,35 @@
                :y1 offset-y
                :x2 x
                :y2 y
-               :stroke (document.h/attr db :stroke)}]
-    (h/set-temp db {:type :element
-                    :tag :line
-                    :attrs attrs})))
+               :stroke (document.handlers/attr db :stroke)}]
+    (tool.handlers/set-temp db {:type :element
+                                :tag :line
+                                :attrs attrs})))
 
 (defn update-line-end
   [db]
   (let [[x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
-        temp (-> (h/temp db)
+        temp (-> (tool.handlers/temp db)
                  (assoc-in [:attrs :x2] x)
                  (assoc-in [:attrs :y2] y))]
-    (h/set-temp db temp)))
+    (tool.handlers/set-temp db temp)))
 
 (defmethod tool.hierarchy/on-pointer-move :line
   [db _e]
   (cond-> db
-    (h/temp db)
+    (tool.handlers/temp db)
     (update-line-end)))
 
 (defmethod tool.hierarchy/on-pointer-up :line
   [db _e]
   (cond
-    (h/temp db)
-    (-> (h/create-temp-element db)
-        (h/activate :transform)
-        (history.h/finalize "Create line"))
+    (tool.handlers/temp db)
+    (-> (tool.handlers/create-temp-element db)
+        (tool.handlers/activate :transform)
+        (history.handlers/finalize "Create line"))
 
     (:pointer-offset db)
-    (-> (h/set-state db :create)
+    (-> (tool.handlers/set-state db :create)
         (create-line))
 
     :else db))
@@ -57,8 +57,8 @@
 (defmethod tool.hierarchy/on-pointer-down :line
   [db _e]
   (cond-> db
-    (h/temp db)
-    (history.h/finalize "Create line")))
+    (tool.handlers/temp db)
+    (history.handlers/finalize "Create line")))
 
 (defmethod tool.hierarchy/on-drag :line
   [db _e]

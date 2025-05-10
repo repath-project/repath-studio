@@ -2,11 +2,11 @@
   "https://svgwg.org/specs/animations/#AnimateElement
    https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/animate"
   (:require
-   [renderer.element.hierarchy :as hierarchy]))
+   [renderer.element.hierarchy :as element.hierarchy]))
 
-(derive :animate ::hierarchy/animation)
+(derive :animate ::element.hierarchy/animation)
 
-(defmethod hierarchy/properties :animate
+(defmethod element.hierarchy/properties :animate
   []
   {:icon "animation"
    :description "The SVG <animate> element provides a way to animate an

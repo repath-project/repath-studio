@@ -1,11 +1,11 @@
 (ns renderer.element.impl.shape.polyline
   "https://www.w3.org/TR/SVG/shapes.html#PolylineElement
    https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/polyline"
-  (:require [renderer.element.hierarchy :as hierarchy]))
+  (:require [renderer.element.hierarchy :as element.hierarchy]))
 
-(derive :polyline ::hierarchy/polyshape)
+(derive :polyline ::element.hierarchy/polyshape)
 
-(defmethod hierarchy/properties :polyline
+(defmethod element.hierarchy/properties :polyline
   []
   {:icon "polyline"
    :description "The <polyline> SVG element is an SVG basic shape that creates
@@ -18,6 +18,6 @@
            :stroke-linejoin
            :opacity]})
 
-(defmethod hierarchy/path :polyline
+(defmethod element.hierarchy/path :polyline
   [el]
   (str "M" (-> el :attrs :points)))

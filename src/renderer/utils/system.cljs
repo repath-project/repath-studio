@@ -1,6 +1,6 @@
 (ns renderer.utils.system
   (:require
-   [clojure.string :as str]))
+   [clojure.string :as string]))
 
 (defonce language
   (keyword (.-language js/navigator)))
@@ -9,7 +9,7 @@
   (.-userAgent js/navigator))
 
 (defonce electron?
-  (str/includes? user-agent "Electron"))
+  (string/includes? user-agent "Electron"))
 
 (defonce platform
   (when electron? js/window.api.platform))

@@ -2,31 +2,31 @@
   (:require
    [config :as config]
    [re-frame.core :as rf]
-   [renderer.dialog.handlers :as h]
-   [renderer.dialog.views :as v]))
+   [renderer.dialog.handlers :as dialog.handlers]
+   [renderer.dialog.views :as dialog.views]))
 
 (rf/reg-event-db
  ::cmdk
  (fn [db [_]]
-   (h/create db {:title [:div.sr-only "Command panel"]
-                 :content (v/cmdk)
-                 :attrs {:class "dialog-content"
-                         :style {:top "33px"
-                                 :transform "translate(-50%, 0)"}}})))
+   (dialog.handlers/create db {:title [:div.sr-only "Command panel"]
+                               :content (dialog.views/cmdk)
+                               :attrs {:class "dialog-content"
+                                       :style {:top "33px"
+                                               :transform "translate(-50%, 0)"}}})))
 
 (rf/reg-event-db
  ::about
  (fn [db [_]]
-   (h/create db {:title config/app-name
-                 :close-button true
-                 :content (v/about)})))
+   (dialog.handlers/create db {:title config/app-name
+                               :close-button true
+                               :content (dialog.views/about)})))
 
 (rf/reg-event-db
  ::confirmation
  (fn [db [_ data]]
-   (h/create db {:title (:title data)
-                 :close-button true
-                 :content (v/confirmation data)})))
+   (dialog.handlers/create db {:title (:title data)
+                               :close-button true
+                               :content (dialog.views/confirmation data)})))
 
 (rf/reg-event-fx
  ::close

@@ -2,13 +2,13 @@
   "https://www.w3.org/TR/SVG/embedded.html#ImageElement
    https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/image"
   (:require
-   [renderer.app.events :as-alias app.e]
-   [renderer.element.hierarchy :as hierarchy]))
+   [renderer.app.events :as-alias app.events]
+   [renderer.element.hierarchy :as element.hierarchy]))
 
-(derive :image ::hierarchy/graphics)
-(derive :image ::hierarchy/box)
+(derive :image ::element.hierarchy/graphics)
+(derive :image ::element.hierarchy/box)
 
-(defmethod hierarchy/properties :image
+(defmethod element.hierarchy/properties :image
   []
   {:icon "image"
    :description "The <image> SVG element includes images inside SVG documents.

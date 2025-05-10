@@ -5,7 +5,7 @@
    [cljs.tagged-literals :as tags]
    [cljs.tools.reader]
    [cljs.tools.reader.reader-types :refer [string-push-back-reader]]
-   [clojure.string :as str]
+   [clojure.string :as string]
    [replumb.ast :as ast]
    [replumb.core :as replumb]
    [replumb.doc-maps :as docs]
@@ -238,7 +238,7 @@ cljs.js/*load-fn*
   [mode text]
   (let [parts (vec (.split text "."))
         completion (or (last parts) "")
-        prefix #(str (when (= mode :cljs) "js/") (str/join "." (conj (vec (butlast parts)) %)))
+        prefix #(str (when (= mode :cljs) "js/") (string/join "." (conj (vec (butlast parts)) %)))
         possibles (js-attrs (reduce aget js/window (butlast parts)))]
     (->> possibles
          (filter #(not= -1 (.indexOf % completion)))

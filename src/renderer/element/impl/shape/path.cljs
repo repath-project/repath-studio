@@ -4,16 +4,16 @@
   (:require
    ["svg-path-bbox" :refer [svgPathBbox]]
    ["svgpath" :as svgpath]
-   [clojure.core.matrix :as mat]
-   [clojure.string :as str]
-   [renderer.element.hierarchy :as hierarchy]
-   [renderer.tool.views :as tool.v]
-   [renderer.utils.element :as element]
-   [renderer.utils.length :as length]))
+   [clojure.core.matrix :as matrix]
+   [clojure.string :as string]
+   [renderer.element.hierarchy :as element.hierarchy]
+   [renderer.tool.views :as tool.views]
+   [renderer.utils.element :as utils.element]
+   [renderer.utils.length :as utils.length]))
 
-(derive :path ::hierarchy/shape)
+(derive :path ::element.hierarchy/shape)
 
-(defmethod hierarchy/properties :path
+(defmethod element.hierarchy/properties :path
   []
   {:icon "bezier-curve"
    :description "The <path> SVG element is the generic element to define a shape.
@@ -24,53 +24,53 @@
            :stroke-linejoin
            :opacity]})
 
-(defmethod hierarchy/translate :path
+(defmethod element.hierarchy/translate :path
   [el [x y]]
   (update-in el [:attrs :d] #(-> (svgpath %)
                                  (.translate x y)
                                  (.toString))))
 
-(defmethod hierarchy/scale :path
+(defmethod element.hierarchy/scale :path
   [el ratio pivot-point]
   (let [[scale-x scale-y] ratio
-        [x y] (hierarchy/bbox el)
-        [x y] (mat/sub (mat/add [x y]
-                                (mat/sub pivot-point
-                                         (mat/mul pivot-point ratio)))
-                       (mat/mul ratio [x y]))]
+        [x y] (element.hierarchy/bbox el)
+        [x y] (matrix/sub (matrix/add [x y]
+                                      (matrix/sub pivot-point
+                                                  (matrix/mul pivot-point ratio)))
+                          (matrix/mul ratio [x y]))]
     (update-in el [:attrs :d] #(-> (svgpath %)
                                    (.scale scale-x scale-y)
                                    (.translate x y)
                                    (.toString)))))
 
-(defmethod hierarchy/bbox :path
+(defmethod element.hierarchy/bbox :path
   [{{:keys [d]} :attrs}]
   (let [[left top right bottom] (js->clj (svgPathBbox d))]
     [left top right bottom]))
 
-(defmethod hierarchy/render-edit :path
+(defmethod element.hierarchy/render-edit :path
   [el]
-  (let [offset (element/offset el)
+  (let [offset (utils.element/offset el)
         segments (-> el :attrs :d svgpath .-segments)
         square-handle (fn [i [x y]]
                         ^{:key i}
-                        [tool.v/square-handle {:id (keyword (str i))
-                                               :x x
-                                               :y y
-                                               :type :handle
-                                               :action :edit
-                                               :element (:id el)}])]
+                        [tool.views/square-handle {:id (keyword (str i))
+                                                   :x x
+                                                   :y y
+                                                   :type :handle
+                                                   :action :edit
+                                                   :element (:id el)}])]
     [:g {:key ::edit-handles}
      (map-indexed (fn [i segment]
-                    (case (-> segment first str/lower-case)
+                    (case (-> segment first string/lower-case)
                       "m"
-                      (let [[x y] (mapv length/unit->px [(second segment) (last segment)])
-                            [x y] (mat/add offset [x y])]
+                      (let [[x y] (mapv utils.length/unit->px [(second segment) (last segment)])
+                            [x y] (matrix/add offset [x y])]
                         (square-handle i [x y]))
 
                       "l"
-                      (let [[x y] (mapv length/unit->px [(second segment) (last segment)])
-                            [x y] (mat/add offset [x y])]
+                      (let [[x y] (mapv utils.length/unit->px [(second segment) (last segment)])
+                            [x y] (matrix/add offset [x y])]
                         (square-handle i [x y]))
 
                       nil))
@@ -80,12 +80,12 @@
   [path i [x y]]
   (let [segment (aget (.-segments path) i)
         segment (array (aget segment 0)
-                       (length/transform (aget segment 1) + x)
-                       (length/transform (aget segment 2) + y))]
+                       (utils.length/transform (aget segment 1) + x)
+                       (utils.length/transform (aget segment 2) + y))]
     (aset (.-segments path) i segment)
     path))
 
-(defmethod hierarchy/edit :path
+(defmethod element.hierarchy/edit :path
   [el offset handle]
   (let [index (js/parseInt (name handle))]
     (update-in el [:attrs :d] #(-> (svgpath %)

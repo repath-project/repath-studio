@@ -1,7 +1,7 @@
 (ns element-impl-test
   (:require
    [cljs.test :refer-macros [deftest is]]
-   [renderer.element.hierarchy :as hierarchy]))
+   [renderer.element.hierarchy :as element.hierarchy]))
 
 (deftest circle
   (let [circle-el {:type :element
@@ -10,25 +10,25 @@
                            :cy "0"
                            :r "50"}}]
 
-    (is (= (:attrs (hierarchy/translate circle-el [50 50]))
+    (is (= (:attrs (element.hierarchy/translate circle-el [50 50]))
            {:cx "50"
             :cy "50"
             :r "50"}))
 
-    (is (= (:attrs (hierarchy/scale circle-el [2 2] [50 50]))
+    (is (= (:attrs (element.hierarchy/scale circle-el [2 2] [50 50]))
            {:cx "0"
             :cy "0"
             :r "100"}))
 
-    (is (= (:attrs (hierarchy/scale circle-el [2 2] [0 0]))
+    (is (= (:attrs (element.hierarchy/scale circle-el [2 2] [0 0]))
            {:cx "50"
             :cy "50"
             :r "100"}))
 
-    (is (= (hierarchy/bbox circle-el)
+    (is (= (element.hierarchy/bbox circle-el)
            [-50 -50 50 50]))
 
-    (is (= (hierarchy/path circle-el)
+    (is (= (element.hierarchy/path circle-el)
            "M 50 0 A 50 50 0 0 1 0 50 A 50 50 0 0 1 -50 0 A 50 50 0 0 1 50 0 z"))))
 
 (deftest rect
@@ -39,28 +39,28 @@
                          :width "50"
                          :height "50"}}]
 
-    (is (= (:attrs (hierarchy/translate rect-el [50 50]))
+    (is (= (:attrs (element.hierarchy/translate rect-el [50 50]))
            {:x "50"
             :y "50"
             :width "50"
             :height "50"}))
 
-    (is (= (:attrs (hierarchy/scale rect-el [2 2] [25 25]))
+    (is (= (:attrs (element.hierarchy/scale rect-el [2 2] [25 25]))
            {:x "-25"
             :y "-25"
             :width "100"
             :height "100"}))
 
-    (is (= (:attrs (hierarchy/scale rect-el [2 2] [0 0]))
+    (is (= (:attrs (element.hierarchy/scale rect-el [2 2] [0 0]))
            {:x "0"
             :y "0"
             :width "100"
             :height "100"}))
 
-    (is (= (hierarchy/bbox rect-el)
+    (is (= (element.hierarchy/bbox rect-el)
            [0 0 50 50]))
 
-    (is (= (hierarchy/path rect-el)
+    (is (= (element.hierarchy/path rect-el)
            "M 0 0 H 50 V 50 H 0 V 0 z"))))
 
 (deftest ellipse
@@ -71,28 +71,28 @@
                             :rx "50"
                             :ry "50"}}]
 
-    (is (= (:attrs (hierarchy/translate ellipse-el [50 50]))
+    (is (= (:attrs (element.hierarchy/translate ellipse-el [50 50]))
            {:cx "50"
             :cy "50"
             :rx "50"
             :ry "50"}))
 
-    (is (= (:attrs (hierarchy/scale ellipse-el [2 2] [25 25]))
+    (is (= (:attrs (element.hierarchy/scale ellipse-el [2 2] [25 25]))
            {:cx "25"
             :cy "25"
             :rx "100"
             :ry "100"}))
 
-    (is (= (:attrs (hierarchy/scale ellipse-el [2 2] [0 0]))
+    (is (= (:attrs (element.hierarchy/scale ellipse-el [2 2] [0 0]))
            {:cx "50"
             :cy "50"
             :rx "100"
             :ry "100"}))
 
-    (is (= (hierarchy/bbox ellipse-el)
+    (is (= (element.hierarchy/bbox ellipse-el)
            [-50 -50 50 50]))
 
-    (is (= (hierarchy/path ellipse-el)
+    (is (= (element.hierarchy/path ellipse-el)
            "M 50 0 A 50 50 0 0 1 0 50 A 50 50 0 0 1 -50 0 A 50 50 0 0 1 50 0 z"))))
 
 (deftest line
@@ -103,28 +103,28 @@
                          :x2 "50"
                          :y2 "50"}}]
 
-    (is (= (:attrs (hierarchy/translate line-el [50 50]))
+    (is (= (:attrs (element.hierarchy/translate line-el [50 50]))
            {:x1 "50"
             :y1 "50"
             :x2 "100"
             :y2 "100"}))
 
-    (is (= (:attrs (hierarchy/scale line-el [2 2] [25 25]))
+    (is (= (:attrs (element.hierarchy/scale line-el [2 2] [25 25]))
            {:x1 "-25"
             :y1 "-25"
             :x2 "75"
             :y2 "75"}))
 
-    (is (= (:attrs (hierarchy/scale line-el [2 2] [0 0]))
+    (is (= (:attrs (element.hierarchy/scale line-el [2 2] [0 0]))
            {:x1 "0"
             :y1 "0"
             :x2 "100"
             :y2 "100"}))
 
-    (is (= (hierarchy/bbox line-el)
+    (is (= (element.hierarchy/bbox line-el)
            [0 0 50 50]))
 
-    (is (= (hierarchy/path line-el)
+    (is (= (element.hierarchy/path line-el)
            "M 0 0 L 50 50"))))
 
 (deftest polygon
@@ -132,22 +132,22 @@
                     :tag :polygon
                     :attrs {:points "528 -305 718 -370 941 -208"}}]
 
-    (is (= (:attrs (hierarchy/translate polygon-el [10 10]))
+    (is (= (:attrs (element.hierarchy/translate polygon-el [10 10]))
            {:points "538 -295 728 -360 951 -198"}))
 
-    (is (= (:attrs (hierarchy/scale polygon-el [2 2] [25 25]))
+    (is (= (:attrs (element.hierarchy/scale polygon-el [2 2] [25 25]))
            {:points "503 -265 883 -395 1329 -71"}))
 
-    (is (= (:attrs (hierarchy/scale polygon-el [2 2] [0 0]))
+    (is (= (:attrs (element.hierarchy/scale polygon-el [2 2] [0 0]))
            {:points "528 -240 908 -370 1354 -46"}))
 
-    (is (= (hierarchy/bbox polygon-el)
+    (is (= (element.hierarchy/bbox polygon-el)
            [528 -370 941 -208]))
 
-    (is (= (hierarchy/path polygon-el)
+    (is (= (element.hierarchy/path polygon-el)
            "M528 -305 718 -370 941 -208z"))
 
-    (is (= (hierarchy/snapping-points polygon-el)
+    (is (= (element.hierarchy/snapping-points polygon-el)
            [[528 -305] [718 -370] [941 -208]]))))
 
 (deftest polyline
@@ -155,22 +155,22 @@
                      :tag :polyline
                      :attrs {:points "528 -305 718 -370 941 -208"}}]
 
-    (is (= (:attrs (hierarchy/translate polyline-el [10 10]))
+    (is (= (:attrs (element.hierarchy/translate polyline-el [10 10]))
            {:points "538 -295 728 -360 951 -198"}))
 
-    (is (= (:attrs (hierarchy/scale polyline-el [2 2] [25 25]))
+    (is (= (:attrs (element.hierarchy/scale polyline-el [2 2] [25 25]))
            {:points "503 -265 883 -395 1329 -71"}))
 
-    (is (= (:attrs (hierarchy/scale polyline-el [2 2] [0 0]))
+    (is (= (:attrs (element.hierarchy/scale polyline-el [2 2] [0 0]))
            {:points "528 -240 908 -370 1354 -46"}))
 
-    (is (= (hierarchy/bbox polyline-el)
+    (is (= (element.hierarchy/bbox polyline-el)
            [528 -370 941 -208]))
 
-    (is (= (hierarchy/path polyline-el)
+    (is (= (element.hierarchy/path polyline-el)
            "M528 -305 718 -370 941 -208"))
 
-    (is (= (hierarchy/snapping-points polyline-el)
+    (is (= (element.hierarchy/snapping-points polyline-el)
            [[528 -305] [718 -370] [941 -208]]))))
 
 (deftest path
@@ -178,19 +178,19 @@
                  :tag :path
                  :attrs {:d "M528 -305 718 -371 941 -208 663 -174 664 -261z"}}]
 
-    (is (= (:attrs (hierarchy/translate path-el [10 10]))
+    (is (= (:attrs (element.hierarchy/translate path-el [10 10]))
            {:d "M538-295L728-361 951-198 673-164 674-251z"}))
 
-    (is (= (:attrs (hierarchy/scale path-el [2 2] [25 25]))
+    (is (= (:attrs (element.hierarchy/scale path-el [2 2] [25 25]))
            {:d "M503-264L883-396 1329-70 773-2 775-176z"}))
 
-    (is (= (:attrs (hierarchy/scale path-el [2 2] [0 0]))
+    (is (= (:attrs (element.hierarchy/scale path-el [2 2] [0 0]))
            {:d "M528-239L908-371 1354-45 798 23 800-151z"}))
 
-    (is (= (hierarchy/bbox path-el)
+    (is (= (element.hierarchy/bbox path-el)
            [528 -371 941 -174]))
 
-    (is (thrown? js/Error (hierarchy/path path-el)))))
+    (is (thrown? js/Error (element.hierarchy/path path-el)))))
 
 (deftest svg
   (let [svg-el {:type :element
@@ -200,28 +200,28 @@
                         :width "50"
                         :height "50"}}]
 
-    (is (= (:attrs (hierarchy/translate svg-el [50 50]))
+    (is (= (:attrs (element.hierarchy/translate svg-el [50 50]))
            {:x "50"
             :y "50"
             :width "50"
             :height "50"}))
 
-    (is (= (:attrs (hierarchy/scale svg-el [2 2] [25 25]))
+    (is (= (:attrs (element.hierarchy/scale svg-el [2 2] [25 25]))
            {:x "-25"
             :y "-25"
             :width "100"
             :height "100"}))
 
-    (is (= (:attrs (hierarchy/scale svg-el [2 2] [0 0]))
+    (is (= (:attrs (element.hierarchy/scale svg-el [2 2] [0 0]))
            {:x "0"
             :y "0"
             :width "100"
             :height "100"}))
 
-    (is (= (hierarchy/bbox svg-el)
+    (is (= (element.hierarchy/bbox svg-el)
            [0 0 50 50]))
 
-    (is (thrown? js/Error (hierarchy/path svg-el)))))
+    (is (thrown? js/Error (element.hierarchy/path svg-el)))))
 
 (deftest text
   (let [text-el {:type :element
@@ -232,7 +232,7 @@
                          :width "50"
                          :height "50"}}]
 
-    (is (= (:attrs (hierarchy/translate text-el [50 50]))
+    (is (= (:attrs (element.hierarchy/translate text-el [50 50]))
            {:x "50"
             :y "50"
             :width "50"

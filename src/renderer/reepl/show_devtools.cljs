@@ -1,7 +1,7 @@
 (ns renderer.reepl.show-devtools
   (:require
-   [clojure.string :as str]
-   [devtools.formatters.core :as devtools]
+   [clojure.string :as string]
+   [devtools.formatters.core :as devtools.formatters]
    [reagent.core :as r]))
 
 (defn js-array?
@@ -12,8 +12,8 @@
   [raw]
   (into {}
         (map (fn [line]
-               (let [[k v] (str/split line ":")]
-                 [(keyword k) v])) (str/split raw ";"))))
+               (let [[k v] (string/split line ":")]
+                 [(keyword k) v])) (string/split raw ";"))))
 
 (defn show-el
   [v show-value]
@@ -37,14 +37,14 @@
            (if open? "▼" "▶")]
           (show-el header show-value)]
          (when open?
-           (show-el (devtools/body-api-call v config) show-value))]))))
+           (show-el (devtools.formatters/body-api-call v config) show-value))]))))
 
 ;; see https://docs.google.com/document/d/1FTascZXT9cxfetuPRT2eXPQKXui4nWFivUnS_335T3U/preview
 (defn show-devtools
   [v config show-value]
   (when-not (var? v)
     (let [header (try
-                   (devtools/header-api-call v config)
+                   (devtools.formatters/header-api-call v config)
                    (catch js/Error e
                      e))]
       (cond
@@ -55,6 +55,6 @@
         [:div.inline-flex.text-error "Error expanding lazy value"]
 
         :else
-        (if-not (devtools/has-body-api-call v config)
+        (if-not (devtools.formatters/has-body-api-call v config)
           [:div.inline-flex.devtools (show-el header show-value)]
           [openable header v config show-value])))))

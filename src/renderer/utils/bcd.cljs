@@ -4,7 +4,7 @@
   (:require
    ["@mdn/browser-compat-data" :as bcd]
    [malli.core :as m]
-   [renderer.element.db :as element.db :refer [Tag]]))
+   [renderer.element.db :refer [Tag]]))
 
 (defonce svg
   (js->clj (.-svg bcd) :keywordize-keys true))

@@ -1,33 +1,33 @@
 (ns renderer.element.views
   (:require
-   [renderer.element.events :as-alias element.e]))
+   [renderer.element.events :as-alias element.events]))
 
 (def context-menu
   ;; TODO: Add and group actions
   [{:label "Cut"
-    :action [::element.e/cut]}
+    :action [::element.events/cut]}
    {:label "Copy"
-    :action [::element.e/copy]}
+    :action [::element.events/copy]}
    {:label "Paste"
-    :action [::element.e/paste]}
+    :action [::element.events/paste]}
    {:type :separator}
    {:label "Raise"
-    :action [::element.e/raise]}
+    :action [::element.events/raise]}
    {:label "Lower"
-    :action [::element.e/lower]}
+    :action [::element.events/lower]}
    {:label "Raise to top"
-    :action [::element.e/raise-to-top]}
+    :action [::element.events/raise-to-top]}
    {:label "Lower to bottom"
-    :action [::element.e/lower-to-bottom]}
+    :action [::element.events/lower-to-bottom]}
    {:type :separator}
    {:label "Animate"
-    :action [::element.e/animate :animate {}]}
+    :action [::element.events/animate :animate {}]}
    {:label "Animate Transform"
-    :action [::element.e/animate :animateTransform {}]}
+    :action [::element.events/animate :animateTransform {}]}
    {:label "Animate Motion"
-    :action [::element.e/animate :animateMotion {}]}
+    :action [::element.events/animate :animateMotion {}]}
    {:type :separator}
    {:label "Duplicate"
-    :action [::element.e/duplicate]}
+    :action [::element.events/duplicate]}
    {:label "Delete"
-    :action [::element.e/delete]}])
+    :action [::element.events/delete]}])

@@ -1,18 +1,18 @@
 (ns renderer.attribute.impl.overflow
   "https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/overflow"
   (:require
-   [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.attribute.views :as v]))
+   [renderer.attribute.hierarchy :as attribute.hierarchy]
+   [renderer.attribute.views :as attribute.views]))
 
-(defmethod hierarchy/description [:default :overflow]
+(defmethod attribute.hierarchy/description [:default :overflow]
   []
   "The overflow attribute sets what to do when an element's content is too big
    to fit in its block formatting context. This feature is not widely
    implemented yet.")
 
-(defmethod hierarchy/form-element [:default :overflow]
+(defmethod attribute.hierarchy/form-element [:default :overflow]
   [_ k v {:keys [disabled]}]
-  [v/select-input k v
+  [attribute.views/select-input k v
    {:disabled disabled
     ;; Although the initial value for overflow is auto, it is overwritten
     ;; in the User Agent style sheet for the <svg> element when it is not

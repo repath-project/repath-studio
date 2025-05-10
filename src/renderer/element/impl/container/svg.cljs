@@ -3,14 +3,14 @@
    https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/svg"
   (:require
    [re-frame.core :as rf]
-   [renderer.document.subs :as-alias document.s]
-   [renderer.element.hierarchy :as hierarchy]
-   [renderer.element.subs :as-alias element.s]
-   [renderer.utils.pointer :as pointer]))
+   [renderer.document.subs :as-alias document.subs]
+   [renderer.element.hierarchy :as element.hierarchy]
+   [renderer.element.subs :as-alias element.subs]
+   [renderer.utils.pointer :as utils.pointer]))
 
-(derive :svg ::hierarchy/container)
+(derive :svg ::element.hierarchy/container)
 
-(defmethod hierarchy/properties :svg
+(defmethod element.hierarchy/properties :svg
   []
   {:icon "svg"
    :description "The svg element is a container that defines a new coordinate
@@ -19,15 +19,15 @@
                  inside an SVG or HTML document."
    :attrs [:overflow]})
 
-(defmethod hierarchy/render :svg
+(defmethod element.hierarchy/render :svg
   [el]
   (let [attrs (:attrs el)
-        child-els @(rf/subscribe [::element.s/filter-visible (:children el)])
+        child-els @(rf/subscribe [::element.subs/filter-visible (:children el)])
         rect-attrs (select-keys attrs [:x :y :width :height])
         text-attrs (select-keys attrs [:x :y])
-        active-filter @(rf/subscribe [::document.s/filter])
-        zoom @(rf/subscribe [::document.s/zoom])
-        pointer-handler #(pointer/event-handler! % el)]
+        active-filter @(rf/subscribe [::document.subs/filter])
+        zoom @(rf/subscribe [::document.subs/zoom])
+        pointer-handler #(utils.pointer/event-handler! % el)]
     [:g
      [:text
       (merge
@@ -61,6 +61,6 @@
          :fill "white"
          :on-pointer-up pointer-handler
          :on-pointer-down #(when (= (.-button %) 2)
-                             (pointer/event-handler! % el))})]
+                             (utils.pointer/event-handler! % el))})]
       (for [el child-els]
-        ^{:key (:id el)} [hierarchy/render el])]]))
+        ^{:key (:id el)} [element.hierarchy/render el])]]))

@@ -1,19 +1,19 @@
 (ns renderer.snap.views
   (:require
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
-   [clojure.core.matrix :as mat]
-   [clojure.string :as str]
+   [clojure.core.matrix :as matrix]
+   [clojure.string :as string]
    [re-frame.core :as rf]
-   [renderer.document.subs :as-alias document.s]
+   [renderer.document.subs :as-alias document.subs]
    [renderer.snap.db :as snap.db]
-   [renderer.snap.events :as-alias snap.e]
-   [renderer.snap.subs :as-alias snap.s]
+   [renderer.snap.events :as-alias snap.events]
+   [renderer.snap.subs :as-alias snap.subs]
    [renderer.ui :as ui]
-   [renderer.utils.svg :as svg]))
+   [renderer.utils.svg :as utils.svg]))
 
 (defn options-dropdown
   []
-  (let [options @(rf/subscribe [::snap.s/options])]
+  (let [options @(rf/subscribe [::snap.subs/options])]
     [:> DropdownMenu/Root
      [:> DropdownMenu/Trigger
       {:as-child true}
@@ -36,7 +36,7 @@
           {:class "menu-checkbox-item inset"
            :on-click #(.stopPropagation %)
            :onSelect #(do (.preventDefault %)
-                          (rf/dispatch [::snap.e/toggle-option option]))
+                          (rf/dispatch [::snap.events/toggle-option option]))
            :checked (contains? options option)}
           [:> DropdownMenu/ItemIndicator
            {:class "menu-item-indicator"}
@@ -47,20 +47,20 @@
   []
   [:button.icon-button.items-center.px-1.gap-1.w-auto.flex
    {:title "Snap"
-    :class (when @(rf/subscribe [::snap.s/active?]) "selected")
-    :on-click #(rf/dispatch [::snap.e/toggle])}
+    :class (when @(rf/subscribe [::snap.subs/active?]) "selected")
+    :on-click #(rf/dispatch [::snap.events/toggle])}
    [ui/icon "magnet"]
    [options-dropdown]])
 
 (defn canvas-label
   [nearest-neighbor]
-  (let [zoom @(rf/subscribe [::document.s/zoom])
+  (let [zoom @(rf/subscribe [::document.subs/zoom])
         margin (/ 15 zoom)
         point-label (-> nearest-neighbor meta :label)
         base-label (-> nearest-neighbor :base-point meta :label)
-        label (str/join " to " (remove nil? [base-label point-label]))
+        label (string/join " to " (remove nil? [base-label point-label]))
         point (:point nearest-neighbor)]
     [:<>
-     [svg/times point]
+     [utils.svg/times point]
      (when (not-empty label)
-       [svg/label label (mat/add point margin) "start"])]))
+       [utils.svg/label label (matrix/add point margin) "start"])]))

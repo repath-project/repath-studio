@@ -1,62 +1,62 @@
 (ns renderer.history.events
   (:require
    [re-frame.core :as rf]
-   [renderer.app.effects :as app.fx]
-   [renderer.element.events :as-alias element.e]
-   [renderer.history.handlers :as h]))
+   [renderer.app.effects :as app.effects]
+   [renderer.element.events :as-alias element.events]
+   [renderer.history.handlers :as history.handlers]))
 
 (rf/reg-event-db
  ::undo
  (fn [db _]
-   (h/undo db)))
+   (history.handlers/undo db)))
 
 (rf/reg-event-db
  ::redo
  (fn [db _]
-   (h/redo db)))
+   (history.handlers/redo db)))
 
 (rf/reg-event-db
  ::undo-by
  (fn [db [_ n]]
-   (h/undo db n)))
+   (history.handlers/undo db n)))
 
 (rf/reg-event-db
  ::redo-by
  (fn [db [_ n]]
-   (h/redo db n)))
+   (history.handlers/redo db n)))
 
 (rf/reg-event-db
  ::reset-state
  (fn [db _]
-   (-> (h/reset-state db)
+   (-> (history.handlers/reset-state db)
        (update-in [:documents (:active-document db)] dissoc :preview-label))))
 
 (rf/reg-event-db
  ::preview
  (fn [db [_ pos]]
-   (h/preview db pos)))
+   (history.handlers/preview db pos)))
 
 (rf/reg-event-db
  ::go-to
  (fn [db [_ id]]
-   (-> (h/go-to db id)
+   (-> (history.handlers/go-to db id)
        (update-in [:documents (:active-document db)] dissoc :preview-label))))
 
 (rf/reg-event-db
  ::clear
  (fn [db _]
-   (-> (h/clear db)
-       (h/finalize "Clear history"))))
+   (-> (history.handlers/clear db)
+       (history.handlers/finalize "Clear history"))))
 
 (rf/reg-event-db
  ::tree-view-updated
  (fn [db [_ zoom translate]]
    (cond-> db
      zoom
-     (h/set-zoom zoom)
+     (history.handlers/set-zoom zoom)
 
      translate
-     (h/set-translate translate))))
+     (history.handlers/set-translate translate))))
 
 (rf/reg-global-interceptor
  (rf/->interceptor
@@ -66,7 +66,7 @@
                  fx (rf/get-effect context :fx)
                  prev-position (when-let [db (rf/get-coeffect context :db)]
                                  (when (:active-document db)
-                                   (h/position db)))]
+                                   (history.handlers/position db)))]
              (cond-> context
-               (and db (not= (h/position db) prev-position))
-               (rf/assoc-effect :fx (conj (or fx []) [::app.fx/persist])))))))
+               (and db (not= (history.handlers/position db) prev-position))
+               (rf/assoc-effect :fx (conj (or fx []) [::app.effects/persist])))))))

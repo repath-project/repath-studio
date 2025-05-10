@@ -4,14 +4,14 @@
    ["@radix-ui/react-popover" :as Popover]
    ["cmdk" :as Command]
    [re-frame.core :as rf]
-   [renderer.app.events :as-alias app.e]
-   [renderer.app.subs :as-alias app.s]
-   [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.attribute.views :as v]
-   [renderer.element.events :as-alias element.e]
+   [renderer.app.events :as-alias app.events]
+   [renderer.app.subs :as-alias app.subs]
+   [renderer.attribute.hierarchy :as attribute.hierarchy]
+   [renderer.attribute.views :as attribute.views]
+   [renderer.element.events :as-alias element.events]
    [renderer.ui :as ui]))
 
-(defmethod hierarchy/description [:default :font-family]
+(defmethod attribute.hierarchy/description [:default :font-family]
   []
   "The font-family attribute indicates which font family will be used to render the text,
    specified as a prioritized list of font family names and/or generic family names.")
@@ -32,23 +32,23 @@
       (for [item suggestions]
         ^{:key item}
         [:> Command/CommandItem
-         {:on-select #(rf/dispatch [::element.e/set-attr :font-family item])}
+         {:on-select #(rf/dispatch [::element.events/set-attr :font-family item])}
          [:div.flex.justify-between.items-center.w-full.gap-2
           [:div item]
           [:div.leading-none.text-muted
            {:style {:font-family item}}
            "Lorem ipsum"]]])]]]])
 
-(defmethod hierarchy/form-element [:default :font-family]
+(defmethod attribute.hierarchy/form-element [:default :font-family]
   [_ k v attrs]
-  (let [suggestions @(rf/subscribe [::app.s/font-options])]
+  (let [suggestions @(rf/subscribe [::app.subs/font-options])]
     [:div.flex.gap-px.w-full
-     [v/form-input k v attrs]
+     [attribute.views/form-input k v attrs]
      [:> Popover/Root
       {:modal true
        :onOpenChange (fn [state]
                        (when (and state (empty? suggestions))
-                         (rf/dispatch [::app.e/query-local-fonts])))}
+                         (rf/dispatch [::app.events/query-local-fonts])))}
       [:> Popover/Trigger
        {:title "Select font"
         :class "form-control-button"

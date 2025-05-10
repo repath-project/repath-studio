@@ -3,10 +3,10 @@
   (:require
    [malli.core :as m]
    [re-frame.core :as rf]
-   [reagent.core :as ra]
-   [renderer.history.events :as-alias history.e]
+   [reagent.core :as reagent]
+   [renderer.history.events :as-alias history.events]
    [renderer.ui :as ui]
-   [renderer.window.events :as-alias window.e]))
+   [renderer.window.events :as-alias window.events]))
 
 (m/=> submit-error-url [:-> string? string?])
 (defn submit-error-url
@@ -36,7 +36,7 @@
 
         [:button.button.px-2.rounded.w-full.mb-5.border.border-default
          {:class "hover:bg-transparent"
-          :on-click #(rf/dispatch [::window.e/open-remote-url
+          :on-click #(rf/dispatch [::window.events/open-remote-url
                                    (submit-error-url error-message)])}
          "Submit an error report"]
 
@@ -44,14 +44,14 @@
              previous working state."]
 
         [:button.button.px-2.rounded.w-full.mb-5.overlay
-         {:on-click #(do (rf/dispatch [::history.e/undo])
+         {:on-click #(do (rf/dispatch [::history.events/undo])
                          (reset! error nil))}
          "Undo your last action"]
 
         [:p "If undoing did't work, you can try restarting the application."]
 
         [:button.button.px-2.rounded.w-full.mb-5.overlay
-         {:on-click #(rf/dispatch [::window.e/relaunch])}
+         {:on-click #(rf/dispatch [::window.events/relaunch])}
          "Restart the application"]
 
         [:p "If you keep getting the same error after restarting,
@@ -60,13 +60,13 @@
              and your local application settings."]
 
         [:button.button.px-2.rounded.w-full.bg-warning
-         {:on-click #(rf/dispatch [::window.e/clear-local-storage-and-relaunch])}
+         {:on-click #(rf/dispatch [::window.events/clear-local-storage-and-relaunch])}
          "Clear data and restart"]]]]]))
 
 (defn boundary
   []
-  (let [error (ra/atom nil)]
-    (ra/create-class
+  (let [error (reagent/atom nil)]
+    (reagent/create-class
      {;; Try to revert to a working state
       ;; https://react.dev/reference/react/Component#static-getderivedstatefromerror
       :get-derived-state-from-error

@@ -1,50 +1,50 @@
 (ns renderer.tool.impl.base.zoom
   (:require
-   [renderer.app.effects :as-alias app.fx]
-   [renderer.frame.handlers :as frame.h]
-   [renderer.snap.handlers :as snap.h]
-   [renderer.tool.handlers :as h]
-   [renderer.tool.hierarchy :as hierarchy]
-   [renderer.utils.pointer :as pointer]
-   [renderer.utils.svg :as svg]))
+   [renderer.app.effects :as-alias app.effects]
+   [renderer.frame.handlers :as frame.handlers]
+   [renderer.snap.handlers :as snap.handlers]
+   [renderer.tool.handlers :as tool.handlers]
+   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.utils.pointer :as utils.pointer]
+   [renderer.utils.svg :as utils.svg]))
 
-(derive :zoom ::hierarchy/tool)
+(derive :zoom ::tool.hierarchy/tool)
 
-(defmethod hierarchy/properties :zoom
+(defmethod tool.hierarchy/properties :zoom
   []
   {:icon "magnifier"})
 
-(defmethod hierarchy/help [:zoom :idle]
+(defmethod tool.hierarchy/help [:zoom :idle]
   []
   [:<>
    [:div "Click or select an area to zoom in."]
    [:div "Hold " [:span.shortcut-key "⇧"] " to zoom out."]])
 
-(defmethod hierarchy/on-activate :zoom
+(defmethod tool.hierarchy/on-activate :zoom
   [db]
-  (h/set-cursor db "zoom-in"))
+  (tool.handlers/set-cursor db "zoom-in"))
 
-(defmethod hierarchy/on-key-down :zoom
+(defmethod tool.hierarchy/on-key-down :zoom
   [db e]
   (cond-> db
-    (pointer/shift? e)
-    (h/set-cursor "zoom-out")))
+    (utils.pointer/shift? e)
+    (tool.handlers/set-cursor "zoom-out")))
 
-(defmethod hierarchy/on-key-up :zoom
+(defmethod tool.hierarchy/on-key-up :zoom
   [db e]
   (cond-> db
-    (not (pointer/shift? e))
-    (h/set-cursor "zoom-in")))
+    (not (utils.pointer/shift? e))
+    (tool.handlers/set-cursor "zoom-in")))
 
-(defmethod hierarchy/on-drag-start :zoom
+(defmethod tool.hierarchy/on-drag-start :zoom
   [db _e]
-  (h/set-cursor db "default"))
+  (tool.handlers/set-cursor db "default"))
 
-(defmethod hierarchy/on-drag :zoom
+(defmethod tool.hierarchy/on-drag :zoom
   [db _e]
-  (h/set-temp db (svg/select-box db)))
+  (tool.handlers/set-temp db (utils.svg/select-box db)))
 
-(defmethod hierarchy/on-drag-end :zoom
+(defmethod tool.hierarchy/on-drag-end :zoom
   [db e]
   (let [[offset-x offset-y] (:adjusted-pointer-offset db)
         [x y] (:adjusted-pointer-pos db)
@@ -55,20 +55,20 @@
         height-ratio (/ (:height dom-rect) height)
         current-zoom (get-in db [:documents (:active-document db) :zoom])
         zoom (min width-ratio height-ratio)]
-    (-> (h/dissoc-temp db)
-        (h/set-cursor (if (pointer/shift? e) "zoom-out" "zoom-in"))
-        (frame.h/zoom-in-place (if (pointer/shift? e)
-                                 (:zoom-sensitivity db)
-                                 (/ zoom current-zoom)))
-        (frame.h/pan-to-bbox [x y offset-x offset-y])
-        (snap.h/update-viewport-tree)
-        (h/add-fx [::app.fx/persist]))))
+    (-> (tool.handlers/dissoc-temp db)
+        (tool.handlers/set-cursor (if (utils.pointer/shift? e) "zoom-out" "zoom-in"))
+        (frame.handlers/zoom-in-place (if (utils.pointer/shift? e)
+                                        (:zoom-sensitivity db)
+                                        (/ zoom current-zoom)))
+        (frame.handlers/pan-to-bbox [x y offset-x offset-y])
+        (snap.handlers/update-viewport-tree)
+        (tool.handlers/add-fx [::app.effects/persist]))))
 
-(defmethod hierarchy/on-pointer-up :zoom
+(defmethod tool.hierarchy/on-pointer-up :zoom
   [db e]
-  (let [factor (if (pointer/shift? e)
+  (let [factor (if (utils.pointer/shift? e)
                  (:zoom-sensitivity db)
                  (/ 1 (:zoom-sensitivity db)))]
-    (-> (frame.h/zoom-at-pointer db factor)
-        (snap.h/update-viewport-tree)
-        (h/add-fx [::app.fx/persist]))))
+    (-> (frame.handlers/zoom-at-pointer db factor)
+        (snap.handlers/update-viewport-tree)
+        (tool.handlers/add-fx [::app.effects/persist]))))

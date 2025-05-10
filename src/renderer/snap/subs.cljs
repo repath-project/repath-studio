@@ -1,8 +1,8 @@
 (ns renderer.snap.subs
   (:require
    [re-frame.core :as rf]
-   [renderer.element.subs :as-alias element.s]
-   [renderer.frame.subs :as-alias frame.s]))
+   [renderer.element.subs :as-alias element.subs]
+   [renderer.frame.subs :as-alias frame.subs]))
 
 (rf/reg-sub
  ::snap

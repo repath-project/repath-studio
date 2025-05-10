@@ -1,22 +1,22 @@
 (ns renderer.tool.views
   (:require
-   [clojure.core.matrix :as mat]
+   [clojure.core.matrix :as matrix]
    [malli.core :as m]
    [re-frame.core :as rf]
-   [renderer.app.subs :as-alias app.s]
-   [renderer.document.subs :as-alias document.s]
-   [renderer.frame.subs :as-alias frame.s]
-   [renderer.snap.subs :as-alias snap.s]
+   [renderer.app.subs :as-alias app.subs]
+   [renderer.document.subs :as-alias document.subs]
+   [renderer.frame.subs :as-alias frame.subs]
+   [renderer.snap.subs :as-alias snap.subs]
    [renderer.theme.db :as theme.db]
-   [renderer.utils.bounds :as bounds :refer [BBox]]
-   [renderer.utils.pointer :as pointer]))
+   [renderer.utils.bounds :as utils.bounds :refer [BBox]]
+   [renderer.utils.pointer :as utils.pointer]))
 
 #_(defn circle-handle
     [el & children]
     (let [{:keys [x y id]} el
-          zoom @(rf/subscribe [::document.s/zoom])
-          clicked-element @(rf/subscribe [::app.s/clicked-element])
-          pointer-handler #(pointer/event-handler! % el)]
+          zoom @(rf/subscribe [::document.subs/zoom])
+          clicked-element @(rf/subscribe [::app.subs/clicked-element])
+          pointer-handler #(utils.pointer/event-handler! % el)]
       (into [:circle {:key id
                       :cx x
                       :cy y
@@ -34,11 +34,11 @@
 (defn square-handle
   [el & children]
   (let [{:keys [x y id cursor element]} el
-        zoom @(rf/subscribe [::document.s/zoom])
-        clicked-element @(rf/subscribe [::app.s/clicked-element])
+        zoom @(rf/subscribe [::document.subs/zoom])
+        clicked-element @(rf/subscribe [::app.subs/clicked-element])
         size (/ theme.db/handle-size zoom)
         stroke-width (/ 1 zoom)
-        pointer-handler #(pointer/event-handler! % el)
+        pointer-handler #(utils.pointer/event-handler! % el)
         active (and (= (:id clicked-element) id)
                     (= (:element clicked-element) element))]
     (into [:rect {:fill (if active theme.db/accent theme.db/accent-inverted)
@@ -61,15 +61,15 @@
 
 (defn wrapping-bbox
   [bbox]
-  (let [zoom @(rf/subscribe [::document.s/zoom])
+  (let [zoom @(rf/subscribe [::document.subs/zoom])
         id :bbox
-        ignored-ids @(rf/subscribe [::document.s/ignored-ids])
+        ignored-ids @(rf/subscribe [::document.subs/ignored-ids])
         ignored? (contains? ignored-ids id)
         [min-x min-y] bbox
-        [w h] (bounds/->dimensions bbox)
-        pointer-handler #(pointer/event-handler! % {:type :handle
-                                                    :action :translate
-                                                    :id id})
+        [w h] (utils.bounds/->dimensions bbox)
+        pointer-handler #(utils.pointer/event-handler! % {:type :handle
+                                                          :action :translate
+                                                          :id id})
         rect-attrs {:x min-x
                     :y min-y
                     :width w
@@ -87,21 +87,21 @@
 (m/=> min-bbox [:-> BBox BBox])
 (defn min-bbox
   [bbox]
-  (let [zoom @(rf/subscribe [::document.s/zoom])
-        dimensions (bounds/->dimensions bbox)
+  (let [zoom @(rf/subscribe [::document.subs/zoom])
+        dimensions (utils.bounds/->dimensions bbox)
         [w h] dimensions
         min-size (/ (* theme.db/handle-size 2) zoom)]
     (cond-> bbox
-      (< w min-size) (mat/add [(- (/ (- min-size w) 2)) 0
-                               (/ (- min-size w) 2) 0])
-      (< h min-size) (mat/add [0 (- (/ (- min-size h) 2))
-                               0 (/ (- min-size h) 2)]))))
+      (< w min-size) (matrix/add [(- (/ (- min-size w) 2)) 0
+                                  (/ (- min-size w) 2) 0])
+      (< h min-size) (matrix/add [0 (- (/ (- min-size h) 2))
+                                  0 (/ (- min-size h) 2)]))))
 
 (defn bounding-corners
   [bbox]
   (let [bbox (min-bbox bbox)
         [min-x min-y max-x max-y] bbox
-        [w h] (bounds/->dimensions bbox)]
+        [w h] (utils.bounds/->dimensions bbox)]
     [:g {:key :bounding-corners}
      (map scale-handle
           [{:x min-x :y min-y :id :top-left :cursor "nwse-resize"}

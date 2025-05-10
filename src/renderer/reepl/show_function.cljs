@@ -1,13 +1,13 @@
 (ns renderer.reepl.show-function
   (:require
-   [clojure.string :as str]))
+   [clojure.string :as string]))
 
 (def cljs-fn-prefix
   "cljs$core$IFn$_invoke$arity$")
 
 (defn recover-cljs-name
   [parts]
-  (-> (str/join \. (butlast parts))
+  (-> (string/join \. (butlast parts))
       (str \/ (last parts))
       demunge))
 
@@ -22,7 +22,7 @@
   (let [source (str f)
         args (second (re-find #"\(([^\)]+)\)" source))]
     (map demunge
-         (str/split args \,))))
+         (string/split args \,))))
 
 (defn get-function-forms
   [f]
@@ -43,7 +43,7 @@
 
 (defn str-fn-forms
   [forms]
-  (str \[ (str/join "] [" (map (partial str/join " ") forms)) \]))
+  (str \[ (string/join "] [" (map (partial string/join " ") forms)) \]))
 
 (defn show-fn-with-docs
   [get-doc f _ _]

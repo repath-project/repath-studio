@@ -2,17 +2,17 @@
   "https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/points"
   (:require
    ["@radix-ui/react-popover" :as Popover]
-   [clojure.string :as str]
+   [clojure.string :as string]
    [re-frame.core :as rf]
-   [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.attribute.views :as v]
-   [renderer.element.events :as-alias element.e]
-   [renderer.tool.subs :as-alias tool.s]
+   [renderer.attribute.hierarchy :as attribute.hierarchy]
+   [renderer.attribute.views :as attribute.views]
+   [renderer.element.events :as-alias element.events]
+   [renderer.tool.subs :as-alias tool.subs]
    [renderer.ui :as ui]
-   [renderer.utils.attribute :as utils.attr]
-   [renderer.utils.vec :as vec]))
+   [renderer.utils.attribute :as utils.utils.attribute]
+   [renderer.utils.vec :as utils.vec]))
 
-(defmethod hierarchy/description [:default :points]
+(defmethod attribute.hierarchy/description [:default :points]
   []
   "The points attribute defines a list of points. Each point is defined by a
    pair of number representing a X and a Y coordinate in the user coordinate
@@ -21,8 +21,8 @@
 
 (defn remove-nth
   [points i]
-  (let [points (str/join " " (flatten (vec/remove-nth points i)))]
-    (rf/dispatch [::element.e/set-attr :points points])))
+  (let [points (string/join " " (flatten (utils.vec/remove-nth points i)))]
+    (rf/dispatch [::element.events/set-attr :points points])))
 
 (defn point-row
   [i [x y] points]
@@ -58,9 +58,9 @@
                        [point-row index point points]) points)]]]
      [:> Popover/Arrow {:class "popover-arrow"}]]]])
 
-(defmethod hierarchy/form-element [:default :points]
+(defmethod attribute.hierarchy/form-element [:default :points]
   [_ k v {:keys [disabled]}]
-  (let [state-idle (= @(rf/subscribe [::tool.s/state]) :idle)]
+  (let [state-idle (= @(rf/subscribe [::tool.subs/state]) :idle)]
     [:div.flex.gap-px.w-full
-     [v/form-input k (if state-idle v "waiting") {:disabled (or disabled (not v) (not state-idle))}]
-     (when v [points-popover (utils.attr/points->vec v)])]))
+     [attribute.views/form-input k (if state-idle v "waiting") {:disabled (or disabled (not v) (not state-idle))}]
+     (when v [points-popover (utils.utils.attribute/points->vec v)])]))

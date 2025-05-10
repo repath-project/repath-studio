@@ -2,43 +2,43 @@
   "This serves as an abstraction for box elements that share the
    :x :y :width :height attributes (e.g. rect, svg, image)."
   (:require
-   [clojure.core.matrix :as mat]
-   [renderer.element.hierarchy :as hierarchy]
-   [renderer.tool.views :as tool.v]
-   [renderer.utils.bounds :as bounds]
-   [renderer.utils.element :as element]
-   [renderer.utils.length :as length]))
+   [clojure.core.matrix :as matrix]
+   [renderer.element.hierarchy :as element.hierarchy]
+   [renderer.tool.views :as tool.views]
+   [renderer.utils.bounds :as utils.bounds]
+   [renderer.utils.element :as utils.element]
+   [renderer.utils.length :as utils.length]))
 
-(derive ::hierarchy/box ::hierarchy/renderable)
+(derive ::element.hierarchy/box ::element.hierarchy/renderable)
 
-(defmethod hierarchy/translate ::hierarchy/box
+(defmethod element.hierarchy/translate ::element.hierarchy/box
   [el [x y]]
-  (element/update-attrs-with el + [[:x x] [:y y]]))
+  (utils.element/update-attrs-with el + [[:x x] [:y y]]))
 
-(defmethod hierarchy/scale ::hierarchy/box
+(defmethod element.hierarchy/scale ::element.hierarchy/box
   [el ratio pivot-point]
   (let [[x y] ratio
-        offset (mat/sub pivot-point (mat/mul pivot-point ratio))]
-    (-> (element/update-attrs-with el * [[:width x] [:height y]])
-        (hierarchy/translate offset))))
+        offset (matrix/sub pivot-point (matrix/mul pivot-point ratio))]
+    (-> (utils.element/update-attrs-with el * [[:width x] [:height y]])
+        (element.hierarchy/translate offset))))
 
-(defmethod hierarchy/edit ::hierarchy/box
+(defmethod element.hierarchy/edit ::element.hierarchy/box
   [el [x y] handle]
   (case handle
     :position
-    (-> (element/update-attrs-with el (comp (partial max 0) -) [[:width x] [:height y]])
-        (hierarchy/translate [x y]))
+    (-> (utils.element/update-attrs-with el (comp (partial max 0) -) [[:width x] [:height y]])
+        (element.hierarchy/translate [x y]))
 
     :size
-    (element/update-attrs-with el (comp (partial max 0) +) [[:width x] [:height y]])
+    (utils.element/update-attrs-with el (comp (partial max 0) +) [[:width x] [:height y]])
 
     el))
 
-(defmethod hierarchy/render-edit ::hierarchy/box
+(defmethod element.hierarchy/render-edit ::element.hierarchy/box
   [el]
   (let [el-bbox (:bbox el)
         [min-x min-y] el-bbox
-        [w h] (bounds/->dimensions el-bbox)]
+        [w h] (utils.bounds/->dimensions el-bbox)]
     [:g
      (for [handle [{:x min-x
                     :y min-y
@@ -51,25 +51,25 @@
                                    :cursor "move"
                                    :element (:id el)})]
          ^{:key (:id handle)}
-         [tool.v/square-handle handle
+         [tool.views/square-handle handle
           ^{:key (str (:id handle) "-title")}
           [:title (name (:id handle))]]))]))
 
-(defmethod hierarchy/bbox ::hierarchy/box
+(defmethod element.hierarchy/bbox ::element.hierarchy/box
   [el]
   (let [{{:keys [x y width height]} :attrs} el
-        [x y width height] (mapv length/unit->px [x y width height])]
+        [x y width height] (mapv utils.length/unit->px [x y width height])]
     [x y (+ x width) (+ y height)]))
 
-(defmethod hierarchy/area ::hierarchy/box
+(defmethod element.hierarchy/area ::element.hierarchy/box
   [el]
   (let [{{:keys [width height]} :attrs} el]
-    (apply * (map length/unit->px [width height]))))
+    (apply * (map utils.length/unit->px [width height]))))
 
-#_(defmethod hierarchy/snapping-points ::hierarchy/box
+#_(defmethod hierarchy/snapping-points ::element.hierarchy/box
     [el]
     (let [{{:keys [x y width height]} :attrs} el
-          [x y w h] (mapv length/unit->px [x y width height])]
+          [x y w h] (mapv utils.length/unit->px [x y width height])]
       [(with-meta [x y] {:label "box corner"})
        (with-meta [(+ x w) y]  {:label "box corner"})
        (with-meta [(+ x w) (+ y h)] {:label "box corner"})

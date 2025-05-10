@@ -1,14 +1,14 @@
 (ns renderer.snap.handlers
   (:require
-   [clojure.core.matrix :as mat]
+   [clojure.core.matrix :as matrix]
    [kdtree :as kdtree]
    [malli.core :as m]
    [renderer.app.db :refer [App]]
-   [renderer.element.handlers :as element.h]
-   [renderer.frame.handlers :as frame.h]
-   [renderer.ruler.handlers :as ruler.h]
+   [renderer.element.handlers :as element.handlers]
+   [renderer.frame.handlers :as frame.handlers]
+   [renderer.ruler.handlers :as ruler.handlers]
    [renderer.snap.db :refer [SnapOption NearestNeighbor]]
-   [renderer.snap.subs :as-alias snap.s]
+   [renderer.snap.subs :as-alias snap.subs]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.math :refer [Vec2]]))
 
@@ -42,7 +42,7 @@
 (m/=> update-viewport-tree [:-> App App])
 (defn update-viewport-tree
   [db]
-  (let [[x y width height] (frame.h/viewbox db)
+  (let [[x y width height] (frame.handlers/viewbox db)
         boundaries [[x (+ x width)] [y (+ y height)]]]
     (assoc db :viewbox-kdtree (-> (:kdtree db)
                                   (kdtree/interval-search boundaries)
@@ -53,10 +53,10 @@
   [db]
   (if (-> db :snap :active)
     (let [elements (tool.hierarchy/snapping-elements db)
-          points (element.h/snapping-points db elements)
+          points (element.handlers/snapping-points db elements)
           points (cond-> points
                    (contains? (-> db :snap :options) :grid)
-                   (into (ruler.h/steps-intersections db)))]
+                   (into (ruler.handlers/steps-intersections db)))]
       (-> (assoc db :kdtree (kdtree/build-tree points))
           (update-viewport-tree)))
     (dissoc db :kdtree :viewbox-kdtree)))
@@ -74,15 +74,15 @@
 (m/=> insert-to-tree [:-> App [:maybe [:set uuid?]] App])
 (defn insert-to-tree
   [db element-ids]
-  (let [elements (vals (element.h/entities db element-ids))
-        points (element.h/snapping-points db elements)]
+  (let [elements (vals (element.handlers/entities db element-ids))
+        points (element.handlers/snapping-points db elements)]
     (update-tree db kdtree/insert points)))
 
 (m/=> delete-from-tree [:-> App [:maybe [:set uuid?]] App])
 (defn delete-from-tree
   [db element-ids]
-  (let [elements (vals (element.h/entities db element-ids))
-        points (element.h/snapping-points db elements)]
+  (let [elements (vals (element.handlers/entities db element-ids))
+        points (element.handlers/snapping-points db elements)]
     (update-tree db kdtree/delete points)))
 
 (m/=> nearest-delta [:-> App Vec2])
@@ -90,7 +90,7 @@
   [db]
   (if (:nearest-neighbor db)
     (let [{:keys [point base-point]} (:nearest-neighbor db)]
-      (mat/sub point base-point))
+      (matrix/sub point base-point))
     [0 0]))
 
 (m/=> snap-with [:-> App ifn? [:* any?] App])

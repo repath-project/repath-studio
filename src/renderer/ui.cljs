@@ -19,9 +19,9 @@
    ["tailwind-merge" :refer [twMerge]]
    [malli.core :as m]
    [re-frame.core :as rf]
-   [reagent.core :as ra]
-   [renderer.app.subs :as-alias app.s]
-   [renderer.utils.keyboard :as keyb]))
+   [reagent.core :as reagent]
+   [renderer.app.subs :as-alias app.subs]
+   [renderer.utils.keyboard :as utils.keyboard]))
 
 (defn merge-with-class
   [& maps]
@@ -75,14 +75,14 @@
          (:ctrlKey shortcut) (conj "Ctrl")
          (:shiftKey shortcut) (conj "⇧")
          (:altKey shortcut) (conj "Alt")
-         :always (conj (keyb/key-code->key (:keyCode shortcut))))
+         :always (conj (utils.keyboard/key-code->key (:keyCode shortcut))))
        (map #(into [:span.shortcut-key] %))
        (interpose [:span {:class "px-0.5"} "+"])
        (into [:span])))
 
 (defn shortcuts
   [event]
-  (let [event-shortcuts @(rf/subscribe [::app.s/event-shortcuts event])]
+  (let [event-shortcuts @(rf/subscribe [::app.subs/event-shortcuts event])]
     (when (seq event-shortcuts)
       (->> event-shortcuts
            (map format-shortcut)
@@ -217,9 +217,9 @@
 
 (defn cm-editor
   [value {:keys [attrs options on-init on-blur]}]
-  (let [cm (ra/atom nil)
+  (let [cm (reagent/atom nil)
         ref (react/createRef)]
-    (ra/create-class
+    (reagent/create-class
      {:component-did-mount
       (fn [_this]
         (let [el (.-current ref)
@@ -238,7 +238,7 @@
 
       :component-did-update
       (fn [this _]
-        (let [value (second (ra/argv this))]
+        (let [value (second (reagent/argv this))]
           (.setValue @cm value)))
 
       :reagent-render

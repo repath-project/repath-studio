@@ -4,40 +4,40 @@
    ["@radix-ui/react-tooltip" :as Tooltip]
    ["path-browserify" :as path]
    ["react-resizable-panels" :refer [Panel PanelGroup PanelResizeHandle]]
-   [clojure.string :as str]
+   [clojure.string :as string]
    [config :as config]
    [re-frame.core :as rf]
-   [renderer.app.events :as e]
-   [renderer.app.subs :as-alias app.s]
-   [renderer.dialog.events :as-alias dialog.e]
-   [renderer.dialog.views :as dialog.v]
-   [renderer.document.events :as-alias document.e]
-   [renderer.document.subs :as-alias document.s]
-   [renderer.document.views :as document.v]
-   [renderer.element.subs :as-alias element.s]
-   [renderer.frame.subs :as-alias frame.s]
-   [renderer.frame.views :as frame.v]
-   [renderer.history.views :as history.v]
-   [renderer.notification.views :as notification]
-   [renderer.reepl.views :as repl.v]
-   [renderer.ruler.events :as-alias ruler.e]
-   [renderer.ruler.subs :as-alias ruler.s]
-   [renderer.ruler.views :as ruler.v]
-   [renderer.snap.subs :as-alias snap.s]
-   [renderer.timeline.views :as timeline.v]
+   [renderer.app.events :as app.events]
+   [renderer.app.subs :as-alias app.subs]
+   [renderer.dialog.events :as-alias dialog.events]
+   [renderer.dialog.views :as dialog.views]
+   [renderer.document.events :as-alias document.events]
+   [renderer.document.subs :as-alias document.subs]
+   [renderer.document.views :as document.views]
+   [renderer.element.subs :as-alias element.subs]
+   [renderer.frame.subs :as-alias frame.subs]
+   [renderer.frame.views :as frame.views]
+   [renderer.history.views :as history.views]
+   [renderer.notification.views :as notification.views]
+   [renderer.reepl.views :as repl.views]
+   [renderer.ruler.events :as-alias ruler.events]
+   [renderer.ruler.subs :as-alias ruler.subs]
+   [renderer.ruler.views :as ruler.views]
+   [renderer.snap.subs :as-alias snap.subs]
+   [renderer.timeline.views :as timeline.views]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.tool.subs :as-alias tool.s]
+   [renderer.tool.subs :as-alias tool.subs]
    [renderer.toolbar.object :as toolbar.object]
    [renderer.toolbar.status :as toolbar.status]
    [renderer.toolbar.tools :as toolbar.tools]
-   [renderer.tree.views :as tree.v]
+   [renderer.tree.views :as tree.views]
    [renderer.ui :as ui]
-   [renderer.window.events :as-alias window.e]
-   [renderer.window.views :as window.v]))
+   [renderer.window.events :as-alias window.events]
+   [renderer.window.views :as window.views]))
 
 (defn coll->str
   [coll]
-  (str "[" (str/join " " (map #(.toFixed % 2) coll)) "]"))
+  (str "[" (string/join " " (map #(.toFixed % 2) coll)) "]"))
 
 (defn map->str
   [m]
@@ -49,20 +49,20 @@
 
 (defn debug-rows
   []
-  [["Dom rect" (map->str @(rf/subscribe [::app.s/dom-rect]))]
-   ["Viewbox" (coll->str @(rf/subscribe [::frame.s/viewbox]))]
-   ["Pointer position" (coll->str @(rf/subscribe [::app.s/pointer-pos]))]
-   ["Adjusted pointer position" (coll->str @(rf/subscribe [::app.s/adjusted-pointer-pos]))]
-   ["Pointer offset" (coll->str @(rf/subscribe [::app.s/pointer-offset]))]
-   ["Adjusted pointer offset" (coll->str @(rf/subscribe [::app.s/adjusted-pointer-offset]))]
-   ["Pointer drag?" (str @(rf/subscribe [::tool.s/drag?]))]
-   ["Pan" (coll->str @(rf/subscribe [::document.s/pan]))]
-   ["Active tool" @(rf/subscribe [::tool.s/active])]
-   ["Primary tool" @(rf/subscribe [::tool.s/primary])]
-   ["State"  @(rf/subscribe [::tool.s/state])]
-   ["Clicked element" (:id @(rf/subscribe [::app.s/clicked-element]))]
-   ["Ignored elements" @(rf/subscribe [::document.s/ignored-ids])]
-   ["Snap" (map->str @(rf/subscribe [::snap.s/nearest-neighbor]))]])
+  [["Dom rect" (map->str @(rf/subscribe [::app.subs/dom-rect]))]
+   ["Viewbox" (coll->str @(rf/subscribe [::frame.subs/viewbox]))]
+   ["Pointer position" (coll->str @(rf/subscribe [::app.subs/pointer-pos]))]
+   ["Adjusted pointer position" (coll->str @(rf/subscribe [::app.subs/adjusted-pointer-pos]))]
+   ["Pointer offset" (coll->str @(rf/subscribe [::app.subs/pointer-offset]))]
+   ["Adjusted pointer offset" (coll->str @(rf/subscribe [::app.subs/adjusted-pointer-offset]))]
+   ["Pointer drag?" (str @(rf/subscribe [::tool.subs/drag?]))]
+   ["Pan" (coll->str @(rf/subscribe [::document.subs/pan]))]
+   ["Active tool" @(rf/subscribe [::tool.subs/active])]
+   ["Primary tool" @(rf/subscribe [::tool.subs/primary])]
+   ["State"  @(rf/subscribe [::tool.subs/state])]
+   ["Clicked element" (:id @(rf/subscribe [::app.subs/clicked-element]))]
+   ["Ignored elements" @(rf/subscribe [::document.subs/ignored-ids])]
+   ["Snap" (map->str @(rf/subscribe [::snap.subs/nearest-neighbor]))]])
 
 (defn debug-info
   []
@@ -73,10 +73,10 @@
 
 (defn frame-panel
   []
-  (let [ruler-visible? @(rf/subscribe [::ruler.s/visible?])
-        read-only? @(rf/subscribe [::document.s/read-only?])
-        ruler-size @(rf/subscribe [::ruler.s/size])
-        ruler-locked? @(rf/subscribe [::ruler.s/locked?])]
+  (let [ruler-visible? @(rf/subscribe [::ruler.subs/visible?])
+        read-only? @(rf/subscribe [::document.subs/read-only?])
+        ruler-size @(rf/subscribe [::ruler.subs/size])
+        ruler-locked? @(rf/subscribe [::ruler.subs/locked?])]
     [:div.flex.flex-col.flex-1.h-full.gap-px
      [:div
       [ui/scroll-area [toolbar.tools/root]]
@@ -89,25 +89,25 @@
            (if ruler-locked? "lock" "unlock")
            {:class "small hidden"
             :title (if ruler-locked? "unlock" "lock")
-            :on-click #(rf/dispatch [::ruler.e/toggle-locked])}]]
+            :on-click #(rf/dispatch [::ruler.events/toggle-locked])}]]
          [:div.bg-primary.flex-1
-          [ruler.v/ruler :horizontal]]])]
+          [ruler.views/ruler :horizontal]]])]
      [:div.flex.flex-1.relative.gap-px
       (when ruler-visible?
         [:div.bg-primary
-         [ruler.v/ruler :vertical]])
+         [ruler.views/ruler :vertical]])
       [:div.relative.grow.flex
-       [frame.v/root]
+       [frame.views/root]
        (if read-only?
          [:div.absolute.inset-0.border-4.border-accent
-          (when-let [preview-label @(rf/subscribe [::document.s/preview-label])]
+          (when-let [preview-label @(rf/subscribe [::document.subs/preview-label])]
             [:div.absolute.bg-accent.top-2.left-2.px-1.rounded.text-accent-inverted
              preview-label])]
-         (when @(rf/subscribe [::app.s/debug-info])
+         (when @(rf/subscribe [::app.subs/debug-info])
            [debug-info]))
-       (when @(rf/subscribe [::app.s/backdrop])
+       (when @(rf/subscribe [::app.subs/backdrop])
          [:div.absolute.inset-0
-          {:on-click #(rf/dispatch [::e/set-backdrop false])}])]]]))
+          {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])]]]))
 
 (defn center-top-group
   []
@@ -121,7 +121,7 @@
       {:id "frame-panel"
        :order 1}
       [frame-panel]]
-     (when @(rf/subscribe [::app.s/panel-visible? :history])
+     (when @(rf/subscribe [::app.subs/panel-visible? :history])
        [:<>
         [:> PanelResizeHandle
          {:id "history-resize-handle"
@@ -131,10 +131,10 @@
                    :minSize 5
                    :order 2}
          [:div.bg-primary.h-full
-          [history.v/root]]]])
+          [history.views/root]]]])
 
-     (when @(rf/subscribe [::app.s/panel-visible? :xml])
-       (let [xml @(rf/subscribe [::element.s/xml])]
+     (when @(rf/subscribe [::app.subs/panel-visible? :xml])
+       (let [xml @(rf/subscribe [::element.subs/xml])]
          [:<>
           [:> PanelResizeHandle
            {:id "xml-resize-handle"
@@ -153,7 +153,7 @@
 
 (defn editor
   []
-  (let [timeline-visible @(rf/subscribe [::app.s/panel-visible? :timeline])]
+  (let [timeline-visible @(rf/subscribe [::app.subs/panel-visible? :timeline])]
     [:> PanelGroup
      {:direction "vertical"
       :id "editor-group"
@@ -173,8 +173,8 @@
          :minSize 10
          :defaultSize 20
          :order 2}
-        [timeline.v/root]])
-     [repl.v/root]]))
+        [timeline.views/root]])
+     [repl.views/root]]))
 
 (def paper-size
   {0 [2384 3370]
@@ -209,13 +209,13 @@
         [:div.flex.items-center.gap-2.flex-wrap
          [ui/icon "file"]
          [:button.button-link.text-lg
-          {:on-click #(rf/dispatch [::document.e/new])} "New"]
-         [ui/shortcuts [::document.e/new]]
+          {:on-click #(rf/dispatch [::document.events/new])} "New"]
+         [ui/shortcuts [::document.events/new]]
 
          [:span "or"]
 
          [:> Select/Root
-          {:onValueChange #(rf/dispatch [::document.e/new-from-template
+          {:onValueChange #(rf/dispatch [::document.events/new-from-template
                                          (get paper-size %)])}
           [:> Select/Trigger
            {:class "button px-2 overlay rounded-sm"
@@ -245,9 +245,9 @@
         [:div.flex.items-center.gap-2
          [ui/icon "folder"]
          [:button.button-link.text-lg
-          {:on-click #(rf/dispatch [::document.e/open nil])}
+          {:on-click #(rf/dispatch [::document.events/open nil])}
           "Open"]
-         [ui/shortcuts [::document.e/open nil]]]
+         [ui/shortcuts [::document.events/open nil]]]
 
         (when (seq recent-documents)
           [:<> [:h2.mb-3.mt-8.text-2xl "Recent"]
@@ -257,7 +257,7 @@
              [:div.flex.items-center.gap-x-2.flex-wrap
               [ui/icon "folder"]
               [:button.button-link.text-lg
-               {:on-click #(rf/dispatch [::document.e/open file-path])}
+               {:on-click #(rf/dispatch [::document.events/open file-path])}
                (.basename path file-path)]
               [:span.text-lg.text-muted (.dirname path file-path)]])])
 
@@ -267,25 +267,25 @@
          [:div.flex.items-center.gap-2
           [ui/icon "command"]
           [:button.button-link.text-lg
-           {:on-click #(rf/dispatch [::dialog.e/cmdk])}
+           {:on-click #(rf/dispatch [::dialog.events/cmdk])}
            "Command panel"]
-          [ui/shortcuts [::dialog.e/cmdk]]]]
+          [ui/shortcuts [::dialog.events/cmdk]]]]
         [:div.flex.items-center.gap-2
          [ui/icon "earth"]
          [:button.button-link.text-lg
-          {:on-click #(rf/dispatch [::window.e/open-remote-url
+          {:on-click #(rf/dispatch [::window.events/open-remote-url
                                     "https://repath.studio/"])}
           "Website"]]
         [:div.flex.items-center.gap-2
          [ui/icon "commit"]
          [:button.button-link.text-lg
-          {:on-click #(rf/dispatch [::window.e/open-remote-url
+          {:on-click #(rf/dispatch [::window.events/open-remote-url
                                     "https://github.com/repath-project/repath-studio"])}
           "Source Code"]]
         [:div.flex.items-center.gap-2
          [ui/icon "list"]
          [:button.button-link.text-lg
-          {:on-click #(rf/dispatch [::window.e/open-remote-url
+          {:on-click #(rf/dispatch [::window.events/open-remote-url
                                     "https://repath.studio/roadmap/changelog/"])}
           "Changelog"]]]
 
@@ -295,24 +295,24 @@
 
 (defn root
   []
-  (let [documents (rf/subscribe [::document.s/entities])
-        tree-visible (rf/subscribe [::app.s/panel-visible? :tree])
-        properties-visible (rf/subscribe [::app.s/panel-visible? :properties])
-        active-tool (rf/subscribe [::tool.s/active])
-        recent-docs (rf/subscribe [::document.s/recent])]
+  (let [documents (rf/subscribe [::document.subs/entities])
+        tree-visible (rf/subscribe [::app.subs/panel-visible? :tree])
+        properties-visible (rf/subscribe [::app.subs/panel-visible? :properties])
+        active-tool (rf/subscribe [::tool.subs/active])
+        recent-docs (rf/subscribe [::document.subs/recent])]
     [:> Tooltip/Provider
      [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden.justify-between
-      [window.v/app-header]
+      [window.views/app-header]
       (if (seq @documents)
         [:div.flex.h-full.flex-1.overflow-hidden.gap-px
          (when @tree-visible
            [:div.flex-col.hidden.overflow-hidden
             {:class "md:flex"
              :style {:width "227px"}}
-            [document.v/actions]
-            [tree.v/root]])
+            [document.views/actions]
+            [tree.views/root]])
          [:div.flex.flex-col.flex-1.overflow-hidden.h-full
-          [document.v/tab-bar]
+          [document.views/tab-bar]
           [:div.flex.h-full.flex-1.gap-px.overflow-hidden
            [:div.flex.h-full.flex-col.flex-1.overflow-hidden
             [editor]]
@@ -328,5 +328,5 @@
              [ui/scroll-area [toolbar.object/root]]]]]]]
         [home @recent-docs])
       [:div]]
-     [dialog.v/root]
-     [notification/main]]))
+     [dialog.views/root]
+     [notification.views/main]]))

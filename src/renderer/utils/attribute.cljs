@@ -1,12 +1,12 @@
 (ns renderer.utils.attribute
   (:require
    ["mdn-data" :as mdn]
-   [camel-snake-kebab.core :as csk]
-   [clojure.string :as str]
+   [camel-snake-kebab.core :as camel-snake-kebab]
+   [clojure.string :as string]
    [malli.core :as m]
    [renderer.element.db :as element.db :refer [Attrs Tag]]
    [renderer.element.hierarchy :as element.hierarchy]
-   [renderer.utils.bcd :as bcd]))
+   [renderer.utils.bcd :as utils.bcd]))
 
 (def mdn-data
   "https://github.com/mdn/data/blob/main/docs/updating_css_json.md"
@@ -16,7 +16,7 @@
   [property k]
   (cond-> property
     (and (get property k) (string? (get property k)))
-    (update k #(-> % csk/->kebab-case-string (str/replace "-" " ")))))
+    (update k #(-> % camel-snake-kebab/->kebab-case-string (string/replace "-" " ")))))
 
 (defn property-data
   [k]
@@ -74,7 +74,7 @@
 
 (defn str->seq
   [s]
-  (-> s str/trim (str/split #"\s*[\s,]\s*")))
+  (-> s string/trim (string/split #"\s*[\s,]\s*")))
 
 (m/=> points->vec [:function
                    [:-> string? vector?]
@@ -235,14 +235,14 @@
    "zoomAndPan"])
 
 (def lowercased
-  (mapv str/lower-case camelcased))
+  (mapv string/lower-case camelcased))
 
 (m/=> ->camel-case [:-> keyword? keyword?])
 (defn ->camel-case
   [k]
-  (let [i (->> k name str/lower-case (.indexOf lowercased))]
+  (let [i (->> k name string/lower-case (.indexOf lowercased))]
     (-> (if (= i -1) k (get camelcased i))
-        (csk/->camelCaseString)
+        (camel-snake-kebab/->camelCaseString)
         (keyword))))
 
 (def ->camel-case-memo (memoize ->camel-case))
@@ -263,10 +263,10 @@
 (defn defaults
   [tag]
   (merge (when (element.db/tag? tag)
-           (merge (->attrs (or (tag (:elements  bcd/svg)) {}))
+           (merge (->attrs (or (tag (:elements  utils.bcd/svg)) {}))
                   (zipmap core (repeat ""))))
          (when (contains? #{:animateMotion :animateTransform} tag)
-           (->attrs (:animate (:elements bcd/svg))))
+           (->attrs (:animate (:elements utils.bcd/svg))))
          (zipmap (:attrs (element.hierarchy/properties tag)) (repeat ""))))
 
 (def defaults-memo (memoize defaults))

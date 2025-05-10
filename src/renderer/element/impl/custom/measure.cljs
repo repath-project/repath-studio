@@ -1,37 +1,37 @@
 (ns renderer.element.impl.custom.measure
   (:require
    [re-frame.core :as rf]
-   [renderer.document.subs :as-alias document.s]
-   [renderer.element.hierarchy :as hierarchy]
-   [renderer.utils.length :as length]
-   [renderer.utils.math :as math]
-   [renderer.utils.svg :as svg]))
+   [renderer.document.subs :as-alias document.subs]
+   [renderer.element.hierarchy :as element.hierarchy]
+   [renderer.utils.length :as utils.length]
+   [renderer.utils.math :as utils.math]
+   [renderer.utils.svg :as utils.svg]))
 
-(derive :measure ::hierarchy/element)
+(derive :measure ::element.hierarchy/element)
 
-(defmethod hierarchy/render :measure
+(defmethod element.hierarchy/render :measure
   [el]
   (let [{:keys [attrs id]} el
         {:keys [x1 x2 y1 y2 hypotenuse]} attrs
-        [x1 y1 x2 y2] (map length/unit->px [x1 y1 x2 y2])
-        angle (math/angle [x1 y1] [x2 y2])
-        zoom @(rf/subscribe [::document.s/zoom])
+        [x1 y1 x2 y2] (map utils.length/unit->px [x1 y1 x2 y2])
+        angle (utils.math/angle [x1 y1] [x2 y2])
+        zoom @(rf/subscribe [::document.subs/zoom])
         straight? (< angle 180)
         straight-angle (if straight? angle (- angle 360))]
     [:g {:key id}
-     [svg/cross [x1 y1]]
-     [svg/cross [x2 y2]]
+     [utils.svg/cross [x1 y1]]
+     [utils.svg/cross [x2 y2]]
 
-     [svg/arc [x1 y1] 20 (if straight? 0 angle) (abs straight-angle)]
+     [utils.svg/arc [x1 y1] 20 (if straight? 0 angle) (abs straight-angle)]
 
-     [svg/line [x1 y1] [x2 y2] false]
-     [svg/line [x1 y1] [(+ x1 (/ 30 zoom)) y1]]
+     [utils.svg/line [x1 y1] [x2 y2] false]
+     [utils.svg/line [x1 y1] [(+ x1 (/ 30 zoom)) y1]]
 
-     [svg/label
+     [utils.svg/label
       (str (.toFixed straight-angle 2) "°")
       [(+ x1 (/ 40 zoom)) y1]
       "start"]
 
-     [svg/label
+     [utils.svg/label
       (-> hypotenuse js/parseFloat (.toFixed 2) str)
       [(/ (+ x1 x2) 2) (/ (+ y1 y2) 2)]]]))

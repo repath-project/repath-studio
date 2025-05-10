@@ -4,17 +4,18 @@
    ["react" :as react]
    ["react-frame-component" :default Frame :refer [useFrame]]
    [re-frame.core :as rf]
-   [reagent.core :as ra]
+   [reagent.core :as reagent]
    [reagent.dom.server :as server]
-   [renderer.app.subs :as-alias app.s]
-   [renderer.document.subs :as-alias document.s]
+   [renderer.app.subs :as-alias app.subs]
+   [renderer.document.subs :as-alias document.subs]
    [renderer.element.hierarchy :as element.hierarchy]
-   [renderer.element.subs :as-alias element.s]
-   [renderer.element.views :as element.v]
-   [renderer.frame.events :as-alias frame.e]
+   [renderer.element.subs :as-alias element.subs]
+   [renderer.element.views :as element.views]
+   [renderer.frame.events :as-alias frame.events]
+   [renderer.tool.events :as tool.events]
    [renderer.ui :as ui]
-   [renderer.utils.pointer :as pointer]
-   [renderer.utils.wheel :as wheel]))
+   [renderer.utils.pointer :as utils.pointer]
+   [renderer.utils.wheel :as utils.wheel]))
 
 (defn inner-component
   "We need access to the iframe's window to add the pointer move listener.
@@ -22,21 +23,26 @@
    https://github.com/ryanseddon/react-frame-component#accessing-the-iframes-window-and-document
    https://github.com/reagent-project/reagent/blob/master/doc/ReactFeatures.md#function-components"
   []
-  (let [frame-window (.-window (useFrame))]
-    (ra/create-class
+  (let [frame-window (.-window (useFrame))
+        wheel-handler (fn [e]
+                        (.stopPropagation e)
+                        ;; Disable wheel zoom on canvas.
+                        (when (.-ctrlKey e) (.preventDefault e))
+                        (rf/dispatch-sync [::tool.events/wheel-event (utils.wheel/event-formatter e)]))]
+    (reagent/create-class
      {:component-did-mount
       (fn []
         (doseq
          [event ["pointermove" "pointerup"]]
-          (.addEventListener frame-window event pointer/event-handler!))
-        (.addEventListener frame-window "wheel" wheel/event-handler! #js {:passive false}))
+          (.addEventListener frame-window event utils.pointer/event-handler!))
+        (.addEventListener frame-window "wheel" wheel-handler #js {:passive false}))
 
       :component-will-unmount
       (fn []
         (doseq
          [event ["pointermove" "pointerup"]]
-          (.removeEventListener frame-window event pointer/event-handler!))
-        (.removeEventListener frame-window "wheel" wheel/event-handler!))
+          (.removeEventListener frame-window event utils.pointer/event-handler!))
+        (.removeEventListener frame-window "wheel" wheel-handler))
 
       :reagent-render #()})))
 
@@ -59,7 +65,7 @@
                         (.find (fn [] true))
                         (.. -target getBoundingClientRect toJSON)
                         (js->clj :keywordize-keys true))]
-       (rf/dispatch-sync [::frame.e/resize dom-rect])))))
+       (rf/dispatch-sync [::frame.events/resize dom-rect])))))
 
 (defn root
   "Our canvas is wrapped within an iframe element that hosts anything
@@ -68,7 +74,7 @@
    https://medium.com/@ryanseddon/rendering-to-iframes-in-react-d1cb92274f86"
   []
   (let [ref (react/createRef)]
-    (ra/create-class
+    (reagent/create-class
      {:component-did-mount
       #(.observe resize-observer (.-current ref))
 
@@ -77,8 +83,8 @@
 
       :reagent-render
       (fn []
-        (let [root-el @(rf/subscribe [::element.s/root])
-              {:keys [x y]} @(rf/subscribe [::app.s/dom-rect])
+        (let [root-el @(rf/subscribe [::element.subs/root])
+              {:keys [x y]} @(rf/subscribe [::app.subs/dom-rect])
               ;; This is a different browsing context inside an iframe.
               ;; We need to simulate the events to the parent window.
               on-keyboard-event (fn [e]
@@ -108,4 +114,4 @@
                      :on-close-auto-focus #(.preventDefault %)
                      :style {:margin-left (str x "px")
                              :margin-top (str y "px")}}]
-                   (map ui/context-menu-item element.v/context-menu))]]]))})))
+                   (map ui/context-menu-item element.views/context-menu))]]]))})))

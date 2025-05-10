@@ -3,12 +3,12 @@
    ["@radix-ui/react-select" :as Select]
    ["react" :as react]
    ["react-d3-tree" :refer [Tree]]
-   [clojure.core.matrix :as mat]
+   [clojure.core.matrix :as matrix]
    [re-frame.core :as rf]
-   [reagent.core :as ra]
-   [renderer.dialog.events :as-alias dialog.e]
-   [renderer.history.events :as-alias history.e]
-   [renderer.history.subs :as-alias history.s]
+   [reagent.core :as reagent]
+   [renderer.dialog.events :as-alias dialog.events]
+   [renderer.history.events :as-alias history.events]
+   [renderer.history.subs :as-alias history.subs]
    [renderer.ui :as ui]))
 
 (defn select-options
@@ -23,7 +23,7 @@
 (defn select
   [label options disabled?]
   [:> Select/Root
-   {:onValueChange #(rf/dispatch [::history.e/go-to (uuid %)])
+   {:onValueChange #(rf/dispatch [::history.events/go-to (uuid %)])
     :disabled disabled?}
    [:> Select/Trigger
     {:aria-label label
@@ -56,12 +56,12 @@
         active? (.-active datum)
         id (uuid (.-id datum))
         color (if active? "var(--color-accent)" (.-color datum))]
-    (ra/as-element
+    (reagent/as-element
      [:circle.transition-fill
       {:class "hover:stroke-accent"
-       :on-click #(rf/dispatch [::history.e/go-to id])
-       :on-pointer-enter #(when-not active? (rf/dispatch [::history.e/preview id]))
-       :on-pointer-leave #(rf/dispatch [::history.e/reset-state id])
+       :on-click #(rf/dispatch [::history.events/go-to id])
+       :on-pointer-enter #(when-not active? (rf/dispatch [::history.events/preview id]))
+       :on-pointer-leave #(rf/dispatch [::history.events/reset-state id])
        :cx "0"
        :cy "0"
        :stroke color
@@ -75,21 +75,21 @@
   [target]
   (let [translate (.-translate target)
         zoom (.-zoom target)]
-    (rf/dispatch [::history.e/tree-view-updated zoom [(.-x translate)
-                                                      (.-y translate)]])))
+    (rf/dispatch [::history.events/tree-view-updated zoom [(.-x translate)
+                                                           (.-y translate)]])))
 
 (defn center
   [ref]
   (when-let [current (.-current ref)]
-    (mat/div [(.-clientWidth current)
-              (.-clientHeight current)] 2)))
+    (matrix/div [(.-clientWidth current)
+                 (.-clientHeight current)] 2)))
 
 (defn tree
   [ref]
-  (let [tree-data @(rf/subscribe [::history.s/tree-data])
-        zoom @(rf/subscribe [::history.s/zoom])
+  (let [tree-data @(rf/subscribe [::history.subs/tree-data])
+        zoom @(rf/subscribe [::history.subs/zoom])
         dom-el (.-current ref)
-        [x y] @(rf/subscribe [::history.s/translate])
+        [x y] @(rf/subscribe [::history.subs/translate])
         translate #js {:x (or x (when dom-el (/ (.-clientWidth dom-el) 2)))
                        :y (or y (when dom-el (/ (.-clientHeight dom-el) 2)))}]
     [:> Tree
@@ -110,14 +110,14 @@
     [:div.flex.flex-col.h-full
      [:div.flex.p-1
       [:button.button.flex-1
-       {:on-click #(rf/dispatch [::history.e/tree-view-updated 0.5 (center ref)])}
+       {:on-click #(rf/dispatch [::history.events/tree-view-updated 0.5 (center ref)])}
        "Center view"]
       [:button.button.flex-1
-       {:on-click #(rf/dispatch [::dialog.e/confirmation
+       {:on-click #(rf/dispatch [::dialog.events/confirmation
                                  {:title "This action cannot be undone."
                                   :description "Are you sure you wish to clear the document history?"
                                   :confirm-label "Clear history"
-                                  :action [::history.e/clear]}])}
+                                  :action [::history.events/clear]}])}
        "Clear history"]]
      [:div.flex-1 {:ref ref}
       [tree ref]]]))
