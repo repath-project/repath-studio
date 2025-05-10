@@ -1,11 +1,11 @@
 (ns renderer.ruler.subs
   (:require
    [re-frame.core :as rf]
-   [renderer.app.subs :as-alias app.s]
-   [renderer.document.subs :as-alias document.s]
-   [renderer.element.subs :as-alias element.s]
-   [renderer.frame.subs :as-alias frame.s]
-   [renderer.ruler.handlers :as h]))
+   [renderer.app.subs :as-alias app.subs]
+   [renderer.document.subs :as-alias document.subs]
+   [renderer.element.subs :as-alias element.subs]
+   [renderer.frame.subs :as-alias frame.subs]
+   [renderer.ruler.handlers :as ruler.handlers]))
 
 (rf/reg-sub
  ::ruler
@@ -28,21 +28,21 @@
 
 (rf/reg-sub
  ::step
- :<- [::document.s/zoom]
- h/step)
+ :<- [::document.subs/zoom]
+ ruler.handlers/step)
 
 (rf/reg-sub
  ::steps-coll
  :<- [::step]
- :<- [::frame.s/viewbox]
+ :<- [::frame.subs/viewbox]
  (fn [[step viewbox] [_ orientation]]
-   (h/steps-coll step viewbox orientation)))
+   (ruler.handlers/steps-coll step viewbox orientation)))
 
 (rf/reg-sub
  ::bbox-rect-attrs
- :<- [::document.s/zoom]
- :<- [::document.s/pan]
- :<- [::element.s/bbox]
+ :<- [::document.subs/zoom]
+ :<- [::document.subs/pan]
+ :<- [::element.subs/bbox]
  :<- [::size]
  (fn [[zoom pan bbox size] [_ orientation]]
    (let [[min-x min-y max-x max-y] (map #(* % zoom) bbox)]

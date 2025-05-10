@@ -1,10 +1,10 @@
 (ns core-test
   (:require
-   [malli.instrument :as mi]
+   [malli.instrument :as m.instrument]
    [re-frame.core :as rf]
    [re-frame.subs :as rf.subs]
    [renderer.app.effects]
-   [renderer.app.events :as app.e]
+   [renderer.app.events :as app.events]
    [renderer.app.subs]
    [renderer.dialog.events]
    [renderer.document.events]
@@ -33,5 +33,5 @@
    [renderer.worker.events]))
 
 (set! rf.subs/warn-when-not-reactive (constantly nil))
-(mi/instrument!)
-(rf/reg-global-interceptor app.e/schema-validator)
+(m.instrument/instrument!)
+(rf/reg-global-interceptor app.events/schema-validator)

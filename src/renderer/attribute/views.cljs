@@ -2,21 +2,21 @@
   (:require
    ["@radix-ui/react-hover-card" :as HoverCard]
    ["@radix-ui/react-select" :as Select]
-   [camel-snake-kebab.core :as csk]
-   [clojure.string :as str]
+   [camel-snake-kebab.core :as camel-snake-kebab]
+   [clojure.string :as string]
    [re-frame.core :as rf]
-   [renderer.app.subs :as-alias app.s]
-   [renderer.attribute.events :as-alias e]
-   [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.element.events :as-alias element.e]
+   [renderer.app.subs :as-alias app.subs]
+   [renderer.attribute.events :as-alias attribute.events]
+   [renderer.attribute.hierarchy :as attribute.hierarchy]
+   [renderer.element.events :as-alias element.events]
    [renderer.element.hierarchy :as element.hierarchy]
-   [renderer.element.subs :as-alias element.s]
+   [renderer.element.subs :as-alias element.subs]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.ui :as ui]
-   [renderer.utils.attribute :as attr]
-   [renderer.utils.bcd :as bcd]
-   [renderer.utils.keyboard :as keyb]
-   [renderer.window.events :as-alias window.e]))
+   [renderer.utils.attribute :as utils.attribute]
+   [renderer.utils.bcd :as utils.bcd]
+   [renderer.utils.keyboard :as utils.keyboard]
+   [renderer.window.events :as-alias window.events]))
 
 (defn browser-support
   [browser version-added]
@@ -48,7 +48,7 @@
 (defn info-button
   [url label]
   [:button.button.px-3.bg-primary.grow
-   {:on-click #(rf/dispatch [::window.e/open-remote-url url])}
+   {:on-click #(rf/dispatch [::window.events/open-remote-url url])}
    label])
 
 (defn construct-mdn-url
@@ -57,9 +57,9 @@
 
 (defn caniusethis
   [{:keys [tag attr]}]
-  (let [data (if attr (bcd/compatibility tag attr) (bcd/compatibility tag))
+  (let [data (if attr (utils.bcd/compatibility tag attr) (utils.bcd/compatibility tag))
         support-data (:support data)
-        property (when attr (attr/property-data attr))
+        property (when attr (utils.attribute/property-data attr))
         spec-url (or (:spec_url data) (:href property))
         spec-url (if (vector? spec-url) (first spec-url) spec-url)
         mdn-url (or (when data (or (:mdn_url data) (construct-mdn-url (name attr))))
@@ -78,8 +78,8 @@
    (let [new-v (.. event -target -value)]
      (when-not (= new-v old-v)
        (rf/dispatch [(if finalize?
-                       ::element.e/set-attr
-                       ::element.e/preview-attr) k new-v])))))
+                       ::element.events/set-attr
+                       ::element.events/preview-attr) k new-v])))))
 
 (defn form-input
   [k v {:keys [disabled placeholder] :as attrs}]
@@ -91,14 +91,14 @@
             :default-value v
             :placeholder (if v placeholder "multiple")
             :on-blur #(on-change-handler! % k v)
-            :on-key-down #(keyb/input-key-down-handler! % v on-change-handler! k v)})]
+            :on-key-down #(utils.keyboard/input-key-down-handler! % v on-change-handler! k v)})]
    (when-not (or (empty? (str v)) disabled)
      [:button.button.bg-primary.text-muted.absolute.h-full.right-0.clear-input-button.invisible.p-1
       {:class "hover:bg-transparent"
-       :on-pointer-down #(rf/dispatch [::element.e/remove-attr k])}
+       :on-pointer-down #(rf/dispatch [::element.events/remove-attr k])}
       [ui/icon "times"]])])
 
-(defmethod hierarchy/form-element :default
+(defmethod attribute.hierarchy/form-element :default
   [_ k v {:keys [disabled placeholder]}]
   [form-input k v {:disabled disabled
                    :placeholder (if v placeholder "multiple")}])
@@ -111,13 +111,13 @@
                     :class "w-20"
                     :on-wheel (fn [e]
                                 (when (= (.-target e) (.-activeElement js/document))
-                                  (rf/dispatch [::e/update-and-focus k (if (pos? (.-deltaY e)) - +) step])))}]
+                                  (rf/dispatch [::attribute.events/update-and-focus k (if (pos? (.-deltaY e)) - +) step])))}]
    [:div.px-1.w-full.bg-primary
     [ui/slider
      (merge attrs
             {:value [(if (= "" v) placeholder v)]
-             :on-value-change (fn [[v]] (rf/dispatch [::element.e/preview-attr k v]))
-             :on-value-commit (fn [[v]] (rf/dispatch [::element.e/set-attr k v]))})]]])
+             :on-value-change (fn [[v]] (rf/dispatch [::element.events/preview-attr k v]))
+             :on-value-commit (fn [[v]] (rf/dispatch [::element.events/set-attr k v]))})]]])
 
 (defn select-input
   [k v {:keys [disabled items default-value] :as attrs}]
@@ -126,7 +126,7 @@
    (when (seq items)
      [:> Select/Root
       {:value (if (empty? v) default-value v)
-       :onValueChange #(rf/dispatch [::element.e/set-attr k %])
+       :onValueChange #(rf/dispatch [::element.events/set-attr k %])
        :disabled disabled}
       [:> Select/Trigger
        {:class "form-control-button"
@@ -160,10 +160,10 @@
     [:<>
      [:h3.font-bold (if (= k :appliesto)
                       "Applies to"
-                      (-> (csk/->kebab-case-string k)
-                          (str/replace "-" " ")
-                          (str/capitalize)))]
-     [:p (cond->> v (vector? v) (str/join " | "))]]))
+                      (-> (camel-snake-kebab/->kebab-case-string k)
+                          (string/replace "-" " ")
+                          (string/capitalize)))]
+     [:p (cond->> v (vector? v) (string/join " | "))]]))
 
 (defn property-list
   [property]
@@ -173,9 +173,9 @@
 
 (defn label
   [tag k]
-  (let [clicked-element @(rf/subscribe [::app.s/clicked-element])
-        property (attr/property-data k)
-        dispatch-tag (if (contains? (methods hierarchy/description) [tag k]) tag :default)
+  (let [clicked-element @(rf/subscribe [::app.subs/clicked-element])
+        property (utils.attribute/property-data k)
+        dispatch-tag (if (contains? (methods attribute.hierarchy/description) [tag k]) tag :default)
         active (and (= (:type clicked-element) :handle)
                     (= (:key clicked-element) key))]
     [:> HoverCard/Root
@@ -191,9 +191,9 @@
         :align "start"}
        [:div.p-5
         [:h2.mb-4.text-lg k]
-        (when (get-method hierarchy/description [dispatch-tag k])
-          [:p.text-pretty (hierarchy/description dispatch-tag k)])
-        (when (bcd/compatibility tag k)
+        (when (get-method attribute.hierarchy/description [dispatch-tag k])
+          [:p.text-pretty (attribute.hierarchy/description dispatch-tag k)])
+        (when (utils.bcd/compatibility tag k)
           [:<>
            (when property [property-list property])
            [caniusethis {:tag tag :attr k}]])]
@@ -201,14 +201,14 @@
 
 (defn row
   [k v locked? tag]
-  (let [property (attr/property-data k)
+  (let [property (utils.attribute/property-data k)
         initial (:initial property)
-        dispatch-tag (if (contains? (methods hierarchy/form-element) [tag k]) tag :default)]
+        dispatch-tag (if (contains? (methods attribute.hierarchy/form-element) [tag k]) tag :default)]
     [:<>
      [label tag k]
      [:div.flex.w-full
-      [hierarchy/form-element dispatch-tag k v {:disabled locked?
-                                                :placeholder initial}]]]))
+      [attribute.hierarchy/form-element dispatch-tag k v {:disabled locked?
+                                                          :placeholder initial}]]]))
 
 (defn tag-info
   [tag]
@@ -229,16 +229,16 @@
        [caniusethis {:tag tag}]
        (when-let [url (:url (element.hierarchy/properties tag))]
          [:button.button.px-3.bg-primary.w-full
-          {:on-click #(rf/dispatch [::window.e/open-remote-url url])}
+          {:on-click #(rf/dispatch [::window.events/open-remote-url url])}
           "Learn more"])]
       [:> HoverCard/Arrow {:class "popover-arrow"}]]]]])
 
 (defn form
   []
-  (let [selected-elements @(rf/subscribe [::element.s/selected])
-        selected-tags @(rf/subscribe [::element.s/selected-tags])
-        selected-attrs @(rf/subscribe [::element.s/selected-attrs])
-        locked? @(rf/subscribe [::element.s/selected-locked?])
+  (let [selected-elements @(rf/subscribe [::element.subs/selected])
+        selected-tags @(rf/subscribe [::element.subs/selected-tags])
+        selected-attrs @(rf/subscribe [::element.subs/selected-attrs])
+        locked? @(rf/subscribe [::element.subs/selected-locked?])
         tag (first selected-tags)
         multitag? (next selected-tags)]
     (when-first [el selected-elements]
@@ -248,8 +248,8 @@
          (if-not (next selected-elements)
            (let [el-label (:label el)]
              (if (empty? el-label) tag el-label))
-           (str/join " " [(count selected-elements)
-                          (if multitag? "elements" (name tag))]))]
+           (string/join " " [(count selected-elements)
+                             (if multitag? "elements" (name tag))]))]
         (when-not multitag?
           [tag-info tag])]
        [:div.grid.grid-cols-2.grid-flow-row.my-px.w-full.gap-px

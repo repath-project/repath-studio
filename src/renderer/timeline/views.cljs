@@ -4,12 +4,12 @@
    ["@xzdarcy/react-timeline-editor" :refer [Timeline]]
    ["react" :as react]
    [re-frame.core :as rf]
-   [reagent.core :as ra]
-   [renderer.app.events :as-alias app.e]
-   [renderer.app.subs :as-alias app.s]
-   [renderer.element.events :as-alias element.e]
-   [renderer.timeline.events :as-alias timeline.e]
-   [renderer.timeline.subs :as-alias timeline.s]
+   [reagent.core :as reagent]
+   [renderer.app.events :as-alias app.events]
+   [renderer.app.subs :as-alias app.subs]
+   [renderer.element.events :as-alias element.events]
+   [renderer.timeline.events :as-alias timeline.events]
+   [renderer.timeline.subs :as-alias timeline.subs]
    [renderer.ui :as ui]))
 
 (def speed-options
@@ -31,7 +31,7 @@
 
 (defn speed-select
   [editor-ref]
-  (let [speed @(rf/subscribe [::timeline.s/speed])]
+  (let [speed @(rf/subscribe [::timeline.subs/speed])]
     [:div.inline-flex.items-center
      [:label.form-element
       {:for "animation-speed"}
@@ -69,27 +69,27 @@
 
 (defn snap-controls
   []
-  (let [grid-snap? @(rf/subscribe [::timeline.s/grid-snap?])
-        guide-snap? @(rf/subscribe [::timeline.s/guide-snap?])]
+  (let [grid-snap? @(rf/subscribe [::timeline.subs/grid-snap?])
+        guide-snap? @(rf/subscribe [::timeline.subs/guide-snap?])]
     [:div.grow
      [ui/switch
       "Grid snap"
       {:id "grid-snap"
        :default-checked grid-snap?
-       :on-checked-change #(rf/dispatch [::timeline.e/set-grid-snap %])}]
+       :on-checked-change #(rf/dispatch [::timeline.events/set-grid-snap %])}]
      [ui/switch
       "Guide snap"
       {:id "guide-snap"
        :default-checked guide-snap?
-       :on-checked-change #(rf/dispatch [::timeline.e/set-guide-snap %])}]]))
+       :on-checked-change #(rf/dispatch [::timeline.events/set-guide-snap %])}]]))
 
 (defn toolbar
   [timeline-ref]
-  (let [t @(rf/subscribe [::timeline.s/time])
-        time-formatted @(rf/subscribe [::timeline.s/time-formatted])
-        paused? @(rf/subscribe [::timeline.s/paused?])
-        replay? @(rf/subscribe [::timeline.s/replay?])
-        end @(rf/subscribe [::timeline.s/end])]
+  (let [t @(rf/subscribe [::timeline.subs/time])
+        time-formatted @(rf/subscribe [::timeline.subs/time-formatted])
+        paused? @(rf/subscribe [::timeline.subs/paused?])
+        replay? @(rf/subscribe [::timeline.subs/replay?])
+        end @(rf/subscribe [::timeline.subs/end])]
     [:div.toolbar.bg-primary
      [ui/icon-button "go-to-start"
       {:on-click #(.setTime (.-current timeline-ref) 0)
@@ -105,40 +105,40 @@
        :disabled (>= t end)}]
      [ui/radio-icon-button "refresh" replay?
       {:title "Replay"
-       :on-click #(rf/dispatch [::timeline.e/toggle-replay])}]
+       :on-click #(rf/dispatch [::timeline.events/toggle-replay])}]
      [speed-select timeline-ref]
      [:span.font-mono.px-2 time-formatted]
      [:span.v-divider]
      [snap-controls]
      [ui/icon-button "window-close"
       {:title "Hide timeline"
-       :on-click #(rf/dispatch [::app.e/toggle-panel :timeline])}]]))
+       :on-click #(rf/dispatch [::app.events/toggle-panel :timeline])}]]))
 
 (defn register-listeners
   [timeline-ref]
   (doseq
    [[e f]
-    [["play" #(rf/dispatch-sync [::timeline.e/play])] ;; Prevent navigation
-     ["paused" #(rf/dispatch-sync [::timeline.e/pause])]
+    [["play" #(rf/dispatch-sync [::timeline.events/play])] ;; Prevent navigation
+     ["paused" #(rf/dispatch-sync [::timeline.events/pause])]
      ["ended" #(do (.setTime (.-current timeline-ref) 0)
-                   (when @(rf/subscribe [::timeline.e/replay?])
+                   (when @(rf/subscribe [::timeline.events/replay?])
                      (.play (.-current timeline-ref) #js {:autoEnd true})))]
-     ["afterSetTime" #(rf/dispatch-sync [::timeline.e/set-time (.-time %)])]
-     ["setTimeByTick" #(rf/dispatch-sync [::timeline.e/set-time (.-time %)])]
-     ["afterSetPlayRate" #(rf/dispatch [::timeline.e/set-speed (.-rate %)])]]]
+     ["afterSetTime" #(rf/dispatch-sync [::timeline.events/set-time (.-time %)])]
+     ["setTimeByTick" #(rf/dispatch-sync [::timeline.events/set-time (.-time %)])]
+     ["afterSetPlayRate" #(rf/dispatch [::timeline.events/set-speed (.-rate %)])]]]
     (.on (.-listener (.-current timeline-ref)) e f)))
 
 (defn custom-renderer
   [action _row]
-  (ra/as-element
+  (reagent/as-element
    [:span (.-name action)]))
 
 (defn timeline
   [timeline-ref]
-  (let [data @(rf/subscribe [::timeline.s/rows])
-        effects @(rf/subscribe [::timeline.s/effects])
-        grid-snap? @(rf/subscribe [::timeline.s/grid-snap?])
-        guide-snap? @(rf/subscribe [::timeline.s/guide-snap?])]
+  (let [data @(rf/subscribe [::timeline.subs/rows])
+        effects @(rf/subscribe [::timeline.subs/effects])
+        grid-snap? @(rf/subscribe [::timeline.subs/grid-snap?])
+        guide-snap? @(rf/subscribe [::timeline.subs/guide-snap?])]
     [:> Timeline
      {:editor-data data
       :effects effects
@@ -147,13 +147,13 @@
       :drag-line guide-snap?
       :auto-scroll true
       :getActionRender custom-renderer
-      :on-click-action #(rf/dispatch [::element.e/select (keyword (.. %2 -action -id)) false])}]))
+      :on-click-action #(rf/dispatch [::element.events/select (keyword (.. %2 -action -id)) false])}]))
 
 (defn time-bar
   []
-  (let [t @(rf/subscribe [::timeline.s/time])
-        end @(rf/subscribe [::timeline.s/end])
-        timeline? @(rf/subscribe [::app.s/panel-visible? :timeline])]
+  (let [t @(rf/subscribe [::timeline.subs/time])
+        end @(rf/subscribe [::timeline.subs/end])
+        timeline? @(rf/subscribe [::app.subs/panel-visible? :timeline])]
     [:div.h-px.block.absolute.bottom-0.left-0
      {:style {:width (str (* (/ t end) 100) "%")
               :background (when-not (or (zero? t) (zero? end) timeline?)
@@ -162,11 +162,11 @@
 (defn root
   []
   (let [timeline-ref (react/createRef)]
-    (ra/create-class
+    (reagent/create-class
      {:component-did-mount
       (fn []
-        (rf/dispatch [::timeline.e/pause])
-        (rf/dispatch [::timeline.e/set-time 0])
+        (rf/dispatch [::timeline.events/pause])
+        (rf/dispatch [::timeline.events/set-time 0])
         (register-listeners timeline-ref))
 
       :component-will-unmount

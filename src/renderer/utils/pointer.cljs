@@ -1,12 +1,12 @@
 (ns renderer.utils.pointer
   (:require
-   [clojure.core.matrix :as mat]
+   [clojure.core.matrix :as matrix]
    [malli.core :as m]
    [re-frame.core :as rf]
    [renderer.document.db :refer [ZoomFactor]]
    [renderer.element.db :refer [Element]]
    [renderer.tool.db :refer [Handle]]
-   [renderer.tool.events :as-alias tool.e]
+   [renderer.tool.events :as-alias tool.events]
    [renderer.utils.keyboard :refer [ModifierKey modifiers]]
    [renderer.utils.math :refer [Vec2]]))
 
@@ -55,8 +55,8 @@
 (defn adjusted-position
   [zoom pan pointer-pos]
   (-> pointer-pos
-      (mat/div zoom)
-      (mat/add pan)))
+      (matrix/div zoom)
+      (matrix/add pan)))
 
 (m/=> button->key [:-> [:enum -1 0 1 2 3 4] [:maybe PointerButton]])
 (defn button->key
@@ -76,10 +76,24 @@
     [x 0]
     [0 y]))
 
+(m/=> event-formatter [:-> any? [:maybe [:or Element Handle]] PointerEvent])
+(defn event-formatter
+  "https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent"
+  [^js/PointerEvent e el]
+  {:element el
+   :target (.-target e)
+   :type (.-type e)
+   :pointer-pos [(.-pageX e) (.-pageY e)]
+   :pressure (.-pressure e)
+   :pointer-type (.-pointerType e)
+   :pointer-id (.-pointerId e)
+   :primary (.-isPrimary e)
+   :button (button->key (.-button e))
+   :modifiers (modifiers e)})
+
 (m/=> event-handler! [:-> any? [:or Element Handle] nil?])
 (defn event-handler!
   "Gathers pointer event props and dispathces the corresponding event.
-   https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent
    https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/"
   [^js/PointerEvent e el]
   (.stopPropagation e)
@@ -90,13 +104,4 @@
   ;; Although the fps might drop because synced dispatch blocks rendering,
   ;; the end result appears to be more responsive because it's synced with the
   ;; pointer movement.
-  (rf/dispatch-sync [::tool.e/pointer-event {:element el
-                                             :target (.-target e)
-                                             :type (.-type e)
-                                             :pointer-pos [(.-pageX e) (.-pageY e)]
-                                             :pressure (.-pressure e)
-                                             :pointer-type (.-pointerType e)
-                                             :pointer-id (.-pointerId e)
-                                             :primary (.-isPrimary e)
-                                             :button (button->key (.-button e))
-                                             :modifiers (modifiers e)}]))
+  (rf/dispatch-sync [::tool.events/pointer-event (event-formatter e el)]))

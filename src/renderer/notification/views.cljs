@@ -1,10 +1,10 @@
 (ns renderer.notification.views
   (:require
    [re-frame.core :as rf]
-   [renderer.notification.events :as-alias notification.e]
-   [renderer.notification.subs :as-alias notification.s]
+   [renderer.notification.events :as-alias notification.events]
+   [renderer.notification.subs :as-alias notification.subs]
    [renderer.ui :as ui]
-   [renderer.window.events :as-alias window.e]))
+   [renderer.window.events :as-alias window.events]))
 
 (defn unavailable-feature
   [feature compatibility-url]
@@ -14,7 +14,7 @@
     "Your browser does not support this API."
     "You can check the "
     [:button.button-link
-     {:on-click #(rf/dispatch [::window.e/open-remote-url compatibility-url])}
+     {:on-click #(rf/dispatch [::window.events/open-remote-url compatibility-url])}
      "browser compatibility table."]]])
 
 (defn generic-error
@@ -38,7 +38,7 @@
 
 (defn main
   []
-  (let [notifications @(rf/subscribe [::notification.s/entities])]
+  (let [notifications @(rf/subscribe [::notification.subs/entities])]
     [:div.fixed.flex.flex-col.m-4.right-0.bottom-0.gap-2.items-end
      (map-indexed
       (fn [index notification]
@@ -49,7 +49,7 @@
           "times"
           {:aria-label "Close"
            :class "icon-button absolute top-3 right-3 small"
-           :on-click #(rf/dispatch [::notification.e/remove-nth index])}]
+           :on-click #(rf/dispatch [::notification.events/remove-nth index])}]
          (when (> (:count notification) 1)
            [:div.absolute.bg-error.left-0.top-0.px-1.py-0.5.rounded
             {:class "-translate-x-1/2 -translate-y-1/2"}
@@ -59,5 +59,5 @@
      (when (second notifications)
        [:div.bg-primary
         [:button.button.overlay.px-2.rounded
-         {:on-click #(rf/dispatch [::notification.e/clear-all])}
+         {:on-click #(rf/dispatch [::notification.events/clear-all])}
          "Clear all"]])]))

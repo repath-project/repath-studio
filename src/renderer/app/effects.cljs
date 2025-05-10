@@ -4,11 +4,10 @@
    [config :as config]
    [re-frame.core :as rf]
    [re-frame.db :as rf.db]
-   [renderer.app.db :as db]
-   [renderer.app.events :as-alias e]
-   [renderer.history.handlers :as history.h]
-   [renderer.notification.events :as-alias notification.e]
-   [renderer.utils.dom :as dom]))
+   [renderer.app.db :as app.db]
+   [renderer.history.handlers :as history.handlers]
+   [renderer.notification.events :as-alias notification.events]
+   [renderer.utils.dom :as utils.dom]))
 
 (rf.storage/reg-co-fx! config/app-key {:cofx :store})
 
@@ -28,8 +27,8 @@
    (let [db @rf.db/app-db
          db (cond-> db
               (:active-document db)
-              history.h/drop-rest)]
-     (->> (select-keys db db/persisted-keys)
+              history.handlers/drop-rest)]
+     (->> (select-keys db app.db/persisted-keys)
           (rf.storage/->store config/app-key)))))
 
 (rf/reg-fx
@@ -55,7 +54,7 @@
 (rf/reg-fx
  ::focus
  (fn [id]
-   (when-let [element (if id (.getElementById js/document id) (dom/canvas-element!))]
+   (when-let [element (if id (.getElementById js/document id) (utils.dom/canvas-element!))]
      (.focus element))))
 
 (rf/reg-fx
@@ -83,7 +82,7 @@
                                                                       formatter))))))))))
          (.catch #(when on-error (rf/dispatch (conj on-error %)))))
      (rf/dispatch
-      [::notification.e/unavailable-feature
+      [::notification.events/unavailable-feature
        "Save File Picker"
        "https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker#browser_compatibility"]))))
 
@@ -141,9 +140,9 @@
 (rf/reg-fx
  ::validate-db
  (fn [[db event]]
-   (when (not (db/valid? db))
+   (when (not (app.db/valid? db))
      (js/console.error (str "Event: " (first event)))
-     (throw (js/Error. (str "Spec check failed: " (db/explain db)))))))
+     (throw (js/Error. (str "Spec check failed: " (app.db/explain db)))))))
 
 (rf/reg-fx
  ::scroll-into-view

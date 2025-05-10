@@ -2,36 +2,36 @@
   "https://www.w3.org/TR/SVG/embedded.html#ImageElement"
   (:require
    [re-frame.core :as rf]
-   [renderer.app.effects :as-alias app.fx]
+   [renderer.app.effects :as-alias app.effects]
    [renderer.element.effects :as-alias element.fx]
-   [renderer.notification.events :as-alias notification.e]
-   [renderer.tool.handlers :as tool.h]
-   [renderer.tool.hierarchy :as hierarchy]))
+   [renderer.notification.events :as-alias notification.events]
+   [renderer.tool.handlers :as tool.handlers]
+   [renderer.tool.hierarchy :as tool.hierarchy]))
 
-(derive :image ::hierarchy/element)
+(derive :image ::tool.hierarchy/element)
 
-(defmethod hierarchy/properties :image
+(defmethod tool.hierarchy/properties :image
   []
   {:icon "image"})
 
-(defmethod hierarchy/on-drag-end :image
+(defmethod tool.hierarchy/on-drag-end :image
   [db e]
-  (hierarchy/on-pointer-up db e))
+  (tool.hierarchy/on-pointer-up db e))
 
-(defmethod hierarchy/on-pointer-up :image
+(defmethod tool.hierarchy/on-pointer-up :image
   [db _e]
-  (tool.h/add-fx db [::app.fx/file-open
-                     {:options {:startIn "pictures"
-                                :types [{:accept {"image/png" [".png"]
-                                                  "image/jpeg" [".jpeg" ".jpg"]
-                                                  "image/bmp" [".bmp"]
-                                                  "image/gif" [".gif"]}}]}
-                      :on-success [::success]
-                      :on-error [::notification.e/exception]}]))
+  (tool.handlers/add-fx db [::app.effects/file-open
+                            {:options {:startIn "pictures"
+                                       :types [{:accept {"image/png" [".png"]
+                                                         "image/jpeg" [".jpeg" ".jpg"]
+                                                         "image/bmp" [".bmp"]
+                                                         "image/gif" [".gif"]}}]}
+                             :on-success [::success]
+                             :on-error [::notification.events/exception]}]))
 
 (rf/reg-event-fx
  ::success
  (fn [{:keys [db]} [_ file]]
-   {:db (tool.h/activate db :transform)
+   {:db (tool.handlers/activate db :transform)
     ::element.fx/import-image [file (or (:point (:nearest-neighbor db))
                                         (:adjusted-pointer-pos db))]}))

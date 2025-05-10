@@ -1,70 +1,70 @@
 (ns user
   (:require
    [clojure.math]
-   [clojure.string :as str]
+   [clojure.string :as string]
    [config :as config]
    [re-frame.core :as rf]
    [re-frame.db :as rf.db]
-   [renderer.document.events :as-alias document.e]
-   [renderer.element.events :as-alias element.e]
-   [renderer.history.events :as-alias history.e]
-   [renderer.window.events :as-alias window.e]))
+   [renderer.document.events :as-alias document.events]
+   [renderer.element.events :as-alias element.events]
+   [renderer.history.events :as-alias history.events]
+   [renderer.window.events :as-alias window.events]))
 
 (defn ^:export translate
   "Moves the selected elements."
   ([offset]
-   (rf/dispatch [::element.e/translate offset]))
+   (rf/dispatch [::element.events/translate offset]))
   ([x y]
    (translate [x y])))
 
 (defn ^:export place
   "Moves the selected elements."
   ([pos]
-   (rf/dispatch [::element.e/place pos]))
+   (rf/dispatch [::element.events/place pos]))
   ([x y]
    (place [x y])))
 
 (defn ^:export scale
   "Scales the selected elements."
   ([ratio]
-   (rf/dispatch [::element.e/scale (if (number? ratio) [ratio ratio] ratio)]))
+   (rf/dispatch [::element.events/scale (if (number? ratio) [ratio ratio] ratio)]))
   ([x y]
-   (rf/dispatch [::element.e/scale [x y]])))
+   (rf/dispatch [::element.events/scale [x y]])))
 
 (defn ^:export fill
   "Fills the selected elements."
   [color]
-  (rf/dispatch [::element.e/set-attr :fill color]))
+  (rf/dispatch [::element.events/set-attr :fill color]))
 
 (defn ^:export delete
   "Deletes the selected elements."
   []
-  (rf/dispatch [::element.e/delete]))
+  (rf/dispatch [::element.events/delete]))
 
 (defn ^:export copy
   "Copies the selected elements."
   []
-  (rf/dispatch [::element.e/copy]))
+  (rf/dispatch [::element.events/copy]))
 
 (defn ^:export paste
   "Pastes the selected elements."
   []
-  (rf/dispatch [::element.e/paste]))
+  (rf/dispatch [::element.events/paste]))
 
 (defn ^:export paste-in-place
   "Pastes the selected elements in place."
   []
-  (rf/dispatch [::element.e/paste-in-place]))
+  (rf/dispatch [::element.events/paste-in-place]))
 
 (defn ^:export duplicate
   "Duplicates the selected elements."
   []
-  (rf/dispatch [::element.e/duplicate]))
+  (rf/dispatch [::element.events/duplicate]))
 
 (defn ^:export create
   "Creates a new element."
   [el]
-  (rf/dispatch [::element.e/add el]))
+  (rf/dispatch [::element.events/add el]))
 
 (defn ^:export circle
   "Creates a circle."
@@ -108,7 +108,7 @@
    (polygon points {:stroke "#000000"}))
   ([points attrs]
    (create {:tag :polygon
-            :attrs (merge {:points (str/join " " (flatten points))} attrs)})))
+            :attrs (merge {:points (string/join " " (flatten points))} attrs)})))
 
 (defn ^:export polyline
   "Creates a polyline."
@@ -116,14 +116,14 @@
    (polyline points {:stroke "#000000"}))
   ([points attrs]
    (create {:tag :polyline
-            :attrs (merge {:points (str/join " " (flatten points))} attrs)})))
+            :attrs (merge {:points (string/join " " (flatten points))} attrs)})))
 
 (defn ^:export path
   "Creates a path."
   ([path-commands]
    (path path-commands {:stroke "#000000"}))
   ([path-commands attrs]
-   (create {:path (merge {:d (str/join " " (flatten path-commands))} attrs)})))
+   (create {:path (merge {:d (string/join " " (flatten path-commands))} attrs)})))
 
 (defn ^:export image
   "Creates an image."
@@ -150,17 +150,17 @@
 (defn ^:export set-attr
   "Sets the attribute of the selected elements."
   [k v]
-  (rf/dispatch [::element.e/set-attr k v]))
+  (rf/dispatch [::element.events/set-attr k v]))
 
 (defn ^:export set-fill
   "Sets the fill color of the editor."
   [color]
-  (rf/dispatch [::document.e/set-attr :fill color]))
+  (rf/dispatch [::document.events/set-attr :fill color]))
 
 (defn ^:export set-stroke
   "Sets the stroke color of the editor."
   [color]
-  (rf/dispatch [::document.e/set-attr :stroke color]))
+  (rf/dispatch [::document.events/set-attr :stroke color]))
 
 (defn ^:export db
   []
@@ -177,49 +177,49 @@
 (defn ^:export raise
   "Raises the selected elements."
   []
-  (rf/dispatch [::element.e/raise]))
+  (rf/dispatch [::element.events/raise]))
 
 (defn ^:export lower
   "Lowers the selected elements."
   []
-  (rf/dispatch [::element.e/lower]))
+  (rf/dispatch [::element.events/lower]))
 
 (defn ^:export group
   "Groups the selected elements."
   []
-  (rf/dispatch [::element.e/group]))
+  (rf/dispatch [::element.events/group]))
 
 (defn ^:export ungroup
   "Ungroups the selected elements."
   []
-  (rf/dispatch [::element.e/ungroup]))
+  (rf/dispatch [::element.events/ungroup]))
 
 (defn ^:export select-all
   "Selects all elements."
   []
-  (rf/dispatch [::element.e/select-all]))
+  (rf/dispatch [::element.events/select-all]))
 
 (defn ^:export deselect-all
   "Deselects all elements."
   []
-  (rf/dispatch [::element.e/deselect-all]))
+  (rf/dispatch [::element.events/deselect-all]))
 
 (defn ^:export ->path
   "Converts the selected elements to paths."
   []
-  (rf/dispatch [::element.e/->path]))
+  (rf/dispatch [::element.events/->path]))
 
 (defn ^:export stroke->path
   "Converts the selected elements' stroke to paths."
   []
-  (rf/dispatch [::element.e/stroke->path]))
+  (rf/dispatch [::element.events/stroke->path]))
 
 (defn ^:export align
   "Aligns the selected elements to the provided direction.
    Accepted directions
    :left :right :top :bottom :center-vertical :center-horizontal"
   [direction]
-  (rf/dispatch [::element.e/align direction]))
+  (rf/dispatch [::element.events/align direction]))
 
 (defn ^:export al
   "Aligns the selected elements to the left."
@@ -258,51 +258,51 @@
   ([attrs]
    (animate :animate attrs))
   ([tag attrs]
-   (rf/dispatch [::element.e/animate tag attrs])))
+   (rf/dispatch [::element.events/animate tag attrs])))
 
 (defn ^:export undo
   "Goes back in history."
   ([]
-   (rf/dispatch [::history.e/undo]))
+   (rf/dispatch [::history.events/undo]))
   ([steps]
-   (rf/dispatch [::history.e/undo-by steps])))
+   (rf/dispatch [::history.events/undo-by steps])))
 
 (defn ^:export redo
   "Goes forward in history."
   ([]
-   (rf/dispatch [::history.e/redo]))
+   (rf/dispatch [::history.events/redo]))
   ([steps]
-   (rf/dispatch [::history.e/redo-by steps])))
+   (rf/dispatch [::history.events/redo-by steps])))
 
 (defn ^:export unite
   "Unites the selected elements."
   []
-  (rf/dispatch [::element.e/boolean-operation :unite]))
+  (rf/dispatch [::element.events/boolean-operation :unite]))
 
 (defn ^:export intersect
   "Intersects the selected elements."
   []
-  (rf/dispatch [::element.e/boolean-operation :intersect]))
+  (rf/dispatch [::element.events/boolean-operation :intersect]))
 
 (defn ^:export subtract
   "Subtracts the selected elements."
   []
-  (rf/dispatch [::element.e/boolean-operation :subtract]))
+  (rf/dispatch [::element.events/boolean-operation :subtract]))
 
 (defn ^:export exclude
   "Excludes the selected elements."
   []
-  (rf/dispatch [::element.e/boolean-operation :exclude]))
+  (rf/dispatch [::element.events/boolean-operation :exclude]))
 
 (defn ^:export div
   "Divides the selected elements."
   []
-  (rf/dispatch [::element.e/boolean-operation :divide]))
+  (rf/dispatch [::element.events/boolean-operation :divide]))
 
 (defn ^:export exit
   "Closes the application."
   []
-  (rf/dispatch [::window.e/close]))
+  (rf/dispatch [::window.events/close]))
 
 (defn ^:export help
   "Lists available functions."

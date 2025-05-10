@@ -1,6 +1,6 @@
 (ns renderer.utils.bounds
   (:require
-   [clojure.core.matrix :as mat]
+   [clojure.core.matrix :as matrix]
    [malli.core :as m]
    [renderer.snap.db :refer [SnapOptions]]
    [renderer.utils.math :refer [Vec2]]))
@@ -41,14 +41,14 @@
 (defn ->dimensions
   "Converts a bounding box to [width height]."
   [[min-x min-y max-x max-y]]
-  (mat/sub [max-x max-y] [min-x min-y]))
+  (matrix/sub [max-x max-y] [min-x min-y]))
 
 (m/=> center [:-> BBox Vec2])
 (defn center
   "Calculates the center of a bounding box."
   [bbox]
-  (mat/add (take 2 bbox)
-           (mat/div (->dimensions bbox) 2)))
+  (matrix/add (take 2 bbox)
+              (matrix/div (->dimensions bbox) 2)))
 
 (m/=> intersect? [:-> BBox BBox boolean?])
 (defn intersect?

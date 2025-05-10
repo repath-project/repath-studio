@@ -4,7 +4,7 @@
    [malli.core :as m]
    [renderer.document.db :refer [ZoomFactor]]
    [renderer.frame.db :refer [Viewbox]]
-   [renderer.frame.handlers :as frame.h]
+   [renderer.frame.handlers :as frame.handlers]
    [renderer.ruler.db :refer [Orientation]]))
 
 (m/=> step [:-> ZoomFactor number?])
@@ -46,7 +46,7 @@
   "Returns the intersection points of the rulers."
   [db]
   (let [zoom (get-in db [:documents (:active-document db) :zoom])
-        viewbox (frame.h/viewbox db)
+        viewbox (frame.handlers/viewbox db)
         ruler-step (step zoom)]
     (combo/cartesian-product (steps-coll ruler-step viewbox :vertical)
                              (steps-coll ruler-step viewbox :horizontal))))

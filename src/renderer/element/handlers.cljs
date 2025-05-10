@@ -1,27 +1,27 @@
 (ns renderer.element.handlers
   (:require
-   [clojure.core.matrix :as mat]
+   [clojure.core.matrix :as matrix]
    [clojure.set :as set]
-   [clojure.string :as str]
+   [clojure.string :as string]
    [hickory.core :as hickory]
    [hickory.zip]
    [malli.core :as m]
-   [malli.error :as me]
+   [malli.error :as m.error]
    [renderer.app.db :refer [App]]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.db :as db :refer [Element Tag AnimationTag Direction]]
-   [renderer.element.hierarchy :as hierarchy]
-   [renderer.notification.handlers :as notification.h]
-   [renderer.notification.views :as notification.v]
-   [renderer.utils.attribute :as attr]
-   [renderer.utils.bounds :as bounds :refer [BBox]]
-   [renderer.utils.element :as element]
+   [renderer.element.hierarchy :as element.hierarchy]
+   [renderer.notification.handlers :as notification.handlers]
+   [renderer.notification.views :as notification.views]
+   [renderer.utils.attribute :as utils.attribute]
+   [renderer.utils.bounds :as utils.bounds :refer [BBox]]
+   [renderer.utils.element :as utils.element]
    [renderer.utils.extra :refer [partial-right]]
-   [renderer.utils.hiccup :as hiccup]
-   [renderer.utils.map :as map]
-   [renderer.utils.math :as math :refer [Vec2]]
-   [renderer.utils.path :as path :refer [PathManipulation PathBooleanOperation]]
-   [renderer.utils.vec :as vec]))
+   [renderer.utils.hiccup :as utils.hiccup]
+   [renderer.utils.map :as utils.map]
+   [renderer.utils.math :as utils.math :refer [Vec2]]
+   [renderer.utils.path :as utils.path :refer [PathManipulation PathBooleanOperation]]
+   [renderer.utils.vec :as utils.vec]))
 
 (m/=> path [:-> App [:* [:or keyword? uuid?]] vector?])
 (defn path
@@ -45,7 +45,7 @@
 (m/=> root [:-> App Element])
 (defn root
   [db]
-  (some #(when (element/root? %) %) (vals (entities db))))
+  (some #(when (utils.element/root? %) %) (vals (entities db))))
 
 (m/=> locked? [:-> App uuid? boolean?])
 (defn locked?
@@ -60,7 +60,7 @@
 (m/=> ratio-locked? [:-> App boolean?])
 (defn ratio-locked?
   [db]
-  (every? element/ratio-locked? (selected db)))
+  (every? utils.element/ratio-locked? (selected db)))
 
 (m/=> selected-ids [:-> App [:set uuid?]])
 (defn selected-ids
@@ -98,7 +98,7 @@
   [db id]
   (loop [parent-el (parent db id)]
     (when parent-el
-      (if (element/container? parent-el)
+      (if (utils.element/container? parent-el)
         parent-el
         (recur (parent db (:id parent-el)))))))
 
@@ -106,10 +106,10 @@
 (defn adjusted-bbox
   [db id]
   (loop [container (parent-container db id)
-         bbox (hierarchy/bbox (entity db id))]
+         bbox (element.hierarchy/bbox (entity db id))]
     (if-not (and container bbox)
       bbox
-      (let [[offset-x offset-y _ _] (hierarchy/bbox container)
+      (let [[offset-x offset-y _ _] (element.hierarchy/bbox container)
             [min-x min-y max-x max-y] bbox]
         (recur
          (parent-container db (:id container))
@@ -124,9 +124,9 @@
   (let [el (entity db id)
         bbox (if (= (:tag el) :g)
                (let [b (map #(adjusted-bbox db %) (children-ids db id))]
-                 (when (seq b) (apply bounds/union b)))
+                 (when (seq b) (apply utils.bounds/union b)))
                (adjusted-bbox db id))]
-    (if (or (not bbox) (element/root? el))
+    (if (or (not bbox) (utils.element/root? el))
       db
       (-> (reduce refresh-bbox db (children-ids db id))
           (update-in (path db id) assoc :bbox bbox)))))
@@ -167,7 +167,7 @@
 (m/=> root-svgs [:-> App [:sequential Element]])
 (defn root-svgs
   [db]
-  (->> db root-children (filter element/svg?)))
+  (->> db root-children (filter utils.element/svg?)))
 
 (m/=> ancestor-ids [:function
                     [:-> App [:sequential uuid?]]
@@ -253,7 +253,7 @@
   ([db k v]
    (reduce (partial-right assoc-prop k v) db (selected-ids db)))
   ([db id k v]
-   (-> (if (str/blank? v)
+   (-> (if (string/blank? v)
          (update-in db (path db id) dissoc k)
          (assoc-in db (path db id k) v))
        (refresh-bbox id))))
@@ -289,15 +289,15 @@
    (reduce (partial-right set-attr k v) db (selected-ids db)))
   ([db id k v]
    (if (and (not (locked? db id))
-            (element/supported-attr? (entity db id) k))
-     (if (str/blank? v)
+            (utils.element/supported-attr? (entity db id) k))
+     (if (string/blank? v)
        (dissoc-attr db id k)
-       (assoc-attr db id k (str/trim (str v))))
+       (assoc-attr db id k (string/trim (str v))))
      db)))
 
 (defn update-attr
   [db id k f & more]
-  (if (element/supported-attr? (entity db id) k)
+  (if (utils.element/supported-attr? (entity db id) k)
     (apply update-el db id attr.hierarchy/update-attr k f more)
     db))
 
@@ -443,7 +443,7 @@
 (m/=> bbox [:-> App [:maybe BBox]])
 (defn bbox
   [db]
-  (element/united-bbox (selected db)))
+  (utils.element/united-bbox (selected db)))
 
 (m/=> copy [:-> App App])
 (defn copy
@@ -462,10 +462,10 @@
    (reduce delete db (reverse (selected-sorted-ids db))))
   ([db id]
    (let [el (entity db id)
-         db (if (element/root? el) db (reduce delete db (:children el)))]
+         db (if (utils.element/root? el) db (reduce delete db (:children el)))]
      (cond-> db
-       (not (element/root? el))
-       (-> (update-prop (:parent el) :children vec/remove-nth (index db id))
+       (not (utils.element/root? el))
+       (-> (update-prop (:parent el) :children utils.vec/remove-nth (index db id))
            (update-in (path db) dissoc id)
            (expand id))))))
 
@@ -481,7 +481,7 @@
          new-index (f i sibling-count)]
      (cond-> db
        (<= 0 new-index (dec sibling-count))
-       (update-prop (:id (parent db id)) :children vec/move i new-index)))))
+       (update-prop (:id (parent db id)) :children utils.vec/move i new-index)))))
 
 (m/=> set-parent [:function
                   [:-> App uuid? App]
@@ -504,7 +504,7 @@
         last-index (count sibling-els)]
     (-> db
         (set-parent id parent-id)
-        (update-prop parent-id :children vec/move last-index i))))
+        (update-prop parent-id :children utils.vec/move last-index i))))
 
 (m/=> hovered-svg [:-> App Element])
 (defn hovered-svg
@@ -512,7 +512,7 @@
   (let [svgs (reverse (root-svgs db))
         pointer-pos (:adjusted-pointer-pos db)]
     (or
-     (some #(when (bounds/contained-point? (:bbox %) pointer-pos) %) svgs)
+     (some #(when (utils.bounds/contained-point? (:bbox %) pointer-pos) %) svgs)
      (root db))))
 
 (m/=> translate [:function
@@ -523,7 +523,7 @@
   ([db offset]
    (reduce (partial-right translate offset) db (top-ancestor-ids db)))
   ([db id offset]
-   (update-el db id hierarchy/translate offset)))
+   (update-el db id element.hierarchy/translate offset)))
 
 (m/=> place [:function
              [:-> App Vec2 App]
@@ -534,9 +534,9 @@
    (reduce (partial-right place position) db (top-ancestor-ids db)))
   ([db id position]
    (let [el (entity db id)
-         center (bounds/center (hierarchy/bbox el))
-         offset (mat/sub position center)]
-     (update-el db id hierarchy/translate offset))))
+         center (utils.bounds/center (element.hierarchy/bbox el))
+         offset (matrix/sub position center)]
+     (update-el db id element.hierarchy/translate offset))))
 
 (m/=> scale [:-> App Vec2 Vec2 boolean? App])
 (defn scale
@@ -549,8 +549,8 @@
        (let [adjusted-pivot-point (->> (entity db id)
                                        :bbox
                                        (take 2)
-                                       (mat/sub pivot-point))]
-         (update-el db id hierarchy/scale ratio adjusted-pivot-point)))
+                                       (matrix/sub pivot-point))]
+         (update-el db id element.hierarchy/scale ratio adjusted-pivot-point)))
      db
      ids-to-scale)))
 
@@ -562,11 +562,11 @@
    (reduce (partial-right align direction) db (selected-ids db)))
   ([db id direction]
    (let [el-bbox (:bbox (entity db id))
-         center (bounds/center el-bbox)
+         center (utils.bounds/center el-bbox)
          parent-bbox (:bbox (parent db id))
-         parent-center (bounds/center parent-bbox)
-         [cx cy] (mat/sub parent-center center)
-         delta-bbox (mat/sub parent-bbox el-bbox)
+         parent-center (utils.bounds/center parent-bbox)
+         [cx cy] (matrix/sub parent-center center)
+         delta-bbox (matrix/sub parent-bbox el-bbox)
          [min-x-delta min-y-delta max-x-delta max-y-delta] delta-bbox]
      (translate db id (case direction
                         :top [0 min-y-delta]
@@ -584,7 +584,7 @@
   ([db]
    (reduce ->path db (selected-ids db)))
   ([db id]
-   (update-el db id element/->path)))
+   (update-el db id utils.element/->path)))
 
 (m/=> stroke->path [:function
                     [:-> App App]
@@ -594,25 +594,25 @@
   ([db]
    (reduce stroke->path db (selected-ids db)))
   ([db id]
-   (update-el db id element/stroke->path)))
+   (update-el db id utils.element/stroke->path)))
 
 (m/=> overlapping-svg [:-> App BBox Element])
 (defn overlapping-svg
   [db el-bbox]
   (let [svgs (reverse (root-svgs db))] ; Reverse to select top svgs first.
     (or
-     (some #(when (bounds/contained? el-bbox (:bbox %)) %) svgs)
-     (some #(when (bounds/intersect? el-bbox (:bbox %)) %) svgs)
+     (some #(when (utils.bounds/contained? el-bbox (:bbox %)) %) svgs)
+     (some #(when (utils.bounds/intersect? el-bbox (:bbox %)) %) svgs)
      (root db))))
 
 (m/=> assoc-parent-id [:-> App Element Element])
 (defn assoc-parent-id
   [db el]
   (cond-> el
-    (not (or (element/root? el) (:parent el)))
-    (assoc :parent (:id (if (element/svg? el)
+    (not (or (utils.element/root? el) (:parent el)))
+    (assoc :parent (:id (if (utils.element/svg? el)
                           (root db)
-                          (overlapping-svg db (hierarchy/bbox el)))))))
+                          (overlapping-svg db (element.hierarchy/bbox el)))))))
 
 (m/=> create [:-> App map? App])
 (defn create
@@ -621,8 +621,8 @@
         new-el (->> (cond-> el
                       (not (string? (:content el)))
                       (dissoc :content))
-                    (map/remove-nils)
-                    (element/normalize-attrs)
+                    (utils.map/remove-nils)
+                    (utils.element/normalize-attrs)
                     (assoc-parent-id db))
         new-el (-> new-el
                    (dissoc :locked)
@@ -630,15 +630,15 @@
         child-els (-> (entities db (set (:children el)))
                       (vals)
                       (concat (:content el)))
-        [min-x min-y] (hierarchy/bbox (entity db (:parent new-el)))
+        [min-x min-y] (element.hierarchy/bbox (entity db (:parent new-el)))
         add-children (fn [db child-els]
                        (reduce #(cond-> %1
                                   (db/tag? (:tag %2))
                                   (create (assoc %2 :parent id))) db child-els))]
     (if-not (db/valid? new-el)
-      (->> (-> new-el db/explain me/humanize str)
-           (notification.v/spec-failed "Invalid element")
-           (notification.h/add db))
+      (->> (-> new-el db/explain m.error/humanize str)
+           (notification.views/spec-failed "Invalid element")
+           (notification.handlers/add db))
       (cond-> db
         :always
         (assoc-in (path db id) new-el)
@@ -646,7 +646,7 @@
         (:parent new-el)
         (update-prop (:parent new-el) :children #(vec (conj % id)))
 
-        (not (or (element/svg? new-el) (element/root? new-el) (:parent el)))
+        (not (or (utils.element/svg? new-el) (utils.element/root? new-el) (:parent el)))
         (translate [(- min-x) (- min-y)])
 
         :always
@@ -678,10 +678,10 @@
 (defn boolean-operation
   [db operation]
   (let [selected-elements (top-selected-sorted db)
-        attrs (-> selected-elements first element/->path :attrs)
+        attrs (-> selected-elements first utils.element/->path :attrs)
         new-path (reduce (fn [path-a el]
-                           (let [path-b (-> el element/->path :attrs :d)]
-                             (path/boolean-operation path-a path-b operation)))
+                           (let [path-b (-> el utils.element/->path :attrs :d)]
+                             (utils.path/boolean-operation path-a path-b operation)))
                          (:d attrs)
                          (rest selected-elements))]
     (cond-> db
@@ -709,9 +709,9 @@
    (let [parent-el (hovered-svg db)]
      (reduce (partial-right paste parent-el) (deselect-all db) (:copied-elements db))))
   ([db el parent-el]
-   (let [center (bounds/center (:copied-bbox db))
-         el-center (bounds/center (:bbox el))
-         offset (mat/sub el-center center)
+   (let [center (utils.bounds/center (:copied-bbox db))
+         el-center (utils.bounds/center (:bbox el))
+         offset (matrix/sub el-center center)
          el (dissoc el :bbox)
          [s-x1 s-y1] (:bbox parent-el)
          pointer-pos (:adjusted-pointer-pos db)]
@@ -721,7 +721,7 @@
         :always
         (-> (deselect-all)
             (add (assoc el :parent (:id parent-el)))
-            (place (mat/add pointer-pos offset)))
+            (place (matrix/add pointer-pos offset)))
 
         (not= (:id (root db)) (:id parent-el))
         (translate [(- s-x1) (- s-y1)])) (selected-ids db)))))
@@ -755,7 +755,7 @@
    ;; TODO: Merge attributes from multiple selected elements.
    (if (= 1 (count (:copied-elements db)))
      (let [attrs (-> db :copied-elements first :attrs)
-           style-attrs (disj attr/presentation :transform)]
+           style-attrs (disj utils.attribute/presentation :transform)]
        (reduce (fn [db attr]
                  (cond-> db
                    (attr attrs)
@@ -771,7 +771,7 @@
            get-value (fn [v] (if (empty? (str v)) source-attr v))]
        (cond-> db
          source-attr
-         (update-attr id attr get-value)))) db attr/presentation))
+         (update-attr id attr get-value)))) db utils.attribute/presentation))
 
 (m/=> group [:function
              [:-> App App]
@@ -815,14 +815,14 @@
   ([db id action]
    (cond-> db
      (= (:tag (entity db id)) :path)
-     (update-attr id :d path/manipulate action))))
+     (update-attr id :d utils.path/manipulate action))))
 
 (defn import-svg
   [db {:keys [svg label position]}]
   (let [[x y] position
         hickory (hickory/as-hickory (hickory/parse svg))
         zipper (hickory.zip/hickory-zip hickory)
-        svg (hiccup/find-svg zipper)
+        svg (utils.hiccup/find-svg zipper)
         svg (-> svg
                 (assoc :label label)
                 (update :attrs dissoc :desc :version :xmlns)
@@ -836,4 +836,4 @@
   [db els]
   (let [options (-> db :snap :options)]
     (reduce (fn [points el]
-              (into points (element/snapping-points el options))) [] els)))
+              (into points (utils.element/snapping-points el options))) [] els)))

@@ -3,16 +3,16 @@
   (:require
    ["@radix-ui/react-popover" :as Popover]
    ["svgpath" :as svgpath]
-   [clojure.string :as str]
+   [clojure.string :as string]
    [re-frame.core :as rf]
-   [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.attribute.views :as v]
-   [renderer.element.events :as-alias element.e]
-   [renderer.tool.subs :as-alias tool.s]
+   [renderer.attribute.hierarchy :as attribute.hierarchy]
+   [renderer.attribute.views :as attribute.views]
+   [renderer.element.events :as-alias element.events]
+   [renderer.tool.subs :as-alias tool.subs]
    [renderer.ui :as ui]
-   [renderer.window.events :as-alias window.e]))
+   [renderer.window.events :as-alias window.events]))
 
-(defmethod hierarchy/description [:default :d]
+(defmethod attribute.hierarchy/description [:default :d]
   []
   "The d attribute defines a path to be drawn.")
 
@@ -40,14 +40,14 @@
 
 (defn ->command
   [c]
-  (get path-commands (keyword (str/lower-case c))))
+  (get path-commands (keyword (string/lower-case c))))
 
 (defn remove-segment-by-index
   [path i]
   (set! (.-segments path) (.splice (.-segments path) i 1))
-  (rf/dispatch [::element.e/set-attr :p (.toString path)]))
+  (rf/dispatch [::element.events/set-attr :p (.toString path)]))
 
-(defmulti segment-form (fn [segment _] (keyword (str/lower-case (first segment)))))
+(defmulti segment-form (fn [segment _] (keyword (string/lower-case (first segment)))))
 
 (defmethod segment-form :default
   [segment i]
@@ -104,14 +104,14 @@
   (let [command (first segment)
         {:keys [label url]} (->command command)]
     [:div.my-2
-     #_[:div (str/join " " segment)]
+     #_[:div (string/join " " segment)]
      [:div.flex.items-center.justify-between.mb-1
       [:span
        [:span.bg-primary.p-1 (first segment)]
        [:button.p-1.text-inherit
-        {:on-click #(rf/dispatch [::window.e/open-remote-url url])}
+        {:on-click #(rf/dispatch [::window.events/open-remote-url url])}
         label]
-       (if (= command (str/lower-case command))
+       (if (= command (string/lower-case command))
          "(Relative)" "(Absolute)")]
       [:button.icon-button.small.bg-transparent.text-muted
        {:on-click #(remove-segment-by-index path i)}
@@ -130,11 +130,11 @@
                       ^{:key (str "segment-" i)}
                       [segment-row i segment path]) segments)]]]))
 
-(defmethod hierarchy/form-element [:default :d]
+(defmethod attribute.hierarchy/form-element [:default :d]
   [_ k v {:keys [disabled]}]
-  (let [idle (= @(rf/subscribe [::tool.s/state]) :idle)]
+  (let [idle (= @(rf/subscribe [::tool.subs/state]) :idle)]
     [:div.flex.gap-px.w-full
-     [v/form-input k (if idle v "waiting")
+     [attribute.views/form-input k (if idle v "waiting")
       {:disabled (or disabled (not v) (not idle))}]
      (when v
        [:> Popover/Root {:modal true}

@@ -1,16 +1,16 @@
 (ns renderer.tool.impl.draw.core
   (:require
-   [renderer.tool.handlers :as h]
-   [renderer.tool.hierarchy :as hierarchy]
+   [renderer.tool.handlers :as tool.handlers]
+   [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.impl.draw.brush]
    [renderer.tool.impl.draw.pen]))
 
-(derive ::hierarchy/draw ::hierarchy/tool)
+(derive ::tool.hierarchy/draw ::tool.hierarchy/tool)
 
-(defmethod hierarchy/help [::hierarchy/draw :idle]
+(defmethod tool.hierarchy/help [::tool.hierarchy/draw :idle]
   []
   "Click and drag to draw.")
 
-(defmethod hierarchy/on-activate ::hierarchy/draw
+(defmethod tool.hierarchy/on-activate ::tool.hierarchy/draw
   [db]
-  (h/set-cursor db "crosshair"))
+  (tool.handlers/set-cursor db "crosshair"))

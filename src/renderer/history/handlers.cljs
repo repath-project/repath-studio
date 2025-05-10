@@ -1,18 +1,18 @@
 (ns renderer.history.handlers
   (:require
    [malli.core :as m]
-   [malli.error :as me]
+   [malli.error :as m.error]
    [renderer.app.db :refer [App]]
-   [renderer.app.effects :as-alias app.fx]
-   [renderer.app.events :as-alias app.e]
-   [renderer.document.handlers :as document.h]
+   [renderer.app.effects :as-alias app.effects]
+   [renderer.app.events :as-alias app.events]
+   [renderer.document.handlers :as document.handlers]
    [renderer.element.db :refer [Element]]
-   [renderer.element.handlers :as element.h]
+   [renderer.element.handlers :as element.handlers]
    [renderer.history.db :refer [History HistoryState]]
-   [renderer.notification.handlers :as notification.h]
-   [renderer.notification.views :as notification.v]
+   [renderer.notification.handlers :as notification.handlers]
+   [renderer.notification.views :as notification.views]
    [renderer.utils.math :refer [Vec2]]
-   [renderer.utils.vec :as vec]))
+   [renderer.utils.vec :as utils.vec]))
 
 (m/=> path [:-> App [:* [:or keyword? uuid?]] vector?])
 (defn path
@@ -63,7 +63,7 @@
   [db]
   (cond-> db
     (:active-document db)
-    (assoc-in (element.h/path db) (-> db history state :elements))))
+    (assoc-in (element.handlers/path db) (-> db history state :elements))))
 
 (m/=> drop-rest [:function
                  [:-> App App]
@@ -87,8 +87,8 @@
   (let [preview-state (-> db history (state pos))
         timestamp (-> preview-state :timestamp js/Date.)]
     (-> db
-        (assoc-in (document.h/path db :preview-label) (str timestamp))
-        (assoc-in (element.h/path db) (:elements preview-state)))))
+        (assoc-in (document.handlers/path db :preview-label) (str timestamp))
+        (assoc-in (element.handlers/path db) (:elements preview-state)))))
 
 (m/=> go-to [:-> App uuid? App])
 (defn go-to
@@ -165,7 +165,7 @@
 (defn create-state
   [db id explanation]
   (let [new-state {:explanation explanation
-                   :elements (element.h/entities db)
+                   :elements (element.handlers/entities db)
                    :timestamp (.now js/Date) ; REVIEW: Sideffect
                    :index (state-count db)
                    :id id
@@ -188,7 +188,7 @@
         (let [index (.indexOf (:children parent) (:id node))
               new-index (dec (count (:children parent)))
               children-path (path db :states parent-id :children)]
-          (recur parent (update-in db children-path vec/move index new-index)))))))
+          (recur parent (update-in db children-path utils.vec/move index new-index)))))))
 
 (def valid-elements? (m/validator [:map-of uuid? Element]))
 
@@ -198,17 +198,17 @@
 (defn finalize
   "Pushes changes to history."
   [db explanation]
-  (let [elements (element.h/entities db)]
+  (let [elements (element.handlers/entities db)]
     (cond
       (= elements (-> db history state :elements))
       db
 
       (not (valid-elements? elements))
       (-> (reset-state db)
-          (notification.h/add
-           (notification.v/spec-failed
+          (notification.handlers/add
+           (notification.views/spec-failed
             explanation
-            (-> elements explain-elements me/humanize str))))
+            (-> elements explain-elements m.error/humanize str))))
 
       :else
       (let [current-position (position db)

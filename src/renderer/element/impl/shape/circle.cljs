@@ -2,19 +2,19 @@
   "https://www.w3.org/TR/SVG/shapes.html#CircleElement
    https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/circle"
   (:require
-   [clojure.core.matrix :as mat]
-   [clojure.string :as str]
+   [clojure.core.matrix :as matrix]
+   [clojure.string :as string]
    [renderer.attribute.hierarchy :as attr.hierarchy]
-   [renderer.element.hierarchy :as hierarchy]
-   [renderer.tool.views :as tool.v]
-   [renderer.utils.bounds :as bounds]
-   [renderer.utils.element :as element]
-   [renderer.utils.length :as length]
-   [renderer.utils.svg :as svg]))
+   [renderer.element.hierarchy :as element.hierarchy]
+   [renderer.tool.views :as tool.views]
+   [renderer.utils.bounds :as utils.bounds]
+   [renderer.utils.element :as utils.element]
+   [renderer.utils.length :as utils.length]
+   [renderer.utils.svg :as utils.svg]))
 
-(derive :circle ::hierarchy/shape)
+(derive :circle ::element.hierarchy/shape)
 
-(defmethod hierarchy/properties :circle
+(defmethod element.hierarchy/properties :circle
   []
   {:icon "circle"
    :description "The <circle> SVG element is an SVG basic shape, used to draw
@@ -26,63 +26,63 @@
            :stroke
            :stroke-dasharray]})
 
-(defmethod hierarchy/translate :circle
+(defmethod element.hierarchy/translate :circle
   [el [x y]]
-  (element/update-attrs-with el + [[:cx x] [:cy y]]))
+  (utils.element/update-attrs-with el + [[:cx x] [:cy y]]))
 
-(defmethod hierarchy/scale :circle
+(defmethod element.hierarchy/scale :circle
   [el ratio pivot-point]
-  (let [dimensions (bounds/->dimensions (hierarchy/bbox el))
-        pivot-point (mat/sub pivot-point (mat/div dimensions 2))
-        offset (mat/sub pivot-point (mat/mul pivot-point ratio))
+  (let [dimensions (utils.bounds/->dimensions (element.hierarchy/bbox el))
+        pivot-point (matrix/sub pivot-point (matrix/div dimensions 2))
+        offset (matrix/sub pivot-point (matrix/mul pivot-point ratio))
         ratio (apply min ratio)]
     (-> el
         (attr.hierarchy/update-attr :r * ratio)
-        (hierarchy/translate offset))))
+        (element.hierarchy/translate offset))))
 
-(defmethod hierarchy/bbox :circle
+(defmethod element.hierarchy/bbox :circle
   [el]
   (let [{{:keys [cx cy r]} :attrs} el
-        [cx cy r] (map length/unit->px [cx cy r])]
+        [cx cy r] (map utils.length/unit->px [cx cy r])]
     [(- cx r) (- cy r) (+ cx r) (+ cy r)]))
 
-(defmethod hierarchy/area :circle
+(defmethod element.hierarchy/area :circle
   [el]
   (-> (get-in el [:attrs :r])
-      (length/unit->px)
+      (utils.length/unit->px)
       (Math/pow 2)
       (* Math/PI)))
 
-(defmethod hierarchy/path :circle
+(defmethod element.hierarchy/path :circle
   [el]
   (let [{{:keys [cx cy r]} :attrs} el
-        [cx cy r] (map length/unit->px [cx cy r])]
-    (str/join " " ["M" (+ cx r) cy
-                   "A" r r 0 0 1 cx (+ cy r)
-                   "A" r r 0 0 1 (- cx r) cy
-                   "A" r r 0 0 1 (+ cx r) cy
-                   "z"])))
+        [cx cy r] (map utils.length/unit->px [cx cy r])]
+    (string/join " " ["M" (+ cx r) cy
+                      "A" r r 0 0 1 cx (+ cy r)
+                      "A" r r 0 0 1 (- cx r) cy
+                      "A" r r 0 0 1 (+ cx r) cy
+                      "z"])))
 
-(defmethod hierarchy/edit :circle
+(defmethod element.hierarchy/edit :circle
   [el [x _y] handle]
   (case handle
     :r (attr.hierarchy/update-attr el :r #(abs (+ % x)))
     el))
 
-(defmethod hierarchy/render-edit :circle
+(defmethod element.hierarchy/render-edit :circle
   [el]
   (let [bbox (:bbox el)
-        [cx cy] (bounds/center bbox)
-        r (/ (first (bounds/->dimensions bbox)) 2)]
+        [cx cy] (utils.bounds/center bbox)
+        r (/ (first (utils.bounds/->dimensions bbox)) 2)]
     [:g
-     [svg/line [cx cy] [(+ cx r) cy]]
-     [svg/label (str (.toFixed r 2)) [(+ cx (/ r 2)) cy]]
-     [svg/times [cx cy]]
-     [tool.v/square-handle {:x (+ cx r)
-                            :y cy
-                            :id :r
-                            :type :handle
-                            :action :edit
-                            :cursor "move"
-                            :element (:id el)}
+     [utils.svg/line [cx cy] [(+ cx r) cy]]
+     [utils.svg/label (str (.toFixed r 2)) [(+ cx (/ r 2)) cy]]
+     [utils.svg/times [cx cy]]
+     [tool.views/square-handle {:x (+ cx r)
+                                :y cy
+                                :id :r
+                                :type :handle
+                                :action :edit
+                                :cursor "move"
+                                :element (:id el)}
       [:title {:key "r-title"} "r"]]]))

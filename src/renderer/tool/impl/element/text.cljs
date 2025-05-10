@@ -1,38 +1,38 @@
 (ns renderer.tool.impl.element.text
   (:require
-   [renderer.element.handlers :as element.h]
-   [renderer.history.handlers :as history.h]
-   [renderer.tool.app :as-alias app.fx]
-   [renderer.tool.handlers :as h]
-   [renderer.tool.hierarchy :as hierarchy]))
+   [renderer.element.handlers :as element.handlers]
+   [renderer.history.handlers :as history.handlers]
+   [renderer.tool.app :as-alias app.effects]
+   [renderer.tool.handlers :as tool.handlers]
+   [renderer.tool.hierarchy :as tool.hierarchy]))
 
-(derive :text ::hierarchy/element)
+(derive :text ::tool.hierarchy/element)
 
-(defmethod hierarchy/properties :text
+(defmethod tool.hierarchy/properties :text
   []
   {:icon "text"})
 
-(defmethod hierarchy/help [:text :idle]
+(defmethod tool.hierarchy/help [:text :idle]
   []
   "Click to enter your text.")
 
-(defmethod hierarchy/on-activate :text
+(defmethod tool.hierarchy/on-activate :text
   [db]
-  (h/set-cursor db "text"))
+  (tool.handlers/set-cursor db "text"))
 
-(defmethod hierarchy/on-pointer-up :text
+(defmethod tool.hierarchy/on-pointer-up :text
   [db _e]
   (let [[offset-x offset-y] (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
         el {:type :element
             :tag :text
             :attrs {:x offset-x
                     :y offset-y}}]
-    (-> (element.h/deselect-all db)
-        (element.h/add el)
-        (history.h/finalize "Create text")
-        (h/activate :edit)
-        (h/set-state :create))))
+    (-> (element.handlers/deselect-all db)
+        (element.handlers/add el)
+        (history.handlers/finalize "Create text")
+        (tool.handlers/activate :edit)
+        (tool.handlers/set-state :create))))
 
-(defmethod hierarchy/on-drag-end :text
+(defmethod tool.hierarchy/on-drag-end :text
   [db e]
-  (hierarchy/on-pointer-up db e))
+  (tool.hierarchy/on-pointer-up db e))

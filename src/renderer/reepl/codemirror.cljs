@@ -10,7 +10,7 @@
    ["codemirror/mode/javascript/javascript.js"]
    ["react" :as react]
    [clojure.edn :as edn]
-   [clojure.string :as str]
+   [clojure.string :as string]
    [reagent.core :as r]))
 
 ;; TODO: can we avoid the global state modification here?
@@ -96,7 +96,7 @@
         words (when-not (empty? text)
                 (vec (complete-word text)))
         ;; Remove core duplicates
-        words (vec (remove #(str/includes? (second %) "cljs.core") words))]
+        words (vec (remove #(string/includes? (second %) "cljs.core") words))]
     (when-not (empty? words)
       {:words words
        :num (count words)

@@ -1,7 +1,7 @@
 (ns renderer.utils.length
   (:require
    [malli.core :as m]
-   [renderer.utils.unit :as unit]))
+   [renderer.utils.unit :as utils.unit]))
 
 (def ppi 96)
 
@@ -33,7 +33,7 @@
    If the unit is invalid, it fallbacks to :px (1)"
   [s]
   (get unit-to-pixel-map (if (valid-unit? s)
-                           (unit/->key s)
+                           (utils.unit/->key s)
                            :px)))
 
 (m/=> ->px [:-> number? string? number?])
@@ -49,7 +49,7 @@
 (m/=> unit->px [:-> [:or string? number? nil?] number?])
 (defn unit->px
   [v]
-  (let [[n unit] (unit/parse v)]
+  (let [[n unit] (utils.unit/parse v)]
     (if (empty? unit)
       n
       (if (valid-unit? unit) (->px n unit) 0))))
@@ -59,7 +59,7 @@
   "Converts a value to pixels, applies a function and converts the result
    back to the original unit."
   ([v f & more]
-   (let [[n unit] (unit/parse v)]
+   (let [[n unit] (utils.unit/parse v)]
      (-> (apply f (->px n unit) more)
          (.toFixed 2)
          (js/parseFloat)

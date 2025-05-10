@@ -1,7 +1,7 @@
 (ns renderer.timeline.events
   (:require
    [re-frame.core :as rf]
-   [renderer.timeline.effects :as fx]))
+   [renderer.timeline.effects :as timeline.effects]))
 
 (rf/reg-event-db
  ::pause
@@ -37,5 +37,5 @@
  ::set-time
  (fn [{:keys [db]} [_ t]]
    {:db (assoc-in db [:timeline :time] t)
-    ::fx/set-current-time t
-    ::fx/pause-animations nil}))
+    ::timeline.effects/set-current-time t
+    ::timeline.effects/pause-animations nil}))

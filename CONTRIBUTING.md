@@ -26,17 +26,6 @@ t           -> time
 h, m, s, ms -> hours, minutes, seconds, milliseconds
 </pre>
 
-We also use the following namespace aliases
-<pre>
-v  -> views
-e  -> events
-h  -> handlers
-s  -> subs
-fx -> effects
-</pre>
-
-If the namespace belongs to a dedicated module, we use `module.v`.
-
 ## App structure
 
 Main structure

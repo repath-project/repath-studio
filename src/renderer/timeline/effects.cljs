@@ -1,11 +1,11 @@
 (ns renderer.timeline.effects
   (:require
    [re-frame.core :as rf]
-   [renderer.utils.dom :as dom]))
+   [renderer.utils.dom :as utils.dom]))
 
 (defn svg-elements!
   []
-  (when-let [document (dom/frame-document!)]
+  (when-let [document (utils.dom/frame-document!)]
     (.querySelectorAll document "svg")))
 
 (rf/reg-fx

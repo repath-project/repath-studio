@@ -4,16 +4,16 @@
    [malli.core :as m]
    [re-frame.core :as rf]
    [renderer.app.db :refer [App]]
-   [renderer.document.subs :as-alias document.s]
+   [renderer.document.subs :as-alias document.subs]
    [renderer.theme.db :as theme.db]
-   [renderer.utils.bounds :as bounds :refer [BBox]]
+   [renderer.utils.bounds :as utils.bounds :refer [BBox]]
    [renderer.utils.hiccup :refer [Hiccup]]
-   [renderer.utils.math :as math :refer [Vec2]]))
+   [renderer.utils.math :as utils.math :refer [Vec2]]))
 
 (m/=> dot [:-> Vec2 Hiccup any?])
 (defn dot
   [[x y] & children]
-  (let [zoom @(rf/subscribe [::document.s/zoom])]
+  (let [zoom @(rf/subscribe [::document.subs/zoom])]
     (into [:circle {:cx x
                     :cy y
                     :stroke-width 0
@@ -27,7 +27,7 @@
   ([[x1 y1] [x2 y2]]
    [line [x1 y1] [x2 y2] true])
   ([[x1 y1] [x2 y2] dashed?]
-   (let [zoom @(rf/subscribe [::document.s/zoom])
+   (let [zoom @(rf/subscribe [::document.subs/zoom])
          stroke-width (/ 1 zoom)
          stroke-dasharray (/ 5 zoom)
          attrs {:x1 x1
@@ -45,7 +45,7 @@
 (m/=> cross [:-> Vec2 any?])
 (defn cross
   [[x y]]
-  (let [zoom @(rf/subscribe [::document.s/zoom])
+  (let [zoom @(rf/subscribe [::document.subs/zoom])
         size (/ theme.db/handle-size zoom)]
     [:g
      [line
@@ -60,15 +60,15 @@
 (m/=> arc [:-> Vec2 number? number? number? any?])
 (defn arc
   [[x y] radius start-degrees size-degrees]
-  (let [zoom @(rf/subscribe [::document.s/zoom])
+  (let [zoom @(rf/subscribe [::document.subs/zoom])
         stroke-width (/ 1 zoom)
         radius (/ radius zoom)
         end-degrees (+ start-degrees size-degrees)
         stroke-dasharray (/ theme.db/dash-size zoom)
-        x1 (+ x (math/angle-dx start-degrees radius))
-        y1 (+ y (math/angle-dy start-degrees radius))
-        x2 (+ x (math/angle-dx end-degrees radius))
-        y2 (+ y (math/angle-dy end-degrees radius))
+        x1 (+ x (utils.math/angle-dx start-degrees radius))
+        y1 (+ y (utils.math/angle-dy start-degrees radius))
+        x2 (+ x (utils.math/angle-dx end-degrees radius))
+        y2 (+ y (utils.math/angle-dy end-degrees radius))
         d (str "M" x1 "," y1 " "
                "A" radius "," radius " 0 0,1 " x2 "," y2)
         attrs {:d d
@@ -82,7 +82,7 @@
 (m/=> times [:-> Vec2 any?])
 (defn times
   [[x y]]
-  (let [zoom @(rf/subscribe [::document.s/zoom])
+  (let [zoom @(rf/subscribe [::document.subs/zoom])
         size (/ theme.db/handle-size zoom)
         mid (/ size Math/PI)]
     [:g {:style {:pointer-events "none"}}
@@ -102,7 +102,7 @@
   ([text position]
    [label text position "middle"])
   ([text position text-anchor]
-   (let [zoom @(rf/subscribe [::document.s/zoom])
+   (let [zoom @(rf/subscribe [::document.subs/zoom])
          [x y] position
          font-size (/ 10 zoom)
          padding (/ 8 zoom)
@@ -132,9 +132,9 @@
 (m/=> bounding-box [:-> BBox boolean? any?])
 (defn bounding-box
   [bbox dashed?]
-  (let [zoom @(rf/subscribe [::document.s/zoom])
+  (let [zoom @(rf/subscribe [::document.subs/zoom])
         [min-x min-y] bbox
-        [w h] (bounds/->dimensions bbox)
+        [w h] (utils.bounds/->dimensions bbox)
         stroke-width (/ 1 zoom)
         stroke-dasharray (/ theme.db/dash-size zoom)
         attrs {:x min-x

@@ -3,9 +3,9 @@
    ["react" :as react]
    ["react-resizable-panels" :refer [Panel PanelResizeHandle]]
    [re-frame.core :as rf]
-   [reagent.core :as ra]
-   [renderer.app.events :as-alias app.e]
-   [renderer.app.subs :as-alias app.s]
+   [reagent.core :as reagent]
+   [renderer.app.events :as-alias app.events]
+   [renderer.app.subs :as-alias app.subs]
    [renderer.reepl.codemirror :as codemirror]
    [renderer.reepl.db :as db]
    [renderer.reepl.handlers :as h]
@@ -21,12 +21,12 @@
 
 (defn mode-button
   [mode]
-  (let [repl-mode @(rf/subscribe [::app.s/repl-mode])
+  (let [repl-mode @(rf/subscribe [::app.subs/repl-mode])
         active (= repl-mode mode)]
     [:button.button.rounded.px-1.leading-none.text-2xs.h-4
      {:class [(when active "selected")
               "m-0.5"]
-      :on-click #(rf/dispatch [::app.e/set-repl-mode mode])}
+      :on-click #(rf/dispatch [::app.events/set-repl-mode mode])}
      mode]))
 
 (defn repl-input
@@ -39,7 +39,7 @@
                        :complete-word
                        :on-change]))]}
   (let [{:keys [_pos _count _text]} @state
-        repl-history? @(rf/subscribe [::app.s/panel-visible? :repl-history])]
+        repl-history? @(rf/subscribe [::app.subs/panel-visible? :repl-history])]
     [:div.flex.p-0.5.items-center.m-1
      [:div.flex.text-xs.self-start {:class "m-0.5"} (replumb.core/get-prompt)]
      ^{:key (str (hash (:js-cm-opts cm-opts)))}
@@ -54,7 +54,7 @@
        {:class "my-0.5 ml-0.5"
         :style {:height "16px"}
         :title (if repl-history? "Hide command output" "Show command output")
-        :on-click #(rf/dispatch [::app.e/toggle-panel :repl-history])}]]]))
+        :on-click #(rf/dispatch [::app.events/toggle-panel :repl-history])}]]]))
 
 (defmulti item (fn [i _opts] (:type i)))
 
@@ -85,13 +85,13 @@
 
 (defn repl-items [_]
   (let [ref (react/createRef)]
-    (ra/create-class
+    (reagent/create-class
      {:component-did-mount
       (fn [_this]
-        (rf/dispatch [::app.e/scroll-to-bottom (.-current ref)]))
+        (rf/dispatch [::app.events/scroll-to-bottom (.-current ref)]))
       :component-did-update
       (fn [_this]
-        (rf/dispatch [::app.e/scroll-to-bottom (.-current ref)]))
+        (rf/dispatch [::app.events/scroll-to-bottom (.-current ref)]))
       :reagent-render
       (fn [items opts]
         [:div.flex-1.border-b.border-default.h-full.overflow-hidden.flex
@@ -117,13 +117,13 @@
 (defn completion-item
   [_text _selected _active _set-active]
   (let [ref (react/createRef)]
-    (ra/create-class
+    (reagent/create-class
      {:component-did-update
       (fn [this [_ _ old-selected]]
-        (let [[_ _ selected] (ra/argv this)]
+        (let [[_ _ selected] (reagent/argv this)]
           (when (and (not old-selected)
                      selected)
-            (rf/dispatch [::app.e/scroll-into-view (.-current ref)]))))
+            (rf/dispatch [::app.events/scroll-into-view (.-current ref)]))))
       :reagent-render
       (fn [text selected active set-active]
         [:div.p-1.bg-secondary.text-nowrap
@@ -176,35 +176,35 @@
              show-value-opts
              js-cm-opts
              on-cm-init]}]
-  (ra/with-let [state (or state (ra/atom db/initial-state))
-                {:keys [add-input
-                        add-result
-                        go-up
-                        go-down
-                        clear-items
-                        set-text
-                        add-log]} (h/make-handlers state)
-                items (s/items state)
-                complete-atom (ra/atom nil)
-                docs (reaction
-                      (let [{:keys [pos words] :as state} @complete-atom]
-                        (when state
-                          (let [sym (first (get words pos))]
-                            (when (symbol? sym)
-                              (get-docs sym))))))
-                submit (fn [text]
-                         (if (= "clear" (.trim text))
-                           (do
-                             (clear-items)
-                             (set-text ""))
-                           (when (pos? (count (.trim text)))
-                             (set-text text)
-                             (add-input text)
-                             (execute text #(add-result (not %1) %2)))))]
+  (reagent/with-let [state (or state (reagent/atom db/initial-state))
+                     {:keys [add-input
+                             add-result
+                             go-up
+                             go-down
+                             clear-items
+                             set-text
+                             add-log]} (h/make-handlers state)
+                     items (s/items state)
+                     complete-atom (reagent/atom nil)
+                     docs (reaction
+                           (let [{:keys [pos words] :as state} @complete-atom]
+                             (when state
+                               (let [sym (first (get words pos))]
+                                 (when (symbol? sym)
+                                   (get-docs sym))))))
+                     submit (fn [text]
+                              (if (= "clear" (.trim text))
+                                (do
+                                  (clear-items)
+                                  (set-text ""))
+                                (when (pos? (count (.trim text)))
+                                  (set-text text)
+                                  (add-input text)
+                                  (execute text #(add-result (not %1) %2)))))]
 
     (set-print! add-log)
     [:<>
-     (when @(rf/subscribe [::app.s/panel-visible? :repl-history])
+     (when @(rf/subscribe [::app.subs/panel-visible? :repl-history])
        [repl-items-panel @items show-value-opts set-text])
 
      [:div.relative.whitespace-pre-wrap.font-mono
@@ -227,18 +227,18 @@
           :on-cm-init on-cm-init}])]]))
 
 (defonce state
-  (ra/atom db/initial-state))
+  (reagent/atom db/initial-state))
 
 (defn root
   []
   [repl
-   :execute #(replumb/run-repl (if (= @(rf/subscribe [::app.s/repl-mode]) :cljs) %1 (str "(js/eval \"" %1 "\")")) {:verbose @(rf/subscribe [::app.s/debug-info])} %2)
-   :complete-word (fn [text] (replumb/process-apropos @(rf/subscribe [::app.s/repl-mode]) text))
+   :execute #(replumb/run-repl (if (= @(rf/subscribe [::app.subs/repl-mode]) :cljs) %1 (str "(js/eval \"" %1 "\")")) {:verbose @(rf/subscribe [::app.subs/debug-info])} %2)
+   :complete-word (fn [text] (replumb/process-apropos @(rf/subscribe [::app.subs/repl-mode]) text))
    :get-docs replumb/process-doc
    :state state
    :show-value-opts
    {:showers [show-devtools/show-devtools
               (partial show-function/show-fn-with-docs maybe-fn-docs)]}
-   :js-cm-opts {:mode (if (= @(rf/subscribe [::app.s/repl-mode]) :cljs) "clojure" "javascript")
+   :js-cm-opts {:mode (if (= @(rf/subscribe [::app.subs/repl-mode]) :cljs) "clojure" "javascript")
                 :keyMap "default"
                 :showCursorWhenSelecting true}])

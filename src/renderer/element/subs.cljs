@@ -2,28 +2,28 @@
   (:require
    ["js-beautify" :as js-beautify]
    [re-frame.core :as rf]
-   [renderer.app.subs :as-alias app.s]
-   [renderer.document.subs :as-alias document.s]
-   [renderer.element.handlers :as h]
-   [renderer.element.hierarchy :as hierarchy]
-   [renderer.utils.attribute :as attr]
-   [renderer.utils.element :as element]
+   [renderer.app.subs :as-alias app.subs]
+   [renderer.document.subs :as-alias document.subs]
+   [renderer.element.handlers :as element.handlers]
+   [renderer.element.hierarchy :as element.hierarchy]
+   [renderer.utils.attribute :as utils.attribute]
+   [renderer.utils.element :as utils.element]
    [renderer.utils.map :as utils.map]))
 
 (rf/reg-sub
  ::root
- h/root)
+ element.handlers/root)
 
 (rf/reg-sub
  ::root-children
- :<- [::document.s/elements]
+ :<- [::document.subs/elements]
  :<- [::root]
  (fn [[elements root] _]
    (mapv elements (:children root))))
 
 (rf/reg-sub
  ::entity
- :<- [::document.s/elements]
+ :<- [::document.subs/elements]
  (fn [elements [_ id]]
    (get elements id)))
 
@@ -31,25 +31,25 @@
  ::xml
  :<- [::root-children]
  (fn [root-children _]
-   (-> (element/->string root-children)
+   (-> (utils.element/->string root-children)
        (js-beautify/html #js {:indent_size 2}))))
 
 (rf/reg-sub
  ::filter-visible
- :<- [::document.s/elements]
+ :<- [::document.subs/elements]
  (fn [elements [_ ks]]
    (filter :visible (mapv #(get elements %) ks))))
 
 (rf/reg-sub
  ::selected
- :<- [::document.s/elements]
+ :<- [::document.subs/elements]
  (fn [elements _]
    (filter :selected (vals elements))))
 
 (rf/reg-sub
  ::hovered
- :<- [::document.s/elements]
- :<- [::document.s/hovered-ids]
+ :<- [::document.subs/elements]
+ :<- [::document.subs/hovered-ids]
  (fn [[elements hovered-ids] _]
    (vals (select-keys elements hovered-ids))))
 
@@ -83,40 +83,40 @@
  (fn [[selected-elements multiple-selected?] _]
    (when (seq selected-elements)
      (let [attrs (->> selected-elements
-                      (map element/attributes)
+                      (map utils.element/attributes)
                       (apply utils.map/merge-common-with
                              (fn [v1 v2] (if (= v1 v2) v1 nil))))
            attrs (if multiple-selected?
                    (dissoc attrs :id)
                    (sort-by (fn [[id _]]
                               (-> (first selected-elements)
-                                  (element/properties)
+                                  (utils.element/properties)
                                   :attrs
                                   (.indexOf id)))
-                            (element/attributes (first selected-elements))))]
-       (sort-by (fn [[id _]] (.indexOf attr/order id)) attrs)))))
+                            (utils.element/attributes (first selected-elements))))]
+       (sort-by (fn [[id _]] (.indexOf utils.attribute/order id)) attrs)))))
 
 (rf/reg-sub
  ::bbox
  :<- [::selected]
  (fn [selected-elements _]
-   (element/united-bbox selected-elements)))
+   (utils.element/united-bbox selected-elements)))
 
 (rf/reg-sub
  ::area
  :<- [::selected]
  (fn [selected-elements _]
-   (reduce #(+ %1 (hierarchy/area %2)) 0 selected-elements)))
+   (reduce #(+ %1 (element.hierarchy/area %2)) 0 selected-elements)))
 
 (rf/reg-sub
  ::ancestor-ids
  (fn [db _]
-   (h/ancestor-ids db)))
+   (element.handlers/ancestor-ids db)))
 
 (rf/reg-sub
  ::font-weights
  :<- [::selected]
- :<- [::app.s/system-fonts]
+ :<- [::app.subs/system-fonts]
  (fn [[selected-elements system-fonts] _]
    (let [families (->> selected-elements
                        (map #(-> % :attrs :font-family))

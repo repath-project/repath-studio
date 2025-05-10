@@ -1,13 +1,13 @@
 (ns renderer.element.db
   (:require
    [malli.core :as m]
-   [malli.transform :as mt]
-   [renderer.element.hierarchy :as hierarchy]
+   [malli.transform :as m.transform]
+   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.utils.bounds :refer [BBox]]))
 
 (defn tag?
   [k]
-  (contains? (descendants ::hierarchy/element) k))
+  (contains? (descendants ::element.hierarchy/element) k))
 
 (def Tag
   [:fn {:error/fn (fn [{:keys [value]} _] (str value ", is not a supported tag"))}
@@ -43,4 +43,4 @@
 
 (def default (m/decode Element {:type :element
                                 :visible true
-                                :children []} mt/default-value-transformer))
+                                :children []} malli.transform/default-value-transformer))

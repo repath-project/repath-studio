@@ -2,8 +2,8 @@
   (:require
    [config :as config]
    [re-frame.core :as rf]
-   [renderer.document.handlers :as h]
-   [renderer.timeline.subs :as-alias timeline.s]))
+   [renderer.document.handlers :as document.handlers]
+   [renderer.timeline.subs :as-alias timeline.subs]))
 
 (rf/reg-sub
  ::active-id
@@ -147,7 +147,7 @@
 (rf/reg-sub
  ::read-only?
  :<- [::preview-label]
- :<- [::timeline.s/time]
+ :<- [::timeline.subs/time]
  (fn [[preview-label current-time] _]
    (or preview-label
        (pos? current-time))))
@@ -155,10 +155,10 @@
 (rf/reg-sub
  ::saved?
  (fn [db [_ id]]
-   (h/saved? db id)))
+   (document.handlers/saved? db id)))
 
 (rf/reg-sub
  ::active-saved?
  (fn [{:keys [active-document] :as db} [_]]
    (when active-document
-     (h/saved? db active-document))))
+     (document.handlers/saved? db active-document))))

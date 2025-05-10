@@ -2,25 +2,25 @@
   "https://www.w3.org/TR/SVG/text.html
    https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/text"
   (:require
-   [clojure.core.matrix :as mat]
-   [clojure.string :as str]
+   [clojure.core.matrix :as matrix]
+   [clojure.string :as string]
    [re-frame.core :as rf]
-   [renderer.app.effects :as-alias app.fx]
-   [renderer.app.events :as-alias app.e]
+   [renderer.app.effects :as-alias app.effects]
+   [renderer.app.events :as-alias app.events]
    [renderer.attribute.hierarchy :as attr.hierarchy]
-   [renderer.element.events :as-alias element.e]
-   [renderer.element.handlers :as element.h]
-   [renderer.element.hierarchy :as hierarchy]
-   [renderer.history.handlers :as history.h]
-   [renderer.tool.handlers :as h]
-   [renderer.utils.bounds :as bounds]
-   [renderer.utils.element :as element]
-   [renderer.utils.length :as length]
-   [renderer.utils.system :as system]))
+   [renderer.element.events :as-alias element.events]
+   [renderer.element.handlers :as element.handlers]
+   [renderer.element.hierarchy :as element.hierarchy]
+   [renderer.history.handlers :as history.handlers]
+   [renderer.tool.handlers :as tool.handlers]
+   [renderer.utils.bounds :as utils.bounds]
+   [renderer.utils.element :as utils.element]
+   [renderer.utils.length :as utils.length]
+   [renderer.utils.system :as utils.system]))
 
-(derive :text ::hierarchy/shape)
+(derive :text ::element.hierarchy/shape)
 
-(defmethod hierarchy/properties :text
+(defmethod element.hierarchy/properties :text
   []
   {:icon "text"
    :description "The SVG <text> element draws a graphics element consisting
@@ -37,34 +37,34 @@
            :stroke-width
            :opacity]})
 
-(defmethod hierarchy/translate :text
+(defmethod element.hierarchy/translate :text
   [el [x y]]
-  (element/update-attrs-with el + [[:x x] [:y y]]))
+  (utils.element/update-attrs-with el + [[:x x] [:y y]]))
 
-(defmethod hierarchy/scale :text
+(defmethod element.hierarchy/scale :text
   [el ratio pivot-point]
-  (let [offset (mat/sub pivot-point (mat/mul pivot-point ratio))
+  (let [offset (matrix/sub pivot-point (matrix/mul pivot-point ratio))
         ratio (apply min ratio)]
     (-> el
         (attr.hierarchy/update-attr :font-size * ratio)
-        (hierarchy/translate offset))))
+        (element.hierarchy/translate offset))))
 
 (defn get-text!
   "Retrieves the input value and replaces spaces with no-break space to maintain
    user intent."
   [e]
-  (str/replace (.. e -target -value) " " "\u00a0"))
+  (string/replace (.. e -target -value) " " "\u00a0"))
 
 (rf/reg-event-fx
  ::set-text
  (fn [{:keys [db]} [_ id s]]
    {:db (-> (if (empty? s)
-              (-> (element.h/delete db id)
-                  (history.h/finalize "Remove text"))
-              (-> (element.h/assoc-prop db id :content s)
-                  (history.h/finalize "Set text")))
-            (h/activate :transform))
-    ::app.fx/focus nil}))
+              (-> (element.handlers/delete db id)
+                  (history.handlers/finalize "Remove text"))
+              (-> (element.handlers/assoc-prop db id :content s)
+                  (history.handlers/finalize "Set text")))
+            (tool.handlers/activate :transform))
+    ::app.effects/focus nil}))
 
 (defn key-down-handler!
   [e id]
@@ -73,15 +73,15 @@
    js/window
    #(rf/dispatch-sync (if (contains? #{"Enter" "Escape"} (.-code e))
                         [::set-text id (get-text! e)]
-                        [::element.e/preview-prop id :content (get-text! e)]))))
+                        [::element.events/preview-prop id :content (get-text! e)]))))
 
-(defmethod hierarchy/render-edit :text
+(defmethod element.hierarchy/render-edit :text
   [el]
   (let [{:keys [attrs id content]} el
-        offset (element/offset el)
-        el-bbox (hierarchy/bbox el)
-        [x y] (mat/add (take 2 el-bbox) offset)
-        [w h] (bounds/->dimensions el-bbox)
+        offset (utils.element/offset el)
+        el-bbox (element.hierarchy/bbox el)
+        [x y] (matrix/add (take 2 el-bbox) offset)
+        [w h] (utils.bounds/->dimensions el-bbox)
         {:keys [fill font-family font-size font-weight]} attrs]
     [:foreignObject {:x x
                      :y y
@@ -108,11 +108,11 @@
                :font-family (if (empty? font-family) "inherit" font-family)
                :font-size (if (empty? font-size)
                             "inherit"
-                            (str (length/unit->px font-size) "px"))
+                            (str (utils.length/unit->px font-size) "px"))
                :font-weight (if (empty? font-weight) "inherit" font-weight)}}]]))
 
-(when system/electron?
-  (defmethod hierarchy/path :text
+(when utils.system/electron?
+  (defmethod element.hierarchy/path :text
     [{:keys [attrs content]}]
 
     (let [font-descriptor #js {:family (:font-family attrs)

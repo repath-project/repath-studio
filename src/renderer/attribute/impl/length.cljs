@@ -3,11 +3,11 @@
   (:require
    [re-frame.core :as rf]
    [renderer.attribute.events :as-alias e]
-   [renderer.attribute.hierarchy :as hierarchy]
-   [renderer.attribute.views :as v]
-   [renderer.element.events :as-alias element.e]
+   [renderer.attribute.hierarchy :as attribute.hierarchy]
+   [renderer.attribute.views :as attribute.views]
+   [renderer.element.events :as-alias element.events]
    [renderer.ui :as ui]
-   [renderer.utils.length :as length]))
+   [renderer.utils.length :as utils.length]))
 
 (derive :x ::length)
 (derive :y ::length)
@@ -29,10 +29,10 @@
 (derive :rx ::positive-length)
 (derive :ry ::positive-length)
 
-(defmethod hierarchy/form-element [:default ::length]
+(defmethod attribute.hierarchy/form-element [:default ::length]
   [_ k v {:keys [disabled placeholder]}]
   [:div.flex.w-full.gap-px
-   [v/form-input k v
+   [attribute.views/form-input k v
     {:disabled disabled
      :placeholder (if v placeholder "multiple")
      :on-wheel (fn [e]
@@ -42,18 +42,18 @@
     [:button.form-control-button
      {:disabled disabled
       :title "Decrease"
-      :on-pointer-down #(rf/dispatch [::element.e/update-attr k - 1])}
+      :on-pointer-down #(rf/dispatch [::element.events/update-attr k - 1])}
      [ui/icon "minus"]]
     [:button.form-control-button
      {:disabled disabled
       :title "Increase"
-      :on-click #(rf/dispatch [::element.e/update-attr k + 1])}
+      :on-click #(rf/dispatch [::element.events/update-attr k + 1])}
      [ui/icon "plus"]]]])
 
-(defmethod hierarchy/update-attr ::length
+(defmethod attribute.hierarchy/update-attr ::length
   [el k f & more]
-  (update-in el [:attrs k] #(apply length/transform % f more)))
+  (update-in el [:attrs k] #(apply utils.length/transform % f more)))
 
-(defmethod hierarchy/update-attr ::positive-length
+(defmethod attribute.hierarchy/update-attr ::positive-length
   [el k f & more]
-  (update-in el [:attrs k] length/transform (fn [v] (max 0 (apply f v more)))))
+  (update-in el [:attrs k] utils.length/transform (fn [v] (max 0 (apply f v more)))))

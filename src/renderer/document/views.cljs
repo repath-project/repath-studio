@@ -3,55 +3,55 @@
    ["@radix-ui/react-context-menu" :as ContextMenu]
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    [re-frame.core :as rf]
-   [reagent.core :as ra]
-   [renderer.app.events :as-alias app.e]
-   [renderer.document.events :as-alias e]
-   [renderer.document.subs :as-alias s]
-   [renderer.history.events :as-alias history.e]
-   [renderer.history.subs :as-alias history.s]
-   [renderer.history.views :as history.v]
+   [reagent.core :as reagent]
+   [renderer.app.events :as-alias app.events]
+   [renderer.document.events :as-alias document.events]
+   [renderer.document.subs :as-alias document.subs]
+   [renderer.history.events :as-alias history.events]
+   [renderer.history.subs :as-alias history.subs]
+   [renderer.history.views :as history.views]
    [renderer.ui :as ui]
-   [renderer.utils.system :as system]))
+   [renderer.utils.system :as utils.system]))
 
 (defn actions
   []
-  (let [undos @(rf/subscribe [::history.s/undos])
-        redos @(rf/subscribe [::history.s/redos])
-        undos? @(rf/subscribe [::history.s/undos?])
-        redos? @(rf/subscribe [::history.s/redos?])]
+  (let [undos @(rf/subscribe [::history.subs/undos])
+        redos @(rf/subscribe [::history.subs/redos])
+        undos? @(rf/subscribe [::history.subs/undos?])
+        redos? @(rf/subscribe [::history.subs/redos?])]
     [:div.toolbar
 
      [ui/icon-button
       "file"
       {:title "New"
-       :on-click #(rf/dispatch [::e/new])}]
+       :on-click #(rf/dispatch [::document.events/new])}]
 
      [ui/icon-button
       "folder"
       {:title "Open"
-       :on-click #(rf/dispatch [::e/open])}]
+       :on-click #(rf/dispatch [::document.events/open])}]
 
      [ui/icon-button
       "save"
       {:title "Save"
-       :on-click #(rf/dispatch [::e/save])
-       :disabled @(rf/subscribe [::s/active-saved?])}]
+       :on-click #(rf/dispatch [::document.events/save])
+       :disabled @(rf/subscribe [::document.subs/active-saved?])}]
 
      [:span.v-divider]
 
      [:button.icon-button.items-center.px-1.gap-1.flex.w-auto
       {:title "Undo"
-       :on-click #(rf/dispatch [::history.e/undo])
+       :on-click #(rf/dispatch [::history.events/undo])
        :disabled (not undos?)}
       [ui/icon "undo"]
-      [history.v/select "Undo stack" undos (not undos?)]]
+      [history.views/select "Undo stack" undos (not undos?)]]
 
      [:button.icon-button.items-center.px-1.gap-1.flex.w-auto
       {:title "Redo"
-       :on-click #(rf/dispatch [::history.e/redo])
+       :on-click #(rf/dispatch [::history.events/redo])
        :disabled (not redos?)}
       [ui/icon "redo"]
-      [history.v/select "Redo stack" redos (not redos?)]]]))
+      [history.views/select "Redo stack" redos (not redos?)]]]))
 
 (defn close-button
   [id saved]
@@ -61,44 +61,44 @@
     :on-pointer-down #(.stopPropagation %)
     :on-pointer-up (fn [e]
                      (.stopPropagation e)
-                     (rf/dispatch [::e/close id true]))}
+                     (rf/dispatch [::document.events/close id true]))}
    [ui/icon "times"]
    (when-not saved
      [ui/icon "dot" {:class "dot"}])])
 
 (defn context-menu
   [id]
-  (let [document @(rf/subscribe [::s/entity id])
+  (let [document @(rf/subscribe [::document.subs/entity id])
         path (:path document)
-        tabs @(rf/subscribe [::s/tabs])]
+        tabs @(rf/subscribe [::document.subs/tabs])]
     (cond-> [{:label "Close"
-              :action [::e/close id true]}
+              :action [::document.events/close id true]}
              {:label "Close others"
-              :action [::e/close-others id]
+              :action [::document.events/close-others id]
               :disabled? (empty? (rest tabs))}
              {:label "Close all"
-              :action [::e/close-all]}
+              :action [::document.events/close-all]}
              {:label "Close saved"
-              :action [::e/close-saved]}]
-      system/electron?
+              :action [::document.events/close-saved]}]
+      utils.system/electron?
       (concat [{:type :separator}
                {:label "Open containing directory"
-                :action [::e/open-directory path]
+                :action [::document.events/open-directory path]
                 :disabled? (nil? path)}]))))
 
 (defn tab
   [id title active?]
-  (ra/with-let [dragged-over? (ra/atom false)]
-    (let [saved? @(rf/subscribe [::s/saved? id])]
+  (reagent/with-let [dragged-over? (reagent/atom false)]
+    (let [saved? @(rf/subscribe [::document.subs/saved? id])]
       [:> ContextMenu/Root
        [:> ContextMenu/Trigger
         [:div.tab
          {:class [(when active? "active")
                   (when saved? "saved")]
-          :on-wheel #(rf/dispatch [::e/cycle (.-deltaY %)])
+          :on-wheel #(rf/dispatch [::document.events/cycle (.-deltaY %)])
           :on-pointer-down #(case (.-buttons %)
-                              4 (rf/dispatch [::e/close id true])
-                              1 (rf/dispatch [::e/set-active id])
+                              4 (rf/dispatch [::document.events/close id true])
+                              1 (rf/dispatch [::document.events/set-active id])
                               nil)
           :draggable true
           :on-drag-start #(.setData (.-dataTransfer %) "id" (str id))
@@ -109,10 +109,10 @@
                      (let [dropped-id (-> (.-dataTransfer evt) (.getData "id") uuid)]
                        (.preventDefault evt)
                        (reset! dragged-over? false)
-                       (rf/dispatch [::e/swap-position dropped-id id])))
+                       (rf/dispatch [::document.events/swap-position dropped-id id])))
           :ref (fn [this]
                  (when (and this active?)
-                   (rf/dispatch [::app.e/scroll-into-view this])))}
+                   (rf/dispatch [::app.events/scroll-into-view this])))}
          [:span.truncate.pointer-events-none title]
          [close-button id saved?]]]
        [:> ContextMenu/Portal
@@ -125,9 +125,9 @@
 
 (defn tab-bar
   []
-  (let [documents @(rf/subscribe [::s/entities])
-        tabs @(rf/subscribe [::s/tabs])
-        active-id @(rf/subscribe [::s/active-id])]
+  (let [documents @(rf/subscribe [::document.subs/entities])
+        tabs @(rf/subscribe [::document.subs/tabs])
+        active-id @(rf/subscribe [::document.subs/active-id])]
     [:div.flex.justify-between.gap-px
      [ui/scroll-area
       [:div.flex.flex-1.gap-px
@@ -149,10 +149,10 @@
          {:class "menu-content rounded-sm"}
          (for [item [{:label "Close all"
                       :key :close-all
-                      :action [::e/close-all]}
+                      :action [::document.events/close-all]}
                      {:label "Close saved"
                       :key :close-saved
-                      :action [::e/close-saved]}]]
+                      :action [::document.events/close-saved]}]]
            ^{:key (:key item)}
            [ui/dropdown-menu-item item])
          [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]]]]))

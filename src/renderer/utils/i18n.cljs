@@ -4,7 +4,7 @@
   (:require
    [malli.core :as m]
    [re-frame.core :as rf]
-   [renderer.app.subs :as-alias app.s]
+   [renderer.app.subs :as-alias app.subs]
    [taoensso.tempura :refer [tr] :refer-macros [load-resource-at-compile-time]]))
 
 (def dictionary
@@ -24,5 +24,5 @@
   "Custom translation function.
    Should be called in a reactive context."
   [& more]
-  (let [lang @(rf/subscribe [::app.s/lang])]
+  (let [lang @(rf/subscribe [::app.subs/lang])]
     (apply tr opts [lang] more)))

@@ -3,48 +3,48 @@
   (:require
    ["blobs/v2" :as blobs]
    ["svgpath" :as svgpath]
-   [clojure.core.matrix :as mat]
+   [clojure.core.matrix :as matrix]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.attribute.impl.length :as attr.length]
-   [renderer.attribute.views :as attr.v]
-   [renderer.element.events :as-alias element.e]
-   [renderer.element.hierarchy :as hierarchy]
-   [renderer.element.subs :as-alias element.s]
-   [renderer.tool.views :as tool.v]
+   [renderer.attribute.views :as attribute.views]
+   [renderer.element.events :as-alias element.events]
+   [renderer.element.hierarchy :as element.hierarchy]
+   [renderer.element.subs :as-alias element.subs]
+   [renderer.tool.views :as tool.views]
    [renderer.ui :as ui]
-   [renderer.utils.element :as element]
-   [renderer.utils.length :as length]
-   [renderer.utils.pointer :as pointer]
-   [renderer.utils.svg :as svg]))
+   [renderer.utils.element :as utils.element]
+   [renderer.utils.length :as utils.length]
+   [renderer.utils.pointer :as utils.pointer]
+   [renderer.utils.svg :as utils.svg]))
 
-(derive :blob ::hierarchy/renderable)
+(derive :blob ::element.hierarchy/renderable)
 
 (derive :size ::attr.length/length)
 
 (defmethod attr.hierarchy/form-element [:blob :extraPoints]
   [_ k v attrs]
-  [attr.v/range-input k v (merge attrs {:min 0
-                                        :max 50
-                                        :step 1
-                                        :placeholder 0})])
+  [attribute.views/range-input k v (merge attrs {:min 0
+                                                 :max 50
+                                                 :step 1
+                                                 :placeholder 0})])
 
 (defmethod attr.hierarchy/form-element [:blob :randomness]
   [_ k v attrs]
-  [attr.v/range-input k v (merge attrs {:min 0
-                                        :max 50
-                                        :step 1
-                                        :placeholder 0})])
+  [attribute.views/range-input k v (merge attrs {:min 0
+                                                 :max 50
+                                                 :step 1
+                                                 :placeholder 0})])
 
 (defmethod attr.hierarchy/form-element [:blob :seed]
   [_ k v {:keys [disabled] :as attrs}]
   (let [random-seed (rand-int 1000000)]
     [:div.flex.flex-row.gap-px.w-full
-     [attr.v/form-input k v (merge attrs {:placeholder 0})]
+     [attribute.views/form-input k v (merge attrs {:placeholder 0})]
      [:button.form-control-button
       {:title "Generate random seed"
        :disabled disabled
-       :on-click #(rf/dispatch [::element.e/set-attr k random-seed])}
+       :on-click #(rf/dispatch [::element.events/set-attr k random-seed])}
       [ui/icon "refresh"]]]))
 
 (defmethod attr.hierarchy/description [:blob :x]
@@ -71,7 +71,7 @@
   []
   "The size of the bounding box.")
 
-(defmethod hierarchy/properties :blob
+(defmethod element.hierarchy/properties :blob
   []
   {:icon "blob"
    :description "Vector based blob."
@@ -88,20 +88,20 @@
            :stroke-width
            :opacity]})
 
-(defmethod hierarchy/scale :blob
+(defmethod element.hierarchy/scale :blob
   [el ratio pivot-point]
-  (let [offset (mat/sub pivot-point (mat/mul pivot-point ratio))
+  (let [offset (matrix/sub pivot-point (matrix/mul pivot-point ratio))
         ratio (apply min ratio)]
     (-> el
         (attr.hierarchy/update-attr :size * ratio)
-        (hierarchy/translate offset))))
+        (element.hierarchy/translate offset))))
 
-(defmethod hierarchy/render :blob
+(defmethod element.hierarchy/render :blob
   [el]
   (let [{:keys [attrs children]} el
-        child-elements @(rf/subscribe [::element.s/filter-visible children])
-        pointer-handler #(pointer/event-handler! % el)]
-    [:path (merge {:d (hierarchy/path el)
+        child-elements @(rf/subscribe [::element.subs/filter-visible children])
+        pointer-handler #(utils.pointer/event-handler! % el)]
+    [:path (merge {:d (element.hierarchy/path el)
                    :on-pointer-up pointer-handler
                    :on-pointer-down pointer-handler
                    :on-pointer-move pointer-handler}
@@ -112,27 +112,27 @@
                                       :class
                                       :opacity])) child-elements]))
 
-(defmethod hierarchy/translate :blob
+(defmethod element.hierarchy/translate :blob
   [el [x y]]
-  (element/update-attrs-with el + [[:x x]
-                                   [:y y]]))
+  (utils.element/update-attrs-with el + [[:x x]
+                                         [:y y]]))
 
-(defmethod hierarchy/bbox :blob
+(defmethod element.hierarchy/bbox :blob
   [el]
   (let [{{:keys [x y size]} :attrs} el
-        [x y size] (mapv length/unit->px [x y size])]
+        [x y size] (mapv utils.length/unit->px [x y size])]
     [x y (+ x size) (+ y size)]))
 
-(defmethod hierarchy/centroid :blob
+(defmethod element.hierarchy/centroid :blob
   [el]
   (let [{{:keys [x y size]} :attrs} el
-        [x y size] (mapv length/unit->px [x y size])]
-    (mat/add [x y] (/ size 2))))
+        [x y size] (mapv utils.length/unit->px [x y size])]
+    (matrix/add [x y] (/ size 2))))
 
-(defmethod hierarchy/path :blob
+(defmethod element.hierarchy/path :blob
   [el]
   (let [{{:keys [x y]} :attrs} el
-        [x y] (mapv length/unit->px [x y])
+        [x y] (mapv utils.length/unit->px [x y])
         options (->> [:seed :extraPoints :randomness :size]
                      (select-keys (:attrs el))
                      (reduce (fn [options [k v]] (assoc options k (int v))) {})
@@ -143,23 +143,23 @@
         (.translate x y)
         (.toString))))
 
-(defmethod hierarchy/edit :blob
+(defmethod element.hierarchy/edit :blob
   [el [x y] handle]
   (case handle
     :size
     (attr.hierarchy/update-attr el :size #(max 0 (+ % (min x y))))
     el))
 
-(defmethod hierarchy/render-edit :blob
+(defmethod element.hierarchy/render-edit :blob
   [el]
   (let [{{:keys [x y size]} :attrs} el
-        [x y size] (mapv length/unit->px [x y size])
-        offset (element/offset el)
-        [x1 y1] (cond->> [x y] (not (element/svg? el)) (mat/add offset))
-        [x2 y2] (mat/add [x1 y1] size)]
+        [x y size] (mapv utils.length/unit->px [x y size])
+        offset (utils.element/offset el)
+        [x1 y1] (cond->> [x y] (not (utils.element/svg? el)) (matrix/add offset))
+        [x2 y2] (matrix/add [x1 y1] size)]
     [:<>
-     [svg/line [x1 y1] [x2 y2]]
-     [tool.v/square-handle
+     [utils.svg/line [x1 y1] [x2 y2]]
+     [tool.views/square-handle
       {:type :handle
        :cursor "move"
        :action :edit
@@ -167,4 +167,4 @@
        :x x2
        :y y2
        :id :size}]
-     [svg/times [x1 y1]]]))
+     [utils.svg/times [x1 y1]]]))
