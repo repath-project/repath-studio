@@ -2,7 +2,6 @@
   (:require
    [re-frame.core :as rf]
    [renderer.app.effects :as-alias app.fx]
-   [renderer.document.events :as-alias document.e]
    [renderer.document.handlers :as document.h]
    [renderer.tool.events :as-alias tool.e]
    [renderer.utils.keyboard :as keyboard]
