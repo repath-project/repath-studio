@@ -2,7 +2,6 @@
   (:require
    [clojure.set :as set]
    [malli.core :as m]
-   [re-frame.core :as rf]
    [renderer.app.events :as-alias app.e]
    [renderer.dialog.events :as-alias dialog.e]
    [renderer.document.events :as-alias document.e]
@@ -45,18 +44,16 @@
     (.-metaKey e) (conj :meta)
     (.-shiftKey e) (conj :shift)))
 
-(defn event-handler!
+(defn event-formatter
   "https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
-   https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/
-
-   To be used on keydown/keyup events."
+   https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/"
   [^js/KeyboardEvent e]
-  (rf/dispatch-sync [::tool.e/keyboard-event {:target (.-target e)
-                                              :type (.-type e)
-                                              :code (.-code e)
-                                              :key-code (.-keyCode e)
-                                              :key (.-key e)
-                                              :modifiers (modifiers e)}]))
+  {:target (.-target e)
+   :type (.-type e)
+   :code (.-code e)
+   :key-code (.-keyCode e)
+   :key (.-key e)
+   :modifiers (modifiers e)})
 
 (defn input-key-down-handler!
   "Generic on-key-down handler for input elements that dispatches an event `f`

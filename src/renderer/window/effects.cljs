@@ -27,6 +27,16 @@
    (.open js/window url)))
 
 (rf/reg-fx
+ ::add-window-listener
+ (fn [[channel listener formatter]]
+   (.addEventListener js/window channel #(rf/dispatch-sync (conj listener (cond-> % formatter formatter))))))
+
+(rf/reg-fx
+ ::add-document-listener
+ (fn [[channel listener formatter]]
+   (.addEventListener js/document channel #(rf/dispatch (conj listener (cond-> % formatter formatter))))))
+
+(rf/reg-fx
  ::ipc-send
  (fn [[channel data]]
    (when system/electron?
@@ -39,3 +49,9 @@
      (-> (js/window.api.invoke channel (clj->js data))
          (.then #(when on-success (rf/dispatch (conj on-success (cond-> % formatter formatter)))))
          (.catch #(when on-error (rf/dispatch (conj on-error %))))))))
+
+(rf/reg-fx
+ ::ipc-on
+ (fn [[channel listener]]
+   (when system/electron?
+     (js/window.api.on channel #(rf/dispatch listener)))))

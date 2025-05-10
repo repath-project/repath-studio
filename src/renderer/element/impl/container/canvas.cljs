@@ -52,12 +52,13 @@
         snap? @(rf/subscribe [::snap.s/active?])
         nearest-neighbor @(rf/subscribe [::snap.s/nearest-neighbor])
         snapped-el-id (-> nearest-neighbor meta :id)
-        snapped-el (when snapped-el-id @(rf/subscribe [::s/entity snapped-el-id]))]
+        snapped-el (when snapped-el-id @(rf/subscribe [::s/entity snapped-el-id]))
+        keyboard-handler #(rf/dispatch-sync [::tool.e/keyboard-event (keyb/event-formatter %)])]
     [:svg#canvas {:on-pointer-up pointer-handler
                   :on-pointer-down pointer-handler
                   :on-pointer-move pointer-handler
-                  :on-key-up keyb/event-handler!
-                  :on-key-down keyb/event-handler!
+                  :on-key-up keyboard-handler
+                  :on-key-down keyboard-handler
                   :tab-index 0 ; Enable keyboard events
                   :viewBox viewbox-attr
                   :on-drop drop-handler!

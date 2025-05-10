@@ -42,7 +42,6 @@
    [renderer.tool.impl.core]
    [renderer.tool.subs]
    [renderer.tree.events]
-   [renderer.utils.dom :as dom]
    [renderer.utils.error :as error]
    [renderer.utils.keyboard :as keyb]
    [renderer.utils.system :as system]
@@ -69,7 +68,7 @@
 ██████╔╝░░░██║░░░╚██████╔╝██████╔╝██║╚█████╔╝
 ╚═════╝░░░░╚═╝░░░░╚═════╝░╚═════╝░╚═╝░╚════╝░")
 
-(def root-el (atom nil))
+(defonce root-el (atom nil))
 
 (defn ^:dev/after-load mount-root! []
   (let [container (.getElementById js/document "app")]
@@ -85,39 +84,6 @@
   (print "")
   (print "You can create or modify shapes using the command line.")
   (print "Type (help) to see a list of commands."))
-
-(defn set-focused!
-  []
-  (rf/dispatch [::window.e/set-focused (or (.hasFocus js/document)
-                                           (and (dom/frame-document!)
-                                                (.hasFocus (dom/frame-document!))))]))
-
-(defn add-listeners!
-  []
-  (.addEventListener js/document "keydown" keyb/event-handler!)
-  (.addEventListener js/document "keyup" keyb/event-handler!)
-  (.addEventListener js/document "fullscreenchange"
-                     #(rf/dispatch [::window.e/set-fullscreen
-                                    (boolean (.-fullscreenElement js/document))]))
-  (.addEventListener js/window "load" set-focused!)
-  (.addEventListener js/window "focus" set-focused!)
-  (.addEventListener js/window "blur" set-focused!)
-
-  (rf/dispatch [::document.e/center]))
-
-(defn register-ipc-on-events!
-  []
-  (doseq
-   [[channel f]
-    [["window-maximized" #(rf/dispatch [::window.e/set-maximized true])]
-     ["window-unmaximized" #(rf/dispatch [::window.e/set-maximized false])]
-     ["window-focused" #(rf/dispatch [::window.e/set-focused true])]
-     ["window-blurred" #(rf/dispatch [::window.e/set-focused false])]
-     ["window-entered-fullscreen" #(rf/dispatch [::window.e/set-fullscreen true])]
-     ["window-leaved-fullscreen" #(rf/dispatch [::window.e/set-fullscreen false])]
-     ["window-minimized" #(rf/dispatch [::window.e/set-minimized true])]
-     ["window-loaded" add-listeners!]]]
-    (js/window.api.on channel f)))
 
 (defn ^:export init! []
   (js/console.log (str "%c" easter-egg) (str "color: " renderer.theme.db/accent))
@@ -135,11 +101,8 @@
   (rf/dispatch-sync [::theme.e/set-document-attr])
   (rf/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])
   (rf/dispatch-sync [::rp/set-keydown-rules keyb/keydown-rules])
+  (rf/dispatch-sync [::window.e/register-listeners])
 
   (.setup paper)
-
-  (if system/electron?
-    (register-ipc-on-events!)
-    (add-listeners!))
 
   (mount-root!))
