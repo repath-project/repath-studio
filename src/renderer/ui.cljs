@@ -17,7 +17,6 @@
    ["react" :as react]
    ["react-svg" :refer [ReactSVG]]
    ["tailwind-merge" :refer [twMerge]]
-   [malli.core :as m]
    [re-frame.core :as rf]
    [reagent.core :as reagent]
    [renderer.app.subs :as-alias app.subs]
@@ -172,12 +171,6 @@
 
      [:> ScrollArea/Corner]]))
 
-(def ColorPickerProps [:map
-                       [:color string?]
-                       [:on-change {:optional true} ifn?]
-                       [:on-change-complete {:optional true} ifn?]])
-
-(m/=> color-picker [:-> ColorPickerProps any? any?])
 (defn color-picker
   [props & children]
   [:> Popover/Root {:modal true}

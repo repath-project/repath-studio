@@ -2,21 +2,17 @@
   (:require
    [clojure.core.matrix :as matrix]
    [clojure.string :as string]
-   [malli.core :as m]
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.subs]
    [renderer.document.subs :as-alias document.subs]
    [renderer.frame.subs :as-alias frame.subs]
-   [renderer.ruler.db :refer [Orientation]]
    [renderer.ruler.subs :as-alias ruler.subs]))
 
-(m/=> bbox-rect [:-> Orientation any?])
 (defn bbox-rect
   [orientation]
   (when-let [attrs @(rf/subscribe [::ruler.subs/bbox-rect-attrs orientation])]
     [:rect (merge attrs {:fill "var(--overlay)"})]))
 
-(m/=> pointer [:-> Orientation any?])
 (defn pointer
   [orientation]
   (let [[x y] @(rf/subscribe [::app.subs/pointer-pos])
@@ -32,7 +28,6 @@
                                            (+ x pointer-size) "," size-diff]))
                :fill "var(--font-color"}]))
 
-(m/=> line [:-> map? any?])
 (defn line
   [{:keys [orientation adjusted-step size starting-point]}]
   [:line (if (= orientation :vertical)
@@ -47,7 +42,6 @@
             :y2 size
             :stroke "var(--font-color-muted)"})])
 
-(m/=> label [:-> Orientation number? number? string? any?])
 (defn label
   [orientation step font-size text]
   (let [vertical (= orientation :vertical)]
@@ -60,7 +54,6 @@
             :font-family "var(--font-mono"}
      (if vertical (reverse text) text)]))
 
-(m/=> base-lines [:-> Orientation any?])
 (defn base-lines
   [orientation]
   (let [[x y] @(rf/subscribe [::frame.subs/viewbox])
@@ -97,7 +90,6 @@
                         :starting-point (/ ruler-size 1.3)}])))
            steps-coll))))
 
-(m/=> ruler [:-> Orientation any?])
 (defn ruler
   [orientation]
   (let [ruler-size @(rf/subscribe [::ruler.subs/size])
@@ -108,7 +100,6 @@
      [base-lines orientation]
      [pointer orientation]]))
 
-(m/=> grid-lines [:-> Orientation any?])
 (defn grid-lines
   [orientation]
   (let [zoom @(rf/subscribe [::document.subs/zoom])
