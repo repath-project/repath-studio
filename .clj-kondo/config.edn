@@ -1,7 +1,21 @@
 {:linters {:unsorted-required-namespaces {:level :warning}
+           :unsorted-imports {:level :warning}
            :single-key-in {:level :warning}
            :shadowed-var {:level :warning}
+           :aliased-namespace-symbol {:level :warning}
+           :condition-always-true {:level :warning}
            :docstring-leading-trailing-whitespace {:level :warning}
+           :equals-float {:level :warning}
+           :equals-false {:level :warning}
+           :equals-true {:level :warning}
+           :def-fn {:level :warning}
+           :reduce-without-init {:level :warning}
+           :keyword-binding {:level :warning}
+           :minus-one {:level :warning}
+           :plus-one {:level :warning}
+           :if-nil-return {:level :warning}
+           :redundant-fn-wrapper {:level :warning}
+           :self-requiring-namespace {:level :warning}
            :used-underscored-binding {:level :warning}
            :unused-value {:level :warning}
            :unused-alias {:level :warning}
