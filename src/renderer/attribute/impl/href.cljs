@@ -9,7 +9,6 @@
    [renderer.attribute.views :as attribute.views]
    [renderer.element.events :as-alias element.events]
    [renderer.notification.events :as-alias notification.events]
-   [renderer.tool.events :as-alias tool.events]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.subs :as-alias tool.subs]
    [renderer.ui :as ui]))

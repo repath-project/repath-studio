@@ -15,8 +15,8 @@
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.element :as utils.element]
    [renderer.utils.keyboard :refer [KeyboardEvent]]
-   [renderer.utils.math :as utils.math :refer [Vec2]]
-   [renderer.utils.pointer :as pointer :refer [PointerEvent]]
+   [renderer.utils.math :refer [Vec2]]
+   [renderer.utils.pointer :refer [PointerEvent]]
    [renderer.utils.wheel :refer [WheelEvent]]))
 
 (m/=> add-fx [:-> App vector? App])
@@ -82,8 +82,8 @@
        (element.handlers/add db)
        (dissoc-temp)))
 
-(m/=> axis-offset [:-> number? number? number? number?])
-(defn axis-offset
+(m/=> axis-pan-offset [:-> number? number? number? number?])
+(defn axis-pan-offset
   [position offset size]
   (let [threshold 50
         step 15]
@@ -103,8 +103,8 @@
   [db dom-rect pointer-pos pointer-offset]
   (let [[x y] pointer-pos
         [offset-x offset-y] pointer-offset
-        pan [(axis-offset x offset-x (:width dom-rect))
-             (axis-offset y offset-y (:height dom-rect))]]
+        pan [(axis-pan-offset x offset-x (:width dom-rect))
+             (axis-pan-offset y offset-y (:height dom-rect))]]
     (cond-> db
       (not-every? zero? pan)
       (-> (frame.handlers/pan-by pan)

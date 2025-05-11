@@ -4,7 +4,6 @@
    [malli.core :as m]
    [re-frame.core :as rf]
    [renderer.app.db :refer [App]]
-   [renderer.app.effects :as-alias app.effects]
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.handlers]

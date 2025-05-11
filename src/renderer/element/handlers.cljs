@@ -19,7 +19,7 @@
    [renderer.utils.extra :refer [partial-right]]
    [renderer.utils.hiccup :as utils.hiccup]
    [renderer.utils.map :as utils.map]
-   [renderer.utils.math :as utils.math :refer [Vec2]]
+   [renderer.utils.math :refer [Vec2]]
    [renderer.utils.path :as utils.path :refer [PathManipulation PathBooleanOperation]]
    [renderer.utils.vec :as utils.vec]))
 

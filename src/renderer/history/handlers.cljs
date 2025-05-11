@@ -3,8 +3,6 @@
    [malli.core :as m]
    [malli.error :as m.error]
    [renderer.app.db :refer [App]]
-   [renderer.app.effects :as-alias app.effects]
-   [renderer.app.events :as-alias app.events]
    [renderer.document.handlers :as document.handlers]
    [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.handlers]

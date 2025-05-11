@@ -41,4 +41,4 @@
 
 (def explain (m/explainer Document))
 
-(def default (m/decode Document {} malli.transform/default-value-transformer))
+(def default (m/decode Document {} m.transform/default-value-transformer))

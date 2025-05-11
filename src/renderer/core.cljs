@@ -31,7 +31,7 @@
    [renderer.ruler.subs]
    [renderer.snap.events]
    [renderer.snap.subs]
-   [renderer.theme.db :as db]
+   [renderer.theme.db :as theme.db]
    [renderer.theme.effects :as theme.fx]
    [renderer.theme.events :as theme.events]
    [renderer.theme.subs]
@@ -86,7 +86,7 @@
   (print "Type (help) to see a list of commands."))
 
 (defn ^:export init! []
-  (js/console.log (str "%c" easter-egg) (str "color: " renderer.theme.db/accent))
+  (js/console.log (str "%c" easter-egg) (str "color: " theme.db/accent))
 
   ;; https://code.thheller.com/blog/shadow-cljs/2017/10/14/bootstrap-support.html
   (bootstrap/init replumb.repl/st {:path "js/bootstrap" :load-on-init '[user]} bootstrap-cb!)

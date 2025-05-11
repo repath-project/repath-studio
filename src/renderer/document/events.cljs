@@ -7,7 +7,6 @@
    [renderer.app.db :refer [App]]
    [renderer.app.effects :as-alias app.effects]
    [renderer.app.events :refer [persist]]
-   [renderer.dialog.events :as-alias dialog.events]
    [renderer.dialog.handlers :as dialog.handlers]
    [renderer.dialog.views :as dialog.views]
    [renderer.document.db :as document.db]
@@ -82,7 +81,8 @@
  ::close
  [persist]
  (fn [db [_ id confirm?]]
-   (if (or (document.handlers/saved? db id) (not confirm?))
+   (if (or (document.handlers/saved? db id)
+           (not confirm?))
      (document.handlers/close db id)
      (-> db
          (document.handlers/set-active id)

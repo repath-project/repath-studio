@@ -6,7 +6,6 @@
    [renderer.app.events :as-alias app.events]
    [renderer.document.events :as-alias document.events]
    [renderer.document.subs :as-alias document.subs]
-   [renderer.element.events :as-alias element.events]
    [renderer.frame.events :as-alias frame.events]
    [renderer.frame.subs :as-alias frame.subs]))
 

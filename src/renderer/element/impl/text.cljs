@@ -6,7 +6,6 @@
    [clojure.string :as string]
    [re-frame.core :as rf]
    [renderer.app.effects :as-alias app.effects]
-   [renderer.app.events :as-alias app.events]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.events :as-alias element.events]
    [renderer.element.handlers :as element.handlers]

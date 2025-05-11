@@ -7,7 +7,6 @@
    [reagent.core :as reagent]
    [reagent.dom.server :as server]
    [renderer.app.subs :as-alias app.subs]
-   [renderer.document.subs :as-alias document.subs]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
    [renderer.element.views :as element.views]
@@ -17,38 +16,36 @@
    [renderer.utils.pointer :as utils.pointer]
    [renderer.utils.wheel :as utils.wheel]))
 
+(defn wheel-handler!
+  [^js/WheelEvent e]
+  (.stopPropagation e)
+  (when (.-ctrlKey e) (.preventDefault e)) ; Disable wheel zoom on canvas.
+  (rf/dispatch-sync [::tool.events/wheel-event (utils.wheel/event-formatter e)]))
+
 (defn inner-component
   "We need access to the iframe's window to add the pointer move listener.
    This is required in order to track pointer movement outside of our canvas.
    https://github.com/ryanseddon/react-frame-component#accessing-the-iframes-window-and-document
    https://github.com/reagent-project/reagent/blob/master/doc/ReactFeatures.md#function-components"
   []
-  (let [frame-window (.-window (useFrame))
-        wheel-handler (fn [e]
-                        (.stopPropagation e)
-                        ;; Disable wheel zoom on canvas.
-                        (when (.-ctrlKey e) (.preventDefault e))
-                        (rf/dispatch-sync [::tool.events/wheel-event (utils.wheel/event-formatter e)]))]
+  (let [frame-window (.-window (useFrame))]
     (reagent/create-class
      {:component-did-mount
       (fn []
-        (doseq
-         [event ["pointermove" "pointerup"]]
+        (doseq [event ["pointermove" "pointerup"]]
           (.addEventListener frame-window event utils.pointer/event-handler!))
-        (.addEventListener frame-window "wheel" wheel-handler #js {:passive false}))
+        (.addEventListener frame-window "wheel" wheel-handler! #js {:passive false}))
 
       :component-will-unmount
       (fn []
-        (doseq
-         [event ["pointermove" "pointerup"]]
+        (doseq [event ["pointermove" "pointerup"]]
           (.removeEventListener frame-window event utils.pointer/event-handler!))
-        (.removeEventListener frame-window "wheel" wheel-handler))
+        (.removeEventListener frame-window "wheel" wheel-handler!))
 
       :reagent-render #()})))
 
-(defn markup
-  "https://github.com/ryanseddon/react-frame-component#initialcontent"
-  []
+(defonce initial-markup
+  ;; https://github.com/ryanseddon/react-frame-component#initialcontent
   [:html
    [:head]
    [:body {:style {:width "100%"
@@ -94,7 +91,7 @@
                                                   (js/KeyboardEvent. (.-type e)
                                                                      e)))]
           [:> Frame
-           {:initial-content (server/render-to-static-markup [markup])
+           {:initial-content (server/render-to-static-markup initial-markup)
             :mount-target "body"
             :class "overflow-hidden flex-1 border-0"
             :on-key-down on-keyboard-event

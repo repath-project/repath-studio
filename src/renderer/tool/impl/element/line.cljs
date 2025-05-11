@@ -1,7 +1,6 @@
 (ns renderer.tool.impl.element.line
   "https://www.w3.org/TR/SVG/shapes.html#LineElement"
   (:require
-   [renderer.app.effects :as-alias app.effects]
    [renderer.document.handlers :as document.handlers]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]

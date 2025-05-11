@@ -1,7 +1,6 @@
 (ns renderer.ruler.subs
   (:require
    [re-frame.core :as rf]
-   [renderer.app.subs :as-alias app.subs]
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.subs :as-alias element.subs]
    [renderer.frame.subs :as-alias frame.subs]

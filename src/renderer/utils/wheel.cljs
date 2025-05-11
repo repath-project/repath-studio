@@ -1,7 +1,6 @@
 (ns renderer.utils.wheel
   (:require
    [malli.core :as m]
-   [renderer.tool.events :as-alias tool.events]
    [renderer.utils.keyboard :refer [ModifierKey modifiers]]
    [renderer.utils.math :refer [Vec2]]))
 

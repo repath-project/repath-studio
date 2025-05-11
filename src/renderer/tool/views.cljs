@@ -5,8 +5,6 @@
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.subs]
    [renderer.document.subs :as-alias document.subs]
-   [renderer.frame.subs :as-alias frame.subs]
-   [renderer.snap.subs :as-alias snap.subs]
    [renderer.theme.db :as theme.db]
    [renderer.utils.bounds :as utils.bounds :refer [BBox]]
    [renderer.utils.pointer :as utils.pointer]))

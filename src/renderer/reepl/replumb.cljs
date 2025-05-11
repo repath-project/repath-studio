@@ -1,7 +1,7 @@
 (ns renderer.reepl.replumb
   (:require
    #_[shadow.cljs.bootstrap.browser :as bootstrap]
-   [cljs.js :as jsc]
+   [cljs.js]
    [cljs.tagged-literals :as tags]
    [cljs.tools.reader]
    [cljs.tools.reader.reader-types :refer [string-push-back-reader]]
@@ -64,19 +64,19 @@ cljs.js/*load-fn*
          ")"))))
 
 #_(defn jsc-run [source cb]
-    (jsc/eval-str repl/st
-                  source
-                  'stuff
-                  {:eval jsc/js-eval
-                   :ns (repl/current-ns)
-                   :load (partial bootstrap/load repl/st)
-                   :context :statement
-                   :def-emits-var true}
-                  (fn [result]
-                    (swap! repl/app-env assoc :current-ns (:ns result))
-                    (if (contains? result :error)
-                      (cb false (:error result))
-                      (cb true (aget js/window "last_repl_value"))))))
+    (cljs.js/eval-str repl/st
+                      source
+                      'stuff
+                      {:eval cljs.js/js-eval
+                       :ns (repl/current-ns)
+                       :load (partial bootstrap/load repl/st)
+                       :context :statement
+                       :def-emits-var true}
+                      (fn [result]
+                        (swap! repl/app-env assoc :current-ns (:ns result))
+                        (if (contains? result :error)
+                          (cb false (:error result))
+                          (cb true (aget js/window "last_repl_value"))))))
 
 (defn get-first-form
   [text]
