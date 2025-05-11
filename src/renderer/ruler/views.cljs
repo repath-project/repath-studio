@@ -52,7 +52,7 @@
   [orientation step font-size text]
   (let [vertical (= orientation :vertical)]
     [:text {:x (if vertical 19 (+ step 4))
-            :y (if vertical (- step 8) (+ font-size 1))
+            :y (if vertical (- step 8) (inc font-size))
             :writing-mode (when vertical "vertical-rl")
             :fill "var(--font-color)"
             :font-size font-size
