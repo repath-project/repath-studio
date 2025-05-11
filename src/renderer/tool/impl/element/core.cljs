@@ -1,6 +1,5 @@
 (ns renderer.tool.impl.element.core
   (:require
-   [renderer.app.effects :as-alias app.effects]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]

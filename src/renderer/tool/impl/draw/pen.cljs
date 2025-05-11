@@ -1,7 +1,6 @@
 (ns renderer.tool.impl.draw.pen
   (:require
    [clojure.string :as string]
-   [renderer.app.effects :as-alias app.effects]
    [renderer.document.handlers :as document.handlers]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]

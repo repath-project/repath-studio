@@ -4,6 +4,7 @@
            :docstring-leading-trailing-whitespace {:level :warning}
            :used-underscored-binding {:level :warning}
            :unused-value {:level :warning}
+           :unused-alias {:level :warning}
            :redundant-call {:level :warning}
            :redundant-str-call {:level :warning}
            :clojure-lsp/unused-public-var {:exclude-regex #{"components.*"

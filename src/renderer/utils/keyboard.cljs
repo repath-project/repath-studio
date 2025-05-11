@@ -37,7 +37,8 @@
 
 (m/=> modifiers [:-> any? [:set ModifierKey]])
 (defn modifiers
-  [e]
+  "Returns a set of modifier keys from the event."
+  [^js/Event e]
   (cond-> #{}
     (.-altKey e) (conj :alt)
     (.-ctrlKey e) (conj :ctrl)

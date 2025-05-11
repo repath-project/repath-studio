@@ -3,7 +3,6 @@
    [clojure.core.matrix :as matrix]
    [re-frame.core :as rf]
    [renderer.app.events :refer [persist]]
-   [renderer.document.events :as-alias document.events]
    [renderer.element.handlers :as element.handlers]
    [renderer.frame.handlers :as frame.handlers]
    [renderer.snap.handlers :as snap.handlers]))

@@ -176,7 +176,7 @@
         [timeline.views/root]])
      [repl.views/root]]))
 
-(def paper-size
+(defonce paper-size
   {0 [2384 3370]
    1 [1684 2384]
    2 [1191 1684]

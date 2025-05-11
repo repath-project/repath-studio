@@ -2,7 +2,6 @@
   (:require
    [re-frame.core :as rf]
    [renderer.app.effects :as app.effects]
-   [renderer.element.events :as-alias element.events]
    [renderer.history.handlers :as history.handlers]))
 
 (rf/reg-event-db

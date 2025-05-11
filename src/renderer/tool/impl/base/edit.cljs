@@ -2,7 +2,6 @@
   (:require
    [clojure.core.matrix :as matrix]
    [re-frame.core :as rf]
-   [renderer.app.effects :as-alias app.effects]
    [renderer.element.handlers :as element.handlers]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]

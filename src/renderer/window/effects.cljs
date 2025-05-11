@@ -1,7 +1,6 @@
 (ns renderer.window.effects
   (:require
    [re-frame.core :as rf]
-   [renderer.notification.events :as-alias notification.events]
    [renderer.utils.dom :as utils.dom]
    [renderer.utils.system :as utils.system]))
 

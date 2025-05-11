@@ -43,4 +43,4 @@
 
 (def default (m/decode Element {:type :element
                                 :visible true
-                                :children []} malli.transform/default-value-transformer))
+                                :children []} m.transform/default-value-transformer))

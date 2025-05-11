@@ -1,6 +1,5 @@
 (ns renderer.tool.impl.misc.fill
   (:require
-   [renderer.app.effects :as-alias app.effects]
    [renderer.document.handlers :as document.handlers]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]

@@ -2,7 +2,6 @@
   (:require
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
-   [renderer.tool.app :as-alias app.effects]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]))
 

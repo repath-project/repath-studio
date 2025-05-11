@@ -2,7 +2,6 @@
   "https://www.w3.org/TR/SVG/embedded.html#ImageElement
    https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/image"
   (:require
-   [renderer.app.events :as-alias app.events]
    [renderer.element.hierarchy :as element.hierarchy]))
 
 (derive :image ::element.hierarchy/graphics)

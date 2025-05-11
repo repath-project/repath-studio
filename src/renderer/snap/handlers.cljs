@@ -8,7 +8,6 @@
    [renderer.frame.handlers :as frame.handlers]
    [renderer.ruler.handlers :as ruler.handlers]
    [renderer.snap.db :refer [SnapOption NearestNeighbor]]
-   [renderer.snap.subs :as-alias snap.subs]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.math :refer [Vec2]]))
 

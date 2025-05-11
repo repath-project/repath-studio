@@ -1,8 +1,7 @@
 (ns renderer.attribute.impl.transform
   "https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/transform"
   (:require
-   [renderer.attribute.hierarchy :as attribute.hierarchy]
-   [renderer.element.events :as-alias element.events]))
+   [renderer.attribute.hierarchy :as attribute.hierarchy]))
 
 (defmethod attribute.hierarchy/description [:default :transform]
   []

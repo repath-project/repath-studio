@@ -1,6 +1,5 @@
 (ns renderer.app.events
   (:require
-   [config :as config]
    [malli.error :as malli.error]
    [re-frame.core :as rf]
    [renderer.app.db :as app.db]
@@ -34,11 +33,9 @@
      (if (app.db/valid? app-db)
        {:db app-db}
        {::app.effects/local-storage-clear nil
-        :db (cond-> db
-              config/debug?
-              (notification.handlers/add (notification.views/spec-failed
-                                          "Invalid local configuration"
-                                          (-> app-db app.db/explain malli.error/humanize str))))}))))
+        :db (notification.handlers/add db (notification.views/spec-failed
+                                           "Invalid local configuration"
+                                           (-> app-db app.db/explain malli.error/humanize str)))}))))
 
 (rf/reg-event-db
  ::set-system-fonts
