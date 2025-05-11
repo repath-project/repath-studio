@@ -85,7 +85,7 @@
      (let [attrs (->> selected-elements
                       (map utils.element/attributes)
                       (apply utils.map/merge-common-with
-                             (fn [v1 v2] (if (= v1 v2) v1 nil))))
+                             (fn [v1 v2] (when (= v1 v2) v1))))
            attrs (if multiple-selected?
                    (dissoc attrs :id)
                    (sort-by (fn [[id _]]
