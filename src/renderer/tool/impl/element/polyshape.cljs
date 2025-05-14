@@ -17,7 +17,9 @@
 
 (defmethod tool.hierarchy/help [::tool.hierarchy/polyshape :idle]
   []
-  "Click to add more points. Double click to finalize the shape.")
+  [:<>
+   [:div "Click to add more points."]
+   [:div "Double click to finalize the shape."]])
 
 (defn create-polyline
   [db points]

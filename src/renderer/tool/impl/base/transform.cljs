@@ -41,12 +41,12 @@
 (defmethod tool.hierarchy/help [:transform :idle]
   []
   [:<>
-   [:div "Click to select an element or click and drag to select by area."]
+   [:div "Click to select an element or drag to select by area."]
    [:div "Hold " [:span.shortcut-key "⇧"] " to add or remove elements to selection."]])
 
 (defmethod tool.hierarchy/help [:transform :select]
   []
-  [:div "Hold " [:span.shortcut-key "Alt"] " while dragging to select intersecting elements."])
+  [:div "Hold " [:span.shortcut-key "Alt"] " to select intersecting elements."])
 
 (defmethod tool.hierarchy/help [:transform :translate]
   []

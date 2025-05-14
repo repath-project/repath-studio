@@ -111,7 +111,7 @@
           {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])
        (when (seq help-message)
          [:div.flex.absolute.justify-center.w-full.p-4.pointer-events-none.light
-          [:div.gap-1.flex.flex-wrap.truncate.overlay.py-2.px-4.rounded-full.justify-center.text-color.overlay
+          [:div.overlay.rounded-full.text-color.text-xs.gap-1.flex.flex-wrap.truncate.py-2.px-4.justify-center
            help-message]])]]]))
 
 (defn center-top-group

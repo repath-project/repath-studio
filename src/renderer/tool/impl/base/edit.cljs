@@ -21,7 +21,9 @@
 
 (defmethod tool.hierarchy/help [:edit :idle]
   []
-  "Drag a handle to modify your shape, or click on an element to change selection.")
+  [:<>
+   [:div "Drag a handle to modify your shape."]
+   [:div "Click on an element to change selection"]])
 
 (defmethod tool.hierarchy/help [:edit :edit]
   []
