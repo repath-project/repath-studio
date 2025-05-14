@@ -13,6 +13,7 @@
    (rf/dispatch [::theme.events/set-native-mode :light])
 
    (let [theme-mode (rf/subscribe [::theme.subs/mode])]
+
      (testing "default theme"
        (is (= :dark @theme-mode)))
 

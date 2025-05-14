@@ -1,26 +1,33 @@
 (ns tool-test
   (:require
-   [cljs.test :refer-macros [deftest is]]
+   [cljs.test :refer-macros [deftest is testing]]
    [day8.re-frame.test :as rf.test]
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.events]
    [renderer.document.events :as-alias document.events]
-   [renderer.tool.events :as-alias e]
-   [renderer.tool.subs :as-alias s]))
+   [renderer.element.events :as-alias element.events]
+   [renderer.tool.events :as-alias tool.events]
+   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.tool.subs :as-alias tool.subs]))
 
-(deftest init
-  (rf.test/run-test-sync
-   (rf/dispatch [::app.events/initialize-db])
-
-   (is (= @(rf/subscribe [::s/active]) :transform))))
-
-(deftest activate
+(deftest tool
   (rf.test/run-test-sync
    (rf/dispatch [::app.events/initialize-db])
    (rf/dispatch [::document.events/init])
 
-   (let [active-tool (rf/subscribe [::s/active])]
-     (is (= @active-tool :transform))
+   (let [active-tool (rf/subscribe [::tool.subs/active])]
 
-     (rf/dispatch [::e/activate :rect])
-     (is (= @active-tool :rect)))))
+     (testing "initial"
+       (is (= @active-tool :transform)))
+
+     (testing "edit tool"
+       (rf/dispatch [::tool.events/activate :edit])
+       (is (= @active-tool :edit))
+       (is (= (tool.hierarchy/render :edit) [:g ()]))
+
+       (rf/dispatch [::element.events/add {:tag :rect
+                                           :attrs {:width 100
+                                                   :height 100}}])
+
+       (rf/dispatch [::tool.events/activate :edit])
+       (is (not= (tool.hierarchy/render :edit) [:g ()]))))))
