@@ -34,7 +34,7 @@
         dimensions (utils.bounds/->dimensions (element.hierarchy/bbox el))
         [x y] (matrix/sub dimensions (matrix/mul dimensions ratio))
         pivot-diff (matrix/sub pivot-point dimensions)
-        offset (matrix/sub pivot-diff (matrix/mul pivot-diff ratio))]
+        offset (utils.element/scale-offset ratio pivot-diff)]
     (-> (utils.element/update-attrs-with el + [[(if (< x1 x2) :x1 :x2) x]
                                                [(if (< y1 y2) :y1 :y2) y]])
         (element.hierarchy/translate offset))))

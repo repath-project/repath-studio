@@ -157,16 +157,14 @@
 (defmethod element.hierarchy/scale :brush
   [el ratio pivot-point]
   (let [bbox-min (take 2 (element.hierarchy/bbox el))
-        pivot-point (matrix/sub pivot-point (matrix/mul pivot-point ratio))]
+        offset (utils.element/scale-offset ratio pivot-point)]
     (update-in el
                [:attrs :points]
                #(->> (into [] partition-to-px (utils.attribute/str->seq %))
                      (reduce (fn [points point]
                                (let [rel-point (matrix/sub bbox-min (take 2 point))
-                                     offset (matrix/add pivot-point
-                                                        (matrix/sub rel-point
-                                                                    (matrix/mul rel-point
-                                                                                ratio)))]
+                                     rel-offset (utils.element/scale-offset ratio rel-point)
+                                     offset (matrix/add offset rel-offset)]
                                  (translate offset points point))) [])
                      (string/join " ")))))
 

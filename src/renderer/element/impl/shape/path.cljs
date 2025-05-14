@@ -33,11 +33,10 @@
 (defmethod element.hierarchy/scale :path
   [el ratio pivot-point]
   (let [[scale-x scale-y] ratio
+        offset (utils.element/scale-offset ratio pivot-point)
         [x y] (element.hierarchy/bbox el)
-        [x y] (matrix/sub (matrix/add [x y]
-                                      (matrix/sub pivot-point
-                                                  (matrix/mul pivot-point ratio)))
-                          (matrix/mul ratio [x y]))]
+        [x y] (-> (matrix/add [x y] offset)
+                  (matrix/sub (matrix/mul ratio [x y])))]
     (update-in el [:attrs :d] #(-> (svgpath %)
                                    (.scale scale-x scale-y)
                                    (.translate x y)

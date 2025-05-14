@@ -32,9 +32,10 @@
 
 (defmethod element.hierarchy/scale :circle
   [el ratio pivot-point]
-  (let [dimensions (utils.bounds/->dimensions (element.hierarchy/bbox el))
-        pivot-point (matrix/sub pivot-point (matrix/div dimensions 2))
-        offset (matrix/sub pivot-point (matrix/mul pivot-point ratio))
+  (let [dimensions (-> el element.hierarchy/bbox utils.bounds/->dimensions)
+        pivot-point (->> (matrix/div dimensions 2)
+                         (matrix/sub pivot-point))
+        offset (utils.element/scale-offset ratio pivot-point)
         ratio (apply min ratio)]
     (-> el
         (attr.hierarchy/update-attr :r * ratio)

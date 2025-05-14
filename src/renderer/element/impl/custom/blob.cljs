@@ -90,7 +90,7 @@
 
 (defmethod element.hierarchy/scale :blob
   [el ratio pivot-point]
-  (let [offset (matrix/sub pivot-point (matrix/mul pivot-point ratio))
+  (let [offset (utils.element/scale-offset ratio pivot-point)
         ratio (apply min ratio)]
     (-> el
         (attr.hierarchy/update-attr :size * ratio)

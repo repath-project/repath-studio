@@ -60,7 +60,8 @@
         db (history.handlers/reset-state db)
         el-id (:element clicked-element)
         handle-id (:id clicked-element)
-        delta (cond-> (matrix/add (tool.handlers/pointer-delta db) (snap.handlers/nearest-delta db))
+        delta (cond-> (matrix/add (tool.handlers/pointer-delta db)
+                                  (snap.handlers/nearest-delta db))
                 (utils.pointer/ctrl? e)
                 (utils.pointer/lock-direction))]
     (cond-> db
@@ -86,8 +87,10 @@
 (defmethod tool.hierarchy/snapping-elements :edit
   [db]
   (let [non-selected-ids (element.handlers/non-selected-ids db)
-        non-selected (select-keys (element.handlers/entities db) (vec non-selected-ids))]
-    (filter :visible (vals non-selected))))
+        non-selected (select-keys (element.handlers/entities db)
+                                  (vec non-selected-ids))]
+    (->> (vals non-selected)
+         (filter :visible))))
 
 (defmethod tool.hierarchy/render :edit
   []

@@ -38,7 +38,7 @@
 (defmethod element.hierarchy/scale ::element.hierarchy/polyshape
   [el ratio pivot-point]
   (let [bounds-min (take 2 (element.hierarchy/bbox el))
-        pivot-point (matrix/sub pivot-point (matrix/mul pivot-point ratio))]
+        offset (utils.element/scale-offset ratio pivot-point)]
     (update-in el
                [:attrs :points]
                #(->> (utils.attribute/str->seq %)
@@ -46,16 +46,21 @@
                       partition-to-px
                       (fn [points point]
                         (let [rel-point (matrix/sub bounds-min point)
-                              offset (matrix/add pivot-point (matrix/sub rel-point (matrix/mul rel-point ratio)))]
+                              offset (->> ratio
+                                          (matrix/mul rel-point)
+                                          (matrix/sub rel-point)
+                                          (matrix/add offset))]
                           (translate offset points point))) [])
                      (string/join " ")
                      (string/trim)))))
 
 (defmethod element.hierarchy/render-edit ::element.hierarchy/polyshape
   [el]
-  [:g (map-indexed (fn [index [x y]]
-                     (let [[x y] (mapv utils.length/unit->px [x y])
-                           [x y] (matrix/add (utils.element/offset el) [x y])]
+  [:g (map-indexed (fn [index point]
+                     (let [offset (utils.element/offset el)
+                           [x y] (->> point
+                                      (mapv utils.length/unit->px)
+                                      (matrix/add offset))]
                        ^{:key index}
                        [tool.views/square-handle {:id (keyword (str index))
                                                   :x x
@@ -87,9 +92,14 @@
         max-y (apply max (map #(utils.length/unit->px (second %)) points))]
     [min-x min-y max-x max-y]))
 
-(defn calc-polygon-area
-  [vertices]
-  (let [count-v (count vertices)]
+(defn ->vertices
+  [el]
+  (-> el :attrs :points points->px))
+
+(defmethod element.hierarchy/area ::element.hierarchy/polyshape
+  [el]
+  (let [vertices (->vertices el)
+        count-v (count vertices)]
     (/ (reduce-kv (fn [area index point]
                     (let [point-b (if (= index (dec count-v))
                                     (first vertices)
@@ -100,17 +110,12 @@
                   0
                   vertices) 2)))
 
-(defmethod element.hierarchy/area ::element.hierarchy/polyshape
-  [{{:keys [points]} :attrs}]
-  (let [points-v (points->px points)]
-    (calc-polygon-area points-v)))
-
 (defmethod element.hierarchy/centroid ::element.hierarchy/polyshape
-  [{{:keys [points]} :attrs}]
-  (let [points-v (points->px points)]
-    (matrix/div (reduce matrix/add [0 0] points-v)
-                (count points-v))))
+  [el]
+  (let [vertices (->vertices el)]
+    (-> (reduce matrix/add [0 0] vertices)
+        (matrix/div (count vertices)))))
 
 (defmethod element.hierarchy/snapping-points ::element.hierarchy/polyshape
-  [{{:keys [points]} :attrs}]
-  (points->px points))
+  [el]
+  (->vertices el))

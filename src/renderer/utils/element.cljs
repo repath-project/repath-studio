@@ -52,7 +52,9 @@
   [el]
   (let [el-bbox (:bbox el)
         local-bbox (element.hierarchy/bbox el)]
-    (vec (take 2 (matrix/sub el-bbox local-bbox)))))
+    (->> (matrix/sub el-bbox local-bbox)
+         (take 2)
+         (vec))))
 
 (m/=> snapping-points [:-> Element SnapOptions [:* Vec2]])
 (defn snapping-points
@@ -151,3 +153,10 @@
   [el f attrs-map]
   (reduce (fn [el [k & more]]
             (apply attribute.hierarchy/update-attr el k f more)) el attrs-map))
+
+(m/=> scale-offset [:-> Vec2 Vec2 Vec2])
+(defn scale-offset
+  [ratio pivot-point]
+  (->> ratio
+       (matrix/mul pivot-point)
+       (matrix/sub pivot-point)))
