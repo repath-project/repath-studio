@@ -35,7 +35,10 @@
        {::app.effects/local-storage-clear nil
         :db (notification.handlers/add db (notification.views/spec-failed
                                            "Invalid local configuration"
-                                           (-> app-db app.db/explain malli.error/humanize str)))}))))
+                                           (-> app-db
+                                               app.db/explain
+                                               malli.error/humanize
+                                               str)))}))))
 
 (rf/reg-event-db
  ::set-system-fonts

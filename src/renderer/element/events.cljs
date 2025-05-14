@@ -23,7 +23,8 @@
 (rf/reg-event-db
  ::select-ids
  (fn [db [_ ids]]
-   (-> (reduce (partial-right element.handlers/assoc-prop :selected true) (element.handlers/deselect-all db) ids)
+   (-> (partial-right element.handlers/assoc-prop :selected true)
+       (reduce (element.handlers/deselect-all db) ids)
        (history.handlers/finalize "Select elements"))))
 
 (rf/reg-event-db
@@ -70,7 +71,8 @@
 (rf/reg-event-db
  ::update-attr
  (fn [db [_ k f & more]]
-   (-> (reduce (apply partial-right element.handlers/update-attr k f more) db (element.handlers/selected-ids db))
+   (-> (apply partial-right element.handlers/update-attr k f more)
+       (reduce db (element.handlers/selected-ids db))
        (history.handlers/finalize (str "Update " (name k))))))
 
 (rf/reg-event-db
