@@ -18,12 +18,8 @@
     @apply overlay;
   }
 
-  &:focus {
+  &:focus:not(:hover) {
     @apply outline-hidden outline-shadow;
-  }
-
-  &:active {
-    @apply shadow-none;
   }
 }
 
