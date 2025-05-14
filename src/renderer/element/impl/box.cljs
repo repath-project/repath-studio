@@ -2,7 +2,6 @@
   "This serves as an abstraction for box elements that share the
    :x :y :width :height attributes (e.g. rect, svg, image)."
   (:require
-   [clojure.core.matrix :as matrix]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.tool.views :as tool.views]
    [renderer.utils.bounds :as utils.bounds]
@@ -18,7 +17,7 @@
 (defmethod element.hierarchy/scale ::element.hierarchy/box
   [el ratio pivot-point]
   (let [[x y] ratio
-        offset (matrix/sub pivot-point (matrix/mul pivot-point ratio))]
+        offset (utils.element/scale-offset ratio pivot-point)]
     (-> (utils.element/update-attrs-with el * [[:width x] [:height y]])
         (element.hierarchy/translate offset))))
 
