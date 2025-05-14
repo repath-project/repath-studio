@@ -12,7 +12,6 @@
    [renderer.ruler.subs :as-alias ruler.subs]
    [renderer.snap.views :as snap.views]
    [renderer.timeline.views :as timeline.views]
-   [renderer.tool.subs :as-alias tool.subs]
    [renderer.ui :as ui]
    [renderer.utils.i18n :refer [t]]
    [renderer.utils.keyboard :as utils.keyboard]
@@ -55,7 +54,7 @@
   [:> DropdownMenu/Root
    [:> DropdownMenu/Trigger
     {:title "Select zoom level"
-     :class "button flex items-center justify-center overlay px-2 font-mono rounded-sm"
+     :class "button flex items-center justify-center overlay px-2 font-mono rounded-sm hover:overlay-2x"
      :side "top"}
     [:div.flex.items-center
      [ui/icon "chevron-up"]]]
@@ -132,13 +131,13 @@
   []
   (let [zoom @(rf/subscribe [::document.subs/zoom])]
     [:div.button-group
-     [:button.button.overlay.px-2.font-mono.rounded
+     [:button.button.overlay.px-2.font-mono.rounded.hover:overlay-2x
       {:disabled (<= zoom 0.01)
        :title "Zoom out"
        :on-click #(rf/dispatch [::frame.events/zoom-out])}
       [ui/icon "minus"]]
 
-     [:button.button.overlay.px-2.font-mono.rounded
+     [:button.button.overlay.px-2.font-mono.rounded.hover:overlay-2x
       {:disabled (>= zoom 100)
        :title "Zoom in"
        :on-click #(rf/dispatch [::frame.events/zoom-in])}
@@ -150,8 +149,7 @@
      [zoom-menu]]))
 
 (defn root []
-  (let [help-message @(rf/subscribe [::tool.subs/help])
-        loading @(rf/subscribe [::worker.subs/loading?])
+  (let [loading @(rf/subscribe [::worker.subs/loading?])
         fill @(rf/subscribe [::document.subs/fill])
         stroke @(rf/subscribe [::document.subs/stroke])
         get-hex #(:hex (js->clj % :keywordize-keys true))]
@@ -185,11 +183,7 @@
                   :height "13px"
                   :bottom "9px"
                   :right "9px"}}]]]]
-     [:div.grow
-      [:div.px-1.hidden.gap-1.flex-wrap.leading-none.truncate
-       {:class "2xl:flex"
-        :style {:max-height "var(--button-size)"}}
-       help-message]]
+     [:div.grow]
      (when loading
        [:button.icon-button
         [ui/loading-indicator]])

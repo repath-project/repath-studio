@@ -21,12 +21,13 @@
 
   --backdrop: rgb(0 0 0 / 0.75);
 
+  .dark,
   &[data-theme='dark'] {
     --bg-secondary: #222;
     --bg-primary: #2d2d2d;
 
-    --overlay: rgba(255, 255, 255, .1);
-    --overlay-2x: rgba(255, 255, 255, .2);
+    --overlay: rgba(255, 255, 255, .05);
+    --overlay-2x: rgba(255, 255, 255, .1);
 
     --font-color: rgba(255, 255, 255, .7);
     --font-color-disabled: rgba(255, 255, 255, .3);
@@ -49,6 +50,7 @@
     }
   }
 
+  .light,
   &[data-theme='light'] {
     --bg-secondary: #eee;
     --bg-primary: #fff;

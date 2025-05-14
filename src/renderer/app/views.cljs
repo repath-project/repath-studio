@@ -76,7 +76,8 @@
   (let [ruler-visible? @(rf/subscribe [::ruler.subs/visible?])
         read-only? @(rf/subscribe [::document.subs/read-only?])
         ruler-size @(rf/subscribe [::ruler.subs/size])
-        ruler-locked? @(rf/subscribe [::ruler.subs/locked?])]
+        ruler-locked? @(rf/subscribe [::ruler.subs/locked?])
+        help-message @(rf/subscribe [::tool.subs/help])]
     [:div.flex.flex-col.flex-1.h-full.gap-px
      [:div
       [ui/scroll-area [toolbar.tools/root]]
@@ -107,7 +108,11 @@
            [debug-info]))
        (when @(rf/subscribe [::app.subs/backdrop])
          [:div.absolute.inset-0
-          {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])]]]))
+          {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])
+       (when (seq help-message)
+         [:div.flex.absolute.justify-center.w-full.p-4.pointer-events-none.light
+          [:div.gap-1.flex.flex-wrap.truncate.overlay.py-2.px-4.rounded-full.justify-center.text-color.overlay
+           help-message]])]]]))
 
 (defn center-top-group
   []
