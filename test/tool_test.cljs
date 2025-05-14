@@ -30,4 +30,8 @@
                                                    :height 100}}])
 
        (rf/dispatch [::tool.events/activate :edit])
-       (is (not= (tool.hierarchy/render :edit) [:g ()]))))))
+       (is (not= (tool.hierarchy/render :edit) [:g ()])))
+
+     (testing "cancel"
+       (rf/dispatch [::tool.events/cancel])
+       (is (= @active-tool :transform))))))
