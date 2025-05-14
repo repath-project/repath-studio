@@ -7,11 +7,12 @@
    [renderer.notification.events :as-alias e]
    [renderer.notification.subs :as-alias s]))
 
-(deftest add-and-remove
+(deftest notification
   (rf.test/run-test-sync
    (rf/dispatch [::app.events/initialize-db])
 
    (let [notifications (rf/subscribe [::s/entities])]
+
      (testing "initial"
        (is (= @notifications [])))
 
@@ -39,13 +40,8 @@
 
      (testing "clear all"
        (rf/dispatch [::e/clear-all])
-       (is (= (count @notifications) 0))))))
+       (is (= (count @notifications) 0)))
 
-(deftest exception
-  (rf.test/run-test-sync
-   (rf/dispatch [::app.events/initialize-db])
-
-   (let [notifications (rf/subscribe [::s/entities])]
      (testing "string exception"
        (try
          (throw (js/Error. "Error message"))

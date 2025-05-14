@@ -10,50 +10,47 @@
    [renderer.history.events :as-alias history.events]
    [renderer.history.subs :as history.subs]))
 
-(deftest undo-redo
+(deftest history
   (rf.test/run-test-sync
    (rf/dispatch [::app.events/initialize-db])
    (rf/dispatch [::document.events/init])
 
-   (testing "no undos/redos"
-     (is (not @(rf/subscribe [::history.subs/undos?])))
-     (is (not @(rf/subscribe [::history.subs/redos?]))))
+   (let [undos? (rf/subscribe [::history.subs/undos?])
+         redos? (rf/subscribe [::history.subs/redos?])
+         undos (rf/subscribe [::history.subs/undos])
+         redos (rf/subscribe [::history.subs/redos])
+         selected-elements (rf/subscribe [::element.subs/selected])]
 
-   (testing "add action to history"
-     (rf/dispatch [::element.events/add {:tag :rect
-                                         :attrs {:x 100
-                                                 :y 100
-                                                 :width 100
-                                                 :height 100}}])
-     (is @(rf/subscribe [::history.subs/undos?]))
-     (is (= (count @(rf/subscribe [::history.subs/undos])) 1))
-     (is (not @(rf/subscribe [::history.subs/redos?])))
-     (is (= (-> @(rf/subscribe [::element.subs/selected]) first :tag) :rect)))
+     (testing "no undos/redos"
+       (is (not @undos?))
+       (is (not @redos?)))
 
-   (testing "undo"
-     (rf/dispatch [::history.events/undo])
-     (is @(rf/subscribe [::history.subs/redos?]))
-     (is (= (count @(rf/subscribe [::history.subs/redos])) 1))
-     (is (not @(rf/subscribe [::history.subs/undos?])))
-     (is (empty? @(rf/subscribe [::element.subs/selected]))))
+     (testing "add action to history"
+       (rf/dispatch [::element.events/add {:tag :rect
+                                           :attrs {:x 100
+                                                   :y 100
+                                                   :width 100
+                                                   :height 100}}])
+       (is @undos?)
+       (is (= (count @undos) 1))
+       (is (not @redos?))
+       (is (= (-> @selected-elements first :tag) :rect)))
 
-   (testing "redo"
-     (rf/dispatch [::history.events/redo])
-     (is @(rf/subscribe [::history.subs/undos?]))
-     (is (= (count @(rf/subscribe [::history.subs/undos])) 1))
-     (is (not @(rf/subscribe [::history.subs/redos?])))
-     (is (= (-> @(rf/subscribe [::element.subs/selected]) first :tag) :rect)))))
+     (testing "undo"
+       (rf/dispatch [::history.events/undo])
+       (is @redos?)
+       (is (= (count @redos) 1))
+       (is (not @undos?))
+       (is (empty? @selected-elements)))
 
-(deftest clear
-  (rf.test/run-test-sync
-   (rf/dispatch [::app.events/initialize-db])
-   (rf/dispatch [::document.events/init])
-   (rf/dispatch [::element.events/add {:tag :rect
-                                       :attrs {:x 100
-                                               :y 100
-                                               :width 100
-                                               :height 100}}])
-   (testing "clear history"
-     (rf/dispatch [::history.events/clear])
-     (is (not @(rf/subscribe [::history.subs/undos?])))
-     (is (not @(rf/subscribe [::history.subs/redos?]))))))
+     (testing "redo"
+       (rf/dispatch [::history.events/redo])
+       (is @undos?)
+       (is (= (count @undos) 1))
+       (is (not @redos?))
+       (is (= (-> @selected-elements first :tag) :rect)))
+
+     (testing "clear history"
+       (rf/dispatch [::history.events/clear])
+       (is (not @undos?))
+       (is (not @redos?))))))
