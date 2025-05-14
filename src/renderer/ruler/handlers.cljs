@@ -2,6 +2,7 @@
   (:require
    [clojure.math.combinatorics :as combo]
    [malli.core :as m]
+   [renderer.app.db :refer [App]]
    [renderer.document.db :refer [ZoomFactor]]
    [renderer.frame.db :refer [Viewbox]]
    [renderer.frame.handlers :as frame.handlers]
@@ -42,6 +43,7 @@
            (if (= orientation :vertical) height width)
            ruler-step)))
 
+(m/=> steps-intersections [:-> App [:sequential [:sequential number?]]])
 (defn steps-intersections
   "Returns the intersection points of the rulers."
   [db]
