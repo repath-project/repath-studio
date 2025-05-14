@@ -2,7 +2,6 @@
   "https://developer.mozilla.org/en-US/docs/Web/SVG/Content_type#length"
   (:require
    [re-frame.core :as rf]
-   [renderer.attribute.events :as-alias e]
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.attribute.views :as attribute.views]
    [renderer.element.events :as-alias element.events]
@@ -34,20 +33,17 @@
   [:div.flex.w-full.gap-px
    [attribute.views/form-input k v
     {:disabled disabled
-     :placeholder (if v placeholder "multiple")
-     :on-wheel (fn [e]
-                 (when (= (.-target e) (.-activeElement js/document))
-                   (rf/dispatch [::e/update-and-focus k (if (pos? (.-deltaY e)) - +) 1])))}]
+     :placeholder (if v placeholder "multiple")}]
    [:div.flex.gap-px
     [:button.form-control-button
      {:disabled disabled
       :title "Decrease"
-      :on-pointer-down #(rf/dispatch [::element.events/update-attr k - 1])}
+      :on-pointer-down #(rf/dispatch [::element.events/update-attr k dec])}
      [ui/icon "minus"]]
     [:button.form-control-button
      {:disabled disabled
       :title "Increase"
-      :on-click #(rf/dispatch [::element.events/update-attr k + 1])}
+      :on-click #(rf/dispatch [::element.events/update-attr k inc])}
      [ui/icon "plus"]]]])
 
 (defmethod attribute.hierarchy/update-attr ::length
