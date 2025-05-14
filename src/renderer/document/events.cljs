@@ -151,7 +151,8 @@
  [(rf/inject-cofx ::app.effects/guid)]
  (fn [{:keys [db guid]} [_]]
    {:db (-> (create db guid)
-            (history.handlers/finalize "Create document"))}))
+            (history.handlers/finalize "Create document"))
+    ::app.effects/focus nil}))
 
 (rf/reg-event-fx
  ::init
@@ -207,7 +208,8 @@
            migrated (not= document migrated-document)
            document (assoc migrated-document :id guid)]
        (cond-> {:db (-> (document.handlers/load db document)
-                        (history.handlers/finalize "Load document"))}
+                        (history.handlers/finalize "Load document"))
+                ::app.effects/focus nil}
          (not migrated)
          (assoc :dispatch [::saved document])))
      {:db (->> (notification.views/generic-error
