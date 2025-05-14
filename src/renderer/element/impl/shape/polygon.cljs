@@ -8,8 +8,9 @@
 (defmethod element.hierarchy/properties :polygon
   []
   {:icon "polygon"
-   :description "The <polyline> SVG element is an SVG basic shape that creates
-                 straight lines connecting several points."
+   :description "The <polygon> SVG element defines a closed shape consisting of
+                 a set of connected straight line segments. The last point is
+                 connected to the first point."
    :attrs [:stroke-width
            :fill
            :stroke
