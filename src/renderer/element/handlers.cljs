@@ -241,6 +241,7 @@
        (entities db)
        (vals)))
 
+(m/=> update-prop [:-> App uuid? ifn? [:* any?] App])
 (defn update-prop
   [db id k & more]
   (-> (apply update-in db (path db id k) more)
@@ -295,6 +296,7 @@
        (assoc-attr db id k (string/trim (str v))))
      db)))
 
+(m/=> update-attr [:-> App uuid? keyword? ifn? [:* any?] App])
 (defn update-attr
   [db id k f & more]
   (if (utils.element/supported-attr? (entity db id) k)
@@ -817,9 +819,16 @@
      (= (:tag (entity db id)) :path)
      (update-attr id :d utils.path/manipulate action))))
 
+(def SvgData [:map
+              [:svg string?]
+              [:label string?]
+              [:position Vec2]])
+
+(m/=> import-svg [:-> App SvgData App])
 (defn import-svg
-  [db {:keys [svg label position]}]
-  (let [[x y] position
+  [db data]
+  (let [{:keys [svg label position]} data
+        [x y] position
         hickory (hickory/as-hickory (hickory/parse svg))
         zipper (hickory.zip/hickory-zip hickory)
         svg (utils.hiccup/find-svg zipper)
