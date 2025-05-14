@@ -47,13 +47,12 @@
   }
 
   &:hover {
-    @apply overlay;
-    transition: all 75ms;
+    @apply overlay outline-none;
     color: var(--font-color-hovered);
   }
 
   &:active {
-    @apply outline-hidden overlay-2x;
+    @apply overlay-2x;
   }
 
   &.selected {
@@ -75,7 +74,6 @@
 @utility backdrop {
   @apply absolute inset-0 flex items-center justify-center;
   background-color: var(--backdrop);
-  backdrop-filter: blur(2px);
 }
 
 @utility icon {
@@ -118,6 +116,10 @@
 @utility radio-icon-button {
   &.selected {
     @apply bg-accent text-accent-inverted;
+  }
+
+  &:active {
+    @apply overlay;
   }
 }
 
@@ -247,18 +249,19 @@
 }
 
 @utility tab {
-  @apply button flex items-center h-full text-left bg-primary gap-2 opacity-50 hover:bg-primary relative;
+  @apply flex items-center h-full text-left gap-2 bg-secondary text-muted hover:text-color relative outline-none;
   padding: 0 8px 0 16px;
   flex: 0 1 130px;
 
   .close {
-    @apply icon-button invisible relative;
+    @apply icon-button invisible relative bg-inherit;
 
     .dot {
-      @apply absolute inset-0 bg-primary flex items-center;
+      @apply absolute inset-0 bg-inherit flex items-center text-muted;
     }
 
-    &:hover {
+    &:hover,
+    &:focus {
       .dot {
         @apply hidden;
       }
@@ -273,12 +276,12 @@
     }
   }
 
-  &:active {
-    @apply bg-primary;
+  &.active {
+    @apply bg-primary text-color;
   }
 
-  &.active {
-    @apply opacity-100;
+  &:focus {
+    @apply text-color;
   }
 }
 

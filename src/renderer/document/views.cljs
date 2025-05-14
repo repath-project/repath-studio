@@ -58,10 +58,9 @@
   [:button.close.small
    {:key id
     :title "Close document"
-    :on-pointer-down #(.stopPropagation %)
-    :on-pointer-up (fn [e]
-                     (.stopPropagation e)
-                     (rf/dispatch [::document.events/close id true]))}
+    :on-click (fn [e]
+                (.stopPropagation e)
+                (rf/dispatch [::document.events/close id true]))}
    [ui/icon "times"]
    (when-not saved
      [ui/icon "dot" {:class "dot"}])])
@@ -95,19 +94,22 @@
         [:div.tab
          {:class [(when active? "active")
                   (when saved? "saved")]
-          :on-wheel #(rf/dispatch [::document.events/cycle (.-deltaY %)])
-          :on-pointer-down #(case (.-buttons %)
-                              4 (rf/dispatch [::document.events/close id true])
-                              1 (rf/dispatch [::document.events/set-active id])
-                              nil)
+          :on-wheel #(when-not (zero? (.-deltaY %))
+                       (rf/dispatch [::document.events/cycle (.-deltaY %)]))
+          :on-click #(rf/dispatch [::document.events/set-active id])
+          :on-pointer-up #(when (= (.-button %) 1)
+                            (rf/dispatch [::document.events/close id true]))
           :draggable true
+          :tab-index 0
+          :on-key-down #(when (= (.-key %) "Enter")
+                          (rf/dispatch [::document.events/set-active id]))
           :on-drag-start #(.setData (.-dataTransfer %) "id" (str id))
           :on-drag-over #(.preventDefault %)
           :on-drag-enter #(reset! dragged-over? true)
           :on-drag-leave #(reset! dragged-over? false)
-          :on-drop (fn [evt]
-                     (let [dropped-id (-> (.-dataTransfer evt) (.getData "id") uuid)]
-                       (.preventDefault evt)
+          :on-drop (fn [e]
+                     (let [dropped-id (-> (.-dataTransfer e) (.getData "id") uuid)]
+                       (.preventDefault e)
                        (reset! dragged-over? false)
                        (rf/dispatch [::document.events/swap-position dropped-id id])))
           :ref (fn [this]
@@ -130,7 +132,7 @@
         active-id @(rf/subscribe [::document.subs/active-id])]
     [:div.flex.justify-between.gap-px
      [ui/scroll-area
-      [:div.flex.flex-1.gap-px
+      [:div.flex.flex-1
        {:class "h-[41px]"}
        (for [document-id tabs]
          (let [title (:title (get documents document-id))
