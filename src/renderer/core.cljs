@@ -9,7 +9,6 @@
    [renderer.app.events :as app.events]
    [renderer.app.subs]
    [renderer.app.views :as app.views]
-   [renderer.attribute.events]
    [renderer.attribute.impl.core]
    [renderer.dialog.events]
    [renderer.dialog.subs]

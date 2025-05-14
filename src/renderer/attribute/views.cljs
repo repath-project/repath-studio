@@ -6,7 +6,6 @@
    [clojure.string :as string]
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.subs]
-   [renderer.attribute.events :as-alias attribute.events]
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.element.events :as-alias element.events]
    [renderer.element.hierarchy :as element.hierarchy]
@@ -104,14 +103,11 @@
                    :placeholder (if v placeholder "multiple")}])
 
 (defn range-input
-  [k v {:keys [placeholder disabled step] :as attrs}]
+  [k v {:keys [placeholder disabled] :as attrs}]
   [:div.flex.w-full.gap-px
    [form-input k v {:disabled disabled
                     :placeholder placeholder
-                    :class "w-20"
-                    :on-wheel (fn [e]
-                                (when (= (.-target e) (.-activeElement js/document))
-                                  (rf/dispatch [::attribute.events/update-and-focus k (if (pos? (.-deltaY e)) - +) step])))}]
+                    :class "w-20"}]
    [:div.px-1.w-full.bg-primary
     [ui/slider
      (merge attrs
