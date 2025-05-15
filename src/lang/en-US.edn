@@ -5,6 +5,16 @@
 
  :color
  {:swap "Swap fill with stroke"}
- 
+
  :renderer.menubar.views
- {:print "Print"}}
+ {:file          "File"
+  :new           "New"
+  :open          "Open..."
+  :recent        "Recent"
+  :print         "Print"
+  :save          "Save"
+  :save-as       "Save as..."
+  :donwload      "Download"
+  :export-as-svg "Export as SVG"
+  :close         "Close"
+  :exit          "Exit"}}

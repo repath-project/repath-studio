@@ -40,45 +40,45 @@
 (defn file-menu
   []
   {:id :file
-   :label "File"
+   :label (t [::file "File"])
    :type :root
    :items [{:id :new-file
-            :label "New"
+            :label (t [::new "New"])
             :icon "file"
             :action [::document.events/new]}
            {:id :divider-1
             :type :separator}
            {:id :open-file
-            :label "Open…"
+            :label (t [::open "Open..."])
             :icon "folder"
             :action [::document.events/open nil]}
            {:id :recent
-            :label "Recent"
+            :label (t [::recent "Recent"])
             :type :sub-menu
             :disabled (not @(rf/subscribe [::document.subs/recent?]))
             :items (recent-submenu)}
            {:id :divider-2
             :type :separator}
            {:id :save
-            :label "Save"
+            :label (t [::save "Save"])
             :icon "save"
             :action [::document.events/save]
             :disabled (or (not @(rf/subscribe [::document.subs/entities?]))
                           @(rf/subscribe [::document.subs/active-saved?]))}
            {:id :save-as
-            :label "Save as…"
+            :label (t [::save-as "Save as..."])
             :icon "save-as"
             :action [::document.events/save-as]
             :disabled (not @(rf/subscribe [::document.subs/entities?]))}
            {:id :download
             :icon "download"
-            :label "Download"
+            :label (t [::download "Download"])
             :disabled (not @(rf/subscribe [::document.subs/entities?]))
             :action [::document.events/download]}
            {:id :divider-3
             :type :separator}
            {:id :export-svg
-            :label "Export as SVG"
+            :label (t [::export-as-svg "Export as SVG"])
             :icon "export"
             :disabled (not @(rf/subscribe [::document.subs/entities?]))
             :action [::element.events/export-svg]}
@@ -92,12 +92,12 @@
            {:id :divider-5
             :type :separator}
            {:id :close
-            :label "Close"
+            :label (t [::close "Close"])
             :icon "window-close"
             :disabled (not @(rf/subscribe [::document.subs/entities?]))
             :action [::document.events/close-active]}
            {:id :exit
-            :label "Exit"
+            :label (t [::exit "Exit"])
             :icon "exit"
             :action [::window.events/close]}]})
 

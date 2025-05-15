@@ -7,4 +7,14 @@
  {:swap "Ανταλλάξτε το γέμισμα με τη γραμμή"}
  
  :renderer.menubar.views
- {:print "Εκτύπωση"}}
+ {:file          "Αρχείο"
+  :new           "Νέο"
+  :open          "Άνοιγμα..."
+  :recent        "Πρόσφατα"
+  :print         "Εκτύπωση"
+  :save          "Αποθήκευση"
+  :save-as       "Αποθήκευση ως..."
+  :download      "Λήψη"
+  :export-as-svg "Εξαγωγή ως SVG"
+  :close         "Κλείσιμο"
+  :exit          "Έξοδος"}}
