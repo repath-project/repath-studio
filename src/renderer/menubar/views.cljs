@@ -104,75 +104,75 @@
 (defn edit-menu
   []
   {:id :edit
-   :label "Edit"
+   :label (t [::edit "Edit"])
    :type :root
    :disabled (not @(rf/subscribe [::document.subs/entities?]))
    :items [{:id :undo
-            :label "Undo"
+            :label (t [::undo "Undo"])
             :icon "undo"
             :disabled (not @(rf/subscribe [::history.subs/undos?]))
             :action [::history.events/undo]}
            {:id :redo
-            :label "Redo"
+            :label (t [::redo "Redo"])
             :icon "redo"
             :disabled (not @(rf/subscribe [::history.subs/redos?]))
             :action [::history.events/redo]}
            {:id :divider-1
             :type :separator}
            {:id :cut
-            :label "Cut"
+            :label (t [::cut "Cut"])
             :icon "cut"
             :disabled (not @(rf/subscribe [::element.subs/some-selected?]))
             :action [::element.events/cut]}
            {:id :copy
             :icon "copy"
-            :label "Copy"
+            :label (t [::copy "Copy"])
             :disabled (not @(rf/subscribe [::element.subs/some-selected?]))
             :action [::element.events/copy]}
            {:id :paste
-            :label "Paste"
+            :label (t [::paste "Paste"])
             :icon "paste"
             :action [::element.events/paste]}
            {:id :paste-in-place
             :icon "paste"
-            :label "Paste in place"
+            :label (t [::paste-in-place "Paste in place"])
             :action [::element.events/paste-in-place]}
            {:id :paste-styles
             :icon "paste"
-            :label "Paste styles"
+            :label (t [::paste-styles "Paste styles"])
             :action [::element.events/paste-styles]}
            {:id :divider-2
             :type :separator}
            {:id :duplicate
             :icon "copy"
-            :label "Duplicate"
+            :label (t [::duplicate "Duplicate"])
             :disabled (not @(rf/subscribe [::element.subs/some-selected?]))
             :action [::element.events/duplicate]}
            {:id :divider-3
             :type :separator}
            {:id :select-all
             :icon "select-all"
-            :label "Select all"
+            :label (t [::select-all "Select all"])
             :action [::element.events/select-all]}
            {:id :deselect-all
             :icon "deselect-all"
-            :label "Deselect all"
+            :label (t [::deselect-all "Deselect all"])
             :disabled (not @(rf/subscribe [::element.subs/some-selected?]))
             :action [::element.events/deselect-all]}
            {:id :invert-selection
-            :label "Invert selection"
+            :label (t [::invert-selection "Invert selection"])
             :icon "invert-selection"
             :action [::element.events/invert-selection]}
            {:id :select-same-tags
             :icon "select-same"
-            :label "Select same tags"
+            :label (t [::select-same-tags "Select same tags"])
             :disabled (not @(rf/subscribe [::element.subs/some-selected?]))
             :action [::element.events/select-same-tags]}
            {:id :divider-4
             :type :separator}
            {:id :delete
             :icon "delete"
-            :label "Delete"
+            :label (t [::delete "Delete"])
             :disabled (not @(rf/subscribe [::element.subs/some-selected?]))
             :action [::element.events/delete]}]})
 
