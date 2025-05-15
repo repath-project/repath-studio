@@ -1,7 +1,10 @@
 {:missing "Missing translation for :en-US"
- :cmdk
+ :renderer.dialog.views
  {:search-command "Search for a command"
   :no-results "No results found."}
 
  :color
- {:swap "Swap fill with stroke"}}
+ {:swap "Swap fill with stroke"}
+ 
+ :renderer.menubar.views
+ {:print "Print"}}

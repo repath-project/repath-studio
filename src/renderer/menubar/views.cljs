@@ -15,8 +15,9 @@
    [renderer.menubar.events :as-alias e]
    [renderer.menubar.filters :as filters]
    [renderer.ruler.events :as-alias ruler.e]
-   [renderer.ruler.subs :as-alias ruler.s]
+   [renderer.ruler.subs :as-alias ruler.s] 
    [renderer.ui :as ui]
+   [renderer.utils.i18n :refer [t]]
    [renderer.window.events :as-alias window.e]
    [renderer.window.subs :as-alias window.s]))
 
@@ -84,7 +85,7 @@
            {:id :divider-4
             :type :separator}
            {:id :print
-            :label "Print"
+            :label (t [::print "Print"])
             :icon "printer"
             :disabled (not @(rf/subscribe [::document.s/entities?]))
             :action [::element.e/print]}

@@ -1,7 +1,10 @@
 {:missing "Λείπει η μετάφραση για :el-GR"
- :cmdk
+ :renderer.dialog.views
  {:search-command "Αναζήτηση για εντολή"
   :no-results "Δεν βρέθηκαν αποτελέσματα."}
 
  :color
- {:swap "Ανταλλάξτε το γέμισμα με τη γραμμή"}}
+ {:swap "Ανταλλάξτε το γέμισμα με τη γραμμή"}
+ 
+ :renderer.menubar.views
+ {:print "Εκτύπωση"}}

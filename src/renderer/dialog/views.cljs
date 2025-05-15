@@ -90,12 +90,12 @@
    {:label "Command Menu"
     :on-key-down #(.stopPropagation %)}
    [:> Command/CommandInput
-    {:placeholder (t [:cmdk/search-command "Search for a command"])}]
+    {:placeholder (t [::search-command "Search for a command"])}]
    [ui/scroll-area
     [:> Command/CommandList
      {:class "p-1"}
      [:> Command/CommandEmpty
-      (t [:cmdk/no-results "No results found."])]
+      (t [::no-results "No results found."])]
      (for [i (menubar/root-menu)]
        ^{:key (:id i)}
        [cmdk-group i])]]])
