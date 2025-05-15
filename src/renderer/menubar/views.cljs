@@ -17,6 +17,7 @@
    [renderer.ruler.events :as-alias ruler.events]
    [renderer.ruler.subs :as-alias ruler.subs]
    [renderer.ui :as ui]
+   [renderer.utils.i18n :refer [t]]
    [renderer.window.events :as-alias window.events]
    [renderer.window.subs :as-alias window.subs]))
 
