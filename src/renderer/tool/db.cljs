@@ -9,7 +9,7 @@
   [:fn {:error/fn (fn [{:keys [value]} _] (str value " is not a supported tool"))}
    tool?])
 
-(def State [:enum :idle :translate :clone :scale :select :create :edit])
+(def State [:enum :idle :translate :clone :scale :select :create :edit :pan])
 
 (def Cursor
   [:enum
