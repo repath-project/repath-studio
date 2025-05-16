@@ -273,79 +273,79 @@
 (defn object-menu
   []
   {:id :object
-   :label "Object"
+   :label (t [::object "Object"])
    :type :root
    :disabled (not @(rf/subscribe [::document.subs/entities?]))
    :items [{:id :to-path
-            :label "Object to path"
+            :label (t [::object-to-path "Object to path"])
             :icon "bezier-curve"
             :disabled (not @(rf/subscribe [::element.subs/some-selected?]))
             :action [::element.events/->path]}
            {:id :stroke-to-path
-            :label "Stroke to path"
+            :label (t [::stroke-to-path "Stroke to path"])
             :icon "bezier-curve"
             :disabled (not @(rf/subscribe [::element.subs/some-selected?]))
             :action [::element.events/stroke->path]}
            {:id :divider-1
             :type :separator}
            {:id :group
-            :label "Group"
+            :label (t [::group "Group"])
             :icon "group"
             :disabled (not @(rf/subscribe [::element.subs/some-selected?]))
             :action [::element.events/group]}
            {:id :ungroup
-            :label "Ungroup"
+            :label (t [::ungroup "Ungroup"])
             :icon "ungroup"
             :disabled (not @(rf/subscribe [::element.subs/some-selected?]))
             :action [::element.events/ungroup]}
            {:id :divider-2
             :type :separator}
            {:id :lock
-            :label "Lock"
+            :label (t [::lock "Lock"])
             :icon "lock"
             :disabled (not @(rf/subscribe [::element.subs/some-selected?]))
             :action [::element.events/lock]}
            {:id :unlock
-            :label "Unlock"
+            :label (t [::unlock "Unlock"])
             :icon "unlock"
             :disabled (not @(rf/subscribe [::element.subs/some-selected?]))
             :action [::element.events/unlock]}
            {:id :divider-3
             :type :separator}
            {:id :path
-            :label "Align"
+            :label (t [::align "Align"])
             :type :sub-menu
             :disabled @(rf/subscribe [::element.subs/every-top-level])
             :items (align-submenu)}
            {:id :boolean
-            :label "Animate"
+            :label (t [::animate "Animate"])
             :type :sub-menu
             :disabled (not @(rf/subscribe [::element.subs/some-selected?]))
             :items (animate-submenu)}
            {:id :boolean
-            :label "Boolean operation"
+            :label (t [::boolean-operation "Boolean operation"])
             :type :sub-menu
             :disabled (not @(rf/subscribe [::element.subs/multiple-selected?]))
             :items (boolean-submenu)}
            {:id :divider-4
             :type :separator}
            {:id :raise
-            :label "Raise"
+            :label (t [::raise "Raise"])
             :icon "bring-forward"
             :disabled (not @(rf/subscribe [::element.subs/some-selected?]))
             :action [::element.events/raise]}
            {:id :lower
-            :label "Lower"
+            :label (t [::lower "Lower"])
             :icon "send-backward"
             :disabled (not @(rf/subscribe [::element.subs/some-selected?]))
             :action [::element.events/lower]}
            {:id :raise-to-top
-            :label "Raise to top"
+            :label (t [::raise-to-top "Raise to top"])
             :icon "bring-front"
             :disabled (not @(rf/subscribe [::element.subs/some-selected?]))
             :action [::element.events/raise-to-top]}
            {:id :lower-to-bottom
-            :label "Lower to bottom"
+            :label (t [::lower-to-bottom "Lower to bottom"])
             :icon "send-back"
             :disabled (not @(rf/subscribe [::element.subs/some-selected?]))
             :action [::element.events/lower-to-bottom]}
@@ -353,10 +353,10 @@
             :type :separator}
            {:id :image
             :type :sub-menu
-            :label "Image"
+            :label (t [::image "Image"])
             :items (image-submenu)}
            {:id :path
-            :label "Path"
+            :label (t [::path "Path"])
             :type :sub-menu
             :items (path-submenu)}]})
 
