@@ -13,6 +13,11 @@
    {:db (tool.handlers/activate db tool)
     ::app.effects/focus nil}))
 
+(rf/reg-event-db
+ ::set-state
+ (fn [db [_ state]]
+   (tool.handlers/set-state db state)))
+
 (rf/reg-event-fx
  ::pointer-event
  [(rf/inject-cofx ::app.effects/timestamp)]

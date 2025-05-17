@@ -11,6 +11,7 @@
    [renderer.element.handlers :as element.handlers]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.handlers]
+   [renderer.tool.events :as tool.events]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
@@ -95,6 +96,7 @@
        :on-pointer-up #(.stopPropagation %)
        :on-blur #(rf/dispatch [::set-text id (get-text! %)])
        :on-key-down #(key-down-handler! % id)
+       :ref (fn [this] (when this (rf/dispatch [::tool.events/set-state :type])))
        :style {:color "transparent"
                :caret-color (or fill "black")
                :display "block"

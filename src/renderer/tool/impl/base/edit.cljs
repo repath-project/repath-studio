@@ -29,6 +29,10 @@
   []
   [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction."])
 
+(defmethod tool.hierarchy/help [:edit :type]
+  []
+  "Enter your text.")
+
 (defmethod tool.hierarchy/on-pointer-down :edit
   [db e]
   (cond-> db

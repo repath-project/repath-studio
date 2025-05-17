@@ -13,7 +13,7 @@
 
 (defmethod tool.hierarchy/help [:text :idle]
   []
-  "Click to enter your text.")
+  "Click to start typing.")
 
 (defmethod tool.hierarchy/on-activate :text
   [db]
@@ -29,8 +29,7 @@
     (-> (element.handlers/deselect-all db)
         (element.handlers/add el)
         (history.handlers/finalize "Create text")
-        (tool.handlers/activate :edit)
-        (tool.handlers/set-state :create))))
+        (tool.handlers/activate :edit))))
 
 (defmethod tool.hierarchy/on-drag-end :text
   [db e]
