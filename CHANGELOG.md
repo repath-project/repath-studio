@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.4.7 (2025-5-17)
+
+**Changed**
+
+- Set label cursor to text only when the item is selected
+- Move help messages over canvas
+- Simplify and improve performance of tests
+- Enhance close button styles
+- Enhance pan help messages
+
+**Fixed**
+
+- Accessibility issues
+- Polygon and polyline description
+- loadURL on windows
+
 ## 0.4.6 (2025-5-7)
 
 **Added**
