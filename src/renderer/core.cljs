@@ -31,6 +31,7 @@
    [renderer.snap.events]
    [renderer.snap.subs]
    [renderer.theme.db :as theme.db]
+   [renderer.theme.effects]
    [renderer.theme.events :as theme.events]
    [renderer.theme.subs]
    [renderer.timeline.events]
