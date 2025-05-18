@@ -50,7 +50,7 @@
 (defn render-to-dom
   "We need a reagent form-3 component in order to set the style attribute manually.
    React expects a map, but we need to set a string to avoid serializing css."
-  [el]
+  [el _child-els _idle?]
   (let [ref (react/createRef)]
     (reagent/create-class
      {:display-name "element-renderer"
@@ -71,7 +71,7 @@
 
       :reagent-render
       (fn
-        [{:keys [attrs tag title content] :as el} child-els default-state?]
+        [{:keys [attrs tag title content] :as el} child-els idle?]
         [:<>
          [tag (->> (-> attrs
                        (dissoc :style)
@@ -84,7 +84,7 @@
           (for [child child-els]
             ^{:key (:id child)} [element.hierarchy/render child])]
 
-         (when default-state? [ghost-element el])])})))
+         (when idle? [ghost-element el])])})))
 
 (defmethod element.hierarchy/render ::element.hierarchy/renderable
   [el]

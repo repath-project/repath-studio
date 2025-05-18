@@ -8,6 +8,7 @@
    ["font-scanner" :as fontManager]
    ["os" :as os]
    ["path" :as path]
+   ["url" :as url]
    [config :as config]
    [electron.file :as file]))
 
@@ -138,7 +139,8 @@
     (.loadURL ^js @main-window
               (if config/debug?
                 "http://localhost:8080"
-                (.join path "file://" js/__dirname "/public/index.html")))
+                (url/format (clj->js {:pathname (.join path js/__dirname "/public/index.html")
+                                      :protocol "file:"}))))
 
     (register-web-contents-events!)
     (register-ipc-on-events!)
@@ -156,7 +158,8 @@
                 :show false
                 :frame false}))
   (.once ^js @loading-window "show" init-main-window!)
-  (.loadURL ^js @loading-window (.join path "file://" js/__dirname "/public/loading.html"))
+  (.loadURL ^js @loading-window (url/format (clj->js {:pathname (.join path js/__dirname "/public/loading.html")
+                                                      :protocol "file:"})))
   (.once ^js (.-webContents @loading-window) "did-finish-load" #(.show ^js @loading-window)))
 
 (defn ^:export init! []

@@ -43,9 +43,8 @@
                                    (.toString)))))
 
 (defmethod element.hierarchy/bbox :path
-  [{{:keys [d]} :attrs}]
-  (let [[left top right bottom] (js->clj (svgPathBbox d))]
-    [left top right bottom]))
+  [el]
+  (-> el :attrs :d svgPathBbox js->clj))
 
 (defmethod element.hierarchy/render-edit :path
   [el]

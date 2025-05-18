@@ -117,7 +117,7 @@
             (into [:div.text-xl.pl-5.pr-10.pt-5]))])
        (when (:close-button (last dialogs))
          [:> Dialog/Close
-          {:class "icon-button absolute top-3 right-3 small"
+          {:class "icon-button absolute top-5 right-5 small"
            :aria-label "Close"}
           [ui/icon "times"]])
        [:> Dialog/Description
