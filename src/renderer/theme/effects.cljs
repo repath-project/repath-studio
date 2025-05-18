@@ -4,11 +4,14 @@
 
 (def native-query! (.matchMedia js/window "(prefers-color-scheme: dark)"))
 
-(defn native-mode!
-  [query]
-  (if (.-matches query) :dark :light))
+(rf/reg-cofx
+ ::native-mode
+ (fn [coeffects _]
+   (assoc coeffects :native-mode (if (.-matches native-query!)
+                                   :dark
+                                   :light))))
 
 (rf/reg-fx
  ::add-native-listener
  (fn [e]
-   (.addListener native-query! #(rf/dispatch [e (native-mode! %)]))))
+   (.addListener native-query! #(rf/dispatch e))))

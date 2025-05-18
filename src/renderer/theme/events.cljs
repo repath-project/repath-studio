@@ -8,7 +8,7 @@
 (rf/reg-event-fx
  ::add-native-listener
  (fn [_ _]
-   {::theme.effects/add-native-listener ::set-native-mode}))
+   {::theme.effects/add-native-listener ::update-native-mode}))
 
 (rf/reg-event-fx
  ::set-document-attr
@@ -18,10 +18,11 @@
      {::app.effects/set-document-attr ["data-theme" (name mode)]})))
 
 (rf/reg-event-fx
- ::set-native-mode
- [persist]
- (fn [{:keys [db]} [_ mode]]
-   {:db (assoc-in db [:theme :native-mode] mode)
+ ::update-native-mode
+ [(rf/inject-cofx ::theme.effects/native-mode)
+  persist]
+ (fn [{:keys [db native-mode]} _]
+   {:db (assoc-in db [:theme :native-mode] native-mode)
     :dispatch [::set-document-attr]}))
 
 (rf/reg-event-fx
