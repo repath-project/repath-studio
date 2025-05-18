@@ -132,7 +132,7 @@
 }
 
 @utility shortcut-key {
-  @apply p-1 text-2xs overlay-2x rounded-sm font-bold text-muted uppercase;
+  @apply p-1 text-2xs overlay rounded-sm font-bold text-muted uppercase;
 }
 
 @utility resize-handle {
