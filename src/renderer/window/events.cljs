@@ -42,7 +42,7 @@
  ::update-fullscreen
  [(rf/inject-cofx ::window.effects/fullscreen)]
  (fn [{:keys [db fullscreen]} _]
-   {:db (assoc-in db [:window :focused] fullscreen)}))
+   {:db (assoc-in db [:window :fullscreen] fullscreen)}))
 
 (rf/reg-event-fx
  ::close

@@ -15,3 +15,8 @@
  ::fullscreen?
  :<- [::window]
  :-> :fullscreen)
+
+(rf/reg-sub
+ ::focused?
+ :<- [::window]
+ :-> :focused)
