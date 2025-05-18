@@ -33,7 +33,7 @@
       (concat [{:id :divider-1
                 :type :separator}
                {:id :clear-recent
-                :label "Clear recent"
+                :label (t [::recent-clear "Clear recent"])
                 :icon "delete"
                 :action [::document.events/clear-recent]}]))))
 
@@ -179,94 +179,94 @@
 (defn align-submenu
   []
   [{:id :align-left
-    :label "Left"
+    :label (t [::align-left "Left"])
     :icon "objects-align-left"
     :disabled @(rf/subscribe [::element.subs/every-top-level])
     :action [::element.events/align :left]}
    {:id :align-center-horizontally
-    :label "Center horizontally"
+    :label (t [::align-center-horizontally "Center horizontally"])
     :icon "objects-align-center-horizontal"
     :action [::element.events/align :center-horizontal]}
    {:id :align-right
-    :label "Right"
+    :label (t [::align-right "Right"])
     :icon "objects-align-right"
     :action [::element.events/align :right]}
    {:id :divider-1
     :type :separator}
    {:id :align-top
-    :label "Top"
+    :label (t [::align-top "Top"])
     :icon "objects-align-top"
     :action [::element.events/align :top]}
    {:id :align-center-vertically
-    :label "Center vertically"
+    :label (t [::align-center-vertically "Center vertically"])
     :icon "objects-align-center-vertical"
     :action [::element.events/align :center-vertical]}
    {:id :align-bottom
-    :label "Bottom"
+    :label (t [::align-bottom "Bottom"])
     :icon "objects-align-bottom"
     :action [::element.events/align :bottom]}])
 
 (defn boolean-submenu
   []
   [{:id :exclude
-    :label "Exclude"
+    :label (t [::boolean-exclude "Exclude"])
     :icon "exclude"
     :action [::element.events/boolean-operation :exclude]}
    {:id :unite
-    :label "Unite"
+    :label (t [::boolean-unite "Unite"])
     :icon "unite"
     :action [::element.events/boolean-operation :unite]}
    {:id :intersect
-    :label "Intersect"
+    :label (t [::boolean-intersect "Intersect"])
     :icon "intersect"
     :action [::element.events/boolean-operation :intersect]}
    {:id :subtract
-    :label "Subtract"
+    :label (t [::boolean-subtract "Subtract"])
     :icon "subtract"
     :action [::element.events/boolean-operation :subtract]}
    {:id :divide
-    :label "Divide"
+    :label (t [::boolean-divide "Divide"])
     :icon "divide"
     :action [::element.events/boolean-operation :divide]}])
 
 (defn animate-submenu
   []
   [{:id :animate
-    :label "Animate"
+    :label (t [::animate "Animate"])
     :icon "animation"
     :action [::element.events/animate :animate {}]}
    {:id :animate-transform
-    :label "Animate Transform"
+    :label (t [::animate-transform "Animate Transform"])
     :icon "animation"
     :action [::element.events/animate :animateTransform {}]}
    {:id :animate-motion
     :icon "animation"
-    :label "Animate Motion"
+    :label (t [::animate-motion "Animate Motion"])
     :action [::element.events/animate :animateMotion {}]}])
 
 (defn path-submenu
   []
   [{:id :simplify
-    :label "Simplify"
+    :label (t [::path-simplify "Simplify"])
     :icon "bezier-curve"
     :action [::element.events/manipulate-path :simplify]}
    {:id :smooth
-    :label "Smooth"
+    :label (t [::path-smooth "Smooth"])
     :icon "bezier-curve"
     :action [::element.events/manipulate-path :smooth]}
    {:id :flatten
-    :label "Flatten"
+    :label (t [::path-flatten "Flatten"])
     :icon "bezier-curve"
     :action [::element.events/manipulate-path :flatten]}
    {:id :reverse
-    :label "Reverse"
+    :label (t [::path-reverse "Reverse"])
     :icon "bezier-curve"
     :action [::element.events/manipulate-path :reverse]}])
 
 (defn image-submenu
   []
   [{:id :trace
-    :label "Trace"
+    :label (t [::image-trace "Trace"])
     :icon "image"
     :action [::element.events/trace]}])
 
@@ -363,38 +363,38 @@
 (defn zoom-submenu
   []
   [{:id :zoom-in
-    :label "In"
+    :label (t [::zoom-in "In"])
     :icon "zoom-in"
     :action [::frame.events/zoom-in]}
    {:id :zoom-out
-    :label "Out"
+    :label (t [::zoom-out "Out"])
     :icon "zoom-out"
     :action [::frame.events/zoom-out]}
    {:id :divider-1
     :type :separator}
-   {:label "Set to 50%"
+   {:label (t [::zoom-set-50 "Set to 50%"])
     :id "50"
     :icon "magnifier"
     :action [::frame.events/set-zoom 0.5]}
-   {:label "Set to 100%"
+   {:label (t [::zoom-set-100 "Set to 100%"])
     :id "100"
     :icon "magnifier"
     :action [::frame.events/set-zoom 1]}
-   {:label "Set to 200%"
+   {:label (t [::zoom-set-200 "Set to 200%"])
     :id "200"
     :icon "magnifier"
     :action [::frame.events/set-zoom 2]}
    {:id :divider-2
     :type :separator}
-   {:label "Focus selected"
+   {:label (t [::zoom-focus-selected "Focus selected"])
     :id "focus-selected"
     :icon "focus"
     :action [::frame.events/focus-selection :original]}
-   {:label "Fit selected"
+   {:label (t [::zoom-fit-selected "Fit selected"])
     :id "fit-selected"
     :icon "focus"
     :action [::frame.events/focus-selection :fit]}
-   {:label "Fill selected"
+   {:label (t [::zoom-fill-selected "Fill selected"])
     :id "fill-selected"
     :icon "focus"
     :action [::frame.events/focus-selection :fill]}])
@@ -414,36 +414,36 @@
   [{:id :toggle-tree
     :type :checkbox
     :icon "tree"
-    :label "Element tree"
+    :label (t [::panel-element-tree "Element tree"])
     :checked @(rf/subscribe [::app.subs/panel-visible? :tree])
     :action [::app.events/toggle-panel :tree]}
    {:id :toggle-props
     :type :checkbox
     :icon "properties"
-    :label "Properties"
+    :label (t [::panel-properties "Properties"])
     :checked @(rf/subscribe [::app.subs/panel-visible? :properties])
     :action [::app.events/toggle-panel :properties]}
    {:id :toggle-xml
-    :label "XML view"
+    :label (t [::panel-xml-view "XML view"])
     :type :checkbox
     :icon "code"
     :checked @(rf/subscribe [::app.subs/panel-visible? :xml])
     :action [::app.events/toggle-panel :xml]}
    {:id :toggle-history
-    :label "History tree"
+    :label (t [::panel-history-tree "History tree"])
     :icon "history"
     :type :checkbox
     :checked @(rf/subscribe [::app.subs/panel-visible? :history])
     :action [::app.events/toggle-panel :history]}
    {:id :toggle-command-history
     :type :checkbox
-    :label "Shell history"
+    :label (t [::panel-shell-history "Shell history"])
     :icon "shell"
     :checked @(rf/subscribe [::app.subs/panel-visible? :repl-history])
     :action [::app.events/toggle-panel :repl-history]}
    {:id :toggle-timeline-panel
     :type :checkbox
-    :label "Timeline editor"
+    :label (t [::panel-timeline-editor "Timeline editor"])
     :icon "timeline"
     :checked @(rf/subscribe [::app.subs/panel-visible? :timeline])
     :action [::app.events/toggle-panel :timeline]}
@@ -453,47 +453,47 @@
 (defn view-menu
   []
   {:id :view
-   :label "View"
+   :label (t [::view "View"])
    :type :root
    :disabled (not @(rf/subscribe [::document.subs/entities?]))
    :items [{:id :zoom
-            :label "Zoom"
+            :label (t [::zoom "Zoom"])
             :type :sub-menu
             :items (zoom-submenu)}
            {:id :a11y
-            :label "Accessibility filter"
+            :label (t [::accessibility-filter "Accessibility filter"])
             :type :sub-menu
             :items (a11y-submenu)}
            {:id :divider-1
             :type :separator}
            {:id :toggle-grid
             :type :checkbox
-            :label "Grid"
+            :label (t [::grid "Grid"])
             :icon "grid"
             :checked @(rf/subscribe [::app.subs/grid])
             :action [::app.events/toggle-grid]}
            {:id :toggle-ruler
             :type :checkbox
-            :label "Rulers"
+            :label (t [::rulers "Rulers"])
             :icon "ruler-combined"
             :checked @(rf/subscribe [::ruler.subs/visible?])
             :action [::ruler.events/toggle-visible]}
            {:id :toggle-debug-info
             :type :checkbox
-            :label "Debug info"
+            :label (t [::debug-info "Debug info"])
             :icon "bug"
             :checked @(rf/subscribe [::app.subs/debug-info])
             :action [::app.events/toggle-debug-info]}
            {:id :divider-2
             :type :separator}
            {:id :panel
-            :label "Panel"
+            :label (t [::panel "Panel"])
             :type :sub-menu
             :items (panel-submenu)}
            {:id :divider-3
             :type :separator}
            {:id :toggle-fullscreen
-            :label "Fullscreen"
+            :label (t [::fullscreen "Fullscreen"])
             :icon "arrow-minimize"
             :type :checkbox
             :checked @(rf/subscribe [::window.subs/fullscreen?])
@@ -502,46 +502,46 @@
 (defn help-menu
   []
   {:id :help
-   :label "Help"
+   :label (t [::help "Help"])
    :type :root
    :items [{:id :cmdk
-            :label "Command panel"
+            :label (t [::command-panel "Command panel"])
             :icon "command"
             :action [::dialog.events/cmdk]}
            {:id :divider-1
             :type :separator}
            {:id :website
-            :label "Website"
+            :label (t [::website "Website"])
             :icon "earth"
             :action [::window.events/open-remote-url
                      "https://repath.studio/"]}
            {:id :source-code
-            :label "Source Code"
+            :label (t [::source-code "Source Code"])
             :icon "commit"
             :action [::window.events/open-remote-url
                      "https://github.com/repath-project/repath-studio"]}
            {:id :license
-            :label "License"
+            :label (t [::license "License"])
             :icon "lgpl"
             :action [::window.events/open-remote-url
                      "https://github.com/repath-project/repath-studio/blob/main/LICENSE"]}
            {:id :changelog
             :icon "list"
-            :label "Changelog"
+            :label (t [::changelog "Changelog"])
             :action [::window.events/open-remote-url
                      "https://repath.studio/roadmap/changelog/"]}
            {:id :divider-2
             :type :separator}
            {:id :submit-issue
             :icon "warning"
-            :label "Submit an issue"
+            :label (t [::submit-an-issue "Submit an issue"])
             :action [::window.events/open-remote-url
                      "https://github.com/repath-project/repath-studio/issues/new/choose"]}
            {:id :divider-3
             :type :separator}
            {:id :about
             :icon "info"
-            :label "About"
+            :label (t [::about "About"])
             :action [::dialog.events/about]}]})
 
 (defmulti menu-item :type)
