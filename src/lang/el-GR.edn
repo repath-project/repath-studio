@@ -105,4 +105,18 @@
   :license         "Άδεια χρήσης"
   :changelog       "Αρχείο αλλαγών"
   :submit-an-issue "Υποβολή προβλήματος"
-  :about           "Σχετικά"}}
+  :about           "Σχετικά"} 
+
+ :renderer.element.views
+ {:cut               "Αποκοπή" 
+  :copy              "Αντιγραφή" 
+  :paste             "Επικόλληση" 
+  :raise             "Aνέβασμα" 
+  :lower             "Κατέβασμα" 
+  :raise-top         "Μετακίνηση προς τα πάνω" 
+  :lower-bottom      "Μετακίνηση προς τα κάτω" 
+  :animate           "Κίνηση" 
+  :animate-transform "Μετατροπή κίνησης" 
+  :animate-motion    "Κίνηση κίνησης" 
+  :duplicate         "Δημιουργία αντιγράφου" 
+  :delete            "Διαγραφή"}}

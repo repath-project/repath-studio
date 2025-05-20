@@ -106,4 +106,19 @@
   :license         "License"
   :changelog       "Changelog"
   :submit-an-issue "Submit an issue"
-  :about           "About"}}
+  :about           "About"}
+  
+  :renderer.element.views
+  {:cut               "Cut"
+   :copy              "Copy"
+   :paste             "Paste"
+   :raise             "Raise"
+   :lower             "Lower"
+   :raise-top         "Raise to top"
+   :lower-bottom      "Lower to bottom"
+   :animate           "Animate"
+   :animate-transform "Animate Transform"
+   :animate-motion    "Animate Motion"
+   :duplicate         "Duplicate"
+   :delete            "Delete"
+  }}
