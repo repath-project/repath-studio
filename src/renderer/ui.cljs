@@ -64,7 +64,7 @@
     {:class "relative flex items-center select-none w-full touch-none h-full"}
     props)
    [:> Slider/Track {:class "relative h-1 bg-secondary flex-1"}
-    [:> Slider/Range {:class "absolute h-full overlay"}]]
+    [:> Slider/Range {:class "absolute h-full overlay-2x"}]]
    [:> Slider/Thumb {:class "slider-thumb"
                      :aria-label "Resize panel thumb"}]])
 
