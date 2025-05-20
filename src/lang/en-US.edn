@@ -128,4 +128,12 @@
   :select      [:div "Hold %1 to select intersecting elements."]
   :translate   [:div "Hold %1 to restrict direction, and %2 to clone."]
   :clone       [:div "Hold %1 to restrict direction. or release %2 to move"]
-  :scale       [:div "Hold %1 to lock proportions, %2 to scale in place, %3 to also scale children."]}}
+  :scale       [:div "Hold %1 to lock proportions, %2 to scale in place, %3 to also scale children."]}
+ 
+ :renderer.document.views
+ {:new   "New"
+  :open  "Open"
+  :save  "Save"
+  :undo  "Undo"
+  :redo  "Redo"}
+ }

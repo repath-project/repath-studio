@@ -11,6 +11,7 @@
    [renderer.history.subs :as-alias history.subs]
    [renderer.history.views :as history.views]
    [renderer.ui :as ui]
+   [renderer.utils.i18n :refer [t]]
    [renderer.utils.system :as utils.system]))
 
 (defn actions
@@ -23,31 +24,31 @@
 
      [ui/icon-button
       "file"
-      {:title "New"
+      {:title (t [::new "New"])
        :on-click #(rf/dispatch [::document.events/new])}]
 
      [ui/icon-button
       "folder"
-      {:title "Open"
+      {:title (t [::open "Open"])
        :on-click #(rf/dispatch [::document.events/open])}]
 
      [ui/icon-button
       "save"
-      {:title "Save"
+      {:title (t [::save "Save"])
        :on-click #(rf/dispatch [::document.events/save])
        :disabled @(rf/subscribe [::document.subs/active-saved?])}]
 
      [:span.v-divider]
 
      [:button.icon-button.items-center.px-1.gap-1.flex.w-auto
-      {:title "Undo"
+      {:title (t [::undo "Undo"])
        :on-click #(rf/dispatch [::history.events/undo])
        :disabled (not undos?)}
       [ui/icon "undo"]
       [history.views/select "Undo stack" undos (not undos?)]]
 
      [:button.icon-button.items-center.px-1.gap-1.flex.w-auto
-      {:title "Redo"
+      {:title (t [::redo "Redo"])
        :on-click #(rf/dispatch [::history.events/redo])
        :disabled (not redos?)}
       [ui/icon "redo"]
