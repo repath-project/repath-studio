@@ -42,29 +42,29 @@
 (defmethod tool.hierarchy/help [:transform :idle]
   []
   [:<>
-   (t [::click-or-drag-to-select [:div "Click to select an element or drag to select by area."]])
-   (t [::hold-to-add-or-remove [:div "Hold %1 to add or remove elements to selection."]] 
+   (t [::idle-click [:div "Click to select an element or drag to select by area."]])
+   (t [::idle-hold [:div "Hold %1 to add or remove elements to selection."]] 
       [[:span.shortcut-key "⇧"]])])
 
 (defmethod tool.hierarchy/help [:transform :select]
   []
-  [:div "Hold " [:span.shortcut-key "Alt"] " to select intersecting elements."])
+  (t [::select [:div "Hold %1 to select intersecting elements."]] 
+     [[:span.shortcut-key "Alt"]]))
 
 (defmethod tool.hierarchy/help [:transform :translate]
   []
-  [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction, and "
-   [:span.shortcut-key "Alt"] " to clone."])
+  (t [::translate [:div "Hold %1 to restrict direction, and %2 to clone."]] 
+     [[:span.shortcut-key "Ctrl"] [:span.shortcut-key "Alt"]]))
 
 (defmethod tool.hierarchy/help [:transform :clone]
   []
-  [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction. or release "
-   [:span.shortcut-key "Alt"] " to move."])
+  (t [::clone [:div "Hold %1 to restrict direction. or release %2 to move"]]
+     [[:span.shortcut-key "Ctrl"] [:span.shortcut-key "Alt"]]))
 
 (defmethod tool.hierarchy/help [:transform :scale]
   []
-  [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions, "
-   [:span.shortcut-key "⇧"] " to scale in place, "
-   [:span.shortcut-key "Alt"] " to also scale children."])
+  (t [::scale [:div "Hold %1 to lock proportions, %2 to scale in place, %3 to also scale children."]]
+     [[:span.shortcut-key "Ctrl"] [:span.shortcut-key "⇧"] [:span.shortcut-key "Alt"]]))
 
 (m/=> hovered? [:-> App Element boolean? boolean?])
 (defn hovered?
