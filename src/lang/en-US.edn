@@ -108,17 +108,20 @@
   :submit-an-issue "Submit an issue"
   :about           "About"}
   
-  :renderer.element.views
-  {:cut               "Cut"
-   :copy              "Copy"
-   :paste             "Paste"
-   :raise             "Raise"
-   :lower             "Lower"
-   :raise-top         "Raise to top"
-   :lower-bottom      "Lower to bottom"
-   :animate           "Animate"
-   :animate-transform "Animate Transform"
-   :animate-motion    "Animate Motion"
-   :duplicate         "Duplicate"
-   :delete            "Delete"
-  }}
+ :renderer.element.views 
+ {:cut               "Cut" 
+  :copy              "Copy" 
+  :paste             "Paste" 
+  :raise             "Raise" 
+  :lower             "Lower" 
+  :raise-top         "Raise to top" 
+  :lower-bottom      "Lower to bottom" 
+  :animate           "Animate" 
+  :animate-transform "Animate Transform" 
+  :animate-motion    "Animate Motion" 
+  :duplicate         "Duplicate" 
+  :delete            "Delete"}
+
+ :renderer.tool.impl.base.transform
+ {:click-or-drag-to-select [:div "Click to select an element or drag to select by area. " ]
+  :hold-to-add-or-remove   [:div "Hold %1 to add or remove elements to selection."]}}

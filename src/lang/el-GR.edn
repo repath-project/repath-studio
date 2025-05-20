@@ -119,4 +119,8 @@
   :animate-transform "Μετατροπή κίνησης" 
   :animate-motion    "Κίνηση κίνησης" 
   :duplicate         "Δημιουργία αντιγράφου" 
-  :delete            "Διαγραφή"}}
+  :delete            "Διαγραφή"}
+ 
+ :renderer.tool.impl.base.transform
+ {:click-or-drag-to-select [:div "Κάντε κλικ για να επιλέξετε ένα στοιχείο ή σύρετε για να επιλέξετε απο περιοχή. "]
+  :hold-to-add-or-remove   [:div "Πιέστε %1 για να προσθέσετε ή να αφαιρέσετε στοιχεία από επιλογή."]}}

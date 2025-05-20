@@ -25,4 +25,4 @@
    Should be called in a reactive context."
   [& more]
   (let [lang @(rf/subscribe [::app.subs/lang])]
-    (apply tr opts [lang] more)))
+    (apply tr opts [:lang] more)))

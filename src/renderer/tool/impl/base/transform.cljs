@@ -20,6 +20,7 @@
    [renderer.tool.views :as tool.views]
    [renderer.utils.bounds :as utils.bounds :refer [BBox]]
    [renderer.utils.element :as utils.element]
+   [renderer.utils.i18n :refer [t]]
    [renderer.utils.math :refer [Vec2]]
    [renderer.utils.pointer :as utils.pointer]
    [renderer.utils.svg :as utils.svg]))
@@ -41,8 +42,9 @@
 (defmethod tool.hierarchy/help [:transform :idle]
   []
   [:<>
-   [:div "Click to select an element or drag to select by area."]
-   [:div "Hold " [:span.shortcut-key "⇧"] " to add or remove elements to selection."]])
+   (t [::click-or-drag-to-select [:div "Click to select an element or drag to select by area."]])
+   (t [::hold-to-add-or-remove [:div "Hold %1 to add or remove elements to selection."]] 
+      [[:span.shortcut-key "⇧"]])])
 
 (defmethod tool.hierarchy/help [:transform :select]
   []
