@@ -71,18 +71,18 @@
   (let [document @(rf/subscribe [::document.subs/entity id])
         path (:path document)
         tabs @(rf/subscribe [::document.subs/tabs])]
-    (cond-> [{:label "Close"
+    (cond-> [{:label (t [::close "Close"])
               :action [::document.events/close id true]}
-             {:label "Close others"
+             {:label (t [::close-others "Close others"])
               :action [::document.events/close-others id]
               :disabled? (empty? (rest tabs))}
-             {:label "Close all"
+             {:label (t [::close-all "Close all"])
               :action [::document.events/close-all]}
-             {:label "Close saved"
+             {:label (t [::close-saved "Close saved"])
               :action [::document.events/close-saved]}]
       utils.system/electron?
       (concat [{:type :separator}
-               {:label "Open containing directory"
+               {:label (t [::open-directory "Open containing directory"])
                 :action [::document.events/open-directory path]
                 :disabled? (nil? path)}]))))
 
@@ -150,10 +150,10 @@
        [:> DropdownMenu/Portal
         [:> DropdownMenu/Content
          {:class "menu-content rounded-sm"}
-         (for [item [{:label "Close all"
+         (for [item [{:label (t [::close-all "Close all"])
                       :key :close-all
                       :action [::document.events/close-all]}
-                     {:label "Close saved"
+                     {:label (t [::close-saved "Close saved"])
                       :key :close-saved
                       :action [::document.events/close-saved]}]]
            ^{:key (:key item)}

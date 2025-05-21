@@ -131,9 +131,14 @@
   :scale       [:div "Hold %1 to lock proportions, %2 to scale in place, %3 to also scale children."]}
  
  :renderer.document.views
- {:new   "New"
-  :open  "Open"
-  :save  "Save"
-  :undo  "Undo"
-  :redo  "Redo"}
+ {:new            "New"
+  :open           "Open"
+  :open-directory "Open containing directory"
+  :save           "Save"
+  :undo           "Undo"
+  :redo           "Redo" 
+  :close          "Close"
+  :close-all      "Close all"
+  :close-saved    "Close saved"
+  :close-others   "Close others"}
  }
