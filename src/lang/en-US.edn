@@ -138,6 +138,7 @@
   :undo           "Undo"
   :redo           "Redo" 
   :close          "Close"
+  :close-doc      "Close document"
   :close-all      "Close all"
   :close-saved    "Close saved"
   :close-others   "Close others"}

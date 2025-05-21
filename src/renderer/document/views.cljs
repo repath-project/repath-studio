@@ -58,7 +58,7 @@
   [id saved]
   [:button.close.small
    {:key id
-    :title "Close document"
+    :title (t [::close-doc "Close document"])
     :on-click (fn [e]
                 (.stopPropagation e)
                 (rf/dispatch [::document.events/close id true]))}
