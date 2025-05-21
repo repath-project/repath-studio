@@ -1,11 +1,7 @@
 (ns portfolio
-  (:require [components.button-scenes]
-            [components.icon-scenes]
-            [components.shortcuts-scenes]
-            [components.slider-scenes]
-            [components.switch-scenes]
-            [portfolio.ui :as ui]
-            [sections.home-scenes]))
+  (:require [pages.components]
+            [pages.sections]
+            [portfolio.ui :as ui]))
 
 (ui/start!
  {:config

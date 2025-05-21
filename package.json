@@ -12,7 +12,7 @@
     "tailwindcss:build": "npx @tailwindcss/cli -i ./src/renderer/main.css -o ./resources/public/css/main.css --minify",
     "tailwindcss:watch": "npx @tailwindcss/cli -i ./src/renderer/main.css -o ./resources/public/css/main.css --watch=always",
     "shadow:build": "npx shadow-cljs release main preload renderer bootstrap",
-    "shadow:watch": "npx shadow-cljs watch main preload renderer bootstrap browser-test karma-test",
+    "shadow:watch": "npx shadow-cljs watch main preload renderer bootstrap browser-test karma-test portfolio",
     "dev": "npx npm-run-all --parallel tailwindcss:watch shadow:watch",
     "build": "npx npm-run-all --parallel tailwindcss:build shadow:build",
     "portfolio": "npx shadow-cljs watch portfolio & npm run tailwindcss:watch",
