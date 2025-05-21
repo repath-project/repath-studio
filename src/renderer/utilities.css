@@ -75,3 +75,23 @@
   width: var(--button-size-sm);
   height: var(--button-size-sm);
 }
+
+@utility v-divider {
+  @apply mx-1 border-l border-default h-6;
+}
+
+@utility h-divider {
+  @apply my-1 border-t border-default w-6;
+}
+
+@utility shortcut-key {
+  @apply p-1 text-2xs overlay rounded-sm font-bold text-muted uppercase;
+}
+
+@utility button-link {
+  @apply text-lg hover:underline text-active inline-block text-left text-wrap break-all hover:cursor-pointer;
+}
+
+@utility backdrop {
+  @apply absolute inset-0 flex items-center justify-center bg-backdrop;
+}

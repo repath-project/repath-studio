@@ -11,15 +11,13 @@
 
   --color-accent: #d12b65;
   --color-accent-inverted: #fff;
+  --color-backdrop: rgb(0 0 0 / 0.75);
 }
 
 :root {
   --font-size: 13px;
-
   --button-size: 33px;
   --button-size-sm: 21px;
-
-  --backdrop: rgb(0 0 0 / 0.75);
 
   .dark,
   &[data-theme='dark'] {
