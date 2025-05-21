@@ -6,6 +6,7 @@
    [renderer.theme.events :as-alias theme.events]
    [renderer.theme.subs :as-alias theme.subs]
    [renderer.ui :as ui]
+   [renderer.utils.i18n :refer [t]]
    [renderer.utils.system :as utils.system]
    [renderer.window.events :as-alias window.events]
    [renderer.window.subs :as-alias window.subs]))
@@ -21,13 +22,13 @@
 (defn window-control-buttons
   [maximized]
   [{:action [::window.events/minimize]
-    :title "Minimize"
+    :title (t [::minimize "Minimize"])
     :icon "window-minimize"}
    {:action [::window.events/toggle-maximized]
-    :title (if maximized "Restore" "Maximize")
+    :title (if maximized (t [::restore "Restore"]) (t [::maximize "Maximize"]))
     :icon (if maximized "window-restore" "window-maximize")}
    {:action [::window.events/close]
-    :title "Close"
+    :title (t [::close "Close"])
     :icon "window-close"}])
 
 (defn app-icon
@@ -54,7 +55,7 @@
       @(rf/subscribe [::document.subs/title-bar])]
      [:div.flex.h-full.flex-1.drag]
      [button {:action [::theme.events/cycle-mode]
-              :title (str "Theme mode - " theme-mode)
+              :title (t [::theme "Theme mode - %1"] [theme-mode])
               :icon theme-mode
               :class "bg-primary"}]
      (when (and utils.system/electron? (not fullscreen?) (not utils.system/mac?))

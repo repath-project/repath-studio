@@ -141,4 +141,11 @@
   :close-all      "Κλείσιμο όλων"
   :close-saved    "Κλείσιμο αποθηκευμένων"
   :close-others   "Κλείσιμο άλλων"}
+ 
+ :renderer.window.views
+ {:minimize  "Ελαχιστοποίηση"
+  :maximize  "Μεγιστοποίηση"
+  :restore   "Επαναφορά"
+  :close     "Κλείσιμο"
+  :theme     "Θέμα - %1"}
  }
