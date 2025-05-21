@@ -33,7 +33,7 @@
 }
 
 @utility button {
-  @apply relative text-center text-nowrap;
+  @apply relative text-center text-nowrap outline-default;
   background-color: transparent;
   color: var(--font-color);
   fill: var(--font-color);
@@ -42,12 +42,8 @@
   line-height: var(--button-size);
   -webkit-app-region: no-drag;
 
-  &:focus {
-    @apply outline outline-offset-0 outline-accent;
-  }
-
   &:hover {
-    @apply overlay outline-none;
+    @apply overlay;
     color: var(--font-color-hovered);
   }
 

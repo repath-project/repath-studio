@@ -5,7 +5,7 @@
 }
 
 .list-item-button {
-  @apply flex pr-1 items-center transition-none text-start;
+  @apply flex pr-1 items-center transition-none text-start outline-default;
   &:hover {
     @apply overlay;
 
@@ -16,10 +16,6 @@
 
   &.hovered {
     @apply overlay;
-  }
-
-  &:focus:not(:hover) {
-    @apply outline-hidden outline-shadow;
   }
 }
 
