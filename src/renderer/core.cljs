@@ -95,7 +95,7 @@
   (rf/dispatch-sync [::app.events/load-system-fonts])
   (rf/dispatch-sync [::app.events/load-local-db])
   (rf/dispatch-sync [::document.events/init])
-  (rf/dispatch-sync [::theme.events/update-native-mode])
+  (rf/dispatch-sync [::theme.events/set-document-mode])
   (rf/dispatch-sync [::theme.events/add-native-listener])
   (rf/dispatch-sync [::re-pressed/add-keyboard-event-listener "keydown"])
   (rf/dispatch-sync [::re-pressed/set-keydown-rules utils.keyboard/keydown-rules])

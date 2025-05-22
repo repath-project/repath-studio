@@ -8,22 +8,15 @@
 (rf/reg-event-fx
  ::add-native-listener
  (fn [_ _]
-   {::theme.effects/add-native-listener ::update-native-mode}))
+   {::theme.effects/add-native-listener ::set-document-mode}))
 
 (rf/reg-event-fx
- ::set-document-attr
- (fn [{:keys [db]} _]
-   (let [mode (-> db :theme :mode)
-         mode (if (= mode :system) (-> db :theme :native-mode) mode)]
-     {::app.effects/set-document-attr ["data-theme" (name mode)]})))
-
-(rf/reg-event-fx
- ::update-native-mode
- [(rf/inject-cofx ::theme.effects/native-mode)
-  persist]
+ ::set-document-mode
+ [(rf/inject-cofx ::theme.effects/native-mode)]
  (fn [{:keys [db native-mode]} _]
-   {:db (assoc-in db [:theme :native-mode] native-mode)
-    :dispatch [::set-document-attr]}))
+   (let [mode (-> db :theme :mode)
+         mode (if (= mode :system) native-mode mode)]
+     {::app.effects/set-document-attr ["data-theme" (name mode)]})))
 
 (rf/reg-event-fx
  ::cycle-mode
@@ -34,4 +27,4 @@
                 :light :system
                 :system :dark)]
      {:db (assoc-in db [:theme :mode] mode)
-      :dispatch [::set-document-attr]})))
+      :dispatch [::set-document-mode]})))

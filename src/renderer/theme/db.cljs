@@ -11,5 +11,4 @@
 
 (def Theme
   [:map {:closed true}
-   [:mode {:default :dark} [:enum :dark :light :system]]
-   [:native-mode {:optional true} [:enum :dark :light]]])
+   [:mode {:default :dark} [:enum :dark :light :system]]])
