@@ -106,6 +106,11 @@
      "window-loaded"]]
     (send-to-renderer! action)))
 
+(defn resource-path
+  [s]
+  (url/format #js {:pathname (.join path js/__dirname s)
+                   :protocol "file"}))
+
 (defn init-main-window!
   []
   (let [win-state (window-state-keeper #js {:defaultWidth 1920
@@ -139,8 +144,7 @@
     (.loadURL ^js @main-window
               (if config/debug?
                 "http://localhost:8080"
-                (url/format (clj->js {:pathname (.join path js/__dirname "/public/index.html")
-                                      :protocol "file:"}))))
+                (resource-path "/public/index.html")))
 
     (register-web-contents-events!)
     (register-ipc-on-events!)
@@ -158,8 +162,7 @@
                 :show false
                 :frame false}))
   (.once ^js @loading-window "show" init-main-window!)
-  (.loadURL ^js @loading-window (url/format (clj->js {:pathname (.join path js/__dirname "/public/loading.html")
-                                                      :protocol "file:"})))
+  (.loadURL ^js @loading-window (resource-path "/public/loading.html"))
   (.once ^js (.-webContents @loading-window) "did-finish-load" #(.show ^js @loading-window)))
 
 (defn ^:export init! []

@@ -133,7 +133,10 @@
    (let [document-tabs (:document-tabs db)
          dragged-i (.indexOf document-tabs dragged-id)
          swapped-i (.indexOf document-tabs swapped-id)]
-     (assoc db :document-tabs (utils.vec/swap document-tabs dragged-i swapped-i)))))
+     (cond-> db
+       (not (or (= dragged-i -1)
+                (= swapped-i -1)))
+       (assoc :document-tabs (utils.vec/swap document-tabs dragged-i swapped-i))))))
 
 (m/=> create [:function
               [:-> map? uuid? App]

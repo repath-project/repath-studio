@@ -11,28 +11,11 @@
 
 @import './theme/styles.css';
 @import './menubar/styles.css';
-@import './tree/styles.css';
 
 body {
   font-size: var(--font-size);
   color: var(--font-color);
   fill: var(--font-color);
-}
-
-::-webkit-scrollbar {
-  @apply w-2 h-2;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply overlay rounded-full;
-}
-
-::-webkit-scrollbar-corner {
-  @apply bg-transparent;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-transparent hover:overlay;
 }
 
 p {
@@ -50,11 +33,6 @@ input {
   &::-webkit-inner-spin-button {
     @apply appearance-none;
   }
-}
-
-textarea {
-  @apply w-full;
-  resize: none;
 }
 
 label {

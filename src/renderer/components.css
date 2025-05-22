@@ -33,7 +33,7 @@
 }
 
 @utility button {
-  @apply relative text-center text-nowrap;
+  @apply relative text-center text-nowrap outline-default;
   background-color: transparent;
   color: var(--font-color);
   fill: var(--font-color);
@@ -42,12 +42,8 @@
   line-height: var(--button-size);
   -webkit-app-region: no-drag;
 
-  &:focus {
-    @apply outline outline-offset-0 outline-accent;
-  }
-
   &:hover {
-    @apply overlay outline-none;
+    @apply overlay;
     color: var(--font-color-hovered);
   }
 
@@ -64,17 +60,6 @@
   }
 }
 
-@utility button-link {
-  @apply text-lg text-accent inline-block text-left text-wrap break-all hover:cursor-pointer;
-
-  font-size: inherit;
-  line-height: inherit;
-}
-
-@utility backdrop {
-  @apply absolute inset-0 flex items-center justify-center;
-  background-color: var(--backdrop);
-}
 
 @utility icon {
   @apply flex justify-center;
@@ -121,18 +106,6 @@
   &:active {
     @apply overlay;
   }
-}
-
-@utility v-divider {
-  @apply mx-1 border-l border-default h-6;
-}
-
-@utility h-divider {
-  @apply my-1 border-t border-default w-6;
-}
-
-@utility shortcut-key {
-  @apply p-1 text-2xs overlay rounded-sm font-bold text-muted uppercase;
 }
 
 @utility resize-handle {

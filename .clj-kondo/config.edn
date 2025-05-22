@@ -19,6 +19,5 @@
            :unused-alias {:level :warning}
            :redundant-call {:level :warning}
            :redundant-str-call {:level :warning}
-           :clojure-lsp/unused-public-var {:exclude-regex #{"components.*"
-                                                            "sections.*"}}}
+           :clojure-lsp/unused-public-var {:exclude-regex #{"pages.*"}}}
  :hooks {:analyze-call {malli.core/=> hooks/=>}}}

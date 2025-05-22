@@ -9,9 +9,9 @@
 (defonce svg
   (js->clj (.-svg bcd) :keywordize-keys true))
 
-(m/=> points->vec [:function
-                   [:-> Tag map?]
-                   [:-> Tag keyword? map?]])
+(m/=> compatibility [:function
+                     [:-> Tag map?]
+                     [:-> Tag keyword? map?]])
 (defn compatibility
   "Returns compatibility data for tags or attributes."
   ([tag]

@@ -1,4 +1,4 @@
-(ns sections.home-scenes
+(ns pages.sections
   (:require
    [portfolio.reagent-18 :refer-macros [defscene]]
    [renderer.app.subs]

@@ -31,7 +31,7 @@
    [renderer.snap.events]
    [renderer.snap.subs]
    [renderer.theme.db :as theme.db]
-   [renderer.theme.effects :as theme.fx]
+   [renderer.theme.effects]
    [renderer.theme.events :as theme.events]
    [renderer.theme.subs]
    [renderer.timeline.events]
@@ -95,9 +95,8 @@
   (rf/dispatch-sync [::app.events/load-system-fonts])
   (rf/dispatch-sync [::app.events/load-local-db])
   (rf/dispatch-sync [::document.events/init])
-  (rf/dispatch-sync [::theme.events/set-native-mode (theme.fx/native-mode! theme.fx/native-query!)])
+  (rf/dispatch-sync [::theme.events/set-document-mode])
   (rf/dispatch-sync [::theme.events/add-native-listener])
-  (rf/dispatch-sync [::theme.events/set-document-attr])
   (rf/dispatch-sync [::re-pressed/add-keyboard-event-listener "keydown"])
   (rf/dispatch-sync [::re-pressed/set-keydown-rules utils.keyboard/keydown-rules])
   (rf/dispatch-sync [::window.events/register-listeners])

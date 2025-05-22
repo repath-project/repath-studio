@@ -85,8 +85,7 @@
 }
 
 .menu-separator {
-  @apply my-1 h-px;
-  background-color: var(--border-color);
+  @apply h-divider mx-0;
 }
 
 .right-slot {

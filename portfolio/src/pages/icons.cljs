@@ -1,9 +1,6 @@
-(ns components.icon-scenes
-  (:require
-   [portfolio.reagent-18 :refer-macros [defscene]]
-   [renderer.ui :as ui]))
+(ns pages.icons)
 
-(def default-icons
+(def default
   ["a11y"
    "animation"
    "arc"
@@ -138,15 +135,7 @@
    "zoom-in"
    "zoom-out"])
 
-(defscene default
-  :title "Default icons"
-  [:div.flex.flex-wrap.gap-2.p-3
-   (for [icon-name default-icons]
-     ^{:key icon-name}
-     [:div {:title icon-name}
-      [ui/icon icon-name]])])
-
-(def branded-icons
+(def branded
   ["android_head"
    "chrome"
    "edge"
@@ -157,16 +146,3 @@
    "safari"
    "samsunginternet_android"
    "webview_android"])
-
-(defscene branded
-  :title "Branded icons"
-  [:div.flex.gap-2.p-3
-   (for [icon-name branded-icons]
-     ^{:key icon-name}
-     [:div {:title icon-name}
-      [ui/icon icon-name]])])
-
-(defscene colored
-  :title "Colored icon"
-  [:div.flex.p-3
-   [ui/icon "download" {:class "text-accent"}]])
