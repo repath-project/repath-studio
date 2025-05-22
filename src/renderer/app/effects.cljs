@@ -82,7 +82,8 @@
                                       (rf/dispatch (conj on-success (cond-> file-handle
                                                                       formatter
                                                                       formatter))))))))))
-         (.catch #(when on-error (rf/dispatch (conj on-error %)))))
+         (.catch (fn [error] (when (and on-error (not= (.-name error) "AbortError"))
+                               (rf/dispatch (conj on-error error))))))
      (rf/dispatch
       [::notification.events/unavailable-feature
        "Save File Picker"
@@ -105,7 +106,8 @@
        (-> (.showOpenFilePicker js/window (clj->js options))
            (.then (fn [[^js/FileSystemFileHandle file-handle]]
                     (.then (.getFile file-handle) success-cb)))
-           (.catch #(when on-error (rf/dispatch (conj on-error %)))))
+           (.catch (fn [error] (when (and on-error (not= (.-name error) "AbortError"))
+                                 (rf/dispatch (conj on-error error))))))
        (legacy-file-open! success-cb)))))
 
 (rf/reg-fx
