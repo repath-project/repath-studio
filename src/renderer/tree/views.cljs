@@ -152,7 +152,7 @@
          [ui/icon icon {:class (when-not visible "opacity-60")}])
        [item-label el]]
       [toggle-item-prop-button id locked :locked "lock" "unlock" "unlock" "lock"]
-      [toggle-item-prop-button id (not visible) :visible "eye-closed" "eye" "hide" "show"]]]))
+      [toggle-item-prop-button id (not visible) :visible "eye-closed" "eye" "show" "hide"]]]))
 
 (defn item [el depth elements]
   (let [{:keys [selected children id]} el
