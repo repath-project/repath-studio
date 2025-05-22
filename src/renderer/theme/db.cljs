@@ -9,6 +9,12 @@
 (def handle-size 12)
 (def dash-size 5)
 
+(def modes
+  [:dark :light :system])
+
+(def ThemeMode
+  (into [:enum] modes))
+
 (def Theme
   [:map {:closed true}
-   [:mode {:default :dark} [:enum :dark :light :system]]])
+   [:mode {:default :dark} ThemeMode]])
