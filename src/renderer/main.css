@@ -19,22 +19,6 @@ body {
   fill: var(--font-color);
 }
 
-::-webkit-scrollbar {
-  @apply w-2 h-2;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply overlay rounded-full;
-}
-
-::-webkit-scrollbar-corner {
-  @apply bg-transparent;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-transparent hover:overlay;
-}
-
 p {
   margin-bottom: 1rem;
 }
@@ -50,11 +34,6 @@ input {
   &::-webkit-inner-spin-button {
     @apply appearance-none;
   }
-}
-
-textarea {
-  @apply w-full;
-  resize: none;
 }
 
 label {

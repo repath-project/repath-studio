@@ -69,12 +69,6 @@
   }
 }
 
-@keyframes spin {
-  100% {
-      transform:rotate(360deg);
-  }
-}
-
 @keyframes rotationBreak {
   0% {
     transform: rotate(0);
