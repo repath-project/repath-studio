@@ -16,7 +16,8 @@
   [property k]
   (cond-> property
     (and (get property k) (string? (get property k)))
-    (update k #(-> % camel-snake-kebab/->kebab-case-string (string/replace "-" " ")))))
+    (update k #(-> (camel-snake-kebab/->kebab-case-string %)
+                   (string/replace "-" " ")))))
 
 (defn property-data
   [k]

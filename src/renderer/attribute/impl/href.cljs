@@ -33,11 +33,12 @@
       {:title "Select file"
        :disabled disabled
        :on-click #(rf/dispatch
-                   [::app.events/file-open {:options {:startIn "pictures"
-                                                      :types [{:accept {"image/png" [".png"]
-                                                                        "image/jpeg" [".jpeg" ".jpg"]
-                                                                        "image/bmp" [".fmp"]}}]}
-                                            :on-success [::success]}])}
+                   [::app.events/file-open
+                    {:options {:startIn "pictures"
+                               :types [{:accept {"image/png" [".png"]
+                                                 "image/jpeg" [".jpeg" ".jpg"]
+                                                 "image/bmp" [".fmp"]}}]}
+                     :on-success [::success]}])}
       [ui/icon "folder"]]]))
 
 (rf/reg-event-fx

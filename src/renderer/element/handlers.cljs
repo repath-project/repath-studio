@@ -648,7 +648,9 @@
         (:parent new-el)
         (update-prop (:parent new-el) :children #(vec (conj % id)))
 
-        (not (or (utils.element/svg? new-el) (utils.element/root? new-el) (:parent el)))
+        (not (or (utils.element/svg? new-el)
+                 (utils.element/root? new-el)
+                 (:parent el)))
         (translate [(- min-x) (- min-y)])
 
         :always

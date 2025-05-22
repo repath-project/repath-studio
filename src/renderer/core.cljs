@@ -88,7 +88,8 @@
   (js/console.log (str "%c" easter-egg) (str "color: " theme.db/accent))
 
   ;; https://code.thheller.com/blog/shadow-cljs/2017/10/14/bootstrap-support.html
-  (bootstrap/init replumb.repl/st {:path "js/bootstrap" :load-on-init '[user]} bootstrap-cb!)
+  (bootstrap/init replumb.repl/st {:path "js/bootstrap"
+                                   :load-on-init '[user]} bootstrap-cb!)
 
   (rf/dispatch-sync [::app.events/initialize-db])
   (rf/dispatch-sync [::app.events/set-lang utils.system/language])

@@ -37,7 +37,9 @@
    (let [document (-> (get-in db [:documents id])
                       (assoc :version (:version db)))]
      (reduce #(update-in %1 [:elements %2] dissoc :selected)
-             (m/decode PersistedDocument document m.transform/strip-extra-keys-transformer)
+             (m/decode PersistedDocument
+                       document
+                       m.transform/strip-extra-keys-transformer)
              (keys (:elements document))))))
 
 (m/=> save-format [:-> PersistedDocument string?])

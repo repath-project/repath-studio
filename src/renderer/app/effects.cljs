@@ -54,7 +54,9 @@
 (rf/reg-fx
  ::focus
  (fn [id]
-   (when-let [element (if id (.getElementById js/document id) (utils.dom/canvas-element!))]
+   (when-let [element (if id
+                        (.getElementById js/document id)
+                        (utils.dom/canvas-element!))]
      (.focus element))))
 
 (rf/reg-fx

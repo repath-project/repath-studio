@@ -86,10 +86,11 @@
      (document.handlers/close db id)
      (-> db
          (document.handlers/set-active id)
-         (dialog.handlers/create {:title "Do you want to save your changes?"
-                                  :close-button true
-                                  :content (dialog.views/save (get-in db [:documents id]))
-                                  :attrs {:onOpenAutoFocus #(.preventDefault %)}})))))
+         (dialog.handlers/create
+          {:title "Do you want to save your changes?"
+           :close-button true
+           :content (dialog.views/save (get-in db [:documents id]))
+           :attrs {:onOpenAutoFocus #(.preventDefault %)}})))))
 
 (rf/reg-event-fx
  ::close-active
@@ -177,25 +178,26 @@
  ::open
  (fn [_ [_ file-path]]
    (if utils.system/electron?
-     {::window.effects/ipc-invoke {:channel "open-documents"
-                                   :data file-path
-                                   :on-success [::load-multiple]
-                                   :on-error [::notification.events/exception]
-                                   :formatter #(mapv cljs.reader/read-string %)}}
-     {::app.effects/file-open {:options file-picker-options
-                               :on-success [::file-read]
-                               :on-error [::notification.events/exception]}})))
+     {::window.effects/ipc-invoke
+      {:channel "open-documents"
+       :data file-path
+       :on-success [::load-multiple]
+       :on-error [::notification.events/exception]
+       :formatter #(mapv cljs.reader/read-string %)}}
+     {::app.effects/file-open
+      {:options file-picker-options
+       :on-success [::file-read]
+       :on-error [::notification.events/exception]}})))
 
 (rf/reg-event-fx
  ::file-read
  (fn [_ [_ file]]
-   {::app.effects/file-read-as [file
-                                :text
-                                {"load" {:formatter #(-> (cljs.reader/read-string %)
-                                                         (assoc :title (.-name file)
-                                                                :path (.-path file)))
-                                         :on-fire [::load]}
-                                 "error" {:on-fire [::notification.events/exception]}}]}))
+   {::app.effects/file-read-as
+    [file :text {"load" {:formatter #(-> (cljs.reader/read-string %)
+                                         (assoc :title (.-name file)
+                                                :path (.-path file)))
+                         :on-fire [::load]}
+                 "error" {:on-fire [::notification.events/exception]}}]}))
 
 (rf/reg-event-fx
  ::open-directory
@@ -230,17 +232,19 @@
  (fn [{:keys [db]} [_]]
    (let [document (document.handlers/persisted-format db)]
      (if utils.system/electron?
-       {::window.effects/ipc-invoke {:channel "save-document"
-                                     :data (pr-str document)
-                                     :on-success [::saved]
-                                     :on-error [::notification.events/exception]
-                                     :formatter cljs.reader/read-string}}
-       {::app.effects/file-save {:data (document.handlers/save-format document)
-                                 :options file-picker-options
-                                 :formatter (fn [file] {:id (:id document)
-                                                        :title (.-name file)})
-                                 :on-success [::saved]
-                                 :on-error [::notification.events/exception]}}))))
+       {::window.effects/ipc-invoke
+        {:channel "save-document"
+         :data (pr-str document)
+         :on-success [::saved]
+         :on-error [::notification.events/exception]
+         :formatter cljs.reader/read-string}}
+       {::app.effects/file-save
+        {:data (document.handlers/save-format document)
+         :options file-picker-options
+         :formatter (fn [file] {:id (:id document)
+                                :title (.-name file)})
+         :on-success [::saved]
+         :on-error [::notification.events/exception]}}))))
 
 (rf/reg-event-fx
  ::download
@@ -254,34 +258,38 @@
  (fn [{:keys [db]} [_ id]]
    (let [document (document.handlers/persisted-format db id)]
      (if utils.system/electron?
-       {::window.effects/ipc-invoke {:channel "save-document"
-                                     :data (pr-str document)
-                                     :on-success [::mark-as-saved-and-close]
-                                     :on-error [::notification.events/exception]
-                                     :formatter cljs.reader/read-string}}
-       {::app.effects/file-save {:data (document.handlers/save-format document)
-                                 :options file-picker-options
-                                 :formatter (fn [file] {:id id
-                                                        :title (.-name file)})
-                                 :on-success [::mark-as-saved-and-close]
-                                 :on-error [::notification.events/exception]}}))))
+       {::window.effects/ipc-invoke
+        {:channel "save-document"
+         :data (pr-str document)
+         :on-success [::mark-as-saved-and-close]
+         :on-error [::notification.events/exception]
+         :formatter cljs.reader/read-string}}
+       {::app.effects/file-save
+        {:data (document.handlers/save-format document)
+         :options file-picker-options
+         :formatter (fn [file] {:id id
+                                :title (.-name file)})
+         :on-success [::mark-as-saved-and-close]
+         :on-error [::notification.events/exception]}}))))
 
 (rf/reg-event-fx
  ::save-as
  (fn [{:keys [db]} [_]]
    (let [document (document.handlers/persisted-format db)]
      (if utils.system/electron?
-       {::window.effects/ipc-invoke {:channel "save-document-as"
-                                     :data (pr-str document)
-                                     :on-success [::saved]
-                                     :on-error [::notification.events/exception]
-                                     :formatter cljs.reader/read-string}}
-       {::app.effects/file-save {:data (document.handlers/save-format document)
-                                 :options file-picker-options
-                                 :formatter (fn [file] {:id (:id document)
-                                                        :title (.-name file)})
-                                 :on-success [::saved]
-                                 :on-error [::notification.events/exception]}}))))
+       {::window.effects/ipc-invoke
+        {:channel "save-document-as"
+         :data (pr-str document)
+         :on-success [::saved]
+         :on-error [::notification.events/exception]
+         :formatter cljs.reader/read-string}}
+       {::app.effects/file-save
+        {:data (document.handlers/save-format document)
+         :options file-picker-options
+         :formatter (fn [file] {:id (:id document)
+                                :title (.-name file)})
+         :on-success [::saved]
+         :on-error [::notification.events/exception]}}))))
 
 (rf/reg-event-db
  ::saved

@@ -61,13 +61,14 @@
                  (let [w (.-width img)
                        h (.-height img)]
                    (.remove img)
-                   (rf/dispatch [::element.events/add {:type :element
-                                                       :tag :image
-                                                       :label (.-name file)
-                                                       :attrs {:x (- x (/ w 2))
-                                                               :y (- y (/ h 2))
-                                                               :width w
-                                                               :height h
-                                                               :href data-url}}]))))
+                   (rf/dispatch [::element.events/add
+                                 {:type :element
+                                  :tag :image
+                                  :label (.-name file)
+                                  :attrs {:x (- x (/ w 2))
+                                          :y (- y (/ h 2))
+                                          :width w
+                                          :height h
+                                          :href data-url}}]))))
          (set! (.-src img) data-url)))
      (.readAsDataURL reader file))))
