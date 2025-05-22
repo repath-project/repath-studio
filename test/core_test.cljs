@@ -33,5 +33,9 @@
    [renderer.worker.events]))
 
 (set! rf.subs/warn-when-not-reactive (constantly nil))
-(m.instrument/instrument!)
-(rf/reg-global-interceptor app.events/schema-validator)
+
+(defn ^:dev/after-load instrument! []
+  (m.instrument/instrument!)
+  (rf/reg-global-interceptor app.events/schema-validator))
+
+(instrument!)
