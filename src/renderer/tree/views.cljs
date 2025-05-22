@@ -22,7 +22,7 @@
   [id state k active-icon inactive-icon active-title inactive-title]
   [ui/icon-button
    (if state active-icon inactive-icon)
-   {:class ["mx-px hover:bg-transparent text-inherit hover:text-inherit small"
+   {:class ["hover:bg-transparent text-inherit hover:text-inherit focus:outline-hidden small"
             (when-not state "invisible")]
     :title (if state active-title inactive-title)
     :on-double-click #(.stopPropagation %)
@@ -105,7 +105,7 @@
   [ui/icon-button
    (if collapsed "chevron-right" "chevron-down")
    {:title (if collapsed "expand" "collapse")
-    :class "hover:bg-transparent text-inherit hover:text-inherit small"
+    :class "hover:bg-transparent text-inherit hover:text-inherit focus:outline-hidden small"
     :on-pointer-up #(.stopPropagation %)
     :on-click #(rf/dispatch (if collapsed
                               [::document.events/expand-el id]
