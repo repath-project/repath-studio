@@ -22,7 +22,7 @@
   [id state k active-icon inactive-icon active-title inactive-title]
   [ui/icon-button
    (if state active-icon inactive-icon)
-   {:class ["mx-px shrink-0 hover:bg-transparent text-inherit hover:text-inherit focus:outline-hidden small"
+   {:class ["mx-px hover:bg-transparent text-inherit hover:text-inherit small"
             (when-not state "invisible")]
     :title (if state active-title inactive-title)
     :on-double-click #(.stopPropagation %)
@@ -53,7 +53,7 @@
           :on-blur (fn [e]
                      (reset! edit-mode? false)
                      (set-item-label! e id))}]
-        [:div.flex.w-full
+        [:div.flex.w-full.overflow-hidden
          [:div.truncate
           {:class [(when-not visible "opacity-60")
                    (when (= :svg tag) "font-bold")]
@@ -105,7 +105,7 @@
   [ui/icon-button
    (if collapsed "chevron-right" "chevron-down")
    {:title (if collapsed "expand" "collapse")
-    :class "list-item-action"
+    :class "hover:bg-transparent text-inherit hover:text-inherit small"
     :on-pointer-up #(.stopPropagation %)
     :on-click #(rf/dispatch (if collapsed
                               [::document.events/expand-el id]
@@ -173,7 +173,8 @@
 (defn inner-sidebar-render
   [root-children elements]
   [:div#tree-sidebar.flex.flex-1.bg-primary.h-full.overflow-hidden
-   ;; When the tree is hovered, ignore the hovered class if the element itself is not hovered
+   ;; When the tree is hovered, ignore the hovered class of the elements,
+   ;; if the element itself is not also hovered.
    {:class "hover:**:[&.list-item-button]:not-hover:bg-inherit"
     :on-pointer-up #(rf/dispatch [::element.events/deselect-all])}
    [ui/scroll-area
