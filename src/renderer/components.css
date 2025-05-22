@@ -70,7 +70,7 @@
 }
 
 @utility toolbar {
-  @apply flex gap-1 p-1 items-stretch;
+  @apply flex gap-1 p-1 items-center;
 }
 
 @utility button-group {

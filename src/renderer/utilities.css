@@ -77,11 +77,11 @@
 }
 
 @utility v-divider {
-  @apply m-1 border-l border-default;
+  @apply m-1 border-l border-default self-stretch;
 }
 
 @utility h-divider {
-  @apply m-1 border-t border-default;
+  @apply m-1 border-t border-default self-stretch;
 }
 
 @utility shortcut-key {
