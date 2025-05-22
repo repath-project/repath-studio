@@ -77,11 +77,11 @@
 }
 
 @utility v-divider {
-  @apply mx-1 border-l border-default h-6;
+  @apply m-1 border-l border-default;
 }
 
 @utility h-divider {
-  @apply my-1 border-t border-default w-6;
+  @apply m-1 border-t border-default;
 }
 
 @utility shortcut-key {
