@@ -11,7 +11,6 @@
 
 @import './theme/styles.css';
 @import './menubar/styles.css';
-@import './tree/styles.css';
 
 body {
   font-size: var(--font-size);

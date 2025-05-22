@@ -5,11 +5,11 @@
 
 (defn query-by-id!
   [id]
-  (.querySelectorAll js/document (str ".tree-sidebar [data-id='" id "']")))
+  (.querySelectorAll js/document (str "#tree-sidebar [data-id='" id "']")))
 
 (defn get-list-elements!
   []
-  (.from js/Array (.querySelectorAll js/document ".tree-sidebar .list-item-button")))
+  (.from js/Array (.querySelectorAll js/document "#tree-sidebar .list-item-button")))
 
 (rf/reg-fx
  ::focus-next

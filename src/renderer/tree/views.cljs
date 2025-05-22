@@ -18,29 +18,19 @@
    [renderer.utils.element :as utils.element]
    [renderer.utils.keyboard :as utils.keyboard]))
 
-(defn lock-button
-  [id locked]
+(defn toggle-item-prop-button
+  [id state k active-icon inactive-icon active-title inactive-title]
   [ui/icon-button
-   (if locked "lock" "unlock")
-   {:class ["list-item-action" (when-not locked "invisible")]
-    :title (if locked "unlock" "lock")
+   (if state active-icon inactive-icon)
+   {:class ["mx-px shrink-0 hover:bg-transparent text-inherit hover:text-inherit focus:outline-hidden small"
+            (when-not state "invisible")]
+    :title (if state active-title inactive-title)
     :on-double-click #(.stopPropagation %)
     :on-pointer-up #(.stopPropagation %)
     :on-click (fn [e]
                 (.stopPropagation e)
-                (rf/dispatch [::element.events/toggle-prop id :locked]))}])
+                (rf/dispatch [::element.events/toggle-prop id k]))}])
 
-(defn visibility-button
-  [id visible]
-  [ui/icon-button
-   (if visible "eye" "eye-closed")
-   {:class ["list-item-action" (when visible "invisible")]
-    :title (if visible "hide" "show")
-    :on-double-click #(.stopPropagation %)
-    :on-pointer-up #(.stopPropagation %)
-    :on-click (fn [e]
-                (.stopPropagation e)
-                (rf/dispatch [::element.events/toggle-prop id :visible]))}])
 
 (defn set-item-label!
   [e id]
@@ -126,8 +116,9 @@
   (let [{:keys [id selected children locked visible]} el
         collapse-button-width 22
         padding (* collapse-button-width (cond-> depth (seq children) dec))]
-    [:div.button.list-item-button
-     {:class [(when selected "selected")
+    [:div.list-item-button.button.flex.pr-1.items-center.text-start.outline-default.hover:overlay
+     {:class ["[&.hovered]:overlay hover:[&_button]:visible"
+              (when selected "selected")
               (when hovered "hovered")]
       :tab-index 0
       :data-id (str id)
@@ -160,8 +151,8 @@
        (when-let [icon (:icon (utils.element/properties el))]
          [ui/icon icon {:class (when-not visible "opacity-60")}])
        [item-label el]]
-      [lock-button id locked]
-      [visibility-button id visible]]]))
+      [toggle-item-prop-button id locked :locked "lock" "unlock" "unlock" "lock"]
+      [toggle-item-prop-button id (not visible) :visible "eye-closed" "eye" "hide" "show"]]]))
 
 (defn item [el depth elements]
   (let [{:keys [selected children id]} el
@@ -181,8 +172,10 @@
 
 (defn inner-sidebar-render
   [root-children elements]
-  [:div.tree-sidebar
-   {:on-pointer-up #(rf/dispatch [::element.events/deselect-all])}
+  [:div#tree-sidebar.flex.flex-1.bg-primary.h-full.overflow-hidden
+   ;; When the tree is hovered, ignore the hovered class if the element itself is not hovered
+   {:class "hover:**:[&.list-item-button]:not-hover:bg-inherit"
+    :on-pointer-up #(rf/dispatch [::element.events/deselect-all])}
    [ui/scroll-area
     [:ul {:role "menu"
           :on-pointer-leave #(rf/dispatch [::document.events/clear-hovered])
