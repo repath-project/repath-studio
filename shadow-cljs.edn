@@ -2,6 +2,8 @@
 
  :build-defaults {:build-hooks [(shadow-git-inject.core/hook)]}
 
+ :jvm-opts ["-Xmx2G"]
+
  :dev-http {8080 "resources/public"
             8081 "target/browser-test"
             8082 ["portfolio/resources/public"
