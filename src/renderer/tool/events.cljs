@@ -7,11 +7,10 @@
    [renderer.tool.effects :as-alias tool.effects]
    [renderer.tool.handlers :as tool.handlers]))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::activate
- (fn [{:keys [db]} [_ tool]]
-   {:db (tool.handlers/activate db tool)
-    ::app.effects/focus nil}))
+ (fn [db [_ tool]]
+   (tool.handlers/activate db tool)))
 
 (rf/reg-event-db
  ::set-state
