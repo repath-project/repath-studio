@@ -90,8 +90,7 @@
 }
 
 @utility button-link {
-  @apply hover:underline text-active inline-block text-left text-wrap break-all hover:cursor-pointer
-  font-size: inherit;
+  @apply hover:underline text-active inline-block text-left text-wrap break-all hover:cursor-pointer;
 }
 
 @utility backdrop {
