@@ -24,7 +24,7 @@
   (let [repl-mode @(rf/subscribe [::app.subs/repl-mode])
         active (= repl-mode mode)]
     [:button.button.rounded.px-1.leading-none.text-2xs.h-4
-     {:class [(when active "selected")
+     {:class [(when active "accent")
               "m-0.5"]
       :on-click #(rf/dispatch [::app.events/set-repl-mode mode])}
      mode]))

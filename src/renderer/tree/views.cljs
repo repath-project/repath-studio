@@ -31,7 +31,6 @@
                 (.stopPropagation e)
                 (rf/dispatch [::element.events/toggle-prop id k]))}])
 
-
 (defn set-item-label!
   [e id]
   (rf/dispatch-sync [::element.events/set-prop id :label (.. e -target -value)]))
@@ -118,7 +117,7 @@
         padding (* collapse-button-width (cond-> depth (seq children) dec))]
     [:div.list-item-button.button.flex.pr-1.items-center.text-start.outline-default.hover:overlay
      {:class ["[&.hovered]:overlay hover:[&_button]:visible"
-              (when selected "selected")
+              (when selected "accent")
               (when hovered "hovered")]
       :tab-index 0
       :data-id (str id)

@@ -90,8 +90,8 @@
 
 (defn radio-icon-button
   [icon-name active props]
-  [:button.icon-button.radio-icon-button
-   (merge-with-class {:class (when active "selected")} props)
+  [:button.icon-button
+   (merge-with-class {:class (str (when active "accent ") "active:overlay")} props)
    [renderer.ui/icon icon-name]])
 
 (defn context-menu-item

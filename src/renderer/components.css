@@ -51,8 +51,12 @@
     @apply overlay-2x;
   }
 
-  &.selected {
+  &.accent {
     @apply bg-accent! text-accent-inverted!;
+
+    &:hover {
+      @apply bg-accent-light!;
+    }
   }
 
   &:disabled {
@@ -95,16 +99,6 @@
 
   &.small {
     @apply button-size-sm rounded-xs m-0;
-  }
-}
-
-@utility radio-icon-button {
-  &.selected {
-    @apply bg-accent text-accent-inverted;
-  }
-
-  &:active {
-    @apply overlay;
   }
 }
 

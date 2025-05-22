@@ -47,7 +47,7 @@
   []
   [:button.icon-button.items-center.px-1.gap-1.w-auto.flex
    {:title "Snap"
-    :class (when @(rf/subscribe [::snap.subs/active?]) "selected")
+    :class (when @(rf/subscribe [::snap.subs/active?]) "accent")
     :on-click #(rf/dispatch [::snap.events/toggle])}
    [ui/icon "magnet"]
    [options-dropdown]])

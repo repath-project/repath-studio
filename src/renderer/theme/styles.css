@@ -10,6 +10,7 @@
   --transition-property-fill: fill;
 
   --color-accent: #d12b65;
+  --color-accent-light: #e23572;
   --color-accent-inverted: #fff;
   --color-backdrop: rgb(0 0 0 / 0.75);
 }

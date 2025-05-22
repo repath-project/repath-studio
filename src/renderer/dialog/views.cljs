@@ -20,7 +20,7 @@
     [:p
      [:span.block [:strong "Version: "] config/version]
      [:span.block [:strong "Browser: "] utils.system/user-agent]]]
-   [:button.button.px-2.bg-primary.rounded.w-full
+   [:button.button.px-2.accent.rounded.w-full
     {:auto-focus true
      :on-click #(rf/dispatch [::dialog.events/close])}
     "OK"]])
@@ -51,7 +51,7 @@
     [:button.button.px-2.bg-primary.rounded.flex-1
      {:on-click #(rf/dispatch [::dialog.events/close])}
      "Cancel"]
-    [:button.button.px-2.bg-primary.rounded.flex-1
+    [:button.button.px-2.rounded.flex-1.accent
      {:auto-focus true
       :on-click #(rf/dispatch [::dialog.events/close [::document.events/save-and-close id]])}
      "Save"]]])
