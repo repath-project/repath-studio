@@ -148,4 +148,25 @@
   :restore   "Επαναφορά"
   :close     "Κλείσιμο"
   :theme     "Θέμα - %1"}
+ 
+ :renderer.toolbar.tools
+ {:transform  "Μετασχηματισμός"
+  :edit       "Eπεξεργασία"
+  :pan        "Μετατόπιση"
+  :zoom       "Μεγέθυνση"
+  :svg        "Svg"
+  :circle     "Κύκλος"
+  :ellipse    "Έλλειψη"
+  :rectangle  "Ορθογώνιο παραλληλόγραμμο"
+  :line       "Γραμμή"
+  :polyline   "Πολύγραμμο"
+  :polygon    "Πολύγωνο"
+  :image      "Εικόνα"
+  :text       "Κείμενο"
+  :blob       "Blob"
+  :brush      "Βούρτσα"
+  :pen        "Στυλό"
+  :dropper    "Επιλογέας χρώματος"
+  :fill       "Γέμισμα"
+  :measure    "Μέτρο"}
  }

@@ -149,4 +149,25 @@
   :restore   "Restore"
   :close     "Close"
   :theme     "Theme mode - %1"}
+ 
+ :renderer.toolbar.tools
+ {:transform "Transform" 
+  :edit      "Edit"
+  :pan       "Pan"
+  :zoom      "Zoom"
+  :svg       "Svg"
+  :circle    "Circle"
+  :ellipse   "Ellipse"
+  :rectangle "Rectangle"
+  :line      "Line"
+  :polyline  "Polyline"
+  :polygon   "Polygon"
+  :image     "Image"
+  :text      "Text"
+  :blob      "Blob"
+  :brush     "Brush"
+  :pen       "Pen"
+  :dropper   "Dropper"
+  :fill      "Fill"
+  :measure   "Measure"}
  }

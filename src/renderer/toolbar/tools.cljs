@@ -6,7 +6,8 @@
    [renderer.tool.events :as-alias tool.events]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.subs :as-alias tool.subs]
-   [renderer.ui :as ui]))
+   [renderer.ui :as ui]
+   [renderer.utils.i18n :refer [t]]))
 
 (defn button
   [tool]
@@ -15,8 +16,9 @@
         active (= active-tool tool)
         primary (= primary-tool tool)
         properties (tool.hierarchy/properties tool)
-        label (or (:label properties) (string/capitalize (name tool)))]
-    (when (:icon properties)
+        label (or (:label properties) (string/capitalize (name tool)))
+        translated-label (t [(keyword "renderer.toolbar.tools" (string/lower-case label)) label])] 
+    (when (:icon properties) 
       [:> Tooltip/Root
        [:> Tooltip/Trigger {:as-child true}
         [:span
@@ -29,9 +31,7 @@
          {:class "tooltip-content"
           :sideOffset 5
           :side "top"}
-         [:div.flex.gap-2.items-center
-          (or (:label properties)
-              (string/capitalize (name tool)))]]]])))
+         [:div.flex.gap-2.items-center translated-label]]]])))
 
 (defn group
   [items]
