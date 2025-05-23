@@ -44,7 +44,8 @@
     (if-not (-> db :window :focused)
       db
       (->> (:document-tabs db)
-           (reduce #(pan-by %1 (matrix/div [(:width offset) (:height offset)] 2) %2) db)))))
+           (reduce (fn [db id]
+                     (pan-by db (matrix/div [(:width offset) (:height offset)] 2) id)) db)))))
 
 (m/=> zoom-at-position [:-> App number? Vec2 App])
 (defn zoom-at-position

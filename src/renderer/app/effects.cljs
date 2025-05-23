@@ -45,7 +45,9 @@
                    [[data-type data] [["image/svg+xml" data]
                                       ["text/html" data]]]
                     (when (.supports js/ClipboardItem data-type)
-                      (aset blob-array data-type (js/Blob. (array data) #js {:type data-type}))))
+                      (aset blob-array
+                            data-type
+                            (js/Blob. (array data) #js {:type data-type}))))
                   blob-array))))
        (.then #(when on-success (rf/dispatch on-success)))
        (.catch #(when on-error (rf/dispatch (conj on-error %)))))))
@@ -81,8 +83,9 @@
                                       (rf/dispatch (conj on-success (cond-> file-handle
                                                                       formatter
                                                                       formatter))))))))))
-         (.catch (fn [error] (when (and on-error (not (string/includes? (.-message error) abort-message)))
-                               (rf/dispatch (conj on-error error))))))
+         (.catch (fn [^js/Error error]
+                   (when (and on-error (not (string/includes? (.-message error) abort-message)))
+                     (rf/dispatch (conj on-error error))))))
      (rf/dispatch
       [::notification.events/unavailable-feature
        "Save File Picker"
@@ -105,8 +108,9 @@
        (-> (.showOpenFilePicker js/window (clj->js options))
            (.then (fn [[^js/FileSystemFileHandle file-handle]]
                     (.then (.getFile file-handle) success-cb)))
-           (.catch (fn [error] (when (and on-error (not (string/includes? (.-message error) abort-message)))
-                                 (rf/dispatch (conj on-error error))))))
+           (.catch (fn [^js/Error error]
+                     (when (and on-error (not (string/includes? (.-message error) abort-message)))
+                       (rf/dispatch (conj on-error error))))))
        (legacy-file-open! success-cb)))))
 
 (rf/reg-fx
