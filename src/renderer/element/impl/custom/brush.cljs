@@ -28,7 +28,9 @@
            :size
            :thinning
            :smoothing
-           :streamline]})
+           :streamline
+           :id
+           :class]})
 
 (defonce option-keys
   [:size :thinning :smoothing :streamline])

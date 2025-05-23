@@ -86,7 +86,9 @@
            :fill
            :stroke
            :stroke-width
-           :opacity]})
+           :opacity
+           :id
+           :class]})
 
 (defmethod element.hierarchy/scale :blob
   [el ratio pivot-point]
