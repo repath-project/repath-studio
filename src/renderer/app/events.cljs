@@ -63,6 +63,11 @@
    (update db :debug-info not)))
 
 (rf/reg-event-db
+ ::toggle-help-bar
+ (fn [db [_]]
+   (update db :help-bar not)))
+
+(rf/reg-event-db
  ::set-backdrop
  (fn [db [_ visible]]
    (assoc db :backdrop visible)))

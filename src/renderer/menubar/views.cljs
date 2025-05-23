@@ -477,6 +477,12 @@
             :icon "ruler-combined"
             :checked @(rf/subscribe [::ruler.subs/visible?])
             :action [::ruler.events/toggle-visible]}
+           {:id :help-bar
+            :type :checkbox
+            :label "Help bar"
+            :icon "info"
+            :checked @(rf/subscribe [::app.subs/help-bar])
+            :action [::app.events/toggle-help-bar]}
            {:id :toggle-debug-info
             :type :checkbox
             :label "Debug info"

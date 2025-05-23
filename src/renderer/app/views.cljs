@@ -77,7 +77,9 @@
         read-only? @(rf/subscribe [::document.subs/read-only?])
         ruler-size @(rf/subscribe [::ruler.subs/size])
         ruler-locked? @(rf/subscribe [::ruler.subs/locked?])
-        help-message @(rf/subscribe [::tool.subs/help])]
+        help-message @(rf/subscribe [::tool.subs/help])
+        help-bar @(rf/subscribe [::app.subs/help-bar])
+        debug-info? @(rf/subscribe [::app.subs/debug-info])]
     [:div.flex.flex-col.flex-1.h-full.gap-px
      [:div
       [ui/scroll-area [toolbar.tools/root]]
@@ -99,17 +101,16 @@
          [ruler.views/ruler :vertical]])
       [:div.relative.grow.flex
        [frame.views/root]
-       (if read-only?
+       (when read-only?
          [:div.absolute.inset-0.border-4.border-accent
           (when-let [preview-label @(rf/subscribe [::document.subs/preview-label])]
             [:div.absolute.bg-accent.top-2.left-2.px-1.rounded.text-accent-inverted
-             preview-label])]
-         (when @(rf/subscribe [::app.subs/debug-info])
-           [debug-info]))
+             preview-label])])
+       (when debug-info? [debug-info])
        (when @(rf/subscribe [::app.subs/backdrop])
          [:div.absolute.inset-0
           {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])
-       (when (seq help-message)
+       (when (and help-bar (seq help-message))
          [:div.flex.absolute.justify-center.w-full.p-4.pointer-events-none
           {:data-theme "light"}
           [:div.bg-primary.rounded-full.overflow-hidden.shadow-xl

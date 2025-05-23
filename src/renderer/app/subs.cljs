@@ -35,6 +35,10 @@
  :-> :debug-info)
 
 (rf/reg-sub
+ ::help-bar
+ :-> :help-bar)
+
+(rf/reg-sub
  ::clicked-element
  :-> :clicked-element)
 
