@@ -113,7 +113,7 @@
        (when (and help-bar (seq help-message))
          [:div.flex.absolute.justify-center.w-full.p-4.pointer-events-none
           {:data-theme "light"}
-          [:div.bg-primary.rounded-full.overflow-hidden.shadow-xl
+          [:div.bg-primary.rounded-full.overflow-hidden.shadow-lg
            [:div.overlay.text-color.text-xs.gap-1.flex.flex-wrap.truncate.py-2.px-4.justify-center
             {:aria-live "polite"}
             help-message]]])]]]))
