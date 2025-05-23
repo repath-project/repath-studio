@@ -112,8 +112,10 @@
        (when (seq help-message)
          [:div.flex.absolute.justify-center.w-full.p-4.pointer-events-none
           {:data-theme "light"}
-          [:div.overlay.rounded-full.text-color.text-xs.gap-1.flex.flex-wrap.truncate.py-2.px-4.justify-center
-           help-message]])]]]))
+          [:div.bg-primary.rounded-full.overflow-hidden.shadow-xl
+           [:div.overlay.text-color.text-xs.gap-1.flex.flex-wrap.truncate.py-2.px-4.justify-center
+            {:aria-live "polite"}
+            help-message]]])]]]))
 
 (defn center-top-group
   []
