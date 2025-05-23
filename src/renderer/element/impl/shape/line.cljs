@@ -64,12 +64,12 @@
      {:key ::edit-handles}
      (map (fn [handle]
             (let [{:keys [x y id]} handle
-                  is-active (and (= (:id clicked-element) (:id handle))
+                  is-active (and (= (:id clicked-element) id)
                                  (= (:element clicked-element) (:id el)))]
-              ^{:key (:id handle)}
+              ^{:key id}
               [:g
                [tool.views/square-handle handle
-                [:title {:key (str (:id handle) "-title")} (name (:id handle))]]
+                [:title {:key (str id "-title")} (name id)]]
                (when is-active
                  [utils.svg/label
                   (string/join " " [(.toFixed x 2) (.toFixed y 2)])
