@@ -10,8 +10,9 @@
    [renderer.notification.events :as-alias notification.events]
    [renderer.utils.dom :as utils.dom]))
 
-(def abort-message
-  "The user aborted a request.")
+(defn abort-error?
+  [error]
+  (string/includes? (.-message error) "The user aborted a request."))
 
 (rf.storage/reg-co-fx! config/app-key {:cofx :store})
 
@@ -84,7 +85,7 @@
                                                                       formatter
                                                                       formatter))))))))))
          (.catch (fn [^js/Error error]
-                   (when (and on-error (not (string/includes? (.-message error) abort-message)))
+                   (when (and on-error (not (abort-error? error)))
                      (rf/dispatch (conj on-error error))))))
      (rf/dispatch
       [::notification.events/unavailable-feature
@@ -109,7 +110,7 @@
            (.then (fn [[^js/FileSystemFileHandle file-handle]]
                     (.then (.getFile file-handle) success-cb)))
            (.catch (fn [^js/Error error]
-                     (when (and on-error (not (string/includes? (.-message error) abort-message)))
+                     (when (and on-error (not (abort-error? error)))
                        (rf/dispatch (conj on-error error))))))
        (legacy-file-open! success-cb)))))
 

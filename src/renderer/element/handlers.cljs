@@ -373,9 +373,10 @@
   (let [tags (selected-tags db)]
     (->> (entities db)
          (vals)
-         (reduce (fn [db el] (cond-> db
-                               (contains? tags (:tag el))
-                               (select (:id el)))) db))))
+         (reduce (fn [db el]
+                   (cond-> db
+                     (contains? tags (:tag el))
+                     (select (:id el)))) db))))
 
 (m/=> selected-sorted [:-> App [:sequential Element]])
 (defn selected-sorted
@@ -400,12 +401,12 @@
 (m/=> invert-selection [:-> App App])
 (defn invert-selection
   [db]
-  (reduce (fn [db {:keys [id tag]}]
-            (cond-> db
-              (not (contains? #{:svg :canvas} tag))
-              (update-prop id :selected not)))
-          db
-          (vals (entities db))))
+  (->> (entities db)
+       (vals)
+       (reduce (fn [db el]
+                 (cond-> db
+                   (not (contains? #{:svg :canvas} (:tag el)))
+                   (update-prop (:id el) :selected not))) db)))
 
 (m/=> hover [:-> App [:or uuid? keyword?] App])
 (defn hover

@@ -36,12 +36,13 @@
   ([db id]
    (let [document (-> (get-in db [:documents id])
                       (assoc :version (:version db)))]
-     (reduce (fn [document el-id]
-               (update-in document [:elements el-id] dissoc :selected))
-             (m/decode PersistedDocument
-                       document
-                       m.transform/strip-extra-keys-transformer)
-             (keys (:elements document))))))
+     (->> (:elements document)
+          (keys)
+          (reduce (fn [document el-id]
+                    (update-in document [:elements el-id] dissoc :selected))
+                  (m/decode PersistedDocument
+                            document
+                            m.transform/strip-extra-keys-transformer))))))
 
 (m/=> save-format [:-> PersistedDocument string?])
 (defn save-format
@@ -55,10 +56,9 @@
   [db id]
   (let [{:keys [active-document document-tabs]} db
         index (.indexOf document-tabs id)
+        new-index (if (zero? index) (inc index) (dec index))
         active-id (if (= active-document id)
-                    (get document-tabs (if (zero? index)
-                                         (inc index)
-                                         (dec index)))
+                    (get document-tabs new-index)
                     active-document)]
     (-> (if active-id
           (set-active db active-id)
@@ -93,7 +93,8 @@
 (defn search-by-path
   [db file-path]
   (->> (vals (:documents db))
-       (some #(when (and file-path (= (:path %) file-path))
+       (some #(when (and file-path
+                         (= (:path %) file-path))
                 (:id %)))))
 
 (m/=> new-title [:-> App string?])
