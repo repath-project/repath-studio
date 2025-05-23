@@ -4,11 +4,15 @@
   (:require
    [clojure.core.matrix :as matrix]
    [clojure.string :as string]
+   [re-frame.core :as rf]
+   [renderer.app.subs :as-alias app.subs]
+   [renderer.document.subs :as-alias document.subs]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.tool.views :as tool.views]
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
-   [renderer.utils.length :as utils.length]))
+   [renderer.utils.length :as utils.length]
+   [renderer.utils.svg :as utils.svg]))
 
 (derive :line ::element.hierarchy/shape)
 
@@ -48,7 +52,10 @@
 
 (defmethod element.hierarchy/render-edit :line
   [el]
-  (let [offset (utils.element/offset el)
+  (let [clicked-element @(rf/subscribe [::app.subs/clicked-element])
+        zoom @(rf/subscribe [::document.subs/zoom])
+        margin (/ 15 zoom)
+        offset (utils.element/offset el)
         {{:keys [x1 y1 x2 y2]} :attrs} el
         [x1 y1 x2 y2] (mapv utils.length/unit->px [x1 y1 x2 y2])
         [x1 y1] (matrix/add offset [x1 y1])
@@ -56,9 +63,18 @@
     [:g
      {:key ::edit-handles}
      (map (fn [handle]
-            ^{:key (:id handle)}
-            [tool.views/square-handle handle
-             [:title {:key (str (:id handle) "-title")} (name (:id handle))]])
+            (let [{:keys [x y id]} handle
+                  is-active (and (= (:id clicked-element) (:id handle))
+                                 (= (:element clicked-element) (:id el)))]
+              ^{:key (:id handle)}
+              [:g
+               [tool.views/square-handle handle
+                [:title {:key (str (:id handle) "-title")} (name (:id handle))]]
+               (when is-active
+                 [utils.svg/label
+                  (string/join " " [(.toFixed x 2) (.toFixed y 2)])
+                  [(- x margin) (+ y margin)]
+                  "end"])]))
           [{:x x1
             :y y1
             :id :starting-point
