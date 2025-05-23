@@ -76,8 +76,7 @@
 (defn parent-ids
   [db]
   (->> (selected db)
-       (map :parent)
-       (remove nil?)
+       (keep :parent)
        (set)))
 
 (m/=> parent [:function
@@ -200,8 +199,7 @@
   [db id]
   (let [ancestor-els (reverse (ancestor-ids db id))]
     (->> (index db id)
-         (conj (map #(index db %) ancestor-els))
-         (remove nil?)
+         (conj (keep #(index db %) ancestor-els))
          (vec))))
 
 (m/=> descendant-ids [:function

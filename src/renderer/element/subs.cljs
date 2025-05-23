@@ -119,13 +119,11 @@
  :<- [::app.subs/system-fonts]
  (fn [[selected-elements system-fonts] _]
    (let [families (->> selected-elements
-                       (map #(-> % :attrs :font-family))
-                       (remove nil?)
+                       (keep #(-> % :attrs :font-family))
                        (set))]
      (->> system-fonts
           (filter #(contains? families (:family %)))
-          (map :weight)
-          (remove nil?)
+          (keep :weight)
           (distinct)
           (sort)
           (vec)))))

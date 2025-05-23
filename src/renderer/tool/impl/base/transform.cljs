@@ -78,10 +78,13 @@
 (m/=> reduce-by-area [:-> App boolean? ifn? App])
 (defn reduce-by-area
   [db intersecting? f]
-  (reduce (fn [db el]
-            (cond-> db
-              (hovered? db el intersecting?)
-              (f (:id el)))) db (filter :visible (vals (element.handlers/entities db)))))
+  (->> (element.handlers/entities db)
+       (vals)
+       (filter :visible)
+       (reduce (fn [db el]
+                 (cond-> db
+                   (hovered? db el intersecting?)
+                   (f (:id el)))) db)))
 
 (defmethod tool.hierarchy/on-pointer-move :transform
   [db {:keys [element] :as e}]
@@ -91,8 +94,9 @@
 
     :always
     (-> (element.handlers/clear-hovered)
-        (tool.handlers/set-cursor (if (and element (or (= (:type element) :handle)
-                                                       (not (utils.element/root? element))))
+        (tool.handlers/set-cursor (if (and element
+                                           (or (= (:type element) :handle)
+                                               (not (utils.element/root? element))))
                                     "move"
                                     "default")))
 
