@@ -83,7 +83,8 @@
         el-bbox (element.hierarchy/bbox el)
         [x y] (matrix/add (take 2 el-bbox) offset)
         [_w h] (utils.bounds/->dimensions el-bbox)
-        {:keys [fill font-family font-size font-weight]} (utils.element/attributes el)]
+        attrs (utils.element/attributes el)
+        {:keys [fill font-family font-size font-weight font-style]} attrs]
     [:foreignObject {:x x
                      :y y
                      :width "1000vw"
@@ -95,11 +96,11 @@
        :on-focus #(.. % -target select)
        :on-pointer-down #(.stopPropagation %)
        :on-pointer-up #(.stopPropagation %)
-       :on-blur #(rf/dispatch [::set-text id (get-text! %)])
+       :on-blur #(rf/dispatch-sync [::set-text id (get-text! %)])
        :on-key-down (fn [e]
                       (.stopPropagation e)
                       (when (contains? #{"Enter" "Escape"} (.-code e))
-                        (rf/dispatch [::set-text id (get-text! e)])))
+                        (rf/dispatch-sync [::set-text id (get-text! e)])))
        :ref (fn [this] (when this (rf/dispatch [::tool.events/set-state :type])))
        :style {:color fill
                :caret-color fill
@@ -110,6 +111,7 @@
                :border 0
                :outline "none"
                :background "transparent"
+               :font-style font-style
                :font-family (if (empty? font-family) "inherit" font-family)
                :font-size (if (empty? font-size)
                             "inherit"
@@ -118,9 +120,9 @@
 
 (when utils.system/electron?
   (defmethod element.hierarchy/path :text
-    [{:keys [attrs content]}]
-
-    (let [font-descriptor #js {:family (:font-family attrs)
+    [el]
+    (let [{:keys [attrs content]} el
+          font-descriptor #js {:family (:font-family attrs)
                                :weight (js/parseInt (:font-weight attrs))
                                :italic (= (:font-style attrs) "italic")}]
       (.textToPath
