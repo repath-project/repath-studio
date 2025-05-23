@@ -36,11 +36,6 @@
        (history.handlers/finalize (str "Toggle " (name k))))))
 
 (rf/reg-event-db
- ::preview-prop
- (fn [db [_ id k v]]
-   (element.handlers/assoc-prop db id k v)))
-
-(rf/reg-event-db
  ::set-prop
  (fn [db [_ id k v]]
    (-> (element.handlers/assoc-prop db id k v)

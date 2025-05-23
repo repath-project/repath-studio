@@ -7,12 +7,14 @@
    [re-frame.core :as rf]
    [renderer.app.effects :as-alias app.effects]
    [renderer.attribute.hierarchy :as attr.hierarchy]
-   [renderer.element.events :as-alias element.events]
    [renderer.element.handlers :as element.handlers]
    [renderer.element.hierarchy :as element.hierarchy]
+   [renderer.element.subs :as-alias element.subs]
+   [renderer.element.views :as element.views]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.events :as tool.events]
    [renderer.tool.handlers :as tool.handlers]
+   [renderer.tool.subs :as-alias tool.subs]
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
    [renderer.utils.length :as utils.length]
@@ -66,26 +68,25 @@
             (tool.handlers/activate :transform))
     ::app.effects/focus nil}))
 
-(defn key-down-handler!
-  [e id]
-  (.stopPropagation e)
-  (.requestAnimationFrame
-   js/window
-   #(rf/dispatch-sync (if (contains? #{"Enter" "Escape"} (.-code e))
-                        [::set-text id (get-text! e)]
-                        [::element.events/preview-prop id :content (get-text! e)]))))
+(defmethod element.hierarchy/render :text
+  [el]
+  (let [child-els @(rf/subscribe [::element.subs/filter-visible (:children el)])
+        state @(rf/subscribe [::tool.subs/state])
+        tool @(rf/subscribe [::tool.subs/active])]
+    (when-not (and (= tool :edit) (:selected el))
+      [element.views/render-to-dom el child-els (= state :idle)])))
 
 (defmethod element.hierarchy/render-edit :text
   [el]
-  (let [{:keys [attrs id content]} el
+  (let [{:keys [id content]} el
         offset (utils.element/offset el)
         el-bbox (element.hierarchy/bbox el)
         [x y] (matrix/add (take 2 el-bbox) offset)
-        [w h] (utils.bounds/->dimensions el-bbox)
-        {:keys [fill font-family font-size font-weight]} attrs]
+        [_w h] (utils.bounds/->dimensions el-bbox)
+        {:keys [fill font-family font-size font-weight]} (utils.element/attributes el)]
     [:foreignObject {:x x
                      :y y
-                     :width (+ w 20)
+                     :width "1000vw"
                      :height h}
      [:input
       {:key id
@@ -95,12 +96,15 @@
        :on-pointer-down #(.stopPropagation %)
        :on-pointer-up #(.stopPropagation %)
        :on-blur #(rf/dispatch [::set-text id (get-text! %)])
-       :on-key-down #(key-down-handler! % id)
+       :on-key-down (fn [e]
+                      (.stopPropagation e)
+                      (when (contains? #{"Enter" "Escape"} (.-code e))
+                        (rf/dispatch [::set-text id (get-text! e)])))
        :ref (fn [this] (when this (rf/dispatch [::tool.events/set-state :type])))
-       :style {:color "transparent"
-               :caret-color (or fill "black")
+       :style {:color fill
+               :caret-color fill
                :display "block"
-               :width (+ w 15)
+               :width "1000vw"
                :height h
                :padding 0
                :border 0
