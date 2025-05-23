@@ -81,17 +81,19 @@
 
       :reagent-render
       (fn
-        [{:keys [attrs tag title content] :as el} child-els idle?]
-        [:<>
-         [tag (->> (-> attrs
-                       (dissoc :style)
-                       (assoc :shape-rendering "geometricPrecision"
-                              :ref ref))
-                   (remove #(empty? (str (second %))))
-                   (into {}))
-          (when title [:title title])
-          content
-          (for [child child-els]
-            ^{:key (:id child)} [element.hierarchy/render child])]
+        [el child-els idle]
+        (let [{:keys [attrs tag title content selected]} el]
+          [:<>
+           [tag (->> (-> attrs
+                         (dissoc :style)
+                         (assoc :shape-rendering "geometricPrecision"
+                                :ref ref))
+                     (remove #(empty? (str (second %))))
+                     (into {}))
+            (when title [:title title])
+            content
+            (for [child child-els]
+              ^{:key (:id child)} [element.hierarchy/render child])]
 
-         (when idle? [ghost-element el])])})))
+           (when (and idle (not selected))
+             [ghost-element el])]))})))
