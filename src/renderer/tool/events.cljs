@@ -20,9 +20,8 @@
 
 (rf/reg-event-fx
  ::pointer-event
- [(rf/inject-cofx ::app.effects/timestamp)]
- (fn [{:keys [db timestamp]} [_ e]]
-   {:db (tool.handlers/pointer-handler db e timestamp)}))
+ (fn [{:keys [db]} [_ e]]
+   {:db (tool.handlers/pointer-handler db e)}))
 
 (rf/reg-event-db
  ::wheel-event

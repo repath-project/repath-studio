@@ -20,6 +20,7 @@
    [:pressure [:maybe number?]]
    [:pointer-type [:enum "mouse" "pen" "touch"]]
    [:pointer-id number?]
+   [:timestamp number?]
    [:primary boolean?]
    [:button [:maybe PointerButton]]
    [:modifiers [:set ModifierKey]]
@@ -87,6 +88,7 @@
    :pressure (.-pressure e)
    :pointer-type (.-pointerType e)
    :pointer-id (.-pointerId e)
+   :timestamp (.-timeStamp e)
    :primary (.-isPrimary e)
    :button (button->key (.-button e))
    :modifiers (modifiers e)})
