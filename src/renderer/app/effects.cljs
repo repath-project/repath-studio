@@ -1,6 +1,7 @@
 (ns renderer.app.effects
   (:require
    [akiroz.re-frame.storage :as rf.storage]
+   [clojure.string :as string]
    [config :as config]
    [re-frame.core :as rf]
    [re-frame.db :as rf.db]
@@ -9,8 +10,8 @@
    [renderer.notification.events :as-alias notification.events]
    [renderer.utils.dom :as utils.dom]))
 
-(def file-picker-abort-message
-  "Failed to execute 'showSaveFilePicker' on 'Window': The user aborted a request.")
+(def abort-message
+  "The user aborted a request.")
 
 (rf.storage/reg-co-fx! config/app-key {:cofx :store})
 
@@ -85,7 +86,7 @@
                                       (rf/dispatch (conj on-success (cond-> file-handle
                                                                       formatter
                                                                       formatter))))))))))
-         (.catch (fn [error] (when (and on-error (not= (.-message error) file-picker-abort-message))
+         (.catch (fn [error] (when (and on-error (not (string/includes? (.-message error) abort-message)))
                                (rf/dispatch (conj on-error error))))))
      (rf/dispatch
       [::notification.events/unavailable-feature
@@ -109,7 +110,7 @@
        (-> (.showOpenFilePicker js/window (clj->js options))
            (.then (fn [[^js/FileSystemFileHandle file-handle]]
                     (.then (.getFile file-handle) success-cb)))
-           (.catch (fn [error] (when (and on-error (not= (.-message error) file-picker-abort-message))
+           (.catch (fn [error] (when (and on-error (not (string/includes? (.-message error) abort-message)))
                                  (rf/dispatch (conj on-error error))))))
        (legacy-file-open! success-cb)))))
 
