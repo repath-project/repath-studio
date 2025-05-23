@@ -82,7 +82,7 @@
       :reagent-render
       (fn
         [el child-els idle]
-        (let [{:keys [attrs tag title content selected]} el]
+        (let [{:keys [attrs tag title content]} el]
           [:<>
            [tag (->> (-> attrs
                          (dissoc :style)
@@ -95,5 +95,4 @@
             (for [child child-els]
               ^{:key (:id child)} [element.hierarchy/render child])]
 
-           (when (and idle (not selected))
-             [ghost-element el])]))})))
+           (when idle [ghost-element el])]))})))
