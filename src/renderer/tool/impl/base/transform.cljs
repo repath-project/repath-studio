@@ -422,6 +422,7 @@
      (when (seq bbox)
        [:<>
         [tool.views/wrapping-bbox bbox]
+        [tool.views/bounding-corners bbox]
         (case state
           :scale [size-label bbox]
           :idle [tool.views/bounding-corners bbox]

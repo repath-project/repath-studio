@@ -6,6 +6,7 @@
    [renderer.app.subs :as-alias app.subs]
    [renderer.document.subs :as-alias document.subs]
    [renderer.theme.db :as theme.db]
+   [renderer.tool.subs :as-alias tool.subs]
    [renderer.utils.bounds :as utils.bounds :refer [BBox]]
    [renderer.utils.pointer :as utils.pointer]))
 
@@ -97,16 +98,22 @@
 
 (defn bounding-corners
   [bbox]
-  (let [bbox (min-bbox bbox)
+  (let [state @(rf/subscribe [::tool.subs/state])
+        clicked-element @(rf/subscribe [::app.subs/clicked-element])
+        bbox (min-bbox bbox)
         [min-x min-y max-x max-y] bbox
         [w h] (utils.bounds/->dimensions bbox)]
     [:g {:key :bounding-corners}
-     (map scale-handle
-          [{:x min-x :y min-y :id :top-left :cursor "nwse-resize"}
+     (->> [{:x min-x :y min-y :id :top-left :cursor "nwse-resize"}
            {:x max-x :y min-y :id :top-right :cursor "nesw-resize"}
            {:x min-x :y max-y :id :bottom-left :cursor "nesw-resize"}
            {:x max-x :y max-y :id :bottom-right :cursor "nwse-resize"}
            {:x (+ min-x (/ w 2)) :y min-y :id :top-middle :cursor "ns-resize"}
            {:x max-x :y (+ min-y (/ h 2)) :id :middle-right :cursor "ew-resize"}
            {:x min-x :y (+ min-y (/ h 2)) :id :middle-left :cursor "ew-resize"}
-           {:x (+ min-x (/ w 2)) :y max-y :id :bottom-middle :cursor "ns-resize"}])]))
+           {:x (+ min-x (/ w 2)) :y max-y :id :bottom-middle :cursor "ns-resize"}]
+          (map #(when (or (= state :idle)
+                          (and (= state :scale)
+                               (= (:id %) (:id clicked-element))))
+                  ^{:key (:id %)}
+                  [scale-handle %])))]))
