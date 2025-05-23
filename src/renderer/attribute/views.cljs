@@ -171,7 +171,9 @@
   [tag k]
   (let [clicked-element @(rf/subscribe [::app.subs/clicked-element])
         property (utils.attribute/property-data k)
-        dispatch-tag (if (contains? (methods attribute.hierarchy/description) [tag k]) tag :default)
+        dispatch-tag (if (contains? (methods attribute.hierarchy/description) [tag k])
+                       tag
+                       :default)
         active (and (= (:type clicked-element) :handle)
                     (= (:key clicked-element) key))]
     [:> HoverCard/Root

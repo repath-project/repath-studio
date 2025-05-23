@@ -81,9 +81,10 @@
                                   (fn []
                                     (.close writable-stream)
                                     (when on-success
-                                      (rf/dispatch (conj on-success (cond-> file-handle
-                                                                      formatter
-                                                                      formatter))))))))))
+                                      (rf/dispatch (conj on-success
+                                                         (cond-> file-handle
+                                                           formatter
+                                                           formatter))))))))))
          (.catch (fn [^js/Error error]
                    (when (and on-error (not (abort-error? error)))
                      (rf/dispatch (conj on-error error))))))
