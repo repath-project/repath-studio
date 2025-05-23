@@ -265,7 +265,8 @@
   [tag]
   (merge (when (element.db/tag? tag)
            (merge (->attrs (or (tag (:elements  utils.bcd/svg)) {}))
-                  (zipmap core (repeat ""))))
+                  (when (isa? tag ::element.hierarchy/shape)
+                    (zipmap core (repeat "")))))
          (when (contains? #{:animateMotion :animateTransform} tag)
            (->attrs (:animate (:elements utils.bcd/svg))))
          (zipmap (:attrs (element.hierarchy/properties tag)) (repeat ""))))
