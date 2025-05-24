@@ -6,7 +6,7 @@
 (def accent-inverted "#fff")
 (def accent "#d12b65")
 (def font-mono "'Consolas (Custom)', 'Bitstream Vera Sans Mono', monospace, 'Apple Color Emoji', 'Segoe UI Emoji'")
-(def handle-size 12)
+(def handle-size 13)
 (def dash-size 5)
 
 (def modes
