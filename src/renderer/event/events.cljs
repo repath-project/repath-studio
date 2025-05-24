@@ -3,19 +3,19 @@
    [re-frame.core :as rf]
    [renderer.event.handlers :as event.handlers]))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::pointer
- (fn [{:keys [db]} [_ e]]
-   {:db (event.handlers/pointer db e)}))
+ (fn [db [_ e]]
+   (event.handlers/pointer db e)))
 
 (rf/reg-event-db
  ::wheel
  (fn [db [_ e]]
    (event.handlers/wheel db e)))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::drag
- (fn [{:keys [db]} [_ e]]
+ (fn [db [_ e]]
    (event.handlers/drag db e)))
 
 (rf/reg-event-db

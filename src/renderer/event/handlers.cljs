@@ -22,7 +22,7 @@
 (defn pointer
   [db e]
   (let [{:keys [pointer-offset tool dom-rect drag primary-tool drag-threshold nearest-neighbor]} db
-        {:keys [button pointer-pos timestamp]} e
+        {:keys [button pointer-pos timestamp pointer-id]} e
         adjusted-pointer-pos (frame.handlers/adjusted-pointer-pos db pointer-pos)
         db (snap.handlers/update-nearest-neighbors db)]
     (case (:type e)
@@ -35,7 +35,7 @@
 
                 (not drag)
                 (-> (tool.hierarchy/on-drag-start e)
-                    (tool.handlers/add-fx [::event.effects/set-pointer-capture (:pointer-id e)])
+                    (tool.handlers/add-fx [::event.effects/set-pointer-capture pointer-id])
                     (assoc :drag true))
 
                 :always
@@ -117,7 +117,11 @@
 
 (m/=> drag [:-> App DragEvent App])
 (defn drag
-  [db {:keys [data-transfer pointer-pos] :as e}]
-  (case (= (:type e) "drop")
-    (let [position (frame.handlers/adjusted-pointer-pos db pointer-pos)]
-      (tool.handlers/add-fx db [::event.effects/drop [position data-transfer]]))))
+  [db e]
+  (case (:type e)
+    "drop"
+    (let [{:keys [data-transfer pointer-pos]} e
+          position (frame.handlers/adjusted-pointer-pos db pointer-pos)]
+      (tool.handlers/add-fx db [::event.effects/drop [position data-transfer]]))
+
+    db))
