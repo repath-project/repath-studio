@@ -59,7 +59,6 @@
    [:meta-key boolean?]
    [:shift-key boolean?]])
 
-;; https://developer.mozilla.org/en-US/docs/Web/API/DragEvent
 (def DragEvent
   [:map {:closed true}
    [:target any?]
