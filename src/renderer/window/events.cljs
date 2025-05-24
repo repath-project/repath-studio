@@ -3,8 +3,8 @@
    [re-frame.core :as rf]
    [renderer.app.effects :as-alias app.effects]
    [renderer.document.handlers :as document.handlers]
-   [renderer.event.keyboard :as event.keyboard]
-   [renderer.tool.events :as-alias tool.events]
+   [renderer.event.events :as-alias event.events]
+   [renderer.event.impl.keyboard :as event.keyboard]
    [renderer.utils.system :as utils.system]
    [renderer.window.effects :as window.effects]))
 
@@ -89,8 +89,8 @@
 (rf/reg-event-fx
  ::add-listeners
  (fn [_ _]
-   {:fx [[::window.effects/add-document-event-listener ["keydown" [::tool.events/keyboard-event] event.keyboard/->map]]
-         [::window.effects/add-document-event-listener ["keyup" [::tool.events/keyboard-event] event.keyboard/->map]]
+   {:fx [[::window.effects/add-document-event-listener ["keydown" [::event.events/keyboard] event.keyboard/->clj]]
+         [::window.effects/add-document-event-listener ["keyup" [::event.events/keyboard] event.keyboard/->clj]]
          [::window.effects/add-document-event-listener ["fullscreenchange" [::update-fullscreen]]]
          [::window.effects/add-event-listener ["load" [::update-focused]]]
          [::window.effects/add-event-listener ["focus" [::update-focused]]]

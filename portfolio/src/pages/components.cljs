@@ -4,7 +4,7 @@
    [portfolio.reagent-18 :refer-macros [defscene]]
    [re-frame.core :as rf]
    [re-pressed.core :as rp]
-   [renderer.event.keyboard :as event.keyboard]
+   [renderer.event.impl.keyboard :as event.impl.keyboard]
    [renderer.history.events :as-alias history.events]
    [renderer.ui :as ui]))
 
@@ -13,33 +13,48 @@
   :params (atom false)
   [store]
   [:div.toolbar.bg-primary
-   [ui/icon-button "download" {:title "download"
-                               :on-click #(js/alert "Downloaded")}]
-   [ui/icon-button "folder" {:title "open"
-                             :on-click #(js/alert "Opened")}]
-   [ui/icon-button "save" {:title "save"
-                           :disabled true
-                           :on-click #(js/alert "Saved")}]
+   [ui/icon-button
+    "download"
+    {:title "download"
+     :on-click #(js/alert "Downloaded")}]
+   [ui/icon-button
+    "folder"
+    {:title "open"
+     :on-click #(js/alert "Opened")}]
+   [ui/icon-button
+    "save"
+    {:title "save"
+     :disabled true
+     :on-click #(js/alert "Saved")}]
    [:span.v-divider]
-   [ui/radio-icon-button "refresh" @store  {:title "Replay"
-                                            :on-click #(swap! store not)}]])
+   [ui/radio-icon-button
+    "refresh"
+    @store
+    {:title "Replay"
+     :on-click #(swap! store not)}]])
 
 (defscene switch
   :title "Switch"
   :params (atom true)
   [store]
   [:div.toolbar.bg-primary.h-10.gap-2
-   [ui/switch "Default" {:id "default-switch"
-                         :default-checked @store
-                         :on-checked-change (fn [v] (reset! store v))}]
-   [ui/switch "Disabled" {:id "disabled-switch"
-                          :disabled true
-                          :default-checked @store
-                          :on-checked-change (fn [v] (reset! store v))}]
-   [ui/switch "Custom" {:id "custom-switch"
-                        :class "data-[state=checked]:bg-cyan-500"
-                        :default-checked @store
-                        :on-checked-change (fn [v] (reset! store v))}]
+   [ui/switch
+    "Default"
+    {:id "default-switch"
+     :default-checked @store
+     :on-checked-change (fn [v] (reset! store v))}]
+   [ui/switch
+    "Disabled"
+    {:id "disabled-switch"
+     :disabled true
+     :default-checked @store
+     :on-checked-change (fn [v] (reset! store v))}]
+   [ui/switch
+    "Custom"
+    {:id "custom-switch"
+     :class "data-[state=checked]:bg-cyan-500"
+     :default-checked @store
+     :on-checked-change (fn [v] (reset! store v))}]
    [:span.v-divider]
    [:div (str "State: " @store)]])
 
@@ -49,22 +64,24 @@
   [store]
   [:div.toolbar.bg-primary.flex.gap-2.px-2
    [:div.w-64.h-8
-    [ui/slider {:min 0
-                :max 50
-                :step 1
-                :default-value @store
-                :on-value-change (fn [v] (reset! store v))}]]
+    [ui/slider
+     {:min 0
+      :max 50
+      :step 1
+      :default-value @store
+      :on-value-change (fn [v] (reset! store v))}]]
    [:div.w-64.h-8
-    [ui/slider {:min 0
-                :max 50
-                :step 1
-                :disabled true
-                :default-value @store
-                :on-value-change (fn [v] (reset! store v))}]]
+    [ui/slider
+     {:min 0
+      :max 50
+      :step 1
+      :disabled true
+      :default-value @store
+      :on-value-change (fn [v] (reset! store v))}]]
    [:span.v-divider]
    [:div (first @store)]])
 
-(rf/dispatch [::rp/set-keydown-rules event.keyboard/keydown-rules])
+(rf/dispatch [::rp/set-keydown-rules event.impl.keyboard/keydown-rules])
 
 (defscene shortcut
   :title "Shortcut"

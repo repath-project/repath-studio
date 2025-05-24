@@ -1,4 +1,4 @@
-(ns renderer.event.keyboard
+(ns renderer.event.impl.keyboard
   (:require
    [clojure.set :as set]
    [malli.core :as m]
@@ -6,6 +6,7 @@
    [renderer.dialog.events :as-alias dialog.events]
    [renderer.document.events :as-alias document.events]
    [renderer.element.events :as-alias element.events]
+   [renderer.event.db :refer [KeyboardEvent]]
    [renderer.frame.events :as-alias frame.events]
    [renderer.history.events :as-alias history.events]
    [renderer.tool.events :as-alias tool.events]
@@ -13,19 +14,8 @@
   (:import
    [goog.events KeyCodes]))
 
-(def KeyboardEvent [:map {:closed true}
-                    [:target any?]
-                    [:type [:enum "keydown" "keypress" "keyup"]]
-                    [:code string?]
-                    [:key-code number?]
-                    [:key string?]
-                    [:alt-key boolean?]
-                    [:ctrl-key boolean?]
-                    [:meta-key boolean?]
-                    [:shift-key boolean?]])
-
+;; https://google.github.io/closure-library/api/goog.events.KeyCodes.html
 (def key-codes
-  "https://google.github.io/closure-library/api/goog.events.KeyCodes.html"
   (js->clj KeyCodes))
 
 (def key-chars
@@ -36,10 +26,9 @@
   [key-code]
   (get key-chars key-code))
 
-(m/=> ->map [:-> any? KeyboardEvent])
-(defn ->map
-  "https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
-   https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/"
+(m/=> ->clj [:-> any? KeyboardEvent])
+(defn ->clj
+  "https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent"
   [^js/KeyboardEvent e]
   {:target (.-target e)
    :type (.-type e)
@@ -63,6 +52,7 @@
   [^js/KeyboardEvent e v f & more]
   (let [target (.-target e)]
     (.stopPropagation e)
+
     (case (.-code e)
       "Enter" (do (apply f e more)
                   (.blur target))

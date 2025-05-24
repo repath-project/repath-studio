@@ -5,7 +5,6 @@
    [renderer.app.db :refer [App]]
    [renderer.document.db :refer [ZoomFactor]]
    [renderer.element.handlers :as element.handlers]
-   [renderer.event.pointer :as event.pointer]
    [renderer.frame.db :refer [DomRect Viewbox FocusType]]
    [renderer.utils.bounds :as utils.bounds :refer [BBox]]
    [renderer.utils.element :as utils.element]
@@ -66,7 +65,9 @@
 (defn adjusted-pointer-pos
   [db pos]
   (let [{:keys [zoom pan]} (get-in db [:documents (:active-document db)])]
-    (event.pointer/adjusted-position zoom pan pos)))
+    (-> pos
+        (matrix/div zoom)
+        (matrix/add pan))))
 
 (m/=> zoom-at-pointer [:-> App number? App])
 (defn zoom-at-pointer

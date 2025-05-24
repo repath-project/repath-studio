@@ -5,7 +5,7 @@
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.subs]
    [renderer.document.subs :as-alias document.subs]
-   [renderer.event.pointer :as event.pointer]
+   [renderer.event.impl.pointer :as event.impl.pointer]
    [renderer.theme.db :as theme.db]
    [renderer.tool.subs :as-alias tool.subs]
    [renderer.utils.bounds :as utils.bounds :refer [BBox]]))
@@ -37,7 +37,7 @@
         clicked-element @(rf/subscribe [::app.subs/clicked-element])
         size (/ theme.db/handle-size zoom)
         stroke-width (/ 1 zoom)
-        pointer-handler #(event.pointer/handler! % el)
+        pointer-handler #(event.impl.pointer/handler! % el)
         active (and (= (:id clicked-element) id)
                     (= (:element clicked-element) element))]
     (into [:rect {:fill (if active theme.db/accent theme.db/accent-inverted)
@@ -66,9 +66,9 @@
         ignored? (contains? ignored-ids id)
         [min-x min-y] bbox
         [w h] (utils.bounds/->dimensions bbox)
-        pointer-handler #(event.pointer/handler! % {:type :handle
-                                                    :action :translate
-                                                    :id id})
+        pointer-handler #(event.impl.pointer/handler! % {:type :handle
+                                                         :action :translate
+                                                         :id id})
         rect-attrs {:x min-x
                     :y min-y
                     :width w
@@ -85,16 +85,20 @@
 
 (m/=> min-bbox [:-> BBox BBox])
 (defn min-bbox
+  "Ensures the bounding box is large enough to avoid overlapping handles."
   [bbox]
   (let [zoom @(rf/subscribe [::document.subs/zoom])
         dimensions (utils.bounds/->dimensions bbox)
         [w h] dimensions
         min-size (/ (* theme.db/handle-size 2) zoom)]
     (cond-> bbox
-      (< w min-size) (matrix/add [(- (/ (- min-size w) 2)) 0
-                                  (/ (- min-size w) 2) 0])
-      (< h min-size) (matrix/add [0 (- (/ (- min-size h) 2))
-                                  0 (/ (- min-size h) 2)]))))
+      (< w min-size)
+      (matrix/add [(- (/ (- min-size w) 2)) 0
+                   (/ (- min-size w) 2) 0])
+
+      (< h min-size)
+      (matrix/add [0 (- (/ (- min-size h) 2))
+                   0 (/ (- min-size h) 2)]))))
 
 (defn bounding-corners
   [bbox]

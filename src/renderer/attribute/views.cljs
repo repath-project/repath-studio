@@ -10,7 +10,7 @@
    [renderer.element.events :as-alias element.events]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
-   [renderer.event.keyboard :as event.keyboard]
+   [renderer.event.impl.keyboard :as event.impl.keyboard]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.ui :as ui]
    [renderer.utils.attribute :as utils.attribute]
@@ -90,7 +90,7 @@
             :default-value v
             :placeholder (if v placeholder "multiple")
             :on-blur #(on-change-handler! % k v)
-            :on-key-down #(event.keyboard/input-key-down-handler! % v on-change-handler! k v)})]
+            :on-key-down #(event.impl.keyboard/input-key-down-handler! % v on-change-handler! k v)})]
    (when-not (or (empty? (str v)) disabled)
      [:button.button.bg-primary.text-muted.absolute.h-full.right-0.clear-input-button.invisible.p-1
       {:class "hover:bg-transparent"

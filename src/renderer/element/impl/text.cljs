@@ -5,12 +5,12 @@
    [clojure.core.matrix :as matrix]
    [clojure.string :as string]
    [re-frame.core :as rf]
-   [renderer.app.effects :as-alias app.effects]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.handlers :as element.handlers]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
    [renderer.element.views :as element.views]
+   [renderer.event.impl.keyboard :as event.impl.keyboard]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.events :as tool.events]
    [renderer.tool.handlers :as tool.handlers]
@@ -57,16 +57,15 @@
   [e]
   (string/replace (.. e -target -value) " " "\u00a0"))
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::set-text
- (fn [{:keys [db]} [_ id s]]
-   {:db (-> (if (empty? s)
-              (-> (element.handlers/delete db id)
-                  (history.handlers/finalize "Remove text"))
-              (-> (element.handlers/assoc-prop db id :content s)
-                  (history.handlers/finalize "Set text")))
-            (tool.handlers/activate :transform))
-    ::app.effects/focus nil}))
+ (fn [db [_ id s]]
+   (-> (if (empty? s)
+         (-> (element.handlers/delete db id)
+             (history.handlers/finalize "Remove text"))
+         (-> (element.handlers/assoc-prop db id :content s)
+             (history.handlers/finalize "Set text")))
+       (tool.handlers/activate :transform))))
 
 (defmethod element.hierarchy/render :text
   [el]
@@ -97,10 +96,7 @@
        :on-pointer-down #(.stopPropagation %)
        :on-pointer-up #(.stopPropagation %)
        :on-blur #(rf/dispatch-sync [::set-text id (get-text! %)])
-       :on-key-down (fn [e]
-                      (.stopPropagation e)
-                      (when (contains? #{"Enter" "Escape"} (.-code e))
-                        (rf/dispatch-sync [::set-text id (get-text! e)])))
+       :on-key-down #(event.impl.keyboard/input-key-down-handler! % content identity id)
        :ref (fn [this] (when this (rf/dispatch [::tool.events/set-state :type])))
        :style {:color fill
                :caret-color fill

@@ -6,7 +6,6 @@
    [renderer.utils.math :refer [Vec2]]))
 
 (def BBox
-  "Coordinates that define a bounding box."
   [:tuple
    [number? {:title "min-x"}]
    [number? {:title "min-y"}]

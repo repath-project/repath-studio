@@ -20,7 +20,7 @@
    [re-frame.core :as rf]
    [reagent.core :as reagent]
    [renderer.app.subs :as-alias app.subs]
-   [renderer.event.keyboard :as event.keyboard]))
+   [renderer.event.impl.keyboard :as event.impl.keyboard]))
 
 (defn merge-with-class
   [& maps]
@@ -74,7 +74,7 @@
          (:ctrlKey shortcut) (conj "Ctrl")
          (:shiftKey shortcut) (conj "⇧")
          (:altKey shortcut) (conj "Alt")
-         :always (conj (event.keyboard/key-code->key (:keyCode shortcut))))
+         :always (conj (event.impl.keyboard/key-code->key (:keyCode shortcut))))
        (map #(into [:span.shortcut-key] %))
        (interpose [:span {:class "px-0.5"} "+"])
        (into [:span])))

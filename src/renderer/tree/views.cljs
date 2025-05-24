@@ -11,7 +11,7 @@
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
    [renderer.element.views :as element.views]
-   [renderer.event.keyboard :as event.keyboard]
+   [renderer.event.impl.keyboard :as event.impl.keyboard]
    [renderer.frame.events :as-alias frame.events]
    [renderer.tool.subs :as-alias tool.subs]
    [renderer.tree.events :as-alias tree.events]
@@ -48,7 +48,7 @@
           :default-value label
           :placeholder tag-label
           :auto-focus true
-          :on-key-down #(event.keyboard/input-key-down-handler! % label set-item-label! id)
+          :on-key-down #(event.impl.keyboard/input-key-down-handler! % label set-item-label! id)
           :on-blur (fn [e]
                      (reset! edit-mode? false)
                      (set-item-label! e id))}]

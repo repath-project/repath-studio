@@ -3,8 +3,6 @@
    [re-frame.core :as rf]
    [renderer.app.effects :as-alias app.effects]
    [renderer.element.events :as element.events]
-   [renderer.frame.handlers :as frame.handlers]
-   [renderer.tool.effects :as-alias tool.effects]
    [renderer.tool.handlers :as tool.handlers]))
 
 (rf/reg-event-fx
@@ -17,28 +15,6 @@
  ::set-state
  (fn [db [_ state]]
    (tool.handlers/set-state db state)))
-
-(rf/reg-event-fx
- ::pointer-event
- (fn [{:keys [db]} [_ e]]
-   {:db (tool.handlers/pointer-handler db e)}))
-
-(rf/reg-event-db
- ::wheel-event
- (fn [db [_ e]]
-   (tool.handlers/wheel-handler db e)))
-
-(rf/reg-event-fx
- ::drag-event
- (fn [{:keys [db]} [_ {:keys [data-transfer pointer-pos] :as e}]]
-   (when (= (:type e) "drop")
-     (let [position (frame.handlers/adjusted-pointer-pos db pointer-pos)]
-       {::tool.effects/drop [position data-transfer]}))))
-
-(rf/reg-event-db
- ::keyboard-event
- (fn [db [_ e]]
-   (tool.handlers/key-handler db e)))
 
 (rf/reg-event-fx
  ::cancel

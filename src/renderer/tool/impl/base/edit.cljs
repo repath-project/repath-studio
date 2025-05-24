@@ -5,7 +5,6 @@
    [renderer.element.handlers :as element.handlers]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
-   [renderer.event.pointer :as event.pointer]
    [renderer.history.handlers :as history.handlers]
    [renderer.snap.handlers :as snap.handlers]
    [renderer.tool.handlers :as tool.handlers]
@@ -62,6 +61,13 @@
     (= (-> e :element :type) :handle)
     (tool.handlers/set-state :edit)))
 
+(defn lock-direction
+  "Locks pointer movement to the axis with the biggest offset"
+  [[x y]]
+  (if (> (abs x) (abs y))
+    [x 0]
+    [0 y]))
+
 (defmethod tool.hierarchy/on-drag :edit
   [db e]
   (let [clicked-element (:clicked-element db)
@@ -71,7 +77,7 @@
         delta (cond-> (matrix/add (tool.handlers/pointer-delta db)
                                   (snap.handlers/nearest-delta db))
                 (:ctrl-key e)
-                (event.pointer/lock-direction))]
+                (lock-direction))]
     (cond-> db
       el-id
       (element.handlers/update-el el-id element.hierarchy/edit delta handle-id))))

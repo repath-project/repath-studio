@@ -10,17 +10,10 @@
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
    [renderer.element.views :as element.views]
-   [renderer.event.pointer :as event.pointer]
-   [renderer.event.wheel :as event.wheel]
+   [renderer.event.impl.pointer :as event.impl.pointer]
+   [renderer.event.impl.wheel :as event.impl.wheel]
    [renderer.frame.events :as-alias frame.events]
-   [renderer.tool.events :as tool.events]
    [renderer.ui :as ui]))
-
-(defn wheel-handler!
-  [^js/WheelEvent e]
-  (.stopPropagation e)
-  (when (.-ctrlKey e) (.preventDefault e)) ; Disable wheel zoom on canvas.
-  (rf/dispatch-sync [::tool.events/wheel-event (event.wheel/->map e)]))
 
 (defn inner-component
   "We need access to the iframe's window to add the pointer move listener.
@@ -33,14 +26,14 @@
      {:component-did-mount
       (fn []
         (doseq [event ["pointermove" "pointerup"]]
-          (.addEventListener frame-window event event.pointer/handler!))
-        (.addEventListener frame-window "wheel" wheel-handler! #js {:passive false}))
+          (.addEventListener frame-window event event.impl.pointer/handler!))
+        (.addEventListener frame-window "wheel" event.impl.wheel/handler! #js {:passive false}))
 
       :component-will-unmount
       (fn []
         (doseq [event ["pointermove" "pointerup"]]
-          (.removeEventListener frame-window event event.pointer/handler!))
-        (.removeEventListener frame-window "wheel" wheel-handler!))
+          (.removeEventListener frame-window event event.impl.pointer/handler!))
+        (.removeEventListener frame-window "wheel" event.impl.wheel/handler!))
 
       :reagent-render #()})))
 

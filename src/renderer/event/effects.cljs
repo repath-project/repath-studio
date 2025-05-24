@@ -1,4 +1,4 @@
-(ns renderer.tool.effects
+(ns renderer.event.effects
   (:require
    [re-frame.core :as rf]
    [renderer.element.events :as-alias element.events]
