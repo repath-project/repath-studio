@@ -5,12 +5,12 @@
    [renderer.element.handlers :as element.handlers]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
+   [renderer.event.pointer :as event.pointer]
    [renderer.history.handlers :as history.handlers]
    [renderer.snap.handlers :as snap.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.element :as utils.element]
-   [renderer.utils.pointer :as utils.pointer]
    [renderer.utils.svg :as utils.svg]))
 
 (derive :edit ::tool.hierarchy/tool)
@@ -45,7 +45,7 @@
                (:selected (:element e)))
     (-> (element.handlers/clear-ignored db)
         (dissoc :clicked-element)
-        (element.handlers/toggle-selection (-> e :element :id) (utils.pointer/shift? e))
+        (element.handlers/toggle-selection (-> e :element :id) (:shift-key e))
         (history.handlers/finalize "Select element"))
     (dissoc db :clicked-element)))
 
@@ -70,8 +70,8 @@
         handle-id (:id clicked-element)
         delta (cond-> (matrix/add (tool.handlers/pointer-delta db)
                                   (snap.handlers/nearest-delta db))
-                (utils.pointer/ctrl? e)
-                (utils.pointer/lock-direction))]
+                (:ctrl-key e)
+                (event.pointer/lock-direction))]
     (cond-> db
       el-id
       (element.handlers/update-el el-id element.hierarchy/edit delta handle-id))))

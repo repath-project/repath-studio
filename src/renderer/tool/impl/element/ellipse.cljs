@@ -3,8 +3,7 @@
   (:require
    [renderer.document.handlers :as document.handlers]
    [renderer.tool.handlers :as tool.handlers]
-   [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.pointer :as utils.pointer]))
+   [renderer.tool.hierarchy :as tool.hierarchy]))
 
 (derive :ellipse ::tool.hierarchy/element)
 
@@ -20,7 +19,7 @@
   [db e]
   (let [[offset-x offset-y] (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
         [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
-        lock-ratio (utils.pointer/ctrl? e)
+        lock-ratio (:ctrl-key e)
         rx (abs (- x offset-x))
         ry (abs (- y offset-y))
         attrs {:cx offset-x

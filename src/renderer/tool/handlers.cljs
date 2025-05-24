@@ -6,6 +6,9 @@
    [renderer.app.effects :as-alias app.effects]
    [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.handlers]
+   [renderer.event.keyboard :refer [KeyboardEvent]]
+   [renderer.event.pointer :refer [PointerEvent]]
+   [renderer.event.wheel :refer [WheelEvent]]
    [renderer.frame.db :refer [DomRect]]
    [renderer.frame.handlers :as frame.handlers]
    [renderer.history.handlers :as history.handlers]
@@ -14,10 +17,7 @@
    [renderer.tool.effects :as-alias tool.effects]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.element :as utils.element]
-   [renderer.utils.keyboard :refer [KeyboardEvent]]
-   [renderer.utils.math :refer [Vec2]]
-   [renderer.utils.pointer :refer [PointerEvent]]
-   [renderer.utils.wheel :refer [WheelEvent]]))
+   [renderer.utils.math :refer [Vec2]]))
 
 (m/=> add-fx [:-> App vector? App])
 (defn add-fx
@@ -200,7 +200,7 @@
 (m/=> wheel-handler [:-> App WheelEvent App])
 (defn wheel-handler
   [db e]
-  (-> (if (some (:modifiers e) [:ctrl :alt])
+  (-> (if (or (:ctrl-key e) (:shift-key e))
         (let [factor (Math/pow (inc (/ (- 1 (:zoom-sensitivity db)) 100))
                                (- (:delta-y e)))]
           (frame.handlers/zoom-at-pointer db factor))

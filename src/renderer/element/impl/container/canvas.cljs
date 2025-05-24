@@ -6,6 +6,8 @@
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
+   [renderer.event.keyboard :as event.keyboard]
+   [renderer.event.pointer :as event.pointer]
    [renderer.frame.subs :as-alias frame.subs]
    [renderer.menubar.filters :as filters]
    [renderer.ruler.views :as ruler.views]
@@ -14,8 +16,6 @@
    [renderer.tool.events :as-alias tool.events]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.subs :as-alias tool.subs]
-   [renderer.utils.keyboard :as utils.keyboard]
-   [renderer.utils.pointer :as utils.pointer]
    [renderer.utils.svg :as utils.svg]))
 
 (derive :canvas ::element.hierarchy/element)
@@ -48,12 +48,12 @@
         primary-tool @(rf/subscribe [::tool.subs/primary])
         rotate @(rf/subscribe [::document.subs/rotate])
         grid @(rf/subscribe [::app.subs/grid])
-        pointer-handler #(utils.pointer/event-handler! % el)
+        pointer-handler #(event.pointer/handler! % el)
         snap? @(rf/subscribe [::snap.subs/active?])
         nearest-neighbor @(rf/subscribe [::snap.subs/nearest-neighbor])
         snapped-el-id (-> nearest-neighbor meta :id)
         snapped-el (when snapped-el-id @(rf/subscribe [::element.subs/entity snapped-el-id]))
-        key-handler #(rf/dispatch-sync [::tool.events/keyboard-event (utils.keyboard/event-formatter %)])]
+        key-handler #(rf/dispatch-sync [::tool.events/keyboard-event (event.keyboard/->map %)])]
     [:svg#canvas {:on-pointer-up pointer-handler
                   :on-pointer-down pointer-handler
                   :on-pointer-move pointer-handler

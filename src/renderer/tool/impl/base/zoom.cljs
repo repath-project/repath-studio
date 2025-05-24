@@ -5,7 +5,6 @@
    [renderer.snap.handlers :as snap.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.pointer :as utils.pointer]
    [renderer.utils.svg :as utils.svg]))
 
 (derive :zoom ::tool.hierarchy/tool)
@@ -27,13 +26,13 @@
 (defmethod tool.hierarchy/on-key-down :zoom
   [db e]
   (cond-> db
-    (utils.pointer/shift? e)
+    (:shift-key e)
     (tool.handlers/set-cursor "zoom-out")))
 
 (defmethod tool.hierarchy/on-key-up :zoom
   [db e]
   (cond-> db
-    (not (utils.pointer/shift? e))
+    (not (:shift-key e))
     (tool.handlers/set-cursor "zoom-in")))
 
 (defmethod tool.hierarchy/on-drag-start :zoom
@@ -54,21 +53,19 @@
         width-ratio (/ (:width dom-rect) width)
         height-ratio (/ (:height dom-rect) height)
         current-zoom (get-in db [:documents (:active-document db) :zoom])
-        zoom (min width-ratio height-ratio)]
+        zoom (min width-ratio height-ratio)
+        factor (if (:shift-key e) (:zoom-sensitivity db) (/ zoom current-zoom))
+        cursor (if (:shift-key e) "zoom-out" "zoom-in")]
     (-> (tool.handlers/dissoc-temp db)
-        (tool.handlers/set-cursor (if (utils.pointer/shift? e) "zoom-out" "zoom-in"))
-        (frame.handlers/zoom-in-place (if (utils.pointer/shift? e)
-                                        (:zoom-sensitivity db)
-                                        (/ zoom current-zoom)))
+        (tool.handlers/set-cursor cursor)
+        (frame.handlers/zoom-in-place factor)
         (frame.handlers/pan-to-bbox [x y offset-x offset-y])
         (snap.handlers/update-viewport-tree)
         (tool.handlers/add-fx [::app.effects/persist]))))
 
 (defmethod tool.hierarchy/on-pointer-up :zoom
   [db e]
-  (let [factor (if (utils.pointer/shift? e)
-                 (:zoom-sensitivity db)
-                 (/ 1 (:zoom-sensitivity db)))]
+  (let [factor (cond->> (:zoom-sensitivity db) (not (:shift-key e)) (/ 1))]
     (-> (frame.handlers/zoom-at-pointer db factor)
         (snap.handlers/update-viewport-tree)
         (tool.handlers/add-fx [::app.effects/persist]))))

@@ -1,4 +1,4 @@
-(ns renderer.utils.pointer
+(ns renderer.event.pointer
   (:require
    [clojure.core.matrix :as matrix]
    [malli.core :as m]
@@ -7,7 +7,6 @@
    [renderer.element.db :refer [Element]]
    [renderer.tool.db :refer [Handle]]
    [renderer.tool.events :as-alias tool.events]
-   [renderer.utils.keyboard :refer [ModifierKey modifiers]]
    [renderer.utils.math :refer [Vec2]]))
 
 (def PointerButton [:enum :left :middle :right :back :forward])
@@ -23,7 +22,10 @@
    [:timestamp number?]
    [:primary boolean?]
    [:button [:maybe PointerButton]]
-   [:modifiers [:set ModifierKey]]
+   [:alt-key boolean?]
+   [:ctrl-key boolean?]
+   [:meta-key boolean?]
+   [:shift-key boolean?]
    [:type [:enum
            "pointerover"
            "pointerenter"
@@ -36,21 +38,6 @@
            "pointerleave"
            "gotpointercapture"
            "lostpointercapture"]]])
-
-(m/=> ctrl? [:-> map? boolean?])
-(defn ctrl?
-  [e]
-  (contains? (:modifiers e) :ctrl))
-
-(m/=> shift? [:-> map? boolean?])
-(defn shift?
-  [e]
-  (contains? (:modifiers e) :shift))
-
-(m/=> alt? [:-> map? boolean?])
-(defn alt?
-  [e]
-  (contains? (:modifiers e) :alt))
 
 (m/=> adjusted-position [:-> ZoomFactor Vec2 Vec2 Vec2])
 (defn adjusted-position
@@ -77,8 +64,8 @@
     [x 0]
     [0 y]))
 
-(m/=> event-formatter [:-> any? [:maybe [:or Element Handle]] PointerEvent])
-(defn event-formatter
+(m/=> ->map [:-> any? [:maybe [:or Element Handle]] PointerEvent])
+(defn ->map
   "https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent"
   [^js/PointerEvent e el]
   {:element el
@@ -91,10 +78,13 @@
    :timestamp (.-timeStamp e)
    :primary (.-isPrimary e)
    :button (button->key (.-button e))
-   :modifiers (modifiers e)})
+   :alt-key (.-altKey e)
+   :ctrl-key (.-ctrlKey e)
+   :meta-key (.-metaKey e)
+   :shift-key (.-shiftKey e)})
 
-(m/=> event-handler! [:-> any? [:or Element Handle] nil?])
-(defn event-handler!
+(m/=> handler! [:-> any? [:or Element Handle] nil?])
+(defn handler!
   "Gathers pointer event props and dispathces the corresponding event.
    https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/"
   [^js/PointerEvent e el]
@@ -106,4 +96,4 @@
   ;; Although the fps might drop because synced dispatch blocks rendering,
   ;; the end result appears to be more responsive because it's synced with the
   ;; pointer movement.
-  (rf/dispatch-sync [::tool.events/pointer-event (event-formatter e el)]))
+  (rf/dispatch-sync [::tool.events/pointer-event (->map e el)]))

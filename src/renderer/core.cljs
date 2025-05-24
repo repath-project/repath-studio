@@ -18,6 +18,7 @@
    [renderer.element.events]
    [renderer.element.impl.core]
    [renderer.element.subs]
+   [renderer.event.keyboard :as event.keyboard]
    [renderer.frame.events]
    [renderer.frame.subs]
    [renderer.history.events]
@@ -42,7 +43,6 @@
    [renderer.tool.subs]
    [renderer.tree.events]
    [renderer.utils.error :as utils.error]
-   [renderer.utils.keyboard :as utils.keyboard]
    [renderer.utils.system :as utils.system]
    [renderer.window.events :as window.events]
    [renderer.window.subs]
@@ -99,7 +99,7 @@
   (rf/dispatch-sync [::theme.events/set-document-mode])
   (rf/dispatch-sync [::theme.events/add-native-listener])
   (rf/dispatch-sync [::re-pressed/add-keyboard-event-listener "keydown"])
-  (rf/dispatch-sync [::re-pressed/set-keydown-rules utils.keyboard/keydown-rules])
+  (rf/dispatch-sync [::re-pressed/set-keydown-rules event.keyboard/keydown-rules])
   (rf/dispatch-sync [::window.events/register-listeners])
 
   (.setup paper)

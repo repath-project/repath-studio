@@ -5,17 +5,17 @@
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.subs]
    [renderer.document.subs :as-alias document.subs]
+   [renderer.event.pointer :as event.pointer]
    [renderer.theme.db :as theme.db]
    [renderer.tool.subs :as-alias tool.subs]
-   [renderer.utils.bounds :as utils.bounds :refer [BBox]]
-   [renderer.utils.pointer :as utils.pointer]))
+   [renderer.utils.bounds :as utils.bounds :refer [BBox]]))
 
 #_(defn circle-handle
     [el & children]
     (let [{:keys [x y id]} el
           zoom @(rf/subscribe [::document.subs/zoom])
           clicked-element @(rf/subscribe [::app.subs/clicked-element])
-          pointer-handler #(utils.pointer/event-handler! % el)]
+          pointer-handler #(event.pointer/handler! % el)]
       (into [:circle {:key id
                       :cx x
                       :cy y
@@ -37,7 +37,7 @@
         clicked-element @(rf/subscribe [::app.subs/clicked-element])
         size (/ theme.db/handle-size zoom)
         stroke-width (/ 1 zoom)
-        pointer-handler #(utils.pointer/event-handler! % el)
+        pointer-handler #(event.pointer/handler! % el)
         active (and (= (:id clicked-element) id)
                     (= (:element clicked-element) element))]
     (into [:rect {:fill (if active theme.db/accent theme.db/accent-inverted)
@@ -66,9 +66,9 @@
         ignored? (contains? ignored-ids id)
         [min-x min-y] bbox
         [w h] (utils.bounds/->dimensions bbox)
-        pointer-handler #(utils.pointer/event-handler! % {:type :handle
-                                                          :action :translate
-                                                          :id id})
+        pointer-handler #(event.pointer/handler! % {:type :handle
+                                                    :action :translate
+                                                    :id id})
         rect-attrs {:x min-x
                     :y min-y
                     :width w

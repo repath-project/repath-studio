@@ -3,8 +3,7 @@
   (:require
    [renderer.document.handlers :as document.handlers]
    [renderer.tool.handlers :as tool.handlers]
-   [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.pointer :as utils.pointer]))
+   [renderer.tool.hierarchy :as tool.hierarchy]))
 
 (derive :rect ::tool.hierarchy/element)
 
@@ -27,7 +26,7 @@
                                 :tag :rect
                                 :attrs {:x (min x offset-x)
                                         :y (min y offset-y)
-                                        :width (if (utils.pointer/ctrl? e) (min width height) width)
-                                        :height (if (utils.pointer/ctrl? e) (min width height) height)
+                                        :width (if (:ctrl-key e) (min width height) width)
+                                        :height (if (:ctrl-key e) (min width height) height)
                                         :fill (document.handlers/attr db :fill)
                                         :stroke (document.handlers/attr db :stroke)}})))

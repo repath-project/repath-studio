@@ -1,4 +1,4 @@
-(ns renderer.utils.keyboard
+(ns renderer.event.keyboard
   (:require
    [clojure.set :as set]
    [malli.core :as m]
@@ -13,15 +13,16 @@
   (:import
    [goog.events KeyCodes]))
 
-(def ModifierKey [:enum :alt :ctrl :meta :shift])
-
 (def KeyboardEvent [:map {:closed true}
                     [:target any?]
                     [:type [:enum "keydown" "keypress" "keyup"]]
                     [:code string?]
                     [:key-code number?]
                     [:key string?]
-                    [:modifiers [:set ModifierKey]]])
+                    [:alt-key boolean?]
+                    [:ctrl-key boolean?]
+                    [:meta-key boolean?]
+                    [:shift-key boolean?]])
 
 (def key-codes
   "https://google.github.io/closure-library/api/goog.events.KeyCodes.html"
@@ -35,18 +36,8 @@
   [key-code]
   (get key-chars key-code))
 
-(m/=> modifiers [:-> any? [:set ModifierKey]])
-(defn modifiers
-  "Returns a set of modifier keys from the event."
-  [^js/Event e]
-  (cond-> #{}
-    (.-altKey e) (conj :alt)
-    (.-ctrlKey e) (conj :ctrl)
-    (.-metaKey e) (conj :meta)
-    (.-shiftKey e) (conj :shift)))
-
-(m/=> event-formatter [:-> any? KeyboardEvent])
-(defn event-formatter
+(m/=> ->map [:-> any? KeyboardEvent])
+(defn ->map
   "https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
    https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/"
   [^js/KeyboardEvent e]
@@ -55,7 +46,10 @@
    :code (.-code e)
    :key-code (.-keyCode e)
    :key (.-key e)
-   :modifiers (modifiers e)})
+   :alt-key (.-altKey e)
+   :ctrl-key (.-ctrlKey e)
+   :meta-key (.-metaKey e)
+   :shift-key (.-shiftKey e)})
 
 (defn input-key-down-handler!
   "Generic on-key-down handler for input elements that dispatches an event `f`

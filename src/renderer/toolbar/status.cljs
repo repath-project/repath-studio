@@ -7,6 +7,7 @@
    [renderer.document.events :as-alias document.events]
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.events :as-alias element.events]
+   [renderer.event.keyboard :as event.keyboard]
    [renderer.frame.events :as-alias frame.events]
    [renderer.ruler.events :as-alias ruler.events]
    [renderer.ruler.subs :as-alias ruler.subs]
@@ -14,7 +15,6 @@
    [renderer.timeline.views :as timeline.views]
    [renderer.ui :as ui]
    [renderer.utils.i18n :refer [t]]
-   [renderer.utils.keyboard :as utils.keyboard]
    [renderer.worker.subs :as-alias worker.subs]))
 
 (defn coordinates []
@@ -122,7 +122,7 @@
               :appearance "textfield"}
       :default-value value
       :on-blur #(set-zoom % value)
-      :on-key-down #(utils.keyboard/input-key-down-handler! % value set-zoom % value)
+      :on-key-down #(event.keyboard/input-key-down-handler! % value set-zoom % value)
       :on-wheel #(rf/dispatch (if (pos? (.-deltaY %))
                                 [::frame.events/zoom-out]
                                 [::frame.events/zoom-in]))}]))

@@ -9,11 +9,11 @@
    [renderer.attribute.impl.range :as attr.range]
    [renderer.attribute.views :as attribute.views]
    [renderer.element.hierarchy :as element.hierarchy]
+   [renderer.event.pointer :as event.pointer]
    [renderer.tool.views :as tool.views]
    [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.element :as utils.element]
-   [renderer.utils.length :as utils.length]
-   [renderer.utils.pointer :as utils.pointer]))
+   [renderer.utils.length :as utils.length]))
 
 (derive :brush ::element.hierarchy/renderable)
 
@@ -114,7 +114,7 @@
 (defmethod element.hierarchy/render :brush
   [el]
   (let [attrs (:attrs el)
-        pointer-handler #(utils.pointer/event-handler! % el)
+        pointer-handler #(event.pointer/handler! % el)
         options (-> attrs
                     (select-keys option-keys)
                     (update-vals js/parseFloat))]

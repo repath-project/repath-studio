@@ -6,7 +6,7 @@
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.events :as-alias element.events]
    [renderer.element.hierarchy :as element.hierarchy]
-   [renderer.utils.pointer :as utils.pointer]))
+   [renderer.event.pointer :as event.pointer]))
 
 (def context-menu
   ;; TODO: Add group actions and more.
@@ -43,7 +43,7 @@
    can interact with it."
   [el]
   (let [{:keys [attrs tag content]} el
-        pointer-handler #(utils.pointer/event-handler! % el)
+        pointer-handler #(event.pointer/handler! % el)
         zoom @(rf/subscribe [::document.subs/zoom])
         stroke-width (max (:stroke-width attrs) (/ 20 zoom))]
     [tag

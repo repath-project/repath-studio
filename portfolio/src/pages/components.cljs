@@ -4,9 +4,9 @@
    [portfolio.reagent-18 :refer-macros [defscene]]
    [re-frame.core :as rf]
    [re-pressed.core :as rp]
+   [renderer.event.keyboard :as event.keyboard]
    [renderer.history.events :as-alias history.events]
-   [renderer.ui :as ui]
-   [renderer.utils.keyboard :as utils.keyboard]))
+   [renderer.ui :as ui]))
 
 (defscene buttons
   :title "Buttons"
@@ -64,7 +64,7 @@
    [:span.v-divider]
    [:div (first @store)]])
 
-(rf/dispatch [::rp/set-keydown-rules utils.keyboard/keydown-rules])
+(rf/dispatch [::rp/set-keydown-rules event.keyboard/keydown-rules])
 
 (defscene shortcut
   :title "Shortcut"

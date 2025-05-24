@@ -21,7 +21,6 @@
    [renderer.utils.bounds :as utils.bounds :refer [BBox]]
    [renderer.utils.element :as utils.element]
    [renderer.utils.math :refer [Vec2]]
-   [renderer.utils.pointer :as utils.pointer]
    [renderer.utils.svg :as utils.svg]))
 
 (def ScaleHandle [:enum
@@ -89,7 +88,7 @@
 (defmethod tool.hierarchy/on-pointer-move :transform
   [db {:keys [element] :as e}]
   (cond-> db
-    (not (utils.pointer/shift? e))
+    (not (:shift-key e))
     (element.handlers/clear-ignored)
 
     :always
@@ -106,13 +105,13 @@
 (defmethod tool.hierarchy/on-key-down :transform
   [db e]
   (cond-> db
-    (utils.pointer/shift? e)
+    (:shift-key e)
     (element.handlers/ignore :bbox)))
 
 (defmethod tool.hierarchy/on-key-up :transform
   [db e]
   (cond-> db
-    (not (utils.pointer/shift? e))
+    (not (:shift-key e))
     (element.handlers/clear-ignored)))
 
 (defmethod tool.hierarchy/on-pointer-down :transform
@@ -122,7 +121,7 @@
     (assoc :clicked-element element)
 
     (and (= button :right) (not= (:id element) :bbox))
-    (element.handlers/toggle-selection (:id element) (utils.pointer/shift? e))
+    (element.handlers/toggle-selection (:id element) (:shift-key e))
 
     :always
     (element.handlers/ignore :bbox)))
@@ -132,7 +131,7 @@
   (-> db
       (dissoc :clicked-element)
       (element.handlers/unignore :bbox)
-      (element.handlers/toggle-selection (:id element) (utils.pointer/shift? e))
+      (element.handlers/toggle-selection (:id element) (:shift-key e))
       (history.handlers/finalize (if (:selected element)
                                    "Deselect element"
                                    "Select element"))))
@@ -286,40 +285,37 @@
     (cond-> (-> (tool.handlers/set-state db state)
                 (element.handlers/clear-hovered))
       (selectable? clicked-element)
-      (-> (element.handlers/toggle-selection (-> db :clicked-element :id) (utils.pointer/shift? e))
+      (-> (element.handlers/toggle-selection (-> db :clicked-element :id) (:shift-key e))
           (snap.handlers/delete-from-tree #{(-> db :clicked-element :id)})))))
 
 (defmethod tool.hierarchy/on-drag :transform
   [db e]
-  (let [state (:state db)
-        ctrl? (utils.pointer/ctrl? e)
-        alt-key? (utils.pointer/alt? e)
-        ratio-locked? (or (utils.pointer/ctrl? e) (element.handlers/ratio-locked? db))
+  (let [ratio-locked? (or (:ctrl-key e) (element.handlers/ratio-locked? db))
         db (element.handlers/clear-ignored db)
         delta (tool.handlers/pointer-delta db)
-        axis (when ctrl?
+        axis (when (:ctrl-key e)
                (if (> (abs (first delta)) (abs (second delta)))
                  :vertical
                  :horizontal))]
-    (case state
+    (case (:state db)
       :select
       (-> (element.handlers/clear-hovered db)
-          (tool.handlers/set-temp (select-rect db alt-key?))
-          (reduce-by-area (utils.pointer/alt? e) element.handlers/hover))
+          (tool.handlers/set-temp (select-rect db (:alt-key e)))
+          (reduce-by-area (:alt-key e) element.handlers/hover))
 
       :translate
-      (if alt-key?
+      (if (:alt-key e)
         (tool.handlers/set-state db :clone)
         (-> (history.handlers/reset-state db)
-            (select-element (utils.pointer/shift? e))
+            (select-element (:shift-key e))
             (translate delta axis)
             (snap.handlers/snap-with translate axis)
             (tool.handlers/set-cursor "default")))
 
       :clone
-      (if alt-key?
+      (if (:alt-key e)
         (-> (history.handlers/reset-state db)
-            (select-element (utils.pointer/shift? e))
+            (select-element (:shift-key e))
             (element.handlers/duplicate)
             (translate delta axis)
             (snap.handlers/snap-with translate axis)
@@ -328,8 +324,8 @@
 
       :scale
       (let [options {:ratio-locked ratio-locked?
-                     :in-place (utils.pointer/shift? e)
-                     :recursive (utils.pointer/alt? e)}]
+                     :in-place (:shift-key e)
+                     :recursive (:alt-key e)}]
         (-> (history.handlers/reset-state db)
             (tool.handlers/set-cursor "default")
             (scale (matrix/add delta (snap.handlers/nearest-delta db)) options)))
@@ -339,8 +335,8 @@
 (defmethod tool.hierarchy/on-drag-end :transform
   [db e]
   (-> (case (:state db)
-        :select (-> (cond-> db (not (utils.pointer/shift? e)) element.handlers/deselect-all)
-                    (reduce-by-area (utils.pointer/alt? e) element.handlers/select)
+        :select (-> (cond-> db (not (:shift-key e)) element.handlers/deselect-all)
+                    (reduce-by-area (:alt-key e) element.handlers/select)
                     (tool.handlers/dissoc-temp)
                     (history.handlers/finalize "Modify selection"))
         :translate (history.handlers/finalize db "Move selection")

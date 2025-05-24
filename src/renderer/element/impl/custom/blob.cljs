@@ -11,11 +11,11 @@
    [renderer.element.events :as-alias element.events]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
+   [renderer.event.pointer :as event.pointer]
    [renderer.tool.views :as tool.views]
    [renderer.ui :as ui]
    [renderer.utils.element :as utils.element]
    [renderer.utils.length :as utils.length]
-   [renderer.utils.pointer :as utils.pointer]
    [renderer.utils.svg :as utils.svg]))
 
 (derive :blob ::element.hierarchy/renderable)
@@ -102,7 +102,7 @@
   [el]
   (let [{:keys [attrs children]} el
         child-elements @(rf/subscribe [::element.subs/filter-visible children])
-        pointer-handler #(utils.pointer/event-handler! % el)]
+        pointer-handler #(event.pointer/handler! % el)]
     [:path (merge {:d (element.hierarchy/path el)
                    :on-pointer-up pointer-handler
                    :on-pointer-down pointer-handler
