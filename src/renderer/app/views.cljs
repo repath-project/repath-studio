@@ -75,7 +75,6 @@
   []
   (let [ruler-visible? @(rf/subscribe [::ruler.subs/visible?])
         read-only? @(rf/subscribe [::document.subs/read-only?])
-        ruler-size @(rf/subscribe [::ruler.subs/size])
         ruler-locked? @(rf/subscribe [::ruler.subs/locked?])
         help-message @(rf/subscribe [::tool.subs/help])
         help-bar @(rf/subscribe [::app.subs/help-bar])
@@ -86,8 +85,8 @@
       (when ruler-visible?
         [:div.flex.gap-px
          [:div.bg-primary
-          {:style {:width ruler-size
-                   :height ruler-size}}
+          {:style {:width ruler.views/ruler-size
+                   :height ruler.views/ruler-size}}
           [ui/icon-button
            (if ruler-locked? "lock" "unlock")
            {:class "small hidden"

@@ -214,7 +214,7 @@
    [:> HoverCard/Root
     [:> HoverCard/Trigger {:as-child true}
      [:span.pb-px
-      [ui/icon-button "info" {:title "MDN Info"}]]]
+      [ui/icon-button "info" {:title "MDN Info" :class "hover:bg-transparent"}]]]
     [:> HoverCard/Portal
      [:> HoverCard/Content
       {:sideOffset 5
@@ -241,8 +241,8 @@
         multitag? (next selected-tags)]
     (when-first [el selected-elements]
       [:div.pr-px
-       [:div.flex.bg-primary.py-4.pl-4.pr-2
-        [:h1.self-center.flex-1.text-lg.p-1
+       [:div.flex.bg-primary.py-4.pl-4.pr-2.gap-1
+        [:h1.self-center.flex-1.text-lg
          (if-not (next selected-elements)
            (let [el-label (:label el)]
              (if (empty? el-label) tag el-label))

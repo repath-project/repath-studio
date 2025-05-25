@@ -8,15 +8,16 @@
    [renderer.frame.subs :as-alias frame.subs]
    [renderer.ruler.subs :as-alias ruler.subs]))
 
+(def ruler-size 24)
+
 (defn bbox-rect
   [orientation]
-  (when-let [attrs @(rf/subscribe [::ruler.subs/bbox-rect-attrs orientation])]
+  (when-let [attrs @(rf/subscribe [::ruler.subs/bbox-rect-attrs orientation ruler-size])]
     [:rect (merge attrs {:fill "var(--overlay)"})]))
 
 (defn pointer
   [orientation]
   (let [[x y] @(rf/subscribe [::app.subs/pointer-pos])
-        ruler-size @(rf/subscribe [::ruler.subs/size])
         pointer-size (/ ruler-size 5)
         size-diff (- ruler-size pointer-size)]
     [:polygon {:points (string/join " " (if (= orientation :vertical)
@@ -58,8 +59,7 @@
   [orientation]
   (let [[x y] @(rf/subscribe [::frame.subs/viewbox])
         zoom @(rf/subscribe [::document.subs/zoom])
-        steps-coll @(rf/subscribe [::ruler.subs/steps-coll orientation])
-        ruler-size @(rf/subscribe [::ruler.subs/size])]
+        steps-coll @(rf/subscribe [::ruler.subs/steps-coll orientation])]
     (into [:g]
           (map-indexed
            (fn [i step]
@@ -92,8 +92,7 @@
 
 (defn ruler
   [orientation]
-  (let [ruler-size @(rf/subscribe [::ruler.subs/size])
-        vertical (= orientation :vertical)]
+  (let [vertical (= orientation :vertical)]
     [:svg {:width  (if vertical ruler-size "100%")
            :height (if vertical "100%" ruler-size)}
      [bbox-rect orientation]

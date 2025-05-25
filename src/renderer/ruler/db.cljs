@@ -3,8 +3,7 @@
 (def Ruler
   [:map {:closed true}
    [:visible {:default true} boolean?]
-   [:locked {:default false} boolean?]
-   [:size {:default 23} number?]])
+   [:locked {:default false} boolean?]])
 
 (def Orientation
   [:enum :vertical :horizontal])

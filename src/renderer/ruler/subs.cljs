@@ -21,11 +21,6 @@
  :-> :visible)
 
 (rf/reg-sub
- ::size
- :<- [::ruler]
- :-> :size)
-
-(rf/reg-sub
  ::step
  :<- [::document.subs/zoom]
  ruler.handlers/step)
@@ -42,8 +37,7 @@
  :<- [::document.subs/zoom]
  :<- [::document.subs/pan]
  :<- [::element.subs/bbox]
- :<- [::size]
- (fn [[zoom pan bbox size] [_ orientation]]
+ (fn [[zoom pan bbox] [_ orientation size]]
    (let [[min-x min-y max-x max-y] (map #(* % zoom) bbox)]
      (if (= orientation :vertical)
        {:x 0
