@@ -11,7 +11,7 @@
    ["react" :as react]
    [clojure.edn :as edn]
    [clojure.string :as string]
-   [reagent.core :as r]))
+   [reagent.core :as reagent]))
 
 ;; TODO: can we avoid the global state modification here?
 #_(js/CodeMirror.registerHelper
@@ -209,7 +209,7 @@
                 should-eval
                 js-cm-opts
                 on-cm-init]} options]
-    (r/create-class
+    (reagent/create-class
      {:component-did-mount
       (fn [_this]
         (let [el (.-current ref)
@@ -302,7 +302,7 @@
 
 (defn colored-text [text style]
   (let [ref (react/createRef)]
-    (r/create-class
+    (reagent/create-class
      {:component-did-mount
       (fn [_this]
         (let [node (.-current ref)]
