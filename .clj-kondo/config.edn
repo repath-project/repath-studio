@@ -19,5 +19,13 @@
            :unused-alias {:level :warning}
            :redundant-call {:level :warning}
            :redundant-str-call {:level :warning}
-           :clojure-lsp/unused-public-var {:exclude-regex #{"pages.*"}}}
+           :clojure-lsp/unused-public-var {:exclude-regex #{"pages.*"}}
+           :consistent-alias {:level :warning
+                              :aliases {clojure.core.matrix matrix
+                                        clojure.core.matrix.stats mat.stats
+                                        clojure.set set
+                                        clojure.string string
+                                        malli.core m
+                                        re-frame.core rf
+                                        reagent.core reagent}}}
  :hooks {:analyze-call {malli.core/=> hooks/=>}}}
