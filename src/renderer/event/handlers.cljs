@@ -62,7 +62,7 @@
       "pointerup"
       (cond-> (if drag
                 (-> (tool.hierarchy/on-drag-end db e)
-                    (tool.handlers/add-fx [::event.effects/release-pointer-capture (:pointer-id e)]))
+                    (tool.handlers/add-fx [::event.effects/release-pointer-capture pointer-id]))
                 (if (= button :right)
                   db
                   (if (> (- timestamp (:event-time db)) (:double-click-delta db))
