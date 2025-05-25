@@ -8,9 +8,9 @@
    [renderer.attribute.views :as attribute.views]
    [renderer.element.events :as-alias element.events]
    [renderer.tool.subs :as-alias tool.subs]
-   [renderer.ui :as ui]
    [renderer.utils.attribute :as utils.utils.attribute]
-   [renderer.utils.vec :as utils.vec]))
+   [renderer.utils.vec :as utils.vec]
+   [renderer.views :as views]))
 
 (defmethod attribute.hierarchy/description [:default :points]
   []
@@ -35,7 +35,7 @@
     {:key (str "y-" i) :default-value y}]
    [:button.button.bg-transparent.text-muted.h-full.rounded
     {:on-click #(remove-nth points i)}
-    [ui/icon "times"]]])
+    [views/icon "times"]]])
 
 (defn points-popover
   [points]
@@ -43,7 +43,7 @@
    [:> Popover/Trigger
     {:title "Edit points"
      :class "form-control-button"}
-    [ui/icon "pencil"]]
+    [views/icon "pencil"]]
    [:> Popover/Portal
     [:> Popover/Content
      {:sideOffset 5
@@ -51,7 +51,7 @@
       :align "end"}
      [:div.flex.overflow-hidden
       {:style {:max-height "50vh"}}
-      [ui/scroll-area
+      [views/scroll-area
        [:div.p-4.flex.flex-col.gap-px
         (map-indexed (fn [index point]
                        ^{:key (str "point-" index)}

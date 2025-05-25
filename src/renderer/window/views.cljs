@@ -5,8 +5,8 @@
    [renderer.menubar.views :as menubar.views]
    [renderer.theme.events :as-alias theme.events]
    [renderer.theme.subs :as-alias theme.subs]
-   [renderer.ui :as ui]
    [renderer.utils.system :as utils.system]
+   [renderer.views :as views]
    [renderer.window.events :as-alias window.events]
    [renderer.window.subs :as-alias window.subs]))
 
@@ -16,7 +16,7 @@
    {:class ["px-3" class]
     :title title
     :on-click #(rf/dispatch action)}
-   [ui/icon icon]])
+   [views/icon icon]])
 
 (defn window-control-buttons
   [maximized]

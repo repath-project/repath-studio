@@ -8,8 +8,8 @@
    [renderer.snap.db :as snap.db]
    [renderer.snap.events :as-alias snap.events]
    [renderer.snap.subs :as-alias snap.subs]
-   [renderer.ui :as ui]
-   [renderer.utils.svg :as utils.svg]))
+   [renderer.utils.svg :as utils.svg]
+   [renderer.views :as views]))
 
 (defn options-dropdown
   []
@@ -21,7 +21,7 @@
        {:role "button"
         :title "Snap options"
         :class "hover:pb-1"}
-       [ui/icon "chevron-up"]]]
+       [views/icon "chevron-up"]]]
      [:> DropdownMenu/Portal
       [:> DropdownMenu/Content
        {:side "top"
@@ -40,7 +40,7 @@
            :checked (contains? options option)}
           [:> DropdownMenu/ItemIndicator
            {:class "menu-item-indicator"}
-           [ui/icon "checkmark"]]
+           [views/icon "checkmark"]]
           (name option)])]]]))
 
 (defn root
@@ -49,7 +49,7 @@
    {:title "Snap"
     :class (when @(rf/subscribe [::snap.subs/active?]) "accent")
     :on-click #(rf/dispatch [::snap.events/toggle])}
-   [ui/icon "magnet"]
+   [views/icon "magnet"]
    [options-dropdown]])
 
 (defn canvas-label

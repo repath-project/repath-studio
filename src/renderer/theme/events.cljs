@@ -1,8 +1,8 @@
 (ns renderer.theme.events
   (:require
    [re-frame.core :as rf]
-   [renderer.app.effects :as-alias app.effects]
    [renderer.app.events :refer [persist]]
+   [renderer.effects :as-alias effects]
    [renderer.theme.db :as theme.db]
    [renderer.theme.effects :as-alias theme.effects]
    [renderer.theme.handlers :as theme.handlers]))
@@ -18,7 +18,7 @@
  (fn [{:keys [db native-mode]} _]
    (let [mode (-> db :theme :mode)
          mode (if (= mode :system) native-mode mode)]
-     {::app.effects/set-document-attr ["data-theme" (name mode)]})))
+     {::effects/set-document-attr ["data-theme" (name mode)]})))
 
 (rf/reg-event-fx
  ::cycle-mode

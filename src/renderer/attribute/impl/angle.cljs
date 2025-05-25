@@ -4,7 +4,7 @@
    ["@radix-ui/react-popover" :as Popover]
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.attribute.views :as attribute.views]
-   [renderer.ui :as ui]))
+   [renderer.views :as views]))
 
 (defmethod attribute.hierarchy/form-element [:default ::angle]
   [_ k v attrs]
@@ -14,7 +14,7 @@
     [:> Popover/Trigger
      {:title "Pick angle"
       :class "form-control-button"}
-     [ui/icon "degrees"]]
+     [views/icon "degrees"]]
     [:> Popover/Portal
      [:> Popover/Content
       {:sideOffset 5

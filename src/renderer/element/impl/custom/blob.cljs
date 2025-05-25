@@ -13,10 +13,10 @@
    [renderer.element.subs :as-alias element.subs]
    [renderer.event.impl.pointer :as event.impl.pointer]
    [renderer.tool.views :as tool.views]
-   [renderer.ui :as ui]
    [renderer.utils.element :as utils.element]
    [renderer.utils.length :as utils.length]
-   [renderer.utils.svg :as utils.svg]))
+   [renderer.utils.svg :as utils.svg]
+   [renderer.views :as views]))
 
 (derive :blob ::element.hierarchy/renderable)
 
@@ -45,7 +45,7 @@
       {:title "Generate random seed"
        :disabled disabled
        :on-click #(rf/dispatch [::element.events/set-attr k random-seed])}
-      [ui/icon "refresh"]]]))
+      [views/icon "refresh"]]]))
 
 (defmethod attr.hierarchy/description [:blob :x]
   []

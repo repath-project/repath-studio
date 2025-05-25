@@ -4,6 +4,7 @@
    [re-frame.core :as rf]
    [renderer.app.effects :as-alias app.effects]
    [renderer.document.events :as-alias document.events]
+   [renderer.effects :as-alias effects]
    [renderer.element.effects :as-alias element.effects]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
@@ -147,7 +148,7 @@
         {:channel "export"
          :data svg
          :on-error [::notification.events/exception]}}
-       {::app.effects/file-save
+       {::effects/file-save
         [:data svg
          :on-error [::notification.events/exception]
          :options {:startIn "pictures"
@@ -303,7 +304,7 @@
    (let [els (element.handlers/top-selected-sorted db)]
      {:db (element.handlers/copy db)
       :fx [(when (seq els)
-             [::app.effects/clipboard-write
+             [::effects/clipboard-write
               {:data (utils.element/->svg els)
                :on-error [::notification.events/exception]}])]})))
 
@@ -315,7 +316,7 @@
               (element.handlers/delete)
               (history.handlers/finalize "Cut selection"))
       :fx [(when (seq els)
-             [::app.effects/clipboard-write
+             [::effects/clipboard-write
               {:data (utils.element/->svg els)
                :on-error [::notification.events/exception]}])]})))
 

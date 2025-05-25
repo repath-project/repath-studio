@@ -13,8 +13,8 @@
    [renderer.ruler.subs :as-alias ruler.subs]
    [renderer.snap.views :as snap.views]
    [renderer.timeline.views :as timeline.views]
-   [renderer.ui :as ui]
    [renderer.utils.i18n :refer [t]]
+   [renderer.views :as views]
    [renderer.worker.subs :as-alias worker.subs]))
 
 (defn coordinates []
@@ -57,14 +57,14 @@
      :class "button flex items-center justify-center overlay px-2 font-mono rounded-sm hover:overlay-2x"
      :side "top"}
     [:div.flex.items-center
-     [ui/icon "chevron-up"]]]
+     [views/icon "chevron-up"]]]
    [:> DropdownMenu/Portal
     [:> DropdownMenu/Content
      {:class "menu-content rounded-sm"
       :side "top"
       :align "end"}
      (for [item zoom-options]
-       ^{:key (:id item)} [ui/dropdown-menu-item item])
+       ^{:key (:id item)} [views/dropdown-menu-item item])
      [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]])
 
 (def view-radio-buttons
@@ -135,13 +135,13 @@
       {:disabled (<= zoom 0.01)
        :title "Zoom out"
        :on-click #(rf/dispatch [::frame.events/zoom-out])}
-      [ui/icon "minus"]]
+      [views/icon "minus"]]
 
      [:button.button.overlay.px-2.font-mono.rounded.hover:overlay-2x
       {:disabled (>= zoom 100)
        :title "Zoom in"
        :on-click #(rf/dispatch [::frame.events/zoom-in])}
-      [ui/icon "plus"]]
+      [views/icon "plus"]]
      [:div.flex.hidden
       {:class "md:flex"}
       [zoom-input zoom]
@@ -155,7 +155,7 @@
         get-hex #(:hex (js->clj % :keywordize-keys true))]
     [:div.toolbar.bg-primary.mt-px.relative
      [:div.flex.gap-1
-      [ui/color-picker
+      [views/color-picker
        {:color fill
         :on-change-complete #(rf/dispatch [::element.events/set-attr :fill (get-hex %)])
         :on-change #(rf/dispatch [::document.events/preview-attr :fill (get-hex %)])}
@@ -168,9 +168,9 @@
        {:title (t [:color/swap "Swap fill with stroke"])
         :style {:width "21px" :background "transparent"}
         :on-click #(rf/dispatch [::document.events/swap-colors])}
-       [ui/icon "swap-horizontal"]]
+       [views/icon "swap-horizontal"]]
       ;; REVIEW: Can we replace alignOffset with collisionBoundary?
-      [ui/color-picker
+      [views/color-picker
        {:color stroke
         :on-change-complete #(rf/dispatch [::element.events/set-attr :stroke (get-hex %)])
         :on-change #(rf/dispatch [::document.events/preview-attr :stroke (get-hex %)])
@@ -186,10 +186,10 @@
      [:div.grow]
      (when loading
        [:button.icon-button
-        [ui/loading-indicator]])
+        [views/loading-indicator]])
      (into [:<>]
            (map (fn [{:keys [title active icon action class]}]
-                  [ui/radio-icon-button icon @(rf/subscribe active)
+                  [views/radio-icon-button icon @(rf/subscribe active)
                    {:title title
                     :class class
                     :on-click #(rf/dispatch action)}])

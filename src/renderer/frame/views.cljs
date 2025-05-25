@@ -13,7 +13,7 @@
    [renderer.event.impl.pointer :as event.impl.pointer]
    [renderer.event.impl.wheel :as event.impl.wheel]
    [renderer.frame.events :as-alias frame.events]
-   [renderer.ui :as ui]))
+   [renderer.views :as views]))
 
 (defn inner-component
   "We need access to the iframe's window to add the pointer move listener.
@@ -104,4 +104,4 @@
                      :on-close-auto-focus #(.preventDefault %)
                      :style {:margin-left (str x "px")
                              :margin-top (str y "px")}}]
-                   (map ui/context-menu-item element.views/context-menu))]]]))})))
+                   (map views/context-menu-item element.views/context-menu))]]]))})))

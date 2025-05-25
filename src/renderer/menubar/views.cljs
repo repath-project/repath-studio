@@ -16,7 +16,7 @@
    [renderer.menubar.filters :as filters]
    [renderer.ruler.events :as-alias ruler.events]
    [renderer.ruler.subs :as-alias ruler.subs]
-   [renderer.ui :as ui]
+   [renderer.views :as views]
    [renderer.window.events :as-alias window.events]
    [renderer.window.subs :as-alias window.subs]))
 
@@ -563,10 +563,10 @@
     :checked checked}
    [:> Menubar/ItemIndicator
     {:class "menu-item-indicator"}
-    [ui/icon "checkmark"]]
+    [views/icon "checkmark"]]
    label
    [:div.right-slot
-    [ui/shortcuts action]]])
+    [views/shortcuts action]]])
 
 (defmethod menu-item :sub-menu
   [{:keys [label items disabled]}]
@@ -576,7 +576,7 @@
      :disabled disabled}
     label
     [:div.right-slot.sub-menu-chevron
-     [ui/icon "chevron-right"]]]
+     [views/icon "chevron-right"]]]
    [:> Menubar/Portal
     (into [:> Menubar/SubContent
            {:class "menu-content"
@@ -608,7 +608,7 @@
     :disabled disabled}
    label
    [:div.right-slot
-    [ui/shortcuts action]]])
+    [views/shortcuts action]]])
 
 (defn submenus
   []

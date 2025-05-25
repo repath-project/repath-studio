@@ -7,6 +7,7 @@
    [renderer.document.events :as-alias document.events]
    [renderer.element.events :as-alias element.events]
    [renderer.event.db :refer [KeyboardEvent]]
+   [renderer.events :as-alias events]
    [renderer.frame.events :as-alias frame.events]
    [renderer.history.events :as-alias history.events]
    [renderer.tool.events :as-alias tool.events]
@@ -170,19 +171,19 @@
                 [[::element.events/select-all]
                  [{:keyCode (key-codes "A")
                    :ctrlKey true}]]
-                [[::app.events/focus "file"]
+                [[::events/focus "file"]
                  [{:keyCode (key-codes "F")
                    :altKey true}]]
-                [[::app.events/focus "edit"]
+                [[::events/focus "edit"]
                  [{:keyCode (key-codes "E")
                    :altKey true}]]
-                [[::app.events/focus "object"]
+                [[::events/focus "object"]
                  [{:keyCode (key-codes "O")
                    :altKey true}]]
-                [[::app.events/focus "view"]
+                [[::events/focus "view"]
                  [{:keyCode (key-codes "V")
                    :altKey true}]]
-                [[::app.events/focus "help"]
+                [[::events/focus "help"]
                  [{:keyCode (key-codes "H")
                    :altKey true}]]
                 [[::element.events/move-up]

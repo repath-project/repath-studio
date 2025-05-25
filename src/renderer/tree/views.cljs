@@ -4,7 +4,6 @@
    [clojure.string :as string]
    [re-frame.core :as rf]
    [reagent.core :as reagent]
-   [renderer.app.events :as-alias app.events]
    [renderer.document.events :as-alias document.events]
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.events :as-alias element.events]
@@ -12,15 +11,16 @@
    [renderer.element.subs :as-alias element.subs]
    [renderer.element.views :as element.views]
    [renderer.event.impl.keyboard :as event.impl.keyboard]
+   [renderer.events :as-alias events]
    [renderer.frame.events :as-alias frame.events]
    [renderer.tool.subs :as-alias tool.subs]
    [renderer.tree.events :as-alias tree.events]
-   [renderer.ui :as ui]
-   [renderer.utils.element :as utils.element]))
+   [renderer.utils.element :as utils.element]
+   [renderer.views :as views]))
 
 (defn toggle-item-prop-button
   [id state k active-icon inactive-icon active-title inactive-title]
-  [ui/icon-button
+  [views/icon-button
    (if state active-icon inactive-icon)
    {:class ["hover:bg-transparent text-inherit hover:text-inherit focus:outline-hidden small"
             (when-not state "invisible")]
@@ -101,7 +101,7 @@
 
 (defn collapse-button
   [id collapsed]
-  [ui/icon-button
+  [views/icon-button
    (if collapsed "chevron-right" "chevron-down")
    {:title (if collapsed "expand" "collapse")
     :class "hover:bg-transparent text-inherit hover:text-inherit focus:outline-hidden small"
@@ -125,7 +125,7 @@
       :on-pointer-enter #(rf/dispatch [::document.events/set-hovered-id id])
       :ref (fn [this]
              (when (and this selected)
-               (rf/dispatch [::app.events/scroll-into-view this])
+               (rf/dispatch [::events/scroll-into-view this])
                (set-last-focused-id! (.getAttribute this "data-id"))))
       :draggable true
       :on-key-down #(key-down-handler! % id)
@@ -148,7 +148,7 @@
       [:div.flex-1.overflow-hidden.flex.items-center
        {:class "gap-1.5"}
        (when-let [icon (:icon (utils.element/properties el))]
-         [ui/icon icon {:class (when-not visible "opacity-60")}])
+         [views/icon icon {:class (when-not visible "opacity-60")}])
        [item-label el]]
       [toggle-item-prop-button id locked :locked "lock" "unlock" "unlock" "lock"]
       [toggle-item-prop-button id (not visible) :visible "eye-closed" "eye" "show" "hide"]]]))
@@ -176,7 +176,7 @@
    ;; if the element itself is not also hovered.
    {:class "hover:**:[&.list-item-button]:not-hover:bg-inherit"
     :on-pointer-up #(rf/dispatch [::element.events/deselect-all])}
-   [ui/scroll-area
+   [views/scroll-area
     [:ul {:role "menu"
           :on-pointer-leave #(rf/dispatch [::document.events/clear-hovered])
           :style {:width "227px"}}
@@ -203,5 +203,5 @@
     (into [:> ContextMenu/Content
            {:class "menu-content context-menu-content"
             :on-close-auto-focus #(.preventDefault %)}]
-          (map (fn [menu-item] [ui/context-menu-item menu-item])
+          (map (fn [menu-item] [views/context-menu-item menu-item])
                element.views/context-menu))]])

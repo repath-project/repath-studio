@@ -31,7 +31,7 @@
    [renderer.toolbar.status :as toolbar.status]
    [renderer.toolbar.tools :as toolbar.tools]
    [renderer.tree.views :as tree.views]
-   [renderer.ui :as ui]
+   [renderer.views :as views]
    [renderer.window.events :as-alias window.events]
    [renderer.window.views :as window.views]))
 
@@ -81,13 +81,13 @@
         debug-info? @(rf/subscribe [::app.subs/debug-info])]
     [:div.flex.flex-col.flex-1.h-full.gap-px
      [:div
-      [ui/scroll-area [toolbar.tools/root]]
+      [views/scroll-area [toolbar.tools/root]]
       (when ruler-visible?
         [:div.flex.gap-px
          [:div.bg-primary
           {:style {:width ruler.views/ruler-size
                    :height ruler.views/ruler-size}}
-          [ui/icon-button
+          [views/icon-button
            (if ruler-locked? "lock" "unlock")
            {:class "small hidden"
             :title (if ruler-locked? "unlock" "lock")
@@ -153,9 +153,9 @@
                      :order 3}
 
            [:div.h-full.bg-primary.flex
-            [ui/scroll-area
+            [views/scroll-area
              [:div.p-1
-              [ui/cm-editor xml
+              [views/cm-editor xml
                {:options {:mode "text/xml"
                           :readOnly true}}]]]]]]))]]])
 
@@ -200,7 +200,7 @@
 (defn home
   [recent-documents]
   [:div.flex.overflow-hidden
-   [ui/scroll-area
+   [views/scroll-area
     [:div.flex.justify-center.p-2
      [:div.justify-between.flex.w-full
       {:class "lg:w-auto"}
@@ -215,10 +215,10 @@
         [:h2.mb-3.mt-8.text-2xl "Start"]
 
         [:div.flex.items-center.gap-2.flex-wrap
-         [ui/icon "file"]
+         [views/icon "file"]
          [:button.button-link.text-lg
           {:on-click #(rf/dispatch [::document.events/new])} "New"]
-         [ui/shortcuts [::document.events/new]]
+         [views/shortcuts [::document.events/new]]
 
          [:span "or"]
 
@@ -231,7 +231,7 @@
            [:div.flex.items-center.gap-2
             [:> Select/Value {:placeholder "Select template"}]
             [:> Select/Icon
-             [ui/icon "chevron-down"]]]]
+             [views/icon "chevron-down"]]]]
           [:> Select/Portal
            [:> Select/Content
             {:class "menu-content rounded-sm select-content"
@@ -251,11 +251,11 @@
                  [:> Select/ItemText (str "A" k)]])]]]]]]
 
         [:div.flex.items-center.gap-2
-         [ui/icon "folder"]
+         [views/icon "folder"]
          [:button.button-link.text-lg
           {:on-click #(rf/dispatch [::document.events/open nil])}
           "Open"]
-         [ui/shortcuts [::document.events/open nil]]]
+         [views/shortcuts [::document.events/open nil]]]
 
         (when (seq recent-documents)
           [:<> [:h2.mb-3.mt-8.text-2xl "Recent"]
@@ -263,7 +263,7 @@
            (for [file-path (take 5 recent-documents)]
              ^{:key file-path}
              [:div.flex.items-center.gap-x-2.flex-wrap
-              [ui/icon "folder"]
+              [views/icon "folder"]
               [:button.button-link.text-lg
                {:on-click #(rf/dispatch [::document.events/open file-path])}
                (.basename path file-path)]
@@ -273,25 +273,25 @@
 
         [:div
          [:div.flex.items-center.gap-2
-          [ui/icon "command"]
+          [views/icon "command"]
           [:button.button-link.text-lg
            {:on-click #(rf/dispatch [::dialog.events/cmdk])}
            "Command panel"]
-          [ui/shortcuts [::dialog.events/cmdk]]]]
+          [views/shortcuts [::dialog.events/cmdk]]]]
         [:div.flex.items-center.gap-2
-         [ui/icon "earth"]
+         [views/icon "earth"]
          [:button.button-link.text-lg
           {:on-click #(rf/dispatch [::window.events/open-remote-url
                                     "https://repath.studio/"])}
           "Website"]]
         [:div.flex.items-center.gap-2
-         [ui/icon "commit"]
+         [views/icon "commit"]
          [:button.button-link.text-lg
           {:on-click #(rf/dispatch [::window.events/open-remote-url
                                     "https://github.com/repath-project/repath-studio"])}
           "Source Code"]]
         [:div.flex.items-center.gap-2
-         [ui/icon "list"]
+         [views/icon "list"]
          [:button.button-link.text-lg
           {:on-click #(rf/dispatch [::window.events/open-remote-url
                                     "https://repath.studio/roadmap/changelog/"])}
@@ -329,11 +329,11 @@
               [:div.hidden
                {:class "md:flex"}
                [:div.flex.flex-col.h-full.w-80
-                [ui/scroll-area
+                [views/scroll-area
                  (tool.hierarchy/right-panel @active-tool)]
                 [:div.bg-primary.grow.flex.mr-px]]])
             [:div.bg-primary.flex
-             [ui/scroll-area [toolbar.object/root]]]]]]]
+             [views/scroll-area [toolbar.object/root]]]]]]]
         [home @recent-docs])
       [:div]]
      [dialog.views/root]

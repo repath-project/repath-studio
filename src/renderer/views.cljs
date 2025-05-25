@@ -1,4 +1,4 @@
-(ns renderer.ui
+(ns renderer.views
   "A collection of stateless reusable ui components.
    Avoid using subscriptions to keep the components pure."
   (:require
@@ -92,7 +92,7 @@
   [icon-name active props]
   [:button.icon-button
    (merge-with-class {:class (str (when active "accent ") "active:overlay")} props)
-   [renderer.ui/icon icon-name]])
+   [renderer.views/icon icon-name]])
 
 (defn context-menu-item
   [{:keys [label action checked? disabled?] :as props}]

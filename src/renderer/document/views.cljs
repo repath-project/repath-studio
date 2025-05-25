@@ -4,14 +4,14 @@
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    [re-frame.core :as rf]
    [reagent.core :as reagent]
-   [renderer.app.events :as-alias app.events]
    [renderer.document.events :as-alias document.events]
    [renderer.document.subs :as-alias document.subs]
+   [renderer.events :as-alias events]
    [renderer.history.events :as-alias history.events]
    [renderer.history.subs :as-alias history.subs]
    [renderer.history.views :as history.views]
-   [renderer.ui :as ui]
-   [renderer.utils.system :as utils.system]))
+   [renderer.utils.system :as utils.system]
+   [renderer.views :as views]))
 
 (defn actions
   []
@@ -21,17 +21,17 @@
         redos? @(rf/subscribe [::history.subs/redos?])]
     [:div.toolbar
 
-     [ui/icon-button
+     [views/icon-button
       "file"
       {:title "New"
        :on-click #(rf/dispatch [::document.events/new])}]
 
-     [ui/icon-button
+     [views/icon-button
       "folder"
       {:title "Open"
        :on-click #(rf/dispatch [::document.events/open])}]
 
-     [ui/icon-button
+     [views/icon-button
       "save"
       {:title "Save"
        :on-click #(rf/dispatch [::document.events/save])
@@ -43,14 +43,14 @@
       {:title "Undo"
        :on-click #(rf/dispatch [::history.events/undo])
        :disabled (not undos?)}
-      [ui/icon "undo"]
+      [views/icon "undo"]
       [history.views/select "Undo stack" undos (not undos?)]]
 
      [:button.icon-button.items-center.px-1.gap-1.flex.w-auto
       {:title "Redo"
        :on-click #(rf/dispatch [::history.events/redo])
        :disabled (not redos?)}
-      [ui/icon "redo"]
+      [views/icon "redo"]
       [history.views/select "Redo stack" redos (not redos?)]]]))
 
 (defn close-button
@@ -61,9 +61,9 @@
     :on-click (fn [e]
                 (.stopPropagation e)
                 (rf/dispatch [::document.events/close id true]))}
-   [ui/icon "times"]
+   [views/icon "times"]
    (when-not saved
-     [ui/icon "dot" {:class "dot"}])])
+     [views/icon "dot" {:class "dot"}])])
 
 (defn context-menu
   [id]
@@ -114,7 +114,7 @@
                        (rf/dispatch [::document.events/swap-position dropped-id id])))
           :ref (fn [this]
                  (when (and this active?)
-                   (rf/dispatch [::app.events/scroll-into-view this])))}
+                   (rf/dispatch [::events/scroll-into-view this])))}
          [:span.truncate.pointer-events-none title]
          [close-button id saved?]]]
        [:> ContextMenu/Portal
@@ -122,7 +122,7 @@
          [:> ContextMenu/Content
           {:class "menu-content context-menu-content"}]
          (map (fn [item]
-                [ui/context-menu-item item])
+                [views/context-menu-item item])
               (context-menu id)))]])))
 
 (defn tab-bar
@@ -131,7 +131,7 @@
         tabs @(rf/subscribe [::document.subs/tabs])
         active-id @(rf/subscribe [::document.subs/active-id])]
     [:div.flex.justify-between.gap-px
-     [ui/scroll-area
+     [views/scroll-area
       [:div.flex.flex-1
        {:class "h-[41px]"}
        (for [document-id tabs]
@@ -145,7 +145,7 @@
         {:as-child true}
         [:button.button.flex.items-center.justify-center.aria-expanded:overlay.px-2.font-mono.rounded
          {:aria-label "More document actions"}
-         [ui/icon "ellipsis-h"]]]
+         [views/icon "ellipsis-h"]]]
        [:> DropdownMenu/Portal
         [:> DropdownMenu/Content
          {:class "menu-content rounded-sm"}
@@ -156,5 +156,5 @@
                       :key :close-saved
                       :action [::document.events/close-saved]}]]
            ^{:key (:key item)}
-           [ui/dropdown-menu-item item])
+           [views/dropdown-menu-item item])
          [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]]]]))

@@ -1,7 +1,7 @@
 (ns renderer.tool.events
   (:require
    [re-frame.core :as rf]
-   [renderer.app.effects :as-alias app.effects]
+   [renderer.effects :as-alias effects]
    [renderer.element.events :as element.events]
    [renderer.tool.handlers :as tool.handlers]))
 
@@ -9,7 +9,7 @@
  ::activate
  (fn [{:keys [db]} [_ tool]]
    {:db (tool.handlers/activate db tool)
-    ::app.effects/focus nil}))
+    ::effects/focus nil}))
 
 (rf/reg-event-db
  ::set-state

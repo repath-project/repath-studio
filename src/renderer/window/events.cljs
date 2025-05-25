@@ -1,8 +1,8 @@
 (ns renderer.window.events
   (:require
    [re-frame.core :as rf]
-   [renderer.app.effects :as-alias app.effects]
    [renderer.document.handlers :as document.handlers]
+   [renderer.effects :as-alias effects]
    [renderer.event.events :as-alias event.events]
    [renderer.event.impl.keyboard :as event.keyboard]
    [renderer.utils.system :as utils.system]
@@ -59,7 +59,7 @@
 (rf/reg-event-fx
  ::clear-local-storage-and-relaunch
  (fn [_ _]
-   {:fx [[::app.effects/local-storage-clear nil]
+   {:fx [[::effects/local-storage-clear nil]
          [:dispatch [::relaunch]]]}))
 
 (rf/reg-event-fx

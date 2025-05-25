@@ -11,6 +11,7 @@
    [renderer.dialog.views :as dialog.views]
    [renderer.document.db :as document.db]
    [renderer.document.handlers :as document.handlers]
+   [renderer.effects :as-alias effects]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
    [renderer.notification.events :as-alias notification.events]
@@ -152,15 +153,15 @@
 
 (rf/reg-event-fx
  ::new
- [(rf/inject-cofx ::app.effects/guid)]
+ [(rf/inject-cofx ::effects/guid)]
  (fn [{:keys [db guid]} [_]]
    {:db (-> (create db guid)
             (history.handlers/finalize "Create document"))
-    ::app.effects/focus nil}))
+    ::effects/focus nil}))
 
 (rf/reg-event-fx
  ::init
- [(rf/inject-cofx ::app.effects/guid)]
+ [(rf/inject-cofx ::effects/guid)]
  (fn [{:keys [db guid]} [_]]
    {:db (if (:active-document db)
           (snap.handlers/rebuild-tree db)
@@ -169,7 +170,7 @@
 
 (rf/reg-event-fx
  ::new-from-template
- [(rf/inject-cofx ::app.effects/guid)]
+ [(rf/inject-cofx ::effects/guid)]
  (fn [{:keys [db guid]} [_ size]]
    {:db (-> (create db guid size)
             (history.handlers/finalize "Create document from template"))}))
@@ -184,7 +185,7 @@
        :on-success [::load-multiple]
        :on-error [::notification.events/exception]
        :formatter #(mapv cljs.reader/read-string %)}}
-     {::app.effects/file-open
+     {::effects/file-open
       {:options file-picker-options
        :on-success [::file-read]
        :on-error [::notification.events/exception]}})))
@@ -206,7 +207,7 @@
 
 (rf/reg-event-fx
  ::load
- [(rf/inject-cofx ::app.effects/guid)]
+ [(rf/inject-cofx ::effects/guid)]
  (fn [{:keys [db guid]} [_ document]]
    (if (and document (map? document) (:elements document))
      (let [migrated-document (utils.compatibility/migrate-document document)
@@ -214,7 +215,7 @@
            document (assoc migrated-document :id guid)]
        (cond-> {:db (-> (document.handlers/load db document)
                         (history.handlers/finalize "Load document"))
-                ::app.effects/focus nil}
+                ::effects/focus nil}
          (not migrated)
          (assoc :dispatch [::saved document])))
      {:db (->> (notification.views/generic-error
@@ -238,7 +239,7 @@
          :on-success [::saved]
          :on-error [::notification.events/exception]
          :formatter cljs.reader/read-string}}
-       {::app.effects/file-save
+       {::effects/file-save
         {:data (document.handlers/save-format document)
          :options file-picker-options
          :formatter (fn [file] {:id (:id document)
@@ -250,8 +251,8 @@
  ::download
  (fn [{:keys [db]} [_]]
    (let [document (document.handlers/persisted-format db)]
-     {::app.effects/download {:data (document.handlers/save-format document)
-                              :title (str "document." config/ext)}})))
+     {::effects/download {:data (document.handlers/save-format document)
+                          :title (str "document." config/ext)}})))
 
 (rf/reg-event-fx
  ::save-and-close
@@ -264,7 +265,7 @@
          :on-success [::mark-as-saved-and-close]
          :on-error [::notification.events/exception]
          :formatter cljs.reader/read-string}}
-       {::app.effects/file-save
+       {::effects/file-save
         {:data (document.handlers/save-format document)
          :options file-picker-options
          :formatter (fn [file] {:id id
@@ -283,7 +284,7 @@
          :on-success [::saved]
          :on-error [::notification.events/exception]
          :formatter cljs.reader/read-string}}
-       {::app.effects/file-save
+       {::effects/file-save
         {:data (document.handlers/save-format document)
          :options file-picker-options
          :formatter (fn [file] {:id (:id document)

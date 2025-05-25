@@ -93,7 +93,6 @@
 
   (rf/dispatch-sync [::app.events/initialize-db])
   (rf/dispatch-sync [::app.events/set-lang utils.system/language])
-  (rf/dispatch-sync [::app.events/load-system-fonts])
   (rf/dispatch-sync [::app.events/load-local-db])
   (rf/dispatch-sync [::document.events/init])
   (rf/dispatch-sync [::theme.events/set-document-mode])

@@ -9,7 +9,7 @@
    [renderer.attribute.views :as attribute.views]
    [renderer.element.events :as-alias element.events]
    [renderer.tool.subs :as-alias tool.subs]
-   [renderer.ui :as ui]
+   [renderer.views :as views]
    [renderer.window.events :as-alias window.events]))
 
 (defmethod attribute.hierarchy/description [:default :d]
@@ -115,7 +115,7 @@
          "(Relative)" "(Absolute)")]
       [:button.icon-button.small.bg-transparent.text-muted
        {:on-click #(remove-segment-by-index path i)}
-       [ui/icon "times"]]]
+       [views/icon "times"]]]
      [segment-form segment i]]))
 
 (defn edit-form
@@ -124,7 +124,7 @@
         segments (.-segments path)]
     [:div.flex.overflow-hidden
      {:style {:max-height "50vh"}}
-     [ui/scroll-area
+     [views/scroll-area
       [:div.p-4.flex.flex-col
        (map-indexed (fn [i segment]
                       ^{:key (str "segment-" i)}
@@ -141,7 +141,7 @@
         [:> Popover/Trigger
          {:title "Edit path"
           :class "form-control-button"}
-         [ui/icon "pencil"]]
+         [views/icon "pencil"]]
         [:> Popover/Portal
          [:> Popover/Content {:sideOffset 5
                               :className "popover-content"

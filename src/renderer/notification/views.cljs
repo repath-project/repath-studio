@@ -3,7 +3,7 @@
    [re-frame.core :as rf]
    [renderer.notification.events :as-alias notification.events]
    [renderer.notification.subs :as-alias notification.subs]
-   [renderer.ui :as ui]
+   [renderer.views :as views]
    [renderer.window.events :as-alias window.events]))
 
 (defn unavailable-feature
@@ -45,7 +45,7 @@
         [:div.relative.flex.bg-secondary.w-80.p-4.mb-2.rounded.shadow-md.border.border-default
          {:key index}
          (:content notification)
-         [ui/icon-button
+         [views/icon-button
           "times"
           {:aria-label "Close"
            :class "icon-button absolute top-3 right-3 small"
