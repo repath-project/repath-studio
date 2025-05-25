@@ -1,10 +1,7 @@
 {:missing "Λείπει η μετάφραση για :el-GR"
  :renderer.dialog.views
  {:search-command "Αναζήτηση για εντολή"
-  :no-results "Δεν βρέθηκαν αποτελέσματα."}
-
- :color
- {:swap "Ανταλλάξτε το γέμισμα με τη γραμμή"}
+  :no-results "Δεν βρέθηκαν αποτελέσματα."} 
  
  :renderer.menubar.views
  {:file          "Αρχείο"
@@ -169,4 +166,31 @@
   :dropper    "Επιλογέας χρώματος"
   :fill       "Γέμισμα"
   :measure    "Μέτρο"}
+ 
+ :renderer.toolbar.status
+ {:select-zoom         "Επιλέξτε επίπεδο μεγέθυνσης"
+  :zoom-out            "Σμίκρυνση"
+  :zoom-in             "Μεγέθυνση"
+  :zoom-set-50         "Ορισμός σε 50%"
+  :zoom-set-100        "Ορισμός σε 100%"
+  :zoom-set-200        "Ορισμός σε 200%"
+  :zoom-focus-selected "Eστίαση επιλεγμένου"
+  :zoom-fit-selected   "Προσαρμογή επιλεγμένου"
+  :zoom-fill-selected  "Γέμισμα επιλεγμένου"
+  :timeline            "Χρονολόγιο"
+  :grid                "Πλέγμα"
+  :rulers              "Χάρακες"
+  :history             "Ιστορικο"
+  :xml                 "XML"
+  :fill-color          "Επιλέξτε χρώμα γεμίσματος"
+  :stroke-color        "Επιλέξτε χρώμα περιγράμματος"
+  :swap-color          "Ανταλλάξτε το γέμισμα με τη γραμμή"}
+ 
+ :renderer.snap.views
+ {:snap           "Προσκόλληση"
+  :snap-options   "Ρυθμίσεις προσκόλλησης"
+  :centers        "κέντρο"
+  :midpoints      "μέση απόσταση"
+  :corners        "γωνία"
+  :nodes          "κόμβος"}
  }

@@ -1,10 +1,7 @@
 {:missing "Missing translation for :en-US"
  :renderer.dialog.views
  {:search-command "Search for a command"
-  :no-results "No results found."}
-
- :color
- {:swap "Swap fill with stroke"}
+  :no-results "No results found."} 
 
  :renderer.menubar.views
  {:file          "File"
@@ -170,4 +167,31 @@
   :dropper   "Dropper"
   :fill      "Fill"
   :measure   "Measure"}
+ 
+ :renderer.toolbar.status 
+ {:select-zoom         "Select zoom level"
+  :zoom-out            "Zoom out"
+  :zoom-in             "Zoom in"
+  :zoom-set-50         "Set to 50%"
+  :zoom-set-100        "Set to 100%"
+  :zoom-set-200        "Set to 200%"
+  :zoom-focus-selected "Focus selected"
+  :zoom-fit-selected   "Fit selected"
+  :zoom-fill-selected  "Fill selected"
+  :timeline            "Timeline"
+  :grid                "Grid"
+  :rulers              "Rulers"
+  :history             "History"
+  :xml                 "XML"
+  :fill-color          "Pick fill color"
+  :stroke-color        "Pick stroke color"
+  :swap-color          "Swap fill with stroke"}
+ 
+ :renderer.snap.views
+ {:snap           "Snap"
+  :snap-options   "Snap options"
+  :centers        "centers"
+  :midpoints      "midpoints"
+  :corners        "corners"
+  :nodes          "nodes"}
  }

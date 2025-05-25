@@ -9,6 +9,7 @@
    [renderer.snap.events :as-alias snap.events]
    [renderer.snap.subs :as-alias snap.subs]
    [renderer.ui :as ui]
+   [renderer.utils.i18n :refer [t]]
    [renderer.utils.svg :as utils.svg]))
 
 (defn options-dropdown
@@ -19,7 +20,7 @@
       {:as-child true}
       [:div.h-full.flex.items-center
        {:role "button"
-        :title "Snap options"
+        :title (t [::snap-options "Snap options"])
         :class "hover:pb-1"}
        [ui/icon "chevron-up"]]]
      [:> DropdownMenu/Portal
@@ -41,12 +42,12 @@
           [:> DropdownMenu/ItemIndicator
            {:class "menu-item-indicator"}
            [ui/icon "checkmark"]]
-          (name option)])]]]))
+          (t [(keyword "renderer.snap.views" (name option)) (name option)])])]]]))
 
 (defn root
   []
   [:button.icon-button.items-center.px-1.gap-1.w-auto.flex
-   {:title "Snap"
+   {:title (t [::snap "Snap"])
     :class (when @(rf/subscribe [::snap.subs/active?]) "selected")
     :on-click #(rf/dispatch [::snap.events/toggle])}
    [ui/icon "magnet"]
