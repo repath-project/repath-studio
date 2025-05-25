@@ -77,6 +77,7 @@
  ::font-options
  :<- [::system-fonts]
  (fn [system-fonts _]
-   (->> system-fonts
-        (map :family)
-        (distinct))))
+   (when system-fonts
+     (->> system-fonts
+          (map :family)
+          (distinct)))))
