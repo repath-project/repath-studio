@@ -113,7 +113,7 @@
 (defn list-item-button
   [el {:keys [depth collapsed hovered]}]
   (let [{:keys [id selected children locked visible]} el
-        collapse-button-width 22
+        collapse-button-width 21
         padding (* collapse-button-width (cond-> depth (seq children) dec))]
     [:div.list-item-button.button.flex.pr-1.items-center.text-start.outline-default.hover:overlay
      {:class ["[&.hovered]:overlay hover:[&_button]:visible"
