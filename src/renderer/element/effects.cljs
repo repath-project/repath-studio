@@ -5,15 +5,6 @@
    [renderer.utils.length :as utils.length]
    [renderer.worker.events :as-alias worker.events]))
 
-(rf/reg-fx
- ::print
- (fn [svg]
-   (let [print-window (.open js/window)
-         document (.-document print-window)]
-     (.write document svg)
-     (.print print-window)
-     (.close print-window))))
-
 (defn data-url->canvas-context!
   [data-url [w h] f]
   (let [canvas (js/document.createElement "canvas")

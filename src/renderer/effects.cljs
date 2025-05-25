@@ -148,3 +148,12 @@
        (.open)
        (.then #(when on-success (rf/dispatch (conj on-success %))))
        (.catch #(when on-error (rf/dispatch (conj on-error %)))))))
+
+(rf/reg-fx
+ ::print
+ (fn [content]
+   (let [print-window (.open js/window)
+         document (.-document print-window)]
+     (.write document content)
+     (.print print-window)
+     (.close print-window))))

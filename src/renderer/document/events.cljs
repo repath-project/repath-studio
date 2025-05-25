@@ -19,6 +19,7 @@
    [renderer.notification.views :as notification.views]
    [renderer.snap.handlers :as snap.handlers]
    [renderer.utils.compatibility :as utils.compatibility]
+   [renderer.utils.element :as utils.element]
    [renderer.utils.math :refer [Vec2]]
    [renderer.utils.system :as utils.system]
    [renderer.utils.vec :as utils.vec]
@@ -325,3 +326,16 @@
  (fn [db [_ id]]
    (-> (document.handlers/set-active db id)
        (document.handlers/center))))
+
+(rf/reg-event-fx
+ ::print
+ (fn [{:keys [db]} _]
+   (let [els (element.handlers/root-children db)
+         svg (utils.element/->svg els)]
+     (if utils.system/electron?
+       {::window.effects/ipc-invoke
+        {:channel "print"
+         :data svg
+         :on-success [::notification.events/add]
+         :on-error [::notification.events/exception]}}
+       {::effects/print svg}))))

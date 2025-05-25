@@ -87,7 +87,7 @@
             :label "Print"
             :icon "printer"
             :disabled (not @(rf/subscribe [::document.subs/entities?]))
-            :action [::element.events/print]}
+            :action [::document.events/print]}
            {:id :divider-5
             :type :separator}
            {:id :close

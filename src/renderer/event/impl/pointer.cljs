@@ -43,6 +43,7 @@
   [^js/PointerEvent e el]
   (.stopPropagation e)
 
+  ;; REVIEW
   (when (= (.-pointerType e) "touch")
     (.preventDefault e))
 

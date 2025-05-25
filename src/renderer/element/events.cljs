@@ -154,19 +154,6 @@
          :options {:startIn "pictures"
                    :types [{:accept {"image/svg+xml" [".svg"]}}]}]}))))
 
-(rf/reg-event-fx
- ::print
- (fn [{:keys [db]} _]
-   (let [els (element.handlers/root-children db)
-         svg (utils.element/->svg els)]
-     (if utils.system/electron?
-       {::window.effects/ipc-invoke
-        {:channel "print"
-         :data svg
-         :on-success [::notification.events/add]
-         :on-error [::notification.events/exception]}}
-       {::element.effects/print svg}))))
-
 (rf/reg-event-db
  ::paste
  (fn [db]
