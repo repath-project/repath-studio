@@ -204,4 +204,4 @@
            {:class "menu-content context-menu-content"
             :on-close-auto-focus #(.preventDefault %)}]
           (map (fn [menu-item] [views/context-menu-item menu-item])
-               element.views/context-menu))]])
+               (element.views/context-menu)))]])

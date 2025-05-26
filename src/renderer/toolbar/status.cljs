@@ -27,7 +27,7 @@
      [:div.flex.justify-between
       [:span.mr-1 "Y:"] [:span (.toFixed y 2)]]]))
 
-(def zoom-options
+(defn zoom-options []
   [{:label (t [::zoom-set-50 "Set to 50%"]) 
     :id "50"
     :action [::frame.events/set-zoom 0.5]}
@@ -63,11 +63,11 @@
      {:class "menu-content rounded-sm"
       :side "top"
       :align "end"}
-     (for [item zoom-options]
+     (for [item (zoom-options)]
        ^{:key (:id item)} [views/dropdown-menu-item item])
      [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]])
 
-(def view-radio-buttons
+(defn view-radio-buttons []
   [{:title (t [::timeline "Timeline"])
     :active [::app.subs/panel-visible? :timeline]
     :icon "animation"
@@ -193,7 +193,7 @@
                    {:title title
                     :class class
                     :on-click #(rf/dispatch action)}])
-                view-radio-buttons))
+                (view-radio-buttons)))
      [snap.views/root]
      [zoom-button-group]
      [coordinates]

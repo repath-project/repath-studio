@@ -9,7 +9,8 @@
    [renderer.event.impl.pointer :as event.impl.pointer]
    [renderer.utils.i18n :refer [t]]))
 
-(def context-menu
+(defn context-menu
+  []
   ;; TODO: Add group actions and more.
   [{:label (t [::cut "Cut"])
     :action [::element.events/cut]}

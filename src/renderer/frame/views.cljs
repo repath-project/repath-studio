@@ -104,4 +104,4 @@
                      :on-close-auto-focus #(.preventDefault %)
                      :style {:margin-left (str x "px")
                              :margin-top (str y "px")}}]
-                   (map views/context-menu-item element.views/context-menu))]]]))})))
+                   (map views/context-menu-item (element.views/context-menu)))]]]))})))
