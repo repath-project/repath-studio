@@ -409,6 +409,14 @@
            :checked @(rf/subscribe [::document.subs/filter-active id])
            :action [::document.events/toggle-filter id]}) filters/accessibility))
 
+(defn languages-submenu []
+  [{:id :lan-us
+    :label "US"
+    :action [::app.events/set-lang :en-US]}
+   {:id :lan-gr
+    :label "GR" 
+    :action [::app.events/set-lang :el-GR]}])
+
 (defn panel-submenu
   []
   [{:id :toggle-tree
@@ -464,6 +472,10 @@
             :label (t [::accessibility-filter "Accessibility filter"])
             :type :sub-menu
             :items (a11y-submenu)}
+           {:id :lang
+            :label (t [::language "Language"])
+            :type :sub-menu
+            :items (languages-submenu)}
            {:id :divider-1
             :type :separator}
            {:id :toggle-grid

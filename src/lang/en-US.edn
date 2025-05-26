@@ -85,6 +85,7 @@
   :accessibility-filter-tritanomaly    "tritanomaly"
   :accessibility-filter-achromatopsia  "achromatopsia"
   :accessibility-filter-achromatomaly  "achromatomaly"
+  :language      "Language"
   :grid          "Grid"
   :rulers        "Rulers"
   :debug-info    "Debug info"
@@ -104,7 +105,7 @@
   :changelog       "Changelog"
   :submit-an-issue "Submit an issue"
   :about           "About"}
-  
+ 
  :renderer.element.views 
  {:cut               "Cut" 
   :copy              "Copy" 
@@ -194,4 +195,23 @@
   :midpoints      "midpoints"
   :corners        "corners"
   :nodes          "nodes"}
+ 
+ :renderer.toolbar.object
+ {:bring-front      "Bring to front"
+  :send-back        "Send to back"
+  :bring-forward    "Bring forward"
+  :send-forward     "Send backward"
+  :group            "Group"
+  :ungroup          "Ungroup"
+  :align-left       "Align left"
+  :align-center-hor "Align center horizontally"
+  :align-right      "Align right"
+  :align-top        "Align top"
+  :align-center-ver "Align center vertically"
+  :align-bottom     "Align bottom"
+  :unite            "Unite"
+  :intersect        "Intersect"
+  :subtract         "Subtract"
+  :exclude          "Exclude"
+  :divide           "Divide"}
  }

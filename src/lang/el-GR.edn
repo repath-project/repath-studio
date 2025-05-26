@@ -84,6 +84,7 @@
   :accessibility-filter-tritanomaly    ""
   :accessibility-filter-achromatopsia  ""
   :accessibility-filter-achromatomaly  ""
+  :language      "Γλώσσα"
   :grid          "Πλέγμα"
   :rulers        "Χάρακες"
   :debug-info    "Πληροφορίες αποσφαλμάτωσης"
@@ -193,4 +194,23 @@
   :midpoints      "μέση απόσταση"
   :corners        "γωνία"
   :nodes          "κόμβος"}
+ 
+ :renderer.toolbar.object
+ {:bring-front      "Μεταφορά στο προσκήνιο"
+  :send-back        "Αποστολή στο παρασκήνιο"
+  :bring-forward    "Μεταφορά προς τα εμπρός"
+  :send-forward     "Αποστολή προς τα εμπρός"
+  :group            "Ομαδοποίηση"
+  :ungroup          "Αποομαδοποίηση"
+  :align-left       "Στοίχιση αριστερά"
+  :align-center-hor "Οριζόντια στοίχιση στο κέντρο"
+  :align-right      "Στοίχιση δεξιά"
+  :align-top        "Στοίχιση στη κορυφή"
+  :align-center-ver "Κάθετη στοίχιση στο κέντρο"
+  :align-bottom     "Στοίχιση στη βάση"
+  :unite            "Ενοποίηση"
+  :intersect        "Τομή"
+  :subtract         "Αφαίρεση"
+  :exclude          "Εξαίρεση"
+  :divide           "Διαίρεση"}
  }
