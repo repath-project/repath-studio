@@ -35,6 +35,10 @@
  :-> :debug-info)
 
 (rf/reg-sub
+ ::help-bar
+ :-> :help-bar)
+
+(rf/reg-sub
  ::clicked-element
  :-> :clicked-element)
 
@@ -73,6 +77,7 @@
  ::font-options
  :<- [::system-fonts]
  (fn [system-fonts _]
-   (->> system-fonts
-        (map :family)
-        (distinct))))
+   (when system-fonts
+     (->> system-fonts
+          (map :family)
+          (distinct)))))

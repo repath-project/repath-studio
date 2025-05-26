@@ -1,4 +1,4 @@
-(ns renderer.ui
+(ns renderer.views
   "A collection of stateless reusable ui components.
    Avoid using subscriptions to keep the components pure."
   (:require
@@ -20,7 +20,7 @@
    [re-frame.core :as rf]
    [reagent.core :as reagent]
    [renderer.app.subs :as-alias app.subs]
-   [renderer.utils.keyboard :as utils.keyboard]))
+   [renderer.event.impl.keyboard :as event.impl.keyboard]))
 
 (defn merge-with-class
   [& maps]
@@ -74,7 +74,7 @@
          (:ctrlKey shortcut) (conj "Ctrl")
          (:shiftKey shortcut) (conj "⇧")
          (:altKey shortcut) (conj "Alt")
-         :always (conj (utils.keyboard/key-code->key (:keyCode shortcut))))
+         :always (conj (event.impl.keyboard/key-code->key (:keyCode shortcut))))
        (map #(into [:span.shortcut-key] %))
        (interpose [:span {:class "px-0.5"} "+"])
        (into [:span])))
@@ -90,9 +90,9 @@
 
 (defn radio-icon-button
   [icon-name active props]
-  [:button.icon-button.radio-icon-button
-   (merge-with-class {:class (when active "selected")} props)
-   [renderer.ui/icon icon-name]])
+  [:button.icon-button
+   (merge-with-class {:class (str (when active "accent ") "active:overlay")} props)
+   [renderer.views/icon icon-name]])
 
 (defn context-menu-item
   [{:keys [label action checked? disabled?] :as props}]

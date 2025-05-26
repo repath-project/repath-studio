@@ -9,7 +9,7 @@
    [renderer.dialog.events :as-alias dialog.events]
    [renderer.history.events :as-alias history.events]
    [renderer.history.subs :as-alias history.subs]
-   [renderer.ui :as ui]))
+   [renderer.views :as views]))
 
 (defn select-options
   [history-list]
@@ -32,7 +32,7 @@
      {:class "hover:pt-1"}
      [:> Select/Value ""]
      [:> Select/Icon
-      [ui/icon "chevron-down"]]]]
+      [views/icon "chevron-down"]]]]
    [:> Select/Portal
     [:> Select/Content
      {:side "top"
@@ -41,13 +41,13 @@
       :position "popper"
       :class "menu-content rounded-sm select-content"}
      [:> Select/ScrollUpButton {:class "select-scroll-button"}
-      [ui/icon "chevron-up"]]
+      [views/icon "chevron-up"]]
      [:> Select/Viewport {:class "select-viewport"}
       [:> Select/Group
        (select-options options)]]
      [:> Select/ScrollDownButton
       {:class "select-scroll-button"}
-      [ui/icon "chevron-down"]]]]])
+      [views/icon "chevron-down"]]]]])
 
 (defn node
   "https://bkrem.github.io/react-d3-tree/docs/interfaces/_src_tree_types_.treeprops.html#rendercustomnodeelement"

@@ -4,6 +4,7 @@
    [re-frame.core :as rf]
    [renderer.app.effects :as-alias app.effects]
    [renderer.document.events :as-alias document.events]
+   [renderer.effects :as-alias effects]
    [renderer.element.effects :as-alias element.effects]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
@@ -18,7 +19,9 @@
  ::select
  (fn [db [_ id multiple]]
    (-> (element.handlers/toggle-selection db id multiple)
-       (history.handlers/finalize (if multiple "Modify selection" "Select element")))))
+       (history.handlers/finalize (if multiple
+                                    "Modify selection"
+                                    "Select element")))))
 
 (rf/reg-event-db
  ::select-ids
@@ -32,11 +35,6 @@
  (fn [db [_ id k]]
    (-> (element.handlers/update-prop db id k not)
        (history.handlers/finalize (str "Toggle " (name k))))))
-
-(rf/reg-event-db
- ::preview-prop
- (fn [db [_ id k v]]
-   (element.handlers/assoc-prop db id k v)))
 
 (rf/reg-event-db
  ::set-prop
@@ -146,25 +144,15 @@
    (let [els (element.handlers/root-children db)
          svg (utils.element/->svg els)]
      (if utils.system/electron?
-       {::window.effects/ipc-invoke {:channel "export"
-                                     :data svg
-                                     :on-error [::notification.events/exception]}}
-       {::app.effects/file-save [:data svg
-                                 :on-error [::notification.events/exception]
-                                 :options {:startIn "pictures"
-                                           :types [{:accept {"image/svg+xml" [".svg"]}}]}]}))))
-
-(rf/reg-event-fx
- ::print
- (fn [{:keys [db]} _]
-   (let [els (element.handlers/root-children db)
-         svg (utils.element/->svg els)]
-     (if utils.system/electron?
-       {::window.effects/ipc-invoke {:channel "print"
-                                     :data svg
-                                     :on-success [::notification.events/add]
-                                     :on-error [::notification.events/exception]}}
-       {::element.effects/print svg}))))
+       {::window.effects/ipc-invoke
+        {:channel "export"
+         :data svg
+         :on-error [::notification.events/exception]}}
+       {::effects/file-save
+        [:data svg
+         :on-error [::notification.events/exception]
+         :options {:startIn "pictures"
+                   :types [{:accept {"image/svg+xml" [".svg"]}}]}]}))))
 
 (rf/reg-event-db
  ::paste
@@ -293,7 +281,9 @@
  ::manipulate-path
  (fn [db [_ action]]
    (-> (element.handlers/manipulate-path db action)
-       (history.handlers/finalize (str (string/capitalize (name action)) " path")))))
+       (history.handlers/finalize (-> (name action)
+                                      (string/capitalize)
+                                      (str " path"))))))
 
 (rf/reg-event-fx
  ::copy
@@ -301,8 +291,9 @@
    (let [els (element.handlers/top-selected-sorted db)]
      {:db (element.handlers/copy db)
       :fx [(when (seq els)
-             [::app.effects/clipboard-write {:data (utils.element/->svg els)
-                                             :on-error [::notification.events/exception]}])]})))
+             [::effects/clipboard-write
+              {:data (utils.element/->svg els)
+               :on-error [::notification.events/exception]}])]})))
 
 (rf/reg-event-fx
  ::cut
@@ -312,8 +303,9 @@
               (element.handlers/delete)
               (history.handlers/finalize "Cut selection"))
       :fx [(when (seq els)
-             [::app.effects/clipboard-write {:data (utils.element/->svg els)
-                                             :on-error [::notification.events/exception]}])]})))
+             [::effects/clipboard-write
+              {:data (utils.element/->svg els)
+               :on-error [::notification.events/exception]}])]})))
 
 (rf/reg-event-fx
  ::trace
@@ -333,13 +325,12 @@
    (when-let [file-type (.-type file)]
      (cond
        (= file-type "image/svg+xml")
-       {::app.effects/file-read-as [file
-                                    :text
-                                    {"load" {:formatter #(hash-map :svg %
-                                                                   :label (.-name file)
-                                                                   :position position)
-                                             :on-fire [::import-svg]}
-                                     "error" {:on-fire [::notification.events/exception]}}]}
+       {::app.effects/file-read-as
+        [file :text {"load" {:formatter #(hash-map :svg %
+                                                   :label (.-name file)
+                                                   :position position)
+                             :on-fire [::import-svg]}
+                     "error" {:on-fire [::notification.events/exception]}}]}
 
        (contains? #{"image/jpeg" "image/png" "image/bmp" "image/gif"} file-type)
        {::element.effects/import-image [file position]}

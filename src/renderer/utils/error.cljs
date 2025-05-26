@@ -5,7 +5,7 @@
    [re-frame.core :as rf]
    [reagent.core :as reagent]
    [renderer.history.events :as-alias history.events]
-   [renderer.ui :as ui]
+   [renderer.views :as views]
    [renderer.window.events :as-alias window.events]))
 
 (m/=> submit-error-url [:-> string? string?])
@@ -20,7 +20,7 @@
   (let [error-message (if (string? @error) @error (.-message @error))
         stack (when-not (string? @error) (.-stack @error))]
     [:div.flex.max-h-dvh.overflow-hidden
-     [ui/scroll-area
+     [views/scroll-area
       [:div.flex.w-full.justify-center.items-center
        [:div.w-full.max-w-md.bg-primary.p-8.m-2
         [:div.text-xl.pr-10.pb-5 "The following unhandled error was thrown"]

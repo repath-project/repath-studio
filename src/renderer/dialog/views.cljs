@@ -9,9 +9,9 @@
    [renderer.dialog.subs :as-alias dialog.subs]
    [renderer.document.events :as-alias document.events]
    [renderer.menubar.views :as menubar.views]
-   [renderer.ui :as ui]
    [renderer.utils.i18n :refer [t]]
-   [renderer.utils.system :as utils.system]))
+   [renderer.utils.system :as utils.system]
+   [renderer.views :as views]))
 
 (defn about
   []
@@ -20,7 +20,7 @@
     [:p
      [:span.block [:strong "Version: "] config/version]
      [:span.block [:strong "Browser: "] utils.system/user-agent]]]
-   [:button.button.px-2.bg-primary.rounded.w-full
+   [:button.button.px-2.accent.rounded.w-full
     {:auto-focus true
      :on-click #(rf/dispatch [::dialog.events/close])}
     "OK"]])
@@ -51,7 +51,7 @@
     [:button.button.px-2.bg-primary.rounded.flex-1
      {:on-click #(rf/dispatch [::dialog.events/close])}
      "Cancel"]
-    [:button.button.px-2.bg-primary.rounded.flex-1
+    [:button.button.px-2.rounded.flex-1.accent
      {:auto-focus true
       :on-click #(rf/dispatch [::dialog.events/close [::document.events/save-and-close id]])}
      "Save"]]])
@@ -63,10 +63,10 @@
      {:on-select #(rf/dispatch [::dialog.events/close action])}
      [:div.w-7.h-7.mr-2.rounded.line-height-6.flex.justify-center.items-center
       {:class (when icon "overlay")}
-      (when icon [ui/icon icon])]
+      (when icon [views/icon icon])]
      label
      [:div.right-slot
-      [ui/shortcuts action]]]))
+      [views/shortcuts action]]]))
 
 (defn cmdk-group-inner
   [items label]
@@ -89,7 +89,7 @@
     :on-key-down #(.stopPropagation %)}
    [:> Command/CommandInput
     {:placeholder (t [::search-command "Search for a command"])}]
-   [ui/scroll-area
+   [views/scroll-area
     [:> Command/CommandList
      {:class "p-1"}
      [:> Command/CommandEmpty
@@ -119,7 +119,7 @@
          [:> Dialog/Close
           {:class "icon-button absolute top-5 right-5 small"
            :aria-label "Close"}
-          [ui/icon "times"]])
+          [views/icon "times"]])
        [:> Dialog/Description
         {:as-child true}
         [:div (:content (last dialogs))]]]]]))

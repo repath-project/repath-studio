@@ -9,7 +9,7 @@
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.attribute.views :as attribute.views]
    [renderer.element.events :as-alias element.events]
-   [renderer.ui :as ui]))
+   [renderer.views :as views]))
 
 (defmethod attribute.hierarchy/description [:default :font-family]
   []
@@ -24,11 +24,13 @@
     [:> Command/CommandInput
      {:class "p-2 text-sm bg-secondary border-b border-default"
       :placeholder "Search for a font"}]
-    [ui/scroll-area
+    [views/scroll-area
      [:> Command/CommandList
       {:class "p-1"}
       [:> Command/CommandEmpty
-       "No local fonts found."]
+       (if-not suggestions
+         [:div.w-full [views/loading-indicator]]
+         "No local fonts found.")]
       (for [item suggestions]
         ^{:key item}
         [:> Command/CommandItem
@@ -48,12 +50,12 @@
       {:modal true
        :onOpenChange (fn [state]
                        (when (and state (empty? suggestions))
-                         (rf/dispatch [::app.events/query-local-fonts])))}
+                         (rf/dispatch [::app.events/load-system-fonts])))}
       [:> Popover/Trigger
        {:title "Select font"
         :class "form-control-button"
         :disabled (:disabled attrs)}
-       [ui/icon "magnifier"]]
+       [views/icon "magnifier"]]
       [:> Popover/Portal
        [:> Popover/Content
         {:sideOffset 5

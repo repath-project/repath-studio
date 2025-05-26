@@ -11,16 +11,17 @@
 
 (defmethod attribute.hierarchy/form-element [:default :stroke-linecap]
   [_ k v attrs]
-  [attribute.views/select-input k v (merge attrs {:default-value "butt"
-                                                  :items [{:key :butt
-                                                           :value "butt"
-                                                           :label "Butt"
-                                                           :icon "linecap-butt"}
-                                                          {:key :round
-                                                           :value "round"
-                                                           :label "Round"
-                                                           :icon "linecap-round"}
-                                                          {:key :square
-                                                           :value "square"
-                                                           :label "Square"
-                                                           :icon "linecap-square"}]})])
+  [attribute.views/select-input k v
+   (merge attrs {:default-value "butt"
+                 :items [{:key :butt
+                          :value "butt"
+                          :label "Butt"
+                          :icon "linecap-butt"}
+                         {:key :round
+                          :value "round"
+                          :label "Round"
+                          :icon "linecap-round"}
+                         {:key :square
+                          :value "square"
+                          :label "Square"
+                          :icon "linecap-square"}]})])

@@ -4,10 +4,12 @@
    [re-frame.core :as rf]
    [renderer.app.db :as app.db]
    [renderer.app.effects :as-alias app.effects]
+   [renderer.effects :as-alias effects]
    [renderer.notification.events :as-alias notification.events]
    [renderer.notification.handlers :as notification.handlers]
    [renderer.notification.views :as notification.views]
    [renderer.utils.i18n :as utils.i18n]
+   [renderer.utils.system :as utils.system]
    [renderer.window.effects :as-alias window.effects]))
 
 (def persist
@@ -32,7 +34,7 @@
    (let [app-db (merge db store)]
      (if (app.db/valid? app-db)
        {:db app-db}
-       {::app.effects/local-storage-clear nil
+       {::effects/local-storage-clear nil
         :db (notification.handlers/add db (notification.views/spec-failed
                                            "Invalid local configuration"
                                            (-> app-db
@@ -63,6 +65,11 @@
    (update db :debug-info not)))
 
 (rf/reg-event-db
+ ::toggle-help-bar
+ (fn [db [_]]
+   (update db :help-bar not)))
+
+(rf/reg-event-db
  ::set-backdrop
  (fn [db [_ visible]]
    (assoc db :backdrop visible)))
@@ -79,11 +86,6 @@
  (fn [db [_ k]]
    (update-in db [:panels k :visible] not)))
 
-(rf/reg-event-fx
- ::focus
- (fn [_ [_ id]]
-   {::app.effects/focus id}))
-
 (defn ->font-map
   [^js/FontData font-data]
   (into {} [[:postscriptName (.-postscriptName font-data)]
@@ -94,22 +96,16 @@
 (rf/reg-event-fx
  ::load-system-fonts
  (fn [_ _]
-   {::window.effects/ipc-invoke {:channel "load-system-fonts"
-                                 :on-success [::set-system-fonts]
-                                 :on-error [::notification.events/exception]
-                                 :formatter #(js->clj % :keywordize-keys true)}}))
-
-(rf/reg-event-fx
- ::query-local-fonts
- (fn [_ _]
-   {::app.effects/query-local-fonts {:on-success [::set-system-fonts]
-                                     :on-error [::notification.events/exception]
-                                     :formatter #(mapv ->font-map %)}}))
-
-(rf/reg-event-fx
- ::file-open
- (fn [_ [_ options]]
-   {::app.effects/file-open options}))
+   (if utils.system/electron?
+     {::window.effects/ipc-invoke
+      {:channel "load-system-fonts"
+       :on-success [::set-system-fonts]
+       :on-error [::notification.events/exception]
+       :formatter #(js->clj % :keywordize-keys true)}}
+     {::effects/query-local-fonts
+      {:on-success [::set-system-fonts]
+       :on-error [::notification.events/exception]
+       :formatter #(mapv ->font-map %)}})))
 
 (def schema-validator
   (rf/->interceptor
@@ -121,15 +117,6 @@
                   event (rf/get-coeffect context :event)]
               (cond-> context
                 db
-                (rf/assoc-effect :fx (conj (or fx [])
-                                           [::app.effects/validate-db [db event]])))))))
-
-(rf/reg-event-fx
- ::scroll-into-view
- (fn [_ [_ el]]
-   {::app.effects/scroll-into-view el}))
-
-(rf/reg-event-fx
- ::scroll-to-bottom
- (fn [_ [_ el]]
-   {::app.effects/scroll-to-bottom el}))
+                (rf/assoc-effect :fx
+                                 (conj (or fx [])
+                                       [::app.effects/validate [db event]])))))))

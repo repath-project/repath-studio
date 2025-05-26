@@ -22,9 +22,8 @@
 (defn nearest-neighbors
   [db]
   (->> (tool.hierarchy/snapping-points db)
-       (map #(when-let [nneighbor (kdtree/nearest-neighbor (:viewbox-kdtree db) %)]
-               (assoc nneighbor :base-point %)))
-       (remove nil?)))
+       (keep #(when-let [nneighbor (kdtree/nearest-neighbor (:viewbox-kdtree db) %)]
+                (assoc nneighbor :base-point %)))))
 
 (m/=> update-nearest-neighbors [:-> App App])
 (defn update-nearest-neighbors

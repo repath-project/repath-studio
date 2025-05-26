@@ -10,7 +10,6 @@
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.element :as utils.element]
-   [renderer.utils.pointer :as utils.pointer]
    [renderer.utils.svg :as utils.svg]))
 
 (derive :edit ::tool.hierarchy/tool)
@@ -45,7 +44,7 @@
                (:selected (:element e)))
     (-> (element.handlers/clear-ignored db)
         (dissoc :clicked-element)
-        (element.handlers/toggle-selection (-> e :element :id) (utils.pointer/shift? e))
+        (element.handlers/toggle-selection (-> e :element :id) (:shift-key e))
         (history.handlers/finalize "Select element"))
     (dissoc db :clicked-element)))
 
@@ -57,8 +56,17 @@
       (element.handlers/hover el-id))))
 
 (defmethod tool.hierarchy/on-drag-start :edit
-  [db _e]
-  (tool.handlers/set-state db :edit))
+  [db e]
+  (cond-> db
+    (= (-> e :element :type) :handle)
+    (tool.handlers/set-state :edit)))
+
+(defn lock-direction
+  "Locks pointer movement to the axis with the biggest offset"
+  [[x y]]
+  (if (> (abs x) (abs y))
+    [x 0]
+    [0 y]))
 
 (defmethod tool.hierarchy/on-drag :edit
   [db e]
@@ -68,8 +76,8 @@
         handle-id (:id clicked-element)
         delta (cond-> (matrix/add (tool.handlers/pointer-delta db)
                                   (snap.handlers/nearest-delta db))
-                (utils.pointer/ctrl? e)
-                (utils.pointer/lock-direction))]
+                (:ctrl-key e)
+                (lock-direction))]
     (cond-> db
       el-id
       (element.handlers/update-el el-id element.hierarchy/edit delta handle-id))))

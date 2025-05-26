@@ -16,7 +16,8 @@
   [property k]
   (cond-> property
     (and (get property k) (string? (get property k)))
-    (update k #(-> % camel-snake-kebab/->kebab-case-string (string/replace "-" " ")))))
+    (update k #(-> (camel-snake-kebab/->kebab-case-string %)
+                   (string/replace "-" " ")))))
 
 (defn property-data
   [k]
@@ -264,7 +265,9 @@
   [tag]
   (merge (when (element.db/tag? tag)
            (merge (->attrs (or (tag (:elements  utils.bcd/svg)) {}))
-                  (zipmap core (repeat ""))))
+                  (when (or (isa? tag ::element.hierarchy/shape)
+                            (isa? tag ::element.hierarchy/container))
+                    (zipmap core (repeat "")))))
          (when (contains? #{:animateMotion :animateTransform} tag)
            (->attrs (:animate (:elements utils.bcd/svg))))
          (zipmap (:attrs (element.hierarchy/properties tag)) (repeat ""))))

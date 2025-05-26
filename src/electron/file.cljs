@@ -12,20 +12,20 @@
    :filters [{:name config/ext
               :extensions [config/ext]}]})
 
-(defn- serialize-document
+(defn serialize-document
   [data file-path]
   (pr-str (assoc data
                  :path file-path
                  :title (.basename path file-path))))
 
-(defn- write-file!
+(defn write-file!
   [file-path data]
   (let [document (pr-str (dissoc data :path :id :title))]
     (-> (.writeFile fs/promises file-path document "utf-8")
         (.then #(-> (select-keys data [:id])
                     (serialize-document file-path))))))
 
-(defn- read!
+(defn read!
   [file-path]
   (let [data (.readFileSync fs file-path "utf-8")
         document (edn/read-string data)]

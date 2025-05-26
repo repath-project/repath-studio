@@ -13,7 +13,9 @@
 (rf/reg-event-db
  ::unavailable-feature
  (fn [db [_ feature compatibility-url]]
-   (notification.handlers/add db (notification.views/unavailable-feature feature compatibility-url))))
+   (notification.handlers/add db (notification.views/unavailable-feature
+                                  feature
+                                  compatibility-url))))
 
 (rf/reg-event-db
  ::exception

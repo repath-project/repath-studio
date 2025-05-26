@@ -1,8 +1,8 @@
 (ns renderer.tool.impl.misc.dropper
   (:require
    [re-frame.core :as rf]
-   [renderer.app.effects :as app.effects]
    [renderer.document.handlers :as document.handlers]
+   [renderer.effects :as effects]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
    [renderer.notification.handlers :as notification.handlers]
@@ -23,8 +23,8 @@
 (defmethod tool.hierarchy/on-activate :dropper
   [db]
   (if (.-EyeDropper js/window)
-    (tool.handlers/add-fx db [::app.effects/eye-dropper {:on-success [::success]
-                                                         :on-error [::error]}])
+    (tool.handlers/add-fx db [::effects/eye-dropper {:on-success [::success]
+                                                     :on-error [::error]}])
     (-> (tool.handlers/activate db :transform)
         (notification.handlers/add
          (notification.views/unavailable-feature

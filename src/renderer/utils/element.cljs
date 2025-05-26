@@ -43,7 +43,7 @@
 (m/=> united-bbox [:-> [:sequential Element] [:maybe BBox]])
 (defn united-bbox
   [elements]
-  (let [el-bbox (->> elements (map :bbox) (remove nil?))]
+  (let [el-bbox (keep :bbox elements)]
     (when (seq el-bbox)
       (apply utils.bounds/union el-bbox))))
 

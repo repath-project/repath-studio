@@ -6,6 +6,7 @@
    [reagent.core :as reagent]
    [renderer.app.events :as-alias app.events]
    [renderer.app.subs :as-alias app.subs]
+   [renderer.events :as-alias events]
    [renderer.reepl.codemirror :as codemirror]
    [renderer.reepl.db :as db]
    [renderer.reepl.handlers :as h]
@@ -14,7 +15,7 @@
    [renderer.reepl.show-function :as show-function]
    [renderer.reepl.show-value :refer [show-value]]
    [renderer.reepl.subs :as s]
-   [renderer.ui :as ui]
+   [renderer.views :as views]
    [replumb.core :as replumb.core])
   (:require-macros
    [reagent.ratom :refer [reaction]]))
@@ -24,7 +25,7 @@
   (let [repl-mode @(rf/subscribe [::app.subs/repl-mode])
         active (= repl-mode mode)]
     [:button.button.rounded.px-1.leading-none.text-2xs.h-4
-     {:class [(when active "selected")
+     {:class [(when active "accent")
               "m-0.5"]
       :on-click #(rf/dispatch [::app.events/set-repl-mode mode])}
      mode]))
@@ -49,7 +50,7 @@
       [mode-button :cljs]
       [mode-button :js]]
      [:div.self-start.flex
-      [ui/icon-button
+      [views/icon-button
        (if repl-history? "chevron-down" "chevron-up")
        {:class "my-0.5 ml-0.5"
         :style {:height "16px"}
@@ -88,14 +89,14 @@
     (reagent/create-class
      {:component-did-mount
       (fn [_this]
-        (rf/dispatch [::app.events/scroll-to-bottom (.-current ref)]))
+        (rf/dispatch [::events/scroll-to-bottom (.-current ref)]))
       :component-did-update
       (fn [_this]
-        (rf/dispatch [::app.events/scroll-to-bottom (.-current ref)]))
+        (rf/dispatch [::events/scroll-to-bottom (.-current ref)]))
       :reagent-render
       (fn [items opts]
         [:div.flex-1.border-b.border-default.h-full.overflow-hidden.flex
-         [ui/scroll-area
+         [views/scroll-area
           {:ref ref}
           (into
            [:div.p-1]
@@ -123,7 +124,7 @@
         (let [[_ _ selected] (reagent/argv this)]
           (when (and (not old-selected)
                      selected)
-            (rf/dispatch [::app.events/scroll-into-view (.-current ref)]))))
+            (rf/dispatch [::events/scroll-into-view (.-current ref)]))))
       :reagent-render
       (fn [text selected active set-active]
         [:div.p-1.bg-secondary.text-nowrap

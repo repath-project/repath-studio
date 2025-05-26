@@ -10,17 +10,10 @@
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
    [renderer.element.views :as element.views]
+   [renderer.event.impl.pointer :as event.impl.pointer]
+   [renderer.event.impl.wheel :as event.impl.wheel]
    [renderer.frame.events :as-alias frame.events]
-   [renderer.tool.events :as tool.events]
-   [renderer.ui :as ui]
-   [renderer.utils.pointer :as utils.pointer]
-   [renderer.utils.wheel :as utils.wheel]))
-
-(defn wheel-handler!
-  [^js/WheelEvent e]
-  (.stopPropagation e)
-  (when (.-ctrlKey e) (.preventDefault e)) ; Disable wheel zoom on canvas.
-  (rf/dispatch-sync [::tool.events/wheel-event (utils.wheel/event-formatter e)]))
+   [renderer.views :as views]))
 
 (defn inner-component
   "We need access to the iframe's window to add the pointer move listener.
@@ -33,14 +26,14 @@
      {:component-did-mount
       (fn []
         (doseq [event ["pointermove" "pointerup"]]
-          (.addEventListener frame-window event utils.pointer/event-handler!))
-        (.addEventListener frame-window "wheel" wheel-handler! #js {:passive false}))
+          (.addEventListener frame-window event event.impl.pointer/handler!))
+        (.addEventListener frame-window "wheel" event.impl.wheel/handler! #js {:passive false}))
 
       :component-will-unmount
       (fn []
         (doseq [event ["pointermove" "pointerup"]]
-          (.removeEventListener frame-window event utils.pointer/event-handler!))
-        (.removeEventListener frame-window "wheel" wheel-handler!))
+          (.removeEventListener frame-window event event.impl.pointer/handler!))
+        (.removeEventListener frame-window "wheel" event.impl.wheel/handler!))
 
       :reagent-render #()})))
 
@@ -111,4 +104,4 @@
                      :on-close-auto-focus #(.preventDefault %)
                      :style {:margin-left (str x "px")
                              :margin-top (str y "px")}}]
-                   (map ui/context-menu-item element.views/context-menu))]]]))})))
+                   (map views/context-menu-item element.views/context-menu))]]]))})))

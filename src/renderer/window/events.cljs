@@ -1,10 +1,10 @@
 (ns renderer.window.events
   (:require
    [re-frame.core :as rf]
-   [renderer.app.effects :as-alias app.effects]
    [renderer.document.handlers :as document.handlers]
-   [renderer.tool.events :as-alias tool.events]
-   [renderer.utils.keyboard :as utils.keyboard]
+   [renderer.effects :as-alias effects]
+   [renderer.event.events :as-alias event.events]
+   [renderer.event.impl.keyboard :as event.keyboard]
    [renderer.utils.system :as utils.system]
    [renderer.window.effects :as window.effects]))
 
@@ -59,7 +59,7 @@
 (rf/reg-event-fx
  ::clear-local-storage-and-relaunch
  (fn [_ _]
-   {:fx [[::app.effects/local-storage-clear nil]
+   {:fx [[::effects/local-storage-clear nil]
          [:dispatch [::relaunch]]]}))
 
 (rf/reg-event-fx
@@ -89,8 +89,8 @@
 (rf/reg-event-fx
  ::add-listeners
  (fn [_ _]
-   {:fx [[::window.effects/add-document-event-listener ["keydown" [::tool.events/keyboard-event] utils.keyboard/event-formatter]]
-         [::window.effects/add-document-event-listener ["keyup" [::tool.events/keyboard-event] utils.keyboard/event-formatter]]
+   {:fx [[::window.effects/add-document-event-listener ["keydown" [::event.events/keyboard] event.keyboard/->clj]]
+         [::window.effects/add-document-event-listener ["keyup" [::event.events/keyboard] event.keyboard/->clj]]
          [::window.effects/add-document-event-listener ["fullscreenchange" [::update-fullscreen]]]
          [::window.effects/add-event-listener ["load" [::update-focused]]]
          [::window.effects/add-event-listener ["focus" [::update-focused]]]

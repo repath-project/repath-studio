@@ -2,7 +2,7 @@
   "https://www.w3.org/TR/SVG/embedded.html#ImageElement"
   (:require
    [re-frame.core :as rf]
-   [renderer.app.effects :as-alias app.effects]
+   [renderer.effects :as-alias effects]
    [renderer.element.effects :as-alias element.fx]
    [renderer.notification.events :as-alias notification.events]
    [renderer.tool.handlers :as tool.handlers]
@@ -20,7 +20,7 @@
 
 (defmethod tool.hierarchy/on-pointer-up :image
   [db _e]
-  (tool.handlers/add-fx db [::app.effects/file-open
+  (tool.handlers/add-fx db [::effects/file-open
                             {:options {:startIn "pictures"
                                        :types [{:accept {"image/png" [".png"]
                                                          "image/jpeg" [".jpeg" ".jpg"]

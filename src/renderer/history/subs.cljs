@@ -48,7 +48,9 @@
          :saved (= id save)
          :active (= id (:position history))
          :color (str "hsla(" (+ (* (/ 100 n) index) 20) ",40%,60%,1)")
-         :children (apply array (map #(state->d3-data history % save) (:children state)))}))
+         :children (->> (:children state)
+                        (map #(state->d3-data history % save))
+                        (apply array))}))
 
 (rf/reg-sub
  ::tree-data

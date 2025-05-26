@@ -2,7 +2,7 @@
   (:require
    ["@radix-ui/react-tooltip" :as Tooltip]
    [re-frame.core :as rf]
-   [renderer.ui :as ui]))
+   [renderer.views :as views]))
 
 (defn button
   [{:keys [title icon disabled action] :as attrs}]
@@ -12,9 +12,9 @@
      [:> Tooltip/Trigger
       {:as-child true}
       [:span.shadow-4
-       [ui/icon-button icon {:disabled disabled
-                             :aria-label title
-                             :on-click #(rf/dispatch action)}]]]
+       [views/icon-button icon {:disabled disabled
+                                :aria-label title
+                                :on-click #(rf/dispatch action)}]]]
      [:> Tooltip/Portal
       [:> Tooltip/Content
        {:class "tooltip-content"

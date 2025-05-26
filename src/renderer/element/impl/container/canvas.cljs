@@ -6,16 +6,17 @@
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
+   [renderer.event.events :as-alias event.events]
+   [renderer.event.impl.drag :as event.impl.drag]
+   [renderer.event.impl.keyboard :as event.impl.keyboard]
+   [renderer.event.impl.pointer :as event.pointer]
    [renderer.frame.subs :as-alias frame.subs]
    [renderer.menubar.filters :as filters]
    [renderer.ruler.views :as ruler.views]
    [renderer.snap.subs :as-alias snap.subs]
    [renderer.snap.views :as snap.views]
-   [renderer.tool.events :as-alias tool.events]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.subs :as-alias tool.subs]
-   [renderer.utils.keyboard :as utils.keyboard]
-   [renderer.utils.pointer :as utils.pointer]
    [renderer.utils.svg :as utils.svg]))
 
 (derive :canvas ::element.hierarchy/element)
@@ -24,17 +25,6 @@
   []
   {:description "The canvas is the main SVG container that hosts all elements."
    :attrs [:fill]})
-
-(defn drop-handler!
-  "Gathers drop event props.
-   https://developer.mozilla.org/en-US/docs/Web/API/DragEvent"
-  [^js/DragEvent e]
-  (.stopPropagation e)
-  (.preventDefault e)
-
-  (rf/dispatch-sync [::tool.events/drag-event {:type (.-type e)
-                                               :pointer-pos [(.-pageX e) (.-pageY e)]
-                                               :data-transfer (.-dataTransfer e)}]))
 
 (defmethod element.hierarchy/render :canvas
   [el]
@@ -48,12 +38,12 @@
         primary-tool @(rf/subscribe [::tool.subs/primary])
         rotate @(rf/subscribe [::document.subs/rotate])
         grid @(rf/subscribe [::app.subs/grid])
-        pointer-handler #(utils.pointer/event-handler! % el)
+        pointer-handler #(event.pointer/handler! % el)
         snap? @(rf/subscribe [::snap.subs/active?])
         nearest-neighbor @(rf/subscribe [::snap.subs/nearest-neighbor])
         snapped-el-id (-> nearest-neighbor meta :id)
         snapped-el (when snapped-el-id @(rf/subscribe [::element.subs/entity snapped-el-id]))
-        key-handler #(rf/dispatch-sync [::tool.events/keyboard-event (utils.keyboard/event-formatter %)])]
+        key-handler #(rf/dispatch-sync [::event.events/keyboard (event.impl.keyboard/->clj %)])]
     [:svg#canvas {:on-pointer-up pointer-handler
                   :on-pointer-down pointer-handler
                   :on-pointer-move pointer-handler
@@ -61,8 +51,8 @@
                   :on-key-down key-handler
                   :tab-index 0 ; Enable keyboard events
                   :viewBox viewbox-attr
-                  :on-drop drop-handler!
-                  :on-drag-over #(.preventDefault %)
+                  :on-drop event.impl.drag/handler!
+                  :on-drag-over event.impl.drag/handler!
                   :width width
                   :height height
                   :transform (str "rotate(" rotate ")")

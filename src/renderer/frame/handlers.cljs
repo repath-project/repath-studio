@@ -8,8 +8,7 @@
    [renderer.frame.db :refer [DomRect Viewbox FocusType]]
    [renderer.utils.bounds :as utils.bounds :refer [BBox]]
    [renderer.utils.element :as utils.element]
-   [renderer.utils.math :as utils.math :refer [Vec2]]
-   [renderer.utils.pointer :as utils.pointer]))
+   [renderer.utils.math :as utils.math :refer [Vec2]]))
 
 (m/=> viewbox [:function
                [:-> App [:maybe Viewbox]]
@@ -44,7 +43,8 @@
     (if-not (-> db :window :focused)
       db
       (->> (:document-tabs db)
-           (reduce #(pan-by %1 (matrix/div [(:width offset) (:height offset)] 2) %2) db)))))
+           (reduce (fn [db id]
+                     (pan-by db (matrix/div [(:width offset) (:height offset)] 2) id)) db)))))
 
 (m/=> zoom-at-position [:-> App number? Vec2 App])
 (defn zoom-at-position
@@ -65,7 +65,9 @@
 (defn adjusted-pointer-pos
   [db pos]
   (let [{:keys [zoom pan]} (get-in db [:documents (:active-document db)])]
-    (utils.pointer/adjusted-position zoom pan pos)))
+    (-> pos
+        (matrix/div zoom)
+        (matrix/add pan))))
 
 (m/=> zoom-at-pointer [:-> App number? App])
 (defn zoom-at-pointer

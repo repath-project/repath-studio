@@ -2,7 +2,7 @@
   (:require
    [clojure.string :as string]
    [devtools.formatters.core :as devtools.formatters]
-   [reagent.core :as r]))
+   [reagent.core :as reagent]))
 
 (defn js-array?
   [v]
@@ -27,7 +27,7 @@
 
 (defn openable
   [header v config show-value]
-  (let [open (r/atom false)]
+  (let [open (reagent/atom false)]
     (fn [_ _]
       (let [open? @open]
         [:div.flex.flex-col

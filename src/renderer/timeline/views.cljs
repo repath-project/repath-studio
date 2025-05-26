@@ -10,7 +10,7 @@
    [renderer.element.events :as-alias element.events]
    [renderer.timeline.events :as-alias timeline.events]
    [renderer.timeline.subs :as-alias timeline.subs]
-   [renderer.ui :as ui]))
+   [renderer.views :as views]))
 
 (def speed-options
   [{:id :0.25
@@ -48,13 +48,13 @@
          {:style {:min-width "50px"}}
          [:span (str speed "x")]
          [:> Select/Icon {:class "select-icon"}
-          [ui/icon "chevron-down"]]]]]
+          [views/icon "chevron-down"]]]]]
       [:> Select/Portal
        [:> Select/Content
         {:class "menu-content rounded-sm select-content"
          :style {:min-width "auto"}}
         [:> Select/ScrollUpButton {:class "select-scroll-button"}
-         [ui/icon "chevron-up"]]
+         [views/icon "chevron-up"]]
         [:> Select/Viewport {:class "select-viewport"}
          [:> Select/Group
           (for [{:keys [id value label]} speed-options]
@@ -65,19 +65,19 @@
              [:> Select/ItemText label]])]]
         [:> Select/ScrollDownButton
          {:class "select-scroll-button"}
-         [ui/icon "chevron-down"]]]]]]))
+         [views/icon "chevron-down"]]]]]]))
 
 (defn snap-controls
   []
   (let [grid-snap? @(rf/subscribe [::timeline.subs/grid-snap?])
         guide-snap? @(rf/subscribe [::timeline.subs/guide-snap?])]
     [:div.grow
-     [ui/switch
+     [views/switch
       "Grid snap"
       {:id "grid-snap"
        :default-checked grid-snap?
        :on-checked-change #(rf/dispatch [::timeline.events/set-grid-snap %])}]
-     [ui/switch
+     [views/switch
       "Guide snap"
       {:id "guide-snap"
        :default-checked guide-snap?
@@ -91,26 +91,26 @@
         replay? @(rf/subscribe [::timeline.subs/replay?])
         end @(rf/subscribe [::timeline.subs/end])]
     [:div.toolbar.bg-primary
-     [ui/icon-button "go-to-start"
+     [views/icon-button "go-to-start"
       {:on-click #(.setTime (.-current timeline-ref) 0)
        :disabled (zero? t)}]
-     [ui/radio-icon-button (if paused? "play" "pause") (not paused?)
+     [views/radio-icon-button (if paused? "play" "pause") (not paused?)
       {:title (if paused? "Play" "Pause")
        :class (when (pos? t) "border border-accent")
        :on-click #(if paused?
                     (.play (.-current timeline-ref) #js {:autoEnd true})
                     (.pause (.-current timeline-ref)))}]
-     [ui/icon-button "go-to-end"
+     [views/icon-button "go-to-end"
       {:on-click #(.setTime (.-current timeline-ref) end)
        :disabled (>= t end)}]
-     [ui/radio-icon-button "refresh" replay?
+     [views/radio-icon-button "refresh" replay?
       {:title "Replay"
        :on-click #(rf/dispatch [::timeline.events/toggle-replay])}]
      [speed-select timeline-ref]
      [:span.font-mono.px-2 time-formatted]
      [:span.v-divider]
      [snap-controls]
-     [ui/icon-button "window-close"
+     [views/icon-button "window-close"
       {:title "Hide timeline"
        :on-click #(rf/dispatch [::app.events/toggle-panel :timeline])}]]))
 

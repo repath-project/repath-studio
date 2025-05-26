@@ -6,9 +6,9 @@
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
+   [renderer.event.impl.pointer :as event.impl.pointer]
    [renderer.utils.bounds :as utils.bounds]
-   [renderer.utils.element :as utils.element]
-   [renderer.utils.pointer :as utils.pointer]))
+   [renderer.utils.element :as utils.element]))
 
 (derive :g ::element.hierarchy/container)
 
@@ -45,7 +45,7 @@
              ignored? (contains? ignored-ids (:id el))
              [min-x min-y] bbox
              [w h] (utils.bounds/->dimensions bbox)
-             pointer-handler #(utils.pointer/event-handler! % el)
+             pointer-handler #(event.impl.pointer/handler! % el)
              zoom @(rf/subscribe [::document.subs/zoom])
              stroke-width (max (:stroke-width attrs) (/ 20 zoom))]
          [:rect {:x min-x

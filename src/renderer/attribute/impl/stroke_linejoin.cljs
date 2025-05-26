@@ -11,13 +11,14 @@
 
 (defmethod attribute.hierarchy/form-element [:default :stroke-linejoin]
   [_ k v attrs]
-  [attribute.views/select-input k v (merge attrs {:default-value "miter"
-                                                  :items [{:key :bevel
-                                                           :value "bevel"
-                                                           :label "Bevel"}
-                                                          {:key :miter
-                                                           :value "miter"
-                                                           :label "Miter"}
-                                                          {:key :round
-                                                           :value "round"
-                                                           :label "Round"}]})])
+  [attribute.views/select-input k v
+   (merge attrs {:default-value "miter"
+                 :items [{:key :bevel
+                          :value "bevel"
+                          :label "Bevel"}
+                         {:key :miter
+                          :value "miter"
+                          :label "Miter"}
+                         {:key :round
+                          :value "round"
+                          :label "Round"}]})])

@@ -10,24 +10,24 @@
    [renderer.element.events :as-alias element.events]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
+   [renderer.event.impl.keyboard :as event.impl.keyboard]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.ui :as ui]
    [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.bcd :as utils.bcd]
-   [renderer.utils.keyboard :as utils.keyboard]
+   [renderer.views :as views]
    [renderer.window.events :as-alias window.events]))
 
 (defn browser-support
   [browser version-added]
   [:div.text-center.flex-1
    [:div {:title browser}
-    [ui/icon (name (case browser
-                     :firefox_android :firefox
-                     :chrome_android :chrome
-                     :opera_android :opera
-                     :safari_ios :safari
-                     :webview_ios :safari
-                     browser))]]
+    [views/icon (name (case browser
+                        :firefox_android :firefox
+                        :chrome_android :chrome
+                        :opera_android :opera
+                        :safari_ios :safari
+                        :webview_ios :safari
+                        browser))]]
    [:div.text-2xs.mt-1
     (case version-added
       true [:div.bg-success "all"]
@@ -39,7 +39,7 @@
   [support-data]
   [:<>
    [:h4.font-bold.mb-1 "Browser compatibility"]
-   [ui/scroll-area
+   [views/scroll-area
     [:div.flex.mb-4.gap-px
      (for [[browser {:keys [version_added]}] support-data]
        ^{:key browser} [browser-support browser version_added])]]])
@@ -90,12 +90,12 @@
             :default-value v
             :placeholder (if v placeholder "multiple")
             :on-blur #(on-change-handler! % k v)
-            :on-key-down #(utils.keyboard/input-key-down-handler! % v on-change-handler! k v)})]
+            :on-key-down #(event.impl.keyboard/input-key-down-handler! % v on-change-handler! k v)})]
    (when-not (or (empty? (str v)) disabled)
      [:button.button.bg-primary.text-muted.absolute.h-full.right-0.clear-input-button.invisible.p-1
       {:class "hover:bg-transparent"
        :on-pointer-down #(rf/dispatch [::element.events/remove-attr k])}
-      [ui/icon "times"]])])
+      [views/icon "times"]])])
 
 (defmethod attribute.hierarchy/form-element :default
   [_ k v {:keys [disabled placeholder]}]
@@ -109,7 +109,7 @@
                     :placeholder placeholder
                     :class "w-20"}]
    [:div.px-1.w-full.bg-primary
-    [ui/slider
+    [views/slider
      (merge attrs
             {:value [(if (= "" v) placeholder v)]
              :on-value-change (fn [[v]] (rf/dispatch [::element.events/preview-attr k v]))
@@ -129,14 +129,14 @@
         :aria-label (str "Select " (name k))}
        [:> Select/Value ""]
        [:> Select/Icon
-        [ui/icon "chevron-down"]]]
+        [views/icon "chevron-down"]]]
       [:> Select/Portal
        [:> Select/Content
         {:class "menu-content rounded-sm select-content"
          :on-key-down #(.stopPropagation %)}
         [:> Select/ScrollUpButton
          {:class "select-scroll-button"}
-         [ui/icon "chevron-up"]]
+         [views/icon "chevron-up"]]
         [:> Select/Viewport
          {:class "select-viewport"}
          (for [item items]
@@ -144,11 +144,11 @@
            [:> Select/Item
             {:value (:value item) :class "menu-item"}
             (when (:icon item)
-              [:div.absolute.left-2 [ui/icon (:icon item)]])
+              [:div.absolute.left-2 [views/icon (:icon item)]])
             [:> Select/ItemText (:label item)]])]
         [:> Select/ScrollDownButton
          {:class "select-scroll-button"}
-         [ui/icon "chevron-down"]]]]])])
+         [views/icon "chevron-down"]]]]])])
 
 (defn property-list-item
   [property k]
@@ -171,7 +171,9 @@
   [tag k]
   (let [clicked-element @(rf/subscribe [::app.subs/clicked-element])
         property (utils.attribute/property-data k)
-        dispatch-tag (if (contains? (methods attribute.hierarchy/description) [tag k]) tag :default)
+        dispatch-tag (if (contains? (methods attribute.hierarchy/description) [tag k])
+                       tag
+                       :default)
         active (and (= (:type clicked-element) :handle)
                     (= (:key clicked-element) key))]
     [:> HoverCard/Root
@@ -212,7 +214,7 @@
    [:> HoverCard/Root
     [:> HoverCard/Trigger {:as-child true}
      [:span.pb-px
-      [ui/icon-button "info" {:title "MDN Info"}]]]
+      [views/icon-button "info" {:title "MDN Info" :class "hover:bg-transparent"}]]]
     [:> HoverCard/Portal
      [:> HoverCard/Content
       {:sideOffset 5
@@ -239,8 +241,8 @@
         multitag? (next selected-tags)]
     (when-first [el selected-elements]
       [:div.pr-px
-       [:div.flex.bg-primary.py-4.pl-4.pr-2
-        [:h1.self-center.flex-1.text-lg.p-1
+       [:div.flex.bg-primary.py-4.pl-4.pr-2.gap-1
+        [:h1.self-center.flex-1.text-lg
          (if-not (next selected-elements)
            (let [el-label (:label el)]
              (if (empty? el-label) tag el-label))

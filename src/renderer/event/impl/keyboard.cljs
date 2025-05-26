@@ -1,4 +1,4 @@
-(ns renderer.utils.keyboard
+(ns renderer.event.impl.keyboard
   (:require
    [clojure.set :as set]
    [malli.core :as m]
@@ -6,6 +6,8 @@
    [renderer.dialog.events :as-alias dialog.events]
    [renderer.document.events :as-alias document.events]
    [renderer.element.events :as-alias element.events]
+   [renderer.event.db :refer [KeyboardEvent]]
+   [renderer.events :as-alias events]
    [renderer.frame.events :as-alias frame.events]
    [renderer.history.events :as-alias history.events]
    [renderer.tool.events :as-alias tool.events]
@@ -13,18 +15,8 @@
   (:import
    [goog.events KeyCodes]))
 
-(def ModifierKey [:enum :alt :ctrl :meta :shift])
-
-(def KeyboardEvent [:map {:closed true}
-                    [:target any?]
-                    [:type [:enum "keydown" "keypress" "keyup"]]
-                    [:code string?]
-                    [:key-code number?]
-                    [:key string?]
-                    [:modifiers [:set ModifierKey]]])
-
+;; https://google.github.io/closure-library/api/goog.events.KeyCodes.html
 (def key-codes
-  "https://google.github.io/closure-library/api/goog.events.KeyCodes.html"
   (js->clj KeyCodes))
 
 (def key-chars
@@ -35,27 +27,19 @@
   [key-code]
   (get key-chars key-code))
 
-(m/=> modifiers [:-> any? [:set ModifierKey]])
-(defn modifiers
-  "Returns a set of modifier keys from the event."
-  [^js/Event e]
-  (cond-> #{}
-    (.-altKey e) (conj :alt)
-    (.-ctrlKey e) (conj :ctrl)
-    (.-metaKey e) (conj :meta)
-    (.-shiftKey e) (conj :shift)))
-
-(m/=> event-formatter [:-> any? KeyboardEvent])
-(defn event-formatter
-  "https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
-   https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/"
+(m/=> ->clj [:-> any? KeyboardEvent])
+(defn ->clj
+  "https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent"
   [^js/KeyboardEvent e]
   {:target (.-target e)
    :type (.-type e)
    :code (.-code e)
    :key-code (.-keyCode e)
    :key (.-key e)
-   :modifiers (modifiers e)})
+   :alt-key (.-altKey e)
+   :ctrl-key (.-ctrlKey e)
+   :meta-key (.-metaKey e)
+   :shift-key (.-shiftKey e)})
 
 (defn input-key-down-handler!
   "Generic on-key-down handler for input elements that dispatches an event `f`
@@ -69,6 +53,7 @@
   [^js/KeyboardEvent e v f & more]
   (let [target (.-target e)]
     (.stopPropagation e)
+
     (case (.-code e)
       "Enter" (do (apply f e more)
                   (.blur target))
@@ -186,19 +171,19 @@
                 [[::element.events/select-all]
                  [{:keyCode (key-codes "A")
                    :ctrlKey true}]]
-                [[::app.events/focus "file"]
+                [[::events/focus "file"]
                  [{:keyCode (key-codes "F")
                    :altKey true}]]
-                [[::app.events/focus "edit"]
+                [[::events/focus "edit"]
                  [{:keyCode (key-codes "E")
                    :altKey true}]]
-                [[::app.events/focus "object"]
+                [[::events/focus "object"]
                  [{:keyCode (key-codes "O")
                    :altKey true}]]
-                [[::app.events/focus "view"]
+                [[::events/focus "view"]
                  [{:keyCode (key-codes "V")
                    :altKey true}]]
-                [[::app.events/focus "help"]
+                [[::events/focus "help"]
                  [{:keyCode (key-codes "H")
                    :altKey true}]]
                 [[::element.events/move-up]

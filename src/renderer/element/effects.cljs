@@ -5,15 +5,6 @@
    [renderer.utils.length :as utils.length]
    [renderer.worker.events :as-alias worker.events]))
 
-(rf/reg-fx
- ::print
- (fn [svg]
-   (let [print-window (.open js/window)
-         document (.-document print-window)]
-     (.write document svg)
-     (.print print-window)
-     (.close print-window))))
-
 (defn data-url->canvas-context!
   [data-url [w h] f]
   (let [canvas (js/document.createElement "canvas")
@@ -61,13 +52,14 @@
                  (let [w (.-width img)
                        h (.-height img)]
                    (.remove img)
-                   (rf/dispatch [::element.events/add {:type :element
-                                                       :tag :image
-                                                       :label (.-name file)
-                                                       :attrs {:x (- x (/ w 2))
-                                                               :y (- y (/ h 2))
-                                                               :width w
-                                                               :height h
-                                                               :href data-url}}]))))
+                   (rf/dispatch [::element.events/add
+                                 {:type :element
+                                  :tag :image
+                                  :label (.-name file)
+                                  :attrs {:x (- x (/ w 2))
+                                          :y (- y (/ h 2))
+                                          :width w
+                                          :height h
+                                          :href data-url}}]))))
          (set! (.-src img) data-url)))
      (.readAsDataURL reader file))))

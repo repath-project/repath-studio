@@ -1,45 +1,20 @@
 (ns renderer.tool.events
   (:require
    [re-frame.core :as rf]
-   [renderer.app.effects :as-alias app.effects]
+   [renderer.effects :as-alias effects]
    [renderer.element.events :as element.events]
-   [renderer.frame.handlers :as frame.handlers]
-   [renderer.tool.effects :as-alias tool.effects]
    [renderer.tool.handlers :as tool.handlers]))
 
 (rf/reg-event-fx
  ::activate
  (fn [{:keys [db]} [_ tool]]
    {:db (tool.handlers/activate db tool)
-    ::app.effects/focus nil}))
+    ::effects/focus nil}))
 
 (rf/reg-event-db
  ::set-state
  (fn [db [_ state]]
    (tool.handlers/set-state db state)))
-
-(rf/reg-event-fx
- ::pointer-event
- [(rf/inject-cofx ::app.effects/timestamp)]
- (fn [{:keys [db timestamp]} [_ e]]
-   {:db (tool.handlers/pointer-handler db e timestamp)}))
-
-(rf/reg-event-db
- ::wheel-event
- (fn [db [_ e]]
-   (tool.handlers/wheel-handler db e)))
-
-(rf/reg-event-fx
- ::drag-event
- (fn [{:keys [db]} [_ {:keys [data-transfer pointer-pos] :as e}]]
-   (when (= (:type e) "drop")
-     (let [position (frame.handlers/adjusted-pointer-pos db pointer-pos)]
-       {::tool.effects/drop [position data-transfer]}))))
-
-(rf/reg-event-db
- ::keyboard-event
- (fn [db [_ e]]
-   (tool.handlers/key-handler db e)))
 
 (rf/reg-event-fx
  ::cancel

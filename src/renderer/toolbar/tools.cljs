@@ -6,8 +6,8 @@
    [renderer.tool.events :as-alias tool.events]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.subs :as-alias tool.subs]
-   [renderer.ui :as ui]
-   [renderer.utils.i18n :refer [t]]))
+   [renderer.utils.i18n :refer [t]]
+   [renderer.views :as views]))
 
 (defn button
   [tool]
@@ -22,7 +22,7 @@
       [:> Tooltip/Root
        [:> Tooltip/Trigger {:as-child true}
         [:span
-         [ui/radio-icon-button (:icon properties) active
+         [views/radio-icon-button (:icon properties) active
           {:class (when primary "outline outline-offset-[-1px] outline-accent")
            :aria-label (str "activate " label)
            :on-click #(rf/dispatch [::tool.events/activate tool])}]]]

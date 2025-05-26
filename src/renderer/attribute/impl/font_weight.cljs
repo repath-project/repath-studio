@@ -27,8 +27,9 @@
   [_ k v attrs]
   (let [weights @(rf/subscribe [::element.subs/font-weights])
         weights (if (seq weights) weights (sort (keys name-mapping)))]
-    [attribute.views/select-input k v (merge attrs
-                                             {:default-value "400"
-                                              :items (mapv #(do {:key %
-                                                                 :label (str % " - " (-> % name-mapping))
-                                                                 :value (str %)}) weights)})]))
+    [attribute.views/select-input k v
+     (merge attrs
+            {:default-value "400"
+             :items (mapv #(do {:key %
+                                :label (str % " - " (-> % name-mapping))
+                                :value (str %)}) weights)})]))

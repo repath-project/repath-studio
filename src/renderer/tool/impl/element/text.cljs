@@ -1,7 +1,6 @@
 (ns renderer.tool.impl.element.text
   (:require
    [renderer.element.handlers :as element.handlers]
-   [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]))
 
@@ -28,8 +27,8 @@
                     :y offset-y}}]
     (-> (element.handlers/deselect-all db)
         (element.handlers/add el)
-        (history.handlers/finalize "Create text")
-        (tool.handlers/activate :edit))))
+        (tool.handlers/activate :edit)
+        (tool.handlers/set-state :type))))
 
 (defmethod tool.hierarchy/on-drag-end :text
   [db e]

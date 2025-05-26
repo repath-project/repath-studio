@@ -11,6 +11,7 @@
    [renderer.dialog.views :as dialog.views]
    [renderer.document.db :as document.db]
    [renderer.document.handlers :as document.handlers]
+   [renderer.effects :as-alias effects]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
    [renderer.notification.events :as-alias notification.events]
@@ -18,6 +19,7 @@
    [renderer.notification.views :as notification.views]
    [renderer.snap.handlers :as snap.handlers]
    [renderer.utils.compatibility :as utils.compatibility]
+   [renderer.utils.element :as utils.element]
    [renderer.utils.math :refer [Vec2]]
    [renderer.utils.system :as utils.system]
    [renderer.utils.vec :as utils.vec]
@@ -86,10 +88,11 @@
      (document.handlers/close db id)
      (-> db
          (document.handlers/set-active id)
-         (dialog.handlers/create {:title "Do you want to save your changes?"
-                                  :close-button true
-                                  :content (dialog.views/save (get-in db [:documents id]))
-                                  :attrs {:onOpenAutoFocus #(.preventDefault %)}})))))
+         (dialog.handlers/create
+          {:title "Do you want to save your changes?"
+           :close-button true
+           :content (dialog.views/save (get-in db [:documents id]))
+           :attrs {:onOpenAutoFocus #(.preventDefault %)}})))))
 
 (rf/reg-event-fx
  ::close-active
@@ -151,15 +154,15 @@
 
 (rf/reg-event-fx
  ::new
- [(rf/inject-cofx ::app.effects/guid)]
+ [(rf/inject-cofx ::effects/guid)]
  (fn [{:keys [db guid]} [_]]
    {:db (-> (create db guid)
             (history.handlers/finalize "Create document"))
-    ::app.effects/focus nil}))
+    ::effects/focus nil}))
 
 (rf/reg-event-fx
  ::init
- [(rf/inject-cofx ::app.effects/guid)]
+ [(rf/inject-cofx ::effects/guid)]
  (fn [{:keys [db guid]} [_]]
    {:db (if (:active-document db)
           (snap.handlers/rebuild-tree db)
@@ -168,7 +171,7 @@
 
 (rf/reg-event-fx
  ::new-from-template
- [(rf/inject-cofx ::app.effects/guid)]
+ [(rf/inject-cofx ::effects/guid)]
  (fn [{:keys [db guid]} [_ size]]
    {:db (-> (create db guid size)
             (history.handlers/finalize "Create document from template"))}))
@@ -177,25 +180,26 @@
  ::open
  (fn [_ [_ file-path]]
    (if utils.system/electron?
-     {::window.effects/ipc-invoke {:channel "open-documents"
-                                   :data file-path
-                                   :on-success [::load-multiple]
-                                   :on-error [::notification.events/exception]
-                                   :formatter #(mapv cljs.reader/read-string %)}}
-     {::app.effects/file-open {:options file-picker-options
-                               :on-success [::file-read]
-                               :on-error [::notification.events/exception]}})))
+     {::window.effects/ipc-invoke
+      {:channel "open-documents"
+       :data file-path
+       :on-success [::load-multiple]
+       :on-error [::notification.events/exception]
+       :formatter #(mapv cljs.reader/read-string %)}}
+     {::effects/file-open
+      {:options file-picker-options
+       :on-success [::file-read]
+       :on-error [::notification.events/exception]}})))
 
 (rf/reg-event-fx
  ::file-read
  (fn [_ [_ file]]
-   {::app.effects/file-read-as [file
-                                :text
-                                {"load" {:formatter #(-> (cljs.reader/read-string %)
-                                                         (assoc :title (.-name file)
-                                                                :path (.-path file)))
-                                         :on-fire [::load]}
-                                 "error" {:on-fire [::notification.events/exception]}}]}))
+   {::app.effects/file-read-as
+    [file :text {"load" {:formatter #(-> (cljs.reader/read-string %)
+                                         (assoc :title (.-name file)
+                                                :path (.-path file)))
+                         :on-fire [::load]}
+                 "error" {:on-fire [::notification.events/exception]}}]}))
 
 (rf/reg-event-fx
  ::open-directory
@@ -204,7 +208,7 @@
 
 (rf/reg-event-fx
  ::load
- [(rf/inject-cofx ::app.effects/guid)]
+ [(rf/inject-cofx ::effects/guid)]
  (fn [{:keys [db guid]} [_ document]]
    (if (and document (map? document) (:elements document))
      (let [migrated-document (utils.compatibility/migrate-document document)
@@ -212,7 +216,7 @@
            document (assoc migrated-document :id guid)]
        (cond-> {:db (-> (document.handlers/load db document)
                         (history.handlers/finalize "Load document"))
-                ::app.effects/focus nil}
+                ::effects/focus nil}
          (not migrated)
          (assoc :dispatch [::saved document])))
      {:db (->> (notification.views/generic-error
@@ -230,58 +234,64 @@
  (fn [{:keys [db]} [_]]
    (let [document (document.handlers/persisted-format db)]
      (if utils.system/electron?
-       {::window.effects/ipc-invoke {:channel "save-document"
-                                     :data (pr-str document)
-                                     :on-success [::saved]
-                                     :on-error [::notification.events/exception]
-                                     :formatter cljs.reader/read-string}}
-       {::app.effects/file-save {:data (document.handlers/save-format document)
-                                 :options file-picker-options
-                                 :formatter (fn [file] {:id (:id document)
-                                                        :title (.-name file)})
-                                 :on-success [::saved]
-                                 :on-error [::notification.events/exception]}}))))
+       {::window.effects/ipc-invoke
+        {:channel "save-document"
+         :data (pr-str document)
+         :on-success [::saved]
+         :on-error [::notification.events/exception]
+         :formatter cljs.reader/read-string}}
+       {::effects/file-save
+        {:data (document.handlers/save-format document)
+         :options file-picker-options
+         :formatter (fn [file] {:id (:id document)
+                                :title (.-name file)})
+         :on-success [::saved]
+         :on-error [::notification.events/exception]}}))))
 
 (rf/reg-event-fx
  ::download
  (fn [{:keys [db]} [_]]
    (let [document (document.handlers/persisted-format db)]
-     {::app.effects/download {:data (document.handlers/save-format document)
-                              :title (str "document." config/ext)}})))
+     {::effects/download {:data (document.handlers/save-format document)
+                          :title (str "document." config/ext)}})))
 
 (rf/reg-event-fx
  ::save-and-close
  (fn [{:keys [db]} [_ id]]
    (let [document (document.handlers/persisted-format db id)]
      (if utils.system/electron?
-       {::window.effects/ipc-invoke {:channel "save-document"
-                                     :data (pr-str document)
-                                     :on-success [::mark-as-saved-and-close]
-                                     :on-error [::notification.events/exception]
-                                     :formatter cljs.reader/read-string}}
-       {::app.effects/file-save {:data (document.handlers/save-format document)
-                                 :options file-picker-options
-                                 :formatter (fn [file] {:id id
-                                                        :title (.-name file)})
-                                 :on-success [::mark-as-saved-and-close]
-                                 :on-error [::notification.events/exception]}}))))
+       {::window.effects/ipc-invoke
+        {:channel "save-document"
+         :data (pr-str document)
+         :on-success [::mark-as-saved-and-close]
+         :on-error [::notification.events/exception]
+         :formatter cljs.reader/read-string}}
+       {::effects/file-save
+        {:data (document.handlers/save-format document)
+         :options file-picker-options
+         :formatter (fn [file] {:id id
+                                :title (.-name file)})
+         :on-success [::mark-as-saved-and-close]
+         :on-error [::notification.events/exception]}}))))
 
 (rf/reg-event-fx
  ::save-as
  (fn [{:keys [db]} [_]]
    (let [document (document.handlers/persisted-format db)]
      (if utils.system/electron?
-       {::window.effects/ipc-invoke {:channel "save-document-as"
-                                     :data (pr-str document)
-                                     :on-success [::saved]
-                                     :on-error [::notification.events/exception]
-                                     :formatter cljs.reader/read-string}}
-       {::app.effects/file-save {:data (document.handlers/save-format document)
-                                 :options file-picker-options
-                                 :formatter (fn [file] {:id (:id document)
-                                                        :title (.-name file)})
-                                 :on-success [::saved]
-                                 :on-error [::notification.events/exception]}}))))
+       {::window.effects/ipc-invoke
+        {:channel "save-document-as"
+         :data (pr-str document)
+         :on-success [::saved]
+         :on-error [::notification.events/exception]
+         :formatter cljs.reader/read-string}}
+       {::effects/file-save
+        {:data (document.handlers/save-format document)
+         :options file-picker-options
+         :formatter (fn [file] {:id (:id document)
+                                :title (.-name file)})
+         :on-success [::saved]
+         :on-error [::notification.events/exception]}}))))
 
 (rf/reg-event-db
  ::saved
@@ -316,3 +326,16 @@
  (fn [db [_ id]]
    (-> (document.handlers/set-active db id)
        (document.handlers/center))))
+
+(rf/reg-event-fx
+ ::print
+ (fn [{:keys [db]} _]
+   (let [els (element.handlers/root-children db)
+         svg (utils.element/->svg els)]
+     (if utils.system/electron?
+       {::window.effects/ipc-invoke
+        {:channel "print"
+         :data svg
+         :on-success [::notification.events/add]
+         :on-error [::notification.events/exception]}}
+       {::effects/print svg}))))

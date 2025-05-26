@@ -5,8 +5,8 @@
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.attribute.views :as attribute.views]
    [renderer.element.events :as-alias element.events]
-   [renderer.ui :as ui]
-   [renderer.utils.length :as utils.length]))
+   [renderer.utils.length :as utils.length]
+   [renderer.views :as views]))
 
 (derive :x ::length)
 (derive :y ::length)
@@ -39,12 +39,12 @@
      {:disabled disabled
       :title "Decrease"
       :on-pointer-down #(rf/dispatch [::element.events/update-attr k dec])}
-     [ui/icon "minus"]]
+     [views/icon "minus"]]
     [:button.form-control-button
      {:disabled disabled
       :title "Increase"
       :on-click #(rf/dispatch [::element.events/update-attr k inc])}
-     [ui/icon "plus"]]]])
+     [views/icon "plus"]]]])
 
 (defmethod attribute.hierarchy/update-attr ::length
   [el k f & more]

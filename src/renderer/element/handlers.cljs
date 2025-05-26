@@ -76,8 +76,7 @@
 (defn parent-ids
   [db]
   (->> (selected db)
-       (map :parent)
-       (remove nil?)
+       (keep :parent)
        (set)))
 
 (m/=> parent [:function
@@ -161,13 +160,15 @@
 (m/=> root-children [:-> App [:sequential Element]])
 (defn root-children
   [db]
-  (->> (children-ids db (:id (root db)))
+  (->> (:id (root db))
+       (children-ids db)
        (mapv (entities db))))
 
 (m/=> root-svgs [:-> App [:sequential Element]])
 (defn root-svgs
   [db]
-  (->> db root-children (filter utils.element/svg?)))
+  (->> (root-children db)
+       (filter utils.element/svg?)))
 
 (m/=> ancestor-ids [:function
                     [:-> App [:sequential uuid?]]
@@ -200,8 +201,7 @@
   [db id]
   (let [ancestor-els (reverse (ancestor-ids db id))]
     (->> (index db id)
-         (conj (map #(index db %) ancestor-els))
-         (remove nil?)
+         (conj (keep #(index db %) ancestor-els))
          (vec))))
 
 (m/=> descendant-ids [:function
@@ -311,7 +311,8 @@
 (m/=> deselect-all [:-> App App])
 (defn deselect-all
   [db]
-  (reduce deselect db (selected-ids db)))
+  (->> (selected-ids db)
+       (reduce deselect db)))
 
 (m/=> collapse [:-> App uuid? App])
 (defn collapse
@@ -321,7 +322,9 @@
 (m/=> collapse-all [:-> App App])
 (defn collapse-all
   [db]
-  (reduce collapse db (keys (entities db))))
+  (->> (entities db)
+       (keys)
+       (reduce collapse db)))
 
 (m/=> expand [:-> App uuid? App])
 (defn expand
@@ -375,19 +378,27 @@
   (let [tags (selected-tags db)]
     (->> (entities db)
          (vals)
-         (reduce (fn [db el] (cond-> db
-                               (contains? tags (:tag el))
-                               (select (:id el)))) db))))
+         (reduce (fn [db el]
+                   (cond-> db
+                     (contains? tags (:tag el))
+                     (select (:id el)))) db))))
+
+(m/=> sort-by-index-path [:-> App [:sequential Element] [:sequential Element]])
+(defn sort-by-index-path
+  [db els]
+  (sort-by #(index-path db (:id %)) els))
 
 (m/=> selected-sorted [:-> App [:sequential Element]])
 (defn selected-sorted
   [db]
-  (sort-by #(index-path db (:id %)) (selected db)))
+  (->> (selected db)
+       (sort-by-index-path db)))
 
 (m/=> top-selected-sorted [:-> App [:sequential Element]])
 (defn top-selected-sorted
   [db]
-  (sort-by #(index-path db (:id %)) (top-selected-ancestors db)))
+  (->> (top-selected-ancestors db)
+       (sort-by-index-path db)))
 
 (m/=> selected-sorted-ids [:-> App [:vector uuid?]])
 (defn selected-sorted-ids
@@ -397,17 +408,18 @@
 (m/=> top-selected-sorted-ids [:-> App [:vector uuid?]])
 (defn top-selected-sorted-ids
   [db]
-  (mapv :id (top-selected-sorted db)))
+  (->> (top-selected-sorted db)
+       (mapv :id)))
 
 (m/=> invert-selection [:-> App App])
 (defn invert-selection
   [db]
-  (reduce (fn [db {:keys [id tag]}]
-            (cond-> db
-              (not (contains? #{:svg :canvas} tag))
-              (update-prop id :selected not)))
-          db
-          (vals (entities db))))
+  (->> (entities db)
+       (vals)
+       (reduce (fn [db el]
+                 (cond-> db
+                   (not (contains? #{:svg :canvas} (:tag el)))
+                   (update-prop (:id el) :selected not))) db)))
 
 (m/=> hover [:-> App [:or uuid? keyword?] App])
 (defn hover
@@ -602,10 +614,9 @@
 (defn overlapping-svg
   [db el-bbox]
   (let [svgs (reverse (root-svgs db))] ; Reverse to select top svgs first.
-    (or
-     (some #(when (utils.bounds/contained? el-bbox (:bbox %)) %) svgs)
-     (some #(when (utils.bounds/intersect? el-bbox (:bbox %)) %) svgs)
-     (root db))))
+    (or (some #(when (utils.bounds/contained? el-bbox (:bbox %)) %) svgs)
+        (some #(when (utils.bounds/intersect? el-bbox (:bbox %)) %) svgs)
+        (root db))))
 
 (m/=> assoc-parent-id [:-> App Element Element])
 (defn assoc-parent-id
@@ -648,7 +659,9 @@
         (:parent new-el)
         (update-prop (:parent new-el) :children #(vec (conj % id)))
 
-        (not (or (utils.element/svg? new-el) (utils.element/root? new-el) (:parent el)))
+        (not (or (utils.element/svg? new-el)
+                 (utils.element/root? new-el)
+                 (:parent el)))
         (translate [(- min-x) (- min-y)])
 
         :always
@@ -681,11 +694,11 @@
   [db operation]
   (let [selected-elements (top-selected-sorted db)
         attrs (-> selected-elements first utils.element/->path :attrs)
-        new-path (reduce (fn [path-a el]
-                           (let [path-b (-> el utils.element/->path :attrs :d)]
-                             (utils.path/boolean-operation path-a path-b operation)))
-                         (:d attrs)
-                         (rest selected-elements))]
+        new-path (->> (rest selected-elements)
+                      (reduce (fn [path-a el]
+                                (let [path-b (-> el utils.element/->path :attrs :d)]
+                                  (utils.path/boolean-operation path-a path-b operation)))
+                              (:d attrs)))]
     (cond-> db
       (seq new-path)
       (-> (delete)
@@ -701,7 +714,8 @@
   ([db]
    (reduce paste-in-place (deselect-all db) (:copied-elements db)))
   ([db el]
-   (reduce select (add db el) (selected-ids db))))
+   (->> (selected-ids db)
+        (reduce select (add db el)))))
 
 (m/=> paste [:function
              [:-> App App]

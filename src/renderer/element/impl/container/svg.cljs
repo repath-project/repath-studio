@@ -6,7 +6,7 @@
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
-   [renderer.utils.pointer :as utils.pointer]))
+   [renderer.event.impl.pointer :as event.impl.pointer]))
 
 (derive :svg ::element.hierarchy/container)
 
@@ -27,7 +27,7 @@
         text-attrs (select-keys attrs [:x :y])
         active-filter @(rf/subscribe [::document.subs/filter])
         zoom @(rf/subscribe [::document.subs/zoom])
-        pointer-handler #(utils.pointer/event-handler! % el)]
+        pointer-handler #(event.impl.pointer/handler! % el)]
     [:g
      [:text
       (merge
@@ -61,6 +61,6 @@
          :fill "white"
          :on-pointer-up pointer-handler
          :on-pointer-down #(when (= (.-button %) 2)
-                             (utils.pointer/event-handler! % el))})]
+                             (event.impl.pointer/handler! % el))})]
       (for [el child-els]
         ^{:key (:id el)} [element.hierarchy/render el])]]))

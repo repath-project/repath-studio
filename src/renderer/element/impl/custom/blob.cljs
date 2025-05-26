@@ -11,12 +11,12 @@
    [renderer.element.events :as-alias element.events]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
+   [renderer.event.impl.pointer :as event.impl.pointer]
    [renderer.tool.views :as tool.views]
-   [renderer.ui :as ui]
    [renderer.utils.element :as utils.element]
    [renderer.utils.length :as utils.length]
-   [renderer.utils.pointer :as utils.pointer]
-   [renderer.utils.svg :as utils.svg]))
+   [renderer.utils.svg :as utils.svg]
+   [renderer.views :as views]))
 
 (derive :blob ::element.hierarchy/renderable)
 
@@ -45,7 +45,7 @@
       {:title "Generate random seed"
        :disabled disabled
        :on-click #(rf/dispatch [::element.events/set-attr k random-seed])}
-      [ui/icon "refresh"]]]))
+      [views/icon "refresh"]]]))
 
 (defmethod attr.hierarchy/description [:blob :x]
   []
@@ -86,7 +86,9 @@
            :fill
            :stroke
            :stroke-width
-           :opacity]})
+           :opacity
+           :id
+           :class]})
 
 (defmethod element.hierarchy/scale :blob
   [el ratio pivot-point]
@@ -100,7 +102,7 @@
   [el]
   (let [{:keys [attrs children]} el
         child-elements @(rf/subscribe [::element.subs/filter-visible children])
-        pointer-handler #(utils.pointer/event-handler! % el)]
+        pointer-handler #(event.impl.pointer/handler! % el)]
     [:path (merge {:d (element.hierarchy/path el)
                    :on-pointer-up pointer-handler
                    :on-pointer-down pointer-handler
