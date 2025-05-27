@@ -27,7 +27,7 @@
    utils.i18n/lang?])
 
 (def App
-  [:map {:closed true}
+  [:map
    [:tool {:default :transform} Tool]
    [:primary-tool {:optional true} Tool]
    [:pointer-pos {:default [0 0]} Vec2]
@@ -39,7 +39,7 @@
    [:nearest-neighbors {:optional true} [:sequential NearestNeighbor]]
    [:drag {:optional true} boolean?]
    [:zoom-sensitivity {:default 0.75} [:and number? pos?]]
-   [:event-time {:optional true} number?]
+   [:event-timestamp {:optional true} number?]
    [:double-click-delta {:default 250} [:and number? pos?]]
    [:state {:default :idle} State]
    [:grid {:default false :persist true} boolean?]
