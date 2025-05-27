@@ -25,14 +25,14 @@
     (reagent/create-class
      {:component-did-mount
       (fn []
-        (doseq [event ["pointermove" "pointerup"]]
-          (.addEventListener frame-window event event.impl.pointer/handler!))
+        (.addEventListener frame-window "pointermove" event.impl.pointer/handler!)
+        (.addEventListener frame-window "pointerup" event.impl.pointer/handler!)
         (.addEventListener frame-window "wheel" event.impl.wheel/handler! #js {:passive false}))
 
       :component-will-unmount
       (fn []
-        (doseq [event ["pointermove" "pointerup"]]
-          (.removeEventListener frame-window event event.impl.pointer/handler!))
+        (.removeEventListener frame-window "pointerup" event.impl.pointer/handler!)
+        (.removeEventListener frame-window "pointermove" event.impl.pointer/handler!)
         (.removeEventListener frame-window "wheel" event.impl.wheel/handler!))
 
       :reagent-render #()})))
@@ -92,7 +92,7 @@
             :id "frame"
             :title "main canvas"
             :ref ref
-            :sandbox "allow-same-origin allow-scripts"
+            :sandbox "allow-same-origin"
             :style {:background (-> root-el :attrs :fill)}}
            [:f> inner-component]
            [:> ContextMenu/Root
