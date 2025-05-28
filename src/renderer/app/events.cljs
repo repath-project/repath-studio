@@ -145,9 +145,12 @@
 (rf/reg-event-fx
  ::add-listeners
  (fn [_ _]
-   {:fx [[::effects/add-listener [js/document "keydown" [::event.events/keyboard] event.impl.keyboard/->clj]]
-         [::effects/add-listener [js/document "keyup" [::event.events/keyboard] event.impl.keyboard/->clj]]
-         [::effects/add-listener [js/document "fullscreenchange" [::window.events/update-fullscreen]]]
+   {:fx [[::effects/add-listener [js/document "keydown"
+                                  [::event.events/keyboard] event.impl.keyboard/->clj]]
+         [::effects/add-listener [js/document "keyup"
+                                  [::event.events/keyboard] event.impl.keyboard/->clj]]
+         [::effects/add-listener [js/document "fullscreenchange"
+                                  [::window.events/update-fullscreen]]]
          [::effects/add-listener [js/window "load" [::window.events/update-focused]]]
          [::effects/add-listener [js/window "focus" [::window.events/update-focused]]]
          [::effects/add-listener [js/window "blur" [::window.events/update-focused]]]]}))
