@@ -10,30 +10,23 @@
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
    [renderer.element.views :as element.views]
-   [renderer.event.impl.pointer :as event.impl.pointer]
    [renderer.event.impl.wheel :as event.impl.wheel]
    [renderer.frame.events :as-alias frame.events]
    [renderer.views :as views]))
 
 (defn inner-component
-  "We need access to the iframe's window to add the pointer move listener.
-   This is required in order to track pointer movement outside of our canvas.
+  "We need access to the iframe's window to add the wheel listener.
+   This is required in order to prevent the default zoom behavior.
    https://github.com/ryanseddon/react-frame-component#accessing-the-iframes-window-and-document
    https://github.com/reagent-project/reagent/blob/master/doc/ReactFeatures.md#function-components"
   []
   (let [frame-window (.-window (useFrame))]
     (reagent/create-class
      {:component-did-mount
-      (fn []
-        (.addEventListener frame-window "pointermove" event.impl.pointer/handler!)
-        (.addEventListener frame-window "pointerup" event.impl.pointer/handler!)
-        (.addEventListener frame-window "wheel" event.impl.wheel/handler! #js {:passive false}))
+      #(.addEventListener frame-window "wheel" event.impl.wheel/handler! #js {:passive false})
 
       :component-will-unmount
-      (fn []
-        (.removeEventListener frame-window "pointerup" event.impl.pointer/handler!)
-        (.removeEventListener frame-window "pointermove" event.impl.pointer/handler!)
-        (.removeEventListener frame-window "wheel" event.impl.wheel/handler!))
+      #(.removeEventListener frame-window "wheel" event.impl.wheel/handler!)
 
       :reagent-render #()})))
 
@@ -78,7 +71,7 @@
               ;; This is a different browsing context inside an iframe.
               ;; We need to simulate the events to the parent window.
               on-keyboard-event (fn [e]
-                                  ;; TODO: use re-pressed :prevent-default-keys
+                                  ;; TODO: Use re-pressed :prevent-default-keys?
                                   (.preventDefault e)
                                   (.dispatchEvent js/window.parent.document
                                                   (js/KeyboardEvent. (.-type e)
