@@ -43,7 +43,6 @@
    [renderer.tool.subs]
    [renderer.tree.events]
    [renderer.utils.error :as utils.error]
-   [renderer.utils.system :as utils.system]
    [renderer.window.effects]
    [renderer.window.events]
    [renderer.window.subs]
@@ -93,10 +92,10 @@
                                    :load-on-init '[user]} bootstrap-cb!)
 
   (rf/dispatch-sync [::app.events/initialize-db])
-  (rf/dispatch-sync [::app.events/set-lang utils.system/language])
   (rf/dispatch-sync [::app.events/load-local-db])
-  (rf/dispatch-sync [::document.events/init])
+  (rf/dispatch-sync [::app.events/init-lang])
   (rf/dispatch-sync [::theme.events/set-document-mode])
+  (rf/dispatch-sync [::document.events/init])
   (rf/dispatch-sync [::theme.events/add-native-listener])
   (rf/dispatch-sync [::re-pressed/add-keyboard-event-listener "keydown"])
   (rf/dispatch-sync [::re-pressed/set-keydown-rules event.impl.keyboard/keydown-rules])

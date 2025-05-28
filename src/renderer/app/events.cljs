@@ -49,12 +49,31 @@
  (fn [db [_ fonts]]
    (assoc db :system-fonts fonts)))
 
-(rf/reg-event-db
+(rf/reg-event-fx
+ ::set-document-lang
+ (fn [{:keys [db]} _]
+   {::effects/set-document-attr ["lang" (name (:lang db))]}))
+
+(rf/reg-event-fx
  ::set-lang
- (fn [db [_ lang]]
-   (cond-> db
-     (utils.i18n/lang? lang)
-     (assoc :lang lang))))
+ [persist]
+ (fn [{:keys [db]} [_ lang]]
+   {:db (cond-> db
+          (utils.i18n/lang? lang)
+          (assoc :lang lang))
+    :dispatch [::set-document-lang]}))
+
+(rf/reg-event-fx
+ ::init-lang
+ [(rf/inject-cofx ::effects/system-language)
+  persist]
+ (fn [{:keys [db system-language]} _]
+   {:db (cond-> db
+          (not (:lang db))
+          (assoc :lang (if (utils.i18n/lang? system-language)
+                         system-language
+                         :en-US)))
+    :dispatch [::set-document-lang]}))
 
 (rf/reg-event-db
  ::set-repl-mode

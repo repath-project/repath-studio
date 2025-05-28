@@ -10,9 +10,22 @@
   (rf.test/run-test-sync
    (rf/dispatch [::app.events/initialize-db])
 
-   (testing "setting language"
-     (rf/dispatch [::app.events/set-lang :en-US])
-     (is (= :en-US @(rf/subscribe [::app.subs/lang]))))
+   (testing "language"
+     (let [lang (rf/subscribe [::app.subs/lang])]
+       (testing "default"
+         (is (not @lang)))
+
+       (testing "initialization"
+         (rf/dispatch [::app.events/init-lang])
+         (is (= :en-US @lang)))
+
+       (testing "valid setting"
+         (rf/dispatch [::app.events/set-lang :el-GR])
+         (is (= :el-GR @lang)))
+
+       (testing "invalid setting"
+         (rf/dispatch [::app.events/set-lang :foo-Bar])
+         (is (= :el-GR @lang)))))
 
    (testing "toggling grid"
      (let [grid-visible (rf/subscribe [::app.subs/grid])]

@@ -15,6 +15,11 @@
  (fn [coeffects _]
    (assoc coeffects :guid (random-uuid))))
 
+(rf/reg-cofx
+ ::system-language
+ (fn [coeffects _]
+   (assoc coeffects :system-language (keyword (.-language js/navigator)))))
+
 (rf/reg-fx
  ::clipboard-write
  (fn [{:keys [data on-success on-error]}]

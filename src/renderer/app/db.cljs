@@ -59,7 +59,7 @@
    [:help-bar {:default true} boolean?]
    [:pen-mode {:default false} boolean?]
    [:backdrop {:default false} boolean?]
-   [:lang {:default :en-US :persist true} Lang]
+   [:lang {:optional true :persist true} Lang]
    [:repl-mode {:default :cljs} keyword?]
    [:worker {:default {:tasks {}}} [:map [:tasks map?]]]
    [:window {:default {}} Window]
