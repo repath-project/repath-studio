@@ -23,9 +23,6 @@
 (defn handler!
   [^js/WheelEvent e]
   (.stopPropagation e)
-
-  ;; Disable wheel zoom on canvas.
-  (when (.-ctrlKey e)
-    (.preventDefault e))
+  (.preventDefault e)
 
   (rf/dispatch-sync [::event.events/wheel (->clj e)]))

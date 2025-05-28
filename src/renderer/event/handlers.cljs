@@ -86,7 +86,8 @@
     "keydown"
     (cond-> db
       (and (= (:code e) "Space")
-           (not= (:tool db) :pan))
+           (not= (:tool db) :pan)
+           (= (:state db) :idle))
       (-> (assoc :primary-tool (:tool db))
           (tool.handlers/activate :pan))
 
