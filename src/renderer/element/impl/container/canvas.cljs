@@ -84,5 +84,5 @@
         attrs (->> (dissoc (:attrs el) :fill)
                    (remove #(empty? (str (second %))))
                    (into {}))]
-    (->> (doall (map element.hierarchy/render-to-string child-elements))
-         (into [:svg attrs]))))
+    (into [:svg attrs]
+          (map element.hierarchy/render-to-string child-elements))))
