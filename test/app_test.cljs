@@ -4,10 +4,19 @@
    [day8.re-frame.test :as rf.test]
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.events]
-   [renderer.app.subs :as-alias app.subs]))
+   [renderer.app.subs :as-alias app.subs]
+   [renderer.effects :as-alias effects]))
+
+(defn test-fixtures
+  []
+  (rf/reg-cofx
+   ::effects/system-language
+   (fn [coeffects _]
+     (assoc coeffects :system-language :en-US))))
 
 (deftest app
   (rf.test/run-test-sync
+   (test-fixtures)
    (rf/dispatch [::app.events/initialize-db])
 
    (testing "language"
