@@ -324,7 +324,7 @@
             {:fill (str "hsl(" (* x 10) " ,50% , 50%)")}))
 
   (defn ^:export kitty [[x y] width height]
-    (-> (js/fetch "https://api.thecatapi.com/v1/images/search" #js{:method "GET"})
+    (-> (js/fetch "https://api.thecatapi.com/v1/images/search" #js {:method "GET"})
         (.then (fn [response]
                  (-> (.json response)
                      (.then (fn [body]

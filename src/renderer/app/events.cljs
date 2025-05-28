@@ -5,12 +5,14 @@
    [renderer.app.db :as app.db]
    [renderer.app.effects :as-alias app.effects]
    [renderer.effects :as-alias effects]
+   [renderer.event.events :as-alias event.events]
+   [renderer.event.impl.keyboard :as event.impl.keyboard]
    [renderer.notification.events :as-alias notification.events]
    [renderer.notification.handlers :as notification.handlers]
    [renderer.notification.views :as notification.views]
    [renderer.utils.i18n :as utils.i18n]
    [renderer.utils.system :as utils.system]
-   [renderer.window.effects :as-alias window.effects]))
+   [renderer.window.events :as-alias window.events]))
 
 (def persist
   (rf/->interceptor
@@ -34,7 +36,7 @@
    (let [app-db (merge db store)]
      (if (app.db/valid? app-db)
        {:db app-db}
-       {::effects/local-storage-clear nil
+       {::app.effects/local-storage-clear nil
         :db (notification.handlers/add db (notification.views/spec-failed
                                            "Invalid local configuration"
                                            (-> app-db
@@ -97,7 +99,7 @@
  ::load-system-fonts
  (fn [_ _]
    (if utils.system/electron?
-     {::window.effects/ipc-invoke
+     {::effects/ipc-invoke
       {:channel "load-system-fonts"
        :on-success [::set-system-fonts]
        :on-error [::notification.events/exception]
@@ -120,3 +122,27 @@
                 (rf/assoc-effect :fx
                                  (conj (or fx [])
                                        [::app.effects/validate [db event]])))))))
+
+(rf/reg-event-fx
+ ::add-listeners
+ (fn [_ _]
+   {:fx [[::effects/add-listener [js/document "keydown" [::event.events/keyboard] event.impl.keyboard/->clj]]
+         [::effects/add-listener [js/document "keyup" [::event.events/keyboard] event.impl.keyboard/->clj]]
+         [::effects/add-listener [js/document "fullscreenchange" [::window.events/update-fullscreen]]]
+         [::effects/add-listener [js/window "load" [::window.events/update-focused]]]
+         [::effects/add-listener [js/window "focus" [::window.events/update-focused]]]
+         [::effects/add-listener [js/window "blur" [::window.events/update-focused]]]]}))
+
+(rf/reg-event-fx
+ ::register-listeners
+ (fn [_ _]
+   (if utils.system/electron?
+     {:fx [[::effects/ipc-on ["window-maximized" [::window.events/set-maximized true]]]
+           [::effects/ipc-on ["window-unmaximized" [::window.events/set-maximized false]]]
+           [::effects/ipc-on ["window-focused" [::window.events/set-focused true]]]
+           [::effects/ipc-on ["window-blurred" [::window.events/set-focused false]]]
+           [::effects/ipc-on ["window-entered-fullscreen" [::window.events/set-fullscreen true]]]
+           [::effects/ipc-on ["window-leaved-fullscreen" [::window.events/set-fullscreen false]]]
+           [::effects/ipc-on ["window-minimized" [::window.events/set-minimized true]]]
+           [::effects/ipc-on ["window-loaded" [::add-listeners]]]]}
+     {:dispatch [::add-listeners]})))

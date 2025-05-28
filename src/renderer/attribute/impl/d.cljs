@@ -8,9 +8,9 @@
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.attribute.views :as attribute.views]
    [renderer.element.events :as-alias element.events]
+   [renderer.events :as-alias events]
    [renderer.tool.subs :as-alias tool.subs]
-   [renderer.views :as views]
-   [renderer.window.events :as-alias window.events]))
+   [renderer.views :as views]))
 
 (defmethod attribute.hierarchy/description [:default :d]
   []
@@ -109,7 +109,7 @@
       [:span
        [:span.bg-primary.p-1 (first segment)]
        [:button.p-1.text-inherit
-        {:on-click #(rf/dispatch [::window.events/open-remote-url url])}
+        {:on-click #(rf/dispatch [::events/open-remote-url url])}
         label]
        (if (= command (string/lower-case command))
          "(Relative)" "(Absolute)")]

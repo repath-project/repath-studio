@@ -34,4 +34,6 @@
         attrs (->> (utils.element/style->map attrs)
                    (remove #(empty? (str (second %))))
                    (into {}))]
-    [tag attrs (when title [:title title]) (map element.hierarchy/render-to-string child-elements)]))
+    [tag attrs
+     (when title [:title title])
+     (map element.hierarchy/render-to-string child-elements)]))

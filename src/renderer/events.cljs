@@ -1,7 +1,8 @@
 (ns renderer.events
   (:require
    [re-frame.core :as rf]
-   [renderer.effects :as-alias effects]))
+   [renderer.effects :as-alias effects]
+   [renderer.utils.system :as utils.system]))
 
 (rf/reg-event-fx
  ::focus
@@ -22,3 +23,10 @@
  ::file-open
  (fn [_ [_ options]]
    {::effects/file-open options}))
+
+(rf/reg-event-fx
+ ::open-remote-url
+ (fn [_ [_ url]]
+   (if utils.system/electron?
+     {::effects/ipc-send ["open-remote-url" url]}
+     {::effects/open-remote-url url})))

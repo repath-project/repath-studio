@@ -9,6 +9,7 @@
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.events :as-alias element.events]
    [renderer.element.subs :as-alias element.subs]
+   [renderer.events :as-alias events]
    [renderer.frame.events :as-alias frame.events]
    [renderer.history.events :as-alias history.events]
    [renderer.history.subs :as-alias history.subs]
@@ -80,7 +81,7 @@
             :label "Export as SVG"
             :icon "export"
             :disabled (not @(rf/subscribe [::document.subs/entities?]))
-            :action [::element.events/export-svg]}
+            :action [::document.events/export-svg]}
            {:id :divider-4
             :type :separator}
            {:id :print
@@ -518,29 +519,29 @@
            {:id :website
             :label "Website"
             :icon "earth"
-            :action [::window.events/open-remote-url
+            :action [::events/open-remote-url
                      "https://repath.studio/"]}
            {:id :source-code
             :label "Source Code"
             :icon "commit"
-            :action [::window.events/open-remote-url
+            :action [::events/open-remote-url
                      "https://github.com/repath-project/repath-studio"]}
            {:id :license
             :label "License"
             :icon "lgpl"
-            :action [::window.events/open-remote-url
+            :action [::events/open-remote-url
                      "https://github.com/repath-project/repath-studio/blob/main/LICENSE"]}
            {:id :changelog
             :icon "list"
             :label "Changelog"
-            :action [::window.events/open-remote-url
+            :action [::events/open-remote-url
                      "https://repath.studio/roadmap/changelog/"]}
            {:id :divider-2
             :type :separator}
            {:id :submit-issue
             :icon "warning"
             :label "Submit an issue"
-            :action [::window.events/open-remote-url
+            :action [::events/open-remote-url
                      "https://github.com/repath-project/repath-studio/issues/new/choose"]}
            {:id :divider-3
             :type :separator}

@@ -25,13 +25,15 @@
   (testing "attribute key to camel-case conversion"
     (are [x y] (= x y)
       :viewBox (utils.attribute/->camel-case :viewbox)
-      :glyphOrientationHorizontal (utils.attribute/->camel-case :Glyphorientationhorizontal))))
+      :glyphOrientationHorizontal (utils.attribute/->camel-case
+                                   :Glyphorientationhorizontal))))
 
 (deftest test->camel-case-memo
   (testing "memoized attribute key to camel-case conversion"
     (are [x y] (= x y)
       :viewBox (utils.attribute/->camel-case :viewbox)
-      :glyphOrientationHorizontal (utils.attribute/->camel-case :Glyphorientationhorizontal))))
+      :glyphOrientationHorizontal (utils.attribute/->camel-case
+                                   :Glyphorientationhorizontal))))
 
 (deftest test-defaults
   (testing "default tag attributes"

@@ -53,7 +53,8 @@
      ["open-remote-url" open-external!]
      ["open-directory" #(.showItemInFolder shell %)]
      ["window-minimize" #(.minimize ^js @main-window)]
-     ["window-toggle-fullscreen" #(.setFullScreen ^js @main-window (not (.isFullScreen ^js @main-window)))]
+     ["window-toggle-fullscreen" #(.setFullScreen ^js @main-window
+                                                  (not (.isFullScreen ^js @main-window)))]
      ["window-toggle-maximized" #(if (.isMaximized ^js @main-window)
                                    (.unmaximize ^js @main-window)
                                    (.maximize ^js @main-window))]]]

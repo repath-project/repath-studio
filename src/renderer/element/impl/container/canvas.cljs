@@ -6,7 +6,6 @@
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
-   [renderer.event.events :as-alias event.events]
    [renderer.event.impl.drag :as event.impl.drag]
    [renderer.event.impl.keyboard :as event.impl.keyboard]
    [renderer.event.impl.pointer :as event.pointer]
@@ -42,13 +41,12 @@
         snap? @(rf/subscribe [::snap.subs/active?])
         nearest-neighbor @(rf/subscribe [::snap.subs/nearest-neighbor])
         snapped-el-id (-> nearest-neighbor meta :id)
-        snapped-el (when snapped-el-id @(rf/subscribe [::element.subs/entity snapped-el-id]))
-        key-handler #(rf/dispatch-sync [::event.events/keyboard (event.impl.keyboard/->clj %)])]
+        snapped-el (when snapped-el-id @(rf/subscribe [::element.subs/entity snapped-el-id]))]
     [:svg#canvas {:on-pointer-up pointer-handler
                   :on-pointer-down pointer-handler
                   :on-pointer-move pointer-handler
-                  :on-key-up key-handler
-                  :on-key-down key-handler
+                  :on-key-up event.impl.keyboard/handler!
+                  :on-key-down event.impl.keyboard/handler!
                   :tab-index 0 ; Enable keyboard events
                   :viewBox viewbox-attr
                   :on-drop event.impl.drag/handler!

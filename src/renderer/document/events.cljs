@@ -22,8 +22,7 @@
    [renderer.utils.element :as utils.element]
    [renderer.utils.math :refer [Vec2]]
    [renderer.utils.system :as utils.system]
-   [renderer.utils.vec :as utils.vec]
-   [renderer.window.effects :as-alias window.effects]))
+   [renderer.utils.vec :as utils.vec]))
 
 (def file-picker-options
   {:startIn config/default-path
@@ -180,7 +179,7 @@
  ::open
  (fn [_ [_ file-path]]
    (if utils.system/electron?
-     {::window.effects/ipc-invoke
+     {::effects/ipc-invoke
       {:channel "open-documents"
        :data file-path
        :on-success [::load-multiple]
@@ -234,7 +233,7 @@
  (fn [{:keys [db]} [_]]
    (let [document (document.handlers/persisted-format db)]
      (if utils.system/electron?
-       {::window.effects/ipc-invoke
+       {::effects/ipc-invoke
         {:channel "save-document"
          :data (pr-str document)
          :on-success [::saved]
@@ -260,7 +259,7 @@
  (fn [{:keys [db]} [_ id]]
    (let [document (document.handlers/persisted-format db id)]
      (if utils.system/electron?
-       {::window.effects/ipc-invoke
+       {::effects/ipc-invoke
         {:channel "save-document"
          :data (pr-str document)
          :on-success [::mark-as-saved-and-close]
@@ -279,7 +278,7 @@
  (fn [{:keys [db]} [_]]
    (let [document (document.handlers/persisted-format db)]
      (if utils.system/electron?
-       {::window.effects/ipc-invoke
+       {::effects/ipc-invoke
         {:channel "save-document-as"
          :data (pr-str document)
          :on-success [::saved]
@@ -328,12 +327,28 @@
        (document.handlers/center))))
 
 (rf/reg-event-fx
+ ::export-svg
+ (fn [{:keys [db]} _]
+   (let [els (element.handlers/root-children db)
+         svg (utils.element/->svg els)]
+     (if utils.system/electron?
+       {::effects/ipc-invoke
+        {:channel "export"
+         :data svg
+         :on-error [::notification.events/exception]}}
+       {::effects/file-save
+        [:data svg
+         :on-error [::notification.events/exception]
+         :options {:startIn "pictures"
+                   :types [{:accept {"image/svg+xml" [".svg"]}}]}]}))))
+
+(rf/reg-event-fx
  ::print
  (fn [{:keys [db]} _]
    (let [els (element.handlers/root-children db)
          svg (utils.element/->svg els)]
      (if utils.system/electron?
-       {::window.effects/ipc-invoke
+       {::effects/ipc-invoke
         {:channel "print"
          :data svg
          :on-success [::notification.events/add]

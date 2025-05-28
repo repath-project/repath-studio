@@ -108,7 +108,9 @@
           :on-drag-enter #(reset! dragged-over? true)
           :on-drag-leave #(reset! dragged-over? false)
           :on-drop (fn [e]
-                     (let [dropped-id (-> (.-dataTransfer e) (.getData "id") uuid)]
+                     (let [dropped-id (-> (.-dataTransfer e)
+                                          (.getData "id")
+                                          uuid)]
                        (.preventDefault e)
                        (reset! dragged-over? false)
                        (rf/dispatch [::document.events/swap-position dropped-id id])))
@@ -143,8 +145,9 @@
       [:> DropdownMenu/Root
        [:> DropdownMenu/Trigger
         {:as-child true}
-        [:button.button.flex.items-center.justify-center.aria-expanded:overlay.px-2.font-mono.rounded
-         {:aria-label "More document actions"}
+        [:button.button.flex.items-center.justify-center.px-2.font-mono.rounded
+         {:class "aria-expanded:overlay"
+          :aria-label "More document actions"}
          [views/icon "ellipsis-h"]]]
        [:> DropdownMenu/Portal
         [:> DropdownMenu/Content

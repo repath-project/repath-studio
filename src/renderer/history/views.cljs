@@ -113,11 +113,12 @@
        {:on-click #(rf/dispatch [::history.events/tree-view-updated 0.5 (center ref)])}
        "Center view"]
       [:button.button.flex-1
-       {:on-click #(rf/dispatch [::dialog.events/confirmation
-                                 {:title "This action cannot be undone."
-                                  :description "Are you sure you wish to clear the document history?"
-                                  :confirm-label "Clear history"
-                                  :action [::history.events/clear]}])}
+       {:on-click #(rf/dispatch
+                    [::dialog.events/confirmation
+                     {:title "This action cannot be undone."
+                      :description "Are you sure you wish to clear the document history?"
+                      :confirm-label "Clear history"
+                      :action [::history.events/clear]}])}
        "Clear history"]]
      [:div.flex-1 {:ref ref}
       [tree ref]]]))

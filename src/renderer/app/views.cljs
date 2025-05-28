@@ -15,6 +15,7 @@
    [renderer.document.subs :as-alias document.subs]
    [renderer.document.views :as document.views]
    [renderer.element.subs :as-alias element.subs]
+   [renderer.events :as-alias events]
    [renderer.frame.subs :as-alias frame.subs]
    [renderer.frame.views :as frame.views]
    [renderer.history.views :as history.views]
@@ -32,7 +33,6 @@
    [renderer.toolbar.tools :as toolbar.tools]
    [renderer.tree.views :as tree.views]
    [renderer.views :as views]
-   [renderer.window.events :as-alias window.events]
    [renderer.window.views :as window.views]))
 
 (defn coll->str
@@ -281,19 +281,19 @@
         [:div.flex.items-center.gap-2
          [views/icon "earth"]
          [:button.button-link.text-lg
-          {:on-click #(rf/dispatch [::window.events/open-remote-url
+          {:on-click #(rf/dispatch [::events/open-remote-url
                                     "https://repath.studio/"])}
           "Website"]]
         [:div.flex.items-center.gap-2
          [views/icon "commit"]
          [:button.button-link.text-lg
-          {:on-click #(rf/dispatch [::window.events/open-remote-url
+          {:on-click #(rf/dispatch [::events/open-remote-url
                                     "https://github.com/repath-project/repath-studio"])}
           "Source Code"]]
         [:div.flex.items-center.gap-2
          [views/icon "list"]
          [:button.button-link.text-lg
-          {:on-click #(rf/dispatch [::window.events/open-remote-url
+          {:on-click #(rf/dispatch [::events/open-remote-url
                                     "https://repath.studio/roadmap/changelog/"])}
           "Changelog"]]]
 

@@ -54,7 +54,8 @@
   [:> DropdownMenu/Root
    [:> DropdownMenu/Trigger
     {:title "Select zoom level"
-     :class "button flex items-center justify-center overlay px-2 font-mono rounded-sm hover:overlay-2x"
+     :class "button flex items-center justify-center overlay px-2
+             font-mono rounded-sm hover:overlay-2x"
      :side "top"}
     [:div.flex.items-center
      [views/icon "chevron-up"]]]

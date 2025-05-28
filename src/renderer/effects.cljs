@@ -1,11 +1,10 @@
 (ns renderer.effects
   (:require
-   [akiroz.re-frame.storage :as rf.storage]
    [clojure.string :as string]
-   [config :as config]
    [re-frame.core :as rf]
    [renderer.notification.events :as-alias notification.events]
-   [renderer.utils.dom :as utils.dom]))
+   [renderer.utils.dom :as utils.dom]
+   [renderer.utils.system :as utils.system]))
 
 (defn abort-error?
   [error]
@@ -40,11 +39,6 @@
                         (.getElementById js/document id)
                         (utils.dom/canvas-element!))]
      (.focus element))))
-
-(rf/reg-fx
- ::local-storage-clear
- (fn []
-   (rf.storage/->store config/app-key {})))
 
 (rf/reg-fx
  ::set-document-attr
@@ -157,3 +151,36 @@
      (.write document content)
      (.print print-window)
      (.close print-window))))
+
+(rf/reg-fx
+ ::open-remote-url
+ (fn [url]
+   (.open js/window url)))
+
+(rf/reg-fx
+ ::add-listener
+ (fn [[target channel listener formatter]]
+   (.addEventListener target
+                      channel
+                      #(rf/dispatch (conj listener
+                                          (cond-> % formatter formatter))))))
+
+(rf/reg-fx
+ ::ipc-send
+ (fn [[channel data]]
+   (when utils.system/electron?
+     (js/window.api.send channel (clj->js data)))))
+
+(rf/reg-fx
+ ::ipc-invoke
+ (fn [{:keys [channel data formatter on-success on-error]}]
+   (when utils.system/electron?
+     (-> (js/window.api.invoke channel (clj->js data))
+         (.then #(when on-success (rf/dispatch (conj on-success (cond-> % formatter formatter)))))
+         (.catch #(when on-error (rf/dispatch (conj on-error %))))))))
+
+(rf/reg-fx
+ ::ipc-on
+ (fn [[channel listener]]
+   (when utils.system/electron?
+     (js/window.api.on channel #(rf/dispatch listener)))))

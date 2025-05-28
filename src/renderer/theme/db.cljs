@@ -5,7 +5,8 @@
 ;; vars in the nested document if we have to.
 (def accent-inverted "#fff")
 (def accent "#d12b65")
-(def font-mono "'Consolas (Custom)', 'Bitstream Vera Sans Mono', monospace, 'Apple Color Emoji', 'Segoe UI Emoji'")
+(def font-mono "'Consolas (Custom)', 'Bitstream Vera Sans Mono', monospace,
+                'Apple Color Emoji', 'Segoe UI Emoji'")
 (def handle-size 13)
 (def dash-size 5)
 

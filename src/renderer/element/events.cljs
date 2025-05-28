@@ -11,9 +11,7 @@
    [renderer.notification.events :as-alias notification.events]
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
-   [renderer.utils.extra :refer [partial-right]]
-   [renderer.utils.system :as utils.system]
-   [renderer.window.effects :as-alias window.effects]))
+   [renderer.utils.extra :refer [partial-right]]))
 
 (rf/reg-event-db
  ::select
@@ -137,22 +135,6 @@
  (fn [db [_ direction]]
    (-> (element.handlers/align db direction)
        (history.handlers/finalize (str "Update " direction)))))
-
-(rf/reg-event-fx
- ::export-svg
- (fn [{:keys [db]} _]
-   (let [els (element.handlers/root-children db)
-         svg (utils.element/->svg els)]
-     (if utils.system/electron?
-       {::window.effects/ipc-invoke
-        {:channel "export"
-         :data svg
-         :on-error [::notification.events/exception]}}
-       {::effects/file-save
-        [:data svg
-         :on-error [::notification.events/exception]
-         :options {:startIn "pictures"
-                   :types [{:accept {"image/svg+xml" [".svg"]}}]}]}))))
 
 (rf/reg-event-db
  ::paste

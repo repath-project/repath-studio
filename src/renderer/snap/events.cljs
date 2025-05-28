@@ -35,6 +35,8 @@
                    (rf/assoc-effect
                     :db
                     (-> db
-                        (snap.handlers/insert-to-tree (set/difference non-selected-ids prev-non-selected-ids))
-                        (snap.handlers/delete-from-tree (set/difference prev-non-selected-ids non-selected-ids))))))
+                        (snap.handlers/insert-to-tree
+                         (set/difference non-selected-ids prev-non-selected-ids))
+                        (snap.handlers/delete-from-tree
+                         (set/difference prev-non-selected-ids non-selected-ids))))))
                context)))))

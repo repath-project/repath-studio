@@ -2,11 +2,13 @@
   (:require
    [clojure.set :as set]
    [malli.core :as m]
+   [re-frame.core :as rf]
    [renderer.app.events :as-alias app.events]
    [renderer.dialog.events :as-alias dialog.events]
    [renderer.document.events :as-alias document.events]
    [renderer.element.events :as-alias element.events]
    [renderer.event.db :refer [KeyboardEvent]]
+   [renderer.event.events :as-alias event.events]
    [renderer.events :as-alias events]
    [renderer.frame.events :as-alias frame.events]
    [renderer.history.events :as-alias history.events]
@@ -40,6 +42,10 @@
    :ctrl-key (.-ctrlKey e)
    :meta-key (.-metaKey e)
    :shift-key (.-shiftKey e)})
+
+(defn handler!
+  [^js/KeyboardEvent e]
+  (rf/dispatch-sync [::event.events/keyboard (->clj e)]))
 
 (defn input-key-down-handler!
   "Generic on-key-down handler for input elements that dispatches an event `f`

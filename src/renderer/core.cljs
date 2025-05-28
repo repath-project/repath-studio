@@ -44,7 +44,8 @@
    [renderer.tree.events]
    [renderer.utils.error :as utils.error]
    [renderer.utils.system :as utils.system]
-   [renderer.window.events :as window.events]
+   [renderer.window.effects]
+   [renderer.window.events]
    [renderer.window.subs]
    [renderer.worker.events]
    [renderer.worker.subs]
@@ -99,7 +100,7 @@
   (rf/dispatch-sync [::theme.events/add-native-listener])
   (rf/dispatch-sync [::re-pressed/add-keyboard-event-listener "keydown"])
   (rf/dispatch-sync [::re-pressed/set-keydown-rules event.impl.keyboard/keydown-rules])
-  (rf/dispatch-sync [::window.events/register-listeners])
+  (rf/dispatch-sync [::app.events/register-listeners])
 
   (.setup paper)
 

@@ -25,3 +25,8 @@
    (when (not (app.db/valid? db))
      (js/console.error (str "Event: " (first event)))
      (throw (js/Error. (str "Spec check failed: " (app.db/explain db)))))))
+
+(rf/reg-fx
+ ::local-storage-clear
+ (fn []
+   (rf.storage/->store config/app-key {})))

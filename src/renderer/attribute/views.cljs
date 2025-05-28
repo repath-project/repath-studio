@@ -11,11 +11,11 @@
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
    [renderer.event.impl.keyboard :as event.impl.keyboard]
+   [renderer.events :as-alias events]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.bcd :as utils.bcd]
-   [renderer.views :as views]
-   [renderer.window.events :as-alias window.events]))
+   [renderer.views :as views]))
 
 (defn browser-support
   [browser version-added]
@@ -47,7 +47,7 @@
 (defn info-button
   [url label]
   [:button.button.px-3.bg-primary.grow
-   {:on-click #(rf/dispatch [::window.events/open-remote-url url])}
+   {:on-click #(rf/dispatch [::events/open-remote-url url])}
    label])
 
 (defn construct-mdn-url
@@ -90,7 +90,9 @@
             :default-value v
             :placeholder (if v placeholder "multiple")
             :on-blur #(on-change-handler! % k v)
-            :on-key-down #(event.impl.keyboard/input-key-down-handler! % v on-change-handler! k v)})]
+            :on-key-down #(event.impl.keyboard/input-key-down-handler!
+                           % v
+                           on-change-handler! k v)})]
    (when-not (or (empty? (str v)) disabled)
      [:button.button.bg-primary.text-muted.absolute.h-full.right-0.clear-input-button.invisible.p-1
       {:class "hover:bg-transparent"
@@ -110,10 +112,11 @@
                     :class "w-20"}]
    [:div.px-1.w-full.bg-primary
     [views/slider
-     (merge attrs
-            {:value [(if (= "" v) placeholder v)]
-             :on-value-change (fn [[v]] (rf/dispatch [::element.events/preview-attr k v]))
-             :on-value-commit (fn [[v]] (rf/dispatch [::element.events/set-attr k v]))})]]])
+     (merge
+      attrs
+      {:value [(if (= "" v) placeholder v)]
+       :on-value-change (fn [[v]] (rf/dispatch [::element.events/preview-attr k v]))
+       :on-value-commit (fn [[v]] (rf/dispatch [::element.events/set-attr k v]))})]]])
 
 (defn select-input
   [k v {:keys [disabled items default-value] :as attrs}]
@@ -201,7 +204,9 @@
   [k v locked? tag]
   (let [property (utils.attribute/property-data k)
         initial (:initial property)
-        dispatch-tag (if (contains? (methods attribute.hierarchy/form-element) [tag k]) tag :default)]
+        dispatch-tag (if (contains? (methods attribute.hierarchy/form-element) [tag k])
+                       tag
+                       :default)]
     [:<>
      [label tag k]
      [:div.flex.w-full
@@ -227,7 +232,7 @@
        [caniusethis {:tag tag}]
        (when-let [url (:url (element.hierarchy/properties tag))]
          [:button.button.px-3.bg-primary.w-full
-          {:on-click #(rf/dispatch [::window.events/open-remote-url url])}
+          {:on-click #(rf/dispatch [::events/open-remote-url url])}
           "Learn more"])]
       [:> HoverCard/Arrow {:class "popover-arrow"}]]]]])
 
