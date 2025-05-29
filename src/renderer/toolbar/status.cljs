@@ -63,7 +63,8 @@
     [:> DropdownMenu/Content
      {:class "menu-content rounded-sm"
       :side "top"
-      :align "end"}
+      :align "end"
+      :on-escape-key-down #(.stopPropagation %)}
      (for [item zoom-options]
        ^{:key (:id item)} [views/dropdown-menu-item item])
      [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]])

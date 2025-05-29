@@ -151,7 +151,8 @@
          [views/icon "ellipsis-h"]]]
        [:> DropdownMenu/Portal
         [:> DropdownMenu/Content
-         {:class "menu-content rounded-sm"}
+         {:class "menu-content rounded-sm"
+          :on-escape-key-down #(.stopPropagation %)}
          (for [item [{:label "Close all"
                       :key :close-all
                       :action [::document.events/close-all]}

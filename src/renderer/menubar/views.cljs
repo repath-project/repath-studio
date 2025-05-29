@@ -598,7 +598,8 @@
            {:class (when items "menu-content")
             :align "start"
             :side-offset 3
-            :loop true}]
+            :loop true
+            :on-escape-key-down #(.stopPropagation %)}]
           (map menu-item items))]])
 
 (defmethod menu-item :default
