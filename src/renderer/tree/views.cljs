@@ -26,7 +26,7 @@
             (when-not state "invisible")]
     :title (if state active-title inactive-title)
     :on-double-click #(.stopPropagation %)
-    :on-pointer-up #(.stopPropagation %)
+    :click #(.stopPropagation %)
     :on-click (fn [e]
                 (.stopPropagation e)
                 (rf/dispatch [::element.events/toggle-prop id k]))}])
@@ -105,10 +105,11 @@
    (if collapsed "chevron-right" "chevron-down")
    {:title (if collapsed "expand" "collapse")
     :class "hover:bg-transparent text-inherit hover:text-inherit focus:outline-hidden small"
-    :on-pointer-up #(.stopPropagation %)
-    :on-click #(rf/dispatch (if collapsed
-                              [::document.events/expand-el id]
-                              [::document.events/collapse-el id]))}])
+    :on-double-click #(.stopPropagation %)
+    :on-click #(do (.stopPropagation %)
+                   (rf/dispatch (if collapsed
+                                  [::document.events/expand-el id]
+                                  [::document.events/collapse-el id])))}])
 
 (defn list-item-button
   [el {:keys [depth collapsed hovered]}]
@@ -135,12 +136,12 @@
       :on-drop #(drop-handler! % id)
       :on-pointer-down #(when (= (.-button %) 2)
                           (rf/dispatch [::element.events/select id (.-ctrlKey %)]))
-      :on-pointer-up (fn [e]
-                       (.stopPropagation e)
-                       (if (.-shiftKey e)
-                         (rf/dispatch-sync [::tree.events/select-range @last-focused-id id])
-                         (do (rf/dispatch [::element.events/select id (.-ctrlKey e)])
-                             (reset! last-focused-id id))))
+      :on-click (fn [e]
+                  (.stopPropagation e)
+                  (if (.-shiftKey e)
+                    (rf/dispatch-sync [::tree.events/select-range @last-focused-id id])
+                    (do (rf/dispatch [::element.events/select id (.-ctrlKey e)])
+                        (reset! last-focused-id id))))
       :style {:padding-left padding}}
      [:div.flex.items-center.content-between.w-full
       (when (seq children)
@@ -175,7 +176,7 @@
    ;; When the tree is hovered, ignore the hovered class of the elements,
    ;; if the element itself is not also hovered.
    {:class "hover:**:[&.list-item-button]:not-hover:bg-inherit"
-    :on-pointer-up #(rf/dispatch [::element.events/deselect-all])}
+    :on-click #(rf/dispatch [::element.events/deselect-all])}
    [views/scroll-area
     [:ul {:role "menu"
           :on-pointer-leave #(rf/dispatch [::document.events/clear-hovered])
