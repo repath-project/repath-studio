@@ -14,6 +14,7 @@
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.bcd :as utils.bcd]
+   [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]
    [renderer.window.events :as-alias window.events]))
 
@@ -38,7 +39,7 @@
 (defn browser-compatibility
   [support-data]
   [:<>
-   [:h4.font-bold.mb-1 "Browser compatibility"]
+   [:h4.font-bold.mb-1 (t [::browser-compatibility "Browser compatibility"])]
    [views/scroll-area
     [:div.flex.mb-4.gap-px
      (for [[browser {:keys [version_added]}] support-data]
@@ -67,8 +68,8 @@
      (when (some :version_added (vals support-data))
        [browser-compatibility support-data])
      [:div.flex.gap-2
-      (when mdn-url [info-button mdn-url "Learn more"])
-      (when spec-url [info-button spec-url "Specification"])]]))
+      (when mdn-url [info-button mdn-url (t [::learn-more "Learn more"])])
+      (when spec-url [info-button spec-url (t [::specification "Specification"])])]]))
 
 (defn on-change-handler!
   ([event k old-v]
@@ -155,10 +156,11 @@
   (when-let [v (get property k)]
     [:<>
      [:h3.font-bold (if (= k :appliesto)
-                      "Applies to"
-                      (-> (camel-snake-kebab/->kebab-case-string k)
-                          (string/replace "-" " ")
-                          (string/capitalize)))]
+                      (t [::applies-to "Applies to"])
+                      (t [(keyword "renderer.attribute.views" (name k)) 
+                          (-> (camel-snake-kebab/->kebab-case-string k) 
+                              (string/replace "-" " ") 
+                              (string/capitalize))]))]
      [:p (cond->> v (vector? v) (string/join " | "))]]))
 
 (defn property-list
@@ -228,7 +230,7 @@
        (when-let [url (:url (element.hierarchy/properties tag))]
          [:button.button.px-3.bg-primary.w-full
           {:on-click #(rf/dispatch [::window.events/open-remote-url url])}
-          "Learn more"])]
+          (t [::learn-more "Learn more"])])]
       [:> HoverCard/Arrow {:class "popover-arrow"}]]]]])
 
 (defn form

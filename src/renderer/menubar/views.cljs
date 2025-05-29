@@ -492,7 +492,7 @@
             :action [::ruler.events/toggle-visible]}
            {:id :help-bar
             :type :checkbox
-            :label "Help bar"
+            :label (t [::help-bar "Help bar"])
             :icon "info"
             :checked @(rf/subscribe [::app.subs/help-bar])
             :action [::app.events/toggle-help-bar]}

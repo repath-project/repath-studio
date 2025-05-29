@@ -3,6 +3,7 @@
    [clojure.core.matrix :as matrix]
    [malli.core :as m]
    [renderer.snap.db :refer [SnapOptions]]
+   [renderer.utils.i18n :refer [t]]
    [renderer.utils.math :refer [Vec2]]))
 
 (def BBox
@@ -84,16 +85,16 @@
         [cx cy] (center bbox)]
     (cond-> []
       (:corners options)
-      (into [(with-meta [min-x min-y] {:label "bounds corner"})
-             (with-meta [min-x max-y] {:label "bounds corner"})
-             (with-meta [max-x min-y] {:label "bounds corner"})
-             (with-meta [max-x max-y] {:label "bounds corner"})])
+      (into [(with-meta [min-x min-y] {:label (t [::bounds-corner "bounds corner"])})
+             (with-meta [min-x max-y] {:label (t [::bounds-corner "bounds corner"])})
+             (with-meta [max-x min-y] {:label (t [::bounds-corner "bounds corner"])})
+             (with-meta [max-x max-y] {:label (t [::bounds-corner "bounds corner"])})])
 
       (:centers options)
-      (into [(with-meta [cx cy] {:label "bounds center"})])
+      (into [(with-meta [cx cy] {:label (t [::bounds-center "bounds center"])})])
 
       (:midpoints options)
-      (into [(with-meta [min-x cy] {:label "bounds midpoint"})
-             (with-meta [max-x cy] {:label "bounds midpoint"})
-             (with-meta [cx min-y] {:label "bounds midpoint"})
-             (with-meta [cx max-y] {:label "bounds midpoint"})]))))
+      (into [(with-meta [min-x cy] {:label (t [::bounds-corner "bounds midpoint"])})
+             (with-meta [max-x cy] {:label (t [::bounds-corner "bounds midpoint"])})
+             (with-meta [cx min-y] {:label (t [::bounds-corner "bounds midpoint"])})
+             (with-meta [cx max-y] {:label (t [::bounds-corner "bounds midpoint"])})]))))

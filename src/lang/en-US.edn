@@ -88,6 +88,7 @@
   :language      "Language"
   :grid          "Grid"
   :rulers        "Rulers"
+  :help-bar      "Help bar"
   :debug-info    "Debug info"
   :panel         "Panel"
   :panel-element-tree    "Element tree"
@@ -119,6 +120,22 @@
   :animate-motion    "Animate Motion" 
   :duplicate         "Duplicate" 
   :delete            "Delete"}
+ 
+ :renderer.attribute.views
+ {:browser-compatibility "Browser compatibility"
+  :learn-more            "Learn more"
+  :specification         "Specification"
+  :applies-to            "Applies to"
+  :computed              "Computed"
+  :percentages           "Percentages"
+  :animatable            "Animatable"
+  :animationType         "Animation type"
+  :syntax                "Syntax"}
+ 
+ :renderer.attribute.impl.overflow
+ {:description "The overflow attribute sets what to do when an element's content is too big to fit in its block formatting context. This feature is not widely implemented yet."
+  :hidden      "Hidden"
+  :visible     "Visible"}
 
  :renderer.tool.impl.base.transform
  {:idle-click  [:div "Click to select an element or drag to select by area. " ]
@@ -194,7 +211,8 @@
   :centers        "centers"
   :midpoints      "midpoints"
   :corners        "corners"
-  :nodes          "nodes"}
+  :nodes          "nodes"
+  :to             " to "}
  
  :renderer.toolbar.object
  {:bring-front      "Bring to front"
@@ -214,4 +232,9 @@
   :subtract         "Subtract"
   :exclude          "Exclude"
   :divide           "Divide"}
+ 
+ :renderer.utils.bounds
+ {:bounds-corner   "bounds corner"
+  :bounds-center   "bounds center"
+  :bounds-midpoint "bounds midpoint"}
  }

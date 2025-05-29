@@ -87,6 +87,7 @@
   :language      "Γλώσσα"
   :grid          "Πλέγμα"
   :rulers        "Χάρακες"
+  :help-bar      "Μπάρα βοηθείας"
   :debug-info    "Πληροφορίες αποσφαλμάτωσης"
   :panel         "Πάνελ" 
   :panel-element-tree    "Δέντρο στοιχείων"
@@ -118,6 +119,22 @@
   :animate-motion    "Κίνηση κίνησης" 
   :duplicate         "Δημιουργία αντιγράφου" 
   :delete            "Διαγραφή"}
+ 
+ :renderer.attribute.views
+ {:browser-compatibility "Συμβατότητα προγράμματος περιήγησης"
+  :learn-more            "Μάθετε περισσότερα"
+  :specification         "Προδιαγραφές"
+  :applies-to            "Εφαρμόζεται σε"
+  :computed              "Yπολογισμός"
+  :percentages           "Τιμές σε ποσοστά"
+  :animatable            "Δυνατότητα κίνησης"
+  :animationType         "Τύπος κίνησης"
+  :syntax                "Σύνταξη"}
+ 
+ :renderer.attribute.impl.overflow
+ {:description "Η ιδιότητα overflow καθορίζει τι θα συμβεί όταν το περιεχόμενο ενός στοιχείου είναι πολύ μεγάλο για να χωρέσει στο πλαίσιο μορφοποίησής του. Αυτή η δυνατότητα δεν έχει ευρεία υλοποίηση ακόμα."
+  :hidden      "Κρυφό"
+  :visible     "Ορατό"}
  
  :renderer.tool.impl.base.transform
  {:idle-click  [:div "Κάντε κλικ για να επιλέξετε ένα στοιχείο ή σύρετε για να επιλέξετε απο περιοχή. "]
@@ -193,7 +210,8 @@
   :centers        "κέντρο"
   :midpoints      "μέση απόσταση"
   :corners        "γωνία"
-  :nodes          "κόμβος"}
+  :nodes          "κόμβος"
+  :to             " προς "}
  
  :renderer.toolbar.object
  {:bring-front      "Μεταφορά στο προσκήνιο"
@@ -213,4 +231,9 @@
   :subtract         "Αφαίρεση"
   :exclude          "Εξαίρεση"
   :divide           "Διαίρεση"}
+ 
+ :renderer.utils.bounds
+ {:bounds-corner   "γωνία ορίων"
+  :bounds-center   "κέντρο ορίων"
+  :bounds-midpoint "μέσο σημείο ορίων"}
  }
