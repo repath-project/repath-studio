@@ -145,26 +145,25 @@
 (rf/reg-event-fx
  ::add-listeners
  (fn [_ _]
-   {:fx [[::effects/add-listener [js/document "keydown"
-                                  [::event.events/keyboard] event.impl.keyboard/->clj]]
-         [::effects/add-listener [js/document "keyup"
-                                  [::event.events/keyboard] event.impl.keyboard/->clj]]
-         [::effects/add-listener [js/document "fullscreenchange"
-                                  [::window.events/update-fullscreen]]]
-         [::effects/add-listener [js/window "load" [::window.events/update-focused]]]
-         [::effects/add-listener [js/window "focus" [::window.events/update-focused]]]
-         [::effects/add-listener [js/window "blur" [::window.events/update-focused]]]]}))
+   {:fx (->> [[js/document "keydown" [::event.events/keyboard] event.impl.keyboard/->clj]
+              [js/document "keyup" [::event.events/keyboard] event.impl.keyboard/->clj]
+              [js/document "fullscreenchange" [::window.events/update-fullscreen]]
+              [js/window "load" [::window.events/update-focused]]
+              [js/window "focus" [::window.events/update-focused]]
+              [js/window "blur" [::window.events/update-focused]]]
+             (mapv #(vector ::effects/add-listener %)))}))
 
 (rf/reg-event-fx
  ::register-listeners
  (fn [_ _]
    (if utils.system/electron?
-     {:fx [[::effects/ipc-on ["window-maximized" [::window.events/set-maximized true]]]
-           [::effects/ipc-on ["window-unmaximized" [::window.events/set-maximized false]]]
-           [::effects/ipc-on ["window-focused" [::window.events/set-focused true]]]
-           [::effects/ipc-on ["window-blurred" [::window.events/set-focused false]]]
-           [::effects/ipc-on ["window-entered-fullscreen" [::window.events/set-fullscreen true]]]
-           [::effects/ipc-on ["window-leaved-fullscreen" [::window.events/set-fullscreen false]]]
-           [::effects/ipc-on ["window-minimized" [::window.events/set-minimized true]]]
-           [::effects/ipc-on ["window-loaded" [::add-listeners]]]]}
+     {:fx (->> [["window-maximized" [::window.events/set-maximized true]]
+                ["window-unmaximized" [::window.events/set-maximized false]]
+                ["window-focused" [::window.events/set-focused true]]
+                ["window-blurred" [::window.events/set-focused false]]
+                ["window-entered-fullscreen" [::window.events/set-fullscreen true]]
+                ["window-leaved-fullscreen" [::window.events/set-fullscreen false]]
+                ["window-minimized" [::window.events/set-minimized true]]
+                ["window-loaded" [::add-listeners]]]
+               (mapv #(vector ::effects/ipc-on %)))}
      {:dispatch [::add-listeners]})))

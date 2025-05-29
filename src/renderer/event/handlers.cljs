@@ -22,7 +22,8 @@
 (m/=> pointer [:-> App PointerEvent number? App])
 (defn pointer
   [db e]
-  (let [{:keys [pointer-offset tool dom-rect drag primary-tool drag-threshold nearest-neighbor]} db
+  (let [{:keys [pointer-offset tool dom-rect drag primary-tool
+                drag-threshold nearest-neighbor]} db
         {:keys [button pointer-pos timestamp pointer-id]} e
         adjusted-pointer-pos (frame.handlers/adjusted-pointer-pos db pointer-pos)
         db (snap.handlers/update-nearest-neighbors db)]
