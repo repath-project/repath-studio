@@ -180,30 +180,6 @@
          (history.handlers/finalize "Scale selection")))))
 
 (rf/reg-event-db
- ::move-up
- (fn [db _]
-   (-> (element.handlers/translate db [0 -1])
-       (history.handlers/finalize "Move selection up"))))
-
-(rf/reg-event-db
- ::move-down
- (fn [db _]
-   (-> (element.handlers/translate db [0 1])
-       (history.handlers/finalize "Move selection down"))))
-
-(rf/reg-event-db
- ::move-left
- (fn [db _]
-   (-> (element.handlers/translate db [-1 0])
-       (history.handlers/finalize "Move selection left"))))
-
-(rf/reg-event-db
- ::move-right
- (fn [db [_]]
-   (-> (element.handlers/translate db [1 0])
-       (history.handlers/finalize "Move selection right"))))
-
-(rf/reg-event-db
  ::->path
  (fn [db]
    (-> (element.handlers/->path db)

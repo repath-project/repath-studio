@@ -192,14 +192,6 @@
                 [[::events/focus "help"]
                  [{:keyCode (key-codes "H")
                    :altKey true}]]
-                [[::element.events/move-up]
-                 [{:keyCode (key-codes "UP")}]]
-                [[::element.events/move-down]
-                 [{:keyCode (key-codes "DOWN")}]]
-                [[::element.events/move-left]
-                 [{:keyCode (key-codes "LEFT")}]]
-                [[::element.events/move-right]
-                 [{:keyCode (key-codes "RIGHT")}]]
                 [[::window.events/close]
                  [{:keyCode (key-codes "Q")
                    :ctrlKey true}]]

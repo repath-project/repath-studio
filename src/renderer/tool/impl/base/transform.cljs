@@ -106,13 +106,37 @@
   [db e]
   (cond-> db
     (:shift-key e)
-    (element.handlers/ignore :bbox)))
+    (element.handlers/ignore :bbox)
+
+    (= (:key e) "ArrowUp")
+    (element.handlers/translate [0 -1])
+
+    (= (:key e) "ArrowDown")
+    (element.handlers/translate [0 1])
+
+    (= (:key e) "ArrowLeft")
+    (element.handlers/translate [-1 0])
+
+    (= (:key e) "ArrowRight")
+    (element.handlers/translate [1 0])))
 
 (defmethod tool.hierarchy/on-key-up :transform
   [db e]
   (cond-> db
     (not (:shift-key e))
-    (element.handlers/clear-ignored)))
+    (element.handlers/clear-ignored)
+
+    (= (:key e) "ArrowUp")
+    (history.handlers/finalize "Move selection up")
+
+    (= (:key e) "ArrowDown")
+    (history.handlers/finalize "Move selection down")
+
+    (= (:key e) "ArrowLeft")
+    (history.handlers/finalize "Move selection left")
+
+    (= (:key e) "ArrowRight")
+    (history.handlers/finalize "Move selection right")))
 
 (defmethod tool.hierarchy/on-pointer-down :transform
   [db {:keys [button element] :as e}]
