@@ -43,12 +43,3 @@ label {
     cursor: pointer;
   }
 }
-
-a {
-  @apply text-accent cursor-pointer;
-  text-decoration: none;
-}
-
-pre {
-  @apply font-mono;
-}
