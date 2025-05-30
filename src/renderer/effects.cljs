@@ -3,8 +3,7 @@
    [clojure.string :as string]
    [re-frame.core :as rf]
    [renderer.notification.events :as-alias notification.events]
-   [renderer.utils.dom :as utils.dom]
-   [renderer.utils.system :as utils.system]))
+   [renderer.utils.dom :as utils.dom]))
 
 (defn abort-error?
   [error]
@@ -16,9 +15,21 @@
    (assoc coeffects :guid (random-uuid))))
 
 (rf/reg-cofx
+ ::platform
+ (fn [coeffects _]
+   (assoc coeffects :platform (if js/window.api
+                                js/window.api.platform
+                                "web"))))
+
+(rf/reg-cofx
+ ::user-agent
+ (fn [coeffects _]
+   (assoc coeffects :user-agent (.-userAgent js/navigator))))
+
+(rf/reg-cofx
  ::system-language
  (fn [coeffects _]
-   (assoc coeffects :system-language (keyword (.-language js/navigator)))))
+   (assoc coeffects :system-language (.-language js/navigator))))
 
 (rf/reg-fx
  ::clipboard-write
@@ -78,7 +89,7 @@
                    (when (and on-error (not (abort-error? error)))
                      (rf/dispatch (conj on-error error))))))
      (rf/dispatch
-      [::notification.events/unavailable-feature
+      [::notification.events/show-unavailable-feature
        "Save File Picker"
        "https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker#browser_compatibility"]))))
 
@@ -173,19 +184,16 @@
 (rf/reg-fx
  ::ipc-send
  (fn [[channel data]]
-   (when utils.system/electron?
-     (js/window.api.send channel (clj->js data)))))
+   (js/window.api?.send channel (clj->js data))))
 
 (rf/reg-fx
  ::ipc-invoke
  (fn [{:keys [channel data formatter on-success on-error]}]
-   (when utils.system/electron?
-     (-> (js/window.api.invoke channel (clj->js data))
-         (.then #(when on-success (rf/dispatch (conj on-success (cond-> % formatter formatter)))))
-         (.catch #(when on-error (rf/dispatch (conj on-error %))))))))
+   (-> (js/window.api?.invoke channel (clj->js data))
+       (.then #(when on-success (rf/dispatch (conj on-success (cond-> % formatter formatter)))))
+       (.catch #(when on-error (rf/dispatch (conj on-error %)))))))
 
 (rf/reg-fx
  ::ipc-on
  (fn [[channel listener]]
-   (when utils.system/electron?
-     (js/window.api.on channel #(rf/dispatch listener)))))
+   (js/window.api?.on channel #(rf/dispatch listener))))

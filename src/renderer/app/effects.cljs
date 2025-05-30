@@ -27,6 +27,6 @@
      (throw (js/Error. (str "Spec check failed: " (app.db/explain db)))))))
 
 (rf/reg-fx
- ::local-storage-clear
+ ::clear-local-storage
  (fn []
    (rf.storage/->store config/app-key {})))

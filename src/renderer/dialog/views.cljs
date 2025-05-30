@@ -5,25 +5,26 @@
    [clojure.string :as string]
    [config :as config]
    [re-frame.core :as rf]
+   [renderer.app.subs :as app.subs]
    [renderer.dialog.events :as-alias dialog.events]
    [renderer.dialog.subs :as-alias dialog.subs]
    [renderer.document.events :as-alias document.events]
    [renderer.menubar.views :as menubar.views]
    [renderer.utils.i18n :refer [t]]
-   [renderer.utils.system :as utils.system]
    [renderer.views :as views]))
 
 (defn about
   []
-  [:div.p-5
-   [:div.flex.gap-3.items-start.pb-2
-    [:p
-     [:span.block [:strong "Version: "] config/version]
-     [:span.block [:strong "Browser: "] utils.system/user-agent]]]
-   [:button.button.px-2.accent.rounded.w-full
-    {:auto-focus true
-     :on-click #(rf/dispatch [::dialog.events/close])}
-    "OK"]])
+  (let [user-agent @(rf/subscribe [::app.subs/user-agent])]
+    [:div.p-5
+     [:div.flex.gap-3.items-start.pb-2
+      [:p
+       [:span.block [:strong "Version: "] config/version]
+       [:span.block [:strong "Browser: "] user-agent]]]
+     [:button.button.px-2.accent.rounded.w-full
+      {:auto-focus true
+       :on-click #(rf/dispatch [::dialog.events/close])}
+      "OK"]]))
 
 (defn confirmation
   [{:keys [description action confirm-label cancel-label]}]

@@ -11,13 +11,16 @@
 (deftest document
   (rf.test/run-test-sync
    (rf/dispatch [::app.events/initialize-db])
-   (is (not @(rf/subscribe [::document.subs/entities?])))
-   (is (not @(rf/subscribe [::document.subs/active])))
 
-   (rf/dispatch [::document.events/init])
-   (is @(rf/subscribe [::document.subs/entities?]))
-   (is (document.db/valid? @(rf/subscribe [::document.subs/active])))
-   (is (= "• Untitled-1 - Repath Studio" @(rf/subscribe [::document.subs/title-bar])))
+   (testing "defaults"
+     (is (not @(rf/subscribe [::document.subs/entities?])))
+     (is (not @(rf/subscribe [::document.subs/active]))))
+
+   (testing "initialization"
+     (rf/dispatch [::document.events/init])
+     (is @(rf/subscribe [::document.subs/entities?]))
+     (is (document.db/valid? @(rf/subscribe [::document.subs/active])))
+     (is (= "• Untitled-1 - Repath Studio" @(rf/subscribe [::document.subs/title-bar]))))
 
    (testing "close"
      (rf/dispatch [::document.events/close @(rf/subscribe [::document.subs/active-id]) false])

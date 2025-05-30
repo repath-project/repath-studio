@@ -214,7 +214,7 @@
                    :altKey true}]]
                 [[::window.events/toggle-fullscreen]
                  [{:keyCode (key-codes "F11")}]]
-                [[::dialog.events/cmdk]
+                [[::dialog.events/show-cmdk]
                  [{:keyCode (key-codes "F1")}]
                  [{:keyCode (key-codes "K")
                    :ctrlKey true}]]

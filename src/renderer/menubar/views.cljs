@@ -513,7 +513,7 @@
    :items [{:id :cmdk
             :label "Command panel"
             :icon "command"
-            :action [::dialog.events/cmdk]}
+            :action [::dialog.events/show-cmdk]}
            {:id :divider-1
             :type :separator}
            {:id :website
@@ -548,7 +548,7 @@
            {:id :about
             :icon "info"
             :label "About"
-            :action [::dialog.events/about]}]})
+            :action [::dialog.events/show-about]}]})
 
 (defmulti menu-item :type)
 

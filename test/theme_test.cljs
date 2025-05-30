@@ -19,7 +19,7 @@
   (rf.test/run-test-sync
    (test-fixtures)
    (rf/dispatch [::app.events/initialize-db])
-   (rf/dispatch [::theme.events/update-native-mode])
+   (rf/dispatch [::theme.events/set-document-attr])
 
    (let [theme-mode (rf/subscribe [::theme.subs/mode])]
 

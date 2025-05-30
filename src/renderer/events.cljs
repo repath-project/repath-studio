@@ -1,8 +1,7 @@
 (ns renderer.events
   (:require
    [re-frame.core :as rf]
-   [renderer.effects :as-alias effects]
-   [renderer.utils.system :as utils.system]))
+   [renderer.effects :as-alias effects]))
 
 (rf/reg-event-fx
  ::focus
@@ -26,7 +25,7 @@
 
 (rf/reg-event-fx
  ::open-remote-url
- (fn [_ [_ url]]
-   (if utils.system/electron?
-     {::effects/ipc-send ["open-remote-url" url]}
-     {::effects/open-remote-url url})))
+ (fn [{:keys [db]} [_ url]]
+   (if (= (:platform db) "web")
+     {::effects/open-remote-url url}
+     {::effects/ipc-send ["open-remote-url" url]})))

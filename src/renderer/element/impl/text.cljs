@@ -17,8 +17,7 @@
    [renderer.tool.subs :as-alias tool.subs]
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
-   [renderer.utils.length :as utils.length]
-   [renderer.utils.system :as utils.system]))
+   [renderer.utils.length :as utils.length]))
 
 (derive :text ::element.hierarchy/shape)
 
@@ -114,7 +113,7 @@
                             (str (utils.length/unit->px font-size) "px"))
                :font-weight (if (empty? font-weight) "inherit" font-weight)}}]]))
 
-(when utils.system/electron?
+(when js/window.api
   (defmethod element.hierarchy/path :text
     [el]
     (let [{:keys [attrs content]} el

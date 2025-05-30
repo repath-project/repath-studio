@@ -48,4 +48,4 @@
     ::effects/file-read-as [file
                             :data-url
                             {"load" {:on-fire [::element.events/set-attr :href]}
-                             "error" {:on-fire [::notification.events/exception]}}]}))
+                             "error" {:on-fire [::notification.events/show-exception]}}]}))

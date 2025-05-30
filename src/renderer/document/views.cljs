@@ -4,13 +4,13 @@
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    [re-frame.core :as rf]
    [reagent.core :as reagent]
+   [renderer.app.subs :as-alias app.subs]
    [renderer.document.events :as-alias document.events]
    [renderer.document.subs :as-alias document.subs]
    [renderer.events :as-alias events]
    [renderer.history.events :as-alias history.events]
    [renderer.history.subs :as-alias history.subs]
    [renderer.history.views :as history.views]
-   [renderer.utils.system :as utils.system]
    [renderer.views :as views]))
 
 (defn actions
@@ -69,7 +69,8 @@
   [id]
   (let [document @(rf/subscribe [::document.subs/entity id])
         path (:path document)
-        tabs @(rf/subscribe [::document.subs/tabs])]
+        tabs @(rf/subscribe [::document.subs/tabs])
+        electron? @(rf/subscribe [::app.subs/electron?])]
     (cond-> [{:label "Close"
               :action [::document.events/close id true]}
              {:label "Close others"
@@ -79,7 +80,7 @@
               :action [::document.events/close-all]}
              {:label "Close saved"
               :action [::document.events/close-saved]}]
-      utils.system/electron?
+      electron?
       (concat [{:type :separator}
                {:label "Open containing directory"
                 :action [::document.events/open-directory path]

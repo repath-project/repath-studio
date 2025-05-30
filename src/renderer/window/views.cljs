@@ -1,11 +1,11 @@
 (ns renderer.window.views
   (:require
    [re-frame.core :as rf]
+   [renderer.app.subs :as-alias app.subs]
    [renderer.document.subs :as-alias document.subs]
    [renderer.menubar.views :as menubar.views]
    [renderer.theme.events :as-alias theme.events]
    [renderer.theme.subs :as-alias theme.subs]
-   [renderer.utils.system :as utils.system]
    [renderer.views :as views]
    [renderer.window.events :as-alias window.events]
    [renderer.window.subs :as-alias window.subs]))
@@ -41,12 +41,14 @@
   []
   (let [fullscreen? @(rf/subscribe [::window.subs/fullscreen?])
         maximized? @(rf/subscribe [::window.subs/maximized?])
-        theme-mode (name @(rf/subscribe [::theme.subs/mode]))]
+        theme-mode (name @(rf/subscribe [::theme.subs/mode]))
+        mac? @(rf/subscribe [::app.subs/mac?])
+        electron? @(rf/subscribe [::app.subs/electron?])]
     [:div.flex.items-center.relative
-     (when-not (or fullscreen? utils.system/mac?)
+     (when-not (or fullscreen? mac?)
        [app-icon])
      [:div.flex.relative.bg-secondary
-      {:class (when (and utils.system/mac? (not fullscreen?)) "ml-16")}
+      {:class (when (and mac? (not fullscreen?)) "ml-16")}
       [menubar.views/root]]
      [:div.absolute.hidden.justify-center.drag.grow.h-full.items-center.pointer-events-none
       {:class "md:flex left-1/2 -translate-x-1/2"
@@ -57,7 +59,7 @@
               :title (str "Theme mode - " theme-mode)
               :icon theme-mode
               :class "bg-primary"}]
-     (when (and utils.system/electron? (not fullscreen?) (not utils.system/mac?))
+     (when (and electron? (not fullscreen?) (not mac?))
        (into [:div.text-right]
              (map button (window-control-buttons maximized?))))
      (when fullscreen?

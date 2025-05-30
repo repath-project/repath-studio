@@ -275,9 +275,9 @@
          [:div.flex.items-center.gap-2
           [views/icon "command"]
           [:button.button-link.text-lg
-           {:on-click #(rf/dispatch [::dialog.events/cmdk])}
+           {:on-click #(rf/dispatch [::dialog.events/show-cmdk])}
            "Command panel"]
-          [views/shortcuts [::dialog.events/cmdk]]]]
+          [views/shortcuts [::dialog.events/show-cmdk]]]]
         [:div.flex.items-center.gap-2
          [views/icon "earth"]
          [:button.button-link.text-lg

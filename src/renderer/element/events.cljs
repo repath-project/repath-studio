@@ -251,7 +251,7 @@
       :fx [(when (seq els)
              [::effects/clipboard-write
               {:data (utils.element/->svg els)
-               :on-error [::notification.events/exception]}])]})))
+               :on-error [::notification.events/show-exception]}])]})))
 
 (rf/reg-event-fx
  ::cut
@@ -263,7 +263,7 @@
       :fx [(when (seq els)
              [::effects/clipboard-write
               {:data (utils.element/->svg els)
-               :on-error [::notification.events/exception]}])]})))
+               :on-error [::notification.events/show-exception]}])]})))
 
 (rf/reg-event-fx
  ::trace
@@ -288,7 +288,7 @@
                                                    :label (.-name file)
                                                    :position position)
                              :on-fire [::import-svg]}
-                     "error" {:on-fire [::notification.events/exception]}}]}
+                     "error" {:on-fire [::notification.events/show-exception]}}]}
 
        (contains? #{"image/jpeg" "image/png" "image/bmp" "image/gif"} file-type)
        {::element.effects/import-image [file position]}

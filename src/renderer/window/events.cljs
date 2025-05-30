@@ -4,7 +4,6 @@
    [renderer.app.effects :as-alias app.effects]
    [renderer.document.handlers :as document.handlers]
    [renderer.effects :as-alias effects]
-   [renderer.utils.system :as utils.system]
    [renderer.window.effects :as-alias window.effects]))
 
 (rf/reg-event-db
@@ -50,15 +49,15 @@
 
 (rf/reg-event-fx
  ::relaunch
- (fn [_ _]
-   (if utils.system/electron?
-     {::effects/ipc-send ["relaunch"]}
-     {::window.effects/reload nil})))
+ (fn [{:keys [db]} _]
+   (if (= (:platform db) "web")
+     {::window.effects/reload nil}
+     {::effects/ipc-send ["relaunch"]})))
 
 (rf/reg-event-fx
  ::clear-local-storage-and-relaunch
  (fn [_ _]
-   {:fx [[::app.effects/local-storage-clear nil]
+   {:fx [[::app.effects/clear-local-storage nil]
          [:dispatch [::relaunch]]]}))
 
 (rf/reg-event-fx
@@ -68,10 +67,10 @@
 
 (rf/reg-event-fx
  ::toggle-fullscreen
- (fn [_ _]
-   (if utils.system/electron?
-     {::effects/ipc-send ["window-toggle-fullscreen"]}
-     {::window.effects/toggle-fullscreen nil})))
+ (fn [{:keys [db]} _]
+   (if (= (:platform db) "web")
+     {::window.effects/toggle-fullscreen nil}
+     {::effects/ipc-send ["window-toggle-fullscreen"]})))
 
 (rf/reg-event-fx
  ::minimize

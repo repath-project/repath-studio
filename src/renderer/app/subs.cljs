@@ -65,6 +65,26 @@
  :-> :lang)
 
 (rf/reg-sub
+ ::platform
+ :-> :platform)
+
+(rf/reg-sub
+ ::electron?
+ :<- [::platform]
+ (fn [platform _]
+   (not= platform "web")))
+
+(rf/reg-sub
+ ::mac?
+ :<- [::platform]
+ (fn [platform _]
+   (= platform "darwin")))
+
+(rf/reg-sub
+ ::user-agent
+ :-> :user-agent)
+
+(rf/reg-sub
  ::grid
  :-> :grid)
 

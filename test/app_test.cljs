@@ -12,7 +12,7 @@
   (rf/reg-cofx
    ::effects/system-language
    (fn [coeffects _]
-     (assoc coeffects :system-language :en-US))))
+     (assoc coeffects :system-language "en-US"))))
 
 (deftest app
   (rf.test/run-test-sync
@@ -26,15 +26,15 @@
 
        (testing "initialization"
          (rf/dispatch [::app.events/init-lang])
-         (is (= :en-US @lang)))
+         (is (= "en-US" @lang)))
 
-       (testing "valid setting"
-         (rf/dispatch [::app.events/set-lang :el-GR])
-         (is (= :el-GR @lang)))
+       (testing "set valid language"
+         (rf/dispatch [::app.events/set-lang "el-GR"])
+         (is (= "el-GR" @lang)))
 
-       (testing "invalid setting"
-         (rf/dispatch [::app.events/set-lang :foo-Bar])
-         (is (= :el-GR @lang)))))
+       (testing "set invalid language"
+         (rf/dispatch [::app.events/set-lang "foo-Bar"])
+         (is (= "el-GR" @lang)))))
 
    (testing "toggling grid"
      (let [grid-visible (rf/subscribe [::app.subs/grid])]

@@ -22,12 +22,14 @@
   [:map-of keyword? [:map [:visible boolean?]]])
 
 (def Lang
-  [:fn {:error/fn (fn [{:keys [value]} _]
-                    (str value " is not a supported language"))}
-   utils.i18n/lang?])
+  [:fn {:error/fn (fn [{:keys [value]} _] (str value " is not a supported language"))}
+   utils.i18n/supported-lang?])
+
+(def Platform
+  [:enum "darwin" "linux" "win32" "web"])
 
 (def App
-  [:map
+  [:map {:closed true}
    [:tool {:default :transform} Tool]
    [:primary-tool {:optional true} Tool]
    [:pointer-pos {:default [0 0]} Vec2]
@@ -60,6 +62,9 @@
    [:pen-mode {:default false} boolean?]
    [:backdrop {:default false} boolean?]
    [:lang {:optional true :persist true} Lang]
+   [:system-lang {:optional true} string?]
+   [:platform {:optional true} Platform]
+   [:user-agent {:optional true} string?]
    [:repl-mode {:default :cljs} keyword?]
    [:worker {:default {:tasks {}}} [:map [:tasks map?]]]
    [:window {:default {}} Window]
