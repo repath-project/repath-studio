@@ -26,7 +26,6 @@
             (when-not state "invisible")]
     :title (if state active-title inactive-title)
     :on-double-click #(.stopPropagation %)
-    :click #(.stopPropagation %)
     :on-click (fn [e]
                 (.stopPropagation e)
                 (rf/dispatch [::element.events/toggle-prop id k]))}])
