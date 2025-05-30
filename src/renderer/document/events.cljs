@@ -10,6 +10,7 @@
    [renderer.dialog.handlers :as dialog.handlers]
    [renderer.dialog.views :as dialog.views]
    [renderer.document.db :as document.db]
+   [renderer.document.effects :as document.effects]
    [renderer.document.handlers :as document.handlers]
    [renderer.effects :as-alias effects]
    [renderer.element.handlers :as element.handlers]
@@ -232,7 +233,7 @@
  (fn [{:keys [db]} [_]]
    (let [document (document.handlers/persisted-format db)]
      (if (= (:platform db) "web")
-       {::effects/file-save
+       {::document.effects/file-save
         {:data (document.handlers/save-format document)
          :options file-picker-options
          :formatter (fn [file] {:id (:id document)
@@ -258,7 +259,7 @@
  (fn [{:keys [db]} [_ id]]
    (let [document (document.handlers/persisted-format db id)]
      (if (= (:platform db) "web")
-       {::effects/file-save
+       {::document.effects/file-save
         {:data (document.handlers/save-format document)
          :options file-picker-options
          :formatter (fn [file] {:id id
@@ -277,7 +278,7 @@
  (fn [{:keys [db]} [_]]
    (let [document (document.handlers/persisted-format db)]
      (if (= (:platform db) "web")
-       {::effects/file-save
+       {::document.effects/file-save
         {:data (document.handlers/save-format document)
          :options file-picker-options
          :formatter (fn [file] {:id (:id document)
@@ -335,7 +336,7 @@
         {:channel "export"
          :data svg
          :on-error [::notification.events/show-exception]}}
-       {::effects/file-save
+       {::document.effects/file-save
         [:data svg
          :on-error [::notification.events/show-exception]
          :options {:startIn "pictures"

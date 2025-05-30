@@ -1,35 +1,13 @@
 (ns renderer.effects
   (:require
-   [clojure.string :as string]
    [re-frame.core :as rf]
-   [renderer.notification.events :as-alias notification.events]
-   [renderer.utils.dom :as utils.dom]))
-
-(defn abort-error?
-  [error]
-  (string/includes? (.-message error) "The user aborted a request."))
+   [renderer.utils.dom :as utils.dom]
+   [renderer.utils.error :as utils.error]))
 
 (rf/reg-cofx
  ::guid
  (fn [coeffects _]
    (assoc coeffects :guid (random-uuid))))
-
-(rf/reg-cofx
- ::platform
- (fn [coeffects _]
-   (assoc coeffects :platform (if js/window.api
-                                js/window.api.platform
-                                "web"))))
-
-(rf/reg-cofx
- ::user-agent
- (fn [coeffects _]
-   (assoc coeffects :user-agent (.-userAgent js/navigator))))
-
-(rf/reg-cofx
- ::system-language
- (fn [coeffects _]
-   (assoc coeffects :system-language (.-language js/navigator))))
 
 (rf/reg-fx
  ::clipboard-write
@@ -61,38 +39,6 @@
  (fn [[k v]]
    (.setAttribute js/window.document.documentElement k v)))
 
-(rf/reg-fx
- ::query-local-fonts
- (fn [{:keys [on-success on-error formatter]}]
-   (when-not (undefined? js/window.queryLocalFonts)
-     (-> (.queryLocalFonts js/window)
-         (.then #(when on-success (rf/dispatch (conj on-success (cond-> % formatter formatter)))))
-         (.catch #(when on-error (rf/dispatch (conj on-error %))))))))
-
-(rf/reg-fx
- ::file-save
- (fn [{:keys [options data on-success on-error formatter]}]
-   (if (.-showSaveFilePicker js/window)
-     (-> (.showSaveFilePicker js/window (clj->js options))
-         (.then (fn [^js/FileSystemFileHandle file-handle]
-                  (.then (.createWritable file-handle)
-                         (fn [^js/FileSystemWritableFileStream writable-stream]
-                           (.then (.write writable-stream data)
-                                  (fn []
-                                    (.close writable-stream)
-                                    (when on-success
-                                      (rf/dispatch (conj on-success
-                                                         (cond-> file-handle
-                                                           formatter
-                                                           formatter))))))))))
-         (.catch (fn [^js/Error error]
-                   (when (and on-error (not (abort-error? error)))
-                     (rf/dispatch (conj on-error error))))))
-     (rf/dispatch
-      [::notification.events/show-unavailable-feature
-       "Save File Picker"
-       "https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker#browser_compatibility"]))))
-
 (defn legacy-file-open!
   [cb]
   (let [el (js/document.createElement "input")]
@@ -111,7 +57,7 @@
            (.then (fn [[^js/FileSystemFileHandle file-handle]]
                     (.then (.getFile file-handle) success-cb)))
            (.catch (fn [^js/Error error]
-                     (when (and on-error (not (abort-error? error)))
+                     (when (and on-error (not (utils.error/abort-error? error)))
                        (rf/dispatch (conj on-error error))))))
        (legacy-file-open! success-cb)))))
 

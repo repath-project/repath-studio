@@ -3,14 +3,14 @@
    [cljs.test :refer-macros [deftest is testing]]
    [day8.re-frame.test :as rf.test]
    [re-frame.core :as rf]
+   [renderer.app.effects :as-alias app.effects]
    [renderer.app.events :as-alias app.events]
-   [renderer.app.subs :as-alias app.subs]
-   [renderer.effects :as-alias effects]))
+   [renderer.app.subs :as-alias app.subs]))
 
 (defn test-fixtures
   []
   (rf/reg-cofx
-   ::effects/system-language
+   ::app.effects/system-language
    (fn [coeffects _]
      (assoc coeffects :system-language "en-US"))))
 

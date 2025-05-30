@@ -25,9 +25,9 @@
 
 (rf/reg-event-fx
  ::initialize-db
- [(rf/inject-cofx ::effects/user-agent)
-  (rf/inject-cofx ::effects/platform)
-  (rf/inject-cofx ::effects/system-language)]
+ [(rf/inject-cofx ::app.effects/user-agent)
+  (rf/inject-cofx ::app.effects/platform)
+  (rf/inject-cofx ::app.effects/system-language)]
  (fn [{:keys [user-agent platform system-language]} _]
    {:db (assoc app.db/default
                :platform platform
@@ -122,7 +122,7 @@
  ::load-system-fonts
  (fn [{:keys [db]} _]
    (if (= (:platform db) "web")
-     {::effects/query-local-fonts
+     {::app.effects/query-local-fonts
       {:on-success [::set-system-fonts]
        :on-error [::notification.events/show-exception]
        :formatter #(mapv ->font-map %)}}

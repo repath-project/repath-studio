@@ -9,6 +9,31 @@
 
 (rf.storage/reg-co-fx! config/app-key {:cofx :store})
 
+(rf/reg-cofx
+ ::platform
+ (fn [coeffects _]
+   (assoc coeffects :platform (if js/window.api
+                                js/window.api.platform
+                                "web"))))
+
+(rf/reg-cofx
+ ::user-agent
+ (fn [coeffects _]
+   (assoc coeffects :user-agent (.-userAgent js/navigator))))
+
+(rf/reg-cofx
+ ::system-language
+ (fn [coeffects _]
+   (assoc coeffects :system-language (.-language js/navigator))))
+
+(rf/reg-fx
+ ::query-local-fonts
+ (fn [{:keys [on-success on-error formatter]}]
+   (when-not (undefined? js/window.queryLocalFonts)
+     (-> (.queryLocalFonts js/window)
+         (.then #(when on-success (rf/dispatch (conj on-success (cond-> % formatter formatter)))))
+         (.catch #(when on-error (rf/dispatch (conj on-error %))))))))
+
 (rf/reg-fx
  ::persist
  (fn []
