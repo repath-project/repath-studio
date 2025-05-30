@@ -33,7 +33,7 @@
     [:button.button.px-2.bg-primary.rounded.flex-1
      {:on-click #(rf/dispatch [::dialog.events/close])}
      (or cancel-label "Cancel")]
-    [:button.button.px-2.bg-primary.rounded.flex-1
+    [:button.button.px-2.rounded.flex-1.accent
      {:auto-focus true
       :on-click #(rf/dispatch [::dialog.events/close action])}
      (or confirm-label "OK")]]])
