@@ -20,9 +20,9 @@
   "Experimental way of getting the bounds of unknown or complicated elements
    using the getBBox method.
    https://developer.mozilla.org/en-US/docs/Web/API/SVGGraphicsElement/getBBox"
-  [el]
-  (when (.-getBBox el)
-    (let [b (.getBBox el)
+  [dom-el]
+  (when (.-getBBox dom-el)
+    (let [b (.getBBox dom-el)
           min-x (.-x b)
           min-y (.-y b)
           max-x (+ min-x (.-width b))

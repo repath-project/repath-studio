@@ -29,7 +29,7 @@
 (m/=> multiplier [:-> string? number?])
 (defn multiplier
   "Returns the multiplier by unit.
-   If the unit is invalid, it fallbacks to :px (1)"
+   If the unit is invalid, it fallbacks to :px (1)."
   [s]
   (get unit-to-pixel-map (if (valid-unit? s)
                            (utils.unit/->key s)
