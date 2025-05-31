@@ -117,7 +117,7 @@
   (defmethod element.hierarchy/path :text
     [el]
     (let [{:keys [attrs content]} el
-          font-descriptor #js {:family (:font-family attrs)
+          font-descriptor #js {:family (or (:font-family attrs) "Adwaita Sans")
                                :weight (js/parseInt (:font-weight attrs))
                                :italic (= (:font-style attrs) "italic")}]
       (.textToPath

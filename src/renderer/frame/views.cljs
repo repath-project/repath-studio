@@ -30,15 +30,16 @@
 
       :reagent-render #()})))
 
+;; https://github.com/ryanseddon/react-frame-component#initialcontent
 (defonce initial-markup
-  ;; https://github.com/ryanseddon/react-frame-component#initialcontent
   [:html
-   [:head]
+   [:head [:link {:rel "stylesheet" :href "./fonts/styles.css"}]]
    [:body {:style {:width "100%"
                    :height "100%"
                    :overflow "hidden"
                    :user-select "none"
                    :touch-action "none"
+                   :font-family "Adwaita Sans"
                    :margin 0}}]])
 
 (def resize-observer
