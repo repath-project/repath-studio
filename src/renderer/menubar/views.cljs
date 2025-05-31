@@ -582,7 +582,8 @@
     (into [:> Menubar/SubContent
            {:class "menu-content"
             :align "start"
-            :loop true}]
+            :loop true
+            :on-escape-key-down #(.stopPropagation %)}]
           (map menu-item items))]])
 
 (defmethod menu-item :root
