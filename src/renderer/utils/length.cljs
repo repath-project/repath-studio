@@ -3,13 +3,12 @@
    [malli.core :as m]
    [renderer.utils.unit :as utils.unit]))
 
-(def ppi 96)
+(defonce ppi 96)
 
-(def units
-  #{"px" "ch" "ex" "em" "rem" "in" "cm" "mm" "pt" "pc" "%"})
+(defonce units #{"px" "ch" "ex" "em" "rem" "in" "cm" "mm" "pt" "pc" "%"})
 
-(def unit-to-pixel-map
-  ;; TODO: Find an agnostic way to handle percentages (we need to pass a base).
+;; TODO: Find an agnostic way to handle percentages (we need to pass a base).
+(defonce unit-to-pixel-map
   {:px 1
    :ch 8
    :ex 7.15625

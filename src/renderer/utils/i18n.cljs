@@ -7,9 +7,9 @@
    [renderer.app.subs :as-alias app.subs]
    [taoensso.tempura :as tempura :refer-macros [load-resource-at-compile-time]]))
 
+;; We need to load resources at compile time in clojurescript
+;; https://github.com/taoensso/tempura/issues/25#issuecomment-451742526
 (def dictionary
-  "We need to load resources at compile time in clojurescript
-   https://github.com/taoensso/tempura/issues/25#issuecomment-451742526"
   {"en-US" (load-resource-at-compile-time "lang/en-US.edn")
    "el-GR" (load-resource-at-compile-time "lang/el-GR.edn")})
 

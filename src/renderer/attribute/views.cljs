@@ -14,7 +14,6 @@
    [renderer.events :as-alias events]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.attribute :as utils.attribute]
-   [renderer.utils.bcd :as utils.bcd]
    [renderer.views :as views]))
 
 (defn browser-support
@@ -56,7 +55,9 @@
 
 (defn caniusethis
   [{:keys [tag attr]}]
-  (let [data (if attr (utils.bcd/compatibility tag attr) (utils.bcd/compatibility tag))
+  (let [data (if attr
+               (utils.attribute/compatibility tag attr)
+               (utils.attribute/compatibility tag))
         support-data (:support data)
         property (when attr (utils.attribute/property-data attr))
         spec-url (or (:spec_url data) (:href property))
@@ -194,7 +195,7 @@
         [:h2.mb-4.text-lg k]
         (when (get-method attribute.hierarchy/description [dispatch-tag k])
           [:p.text-pretty (attribute.hierarchy/description dispatch-tag k)])
-        (when (utils.bcd/compatibility tag k)
+        (when (utils.attribute/compatibility tag k)
           [:<>
            (when property [property-list property])
            [caniusethis {:tag tag :attr k}]])]
