@@ -32,14 +32,13 @@
 
 ;; https://github.com/ryanseddon/react-frame-component#initialcontent
 (defonce initial-markup
-  [:html
-   [:head [:link {:rel "stylesheet" :href "./fonts/styles.css"}]]
+  [:html {:data-theme "light"}
+   [:head [:link {:rel "stylesheet" :href "./css/frame.css"}]]
    [:body {:style {:width "100%"
                    :height "100%"
                    :overflow "hidden"
                    :user-select "none"
                    :touch-action "none"
-                   :font-family "Adwaita Sans"
                    :margin 0}}]])
 
 (def resize-observer

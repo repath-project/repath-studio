@@ -17,6 +17,20 @@
                                 "web"))))
 
 (rf/reg-cofx
+ ::versions
+ (fn [coeffects _]
+   (cond-> coeffects
+     js/window.api
+     (assoc :versions js/window.api.versions))))
+
+(rf/reg-cofx
+ ::env
+ (fn [coeffects _]
+   (cond-> coeffects
+     js/window.api
+     (assoc :env js/window.api.env))))
+
+(rf/reg-cofx
  ::user-agent
  (fn [coeffects _]
    (assoc coeffects :user-agent (.-userAgent js/navigator))))

@@ -4,7 +4,7 @@
 @import 'codemirror/addon/hint/show-hint.css';
 @import 'codemirror/theme/tomorrow-night-eighties.css';
 
-@import '../fonts/styles.css';
+@import './fonts.css';
 @import './utilities.css';
 @import './components.css';
 @import './animations.css';
@@ -24,7 +24,7 @@ p {
 }
 
 input {
-  @apply font-mono appearance-none;
+  @apply appearance-none;
 
   &:focus {
     @apply outline-hidden;

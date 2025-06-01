@@ -40,15 +40,6 @@ jobs:
         with:
           cli: 1.12.0.1530
 
-      # Required for font-scanner.
-      - name: Install python setuptools
-        if: matrix.os == 'macos-latest'
-        run: brew install python-setuptools
-
-      - name: Install fontconfig
-        if: matrix.os == 'ubuntu-latest'
-        run: sudo apt -y install libfontconfig1-dev
-
       - name: Electron Builder Action
         uses: samuelmeuli/action-electron-builder@v1.6.0
         with:

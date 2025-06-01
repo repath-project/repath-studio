@@ -31,19 +31,19 @@
        (if-not suggestions
          [:div.w-full [views/loading-indicator]]
          "No local fonts found.")]
-      (for [item suggestions]
-        ^{:key item}
+      (for [[family _item] suggestions]
+        ^{:key family}
         [:> Command/CommandItem
-         {:on-select #(rf/dispatch [::element.events/set-attr :font-family item])}
+         {:on-select #(rf/dispatch [::element.events/set-attr :font-family family])}
          [:div.flex.justify-between.items-center.w-full.gap-2
-          [:div item]
+          [:div family]
           [:div.leading-none.text-muted
-           {:style {:font-family item}}
-           "Lorem ipsum"]]])]]]])
+           {:style {:font-family family}}
+           "AaBbCc 0123"]]])]]]])
 
 (defmethod attribute.hierarchy/form-element [:default :font-family]
   [_ k v attrs]
-  (let [suggestions @(rf/subscribe [::app.subs/font-options])]
+  (let [suggestions @(rf/subscribe [::app.subs/system-fonts])]
     [:div.flex.gap-px.w-full
      [attribute.views/form-input k v attrs]
      [:> Popover/Root

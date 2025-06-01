@@ -32,7 +32,8 @@
   [_ k v {:keys [disabled placeholder]}]
   [:div.flex.w-full.gap-px
    [attribute.views/form-input k v
-    {:disabled disabled
+    {:class "font-mono"
+     :disabled disabled
      :placeholder (if v placeholder "multiple")}]
    [:div.flex.gap-px
     [:button.form-control-button

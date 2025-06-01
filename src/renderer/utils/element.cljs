@@ -91,12 +91,14 @@
 
 (m/=> ->path [:-> Element Element])
 (defn ->path
-  [el]
-  (cond-> el
-    (get-method element.hierarchy/path (:tag el))
-    (-> (assoc :tag :path)
-        (update :attrs #(utils.map/merge-common-with str % (utils.attribute/defaults-memo :path)))
-        (assoc-in [:attrs :d] (element.hierarchy/path el)))))
+  ([el]
+   (->path el (element.hierarchy/path el)))
+  ([el d]
+   (cond-> el
+     (string? d)
+     (-> (assoc :tag :path)
+         (update :attrs #(utils.map/merge-common-with str % (utils.attribute/defaults-memo :path)))
+         (assoc-in [:attrs :d] d)))))
 
 (m/=> stroke->path [:-> Element Element])
 (defn stroke->path

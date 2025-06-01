@@ -113,14 +113,15 @@
 (defn zoom-input
   [zoom]
   (let [value (.toFixed (* 100 zoom) (zoom-decimal-points zoom) 2)]
-    [:input.form-element.overlay.text-right
+    [:input.form-element.overlay.text-right.font-mono
      {:key zoom
       :aria-label "Zoom"
       :type "number"
       :input-mode "decimal"
       :min "1"
       :max "10000"
-      :style {:width "60px"
+      :style {:width "70px"
+              :font-size "inherit"
               :appearance "textfield"}
       :default-value value
       :on-blur #(set-zoom % value)

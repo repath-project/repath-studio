@@ -35,7 +35,7 @@
        {:on-pointer-up pointer-handler
         :on-pointer-down pointer-handler
         :on-pointer-move pointer-handler
-        :fill "#888"
+        :fill "var(--font-color-muted)"
         :font-family "monospace"
         :font-size (/ 12 zoom)}) (or (:label el) (name (:tag el)))]
 

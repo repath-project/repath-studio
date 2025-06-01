@@ -2,9 +2,11 @@
   "https://www.w3.org/TR/SVG/text.html
    https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/text"
   (:require
+   ["opentype.js" :as opentype]
    [clojure.core.matrix :as matrix]
    [clojure.string :as string]
    [re-frame.core :as rf]
+   [renderer.app.subs :as-alias app.subs]
    [renderer.attribute.hierarchy :as attr.hierarchy]
    [renderer.element.handlers :as element.handlers]
    [renderer.element.hierarchy :as element.hierarchy]
@@ -113,17 +115,52 @@
                             (str (utils.length/unit->px font-size) "px"))
                :font-weight (if (empty? font-weight) "inherit" font-weight)}}]]))
 
-(when js/window.api
-  (defmethod element.hierarchy/path :text
-    [el]
-    (let [{:keys [attrs content]} el
-          font-descriptor #js {:family (or (:font-family attrs) "Adwaita Sans")
-                               :weight (js/parseInt (:font-weight attrs))
-                               :italic (= (:font-style attrs) "italic")}]
-      (.textToPath
-       js/window.api
-       content
-       #js {:font-url (.-path (.findFont js/window.api font-descriptor))
-            :x (js/parseFloat (:x attrs))
-            :y (js/parseFloat (:y attrs))
-            :font-size (js/parseFloat (or (:font-size attrs) 16))})))) ; FIXME
+(rf/reg-event-db
+ ::->path
+ (fn [db [_ id d]]
+   (element.handlers/update-el db id utils.element/->path d)))
+
+;; https://drafts.csswg.org/css-fonts/#absolute-size-mapping
+(defonce size-scale-factor
+  {"xx-small" (/ 3 5)
+   "x-small" (/ 3 4)
+   "small" (/ 8 9)
+   "medium" 1
+   "large" (/ 6 5)
+   "x-large" (/ 3 2)
+   "xx-large" (/ 2 1)
+   "xxx-large" (/ 3 1)})
+
+(defn font-size->px
+  [font-size]
+  (let [scale-factor (get size-scale-factor font-size)]
+    (if font-size
+      (if scale-factor
+        (str (* scale-factor 16))
+        font-size)
+      "16")))
+
+(defmethod element.hierarchy/path :text
+  [el]
+  (let [{:keys [attrs content id]} el
+        {:keys [x y font-size weight font-style font-family]} attrs
+        system-fonts @(rf/subscribe [::app.subs/system-fonts])
+        family-name (or font-family "Adwaita Sans")
+        _style-name (or font-style "Normal")
+        font-size (font-size->px font-size)
+        [x y font-size] (mapv utils.length/unit->px [x y font-size weight])
+        postscript-name (-> system-fonts (get family-name) :postscript-name)]
+    (-> (js/window.queryLocalFonts #js {:postscriptNames [postscript-name]})
+        (.then (fn [fonts]
+                 (print "Fonts found: " (count fonts))
+                 (when-let [font (first fonts)]
+                   (-> (.blob font)
+                       (.then (fn [blob]
+                                (-> (.arrayBuffer blob)
+                                    (.then (fn [buffer]
+                                             (let [opentype-font (opentype/parse buffer)
+                                                   path (.getPath opentype-font content
+                                                                  x y font-size)
+                                                   d (.toPathData path)]
+                                               (rf/dispatch [::->path id d])))))))))))
+        (.catch (fn [_error])))))
