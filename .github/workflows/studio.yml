@@ -38,7 +38,7 @@ jobs:
       - name: Install clojure tools
         uses: DeLaGuardo/setup-clojure@13.2
         with:
-          cli: 1.12.1.1543
+          cli: 1.12.1.1550
 
       # Required for font-scanner.
       - name: Install python setuptools
