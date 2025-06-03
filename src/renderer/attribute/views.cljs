@@ -167,9 +167,9 @@
 
 (defn property-list
   [property]
-  (->> [:appliesto :computed :percentages :animatable :animationType :syntax]
-       (map #(property-list-item property %))
-       (into [:<>])))
+  (into [:<>]
+        (map (partial property-list-item property))
+        [:appliesto :computed :percentages :animatable :animationType :syntax]))
 
 (defn label
   [tag k]

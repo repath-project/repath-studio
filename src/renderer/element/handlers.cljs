@@ -75,9 +75,7 @@
 (m/=> parent-ids [:-> App [:set uuid?]])
 (defn parent-ids
   [db]
-  (->> (selected db)
-       (keep :parent)
-       (set)))
+  (into #{} (keep :parent) (selected db)))
 
 (m/=> parent [:function
               [:-> App [:maybe Element]]
@@ -192,7 +190,7 @@
   (when-let [sibling-els (siblings db id)]
     (.indexOf sibling-els id)))
 
-(m/=> index-path [:-> App uuid? [:sequential int?]])
+(m/=> index-path [:-> App uuid? [:vector int?]])
 (defn index-path
   "Returns a sequence that represents the index path of an element.
    For example, the seventh element of the second svg on the canvas will
@@ -200,9 +198,8 @@
    of nested elements."
   [db id]
   (let [ancestor-els (reverse (ancestor-ids db id))]
-    (->> (index db id)
-         (conj (keep #(index db %) ancestor-els))
-         (vec))))
+    (conj (into [] (keep (partial index db)) ancestor-els)
+          (index db id))))
 
 (m/=> descendant-ids [:function
                       [:-> App [:set uuid?]]

@@ -6,9 +6,8 @@
 (defn remove-nth
   "Removes element at index."
   [v i]
-  (into
-   (subvec v 0 i)
-   (subvec v (inc i))))
+  (into (subvec v 0 i)
+        (subvec v (inc i))))
 
 (m/=> add [:-> vector? number? any? vector?])
 (defn add
@@ -27,8 +26,7 @@
     (if (= i-1 i-2)
       v
       (-> (remove-nth v i-1)
-          (add i-2 el)
-          (vec)))))
+          (add i-2 el)))))
 
 (m/=> swap [:-> vector? number? number? vector?])
 (defn swap
