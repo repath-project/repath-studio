@@ -21,6 +21,7 @@
 (defmethod element.hierarchy/properties :brush
   []
   {:icon "brush"
+   :label (t [::name "Brush"])
    :description (t [::description "Draw pressure-sensitive freehand lines using perfect-freehand."])
    :url "https://github.com/steveruizok/perfect-freehand"
    :attrs [:points

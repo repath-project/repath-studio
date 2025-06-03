@@ -4,6 +4,7 @@
   (:require
    [clojure.string :as string]
    [renderer.element.hierarchy :as element.hierarchy]
+   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]))
 
 (derive :rect ::element.hierarchy/box)
@@ -12,10 +13,11 @@
 (defmethod element.hierarchy/properties :rect
   []
   {:icon "rectangle"
-   :label "Rectangle"
-   :description "The <rect> element is a basic SVG shape that draws rectangles,
-                 defined by their position, width, and height. The rectangles
-                 may have their corners rounded."
+   :label (t [::name "Rectangle"])
+   :description (t [::description 
+                    "The <rect> element is a basic SVG shape that draws rectangles,
+                     defined by their position, width, and height. The rectangles
+                     may have their corners rounded."])
    :attrs [:stroke-width
            :opacity
            :fill

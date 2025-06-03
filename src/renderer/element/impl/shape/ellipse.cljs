@@ -18,6 +18,7 @@
 (defmethod element.hierarchy/properties :ellipse
   []
   {:icon "ellipse"
+   :label (t [::name "Ellipse"])
    :description (t [::description 
                     "The <ellipse> element is an SVG basic shape, used to create
                      ellipses based on a center coordinate, and both their x and

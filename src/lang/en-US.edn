@@ -122,13 +122,49 @@
   :delete            "Delete"}
  
  :renderer.element.impl.shape.circle
- {:description "The <circle> SVG element is an SVG basic shape, used to draw
+ {:name        "Circle"
+  :description "The <circle> SVG element is an SVG basic shape, used to draw
                 circles based on a center point and a radius."}
  
+ :renderer.element.impl.shape.image
+ {:name        "Image"
+  :description "The <image> SVG element includes images inside SVG documents.
+                It can display raster image files or other SVG files."}
+ 
  :renderer.element.impl.shape.ellipse
- {:description "The <ellipse> element is an SVG basic shape, used to create
+ {:name        "Ellipse"
+  :description "The <ellipse> element is an SVG basic shape, used to create
                 ellipses based on a center coordinate, and both their x and
                 y radius."}
+ 
+ :renderer.element.impl.shape.line
+ {:name        "Line"
+  :description "The <line> element is an SVG basic shape used to create a line
+                connecting two points."}
+ 
+ :renderer.element.impl.shape.path
+ {:name        "Path"
+  :description "The <path> SVG element is the generic element to define a shape.
+                All the basic shapes can be created with a path element."}
+ 
+ :renderer.element.impl.shape.polygon
+ {:name        "Polygon"
+  :description "The <polygon> SVG element defines a closed shape consisting of
+                a set of connected straight line segments. The last point is
+                connected to the first point."}
+ 
+ :renderer.element.impl.shape.polyline
+ {:name        "Polyline"
+  :description "The <polyline> SVG element is an SVG basic shape that creates
+                straight lines connecting several points. Typically a polyline
+                is used to create open shapes as the last point doesn't have to
+                be connected to the first point."}
+ 
+ :renderer.element.impl.shape.rect
+ {:name        "Rectangle"
+  :description "The <rect> element is a basic SVG shape that draws rectangles,
+                defined by their position, width, and height. The rectangles
+                may have their corners rounded."}
  
  :renderer.element.impl.custom.blob
  {:x            "Horizontal coordinate of the blob's center."
@@ -140,7 +176,8 @@
   :description  "Vector based blob."}
  
  :renderer.element.impl.custom.brush
- {:points      "Input points recorded from a user's mouse movement."
+ {:name        "Brush"
+  :points      "Input points recorded from a user's mouse movement."
   :size        "The base size (diameter) of the stroke."
   :thinning    "The effect of pressure on the stroke's size."
   :smoothing   "How much to soften the stroke's edges."
