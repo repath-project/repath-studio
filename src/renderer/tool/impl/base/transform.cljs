@@ -443,10 +443,7 @@
        [:<>
         [tool.views/wrapping-bbox bbox]
         [tool.views/bounding-corners bbox]
-        (case state
-          :scale [size-label bbox]
-          :idle [tool.views/bounding-corners bbox]
-          nil)])
+        (when (= state :scale) [size-label bbox])])
 
      (when pivot-point
        [utils.svg/times pivot-point])]))
