@@ -20,10 +20,10 @@
      (when-let [dom-rect (:dom-rect db)]
        (viewbox zoom pan dom-rect))))
   ([zoom pan dom-rect]
-   (let [{:keys [width height]} dom-rect
-         [x y] pan
-         [w h] (matrix/div [width height] zoom)]
-     [x y w h])))
+   (let [{:keys [width height]} dom-rect]
+     (into pan
+           (matrix/div [width height]
+                       zoom)))))
 
 (m/=> pan-by [:function
               [:-> App Vec2 App]
