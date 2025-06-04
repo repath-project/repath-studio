@@ -113,14 +113,14 @@
 (defn zoom-input
   [zoom]
   (let [value (.toFixed (* 100 zoom) (zoom-decimal-points zoom) 2)]
-    [:input.form-element.overlay.text-right.font-mono
+    [:input.form-element.overlay.text-right.font-mono.p-1
      {:key zoom
       :aria-label "Zoom"
       :type "number"
       :input-mode "decimal"
       :min "1"
       :max "10000"
-      :style {:width "70px"
+      :style {:width "60px"
               :font-size "inherit"
               :appearance "textfield"}
       :default-value value
@@ -148,7 +148,7 @@
      [:div.flex.hidden
       {:class "md:flex"}
       [zoom-input zoom]
-      [:div.pr-2.overlay.flex.items-center "%"]]
+      [:div.pr-2.overlay.flex.items-center.font-mono "%"]]
      [zoom-menu]]))
 
 (defn root []

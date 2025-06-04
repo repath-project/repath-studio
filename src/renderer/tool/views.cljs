@@ -41,7 +41,7 @@
         active (and (= (:id clicked-element) id)
                     (= (:element clicked-element) element))]
     (into [:rect {:fill (if active "var(--color-accent)" "var(--color-accent-inverted)")
-                  :stroke (if active "var(--color-accent)" "var(--font-color-muted)")
+                  :stroke (if active "var(--color-accent)" "gray")
                   :stroke-width stroke-width
                   :x (- x (/ size 2))
                   :y (- y (/ size 2))

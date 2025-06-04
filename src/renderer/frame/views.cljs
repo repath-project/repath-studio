@@ -30,16 +30,26 @@
 
       :reagent-render #()})))
 
-;; https://github.com/ryanseddon/react-frame-component#initialcontent
-(defonce initial-markup
-  [:html {:data-theme "light"}
-   [:head [:link {:rel "stylesheet" :href "./css/frame.css"}]]
-   [:body {:style {:width "100%"
-                   :height "100%"
-                   :overflow "hidden"
-                   :user-select "none"
-                   :touch-action "none"
-                   :margin 0}}]])
+(defn initial-markup
+  "https://github.com/ryanseddon/react-frame-component#initialcontent
+   The iframe is isolated so we don't have access to the css vars of the parent."
+  []
+  (let [body-styles (js/window.getComputedStyle js/document.body)]
+    [:html {:style (into {}
+                         (map (fn [k] [k (.getPropertyValue body-styles k)]))
+                         ["--font-sans"
+                          "--font-mono"
+                          "--color-accent"
+                          "--color-accent-light"
+                          "--color-accent-inverted"])}
+     [:head]
+     [:body {:style {:width "100%"
+                     :height "100%"
+                     :font-family "var(--font-sans)"
+                     :overflow "hidden"
+                     :user-select "none"
+                     :touch-action "none"
+                     :margin 0}}]]))
 
 (def resize-observer
   (js/ResizeObserver.
@@ -77,7 +87,7 @@
                                                   (js/KeyboardEvent. (.-type e)
                                                                      e)))]
           [:> Frame
-           {:initial-content (server/render-to-static-markup initial-markup)
+           {:initial-content (server/render-to-static-markup (initial-markup))
             :mount-target "body"
             :class "overflow-hidden flex-1 border-0"
             :on-key-down on-keyboard-event

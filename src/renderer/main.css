@@ -4,7 +4,9 @@
 @import 'codemirror/addon/hint/show-hint.css';
 @import 'codemirror/theme/tomorrow-night-eighties.css';
 
-@import './fonts.css';
+@import "@fontsource/noto-sans";
+@import "@fontsource/noto-sans-mono";
+
 @import './utilities.css';
 @import './components.css';
 @import './animations.css';

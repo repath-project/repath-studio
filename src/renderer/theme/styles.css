@@ -1,6 +1,6 @@
 @theme {
-  --font-sans: 'Adwaita Sans', sans;
-  --font-mono: 'Adwaita Mono', monospace;
+  --font-sans: 'Noto Sans', sans;
+  --font-mono: 'Noto Sans Mono', monospace;
 
   --text-2xs: 10px;
   --text-2xs--line-height: 14px;
