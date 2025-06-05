@@ -125,15 +125,10 @@
 (rf/reg-fx
  ::eye-dropper
  (fn [{:keys [on-success on-error]}]
-   (if (.-EyeDropper js/window)
-     (-> (js/EyeDropper.)
-         (.open)
-         (.then #(when on-success (rf/dispatch (conj on-success %))))
-         (.catch #(when on-error (rf/dispatch (conj on-error %)))))
-     (rf/dispatch
-      [::notification.events/show-unavailable-feature
-       "EyeDropper"
-       "https://developer.mozilla.org/en-US/docs/Web/API/EyeDropper_API#browser_compatibility"]))))
+   (-> (js/EyeDropper.)
+       (.open)
+       (.then #(when on-success (rf/dispatch (conj on-success %))))
+       (.catch #(when on-error (rf/dispatch (conj on-error %)))))))
 
 (rf/reg-fx
  ::print
