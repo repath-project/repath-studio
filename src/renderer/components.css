@@ -1,24 +1,22 @@
 @utility form-element {
-  @apply bg-primary border-0 w-full;
+  @apply bg-primary border-0 w-full outline-none shadow-none!;
 
-  outline: none;
   padding: 4px 12px;
   box-sizing: border-box;
   font-size: 12px;
-  box-shadow: none !important;
   color: var(--font-color) !important;
 
   &:hover,
   &:focus {
-    color: var(--font-color-active) !important;
+    @apply text-active!;
   }
 
   &::placeholder {
-    color: var(--font-color-disabled);
+    @apply text-disabled;
   }
 
   &:disabled {
-    color: var(--font-color-disabled);
+    @apply text-disabled!;
   }
 }
 
@@ -32,8 +30,7 @@
 }
 
 @utility button {
-  @apply relative text-center text-nowrap outline-default;
-  background-color: transparent;
+  @apply relative text-center text-nowrap outline-default bg-transparent;
   color: var(--font-color);
   fill: var(--font-color);
   font-size: 1em;
