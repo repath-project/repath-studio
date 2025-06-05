@@ -112,11 +112,9 @@
                :outline "none"
                :background "transparent"
                :font-style font-style
-               :font-family (if (empty? font-family) "inherit" font-family)
-               :font-size (if (empty? font-size)
-                            "inherit"
-                            (str (utils.length/unit->px font-size) "px"))
-               :font-weight (if (empty? font-weight) "inherit" font-weight)}}]]))
+               :font-family font-family
+               :font-size font-size
+               :font-weight font-weight}}]]))
 
 (defn get-computed-styles!
   [{:keys [content] :as el}]
@@ -146,8 +144,7 @@
 (defn includes-prop?
   [v prop]
   (when v
-    (some #{(string/lower-case v)}
-          (-> prop string/lower-case (string/split #" ")))))
+    (string/includes? (string/lower-case v) (string/lower-case prop))))
 
 (defn match-font-by-weight
   [weight fonts]
