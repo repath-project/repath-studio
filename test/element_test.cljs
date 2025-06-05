@@ -293,9 +293,9 @@
      (is (= (-> @selected first :attrs :y) "50")))))
 
 (deftest ->path
-  (rf.test/run-test-sync
-   (rf/dispatch [::app.events/initialize-db])
-   (rf/dispatch [::document.events/init])
+  (rf.test/run-test-async
+   (rf/dispatch-sync [::app.events/initialize-db])
+   (rf/dispatch-sync [::document.events/init])
    (let [selected (rf/subscribe [::element.subs/selected])]
      (rf/dispatch [::element.events/add {:tag :rect
                                          :attrs {:x "100"
@@ -304,9 +304,13 @@
                                                  :height "100"
                                                  :fill "red"}}])
      (rf/dispatch [::element.events/->path])
-     (is (= (-> @selected first :tag) :path))
-     (is (= (-> @selected first :attrs :fill) "red"))
-     (not (-> @selected first :attrs :x)))))
+
+     (rf.test/wait-for
+      [::element.events/converted-to-path]
+
+      (is (= (-> @selected first :tag) :path))
+      (is (= (-> @selected first :attrs :fill) "red"))
+      (not (-> @selected first :attrs :x))))))
 
 (deftest stroke->path
   (rf.test/run-test-sync

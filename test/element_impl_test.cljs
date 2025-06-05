@@ -188,9 +188,7 @@
            {:d "M528-239L908-371 1354-45 798 23 800-151z"}))
 
     (is (= (element.hierarchy/bbox path-el)
-           [528 -371 941 -174]))
-
-    (is (thrown? js/Error (element.hierarchy/path path-el)))))
+           [528 -371 941 -174]))))
 
 (deftest svg
   (let [svg-el {:type :element
