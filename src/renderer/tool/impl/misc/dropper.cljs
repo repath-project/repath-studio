@@ -22,14 +22,8 @@
 
 (defmethod tool.hierarchy/on-activate :dropper
   [db]
-  (if (.-EyeDropper js/window)
-    (tool.handlers/add-fx db [::effects/eye-dropper {:on-success [::success]
-                                                     :on-error [::error]}])
-    (-> (tool.handlers/activate db :transform)
-        (notification.handlers/add
-         (notification.views/unavailable-feature
-          "EyeDropper"
-          "https://developer.mozilla.org/en-US/docs/Web/API/EyeDropper_API#browser_compatibility")))))
+  (tool.handlers/add-fx db [::effects/eye-dropper {:on-success [::success]
+                                                   :on-error [::error]}]))
 
 (rf/reg-event-db
  ::success
