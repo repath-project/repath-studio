@@ -2,6 +2,7 @@
   (:require
    [re-frame.core :as rf]
    [renderer.element.events :as-alias element.events]
+   [renderer.utils.element :as utils.element]
    [renderer.utils.length :as utils.length]
    [renderer.worker.events :as-alias worker.events]))
 
@@ -63,3 +64,10 @@
                                           :href data-url}}]))))
          (set! (.-src img) data-url)))
      (.readAsDataURL reader file))))
+
+(rf/reg-fx
+ ::->path
+ (fn [elements]
+   (-> (mapv utils.element/->path elements)
+       (js/Promise.all)
+       (.then #(rf/dispatch [::element.events/converted-to-path %])))))

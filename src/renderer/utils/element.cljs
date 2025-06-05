@@ -94,11 +94,14 @@
   ([el]
    (->path el (element.hierarchy/path el)))
   ([el d]
-   (cond-> el
+   (cond
      (string? d)
-     (-> (assoc :tag :path)
+     (-> (assoc el :tag :path)
          (update :attrs #(utils.map/merge-common-with str % (utils.attribute/defaults-memo :path)))
-         (assoc-in [:attrs :d] d)))))
+         (assoc-in [:attrs :d] d))
+
+     (instance? js/Promise d)
+     (.then d (fn [d] (->path el d))))))
 
 (m/=> stroke->path [:-> Element Element])
 (defn stroke->path

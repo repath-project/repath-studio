@@ -118,12 +118,6 @@
                             (str (utils.length/unit->px font-size) "px"))
                :font-weight (if (empty? font-weight) "inherit" font-weight)}}]]))
 
-(rf/reg-event-db
- ::->path
- (fn [db [_ id d]]
-   (-> (element.handlers/update-el db id utils.element/->path d)
-       (history.handlers/finalize "Text to path"))))
-
 (defn get-computed-styles!
   [{:keys [content] :as el}]
   (when-let [svg (utils.dom/canvas-element!)]
@@ -139,43 +133,43 @@
          :font-size font-size
          :font-weight font-weight}))))
 
-(defn ->path
-  [file id content x y font-size]
+(defn font-file->path
+  [file content x y font-size]
   (-> (.blob file)
       (.then (fn [blob]
                (-> (.arrayBuffer blob)
                    (.then (fn [buffer]
                             (let [opentype-font (opentype/parse buffer)
-                                  path (.getPath opentype-font content
-                                                 x y font-size)
-                                  d (.toPathData path)]
-                              (rf/dispatch [::->path id d])))))))))
+                                  path (.getPath opentype-font content x y font-size)]
+                              (.toPathData path)))))))))
+
+(defn match-font
+  [fonts family style weight]
+  (let [includes-prop? (fn [v prop] (string/includes? (string/lower-case prop)
+                                                      (string/lower-case v)))
+        matched-family (filter #(includes-prop? family (.-family %)) fonts)
+        matched-style (filter #(includes-prop? style (.-style %)) matched-family)
+        ;;TODO: Find closest font-weight if not found.
+        matched-weight (filter #(includes-prop? weight (.-style %))
+                               (if (seq matched-style)
+                                 matched-style
+                                 matched-family))]
+    (or (first matched-weight)
+        (first matched-style)
+        (first matched-family)
+        (first fonts))))
 
 (defmethod element.hierarchy/path :text
   [el]
-  (let [{:keys [attrs content id]} el
+  (let [{:keys [attrs content]} el
         {:keys [x y font-family]} attrs
         {:keys [font-size font-style font-weight]} (get-computed-styles! el)
-        font-weight-name (get wight-name-mapping font-weight)
-        [x y font-size] (mapv utils.length/unit->px [x y font-size])
-        includes-prop? (fn [v prop]
-                         (string/includes? (string/lower-case prop)
-                                           (string/lower-case v)))]
+        [x y font-size] (mapv utils.length/unit->px [x y font-size])]
     (if font-family
       (-> (js/window.queryLocalFonts)
           (.then (fn [fonts]
-                   (let [matched-family (filter #(includes-prop? font-family (.-family %))
-                                                fonts)
-                         matched-style (filter #(includes-prop? font-style (.-style %))
-                                               matched-family)
-                         matched-weight (filter #(includes-prop? font-weight-name (.-style %))
-                                                (if (seq matched-style)
-                                                  matched-style
-                                                  matched-family))]
-                     (when-let [font (or (first matched-weight)
-                                         (first matched-style)
-                                         (first matched-family))]
-                       (->path font id content x y font-size))))))
+                   (when-let [font (match-font fonts font-family font-style
+                                               (get wight-name-mapping font-weight))]
+                     (font-file->path font content x y font-size)))))
       (-> (js/fetch (str "./css/files/noto-sans-latin-" font-weight "-" font-style ".woff"))
-          (.then (fn [response]
-                   (->path response id content x y font-size)))))))
+          (.then (fn [response]  (font-file->path response content x y font-size)))))))

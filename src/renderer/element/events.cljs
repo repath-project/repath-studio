@@ -179,11 +179,18 @@
      (-> (element.handlers/scale db ratio pivot-point false)
          (history.handlers/finalize "Scale selection")))))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::->path
- (fn [db]
-   (-> (element.handlers/->path db)
-       (history.handlers/finalize "Convert selection to path"))))
+ (fn [{:keys [db]}]
+   {::element.effects/->path (element.handlers/selected db)}))
+
+(rf/reg-event-fx
+ ::converted-to-path
+ (fn [{:keys [db]} [_ elements]]
+   {:db (-> (reduce (fn [db el]
+                      (element.handlers/update-el db (:id el) (fn [] el)))
+                    db elements)
+            (history.handlers/finalize "Convert selection to path"))}))
 
 (rf/reg-event-db
  ::stroke->path

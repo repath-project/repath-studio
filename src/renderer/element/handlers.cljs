@@ -587,21 +587,10 @@
                         :center-horizontal [cx 0]
                         :right [max-x-delta 0])))))
 
-(m/=> ->path [:function
-              [:-> App App]
-              [:-> App uuid? App]])
-(defn ->path
-  "Converts elements to paths."
-  ([db]
-   (reduce ->path db (selected-ids db)))
-  ([db id]
-   (update-el db id utils.element/->path)))
-
 (m/=> stroke->path [:function
                     [:-> App App]
                     [:-> App uuid? App]])
 (defn stroke->path
-  "Converts the stroke of elements to paths."
   ([db]
    (reduce stroke->path db (selected-ids db)))
   ([db id]

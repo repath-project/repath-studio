@@ -89,3 +89,7 @@
     (update-in el [:attrs :d] #(-> (svgpath %)
                                    (translate-segment index offset)
                                    (.toString)))))
+
+(defmethod element.hierarchy/path :path
+  [el]
+  (-> el :attrs :d))
