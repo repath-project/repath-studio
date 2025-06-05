@@ -7,7 +7,7 @@
    [clojure.string :as string]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as attr.hierarchy]
-   [renderer.attribute.impl.font-weight :refer [wight-name-mapping]]
+   [renderer.attribute.impl.font-weight :refer [weight-name-mapping]]
    [renderer.element.handlers :as element.handlers]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
@@ -143,17 +143,28 @@
                                   path (.getPath opentype-font content x y font-size)]
                               (.toPathData path)))))))))
 
+(defn includes-prop?
+  [v prop]
+  (when v
+    (some #{(string/lower-case v)}
+          (-> prop string/lower-case (string/split #" ")))))
+
+(defn match-font-by-weight
+  [weight fonts]
+  (let [weight-num (js/parseInt weight)
+        weight-name (get weight-name-mapping weight)
+        matched-weight (filter #(includes-prop? weight-name (.-style %)) fonts)]
+    (if (or (seq matched-weight) (< weight-num 100))
+      matched-weight
+      (recur (str (- weight-num 100)) fonts))))
+
 (defn match-font
   [fonts family style weight]
-  (let [includes-prop? (fn [v prop] (string/includes? (string/lower-case prop)
-                                                      (string/lower-case v)))
-        matched-family (filter #(includes-prop? family (.-family %)) fonts)
+  (let [matched-family (filter #(includes-prop? family (.-family %)) fonts)
         matched-style (filter #(includes-prop? style (.-style %)) matched-family)
-        ;;TODO: Find closest font-weight if not found.
-        matched-weight (filter #(includes-prop? weight (.-style %))
-                               (if (seq matched-style)
-                                 matched-style
-                                 matched-family))]
+        matched-weight (match-font-by-weight weight (if (seq matched-style)
+                                                      matched-style
+                                                      matched-family))]
     (or (first matched-weight)
         (first matched-style)
         (first matched-family)
@@ -168,8 +179,7 @@
     (if font-family
       (-> (js/window.queryLocalFonts)
           (.then (fn [fonts]
-                   (when-let [font (match-font fonts font-family font-style
-                                               (get wight-name-mapping font-weight))]
+                   (when-let [font (match-font fonts font-family font-style font-weight)]
                      (font-file->path font content x y font-size)))))
       (-> (js/fetch (str "./css/files/noto-sans-latin-" font-weight "-" font-style ".woff"))
           (.then (fn [response]  (font-file->path response content x y font-size)))))))
