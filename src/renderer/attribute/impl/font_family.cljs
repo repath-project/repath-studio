@@ -20,7 +20,8 @@
   [font-list]
   [:div.flex.flex-col
    [:> Command/Command
-    {:label "Command Menu"}
+    {:label "Command Menu"
+     :on-key-down #(.stopPropagation %)}
     [:> Command/CommandInput
      {:class "p-2 text-sm bg-secondary border-b border-default"
       :placeholder "Search for a font"}]
