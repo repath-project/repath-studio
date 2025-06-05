@@ -253,7 +253,8 @@
            (let [el-label (:label el)]
              (if (empty? el-label) tag el-label))
            (string/join " " [(count selected-elements)
-                             (if multitag? "elements" (name tag))]))]
+                             (when-not multitag? (name tag))
+                             "elements"]))]
         (when-not multitag?
           [tag-info tag])]
        [:div.grid.grid-cols-2.grid-flow-row.my-px.w-full.gap-px
