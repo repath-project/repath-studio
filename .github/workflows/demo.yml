@@ -49,7 +49,7 @@ jobs:
         uses: DeLaGuardo/setup-clojure@13.4
         with:
           cli: 1.12.1.1550
-          clj-kondo: 2025.04.07
+          clj-kondo: 2025.06.05
 
       - name: Lint
         run: npm run lint
