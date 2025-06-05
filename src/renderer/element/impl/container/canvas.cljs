@@ -66,23 +66,22 @@
 
      (when grid [ruler.views/grid])
 
-     (when-not read-only?
-       [:<>
-        [tool.hierarchy/render (or primary-tool active-tool)]
-        [element.hierarchy/render temp-element]])
+     (when-not read-only? [element.hierarchy/render temp-element])
 
      (when snap?
        [:<>
         (when snapped-el
           [utils.svg/bounding-box (:bbox snapped-el) true])
         (when nearest-neighbor
-          [snap.views/canvas-label nearest-neighbor])])]))
+          [snap.views/canvas-label nearest-neighbor])])
+
+     (when-not read-only? [tool.hierarchy/render (or primary-tool active-tool)])]))
 
 (defmethod element.hierarchy/render-to-string :canvas
   [el]
   (let [child-elements @(rf/subscribe [::element.subs/filter-visible (:children el)])
-        attrs (->> (dissoc (:attrs el) :fill)
-                   (remove #(empty? (str (second %))))
-                   (into {}))]
+        attrs (into {} (comp (dissoc (:attrs el) :fill)
+                             (remove #(empty? (str (second %))))))]
     (into [:svg attrs]
-          (map element.hierarchy/render-to-string child-elements))))
+          (map element.hierarchy/render-to-string)
+          child-elements)))
