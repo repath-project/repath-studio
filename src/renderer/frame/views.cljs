@@ -34,22 +34,15 @@
   "https://github.com/ryanseddon/react-frame-component#initialcontent
    The iframe is isolated so we don't have access to the css vars of the parent."
   []
-  (let [body-styles (js/window.getComputedStyle js/document.body)]
-    [:html {:style (into {}
-                         (map (fn [k] [k (.getPropertyValue body-styles k)]))
-                         ["--font-sans"
-                          "--font-mono"
-                          "--color-accent"
-                          "--color-accent-light"
-                          "--color-accent-inverted"])}
-     [:head]
-     [:body {:style {:width "100%"
-                     :height "100%"
-                     :font-family "var(--font-sans)"
-                     :overflow "hidden"
-                     :user-select "none"
-                     :touch-action "none"
-                     :margin 0}}]]))
+  [:html {:data-theme "light"}
+   [:head [:link {:rel "stylesheet" :href "./css/main.css"}]]
+   [:body {:style {:width "100%"
+                   :height "100%"
+                   :font-family "var(--font-sans)"
+                   :overflow "hidden"
+                   :user-select "none"
+                   :touch-action "none"
+                   :margin 0}}]])
 
 (def resize-observer
   (js/ResizeObserver.
