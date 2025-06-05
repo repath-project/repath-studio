@@ -1,5 +1,5 @@
-(ns renderer.attribute.impl.font-size
-  "https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/font-size"
+(ns renderer.attribute.impl.font-style
+  "https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/font-style"
   (:require
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.attribute.views :as attribute.views]
@@ -7,7 +7,7 @@
    [renderer.utils.element :as utils.element]
    [renderer.utils.length :as utils.length]))
 
-(defmethod attribute.hierarchy/description [:default :font-size]
+(defmethod attribute.hierarchy/description [:default :font-style]
   []
   "The font-size attribute refers to the size of the font from baseline to
    baseline when multiple lines of text are set solid in a multiline layout environment.")
@@ -23,27 +23,22 @@
         (.remove dom-el)
         font-size))))
 
-(defmethod attribute.hierarchy/update-attr :font-size
+(defmethod attribute.hierarchy/update-attr :font-style
   [el attribute f & more]
   (let [font-size (get-font-size! el)
         font-size (utils.length/unit->px font-size)]
     (assoc-in el [:attrs attribute] (str (apply f font-size more)))))
 
-(defonce sizes
-  ["xx-small"
-   "x-small"
-   "small"
-   "medium"
-   "large"
-   "x-large"
-   "xx-large"
-   "xxx-large"])
+(defonce styles
+  ["normal"
+   "italic"
+   "oblique"])
 
-(defmethod attribute.hierarchy/form-element [:default :font-size]
+(defmethod attribute.hierarchy/form-element [:default :font-style]
   [_ k v attrs]
   [attribute.views/select-input k v
    (merge attrs
-          {:default-value "medium"
+          {:default-value "normal"
            :items (mapv #(do {:key %
                               :label %
-                              :value %}) sizes)})])
+                              :value %}) styles)})])

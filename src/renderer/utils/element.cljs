@@ -162,3 +162,12 @@
   (->> ratio
        (matrix/mul pivot-point)
        (matrix/sub pivot-point)))
+
+(defn ->dom-element
+  [el]
+  (let [{:keys [tag attrs]} el
+        dom-el (js/document.createElementNS "http://www.w3.org/2000/svg" (name tag))]
+    (doseq [[k v] attrs]
+      (when (supported-attr? (dissoc el :attrs) k)
+        (.setAttributeNS dom-el nil (name k) v)))
+    dom-el))

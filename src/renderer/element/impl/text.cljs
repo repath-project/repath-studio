@@ -6,8 +6,8 @@
    [clojure.core.matrix :as matrix]
    [clojure.string :as string]
    [re-frame.core :as rf]
-   [renderer.app.subs :as-alias app.subs]
    [renderer.attribute.hierarchy :as attr.hierarchy]
+   [renderer.attribute.impl.font-weight :refer [wight-name-mapping]]
    [renderer.element.handlers :as element.handlers]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
@@ -18,6 +18,7 @@
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.subs :as-alias tool.subs]
    [renderer.utils.bounds :as utils.bounds]
+   [renderer.utils.dom :as utils.dom]
    [renderer.utils.element :as utils.element]
    [renderer.utils.length :as utils.length]))
 
@@ -46,7 +47,9 @@
 
 (defmethod element.hierarchy/scale :text
   [el ratio pivot-point]
-  (let [offset (utils.element/scale-offset ratio pivot-point)
+  (let [bounds (element.hierarchy/bbox el)
+        [_w h] (utils.bounds/->dimensions bounds)
+        offset (utils.element/scale-offset ratio (matrix/sub pivot-point [0 (/ h 2)]))
         ratio (apply min ratio)]
     (-> el
         (attr.hierarchy/update-attr :font-size * ratio)
@@ -118,49 +121,61 @@
 (rf/reg-event-db
  ::->path
  (fn [db [_ id d]]
-   (element.handlers/update-el db id utils.element/->path d)))
+   (-> (element.handlers/update-el db id utils.element/->path d)
+       (history.handlers/finalize "Text to path"))))
 
-;; https://drafts.csswg.org/css-fonts/#absolute-size-mapping
-(defonce size-scale-factor
-  {"xx-small" (/ 3 5)
-   "x-small" (/ 3 4)
-   "small" (/ 8 9)
-   "medium" 1
-   "large" (/ 6 5)
-   "x-large" (/ 3 2)
-   "xx-large" (/ 2 1)
-   "xxx-large" (/ 3 1)})
+(defn get-computed-styles!
+  [{:keys [content] :as el}]
+  (when-let [svg (utils.dom/canvas-element!)]
+    (let [dom-el (utils.element/->dom-element el)]
+      (.appendChild svg dom-el)
+      (set! (.-innerHTML dom-el) (if (empty? content) "\u00a0" content))
+      (let [computed-style (.getComputedStyle js/window dom-el nil)
+            font-style (.getPropertyValue computed-style "font-style")
+            font-size (.getPropertyValue computed-style "font-size")
+            font-weight (.getPropertyValue computed-style "font-weight")]
+        (.remove dom-el)
+        {:font-style font-style
+         :font-size font-size
+         :font-weight font-weight}))))
 
-(defn font-size->px
-  [font-size]
-  (let [scale-factor (get size-scale-factor font-size)]
-    (if font-size
-      (if scale-factor
-        (str (* scale-factor 16))
-        font-size)
-      "16")))
+(defn ->path
+  [file id content x y font-size]
+  (-> (.blob file)
+      (.then (fn [blob]
+               (-> (.arrayBuffer blob)
+                   (.then (fn [buffer]
+                            (let [opentype-font (opentype/parse buffer)
+                                  path (.getPath opentype-font content
+                                                 x y font-size)
+                                  d (.toPathData path)]
+                              (rf/dispatch [::->path id d])))))))))
 
 (defmethod element.hierarchy/path :text
   [el]
   (let [{:keys [attrs content id]} el
-        {:keys [x y font-size weight font-style font-family]} attrs
-        system-fonts @(rf/subscribe [::app.subs/system-fonts])
-        family-name (or font-family "Adwaita Sans")
-        _style-name (or font-style "Normal")
-        font-size (font-size->px font-size)
-        [x y font-size] (mapv utils.length/unit->px [x y font-size weight])
-        postscript-name (-> system-fonts (get family-name) :postscript-name)]
-    (-> (js/window.queryLocalFonts #js {:postscriptNames [postscript-name]})
-        (.then (fn [fonts]
-                 (print "Fonts found: " (count fonts))
-                 (when-let [font (first fonts)]
-                   (-> (.blob font)
-                       (.then (fn [blob]
-                                (-> (.arrayBuffer blob)
-                                    (.then (fn [buffer]
-                                             (let [opentype-font (opentype/parse buffer)
-                                                   path (.getPath opentype-font content
-                                                                  x y font-size)
-                                                   d (.toPathData path)]
-                                               (rf/dispatch [::->path id d])))))))))))
-        (.catch (fn [_error])))))
+        {:keys [x y font-family]} attrs
+        {:keys [font-size font-style font-weight]} (get-computed-styles! el)
+        font-weight-name (get wight-name-mapping font-weight)
+        [x y font-size] (mapv utils.length/unit->px [x y font-size])
+        includes-prop? (fn [v prop]
+                         (string/includes? (string/lower-case prop)
+                                           (string/lower-case v)))]
+    (if font-family
+      (-> (js/window.queryLocalFonts)
+          (.then (fn [fonts]
+                   (let [matched-family (filter #(includes-prop? font-family (.-family %))
+                                                fonts)
+                         matched-style (filter #(includes-prop? font-style (.-style %))
+                                               matched-family)
+                         matched-weight (filter #(includes-prop? font-weight-name (.-style %))
+                                                (if (seq matched-style)
+                                                  matched-style
+                                                  matched-family))]
+                     (when-let [font (or (first matched-weight)
+                                         (first matched-style)
+                                         (first matched-family))]
+                       (->path font id content x y font-size))))))
+      (-> (js/fetch (str "./css/files/noto-sans-latin-" font-weight "-" font-style ".woff"))
+          (.then (fn [response]
+                   (->path response id content x y font-size)))))))

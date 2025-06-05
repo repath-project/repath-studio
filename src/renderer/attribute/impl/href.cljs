@@ -1,5 +1,5 @@
 (ns renderer.attribute.impl.href
-  "https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/href"
+  "https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/href"
   (:require
    [clojure.string :as string]
    [re-frame.core :as rf]

@@ -1,5 +1,5 @@
 (ns renderer.attribute.impl.font-family
-  "https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/font-family"
+  "https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/font-family"
   (:require
    ["@radix-ui/react-popover" :as Popover]
    ["cmdk" :as Command]
