@@ -3,6 +3,7 @@
    [clojure.core.matrix :as matrix]
    [malli.core :as m]
    [renderer.snap.db :refer [SnapOptions]]
+   [renderer.utils.dom :refer [DomElement]]
    [renderer.utils.math :refer [Vec2]]))
 
 (def BBox
@@ -11,9 +12,6 @@
    [number? {:title "min-y"}]
    [number? {:title "max-x"}]
    [number? {:title "max-y"}]])
-
-(def DomElement
-  [:fn (fn [x] (instance? js/Element x))])
 
 (m/=> dom-el->bbox [:-> DomElement [:maybe BBox]])
 (defn dom-el->bbox

@@ -19,7 +19,7 @@
   (> (apply max (map abs (matrix/sub position offset)))
      threshold))
 
-(m/=> pointer [:-> App PointerEvent number? App])
+(m/=> pointer [:-> App PointerEvent App])
 (defn pointer
   [db e]
   (let [{:keys [pointer-offset tool dom-rect drag primary-tool

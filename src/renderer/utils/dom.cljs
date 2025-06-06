@@ -1,5 +1,8 @@
 (ns renderer.utils.dom)
 
+(def DomElement
+  [:fn (fn [x] (instance? js/Element x))])
+
 (defn frame-document!
   []
   (when-let [frame (.getElementById js/document "frame")]

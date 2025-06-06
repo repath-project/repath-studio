@@ -12,6 +12,7 @@
    [renderer.snap.db :refer [SnapOptions]]
    [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.bounds :as utils.bounds :refer [BBox]]
+   [renderer.utils.dom :refer [DomElement]]
    [renderer.utils.map :as utils.map]
    [renderer.utils.math :refer [Vec2]]))
 
@@ -166,6 +167,7 @@
        (matrix/mul pivot-point)
        (matrix/sub pivot-point)))
 
+(m/=> ->dom-element [:-> Element DomElement])
 (defn ->dom-element
   [el]
   (let [{:keys [tag attrs]} el
