@@ -153,6 +153,7 @@
        [:> DropdownMenu/Portal
         [:> DropdownMenu/Content
          {:class "menu-content rounded-sm"
+          :on-key-down #(.stopPropagation %)
           :on-escape-key-down #(.stopPropagation %)}
          (for [item [{:label "Close all"
                       :key :close-all
