@@ -87,7 +87,9 @@
         [x y] (matrix/add (take 2 el-bbox) offset)
         [_w h] (utils.bounds/->dimensions el-bbox)
         attrs (utils.element/attributes el)
-        {:keys [fill font-family font-size font-weight font-style]} attrs]
+        {:keys [fill font-family font-size font-weight font-style]} attrs
+        font-size-px (utils.length/unit->px font-size)
+        font-size (if (zero? font-size-px) font-size (str font-size-px "px"))]
     [:foreignObject {:x x
                      :y y
                      :width "1000vw"
