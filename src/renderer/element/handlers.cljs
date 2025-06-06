@@ -360,9 +360,9 @@
 (m/=> selected-tags [:-> App [:set Tag]])
 (defn selected-tags
   [db]
-  (->> (selected db)
-       (map :tag)
-       (set)))
+  (into #{}
+        (map :tag)
+        (selected db)))
 
 (m/=> filter-by-tag [:-> App Tag [:sequential Element]])
 (defn filter-by-tag

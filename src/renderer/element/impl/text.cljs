@@ -7,7 +7,6 @@
    [clojure.string :as string]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as attr.hierarchy]
-   [renderer.attribute.impl.font-weight :refer [weight-name-mapping]]
    [renderer.element.handlers :as element.handlers]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
@@ -17,6 +16,7 @@
    [renderer.tool.events :as tool.events]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.subs :as-alias tool.subs]
+   [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.dom :as utils.dom]
    [renderer.utils.element :as utils.element]
@@ -149,8 +149,10 @@
 (defn match-font-by-weight
   [weight fonts]
   (let [weight-num (js/parseInt weight)
-        weight-name (get weight-name-mapping weight)
-        matched-weight (filter #(includes-prop? weight-name (.-style %)) fonts)]
+        weight-names (get utils.attribute/weight-name-mapping weight)
+        matched-weight (->> fonts
+                            (filter (fn [font]
+                                      (some #(includes-prop? % (.-style font)) weight-names))))]
     (if (or (seq matched-weight) (< weight-num 100))
       matched-weight
       (recur (str (- weight-num 100)) fonts))))
