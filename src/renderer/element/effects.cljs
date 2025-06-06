@@ -2,6 +2,7 @@
   (:require
    [re-frame.core :as rf]
    [renderer.element.events :as-alias element.events]
+   [renderer.notification.events :as-alias notification.events]
    [renderer.utils.element :as utils.element]
    [renderer.utils.length :as utils.length]
    [renderer.worker.events :as-alias worker.events]))
@@ -70,4 +71,5 @@
  (fn [elements]
    (-> (mapv utils.element/->path elements)
        (js/Promise.all)
-       (.then #(rf/dispatch [::element.events/converted-to-path %])))))
+       (.then #(rf/dispatch [::element.events/converted-to-path %]))
+       (.catch #(rf/dispatch [::notification.events/show-exception %])))))
