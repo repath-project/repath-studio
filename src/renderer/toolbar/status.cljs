@@ -64,6 +64,7 @@
      {:class "menu-content rounded-sm"
       :side "top"
       :align "end"
+      :on-key-down #(.stopPropagation %)
       :on-escape-key-down #(.stopPropagation %)}
      (for [item zoom-options]
        ^{:key (:id item)} [views/dropdown-menu-item item])
