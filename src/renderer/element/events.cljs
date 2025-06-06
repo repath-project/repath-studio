@@ -2,7 +2,6 @@
   (:require
    [clojure.string :as string]
    [re-frame.core :as rf]
-   [renderer.app.effects :as-alias app.effects]
    [renderer.document.events :as-alias document.events]
    [renderer.effects :as-alias effects]
    [renderer.element.effects :as-alias element.effects]
@@ -283,7 +282,7 @@
    (when-let [file-type (.-type file)]
      (cond
        (= file-type "image/svg+xml")
-       {::app.effects/file-read-as
+       {::effects/file-read-as
         [file :text {"load" {:formatter #(hash-map :svg %
                                                    :label (.-name file)
                                                    :position position)

@@ -5,7 +5,6 @@
    [malli.core :as m]
    [re-frame.core :as rf]
    [renderer.app.db :refer [App]]
-   [renderer.app.effects :as-alias app.effects]
    [renderer.app.events :refer [persist]]
    [renderer.dialog.handlers :as dialog.handlers]
    [renderer.dialog.views :as dialog.views]
@@ -192,7 +191,7 @@
 (rf/reg-event-fx
  ::file-read
  (fn [_ [_ file]]
-   {::app.effects/file-read-as
+   {::effects/file-read-as
     [file :text {"load" {:formatter #(-> (cljs.reader/read-string %)
                                          (assoc :title (.-name file)
                                                 :path (.-path file)))
