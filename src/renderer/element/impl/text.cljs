@@ -131,7 +131,7 @@
          :font-size font-size
          :font-weight font-weight}))))
 
-(defn font-file->path
+(defn font-file->path-data
   [file content x y font-size]
   (-> (.blob file)
       (.then (fn [blob]
@@ -177,6 +177,7 @@
       (-> (js/window.queryLocalFonts)
           (.then (fn [fonts]
                    (when-let [font (match-font fonts font-family font-style font-weight)]
-                     (font-file->path font content x y font-size)))))
+                     (font-file->path-data font content x y font-size)))))
       (-> (js/fetch (str "./css/files/noto-sans-latin-" font-weight "-" font-style ".woff"))
-          (.then (fn [response]  (font-file->path response content x y font-size)))))))
+          (.then (fn [response]
+                   (font-file->path-data response content x y font-size)))))))
