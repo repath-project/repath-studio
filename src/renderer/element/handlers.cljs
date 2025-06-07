@@ -678,7 +678,8 @@
 (m/=> swap [:-> App Element App])
 (defn swap
   [db el]
-  (assoc-in db (path db (:id el)) el))
+  (-> (assoc-in db (path db (:id el)) el)
+      (refresh-bbox (:id el))))
 
 (m/=> boolean-operation [:-> App PathBooleanOperation App])
 (defn boolean-operation
