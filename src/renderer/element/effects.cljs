@@ -2,7 +2,6 @@
   (:require
    [re-frame.core :as rf]
    [renderer.element.events :as-alias element.events]
-   [renderer.notification.events :as-alias notification.events]
    [renderer.utils.element :as utils.element]
    [renderer.utils.length :as utils.length]
    [renderer.worker.events :as-alias worker.events]))
@@ -68,8 +67,8 @@
 
 (rf/reg-fx
  ::->path
- (fn [elements]
-   (-> (mapv utils.element/->path elements)
+ (fn [{:keys [data on-success on-error]}]
+   (-> (mapv utils.element/->path data)
        (js/Promise.all)
-       (.then #(rf/dispatch [::element.events/converted-to-path %]))
-       (.catch #(rf/dispatch [::notification.events/show-exception %])))))
+       (.then #(when on-success (rf/dispatch (conj on-success %))))
+       (.catch #(when on-error (rf/dispatch (conj on-error %)))))))

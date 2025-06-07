@@ -181,29 +181,47 @@
 (rf/reg-event-fx
  ::->path
  (fn [{:keys [db]}]
-   {::element.effects/->path (element.handlers/selected db)}))
+   {::element.effects/->path {:data (element.handlers/selected db)
+                              :on-success [::finalize->path]
+                              :on-error [::notification.events/show-exception]}}))
+
+(rf/reg-event-db
+ ::finalize->path
+ (fn [db [_ elements]]
+   (-> (reduce (fn [db el] (element.handlers/update-el db (:id el) (fn [] el)))
+               db elements)
+       (history.handlers/finalize "Convert selection to path"))))
 
 (rf/reg-event-fx
- ::converted-to-path
- (fn [{:keys [db]} [_ elements]]
-   {:db (-> (reduce (fn [db el]
-                      (element.handlers/update-el db (:id el) (fn [] el)))
-                    db elements)
-            (history.handlers/finalize "Convert selection to path"))}))
+ ::stroke->path
+ (fn [{:keys [db]}]
+   {::element.effects/->path {:data (element.handlers/selected db)
+                              :on-success [::finalize-stroke->path]
+                              :on-error [::notification.events/show-exception]}}))
 
 (rf/reg-event-db
- ::stroke->path
- (fn [db]
-   (-> (element.handlers/stroke->path db)
+ ::finalize-stroke->path
+ (fn [db [_ elements]]
+   (-> (reduce (fn [db el] (element.handlers/update-el db (:id el) (fn [] el)))
+               db elements)
+       (element.handlers/stroke->path)
        (history.handlers/finalize "Convert selection's stroke to path"))))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::boolean-operation
- (fn [db [_ operation]]
-   (cond-> db
-     (seq (rest (element.handlers/selected db)))
-     (-> (element.handlers/boolean-operation operation)
-         (history.handlers/finalize (string/capitalize (name operation)))))))
+ (fn [{:keys [db]} [_ operation]]
+   (when (seq (rest (element.handlers/selected db)))
+     {::element.effects/->path {:data (element.handlers/selected db)
+                                :on-success [::finalize-boolean-operation operation]
+                                :on-error [::notification.events/show-exception]}})))
+
+(rf/reg-event-db
+ ::finalize-boolean-operation
+ (fn [db [_ operation elements]]
+   (-> (reduce (fn [db el] (element.handlers/update-el db (:id el) (fn [] el)))
+               db elements)
+       (element.handlers/boolean-operation operation)
+       (history.handlers/finalize (string/capitalize (name operation))))))
 
 (rf/reg-event-db
  ::add

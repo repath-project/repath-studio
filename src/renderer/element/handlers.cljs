@@ -679,10 +679,10 @@
 (defn boolean-operation
   [db operation]
   (let [selected-elements (top-selected-sorted db)
-        attrs (-> selected-elements first utils.element/->path :attrs)
+        attrs (-> selected-elements first :attrs)
         new-path (->> (rest selected-elements)
                       (reduce (fn [path-a el]
-                                (let [path-b (-> el utils.element/->path :attrs :d)]
+                                (let [path-b (-> el :attrs :d)]
                                   (utils.path/boolean-operation path-a path-b operation)))
                               (:d attrs)))]
     (cond-> db
