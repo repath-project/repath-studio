@@ -306,16 +306,16 @@
      (rf/dispatch [::element.events/->path])
 
      (rf.test/wait-for
-      [::element.events/converted-to-path]
+      [::element.events/finalize->path]
 
       (is (= (-> @selected first :tag) :path))
       (is (= (-> @selected first :attrs :fill) "red"))
       (not (-> @selected first :attrs :x))))))
 
 (deftest stroke->path
-  (rf.test/run-test-sync
-   (rf/dispatch [::app.events/initialize-db])
-   (rf/dispatch [::document.events/init])
+  (rf.test/run-test-async
+   (rf/dispatch-sync [::app.events/initialize-db])
+   (rf/dispatch-sync [::document.events/init])
    (let [selected (rf/subscribe [::element.subs/selected])]
      (rf/dispatch [::element.events/add {:tag :rect
                                          :attrs {:x "100"
@@ -325,14 +325,18 @@
                                                  :fill "red"
                                                  :stroke "black"}}])
      (rf/dispatch [::element.events/stroke->path])
-     (is (= (-> @selected first :tag) :path))
-     (is (= (-> @selected first :attrs :fill) "black"))
-     (not (-> @selected first :attrs :stroke)))))
+
+     (rf.test/wait-for
+      [::element.events/finalize-stroke->path]
+
+      (is (= (-> @selected first :tag) :path))
+      (is (= (-> @selected first :attrs :fill) "black"))
+      (not (-> @selected first :attrs :stroke))))))
 
 (deftest boolean-operation
-  (rf.test/run-test-sync
-   (rf/dispatch [::app.events/initialize-db])
-   (rf/dispatch [::document.events/init])
+  (rf.test/run-test-async
+   (rf/dispatch-sync [::app.events/initialize-db])
+   (rf/dispatch-sync [::document.events/init])
    (let [selected (rf/subscribe [::element.subs/selected])]
      (rf/dispatch [::element.events/add {:tag :rect
                                          :attrs {:x "100"
@@ -348,8 +352,12 @@
                                                  :height "100"}}])
      (rf/dispatch [::element.events/select-all])
      (rf/dispatch [::element.events/boolean-operation :unite])
-     (is (= (-> @selected first :tag) :path))
-     (is (= (-> @selected first :attrs :fill) "red")))))
+
+     (rf.test/wait-for
+      [::element.events/finalize-boolean-operation]
+
+      (is (= (-> @selected first :tag) :path))
+      (is (= (-> @selected first :attrs :fill) "red"))))))
 
 (deftest import-svg
   (rf.test/run-test-sync
