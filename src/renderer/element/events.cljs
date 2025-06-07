@@ -188,8 +188,7 @@
 (rf/reg-event-db
  ::finalize->path
  (fn [db [_ elements]]
-   (-> (reduce (fn [db el] (element.handlers/update-el db (:id el) (fn [] el)))
-               db elements)
+   (-> (reduce element.handlers/swap db elements)
        (history.handlers/finalize "Convert selection to path"))))
 
 (rf/reg-event-fx
@@ -202,8 +201,7 @@
 (rf/reg-event-db
  ::finalize-stroke->path
  (fn [db [_ elements]]
-   (-> (reduce (fn [db el] (element.handlers/update-el db (:id el) (fn [] el)))
-               db elements)
+   (-> (reduce element.handlers/swap db elements)
        (element.handlers/stroke->path)
        (history.handlers/finalize "Convert selection's stroke to path"))))
 
@@ -218,8 +216,7 @@
 (rf/reg-event-db
  ::finalize-boolean-operation
  (fn [db [_ operation elements]]
-   (-> (reduce (fn [db el] (element.handlers/update-el db (:id el) (fn [] el)))
-               db elements)
+   (-> (reduce element.handlers/swap db elements)
        (element.handlers/boolean-operation operation)
        (history.handlers/finalize (string/capitalize (name operation))))))
 

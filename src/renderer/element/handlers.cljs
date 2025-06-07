@@ -675,6 +675,11 @@
   (-> (deselect-all db)
       (create (assoc el :selected true))))
 
+(m/=> swap [:-> App Element App])
+(defn swap
+  [db el]
+  (assoc-in db (path db (:id el)) el))
+
 (m/=> boolean-operation [:-> App PathBooleanOperation App])
 (defn boolean-operation
   [db operation]
