@@ -5,6 +5,7 @@
    [renderer.attribute.impl.d]
    [renderer.attribute.impl.font-family]
    [renderer.attribute.impl.font-size]
+   [renderer.attribute.impl.font-style]
    [renderer.attribute.impl.font-weight]
    [renderer.attribute.impl.href]
    [renderer.attribute.impl.length]

@@ -60,6 +60,18 @@
    :id :class :tab-index
    :style])
 
+;; https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-weight#common_weight_name_mapping
+(defonce weight-name-mapping
+  {"100" ["Thin" "Hairline"]
+   "200" ["ExtraLight" "UltraLight"]
+   "300" ["Light"]
+   "400" ["Regular" "Normal" "Book"]
+   "500" ["Medium"]
+   "600" ["SemiBold" "DemiBold"]
+   "700" ["Bold"]
+   "800" ["ExtraBold" "UltraBold"]
+   "900" ["Black" "Heavy"]})
+
 (defonce camelcased
   ["accentHeight"
    "alignmentBaseline"
@@ -94,12 +106,10 @@
    "floodColor"
    "floodOpacity"
    "fontFamily"
-   "fontSize"
    "fontSizeAdjust"
    "fontStretch"
    "fontStyle"
    "fontVariant"
-   "fontWeight"
    "glyphName"
    "glyphOrientationHorizontal"
    "glyphOrientationVertical"

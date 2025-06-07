@@ -27,6 +27,13 @@
  :-> :system-fonts)
 
 (rf/reg-sub
+ ::font-list
+ :<- [::system-fonts]
+ (fn [system-fonts _]
+   (when system-fonts
+     (->> system-fonts keys sort))))
+
+(rf/reg-sub
  ::backdrop
  :-> :backdrop)
 
@@ -92,12 +99,3 @@
  ::panel-visible?
  (fn [db [_ k]]
    (-> db :panels k :visible)))
-
-(rf/reg-sub
- ::font-options
- :<- [::system-fonts]
- (fn [system-fonts _]
-   (when system-fonts
-     (->> system-fonts
-          (map :family)
-          (distinct)))))

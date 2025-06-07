@@ -118,8 +118,8 @@
                          :x2 (if vertical w step-x)
                          :y2 (if vertical step-y h)
                          :stroke-width (/ 1 zoom)
-                         :opacity (if main? ".3"  ".1")
-                         :stroke "#777"
+                         :opacity (when-not main? ".5")
+                         :stroke "var(--border-color)"
                          :pointer-events "none"}]))) steps-coll))))
 
 (defn grid

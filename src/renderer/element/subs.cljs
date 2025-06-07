@@ -1,6 +1,8 @@
 (ns renderer.element.subs
   (:require
    ["js-beautify" :as js-beautify]
+   [clojure.set :as set]
+   [clojure.string :as string]
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.subs]
    [renderer.document.subs :as-alias document.subs]
@@ -114,19 +116,29 @@
    (element.handlers/ancestor-ids db)))
 
 (rf/reg-sub
- ::font-weights
+ ::font-styles
  :<- [::selected]
  :<- [::app.subs/system-fonts]
  (fn [[selected-elements system-fonts] _]
-   (let [families (->> selected-elements
-                       (keep #(-> % :attrs :font-family))
-                       (set))]
-     (->> system-fonts
-          (filter #(contains? families (:family %)))
-          (keep :weight)
-          (distinct)
-          (sort)
-          (vec)))))
+   (let [families (keep #(-> % :attrs :font-family) selected-elements)]
+     (->> (select-keys system-fonts families)
+          (vals)
+          (map keys)
+          (flatten)
+          (distinct)))))
+
+(rf/reg-sub
+ ::font-weights
+ :<- [::font-styles]
+ (fn [font-styles _]
+   (->> font-styles
+        (reduce (fn [weights style]
+                  (->> (filter (fn [[_k v]]
+                                 (some #(string/includes? style %) v))
+                               utils.attribute/weight-name-mapping)
+                       (keys)
+                       (set)
+                       (set/union weights))) #{}))))
 
 (rf/reg-sub
  ::every-top-level

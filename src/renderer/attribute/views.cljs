@@ -51,7 +51,7 @@
 
 (defn construct-mdn-url
   [attr]
-  (str "https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/" attr))
+  (str "https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/" attr))
 
 (defn caniusethis
   [{:keys [tag attr]}]
@@ -110,7 +110,7 @@
   [:div.flex.w-full.gap-px
    [form-input k v {:disabled disabled
                     :placeholder placeholder
-                    :class "w-20"}]
+                    :class "font-mono w-20"}]
    [:div.px-1.w-full.bg-primary
     [views/slider
      (merge
@@ -258,7 +258,7 @@
         (when-not multitag?
           [tag-info tag])]
        [:div.grid.grid-cols-2.grid-flow-row.my-px.w-full.gap-px
-        {:style {:grid-template-columns "minmax(100px, auto) 1fr"}}
+        {:style {:grid-template-columns "minmax(120px, 120px) 1fr"}}
         (for [[k v] selected-attrs]
           ^{:key k} [row k v locked? tag])]])))
 

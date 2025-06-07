@@ -5,7 +5,6 @@
    ["electron-log/main" :as log]
    ["electron-reloader"]
    ["electron-window-state" :as window-state-keeper]
-   ["font-scanner" :as fontManager]
    ["os" :as os]
    ["path" :as path]
    ["url" :as url]
@@ -68,8 +67,7 @@
      ["save-document" file/save!]
      ["save-document-as" file/save-as!]
      ["export" file/export!]
-     ["print" file/print!]
-     ["load-system-fonts" #(.getAvailableFonts fontManager)]]]
+     ["print" file/print!]]]
     (.handle ipcMain e #(f %2))))
 
 (defn register-window-events!

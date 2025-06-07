@@ -2,6 +2,7 @@
   (:require
    [re-frame.core :as rf]
    [renderer.element.events :as-alias element.events]
+   [renderer.utils.element :as utils.element]
    [renderer.utils.length :as utils.length]
    [renderer.worker.events :as-alias worker.events]))
 
@@ -63,3 +64,11 @@
                                           :href data-url}}]))))
          (set! (.-src img) data-url)))
      (.readAsDataURL reader file))))
+
+(rf/reg-fx
+ ::->path
+ (fn [{:keys [data on-success on-error]}]
+   (-> (mapv utils.element/->path data)
+       (js/Promise.all)
+       (.then #(when on-success (rf/dispatch (conj on-success %))))
+       (.catch #(when on-error (rf/dispatch (conj on-error %)))))))

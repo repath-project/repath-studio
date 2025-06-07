@@ -27,10 +27,14 @@
  ::initialize-db
  [(rf/inject-cofx ::app.effects/user-agent)
   (rf/inject-cofx ::app.effects/platform)
+  (rf/inject-cofx ::app.effects/versions)
+  (rf/inject-cofx ::app.effects/env)
   (rf/inject-cofx ::app.effects/system-language)]
- (fn [{:keys [user-agent platform system-language]} _]
+ (fn [{:keys [user-agent platform versions env system-language]} _]
    {:db (assoc app.db/default
                :platform platform
+               :versions (js->clj versions)
+               :env (js->clj env)
                :user-agent user-agent
                :system-lang system-language)}))
 
@@ -111,26 +115,19 @@
  (fn [db [_ k]]
    (update-in db [:panels k :visible] not)))
 
-(defn ->font-map
-  [^js/FontData font-data]
-  (into {} [[:postscriptName (.-postscriptName font-data)]
-            [:fullName (.-fullName font-data)]
-            [:family (.-family font-data)]
-            [:style (.-style font-data)]]))
-
 (rf/reg-event-fx
  ::load-system-fonts
- (fn [{:keys [db]} _]
-   (if (= (:platform db) "web")
-     {::app.effects/query-local-fonts
-      {:on-success [::set-system-fonts]
-       :on-error [::notification.events/show-exception]
-       :formatter #(mapv ->font-map %)}}
-     {::effects/ipc-invoke
-      {:channel "load-system-fonts"
-       :on-success [::set-system-fonts]
-       :on-error [::notification.events/show-exception]
-       :formatter #(js->clj % :keywordize-keys true)}})))
+ (fn [_ _]
+   {::app.effects/query-local-fonts
+    {:on-success [::set-system-fonts]
+     :on-error [::notification.events/show-exception]
+     :formatter #(reduce (fn [fonts ^js/FontData font-data]
+                           (let [family (.-family font-data)
+                                 style (.-style font-data)]
+                             (assoc-in fonts [family style]
+                                       {:postscript-name (.-postscriptName font-data)
+                                        :full-name (.-fullName font-data)})))
+                         {} %)}}))
 
 (def schema-validator
   (rf/->interceptor

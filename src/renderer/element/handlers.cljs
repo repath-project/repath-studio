@@ -360,9 +360,9 @@
 (m/=> selected-tags [:-> App [:set Tag]])
 (defn selected-tags
   [db]
-  (->> (selected db)
-       (map :tag)
-       (set)))
+  (into #{}
+        (map :tag)
+        (selected db)))
 
 (m/=> filter-by-tag [:-> App Tag [:sequential Element]])
 (defn filter-by-tag
@@ -587,21 +587,10 @@
                         :center-horizontal [cx 0]
                         :right [max-x-delta 0])))))
 
-(m/=> ->path [:function
-              [:-> App App]
-              [:-> App uuid? App]])
-(defn ->path
-  "Converts elements to paths."
-  ([db]
-   (reduce ->path db (selected-ids db)))
-  ([db id]
-   (update-el db id utils.element/->path)))
-
 (m/=> stroke->path [:function
                     [:-> App App]
                     [:-> App uuid? App]])
 (defn stroke->path
-  "Converts the stroke of elements to paths."
   ([db]
    (reduce stroke->path db (selected-ids db)))
   ([db id]
@@ -686,14 +675,19 @@
   (-> (deselect-all db)
       (create (assoc el :selected true))))
 
+(m/=> swap [:-> App Element App])
+(defn swap
+  [db el]
+  (assoc-in db (path db (:id el)) el))
+
 (m/=> boolean-operation [:-> App PathBooleanOperation App])
 (defn boolean-operation
   [db operation]
   (let [selected-elements (top-selected-sorted db)
-        attrs (-> selected-elements first utils.element/->path :attrs)
+        attrs (-> selected-elements first :attrs)
         new-path (->> (rest selected-elements)
                       (reduce (fn [path-a el]
-                                (let [path-b (-> el utils.element/->path :attrs :d)]
+                                (let [path-b (-> el :attrs :d)]
                                   (utils.path/boolean-operation path-a path-b operation)))
                               (:d attrs)))]
     (cond-> db

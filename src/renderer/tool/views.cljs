@@ -19,11 +19,11 @@
       (into [:circle {:key id
                       :cx x
                       :cy y
-                      :stroke theme.db/accent
+                      :stroke "var(--color-accent)"
                       :stroke-width (/ 1 zoom)
                       :fill (if (= (:key clicked-element) id)
-                              theme.db/accent
-                              theme.db/accent-inverted)
+                              "var(--color-accent)"
+                              "var(--color-accent-inverted)")
                       :r (/ 4 zoom)
                       :cursor "default"
                       :on-pointer-up pointer-handler
@@ -40,8 +40,8 @@
         pointer-handler #(event.impl.pointer/handler! % el)
         active (and (= (:id clicked-element) id)
                     (= (:element clicked-element) element))]
-    (into [:rect {:fill (if active theme.db/accent theme.db/accent-inverted)
-                  :stroke (if active theme.db/accent "#777")
+    (into [:rect {:fill (if active "var(--color-accent)" "var(--color-accent-inverted)")
+                  :stroke (if active "var(--color-accent)" "gray")
                   :stroke-width stroke-width
                   :x (- x (/ size 2))
                   :y (- y (/ size 2))
@@ -77,7 +77,7 @@
                     :stroke-opacity ".3"
                     :fill "transparent"
                     :shape-rendering "crispEdges"
-                    :stroke theme.db/accent
+                    :stroke "var(--color-accent)"
                     :pointer-events (when ignored? "none")}]
     [:rect (merge rect-attrs {:on-pointer-up pointer-handler
                               :on-pointer-down pointer-handler

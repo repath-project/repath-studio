@@ -35,8 +35,8 @@
        {:on-pointer-up pointer-handler
         :on-pointer-down pointer-handler
         :on-pointer-move pointer-handler
-        :fill "#888"
-        :font-family "monospace"
+        :fill "gray"
+        :font-family "var(--font-mono)"
         :font-size (/ 12 zoom)}) (or (:label el) (name (:tag el)))]
 
      [:rect

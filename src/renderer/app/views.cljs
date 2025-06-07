@@ -66,8 +66,7 @@
 
 (defn debug-info
   []
-  (into [:div.absolute.top-1.left-2.pointer-events-none
-         {:style {:color "#555"}}]
+  (into [:div.absolute.top-1.left-2.pointer-events-none]
         (for [[s v] (debug-rows)]
           [:div.flex [:strong.mr-1 s] [:div v]])))
 
@@ -99,6 +98,7 @@
         [:div.bg-primary
          [ruler.views/ruler :vertical]])
       [:div.relative.grow.flex
+       {:data-theme "light"}
        [frame.views/root]
        (when read-only?
          [:div.absolute.inset-0.border-4.border-accent
@@ -111,7 +111,6 @@
           {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])
        (when (and help-bar (seq help-message))
          [:div.flex.absolute.justify-center.w-full.p-4.pointer-events-none
-          {:data-theme "light"}
           [:div.bg-primary.rounded-full.overflow-hidden.shadow-lg
            [:div.overlay.text-color.text-xs.gap-1.flex.flex-wrap.truncate.py-2.px-4.justify-center
             {:aria-live "polite"}

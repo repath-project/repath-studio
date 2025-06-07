@@ -13,12 +13,9 @@
 (derive ::element.hierarchy/renderable ::element.hierarchy/element)
 
 (defmethod element.hierarchy/bbox ::element.hierarchy/renderable
-  [{:keys [tag attrs content] :as el}]
+  [{:keys [content] :as el}]
   (when-let [svg (utils.dom/canvas-element!)]
-    (let [dom-el (js/document.createElementNS "http://www.w3.org/2000/svg" (name tag))]
-      (doseq [[k v] attrs]
-        (when (utils.element/supported-attr? (dissoc el :attrs) k)
-          (.setAttributeNS dom-el nil (name k) v)))
+    (let [dom-el (utils.element/->dom-element el)]
       (.appendChild svg dom-el)
       (set! (.-innerHTML dom-el) (if (empty? content) "\u00a0" content))
       (let [bbox (utils.bounds/dom-el->bbox dom-el)]

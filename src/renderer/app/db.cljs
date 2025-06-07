@@ -28,6 +28,11 @@
 (def Platform
   [:enum "darwin" "linux" "win32" "web"])
 
+(def Font
+  [:map-of {:title "style"} string? [:map
+                                     [:postscript-name string?]
+                                     [:full-name string?]]])
+
 (def App
   [:map {:closed true}
    [:tool {:default :transform} Tool]
@@ -55,7 +60,7 @@
    [:document-tabs {:default [] :persist true} [:vector uuid?]]
    [:recent {:max 10 :default [] :persist true} [:vector string?]]
    [:drag-threshold {:default 1} number?]
-   [:system-fonts {:optional true} vector?]
+   [:system-fonts {:optional true} [:map-of string? Font]]
    [:notifications {:default []} [:* Notification]]
    [:debug-info {:default false} boolean?]
    [:help-bar {:default true} boolean?]
@@ -64,6 +69,8 @@
    [:lang {:optional true :persist true} Lang]
    [:system-lang {:optional true} string?]
    [:platform {:optional true} Platform]
+   [:versions {:optional true} [:maybe map?]]
+   [:env {:optional true} [:maybe map?]]
    [:user-agent {:optional true} string?]
    [:repl-mode {:default :cljs} keyword?]
    [:worker {:default {:tasks {}}} [:map [:tasks map?]]]

@@ -12,6 +12,7 @@
    [renderer.snap.db :refer [SnapOptions]]
    [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.bounds :as utils.bounds :refer [BBox]]
+   [renderer.utils.dom :refer [DomElement]]
    [renderer.utils.map :as utils.map]
    [renderer.utils.math :refer [Vec2]]))
 
@@ -91,18 +92,22 @@
 
 (m/=> ->path [:-> Element Element])
 (defn ->path
-  [el]
-  (cond-> el
-    (get-method element.hierarchy/path (:tag el))
-    (-> (assoc :tag :path)
-        (update :attrs #(utils.map/merge-common-with str % (utils.attribute/defaults-memo :path)))
-        (assoc-in [:attrs :d] (element.hierarchy/path el)))))
+  ([el]
+   (->path el (element.hierarchy/path el)))
+  ([el d]
+   (cond
+     (string? d)
+     (-> (assoc el :tag :path)
+         (update :attrs #(utils.map/merge-common-with str % (utils.attribute/defaults-memo :path)))
+         (assoc-in [:attrs :d] d))
+
+     (instance? js/Promise d)
+     (.then d (fn [d] (->path el d))))))
 
 (m/=> stroke->path [:-> Element Element])
 (defn stroke->path
   [{:keys [attrs] :as el}]
-  (let [d (element.hierarchy/path el)
-        paper-path (Path. d)
+  (let [paper-path (Path. (:d attrs))
         el-offset (or (:stroke-width attrs) 1)
         stroke-path (PaperOffset.offsetStroke
                      paper-path
@@ -160,3 +165,13 @@
   (->> ratio
        (matrix/mul pivot-point)
        (matrix/sub pivot-point)))
+
+(m/=> ->dom-element [:-> Element DomElement])
+(defn ->dom-element
+  [el]
+  (let [{:keys [tag attrs]} el
+        dom-el (js/document.createElementNS "http://www.w3.org/2000/svg" (name tag))]
+    (doseq [[k v] attrs]
+      (when (supported-attr? (dissoc el :attrs) k)
+        (.setAttributeNS dom-el nil (name k) v)))
+    dom-el))
