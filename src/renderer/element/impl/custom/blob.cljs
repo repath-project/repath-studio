@@ -163,7 +163,6 @@
      [utils.svg/line [x1 y1] [x2 y2]]
      [tool.views/square-handle
       {:type :handle
-       :cursor "move"
        :action :edit
        :element (:id el)
        :x x2

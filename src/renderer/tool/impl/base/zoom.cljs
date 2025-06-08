@@ -35,10 +35,6 @@
     (not (:shift-key e))
     (tool.handlers/set-cursor "zoom-in")))
 
-(defmethod tool.hierarchy/on-drag-start :zoom
-  [db _e]
-  (tool.handlers/set-cursor db "default"))
-
 (defmethod tool.hierarchy/on-drag :zoom
   [db _e]
   (tool.handlers/set-temp db (utils.svg/select-box db)))

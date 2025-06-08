@@ -334,7 +334,7 @@
             (select-element (:shift-key e))
             (translate delta axis)
             (snap.handlers/snap-with translate axis)
-            (tool.handlers/set-cursor "default")))
+            (tool.handlers/set-cursor "move")))
 
       :clone
       (if (:alt-key e)

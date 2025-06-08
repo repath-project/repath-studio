@@ -85,7 +85,6 @@
             [tool.views/square-handle
              (merge handle {:type :handle
                             :action :edit
-                            :cursor "move"
                             :element (:id el)})
              [:title
               {:key (str (:id handle) "-title")}

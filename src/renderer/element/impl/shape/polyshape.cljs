@@ -78,7 +78,6 @@
                                                      :y y
                                                      :label "point"
                                                      :type :handle
-                                                     :cursor "move"
                                                      :action :edit
                                                      :element (:id el)}]
                           (when is-active

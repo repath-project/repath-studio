@@ -84,6 +84,5 @@
                                 :id :r
                                 :type :handle
                                 :action :edit
-                                :cursor "move"
                                 :element (:id el)}
       [:title {:key "r-title"} "r"]]]))

@@ -47,7 +47,6 @@
                     :id :size}]]
        (let [handle (merge handle {:type :handle
                                    :action :edit
-                                   :cursor "move"
                                    :element (:id el)})]
          ^{:key (:id handle)}
          [tool.views/square-handle handle

@@ -47,7 +47,7 @@
                   :y (- y (/ size 2))
                   :width size
                   :height size
-                  :cursor (if (or active (not cursor)) "default" cursor)
+                  :cursor (or cursor "move")
                   :on-pointer-up pointer-handler
                   :on-pointer-down pointer-handler
                   :on-pointer-move pointer-handler}] children)))
