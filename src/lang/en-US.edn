@@ -291,11 +291,24 @@
                      of an SVG viewport."
   :preserve-aspect-ratio "The preserveAspectRatio attribute indicates how an element with a viewBox
                           providing a given aspect ratio must fit into a viewport with a different
-                          aspect ratio."}
+                          aspect ratio."} 
+ 
+ :renderer.tool.impl.element.core
+ {:help "Click and drag to create an element."}
+
+ :renderer.tool.impl.element.polyshape
+ {:add-points "Click to add more points."
+  :finalize-shape "Double click to finalize the shape."}
  
  :renderer.tool.impl.element.rect
  {:name "Rectangle"
   :help [:div "Hold %1 to lock proportions."]}
+ 
+ :renderer.tool.impl.element.svg
+ {:help [:div "Hold %1 to lock proportions."]}
+
+ :renderer.tool.impl.element.text
+ {:help "Click to start typing."}
  
  :renderer.attribute.impl.stroke-linecap
  {:description "The stroke-linecap attribute is a presentation attribute defining the shape
@@ -305,6 +318,12 @@
  {:description "The overflow attribute sets what to do when an element's content is too big to fit in its block formatting context. This feature is not widely implemented yet."
   :hidden      "Hidden"
   :visible     "Visible"}
+ 
+ :renderer.tool.impl.base.edit
+ {:help-idle-drag  [:div "Drag a handle to modify your shape."]
+  :help-idle-click [:div "Click on an element to change selection"]
+  :help-edit       [:div "Hold %1 to restrict direction."]
+  :help-type       [:div "Enter your text."]}
 
  :renderer.tool.impl.base.transform
  {:idle-click  [:div "Click to select an element or drag to select by area. " ]
@@ -313,6 +332,14 @@
   :translate   [:div "Hold %1 to restrict direction, and %2 to clone."]
   :clone       [:div "Hold %1 to restrict direction. or release %2 to move"]
   :scale       [:div "Hold %1 to lock proportions, %2 to scale in place, %3 to also scale children."]}
+ 
+ :renderer.tool.impl.base.pan
+ {:idle-help "Click and drag to pan."
+  :pan-help  "Drag to pan."}
+ 
+ :renderer.tool.impl.base.zoom
+ {:zoom-in  [:div "Click or select an area to zoom in."]
+  :zoom-out [:div "Hold %1 to zoom out."]}
  
  :renderer.document.views
  {:new            "New"

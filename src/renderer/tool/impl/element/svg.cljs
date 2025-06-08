@@ -2,7 +2,8 @@
   "https://www.w3.org/TR/SVG/struct.html#SVGElement"
   (:require
    [renderer.tool.handlers :as tool.handlers]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.utils.i18n :refer [t]]))
 
 (derive :svg ::tool.hierarchy/element)
 
@@ -12,7 +13,8 @@
 
 (defmethod tool.hierarchy/help [:svg :create]
   []
-  [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions."])
+  (t [::help [:div "Hold %1 to lock proportions."]]
+     [[:span.shortcut-key "Ctrl"]]))
 
 (defmethod tool.hierarchy/on-drag :svg
   [db e]
