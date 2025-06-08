@@ -66,7 +66,7 @@
 
 (defn debug-info
   []
-  (into [:div.absolute.top-1.left-2.pointer-events-none]
+  (into [:div.absolute.top-1.left-2.pointer-events-none.text-color]
         (for [[s v] (debug-rows)]
           [:div.flex [:strong.mr-1 s] [:div v]])))
 
