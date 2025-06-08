@@ -3,18 +3,20 @@
   (:require
    [renderer.document.handlers :as document.handlers]
    [renderer.tool.handlers :as tool.handlers]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.utils.i18n :refer [t]]))
 
 (derive :rect ::tool.hierarchy/element)
 
 (defmethod tool.hierarchy/properties :rect
   []
   {:icon "rectangle-tool"
-   :label "Rectangle"})
+   :label (t [::name "Rectangle"])})
 
 (defmethod tool.hierarchy/help [:rect :create]
   []
-  [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions."])
+  (t [::help [:div "Hold %1 to lock proportions."]] 
+     [[:span.shortcut-key "Ctrl"]]))
 
 (defmethod tool.hierarchy/on-drag :rect
   [db e]

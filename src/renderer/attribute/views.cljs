@@ -216,14 +216,15 @@
    [:> HoverCard/Root
     [:> HoverCard/Trigger {:as-child true}
      [:span.pb-px
-      [views/icon-button "info" {:title "MDN Info" :class "hover:bg-transparent"}]]]
+      [views/icon-button "info" {:title (t [::mdn-info "MDN Info"])  
+                                 :class "hover:bg-transparent"}]]]
     [:> HoverCard/Portal
      [:> HoverCard/Content
       {:sideOffset 5
        :class "popover-content"
        :align "end"}
       [:div.p-5
-       [:h2.mb-4.text-lg tag]
+       [:h2.mb-4.text-lg (or (:label (element.hierarchy/properties tag)) tag)]
        (when-let [description (:description (element.hierarchy/properties tag))]
          [:p.text-pretty description])
        [caniusethis {:tag tag}]
@@ -241,13 +242,15 @@
         locked? @(rf/subscribe [::element.subs/selected-locked?])
         tag (first selected-tags)
         multitag? (next selected-tags)]
-    (when-first [el selected-elements]
+    (when-first [el selected-elements] 
       [:div.pr-px
        [:div.flex.bg-primary.py-4.pl-4.pr-2.gap-1
         [:h1.self-center.flex-1.text-lg
          (if-not (next selected-elements)
-           (let [el-label (:label el)]
-             (if (empty? el-label) tag el-label))
+           (let [el-label (:label el)
+                 properties (element.hierarchy/properties tag)
+                 tag-label (or (:label properties) (string/capitalize (name tag)))]
+             (if (empty? el-label) tag-label el-label))
            (string/join " " [(count selected-elements)
                              (if multitag? "elements" (name tag))]))]
         (when-not multitag?

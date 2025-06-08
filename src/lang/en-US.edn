@@ -199,7 +199,8 @@
   :percentages           "Percentages"
   :animatable            "Animatable"
   :animationType         "Animation type"
-  :syntax                "Syntax"}
+  :syntax                "Syntax"
+  :mdn-info              "MDN Info"}
  
  :renderer.attribute.impl.core
  {:x                "The x attribute defines an x-axis coordinate in the user coordinate system."
@@ -291,6 +292,10 @@
   :preserve-aspect-ratio "The preserveAspectRatio attribute indicates how an element with a viewBox
                           providing a given aspect ratio must fit into a viewport with a different
                           aspect ratio."}
+ 
+ :renderer.tool.impl.element.rect
+ {:name "Rectangle"
+  :help [:div "Hold %1 to lock proportions."]}
  
  :renderer.attribute.impl.stroke-linecap
  {:description "The stroke-linecap attribute is a presentation attribute defining the shape
