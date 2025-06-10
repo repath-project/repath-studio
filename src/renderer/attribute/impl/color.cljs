@@ -6,7 +6,8 @@
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.attribute.views :as attribute.views]
-   [renderer.element.events :as-alias element.events]))
+   [renderer.element.events :as-alias element.events]
+   [renderer.utils.i18n :refer [t]]))
 
 (derive :stroke ::color)
 (derive :fill ::color)
@@ -21,7 +22,7 @@
      {:as-child true
       :disabled disabled}
      [:button.button.color-drip.inline-block
-      {:title "Pick color"
+      {:title (t [::title "Pick color"])
        :style {:border "5px solid var(--bg-primary)"
                :background v}}]]
     [:> Popover/Portal

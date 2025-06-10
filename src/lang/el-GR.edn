@@ -179,6 +179,10 @@
   :stream-line "Ο βαθμός απλοποίησης της γραμμής."
   :description "Σχεδιάστε γραμμές με ευαισθησία στην πίεση χρησιμοποιώντας το τέλειο ελεύθερο σχέδιο."}
  
+ :renderer.element.impl.container.canvas
+ {:name        "Καμβάς"
+  :description "Ο καμβάς είναι το κύριο πλαίσιο SVG που περιέχει όλα τα στοιχεία."}
+ 
  :renderer.element.impl.container.svg
  {:description "Το στοιχείο svg είναι μια θέση υποδοχής (container) που ορίζει ένα νέο σύστημα συντεταγμένων και μια περιοχή προβολής (viewport). 
                 Χρησιμοποιείται ως το εξωτερικό στοιχείο των εγγράφων SVG, 
@@ -288,6 +292,13 @@
  {:description "Η ιδιότητα overflow καθορίζει τι θα συμβεί όταν το περιεχόμενο ενός στοιχείου είναι πολύ μεγάλο για να χωρέσει στο πλαίσιο μορφοποίησής του. Αυτή η δυνατότητα δεν έχει ευρεία υλοποίηση ακόμα."
   :hidden      "Κρυφό"
   :visible     "Ορατό"}
+ 
+ :renderer.attribute.impl.color
+ {:title "Επιλέξτε χρώμα"}
+
+ :renderer.attribute.impl.length
+ {:increase "Αύξηση"
+  :decrease "Μείωση"}
  
  :renderer.tool.impl.base.edit
  {:help-idle-drag  [:div "Σύρετε μια λαβή για να τροποποιήσετε το σχήμα σας."]

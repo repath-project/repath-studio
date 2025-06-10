@@ -119,7 +119,7 @@
   :animate-transform "Animate Transform" 
   :animate-motion    "Animate Motion" 
   :duplicate         "Duplicate" 
-  :delete            "Delete"}
+  :delete            "Delete"} 
  
  :renderer.element.impl.shape.circle
  {:name        "Circle"
@@ -183,6 +183,10 @@
   :smoothing   "How much to soften the stroke's edges."
   :stream-line "How much to streamline the stroke."
   :description "Draw pressure-sensitive freehand lines using perfect-freehand."}
+ 
+ :renderer.element.impl.container.canvas
+ {:name        "Canvas"
+  :description "The canvas is the main SVG container that hosts all elements."}
  
  :renderer.element.impl.container.svg
  {:description "The svg element is a container that defines a new coordinate
@@ -318,6 +322,13 @@
  {:description "The overflow attribute sets what to do when an element's content is too big to fit in its block formatting context. This feature is not widely implemented yet."
   :hidden      "Hidden"
   :visible     "Visible"}
+ 
+ :renderer.attribute.impl.color
+ {:title "Pick color"}
+
+ :renderer.attribute.impl.length
+ {:increase "Increase"
+  :decrease "Decrease"}
  
  :renderer.tool.impl.base.edit
  {:help-idle-drag  [:div "Drag a handle to modify your shape."]

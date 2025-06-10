@@ -6,7 +6,8 @@
    [renderer.attribute.views :as attribute.views]
    [renderer.element.events :as-alias element.events]
    [renderer.utils.length :as utils.length]
-   [renderer.views :as views]))
+   [renderer.views :as views]
+   [renderer.utils.i18n :refer [t]]))
 
 (derive :x ::length)
 (derive :y ::length)
@@ -37,12 +38,12 @@
    [:div.flex.gap-px
     [:button.form-control-button
      {:disabled disabled
-      :title "Decrease"
+      :title (t [::decrease "Decrease"])
       :on-pointer-down #(rf/dispatch [::element.events/update-attr k dec])}
      [views/icon "minus"]]
     [:button.form-control-button
      {:disabled disabled
-      :title "Increase"
+      :title (t [::increase "Increase"])
       :on-click #(rf/dispatch [::element.events/update-attr k inc])}
      [views/icon "plus"]]]])
 
