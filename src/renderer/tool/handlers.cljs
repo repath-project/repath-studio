@@ -31,18 +31,19 @@
   [db tool]
   (cond-> db
     :always
-    (-> (tool.hierarchy/on-deactivate)
-        (assoc :tool tool)
-        (set-state :idle)
-        (set-cursor "default")
-        (dissoc :drag :pointer-offset :clicked-element)
-        (snap.handlers/rebuild-tree))
+    (tool.hierarchy/on-deactivate)
 
-    (not (:cached-tool db))
+    (and (not= (:cached-state db) :create)
+         (not= (:state db) :type))
     (history.handlers/reset-state)
 
     :always
-    (tool.hierarchy/on-activate)))
+    (-> (assoc :tool tool)
+        (set-state :idle)
+        (set-cursor "default")
+        (dissoc :drag :pointer-offset :clicked-element)
+        (snap.handlers/rebuild-tree)
+        (tool.hierarchy/on-activate))))
 
 (m/=> pointer-delta [:-> App Vec2])
 (defn pointer-delta

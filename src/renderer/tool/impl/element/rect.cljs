@@ -19,55 +19,50 @@
   []
   [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions."])
 
-(defn create
-  [db lock-ratio]
-  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
-                                (:adjusted-pointer-offset db))
-        [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
-        width (abs (- x offset-x))
-        height (abs (- y offset-y))
-        width (cond-> width lock-ratio (min height))
-        height (cond-> height lock-ratio (min width))
-        fill (document.handlers/attr db :fill)
-        stroke (document.handlers/attr db :stroke)]
-    (-> db
-        (tool.handlers/set-state :create)
-        (element.handlers/add {:type :element
-                               :tag :rect
-                               :attrs {:x (min x offset-x)
-                                       :y (min y offset-y)
-                                       :width width
-                                       :height height
-                                       :fill fill
-                                       :stroke stroke}}))))
-
-(defn update-size
+(defn attributes
   [db lock-ratio]
   (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
                                 (:adjusted-pointer-offset db))
         [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
         width (.toFixed (abs (- x offset-x)) 3)
-        height (.toFixed (abs (- y offset-y)) 3)
-        width (cond-> width lock-ratio (min height))
-        height (cond-> height lock-ratio (min width))
-        x (.toFixed (min x offset-x) 3)
-        y (.toFixed (min y offset-y) 3)
+        height (.toFixed (abs (- y offset-y)) 3)]
+    {:x (.toFixed (min x offset-x) 3)
+     :y (.toFixed (min y offset-y) 3)
+     :width (cond-> width lock-ratio (min height))
+     :height (cond-> height lock-ratio (min width))}))
+
+(defn create
+  [db lock-ratio]
+  (let [fill (document.handlers/attr db :fill)
+        stroke (document.handlers/attr db :stroke)]
+    (-> db
+        (tool.handlers/set-state :create)
+        (element.handlers/add {:type :element
+                               :tag :rect
+                               :attrs (merge (attributes db lock-ratio)
+                                             {:fill fill
+                                              :stroke stroke})}))))
+
+(defn update-size
+  [db lock-ratio]
+  (let [attrs (attributes db lock-ratio)
+        assoc-attr (fn [el [k v]] (assoc-in el [:attrs k] (str v)))
         {:keys [id parent]} (first (element.handlers/selected db))
         [min-x min-y] (element.hierarchy/bbox (element.handlers/entity db parent))]
     (-> db
-        (element.handlers/update-el id #(-> %
-                                            (assoc-in [:attrs :x] (str x))
-                                            (assoc-in [:attrs :y] (str y))
-                                            (assoc-in [:attrs :width] (str width))
-                                            (assoc-in [:attrs :height] (str height))))
+        (element.handlers/update-el id #(reduce assoc-attr % attrs))
         (element.handlers/translate [(- min-x) (- min-y)]))))
+
+(defn finalize
+  [db]
+  (-> db
+      (history.handlers/finalize "Create rectangle")
+      (tool.handlers/activate :transform)))
 
 (defmethod tool.hierarchy/on-pointer-up :rect
   [db e]
   (if (= (:state db) :create)
-    (-> db
-        (history.handlers/finalize "Create rectangle")
-        (tool.handlers/activate  :transform))
+    (finalize db)
     (create db (:ctrl-key e))))
 
 (defmethod tool.hierarchy/on-pointer-move :rect
@@ -86,6 +81,4 @@
 
 (defmethod tool.hierarchy/on-drag-end :rect
   [db _e]
-  (-> db
-      (history.handlers/finalize "Create rectangle")
-      (tool.handlers/activate :transform)))
+  (finalize db))

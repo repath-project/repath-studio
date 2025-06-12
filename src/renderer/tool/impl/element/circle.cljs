@@ -39,12 +39,16 @@
         id (:id (first (element.handlers/selected db)))]
     (element.handlers/update-el db id #(assoc-in % [:attrs :r] (str radius)))))
 
+(defn finalize
+  [db]
+  (-> db
+      (history.handlers/finalize "Create circle")
+      (tool.handlers/activate :transform)))
+
 (defmethod tool.hierarchy/on-pointer-up :circle
   [db _e]
   (if (= (:state db) :create)
-    (-> db
-        (history.handlers/finalize "Create circle")
-        (tool.handlers/activate :transform))
+    (finalize db)
     (create db)))
 
 (defmethod tool.hierarchy/on-pointer-move :circle
@@ -63,9 +67,7 @@
 
 (defmethod tool.hierarchy/on-drag-end :circle
   [db _e]
-  (-> db
-      (history.handlers/finalize "Create circle")
-      (tool.handlers/activate :transform)))
+  (finalize db))
 
 (defmethod tool.hierarchy/snapping-points :circle
   [db]

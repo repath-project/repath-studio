@@ -18,48 +18,49 @@
   []
   [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions."])
 
-(defn create
+(defn attributes
   [db lock-ratio]
   (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
                                 (:adjusted-pointer-offset db))
         [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
-        rx (abs (- x offset-x))
-        ry (abs (- y offset-y))
-        rx (cond-> rx lock-ratio (min ry))
-        ry (cond-> ry lock-ratio (min rx))
+        rx (.toFixed (abs (- x offset-x)) 3)
+        ry (.toFixed (abs (- y offset-y)) 3)]
+    {:rx (cond-> rx lock-ratio (min ry))
+     :ry (cond-> ry lock-ratio (min rx))}))
+
+(defn create
+  [db lock-ratio]
+  (let [[x y] (or (:nearest-neighbor-offset db)
+                  (:adjusted-pointer-offset db))
         fill (document.handlers/attr db :fill)
         stroke (document.handlers/attr db :stroke)]
     (-> db
         (tool.handlers/set-state :create)
         (element.handlers/add {:type :element
                                :tag :ellipse
-                               :attrs {:cx offset-x
-                                       :cy offset-y
-                                       :fill fill
-                                       :stroke stroke
-                                       :rx rx
-                                       :ry ry}}))))
+                               :attrs (merge (attributes db lock-ratio)
+                                             {:cx x
+                                              :cy y
+                                              :fill fill
+                                              :stroke stroke})}))))
 
 (defn update-radius
   [db lock-ratio]
-  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
-                                (:adjusted-pointer-offset db))
-        [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
-        rx (.toFixed (abs (- x offset-x)) 3)
-        ry (.toFixed (abs (- y offset-y)) 3)
-        rx (cond-> rx lock-ratio (min ry))
-        ry (cond-> ry lock-ratio (min rx))
+  (let [attrs (attributes db lock-ratio)
+        assoc-attr (fn [el [k v]] (assoc-in el [:attrs k] (str v)))
         id (:id (first (element.handlers/selected db)))]
-    (element.handlers/update-el db id #(-> %
-                                           (assoc-in [:attrs :rx] (str rx))
-                                           (assoc-in [:attrs :ry] (str ry))))))
+    (element.handlers/update-el db id #(reduce assoc-attr % attrs))))
+
+(defn finalize
+  [db]
+  (-> db
+      (history.handlers/finalize "Create ellipse")
+      (tool.handlers/activate :transform)))
 
 (defmethod tool.hierarchy/on-pointer-up :ellipse
   [db e]
   (if (= (:state db) :create)
-    (-> db
-        (history.handlers/finalize "Create ellipse")
-        (tool.handlers/activate :transform))
+    (finalize db)
     (create db (:ctrl-key e))))
 
 (defmethod tool.hierarchy/on-pointer-move :ellipse
@@ -78,6 +79,4 @@
 
 (defmethod tool.hierarchy/on-drag-end :ellipse
   [db _e]
-  (-> db
-      (history.handlers/finalize "Create ellipse")
-      (tool.handlers/activate :transform)))
+  (finalize db))
