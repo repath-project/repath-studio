@@ -17,6 +17,7 @@
    [renderer.tool.subs :as-alias tool.subs]
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
+   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]
    [renderer.utils.system :as utils.system]))
 
@@ -25,10 +26,12 @@
 (defmethod element.hierarchy/properties :text
   []
   {:icon "text"
-   :description "The SVG <text> element draws a graphics element consisting
-                 of text. It's possible to apply a gradient, pattern,
-                 clipping path, mask, or filter to <text>, like any other SVG
-                 graphics element."
+   :label (t [::label "Text"])
+   :description (t [::description 
+                    "The SVG <text> element draws a graphics element consisting
+                     of text. It's possible to apply a gradient, pattern,
+                     clipping path, mask, or filter to <text>, like any other SVG
+                     graphics element."])
    :ratio-locked true
    :attrs [:font-family
            :font-size

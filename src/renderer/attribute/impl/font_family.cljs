@@ -9,12 +9,14 @@
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.attribute.views :as attribute.views]
    [renderer.element.events :as-alias element.events]
+   [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]))
 
 (defmethod attribute.hierarchy/description [:default :font-family]
   []
-  "The font-family attribute indicates which font family will be used to render the text,
-   specified as a prioritized list of font family names and/or generic family names.")
+  (t [::description 
+      "The font-family attribute indicates which font family will be used to render the text,
+       specified as a prioritized list of font family names and/or generic family names."]))
 
 (defn suggestions-list
   [suggestions]
@@ -23,14 +25,14 @@
     {:label "Command Menu"}
     [:> Command/CommandInput
      {:class "p-2 text-sm bg-secondary border-b border-default"
-      :placeholder "Search for a font"}]
+      :placeholder (t [::search-font "Search for a font"])}]
     [views/scroll-area
      [:> Command/CommandList
       {:class "p-1"}
       [:> Command/CommandEmpty
        (if-not suggestions
          [:div.w-full [views/loading-indicator]]
-         "No local fonts found.")]
+         (t [::no-local-font "No local fonts found."]))]
       (for [item suggestions]
         ^{:key item}
         [:> Command/CommandItem
@@ -52,7 +54,7 @@
                        (when (and state (empty? suggestions))
                          (rf/dispatch [::app.events/load-system-fonts])))}
       [:> Popover/Trigger
-       {:title "Select font"
+       {:title (t [::select-font "Select font"])
         :class "form-control-button"
         :disabled (:disabled attrs)}
        [views/icon "magnifier"]]

@@ -4,12 +4,14 @@
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.attribute.views :as attribute.views]
-   [renderer.element.subs :as-alias element.subs]))
+   [renderer.element.subs :as-alias element.subs]
+   [renderer.utils.i18n :refer [t]]))
 
 (defmethod attribute.hierarchy/description [:default :font-weight]
   []
-  "The font-weight attribute refers to the boldness or lightness of the glyphs
-   used to render the text, relative to other fonts in the same font family.")
+  (t [::description 
+      "The font-weight attribute refers to the boldness or lightness of the glyphs
+       used to render the text, relative to other fonts in the same font family."]))
 
 (def name-mapping
   "https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-weight#common_weight_name_mapping"
