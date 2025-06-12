@@ -31,8 +31,7 @@
 
 (defmethod tool.hierarchy/on-drag :pen
   [db _e]
-  (let [{:keys [adjusted-pointer-pos]} db
-        point (string/join " " adjusted-pointer-pos)
+  (let [point (string/join " " (:adjusted-pointer-pos db))
         id (:id (first (element.handlers/selected db)))]
     (element.handlers/update-el db id (fn [el]
                                         (update-in el

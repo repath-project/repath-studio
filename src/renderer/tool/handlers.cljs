@@ -3,15 +3,12 @@
    [clojure.core.matrix :as matrix]
    [malli.core :as m]
    [renderer.app.db :refer [App]]
-   [renderer.element.db :refer [Element]]
-   [renderer.element.handlers :as element.handlers]
    [renderer.frame.db :refer [DomRect]]
    [renderer.frame.handlers :as frame.handlers]
    [renderer.history.handlers :as history.handlers]
    [renderer.snap.handlers :as snap.handlers]
    [renderer.tool.db :refer [Tool State Cursor]]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.element :as utils.element]
    [renderer.utils.math :refer [Vec2]]))
 
 (m/=> add-fx [:-> App vector? App])
@@ -45,31 +42,6 @@
 (defn pointer-delta
   [db]
   (matrix/sub (:adjusted-pointer-pos db) (:adjusted-pointer-offset db)))
-
-(m/=> dissoc-temp [:-> App App])
-(defn dissoc-temp
-  [db]
-  (cond-> db
-    (:active-document db)
-    (update-in [:documents (:active-document db)] dissoc :temp-element)))
-
-(m/=> set-temp [:-> App map? App])
-(defn set-temp
-  [db el]
-  (->> (utils.element/normalize-attrs el)
-       (assoc-in db [:documents (:active-document db) :temp-element])))
-
-(m/=> temp [:-> App [:maybe Element]])
-(defn temp
-  [db]
-  (get-in db [:documents (:active-document db) :temp-element]))
-
-(m/=> create-temp-element [:-> App App])
-(defn create-temp-element
-  [db]
-  (->> (temp db)
-       (element.handlers/add db)
-       (dissoc-temp)))
 
 (m/=> axis-pan-offset [:-> number? number? number? number?])
 (defn axis-pan-offset
@@ -106,7 +78,6 @@
   (cond-> db
     :always
     (-> (activate (:tool db))
-        (dissoc-temp)
         (history.handlers/reset-state))
 
     (= (:state db) :idle)

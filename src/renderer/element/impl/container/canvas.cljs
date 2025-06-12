@@ -30,7 +30,6 @@
   (let [child-elements @(rf/subscribe [::element.subs/filter-visible (:children el)])
         viewbox-attr @(rf/subscribe [::frame.subs/viewbox-attr])
         {:keys [width height]} @(rf/subscribe [::app.subs/dom-rect])
-        temp-element @(rf/subscribe [::document.subs/temp-element])
         read-only? @(rf/subscribe [::document.subs/read-only?])
         cursor @(rf/subscribe [::tool.subs/cursor])
         active-tool @(rf/subscribe [::tool.subs/active])
@@ -65,8 +64,6 @@
            filters/accessibility)]
 
      (when grid [ruler.views/grid])
-
-     (when-not read-only? [element.hierarchy/render temp-element])
 
      (when snap?
        [:<>
