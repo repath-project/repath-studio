@@ -1,8 +1,10 @@
 (ns renderer.tool.impl.element.line
   "https://www.w3.org/TR/SVG/shapes.html#LineElement"
   (:require
+   [clojure.core.matrix :as matrix]
    [renderer.document.handlers :as document.handlers]
    [renderer.element.handlers :as element.handlers]
+   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]))
@@ -31,8 +33,10 @@
 
 (defn update-end
   [db]
-  (let [[x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
-        id (:id (first (element.handlers/selected db)))
+  (let [position (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
+        {:keys [id parent]} (first (element.handlers/selected db))
+        [min-x min-y] (element.hierarchy/bbox (element.handlers/entity db parent))
+        [x y] (matrix/sub position [min-x min-y])
         x (.toFixed x 3)
         y (.toFixed y 3)]
     (element.handlers/update-el db id #(-> %

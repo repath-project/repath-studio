@@ -2,9 +2,11 @@
   "This serves as an abstraction for polygons and polylines that have similar
    attributes and hehavior"
   (:require
+   [clojure.core.matrix :as matrix]
    [clojure.string :as string]
    [renderer.document.handlers :as document.handlers]
    [renderer.element.handlers :as element.handlers]
+   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
@@ -32,8 +34,7 @@
 
 (defn add-point
   [db point]
-  (let [id (:id (first (element.handlers/selected db)))
-        point (string/join " " point)]
+  (let [id (:id (first (element.handlers/selected db)))]
     (element.handlers/update-attr db id :points str " " point)))
 
 (defn drop-last-point
@@ -61,7 +62,9 @@
 (defmethod tool.hierarchy/on-pointer-move ::tool.hierarchy/polyshape
   [db _e]
   (let [point (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
-        id (:id (first (element.handlers/selected db)))]
+        {:keys [id parent]} (first (element.handlers/selected db))
+        [min-x min-y] (element.hierarchy/bbox (element.handlers/entity db parent))
+        point (matrix/sub point [min-x min-y])]
     (if (= (:state db) :create)
       (element.handlers/update-attr
        db id :points

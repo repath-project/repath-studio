@@ -3,6 +3,7 @@
   (:require
    [renderer.document.handlers :as document.handlers]
    [renderer.element.handlers :as element.handlers]
+   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]))
@@ -51,12 +52,15 @@
         height (cond-> height lock-ratio (min width))
         x (.toFixed (min x offset-x) 3)
         y (.toFixed (min y offset-y) 3)
-        id (:id (first (element.handlers/selected db)))]
-    (element.handlers/update-el db id #(-> %
-                                           (assoc-in [:attrs :x] (str x))
-                                           (assoc-in [:attrs :y] (str y))
-                                           (assoc-in [:attrs :width] (str width))
-                                           (assoc-in [:attrs :height] (str height))))))
+        {:keys [id parent]} (first (element.handlers/selected db))
+        [min-x min-y] (element.hierarchy/bbox (element.handlers/entity db parent))]
+    (-> db
+        (element.handlers/update-el id #(-> %
+                                            (assoc-in [:attrs :x] (str x))
+                                            (assoc-in [:attrs :y] (str y))
+                                            (assoc-in [:attrs :width] (str width))
+                                            (assoc-in [:attrs :height] (str height))))
+        (element.handlers/translate [(- min-x) (- min-y)]))))
 
 (defmethod tool.hierarchy/on-pointer-up :rect
   [db e]

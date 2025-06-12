@@ -4,6 +4,7 @@
    [clojure.core.matrix :as matrix]
    [renderer.document.handlers :as document.handlers]
    [renderer.element.handlers :as element.handlers]
+   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]))
@@ -42,11 +43,14 @@
   [db]
   (let [[offset-x offset-y] (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
         radius (pointer-delta db)
-        id (:id (first (element.handlers/selected db)))]
-    (element.handlers/update-el db id #(-> %
-                                           (assoc-in [:attrs :x] (str (- offset-x radius)))
-                                           (assoc-in [:attrs :y] (str (- offset-y radius)))
-                                           (assoc-in [:attrs :size] (str (* radius 2)))))))
+        {:keys [id parent]} (first (element.handlers/selected db))
+        [min-x min-y] (element.hierarchy/bbox (element.handlers/entity db parent))]
+    (-> db
+        (element.handlers/update-el id #(-> %
+                                            (assoc-in [:attrs :x] (str (- offset-x radius)))
+                                            (assoc-in [:attrs :y] (str (- offset-y radius)))
+                                            (assoc-in [:attrs :size] (str (* radius 2)))))
+        (element.handlers/translate [(- min-x) (- min-y)]))))
 
 (defmethod tool.hierarchy/on-pointer-up :blob
   [db _e]

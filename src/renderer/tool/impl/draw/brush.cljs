@@ -1,6 +1,7 @@
 (ns renderer.tool.impl.draw.brush
   "https://github.com/steveruizok/perfect-freehand"
   (:require
+   [clojure.core.matrix :as matrix]
    [clojure.string :as string]
    [re-frame.core :as rf]
    [reagent.core :as reagent]
@@ -55,12 +56,11 @@
 
 (defmethod tool.hierarchy/on-drag :brush
   [db e]
-  (let [point (string/join " " (conj (:adjusted-pointer-pos db) (:pressure e)))
-        id (:id (first (element.handlers/selected db)))]
-    (element.handlers/update-el db id (fn [el]
-                                        (update-in el
-                                                   [:attrs :points]
-                                                   #(str % " " point))))))
+  (let [{:keys [id parent]} (first (element.handlers/selected db))
+        [min-x min-y] (element.hierarchy/bbox (element.handlers/entity db parent))
+        point (matrix/sub (:adjusted-pointer-pos db) [min-x min-y])
+        point (string/join " " (conj point (:pressure e)))]
+    (element.handlers/update-attr db id :points str " " point)))
 
 (defmethod tool.hierarchy/on-drag-end :brush
   [db _e]
