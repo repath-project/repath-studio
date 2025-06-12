@@ -3,6 +3,8 @@
   (:require
    [clojure.core.matrix :as matrix]
    [renderer.document.handlers :as document.handlers]
+   [renderer.element.handlers :as element.handlers]
+   [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]))
 
@@ -12,21 +14,61 @@
   []
   {:icon "circle-tool"})
 
-(defmethod tool.hierarchy/on-drag :circle
-  [db _e]
+(defn create
+  [db]
   (let [offset (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
         position (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
-        [x y] offset
         radius (matrix/distance position offset)
-        attrs {:cx x
-               :cy y
-               :fill (document.handlers/attr db :fill)
-               :stroke (document.handlers/attr db :stroke)
-               :r radius}]
-    (tool.handlers/set-temp db {:type :element :tag :circle :attrs attrs})))
+        [cx cy] offset
+        fill (document.handlers/attr db :fill)
+        stroke (document.handlers/attr db :stroke)]
+    (-> (tool.handlers/set-state db :create)
+        (element.handlers/deselect-all)
+        (element.handlers/add {:type :element
+                               :tag :circle
+                               :attrs {:cx cx
+                                       :cy cy
+                                       :fill fill
+                                       :stroke stroke
+                                       :r radius}}))))
+
+(defn update-radius
+  [db]
+  (let [offset (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
+        position (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
+        radius (matrix/distance position offset)
+        id (:id (first (element.handlers/selected db)))]
+    (element.handlers/update-el db id #(assoc-in % [:attrs :r] (str radius)))))
+
+(defmethod tool.hierarchy/on-pointer-up :circle
+  [db _e]
+  (if (= (:state db) :create)
+    (-> (tool.handlers/activate db :transform)
+        (history.handlers/finalize "Create circle"))
+    (create db)))
+
+(defmethod tool.hierarchy/on-pointer-move :circle
+  [db _e]
+  (cond-> db
+    (= (:state db) :create)
+    (update-radius)))
+
+(defmethod tool.hierarchy/on-drag-start :circle
+  [db _e]
+  (create db))
+
+(defmethod tool.hierarchy/on-drag :circle
+  [db _e]
+  (update-radius db))
+
+(defmethod tool.hierarchy/on-drag-end :circle
+  [db _e]
+  (-> db
+      (tool.handlers/activate :transform)
+      (history.handlers/finalize "Create circle")))
 
 (defmethod tool.hierarchy/snapping-points :circle
   [db]
   [(with-meta
      (:adjusted-pointer-pos db)
-     {:label (str (name (:tool db)) " " (if (tool.handlers/temp db) "radius" "center"))})])
+     {:label (str "Circle " (if (tool.handlers/temp db) "radius" "center"))})])
