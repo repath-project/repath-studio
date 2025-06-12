@@ -22,8 +22,8 @@
 (m/=> pointer [:-> App PointerEvent App])
 (defn pointer
   [db e]
-  (let [{:keys [pointer-offset tool dom-rect drag cached-tool
-                drag-threshold nearest-neighbor]} db
+  (let [{:keys [pointer-offset tool state cached-tool cached-state
+                dom-rect drag  drag-threshold nearest-neighbor]} db
         {:keys [button pointer-pos timestamp pointer-id]} e
         adjusted-pointer-pos (frame.handlers/adjusted-pointer-pos db pointer-pos)
         db (snap.handlers/update-nearest-neighbors db)]
@@ -50,7 +50,8 @@
       "pointerdown"
       (cond-> db
         (= button :middle)
-        (-> (assoc :cached-tool tool)
+        (-> (assoc :cached-tool tool
+                   :cached-state state)
             (tool.handlers/activate :pan))
 
         (not= button :right)
@@ -75,7 +76,8 @@
                         (tool.hierarchy/on-pointer-up e)))))
         (and cached-tool (= button :middle))
         (-> (tool.handlers/activate cached-tool)
-            (dissoc :cached-tool))
+            (tool.handlers/set-state cached-state)
+            (dissoc :cached-tool :cached-state))
 
         :always
         (dissoc :pointer-offset :drag :nearest-neighbor))

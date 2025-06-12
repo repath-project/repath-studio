@@ -49,6 +49,7 @@
    [:event-timestamp {:optional true} number?]
    [:double-click-delta {:default 250} [:and number? pos?]]
    [:state {:default :idle} State]
+   [:cached-state {:optional true} State]
    [:grid {:default false :persist true} boolean?]
    [:ruler {:default {} :persist true} Ruler]
    [:snap {:default {} :persist true} Snap]
