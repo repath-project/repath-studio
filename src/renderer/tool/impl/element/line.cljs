@@ -2,6 +2,7 @@
   "https://www.w3.org/TR/SVG/shapes.html#LineElement"
   (:require
    [renderer.document.handlers :as document.handlers]
+   [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]))
@@ -12,53 +13,52 @@
   []
   {:icon "line-tool"})
 
-(defn create-line
+(defn create
   [db]
-  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
+  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
+                                (:adjusted-pointer-offset db))
         [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
-        attrs {:x1 offset-x
-               :y1 offset-y
-               :x2 x
-               :y2 y
-               :stroke (document.handlers/attr db :stroke)}]
-    (tool.handlers/set-temp db {:type :element
-                                :tag :line
-                                :attrs attrs})))
+        stroke (document.handlers/attr db :stroke)]
+    (-> (tool.handlers/set-state db :create)
+        (element.handlers/deselect-all)
+        (element.handlers/add {:type :element
+                               :tag :line
+                               :attrs {:x1 offset-x
+                                       :y1 offset-y
+                                       :x2 x
+                                       :y2 y
+                                       :stroke stroke}}))))
 
-(defn update-line-end
+(defn update-end
   [db]
   (let [[x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
-        temp (-> (tool.handlers/temp db)
-                 (assoc-in [:attrs :x2] x)
-                 (assoc-in [:attrs :y2] y))]
-    (tool.handlers/set-temp db temp)))
+        id (:id (first (element.handlers/selected db)))]
+    (element.handlers/update-el db id #(-> %
+                                           (assoc-in [:attrs :x2] (str x))
+                                           (assoc-in [:attrs :y2] (str y))))))
 
 (defmethod tool.hierarchy/on-pointer-move :line
   [db _e]
   (cond-> db
-    (tool.handlers/temp db)
-    (update-line-end)))
+    (= (:state db) :create)
+    (update-end)))
 
 (defmethod tool.hierarchy/on-pointer-up :line
   [db _e]
-  (cond
-    (tool.handlers/temp db)
-    (-> (tool.handlers/create-temp-element db)
-        (tool.handlers/activate :transform)
+  (if (= (:state db) :create)
+    (-> (tool.handlers/activate db :transform)
         (history.handlers/finalize "Create line"))
+    (create db)))
 
-    (:pointer-offset db)
-    (-> (tool.handlers/set-state db :create)
-        (create-line))
-
-    :else db))
-
-(defmethod tool.hierarchy/on-pointer-down :line
+(defmethod tool.hierarchy/on-drag-start :line
   [db _e]
-  (cond-> db
-    (tool.handlers/temp db)
-    (history.handlers/finalize "Create line")))
+  (create db))
 
 (defmethod tool.hierarchy/on-drag :line
   [db _e]
-  (create-line db))
+  (update-end db))
+
+(defmethod tool.hierarchy/on-drag-end :line
+  [db _e]
+  (-> (tool.handlers/activate db :transform)
+      (history.handlers/finalize "Create line")))
