@@ -1,6 +1,8 @@
 (ns renderer.tool.impl.base.zoom
   (:require
+   [reagent.core :as reagent]
    [renderer.app.effects :as-alias app.effects]
+   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.frame.handlers :as frame.handlers]
    [renderer.snap.handlers :as snap.handlers]
    [renderer.tool.handlers :as tool.handlers]
@@ -8,6 +10,8 @@
    [renderer.utils.svg :as utils.svg]))
 
 (derive :zoom ::tool.hierarchy/tool)
+
+(defonce element (reagent/atom nil))
 
 (defmethod tool.hierarchy/properties :zoom
   []
@@ -23,6 +27,11 @@
   [db]
   (tool.handlers/set-cursor db "zoom-in"))
 
+(defmethod tool.hierarchy/on-deactivate :zoom
+  [db]
+  (reset! element nil)
+  db)
+
 (defmethod tool.hierarchy/on-key-down :zoom
   [db e]
   (cond-> db
@@ -37,7 +46,8 @@
 
 (defmethod tool.hierarchy/on-drag :zoom
   [db _e]
-  (tool.handlers/set-temp db (utils.svg/select-box db)))
+  (reset! element (utils.svg/select-box db))
+  db)
 
 (defmethod tool.hierarchy/on-drag-end :zoom
   [db e]
@@ -52,7 +62,8 @@
         zoom (min width-ratio height-ratio)
         factor (if (:shift-key e) (:zoom-sensitivity db) (/ zoom current-zoom))
         cursor (if (:shift-key e) "zoom-out" "zoom-in")]
-    (-> (tool.handlers/dissoc-temp db)
+    (reset! element nil)
+    (-> db
         (tool.handlers/set-cursor cursor)
         (frame.handlers/zoom-in-place factor)
         (frame.handlers/pan-to-bbox [x y offset-x offset-y])
@@ -65,3 +76,7 @@
     (-> (frame.handlers/zoom-at-pointer db factor)
         (snap.handlers/update-viewport-tree)
         (tool.handlers/add-fx [::app.effects/persist]))))
+
+(defmethod tool.hierarchy/render :zoom
+  []
+  [element.hierarchy/render @element])
