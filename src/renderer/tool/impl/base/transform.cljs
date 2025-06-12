@@ -3,6 +3,7 @@
    [clojure.core.matrix :as matrix]
    [malli.core :as m]
    [re-frame.core :as rf]
+   [reagent.core :as reagent]
    [renderer.app.db :refer [App]]
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.db :refer [Element]]
@@ -32,6 +33,15 @@
                   :bottom-left])
 
 (derive :transform ::tool.hierarchy/tool)
+
+(derive :zoom ::tool.hierarchy/tool)
+
+(defonce bbox-element (reagent/atom nil))
+
+(rf/reg-fx
+ ::update
+ (fn [value]
+   (reset! bbox-element value)))
 
 (defmethod tool.hierarchy/properties :transform
   []
@@ -66,8 +76,8 @@
 
 (m/=> hovered? [:-> App Element boolean? boolean?])
 (defn hovered?
-  [db el intersecting?]
-  (let [selection-bbox (element.hierarchy/bbox (tool.handlers/temp db))]
+  [el intersecting?]
+  (let [selection-bbox (element.hierarchy/bbox @bbox-element)]
     (if-let [el-bbox (:bbox el)]
       (if intersecting?
         (utils.bounds/intersect? el-bbox selection-bbox)
@@ -82,7 +92,7 @@
        (filter :visible)
        (reduce (fn [db el]
                  (cond-> db
-                   (hovered? db el intersecting?)
+                   (hovered? el intersecting?)
                    (f (:id el)))) db)))
 
 (defmethod tool.hierarchy/on-pointer-move :transform
@@ -324,7 +334,7 @@
     (case (:state db)
       :select
       (-> (element.handlers/clear-hovered db)
-          (tool.handlers/set-temp (select-rect db (:alt-key e)))
+          (tool.handlers/add-fx [::update (select-rect db (:alt-key e))])
           (reduce-by-area (:alt-key e) element.handlers/hover))
 
       :translate
@@ -361,7 +371,7 @@
   (-> (case (:state db)
         :select (-> (cond-> db (not (:shift-key e)) element.handlers/deselect-all)
                     (reduce-by-area (:alt-key e) element.handlers/select)
-                    (tool.handlers/dissoc-temp)
+                    (tool.handlers/add-fx [::update nil])
                     (history.handlers/finalize "Modify selection"))
         :translate (history.handlers/finalize db "Move selection")
         :scale (history.handlers/finalize db "Scale selection")
@@ -446,4 +456,6 @@
         (when (= state :scale) [size-label bbox])])
 
      (when pivot-point
-       [utils.svg/times pivot-point])]))
+       [utils.svg/times pivot-point])
+
+     [element.hierarchy/render @bbox-element]]))
