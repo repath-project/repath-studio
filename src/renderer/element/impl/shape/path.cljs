@@ -22,6 +22,7 @@
            :fill
            :stroke
            :stroke-linejoin
+           :stroke-linecap
            :opacity]})
 
 (defmethod element.hierarchy/translate :path
