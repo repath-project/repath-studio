@@ -13,6 +13,7 @@
    [renderer.event.impl.keyboard :as event.impl.keyboard]
    [renderer.events :as-alias events]
    [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.tool.subs :as-alias tool.subs]
    [renderer.utils.attribute :as utils.attribute]
    [renderer.views :as views]))
 
@@ -242,7 +243,12 @@
   (let [selected-elements @(rf/subscribe [::element.subs/selected])
         selected-tags @(rf/subscribe [::element.subs/selected-tags])
         selected-attrs @(rf/subscribe [::element.subs/selected-attrs])
-        locked? @(rf/subscribe [::element.subs/selected-locked?])
+        selected-locked? @(rf/subscribe [::element.subs/selected-locked?])
+        tool-state @(rf/subscribe [::tool.subs/state])
+        tool-cached-state @(rf/subscribe [::tool.subs/cached-state])
+        locked? (or selected-locked?
+                    (not= tool-state :idle)
+                    (and tool-cached-state (not= tool-cached-state :idle)))
         tag (first selected-tags)
         multitag? (next selected-tags)]
     (when-first [el selected-elements]

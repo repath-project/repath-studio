@@ -28,6 +28,10 @@
  :-> :state)
 
 (rf/reg-sub
+ ::cached-state
+ :-> :cached-state)
+
+(rf/reg-sub
  ::help
  :<- [::active]
  :<- [::state]

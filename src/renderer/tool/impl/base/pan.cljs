@@ -21,19 +21,13 @@
   []
   "Click and drag to pan.")
 
-(defmethod tool.hierarchy/help [:pan :pan]
-  []
-  "Drag to pan.")
-
 (defmethod tool.hierarchy/on-pointer-up :pan
   [db _e]
-  (-> (tool.handlers/set-cursor db "grab")
-      (tool.handlers/set-state :idle)))
+  (tool.handlers/set-cursor db "grab"))
 
 (defmethod tool.hierarchy/on-pointer-down :pan
   [db _e]
-  (-> (tool.handlers/set-cursor db "grabbing")
-      (tool.handlers/set-state :pan)))
+  (tool.handlers/set-cursor db "grabbing"))
 
 (defmethod tool.hierarchy/on-drag :pan
   [db e]
@@ -42,6 +36,5 @@
 (defmethod tool.hierarchy/on-drag-end :pan
   [db _e]
   (-> (tool.handlers/set-cursor db "grab")
-      (tool.handlers/set-state :idle)
       (snap.handlers/update-viewport-tree)
       (tool.handlers/add-fx [::app.effects/persist])))

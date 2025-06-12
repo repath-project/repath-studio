@@ -38,11 +38,12 @@
     [views/icon "times"]]])
 
 (defn points-popover
-  [points]
+  [points disabled]
   [:> Popover/Root {:modal true}
    [:> Popover/Trigger
     {:title "Edit points"
-     :class "form-control-button"}
+     :class "form-control-button"
+     :disabled disabled}
     [views/icon "pencil"]]
    [:> Popover/Portal
     [:> Popover/Content
@@ -64,4 +65,4 @@
     [:div.flex.gap-px.w-full
      [attribute.views/form-input k (if state-idle v "waiting")
       {:disabled (or disabled (not v) (not state-idle))}]
-     (when v [points-popover (utils.utils.attribute/points->vec v)])]))
+     (when v [points-popover (utils.utils.attribute/points->vec v) disabled])]))
