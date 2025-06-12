@@ -13,7 +13,12 @@
 
 (derive :measure ::tool.hierarchy/tool)
 
-(defonce element (reagent/atom nil))
+(defonce attrs (reagent/atom nil))
+
+(rf/reg-fx
+ ::update
+ (fn [value]
+   (reset! attrs value)))
 
 (defmethod tool.hierarchy/properties :measure
   []
@@ -29,8 +34,7 @@
 
 (defmethod tool.hierarchy/on-deactivate :measure
   [db]
-  (reset! element nil)
-  db)
+  (tool.handlers/add-fx db [::update nil]))
 
 (defmethod tool.hierarchy/on-drag :measure
   [db _e]
@@ -38,27 +42,23 @@
         [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
         [adjacent opposite] (matrix/sub [offset-x offset-y] [x y])
         hypotenuse (Math/hypot adjacent opposite)]
-    (reset! element {:type :element
-                     :tag :measure
-                     :attrs {:x1 offset-x
-                             :y1 offset-y
-                             :x2 x
-                             :y2 y
-                             :hypotenuse hypotenuse
-                             :stroke "gray"}})
-    db))
+    (tool.handlers/add-fx db [::update {:x1 offset-x
+                                        :y1 offset-y
+                                        :x2 x
+                                        :y2 y
+                                        :hypotenuse hypotenuse
+                                        :stroke "gray"}])))
 
 (defmethod tool.hierarchy/render :measure
   []
-  (when @element
-    (let [{:keys [attrs id]} @element
-          {:keys [x1 x2 y1 y2 hypotenuse]} attrs
+  (when @attrs
+    (let [{:keys [x1 x2 y1 y2 hypotenuse]} @attrs
           [x1 y1 x2 y2] (map utils.length/unit->px [x1 y1 x2 y2])
           angle (utils.math/angle [x1 y1] [x2 y2])
           zoom @(rf/subscribe [::document.subs/zoom])
           straight? (< angle 180)
           straight-angle (if straight? angle (- angle 360))]
-      [:g {:key id}
+      [:g
        [utils.svg/cross [x1 y1]]
        [utils.svg/cross [x2 y2]]
 
@@ -80,7 +80,7 @@
   [db]
   [(with-meta
      (:adjusted-pointer-pos db)
-     {:label (str "measure " (if @element "end" "start"))})])
+     {:label (str "measure " (if @attrs "end" "start"))})])
 
 (defmethod tool.hierarchy/snapping-elements :measure
   [db]

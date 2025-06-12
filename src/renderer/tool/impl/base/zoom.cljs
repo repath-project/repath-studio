@@ -1,5 +1,6 @@
 (ns renderer.tool.impl.base.zoom
   (:require
+   [re-frame.core :as rf]
    [reagent.core :as reagent]
    [renderer.app.effects :as-alias app.effects]
    [renderer.element.hierarchy :as element.hierarchy]
@@ -12,6 +13,11 @@
 (derive :zoom ::tool.hierarchy/tool)
 
 (defonce element (reagent/atom nil))
+
+(rf/reg-fx
+ ::update
+ (fn [value]
+   (reset! element value)))
 
 (defmethod tool.hierarchy/properties :zoom
   []
@@ -29,8 +35,7 @@
 
 (defmethod tool.hierarchy/on-deactivate :zoom
   [db]
-  (reset! element nil)
-  db)
+  (tool.handlers/add-fx db [::update nil]))
 
 (defmethod tool.hierarchy/on-key-down :zoom
   [db e]
@@ -46,8 +51,7 @@
 
 (defmethod tool.hierarchy/on-drag :zoom
   [db _e]
-  (reset! element (utils.svg/select-box db))
-  db)
+  (tool.handlers/add-fx db [::update (utils.svg/select-box db)]))
 
 (defmethod tool.hierarchy/on-drag-end :zoom
   [db e]
@@ -62,8 +66,8 @@
         zoom (min width-ratio height-ratio)
         factor (if (:shift-key e) (:zoom-sensitivity db) (/ zoom current-zoom))
         cursor (if (:shift-key e) "zoom-out" "zoom-in")]
-    (reset! element nil)
     (-> db
+        (tool.handlers/add-fx [::update nil])
         (tool.handlers/set-cursor cursor)
         (frame.handlers/zoom-in-place factor)
         (frame.handlers/pan-to-bbox [x y offset-x offset-y])
