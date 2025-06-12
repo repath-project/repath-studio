@@ -72,4 +72,4 @@
   [db]
   [(with-meta
      (:adjusted-pointer-pos db)
-     {:label (str "Circle " (if (tool.handlers/temp db) "radius" "center"))})])
+     {:label (str "Circle " (if (= (:state db) :create) "radius" "center"))})])
