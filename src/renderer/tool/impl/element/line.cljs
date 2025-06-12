@@ -15,8 +15,8 @@
   []
   {:icon "line-tool"})
 
-(defn create
-  [db]
+(defmethod tool.hierarchy/on-drag-start :line
+  [db _e]
   (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
                                 (:adjusted-pointer-offset db))
         [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
@@ -31,8 +31,8 @@
                                        :y2 y
                                        :stroke stroke}}))))
 
-(defn update-end
-  [db]
+(defmethod tool.hierarchy/on-drag :line
+  [db _e]
   (let [position (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
         {:keys [id parent]} (first (element.handlers/selected db))
         [min-x min-y] (element.hierarchy/bbox (element.handlers/entity db parent))
@@ -42,28 +42,6 @@
     (element.handlers/update-el db id #(-> %
                                            (assoc-in [:attrs :x2] (str x))
                                            (assoc-in [:attrs :y2] (str y))))))
-
-(defmethod tool.hierarchy/on-pointer-move :line
-  [db _e]
-  (cond-> db
-    (= (:state db) :create)
-    (update-end)))
-
-(defmethod tool.hierarchy/on-pointer-up :line
-  [db _e]
-  (if (= (:state db) :create)
-    (-> db
-        (history.handlers/finalize "Create line")
-        (tool.handlers/activate :transform))
-    (create db)))
-
-(defmethod tool.hierarchy/on-drag-start :line
-  [db _e]
-  (create db))
-
-(defmethod tool.hierarchy/on-drag :line
-  [db _e]
-  (update-end db))
 
 (defmethod tool.hierarchy/on-drag-end :line
   [db _e]

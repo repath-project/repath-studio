@@ -6,7 +6,6 @@
    [renderer.element.handlers :as element.handlers]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.handlers]
-   [renderer.reepl.db :as db]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]))
 
@@ -32,23 +31,23 @@
      :y (- offset-y radius)
      :size (* radius 2)}))
 
-(defn create
-  [db]
+(defmethod tool.hierarchy/on-drag-start :blob
+  [db _e]
   (let [fill (document.handlers/attr db :fill)
         stroke (document.handlers/attr db :stroke)
         seed (rand-int 1000000)]
     (-> (tool.handlers/set-state db :create)
         (element.handlers/add {:type :element
                                :tag :blob
-                               :attrs (merge (attributes db/initial-state)
+                               :attrs (merge (attributes db)
                                              {:seed seed
                                               :extraPoints 8
                                               :randomness 4
                                               :fill fill
                                               :stroke stroke})}))))
 
-(defn update-size
-  [db]
+(defmethod tool.hierarchy/on-drag :blob
+  [db _e]
   (let [attrs (attributes db)
         assoc-attr (fn [el [k v]] (assoc-in el [:attrs k] (str v)))
         {:keys [id parent]} (first (element.handlers/selected db))
@@ -57,28 +56,6 @@
     (-> db
         (element.handlers/update-el id #(reduce assoc-attr % attrs))
         (element.handlers/translate [(- min-x) (- min-y)]))))
-
-(defmethod tool.hierarchy/on-pointer-up :blob
-  [db _e]
-  (if (= (:state db) :create)
-    (-> db
-        (history.handlers/finalize "Create blob")
-        (tool.handlers/activate  :transform))
-    (create db)))
-
-(defmethod tool.hierarchy/on-pointer-move :blob
-  [db _e]
-  (cond-> db
-    (= (:state db) :create)
-    (update-size)))
-
-(defmethod tool.hierarchy/on-drag-start :blob
-  [db _e]
-  (create db))
-
-(defmethod tool.hierarchy/on-drag :blob
-  [db _e]
-  (update-size db))
 
 (defmethod tool.hierarchy/on-drag-end :blob
   [db _e]

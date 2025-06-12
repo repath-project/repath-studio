@@ -28,8 +28,8 @@
     {:rx (cond-> rx lock-ratio (min ry))
      :ry (cond-> ry lock-ratio (min rx))}))
 
-(defn create
-  [db lock-ratio]
+(defmethod tool.hierarchy/on-drag-start :ellipse
+  [db e]
   (let [[x y] (or (:nearest-neighbor-offset db)
                   (:adjusted-pointer-offset db))
         fill (document.handlers/attr db :fill)
@@ -38,45 +38,21 @@
         (tool.handlers/set-state :create)
         (element.handlers/add {:type :element
                                :tag :ellipse
-                               :attrs (merge (attributes db lock-ratio)
+                               :attrs (merge (attributes db (:ctrl-key e))
                                              {:cx x
                                               :cy y
                                               :fill fill
                                               :stroke stroke})}))))
 
-(defn update-radius
-  [db lock-ratio]
-  (let [attrs (attributes db lock-ratio)
+(defmethod tool.hierarchy/on-drag :ellipse
+  [db e]
+  (let [attrs (attributes db (:ctrl-key e))
         assoc-attr (fn [el [k v]] (assoc-in el [:attrs k] (str v)))
         id (:id (first (element.handlers/selected db)))]
     (element.handlers/update-el db id #(reduce assoc-attr % attrs))))
 
-(defn finalize
-  [db]
+(defmethod tool.hierarchy/on-drag-end :ellipse
+  [db _e]
   (-> db
       (history.handlers/finalize "Create ellipse")
       (tool.handlers/activate :transform)))
-
-(defmethod tool.hierarchy/on-pointer-up :ellipse
-  [db e]
-  (if (= (:state db) :create)
-    (finalize db)
-    (create db (:ctrl-key e))))
-
-(defmethod tool.hierarchy/on-pointer-move :ellipse
-  [db e]
-  (cond-> db
-    (= (:state db) :create)
-    (update-radius (:ctrl-key e))))
-
-(defmethod tool.hierarchy/on-drag-start :ellipse
-  [db e]
-  (create db (:ctrl-key e)))
-
-(defmethod tool.hierarchy/on-drag :ellipse
-  [db e]
-  (update-radius db (:ctrl-key e)))
-
-(defmethod tool.hierarchy/on-drag-end :ellipse
-  [db _e]
-  (finalize db))
