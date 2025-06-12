@@ -27,8 +27,8 @@
                     :y offset-y}}]
     (-> (element.handlers/deselect-all db)
         (element.handlers/add el)
-        (tool.handlers/activate :edit)
-        (tool.handlers/set-state :type))))
+        (tool.handlers/set-state :type)
+        (tool.handlers/activate :edit))))
 
 (defmethod tool.hierarchy/on-drag-end :text
   [db e]
