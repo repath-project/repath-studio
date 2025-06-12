@@ -28,47 +28,23 @@
      :width (cond-> width lock-ratio (min height))
      :height (cond-> height lock-ratio (min width))}))
 
-(defn create
-  [db lock-ratio]
+(defmethod tool.hierarchy/on-drag-start :svg
+  [db e]
   (-> db
       (tool.handlers/set-state :create)
       (element.handlers/add {:tag :svg
                              :type :element
-                             :attrs (attributes db lock-ratio)})))
-
-(defn update-size
-  [db lock-ratio]
-  (let [id (:id (first (element.handlers/selected db)))
-        attrs (attributes db lock-ratio)
-        assoc-attr (fn [el [k v]] (assoc-in el [:attrs k] (str v)))]
-    (element.handlers/update-el db id #(reduce assoc-attr % attrs))))
-
-(defn finalize
-  [db]
-  (-> db
-      (history.handlers/finalize "Create SVG")
-      (tool.handlers/activate :transform)))
-
-(defmethod tool.hierarchy/on-pointer-up :svg
-  [db e]
-  (if (= (:state db) :create)
-    (finalize db)
-    (create db (:ctrl-key e))))
-
-(defmethod tool.hierarchy/on-pointer-move :svg
-  [db e]
-  (cond-> db
-    (= (:state db) :create)
-    (update-size (:ctrl-key e))))
-
-(defmethod tool.hierarchy/on-drag-start :svg
-  [db e]
-  (create db (:ctrl-key e)))
+                             :attrs (attributes db (:ctrl-key e))})))
 
 (defmethod tool.hierarchy/on-drag :svg
   [db e]
-  (update-size db (:ctrl-key e)))
+  (let [id (:id (first (element.handlers/selected db)))
+        attrs (attributes db (:ctrl-key e))
+        assoc-attr (fn [el [k v]] (assoc-in el [:attrs k] (str v)))]
+    (element.handlers/update-el db id #(reduce assoc-attr % attrs))))
 
 (defmethod tool.hierarchy/on-drag-end :svg
   [db _e]
-  (finalize db))
+  (-> db
+      (history.handlers/finalize "Create SVG")
+      (tool.handlers/activate :transform)))
