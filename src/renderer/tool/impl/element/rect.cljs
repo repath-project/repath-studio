@@ -2,6 +2,8 @@
   "https://www.w3.org/TR/SVG/shapes.html#RectElement"
   (:require
    [renderer.document.handlers :as document.handlers]
+   [renderer.element.handlers :as element.handlers]
+   [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]))
 
@@ -16,17 +18,67 @@
   []
   [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions."])
 
-(defmethod tool.hierarchy/on-drag :rect
-  [db e]
-  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
+(defn create
+  [db lock-ratio]
+  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
+                                (:adjusted-pointer-offset db))
         [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
         width (abs (- x offset-x))
-        height (abs (- y offset-y))]
-    (tool.handlers/set-temp db {:type :element
-                                :tag :rect
-                                :attrs {:x (min x offset-x)
-                                        :y (min y offset-y)
-                                        :width (if (:ctrl-key e) (min width height) width)
-                                        :height (if (:ctrl-key e) (min width height) height)
-                                        :fill (document.handlers/attr db :fill)
-                                        :stroke (document.handlers/attr db :stroke)}})))
+        height (abs (- y offset-y))
+        width (cond-> width lock-ratio (min height))
+        height (cond-> height lock-ratio (min width))
+        fill (document.handlers/attr db :fill)
+        stroke (document.handlers/attr db :stroke)]
+    (-> (tool.handlers/set-state db :create)
+        (element.handlers/deselect-all)
+        (element.handlers/add {:type :element
+                               :tag :rect
+                               :attrs {:x (min x offset-x)
+                                       :y (min y offset-y)
+                                       :width width
+                                       :height height
+                                       :fill fill
+                                       :stroke stroke}}))))
+
+(defn update-size
+  [db lock-ratio]
+  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
+                                (:adjusted-pointer-offset db))
+        [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
+        width (abs (- x offset-x))
+        height (abs (- y offset-y))
+        width (cond-> width lock-ratio (min height))
+        height (cond-> height lock-ratio (min width))
+        id (:id (first (element.handlers/selected db)))]
+    (element.handlers/update-el db id #(-> %
+                                           (assoc-in [:attrs :x] (str (min x offset-x)))
+                                           (assoc-in [:attrs :y] (str (min y offset-y)))
+                                           (assoc-in [:attrs :width] (str width))
+                                           (assoc-in [:attrs :height] (str height))))))
+
+(defmethod tool.hierarchy/on-pointer-up :rect
+  [db e]
+  (if (= (:state db) :create)
+    (-> (tool.handlers/activate db :transform)
+        (history.handlers/finalize "Create rectangle"))
+    (create db (:ctrl-key e))))
+
+(defmethod tool.hierarchy/on-pointer-move :rect
+  [db e]
+  (cond-> db
+    (= (:state db) :create)
+    (update-size (:ctrl-key e))))
+
+(defmethod tool.hierarchy/on-drag-start :rect
+  [db e]
+  (create db (:ctrl-key e)))
+
+(defmethod tool.hierarchy/on-drag :rect
+  [db e]
+  (update-size db (:ctrl-key e)))
+
+(defmethod tool.hierarchy/on-drag-end :rect
+  [db _e]
+  (-> db
+      (tool.handlers/activate :transform)
+      (history.handlers/finalize "Create rectangle")))
