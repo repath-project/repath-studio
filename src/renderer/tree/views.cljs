@@ -18,11 +18,12 @@
    [renderer.utils.element :as utils.element]
    [renderer.views :as views]))
 
-(defn toggle-item-prop-button
+(defn item-prop-toggle
   [id state k active-icon inactive-icon active-title inactive-title]
   [views/icon-button
    (if state active-icon inactive-icon)
-   {:class ["hover:bg-transparent text-inherit hover:text-inherit focus:outline-hidden small"
+   {:class ["hover:bg-transparent text-inherit hover:text-inherit
+             focus:outline-hidden small"
             (when-not state "invisible")]
     :title (if state active-title inactive-title)
     :on-double-click #(.stopPropagation %)
@@ -47,7 +48,8 @@
           :default-value label
           :placeholder tag-label
           :auto-focus true
-          :on-key-down #(event.impl.keyboard/input-key-down-handler! % label set-item-label! id)
+          :on-key-down #(event.impl.keyboard/input-key-down-handler! % label
+                                                                     set-item-label! id)
           :on-blur (fn [e]
                      (reset! edit-mode? false)
                      (set-item-label! e id))}]
@@ -103,7 +105,8 @@
   [views/icon-button
    (if collapsed "chevron-right" "chevron-down")
    {:title (if collapsed "expand" "collapse")
-    :class "hover:bg-transparent text-inherit hover:text-inherit focus:outline-hidden small"
+    :class "hover:bg-transparent text-inherit hover:text-inherit
+            focus:outline-hidden small"
     :on-double-click #(.stopPropagation %)
     :on-click #(do (.stopPropagation %)
                    (rf/dispatch (if collapsed
@@ -115,8 +118,8 @@
   (let [{:keys [id selected children locked visible]} el
         collapse-button-width 21
         padding (* collapse-button-width (cond-> depth (seq children) dec))]
-    [:div.list-item-button.button.flex.pr-1.items-center.text-start.outline-default.hover:overlay
-     {:class ["[&.hovered]:overlay hover:[&_button]:visible"
+    [:div.list-item-button.button.flex.pr-1.items-center.text-start.outline-default
+     {:class ["hover:overlay [&.hovered]:overlay hover:[&_button]:visible"
               (when selected "accent")
               (when hovered "hovered")]
       :tab-index 0
@@ -150,8 +153,8 @@
        (when-let [icon (:icon (utils.element/properties el))]
          [views/icon icon {:class (when-not visible "opacity-60")}])
        [item-label el]]
-      [toggle-item-prop-button id locked :locked "lock" "unlock" "unlock" "lock"]
-      [toggle-item-prop-button id (not visible) :visible "eye-closed" "eye" "show" "hide"]]]))
+      [item-prop-toggle id locked :locked "lock" "unlock" "unlock" "lock"]
+      [item-prop-toggle id (not visible) :visible "eye-closed" "eye" "show" "hide"]]]))
 
 (defn item [el depth elements]
   (let [{:keys [selected children id]} el

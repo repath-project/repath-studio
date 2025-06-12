@@ -45,7 +45,9 @@
  (fn [{:keys [on-success on-error formatter]}]
    (when-not (undefined? js/window.queryLocalFonts)
      (-> (.queryLocalFonts js/window)
-         (.then #(when on-success (rf/dispatch (conj on-success (cond-> % formatter formatter)))))
+         (.then #(when on-success (rf/dispatch (conj on-success
+                                                     (cond-> %
+                                                       formatter formatter)))))
          (.catch #(when on-error (rf/dispatch (conj on-error %))))))))
 
 (rf/reg-fx

@@ -12,6 +12,11 @@
   "The font-weight attribute refers to the boldness or lightness of the glyphs
    used to render the text, relative to other fonts in the same font family.")
 
+(defn label
+  [weight]
+  (let [weight-name (first (get utils.attribute/weight-name-mapping weight))]
+    (str weight " - " weight-name)))
+
 (defmethod attribute.hierarchy/form-element [:default :font-weight]
   [_ k v attrs]
   (let [available-weights @(rf/subscribe [::element.subs/font-weights])
@@ -22,7 +27,5 @@
      (merge attrs
             {:default-value "400"
              :items (mapv #(do {:key %
-                                :label (str % " - " (-> %
-                                                        utils.attribute/weight-name-mapping
-                                                        first))
+                                :label (label %)
                                 :value %}) weights)})]))

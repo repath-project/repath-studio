@@ -96,8 +96,8 @@
                            % v
                            on-change-handler! k v)})]
    (when-not (or (empty? (str v)) disabled)
-     [:button.button.bg-primary.text-muted.absolute.h-full.right-0.clear-input-button.invisible.p-1
-      {:class "hover:bg-transparent"
+     [:button.button.bg-primary.text-muted.absolute.h-full.right-0.p-1.invisible
+      {:class "clear-input-button hover:bg-transparent"
        :on-pointer-down #(rf/dispatch [::element.events/remove-attr k])}
       [views/icon "times"]])])
 

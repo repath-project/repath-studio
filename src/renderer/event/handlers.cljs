@@ -36,9 +36,10 @@
                 (tool.handlers/pan-out-of-canvas dom-rect pointer-pos pointer-offset)
 
                 (not drag)
-                (-> (tool.hierarchy/on-drag-start e)
-                    (tool.handlers/add-fx [::event.effects/set-pointer-capture pointer-id])
-                    (assoc :drag true))
+                (-> (assoc :drag true)
+                    (tool.hierarchy/on-drag-start e)
+                    (tool.handlers/add-fx [::event.effects/set-pointer-capture
+                                           pointer-id]))
 
                 :always
                 (tool.hierarchy/on-drag e))
@@ -66,7 +67,8 @@
       "pointerup"
       (cond-> (if drag
                 (-> (tool.hierarchy/on-drag-end db e)
-                    (tool.handlers/add-fx [::event.effects/release-pointer-capture pointer-id]))
+                    (tool.handlers/add-fx [::event.effects/release-pointer-capture
+                                           pointer-id]))
                 (if (= button :right)
                   db
                   (if (< 0 (- timestamp (:event-timestamp db)) (:double-click-delta db))

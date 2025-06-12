@@ -162,7 +162,9 @@
                 :frame false}))
   (.once ^js @loading-window "show" init-main-window!)
   (.loadURL ^js @loading-window (resource-path "/public/loading.html"))
-  (.once ^js (.-webContents @loading-window) "did-finish-load" #(.show ^js @loading-window)))
+  (.once ^js (.-webContents @loading-window)
+         "did-finish-load"
+         #(.show ^js @loading-window)))
 
 (defn ^:export init! []
   (.initialize log)

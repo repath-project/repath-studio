@@ -63,13 +63,13 @@
      (map-indexed (fn [i segment]
                     (case (-> segment first string/lower-case)
                       "m"
-                      (let [[x y] (mapv utils.length/unit->px [(second segment) (last segment)])
-                            [x y] (matrix/add offset [x y])]
+                      (let [point (mapv utils.length/unit->px (rest segment))
+                            [x y] (matrix/add offset point)]
                         (square-handle i [x y]))
 
                       "l"
-                      (let [[x y] (mapv utils.length/unit->px [(second segment) (last segment)])
-                            [x y] (matrix/add offset [x y])]
+                      (let [point (mapv utils.length/unit->px (rest segment))
+                            [x y] (matrix/add offset point)]
                         (square-handle i [x y]))
 
                       nil))

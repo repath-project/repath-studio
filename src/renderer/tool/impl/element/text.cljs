@@ -20,7 +20,8 @@
 
 (defmethod tool.hierarchy/on-pointer-up :text
   [db _e]
-  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
+  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
+                                (:adjusted-pointer-offset db))
         el {:type :element
             :tag :text
             :attrs {:x offset-x

@@ -279,7 +279,8 @@
                  offset)]
     (reduce (fn [db id]
               (let [container (element.handlers/parent-container db id)
-                    hovered-svg (element.handlers/hovered-svg db)]
+                    hovered-svg (element.handlers/hovered-svg db)
+                    start-point (fn [el] (into [] (take 2) (:bbox el)))]
                 (cond-> (element.handlers/translate db id offset)
                   (and (seq (element.handlers/selected db))
                        (empty? (rest (element.handlers/selected db)))
@@ -292,10 +293,10 @@
 
                     ;; FIXME: Handle nested containers.
                     (:bbox container)
-                    (element.handlers/translate id (vec (take 2 (:bbox container))))
+                    (element.handlers/translate id (start-point container))
 
                     (:bbox hovered-svg)
-                    (element.handlers/translate id (matrix/mul (take 2 (:bbox hovered-svg))
+                    (element.handlers/translate id (matrix/mul (start-point hovered-svg)
                                                                -1))))))
             db
             (element.handlers/top-ancestor-ids db))))
@@ -402,7 +403,8 @@
 (defmethod tool.hierarchy/snapping-elements :transform
   [db]
   (let [non-selected-ids (element.handlers/non-selected-ids db)
-        non-selected (select-keys (element.handlers/entities db) (vec non-selected-ids))]
+        els (element.handlers/entities db)
+        non-selected (select-keys els (vec non-selected-ids))]
     (filter :visible (vals non-selected))))
 
 (m/=> size-label [:-> BBox any?])

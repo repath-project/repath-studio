@@ -23,15 +23,17 @@
 
 (defmethod element.hierarchy/edit ::element.hierarchy/box
   [el [x y] handle]
-  (case handle
-    :position
-    (-> (utils.element/update-attrs-with el (comp (partial max 0) -) [[:width x] [:height y]])
-        (element.hierarchy/translate [x y]))
+  (let [clamp (partial max 0)]
+    (case handle
+      :position
+      (-> el
+          (utils.element/update-attrs-with (comp clamp -) [[:width x] [:height y]])
+          (element.hierarchy/translate [x y]))
 
-    :size
-    (utils.element/update-attrs-with el (comp (partial max 0) +) [[:width x] [:height y]])
+      :size
+      (utils.element/update-attrs-with el (comp clamp +) [[:width x] [:height y]])
 
-    el))
+      el)))
 
 (defmethod element.hierarchy/render-edit ::element.hierarchy/box
   [el]

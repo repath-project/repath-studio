@@ -95,14 +95,15 @@
   ([el]
    (->path el (element.hierarchy/path el)))
   ([el d]
-   (cond
-     (string? d)
-     (-> (assoc el :tag :path)
-         (update :attrs #(utils.map/merge-common-with str % (utils.attribute/defaults-memo :path)))
-         (assoc-in [:attrs :d] d))
+   (let [default-attrs (utils.attribute/defaults-memo :path)]
+     (cond
+       (string? d)
+       (-> (assoc el :tag :path)
+           (update :attrs #(utils.map/merge-common-with str % default-attrs))
+           (assoc-in [:attrs :d] d))
 
-     (instance? js/Promise d)
-     (.then d (fn [d] (->path el d))))))
+       (instance? js/Promise d)
+       (.then d (fn [d] (->path el d)))))))
 
 (m/=> stroke->path [:-> Element Element])
 (defn stroke->path
@@ -114,10 +115,11 @@
                      (/ el-offset 2)
                      #js {:cap (or (:stroke-linecap attrs) "butt")
                           :join (or (:stroke-linejoin attrs) "miter")})
-        new-d (.getAttribute (.exportSVG stroke-path) "d")]
+        new-d (.getAttribute (.exportSVG stroke-path) "d")
+        default-attrs (utils.attribute/defaults-memo :path)]
     (-> (assoc el :tag :path)
         (update :attrs dissoc :stroke :stroke-width)
-        (update :attrs #(utils.map/merge-common-with str % (utils.attribute/defaults-memo :path)))
+        (update :attrs #(utils.map/merge-common-with str % default-attrs))
         (assoc-in [:attrs :d] new-d)
         (assoc-in [:attrs :fill] (:stroke attrs)))))
 

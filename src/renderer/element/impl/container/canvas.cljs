@@ -40,7 +40,8 @@
         snap? @(rf/subscribe [::snap.subs/active?])
         nearest-neighbor @(rf/subscribe [::snap.subs/nearest-neighbor])
         snapped-el-id (-> nearest-neighbor meta :id)
-        snapped-el (when snapped-el-id @(rf/subscribe [::element.subs/entity snapped-el-id]))]
+        snapped-el (when snapped-el-id
+                     @(rf/subscribe [::element.subs/entity snapped-el-id]))]
     [:svg#canvas {:on-pointer-up pointer-handler
                   :on-pointer-down pointer-handler
                   :on-pointer-move pointer-handler
