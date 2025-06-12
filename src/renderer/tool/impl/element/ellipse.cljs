@@ -11,7 +11,8 @@
 
 (defmethod tool.hierarchy/properties :ellipse
   []
-  {:icon "ellipse-tool"})
+  {:icon "ellipse-tool"
+   :label "Ellipse"})
 
 (defmethod tool.hierarchy/help [:ellipse :create]
   []
@@ -45,8 +46,8 @@
   (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
                                 (:adjusted-pointer-offset db))
         [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
-        rx (abs (- x offset-x))
-        ry (abs (- y offset-y))
+        rx (.toFixed (abs (- x offset-x)) 3)
+        ry (.toFixed (abs (- y offset-y)) 3)
         rx (cond-> rx lock-ratio (min ry))
         ry (cond-> ry lock-ratio (min rx))
         id (:id (first (element.handlers/selected db)))]

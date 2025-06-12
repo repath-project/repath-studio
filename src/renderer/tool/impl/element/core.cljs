@@ -27,17 +27,6 @@
       (history.handlers/reset-state)
       (tool.handlers/set-cursor "crosshair")))
 
-(defmethod tool.hierarchy/on-drag-start ::tool.hierarchy/element
-  [db _e]
-  (tool.handlers/set-state db :create))
-
-(defmethod tool.hierarchy/on-drag-end ::tool.hierarchy/element
-  [db _e]
-  (-> db
-      (tool.handlers/create-temp-element)
-      (history.handlers/finalize (str "Create " (name (:tag (tool.handlers/temp db)))))
-      (tool.handlers/activate :transform)))
-
 (defmethod tool.hierarchy/snapping-points ::tool.hierarchy/element
   [db]
   [(with-meta

@@ -4,7 +4,6 @@
    [renderer.document.handlers :as document.handlers]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
-   [renderer.reepl.db :as db]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]))
 
@@ -34,7 +33,9 @@
 (defn update-end
   [db]
   (let [[x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
-        id (:id (first (element.handlers/selected db)))]
+        id (:id (first (element.handlers/selected db)))
+        x (.toFixed x 3)
+        y (.toFixed y 3)]
     (element.handlers/update-el db id #(-> %
                                            (assoc-in [:attrs :x2] (str x))
                                            (assoc-in [:attrs :y2] (str y))))))

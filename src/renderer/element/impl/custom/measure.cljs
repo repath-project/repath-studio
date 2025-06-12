@@ -28,10 +28,10 @@
      [utils.svg/line [x1 y1] [(+ x1 (/ 30 zoom)) y1]]
 
      [utils.svg/label
-      (str (.toFixed straight-angle 2) "°")
+      (str (.toFixed straight-angle 3) "°")
       [(+ x1 (/ 40 zoom)) y1]
       "start"]
 
      [utils.svg/label
-      (-> hypotenuse js/parseFloat (.toFixed 2) str)
+      (-> hypotenuse js/parseFloat (.toFixed 3) str)
       [(/ (+ x1 x2) 2) (/ (+ y1 y2) 2)]]]))
