@@ -2,6 +2,7 @@
   (:require
    [clojure.string :as string]
    [renderer.document.handlers :as document.handlers]
+   [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
@@ -14,26 +15,37 @@
   []
   {:icon "pencil"})
 
+(defmethod tool.hierarchy/on-drag-start :pen
+  [db _e]
+  (let [stroke (document.handlers/attr db :stroke)
+        point-1 (string/join " " (:adjusted-pointer-offset db))
+        point-2 (string/join " " (:adjusted-pointer-pos db))]
+    (-> db
+        (tool.handlers/set-state :create)
+        (element.handlers/deselect-all)
+        (element.handlers/add {:type :element
+                               :tag :polyline
+                               :attrs {:points (str point-1 " " point-2)
+                                       :stroke stroke
+                                       :fill "transparent"}}))))
+
 (defmethod tool.hierarchy/on-drag :pen
   [db _e]
-  (let [{:keys [active-document adjusted-pointer-pos]} db
-        points-path [:documents active-document :temp-element :attrs :points]]
-    (if (get-in db points-path)
-      (update-in db points-path #(str % " " (string/join " " adjusted-pointer-pos)))
-      (tool.handlers/set-temp db {:type :element
-                                  :tag :polyline
-                                  :attrs {:points (string/join " " adjusted-pointer-pos)
-                                          :stroke (document.handlers/attr db :stroke)
-                                          :fill "transparent"}}))))
+  (let [{:keys [adjusted-pointer-pos]} db
+        point (string/join " " adjusted-pointer-pos)
+        id (:id (first (element.handlers/selected db)))]
+    (element.handlers/update-el db id (fn [el]
+                                        (update-in el
+                                                   [:attrs :points]
+                                                   #(str % " " point))))))
 
 (defmethod tool.hierarchy/on-drag-end :pen
   [db _e]
-  (let [path (-> (tool.handlers/temp db)
+  (let [path (-> (first (element.handlers/selected db))
                  (utils.element/->path)
                  (update-in [:attrs :d] utils.path/manipulate :smooth)
                  (update-in [:attrs :d] utils.path/manipulate :simplify))]
     (-> db
-        (tool.handlers/set-temp path)
-        (tool.handlers/create-temp-element)
-        (tool.handlers/activate :transform)
-        (history.handlers/finalize "Draw line"))))
+        (element.handlers/swap path)
+        (history.handlers/finalize "Draw line")
+        (tool.handlers/activate :transform))))
