@@ -2,6 +2,8 @@
   "https://www.w3.org/TR/SVG/shapes.html#EllipseElement"
   (:require
    [renderer.document.handlers :as document.handlers]
+   [renderer.element.handlers :as element.handlers]
+   [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]))
 
@@ -15,19 +17,65 @@
   []
   [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions."])
 
-(defmethod tool.hierarchy/on-drag :ellipse
-  [db e]
-  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
+(defn create
+  [db lock-ratio]
+  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
+                                (:adjusted-pointer-offset db))
         [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
-        lock-ratio (:ctrl-key e)
         rx (abs (- x offset-x))
         ry (abs (- y offset-y))
-        attrs {:cx offset-x
-               :cy offset-y
-               :fill (document.handlers/attr db :fill)
-               :stroke (document.handlers/attr db :stroke)
-               :rx (if lock-ratio (min rx ry) rx)
-               :ry (if lock-ratio (min rx ry) ry)}]
-    (tool.handlers/set-temp db {:type :element
-                                :tag :ellipse
-                                :attrs attrs})))
+        rx (cond-> rx lock-ratio (min ry))
+        ry (cond-> ry lock-ratio (min rx))
+        fill (document.handlers/attr db :fill)
+        stroke (document.handlers/attr db :stroke)]
+    (-> (tool.handlers/set-state db :create)
+        (element.handlers/deselect-all)
+        (element.handlers/add {:type :element
+                               :tag :ellipse
+                               :attrs {:cx offset-x
+                                       :cy offset-y
+                                       :fill fill
+                                       :stroke stroke
+                                       :rx rx
+                                       :ry ry}}))))
+
+(defn update-radius
+  [db lock-ratio]
+  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
+                                (:adjusted-pointer-offset db))
+        [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
+        rx (abs (- x offset-x))
+        ry (abs (- y offset-y))
+        rx (cond-> rx lock-ratio (min ry))
+        ry (cond-> ry lock-ratio (min rx))
+        id (:id (first (element.handlers/selected db)))]
+    (element.handlers/update-el db id #(-> %
+                                           (assoc-in [:attrs :rx] (str rx))
+                                           (assoc-in [:attrs :ry] (str ry))))))
+
+(defmethod tool.hierarchy/on-pointer-up :ellipse
+  [db e]
+  (if (= (:state db) :create)
+    (-> (tool.handlers/activate db :transform)
+        (history.handlers/finalize "Create ellipse"))
+    (create db (:ctrl-key e))))
+
+(defmethod tool.hierarchy/on-pointer-move :ellipse
+  [db e]
+  (cond-> db
+    (= (:state db) :create)
+    (update-radius (:ctrl-key e))))
+
+(defmethod tool.hierarchy/on-drag-start :ellipse
+  [db e]
+  (create db (:ctrl-key e)))
+
+(defmethod tool.hierarchy/on-drag :ellipse
+  [db e]
+  (update-radius db (:ctrl-key e)))
+
+(defmethod tool.hierarchy/on-drag-end :ellipse
+  [db _e]
+  (-> db
+      (tool.handlers/activate :transform)
+      (history.handlers/finalize "Create ellipse")))
