@@ -29,14 +29,20 @@
 (m/=> activate [:-> App Tool App])
 (defn activate
   [db tool]
-  (-> db
-      (tool.hierarchy/on-deactivate)
-      (assoc :tool tool)
-      (set-state :idle)
-      (set-cursor "default")
-      (dissoc :drag :pointer-offset :clicked-element)
-      (snap.handlers/rebuild-tree)
-      (tool.hierarchy/on-activate)))
+  (cond-> db
+    :always
+    (-> (tool.hierarchy/on-deactivate)
+        (assoc :tool tool)
+        (set-state :idle)
+        (set-cursor "default")
+        (dissoc :drag :pointer-offset :clicked-element)
+        (snap.handlers/rebuild-tree))
+
+    (not (:cached-tool db))
+    (history.handlers/reset-state)
+
+    :always
+    (tool.hierarchy/on-activate)))
 
 (m/=> pointer-delta [:-> App Vec2])
 (defn pointer-delta
