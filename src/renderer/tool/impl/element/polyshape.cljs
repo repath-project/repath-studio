@@ -24,7 +24,6 @@
         fill (document.handlers/attr db :fill)]
     (-> db
         (tool.handlers/set-state :create)
-        (element.handlers/deselect-all)
         (element.handlers/add {:type :element
                                :tag (:tool db)
                                :attrs {:points (string/join " " points)

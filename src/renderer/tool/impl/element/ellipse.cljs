@@ -31,7 +31,6 @@
         stroke (document.handlers/attr db :stroke)]
     (-> db
         (tool.handlers/set-state :create)
-        (element.handlers/deselect-all)
         (element.handlers/add {:type :element
                                :tag :ellipse
                                :attrs {:cx offset-x

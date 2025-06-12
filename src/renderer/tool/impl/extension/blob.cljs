@@ -27,7 +27,6 @@
         fill (document.handlers/attr db :fill)
         stroke (document.handlers/attr db :stroke)]
     (-> (tool.handlers/set-state db :create)
-        (element.handlers/deselect-all)
         (element.handlers/add {:type :element
                                :tag :blob
                                :attrs {:x (- offset-x radius)

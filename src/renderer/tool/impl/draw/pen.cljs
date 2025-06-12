@@ -22,7 +22,6 @@
         point-2 (string/join " " (:adjusted-pointer-pos db))]
     (-> db
         (tool.handlers/set-state :create)
-        (element.handlers/deselect-all)
         (element.handlers/add {:type :element
                                :tag :polyline
                                :attrs {:points (str point-1 " " point-2)

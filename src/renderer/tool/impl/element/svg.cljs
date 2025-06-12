@@ -26,7 +26,6 @@
         width (cond-> width lock-ratio (min height))
         height (cond-> height lock-ratio (min width))]
     (-> (tool.handlers/set-state db :create)
-        (element.handlers/deselect-all)
         (element.handlers/add {:tag :svg
                                :type :element
                                :attrs {:x (min x offset-x)
