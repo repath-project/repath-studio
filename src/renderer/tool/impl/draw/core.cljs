@@ -1,5 +1,6 @@
 (ns renderer.tool.impl.draw.core
   (:require
+   [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.impl.draw.brush]
@@ -13,4 +14,6 @@
 
 (defmethod tool.hierarchy/on-activate ::tool.hierarchy/draw
   [db]
-  (tool.handlers/set-cursor db "crosshair"))
+  (-> db
+      (history.handlers/reset-state)
+      (tool.handlers/set-cursor "crosshair")))

@@ -23,7 +23,9 @@
 
 (defmethod tool.hierarchy/on-activate ::tool.hierarchy/element
   [db]
-  (tool.handlers/set-cursor db "crosshair"))
+  (-> db
+      (history.handlers/reset-state)
+      (tool.handlers/set-cursor "crosshair")))
 
 (defmethod tool.hierarchy/on-drag-start ::tool.hierarchy/element
   [db _e]
