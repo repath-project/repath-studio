@@ -52,8 +52,9 @@
 (defmethod tool.hierarchy/on-pointer-up :blob
   [db _e]
   (if (= (:state db) :create)
-    (-> (tool.handlers/activate db :transform)
-        (history.handlers/finalize "Create blob"))
+    (-> db
+        (history.handlers/finalize "Create blob")
+        (tool.handlers/activate  :transform))
     (create db)))
 
 (defmethod tool.hierarchy/on-pointer-move :blob
@@ -73,5 +74,5 @@
 (defmethod tool.hierarchy/on-drag-end :blob
   [db _e]
   (-> db
-      (tool.handlers/activate :transform)
-      (history.handlers/finalize "Create blob")))
+      (history.handlers/finalize "Create blob")
+      (tool.handlers/activate :transform)))

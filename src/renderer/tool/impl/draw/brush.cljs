@@ -46,5 +46,5 @@
   [db _e]
   (-> db
       (tool.handlers/create-temp-element)
-      (tool.handlers/activate :transform)
-      (history.handlers/finalize "Draw line")))
+      (history.handlers/finalize "Draw line")
+      (tool.handlers/activate :transform)))

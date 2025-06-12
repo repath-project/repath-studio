@@ -59,8 +59,9 @@
 (defmethod tool.hierarchy/on-pointer-up :rect
   [db e]
   (if (= (:state db) :create)
-    (-> (tool.handlers/activate db :transform)
-        (history.handlers/finalize "Create rectangle"))
+    (-> db
+        (history.handlers/finalize "Create rectangle")
+        (tool.handlers/activate  :transform))
     (create db (:ctrl-key e))))
 
 (defmethod tool.hierarchy/on-pointer-move :rect
@@ -80,5 +81,5 @@
 (defmethod tool.hierarchy/on-drag-end :rect
   [db _e]
   (-> db
-      (tool.handlers/activate :transform)
-      (history.handlers/finalize "Create rectangle")))
+      (history.handlers/finalize "Create rectangle")
+      (tool.handlers/activate :transform)))

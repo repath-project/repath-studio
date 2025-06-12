@@ -4,6 +4,7 @@
    [renderer.document.handlers :as document.handlers]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
+   [renderer.reepl.db :as db]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]))
 
@@ -19,7 +20,8 @@
                                 (:adjusted-pointer-offset db))
         [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
         stroke (document.handlers/attr db :stroke)]
-    (-> (tool.handlers/set-state db :create)
+    (-> db
+        (tool.handlers/set-state :create)
         (element.handlers/deselect-all)
         (element.handlers/add {:type :element
                                :tag :line
@@ -46,8 +48,9 @@
 (defmethod tool.hierarchy/on-pointer-up :line
   [db _e]
   (if (= (:state db) :create)
-    (-> (tool.handlers/activate db :transform)
-        (history.handlers/finalize "Create line"))
+    (-> db
+        (history.handlers/finalize "Create line")
+        (tool.handlers/activate :transform))
     (create db)))
 
 (defmethod tool.hierarchy/on-drag-start :line
@@ -60,5 +63,6 @@
 
 (defmethod tool.hierarchy/on-drag-end :line
   [db _e]
-  (-> (tool.handlers/activate db :transform)
-      (history.handlers/finalize "Create line")))
+  (-> db
+      (history.handlers/finalize "Create line")
+      (tool.handlers/activate :transform)))

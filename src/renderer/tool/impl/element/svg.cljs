@@ -53,8 +53,9 @@
 (defmethod tool.hierarchy/on-pointer-up :svg
   [db e]
   (if (= (:state db) :create)
-    (-> (tool.handlers/activate db :transform)
-        (history.handlers/finalize "Create SVG"))
+    (-> db
+        (history.handlers/finalize "Create SVG")
+        (tool.handlers/activate :transform))
     (create db (:ctrl-key e))))
 
 (defmethod tool.hierarchy/on-pointer-move :svg
@@ -74,5 +75,5 @@
 (defmethod tool.hierarchy/on-drag-end :svg
   [db _e]
   (-> db
-      (tool.handlers/activate :transform)
-      (history.handlers/finalize "Create SVG")))
+      (history.handlers/finalize "Create SVG")
+      (tool.handlers/activate :transform)))

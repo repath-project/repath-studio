@@ -72,5 +72,5 @@
   [db _e]
   (-> (drop-last-point db)
       (tool.handlers/create-temp-element)
-      (tool.handlers/activate :transform)
-      (history.handlers/finalize (str "Create " (name (:tool db))))))
+      (history.handlers/finalize (str "Create " (name (:tool db))))
+      (tool.handlers/activate :transform)))

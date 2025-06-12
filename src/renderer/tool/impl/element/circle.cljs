@@ -43,8 +43,9 @@
 (defmethod tool.hierarchy/on-pointer-up :circle
   [db _e]
   (if (= (:state db) :create)
-    (-> (tool.handlers/activate db :transform)
-        (history.handlers/finalize "Create circle"))
+    (-> db
+        (history.handlers/finalize "Create circle")
+        (tool.handlers/activate :transform))
     (create db)))
 
 (defmethod tool.hierarchy/on-pointer-move :circle
@@ -64,8 +65,8 @@
 (defmethod tool.hierarchy/on-drag-end :circle
   [db _e]
   (-> db
-      (tool.handlers/activate :transform)
-      (history.handlers/finalize "Create circle")))
+      (history.handlers/finalize "Create circle")
+      (tool.handlers/activate :transform)))
 
 (defmethod tool.hierarchy/snapping-points :circle
   [db]

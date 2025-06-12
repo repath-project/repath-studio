@@ -38,6 +38,7 @@
       (set-state :idle)
       (set-cursor "default")
       (dissoc :drag :pointer-offset :clicked-element)
+      (history.handlers/reset-state)
       (snap.handlers/rebuild-tree)
       (tool.hierarchy/on-activate)))
 

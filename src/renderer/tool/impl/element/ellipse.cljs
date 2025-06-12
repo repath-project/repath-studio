@@ -28,7 +28,8 @@
         ry (cond-> ry lock-ratio (min rx))
         fill (document.handlers/attr db :fill)
         stroke (document.handlers/attr db :stroke)]
-    (-> (tool.handlers/set-state db :create)
+    (-> db
+        (tool.handlers/set-state :create)
         (element.handlers/deselect-all)
         (element.handlers/add {:type :element
                                :tag :ellipse
@@ -56,8 +57,9 @@
 (defmethod tool.hierarchy/on-pointer-up :ellipse
   [db e]
   (if (= (:state db) :create)
-    (-> (tool.handlers/activate db :transform)
-        (history.handlers/finalize "Create ellipse"))
+    (-> db
+        (history.handlers/finalize "Create ellipse")
+        (tool.handlers/activate :transform))
     (create db (:ctrl-key e))))
 
 (defmethod tool.hierarchy/on-pointer-move :ellipse
@@ -77,5 +79,5 @@
 (defmethod tool.hierarchy/on-drag-end :ellipse
   [db _e]
   (-> db
-      (tool.handlers/activate :transform)
-      (history.handlers/finalize "Create ellipse")))
+      (history.handlers/finalize "Create ellipse")
+      (tool.handlers/activate :transform)))

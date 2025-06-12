@@ -33,8 +33,8 @@
   [db _e]
   (-> db
       (tool.handlers/create-temp-element)
-      (tool.handlers/activate :transform)
-      (history.handlers/finalize (str "Create " (name (:tag (tool.handlers/temp db)))))))
+      (history.handlers/finalize (str "Create " (name (:tag (tool.handlers/temp db)))))
+      (tool.handlers/activate :transform)))
 
 (defmethod tool.hierarchy/snapping-points ::tool.hierarchy/element
   [db]
