@@ -22,7 +22,7 @@
 (m/=> pointer [:-> App PointerEvent App])
 (defn pointer
   [db e]
-  (let [{:keys [pointer-offset tool dom-rect drag primary-tool
+  (let [{:keys [pointer-offset tool dom-rect drag cached-tool
                 drag-threshold nearest-neighbor]} db
         {:keys [button pointer-pos timestamp pointer-id]} e
         adjusted-pointer-pos (frame.handlers/adjusted-pointer-pos db pointer-pos)
@@ -50,7 +50,7 @@
       "pointerdown"
       (cond-> db
         (= button :middle)
-        (-> (assoc :primary-tool tool)
+        (-> (assoc :cached-tool tool)
             (tool.handlers/activate :pan))
 
         (not= button :right)
@@ -73,9 +73,9 @@
                         (tool.hierarchy/on-double-click e))
                     (-> (assoc db :event-timestamp timestamp)
                         (tool.hierarchy/on-pointer-up e)))))
-        (and primary-tool (= button :middle))
-        (-> (tool.handlers/activate primary-tool)
-            (dissoc :primary-tool))
+        (and cached-tool (= button :middle))
+        (-> (tool.handlers/activate cached-tool)
+            (dissoc :cached-tool))
 
         :always
         (dissoc :pointer-offset :drag :nearest-neighbor))
@@ -91,7 +91,7 @@
       (and (= (:code e) "Space")
            (not= (:tool db) :pan)
            (= (:state db) :idle))
-      (-> (assoc :primary-tool (:tool db))
+      (-> (assoc :cached-tool (:tool db))
           (tool.handlers/activate :pan))
 
       :always
@@ -100,9 +100,9 @@
     "keyup"
     (cond-> db
       (and (= (:code e) "Space")
-           (:primary-tool db))
-      (-> (tool.handlers/activate (:primary-tool db))
-          (dissoc :primary-tool))
+           (:cached-tool db))
+      (-> (tool.handlers/activate (:cached-tool db))
+          (dissoc :cached-tool))
 
       :always
       (tool.hierarchy/on-key-up e))

@@ -8,8 +8,8 @@
  :-> :tool)
 
 (rf/reg-sub
- ::primary
- :-> :primary-tool)
+ ::cached
+ :-> :cached-tool)
 
 (rf/reg-sub
  ::pivot-point

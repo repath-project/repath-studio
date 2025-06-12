@@ -58,7 +58,7 @@
    ["Pointer drag?" (str @(rf/subscribe [::tool.subs/drag?]))]
    ["Pan" (coll->str @(rf/subscribe [::document.subs/pan]))]
    ["Active tool" @(rf/subscribe [::tool.subs/active])]
-   ["Primary tool" @(rf/subscribe [::tool.subs/primary])]
+   ["Cached tool" @(rf/subscribe [::tool.subs/cached])]
    ["State"  @(rf/subscribe [::tool.subs/state])]
    ["Clicked element" (:id @(rf/subscribe [::app.subs/clicked-element]))]
    ["Ignored elements" @(rf/subscribe [::document.subs/ignored-ids])]

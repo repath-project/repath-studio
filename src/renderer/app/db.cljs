@@ -36,7 +36,7 @@
 (def App
   [:map {:closed true}
    [:tool {:default :transform} Tool]
-   [:primary-tool {:optional true} Tool]
+   [:cached-tool {:optional true} Tool]
    [:pointer-pos {:default [0 0]} Vec2]
    [:pointer-offset {:optional true} Vec2]
    [:adjusted-pointer-pos {:default [0 0]} Vec2]

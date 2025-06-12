@@ -34,7 +34,7 @@
         read-only? @(rf/subscribe [::document.subs/read-only?])
         cursor @(rf/subscribe [::tool.subs/cursor])
         active-tool @(rf/subscribe [::tool.subs/active])
-        primary-tool @(rf/subscribe [::tool.subs/primary])
+        cached-tool @(rf/subscribe [::tool.subs/cached])
         rotate @(rf/subscribe [::document.subs/rotate])
         grid @(rf/subscribe [::app.subs/grid])
         pointer-handler #(event.pointer/handler! % el)
@@ -75,7 +75,7 @@
         (when nearest-neighbor
           [snap.views/canvas-label nearest-neighbor])])
 
-     (when-not read-only? [tool.hierarchy/render (or primary-tool active-tool)])]))
+     (when-not read-only? [tool.hierarchy/render (or cached-tool active-tool)])]))
 
 (defmethod element.hierarchy/render-to-string :canvas
   [el]
