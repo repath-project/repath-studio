@@ -323,7 +323,17 @@
  
  :renderer.attribute.impl.stroke-linecap
  {:description "The stroke-linecap attribute is a presentation attribute defining the shape
-                to be used at the end of open subpaths when they are stroked."}
+                to be used at the end of open subpaths when they are stroked."
+  :butt        "Butt"
+  :round       "Round"
+  :square      "Square"}
+ 
+ :renderer.attribute.impl.stroke-linejoin
+ {:description "The stroke-linejoin attribute is a presentation attribute defining the shape
+                to be used at the corners of paths when they are stroked."
+  :bevel       "Bevel"
+  :miter       "Miter"
+  :round       "Round"}
  
  :renderer.attribute.impl.overflow
  {:description "The overflow attribute sets what to do when an element's content is too big to fit in its block formatting context. This feature is not widely implemented yet."
@@ -332,6 +342,22 @@
  
  :renderer.attribute.impl.color
  {:title "Pick color"}
+
+ :renderer.attribute.impl.d
+ {:description     "The d attribute defines a path to be drawn."
+  :edit            "Edit path"
+  :absolute        "(Absolute)"
+  :relative        "(Relative)"
+  :move-to         "Move To"
+  :line-to         "Line To"
+  :vertical-line   "Vertical Line"
+  :horizontal-line "Horizontal Line"
+  :cubic-bezier    "Cubic Bézier Curve"
+  :shortcut-cubic-bezier "Shortcut Cubic Bézier Curve"
+  :quadratic-bezier-curve "Quadratic Bézier Curve"
+  :shortcut-quadratic     "Shortcut Quadratic Bézier Curve"
+  :elliptical-arc-curve   "Elliptical Arc Curve"
+  :close-path             "Close Path"}
 
  :renderer.attribute.impl.length
  {:increase "Increase"

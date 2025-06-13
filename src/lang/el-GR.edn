@@ -289,7 +289,16 @@
  
  :renderer.attribute.impl.stroke-linecap
  {:description "Η ιδιότητα stroke-linecap είναι μια ιδιότητα παρουσίασης που καθορίζει το σχήμα που θα χρησιμοποιηθεί στο τέλος των ανοιχτών υποδιαδρομών
-                όταν εφαρμόζεται περίγραμμα."}
+                όταν εφαρμόζεται περίγραμμα."
+  :butt        "Κοφτό"
+  :round       "Στρογγυλό"
+  :square      "Τετράγωνο"}
+ 
+ :renderer.attribute.impl.stroke-linejoin
+ {:description "Η ιδιότητα stroke-linejoin είναι μια ιδιότητα παρουσίασης που καθορίζει το σχήμα που θα χρησιμοποιηθεί στις γωνίες των μονοπατιών όταν εφαρμόζεται περίγραμμα."
+  :bevel       "Λοξό"
+  :miter       "Γωνιώδες"
+  :round       "Στρογγυλεμένο"}
  
  :renderer.tool.impl.element.text
  {:help "Κάντε κλικ για να ξεκινήσετε τη πληκτρολόγηση."}
@@ -301,6 +310,22 @@
  
  :renderer.attribute.impl.color
  {:title "Επιλέξτε χρώμα"}
+
+ :renderer.attribute.impl.d
+ {:description     "Η ιδιότητα d καθορίζει τη διαδρομή που θα σχεδιαστεί."
+  :edit            "Επεξεργασία διαδρομής"
+  :absolute        "(Απόλυτο)"
+  :relative        "(Σχετικό)"
+  :move-to         "Μετακίνηση προς"
+  :line-to         "Γραμμή προς"
+  :vertical-line   "Κάθετη γραμμή"
+  :horizontal-line "Οριζόντια γραμμή"
+  :cubic-bezier    "Κυβική καμπύλη Bézier"
+  :shortcut-cubic-bezier "Συντομευμένη κυβική καμπύλη Bézier"
+  :quadratic-bezier-curve "Τετραγωνική καμπύλη Bézier"
+  :shortcut-quadratic     "Συντομευμένη τετραγωνική καμπύλη Bézier"
+  :elliptical-arc-curve   "Ελλειπτική καμπύλη τόξου"
+  :close-path             "Κλείσιμο διαδρομής"}
 
  :renderer.attribute.impl.length
  {:increase "Αύξηση"
@@ -319,7 +344,7 @@
  
  :renderer.attribute.impl.font-weight
  {:description "Η ιδιότητα font-weight αναφέρεται στο πάχος ή την ελαφρότητα των γλυφών που χρησιμοποιούνται για την απεικόνιση του κειμένου, 
-                σε σχέση με άλλες γραμματοσειρές της ίδιας οικογένειας."}
+                σε σχέση με άλλες γραμματοσειρές της ίδιας οικογένειας."} 
  
  :renderer.tool.impl.base.edit
  {:help-idle-drag  [:div "Σύρετε μια λαβή για να τροποποιήσετε το σχήμα σας."]

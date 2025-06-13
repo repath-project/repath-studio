@@ -17,13 +17,13 @@
    (merge attrs {:default-value "butt"
                  :items [{:key :butt
                           :value "butt"
-                          :label "Butt"
+                          :label (t [::butt "Butt"])
                           :icon "linecap-butt"}
                          {:key :round
                           :value "round"
-                          :label "Round"
+                          :label (t [::round "Round"])
                           :icon "linecap-round"}
                          {:key :square
                           :value "square"
-                          :label "Square"
+                          :label (t [::square "Square"])
                           :icon "linecap-square"}]})])
