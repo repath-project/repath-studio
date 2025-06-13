@@ -1,7 +1,10 @@
 (ns renderer.tool.impl.element.line
   "https://www.w3.org/TR/SVG/shapes.html#LineElement"
   (:require
+   [clojure.core.matrix :as matrix]
    [renderer.document.handlers :as document.handlers]
+   [renderer.element.handlers :as element.handlers]
+   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]))
@@ -12,53 +15,36 @@
   []
   {:icon "line-tool"})
 
-(defn create-line
-  [db]
-  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
+(defmethod tool.hierarchy/on-drag-start :line
+  [db _e]
+  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
+                                (:adjusted-pointer-offset db))
         [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
-        attrs {:x1 offset-x
-               :y1 offset-y
-               :x2 x
-               :y2 y
-               :stroke (document.handlers/attr db :stroke)}]
-    (tool.handlers/set-temp db {:type :element
-                                :tag :line
-                                :attrs attrs})))
-
-(defn update-line-end
-  [db]
-  (let [[x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
-        temp (-> (tool.handlers/temp db)
-                 (assoc-in [:attrs :x2] x)
-                 (assoc-in [:attrs :y2] y))]
-    (tool.handlers/set-temp db temp)))
-
-(defmethod tool.hierarchy/on-pointer-move :line
-  [db _e]
-  (cond-> db
-    (tool.handlers/temp db)
-    (update-line-end)))
-
-(defmethod tool.hierarchy/on-pointer-up :line
-  [db _e]
-  (cond
-    (tool.handlers/temp db)
-    (-> (tool.handlers/create-temp-element db)
-        (tool.handlers/activate :transform)
-        (history.handlers/finalize "Create line"))
-
-    (:pointer-offset db)
-    (-> (tool.handlers/set-state db :create)
-        (create-line))
-
-    :else db))
-
-(defmethod tool.hierarchy/on-pointer-down :line
-  [db _e]
-  (cond-> db
-    (tool.handlers/temp db)
-    (history.handlers/finalize "Create line")))
+        stroke (document.handlers/attr db :stroke)]
+    (-> db
+        (tool.handlers/set-state :create)
+        (element.handlers/add {:type :element
+                               :tag :line
+                               :attrs {:x1 offset-x
+                                       :y1 offset-y
+                                       :x2 x
+                                       :y2 y
+                                       :stroke stroke}}))))
 
 (defmethod tool.hierarchy/on-drag :line
   [db _e]
-  (create-line db))
+  (let [position (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
+        {:keys [id parent]} (first (element.handlers/selected db))
+        [min-x min-y] (element.hierarchy/bbox (element.handlers/entity db parent))
+        [x y] (matrix/sub position [min-x min-y])
+        x (.toFixed x 3)
+        y (.toFixed y 3)]
+    (element.handlers/update-el db id #(-> %
+                                           (assoc-in [:attrs :x2] (str x))
+                                           (assoc-in [:attrs :y2] (str y))))))
+
+(defmethod tool.hierarchy/on-drag-end :line
+  [db _e]
+  (-> db
+      (history.handlers/finalize "Create line")
+      (tool.handlers/activate :transform)))

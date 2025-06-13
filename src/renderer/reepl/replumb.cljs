@@ -238,8 +238,10 @@ cljs.js/*load-fn*
   [mode text]
   (let [parts (vec (.split text "."))
         completion (or (last parts) "")
-        prefix #(str (when (= mode :cljs) "js/") (string/join "." (conj (vec (butlast parts)) %)))
-        possibles (js-attrs (reduce aget js/window (butlast parts)))]
+        possibles (js-attrs (reduce aget js/window (butlast parts)))
+        prefix #(->> (conj (vec (butlast parts)) %)
+                     (string/join ".")
+                     (str (when (= mode :cljs) "js/")))]
     (->> possibles
          (filter #(not= -1 (.indexOf % completion)))
          (sort (partial compare-completion text))

@@ -13,6 +13,7 @@
    [renderer.event.impl.keyboard :as event.impl.keyboard]
    [renderer.events :as-alias events]
    [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.tool.subs :as-alias tool.subs]
    [renderer.utils.attribute :as utils.attribute]
    [renderer.views :as views]))
 
@@ -95,8 +96,8 @@
                            % v
                            on-change-handler! k v)})]
    (when-not (or (empty? (str v)) disabled)
-     [:button.button.bg-primary.text-muted.absolute.h-full.right-0.clear-input-button.invisible.p-1
-      {:class "hover:bg-transparent"
+     [:button.button.bg-primary.text-muted.absolute.h-full.right-0.p-1.invisible
+      {:class "clear-input-button hover:bg-transparent"
        :on-pointer-down #(rf/dispatch [::element.events/remove-attr k])}
       [views/icon "times"]])])
 
@@ -242,7 +243,12 @@
   (let [selected-elements @(rf/subscribe [::element.subs/selected])
         selected-tags @(rf/subscribe [::element.subs/selected-tags])
         selected-attrs @(rf/subscribe [::element.subs/selected-attrs])
-        locked? @(rf/subscribe [::element.subs/selected-locked?])
+        selected-locked? @(rf/subscribe [::element.subs/selected-locked?])
+        tool-state @(rf/subscribe [::tool.subs/state])
+        tool-cached-state @(rf/subscribe [::tool.subs/cached-state])
+        locked? (or selected-locked?
+                    (not= tool-state :idle)
+                    (and tool-cached-state (not= tool-cached-state :idle)))
         tag (first selected-tags)
         multitag? (next selected-tags)]
     (when-first [el selected-elements]

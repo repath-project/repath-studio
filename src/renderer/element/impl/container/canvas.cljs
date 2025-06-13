@@ -30,18 +30,18 @@
   (let [child-elements @(rf/subscribe [::element.subs/filter-visible (:children el)])
         viewbox-attr @(rf/subscribe [::frame.subs/viewbox-attr])
         {:keys [width height]} @(rf/subscribe [::app.subs/dom-rect])
-        temp-element @(rf/subscribe [::document.subs/temp-element])
         read-only? @(rf/subscribe [::document.subs/read-only?])
         cursor @(rf/subscribe [::tool.subs/cursor])
         active-tool @(rf/subscribe [::tool.subs/active])
-        primary-tool @(rf/subscribe [::tool.subs/primary])
+        cached-tool @(rf/subscribe [::tool.subs/cached])
         rotate @(rf/subscribe [::document.subs/rotate])
         grid @(rf/subscribe [::app.subs/grid])
         pointer-handler #(event.pointer/handler! % el)
         snap? @(rf/subscribe [::snap.subs/active?])
         nearest-neighbor @(rf/subscribe [::snap.subs/nearest-neighbor])
         snapped-el-id (-> nearest-neighbor meta :id)
-        snapped-el (when snapped-el-id @(rf/subscribe [::element.subs/entity snapped-el-id]))]
+        snapped-el (when snapped-el-id
+                     @(rf/subscribe [::element.subs/entity snapped-el-id]))]
     [:svg#canvas {:on-pointer-up pointer-handler
                   :on-pointer-down pointer-handler
                   :on-pointer-move pointer-handler
@@ -66,8 +66,6 @@
 
      (when grid [ruler.views/grid])
 
-     (when-not read-only? [element.hierarchy/render temp-element])
-
      (when snap?
        [:<>
         (when snapped-el
@@ -75,7 +73,7 @@
         (when nearest-neighbor
           [snap.views/canvas-label nearest-neighbor])])
 
-     (when-not read-only? [tool.hierarchy/render (or primary-tool active-tool)])]))
+     (when-not read-only? [tool.hierarchy/render (or cached-tool active-tool)])]))
 
 (defmethod element.hierarchy/render-to-string :canvas
   [el]

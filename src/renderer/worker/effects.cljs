@@ -14,6 +14,8 @@
       #(let [response-data (js->clj (.. % -data) :keywordize-keys true)]
          (rf/dispatch [::worker.events/message id on-success response-data])))
 
-     (.addEventListener worker "error" #(rf/dispatch [::worker.events/message id on-error %]))
+     (.addEventListener worker
+                        "error"
+                        #(rf/dispatch [::worker.events/message id on-error %]))
 
      (.postMessage worker (clj->js data)))))

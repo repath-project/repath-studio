@@ -3,6 +3,7 @@
    [clojure.core.matrix :as matrix]
    [malli.core :as m]
    [re-frame.core :as rf]
+   [reagent.core :as reagent]
    [renderer.app.db :refer [App]]
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.db :refer [Element]]
@@ -32,6 +33,15 @@
                   :bottom-left])
 
 (derive :transform ::tool.hierarchy/tool)
+
+(derive :zoom ::tool.hierarchy/tool)
+
+(defonce bbox-element (reagent/atom nil))
+
+(rf/reg-fx
+ ::update
+ (fn [value]
+   (reset! bbox-element value)))
 
 (defmethod tool.hierarchy/properties :transform
   []
@@ -66,8 +76,8 @@
 
 (m/=> hovered? [:-> App Element boolean? boolean?])
 (defn hovered?
-  [db el intersecting?]
-  (let [selection-bbox (element.hierarchy/bbox (tool.handlers/temp db))]
+  [el intersecting?]
+  (let [selection-bbox (element.hierarchy/bbox @bbox-element)]
     (if-let [el-bbox (:bbox el)]
       (if intersecting?
         (utils.bounds/intersect? el-bbox selection-bbox)
@@ -82,7 +92,7 @@
        (filter :visible)
        (reduce (fn [db el]
                  (cond-> db
-                   (hovered? db el intersecting?)
+                   (hovered? el intersecting?)
                    (f (:id el)))) db)))
 
 (defmethod tool.hierarchy/on-pointer-move :transform
@@ -269,7 +279,8 @@
                  offset)]
     (reduce (fn [db id]
               (let [container (element.handlers/parent-container db id)
-                    hovered-svg (element.handlers/hovered-svg db)]
+                    hovered-svg (element.handlers/hovered-svg db)
+                    start-point (fn [el] (into [] (take 2) (:bbox el)))]
                 (cond-> (element.handlers/translate db id offset)
                   (and (seq (element.handlers/selected db))
                        (empty? (rest (element.handlers/selected db)))
@@ -282,10 +293,10 @@
 
                     ;; FIXME: Handle nested containers.
                     (:bbox container)
-                    (element.handlers/translate id (vec (take 2 (:bbox container))))
+                    (element.handlers/translate id (start-point container))
 
                     (:bbox hovered-svg)
-                    (element.handlers/translate id (matrix/mul (take 2 (:bbox hovered-svg))
+                    (element.handlers/translate id (matrix/mul (start-point hovered-svg)
                                                                -1))))))
             db
             (element.handlers/top-ancestor-ids db))))
@@ -324,7 +335,7 @@
     (case (:state db)
       :select
       (-> (element.handlers/clear-hovered db)
-          (tool.handlers/set-temp (select-rect db (:alt-key e)))
+          (tool.handlers/add-fx [::update (select-rect db (:alt-key e))])
           (reduce-by-area (:alt-key e) element.handlers/hover))
 
       :translate
@@ -361,7 +372,7 @@
   (-> (case (:state db)
         :select (-> (cond-> db (not (:shift-key e)) element.handlers/deselect-all)
                     (reduce-by-area (:alt-key e) element.handlers/select)
-                    (tool.handlers/dissoc-temp)
+                    (tool.handlers/add-fx [::update nil])
                     (history.handlers/finalize "Modify selection"))
         :translate (history.handlers/finalize db "Move selection")
         :scale (history.handlers/finalize db "Scale selection")
@@ -392,7 +403,8 @@
 (defmethod tool.hierarchy/snapping-elements :transform
   [db]
   (let [non-selected-ids (element.handlers/non-selected-ids db)
-        non-selected (select-keys (element.handlers/entities db) (vec non-selected-ids))]
+        els (element.handlers/entities db)
+        non-selected (select-keys els (vec non-selected-ids))]
     (filter :visible (vals non-selected))))
 
 (m/=> size-label [:-> BBox any?])
@@ -403,7 +415,7 @@
         x (+ min-x (/ (- max-x min-x) 2))
         y (+ y2 (/ (+ (/ theme.db/handle-size 2) 15) zoom))
         [w h] (utils.bounds/->dimensions bbox)
-        text (str (.toFixed w 2) " x " (.toFixed h 2))]
+        text (str (.toFixed w 3) " x " (.toFixed h 3))]
     [utils.svg/label text [x y]]))
 
 (m/=> area-label [:-> number? BBox any?])
@@ -414,7 +426,7 @@
           [min-x min-y max-x] bbox
           x (+ min-x (/ (- max-x min-x) 2))
           y (+ min-y (/ (- -15 (/ theme.db/handle-size 2)) zoom))
-          text (str (.toFixed area 2) " px²")]
+          text (str (.toFixed area 3) " px²")]
       [utils.svg/label text [x y]])))
 
 (defmethod tool.hierarchy/render :transform
@@ -446,4 +458,6 @@
         (when (= state :scale) [size-label bbox])])
 
      (when pivot-point
-       [utils.svg/times pivot-point])]))
+       [utils.svg/times pivot-point])
+
+     [element.hierarchy/render @bbox-element]]))

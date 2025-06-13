@@ -150,7 +150,8 @@
    (.addEventListener target
                       channel
                       #(rf/dispatch (conj listener
-                                          (cond-> % formatter formatter))))))
+                                          (cond-> %
+                                            formatter formatter))))))
 
 (rf/reg-fx
  ::ipc-send
@@ -163,7 +164,8 @@
  (fn [{:keys [channel data formatter on-success on-error]}]
    (when js/window.api
      (-> (js/window.api.invoke channel (clj->js data))
-         (.then #(when on-success (rf/dispatch (conj on-success (cond-> % formatter formatter)))))
+         (.then #(when on-success (rf/dispatch (conj on-success (cond-> %
+                                                                  formatter formatter)))))
          (.catch #(when on-error (rf/dispatch (conj on-error %))))))))
 
 (rf/reg-fx

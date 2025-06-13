@@ -23,7 +23,6 @@
    [:zoom {:default 1} ZoomFactor]
    [:rotate {:default 0} number?]
    [:history {:optional true} History]
-   [:temp-element {:optional true} Element]
    [:pan {:default [0 0]} Vec2]
    [:elements {:default {} :persist true} [:map-of uuid? Element]]
    [:focused {:optional true} boolean?]

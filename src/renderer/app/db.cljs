@@ -36,7 +36,7 @@
 (def App
   [:map {:closed true}
    [:tool {:default :transform} Tool]
-   [:primary-tool {:optional true} Tool]
+   [:cached-tool {:optional true} Tool]
    [:pointer-pos {:default [0 0]} Vec2]
    [:pointer-offset {:optional true} Vec2]
    [:adjusted-pointer-pos {:default [0 0]} Vec2]
@@ -49,6 +49,7 @@
    [:event-timestamp {:optional true} number?]
    [:double-click-delta {:default 250} [:and number? pos?]]
    [:state {:default :idle} State]
+   [:cached-state {:optional true} State]
    [:grid {:default false :persist true} boolean?]
    [:ruler {:default {} :persist true} Ruler]
    [:snap {:default {} :persist true} Snap]

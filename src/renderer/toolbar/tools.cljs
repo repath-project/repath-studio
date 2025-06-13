@@ -11,9 +11,9 @@
 (defn button
   [tool]
   (let [active-tool @(rf/subscribe [::tool.subs/active])
-        primary-tool @(rf/subscribe [::tool.subs/primary])
+        cached-tool @(rf/subscribe [::tool.subs/cached])
         active (= active-tool tool)
-        primary (= primary-tool tool)
+        primary (= cached-tool tool)
         properties (tool.hierarchy/properties tool)
         label (or (:label properties) (string/capitalize (name tool)))]
     (when (:icon properties)

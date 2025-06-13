@@ -165,7 +165,8 @@
                #(->> (into [] partition-to-px (utils.attribute/str->seq %))
                      (reduce (fn [points point]
                                (let [rel-point (matrix/sub bbox-min (take 2 point))
-                                     rel-offset (utils.element/scale-offset ratio rel-point)
+                                     rel-offset (utils.element/scale-offset ratio
+                                                                            rel-point)
                                      offset (matrix/add offset rel-offset)]
                                  (translate offset points point))) [])
                      (string/join " ")))))

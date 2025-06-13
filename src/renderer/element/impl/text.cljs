@@ -139,8 +139,8 @@
       (.then (fn [blob]
                (-> (.arrayBuffer blob)
                    (.then (fn [buffer]
-                            (let [opentype-font (opentype/parse buffer)
-                                  path (.getPath opentype-font content x y font-size)]
+                            (let [font (opentype/parse buffer)
+                                  path (.getPath font content x y font-size)]
                               (.toPathData path)))))))))
 
 (defn includes-prop?
@@ -152,9 +152,9 @@
   [weight fonts]
   (let [weight-num (js/parseInt weight)
         weight-names (get utils.attribute/weight-name-mapping weight)
-        matched-weight (->> fonts
-                            (filter (fn [font]
-                                      (some #(includes-prop? % (.-style font)) weight-names))))]
+        includes-weight? (fn [font]
+                           (some #(includes-prop? % (.-style font)) weight-names))
+        matched-weight (filter includes-weight? fonts)]
     (if (or (seq matched-weight) (< weight-num 100))
       matched-weight
       (recur (str (- weight-num 100)) fonts))))
@@ -171,6 +171,10 @@
         (first matched-family)
         (first fonts))))
 
+(defn default-font-path
+  [font-style font-weight]
+  (str "./css/files/noto-sans-latin-" font-weight "-" font-style ".woff"))
+
 (defmethod element.hierarchy/path :text
   [el]
   (let [{:keys [attrs content]} el
@@ -180,8 +184,11 @@
     (if font-family
       (-> (js/window.queryLocalFonts)
           (.then (fn [fonts]
-                   (when-let [font (match-font fonts font-family font-style font-weight)]
+                   (when-let [font (match-font fonts
+                                               font-family
+                                               font-style
+                                               font-weight)]
                      (font-file->path-data font content x y font-size)))))
-      (-> (js/fetch (str "./css/files/noto-sans-latin-" font-weight "-" font-style ".woff"))
+      (-> (js/fetch (default-font-path font-style font-weight))
           (.then (fn [response]
                    (font-file->path-data response content x y font-size)))))))

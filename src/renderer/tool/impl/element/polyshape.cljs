@@ -2,18 +2,17 @@
   "This serves as an abstraction for polygons and polylines that have similar
    attributes and hehavior"
   (:require
+   [clojure.core.matrix :as matrix]
    [clojure.string :as string]
    [renderer.document.handlers :as document.handlers]
+   [renderer.element.handlers :as element.handlers]
+   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.attribute :as utils.attribute]))
 
 (derive ::tool.hierarchy/polyshape ::tool.hierarchy/element)
-
-(defn points-path
-  [db]
-  [:documents (:active-document db) :temp-element :attrs :points])
 
 (defmethod tool.hierarchy/help [::tool.hierarchy/polyshape :idle]
   []
@@ -23,54 +22,62 @@
 
 (defn create-polyline
   [db points]
-  (tool.handlers/set-temp db {:type :element
-                              :tag (:tool db)
-                              :attrs {:points (string/join " " points)
-                                      :stroke (document.handlers/attr db :stroke)
-                                      :fill (document.handlers/attr db :fill)}}))
+  (let [stroke (document.handlers/attr db :stroke)
+        fill (document.handlers/attr db :fill)]
+    (-> db
+        (tool.handlers/set-state :create)
+        (element.handlers/add {:type :element
+                               :tag (:tool db)
+                               :attrs {:points (string/join " " points)
+                                       :stroke stroke
+                                       :fill fill}}))))
 
 (defn add-point
   [db point]
-  (update-in db (points-path db) #(str % " " (string/join " " point))))
+  (let [id (:id (first (element.handlers/selected db)))]
+    (element.handlers/update-attr db id :points str " " point)))
 
 (defn drop-last-point
   [db]
-  (let [points (get-in db (points-path db))
-        point-vector (utils.attribute/points->vec points)]
-    (assoc-in db
-              (points-path db)
-              (->> point-vector drop-last flatten (string/join " ")))))
+  (let [id (:id (first (element.handlers/selected db)))]
+    (element.handlers/update-attr db id :points #(->> %
+                                                      utils.attribute/points->vec
+                                                      drop-last
+                                                      flatten
+                                                      (string/join " ")))))
 
 (defmethod tool.hierarchy/on-pointer-up ::tool.hierarchy/polyshape
   [db _e]
   (let [point (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))]
-    (if (tool.handlers/temp db)
+    (if (= (:state db) :create)
       (add-point db point)
-      (-> (tool.handlers/set-state db :create)
-          (create-polyline point)))))
+      (create-polyline db point))))
 
 (defmethod tool.hierarchy/on-drag-end ::tool.hierarchy/polyshape
   [db _e]
-  (if (tool.handlers/temp db)
+  (if (= (:state db) :create)
     (add-point db (:adjusted-pointer-pos db))
-    (-> (tool.handlers/set-state db :create)
-        (create-polyline (:adjusted-pointer-pos db)))))
+    (create-polyline db (:adjusted-pointer-pos db))))
 
 (defmethod tool.hierarchy/on-pointer-move ::tool.hierarchy/polyshape
   [db _e]
-  (let [point (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))]
-    (if-let [points (get-in db (points-path db))]
-      (let [point-vector (utils.attribute/points->vec points)]
-        (assoc-in db
-                  (points-path db)
-                  (string/join " " (concat (apply concat (if (second point-vector)
-                                                           (drop-last point-vector)
-                                                           point-vector))
-                                           point)))) db)))
+  (let [point (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
+        {:keys [id parent]} (first (element.handlers/selected db))
+        [min-x min-y] (element.hierarchy/bbox (element.handlers/entity db parent))
+        point (matrix/sub point [min-x min-y])]
+    (if (= (:state db) :create)
+      (element.handlers/update-attr
+       db id :points
+       #(let [point-vector (utils.attribute/points->vec %)]
+          (string/join " " (concat (apply concat (if (second point-vector)
+                                                   (drop-last point-vector)
+                                                   point-vector))
+                                   point))))
+
+      db)))
 
 (defmethod tool.hierarchy/on-double-click ::tool.hierarchy/polyshape
   [db _e]
   (-> (drop-last-point db)
-      (tool.handlers/create-temp-element)
-      (tool.handlers/activate :transform)
-      (history.handlers/finalize (str "Create " (name (:tool db))))))
+      (history.handlers/finalize (str "Create " (name (:tool db))))
+      (tool.handlers/activate :transform)))

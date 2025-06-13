@@ -66,7 +66,8 @@
     [:g (map-indexed (fn [index point]
                        (let [id (keyword (str index))
                              is-active (and (= (:id clicked-element) id)
-                                            (= (:element clicked-element) (:id el)))
+                                            (= (:element clicked-element)
+                                               (:id el)))
                              offset (utils.element/offset el)
                              [x y] (->> point
                                         (mapv utils.length/unit->px)
@@ -82,18 +83,19 @@
                                                      :element (:id el)}]
                           (when is-active
                             [utils.svg/label
-                             (string/join " " [(.toFixed x 2) (.toFixed y 2)])
+                             (string/join " " [(.toFixed x 3) (.toFixed y 3)])
                              [(- x margin) (+ y margin)]
                              "end"])]))
                      (utils.attribute/points->vec (-> el :attrs :points)))]))
 
 (defmethod element.hierarchy/edit ::element.hierarchy/polyshape
   [el [x y] handle]
-  (let [index (js/parseInt (name handle))]
+  (let [index (js/parseInt (name handle))
+        transform-point (fn [[px py]]
+                          (list (utils.length/transform px + x)
+                                (utils.length/transform py + y)))]
     (update-in el [:attrs :points] #(-> (utils.attribute/points->vec %)
-                                        (update index (fn [[px py]]
-                                                        (list (utils.length/transform px + x)
-                                                              (utils.length/transform py + y))))
+                                        (update index transform-point)
                                         (flatten)
                                         (->> (string/join " ")
                                              (string/trim))))))

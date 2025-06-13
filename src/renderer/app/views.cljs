@@ -44,25 +44,39 @@
   (interpose ", " (map (fn [[k v]]
                          ^{:key k}
                          [:span (str (name k) ": " (if (number? v)
-                                                     (.toFixed v 2)
+                                                     (.toFixed v 3)
                                                      (coll->str v)))]) m)))
 
 (defn debug-rows
   []
-  [["Dom rect" (map->str @(rf/subscribe [::app.subs/dom-rect]))]
-   ["Viewbox" (coll->str @(rf/subscribe [::frame.subs/viewbox]))]
-   ["Pointer position" (coll->str @(rf/subscribe [::app.subs/pointer-pos]))]
-   ["Adjusted pointer position" (coll->str @(rf/subscribe [::app.subs/adjusted-pointer-pos]))]
-   ["Pointer offset" (coll->str @(rf/subscribe [::app.subs/pointer-offset]))]
-   ["Adjusted pointer offset" (coll->str @(rf/subscribe [::app.subs/adjusted-pointer-offset]))]
-   ["Pointer drag?" (str @(rf/subscribe [::tool.subs/drag?]))]
-   ["Pan" (coll->str @(rf/subscribe [::document.subs/pan]))]
-   ["Active tool" @(rf/subscribe [::tool.subs/active])]
-   ["Primary tool" @(rf/subscribe [::tool.subs/primary])]
-   ["State"  @(rf/subscribe [::tool.subs/state])]
-   ["Clicked element" (:id @(rf/subscribe [::app.subs/clicked-element]))]
-   ["Ignored elements" @(rf/subscribe [::document.subs/ignored-ids])]
-   ["Snap" (map->str @(rf/subscribe [::snap.subs/nearest-neighbor]))]])
+  (let [dom-rect (rf/subscribe [::app.subs/dom-rect])
+        viewbox (rf/subscribe [::frame.subs/viewbox])
+        pointer-pos (rf/subscribe [::app.subs/pointer-pos])
+        adjusted-pointer-pos (rf/subscribe [::app.subs/adjusted-pointer-pos])
+        pointer-offset (rf/subscribe [::app.subs/pointer-offset])
+        adjusted-pointer-offset (rf/subscribe [::app.subs/adjusted-pointer-offset])
+        drag? (rf/subscribe [::tool.subs/drag?])
+        pan (rf/subscribe [::document.subs/pan])
+        active-tool (rf/subscribe [::tool.subs/active])
+        cached-tool (rf/subscribe [::tool.subs/cached])
+        tool-state (rf/subscribe [::tool.subs/state])
+        clicked-element (rf/subscribe [::app.subs/clicked-element])
+        ignored-ids (rf/subscribe [::document.subs/ignored-ids])
+        nearest-neighbor (rf/subscribe [::snap.subs/nearest-neighbor])]
+    [["Dom rect" (map->str @dom-rect)]
+     ["Viewbox" (coll->str @viewbox)]
+     ["Pointer position" (coll->str @pointer-pos)]
+     ["Adjusted pointer position" (coll->str @adjusted-pointer-pos)]
+     ["Pointer offset" (coll->str @pointer-offset)]
+     ["Adjusted pointer offset" (coll->str @adjusted-pointer-offset)]
+     ["Pointer drag?" (str @drag?)]
+     ["Pan" (coll->str @pan)]
+     ["Active tool" @active-tool]
+     ["Cached tool" @cached-tool]
+     ["State" @tool-state]
+     ["Clicked element" (:id @clicked-element)]
+     ["Ignored elements" @ignored-ids]
+     ["Snap" (map->str @nearest-neighbor)]]))
 
 (defn debug-info
   []
@@ -112,8 +126,9 @@
        (when (and help-bar (seq help-message))
          [:div.flex.absolute.justify-center.w-full.p-4.pointer-events-none
           [:div.bg-primary.rounded-full.overflow-hidden.shadow-lg
-           [:div.overlay.text-color.text-xs.gap-1.flex.flex-wrap.truncate.py-2.px-4.justify-center
-            {:aria-live "polite"}
+           [:div.overlay.text-color.text-xs.gap-1.flex.flex-wrap.truncate.py-2
+            {:class "px-4 justify-center"
+             :aria-live "polite"}
             help-message]]])]]]))
 
 (defn center-top-group

@@ -45,7 +45,6 @@
  ::success
  (fn [{:keys [db]} [_ file]]
    {:db (tool.handlers/activate db :transform)
-    ::effects/file-read-as [file
-                            :data-url
-                            {"load" {:on-fire [::element.events/set-attr :href]}
-                             "error" {:on-fire [::notification.events/show-exception]}}]}))
+    ::effects/file-read-as
+    [file :data-url {"load" {:on-fire [::element.events/set-attr :href]}
+                     "error" {:on-fire [::notification.events/show-exception]}}]}))

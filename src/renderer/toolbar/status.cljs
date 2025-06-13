@@ -21,11 +21,11 @@
   (let [[x y] @(rf/subscribe [::app.subs/adjusted-pointer-pos])]
     [:div.flex-col.font-mono.leading-tight.hidden
      {:class "xl:flex"
-      :style {:min-width "90px"}}
+      :style {:min-width "100px"}}
      [:div.flex.justify-between
-      [:span.mr-1 "X:"] [:span (.toFixed x 2)]]
+      [:span.mr-1 "X:"] [:span (.toFixed x 3)]]
      [:div.flex.justify-between
-      [:span.mr-1 "Y:"] [:span (.toFixed y 2)]]]))
+      [:span.mr-1 "Y:"] [:span (.toFixed y 3)]]]))
 
 (def zoom-options
   [{:label "Set to 50%"

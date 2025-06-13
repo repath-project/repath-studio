@@ -100,7 +100,8 @@
           {:ref ref}
           (into
            [:div.p-1]
-           (map (fn [i] [:div.font-mono.p-1.flex.text-xs.min-h-4 (item i opts)]) items))]])})))
+           (map (fn [i]
+                  [:div.font-mono.p-1.flex.text-xs.min-h-4 (item i opts)]) items))]])})))
 
 (defn repl-items-panel
   [items show-value-opts set-text]
@@ -232,17 +233,17 @@
 
 (defn root
   []
-  [repl
-   :execute #(replumb/run-repl (if (= @(rf/subscribe [::app.subs/repl-mode]) :cljs)
-                                 %1
-                                 (str "(js/eval \"" %1 "\")"))
-                               {:verbose @(rf/subscribe [::app.subs/debug-info])} %2)
-   :complete-word (fn [text] (replumb/process-apropos @(rf/subscribe [::app.subs/repl-mode]) text))
-   :get-docs replumb/process-doc
-   :state state
-   :show-value-opts
-   {:showers [show-devtools/show-devtools
-              (partial show-function/show-fn-with-docs maybe-fn-docs)]}
-   :js-cm-opts {:mode (if (= @(rf/subscribe [::app.subs/repl-mode]) :cljs) "clojure" "javascript")
-                :keyMap "default"
-                :showCursorWhenSelecting true}])
+  (let [repl-mode (rf/subscribe [::app.subs/repl-mode])
+        debug-info (rf/subscribe [::app.subs/debug-info])]
+    [repl
+     :execute #(replumb/run-repl (if (= @repl-mode :cljs) %1 (str "(js/eval \"" %1 "\")"))
+                                 {:verbose @debug-info} %2)
+     :complete-word (fn [text] (replumb/process-apropos @repl-mode text))
+     :get-docs replumb/process-doc
+     :state state
+     :show-value-opts
+     {:showers [show-devtools/show-devtools
+                (partial show-function/show-fn-with-docs maybe-fn-docs)]}
+     :js-cm-opts {:mode (if (= @repl-mode :cljs) "clojure" "javascript")
+                  :keyMap "default"
+                  :showCursorWhenSelecting true}]))

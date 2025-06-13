@@ -42,8 +42,9 @@
     [:div.fixed.flex.flex-col.m-4.right-0.bottom-0.gap-2.items-end
      (map-indexed
       (fn [index notification]
-        [:div.relative.flex.bg-secondary.w-80.p-4.mb-2.rounded.shadow-md.border.border-default
-         {:key index}
+        [:div.relative.flex.bg-secondary.w-80.p-4.mb-2.rounded.shadow-md
+         {:key index
+          :class "border border-default"}
          (:content notification)
          [views/icon-button
           "times"

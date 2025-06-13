@@ -140,7 +140,8 @@
        [:> Popover/Root {:modal true}
         [:> Popover/Trigger
          {:title "Edit path"
-          :class "form-control-button"}
+          :class "form-control-button"
+          :disabled disabled}
          [views/icon "pencil"]]
         [:> Popover/Portal
          [:> Popover/Content {:sideOffset 5
