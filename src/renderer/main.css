@@ -37,7 +37,6 @@
 body {
   font-size: var(--font-size);
   color: var(--font-color);
-  fill: var(--font-color);
 }
 
 p {

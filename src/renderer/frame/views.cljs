@@ -39,7 +39,6 @@
    [:head [:link {:rel "stylesheet" :href "./css/main.css"}]]
    [:body {:style {:width "100%"
                    :height "100%"
-                   :font-family "var(--font-sans)"
                    :overflow "hidden"
                    :user-select "none"
                    :touch-action "none"
