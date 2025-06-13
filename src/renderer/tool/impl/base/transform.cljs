@@ -279,6 +279,9 @@
 (defn translate
   [db offset axis]
   (let [hovered-svg (element.handlers/hovered-svg db)
+        user-translate? (contains? #{:translate :clone} (:state db))
+        single-selection? (and (seq (element.handlers/selected db))
+                               (empty? (rest (element.handlers/selected db))))
         offset (case axis
                  :vertical [(first offset) 0]
                  :horizontal [0 (second offset)]
@@ -286,9 +289,8 @@
     (reduce (fn [db id]
               (let [container (element.handlers/parent-container db id)]
                 (cond-> (element.handlers/translate db id offset)
-                  (and (seq (element.handlers/selected db))
-                       (empty? (rest (element.handlers/selected db)))
-                       (contains? #{:translate :clone} (:state db))
+                  (and single-selection?
+                       user-translate?
                        (not= (:id (element.handlers/parent db id)) (:id hovered-svg))
                        (not (utils.element/svg? (element.handlers/entity db id))))
                   (cond->
