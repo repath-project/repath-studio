@@ -270,17 +270,21 @@
     (selectable? (:clicked-element db))
     (element.handlers/toggle-selection (-> db :clicked-element :id) multiple)))
 
+(m/=> start-point [:-> Element Vec2])
+(defn start-point
+  [el]
+  (into [] (take 2) (:bbox el)))
+
 (m/=> translate [:-> App Vec2 [:maybe Orientation] App])
 (defn translate
   [db offset axis]
-  (let [offset (case axis
+  (let [hovered-svg (element.handlers/hovered-svg db)
+        offset (case axis
                  :vertical [(first offset) 0]
                  :horizontal [0 (second offset)]
                  offset)]
     (reduce (fn [db id]
-              (let [container (element.handlers/parent-container db id)
-                    hovered-svg (element.handlers/hovered-svg db)
-                    start-point (fn [el] (into [] (take 2) (:bbox el)))]
+              (let [container (element.handlers/parent-container db id)]
                 (cond-> (element.handlers/translate db id offset)
                   (and (seq (element.handlers/selected db))
                        (empty? (rest (element.handlers/selected db)))
