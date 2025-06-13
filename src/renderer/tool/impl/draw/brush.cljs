@@ -10,7 +10,8 @@
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.tool.subs :as-alias tool.subs]))
 
 (derive :brush ::tool.hierarchy/draw)
 
@@ -70,4 +71,5 @@
 
 (defmethod tool.hierarchy/render :brush
   []
-  [element.hierarchy/render @brush-element])
+  (when-not (= :create @(rf/subscribe [::tool.subs/state]))
+    [element.hierarchy/render @brush-element]))
