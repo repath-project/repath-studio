@@ -65,7 +65,7 @@
 (m/=> selected-ids [:-> App [:set uuid?]])
 (defn selected-ids
   [db]
-  (->> db selected (map :id) set))
+  (into #{} (map :id) (selected db)))
 
 (m/=> children-ids [:-> App uuid? [:vector uuid?]])
 (defn children-ids
@@ -139,12 +139,11 @@
 (m/=> siblings-selected? [:-> App [:maybe boolean?]])
 (defn siblings-selected?
   [db]
-  (let [selected-els (selected db)
-        parent-els (set (map :parent selected-els))]
-    (and (seq parent-els)
-         (empty? (rest parent-els))
-         (= (count selected-els)
-            (count (children-ids db (first parent-els)))))))
+  (let [ids (parent-ids db)]
+    (and (seq ids)
+         (empty? (rest ids))
+         (= (count (selected db))
+            (count (children-ids db (first ids)))))))
 
 (m/=> siblings [:function
                 [:-> App [:maybe [:vector uuid?]]]

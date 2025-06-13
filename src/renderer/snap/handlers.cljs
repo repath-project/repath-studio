@@ -94,7 +94,9 @@
 (m/=> snap-with [:-> App ifn? [:* any?] App])
 (defn snap-with
   [db f & more]
-  (let [db (update-nearest-neighbors db)]
-    (if (:nearest-neighbor db)
-      (apply f db (nearest-delta db) more)
-      db)))
+  (if (-> db :snap :active)
+    (let [db (update-nearest-neighbors db)]
+      (if (:nearest-neighbor db)
+        (apply f db (nearest-delta db) more)
+        db))
+    db))
