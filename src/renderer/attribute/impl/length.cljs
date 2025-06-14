@@ -48,9 +48,17 @@
      [views/icon "plus"]]]])
 
 (defmethod attribute.hierarchy/update-attr ::length
-  [el k f & more]
-  (update-in el [:attrs k] #(apply utils.length/transform % f more)))
+  ([el k f]
+   (update-in el [:attrs k] #(utils.length/transform % f)))
+  ([el k f arg]
+   (update-in el [:attrs k] #(utils.length/transform % f arg)))
+  ([el k f arg & more]
+   (update-in el [:attrs k] #(apply utils.length/transform % f arg more))))
 
 (defmethod attribute.hierarchy/update-attr ::positive-length
-  [el k f & more]
-  (update-in el [:attrs k] utils.length/transform (fn [v] (max 0 (apply f v more)))))
+  ([el k f]
+   (update-in el [:attrs k] utils.length/transform (fn [v] (max 0 (f v)))))
+  ([el k f arg]
+   (update-in el [:attrs k] utils.length/transform (fn [v] (max 0 (f v arg)))))
+  ([el k f arg & more]
+   (update-in el [:attrs k] utils.length/transform (fn [v] (max 0 (apply f v arg more))))))

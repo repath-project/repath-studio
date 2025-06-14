@@ -60,7 +60,7 @@
                (utils.attribute/compatibility tag attr)
                (utils.attribute/compatibility tag))
         support-data (:support data)
-        property (when attr (utils.attribute/property-data attr))
+        property (when attr (utils.attribute/property-data-memo attr))
         spec-url (or (:spec_url data) (:href property))
         spec-url (if (vector? spec-url) (first spec-url) spec-url)
         mdn-url (or (when data (or (:mdn_url data) (construct-mdn-url (name attr))))
@@ -175,7 +175,7 @@
 (defn label
   [tag k]
   (let [clicked-element @(rf/subscribe [::app.subs/clicked-element])
-        property (utils.attribute/property-data k)
+        property (utils.attribute/property-data-memo k)
         dispatch-tag (if (contains? (methods attribute.hierarchy/description) [tag k])
                        tag
                        :default)
@@ -204,7 +204,7 @@
 
 (defn row
   [k v locked? tag]
-  (let [property (utils.attribute/property-data k)
+  (let [property (utils.attribute/property-data-memo k)
         initial (:initial property)
         dispatch-tag (if (contains? (methods attribute.hierarchy/form-element) [tag k])
                        tag

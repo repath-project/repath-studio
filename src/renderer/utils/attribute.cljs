@@ -247,10 +247,14 @@
             css-property
             [:appliesto :computed :percentages :animationType])))
 
+(def property-data-memo (memoize property-data))
+
+(defonce whitespace-regex #"\s*[\s,]\s*")
+
 (m/=> str->seq [:-> string? vector?])
 (defn str->seq
   [s]
-  (-> s string/trim (string/split #"\s*[\s,]\s*")))
+  (-> s string/trim (string/split whitespace-regex)))
 
 (m/=> points->vec [:function
                    [:-> string? vector?]
@@ -283,16 +287,18 @@
         (keys)
         (zipmap (repeat "")))))
 
+(def ->attrs-memo (memoize ->attrs))
+
 (m/=> defaults [:-> Tag Attrs])
 (defn defaults
   [tag]
   (merge (when (element.db/tag? tag)
-           (merge (->attrs (or (tag (:elements svg-data)) {}))
+           (merge (->attrs-memo (or (tag (:elements svg-data)) {}))
                   (when (or (isa? tag ::element.hierarchy/shape)
                             (isa? tag ::element.hierarchy/container))
                     (zipmap core (repeat "")))))
          (when (contains? #{:animateMotion :animateTransform} tag)
-           (->attrs (:animate (:elements svg-data))))
+           (->attrs-memo (:animate (:elements svg-data))))
          (zipmap (:attrs (element.hierarchy/properties tag)) (repeat ""))))
 
 (def defaults-memo (memoize defaults))

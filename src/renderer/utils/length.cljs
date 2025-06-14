@@ -1,5 +1,6 @@
 (ns renderer.utils.length
   (:require
+   [clojure.string :as string]
    [malli.core :as m]
    [renderer.utils.unit :as utils.unit]))
 
@@ -9,17 +10,17 @@
 
 ;; TODO: Find an agnostic way to handle percentages (we need to pass a base).
 (defonce unit-to-pixel-map
-  {:px 1
-   :ch 8
-   :ex 7.15625
-   :em 16
-   :rem 16
-   :in ppi
-   :cm (/ ppi 2.54)
-   :mm (/ ppi 25.4)
-   :pt (/ ppi 72)
-   :pc (/ ppi 6)
-   :% 1})
+  {"px" 1
+   "ch" 8
+   "ex" 7.15625
+   "em" 16
+   "rem" 16
+   "in" ppi
+   "cm" (/ ppi 2.54)
+   "mm" (/ ppi 25.4)
+   "pt" (/ ppi 72)
+   "pc" (/ ppi 6)
+   "%" 1})
 
 (m/=> valid-unit? [:-> string? boolean?])
 (defn valid-unit?
@@ -29,11 +30,10 @@
 (m/=> multiplier [:-> string? number?])
 (defn multiplier
   "Returns the multiplier by unit.
-   If the unit is invalid, it fallbacks to :px (1)."
+   If the unit is invalid, it fallbacks to px (1)."
   [s]
-  (get unit-to-pixel-map (if (valid-unit? s)
-                           (utils.unit/->key s)
-                           :px)))
+  (or (get unit-to-pixel-map (string/lower-case s))
+      1))
 
 (m/=> ->px [:-> number? string? number?])
 (defn ->px

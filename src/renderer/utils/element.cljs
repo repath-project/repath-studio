@@ -31,10 +31,12 @@
   [el]
   (or (svg? el) (root? el)))
 
+(def properties-memo (memoize element.hierarchy/properties))
+
 (m/=> properties [:-> Element [:maybe map?]])
 (defn properties
   [el]
-  (-> el :tag element.hierarchy/properties))
+  (-> el :tag properties-memo))
 
 (m/=> ratio-locked? [:-> Element boolean?])
 (defn ratio-locked?
@@ -172,8 +174,11 @@
 (defn ->dom-element
   [el]
   (let [{:keys [tag attrs]} el
-        dom-el (js/document.createElementNS "http://www.w3.org/2000/svg" (name tag))]
-    (doseq [[k v] attrs]
-      (when (supported-attr? (dissoc el :attrs) k)
-        (.setAttributeNS dom-el nil (name k) v)))
+        dom-el (js/document.createElementNS "http://www.w3.org/2000/svg" (name tag))
+        el (dissoc el :attrs)
+        supported-attrs (keep (fn [[k v]]
+                                (when (supported-attr? el k)
+                                  [k v])) attrs)]
+    (doseq [[k v] supported-attrs]
+      (.setAttributeNS dom-el nil (name k) v))
     dom-el))
