@@ -250,8 +250,7 @@
 (m/=> update-prop [:-> App uuid? ifn? [:* any?] App])
 (defn update-prop
   [db id k & more]
-  (-> (apply update-in db (path db id k) more)
-      (refresh-bbox id)))
+  (apply update-in db (path db id k) more))
 
 (m/=> assoc-prop [:function
                   [:-> App keyword? any? App]
@@ -260,10 +259,9 @@
   ([db k v]
    (reduce (partial-right assoc-prop k v) db (selected-ids db)))
   ([db id k v]
-   (-> (if (string/blank? v)
-         (update-in db (path db id) dissoc k)
-         (assoc-in db (path db id k) v))
-       (refresh-bbox id))))
+   (if (string/blank? v)
+     (update-in db (path db id) dissoc k)
+     (assoc-in db (path db id k) v))))
 
 (m/=> dissoc-attr [:function
                    [:-> App keyword? App]
@@ -274,7 +272,8 @@
   ([db id k]
    (cond-> db
      (not (locked? db id))
-     (update-prop id :attrs dissoc k))))
+     (-> (update-prop id :attrs dissoc k)
+         (refresh-bbox id)))))
 
 (m/=> assoc-attr [:function
                   [:-> App keyword? string? App]

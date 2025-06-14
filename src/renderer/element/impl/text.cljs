@@ -68,6 +68,7 @@
          (-> (element.handlers/delete db id)
              (history.handlers/finalize "Remove text"))
          (-> (element.handlers/assoc-prop db id :content s)
+             (element.handlers/refresh-bbox id)
              (history.handlers/finalize "Set text")))
        (tool.handlers/activate :transform))))
 
