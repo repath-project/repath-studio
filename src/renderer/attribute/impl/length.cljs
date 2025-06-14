@@ -61,4 +61,7 @@
   ([el k f arg]
    (update-in el [:attrs k] utils.length/transform (fn [v] (max 0 (f v arg)))))
   ([el k f arg & more]
-   (update-in el [:attrs k] utils.length/transform (fn [v] (max 0 (apply f v arg more))))))
+   (update-in el
+              [:attrs k]
+              utils.length/transform
+              (fn [v] (max 0 (apply f v arg more))))))
