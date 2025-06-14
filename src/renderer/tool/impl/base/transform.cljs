@@ -390,8 +390,7 @@
 
 (defmethod tool.hierarchy/snapping-points :transform
   [db]
-  (let [elements (vals (element.handlers/entities db))
-        selected (filter :selected elements)
+  (let [selected (element.handlers/selected db)
         options (-> db :snap :options)]
     (cond
       (= (:state db) :scale)
@@ -461,7 +460,8 @@
        [:<>
         [tool.views/wrapping-bbox bbox]
         [tool.views/bounding-corners bbox]
-        (when (= state :scale) [size-label bbox])])
+        (when (= state :scale)
+          [size-label bbox])])
 
      (when pivot-point
        [utils.svg/times pivot-point])

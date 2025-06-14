@@ -28,23 +28,27 @@
 (m/=> update-nearest-neighbors [:-> App App])
 (defn update-nearest-neighbors
   [db]
-  (let [zoom (get-in db [:documents (:active-document db) :zoom])
-        threshold (-> db :snap :threshold)
-        threshold (Math/pow (/ threshold zoom) 2)
-        nneighbors (nearest-neighbors db)
-        nneighbors (filter #(< (:dist-squared %) threshold) nneighbors)]
-    (assoc db
-           :nearest-neighbors nneighbors
-           :nearest-neighbor (apply min-key :dist-squared nneighbors))))
+  (if-not (-> db :snap :active)
+    db
+    (let [zoom (get-in db [:documents (:active-document db) :zoom])
+          threshold (-> db :snap :threshold)
+          threshold (Math/pow (/ threshold zoom) 2)
+          nneighbors (nearest-neighbors db)
+          nneighbors (filter #(< (:dist-squared %) threshold) nneighbors)]
+      (assoc db
+             :nearest-neighbors nneighbors
+             :nearest-neighbor (apply min-key :dist-squared nneighbors)))))
 
 (m/=> update-viewport-tree [:-> App App])
 (defn update-viewport-tree
   [db]
-  (let [[x y width height] (frame.handlers/viewbox db)
-        boundaries [[x (+ x width)] [y (+ y height)]]]
-    (assoc db :viewbox-kdtree (-> (:kdtree db)
-                                  (kdtree/interval-search boundaries)
-                                  (kdtree/build-tree)))))
+  (if-not (-> db :snap :active)
+    db
+    (let [[x y width height] (frame.handlers/viewbox db)
+          boundaries [[x (+ x width)] [y (+ y height)]]]
+      (assoc db :viewbox-kdtree (-> (:kdtree db)
+                                    (kdtree/interval-search boundaries)
+                                    (kdtree/build-tree))))))
 
 (m/=> rebuild-tree [:-> App App])
 (defn rebuild-tree

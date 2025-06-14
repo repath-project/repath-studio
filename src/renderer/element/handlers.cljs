@@ -23,10 +23,20 @@
    [renderer.utils.path :as utils.path :refer [PathManipulation PathBooleanOperation]]
    [renderer.utils.vec :as utils.vec]))
 
-(m/=> path [:-> App [:* [:or keyword? uuid?]] vector?])
+(m/=> path [:function
+            [:-> App vector?]
+            [:-> App uuid? vector?]
+            [:-> App uuid? keyword? vector?]
+            [:-> App uuid? keyword? [:* any?] vector?]])
 (defn path
-  [db & more]
-  (apply conj [:documents (:active-document db) :elements] more))
+  ([db]
+   [:documents (:active-document db) :elements])
+  ([db id]
+   (conj (path db) id))
+  ([db id prop]
+   (conj (path db) id prop))
+  ([db id prop & more]
+   (apply conj (path db) id prop more)))
 
 (m/=> entities [:function
                 [:-> App [:maybe [:map-of uuid? Element]]]
