@@ -346,9 +346,9 @@
      (utils.element/supported-attr? (entity db id) k)
      (update-el id attr.hierarchy/update-attr k f arg)))
   ([db id k f arg & more]
-   (cond-> db
-     (utils.element/supported-attr? (entity db id) k)
-     (apply update-el id attr.hierarchy/update-attr k f arg more))))
+   (if (utils.element/supported-attr? (entity db id) k)
+     (apply update-el db id attr.hierarchy/update-attr k f arg more)
+     db)))
 
 (m/=> deselect [:function
                 [:-> App App]
