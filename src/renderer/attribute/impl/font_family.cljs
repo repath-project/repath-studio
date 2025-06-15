@@ -16,6 +16,16 @@
   "The font-family attribute indicates which font family will be used to render the text,
    specified as a prioritized list of font family names and/or generic family names.")
 
+(defn font-item
+  [font]
+  [:> Command/CommandItem
+   {:on-select #(rf/dispatch [::element.events/set-attr :font-family font])}
+   [:div.flex.justify-between.items-center.w-full.gap-2
+    [:div font]
+    [:div.leading-none.text-muted
+     {:style {:font-family font}}
+     "AaBbCc 0123"]]])
+
 (defn suggestions-list
   [font-list]
   [:div.flex.flex-col
@@ -34,13 +44,7 @@
          "No local fonts found.")]
       (for [font font-list]
         ^{:key font}
-        [:> Command/CommandItem
-         {:on-select #(rf/dispatch [::element.events/set-attr :font-family font])}
-         [:div.flex.justify-between.items-center.w-full.gap-2
-          [:div font]
-          [:div.leading-none.text-muted
-           {:style {:font-family font}}
-           "AaBbCc 0123"]]])]]]])
+        [font-item font])]]]])
 
 (defmethod attribute.hierarchy/form-element [:default :font-family]
   [_ k v attrs]
