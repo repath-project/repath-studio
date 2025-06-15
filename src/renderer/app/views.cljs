@@ -50,8 +50,7 @@
 
 (defn debug-rows
   []
-  (let [dom-rect (rf/subscribe [::app.subs/dom-rect])
-        viewbox (rf/subscribe [::frame.subs/viewbox])
+  (let [viewbox (rf/subscribe [::frame.subs/viewbox])
         pointer-pos (rf/subscribe [::app.subs/pointer-pos])
         adjusted-pointer-pos (rf/subscribe [::app.subs/adjusted-pointer-pos])
         pointer-offset (rf/subscribe [::app.subs/pointer-offset])
@@ -64,8 +63,7 @@
         clicked-element (rf/subscribe [::app.subs/clicked-element])
         ignored-ids (rf/subscribe [::document.subs/ignored-ids])
         nearest-neighbor (rf/subscribe [::snap.subs/nearest-neighbor])]
-    [["Dom rect" (map->str @dom-rect)]
-     ["Viewbox" (coll->str @viewbox)]
+    [["Viewbox" (coll->str @viewbox)]
      ["Pointer position" (coll->str @pointer-pos)]
      ["Adjusted pointer position" (coll->str @adjusted-pointer-pos)]
      ["Pointer offset" (coll->str @pointer-offset)]
