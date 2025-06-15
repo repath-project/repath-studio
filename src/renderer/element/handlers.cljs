@@ -50,7 +50,7 @@
 (m/=> entity [:-> App [:maybe uuid?] [:maybe Element]])
 (defn entity
   [db id]
-  (get (entities db) id))
+  (get-in db (path db id)))
 
 (m/=> root [:-> App Element])
 (defn root
@@ -62,30 +62,42 @@
   [db id]
   (-> db (entity id) :locked boolean))
 
-(m/=> selected [:-> App [:sequential Element]])
+(m/=> selected [:function
+                [:-> fn?]
+                [:-> App [:sequential Element]]])
 (defn selected
-  [db]
-  (->> db entities vals (filter :selected)))
+  ([]
+   (comp (map val) (filter :selected)))
+  ([db]
+   (into [] (selected) (entities db))))
 
 (m/=> ratio-locked? [:-> App boolean?])
 (defn ratio-locked?
   [db]
   (every? utils.element/ratio-locked? (selected db)))
 
-(m/=> selected-ids [:-> App [:set uuid?]])
+(m/=> selected-ids [:function
+                    [:-> fn?]
+                    [:-> App [:set uuid?]]])
 (defn selected-ids
-  [db]
-  (into #{} (map :id) (selected db)))
+  ([]
+   (comp (selected) (map :id)))
+  ([db]
+   (into #{} (selected-ids) (entities db))))
 
 (m/=> children-ids [:-> App uuid? [:vector uuid?]])
 (defn children-ids
   [db id]
   (:children (entity db id)))
 
-(m/=> parent-ids [:-> App [:set uuid?]])
+(m/=> parent-ids [:function
+                  [:-> fn?]
+                  [:-> App [:set uuid?]]])
 (defn parent-ids
-  [db]
-  (into #{} (keep :parent) (selected db)))
+  ([]
+   (comp (selected) (keep :parent)))
+  ([db]
+   (into #{} (parent-ids) (entities db))))
 
 (m/=> parent [:function
               [:-> App [:maybe Element]]
@@ -129,22 +141,33 @@
 (defn refresh-bbox
   [db id]
   (let [el (entity db id)
+        children (children-ids db id)
         bbox (if (= (:tag el) :g)
-               (let [b (map #(adjusted-bbox db %) (children-ids db id))]
+               (let [b (map #(adjusted-bbox db %) children)]
                  (when (seq b) (apply utils.bounds/union b)))
                (adjusted-bbox db id))]
     (if (or (not bbox) (utils.element/root? el))
       db
-      (-> (reduce refresh-bbox db (children-ids db id))
+      (-> (reduce refresh-bbox db children)
           (update-in (path db id) assoc :bbox bbox)))))
 
 (m/=> update-el [:-> App uuid? ifn? [:* any?] App])
 (defn update-el
-  [db id f & more]
-  (if (locked? db id)
-    db
-    (-> (apply update-in db (path db id) f more)
-        (refresh-bbox id))))
+  ([db id f]
+   (if (locked? db id)
+     db
+     (-> (update-in db (path db id) f)
+         (refresh-bbox id))))
+  ([db id f arg]
+   (if (locked? db id)
+     db
+     (-> (update-in db (path db id) f arg)
+         (refresh-bbox id))))
+  ([db id f arg & more]
+   (if (locked? db id)
+     db
+     (-> (apply update-in db (path db id) f arg more)
+         (refresh-bbox id)))))
 
 (m/=> siblings-selected? [:-> App [:maybe boolean?]])
 (defn siblings-selected?
@@ -167,9 +190,7 @@
 (m/=> root-children [:-> App [:sequential Element]])
 (defn root-children
   [db]
-  (->> (:id (root db))
-       (children-ids db)
-       (mapv (entities db))))
+  (into [] (map (entities db)) (children-ids db (:id (root db)))))
 
 (m/=> root-svgs [:-> App [:sequential Element]])
 (defn root-svgs
@@ -215,7 +236,8 @@
                       [:-> App uuid? [:set uuid?]]])
 (defn descendant-ids
   ([db]
-   (reduce #(set/union %1 (descendant-ids db %2)) #{} (selected-ids db)))
+   (into #{} (comp (selected-ids)
+                   (mapcat #(descendant-ids db %))) (entities db)))
   ([db id]
    (loop [children-set (set (children-ids db id))
           child-keys #{}]
@@ -240,6 +262,14 @@
   [db]
   (set/difference (-> db entities keys set) (selected-with-descendant-ids db)))
 
+(m/=> non-selected-visible [:-> App [:sequential Element]])
+(defn non-selected-visible
+  [db]
+  (sequence (comp (filter (comp (non-selected-ids db) key))
+                  (map val)
+                  (filter :visible))
+            (entities db)))
+
 (m/=> top-selected-ancestors [:-> App [:sequential Element]])
 (defn top-selected-ancestors
   [db]
@@ -249,8 +279,12 @@
 
 (m/=> update-prop [:-> App uuid? ifn? [:* any?] App])
 (defn update-prop
-  [db id k & more]
-  (apply update-in db (path db id k) more))
+  ([db id k f]
+   (update-in db (path db id k) f))
+  ([db id k f arg]
+   (update-in db (path db id k) f arg))
+  ([db id k f arg & more]
+   (apply update-in db (path db id k) f arg more)))
 
 (m/=> assoc-prop [:function
                   [:-> App keyword? any? App]
@@ -303,21 +337,27 @@
 
 (m/=> update-attr [:-> App uuid? keyword? ifn? [:* any?] App])
 (defn update-attr
-  [db id k f & more]
-  (if (utils.element/supported-attr? (entity db id) k)
-    (apply update-el db id attr.hierarchy/update-attr k f more)
-    db))
+  ([db id k f]
+   (cond-> db
+     (utils.element/supported-attr? (entity db id) k)
+     (update-el id attr.hierarchy/update-attr k f)))
+  ([db id k f arg]
+   (cond-> db
+     (utils.element/supported-attr? (entity db id) k)
+     (update-el id attr.hierarchy/update-attr k f arg)))
+  ([db id k f arg & more]
+   (cond-> db
+     (utils.element/supported-attr? (entity db id) k)
+     (apply update-el id attr.hierarchy/update-attr k f arg more))))
 
-(m/=> deselect [:-> App uuid? App])
+(m/=> deselect [:function
+                [:-> App App]
+                [:-> App uuid? App]])
 (defn deselect
-  [db id]
-  (assoc-prop db id :selected false))
-
-(m/=> deselect-all [:-> App App])
-(defn deselect-all
-  [db]
-  (->> (selected-ids db)
-       (reduce deselect db)))
+  ([db]
+   (transduce (selected-ids) (completing deselect) db (entities db)))
+  ([db id]
+   (assoc-prop db id :selected false)))
 
 (m/=> collapse [:-> App uuid? App])
 (defn collapse
@@ -327,9 +367,7 @@
 (m/=> collapse-all [:-> App App])
 (defn collapse-all
   [db]
-  (->> (entities db)
-       (keys)
-       (reduce collapse db)))
+  (transduce (map key) (completing collapse) db (entities db)))
 
 (m/=> expand [:-> App uuid? App])
 (defn expand
@@ -339,8 +377,7 @@
 (m/=> expand-ancestors [:-> App uuid? App])
 (defn expand-ancestors
   [db id]
-  (->> (ancestor-ids db id)
-       (reduce expand db)))
+  (reduce expand db (ancestor-ids db id)))
 
 (m/=> select [:-> App uuid? App])
 (defn select
@@ -355,8 +392,8 @@
   (if (entity db id)
     (if multiple
       (update-prop db id :selected not)
-      (-> db deselect-all (select id)))
-    (deselect-all db)))
+      (-> db deselect (select id)))
+    (deselect db)))
 
 (m/=> select-all [:-> App App])
 (defn select-all
@@ -368,25 +405,27 @@
 (m/=> selected-tags [:-> App [:set Tag]])
 (defn selected-tags
   [db]
-  (into #{}
-        (map :tag)
-        (selected db)))
+  (into #{} (comp (selected)
+                  (map :tag)) (entities db)))
 
 (m/=> filter-by-tag [:-> App Tag [:sequential Element]])
 (defn filter-by-tag
-  [db tag]
-  (filter #(= tag (:tag %)) (selected db)))
+  ([tag]
+   (comp (selected)
+         (filter #(= tag (:tag %)))))
+  ([db tag]
+   (into [] (filter-by-tag tag) (entities db))))
 
 (m/=> select-same-tags [:-> App App])
 (defn select-same-tags
   [db]
   (let [tags (selected-tags db)]
-    (->> (entities db)
-         (vals)
-         (reduce (fn [db el]
-                   (cond-> db
-                     (contains? tags (:tag el))
-                     (select (:id el)))) db))))
+    (transduce (comp (map val)
+                     (filter #(contains? tags (:tag %)))
+                     (map :id))
+               (completing select)
+               db
+               (entities db))))
 
 (m/=> sort-by-index-path [:-> App [:sequential Element] [:sequential Element]])
 (defn sort-by-index-path
@@ -680,7 +719,7 @@
 (m/=> add [:-> App map? App])
 (defn add
   [db el]
-  (-> (deselect-all db)
+  (-> (deselect db)
       (create (assoc el :selected true))))
 
 (m/=> swap [:-> App Element App])
@@ -712,7 +751,7 @@
                       [:-> App Element App]])
 (defn paste-in-place
   ([db]
-   (reduce paste-in-place (deselect-all db) (:copied-elements db)))
+   (reduce paste-in-place (deselect db) (:copied-elements db)))
   ([db el]
    (->> (selected-ids db)
         (reduce select (add db el)))))
@@ -723,7 +762,7 @@
 (defn paste
   ([db]
    (let [parent-el (hovered-svg db)]
-     (reduce (partial-right paste parent-el) (deselect-all db) (:copied-elements db))))
+     (reduce (partial-right paste parent-el) (deselect db) (:copied-elements db))))
   ([db el parent-el]
    (let [center (utils.bounds/center (:copied-bbox db))
          el-center (utils.bounds/center (:bbox el))
@@ -735,7 +774,7 @@
       select
       (cond-> db
         :always
-        (-> (deselect-all)
+        (-> (deselect)
             (add (assoc el :parent (:id parent-el)))
             (place (matrix/add pointer-pos offset)))
 
@@ -745,7 +784,7 @@
 (m/=> duplicate [:-> App App])
 (defn duplicate
   [db]
-  (reduce create (deselect-all db) (top-selected-sorted db)))
+  (reduce create (deselect db) (top-selected-sorted db)))
 
 (m/=> animate [:function
                [:-> App AnimationTag App]
@@ -755,7 +794,7 @@
   ([db tag]
    (animate db tag {}))
   ([db tag attrs]
-   (reduce (partial-right animate tag attrs) (deselect-all db) (selected-ids db)))
+   (reduce (partial-right animate tag attrs) (deselect db) (selected-ids db)))
   ([db id tag attrs]
    (reduce select (add db {:tag tag
                            :attrs attrs
@@ -858,5 +897,4 @@
 (defn snapping-points
   [db els]
   (let [options (-> db :snap :options)]
-    (reduce (fn [points el]
-              (into points (utils.element/snapping-points el options))) [] els)))
+    (into [] (mapcat #(utils.element/snapping-points % options)) els)))

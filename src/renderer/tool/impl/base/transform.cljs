@@ -87,13 +87,16 @@
 (m/=> reduce-by-area [:-> App boolean? ifn? App])
 (defn reduce-by-area
   [db intersecting? f]
-  (->> (element.handlers/entities db)
-       (vals)
-       (filter :visible)
-       (reduce (fn [db el]
-                 (cond-> db
-                   (hovered? el intersecting?)
-                   (f (:id el)))) db)))
+  (transduce
+   (comp
+    (map val)
+    (filter :visible)
+    (filter #(hovered? % intersecting?))
+    (map :id))
+   (fn [db id]
+     (cond-> db
+       id (f id)))
+   db (element.handlers/entities db)))
 
 (defmethod tool.hierarchy/on-pointer-move :transform
   [db {:keys [element] :as e}]
@@ -376,7 +379,8 @@
 (defmethod tool.hierarchy/on-drag-end :transform
   [db e]
   (-> (case (:state db)
-        :select (-> (cond-> db (not (:shift-key e)) element.handlers/deselect-all)
+        :select (-> (cond-> db
+                      (not (:shift-key e)) element.handlers/deselect)
                     (reduce-by-area (:alt-key e) element.handlers/select)
                     (tool.handlers/add-fx [::update nil])
                     (history.handlers/finalize "Modify selection"))
@@ -407,10 +411,7 @@
 
 (defmethod tool.hierarchy/snapping-elements :transform
   [db]
-  (let [non-selected-ids (element.handlers/non-selected-ids db)
-        els (element.handlers/entities db)
-        non-selected (select-keys els (vec non-selected-ids))]
-    (filter :visible (vals non-selected))))
+  (element.handlers/non-selected-visible db))
 
 (m/=> size-label [:-> BBox any?])
 (defn size-label

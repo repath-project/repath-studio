@@ -24,7 +24,7 @@
  ::select-ids
  (fn [db [_ ids]]
    (-> (partial-right element.handlers/assoc-prop :selected true)
-       (reduce (element.handlers/deselect-all db) ids)
+       (reduce (element.handlers/deselect db) ids)
        (history.handlers/finalize "Select elements"))))
 
 (rf/reg-event-db
@@ -84,7 +84,7 @@
 (rf/reg-event-db
  ::deselect-all
  (fn [db]
-   (-> (element.handlers/deselect-all db)
+   (-> (element.handlers/deselect db)
        (history.handlers/finalize "Deselect all"))))
 
 (rf/reg-event-db
