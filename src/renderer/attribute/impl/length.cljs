@@ -47,6 +47,8 @@
       :on-click #(rf/dispatch [::element.events/update-attr k inc])}
      [views/icon "plus"]]]])
 
+(defmethod attribute.hierarchy/initial ::length [_tag _attr] 0)
+
 (defmethod attribute.hierarchy/update-attr ::length
   ([el k f]
    (update-in el [:attrs k] #(utils.length/transform % f)))

@@ -5,6 +5,7 @@
    [camel-snake-kebab.core :as camel-snake-kebab]
    [clojure.string :as string]
    [malli.core :as m]
+   [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.element.db :as element.db :refer [Attrs Tag]]
    [renderer.element.hierarchy :as element.hierarchy]))
 
@@ -235,7 +236,8 @@
 (defn enhance-data-readability
   [property k]
   (cond-> property
-    (and (get property k) (string? (get property k)))
+    (and (get property k)
+         (string? (get property k)))
     (update k #(-> (camel-snake-kebab/->kebab-case-string %)
                    (string/replace "-" " ")))))
 
@@ -302,3 +304,21 @@
          (zipmap (:attrs (element.hierarchy/properties tag)) (repeat ""))))
 
 (def defaults-memo (memoize defaults))
+
+(m/=> initial [:-> Tag keyword? string?])
+(defn initial
+  [tag k]
+  (let [dispatch-tag (if (contains? (methods attribute.hierarchy/initial) [tag k])
+                       tag
+                       :default)]
+    (or (attribute.hierarchy/initial dispatch-tag k)
+        (:initial (property-data-memo k)))))
+
+(def initial-memo (memoize initial))
+
+(m/=> defaults-with-vals [:-> Tag Attrs])
+(defn defaults-with-vals
+  [tag]
+  (into {}
+        (map (fn [[k v]]
+               [k (or (initial-memo tag k) v)])) (defaults-memo tag)))

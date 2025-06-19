@@ -2,14 +2,14 @@
   (:require
    [clojure.string :as string]
    [malli.core :as m]
+   [renderer.element.db :as db :refer [Tag]]
+   [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.unit :as utils.unit]))
 
 (defonce ppi 96)
 
-(defonce units #{"px" "ch" "ex" "em" "rem" "in" "cm" "mm" "pt" "pc" "%"})
-
 ;; TODO: Find an agnostic way to handle percentages (we need to pass a base).
-(defonce unit-to-pixel-map
+(defonce units
   {"px" 1
    "ch" 8
    "ex" 7.15625
@@ -32,7 +32,7 @@
   "Returns the multiplier by unit.
    If the unit is invalid, it fallbacks to px (1)."
   [s]
-  (or (get unit-to-pixel-map (string/lower-case s))
+  (or (get units (string/lower-case s))
       1))
 
 (m/=> ->px [:-> number? string? number?])
@@ -45,13 +45,23 @@
   [n unit]
   (/ n (multiplier unit)))
 
-(m/=> unit->px [:-> [:or string? number? nil?] number?])
+(m/=> unit->px [:function
+                [:-> [:or string? number? nil?] number?]
+                [:-> [:or string? number? nil?] number? number?]
+                [:-> [:or string? number? nil?] Tag keyword? number?]])
 (defn unit->px
-  [v]
-  (let [[n unit] (utils.unit/parse v)]
-    (if (empty? unit)
-      n
-      (if (valid-unit? unit) (->px n unit) 0))))
+  ([v]
+   (unit->px v 0))
+  ([v initial]
+   (let [[n unit] (utils.unit/parse v)]
+     (if (empty? unit)
+       n
+       (if (valid-unit? unit)
+         (->px n unit)
+         initial))))
+  ([v tag attr]
+   (let [initial (utils.attribute/initial-memo tag attr)]
+     (unit->px v (unit->px initial 0)))))
 
 (m/=> transform [:-> [:or string? number? nil?] ifn? [:* any?] string?])
 (defn transform

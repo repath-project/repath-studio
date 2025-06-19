@@ -204,8 +204,7 @@
 
 (defn row
   [k v locked? tag]
-  (let [property (utils.attribute/property-data-memo k)
-        initial (:initial property)
+  (let [initial (utils.attribute/initial-memo tag k)
         dispatch-tag (if (contains? (methods attribute.hierarchy/form-element) [tag k])
                        tag
                        :default)]
