@@ -403,7 +403,7 @@
   []
   (mapv (fn [{:keys [id]}]
           {:id id
-           :label (name id)
+           :label (t [(keyword "renderer.menubar.views" (name id)) (name id)])
            :type :checkbox
            :icon "a11y"
            :checked @(rf/subscribe [::document.subs/filter-active id])
