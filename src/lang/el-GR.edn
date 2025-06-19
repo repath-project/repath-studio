@@ -1,7 +1,14 @@
 {:missing "Λείπει η μετάφραση για :el-GR"
+ 
  :renderer.dialog.views
  {:search-command "Αναζήτηση για εντολή"
-  :no-results "Δεν βρέθηκαν αποτελέσματα."} 
+  :no-results "Δεν βρέθηκαν αποτελέσματα."
+  :version    "Έκδοση: "
+  :browser    "Πρόγραμμα περιήγησης: "
+  :save       "Αποθήκευση"
+  :dont-save  "Μη αποθήκευση"
+  :cancel     "Ακύρωση"
+  :changes-will-be-lost [:p "Οι αλλαγές στο %1 θα χαθούνε εάν κλείσετε το έγγραφο χωρίς αποθήκευση."]} 
  
  :renderer.menubar.views
  {:file          "Αρχείο"
@@ -367,6 +374,9 @@
  :renderer.tool.impl.base.zoom
  {:zoom-in  [:div "Κάντε κλικ ή επιλέξτε μια περιοχή για μεγέθυνση."]
  :zoom-out [:div "Κρατήστε %1 για σμίκρυνση."]}
+
+ :renderer.document.events
+ {:save-changes "Θέλετε να αποθηκεύσετε τις αλλαγές σας?"}
 
  :renderer.document.views
  {:new            "Νέο"

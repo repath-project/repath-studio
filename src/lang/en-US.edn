@@ -1,7 +1,14 @@
 {:missing "Missing translation for :en-US"
+ 
  :renderer.dialog.views
  {:search-command "Search for a command"
-  :no-results "No results found."} 
+  :no-results "No results found."
+  :version    "Version: "
+  :browser    "Browser: "
+  :save       "Save"
+  :dont-save  "Don't save"
+  :cancel     "Cancel"
+  :changes-will-be-lost [:p "Your changes to %1 will be lost if you close the document without saving."]} 
 
  :renderer.menubar.views
  {:file          "File"
@@ -399,6 +406,9 @@
  :renderer.tool.impl.base.zoom
  {:zoom-in  [:div "Click or select an area to zoom in."]
   :zoom-out [:div "Hold %1 to zoom out."]}
+ 
+ :renderer.document.events
+ {:save-changes "Do you want to save your changes?"}
  
  :renderer.document.views
  {:new            "New"

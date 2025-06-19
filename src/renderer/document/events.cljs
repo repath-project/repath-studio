@@ -21,7 +21,8 @@
    [renderer.utils.compatibility :as utils.compatibility]
    [renderer.utils.element :as utils.element]
    [renderer.utils.math :refer [Vec2]]
-   [renderer.utils.system :as utils.system]
+   [renderer.utils.i18n :refer [t]]
+   [renderer.utils.system :as utils.system] 
    [renderer.utils.vec :as utils.vec]
    [renderer.window.effects :as-alias window.effects]))
 
@@ -89,7 +90,7 @@
      (-> db
          (document.handlers/set-active id)
          (dialog.handlers/create
-          {:title "Do you want to save your changes?"
+          {:title (t [::save-changes "Do you want to save your changes?"])
            :close-button true
            :content (dialog.views/save (get-in db [:documents id]))
            :attrs {:onOpenAutoFocus #(.preventDefault %)}})))))

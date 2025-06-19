@@ -18,8 +18,8 @@
   [:div.p-5
    [:div.flex.gap-3.items-start.pb-2
     [:p
-     [:span.block [:strong "Version: "] config/version]
-     [:span.block [:strong "Browser: "] utils.system/user-agent]]]
+     [:span.block [:strong (t [::version "Version: "])] config/version]
+     [:span.block [:strong (t [::browser "Browser: "])] utils.system/user-agent]]]
    [:button.button.px-2.accent.rounded.w-full
     {:auto-focus true
      :on-click #(rf/dispatch [::dialog.events/close])}
@@ -41,20 +41,22 @@
 (defn save
   [{:keys [id title]}]
   [:div.p-5
-   [:p
-    "Your changes to " [:strong title]
-    " will be lost if you close the document without saving."]
+   (t [::changes-will-be-lost 
+       [:p
+        "Your changes to " [:strong title]
+        " will be lost if you close the document without saving."]]
+      [[:strong title]]) 
    [:div.flex.gap-2.flex-wrap
     [:button.button.px-2.bg-primary.rounded.flex-1
      {:on-click #(rf/dispatch [::dialog.events/close [::document.events/close id false]])}
-     "Don't save"]
+     (t [::dont-save "Don't save"])]
     [:button.button.px-2.bg-primary.rounded.flex-1
      {:on-click #(rf/dispatch [::dialog.events/close])}
-     "Cancel"]
+     (t [::cancel "Cancel"])]
     [:button.button.px-2.rounded.flex-1.accent
      {:auto-focus true
       :on-click #(rf/dispatch [::dialog.events/close [::document.events/save-and-close id]])}
-     "Save"]]])
+     (t [::save "Save"])]]])
 
 (defn cmdk-item
   [{:keys [label action icon] :as attrs}]
