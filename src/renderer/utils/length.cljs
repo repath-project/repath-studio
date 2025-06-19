@@ -2,7 +2,7 @@
   (:require
    [clojure.string :as string]
    [malli.core :as m]
-   [renderer.element.db :as db :refer [Tag]]
+   [renderer.element.db :refer [Tag]]
    [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.unit :as utils.unit]))
 
