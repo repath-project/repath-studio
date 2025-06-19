@@ -51,13 +51,6 @@
                             document
                             m.transform/strip-extra-keys-transformer))))))
 
-(m/=> save-format [:-> PersistedDocument string?])
-(defn save-format
-  [document]
-  (-> document
-      (dissoc :path :id :title)
-      (pr-str)))
-
 (m/=> close [:-> App uuid? App])
 (defn close
   [db id]

@@ -20,7 +20,8 @@
    [renderer.utils.compatibility :as utils.compatibility]
    [renderer.utils.element :as utils.element]
    [renderer.utils.math :refer [Vec2]]
-   [renderer.utils.vec :as utils.vec]))
+   [renderer.utils.vec :as utils.vec]
+   [shared :as shared]))
 
 (def file-picker-options
   {:startIn config/default-path
@@ -232,7 +233,7 @@
    (let [document (document.handlers/persisted-format db)]
      (if (= (:platform db) "web")
        {::effects/file-save
-        {:data (document.handlers/save-format document)
+        {:data (shared/document->save-format document)
          :options file-picker-options
          :formatter (fn [file] {:id (:id document)
                                 :title (.-name file)})
@@ -249,7 +250,7 @@
  ::download
  (fn [{:keys [db]} [_]]
    (let [document (document.handlers/persisted-format db)]
-     {::effects/download {:data (document.handlers/save-format document)
+     {::effects/download {:data (shared/document->save-format document)
                           :title (str "document." config/ext)}})))
 
 (rf/reg-event-fx
@@ -258,7 +259,7 @@
    (let [document (document.handlers/persisted-format db id)]
      (if (= (:platform db) "web")
        {::effects/file-save
-        {:data (document.handlers/save-format document)
+        {:data (shared/document->save-format document)
          :options file-picker-options
          :formatter (fn [file] {:id id
                                 :title (.-name file)})
@@ -277,7 +278,7 @@
    (let [document (document.handlers/persisted-format db)]
      (if (= (:platform db) "web")
        {::effects/file-save
-        {:data (document.handlers/save-format document)
+        {:data (shared/document->save-format document)
          :options file-picker-options
          :formatter (fn [file] {:id (:id document)
                                 :title (.-name file)})
