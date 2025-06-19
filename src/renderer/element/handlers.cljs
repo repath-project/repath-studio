@@ -553,7 +553,8 @@
        (and el (not= id parent-id) (not (locked? db id)))
        (-> (update-prop (:parent el) :children #(vec (remove #{id} %)))
            (update-prop parent-id :children conj id)
-           (assoc-prop id :parent parent-id))))))
+           (assoc-prop id :parent parent-id)
+           (refresh-bbox id))))))
 
 (m/=> set-parent-at-index [:-> App uuid? uuid? int? App])
 (defn set-parent-at-index
