@@ -55,13 +55,14 @@
        :style {:z-index -1}}
       @(rf/subscribe [::document.subs/title-bar])]
      [:div.flex.h-full.flex-1.drag]
-     [button {:action [::theme.events/cycle-mode]
-              :title (str "Theme mode - " theme-mode)
-              :icon theme-mode
-              :class "bg-primary"}]
-     (when (and electron? (not fullscreen?) (not mac?))
-       (into [:div.text-right]
-             (map button (window-control-buttons maximized?))))
-     (when fullscreen?
-       [button {:action [::window.events/toggle-fullscreen]
-                :icon "arrow-minimize"}])]))
+     [:div.flex
+      [button {:action [::theme.events/cycle-mode]
+               :title (str "Theme mode - " theme-mode)
+               :icon theme-mode
+               :class "bg-primary"}]
+      (when (and electron? (not fullscreen?) (not mac?))
+        (into [:div.flex]
+              (map button (window-control-buttons maximized?))))
+      (when fullscreen?
+        [button {:action [::window.events/toggle-fullscreen]
+                 :icon "arrow-minimize"}])]]))

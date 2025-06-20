@@ -30,13 +30,12 @@
 }
 
 @utility button {
-  @apply relative text-center text-nowrap outline-default bg-transparent;
+  @apply relative text-center text-nowrap outline-default bg-transparent no-drag;
   color: var(--font-color);
   fill: var(--font-color);
   font-size: 1em;
   height: var(--button-size);
   line-height: var(--button-size);
-  -webkit-app-region: no-drag;
 
   &:hover {
     @apply overlay;
