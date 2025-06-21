@@ -65,6 +65,7 @@
    [:notifications {:default []} [:* Notification]]
    [:debug-info {:default false} boolean?]
    [:help-bar {:default true} boolean?]
+   [:loading {:default true} boolean?]
    [:pen-mode {:default false} boolean?]
    [:backdrop {:default false} boolean?]
    [:lang {:optional true :persist true} Lang]

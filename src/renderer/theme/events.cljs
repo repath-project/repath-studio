@@ -8,11 +8,6 @@
    [renderer.theme.handlers :as theme.handlers]))
 
 (rf/reg-event-fx
- ::add-native-listener
- (fn [_ _]
-   {::theme.effects/add-native-listener [::set-document-attr]}))
-
-(rf/reg-event-fx
  ::set-document-attr
  [(rf/inject-cofx ::theme.effects/native-mode)]
  (fn [{:keys [db native-mode]} _]

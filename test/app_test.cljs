@@ -9,6 +9,11 @@
 
 (defn test-fixtures
   []
+  (rf/reg-fx
+   ::app.effects/get-local-db
+   (fn [{:keys [on-finally]}]
+     (rf/dispatch on-finally)))
+
   (rf/reg-cofx
    ::app.effects/system-language
    (fn [coeffects _]
@@ -39,10 +44,6 @@
    (testing "language"
      (let [lang (rf/subscribe [::app.subs/lang])]
        (testing "default"
-         (is (not @lang)))
-
-       (testing "initialization"
-         (rf/dispatch [::app.events/init-lang])
          (is (= "en-US" @lang)))
 
        (testing "set valid language"

@@ -1,15 +1,19 @@
 (ns renderer.app.events
   (:require
-   [malli.error :as malli.error]
    [re-frame.core :as rf]
    [renderer.app.db :as app.db]
    [renderer.app.effects :as-alias app.effects]
+   [renderer.document.events :as-alias document.events]
+   [renderer.document.handlers :as document.handlers]
    [renderer.effects :as-alias effects]
    [renderer.event.events :as-alias event.events]
    [renderer.event.impl.keyboard :as event.impl.keyboard]
+   [renderer.events :as-alias events]
+   [renderer.history.handlers :as history.handlers]
    [renderer.notification.events :as-alias notification.events]
-   [renderer.notification.handlers :as notification.handlers]
-   [renderer.notification.views :as notification.views]
+   [renderer.snap.handlers :as snap.handlers]
+   [renderer.theme.effects :as-alias theme.effects]
+   [renderer.theme.events :as-alias theme.events]
    [renderer.utils.i18n :as utils.i18n]
    [renderer.window.events :as-alias window.events]))
 
@@ -36,22 +40,42 @@
                :versions (js->clj versions)
                :env (js->clj env)
                :user-agent user-agent
-               :system-lang system-language)}))
+               :system-lang system-language)
+    ::app.effects/get-local-db {:on-success [::load-local-db]
+                                :on-error [::app.effects/clear-local-storage]
+                                :on-finally [::db-loaded]}}))
 
 (rf/reg-event-fx
  ::load-local-db
- [(rf/inject-cofx :store)]
- (fn [{:keys [db store]} _]
-   (let [app-db (merge db store)]
+ (fn [{:keys [db]} [_ local-stored-db]]
+   (let [app-db (merge db local-stored-db)]
      (if (app.db/valid? app-db)
        {:db app-db}
-       {::app.effects/clear-local-storage nil
-        :db (notification.handlers/add db (notification.views/spec-failed
-                                           "Invalid local configuration"
-                                           (-> app-db
-                                               app.db/explain
-                                               malli.error/humanize
-                                               str)))}))))
+       {::app.effects/clear-local-storage nil}))))
+
+(rf/reg-event-fx
+ ::db-loaded
+ [(rf/inject-cofx ::effects/guid)]
+ (fn [{:keys [db guid]} _]
+   {:db (cond-> db
+          (not (:lang db))
+          (assoc :lang (if (utils.i18n/supported-lang? (:system-lang db))
+                         (:system-lang db)
+                         "en-US"))
+
+          (not (:active-document db))
+          (-> (document.handlers/create guid)
+              (history.handlers/finalize "Create document"))
+
+          :always
+          (-> (snap.handlers/rebuild-tree)
+              (assoc :loading false)))
+    :fx [[::theme.effects/add-native-listener [::set-document-attr]]
+         [:dispatch [::theme.events/set-document-attr]]
+         [:dispatch [::set-document-lang]]
+         [:dispatch ^:flush-dom [::effects/focus nil]]
+         [:dispatch ^:flush-dom [::document.events/center]]
+         [::effects/ipc-send ["db-loaded"]]]}))
 
 (rf/reg-event-db
  ::set-system-fonts
@@ -70,17 +94,6 @@
    {:db (cond-> db
           (utils.i18n/supported-lang? lang)
           (assoc :lang lang))
-    :dispatch [::set-document-lang]}))
-
-(rf/reg-event-fx
- ::init-lang
- [persist]
- (fn [{:keys [db]} _]
-   {:db (cond-> db
-          (not (:lang db))
-          (assoc :lang (if (utils.i18n/supported-lang? (:system-lang db))
-                         (:system-lang db)
-                         "en-US")))
     :dispatch [::set-document-lang]}))
 
 (rf/reg-event-db

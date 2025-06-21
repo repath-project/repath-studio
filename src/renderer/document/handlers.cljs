@@ -4,11 +4,13 @@
    [malli.error :as m.error]
    [malli.transform :as m.transform]
    [renderer.app.db :refer [App]]
-   [renderer.document.db :as db :refer [Document PersistedDocument]]
+   [renderer.document.db :as document.db :refer [Document PersistedDocument]]
+   [renderer.element.handlers :as element.handlers]
    [renderer.frame.handlers :as frame.handlers]
    [renderer.notification.handlers :as notification.handlers]
    [renderer.notification.views :as notification.views]
    [renderer.snap.handlers :as snap.handlers]
+   [renderer.utils.math :refer [Vec2]]
    [renderer.utils.vec :as utils.vec]))
 
 (m/=> path [:function
@@ -121,6 +123,17 @@
         (set-active id)
         (update :document-tabs #(utils.vec/add % (inc active-index) id)))))
 
+(m/=> create [:function
+              [:-> map? uuid? App]
+              [:-> map? uuid? [:maybe Vec2] App]])
+(defn create
+  ([db guid]
+   (create db guid [595 842]))
+  ([db guid size]
+   (-> (create-tab db (assoc document.db/default :id guid))
+       (element.handlers/create-default-canvas size)
+       (center))))
+
 (m/=> set-hovered-ids [:-> App [:set uuid?] App])
 (defn set-hovered-ids
   [db ids]
@@ -150,11 +163,11 @@
 (defn load
   [db document]
   (let [open-document-id (search-by-path db (:path document))
-        document (merge db/default document)
+        document (merge document.db/default document)
         document (cond-> document
                    open-document-id
                    (assoc :id open-document-id))]
-    (if (db/valid? document)
+    (if (document.db/valid? document)
       (cond-> db
         (not open-document-id)
         (-> (create-tab document)
@@ -166,7 +179,7 @@
         :always
         (set-active (:id document)))
 
-      (let [explanation (-> document db/explain m.error/humanize str)]
+      (let [explanation (-> document document.db/explain m.error/humanize str)]
         (->> (notification.views/spec-failed "Load document" explanation)
              (notification.handlers/add db))))))
 

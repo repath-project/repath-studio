@@ -12,7 +12,7 @@
    [renderer.attribute.impl.core]
    [renderer.dialog.events]
    [renderer.dialog.subs]
-   [renderer.document.events :as document.events]
+   [renderer.document.events]
    [renderer.document.subs]
    [renderer.element.effects]
    [renderer.element.events]
@@ -33,7 +33,7 @@
    [renderer.snap.events]
    [renderer.snap.subs]
    [renderer.theme.effects]
-   [renderer.theme.events :as theme.events]
+   [renderer.theme.events]
    [renderer.theme.subs]
    [renderer.timeline.events]
    [renderer.timeline.subs]
@@ -75,8 +75,7 @@
     (reset! root-el (ra.dom.client/create-root container))
     (ra.dom.client/render @root-el [utils.error/boundary [app.views/root]])))
 
-(defn bootstrap-cb!
-  []
+(defn bootstrap-cb! []
   (replumb/run-repl "(in-ns 'user)" identity)
   (print "Welcome to your REPL!")
   (print "")
@@ -91,11 +90,6 @@
                                    :load-on-init '[user]} bootstrap-cb!)
 
   (rf/dispatch-sync [::app.events/initialize-db])
-  (rf/dispatch-sync [::app.events/load-local-db])
-  (rf/dispatch-sync [::app.events/init-lang])
-  (rf/dispatch-sync [::theme.events/set-document-attr])
-  (rf/dispatch-sync [::document.events/init])
-  (rf/dispatch-sync [::theme.events/add-native-listener])
   (rf/dispatch-sync [::re-pressed/add-keyboard-event-listener "keydown"])
   (rf/dispatch-sync [::re-pressed/set-keydown-rules event.impl.keyboard/keydown-rules])
   (rf/dispatch-sync [::app.events/register-listeners])
