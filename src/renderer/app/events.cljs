@@ -8,7 +8,6 @@
    [renderer.effects :as-alias effects]
    [renderer.event.events :as-alias event.events]
    [renderer.event.impl.keyboard :as event.impl.keyboard]
-   [renderer.events :as-alias events]
    [renderer.history.handlers :as history.handlers]
    [renderer.notification.events :as-alias notification.events]
    [renderer.snap.handlers :as snap.handlers]
@@ -32,15 +31,13 @@
  [(rf/inject-cofx ::app.effects/user-agent)
   (rf/inject-cofx ::app.effects/platform)
   (rf/inject-cofx ::app.effects/versions)
-  (rf/inject-cofx ::app.effects/env)
-  (rf/inject-cofx ::app.effects/system-language)]
- (fn [{:keys [user-agent platform versions env system-language]} _]
+  (rf/inject-cofx ::app.effects/env)]
+ (fn [{:keys [user-agent platform versions env]} _]
    {:db (assoc app.db/default
                :platform platform
                :versions (js->clj versions)
                :env (js->clj env)
-               :user-agent user-agent
-               :system-lang system-language)
+               :user-agent user-agent)
     ::app.effects/get-local-db {:on-success [::load-local-db]
                                 :on-error [::app.effects/clear-local-storage]
                                 :on-finally [::db-loaded]}}))
@@ -55,12 +52,13 @@
 
 (rf/reg-event-fx
  ::db-loaded
- [(rf/inject-cofx ::effects/guid)]
- (fn [{:keys [db guid]} _]
+ [(rf/inject-cofx ::effects/guid)
+  (rf/inject-cofx ::app.effects/system-language)]
+ (fn [{:keys [db guid system-language]} _]
    {:db (cond-> db
           (not (:lang db))
-          (assoc :lang (if (utils.i18n/supported-lang? (:system-lang db))
-                         (:system-lang db)
+          (assoc :lang (if (utils.i18n/supported-lang? system-language)
+                         system-language
                          "en-US"))
 
           (not (:active-document db))

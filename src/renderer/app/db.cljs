@@ -69,7 +69,6 @@
    [:pen-mode {:default false} boolean?]
    [:backdrop {:default false} boolean?]
    [:lang {:optional true :persist true} Lang]
-   [:system-lang {:optional true} string?]
    [:platform {:optional true} Platform]
    [:versions {:optional true} [:maybe map?]]
    [:env {:optional true} [:maybe map?]]
