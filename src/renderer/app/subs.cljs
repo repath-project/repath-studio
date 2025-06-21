@@ -96,6 +96,10 @@
  :-> :grid)
 
 (rf/reg-sub
+ ::loading?
+ :-> :loading)
+
+(rf/reg-sub
  ::panel-visible?
  (fn [db [_ k]]
    (-> db :panels k :visible)))

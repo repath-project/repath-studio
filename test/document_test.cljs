@@ -3,14 +3,24 @@
    [cljs.test :refer-macros [deftest is testing]]
    [day8.re-frame.test :as rf.test]
    [re-frame.core :as rf]
+   [renderer.app.effects :as-alias app.effects]
    [renderer.app.events :as-alias app.events]
    [renderer.document.db :as document.db]
    [renderer.document.events :as-alias document.events]
    [renderer.document.subs :as-alias document.subs]))
 
+(defn test-fixtures
+  []
+  (rf/reg-fx
+   ::app.effects/get-local-db
+   (fn [{:keys [on-finally]}]
+     (rf/dispatch on-finally))))
+
 (deftest document
   (rf.test/run-test-sync
+   (test-fixtures)
    (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/db-loaded])
 
    (let [document-entities? (rf/subscribe [::document.subs/entities?])
          active-document (rf/subscribe [::document.subs/active])
@@ -18,11 +28,6 @@
          title-bar (rf/subscribe [::document.subs/title-bar])
          active-id (rf/subscribe [::document.subs/active-id])]
      (testing "defaults"
-       (is (not @document-entities?))
-       (is (not @active-document)))
-
-     (testing "initialization"
-       (rf/dispatch [::document.events/init])
        (is @document-entities?)
        (is (document.db/valid? @active-document))
        (is (= "• Untitled-1 - Repath Studio" @title-bar)))

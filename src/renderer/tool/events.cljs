@@ -8,7 +8,9 @@
 (rf/reg-event-fx
  ::activate
  (fn [{:keys [db]} [_ tool]]
-   {:db (tool.handlers/activate db tool)
+   {:db (cond-> db
+          (:active-document db)
+          (tool.handlers/activate tool))
     ::effects/focus nil}))
 
 (rf/reg-event-db

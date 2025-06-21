@@ -4,7 +4,6 @@
    [malli.core :as m]
    [renderer.app.db :refer [App]]
    [renderer.app.effects :as-alias app.effects]
-   [renderer.effects :as-alias effects]
    [renderer.event.db :refer [PointerEvent KeyboardEvent WheelEvent DragEvent]]
    [renderer.event.effects :as-alias event.effects]
    [renderer.frame.handlers :as frame.handlers]
@@ -61,8 +60,7 @@
                :nearest-neighbor-offset (:point nearest-neighbor))
 
         :always
-        (-> (tool.hierarchy/on-pointer-down e)
-            (tool.handlers/add-fx [::effects/focus nil])))
+        (tool.hierarchy/on-pointer-down e))
 
       "pointerup"
       (cond-> (if drag
