@@ -68,7 +68,7 @@
           :always
           (-> (snap.handlers/rebuild-tree)
               (assoc :loading false)))
-    :fx [[::theme.effects/add-native-listener [::set-document-attr]]
+    :fx [[::theme.effects/add-native-listener [::theme.events/set-document-attr]]
          [:dispatch [::theme.events/set-document-attr]]
          [:dispatch [::set-document-lang]]
          [:dispatch ^:flush-dom [::effects/focus nil]]
