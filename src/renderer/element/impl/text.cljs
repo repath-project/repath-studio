@@ -128,11 +128,13 @@
       (let [computed-style (.getComputedStyle js/window dom-el nil)
             font-style (.getPropertyValue computed-style "font-style")
             font-size (.getPropertyValue computed-style "font-size")
-            font-weight (.getPropertyValue computed-style "font-weight")]
+            font-weight (.getPropertyValue computed-style "font-weight")
+            bbox (utils.bounds/dom-el->bbox dom-el)]
         (.remove dom-el)
         {:font-style font-style
          :font-size font-size
-         :font-weight font-weight}))))
+         :font-weight font-weight
+         :bbox bbox}))))
 
 (defn font-file->path-data
   [file content x y font-size]
@@ -193,3 +195,7 @@
       (-> (js/fetch (default-font-path font-style font-weight))
           (.then (fn [response]
                    (font-file->path-data response content x y font-size)))))))
+
+(defmethod element.hierarchy/bbox :text
+  [el]
+  (:bbox (get-computed-styles! el)))

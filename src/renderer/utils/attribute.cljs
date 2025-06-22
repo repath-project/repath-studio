@@ -107,6 +107,7 @@
    "floodColor"
    "floodOpacity"
    "fontFamily"
+   "fontSize"
    "fontSizeAdjust"
    "fontStretch"
    "fontStyle"
