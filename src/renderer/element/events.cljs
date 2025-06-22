@@ -12,6 +12,7 @@
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
    [renderer.utils.extra :refer [partial-right]]
+   [renderer.utils.i18n :refer [t]]
    [renderer.utils.system :as utils.system]
    [renderer.window.effects :as-alias window.effects]))
 
@@ -20,21 +21,21 @@
  (fn [db [_ id multiple]]
    (-> (element.handlers/toggle-selection db id multiple)
        (history.handlers/finalize (if multiple
-                                    "Modify selection"
-                                    "Select element")))))
+                                    #(t [::modify-selection "Modify selection"])
+                                    #(t [::select-element   "Select elementd"]))))))
 
 (rf/reg-event-db
  ::select-ids
  (fn [db [_ ids]]
    (-> (partial-right element.handlers/assoc-prop :selected true)
        (reduce (element.handlers/deselect-all db) ids)
-       (history.handlers/finalize "Select elements"))))
+       (history.handlers/finalize #(t [::select-elements "Select elements"])))))
 
 (rf/reg-event-db
  ::toggle-prop
  (fn [db [_ id k]]
    (-> (element.handlers/update-prop db id k not)
-       (history.handlers/finalize (str "Toggle " (name k))))))
+       (history.handlers/finalize #(t [::toggle (str "Toggle " (name k))] [(name k)])))))
 
 (rf/reg-event-db
  ::set-prop
@@ -82,7 +83,7 @@
  ::delete
  (fn [db]
    (-> (element.handlers/delete db)
-       (history.handlers/finalize "Delete selection"))))
+       (history.handlers/finalize #(t [::select-element "Delete selection"])))))
 
 (rf/reg-event-db
  ::deselect-all

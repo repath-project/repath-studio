@@ -32,7 +32,7 @@
    [:div.flex.gap-2.flex-wrap
     [:button.button.px-2.bg-primary.rounded.flex-1
      {:on-click #(rf/dispatch [::dialog.events/close])}
-     (or cancel-label "Cancel")]
+     (or cancel-label (t [::cancel "Cancel"]))]
     [:button.button.px-2.bg-primary.rounded.flex-1
      {:auto-focus true
       :on-click #(rf/dispatch [::dialog.events/close action])}

@@ -42,17 +42,17 @@
   []
   [:<>
    (t [::idle-click [:div "Click to select an element or drag to select by area."]])
-   (t [::idle-hold [:div "Hold %1 to add or remove elements to selection."]] 
+   (t [::idle-hold [:div "Hold %1 to add or remove elements to selection."]]
       [[:span.shortcut-key "⇧"]])])
 
 (defmethod tool.hierarchy/help [:transform :select]
   []
-  (t [::select [:div "Hold %1 to select intersecting elements."]] 
+  (t [::select [:div "Hold %1 to select intersecting elements."]]
      [[:span.shortcut-key "Alt"]]))
 
 (defmethod tool.hierarchy/help [:transform :translate]
   []
-  (t [::translate [:div "Hold %1 to restrict direction, and %2 to clone."]] 
+  (t [::translate [:div "Hold %1 to restrict direction, and %2 to clone."]]
      [[:span.shortcut-key "Ctrl"] [:span.shortcut-key "Alt"]]))
 
 (defmethod tool.hierarchy/help [:transform :clone]
@@ -134,8 +134,8 @@
       (element.handlers/unignore :bbox)
       (element.handlers/toggle-selection (:id element) (:shift-key e))
       (history.handlers/finalize (if (:selected element)
-                                   "Deselect element"
-                                   "Select element"))))
+                                   #(t [::deselect-element "Deselect element"])
+                                   #(t [::select-element "Select element"])))))
 
 (defmethod tool.hierarchy/on-double-click :transform
   [db e]
