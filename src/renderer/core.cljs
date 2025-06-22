@@ -89,10 +89,9 @@
   (bootstrap/init replumb.repl/st {:path "js/bootstrap"
                                    :load-on-init '[user]} bootstrap-cb!)
 
-  (rf/dispatch-sync [::app.events/initialize-db])
+  (rf/dispatch-sync [::app.events/initialize])
   (rf/dispatch-sync [::re-pressed/add-keyboard-event-listener "keydown"])
   (rf/dispatch-sync [::re-pressed/set-keydown-rules event.impl.keyboard/keydown-rules])
-  (rf/dispatch-sync [::app.events/register-listeners])
 
   (.setup paper)
 

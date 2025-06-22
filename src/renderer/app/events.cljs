@@ -25,8 +25,24 @@
                 db
                 (rf/assoc-effect :fx (conj (or fx []) [::app.effects/persist])))))))
 
+(defonce document-listeners
+  [[js/document "keydown" [::event.events/keyboard] event.impl.keyboard/->clj]
+   [js/document "keyup" [::event.events/keyboard] event.impl.keyboard/->clj]
+   [js/document "fullscreenchange" [::window.events/update-fullscreen]]
+   [js/window "focus" [::window.events/update-focused]]
+   [js/window "blur" [::window.events/update-focused]]])
+
+(defonce ipc-listeners
+  [["window-maximized" [::window.events/set-maximized true]]
+   ["window-unmaximized" [::window.events/set-maximized false]]
+   ["window-focused" [::window.events/set-focused true]]
+   ["window-blurred" [::window.events/set-focused false]]
+   ["window-entered-fullscreen" [::window.events/set-fullscreen true]]
+   ["window-leaved-fullscreen" [::window.events/set-fullscreen false]]
+   ["window-minimized" [::window.events/set-minimized true]]])
+
 (rf/reg-event-fx
- ::initialize-db
+ ::initialize
  [(rf/inject-cofx ::app.effects/user-agent)
   (rf/inject-cofx ::app.effects/platform)
   (rf/inject-cofx ::app.effects/versions)
@@ -37,9 +53,11 @@
                :versions (js->clj versions)
                :env (js->clj env)
                :user-agent user-agent)
-    ::app.effects/get-local-db {:on-success [::load-local-db]
-                                :on-error [::notification.events/show-exception]
-                                :on-finally [::db-loaded]}}))
+    :fx (into
+         [[::app.effects/get-local-db {:on-success [::load-local-db]
+                                       :on-error [::notification.events/show-exception]
+                                       :on-finally [::db-loaded]}]]
+         (map (partial vector ::effects/ipc-on) ipc-listeners))}))
 
 (rf/reg-event-fx
  ::load-local-db
@@ -64,21 +82,18 @@
           (-> (document.handlers/create guid)
               (history.handlers/finalize "Create document"))
 
+          (:active-document db)
+          (snap.handlers/rebuild-tree)
+
           :always
-          (-> (snap.handlers/rebuild-tree)
-              (assoc :loading false)))
+          (assoc :loading false))
     :fx (into
          [[:dispatch [::theme.events/set-document-attr]]
           [:dispatch ^:flush-dom [::set-document-lang]]
           [:dispatch ^:flush-dom [::window.events/update-focused]]
-          [::effects/ipc-send ["db-loaded"]]
-          [::theme.effects/add-native-listener [::theme.events/set-document-attr]]]
-         (map #(vector ::effects/add-listener %)
-              [[js/document "keydown" [::event.events/keyboard] event.impl.keyboard/->clj]
-               [js/document "keyup" [::event.events/keyboard] event.impl.keyboard/->clj]
-               [js/document "fullscreenchange" [::window.events/update-fullscreen]]
-               [js/window "focus" [::window.events/update-focused]]
-               [js/window "blur" [::window.events/update-focused]]]))}))
+          [::theme.effects/add-native-listener [::theme.events/set-document-attr]]
+          [::effects/ipc-send ["initialized"]]]
+         (map (partial vector ::effects/add-listener) document-listeners))}))
 
 (rf/reg-event-db
  ::set-system-fonts
@@ -158,15 +173,3 @@
                 (rf/assoc-effect :fx
                                  (conj (or fx [])
                                        [::app.effects/validate [db event]])))))))
-
-(rf/reg-event-fx
- ::register-listeners
- (fn [_ _]
-   {:fx (mapv #(vector ::effects/ipc-on %)
-              [["window-maximized" [::window.events/set-maximized true]]
-               ["window-unmaximized" [::window.events/set-maximized false]]
-               ["window-focused" [::window.events/set-focused true]]
-               ["window-blurred" [::window.events/set-focused false]]
-               ["window-entered-fullscreen" [::window.events/set-fullscreen true]]
-               ["window-leaved-fullscreen" [::window.events/set-fullscreen false]]
-               ["window-minimized" [::window.events/set-minimized true]]])}))

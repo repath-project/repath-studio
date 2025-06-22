@@ -47,7 +47,7 @@
 (defn register-ipc-on-events! []
   (doseq
    [[e f]
-    [["db-loaded" #(.close ^js @loading-window)]
+    [["initialized" #(.close ^js @loading-window)]
      ["relaunch" #(doto app (.relaunch) (.exit))]
      ["open-remote-url" open-external!]
      ["open-directory" #(.showItemInFolder shell %)]
