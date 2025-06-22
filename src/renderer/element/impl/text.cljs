@@ -2,7 +2,6 @@
   "https://www.w3.org/TR/SVG/text.html
    https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/text"
   (:require
-   ["opentype.js" :as opentype]
    [clojure.core.matrix :as matrix]
    [clojure.string :as string]
    [re-frame.core :as rf]
@@ -16,10 +15,9 @@
    [renderer.tool.events :as tool.events]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.subs :as-alias tool.subs]
-   [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.bounds :as utils.bounds]
-   [renderer.utils.dom :as utils.dom]
    [renderer.utils.element :as utils.element]
+   [renderer.utils.font :as utils.font]
    [renderer.utils.length :as utils.length]))
 
 (derive :text ::element.hierarchy/shape)
@@ -119,83 +117,24 @@
                :font-size font-size
                :font-weight font-weight}}]]))
 
-(defn get-computed-styles!
-  [{:keys [content] :as el}]
-  (when-let [svg (utils.dom/canvas-element!)]
-    (let [dom-el (utils.element/->dom-element el)]
-      (.appendChild svg dom-el)
-      (set! (.-innerHTML dom-el) (if (empty? content) "\u00a0" content))
-      (let [computed-style (.getComputedStyle js/window dom-el nil)
-            font-style (.getPropertyValue computed-style "font-style")
-            font-size (.getPropertyValue computed-style "font-size")
-            font-weight (.getPropertyValue computed-style "font-weight")
-            bbox (utils.bounds/dom-el->bbox dom-el)]
-        (.remove dom-el)
-        {:font-style font-style
-         :font-size font-size
-         :font-weight font-weight
-         :bbox bbox}))))
-
-(defn font-file->path-data
-  [file content x y font-size]
-  (-> (.blob file)
-      (.then (fn [blob]
-               (-> (.arrayBuffer blob)
-                   (.then (fn [buffer]
-                            (let [font (opentype/parse buffer)
-                                  path (.getPath font content x y font-size)]
-                              (.toPathData path)))))))))
-
-(defn includes-prop?
-  [v prop]
-  (when v
-    (string/includes? (string/lower-case v) (string/lower-case prop))))
-
-(defn match-font-by-weight
-  [weight fonts]
-  (let [weight-num (js/parseInt weight)
-        weight-names (get utils.attribute/weight-name-mapping weight)
-        includes-weight? (fn [font]
-                           (some #(includes-prop? % (.-style font)) weight-names))
-        matched-weight (filter includes-weight? fonts)]
-    (if (or (seq matched-weight) (< weight-num 100))
-      matched-weight
-      (recur (str (- weight-num 100)) fonts))))
-
-(defn match-font
-  [fonts family style weight]
-  (let [matched-family (filter #(includes-prop? family (.-family %)) fonts)
-        matched-style (filter #(includes-prop? style (.-style %)) matched-family)
-        matched-weight (match-font-by-weight weight (if (seq matched-style)
-                                                      matched-style
-                                                      matched-family))]
-    (or (first matched-weight)
-        (first matched-style)
-        (first matched-family)
-        (first fonts))))
-
-(defn default-font-path
-  [font-style font-weight]
-  (str "./css/files/noto-sans-latin-" font-weight "-" font-style ".woff"))
-
 (defmethod element.hierarchy/path :text
   [el]
   (let [{:keys [attrs content]} el
         {:keys [x y font-family]} attrs
-        {:keys [font-size font-style font-weight]} (get-computed-styles! el)
+        {:keys [font-size font-style font-weight]} (utils.font/get-computed-styles! el)
         [x y font-size] (mapv utils.length/unit->px [x y font-size])]
     (if font-family
       (-> (js/window.queryLocalFonts)
           (.then (fn [fonts]
-                   (when-let [font (match-font fonts
-                                               font-family
-                                               font-style
-                                               font-weight)]
-                     (font-file->path-data font content x y font-size)))))
-      (-> (js/fetch (default-font-path font-style font-weight))
+                   (when-let [font (utils.font/match-font fonts
+                                                          font-family
+                                                          font-style
+                                                          font-weight)]
+                     (utils.font/font-file->path-data font content x y font-size)))))
+      (-> (js/fetch (utils.font/default-font-path font-style font-weight))
           (.then (fn [response]
-                   (font-file->path-data response content x y font-size)))))))
+                   (utils.font/font-file->path-data response content x y font-size)))))))
 
 (defmethod element.hierarchy/bbox :text
   [el]
-  (:bbox (get-computed-styles! el)))
+  (:bbox (utils.font/get-computed-styles! el)))
