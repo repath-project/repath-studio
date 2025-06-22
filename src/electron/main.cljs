@@ -47,7 +47,7 @@
 (defn register-ipc-on-events! []
   (doseq
    [[e f]
-    [["db-loaded" #(doto ^js @loading-window (.hide) (.close))]
+    [["db-loaded" #(.close ^js @loading-window)]
      ["relaunch" #(doto app (.relaunch) (.exit))]
      ["open-remote-url" open-external!]
      ["open-directory" #(.showItemInFolder shell %)]
@@ -99,8 +99,7 @@
    [action
     [(if (.isMaximized window) "window-maximized" "window-unmaximized")
      (if (.isFullScreen window) "window-entered-fullscreen" "window-leaved-fullscreen")
-     (if (.isFocused window) "window-focused" "window-blurred")
-     "window-loaded"]]
+     (if (.isFocused window) "window-focused" "window-blurred")]]
     (send-to-renderer! action)))
 
 (defn resource-path

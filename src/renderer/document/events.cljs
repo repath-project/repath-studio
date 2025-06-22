@@ -142,11 +142,6 @@
             (history.handlers/finalize "Create document"))
     ::effects/focus nil}))
 
-(rf/reg-event-db
- ::center
- (fn [db [_]]
-   (document.handlers/center db)))
-
 (rf/reg-event-fx
  ::new-from-template
  [(rf/inject-cofx ::effects/guid)]

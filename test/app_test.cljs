@@ -15,9 +15,9 @@
      (rf/dispatch on-finally)))
 
   (rf/reg-cofx
-   ::app.effects/system-language
+   ::app.effects/language
    (fn [coeffects _]
-     (assoc coeffects :system-language "en-US")))
+     (assoc coeffects :language "en-US")))
 
   (rf/reg-fx
    ::app.effects/query-local-fonts

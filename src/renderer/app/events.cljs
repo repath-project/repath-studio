@@ -3,12 +3,10 @@
    [re-frame.core :as rf]
    [renderer.app.db :as app.db]
    [renderer.app.effects :as-alias app.effects]
-   [renderer.document.events :as-alias document.events]
    [renderer.document.handlers :as document.handlers]
    [renderer.effects :as-alias effects]
    [renderer.event.events :as-alias event.events]
    [renderer.event.impl.keyboard :as event.impl.keyboard]
-   [renderer.events :as-alias events]
    [renderer.history.handlers :as history.handlers]
    [renderer.notification.events :as-alias notification.events]
    [renderer.snap.handlers :as snap.handlers]
@@ -54,12 +52,12 @@
 (rf/reg-event-fx
  ::db-loaded
  [(rf/inject-cofx ::effects/guid)
-  (rf/inject-cofx ::app.effects/system-language)]
- (fn [{:keys [db guid system-language]} _]
+  (rf/inject-cofx ::app.effects/language)]
+ (fn [{:keys [db guid language]} _]
    {:db (cond-> db
           (not (:lang db))
-          (assoc :lang (if (utils.i18n/supported-lang? system-language)
-                         system-language
+          (assoc :lang (if (utils.i18n/supported-lang? language)
+                         language
                          "en-US"))
 
           (not (:active-document db))
@@ -69,13 +67,18 @@
           :always
           (-> (snap.handlers/rebuild-tree)
               (assoc :loading false)))
-    :fx [[::theme.effects/add-native-listener [::theme.events/set-document-attr]]
-         [:dispatch [::theme.events/set-document-attr]]
-         [:dispatch [::set-document-lang]]
-         ;; WE need to render the canvas to properly center and focus on the document.
-         [:dispatch ^:flush-dom [::events/focus nil]]
-         [:dispatch ^:flush-dom [::document.events/center]]
-         [::effects/ipc-send ["db-loaded"]]]}))
+    :fx (into
+         [[:dispatch [::theme.events/set-document-attr]]
+          [:dispatch ^:flush-dom [::set-document-lang]]
+          [:dispatch ^:flush-dom [::window.events/update-focused]]
+          [::effects/ipc-send ["db-loaded"]]
+          [::theme.effects/add-native-listener [::theme.events/set-document-attr]]]
+         (map #(vector ::effects/add-listener %)
+              [[js/document "keydown" [::event.events/keyboard] event.impl.keyboard/->clj]
+               [js/document "keyup" [::event.events/keyboard] event.impl.keyboard/->clj]
+               [js/document "fullscreenchange" [::window.events/update-fullscreen]]
+               [js/window "focus" [::window.events/update-focused]]
+               [js/window "blur" [::window.events/update-focused]]]))}))
 
 (rf/reg-event-db
  ::set-system-fonts
@@ -157,27 +160,13 @@
                                        [::app.effects/validate [db event]])))))))
 
 (rf/reg-event-fx
- ::add-listeners
- (fn [_ _]
-   {:fx (->> [[js/document "keydown" [::event.events/keyboard] event.impl.keyboard/->clj]
-              [js/document "keyup" [::event.events/keyboard] event.impl.keyboard/->clj]
-              [js/document "fullscreenchange" [::window.events/update-fullscreen]]
-              [js/window "load" [::window.events/update-focused]]
-              [js/window "focus" [::window.events/update-focused]]
-              [js/window "blur" [::window.events/update-focused]]]
-             (mapv #(vector ::effects/add-listener %)))}))
-
-(rf/reg-event-fx
  ::register-listeners
- (fn [{:keys [db]} _]
-   (if (= (:platform db) "web")
-     {:dispatch [::add-listeners]}
-     {:fx (->> [["window-maximized" [::window.events/set-maximized true]]
-                ["window-unmaximized" [::window.events/set-maximized false]]
-                ["window-focused" [::window.events/set-focused true]]
-                ["window-blurred" [::window.events/set-focused false]]
-                ["window-entered-fullscreen" [::window.events/set-fullscreen true]]
-                ["window-leaved-fullscreen" [::window.events/set-fullscreen false]]
-                ["window-minimized" [::window.events/set-minimized true]]
-                ["window-loaded" [::add-listeners]]]
-               (mapv #(vector ::effects/ipc-on %)))})))
+ (fn [_ _]
+   {:fx (mapv #(vector ::effects/ipc-on %)
+              [["window-maximized" [::window.events/set-maximized true]]
+               ["window-unmaximized" [::window.events/set-maximized false]]
+               ["window-focused" [::window.events/set-focused true]]
+               ["window-blurred" [::window.events/set-focused false]]
+               ["window-entered-fullscreen" [::window.events/set-fullscreen true]]
+               ["window-leaved-fullscreen" [::window.events/set-fullscreen false]]
+               ["window-minimized" [::window.events/set-minimized true]]])}))

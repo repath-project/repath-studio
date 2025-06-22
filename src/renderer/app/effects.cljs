@@ -36,9 +36,9 @@
    (assoc coeffects :user-agent (.-userAgent js/navigator))))
 
 (rf/reg-cofx
- ::system-language
+ ::language
  (fn [coeffects _]
-   (assoc coeffects :system-language (.-language js/navigator))))
+   (assoc coeffects :language (.-language js/navigator))))
 
 (rf/reg-fx
  ::query-local-fonts
