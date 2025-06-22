@@ -8,6 +8,7 @@
    [renderer.effects :as-alias effects]
    [renderer.event.events :as-alias event.events]
    [renderer.event.impl.keyboard :as event.impl.keyboard]
+   [renderer.events :as-alias events]
    [renderer.history.handlers :as history.handlers]
    [renderer.notification.events :as-alias notification.events]
    [renderer.snap.handlers :as snap.handlers]
@@ -39,7 +40,7 @@
                :env (js->clj env)
                :user-agent user-agent)
     ::app.effects/get-local-db {:on-success [::load-local-db]
-                                :on-error [::app.effects/clear-local-storage]
+                                :on-error [::notification.events/show-exception]
                                 :on-finally [::db-loaded]}}))
 
 (rf/reg-event-fx
@@ -71,7 +72,8 @@
     :fx [[::theme.effects/add-native-listener [::theme.events/set-document-attr]]
          [:dispatch [::theme.events/set-document-attr]]
          [:dispatch [::set-document-lang]]
-         [:dispatch ^:flush-dom [::effects/focus nil]]
+         ;; WE need to render the canvas to properly center and focus on the document.
+         [:dispatch ^:flush-dom [::events/focus nil]]
          [:dispatch ^:flush-dom [::document.events/center]]
          [::effects/ipc-send ["db-loaded"]]]}))
 

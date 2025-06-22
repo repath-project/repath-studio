@@ -6,7 +6,8 @@
    [re-frame.core :as rf]
    [re-frame.db :as rf.db]
    [renderer.app.db :as app.db]
-   [renderer.history.handlers :as history.handlers]))
+   [renderer.history.handlers :as history.handlers]
+   [renderer.notification.events :as-alias notification.events]))
 
 (rf/reg-cofx
  ::platform
@@ -67,9 +68,10 @@
          db (cond-> db
               (:active-document db)
               history.handlers/drop-rest)]
-     (->> (select-keys db app.db/persisted-keys)
-          (transit/write (transit/writer :json))
-          (localforage/setItem config/app-name)))))
+     (.catch (->> (select-keys db app.db/persisted-keys)
+                  (transit/write (transit/writer :json))
+                  (localforage/setItem config/app-name))
+             #(rf/dispatch [::notification.events/show-exception %])))))
 
 (rf/reg-fx
  ::validate
