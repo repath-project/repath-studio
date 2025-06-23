@@ -82,19 +82,22 @@
 (defn ->snapping-points
   [bbox options]
   (let [[min-x min-y max-x max-y] bbox
-        [cx cy] (center bbox)]
+        [cx cy] (center bbox)
+        bounds-corner-txt    (t [::bounds-corner "bounds corner"])
+        bounds-center-txt    (t [::bounds-center "bounds center"])
+        bounds-midpoints-txt (t [::bounds-midpoint "bounds midpoint"])]
     (cond-> []
       (:corners options)
-      (into [(with-meta [min-x min-y] {:label (t [::bounds-corner "bounds corner"])})
-             (with-meta [min-x max-y] {:label (t [::bounds-corner "bounds corner"])})
-             (with-meta [max-x min-y] {:label (t [::bounds-corner "bounds corner"])})
-             (with-meta [max-x max-y] {:label (t [::bounds-corner "bounds corner"])})])
+      (into [(with-meta [min-x min-y] {:label bounds-corner-txt})
+             (with-meta [min-x max-y] {:label bounds-corner-txt})
+             (with-meta [max-x min-y] {:label bounds-corner-txt})
+             (with-meta [max-x max-y] {:label bounds-corner-txt})])
 
       (:centers options)
-      (into [(with-meta [cx cy] {:label (t [::bounds-center "bounds center"])})])
+      (into [(with-meta [cx cy] {:label bounds-center-txt})])
 
       (:midpoints options)
-      (into [(with-meta [min-x cy] {:label (t [::bounds-corner "bounds midpoint"])})
-             (with-meta [max-x cy] {:label (t [::bounds-corner "bounds midpoint"])})
-             (with-meta [cx min-y] {:label (t [::bounds-corner "bounds midpoint"])})
-             (with-meta [cx max-y] {:label (t [::bounds-corner "bounds midpoint"])})]))))
+      (into [(with-meta [min-x cy] {:label bounds-midpoints-txt})
+             (with-meta [max-x cy] {:label bounds-midpoints-txt})
+             (with-meta [cx min-y] {:label bounds-midpoints-txt})
+             (with-meta [cx max-y] {:label bounds-midpoints-txt})]))))

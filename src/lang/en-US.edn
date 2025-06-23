@@ -116,8 +116,9 @@
 
  :renderer.element.events
  {:modify-selection  "Modify selection"
-  :select-element    "Select elementssss"
+  :select-element    "Select element"
   :select-elements   "Select elements"
+  :delete-selection  "Delete selection"
   :toggle            "Toggle %1"}
 
  :renderer.element.views

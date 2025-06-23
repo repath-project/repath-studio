@@ -35,7 +35,7 @@
  ::toggle-prop
  (fn [db [_ id k]]
    (-> (element.handlers/update-prop db id k not)
-       (history.handlers/finalize #(t [::toggle (str "Toggle " (name k))] [(name k)])))))
+       (history.handlers/finalize #(t [::toggle "Toggle %1"] [(name k)])))))
 
 (rf/reg-event-db
  ::set-prop
@@ -83,7 +83,7 @@
  ::delete
  (fn [db]
    (-> (element.handlers/delete db)
-       (history.handlers/finalize #(t [::select-element "Delete selection"])))))
+       (history.handlers/finalize #(t [::delete-selection "Delete selection"])))))
 
 (rf/reg-event-db
  ::deselect-all

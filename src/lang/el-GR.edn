@@ -118,6 +118,7 @@
  {:modify-selection  "Τροποποίηση επιλογής"
   :select-element    "Επιλογή στοιχείου"
   :select-elements   "Επιλογή στοιχείων"
+  :delete-selection  "Διαγραφή επιλεγμένου"
   :toggle            "Εναλλαγή %1"}
 
  :renderer.element.views
