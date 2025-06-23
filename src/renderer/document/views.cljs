@@ -4,6 +4,7 @@
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    [re-frame.core :as rf]
    [reagent.core :as reagent]
+   [renderer.app.subs :as-alias app.subs]
    [renderer.document.events :as-alias document.events]
    [renderer.document.subs :as-alias document.subs]
    [renderer.events :as-alias events]
@@ -11,7 +12,6 @@
    [renderer.history.subs :as-alias history.subs]
    [renderer.history.views :as history.views]
    [renderer.utils.i18n :refer [t]]
-   [renderer.utils.system :as utils.system]
    [renderer.views :as views]))
 
 (defn actions
@@ -70,7 +70,8 @@
   [id]
   (let [document @(rf/subscribe [::document.subs/entity id])
         path (:path document)
-        tabs @(rf/subscribe [::document.subs/tabs])]
+        tabs @(rf/subscribe [::document.subs/tabs])
+        electron? @(rf/subscribe [::app.subs/electron?])]
     (cond-> [{:label (t [::close "Close"])
               :action [::document.events/close id true]}
              {:label (t [::close-others "Close others"])
@@ -80,7 +81,7 @@
               :action [::document.events/close-all]}
              {:label (t [::close-saved "Close saved"])
               :action [::document.events/close-saved]}]
-      utils.system/electron?
+      electron?
       (concat [{:type :separator}
                {:label (t [::open-directory "Open containing directory"])
                 :action [::document.events/open-directory path]
@@ -109,7 +110,9 @@
           :on-drag-enter #(reset! dragged-over? true)
           :on-drag-leave #(reset! dragged-over? false)
           :on-drop (fn [e]
-                     (let [dropped-id (-> (.-dataTransfer e) (.getData "id") uuid)]
+                     (let [dropped-id (-> (.-dataTransfer e)
+                                          (.getData "id")
+                                          uuid)]
                        (.preventDefault e)
                        (reset! dragged-over? false)
                        (rf/dispatch [::document.events/swap-position dropped-id id])))
@@ -144,12 +147,15 @@
       [:> DropdownMenu/Root
        [:> DropdownMenu/Trigger
         {:as-child true}
-        [:button.button.flex.items-center.justify-center.aria-expanded:overlay.px-2.font-mono.rounded
-         {:aria-label "More document actions"}
+        [:button.button.flex.items-center.justify-center.px-2.font-mono.rounded
+         {:class "aria-expanded:overlay"
+          :aria-label "More document actions"}
          [views/icon "ellipsis-h"]]]
        [:> DropdownMenu/Portal
         [:> DropdownMenu/Content
-         {:class "menu-content rounded-sm"}
+         {:class "menu-content rounded-sm"
+          :on-key-down #(.stopPropagation %)
+          :on-escape-key-down #(.stopPropagation %)}
          (for [item [{:label (t [::close-all "Close all"])
                       :key :close-all
                       :action [::document.events/close-all]}

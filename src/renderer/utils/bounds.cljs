@@ -1,8 +1,8 @@
 (ns renderer.utils.bounds
   (:require
-   [clojure.core.matrix :as matrix]
    [malli.core :as m]
    [renderer.snap.db :refer [SnapOptions]]
+   [renderer.utils.dom :refer [DomElement]]
    [renderer.utils.i18n :refer [t]]
    [renderer.utils.math :refer [Vec2]]))
 
@@ -13,17 +13,14 @@
    [number? {:title "max-x"}]
    [number? {:title "max-y"}]])
 
-(def DomElement
-  [:fn (fn [x] (instance? js/Element x))])
-
 (m/=> dom-el->bbox [:-> DomElement [:maybe BBox]])
 (defn dom-el->bbox
   "Experimental way of getting the bounds of unknown or complicated elements
    using the getBBox method.
    https://developer.mozilla.org/en-US/docs/Web/API/SVGGraphicsElement/getBBox"
-  [el]
-  (when (.-getBBox el)
-    (let [b (.getBBox el)
+  [dom-el]
+  (when (.-getBBox dom-el)
+    (let [b (.getBBox dom-el)
           min-x (.-x b)
           min-y (.-y b)
           max-x (+ min-x (.-width b))
@@ -34,27 +31,30 @@
 (defn union
   "Returns the bounding box that contains the provided collection of bounds."
   [& bbox]
-  (vec (concat (apply map min (map #(take 2 %) bbox))
-               (apply map max (map #(drop 2 %) bbox)))))
+  (reduce (fn [[a-min-x a-min-y a-max-x a-max-y] [b-min-x b-min-y b-max-x b-max-y]]
+            [(min a-min-x b-min-x)
+             (min a-min-y b-min-y)
+             (max a-max-x b-max-x)
+             (max a-max-y b-max-y)])
+          bbox))
 
 (m/=> ->dimensions [:-> BBox Vec2])
 (defn ->dimensions
   "Converts a bounding box to [width height]."
   [[min-x min-y max-x max-y]]
-  (matrix/sub [max-x max-y] [min-x min-y]))
+  [(- max-x min-x) (- max-y min-y)])
 
 (m/=> center [:-> BBox Vec2])
 (defn center
   "Calculates the center of a bounding box."
-  [bbox]
-  (matrix/add (take 2 bbox)
-              (matrix/div (->dimensions bbox) 2)))
+  [[min-x min-y max-x max-y]]
+  [(+ min-x (/ (- max-x min-x) 2))
+   (+ min-y (/ (- max-y min-y) 2))])
 
 (m/=> intersect? [:-> BBox BBox boolean?])
 (defn intersect?
   "Tests whether the provided set of bounds intersect."
-  [[a-min-x a-min-y a-max-x a-max-y]
-   [b-min-x b-min-y b-max-x b-max-y]]
+  [[a-min-x a-min-y a-max-x a-max-y] [b-min-x b-min-y b-max-x b-max-y]]
   (not (or (> b-min-x a-max-x)
            (< b-max-x a-min-x)
            (> b-min-y a-max-y)

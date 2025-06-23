@@ -21,15 +21,16 @@
 
 (defmethod tool.hierarchy/on-pointer-up :text
   [db _e]
-  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
+  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
+                                (:adjusted-pointer-offset db))
         el {:type :element
             :tag :text
             :attrs {:x offset-x
                     :y offset-y}}]
-    (-> (element.handlers/deselect-all db)
+    (-> (element.handlers/deselect db)
         (element.handlers/add el)
-        (tool.handlers/activate :edit)
-        (tool.handlers/set-state :type))))
+        (tool.handlers/set-state :type)
+        (tool.handlers/activate :edit))))
 
 (defmethod tool.hierarchy/on-drag-end :text
   [db e]

@@ -25,7 +25,8 @@
   (if (.-EyeDropper js/window)
     (tool.handlers/add-fx db [::effects/eye-dropper {:on-success [::success]
                                                      :on-error [::error]}])
-    (-> (tool.handlers/activate db :transform)
+    (-> db
+        (tool.handlers/activate :transform)
         (notification.handlers/add
          (notification.views/unavailable-feature
           "EyeDropper"
@@ -35,13 +36,15 @@
  ::success
  (fn [db [_ ^js color]]
    (let [srgb-color (.-sRGBHex color)]
-     (-> (document.handlers/assoc-attr db :fill srgb-color)
+     (-> db
+         (document.handlers/assoc-attr :fill srgb-color)
          (element.handlers/assoc-attr :fill srgb-color)
-         (tool.handlers/activate :transform)
-         (history.handlers/finalize "Pick color")))))
+         (history.handlers/finalize "Pick color")
+         (tool.handlers/activate :transform)))))
 
 (rf/reg-event-db
  ::error
  (fn [db [_ error]]
-   (-> (tool.handlers/activate db :transform)
+   (-> db
+       (tool.handlers/activate :transform)
        (notification.handlers/add (notification.views/exception error)))))

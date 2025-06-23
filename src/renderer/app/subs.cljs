@@ -27,6 +27,13 @@
  :-> :system-fonts)
 
 (rf/reg-sub
+ ::font-list
+ :<- [::system-fonts]
+ (fn [system-fonts _]
+   (when system-fonts
+     (->> system-fonts keys sort))))
+
+(rf/reg-sub
  ::backdrop
  :-> :backdrop)
 
@@ -65,6 +72,26 @@
  :-> :lang)
 
 (rf/reg-sub
+ ::platform
+ :-> :platform)
+
+(rf/reg-sub
+ ::electron?
+ :<- [::platform]
+ (fn [platform _]
+   (not= platform "web")))
+
+(rf/reg-sub
+ ::mac?
+ :<- [::platform]
+ (fn [platform _]
+   (= platform "darwin")))
+
+(rf/reg-sub
+ ::user-agent
+ :-> :user-agent)
+
+(rf/reg-sub
  ::grid
  :-> :grid)
 
@@ -72,12 +99,3 @@
  ::panel-visible?
  (fn [db [_ k]]
    (-> db :panels k :visible)))
-
-(rf/reg-sub
- ::font-options
- :<- [::system-fonts]
- (fn [system-fonts _]
-   (when system-fonts
-     (->> system-fonts
-          (map :family)
-          (distinct)))))

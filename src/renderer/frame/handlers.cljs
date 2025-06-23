@@ -20,10 +20,10 @@
      (when-let [dom-rect (:dom-rect db)]
        (viewbox zoom pan dom-rect))))
   ([zoom pan dom-rect]
-   (let [{:keys [width height]} dom-rect
-         [x y] pan
-         [w h] (matrix/div [width height] zoom)]
-     [x y w h])))
+   (let [{:keys [width height]} dom-rect]
+     (into pan
+           (matrix/div [width height]
+                       zoom)))))
 
 (m/=> pan-by [:function
               [:-> App Vec2 App]
@@ -38,13 +38,12 @@
 (m/=> recenter-to-dom-rect [:-> App DomRect App])
 (defn recenter-to-dom-rect
   [db updated-dom-rect]
-  (let [offset (-> (merge-with - (:dom-rect db) updated-dom-rect)
-                   (select-keys [:width :height]))]
+  (let [delta (merge-with - (:dom-rect db) updated-dom-rect)
+        offset (matrix/div [(:width delta) (:height delta)] 2)]
     (if-not (-> db :window :focused)
       db
       (->> (:document-tabs db)
-           (reduce (fn [db id]
-                     (pan-by db (matrix/div [(:width offset) (:height offset)] 2) id)) db)))))
+           (reduce (fn [db id] (pan-by db offset id)) db)))))
 
 (m/=> zoom-at-position [:-> App number? Vec2 App])
 (defn zoom-at-position

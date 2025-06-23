@@ -6,7 +6,7 @@
    [renderer.dialog.views :as dialog.views]))
 
 (rf/reg-event-db
- ::cmdk
+ ::show-cmdk
  (fn [db [_]]
    (dialog.handlers/create db {:title [:div.sr-only "Command panel"]
                                :content (dialog.views/cmdk)
@@ -15,14 +15,14 @@
                                                :transform "translate(-50%, 0)"}}})))
 
 (rf/reg-event-db
- ::about
+ ::show-about
  (fn [db [_]]
    (dialog.handlers/create db {:title config/app-name
                                :close-button true
                                :content (dialog.views/about)})))
 
 (rf/reg-event-db
- ::confirmation
+ ::show-confirmation
  (fn [db [_ data]]
    (dialog.handlers/create db {:title (:title data)
                                :close-button true
@@ -30,7 +30,7 @@
 
 (rf/reg-event-fx
  ::close
- (fn [{:keys [db]} [_ event]]
+ (fn [{:keys [db]} [_ on-close]]
    (cond-> {:db (update db :dialogs pop)}
-     event
-     (assoc :dispatch event))))
+     on-close
+     (assoc :dispatch on-close))))

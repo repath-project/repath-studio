@@ -17,9 +17,9 @@
    [renderer.tool.subs :as-alias tool.subs]
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
+   [renderer.utils.font :as utils.font]
    [renderer.utils.i18n :refer [t]]
-   [renderer.utils.length :as utils.length]
-   [renderer.utils.system :as utils.system]))
+   [renderer.utils.length :as utils.length]))
 
 (derive :text ::element.hierarchy/shape)
 
@@ -27,7 +27,7 @@
   []
   {:icon "text"
    :label (t [::label "Text"])
-   :description (t [::description 
+   :description (t [::description
                     "The SVG <text> element draws a graphics element consisting
                      of text. It's possible to apply a gradient, pattern,
                      clipping path, mask, or filter to <text>, like any other SVG
@@ -48,7 +48,9 @@
 
 (defmethod element.hierarchy/scale :text
   [el ratio pivot-point]
-  (let [offset (utils.element/scale-offset ratio pivot-point)
+  (let [bounds (element.hierarchy/bbox el)
+        [_w h] (utils.bounds/->dimensions bounds)
+        offset (utils.element/scale-offset ratio (matrix/sub pivot-point [0 (/ h 2)]))
         ratio (apply min ratio)]
     (-> el
         (attr.hierarchy/update-attr :font-size * ratio)
@@ -67,6 +69,7 @@
          (-> (element.handlers/delete db id)
              (history.handlers/finalize "Remove text"))
          (-> (element.handlers/assoc-prop db id :content s)
+             (element.handlers/refresh-bbox id)
              (history.handlers/finalize "Set text")))
        (tool.handlers/activate :transform))))
 
@@ -86,7 +89,9 @@
         [x y] (matrix/add (take 2 el-bbox) offset)
         [_w h] (utils.bounds/->dimensions el-bbox)
         attrs (utils.element/attributes el)
-        {:keys [fill font-family font-size font-weight font-style]} attrs]
+        {:keys [fill font-family font-size font-weight font-style]} attrs
+        font-size-px (utils.length/unit->px font-size)
+        font-size (if (zero? font-size-px) font-size (str font-size-px "px"))]
     [:foreignObject {:x x
                      :y y
                      :width "1000vw"
@@ -98,7 +103,7 @@
        :on-focus #(.. % -target select)
        :on-pointer-down #(.stopPropagation %)
        :on-pointer-up #(.stopPropagation %)
-       :on-blur #(rf/dispatch-sync [::set-text id (get-text! %)])
+       :on-blur #(rf/dispatch [::set-text id (get-text! %)])
        :on-key-down #(event.impl.keyboard/input-key-down-handler! % content identity id)
        :ref (fn [this] (when this (rf/dispatch [::tool.events/set-state :type])))
        :style {:color fill
@@ -111,23 +116,28 @@
                :outline "none"
                :background "transparent"
                :font-style font-style
-               :font-family (if (empty? font-family) "inherit" font-family)
-               :font-size (if (empty? font-size)
-                            "inherit"
-                            (str (utils.length/unit->px font-size) "px"))
-               :font-weight (if (empty? font-weight) "inherit" font-weight)}}]]))
+               :font-family font-family
+               :font-size font-size
+               :font-weight font-weight}}]]))
 
-(when utils.system/electron?
-  (defmethod element.hierarchy/path :text
-    [el]
-    (let [{:keys [attrs content]} el
-          font-descriptor #js {:family (:font-family attrs)
-                               :weight (js/parseInt (:font-weight attrs))
-                               :italic (= (:font-style attrs) "italic")}]
-      (.textToPath
-       js/window.api
-       content
-       #js {:font-url (.-path (.findFont js/window.api font-descriptor))
-            :x (js/parseFloat (:x attrs))
-            :y (js/parseFloat (:y attrs))
-            :font-size (js/parseFloat (or (:font-size attrs) 16))})))) ; FIXME
+(defmethod element.hierarchy/path :text
+  [el]
+  (let [{:keys [attrs content]} el
+        {:keys [x y font-family]} attrs
+        {:keys [font-size font-style font-weight]} (utils.font/get-computed-styles! el)
+        [x y font-size] (mapv utils.length/unit->px [x y font-size])]
+    (if font-family
+      (-> (js/window.queryLocalFonts)
+          (.then (fn [fonts]
+                   (when-let [font (utils.font/match-font fonts
+                                                          font-family
+                                                          font-style
+                                                          font-weight)]
+                     (utils.font/font-file->path-data font content x y font-size)))))
+      (-> (js/fetch (utils.font/default-font-path font-style font-weight))
+          (.then (fn [response]
+                   (utils.font/font-file->path-data response content x y font-size)))))))
+
+(defmethod element.hierarchy/bbox :text
+  [el]
+  (:bbox (utils.font/get-computed-styles! el)))

@@ -3,10 +3,10 @@
   (:require
    ["perfect-freehand" :refer [getStroke]]
    [clojure.core.matrix :as matrix]
-   [clojure.core.matrix.stats :as mat.stats]
+   [clojure.core.matrix.stats :as matrix.stats]
    [clojure.string :as string]
-   [renderer.attribute.hierarchy :as attr.hierarchy]
-   [renderer.attribute.impl.range :as attr.range]
+   [renderer.attribute.hierarchy :as attribute.hierarchy]
+   [renderer.attribute.impl.range :as attribute.impl.range]
    [renderer.attribute.views :as attribute.views]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.event.impl.pointer :as event.impl.pointer]
@@ -37,39 +37,39 @@
 (defonce option-keys
   [:size :thinning :smoothing :streamline])
 
-(derive :thinning ::attr.range/range)
-(derive :smoothing ::attr.range/range)
-(derive :streamline ::attr.range/range)
+(derive :thinning ::attribute.impl.range/range)
+(derive :smoothing :attribute.impl.range/range)
+(derive :streamline ::attribute.impl.range/range)
 
-(defmethod attr.hierarchy/form-element [:brush :size]
+(defmethod attribute.hierarchy/form-element [:brush :size]
   [_ k v attrs]
   [attribute.views/range-input k v (merge attrs {:min 1
                                                  :max 100
                                                  :step 1})])
 
-(defmethod attr.hierarchy/form-element [:brush :points]
+(defmethod attribute.hierarchy/form-element [:brush :points]
   [_ _k v]
   [:input.form-element {:value v
                         :disabled true
                         :placeholder (when-not v "multiple")}])
 
-(defmethod attr.hierarchy/description [:brush ::points]
+(defmethod attribute.hierarchy/description [:brush ::points]
   []
   (t [::points "Input points recorded from a user's mouse movement."]))
 
-(defmethod attr.hierarchy/description [:brush :size]
+(defmethod attribute.hierarchy/description [:brush :size]
   []
   (t [::size "The base size (diameter) of the stroke."]))
 
-(defmethod attr.hierarchy/description [:brush :thinning]
+(defmethod attribute.hierarchy/description [:brush :thinning]
   []
   (t [::thinning "The effect of pressure on the stroke's size."]))
 
-(defmethod attr.hierarchy/description [:brush :smoothing]
+(defmethod attribute.hierarchy/description [:brush :smoothing]
   []
   (t [::smoothing "How much to soften the stroke's edges."]))
 
-(defmethod attr.hierarchy/description [:brush :streamline]
+(defmethod attribute.hierarchy/description [:brush :streamline]
   []
   (t [::stream-line "How much to streamline the stroke."]))
 
@@ -86,8 +86,8 @@
             d (str
                "M" (.toFixed (first a) 2) "," (.toFixed (second a) 2)
                " Q" (.toFixed (first b) 2) "," (.toFixed (second b) 2)
-               " " (.toFixed (mat.stats/mean [(first b) (first c)]) 2) ","
-               (.toFixed (mat.stats/mean [(second b) (second c)]) 2) " T")]
+               " " (.toFixed (matrix.stats/mean [(first b) (first c)]) 2) ","
+               (.toFixed (matrix.stats/mean [(second b) (second c)]) 2) " T")]
         (reduce-kv
          (fn [result index]
            (if (or (= len (inc index)) (< index 2))
@@ -95,9 +95,9 @@
              (let [a (nth points index)
                    b (nth points (inc index))]
                (str result
-                    (.toFixed (mat.stats/mean [(first a) (first b)]) 2)
+                    (.toFixed (matrix.stats/mean [(first a) (first b)]) 2)
                     ","
-                    (.toFixed (mat.stats/mean [(second a) (second b)]) 2)
+                    (.toFixed (matrix.stats/mean [(second a) (second b)]) 2)
                     " ")))) d points)))))
 
 (def partition-to-px
@@ -167,7 +167,8 @@
                #(->> (into [] partition-to-px (utils.attribute/str->seq %))
                      (reduce (fn [points point]
                                (let [rel-point (matrix/sub bbox-min (take 2 point))
-                                     rel-offset (utils.element/scale-offset ratio rel-point)
+                                     rel-offset (utils.element/scale-offset ratio
+                                                                            rel-point)
                                      offset (matrix/add offset rel-offset)]
                                  (translate offset points point))) [])
                      (string/join " ")))))

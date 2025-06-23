@@ -1,5 +1,5 @@
 (ns renderer.attribute.impl.d
-  "https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/points"
+  "https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/points"
   (:require
    ["@radix-ui/react-popover" :as Popover]
    ["svgpath" :as svgpath]
@@ -8,10 +8,10 @@
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.attribute.views :as attribute.views]
    [renderer.element.events :as-alias element.events]
+   [renderer.events :as-alias events]
    [renderer.tool.subs :as-alias tool.subs]
    [renderer.utils.i18n :refer [t]]
-   [renderer.views :as views]
-   [renderer.window.events :as-alias window.events]))
+   [renderer.views :as views]))
 
 (defmethod attribute.hierarchy/description [:default :d]
   []
@@ -111,7 +111,7 @@
       [:span
        [:span.bg-primary.p-1 (first segment)]
        [:button.p-1.text-inherit
-        {:on-click #(rf/dispatch [::window.events/open-remote-url url])}
+        {:on-click #(rf/dispatch [::events/open-remote-url url])}
         label]
        (if (= command (string/lower-case command))
          (t [::relative "(Relative)"]) (t [::absolute "(Absolute)"]))]
@@ -142,7 +142,8 @@
        [:> Popover/Root {:modal true}
         [:> Popover/Trigger
          {:title (t [::edit "Edit path"])
-          :class "form-control-button"}
+          :class "form-control-button"
+          :disabled disabled}
          [views/icon "pencil"]]
         [:> Popover/Portal
          [:> Popover/Content {:sideOffset 5

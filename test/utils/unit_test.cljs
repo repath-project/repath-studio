@@ -3,12 +3,6 @@
    [cljs.test :refer-macros [deftest testing are]]
    [renderer.utils.unit :as utils.unit]))
 
-(deftest test-->key
-  (testing "convert unit string to keyword"
-    (are [x y] (= x y)
-      :px (utils.unit/->key "px")
-      :px (utils.unit/->key "Px"))))
-
 (deftest test-unit
   (testing "match unit"
     (are [x y] (= x y)

@@ -13,10 +13,17 @@
    [renderer.utils.math :refer [Vec2]]
    [renderer.utils.vec :as utils.vec]))
 
-(m/=> path [:-> App [:* [:or keyword? uuid?]] vector?])
+(m/=> path [:function
+            [:-> App vector?]
+            [:-> App keyword? vector?]
+            [:-> App keyword? [:* any?] vector?]])
 (defn path
-  [db & more]
-  (apply conj [:documents (:active-document db) :history] more))
+  ([db]
+   [:documents (:active-document db) :history])
+  ([db k]
+   (conj (path db) k))
+  ([db k & more]
+   (apply conj (path db) k more)))
 
 (m/=> history [:-> App [:maybe History]])
 (defn history

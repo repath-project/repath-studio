@@ -27,7 +27,7 @@
                                                          "image/bmp" [".bmp"]
                                                          "image/gif" [".gif"]}}]}
                              :on-success [::success]
-                             :on-error [::notification.events/exception]}]))
+                             :on-error [::notification.events/show-exception]}]))
 
 (rf/reg-event-fx
  ::success

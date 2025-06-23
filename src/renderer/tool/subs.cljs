@@ -8,8 +8,8 @@
  :-> :tool)
 
 (rf/reg-sub
- ::primary
- :-> :primary-tool)
+ ::cached
+ :-> :cached-tool)
 
 (rf/reg-sub
  ::pivot-point
@@ -26,6 +26,10 @@
 (rf/reg-sub
  ::state
  :-> :state)
+
+(rf/reg-sub
+ ::cached-state
+ :-> :cached-state)
 
 (rf/reg-sub
  ::help

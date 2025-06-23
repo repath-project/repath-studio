@@ -70,23 +70,23 @@
 
 (defn format-shortcut
   [[shortcut]]
-  (->> (cond-> []
-         (:ctrlKey shortcut) (conj "Ctrl")
-         (:shiftKey shortcut) (conj "⇧")
-         (:altKey shortcut) (conj "Alt")
-         :always (conj (event.impl.keyboard/key-code->key (:keyCode shortcut))))
-       (map #(into [:span.shortcut-key] %))
-       (interpose [:span {:class "px-0.5"} "+"])
-       (into [:span])))
+  (into [:span]
+        (comp (map (partial into [:span.shortcut-key]))
+              (interpose [:span {:class "px-0.5"} "+"]))
+        (cond-> []
+          (:ctrlKey shortcut) (conj "Ctrl")
+          (:shiftKey shortcut) (conj "⇧")
+          (:altKey shortcut) (conj "Alt")
+          :always (conj (event.impl.keyboard/key-code->key (:keyCode shortcut))))))
 
 (defn shortcuts
   [event]
   (let [event-shortcuts @(rf/subscribe [::app.subs/event-shortcuts event])]
     (when (seq event-shortcuts)
-      (->> event-shortcuts
-           (map format-shortcut)
-           (interpose [:span])
-           (into [:span.inline-flex.text-muted {:class "gap-1.5"}])))))
+      (into [:span.inline-flex.text-muted {:class "gap-1.5"}]
+            (comp (map format-shortcut)
+                  (interpose [:span]))
+            event-shortcuts))))
 
 (defn radio-icon-button
   [icon-name active props]

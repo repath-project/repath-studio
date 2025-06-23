@@ -10,10 +10,10 @@
 (rf/reg-event-fx
  ::add-native-listener
  (fn [_ _]
-   {::theme.effects/add-native-listener ::set-document-mode}))
+   {::theme.effects/add-native-listener [::set-document-attr]}))
 
 (rf/reg-event-fx
- ::set-document-mode
+ ::set-document-attr
  [(rf/inject-cofx ::theme.effects/native-mode)]
  (fn [{:keys [db native-mode]} _]
    (let [mode (-> db :theme :mode)
@@ -28,4 +28,4 @@
          mode (or (get theme.db/modes (inc index))
                   (first theme.db/modes))]
      {:db (theme.handlers/set-mode db mode)
-      :dispatch [::set-document-mode]})))
+      :dispatch [::set-document-attr]})))

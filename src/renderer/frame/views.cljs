@@ -10,37 +10,33 @@
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
    [renderer.element.views :as element.views]
-   [renderer.event.impl.pointer :as event.impl.pointer]
    [renderer.event.impl.wheel :as event.impl.wheel]
    [renderer.frame.events :as-alias frame.events]
    [renderer.views :as views]))
 
 (defn inner-component
-  "We need access to the iframe's window to add the pointer move listener.
-   This is required in order to track pointer movement outside of our canvas.
+  "We need access to the iframe's window to add the wheel listener.
+   This is required in order to prevent the default zoom behavior.
    https://github.com/ryanseddon/react-frame-component#accessing-the-iframes-window-and-document
    https://github.com/reagent-project/reagent/blob/master/doc/ReactFeatures.md#function-components"
   []
   (let [frame-window (.-window (useFrame))]
     (reagent/create-class
      {:component-did-mount
-      (fn []
-        (doseq [event ["pointermove" "pointerup"]]
-          (.addEventListener frame-window event event.impl.pointer/handler!))
-        (.addEventListener frame-window "wheel" event.impl.wheel/handler! #js {:passive false}))
+      #(.addEventListener frame-window "wheel" event.impl.wheel/handler!
+                          #js {:passive false})
 
       :component-will-unmount
-      (fn []
-        (doseq [event ["pointermove" "pointerup"]]
-          (.removeEventListener frame-window event event.impl.pointer/handler!))
-        (.removeEventListener frame-window "wheel" event.impl.wheel/handler!))
+      #(.removeEventListener frame-window "wheel" event.impl.wheel/handler!)
 
       :reagent-render #()})))
 
-(defonce initial-markup
-  ;; https://github.com/ryanseddon/react-frame-component#initialcontent
-  [:html
-   [:head]
+(defn initial-markup
+  "https://github.com/ryanseddon/react-frame-component#initialcontent
+   The iframe is isolated so we don't have access to the css vars of the parent."
+  []
+  [:html {:data-theme "light"}
+   [:head [:link {:rel "stylesheet" :href "./css/main.css"}]]
    [:body {:style {:width "100%"
                    :height "100%"
                    :overflow "hidden"
@@ -78,13 +74,13 @@
               ;; This is a different browsing context inside an iframe.
               ;; We need to simulate the events to the parent window.
               on-keyboard-event (fn [e]
-                                  ;; TODO: use re-pressed :prevent-default-keys
+                                  ;; TODO: Use re-pressed :prevent-default-keys?
                                   (.preventDefault e)
                                   (.dispatchEvent js/window.parent.document
                                                   (js/KeyboardEvent. (.-type e)
                                                                      e)))]
           [:> Frame
-           {:initial-content (server/render-to-static-markup initial-markup)
+           {:initial-content (server/render-to-static-markup (initial-markup))
             :mount-target "body"
             :class "overflow-hidden flex-1 border-0"
             :on-key-down on-keyboard-event
@@ -92,7 +88,7 @@
             :id "frame"
             :title "main canvas"
             :ref ref
-            :sandbox "allow-same-origin allow-scripts"
+            :sandbox "allow-same-origin"
             :style {:background (-> root-el :attrs :fill)}}
            [:f> inner-component]
            [:> ContextMenu/Root
@@ -102,6 +98,7 @@
              (into [:> ContextMenu/Content
                     {:class "menu-content context-menu-content"
                      :on-close-auto-focus #(.preventDefault %)
+                     :on-escape-key-down #(.stopPropagation %)
                      :style {:margin-left (str x "px")
                              :margin-top (str y "px")}}]
                    (map views/context-menu-item (element.views/context-menu)))]]]))})))

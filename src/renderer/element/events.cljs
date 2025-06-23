@@ -2,7 +2,6 @@
   (:require
    [clojure.string :as string]
    [re-frame.core :as rf]
-   [renderer.app.effects :as-alias app.effects]
    [renderer.document.events :as-alias document.events]
    [renderer.effects :as-alias effects]
    [renderer.element.effects :as-alias element.effects]
@@ -12,9 +11,7 @@
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
    [renderer.utils.extra :refer [partial-right]]
-   [renderer.utils.i18n :refer [t]]
-   [renderer.utils.system :as utils.system]
-   [renderer.window.effects :as-alias window.effects]))
+   [renderer.utils.i18n :refer [t]]))
 
 (rf/reg-event-db
  ::select
@@ -28,7 +25,7 @@
  ::select-ids
  (fn [db [_ ids]]
    (-> (partial-right element.handlers/assoc-prop :selected true)
-       (reduce (element.handlers/deselect-all db) ids)
+       (reduce (element.handlers/deselect db) ids)
        (history.handlers/finalize #(t [::select-elements "Select elements"])))))
 
 (rf/reg-event-db
@@ -88,7 +85,7 @@
 (rf/reg-event-db
  ::deselect-all
  (fn [db]
-   (-> (element.handlers/deselect-all db)
+   (-> (element.handlers/deselect db)
        (history.handlers/finalize "Deselect all"))))
 
 (rf/reg-event-db
@@ -139,22 +136,6 @@
    (-> (element.handlers/align db direction)
        (history.handlers/finalize (str "Update " direction)))))
 
-(rf/reg-event-fx
- ::export-svg
- (fn [{:keys [db]} _]
-   (let [els (element.handlers/root-children db)
-         svg (utils.element/->svg els)]
-     (if utils.system/electron?
-       {::window.effects/ipc-invoke
-        {:channel "export"
-         :data svg
-         :on-error [::notification.events/exception]}}
-       {::effects/file-save
-        [:data svg
-         :on-error [::notification.events/exception]
-         :options {:startIn "pictures"
-                   :types [{:accept {"image/svg+xml" [".svg"]}}]}]}))))
-
 (rf/reg-event-db
  ::paste
  (fn [db]
@@ -198,49 +179,47 @@
      (-> (element.handlers/scale db ratio pivot-point false)
          (history.handlers/finalize "Scale selection")))))
 
-(rf/reg-event-db
- ::move-up
- (fn [db _]
-   (-> (element.handlers/translate db [0 -1])
-       (history.handlers/finalize "Move selection up"))))
-
-(rf/reg-event-db
- ::move-down
- (fn [db _]
-   (-> (element.handlers/translate db [0 1])
-       (history.handlers/finalize "Move selection down"))))
-
-(rf/reg-event-db
- ::move-left
- (fn [db _]
-   (-> (element.handlers/translate db [-1 0])
-       (history.handlers/finalize "Move selection left"))))
-
-(rf/reg-event-db
- ::move-right
- (fn [db [_]]
-   (-> (element.handlers/translate db [1 0])
-       (history.handlers/finalize "Move selection right"))))
-
-(rf/reg-event-db
+(rf/reg-event-fx
  ::->path
- (fn [db]
-   (-> (element.handlers/->path db)
+ (fn [{:keys [db]}]
+   {::element.effects/->path {:data (element.handlers/selected db)
+                              :on-success [::finalize->path]
+                              :on-error [::notification.events/show-exception]}}))
+
+(rf/reg-event-db
+ ::finalize->path
+ (fn [db [_ elements]]
+   (-> (reduce element.handlers/swap db elements)
        (history.handlers/finalize "Convert selection to path"))))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::stroke->path
- (fn [db]
-   (-> (element.handlers/stroke->path db)
-       (history.handlers/finalize "Convert selection's stroke to path"))))
+ (fn [{:keys [db]}]
+   {::element.effects/->path {:data (element.handlers/selected db)
+                              :on-success [::finalize-stroke->path]
+                              :on-error [::notification.events/show-exception]}}))
 
 (rf/reg-event-db
+ ::finalize-stroke->path
+ (fn [db [_ elements]]
+   (-> (reduce element.handlers/swap db elements)
+       (element.handlers/stroke->path)
+       (history.handlers/finalize "Convert selection's stroke to path"))))
+
+(rf/reg-event-fx
  ::boolean-operation
- (fn [db [_ operation]]
-   (cond-> db
-     (seq (rest (element.handlers/selected db)))
-     (-> (element.handlers/boolean-operation operation)
-         (history.handlers/finalize (string/capitalize (name operation)))))))
+ (fn [{:keys [db]} [_ operation]]
+   (when (seq (rest (element.handlers/selected db)))
+     {::element.effects/->path {:data (element.handlers/selected db)
+                                :on-success [::finalize-boolean-operation operation]
+                                :on-error [::notification.events/show-exception]}})))
+
+(rf/reg-event-db
+ ::finalize-boolean-operation
+ (fn [db [_ operation elements]]
+   (-> (reduce element.handlers/swap db elements)
+       (element.handlers/boolean-operation operation)
+       (history.handlers/finalize (string/capitalize (name operation))))))
 
 (rf/reg-event-db
  ::add
@@ -294,7 +273,7 @@
       :fx [(when (seq els)
              [::effects/clipboard-write
               {:data (utils.element/->svg els)
-               :on-error [::notification.events/exception]}])]})))
+               :on-error [::notification.events/show-exception]}])]})))
 
 (rf/reg-event-fx
  ::cut
@@ -306,7 +285,7 @@
       :fx [(when (seq els)
              [::effects/clipboard-write
               {:data (utils.element/->svg els)
-               :on-error [::notification.events/exception]}])]})))
+               :on-error [::notification.events/show-exception]}])]})))
 
 (rf/reg-event-fx
  ::trace
@@ -326,12 +305,12 @@
    (when-let [file-type (.-type file)]
      (cond
        (= file-type "image/svg+xml")
-       {::app.effects/file-read-as
+       {::effects/file-read-as
         [file :text {"load" {:formatter #(hash-map :svg %
                                                    :label (.-name file)
                                                    :position position)
                              :on-fire [::import-svg]}
-                     "error" {:on-fire [::notification.events/exception]}}]}
+                     "error" {:on-fire [::notification.events/show-exception]}}]}
 
        (contains? #{"image/jpeg" "image/png" "image/bmp" "image/gif"} file-type)
        {::element.effects/import-image [file position]}

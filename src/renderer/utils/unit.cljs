@@ -3,16 +3,12 @@
    [clojure.string :as string]
    [malli.core :as m]))
 
-(m/=> ->key [:-> string? keyword?])
-(defn ->key
-  "Converts the string unit to a lower-cased keyword."
-  [s]
-  (keyword (string/lower-case s)))
+(defonce unit-regex #"[\d.\-\+]*\s*(.*)")
 
 (m/=> match [:-> string? string?])
 (defn match
   [s]
-  (second (re-matches #"[\d.\-\+]*\s*(.*)" s)))
+  (second (re-matches unit-regex s)))
 
 (m/=> parse [:-> [:or string? number? nil?] [:tuple number? string?]])
 (defn parse

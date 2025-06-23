@@ -32,7 +32,6 @@
    [renderer.ruler.subs]
    [renderer.snap.events]
    [renderer.snap.subs]
-   [renderer.theme.db :as theme.db]
    [renderer.theme.effects]
    [renderer.theme.events :as theme.events]
    [renderer.theme.subs]
@@ -43,8 +42,8 @@
    [renderer.tool.subs]
    [renderer.tree.events]
    [renderer.utils.error :as utils.error]
-   [renderer.utils.system :as utils.system]
-   [renderer.window.events :as window.events]
+   [renderer.window.effects]
+   [renderer.window.events]
    [renderer.window.subs]
    [renderer.worker.events]
    [renderer.worker.subs]
@@ -85,21 +84,21 @@
   (print "Type (help) to see a list of commands."))
 
 (defn ^:export init! []
-  (js/console.log (str "%c" easter-egg) (str "color: " theme.db/accent))
+  (js/console.log (str "%c" easter-egg) (str "color: " "pink"))
 
   ;; https://code.thheller.com/blog/shadow-cljs/2017/10/14/bootstrap-support.html
   (bootstrap/init replumb.repl/st {:path "js/bootstrap"
                                    :load-on-init '[user]} bootstrap-cb!)
 
   (rf/dispatch-sync [::app.events/initialize-db])
-  (rf/dispatch-sync [::app.events/set-lang utils.system/language])
   (rf/dispatch-sync [::app.events/load-local-db])
+  (rf/dispatch-sync [::app.events/init-lang])
+  (rf/dispatch-sync [::theme.events/set-document-attr])
   (rf/dispatch-sync [::document.events/init])
-  (rf/dispatch-sync [::theme.events/set-document-mode])
   (rf/dispatch-sync [::theme.events/add-native-listener])
   (rf/dispatch-sync [::re-pressed/add-keyboard-event-listener "keydown"])
   (rf/dispatch-sync [::re-pressed/set-keydown-rules event.impl.keyboard/keydown-rules])
-  (rf/dispatch-sync [::window.events/register-listeners])
+  (rf/dispatch-sync [::app.events/register-listeners])
 
   (.setup paper)
 

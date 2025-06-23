@@ -1,35 +1,23 @@
 (ns renderer.utils.attribute
   (:require
+   ["@mdn/browser-compat-data" :as bcd]
    ["mdn-data" :as mdn]
    [camel-snake-kebab.core :as camel-snake-kebab]
    [clojure.string :as string]
    [malli.core :as m]
+   [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.element.db :as element.db :refer [Attrs Tag]]
-   [renderer.element.hierarchy :as element.hierarchy]
-   [renderer.utils.bcd :as utils.bcd]))
+   [renderer.element.hierarchy :as element.hierarchy]))
 
-(def mdn-data
-  "https://github.com/mdn/data/blob/main/docs/updating_css_json.md"
-  (js->clj mdn :keywordize-keys true))
+;; https://github.com/mdn/data/blob/main/docs/updating_css_json.md
+(defonce mdn-data (js->clj mdn :keywordize-keys true))
 
-(defn enhance-data-readability
-  [property k]
-  (cond-> property
-    (and (get property k) (string? (get property k)))
-    (update k #(-> (camel-snake-kebab/->kebab-case-string %)
-                   (string/replace "-" " ")))))
+;; https://github.com/mdn/browser-compat-data
+(defonce svg-data (js->clj (.-svg bcd) :keywordize-keys true))
 
-(defn property-data
-  [k]
-  (let [css-property (get-in mdn-data [:css :properties k])]
-    (reduce enhance-data-readability
-            css-property
-            [:appliesto :computed :percentages :animationType])))
+(defonce core  #{:id :class :style})
 
-(def core
-  #{:id :class :style})
-
-(def presentation
+(defonce presentation
   #{:text-anchor :text-rendering :font-style :mask :image-rendering
     :stroke-dasharray :fill-rule :font-stretch :text-overflow :vector-effect
     :stroke :stop-color :clip :glyph-orientation-horizontal :solid-opacity
@@ -45,7 +33,7 @@
     :enable-background :direction :fill-opacity :solid-color :font-family
     :marker-end :paint-order})
 
-(def order
+(defonce order
   [:href
    :d
    :points
@@ -73,20 +61,19 @@
    :id :class :tab-index
    :style])
 
-(defn str->seq
-  [s]
-  (-> s string/trim (string/split #"\s*[\s,]\s*")))
+;; https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-weight#common_weight_name_mapping
+(defonce weight-name-mapping
+  {"100" ["Thin" "Hairline"]
+   "200" ["ExtraLight" "UltraLight"]
+   "300" ["Light"]
+   "400" ["Regular" "Normal" "Book"]
+   "500" ["Medium"]
+   "600" ["SemiBold" "DemiBold"]
+   "700" ["Bold"]
+   "800" ["ExtraBold" "UltraBold"]
+   "900" ["Black" "Heavy"]})
 
-(m/=> points->vec [:function
-                   [:-> string? vector?]
-                   [:-> string? pos-int? vector?]])
-(defn points->vec
-  ([points]
-   (points->vec points 2))
-  ([points step]
-   (into [] (partition-all step) (str->seq points))))
-
-(def camelcased
+(defonce camelcased
   ["accentHeight"
    "alignmentBaseline"
    "allowReorder"
@@ -125,7 +112,6 @@
    "fontStretch"
    "fontStyle"
    "fontVariant"
-   "fontWeight"
    "glyphName"
    "glyphOrientationHorizontal"
    "glyphOrientationVertical"
@@ -235,8 +221,52 @@
    "yChannelSelector"
    "zoomAndPan"])
 
-(def lowercased
-  (mapv string/lower-case camelcased))
+(defonce lowercased (mapv string/lower-case camelcased))
+
+(m/=> compatibility [:function
+                     [:-> Tag map?]
+                     [:-> Tag keyword? map?]])
+(defn compatibility
+  "Returns compatibility data for tags or attributes."
+  ([tag]
+   (-> svg-data :elements tag :__compat))
+  ([tag attr]
+   (or (-> svg-data :elements tag attr :__compat)
+       (-> svg-data :global_attributes attr :__compat))))
+
+(defn enhance-data-readability
+  [property k]
+  (cond-> property
+    (and (get property k)
+         (string? (get property k)))
+    (update k #(-> (camel-snake-kebab/->kebab-case-string %)
+                   (string/replace "-" " ")))))
+
+(m/=> property-data [:-> keyword? any?])
+(defn property-data
+  [k]
+  (let [css-property (get-in mdn-data [:css :properties k])]
+    (reduce enhance-data-readability
+            css-property
+            [:appliesto :computed :percentages :animationType])))
+
+(def property-data-memo (memoize property-data))
+
+(defonce whitespace-regex #"\s*[\s,]\s*")
+
+(m/=> str->seq [:-> string? vector?])
+(defn str->seq
+  [s]
+  (-> s string/trim (string/split whitespace-regex)))
+
+(m/=> points->vec [:function
+                   [:-> string? vector?]
+                   [:-> string? pos-int? vector?]])
+(defn points->vec
+  ([points]
+   (points->vec points 2))
+  ([points step]
+   (into [] (partition-all step) (str->seq points))))
 
 (m/=> ->camel-case [:-> keyword? keyword?])
 (defn ->camel-case
@@ -260,16 +290,36 @@
         (keys)
         (zipmap (repeat "")))))
 
+(def ->attrs-memo (memoize ->attrs))
+
 (m/=> defaults [:-> Tag Attrs])
 (defn defaults
   [tag]
   (merge (when (element.db/tag? tag)
-           (merge (->attrs (or (tag (:elements  utils.bcd/svg)) {}))
+           (merge (->attrs-memo (or (tag (:elements svg-data)) {}))
                   (when (or (isa? tag ::element.hierarchy/shape)
                             (isa? tag ::element.hierarchy/container))
                     (zipmap core (repeat "")))))
          (when (contains? #{:animateMotion :animateTransform} tag)
-           (->attrs (:animate (:elements utils.bcd/svg))))
+           (->attrs-memo (:animate (:elements svg-data))))
          (zipmap (:attrs (element.hierarchy/properties tag)) (repeat ""))))
 
 (def defaults-memo (memoize defaults))
+
+(m/=> initial [:-> Tag keyword? string?])
+(defn initial
+  [tag k]
+  (let [dispatch-tag (if (contains? (methods attribute.hierarchy/initial) [tag k])
+                       tag
+                       :default)]
+    (or (attribute.hierarchy/initial dispatch-tag k)
+        (:initial (property-data-memo k)))))
+
+(def initial-memo (memoize initial))
+
+(m/=> defaults-with-vals [:-> Tag Attrs])
+(defn defaults-with-vals
+  [tag]
+  (into {}
+        (map (fn [[k v]]
+               [k (or (initial-memo tag k) v)])) (defaults-memo tag)))

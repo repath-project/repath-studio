@@ -3,6 +3,7 @@
    ["@radix-ui/react-select" :as Select]
    ["@radix-ui/react-tooltip" :as Tooltip]
    ["path-browserify" :as path]
+   ["react-fps" :refer [FpsView]]
    ["react-resizable-panels" :refer [Panel PanelGroup PanelResizeHandle]]
    [clojure.string :as string]
    [config :as config]
@@ -15,6 +16,7 @@
    [renderer.document.subs :as-alias document.subs]
    [renderer.document.views :as document.views]
    [renderer.element.subs :as-alias element.subs]
+   [renderer.events :as-alias events]
    [renderer.frame.subs :as-alias frame.subs]
    [renderer.frame.views :as frame.views]
    [renderer.history.views :as history.views]
@@ -32,7 +34,6 @@
    [renderer.toolbar.tools :as toolbar.tools]
    [renderer.tree.views :as tree.views]
    [renderer.views :as views]
-   [renderer.window.events :as-alias window.events]
    [renderer.window.views :as window.views]))
 
 (defn coll->str
@@ -44,32 +45,49 @@
   (interpose ", " (map (fn [[k v]]
                          ^{:key k}
                          [:span (str (name k) ": " (if (number? v)
-                                                     (.toFixed v 2)
+                                                     (.toFixed v 3)
                                                      (coll->str v)))]) m)))
 
 (defn debug-rows
   []
-  [["Dom rect" (map->str @(rf/subscribe [::app.subs/dom-rect]))]
-   ["Viewbox" (coll->str @(rf/subscribe [::frame.subs/viewbox]))]
-   ["Pointer position" (coll->str @(rf/subscribe [::app.subs/pointer-pos]))]
-   ["Adjusted pointer position" (coll->str @(rf/subscribe [::app.subs/adjusted-pointer-pos]))]
-   ["Pointer offset" (coll->str @(rf/subscribe [::app.subs/pointer-offset]))]
-   ["Adjusted pointer offset" (coll->str @(rf/subscribe [::app.subs/adjusted-pointer-offset]))]
-   ["Pointer drag?" (str @(rf/subscribe [::tool.subs/drag?]))]
-   ["Pan" (coll->str @(rf/subscribe [::document.subs/pan]))]
-   ["Active tool" @(rf/subscribe [::tool.subs/active])]
-   ["Primary tool" @(rf/subscribe [::tool.subs/primary])]
-   ["State"  @(rf/subscribe [::tool.subs/state])]
-   ["Clicked element" (:id @(rf/subscribe [::app.subs/clicked-element]))]
-   ["Ignored elements" @(rf/subscribe [::document.subs/ignored-ids])]
-   ["Snap" (map->str @(rf/subscribe [::snap.subs/nearest-neighbor]))]])
+  (let [viewbox (rf/subscribe [::frame.subs/viewbox])
+        pointer-pos (rf/subscribe [::app.subs/pointer-pos])
+        adjusted-pointer-pos (rf/subscribe [::app.subs/adjusted-pointer-pos])
+        pointer-offset (rf/subscribe [::app.subs/pointer-offset])
+        adjusted-pointer-offset (rf/subscribe [::app.subs/adjusted-pointer-offset])
+        drag? (rf/subscribe [::tool.subs/drag?])
+        pan (rf/subscribe [::document.subs/pan])
+        active-tool (rf/subscribe [::tool.subs/active])
+        cached-tool (rf/subscribe [::tool.subs/cached])
+        tool-state (rf/subscribe [::tool.subs/state])
+        clicked-element (rf/subscribe [::app.subs/clicked-element])
+        ignored-ids (rf/subscribe [::document.subs/ignored-ids])
+        nearest-neighbor (rf/subscribe [::snap.subs/nearest-neighbor])]
+    [["Viewbox" (coll->str @viewbox)]
+     ["Pointer position" (coll->str @pointer-pos)]
+     ["Adjusted pointer position" (coll->str @adjusted-pointer-pos)]
+     ["Pointer offset" (coll->str @pointer-offset)]
+     ["Adjusted pointer offset" (coll->str @adjusted-pointer-offset)]
+     ["Pointer drag?" (str @drag?)]
+     ["Pan" (coll->str @pan)]
+     ["Active tool" @active-tool]
+     ["Cached tool" @cached-tool]
+     ["State" @tool-state]
+     ["Clicked element" (:id @clicked-element)]
+     ["Ignored elements" @ignored-ids]
+     ["Snap" (map->str @nearest-neighbor)]]))
 
 (defn debug-info
   []
-  (into [:div.absolute.top-1.left-2.pointer-events-none
-         {:style {:color "#555"}}]
-        (for [[s v] (debug-rows)]
-          [:div.flex [:strong.mr-1 s] [:div v]])))
+  [:div
+   (into [:div.absolute.top-1.left-2.pointer-events-none.text-color]
+         (for [[s v] (debug-rows)]
+           [:div.flex
+            [:strong.mr-1 s]
+            [:div v]]))
+   [:div.fps-wrapper
+    [:> FpsView #js {:width 240
+                     :height 180}]]])
 
 (defn frame-panel
   []
@@ -99,6 +117,7 @@
         [:div.bg-primary
          [ruler.views/ruler :vertical]])
       [:div.relative.grow.flex
+       {:data-theme "light"}
        [frame.views/root]
        (when read-only?
          [:div.absolute.inset-0.border-4.border-accent
@@ -111,10 +130,10 @@
           {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])
        (when (and help-bar (seq help-message))
          [:div.flex.absolute.justify-center.w-full.p-4.pointer-events-none
-          {:data-theme "light"}
           [:div.bg-primary.rounded-full.overflow-hidden.shadow-lg
-           [:div.overlay.text-color.text-xs.gap-1.flex.flex-wrap.truncate.py-2.px-4.justify-center
-            {:aria-live "polite"}
+           [:div.overlay.text-color.text-xs.gap-1.flex.flex-wrap.truncate.py-2
+            {:class "px-4 justify-center"
+             :aria-live "polite"}
             help-message]]])]]]))
 
 (defn center-top-group
@@ -275,25 +294,25 @@
          [:div.flex.items-center.gap-2
           [views/icon "command"]
           [:button.button-link.text-lg
-           {:on-click #(rf/dispatch [::dialog.events/cmdk])}
+           {:on-click #(rf/dispatch [::dialog.events/show-cmdk])}
            "Command panel"]
-          [views/shortcuts [::dialog.events/cmdk]]]]
+          [views/shortcuts [::dialog.events/show-cmdk]]]]
         [:div.flex.items-center.gap-2
          [views/icon "earth"]
          [:button.button-link.text-lg
-          {:on-click #(rf/dispatch [::window.events/open-remote-url
+          {:on-click #(rf/dispatch [::events/open-remote-url
                                     "https://repath.studio/"])}
           "Website"]]
         [:div.flex.items-center.gap-2
          [views/icon "commit"]
          [:button.button-link.text-lg
-          {:on-click #(rf/dispatch [::window.events/open-remote-url
+          {:on-click #(rf/dispatch [::events/open-remote-url
                                     "https://github.com/repath-project/repath-studio"])}
           "Source Code"]]
         [:div.flex.items-center.gap-2
          [views/icon "list"]
          [:button.button-link.text-lg
-          {:on-click #(rf/dispatch [::window.events/open-remote-url
+          {:on-click #(rf/dispatch [::events/open-remote-url
                                     "https://repath.studio/roadmap/changelog/"])}
           "Changelog"]]]
 

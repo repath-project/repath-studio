@@ -10,6 +10,8 @@
    [renderer.utils.hiccup :refer [Hiccup]]
    [renderer.utils.math :as utils.math :refer [Vec2]]))
 
+(defonce dash-size 5)
+
 (m/=> dot [:-> Vec2 Hiccup any?])
 (defn dot
   [[x y] & children]
@@ -17,7 +19,7 @@
     (into [:circle {:cx x
                     :cy y
                     :stroke-width 0
-                    :fill theme.db/accent
+                    :fill "var(--color-accent)"
                     :r (/ 3 zoom)}] children)))
 
 (m/=> line [:function
@@ -37,9 +39,9 @@
                 :stroke-width stroke-width
                 :shape-rendering (when dashed? "crispEdges")}]
      [:g
-      (when dashed? [:line (merge attrs {:stroke theme.db/accent-inverted})])
+      (when dashed? [:line (merge attrs {:stroke "var(--color-accent-inverted)"})])
       [:line (merge attrs
-                    {:stroke theme.db/accent
+                    {:stroke "var(--color-accent)"
                      :stroke-dasharray (when dashed? stroke-dasharray)})]])))
 
 (m/=> cross [:-> Vec2 any?])
@@ -64,7 +66,7 @@
         stroke-width (/ 1 zoom)
         radius (/ radius zoom)
         end-degrees (+ start-degrees size-degrees)
-        stroke-dasharray (/ theme.db/dash-size zoom)
+        stroke-dasharray (/ dash-size zoom)
         x1 (+ x (utils.math/angle-dx start-degrees radius))
         y1 (+ y (utils.math/angle-dy start-degrees radius))
         x2 (+ x (utils.math/angle-dx end-degrees radius))
@@ -75,8 +77,8 @@
                :fill "transparent"
                :stroke-width stroke-width}]
     [:g
-     [:path (merge {:stroke theme.db/accent-inverted} attrs)]
-     [:path (merge {:stroke theme.db/accent
+     [:path (merge {:stroke "var(--color-accent-inverted)"} attrs)]
+     [:path (merge {:stroke "var(--color-accent)"
                     :stroke-dasharray stroke-dasharray} attrs)]]))
 
 (m/=> times [:-> Vec2 any?])
@@ -116,17 +118,17 @@
                    "middle" (- x (/ label-width 2))
                    "end" (- x label-width (/ (- padding) 2)))
               :y (- y  (/ label-height 2))
-              :fill theme.db/accent
+              :fill "var(--color-accent)"
               :rx (/ 4 zoom)
               :width label-width
               :height label-height} text]
       [:text {:x x
               :y y
-              :fill theme.db/accent-inverted
+              :fill "var(--color-accent-inverted)"
               :dominant-baseline "middle"
               :text-anchor text-anchor
               :width label-width
-              :font-family theme.db/font-mono
+              :font-family "var(--font-mono)"
               :font-size font-size} text]])))
 
 (m/=> bounding-box [:-> BBox boolean? any?])
@@ -136,7 +138,7 @@
         [min-x min-y] bbox
         [w h] (utils.bounds/->dimensions bbox)
         stroke-width (/ 1 zoom)
-        stroke-dasharray (/ theme.db/dash-size zoom)
+        stroke-dasharray (/ dash-size zoom)
         attrs {:x min-x
                :y min-y
                :width w
@@ -146,9 +148,9 @@
                :fill "transparent"}]
 
     [:g {:style {:pointer-events "none"}}
-     [:rect (merge attrs {:stroke theme.db/accent})]
+     [:rect (merge attrs {:stroke "var(--color-accent)"})]
      (when dashed?
-       [:rect (merge attrs {:stroke theme.db/accent-inverted
+       [:rect (merge attrs {:stroke "var(--color-accent-inverted)"
                             :stroke-dasharray stroke-dasharray})])]))
 
 (m/=> select-box [:-> App any?])
@@ -164,7 +166,7 @@
              :height (abs (- pos-y offset-y))
              :shape-rendering "crispEdges"
              :fill-opacity ".1"
-             :fill theme.db/accent
-             :stroke theme.db/accent
+             :fill "var(--color-accent)"
+             :stroke "var(--color-accent)"
              :stroke-opacity ".5"
              :stroke-width (/ 1 zoom)}}))

@@ -1,7 +1,6 @@
 (ns renderer.tool.impl.element.core
   (:require
    [renderer.element.handlers :as element.handlers]
-   [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.impl.element.circle]
@@ -25,17 +24,6 @@
 (defmethod tool.hierarchy/on-activate ::tool.hierarchy/element
   [db]
   (tool.handlers/set-cursor db "crosshair"))
-
-(defmethod tool.hierarchy/on-drag-start ::tool.hierarchy/element
-  [db _e]
-  (tool.handlers/set-state db :create))
-
-(defmethod tool.hierarchy/on-drag-end ::tool.hierarchy/element
-  [db _e]
-  (-> db
-      (tool.handlers/create-temp-element)
-      (tool.handlers/activate :transform)
-      (history.handlers/finalize (str "Create " (name (:tag (tool.handlers/temp db)))))))
 
 (defmethod tool.hierarchy/snapping-points ::tool.hierarchy/element
   [db]

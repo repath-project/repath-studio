@@ -5,7 +5,6 @@
    [malli.core :as m]
    [re-frame.core :as rf]
    [renderer.app.db :refer [App]]
-   [renderer.app.effects :as-alias app.effects]
    [renderer.app.events :refer [persist]]
    [renderer.dialog.handlers :as dialog.handlers]
    [renderer.dialog.views :as dialog.views]
@@ -20,11 +19,10 @@
    [renderer.snap.handlers :as snap.handlers]
    [renderer.utils.compatibility :as utils.compatibility]
    [renderer.utils.element :as utils.element]
-   [renderer.utils.math :refer [Vec2]]
    [renderer.utils.i18n :refer [t]]
-   [renderer.utils.system :as utils.system] 
+   [renderer.utils.math :refer [Vec2]]
    [renderer.utils.vec :as utils.vec]
-   [renderer.window.effects :as-alias window.effects]))
+   [shared :as shared]))
 
 (def file-picker-options
   {:startIn config/default-path
@@ -179,28 +177,28 @@
 
 (rf/reg-event-fx
  ::open
- (fn [_ [_ file-path]]
-   (if utils.system/electron?
-     {::window.effects/ipc-invoke
-      {:channel "open-documents"
-       :data file-path
-       :on-success [::load-multiple]
-       :on-error [::notification.events/exception]
-       :formatter #(mapv cljs.reader/read-string %)}}
+ (fn [{:keys [db]} [_ file-path]]
+   (if (= (:platform db) "web")
      {::effects/file-open
       {:options file-picker-options
        :on-success [::file-read]
-       :on-error [::notification.events/exception]}})))
+       :on-error [::notification.events/show-exception]}}
+     {::effects/ipc-invoke
+      {:channel "open-documents"
+       :data file-path
+       :on-success [::load-multiple]
+       :on-error [::notification.events/show-exception]
+       :formatter #(mapv cljs.reader/read-string %)}})))
 
 (rf/reg-event-fx
  ::file-read
  (fn [_ [_ file]]
-   {::app.effects/file-read-as
+   {::effects/file-read-as
     [file :text {"load" {:formatter #(-> (cljs.reader/read-string %)
                                          (assoc :title (.-name file)
                                                 :path (.-path file)))
                          :on-fire [::load]}
-                 "error" {:on-fire [::notification.events/exception]}}]}))
+                 "error" {:on-fire [::notification.events/show-exception]}}]}))
 
 (rf/reg-event-fx
  ::open-directory
@@ -234,65 +232,65 @@
  ::save
  (fn [{:keys [db]} [_]]
    (let [document (document.handlers/persisted-format db)]
-     (if utils.system/electron?
-       {::window.effects/ipc-invoke
-        {:channel "save-document"
-         :data (pr-str document)
-         :on-success [::saved]
-         :on-error [::notification.events/exception]
-         :formatter cljs.reader/read-string}}
+     (if (= (:platform db) "web")
        {::effects/file-save
-        {:data (document.handlers/save-format document)
+        {:data (shared/document->save-format document)
          :options file-picker-options
          :formatter (fn [file] {:id (:id document)
                                 :title (.-name file)})
          :on-success [::saved]
-         :on-error [::notification.events/exception]}}))))
+         :on-error [::notification.events/show-exception]}}
+       {::effects/ipc-invoke
+        {:channel "save-document"
+         :data (pr-str document)
+         :on-success [::saved]
+         :on-error [::notification.events/show-exception]
+         :formatter cljs.reader/read-string}}))))
 
 (rf/reg-event-fx
  ::download
  (fn [{:keys [db]} [_]]
    (let [document (document.handlers/persisted-format db)]
-     {::effects/download {:data (document.handlers/save-format document)
+     {::effects/download {:data (shared/document->save-format document)
                           :title (str "document." config/ext)}})))
 
 (rf/reg-event-fx
  ::save-and-close
  (fn [{:keys [db]} [_ id]]
    (let [document (document.handlers/persisted-format db id)]
-     (if utils.system/electron?
-       {::window.effects/ipc-invoke
-        {:channel "save-document"
-         :data (pr-str document)
-         :on-success [::mark-as-saved-and-close]
-         :on-error [::notification.events/exception]
-         :formatter cljs.reader/read-string}}
+     (if (= (:platform db) "web")
        {::effects/file-save
-        {:data (document.handlers/save-format document)
+        {:data (shared/document->save-format document)
          :options file-picker-options
          :formatter (fn [file] {:id id
                                 :title (.-name file)})
          :on-success [::mark-as-saved-and-close]
-         :on-error [::notification.events/exception]}}))))
+         :on-error [::notification.events/show-exception]}}
+       {::effects/ipc-invoke
+        {:channel "save-document"
+         :data (pr-str document)
+         :on-success [::mark-as-saved-and-close]
+         :on-error [::notification.events/show-exception]
+         :formatter cljs.reader/read-string}}))))
 
 (rf/reg-event-fx
  ::save-as
  (fn [{:keys [db]} [_]]
    (let [document (document.handlers/persisted-format db)]
-     (if utils.system/electron?
-       {::window.effects/ipc-invoke
-        {:channel "save-document-as"
-         :data (pr-str document)
-         :on-success [::saved]
-         :on-error [::notification.events/exception]
-         :formatter cljs.reader/read-string}}
+     (if (= (:platform db) "web")
        {::effects/file-save
-        {:data (document.handlers/save-format document)
+        {:data (shared/document->save-format document)
          :options file-picker-options
          :formatter (fn [file] {:id (:id document)
                                 :title (.-name file)})
          :on-success [::saved]
-         :on-error [::notification.events/exception]}}))))
+         :on-error [::notification.events/show-exception]}}
+       {::effects/ipc-invoke
+        {:channel "save-document-as"
+         :data (pr-str document)
+         :on-success [::saved]
+         :on-error [::notification.events/show-exception]
+         :formatter cljs.reader/read-string}}))))
 
 (rf/reg-event-db
  ::saved
@@ -329,14 +327,30 @@
        (document.handlers/center))))
 
 (rf/reg-event-fx
+ ::export-svg
+ (fn [{:keys [db]} _]
+   (let [els (element.handlers/root-children db)
+         svg (utils.element/->svg els)]
+     (if (:platmform db)
+       {::effects/ipc-invoke
+        {:channel "export"
+         :data svg
+         :on-error [::notification.events/show-exception]}}
+       {::effects/file-save
+        [:data svg
+         :on-error [::notification.events/show-exception]
+         :options {:startIn "pictures"
+                   :types [{:accept {"image/svg+xml" [".svg"]}}]}]}))))
+
+(rf/reg-event-fx
  ::print
  (fn [{:keys [db]} _]
    (let [els (element.handlers/root-children db)
          svg (utils.element/->svg els)]
-     (if utils.system/electron?
-       {::window.effects/ipc-invoke
+     (if (:platmform db)
+       {::effects/ipc-invoke
         {:channel "print"
          :data svg
          :on-success [::notification.events/add]
-         :on-error [::notification.events/exception]}}
+         :on-error [::notification.events/show-exception]}}
        {::effects/print svg}))))

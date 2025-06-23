@@ -206,3 +206,18 @@
 .devtools * {
   background: transparent !important;
 }
+
+.fps-wrapper {
+  > div {
+    @apply absolute! left-auto! top-2! right-2! drop-shadow-md overflow-hidden! px-1!
+    font-sans! text-xs! bg-primary! text-color! z-auto!;
+
+    > div {
+      @apply left-0! right-0! bottom-0! bg-primary!;
+
+      > div {
+         @apply bg-accent!;
+      }
+    }
+  }
+}

@@ -18,15 +18,15 @@
    [renderer.utils.element :as utils.element]
    [renderer.views :as views]))
 
-(defn toggle-item-prop-button
+(defn item-prop-toggle
   [id state k active-icon inactive-icon active-title inactive-title]
   [views/icon-button
    (if state active-icon inactive-icon)
-   {:class ["hover:bg-transparent text-inherit hover:text-inherit focus:outline-hidden small"
+   {:class ["hover:bg-transparent text-inherit hover:text-inherit
+             focus:outline-hidden small"
             (when-not state "invisible")]
     :title (if state active-title inactive-title)
     :on-double-click #(.stopPropagation %)
-    :on-pointer-up #(.stopPropagation %)
     :on-click (fn [e]
                 (.stopPropagation e)
                 (rf/dispatch [::element.events/toggle-prop id k]))}])
@@ -48,7 +48,8 @@
           :default-value label
           :placeholder tag-label
           :auto-focus true
-          :on-key-down #(event.impl.keyboard/input-key-down-handler! % label set-item-label! id)
+          :on-key-down #(event.impl.keyboard/input-key-down-handler! % label
+                                                                     set-item-label! id)
           :on-blur (fn [e]
                      (reset! edit-mode? false)
                      (set-item-label! e id))}]
@@ -76,7 +77,7 @@
 
 (defn key-down-handler!
   [e id]
-  (case (.-key e)
+  (case (.-code e)
     "ArrowUp"
     (do (.stopPropagation e)
         (rf/dispatch [::tree.events/focus-up id]))
@@ -97,6 +98,10 @@
     (do (.stopPropagation e)
         (rf/dispatch [::element.events/select id (.-ctrlKey e)]))
 
+    "Space"
+    (do (.stopPropagation e)
+        (rf/dispatch [::element.events/select id (.-ctrlKey e)]))
+
     nil))
 
 (defn collapse-button
@@ -104,19 +109,21 @@
   [views/icon-button
    (if collapsed "chevron-right" "chevron-down")
    {:title (if collapsed "expand" "collapse")
-    :class "hover:bg-transparent text-inherit hover:text-inherit focus:outline-hidden small"
-    :on-pointer-up #(.stopPropagation %)
-    :on-click #(rf/dispatch (if collapsed
-                              [::document.events/expand-el id]
-                              [::document.events/collapse-el id]))}])
+    :class "hover:bg-transparent text-inherit hover:text-inherit
+            focus:outline-hidden small"
+    :on-double-click #(.stopPropagation %)
+    :on-click #(do (.stopPropagation %)
+                   (rf/dispatch (if collapsed
+                                  [::document.events/expand-el id]
+                                  [::document.events/collapse-el id])))}])
 
 (defn list-item-button
   [el {:keys [depth collapsed hovered]}]
   (let [{:keys [id selected children locked visible]} el
         collapse-button-width 21
         padding (* collapse-button-width (cond-> depth (seq children) dec))]
-    [:div.list-item-button.button.flex.pr-1.items-center.text-start.outline-default.hover:overlay
-     {:class ["[&.hovered]:overlay hover:[&_button]:visible"
+    [:div.list-item-button.button.flex.pr-1.items-center.text-start.outline-default
+     {:class ["hover:overlay [&.hovered]:overlay hover:[&_button]:visible"
               (when selected "accent")
               (when hovered "hovered")]
       :tab-index 0
@@ -135,12 +142,12 @@
       :on-drop #(drop-handler! % id)
       :on-pointer-down #(when (= (.-button %) 2)
                           (rf/dispatch [::element.events/select id (.-ctrlKey %)]))
-      :on-pointer-up (fn [e]
-                       (.stopPropagation e)
-                       (if (.-shiftKey e)
-                         (rf/dispatch-sync [::tree.events/select-range @last-focused-id id])
-                         (do (rf/dispatch [::element.events/select id (.-ctrlKey e)])
-                             (reset! last-focused-id id))))
+      :on-click (fn [e]
+                  (.stopPropagation e)
+                  (if (.-shiftKey e)
+                    (rf/dispatch-sync [::tree.events/select-range @last-focused-id id])
+                    (do (rf/dispatch [::element.events/select id (.-ctrlKey e)])
+                        (reset! last-focused-id id))))
       :style {:padding-left padding}}
      [:div.flex.items-center.content-between.w-full
       (when (seq children)
@@ -150,8 +157,8 @@
        (when-let [icon (:icon (utils.element/properties el))]
          [views/icon icon {:class (when-not visible "opacity-60")}])
        [item-label el]]
-      [toggle-item-prop-button id locked :locked "lock" "unlock" "unlock" "lock"]
-      [toggle-item-prop-button id (not visible) :visible "eye-closed" "eye" "show" "hide"]]]))
+      [item-prop-toggle id locked :locked "lock" "unlock" "unlock" "lock"]
+      [item-prop-toggle id (not visible) :visible "eye-closed" "eye" "show" "hide"]]]))
 
 (defn item [el depth elements]
   (let [{:keys [selected children id]} el
@@ -175,7 +182,7 @@
    ;; When the tree is hovered, ignore the hovered class of the elements,
    ;; if the element itself is not also hovered.
    {:class "hover:**:[&.list-item-button]:not-hover:bg-inherit"
-    :on-pointer-up #(rf/dispatch [::element.events/deselect-all])}
+    :on-click #(rf/dispatch [::element.events/deselect-all])}
    [views/scroll-area
     [:ul {:role "menu"
           :on-pointer-leave #(rf/dispatch [::document.events/clear-hovered])

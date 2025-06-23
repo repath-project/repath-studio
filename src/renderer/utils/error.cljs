@@ -1,12 +1,18 @@
 (ns renderer.utils.error
   "https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary"
   (:require
+   [clojure.string :as string]
    [malli.core :as m]
    [re-frame.core :as rf]
    [reagent.core :as reagent]
+   [renderer.events :as-alias events]
    [renderer.history.events :as-alias history.events]
    [renderer.views :as views]
    [renderer.window.events :as-alias window.events]))
+
+(defn abort-error?
+  [error]
+  (string/includes? (.-message error) "The user aborted a request."))
 
 (m/=> submit-error-url [:-> string? string?])
 (defn submit-error-url
@@ -36,7 +42,7 @@
 
         [:button.button.px-2.rounded.w-full.mb-5.border.border-default
          {:class "hover:bg-transparent"
-          :on-click #(rf/dispatch [::window.events/open-remote-url
+          :on-click #(rf/dispatch [::events/open-remote-url
                                    (submit-error-url error-message)])}
          "Submit an error report"]
 

@@ -104,11 +104,6 @@
  :-> :elements)
 
 (rf/reg-sub
- ::temp-element
- :<- [::active]
- :-> :temp-element)
-
-(rf/reg-sub
  ::filter
  :<- [::active]
  :-> :filter)

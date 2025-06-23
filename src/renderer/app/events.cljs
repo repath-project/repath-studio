@@ -5,12 +5,13 @@
    [renderer.app.db :as app.db]
    [renderer.app.effects :as-alias app.effects]
    [renderer.effects :as-alias effects]
+   [renderer.event.events :as-alias event.events]
+   [renderer.event.impl.keyboard :as event.impl.keyboard]
    [renderer.notification.events :as-alias notification.events]
    [renderer.notification.handlers :as notification.handlers]
    [renderer.notification.views :as notification.views]
    [renderer.utils.i18n :as utils.i18n]
-   [renderer.utils.system :as utils.system]
-   [renderer.window.effects :as-alias window.effects]))
+   [renderer.window.events :as-alias window.events]))
 
 (def persist
   (rf/->interceptor
@@ -22,10 +23,20 @@
                 db
                 (rf/assoc-effect :fx (conj (or fx []) [::app.effects/persist])))))))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::initialize-db
- (fn [_ _]
-   app.db/default))
+ [(rf/inject-cofx ::app.effects/user-agent)
+  (rf/inject-cofx ::app.effects/platform)
+  (rf/inject-cofx ::app.effects/versions)
+  (rf/inject-cofx ::app.effects/env)
+  (rf/inject-cofx ::app.effects/system-language)]
+ (fn [{:keys [user-agent platform versions env system-language]} _]
+   {:db (assoc app.db/default
+               :platform platform
+               :versions (js->clj versions)
+               :env (js->clj env)
+               :user-agent user-agent
+               :system-lang system-language)}))
 
 (rf/reg-event-fx
  ::load-local-db
@@ -34,7 +45,7 @@
    (let [app-db (merge db store)]
      (if (app.db/valid? app-db)
        {:db app-db}
-       {::effects/local-storage-clear nil
+       {::app.effects/clear-local-storage nil
         :db (notification.handlers/add db (notification.views/spec-failed
                                            "Invalid local configuration"
                                            (-> app-db
@@ -47,12 +58,30 @@
  (fn [db [_ fonts]]
    (assoc db :system-fonts fonts)))
 
-(rf/reg-event-db
+(rf/reg-event-fx
+ ::set-document-lang
+ (fn [{:keys [db]} _]
+   {::effects/set-document-attr ["lang" (:lang db)]}))
+
+(rf/reg-event-fx
  ::set-lang
- (fn [db [_ lang]]
-   (cond-> db
-     (utils.i18n/lang? lang)
-     (assoc :lang lang))))
+ [persist]
+ (fn [{:keys [db]} [_ lang]]
+   {:db (cond-> db
+          (utils.i18n/supported-lang? lang)
+          (assoc :lang lang))
+    :dispatch [::set-document-lang]}))
+
+(rf/reg-event-fx
+ ::init-lang
+ [persist]
+ (fn [{:keys [db]} _]
+   {:db (cond-> db
+          (not (:lang db))
+          (assoc :lang (if (utils.i18n/supported-lang? (:system-lang db))
+                         (:system-lang db)
+                         "en-US")))
+    :dispatch [::set-document-lang]}))
 
 (rf/reg-event-db
  ::set-repl-mode
@@ -86,26 +115,19 @@
  (fn [db [_ k]]
    (update-in db [:panels k :visible] not)))
 
-(defn ->font-map
-  [^js/FontData font-data]
-  (into {} [[:postscriptName (.-postscriptName font-data)]
-            [:fullName (.-fullName font-data)]
-            [:family (.-family font-data)]
-            [:style (.-style font-data)]]))
-
 (rf/reg-event-fx
  ::load-system-fonts
  (fn [_ _]
-   (if utils.system/electron?
-     {::window.effects/ipc-invoke
-      {:channel "load-system-fonts"
-       :on-success [::set-system-fonts]
-       :on-error [::notification.events/exception]
-       :formatter #(js->clj % :keywordize-keys true)}}
-     {::effects/query-local-fonts
-      {:on-success [::set-system-fonts]
-       :on-error [::notification.events/exception]
-       :formatter #(mapv ->font-map %)}})))
+   {::app.effects/query-local-fonts
+    {:on-success [::set-system-fonts]
+     :on-error [::notification.events/show-exception]
+     :formatter #(reduce (fn [fonts ^js/FontData font-data]
+                           (let [family (.-family font-data)
+                                 style (.-style font-data)]
+                             (assoc-in fonts [family style]
+                                       {:postscript-name (.-postscriptName font-data)
+                                        :full-name (.-fullName font-data)})))
+                         {} %)}}))
 
 (def schema-validator
   (rf/->interceptor
@@ -120,3 +142,29 @@
                 (rf/assoc-effect :fx
                                  (conj (or fx [])
                                        [::app.effects/validate [db event]])))))))
+
+(rf/reg-event-fx
+ ::add-listeners
+ (fn [_ _]
+   {:fx (->> [[js/document "keydown" [::event.events/keyboard] event.impl.keyboard/->clj]
+              [js/document "keyup" [::event.events/keyboard] event.impl.keyboard/->clj]
+              [js/document "fullscreenchange" [::window.events/update-fullscreen]]
+              [js/window "load" [::window.events/update-focused]]
+              [js/window "focus" [::window.events/update-focused]]
+              [js/window "blur" [::window.events/update-focused]]]
+             (mapv #(vector ::effects/add-listener %)))}))
+
+(rf/reg-event-fx
+ ::register-listeners
+ (fn [{:keys [db]} _]
+   (if (= (:platform db) "web")
+     {:dispatch [::add-listeners]}
+     {:fx (->> [["window-maximized" [::window.events/set-maximized true]]
+                ["window-unmaximized" [::window.events/set-maximized false]]
+                ["window-focused" [::window.events/set-focused true]]
+                ["window-blurred" [::window.events/set-focused false]]
+                ["window-entered-fullscreen" [::window.events/set-fullscreen true]]
+                ["window-leaved-fullscreen" [::window.events/set-fullscreen false]]
+                ["window-minimized" [::window.events/set-minimized true]]
+                ["window-loaded" [::add-listeners]]]
+               (mapv #(vector ::effects/ipc-on %)))})))

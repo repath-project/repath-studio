@@ -1,5 +1,5 @@
 (ns renderer.attribute.impl.font-family
-  "https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/font-family"
+  "https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/font-family"
   (:require
    ["@radix-ui/react-popover" :as Popover]
    ["cmdk" :as Command]
@@ -14,15 +14,36 @@
 
 (defmethod attribute.hierarchy/description [:default :font-family]
   []
-  (t [::description 
+  (t [::description
       "The font-family attribute indicates which font family will be used to render the text,
        specified as a prioritized list of font family names and/or generic family names."]))
 
+(defn font-item
+  [font]
+  [:> Command/CommandItem
+   {:on-select #(rf/dispatch [::element.events/set-attr :font-family font])}
+   [:div.flex.justify-between.items-center.w-full.gap-2
+    [:div font]
+    [:div.leading-none.text-muted
+     {:style {:font-family font}}
+     "AaBbCc 0123"]]])
+
+(defn font-item
+  [font]
+  [:> Command/CommandItem
+   {:on-select #(rf/dispatch [::element.events/set-attr :font-family font])}
+   [:div.flex.justify-between.items-center.w-full.gap-2
+    [:div font]
+    [:div.leading-none.text-muted
+     {:style {:font-family font}}
+     "AaBbCc 0123"]]])
+
 (defn suggestions-list
-  [suggestions]
+  [font-list]
   [:div.flex.flex-col
    [:> Command/Command
-    {:label "Command Menu"}
+    {:label "Command Menu"
+     :on-key-down #(.stopPropagation %)}
     [:> Command/CommandInput
      {:class "p-2 text-sm bg-secondary border-b border-default"
       :placeholder (t [::search-font "Search for a font"])}]
@@ -30,28 +51,22 @@
      [:> Command/CommandList
       {:class "p-1"}
       [:> Command/CommandEmpty
-       (if-not suggestions
+       (if-not font-list
          [:div.w-full [views/loading-indicator]]
          (t [::no-local-font "No local fonts found."]))]
-      (for [item suggestions]
-        ^{:key item}
-        [:> Command/CommandItem
-         {:on-select #(rf/dispatch [::element.events/set-attr :font-family item])}
-         [:div.flex.justify-between.items-center.w-full.gap-2
-          [:div item]
-          [:div.leading-none.text-muted
-           {:style {:font-family item}}
-           "Lorem ipsum"]]])]]]])
+      (for [font font-list]
+        ^{:key font}
+        [font-item font])]]]])
 
 (defmethod attribute.hierarchy/form-element [:default :font-family]
   [_ k v attrs]
-  (let [suggestions @(rf/subscribe [::app.subs/font-options])]
+  (let [font-list @(rf/subscribe [::app.subs/font-list])]
     [:div.flex.gap-px.w-full
      [attribute.views/form-input k v attrs]
      [:> Popover/Root
       {:modal true
        :onOpenChange (fn [state]
-                       (when (and state (empty? suggestions))
+                       (when (and state (empty? font-list))
                          (rf/dispatch [::app.events/load-system-fonts])))}
       [:> Popover/Trigger
        {:title (t [::select-font "Select font"])
@@ -63,5 +78,5 @@
         {:sideOffset 5
          :className "popover-content"
          :align "end"}
-        [suggestions-list suggestions]
+        [suggestions-list font-list]
         [:> Popover/Arrow {:class "popover-arrow"}]]]]]))

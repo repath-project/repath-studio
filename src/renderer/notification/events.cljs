@@ -11,14 +11,14 @@
    (cond-> db notification (notification.handlers/add notification))))
 
 (rf/reg-event-db
- ::unavailable-feature
+ ::show-unavailable-feature
  (fn [db [_ feature compatibility-url]]
    (notification.handlers/add db (notification.views/unavailable-feature
                                   feature
                                   compatibility-url))))
 
 (rf/reg-event-db
- ::exception
+ ::show-exception
  (fn [db [_ ^js/Error error]]
    (notification.handlers/add db (notification.views/exception error))))
 

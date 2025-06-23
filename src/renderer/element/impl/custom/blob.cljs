@@ -13,6 +13,7 @@
    [renderer.element.subs :as-alias element.subs]
    [renderer.event.impl.pointer :as event.impl.pointer]
    [renderer.tool.views :as tool.views]
+   [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.element :as utils.element]
    [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]
@@ -71,6 +72,12 @@
 (defmethod attr.hierarchy/description [:blob :size]
   []
   (t [::size "The size of the bounding box."]))
+
+(defmethod attr.hierarchy/initial [:blob :extraPoints] [] "0")
+
+(defmethod attr.hierarchy/initial [:blob :randomness] [] "0")
+
+(defmethod attr.hierarchy/initial [:blob :size] [] "0")
 
 (defmethod element.hierarchy/properties :blob
   []
@@ -136,8 +143,8 @@
   [el]
   (let [{{:keys [x y]} :attrs} el
         [x y] (mapv utils.length/unit->px [x y])
-        options (->> [:seed :extraPoints :randomness :size]
-                     (select-keys (:attrs el))
+        options (->> (select-keys (:attrs el) [:seed :extraPoints :randomness :size])
+                     (merge (utils.attribute/defaults-with-vals :blob))
                      (reduce (fn [options [k v]] (assoc options k (int v))) {})
                      (clj->js))]
     (-> blobs
@@ -164,7 +171,6 @@
      [utils.svg/line [x1 y1] [x2 y2]]
      [tool.views/square-handle
       {:type :handle
-       :cursor "move"
        :action :edit
        :element (:id el)
        :x x2

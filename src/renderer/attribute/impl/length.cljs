@@ -33,7 +33,8 @@
   [_ k v {:keys [disabled placeholder]}]
   [:div.flex.w-full.gap-px
    [attribute.views/form-input k v
-    {:disabled disabled
+    {:class "font-mono"
+     :disabled disabled
      :placeholder (if v placeholder "multiple")}]
    [:div.flex.gap-px
     [:button.form-control-button
@@ -47,10 +48,23 @@
       :on-click #(rf/dispatch [::element.events/update-attr k inc])}
      [views/icon "plus"]]]])
 
+(defmethod attribute.hierarchy/initial ::length [_tag _attr] 0)
+
 (defmethod attribute.hierarchy/update-attr ::length
-  [el k f & more]
-  (update-in el [:attrs k] #(apply utils.length/transform % f more)))
+  ([el k f]
+   (update-in el [:attrs k] #(utils.length/transform % f)))
+  ([el k f arg]
+   (update-in el [:attrs k] #(utils.length/transform % f arg)))
+  ([el k f arg & more]
+   (update-in el [:attrs k] #(apply utils.length/transform % f arg more))))
 
 (defmethod attribute.hierarchy/update-attr ::positive-length
-  [el k f & more]
-  (update-in el [:attrs k] utils.length/transform (fn [v] (max 0 (apply f v more)))))
+  ([el k f]
+   (update-in el [:attrs k] utils.length/transform (fn [v] (max 0 (f v)))))
+  ([el k f arg]
+   (update-in el [:attrs k] utils.length/transform (fn [v] (max 0 (f v arg)))))
+  ([el k f arg & more]
+   (update-in el
+              [:attrs k]
+              utils.length/transform
+              (fn [v] (max 0 (apply f v arg more))))))

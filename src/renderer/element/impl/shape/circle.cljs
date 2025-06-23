@@ -80,13 +80,12 @@
         r (/ (first (utils.bounds/->dimensions bbox)) 2)]
     [:g
      [utils.svg/line [cx cy] [(+ cx r) cy]]
-     [utils.svg/label (str (.toFixed r 2)) [(+ cx (/ r 2)) cy]]
+     [utils.svg/label (str (.toFixed r 3)) [(+ cx (/ r 2)) cy]]
      [utils.svg/times [cx cy]]
      [tool.views/square-handle {:x (+ cx r)
                                 :y cy
                                 :id :r
                                 :type :handle
                                 :action :edit
-                                :cursor "move"
                                 :element (:id el)}
       [:title {:key "r-title"} "r"]]]))

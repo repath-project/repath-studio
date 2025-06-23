@@ -44,7 +44,9 @@
       :sideOffset 5
       :alignOffset -24
       :position "popper"
-      :class "menu-content rounded-sm select-content"}
+      :class "menu-content rounded-sm select-content"
+      :on-key-down #(.stopPropagation %)
+      :on-escape-key-down #(.stopPropagation %)}
      [:> Select/ScrollUpButton {:class "select-scroll-button"}
       [views/icon "chevron-up"]]
      [:> Select/Viewport {:class "select-viewport"}
@@ -119,7 +121,7 @@
        {:on-click #(rf/dispatch [::history.events/tree-view-updated 0.5 (center ref)])}
        (t [::center-view "Center view"])]
       [:button.button.flex-1
-       {:on-click #(rf/dispatch [::dialog.events/confirmation
+       {:on-click #(rf/dispatch [::dialog.events/show-confirmation
                                  {:title (t [::action-cannot-undone "This action cannot be undone."])
                                   :description (t [::clear-history-description "Are you sure you wish to clear the document history?"])
                                   :confirm-label (t [::clear-history "Clear history"])

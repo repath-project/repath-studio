@@ -4,6 +4,7 @@
    [malli.core :as m]
    [renderer.app.db :refer [App]]
    [renderer.app.effects :as-alias app.effects]
+   [renderer.effects :as-alias effects]
    [renderer.event.db :refer [PointerEvent KeyboardEvent WheelEvent DragEvent]]
    [renderer.event.effects :as-alias event.effects]
    [renderer.frame.handlers :as frame.handlers]
@@ -18,10 +19,11 @@
   (> (apply max (map abs (matrix/sub position offset)))
      threshold))
 
-(m/=> pointer [:-> App PointerEvent number? App])
+(m/=> pointer [:-> App PointerEvent App])
 (defn pointer
   [db e]
-  (let [{:keys [pointer-offset tool dom-rect drag primary-tool drag-threshold nearest-neighbor]} db
+  (let [{:keys [pointer-offset tool state cached-tool cached-state
+                dom-rect drag  drag-threshold nearest-neighbor]} db
         {:keys [button pointer-pos timestamp pointer-id]} e
         adjusted-pointer-pos (frame.handlers/adjusted-pointer-pos db pointer-pos)
         db (snap.handlers/update-nearest-neighbors db)]
@@ -34,9 +36,10 @@
                 (tool.handlers/pan-out-of-canvas dom-rect pointer-pos pointer-offset)
 
                 (not drag)
-                (-> (tool.hierarchy/on-drag-start e)
-                    (tool.handlers/add-fx [::event.effects/set-pointer-capture pointer-id])
-                    (assoc :drag true))
+                (-> (assoc :drag true)
+                    (tool.hierarchy/on-drag-start e)
+                    (tool.handlers/add-fx [::event.effects/set-pointer-capture
+                                           pointer-id]))
 
                 :always
                 (tool.hierarchy/on-drag e))
@@ -48,7 +51,8 @@
       "pointerdown"
       (cond-> db
         (= button :middle)
-        (-> (assoc :primary-tool tool)
+        (-> (assoc :cached-tool tool
+                   :cached-state state)
             (tool.handlers/activate :pan))
 
         (not= button :right)
@@ -57,21 +61,25 @@
                :nearest-neighbor-offset (:point nearest-neighbor))
 
         :always
-        (tool.hierarchy/on-pointer-down e))
+        (-> (tool.hierarchy/on-pointer-down e)
+            (tool.handlers/add-fx [::effects/focus nil])))
 
       "pointerup"
       (cond-> (if drag
                 (-> (tool.hierarchy/on-drag-end db e)
-                    (tool.handlers/add-fx [::event.effects/release-pointer-capture pointer-id]))
+                    (tool.handlers/add-fx [::event.effects/release-pointer-capture
+                                           pointer-id]))
                 (if (= button :right)
                   db
-                  (if (> (- timestamp (:event-time db)) (:double-click-delta db))
-                    (-> (assoc db :event-time timestamp)
-                        (tool.hierarchy/on-pointer-up e))
-                    (tool.hierarchy/on-double-click db e))))
-        (and primary-tool (= button :middle))
-        (-> (tool.handlers/activate primary-tool)
-            (dissoc :primary-tool))
+                  (if (< 0 (- timestamp (:event-timestamp db)) (:double-click-delta db))
+                    (-> (dissoc db :event-timestamp)
+                        (tool.hierarchy/on-double-click e))
+                    (-> (assoc db :event-timestamp timestamp)
+                        (tool.hierarchy/on-pointer-up e)))))
+        (and cached-tool (= button :middle))
+        (-> (tool.handlers/activate cached-tool)
+            (tool.handlers/set-state cached-state)
+            (dissoc :cached-tool :cached-state))
 
         :always
         (dissoc :pointer-offset :drag :nearest-neighbor))
@@ -85,8 +93,9 @@
     "keydown"
     (cond-> db
       (and (= (:code e) "Space")
-           (not= (:tool db) :pan))
-      (-> (assoc :primary-tool (:tool db))
+           (not= (:tool db) :pan)
+           (= (:state db) :idle))
+      (-> (assoc :cached-tool (:tool db))
           (tool.handlers/activate :pan))
 
       :always
@@ -95,9 +104,9 @@
     "keyup"
     (cond-> db
       (and (= (:code e) "Space")
-           (:primary-tool db))
-      (-> (tool.handlers/activate (:primary-tool db))
-          (dissoc :primary-tool))
+           (:cached-tool db))
+      (-> (tool.handlers/activate (:cached-tool db))
+          (dissoc :cached-tool))
 
       :always
       (tool.hierarchy/on-key-up e))

@@ -3,33 +3,25 @@
 }
 
 .menubar-trigger {
-  @apply px-3 py-1.5 flex rounded-sm;
-  outline: none;
-  user-select: none;
-  line-height: 1;
-  color: var(--font-color);
-  align-items: center;
-  justify-content: space-between;
+  @apply px-3 py-1.5 flex rounded-sm outline-none select-none items-center leading-none;
 
   &[data-highlighted],
   &[data-state='open'] {
-    background-color: var(--overlay);
+    @apply overlay;
   }
 
   &:hover,
   &:focus {
-    color: var(--font-color-active);
-    background-color: var(--overlay);
+    @apply text-active overlay;
   }
 }
 
 .menu-content,
 .menu-sub-content {
-  @apply bg-secondary drop-shadow-lg p-1 z-10 rounded-sm;
+  @apply bg-secondary drop-shadow-lg p-1 z-10 rounded-sm no-drag;
   min-width: 200px;
   will-change: transform, opacity;
   border: 1px solid var(--border-color);
-  -webkit-app-region: no-drag;
 }
 
 .menu-item,

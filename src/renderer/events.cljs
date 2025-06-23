@@ -22,3 +22,10 @@
  ::file-open
  (fn [_ [_ options]]
    {::effects/file-open options}))
+
+(rf/reg-event-fx
+ ::open-remote-url
+ (fn [{:keys [db]} [_ url]]
+   (if (= (:platform db) "web")
+     {::effects/open-remote-url url}
+     {::effects/ipc-send ["open-remote-url" url]})))

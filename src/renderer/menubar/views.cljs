@@ -9,6 +9,7 @@
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.events :as-alias element.events]
    [renderer.element.subs :as-alias element.subs]
+   [renderer.events :as-alias events]
    [renderer.frame.events :as-alias frame.events]
    [renderer.history.events :as-alias history.events]
    [renderer.history.subs :as-alias history.subs]
@@ -81,7 +82,7 @@
             :label (t [::export-as-svg "Export as SVG"])
             :icon "export"
             :disabled (not @(rf/subscribe [::document.subs/entities?]))
-            :action [::element.events/export-svg]}
+            :action [::document.events/export-svg]}
            {:id :divider-4
             :type :separator}
            {:id :print
@@ -414,7 +415,7 @@
     :label "US"
     :action [::app.events/set-lang :en-US]}
    {:id :lan-gr
-    :label "GR" 
+    :label "GR"
     :action [::app.events/set-lang :el-GR]}])
 
 (defn panel-submenu
@@ -525,42 +526,42 @@
    :items [{:id :cmdk
             :label (t [::command-panel "Command panel"])
             :icon "command"
-            :action [::dialog.events/cmdk]}
+            :action [::dialog.events/show-cmdk]}
            {:id :divider-1
             :type :separator}
            {:id :website
             :label (t [::website "Website"])
             :icon "earth"
-            :action [::window.events/open-remote-url
+            :action [::events/open-remote-url
                      "https://repath.studio/"]}
            {:id :source-code
             :label (t [::source-code "Source Code"])
             :icon "commit"
-            :action [::window.events/open-remote-url
+            :action [::events/open-remote-url
                      "https://github.com/repath-project/repath-studio"]}
            {:id :license
             :label (t [::license "License"])
             :icon "lgpl"
-            :action [::window.events/open-remote-url
+            :action [::events/open-remote-url
                      "https://github.com/repath-project/repath-studio/blob/main/LICENSE"]}
            {:id :changelog
             :icon "list"
             :label (t [::changelog "Changelog"])
-            :action [::window.events/open-remote-url
+            :action [::events/open-remote-url
                      "https://repath.studio/roadmap/changelog/"]}
            {:id :divider-2
             :type :separator}
            {:id :submit-issue
             :icon "warning"
             :label (t [::submit-an-issue "Submit an issue"])
-            :action [::window.events/open-remote-url
+            :action [::events/open-remote-url
                      "https://github.com/repath-project/repath-studio/issues/new/choose"]}
            {:id :divider-3
             :type :separator}
            {:id :about
             :icon "info"
             :label (t [::about "About"])
-            :action [::dialog.events/about]}]})
+            :action [::dialog.events/show-about]}]})
 
 (defmulti menu-item :type)
 
@@ -594,7 +595,8 @@
     (into [:> Menubar/SubContent
            {:class "menu-content"
             :align "start"
-            :loop true}]
+            :loop true
+            :on-escape-key-down #(.stopPropagation %)}]
           (map menu-item items))]])
 
 (defmethod menu-item :root
@@ -610,7 +612,8 @@
            {:class (when items "menu-content")
             :align "start"
             :side-offset 3
-            :loop true}]
+            :loop true
+            :on-escape-key-down #(.stopPropagation %)}]
           (map menu-item items))]])
 
 (defmethod menu-item :default
@@ -635,6 +638,6 @@
   []
   (into [:> Menubar/Root
          {:class "menubar-root"
-          :on-key-down #(.stopPropagation %) ; FIXME: Esc global action also triggered.
+          :on-key-down #(.stopPropagation %)
           :on-value-change #(rf/dispatch [::app.events/set-backdrop (boolean (seq %))])}]
         (map menu-item (submenus))))

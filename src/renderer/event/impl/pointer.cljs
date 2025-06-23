@@ -42,10 +42,7 @@
    https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/"
   [^js/PointerEvent e el]
   (.stopPropagation e)
-
-  ;; REVIEW
-  (when (= (.-pointerType e) "touch")
-    (.preventDefault e))
+  (.preventDefault e)
 
   ;; Although the fps might drop because synced dispatch blocks rendering,
   ;; the end result appears to be more responsive because it's synced with the

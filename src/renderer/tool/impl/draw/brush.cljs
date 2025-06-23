@@ -1,11 +1,17 @@
 (ns renderer.tool.impl.draw.brush
   "https://github.com/steveruizok/perfect-freehand"
   (:require
+   [clojure.core.matrix :as matrix]
    [clojure.string :as string]
+   [re-frame.core :as rf]
+   [reagent.core :as reagent]
    [renderer.document.handlers :as document.handlers]
+   [renderer.element.handlers :as element.handlers]
+   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.tool.subs :as-alias tool.subs]))
 
 (derive :brush ::tool.hierarchy/draw)
 
@@ -13,38 +19,57 @@
   []
   {:icon "brush"})
 
+(defonce brush-element (reagent/atom nil))
+
+(rf/reg-fx
+ ::update-brush
+ (fn [value]
+   (reset! brush-element value)))
+
 (defmethod tool.hierarchy/on-pointer-move :brush
   [db e]
   (let [[x y] (:adjusted-pointer-pos db)
         pressure (:pressure e)
         pressure (if (zero? pressure) 1 pressure)
-        r (* (/ 16 2) pressure)]
-    (tool.handlers/set-temp db {:type :element
-                                :tag :circle
-                                :attrs {:cx x
-                                        :cy y
-                                        :r r
-                                        :fill (document.handlers/attr db :stroke)}})))
+        r (* (/ 16 2) pressure)
+        stroke (document.handlers/attr db :stroke)]
+    (tool.handlers/add-fx db [::update-brush {:type :element
+                                              :tag :circle
+                                              :attrs {:cx x
+                                                      :cy y
+                                                      :r r
+                                                      :fill stroke}}])))
+
+(defmethod tool.hierarchy/on-drag-start :brush
+  [db e]
+  (let [point (string/join " " (conj (:adjusted-pointer-pos db) (:pressure e)))
+        stroke (document.handlers/attr db :stroke)]
+    (-> db
+        (tool.handlers/set-state :create)
+        (element.handlers/add {:type :element
+                               :tag :brush
+                               :attrs {:points point
+                                       :stroke stroke
+                                       :size 16
+                                       :thinning 0.5
+                                       :smoothing 0.5
+                                       :streamline 0.5}}))))
 
 (defmethod tool.hierarchy/on-drag :brush
   [db e]
-  (let [active-document (:active-document db)
-        point (string/join " " (conj (:adjusted-pointer-pos db) (:pressure e)))
-        points-path [:documents active-document :temp-element :attrs :points]]
-    (if (get-in db points-path)
-      (update-in db points-path #(str % " " point))
-      (tool.handlers/set-temp db {:type :element
-                                  :tag :brush
-                                  :attrs {:points point
-                                          :stroke (document.handlers/attr db :stroke)
-                                          :size 16
-                                          :thinning 0.5
-                                          :smoothing 0.5
-                                          :streamline 0.5}}))))
+  (let [{:keys [id parent]} (first (element.handlers/selected db))
+        [min-x min-y] (element.hierarchy/bbox (element.handlers/entity db parent))
+        point (matrix/sub (:adjusted-pointer-pos db) [min-x min-y])
+        point (string/join " " (conj point (:pressure e)))]
+    (element.handlers/update-attr db id :points str " " point)))
 
 (defmethod tool.hierarchy/on-drag-end :brush
   [db _e]
   (-> db
-      (tool.handlers/create-temp-element)
-      (tool.handlers/activate :transform)
-      (history.handlers/finalize "Draw line")))
+      (history.handlers/finalize "Draw brush")
+      (tool.handlers/activate :transform)))
+
+(defmethod tool.hierarchy/render :brush
+  []
+  (when-not (= :create @(rf/subscribe [::tool.subs/state]))
+    [element.hierarchy/render @brush-element]))

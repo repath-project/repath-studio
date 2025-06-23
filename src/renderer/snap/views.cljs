@@ -30,7 +30,9 @@
         :sideOffset 5
         :alignOffset -5
         :position "popper"
-        :class "menu-content rounded-sm select-content"}
+        :class "menu-content rounded-sm select-content"
+        :on-key-down #(.stopPropagation %)
+        :on-escape-key-down #(.stopPropagation %)}
        (for [option snap.db/snap-options]
          ^{:key option}
          [:> DropdownMenu/CheckboxItem

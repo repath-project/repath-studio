@@ -3,6 +3,7 @@
    [clojure.core.matrix :as matrix]
    [malli.core :as m]
    [re-frame.core :as rf]
+   [reagent.core :as reagent]
    [renderer.app.db :refer [App]]
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.db :refer [Element]]
@@ -33,6 +34,15 @@
                   :bottom-left])
 
 (derive :transform ::tool.hierarchy/tool)
+
+(derive :zoom ::tool.hierarchy/tool)
+
+(defonce bbox-element (reagent/atom nil))
+
+(rf/reg-fx
+ ::update
+ (fn [value]
+   (reset! bbox-element value)))
 
 (defmethod tool.hierarchy/properties :transform
   []
@@ -67,8 +77,8 @@
 
 (m/=> hovered? [:-> App Element boolean? boolean?])
 (defn hovered?
-  [db el intersecting?]
-  (let [selection-bbox (element.hierarchy/bbox (tool.handlers/temp db))]
+  [el intersecting?]
+  (let [selection-bbox (element.hierarchy/bbox @bbox-element)]
     (if-let [el-bbox (:bbox el)]
       (if intersecting?
         (utils.bounds/intersect? el-bbox selection-bbox)
@@ -78,13 +88,16 @@
 (m/=> reduce-by-area [:-> App boolean? ifn? App])
 (defn reduce-by-area
   [db intersecting? f]
-  (->> (element.handlers/entities db)
-       (vals)
-       (filter :visible)
-       (reduce (fn [db el]
-                 (cond-> db
-                   (hovered? db el intersecting?)
-                   (f (:id el)))) db)))
+  (transduce
+   (comp
+    (map val)
+    (filter :visible)
+    (filter #(hovered? % intersecting?))
+    (map :id))
+   (fn [db id]
+     (cond-> db
+       id (f id)))
+   db (element.handlers/entities db)))
 
 (defmethod tool.hierarchy/on-pointer-move :transform
   [db {:keys [element] :as e}]
@@ -107,13 +120,37 @@
   [db e]
   (cond-> db
     (:shift-key e)
-    (element.handlers/ignore :bbox)))
+    (element.handlers/ignore :bbox)
+
+    (= (:key e) "ArrowUp")
+    (element.handlers/translate [0 -1])
+
+    (= (:key e) "ArrowDown")
+    (element.handlers/translate [0 1])
+
+    (= (:key e) "ArrowLeft")
+    (element.handlers/translate [-1 0])
+
+    (= (:key e) "ArrowRight")
+    (element.handlers/translate [1 0])))
 
 (defmethod tool.hierarchy/on-key-up :transform
   [db e]
   (cond-> db
     (not (:shift-key e))
-    (element.handlers/clear-ignored)))
+    (element.handlers/clear-ignored)
+
+    (= (:key e) "ArrowUp")
+    (history.handlers/finalize "Move selection up")
+
+    (= (:key e) "ArrowDown")
+    (history.handlers/finalize "Move selection down")
+
+    (= (:key e) "ArrowLeft")
+    (history.handlers/finalize "Move selection left")
+
+    (= (:key e) "ArrowRight")
+    (history.handlers/finalize "Move selection right")))
 
 (defmethod tool.hierarchy/on-pointer-down :transform
   [db {:keys [button element] :as e}]
@@ -237,20 +274,27 @@
     (selectable? (:clicked-element db))
     (element.handlers/toggle-selection (-> db :clicked-element :id) multiple)))
 
+(m/=> start-point [:-> Element Vec2])
+(defn start-point
+  [el]
+  (into [] (take 2) (:bbox el)))
+
 (m/=> translate [:-> App Vec2 [:maybe Orientation] App])
 (defn translate
   [db offset axis]
-  (let [offset (case axis
+  (let [hovered-svg (element.handlers/hovered-svg db)
+        user-translate? (contains? #{:translate :clone} (:state db))
+        single-selection? (and (seq (element.handlers/selected db))
+                               (empty? (rest (element.handlers/selected db))))
+        offset (case axis
                  :vertical [(first offset) 0]
                  :horizontal [0 (second offset)]
                  offset)]
     (reduce (fn [db id]
-              (let [container (element.handlers/parent-container db id)
-                    hovered-svg (element.handlers/hovered-svg db)]
+              (let [container (element.handlers/parent-container db id)]
                 (cond-> (element.handlers/translate db id offset)
-                  (and (seq (element.handlers/selected db))
-                       (empty? (rest (element.handlers/selected db)))
-                       (contains? #{:translate :clone} (:state db))
+                  (and single-selection?
+                       user-translate?
                        (not= (:id (element.handlers/parent db id)) (:id hovered-svg))
                        (not (utils.element/svg? (element.handlers/entity db id))))
                   (cond->
@@ -259,10 +303,10 @@
 
                     ;; FIXME: Handle nested containers.
                     (:bbox container)
-                    (element.handlers/translate id (vec (take 2 (:bbox container))))
+                    (element.handlers/translate id (start-point container))
 
                     (:bbox hovered-svg)
-                    (element.handlers/translate id (matrix/mul (take 2 (:bbox hovered-svg))
+                    (element.handlers/translate id (matrix/mul (start-point hovered-svg)
                                                                -1))))))
             db
             (element.handlers/top-ancestor-ids db))))
@@ -301,7 +345,7 @@
     (case (:state db)
       :select
       (-> (element.handlers/clear-hovered db)
-          (tool.handlers/set-temp (select-rect db (:alt-key e)))
+          (tool.handlers/add-fx [::update (select-rect db (:alt-key e))])
           (reduce-by-area (:alt-key e) element.handlers/hover))
 
       :translate
@@ -311,7 +355,7 @@
             (select-element (:shift-key e))
             (translate delta axis)
             (snap.handlers/snap-with translate axis)
-            (tool.handlers/set-cursor "default")))
+            (tool.handlers/set-cursor "move")))
 
       :clone
       (if (:alt-key e)
@@ -336,9 +380,10 @@
 (defmethod tool.hierarchy/on-drag-end :transform
   [db e]
   (-> (case (:state db)
-        :select (-> (cond-> db (not (:shift-key e)) element.handlers/deselect-all)
+        :select (-> (cond-> db
+                      (not (:shift-key e)) element.handlers/deselect)
                     (reduce-by-area (:alt-key e) element.handlers/select)
-                    (tool.handlers/dissoc-temp)
+                    (tool.handlers/add-fx [::update nil])
                     (history.handlers/finalize "Modify selection"))
         :translate (history.handlers/finalize db "Move selection")
         :scale (history.handlers/finalize db "Scale selection")
@@ -350,8 +395,7 @@
 
 (defmethod tool.hierarchy/snapping-points :transform
   [db]
-  (let [elements (vals (element.handlers/entities db))
-        selected (filter :selected elements)
+  (let [selected (element.handlers/selected db)
         options (-> db :snap :options)]
     (cond
       (= (:state db) :scale)
@@ -368,9 +412,7 @@
 
 (defmethod tool.hierarchy/snapping-elements :transform
   [db]
-  (let [non-selected-ids (element.handlers/non-selected-ids db)
-        non-selected (select-keys (element.handlers/entities db) (vec non-selected-ids))]
-    (filter :visible (vals non-selected))))
+  (element.handlers/non-selected-visible db))
 
 (m/=> size-label [:-> BBox any?])
 (defn size-label
@@ -380,7 +422,7 @@
         x (+ min-x (/ (- max-x min-x) 2))
         y (+ y2 (/ (+ (/ theme.db/handle-size 2) 15) zoom))
         [w h] (utils.bounds/->dimensions bbox)
-        text (str (.toFixed w 2) " x " (.toFixed h 2))]
+        text (str (.toFixed w 3) " x " (.toFixed h 3))]
     [utils.svg/label text [x y]]))
 
 (m/=> area-label [:-> number? BBox any?])
@@ -391,7 +433,7 @@
           [min-x min-y max-x] bbox
           x (+ min-x (/ (- max-x min-x) 2))
           y (+ min-y (/ (- -15 (/ theme.db/handle-size 2)) zoom))
-          text (str (.toFixed area 2) " px²")]
+          text (str (.toFixed area 3) " px²")]
       [utils.svg/label text [x y]])))
 
 (defmethod tool.hierarchy/render :transform
@@ -420,10 +462,10 @@
        [:<>
         [tool.views/wrapping-bbox bbox]
         [tool.views/bounding-corners bbox]
-        (case state
-          :scale [size-label bbox]
-          :idle [tool.views/bounding-corners bbox]
-          nil)])
+        (when (= state :scale)
+          [size-label bbox])])
 
      (when pivot-point
-       [utils.svg/times pivot-point])]))
+       [utils.svg/times pivot-point])
+
+     [element.hierarchy/render @bbox-element]]))

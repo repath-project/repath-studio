@@ -1,13 +1,13 @@
 (ns renderer.tool.impl.base.pan
   (:require
+   [cljs.test :as t]
    [clojure.core.matrix :as matrix]
    [renderer.app.effects :as-alias app.effects]
    [renderer.frame.handlers :as frame.handlers]
    [renderer.snap.handlers :as snap.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.i18n :refer [t]]
-   [cljs.test :as t]))
+   [renderer.utils.i18n :refer [t]]))
 
 (derive :pan ::tool.hierarchy/tool)
 
@@ -23,19 +23,13 @@
   []
   (t [::idle-help "Click and drag to pan."]))
 
-(defmethod tool.hierarchy/help [:pan :pan]
-  []
-  (t [::pan-help "Drag to pan."]))
-
 (defmethod tool.hierarchy/on-pointer-up :pan
   [db _e]
-  (-> (tool.handlers/set-cursor db "grab")
-      (tool.handlers/set-state :idle)))
+  (tool.handlers/set-cursor db "grab"))
 
 (defmethod tool.hierarchy/on-pointer-down :pan
   [db _e]
-  (-> (tool.handlers/set-cursor db "grabbing")
-      (tool.handlers/set-state :pan)))
+  (tool.handlers/set-cursor db "grabbing"))
 
 (defmethod tool.hierarchy/on-drag :pan
   [db e]
@@ -44,6 +38,5 @@
 (defmethod tool.hierarchy/on-drag-end :pan
   [db _e]
   (-> (tool.handlers/set-cursor db "grab")
-      (tool.handlers/set-state :idle)
       (snap.handlers/update-viewport-tree)
       (tool.handlers/add-fx [::app.effects/persist])))

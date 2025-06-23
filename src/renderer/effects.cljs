@@ -1,15 +1,9 @@
 (ns renderer.effects
   (:require
-   [akiroz.re-frame.storage :as rf.storage]
-   [clojure.string :as string]
-   [config :as config]
    [re-frame.core :as rf]
    [renderer.notification.events :as-alias notification.events]
-   [renderer.utils.dom :as utils.dom]))
-
-(defn abort-error?
-  [error]
-  (string/includes? (.-message error) "The user aborted a request."))
+   [renderer.utils.dom :as utils.dom]
+   [renderer.utils.error :as utils.error]))
 
 (rf/reg-cofx
  ::guid
@@ -42,22 +36,18 @@
      (.focus element))))
 
 (rf/reg-fx
- ::local-storage-clear
- (fn []
-   (rf.storage/->store config/app-key {})))
-
-(rf/reg-fx
  ::set-document-attr
  (fn [[k v]]
    (.setAttribute js/window.document.documentElement k v)))
 
-(rf/reg-fx
- ::query-local-fonts
- (fn [{:keys [on-success on-error formatter]}]
-   (when-not (undefined? js/window.queryLocalFonts)
-     (-> (.queryLocalFonts js/window)
-         (.then #(when on-success (rf/dispatch (conj on-success (cond-> % formatter formatter)))))
-         (.catch #(when on-error (rf/dispatch (conj on-error %))))))))
+(defn legacy-file-open!
+  [cb]
+  (let [el (js/document.createElement "input")]
+    (set! (.-type el) "file")
+    (.addEventListener el "change" (fn [e]
+                                     (.remove el)
+                                     (cb (first (.. e -target -files)))))
+    (.click el)))
 
 (rf/reg-fx
  ::file-save
@@ -76,21 +66,12 @@
                                                            formatter
                                                            formatter))))))))))
          (.catch (fn [^js/Error error]
-                   (when (and on-error (not (abort-error? error)))
+                   (when (and on-error (not (utils.error/abort-error? error)))
                      (rf/dispatch (conj on-error error))))))
      (rf/dispatch
-      [::notification.events/unavailable-feature
+      [::notification.events/show-unavailable-feature
        "Save File Picker"
        "https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker#browser_compatibility"]))))
-
-(defn legacy-file-open!
-  [cb]
-  (let [el (js/document.createElement "input")]
-    (set! (.-type el) "file")
-    (.addEventListener el "change" (fn [e]
-                                     (.remove el)
-                                     (cb (first (.. e -target -files)))))
-    (.click el)))
 
 (rf/reg-fx
  ::file-open
@@ -101,7 +82,7 @@
            (.then (fn [[^js/FileSystemFileHandle file-handle]]
                     (.then (.getFile file-handle) success-cb)))
            (.catch (fn [^js/Error error]
-                     (when (and on-error (not (abort-error? error)))
+                     (when (and on-error (not (utils.error/abort-error? error)))
                        (rf/dispatch (conj on-error error))))))
        (legacy-file-open! success-cb)))))
 
@@ -157,3 +138,38 @@
      (.write document content)
      (.print print-window)
      (.close print-window))))
+
+(rf/reg-fx
+ ::open-remote-url
+ (fn [url]
+   (.open js/window url)))
+
+(rf/reg-fx
+ ::add-listener
+ (fn [[target channel listener formatter]]
+   (.addEventListener target
+                      channel
+                      #(rf/dispatch (conj listener
+                                          (cond-> %
+                                            formatter formatter))))))
+
+(rf/reg-fx
+ ::ipc-send
+ (fn [[channel data]]
+   (when js/window.api
+     (js/window.api.send channel (clj->js data)))))
+
+(rf/reg-fx
+ ::ipc-invoke
+ (fn [{:keys [channel data formatter on-success on-error]}]
+   (when js/window.api
+     (-> (js/window.api.invoke channel (clj->js data))
+         (.then #(when on-success (rf/dispatch (conj on-success (cond-> %
+                                                                  formatter formatter)))))
+         (.catch #(when on-error (rf/dispatch (conj on-error %))))))))
+
+(rf/reg-fx
+ ::ipc-on
+ (fn [[channel listener]]
+   (when js/window.api
+     (js/window.api.on channel #(rf/dispatch listener)))))

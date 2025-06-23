@@ -12,6 +12,7 @@
    [renderer.snap.db :refer [SnapOptions]]
    [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.bounds :as utils.bounds :refer [BBox]]
+   [renderer.utils.dom :refer [DomElement]]
    [renderer.utils.map :as utils.map]
    [renderer.utils.math :refer [Vec2]]))
 
@@ -30,10 +31,12 @@
   [el]
   (or (svg? el) (root? el)))
 
+(def properties-memo (memoize element.hierarchy/properties))
+
 (m/=> properties [:-> Element [:maybe map?]])
 (defn properties
   [el]
-  (-> el :tag element.hierarchy/properties))
+  (-> el :tag properties-memo))
 
 (m/=> ratio-locked? [:-> Element boolean?])
 (defn ratio-locked?
@@ -91,28 +94,34 @@
 
 (m/=> ->path [:-> Element Element])
 (defn ->path
-  [el]
-  (cond-> el
-    (get-method element.hierarchy/path (:tag el))
-    (-> (assoc :tag :path)
-        (update :attrs #(utils.map/merge-common-with str % (utils.attribute/defaults-memo :path)))
-        (assoc-in [:attrs :d] (element.hierarchy/path el)))))
+  ([el]
+   (->path el (element.hierarchy/path el)))
+  ([el d]
+   (let [default-attrs (utils.attribute/defaults-memo :path)]
+     (cond
+       (string? d)
+       (-> (assoc el :tag :path)
+           (update :attrs #(utils.map/merge-common-with str % default-attrs))
+           (assoc-in [:attrs :d] d))
+
+       (instance? js/Promise d)
+       (.then d (fn [d] (->path el d)))))))
 
 (m/=> stroke->path [:-> Element Element])
 (defn stroke->path
   [{:keys [attrs] :as el}]
-  (let [d (element.hierarchy/path el)
-        paper-path (Path. d)
+  (let [paper-path (Path. (:d attrs))
         el-offset (or (:stroke-width attrs) 1)
         stroke-path (PaperOffset.offsetStroke
                      paper-path
                      (/ el-offset 2)
                      #js {:cap (or (:stroke-linecap attrs) "butt")
                           :join (or (:stroke-linejoin attrs) "miter")})
-        new-d (.getAttribute (.exportSVG stroke-path) "d")]
+        new-d (.getAttribute (.exportSVG stroke-path) "d")
+        default-attrs (utils.attribute/defaults-memo :path)]
     (-> (assoc el :tag :path)
         (update :attrs dissoc :stroke :stroke-width)
-        (update :attrs #(utils.map/merge-common-with str % (utils.attribute/defaults-memo :path)))
+        (update :attrs #(utils.map/merge-common-with str % default-attrs))
         (assoc-in [:attrs :d] new-d)
         (assoc-in [:attrs :fill] (:stroke attrs)))))
 
@@ -160,3 +169,16 @@
   (->> ratio
        (matrix/mul pivot-point)
        (matrix/sub pivot-point)))
+
+(m/=> ->dom-element [:-> Element DomElement])
+(defn ->dom-element
+  [el]
+  (let [{:keys [tag attrs]} el
+        dom-el (js/document.createElementNS "http://www.w3.org/2000/svg" (name tag))
+        el (dissoc el :attrs)
+        supported-attrs (keep (fn [[k v]]
+                                (when (supported-attr? el k)
+                                  [k v])) attrs)]
+    (doseq [[k v] supported-attrs]
+      (.setAttributeNS dom-el nil (name k) v))
+    dom-el))

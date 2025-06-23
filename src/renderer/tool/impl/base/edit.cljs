@@ -102,11 +102,7 @@
 
 (defmethod tool.hierarchy/snapping-elements :edit
   [db]
-  (let [non-selected-ids (element.handlers/non-selected-ids db)
-        non-selected (select-keys (element.handlers/entities db)
-                                  (vec non-selected-ids))]
-    (->> (vals non-selected)
-         (filter :visible))))
+  (element.handlers/non-selected-visible db))
 
 (defmethod tool.hierarchy/render :edit
   []

@@ -5,7 +5,6 @@
    ["electron-log/main" :as log]
    ["electron-reloader"]
    ["electron-window-state" :as window-state-keeper]
-   ["font-scanner" :as fontManager]
    ["os" :as os]
    ["path" :as path]
    ["url" :as url]
@@ -53,7 +52,8 @@
      ["open-remote-url" open-external!]
      ["open-directory" #(.showItemInFolder shell %)]
      ["window-minimize" #(.minimize ^js @main-window)]
-     ["window-toggle-fullscreen" #(.setFullScreen ^js @main-window (not (.isFullScreen ^js @main-window)))]
+     ["window-toggle-fullscreen" #(.setFullScreen ^js @main-window
+                                                  (not (.isFullScreen ^js @main-window)))]
      ["window-toggle-maximized" #(if (.isMaximized ^js @main-window)
                                    (.unmaximize ^js @main-window)
                                    (.maximize ^js @main-window))]]]
@@ -67,8 +67,7 @@
      ["save-document" file/save!]
      ["save-document-as" file/save-as!]
      ["export" file/export!]
-     ["print" file/print!]
-     ["load-system-fonts" #(.getAvailableFonts fontManager)]]]
+     ["print" file/print!]]]
     (.handle ipcMain e #(f %2))))
 
 (defn register-window-events!
@@ -163,7 +162,9 @@
                 :frame false}))
   (.once ^js @loading-window "show" init-main-window!)
   (.loadURL ^js @loading-window (resource-path "/public/loading.html"))
-  (.once ^js (.-webContents @loading-window) "did-finish-load" #(.show ^js @loading-window)))
+  (.once ^js (.-webContents @loading-window)
+         "did-finish-load"
+         #(.show ^js @loading-window)))
 
 (defn ^:export init! []
   (.initialize log)

@@ -1,10 +1,10 @@
 (ns renderer.notification.views
   (:require
    [re-frame.core :as rf]
+   [renderer.events :as-alias events]
    [renderer.notification.events :as-alias notification.events]
    [renderer.notification.subs :as-alias notification.subs]
-   [renderer.views :as views]
-   [renderer.window.events :as-alias window.events]))
+   [renderer.views :as views]))
 
 (defn unavailable-feature
   [feature compatibility-url]
@@ -14,7 +14,7 @@
     "Your browser does not support this API."
     "You can check the "
     [:button.button-link
-     {:on-click #(rf/dispatch [::window.events/open-remote-url compatibility-url])}
+     {:on-click #(rf/dispatch [::events/open-remote-url compatibility-url])}
      "browser compatibility table."]]])
 
 (defn generic-error
@@ -42,8 +42,9 @@
     [:div.fixed.flex.flex-col.m-4.right-0.bottom-0.gap-2.items-end
      (map-indexed
       (fn [index notification]
-        [:div.relative.flex.bg-secondary.w-80.p-4.mb-2.rounded.shadow-md.border.border-default
-         {:key index}
+        [:div.relative.flex.bg-secondary.w-80.p-4.mb-2.rounded.shadow-md
+         {:key index
+          :class "border border-default"}
          (:content notification)
          [views/icon-button
           "times"

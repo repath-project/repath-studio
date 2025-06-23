@@ -22,14 +22,21 @@
   [:map-of keyword? [:map [:visible boolean?]]])
 
 (def Lang
-  [:fn {:error/fn (fn [{:keys [value]} _]
-                    (str value " is not a supported language"))}
-   utils.i18n/lang?])
+  [:fn {:error/fn (fn [{:keys [value]} _] (str value " is not a supported language"))}
+   utils.i18n/supported-lang?])
+
+(def Platform
+  [:enum "darwin" "linux" "win32" "web"])
+
+(def Font
+  [:map-of {:title "style"} string? [:map
+                                     [:postscript-name string?]
+                                     [:full-name string?]]])
 
 (def App
   [:map {:closed true}
    [:tool {:default :transform} Tool]
-   [:primary-tool {:optional true} Tool]
+   [:cached-tool {:optional true} Tool]
    [:pointer-pos {:default [0 0]} Vec2]
    [:pointer-offset {:optional true} Vec2]
    [:adjusted-pointer-pos {:default [0 0]} Vec2]
@@ -39,9 +46,10 @@
    [:nearest-neighbors {:optional true} [:sequential NearestNeighbor]]
    [:drag {:optional true} boolean?]
    [:zoom-sensitivity {:default 0.75} [:and number? pos?]]
-   [:event-time {:optional true} number?]
+   [:event-timestamp {:optional true} number?]
    [:double-click-delta {:default 250} [:and number? pos?]]
    [:state {:default :idle} State]
+   [:cached-state {:optional true} State]
    [:grid {:default false :persist true} boolean?]
    [:ruler {:default {} :persist true} Ruler]
    [:snap {:default {} :persist true} Snap]
@@ -53,13 +61,18 @@
    [:document-tabs {:default [] :persist true} [:vector uuid?]]
    [:recent {:max 10 :default [] :persist true} [:vector string?]]
    [:drag-threshold {:default 1} number?]
-   [:system-fonts {:optional true} vector?]
+   [:system-fonts {:optional true} [:map-of string? Font]]
    [:notifications {:default []} [:* Notification]]
    [:debug-info {:default false} boolean?]
    [:help-bar {:default true} boolean?]
    [:pen-mode {:default false} boolean?]
    [:backdrop {:default false} boolean?]
-   [:lang {:default :en-US :persist true} Lang]
+   [:lang {:optional true :persist true} Lang]
+   [:system-lang {:optional true} string?]
+   [:platform {:optional true} Platform]
+   [:versions {:optional true} [:maybe map?]]
+   [:env {:optional true} [:maybe map?]]
+   [:user-agent {:optional true} string?]
    [:repl-mode {:default :cljs} keyword?]
    [:worker {:default {:tasks {}}} [:map [:tasks map?]]]
    [:window {:default {}} Window]

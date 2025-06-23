@@ -21,25 +21,25 @@
   (let [[x y] @(rf/subscribe [::app.subs/adjusted-pointer-pos])]
     [:div.flex-col.font-mono.leading-tight.hidden
      {:class "xl:flex"
-      :style {:min-width "90px"}}
+      :style {:min-width "100px"}}
      [:div.flex.justify-between
-      [:span.mr-1 "X:"] [:span (.toFixed x 2)]]
+      [:span.mr-1 "X:"] [:span (.toFixed x 3)]]
      [:div.flex.justify-between
-      [:span.mr-1 "Y:"] [:span (.toFixed y 2)]]]))
+      [:span.mr-1 "Y:"] [:span (.toFixed y 3)]]]))
 
 (defn zoom-options []
-  [{:label (t [::zoom-set-50 "Set to 50%"]) 
+  [{:label (t [::zoom-set-50 "Set to 50%"])
     :id "50"
     :action [::frame.events/set-zoom 0.5]}
    {:label (t [::zoom-set-100 "Set to 100%"])
     :id "100"
     :action [::frame.events/set-zoom 1]}
-   {:label (t [::zoom-set-200 "Set to 200%"]) 
+   {:label (t [::zoom-set-200 "Set to 200%"])
     :id "200"
     :action [::frame.events/set-zoom 2]}
    {:id :divider-1
     :type :separator}
-   {:label (t [::zoom-focus-selected "Focus selected"]) 
+   {:label (t [::zoom-focus-selected "Focus selected"])
     :id "center-selected"
     :action [::frame.events/focus-selection :original]}
    {:label (t [::zoom-fit-selected "Fit selected"])
@@ -54,7 +54,8 @@
   [:> DropdownMenu/Root
    [:> DropdownMenu/Trigger
     {:title (t [::select-zoom "Select zoom level"])
-     :class "button flex items-center justify-center overlay px-2 font-mono rounded-sm hover:overlay-2x"
+     :class "button flex items-center justify-center overlay px-2
+             font-mono rounded-sm hover:overlay-2x"
      :side "top"}
     [:div.flex.items-center
      [views/icon "chevron-up"]]]
@@ -62,8 +63,10 @@
     [:> DropdownMenu/Content
      {:class "menu-content rounded-sm"
       :side "top"
-      :align "end"}
-     (for [item (zoom-options)]
+      :align "end"
+      :on-key-down #(.stopPropagation %)
+      :on-escape-key-down #(.stopPropagation %)}
+     (for [item zoom-options]
        ^{:key (:id item)} [views/dropdown-menu-item item])
      [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]])
 
@@ -111,7 +114,7 @@
 (defn zoom-input
   [zoom]
   (let [value (.toFixed (* 100 zoom) (zoom-decimal-points zoom) 2)]
-    [:input.form-element.overlay.text-right
+    [:input.form-element.overlay.text-right.font-mono.p-1
      {:key zoom
       :aria-label "Zoom"
       :type "number"
@@ -119,6 +122,7 @@
       :min "1"
       :max "10000"
       :style {:width "60px"
+              :font-size "inherit"
               :appearance "textfield"}
       :default-value value
       :on-blur #(set-zoom % value)
@@ -145,7 +149,7 @@
      [:div.flex.hidden
       {:class "md:flex"}
       [zoom-input zoom]
-      [:div.pr-2.overlay.flex.items-center "%"]]
+      [:div.pr-2.overlay.flex.items-center.font-mono "%"]]
      [zoom-menu]]))
 
 (defn root []

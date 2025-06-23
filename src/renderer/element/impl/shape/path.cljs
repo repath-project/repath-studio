@@ -25,6 +25,7 @@
            :fill
            :stroke
            :stroke-linejoin
+           :stroke-linecap
            :opacity]})
 
 (defmethod element.hierarchy/translate :path
@@ -65,13 +66,13 @@
      (map-indexed (fn [i segment]
                     (case (-> segment first string/lower-case)
                       "m"
-                      (let [[x y] (mapv utils.length/unit->px [(second segment) (last segment)])
-                            [x y] (matrix/add offset [x y])]
+                      (let [point (mapv utils.length/unit->px (rest segment))
+                            [x y] (matrix/add offset point)]
                         (square-handle i [x y]))
 
                       "l"
-                      (let [[x y] (mapv utils.length/unit->px [(second segment) (last segment)])
-                            [x y] (matrix/add offset [x y])]
+                      (let [point (mapv utils.length/unit->px (rest segment))
+                            [x y] (matrix/add offset point)]
                         (square-handle i [x y]))
 
                       nil))
@@ -92,3 +93,7 @@
     (update-in el [:attrs :d] #(-> (svgpath %)
                                    (translate-segment index offset)
                                    (.toString)))))
+
+(defmethod element.hierarchy/path :path
+  [el]
+  (-> el :attrs :d))

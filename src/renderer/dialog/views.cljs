@@ -5,25 +5,26 @@
    [clojure.string :as string]
    [config :as config]
    [re-frame.core :as rf]
+   [renderer.app.subs :as app.subs]
    [renderer.dialog.events :as-alias dialog.events]
    [renderer.dialog.subs :as-alias dialog.subs]
    [renderer.document.events :as-alias document.events]
    [renderer.menubar.views :as menubar.views]
    [renderer.utils.i18n :refer [t]]
-   [renderer.utils.system :as utils.system]
    [renderer.views :as views]))
 
 (defn about
   []
-  [:div.p-5
-   [:div.flex.gap-3.items-start.pb-2
-    [:p
-     [:span.block [:strong (t [::version "Version: "])] config/version]
-     [:span.block [:strong (t [::browser "Browser: "])] utils.system/user-agent]]]
-   [:button.button.px-2.accent.rounded.w-full
-    {:auto-focus true
-     :on-click #(rf/dispatch [::dialog.events/close])}
-    "OK"]])
+  (let [user-agent @(rf/subscribe [::app.subs/user-agent])]
+    [:div.p-5
+     [:div.flex.gap-3.items-start.pb-2
+      [:p
+       [:span.block [:strong (t [::version "Version: "])] config/version]
+       [:span.block [:strong (t [::browser "Browser: "])] user-agent]]]
+     [:button.button.px-2.accent.rounded.w-full
+      {:auto-focus true
+       :on-click #(rf/dispatch [::dialog.events/close])}
+      "OK"]]))
 
 (defn confirmation
   [{:keys [description action confirm-label cancel-label]}]
@@ -33,7 +34,7 @@
     [:button.button.px-2.bg-primary.rounded.flex-1
      {:on-click #(rf/dispatch [::dialog.events/close])}
      (or cancel-label (t [::cancel "Cancel"]))]
-    [:button.button.px-2.bg-primary.rounded.flex-1
+    [:button.button.px-2.rounded.flex-1.accent
      {:auto-focus true
       :on-click #(rf/dispatch [::dialog.events/close action])}
      (or confirm-label "OK")]]])
@@ -41,21 +42,23 @@
 (defn save
   [{:keys [id title]}]
   [:div.p-5
-   (t [::changes-will-be-lost 
+   (t [::changes-will-be-lost
        [:p
         "Your changes to " [:strong title]
         " will be lost if you close the document without saving."]]
-      [[:strong title]]) 
+      [[:strong title]])
    [:div.flex.gap-2.flex-wrap
     [:button.button.px-2.bg-primary.rounded.flex-1
-     {:on-click #(rf/dispatch [::dialog.events/close [::document.events/close id false]])}
+     {:on-click #(rf/dispatch [::dialog.events/close
+                               [::document.events/close id false]])}
      (t [::dont-save "Don't save"])]
     [:button.button.px-2.bg-primary.rounded.flex-1
      {:on-click #(rf/dispatch [::dialog.events/close])}
      (t [::cancel "Cancel"])]
     [:button.button.px-2.rounded.flex-1.accent
      {:auto-focus true
-      :on-click #(rf/dispatch [::dialog.events/close [::document.events/save-and-close id]])}
+      :on-click #(rf/dispatch [::dialog.events/close
+                               [::document.events/save-and-close id]])}
      (t [::save "Save"])]]])
 
 (defn cmdk-item

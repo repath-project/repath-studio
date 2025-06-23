@@ -46,12 +46,16 @@
 (defmethod element.hierarchy/bbox :ellipse
   [el]
   (let [{{:keys [cx cy rx ry]} :attrs} el
+        rx (or rx ry)
+        ry (or ry rx)
         [cx cy rx ry] (map utils.length/unit->px [cx cy rx ry])]
     [(- cx rx) (- cy ry) (+ cx rx) (+ cy ry)]))
 
 (defmethod element.hierarchy/path :ellipse
   [el]
   (let [{{:keys [cx cy rx ry]} :attrs} el
+        rx (or rx ry)
+        ry (or ry rx)
         [cx cy rx ry] (mapv utils.length/unit->px [cx cy rx ry])]
     (string/join " " ["M" (+ cx rx) cy
                       "A" rx ry 0 0 1 cx (+ cy ry)
@@ -62,15 +66,18 @@
 (defmethod element.hierarchy/area :ellipse
   [el]
   (let [{{:keys [rx ry]} :attrs} el
+        rx (or rx ry)
+        ry (or ry rx)
         [rx ry] (map utils.length/unit->px [rx ry])]
     (* Math/PI rx ry)))
 
 (defmethod element.hierarchy/edit :ellipse
   [el [x y] handle]
-  (case handle
-    :rx (attr.hierarchy/update-attr el :rx #(abs (+ % x)))
-    :ry (attr.hierarchy/update-attr el :ry #(abs (- % y)))
-    el))
+  (let [{{:keys [rx ry]} :attrs} el]
+    (case handle
+      :rx (attr.hierarchy/update-attr el (if rx :rx :ry) #(abs (+ % x)))
+      :ry (attr.hierarchy/update-attr el (if ry :ry :rx) #(abs (- % y)))
+      el)))
 
 (defmethod element.hierarchy/render-edit :ellipse
   [el]
@@ -80,15 +87,14 @@
     [:g ::edit-handles
      [utils.svg/times [cx cy]]
      [utils.svg/line [cx cy] [(+ cx rx) cy]]
-     [utils.svg/label (str (.toFixed rx 2)) [(+ cx (/ rx 2)) cy]]
+     [utils.svg/label (str (.toFixed rx 3)) [(+ cx (/ rx 2)) cy]]
      [utils.svg/line [cx cy] [cx (- cy ry)]]
-     [utils.svg/label (str (.toFixed ry 2)) [cx (- cy (/ ry 2))]]
+     [utils.svg/label (str (.toFixed ry 3)) [cx (- cy (/ ry 2))]]
      (map (fn [handle]
             ^{:key (:id handle)}
             [tool.views/square-handle
              (merge handle {:type :handle
                             :action :edit
-                            :cursor "move"
                             :element (:id el)})
              [:title
               {:key (str (:id handle) "-title")}
