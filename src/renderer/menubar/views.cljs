@@ -413,10 +413,10 @@
 (defn languages-submenu []
   [{:id :lan-us
     :label "US"
-    :action [::app.events/set-lang :en-US]}
+    :action [::app.events/set-lang "en-US"]}
    {:id :lan-gr
     :label "GR"
-    :action [::app.events/set-lang :el-GR]}])
+    :action [::app.events/set-lang "el-GR"]}])
 
 (defn panel-submenu
   []

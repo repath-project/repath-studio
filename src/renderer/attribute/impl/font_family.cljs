@@ -28,16 +28,6 @@
      {:style {:font-family font}}
      "AaBbCc 0123"]]])
 
-(defn font-item
-  [font]
-  [:> Command/CommandItem
-   {:on-select #(rf/dispatch [::element.events/set-attr :font-family font])}
-   [:div.flex.justify-between.items-center.w-full.gap-2
-    [:div font]
-    [:div.leading-none.text-muted
-     {:style {:font-family font}}
-     "AaBbCc 0123"]]])
-
 (defn suggestions-list
   [font-list]
   [:div.flex.flex-col
