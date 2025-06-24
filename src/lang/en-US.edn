@@ -213,7 +213,9 @@
                 of text. It's possible to apply a gradient, pattern,
                 clipping path, mask, or filter to <text>, like any other SVG
                 graphics element."
-  :label       "Text"}
+  :label       "Text"
+  :remove-text "Remove text"
+  :set-text    "Set text"}
 
  :renderer.attribute.views
  {:browser-compatibility "Browser compatibility"
@@ -396,7 +398,9 @@
  {:help-idle-drag  [:div "Drag a handle to modify your shape."]
   :help-idle-click [:div "Click on an element to change selection"]
   :help-edit       [:div "Hold %1 to restrict direction."]
-  :help-type       [:div "Enter your text."]}
+  :help-type       [:div "Enter your text."]
+  :select-element  "Select element"
+  :edit            "Edit"}
 
  :renderer.tool.impl.base.transform
  {:idle-click  [:div "Click to select an element or drag to select by area. "]
@@ -406,7 +410,15 @@
   :deselect-element "Deselect element"
   :translate   [:div "Hold %1 to restrict direction, and %2 to clone."]
   :clone       [:div "Hold %1 to restrict direction. or release %2 to move"]
-  :scale       [:div "Hold %1 to lock proportions, %2 to scale in place, %3 to also scale children."]}
+  :scale       [:div "Hold %1 to lock proportions, %2 to scale in place, %3 to also scale children."]
+  :move-selection-up "Move selection up"
+  :move-selection-down "Move selection down"
+  :move-selection-left "Move selection left"
+  :move-selection-right "Move selection right"
+  :modify-selection "Modify selection"
+  :move-selection   "Move selection"
+  :scale-selection  "Scale selection"
+  :clone-selection  "Clone selection"}
 
  :renderer.tool.impl.base.pan
  {:idle-help "Click and drag to pan."
@@ -417,7 +429,13 @@
   :zoom-out [:div "Hold %1 to zoom out."]}
 
  :renderer.document.events
- {:save-changes "Do you want to save your changes?"}
+ {:save-changes "Do you want to save your changes?"
+  :create-doc   "Create document"
+  :init-doc     "Init document"
+  :create-doc-from-template "Create document from template"
+  :load-doc     "Load document"
+  :error-loading "Error while loading %1"
+  :unsupported-or-corrupted "File appears to be unsupported or corrupted."}
 
  :renderer.document.views
  {:new            "New"

@@ -67,10 +67,10 @@
  (fn [db [_ id s]]
    (-> (if (empty? s)
          (-> (element.handlers/delete db id)
-             (history.handlers/finalize "Remove text"))
+             (history.handlers/finalize  #(t [::remove-text "Remove text"])))
          (-> (element.handlers/assoc-prop db id :content s)
              (element.handlers/refresh-bbox id)
-             (history.handlers/finalize "Set text")))
+             (history.handlers/finalize #(t [::set-text "Set text"]))))
        (tool.handlers/activate :transform))))
 
 (defmethod element.hierarchy/render :text

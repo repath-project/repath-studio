@@ -156,7 +156,7 @@
  [(rf/inject-cofx ::effects/guid)]
  (fn [{:keys [db guid]} [_]]
    {:db (-> (create db guid)
-            (history.handlers/finalize "Create document"))
+            (history.handlers/finalize  #(t [::create-doc "Create document"])))
     ::effects/focus nil}))
 
 (rf/reg-event-fx
@@ -166,14 +166,14 @@
    {:db (if (:active-document db)
           (snap.handlers/rebuild-tree db)
           (-> (create db guid)
-              (history.handlers/finalize "Init document")))}))
+              (history.handlers/finalize #(t [::init-doc "Init document"]))))}))
 
 (rf/reg-event-fx
  ::new-from-template
  [(rf/inject-cofx ::effects/guid)]
  (fn [{:keys [db guid]} [_ size]]
    {:db (-> (create db guid size)
-            (history.handlers/finalize "Create document from template"))}))
+            (history.handlers/finalize #(t [::create-doc-from-template "Create document from template"])))}))
 
 (rf/reg-event-fx
  ::open
@@ -214,13 +214,13 @@
            migrated (not= document migrated-document)
            document (assoc migrated-document :id guid)]
        (cond-> {:db (-> (document.handlers/load db document)
-                        (history.handlers/finalize "Load document"))
+                        (history.handlers/finalize #(t [::load-doc "Load document"])))
                 ::effects/focus nil}
          (not migrated)
          (assoc :dispatch [::saved document])))
      {:db (->> (notification.views/generic-error
-                {:title (str "Error while loading " (:title document))
-                 :message "File appears to be unsupported or corrupted."})
+                {:title (t [::error-loading "Error while loading %1"] [(:title document)])
+                 :message (t [::unsupported-or-corrupted "File appears to be unsupported or corrupted."])})
                (notification.handlers/add db))})))
 
 (rf/reg-event-fx

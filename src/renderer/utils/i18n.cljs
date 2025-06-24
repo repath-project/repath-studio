@@ -24,4 +24,4 @@
   "Translation function that should be called in a reactive context."
   [& more]
   (let [lang @(rf/subscribe [::app.subs/lang])]
-    (apply tempura/tr opts [lang] more)))
+    (apply tempura/tr opts [(or lang "en-US")] more)))
