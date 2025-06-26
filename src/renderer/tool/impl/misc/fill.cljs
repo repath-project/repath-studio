@@ -4,7 +4,8 @@
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.utils.i18n :refer [t]]))
 
 (derive :fill ::tool.hierarchy/tool)
 
@@ -14,7 +15,7 @@
 
 (defmethod tool.hierarchy/help [:fill :idle]
   []
-  "Click on an element to fill.")
+  (t [::help "Click on an element to fill."]))
 
 (defmethod tool.hierarchy/on-activate :fill
   [db]
@@ -25,4 +26,4 @@
   (let [color (document.handlers/attr db :fill)
         el-id (-> e :element :id)]
     (-> (element.handlers/set-attr db el-id :fill color)
-        (history.handlers/finalize "Fill"))))
+        (history.handlers/finalize #(t [::fill "Fill"])))))

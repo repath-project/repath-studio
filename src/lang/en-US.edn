@@ -354,14 +354,31 @@
 
  :renderer.tool.impl.element.polyshape
  {:add-points "Click to add more points."
-  :finalize-shape "Double click to finalize the shape."}
+  :finalize-shape "Double click to finalize the shape."
+  :create-tool    "Create %1"}
 
  :renderer.tool.impl.element.rect
  {:name "Rectangle"
-  :help [:div "Hold %1 to lock proportions."]}
+  :help [:div "Hold %1 to lock proportions."]
+  :create-rectangle "Create rectangle"}
 
  :renderer.tool.impl.element.svg
- {:help [:div "Hold %1 to lock proportions."]}
+ {:help [:div "Hold %1 to lock proportions."]
+  :create-svg "Create svg"}
+
+ :renderer.tool.impl.extension.blob
+ {:create-blob "Create blob"}
+
+ :renderer.tool.impl.misc.dropper
+ {:help "Click anywhere to pick a color."
+  :pick-color "Pick color"}
+
+ :renderer.tool.impl.misc.fill
+ {:help "Click on an element to fill."
+  :fill "Fill"}
+
+ :renderer.tool.impl.misc.measure
+ {:help "Click and drag to measure a distance."}
 
  :renderer.tool.impl.element.text
  {:help "Click to start typing."}
@@ -456,6 +473,24 @@
  :renderer.tool.impl.base.zoom
  {:zoom-in  [:div "Click or select an area to zoom in."]
   :zoom-out [:div "Hold %1 to zoom out."]}
+
+ :renderer.tool.impl.draw.brush
+ {:draw-brush "Draw brush"}
+
+ :renderer.tool.impl.draw.pen
+ {:draw-line "Draw line"}
+
+ :renderer.tool.impl.draw.core
+ {:help "Click and drag to draw."}
+
+ :renderer.tool.impl.element.circle
+ {:create-circle "Create circle"}
+
+ :renderer.tool.impl.element.ellipse
+ {:create-ellipse "Create ellipse"}
+
+ :renderer.tool.impl.element.line
+ {:create-line "Create line"}
 
  :renderer.document.events
  {:save-changes "Do you want to save your changes?"
@@ -558,6 +593,9 @@
  {:bounds-corner   "bounds corner"
   :bounds-center   "bounds center"
   :bounds-midpoint "bounds midpoint"}
+
+ :renderer.history.events
+ {:clear-history "Clear history"}
 
  :renderer.history.views
  {:center-view               "Center view"

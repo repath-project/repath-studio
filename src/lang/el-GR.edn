@@ -324,14 +324,31 @@
 
  :renderer.tool.impl.element.polyshape
  {:add-points "Κάντε κλικ για να προσθέτε σημεία."
-  :finalize-shape "Διπλό κλικ για να οριστικοποιήσετε το σχήμα."}
+  :finalize-shape "Διπλό κλικ για να οριστικοποιήσετε το σχήμα."
+  :create-tool    "Δημιουργία %1"}
 
  :renderer.tool.impl.element.rect
  {:name "Ορθογώνιο παραλληλόγραμμο"
-  :help [:div "Κρατήστε %1 για να κλειδώσετε τις αναλογίες."]}
+  :help [:div "Κρατήστε %1 για να κλειδώσετε τις αναλογίες."]
+  :create-rectangle "Δημιουργία ορθ. παραλληλόγραμου"}
 
  :renderer.tool.impl.element.svg
- {:help [:div "Κρατήστε %1 για να κλειδώσετε τις αναλογίες."]}
+ {:help [:div "Κρατήστε %1 για να κλειδώσετε τις αναλογίες."]
+  :create-svg "Δημιουργία svg"}
+
+ :renderer.tool.impl.extension.blob
+ {:create-blob "Δημιουργία blob"}
+
+ :renderer.tool.impl.misc.dropper
+ {:help "Κάντε κλικ οπουδήποτε για να επιλέξετε χρώμα."
+  :pick-color "Επιλογή χρώματος"}
+
+ :renderer.tool.impl.misc.fill
+ {:help "Κάντε κλικ σε ένα στοιχείο για γέμισμα."
+  :fill "Γέμισμα"}
+
+ :renderer.tool.impl.misc.measure
+ {:help "Κάντε κλικ και σύρετε για να μετρήσετε μια απόσταση."}
 
  :renderer.attribute.impl.stroke-linecap
  {:description "Η ιδιότητα stroke-linecap είναι μια ιδιότητα παρουσίασης που καθορίζει το σχήμα που θα χρησιμοποιηθεί στο τέλος των ανοιχτών υποδιαδρομών
@@ -425,6 +442,24 @@
  :renderer.tool.impl.base.zoom
  {:zoom-in  [:div "Κάντε κλικ ή επιλέξτε μια περιοχή για μεγέθυνση."]
   :zoom-out [:div "Κρατήστε %1 για σμίκρυνση."]}
+
+ :renderer.tool.impl.draw.brush
+ {:draw-brush "Πινέλο σχεδίασης"}
+
+ :renderer.tool.impl.draw.pen
+ {:draw-line "Σχεδίαση γραμμής"}
+
+ :renderer.tool.impl.draw.core
+ {:help "Κάντε κλικ και σύρετε για να σχεδιάσετε."}
+
+ :renderer.tool.impl.element.circle
+ {:create-circle "Δημιουργία κύκλου"}
+
+ :renderer.tool.impl.element.ellipse
+ {:create-ellipse "Δημιουργία έλλειψης"}
+
+ :renderer.tool.impl.element.line
+ {:create-line "Δημιουργία γραμμής"}
 
  :renderer.document.events
  {:save-changes "Θέλετε να αποθηκεύσετε τις αλλαγές σας?"
@@ -527,6 +562,9 @@
  {:bounds-corner   "γωνία ορίων"
   :bounds-center   "κέντρο ορίων"
   :bounds-midpoint "μέσο σημείο ορίων"}
+
+ :renderer.history.events
+ {:clear-history "Εκκαθάριση ιστορικού"}
 
  :renderer.history.views
  {:center-view               "Κεντρική προβολή"

@@ -7,6 +7,7 @@
    [renderer.element.handlers :as element.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]
    [renderer.utils.math :as utils.math]
    [renderer.utils.svg :as utils.svg]))
@@ -26,7 +27,7 @@
 
 (defmethod tool.hierarchy/help [:measure :idle]
   []
-  "Click and drag to measure a distance.")
+  (t [::help "Click and drag to measure a distance."]))
 
 (defmethod tool.hierarchy/on-activate :measure
   [db]

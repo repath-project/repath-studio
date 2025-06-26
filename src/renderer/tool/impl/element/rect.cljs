@@ -18,7 +18,7 @@
 
 (defmethod tool.hierarchy/help [:rect :create]
   []
-  (t [::help [:div "Hold %1 to lock proportions."]] 
+  (t [::help [:div "Hold %1 to lock proportions."]]
      [[:span.shortcut-key "Ctrl"]]))
 
 (defn attributes
@@ -58,5 +58,5 @@
 (defmethod tool.hierarchy/on-drag-end :rect
   [db _e]
   (-> db
-      (history.handlers/finalize "Create rectangle")
+      (history.handlers/finalize #(t [::create-rectangle "Create rectangle"]))
       (tool.handlers/activate :transform)))

@@ -5,7 +5,8 @@
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.utils.i18n :refer [t]]))
 
 (derive :ellipse ::tool.hierarchy/element)
 
@@ -54,5 +55,5 @@
 (defmethod tool.hierarchy/on-drag-end :ellipse
   [db _e]
   (-> db
-      (history.handlers/finalize "Create ellipse")
+      (history.handlers/finalize #(t [::create-ellipse "Create ellipse"]))
       (tool.handlers/activate :transform)))

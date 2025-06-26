@@ -6,7 +6,8 @@
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.utils.i18n :refer [t]]))
 
 (derive :circle ::tool.hierarchy/element)
 
@@ -42,7 +43,7 @@
 (defmethod tool.hierarchy/on-drag-end :circle
   [db _e]
   (-> db
-      (history.handlers/finalize "Create circle")
+      (history.handlers/finalize #(t [::create-circle "Create circle"]))
       (tool.handlers/activate :transform)))
 
 (defmethod tool.hierarchy/snapping-points :circle
