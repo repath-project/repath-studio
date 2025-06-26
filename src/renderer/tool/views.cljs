@@ -50,7 +50,8 @@
                   :cursor (or cursor "move")
                   :on-pointer-up pointer-handler
                   :on-pointer-down pointer-handler
-                  :on-pointer-move pointer-handler}] children)))
+                  :on-pointer-move pointer-handler}]
+          children)))
 
 (defn scale-handle
   [props]
@@ -104,7 +105,7 @@
   [bbox]
   (let [state @(rf/subscribe [::tool.subs/state])
         clicked-element @(rf/subscribe [::app.subs/clicked-element])
-        bbox (min-bbox bbox)
+        bbox (cond-> bbox (= state :idle) min-bbox)
         [min-x min-y max-x max-y] bbox
         [w h] (utils.bounds/->dimensions bbox)]
     [:g {:key :bounding-corners}

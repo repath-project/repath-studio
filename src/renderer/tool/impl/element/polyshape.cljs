@@ -21,21 +21,21 @@
    [:div "Double click to finalize the shape."]])
 
 (defn create-polyline
-  [db points]
+  [db initial-point]
   (let [stroke (document.handlers/attr db :stroke)
         fill (document.handlers/attr db :fill)]
     (-> db
         (tool.handlers/set-state :create)
         (element.handlers/add {:type :element
                                :tag (:tool db)
-                               :attrs {:points (string/join " " points)
+                               :attrs {:points (string/join " " initial-point)
                                        :stroke stroke
                                        :fill fill}}))))
 
 (defn add-point
   [db point]
   (let [id (:id (first (element.handlers/selected db)))]
-    (element.handlers/update-attr db id :points str " " point)))
+    (element.handlers/update-attr db id :points str " " (string/join " " point))))
 
 (defn drop-last-point
   [db]

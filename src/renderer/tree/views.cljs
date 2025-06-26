@@ -77,7 +77,7 @@
 
 (defn key-down-handler!
   [e id]
-  (case (.-key e)
+  (case (.-code e)
     "ArrowUp"
     (do (.stopPropagation e)
         (rf/dispatch [::tree.events/focus-up id]))
@@ -95,6 +95,10 @@
         (rf/dispatch [::document.events/expand-el id]))
 
     "Enter"
+    (do (.stopPropagation e)
+        (rf/dispatch [::element.events/select id (.-ctrlKey e)]))
+
+    "Space"
     (do (.stopPropagation e)
         (rf/dispatch [::element.events/select id (.-ctrlKey e)]))
 
