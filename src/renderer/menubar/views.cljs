@@ -17,7 +17,7 @@
    [renderer.menubar.filters :as filters]
    [renderer.ruler.events :as-alias ruler.events]
    [renderer.ruler.subs :as-alias ruler.subs]
-   [renderer.utils.i18n :refer [t]]
+   [renderer.utils.i18n :as utils.i18n :refer [t]]
    [renderer.views :as views]
    [renderer.window.events :as-alias window.events]
    [renderer.window.subs :as-alias window.subs]))
@@ -411,12 +411,13 @@
            :action [::document.events/toggle-filter id]}) filters/accessibility))
 
 (defn languages-submenu []
-  [{:id :lan-us
-    :label "US"
-    :action [::app.events/set-lang "en-US"]}
-   {:id :lan-gr
-    :label "GR"
-    :action [::app.events/set-lang "el-GR"]}])
+  (mapv (fn [[k v]]
+          {:id k
+           :label (str (:native-name v) " - " k)
+           :type :checkbox
+           :action [::app.events/set-lang k]
+           :checked (= @(rf/subscribe [::app.subs/lang]) k)})
+        utils.i18n/languages))
 
 (defn panel-submenu
   []

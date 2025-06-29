@@ -9,19 +9,24 @@
 
 ;; We need to load resources at compile time in clojurescript
 ;; https://github.com/taoensso/tempura/issues/25#issuecomment-451742526
-(def dictionary
-  {"en-US" (load-resource-at-compile-time "lang/en-US.edn")
-   "el-GR" (load-resource-at-compile-time "lang/el-GR.edn")})
+(def languages
+  {"en-US" {:dir "ltr"
+            :native-name "English (US)"
+            :dictionary (load-resource-at-compile-time "lang/en-US.edn")}
+   "el-GR" {:dir "ltr"
+            :native-name "Ελληνικά"
+            :dictionary (load-resource-at-compile-time "lang/el-GR.edn")}})
 
 (m/=> supported-lang? [:-> string? boolean?])
 (defn supported-lang?
   [lang]
-  (contains? dictionary lang))
+  (contains? languages lang))
 
-(def opts {:dict dictionary})
+(def options
+  {:dict (into {} (map (fn [[k v]] [k (:dictionary v)])) languages)})
 
 (defn t
   "Translation function that should be called in a reactive context."
   [& more]
   (let [lang @(rf/subscribe [::app.subs/lang])]
-    (apply tempura/tr opts [(or lang "en-US")] more)))
+    (apply tempura/tr options [(or lang "en-US")] more)))
