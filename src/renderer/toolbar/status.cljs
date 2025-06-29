@@ -14,6 +14,7 @@
    [renderer.snap.views :as snap.views]
    [renderer.timeline.views :as timeline.views]
    [renderer.utils.i18n :refer [t]]
+   [renderer.utils.length :as utils.length]
    [renderer.views :as views]
    [renderer.worker.subs :as-alias worker.subs]))
 
@@ -23,9 +24,9 @@
      {:class "xl:flex"
       :style {:min-width "100px"}}
      [:div.flex.justify-between
-      [:span.mr-1 "X:"] [:span (.toFixed x 3)]]
+      [:span.mr-1 "X:"] [:span (utils.length/to-fixed x)]]
      [:div.flex.justify-between
-      [:span.mr-1 "Y:"] [:span (.toFixed y 3)]]]))
+      [:span.mr-1 "Y:"] [:span (utils.length/to-fixed y)]]]))
 
 (def zoom-options
   [{:label "Set to 50%"
@@ -113,7 +114,7 @@
 
 (defn zoom-input
   [zoom]
-  (let [value (.toFixed (* 100 zoom) (zoom-decimal-points zoom) 2)]
+  (let [value (utils.length/to-fixed (* 100 zoom) (zoom-decimal-points zoom))]
     [:input.form-element.overlay.text-right.font-mono.p-1
      {:key zoom
       :aria-label "Zoom"

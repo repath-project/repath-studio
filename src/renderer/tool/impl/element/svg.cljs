@@ -4,7 +4,8 @@
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.utils.length :as utils.length]))
 
 (derive :svg ::tool.hierarchy/element)
 
@@ -21,10 +22,10 @@
   (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
                                 (:adjusted-pointer-offset db))
         [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
-        width (.toFixed (abs (- x offset-x)) 3)
-        height (.toFixed (abs (- y offset-y)) 3)]
-    {:x (.toFixed (min x offset-x) 3)
-     :y (.toFixed (min y offset-y) 3)
+        width (utils.length/to-fixed (abs (- x offset-x)))
+        height (utils.length/to-fixed (abs (- y offset-y)))]
+    {:x (utils.length/to-fixed (min x offset-x))
+     :y (utils.length/to-fixed (min y offset-y))
      :width (cond-> width lock-ratio (min height))
      :height (cond-> height lock-ratio (min width))}))
 

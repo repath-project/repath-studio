@@ -7,7 +7,8 @@
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.utils.length :as utils.length]))
 
 (derive :line ::tool.hierarchy/element)
 
@@ -37,8 +38,8 @@
         {:keys [id parent]} (first (element.handlers/selected db))
         [min-x min-y] (element.hierarchy/bbox (element.handlers/entity db parent))
         [x y] (matrix/sub position [min-x min-y])
-        x (.toFixed x 3)
-        y (.toFixed y 3)]
+        x (utils.length/to-fixed x)
+        y (utils.length/to-fixed y)]
     (element.handlers/update-el db id #(-> %
                                            (assoc-in [:attrs :x2] (str x))
                                            (assoc-in [:attrs :y2] (str y))))))

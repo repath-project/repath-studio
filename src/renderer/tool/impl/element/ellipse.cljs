@@ -5,7 +5,8 @@
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.utils.length :as utils.length]))
 
 (derive :ellipse ::tool.hierarchy/element)
 
@@ -23,8 +24,8 @@
   (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
                                 (:adjusted-pointer-offset db))
         [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
-        rx (.toFixed (abs (- x offset-x)) 3)
-        ry (.toFixed (abs (- y offset-y)) 3)]
+        rx (utils.length/to-fixed (abs (- x offset-x)))
+        ry (utils.length/to-fixed (abs (- y offset-y)))]
     {:rx (cond-> rx lock-ratio (min ry))
      :ry (cond-> ry lock-ratio (min rx))}))
 

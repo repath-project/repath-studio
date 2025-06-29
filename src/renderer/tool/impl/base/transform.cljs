@@ -21,6 +21,7 @@
    [renderer.tool.views :as tool.views]
    [renderer.utils.bounds :as utils.bounds :refer [BBox]]
    [renderer.utils.element :as utils.element]
+   [renderer.utils.length :as utils.length]
    [renderer.utils.math :refer [Vec2]]
    [renderer.utils.svg :as utils.svg]))
 
@@ -421,7 +422,7 @@
         x (+ min-x (/ (- max-x min-x) 2))
         y (+ y2 (/ (+ (/ theme.db/handle-size 2) 15) zoom))
         [w h] (utils.bounds/->dimensions bbox)
-        text (str (.toFixed w 3) " x " (.toFixed h 3))]
+        text (str (utils.length/to-fixed w) " x " (utils.length/to-fixed h))]
     [utils.svg/label text [x y]]))
 
 (m/=> area-label [:-> number? BBox any?])
@@ -432,7 +433,7 @@
           [min-x min-y max-x] bbox
           x (+ min-x (/ (- max-x min-x) 2))
           y (+ min-y (/ (- -15 (/ theme.db/handle-size 2)) zoom))
-          text (str (.toFixed area 3) " px²")]
+          text (str (utils.length/to-fixed area) " px²")]
       [utils.svg/label text [x y]])))
 
 (defmethod tool.hierarchy/render :transform

@@ -7,7 +7,8 @@
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.utils.length :as utils.length]))
 
 (derive :blob ::tool.hierarchy/element)
 
@@ -27,9 +28,9 @@
   (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
                                 (:adjusted-pointer-offset db))
         radius (pointer-delta db)]
-    {:x (.toFixed (- offset-x radius) 3)
-     :y (.toFixed (- offset-y radius) 3)
-     :size (.toFixed (* radius 2) 3)}))
+    {:x (utils.length/to-fixed (- offset-x radius))
+     :y (utils.length/to-fixed (- offset-y radius))
+     :size (utils.length/to-fixed (* radius 2))}))
 
 (defmethod tool.hierarchy/on-drag-start :blob
   [db _e]

@@ -6,7 +6,8 @@
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.utils.length :as utils.length]))
 
 (derive :circle ::tool.hierarchy/element)
 
@@ -35,7 +36,7 @@
   [db _e]
   (let [offset (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
         position (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
-        radius (.toFixed (matrix/distance position offset) 3)
+        radius (utils.length/to-fixed (matrix/distance position offset))
         id (:id (first (element.handlers/selected db)))]
     (element.handlers/update-el db id #(assoc-in % [:attrs :r] (str radius)))))
 
