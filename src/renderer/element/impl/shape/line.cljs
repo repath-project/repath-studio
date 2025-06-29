@@ -72,7 +72,7 @@
                 [:title {:key (str id "-title")} (name id)]]
                (when is-active
                  [utils.svg/label
-                  (string/join " " [(utils.length/to-fixed x) (utils.length/to-fixed y)])
+                  (string/join " " [(utils.length/->fixed x) (utils.length/->fixed y)])
                   [(- x margin) (+ y margin)]
                   "end"])]))
           [{:x x1

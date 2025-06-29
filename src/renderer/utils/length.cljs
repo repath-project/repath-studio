@@ -63,12 +63,12 @@
    (let [initial (utils.attribute/initial-memo tag attr)]
      (unit->px v (unit->px initial 0)))))
 
-(m/=> to-fixed [:function
-                [:-> number? number?]
-                [:-> number? integer? number?]])
-(defn to-fixed
+(m/=> ->fixed [:function
+               [:-> number? number?]
+               [:-> number? integer? number?]])
+(defn ->fixed
   ([v]
-   (to-fixed v 3))
+   (->fixed v 3))
   ([v precision]
    (-> (.toFixed v precision)
        (js/parseFloat))))
@@ -80,6 +80,6 @@
   ([v f & more]
    (let [[n unit] (utils.unit/parse v)]
      (-> (apply f (->px n unit) more)
-         (to-fixed)
+         (->fixed)
          (->unit unit)
          (str (when (valid-unit? unit) unit))))))

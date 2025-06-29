@@ -24,9 +24,9 @@
      {:class "xl:flex"
       :style {:min-width "100px"}}
      [:div.flex.justify-between
-      [:span.mr-1 "X:"] [:span (utils.length/to-fixed x)]]
+      [:span.mr-1 "X:"] [:span (utils.length/->fixed x)]]
      [:div.flex.justify-between
-      [:span.mr-1 "Y:"] [:span (utils.length/to-fixed y)]]]))
+      [:span.mr-1 "Y:"] [:span (utils.length/->fixed y)]]]))
 
 (def zoom-options
   [{:label "Set to 50%"
@@ -114,7 +114,7 @@
 
 (defn zoom-input
   [zoom]
-  (let [value (utils.length/to-fixed (* 100 zoom) (zoom-decimal-points zoom))]
+  (let [value (utils.length/->fixed (* 100 zoom) (zoom-decimal-points zoom))]
     [:input.form-element.overlay.text-right.font-mono.p-1
      {:key zoom
       :aria-label "Zoom"

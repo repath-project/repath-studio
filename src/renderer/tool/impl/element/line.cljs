@@ -38,8 +38,8 @@
         {:keys [id parent]} (first (element.handlers/selected db))
         [min-x min-y] (element.hierarchy/bbox (element.handlers/entity db parent))
         [x y] (matrix/sub position [min-x min-y])
-        x (utils.length/to-fixed x)
-        y (utils.length/to-fixed y)]
+        x (utils.length/->fixed x)
+        y (utils.length/->fixed y)]
     (element.handlers/update-el db id #(-> %
                                            (assoc-in [:attrs :x2] (str x))
                                            (assoc-in [:attrs :y2] (str y))))))

@@ -422,7 +422,7 @@
         x (+ min-x (/ (- max-x min-x) 2))
         y (+ y2 (/ (+ (/ theme.db/handle-size 2) 15) zoom))
         [w h] (utils.bounds/->dimensions bbox)
-        text (str (utils.length/to-fixed w) " x " (utils.length/to-fixed h))]
+        text (str (utils.length/->fixed w) " x " (utils.length/->fixed h))]
     [utils.svg/label text [x y]]))
 
 (m/=> area-label [:-> number? BBox any?])
@@ -433,7 +433,7 @@
           [min-x min-y max-x] bbox
           x (+ min-x (/ (- max-x min-x) 2))
           y (+ min-y (/ (- -15 (/ theme.db/handle-size 2)) zoom))
-          text (str (utils.length/to-fixed area) " px²")]
+          text (str (utils.length/->fixed area) " px²")]
       [utils.svg/label text [x y]])))
 
 (defmethod tool.hierarchy/render :transform

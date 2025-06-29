@@ -39,14 +39,14 @@
 
 (defn coll->str
   [coll]
-  (str "[" (string/join " " (map utils.length/to-fixed coll)) "]"))
+  (str "[" (string/join " " (map utils.length/->fixed coll)) "]"))
 
 (defn map->str
   [m]
   (interpose ", " (map (fn [[k v]]
                          ^{:key k}
                          [:span (str (name k) ": " (if (number? v)
-                                                     (utils.length/to-fixed v)
+                                                     (utils.length/->fixed v)
                                                      (coll->str v)))]) m)))
 
 (defn debug-rows

@@ -83,7 +83,8 @@
                                                      :element (:id el)}]
                           (when is-active
                             [utils.svg/label
-                             (->> [(utils.length/to-fixed x) (utils.length/to-fixed y)]
+                             (->> [x y]
+                                  (mapv utils.length/->fixed)
                                   (string/join " "))
                              [(- x margin) (+ y margin)]
                              "end"])]))

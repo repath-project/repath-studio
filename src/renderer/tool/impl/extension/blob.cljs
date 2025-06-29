@@ -28,9 +28,9 @@
   (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
                                 (:adjusted-pointer-offset db))
         radius (pointer-delta db)]
-    {:x (utils.length/to-fixed (- offset-x radius))
-     :y (utils.length/to-fixed (- offset-y radius))
-     :size (utils.length/to-fixed (* radius 2))}))
+    {:x (utils.length/->fixed (- offset-x radius))
+     :y (utils.length/->fixed (- offset-y radius))
+     :size (utils.length/->fixed (* radius 2))}))
 
 (defmethod tool.hierarchy/on-drag-start :blob
   [db _e]

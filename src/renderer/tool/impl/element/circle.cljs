@@ -36,7 +36,7 @@
   [db _e]
   (let [offset (or (:nearest-neighbor-offset db) (:adjusted-pointer-offset db))
         position (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
-        radius (utils.length/to-fixed (matrix/distance position offset))
+        radius (utils.length/->fixed (matrix/distance position offset))
         id (:id (first (element.handlers/selected db)))]
     (element.handlers/update-el db id #(assoc-in % [:attrs :r] (str radius)))))
 
