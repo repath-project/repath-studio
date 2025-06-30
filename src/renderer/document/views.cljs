@@ -136,7 +136,7 @@
         active-id @(rf/subscribe [::document.subs/active-id])]
     [:div.flex.justify-between.gap-px
      [views/scroll-area
-      [:div.flex.flex-1
+      [:div.flex.flex-1.rtl:flex-row-reverse
        {:class "h-[41px]"}
        (for [document-id tabs]
          (let [title (:title (get documents document-id))

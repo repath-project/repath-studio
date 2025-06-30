@@ -64,13 +64,20 @@
    {::effects/set-document-attr ["lang" (:lang db)]}))
 
 (rf/reg-event-fx
+ ::set-document-dir
+ (fn [{:keys [db]} _]
+   {::effects/set-document-attr ["dir" (:dir db)]}))
+
+(rf/reg-event-fx
  ::set-lang
  [persist]
  (fn [{:keys [db]} [_ lang]]
    {:db (cond-> db
           (utils.i18n/supported-lang? lang)
-          (assoc :lang lang))
-    :dispatch [::set-document-lang]}))
+          (assoc :lang lang
+                 :dir (get-in utils.i18n/languages [lang :dir])))
+    :dispatch-n [[::set-document-lang]
+                 [::set-document-dir]]}))
 
 (rf/reg-event-fx
  ::init-lang

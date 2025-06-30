@@ -13,7 +13,7 @@
   {"en-US" {:dir "ltr"
             :native-name "English (US)"
             :dictionary (load-resource-at-compile-time "lang/en-US.edn")}
-   "el-GR" {:dir "ltr"
+   "el-GR" {:dir "rtl"
             :native-name "Ελληνικά"
             :dictionary (load-resource-at-compile-time "lang/el-GR.edn")}})
 

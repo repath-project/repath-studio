@@ -17,8 +17,8 @@
         primary (= cached-tool tool)
         properties (tool.hierarchy/properties tool)
         label (or (:label properties) (string/capitalize (name tool)))
-        translated-label (t [(keyword "renderer.toolbar.tools" (string/lower-case label)) label])] 
-    (when (:icon properties) 
+        translated-label (t [(keyword "renderer.toolbar.tools" (string/lower-case label)) label])]
+    (when (:icon properties)
       [:> Tooltip/Root
        [:> Tooltip/Trigger {:as-child true}
         [:span
@@ -35,7 +35,7 @@
 
 (defn group
   [items]
-  (into [:div.flex.gap-1]
+  (into [:div.flex.gap-1.rtl:flex-row-reverse]
         (map button items)))
 
 (def groups
@@ -48,6 +48,6 @@
 
 (defn root
   []
-  (into [:div.justify-center.bg-primary.toolbar]
+  (into [:div.justify-center.bg-primary.toolbar.rtl:flex-row-reverse]
         (interpose [:span.v-divider]
                    (map group groups))))

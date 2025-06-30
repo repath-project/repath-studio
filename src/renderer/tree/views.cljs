@@ -4,6 +4,7 @@
    [clojure.string :as string]
    [re-frame.core :as rf]
    [reagent.core :as reagent]
+   [renderer.app.subs :as-alias app.subs]
    [renderer.document.events :as-alias document.events]
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.events :as-alias element.events]
@@ -54,6 +55,7 @@
                      (reset! edit-mode? false)
                      (set-item-label! e id))}]
         [:div.flex.w-full.overflow-hidden
+         {:class "rtl:flex-row-reverse"}
          [:div.truncate
           {:class [(when-not visible "opacity-60")
                    (when (= :svg tag) "font-bold")]
@@ -121,7 +123,8 @@
   [el {:keys [depth collapsed hovered]}]
   (let [{:keys [id selected children locked visible]} el
         collapse-button-width 21
-        padding (* collapse-button-width (cond-> depth (seq children) dec))]
+        padding (* collapse-button-width (cond-> depth (seq children) dec))
+        lang-dir @(rf/subscribe [::app.subs/lang-dir])]
     [:div.list-item-button.button.flex.pr-1.items-center.text-start.outline-default
      {:class ["hover:overlay [&.hovered]:overlay hover:[&_button]:visible"
               (when selected "accent")
@@ -148,12 +151,13 @@
                     (rf/dispatch-sync [::tree.events/select-range @last-focused-id id])
                     (do (rf/dispatch [::element.events/select id (.-ctrlKey e)])
                         (reset! last-focused-id id))))
-      :style {:padding-left padding}}
-     [:div.flex.items-center.content-between.w-full
+      :style (if (= lang-dir "rtl") {:padding-right padding} {:padding-left padding})}
+     [:div.flex.items-center.justify-between.w-full
+      {:class "rtl:flex-row-reverse"}
       (when (seq children)
         [collapse-button id collapsed])
       [:div.flex-1.overflow-hidden.flex.items-center
-       {:class "gap-1.5"}
+       {:class "gap-1.5 rtl:flex-row-reverse"}
        (when-let [icon (:icon (utils.element/properties el))]
          [views/icon icon {:class (when-not visible "opacity-60")}])
        [item-label el]]

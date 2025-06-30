@@ -218,27 +218,28 @@
 
 (defn tag-info
   [tag]
-  [:div
-   [:> HoverCard/Root
-    [:> HoverCard/Trigger {:as-child true}
-     [:span.pb-px
-      [views/icon-button "info" {:title (t [::mdn-info "MDN Info"])
-                                 :class "hover:bg-transparent"}]]]
-    [:> HoverCard/Portal
-     [:> HoverCard/Content
-      {:sideOffset 5
-       :class "popover-content"
-       :align "end"}
-      [:div.p-5
-       [:h2.mb-4.text-lg (or (:label (element.hierarchy/properties tag)) tag)]
-       (when-let [description (:description (element.hierarchy/properties tag))]
-         [:p.text-pretty description])
-       [caniusethis {:tag tag}]
-       (when-let [url (:url (element.hierarchy/properties tag))]
-         [:button.button.px-3.bg-primary.w-full
-          {:on-click #(rf/dispatch [::events/open-remote-url url])}
-          (t [::learn-more "Learn more"])])]
-      [:> HoverCard/Arrow {:class "popover-arrow"}]]]]])
+  (let [lang-dir @(rf/subscribe [::app.subs/lang-dir])]
+    [:div
+     [:> HoverCard/Root
+      [:> HoverCard/Trigger {:as-child true}
+       [:span.pb-px
+        [views/icon-button "info" {:title (t [::mdn-info "MDN Info"])
+                                   :class "hover:bg-transparent"}]]]
+      [:> HoverCard/Portal
+       [:> HoverCard/Content
+        {:sideOffset 5
+         :class (str "popover-content " (if (= lang-dir "rtl") "text-right" "text-left"))
+         :align (if (= lang-dir "rtl") "start" "end")}
+        [:div.p-5
+         [:h2.mb-4.text-lg (or (:label (element.hierarchy/properties tag)) tag)]
+         (when-let [description (:description (element.hierarchy/properties tag))]
+           [:p.text-pretty description])
+         [caniusethis {:tag tag}]
+         (when-let [url (:url (element.hierarchy/properties tag))]
+           [:button.button.px-3.bg-primary.w-full
+            {:on-click #(rf/dispatch [::events/open-remote-url url])}
+            (t [::learn-more "Learn more"])])]
+        [:> HoverCard/Arrow {:class "popover-arrow"}]]]]]))
 
 (defn form
   []
@@ -248,6 +249,7 @@
         selected-locked? @(rf/subscribe [::element.subs/selected-locked?])
         tool-state @(rf/subscribe [::tool.subs/state])
         tool-cached-state @(rf/subscribe [::tool.subs/cached-state])
+        lang-dir @(rf/subscribe [::app.subs/lang-dir])
         locked? (or selected-locked?
                     (not= tool-state :idle)
                     (and tool-cached-state (not= tool-cached-state :idle)))
@@ -255,8 +257,10 @@
         multitag? (next selected-tags)]
     (when-first [el selected-elements]
       [:div.pr-px
-       [:div.flex.bg-primary.py-4.pl-4.pr-2.gap-1
+       [:div.flex.bg-primary.py-4.gap-1.rtl:flex-row-reverse
+        {:class (if (= lang-dir "rtl") "pr-4 pl-2" "pl-4 pr-2")}
         [:h1.self-center.flex-1.text-lg
+         {:class (if (= lang-dir "rtl") "text-right" "text-left")}
          (if-not (next selected-elements)
            (let [el-label (:label el)
                  properties (element.hierarchy/properties tag)

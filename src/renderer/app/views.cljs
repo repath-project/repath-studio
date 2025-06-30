@@ -225,7 +225,7 @@
       {:class "lg:w-auto"}
       [:div.bg-primary.p-6.flex.w-full.gap-8
        {:class "lg:p-12 max-w-(--breakpoint-xl)"}
-       [:div.flex-1
+       [:div.flex-1.rtl:flex-row-reverse
         [:h1.text-4xl.mb-1.font-light config/app-name]
 
         [:p.text-xl.text-muted.font-bold
