@@ -122,13 +122,15 @@
  ::raise-to-top
  (fn [db]
    (-> (element.handlers/update-index db (fn [_i sibling-count] (dec sibling-count)))
-       (history.handlers/finalize #(t [::raise-selection-top "Raise selection to top"])))))
+       (history.handlers/finalize #(t [::raise-selection-top
+                                       "Raise selection to top"])))))
 
 (rf/reg-event-db
  ::lower-to-bottom
  (fn [db]
    (-> (element.handlers/update-index db #(identity 0))
-       (history.handlers/finalize #(t [::lower-selection-bottom "Lower selection to bottom"])))))
+       (history.handlers/finalize #(t [::lower-selection-bottom
+                                       "Lower selection to bottom"])))))
 
 (rf/reg-event-db
  ::align
@@ -146,13 +148,15 @@
  ::paste-in-place
  (fn [db]
    (-> (element.handlers/paste-in-place db)
-       (history.handlers/finalize #(t [::paste-selection-in-place "Paste selection in place"])))))
+       (history.handlers/finalize #(t [::paste-selection-in-place
+                                       "Paste selection in place"])))))
 
 (rf/reg-event-db
  ::paste-styles
  (fn [db]
    (-> (element.handlers/paste-styles db)
-       (history.handlers/finalize #(t [::paste-styles-to-selection "Paste styles to selection"])))))
+       (history.handlers/finalize #(t [::paste-styles-to-selection
+                                       "Paste styles to selection"])))))
 
 (rf/reg-event-db
  ::duplicate
@@ -190,7 +194,8 @@
  ::finalize->path
  (fn [db [_ elements]]
    (-> (reduce element.handlers/swap db elements)
-       (history.handlers/finalize #(t [::convert-selection-path "Convert selection to path"])))))
+       (history.handlers/finalize #(t [::convert-selection-path
+                                       "Convert selection to path"])))))
 
 (rf/reg-event-fx
  ::stroke->path

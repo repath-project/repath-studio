@@ -173,7 +173,8 @@
  [(rf/inject-cofx ::effects/guid)]
  (fn [{:keys [db guid]} [_ size]]
    {:db (-> (create db guid size)
-            (history.handlers/finalize #(t [::create-doc-from-template "Create document from template"])))}))
+            (history.handlers/finalize #(t [::create-doc-from-template
+                                            "Create document from template"])))}))
 
 (rf/reg-event-fx
  ::open
@@ -220,7 +221,8 @@
          (assoc :dispatch [::saved document])))
      {:db (->> (notification.views/generic-error
                 {:title (t [::error-loading "Error while loading %1"] [(:title document)])
-                 :message (t [::unsupported-or-corrupted "File appears to be unsupported or corrupted."])})
+                 :message (t [::unsupported-or-corrupted
+                              "File appears to be unsupported or corrupted."])})
                (notification.handlers/add db))})))
 
 (rf/reg-event-fx

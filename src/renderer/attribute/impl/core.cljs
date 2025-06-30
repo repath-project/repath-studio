@@ -172,7 +172,8 @@
   []
   (t [::attribute-name
       "The attributeName attribute indicates the name of the CSS property or
-       attribute of the target element that is going to be changed during an animation."]))
+       attribute of the target element that is going to be 
+       changed during an animation."]))
 
 (defmethod attribute.hierarchy/description [:default :begin]
   []
@@ -190,15 +191,18 @@
 
 (defmethod attribute.hierarchy/description [:default :min]
   []
-  (t [::min "The min attribute specifies the minimum value of the active animation duration."]))
+  (t [::min "The min attribute specifies the minimum value 
+             of the active animation duration."]))
 
 (defmethod attribute.hierarchy/description [:default :max]
   []
-  (t [::max "The max attribute specifies the maximum value of the active animation duration."]))
+  (t [::max "The max attribute specifies the maximum value 
+             of the active animation duration."]))
 
 (defmethod attribute.hierarchy/description [:default :restart]
   []
-  (t [::restart "The restart attribute specifies whether or not an animation can restart."]))
+  (t [::restart
+      "The restart attribute specifies whether or not an animation can restart."]))
 
 (defmethod attribute.hierarchy/description [:default :repeatCount]
   []
@@ -208,16 +212,20 @@
 
 (defmethod attribute.hierarchy/description [:default :repeatDur]
   []
-  (t [::repeat-dur "The repeatDur attribute specifies the total duration for repeating an animation."]))
+  (t [::repeat-dur
+      "The repeatDur attribute specifies 
+       the total duration for repeating an animation."]))
 
 (defmethod attribute.hierarchy/description [:default :calcMode]
   []
-  (t [::calc-mode "The calcMode attribute specifies the interpolation mode for the animation."]))
+  (t [::calc-mode
+      "The calcMode attribute specifies the interpolation mode for the animation."]))
 
 (defmethod attribute.hierarchy/description [:default :values]
   []
   (t [::values
-      "The values attribute has different meanings, depending upon the context where it's used,
+      "The values attribute has different meanings, 
+       depending upon the context where it's used,
        either it defines a sequence of values used over the course of an animation,
        or it's a list of numbers for a color matrix, which is interpreted differently
        depending on the type of color change to be performed."]))
@@ -255,11 +263,13 @@
 
 (defmethod attribute.hierarchy/description [:default :additive]
   []
-  (t [::additive "The additive attribute controls whether or not an animation is additive."]))
+  (t [::additive
+      "The additive attribute controls whether or not an animation is additive."]))
 
 (defmethod attribute.hierarchy/description [:default :accumulate]
   []
-  (t [::accumulate "The accumulate attribute controls whether or not an animation is cumulative."]))
+  (t [::accumulate
+      "The accumulate attribute controls whether or not an animation is cumulative."]))
 
 (defmethod attribute.hierarchy/description [:default :viewBox]
   []

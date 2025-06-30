@@ -72,7 +72,8 @@
 
 (defmethod tool.hierarchy/help [:transform :scale]
   []
-  (t [::scale [:div "Hold %1 to lock proportions, %2 to scale in place, %3 to also scale children."]]
+  (t [::scale [:div "Hold %1 to lock proportions, %2 to scale in place, 
+                     %3 to also scale children."]]
      [[:span.shortcut-key "Ctrl"] [:span.shortcut-key "⇧"] [:span.shortcut-key "Alt"]]))
 
 (m/=> hovered? [:-> App Element boolean? boolean?])
@@ -384,7 +385,8 @@
                       (not (:shift-key e)) element.handlers/deselect)
                     (reduce-by-area (:alt-key e) element.handlers/select)
                     (tool.handlers/add-fx [::update nil])
-                    (history.handlers/finalize #(t [::modify-selection "Modify selection"])))
+                    (history.handlers/finalize #(t [::modify-selection
+                                                    "Modify selection"])))
         :translate (history.handlers/finalize db #(t [::move-selection "Move selection"]))
         :scale (history.handlers/finalize db #(t [::scale-selection "Scale selection"]))
         :clone (history.handlers/finalize db #(t [::clone-selection "Clone selection"]))

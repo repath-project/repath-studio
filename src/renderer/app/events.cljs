@@ -83,12 +83,15 @@
  ::init-lang
  [persist]
  (fn [{:keys [db]} _]
-   {:db (cond-> db
-          (not (:lang db))
-          (assoc :lang (if (utils.i18n/supported-lang? (:system-lang db))
-                         (:system-lang db)
-                         "en-US")))
-    :dispatch [::set-document-lang]}))
+   (let [lang (if (utils.i18n/supported-lang? (:system-lang db))
+                (:system-lang db)
+                "en-US")]
+     {:db (cond-> db
+            (not (:lang db))
+            (assoc :lang lang
+                   :dir (get-in utils.i18n/languages [lang :dir])))
+      :dispatch-n [[::set-document-lang]
+                   [::set-document-dir]]})))
 
 (rf/reg-event-db
  ::set-repl-mode

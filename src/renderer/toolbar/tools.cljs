@@ -17,7 +17,8 @@
         primary (= cached-tool tool)
         properties (tool.hierarchy/properties tool)
         label (or (:label properties) (string/capitalize (name tool)))
-        translated-label (t [(keyword "renderer.toolbar.tools" (string/lower-case label)) label])]
+        translated-label (t [(keyword "renderer.toolbar.tools" (string/lower-case label))
+                             label])]
     (when (:icon properties)
       [:> Tooltip/Root
        [:> Tooltip/Trigger {:as-child true}

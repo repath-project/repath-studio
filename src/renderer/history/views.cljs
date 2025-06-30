@@ -122,8 +122,11 @@
        (t [::center-view "Center view"])]
       [:button.button.flex-1
        {:on-click #(rf/dispatch [::dialog.events/show-confirmation
-                                 {:title (t [::action-cannot-undone "This action cannot be undone."])
-                                  :description (t [::clear-history-description "Are you sure you wish to clear the document history?"])
+                                 {:title (t [::action-cannot-undone
+                                             "This action cannot be undone."])
+                                  :description (t [::clear-history-description
+                                                   "Are you sure you wish 
+                                                    to clear the document history?"])
                                   :confirm-label (t [::clear-history "Clear history"])
                                   :action [::history.events/clear]}])}
        (t [::clear-history "Clear history"])]]
