@@ -33,19 +33,20 @@
    [renderer.toolbar.status :as toolbar.status]
    [renderer.toolbar.tools :as toolbar.tools]
    [renderer.tree.views :as tree.views]
+   [renderer.utils.length :as utils.length]
    [renderer.views :as views]
    [renderer.window.views :as window.views]))
 
 (defn coll->str
   [coll]
-  (str "[" (string/join " " (map #(.toFixed % 2) coll)) "]"))
+  (str "[" (string/join " " (map utils.length/->fixed coll)) "]"))
 
 (defn map->str
   [m]
   (interpose ", " (map (fn [[k v]]
                          ^{:key k}
                          [:span (str (name k) ": " (if (number? v)
-                                                     (.toFixed v 3)
+                                                     (utils.length/->fixed v)
                                                      (coll->str v)))]) m)))
 
 (defn debug-rows

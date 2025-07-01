@@ -5,7 +5,6 @@
            :aliased-namespace-symbol {:level :warning}
            :condition-always-true {:level :warning}
            :docstring-leading-trailing-whitespace {:level :warning}
-           :equals-float {:level :warning}
            :def-fn {:level :warning}
            :reduce-without-init {:level :warning}
            :keyword-binding {:level :warning}

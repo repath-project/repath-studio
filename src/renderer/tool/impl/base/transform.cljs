@@ -22,6 +22,7 @@
    [renderer.utils.bounds :as utils.bounds :refer [BBox]]
    [renderer.utils.element :as utils.element]
    [renderer.utils.i18n :refer [t]]
+   [renderer.utils.length :as utils.length]
    [renderer.utils.math :refer [Vec2]]
    [renderer.utils.svg :as utils.svg]))
 
@@ -72,7 +73,7 @@
 
 (defmethod tool.hierarchy/help [:transform :scale]
   []
-  (t [::scale [:div "Hold %1 to lock proportions, %2 to scale in place, 
+  (t [::scale [:div "Hold %1 to lock proportions, %2 to scale in place,
                      %3 to also scale children."]]
      [[:span.shortcut-key "Ctrl"] [:span.shortcut-key "⇧"] [:span.shortcut-key "Alt"]]))
 
@@ -424,7 +425,7 @@
         x (+ min-x (/ (- max-x min-x) 2))
         y (+ y2 (/ (+ (/ theme.db/handle-size 2) 15) zoom))
         [w h] (utils.bounds/->dimensions bbox)
-        text (str (.toFixed w 3) " x " (.toFixed h 3))]
+        text (str (utils.length/->fixed w) " x " (utils.length/->fixed h))]
     [utils.svg/label text [x y]]))
 
 (m/=> area-label [:-> number? BBox any?])
@@ -435,7 +436,7 @@
           [min-x min-y max-x] bbox
           x (+ min-x (/ (- max-x min-x) 2))
           y (+ min-y (/ (- -15 (/ theme.db/handle-size 2)) zoom))
-          text (str (.toFixed area 3) " px²")]
+          text (str (utils.length/->fixed area) " px²")]
       [utils.svg/label text [x y]])))
 
 (defmethod tool.hierarchy/render :transform

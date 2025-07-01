@@ -83,7 +83,9 @@
                                                      :element (:id el)}]
                           (when is-active
                             [utils.svg/label
-                             (string/join " " [(.toFixed x 3) (.toFixed y 3)])
+                             (->> [x y]
+                                  (mapv utils.length/->fixed)
+                                  (string/join " "))
                              [(- x margin) (+ y margin)]
                              "end"])]))
                      (utils.attribute/points->vec (-> el :attrs :points)))]))

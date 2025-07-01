@@ -85,10 +85,10 @@
             b (nth points 1)
             c (nth points 2)
             d (str
-               "M" (.toFixed (first a) 2) "," (.toFixed (second a) 2)
-               " Q" (.toFixed (first b) 2) "," (.toFixed (second b) 2)
-               " " (.toFixed (matrix.stats/mean [(first b) (first c)]) 2) ","
-               (.toFixed (matrix.stats/mean [(second b) (second c)]) 2) " T")]
+               "M" (utils.length/->fixed (first a)) "," (utils.length/->fixed (second a))
+               " Q" (utils.length/->fixed (first b)) "," (utils.length/->fixed (second b))
+               " " (utils.length/->fixed (matrix.stats/mean [(first b) (first c)])) ","
+               (utils.length/->fixed (matrix.stats/mean [(second b) (second c)])) " T")]
         (reduce-kv
          (fn [result index]
            (if (or (= len (inc index)) (< index 2))
@@ -96,9 +96,9 @@
              (let [a (nth points index)
                    b (nth points (inc index))]
                (str result
-                    (.toFixed (matrix.stats/mean [(first a) (first b)]) 2)
+                    (utils.length/->fixed (matrix.stats/mean [(first a) (first b)]))
                     ","
-                    (.toFixed (matrix.stats/mean [(second a) (second b)]) 2)
+                    (utils.length/->fixed (matrix.stats/mean [(second a) (second b)]))
                     " ")))) d points)))))
 
 (def partition-to-px
