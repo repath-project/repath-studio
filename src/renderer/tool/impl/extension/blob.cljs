@@ -8,6 +8,7 @@
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]))
 
 (derive :blob ::tool.hierarchy/element)
@@ -61,5 +62,5 @@
 (defmethod tool.hierarchy/on-drag-end :blob
   [db _e]
   (-> db
-      (history.handlers/finalize "Create blob")
+      (history.handlers/finalize #(t [::create-blob "Create blob"]))
       (tool.handlers/activate :transform)))

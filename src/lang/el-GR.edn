@@ -129,6 +129,42 @@
   :submit-an-issue "Υποβολή προβλήματος"
   :about "Σχετικά"}
 
+ :renderer.element.events
+ {:modify-selection "Τροποποίηση επιλογής"
+  :select-element "Επιλογή στοιχείου"
+  :select-elements "Επιλογή στοιχείων"
+  :delete-selection "Διαγραφή επιλογής"
+  :toggle "Εναλλαγή %1"
+  :set "Ορισμός %1"
+  :lock-selection "Κλείδωμα επιλογής"
+  :unlock-selection "Ξεκλείδωμα επιλογής"
+  :remove "Αφαίρεση %1"
+  :update "Ενημέρωση %1"
+  :deselect-all "Αποεπιλογή όλων"
+  :select-all "Επιλογή όλων"
+  :select-same-tags "Επιλογή κοινών ετικετών"
+  :invert-selection "Αντιστροφή επιλογής"
+  :raise-selection "Ανύψωση επιλογής"
+  :lower-selection "Κατέβασμα επιλογής"
+  :raise-selection-top "Ανύψωση επιλογής στη κορυφή"
+  :lower-selection-bottom "Κατέβασμα επιλογής στη βάση"
+  :paste-selection "Επικόλληση επιλεγμένου"
+  :paste-selection-in-place "Επικόλληση επιλογής επί τόπου"
+  :paste-styles-to-selection "Επικόλληση στυλ στην επιλογή"
+  :duplicate-selection "Διπλότυπο επιλογής"
+  :move-selection "Μετακίνηση επιλογής"
+  :place-selection "Τοποθέτηση επιλογής"
+  :scale-selection "Μεταβολή μεγέθους επιλογής"
+  :convert-selection-path "Μετατροπή επιλογής σε διαδρομή"
+  :convert-selection-stroke-path "Μετατροπή περιγράμματος επιλογής σε διαδρομή"
+  :create "Δημιουργία %1"
+  :import-svg "Εισαγωγή svg"
+  :set-parent "Ορισμός γονέα"
+  :group-selection "Ομαδοποίηση επιλογής"
+  :ungroup-selection "Αποομαδοποίηση επιλογής"
+  :cut-selection "Αποκοπή επιλογής"
+  :trace-image "Ανίχνευση εικόνας"}
+
  :renderer.element.views
  {:cut "Αποκοπή"
   :copy "Αντιγραφή"
@@ -224,7 +260,9 @@
                 από κείμενο. Είναι δυνατόν να εφαρμοστεί διαβάθμιση, πατρόν, διαδρομή
                 αποκοπής, μάσκα ή φίλτρο στο <text>, όπως σε οποιοδήποτε άλλο γραφικό
                 στοιχείο SVG."
-  :label "Κείμενο"}
+  :label "Κείμενο"
+  :remove-text "Διαφραφή κειμένου"
+  :set-text "Ορισμός κειμένου"}
 
  :renderer.attribute.views
  {:browser-compatibility "Συμβατότητα προγράμματος περιήγησης"
@@ -355,20 +393,28 @@
 
  :renderer.tool.impl.element.polyshape
  {:add-points "Κάντε κλικ για να προσθέτε σημεία."
-  :finalize-shape "Διπλό κλικ για να οριστικοποιήσετε το σχήμα."}
+  :finalize-shape "Διπλό κλικ για να οριστικοποιήσετε το σχήμα."
+  :create-tool "Δημιουργία %1"}
 
  :renderer.tool.impl.element.rect
  {:name "Ορθογώνιο παραλληλόγραμμο"
-  :help [:div "Κρατήστε %1 για να κλειδώσετε τις αναλογίες."]}
+  :help [:div "Κρατήστε %1 για να κλειδώσετε τις αναλογίες."]
+  :create-rectangle "Δημιουργία ορθ. παραλληλόγραμου"}
 
  :renderer.tool.impl.element.svg
- {:help [:div "Κρατήστε %1 για να κλειδώσετε τις αναλογίες."]}
+ {:help [:div "Κρατήστε %1 για να κλειδώσετε τις αναλογίες."]
+  :create-svg "Δημιουργία svg"}
+
+ :renderer.tool.impl.extension.blob
+ {:create-blob "Δημιουργία blob"}
 
  :renderer.tool.impl.misc.dropper
- {:help "Κάντε κλικ οπουδήποτε για να επιλέξετε χρώμα."}
+ {:help "Κάντε κλικ οπουδήποτε για να επιλέξετε χρώμα."
+  :pick-color "Επιλογή χρώματος"}
 
  :renderer.tool.impl.misc.fill
- {:help "Κάντε κλικ σε ένα στοιχείο για γέμισμα."}
+ {:help "Κάντε κλικ σε ένα στοιχείο για γέμισμα."
+  :fill "Γέμισμα"}
 
  :renderer.tool.impl.misc.measure
  {:help "Κάντε κλικ και σύρετε για να μετρήσετε μια απόσταση."}
@@ -446,17 +492,29 @@
  {:help-idle-drag [:div "Σύρετε μια λαβή για να τροποποιήσετε το σχήμα σας."]
   :help-idle-click [:div "Κάντε κλικ σε ένα στοιχείο για αλλάξετε επιλογή"]
   :help-edit [:div "Κρατήστε %1 για να περιορίσετε την κατεύθυνση."]
-  :help-type [:div "Εισάγετε κείμενο."]}
+  :help-type [:div "Εισάγετε κείμενο."]
+  :select-element "Επιλογή στοιχείου"
+  :edit "Επεξεργασία"}
 
  :renderer.tool.impl.base.transform
  {:idle-click [:div "Κάντε κλικ για να επιλέξετε ένα στοιχείο ή σύρετε για να επιλέξετε
                      από περιοχή. "]
   :idle-hold [:div "Πιέστε %1 για να προσθέσετε ή να αφαιρέσετε στοιχεία από επιλογή."]
   :select [:div "Πιέστε %1 για να επιλέξετε τεμνόμενα στοιχεία."]
+  :select-element "Επιλογή στοιχείου"
+  :deselect-element "Αποεπιλογή στοιχείου"
   :translate [:div "Πιέστε %1 για περιορισμό κατεύθυνσης, και %2 για κλωνοποίηση."]
   :clone [:div "Πιέστε %1 για περιορισμό κατεύθυνσης. ή αφήστε %2 για μετακίνηση."]
   :scale [:div "Πιέστε %1 για κλείδωμα αναλογιών, %2 για αλλαγή κλίμακας χωρίς μετατόπιση,
-                %3 για αλλαγή κλίμακας και των παιδιών."]}
+                %3 για αλλαγή κλίμακας και των παιδιών."]
+  :move-selection-up "Μετακίνηση επιλογής προς τα πάνω"
+  :move-selection-down "Μετακίνηση επιλογής προς τα κάτω"
+  :move-selection-left "Μετακίνηση επιλογής προς τα αριστερά"
+  :move-selection-right "Μετακίνηση επιλογής προς τα δεξιά"
+  :modify-selection "Τροποποίηση επιλογής"
+  :move-selection "Μετακίνηση επιλογής"
+  :scale-selection "Κλιμάκωση επιλογής"
+  :clone-selection "Κλωνοποίηση επιλογής"}
 
  :renderer.tool.impl.base.pan
  {:idle-help "Κάντε κλικ και σύρετε για μετατόπιση."
@@ -466,14 +524,31 @@
  {:zoom-in  [:div "Κάντε κλικ ή επιλέξτε μια περιοχή για μεγέθυνση."]
   :zoom-out [:div "Κρατήστε %1 για σμίκρυνση."]}
 
+ :renderer.tool.impl.draw.brush
+ {:draw-brush "Πινέλο σχεδίασης"}
+
+ :renderer.tool.impl.draw.pen
+ {:draw-line "Σχεδίαση γραμμής"}
+
  :renderer.tool.impl.draw.core
  {:help "Κάντε κλικ και σύρετε για να σχεδιάσετε."}
 
+ :renderer.tool.impl.element.circle
+ {:create-circle "Δημιουργία κύκλου"}
+
  :renderer.tool.impl.element.ellipse
- {:help [:div "Κρατήστε %1 για να κλειδώσετε τις αναλογίες."]}
+ {:create-ellipse "Δημιουργία έλλειψης"
+  :help [:div "Κρατήστε %1 για να κλειδώσετε τις αναλογίες."]}
+
+ :renderer.tool.impl.element.line
+ {:create-line "Δημιουργία γραμμής"}
 
  :renderer.document.events
  {:save-changes "Θέλετε να αποθηκεύσετε τις αλλαγές σας;"
+  :create-doc "Δημιουργία εγγράφου"
+  :init-doc "Αρχικοποίηση εγγράφου"
+  :create-doc-from-template "Δημιουργία εγγράφου από πρότυπο"
+  :load-doc "Φόρτωση εγγράφου"
   :error-loading "Σφάλμα κατα τη φόρτωση %1"
   :unsupported-or-corrupted "Ο τύπος αρχείου δεν υποστηρίζεται ή το αρχείο είναι
                              κατεστραμμένο."}
@@ -571,12 +646,17 @@
   :bounds-center "κέντρο ορίων"
   :bounds-midpoint "μέσο σημείο ορίων"}
 
+ :renderer.history.events
+ {:clear-history "Εκκαθάριση ιστορικού"}
+
  :renderer.history.views
  {:center-view "Κεντρική προβολή"
   :clear-history "Εκκαθάριση ιστορικού"
   :action-cannot-undone "Αυτή η ενέργεια δεν μπορεί να αναιρεθεί."
   :clear-history-description "Είστε σίγουροι οτι θέλετε να διαγράψετε το ιστορικό του
-                              εγγράφου?"}
+                              εγγράφου?"
+  :select-element "Επιλογή στοιχείου"
+  :delete-selection "Διαγραφή επιλεγμένου"}
 
  :renderer.timeline.views
  {:speed "Ταχύτητα"

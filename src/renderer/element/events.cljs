@@ -10,65 +10,66 @@
    [renderer.notification.events :as-alias notification.events]
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
-   [renderer.utils.extra :refer [partial-right]]))
+   [renderer.utils.extra :refer [partial-right]]
+   [renderer.utils.i18n :refer [t]]))
 
 (rf/reg-event-db
  ::select
  (fn [db [_ id multiple]]
    (-> (element.handlers/toggle-selection db id multiple)
        (history.handlers/finalize (if multiple
-                                    "Modify selection"
-                                    "Select element")))))
+                                    #(t [::modify-selection "Modify selection"])
+                                    #(t [::select-element   "Select elementd"]))))))
 
 (rf/reg-event-db
  ::select-ids
  (fn [db [_ ids]]
    (-> (partial-right element.handlers/assoc-prop :selected true)
        (reduce (element.handlers/deselect db) ids)
-       (history.handlers/finalize "Select elements"))))
+       (history.handlers/finalize #(t [::select-elements "Select elements"])))))
 
 (rf/reg-event-db
  ::toggle-prop
  (fn [db [_ id k]]
    (-> (element.handlers/update-prop db id k not)
-       (history.handlers/finalize (str "Toggle " (name k))))))
+       (history.handlers/finalize #(t [::toggle "Toggle %1"] [(name k)])))))
 
 (rf/reg-event-db
  ::set-prop
  (fn [db [_ id k v]]
    (-> (element.handlers/assoc-prop db id k v)
-       (history.handlers/finalize (str "Set " (name k))))))
+       (history.handlers/finalize #(t [::set "Set %1"] [(name k)])))))
 
 (rf/reg-event-db
  ::lock
  (fn [db]
    (-> (element.handlers/assoc-prop db :locked true)
-       (history.handlers/finalize "Lock selection"))))
+       (history.handlers/finalize #(t [:lock-selection "Lock selection"])))))
 
 (rf/reg-event-db
  ::unlock
  (fn [db]
    (-> (element.handlers/assoc-prop db :locked false)
-       (history.handlers/finalize "Unlock selection"))))
+       (history.handlers/finalize #(t [:unlock-selection "Unlock selection"])))))
 
 (rf/reg-event-db
  ::set-attr
  (fn [db [_ k v]]
    (-> (element.handlers/set-attr db k v)
-       (history.handlers/finalize (str "Set " (name k))))))
+       (history.handlers/finalize #(t [::set "Set %1"] [(name k)])))))
 
 (rf/reg-event-db
  ::remove-attr
  (fn [db [_ k]]
    (-> (element.handlers/dissoc-attr db k)
-       (history.handlers/finalize (str "Remove " (name k))))))
+       (history.handlers/finalize #(t [::remove "Remove %1"] [(name k)])))))
 
 (rf/reg-event-db
  ::update-attr
  (fn [db [_ k f & more]]
    (-> (apply partial-right element.handlers/update-attr k f more)
        (reduce db (element.handlers/selected-ids db))
-       (history.handlers/finalize (str "Update " (name k))))))
+       (history.handlers/finalize #(t [::update "Update %1"] [(name k)])))))
 
 (rf/reg-event-db
  ::preview-attr
@@ -79,104 +80,108 @@
  ::delete
  (fn [db]
    (-> (element.handlers/delete db)
-       (history.handlers/finalize "Delete selection"))))
+       (history.handlers/finalize #(t [::delete-selection "Delete selection"])))))
 
 (rf/reg-event-db
  ::deselect-all
  (fn [db]
    (-> (element.handlers/deselect db)
-       (history.handlers/finalize "Deselect all"))))
+       (history.handlers/finalize #(t [::deselect-all "Deselect all"])))))
 
 (rf/reg-event-db
  ::select-all
  (fn [db]
    (-> (element.handlers/select-all db)
-       (history.handlers/finalize "Select all"))))
+       (history.handlers/finalize #(t [::select-all "Select all"])))))
 
 (rf/reg-event-db
  ::select-same-tags
  (fn [db]
    (-> (element.handlers/select-same-tags db)
-       (history.handlers/finalize "Select same tags"))))
+       (history.handlers/finalize #(t [::select-same-tags "Select same tags"])))))
 
 (rf/reg-event-db
  ::invert-selection
  (fn [db]
    (-> (element.handlers/invert-selection db)
-       (history.handlers/finalize "Invert selection"))))
+       (history.handlers/finalize #(t [::invert-selection "Invert selection"])))))
 
 (rf/reg-event-db
  ::raise
  (fn [db]
    (-> (element.handlers/update-index db inc)
-       (history.handlers/finalize "Raise selection"))))
+       (history.handlers/finalize #(t [::raise-selection "Raise selection"])))))
 
 (rf/reg-event-db
  ::lower
  (fn [db]
    (-> (element.handlers/update-index db dec)
-       (history.handlers/finalize "Lower selection"))))
+       (history.handlers/finalize #(t [::lower-selection "Lower selection"])))))
 
 (rf/reg-event-db
  ::raise-to-top
  (fn [db]
    (-> (element.handlers/update-index db (fn [_i sibling-count] (dec sibling-count)))
-       (history.handlers/finalize "Raise selection to top"))))
+       (history.handlers/finalize #(t [::raise-selection-top
+                                       "Raise selection to top"])))))
 
 (rf/reg-event-db
  ::lower-to-bottom
  (fn [db]
    (-> (element.handlers/update-index db #(identity 0))
-       (history.handlers/finalize "Lower selection to bottom"))))
+       (history.handlers/finalize #(t [::lower-selection-bottom
+                                       "Lower selection to bottom"])))))
 
 (rf/reg-event-db
  ::align
  (fn [db [_ direction]]
    (-> (element.handlers/align db direction)
-       (history.handlers/finalize (str "Update " direction)))))
+       (history.handlers/finalize #(t [::update "Update %1"] [direction])))))
 
 (rf/reg-event-db
  ::paste
  (fn [db]
    (-> (element.handlers/paste db)
-       (history.handlers/finalize "Paste selection"))))
+       (history.handlers/finalize #(t [::paste-selection "Paste selection"])))))
 
 (rf/reg-event-db
  ::paste-in-place
  (fn [db]
    (-> (element.handlers/paste-in-place db)
-       (history.handlers/finalize "Paste selection in place"))))
+       (history.handlers/finalize #(t [::paste-selection-in-place
+                                       "Paste selection in place"])))))
 
 (rf/reg-event-db
  ::paste-styles
  (fn [db]
    (-> (element.handlers/paste-styles db)
-       (history.handlers/finalize "Paste styles to selection"))))
+       (history.handlers/finalize #(t [::paste-styles-to-selection
+                                       "Paste styles to selection"])))))
 
 (rf/reg-event-db
  ::duplicate
  (fn [db]
    (-> (element.handlers/duplicate db)
-       (history.handlers/finalize "Duplicate selection"))))
+       (history.handlers/finalize #(t [::duplicate-selection "Duplicate selection"])))))
 
 (rf/reg-event-db
  ::translate
  (fn [db [_ offset]]
    (-> (element.handlers/translate db offset)
-       (history.handlers/finalize "Move selection"))))
+       (history.handlers/finalize #(t [::move-selection "Move selection"])))))
 
 (rf/reg-event-db
  ::place
  (fn [db [_ position]]
    (-> (element.handlers/place db position)
-       (history.handlers/finalize "Place selection"))))
+       (history.handlers/finalize #(t [::place-selection "Place selection"])))))
 
 (rf/reg-event-db
  ::scale
  (fn [db [_ ratio]]
    (let [pivot-point (-> db element.handlers/bbox utils.bounds/center)]
      (-> (element.handlers/scale db ratio pivot-point false)
-         (history.handlers/finalize "Scale selection")))))
+         (history.handlers/finalize #(t [::scale-selection "Scale selection"]))))))
 
 (rf/reg-event-fx
  ::->path
@@ -189,7 +194,8 @@
  ::finalize->path
  (fn [db [_ elements]]
    (-> (reduce element.handlers/swap db elements)
-       (history.handlers/finalize "Convert selection to path"))))
+       (history.handlers/finalize #(t [::convert-selection-path
+                                       "Convert selection to path"])))))
 
 (rf/reg-event-fx
  ::stroke->path
@@ -203,7 +209,8 @@
  (fn [db [_ elements]]
    (-> (reduce element.handlers/swap db elements)
        (element.handlers/stroke->path)
-       (history.handlers/finalize "Convert selection's stroke to path"))))
+       (history.handlers/finalize #(t [::convert-selection-stroke-path
+                                       "Convert selection's stroke to path"])))))
 
 (rf/reg-event-fx
  ::boolean-operation
@@ -224,13 +231,13 @@
  ::add
  (fn [db [_ el]]
    (-> (element.handlers/add db el)
-       (history.handlers/finalize (str "Create " (name (:tag el)))))))
+       (history.handlers/finalize #(t [::create "Create %1"] [(name (:tag el))])))))
 
 (rf/reg-event-db
  ::import-svg
  (fn [db [_ data]]
    (-> (element.handlers/import-svg db data)
-       (history.handlers/finalize "Import svg"))))
+       (history.handlers/finalize #(t [::import-svg "Import svg"])))))
 
 (rf/reg-event-db
  ::animate
@@ -242,19 +249,19 @@
  ::set-parent
  (fn [db [_ id parent-id]]
    (-> (element.handlers/set-parent db id parent-id)
-       (history.handlers/finalize "Set parent"))))
+       (history.handlers/finalize #(t [::set-parent "Set parent"])))))
 
 (rf/reg-event-db
  ::group
  (fn [db]
    (-> (element.handlers/group db)
-       (history.handlers/finalize "Group selection"))))
+       (history.handlers/finalize #(t [::group-selection "Group selection"])))))
 
 (rf/reg-event-db
  ::ungroup
  (fn [db]
    (-> (element.handlers/ungroup db)
-       (history.handlers/finalize "Ungroup selection"))))
+       (history.handlers/finalize #(t [::ungroup-selection "Ungroup selection"])))))
 
 (rf/reg-event-db
  ::manipulate-path
@@ -280,7 +287,7 @@
    (let [els (element.handlers/top-selected-sorted db)]
      {:db (-> (element.handlers/copy db)
               (element.handlers/delete)
-              (history.handlers/finalize "Cut selection"))
+              (history.handlers/finalize #(t [::cut-selection "Cut selection"])))
       :fx [(when (seq els)
              [::effects/clipboard-write
               {:data (utils.element/->svg els)
@@ -296,7 +303,7 @@
  ::traced
  (fn [db [_ data]]
    (-> (element.handlers/import-svg db data)
-       (history.handlers/finalize "Trace image"))))
+       (history.handlers/finalize #(t [::trace-image "Trace image"])))))
 
 (rf/reg-event-fx
  ::import-file

@@ -129,6 +129,42 @@
   :submit-an-issue "Submit an issue"
   :about "About"}
 
+ :renderer.element.events
+ {:modify-selection "Modify selection"
+  :select-element "Select element"
+  :select-elements "Select elements"
+  :delete-selection "Delete selection"
+  :toggle "Toggle %1"
+  :set "Set %1"
+  :lock-selection "Lock selection"
+  :unlock-selection "Unlock selection"
+  :remove "Remove %1"
+  :update "Update %1"
+  :deselect-all "Deselect all"
+  :select-all "Select all"
+  :select-same-tags "Select same tags"
+  :invert-selection "Invert selection"
+  :raise-selection "Raise selection"
+  :lower-selection "Lower selection"
+  :raise-selection-top "Raise selection to top"
+  :lower-selection-bottom "Lower selection to bottom"
+  :paste-selection "Paste selection"
+  :paste-selection-in-place "Paste selection in place"
+  :paste-styles-to-selection "Paste styles to selection"
+  :duplicate-selection "Duplicate selection"
+  :move-selection "Move selection"
+  :place-selection "Place selection"
+  :scale-selection "Scale selection"
+  :convert-selection-path "Convert selection to path"
+  :convert-selection-stroke-path "Convert selection's stroke to path"
+  :create "Create %1"
+  :import-svg "Import svg"
+  :set-parent "Set parent"
+  :group-selection "Group selection"
+  :ungroup-selection "Ungroup selection"
+  :cut-selection "Cut selection"
+  :trace-image "Trace image"}
+
  :renderer.element.views
  {:cut "Cut"
   :copy "Copy"
@@ -218,7 +254,9 @@
  {:description "The SVG <text> element draws a graphics element consisting of text. It's
                 possible to apply a gradient, pattern, clipping path, mask, or filter to
                 <text>, like any other SVG graphics element."
-  :label "Text"}
+  :label "Text"
+  :remove-text "Remove text"
+  :set-text "Set text"}
 
  :renderer.attribute.views
  {:browser-compatibility "Browser compatibility"
@@ -332,20 +370,28 @@
 
  :renderer.tool.impl.element.polyshape
  {:add-points "Click to add more points."
-  :finalize-shape "Double click to finalize the shape."}
+  :finalize-shape "Double click to finalize the shape."
+  :create-tool "Create %1"}
 
  :renderer.tool.impl.element.rect
  {:name "Rectangle"
-  :help [:div "Hold %1 to lock proportions."]}
+  :help [:div "Hold %1 to lock proportions."]
+  :create-rectangle "Create rectangle"}
 
  :renderer.tool.impl.element.svg
- {:help [:div "Hold %1 to lock proportions."]}
+ {:help [:div "Hold %1 to lock proportions."]
+  :create-svg "Create svg"}
+
+ :renderer.tool.impl.extension.blob
+ {:create-blob "Create blob"}
 
  :renderer.tool.impl.misc.dropper
- {:help "Click anywhere to pick a color."}
+ {:help "Click anywhere to pick a color."
+  :pick-color "Pick color"}
 
  :renderer.tool.impl.misc.fill
- {:help "Click on an element to fill."}
+ {:help "Click on an element to fill."
+  :fill "Fill"}
 
  :renderer.tool.impl.misc.measure
  {:help "Click and drag to measure a distance."}
@@ -419,16 +465,28 @@
  {:help-idle-drag [:div "Drag a handle to modify your shape."]
   :help-idle-click [:div "Click on an element to change selection"]
   :help-edit [:div "Hold %1 to restrict direction."]
-  :help-type [:div "Enter your text."]}
+  :help-type [:div "Enter your text."]
+  :select-element "Select element"
+  :edit "Edit"}
 
  :renderer.tool.impl.base.transform
  {:idle-click [:div "Click to select an element or drag to select by area. "]
   :idle-hold [:div "Hold %1 to add or remove elements to selection."]
   :select [:div "Hold %1 to select intersecting elements."]
+  :select-element "Select element"
+  :deselect-element "Deselect element"
   :translate [:div "Hold %1 to restrict direction, and %2 to clone."]
   :clone [:div "Hold %1 to restrict direction. or release %2 to move"]
   :scale [:div "Hold %1 to lock proportions, %2 to scale in place,
-                  %3 to also scale children."]}
+                  %3 to also scale children."]
+  :move-selection-up "Move selection up"
+  :move-selection-down "Move selection down"
+  :move-selection-left "Move selection left"
+  :move-selection-right "Move selection right"
+  :modify-selection "Modify selection"
+  :move-selection "Move selection"
+  :scale-selection "Scale selection"
+  :clone-selection "Clone selection"}
 
  :renderer.tool.impl.base.pan
  {:idle-help "Click and drag to pan."
@@ -438,14 +496,31 @@
  {:zoom-in [:div "Click or select an area to zoom in."]
   :zoom-out [:div "Hold %1 to zoom out."]}
 
+ :renderer.tool.impl.draw.brush
+ {:draw-brush "Draw brush"}
+
+ :renderer.tool.impl.draw.pen
+ {:draw-line "Draw line"}
+
  :renderer.tool.impl.draw.core
  {:help "Click and drag to draw."}
 
+ :renderer.tool.impl.element.circle
+ {:create-circle "Create circle"}
+
  :renderer.tool.impl.element.ellipse
- {:help [:div "Hold %1 to lock proportions."]}
+ {:create-ellipse "Create ellipse"
+  :help [:div "Hold %1 to lock proportions."]}
+
+ :renderer.tool.impl.element.line
+ {:create-line "Create line"}
 
  :renderer.document.events
  {:save-changes "Do you want to save your changes?"
+  :create-doc "Create document"
+  :init-doc "Init document"
+  :create-doc-from-template "Create document from template"
+  :load-doc "Load document"
   :error-loading "Error while loading %1"
   :unsupported-or-corrupted "File appears to be unsupported or corrupted."}
 
@@ -542,11 +617,16 @@
   :bounds-center "bounds center"
   :bounds-midpoint "bounds midpoint"}
 
+ :renderer.history.events
+ {:clear-history "Clear history"}
+
  :renderer.history.views
  {:center-view "Center view"
   :clear-history "Clear history"
   :action-cannot-undone "This action cannot be undone."
-  :clear-history-description "Are you sure you wish to clear the document history?"}
+  :clear-history-description "Are you sure you wish to clear the document history?"
+  :select-element "Select element"
+  :delete-selection "Delete selection"}
 
  :renderer.timeline.views
  {:speed "Speed"

@@ -11,7 +11,8 @@
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.tool.subs :as-alias tool.subs]))
+   [renderer.tool.subs :as-alias tool.subs]
+   [renderer.utils.i18n :refer [t]]))
 
 (derive :brush ::tool.hierarchy/draw)
 
@@ -66,7 +67,7 @@
 (defmethod tool.hierarchy/on-drag-end :brush
   [db _e]
   (-> db
-      (history.handlers/finalize "Draw brush")
+      (history.handlers/finalize #(t [::draw-brush "Draw brush"]))
       (tool.handlers/activate :transform)))
 
 (defmethod tool.hierarchy/render :brush

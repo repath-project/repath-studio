@@ -57,5 +57,5 @@
 (defmethod tool.hierarchy/on-drag-end :ellipse
   [db _e]
   (-> db
-      (history.handlers/finalize "Create ellipse")
+      (history.handlers/finalize #(t [::create-ellipse "Create ellipse"]))
       (tool.handlers/activate :transform)))

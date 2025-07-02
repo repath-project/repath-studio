@@ -26,4 +26,4 @@
   (let [color (document.handlers/attr db :fill)
         el-id (-> e :element :id)]
     (-> (element.handlers/set-attr db el-id :fill color)
-        (history.handlers/finalize "Fill"))))
+        (history.handlers/finalize #(t [::fill "Fill"])))))
