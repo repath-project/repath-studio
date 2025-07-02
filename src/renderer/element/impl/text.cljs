@@ -18,6 +18,7 @@
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
    [renderer.utils.font :as utils.font]
+   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]))
 
 (derive :text ::element.hierarchy/shape)
@@ -25,10 +26,12 @@
 (defmethod element.hierarchy/properties :text
   []
   {:icon "text"
-   :description "The SVG <text> element draws a graphics element consisting
-                 of text. It's possible to apply a gradient, pattern,
-                 clipping path, mask, or filter to <text>, like any other SVG
-                 graphics element."
+   :label (t [::label "Text"])
+   :description (t [::description
+                    "The SVG <text> element draws a graphics element consisting
+                     of text. It's possible to apply a gradient, pattern,
+                     clipping path, mask, or filter to <text>, like any other SVG
+                     graphics element."])
    :ratio-locked true
    :attrs [:font-family
            :font-size
@@ -64,10 +67,10 @@
  (fn [db [_ id s]]
    (-> (if (empty? s)
          (-> (element.handlers/delete db id)
-             (history.handlers/finalize "Remove text"))
+             (history.handlers/finalize  #(t [::remove-text "Remove text"])))
          (-> (element.handlers/assoc-prop db id :content s)
              (element.handlers/refresh-bbox id)
-             (history.handlers/finalize "Set text")))
+             (history.handlers/finalize #(t [::set-text "Set text"]))))
        (tool.handlers/activate :transform))))
 
 (defmethod element.hierarchy/render :text

@@ -1,7 +1,3 @@
-.menubar-root {
-  @apply flex ml-1;
-}
-
 .menubar-trigger {
   @apply px-3 py-1.5 flex rounded-sm outline-none select-none items-center leading-none;
 
@@ -29,31 +25,22 @@
 .menu-checkbox-item,
 .menu-radio-item {
   all: unset;
+  @apply flex justify-between gap-4 text-color items-center relative h-8;
   line-height: 1;
-  color: var(--font-color);
-  display: flex;
-  align-items: center;
-  height: 32px;
   padding: 0 30px;
-  position: relative;
   user-select: none;
-}
-
-.sub-menu-tem {
-  padding-right: 15px !important;
 }
 
 .menu-item[data-state='open'],
 .menu-sub-trigger[data-state='open'] {
-  background-color: var(--overlay);
+  @apply overlay;
 }
 
 .menu-item[data-highlighted],
 .menu-sub-trigger[data-highlighted],
 .menu-checkbox-item[data-highlighted],
 .menu-radio-item[data-highlighted] {
-  background: var(--overlay);
-  color: var(--font-color-active);
+  @apply text-active overlay;
 }
 
 .menu-item[data-disabled],
@@ -61,38 +48,20 @@
 .menu-checkbox-item[data-disabled],
 .menu-radio-item[data-disabled],
 .menubar-trigger[data-disabled] {
-  color: var(--font-color-disabled);
-  pointer-events: none;
-
-  .right-slot {
-    @apply opacity-50;
-  }
+  @apply opacity-50 pointer-events-none;
 }
 
 .menu-item-indicator {
-  @apply inline-flex absolute left-0;
-  width: 30px;
-  align-items: center;
-  justify-content: center;
+  @apply inline-flex absolute left-0 items-center justify-center rtl:right-0 rtl:left-auto w-8;
 }
 
 .menu-separator {
   @apply h-divider mx-0;
 }
 
-.right-slot {
-  margin-left: auto;
-  padding-left: 40px;
-  color: var(--font-color-muted);
-}
-
 .sub-menu-chevron {
-  margin-right: -1rem;
+  @apply mr-[-1rem] rtl:ml-[-1rem] rtl:mr-auto;
   color: inherit;
-}
-
-[data-highlighted]>.right-slot {
-  color: var(--font-color-active);
 }
 
 .select-content {

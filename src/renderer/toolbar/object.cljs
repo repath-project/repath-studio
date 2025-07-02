@@ -3,85 +3,86 @@
    [re-frame.core :as rf]
    [renderer.element.events :as-alias element.events]
    [renderer.element.subs :as-alias element.subs]
-   [renderer.toolbar.views :as toolbar.views]))
+   [renderer.toolbar.views :as toolbar.views]
+   [renderer.utils.i18n :refer [t]]))
 
 (defn index-actions
   [disabled]
-  [{:title "Bring to front"
+  [{:title (t [::bring-front "Bring to front"])
     :icon "bring-front"
     :action [::element.events/raise-to-top]
     :disabled disabled}
-   {:title "Send to back"
+   {:title (t [::send-back "Send to back"])
     :icon "send-back"
     :action [::element.events/lower-to-bottom]
     :disabled disabled}
-   {:title "Bring forward"
+   {:title (t [::bring-forward "Bring forward"])
     :icon "bring-forward"
     :action [::element.events/raise]
     :disabled disabled}
-   {:title "Send backward"
+   {:title (t [::send-backward "Send backward"])
     :icon "send-backward"
     :action [::element.events/lower]
     :disabled disabled}])
 
 (defn group-actions
   [disabled]
-  [{:title "Group"
+  [{:title (t [::group "Group"])
     :icon "group"
     :disabled disabled
     :action [::element.events/group]}
-   {:title "Ungroup"
+   {:title (t [::ungroup "Ungroup"])
     :icon "ungroup"
     :disabled disabled
     :action [::element.events/ungroup]}])
 
 (defn alignment-actions
   [disabled]
-  [{:title "Align left"
+  [{:title (t [::align-left "Align left"])
     :icon "objects-align-left"
     :disabled disabled
     :action [::element.events/align :left]}
-   {:title "Align center horizontally"
+   {:title (t [::align-center-hor "Align center horizontally"])
     :disabled disabled
     :icon "objects-align-center-horizontal"
     :action [::element.events/align :center-horizontal]}
-   {:title "Align rignt"
+   {:title (t [::align-right "Align right"])
     :icon "objects-align-right"
     :disabled disabled
     :action [::element.events/align :right]}
    {:type :divider}
-   {:title "Align top"
+   {:title (t [::align-top "Align top"])
     :icon "objects-align-top"
     :disabled  disabled
     :action [::element.events/align :top]}
-   {:title "Align center vertically"
+   {:title (t [::align-center-ver "Align center vertically"])
     :icon "objects-align-center-vertical"
     :disabled  disabled
     :action [::element.events/align :center-vertical]}
-   {:title "Align bottom"
+   {:title (t [::align-bottom "Align bottom"])
     :icon "objects-align-bottom"
     :disabled  disabled
     :action [::element.events/align :bottom]}])
 
 (defn boolean-actions
   [disabled]
-  [{:title "Unite"
+  [{:title (t [::unite "Unite"])
     :icon "unite"
     :disabled disabled
     :action [::element.events/boolean-operation :unite]}
-   {:title "Intersect"
+   {:title (t [::intersect "Intersect"])
     :icon "intersect"
     :disabled disabled
     :action [::element.events/boolean-operation :intersect]}
-   {:title "Subtract"
+   {:title (t [::subtract "Subtract"])
     :icon "subtract"
     :disabled disabled
     :action [::element.events/boolean-operation :subtract]}
-   {:title "Exclude"
+   {:title (t [::exclude "Exclude"])
     :icon "exclude"
     :disabled disabled
     :action [::element.events/boolean-operation :exclude]}
-   {:title "Divide"
+   {:title (t [::divide "Divide"])
     :icon "divide"
     :disabled disabled
     :action [::element.events/boolean-operation :divide]}])

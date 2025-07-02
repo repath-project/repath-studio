@@ -42,8 +42,9 @@
   [history id save]
   (let [states (:states history)
         {:keys [index] :as state} (get states id)
-        n (count states)]
-    #js {:name (:explanation state)
+        n (count states)
+        explanation (:explanation state)]
+    #js {:name (if (string? explanation) explanation (explanation))
          :id (str id)
          :saved (= id save)
          :active (= id (:position history))

@@ -10,6 +10,7 @@
    [renderer.element.events :as-alias element.events]
    [renderer.timeline.events :as-alias timeline.events]
    [renderer.timeline.subs :as-alias timeline.subs]
+   [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]))
 
 (def speed-options
@@ -35,7 +36,7 @@
     [:div.inline-flex.items-center
      [:label.form-element
       {:for "animation-speed"}
-      "Speed"]
+      (t [::speed "Speed"])]
      [:> Select/Root
       {:value speed
        :onValueChange #(.setPlayRate (.-current editor-ref) %)}
@@ -43,19 +44,23 @@
        {:class "button px-2 overlay rounded-sm"
         :id "animation-speed"
         :aria-label "No a11y filter"}
-       [:> Select/Value {:placeholder "Filter"}
+       [:> Select/Value
+        {:placeholder "Filter"}
         [:div.flex.gap-1.justify-between.items-center
          {:style {:min-width "50px"}}
          [:span (str speed "x")]
-         [:> Select/Icon {:class "select-icon"}
+         [:> Select/Icon
+          {:class "select-icon"}
           [views/icon "chevron-down"]]]]]
       [:> Select/Portal
        [:> Select/Content
         {:class "menu-content rounded-sm select-content"
          :style {:min-width "auto"}}
-        [:> Select/ScrollUpButton {:class "select-scroll-button"}
+        [:> Select/ScrollUpButton
+         {:class "select-scroll-button"}
          [views/icon "chevron-up"]]
-        [:> Select/Viewport {:class "select-viewport"}
+        [:> Select/Viewport
+         {:class "select-viewport"}
          [:> Select/Group
           (for [{:keys [id value label]} speed-options]
             ^{:key id}
@@ -73,19 +78,19 @@
         guide-snap? @(rf/subscribe [::timeline.subs/guide-snap?])]
     [:div.grow
      [views/switch
-      "Grid snap"
+      (t [::grid-snap "Grid snap"])
       {:id "grid-snap"
        :default-checked grid-snap?
        :on-checked-change #(rf/dispatch [::timeline.events/set-grid-snap %])}]
      [views/switch
-      "Guide snap"
+      (t [::guide-snap "Guide snap"])
       {:id "guide-snap"
        :default-checked guide-snap?
        :on-checked-change #(rf/dispatch [::timeline.events/set-guide-snap %])}]]))
 
 (defn toolbar
   [timeline-ref]
-  (let [t @(rf/subscribe [::timeline.subs/time])
+  (let [tm @(rf/subscribe [::timeline.subs/time])
         time-formatted @(rf/subscribe [::timeline.subs/time-formatted])
         paused? @(rf/subscribe [::timeline.subs/paused?])
         replay? @(rf/subscribe [::timeline.subs/replay?])
@@ -93,25 +98,25 @@
     [:div.toolbar.bg-primary
      [views/icon-button "go-to-start"
       {:on-click #(.setTime (.-current timeline-ref) 0)
-       :disabled (zero? t)}]
+       :disabled (zero? tm)}]
      [views/radio-icon-button (if paused? "play" "pause") (not paused?)
-      {:title (if paused? "Play" "Pause")
-       :class (when (pos? t) "border border-accent")
+      {:title (if paused? (t [::play "Play"]) (t [::pause "Pause"]))
+       :class (when (pos? tm) "border border-accent")
        :on-click #(if paused?
                     (.play (.-current timeline-ref) #js {:autoEnd true})
                     (.pause (.-current timeline-ref)))}]
      [views/icon-button "go-to-end"
       {:on-click #(.setTime (.-current timeline-ref) end)
-       :disabled (>= t end)}]
+       :disabled (>= tm end)}]
      [views/radio-icon-button "refresh" replay?
-      {:title "Replay"
+      {:title (t [::replay "Replay"])
        :on-click #(rf/dispatch [::timeline.events/toggle-replay])}]
      [speed-select timeline-ref]
      [:span.font-mono.px-2 time-formatted]
      [:span.v-divider]
      [snap-controls]
      [views/icon-button "window-close"
-      {:title "Hide timeline"
+      {:title (t [::hide-timeline "Hide timeline"])
        :on-click #(rf/dispatch [::app.events/toggle-panel :timeline])}]]))
 
 (defn register-listeners
@@ -152,12 +157,12 @@
 
 (defn time-bar
   []
-  (let [t @(rf/subscribe [::timeline.subs/time])
+  (let [tm @(rf/subscribe [::timeline.subs/time])
         end @(rf/subscribe [::timeline.subs/end])
         timeline? @(rf/subscribe [::app.subs/panel-visible? :timeline])]
     [:div.h-px.block.absolute.bottom-0.left-0
-     {:style {:width (str (* (/ t end) 100) "%")
-              :background (when-not (or (zero? t) (zero? end) timeline?)
+     {:style {:width (str (* (/ tm end) 100) "%")
+              :background (when-not (or (zero? tm) (zero? end) timeline?)
                             "var(--color-accent)")}}]))
 
 (defn root

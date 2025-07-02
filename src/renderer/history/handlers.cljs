@@ -166,7 +166,7 @@
   [db [x y]]
   (assoc-in db (path db :translate) [x y]))
 
-(m/=> create-state [:-> App uuid? string? HistoryState])
+(m/=> create-state [:-> App uuid? [:or fn? string?] HistoryState])
 (defn create-state
   [db id explanation]
   (let [new-state {:explanation explanation
@@ -199,7 +199,7 @@
 
 (def explain-elements (m/explainer [:map-of uuid? Element]))
 
-(m/=> finalize [:-> App string? App])
+(m/=> finalize [:-> App [:or fn? string?] App])
 (defn finalize
   "Pushes changes to history."
   [db explanation]

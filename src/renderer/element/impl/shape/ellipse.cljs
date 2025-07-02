@@ -9,6 +9,7 @@
    [renderer.tool.views :as tool.views]
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
+   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]
    [renderer.utils.svg :as utils.svg]))
 
@@ -17,9 +18,11 @@
 (defmethod element.hierarchy/properties :ellipse
   []
   {:icon "ellipse"
-   :description "The <ellipse> element is an SVG basic shape, used to create
-                 ellipses based on a center coordinate, and both their x and
-                 y radius."
+   :label (t [::name "Ellipse"])
+   :description (t [::description 
+                    "The <ellipse> element is an SVG basic shape, used to create
+                     ellipses based on a center coordinate, and both their x and
+                     y radius."])
    :attrs [:stroke-width
            :opacity
            :fill

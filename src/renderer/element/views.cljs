@@ -6,36 +6,38 @@
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.events :as-alias element.events]
    [renderer.element.hierarchy :as element.hierarchy]
-   [renderer.event.impl.pointer :as event.impl.pointer]))
+   [renderer.event.impl.pointer :as event.impl.pointer]
+   [renderer.utils.i18n :refer [t]]))
 
-(def context-menu
+(defn context-menu
+  []
   ;; TODO: Add group actions and more.
-  [{:label "Cut"
+  [{:label (t [::cut "Cut"])
     :action [::element.events/cut]}
-   {:label "Copy"
+   {:label (t [::copy "Copy"])
     :action [::element.events/copy]}
-   {:label "Paste"
+   {:label (t [::paste "Paste"])
     :action [::element.events/paste]}
    {:type :separator}
-   {:label "Raise"
+   {:label (t [::raise "Raise"])
     :action [::element.events/raise]}
-   {:label "Lower"
+   {:label (t [::lower "Lower"])
     :action [::element.events/lower]}
-   {:label "Raise to top"
+   {:label (t [::raise-top "Raise to top"])
     :action [::element.events/raise-to-top]}
-   {:label "Lower to bottom"
+   {:label (t [::lower-bottom "Lower to bottom"])
     :action [::element.events/lower-to-bottom]}
    {:type :separator}
-   {:label "Animate"
+   {:label (t [::animate "Animate"])
     :action [::element.events/animate :animate {}]}
-   {:label "Animate Transform"
+   {:label (t [::animate-transform "Animate Transform"])
     :action [::element.events/animate :animateTransform {}]}
-   {:label "Animate Motion"
+   {:label (t [::animate-motion "Animate Motion"])
     :action [::element.events/animate :animateMotion {}]}
    {:type :separator}
-   {:label "Duplicate"
+   {:label (t [::duplicate "Duplicate"])
     :action [::element.events/duplicate]}
-   {:label "Delete"
+   {:label (t [::delete "Delete"])
     :action [::element.events/delete]}])
 
 (defn ghost-element

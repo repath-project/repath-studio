@@ -10,15 +10,16 @@
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.attribute :as utils.attribute]))
+   [renderer.utils.attribute :as utils.attribute]
+   [renderer.utils.i18n :refer [t]]))
 
 (derive ::tool.hierarchy/polyshape ::tool.hierarchy/element)
 
 (defmethod tool.hierarchy/help [::tool.hierarchy/polyshape :idle]
   []
   [:<>
-   [:div "Click to add more points."]
-   [:div "Double click to finalize the shape."]])
+   [:div (t [::add-points "Click to add more points."])]
+   [:div (t [::finalize-shape "Double click to finalize the shape."])]])
 
 (defn create-polyline
   [db initial-point]
@@ -79,5 +80,5 @@
 (defmethod tool.hierarchy/on-double-click ::tool.hierarchy/polyshape
   [db _e]
   (-> (drop-last-point db)
-      (history.handlers/finalize (str "Create " (name (:tool db))))
+      (history.handlers/finalize #(t [::create-tool "Create %1"] [(name (:tool db))]))
       (tool.handlers/activate :transform)))

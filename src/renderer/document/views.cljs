@@ -11,6 +11,7 @@
    [renderer.history.events :as-alias history.events]
    [renderer.history.subs :as-alias history.subs]
    [renderer.history.views :as history.views]
+   [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]))
 
 (defn actions
@@ -23,31 +24,31 @@
 
      [views/icon-button
       "file"
-      {:title "New"
+      {:title (t [::new "New"])
        :on-click #(rf/dispatch [::document.events/new])}]
 
      [views/icon-button
       "folder"
-      {:title "Open"
+      {:title (t [::open "Open"])
        :on-click #(rf/dispatch [::document.events/open])}]
 
      [views/icon-button
       "save"
-      {:title "Save"
+      {:title (t [::save "Save"])
        :on-click #(rf/dispatch [::document.events/save])
        :disabled @(rf/subscribe [::document.subs/active-saved?])}]
 
      [:span.v-divider]
 
      [:button.icon-button.items-center.px-1.gap-1.flex.w-auto
-      {:title "Undo"
+      {:title (t [::undo "Undo"])
        :on-click #(rf/dispatch [::history.events/undo])
        :disabled (not undos?)}
       [views/icon "undo"]
       [history.views/select "Undo stack" undos (not undos?)]]
 
      [:button.icon-button.items-center.px-1.gap-1.flex.w-auto
-      {:title "Redo"
+      {:title (t [::redo "Redo"])
        :on-click #(rf/dispatch [::history.events/redo])
        :disabled (not redos?)}
       [views/icon "redo"]
@@ -57,7 +58,7 @@
   [id saved]
   [:button.close.small
    {:key id
-    :title "Close document"
+    :title (t [::close-doc "Close document"])
     :on-click (fn [e]
                 (.stopPropagation e)
                 (rf/dispatch [::document.events/close id true]))}
@@ -71,18 +72,18 @@
         path (:path document)
         tabs @(rf/subscribe [::document.subs/tabs])
         electron? @(rf/subscribe [::app.subs/electron?])]
-    (cond-> [{:label "Close"
+    (cond-> [{:label (t [::close "Close"])
               :action [::document.events/close id true]}
-             {:label "Close others"
+             {:label (t [::close-others "Close others"])
               :action [::document.events/close-others id]
               :disabled? (empty? (rest tabs))}
-             {:label "Close all"
+             {:label (t [::close-all "Close all"])
               :action [::document.events/close-all]}
-             {:label "Close saved"
+             {:label (t [::close-saved "Close saved"])
               :action [::document.events/close-saved]}]
       electron?
       (concat [{:type :separator}
-               {:label "Open containing directory"
+               {:label (t [::open-directory "Open containing directory"])
                 :action [::document.events/open-directory path]
                 :disabled? (nil? path)}]))))
 
@@ -118,7 +119,7 @@
           :ref (fn [this]
                  (when (and this active?)
                    (rf/dispatch [::events/scroll-into-view this])))}
-         [:span.truncate.pointer-events-none title]
+         [:span.truncate.pointer-events-none.px-2 title]
          [close-button id saved?]]]
        [:> ContextMenu/Portal
         (into
@@ -155,10 +156,10 @@
          {:class "menu-content rounded-sm"
           :on-key-down #(.stopPropagation %)
           :on-escape-key-down #(.stopPropagation %)}
-         (for [item [{:label "Close all"
+         (for [item [{:label (t [::close-all "Close all"])
                       :key :close-all
                       :action [::document.events/close-all]}
-                     {:label "Close saved"
+                     {:label (t [::close-saved "Close saved"])
                       :key :close-saved
                       :action [::document.events/close-saved]}]]
            ^{:key (:key item)}

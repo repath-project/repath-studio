@@ -5,7 +5,7 @@
 
 (def HistoryState
   [:map {:closed true}
-   [:explanation string?]
+   [:explanation [:or fn? string?]]
    [:timestamp number?]
    [:index [:or pos-int? zero?]]
    [:id uuid?]

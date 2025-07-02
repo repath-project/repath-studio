@@ -12,13 +12,14 @@
    [renderer.tool.impl.element.polyshape]
    [renderer.tool.impl.element.rect]
    [renderer.tool.impl.element.svg]
-   [renderer.tool.impl.element.text]))
+   [renderer.tool.impl.element.text]
+   [renderer.utils.i18n :refer [t]]))
 
 (derive ::tool.hierarchy/element ::tool.hierarchy/tool)
 
 (defmethod tool.hierarchy/help [::tool.hierarchy/element :idle]
   []
-  "Click and drag to create an element.")
+  (t [::help "Click and drag to create an element."]))
 
 (defmethod tool.hierarchy/on-activate ::tool.hierarchy/element
   [db]

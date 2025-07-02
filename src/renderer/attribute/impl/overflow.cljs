@@ -2,13 +2,15 @@
   "https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/overflow"
   (:require
    [renderer.attribute.hierarchy :as attribute.hierarchy]
-   [renderer.attribute.views :as attribute.views]))
+   [renderer.attribute.views :as attribute.views]
+   [renderer.utils.i18n :refer [t]]))
 
 (defmethod attribute.hierarchy/description [:default :overflow]
   []
-  "The overflow attribute sets what to do when an element's content is too big
-   to fit in its block formatting context. This feature is not widely
-   implemented yet.")
+  (t [::description 
+      "The overflow attribute sets what to do when an element's content is too big
+       to fit in its block formatting context. This feature is not widely
+       implemented yet."]))
 
 (defmethod attribute.hierarchy/form-element [:default :overflow]
   [_ k v {:keys [disabled]}]
@@ -22,10 +24,10 @@
     :default-value "hidden"
     :items [{:key :visible
              :value "visible"
-             :label "Visible"}
+             :label (t [::visible "Visible"])}
             {:key :hidden
              :value "hidden"
-             :label "Hidden"}
+             :label (t [::hidden "Hidden"])}
             #_{:key :scroll
                :value "scroll"
                :label "Scroll"}

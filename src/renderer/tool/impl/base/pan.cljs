@@ -5,7 +5,8 @@
    [renderer.frame.handlers :as frame.handlers]
    [renderer.snap.handlers :as snap.handlers]
    [renderer.tool.handlers :as tool.handlers]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.utils.i18n :refer [t]]))
 
 (derive :pan ::tool.hierarchy/tool)
 
@@ -19,7 +20,7 @@
 
 (defmethod tool.hierarchy/help [:pan :idle]
   []
-  "Click and drag to pan.")
+  (t [::idle-help "Click and drag to pan."]))
 
 (defmethod tool.hierarchy/on-pointer-up :pan
   [db _e]

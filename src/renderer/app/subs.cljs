@@ -1,6 +1,7 @@
 (ns renderer.app.subs
   (:require
-   [re-frame.core :as rf]))
+   [re-frame.core :as rf]
+   [renderer.utils.i18n :as utils.i18n]))
 
 (rf/reg-sub
  ::pointer-pos
@@ -70,6 +71,18 @@
 (rf/reg-sub
  ::lang
  :-> :lang)
+
+(rf/reg-sub
+ ::lang-dir
+ :<- [::lang]
+ (fn [lang _]
+   (get-in utils.i18n/languages [lang :dir])))
+
+(rf/reg-sub
+ ::rtl?
+ :<- [::lang-dir]
+ (fn [lang-dir _]
+   (= lang-dir "rtl")))
 
 (rf/reg-sub
  ::platform

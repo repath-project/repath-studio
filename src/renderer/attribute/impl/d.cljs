@@ -10,37 +10,39 @@
    [renderer.element.events :as-alias element.events]
    [renderer.events :as-alias events]
    [renderer.tool.subs :as-alias tool.subs]
+   [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]))
 
 (defmethod attribute.hierarchy/description [:default :d]
   []
-  "The d attribute defines a path to be drawn.")
+  (t [::description "The d attribute defines a path to be drawn."]))
 
-(def path-commands
-  {:m {:label "Move To"
+(defn path-commands
+  []
+  {:m {:label (t [::move-to "Move To"])
        :url "https://svgwg.org/svg2-draft/paths.html#PathDataMovetoCommands"}
-   :l {:label "Line To"
+   :l {:label (t [::line-to "Line To"])
        :url "https://svgwg.org/svg2-draft/paths.html#PathDataLinetoCommands"}
-   :v {:label "Vertical Line"
+   :v {:label (t [::vertical-line "Vertical Line"])
        :url "https://svgwg.org/svg2-draft/paths.html#PathDataLinetoCommands"}
-   :h {:label "Horizontal Line"
+   :h {:label (t [::horizontal-line "Horizontal Line"])
        :url "https://svgwg.org/svg2-draft/paths.html#PathDataLinetoCommands"}
-   :c {:label "Cubic Bézier Curve"
+   :c {:label (t [::cubic-bezier "Cubic Bézier Curve"])
        :url "https://svgwg.org/svg2-draft/paths.html#PathDataCubicBezierCommands"}
-   :s {:label "Shortcut Cubic Bézier Curve"
+   :s {:label (t [::shortcut-cubic-bezier "Shortcut Cubic Bézier Curve"])
        :url "https://svgwg.org/svg2-draft/paths.html#PathDataCubicBezierCommands"}
-   :q {:label "Quadratic Bézier Curve"
+   :q {:label (t [::quadratic-bezier-curve "Quadratic Bézier Curve"])
        :url "https://svgwg.org/svg2-draft/paths.html#PathDataQuadraticBezierCommands"}
-   :t {:label "Shortcut Quadratic Bézier Curve"
+   :t {:label (t [::shortcut-quadratic "Shortcut Quadratic Bézier Curve"])
        :url "https://svgwg.org/svg2-draft/paths.html#PathDataQuadraticBezierCommands"}
-   :a {:label "Elliptical Arc Curve"
+   :a {:label (t [::elliptical-arc-curve "Elliptical Arc Curve"])
        :url "https://svgwg.org/svg2-draft/paths.html#PathDataEllipticalArcCommands"}
-   :z {:label "Close Path"
+   :z {:label (t [::close-path "Close Path"])
        :url "https://svgwg.org/svg2-draft/paths.html#PathDataClosePathCommand"}})
 
 (defn ->command
   [c]
-  (get path-commands (keyword (string/lower-case c))))
+  (get (path-commands) (keyword (string/lower-case c))))
 
 (defn remove-segment-by-index
   [path i]
@@ -112,7 +114,7 @@
         {:on-click #(rf/dispatch [::events/open-remote-url url])}
         label]
        (if (= command (string/lower-case command))
-         "(Relative)" "(Absolute)")]
+         (t [::relative "(Relative)"]) (t [::absolute "(Absolute)"]))]
       [:button.icon-button.small.bg-transparent.text-muted
        {:on-click #(remove-segment-by-index path i)}
        [views/icon "times"]]]
@@ -139,7 +141,7 @@
      (when v
        [:> Popover/Root {:modal true}
         [:> Popover/Trigger
-         {:title "Edit path"
+         {:title (t [::edit "Edit path"])
           :class "form-control-button"
           :disabled disabled}
          [views/icon "pencil"]]

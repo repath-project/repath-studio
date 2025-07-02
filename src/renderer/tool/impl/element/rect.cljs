@@ -7,6 +7,7 @@
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]))
 
 (derive :rect ::tool.hierarchy/element)
@@ -14,11 +15,12 @@
 (defmethod tool.hierarchy/properties :rect
   []
   {:icon "rectangle-tool"
-   :label "Rectangle"})
+   :label (t [::name "Rectangle"])})
 
 (defmethod tool.hierarchy/help [:rect :create]
   []
-  [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions."])
+  (t [::help [:div "Hold %1 to lock proportions."]]
+     [[:span.shortcut-key "Ctrl"]]))
 
 (defn attributes
   [db lock-ratio]
@@ -57,5 +59,5 @@
 (defmethod tool.hierarchy/on-drag-end :rect
   [db _e]
   (-> db
-      (history.handlers/finalize "Create rectangle")
+      (history.handlers/finalize #(t [::create-rectangle "Create rectangle"]))
       (tool.handlers/activate :transform)))

@@ -4,6 +4,7 @@
    [clojure.string :as string]
    [re-frame.core :as rf]
    [reagent.core :as reagent]
+   [renderer.app.subs :as-alias app.subs]
    [renderer.document.events :as-alias document.events]
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.events :as-alias element.events]
@@ -42,7 +43,7 @@
         tag-label (or (:label properties) (string/capitalize (name tag)))]
     (reagent/with-let [edit-mode? (reagent/atom false)]
       (if @edit-mode?
-        [:input.mr-1.pl-0.bg-transparent.w-full
+        [:input.bg-transparent.w-full
          {:class ["font-[inherit]! leading-[inherit]!"
                   (when (= :svg tag) "font-bold")]
           :default-value label
@@ -110,7 +111,7 @@
    (if collapsed "chevron-right" "chevron-down")
    {:title (if collapsed "expand" "collapse")
     :class "hover:bg-transparent text-inherit hover:text-inherit
-            focus:outline-hidden small"
+              focus:outline-hidden small rtl:scale-x-[-1]"
     :on-double-click #(.stopPropagation %)
     :on-click #(do (.stopPropagation %)
                    (rf/dispatch (if collapsed
@@ -121,8 +122,9 @@
   [el {:keys [depth collapsed hovered]}]
   (let [{:keys [id selected children locked visible]} el
         collapse-button-width 21
-        padding (* collapse-button-width (cond-> depth (seq children) dec))]
-    [:div.list-item-button.button.flex.pr-1.items-center.text-start.outline-default
+        padding (* collapse-button-width (cond-> depth (seq children) dec))
+        rtl? @(rf/subscribe [::app.subs/rtl?])]
+    [:div.list-item-button.button.flex.px-1.items-center.text-start.outline-default
      {:class ["hover:overlay [&.hovered]:overlay hover:[&_button]:visible"
               (when selected "accent")
               (when hovered "hovered")]
@@ -148,8 +150,8 @@
                     (rf/dispatch-sync [::tree.events/select-range @last-focused-id id])
                     (do (rf/dispatch [::element.events/select id (.-ctrlKey e)])
                         (reset! last-focused-id id))))
-      :style {:padding-left padding}}
-     [:div.flex.items-center.content-between.w-full
+      :style (if rtl? {:padding-right padding} {:padding-left padding})}
+     [:div.flex.items-center.justify-between.w-full
       (when (seq children)
         [collapse-button id collapsed])
       [:div.flex-1.overflow-hidden.flex.items-center
@@ -211,4 +213,4 @@
            {:class "menu-content context-menu-content"
             :on-close-auto-focus #(.preventDefault %)}]
           (map (fn [menu-item] [views/context-menu-item menu-item])
-               element.views/context-menu))]])
+               (element.views/context-menu)))]])

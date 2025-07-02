@@ -8,6 +8,7 @@
    [renderer.snap.db :as snap.db]
    [renderer.snap.events :as-alias snap.events]
    [renderer.snap.subs :as-alias snap.subs]
+   [renderer.utils.i18n :refer [t]]
    [renderer.utils.svg :as utils.svg]
    [renderer.views :as views]))
 
@@ -19,7 +20,7 @@
       {:as-child true}
       [:div.h-full.flex.items-center
        {:role "button"
-        :title "Snap options"
+        :title (t [::snap-options "Snap options"])
         :class "hover:pb-1"}
        [views/icon "chevron-up"]]]
      [:> DropdownMenu/Portal
@@ -41,9 +42,8 @@
                           (rf/dispatch [::snap.events/toggle-option option]))
            :checked (contains? options option)}
           [:> DropdownMenu/ItemIndicator
-           {:class "menu-item-indicator"}
            [views/icon "checkmark"]]
-          (name option)])]]]))
+          (t [(keyword "renderer.snap.views" (name option)) (name option)])])]]]))
 
 (defn root
   []
@@ -60,7 +60,7 @@
         margin (/ 15 zoom)
         point-label (-> nearest-neighbor meta :label)
         base-label (-> nearest-neighbor :base-point meta :label)
-        label (string/join " to " (remove nil? [base-label point-label]))
+        label (string/join (t [::to " to "]) (remove nil? [base-label point-label]))
         point (:point nearest-neighbor)]
     [:<>
      [utils.svg/times point]
