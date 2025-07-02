@@ -8,7 +8,6 @@
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]))
 
 (derive :line ::tool.hierarchy/element)
@@ -48,5 +47,5 @@
 (defmethod tool.hierarchy/on-drag-end :line
   [db _e]
   (-> db
-      (history.handlers/finalize #(t [::create-line "Create line"]))
+      (history.handlers/finalize "Create line")
       (tool.handlers/activate :transform)))

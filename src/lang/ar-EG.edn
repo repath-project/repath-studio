@@ -129,42 +129,6 @@
   :submit-an-issue "إرسال مشكلة"
   :about "حول"}
 
- :renderer.element.events
- {:modify-selection "تعديل التحديد"
-  :select-element "تحديد عنصر"
-  :select-elements "تحديد عناصر"
-  :delete-selection "حذف التحديد"
-  :toggle "تبديل %1"
-  :set "تعيين %1"
-  :lock-selection "قفل التحديد"
-  :unlock-selection "إلغاء قفل التحديد"
-  :remove "إزالة %1"
-  :update "تحديث %1"
-  :deselect-all "إلغاء تحديد الكل"
-  :select-all "تحديد الكل"
-  :select-same-tags "تحديد نفس العلامات"
-  :invert-selection "عكس التحديد"
-  :raise-selection "رفع التحديد"
-  :lower-selection "خفض التحديد"
-  :raise-selection-top "رفع التحديد إلى الأعلى"
-  :lower-selection-bottom "خفض التحديد إلى الأسفل"
-  :paste-selection "لصق التحديد"
-  :paste-selection-in-place "لصق التحديد في المكان"
-  :paste-styles-to-selection "لصق الأنماط إلى التحديد"
-  :duplicate-selection "مضاعفة التحديد"
-  :move-selection "تحريك التحديد"
-  :place-selection "وضع التحديد"
-  :scale-selection "تحجيم التحديد"
-  :convert-selection-path "تحويل التحديد إلى مسار"
-  :convert-selection-stroke-path "تحويل خط التحديد إلى مسار"
-  :create "إنشاء %1"
-  :import-svg "استيراد svg"
-  :set-parent "تعيين الأصل"
-  :group-selection "تجميع التحديد"
-  :ungroup-selection "إلغاء تجميع التحديد"
-  :cut-selection "قص التحديد"
-  :trace-image "تتبع الصورة"}
-
  :renderer.element.views
  {:cut "قص"
   :copy "نسخ"
@@ -252,9 +216,7 @@
  {:description "عنصر SVG <text> يرسم عنصراً رسومياً يتكون من نص. من
                 الممكن تطبيق تدرج، نمط، مسار قطع، قناع، أو مرشح على
                 <text>، مثل أي عنصر رسومي SVG آخر."
-  :label "نص"
-  :remove-text "إزالة النص"
-  :set-text "تعيين النص"}
+  :label "نص"}
 
  :renderer.attribute.views
  {:browser-compatibility "توافق المتصفح"
@@ -354,28 +316,20 @@
 
  :renderer.tool.impl.element.polyshape
  {:add-points "انقر لإضافة المزيد من النقاط."
-  :finalize-shape "انقر مرتين لإنهاء الشكل."
-  :create-tool "إنشاء %1"}
+  :finalize-shape "انقر مرتين لإنهاء الشكل."}
 
  :renderer.tool.impl.element.rect
  {:name "مستطيل"
-  :help [:div "اضغط %1 لقفل النسب."]
-  :create-rectangle "إنشاء مستطيل"}
+  :help [:div "اضغط %1 لقفل النسب."]}
 
  :renderer.tool.impl.element.svg
- {:help [:div "اضغط %1 لقفل النسب."]
-  :create-svg "إنشاء svg"}
-
- :renderer.tool.impl.extension.blob
- {:create-blob "إنشاء نقطة"}
+ {:help [:div "اضغط %1 لقفل النسب."]}
 
  :renderer.tool.impl.misc.dropper
- {:help "انقر في أي مكان لاختيار لون."
-  :pick-color "اختيار لون"}
+ {:help "انقر في أي مكان لاختيار لون."}
 
  :renderer.tool.impl.misc.fill
- {:help "انقر على عنصر للملء."
-  :fill "ملء"}
+ {:help "انقر على عنصر للملء."}
 
  :renderer.tool.impl.misc.measure
  {:help "انقر واسحب لقياس مسافة."}
@@ -449,28 +403,16 @@
  {:help-idle-drag [:div "اسحب مقبضاً لتعديل شكلك."]
   :help-idle-click [:div "انقر على عنصر لتغيير التحديد"]
   :help-edit [:div "اضغط %1 لتقييد الاتجاه."]
-  :help-type [:div "أدخل النص الخاص بك."]
-  :select-element "تحديد عنصر"
-  :edit "تحرير"}
+  :help-type [:div "أدخل النص الخاص بك."]}
 
  :renderer.tool.impl.base.transform
  {:idle-click [:div "انقر لتحديد عنصر أو اسحب للتحديد بالمنطقة. "]
   :idle-hold [:div "اضغط %1 لإضافة أو إزالة عناصر إلى التحديد."]
   :select [:div "اضغط %1 لتحديد العناصر المتقاطعة."]
-  :select-element "تحديد عنصر"
-  :deselect-element "إلغاء تحديد عنصر"
   :translate [:div "اضغط %1 لتقييد الاتجاه، و %2 للاستنساخ."]
   :clone [:div "اضغط %1 لتقييد الاتجاه. أو حرر %2 للتحريك"]
   :scale [:div "اضغط %1 لقفل النسب، %2 للتحجيم في المكان،
-                  %3 لتحجيم العناصر الفرعية أيضاً."]
-  :move-selection-up "تحريك التحديد لأعلى"
-  :move-selection-down "تحريك التحديد لأسفل"
-  :move-selection-left "تحريك التحديد لليسار"
-  :move-selection-right "تحريك التحديد لليمين"
-  :modify-selection "تعديل التحديد"
-  :move-selection "تحريك التحديد"
-  :scale-selection "تحجيم التحديد"
-  :clone-selection "استنساخ التحديد"}
+                  %3 لتحجيم العناصر الفرعية أيضاً."]}
 
  :renderer.tool.impl.base.pan
  {:idle-help "انقر واسحب للتحريك."
@@ -480,31 +422,14 @@
  {:zoom-in [:div "انقر أو حدد منطقة للتكبير."]
   :zoom-out [:div "اضغط %1 للتصغير."]}
 
- :renderer.tool.impl.draw.brush
- {:draw-brush "رسم بالفرشاة"}
-
- :renderer.tool.impl.draw.pen
- {:draw-line "رسم خط"}
-
  :renderer.tool.impl.draw.core
  {:help "انقر واسحب للرسم."}
 
- :renderer.tool.impl.element.circle
- {:create-circle "إنشاء دائرة"}
-
  :renderer.tool.impl.element.ellipse
- {:create-ellipse "إنشاء قطع ناقص"
-  :help [:div "اضغط %1 لقفل النسب."]}
-
- :renderer.tool.impl.element.line
- {:create-line "إنشاء خط"}
+ {:help [:div "اضغط %1 لقفل النسب."]}
 
  :renderer.document.events
  {:save-changes "هل تريد حفظ التغييرات؟"
-  :create-doc "إنشاء مستند"
-  :init-doc "تهيئة مستند"
-  :create-doc-from-template "إنشاء مستند من قالب"
-  :load-doc "تحميل مستند"
   :error-loading "خطأ أثناء تحميل %1"
   :unsupported-or-corrupted "يبدو أن الملف غير مدعوم أو تالف."}
 
@@ -601,16 +526,11 @@
   :bounds-center "مركز الحدود"
   :bounds-midpoint "نقطة منتصف الحدود"}
 
- :renderer.history.events
- {:clear-history "مسح التاريخ"}
-
  :renderer.history.views
  {:center-view "عرض المركز"
   :clear-history "مسح التاريخ"
   :action-cannot-undone "لا يمكن التراجع عن هذا الإجراء."
-  :clear-history-description "هل أنت متأكد من رغبتك في مسح تاريخ المستند؟"
-  :select-element "تحديد عنصر"
-  :delete-selection "حذف التحديد"}
+  :clear-history-description "هل أنت متأكد من رغبتك في مسح تاريخ المستند؟"}
 
  :renderer.timeline.views
  {:speed "السرعة"

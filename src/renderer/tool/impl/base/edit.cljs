@@ -47,7 +47,7 @@
     (-> (element.handlers/clear-ignored db)
         (dissoc :clicked-element)
         (element.handlers/toggle-selection (-> e :element :id) (:shift-key e))
-        (history.handlers/finalize #(t [::select-element "Select element"])))
+        (history.handlers/finalize "Select element"))
     (dissoc db :clicked-element)))
 
 (defmethod tool.hierarchy/on-pointer-move :edit
@@ -88,7 +88,7 @@
   [db _e]
   (-> (tool.handlers/set-state db :idle)
       (dissoc :clicked-element)
-      (history.handlers/finalize #(t [::edit "Edit"]))))
+      (history.handlers/finalize "Edit")))
 
 (defmethod tool.hierarchy/snapping-points :edit
   [db]

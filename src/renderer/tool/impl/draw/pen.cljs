@@ -9,7 +9,6 @@
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.element :as utils.element]
-   [renderer.utils.i18n :refer [t]]
    [renderer.utils.path :as utils.path]))
 
 (derive :pen ::tool.hierarchy/draw)
@@ -47,5 +46,5 @@
                  (update-in [:attrs :d] utils.path/manipulate :simplify))]
     (-> db
         (element.handlers/swap path)
-        (history.handlers/finalize #(t [::draw-line "Draw line"]))
+        (history.handlers/finalize "Draw line")
         (tool.handlers/activate :transform))))

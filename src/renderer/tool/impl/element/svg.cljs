@@ -49,5 +49,5 @@
 (defmethod tool.hierarchy/on-drag-end :svg
   [db _e]
   (-> db
-      (history.handlers/finalize #(t [::create-svg "Create SVG"]))
+      (history.handlers/finalize "Create SVG")
       (tool.handlers/activate :transform)))
