@@ -20,7 +20,7 @@
 (deftest tool
   (rf.test/run-test-sync
    (test-fixtures)
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
 
    (let [active-tool (rf/subscribe [::tool.subs/active])]
 

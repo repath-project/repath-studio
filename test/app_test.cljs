@@ -39,7 +39,7 @@
 (deftest app
   (rf.test/run-test-sync
    (test-fixtures)
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
 
    (testing "language"
      (let [lang (rf/subscribe [::app.subs/lang])]
@@ -71,7 +71,7 @@
 (deftest fonts
   (rf.test/run-test-async
    (test-fixtures)
-   (rf/dispatch-sync [::app.events/initialize-db])
+   (rf/dispatch-sync [::app.events/initialize])
 
    (testing "loading system fonts"
      (let [system-fonts (rf/subscribe [::app.subs/system-fonts])

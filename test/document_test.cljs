@@ -19,7 +19,7 @@
 (deftest document
   (rf.test/run-test-sync
    (test-fixtures)
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
    (rf/dispatch [::app.events/db-loaded])
 
    (let [document-entities? (rf/subscribe [::document.subs/entities?])

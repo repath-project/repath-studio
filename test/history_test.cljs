@@ -20,7 +20,7 @@
 (deftest history
   (rf.test/run-test-sync
    (test-fixtures)
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
 
    (let [undos? (rf/subscribe [::history.subs/undos?])
          redos? (rf/subscribe [::history.subs/redos?])

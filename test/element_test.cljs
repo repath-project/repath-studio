@@ -23,7 +23,7 @@
 (deftest init
   (rf.test/run-test-sync
    (test-fixtures)
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
 
    (let [root (rf/subscribe [::element.subs/root])
          root-children (rf/subscribe [::element.subs/root-children])]
@@ -36,7 +36,7 @@
 (deftest select
   (rf.test/run-test-sync
    (test-fixtures)
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
 
    (let [selected (rf/subscribe [::element.subs/selected])]
      (testing "default state"
@@ -65,7 +65,7 @@
 (deftest index
   (rf.test/run-test-sync
    (test-fixtures)
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
    (rf/dispatch [::document.events/new-from-template nil])
 
    (rf/dispatch [::element.events/add {:tag :rect
@@ -109,7 +109,7 @@
 (deftest align
   (rf.test/run-test-sync
    (test-fixtures)
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
    (rf/dispatch [::document.events/new-from-template [800 600]])
 
    (rf/dispatch [::element.events/add {:tag :rect
@@ -164,7 +164,7 @@
 (deftest visibility
   (rf.test/run-test-sync
    (test-fixtures)
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
 
    (let [selected (rf/subscribe [::element.subs/selected])]
      (rf/dispatch [::element.events/add {:tag :rect
@@ -184,7 +184,7 @@
 (deftest label
   (rf.test/run-test-sync
    (test-fixtures)
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
 
    (let [selected (rf/subscribe [::element.subs/selected])]
      (rf/dispatch [::element.events/add {:tag :rect
@@ -204,7 +204,7 @@
 (deftest lock
   (rf.test/run-test-sync
    (test-fixtures)
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
 
    (let [selected (rf/subscribe [::element.subs/selected])]
      (rf/dispatch [::element.events/add {:tag :rect
@@ -224,7 +224,7 @@
 (deftest attribute
   (rf.test/run-test-sync
    (test-fixtures)
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
 
    (let [selected (rf/subscribe [::element.subs/selected])]
      (rf/dispatch [::element.events/add {:tag :rect
@@ -248,7 +248,7 @@
 (deftest delete
   (rf.test/run-test-sync
    (test-fixtures)
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
 
    (let [selected (rf/subscribe [::element.subs/selected])]
      (rf/dispatch [::element.events/add {:tag :rect
@@ -265,7 +265,7 @@
 (deftest scale
   (rf.test/run-test-sync
    (test-fixtures)
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
 
    (let [selected (rf/subscribe [::element.subs/selected])]
      (rf/dispatch [::element.events/add {:tag :rect
@@ -278,7 +278,7 @@
 (deftest translate
   (rf.test/run-test-sync
    (test-fixtures)
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
 
    (let [selected (rf/subscribe [::element.subs/selected])]
      (rf/dispatch [::element.events/add {:tag :rect
@@ -293,7 +293,7 @@
 (deftest place
   (rf.test/run-test-sync
    (test-fixtures)
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
 
    (let [selected (rf/subscribe [::element.subs/selected])]
      (rf/dispatch [::element.events/add {:tag :rect
@@ -308,7 +308,7 @@
 (deftest ->path
   (rf.test/run-test-async
    (test-fixtures)
-   (rf/dispatch-sync [::app.events/initialize-db])
+   (rf/dispatch-sync [::app.events/initialize])
 
    (let [selected (rf/subscribe [::element.subs/selected])]
      (rf/dispatch [::element.events/add {:tag :rect
@@ -329,7 +329,7 @@
 (deftest stroke->path
   (rf.test/run-test-async
    (test-fixtures)
-   (rf/dispatch-sync [::app.events/initialize-db])
+   (rf/dispatch-sync [::app.events/initialize])
 
    (rf.test/wait-for
     [::app.events/db-loaded]
@@ -353,7 +353,7 @@
 (deftest boolean-operation
   (rf.test/run-test-async
    (test-fixtures)
-   (rf/dispatch-sync [::app.events/initialize-db])
+   (rf/dispatch-sync [::app.events/initialize])
 
    (let [selected (rf/subscribe [::element.subs/selected])]
      (rf/dispatch [::element.events/add {:tag :rect
@@ -380,7 +380,7 @@
 (deftest import-svg
   (rf.test/run-test-sync
    (test-fixtures)
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
 
    (let [selected (rf/subscribe [::element.subs/selected])]
      (rf/dispatch [::element.events/import-svg
@@ -395,7 +395,7 @@
 (deftest animate
   (rf.test/run-test-sync
    (test-fixtures)
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
 
    (rf/dispatch [::element.events/add {:tag :rect
                                        :attrs {:x "100"
@@ -411,7 +411,7 @@
 (deftest set-parent
   (rf.test/run-test-sync
    (test-fixtures)
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
 
    (rf/dispatch [::element.events/add {:tag :rect
                                        :attrs {:x "100"
@@ -429,7 +429,7 @@
 (deftest group
   (rf.test/run-test-sync
    (test-fixtures)
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
 
    (rf/dispatch [::element.events/add {:tag :rect
                                        :attrs {:x "100"

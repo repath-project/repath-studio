@@ -19,7 +19,7 @@
 (deftest frame
   (rf.test/run-test-sync
    (test-fixtures)
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
 
    (let [viewbox (rf/subscribe [::frame.subs/viewbox])
          zoom (rf/subscribe [::document.subs/zoom])
