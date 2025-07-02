@@ -13,6 +13,7 @@
    [renderer.tool.views :as tool.views]
    [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.element :as utils.element]
+   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]))
 
 (derive :brush ::element.hierarchy/renderable)
@@ -20,7 +21,9 @@
 (defmethod element.hierarchy/properties :brush
   []
   {:icon "brush"
-   :description "Draw pressure-sensitive freehand lines using perfect-freehand."
+   :label (t [::name "Brush"])
+   :description (t [::description
+                    "Draw pressure-sensitive freehand lines using perfect-freehand."])
    :url "https://github.com/steveruizok/perfect-freehand"
    :attrs [:points
            :stroke
@@ -53,23 +56,23 @@
 
 (defmethod attribute.hierarchy/description [:brush ::points]
   []
-  "Input points recorded from a user's mouse movement.")
+  (t [::points "Input points recorded from a user's mouse movement."]))
 
 (defmethod attribute.hierarchy/description [:brush :size]
   []
-  "The base size (diameter) of the stroke.")
+  (t [::size "The base size (diameter) of the stroke."]))
 
 (defmethod attribute.hierarchy/description [:brush :thinning]
   []
-  "The effect of pressure on the stroke's size.")
+  (t [::thinning "The effect of pressure on the stroke's size."]))
 
 (defmethod attribute.hierarchy/description [:brush :smoothing]
   []
-  "How much to soften the stroke's edges.")
+  (t [::smoothing "How much to soften the stroke's edges."]))
 
 (defmethod attribute.hierarchy/description [:brush :streamline]
   []
-  "How much to streamline the stroke.")
+  (t [::stream-line "How much to streamline the stroke."]))
 
 (defn get-svg-path-from-stroke
   "Turns the points returned by getStroke into SVG path data.
@@ -82,10 +85,10 @@
             b (nth points 1)
             c (nth points 2)
             d (str
-               "M" (.toFixed (first a) 2) "," (.toFixed (second a) 2)
-               " Q" (.toFixed (first b) 2) "," (.toFixed (second b) 2)
-               " " (.toFixed (matrix.stats/mean [(first b) (first c)]) 2) ","
-               (.toFixed (matrix.stats/mean [(second b) (second c)]) 2) " T")]
+               "M" (utils.length/->fixed (first a)) "," (utils.length/->fixed (second a))
+               " Q" (utils.length/->fixed (first b)) "," (utils.length/->fixed (second b))
+               " " (utils.length/->fixed (matrix.stats/mean [(first b) (first c)])) ","
+               (utils.length/->fixed (matrix.stats/mean [(second b) (second c)])) " T")]
         (reduce-kv
          (fn [result index]
            (if (or (= len (inc index)) (< index 2))
@@ -93,9 +96,9 @@
              (let [a (nth points index)
                    b (nth points (inc index))]
                (str result
-                    (.toFixed (matrix.stats/mean [(first a) (first b)]) 2)
+                    (utils.length/->fixed (matrix.stats/mean [(first a) (first b)]))
                     ","
-                    (.toFixed (matrix.stats/mean [(second a) (second b)]) 2)
+                    (utils.length/->fixed (matrix.stats/mean [(second a) (second b)]))
                     " ")))) d points)))))
 
 (def partition-to-px

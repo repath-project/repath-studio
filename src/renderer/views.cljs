@@ -50,7 +50,8 @@
    [:> Switch/Root
     (merge-with-class
      {:class "overlay relative rounded-full w-10 h-6
-              data-[state=checked]:bg-accent data-disabled:opacity-50"}
+              data-[state=checked]:bg-accent data-disabled:opacity-50"
+      :dir "ltr"}
      props)
     [:> Switch/Thumb
      {:class "block bg-primary rounded-full shadow-sm w-5 h-5
@@ -70,9 +71,9 @@
 
 (defn format-shortcut
   [[shortcut]]
-  (into [:span]
+  (into [:div.flex.gap-1.items-center {:dir "ltr"}]
         (comp (map (partial into [:span.shortcut-key]))
-              (interpose [:span {:class "px-0.5"} "+"]))
+              (interpose [:span "+"]))
         (cond-> []
           (:ctrlKey shortcut) (conj "Ctrl")
           (:shiftKey shortcut) (conj "⇧")
@@ -109,17 +110,15 @@
      [:> ContextMenu/ItemIndicator
       {:class "menu-item-indicator"}
       [icon "checkmark"]]
-     label
-     [:div.right-slot
-      [shortcuts action]]]
+     [:div label]
+     [shortcuts action]]
 
     [:> ContextMenu/Item
      {:class "menu-item context-menu-item"
       :onSelect #(rf/dispatch action)
       :disabled disabled?}
-     label
-     [:div.right-slot
-      [shortcuts action]]]))
+     [:div label]
+     [shortcuts action]]))
 
 (defn dropdown-menu-item
   [{:keys [label action checked?] :as props}]
@@ -136,16 +135,14 @@
      [:> DropdownMenu/ItemIndicator
       {:class "menu-item-indicator"}
       [icon "checkmark"]]
-     label
-     [:div.right-slot
-      [shortcuts action]]]
+     [:div label]
+     [shortcuts action]]
 
     [:> DropdownMenu/Item
      {:class "menu-item dropdown-menu-item"
       :onSelect #(rf/dispatch action)}
-     label
-     [:div.right-slot
-      [shortcuts action]]]))
+     [:div label]
+     [shortcuts action]]))
 
 (defn scroll-area
   [& more]

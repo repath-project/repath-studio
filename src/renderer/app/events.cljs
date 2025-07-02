@@ -89,7 +89,7 @@
           (assoc :loading false))
     :fx (into
          [[:dispatch [::theme.events/set-document-attr]]
-          [:dispatch ^:flush-dom [::set-document-lang]]
+          [:dispatch ^:flush-dom [::set-document-attrs]]
           [:dispatch ^:flush-dom [::window.events/update-focused]]
           [::theme.effects/add-native-listener [::theme.events/set-document-attr]]
           [::effects/ipc-send ["initialized"]]]
@@ -101,9 +101,10 @@
    (assoc db :system-fonts fonts)))
 
 (rf/reg-event-fx
- ::set-document-lang
+ ::set-document-attrs
  (fn [{:keys [db]} _]
-   {::effects/set-document-attr ["lang" (:lang db)]}))
+   {:fx [[::effects/set-document-attr ["lang" (:lang db)]]
+         [::effects/set-document-attr ["dir" (:dir db)]]]}))
 
 (rf/reg-event-fx
  ::set-lang
@@ -111,8 +112,9 @@
  (fn [{:keys [db]} [_ lang]]
    {:db (cond-> db
           (utils.i18n/supported-lang? lang)
-          (assoc :lang lang))
-    :dispatch [::set-document-lang]}))
+          (assoc :lang lang
+                 :dir (get-in utils.i18n/languages [lang :dir])))
+    :dispatch [::set-document-attrs]}))
 
 (rf/reg-event-db
  ::set-repl-mode

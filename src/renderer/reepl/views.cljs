@@ -99,7 +99,7 @@
          [views/scroll-area
           {:ref ref}
           (into
-           [:div.p-1]
+           [:div.p-1 {:dir "ltr"}]
            (map (fn [i]
                   [:div.font-mono.p-1.flex.text-xs.min-h-4 (item i opts)]) items))]])})))
 
@@ -210,6 +210,7 @@
        [repl-items-panel @items show-value-opts set-text])
 
      [:div.relative.whitespace-pre-wrap.font-mono
+      {:dir "ltr"}
       [completion-list
        @docs
        @complete-atom

@@ -2,7 +2,8 @@
   (:require
    [renderer.element.handlers :as element.handlers]
    [renderer.tool.handlers :as tool.handlers]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.utils.i18n :refer [t]]))
 
 (derive :text ::tool.hierarchy/element)
 
@@ -12,7 +13,7 @@
 
 (defmethod tool.hierarchy/help [:text :idle]
   []
-  "Click to start typing.")
+  (t [::help "Click to start typing."]))
 
 (defmethod tool.hierarchy/on-activate :text
   [db]

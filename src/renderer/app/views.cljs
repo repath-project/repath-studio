@@ -1,5 +1,6 @@
 (ns renderer.app.views
   (:require
+   ["@radix-ui/react-direction" :as Direction]
    ["@radix-ui/react-select" :as Select]
    ["@radix-ui/react-tooltip" :as Tooltip]
    ["path-browserify" :as path]
@@ -33,19 +34,21 @@
    [renderer.toolbar.status :as toolbar.status]
    [renderer.toolbar.tools :as toolbar.tools]
    [renderer.tree.views :as tree.views]
+   [renderer.utils.i18n :refer [t]]
+   [renderer.utils.length :as utils.length]
    [renderer.views :as views]
    [renderer.window.views :as window.views]))
 
 (defn coll->str
   [coll]
-  (str "[" (string/join " " (map #(.toFixed % 2) coll)) "]"))
+  (str "[" (string/join " " (map utils.length/->fixed coll)) "]"))
 
 (defn map->str
   [m]
   (interpose ", " (map (fn [[k v]]
                          ^{:key k}
                          [:span (str (name k) ": " (if (number? v)
-                                                     (.toFixed v 3)
+                                                     (utils.length/->fixed v)
                                                      (coll->str v)))]) m)))
 
 (defn debug-rows
@@ -111,10 +114,13 @@
             :title (if ruler-locked? "unlock" "lock")
             :on-click #(rf/dispatch [::ruler.events/toggle-locked])}]]
          [:div.bg-primary.flex-1
+          {:dir "ltr"}
           [ruler.views/ruler :horizontal]]])]
      [:div.flex.flex-1.relative.gap-px
       (when ruler-visible?
         [:div.bg-primary
+         {:dir "ltr"
+          :class "rtl:scale-x-[-1]"}
          [ruler.views/ruler :vertical]])
       [:div.relative.grow.flex
        {:data-theme "light"}
@@ -229,14 +235,15 @@
         [:h1.text-4xl.mb-1.font-light config/app-name]
 
         [:p.text-xl.text-muted.font-bold
-         "Scalable Vector Graphics Manipulation"]
+         (t [::svg-description "Scalable Vector Graphics Manipulation"])]
 
-        [:h2.mb-3.mt-8.text-2xl "Start"]
+        [:h2.mb-3.mt-8.text-2xl (t [::start "Start"])]
 
         [:div.flex.items-center.gap-2.flex-wrap
          [views/icon "file"]
          [:button.button-link.text-lg
-          {:on-click #(rf/dispatch [::document.events/new])} "New"]
+          {:on-click #(rf/dispatch [::document.events/new])}
+          (t [::new "New"])]
          [views/shortcuts [::document.events/new]]
 
          [:span "or"]
@@ -246,9 +253,10 @@
                                          (get paper-size %)])}
           [:> Select/Trigger
            {:class "button px-2 overlay rounded-sm"
-            :aria-label "Select size"}
+            :aria-label (t [::select-size "Select size"])}
            [:div.flex.items-center.gap-2
-            [:> Select/Value {:placeholder "Select template"}]
+            [:> Select/Value
+             {:placeholder (t [::select-template "Select template"])}]
             [:> Select/Icon
              [views/icon "chevron-down"]]]]
           [:> Select/Portal
@@ -256,12 +264,14 @@
             {:class "menu-content rounded-sm select-content"
              :style {:min-width "auto"}}
 
-            [:> Select/Viewport {:class "select-viewport"}
+            [:> Select/Viewport
+             {:class "select-viewport"}
              [:> Select/Group
               [:> Select/Item
                {:value :empty-canvas
                 :class "menu-item select-item"}
-               [:> Select/ItemText "Empty canvas"]]
+               [:> Select/ItemText
+                (t [::empty-canvas "Empty canvas"])]]
               (for [[k _v] (sort paper-size)]
                 ^{:key k}
                 [:> Select/Item
@@ -273,7 +283,7 @@
          [views/icon "folder"]
          [:button.button-link.text-lg
           {:on-click #(rf/dispatch [::document.events/open nil])}
-          "Open"]
+          (t [::open "Open"])]
          [views/shortcuts [::document.events/open nil]]]
 
         (when (seq recent-documents)
@@ -288,33 +298,34 @@
                (.basename path file-path)]
               [:span.text-lg.text-muted (.dirname path file-path)]])])
 
-        [:h2.mb-3.mt-8.text-2xl "Help"]
+        [:h2.mb-3.mt-8.text-2xl
+         (t [::help "Help"])]
 
         [:div
          [:div.flex.items-center.gap-2
           [views/icon "command"]
           [:button.button-link.text-lg
            {:on-click #(rf/dispatch [::dialog.events/show-cmdk])}
-           "Command panel"]
+           (t [::command-panel "Command panel"])]
           [views/shortcuts [::dialog.events/show-cmdk]]]]
         [:div.flex.items-center.gap-2
          [views/icon "earth"]
          [:button.button-link.text-lg
           {:on-click #(rf/dispatch [::events/open-remote-url
                                     "https://repath.studio/"])}
-          "Website"]]
+          (t [::website "Website"])]]
         [:div.flex.items-center.gap-2
          [views/icon "commit"]
          [:button.button-link.text-lg
           {:on-click #(rf/dispatch [::events/open-remote-url
                                     "https://github.com/repath-project/repath-studio"])}
-          "Source Code"]]
+          (t [::source-code "Source Code"])]]
         [:div.flex.items-center.gap-2
          [views/icon "list"]
          [:button.button-link.text-lg
           {:on-click #(rf/dispatch [::events/open-remote-url
                                     "https://repath.studio/roadmap/changelog/"])}
-          "Changelog"]]]
+          (t [::changelog "Changelog"])]]]
 
        [:div.hidden.flex-1
         {:class "md:block"}
@@ -322,41 +333,43 @@
 
 (defn root
   []
-  (let [documents (rf/subscribe [::document.subs/entities])
-        tree-visible (rf/subscribe [::app.subs/panel-visible? :tree])
-        loading (rf/subscribe [::app.subs/loading?])
-        properties-visible (rf/subscribe [::app.subs/panel-visible? :properties])
-        active-tool (rf/subscribe [::tool.subs/active])
-        recent-docs (rf/subscribe [::document.subs/recent])]
-    (if @loading
+  (let [documents @(rf/subscribe [::document.subs/entities])
+        tree-visible @(rf/subscribe [::app.subs/panel-visible? :tree])
+        properties-visible @(rf/subscribe [::app.subs/panel-visible? :properties])
+        active-tool @(rf/subscribe [::tool.subs/active])
+        recent-documents @(rf/subscribe [::document.subs/recent])
+        lang-dir @(rf/subscribe [::app.subs/lang-dir])
+        loading @(rf/subscribe [::app.subs/loading?])]
+    (if loading
       [:div.loader]
-      [:> Tooltip/Provider
-       [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden.justify-between
-        [window.views/app-header]
-        (if (seq @documents)
-          [:div.flex.h-full.flex-1.overflow-hidden.gap-px
-           (when @tree-visible
-             [:div.flex-col.hidden.overflow-hidden
-              {:class "md:flex"
-               :style {:width "227px"}}
-              [document.views/actions]
-              [tree.views/root]])
-           [:div.flex.flex-col.flex-1.overflow-hidden.h-full
-            [document.views/tab-bar]
-            [:div.flex.h-full.flex-1.gap-px.overflow-hidden
-             [:div.flex.h-full.flex-col.flex-1.overflow-hidden
-              [editor]]
-             [:div.flex
-              (when @properties-visible
-                [:div.hidden
-                 {:class "md:flex"}
-                 [:div.flex.flex-col.h-full.w-80
-                  [views/scroll-area
-                   (tool.hierarchy/right-panel @active-tool)]
-                  [:div.bg-primary.grow.flex.mr-px]]])
-              [:div.bg-primary.flex
-               [views/scroll-area [toolbar.object/root]]]]]]]
-          [home @recent-docs])
-        [:div]]
-       [dialog.views/root]
-       [notification.views/main]])))
+      [:> Direction/Provider {:dir lang-dir}
+       [:> Tooltip/Provider
+        [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden.justify-between
+         [window.views/app-header]
+         (if (seq documents)
+           [:div.flex.h-full.flex-1.overflow-hidden.gap-px
+            (when tree-visible
+              [:div.flex-col.hidden.overflow-hidden
+               {:class "md:flex"
+                :style {:width "227px"}}
+               [document.views/actions]
+               [tree.views/root]])
+            [:div.flex.flex-col.flex-1.overflow-hidden.h-full
+             [document.views/tab-bar]
+             [:div.flex.h-full.flex-1.gap-px.overflow-hidden
+              [:div.flex.h-full.flex-col.flex-1.overflow-hidden.gap-px
+               [editor]]
+              [:div.flex.gap-px
+               (when properties-visible
+                 [:div.hidden
+                  {:class "md:flex"}
+                  [:div.flex.flex-col.h-full.w-80
+                   [views/scroll-area
+                    (tool.hierarchy/right-panel active-tool)]
+                   [:div.bg-primary.grow.flex]]])
+               [:div.bg-primary.flex
+                [views/scroll-area [toolbar.object/root]]]]]]]
+           [home recent-documents])
+         [:div]]
+        [dialog.views/root]
+        [notification.views/main]]])))

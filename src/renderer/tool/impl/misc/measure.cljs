@@ -7,6 +7,7 @@
    [renderer.element.handlers :as element.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]
    [renderer.utils.math :as utils.math]
    [renderer.utils.svg :as utils.svg]))
@@ -26,7 +27,7 @@
 
 (defmethod tool.hierarchy/help [:measure :idle]
   []
-  "Click and drag to measure a distance.")
+  (t [::help "Click and drag to measure a distance."]))
 
 (defmethod tool.hierarchy/on-activate :measure
   [db]
@@ -69,12 +70,12 @@
        [utils.svg/line [x1 y1] [(+ x1 (/ 30 zoom)) y1]]
 
        [utils.svg/label
-        (str (.toFixed straight-angle 3) "°")
+        (str (utils.length/->fixed straight-angle) "°")
         [(+ x1 (/ 40 zoom)) y1]
         "start"]
 
        [utils.svg/label
-        (-> hypotenuse js/parseFloat (.toFixed 3) str)
+        (-> hypotenuse js/parseFloat utils.length/->fixed str)
         [(/ (+ x1 x2) 2) (/ (+ y1 y2) 2)]]])))
 
 (defmethod tool.hierarchy/snapping-points :measure

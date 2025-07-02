@@ -10,6 +10,7 @@
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.element :as utils.element]
+   [renderer.utils.i18n :refer [t]]
    [renderer.utils.svg :as utils.svg]))
 
 (derive :edit ::tool.hierarchy/tool)
@@ -21,16 +22,17 @@
 (defmethod tool.hierarchy/help [:edit :idle]
   []
   [:<>
-   [:div "Drag a handle to modify your shape."]
-   [:div "Click on an element to change selection"]])
+   (t [::help-idle-drag "Drag a handle to modify your shape."])
+   (t [::help-idle-click "Click on an element to change selection"])])
 
 (defmethod tool.hierarchy/help [:edit :edit]
   []
-  [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction."])
+  (t [::help-edit "Hold %1 to restrict direction."]
+     [[:span.shortcut-key "Ctrl"]]))
 
 (defmethod tool.hierarchy/help [:edit :type]
   []
-  "Enter your text.")
+  (t [::help-type "Enter your text."]))
 
 (defmethod tool.hierarchy/on-pointer-down :edit
   [db e]
@@ -45,7 +47,7 @@
     (-> (element.handlers/clear-ignored db)
         (dissoc :clicked-element)
         (element.handlers/toggle-selection (-> e :element :id) (:shift-key e))
-        (history.handlers/finalize "Select element"))
+        (history.handlers/finalize #(t [::select-element "Select element"])))
     (dissoc db :clicked-element)))
 
 (defmethod tool.hierarchy/on-pointer-move :edit
@@ -86,7 +88,7 @@
   [db _e]
   (-> (tool.handlers/set-state db :idle)
       (dissoc :clicked-element)
-      (history.handlers/finalize "Edit")))
+      (history.handlers/finalize #(t [::edit "Edit"]))))
 
 (defmethod tool.hierarchy/snapping-points :edit
   [db]

@@ -15,8 +15,9 @@
    [renderer.tool.views :as tool.views]
    [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.element :as utils.element]
+   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]
-   [renderer.utils.svg :as utils.svg]
+   [renderer.utils.svg :as utils.svg] 
    [renderer.views :as views]))
 
 (derive :blob ::element.hierarchy/renderable)
@@ -50,27 +51,27 @@
 
 (defmethod attr.hierarchy/description [:blob :x]
   []
-  "Horizontal coordinate of the blob's center.")
+  (t [::x "Horizontal coordinate of the blob's center."]))
 
 (defmethod attr.hierarchy/description [:blob :y]
   []
-  "Vertical coordinate of the blob's center.")
+  (t [::y "Vertical coordinate of the blob's center."]))
 
 (defmethod attr.hierarchy/description [:blob :seed]
   []
-  "A given seed will always produce the same blob.")
+  (t [::seed "A given seed will always produce the same blob."]))
 
 (defmethod attr.hierarchy/description [:blob :extraPoints]
   []
-  "The actual number of points will be `3 + extraPoints`.")
+  (t [::extra-points "The actual number of points will be `3 + extraPoints`."]))
 
 (defmethod attr.hierarchy/description [:blob :randomness]
   []
-  "Increases the amount of variation in point position.")
+  (t [::randomness "Increases the amount of variation in point position."]))
 
 (defmethod attr.hierarchy/description [:blob :size]
   []
-  "The size of the bounding box.")
+  (t [::size "The size of the bounding box."]))
 
 (defmethod attr.hierarchy/initial [:blob :extraPoints] [] "0")
 
@@ -81,7 +82,7 @@
 (defmethod element.hierarchy/properties :blob
   []
   {:icon "blob"
-   :description "Vector based blob."
+   :description (t [::description "Vector based blob."])
    :url "https://blobs.dev/"
    :ratio-locked true
    :attrs [:x

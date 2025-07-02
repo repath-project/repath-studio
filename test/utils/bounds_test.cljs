@@ -1,7 +1,8 @@
 (ns utils.bounds-test
   (:require
    [cljs.test :refer-macros [deftest testing are is]]
-   [renderer.utils.bounds :as utils.bounds]))
+   [renderer.utils.bounds :as utils.bounds]
+   [renderer.utils.i18n :as i18n]))
 
 (deftest test-union
   (testing "united bounds"
@@ -38,8 +39,9 @@
     (is (= (utils.bounds/center [0 0 10 10]) [5 5]))))
 
 (deftest test-->snapping-points
-  (testing "snapping points of bounds"
-    (is (= (utils.bounds/->snapping-points [0 0 10 10] #{:corners :centers :midpoints})
-           [[0 0] [0 10] [10 0] [10 10] [5 5] [0 5] [10 5] [5 0] [5 10]]))
+  (with-redefs [i18n/t (fn [& _] "translation")]
+    (testing "snapping points of bounds"
+      (is (= (utils.bounds/->snapping-points [0 0 10 10] #{:corners :centers :midpoints})
+             [[0 0] [0 10] [10 0] [10 10] [5 5] [0 5] [10 5] [5 0] [5 10]]))
 
-    (is (= (utils.bounds/->snapping-points [0 0 10 10] #{}) []))))
+      (is (= (utils.bounds/->snapping-points [0 0 10 10] #{}) [])))))

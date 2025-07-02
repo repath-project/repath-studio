@@ -15,6 +15,7 @@
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.subs :as-alias tool.subs]
    [renderer.utils.attribute :as utils.attribute]
+   [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]))
 
 (defn browser-support
@@ -38,7 +39,7 @@
 (defn browser-compatibility
   [support-data]
   [:<>
-   [:h4.font-bold.mb-1 "Browser compatibility"]
+   [:h4.font-bold.mb-1 (t [::browser-compatibility "Browser compatibility"])]
    [views/scroll-area
     [:div.flex.mb-4.gap-px
      (for [[browser {:keys [version_added]}] support-data]
@@ -69,8 +70,8 @@
      (when (some :version_added (vals support-data))
        [browser-compatibility support-data])
      [:div.flex.gap-2
-      (when mdn-url [info-button mdn-url "Learn more"])
-      (when spec-url [info-button spec-url "Specification"])]]))
+      (when mdn-url [info-button mdn-url (t [::learn-more "Learn more"])])
+      (when spec-url [info-button spec-url (t [::specification "Specification"])])]]))
 
 (defn on-change-handler!
   ([event k old-v]
@@ -88,6 +89,8 @@
    [:input.form-element
     (merge attrs
            {:key v
+            :dir "ltr"
+            :class "rtl:text-right"
             :id (name k)
             :default-value v
             :placeholder (if v placeholder "multiple")
@@ -97,7 +100,7 @@
                            on-change-handler! k v)})]
    (when-not (or (empty? (str v)) disabled)
      [:button.button.bg-primary.text-muted.absolute.h-full.right-0.p-1.invisible
-      {:class "clear-input-button hover:bg-transparent"
+      {:class "clear-input-button hover:bg-transparent rtl:right-auto rtl:left-0"
        :on-pointer-down #(rf/dispatch [::element.events/remove-attr k])}
       [views/icon "times"]])])
 
@@ -116,7 +119,7 @@
     [views/slider
      (merge
       attrs
-      {:value [(if (= "" v) placeholder v)]
+      {:value [(if (empty? v) placeholder v)]
        :on-value-change (fn [[v]] (rf/dispatch [::element.events/preview-attr k v]))
        :on-value-commit (fn [[v]] (rf/dispatch [::element.events/set-attr k v]))})]]])
 
@@ -160,10 +163,11 @@
   (when-let [v (get property k)]
     [:<>
      [:h3.font-bold (if (= k :appliesto)
-                      "Applies to"
-                      (-> (camel-snake-kebab/->kebab-case-string k)
-                          (string/replace "-" " ")
-                          (string/capitalize)))]
+                      (t [::applies-to "Applies to"])
+                      (t [(keyword "renderer.attribute.views" (name k))
+                          (-> (camel-snake-kebab/->kebab-case-string k)
+                              (string/replace "-" " ")
+                              (string/capitalize))]))]
      [:p (cond->> v (vector? v) (string/join " | "))]]))
 
 (defn property-list
@@ -186,7 +190,8 @@
       {:as-child true}
       [:label.form-element.w-28.truncate
        {:for (name k)
-        :class (when active "text-active")} k]]
+        :dir "ltr"
+        :class ["rtl:text-left!" (when active "text-active")]} k]]
      [:> HoverCard/Portal
       [:> HoverCard/Content
        {:side "left"
@@ -220,21 +225,22 @@
    [:> HoverCard/Root
     [:> HoverCard/Trigger {:as-child true}
      [:span.pb-px
-      [views/icon-button "info" {:title "MDN Info" :class "hover:bg-transparent"}]]]
+      [views/icon-button "info" {:title (t [::mdn-info "MDN Info"])
+                                 :class "hover:bg-transparent"}]]]
     [:> HoverCard/Portal
      [:> HoverCard/Content
       {:sideOffset 5
        :class "popover-content"
        :align "end"}
       [:div.p-5
-       [:h2.mb-4.text-lg tag]
+       [:h2.mb-4.text-lg (or (:label (element.hierarchy/properties tag)) tag)]
        (when-let [description (:description (element.hierarchy/properties tag))]
          [:p.text-pretty description])
        [caniusethis {:tag tag}]
        (when-let [url (:url (element.hierarchy/properties tag))]
          [:button.button.px-3.bg-primary.w-full
           {:on-click #(rf/dispatch [::events/open-remote-url url])}
-          "Learn more"])]
+          (t [::learn-more "Learn more"])])]
       [:> HoverCard/Arrow {:class "popover-arrow"}]]]]])
 
 (defn form
@@ -251,12 +257,14 @@
         tag (first selected-tags)
         multitag? (next selected-tags)]
     (when-first [el selected-elements]
-      [:div.pr-px
-       [:div.flex.bg-primary.py-4.pl-4.pr-2.gap-1
-        [:h1.self-center.flex-1.text-lg
+      [:div
+       [:div.flex.bg-primary.py-4.gap-1
+        [:h1.self-center.flex-1.text-lg.px-4
          (if-not (next selected-elements)
-           (let [el-label (:label el)]
-             (if (empty? el-label) tag el-label))
+           (let [el-label (:label el)
+                 properties (element.hierarchy/properties tag)
+                 tag-label (or (:label properties) (string/capitalize (name tag)))]
+             (if (empty? el-label) tag-label el-label))
            (string/join " " [(count selected-elements)
                              (when-not multitag? (name tag))
                              "elements"]))]

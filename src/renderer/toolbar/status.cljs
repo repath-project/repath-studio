@@ -14,6 +14,7 @@
    [renderer.snap.views :as snap.views]
    [renderer.timeline.views :as timeline.views]
    [renderer.utils.i18n :refer [t]]
+   [renderer.utils.length :as utils.length]
    [renderer.views :as views]
    [renderer.worker.subs :as-alias worker.subs]))
 
@@ -21,31 +22,32 @@
   (let [[x y] @(rf/subscribe [::app.subs/adjusted-pointer-pos])]
     [:div.flex-col.font-mono.leading-tight.hidden
      {:class "xl:flex"
-      :style {:min-width "100px"}}
+      :style {:min-width "100px"}
+      :dir "ltr"}
      [:div.flex.justify-between
-      [:span.mr-1 "X:"] [:span (.toFixed x 3)]]
+      [:span.mr-1 "X:"] [:span (utils.length/->fixed x)]]
      [:div.flex.justify-between
-      [:span.mr-1 "Y:"] [:span (.toFixed y 3)]]]))
+      [:span.mr-1 "Y:"] [:span (utils.length/->fixed y)]]]))
 
-(def zoom-options
-  [{:label "Set to 50%"
+(defn zoom-options []
+  [{:label (t [::zoom-set-50 "Set to 50%"])
     :id "50"
     :action [::frame.events/set-zoom 0.5]}
-   {:label "Set to 100%"
+   {:label (t [::zoom-set-100 "Set to 100%"])
     :id "100"
     :action [::frame.events/set-zoom 1]}
-   {:label "Set to 200%"
+   {:label (t [::zoom-set-200 "Set to 200%"])
     :id "200"
     :action [::frame.events/set-zoom 2]}
    {:id :divider-1
     :type :separator}
-   {:label "Focus selected"
+   {:label (t [::zoom-focus-selected "Focus selected"])
     :id "center-selected"
     :action [::frame.events/focus-selection :original]}
-   {:label "Fit selected"
+   {:label (t [::zoom-fit-selected "Fit selected"])
     :id "fit-selected"
     :action [::frame.events/focus-selection :fit]}
-   {:label "Fill selected"
+   {:label (t [::zoom-fill-selected "Fill selected"])
     :id "fill-selected"
     :action [::frame.events/focus-selection :fill]}])
 
@@ -53,7 +55,7 @@
   []
   [:> DropdownMenu/Root
    [:> DropdownMenu/Trigger
-    {:title "Select zoom level"
+    {:title (t [::select-zoom "Select zoom level"])
      :class "button flex items-center justify-center overlay px-2
              font-mono rounded-sm hover:overlay-2x"
      :side "top"}
@@ -66,32 +68,32 @@
       :align "end"
       :on-key-down #(.stopPropagation %)
       :on-escape-key-down #(.stopPropagation %)}
-     (for [item zoom-options]
+     (for [item (zoom-options)]
        ^{:key (:id item)} [views/dropdown-menu-item item])
      [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]])
 
-(def view-radio-buttons
-  [{:title "Timeline"
+(defn view-radio-buttons []
+  [{:title (t [::timeline "Timeline"])
     :active [::app.subs/panel-visible? :timeline]
     :icon "animation"
     :class "hidden sm:inline-block shrink-0"
     :action [::app.events/toggle-panel :timeline]}
-   {:title "Grid"
+   {:title (t [::grid "Grid"])
     :active [::app.subs/grid]
     :icon "grid"
     :class "shrink-0"
     :action [::app.events/toggle-grid]}
-   {:title "Rulers"
+   {:title (t [::rulers "Rulers"])
     :active [::ruler.subs/visible?]
     :icon "ruler-combined"
     :class "shrink-0"
     :action [::ruler.events/toggle-visible]}
-   {:title "History"
+   {:title (t [::history "History"])
     :active [::app.subs/panel-visible? :history]
     :icon "history"
     :class "hidden sm:inline-block shrink-0"
     :action [::app.events/toggle-panel :history]}
-   {:title "XML"
+   {:title (t [::xml "XML"])
     :class "hidden sm:inline-block shrink-0"
     :active [::app.subs/panel-visible? :xml]
     :icon "code"
@@ -113,7 +115,7 @@
 
 (defn zoom-input
   [zoom]
-  (let [value (.toFixed (* 100 zoom) (zoom-decimal-points zoom) 2)]
+  (let [value (utils.length/->fixed (* 100 zoom) (zoom-decimal-points zoom))]
     [:input.form-element.overlay.text-right.font-mono.p-1
      {:key zoom
       :aria-label "Zoom"
@@ -137,19 +139,20 @@
     [:div.button-group
      [:button.button.overlay.px-2.font-mono.rounded.hover:overlay-2x
       {:disabled (<= zoom 0.01)
-       :title "Zoom out"
+       :title (t [::zoom-out "Zoom out"])
        :on-click #(rf/dispatch [::frame.events/zoom-out])}
       [views/icon "minus"]]
 
      [:button.button.overlay.px-2.font-mono.rounded.hover:overlay-2x
       {:disabled (>= zoom 100)
-       :title "Zoom in"
+       :title (t [::zoom-in "Zoom in"])
        :on-click #(rf/dispatch [::frame.events/zoom-in])}
       [views/icon "plus"]]
      [:div.flex.hidden
-      {:class "md:flex"}
+      {:class "md:flex"
+       :dir "ltr"}
       [zoom-input zoom]
-      [:div.pr-2.overlay.flex.items-center.font-mono "%"]]
+      [:div.px-2.overlay.flex.items-center.font-mono "%"]]
      [zoom-menu]]))
 
 (defn root []
@@ -165,11 +168,11 @@
         :on-change #(rf/dispatch [::document.events/preview-attr :fill (get-hex %)])}
 
        [:button.button.color-rect
-        {:title "Pick fill color"
+        {:title (t [::fill-color "Pick fill color"])
          :style {:background fill}}]]
 
       [:button.icon-button
-       {:title (t [:color/swap "Swap fill with stroke"])
+       {:title (t [::swap-color "Swap fill with stroke"])
         :style {:width "21px" :background "transparent"}
         :on-click #(rf/dispatch [::document.events/swap-colors])}
        [views/icon "swap-horizontal"]]
@@ -180,7 +183,7 @@
         :on-change #(rf/dispatch [::document.events/preview-attr :stroke (get-hex %)])
         :align-offset -54}
        [:button.button.color-rect.relative
-        {:title "Pick stroke color"
+        {:title (t [::stroke-color "Pick stroke color"])
          :style {:background stroke}}
         [:div.color-rect.bg-primary.absolute
          {:style {:width "13px"
@@ -197,7 +200,7 @@
                    {:title title
                     :class class
                     :on-click #(rf/dispatch action)}])
-                view-radio-buttons))
+                (view-radio-buttons)))
      [snap.views/root]
      [zoom-button-group]
      [coordinates]

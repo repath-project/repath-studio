@@ -16,13 +16,16 @@
    [renderer.snap.views :as snap.views]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.subs :as-alias tool.subs]
+   [renderer.utils.i18n :refer [t]]
    [renderer.utils.svg :as utils.svg]))
 
 (derive :canvas ::element.hierarchy/element)
 
 (defmethod element.hierarchy/properties :canvas
   []
-  {:description "The canvas is the main SVG container that hosts all elements."
+  {:description (t [::description
+                    "The canvas is the main SVG container that hosts all elements."])
+   :label (t [::name "Canvas"])
    :attrs [:fill]})
 
 (defmethod element.hierarchy/render :canvas

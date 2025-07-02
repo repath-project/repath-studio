@@ -2,7 +2,8 @@
   (:require
    [re-frame.core :as rf]
    [renderer.app.effects :as app.effects]
-   [renderer.history.handlers :as history.handlers]))
+   [renderer.history.handlers :as history.handlers]
+   [renderer.utils.i18n :refer [t]]))
 
 (rf/reg-event-db
  ::undo
@@ -45,7 +46,7 @@
  ::clear
  (fn [db _]
    (-> (history.handlers/clear db)
-       (history.handlers/finalize "Clear history"))))
+       (history.handlers/finalize #(t [::clear-history "Clear history"])))))
 
 (rf/reg-event-db
  ::tree-view-updated

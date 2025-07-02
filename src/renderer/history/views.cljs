@@ -9,6 +9,7 @@
    [renderer.dialog.events :as-alias dialog.events]
    [renderer.history.events :as-alias history.events]
    [renderer.history.subs :as-alias history.subs]
+   [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]))
 
 (defn select-options
@@ -18,7 +19,9 @@
     [:> Select/Item
      {:value (str id)
       :class "menu-item select-item"}
-     [:> Select/ItemText explanation]]))
+     [:> Select/ItemText (if (string? explanation)
+                           explanation
+                           (explanation))]]))
 
 (defn select
   [label options disabled?]
@@ -113,14 +116,16 @@
      [:div.flex.p-1
       [:button.button.flex-1
        {:on-click #(rf/dispatch [::history.events/tree-view-updated 0.5 (center ref)])}
-       "Center view"]
+       (t [::center-view "Center view"])]
       [:button.button.flex-1
-       {:on-click #(rf/dispatch
-                    [::dialog.events/show-confirmation
-                     {:title "This action cannot be undone."
-                      :description "Are you sure you wish to clear the document history?"
-                      :confirm-label "Clear history"
-                      :action [::history.events/clear]}])}
-       "Clear history"]]
+       {:on-click #(rf/dispatch [::dialog.events/show-confirmation
+                                 {:title (t [::action-cannot-undone
+                                             "This action cannot be undone."])
+                                  :description (t [::clear-history-description
+                                                   "Are you sure you wish to clear the
+                                                    document history?"])
+                                  :confirm-label (t [::clear-history "Clear history"])
+                                  :action [::history.events/clear]}])}
+       (t [::clear-history "Clear history"])]]
      [:div.flex-1 {:ref ref}
       [tree ref]]]))

@@ -21,6 +21,8 @@
    [renderer.tool.views :as tool.views]
    [renderer.utils.bounds :as utils.bounds :refer [BBox]]
    [renderer.utils.element :as utils.element]
+   [renderer.utils.i18n :refer [t]]
+   [renderer.utils.length :as utils.length]
    [renderer.utils.math :refer [Vec2]]
    [renderer.utils.svg :as utils.svg]))
 
@@ -50,29 +52,30 @@
 (defmethod tool.hierarchy/help [:transform :idle]
   []
   [:<>
-   [:div "Click to select an element or drag to select by area."]
-   [:div "Hold " [:span.shortcut-key "⇧"] " to add or remove elements to selection."]])
+   (t [::idle-click [:div "Click to select an element or drag to select by area."]])
+   (t [::idle-hold [:div "Hold %1 to add or remove elements to selection."]]
+      [[:span.shortcut-key "⇧"]])])
 
 (defmethod tool.hierarchy/help [:transform :select]
   []
-  [:div "Hold " [:span.shortcut-key "Alt"] " to select intersecting elements."])
+  (t [::select [:div "Hold %1 to select intersecting elements."]]
+     [[:span.shortcut-key "Alt"]]))
 
 (defmethod tool.hierarchy/help [:transform :translate]
   []
-  [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction, and "
-   [:span.shortcut-key "Alt"] " to clone."])
+  (t [::translate [:div "Hold %1 to restrict direction, and %2 to clone."]]
+     [[:span.shortcut-key "Ctrl"] [:span.shortcut-key "Alt"]]))
 
 (defmethod tool.hierarchy/help [:transform :clone]
   []
-  [:div "Hold " [:span.shortcut-key "Ctrl"] " to restrict direction. or release "
-   [:span.shortcut-key "Alt"] " to move."])
+  (t [::clone [:div "Hold %1 to restrict direction. or release %2 to move"]]
+     [[:span.shortcut-key "Ctrl"] [:span.shortcut-key "Alt"]]))
 
 (defmethod tool.hierarchy/help [:transform :scale]
   []
-  [:<>
-   [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions,"]
-   [:div [:span.shortcut-key "⇧"] " to scale in place,"]
-   [:div [:span.shortcut-key "Alt"] " to also scale children."]])
+  (t [::scale [:div "Hold %1 to lock proportions, %2 to scale in place,
+                     %3 to also scale children."]]
+     [[:span.shortcut-key "Ctrl"] [:span.shortcut-key "⇧"] [:span.shortcut-key "Alt"]]))
 
 (m/=> hovered? [:-> App Element boolean? boolean?])
 (defn hovered?
@@ -140,16 +143,16 @@
     (element.handlers/clear-ignored)
 
     (= (:key e) "ArrowUp")
-    (history.handlers/finalize "Move selection up")
+    (history.handlers/finalize #(t [::move-selection-up "Move selection up"]))
 
     (= (:key e) "ArrowDown")
-    (history.handlers/finalize "Move selection down")
+    (history.handlers/finalize #(t [::move-selection-down "Move selection down"]))
 
     (= (:key e) "ArrowLeft")
-    (history.handlers/finalize "Move selection left")
+    (history.handlers/finalize #(t [::move-selection-left "Move selection left"]))
 
     (= (:key e) "ArrowRight")
-    (history.handlers/finalize "Move selection right")))
+    (history.handlers/finalize #(t [::move-selection-right "Move selection right"]))))
 
 (defmethod tool.hierarchy/on-pointer-down :transform
   [db {:keys [button element] :as e}]
@@ -170,8 +173,8 @@
       (element.handlers/unignore :bbox)
       (element.handlers/toggle-selection (:id element) (:shift-key e))
       (history.handlers/finalize (if (:selected element)
-                                   "Deselect element"
-                                   "Select element"))))
+                                   #(t [::deselect-element "Deselect element"])
+                                   #(t [::select-element "Select element"])))))
 
 (defmethod tool.hierarchy/on-double-click :transform
   [db e]
@@ -383,10 +386,11 @@
                       (not (:shift-key e)) element.handlers/deselect)
                     (reduce-by-area (:alt-key e) element.handlers/select)
                     (tool.handlers/add-fx [::update nil])
-                    (history.handlers/finalize "Modify selection"))
-        :translate (history.handlers/finalize db "Move selection")
-        :scale (history.handlers/finalize db "Scale selection")
-        :clone (history.handlers/finalize db "Clone selection")
+                    (history.handlers/finalize #(t [::modify-selection
+                                                    "Modify selection"])))
+        :translate (history.handlers/finalize db #(t [::move-selection "Move selection"]))
+        :scale (history.handlers/finalize db #(t [::scale-selection "Scale selection"]))
+        :clone (history.handlers/finalize db #(t [::clone-selection "Clone selection"]))
         :idle db)
       (tool.handlers/set-state :idle)
       (element.handlers/clear-hovered)
@@ -421,7 +425,7 @@
         x (+ min-x (/ (- max-x min-x) 2))
         y (+ y2 (/ (+ (/ theme.db/handle-size 2) 15) zoom))
         [w h] (utils.bounds/->dimensions bbox)
-        text (str (.toFixed w 3) " x " (.toFixed h 3))]
+        text (str (utils.length/->fixed w) " x " (utils.length/->fixed h))]
     [utils.svg/label text [x y]]))
 
 (m/=> area-label [:-> number? BBox any?])
@@ -432,7 +436,7 @@
           [min-x min-y max-x] bbox
           x (+ min-x (/ (- max-x min-x) 2))
           y (+ min-y (/ (- -15 (/ theme.db/handle-size 2)) zoom))
-          text (str (.toFixed area 3) " px²")]
+          text (str (utils.length/->fixed area) " px²")]
       [utils.svg/label text [x y]])))
 
 (defmethod tool.hierarchy/render :transform

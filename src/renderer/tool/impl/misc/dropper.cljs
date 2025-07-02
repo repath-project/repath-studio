@@ -8,7 +8,8 @@
    [renderer.notification.handlers :as notification.handlers]
    [renderer.notification.views :as notification.views]
    [renderer.tool.handlers :as tool.handlers]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.utils.i18n :refer [t]]))
 
 (derive :dropper ::tool.hierarchy/tool)
 
@@ -18,7 +19,7 @@
 
 (defmethod tool.hierarchy/help [:dropper :idle]
   []
-  "Click anywhere to pick a color.")
+  (t [::help "Click anywhere to pick a color."]))
 
 (defmethod tool.hierarchy/on-activate :dropper
   [db]
@@ -39,7 +40,7 @@
      (-> db
          (document.handlers/assoc-attr :fill srgb-color)
          (element.handlers/assoc-attr :fill srgb-color)
-         (history.handlers/finalize "Pick color")
+         (history.handlers/finalize #(t [::pick-color "Pick color"]))
          (tool.handlers/activate :transform)))))
 
 (rf/reg-event-db

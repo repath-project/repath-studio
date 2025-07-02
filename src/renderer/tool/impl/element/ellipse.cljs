@@ -5,7 +5,9 @@
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.utils.i18n :refer [t]]
+   [renderer.utils.length :as utils.length]))
 
 (derive :ellipse ::tool.hierarchy/element)
 
@@ -16,15 +18,16 @@
 
 (defmethod tool.hierarchy/help [:ellipse :create]
   []
-  [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions."])
+  (t [::help [:div "Hold %1 to lock proportions."]]
+     [[:span.shortcut-key "Ctrl"]]))
 
 (defn attributes
   [db lock-ratio]
   (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
                                 (:adjusted-pointer-offset db))
         [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
-        rx (.toFixed (abs (- x offset-x)) 3)
-        ry (.toFixed (abs (- y offset-y)) 3)]
+        rx (utils.length/->fixed (abs (- x offset-x)))
+        ry (utils.length/->fixed (abs (- y offset-y)))]
     {:rx (cond-> rx lock-ratio (min ry))
      :ry (cond-> ry lock-ratio (min rx))}))
 
@@ -54,5 +57,5 @@
 (defmethod tool.hierarchy/on-drag-end :ellipse
   [db _e]
   (-> db
-      (history.handlers/finalize "Create ellipse")
+      (history.handlers/finalize #(t [::create-ellipse "Create ellipse"]))
       (tool.handlers/activate :transform)))

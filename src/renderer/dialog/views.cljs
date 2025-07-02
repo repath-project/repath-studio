@@ -19,8 +19,8 @@
     [:div.p-5
      [:div.flex.gap-3.items-start.pb-2
       [:p
-       [:span.block [:strong "Version: "] config/version]
-       [:span.block [:strong "Browser: "] user-agent]]]
+       [:span.block [:strong (t [::version "Version:"])] config/version]
+       [:span.block [:strong (t [::browser "Browser:"])] user-agent]]]
      [:button.button.px-2.accent.rounded.w-full
       {:auto-focus true
        :on-click #(rf/dispatch [::dialog.events/close])}
@@ -33,7 +33,7 @@
    [:div.flex.gap-2.flex-wrap
     [:button.button.px-2.bg-primary.rounded.flex-1
      {:on-click #(rf/dispatch [::dialog.events/close])}
-     (or cancel-label "Cancel")]
+     (or cancel-label (t [::cancel "Cancel"]))]
     [:button.button.px-2.rounded.flex-1.accent
      {:auto-focus true
       :on-click #(rf/dispatch [::dialog.events/close action])}
@@ -42,34 +42,36 @@
 (defn save
   [{:keys [id title]}]
   [:div.p-5
-   [:p
-    "Your changes to " [:strong title]
-    " will be lost if you close the document without saving."]
+   (t [::changes-will-be-lost
+       [:p
+        "Your changes to " [:strong title]
+        " will be lost if you close the document without saving."]]
+      [[:strong title]])
    [:div.flex.gap-2.flex-wrap
     [:button.button.px-2.bg-primary.rounded.flex-1
      {:on-click #(rf/dispatch [::dialog.events/close
                                [::document.events/close id false]])}
-     "Don't save"]
+     (t [::dont-save "Don't save"])]
     [:button.button.px-2.bg-primary.rounded.flex-1
      {:on-click #(rf/dispatch [::dialog.events/close])}
-     "Cancel"]
+     (t [::cancel "Cancel"])]
     [:button.button.px-2.rounded.flex-1.accent
      {:auto-focus true
       :on-click #(rf/dispatch [::dialog.events/close
                                [::document.events/save-and-close id]])}
-     "Save"]]])
+     (t [::save "Save"])]]])
 
 (defn cmdk-item
   [{:keys [label action icon] :as attrs}]
   (when-not (= (:type attrs) :separator)
     [:> Command/CommandItem
      {:on-select #(rf/dispatch [::dialog.events/close action])}
-     [:div.w-7.h-7.mr-2.rounded.line-height-6.flex.justify-center.items-center
-      {:class (when icon "overlay")}
-      (when icon [views/icon icon])]
-     label
-     [:div.right-slot
-      [views/shortcuts action]]]))
+     [:div.flex.items-center.gap-1.5
+      [:div.w-7.h-7.rounded.line-height-6.flex.justify-center.items-center
+       {:class (when icon "overlay")}
+       (when icon [views/icon icon])]
+      [:div label]]
+     [views/shortcuts action]]))
 
 (defn cmdk-group-inner
   [items label]
@@ -91,12 +93,12 @@
    {:label "Command Menu"
     :on-key-down #(.stopPropagation %)}
    [:> Command/CommandInput
-    {:placeholder (t [:cmdk/search-command "Search for a command"])}]
+    {:placeholder (t [::search-command "Search for a command"])}]
    [views/scroll-area
     [:> Command/CommandList
      {:class "p-1"}
      [:> Command/CommandEmpty
-      (t [:cmdk/no-results "No results found."])]
+      (t [::no-results "No results found."])]
      (for [i (menubar.views/submenus)]
        ^{:key (:id i)}
        [cmdk-group i])]]])
@@ -117,10 +119,10 @@
          [:> Dialog/Title
           (cond->> title
             (string? title)
-            (into [:div.text-xl.pl-5.pr-10.pt-5]))])
+            (into [:div.text-xl.px-5.pt-5]))])
        (when (:close-button (last dialogs))
          [:> Dialog/Close
-          {:class "icon-button absolute top-5 right-5 small"
+          {:class "icon-button absolute top-5 right-5 small rtl:right-auto rtl:left-5"
            :aria-label "Close"}
           [views/icon "times"]])
        [:> Dialog/Description

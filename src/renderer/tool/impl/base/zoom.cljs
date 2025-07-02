@@ -8,6 +8,7 @@
    [renderer.snap.handlers :as snap.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.utils.i18n :refer [t]]
    [renderer.utils.svg :as utils.svg]))
 
 (derive :zoom ::tool.hierarchy/tool)
@@ -26,8 +27,9 @@
 (defmethod tool.hierarchy/help [:zoom :idle]
   []
   [:<>
-   [:div "Click or select an area to zoom in."]
-   [:div "Hold " [:span.shortcut-key "⇧"] " to zoom out."]])
+   (t [::zoom-in "Click or select an area to zoom in."])
+   (t [::zoom-out "Hold %1 to zoom out."]
+            [[:span.shortcut-key "⇧"]])])
 
 (defmethod tool.hierarchy/on-activate :zoom
   [db]
