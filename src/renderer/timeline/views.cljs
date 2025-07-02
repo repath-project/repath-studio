@@ -44,19 +44,23 @@
        {:class "button px-2 overlay rounded-sm"
         :id "animation-speed"
         :aria-label "No a11y filter"}
-       [:> Select/Value {:placeholder "Filter"}
+       [:> Select/Value
+        {:placeholder "Filter"}
         [:div.flex.gap-1.justify-between.items-center
          {:style {:min-width "50px"}}
          [:span (str speed "x")]
-         [:> Select/Icon {:class "select-icon"}
+         [:> Select/Icon
+          {:class "select-icon"}
           [views/icon "chevron-down"]]]]]
       [:> Select/Portal
        [:> Select/Content
         {:class "menu-content rounded-sm select-content"
          :style {:min-width "auto"}}
-        [:> Select/ScrollUpButton {:class "select-scroll-button"}
+        [:> Select/ScrollUpButton
+         {:class "select-scroll-button"}
          [views/icon "chevron-up"]]
-        [:> Select/Viewport {:class "select-viewport"}
+        [:> Select/Viewport
+         {:class "select-viewport"}
          [:> Select/Group
           (for [{:keys [id value label]} speed-options]
             ^{:key id}

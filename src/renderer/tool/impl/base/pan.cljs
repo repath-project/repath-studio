@@ -1,6 +1,5 @@
 (ns renderer.tool.impl.base.pan
   (:require
-   [cljs.test :as t]
    [clojure.core.matrix :as matrix]
    [renderer.app.effects :as-alias app.effects]
    [renderer.frame.handlers :as frame.handlers]

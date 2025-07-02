@@ -19,9 +19,9 @@
   []
   {:icon "circle"
    :label (t [::name "Circle"])
-   :description (t [::description 
-                    "The <circle> SVG element is an SVG basic shape, used to draw
-                     circles based on a center point and a radius."])
+   :description (t [::description
+                    "The <circle> SVG element is an SVG basic shape, used to draw circles
+                     based on a center point and a radius."])
    :ratio-locked true
    :attrs [:stroke-width
            :opacity

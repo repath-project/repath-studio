@@ -13,9 +13,12 @@
   {"en-US" {:dir "ltr"
             :native-name "English (US)"
             :dictionary (load-resource-at-compile-time "lang/en-US.edn")}
-   "el-GR" {:dir "rtl"
+   "el-GR" {:dir "ltr"
             :native-name "Ελληνικά"
-            :dictionary (load-resource-at-compile-time "lang/el-GR.edn")}})
+            :dictionary (load-resource-at-compile-time "lang/el-GR.edn")}
+   "ar-EG" {:dir "rtl"
+            :native-name "العربية (مصر)"
+            :dictionary (load-resource-at-compile-time "lang/ar-EG.edn")}})
 
 (m/=> supported-lang? [:-> string? boolean?])
 (defn supported-lang?

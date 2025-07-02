@@ -4,10 +4,8 @@
    ["react" :as react]
    ["react-d3-tree" :refer [Tree]]
    [clojure.core.matrix :as matrix]
-   [clojure.string :as str]
    [re-frame.core :as rf]
    [reagent.core :as reagent]
-   [renderer.app.subs :as-alias app.subs]
    [renderer.dialog.events :as-alias dialog.events]
    [renderer.history.events :as-alias history.events]
    [renderer.history.subs :as-alias history.subs]
@@ -98,8 +96,7 @@
         dom-el (.-current ref)
         [x y] @(rf/subscribe [::history.subs/translate])
         translate #js {:x (or x (when dom-el (/ (.-clientWidth dom-el) 2)))
-                       :y (or y (when dom-el (/ (.-clientHeight dom-el) 2)))}
-        lang     @(rf/subscribe [::app.subs/lang])]
+                       :y (or y (when dom-el (/ (.-clientHeight dom-el) 2)))}]
     [:> Tree
      {:data tree-data
       :collapsible false
@@ -125,8 +122,8 @@
                                  {:title (t [::action-cannot-undone
                                              "This action cannot be undone."])
                                   :description (t [::clear-history-description
-                                                   "Are you sure you wish 
-                                                    to clear the document history?"])
+                                                   "Are you sure you wish to clear the
+                                                    document history?"])
                                   :confirm-label (t [::clear-history "Clear history"])
                                   :action [::history.events/clear]}])}
        (t [::clear-history "Clear history"])]]

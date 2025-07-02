@@ -36,7 +36,7 @@
 
 (defn group
   [items]
-  (into [:div.flex.gap-1.rtl:flex-row-reverse]
+  (into [:div.flex.gap-1]
         (map button items)))
 
 (def groups
@@ -49,6 +49,6 @@
 
 (defn root
   []
-  (into [:div.justify-center.bg-primary.toolbar.rtl:flex-row-reverse]
+  (into [:div.justify-center.bg-primary.toolbar]
         (interpose [:span.v-divider]
                    (map group groups))))

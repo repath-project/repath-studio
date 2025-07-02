@@ -34,7 +34,7 @@
 (defn app-icon
   []
   [:div.drag
-   [:img.ml-2.h-4.w-4
+   [:img.mx-2.h-4.w-4
     {:src "img/icon-no-bg.svg"
      :alt "logo"}]])
 
@@ -44,7 +44,8 @@
         maximized? @(rf/subscribe [::window.subs/maximized?])
         theme-mode (name @(rf/subscribe [::theme.subs/mode]))
         mac? @(rf/subscribe [::app.subs/mac?])
-        electron? @(rf/subscribe [::app.subs/electron?])]
+        electron? @(rf/subscribe [::app.subs/electron?])
+        title-bar @(rf/subscribe [::document.subs/title-bar])]
     [:div.flex.items-center.relative
      (when-not (or fullscreen? mac?)
        [app-icon])
@@ -53,8 +54,9 @@
       [menubar.views/root]]
      [:div.absolute.hidden.justify-center.drag.grow.h-full.items-center
       {:class "pointer-events-none md:flex left-1/2 -translate-x-1/2"
-       :style {:z-index -1}}
-      @(rf/subscribe [::document.subs/title-bar])]
+       :style {:z-index -1}
+       :dir "ltr"}
+      title-bar]
      [:div.flex.h-full.flex-1.drag]
      [:div.flex
       [button {:action [::theme.events/cycle-mode]

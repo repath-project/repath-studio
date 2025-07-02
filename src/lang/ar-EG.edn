@@ -1,0 +1,622 @@
+{:missing "ترجمة مفقودة لـ :ar-EG"
+
+ :renderer.app.views
+ {:svg-description "معالجة الرسوميات المتجهة القابلة للتحجيم"
+  :start "ابدأ"
+  :new "جديد"
+  :open "فتح"
+  :select-size "اختيار الحجم"
+  :select-template "اختيار قالب"
+  :empty-canvas "لوحة رسم فارغة"
+  :help "مساعدة"
+  :command-panel "لوحة الأوامر"
+  :website "الموقع الإلكتروني"
+  :source-code "الكود المصدري"
+  :changelog "سجل التغييرات"}
+
+ :renderer.dialog.views
+ {:search-command "البحث عن أمر"
+  :no-results "لا توجد نتائج."
+  :version "الإصدار: "
+  :browser "المتصفح: "
+  :save "حفظ"
+  :dont-save "عدم الحفظ"
+  :cancel "إلغاء"
+  :changes-will-be-lost [:p "ستفقد التغييرات في %1 إذا أغلقت المستند
+                             بدون حفظ."]}
+
+ :renderer.menubar.views
+ {:file "ملف"
+  :new "جديد"
+  :open "فتح..."
+  :recent "الحديثة"
+  :recent-clear "مسح الحديثة"
+  :print "طباعة"
+  :save "حفظ"
+  :save-as "حفظ باسم..."
+  :download "تحميل"
+  :export-as-svg "تصدير كـ SVG"
+  :close "إغلاق"
+  :exit "خروج"
+  :edit "تحرير"
+  :undo "تراجع"
+  :redo "إعادة"
+  :cut "قص"
+  :copy "نسخ"
+  :paste "لصق"
+  :paste-in-place "لصق في المكان"
+  :paste-styles "لصق الأنماط"
+  :duplicate "مضاعفة"
+  :select-all "تحديد الكل"
+  :deselect-all "إلغاء تحديد الكل"
+  :invert-selection "عكس التحديد"
+  :select-same-tags "تحديد نفس العلامات"
+  :delete "حذف"
+  :object "كائن"
+  :object-to-path "كائن إلى مسار"
+  :stroke-to-path "خط إلى مسار"
+  :group "تجميع"
+  :ungroup "إلغاء التجميع"
+  :lock "قفل"
+  :unlock "إلغاء القفل"
+  :align "محاذاة"
+  :align-left "يسار"
+  :align-right "يمين"
+  :align-top "أعلى"
+  :align-bottom "أسفل"
+  :align-center-vertically "وسط عمودياً"
+  :align-center-horizontally "وسط أفقياً"
+  :animate "تحريك"
+  :animate-transform "تحريك التحويل"
+  :animate-motion "تحريك الحركة"
+  :boolean-operation "عملية منطقية"
+  :boolean-exclude "استبعاد"
+  :boolean-unite "توحيد"
+  :boolean-intersect "تقاطع"
+  :boolean-subtract "طرح"
+  :boolean-divide "قسمة"
+  :raise "رفع"
+  :lower "خفض"
+  :raise-to-top "رفع إلى الأعلى"
+  :lower-to-bottom "خفض إلى الأسفل"
+  :image "صورة"
+  :image-trace "تتبع"
+  :path "مسار"
+  :path-simplify "تبسيط"
+  :path-smooth "تنعيم"
+  :path-flatten "تسطيح"
+  :path-reverse "عكس"
+  :view "عرض"
+  :zoom "تكبير"
+  :zoom-in "تكبير"
+  :zoom-out "تصغير"
+  :zoom-set-50 "تعيين إلى 50%"
+  :zoom-set-100 "تعيين إلى 100%"
+  :zoom-set-200 "تعيين إلى 200%"
+  :zoom-focus-selected "تركيز على المحدد"
+  :zoom-fit-selected "ملائمة المحدد"
+  :zoom-fill-selected "ملء المحدد"
+  :accessibility-filter "مرشح إمكانية الوصول"
+  :blur "ضبابية البصر"
+  :blur-x2 "ضبابية البصر المضاعفة"
+  :protanopia "عمى الألوان الأحمر"
+  :protanomaly "ضعف الألوان الأحمر"
+  :deuteranopia "عمى الألوان الأخضر"
+  :deuteranomaly "ضعف الألوان الأخضر"
+  :tritanopia "عمى الألوان الأزرق"
+  :tritanomaly "ضعف الألوان الأزرق"
+  :achromatopsia "عمى الألوان الكامل"
+  :achromatomaly "ضعف الألوان الكامل"
+  :language "اللغة"
+  :grid "الشبكة"
+  :rulers "المساطر"
+  :help-bar "شريط المساعدة"
+  :debug-info "معلومات التصحيح"
+  :panel "لوحة"
+  :panel-element-tree "شجرة العناصر"
+  :panel-properties "الخصائص"
+  :panel-xml-view "عرض XML"
+  :panel-history-tree "شجرة التاريخ"
+  :panel-shell-history "تاريخ الأوامر"
+  :panel-timeline-editor "محرر الجدول الزمني"
+  :fullscreen "ملء الشاشة"
+  :help "مساعدة"
+  :command-panel "لوحة الأوامر"
+  :website "الموقع الإلكتروني"
+  :source-code "الكود المصدري"
+  :license "الرخصة"
+  :changelog "سجل التغييرات"
+  :submit-an-issue "إرسال مشكلة"
+  :about "حول"}
+
+ :renderer.element.events
+ {:modify-selection "تعديل التحديد"
+  :select-element "تحديد عنصر"
+  :select-elements "تحديد عناصر"
+  :delete-selection "حذف التحديد"
+  :toggle "تبديل %1"
+  :set "تعيين %1"
+  :lock-selection "قفل التحديد"
+  :unlock-selection "إلغاء قفل التحديد"
+  :remove "إزالة %1"
+  :update "تحديث %1"
+  :deselect-all "إلغاء تحديد الكل"
+  :select-all "تحديد الكل"
+  :select-same-tags "تحديد نفس العلامات"
+  :invert-selection "عكس التحديد"
+  :raise-selection "رفع التحديد"
+  :lower-selection "خفض التحديد"
+  :raise-selection-top "رفع التحديد إلى الأعلى"
+  :lower-selection-bottom "خفض التحديد إلى الأسفل"
+  :paste-selection "لصق التحديد"
+  :paste-selection-in-place "لصق التحديد في المكان"
+  :paste-styles-to-selection "لصق الأنماط إلى التحديد"
+  :duplicate-selection "مضاعفة التحديد"
+  :move-selection "تحريك التحديد"
+  :place-selection "وضع التحديد"
+  :scale-selection "تحجيم التحديد"
+  :convert-selection-path "تحويل التحديد إلى مسار"
+  :convert-selection-stroke-path "تحويل خط التحديد إلى مسار"
+  :create "إنشاء %1"
+  :import-svg "استيراد svg"
+  :set-parent "تعيين الأصل"
+  :group-selection "تجميع التحديد"
+  :ungroup-selection "إلغاء تجميع التحديد"
+  :cut-selection "قص التحديد"
+  :trace-image "تتبع الصورة"}
+
+ :renderer.element.views
+ {:cut "قص"
+  :copy "نسخ"
+  :paste "لصق"
+  :raise "رفع"
+  :lower "خفض"
+  :raise-top "رفع إلى الأعلى"
+  :lower-bottom "خفض إلى الأسفل"
+  :animate "تحريك"
+  :animate-transform "تحريك التحويل"
+  :animate-motion "تحريك الحركة"
+  :duplicate "مضاعفة"
+  :delete "حذف"}
+
+ :renderer.element.impl.shape.circle
+ {:name "دائرة"
+  :description "عنصر <circle> هو شكل SVG أساسي، يُستخدم لرسم الدوائر
+                بناءً على نقطة مركز ونصف قطر."}
+
+ :renderer.element.impl.shape.image
+ {:name "صورة"
+  :description "عنصر <image> يشمل الصور داخل مستندات SVG.
+                يمكنه عرض ملفات الصور النقطية أو ملفات SVG أخرى."}
+
+ :renderer.element.impl.shape.ellipse
+ {:name "قطع ناقص"
+  :description "عنصر <ellipse> هو شكل SVG أساسي، يُستخدم لإنشاء القطع الناقص بناءً
+                على إحداثي مركز، ونصف قطر في الاتجاهين x و y."}
+
+ :renderer.element.impl.shape.line
+ {:name "خط"
+  :description "عنصر <line> هو شكل SVG أساسي يُستخدم لإنشاء خط يصل
+                بين نقطتين."}
+
+ :renderer.element.impl.shape.path
+ {:name "مسار"
+  :description "عنصر <path> في SVG هو العنصر العام لتعريف شكل.
+                يمكن إنشاء جميع الأشكال الأساسية باستخدام عنصر مسار."}
+
+ :renderer.element.impl.shape.polygon
+ {:name "مضلع"
+  :description "عنصر <polygon> في SVG يُعرف شكلاً مغلقاً يتكون من مجموعة من
+                القطع المستقيمة المتصلة. النقطة الأخيرة متصلة بالنقطة الأولى."}
+
+ :renderer.element.impl.shape.polyline
+ {:name "خط متعدد"
+  :description "عنصر <polyline> هو شكل SVG أساسي ينشئ خطوطاً مستقيمة
+                تصل عدة نقاط. عادة، يُستخدم polyline لإنشاء
+                أشكال مفتوحة حيث لا تحتاج النقطة الأخيرة للاتصال بالنقطة الأولى."}
+
+ :renderer.element.impl.shape.rect
+ {:name "مستطيل"
+  :description "عنصر <rect> هو شكل SVG أساسي يرسم مستطيلات، محددة بـ
+                موضعها وعرضها وارتفاعها. قد تحتوي المستطيلات على زوايا
+                مدورة."}
+
+ :renderer.element.impl.custom.blob
+ {:x "الإحداثي الأفقي لمركز النقطة."
+  :y "الإحداثي العمودي لمركز النقطة."
+  :seed "بذرة معينة ستنتج دائماً نفس النقطة."
+  :extra-points "العدد الفعلي للنقاط سيكون `3 + extraPoints`."
+  :randomness "يزيد من كمية التنوع في موضع النقطة."
+  :size "حجم الصندوق المحيط."
+  :description "نقطة قائمة على المتجهات."}
+
+ :renderer.element.impl.custom.brush
+ {:name "فرشاة"
+  :points "نقاط الإدخال المسجلة من حركة فأرة المستخدم."
+  :size "الحجم الأساسي (القطر) للخط."
+  :thinning "تأثير الضغط على حجم الخط."
+  :smoothing "مقدار تنعيم حواف الخط."
+  :stream-line "مقدار تبسيط الخط."
+  :description "ارسم خطوطاً حساسة للضغط باستخدام perfect-freehand."}
+
+ :renderer.element.impl.container.canvas
+ {:name "لوحة الرسم"
+  :description "لوحة الرسم هي حاوية SVG الرئيسية التي تستضيف جميع العناصر."}
+
+ :renderer.element.impl.container.svg
+ {:description "عنصر svg هو حاوية تُعرف نظام إحداثيات جديد ومنفذ عرض.
+                يُستخدم كالعنصر الخارجي لمستندات SVG، ولكن يمكن أيضاً
+                استخدامه لتضمين جزء SVG داخل مستند SVG أو HTML."}
+
+ :renderer.element.impl.text
+ {:description "عنصر SVG <text> يرسم عنصراً رسومياً يتكون من نص. من
+                الممكن تطبيق تدرج، نمط، مسار قطع، قناع، أو مرشح على
+                <text>، مثل أي عنصر رسومي SVG آخر."
+  :label "نص"
+  :remove-text "إزالة النص"
+  :set-text "تعيين النص"}
+
+ :renderer.attribute.views
+ {:browser-compatibility "توافق المتصفح"
+  :learn-more "تعلم المزيد"
+  :specification "المواصفة"
+  :applies-to "ينطبق على"
+  :computed "محسوب"
+  :percentages "النسب المئوية"
+  :animatable "قابل للتحريك"
+  :animationType "نوع التحريك"
+  :syntax "بنية الجملة"
+  :mdn-info "معلومات MDN"}
+
+ :renderer.attribute.impl.core
+ {:x "خاصية x تحدد إحداثي المحور x في نظام إحداثيات المستخدم."
+  :y "خاصية y تحدد إحداثي المحور y في نظام إحداثيات المستخدم."
+  :x1 "خاصية x1 تُستخدم لتحديد أول إحداثي x لرسم عنصر SVG
+       يتطلب أكثر من إحداثي واحد. العناصر التي تحتاج إحداثياً واحداً فقط
+       تستخدم خاصية x بدلاً من ذلك."
+  :y1 "خاصية y1 تُستخدم لتحديد أول إحداثي y لرسم عنصر SVG
+       يتطلب أكثر من إحداثي واحد. العناصر التي تحتاج إحداثياً واحداً فقط
+       تستخدم خاصية y بدلاً من ذلك."
+  :x2 "خاصية x2 تُستخدم لتحديد ثاني إحداثي x لرسم عنصر SVG
+       يتطلب أكثر من إحداثي واحد. العناصر التي تحتاج إحداثياً واحداً فقط
+       تستخدم خاصية x بدلاً من ذلك."
+  :y2 "خاصية y2 تُستخدم لتحديد ثاني إحداثي y لرسم عنصر SVG
+       يتطلب أكثر من إحداثي واحد. العناصر التي تحتاج إحداثياً واحداً فقط
+       تستخدم خاصية y بدلاً من ذلك."
+  :cx "خاصية cx تحدد إحداثي المحور x لنقطة المركز."
+  :cy "خاصية cy تحدد إحداثي المحور y لنقطة المركز."
+  :dx "خاصية dx تشير إلى إزاحة على طول المحور x في موضع عنصر
+       أو محتواه."
+  :dy "خاصية dy تشير إلى إزاحة على طول المحور y في موضع عنصر
+       أو محتواه."
+  :width "خاصية width تحدد الطول الأفقي لعنصر في نظام إحداثيات المستخدم."
+  :height "خاصية height تحدد الطول العمودي لعنصر في نظام إحداثيات المستخدم."
+  :rx "خاصية rx تحدد نصف القطر على المحور x."
+  :ry "خاصية ry تحدد نصف القطر على المحور y."
+  :r "خاصية r تحدد نصف قطر الدائرة."
+  :rotate "خاصية rotate تحدد كيفية دوران العنصر المتحرك أثناء حركته
+           على طول مسار محدد في عنصر <animateMotion>."
+  :stroke "خاصية stroke هي خاصية عرض تحدد اللون (أو أي خوادم طلاء SVG
+           مثل التدرجات أو الأنماط) المستخدم لرسم الخط الخارجي للشكل."
+  :fill "خاصية fill لها معنيان مختلفان. للأشكال والنص هي خاصية عرض تحدد
+         اللون (أو أي خوادم طلاء SVG مثل التدرجات أو الأنماط) المستخدم
+         لطلاء العنصر؛ للرسوم المتحركة تحدد الحالة النهائية للرسوم المتحركة."
+  :stroke-width "خاصية stroke-width هي خاصية عرض تحدد عرض الخط المطبق على الشكل."
+  :stroke-dasharray "خاصية stroke-dasharray هي خاصية عرض تحدد نمط الشرطات
+                     والفجوات المستخدمة لرسم الخط الخارجي للشكل."
+  :opacity "خاصية opacity تحدد شفافية كائن أو مجموعة من الكائنات، أي درجة
+            تراكب الخلفية خلف العنصر."
+  :id "خاصية id تعين اسماً فريداً لعنصر."
+  :class "تعين اسم فئة أو مجموعة من أسماء الفئات لعنصر. يمكنك تعيين نفس
+          اسم الفئة أو الأسماء لأي عدد من العناصر، ولكن يجب فصل أسماء الفئات
+          المتعددة بأحرف مسافة بيضاء."
+  :tabindex "خاصية tabindex تسمح لك بالتحكم في ما إذا كان العنصر قابلاً
+             للتركيز وتحديد الترتيب النسبي للعنصر لأغراض التنقل المتسلسل بالتركيز."
+  :style "خاصية style تسمح بتنسيق عنصر باستخدام إعلانات CSS.
+          تعمل بشكل مطابق لخاصية style في HTML."
+  :href "خاصية href تحدد رابطاً إلى مورد كمرجع URL. المعنى الدقيق لهذا
+         الرابط يعتمد على سياق كل عنصر يستخدمه."
+  :attribute-name "خاصية attributeName تشير إلى اسم خاصية CSS أو خاصية
+                   العنصر المستهدف التي ستتغير أثناء الرسوم المتحركة."
+  :begin "خاصية begin تحدد متى يجب أن تبدأ الرسوم المتحركة."
+  :end "خاصية end تحدد قيمة نهائية للرسوم المتحركة يمكنها تقييد المدة النشطة."
+  :dur "خاصية dur تشير إلى المدة البسيطة للرسوم المتحركة."
+  :min "خاصية min تحدد الحد الأدنى لقيمة مدة الرسوم المتحركة النشطة."
+  :max "خاصية max تحدد الحد الأقصى لقيمة مدة الرسوم المتحركة النشطة."
+  :restart "خاصية restart تحدد ما إذا كان يمكن إعادة تشغيل الرسوم المتحركة أم لا."
+  :repeat-count "خاصية repeatCount تشير إلى عدد المرات التي ستحدث فيها
+                 الرسوم المتحركة."
+  :repeat-dur "خاصية repeatDur تحدد المدة الإجمالية لتكرار الرسوم المتحركة."
+  :calc-mode "خاصية calcMode تحدد وضع الاستيفاء للرسوم المتحركة."
+  :values "خاصية values لها معانٍ مختلفة، اعتماداً على السياق المستخدم فيه،
+           إما أنها تحدد تسلسل القيم المستخدمة خلال الرسوم المتحركة، أو هي قائمة
+           من الأرقام لمصفوفة الألوان، والتي يتم تفسيرها بشكل مختلف حسب نوع
+           تغيير اللون المراد تنفيذه."
+  :key-times "خاصية keyTimes تمثل قائمة من قيم الوقت المستخدمة للتحكم
+              في وتيرة الرسوم المتحركة."
+  :key-splines "خاصية keySplines تحدد مجموعة من نقاط التحكم في منحنى بيزيه
+                المرتبطة بقائمة keyTimes، وتحدد دالة بيزيه المكعبة التي تتحكم
+                في وتيرة الفترة"
+  :from "خاصية from تشير إلى القيمة الأولية للخاصية التي ستتم تعديلها
+         أثناء الرسوم المتحركة."
+  :to "خاصية to تشير إلى القيمة النهائية للخاصية التي ستتم تعديلها
+       أثناء الرسوم المتحركة."
+  :by "خاصية by تحدد قيمة إزاحة نسبية لخاصية ستتم تعديلها أثناء الرسوم المتحركة."
+  :additive "خاصية additive تتحكم في ما إذا كانت الرسوم المتحركة إضافية أم لا."
+  :accumulate "خاصية accumulate تتحكم في ما إذا كانت الرسوم المتحركة تراكمية أم لا."
+  :view-box "خاصية viewBox تحدد الموضع والبعد، في مساحة المستخدم، لمنفذ عرض SVG."
+  :preserve-aspect-ratio "خاصية preserveAspectRatio تشير إلى كيفية ملائمة عنصر
+                          يحتوي على viewBox يوفر نسبة عرض إلى ارتفاع معينة في
+                          منفذ عرض بنسبة عرض إلى ارتفاع مختلفة."}
+
+ :renderer.tool.impl.element.core
+ {:help "انقر واسحب لإنشاء عنصر."}
+
+ :renderer.tool.impl.element.polyshape
+ {:add-points "انقر لإضافة المزيد من النقاط."
+  :finalize-shape "انقر مرتين لإنهاء الشكل."
+  :create-tool "إنشاء %1"}
+
+ :renderer.tool.impl.element.rect
+ {:name "مستطيل"
+  :help [:div "اضغط %1 لقفل النسب."]
+  :create-rectangle "إنشاء مستطيل"}
+
+ :renderer.tool.impl.element.svg
+ {:help [:div "اضغط %1 لقفل النسب."]
+  :create-svg "إنشاء svg"}
+
+ :renderer.tool.impl.extension.blob
+ {:create-blob "إنشاء نقطة"}
+
+ :renderer.tool.impl.misc.dropper
+ {:help "انقر في أي مكان لاختيار لون."
+  :pick-color "اختيار لون"}
+
+ :renderer.tool.impl.misc.fill
+ {:help "انقر على عنصر للملء."
+  :fill "ملء"}
+
+ :renderer.tool.impl.misc.measure
+ {:help "انقر واسحب لقياس مسافة."}
+
+ :renderer.tool.impl.element.text
+ {:help "انقر لبدء الكتابة."}
+
+ :renderer.attribute.impl.stroke-linecap
+ {:description "خاصية stroke-linecap هي خاصية عرض تحدد
+                الشكل المستخدم في نهاية المسارات الفرعية المفتوحة عند رسمها."
+  :butt "مقطوع"
+  :round "دائري"
+  :square "مربع"}
+
+ :renderer.attribute.impl.stroke-linejoin
+ {:description "خاصية stroke-linejoin هي خاصية عرض تحدد
+                الشكل المستخدم في زوايا المسارات عند رسمها."
+  :bevel "مشطوف"
+  :miter "زاوي"
+  :round "دائري"}
+
+ :renderer.attribute.impl.overflow
+ {:description "خاصية overflow تحدد ما يجب فعله عندما يكون محتوى العنصر
+                كبيراً جداً ليناسب سياق تنسيق الكتلة الخاص به. هذه الميزة ليست
+                مطبقة على نطاق واسع بعد."
+  :hidden "مخفي"
+  :visible "مرئي"}
+
+ :renderer.attribute.impl.color
+ {:title "اختيار لون"}
+
+ :renderer.attribute.impl.d
+ {:description "خاصية d تحدد مساراً ليتم رسمه."
+  :edit "تحرير المسار"
+  :absolute "(مطلق)"
+  :relative "(نسبي)"
+  :move-to "الانتقال إلى"
+  :line-to "خط إلى"
+  :vertical-line "خط عمودي"
+  :horizontal-line "خط أفقي"
+  :cubic-bezier "منحنى بيزيه المكعب"
+  :shortcut-cubic-bezier "منحنى بيزيه المكعب المختصر"
+  :quadratic-bezier-curve "منحنى بيزيه التربيعي"
+  :shortcut-quadratic "منحنى بيزيه التربيعي المختصر"
+  :elliptical-arc-curve "منحنى القوس البيضاوي"
+  :close-path "إغلاق المسار"}
+
+ :renderer.attribute.impl.length
+ {:increase "زيادة"
+  :decrease "تقليل"}
+
+ :renderer.attribute.impl.font-family
+ {:description "خاصية font-family تشير إلى عائلة الخط التي ستُستخدم
+                لعرض النص، محددة كقائمة مرتبة حسب الأولوية من أسماء عائلات الخطوط
+                و/أو أسماء العائلات العامة."
+  :search-font "البحث عن خط"
+  :select-font "اختيار خط"
+  :no-local-font "لم يتم العثور على خطوط محلية."}
+
+ :renderer.attribute.impl.font-size
+ {:description "خاصية font-size تشير إلى حجم الخط من الخط الأساسي إلى
+                الخط الأساسي عندما يتم تعيين خطوط متعددة من النص صلبة في بيئة
+                تخطيط متعدد الأسطر."}
+
+ :renderer.attribute.impl.font-weight
+ {:description "خاصية font-weight تشير إلى جرأة أو خفة
+                الرموز المستخدمة لعرض النص، نسبة إلى الخطوط الأخرى في نفس
+                عائلة الخط."}
+
+ :renderer.tool.impl.base.edit
+ {:help-idle-drag [:div "اسحب مقبضاً لتعديل شكلك."]
+  :help-idle-click [:div "انقر على عنصر لتغيير التحديد"]
+  :help-edit [:div "اضغط %1 لتقييد الاتجاه."]
+  :help-type [:div "أدخل النص الخاص بك."]
+  :select-element "تحديد عنصر"
+  :edit "تحرير"}
+
+ :renderer.tool.impl.base.transform
+ {:idle-click [:div "انقر لتحديد عنصر أو اسحب للتحديد بالمنطقة. "]
+  :idle-hold [:div "اضغط %1 لإضافة أو إزالة عناصر إلى التحديد."]
+  :select [:div "اضغط %1 لتحديد العناصر المتقاطعة."]
+  :select-element "تحديد عنصر"
+  :deselect-element "إلغاء تحديد عنصر"
+  :translate [:div "اضغط %1 لتقييد الاتجاه، و %2 للاستنساخ."]
+  :clone [:div "اضغط %1 لتقييد الاتجاه. أو حرر %2 للتحريك"]
+  :scale [:div "اضغط %1 لقفل النسب، %2 للتحجيم في المكان،
+                  %3 لتحجيم العناصر الفرعية أيضاً."]
+  :move-selection-up "تحريك التحديد لأعلى"
+  :move-selection-down "تحريك التحديد لأسفل"
+  :move-selection-left "تحريك التحديد لليسار"
+  :move-selection-right "تحريك التحديد لليمين"
+  :modify-selection "تعديل التحديد"
+  :move-selection "تحريك التحديد"
+  :scale-selection "تحجيم التحديد"
+  :clone-selection "استنساخ التحديد"}
+
+ :renderer.tool.impl.base.pan
+ {:idle-help "انقر واسحب للتحريك."
+  :pan-help "اسحب للتحريك."}
+
+ :renderer.tool.impl.base.zoom
+ {:zoom-in [:div "انقر أو حدد منطقة للتكبير."]
+  :zoom-out [:div "اضغط %1 للتصغير."]}
+
+ :renderer.tool.impl.draw.brush
+ {:draw-brush "رسم بالفرشاة"}
+
+ :renderer.tool.impl.draw.pen
+ {:draw-line "رسم خط"}
+
+ :renderer.tool.impl.draw.core
+ {:help "انقر واسحب للرسم."}
+
+ :renderer.tool.impl.element.circle
+ {:create-circle "إنشاء دائرة"}
+
+ :renderer.tool.impl.element.ellipse
+ {:create-ellipse "إنشاء قطع ناقص"
+  :help [:div "اضغط %1 لقفل النسب."]}
+
+ :renderer.tool.impl.element.line
+ {:create-line "إنشاء خط"}
+
+ :renderer.document.events
+ {:save-changes "هل تريد حفظ التغييرات؟"
+  :create-doc "إنشاء مستند"
+  :init-doc "تهيئة مستند"
+  :create-doc-from-template "إنشاء مستند من قالب"
+  :load-doc "تحميل مستند"
+  :error-loading "خطأ أثناء تحميل %1"
+  :unsupported-or-corrupted "يبدو أن الملف غير مدعوم أو تالف."}
+
+ :renderer.document.views
+ {:new "جديد"
+  :open "فتح"
+  :open-directory "فتح المجلد المحتوي"
+  :save "حفظ"
+  :undo "تراجع"
+  :redo "إعادة"
+  :close "إغلاق"
+  :close-doc "إغلاق المستند"
+  :close-all "إغلاق الكل"
+  :close-saved "إغلاق المحفوظة"
+  :close-others "إغلاق الآخرين"}
+
+ :renderer.window.views
+ {:minimize "تصغير"
+  :maximize "تكبير"
+  :restore "استعادة"
+  :close "إغلاق"
+  :theme "وضع السمة - %1"}
+
+ :renderer.toolbar.tools
+ {:transform "تحويل"
+  :edit "تحرير"
+  :pan "تحريك"
+  :zoom "تكبير"
+  :svg "Svg"
+  :circle "دائرة"
+  :ellipse "قطع ناقص"
+  :rectangle "مستطيل"
+  :line "خط"
+  :polyline "خط متعدد"
+  :polygon "مضلع"
+  :image "صورة"
+  :text "نص"
+  :blob "نقطة"
+  :brush "فرشاة"
+  :pen "قلم"
+  :dropper "قطارة"
+  :fill "ملء"
+  :measure "قياس"}
+
+ :renderer.toolbar.status
+ {:select-zoom "اختيار مستوى التكبير"
+  :zoom-out "تصغير"
+  :zoom-in "تكبير"
+  :zoom-set-50 "تعيين إلى 50%"
+  :zoom-set-100 "تعيين إلى 100%"
+  :zoom-set-200 "تعيين إلى 200%"
+  :zoom-focus-selected "تركيز على المحدد"
+  :zoom-fit-selected "ملائمة المحدد"
+  :zoom-fill-selected "ملء المحدد"
+  :timeline "الجدول الزمني"
+  :grid "الشبكة"
+  :rulers "المساطر"
+  :history "التاريخ"
+  :xml "XML"
+  :fill-color "اختيار لون الملء"
+  :stroke-color "اختيار لون الخط"
+  :swap-color "تبديل الملء مع الخط"}
+
+ :renderer.snap.views
+ {:snap "التقاط"
+  :snap-options "خيارات الالتقاط"
+  :centers "المراكز"
+  :midpoints "نقاط المنتصف"
+  :corners "الزوايا"
+  :nodes "العقد"
+  :to " إلى "}
+
+ :renderer.toolbar.object
+ {:bring-front "إحضار إلى المقدمة"
+  :send-back "إرسال إلى الخلف"
+  :bring-forward "إحضار للأمام"
+  :send-backward "إرسال للخلف"
+  :group "تجميع"
+  :ungroup "إلغاء التجميع"
+  :align-left "محاذاة يسار"
+  :align-center-hor "محاذاة وسط أفقياً"
+  :align-right "محاذاة يمين"
+  :align-top "محاذاة أعلى"
+  :align-center-ver "محاذاة وسط عمودياً"
+  :align-bottom "محاذاة أسفل"
+  :unite "توحيد"
+  :intersect "تقاطع"
+  :subtract "طرح"
+  :exclude "استبعاد"
+  :divide "قسمة"}
+
+ :renderer.utils.bounds
+ {:bounds-corner "زاوية الحدود"
+  :bounds-center "مركز الحدود"
+  :bounds-midpoint "نقطة منتصف الحدود"}
+
+ :renderer.history.events
+ {:clear-history "مسح التاريخ"}
+
+ :renderer.history.views
+ {:center-view "عرض المركز"
+  :clear-history "مسح التاريخ"
+  :action-cannot-undone "لا يمكن التراجع عن هذا الإجراء."
+  :clear-history-description "هل أنت متأكد من رغبتك في مسح تاريخ المستند؟"
+  :select-element "تحديد عنصر"
+  :delete-selection "حذف التحديد"}
+
+ :renderer.timeline.views
+ {:speed "السرعة"
+  :grid-snap "التقاط الشبكة"
+  :guide-snap "التقاط الدليل"
+  :play "تشغيل"
+  :replay "إعادة تشغيل"
+  :pause "إيقاف مؤقت"
+  :hide-timeline "إخفاء الجدول الزمني"}}

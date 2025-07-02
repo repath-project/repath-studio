@@ -119,7 +119,7 @@
           :ref (fn [this]
                  (when (and this active?)
                    (rf/dispatch [::events/scroll-into-view this])))}
-         [:span.truncate.pointer-events-none title]
+         [:span.truncate.pointer-events-none.px-2 title]
          [close-button id saved?]]]
        [:> ContextMenu/Portal
         (into
@@ -136,7 +136,7 @@
         active-id @(rf/subscribe [::document.subs/active-id])]
     [:div.flex.justify-between.gap-px
      [views/scroll-area
-      [:div.flex.flex-1.rtl:flex-row-reverse
+      [:div.flex.flex-1
        {:class "h-[41px]"}
        (for [document-id tabs]
          (let [title (:title (get documents document-id))

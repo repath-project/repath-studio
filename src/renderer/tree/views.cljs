@@ -43,7 +43,7 @@
         tag-label (or (:label properties) (string/capitalize (name tag)))]
     (reagent/with-let [edit-mode? (reagent/atom false)]
       (if @edit-mode?
-        [:input.mr-1.pl-0.bg-transparent.w-full
+        [:input.bg-transparent.w-full
          {:class ["font-[inherit]! leading-[inherit]!"
                   (when (= :svg tag) "font-bold")]
           :default-value label
@@ -55,7 +55,6 @@
                      (reset! edit-mode? false)
                      (set-item-label! e id))}]
         [:div.flex.w-full.overflow-hidden
-         {:class "rtl:flex-row-reverse"}
          [:div.truncate
           {:class [(when-not visible "opacity-60")
                    (when (= :svg tag) "font-bold")]
@@ -112,7 +111,7 @@
    (if collapsed "chevron-right" "chevron-down")
    {:title (if collapsed "expand" "collapse")
     :class "hover:bg-transparent text-inherit hover:text-inherit
-            focus:outline-hidden small"
+              focus:outline-hidden small rtl:scale-x-[-1]"
     :on-double-click #(.stopPropagation %)
     :on-click #(do (.stopPropagation %)
                    (rf/dispatch (if collapsed
@@ -124,8 +123,8 @@
   (let [{:keys [id selected children locked visible]} el
         collapse-button-width 21
         padding (* collapse-button-width (cond-> depth (seq children) dec))
-        lang-dir @(rf/subscribe [::app.subs/lang-dir])]
-    [:div.list-item-button.button.flex.pr-1.items-center.text-start.outline-default
+        rtl? @(rf/subscribe [::app.subs/rtl?])]
+    [:div.list-item-button.button.flex.px-1.items-center.text-start.outline-default
      {:class ["hover:overlay [&.hovered]:overlay hover:[&_button]:visible"
               (when selected "accent")
               (when hovered "hovered")]
@@ -151,13 +150,12 @@
                     (rf/dispatch-sync [::tree.events/select-range @last-focused-id id])
                     (do (rf/dispatch [::element.events/select id (.-ctrlKey e)])
                         (reset! last-focused-id id))))
-      :style (if (= lang-dir "rtl") {:padding-right padding} {:padding-left padding})}
+      :style (if rtl? {:padding-right padding} {:padding-left padding})}
      [:div.flex.items-center.justify-between.w-full
-      {:class "rtl:flex-row-reverse"}
       (when (seq children)
         [collapse-button id collapsed])
       [:div.flex-1.overflow-hidden.flex.items-center
-       {:class "gap-1.5 rtl:flex-row-reverse"}
+       {:class "gap-1.5"}
        (when-let [icon (:icon (utils.element/properties el))]
          [views/icon icon {:class (when-not visible "opacity-60")}])
        [item-label el]]

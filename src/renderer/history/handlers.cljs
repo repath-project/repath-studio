@@ -1,6 +1,5 @@
 (ns renderer.history.handlers
   (:require
-   [clojure.string :as string]
    [malli.core :as m]
    [malli.error :as m.error]
    [renderer.app.db :refer [App]]

@@ -210,8 +210,7 @@
 }
 
 @utility tab {
-  @apply flex items-center h-full text-left gap-2 bg-secondary text-muted hover:text-color relative outline-none;
-  padding: 0 8px 0 16px;
+  @apply flex items-center h-full text-left bg-secondary text-muted hover:text-color relative outline-none px-2 py-0;
   flex: 0 1 130px;
 
   .close {

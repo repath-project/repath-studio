@@ -5,9 +5,9 @@
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.attribute.views :as attribute.views]
    [renderer.element.events :as-alias element.events]
+   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]
-   [renderer.views :as views]
-   [renderer.utils.i18n :refer [t]]))
+   [renderer.views :as views]))
 
 (derive :x ::length)
 (derive :y ::length)

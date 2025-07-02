@@ -20,7 +20,7 @@
     :icon "bring-forward"
     :action [::element.events/raise]
     :disabled disabled}
-   {:title (t [::send-forward "Send backward"])
+   {:title (t [::send-backward "Send backward"])
     :icon "send-backward"
     :action [::element.events/lower]
     :disabled disabled}])

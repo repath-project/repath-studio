@@ -45,9 +45,8 @@
 
 (defn label
   [orientation step font-size text]
-  (let [lang-dir @(rf/subscribe [::app.subs/lang-dir])
-        x-step (if (= lang-dir "rtl") (- step 4) (+ step 4))
-        y-step (if (= lang-dir "rtl") (+ step 8) (- step 8))
+  (let [x-step (+ step 4)
+        y-step (- step 8)
         vertical (= orientation :vertical)]
     [:text {:x (if vertical 19 x-step)
             :y (if vertical  y-step (inc font-size))

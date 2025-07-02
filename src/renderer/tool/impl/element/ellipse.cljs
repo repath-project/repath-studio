@@ -18,7 +18,8 @@
 
 (defmethod tool.hierarchy/help [:ellipse :create]
   []
-  [:div "Hold " [:span.shortcut-key "Ctrl"] " to lock proportions."])
+  (t [::help [:div "Hold %1 to lock proportions."]]
+     [[:span.shortcut-key "Ctrl"]]))
 
 (defn attributes
   [db lock-ratio]

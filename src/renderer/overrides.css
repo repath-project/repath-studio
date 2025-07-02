@@ -82,7 +82,7 @@
 
 [cmdk-item],
 [cmdk-empty] {
-  @apply flex p-2 rounded-sm items-center text-sm;
+  @apply flex p-2 rounded-sm items-center text-sm justify-between;
 
   &[data-selected="true"] {
     @apply overlay;

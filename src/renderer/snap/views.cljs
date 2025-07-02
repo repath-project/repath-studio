@@ -42,7 +42,6 @@
                           (rf/dispatch [::snap.events/toggle-option option]))
            :checked (contains? options option)}
           [:> DropdownMenu/ItemIndicator
-           {:class "menu-item-indicator"}
            [views/icon "checkmark"]]
           (t [(keyword "renderer.snap.views" (name option)) (name option)])])]]]))
 

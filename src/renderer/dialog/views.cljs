@@ -19,8 +19,8 @@
     [:div.p-5
      [:div.flex.gap-3.items-start.pb-2
       [:p
-       [:span.block [:strong (t [::version "Version: "])] config/version]
-       [:span.block [:strong (t [::browser "Browser: "])] user-agent]]]
+       [:span.block [:strong (t [::version "Version:"])] config/version]
+       [:span.block [:strong (t [::browser "Browser:"])] user-agent]]]
      [:button.button.px-2.accent.rounded.w-full
       {:auto-focus true
        :on-click #(rf/dispatch [::dialog.events/close])}
@@ -66,12 +66,12 @@
   (when-not (= (:type attrs) :separator)
     [:> Command/CommandItem
      {:on-select #(rf/dispatch [::dialog.events/close action])}
-     [:div.w-7.h-7.mr-2.rounded.line-height-6.flex.justify-center.items-center
-      {:class (when icon "overlay")}
-      (when icon [views/icon icon])]
-     label
-     [:div.right-slot
-      [views/shortcuts action]]]))
+     [:div.flex.items-center.gap-1.5
+      [:div.w-7.h-7.rounded.line-height-6.flex.justify-center.items-center
+       {:class (when icon "overlay")}
+       (when icon [views/icon icon])]
+      [:div label]]
+     [views/shortcuts action]]))
 
 (defn cmdk-group-inner
   [items label]
@@ -119,10 +119,10 @@
          [:> Dialog/Title
           (cond->> title
             (string? title)
-            (into [:div.text-xl.pl-5.pr-10.pt-5]))])
+            (into [:div.text-xl.px-5.pt-5]))])
        (when (:close-button (last dialogs))
          [:> Dialog/Close
-          {:class "icon-button absolute top-5 right-5 small"
+          {:class "icon-button absolute top-5 right-5 small rtl:right-auto rtl:left-5"
            :aria-label "Close"}
           [views/icon "times"]])
        [:> Dialog/Description

@@ -79,6 +79,12 @@
    (get-in utils.i18n/languages [lang :dir])))
 
 (rf/reg-sub
+ ::rtl?
+ :<- [::lang-dir]
+ (fn [lang-dir _]
+   (= lang-dir "rtl")))
+
+(rf/reg-sub
  ::platform
  :-> :platform)
 

@@ -413,7 +413,7 @@
 (defn languages-submenu []
   (mapv (fn [[k v]]
           {:id k
-           :label (str (:native-name v) " - " k)
+           :label (:native-name v)
            :type :checkbox
            :action [::app.events/set-lang k]
            :checked (= @(rf/subscribe [::app.subs/lang]) k)})
@@ -465,14 +465,15 @@
   {:id :view
    :label (t [::view "View"])
    :type :root
-   :disabled (not @(rf/subscribe [::document.subs/entities?]))
    :items [{:id :zoom
             :label (t [::zoom "Zoom"])
             :type :sub-menu
+            :disabled (not @(rf/subscribe [::document.subs/entities?]))
             :items (zoom-submenu)}
            {:id :a11y
             :label (t [::accessibility-filter "Accessibility filter"])
             :type :sub-menu
+            :disabled (not @(rf/subscribe [::document.subs/entities?]))
             :items (a11y-submenu)}
            {:id :lang
             :label (t [::language "Language"])
@@ -579,9 +580,8 @@
    [:> Menubar/ItemIndicator
     {:class "menu-item-indicator"}
     [views/icon "checkmark"]]
-   label
-   [:div.right-slot
-    [views/shortcuts action]]])
+   [:div label]
+   [views/shortcuts action]])
 
 (defmethod menu-item :sub-menu
   [{:keys [label items disabled]}]
@@ -589,8 +589,9 @@
    [:> Menubar/SubTrigger
     {:class "sub-menu-item menu-item"
      :disabled disabled}
-    label
-    [:div.right-slot.sub-menu-chevron
+    [:div label]
+    [:div.sub-menu-chevron
+     {:class "rtl:scale-x-[-1]"}
      [views/icon "chevron-right"]]]
    [:> Menubar/Portal
     (into [:> Menubar/SubContent
@@ -623,9 +624,8 @@
    {:class "menu-item"
     :on-select #(rf/dispatch [::menubar.events/select-item action])
     :disabled disabled}
-   label
-   [:div.right-slot
-    [views/shortcuts action]]])
+   [:div label]
+   [views/shortcuts action]])
 
 (defn submenus
   []
@@ -638,7 +638,7 @@
 (defn root
   []
   (into [:> Menubar/Root
-         {:class "menubar-root"
+         {:class "flex"
           :on-key-down #(.stopPropagation %)
           :on-value-change #(rf/dispatch [::app.events/set-backdrop (boolean (seq %))])}]
         (map menu-item (submenus))))

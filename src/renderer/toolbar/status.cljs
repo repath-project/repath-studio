@@ -22,7 +22,8 @@
   (let [[x y] @(rf/subscribe [::app.subs/adjusted-pointer-pos])]
     [:div.flex-col.font-mono.leading-tight.hidden
      {:class "xl:flex"
-      :style {:min-width "100px"}}
+      :style {:min-width "100px"}
+      :dir "ltr"}
      [:div.flex.justify-between
       [:span.mr-1 "X:"] [:span (utils.length/->fixed x)]]
      [:div.flex.justify-between
@@ -148,9 +149,10 @@
        :on-click #(rf/dispatch [::frame.events/zoom-in])}
       [views/icon "plus"]]
      [:div.flex.hidden
-      {:class "md:flex"}
+      {:class "md:flex"
+       :dir "ltr"}
       [zoom-input zoom]
-      [:div.pr-2.overlay.flex.items-center.font-mono "%"]]
+      [:div.px-2.overlay.flex.items-center.font-mono "%"]]
      [zoom-menu]]))
 
 (defn root []
