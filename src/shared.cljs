@@ -1,9 +1,5 @@
-(ns shared
-  (:require
-   [malli.core :as m]
-   [renderer.document.db :refer [PersistedDocument]]))
+(ns shared)
 
-(m/=> document->save-format [:-> PersistedDocument string?])
 (defn document->save-format
   [document]
   (-> document
