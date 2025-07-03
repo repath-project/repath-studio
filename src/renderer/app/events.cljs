@@ -103,8 +103,10 @@
 (rf/reg-event-fx
  ::set-lang-attrs
  (fn [{:keys [db]} _]
-   {:fx [[::effects/set-document-attr ["lang" (:lang db)]]
-         [::effects/set-document-attr ["dir" (:dir db)]]]}))
+   (let [lang (:lang db)
+         dir (get-in utils.i18n/languages [lang :dir])]
+     {:fx [[::effects/set-document-attr ["lang" lang]]
+           [::effects/set-document-attr ["dir" dir]]]})))
 
 (rf/reg-event-fx
  ::set-lang
