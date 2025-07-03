@@ -9,10 +9,15 @@
 
 (defn test-fixtures
   []
+  (rf/reg-fx
+   ::app.effects/get-local-db
+   (fn [{:keys [on-finally]}]
+     (rf/dispatch on-finally)))
+
   (rf/reg-cofx
-   ::app.effects/system-language
+   ::app.effects/language
    (fn [coeffects _]
-     (assoc coeffects :system-language "en-US")))
+     (assoc coeffects :language "en-US")))
 
   (rf/reg-fx
    ::app.effects/query-local-fonts
@@ -34,15 +39,11 @@
 (deftest app
   (rf.test/run-test-sync
    (test-fixtures)
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
 
    (testing "language"
      (let [lang (rf/subscribe [::app.subs/lang])]
        (testing "default"
-         (is (not @lang)))
-
-       (testing "initialization"
-         (rf/dispatch [::app.events/init-lang])
          (is (= "en-US" @lang)))
 
        (testing "set valid language"
@@ -70,7 +71,7 @@
 (deftest fonts
   (rf.test/run-test-async
    (test-fixtures)
-   (rf/dispatch-sync [::app.events/initialize-db])
+   (rf/dispatch-sync [::app.events/initialize])
 
    (testing "loading system fonts"
      (let [system-fonts (rf/subscribe [::app.subs/system-fonts])

@@ -18,7 +18,7 @@
 (deftest mode
   (rf.test/run-test-sync
    (test-fixtures)
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
    (rf/dispatch [::theme.events/set-document-attr])
 
    (let [theme-mode (rf/subscribe [::theme.subs/mode])]

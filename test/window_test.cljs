@@ -23,7 +23,7 @@
 (deftest window
   (rf.test/run-test-sync
    (test-fixtures)
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
 
    (let [maximized (rf/subscribe [::window.subs/maximized?])
          fullscreen (rf/subscribe [::window.subs/fullscreen?])

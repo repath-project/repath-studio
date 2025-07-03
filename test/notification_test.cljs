@@ -9,7 +9,7 @@
 
 (deftest notification
   (rf.test/run-test-sync
-   (rf/dispatch [::app.events/initialize-db])
+   (rf/dispatch [::app.events/initialize])
 
    (let [notifications (rf/subscribe [::notification.subs/entities])]
 

@@ -3,16 +3,23 @@
    [cljs.test :refer-macros [deftest is testing]]
    [day8.re-frame.test :as rf.test]
    [re-frame.core :as rf]
+   [renderer.app.effects :as-alias app.effects]
    [renderer.app.events :as-alias app.events]
-   [renderer.document.events :as-alias document.events]
    [renderer.document.subs :as-alias document.subs]
    [renderer.frame.events :as-alias frame.events]
    [renderer.frame.subs :as-alias frame.subs]))
 
+(defn test-fixtures
+  []
+  (rf/reg-fx
+   ::app.effects/get-local-db
+   (fn [{:keys [on-finally]}]
+     (rf/dispatch on-finally))))
+
 (deftest frame
   (rf.test/run-test-sync
-   (rf/dispatch [::app.events/initialize-db])
-   (rf/dispatch [::document.events/init])
+   (test-fixtures)
+   (rf/dispatch [::app.events/initialize])
 
    (let [viewbox (rf/subscribe [::frame.subs/viewbox])
          zoom (rf/subscribe [::document.subs/zoom])

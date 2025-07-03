@@ -44,11 +44,11 @@
     (when (and (secure-url? url-parsed) (allowed-url? url-parsed))
       (.openExternal shell url-parsed.href))))
 
-(defn register-ipc-on-events!
-  []
+(defn register-ipc-on-events! []
   (doseq
    [[e f]
-    [["relaunch" #(do (.relaunch app) (.exit app))]
+    [["initialized" #(.close ^js @loading-window)]
+     ["relaunch" #(doto app (.relaunch) (.exit))]
      ["open-remote-url" open-external!]
      ["open-directory" #(.showItemInFolder shell %)]
      ["window-minimize" #(.minimize ^js @main-window)]
@@ -59,8 +59,7 @@
                                    (.maximize ^js @main-window))]]]
     (.on ipcMain e #(f %2))))
 
-(defn register-ipc-handle-events!
-  []
+(defn register-ipc-handle-events! []
   (doseq
    [[e f]
     [["open-documents" file/open!]
@@ -70,8 +69,7 @@
      ["print" file/print!]]]
     (.handle ipcMain e #(f %2))))
 
-(defn register-window-events!
-  []
+(defn register-window-events! []
   (doseq
    [[window-event f]
     [["maximize" #(send-to-renderer! "window-maximized")]
@@ -87,22 +85,21 @@
                                      "window-unmaximized"))]]]
     (.on ^js @main-window window-event f)))
 
-(defn register-web-contents-events!
-  []
-  (doseq
-   [[web-contents-event f]
-    [["will-frame-navigate" #(.preventDefault %)]
-     ["closed" #(reset! main-window nil)]]]
-    (.on (.-webContents ^js @main-window) web-contents-event f)))
+(defn register-web-contents-events! []
+  (let [web-contents (.-webContents ^js @main-window)]
+    (doseq
+     [[web-contents-event f]
+      [["will-frame-navigate" #(.preventDefault %)]
+       ["closed" #(reset! main-window nil)]]]
+      (.on web-contents web-contents-event f))))
 
-(defn handle-on-ready-to-show!
+(defn on-ready-to-show!
   [^js window]
   (doseq
    [action
     [(if (.isMaximized window) "window-maximized" "window-unmaximized")
      (if (.isFullScreen window) "window-entered-fullscreen" "window-leaved-fullscreen")
-     (if (.isFocused window) "window-focused" "window-blurred")
-     "window-loaded"]]
+     (if (.isFocused window) "window-focused" "window-blurred")]]
     (send-to-renderer! action)))
 
 (defn resource-path
@@ -110,8 +107,7 @@
   (url/format #js {:pathname (.join path js/__dirname s)
                    :protocol "file"}))
 
-(defn init-main-window!
-  []
+(defn init-main-window! []
   (let [win-state (window-state-keeper #js {:defaultWidth 1920
                                             :defaultHeight 1080})]
     (reset! main-window
@@ -120,12 +116,12 @@
                   :y (.-y win-state)
                   :width (.-width win-state)
                   :height (.-height win-state)
-                  :backgroundColor "#313131"
                   :titleBarStyle (when (= (.platform os) "darwin") "hidden")
                   :trafficLightPosition #js {:x 8 :y 10}
                   :icon (.join path js/__dirname "/public/img/icon.png")
                   :frame false
                   :show false
+                  :transparent true
                   :webPreferences
                   #js {:sandbox false
                        :preload (.join path js/__dirname "preload.js")}}))
@@ -134,11 +130,9 @@
            "ready-to-show"
            (fn []
              (.show ^js @main-window)
-             (.manage win-state ^js @main-window)
-             (.hide ^js @loading-window)
-             (.close ^js @loading-window)))
+             (.manage win-state ^js @main-window)))
 
-    (.on ^js @main-window "ready-to-show" #(handle-on-ready-to-show! @main-window))
+    (.on ^js @main-window "ready-to-show" #(on-ready-to-show! @main-window))
 
     (.loadURL ^js @main-window
               (if config/debug?
@@ -156,9 +150,10 @@
           (BrowserWindow.
            #js {:width 720
                 :height 576
-                :backgroundColor "#313131"
                 :icon (.join path js/__dirname "/public/img/icon.png")
                 :show false
+                :alwaysOnTop true
+                :transparent true
                 :frame false}))
   (.once ^js @loading-window "show" init-main-window!)
   (.loadURL ^js @loading-window (resource-path "/public/loading.html"))

@@ -338,35 +338,38 @@
         properties-visible @(rf/subscribe [::app.subs/panel-visible? :properties])
         active-tool @(rf/subscribe [::tool.subs/active])
         recent-documents @(rf/subscribe [::document.subs/recent])
-        lang-dir @(rf/subscribe [::app.subs/lang-dir])]
-    [:> Direction/Provider {:dir lang-dir}
-     [:> Tooltip/Provider
-      [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden.justify-between
-       [window.views/app-header]
-       (if (seq documents)
-         [:div.flex.h-full.flex-1.overflow-hidden.gap-px
-          (when tree-visible
-            [:div.flex-col.hidden.overflow-hidden
-             {:class "md:flex"
-              :style {:width "227px"}}
-             [document.views/actions]
-             [tree.views/root]])
-          [:div.flex.flex-col.flex-1.overflow-hidden.h-full
-           [document.views/tab-bar]
-           [:div.flex.h-full.flex-1.gap-px.overflow-hidden
-            [:div.flex.h-full.flex-col.flex-1.overflow-hidden.gap-px
-             [editor]]
-            [:div.flex.gap-px
-             (when properties-visible
-               [:div.hidden
-                {:class "md:flex"}
-                [:div.flex.flex-col.h-full.w-80
-                 [views/scroll-area
-                  (tool.hierarchy/right-panel active-tool)]
-                 [:div.bg-primary.grow.flex]]])
-             [:div.bg-primary.flex
-              [views/scroll-area [toolbar.object/root]]]]]]]
-         [home recent-documents])
-       [:div]]
-      [dialog.views/root]
-      [notification.views/main]]]))
+        lang-dir @(rf/subscribe [::app.subs/lang-dir])
+        loading @(rf/subscribe [::app.subs/loading?])]
+    (if loading
+      [:div.loader]
+      [:> Direction/Provider {:dir lang-dir}
+       [:> Tooltip/Provider
+        [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden.justify-between
+         [window.views/app-header]
+         (if (seq documents)
+           [:div.flex.h-full.flex-1.overflow-hidden.gap-px
+            (when tree-visible
+              [:div.flex-col.hidden.overflow-hidden
+               {:class "md:flex"
+                :style {:width "227px"}}
+               [document.views/actions]
+               [tree.views/root]])
+            [:div.flex.flex-col.flex-1.overflow-hidden.h-full
+             [document.views/tab-bar]
+             [:div.flex.h-full.flex-1.gap-px.overflow-hidden
+              [:div.flex.h-full.flex-col.flex-1.overflow-hidden.gap-px
+               [editor]]
+              [:div.flex.gap-px
+               (when properties-visible
+                 [:div.hidden
+                  {:class "md:flex"}
+                  [:div.flex.flex-col.h-full.w-80
+                   [views/scroll-area
+                    (tool.hierarchy/right-panel active-tool)]
+                   [:div.bg-primary.grow.flex]]])
+               [:div.bg-primary.flex
+                [views/scroll-area [toolbar.object/root]]]]]]]
+           [home recent-documents])
+         [:div]]
+        [dialog.views/root]
+        [notification.views/main]]])))

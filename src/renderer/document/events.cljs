@@ -2,13 +2,10 @@
   (:require
    [cljs.reader :as cljs.reader]
    [config :as config]
-   [malli.core :as m]
    [re-frame.core :as rf]
-   [renderer.app.db :refer [App]]
    [renderer.app.events :refer [persist]]
    [renderer.dialog.handlers :as dialog.handlers]
    [renderer.dialog.views :as dialog.views]
-   [renderer.document.db :as document.db]
    [renderer.document.handlers :as document.handlers]
    [renderer.effects :as-alias effects]
    [renderer.element.handlers :as element.handlers]
@@ -16,11 +13,9 @@
    [renderer.notification.events :as-alias notification.events]
    [renderer.notification.handlers :as notification.handlers]
    [renderer.notification.views :as notification.views]
-   [renderer.snap.handlers :as snap.handlers]
    [renderer.utils.compatibility :as utils.compatibility]
    [renderer.utils.element :as utils.element]
    [renderer.utils.i18n :refer [t]]
-   [renderer.utils.math :refer [Vec2]]
    [renderer.utils.vec :as utils.vec]
    [shared :as shared]))
 
@@ -140,39 +135,19 @@
                 (= swapped-i -1)))
        (assoc :document-tabs (utils.vec/swap document-tabs dragged-i swapped-i))))))
 
-(m/=> create [:function
-              [:-> map? uuid? App]
-              [:-> map? uuid? [:maybe Vec2] App]])
-(defn create
-  ([db guid]
-   (create db guid [595 842]))
-  ([db guid size]
-   (-> (document.handlers/create-tab db (assoc document.db/default :id guid))
-       (element.handlers/create-default-canvas size)
-       (document.handlers/center))))
-
 (rf/reg-event-fx
  ::new
  [(rf/inject-cofx ::effects/guid)]
  (fn [{:keys [db guid]} [_]]
-   {:db (-> (create db guid)
-            (history.handlers/finalize  #(t [::create-doc "Create document"])))
+   {:db (-> (document.handlers/create db guid)
+            (history.handlers/finalize #(t [:create-doc "Create document"])))
     ::effects/focus nil}))
-
-(rf/reg-event-fx
- ::init
- [(rf/inject-cofx ::effects/guid)]
- (fn [{:keys [db guid]} [_]]
-   {:db (if (:active-document db)
-          (snap.handlers/rebuild-tree db)
-          (-> (create db guid)
-              (history.handlers/finalize #(t [::init-doc "Init document"]))))}))
 
 (rf/reg-event-fx
  ::new-from-template
  [(rf/inject-cofx ::effects/guid)]
  (fn [{:keys [db guid]} [_ size]]
-   {:db (-> (create db guid size)
+   {:db (-> (document.handlers/create db guid size)
             (history.handlers/finalize #(t [::create-doc-from-template
                                             "Create document from template"])))}))
 

@@ -6,7 +6,6 @@
    [malli.instrument :as m.instrument]
    [re-frame.core :as rf]
    [renderer.app.events :as app.events]
-   [renderer.document.events :as-alias document.events]
    [renderer.element.events :as-alias element.events]))
 
 (defn bench
@@ -21,8 +20,7 @@
 
 (deftest polygons
   (rf.test/run-test-sync
-   (rf/dispatch [::app.events/initialize-db])
-   (rf/dispatch [::document.events/init])
+   (rf/dispatch [::app.events/initialize])
 
    ;; Istrumentation and db validation affects performance, so we disable it.
    (m.instrument/unstrument!)
