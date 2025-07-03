@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.4.8 (2025-7-3)
+
+**Added**
+
+- Internationalization support (#87)[https://github.com/repath-project/repath-studio/pull/87]
+- Initial attribute value support
+- Reintroduce FPS component
+- Core attributes to container elements
+
+**Changed**
+
+- Font enhancements (#84)[https://github.com/repath-project/repath-studio/pull/84]
+- Persist enhancements (#86)[https://github.com/repath-project/repath-studio/pull/86]
+- Tool enhancements (#85)[https://github.com/repath-project/repath-studio/pull/85]
+- Enhance performance
+- Enhance cursors
+- Enhance button styles
+- Increase handle size
+
+**Fixed**
+
+- Refresh bbox on set parent
+- Various precision issues
+- Multi-selection label
+- Stop propagation of escape on various cases
+- XML view id console warnings
+
 ## 0.4.7 (2025-5-17)
 
 **Changed**
