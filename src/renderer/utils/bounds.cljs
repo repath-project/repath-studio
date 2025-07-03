@@ -83,8 +83,8 @@
   [bbox options]
   (let [[min-x min-y max-x max-y] bbox
         [cx cy] (center bbox)
-        bounds-corner-txt    (t [::bounds-corner "bounds corner"])
-        bounds-center-txt    (t [::bounds-center "bounds center"])
+        bounds-corner-txt (t [::bounds-corner "bounds corner"])
+        bounds-center-txt (t [::bounds-center "bounds center"])
         bounds-midpoints-txt (t [::bounds-midpoint "bounds midpoint"])]
     (cond-> []
       (:corners options)

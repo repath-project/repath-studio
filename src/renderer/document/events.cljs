@@ -140,7 +140,7 @@
  [(rf/inject-cofx ::effects/guid)]
  (fn [{:keys [db guid]} [_]]
    {:db (-> (document.handlers/create db guid)
-            (history.handlers/finalize #(t [::init-doc "Init document"])))
+            (history.handlers/finalize #(t [:create-doc "Create document"])))
     ::effects/focus nil}))
 
 (rf/reg-event-fx

@@ -14,6 +14,9 @@
   :source-code "الكود المصدري"
   :changelog "سجل التغييرات"}
 
+ :renderer.app.events
+ {:create-doc "إنشاء مستند"}
+
  :renderer.dialog.views
  {:search-command "البحث عن أمر"
   :no-results "لا توجد نتائج."
@@ -502,7 +505,6 @@
  :renderer.document.events
  {:save-changes "هل تريد حفظ التغييرات؟"
   :create-doc "إنشاء مستند"
-  :init-doc "تهيئة مستند"
   :create-doc-from-template "إنشاء مستند من قالب"
   :load-doc "تحميل مستند"
   :error-loading "خطأ أثناء تحميل %1"

@@ -14,6 +14,9 @@
   :source-code "Source Code"
   :changelog "Changelog"}
 
+ :renderer.app.events
+ {:create-doc "Create document"}
+
  :renderer.dialog.views
  {:search-command "Search for a command"
   :no-results "No results found."
@@ -518,7 +521,6 @@
  :renderer.document.events
  {:save-changes "Do you want to save your changes?"
   :create-doc "Create document"
-  :init-doc "Init document"
   :create-doc-from-template "Create document from template"
   :load-doc "Load document"
   :error-loading "Error while loading %1"

@@ -12,7 +12,7 @@
    [renderer.snap.handlers :as snap.handlers]
    [renderer.theme.effects :as-alias theme.effects]
    [renderer.theme.events :as-alias theme.events]
-   [renderer.utils.i18n :as utils.i18n]
+   [renderer.utils.i18n :as utils.i18n :refer [t]]
    [renderer.window.events :as-alias window.events]))
 
 (def persist
@@ -80,7 +80,7 @@
 
           (not (:active-document db))
           (-> (document.handlers/create guid)
-              (history.handlers/finalize "Create document"))
+              (history.handlers/finalize #(t [:create-doc "Create document"])))
 
           (:active-document db)
           (snap.handlers/rebuild-tree)
