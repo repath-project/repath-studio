@@ -4,16 +4,25 @@
 
 **Added**
 
-- Internationalization support (#87)[https://github.com/repath-project/repath-studio/pull/87]
+- Internationalization support [#87](https://github.com/repath-project/repath-studio/pull/87)
 - Initial attribute value support
 - Reintroduce FPS component
 - Core attributes to container elements
 
 **Changed**
 
-- Font enhancements (#84)[https://github.com/repath-project/repath-studio/pull/84]
-- Persist enhancements (#86)[https://github.com/repath-project/repath-studio/pull/86]
-- Tool enhancements (#85)[https://github.com/repath-project/repath-studio/pull/85]
+- Font enhancements [#84](https://github.com/repath-project/repath-studio/pull/84)
+  - Converting text elements to paths works on web
+  - Noto Sans bundled with the app
+  - Text elements without a font family set can be converted to paths
+  - Font weight filtering based on the selected font-family also works on web
+  - Improved scaling of text elements
+- Persist enhancements [#86](https://github.com/repath-project/repath-studio/pull/86)
+  - Persisting is not constrained to local storage limitations
+  - Some loading issues on we are now fixed
+- Tool enhancements [#85](https://github.com/repath-project/repath-studio/pull/85)
+  - Preview attributes while creating elements
+  - Disable attributes while modifying elements
 - Enhance performance
 - Enhance cursors
 - Enhance button styles
