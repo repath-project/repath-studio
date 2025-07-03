@@ -25,9 +25,9 @@
       :style {:min-width "100px"}
       :dir "ltr"}
      [:div.flex.justify-between
-      [:span.mr-1 "X:"] [:span (utils.length/->fixed x)]]
+      [:span.mr-1 "X:"] [:span (utils.length/->fixed x 2 false)]]
      [:div.flex.justify-between
-      [:span.mr-1 "Y:"] [:span (utils.length/->fixed y)]]]))
+      [:span.mr-1 "Y:"] [:span (utils.length/->fixed y 2 false)]]]))
 
 (defn zoom-options []
   [{:label (t [::zoom-set-50 "Set to 50%"])
@@ -115,7 +115,7 @@
 
 (defn zoom-input
   [zoom]
-  (let [value (utils.length/->fixed (* 100 zoom) (zoom-decimal-points zoom))]
+  (let [value (utils.length/->fixed (* 100 zoom) (zoom-decimal-points zoom) false)]
     [:input.form-element.overlay.text-right.font-mono.p-1
      {:key zoom
       :aria-label "Zoom"

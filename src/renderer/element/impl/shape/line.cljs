@@ -12,7 +12,7 @@
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
    [renderer.utils.i18n :refer [t]]
-   [renderer.utils.length :as utils.length] 
+   [renderer.utils.length :as utils.length]
    [renderer.utils.svg :as utils.svg]))
 
 (derive :line ::element.hierarchy/shape)
@@ -21,8 +21,8 @@
   []
   {:icon "line"
    :label (t [::name "Line"])
-   :description (t [::description 
-                    "The <line> element is an SVG basic shape 
+   :description (t [::description
+                    "The <line> element is an SVG basic shape
                      used to create a line connecting two points."])
    :attrs [:stroke
            :stroke-width
@@ -75,7 +75,8 @@
                 [:title {:key (str id "-title")} (name id)]]
                (when is-active
                  [utils.svg/label
-                  (string/join " " [(utils.length/->fixed x) (utils.length/->fixed y)])
+                  (string/join " " [(utils.length/->fixed x 2 false)
+                                    (utils.length/->fixed y 2 false)])
                   [(- x margin) (+ y margin)]
                   "end"])]))
           [{:x x1

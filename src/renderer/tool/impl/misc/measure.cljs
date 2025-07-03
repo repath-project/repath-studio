@@ -70,12 +70,12 @@
        [utils.svg/line [x1 y1] [(+ x1 (/ 30 zoom)) y1]]
 
        [utils.svg/label
-        (str (utils.length/->fixed straight-angle) "°")
+        (str (utils.length/->fixed straight-angle 2 false) "°")
         [(+ x1 (/ 40 zoom)) y1]
         "start"]
 
        [utils.svg/label
-        (-> hypotenuse js/parseFloat utils.length/->fixed str)
+        (-> hypotenuse js/parseFloat (utils.length/->fixed 2 false) str)
         [(/ (+ x1 x2) 2) (/ (+ y1 y2) 2)]]])))
 
 (defmethod tool.hierarchy/snapping-points :measure

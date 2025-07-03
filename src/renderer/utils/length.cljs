@@ -65,13 +65,17 @@
 
 (m/=> ->fixed [:function
                [:-> number? number?]
-               [:-> number? integer? number?]])
+               [:-> number? integer? number?]
+               [:-> number? integer? boolean? number?]])
 (defn ->fixed
   ([v]
    (->fixed v 3))
   ([v precision]
-   (-> (.toFixed v precision)
-       (js/parseFloat))))
+   (->fixed v precision true))
+  ([v precision remove-trailing-zeros]
+   (cond-> (.toFixed v precision)
+     remove-trailing-zeros
+     (js/parseFloat))))
 
 (m/=> transform [:-> [:or string? number? nil?] ifn? [:* any?] string?])
 (defn transform

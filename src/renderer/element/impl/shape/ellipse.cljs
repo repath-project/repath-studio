@@ -19,7 +19,7 @@
   []
   {:icon "ellipse"
    :label (t [::name "Ellipse"])
-   :description (t [::description 
+   :description (t [::description
                     "The <ellipse> element is an SVG basic shape, used to create
                      ellipses based on a center coordinate, and both their x and
                      y radius."])
@@ -87,9 +87,9 @@
     [:g ::edit-handles
      [utils.svg/times [cx cy]]
      [utils.svg/line [cx cy] [(+ cx rx) cy]]
-     [utils.svg/label (str (utils.length/->fixed rx)) [(+ cx (/ rx 2)) cy]]
+     [utils.svg/label (str (utils.length/->fixed rx 2 false)) [(+ cx (/ rx 2)) cy]]
      [utils.svg/line [cx cy] [cx (- cy ry)]]
-     [utils.svg/label (str (utils.length/->fixed ry)) [cx (- cy (/ ry 2))]]
+     [utils.svg/label (str (utils.length/->fixed ry 2 false)) [cx (- cy (/ ry 2))]]
      (map (fn [handle]
             ^{:key (:id handle)}
             [tool.views/square-handle

@@ -84,7 +84,7 @@
                           (when is-active
                             [utils.svg/label
                              (->> [x y]
-                                  (mapv utils.length/->fixed)
+                                  (mapv #(utils.length/->fixed % 2 false))
                                   (string/join " "))
                              [(- x margin) (+ y margin)]
                              "end"])]))
