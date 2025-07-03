@@ -111,11 +111,11 @@
 
 (defn range-input
   [k v {:keys [placeholder disabled] :as attrs}]
-  [:div.flex.w-full.gap-px
+  [:div.flex.flex-1.gap-px
    [form-input k v {:disabled disabled
                     :placeholder placeholder
                     :class "font-mono w-20"}]
-   [:div.px-1.w-full.bg-primary
+   [:div.px-1.flex-1.bg-primary
     [views/slider
      (merge
       attrs
@@ -215,7 +215,7 @@
                        :default)]
     [:<>
      [label tag k]
-     [:div.flex.w-full
+     [:div.flex.flex-1
       [attribute.hierarchy/form-element dispatch-tag k v {:disabled locked?
                                                           :placeholder initial}]]]))
 
