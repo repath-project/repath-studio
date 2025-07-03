@@ -72,30 +72,30 @@
  [(rf/inject-cofx ::effects/guid)
   (rf/inject-cofx ::app.effects/language)]
  (fn [{:keys [db guid language]} _]
-   {:db (cond-> db
-          (not (:lang db))
-          (assoc :lang (if (utils.i18n/supported-lang? language)
-                         language
-                         "en-US"))
+   (let [initial-document (:active-document db)]
+     {:db (cond-> db
+            (not (:lang db))
+            (assoc :lang (if (utils.i18n/supported-lang? language)
+                           language
+                           "en-US"))
 
-          (not (:active-document db))
-          (-> (document.handlers/create guid)
-              (history.handlers/finalize #(t [:create-doc "Create document"])))
+            (not initial-document)
+            (-> (document.handlers/create guid)
+                (history.handlers/finalize #(t [:create-doc "Create document"])))
 
-          (:active-document db)
-          (snap.handlers/rebuild-tree)
+            initial-document
+            (snap.handlers/rebuild-tree)
 
-          :always
-          (assoc :loading false))
-    :fx (into
-         [[:dispatch [::theme.events/set-document-attr]]
-          [:dispatch ^:flush-dom [::set-lang-attrs]]
-          [:dispatch ^:flush-dom [::set-lang-attrs]]
-          ;; We need to render once to get the canvas size right.
-          [:dispatch ^:flush-dom [::window.events/update-focused]]
-          [::theme.effects/add-native-listener [::theme.events/set-document-attr]]
-          [::effects/ipc-send ["initialized"]]]
-         (map (partial vector ::effects/add-listener) document-listeners))}))
+            :always
+            (assoc :loading false))
+      :fx (into
+           [[:dispatch [::theme.events/set-document-attr]]
+            [:dispatch ^:flush-dom [::set-lang-attrs]]
+            ;; We need to render once to get the canvas size right.
+            [:dispatch ^:flush-dom [::window.events/update-focused]]
+            [::theme.effects/add-native-listener [::theme.events/set-document-attr]]
+            [::effects/ipc-send ["initialized"]]]
+           (map (partial vector ::effects/add-listener) document-listeners))})))
 
 (rf/reg-event-db
  ::set-system-fonts
