@@ -1,2 +1,5 @@
 [default.extend-words]
 edn = "edn"
+
+[files]
+extend-exclude = ["src/lang/*.edn"]
