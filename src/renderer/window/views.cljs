@@ -20,16 +20,21 @@
    [views/icon icon]])
 
 (defn window-control-buttons
-  [maximized]
-  [{:action [::window.events/minimize]
-    :title (t [::minimize "Minimize"])
-    :icon "window-minimize"}
-   {:action [::window.events/toggle-maximized]
-    :title (if maximized (t [::restore "Restore"]) (t [::maximize "Maximize"]))
-    :icon (if maximized "window-restore" "window-maximize")}
-   {:action [::window.events/close]
-    :title (t [::close "Close"])
-    :icon "window-close"}])
+  []
+  (let [maximized @(rf/subscribe [::window.subs/maximized?])]
+    [{:action [::window.events/minimize]
+      :title (t [::minimize "Minimize"])
+      :icon "window-minimize"}
+     {:action [::window.events/toggle-maximized]
+      :title (if maximized
+               (t [::restore "Restore"])
+               (t [::maximize "Maximize"]))
+      :icon (if maximized
+              "window-restore"
+              "window-maximize")}
+     {:action [::window.events/close]
+      :title (t [::close "Close"])
+      :icon "window-close"}]))
 
 (defn app-icon
   []
@@ -41,7 +46,6 @@
 (defn app-header
   []
   (let [fullscreen? @(rf/subscribe [::window.subs/fullscreen?])
-        maximized? @(rf/subscribe [::window.subs/maximized?])
         theme-mode (name @(rf/subscribe [::theme.subs/mode]))
         mac? @(rf/subscribe [::app.subs/mac?])
         electron? @(rf/subscribe [::app.subs/electron?])
@@ -50,7 +54,8 @@
      (when-not (or fullscreen? mac?)
        [app-icon])
      [:div.flex.relative.bg-secondary
-      {:class (when (and mac? (not fullscreen?)) "ml-16")}
+      {:class (when (and mac? (not fullscreen?))
+                "ml-16")}
       [menubar.views/root]]
      [:div.absolute.hidden.justify-center.drag.grow.h-full.items-center
       {:class "pointer-events-none md:flex left-1/2 -translate-x-1/2"
@@ -59,13 +64,18 @@
       title-bar]
      [:div.flex.h-full.flex-1.drag]
      [:div.flex
-      [button {:action [::theme.events/cycle-mode]
-               :title (t [::theme "Theme mode - %1"] [theme-mode])
-               :icon theme-mode
-               :class "bg-primary"}]
-      (when (and electron? (not fullscreen?) (not mac?))
-        (into [:div.flex]
-              (map button (window-control-buttons maximized?))))
+      [button
+       {:action [::theme.events/cycle-mode]
+        :title (t [::theme "Theme mode - %1"] [theme-mode])
+        :icon theme-mode
+        :class "bg-primary"}]
+      (when (and electron?
+                 (not fullscreen?)
+                 (not mac?))
+        (->> (window-control-buttons)
+             (map button)
+             (into [:div.flex])))
       (when fullscreen?
-        [button {:action [::window.events/toggle-fullscreen]
-                 :icon "arrow-minimize"}])]]))
+        [button
+         {:action [::window.events/toggle-fullscreen]
+          :icon "arrow-minimize"}])]]))
