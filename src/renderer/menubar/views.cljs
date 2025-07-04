@@ -415,6 +415,7 @@
           {:id k
            :label (:native-name v)
            :type :checkbox
+           :icon "language"
            :action [::app.events/set-lang k]
            :checked (= @(rf/subscribe [::app.subs/lang]) k)})
         utils.i18n/languages))
