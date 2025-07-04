@@ -39,11 +39,13 @@
 (defn browser-compatibility
   [support-data]
   [:<>
-   [:h4.font-bold.mb-1 (t [::browser-compatibility "Browser compatibility"])]
+   [:h4.font-bold.mb-1
+    (t [::browser-compatibility "Browser compatibility"])]
    [views/scroll-area
     [:div.flex.mb-4.gap-px
      (for [[browser {:keys [version_added]}] support-data]
-       ^{:key browser} [browser-support browser version_added])]]])
+       ^{:key browser}
+       [browser-support browser version_added])]]])
 
 (defn info-button
   [url label]
@@ -62,16 +64,27 @@
                (utils.attribute/compatibility tag))
         support-data (:support data)
         property (when attr (utils.attribute/property-data-memo attr))
-        spec-url (or (:spec_url data) (:href property))
-        spec-url (if (vector? spec-url) (first spec-url) spec-url)
-        mdn-url (or (when data (or (:mdn_url data) (construct-mdn-url (name attr))))
+        spec-url (or (:spec_url data)
+                     (:href property))
+        spec-url (if (vector? spec-url)
+                   (first spec-url)
+                   spec-url)
+        mdn-url (or (when data
+                      (or (:mdn_url data)
+                          (construct-mdn-url (name attr))))
                     (:mdn_url property))]
     [:div.flex.flex-col
      (when (some :version_added (vals support-data))
        [browser-compatibility support-data])
      [:div.flex.gap-2
-      (when mdn-url [info-button mdn-url (t [::learn-more "Learn more"])])
-      (when spec-url [info-button spec-url (t [::specification "Specification"])])]]))
+      (when mdn-url
+        [info-button
+         mdn-url
+         (t [::learn-more "Learn more"])])
+      (when spec-url
+        [info-button
+         spec-url
+         (t [::specification "Specification"])])]]))
 
 (defn on-change-handler!
   ([event k old-v]
@@ -93,6 +106,7 @@
             :class "rtl:text-right"
             :id (name k)
             :default-value v
+            :on-focus #(.. % -target select)
             :placeholder (if v placeholder "multiple")
             :on-blur #(on-change-handler! % k v)
             :on-key-down #(event.impl.keyboard/input-key-down-handler!
