@@ -135,7 +135,6 @@
   },
   "dependencies": {
     "electron-log": "5.4.1",
-    "electron-reloader": "1.2.3",
     "electron-window-state": "5.0.3"
   },
   "overrides": {

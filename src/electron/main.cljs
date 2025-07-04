@@ -3,7 +3,6 @@
   (:require
    ["electron" :refer [app shell ipcMain BrowserWindow]]
    ["electron-log/main" :as log]
-   ["electron-reloader"]
    ["electron-window-state" :as window-state-keeper]
    ["os" :as os]
    ["path" :as path]
