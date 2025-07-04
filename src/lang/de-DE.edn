@@ -1,0 +1,657 @@
+{:missing "Fehlende Übersetzung für :de-DE"
+
+ :renderer.app.views
+ {:lock "Sperren"
+  :unlock "Entsperren"
+  :svg-description "Bearbeitung skalierbarer Vektorgrafiken"
+  :start "Starten"
+  :new "Neu"
+  :or "oder"
+  :open "Öffnen"
+  :recent "Zuletzt verwendet"
+  :select-size "Größe auswählen"
+  :select-template "Vorlage auswählen"
+  :empty-canvas "Leere Leinwand"
+  :help "Hilfe"
+  :command-panel "Befehlsfeld"
+  :website "Website"
+  :source-code "Quellcode"
+  :changelog "Änderungsprotokoll"}
+
+ :renderer.tree.views
+ {:lock "Sperren"
+  :unlock "Entsperren"
+  :show "Anzeigen"
+  :hide "Ausblenden"}
+
+ :renderer.reepl.views
+ {:hide-command-output "Befehlsausgabe ausblenden"
+  :show-command-output "Befehlsausgabe anzeigen"}
+
+ :renderer.app.events
+ {:create-doc "Dokument erstellen"}
+
+ :renderer.dialog.views
+ {:search-command "Nach Befehl suchen"
+  :no-results "Keine Ergebnisse gefunden."
+  :version "Version: "
+  :browser "Browser: "
+  :save "Speichern"
+  :dont-save "Nicht speichern"
+  :cancel "Abbrechen"
+  :changes-will-be-lost [:p "Ihre Änderungen an %1 gehen verloren, wenn Sie das Dokument
+                             ohne Speichern schließen."]}
+
+ :renderer.menubar.views
+ {:file "Datei"
+  :new "Neu"
+  :open "Öffnen..."
+  :recent "Zuletzt verwendet"
+  :recent-clear "Verlauf löschen"
+  :print "Drucken"
+  :save "Speichern"
+  :save-as "Speichern unter..."
+  :download "Herunterladen"
+  :export-as-svg "Als SVG exportieren"
+  :close "Schließen"
+  :exit "Beenden"
+  :edit "Bearbeiten"
+  :undo "Rückgängig"
+  :redo "Wiederholen"
+  :cut "Ausschneiden"
+  :copy "Kopieren"
+  :paste "Einfügen"
+  :paste-in-place "An Ort einfügen"
+  :paste-styles "Stile einfügen"
+  :duplicate "Duplizieren"
+  :select-all "Alles auswählen"
+  :deselect-all "Alles abwählen"
+  :invert-selection "Auswahl umkehren"
+  :select-same-tags "Gleiche Tags auswählen"
+  :delete "Löschen"
+  :object "Objekt"
+  :object-to-path "Objekt zu Pfad"
+  :stroke-to-path "Kontur zu Pfad"
+  :group "Gruppieren"
+  :ungroup "Gruppierung aufheben"
+  :lock "Sperren"
+  :unlock "Entsperren"
+  :align "Ausrichten"
+  :align-left "Links"
+  :align-right "Rechts"
+  :align-top "Oben"
+  :align-bottom "Unten"
+  :align-center-vertically "Vertikal zentrieren"
+  :align-center-horizontally "Horizontal zentrieren"
+  :animate "Animieren"
+  :animate-transform "Transformation animieren"
+  :animate-motion "Bewegung animieren"
+  :boolean-operation "Boolesche Operation"
+  :boolean-exclude "Ausschließen"
+  :boolean-unite "Vereinigen"
+  :boolean-intersect "Schnittmenge"
+  :boolean-subtract "Subtrahieren"
+  :boolean-divide "Teilen"
+  :raise "Nach vorne"
+  :lower "Nach hinten"
+  :raise-to-top "Ganz nach vorne"
+  :lower-to-bottom "Ganz nach hinten"
+  :image "Bild"
+  :image-trace "Nachzeichnen"
+  :path "Pfad"
+  :path-simplify "Vereinfachen"
+  :path-smooth "Glätten"
+  :path-flatten "Abflachen"
+  :path-reverse "Umkehren"
+  :view "Ansicht"
+  :zoom "Zoom"
+  :zoom-in "Vergrößern"
+  :zoom-out "Verkleinern"
+  :zoom-set-50 "Auf 50% setzen"
+  :zoom-set-100 "Auf 100% setzen"
+  :zoom-set-200 "Auf 200% setzen"
+  :zoom-focus-selected "Auswahl fokussieren"
+  :zoom-fit-selected "An Auswahl anpassen"
+  :zoom-fill-selected "Auswahl ausfüllen"
+  :accessibility-filter "Barrierefreiheitsfilter"
+  :blur "Unschärfe"
+  :blur-x2 "Starke Unschärfe"
+  :protanopia "Protanopie"
+  :protanomaly "Protanomalie"
+  :deuteranopia "Deuteranopie"
+  :deuteranomaly "Deuteranomalie"
+  :tritanopia "Tritanopie"
+  :tritanomaly "Tritanomalie"
+  :achromatopsia "Achromatopsie"
+  :achromatomaly "Achromatoma­lie"
+  :language "Sprache"
+  :grid "Raster"
+  :rulers "Lineale"
+  :help-bar "Hilfeleiste"
+  :debug-info "Debug-Informationen"
+  :panel "Panel"
+  :panel-element-tree "Elementbaum"
+  :panel-properties "Eigenschaften"
+  :panel-xml-view "XML-Ansicht"
+  :panel-history-tree "Verlaufsbaum"
+  :panel-shell-history "Shell-Verlauf"
+  :panel-timeline-editor "Timeline-Editor"
+  :fullscreen "Vollbild"
+  :help "Hilfe"
+  :command-panel "Befehlsfeld"
+  :website "Website"
+  :source-code "Quellcode"
+  :license "Lizenz"
+  :changelog "Änderungsprotokoll"
+  :submit-an-issue "Problem melden"
+  :about "Über"}
+
+ :renderer.element.events
+ {:modify-selection "Auswahl ändern"
+  :select-element "Element auswählen"
+  :select-elements "Elemente auswählen"
+  :delete-selection "Auswahl löschen"
+  :toggle "%1 umschalten"
+  :set "%1 setzen"
+  :lock-selection "Auswahl sperren"
+  :unlock-selection "Auswahl entsperren"
+  :remove "%1 entfernen"
+  :update "%1 aktualisieren"
+  :deselect-all "Alles abwählen"
+  :select-all "Alles auswählen"
+  :select-same-tags "Gleiche Tags auswählen"
+  :invert-selection "Auswahl umkehren"
+  :raise-selection "Auswahl nach vorne"
+  :lower-selection "Auswahl nach hinten"
+  :raise-selection-top "Auswahl ganz nach vorne"
+  :lower-selection-bottom "Auswahl ganz nach hinten"
+  :paste-selection "Auswahl einfügen"
+  :paste-selection-in-place "Auswahl an Ort einfügen"
+  :paste-styles-to-selection "Stile auf Auswahl einfügen"
+  :duplicate-selection "Auswahl duplizieren"
+  :move-selection "Auswahl verschieben"
+  :place-selection "Auswahl platzieren"
+  :scale-selection "Auswahl skalieren"
+  :convert-selection-path "Auswahl zu Pfad konvertieren"
+  :convert-selection-stroke-path "Kontur der Auswahl zu Pfad konvertieren"
+  :create "%1 erstellen"
+  :import-svg "SVG importieren"
+  :set-parent "Übergeordnetes Element setzen"
+  :group-selection "Auswahl gruppieren"
+  :ungroup-selection "Auswahl gruppierung aufheben"
+  :cut-selection "Auswahl ausschneiden"
+  :trace-image "Bild nachzeichnen"}
+
+ :renderer.element.views
+ {:cut "Ausschneiden"
+  :copy "Kopieren"
+  :paste "Einfügen"
+  :raise "Nach vorne"
+  :lower "Nach hinten"
+  :raise-top "Ganz nach vorne"
+  :lower-bottom "Ganz nach hinten"
+  :animate "Animieren"
+  :animate-transform "Transformation animieren"
+  :animate-motion "Bewegung animieren"
+  :duplicate "Duplizieren"
+  :delete "Löschen"}
+
+ :renderer.element.impl.shape.circle
+ {:name "Kreis"
+  :description "Das SVG-Element <circle> ist eine SVG-Grundform, die zum Zeichnen von Kreisen
+                basierend auf einem Mittelpunkt und einem Radius verwendet wird."}
+
+ :renderer.element.impl.shape.image
+ {:name "Bild"
+  :description "Das SVG-Element <image> bindet Bilder in SVG-Dokumente ein.
+                Es kann Rasterbild-Dateien oder andere SVG-Dateien anzeigen."}
+
+ :renderer.element.impl.shape.ellipse
+ {:name "Ellipse"
+  :description "Das Element <ellipse> ist eine SVG-Grundform, die zum Erstellen von Ellipsen basierend
+                auf einer Mittelkoordinate und ihren x- und y-Radien verwendet wird."}
+
+ :renderer.element.impl.shape.line
+ {:name "Linie"
+  :description "Das Element <line> ist eine SVG-Grundform, die zum Erstellen einer Linie verwendet wird, die
+                zwei Punkte verbindet."}
+
+ :renderer.element.impl.shape.path
+ {:name "Pfad"
+  :description "Das SVG-Element <path> ist das generische Element zur Definition einer Form.
+                Alle Grundformen können mit einem Pfad-Element erstellt werden."}
+
+ :renderer.element.impl.shape.polygon
+ {:name "Polygon"
+  :description "Das SVG-Element <polygon> definiert eine geschlossene Form, die aus einer Reihe von
+                verbundenen geraden Liniensegmenten besteht. Der letzte Punkt ist mit dem ersten
+                Punkt verbunden."}
+
+ :renderer.element.impl.shape.polyline
+ {:name "Polylinie"
+  :description "Das SVG-Element <polyline> ist eine SVG-Grundform, die gerade Linien erstellt, die
+                mehrere Punkte verbinden. Typischerweise wird eine Polylinie verwendet, um
+                offene Formen zu erstellen, da der letzte Punkt nicht mit dem ersten
+                Punkt verbunden sein muss."}
+
+ :renderer.element.impl.shape.rect
+ {:name "Rechteck"
+  :description "Das Element <rect> ist eine SVG-Grundform, die Rechtecke zeichnet, definiert durch
+                ihre Position, Breite und Höhe. Die Rechtecke können abgerundete Ecken
+                haben."}
+
+ :renderer.element.impl.custom.blob
+ {:x "Horizontale Koordinate des Blob-Zentrums."
+  :y "Vertikale Koordinate des Blob-Zentrums."
+  :seed "Ein gegebener Seed wird immer denselben Blob erzeugen."
+  :extra-points "Die tatsächliche Anzahl der Punkte wird `3 + extraPoints` sein."
+  :randomness "Erhöht die Menge der Variation in der Punktposition."
+  :size "Die Größe der Begrenzungsbox."
+  :description "Vektorbasierter Blob."}
+
+ :renderer.element.impl.custom.brush
+ {:name "Pinsel"
+  :points "Eingabepunkte, die von der Mausbewegung des Benutzers aufgezeichnet wurden."
+  :size "Die Grundgröße (Durchmesser) des Strichs."
+  :thinning "Der Effekt des Drucks auf die Größe des Strichs."
+  :smoothing "Wie viel die Kanten des Strichs geglättet werden sollen."
+  :stream-line "Wie viel der Strich gestrafft werden soll."
+  :description "Zeichnen Sie druckempfindliche Freihandlinien mit perfect-freehand."}
+
+ :renderer.element.impl.container.canvas
+ {:name "Leinwand"
+  :description "Die Leinwand ist der Haupt-SVG-Container, der alle Elemente beherbergt."}
+
+ :renderer.element.impl.container.svg
+ {:description "Das svg-Element ist ein Container, der ein neues Koordinatensystem und
+                einen Viewport definiert. Es wird als äußerstes Element von SVG-Dokumenten verwendet, kann aber
+                auch verwendet werden, um ein SVG-Fragment in ein SVG- oder HTML-Dokument einzubetten."}
+
+ :renderer.element.impl.text
+ {:description "Das SVG-Element <text> zeichnet ein Grafikelement, das aus Text besteht. Es ist
+                möglich, einen Verlauf, ein Muster, einen Beschneidungspfad, eine Maske oder einen Filter auf
+                <text> anzuwenden, wie bei jedem anderen SVG-Grafikelement."
+  :label "Text"
+  :remove-text "Text entfernen"
+  :set-text "Text setzen"}
+
+ :renderer.attribute.views
+ {:all "alle"
+  :browser-compatibility "Browser-Kompatibilität"
+  :learn-more "Mehr erfahren"
+  :specification "Spezifikation"
+  :applies-to "Gilt für"
+  :computed "Berechnet"
+  :percentages "Prozentsätze"
+  :animatable "Animierbar"
+  :animationType "Animationstyp"
+  :syntax "Syntax"
+  :mdn-info "MDN-Info"}
+
+ :renderer.attribute.impl.core
+ {:x "Das x-Attribut definiert eine x-Achsen-Koordinate im Benutzerkoordinatensystem."
+  :y "Das y-Attribut definiert eine y-Achsen-Koordinate im Benutzerkoordinatensystem."
+  :x1 "Das x1-Attribut wird verwendet, um die erste x-Koordinate zum Zeichnen eines SVG-Elements
+       zu spezifizieren, das mehr als eine Koordinate benötigt. Elemente, die nur eine Koordinate benötigen,
+       verwenden stattdessen das x-Attribut."
+  :y1 "Das y1-Attribut wird verwendet, um die erste y-Koordinate zum Zeichnen eines SVG-Elements
+       zu spezifizieren, das mehr als eine Koordinate benötigt. Elemente, die nur eine Koordinate benötigen,
+       verwenden stattdessen das y-Attribut."
+  :x2 "Das x2-Attribut wird verwendet, um die zweite x-Koordinate zum Zeichnen eines SVG-Elements
+       zu spezifizieren, das mehr als eine Koordinate benötigt. Elemente, die nur eine Koordinate benötigen,
+       verwenden stattdessen das x-Attribut."
+  :y2 "Das y2-Attribut wird verwendet, um die zweite y-Koordinate zum Zeichnen eines SVG-Elements
+       zu spezifizieren, das mehr als eine Koordinate benötigt. Elemente, die nur eine Koordinate benötigen,
+       verwenden stattdessen das y-Attribut."
+  :cx "Das cx-Attribut definiert die x-Achsen-Koordinate eines Mittelpunkts."
+  :cy "Das cy-Attribut definiert die y-Achsen-Koordinate eines Mittelpunkts."
+  :dx "Das dx-Attribut zeigt eine Verschiebung entlang der x-Achse an der Position eines Elements
+       oder seines Inhalts an."
+  :dy "Das dy-Attribut zeigt eine Verschiebung entlang der y-Achse an der Position eines Elements
+       oder seines Inhalts an."
+  :width "Das width-Attribut definiert die horizontale Länge eines Elements im Benutzer-
+          koordinatensystem."
+  :height "Das height-Attribut definiert die vertikale Länge eines Elements im Benutzer-
+           koordinatensystem."
+  :rx "Das rx-Attribut definiert einen Radius auf der x-Achse."
+  :ry "Das ry-Attribut definiert einen Radius auf der y-Achse."
+  :r "Das r-Attribut definiert den Radius eines Kreises."
+  :rotate "Das rotate-Attribut spezifiziert, wie sich das animierte Element dreht, während es sich
+           entlang eines in einem <animateMotion>-Element spezifizierten Pfads bewegt."
+  :stroke "Das stroke-Attribut ist ein Präsentationsattribut, das die Farbe (oder jeden SVG-
+           Farbserver wie Verläufe oder Muster) definiert, die zum Malen der Kontur der
+           Form verwendet wird."
+  :fill "Das fill-Attribut hat zwei verschiedene Bedeutungen. Für Formen und Text ist es ein
+         Präsentationsattribut, das die Farbe (oder jeden SVG-Farbserver wie
+         Verläufe oder Muster) definiert, die zum Malen des Elements verwendet wird; für Animationen definiert es den
+         Endzustand der Animation."
+  :stroke-width "Das stroke-width-Attribut ist ein Präsentationsattribut, das die Breite
+                 des auf die Form anzuwendenden Strichs definiert."
+  :stroke-dasharray "Das stroke-dasharray-Attribut ist ein Präsentationsattribut, das
+                     das Muster von Strichen und Lücken definiert, das zum Malen der Kontur der
+                     Form verwendet wird."
+  :opacity "Das opacity-Attribut spezifiziert die Transparenz eines Objekts oder einer Gruppe von
+            Objekten, das heißt, den Grad, zu dem der Hintergrund hinter dem Element
+            überlagert wird."
+  :id "Das id-Attribut weist einem Element einen eindeutigen Namen zu."
+  :class "Weist einem Element einen Klassennamen oder eine Menge von Klassennamen zu. Sie können den
+          gleichen Klassennamen oder Namen einer beliebigen Anzahl von Elementen zuweisen, jedoch müssen mehrere Klassen-
+          namen durch Leerzeichen getrennt werden."
+  :tabindex "Das tabindex-Attribut ermöglicht es Ihnen zu kontrollieren, ob ein Element fokussierbar ist
+             und die relative Reihenfolge des Elements für die Zwecke der
+             sequenziellen Fokusnavigation zu definieren."
+  :style "Das style-Attribut ermöglicht es, ein Element mit CSS-Deklarationen zu stylen.
+          Es funktioniert identisch zum style-Attribut in HTML."
+  :href "Das href-Attribut definiert einen Link zu einer Ressource als Referenz-URL.
+         Die genaue Bedeutung dieses Links hängt vom Kontext jedes Elements ab, das ihn verwendet."
+  :attribute-name "Das attributeName-Attribut zeigt den Namen der CSS-Eigenschaft oder
+                   des Attributs des Zielelements an, das während einer
+                   Animation geändert wird."
+  :begin "Das begin-Attribut definiert, wann eine Animation beginnen soll."
+  :end "Das end-Attribut definiert einen Endwert für die Animation, der die
+         aktive Dauer einschränken kann."
+  :dur "Das dur-Attribut zeigt die einfache Dauer einer Animation an."
+  :min "Das min-Attribut spezifiziert den Mindestwert der aktiven Animationsdauer."
+  :max "Das max-Attribut spezifiziert den Höchstwert der aktiven Animationsdauer."
+  :restart "Das restart-Attribut spezifiziert, ob eine Animation neu gestartet werden kann oder nicht."
+  :repeat-count "Das repeatCount-Attribut zeigt die Anzahl der Male an, die eine Animation
+                 stattfinden wird."
+  :repeat-dur "Das repeatDur-Attribut spezifiziert die Gesamtdauer für die Wiederholung einer
+               Animation."
+  :calc-mode "Das calcMode-Attribut spezifiziert den Interpolationsmodus für die Animation."
+  :values "Das values-Attribut hat verschiedene Bedeutungen, je nach dem Kontext, in dem
+           es verwendet wird. Entweder definiert es eine Sequenz von Werten, die im Verlauf einer
+           Animation verwendet werden, oder es ist eine Liste von Zahlen für eine Farbmatrix, die je nach Art der durchzuführenden Farbänderung unterschiedlich interpretiert wird."
+  :key-times "Das keyTimes-Attribut repräsentiert eine Liste von Zeitwerten, die zur Kontrolle
+                des Tempos der Animation verwendet werden."
+  :key-splines "Das keySplines-Attribut definiert eine Menge von Bézier-Kurven-Kontrollpunkten,
+                die mit der keyTimes-Liste verknüpft sind und eine kubische Bézier-Funktion definieren, die
+                das Intervalltempo steuert"
+  :from "Das from-Attribut zeigt den Anfangswert des Attributs an, das während
+         der Animation geändert wird."
+  :to "Das to-Attribut zeigt den Endwert des Attributs an, das während
+       der Animation geändert wird."
+  :by "Das by-Attribut spezifiziert einen relativen Offset-Wert für ein Attribut, das während
+       einer Animation geändert wird."
+  :additive "Das additive-Attribut kontrolliert, ob eine Animation additiv ist oder nicht."
+  :accumulate "Das accumulate-Attribut kontrolliert, ob eine Animation
+               kumulativ ist oder nicht."
+  :view-box "Das viewBox-Attribut definiert die Position und Dimension im Benutzerraum eines
+             SVG-Viewports."
+  :preserve-aspect-ratio "Das preserveAspectRatio-Attribut zeigt an, wie ein Element mit
+                          einer viewBox, die ein gegebenes Seitenverhältnis bereitstellt, in einen
+                          Viewport mit einem anderen Seitenverhältnis passen muss."}
+
+ :renderer.tool.impl.element.core
+ {:help "Klicken und ziehen, um ein Element zu erstellen."}
+
+ :renderer.tool.impl.element.polyshape
+ {:add-points "Klicken, um weitere Punkte hinzuzufügen."
+  :finalize-shape "Doppelklicken, um die Form zu finalisieren."
+  :create-tool "%1 erstellen"}
+
+ :renderer.tool.impl.element.rect
+ {:name "Rechteck"
+  :help [:div "Halten Sie %1, um die Proportionen zu sperren."]
+  :create-rectangle "Rechteck erstellen"}
+
+ :renderer.tool.impl.element.svg
+ {:help [:div "Halten Sie %1, um die Proportionen zu sperren."]
+  :create-svg "SVG erstellen"}
+
+ :renderer.tool.impl.extension.blob
+ {:create-blob "Blob erstellen"}
+
+ :renderer.tool.impl.misc.dropper
+ {:help "Klicken Sie irgendwo, um eine Farbe zu wählen."
+  :pick-color "Farbe wählen"}
+
+ :renderer.tool.impl.misc.fill
+ {:help "Klicken Sie auf ein Element, um es zu füllen."
+  :fill "Füllen"}
+
+ :renderer.tool.impl.misc.measure
+ {:help "Klicken und ziehen, um eine Entfernung zu messen."}
+
+ :renderer.tool.impl.element.text
+ {:help "Klicken, um mit der Eingabe zu beginnen."}
+
+ :renderer.attribute.impl.stroke-linecap
+ {:description "Das stroke-linecap-Attribut ist ein Präsentationsattribut, das die
+                Form definiert, die am Ende offener Unterpfade verwendet wird, wenn sie gezeichnet werden."
+  :butt "Stumpf"
+  :round "Rund"
+  :square "Quadratisch"}
+
+ :renderer.attribute.impl.stroke-linejoin
+ {:description "Das stroke-linejoin-Attribut ist ein Präsentationsattribut, das die
+                Form definiert, die an den Ecken von Pfaden verwendet wird, wenn sie gezeichnet werden."
+  :bevel "Schräg"
+  :miter "Gehrung"
+  :round "Rund"}
+
+ :renderer.attribute.impl.overflow
+ {:description "Das overflow-Attribut legt fest, was zu tun ist, wenn der Inhalt eines Elements zu
+                groß ist, um in seinen Blockformatierungskontext zu passen. Diese Funktion ist noch nicht
+                weit verbreitet implementiert."
+  :hidden "Versteckt"
+  :visible "Sichtbar"}
+
+ :renderer.attribute.impl.color
+ {:title "Farbe wählen"}
+
+ :renderer.attribute.impl.d
+ {:description "Das d-Attribut definiert einen zu zeichnenden Pfad."
+  :edit "Pfad bearbeiten"
+  :absolute "(Absolut)"
+  :relative "(Relativ)"
+  :move-to "Bewegen zu"
+  :line-to "Linie zu"
+  :vertical-line "Vertikale Linie"
+  :horizontal-line "Horizontale Linie"
+  :cubic-bezier "Kubische Bézier-Kurve"
+  :shortcut-cubic-bezier "Kubische Bézier-Kurve Verknüpfung"
+  :quadratic-bezier-curve "Quadratische Bézier-Kurve"
+  :shortcut-quadratic "Quadratische Bézier-Verknüpfung"
+  :elliptical-arc-curve "Elliptische Bogenkurve"
+  :close-path "Pfad schließen"}
+
+ :renderer.attribute.impl.length
+ {:increase "Erhöhen"
+  :decrease "Verringern"}
+
+ :renderer.attribute.impl.font-family
+ {:description "Das font-family-Attribut zeigt an, welche Schriftfamilie verwendet wird, um
+                den Text zu rendern, spezifiziert als priorisierte Liste von Schriftfamilien-Namen
+                und/oder generischen Familiennamen."
+  :search-font "Nach Schrift suchen"
+  :select-font "Schrift auswählen"
+  :no-local-font "Keine lokalen Schriften gefunden."}
+
+ :renderer.attribute.impl.font-size
+ {:description "Das font-size-Attribut bezieht sich auf die Größe der Schrift von Grundlinie zu
+                Grundlinie, wenn mehrere Textzeilen in einer mehrzeiligen Layout-
+                Umgebung gesetzt werden."}
+
+ :renderer.attribute.impl.font-weight
+ {:description "Das font-weight-Attribut bezieht sich auf die Fettheit oder Leichtigkeit der
+                Glyphen, die zum Rendern des Textes verwendet werden, relativ zu anderen Schriften in derselben Schrift-
+                familie."}
+
+ :renderer.tool.impl.base.edit
+ {:help-idle-drag [:div "Ziehen Sie einen Griff, um Ihre Form zu ändern."]
+  :help-idle-click [:div "Klicken Sie auf ein Element, um die Auswahl zu ändern"]
+  :help-edit [:div "Halten Sie %1, um die Richtung zu beschränken."]
+  :help-type [:div "Geben Sie Ihren Text ein."]
+  :select-element "Element auswählen"
+  :edit "Bearbeiten"}
+
+ :renderer.tool.impl.base.transform
+ {:idle-click [:div "Klicken, um ein Element auszuwählen oder ziehen, um nach Bereich auszuwählen. "]
+  :idle-hold [:div "Halten Sie %1, um Elemente zur Auswahl hinzuzufügen oder zu entfernen."]
+  :select [:div "Halten Sie %1, um sich schneidende Elemente auszuwählen."]
+  :select-element "Element auswählen"
+  :deselect-element "Element abwählen"
+  :translate [:div "Halten Sie %1, um die Richtung zu beschränken, und %2 zum Klonen."]
+  :clone [:div "Halten Sie %1, um die Richtung zu beschränken. oder lassen Sie %2 los, um zu verschieben"]
+  :scale [:div "Halten Sie %1, um die Proportionen zu sperren, %2 zum Skalieren an Ort und Stelle,
+                  %3 um auch Kinder zu skalieren."]
+  :move-selection-up "Auswahl nach oben verschieben"
+  :move-selection-down "Auswahl nach unten verschieben"
+  :move-selection-left "Auswahl nach links verschieben"
+  :move-selection-right "Auswahl nach rechts verschieben"
+  :modify-selection "Auswahl ändern"
+  :move-selection "Auswahl verschieben"
+  :scale-selection "Auswahl skalieren"
+  :clone-selection "Auswahl klonen"}
+
+ :renderer.tool.impl.base.pan
+ {:idle-help "Klicken und ziehen zum Schwenken."
+  :pan-help "Ziehen zum Schwenken."}
+
+ :renderer.tool.impl.base.zoom
+ {:zoom-in [:div "Klicken oder einen Bereich auswählen, um zu vergrößern."]
+  :zoom-out [:div "Halten Sie %1, um zu verkleinern."]}
+
+ :renderer.tool.impl.draw.brush
+ {:draw-brush "Mit Pinsel zeichnen"}
+
+ :renderer.tool.impl.draw.pen
+ {:draw-line "Linie zeichnen"}
+
+ :renderer.tool.impl.draw.core
+ {:help "Klicken und ziehen zum Zeichnen."}
+
+ :renderer.tool.impl.element.circle
+ {:create-circle "Kreis erstellen"}
+
+ :renderer.tool.impl.element.ellipse
+ {:create-ellipse "Ellipse erstellen"
+  :help [:div "Halten Sie %1, um die Proportionen zu sperren."]}
+
+ :renderer.tool.impl.element.line
+ {:create-line "Linie erstellen"}
+
+ :renderer.document.events
+ {:save-changes "Möchten Sie Ihre Änderungen speichern?"
+  :create-doc "Dokument erstellen"
+  :create-doc-from-template "Dokument aus Vorlage erstellen"
+  :load-doc "Dokument laden"
+  :error-loading "Fehler beim Laden von %1"
+  :unsupported-or-corrupted "Datei scheint nicht unterstützt oder beschädigt zu sein."}
+
+ :renderer.document.views
+ {:new "Neu"
+  :open "Öffnen"
+  :open-directory "Enthaltenden Ordner öffnen"
+  :save "Speichern"
+  :undo "Rückgängig"
+  :redo "Wiederholen"
+  :close "Schließen"
+  :close-doc "Dokument schließen"
+  :close-all "Alle schließen"
+  :close-saved "Gespeicherte schließen"
+  :close-others "Andere schließen"}
+
+ :renderer.window.views
+ {:minimize "Minimieren"
+  :maximize "Maximieren"
+  :restore "Wiederherstellen"
+  :close "Schließen"
+  :theme "Themamodus - %1"}
+
+ :renderer.toolbar.tools
+ {:transform "Transformieren"
+  :edit "Bearbeiten"
+  :pan "Schwenken"
+  :zoom "Zoom"
+  :svg "SVG"
+  :circle "Kreis"
+  :ellipse "Ellipse"
+  :rectangle "Rechteck"
+  :line "Linie"
+  :polyline "Polylinie"
+  :polygon "Polygon"
+  :image "Bild"
+  :text "Text"
+  :blob "Blob"
+  :brush "Pinsel"
+  :pen "Stift"
+  :dropper "Pipette"
+  :fill "Füllen"
+  :measure "Messen"}
+
+ :renderer.toolbar.status
+ {:select-zoom "Zoom-Ebene auswählen"
+  :zoom "Zoom"
+  :zoom-out "Verkleinern"
+  :zoom-in "Vergrößern"
+  :zoom-set-50 "Auf 50% setzen"
+  :zoom-set-100 "Auf 100% setzen"
+  :zoom-set-200 "Auf 200% setzen"
+  :zoom-focus-selected "Auswahl fokussieren"
+  :zoom-fit-selected "An Auswahl anpassen"
+  :zoom-fill-selected "Auswahl ausfüllen"
+  :timeline "Timeline"
+  :grid "Raster"
+  :rulers "Lineale"
+  :history "Verlauf"
+  :xml "XML"
+  :fill-color "Füllfarbe wählen"
+  :stroke-color "Konturfarbe wählen"
+  :swap-color "Füllung mit Kontur tauschen"}
+
+ :renderer.snap.views
+ {:snap "Einrasten"
+  :snap-options "Einrast-Optionen"
+  :centers "Zentren"
+  :midpoints "Mittelpunkte"
+  :corners "Ecken"
+  :nodes "Knoten"
+  :to " zu "}
+
+ :renderer.toolbar.object
+ {:bring-front "Nach vorne bringen"
+  :send-back "Nach hinten senden"
+  :bring-forward "Vorwärts bringen"
+  :send-backward "Rückwärts senden"
+  :group "Gruppieren"
+  :ungroup "Gruppierung aufheben"
+  :align-left "Links ausrichten"
+  :align-center-hor "Horizontal zentrieren"
+  :align-right "Rechts ausrichten"
+  :align-top "Oben ausrichten"
+  :align-center-ver "Vertikal zentrieren"
+  :align-bottom "Unten ausrichten"
+  :unite "Vereinigen"
+  :intersect "Schnittmenge"
+  :subtract "Subtrahieren"
+  :exclude "Ausschließen"
+  :divide "Teilen"}
+
+ :renderer.utils.bounds
+ {:bounds-corner "Begrenzungsecke"
+  :bounds-center "Begrenzungszentrum"
+  :bounds-midpoint "Begrenzungsmittelpunkt"}
+
+ :renderer.history.events
+ {:clear-history "Verlauf löschen"}
+
+ :renderer.history.views
+ {:center-view "Ansicht zentrieren"
+  :clear-history "Verlauf löschen"
+  :action-cannot-undone "Diese Aktion kann nicht rückgängig gemacht werden."
+  :clear-history-description "Sind Sie sicher, dass Sie den Dokumentverlauf löschen möchten?"
+  :select-element "Element auswählen"
+  :delete-selection "Auswahl löschen"}
+
+ :renderer.timeline.views
+ {:speed "Geschwindigkeit"
+  :no-filter "Kein Filter"
+  :filter "Filter"
+  :grid-snap "Raster-Einrasten"
+  :guide-snap "Hilfslinien-Einrasten"
+  :play "Abspielen"
+  :replay "Wiederholen"
+  :pause "Pause"
+  :hide-timeline "Timeline ausblenden"}}

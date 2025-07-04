@@ -13,6 +13,12 @@
   {"en-US" {:dir "ltr"
             :native-name "English (US)"
             :dictionary (load-resource-at-compile-time "lang/en-US.edn")}
+   "fr-FR" {:dir "ltr"
+            :native-name "Français"
+            :dictionary (load-resource-at-compile-time "lang/fr-FR.edn")}
+   "de-DE" {:dir "ltr"
+            :native-name "Deutsch"
+            :dictionary (load-resource-at-compile-time "lang/de-DE.edn")}
    "el-GR" {:dir "ltr"
             :native-name "Ελληνικά"
             :dictionary (load-resource-at-compile-time "lang/el-GR.edn")}
