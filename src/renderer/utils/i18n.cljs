@@ -11,8 +11,20 @@
 ;; https://github.com/taoensso/tempura/issues/25#issuecomment-451742526
 (def languages
   {"en-US" {:dir "ltr"
-            :native-name "English (US)"
+            :native-name "English"
             :dictionary (load-resource-at-compile-time "lang/en-US.edn")}
+   "es-ES" {:dir "ltr"
+            :native-name "Español"
+            :dictionary (load-resource-at-compile-time "lang/es-ES.edn")}
+   "pt-PT" {:dir "ltr"
+            :native-name "Português"
+            :dictionary (load-resource-at-compile-time "lang/pt-PT.edn")}
+   "ru-RU" {:dir "ltr"
+            :native-name "Русский"
+            :dictionary (load-resource-at-compile-time "lang/ru-RU.edn")}
+   "zh-CN" {:dir "ltr"
+            :native-name "中文（简体）"
+            :dictionary (load-resource-at-compile-time "lang/zh-CN.edn")}
    "fr-FR" {:dir "ltr"
             :native-name "Français"
             :dictionary (load-resource-at-compile-time "lang/fr-FR.edn")}

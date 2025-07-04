@@ -276,7 +276,7 @@
         (camel-snake-kebab/->camelCaseString)
         (keyword))))
 
-(def ->camel-case-memo (memoize ->camel-case))
+#_(def ->camel-case-memo (memoize ->camel-case))
 
 (m/=> ->attrs [:-> map? Attrs])
 (defn ->attrs

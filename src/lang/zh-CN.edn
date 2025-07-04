@@ -1,0 +1,616 @@
+{:missing "缺少 :zh-CN 的翻译"
+
+ :renderer.app.views
+ {:lock "锁定"
+  :unlock "解锁"
+  :svg-description "可缩放矢量图形操作"
+  :start "开始"
+  :new "新建"
+  :or "或"
+  :open "打开"
+  :recent "最近"
+  :select-size "选择尺寸"
+  :select-template "选择模板"
+  :empty-canvas "空白画布"
+  :help "帮助"
+  :command-panel "命令面板"
+  :website "网站"
+  :source-code "源代码"
+  :changelog "更改日志"}
+
+ :renderer.tree.views
+ {:lock "锁定"
+  :unlock "解锁"
+  :show "显示"
+  :hide "隐藏"}
+
+ :renderer.reepl.views
+ {:hide-command-output "隐藏命令输出"
+  :show-command-output "显示命令输出"}
+
+ :renderer.app.events
+ {:create-doc "创建文档"}
+
+ :renderer.dialog.views
+ {:search-command "搜索命令"
+  :no-results "未找到结果。"
+  :version "版本："
+  :browser "浏览器："
+  :save "保存"
+  :dont-save "不保存"
+  :cancel "取消"
+  :changes-will-be-lost [:p "如果您不保存就关闭文档，您对 %1 的更改将丢失。"]}
+
+ :renderer.menubar.views
+ {:file "文件"
+  :new "新建"
+  :open "打开..."
+  :recent "最近"
+  :recent-clear "清除最近"
+  :print "打印"
+  :save "保存"
+  :save-as "另存为..."
+  :download "下载"
+  :export-as-svg "导出为 SVG"
+  :close "关闭"
+  :exit "退出"
+  :edit "编辑"
+  :undo "撤销"
+  :redo "重做"
+  :cut "剪切"
+  :copy "复制"
+  :paste "粘贴"
+  :paste-in-place "原位粘贴"
+  :paste-styles "粘贴样式"
+  :duplicate "复制"
+  :select-all "全选"
+  :deselect-all "取消全选"
+  :invert-selection "反选"
+  :select-same-tags "选择相同标签"
+  :delete "删除"
+  :object "对象"
+  :object-to-path "对象转路径"
+  :stroke-to-path "描边转路径"
+  :group "成组"
+  :ungroup "取消成组"
+  :lock "锁定"
+  :unlock "解锁"
+  :align "对齐"
+  :align-left "左对齐"
+  :align-right "右对齐"
+  :align-top "顶部对齐"
+  :align-bottom "底部对齐"
+  :align-center-vertically "垂直居中对齐"
+  :align-center-horizontally "水平居中对齐"
+  :animate "动画"
+  :animate-transform "变换动画"
+  :animate-motion "运动动画"
+  :boolean-operation "布尔运算"
+  :boolean-exclude "排除"
+  :boolean-unite "合并"
+  :boolean-intersect "相交"
+  :boolean-subtract "差集"
+  :boolean-divide "分割"
+  :raise "上移"
+  :lower "下移"
+  :raise-to-top "置于顶层"
+  :lower-to-bottom "置于底层"
+  :image "图像"
+  :image-trace "描摹"
+  :path "路径"
+  :path-simplify "简化"
+  :path-smooth "平滑"
+  :path-flatten "展平"
+  :path-reverse "反转"
+  :view "视图"
+  :zoom "缩放"
+  :zoom-in "放大"
+  :zoom-out "缩小"
+  :zoom-set-50 "设置为 50%"
+  :zoom-set-100 "设置为 100%"
+  :zoom-set-200 "设置为 200%"
+  :zoom-focus-selected "聚焦选择"
+  :zoom-fit-selected "适合选择"
+  :zoom-fill-selected "填充选择"
+  :accessibility-filter "辅助功能过滤器"
+  :blur "模糊"
+  :blur-x2 "模糊-x2"
+  :protanopia "红色盲"
+  :protanomaly "红色弱"
+  :deuteranopia "绿色盲"
+  :deuteranomaly "绿色弱"
+  :tritanopia "蓝色盲"
+  :tritanomaly "蓝色弱"
+  :achromatopsia "全色盲"
+  :achromatomaly "全色弱"
+  :language "语言"
+  :grid "网格"
+  :rulers "标尺"
+  :help-bar "帮助栏"
+  :debug-info "调试信息"
+  :panel "面板"
+  :panel-element-tree "元素树"
+  :panel-properties "属性"
+  :panel-xml-view "XML 视图"
+  :panel-history-tree "历史树"
+  :panel-shell-history "终端历史"
+  :panel-timeline-editor "时间轴编辑器"
+  :fullscreen "全屏"
+  :help "帮助"
+  :command-panel "命令面板"
+  :website "网站"
+  :source-code "源代码"
+  :license "许可证"
+  :changelog "更改日志"
+  :submit-an-issue "报告问题"
+  :about "关于"}
+
+ :renderer.element.events
+ {:modify-selection "修改选择"
+  :select-element "选择元素"
+  :select-elements "选择元素"
+  :delete-selection "删除选择"
+  :toggle "切换 %1"
+  :set "设置 %1"
+  :lock-selection "锁定选择"
+  :unlock-selection "解锁选择"
+  :remove "移除 %1"
+  :update "更新 %1"
+  :deselect-all "取消全选"
+  :select-all "全选"
+  :select-same-tags "选择相同标签"
+  :invert-selection "反选"
+  :raise-selection "上移选择"
+  :lower-selection "下移选择"
+  :raise-selection-top "选择置于顶层"
+  :lower-selection-bottom "选择置于底层"
+  :paste-selection "粘贴选择"
+  :paste-selection-in-place "原位粘贴选择"
+  :paste-styles-to-selection "将样式粘贴到选择"
+  :duplicate-selection "复制选择"
+  :move-selection "移动选择"
+  :place-selection "放置选择"
+  :scale-selection "缩放选择"
+  :convert-selection-path "选择转换为路径"
+  :convert-selection-stroke-path "选择的描边转换为路径"
+  :create "创建 %1"
+  :import-svg "导入 SVG"
+  :set-parent "设置父级"
+  :group-selection "选择成组"
+  :ungroup-selection "选择取消成组"
+  :cut-selection "剪切选择"
+  :trace-image "描摹图像"}
+
+ :renderer.element.views
+ {:cut "剪切"
+  :copy "复制"
+  :paste "粘贴"
+  :raise "上移"
+  :lower "下移"
+  :raise-top "置于顶层"
+  :lower-bottom "置于底层"
+  :animate "动画"
+  :animate-transform "变换动画"
+  :animate-motion "运动动画"
+  :duplicate "复制"
+  :delete "删除"}
+
+ :renderer.element.impl.shape.circle
+ {:name "圆形"
+  :description "SVG 元素 <circle> 是一个 SVG 基本形状，用于绘制基于中心点和半径的圆形。"}
+
+ :renderer.element.impl.shape.image
+ {:name "图像"
+  :description "SVG 元素 <image> 在 SVG 文档中包含图像。它可以显示栅格图像文件或其他
+                SVG 文件。"}
+
+ :renderer.element.impl.shape.ellipse
+ {:name "椭圆"
+  :description "元素 <ellipse> 是一个 SVG 基本形状，用于创建基于中心坐标及其 x 和 y
+                半径的椭圆。"}
+
+ :renderer.element.impl.shape.line
+ {:name "线条"
+  :description "元素 <line> 是一个 SVG 基本形状，用于创建连接两点的线条。"}
+
+ :renderer.element.impl.shape.path
+ {:name "路径"
+  :description "SVG 元素 <path> 是定义形状的通用元素。所有基本形状都可以用路径元素
+                创建。"}
+
+ :renderer.element.impl.shape.polygon
+ {:name "多边形"
+  :description "SVG 元素 <polygon> 定义由一组连接的直线段组成的封闭形状。最后一个点
+                连接到第一个点。"}
+
+ :renderer.element.impl.shape.polyline
+ {:name "折线"
+  :description "SVG 元素 <polyline> 是一个 SVG 基本形状，创建连接多个点的直线。
+                通常折线用于创建开放形状，因为最后一个点不必连接到第一个点。"}
+
+ :renderer.element.impl.shape.rect
+ {:name "矩形"
+  :description "元素 <rect> 是一个基本的 SVG 形状，绘制由位置、宽度和高度定义的
+                矩形。矩形可以有圆角。"}
+
+ :renderer.element.impl.custom.blob
+ {:x "blob 中心的水平坐标。"
+  :y "blob 中心的垂直坐标。"
+  :seed "给定的种子总是会产生相同的 blob。"
+  :extra-points "实际点数将是 `3 + 额外点数`。"
+  :randomness "增加点位置的变化量。"
+  :size "边界框的大小。"
+  :description "基于矢量的 blob。"}
+
+ :renderer.element.impl.custom.brush
+ {:name "画笔"
+  :points "从用户鼠标移动记录的输入点。"
+  :size "笔画的基本大小（直径）。"
+  :thinning "压力对笔画大小的影响。"
+  :smoothing "平滑笔画边缘的程度。"
+  :stream-line "简化笔画的程度。"
+  :description "使用 perfect-freehand 绘制压力敏感的手绘线条。"}
+
+ :renderer.element.impl.container.canvas
+ {:name "画布"
+  :description "画布是承载所有元素的主要 SVG 容器。"}
+
+ :renderer.element.impl.container.svg
+ {:description "svg 元素是定义新坐标系统和视口的容器。它用作 SVG 文档的最外层元素，
+                但也可用于在 SVG 或 HTML 文档中嵌入 SVG 片段。"}
+
+ :renderer.element.impl.text
+ {:description "SVG <text> 元素绘制由文本组成的图形元素。可以对 <text> 应用渐变、
+                图案、剪切路径、蒙版或滤镜，就像任何其他 SVG 图形元素一样。"
+  :label "文本"
+  :remove-text "移除文本"
+  :set-text "设置文本"}
+
+ :renderer.attribute.views
+ {:all "全部"
+  :browser-compatibility "浏览器兼容性"
+  :learn-more "了解更多"
+  :specification "规范"
+  :applies-to "适用于"
+  :computed "计算值"
+  :percentages "百分比"
+  :animatable "可动画"
+  :animationType "动画类型"
+  :syntax "语法"
+  :mdn-info "MDN 信息"}
+
+ :renderer.attribute.impl.core
+ {:x "x 属性在用户坐标系统中定义 x 轴坐标。"
+  :y "y 属性在用户坐标系统中定义 y 轴坐标。"
+  :x1 "x1 属性用于指定绘制需要多个坐标的 SVG 元素的第一个 x 坐标。只需要一个
+       坐标的元素使用 x 属性代替。"
+  :y1 "y1 属性用于指定绘制需要多个坐标的 SVG 元素的第一个 y 坐标。只需要一个
+       坐标的元素使用 y 属性代替。"
+  :x2 "x2 属性用于指定绘制需要多个坐标的 SVG 元素的第二个 x 坐标。只需要一个
+       坐标的元素使用 x 属性代替。"
+  :y2 "y2 属性用于指定绘制需要多个坐标的 SVG 元素的第二个 y 坐标。只需要一个
+       坐标的元素使用 y 属性代替。"
+  :cx "cx 属性定义中心点的 x 轴坐标。"
+  :cy "cy 属性定义中心点的 y 轴坐标。"
+  :dx "dx 属性表示元素或其内容位置沿 x 轴的偏移。"
+  :dy "dy 属性表示元素或其内容位置沿 y 轴的偏移。"
+  :width "width 属性在用户坐标系统中定义元素的水平长度。"
+  :height "height 属性在用户坐标系统中定义元素的垂直长度。"
+  :rx "rx 属性定义 x 轴上的半径。"
+  :ry "ry 属性定义 y 轴上的半径。"
+  :r "r 属性定义圆的半径。"
+  :rotate "rotate 属性指定动画元素在沿 <animateMotion> 元素中指定的路径移动时
+           如何旋转。"
+  :stroke "stroke 属性是一个表示属性，定义用于绘制形状轮廓的颜色（或任何 SVG
+           绘制服务器，如渐变或图案）。"
+  :fill "fill 属性有两种不同的含义。对于形状和文本，它是一个表示属性，定义用于
+         绘制元素的颜色（或任何 SVG 绘制服务器，如渐变或图案）；对于动画，它
+         定义动画的最终状态。"
+  :stroke-width "stroke-width 属性是一个表示属性，定义应用于形状的描边宽度。"
+  :stroke-dasharray "stroke-dasharray 属性是一个表示属性，定义用于绘制形状
+                     轮廓的虚线和间隙图案。"
+  :opacity "opacity 属性指定对象或对象组的透明度，即元素后面的背景被覆盖的
+            程度。"
+  :id "id 属性为元素分配唯一的名称。"
+  :class "为元素分配类名或一组类名。您可以为任意数量的元素分配相同的类名或名称，
+          但是多个类名必须用空白字符分隔。"
+  :tabindex "tabindex 属性允许您控制元素是否可聚焦，并定义元素在顺序焦点
+             导航中的相对顺序。"
+  :style "style 属性允许使用 CSS 声明来样式化元素。它的功能与 HTML 中的
+          style 属性相同。"
+  :href "href 属性定义作为参考 URL 的资源链接。该链接的确切含义取决于使用它
+         的每个元素的上下文。"
+  :attribute-name "attributeName 属性指示在动画期间将要更改的目标元素的
+                   CSS 属性或属性的名称。"
+  :begin "begin 属性定义动画何时开始。"
+  :end "end 属性定义动画的结束值，可以限制活动持续时间。"
+  :dur "dur 属性指示动画的简单持续时间。"
+  :min "min 属性指定活动动画持续时间的最小值。"
+  :max "max 属性指定活动动画持续时间的最大值。"
+  :restart "restart 属性指定动画是否可以重新启动。"
+  :repeat-count "repeatCount 属性指示动画将发生的次数。"
+  :repeat-dur "repeatDur 属性指定重复动画的总持续时间。"
+  :calc-mode "calcMode 属性指定动画的插值模式。"
+  :values "values 属性有不同的含义，取决于使用它的上下文，它要么定义在动画
+           过程中使用的值序列，要么是颜色矩阵的数字列表，根据要执行的颜色
+           变化类型进行不同的解释。"
+  :key-times "keyTimes 属性表示用于控制动画节奏的时间值列表。"
+  :key-splines "keySplines 属性定义与 keyTimes 列表关联的一组贝塞尔曲线
+                控制点，定义控制间隔节奏的三次贝塞尔函数"
+  :from "from 属性指示在动画期间将被修改的属性的初始值。"
+  :to "to 属性指示在动画期间将被修改的属性的最终值。"
+  :by "by 属性指定在动画期间将被修改的属性的相对偏移值。"
+  :additive "additive 属性控制动画是否为附加的。"
+  :accumulate "accumulate 属性控制动画是否为累积的。"
+  :view-box "viewBox 属性在用户空间中定义 SVG 视口的位置和尺寸。"
+  :preserve-aspect-ratio "preserveAspectRatio 属性指示具有提供给定纵横比的
+                          viewBox 的元素如何适合具有不同纵横比的视口。"}
+
+ :renderer.tool.impl.element.core
+ {:help "点击并拖动以创建元素。"}
+
+ :renderer.tool.impl.element.polyshape
+ {:add-points "点击添加更多点。"
+  :finalize-shape "双击完成形状。"
+  :create-tool "创建 %1"}
+
+ :renderer.tool.impl.element.rect
+ {:name "矩形"
+  :help [:div "按住 %1 锁定比例。"]
+  :create-rectangle "创建矩形"}
+
+ :renderer.tool.impl.element.svg
+ {:help [:div "按住 %1 锁定比例。"]
+  :create-svg "创建 SVG"}
+
+ :renderer.tool.impl.extension.blob
+ {:create-blob "创建 blob"}
+
+ :renderer.tool.impl.misc.dropper
+ {:help "点击任何地方选择颜色。"
+  :pick-color "选择颜色"}
+
+ :renderer.tool.impl.misc.fill
+ {:help "点击元素进行填充。"
+  :fill "填充"}
+
+ :renderer.tool.impl.misc.measure
+ {:help "点击并拖动测量距离。"}
+
+ :renderer.tool.impl.element.text
+ {:help "点击开始输入。"}
+
+ :renderer.attribute.impl.stroke-linecap
+ {:description "stroke-linecap 属性是一个表示属性，定义在描边开放子路径末端
+                使用的形状。"
+  :butt "平头"
+  :round "圆头"
+  :square "方头"}
+
+ :renderer.attribute.impl.stroke-linejoin
+ {:description "stroke-linejoin 属性是一个表示属性，定义在描边路径拐角处
+                使用的形状。"
+  :bevel "斜切"
+  :miter "尖角"
+  :round "圆角"}
+
+ :renderer.attribute.impl.overflow
+ {:description "overflow 属性设置当元素内容太大而无法适应其块格式化上下文时
+                该做什么。此功能尚未广泛实现。"
+  :hidden "隐藏"
+  :visible "可见"}
+
+ :renderer.attribute.impl.color
+ {:title "选择颜色"}
+
+ :renderer.attribute.impl.d
+ {:description "d 属性定义要绘制的路径。"
+  :edit "编辑路径"
+  :absolute "（绝对）"
+  :relative "（相对）"
+  :move-to "移动到"
+  :line-to "线条到"
+  :vertical-line "垂直线"
+  :horizontal-line "水平线"
+  :cubic-bezier "三次贝塞尔曲线"
+  :shortcut-cubic-bezier "简写三次贝塞尔曲线"
+  :quadratic-bezier-curve "二次贝塞尔曲线"
+  :shortcut-quadratic "简写二次贝塞尔曲线"
+  :elliptical-arc-curve "椭圆弧曲线"
+  :close-path "闭合路径"}
+
+ :renderer.attribute.impl.length
+ {:increase "增加"
+  :decrease "减少"}
+
+ :renderer.attribute.impl.font-family
+ {:description "font-family 属性指示将用于渲染文本的字体系列，指定为字体
+                系列名称和/或通用系列名称的优先级列表。"
+  :search-font "搜索字体"
+  :select-font "选择字体"
+  :no-local-font "未找到本地字体。"}
+
+ :renderer.attribute.impl.font-size
+ {:description "font-size 属性是指在多行布局环境中设置多行文本时从基线到
+                基线的字体大小。"}
+
+ :renderer.attribute.impl.font-weight
+ {:description "font-weight 属性是指用于渲染文本的字形的粗细或轻重，相对于
+                同一字体系列中的其他字体。"}
+
+ :renderer.tool.impl.base.edit
+ {:help-idle-drag [:div "拖动控制柄修改您的形状。"]
+  :help-idle-click [:div "点击元素更改选择"]
+  :help-edit [:div "按住 %1 限制方向。"]
+  :help-type [:div "输入您的文本。"]
+  :select-element "选择元素"
+  :edit "编辑"}
+
+ :renderer.tool.impl.base.transform
+ {:idle-click [:div "点击选择元素或拖动按区域选择。"]
+  :idle-hold [:div "按住 %1 向选择中添加或移除元素。"]
+  :select [:div "按住 %1 选择相交元素。"]
+  :select-element "选择元素"
+  :deselect-element "取消选择元素"
+  :translate [:div "按住 %1 限制方向，%2 进行克隆。"]
+  :clone [:div "按住 %1 限制方向。或释放 %2 进行移动"]
+  :scale [:div "按住 %1 锁定比例，%2 就地缩放，%3 同时缩放子级。"]
+  :move-selection-up "向上移动选择"
+  :move-selection-down "向下移动选择"
+  :move-selection-left "向左移动选择"
+  :move-selection-right "向右移动选择"
+  :modify-selection "修改选择"
+  :move-selection "移动选择"
+  :scale-selection "缩放选择"
+  :clone-selection "克隆选择"}
+
+ :renderer.tool.impl.base.pan
+ {:idle-help "点击并拖动进行平移。"
+  :pan-help "拖动进行平移。"}
+
+ :renderer.tool.impl.base.zoom
+ {:zoom-in [:div "点击或选择区域进行放大。"]
+  :zoom-out [:div "按住 %1 进行缩小。"]}
+
+ :renderer.tool.impl.draw.brush
+ {:draw-brush "画笔绘制"}
+
+ :renderer.tool.impl.draw.pen
+ {:draw-line "绘制线条"}
+
+ :renderer.tool.impl.draw.core
+ {:help "点击并拖动进行绘制。"}
+
+ :renderer.tool.impl.element.circle
+ {:create-circle "创建圆形"}
+
+ :renderer.tool.impl.element.ellipse
+ {:create-ellipse "创建椭圆"
+  :help [:div "按住 %1 锁定比例。"]}
+
+ :renderer.tool.impl.element.line
+ {:create-line "创建线条"}
+
+ :renderer.document.events
+ {:save-changes "您要保存更改吗？"
+  :create-doc "创建文档"
+  :create-doc-from-template "从模板创建文档"
+  :load-doc "加载文档"
+  :error-loading "加载 %1 时出错"
+  :unsupported-or-corrupted "文件似乎不受支持或已损坏。"}
+
+ :renderer.document.views
+ {:new "新建"
+  :open "打开"
+  :open-directory "打开包含目录"
+  :save "保存"
+  :undo "撤销"
+  :redo "重做"
+  :close "关闭"
+  :close-doc "关闭文档"
+  :close-all "关闭全部"
+  :close-saved "关闭已保存"
+  :close-others "关闭其他"}
+
+ :renderer.window.views
+ {:minimize "最小化"
+  :maximize "最大化"
+  :restore "还原"
+  :close "关闭"
+  :theme "主题模式 - %1"}
+
+ :renderer.toolbar.tools
+ {:transform "变换"
+  :edit "编辑"
+  :pan "平移"
+  :zoom "缩放"
+  :svg "SVG"
+  :circle "圆形"
+  :ellipse "椭圆"
+  :rectangle "矩形"
+  :line "线条"
+  :polyline "折线"
+  :polygon "多边形"
+  :image "图像"
+  :text "文本"
+  :blob "Blob"
+  :brush "画笔"
+  :pen "钢笔"
+  :dropper "滴管"
+  :fill "填充"
+  :measure "测量"}
+
+ :renderer.toolbar.status
+ {:select-zoom "选择缩放级别"
+  :zoom "缩放"
+  :zoom-out "缩小"
+  :zoom-in "放大"
+  :zoom-set-50 "设置为 50%"
+  :zoom-set-100 "设置为 100%"
+  :zoom-set-200 "设置为 200%"
+  :zoom-focus-selected "聚焦选择"
+  :zoom-fit-selected "适合选择"
+  :zoom-fill-selected "填充选择"
+  :timeline "时间轴"
+  :grid "网格"
+  :rulers "标尺"
+  :history "历史"
+  :xml "XML"
+  :fill-color "选择填充颜色"
+  :stroke-color "选择描边颜色"
+  :swap-color "交换填充和描边"}
+
+ :renderer.snap.views
+ {:snap "吸附"
+  :snap-options "吸附选项"
+  :centers "中心"
+  :midpoints "中点"
+  :corners "角点"
+  :nodes "节点"
+  :to " 到 "}
+
+ :renderer.toolbar.object
+ {:bring-front "置于前面"
+  :send-back "置于后面"
+  :bring-forward "前移"
+  :send-backward "后移"
+  :group "成组"
+  :ungroup "取消成组"
+  :align-left "左对齐"
+  :align-center-hor "水平居中对齐"
+  :align-right "右对齐"
+  :align-top "顶部对齐"
+  :align-center-ver "垂直居中对齐"
+  :align-bottom "底部对齐"
+  :unite "合并"
+  :intersect "相交"
+  :subtract "差集"
+  :exclude "排除"
+  :divide "分割"}
+
+ :renderer.utils.bounds
+ {:bounds-corner "边界角点"
+  :bounds-center "边界中心"
+  :bounds-midpoint "边界中点"}
+
+ :renderer.history.events
+ {:clear-history "清除历史"}
+
+ :renderer.history.views
+ {:center-view "居中视图"
+  :clear-history "清除历史"
+  :action-cannot-undone "此操作无法撤销。"
+  :clear-history-description "您确定要清除文档历史吗？"
+  :select-element "选择元素"
+  :delete-selection "删除选择"}
+
+ :renderer.timeline.views
+ {:speed "速度"
+  :no-filter "无过滤器"
+  :filter "过滤器"
+  :grid-snap "网格吸附"
+  :guide-snap "参考线吸附"
+  :play "播放"
+  :replay "重播"
+  :pause "暂停"
+  :hide-timeline "隐藏时间轴"}}

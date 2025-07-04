@@ -18,7 +18,8 @@
     [:> DropdownMenu/Root
      [:> DropdownMenu/Trigger
       {:as-child true}
-      [:button.button.flex.gap-1.items-center.px-2.uppercase.text-muted.bg-primary
+      [:button.button
+       {:class "flex gap-1 items-center px-2 uppercase text-muted bg-primary font-mono"}
        (take 2 lang)
        [views/icon "chevron-down"]]]
      [:> DropdownMenu/Portal
@@ -40,7 +41,7 @@
            {:class "menu-item-indicator"}
            [views/icon "checkmark"]]
           [:div label]
-          [:span.text-muted id]])]]]))
+          [:span.text-muted.uppercase.font-mono (take 2 id)]])]]]))
 
 (defn button
   [{:keys [icon action class title]}]
