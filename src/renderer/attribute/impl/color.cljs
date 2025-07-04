@@ -30,7 +30,8 @@
       {:sideOffset 5
        :className "popover-content"
        :align "end"}
-      [:> ChromePicker
-       {:color (or v "")
-        :on-change-complete #(rf/dispatch [::element.events/set-attr k (.-hex %)])
-        :on-change #(rf/dispatch [::element.events/preview-attr k (.-hex %)])}]]]]])
+      [:div {:dir "ltr"}
+       [:> ChromePicker
+        {:color (or v "")
+         :on-change-complete #(rf/dispatch [::element.events/set-attr k (.-hex %)])
+         :on-change #(rf/dispatch [::element.events/preview-attr k (.-hex %)])}]]]]]])

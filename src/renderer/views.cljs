@@ -179,7 +179,8 @@
       :align "start"
       :side "top"
       :align-offset (:align-offset props)}
-     [:> PhotoshopPicker props]
+     [:div {:dir "ltr"}
+      [:> PhotoshopPicker props]]
      [:> Popover/Arrow {:class "popover-arrow"}]]]])
 
 (def cm-defaults

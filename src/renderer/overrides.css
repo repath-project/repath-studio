@@ -49,9 +49,9 @@
     }
 
     >div:nth-child(3) {
-      @apply bg-primary! w-full!;
+      @apply bg-primary!;
       padding-top: 9px !important;
-
+      width: 120px !important;
       >div:last-child {
         right: 5px !important;
         top: 7px !important;
