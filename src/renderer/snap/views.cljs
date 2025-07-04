@@ -42,6 +42,7 @@
                           (rf/dispatch [::snap.events/toggle-option option]))
            :checked (contains? options option)}
           [:> DropdownMenu/ItemIndicator
+           {:class "menu-item-indicator"}
            [views/icon "checkmark"]]
           (t [(keyword "renderer.snap.views" (name option)) (name option)])])]]]))
 
@@ -60,7 +61,8 @@
         margin (/ 15 zoom)
         point-label (-> nearest-neighbor meta :label)
         base-label (-> nearest-neighbor :base-point meta :label)
-        label (string/join (t [::to " to "]) (remove nil? [base-label point-label]))
+        label (string/join (t [::to " to "])
+                           (remove nil? [base-label point-label]))
         point (:point nearest-neighbor)]
     [:<>
      [utils.svg/times point]
