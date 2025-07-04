@@ -31,7 +31,7 @@
                         browser))]]
    [:div.text-2xs.mt-1
     (case version-added
-      true [:div.bg-success "all"]
+      true [:div.bg-success (t [::all "all"])]
       false [:div.bg-error "x"]
       nil [:div.bg-warning "?"]
       [:div.bg-success (str "≥" version-added)])]])

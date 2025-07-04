@@ -15,6 +15,7 @@
    [renderer.reepl.show-function :as show-function]
    [renderer.reepl.show-value :refer [show-value]]
    [renderer.reepl.subs :as s]
+   [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]
    [replumb.core :as replumb.core])
   (:require-macros
@@ -54,7 +55,9 @@
        (if repl-history? "chevron-down" "chevron-up")
        {:class "my-0.5 ml-0.5"
         :style {:height "16px"}
-        :title (if repl-history? "Hide command output" "Show command output")
+        :title (if repl-history?
+                 (t [::hide-command-output "Hide command output"])
+                 (t [::show-command-output "Show command output"]))
         :on-click #(rf/dispatch [::app.events/toggle-panel :repl-history])}]]]))
 
 (defmulti item (fn [i _opts] (:type i)))

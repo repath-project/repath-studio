@@ -1,10 +1,14 @@
 {:missing "Missing translation for :en-US"
 
  :renderer.app.views
- {:svg-description "Scalable Vector Graphics Manipulation"
+ {:lock "Lock"
+  :unlock "Unlock"
+  :svg-description "Scalable Vector Graphics Manipulation"
   :start "Start"
   :new "New"
+  :or "or"
   :open "Open"
+  :recent "Recent"
   :select-size "Select size"
   :select-template "Select template"
   :empty-canvas "Empty canvas"
@@ -13,6 +17,16 @@
   :website "Website"
   :source-code "Source Code"
   :changelog "Changelog"}
+
+ :renderer.tree.views
+ {:lock "Lock"
+  :unlock "Unlock"
+  :show "Show"
+  :hide "Hide"}
+
+ :renderer.reepl.views
+ {:hide-command-output "Hide command output"
+  :show-command-output "Show command output"}
 
  :renderer.app.events
  {:create-doc "Create document"}
@@ -262,7 +276,8 @@
   :set-text "Set text"}
 
  :renderer.attribute.views
- {:browser-compatibility "Browser compatibility"
+ {:all "all"
+  :browser-compatibility "Browser compatibility"
   :learn-more "Learn more"
   :specification "Specification"
   :applies-to "Applies to"
@@ -569,6 +584,7 @@
 
  :renderer.toolbar.status
  {:select-zoom "Select zoom level"
+  :zoom "Zoom"
   :zoom-out "Zoom out"
   :zoom-in "Zoom in"
   :zoom-set-50 "Set to 50%"
@@ -632,6 +648,8 @@
 
  :renderer.timeline.views
  {:speed "Speed"
+  :no-filter "No filter"
+  :filter "Filter"
   :grid-snap "Grid snap"
   :guide-snap "Guide snap"
   :play "Play"

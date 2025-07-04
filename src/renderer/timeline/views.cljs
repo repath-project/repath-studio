@@ -43,9 +43,9 @@
       [:> Select/Trigger
        {:class "button px-2 overlay rounded-sm"
         :id "animation-speed"
-        :aria-label "No a11y filter"}
+        :aria-label (t [::no-filter "No filter"])}
        [:> Select/Value
-        {:placeholder "Filter"}
+        {:placeholder (t [::filter "Filter"])}
         [:div.flex.gap-1.justify-between.items-center
          {:style {:min-width "50px"}}
          [:span (str speed "x")]

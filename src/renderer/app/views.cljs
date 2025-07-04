@@ -111,7 +111,9 @@
           [views/icon-button
            (if ruler-locked? "lock" "unlock")
            {:class "small hidden"
-            :title (if ruler-locked? "unlock" "lock")
+            :title (if ruler-locked?
+                     (t [::unlock "Unlock"])
+                     (t [::lock "Lock"]))
             :on-click #(rf/dispatch [::ruler.events/toggle-locked])}]]
          [:div.bg-primary.flex-1
           {:dir "ltr"}
@@ -246,7 +248,7 @@
           (t [::new "New"])]
          [views/shortcuts [::document.events/new]]
 
-         [:span "or"]
+         [:span (t [::or "or"])]
 
          [:> Select/Root
           {:onValueChange #(rf/dispatch [::document.events/new-from-template
@@ -287,7 +289,8 @@
          [views/shortcuts [::document.events/open nil]]]
 
         (when (seq recent-documents)
-          [:<> [:h2.mb-3.mt-8.text-2xl "Recent"]
+          [:<> [:h2.mb-3.mt-8.text-2xl
+                (t [::recent "Recent"])]
 
            (for [file-path (take 5 recent-documents)]
              ^{:key file-path}

@@ -118,7 +118,7 @@
   (let [value (utils.length/->fixed (* 100 zoom) (zoom-decimal-points zoom) false)]
     [:input.form-element.overlay.text-right.font-mono.p-1
      {:key zoom
-      :aria-label "Zoom"
+      :aria-label (t [::zoom "Zoom"])
       :type "number"
       :input-mode "decimal"
       :min "1"

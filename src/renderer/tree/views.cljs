@@ -17,6 +17,7 @@
    [renderer.tool.subs :as-alias tool.subs]
    [renderer.tree.events :as-alias tree.events]
    [renderer.utils.element :as utils.element]
+   [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]))
 
 (defn item-prop-toggle
@@ -159,8 +160,10 @@
        (when-let [icon (:icon (utils.element/properties el))]
          [views/icon icon {:class (when-not visible "opacity-60")}])
        [item-label el]]
-      [item-prop-toggle id locked :locked "lock" "unlock" "unlock" "lock"]
-      [item-prop-toggle id (not visible) :visible "eye-closed" "eye" "show" "hide"]]]))
+      [item-prop-toggle id locked :locked "lock" "unlock"
+       (t [::unlock "Unlock"]) (t [::lock "Lock"])]
+      [item-prop-toggle id (not visible) :visible "eye-closed" "eye"
+       (t [::show "Show"]) (t [::hide "Hide"])]]]))
 
 (defn item [el depth elements]
   (let [{:keys [selected children id]} el

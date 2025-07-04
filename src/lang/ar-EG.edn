@@ -1,10 +1,14 @@
 {:missing "ترجمة مفقودة لـ :ar-EG"
 
  :renderer.app.views
- {:svg-description "معالجة الرسوميات المتجهة القابلة للتحجيم"
+ {:lock "قفل"
+  :unlock "فتح"
+  :svg-description "معالجة الرسوميات المتجهة القابلة للتحجيم"
   :start "ابدأ"
   :new "جديد"
+  :or "أو"
   :open "فتح"
+  :recent "حديث"
   :select-size "اختيار الحجم"
   :select-template "اختيار قالب"
   :empty-canvas "لوحة رسم فارغة"
@@ -13,6 +17,16 @@
   :website "الموقع الإلكتروني"
   :source-code "الكود المصدري"
   :changelog "سجل التغييرات"}
+
+ :renderer.tree.views
+ {:lock "قفل"
+  :unlock "فتح"
+  :show "إظهار"
+  :hide "إخفاء"}
+
+ :renderer.reepl.views
+ {:hide-command-output "إخفاء مخرجات الأمر"
+  :show-command-output "إظهار مخرجات الأمر"}
 
  :renderer.app.events
  {:create-doc "إنشاء مستند"}
@@ -260,7 +274,8 @@
   :set-text "تعيين النص"}
 
  :renderer.attribute.views
- {:browser-compatibility "توافق المتصفح"
+ {:all "الكل"
+  :browser-compatibility "توافق المتصفح"
   :learn-more "تعلم المزيد"
   :specification "المواصفة"
   :applies-to "ينطبق على"
@@ -553,6 +568,7 @@
 
  :renderer.toolbar.status
  {:select-zoom "اختيار مستوى التكبير"
+  :zoom "تكبير"
   :zoom-out "تصغير"
   :zoom-in "تكبير"
   :zoom-set-50 "تعيين إلى 50%"
@@ -616,6 +632,8 @@
 
  :renderer.timeline.views
  {:speed "السرعة"
+  :no-filter "لا يوجد مرشح"
+  :filter "مرشح"
   :grid-snap "التقاط الشبكة"
   :guide-snap "التقاط الدليل"
   :play "تشغيل"
