@@ -1,5 +1,6 @@
 (ns renderer.window.views
   (:require
+   ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.subs]
    [renderer.document.subs :as-alias document.subs]
@@ -10,6 +11,36 @@
    [renderer.views :as views]
    [renderer.window.events :as-alias window.events]
    [renderer.window.subs :as-alias window.subs]))
+
+(defn language-dropdown
+  []
+  (let [lang @(rf/subscribe [::app.subs/lang])]
+    [:> DropdownMenu/Root
+     [:> DropdownMenu/Trigger
+      {:as-child true}
+      [:button.button.flex.gap-1.items-center.px-2.uppercase.text-muted.bg-primary
+       (take 2 lang)
+       [views/icon "chevron-down"]]]
+     [:> DropdownMenu/Portal
+      [:> DropdownMenu/Content
+       {:side "top"
+        :align "end"
+        :sideOffset 5
+        :position "popper"
+        :class "menu-content rounded-sm select-content"
+        :on-key-down #(.stopPropagation %)
+        :on-escape-key-down #(.stopPropagation %)}
+       (for [{:keys [id label action checked]} (menubar.views/languages-submenu)]
+         ^{:key id}
+         [:> DropdownMenu/CheckboxItem
+          {:class "menu-checkbox-item inset"
+           :on-select #(rf/dispatch action)
+           :checked checked}
+          [:> DropdownMenu/ItemIndicator
+           {:class "menu-item-indicator"}
+           [views/icon "checkmark"]]
+          [:div label]
+          [:span.text-muted id]])]]]))
 
 (defn button
   [{:keys [icon action class title]}]
@@ -64,11 +95,13 @@
       title-bar]
      [:div.flex.h-full.flex-1.drag]
      [:div.flex
-      [button
-       {:action [::theme.events/cycle-mode]
-        :title (t [::theme "Theme mode - %1"] [theme-mode])
-        :icon theme-mode
-        :class "bg-primary"}]
+      [:div.flex.gap-px
+       [language-dropdown]
+       [button
+        {:action [::theme.events/cycle-mode]
+         :title (t [::theme "Theme mode - %1"] [theme-mode])
+         :icon theme-mode
+         :class "bg-primary"}]]
       (when (and electron?
                  (not fullscreen?)
                  (not mac?))
