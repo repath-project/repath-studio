@@ -8,7 +8,7 @@
    [renderer.element.subs :as-alias element.subs]
    [renderer.event.impl.drag :as event.impl.drag]
    [renderer.event.impl.keyboard :as event.impl.keyboard]
-   [renderer.event.impl.pointer :as event.pointer]
+   [renderer.event.impl.pointer :as event.impl.pointer]
    [renderer.frame.subs :as-alias frame.subs]
    [renderer.menubar.filters :as filters]
    [renderer.ruler.views :as ruler.views]
@@ -39,7 +39,7 @@
         cached-tool @(rf/subscribe [::tool.subs/cached])
         rotate @(rf/subscribe [::document.subs/rotate])
         grid @(rf/subscribe [::app.subs/grid])
-        pointer-handler #(event.pointer/handler! % el)
+        pointer-handler #(event.impl.pointer/handler! % el)
         snap? @(rf/subscribe [::snap.subs/active?])
         nearest-neighbor @(rf/subscribe [::snap.subs/nearest-neighbor])
         snapped-el-id (-> nearest-neighbor meta :id)

@@ -15,7 +15,7 @@
     (let [{:keys [x y id]} el
           zoom @(rf/subscribe [::document.subs/zoom])
           clicked-element @(rf/subscribe [::app.subs/clicked-element])
-          pointer-handler #(event.pointer/handler! % el)]
+          pointer-handler #(event.impl.pointer/handler! % el)]
       (into [:circle {:key id
                       :cx x
                       :cy y
