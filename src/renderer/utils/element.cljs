@@ -82,7 +82,9 @@
 (defn normalize-attrs
   [el]
   (-> el
-      (update :attrs update-keys utils.attribute/->camel-case-memo)
+      ;; FIXME: This is a temporary fix to avoid issues with camelCase attributes
+      ;; that also have a kebab-case equivalent.
+      #_(update :attrs update-keys utils.attribute/->camel-case-memo)
       (update :attrs update-vals str)))
 
 (m/=> supported-attr? [:-> Element keyword? boolean?])
