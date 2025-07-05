@@ -420,7 +420,9 @@
   :fill "Rellenar"}
 
  :renderer.tool.impl.misc.measure
- {:help "Haga clic y arrastre para medir una distancia."}
+ {:help "Haga clic y arrastre para medir una distancia."
+  :measure-end "fin de medición"
+  :measure-start "inicio de medición"}
 
  :renderer.tool.impl.element.text
  {:help "Haga clic para comenzar a escribir."}
@@ -447,7 +449,7 @@
   :visible "Visible"}
 
  :renderer.attribute.impl.color
- {:title "Elegir color"}
+ {:pick-color "Elegir color"}
 
  :renderer.attribute.impl.d
  {:description "El atributo d define un trazado a dibujar."
@@ -513,6 +515,7 @@
   :modify-selection "Modificar selección"
   :move-selection "Mover selección"
   :scale-selection "Escalar selección"
+  :scale-handle "control de escalado"
   :clone-selection "Clonar selección"}
 
  :renderer.tool.impl.base.pan
@@ -533,7 +536,9 @@
  {:help "Haga clic y arrastre para dibujar."}
 
  :renderer.tool.impl.element.circle
- {:create-circle "Crear círculo"}
+ {:create-circle "Crear círculo"
+  :circle-radius "radio del círculo"
+  :circle-center "centro del círculo"}
 
  :renderer.tool.impl.element.ellipse
  {:create-ellipse "Crear elipse"

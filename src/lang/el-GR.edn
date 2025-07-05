@@ -435,7 +435,9 @@
   :fill "Γέμισμα"}
 
  :renderer.tool.impl.misc.measure
- {:help "Κάντε κλικ και σύρετε για να μετρήσετε μια απόσταση."}
+ {:help "Κάντε κλικ και σύρετε για να μετρήσετε μια απόσταση."
+  :measure-end "τέλος μέτρησης"
+  :measure-start "αρχή μέτρησης"}
 
  :renderer.attribute.impl.stroke-linecap
  {:description "To χαρακτηριστικό stroke-linecap είναι μια ιδιότητα παρουσίασης που
@@ -464,7 +466,7 @@
   :visible "Ορατό"}
 
  :renderer.attribute.impl.color
- {:title "Επιλέξτε χρώμα"}
+ {:pick-color "Επιλέξτε χρώμα"}
 
  :renderer.attribute.impl.d
  {:description "To χαρακτηριστικό d καθορίζει τη διαδρομή που θα σχεδιαστεί."
@@ -532,7 +534,8 @@
   :modify-selection "Τροποποίηση επιλογής"
   :move-selection "Μετακίνηση επιλογής"
   :scale-selection "Κλιμάκωση επιλογής"
-  :clone-selection "Κλωνοποίηση επιλογής"}
+  :clone-selection "Κλωνοποίηση επιλογής"
+  :scale-handle "λαβή κλίμακας"}
 
  :renderer.tool.impl.base.pan
  {:idle-help "Κάντε κλικ και σύρετε για μετατόπιση."
@@ -552,7 +555,9 @@
  {:help "Κάντε κλικ και σύρετε για να σχεδιάσετε."}
 
  :renderer.tool.impl.element.circle
- {:create-circle "Δημιουργία κύκλου"}
+ {:create-circle "Δημιουργία κύκλου"
+  :circle-radius "ακτίνα κύκλου"
+  :circle-center "κέντρο κύκλου"}
 
  :renderer.tool.impl.element.ellipse
  {:create-ellipse "Δημιουργία έλλειψης"

@@ -419,7 +419,9 @@
   :fill "Preencher"}
 
  :renderer.tool.impl.misc.measure
- {:help "Clique e arraste para medir uma distância."}
+ {:help "Clique e arraste para medir uma distância."
+  :measure-end "fim da medição"
+  :measure-start "início da medição"}
 
  :renderer.tool.impl.element.text
  {:help "Clique para começar a escrever."}
@@ -446,7 +448,7 @@
   :visible "Visível"}
 
  :renderer.attribute.impl.color
- {:title "Escolher cor"}
+ {:pick-color "Escolher cor"}
 
  :renderer.attribute.impl.d
  {:description "O atributo d define um caminho a desenhar."
@@ -512,6 +514,7 @@
   :modify-selection "Modificar seleção"
   :move-selection "Mover seleção"
   :scale-selection "Escalar seleção"
+  :scale-handle "controlo de escala"
   :clone-selection "Clonar seleção"}
 
  :renderer.tool.impl.base.pan
@@ -532,7 +535,9 @@
  {:help "Clique e arraste para desenhar."}
 
  :renderer.tool.impl.element.circle
- {:create-circle "Criar círculo"}
+ {:create-circle "Criar círculo"
+  :circle-radius "raio do círculo"
+  :circle-center "centro do círculo"}
 
  :renderer.tool.impl.element.ellipse
  {:create-ellipse "Criar elipse"

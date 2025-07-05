@@ -299,9 +299,9 @@
   :x1 "L'attribut x1 est utilisé pour spécifier la première coordonnée x pour dessiner
        un élément SVG qui nécessite plus d'une coordonnée. Les éléments qui n'ont besoin
        que d'une coordonnée utilisent l'attribut x à la place."
-  :y1 "L'attribut y1 est utilisé pour spécifier la première coordonnée y pour dessiner
-       un élément SVG qui nécessite plus d'une coordonnée. Les éléments qui n'ont besoin
-       que d'une coordonnée utilisent l'attribut y à la place."
+  :y1 "L'attribut y1 est utilisé pour spécifier la première coordonnée y pour dessiner un
+       élément SVG qui nécessite plus d'une coordonnée. Les éléments qui n'ont besoin que
+       d'une coordonnée utilisent l'attribut y à la place."
   :x2 "L'attribut x2 est utilisé pour spécifier la deuxième coordonnée x pour dessiner un
        élément SVG qui nécessite plus d'une coordonnée. Les éléments qui n'ont besoin
        que d'une coordonnée utilisent l'attribut x à la place."
@@ -421,7 +421,9 @@
   :fill "Remplir"}
 
  :renderer.tool.impl.misc.measure
- {:help "Cliquez et faites glisser pour mesurer une distance."}
+ {:help "Cliquez et faites glisser pour mesurer une distance."
+  :measure-end "fin de mesure"
+  :measure-start "début de mesure"}
 
  :renderer.tool.impl.element.text
  {:help "Cliquez pour commencer à taper."}
@@ -449,7 +451,7 @@
   :visible "Visible"}
 
  :renderer.attribute.impl.color
- {:title "Choisir une couleur"}
+ {:pick-color "Choisir une couleur"}
 
  :renderer.attribute.impl.d
  {:description "L'attribut d définit un chemin à dessiner."
@@ -515,6 +517,7 @@
   :modify-selection "Modifier la sélection"
   :move-selection "Déplacer la sélection"
   :scale-selection "Redimensionner la sélection"
+  :scale-handle "poignée de redimensionnement"
   :clone-selection "Cloner la sélection"}
 
  :renderer.tool.impl.base.pan
@@ -535,7 +538,9 @@
  {:help "Cliquez et faites glisser pour dessiner."}
 
  :renderer.tool.impl.element.circle
- {:create-circle "Créer un cercle"}
+ {:create-circle "Créer un cercle"
+  :circle-radius "rayon du cercle"
+  :circle-center "centre du cercle"}
 
  :renderer.tool.impl.element.ellipse
  {:create-ellipse "Créer une ellipse"

@@ -396,7 +396,9 @@
   :fill "ملء"}
 
  :renderer.tool.impl.misc.measure
- {:help "انقر واسحب لقياس مسافة."}
+ {:help "انقر واسحب لقياس مسافة."
+  :measure-end "نهاية القياس"
+  :measure-start "بداية القياس"}
 
  :renderer.tool.impl.element.text
  {:help "انقر لبدء الكتابة."}
@@ -423,7 +425,7 @@
   :visible "مرئي"}
 
  :renderer.attribute.impl.color
- {:title "اختيار لون"}
+ {:pick-color "اختيار لون"}
 
  :renderer.attribute.impl.d
  {:description "خاصية d تحدد مساراً ليتم رسمه."
@@ -488,6 +490,7 @@
   :modify-selection "تعديل التحديد"
   :move-selection "تحريك التحديد"
   :scale-selection "تحجيم التحديد"
+  :scale-handle "مقبض التحجيم"
   :clone-selection "استنساخ التحديد"}
 
  :renderer.tool.impl.base.pan
@@ -508,7 +511,9 @@
  {:help "انقر واسحب للرسم."}
 
  :renderer.tool.impl.element.circle
- {:create-circle "إنشاء دائرة"}
+ {:create-circle "إنشاء دائرة"
+  :circle-radius "نصف قطر الدائرة"
+  :circle-center "مركز الدائرة"}
 
  :renderer.tool.impl.element.ellipse
  {:create-ellipse "إنشاء قطع ناقص"

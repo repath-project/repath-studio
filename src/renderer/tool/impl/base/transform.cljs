@@ -406,7 +406,7 @@
         [(with-meta
            (matrix/add [(:x el) (:y el)]
                        (tool.handlers/pointer-delta db))
-           {:label "scale handle"})])
+           {:label #(t [::scale-handle "scale handle"])})])
 
       (not= (:state db) :idle)
       (cond-> (element.handlers/snapping-points db (filter :visible selected))

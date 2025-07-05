@@ -49,7 +49,7 @@
 (defn root
   []
   [:button.icon-button.items-center.px-1.gap-1.w-auto.flex
-   {:title "Snap"
+   {:title (t [::snap "Snap"])
     :class (when @(rf/subscribe [::snap.subs/active?]) "accent")
     :on-click #(rf/dispatch [::snap.events/toggle])}
    [views/icon "magnet"]
@@ -62,7 +62,12 @@
         point-label (-> nearest-neighbor meta :label)
         base-label (-> nearest-neighbor :base-point meta :label)
         label (string/join (t [::to " to "])
-                           (remove nil? [base-label point-label]))
+                           (remove nil? [(if (string? base-label)
+                                           base-label
+                                           (base-label))
+                                         (if (string? point-label)
+                                           point-label
+                                           (point-label))]))
         point (:point nearest-neighbor)]
     [:<>
      [utils.svg/times point]

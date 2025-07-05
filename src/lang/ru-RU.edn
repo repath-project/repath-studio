@@ -425,7 +425,9 @@
   :fill "Заливка"}
 
  :renderer.tool.impl.misc.measure
- {:help "Щёлкните и перетащите для измерения расстояния."}
+ {:help "Щёлкните и перетащите для измерения расстояния."
+  :measure-end "конец измерения"
+  :measure-start "начало измерения"}
 
  :renderer.tool.impl.element.text
  {:help "Щёлкните для начала ввода."}
@@ -455,7 +457,7 @@
   :visible "Видимый"}
 
  :renderer.attribute.impl.color
- {:title "Выбрать цвет"}
+ {:pick-color "Выбрать цвет"}
 
  :renderer.attribute.impl.d
  {:description "Атрибут d определяет контур для рисования."
@@ -525,6 +527,7 @@
   :modify-selection "Изменить выделение"
   :move-selection "Переместить выделение"
   :scale-selection "Масштабировать выделение"
+  :scale-handle "ручка масштабирования"
   :clone-selection "Клонировать выделение"}
 
  :renderer.tool.impl.base.pan
@@ -545,7 +548,9 @@
  {:help "Щёлкните и перетащите для рисования."}
 
  :renderer.tool.impl.element.circle
- {:create-circle "Создать круг"}
+ {:create-circle "Создать круг"
+  :circle-radius "радиус круга"
+  :circle-center "центр круга"}
 
  :renderer.tool.impl.element.ellipse
  {:create-ellipse "Создать эллипс"

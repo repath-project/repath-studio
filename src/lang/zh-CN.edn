@@ -375,7 +375,9 @@
   :fill "填充"}
 
  :renderer.tool.impl.misc.measure
- {:help "点击并拖动测量距离。"}
+ {:help "点击并拖动测量距离。"
+  :measure-end "测量终点"
+  :measure-start "测量起点"}
 
  :renderer.tool.impl.element.text
  {:help "点击开始输入。"}
@@ -401,7 +403,7 @@
   :visible "可见"}
 
  :renderer.attribute.impl.color
- {:title "选择颜色"}
+ {:pick-color "选择颜色"}
 
  :renderer.attribute.impl.d
  {:description "d 属性定义要绘制的路径。"
@@ -462,6 +464,7 @@
   :modify-selection "修改选择"
   :move-selection "移动选择"
   :scale-selection "缩放选择"
+  :scale-handle "缩放控制点"
   :clone-selection "克隆选择"}
 
  :renderer.tool.impl.base.pan
@@ -482,7 +485,9 @@
  {:help "点击并拖动进行绘制。"}
 
  :renderer.tool.impl.element.circle
- {:create-circle "创建圆形"}
+ {:create-circle "创建圆形"
+  :circle-radius "圆半径"
+  :circle-center "圆心"}
 
  :renderer.tool.impl.element.ellipse
  {:create-ellipse "创建椭圆"

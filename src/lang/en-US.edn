@@ -412,7 +412,9 @@
   :fill "Fill"}
 
  :renderer.tool.impl.misc.measure
- {:help "Click and drag to measure a distance."}
+ {:help "Click and drag to measure a distance."
+  :measure-end "measure end"
+  :measure-start "measure start"}
 
  :renderer.tool.impl.element.text
  {:help "Click to start typing."}
@@ -439,7 +441,7 @@
   :visible "Visible"}
 
  :renderer.attribute.impl.color
- {:title "Pick color"}
+ {:pick-color "Pick color"}
 
  :renderer.attribute.impl.d
  {:description "The d attribute defines a path to be drawn."
@@ -504,7 +506,8 @@
   :modify-selection "Modify selection"
   :move-selection "Move selection"
   :scale-selection "Scale selection"
-  :clone-selection "Clone selection"}
+  :clone-selection "Clone selection"
+  :scale-handle "scale handle"}
 
  :renderer.tool.impl.base.pan
  {:idle-help "Click and drag to pan."
@@ -524,7 +527,9 @@
  {:help "Click and drag to draw."}
 
  :renderer.tool.impl.element.circle
- {:create-circle "Create circle"}
+ {:create-circle "Create circle"
+  :circle-radius "circle radius"
+  :circle-center "circle center"}
 
  :renderer.tool.impl.element.ellipse
  {:create-ellipse "Create ellipse"

@@ -82,7 +82,9 @@
   [db]
   [(with-meta
      (:adjusted-pointer-pos db)
-     {:label (str "measure " (if @attrs "end" "start"))})])
+     {:label (if @attrs
+               #(t [::measure-end "measure end"])
+               #(t [::measure-start "measure start"]))})])
 
 (defmethod tool.hierarchy/snapping-elements :measure
   [db]

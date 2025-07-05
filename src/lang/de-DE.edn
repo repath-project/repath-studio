@@ -427,7 +427,9 @@
   :fill "Füllen"}
 
  :renderer.tool.impl.misc.measure
- {:help "Klicken und ziehen, um eine Entfernung zu messen."}
+ {:help "Klicken und ziehen, um eine Entfernung zu messen."
+  :measure-end "Messende"
+  :measure-start "Messanfang"}
 
  :renderer.tool.impl.element.text
  {:help "Klicken, um mit der Eingabe zu beginnen."}
@@ -457,7 +459,7 @@
   :visible "Sichtbar"}
 
  :renderer.attribute.impl.color
- {:title "Farbe wählen"}
+ {:pick-color "Farbe wählen"}
 
  :renderer.attribute.impl.d
  {:description "Das d-Attribut definiert einen zu zeichnenden Pfad."
@@ -525,6 +527,7 @@
   :modify-selection "Auswahl ändern"
   :move-selection "Auswahl verschieben"
   :scale-selection "Auswahl skalieren"
+  :scale-handle "Skalierungsgriff"
   :clone-selection "Auswahl klonen"}
 
  :renderer.tool.impl.base.pan
@@ -545,7 +548,9 @@
  {:help "Klicken und ziehen zum Zeichnen."}
 
  :renderer.tool.impl.element.circle
- {:create-circle "Kreis erstellen"}
+ {:create-circle "Kreis erstellen"
+  :circle-radius "Kreisradius"
+  :circle-center "Kreismittelpunkt"}
 
  :renderer.tool.impl.element.ellipse
  {:create-ellipse "Ellipse erstellen"
