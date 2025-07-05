@@ -22,7 +22,7 @@
      {:as-child true
       :disabled disabled}
      [:button.button.color-drip.inline-block
-      {:title (t [::title "Pick color"])
+      {:title (t [::pick-color "Pick color"])
        :style {:border "5px solid var(--bg-primary)"
                :background v}}]]
     [:> Popover/Portal
