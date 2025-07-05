@@ -62,12 +62,14 @@
         point-label (-> nearest-neighbor meta :label)
         base-label (-> nearest-neighbor :base-point meta :label)
         label (string/join (t [::to " to "])
-                           (remove nil? [(if (string? base-label)
-                                           base-label
-                                           (base-label))
-                                         (if (string? point-label)
-                                           point-label
-                                           (point-label))]))
+                           (remove nil? [(when base-label
+                                           (if (string? base-label)
+                                             base-label
+                                             (base-label)))
+                                         (when point-label
+                                           (if (string? point-label)
+                                             point-label
+                                             (point-label)))]))
         point (:point nearest-neighbor)]
     [:<>
      [utils.svg/times point]
