@@ -69,7 +69,7 @@
         base-label (-> nearest-neighbor :base-point meta :label)
         label
         (->> [base-label point-label]
-             (get-label)
+             (map get-label)
              (remove nil?)
              (string/join (t [::to " to "])))
         point (:point nearest-neighbor)]
