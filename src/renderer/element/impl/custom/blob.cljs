@@ -17,7 +17,7 @@
    [renderer.utils.element :as utils.element]
    [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]
-   [renderer.utils.svg :as utils.svg] 
+   [renderer.utils.svg :as utils.svg]
    [renderer.views :as views]))
 
 (derive :blob ::element.hierarchy/renderable)
@@ -44,7 +44,7 @@
     [:div.flex.flex-row.gap-px.w-full
      [attribute.views/form-input k v (merge attrs {:placeholder 0})]
      [:button.form-control-button
-      {:title "Generate random seed"
+      {:title (t [::generate-random-seed "Generate random seed"])
        :disabled disabled
        :on-click #(rf/dispatch [::element.events/set-attr k random-seed])}
       [views/icon "refresh"]]]))

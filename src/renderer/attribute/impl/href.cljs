@@ -11,6 +11,7 @@
    [renderer.notification.events :as-alias notification.events]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.subs :as-alias tool.subs]
+   [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]))
 
 (defmethod attribute.hierarchy/description [:default :href]
@@ -30,7 +31,7 @@
                      (not v)
                      (not state-default?))}]
      [:button.form-control-button
-      {:title "Select file"
+      {:title (t [::select-file "Select file"])
        :disabled disabled
        :on-click #(rf/dispatch
                    [::events/file-open

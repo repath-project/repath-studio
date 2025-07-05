@@ -116,4 +116,4 @@
           (let [offset (utils.element/offset el)
                 pos (matrix/add offset pos)]
             ^{:key (str (:id el) "-centroid")}
-            [utils.svg/dot pos [:title "Centroid"]]))])]))
+            [utils.svg/dot pos [:title (t [::centroid "Centroid"])]]))])]))

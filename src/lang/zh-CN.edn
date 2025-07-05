@@ -240,7 +240,8 @@
   :extra-points "实际点数将是 `3 + 额外点数`。"
   :randomness "增加点位置的变化量。"
   :size "边界框的大小。"
-  :description "基于矢量的 blob。"}
+  :description "基于矢量的 blob。"
+  :generate-random-seed "生成随机种子"}
 
  :renderer.element.impl.custom.brush
  {:name "画笔"
@@ -446,7 +447,8 @@
   :help-edit [:div "按住 %1 限制方向。"]
   :help-type [:div "输入您的文本。"]
   :select-element "选择元素"
-  :edit "编辑"}
+  :edit "编辑"
+  :centroid "质心"}
 
  :renderer.tool.impl.base.transform
  {:idle-click [:div "点击选择元素或拖动按区域选择。"]
@@ -618,4 +620,16 @@
   :play "播放"
   :replay "重播"
   :pause "暂停"
-  :hide-timeline "隐藏时间轴"}}
+  :hide-timeline "隐藏时间轴"}
+
+ :renderer.attribute.impl.angle
+ {:pick-angle "选择角度"}
+
+ :renderer.attribute.impl.href
+ {:select-file "选择文件"}
+
+ :renderer.attribute.impl.points
+ {:edit-points "编辑点"}
+
+ :renderer.frame.views
+ {:main-canvas "主画布"}}

@@ -247,7 +247,8 @@
   :extra-points "Le nombre réel de points sera `3 + pointsSupplementaires`."
   :randomness "Augmente la quantité de variation dans la position des points."
   :size "La taille de la boîte englobante."
-  :description "Blob basé sur des vecteurs."}
+  :description "Blob basé sur des vecteurs."
+  :generate-random-seed "Générer une graine aléatoire"}
 
  :renderer.element.impl.custom.brush
  {:name "Pinceau"
@@ -497,7 +498,8 @@
   :help-edit [:div "Maintenez %1 pour restreindre la direction."]
   :help-type [:div "Entrez votre texte."]
   :select-element "Sélectionner l'élément"
-  :edit "Éditer"}
+  :edit "Éditer"
+  :centroid "Centroïde"}
 
  :renderer.tool.impl.base.transform
  {:idle-click [:div "Cliquez pour sélectionner un élément ou faites glisser pour
@@ -671,4 +673,16 @@
   :play "Jouer"
   :replay "Rejouer"
   :pause "Pause"
-  :hide-timeline "Masquer la chronologie"}}
+  :hide-timeline "Masquer la chronologie"}
+
+ :renderer.attribute.impl.angle
+ {:pick-angle "Choisir un angle"}
+
+ :renderer.attribute.impl.href
+ {:select-file "Sélectionner un fichier"}
+
+ :renderer.attribute.impl.points
+ {:edit-points "Éditer les points"}
+
+ :renderer.frame.views
+ {:main-canvas "canevas principal"}}

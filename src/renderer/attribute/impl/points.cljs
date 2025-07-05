@@ -9,6 +9,7 @@
    [renderer.element.events :as-alias element.events]
    [renderer.tool.subs :as-alias tool.subs]
    [renderer.utils.attribute :as utils.utils.attribute]
+   [renderer.utils.i18n :refer [t]]
    [renderer.utils.vec :as utils.vec]
    [renderer.views :as views]))
 
@@ -41,7 +42,7 @@
   [points disabled]
   [:> Popover/Root {:modal true}
    [:> Popover/Trigger
-    {:title "Edit points"
+    {:title (t [::edit-points "Edit points"])
      :class "form-control-button"
      :disabled disabled}
     [views/icon "pencil"]]

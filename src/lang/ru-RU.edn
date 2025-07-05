@@ -249,7 +249,8 @@
   :extra-points "Фактическое количество точек будет `3 + дополнительныеТочки`."
   :randomness "Увеличивает количество вариации в позиции точек."
   :size "Размер ограничивающего прямоугольника."
-  :description "Blob на основе векторов."}
+  :description "Blob на основе векторов."
+  :generate-random-seed "Сгенерировать случайное зерно"}
 
  :renderer.element.impl.custom.brush
  {:name "Кисть"
@@ -504,7 +505,8 @@
   :help-edit [:div "Удерживайте %1 для ограничения направления."]
   :help-type [:div "Введите ваш текст."]
   :select-element "Выделить элемент"
-  :edit "Редактировать"}
+  :edit "Редактировать"
+  :centroid "Центроид"}
 
  :renderer.tool.impl.base.transform
  {:idle-click [:div "Щёлкните для выделения элемента или перетащите для
@@ -682,4 +684,16 @@
   :play "Воспроизвести"
   :replay "Повтор"
   :pause "Пауза"
-  :hide-timeline "Скрыть временную шкалу"}}
+  :hide-timeline "Скрыть временную шкалу"}
+
+ :renderer.attribute.impl.angle
+ {:pick-angle "Выбрать угол"}
+
+ :renderer.attribute.impl.href
+ {:select-file "Выбрать файл"}
+
+ :renderer.attribute.impl.points
+ {:edit-points "Редактировать точки"}
+
+ :renderer.frame.views
+ {:main-canvas "основной холст"}}

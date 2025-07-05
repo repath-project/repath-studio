@@ -247,7 +247,8 @@
   :extra-points "The actual number of points will be `3 + extraPoints`."
   :randomness "Increases the amount of variation in point position."
   :size "The size of the bounding box."
-  :description "Vector based blob."}
+  :description "Vector based blob."
+  :generate-random-seed "Generate random seed"}
 
  :renderer.element.impl.custom.brush
  {:name "Brush"
@@ -487,7 +488,8 @@
   :help-edit [:div "Hold %1 to restrict direction."]
   :help-type [:div "Enter your text."]
   :select-element "Select element"
-  :edit "Edit"}
+  :edit "Edit"
+  :centroid "Centroid"}
 
  :renderer.tool.impl.base.transform
  {:idle-click [:div "Click to select an element or drag to select by area. "]
@@ -660,4 +662,16 @@
   :play "Play"
   :replay "Replay"
   :pause "Pause"
-  :hide-timeline "Hide timeline"}}
+  :hide-timeline "Hide timeline"}
+
+ :renderer.attribute.impl.angle
+ {:pick-angle "Pick angle"}
+
+ :renderer.attribute.impl.href
+ {:select-file "Select file"}
+
+ :renderer.attribute.impl.points
+ {:edit-points "Edit points"}
+
+ :renderer.frame.views
+ {:main-canvas "main canvas"}}

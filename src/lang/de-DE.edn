@@ -249,7 +249,8 @@
   :extra-points "Die tatsächliche Anzahl der Punkte wird `3 + extraPoints` sein."
   :randomness "Erhöht die Menge der Variation in der Punktposition."
   :size "Die Größe der Begrenzungsbox."
-  :description "Vektorbasierter Blob."}
+  :description "Vektorbasierter Blob."
+  :generate-random-seed "Zufälligen Seed generieren"}
 
  :renderer.element.impl.custom.brush
  {:name "Pinsel"
@@ -505,7 +506,8 @@
   :help-edit [:div "Halten Sie %1, um die Richtung zu beschränken."]
   :help-type [:div "Geben Sie Ihren Text ein."]
   :select-element "Element auswählen"
-  :edit "Bearbeiten"}
+  :edit "Bearbeiten"
+  :centroid "Schwerpunkt"}
 
  :renderer.tool.impl.base.transform
  {:idle-click [:div "Klicken, um ein Element auszuwählen oder ziehen, um nach Bereich
@@ -682,4 +684,16 @@
   :play "Abspielen"
   :replay "Wiederholen"
   :pause "Pause"
-  :hide-timeline "Timeline ausblenden"}}
+  :hide-timeline "Timeline ausblenden"}
+
+ :renderer.attribute.impl.angle
+ {:pick-angle "Winkel auswählen"}
+
+ :renderer.attribute.impl.href
+ {:select-file "Datei auswählen"}
+
+ :renderer.attribute.impl.points
+ {:edit-points "Punkte bearbeiten"}
+
+ :renderer.frame.views
+ {:main-canvas "Hauptleinwand"}}

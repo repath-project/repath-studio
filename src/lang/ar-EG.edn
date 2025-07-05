@@ -245,7 +245,8 @@
   :extra-points "العدد الفعلي للنقاط سيكون `3 + extraPoints`."
   :randomness "يزيد من كمية التنوع في موضع النقطة."
   :size "حجم الصندوق المحيط."
-  :description "نقطة قائمة على المتجهات."}
+  :description "نقطة قائمة على المتجهات."
+  :generate-random-seed "توليد بذرة عشوائية"}
 
  :renderer.element.impl.custom.brush
  {:name "فرشاة"
@@ -471,7 +472,8 @@
   :help-edit [:div "اضغط %1 لتقييد الاتجاه."]
   :help-type [:div "أدخل النص الخاص بك."]
   :select-element "تحديد عنصر"
-  :edit "تحرير"}
+  :edit "تحرير"
+  :centroid "النقطة المركزية"}
 
  :renderer.tool.impl.base.transform
  {:idle-click [:div "انقر لتحديد عنصر أو اسحب للتحديد بالمنطقة. "]
@@ -644,4 +646,16 @@
   :play "تشغيل"
   :replay "إعادة تشغيل"
   :pause "إيقاف مؤقت"
-  :hide-timeline "إخفاء الجدول الزمني"}}
+  :hide-timeline "إخفاء الجدول الزمني"}
+
+ :renderer.attribute.impl.angle
+ {:pick-angle "اختيار زاوية"}
+
+ :renderer.attribute.impl.href
+ {:select-file "اختيار ملف"}
+
+ :renderer.attribute.impl.points
+ {:edit-points "تحرير النقاط"}
+
+ :renderer.frame.views
+ {:main-canvas "اللوحة الرئيسية"}}

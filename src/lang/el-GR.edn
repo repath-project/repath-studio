@@ -249,7 +249,8 @@
   :extra-points "Ο πραγματικός αριθμός των σημείων θα είναι `3 + extraPoints`"
   :randomness "Αυξάνει την ποσότητα της μεταβλητότητας στη θέση των σημείων."
   :size "Το μέγεθος του πλαισίου οριοθέτησης."
-  :description "Διανυσματικό blob."}
+  :description "Διανυσματικό blob."
+  :generate-random-seed "Δημιουργία τυχαίου seed"}
 
  :renderer.element.impl.custom.brush
  {:name "Πινέλο"
@@ -514,7 +515,8 @@
   :help-edit [:div "Κρατήστε %1 για να περιορίσετε την κατεύθυνση."]
   :help-type [:div "Εισάγετε κείμενο."]
   :select-element "Επιλογή στοιχείου"
-  :edit "Επεξεργασία"}
+  :edit "Επεξεργασία"
+  :centroid "Κέντρο μάζας"}
 
  :renderer.tool.impl.base.transform
  {:idle-click [:div "Κάντε κλικ για να επιλέξετε ένα στοιχείο ή σύρετε για να επιλέξετε
@@ -689,4 +691,16 @@
   :play "Αναπαραγωγή"
   :replay "Αναπαραγωγή ξανά"
   :pause "Παύση"
-  :hide-timeline "Κλείσιμο χρονολογίου"}}
+  :hide-timeline "Κλείσιμο χρονολογίου"}
+
+ :renderer.attribute.impl.angle
+ {:pick-angle "Επιλογή γωνίας"}
+
+ :renderer.attribute.impl.href
+ {:select-file "Επιλογή αρχείου"}
+
+ :renderer.attribute.impl.points
+ {:edit-points "Επεξεργασία σημείων"}
+
+ :renderer.frame.views
+ {:main-canvas "κύριος καμβάς"}}

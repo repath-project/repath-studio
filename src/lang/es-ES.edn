@@ -247,7 +247,8 @@
   :extra-points "El número real de puntos será `3 + puntosExtra`."
   :randomness "Aumenta la cantidad de variación en la posición de los puntos."
   :size "El tamaño del cuadro delimitador."
-  :description "Blob basado en vectores."}
+  :description "Blob basado en vectores."
+  :generate-random-seed "Generar semilla aleatoria"}
 
  :renderer.element.impl.custom.brush
  {:name "Pincel"
@@ -495,7 +496,8 @@
   :help-edit [:div "Mantenga %1 para restringir la dirección."]
   :help-type [:div "Ingrese su texto."]
   :select-element "Seleccionar elemento"
-  :edit "Editar"}
+  :edit "Editar"
+  :centroid "Centroide"}
 
  :renderer.tool.impl.base.transform
  {:idle-click [:div "Haga clic para seleccionar un elemento o arrastre para
@@ -670,4 +672,16 @@
   :play "Reproducir"
   :replay "Repetir"
   :pause "Pausar"
-  :hide-timeline "Ocultar línea de tiempo"}}
+  :hide-timeline "Ocultar línea de tiempo"}
+
+ :renderer.attribute.impl.angle
+ {:pick-angle "Elegir ángulo"}
+
+ :renderer.attribute.impl.href
+ {:select-file "Seleccionar archivo"}
+
+ :renderer.attribute.impl.points
+ {:edit-points "Editar puntos"}
+
+ :renderer.frame.views
+ {:main-canvas "lienzo principal"}}

@@ -61,13 +61,17 @@
                   :style {:outline 0
                           :background (-> el :attrs :fill)}}
      (for [el child-elements]
-       ^{:key (:id el)} [element.hierarchy/render el])
+       ^{:key (:id el)}
+       [element.hierarchy/render el])
 
-     [:defs
-      (map (fn [{:keys [id tag attrs]}] [:filter {:id id :key id} [tag attrs]])
-           filters/accessibility)]
+     (into [:defs]
+           (map (fn [{:keys [id tag attrs]}]
+                  [:filter {:id id :key id}
+                   [tag attrs]]))
+           filters/accessibility)
 
-     (when grid [ruler.views/grid])
+     (when grid
+       [ruler.views/grid])
 
      (when snap?
        [:<>
@@ -76,7 +80,8 @@
         (when nearest-neighbor
           [snap.views/canvas-label nearest-neighbor])])
 
-     (when-not read-only? [tool.hierarchy/render (or cached-tool active-tool)])]))
+     (when-not read-only?
+       [tool.hierarchy/render (or cached-tool active-tool)])]))
 
 (defmethod element.hierarchy/render-to-string :canvas
   [el]
