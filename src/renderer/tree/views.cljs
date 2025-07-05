@@ -50,6 +50,7 @@
           :default-value label
           :placeholder tag-label
           :auto-focus true
+          :on-focus #(.. % -target select)
           :on-key-down #(event.impl.keyboard/input-key-down-handler! % label
                                                                      set-item-label! id)
           :on-blur (fn [e]

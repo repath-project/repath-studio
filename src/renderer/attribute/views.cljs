@@ -106,7 +106,12 @@
             :class "rtl:text-right"
             :id (name k)
             :default-value v
-            :on-focus #(.. % -target select)
+            :on-pointer-up (fn [event]
+                             (let [target (.-target event)
+                                   start-pos (.-selectionStart target)
+                                   end-pos (.-selectionEnd target)]
+                               (when (= start-pos end-pos)
+                                 (.select target))))
             :placeholder (if v placeholder "multiple")
             :on-blur #(on-change-handler! % k v)
             :on-key-down #(event.impl.keyboard/input-key-down-handler!
@@ -182,7 +187,9 @@
                           (-> (camel-snake-kebab/->kebab-case-string k)
                               (string/replace "-" " ")
                               (string/capitalize))]))]
-     [:p (cond->> v (vector? v) (string/join " | "))]]))
+     [:p (cond->> v
+           (vector? v)
+           (string/join " | "))]]))
 
 (defn property-list
   [property]
@@ -214,12 +221,14 @@
        [:div.p-5
         [:h2.mb-4.text-lg k]
         (when (get-method attribute.hierarchy/description [dispatch-tag k])
-          [:p.text-pretty (attribute.hierarchy/description dispatch-tag k)])
+          [:p.text-pretty
+           (attribute.hierarchy/description dispatch-tag k)])
         (when (utils.attribute/compatibility tag k)
           [:<>
            (when property [property-list property])
            [caniusethis {:tag tag :attr k}]])]
-       [:> HoverCard/Arrow {:class "popover-arrow"}]]]]))
+       [:> HoverCard/Arrow
+        {:class "popover-arrow"}]]]]))
 
 (defn row
   [k v locked? tag]
