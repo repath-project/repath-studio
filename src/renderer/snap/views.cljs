@@ -55,21 +55,23 @@
    [views/icon "magnet"]
    [options-dropdown]])
 
+(defn get-label [label]
+  (when label
+    (if (string? label)
+      label
+      (label))))
+
 (defn canvas-label
   [nearest-neighbor]
   (let [zoom @(rf/subscribe [::document.subs/zoom])
         margin (/ 15 zoom)
         point-label (-> nearest-neighbor meta :label)
         base-label (-> nearest-neighbor :base-point meta :label)
-        label (string/join (t [::to " to "])
-                           (remove nil? [(when base-label
-                                           (if (string? base-label)
-                                             base-label
-                                             (base-label)))
-                                         (when point-label
-                                           (if (string? point-label)
-                                             point-label
-                                             (point-label)))]))
+        label
+        (->> [base-label point-label]
+             (get-label)
+             (remove nil?)
+             (string/join (t [::to " to "])))
         point (:point nearest-neighbor)]
     [:<>
      [utils.svg/times point]
