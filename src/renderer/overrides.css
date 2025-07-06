@@ -7,13 +7,11 @@
 
 .chrome-picker,
 .photoshop-picker {
-  background: transparent !important;
-  box-shadow: none !important;
-  color: var(--font-color) !important;
+  @apply text-color! bg-transparent! shadow-none!;
+  font-family: inherit !important;
 
   div {
-    border-width: 0 !important;
-    color: var(--font-color) !important;
+    @apply text-color! border-0!;
   }
 
   svg {
@@ -23,9 +21,7 @@
   }
 
   input {
-    color: var(--font-color) !important;
-    border: none !important;
-    box-shadow: none !important;
+    @apply text-color! border-0! shadow-none!;
   }
 }
 
