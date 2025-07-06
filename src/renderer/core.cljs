@@ -66,14 +66,11 @@
 ██████╔╝░░░██║░░░╚██████╔╝██████╔╝██║╚█████╔╝
 ╚═════╝░░░░╚═╝░░░░╚═════╝░╚═════╝░╚═╝░╚════╝░")
 
-(defonce root-el (atom nil))
+(defonce root (delay (ra.dom.client/create-root (.getElementById js/document "app"))))
 
 (defn ^:dev/after-load mount-root! []
-  (let [container (.getElementById js/document "app")]
-    (rf/clear-subscription-cache!)
-    (when @root-el (ra.dom.client/unmount @root-el))
-    (reset! root-el (ra.dom.client/create-root container))
-    (ra.dom.client/render @root-el [utils.error/boundary [app.views/root]])))
+  (rf/clear-subscription-cache!)
+  (ra.dom.client/render @root [utils.error/boundary [app.views/root]]))
 
 (defn bootstrap-cb! []
   (replumb/run-repl "(in-ns 'user)" identity)
