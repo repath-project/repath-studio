@@ -661,19 +661,25 @@
                           (root db)
                           (overlapping-svg db (element.hierarchy/bbox el)))))))
 
+(m/=> normalize [:-> map? Element])
+(defn normalize
+  [el]
+  (cond-> el
+    (not (string? (:content el)))
+    (dissoc :content)
+
+    :always
+    (-> (utils.map/remove-nils)
+        (utils.element/normalize-attrs)
+        (dissoc :locked)
+        (merge db/default))))
+
 (m/=> create [:-> App map? App])
 (defn create
   [db el]
   (let [id (random-uuid) ; REVIEW: Hard to use a coeffect because of recursion.
-        new-el (->> (cond-> el
-                      (not (string? (:content el)))
-                      (dissoc :content))
-                    (utils.map/remove-nils)
-                    (utils.element/normalize-attrs)
+        new-el (->> (assoc (normalize el) :id id)
                     (assoc-parent-id db))
-        new-el (-> new-el
-                   (dissoc :locked)
-                   (merge db/default {:id id}))
         child-els (-> (entities db (set (:children el)))
                       (vals)
                       (concat (:content el)))
