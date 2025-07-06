@@ -276,7 +276,7 @@
         (camel-snake-kebab/->camelCaseString)
         (keyword))))
 
-#_(def ->camel-case-memo (memoize ->camel-case))
+(def ->camel-case-memo (memoize ->camel-case))
 
 (m/=> ->attrs [:-> map? Attrs])
 (defn ->attrs
@@ -320,6 +320,6 @@
 (m/=> defaults-with-vals [:-> Tag Attrs])
 (defn defaults-with-vals
   [tag]
-  (into {}
-        (map (fn [[k v]]
-               [k (or (initial-memo tag k) v)])) (defaults-memo tag)))
+  (->> (defaults-memo tag)
+       (map (fn [[k v]] [k (or (initial-memo tag k) v)]))
+       (into {})))

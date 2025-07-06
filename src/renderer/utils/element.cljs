@@ -78,13 +78,22 @@
     tag
     (merge (utils.attribute/defaults-memo tag))))
 
-(m/=> normalize-attrs [:-> map? Element])
+(m/=> normalize-attr-key [:-> Element keyword? keyword?])
+(defn normalize-attr-key
+  "Converts an attribute key to a consistent format."
+  [el k]
+  (let [valid-attrs (set (keys (attributes el)))
+        kebab-case-k k
+        camel-case-k (utils.attribute/->camel-case-memo k)]
+    (cond
+      (contains? valid-attrs kebab-case-k) kebab-case-k
+      (contains? valid-attrs camel-case-k) camel-case-k
+      :else camel-case-k)))
+
 (defn normalize-attrs
   [el]
   (-> el
-      ;; FIXME: This is a temporary fix to avoid issues with camelCase attributes
-      ;; that also have a kebab-case equivalent.
-      #_(update :attrs update-keys utils.attribute/->camel-case-memo)
+      (update :attrs update-keys (partial normalize-attr-key el))
       (update :attrs update-vals str)))
 
 (m/=> supported-attr? [:-> Element keyword? boolean?])
@@ -149,7 +158,7 @@
 (m/=> style->map [:-> Attrs Attrs])
 (defn style->map
   "Converts :style attribute to map.
-   Parsing might through an exception. When that happens, we remove the attribute
+   Parsing might throw an exception. When that happens, we remove the attribute
    because there is no other way to handle this gracefully."
   [attrs]
   (try (cond-> (update attrs :style parse)
