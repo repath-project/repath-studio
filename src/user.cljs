@@ -233,7 +233,7 @@
 
 (defn ^:export at
   "Aligns the selected elements to the top."
-  [[]]
+  []
   (align :top))
 
 (defn ^:export ab
