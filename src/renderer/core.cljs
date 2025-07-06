@@ -70,7 +70,7 @@
 
 (defn ^:dev/after-load mount-root! []
   (rf/clear-subscription-cache!)
-  (ra.dom.client/render @root [utils.error/boundary [app.views/root]]))
+  (ra.dom.client/render @root [#'utils.error/boundary [app.views/root]]))
 
 (defn bootstrap-cb! []
   (replumb/run-repl "(in-ns 'user)" identity)
