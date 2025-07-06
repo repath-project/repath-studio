@@ -70,7 +70,7 @@
       (into (mapv #(with-meta % (merge (meta %) {:id (:id el)}))
                   (utils.bounds/->snapping-points (:bbox el) options))))))
 
-(m/=> attributes [:-> Element Attrs])
+(m/=> attributes [:-> map? map?])
 (defn attributes
   "Returns existing attributes merged with defaults."
   [{:keys [tag attrs]}]
@@ -78,28 +78,24 @@
     tag
     (merge (utils.attribute/defaults-memo tag))))
 
-(m/=> normalize-attr-key [:-> Element keyword? keyword?])
-(defn normalize-attr-key
-  "Converts an attribute key to a consistent format."
-  [el k]
-  (let [valid-attrs (set (keys (attributes el)))
-        kebab-case-k k
-        camel-case-k (utils.attribute/->camel-case-memo k)]
-    (cond
-      (contains? valid-attrs kebab-case-k) kebab-case-k
-      (contains? valid-attrs camel-case-k) camel-case-k
-      :else camel-case-k)))
-
-(defn normalize-attrs
-  [el]
-  (-> el
-      (update :attrs update-keys (partial normalize-attr-key el))
-      (update :attrs update-vals str)))
-
-(m/=> supported-attr? [:-> Element keyword? boolean?])
+(m/=> supported-attr? [:-> map? keyword? boolean?])
 (defn supported-attr?
   [el k]
   (-> el attributes k boolean))
+
+(m/=> normalize-attr-key [:-> map? keyword? keyword?])
+(defn normalize-attr-key
+  [el k]
+  (cond-> k
+    (not (supported-attr? el k))
+    utils.attribute/->camel-case-memo))
+
+(m/=> normalize-attrs [:-> map? Element])
+(defn normalize-attrs
+  [el]
+  (-> el
+      (update :attrs update-vals str)
+      (update :attrs update-keys (partial normalize-attr-key el))))
 
 (m/=> ->path [:-> Element Element])
 (defn ->path
