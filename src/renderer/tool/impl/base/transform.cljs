@@ -134,7 +134,10 @@
     (element.handlers/translate [-1 0])
 
     (= (:key e) "ArrowRight")
-    (element.handlers/translate [1 0])))
+    (element.handlers/translate [1 0])
+
+    (= (:key e) "Escape")
+    (history.handlers/reset-state)))
 
 (defmethod tool.hierarchy/on-key-up :transform
   [db e]
