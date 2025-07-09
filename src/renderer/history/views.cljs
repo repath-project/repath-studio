@@ -81,7 +81,7 @@
   (let [translate (.-translate target)
         zoom (.-zoom target)]
     (rf/dispatch-sync [::history.events/tree-view-updated zoom [(.-x translate)
-                                                           (.-y translate)]])))
+                                                                (.-y translate)]])))
 
 (defn center
   [ref]
