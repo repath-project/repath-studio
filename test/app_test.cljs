@@ -2,43 +2,14 @@
   (:require
    [cljs.test :refer-macros [deftest is testing]]
    [day8.re-frame.test :as rf.test]
+   [fixtures :as fixtures]
    [re-frame.core :as rf]
-   [renderer.app.effects :as-alias app.effects]
    [renderer.app.events :as-alias app.events]
    [renderer.app.subs :as-alias app.subs]))
 
-(defn test-fixtures
-  []
-  (rf/reg-fx
-   ::app.effects/get-local-db
-   (fn [{:keys [on-finally]}]
-     (rf/dispatch on-finally)))
-
-  (rf/reg-cofx
-   ::app.effects/language
-   (fn [coeffects _]
-     (assoc coeffects :language "en-US")))
-
-  (rf/reg-fx
-   ::app.effects/query-local-fonts
-   (fn [{:keys [on-success formatter]}]
-     (let [font-data (clj->js [{:family "Noto Sans"
-                                :fullName "Noto Sans Regular"
-                                :postscriptName "Noto-Sans-Regular"
-                                :style "Regular"}
-                               {:family "Adwaita Mono"
-                                :fullName "Adwaita Mono Bold"
-                                :postscriptName "Adwaita-Mono-Bold"
-                                :style "Bold"}
-                               {:family "Adwaita Mono"
-                                :fullName "Adwaita Mono Bold Italic"
-                                :postscriptName "Adwaita-Mono-Bold-Italic"
-                                :style "Bold Italic"}])]
-       (rf/dispatch (conj on-success (cond-> font-data formatter formatter)))))))
-
 (deftest app
   (rf.test/run-test-sync
-   (test-fixtures)
+   (fixtures/test-fixtures)
    (rf/dispatch [::app.events/initialize])
 
    (testing "language"
@@ -70,7 +41,7 @@
 
 (deftest fonts
   (rf.test/run-test-async
-   (test-fixtures)
+   (fixtures/test-fixtures)
    (rf/dispatch-sync [::app.events/initialize])
 
    (testing "loading system fonts"

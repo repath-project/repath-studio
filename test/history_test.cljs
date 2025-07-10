@@ -2,24 +2,17 @@
   (:require
    [cljs.test :refer-macros [deftest is testing]]
    [day8.re-frame.test :as rf.test]
+   [fixtures :as fixtures]
    [re-frame.core :as rf]
-   [renderer.app.effects :as-alias app.effects]
    [renderer.app.events :as-alias app.events]
    [renderer.element.events :as-alias element.events]
    [renderer.element.subs :as-alias element.subs]
    [renderer.history.events :as-alias history.events]
    [renderer.history.subs :as history.subs]))
 
-(defn test-fixtures
-  []
-  (rf/reg-fx
-   ::app.effects/get-local-db
-   (fn [{:keys [on-finally]}]
-     (rf/dispatch on-finally))))
-
 (deftest history
   (rf.test/run-test-sync
-   (test-fixtures)
+   (fixtures/test-fixtures)
    (rf/dispatch [::app.events/initialize])
 
    (let [undos? (rf/subscribe [::history.subs/undos?])

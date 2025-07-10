@@ -3,7 +3,6 @@
    [malli.instrument :as m.instrument]
    [re-frame.core :as rf]
    [re-frame.subs :as rf.subs]
-   [renderer.app.effects]
    [renderer.app.events :as app.events]
    [renderer.app.subs]
    [renderer.dialog.events]

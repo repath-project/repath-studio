@@ -2,22 +2,15 @@
   (:require
    [cljs.test :refer-macros [deftest is testing]]
    [day8.re-frame.test :as rf.test]
+   [fixtures :as fixtures]
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.events]
-   [renderer.theme.effects :as-alias theme.effects]
    [renderer.theme.events :as-alias theme.events]
    [renderer.theme.subs :as-alias theme.subs]))
 
-(defn test-fixtures
-  []
-  (rf/reg-cofx
-   ::theme.effects/native-mode
-   (fn [cofx _]
-     (assoc cofx :native-mode :light))))
-
 (deftest mode
   (rf.test/run-test-sync
-   (test-fixtures)
+   (fixtures/test-fixtures)
    (rf/dispatch [::app.events/initialize])
    (rf/dispatch [::theme.events/set-document-attr])
 
