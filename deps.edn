@@ -15,7 +15,7 @@
         org.slf4j/slf4j-nop {:mvn/version "2.0.17"}
         re-frame/re-frame {:mvn/version "1.4.3"}
         re-pressed/re-pressed {:mvn/version "0.3.2"}
-        reagent/reagent {:mvn/version "2.0.0-alpha1"}
+        reagent/reagent {:mvn/version "2.0.0-SNAPSHOT"}
         replumb/replumb {:mvn/version "0.2.4"}
         thheller/shadow-cljs {:mvn/version "3.1.7"}}
  :aliases
