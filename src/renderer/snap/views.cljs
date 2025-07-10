@@ -67,12 +67,10 @@
         margin (/ 15 zoom)
         point-label (-> nearest-neighbor meta :label)
         base-label (-> nearest-neighbor :base-point meta :label)
-        label
-        (->> [base-label point-label]
-             (map get-label)
-             (remove nil?)
-             (string/join (t [::to " to "])))
-        point (:point nearest-neighbor)]
+        point (:point nearest-neighbor)
+        label (->> [base-label point-label]
+                   (keep get-label)
+                   (string/join (t [::to " to "])))]
     [:<>
      [utils.svg/times point]
      (when (not-empty label)
