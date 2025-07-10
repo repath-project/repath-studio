@@ -96,6 +96,14 @@
                        ::element.events/set-attr
                        ::element.events/preview-attr) k new-v])))))
 
+(defn pointer-up-handler!
+  [event]
+  (let [target (.-target event)
+        start-pos (.-selectionStart target)
+        end-pos (.-selectionEnd target)]
+    (when (= start-pos end-pos)
+      (.select target))))
+
 (defn form-input
   [k v {:keys [disabled placeholder] :as attrs}]
   [:div.relative.flex.form-input.flex-1
@@ -106,12 +114,7 @@
             :class "rtl:text-right"
             :id (name k)
             :default-value v
-            :on-pointer-up (fn [event]
-                             (let [target (.-target event)
-                                   start-pos (.-selectionStart target)
-                                   end-pos (.-selectionEnd target)]
-                               (when (= start-pos end-pos)
-                                 (.select target))))
+            :on-pointer-up pointer-up-handler!
             :placeholder (if v placeholder "multiple")
             :on-blur #(on-change-handler! % k v)
             :on-key-down #(event.impl.keyboard/input-key-down-handler!
