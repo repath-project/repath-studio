@@ -102,7 +102,8 @@
       (-> (assoc-in [:snap :transient-active] true)
           (cond->
            (not (-> db :snap :active))
-            (snap.handlers/rebuild-tree)))
+            (-> (dissoc :nearest-neighbor)
+                (snap.handlers/rebuild-tree))))
 
       :always
       (tool.hierarchy/on-key-down e))
