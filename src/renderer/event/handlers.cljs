@@ -98,6 +98,10 @@
       (-> (assoc :cached-tool (:tool db))
           (tool.handlers/activate :pan))
 
+      (= (:key e) "Shift")
+      (-> (assoc-in [:snap :transient-active] true)
+          (snap.handlers/rebuild-tree))
+
       :always
       (tool.hierarchy/on-key-down e))
 
@@ -107,6 +111,9 @@
            (:cached-tool db))
       (-> (tool.handlers/activate (:cached-tool db))
           (dissoc :cached-tool))
+
+      (= (:key e) "Shift")
+      (assoc-in [:snap :transient-active] false)
 
       :always
       (tool.hierarchy/on-key-up e))

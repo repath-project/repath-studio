@@ -11,6 +11,12 @@
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.math :refer [Vec2]]))
 
+(m/=> active? [:-> App boolean?])
+(defn active?
+  [db]
+  (or (-> db :snap :active)
+      (-> db :snap :transient-active)))
+
 (m/=> toggle-option [:-> App SnapOption App])
 (defn toggle-option
   [db option]
@@ -28,7 +34,7 @@
 (m/=> update-nearest-neighbors [:-> App App])
 (defn update-nearest-neighbors
   [db]
-  (if-not (-> db :snap :active)
+  (if-not (active? db)
     db
     (let [zoom (get-in db [:documents (:active-document db) :zoom])
           threshold (-> db :snap :threshold)
@@ -42,7 +48,7 @@
 (m/=> update-viewport-tree [:-> App App])
 (defn update-viewport-tree
   [db]
-  (if-not (-> db :snap :active)
+  (if-not (active? db)
     db
     (let [[x y width height] (frame.handlers/viewbox db)
           boundaries [[x (+ x width)] [y (+ y height)]]]
@@ -53,7 +59,7 @@
 (m/=> rebuild-tree [:-> App App])
 (defn rebuild-tree
   [db]
-  (if (-> db :snap :active)
+  (if (active? db)
     (let [elements (tool.hierarchy/snapping-elements db)
           points (element.handlers/snapping-points db elements)
           points (cond-> points
@@ -98,7 +104,7 @@
 (m/=> snap-with [:-> App ifn? [:* any?] App])
 (defn snap-with
   [db f & more]
-  (if (-> db :snap :active)
+  (if (active? db)
     (let [db (update-nearest-neighbors db)]
       (if (:nearest-neighbor db)
         (apply f db (nearest-delta db) more)

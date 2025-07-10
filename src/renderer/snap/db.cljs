@@ -18,6 +18,7 @@
 
 (def Snap
   [:map {:closed true}
-   [:active {:default true} boolean?]
+   [:active {:default false} boolean?]
+   [:transient-active {:default false} boolean?]
    [:threshold {:default 15} number?]
    [:options {:default (set snap-options)} SnapOptions]])

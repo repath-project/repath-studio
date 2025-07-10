@@ -9,7 +9,9 @@
 (rf/reg-sub
  ::active?
  :<- [::snap]
- :-> :active)
+ (fn [snap _]
+   (or (:active snap)
+       (:transient-active snap))))
 
 (rf/reg-sub
  ::options
