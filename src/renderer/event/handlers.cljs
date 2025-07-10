@@ -100,7 +100,9 @@
 
       (= (:key e) "Shift")
       (-> (assoc-in [:snap :transient-active] true)
-          (snap.handlers/rebuild-tree))
+          (cond->
+           (not (-> db :snap :active))
+            (snap.handlers/rebuild-tree)))
 
       :always
       (tool.hierarchy/on-key-down e))
@@ -113,7 +115,10 @@
           (dissoc :cached-tool))
 
       (= (:key e) "Shift")
-      (assoc-in [:snap :transient-active] false)
+      (-> (assoc-in [:snap :transient-active] false)
+          (cond->
+           (not (-> db :snap :active))
+            (dissoc :nearest-neighbor)))
 
       :always
       (tool.hierarchy/on-key-up e))
