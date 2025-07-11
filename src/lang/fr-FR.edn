@@ -512,10 +512,6 @@
   :clone [:div "Maintenez %1 pour restreindre la direction. ou relâchez %2 pour déplacer"]
   :scale [:div "Maintenez %1 pour verrouiller les proportions, %2 pour redimensionner en
                 place, %3 pour aussi redimensionner les enfants."]
-  :move-selection-up "Déplacer la sélection vers le haut"
-  :move-selection-down "Déplacer la sélection vers le bas"
-  :move-selection-left "Déplacer la sélection vers la gauche"
-  :move-selection-right "Déplacer la sélection vers la droite"
   :modify-selection "Modifier la sélection"
   :move-selection "Déplacer la sélection"
   :scale-selection "Redimensionner la sélection"

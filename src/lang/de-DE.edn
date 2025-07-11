@@ -522,10 +522,6 @@
                 um zu verschieben"]
   :scale [:div "Halten Sie %1, um die Proportionen zu sperren, %2 zum Skalieren an Ort
                 und Stelle, %3 um auch Kinder zu skalieren."]
-  :move-selection-up "Auswahl nach oben verschieben"
-  :move-selection-down "Auswahl nach unten verschieben"
-  :move-selection-left "Auswahl nach links verschieben"
-  :move-selection-right "Auswahl nach rechts verschieben"
   :modify-selection "Auswahl ändern"
   :move-selection "Auswahl verschieben"
   :scale-selection "Auswahl skalieren"

@@ -485,10 +485,6 @@
   :clone [:div "اضغط %1 لتقييد الاتجاه. أو حرر %2 للتحريك"]
   :scale [:div "اضغط %1 لقفل النسب، %2 للتحجيم في المكان،
                   %3 لتحجيم العناصر الفرعية أيضاً."]
-  :move-selection-up "تحريك التحديد لأعلى"
-  :move-selection-down "تحريك التحديد لأسفل"
-  :move-selection-left "تحريك التحديد لليسار"
-  :move-selection-right "تحريك التحديد لليمين"
   :modify-selection "تعديل التحديد"
   :move-selection "تحريك التحديد"
   :scale-selection "تحجيم التحديد"

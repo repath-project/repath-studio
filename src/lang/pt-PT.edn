@@ -509,10 +509,6 @@
   :clone [:div "Mantenha %1 para restringir direção. ou solte %2 para mover"]
   :scale [:div "Mantenha %1 para bloquear proporções, %2 para escalar no local,
                 %3 para também escalar filhos."]
-  :move-selection-up "Mover seleção para cima"
-  :move-selection-down "Mover seleção para baixo"
-  :move-selection-left "Mover seleção para a esquerda"
-  :move-selection-right "Mover seleção para a direita"
   :modify-selection "Modificar seleção"
   :move-selection "Mover seleção"
   :scale-selection "Escalar seleção"

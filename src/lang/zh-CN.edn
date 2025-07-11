@@ -459,10 +459,6 @@
   :translate [:div "按住 %1 限制方向，%2 进行克隆。"]
   :clone [:div "按住 %1 限制方向。或释放 %2 进行移动"]
   :scale [:div "按住 %1 锁定比例，%2 就地缩放，%3 同时缩放子级。"]
-  :move-selection-up "向上移动选择"
-  :move-selection-down "向下移动选择"
-  :move-selection-left "向左移动选择"
-  :move-selection-right "向右移动选择"
   :modify-selection "修改选择"
   :move-selection "移动选择"
   :scale-selection "缩放选择"

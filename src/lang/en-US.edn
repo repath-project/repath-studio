@@ -501,10 +501,6 @@
   :clone [:div "Hold %1 to restrict direction. or release %2 to move"]
   :scale [:div "Hold %1 to lock proportions, %2 to scale in place,
                   %3 to also scale children."]
-  :move-selection-up "Move selection up"
-  :move-selection-down "Move selection down"
-  :move-selection-left "Move selection left"
-  :move-selection-right "Move selection right"
   :modify-selection "Modify selection"
   :move-selection "Move selection"
   :scale-selection "Scale selection"
