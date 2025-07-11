@@ -388,12 +388,15 @@
 
 (m/=> toggle-selection [:-> App uuid? boolean? App])
 (defn toggle-selection
-  [db id multiple]
-  (if (entity db id)
-    (if multiple
-      (update-prop db id :selected not)
-      (-> db deselect (select id)))
-    (deselect db)))
+  [db id additive]
+  (let [root-id (:id (root db))]
+    (if (entity db id)
+      (if (and additive
+               (not= id root-id)
+               (not (contains? (selected-ids db) root-id)))
+        (update-prop db id :selected not)
+        (-> db deselect (select id)))
+      (deselect db))))
 
 (m/=> select-all [:-> App App])
 (defn select-all

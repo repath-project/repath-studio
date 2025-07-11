@@ -15,9 +15,9 @@
 
 (rf/reg-event-db
  ::select
- (fn [db [_ id multiple]]
-   (-> (element.handlers/toggle-selection db id multiple)
-       (history.handlers/finalize (if multiple
+ (fn [db [_ id additive]]
+   (-> (element.handlers/toggle-selection db id additive)
+       (history.handlers/finalize (if additive
                                     #(t [::modify-selection "Modify selection"])
                                     #(t [::select-element   "Select elementd"]))))))
 
