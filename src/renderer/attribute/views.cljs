@@ -250,9 +250,9 @@
   [:div
    [:> HoverCard/Root
     [:> HoverCard/Trigger {:as-child true}
-     [:span.pb-px
+     [:div.flex.items-center
       [views/icon-button "info" {:title (t [::mdn-info "MDN Info"])
-                                 :class "hover:bg-transparent"}]]]
+                                 :class "hover:bg-transparent w-auto h-auto"}]]]
     [:> HoverCard/Portal
      [:> HoverCard/Content
       {:sideOffset 5
@@ -284,8 +284,8 @@
         multitag? (next selected-tags)]
     (when-first [el selected-elements]
       [:div
-       [:div.flex.bg-primary.py-4.gap-1
-        [:h1.self-center.flex-1.text-lg.px-4
+       [:div.flex.bg-primary.py-5.px-4.gap-1.items-center
+        [:h1.flex-1.text-lg
          (if-not (next selected-elements)
            (let [el-label (:label el)
                  properties (element.hierarchy/properties tag)
@@ -296,9 +296,10 @@
                              "elements"]))]
         (when-not multitag?
           [tag-info tag])]
-       [:div.grid.grid-cols-2.grid-flow-row.my-px.w-full.gap-px
-        {:style {:grid-template-columns "minmax(120px, 120px) 1fr"}}
-        (for [[k v] selected-attrs]
-          ^{:key k} [row k v locked? tag])]])))
+       (when (seq selected-attrs)
+         [:div.grid.grid-cols-2.grid-flow-row.my-px.w-full.gap-px
+          {:style {:grid-template-columns "minmax(120px, 120px) 1fr"}}
+          (for [[k v] selected-attrs]
+            ^{:key k} [row k v locked? tag])])])))
 
 (defmethod tool.hierarchy/right-panel :default [] [form])
