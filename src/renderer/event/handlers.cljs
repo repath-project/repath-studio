@@ -23,7 +23,7 @@
 (defn pointer
   [db e]
   (let [{:keys [pointer-offset tool state cached-tool cached-state
-                dom-rect drag  drag-threshold nearest-neighbor]} db
+                dom-rect drag  drag-threshold nearest-neighbor active-pointers]} db
         {:keys [button pointer-pos timestamp pointer-id]} e
         adjusted-pointer-pos (frame.handlers/adjusted-pointer-pos db pointer-pos)
         db (snap.handlers/update-nearest-neighbors db)]
@@ -56,33 +56,37 @@
             (tool.handlers/activate :pan))
 
         (not= button :right)
-        (assoc :pointer-offset pointer-pos
-               :adjusted-pointer-offset adjusted-pointer-pos
-               :nearest-neighbor-offset (:point nearest-neighbor))
+        (-> (update :active-pointers conj pointer-id)
+            (assoc :pointer-offset pointer-pos
+                   :adjusted-pointer-offset adjusted-pointer-pos
+                   :nearest-neighbor-offset (:point nearest-neighbor)))
 
         :always
         (-> (tool.hierarchy/on-pointer-down e)
             (tool.handlers/add-fx [::effects/focus nil])))
 
       "pointerup"
-      (cond-> (if drag
-                (-> (tool.hierarchy/on-drag-end db e)
-                    (tool.handlers/add-fx [::event.effects/release-pointer-capture
-                                           pointer-id]))
-                (if (= button :right)
-                  db
-                  (if (< 0 (- timestamp (:event-timestamp db)) (:double-click-delta db))
-                    (-> (dissoc db :event-timestamp)
-                        (tool.hierarchy/on-double-click e))
-                    (-> (assoc db :event-timestamp timestamp)
-                        (tool.hierarchy/on-pointer-up e)))))
-        (and cached-tool (= button :middle))
-        (-> (tool.handlers/activate cached-tool)
-            (tool.handlers/set-state cached-state)
-            (dissoc :cached-tool :cached-state))
+      (if (contains? active-pointers pointer-id)
+        (cond-> (if drag
+                  (-> (tool.hierarchy/on-drag-end db e)
+                      (tool.handlers/add-fx [::event.effects/release-pointer-capture
+                                             pointer-id]))
+                  (if (= button :right)
+                    db
+                    (if (< 0 (- timestamp (:event-timestamp db)) (:double-click-delta db))
+                      (-> (dissoc db :event-timestamp)
+                          (tool.hierarchy/on-double-click e))
+                      (-> (assoc db :event-timestamp timestamp)
+                          (tool.hierarchy/on-pointer-up e)))))
+          (and cached-tool (= button :middle))
+          (-> (tool.handlers/activate cached-tool)
+              (tool.handlers/set-state cached-state)
+              (dissoc :cached-tool :cached-state))
 
-        :always
-        (dissoc :pointer-offset :drag :nearest-neighbor))
+          :always
+          (-> (update :active-pointers disj pointer-id)
+              (dissoc :pointer-offset :drag :nearest-neighbor)))
+        db)
 
       db)))
 

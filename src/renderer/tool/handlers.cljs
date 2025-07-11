@@ -91,4 +91,6 @@
     (activate :transform)
 
     :always
-    (set-state :idle)))
+    (-> (assoc :active-pointers #{})
+        (dissoc :pointer-offset :drag :nearest-neighbor)
+        (set-state :idle))))

@@ -37,6 +37,7 @@
   [:map {:closed true}
    [:tool {:default :transform} Tool]
    [:cached-tool {:optional true} Tool]
+   [:active-pointers {:default #{}} [:set number?]]
    [:pointer-pos {:default [0 0]} Vec2]
    [:pointer-offset {:optional true} Vec2]
    [:adjusted-pointer-pos {:default [0 0]} Vec2]
