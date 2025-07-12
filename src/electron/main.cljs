@@ -117,13 +117,12 @@
                   :height (.-height win-state)
                   :titleBarStyle (when (= (.platform os) "darwin") "hidden")
                   :trafficLightPosition #js {:x 8 :y 10}
-                  :icon (.join path js/__dirname "/public/img/icon.png")
+                  :icon (resource-path "/public/img/icon.png")
                   :frame false
                   :show false
                   :transparent true
                   :webPreferences
-                  #js {:sandbox false
-                       :preload (.join path js/__dirname "preload.js")}}))
+                  #js {:preload (.join path js/__dirname "preload.js")}}))
 
     (.once ^js @main-window
            "ready-to-show"
@@ -149,7 +148,7 @@
           (BrowserWindow.
            #js {:width 720
                 :height 576
-                :icon (.join path js/__dirname "/public/img/icon.png")
+                :icon (resource-path "/public/img/icon.png")
                 :show false
                 :alwaysOnTop true
                 :transparent true

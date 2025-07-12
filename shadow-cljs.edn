@@ -1,6 +1,10 @@
 {:deps {:aliases [:dev]}
 
- :build-defaults {:build-hooks [(shadow-git-inject.core/hook)]}
+ :build-defaults {:build-hooks [(shadow-git-inject.core/hook)]
+                  :js-options {:resolve {"fs" {:target :npm
+                                               :require "graceful-fs"}
+                                         "stream" {:target :npm
+                                                   :require "stream-browserify"}}}}
 
  :jvm-opts ["-Xmx2G"]
 
@@ -23,10 +27,6 @@
 
   :renderer {:target :browser
              :output-dir "resources/public/js"
-             :js-options {:resolve {"fs" {:target :npm
-                                          :require "graceful-fs"}
-                                    "stream" {:target :npm
-                                              :require "stream-browserify"}}}
              :compiler-options {:optimizations :simple
                                 :silence-optimizations-warning true
                                 :output-wrapper false
@@ -65,24 +65,12 @@
   :browser-test {:target :browser-test
                  :ns-regexp "-test$"
                  :runner-ns shadow.test.browser
-                 :test-dir "target/browser-test"
-                 :js-options {:resolve {"fs" {:target :npm
-                                              :require "graceful-fs"}
-                                        "stream" {:target :npm
-                                                  :require "stream-browserify"}}}}
+                 :test-dir "target/browser-test"}
 
   :karma-test {:target :karma
                :ns-regexp "-test$"
-               :output-to "target/karma-test.js"
-               :js-options {:resolve {"fs" {:target :npm
-                                            :require "graceful-fs"}
-                                      "stream" {:target :npm
-                                                :require "stream-browserify"}}}}
+               :output-to "target/karma-test.js"}
 
   :portfolio {:target :browser
               :modules {:scenes {:init-fn portfolio/init!}}
-              :output-dir "portfolio/resources/public/js"
-              :js-options {:resolve {"fs" {:target :npm
-                                           :require "graceful-fs"}
-                                     "stream" {:target :npm
-                                               :require "stream-browserify"}}}}}}
+              :output-dir "portfolio/resources/public/js"}}}
