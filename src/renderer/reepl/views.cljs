@@ -112,22 +112,14 @@
     [repl-items items (assoc show-value-opts :set-text set-text)]]])
 
 (defn completion-item
-  [_text _selected _active _set-active]
-  (let [ref (react/createRef)]
-    (reagent/create-class
-     {:component-did-update
-      (fn [this [_ _ old-selected]]
-        (let [[_ _ selected] (reagent/argv this)]
-          (when (and (not old-selected)
-                     selected)
-            (rf/dispatch [::events/scroll-into-view (.-current ref)]))))
-      :reagent-render
-      (fn [text selected active set-active]
-        [:div.p-1.bg-secondary.text-nowrap
-         {:on-click set-active
-          :class (and selected (if active "bg-accent!" "bg-primary!"))
-          :ref ref}
-         text])})))
+  [text selected active set-active]
+  [:div.p-1.bg-secondary.text-nowrap
+   {:ref (fn [this]
+           (when (and this selected)
+             (rf/dispatch [::events/scroll-into-view this])))
+    :on-click set-active
+    :class (when selected (if active "bg-accent!" "bg-primary!"))}
+   text])
 
 (defn completion-list
   [docs {:keys [pos words active show-all]} set-active]
