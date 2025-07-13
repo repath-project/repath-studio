@@ -91,8 +91,6 @@
       :fx (into
            [[:dispatch [::theme.events/set-document-attr]]
             [:dispatch ^:flush-dom [::set-lang-attrs]]
-            ;; We need to render once to get the canvas size right.
-            [:dispatch ^:flush-dom [::window.events/update-focused]]
             [::theme.effects/add-native-listener [::theme.events/set-document-attr]]
             [::effects/ipc-send ["initialized"]]]
            (map (partial vector ::effects/add-listener) document-listeners))})))

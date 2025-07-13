@@ -13,7 +13,8 @@
    [renderer.event.impl.wheel :as event.impl.wheel]
    [renderer.frame.events :as-alias frame.events]
    [renderer.utils.i18n :refer [t]]
-   [renderer.views :as views]))
+   [renderer.views :as views]
+   [renderer.window.events :as-alias window.events]))
 
 (defn inner-component
   "We need access to the iframe's window to add the wheel listener.
@@ -63,7 +64,8 @@
   (let [ref (react/createRef)]
     (reagent/create-class
      {:component-did-mount
-      #(.observe resize-observer (.-current ref))
+      #(do (.observe resize-observer (.-current ref))
+           (rf/dispatch [::window.events/update-focused]))
 
       :component-will-unmount
       #(.disconnect resize-observer)
