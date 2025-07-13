@@ -224,6 +224,47 @@
    9 [105 147]
    10 [74 105]})
 
+(defn document-size-select []
+  [:> Select/Root
+   {:onValueChange #(rf/dispatch [::document.events/new-from-template
+                                  (get paper-size %)])}
+   [:> Select/Trigger
+    {:class "button px-2 overlay rounded-sm"
+     :aria-label (t [::select-size "Select size"])}
+    [:div.flex.items-center.gap-2
+     [:> Select/Value
+      {:placeholder (t [::select-template "Select template"])}]
+     [:> Select/Icon
+      [views/icon "chevron-down"]]]]
+   [:> Select/Portal
+    [:> Select/Content
+     {:class "menu-content rounded-sm select-content"
+      :style {:min-width "auto"}}
+
+     [:> Select/Viewport
+      {:class "select-viewport"}
+      [:> Select/Group
+       [:> Select/Item
+        {:value :empty-canvas
+         :class "menu-item select-item"}
+        [:> Select/ItemText
+         (t [::empty-canvas "Empty canvas"])]]
+       (for [[k _v] (sort paper-size)]
+         ^{:key k}
+         [:> Select/Item
+          {:value k
+           :class "menu-item select-item"}
+          [:> Select/ItemText (str "A" k)]])]]]]])
+
+(defn recent-document
+  [file-path]
+  [:div.flex.items-center.gap-x-2.flex-wrap
+   [views/icon "folder"]
+   [:button.button-link.text-lg
+    {:on-click #(rf/dispatch [::document.events/open file-path])}
+    (.basename path file-path)]
+   [:span.text-lg.text-muted (.dirname path file-path)]])
+
 (defn home
   [recent-documents]
   [:div.flex.overflow-hidden
@@ -250,36 +291,7 @@
 
          [:span (t [::or "or"])]
 
-         [:> Select/Root
-          {:onValueChange #(rf/dispatch [::document.events/new-from-template
-                                         (get paper-size %)])}
-          [:> Select/Trigger
-           {:class "button px-2 overlay rounded-sm"
-            :aria-label (t [::select-size "Select size"])}
-           [:div.flex.items-center.gap-2
-            [:> Select/Value
-             {:placeholder (t [::select-template "Select template"])}]
-            [:> Select/Icon
-             [views/icon "chevron-down"]]]]
-          [:> Select/Portal
-           [:> Select/Content
-            {:class "menu-content rounded-sm select-content"
-             :style {:min-width "auto"}}
-
-            [:> Select/Viewport
-             {:class "select-viewport"}
-             [:> Select/Group
-              [:> Select/Item
-               {:value :empty-canvas
-                :class "menu-item select-item"}
-               [:> Select/ItemText
-                (t [::empty-canvas "Empty canvas"])]]
-              (for [[k _v] (sort paper-size)]
-                ^{:key k}
-                [:> Select/Item
-                 {:value k
-                  :class "menu-item select-item"}
-                 [:> Select/ItemText (str "A" k)]])]]]]]]
+         [document-size-select]]
 
         [:div.flex.items-center.gap-2
          [views/icon "folder"]
@@ -294,12 +306,7 @@
 
            (for [file-path (take 5 recent-documents)]
              ^{:key file-path}
-             [:div.flex.items-center.gap-x-2.flex-wrap
-              [views/icon "folder"]
-              [:button.button-link.text-lg
-               {:on-click #(rf/dispatch [::document.events/open file-path])}
-               (.basename path file-path)]
-              [:span.text-lg.text-muted (.dirname path file-path)]])])
+             [recent-document file-path])])
 
         [:h2.mb-3.mt-8.text-2xl
          (t [::help "Help"])]

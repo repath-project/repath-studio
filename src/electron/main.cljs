@@ -122,7 +122,8 @@
                   :show false
                   :transparent true
                   :webPreferences
-                  #js {:preload (.join path js/__dirname "preload.js")}}))
+                  #js {:sandbox false
+                       :preload (.join path js/__dirname "preload.js")}}))
 
     (.once ^js @main-window
            "ready-to-show"
