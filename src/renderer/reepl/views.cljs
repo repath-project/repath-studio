@@ -87,24 +87,16 @@
   [{:keys [value]} opts]
   [:div.flex-1.break-words [show-value value nil opts]])
 
-(defn repl-items [_]
-  (let [ref (react/createRef)]
-    (reagent/create-class
-     {:component-did-mount
-      (fn [_this]
-        (rf/dispatch [::events/scroll-to-bottom (.-current ref)]))
-      :component-did-update
-      (fn [_this]
-        (rf/dispatch [::events/scroll-to-bottom (.-current ref)]))
-      :reagent-render
-      (fn [items opts]
-        [:div.flex-1.border-b.border-default.h-full.overflow-hidden.flex
-         [views/scroll-area
-          {:ref ref}
-          (into
-           [:div.p-1 {:dir "ltr"}]
-           (map (fn [i]
-                  [:div.font-mono.p-1.flex.text-xs.min-h-4 (item i opts)]) items))]])})))
+(defn repl-items [items opts]
+  [:div.flex-1.border-b.border-default.h-full.overflow-hidden.flex
+   [views/scroll-area
+    {:ref (fn [this]
+            (when this
+              (rf/dispatch [::events/scroll-to-bottom this])))}
+    (into
+     [:div.p-1 {:dir "ltr"}]
+     (map (fn [i]
+            [:div.font-mono.p-1.flex.text-xs.min-h-4 (item i opts)]) items))]])
 
 (defn repl-items-panel
   [items show-value-opts set-text]
