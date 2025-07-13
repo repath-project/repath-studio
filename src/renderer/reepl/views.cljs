@@ -1,6 +1,5 @@
 (ns renderer.reepl.views
   (:require
-   ["react" :as react]
    ["react-resizable-panels" :refer [Panel PanelResizeHandle]]
    [re-frame.core :as rf]
    [reagent.core :as reagent]
