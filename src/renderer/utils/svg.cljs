@@ -119,9 +119,10 @@
               :height label-height} text]
       [:text {:ref (fn [this]
                      (when (and this rect-ref)
-                       (let [rect-width (+ (.-width (.getBBox this)) padding)]
-                         (.setAttribute (.-current rect-ref) "width" rect-width)
-                         (.setAttribute (.-current rect-ref) "x"
+                       (let [rect-el (.-current rect-ref)
+                             rect-width (+ (.-width (.getBBox this)) padding)]
+                         (.setAttribute rect-el "width" rect-width)
+                         (.setAttribute rect-el "x"
                                         (case text-anchor
                                           "start" (- x (/ padding 2))
                                           "middle" (- x (/ rect-width 2))
