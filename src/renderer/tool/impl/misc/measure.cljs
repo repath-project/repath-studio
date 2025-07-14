@@ -71,12 +71,14 @@
 
        [utils.svg/label
         (str (utils.length/->fixed straight-angle 2 false) "°")
-        [(+ x1 (/ 40 zoom)) y1]
-        "start"]
+        {:x (+ x1 (/ 40 zoom))
+         :y y1
+         :text-anchor "start"}]
 
        [utils.svg/label
         (-> hypotenuse js/parseFloat (utils.length/->fixed 2 false) str)
-        [(/ (+ x1 x2) 2) (/ (+ y1 y2) 2)]]])))
+        {:x (/ (+ x1 x2) 2)
+         :y (/ (+ y1 y2) 2)}]])))
 
 (defmethod tool.hierarchy/snapping-points :measure
   [db]

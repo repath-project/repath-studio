@@ -86,8 +86,9 @@
                              (->> [x y]
                                   (mapv #(utils.length/->fixed % 2 false))
                                   (string/join " "))
-                             [(- x margin) (+ y margin)]
-                             "end"])]))
+                             {:x (- x margin)
+                              :y (+ y margin)
+                              :text-anchor "end"}])]))
                      (utils.attribute/points->vec (-> el :attrs :points)))]))
 
 (defmethod element.hierarchy/edit ::element.hierarchy/polyshape

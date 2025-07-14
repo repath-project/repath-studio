@@ -422,7 +422,7 @@
         text (str (utils.length/->fixed w 2 false)
                   " x "
                   (utils.length/->fixed h 2 false))]
-    [utils.svg/label text [x y]]))
+    [utils.svg/label text {:x x :y y}]))
 
 (m/=> area-label [:-> number? BBox any?])
 (defn area-label
@@ -433,7 +433,7 @@
           x (+ min-x (/ (- max-x min-x) 2))
           y (+ min-y (/ (- -15 (/ theme.db/handle-size 2)) zoom))
           text (str (utils.length/->fixed area 2 false) " px²")]
-      [utils.svg/label text [x y]])))
+      [utils.svg/label text {:x x :y y}])))
 
 (defmethod tool.hierarchy/render :transform
   []

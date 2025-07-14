@@ -77,8 +77,9 @@
                  [utils.svg/label
                   (string/join " " [(utils.length/->fixed x 2 false)
                                     (utils.length/->fixed y 2 false)])
-                  [(- x margin) (+ y margin)]
-                  "end"])]))
+                  {:x (- x margin)
+                   :y (+ y margin)
+                   :text-anchor "end"}])]))
           [{:x x1
             :y y1
             :id :starting-point

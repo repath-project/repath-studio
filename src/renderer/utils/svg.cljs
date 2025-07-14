@@ -98,42 +98,40 @@
       [(- x mid) (+ y mid)]
       false]]))
 
-(m/=> label [:function
-             [:-> string? Vec2 any?]
-             [:-> string? Vec2 [:enum "start" "middle" "end"] any?]])
+(m/=> label [:-> string? map? any?])
 (defn label
-  ([text position]
-   [label text position "middle"])
-  ([text position text-anchor]
-   (let [rect-ref (react/createRef)
-         zoom @(rf/subscribe [::document.subs/zoom])
-         [x y] position
-         font-size (/ 10 zoom)
-         padding (/ 8 zoom)
-         label-height (+ font-size padding)]
-     [:g
-      [:rect {:ref rect-ref
-              :y (- y  (/ label-height 2))
-              :fill "var(--color-accent)"
-              :rx (/ 4 zoom)
-              :height label-height} text]
-      [:text {:ref (fn [this]
-                     (when (and this rect-ref)
-                       (let [rect-el (.-current rect-ref)
-                             rect-width (+ (.-width (.getBBox this)) padding)]
-                         (.setAttribute rect-el "width" rect-width)
-                         (.setAttribute rect-el "x"
-                                        (case text-anchor
-                                          "start" (- x (/ padding 2))
-                                          "middle" (- x (/ rect-width 2))
-                                          "end" (- x rect-width (/ (- padding) 2)))))))
-              :x x
-              :y y
-              :fill "var(--color-accent-inverted)"
-              :dominant-baseline "middle"
-              :text-anchor text-anchor
-              :font-family "var(--font-mono)"
-              :font-size font-size} text]])))
+  [text attrs]
+  (let [{:keys [x y text-anchor font-size font-family]} attrs
+        rect-ref (react/createRef)
+        zoom @(rf/subscribe [::document.subs/zoom])
+        text-anchor (or text-anchor "middle")
+        font-size (/ (or font-size 10) zoom)
+        font-family (or font-family "var(--font-mono)")
+        padding (/ 8 zoom)
+        label-height (+ font-size padding)]
+    [:g
+     [:rect {:ref rect-ref
+             :y (- y  (/ label-height 2))
+             :fill "var(--color-accent)"
+             :rx (/ 4 zoom)
+             :height label-height} text]
+     [:text {:ref (fn [this]
+                    (when (and this rect-ref)
+                      (let [rect-el (.-current rect-ref)
+                            rect-width (+ (.-width (.getBBox this)) padding)]
+                        (.setAttribute rect-el "width" rect-width)
+                        (.setAttribute rect-el "x"
+                                       (case text-anchor
+                                         "start" (- x (/ padding 2))
+                                         "middle" (- x (/ rect-width 2))
+                                         "end" (- x rect-width (/ (- padding) 2)))))))
+             :fill "var(--color-accent-inverted)"
+             :dominant-baseline "middle"
+             :x x
+             :y y
+             :text-anchor text-anchor
+             :font-family font-family
+             :font-size font-size} text]]))
 
 (m/=> bounding-box [:-> BBox boolean? any?])
 (defn bounding-box

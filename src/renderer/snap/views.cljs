@@ -68,10 +68,14 @@
         point-label (-> nearest-neighbor meta :label)
         base-label (-> nearest-neighbor :base-point meta :label)
         point (:point nearest-neighbor)
+        [x y] (matrix/add point margin)
         label (->> [base-label point-label]
                    (keep get-label)
                    (string/join (t [::to " to "])))]
     [:<>
      [utils.svg/times point]
      (when (not-empty label)
-       [utils.svg/label label (matrix/add point margin) "start"])]))
+       [utils.svg/label label {:x x
+                               :y y
+                               :text-anchor "start"
+                               :font-family "var(--font-sans)"}])]))
