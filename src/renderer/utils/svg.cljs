@@ -1,6 +1,7 @@
 (ns renderer.utils.svg
   "Render functions for canvas overlay objects."
   (:require
+   ["react" :as react]
    [malli.core :as m]
    [re-frame.core :as rf]
    [renderer.app.db :refer [App]]
@@ -104,30 +105,32 @@
   ([text position]
    [label text position "middle"])
   ([text position text-anchor]
-   (let [zoom @(rf/subscribe [::document.subs/zoom])
+   (let [rect-ref (react/createRef)
+         zoom @(rf/subscribe [::document.subs/zoom])
          [x y] position
          font-size (/ 10 zoom)
          padding (/ 8 zoom)
-         font-width (/ 6 zoom)
-         label-width (+ (* (count text) font-width)
-                        font-size)
          label-height (+ font-size padding)]
      [:g
-      [:rect {:x (case text-anchor
-                   "start" (- x (/ padding 2))
-                   "middle" (- x (/ label-width 2))
-                   "end" (- x label-width (/ (- padding) 2)))
+      [:rect {:ref rect-ref
               :y (- y  (/ label-height 2))
               :fill "var(--color-accent)"
               :rx (/ 4 zoom)
-              :width label-width
               :height label-height} text]
-      [:text {:x x
+      [:text {:ref (fn [this]
+                     (when (and this rect-ref)
+                       (let [rect-width (+ (.-width (.getBBox this)) padding)]
+                         (.setAttribute (.-current rect-ref) "width" rect-width)
+                         (.setAttribute (.-current rect-ref) "x"
+                                        (case text-anchor
+                                          "start" (- x (/ padding 2))
+                                          "middle" (- x (/ rect-width 2))
+                                          "end" (- x rect-width (/ (- padding) 2)))))))
+              :x x
               :y y
               :fill "var(--color-accent-inverted)"
               :dominant-baseline "middle"
               :text-anchor text-anchor
-              :width label-width
               :font-family "var(--font-mono)"
               :font-size font-size} text]])))
 
