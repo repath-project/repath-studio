@@ -274,11 +274,11 @@
 
   &:after,
   &:before {
-    @apply absolute top-0 left-0;
+    @apply absolute top-0 left-0 bg-white;
     content: '';
     width: 24px;
     height: 24px;
-    border: 2px solid var(--font-color);
+    border: 1px solid gray;
     animation: rotationBreak 3s ease-in-out infinite alternate;
   }
 

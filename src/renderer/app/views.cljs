@@ -352,9 +352,8 @@
         active-tool @(rf/subscribe [::tool.subs/active])
         recent-documents @(rf/subscribe [::document.subs/recent])
         lang-dir @(rf/subscribe [::app.subs/lang-dir])
-        loading @(rf/subscribe [::app.subs/loading?])]
-    (if loading
-      [:div.loader]
+        is-app-loading @(rf/subscribe [::app.subs/loading?])]
+    (when-not is-app-loading
       [:> Direction/Provider {:dir lang-dir}
        [:> Tooltip/Provider
         [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden.justify-between

@@ -67,6 +67,11 @@
        {:db app-db}
        {::app.effects/clear-local-storage nil}))))
 
+(rf/reg-event-db
+ ::set-loading
+ (fn [db [_ state]]
+   (assoc db :loading state)))
+
 (rf/reg-event-fx
  ::db-loaded
  [(rf/inject-cofx ::effects/guid)
@@ -84,13 +89,11 @@
                 (history.handlers/finalize #(t [:create-doc "Create document"])))
 
             initial-document
-            (snap.handlers/rebuild-tree)
-
-            :always
-            (assoc :loading false))
+            (snap.handlers/rebuild-tree))
       :fx (into
            [[:dispatch [::theme.events/set-document-attr]]
-            [:dispatch ^:flush-dom [::set-lang-attrs]]
+            [:dispatch [::set-lang-attrs]]
+            [:dispatch [::set-loading false]]
             ;; We need to render once to get the canvas size right.
             [:dispatch ^:flush-dom [::window.events/update-focused]]
             [::theme.effects/add-native-listener [::theme.events/set-document-attr]]
