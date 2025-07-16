@@ -114,7 +114,7 @@
 }
 
 .CodeMirror-wrap {
-  @apply form-element p-0;
+  @apply p-0 text-xs;
 
   pre {
     word-break: break-word !important;

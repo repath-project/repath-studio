@@ -229,8 +229,11 @@
 
       :component-did-update
       (fn [this _]
-        (let [value (second (reagent/argv this))]
-          (.setValue @cm value)))
+        (let [value (second (reagent/argv this))
+              options (:options (last (reagent/argv this)))]
+          (.setValue @cm value)
+          (doseq [[k v] options]
+            (.setOption @cm (name k) v))))
 
       :reagent-render
       (fn [value]

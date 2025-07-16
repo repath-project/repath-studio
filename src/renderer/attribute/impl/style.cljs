@@ -4,12 +4,16 @@
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.element.events :as-alias element.events]
+   [renderer.theme.subs :as-alias theme.subs]
    [renderer.views :as views]))
 
 (defmethod attribute.hierarchy/form-element [:default :style]
   [_ k v {:keys [disabled]}]
-  [:div.w-full.bg-primary.p-1
-   [views/cm-editor v {:on-blur #(rf/dispatch [::element.events/set-attr k %])
-                       :attrs {:id (name k)}
-                       :options {:mode "css"
-                                 :readOnly disabled}}]])
+  (let [codemirror-theme @(rf/subscribe [::theme.subs/codemirror])]
+    [:div.w-full.bg-primary.p-1
+     {:class (when disabled "*:[&.CodeMirror]:opacity-50")}
+     [views/cm-editor v {:on-blur #(rf/dispatch [::element.events/set-attr k %])
+                         :attrs {:id (name k)}
+                         :options {:mode "css"
+                                   :readOnly disabled
+                                   :theme codemirror-theme}}]]))

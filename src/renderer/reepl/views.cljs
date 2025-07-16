@@ -14,6 +14,7 @@
    [renderer.reepl.show-function :as show-function]
    [renderer.reepl.show-value :refer [show-value]]
    [renderer.reepl.subs :as s]
+   [renderer.theme.subs :as-alias theme.subs]
    [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]
    [replumb.core :as replumb.core])
@@ -221,7 +222,8 @@
 (defn root
   []
   (let [repl-mode (rf/subscribe [::app.subs/repl-mode])
-        debug-info (rf/subscribe [::app.subs/debug-info])]
+        debug-info (rf/subscribe [::app.subs/debug-info])
+        codemirror-theme @(rf/subscribe [::theme.subs/codemirror])]
     [repl
      :execute #(replumb/run-repl (if (= @repl-mode :cljs) %1 (str "(js/eval \"" %1 "\")"))
                                  {:verbose @debug-info} %2)
@@ -233,4 +235,5 @@
                 (partial show-function/show-fn-with-docs maybe-fn-docs)]}
      :js-cm-opts {:mode (if (= @repl-mode :cljs) "clojure" "javascript")
                   :keyMap "default"
-                  :showCursorWhenSelecting true}]))
+                  :showCursorWhenSelecting true
+                  :theme codemirror-theme}]))

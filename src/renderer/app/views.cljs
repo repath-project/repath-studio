@@ -27,6 +27,7 @@
    [renderer.ruler.subs :as-alias ruler.subs]
    [renderer.ruler.views :as ruler.views]
    [renderer.snap.subs :as-alias snap.subs]
+   [renderer.theme.subs :as-alias theme.subs]
    [renderer.timeline.views :as timeline.views]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.subs :as-alias tool.subs]
@@ -169,7 +170,8 @@
           [history.views/root]]]])
 
      (when @(rf/subscribe [::app.subs/panel-visible? :xml])
-       (let [xml @(rf/subscribe [::element.subs/xml])]
+       (let [xml @(rf/subscribe [::element.subs/xml])
+             codemirror-theme @(rf/subscribe [::theme.subs/codemirror])]
          [:<>
           [:> PanelResizeHandle
            {:id "xml-resize-handle"
@@ -184,7 +186,8 @@
              [:div.p-1
               [views/cm-editor xml
                {:options {:mode "text/xml"
-                          :readOnly true}}]]]]]]))]]])
+                          :readOnly true
+                          :theme codemirror-theme}}]]]]]]))]]])
 
 (defn editor
   []
