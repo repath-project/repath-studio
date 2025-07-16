@@ -1,7 +1,6 @@
 @utility form-element {
-  @apply bg-primary border-0 w-full outline-none shadow-none!;
+  @apply bg-primary border-0 w-full outline-none px-3 py-1 shadow-none!;
 
-  padding: 4px 12px;
   box-sizing: border-box;
   font-size: 12px;
   color: var(--font-color) !important;

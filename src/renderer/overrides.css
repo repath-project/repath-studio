@@ -125,6 +125,10 @@
   @apply bg-secondary!;
 }
 
+.CodeMirror-placeholder {
+  @apply text-disabled! font-sans!;
+}
+
 .CodeMirror {
   @apply font-mono h-auto z-0;
   background: transparent !important;

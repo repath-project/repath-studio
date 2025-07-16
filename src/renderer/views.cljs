@@ -10,6 +10,7 @@
    ["@radix-ui/react-switch" :as Switch]
    ["@repath-project/react-color" :refer [PhotoshopPicker]]
    ["codemirror" :as codemirror]
+   ["codemirror/addon/display/placeholder.js"]
    ["codemirror/addon/hint/css-hint.js"]
    ["codemirror/addon/hint/show-hint.js"]
    ["codemirror/mode/css/css.js"]

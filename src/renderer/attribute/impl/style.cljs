@@ -10,10 +10,11 @@
 (defmethod attribute.hierarchy/form-element [:default :style]
   [_ k v {:keys [disabled]}]
   (let [codemirror-theme @(rf/subscribe [::theme.subs/codemirror])]
-    [:div.w-full.bg-primary.p-1
+    [:div.w-full.bg-primary.px-2.py-1
      {:class (when disabled "*:[&.CodeMirror]:opacity-50")}
-     [views/cm-editor v {:on-blur #(rf/dispatch [::element.events/set-attr k %])
-                         :attrs {:id (name k)}
-                         :options {:mode "css"
-                                   :readOnly disabled
-                                   :theme codemirror-theme}}]]))
+     [views/cm-editor (str v) {:on-blur #(rf/dispatch [::element.events/set-attr k %])
+                               :attrs {:id (name k)}
+                               :options {:mode "css"
+                                         :placeholder (when-not v "multiple")
+                                         :readOnly disabled
+                                         :theme codemirror-theme}}]]))
