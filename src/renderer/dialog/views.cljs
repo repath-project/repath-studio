@@ -30,7 +30,8 @@
   [{:keys [description action confirm-label cancel-label]}]
   [:div.p-5
    [:p description]
-   [:div.flex.gap-2.flex-wrap
+   [:div.flex.flex-col.gap-2.flex-wrap
+    {:class "sm:flex-row"}
     [:button.button.px-2.bg-primary.rounded.flex-1
      {:on-click #(rf/dispatch [::dialog.events/close])}
      (or cancel-label (t [::cancel "Cancel"]))]
@@ -47,7 +48,8 @@
         "Your changes to " [:strong title]
         " will be lost if you close the document without saving."]]
       [[:strong title]])
-   [:div.flex.gap-2.flex-wrap
+   [:div.flex.flex-col.gap-2
+    {:class "sm:flex-row"}
     [:button.button.px-2.bg-primary.rounded.flex-1
      {:on-click #(rf/dispatch [::dialog.events/close
                                [::document.events/close id false]])}
