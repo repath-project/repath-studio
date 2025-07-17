@@ -275,74 +275,76 @@
     [:div.flex.justify-center.p-2
      [:div.justify-between.flex.w-full
       {:class "lg:w-auto"}
-      [:div.bg-primary.p-6.flex.w-full.gap-8
-       {:class "lg:p-12 max-w-(--breakpoint-xl)"}
+      [:div.flex.w-full
+       {:class "max-w-(--breakpoint-xl) lg:bg-primary"}
        [:div.flex-1
-        [:h1.text-4xl.mb-1.font-light config/app-name]
+        [:div.p-4
+         {:class "lg:p-12"}
+         [:h1.text-4xl.mb-1.font-light config/app-name]
 
-        [:p.text-xl.text-muted.font-bold
-         (t [::svg-description "Scalable Vector Graphics Manipulation"])]
+         [:p.text-xl.text-muted.font-bold
+          (t [::svg-description "Scalable Vector Graphics Manipulation"])]
 
-        [:h2.mb-3.mt-8.text-2xl (t [::start "Start"])]
+         [:h2.mb-3.mt-8.text-2xl (t [::start "Start"])]
 
-        [:div.flex.items-center.gap-2.flex-wrap
-         [views/icon "file"]
-         [:button.button-link.text-lg
-          {:on-click #(rf/dispatch [::document.events/new])}
-          (t [::new "New"])]
-         [views/shortcuts [::document.events/new]]
-
-         [:span (t [::or "or"])]
-
-         [document-size-select]]
-
-        [:div.flex.items-center.gap-2
-         [views/icon "folder"]
-         [:button.button-link.text-lg
-          {:on-click #(rf/dispatch [::document.events/open nil])}
-          (t [::open "Open"])]
-         [views/shortcuts [::document.events/open nil]]]
-
-        (when (seq recent-documents)
-          [:<> [:h2.mb-3.mt-8.text-2xl
-                (t [::recent "Recent"])]
-
-           (for [file-path (take 5 recent-documents)]
-             ^{:key file-path}
-             [recent-document file-path])])
-
-        [:h2.mb-3.mt-8.text-2xl
-         (t [::help "Help"])]
-
-        [:div
-         [:div.flex.items-center.gap-2
-          [views/icon "command"]
+         [:div.flex.items-center.gap-2.flex-wrap
+          [views/icon "file"]
           [:button.button-link.text-lg
-           {:on-click #(rf/dispatch [::dialog.events/show-cmdk])}
-           (t [::command-panel "Command panel"])]
-          [views/shortcuts [::dialog.events/show-cmdk]]]]
-        [:div.flex.items-center.gap-2
-         [views/icon "earth"]
-         [:button.button-link.text-lg
-          {:on-click #(rf/dispatch [::events/open-remote-url
-                                    "https://repath.studio/"])}
-          (t [::website "Website"])]]
-        [:div.flex.items-center.gap-2
-         [views/icon "commit"]
-         [:button.button-link.text-lg
-          {:on-click #(rf/dispatch [::events/open-remote-url
-                                    "https://github.com/repath-project/repath-studio"])}
-          (t [::source-code "Source Code"])]]
-        [:div.flex.items-center.gap-2
-         [views/icon "list"]
-         [:button.button-link.text-lg
-          {:on-click #(rf/dispatch [::events/open-remote-url
-                                    "https://repath.studio/roadmap/changelog/"])}
-          (t [::changelog "Changelog"])]]]
+           {:on-click #(rf/dispatch [::document.events/new])}
+           (t [::new "New"])]
+          [views/shortcuts [::document.events/new]]
+
+          [:span (t [::or "or"])]
+
+          [document-size-select]]
+
+         [:div.flex.items-center.gap-2
+          [views/icon "folder"]
+          [:button.button-link.text-lg
+           {:on-click #(rf/dispatch [::document.events/open nil])}
+           (t [::open "Open"])]
+          [views/shortcuts [::document.events/open nil]]]
+
+         (when (seq recent-documents)
+           [:<> [:h2.mb-3.mt-8.text-2xl
+                 (t [::recent "Recent"])]
+
+            (for [file-path (take 5 recent-documents)]
+              ^{:key file-path}
+              [recent-document file-path])])
+
+         [:h2.mb-3.mt-8.text-2xl
+          (t [::help "Help"])]
+
+         [:div
+          [:div.flex.items-center.gap-2
+           [views/icon "command"]
+           [:button.button-link.text-lg
+            {:on-click #(rf/dispatch [::dialog.events/show-cmdk])}
+            (t [::command-panel "Command panel"])]
+           [views/shortcuts [::dialog.events/show-cmdk]]]]
+         [:div.flex.items-center.gap-2
+          [views/icon "earth"]
+          [:button.button-link.text-lg
+           {:on-click #(rf/dispatch [::events/open-remote-url
+                                     "https://repath.studio/"])}
+           (t [::website "Website"])]]
+         [:div.flex.items-center.gap-2
+          [views/icon "commit"]
+          [:button.button-link.text-lg
+           {:on-click #(rf/dispatch [::events/open-remote-url
+                                     "https://github.com/repath-project/repath-studio"])}
+           (t [::source-code "Source Code"])]]
+         [:div.flex.items-center.gap-2
+          [views/icon "list"]
+          [:button.button-link.text-lg
+           {:on-click #(rf/dispatch [::events/open-remote-url
+                                     "https://repath.studio/roadmap/changelog/"])}
+           (t [::changelog "Changelog"])]]]]
 
        [:div.hidden.flex-1
-        {:class "md:block"}
-        [:img {:src "./img/icon.svg"}]]]]]]])
+        {:class "lg:block"}
+        [:img.h-full.w-full {:src "./img/icon-square.svg"}]]]]]]])
 
 (defn root
   []
