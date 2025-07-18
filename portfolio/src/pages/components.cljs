@@ -96,9 +96,15 @@
   :title "Icons"
   [:div.flex
    [:div.flex.flex-wrap.gap-2.p-3
-    (for [icon-name icons/default] ^{:key icon-name} [:div {:title icon-name}
-                                                      [views/icon icon-name]])]
+    (for [icon-name icons/default]
+      ^{:key icon-name}
+      [:div {:title icon-name}
+       [views/icon icon-name]])]
    [:div.flex.gap-2.p-3
-    (for [icon-name icons/branded] ^{:key icon-name} [:div {:title icon-name}
-                                                      [views/icon icon-name]])]
-   [:div.flex.p-3 [views/icon "download" {:class "text-accent"}]]])
+    (for [icon-name icons/branded]
+      ^{:key icon-name}
+      [:div {:title icon-name}
+       [views/icon icon-name]])]
+   [:div.flex.p-3
+    [views/icon "download"
+     {:class "text-accent"}]]])

@@ -69,7 +69,8 @@
       :on-key-down #(.stopPropagation %)
       :on-escape-key-down #(.stopPropagation %)}
      (for [item (zoom-options)]
-       ^{:key (:id item)} [views/dropdown-menu-item item])
+       ^{:key (:id item)}
+       [views/dropdown-menu-item item])
      [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]])
 
 (defn view-radio-buttons []

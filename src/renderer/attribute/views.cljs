@@ -300,6 +300,7 @@
          [:div.grid.grid-cols-2.grid-flow-row.my-px.w-full.gap-px
           {:style {:grid-template-columns "minmax(120px, 120px) 1fr"}}
           (for [[k v] selected-attrs]
-            ^{:key k} [row k v locked? tag])])])))
+            ^{:key k}
+            [row k v locked? tag])])])))
 
 (defmethod tool.hierarchy/right-panel :default [] [form])

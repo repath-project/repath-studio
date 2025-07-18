@@ -25,7 +25,8 @@
   (let [{:keys [children tag attrs id]} el
         child-elements @(rf/subscribe [::element.subs/filter-visible children])]
     [tag attrs (for [el child-elements]
-                 ^{:key id} [element.hierarchy/render el])]))
+                 ^{:key id}
+                 [element.hierarchy/render el])]))
 
 (defmethod element.hierarchy/render-to-string ::element.hierarchy/container
   [el]

@@ -180,7 +180,8 @@
      (when (and has-children (not collapsed))
        [:ul {:role "menu"}
         (for [el (mapv (fn [k] (get elements k)) (reverse children))]
-          ^{:key (:id el)} [item el (inc depth) elements])])]))
+          ^{:key (:id el)}
+          [item el (inc depth) elements])])]))
 
 (defn inner-sidebar-render
   [root-children elements]
@@ -194,7 +195,8 @@
           :on-pointer-leave #(rf/dispatch [::document.events/clear-hovered])
           :style {:width "227px"}}
      (for [el (reverse root-children)]
-       ^{:key (:id el)} [item el 1 elements])]]])
+       ^{:key (:id el)}
+       [item el 1 elements])]]])
 
 (defn inner-sidebar []
   (let [state @(rf/subscribe [::tool.subs/state])

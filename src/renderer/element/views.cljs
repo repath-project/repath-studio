@@ -95,6 +95,7 @@
             (when title [:title title])
             content
             (for [child child-els]
-              ^{:key (:id child)} [element.hierarchy/render child])]
+              ^{:key (:id child)}
+              [element.hierarchy/render child])]
 
            (when idle [ghost-element el])]))})))

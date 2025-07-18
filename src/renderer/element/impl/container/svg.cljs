@@ -64,4 +64,5 @@
          :on-pointer-down #(when (= (.-button %) 2)
                              (event.impl.pointer/handler! % el))})]
       (for [el child-els]
-        ^{:key (:id el)} [element.hierarchy/render el])]]))
+        ^{:key (:id el)}
+        [element.hierarchy/render el])]]))

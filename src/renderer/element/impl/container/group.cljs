@@ -39,7 +39,8 @@
         child-els @(rf/subscribe [::element.subs/filter-visible children])]
     [:g (utils.element/style->map attrs)
      (for [child child-els]
-       ^{:key (:id child)} [element.hierarchy/render child])
+       ^{:key (:id child)}
+       [element.hierarchy/render child])
      (when bbox
        (let [ignored-ids @(rf/subscribe [::document.subs/ignored-ids])
              ignored? (contains? ignored-ids (:id el))

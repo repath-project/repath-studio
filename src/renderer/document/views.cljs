@@ -138,10 +138,11 @@
      [views/scroll-area
       [:div.flex.flex-1
        {:class "h-[41px]"}
-       (for [document-id tabs]
-         (let [title (:title (get documents document-id))
-               active? (= document-id active-id)]
-           ^{:key (str document-id)} [tab document-id title active?]))
+       (for [document-id tabs
+             :let [title (:title (get documents document-id))
+                   active? (= document-id active-id)]]
+         ^{:key (str document-id)}
+         [tab document-id title active?])
        [:div.drag.flex-1]]]
      [:div.toolbar
       [:> DropdownMenu/Root
