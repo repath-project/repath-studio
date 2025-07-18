@@ -70,7 +70,7 @@
 
 (defn app-icon
   []
-  [:div.drag
+  [:div.drag.shrink-0
    [:img.mx-2.h-4.w-4
     {:src "img/icon-no-bg.svg"
      :alt "logo"}]])
@@ -85,10 +85,11 @@
     [:div.flex.items-center.relative
      (when-not (or fullscreen? mac?)
        [app-icon])
-     [:div.flex.relative.bg-secondary
-      {:class (when (and mac? (not fullscreen?))
-                "ml-16")}
-      [menubar.views/root]]
+     [views/scroll-area
+      [:div.flex.relative.bg-secondary
+       {:class (when (and mac? (not fullscreen?))
+                 "ml-16")}
+       [menubar.views/root]]]
      [:div.absolute.hidden.justify-center.drag.grow.h-full.items-center
       {:class "pointer-events-none md:flex left-1/2 -translate-x-1/2"
        :style {:z-index -1}
