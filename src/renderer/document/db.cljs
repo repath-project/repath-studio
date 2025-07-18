@@ -5,7 +5,8 @@
    [renderer.element.db :refer [Element]]
    [renderer.history.db :refer [History]]
    [renderer.menubar.filters :refer [A11yFilter]]
-   [renderer.utils.math :refer [Vec2]]))
+   [renderer.utils.math :refer [Vec2]]
+   [shared :as shared]))
 
 (def ZoomFactor
   [:and number? [:>= 0.01] [:<= 100]])
@@ -34,7 +35,13 @@
   (->> Document
        (m/children)
        (filter (comp :persist second))
-       (into [:map])))
+       (into [:map {:closed true}])))
+
+(def SaveInfo
+  (->> Document
+       (m/children)
+       (filter (comp #(some #{%} shared/save-keys) first))
+       (into [:map {:closed true}])))
 
 (def valid? (m/validator Document))
 

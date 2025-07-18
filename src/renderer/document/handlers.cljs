@@ -4,7 +4,7 @@
    [malli.error :as m.error]
    [malli.transform :as m.transform]
    [renderer.app.db :refer [App]]
-   [renderer.document.db :as document.db :refer [Document PersistedDocument]]
+   [renderer.document.db :as document.db :refer [Document PersistedDocument SaveInfo]]
    [renderer.element.handlers :as element.handlers]
    [renderer.frame.handlers :as frame.handlers]
    [renderer.notification.handlers :as notification.handlers]
@@ -158,6 +158,20 @@
 (defn assoc-attr
   [db k v]
   (assoc-in db (path db :attrs k) v))
+
+(m/=> saved-info [:-> Document any? SaveInfo])
+(defn saved-info
+  [document ^js/File file]
+  {:id (:id document)
+   :title (.-name file)})
+
+(m/=> update-saved-info [:-> App SaveInfo App])
+(defn update-saved-info
+  [db info]
+  (print info)
+  (let [id (:id info)
+        position (get-in db [:documents id :history :position])]
+    (update-in db [:documents id] merge (assoc info :save position))))
 
 (m/=> load [:-> App map? App])
 (defn load

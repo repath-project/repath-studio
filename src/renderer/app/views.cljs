@@ -273,8 +273,7 @@
   [:div.flex.overflow-hidden
    [views/scroll-area
     [:div.flex.justify-center.p-2
-     [:div.justify-between.flex.w-full
-      {:class "lg:w-auto"}
+     [:div.justify-around.flex.w-full
       [:div.flex.w-full
        {:class "max-w-(--breakpoint-xl) lg:bg-primary"}
        [:div.flex-1
@@ -309,7 +308,7 @@
            [:<> [:h2.mb-3.mt-8.text-2xl
                  (t [::recent "Recent"])]
 
-            (for [file-path (take 5 recent-documents)]
+            (for [file-path (take 3 recent-documents)]
               ^{:key file-path}
               [recent-document file-path])])
 
@@ -343,8 +342,9 @@
            (t [::changelog "Changelog"])]]]]
 
        [:div.hidden.flex-1
-        {:class "lg:block"}
-        [:img.h-full.w-full {:src "./img/icon-square.svg"}]]]]]]])
+        {:class "lg:block"
+         :style {:background "url(./img/icon-square.svg) no-repeat center center"
+                 :background-size "cover"}}]]]]]])
 
 (defn root
   []

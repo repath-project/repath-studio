@@ -31,19 +31,22 @@
 
      (testing "close active"
        (rf/dispatch [::document.events/new])
-       (rf/dispatch [::document.events/saved @active-document])
+       (rf/dispatch [::document.events/saved {:id (:id @active-document)
+                                              :title "File-1"}])
        (rf/dispatch [::document.events/close-active])
        (is (not @active-document)))
 
      (testing "close saved"
        (rf/dispatch [::document.events/new])
        (rf/dispatch [::document.events/new])
-       (rf/dispatch [::document.events/saved @active-document])
+       (rf/dispatch [::document.events/saved {:id (:id @active-document)
+                                              :title "File-1"}])
        (rf/dispatch [::document.events/close-saved])
        (is (= (count @(rf/subscribe [::document.subs/entities])) 1)))
 
      (testing "close all"
-       (rf/dispatch [::document.events/saved @active-document])
+       (rf/dispatch [::document.events/saved {:id (:id @active-document)
+                                              :title "File-2"}])
        (rf/dispatch [::document.events/close-all])
        (is (not @active-document)))
 
@@ -130,7 +133,8 @@
          (is (not @saved?)))
 
        (testing "save"
-         (rf/dispatch [::document.events/saved @active-document])
+         (rf/dispatch [::document.events/saved {:id (:id @active-document)
+                                                :title "File-1"}])
          (is @saved?)
          (is @(rf/subscribe [::document.subs/saved? (:id @active-document)]))))
 

@@ -189,11 +189,15 @@
      (let [migrated-document (utils.compatibility/migrate-document document)
            migrated (not= document migrated-document)
            document (assoc migrated-document :id guid)]
-       (cond-> {:db (-> (document.handlers/load db document)
-                        (history.handlers/finalize #(t [::load-doc "Load document"])))
-                ::effects/focus nil}
-         (not migrated)
-         (assoc :dispatch [::saved document])))
+       {:db (cond-> db
+              :always
+              (-> (document.handlers/load document)
+                  (history.handlers/finalize #(t [::load-doc "Load document"])))
+
+              (not migrated)
+              (document.handlers/update-saved-info (select-keys document
+                                                                shared/save-keys)))
+        ::effects/focus nil})
      {:db (->> (notification.views/generic-error
                 {:title (t [::error-loading "Error while loading %1"] [(:title document)])
                  :message (t [::unsupported-or-corrupted
@@ -213,8 +217,7 @@
        {::effects/file-save
         {:data (shared/document->save-format document)
          :options file-picker-options
-         :formatter (fn [file] {:id (:id document)
-                                :title (.-name file)})
+         :formatter (partial document.handlers/saved-info document)
          :on-success [::saved]
          :on-error [::notification.events/show-exception]}}
        {::effects/ipc-invoke
@@ -239,8 +242,7 @@
        {::effects/file-save
         {:data (shared/document->save-format document)
          :options file-picker-options
-         :formatter (fn [file] {:id id
-                                :title (.-name file)})
+         :formatter (partial document.handlers/saved-info document)
          :on-success [::mark-as-saved-and-close]
          :on-error [::notification.events/show-exception]}}
        {::effects/ipc-invoke
@@ -258,8 +260,7 @@
        {::effects/file-save
         {:data (shared/document->save-format document)
          :options file-picker-options
-         :formatter (fn [file] {:id (:id document)
-                                :title (.-name file)})
+         :formatter (partial document.handlers/saved-info document)
          :on-success [::saved]
          :on-error [::notification.events/show-exception]}}
        {::effects/ipc-invoke
@@ -272,17 +273,13 @@
 (rf/reg-event-db
  ::saved
  [persist]
- (fn [db [_ document-info]]
-   (if document-info
-     (let [{:keys [id]} document-info
-           position (get-in db [:documents id :history :position])]
-       (cond-> db
-         :always
-         (update-in [:documents id] merge (assoc document-info :save position))
+ (fn [db [_ save-info]]
+   (cond-> db
+     save-info
+     (document.handlers/update-saved-info save-info)
 
-         (:path document-info)
-         (document.handlers/add-recent (:path document-info))))
-     db)))
+     (:path save-info)
+     (document.handlers/add-recent (:path save-info)))))
 
 (rf/reg-event-fx
  ::mark-as-saved-and-close
