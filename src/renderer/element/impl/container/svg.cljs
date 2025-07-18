@@ -14,11 +14,11 @@
 (defmethod element.hierarchy/properties :svg
   []
   {:icon "svg"
-   :description (t [::description 
+   :description (t [::description
                     "The svg element is a container that defines a new coordinate
                      system and viewport. It is used as the outermost element of
                      SVG documents, but it can also be used to embed an SVG fragment
-                     inside an SVG or HTML document."]) 
+                     inside an SVG or HTML document."])
    :attrs [:overflow]})
 
 (defmethod element.hierarchy/render :svg
@@ -38,7 +38,6 @@
         :on-pointer-down pointer-handler
         :on-pointer-move pointer-handler
         :fill "gray"
-        :font-family "var(--font-mono)"
         :font-size (/ 12 zoom)}) (or (:label el) (name (:tag el)))]
 
      [:rect
