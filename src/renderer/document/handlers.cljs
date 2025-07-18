@@ -167,7 +167,6 @@
 (m/=> update-saved-info [:-> App SaveInfo App])
 (defn update-saved-info
   [db info]
-  (print info)
   (let [id (:id info)
         position (get-in db [:documents id :history :position])]
     (update-in db [:documents id] merge (assoc info :save position))))
