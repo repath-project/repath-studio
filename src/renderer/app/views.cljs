@@ -268,14 +268,22 @@
     (.basename path file-path)]
    [:span.text-lg.text-muted (.dirname path file-path)]])
 
+(defn help-command
+  [icon label event]
+  [:div.flex.items-center.gap-2.flex-wrap
+   [views/icon icon]
+   [:button.button-link.text-lg
+    {:on-click #(rf/dispatch event)}
+    label]
+   [views/shortcuts event]])
+
 (defn home
   [recent-documents]
   [:div.flex.overflow-hidden
    [views/scroll-area
     [:div.flex.justify-center.p-2
-     [:div.justify-around.flex.w-full
+     [:div.justify-around.flex
       [:div.flex.w-full
-       {:class "max-w-(--breakpoint-xl) lg:bg-primary"}
        [:div.flex-1
         [:div.p-4
          {:class "lg:p-12"}
@@ -308,43 +316,27 @@
            [:<> [:h2.mb-3.mt-8.text-2xl
                  (t [::recent "Recent"])]
 
-            (for [file-path (take 3 recent-documents)]
+            (for [file-path (take 5 recent-documents)]
               ^{:key file-path}
               [recent-document file-path])])
 
          [:h2.mb-3.mt-8.text-2xl
           (t [::help "Help"])]
 
-         [:div
-          [:div.flex.items-center.gap-2
-           [views/icon "command"]
-           [:button.button-link.text-lg
-            {:on-click #(rf/dispatch [::dialog.events/show-cmdk])}
-            (t [::command-panel "Command panel"])]
-           [views/shortcuts [::dialog.events/show-cmdk]]]]
-         [:div.flex.items-center.gap-2
-          [views/icon "earth"]
-          [:button.button-link.text-lg
-           {:on-click #(rf/dispatch [::events/open-remote-url
-                                     "https://repath.studio/"])}
-           (t [::website "Website"])]]
-         [:div.flex.items-center.gap-2
-          [views/icon "commit"]
-          [:button.button-link.text-lg
-           {:on-click #(rf/dispatch [::events/open-remote-url
-                                     "https://github.com/repath-project/repath-studio"])}
-           (t [::source-code "Source Code"])]]
-         [:div.flex.items-center.gap-2
-          [views/icon "list"]
-          [:button.button-link.text-lg
-           {:on-click #(rf/dispatch [::events/open-remote-url
-                                     "https://repath.studio/roadmap/changelog/"])}
-           (t [::changelog "Changelog"])]]]]
-
-       [:div.hidden.flex-1
-        {:class "lg:block"
-         :style {:background "url(./img/icon-square.svg) no-repeat center center"
-                 :background-size "cover"}}]]]]]])
+         (->> [["command"
+                (t [::command-panel "Command panel"])
+                [::dialog.events/show-cmdk]]
+               ["earth"
+                (t [::website "Website"])
+                [::events/open-remote-url "https://repath.studio/"]]
+               ["commit"
+                (t [::source-code "Source Code"])
+                [::events/open-remote-url "https://github.com/repath-project/repath-studio"]]
+               ["list"
+                (t [::changelog "Changelog"])
+                [::events/open-remote-url "https://repath.studio/roadmap/changelog/"]]]
+              (map #(apply help-command %))
+              (into [:div]))]]]]]]])
 
 (defn root
   []
