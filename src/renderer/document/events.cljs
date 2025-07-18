@@ -300,6 +300,12 @@
    (-> (document.handlers/set-active db id)
        (document.handlers/center))))
 
+(rf/reg-event-db
+ ::center
+ [persist]
+ (fn [db [_]]
+   (document.handlers/center db)))
+
 (rf/reg-event-fx
  ::export-svg
  (fn [{:keys [db]} _]

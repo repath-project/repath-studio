@@ -26,7 +26,7 @@
    [:history {:optional true} History]
    [:pan {:default [0 0]} Vec2]
    [:elements {:default {} :persist true} [:map-of uuid? Element]]
-   [:focused {:optional true} boolean?]
+   [:centered {:optional true} boolean?]
    [:filter {:optional true} A11yFilter]
    [:attrs {:default {:fill "white" :stroke "black"}} [:map-of keyword? string?]]
    [:preview-label {:optional true} string?]])

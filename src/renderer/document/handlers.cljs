@@ -85,10 +85,9 @@
   (cond-> db
     (and (:active-document db)
          (-> db :dom-rect)
-         (-> db :window :focused)
-         (not (get-in db (path db :focused))))
+         (not (get-in db (path db :centered))))
     (-> (frame.handlers/focus-bbox :original)
-        (assoc-in (path db :focused) true)
+        (assoc-in (path db :centered) true)
         (snap.handlers/update-viewport-tree))))
 
 (m/=> search-by-path [:-> App string? [:maybe uuid?]])

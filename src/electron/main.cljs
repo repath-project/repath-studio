@@ -73,8 +73,6 @@
    [[window-event f]
     [["maximize" #(send-to-renderer! "window-maximized")]
      ["unmaximize" #(send-to-renderer! "window-unmaximized")]
-     ["focus" #(send-to-renderer! "window-focused")]
-     ["blur" #(send-to-renderer! "window-blurred")]
      ["enter-full-screen" #(send-to-renderer! "window-entered-fullscreen")]
      ["leave-full-screen" #(send-to-renderer! "window-leaved-fullscreen")]
      ["minimize" #(send-to-renderer! "window-minimized")]
@@ -97,8 +95,7 @@
   (doseq
    [action
     [(if (.isMaximized window) "window-maximized" "window-unmaximized")
-     (if (.isFullScreen window) "window-entered-fullscreen" "window-leaved-fullscreen")
-     (if (.isFocused window) "window-focused" "window-blurred")]]
+     (if (.isFullScreen window) "window-entered-fullscreen" "window-leaved-fullscreen")]]
     (send-to-renderer! action)))
 
 (defn resource-path

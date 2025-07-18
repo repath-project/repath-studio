@@ -2,7 +2,6 @@
   (:require
    [re-frame.core :as rf]
    [renderer.app.effects :as-alias app.effects]
-   [renderer.document.handlers :as document.handlers]
    [renderer.effects :as-alias effects]
    [renderer.window.effects :as-alias window.effects]))
 
@@ -24,17 +23,13 @@
 (rf/reg-event-db
  ::set-focused
  (fn [db [_ state]]
-   (cond-> db
-     :always (assoc-in [:window :focused] state)
-     state document.handlers/center)))
+   (assoc-in db [:window :focused] state)))
 
 (rf/reg-event-fx
  ::update-focused
  [(rf/inject-cofx ::window.effects/focused)]
  (fn [{:keys [db focused]} _]
-   {:db (cond-> (assoc-in db [:window :focused] focused)
-          focused
-          document.handlers/center)}))
+   {:db (assoc-in db [:window :focused] focused)}))
 
 (rf/reg-event-fx
  ::update-fullscreen

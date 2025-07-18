@@ -3,6 +3,7 @@
    [re-frame.core :as rf]
    [renderer.app.db :as app.db]
    [renderer.app.effects :as-alias app.effects]
+   [renderer.document.events :as-alias document.events]
    [renderer.document.handlers :as document.handlers]
    [renderer.effects :as-alias effects]
    [renderer.event.events :as-alias event.events]
@@ -35,8 +36,6 @@
 (defonce ipc-listeners
   [["window-maximized" [::window.events/set-maximized true]]
    ["window-unmaximized" [::window.events/set-maximized false]]
-   ["window-focused" [::window.events/set-focused true]]
-   ["window-blurred" [::window.events/set-focused false]]
    ["window-entered-fullscreen" [::window.events/set-fullscreen true]]
    ["window-leaved-fullscreen" [::window.events/set-fullscreen false]]
    ["window-minimized" [::window.events/set-minimized true]]])
@@ -93,10 +92,11 @@
       :fx (into
            [[:dispatch [::theme.events/set-document-attr]]
             [:dispatch [::set-lang-attrs]]
+            [::theme.effects/add-native-listener [::theme.events/set-document-attr]]
             [:dispatch [::set-loading false]]
             ;; We need to render once to get the canvas size right.
-            [:dispatch ^:flush-dom [::window.events/update-focused]]
-            [::theme.effects/add-native-listener [::theme.events/set-document-attr]]
+            [:dispatch ^:flush-dom [::document.events/center]]
+            [:dispatch [::window.events/update-focused]]
             [::effects/ipc-send ["initialized"]]]
            (map (partial vector ::effects/add-listener) document-listeners))})))
 
