@@ -126,7 +126,7 @@
         collapse-button-width 21
         padding (* collapse-button-width (cond-> depth (seq children) dec))
         rtl? @(rf/subscribe [::app.subs/rtl?])]
-    [:div.list-item-button.button.flex.px-1.items-center.text-start.outline-default
+    [:div.list-item-button.button.flex.px-1.items-center.text-start
      {:class ["hover:overlay [&.hovered]:overlay hover:[&_button]:visible"
               (when selected "accent")
               (when hovered "hovered")]
