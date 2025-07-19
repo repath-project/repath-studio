@@ -138,10 +138,12 @@
          [:div.absolute.inset-0
           {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])
        (when (and help-bar (seq help-message))
-         [:div.flex.absolute.justify-center.w-full.p-4.pointer-events-none
-          [:div.bg-primary.rounded-full.overflow-hidden.shadow-lg
-           [:div.overlay.text-color.text-xs.gap-1.flex.flex-wrap.truncate.py-2
-            {:class "px-4 justify-center"
+         [:div.flex.absolute.justify-center.w-full.pointer-events-none
+          {:class "sm:p-4"}
+          [:div.bg-primary.overflow-hidden.shadow-lg.w-full
+           {:class "sm:rounded-full sm:w-auto"}
+           [:div.overlay.text-color.text-xs.gap-1.flex.flex-wrap.py-2.px-4
+            {:class "sm:justify-center sm:truncate"
              :aria-live "polite"}
             help-message]]])]]]))
 
