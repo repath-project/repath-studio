@@ -289,6 +289,10 @@
        [:div.flex-1
         [:div.p-4
          {:class "lg:p-12"}
+         [:img.h-24.w-24.grayscale.brightness-15.opacity-25.mb-3
+          {:src "img/icon-no-bg.svg"
+           :alt "logo"
+           :class "[html[data-theme=light]_&]:opacity-5"}]
          [:h1.text-4xl.mb-1.font-light config/app-name]
 
          [:p.text-xl.text-muted.font-bold
