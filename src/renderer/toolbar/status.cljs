@@ -1,6 +1,7 @@
 (ns renderer.toolbar.status
   (:require
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
+   ["@radix-ui/react-tooltip" :as Tooltip]
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.events]
    [renderer.app.subs :as-alias app.subs]
@@ -156,6 +157,23 @@
       [:div.px-2.overlay.flex.items-center.font-mono "%"]]
      [zoom-menu]]))
 
+(defn radio-button
+  [{:keys [title active icon action class]}]
+  [:> Tooltip/Root
+   [:> Tooltip/Trigger {:as-child true}
+    [:span
+     [views/radio-icon-button icon @(rf/subscribe active)
+      {:class class
+       :on-click #(rf/dispatch action)}]]]
+   [:> Tooltip/Portal
+    [:> Tooltip/Content
+     {:class "tooltip-content"
+      :sideOffset 5
+      :side "top"}
+     [:div.flex.gap-2.items-center
+      title
+      [views/shortcuts action]]]]])
+
 (defn root []
   (let [loading @(rf/subscribe [::worker.subs/loading?])
         fill @(rf/subscribe [::document.subs/fill])
@@ -196,12 +214,7 @@
        [:button.icon-button
         [views/loading-indicator]])
      (into [:<>]
-           (map (fn [{:keys [title active icon action class]}]
-                  [views/radio-icon-button icon @(rf/subscribe active)
-                   {:title title
-                    :class class
-                    :on-click #(rf/dispatch action)}])
-                (view-radio-buttons)))
+           (map radio-button (view-radio-buttons)))
      [snap.views/root]
      [zoom-button-group]
      [coordinates]

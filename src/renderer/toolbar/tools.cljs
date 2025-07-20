@@ -30,7 +30,7 @@
        [:> Tooltip/Portal
         [:> Tooltip/Content
          {:class "tooltip-content"
-          :sideOffset 5
+          :sideOffset 10
           :side "top"}
          [:div.flex.gap-2.items-center
           translated-label

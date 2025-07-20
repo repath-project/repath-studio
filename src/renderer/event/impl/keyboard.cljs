@@ -12,6 +12,7 @@
    [renderer.events :as-alias events]
    [renderer.frame.events :as-alias frame.events]
    [renderer.history.events :as-alias history.events]
+   [renderer.ruler.events :as-alias ruler.events]
    [renderer.tool.events :as-alias tool.events]
    [renderer.window.events :as-alias window.events])
   (:import
@@ -95,6 +96,15 @@
                    :ctrlKey true}]]
                 [[::app.events/toggle-panel :properties]
                  [{:keyCode (key-codes "P")
+                   :ctrlKey true}]]
+                [[::app.events/toggle-panel :history]
+                 [{:keyCode (key-codes "H")
+                   :ctrlKey true}]]
+                [[::app.events/toggle-grid]
+                 [{:keyCode (key-codes "PERIOD")
+                   :ctrlKey true}]]
+                [[::ruler.events/toggle-visible]
+                 [{:keyCode (key-codes "R")
                    :ctrlKey true}]]
                 [[::element.events/stroke->path]
                  [{:keyCode (key-codes "P")
