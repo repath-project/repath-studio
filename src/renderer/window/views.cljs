@@ -82,35 +82,37 @@
         mac? @(rf/subscribe [::app.subs/mac?])
         electron? @(rf/subscribe [::app.subs/electron?])
         title-bar @(rf/subscribe [::document.subs/title-bar])]
-    [:div.flex.items-center.relative
+    [:div.flex.items-center.relative.gap-0.5
      (when-not (or fullscreen? mac?)
        [app-icon])
-     [views/scroll-area
-      [:div.flex.relative.bg-secondary
-       {:class (when (and mac? (not fullscreen?))
-                 "ml-16")}
-       [menubar.views/root]]]
+     [:div.overflow-hidden
+      [views/scroll-area
+       [:div.flex.relative.bg-secondary
+        {:class (when (and mac? (not fullscreen?))
+                  "ml-16")}
+        [menubar.views/root]]]]
      [:div.absolute.hidden.justify-center.drag.grow.h-full.items-center
       {:class "pointer-events-none md:flex left-1/2 -translate-x-1/2"
        :style {:z-index -1}
        :dir "ltr"}
       title-bar]
-     [:div.flex.h-full.flex-1.drag]
+     [:div.flex.h-full.drag {:class "md:flex-1"}]
      [:div.flex
       [:div.flex.gap-px
        [language-dropdown]
-       [button
-        {:action [::theme.events/cycle-mode]
-         :title (t [::theme "Theme mode - %1"] [theme-mode])
-         :icon theme-mode
-         :class "bg-primary"}]]
-      (when (and electron?
-                 (not fullscreen?)
-                 (not mac?))
-        (->> (window-control-buttons)
-             (map button)
-             (into [:div.flex])))
-      (when fullscreen?
-        [button
-         {:action [::window.events/toggle-fullscreen]
-          :icon "arrow-minimize"}])]]))
+       [button {:action [::theme.events/cycle-mode]
+                :title (t [::theme "Theme mode - %1"] [theme-mode])
+                :icon theme-mode
+                :class "bg-primary"}]
+       [button {:action [::window.events/toggle-fullscreen]
+                :title (if fullscreen?
+                         (t [::exit-fullscreen "Exit fullscreen"])
+                         (t [::enter-fullscreen "Enter fullscreen"]))
+                :icon (if fullscreen? "arrow-minimize" "arrow-maximize")
+                :class "bg-primary hidden sm:block"}]
+       (when (and electron?
+                  (not fullscreen?)
+                  (not mac?))
+         (->> (window-control-buttons)
+              (map button)
+              (into [:div.flex])))]]]))

@@ -571,7 +571,9 @@
   :maximize "Maximizar"
   :restore "Restaurar"
   :close "Fechar"
-  :theme "Modo de tema - %1"}
+  :theme "Modo de tema - %1"
+  :enter-fullscreen "Entrar em ecrã inteiro"
+  :exit-fullscreen "Sair do ecrã inteiro"}
 
  :renderer.toolbar.tools
  {:transform "Transformar"

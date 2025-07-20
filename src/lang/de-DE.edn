@@ -583,7 +583,9 @@
   :maximize "Maximieren"
   :restore "Wiederherstellen"
   :close "Schließen"
-  :theme "Themamodus - %1"}
+  :theme "Themamodus - %1"
+  :enter-fullscreen "Vollbild aktivieren"
+  :exit-fullscreen "Vollbild verlassen"}
 
  :renderer.toolbar.tools
  {:transform "Transformieren"

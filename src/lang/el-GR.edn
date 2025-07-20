@@ -591,7 +591,9 @@
   :maximize "Μεγιστοποίηση"
   :restore "Επαναφορά"
   :close "Κλείσιμο"
-  :theme "Θέμα - %1"}
+  :theme "Θέμα - %1"
+  :enter-fullscreen "Είσοδος σε πλήρη οθόνη"
+  :exit-fullscreen "Έξοδος από πλήρη οθόνη"}
 
  :renderer.toolbar.tools
  {:transform "Μετασχηματισμός"

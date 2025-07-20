@@ -573,7 +573,9 @@
   :maximize "Agrandir"
   :restore "Restaurer"
   :close "Fermer"
-  :theme "Mode de thème - %1"}
+  :theme "Mode de thème - %1"
+  :enter-fullscreen "Activer le plein écran"
+  :exit-fullscreen "Quitter le plein écran"}
 
  :renderer.toolbar.tools
  {:transform "Transformer"

@@ -520,7 +520,9 @@
   :maximize "最大化"
   :restore "还原"
   :close "关闭"
-  :theme "主题模式 - %1"}
+  :theme "主题模式 - %1"
+  :enter-fullscreen "进入全屏"
+  :exit-fullscreen "退出全屏"}
 
  :renderer.toolbar.tools
  {:transform "变换"

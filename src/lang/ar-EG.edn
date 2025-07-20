@@ -546,7 +546,9 @@
   :maximize "تكبير"
   :restore "استعادة"
   :close "إغلاق"
-  :theme "وضع السمة - %1"}
+  :theme "وضع السمة - %1"
+  :enter-fullscreen "دخول الشاشة الكاملة"
+  :exit-fullscreen "خروج من الشاشة الكاملة"}
 
  :renderer.toolbar.tools
  {:transform "تحويل"

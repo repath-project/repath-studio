@@ -562,7 +562,9 @@
   :maximize "Maximize"
   :restore "Restore"
   :close "Close"
-  :theme "Theme mode - %1"}
+  :theme "Theme mode - %1"
+  :enter-fullscreen "Enter fullscreen"
+  :exit-fullscreen "Exit fullscreen"}
 
  :renderer.toolbar.tools
  {:transform "Transform"

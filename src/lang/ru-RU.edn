@@ -583,7 +583,9 @@
   :maximize "Развернуть"
   :restore "Восстановить"
   :close "Закрыть"
-  :theme "Режим темы - %1"}
+  :theme "Режим темы - %1"
+  :enter-fullscreen "Войти в полноэкранный режим"
+  :exit-fullscreen "Выйти из полноэкранного режима"}
 
  :renderer.toolbar.tools
  {:transform "Трансформировать"
