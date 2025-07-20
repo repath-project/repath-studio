@@ -96,7 +96,7 @@
        :style {:z-index -1}
        :dir "ltr"}
       title-bar]
-     [:div.flex.h-full.drag {:class "md:flex-1"}]
+     [:div.flex.h-full.flex-1.drag]
      [:div.flex
       [:div.flex.gap-px
        [language-dropdown]
