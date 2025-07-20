@@ -12,6 +12,19 @@
    [renderer.utils.svg :as utils.svg]
    [renderer.views :as views]))
 
+(defn menu-option
+  [option is-checked]
+  [:> DropdownMenu/CheckboxItem
+   {:class "menu-checkbox-item inset"
+    :on-click #(.stopPropagation %)
+    :onSelect #(do (.preventDefault %)
+                   (rf/dispatch [::snap.events/toggle-option option]))
+    :checked is-checked}
+   [:> DropdownMenu/ItemIndicator
+    {:class "menu-item-indicator"}
+    [views/icon "checkmark"]]
+   (t [(keyword "renderer.snap.views" (name option)) (name option)])])
+
 (defn options-dropdown
   []
   (let [options @(rf/subscribe [::snap.subs/options])]
@@ -24,27 +37,16 @@
         :class "hover:pb-1"}
        [views/icon "chevron-up"]]]
      [:> DropdownMenu/Portal
-      [:> DropdownMenu/Content
-       {:side "top"
-        :align "end"
-        :sideOffset 5
-        :alignOffset -5
-        :position "popper"
-        :class "menu-content rounded-sm select-content"
-        :on-key-down #(.stopPropagation %)
-        :on-escape-key-down #(.stopPropagation %)}
-       (for [option snap.db/snap-options]
-         ^{:key option}
-         [:> DropdownMenu/CheckboxItem
-          {:class "menu-checkbox-item inset"
-           :on-click #(.stopPropagation %)
-           :onSelect #(do (.preventDefault %)
-                          (rf/dispatch [::snap.events/toggle-option option]))
-           :checked (contains? options option)}
-          [:> DropdownMenu/ItemIndicator
-           {:class "menu-item-indicator"}
-           [views/icon "checkmark"]]
-          (t [(keyword "renderer.snap.views" (name option)) (name option)])])]]]))
+      (into [:> DropdownMenu/Content
+             {:side "top"
+              :align "end"
+              :sideOffset 5
+              :alignOffset -5
+              :position "popper"
+              :class "menu-content rounded-sm select-content"
+              :on-key-down #(.stopPropagation %)
+              :on-escape-key-down #(.stopPropagation %)}]
+            (map #(menu-option % (contains? options %)) snap.db/snap-options))]]))
 
 (defn root
   []

@@ -12,16 +12,14 @@
    [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]))
 
-(defn select-options
-  [history-list]
-  (for [{:keys [id explanation]} history-list]
-    ^{:key id}
-    [:> Select/Item
-     {:value (str id)
-      :class "menu-item select-item"}
-     [:> Select/ItemText (if (string? explanation)
-                           explanation
-                           (explanation))]]))
+(defn select-option
+  [{:keys [id explanation]}]
+  [:> Select/Item
+   {:value (str id)
+    :class "menu-item select-item"}
+   [:> Select/ItemText (if (string? explanation)
+                         explanation
+                         (explanation))]])
 
 (defn select
   [label options disabled?]
@@ -48,8 +46,8 @@
      [:> Select/ScrollUpButton {:class "select-scroll-button"}
       [views/icon "chevron-up"]]
      [:> Select/Viewport {:class "select-viewport"}
-      [:> Select/Group
-       (select-options options)]]
+      (into [:> Select/Group]
+            (map select-option options))]
      [:> Select/ScrollDownButton
       {:class "select-scroll-button"}
       [views/icon "chevron-down"]]]]])
