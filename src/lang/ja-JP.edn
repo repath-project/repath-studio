@@ -1,0 +1,662 @@
+{:missing ":ja-JPの翻訳がありません"
+
+ :renderer.app.views
+ {:lock "ロック"
+  :unlock "ロック解除"
+  :svg-description "スケーラブルベクターグラフィックス操作"
+  :start "開始"
+  :new "新規"
+  :or "または"
+  :open "開く"
+  :recent "最近"
+  :select-size "サイズを選択"
+  :select-template "テンプレートを選択"
+  :empty-canvas "空のキャンバス"
+  :help "ヘルプ"
+  :command-panel "コマンドパネル"
+  :website "ウェブサイト"
+  :source-code "ソースコード"
+  :changelog "変更履歴"}
+
+ :renderer.tree.views
+ {:lock "ロック"
+  :unlock "ロック解除"
+  :show "表示"
+  :hide "非表示"}
+
+ :renderer.reepl.views
+ {:hide-command-output "コマンド出力を隠す"
+  :show-command-output "コマンド出力を表示"}
+
+ :renderer.app.events
+ {:create-doc "ドキュメントを作成"}
+
+ :renderer.dialog.views
+ {:search-command "コマンドを検索"
+  :no-results "結果が見つかりません。"
+  :version "バージョン: "
+  :browser "ブラウザ: "
+  :save "保存"
+  :dont-save "保存しない"
+  :cancel "キャンセル"
+  :changes-will-be-lost [:p "%1への変更は、ドキュメントを保存せずに閉じると失われます。"]}
+
+ :renderer.menubar.views
+ {:file "ファイル"
+  :new "新規"
+  :open "開く..."
+  :recent "最近使用"
+  :recent-clear "最近使用をクリア"
+  :print "印刷"
+  :save "保存"
+  :save-as "名前を付けて保存..."
+  :download "ダウンロード"
+  :export-as-svg "SVGとしてエクスポート"
+  :close "閉じる"
+  :exit "終了"
+  :edit "編集"
+  :undo "元に戻す"
+  :redo "やり直し"
+  :cut "切り取り"
+  :copy "コピー"
+  :paste "貼り付け"
+  :paste-in-place "同じ場所に貼り付け"
+  :paste-styles "スタイルを貼り付け"
+  :duplicate "複製"
+  :select-all "すべて選択"
+  :deselect-all "すべて選択解除"
+  :invert-selection "選択を反転"
+  :select-same-tags "同じタグを選択"
+  :delete "削除"
+  :object "オブジェクト"
+  :object-to-path "オブジェクトをパスに"
+  :stroke-to-path "ストロークをパスに"
+  :group "グループ"
+  :ungroup "グループ解除"
+  :lock "ロック"
+  :unlock "ロック解除"
+  :align "整列"
+  :align-left "左揃え"
+  :align-right "右揃え"
+  :align-top "上揃え"
+  :align-bottom "下揃え"
+  :align-center-vertically "垂直中央揃え"
+  :align-center-horizontally "水平中央揃え"
+  :animate "アニメーション"
+  :animate-transform "変形をアニメーション"
+  :animate-motion "モーションをアニメーション"
+  :boolean-operation "ブール演算"
+  :boolean-exclude "除外"
+  :boolean-unite "結合"
+  :boolean-intersect "交差"
+  :boolean-subtract "減算"
+  :boolean-divide "分割"
+  :raise "前面へ"
+  :lower "背面へ"
+  :raise-to-top "最前面へ"
+  :lower-to-bottom "最背面へ"
+  :image "画像"
+  :image-trace "トレース"
+  :path "パス"
+  :path-simplify "単純化"
+  :path-smooth "スムーズ"
+  :path-flatten "平坦化"
+  :path-reverse "反転"
+  :view "表示"
+  :zoom "ズーム"
+  :zoom-in "拡大"
+  :zoom-out "縮小"
+  :zoom-set-50 "50%に設定"
+  :zoom-set-100 "100%に設定"
+  :zoom-set-200 "200%に設定"
+  :zoom-focus-selected "選択項目にフォーカス"
+  :zoom-fit-selected "選択項目にフィット"
+  :zoom-fill-selected "選択項目を画面に合わせる"
+  :accessibility-filter "アクセシビリティフィルタ"
+  :blur "ブラー"
+  :blur-x2 "ブラーx2"
+  :protanopia "第一色覚異常"
+  :protanomaly "第一色弱"
+  :deuteranopia "第二色覚異常"
+  :deuteranomaly "第二色弱"
+  :tritanopia "第三色覚異常"
+  :tritanomaly "第三色弱"
+  :achromatopsia "全色覚異常"
+  :achromatomaly "全色弱"
+  :language "言語"
+  :grid "グリッド"
+  :rulers "ルーラー"
+  :help-bar "ヘルプバー"
+  :debug-info "デバッグ情報"
+  :panel "パネル"
+  :panel-element-tree "要素ツリー"
+  :panel-properties "プロパティ"
+  :panel-xml-view "XML表示"
+  :panel-history-tree "履歴ツリー"
+  :panel-shell-history "シェル履歴"
+  :panel-timeline-editor "タイムラインエディタ"
+  :fullscreen "フルスクリーン"
+  :help "ヘルプ"
+  :command-panel "コマンドパネル"
+  :website "ウェブサイト"
+  :source-code "ソースコード"
+  :license "ライセンス"
+  :changelog "変更履歴"
+  :submit-an-issue "問題を報告"
+  :about "このアプリについて"}
+
+ :renderer.element.events
+ {:modify-selection "選択を変更"
+  :select-element "要素を選択"
+  :select-elements "要素を選択"
+  :delete-selection "選択を削除"
+  :toggle "%1を切り替え"
+  :set "%1を設定"
+  :lock-selection "選択をロック"
+  :unlock-selection "選択のロックを解除"
+  :remove "%1を削除"
+  :update "%1を更新"
+  :deselect-all "すべて選択解除"
+  :select-all "すべて選択"
+  :select-same-tags "同じタグを選択"
+  :invert-selection "選択を反転"
+  :raise-selection "選択を前面へ"
+  :lower-selection "選択を背面へ"
+  :raise-selection-top "選択を最前面へ"
+  :lower-selection-bottom "選択を最背面へ"
+  :paste-selection "選択を貼り付け"
+  :paste-selection-in-place "選択を同じ場所に貼り付け"
+  :paste-styles-to-selection "選択にスタイルを貼り付け"
+  :duplicate-selection "選択を複製"
+  :move-selection "選択を移動"
+  :place-selection "選択を配置"
+  :scale-selection "選択を拡大縮小"
+  :convert-selection-path "選択をパスに変換"
+  :convert-selection-stroke-path "選択のストロークをパスに変換"
+  :create "%1を作成"
+  :import-svg "SVGをインポート"
+  :set-parent "親を設定"
+  :group-selection "選択をグループ化"
+  :ungroup-selection "選択のグループ化を解除"
+  :cut-selection "選択を切り取り"
+  :trace-image "画像をトレース"}
+
+ :renderer.element.views
+ {:cut "切り取り"
+  :copy "コピー"
+  :paste "貼り付け"
+  :raise "前面へ"
+  :lower "背面へ"
+  :raise-top "最前面へ"
+  :lower-bottom "最背面へ"
+  :animate "アニメーション"
+  :animate-transform "変形をアニメーション"
+  :animate-motion "モーションをアニメーション"
+  :duplicate "複製"
+  :delete "削除"}
+
+ :renderer.element.impl.shape.circle
+ {:name "円"
+  :description "<circle> SVG要素は、中心点と半径に基づいて円を描画するために使用される
+                SVG基本形状です。"}
+
+ :renderer.element.impl.shape.image
+ {:name "画像"
+  :description "<image> SVG要素は、SVGドキュメント内に画像を含めます。ラスター
+                画像ファイルまたは他のSVGファイルを表示できます。"}
+
+ :renderer.element.impl.shape.ellipse
+ {:name "楕円"
+  :description "<ellipse>要素は、中心座標とx、y半径に基づいて楕円を作成するために
+                使用されるSVG基本形状です。"}
+
+ :renderer.element.impl.shape.line
+ {:name "線"
+  :description "<line>要素は、2つの点を接続する線を作成するために使用される
+                SVG基本形状です。"}
+
+ :renderer.element.impl.shape.path
+ {:name "パス"
+  :description "<path> SVG要素は、形状を定義する汎用要素です。すべての基本形状は
+                パス要素で作成できます。"}
+
+ :renderer.element.impl.shape.polygon
+ {:name "多角形"
+  :description "<polygon> SVG要素は、接続された直線セグメントのセットで構成される
+                閉じた形状を定義します。最後の点は最初の点に接続されます。"}
+
+ :renderer.element.impl.shape.polyline
+ {:name "複線"
+  :description "<polyline> SVG要素は、複数の点を接続する直線を作成するSVG基本形状
+                です。通常、最後の点を最初の点に接続する必要がないため、開いた
+                形状を作成するために使用されます。"}
+
+ :renderer.element.impl.shape.rect
+ {:name "矩形"
+  :description "<rect>要素は、位置、幅、高さによって定義される矩形を描画する基本的な
+                SVG形状です。矩形の角を丸くすることもできます。"}
+
+ :renderer.element.impl.custom.blob
+ {:x "ブロブの中心のX座標。"
+  :y "ブロブの中心のY座標。"
+  :seed "指定されたシードは常に同じブロブを生成します。"
+  :extra-points "実際の点数は `3 + extraPoints` になります。"
+  :randomness "点の位置のバリエーションの量を増加させます。"
+  :size "境界ボックスのサイズ。"
+  :description "ベクターベースのブロブ。"
+  :generate-random-seed "ランダムシードを生成"}
+
+ :renderer.element.impl.custom.brush
+ {:name "ブラシ"
+  :points "ユーザーのマウス移動から記録された入力点。"
+  :size "ストロークの基本サイズ（直径）。"
+  :thinning "ストロークのサイズに対する圧力の影響。"
+  :smoothing "ストロークのエッジをどの程度柔らかくするか。"
+  :stream-line "ストロークをどの程度流線化するか。"
+  :description "perfect-freehandを使用して圧力感知フリーハンドラインを描画。"}
+
+ :renderer.element.impl.container.canvas
+ {:name "キャンバス"
+  :description "キャンバスは、すべての要素をホストするメインのSVGコンテナです。"}
+
+ :renderer.element.impl.container.svg
+ {:description "svg要素は、新しい座標系とビューポートを定義するコンテナです。
+                SVGドキュメントの最も外側の要素として使用されますが、SVGまたは
+                HTMLドキュメント内にSVGフラグメントを埋め込むためにも使用できます。"}
+
+ :renderer.element.impl.text
+ {:description "SVG <text>要素は、テキストで構成されるグラフィック要素を描画します。
+                他のSVGグラフィック要素と同様に、<text>にグラデーション、パターン、
+                クリッピングパス、マスク、またはフィルターを適用することが可能です。"
+  :label "テキスト"
+  :remove-text "テキストを削除"
+  :set-text "テキストを設定"}
+
+ :renderer.attribute.views
+ {:all "すべて"
+  :browser-compatibility "ブラウザ互換性"
+  :learn-more "詳細を学ぶ"
+  :specification "仕様"
+  :applies-to "適用先"
+  :computed "計算値"
+  :percentages "パーセンテージ"
+  :animatable "アニメーション可能"
+  :animationType "アニメーションタイプ"
+  :syntax "構文"
+  :mdn-info "MDN情報"}
+
+ :renderer.attribute.impl.core
+ {:x "x属性は、ユーザー座標系内のx軸座標を定義します。"
+  :y "y属性は、ユーザー座標系内のy軸座標を定義します。"
+  :x1 "x1属性は、複数の座標を必要とするSVG要素を描画するための最初のx座標を
+       指定するために使用されます。1つの座標のみを必要とする要素は、代わりに
+       x属性を使用します。"
+  :y1 "y1属性は、複数の座標を必要とするSVG要素を描画するための最初のy座標を
+       指定するために使用されます。1つの座標のみを必要とする要素は、代わりに
+       y属性を使用します。"
+  :x2 "x2属性は、複数の座標を必要とするSVG要素を描画するための2番目のx座標を
+       指定するために使用されます。1つの座標のみを必要とする要素は、代わりに
+       x属性を使用します。"
+  :y2 "y2属性は、複数の座標を必要とするSVG要素を描画するための2番目のy座標を
+       指定するために使用されます。1つの座標のみを必要とする要素は、代わりに
+       y属性を使用します。"
+  :cx "cx属性は、中心点のx軸座標を定義します。"
+  :cy "cy属性は、中心点のy軸座標を定義します。"
+  :dx "dx属性は、要素またはその内容の位置のx軸に沿ったシフトを示します。"
+  :dy "dy属性は、要素またはその内容の位置のy軸に沿ったシフトを示します。"
+  :width "width属性は、ユーザー座標系内の要素の水平長を定義します。"
+  :height "height属性は、ユーザー座標系内の要素の垂直長を定義します。"
+  :rx "rx属性は、x軸上の半径を定義します。"
+  :ry "ry属性は、y軸上の半径を定義します。"
+  :r "r属性は、円の半径を定義します。"
+  :rotate "rotate属性は、<animateMotion>要素で指定されたパスに沿って移動する
+           ときに、アニメーション化された要素がどのように回転するかを指定します。"
+  :stroke "stroke属性は、形状の輪郭を描画するために使用される色（または
+           グラデーションやパターンなどのSVGペイントサーバー）を定義する
+           プレゼンテーション属性です。"
+  :fill "fill属性には2つの異なる意味があります。形状とテキストの場合、要素を
+         描画するために使用される色（またはグラデーションやパターンなどの
+         SVGペイントサーバー）を定義するプレゼンテーション属性です；
+         アニメーションの場合、アニメーションの最終状態を定義します。"
+  :stroke-width "stroke-width属性は、形状に適用されるストロークの幅を定義する
+                 プレゼンテーション属性です。"
+  :stroke-dasharray "stroke-dasharray属性は、形状の輪郭を描画するために
+                     使用される破線とギャップのパターンを定義する
+                     プレゼンテーション属性です。"
+  :opacity "opacity属性は、オブジェクトまたはオブジェクトのグループの透明度、
+            つまり要素の背後の背景がどの程度オーバーレイされるかを指定します。"
+  :id "id属性は、要素に一意の名前を割り当てます。"
+  :class "要素にクラス名またはクラス名のセットを割り当てます。同じクラス名を
+          任意の数の要素に割り当てることができますが、複数のクラス名は空白文字で
+          区切る必要があります。"
+  :tabindex "tabindex属性を使用すると、要素がフォーカス可能かどうかを制御し、
+             順次フォーカスナビゲーションの目的で要素の相対的な順序を定義
+             できます。"
+  :style "style属性を使用すると、CSS宣言を使用して要素にスタイルを設定
+          できます。HTMLのstyle属性と同じように機能します。"
+  :href "href属性は、参照URLとしてリソースへのリンクを定義します。そのリンク
+         の正確な意味は、それを使用する各要素のコンテキストに依存します。"
+  :attribute-name "attributeName属性は、アニメーション中に変更されるターゲット
+                   要素のCSSプロパティまたは属性の名前を示します。"
+  :begin "begin属性は、アニメーションが開始するタイミングを定義します。"
+  :end "end属性は、アクティブな継続時間を制約できるアニメーションの終了値を
+        定義します。"
+  :dur "dur属性は、アニメーションの単純な継続時間を示します。"
+  :min "min属性は、アクティブなアニメーション継続時間の最小値を指定します。"
+  :max "max属性は、アクティブなアニメーション継続時間の最大値を指定します。"
+  :restart "restart属性は、アニメーションを再開できるかどうかを指定します。"
+  :repeat-count "repeatCount属性は、アニメーションが実行される回数を示します。"
+  :repeat-dur "repeatDur属性は、アニメーションを繰り返すための総継続時間を
+               指定します。"
+  :calc-mode "calcMode属性は、アニメーションの補間モードを指定します。"
+  :values "values属性は、使用されるコンテキストに応じて異なる意味を持ちます。
+           アニメーションの過程で使用される値のシーケンスを定義するか、実行
+           される色変更のタイプに応じて異なって解釈される色行列の数値の
+           リストです。"
+  :key-times "keyTimes属性は、アニメーションのペーシングを制御するために
+              使用される時間値のリストを表します。"
+  :key-splines "keySplines属性は、keyTimesリストに関連付けられたベジェ曲線
+                制御点のセットを定義し、区間ペーシングを制御する3次ベジェ関数を
+                定義します。"
+  :from "from属性は、アニメーション中に変更される属性の初期値を示します。"
+  :to "to属性は、アニメーション中に変更される属性の最終値を示します。"
+  :by "by属性は、アニメーション中に変更される属性の相対オフセット値を
+       指定します。"
+  :additive "additive属性は、アニメーションが加算的かどうかを制御します。"
+  :accumulate "accumulate属性は、アニメーションが累積的かどうかを制御します。"
+  :view-box "viewBox属性は、ユーザー空間内でのSVGビューポートの位置と寸法を
+             定義します。"
+  :preserve-aspect-ratio "preserveAspectRatio属性は、指定されたアスペクト比を
+                          提供するviewBoxを持つ要素が、異なるアスペクト比の
+                          ビューポートにどのようにフィットする必要があるかを
+                          示します。"}
+
+ :renderer.tool.impl.element.core
+ {:help "クリックしてドラッグして要素を作成します。"}
+
+ :renderer.tool.impl.element.polyshape
+ {:add-points "クリックしてポイントを追加。"
+  :finalize-shape "ダブルクリックして形状を確定。"
+  :create-tool "%1を作成"}
+
+ :renderer.tool.impl.element.rect
+ {:name "矩形"
+  :help [:div "%1を押しながら比率をロック。"]
+  :create-rectangle "矩形を作成"}
+
+ :renderer.tool.impl.element.svg
+ {:help [:div "%1を押しながら比率をロック。"]
+  :create-svg "SVGを作成"}
+
+ :renderer.tool.impl.extension.blob
+ {:create-blob "ブロブを作成"}
+
+ :renderer.tool.impl.misc.dropper
+ {:help "どこでもクリックして色を選択。"
+  :pick-color "色を選択"}
+
+ :renderer.tool.impl.misc.fill
+ {:help "要素をクリックして塗りつぶし。"
+  :fill "塗りつぶし"}
+
+ :renderer.tool.impl.misc.measure
+ {:help "クリックしてドラッグして距離を測定。"
+  :measure-end "測定終了"
+  :measure-start "測定開始"}
+
+ :renderer.tool.impl.element.text
+ {:help "クリックして入力を開始。"}
+
+ :renderer.attribute.impl.stroke-linecap
+ {:description "stroke-linecap属性は、ストロークされた開いたサブパスの端で
+                使用される形状を定義するプレゼンテーション属性です。"
+  :butt "バット"
+  :round "ラウンド"
+  :square "スクエア"}
+
+ :renderer.attribute.impl.stroke-linejoin
+ {:description "stroke-linejoin属性は、ストロークされたパスのコーナーで
+                使用される形状を定義するプレゼンテーション属性です。"
+  :bevel "ベベル"
+  :miter "マイター"
+  :round "ラウンド"}
+
+ :renderer.attribute.impl.overflow
+ {:description "overflow属性は、要素のコンテンツがそのブロックフォーマッティング
+                コンテキストに収まらないときの処理方法を設定します。この機能は
+                まだ広く実装されていません。"
+  :hidden "隠す"
+  :visible "表示"}
+
+ :renderer.attribute.impl.color
+ {:pick-color "色を選択"}
+
+ :renderer.attribute.impl.d
+ {:description "d属性は描画するパスを定義します。"
+  :edit "パスを編集"
+  :absolute "（絶対）"
+  :relative "（相対）"
+  :move-to "移動"
+  :line-to "直線"
+  :vertical-line "垂直線"
+  :horizontal-line "水平線"
+  :cubic-bezier "3次ベジェ曲線"
+  :shortcut-cubic-bezier "ショートカット3次ベジェ曲線"
+  :quadratic-bezier-curve "2次ベジェ曲線"
+  :shortcut-quadratic "ショートカット2次ベジェ曲線"
+  :elliptical-arc-curve "楕円弧曲線"
+  :close-path "パスを閉じる"}
+
+ :renderer.attribute.impl.length
+ {:increase "増加"
+  :decrease "減少"}
+
+ :renderer.attribute.impl.font-family
+ {:description "font-family属性は、テキストのレンダリングに使用されるフォント
+                ファミリーを、フォントファミリー名および/または汎用ファミリー名の
+                優先順位リストとして指定します。"
+  :search-font "フォントを検索"
+  :select-font "フォントを選択"
+  :no-local-font "ローカルフォントが見つかりません。"}
+
+ :renderer.attribute.impl.font-size
+ {:description "font-size属性は、マルチライン配置環境で複数行のテキストを
+                隙間なく設定する際の、ベースラインからベースラインまでの
+                フォントサイズを指します。"}
+
+ :renderer.attribute.impl.font-weight
+ {:description "font-weight属性は、同じフォントファミリーの他のフォントと
+                比較して、テキストのレンダリングに使用されるグリフの太さや
+                細さを指します。"}
+
+ :renderer.tool.impl.base.edit
+ {:help-idle-drag [:div "ハンドルをドラッグして形状を変更。"]
+  :help-idle-click [:div "要素をクリックして選択を変更"]
+  :help-edit [:div "%1を押しながら方向を制限。"]
+  :help-type [:div "テキストを入力してください。"]
+  :select-element "要素を選択"
+  :edit "編集"
+  :centroid "重心"}
+
+ :renderer.tool.impl.base.transform
+ {:idle-click [:div "クリックして要素を選択するか、ドラッグして範囲選択。 "]
+  :idle-hold [:div "%1を押しながら選択に要素を追加または削除。"]
+  :select [:div "%1を押しながら交差する要素を選択。"]
+  :select-element "要素を選択"
+  :deselect-element "要素の選択を解除"
+  :translate [:div "%1を押しながら方向を制限、%2を押しながら複製。"]
+  :clone [:div "%1を押しながら方向を制限。または%2を離して移動"]
+  :scale [:div "%1を押しながら比率をロック、%2を押しながらその場で拡大縮小、
+                  %3を押しながら子要素も拡大縮小。"]
+  :modify-selection "選択を変更"
+  :move-selection "選択を移動"
+  :scale-selection "選択を拡大縮小"
+  :clone-selection "選択を複製"
+  :scale-handle "拡大縮小ハンドル"}
+
+ :renderer.tool.impl.base.pan
+ {:idle-help "クリックしてドラッグしてパン。"
+  :pan-help "ドラッグしてパン。"}
+
+ :renderer.tool.impl.base.zoom
+ {:zoom-in [:div "クリックするか範囲を選択してズームイン。"]
+  :zoom-out [:div "%1を押しながらズームアウト。"]}
+
+ :renderer.tool.impl.draw.brush
+ {:draw-brush "ブラシで描画"}
+
+ :renderer.tool.impl.draw.pen
+ {:draw-line "線を描画"}
+
+ :renderer.tool.impl.draw.core
+ {:help "クリックしてドラッグして描画。"}
+
+ :renderer.tool.impl.element.circle
+ {:create-circle "円を作成"
+  :circle-radius "円の半径"
+  :circle-center "円の中心"}
+
+ :renderer.tool.impl.element.ellipse
+ {:create-ellipse "楕円を作成"
+  :help [:div "%1を押しながら比率をロック。"]}
+
+ :renderer.tool.impl.element.line
+ {:create-line "線を作成"}
+
+ :renderer.document.events
+ {:save-changes "変更を保存しますか？"
+  :create-doc "ドキュメントを作成"
+  :create-doc-from-template "テンプレートからドキュメントを作成"
+  :load-doc "ドキュメントを読み込み"
+  :error-loading "%1の読み込みエラー"
+  :unsupported-or-corrupted "ファイルがサポートされていないか破損しているようです。"}
+
+ :renderer.document.views
+ {:new "新規"
+  :open "開く"
+  :open-directory "格納ディレクトリを開く"
+  :save "保存"
+  :undo "元に戻す"
+  :redo "やり直し"
+  :close "閉じる"
+  :close-doc "ドキュメントを閉じる"
+  :close-all "すべて閉じる"
+  :close-saved "保存済みを閉じる"
+  :close-others "他を閉じる"}
+
+ :renderer.window.views
+ {:minimize "最小化"
+  :maximize "最大化"
+  :restore "復元"
+  :close "閉じる"
+  :theme "テーマモード - %1"
+  :enter-fullscreen "フルスクリーンに入る"
+  :exit-fullscreen "フルスクリーンを終了"}
+
+ :renderer.toolbar.tools
+ {:transform "変形"
+  :edit "編集"
+  :pan "パン"
+  :zoom "ズーム"
+  :svg "SVG"
+  :circle "円"
+  :ellipse "楕円"
+  :rectangle "矩形"
+  :line "線"
+  :polyline "複線"
+  :polygon "多角形"
+  :image "画像"
+  :text "テキスト"
+  :blob "ブロブ"
+  :brush "ブラシ"
+  :pen "ペン"
+  :dropper "スポイト"
+  :fill "塗りつぶし"
+  :measure "測定"}
+
+ :renderer.toolbar.status
+ {:select-zoom "ズームレベルを選択"
+  :zoom "ズーム"
+  :zoom-out "ズームアウト"
+  :zoom-in "ズームイン"
+  :zoom-set-50 "50%に設定"
+  :zoom-set-100 "100%に設定"
+  :zoom-set-200 "200%に設定"
+  :zoom-focus-selected "選択項目にフォーカス"
+  :zoom-fit-selected "選択項目にフィット"
+  :zoom-fill-selected "選択項目を画面に合わせる"
+  :timeline "タイムライン"
+  :grid "グリッド"
+  :rulers "ルーラー"
+  :history "履歴"
+  :xml "XML"
+  :fill-color "塗り色を選択"
+  :stroke-color "線色を選択"
+  :swap-color "塗りと線の色を交換"}
+
+ :renderer.snap.views
+ {:snap "スナップ"
+  :snap-options "スナップオプション"
+  :centers "中心"
+  :midpoints "中点"
+  :corners "角"
+  :nodes "ノード"
+  :to " に "}
+
+ :renderer.toolbar.object
+ {:bring-front "最前面へ"
+  :send-back "最背面へ"
+  :bring-forward "前面へ"
+  :send-backward "背面へ"
+  :group "グループ"
+  :ungroup "グループ解除"
+  :align-left "左揃え"
+  :align-center-hor "水平中央揃え"
+  :align-right "右揃え"
+  :align-top "上揃え"
+  :align-center-ver "垂直中央揃え"
+  :align-bottom "下揃え"
+  :unite "結合"
+  :intersect "交差"
+  :subtract "減算"
+  :exclude "除外"
+  :divide "分割"}
+
+ :renderer.utils.bounds
+ {:bounds-corner "境界角"
+  :bounds-center "境界中心"
+  :bounds-midpoint "境界中点"}
+
+ :renderer.history.events
+ {:clear-history "履歴をクリア"}
+
+ :renderer.history.views
+ {:center-view "ビューを中央に"
+  :clear-history "履歴をクリア"
+  :action-cannot-undone "この操作は元に戻せません。"
+  :clear-history-description "ドキュメントの履歴をクリアしてもよろしいですか？"
+  :select-element "要素を選択"
+  :delete-selection "選択を削除"}
+
+ :renderer.timeline.views
+ {:speed "速度"
+  :no-filter "フィルタなし"
+  :filter "フィルタ"
+  :grid-snap "グリッドスナップ"
+  :guide-snap "ガイドスナップ"
+  :play "再生"
+  :replay "リプレイ"
+  :pause "一時停止"
+  :hide-timeline "タイムラインを隠す"}
+
+ :renderer.attribute.impl.angle
+ {:pick-angle "角度を選択"}
+
+ :renderer.attribute.impl.href
+ {:select-file "ファイルを選択"}
+
+ :renderer.attribute.impl.points
+ {:edit-points "ポイントを編集"}
+
+ :renderer.frame.views
+ {:main-canvas "メインキャンバス"}}

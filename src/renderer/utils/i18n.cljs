@@ -36,7 +36,10 @@
             :dictionary (load-resource-at-compile-time "lang/el-GR.edn")}
    "ar-EG" {:dir "rtl"
             :native-name "العربية (مصر)"
-            :dictionary (load-resource-at-compile-time "lang/ar-EG.edn")}})
+            :dictionary (load-resource-at-compile-time "lang/ar-EG.edn")}
+   "ja-JP" {:dir "ltr"
+            :native-name "日本語"
+            :dictionary (load-resource-at-compile-time "lang/ja-JP.edn")}})
 
 (m/=> supported-lang? [:-> string? boolean?])
 (defn supported-lang?
