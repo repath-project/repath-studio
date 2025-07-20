@@ -21,4 +21,5 @@
         :side "left"
         :sideOffset 5}
        [:div.flex.gap-2.items-center
-        title]]]]))
+        title
+        [views/shortcuts action]]]]]))
