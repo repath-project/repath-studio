@@ -32,7 +32,9 @@
          {:class "tooltip-content"
           :sideOffset 5
           :side "top"}
-         [:div.flex.gap-2.items-center translated-label]]]])))
+         [:div.flex.gap-2.items-center
+          translated-label
+          [views/shortcuts [::tool.events/activate tool]]]]]])))
 
 (defn group
   [items]
