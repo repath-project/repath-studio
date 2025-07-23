@@ -287,7 +287,8 @@
   :animatable "Animatable"
   :animationType "Animation type"
   :syntax "Syntax"
-  :mdn-info "MDN Info"}
+  :mdn-info "MDN Info"
+  :attributes-title "%1 %2 elements"}
 
  :renderer.attribute.impl.core
  {:x "The x attribute defines an x-axis coordinate in the user coordinate system."

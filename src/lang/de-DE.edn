@@ -292,7 +292,8 @@
   :animatable "Animierbar"
   :animationType "Animationstyp"
   :syntax "Syntax"
-  :mdn-info "MDN-Info"}
+  :mdn-info "MDN-Info"
+  :attributes-title "%1 %2 Elemente"}
 
  :renderer.attribute.impl.core
  {:x "Das x-Attribut definiert eine x-Achsen-Koordinate im Benutzerkoordinatensystem."

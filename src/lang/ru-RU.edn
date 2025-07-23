@@ -292,7 +292,8 @@
   :animatable "Анимируемое"
   :animationType "Тип анимации"
   :syntax "Синтаксис"
-  :mdn-info "Информация MDN"}
+  :mdn-info "Информация MDN"
+  :attributes-title "%1 %2 элементов"}
 
  :renderer.attribute.impl.core
  {:x "Атрибут x определяет координату оси x в пользовательской системе

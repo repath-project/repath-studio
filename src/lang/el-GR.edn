@@ -293,7 +293,8 @@
   :animatable "Δυνατότητα κίνησης"
   :animationType "Τύπος κίνησης"
   :syntax "Σύνταξη"
-  :mdn-info "Πληροφορίες MDN"}
+  :mdn-info "Πληροφορίες MDN"
+  :attributes-title "%1 %2 στοιχεία"}
 
  :renderer.attribute.impl.core
  {:x "To χαρακτηριστικό x καθορίζει μια συντεταγμένη στον άξονα x μέσα στο σύστημα

@@ -285,7 +285,8 @@
   :animatable "قابل للتحريك"
   :animationType "نوع التحريك"
   :syntax "بنية الجملة"
-  :mdn-info "معلومات MDN"}
+  :mdn-info "معلومات MDN"
+  :attributes-title "%1 %2 عناصر"}
 
  :renderer.attribute.impl.core
  {:x "خاصية x تحدد إحداثي المحور x في نظام إحداثيات المستخدم."

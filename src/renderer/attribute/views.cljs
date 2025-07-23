@@ -222,7 +222,7 @@
         :class "popover-content"
         :align "start"}
        [:div.p-5
-        [:h2.mb-4.text-lg k]
+        [:h2.mb-4.text-lg.font-mono k]
         (when (get-method attribute.hierarchy/description [dispatch-tag k])
           [:p.text-pretty
            (attribute.hierarchy/description dispatch-tag k)])
@@ -261,7 +261,7 @@
          :class "popover-content"
          :align "end"}
         [:div.p-5
-         [:h2.mb-4.text-lg (name tag)]
+         [:h2.mb-4.text-lg.font-mono (str "<" (name tag) ">")]
          (when-let [description (:description properties)]
            [:p.text-pretty description])
          [caniusethis {:tag tag}]
@@ -294,9 +294,8 @@
                  tag-label (or (:label properties)
                                (string/capitalize (name tag)))]
              (if (empty? el-label) tag-label el-label))
-           (string/join " " [(count selected-elements)
-                             (when-not multitag? (name tag))
-                             "elements"]))]
+           (t [::attributes-title "%1 %2 elements"] [(count selected-elements)
+                                                     (when-not multitag? (name tag))]))]
         (when-not multitag?
           [tag-info tag])]
        (when (seq selected-attrs)

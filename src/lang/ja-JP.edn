@@ -283,7 +283,8 @@
   :animatable "アニメーション可能"
   :animationType "アニメーションタイプ"
   :syntax "構文"
-  :mdn-info "MDN情報"}
+  :mdn-info "MDN情報"
+  :attributes-title "%1 %2 要素"}
 
  :renderer.attribute.impl.core
  {:x "x属性は、ユーザー座標系内のx軸座標を定義します。"

@@ -278,7 +278,8 @@
   :animatable "可动画"
   :animationType "动画类型"
   :syntax "语法"
-  :mdn-info "MDN 信息"}
+  :mdn-info "MDN 信息"
+  :attributes-title "%1 %2 个元素"}
 
  :renderer.attribute.impl.core
  {:x "x 属性在用户坐标系统中定义 x 轴坐标。"
