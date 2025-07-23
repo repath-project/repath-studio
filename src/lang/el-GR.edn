@@ -197,47 +197,47 @@
   :delete "Διαγραφή"}
 
  :renderer.element.impl.shape.circle
- {:name "Κύκλος"
+ {:label "Κύκλος"
   :description "Το στοιχείο <circle> είναι ένα βασικό σχήμα SVG, που χρησιμοποιείται για
                 τη σχεδίαση κύκλων με βάση ένα κεντρικό σημείο και μια ακτίνα."}
 
  :renderer.element.impl.shape.image
- {:name "Εικόνα"
+ {:label "Εικόνα"
   :description "Το στοιχείο <image> ενσωματώνει εικόνες μέσα σε έγγραφα SVG.
                 Μπορεί να εμφανίζει αρχεία raster εικόνων ή άλλα αρχεία SVG."}
 
  :renderer.element.impl.shape.ellipse
- {:name "'Ελλειψη"
+ {:label "'Ελλειψη"
   :description "Το στοιχείο <ellipse> είναι ένα βασικό σχήμα SVG, που χρησιμοποιείται για
                 τη δημιουργία ελλείψεων με βάση ένα κεντρικό σημείο και τις ακτίνες τους
                 στους άξονες x και y."}
 
  :renderer.element.impl.shape.line
- {:name "Γραμμή"
+ {:label "Γραμμή"
   :description "Το στοιχείο <line> είναι ένα βασικό σχήμα SVG που χρησιμοποιείται για τη
                 δημιουργία μιας γραμμής που συνδέει δύο σημεία."}
 
  :renderer.element.impl.shape.path
- {:name "Path"
+ {:label "Path"
   :description "Το στοιχείο <path> στο SVG είναι το γενικό στοιχείο για τον ορισμό ενός
                 σχήματος. Όλα τα βασικά σχήματα μπορούν να δημιουργηθούν χρησιμοποιώντας
                 ένα path στοιχείο"}
 
  :renderer.element.impl.shape.polygon
- {:name "Πολύγωνο"
+ {:label "Πολύγωνο"
   :description "Το στοιχείο <polygon> στο SVG ορίζει ένα κλειστό σχήμα που αποτελείται από
                 ένα σύνολο συνδεδεμένων ευθύγραμμων τμημάτων. Το τελευταίο σημείο
                 συνδέεται με το πρώτο."}
 
  :renderer.element.impl.shape.polyline
- {:name "Πολύγραμμο"
+ {:label "Πολύγραμμο"
   :description "Το στοιχείο <polyline> είναι ένα βασικό σχήμα SVG που δημιουργεί
                 ευθύγραμμες συνδέσεις μεταξύ πολλών σημείων. Συνήθως, ένα polyline
                 χρησιμοποιείται για τη δημιουργία ανοιχτών σχημάτων, καθώς το τελευταίο
                 σημείο δεν χρειάζεται να συνδέεται με το πρώτο."}
 
  :renderer.element.impl.shape.rect
- {:name "Ορθογώνιο παραλληλόγραμμο"
+ {:label "Ορθογώνιο"
   :description "Το στοιχείο <rect> είναι ένα βασικό σχήμα SVG που σχεδιάζει ορθογώνια,
                 καθορισμένα από τη θέση, το πλάτος και το ύψος τους. Τα ορθογώνια μπορούν
                 να έχουν στρογγυλεμένες γωνίες."}
@@ -253,7 +253,7 @@
   :generate-random-seed "Δημιουργία τυχαίου seed"}
 
  :renderer.element.impl.custom.brush
- {:name "Πινέλο"
+ {:label "Πινέλο"
   :points "Σημεία εισόδου καταγεγραμμένα από την κίνηση του ποντικιού του χρήστη."
   :size "Το βασικό μέγεθος (διάμετρος) της γραμμής."
   :thinning "Η επίδραση της πίεσης στο μέγεθος της γραμμής."
@@ -263,7 +263,7 @@
                 perfect-freehand."}
 
  :renderer.element.impl.container.canvas
- {:name "Καμβάς"
+ {:label "Καμβάς"
   :description "Ο καμβάς είναι το κύριο πλαίσιο SVG που περιέχει όλα τα στοιχεία."}
 
  :renderer.element.impl.container.svg
@@ -416,27 +416,32 @@
   :create-tool "Δημιουργία %1"}
 
  :renderer.tool.impl.element.rect
- {:name "Ορθογώνιο παραλληλόγραμμο"
+ {:label "Ορθογώνιο"
   :help [:div "Κρατήστε %1 για να κλειδώσετε τις αναλογίες."]
   :create-rectangle "Δημιουργία ορθ. παραλληλόγραμου"}
 
  :renderer.tool.impl.element.svg
- {:help [:div "Κρατήστε %1 για να κλειδώσετε τις αναλογίες."]
+ {:label "Svg"
+  :help [:div "Κρατήστε %1 για να κλειδώσετε τις αναλογίες."]
   :create-svg "Δημιουργία svg"}
 
  :renderer.tool.impl.extension.blob
- {:create-blob "Δημιουργία blob"}
+ {:label "Blob"
+  :create-blob "Δημιουργία blob"}
 
  :renderer.tool.impl.misc.dropper
- {:help "Κάντε κλικ οπουδήποτε για να επιλέξετε χρώμα."
+ {:label "Επιλογέας χρώματος"
+  :help "Κάντε κλικ οπουδήποτε για να επιλέξετε χρώμα."
   :pick-color "Επιλογή χρώματος"}
 
  :renderer.tool.impl.misc.fill
- {:help "Κάντε κλικ σε ένα στοιχείο για γέμισμα."
+ {:label "Γέμισμα"
+  :help "Κάντε κλικ σε ένα στοιχείο για γέμισμα."
   :fill "Γέμισμα"}
 
  :renderer.tool.impl.misc.measure
- {:help "Κάντε κλικ και σύρετε για να μετρήσετε μια απόσταση."
+ {:label "Μέτρο"
+  :help "Κάντε κλικ και σύρετε για να μετρήσετε μια απόσταση."
   :measure-end "τέλος μέτρησης"
   :measure-start "αρχή μέτρησης"}
 
@@ -457,7 +462,17 @@
   :round "Στρογγυλεμένο"}
 
  :renderer.tool.impl.element.text
- {:help "Κάντε κλικ για να ξεκινήσετε τη πληκτρολόγηση."}
+ {:label "Κείμενο"
+  :help "Κάντε κλικ για να ξεκινήσετε τη πληκτρολόγηση."}
+
+ :renderer.tool.impl.element.polyline
+ {:label "Πολύγραμμο"}
+
+ :renderer.tool.impl.element.polygon
+ {:label "Πολύγωνο"}
+
+ :renderer.tool.impl.element.image
+ {:label "Εικόνα"}
 
  :renderer.attribute.impl.overflow
  {:description "To χαρακτηριστικό overflow καθορίζει τι θα συμβεί όταν το περιεχόμενο ενός
@@ -510,7 +525,8 @@
                 άλλες γραμματοσειρές της ίδιας οικογένειας."}
 
  :renderer.tool.impl.base.edit
- {:help-idle-drag [:div "Σύρετε μια λαβή για να τροποποιήσετε το σχήμα σας."]
+ {:label "Επεξεργασία"
+  :help-idle-drag [:div "Σύρετε μια λαβή για να τροποποιήσετε το σχήμα σας."]
   :help-idle-click [:div "Κάντε κλικ σε ένα στοιχείο για αλλάξετε επιλογή"]
   :help-edit [:div "Κρατήστε %1 για να περιορίσετε την κατεύθυνση."]
   :help-type [:div "Εισάγετε κείμενο."]
@@ -519,7 +535,8 @@
   :centroid "Κέντρο μάζας"}
 
  :renderer.tool.impl.base.transform
- {:idle-click [:div "Κάντε κλικ για να επιλέξετε ένα στοιχείο ή σύρετε για να επιλέξετε
+ {:label "Μετασχηματισμός"
+  :idle-click [:div "Κάντε κλικ για να επιλέξετε ένα στοιχείο ή σύρετε για να επιλέξετε
                      από περιοχή. "]
   :idle-hold [:div "Πιέστε %1 για να προσθέσετε ή να αφαιρέσετε στοιχεία από επιλογή."]
   :select [:div "Πιέστε %1 για να επιλέξετε τεμνόμενα στοιχεία."]
@@ -536,33 +553,40 @@
   :scale-handle "λαβή κλίμακας"}
 
  :renderer.tool.impl.base.pan
- {:idle-help "Κάντε κλικ και σύρετε για μετατόπιση."
+ {:label "Μετατόπιση"
+  :idle-help "Κάντε κλικ και σύρετε για μετατόπιση."
   :pan-help "Σύρετε για μετατόπιση."}
 
  :renderer.tool.impl.base.zoom
- {:zoom-in  [:div "Κάντε κλικ ή επιλέξτε μια περιοχή για μεγέθυνση."]
+ {:label "Μεγέθυνση"
+  :zoom-in  [:div "Κάντε κλικ ή επιλέξτε μια περιοχή για μεγέθυνση."]
   :zoom-out [:div "Κρατήστε %1 για σμίκρυνση."]}
 
  :renderer.tool.impl.draw.brush
- {:draw-brush "Πινέλο σχεδίασης"}
+ {:label "Πινέλο"
+  :draw-brush "Πινέλο σχεδίασης"}
 
  :renderer.tool.impl.draw.pen
- {:draw-line "Σχεδίαση γραμμής"}
+ {:label "Στυλό"
+  :draw-line "Σχεδίαση γραμμής"}
 
  :renderer.tool.impl.draw.core
  {:help "Κάντε κλικ και σύρετε για να σχεδιάσετε."}
 
  :renderer.tool.impl.element.circle
- {:create-circle "Δημιουργία κύκλου"
+ {:label "Κύκλος"
+  :create-circle "Δημιουργία κύκλου"
   :circle-radius "ακτίνα κύκλου"
   :circle-center "κέντρο κύκλου"}
 
  :renderer.tool.impl.element.ellipse
- {:create-ellipse "Δημιουργία έλλειψης"
+ {:label "Έλλειψη"
+  :create-ellipse "Δημιουργία έλλειψης"
   :help [:div "Κρατήστε %1 για να κλειδώσετε τις αναλογίες."]}
 
  :renderer.tool.impl.element.line
- {:create-line "Δημιουργία γραμμής"}
+ {:label "Γραμμή"
+  :create-line "Δημιουργία γραμμής"}
 
  :renderer.document.events
  {:save-changes "Θέλετε να αποθηκεύσετε τις αλλαγές σας;"
@@ -594,27 +618,6 @@
   :theme "Θέμα - %1"
   :enter-fullscreen "Είσοδος σε πλήρη οθόνη"
   :exit-fullscreen "Έξοδος από πλήρη οθόνη"}
-
- :renderer.toolbar.tools
- {:transform "Μετασχηματισμός"
-  :edit "Επεξεργασία"
-  :pan "Μετατόπιση"
-  :zoom "Μεγέθυνση"
-  :svg "Svg"
-  :circle "Κύκλος"
-  :ellipse "Έλλειψη"
-  :rectangle "Ορθογώνιο παραλληλόγραμμο"
-  :line "Γραμμή"
-  :polyline "Πολύγραμμο"
-  :polygon "Πολύγωνο"
-  :image "Εικόνα"
-  :text "Κείμενο"
-  :blob "Blob"
-  :brush "Πινέλο"
-  :pen "Στυλό"
-  :dropper "Επιλογέας χρώματος"
-  :fill "Γέμισμα"
-  :measure "Μέτρο"}
 
  :renderer.toolbar.status
  {:select-zoom "Επιλέξτε επίπεδο μεγέθυνσης"

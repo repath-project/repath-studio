@@ -14,7 +14,7 @@
 (defmethod tool.hierarchy/properties :ellipse
   []
   {:icon "ellipse-tool"
-   :label "Ellipse"})
+   :label (t [::label "Ellipse"])})
 
 (defmethod tool.hierarchy/help [:ellipse :create]
   []

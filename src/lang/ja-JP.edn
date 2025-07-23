@@ -196,43 +196,43 @@
   :delete "削除"}
 
  :renderer.element.impl.shape.circle
- {:name "円"
+ {:label "円"
   :description "<circle> SVG要素は、中心点と半径に基づいて円を描画するために使用される
                 SVG基本形状です。"}
 
  :renderer.element.impl.shape.image
- {:name "画像"
+ {:label "画像"
   :description "<image> SVG要素は、SVGドキュメント内に画像を含めます。ラスター
                 画像ファイルまたは他のSVGファイルを表示できます。"}
 
  :renderer.element.impl.shape.ellipse
- {:name "楕円"
+ {:label "楕円"
   :description "<ellipse>要素は、中心座標とx、y半径に基づいて楕円を作成するために
                 使用されるSVG基本形状です。"}
 
  :renderer.element.impl.shape.line
- {:name "線"
+ {:label "線"
   :description "<line>要素は、2つの点を接続する線を作成するために使用される
                 SVG基本形状です。"}
 
  :renderer.element.impl.shape.path
- {:name "パス"
+ {:label "パス"
   :description "<path> SVG要素は、形状を定義する汎用要素です。すべての基本形状は
                 パス要素で作成できます。"}
 
  :renderer.element.impl.shape.polygon
- {:name "多角形"
+ {:label "多角形"
   :description "<polygon> SVG要素は、接続された直線セグメントのセットで構成される
                 閉じた形状を定義します。最後の点は最初の点に接続されます。"}
 
  :renderer.element.impl.shape.polyline
- {:name "複線"
+ {:label "複線"
   :description "<polyline> SVG要素は、複数の点を接続する直線を作成するSVG基本形状
                 です。通常、最後の点を最初の点に接続する必要がないため、開いた
                 形状を作成するために使用されます。"}
 
  :renderer.element.impl.shape.rect
- {:name "矩形"
+ {:label "矩形"
   :description "<rect>要素は、位置、幅、高さによって定義される矩形を描画する基本的な
                 SVG形状です。矩形の角を丸くすることもできます。"}
 
@@ -247,7 +247,7 @@
   :generate-random-seed "ランダムシードを生成"}
 
  :renderer.element.impl.custom.brush
- {:name "ブラシ"
+ {:label "ブラシ"
   :points "ユーザーのマウス移動から記録された入力点。"
   :size "ストロークの基本サイズ（直径）。"
   :thinning "ストロークのサイズに対する圧力の影響。"
@@ -256,7 +256,7 @@
   :description "perfect-freehandを使用して圧力感知フリーハンドラインを描画。"}
 
  :renderer.element.impl.container.canvas
- {:name "キャンバス"
+ {:label "キャンバス"
   :description "キャンバスは、すべての要素をホストするメインのSVGコンテナです。"}
 
  :renderer.element.impl.container.svg
@@ -380,32 +380,47 @@
   :create-tool "%1を作成"}
 
  :renderer.tool.impl.element.rect
- {:name "矩形"
+ {:label "矩形"
   :help [:div "%1を押しながら比率をロック。"]
   :create-rectangle "矩形を作成"}
 
  :renderer.tool.impl.element.svg
- {:help [:div "%1を押しながら比率をロック。"]
+ {:label "SVG"
+  :help [:div "%1を押しながら比率をロック。"]
   :create-svg "SVGを作成"}
 
  :renderer.tool.impl.extension.blob
- {:create-blob "ブロブを作成"}
+ {:label "ブロブ"
+  :create-blob "ブロブを作成"}
 
  :renderer.tool.impl.misc.dropper
- {:help "どこでもクリックして色を選択。"
+ {:label "スポイト"
+  :help "どこでもクリックして色を選択。"
   :pick-color "色を選択"}
 
  :renderer.tool.impl.misc.fill
- {:help "要素をクリックして塗りつぶし。"
+ {:label "塗りつぶし"
+  :help "要素をクリックして塗りつぶし。"
   :fill "塗りつぶし"}
 
  :renderer.tool.impl.misc.measure
- {:help "クリックしてドラッグして距離を測定。"
+ {:label "測定"
+  :help "クリックしてドラッグして距離を測定。"
   :measure-end "測定終了"
   :measure-start "測定開始"}
 
  :renderer.tool.impl.element.text
- {:help "クリックして入力を開始。"}
+ {:label "テキスト"
+  :help "クリックして入力を開始。"}
+
+ :renderer.tool.impl.element.polyline
+ {:label "複線"}
+
+ :renderer.tool.impl.element.polygon
+ {:label "多角形"}
+
+ :renderer.tool.impl.element.image
+ {:label "画像"}
 
  :renderer.attribute.impl.stroke-linecap
  {:description "stroke-linecap属性は、ストロークされた開いたサブパスの端で
@@ -470,7 +485,8 @@
                 細さを指します。"}
 
  :renderer.tool.impl.base.edit
- {:help-idle-drag [:div "ハンドルをドラッグして形状を変更。"]
+ {:label "編集"
+  :help-idle-drag [:div "ハンドルをドラッグして形状を変更。"]
   :help-idle-click [:div "要素をクリックして選択を変更"]
   :help-edit [:div "%1を押しながら方向を制限。"]
   :help-type [:div "テキストを入力してください。"]
@@ -479,7 +495,8 @@
   :centroid "重心"}
 
  :renderer.tool.impl.base.transform
- {:idle-click [:div "クリックして要素を選択するか、ドラッグして範囲選択。 "]
+ {:label "変形"
+  :idle-click [:div "クリックして要素を選択するか、ドラッグして範囲選択。 "]
   :idle-hold [:div "%1を押しながら選択に要素を追加または削除。"]
   :select [:div "%1を押しながら交差する要素を選択。"]
   :select-element "要素を選択"
@@ -495,33 +512,40 @@
   :scale-handle "拡大縮小ハンドル"}
 
  :renderer.tool.impl.base.pan
- {:idle-help "クリックしてドラッグしてパン。"
+ {:label "パン"
+  :idle-help "クリックしてドラッグしてパン。"
   :pan-help "ドラッグしてパン。"}
 
  :renderer.tool.impl.base.zoom
- {:zoom-in [:div "クリックするか範囲を選択してズームイン。"]
+ {:label "ズーム"
+  :zoom-in [:div "クリックするか範囲を選択してズームイン。"]
   :zoom-out [:div "%1を押しながらズームアウト。"]}
 
  :renderer.tool.impl.draw.brush
- {:draw-brush "ブラシで描画"}
+ {:label "ブラシ"
+  :draw-brush "ブラシで描画"}
 
  :renderer.tool.impl.draw.pen
- {:draw-line "線を描画"}
+ {:label "ペン"
+  :draw-line "線を描画"}
 
  :renderer.tool.impl.draw.core
  {:help "クリックしてドラッグして描画。"}
 
  :renderer.tool.impl.element.circle
- {:create-circle "円を作成"
+ {:label "円"
+  :create-circle "円を作成"
   :circle-radius "円の半径"
   :circle-center "円の中心"}
 
  :renderer.tool.impl.element.ellipse
- {:create-ellipse "楕円を作成"
+ {:label "楕円"
+  :create-ellipse "楕円を作成"
   :help [:div "%1を押しながら比率をロック。"]}
 
  :renderer.tool.impl.element.line
- {:create-line "線を作成"}
+ {:label "線"
+  :create-line "線を作成"}
 
  :renderer.document.events
  {:save-changes "変更を保存しますか？"
@@ -552,27 +576,6 @@
   :theme "テーマモード - %1"
   :enter-fullscreen "フルスクリーンに入る"
   :exit-fullscreen "フルスクリーンを終了"}
-
- :renderer.toolbar.tools
- {:transform "変形"
-  :edit "編集"
-  :pan "パン"
-  :zoom "ズーム"
-  :svg "SVG"
-  :circle "円"
-  :ellipse "楕円"
-  :rectangle "矩形"
-  :line "線"
-  :polyline "複線"
-  :polygon "多角形"
-  :image "画像"
-  :text "テキスト"
-  :blob "ブロブ"
-  :brush "ブラシ"
-  :pen "ペン"
-  :dropper "スポイト"
-  :fill "塗りつぶし"
-  :measure "測定"}
 
  :renderer.toolbar.status
  {:select-zoom "ズームレベルを選択"

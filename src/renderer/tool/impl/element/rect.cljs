@@ -15,7 +15,7 @@
 (defmethod tool.hierarchy/properties :rect
   []
   {:icon "rectangle-tool"
-   :label (t [::name "Rectangle"])})
+   :label (t [::label "Rectangle"])})
 
 (defmethod tool.hierarchy/help [:rect :create]
   []

@@ -23,9 +23,9 @@
 
 (defmethod element.hierarchy/properties :canvas
   []
-  {:description (t [::description
+  {:label (t [::label "Canvas"])
+   :description (t [::description
                     "The canvas is the main SVG container that hosts all elements."])
-   :label (t [::name "Canvas"])
    :attrs [:fill]})
 
 (defmethod element.hierarchy/render :canvas

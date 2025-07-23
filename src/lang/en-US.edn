@@ -197,45 +197,45 @@
   :delete "Delete"}
 
  :renderer.element.impl.shape.circle
- {:name "Circle"
+ {:label "Circle"
   :description "The <circle> SVG element is an SVG basic shape, used to draw circles
                 based on a center point and a radius."}
 
  :renderer.element.impl.shape.image
- {:name "Image"
+ {:label "Image"
   :description "The <image> SVG element includes images inside SVG documents.
                 It can display raster image files or other SVG files."}
 
  :renderer.element.impl.shape.ellipse
- {:name "Ellipse"
+ {:label "Ellipse"
   :description "The <ellipse> element is an SVG basic shape, used to create ellipses based
                 on a center coordinate, and both their x and y radius."}
 
  :renderer.element.impl.shape.line
- {:name "Line"
+ {:label "Line"
   :description "The <line> element is an SVG basic shape used to create a line connecting
                 two points."}
 
  :renderer.element.impl.shape.path
- {:name "Path"
+ {:label "Path"
   :description "The <path> SVG element is the generic element to define a shape.
                 All the basic shapes can be created with a path element."}
 
  :renderer.element.impl.shape.polygon
- {:name "Polygon"
+ {:label "Polygon"
   :description "The <polygon> SVG element defines a closed shape consisting of a set of
                 connected straight line segments. The last point is connected to the first
                 point."}
 
  :renderer.element.impl.shape.polyline
- {:name "Polyline"
+ {:label "Polyline"
   :description "The <polyline> SVG element is an SVG basic shape that creates straight
                 lines connecting several points. Typically a polyline is used to create
                 open shapes as the last point doesn't have to be connected to the first
                 oint."}
 
  :renderer.element.impl.shape.rect
- {:name "Rectangle"
+ {:label "Rectangle"
   :description "The <rect> element is a basic SVG shape that draws rectangles, defined by
                 their position, width, and height. The rectangles may have their corners
                 rounded."}
@@ -251,7 +251,7 @@
   :generate-random-seed "Generate random seed"}
 
  :renderer.element.impl.custom.brush
- {:name "Brush"
+ {:label "Brush"
   :points "Input points recorded from a user's mouse movement."
   :size "The base size (diameter) of the stroke."
   :thinning "The effect of pressure on the stroke's size."
@@ -260,7 +260,7 @@
   :description "Draw pressure-sensitive freehand lines using perfect-freehand."}
 
  :renderer.element.impl.container.canvas
- {:name "Canvas"
+ {:label "Canvas"
   :description "The canvas is the main SVG container that hosts all elements."}
 
  :renderer.element.impl.container.svg
@@ -384,6 +384,15 @@
                           a viewBox providing a given aspect ratio must fit into a
                           viewport with a different aspect ratio."}
 
+ :renderer.tool.impl.element.polyline
+ {:label "Polyline"}
+
+ :renderer.tool.impl.element.polygon
+ {:label "Polygon"}
+
+ :renderer.tool.impl.element.image
+ {:label "Image"}
+
  :renderer.tool.impl.element.core
  {:help "Click and drag to create an element."}
 
@@ -393,32 +402,38 @@
   :create-tool "Create %1"}
 
  :renderer.tool.impl.element.rect
- {:name "Rectangle"
+ {:label "Rectangle"
   :help [:div "Hold %1 to lock proportions."]
   :create-rectangle "Create rectangle"}
 
  :renderer.tool.impl.element.svg
- {:help [:div "Hold %1 to lock proportions."]
+ {:label "Svg"
+  :help [:div "Hold %1 to lock proportions."]
   :create-svg "Create svg"}
 
  :renderer.tool.impl.extension.blob
- {:create-blob "Create blob"}
+ {:label "Blob"
+  :create-blob "Create blob"}
 
  :renderer.tool.impl.misc.dropper
- {:help "Click anywhere to pick a color."
+ {:label "Dropper"
+  :help "Click anywhere to pick a color."
   :pick-color "Pick color"}
 
  :renderer.tool.impl.misc.fill
- {:help "Click on an element to fill."
+ {:label "Fill"
+  :help "Click on an element to fill."
   :fill "Fill"}
 
  :renderer.tool.impl.misc.measure
- {:help "Click and drag to measure a distance."
+ {:label "Measure"
+  :help "Click and drag to measure a distance."
   :measure-end "measure end"
   :measure-start "measure start"}
 
  :renderer.tool.impl.element.text
- {:help "Click to start typing."}
+ {:label "Text"
+  :help "Click to start typing."}
 
  :renderer.attribute.impl.stroke-linecap
  {:description "The stroke-linecap attribute is a presentation attribute defining the
@@ -483,7 +498,8 @@
                 family."}
 
  :renderer.tool.impl.base.edit
- {:help-idle-drag [:div "Drag a handle to modify your shape."]
+ {:label "Edit"
+  :help-idle-drag [:div "Drag a handle to modify your shape."]
   :help-idle-click [:div "Click on an element to change selection"]
   :help-edit [:div "Hold %1 to restrict direction."]
   :help-type [:div "Enter your text."]
@@ -492,7 +508,8 @@
   :centroid "Centroid"}
 
  :renderer.tool.impl.base.transform
- {:idle-click [:div "Click to select an element or drag to select by area. "]
+ {:label "Transform"
+  :idle-click [:div "Click to select an element or drag to select by area. "]
   :idle-hold [:div "Hold %1 to add or remove elements to selection."]
   :select [:div "Hold %1 to select intersecting elements."]
   :select-element "Select element"
@@ -508,33 +525,40 @@
   :scale-handle "scale handle"}
 
  :renderer.tool.impl.base.pan
- {:idle-help "Click and drag to pan."
+ {:label "Pan"
+  :idle-help "Click and drag to pan."
   :pan-help "Drag to pan."}
 
  :renderer.tool.impl.base.zoom
- {:zoom-in [:div "Click or select an area to zoom in."]
+ {:label "Zoom"
+  :zoom-in [:div "Click or select an area to zoom in."]
   :zoom-out [:div "Hold %1 to zoom out."]}
 
  :renderer.tool.impl.draw.brush
- {:draw-brush "Draw brush"}
+ {:label "Brush"
+  :draw-brush "Draw brush"}
 
  :renderer.tool.impl.draw.pen
- {:draw-line "Draw line"}
+ {:label "Pen"
+  :draw-line "Draw line"}
 
  :renderer.tool.impl.draw.core
  {:help "Click and drag to draw."}
 
  :renderer.tool.impl.element.circle
- {:create-circle "Create circle"
+ {:label "Circle"
+  :create-circle "Create circle"
   :circle-radius "circle radius"
   :circle-center "circle center"}
 
  :renderer.tool.impl.element.ellipse
- {:create-ellipse "Create ellipse"
+ {:label "Ellipse"
+  :create-ellipse "Create ellipse"
   :help [:div "Hold %1 to lock proportions."]}
 
  :renderer.tool.impl.element.line
- {:create-line "Create line"}
+ {:label "Line"
+  :create-line "Create line"}
 
  :renderer.document.events
  {:save-changes "Do you want to save your changes?"
@@ -565,27 +589,6 @@
   :theme "Theme mode - %1"
   :enter-fullscreen "Enter fullscreen"
   :exit-fullscreen "Exit fullscreen"}
-
- :renderer.toolbar.tools
- {:transform "Transform"
-  :edit "Edit"
-  :pan "Pan"
-  :zoom "Zoom"
-  :svg "Svg"
-  :circle "Circle"
-  :ellipse "Ellipse"
-  :rectangle "Rectangle"
-  :line "Line"
-  :polyline "Polyline"
-  :polygon "Polygon"
-  :image "Image"
-  :text "Text"
-  :blob "Blob"
-  :brush "Brush"
-  :pen "Pen"
-  :dropper "Dropper"
-  :fill "Fill"
-  :measure "Measure"}
 
  :renderer.toolbar.status
  {:select-zoom "Select zoom level"

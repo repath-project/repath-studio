@@ -18,7 +18,7 @@
 (defmethod element.hierarchy/properties :circle
   []
   {:icon "circle"
-   :label (t [::name "Circle"])
+   :label (t [::label "Circle"])
    :description (t [::description
                     "The <circle> SVG element is an SVG basic shape, used to draw circles
                      based on a center point and a radius."])

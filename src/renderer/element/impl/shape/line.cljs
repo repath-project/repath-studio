@@ -20,7 +20,7 @@
 (defmethod element.hierarchy/properties :line
   []
   {:icon "line"
-   :label (t [::name "Line"])
+   :label (t [::label "Line"])
    :description (t [::description
                     "The <line> element is an SVG basic shape
                      used to create a line connecting two points."])

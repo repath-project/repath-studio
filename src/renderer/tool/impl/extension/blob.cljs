@@ -15,7 +15,8 @@
 
 (defmethod tool.hierarchy/properties :blob
   []
-  {:icon "blob"})
+  {:icon "blob"
+   :label (t [::label "Blob"])})
 
 (defn pointer-delta
   [db]

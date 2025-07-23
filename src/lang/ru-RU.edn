@@ -197,47 +197,47 @@
   :delete "Удалить"}
 
  :renderer.element.impl.shape.circle
- {:name "Круг"
+ {:label "Круг"
   :description "Элемент SVG <circle> является базовой формой SVG, используемой для
                 рисования кругов на основе центральной точки и радиуса."}
 
  :renderer.element.impl.shape.image
- {:name "Изображение"
+ {:label "Изображение"
   :description "Элемент SVG <image> включает изображения в документы SVG.
                 Он может отображать растровые файлы изображений или другие
                 файлы SVG."}
 
  :renderer.element.impl.shape.ellipse
- {:name "Эллипс"
+ {:label "Эллипс"
   :description "Элемент <ellipse> является базовой формой SVG, используемой для
                 создания эллипсов на основе центральной координаты и их радиусов
                 x и y."}
 
  :renderer.element.impl.shape.line
- {:name "Линия"
+ {:label "Линия"
   :description "Элемент <line> является базовой формой SVG, используемой для
                 создания линии, соединяющей две точки."}
 
  :renderer.element.impl.shape.path
- {:name "Контур"
+ {:label "Контур"
   :description "Элемент SVG <path> является универсальным элементом для определения
                 формы. Все базовые формы могут быть созданы с помощью элемента path."}
 
  :renderer.element.impl.shape.polygon
- {:name "Многоугольник"
+ {:label "Многоугольник"
   :description "Элемент SVG <polygon> определяет замкнутую форму, состоящую из
                 набора соединённых сегментов прямых линий. Последняя точка
                 соединена с первой точкой."}
 
  :renderer.element.impl.shape.polyline
- {:name "Ломаная линия"
+ {:label "Ломаная линия"
   :description "Элемент SVG <polyline> является базовой формой SVG, которая создаёт
                 прямые линии, соединяющие несколько точек. Обычно ломаная линия
                 используется для создания открытых форм, поскольку последняя точка
                 не должна быть соединена с первой точкой."}
 
  :renderer.element.impl.shape.rect
- {:name "Прямоугольник"
+ {:label "Прямоугольник"
   :description "Элемент <rect> является базовой формой SVG, которая рисует
                 прямоугольники, определённые их позицией, шириной и высотой.
                 Прямоугольники могут иметь закруглённые углы."}
@@ -253,7 +253,7 @@
   :generate-random-seed "Сгенерировать случайное зерно"}
 
  :renderer.element.impl.custom.brush
- {:name "Кисть"
+ {:label "Кисть"
   :points "Входные точки, записанные от движения мыши пользователя."
   :size "Базовый размер (диаметр) штриха."
   :thinning "Влияние давления на размер штриха."
@@ -263,7 +263,7 @@
                 perfect-freehand."}
 
  :renderer.element.impl.container.canvas
- {:name "Холст"
+ {:label "Холст"
   :description "Холст является основным контейнером SVG, который содержит все
                 элементы."}
 
@@ -406,32 +406,47 @@
   :create-tool "Создать %1"}
 
  :renderer.tool.impl.element.rect
- {:name "Прямоугольник"
+ {:label "Прямоугольник"
   :help [:div "Удерживайте %1 для блокировки пропорций."]
   :create-rectangle "Создать прямоугольник"}
 
  :renderer.tool.impl.element.svg
- {:help [:div "Удерживайте %1 для блокировки пропорций."]
+ {:label "SVG"
+  :help [:div "Удерживайте %1 для блокировки пропорций."]
   :create-svg "Создать SVG"}
 
  :renderer.tool.impl.extension.blob
- {:create-blob "Создать blob"}
+ {:label "Blob"
+  :create-blob "Создать blob"}
 
  :renderer.tool.impl.misc.dropper
- {:help "Щёлкните в любом месте для выбора цвета."
+ {:label "Пипетка"
+  :help "Щёлкните в любом месте для выбора цвета."
   :pick-color "Выбрать цвет"}
 
  :renderer.tool.impl.misc.fill
- {:help "Щёлкните на элементе для заливки."
+ {:label "Заливка"
+  :help "Щёлкните на элементе для заливки."
   :fill "Заливка"}
 
  :renderer.tool.impl.misc.measure
- {:help "Щёлкните и перетащите для измерения расстояния."
+ {:label "Измерение"
+  :help "Щёлкните и перетащите для измерения расстояния."
   :measure-end "конец измерения"
   :measure-start "начало измерения"}
 
  :renderer.tool.impl.element.text
- {:help "Щёлкните для начала ввода."}
+ {:label "Текст"
+  :help "Щёлкните для начала ввода."}
+
+ :renderer.tool.impl.element.polyline
+ {:label "Ломаная"}
+
+ :renderer.tool.impl.element.polygon
+ {:label "Многоугольник"}
+
+ :renderer.tool.impl.element.image
+ {:label "Изображение"}
 
  :renderer.attribute.impl.stroke-linecap
  {:description "Атрибут stroke-linecap является атрибутом представления,
@@ -500,7 +515,8 @@
                 в том же семействе шрифтов."}
 
  :renderer.tool.impl.base.edit
- {:help-idle-drag [:div "Перетащите маркер для изменения вашей формы."]
+ {:label "Редактирование"
+  :help-idle-drag [:div "Перетащите маркер для изменения вашей формы."]
   :help-idle-click [:div "Щёлкните на элементе для изменения выделения"]
   :help-edit [:div "Удерживайте %1 для ограничения направления."]
   :help-type [:div "Введите ваш текст."]
@@ -509,7 +525,8 @@
   :centroid "Центроид"}
 
  :renderer.tool.impl.base.transform
- {:idle-click [:div "Щёлкните для выделения элемента или перетащите для
+ {:label "Трансформация"
+  :idle-click [:div "Щёлкните для выделения элемента или перетащите для
                      выделения по области. "]
   :idle-hold [:div "Удерживайте %1 для добавления или удаления элементов из
                     выделения."]
@@ -529,33 +546,40 @@
   :clone-selection "Клонировать выделение"}
 
  :renderer.tool.impl.base.pan
- {:idle-help "Щёлкните и перетащите для панорамирования."
+ {:label "Панорамирование"
+  :idle-help "Щёлкните и перетащите для панорамирования."
   :pan-help "Перетащите для панорамирования."}
 
  :renderer.tool.impl.base.zoom
- {:zoom-in [:div "Щёлкните или выделите область для увеличения."]
+ {:label "Масштабирование"
+  :zoom-in [:div "Щёлкните или выделите область для увеличения."]
   :zoom-out [:div "Удерживайте %1 для уменьшения."]}
 
  :renderer.tool.impl.draw.brush
- {:draw-brush "Рисовать кистью"}
+ {:label "Кисть"
+  :draw-brush "Рисовать кистью"}
 
  :renderer.tool.impl.draw.pen
- {:draw-line "Рисовать линию"}
+ {:label "Перо"
+  :draw-line "Рисовать линию"}
 
  :renderer.tool.impl.draw.core
  {:help "Щёлкните и перетащите для рисования."}
 
  :renderer.tool.impl.element.circle
- {:create-circle "Создать круг"
+ {:label "Круг"
+  :create-circle "Создать круг"
   :circle-radius "радиус круга"
   :circle-center "центр круга"}
 
  :renderer.tool.impl.element.ellipse
- {:create-ellipse "Создать эллипс"
+ {:label "Эллипс"
+  :create-ellipse "Создать эллипс"
   :help [:div "Удерживайте %1 для блокировки пропорций."]}
 
  :renderer.tool.impl.element.line
- {:create-line "Создать линию"}
+ {:label "Линия"
+  :create-line "Создать линию"}
 
  :renderer.document.events
  {:save-changes "Хотите сохранить ваши изменения?"
@@ -586,27 +610,6 @@
   :theme "Режим темы - %1"
   :enter-fullscreen "Войти в полноэкранный режим"
   :exit-fullscreen "Выйти из полноэкранного режима"}
-
- :renderer.toolbar.tools
- {:transform "Трансформировать"
-  :edit "Редактировать"
-  :pan "Панорама"
-  :zoom "Масштаб"
-  :svg "SVG"
-  :circle "Круг"
-  :ellipse "Эллипс"
-  :rectangle "Прямоугольник"
-  :line "Линия"
-  :polyline "Ломаная линия"
-  :polygon "Многоугольник"
-  :image "Изображение"
-  :text "Текст"
-  :blob "Blob"
-  :brush "Кисть"
-  :pen "Перо"
-  :dropper "Пипетка"
-  :fill "Заливка"
-  :measure "Измерить"}
 
  :renderer.toolbar.status
  {:select-zoom "Выбрать уровень масштаба"

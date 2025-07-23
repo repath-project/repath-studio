@@ -15,7 +15,8 @@
 
 (defmethod tool.hierarchy/properties :line
   []
-  {:icon "line-tool"})
+  {:icon "line-tool"
+   :label (t [::label "Line"])})
 
 (defmethod tool.hierarchy/on-drag-start :line
   [db _e]

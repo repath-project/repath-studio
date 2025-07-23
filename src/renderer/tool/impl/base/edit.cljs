@@ -17,7 +17,8 @@
 
 (defmethod tool.hierarchy/properties :edit
   []
-  {:icon "edit"})
+  {:icon "edit"
+   :label (t [::label "Edit"])})
 
 (defmethod tool.hierarchy/help [:edit :idle]
   []

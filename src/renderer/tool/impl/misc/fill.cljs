@@ -11,7 +11,8 @@
 
 (defmethod tool.hierarchy/properties :fill
   []
-  {:icon "fill"})
+  {:icon "fill"
+   :label (t [::label "Fill"])})
 
 (defmethod tool.hierarchy/help [:fill :idle]
   []

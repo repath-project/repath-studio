@@ -197,45 +197,45 @@
   :delete "Supprimer"}
 
  :renderer.element.impl.shape.circle
- {:name "Cercle"
+ {:label "Cercle"
   :description "L'élément SVG <circle> est une forme de base SVG, utilisée pour dessiner
                 des cercles basés sur un point central et un rayon."}
 
  :renderer.element.impl.shape.image
- {:name "Image"
+ {:label "Image"
   :description "L'élément SVG <image> inclut des images dans les documents SVG. Il peut
                 afficher des fichiers d'images raster ou d'autres fichiers SVG."}
 
  :renderer.element.impl.shape.ellipse
- {:name "Ellipse"
+ {:label "Ellipse"
   :description "L'élément <ellipse> est une forme de base SVG, utilisée pour créer des
                 ellipses basées sur une coordonnée centrale et leurs rayons x et y."}
 
  :renderer.element.impl.shape.line
- {:name "Ligne"
+ {:label "Ligne"
   :description "L'élément <line> est une forme de base SVG utilisée pour créer une ligne
                 reliant deux points."}
 
  :renderer.element.impl.shape.path
- {:name "Chemin"
+ {:label "Chemin"
   :description "L'élément SVG <path> est l'élément générique pour définir une forme.
                 Toutes les formes de base peuvent être créées avec un élément path."}
 
  :renderer.element.impl.shape.polygon
- {:name "Polygone"
+ {:label "Polygone"
   :description "L'élément SVG <polygon> définit une forme fermée constituée d'un ensemble
                 de segments de lignes droites connectés. Le dernier point est connecté au
                 premier point."}
 
  :renderer.element.impl.shape.polyline
- {:name "Polyligne"
+ {:label "Polyligne"
   :description "L'élément SVG <polyline> est une forme de base SVG qui crée des lignes
                 droites reliant plusieurs points. Typiquement, une polyligne est utilisée
                 pour créer des formes ouvertes car le dernier point n'a pas besoin d'être
                 connecté au premier point."}
 
  :renderer.element.impl.shape.rect
- {:name "Rectangle"
+ {:label "Rectangle"
   :description "L'élément <rect> est une forme SVG de base qui dessine des rectangles,
                 définis par leur position, largeur et hauteur. Les rectangles peuvent
                 avoir leurs coins arrondis."}
@@ -251,7 +251,7 @@
   :generate-random-seed "Générer une graine aléatoire"}
 
  :renderer.element.impl.custom.brush
- {:name "Pinceau"
+ {:label "Pinceau"
   :points "Points d'entrée enregistrés à partir du mouvement de la souris de
            l'utilisateur."
   :size "La taille de base (diamètre) du trait."
@@ -262,7 +262,7 @@
                 perfect-freehand."}
 
  :renderer.element.impl.container.canvas
- {:name "Canevas"
+ {:label "Canevas"
   :description "Le canevas est le conteneur SVG principal qui héberge tous les éléments."}
 
  :renderer.element.impl.container.svg
@@ -402,32 +402,47 @@
   :create-tool "Créer %1"}
 
  :renderer.tool.impl.element.rect
- {:name "Rectangle"
+ {:label "Rectangle"
   :help [:div "Maintenez %1 pour verrouiller les proportions."]
   :create-rectangle "Créer un rectangle"}
 
  :renderer.tool.impl.element.svg
- {:help [:div "Maintenez %1 pour verrouiller les proportions."]
+ {:label "SVG"
+  :help [:div "Maintenez %1 pour verrouiller les proportions."]
   :create-svg "Créer un SVG"}
 
  :renderer.tool.impl.extension.blob
- {:create-blob "Créer un blob"}
+ {:label "Blob"
+  :create-blob "Créer un blob"}
 
  :renderer.tool.impl.misc.dropper
- {:help "Cliquez n'importe où pour choisir une couleur."
+ {:label "Pipette"
+  :help "Cliquez n'importe où pour choisir une couleur."
   :pick-color "Choisir une couleur"}
 
  :renderer.tool.impl.misc.fill
- {:help "Cliquez sur un élément pour le remplir."
+ {:label "Remplir"
+  :help "Cliquez sur un élément pour le remplir."
   :fill "Remplir"}
 
  :renderer.tool.impl.misc.measure
- {:help "Cliquez et faites glisser pour mesurer une distance."
+ {:label "Mesurer"
+  :help "Cliquez et faites glisser pour mesurer une distance."
   :measure-end "fin de mesure"
   :measure-start "début de mesure"}
 
  :renderer.tool.impl.element.text
- {:help "Cliquez pour commencer à taper."}
+ {:label "Texte"
+  :help "Cliquez pour commencer à taper."}
+
+ :renderer.tool.impl.element.polyline
+ {:label "Polyligne"}
+
+ :renderer.tool.impl.element.polygon
+ {:label "Polygone"}
+
+ :renderer.tool.impl.element.image
+ {:label "Image"}
 
  :renderer.attribute.impl.stroke-linecap
  {:description "L'attribut stroke-linecap est un attribut de présentation définissant la
@@ -493,7 +508,8 @@
                 la même famille de polices."}
 
  :renderer.tool.impl.base.edit
- {:help-idle-drag [:div "Faites glisser une poignée pour modifier votre forme."]
+ {:label "Éditer"
+  :help-idle-drag [:div "Faites glisser une poignée pour modifier votre forme."]
   :help-idle-click [:div "Cliquez sur un élément pour changer la sélection"]
   :help-edit [:div "Maintenez %1 pour restreindre la direction."]
   :help-type [:div "Entrez votre texte."]
@@ -502,7 +518,8 @@
   :centroid "Centroïde"}
 
  :renderer.tool.impl.base.transform
- {:idle-click [:div "Cliquez pour sélectionner un élément ou faites glisser pour
+ {:label "Transformer"
+  :idle-click [:div "Cliquez pour sélectionner un élément ou faites glisser pour
                      sélectionner par zone. "]
   :idle-hold [:div "Maintenez %1 pour ajouter ou supprimer des éléments de la sélection."]
   :select [:div "Maintenez %1 pour sélectionner les éléments intersectants."]
@@ -519,33 +536,40 @@
   :clone-selection "Cloner la sélection"}
 
  :renderer.tool.impl.base.pan
- {:idle-help "Cliquez et faites glisser pour faire un panoramique."
+ {:label "Panoramique"
+  :idle-help "Cliquez et faites glisser pour faire un panoramique."
   :pan-help "Faites glisser pour faire un panoramique."}
 
  :renderer.tool.impl.base.zoom
- {:zoom-in [:div "Cliquez ou sélectionnez une zone pour agrandir."]
+ {:label "Zoom"
+  :zoom-in [:div "Cliquez ou sélectionnez une zone pour agrandir."]
   :zoom-out [:div "Maintenez %1 pour réduire."]}
 
  :renderer.tool.impl.draw.brush
- {:draw-brush "Dessiner au pinceau"}
+ {:label "Pinceau"
+  :draw-brush "Dessiner au pinceau"}
 
  :renderer.tool.impl.draw.pen
- {:draw-line "Dessiner une ligne"}
+ {:label "Stylo"
+  :draw-line "Dessiner une ligne"}
 
  :renderer.tool.impl.draw.core
  {:help "Cliquez et faites glisser pour dessiner."}
 
  :renderer.tool.impl.element.circle
- {:create-circle "Créer un cercle"
+ {:label "Cercle"
+  :create-circle "Créer un cercle"
   :circle-radius "rayon du cercle"
   :circle-center "centre du cercle"}
 
  :renderer.tool.impl.element.ellipse
- {:create-ellipse "Créer une ellipse"
+ {:label "Ellipse"
+  :create-ellipse "Créer une ellipse"
   :help [:div "Maintenez %1 pour verrouiller les proportions."]}
 
  :renderer.tool.impl.element.line
- {:create-line "Créer une ligne"}
+ {:label "Ligne"
+  :create-line "Créer une ligne"}
 
  :renderer.document.events
  {:save-changes "Voulez-vous enregistrer vos modifications ?"
@@ -576,27 +600,6 @@
   :theme "Mode de thème - %1"
   :enter-fullscreen "Activer le plein écran"
   :exit-fullscreen "Quitter le plein écran"}
-
- :renderer.toolbar.tools
- {:transform "Transformer"
-  :edit "Éditer"
-  :pan "Panoramique"
-  :zoom "Zoom"
-  :svg "SVG"
-  :circle "Cercle"
-  :ellipse "Ellipse"
-  :rectangle "Rectangle"
-  :line "Ligne"
-  :polyline "Polyligne"
-  :polygon "Polygone"
-  :image "Image"
-  :text "Texte"
-  :blob "Blob"
-  :brush "Pinceau"
-  :pen "Stylo"
-  :dropper "Pipette"
-  :fill "Remplir"
-  :measure "Mesurer"}
 
  :renderer.toolbar.status
  {:select-zoom "Sélectionner le niveau de zoom"

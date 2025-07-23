@@ -200,7 +200,7 @@
         (map (partial property-list-item property))
         [:appliesto :computed :percentages :animatable :animationType :syntax]))
 
-(defn label
+(defn title
   [tag k]
   (let [clicked-element @(rf/subscribe [::app.subs/clicked-element])
         property (utils.attribute/property-data-memo k)
@@ -240,34 +240,36 @@
                        tag
                        :default)]
     [:<>
-     [label tag k]
+     [title tag k]
      [:div.flex.flex-1
       [attribute.hierarchy/form-element dispatch-tag k v {:disabled locked?
                                                           :placeholder initial}]]]))
 
 (defn tag-info
   [tag]
-  [:div
-   [:> HoverCard/Root
-    [:> HoverCard/Trigger {:as-child true}
-     [:div.flex.items-center
-      [views/icon-button "info" {:title (t [::mdn-info "MDN Info"])
-                                 :class "hover:bg-transparent w-auto h-auto"}]]]
-    [:> HoverCard/Portal
-     [:> HoverCard/Content
-      {:sideOffset 5
-       :class "popover-content"
-       :align "end"}
-      [:div.p-5
-       [:h2.mb-4.text-lg (or (:label (element.hierarchy/properties tag)) tag)]
-       (when-let [description (:description (element.hierarchy/properties tag))]
-         [:p.text-pretty description])
-       [caniusethis {:tag tag}]
-       (when-let [url (:url (element.hierarchy/properties tag))]
-         [:button.button.px-3.bg-primary.w-full
-          {:on-click #(rf/dispatch [::events/open-remote-url url])}
-          (t [::learn-more "Learn more"])])]
-      [:> HoverCard/Arrow {:class "popover-arrow"}]]]]])
+  (let [properties (element.hierarchy/properties tag)]
+    [:div
+     [:> HoverCard/Root
+      [:> HoverCard/Trigger {:as-child true}
+       [:div.flex.items-center
+        [views/icon-button "info"
+         {:title (t [::mdn-info "MDN Info"])
+          :class "hover:bg-transparent w-auto h-auto"}]]]
+      [:> HoverCard/Portal
+       [:> HoverCard/Content
+        {:sideOffset 5
+         :class "popover-content"
+         :align "end"}
+        [:div.p-5
+         [:h2.mb-4.text-lg (name tag)]
+         (when-let [description (:description properties)]
+           [:p.text-pretty description])
+         [caniusethis {:tag tag}]
+         (when-let [url (:url properties)]
+           [:button.button.px-3.bg-primary.w-full
+            {:on-click #(rf/dispatch [::events/open-remote-url url])}
+            (t [::learn-more "Learn more"])])]
+        [:> HoverCard/Arrow {:class "popover-arrow"}]]]]]))
 
 (defn form
   []
@@ -277,11 +279,11 @@
         selected-locked? @(rf/subscribe [::element.subs/selected-locked?])
         tool-state @(rf/subscribe [::tool.subs/state])
         tool-cached-state @(rf/subscribe [::tool.subs/cached-state])
+        tag (first selected-tags)
+        multitag? (next selected-tags)
         locked? (or selected-locked?
                     (not= tool-state :idle)
-                    (and tool-cached-state (not= tool-cached-state :idle)))
-        tag (first selected-tags)
-        multitag? (next selected-tags)]
+                    (and tool-cached-state (not= tool-cached-state :idle)))]
     (when-first [el selected-elements]
       [:div
        [:div.flex.bg-primary.py-5.px-4.gap-1.items-center
@@ -289,7 +291,8 @@
          (if-not (next selected-elements)
            (let [el-label (:label el)
                  properties (element.hierarchy/properties tag)
-                 tag-label (or (:label properties) (string/capitalize (name tag)))]
+                 tag-label (or (:label properties)
+                               (string/capitalize (name tag)))]
              (if (empty? el-label) tag-label el-label))
            (string/join " " [(count selected-elements)
                              (when-not multitag? (name tag))

@@ -47,7 +47,8 @@
 
 (defmethod tool.hierarchy/properties :transform
   []
-  {:icon "pointer"})
+  {:icon "pointer"
+   :label (t [::label "Transform"])})
 
 (defmethod tool.hierarchy/help [:transform :idle]
   []
@@ -400,7 +401,7 @@
         [(with-meta
            (matrix/add [(:x el) (:y el)]
                        (tool.handlers/pointer-delta db))
-           {:label #(t [::scale-handle "scale handle"])})])
+           {:label (t [::scale-handle "scale handle"])})])
 
       (not= (:state db) :idle)
       (cond-> (element.handlers/snapping-points db (filter :visible selected))

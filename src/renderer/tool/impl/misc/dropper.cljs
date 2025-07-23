@@ -15,7 +15,8 @@
 
 (defmethod tool.hierarchy/properties :dropper
   []
-  {:icon "eye-dropper"})
+  {:icon "eye-dropper"
+   :label (t [::label "Dropper"])})
 
 (defmethod tool.hierarchy/help [:dropper :idle]
   []

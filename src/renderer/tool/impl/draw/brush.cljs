@@ -18,7 +18,8 @@
 
 (defmethod tool.hierarchy/properties :brush
   []
-  {:icon "brush"})
+  {:icon "brush"
+   :label (t [::label "Brush"])})
 
 (defonce brush-element (reagent/atom nil))
 

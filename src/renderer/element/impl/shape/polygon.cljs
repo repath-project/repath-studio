@@ -9,8 +9,8 @@
 (defmethod element.hierarchy/properties :polygon
   []
   {:icon "polygon"
-   :label (t [::name "Polygon"])
-   :description (t [::description 
+   :label (t [::label "Polygon"])
+   :description (t [::description
                     "The <polygon> SVG element defines a closed shape consisting of
                      a set of connected straight line segments. The last point is
                      connected to the first point."])

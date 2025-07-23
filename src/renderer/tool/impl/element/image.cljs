@@ -6,13 +6,15 @@
    [renderer.element.effects :as-alias element.fx]
    [renderer.notification.events :as-alias notification.events]
    [renderer.tool.handlers :as tool.handlers]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.hierarchy :as tool.hierarchy]
+   [renderer.utils.i18n :refer [t]]))
 
 (derive :image ::tool.hierarchy/element)
 
 (defmethod tool.hierarchy/properties :image
   []
-  {:icon "image"})
+  {:icon "image"
+   :label (t [::label "Image"])})
 
 (defmethod tool.hierarchy/on-drag-end :image
   [db e]

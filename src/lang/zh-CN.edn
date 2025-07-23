@@ -196,40 +196,40 @@
   :delete "删除"}
 
  :renderer.element.impl.shape.circle
- {:name "圆形"
+ {:label "圆形"
   :description "SVG 元素 <circle> 是一个 SVG 基本形状，用于绘制基于中心点和半径的圆形。"}
 
  :renderer.element.impl.shape.image
- {:name "图像"
+ {:label "图像"
   :description "SVG 元素 <image> 在 SVG 文档中包含图像。它可以显示栅格图像文件或其他
                 SVG 文件。"}
 
  :renderer.element.impl.shape.ellipse
- {:name "椭圆"
+ {:label "椭圆"
   :description "元素 <ellipse> 是一个 SVG 基本形状，用于创建基于中心坐标及其 x 和 y
                 半径的椭圆。"}
 
  :renderer.element.impl.shape.line
- {:name "线条"
+ {:label "线条"
   :description "元素 <line> 是一个 SVG 基本形状，用于创建连接两点的线条。"}
 
  :renderer.element.impl.shape.path
- {:name "路径"
+ {:label "路径"
   :description "SVG 元素 <path> 是定义形状的通用元素。所有基本形状都可以用路径元素
                 创建。"}
 
  :renderer.element.impl.shape.polygon
- {:name "多边形"
+ {:label "多边形"
   :description "SVG 元素 <polygon> 定义由一组连接的直线段组成的封闭形状。最后一个点
                 连接到第一个点。"}
 
  :renderer.element.impl.shape.polyline
- {:name "折线"
+ {:label "折线"
   :description "SVG 元素 <polyline> 是一个 SVG 基本形状，创建连接多个点的直线。
                 通常折线用于创建开放形状，因为最后一个点不必连接到第一个点。"}
 
  :renderer.element.impl.shape.rect
- {:name "矩形"
+ {:label "矩形"
   :description "元素 <rect> 是一个基本的 SVG 形状，绘制由位置、宽度和高度定义的
                 矩形。矩形可以有圆角。"}
 
@@ -244,7 +244,7 @@
   :generate-random-seed "生成随机种子"}
 
  :renderer.element.impl.custom.brush
- {:name "画笔"
+ {:label "画笔"
   :points "从用户鼠标移动记录的输入点。"
   :size "笔画的基本大小（直径）。"
   :thinning "压力对笔画大小的影响。"
@@ -253,7 +253,7 @@
   :description "使用 perfect-freehand 绘制压力敏感的手绘线条。"}
 
  :renderer.element.impl.container.canvas
- {:name "画布"
+ {:label "画布"
   :description "画布是承载所有元素的主要 SVG 容器。"}
 
  :renderer.element.impl.container.svg
@@ -356,32 +356,47 @@
   :create-tool "创建 %1"}
 
  :renderer.tool.impl.element.rect
- {:name "矩形"
+ {:label "矩形"
   :help [:div "按住 %1 锁定比例。"]
   :create-rectangle "创建矩形"}
 
  :renderer.tool.impl.element.svg
- {:help [:div "按住 %1 锁定比例。"]
+ {:label "SVG"
+  :help [:div "按住 %1 锁定比例。"]
   :create-svg "创建 SVG"}
 
  :renderer.tool.impl.extension.blob
- {:create-blob "创建 blob"}
+ {:label "Blob"
+  :create-blob "创建 blob"}
 
  :renderer.tool.impl.misc.dropper
- {:help "点击任何地方选择颜色。"
+ {:label "吸管"
+  :help "点击任何地方选择颜色。"
   :pick-color "选择颜色"}
 
  :renderer.tool.impl.misc.fill
- {:help "点击元素进行填充。"
+ {:label "填充"
+  :help "点击元素进行填充。"
   :fill "填充"}
 
  :renderer.tool.impl.misc.measure
- {:help "点击并拖动测量距离。"
+ {:label "测量"
+  :help "点击并拖动测量距离。"
   :measure-end "测量终点"
   :measure-start "测量起点"}
 
  :renderer.tool.impl.element.text
- {:help "点击开始输入。"}
+ {:label "文本"
+  :help "点击开始输入."}
+
+ :renderer.tool.impl.element.polyline
+ {:label "折线"}
+
+ :renderer.tool.impl.element.polygon
+ {:label "多边形"}
+
+ :renderer.tool.impl.element.image
+ {:label "图像"}
 
  :renderer.attribute.impl.stroke-linecap
  {:description "stroke-linecap 属性是一个表示属性，定义在描边开放子路径末端
@@ -442,7 +457,8 @@
                 同一字体系列中的其他字体。"}
 
  :renderer.tool.impl.base.edit
- {:help-idle-drag [:div "拖动控制柄修改您的形状。"]
+ {:label "编辑"
+  :help-idle-drag [:div "拖动控制柄修改您的形状。"]
   :help-idle-click [:div "点击元素更改选择"]
   :help-edit [:div "按住 %1 限制方向。"]
   :help-type [:div "输入您的文本。"]
@@ -451,7 +467,8 @@
   :centroid "质心"}
 
  :renderer.tool.impl.base.transform
- {:idle-click [:div "点击选择元素或拖动按区域选择。"]
+ {:label "变换"
+  :idle-click [:div "点击选择元素或拖动按区域选择。"]
   :idle-hold [:div "按住 %1 向选择中添加或移除元素。"]
   :select [:div "按住 %1 选择相交元素。"]
   :select-element "选择元素"
@@ -466,33 +483,40 @@
   :clone-selection "克隆选择"}
 
  :renderer.tool.impl.base.pan
- {:idle-help "点击并拖动进行平移。"
+ {:label "平移"
+  :idle-help "点击并拖动进行平移。"
   :pan-help "拖动进行平移。"}
 
  :renderer.tool.impl.base.zoom
- {:zoom-in [:div "点击或选择区域进行放大。"]
+ {:label "缩放"
+  :zoom-in [:div "点击或选择区域进行放大。"]
   :zoom-out [:div "按住 %1 进行缩小。"]}
 
  :renderer.tool.impl.draw.brush
- {:draw-brush "画笔绘制"}
+ {:label "画笔"
+  :draw-brush "画笔绘制"}
 
  :renderer.tool.impl.draw.pen
- {:draw-line "绘制线条"}
+ {:label "钢笔"
+  :draw-line "绘制线条"}
 
  :renderer.tool.impl.draw.core
  {:help "点击并拖动进行绘制。"}
 
  :renderer.tool.impl.element.circle
- {:create-circle "创建圆形"
+ {:label "圆形"
+  :create-circle "创建圆形"
   :circle-radius "圆半径"
   :circle-center "圆心"}
 
  :renderer.tool.impl.element.ellipse
- {:create-ellipse "创建椭圆"
+ {:label "椭圆"
+  :create-ellipse "创建椭圆"
   :help [:div "按住 %1 锁定比例。"]}
 
  :renderer.tool.impl.element.line
- {:create-line "创建线条"}
+ {:label "线条"
+  :create-line "创建线条"}
 
  :renderer.document.events
  {:save-changes "您要保存更改吗？"
@@ -523,27 +547,6 @@
   :theme "主题模式 - %1"
   :enter-fullscreen "进入全屏"
   :exit-fullscreen "退出全屏"}
-
- :renderer.toolbar.tools
- {:transform "变换"
-  :edit "编辑"
-  :pan "平移"
-  :zoom "缩放"
-  :svg "SVG"
-  :circle "圆形"
-  :ellipse "椭圆"
-  :rectangle "矩形"
-  :line "线条"
-  :polyline "折线"
-  :polygon "多边形"
-  :image "图像"
-  :text "文本"
-  :blob "Blob"
-  :brush "画笔"
-  :pen "钢笔"
-  :dropper "滴管"
-  :fill "填充"
-  :measure "测量"}
 
  :renderer.toolbar.status
  {:select-zoom "选择缩放级别"

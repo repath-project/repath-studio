@@ -14,7 +14,8 @@
 
 (defmethod tool.hierarchy/properties :circle
   []
-  {:icon "circle-tool"})
+  {:icon "circle-tool"
+   :label (t [::label "Circle"])})
 
 (defmethod tool.hierarchy/on-drag-start :circle
   [db _e]

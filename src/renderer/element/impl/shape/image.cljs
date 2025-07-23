@@ -11,8 +11,8 @@
 (defmethod element.hierarchy/properties :image
   []
   {:icon "image"
-   :label (t [::name "Image"])
-   :description (t [::description 
+   :label (t [::label "Image"])
+   :description (t [::description
                     "The <image> SVG element includes images inside SVG documents.
                      It can display raster image files or other SVG files."])
    :attrs [:href]})

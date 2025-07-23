@@ -17,8 +17,8 @@
 (defmethod element.hierarchy/properties :path
   []
   {:icon "bezier-curve"
-   :label (t [::name "Path"])
-   :description (t [::description 
+   :label (t [::label "Path"])
+   :description (t [::description
                     "The <path> SVG element is the generic element to define a shape.
                      All the basic shapes can be created with a path element."])
    :attrs [:stroke-width

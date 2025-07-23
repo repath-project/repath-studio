@@ -197,45 +197,45 @@
   :delete "Eliminar"}
 
  :renderer.element.impl.shape.circle
- {:name "Círculo"
+ {:label "Círculo"
   :description "El elemento SVG <circle> es una forma básica SVG, usado para dibujar
                 círculos basados en un punto central y un radio."}
 
  :renderer.element.impl.shape.image
- {:name "Imagen"
+ {:label "Imagen"
   :description "El elemento SVG <image> incluye imágenes dentro de documentos SVG.
                 Puede mostrar archivos de imagen raster u otros archivos SVG."}
 
  :renderer.element.impl.shape.ellipse
- {:name "Elipse"
+ {:label "Elipse"
   :description "El elemento <ellipse> es una forma básica SVG, usado para crear elipses
                 basadas en una coordenada central y sus radios x e y."}
 
  :renderer.element.impl.shape.line
- {:name "Línea"
+ {:label "Línea"
   :description "El elemento <line> es una forma básica SVG usado para crear una línea
                 que conecta dos puntos."}
 
  :renderer.element.impl.shape.path
- {:name "Trazado"
+ {:label "Trazado"
   :description "El elemento SVG <path> es el elemento genérico para definir una forma.
                 Todas las formas básicas pueden ser creadas con un elemento path."}
 
  :renderer.element.impl.shape.polygon
- {:name "Polígono"
+ {:label "Polígono"
   :description "El elemento SVG <polygon> define una forma cerrada que consiste en un
                 conjunto de segmentos de línea recta conectados. El último punto está
                 conectado al primer punto."}
 
  :renderer.element.impl.shape.polyline
- {:name "Polilínea"
+ {:label "Polilínea"
   :description "El elemento SVG <polyline> es una forma básica SVG que crea líneas
                 rectas conectando varios puntos. Típicamente una polilínea se usa para
                 crear formas abiertas ya que el último punto no tiene que estar conectado
                 al primer punto."}
 
  :renderer.element.impl.shape.rect
- {:name "Rectángulo"
+ {:label "Rectángulo"
   :description "El elemento <rect> es una forma SVG básica que dibuja rectángulos,
                 definidos por su posición, ancho y alto. Los rectángulos pueden tener
                 sus esquinas redondeadas."}
@@ -251,7 +251,7 @@
   :generate-random-seed "Generar semilla aleatoria"}
 
  :renderer.element.impl.custom.brush
- {:name "Pincel"
+ {:label "Pincel"
   :points "Puntos de entrada registrados del movimiento del ratón del usuario."
   :size "El tamaño base (diámetro) del trazo."
   :thinning "El efecto de la presión en el tamaño del trazo."
@@ -261,7 +261,7 @@
                 perfect-freehand."}
 
  :renderer.element.impl.container.canvas
- {:name "Lienzo"
+ {:label "Lienzo"
   :description "El lienzo es el contenedor SVG principal que aloja todos los elementos."}
 
  :renderer.element.impl.container.svg
@@ -401,32 +401,47 @@
   :create-tool "Crear %1"}
 
  :renderer.tool.impl.element.rect
- {:name "Rectángulo"
+ {:label "Rectángulo"
   :help [:div "Mantenga %1 para bloquear proporciones."]
   :create-rectangle "Crear rectángulo"}
 
  :renderer.tool.impl.element.svg
- {:help [:div "Mantenga %1 para bloquear proporciones."]
+ {:label "SVG"
+  :help [:div "Mantenga %1 para bloquear proporciones."]
   :create-svg "Crear SVG"}
 
  :renderer.tool.impl.extension.blob
- {:create-blob "Crear blob"}
+ {:label "Blob"
+  :create-blob "Crear blob"}
 
  :renderer.tool.impl.misc.dropper
- {:help "Haga clic en cualquier lugar para elegir un color."
+ {:label "Gotero"
+  :help "Haga clic en cualquier lugar para elegir un color."
   :pick-color "Elegir color"}
 
  :renderer.tool.impl.misc.fill
- {:help "Haga clic en un elemento para rellenar."
+ {:label "Rellenar"
+  :help "Haga clic en un elemento para rellenar."
   :fill "Rellenar"}
 
  :renderer.tool.impl.misc.measure
- {:help "Haga clic y arrastre para medir una distancia."
+ {:label "Medir"
+  :help "Haga clic y arrastre para medir una distancia."
   :measure-end "fin de medición"
   :measure-start "inicio de medición"}
 
  :renderer.tool.impl.element.text
- {:help "Haga clic para comenzar a escribir."}
+ {:label "Texto"
+  :help "Haga clic para comenzar a escribir."}
+
+ :renderer.tool.impl.element.polyline
+ {:label "Polilínea"}
+
+ :renderer.tool.impl.element.polygon
+ {:label "Polígono"}
+
+ :renderer.tool.impl.element.image
+ {:label "Imagen"}
 
  :renderer.attribute.impl.stroke-linecap
  {:description "El atributo stroke-linecap es un atributo de presentación que define
@@ -491,7 +506,8 @@
                 misma familia de fuente."}
 
  :renderer.tool.impl.base.edit
- {:help-idle-drag [:div "Arrastre un asa para modificar su forma."]
+ {:label "Editar"
+  :help-idle-drag [:div "Arrastre un asa para modificar su forma."]
   :help-idle-click [:div "Haga clic en un elemento para cambiar la selección"]
   :help-edit [:div "Mantenga %1 para restringir la dirección."]
   :help-type [:div "Ingrese su texto."]
@@ -500,7 +516,8 @@
   :centroid "Centroide"}
 
  :renderer.tool.impl.base.transform
- {:idle-click [:div "Haga clic para seleccionar un elemento o arrastre para
+ {:label "Transformar"
+  :idle-click [:div "Haga clic para seleccionar un elemento o arrastre para
                      seleccionar por área. "]
   :idle-hold [:div "Mantenga %1 para agregar o quitar elementos de la selección."]
   :select [:div "Mantenga %1 para seleccionar elementos que se intersecan."]
@@ -517,33 +534,40 @@
   :clone-selection "Clonar selección"}
 
  :renderer.tool.impl.base.pan
- {:idle-help "Haga clic y arrastre para hacer panorámica."
+ {:label "Panorámica"
+  :idle-help "Haga clic y arrastre para hacer panorámica."
   :pan-help "Arrastre para hacer panorámica."}
 
  :renderer.tool.impl.base.zoom
- {:zoom-in [:div "Haga clic o seleccione un área para acercar."]
+ {:label "Zoom"
+  :zoom-in [:div "Haga clic o seleccione un área para acercar."]
   :zoom-out [:div "Mantenga %1 para alejar."]}
 
  :renderer.tool.impl.draw.brush
- {:draw-brush "Dibujar con pincel"}
+ {:label "Pincel"
+  :draw-brush "Dibujar con pincel"}
 
  :renderer.tool.impl.draw.pen
- {:draw-line "Dibujar línea"}
+ {:label "Pluma"
+  :draw-line "Dibujar línea"}
 
  :renderer.tool.impl.draw.core
  {:help "Haga clic y arrastre para dibujar."}
 
  :renderer.tool.impl.element.circle
- {:create-circle "Crear círculo"
+ {:label "Círculo"
+  :create-circle "Crear círculo"
   :circle-radius "radio del círculo"
   :circle-center "centro del círculo"}
 
  :renderer.tool.impl.element.ellipse
- {:create-ellipse "Crear elipse"
+ {:label "Elipse"
+  :create-ellipse "Crear elipse"
   :help [:div "Mantenga %1 para bloquear proporciones."]}
 
  :renderer.tool.impl.element.line
- {:create-line "Crear línea"}
+ {:label "Línea"
+  :create-line "Crear línea"}
 
  :renderer.document.events
  {:save-changes "¿Desea guardar sus cambios?"
@@ -574,27 +598,6 @@
   :theme "Modo de tema - %1"
   :enter-fullscreen "Entrar en pantalla completa"
   :exit-fullscreen "Salir de pantalla completa"}
-
- :renderer.toolbar.tools
- {:transform "Transformar"
-  :edit "Editar"
-  :pan "Panorámica"
-  :zoom "Zoom"
-  :svg "SVG"
-  :circle "Círculo"
-  :ellipse "Elipse"
-  :rectangle "Rectángulo"
-  :line "Línea"
-  :polyline "Polilínea"
-  :polygon "Polígono"
-  :image "Imagen"
-  :text "Texto"
-  :blob "Blob"
-  :brush "Pincel"
-  :pen "Pluma"
-  :dropper "Gotero"
-  :fill "Rellenar"
-  :measure "Medir"}
 
  :renderer.toolbar.status
  {:select-zoom "Seleccionar nivel de zoom"

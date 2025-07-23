@@ -9,7 +9,8 @@
 
 (defmethod tool.hierarchy/properties :text
   []
-  {:icon "text"})
+  {:icon "text"
+   :label (t [::label "Text"])})
 
 (defmethod tool.hierarchy/help [:text :idle]
   []

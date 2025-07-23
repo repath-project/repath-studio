@@ -12,7 +12,8 @@
 
 (defmethod tool.hierarchy/properties :svg
   []
-  {:icon "svg"})
+  {:icon "svg"
+   :label (t [::label "Svg"])})
 
 (defmethod tool.hierarchy/help [:svg :create]
   []

@@ -21,7 +21,7 @@
 (defmethod element.hierarchy/properties :brush
   []
   {:icon "brush"
-   :label (t [::name "Brush"])
+   :label (t [::label "Brush"])
    :description (t [::description
                     "Draw pressure-sensitive freehand lines using perfect-freehand."])
    :url "https://github.com/steveruizok/perfect-freehand"
@@ -78,12 +78,10 @@
   "Turns the points returned by getStroke into SVG path data.
    Ported from https://github.com/steveruizok/perfect-freehand#rendering"
   [points]
-  (let [len (count points)]
-    (if (< len 4)
+  (let [length (count points)]
+    (if (< length 4)
       ""
-      (let [a (nth points 0)
-            b (nth points 1)
-            c (nth points 2)
+      (let [[a b c] points
             d (str
                "M" (utils.length/->fixed (first a)) "," (utils.length/->fixed (second a))
                " Q" (utils.length/->fixed (first b)) "," (utils.length/->fixed (second b))
@@ -91,7 +89,8 @@
                (utils.length/->fixed (matrix.stats/mean [(second b) (second c)])) " T")]
         (reduce-kv
          (fn [result index]
-           (if (or (= len (inc index)) (< index 2))
+           (if (or (= length (inc index))
+                   (< index 2))
              result
              (let [a (nth points index)
                    b (nth points (inc index))]

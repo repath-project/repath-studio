@@ -41,7 +41,8 @@
   [el]
   (let [{:keys [id label visible selected tag]} el
         properties (element.hierarchy/properties tag)
-        tag-label (or (:label properties) (string/capitalize (name tag)))]
+        tag-label (or (:label properties)
+                      (string/capitalize (name tag)))]
     (reagent/with-let [edit-mode? (reagent/atom false)]
       (if @edit-mode?
         [:input.bg-transparent.w-full

@@ -197,43 +197,43 @@
   :delete "حذف"}
 
  :renderer.element.impl.shape.circle
- {:name "دائرة"
+ {:label "دائرة"
   :description "عنصر <circle> هو شكل SVG أساسي، يُستخدم لرسم الدوائر
                 بناءً على نقطة مركز ونصف قطر."}
 
  :renderer.element.impl.shape.image
- {:name "صورة"
+ {:label "صورة"
   :description "عنصر <image> يشمل الصور داخل مستندات SVG.
                 يمكنه عرض ملفات الصور النقطية أو ملفات SVG أخرى."}
 
  :renderer.element.impl.shape.ellipse
- {:name "قطع ناقص"
+ {:label "قطع ناقص"
   :description "عنصر <ellipse> هو شكل SVG أساسي، يُستخدم لإنشاء القطع الناقص بناءً
                 على إحداثي مركز، ونصف قطر في الاتجاهين x و y."}
 
  :renderer.element.impl.shape.line
- {:name "خط"
+ {:label "خط"
   :description "عنصر <line> هو شكل SVG أساسي يُستخدم لإنشاء خط يصل
                 بين نقطتين."}
 
  :renderer.element.impl.shape.path
- {:name "مسار"
+ {:label "مسار"
   :description "عنصر <path> في SVG هو العنصر العام لتعريف شكل.
                 يمكن إنشاء جميع الأشكال الأساسية باستخدام عنصر مسار."}
 
  :renderer.element.impl.shape.polygon
- {:name "مضلع"
+ {:label "مضلع"
   :description "عنصر <polygon> في SVG يُعرف شكلاً مغلقاً يتكون من مجموعة من
                 القطع المستقيمة المتصلة. النقطة الأخيرة متصلة بالنقطة الأولى."}
 
  :renderer.element.impl.shape.polyline
- {:name "خط متعدد"
+ {:label "خط متعدد"
   :description "عنصر <polyline> هو شكل SVG أساسي ينشئ خطوطاً مستقيمة
                 تصل عدة نقاط. عادة، يُستخدم polyline لإنشاء
                 أشكال مفتوحة حيث لا تحتاج النقطة الأخيرة للاتصال بالنقطة الأولى."}
 
  :renderer.element.impl.shape.rect
- {:name "مستطيل"
+ {:label "مستطيل"
   :description "عنصر <rect> هو شكل SVG أساسي يرسم مستطيلات، محددة بـ
                 موضعها وعرضها وارتفاعها. قد تحتوي المستطيلات على زوايا
                 مدورة."}
@@ -249,7 +249,7 @@
   :generate-random-seed "توليد بذرة عشوائية"}
 
  :renderer.element.impl.custom.brush
- {:name "فرشاة"
+ {:label "فرشاة"
   :points "نقاط الإدخال المسجلة من حركة فأرة المستخدم."
   :size "الحجم الأساسي (القطر) للخط."
   :thinning "تأثير الضغط على حجم الخط."
@@ -258,7 +258,7 @@
   :description "ارسم خطوطاً حساسة للضغط باستخدام perfect-freehand."}
 
  :renderer.element.impl.container.canvas
- {:name "لوحة الرسم"
+ {:label "لوحة الرسم"
   :description "لوحة الرسم هي حاوية SVG الرئيسية التي تستضيف جميع العناصر."}
 
  :renderer.element.impl.container.svg
@@ -377,32 +377,47 @@
   :create-tool "إنشاء %1"}
 
  :renderer.tool.impl.element.rect
- {:name "مستطيل"
+ {:label "مستطيل"
   :help [:div "اضغط %1 لقفل النسب."]
   :create-rectangle "إنشاء مستطيل"}
 
  :renderer.tool.impl.element.svg
- {:help [:div "اضغط %1 لقفل النسب."]
+ {:label "SVG"
+  :help [:div "اضغط %1 لقفل النسب."]
   :create-svg "إنشاء svg"}
 
  :renderer.tool.impl.extension.blob
- {:create-blob "إنشاء نقطة"}
+ {:label "نقطة"
+  :create-blob "إنشاء نقطة"}
 
  :renderer.tool.impl.misc.dropper
- {:help "انقر في أي مكان لاختيار لون."
+ {:label "قطارة"
+  :help "انقر في أي مكان لاختيار لون."
   :pick-color "اختيار لون"}
 
  :renderer.tool.impl.misc.fill
- {:help "انقر على عنصر للملء."
+ {:label "ملء"
+  :help "انقر على عنصر للملء."
   :fill "ملء"}
 
  :renderer.tool.impl.misc.measure
- {:help "انقر واسحب لقياس مسافة."
+ {:label "قياس"
+  :help "انقر واسحب لقياس مسافة."
   :measure-end "نهاية القياس"
   :measure-start "بداية القياس"}
 
  :renderer.tool.impl.element.text
- {:help "انقر لبدء الكتابة."}
+ {:label "نص"
+  :help "انقر لبدء الكتابة."}
+
+ :renderer.tool.impl.element.polyline
+ {:label "خط متعدد"}
+
+ :renderer.tool.impl.element.polygon
+ {:label "مضلع"}
+
+ :renderer.tool.impl.element.image
+ {:label "صورة"}
 
  :renderer.attribute.impl.stroke-linecap
  {:description "خاصية stroke-linecap هي خاصية عرض تحدد
@@ -467,7 +482,8 @@
                 عائلة الخط."}
 
  :renderer.tool.impl.base.edit
- {:help-idle-drag [:div "اسحب مقبضاً لتعديل شكلك."]
+ {:label "تحرير"
+  :help-idle-drag [:div "اسحب مقبضاً لتعديل شكلك."]
   :help-idle-click [:div "انقر على عنصر لتغيير التحديد"]
   :help-edit [:div "اضغط %1 لتقييد الاتجاه."]
   :help-type [:div "أدخل النص الخاص بك."]
@@ -476,7 +492,8 @@
   :centroid "النقطة المركزية"}
 
  :renderer.tool.impl.base.transform
- {:idle-click [:div "انقر لتحديد عنصر أو اسحب للتحديد بالمنطقة. "]
+ {:label "تحويل"
+  :idle-click [:div "انقر لتحديد عنصر أو اسحب للتحديد بالمنطقة. "]
   :idle-hold [:div "اضغط %1 لإضافة أو إزالة عناصر إلى التحديد."]
   :select [:div "اضغط %1 لتحديد العناصر المتقاطعة."]
   :select-element "تحديد عنصر"
@@ -492,33 +509,40 @@
   :clone-selection "استنساخ التحديد"}
 
  :renderer.tool.impl.base.pan
- {:idle-help "انقر واسحب للتحريك."
+ {:label "تحريك"
+  :idle-help "انقر واسحب للتحريك."
   :pan-help "اسحب للتحريك."}
 
  :renderer.tool.impl.base.zoom
- {:zoom-in [:div "انقر أو حدد منطقة للتكبير."]
+ {:label "تكبير"
+  :zoom-in [:div "انقر أو حدد منطقة للتكبير."]
   :zoom-out [:div "اضغط %1 للتصغير."]}
 
  :renderer.tool.impl.draw.brush
- {:draw-brush "رسم بالفرشاة"}
+ {:label "فرشاة"
+  :draw-brush "رسم بالفرشاة"}
 
  :renderer.tool.impl.draw.pen
- {:draw-line "رسم خط"}
+ {:label "قلم"
+  :draw-line "رسم خط"}
 
  :renderer.tool.impl.draw.core
  {:help "انقر واسحب للرسم."}
 
  :renderer.tool.impl.element.circle
- {:create-circle "إنشاء دائرة"
+ {:label "دائرة"
+  :create-circle "إنشاء دائرة"
   :circle-radius "نصف قطر الدائرة"
   :circle-center "مركز الدائرة"}
 
  :renderer.tool.impl.element.ellipse
- {:create-ellipse "إنشاء قطع ناقص"
+ {:label "قطع ناقص"
+  :create-ellipse "إنشاء قطع ناقص"
   :help [:div "اضغط %1 لقفل النسب."]}
 
  :renderer.tool.impl.element.line
- {:create-line "إنشاء خط"}
+ {:label "خط"
+  :create-line "إنشاء خط"}
 
  :renderer.document.events
  {:save-changes "هل تريد حفظ التغييرات؟"
@@ -549,27 +573,6 @@
   :theme "وضع السمة - %1"
   :enter-fullscreen "دخول الشاشة الكاملة"
   :exit-fullscreen "خروج من الشاشة الكاملة"}
-
- :renderer.toolbar.tools
- {:transform "تحويل"
-  :edit "تحرير"
-  :pan "تحريك"
-  :zoom "تكبير"
-  :svg "Svg"
-  :circle "دائرة"
-  :ellipse "قطع ناقص"
-  :rectangle "مستطيل"
-  :line "خط"
-  :polyline "خط متعدد"
-  :polygon "مضلع"
-  :image "صورة"
-  :text "نص"
-  :blob "نقطة"
-  :brush "فرشاة"
-  :pen "قلم"
-  :dropper "قطارة"
-  :fill "ملء"
-  :measure "قياس"}
 
  :renderer.toolbar.status
  {:select-zoom "اختيار مستوى التكبير"

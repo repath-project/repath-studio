@@ -23,7 +23,8 @@
 
 (defmethod tool.hierarchy/properties :measure
   []
-  {:icon "ruler-triangle"})
+  {:icon "ruler-triangle"
+   :label (t [::label "Measure"])})
 
 (defmethod tool.hierarchy/help [:measure :idle]
   []

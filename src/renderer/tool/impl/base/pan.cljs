@@ -12,7 +12,8 @@
 
 (defmethod tool.hierarchy/properties :pan
   []
-  {:icon "hand"})
+  {:icon "hand"
+   :label (t [::label "Pan"])})
 
 (defmethod tool.hierarchy/on-activate :pan
   [db]

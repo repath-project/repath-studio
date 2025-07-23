@@ -6,7 +6,6 @@
    [renderer.tool.events :as-alias tool.events]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.subs :as-alias tool.subs]
-   [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]))
 
 (defn button
@@ -16,16 +15,15 @@
         active (= active-tool tool)
         primary (= cached-tool tool)
         properties (tool.hierarchy/properties tool)
-        label (or (:label properties) (string/capitalize (name tool)))
-        translated-label (t [(keyword "renderer.toolbar.tools" (string/lower-case label))
-                             label])]
+        label (or (:label properties)
+                  (string/capitalize (name tool)))]
     (when (:icon properties)
       [:> Tooltip/Root
        [:> Tooltip/Trigger {:as-child true}
         [:span
          [views/radio-icon-button (:icon properties) active
           {:class (when primary "outline outline-offset-[-1px] outline-accent")
-           :aria-label (str "activate " label)
+           :aria-label label
            :on-click #(rf/dispatch [::tool.events/activate tool])}]]]
        [:> Tooltip/Portal
         [:> Tooltip/Content
@@ -33,7 +31,7 @@
           :sideOffset 10
           :side "top"}
          [:div.flex.gap-2.items-center
-          translated-label
+          label
           [views/shortcuts [::tool.events/activate tool]]]]]])))
 
 (defn group

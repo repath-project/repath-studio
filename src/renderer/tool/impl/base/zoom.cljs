@@ -22,14 +22,14 @@
 
 (defmethod tool.hierarchy/properties :zoom
   []
-  {:icon "magnifier"})
+  {:icon "magnifier"
+   :label (t [::label "Zoom"])})
 
 (defmethod tool.hierarchy/help [:zoom :idle]
   []
   [:<>
    (t [::zoom-in "Click or select an area to zoom in."])
-   (t [::zoom-out "Hold %1 to zoom out."]
-            [[:span.shortcut-key "⇧"]])])
+   (t [::zoom-out "Hold %1 to zoom out."] [[:span.shortcut-key "⇧"]])])
 
 (defmethod tool.hierarchy/on-activate :zoom
   [db]

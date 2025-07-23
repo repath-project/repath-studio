@@ -16,7 +16,8 @@
 
 (defmethod tool.hierarchy/properties :pen
   []
-  {:icon "pencil"})
+  {:icon "pencil"
+   :label (t [::label "Pen"])})
 
 (defmethod tool.hierarchy/on-drag-start :pen
   [db _e]
