@@ -19,15 +19,27 @@
   [orientation]
   (let [[x y] @(rf/subscribe [::app.subs/pointer-pos])
         pointer-size (/ ruler-size 5)
-        size-diff (- ruler-size pointer-size)]
-    [:polygon {:points (string/join " " (if (= orientation :vertical)
-                                          [ruler-size "," y
-                                           size-diff "," (- y pointer-size)
-                                           size-diff "," (+ y pointer-size)]
-                                          [x "," ruler-size
-                                           (- x pointer-size) "," size-diff
-                                           (+ x pointer-size) "," size-diff]))
-               :fill "var(--font-color"}]))
+        color "var(--color-accent)"]
+    [:g
+     [:polygon {:fill color
+                :points (string/join " " (if (= orientation :vertical)
+                                           [pointer-size "," y
+                                            0 "," (- y pointer-size)
+                                            0 "," (+ y pointer-size)]
+                                           [x "," pointer-size
+                                            (- x pointer-size) "," 0
+                                            (+ x pointer-size) "," 0]))}]
+     [:line (if (= orientation :vertical)
+              {:x1 0
+               :y1 y
+               :x2 ruler-size
+               :y2 y
+               :stroke color}
+              {:x1 x
+               :y1 0
+               :x2 x
+               :y2 ruler-size
+               :stroke color})]]))
 
 (defn line
   [{:keys [orientation adjusted-step size starting-point]}]
