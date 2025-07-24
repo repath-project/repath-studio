@@ -20,10 +20,11 @@
 (m/=> version->vec [:-> string? Version])
 (defn version->vec
   [s]
-  (->> (re-find ver-regex s)
-       (rest)
-       (take 3)
-       (mapv js/parseInt)))
+  (into []
+        (comp (drop 1)
+              (take 3)
+              (map js/parseInt))
+        (re-find ver-regex s)))
 
 (m/=> requires-migration? [:-> Version Version boolean?])
 (defn requires-migration?
