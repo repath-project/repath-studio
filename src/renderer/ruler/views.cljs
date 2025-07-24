@@ -66,7 +66,7 @@
             :fill "var(--font-color)"
             :font-size font-size
             :rotate (when vertical 180)
-            :font-family "var(--font-mono"}
+            :font-family "var(--font-mono)"}
      (if vertical (reverse text) text)]))
 
 (defn base-lines
