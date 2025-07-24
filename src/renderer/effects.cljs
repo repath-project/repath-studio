@@ -145,13 +145,13 @@
    (.open js/window url)))
 
 (rf/reg-fx
- ::add-listener
- (fn [[target channel listener formatter]]
+ ::add-event-listener
+ (fn [[target channel event formatter]]
    (.addEventListener target
                       channel
-                      #(rf/dispatch (conj listener
-                                          (cond-> %
-                                            formatter formatter))))))
+                      #(rf/dispatch (conj event (cond-> %
+                                                  formatter
+                                                  formatter))))))
 
 (rf/reg-fx
  ::ipc-send

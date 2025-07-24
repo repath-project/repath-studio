@@ -9,7 +9,7 @@
 (defn test-fixtures
   []
   (rf/reg-fx
-   ::effects/add-listener
+   ::effects/add-event-listener
    (fn [_]))
 
   (rf/reg-fx

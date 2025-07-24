@@ -98,7 +98,7 @@
             [:dispatch ^:flush-dom [::document.events/center]]
             [:dispatch [::window.events/update-focused]]
             [::effects/ipc-send ["initialized"]]]
-           (map (partial vector ::effects/add-listener) document-listeners))})))
+           (map (partial vector ::effects/add-event-listener) document-listeners))})))
 
 (rf/reg-event-db
  ::set-system-fonts
