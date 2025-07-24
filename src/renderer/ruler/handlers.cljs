@@ -12,24 +12,14 @@
 (defn step
   "Returns the grid step given a zoom level."
   [zoom]
-  ;; Any attempt to ingeniously produce this mapping was proven inferior.
-  ;; Simply returning a fixed step depending on the zoom range works fine.
-  ;; Zoom levels outside of this range are considered invalid for now.
-  ;; Maybe we need to revisit this at some point.
-  (condp > zoom
-    0.001 2000
-    0.025 1000
-    0.05  500
-    0.1   200
-    0.25  100
-    0.5   50
-    1     15
-    2     10
-    5     5
-    10    2
-    25    1
-    50    0.5
-    0.1))
+  (let [raw-step (/ 10 zoom)
+        magnitude (Math/pow 10 (Math/floor (Math/log10 (Math/abs raw-step))))
+        normalized (/ raw-step magnitude)]
+    (* magnitude (condp >= normalized
+                   1.5 1
+                   3.5 2
+                   7 5
+                   10))))
 
 (m/=> steps-coll [:-> number? Viewbox Orientation [:sequential number?]])
 (defn steps-coll
