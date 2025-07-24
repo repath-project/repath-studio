@@ -78,13 +78,9 @@
        [browser-compatibility support-data])
      [:div.flex.gap-2
       (when mdn-url
-        [info-button
-         mdn-url
-         (t [::learn-more "Learn more"])])
+        [info-button mdn-url (t [::learn-more "Learn more"])])
       (when spec-url
-        [info-button
-         spec-url
-         (t [::specification "Specification"])])]]))
+        [info-button spec-url (t [::specification "Specification"])])]]))
 
 (defn on-change-handler!
   ([event k old-v]

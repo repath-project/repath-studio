@@ -47,7 +47,9 @@
   (contains? languages lang))
 
 (def options
-  {:dict (into {} (map (fn [[k v]] [k (:dictionary v)])) languages)})
+  {:dict (->> languages
+              (map (fn [[k v]] [k (:dictionary v)]))
+              (into {}))})
 
 (defn t
   "Translation function that should be called in a reactive context."
