@@ -1,12 +1,12 @@
 (ns renderer.document.db
   (:require
+   [config :as config]
    [malli.core :as m]
    [malli.transform :as m.transform]
    [renderer.element.db :refer [Element]]
    [renderer.history.db :refer [History]]
    [renderer.menubar.filters :refer [A11yFilter]]
-   [renderer.utils.math :refer [Vec2]]
-   [shared :as shared]))
+   [renderer.utils.math :refer [Vec2]]))
 
 (def ZoomFactor
   [:and number? [:>= 0.01] [:<= 100]])
@@ -40,7 +40,7 @@
 (def SaveInfo
   (->> Document
        (m/children)
-       (filter (comp #(some #{%} shared/save-keys) first))
+       (filter (comp #(some #{%} config/save-keys) first))
        (into [:map {:closed true}])))
 
 (def valid? (m/validator Document))

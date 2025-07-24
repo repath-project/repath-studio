@@ -16,8 +16,7 @@
    [renderer.utils.compatibility :as utils.compatibility]
    [renderer.utils.element :as utils.element]
    [renderer.utils.i18n :refer [t]]
-   [renderer.utils.vec :as utils.vec]
-   [shared :as shared]))
+   [renderer.utils.vec :as utils.vec]))
 
 (def file-picker-options
   {:startIn config/default-path
@@ -196,7 +195,7 @@
 
               (not migrated)
               (document.handlers/update-saved-info (select-keys document
-                                                                shared/save-keys)))
+                                                                config/save-keys)))
         ::effects/focus nil})
      {:db (->> (notification.views/generic-error
                 {:title (t [::error-loading "Error while loading %1"] [(:title document)])
@@ -215,7 +214,7 @@
    (let [document (document.handlers/persisted-format db)]
      (if (= (:platform db) "web")
        {::effects/file-save
-        {:data (shared/document->save-format document)
+        {:data (document.handlers/->save-format document)
          :options file-picker-options
          :formatter (partial document.handlers/saved-info document)
          :on-success [::saved]
@@ -231,7 +230,7 @@
  ::download
  (fn [{:keys [db]} [_]]
    (let [document (document.handlers/persisted-format db)]
-     {::effects/download {:data (shared/document->save-format document)
+     {::effects/download {:data (document.handlers/->save-format document)
                           :title (str "document." config/ext)}})))
 
 (rf/reg-event-fx
@@ -240,7 +239,7 @@
    (let [document (document.handlers/persisted-format db id)]
      (if (= (:platform db) "web")
        {::effects/file-save
-        {:data (shared/document->save-format document)
+        {:data (document.handlers/->save-format document)
          :options file-picker-options
          :formatter (partial document.handlers/saved-info document)
          :on-success [::mark-as-saved-and-close]
@@ -258,7 +257,7 @@
    (let [document (document.handlers/persisted-format db)]
      (if (= (:platform db) "web")
        {::effects/file-save
-        {:data (shared/document->save-format document)
+        {:data (document.handlers/->save-format document)
          :options file-picker-options
          :formatter (partial document.handlers/saved-info document)
          :on-success [::saved]

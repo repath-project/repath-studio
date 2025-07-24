@@ -4,8 +4,7 @@
    ["fs" :as fs]
    ["path" :as path]
    [clojure.edn :as edn]
-   [config :as config]
-   [shared :as shared]))
+   [config :as config]))
 
 (def dialog-options
   {:defaultPath (.getPath app config/default-path)
@@ -21,7 +20,8 @@
 
 (defn write-file!
   [file-path data]
-  (let [document (shared/document->save-format data)]
+  (let [document (-> (apply dissoc data config/save-keys)
+                     (pr-str))]
     (-> (.writeFile fs/promises file-path document "utf-8")
         (.then #(-> (select-keys data [:id])
                     (serialize-document file-path))))))

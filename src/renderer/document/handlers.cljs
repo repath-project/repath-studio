@@ -1,5 +1,6 @@
 (ns renderer.document.handlers
   (:require
+   [config :as config]
    [malli.core :as m]
    [malli.error :as m.error]
    [malli.transform :as m.transform]
@@ -206,3 +207,9 @@
 (defn saved-ids
   [db]
   (filter (partial saved? db) (:document-tabs db)))
+
+(m/=> ->save-format [:-> Document string?])
+(defn ->save-format
+  [document]
+  (-> (apply dissoc document config/save-keys)
+      (pr-str)))

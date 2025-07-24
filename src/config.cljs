@@ -11,3 +11,5 @@
 (def mime-type "application/x-repath-studio")
 
 (def default-path "documents")
+
+(def save-keys [:id :title :path])
