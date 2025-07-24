@@ -2,9 +2,22 @@
 <html lang="en">
 
 <head>
+  <title>Repath Studio</title>
+
+  <link rel="icon" href="img/favicon.png">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="img/icon-192.png">
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Scalable Vector Graphics Manipulation">
+  <meta name="theme-color" content="#000000">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Repath Studio">
+  <meta name="msapplication-TileImage" content="img/icon-192.png">
+  <meta name="msapplication-TileColor" content="#000000">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self';
                                                       script-src 'self' 'unsafe-eval';
                                                       style-src 'self' 'unsafe-inline';
@@ -12,10 +25,8 @@
                                                       font-src 'self' data:;
                                                       connect-src 'self' https: ws://localhost:*;
                                                       media-src 'self' data: blob:;
-                                                      child-src 'self'">
-  <title>Repath Studio</title>
-  <link rel="icon" href="img/favicon.png">
-  <link rel="stylesheet" href="css/main.css">
+                                                      child-src 'self';
+                                                      worker-src 'self'">
 </head>
 
 <body class="absolute inset-0 m-0 p-0 bg-secondary overflow-hidden select-none font-sans">
