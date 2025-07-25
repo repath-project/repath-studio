@@ -11,5 +11,5 @@
 
 (m/=> set-native-mode [:-> App NativeMode App])
 (defn set-native-mode
-  [db mode]
-  (assoc-in db [:theme :native-mode] mode))
+  [db native-mode]
+  (assoc-in db [:theme :native-mode] native-mode))

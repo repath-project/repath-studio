@@ -13,5 +13,5 @@
 
 (def Theme
   [:map {:closed true}
-   [:mode {:default :dark} ThemeMode
-    :native-mode {:default :dark} NativeMode]])
+   [:mode {:default :dark} ThemeMode]
+   [:native-mode {:optional true} NativeMode]])
