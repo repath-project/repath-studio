@@ -194,8 +194,8 @@
                   (history.handlers/finalize #(t [::load-doc "Load document"])))
 
               (not migrated)
-              (document.handlers/update-saved-info (select-keys document
-                                                                config/save-keys)))
+              (document.handlers/update-saved-info
+               (select-keys document config/save-excluded-keys)))
         ::effects/focus nil})
      {:db (->> (notification.views/generic-error
                 {:title (t [::error-loading "Error while loading %1"] [(:title document)])

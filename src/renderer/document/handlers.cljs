@@ -211,5 +211,5 @@
 (m/=> ->save-format [:-> Document string?])
 (defn ->save-format
   [document]
-  (-> (apply dissoc document config/save-keys)
+  (-> (apply dissoc document config/save-excluded-keys)
       (pr-str)))

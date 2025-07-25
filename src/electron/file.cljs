@@ -20,7 +20,7 @@
 
 (defn write-file!
   [file-path data]
-  (let [document (-> (apply dissoc data config/save-keys)
+  (let [document (-> (apply dissoc data config/save-excluded-keys)
                      (pr-str))]
     (-> (.writeFile fs/promises file-path document "utf-8")
         (.then #(-> (select-keys data [:id])

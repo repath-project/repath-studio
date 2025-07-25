@@ -40,7 +40,7 @@
 (def SaveInfo
   (->> Document
        (m/children)
-       (filter (comp #(some #{%} config/save-keys) first))
+       (filter (comp #(some #{%} config/save-excluded-keys) first))
        (into [:map {:closed true}])))
 
 (def valid? (m/validator Document))
