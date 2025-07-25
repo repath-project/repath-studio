@@ -13,7 +13,8 @@
  (fn [{:keys [db native-mode]} _]
    (let [mode (-> db :theme :mode)
          mode (if (= mode :system) native-mode mode)]
-     {::effects/set-document-attr ["data-theme" (name mode)]})))
+     {:db (theme.handlers/set-native-mode db native-mode)
+      ::effects/set-document-attr ["data-theme" (name mode)]})))
 
 (rf/reg-event-fx
  ::cycle-mode

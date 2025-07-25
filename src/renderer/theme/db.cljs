@@ -8,6 +8,10 @@
 (def ThemeMode
   (into [:enum] modes))
 
+(def NativeMode
+  [:enum :dark :light])
+
 (def Theme
   [:map {:closed true}
-   [:mode {:default :dark} ThemeMode]])
+   [:mode {:default :dark} ThemeMode
+    :native-mode {:default :dark} NativeMode]])
