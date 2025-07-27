@@ -104,20 +104,19 @@
 
 (defmethod tool.hierarchy/on-pointer-move :transform
   [db {:keys [element] :as e}]
-  (cond-> db
-    (not (:shift-key e))
-    (element.handlers/clear-ignored)
+  (-> (cond-> db
+        (not (:shift-key e))
+        (element.handlers/clear-ignored))
 
-    :always
-    (-> (element.handlers/clear-hovered)
-        (tool.handlers/set-cursor (if (and element
-                                           (or (= (:type element) :handle)
-                                               (not (utils.element/root? element))))
-                                    "move"
-                                    "default")))
+      (element.handlers/clear-hovered)
+      (tool.handlers/set-cursor (if (and element
+                                         (or (= (:type element) :handle)
+                                             (not (utils.element/root? element))))
+                                  "move"
+                                  "default"))
 
-    (:id element)
-    (element.handlers/hover (:id element))))
+      (cond-> (:id element)
+        (element.handlers/hover (:id element)))))
 
 (defmethod tool.hierarchy/on-key-down :transform
   [db e]
@@ -151,15 +150,13 @@
 
 (defmethod tool.hierarchy/on-pointer-down :transform
   [db {:keys [button element] :as e}]
-  (cond-> db
-    element
-    (assoc :clicked-element element)
+  (-> (cond-> db
+        element
+        (assoc :clicked-element element)
 
-    (and (= button :right) (not= (:id element) :bbox))
-    (element.handlers/toggle-selection (:id element) (:shift-key e))
-
-    :always
-    (element.handlers/ignore :bbox)))
+        (and (= button :right) (not= (:id element) :bbox))
+        (element.handlers/toggle-selection (:id element) (:shift-key e)))
+      (element.handlers/ignore :bbox)))
 
 (defmethod tool.hierarchy/on-pointer-up :transform
   [db {:keys [element] :as e}]
@@ -294,17 +291,14 @@
                        user-translate?
                        (not= (:id (element.handlers/parent db id)) (:id hovered-svg))
                        (not (utils.element/svg? (element.handlers/entity db id))))
-                  (cond->
-                   :always
-                    (element.handlers/set-parent (:id hovered-svg))
+                  (-> (element.handlers/set-parent (:id hovered-svg))
+                      (cond-> (:bbox container) ;; FIXME: Handle nested containers.
+                        (element.handlers/translate id (start-point container))
 
-                    ;; FIXME: Handle nested containers.
-                    (:bbox container)
-                    (element.handlers/translate id (start-point container))
-
-                    (:bbox hovered-svg)
-                    (element.handlers/translate id (matrix/mul (start-point hovered-svg)
-                                                               -1))))))
+                        (:bbox hovered-svg)
+                        (element.handlers/translate id (matrix/mul
+                                                        (start-point hovered-svg)
+                                                        -1)))))))
             db
             (element.handlers/top-ancestor-ids db))))
 

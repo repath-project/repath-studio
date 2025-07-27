@@ -34,15 +34,15 @@
         rx (if (> rx (/ width 2)) (/ width 2) rx)
         ry (if (> ry (/ height 2)) (/ height 2) ry)
         curved? (and (> rx 0) (> ry 0))]
-    (cond-> []
-      :always (conj "M" (+ x rx) y
-                    "H" (- (+ x width) rx))
-      curved? (conj "A" rx ry 0 0 1 (+ x width) (+ y ry))
-      :always (conj "V" (- (+ y height) ry))
-      curved? (conj "A" rx ry 0 0 1 (- (+ x width) rx) (+ y height))
-      :always (conj "H" (+ x rx))
-      curved? (conj "A" rx ry 0 0 1 x (- (+ y height) ry))
-      :always (conj "V" (+ y ry))
-      curved? (conj "A" rx ry 0 0 1 (+ x rx) y)
-      :always (conj "z")
-      :always (->> (string/join " ")))))
+    (-> []
+        (conj "M" (+ x rx) y)
+        (conj "H" (- (+ x width) rx))
+        (cond-> curved? (conj "A" rx ry 0 0 1 (+ x width) (+ y ry)))
+        (conj "V" (- (+ y height) ry))
+        (cond-> curved? (conj "A" rx ry 0 0 1 (- (+ x width) rx) (+ y height)))
+        (conj "H" (+ x rx))
+        (cond-> curved? (conj "A" rx ry 0 0 1 x (- (+ y height) ry)))
+        (conj "V" (+ y ry))
+        (cond-> curved? (conj "A" rx ry 0 0 1 (+ x rx) y))
+        (conj "z")
+        (->> (string/join " ")))))

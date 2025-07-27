@@ -29,21 +29,16 @@
 (m/=> activate [:-> App Tool App])
 (defn activate
   [db tool]
-  (cond-> db
-    :always
-    (tool.hierarchy/on-deactivate)
-
-    (and (not= (:cached-state db) :create)
-         (not= (:state db) :type))
-    (history.handlers/reset-state)
-
-    :always
-    (-> (assoc :tool tool)
-        (set-state :idle)
-        (set-cursor "default")
-        (dissoc :drag :pointer-offset :clicked-element)
-        (snap.handlers/rebuild-tree)
-        (tool.hierarchy/on-activate))))
+  (-> (cond-> (tool.hierarchy/on-deactivate db)
+        (and (not= (:cached-state db) :create)
+             (not= (:state db) :type))
+        (history.handlers/reset-state))
+      (assoc :tool tool)
+      (set-state :idle)
+      (set-cursor "default")
+      (dissoc :drag :pointer-offset :clicked-element)
+      (snap.handlers/rebuild-tree)
+      (tool.hierarchy/on-activate)))
 
 (m/=> pointer-delta [:-> App Vec2])
 (defn pointer-delta
@@ -82,15 +77,10 @@
 (m/=> cancel [:-> App App])
 (defn cancel
   [db]
-  (cond-> db
-    :always
-    (-> (activate (:tool db))
-        (history.handlers/reset-state))
-
-    (= (:state db) :idle)
-    (activate :transform)
-
-    :always
-    (-> (assoc :active-pointers #{})
-        (dissoc :pointer-offset :drag :nearest-neighbor)
-        (set-state :idle))))
+  (-> (cond-> (-> (activate db (:tool db))
+                  (history.handlers/reset-state))
+        (= (:state db) :idle)
+        (activate :transform))
+      (assoc :active-pointers #{})
+      (dissoc :pointer-offset :drag :nearest-neighbor)
+      (set-state :idle)))

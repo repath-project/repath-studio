@@ -667,15 +667,13 @@
 (m/=> normalize [:-> map? Element])
 (defn normalize
   [el]
-  (cond-> el
-    (not (string? (:content el)))
-    (dissoc :content)
-
-    :always
-    (-> (utils.map/remove-nils)
-        (utils.element/normalize-attrs)
-        (dissoc :locked)
-        (merge db/default))))
+  (-> (cond-> el
+        (not (string? (:content el)))
+        (dissoc :content))
+      (utils.map/remove-nils)
+      (utils.element/normalize-attrs)
+      (dissoc :locked)
+      (merge db/default)))
 
 (m/=> create [:-> App map? App])
 (defn create
@@ -692,13 +690,10 @@
                                   (db/tag? (:tag %2))
                                   (create (assoc %2 :parent id))) db child-els))]
     (if-not (db/valid? new-el)
-      (->> (-> new-el db/explain m.error/humanize str)
-           (notification.views/spec-failed "Invalid element")
-           (notification.handlers/add db))
-      (cond-> db
-        :always
-        (assoc-in (path db id) new-el)
-
+      (let [error-message (-> new-el db/explain m.error/humanize str)]
+        (->> (notification.views/spec-failed "Invalid element" error-message)
+             (notification.handlers/add db)))
+      (cond-> (assoc-in db (path db id) new-el)
         (:parent new-el)
         (update-prop (:parent new-el) :children #(vec (conj % id)))
 
@@ -707,7 +702,9 @@
                  (:parent el)))
         (translate [(- min-x) (- min-y)])
 
-        :always
+        (or (utils.element/svg? new-el)
+            (utils.element/root? new-el)
+            (:parent el))
         (refresh-bbox id)
 
         child-els
@@ -716,11 +713,8 @@
 (m/=> create-default-canvas [:-> App [:maybe Vec2] App])
 (defn create-default-canvas
   [db size]
-  (cond-> db
-    :always
-    (create {:tag :canvas
-             :attrs {:fill "#eeeeee"}})
-
+  (cond-> (create db {:tag :canvas
+                      :attrs {:fill "#eeeeee"}})
     size
     (-> (create {:tag :svg
                  :attrs {:width (first size)
@@ -782,12 +776,9 @@
          pointer-pos (:adjusted-pointer-pos db)]
      (reduce
       select
-      (cond-> db
-        :always
-        (-> (deselect)
-            (add (assoc el :parent (:id parent-el)))
-            (place (matrix/add pointer-pos offset)))
-
+      (cond-> (-> (deselect db)
+                  (add (assoc el :parent (:id parent-el)))
+                  (place (matrix/add pointer-pos offset)))
         (not= (:id (root db)) (:id parent-el))
         (translate [(- s-x1) (- s-y1)])) (selected-ids db)))))
 

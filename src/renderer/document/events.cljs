@@ -188,14 +188,13 @@
      (let [migrated-document (utils.compatibility/migrate-document document)
            migrated (not= document migrated-document)
            document (assoc migrated-document :id guid)]
-       {:db (cond-> db
-              :always
-              (-> (document.handlers/load document)
-                  (history.handlers/finalize #(t [::load-doc "Load document"])))
-
+       {:db (cond-> (-> db
+                        (document.handlers/load document)
+                        (history.handlers/finalize #(t [::load-doc "Load document"])))
               (not migrated)
-              (document.handlers/update-saved-info
-               (select-keys document config/save-excluded-keys)))
+              (document.handlers/update-saved-info (select-keys
+                                                    document
+                                                    config/save-excluded-keys)))
         ::effects/focus nil})
      {:db (->> (notification.views/generic-error
                 {:title (t [::error-loading "Error while loading %1"] [(:title document)])

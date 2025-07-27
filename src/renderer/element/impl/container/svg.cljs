@@ -48,10 +48,7 @@
         :style {:filter (str "blur(" (/ 2 zoom) "px)")}})]
 
      [:svg
-      (cond-> attrs
-        :always
-        (dissoc :style)
-
+      (cond-> (dissoc attrs :style)
         active-filter
         (assoc :filter (str "url(#" (name active-filter) ")")))
       [:rect

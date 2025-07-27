@@ -181,16 +181,15 @@
                    open-document-id
                    (assoc :id open-document-id))]
     (if (document.db/valid? document)
-      (cond-> db
-        (not open-document-id)
-        (-> (create-tab document)
-            (center))
+      (-> (cond-> db
+            (not open-document-id)
+            (-> (create-tab document)
+                (center))
 
-        (:path document)
-        (add-recent (:path document))
+            (:path document)
+            (add-recent (:path document)))
 
-        :always
-        (set-active (:id document)))
+          (set-active (:id document)))
 
       (let [explanation (-> document document.db/explain m.error/humanize str)]
         (->> (notification.views/spec-failed "Load document" explanation)

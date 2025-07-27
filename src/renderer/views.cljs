@@ -75,11 +75,12 @@
   (into [:div.flex.gap-1.items-center {:dir "ltr"}]
         (comp (map (partial into [:span.shortcut-key]))
               (interpose [:span "+"]))
-        (cond-> []
-          (:ctrlKey shortcut) (conj "Ctrl")
-          (:shiftKey shortcut) (conj "⇧")
-          (:altKey shortcut) (conj "Alt")
-          :always (conj (event.impl.keyboard/key-code->key (:keyCode shortcut))))))
+        (-> (cond-> []
+              (:ctrlKey shortcut) (conj "Ctrl")
+              (:shiftKey shortcut) (conj "⇧")
+              (:altKey shortcut) (conj "Alt"))
+
+            (conj (event.impl.keyboard/key-code->key (:keyCode shortcut))))))
 
 (defn shortcuts
   [event]
