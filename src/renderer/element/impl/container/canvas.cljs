@@ -39,7 +39,7 @@
         cached-tool @(rf/subscribe [::tool.subs/cached])
         rotate @(rf/subscribe [::document.subs/rotate])
         grid @(rf/subscribe [::app.subs/grid])
-        pointer-handler #(event.impl.pointer/handler! % el)
+        pointer-handler (partial event.impl.pointer/handler! el)
         snap? @(rf/subscribe [::snap.subs/active?])
         nearest-neighbor @(rf/subscribe [::snap.subs/nearest-neighbor])
         snapped-el-id (-> nearest-neighbor meta :id)

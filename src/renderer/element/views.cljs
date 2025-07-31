@@ -45,7 +45,7 @@
    can interact with it."
   [el]
   (let [{:keys [attrs tag content]} el
-        pointer-handler #(event.impl.pointer/handler! % el)
+        pointer-handler (partial event.impl.pointer/handler! el)
         zoom @(rf/subscribe [::document.subs/zoom])
         stroke-width (max (:stroke-width attrs) (/ 20 zoom))]
     [tag

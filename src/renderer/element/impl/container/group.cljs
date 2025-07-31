@@ -46,7 +46,7 @@
              ignored? (contains? ignored-ids (:id el))
              [min-x min-y] bbox
              [w h] (utils.bounds/->dimensions bbox)
-             pointer-handler #(event.impl.pointer/handler! % el)
+             pointer-handler (partial event.impl.pointer/handler! el)
              zoom @(rf/subscribe [::document.subs/zoom])
              stroke-width (max (:stroke-width attrs) (/ 20 zoom))]
          [:rect {:x min-x

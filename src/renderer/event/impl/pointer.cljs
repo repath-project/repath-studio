@@ -17,10 +17,10 @@
         3 :back
         4 :forward} button))
 
-(m/=> ->clj [:-> any? [:maybe [:or Element Handle]] PointerEvent])
+(m/=> ->clj [:-> [:maybe [:or Element Handle]] any? PointerEvent])
 (defn ->clj
   "https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent"
-  [^js/PointerEvent e el]
+  [el ^js/PointerEvent e]
   {:element el
    :target (.-target e)
    :type (.-type e)
@@ -36,15 +36,15 @@
    :meta-key (.-metaKey e)
    :shift-key (.-shiftKey e)})
 
-(m/=> handler! [:-> any? [:or Element Handle] nil?])
+(m/=> handler! [:-> [:or Element Handle] any? nil?])
 (defn handler!
   "Gathers pointer event props and dispathces the corresponding event.
    https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/"
-  [^js/PointerEvent e el]
+  [el ^js/PointerEvent e]
   (.stopPropagation e)
   (.preventDefault e)
 
   ;; Although the fps might drop because synced dispatch blocks rendering,
   ;; the end result appears to be more responsive because it's synced with the
   ;; pointer movement.
-  (rf/dispatch-sync [::event.events/pointer (->clj e el)]))
+  (rf/dispatch-sync [::event.events/pointer (->clj el e)]))

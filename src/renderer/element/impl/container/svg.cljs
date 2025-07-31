@@ -29,7 +29,7 @@
         text-attrs (select-keys attrs [:x :y])
         active-filter @(rf/subscribe [::document.subs/filter])
         zoom @(rf/subscribe [::document.subs/zoom])
-        pointer-handler #(event.impl.pointer/handler! % el)]
+        pointer-handler (partial event.impl.pointer/handler! el)]
     [:g
      [:text
       (merge

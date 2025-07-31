@@ -110,7 +110,7 @@
   [el]
   (let [{:keys [attrs children]} el
         child-elements @(rf/subscribe [::element.subs/filter-visible children])
-        pointer-handler #(event.impl.pointer/handler! % el)]
+        pointer-handler (partial event.impl.pointer/handler! el)]
     [:path (merge {:d (element.hierarchy/path el)
                    :on-pointer-up pointer-handler
                    :on-pointer-down pointer-handler

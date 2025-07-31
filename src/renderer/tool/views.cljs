@@ -15,7 +15,7 @@
     (let [{:keys [x y id]} el
           zoom @(rf/subscribe [::document.subs/zoom])
           clicked-element @(rf/subscribe [::app.subs/clicked-element])
-          pointer-handler #(event.impl.pointer/handler! % el)]
+          pointer-handler (partial event.impl.pointer/handler! el)]
       (into [:circle {:key id
                       :cx x
                       :cy y
@@ -37,7 +37,7 @@
         clicked-element @(rf/subscribe [::app.subs/clicked-element])
         size (/ theme.db/handle-size zoom)
         stroke-width (/ 1 zoom)
-        pointer-handler #(event.impl.pointer/handler! % el)
+        pointer-handler (partial event.impl.pointer/handler! el)
         active (and (= (:id clicked-element) id)
                     (= (:element clicked-element) element))]
     (into [:rect {:fill (if active "var(--color-accent)" "var(--color-accent-inverted)")
@@ -67,9 +67,9 @@
         ignored? (contains? ignored-ids id)
         [min-x min-y] bbox
         [w h] (utils.bounds/->dimensions bbox)
-        pointer-handler #(event.impl.pointer/handler! % {:type :handle
-                                                         :action :translate
-                                                         :id id})
+        pointer-handler (partial event.impl.pointer/handler! {:type :handle
+                                                              :action :translate
+                                                              :id id})
         rect-attrs {:x min-x
                     :y min-y
                     :width w

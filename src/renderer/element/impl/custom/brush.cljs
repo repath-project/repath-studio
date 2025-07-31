@@ -116,7 +116,7 @@
 (defmethod element.hierarchy/render :brush
   [el]
   (let [attrs (:attrs el)
-        pointer-handler #(event.impl.pointer/handler! % el)
+        pointer-handler (partial event.impl.pointer/handler! el)
         options (-> attrs
                     (select-keys option-keys)
                     (update-vals js/parseFloat))]
