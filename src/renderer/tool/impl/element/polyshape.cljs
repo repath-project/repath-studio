@@ -36,7 +36,9 @@
 (defn add-point
   [db point]
   (let [id (:id (first (element.handlers/selected db)))]
-    (element.handlers/update-attr db id :points str " " (string/join " " point))))
+    (if (= (:state db) :create)
+      (element.handlers/update-attr db id :points str " " (string/join " " point))
+      (create-polyline db point))))
 
 (defn drop-last-point
   [db]
@@ -49,16 +51,13 @@
 
 (defmethod tool.hierarchy/on-pointer-up ::tool.hierarchy/polyshape
   [db _e]
-  (let [point (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))]
-    (if (= (:state db) :create)
-      (add-point db point)
-      (create-polyline db point))))
+  (let [point (or (:point (:nearest-neighbor db))
+                  (:adjusted-pointer-pos db))]
+    (add-point db point)))
 
 (defmethod tool.hierarchy/on-drag-end ::tool.hierarchy/polyshape
   [db _e]
-  (if (= (:state db) :create)
-    (add-point db (:adjusted-pointer-pos db))
-    (create-polyline db (:adjusted-pointer-pos db))))
+  (add-point db (:adjusted-pointer-pos db)))
 
 (defmethod tool.hierarchy/on-pointer-move ::tool.hierarchy/polyshape
   [db _e]

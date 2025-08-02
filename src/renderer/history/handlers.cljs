@@ -157,7 +157,7 @@
 (m/=> state-count [:-> App int?])
 (defn state-count
   [db]
-  (-> (history db) :states count))
+  (-> db history :states count))
 
 (m/=> set-zoom [:-> App number? App])
 (defn set-zoom
