@@ -12,11 +12,11 @@
 (m/=> add [:-> vector? number? any? vector?])
 (defn add
   "Adds element to index."
-  [v index el]
+  [v i el]
   (vec (concat
-        (subvec v 0 index)
+        (subvec v 0 i)
         [el]
-        (subvec v index))))
+        (subvec v i))))
 
 (m/=> move [:-> vector? number? number? vector?])
 (defn move

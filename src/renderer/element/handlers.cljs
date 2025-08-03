@@ -569,9 +569,8 @@
   [db]
   (let [svgs (reverse (root-svgs db))
         pointer-pos (:adjusted-pointer-pos db)]
-    (or
-     (some #(when (utils.bounds/contained-point? (:bbox %) pointer-pos) %) svgs)
-     (root db))))
+    (or (some #(when (utils.bounds/contained-point? (:bbox %) pointer-pos) %) svgs)
+        (root db))))
 
 (m/=> translate [:function
                  [:-> App Vec2 App]

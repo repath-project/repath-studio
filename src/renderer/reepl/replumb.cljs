@@ -260,9 +260,8 @@ cljs.js/*load-fn*
                    (< -1 (.indexOf (str %) text)))
         current-ns (repl/current-ns)
         replace-name (fn [sym]
-                       (if (or
-                            (= (namespace sym) "cljs.core")
-                            (= (namespace sym) (str current-ns)))
+                       (if (or (= (namespace sym) "cljs.core")
+                               (= (namespace sym) (str current-ns)))
                          (name sym)
                          (str sym)))
         requires (:requires
