@@ -662,13 +662,15 @@
 (m/=> normalize [:-> map? Element])
 (defn normalize
   [el]
-  (-> (cond-> el
-        (not (string? (:content el)))
-        (dissoc :content))
-      (utils.map/remove-nils)
-      (utils.element/normalize-attrs)
-      (dissoc :locked)
-      (merge db/default)))
+  (cond-> el
+    (not (string? (:content el)))
+    (dissoc :content)
+
+    :always
+    (-> (utils.map/remove-nils)
+        (utils.element/normalize-attrs)
+        (dissoc :locked)
+        (merge db/default))))
 
 (m/=> create [:-> App map? App])
 (defn create
@@ -688,28 +690,33 @@
       (let [error-message (-> new-el db/explain m.error/humanize str)]
         (->> (notification.views/spec-failed "Invalid element" error-message)
              (notification.handlers/add db)))
-      (cond-> (assoc-in db (path db id) new-el)
-        (:parent new-el)
-        (update-prop (:parent new-el) :children #(vec (conj % id)))
+      (let [is-translated (or (utils.element/svg? new-el)
+                              (utils.element/root? new-el)
+                              (:parent el))]
+        (cond-> db
+          :always
+          (assoc-in (path db id) new-el)
 
-        (not (or (utils.element/svg? new-el)
-                 (utils.element/root? new-el)
-                 (:parent el)))
-        (translate [(- min-x) (- min-y)])
+          (:parent new-el)
+          (update-prop (:parent new-el) :children #(vec (conj % id)))
 
-        (or (utils.element/svg? new-el)
-            (utils.element/root? new-el)
-            (:parent el))
-        (refresh-bbox id)
+          (not is-translated)
+          (translate [(- min-x) (- min-y)])
 
-        child-els
-        (add-children child-els)))))
+          is-translated
+          (refresh-bbox id)
+
+          child-els
+          (add-children child-els))))))
 
 (m/=> create-default-canvas [:-> App [:maybe Vec2] App])
 (defn create-default-canvas
   [db size]
-  (cond-> (create db {:tag :canvas
-                      :attrs {:fill "#eeeeee"}})
+  (cond-> db
+    :always
+    (create {:tag :canvas
+             :attrs {:fill "#eeeeee"}})
+
     size
     (-> (create {:tag :svg
                  :attrs {:width (first size)
@@ -771,9 +778,12 @@
          pointer-pos (:adjusted-pointer-pos db)]
      (reduce
       select
-      (cond-> (-> (deselect db)
-                  (add (assoc el :parent (:id parent-el)))
-                  (place (matrix/add pointer-pos offset)))
+      (cond-> db
+        :always
+        (-> (deselect)
+            (add (assoc el :parent (:id parent-el)))
+            (place (matrix/add pointer-pos offset)))
+
         (not= (:id (root db)) (:id parent-el))
         (translate [(- s-x1) (- s-y1)])) (selected-ids db)))))
 

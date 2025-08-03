@@ -104,19 +104,20 @@
 
 (defmethod tool.hierarchy/on-pointer-move :transform
   [db {:keys [element] :as e}]
-  (-> (cond-> db
-        (not (:shift-key e))
-        (element.handlers/clear-ignored))
+  (cond-> db
+    (not (:shift-key e))
+    (element.handlers/clear-ignored)
 
-      (element.handlers/clear-hovered)
-      (tool.handlers/set-cursor (if (and element
-                                         (or (= (:type element) :handle)
-                                             (not (utils.element/root? element))))
-                                  "move"
-                                  "default"))
+    :always
+    (-> (element.handlers/clear-hovered)
+        (tool.handlers/set-cursor (if (and element
+                                           (or (= (:type element) :handle)
+                                               (not (utils.element/root? element))))
+                                    "move"
+                                    "default")))
 
-      (cond-> (:id element)
-        (element.handlers/hover (:id element)))))
+    (:id element)
+    (element.handlers/hover (:id element))))
 
 (defmethod tool.hierarchy/on-key-down :transform
   [db e]
@@ -150,13 +151,15 @@
 
 (defmethod tool.hierarchy/on-pointer-down :transform
   [db {:keys [button element] :as e}]
-  (-> (cond-> db
-        element
-        (assoc :clicked-element element)
+  (cond-> db
+    element
+    (assoc :clicked-element element)
 
-        (and (= button :right) (not= (:id element) :bbox))
-        (element.handlers/toggle-selection (:id element) (:shift-key e)))
-      (element.handlers/ignore :bbox)))
+    (and (= button :right) (not= (:id element) :bbox))
+    (element.handlers/toggle-selection (:id element) (:shift-key e))
+
+    :always
+    (element.handlers/ignore :bbox)))
 
 (defmethod tool.hierarchy/on-pointer-up :transform
   [db {:keys [element] :as e}]

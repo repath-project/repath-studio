@@ -17,19 +17,23 @@
 
    [[0 4 0] (fn [document]
               (let [key->uuid (comp uuid name)]
-                (-> (cond-> document
-                      (:id document)
-                      (update :id key->uuid)
+                (cond-> document
+                  (:id document)
+                  (update :id key->uuid)
 
-                      (:save document)
-                      (update :save key->uuid))
-                    (update :elements update-keys key->uuid)
-                    (update :elements update-vals
-                            #(cond-> (-> %
-                                         (update :id key->uuid)
-                                         (update :children (fn [ks] (mapv key->uuid ks))))
-                               (:parent %)
-                               (update :parent key->uuid))))))]
+                  (:save document)
+                  (update :save key->uuid)
+
+                  :always
+                  (-> (update :elements update-keys key->uuid)
+                      (update :elements update-vals
+                              #(cond-> %
+                                 :always
+                                 (-> (update :id key->uuid)
+                                     (update :children (fn [ks] (mapv key->uuid ks))))
+
+                                 (:parent %)
+                                 (update :parent key->uuid)))))))]
 
    [[0 4 4] (fn [document]
               (update document :elements update-vals
@@ -43,11 +47,12 @@
    [[0 4 5] (fn [document]
               (update document :elements update-vals
                       (fn [el]
-                        (-> (cond-> el
-                              (= (:tag el) :brush)
-                              (update-in [:attrs :points] #(string/join " " (flatten %))))
+                        (cond-> el
+                          (= (:tag el) :brush)
+                          (update-in [:attrs :points] #(string/join " " (flatten %)))
 
-                            (utils.element/normalize-attrs)))))]
+                          :always
+                          (utils.element/normalize-attrs)))))]
 
    [[0 4 6] (fn [document]
               (update document :elements update-vals

@@ -44,10 +44,12 @@
   (let [document (edn/read-string data)
         file-path (:path document)
         directory (and file-path (.dirname path file-path))
-        options (-> (cond-> dialog-options
-                      (and directory (.existsSync fs directory))
-                      (assoc :defaultPath directory))
-                    (update :defaultPath #(.join path % (:title document))))]
+        options (cond-> dialog-options
+                  (and directory (.existsSync fs directory))
+                  (assoc :defaultPath directory)
+
+                  :always
+                  (update :defaultPath #(.join path % (:title document))))]
     (-> (save-dialog! options)
         (.then (fn [file-path]
                  (when file-path
