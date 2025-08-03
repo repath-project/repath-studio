@@ -546,27 +546,23 @@
 
 (m/=> set-parent [:function
                   [:-> App uuid? App]
-                  [:-> App uuid? uuid? App]])
+                  [:-> App uuid? uuid? App]
+                  [:-> App uuid? uuid? int? App]])
 (defn set-parent
   ([db parent-id]
    (reduce (partial-right set-parent parent-id) db (selected-sorted-ids db)))
   ([db id parent-id]
+   (let [sibling-els (:children (entity db parent-id))
+         last-index (count sibling-els)]
+     (set-parent db id parent-id last-index)))
+  ([db id parent-id i]
    (let [el (entity db id)]
      (cond-> db
        (and el (not= id parent-id) (not (locked? db id)))
        (-> (update-prop (:parent el) :children #(vec (remove #{id} %)))
-           (update-prop parent-id :children conj id)
+           (update-prop parent-id :children utils.vec/add i id)
            (assoc-prop id :parent parent-id)
            (refresh-bbox id))))))
-
-(m/=> set-parent-at-index [:-> App uuid? uuid? int? App])
-(defn set-parent-at-index
-  [db id parent-id i]
-  (let [sibling-els (:children (entity db parent-id))
-        last-index (count sibling-els)]
-    (-> db
-        (set-parent id parent-id)
-        (update-prop parent-id :children utils.vec/move last-index i))))
 
 (m/=> hovered-svg [:-> App Element])
 (defn hovered-svg
@@ -854,7 +850,7 @@
          (reduce
           (fn [db child-id]
             (-> db
-                (set-parent-at-index child-id (:parent (entity db id)) i)
+                (set-parent child-id (:parent (entity db id)) i)
                 ;; Group attributes are inherited by its children,
                 ;; so we need to maintain the presentation attrs.
                 (inherit-attrs (entity db id) child-id)
