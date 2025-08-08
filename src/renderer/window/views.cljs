@@ -68,12 +68,13 @@
       :title (t [::close "Close"])
       :icon "window-close"}]))
 
-(defn app-icon
-  []
-  [:div.drag.shrink-0
-   [:img.mx-2.h-4.w-4
-    {:src "img/icon-no-bg.svg"
-     :alt "logo"}]])
+(defn app-icon []
+  (let [rtl? @(rf/subscribe [::app.subs/rtl?])]
+    [:div.drag.shrink-0.hidden.sm:block
+     {:class (if rtl? "pr-2" "pl-2")}
+     [:img.h-4.w-4
+      {:src "img/icon-no-bg.svg"
+       :alt "logo"}]]))
 
 (defn app-header
   []
@@ -82,18 +83,18 @@
         mac? @(rf/subscribe [::app.subs/mac?])
         electron? @(rf/subscribe [::app.subs/electron?])
         title-bar @(rf/subscribe [::document.subs/title-bar])]
-    [:div.flex.items-center.relative.gap-0.5
+    [:div.flex.items-center.relative.gap-1
      (when-not (or fullscreen? mac?)
        [app-icon])
      [:div.overflow-hidden
       [views/scroll-area
        [:div.flex.relative.bg-secondary
-        {:class (when (and mac? (not fullscreen?))
-                  "ml-16")}
+        {:class ["px-1"
+                 (when (and mac? (not fullscreen?))
+                   "ml-16")]}
         [menubar.views/root]]]]
      [:div.absolute.hidden.justify-center.drag.grow.h-full.items-center
-      {:class "pointer-events-none md:flex left-1/2 -translate-x-1/2"
-       :style {:z-index -1}
+      {:class "pointer-events-none md:flex left-1/2 -translate-x-1/2 z-[-1]"
        :dir "ltr"}
       title-bar]
      [:div.flex.h-full.flex-1.drag]
