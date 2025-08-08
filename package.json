@@ -68,7 +68,7 @@
   "devDependencies": {
     "@fontsource/noto-sans": "5.2.7",
     "@fontsource/noto-sans-mono": "5.2.7",
-    "@mdn/browser-compat-data": "6.0.34",
+    "@mdn/browser-compat-data": "6.1.0",
     "@radix-ui/react-context-menu": "2.2.7",
     "@radix-ui/react-dialog": "1.1.14",
     "@radix-ui/react-direction": "1.1.1",
@@ -92,7 +92,7 @@
     "codemirror": "5.65.15",
     "constants": "0.0.2",
     "create-react-class": "15.7.0",
-    "electron": "37.2.4",
+    "electron": "37.2.6",
     "electron-builder": "26.0.12",
     "events": "3.3.0",
     "graceful-fs": "4.2.11",
@@ -114,13 +114,13 @@
     "path-browserify": "1.0.1",
     "perfect-freehand": "1.2.2",
     "process": "0.11.10",
-    "puppeteer": "24.15.0",
-    "react": "19.1.0",
+    "puppeteer": "24.16.0",
+    "react": "19.1.1",
     "react-d3-tree": "3.6.6",
-    "react-dom": "19.1.0",
+    "react-dom": "19.1.1",
     "react-fps": "1.0.6",
     "react-frame-component": "5.2.7",
-    "react-resizable-panels": "3.0.3",
+    "react-resizable-panels": "3.0.4",
     "react-svg": "16.3.0",
     "shadow-cljs": "3.1.8",
     "shx": "0.4.0",
@@ -134,11 +134,11 @@
     "tailwindcss": "4.1.11"
   },
   "dependencies": {
-    "electron-log": "5.4.1",
+    "electron-log": "5.4.2",
     "electron-window-state": "5.0.3"
   },
   "overrides": {
-    "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
   }
 }
