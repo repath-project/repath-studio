@@ -64,14 +64,14 @@
 (rf/reg-fx
  ::persist
  (fn []
-   (let [db @rf.db/app-db
-         db (cond-> db
-              (:active-document db)
-              history.handlers/drop-rest)]
-     (.catch (->> (select-keys db app.db/persisted-keys)
-                  (transit/write (transit/writer :json))
-                  (localforage/setItem config/app-name))
-             #(rf/dispatch [::notification.events/show-exception %])))))
+   (let [db (history.handlers/drop-rest @rf.db/app-db)
+         persisted-db (select-keys db app.db/persisted-keys)
+         writer (transit/writer :json)]
+     (when-let [json (try (transit/write writer persisted-db)
+                          (catch :default e
+                            (rf/dispatch [::notification.events/show-exception e])))]
+       (-> (localforage/setItem config/app-name json)
+           (.catch #(rf/dispatch [::notification.events/show-exception %])))))))
 
 (rf/reg-fx
  ::validate
