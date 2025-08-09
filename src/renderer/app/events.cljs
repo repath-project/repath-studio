@@ -26,7 +26,7 @@
                 db
                 (rf/assoc-effect :fx (conj (or fx []) [::app.effects/persist])))))))
 
-(defonce document-listeners
+(defonce listeners
   [[js/document "keydown" [::event.events/keyboard] event.impl.keyboard/->clj]
    [js/document "keyup" [::event.events/keyboard] event.impl.keyboard/->clj]
    [js/document "fullscreenchange" [::window.events/update-fullscreen]]
@@ -98,7 +98,7 @@
             [:dispatch ^:flush-dom [::document.events/center]]
             [:dispatch [::window.events/update-focused]]
             [::effects/ipc-send ["initialized"]]]
-           (map (partial vector ::effects/add-event-listener) document-listeners))})))
+           (map (partial vector ::effects/add-event-listener) listeners))})))
 
 (rf/reg-event-db
  ::set-system-fonts
