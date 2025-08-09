@@ -6,6 +6,7 @@
    [clojure.string :as string]
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as attr.hierarchy]
+   [renderer.effects :as-alias effects]
    [renderer.element.handlers :as element.handlers]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
@@ -62,16 +63,17 @@
   [e]
   (string/replace (.. e -target -value) " " "\u00a0"))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::set-text
- (fn [db [_ id s]]
-   (-> (if (empty? s)
-         (-> (element.handlers/delete db id)
-             (history.handlers/finalize  #(t [::remove-text "Remove text"])))
-         (-> (element.handlers/assoc-prop db id :content s)
-             (element.handlers/refresh-bbox id)
-             (history.handlers/finalize #(t [::set-text "Set text"]))))
-       (tool.handlers/activate :transform))))
+ (fn [{:keys [db]} [_ id s]]
+   {:db (-> (if (empty? s)
+              (-> (element.handlers/delete db id)
+                  (history.handlers/finalize  #(t [::remove-text "Remove text"])))
+              (-> (element.handlers/assoc-prop db id :content s)
+                  (element.handlers/refresh-bbox id)
+                  (history.handlers/finalize #(t [::set-text "Set text"]))))
+            (tool.handlers/activate :transform))
+    ::effects/focus nil}))
 
 (defmethod element.hierarchy/render :text
   [el]
