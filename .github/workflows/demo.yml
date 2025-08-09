@@ -43,7 +43,7 @@ jobs:
           java-version: '21'
 
       - name: Typos
-        uses: crate-ci/typos@v1.34.0
+        uses: crate-ci/typos@v1.35.3
 
       - name: Install clojure tools
         uses: DeLaGuardo/setup-clojure@13.4
