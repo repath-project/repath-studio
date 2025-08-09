@@ -93,6 +93,16 @@
     [:> FpsView #js {:width 240
                      :height 180}]]])
 
+(defn help
+  [message]
+  [:div.hidden.absolute.justify-center.w-full.pointer-events-none.p-4
+   {:class "sm:flex"}
+   [:div.bg-primary.overflow-hidden.shadow-lg.rounded-full
+    [:div.overlay.text-color.text-xs.gap-1.flex.flex-wrap.py-2.px-4
+     {:class "justify-center truncate"
+      :aria-live "polite"}
+     message]]])
+
 (defn frame-panel
   []
   (let [ruler-visible? @(rf/subscribe [::ruler.subs/visible?])
@@ -138,14 +148,7 @@
          [:div.absolute.inset-0
           {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])
        (when (and help-bar (seq help-message))
-         [:div.flex.absolute.justify-center.w-full.pointer-events-none
-          {:class "sm:p-4"}
-          [:div.bg-primary.overflow-hidden.shadow-lg.w-full
-           {:class "sm:rounded-full sm:w-auto"}
-           [:div.overlay.text-color.text-xs.gap-1.flex.flex-wrap.py-2.px-4
-            {:class "sm:justify-center sm:truncate"
-             :aria-live "polite"}
-            help-message]]])]]]))
+         [help help-message])]]]))
 
 (defn center-top-group
   []
