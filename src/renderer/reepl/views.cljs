@@ -9,7 +9,7 @@
    [renderer.reepl.codemirror :as codemirror]
    [renderer.reepl.db :as db]
    [renderer.reepl.handlers :as h]
-   [renderer.reepl.replumb :as replumb]
+   [renderer.reepl.replumb :as reepl.replumb]
    [renderer.reepl.show-devtools :as show-devtools]
    [renderer.reepl.show-function :as show-function]
    [renderer.reepl.show-value :refer [show-value]]
@@ -17,7 +17,7 @@
    [renderer.theme.subs :as-alias theme.subs]
    [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]
-   [replumb.core :as replumb.core])
+   [replumb.core :as replumb])
   (:require-macros
    [reagent.ratom :refer [reaction]]))
 
@@ -43,7 +43,7 @@
   (let [{:keys [_pos _count _text]} @state
         repl-history? @(rf/subscribe [::app.subs/panel-visible? :repl-history])]
     [:div.flex.p-0.5.items-center.m-1
-     [:div.flex.text-xs.self-start {:class "m-0.5"} (replumb.core/get-prompt)]
+     [:div.flex.text-xs.self-start {:class "m-0.5"} (replumb/get-prompt)]
      ^{:key (str (hash (:js-cm-opts cm-opts)))}
      [codemirror/code-mirror (reaction (:text @state))
       (merge {:on-eval submit} cm-opts)]
@@ -138,10 +138,10 @@
 
 (defn maybe-fn-docs
   [f]
-  (let [doc (replumb/doc-from-sym f)]
+  (let [doc (reepl.replumb/doc-from-sym f)]
     (when (:forms doc)
       (with-out-str
-        (replumb/print-doc doc)))))
+        (reepl.replumb/print-doc doc)))))
 
 (defn set-print!
   [log]
@@ -225,10 +225,12 @@
         debug-info (rf/subscribe [::app.subs/debug-info])
         codemirror-theme @(rf/subscribe [::theme.subs/codemirror])]
     [repl
-     :execute #(replumb/run-repl (if (= @repl-mode :cljs) %1 (str "(js/eval \"" %1 "\")"))
-                                 {:verbose @debug-info} %2)
-     :complete-word (fn [text] (replumb/process-apropos @repl-mode text))
-     :get-docs replumb/process-doc
+     :execute #(reepl.replumb/run-repl (if (= @repl-mode :cljs)
+                                         %1
+                                         (str "(js/eval \"" %1 "\")"))
+                                       {:verbose @debug-info} %2)
+     :complete-word (fn [text] (reepl.replumb/process-apropos @repl-mode text))
+     :get-docs reepl.replumb/process-doc
      :state state
      :show-value-opts
      {:showers [show-devtools/show-devtools

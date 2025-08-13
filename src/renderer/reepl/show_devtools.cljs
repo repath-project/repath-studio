@@ -43,10 +43,9 @@
 (defn show-devtools
   [v config show-value]
   (when-not (var? v)
-    (let [header (try
-                   (devtools.formatters/header-api-call v config)
-                   (catch js/Error e
-                     e))]
+    (let [header (try (devtools.formatters/header-api-call v config)
+                      (catch js/Error e
+                        e))]
       (cond
         (not header)
         nil

@@ -81,7 +81,6 @@
 
 (m/=> center [:-> App App])
 (defn center
-  "Centers the contents of the document to the current view."
   [db]
   (cond-> db
     (and (:active-document db)
