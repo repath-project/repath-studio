@@ -1,6 +1,5 @@
 (ns renderer.frame.events
   (:require
-   [clojure.core.matrix :as matrix]
    [re-frame.core :as rf]
    [renderer.app.events :refer [persist]]
    [renderer.element.handlers :as element.handlers]
@@ -46,9 +45,5 @@
  ::pan-to-element
  [persist]
  (fn [db [_ id]]
-   (let [element (element.handlers/entity db id)
-         el-bbox (:bbox element)
-         viewbox (frame.handlers/viewbox db)
-         diff (matrix/sub el-bbox viewbox)
-         bbox (matrix/add viewbox diff)]
-     (frame.handlers/pan-to-bbox db bbox))))
+   (let [element (element.handlers/entity db id)]
+     (frame.handlers/pan-to-bbox db (:bbox element)))))
