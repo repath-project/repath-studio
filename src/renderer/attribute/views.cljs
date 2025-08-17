@@ -227,7 +227,7 @@
            (when property [property-list property])
            [caniusethis {:tag tag :attr k}]])]
        [:> HoverCard/Arrow
-        {:class "popover-arrow"}]]]]))
+        {:class "fill-secondary"}]]]]))
 
 (defn row
   [k v locked? tag]
@@ -265,7 +265,7 @@
            [:button.button.px-3.bg-primary.w-full
             {:on-click #(rf/dispatch [::events/open-remote-url url])}
             (t [::learn-more "Learn more"])])]
-        [:> HoverCard/Arrow {:class "popover-arrow"}]]]]]))
+        [:> HoverCard/Arrow {:class "fill-secondary"}]]]]]))
 
 (defn form
   []

@@ -114,9 +114,11 @@
      [:> Dialog/Portal
       [:> Dialog/Overlay {:class "backdrop"}]
       [:> Dialog/Content
-       (merge {:class "dialog-content"
-               :on-key-down #(.stopPropagation %)}
-              (:attrs (last dialogs)))
+       (views/merge-with-class {:class "fixed bg-secondary rounded-lg overflow-hidden
+                                        shadow-xl border border-default left-1/2 top-1/2
+                                        w-125 max-w-9/10 -translate-1/2"
+                                :on-key-down #(.stopPropagation %)}
+                               (:attrs (last dialogs)))
        (when-let [title (:title (last dialogs))]
          [:> Dialog/Title
           (cond->> title

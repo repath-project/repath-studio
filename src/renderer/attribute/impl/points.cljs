@@ -65,7 +65,7 @@
         (map-indexed (fn [index point]
                        ^{:key (str "point-" index)}
                        [point-row index point points]) points)]]]
-     [:> Popover/Arrow {:class "popover-arrow"}]]]])
+     [:> Popover/Arrow {:class "fill-secondary"}]]]])
 
 (defmethod attribute.hierarchy/form-element [:default :points]
   [_ k v {:keys [disabled]}]

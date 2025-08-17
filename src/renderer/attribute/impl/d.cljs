@@ -150,4 +150,4 @@
                               :className "popover-content"
                               :align "end"}
           (when idle [edit-form v])
-          [:> Popover/Arrow {:class "popover-arrow"}]]]])]))
+          [:> Popover/Arrow {:class "fill-secondary"}]]]])]))

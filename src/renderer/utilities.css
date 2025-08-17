@@ -6,6 +6,15 @@
   background: var(--bg-primary);
 }
 
+@utility fill-secondary {
+  fill: var(--bg-secondary);
+}
+
+@utility fill-primary {
+  fill: var(--bg-primary);
+}
+
+
 @utility bg-error {
   background: var(--bg-error);
 }
@@ -34,7 +43,7 @@
   background-color: var(--overlay-2x);
 }
 
-@utility text-color {
+@utility text-default {
   color: var(--font-color);
 }
 

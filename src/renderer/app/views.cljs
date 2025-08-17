@@ -84,7 +84,7 @@
 (defn debug-info
   []
   [:div
-   (into [:div.absolute.top-1.left-2.pointer-events-none.text-color]
+   (into [:div.absolute.top-1.left-2.pointer-events-none.text-default]
          (for [[s v] (debug-rows)]
            [:div.flex
             [:strong.mr-1 s]
@@ -98,7 +98,7 @@
   [:div.hidden.absolute.justify-center.w-full.pointer-events-none.p-4
    {:class "sm:flex"}
    [:div.bg-primary.overflow-hidden.shadow-lg.rounded-full
-    [:div.overlay.text-color.text-xs.gap-1.flex.flex-wrap.py-2.px-4
+    [:div.overlay.text-default.text-xs.gap-1.flex.flex-wrap.py-2.px-4
      {:class "justify-center truncate"
       :aria-live "polite"}
      message]]])

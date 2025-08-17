@@ -7,11 +7,11 @@
 
 .chrome-picker,
 .photoshop-picker {
-  @apply text-color! bg-transparent! shadow-none!;
+  @apply text-default! bg-transparent! shadow-none!;
   font-family: inherit !important;
 
   div {
-    @apply text-color! border-0!;
+    @apply text-default! border-0!;
   }
 
   svg {
@@ -21,7 +21,7 @@
   }
 
   input {
-    @apply text-color! border-0! shadow-none!;
+    @apply text-default! border-0! shadow-none!;
   }
 }
 
@@ -185,7 +185,7 @@
 }
 
 .timeline-editor-edit-row {
-  background-image: linear-gradient(var(--bg-primary), var(--bg-primary)),
+  background-image: linear-gradient(var(--primary), var(--primary)),
                     linear-gradient(90deg, var(--border-color) 1px, transparent 0) !important;
 }
 
@@ -210,7 +210,7 @@
 .fps-wrapper {
   > div {
     @apply absolute! left-auto! top-2! right-2! drop-shadow-md overflow-hidden! px-1!
-    font-sans! text-xs! bg-primary! text-color! z-auto!;
+    font-sans! text-xs! bg-primary! text-default! z-auto!;
 
     > div {
       @apply left-0! right-0! bottom-0! bg-primary!;

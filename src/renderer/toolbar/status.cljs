@@ -72,7 +72,7 @@
      (for [item (zoom-options)]
        ^{:key (:id item)}
        [views/dropdown-menu-item item])
-     [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]])
+     [:> DropdownMenu/Arrow {:class "fill-secondary"}]]]])
 
 (defn view-radio-buttons []
   [{:title (t [::timeline "Timeline"])
@@ -186,7 +186,7 @@
         :on-change-complete #(rf/dispatch [::element.events/set-attr :fill (get-hex %)])
         :on-change #(rf/dispatch [::document.events/preview-attr :fill (get-hex %)])}
 
-       [:button.button.color-rect
+       [:button.button.border.border-default.button-size
         {:title (t [::fill-color "Pick fill color"])
          :style {:background fill}}]]
 
@@ -201,10 +201,10 @@
         :on-change-complete #(rf/dispatch [::element.events/set-attr :stroke (get-hex %)])
         :on-change #(rf/dispatch [::document.events/preview-attr :stroke (get-hex %)])
         :align-offset -54}
-       [:button.button.color-rect.relative
+       [:button.button.relative.border.border-default.button-size
         {:title (t [::stroke-color "Pick stroke color"])
          :style {:background stroke}}
-        [:div.color-rect.bg-primary.absolute
+        [:div.bg-primary.absolute.border.border-default
          {:style {:width "13px"
                   :height "13px"
                   :bottom "9px"

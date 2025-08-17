@@ -22,4 +22,4 @@
        :className "popover-content"
        :align "end"}
       [:div.circular-slider]
-      [:> Popover/Arrow {:class "popover-arrow"}]]]]])
+      [:> Popover/Arrow {:class "fill-secondary"}]]]]])

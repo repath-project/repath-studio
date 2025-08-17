@@ -15,9 +15,9 @@
 (defmethod attribute.hierarchy/description [:default :font-family]
   []
   (t [::description
-      "The font-family attribute indicates which font family 
+      "The font-family attribute indicates which font family
        will be used to render the text,
-       specified as a prioritized list of font 
+       specified as a prioritized list of font
        family names and/or generic family names."]))
 
 (defn font-item
@@ -71,4 +71,4 @@
          :className "popover-content"
          :align "end"}
         [suggestions-list font-list]
-        [:> Popover/Arrow {:class "popover-arrow"}]]]]]))
+        [:> Popover/Arrow {:class "fill-secondary"}]]]]]))

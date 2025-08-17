@@ -165,4 +165,4 @@
                       :action [::document.events/close-saved]}]]
            ^{:key (:key item)}
            [views/dropdown-menu-item item])
-         [:> DropdownMenu/Arrow {:class "menu-arrow"}]]]]]]))
+         [:> DropdownMenu/Arrow {:class "fill-secondary"}]]]]]]))

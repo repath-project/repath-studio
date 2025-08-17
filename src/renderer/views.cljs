@@ -31,7 +31,7 @@
 (defn icon
   [icon-name props]
   [:> ReactSVG
-   (merge-with-class {:class "icon"
+   (merge-with-class {:class "flex justify-center [&_svg]:fill-current"
                       :src (str "icons/" icon-name ".svg")} props)])
 
 (defn icon-button
@@ -182,7 +182,7 @@
       :align-offset (:align-offset props)}
      [:div {:dir "ltr"}
       [:> PhotoshopPicker props]]
-     [:> Popover/Arrow {:class "popover-arrow"}]]]])
+     [:> Popover/Arrow {:class "fill-secondary"}]]]])
 
 (def cm-defaults
   {:lineNumbers false

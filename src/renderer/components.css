@@ -58,14 +58,6 @@
   }
 }
 
-@utility icon {
-  @apply flex justify-center;
-
-  svg {
-    @apply fill-current;
-  }
-}
-
 @utility toolbar {
   @apply flex gap-1 p-1 items-center;
 }
@@ -158,14 +150,6 @@
   }
 }
 
-@utility popover-arrow {
-  fill: var(--bg-secondary);
-}
-
-@utility menu-arrow {
-  fill: var(--bg-secondary);
-}
-
 @utility tooltip-content {
   @apply bg-secondary px-2 py-1 rounded-sm drop-shadow-md;
   max-width: 300px;
@@ -201,15 +185,9 @@
   }
 }
 
-@utility dialog-content {
-  @apply fixed bg-secondary rounded-lg overflow-hidden shadow-xl border border-default left-1/2 top-1/2;
-  width: 500px;
-  max-width: 90%;
-  transform: translate(-50%, -50%);
-}
-
 @utility tab {
-  @apply flex items-center h-full text-left bg-secondary text-muted hover:text-color relative outline-none px-2 py-0;
+  @apply flex items-center h-full text-left bg-secondary text-muted hover:text-default
+  relative outline-none px-2 py-0;
   flex: 0 1 130px;
 
   .close {
@@ -236,11 +214,11 @@
   }
 
   &.active {
-    @apply bg-primary text-color;
+    @apply bg-primary text-default;
   }
 
   &:focus {
-    @apply text-color;
+    @apply text-default;
   }
 }
 
@@ -248,19 +226,6 @@
   @apply button bg-primary text-muted p-1 h-auto;
   width: 26px;
   height: 26px;
-}
-
-@utility color-rect {
-  @apply button-size;
-  border: 1px solid var(--border-color);
-}
-
-@utility color-drip {
-  box-sizing: content-box;
-  width: 16px;
-  max-width: 16px;
-  height: 16px;
-  flex: 1;
 }
 
 @utility loader {
