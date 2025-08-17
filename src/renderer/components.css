@@ -223,7 +223,7 @@
 }
 
 @utility form-control-button {
-  @apply button bg-primary text-muted p-1 h-auto;
+  @apply button bg-primary text-muted p-1;
   width: 26px;
   height: 26px;
 }
