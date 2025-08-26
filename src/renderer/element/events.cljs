@@ -19,7 +19,7 @@
    (-> (element.handlers/toggle-selection db id additive)
        (history.handlers/finalize (if additive
                                     #(t [::modify-selection "Modify selection"])
-                                    #(t [::select-element   "Select elementd"]))))))
+                                    #(t [::select-element "Select element"]))))))
 
 (rf/reg-event-db
  ::select-ids
