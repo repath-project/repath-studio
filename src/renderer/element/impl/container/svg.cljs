@@ -29,7 +29,8 @@
         text-attrs (select-keys attrs [:x :y])
         active-filter @(rf/subscribe [::document.subs/filter])
         zoom @(rf/subscribe [::document.subs/zoom])
-        pointer-handler (partial event.impl.pointer/handler! el)]
+        pointer-handler (partial event.impl.pointer/handler! el)
+        shadow-size (/ 2 zoom)]
     [:g
      [:text
       (merge
@@ -44,8 +45,8 @@
       (merge
        rect-attrs
        {:fill "rgba(0, 0, 0, .1)"
-        :transform (str "translate(" (/ 2 zoom) " " (/ 2 zoom) ")")
-        :style {:filter (str "blur(" (/ 2 zoom) "px)")}})]
+        :transform (str "translate(" shadow-size " " shadow-size ")")
+        :style {:filter (str "blur(" shadow-size "px)")}})]
 
      [:svg
       (cond-> attrs
@@ -62,7 +63,7 @@
          :fill "white"
          :on-pointer-up pointer-handler
          :on-pointer-down #(when (= (.-button %) 2)
-                             (event.impl.pointer/handler! % el))})]
+                             (pointer-handler %))})]
       (for [el child-els]
         ^{:key (:id el)}
         [element.hierarchy/render el])]]))
