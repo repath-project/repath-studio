@@ -30,7 +30,7 @@ jobs:
           node-version: 20
 
       - name: Prepare java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version: '21'
