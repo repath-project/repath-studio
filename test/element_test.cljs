@@ -439,3 +439,21 @@
      (testing "ungroup"
        (rf/dispatch [::element.events/ungroup])
        (is (= (-> @selected first :tag) :rect))))))
+
+(deftest fonts
+  (rf.test/run-test-sync
+   (fixtures/test-fixtures)
+   (rf/dispatch [::app.events/initialize])
+   (rf/dispatch [::app.events/load-system-fonts])
+
+   (rf/dispatch [::element.events/add {:tag :text
+                                       :content "Hello!"
+                                       :attrs {:x "100"
+                                               :y "100"}}])
+   (let [font-weights (rf/subscribe [::element.subs/font-weights])]
+     (testing "no available font weights"
+       (is (= @font-weights #{})))
+
+     (testing "bold weight"
+       (rf/dispatch [::element.events/set-attr :font-family "Adwaita Mono"])
+       (is (= @font-weights #{"700"}))))))
