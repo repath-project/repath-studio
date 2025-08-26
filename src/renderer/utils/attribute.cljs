@@ -224,8 +224,8 @@
 (defonce lowercased (mapv string/lower-case camelcased))
 
 (m/=> compatibility [:function
-                     [:-> Tag map?]
-                     [:-> Tag keyword? map?]])
+                     [:-> Tag [:maybe map?]]
+                     [:-> Tag keyword? [:maybe map?]]])
 (defn compatibility
   "Returns compatibility data for tags or attributes."
   ([tag]

@@ -64,9 +64,9 @@
      (unit->px v (unit->px initial 0)))))
 
 (m/=> ->fixed [:function
-               [:-> number? number?]
-               [:-> number? integer? number?]
-               [:-> number? integer? boolean? number?]])
+               [:-> number? string?]
+               [:-> number? integer? string?]
+               [:-> number? integer? boolean? string?]])
 (defn ->fixed
   ([v]
    (->fixed v 3))
@@ -75,7 +75,7 @@
   ([v precision remove-trailing-zeros]
    (cond-> (.toFixed v precision)
      remove-trailing-zeros
-     (js/parseFloat))))
+     (-> js/parseFloat str))))
 
 (m/=> transform [:-> [:or string? number? nil?] ifn? [:* any?] string?])
 (defn transform
@@ -85,5 +85,6 @@
    (let [[n unit] (utils.unit/parse v)]
      (-> (apply f (->px n unit) more)
          (->fixed)
+         (js/parseFloat)
          (->unit unit)
          (str (when (valid-unit? unit) unit))))))

@@ -78,15 +78,15 @@
                      %3 to also scale children."]]
      [[:span.shortcut-key "Ctrl"] [:span.shortcut-key "⇧"] [:span.shortcut-key "Alt"]]))
 
-(m/=> hovered? [:-> App Element boolean? boolean?])
+(m/=> hovered? [:-> Element boolean? boolean?])
 (defn hovered?
   [el intersecting?]
-  (let [selection-bbox (element.hierarchy/bbox @bbox-element)]
-    (if-let [el-bbox (:bbox el)]
-      (if intersecting?
-        (utils.bounds/intersect? el-bbox selection-bbox)
-        (utils.bounds/contained? el-bbox selection-bbox))
-      false)))
+  (or (when-let [selection-bbox (element.hierarchy/bbox @bbox-element)]
+        (when-let [el-bbox (:bbox el)]
+          (if intersecting?
+            (utils.bounds/intersect? el-bbox selection-bbox)
+            (utils.bounds/contained? el-bbox selection-bbox))))
+      false))
 
 (m/=> reduce-by-area [:-> App boolean? ifn? App])
 (defn reduce-by-area

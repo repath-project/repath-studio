@@ -657,7 +657,9 @@
     (not (or (utils.element/root? el) (:parent el)))
     (assoc :parent (:id (if (utils.element/svg? el)
                           (root db)
-                          (overlapping-svg db (element.hierarchy/bbox el)))))))
+                          (if-let [el-bbox (element.hierarchy/bbox el)]
+                            (overlapping-svg db el-bbox)
+                            (root db)))))))
 
 (m/=> normalize [:-> map? Element])
 (defn normalize
