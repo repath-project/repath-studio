@@ -59,6 +59,7 @@
   [square-handle (merge props {:type :handle
                                :action :scale})])
 
+(m/=> wrapping-bbox [:-> BBox any?])
 (defn wrapping-bbox
   [bbox]
   (let [zoom @(rf/subscribe [::document.subs/zoom])
@@ -101,6 +102,7 @@
       (matrix/add [0 (- (/ (- min-size h) 2))
                    0 (/ (- min-size h) 2)]))))
 
+(m/=> bounding-corners [:-> BBox any?])
 (defn bounding-corners
   [bbox]
   (let [state @(rf/subscribe [::tool.subs/state])
