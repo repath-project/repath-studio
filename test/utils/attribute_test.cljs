@@ -1,8 +1,7 @@
 (ns utils.attribute-test
   (:require
    [cljs.test :refer-macros [deftest testing are]]
-   [renderer.utils.attribute :as utils.attribute]
-   [renderer.utils.i18n :as i18n]))
+   [renderer.utils.attribute :as utils.attribute]))
 
 (deftest test-str->seq
   (testing "string to sequence conversion"
@@ -37,21 +36,20 @@
                                    :Glyphorientationhorizontal))))
 
 (deftest test-defaults
-  (with-redefs [i18n/t (fn [& _] "translation")]
-    (testing "default tag attributes"
-      (are [x y] (= x y)
-        {:x ""
-         :y ""
-         :rx ""
-         :ry ""
-         :width ""
-         :height ""
-         :fill ""
-         :stroke ""
-         :stroke-dasharray ""
-         :stroke-linejoin ""
-         :style ""
-         :stroke-width ""
-         :opacity ""
-         :id ""
-         :class ""} (utils.attribute/defaults :rect)))))
+  (testing "default tag attributes"
+    (are [x y] (= x y)
+      {:x ""
+       :y ""
+       :rx ""
+       :ry ""
+       :width ""
+       :height ""
+       :fill ""
+       :stroke ""
+       :stroke-dasharray ""
+       :stroke-linejoin ""
+       :style ""
+       :stroke-width ""
+       :opacity ""
+       :id ""
+       :class ""} (utils.attribute/defaults :rect))))
