@@ -32,7 +32,7 @@
 (defmethod bbox :default [])
 (defmethod area :default [])
 (defmethod centroid :default [])
-(defmethod snapping-points :default [])
+(defmethod snapping-points :default [] [])
 (defmethod translate :default [el _offset] el)
 (defmethod scale :default [el _ratio _pivot-point] el)
 (defmethod edit :default [el _offset _handle] el)
