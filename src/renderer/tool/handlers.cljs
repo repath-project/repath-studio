@@ -26,6 +26,14 @@
   [db cursor]
   (assoc db :cursor cursor))
 
+(m/=> help [:-> Tool State any?])
+(defn help
+  [tool state]
+  (let [dispatch-state (if (contains? (methods tool.hierarchy/help) [tool state])
+                         state
+                         :idle)]
+    (tool.hierarchy/help tool dispatch-state)))
+
 (m/=> activate [:-> App Tool App])
 (defn activate
   [db tool]

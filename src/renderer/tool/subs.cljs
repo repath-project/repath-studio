@@ -1,7 +1,7 @@
 (ns renderer.tool.subs
   (:require
    [re-frame.core :as rf]
-   [renderer.tool.hierarchy :as tool.hierarchy]))
+   [renderer.tool.handlers :as tool.handlers]))
 
 (rf/reg-sub
  ::active
@@ -36,7 +36,4 @@
  :<- [::active]
  :<- [::state]
  (fn [[tool state] _]
-   (let [dispatch-state (if (contains? (methods tool.hierarchy/help) [tool state])
-                          state
-                          :idle)]
-     (tool.hierarchy/help tool dispatch-state))))
+   (tool.handlers/help tool state)))
