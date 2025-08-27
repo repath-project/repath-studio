@@ -465,4 +465,5 @@
      (when pivot-point
        [utils.svg/times pivot-point])
 
-     [element.hierarchy/render @bbox-element]]))
+     (when @bbox-element
+       [element.hierarchy/render @bbox-element])]))
