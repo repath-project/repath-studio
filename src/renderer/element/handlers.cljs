@@ -18,7 +18,6 @@
    [renderer.utils.element :as utils.element]
    [renderer.utils.extra :refer [partial-right]]
    [renderer.utils.hiccup :as utils.hiccup]
-   [renderer.utils.map :as utils.map]
    [renderer.utils.math :refer [Vec2]]
    [renderer.utils.path :as utils.path :refer [PathManipulation PathBooleanOperation]]
    [renderer.utils.vec :as utils.vec]))
@@ -386,17 +385,19 @@
       (expand-ancestors id)
       (assoc-prop id :selected true)))
 
-(m/=> toggle-selection [:-> App uuid? boolean? App])
+(m/=> toggle-selection [:-> App [:or uuid? keyword?] boolean? App])
 (defn toggle-selection
   [db id additive]
-  (let [root-id (:id (root db))]
-    (if (entity db id)
-      (if (and additive
-               (not= id root-id)
-               (not (contains? (selected-ids db) root-id)))
-        (update-prop db id :selected not)
-        (-> db deselect (select id)))
-      (deselect db))))
+  (if-not (uuid? id)
+    db
+    (let [root-id (:id (root db))]
+      (if (entity db id)
+        (if (and additive
+                 (not= id root-id)
+                 (not (contains? (selected-ids db) root-id)))
+          (update-prop db id :selected not)
+          (-> db deselect (select id)))
+        (deselect db)))))
 
 (m/=> select-all [:-> App App])
 (defn select-all
@@ -661,29 +662,17 @@
                             (overlapping-svg db el-bbox)
                             (root db)))))))
 
-(m/=> normalize [:-> map? Element])
-(defn normalize
-  [el]
-  (cond-> el
-    (not (string? (:content el)))
-    (dissoc :content)
-
-    :always
-    (-> (utils.map/remove-nils)
-        (utils.element/normalize-attrs)
-        (dissoc :locked)
-        (merge db/default))))
-
 (m/=> create [:-> App map? App])
 (defn create
   [db el]
   (let [id (random-uuid) ; REVIEW: Hard to use a coeffect because of recursion.
-        new-el (->> (assoc (normalize el) :id id)
+        new-el (->> (assoc (utils.element/normalize el) :id id)
                     (assoc-parent-id db))
         child-els (-> (entities db (set (:children el)))
                       (vals)
                       (concat (:content el)))
-        [min-x min-y] (element.hierarchy/bbox (entity db (:parent new-el)))
+        parent-el (entity db (:parent new-el))
+        [min-x min-y] (when parent-el (element.hierarchy/bbox parent-el))
         add-children (fn [db child-els]
                        (reduce #(cond-> %1
                                   (db/tag? (:tag %2))
@@ -702,7 +691,7 @@
           (:parent new-el)
           (update-prop (:parent new-el) :children #(vec (conj % id)))
 
-          (not is-translated)
+          (and (not is-translated) parent-el)
           (translate [(- min-x) (- min-y)])
 
           is-translated
@@ -905,4 +894,4 @@
 (defn snapping-points
   [db els]
   (let [options (-> db :snap :options)]
-    (into [] (mapcat #(utils.element/snapping-points % options)) els)))
+    (into [] (mapcat #(utils.element/acc-snapping-points % options)) els)))

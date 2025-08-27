@@ -7,7 +7,7 @@
    [malli.core :as m]
    [reagent.dom.server :as dom.server]
    [renderer.attribute.hierarchy :as attribute.hierarchy]
-   [renderer.element.db :refer [Element Attrs]]
+   [renderer.element.db :as db :refer [Element Attrs]]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.snap.db :refer [SnapOptions]]
    [renderer.utils.attribute :as utils.attribute]
@@ -57,14 +57,15 @@
         local-bbox (element.hierarchy/bbox el)]
     (into [] (take 2) (matrix/sub el-bbox local-bbox))))
 
-(m/=> snapping-points [:-> Element SnapOptions [:* Vec2]])
-(defn snapping-points
+(m/=> acc-snapping-points [:-> Element SnapOptions [:* Vec2]])
+(defn acc-snapping-points
   [el options]
   (let [points (or (when (contains? options :nodes)
                      (mapv #(with-meta
                               (matrix/add % (offset el))
                               (merge (meta %) {:id (:id el)}))
-                           (element.hierarchy/snapping-points el))) [])]
+                           (element.hierarchy/snapping-points el)))
+                   [])]
     (cond-> points
       (:bbox el)
       (into (mapv #(with-meta % (merge (meta %) {:id (:id el)}))
@@ -187,3 +188,16 @@
     (doseq [[k v] supported-attrs]
       (.setAttributeNS dom-el nil (name k) v))
     dom-el))
+
+(m/=> normalize [:-> map? Element])
+(defn normalize
+  [el]
+  (cond-> el
+    (not (string? (:content el)))
+    (dissoc :content)
+
+    :always
+    (-> (utils.map/remove-nils)
+        (normalize-attrs)
+        (dissoc :locked)
+        (merge db/default))))
