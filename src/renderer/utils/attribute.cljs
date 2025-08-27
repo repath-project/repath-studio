@@ -313,7 +313,8 @@
                        tag
                        :default)]
     (or (attribute.hierarchy/initial dispatch-tag k)
-        (:initial (property-data-memo k)))))
+        (let [initial-value (:initial (property-data-memo k))]
+          (when (string? initial-value) initial-value)))))
 
 (def initial-memo (memoize initial))
 
