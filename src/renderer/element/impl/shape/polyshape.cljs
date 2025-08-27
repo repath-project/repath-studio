@@ -63,33 +63,33 @@
   (let [clicked-element @(rf/subscribe [::app.subs/clicked-element])
         zoom @(rf/subscribe [::document.subs/zoom])
         margin (/ 15 zoom)]
-    [:g (map-indexed (fn [index point]
-                       (let [id (keyword (str index))
-                             is-active (and (= (:id clicked-element) id)
-                                            (= (:element clicked-element)
-                                               (:id el)))
-                             offset (utils.element/offset el)
-                             [x y] (->> point
-                                        (mapv utils.length/unit->px)
-                                        (matrix/add offset))]
-                         ^{:key index}
-                         [:g
-                          [tool.views/square-handle {:id (keyword (str index))
-                                                     :x x
-                                                     :y y
-                                                     :label "point"
-                                                     :type :handle
-                                                     :action :edit
-                                                     :element (:id el)}]
-                          (when is-active
-                            [utils.svg/label
-                             (->> [x y]
-                                  (mapv #(utils.length/->fixed % 2 false))
-                                  (string/join " "))
-                             {:x (- x margin)
-                              :y (+ y margin)
-                              :text-anchor "end"}])]))
-                     (utils.attribute/points->vec (-> el :attrs :points)))]))
+    (->> (utils.attribute/points->vec (-> el :attrs :points))
+         (map-indexed (fn [index point]
+                        (let [id (keyword (str index))
+                              is-active (and (= (:id clicked-element) id)
+                                             (= (:element clicked-element)
+                                                (:id el)))
+                              offset (utils.element/offset el)
+                              [x y] (->> point
+                                         (mapv utils.length/unit->px)
+                                         (matrix/add offset))]
+                          [:g
+                           [tool.views/square-handle {:id (keyword (str index))
+                                                      :x x
+                                                      :y y
+                                                      :label "point"
+                                                      :type :handle
+                                                      :action :edit
+                                                      :element (:id el)}]
+                           (when is-active
+                             [utils.svg/label
+                              (->> [x y]
+                                   (mapv #(utils.length/->fixed % 2 false))
+                                   (string/join " "))
+                              {:x (- x margin)
+                               :y (+ y margin)
+                               :text-anchor "end"}])])))
+         (into [:g]))))
 
 (defmethod element.hierarchy/edit ::element.hierarchy/polyshape
   [el [x y] handle]

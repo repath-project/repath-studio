@@ -23,14 +23,14 @@
      (testing "edit tool"
        (rf/dispatch [::tool.events/activate :edit])
        (is (= @active-tool :edit))
-       (is (= (tool.hierarchy/render :edit) [:g ()]))
+       (is (= (tool.hierarchy/render :edit) [:g]))
 
        (rf/dispatch [::element.events/add {:tag :rect
                                            :attrs {:width 100
                                                    :height 100}}])
 
        (rf/dispatch [::tool.events/activate :edit])
-       (is (not= (tool.hierarchy/render :edit) [:g ()])))
+       (is (not= (tool.hierarchy/render :edit) [:g])))
 
      (testing "cancel"
        (rf/dispatch [::tool.events/cancel])

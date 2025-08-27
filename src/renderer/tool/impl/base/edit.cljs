@@ -108,13 +108,12 @@
 (defmethod tool.hierarchy/render :edit
   []
   (let [selected-elements @(rf/subscribe [::element.subs/selected])]
-    [:g
-     (for [el selected-elements]
-       ^{:key (str (:id el) "-edit-points")}
-       [:g
-        [element.hierarchy/render-edit el]
-        (when-let [pos (element.hierarchy/centroid el)]
-          (let [offset (utils.element/offset el)
-                pos (matrix/add offset pos)]
-            ^{:key (str (:id el) "-centroid")}
-            [utils.svg/dot pos [:title (t [::centroid "Centroid"])]]))])]))
+    (->> selected-elements
+         (map (fn [el]
+                [:g
+                 [element.hierarchy/render-edit el]
+                 (when-let [pos (element.hierarchy/centroid el)]
+                   (let [offset (utils.element/offset el)
+                         pos (matrix/add offset pos)]
+                     [utils.svg/dot pos [:title (t [::centroid "Centroid"])]]))]))
+         (into [:g]))))
