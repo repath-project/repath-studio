@@ -27,7 +27,8 @@
     "fxtf.org"
     "drafts.fxtf.org"
     "csswg.org"
-    "drafts.csswg.org"})
+    "drafts.csswg.org"
+    "blobs.dev"})
 
 (defn allowed-url?
   [^js/Url url]
