@@ -75,18 +75,6 @@
                         (clj->js)
                         (js/Promise.resolve))))))))
 
-(def export-options
-  {:defaultPath (.getPath app "pictures")
-   :filters [{:name "svg"
-              :extensions ["svg"]}]})
-
-(defn export!
-  [data]
-  (-> (save-dialog! export-options)
-      (.then (fn [file-path]
-               (when file-path
-                 (.writeFile fs/promises file-path data "utf-8"))))))
-
 (defn print!
   [content]
   (let [window (BrowserWindow. #js {:show false :frame false})]

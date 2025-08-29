@@ -134,7 +134,9 @@
 (m/=> wrap-to-svg [:-> string? Vec2 string?])
 (defn wrap-to-svg
   [s [w h]]
-  (str "<svg width='" w "' height='" h "'>" s "</svg>"))
+  (str "<svg width='" w "' height='" h "' xmlns='http://www.w3.org/2000/svg'>"
+       s
+       "</svg>"))
 
 (m/=> ->string [:-> [:sequential Element] string?])
 (defn ->string

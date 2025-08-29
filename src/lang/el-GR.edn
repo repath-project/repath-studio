@@ -52,7 +52,7 @@
   :save "Αποθήκευση"
   :save-as "Αποθήκευση ως..."
   :download "Λήψη"
-  :export-as-svg "Εξαγωγή ως SVG"
+  :export-as "Εξαγωγή ως"
   :close "Κλείσιμο"
   :exit "Έξοδος"
   :edit "Επεξεργασία"

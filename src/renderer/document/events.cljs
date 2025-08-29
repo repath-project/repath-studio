@@ -8,11 +8,13 @@
    [renderer.dialog.views :as dialog.views]
    [renderer.document.handlers :as document.handlers]
    [renderer.effects :as-alias effects]
+   [renderer.element.effects :as-alias element.effects]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
    [renderer.notification.events :as-alias notification.events]
    [renderer.notification.handlers :as notification.handlers]
    [renderer.notification.views :as notification.views]
+   [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.compatibility :as utils.compatibility]
    [renderer.utils.element :as utils.element]
    [renderer.utils.i18n :refer [t]]
@@ -307,20 +309,36 @@
    (document.handlers/center db)))
 
 (rf/reg-event-fx
- ::export-svg
- (fn [{:keys [db]} _]
+ ::export
+ (fn [{:keys [db]} [_ mime-type]]
    (let [els (element.handlers/root-children db)
          svg (utils.element/->svg els)]
-     (if (:platmform db)
-       {::effects/ipc-invoke
-        {:channel "export"
-         :data svg
-         :on-error [::notification.events/show-exception]}}
+     (case mime-type
+       "image/svg+xml"
        {::effects/file-save
-        [:data svg
+        {:data svg
          :on-error [::notification.events/show-exception]
          :options {:startIn "pictures"
-                   :types [{:accept {"image/svg+xml" [".svg"]}}]}]}))))
+                   :types [{:accept {"image/svg+xml" [".svg"]}}]}}}
+
+       {::element.effects/export-image
+        {:data svg
+         :mime-type mime-type
+         :size (utils.bounds/->dimensions (utils.element/united-bbox els))
+         :on-success [::save-rasterized-image]
+         :on-error [::notification.events/show-exception]}}))))
+
+(rf/reg-event-fx
+ ::save-rasterized-image
+ (fn [_ [_ data mime-type]]
+   {::effects/file-save
+    {:data data
+     :on-error [::notification.events/show-exception]
+     :options {:startIn "pictures"
+               :types [{:accept {mime-type (case mime-type
+                                             "image/png" [".png"]
+                                             "image/jpeg" [".jpg" ".jpeg"]
+                                             [])}}]}}}))
 
 (rf/reg-event-fx
  ::print

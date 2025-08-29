@@ -3,7 +3,7 @@
   (:require
    [re-frame.core :as rf]
    [renderer.effects :as-alias effects]
-   [renderer.element.effects :as-alias element.fx]
+   [renderer.element.effects :as-alias element.effects]
    [renderer.notification.events :as-alias notification.events]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
@@ -35,5 +35,7 @@
  ::success
  (fn [{:keys [db]} [_ file]]
    {:db (tool.handlers/activate db :transform)
-    ::element.fx/import-image [file (or (:point (:nearest-neighbor db))
-                                        (:adjusted-pointer-pos db))]}))
+    ::element.effects/import-image {:file file
+                                    :on-success [::element.effects/add]
+                                    :position (or (:point (:nearest-neighbor db))
+                                                  (:adjusted-pointer-pos db))}}))

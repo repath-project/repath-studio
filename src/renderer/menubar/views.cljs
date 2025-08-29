@@ -38,6 +38,26 @@
                 :icon "delete"
                 :action [::document.events/clear-recent]}]))))
 
+(defn export-submenu
+  []
+  [{:id :export-svg
+    :label "SVG"
+    :icon "export"
+    :disabled (not @(rf/subscribe [::document.subs/entities?]))
+    :action [::document.events/export "image/svg+xml"]}
+   {:id :divider-1
+    :type :separator}
+   {:id :export-png
+    :label "PNG"
+    :icon "export"
+    :disabled (not @(rf/subscribe [::document.subs/entities?]))
+    :action [::document.events/export "image/png"]}
+   {:id :export-jpg
+    :label "JPG"
+    :icon "export"
+    :disabled (not @(rf/subscribe [::document.subs/entities?]))
+    :action [::document.events/export "image/jpeg"]}])
+
 (defn file-menu
   []
   {:id :file
@@ -76,21 +96,18 @@
             :label (t [::download "Download"])
             :disabled (not @(rf/subscribe [::document.subs/entities?]))
             :action [::document.events/download]}
+           {:id :export
+            :label (t [::export-as "Export as"])
+            :type :sub-menu
+            :items (export-submenu)}
            {:id :divider-3
-            :type :separator}
-           {:id :export-svg
-            :label (t [::export-as-svg "Export as SVG"])
-            :icon "export"
-            :disabled (not @(rf/subscribe [::document.subs/entities?]))
-            :action [::document.events/export-svg]}
-           {:id :divider-4
             :type :separator}
            {:id :print
             :label (t [::print "Print"])
             :icon "printer"
             :disabled (not @(rf/subscribe [::document.subs/entities?]))
             :action [::document.events/print]}
-           {:id :divider-5
+           {:id :divider-4
             :type :separator}
            {:id :close
             :label (t [::close "Close"])
