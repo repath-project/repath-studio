@@ -286,7 +286,7 @@
                             (filter #(not (get-in (val %) deprecated-path)))
                             (into {}))]
     (-> filtered-attrs
-        (dissoc :__compat :systemLanguage)
+        (dissoc :__compat :systemLanguage :fetchpriority)
         (keys)
         (zipmap (repeat "")))))
 
