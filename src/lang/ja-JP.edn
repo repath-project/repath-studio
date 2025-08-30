@@ -51,7 +51,7 @@
   :save "保存"
   :save-as "名前を付けて保存..."
   :download "ダウンロード"
-  :export-as-svg "SVGとしてエクスポート"
+  :export-as "形式を指定してエクスポート"
   :close "閉じる"
   :exit "終了"
   :edit "編集"

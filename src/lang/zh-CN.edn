@@ -51,7 +51,7 @@
   :save "保存"
   :save-as "另存为..."
   :download "下载"
-  :export-as-svg "导出为 SVG"
+  :export-as "导出为"
   :close "关闭"
   :exit "退出"
   :edit "编辑"

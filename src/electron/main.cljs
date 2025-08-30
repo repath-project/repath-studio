@@ -65,7 +65,6 @@
     [["open-documents" file/open!]
      ["save-document" file/save!]
      ["save-document-as" file/save-as!]
-     ["export" file/export!]
      ["print" file/print!]]]
     (.handle ipcMain e #(f %2))))
 
