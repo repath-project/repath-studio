@@ -8,7 +8,7 @@
    [renderer.history.events :as-alias history.events]
    [renderer.views :as views]))
 
-(defscene buttons
+(defscene ^:export buttons
   :title "Buttons"
   :params (atom false)
   [store]
@@ -33,7 +33,7 @@
     {:title "Replay"
      :on-click #(swap! store not)}]])
 
-(defscene switch
+(defscene ^:export switch
   :title "Switch"
   :params (atom true)
   [store]
@@ -58,7 +58,7 @@
    [:span.v-divider]
    [:div (str "State: " @store)]])
 
-(defscene slider
+(defscene ^:export slider
   :title "Slider"
   :params (atom [25])
   [store]
@@ -83,7 +83,7 @@
 
 (rf/dispatch [::rp/set-keydown-rules event.impl.keyboard/keydown-rules])
 
-(defscene shortcut
+(defscene ^:export shortcut
   :title "Shortcut"
   [:div.toolbar.bg-primary.h-10.p-2.gap-2
    [:div.flex.gap-2 "Single" [views/shortcuts [::history.events/undo]]]
@@ -92,7 +92,7 @@
    [:span.v-divider]
    [:div.flex.gap-2 "No shortcuts" [views/shortcuts [:event-id-with-no-shortcut]]]])
 
-(defscene default
+(defscene ^:export default
   :title "Icons"
   [:div.flex
    [:div.flex.flex-wrap.gap-2.p-3
