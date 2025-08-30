@@ -189,7 +189,7 @@
 (m/=> root-children [:-> App [:sequential Element]])
 (defn root-children
   [db]
-  (into [] (map (entities db)) (children-ids db (:id (root db)))))
+  (into [] (map (entities db)) (:children (root db))))
 
 (m/=> root-svgs [:-> App [:sequential Element]])
 (defn root-svgs

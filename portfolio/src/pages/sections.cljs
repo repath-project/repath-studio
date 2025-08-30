@@ -4,7 +4,7 @@
    [renderer.app.subs]
    [renderer.app.views :as app.views]))
 
-(defscene home
+(defscene ^:export home
   :title "Home"
   :params (atom ["path/to/file/name.rps"])
   [store]

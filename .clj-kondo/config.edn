@@ -20,7 +20,6 @@
            :redundant-str-call {:level :warning}
            :line-length {:max-line-length 90
                          :exclude-urls true}
-           :clojure-lsp/unused-public-var {:exclude-regex #{"pages.*"}}
            :consistent-alias {:level :warning
                               :aliases {clojure.core.matrix matrix
                                         clojure.core.matrix.stats matrix.stats
