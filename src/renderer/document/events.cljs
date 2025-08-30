@@ -8,6 +8,7 @@
    [renderer.dialog.views :as dialog.views]
    [renderer.document.handlers :as document.handlers]
    [renderer.effects :as-alias effects]
+   [renderer.element.db :as element.db]
    [renderer.element.effects :as-alias element.effects]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
@@ -335,10 +336,8 @@
     {:data data
      :on-error [::notification.events/show-exception]
      :options {:startIn "pictures"
-               :types [{:accept {mime-type (case mime-type
-                                             "image/png" [".png"]
-                                             "image/jpeg" [".jpg" ".jpeg"]
-                                             [])}}]}}}))
+               :types [{:accept {mime-type (or (get element.db/image-mime-types mime-type)
+                                               [])}}]}}}))
 
 (rf/reg-event-fx
  ::print

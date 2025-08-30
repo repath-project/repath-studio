@@ -3,6 +3,7 @@
   (:require
    [re-frame.core :as rf]
    [renderer.effects :as-alias effects]
+   [renderer.element.db :as element.db]
    [renderer.element.effects :as-alias element.effects]
    [renderer.notification.events :as-alias notification.events]
    [renderer.tool.handlers :as tool.handlers]
@@ -24,10 +25,7 @@
   [db _e]
   (tool.handlers/add-fx db [::effects/file-open
                             {:options {:startIn "pictures"
-                                       :types [{:accept {"image/png" [".png"]
-                                                         "image/jpeg" [".jpeg" ".jpg"]
-                                                         "image/bmp" [".bmp"]
-                                                         "image/gif" [".gif"]}}]}
+                                       :types [{:accept element.db/image-mime-types}]}
                              :on-success [::success]
                              :on-error [::notification.events/show-exception]}]))
 

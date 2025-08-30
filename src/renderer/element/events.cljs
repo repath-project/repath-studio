@@ -4,6 +4,7 @@
    [re-frame.core :as rf]
    [renderer.document.events :as-alias document.events]
    [renderer.effects :as-alias effects]
+   [renderer.element.db :as element.db]
    [renderer.element.effects :as-alias element.effects]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
@@ -319,7 +320,7 @@
                              :on-fire [::import-svg]}
                      "error" {:on-fire [::notification.events/show-exception]}}]}
 
-       (contains? #{"image/jpeg" "image/png" "image/bmp" "image/gif"} file-type)
+       (contains? element.db/image-mime-types file-type)
        {::element.effects/import-image {:file file
                                         :position position
                                         :on-success [::add]

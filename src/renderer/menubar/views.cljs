@@ -56,7 +56,17 @@
     :label "JPG"
     :icon "export"
     :disabled (not @(rf/subscribe [::document.subs/entities?]))
-    :action [::document.events/export "image/jpeg"]}])
+    :action [::document.events/export "image/jpeg"]}
+   {:id :export-webp
+    :label "WEBP"
+    :icon "export"
+    :disabled (not @(rf/subscribe [::document.subs/entities?]))
+    :action [::document.events/export "image/webp"]}
+   {:id :export-gif
+    :label "GIF"
+    :icon "export"
+    :disabled (not @(rf/subscribe [::document.subs/entities?]))
+    :action [::document.events/export "image/gif"]}])
 
 (defn file-menu
   []

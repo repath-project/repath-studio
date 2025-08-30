@@ -13,6 +13,13 @@
   [:fn {:error/fn (fn [{:keys [value]} _] (str value ", is not a supported tag"))}
    tag?])
 
+(def image-mime-types
+  {"image/png" [".png"]
+   "image/jpeg" [".jpeg" ".jpg"]
+   "image/bmp" [".bmp"]
+   "image/gif" [".gif"]
+   "image/webp" [".webp"]})
+
 (def AnimationTag
   [:enum :animate :animateTransform :animateMotion])
 
