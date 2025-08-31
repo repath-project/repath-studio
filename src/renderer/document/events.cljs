@@ -158,7 +158,7 @@
  (fn [{:keys [db]} [_ file-path]]
    (if (= (:platform db) "web")
      {::effects/file-open
-      {:options file-picker-options
+      {:options (assoc file-picker-options :id "open")
        :on-success [::file-read]
        :on-error [::notification.events/show-exception]}}
      {::effects/ipc-invoke
@@ -219,7 +219,7 @@
      (if (= (:platform db) "web")
        {::effects/file-save
         {:data (document.handlers/->save-format document)
-         :options file-picker-options
+         :options (assoc file-picker-options :id "save")
          :formatter (partial document.handlers/saved-info document)
          :on-success [::saved]
          :on-error [::notification.events/show-exception]}}
@@ -244,7 +244,7 @@
      (if (= (:platform db) "web")
        {::effects/file-save
         {:data (document.handlers/->save-format document)
-         :options file-picker-options
+         :options (assoc file-picker-options :id "save")
          :formatter (partial document.handlers/saved-info document)
          :on-success [::mark-as-saved-and-close]
          :on-error [::notification.events/show-exception]}}
@@ -262,7 +262,7 @@
      (if (= (:platform db) "web")
        {::effects/file-save
         {:data (document.handlers/->save-format document)
-         :options file-picker-options
+         :options (assoc file-picker-options :id "save")
          :formatter (partial document.handlers/saved-info document)
          :on-success [::saved]
          :on-error [::notification.events/show-exception]}}
@@ -319,7 +319,8 @@
        {::effects/file-save
         {:data svg
          :on-error [::notification.events/show-exception]
-         :options {:startIn "pictures"
+         :options {:id "export"
+                   :startIn "pictures"
                    :types [{:accept {"image/svg+xml" [".svg"]}}]}}}
 
        {::element.effects/export-image
@@ -335,7 +336,8 @@
    {::effects/file-save
     {:data data
      :on-error [::notification.events/show-exception]
-     :options {:startIn "pictures"
+     :options {:id "export"
+               :startIn "pictures"
                :types [{:accept {mime-type (or (get element.db/image-mime-types mime-type)
                                                [])}}]}}}))
 
