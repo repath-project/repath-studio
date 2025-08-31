@@ -69,7 +69,6 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4.0.0
         with:
-          # Upload entire repository
           path: './resources/public'
 
       - name: Deploy to GitHub Pages

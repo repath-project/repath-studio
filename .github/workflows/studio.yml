@@ -1,9 +1,9 @@
 name: Desktop app
 
 on:
-  create:
+  push:
     tags:
-      - v*
+      - '*'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
