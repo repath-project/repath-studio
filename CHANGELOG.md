@@ -5,8 +5,8 @@
 **Added**
 
 - Export to rasterized image formats (png, jpeg, bmp, gif, webp) 
-- Add system language option
-- Add more languages (French, German, Spanish, Russian, Chinese, Portuguese, Japanese)
+- System language option
+- More languages (French, German, Spanish, Russian, Chinese, Portuguese, Japanese)
 - Top level language dropdown
 - Subsequent file saves support on web after loading/saving
 - Opening multiple files at once on web
