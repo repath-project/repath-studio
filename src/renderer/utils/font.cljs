@@ -24,7 +24,7 @@
          :font-weight font-weight
          :bbox bbox}))))
 
-(defn font-file->path-data
+(defn font-file->path-data!
   [file content x y font-size]
   (-> (.blob file)
       (.then (fn [blob]
