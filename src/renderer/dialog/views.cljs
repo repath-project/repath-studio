@@ -24,7 +24,7 @@
      [:button.button.px-2.accent.rounded.w-full
       {:auto-focus true
        :on-click #(rf/dispatch [::dialog.events/close])}
-      "OK"]]))
+      (t [::ok "OK"])]]))
 
 (defn confirmation
   [{:keys [description action confirm-label cancel-label]}]
@@ -38,7 +38,7 @@
     [:button.button.px-2.rounded.flex-1.accent
      {:auto-focus true
       :on-click #(rf/dispatch [::dialog.events/close action])}
-     (or confirm-label "OK")]]])
+     (or confirm-label (t [::ok "OK"]))]]])
 
 (defn save
   [{:keys [id title]}]
@@ -127,7 +127,7 @@
        (when (:close-button (last dialogs))
          [:> Dialog/Close
           {:class "icon-button absolute top-5 right-5 small rtl:right-auto rtl:left-5"
-           :aria-label "Close"}
+           :aria-label (t [::close "Close"])}
           [views/icon "times"]])
        [:> Dialog/Description
         {:as-child true}

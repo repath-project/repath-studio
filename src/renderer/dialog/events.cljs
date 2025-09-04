@@ -9,7 +9,7 @@
  ::show-cmdk
  (fn [db [_]]
    (dialog.handlers/create db {:title [:div.sr-only "Command panel"]
-                               :content (dialog.views/cmdk)
+                               :content [dialog.views/cmdk]
                                :attrs {:class "top-10 translate-y-0 w-150"}})))
 
 (rf/reg-event-db
@@ -17,14 +17,14 @@
  (fn [db [_]]
    (dialog.handlers/create db {:title config/app-name
                                :close-button true
-                               :content (dialog.views/about)})))
+                               :content [dialog.views/about]})))
 
 (rf/reg-event-db
  ::show-confirmation
  (fn [db [_ data]]
    (dialog.handlers/create db {:title (:title data)
                                :close-button true
-                               :content (dialog.views/confirmation data)})))
+                               :content [dialog.views/confirmation data]})))
 
 (rf/reg-event-fx
  ::close

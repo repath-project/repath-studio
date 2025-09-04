@@ -39,6 +39,8 @@
   :save "Save"
   :dont-save "Don't save"
   :cancel "Cancel"
+  :close "Close"
+  :ok "OK"
   :changes-will-be-lost [:p "Your changes to %1 will be lost if you close the document
                              without saving."]}
 
@@ -677,3 +679,10 @@
 
  :renderer.frame.views
  {:main-canvas "main canvas"}}
+
+:renderer.notification.views
+{:close "Close"
+ :error "Error"
+ :validation-error "Validation error"
+ :clear-all "Clear all"
+ :event "Event: "}

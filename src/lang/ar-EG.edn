@@ -39,6 +39,8 @@
   :save "حفظ"
   :dont-save "عدم الحفظ"
   :cancel "إلغاء"
+  :close "إغلاق"
+  :ok "موافق"
   :changes-will-be-lost [:p "ستفقد التغييرات في %1 إذا أغلقت المستند
                              بدون حفظ."]}
 
@@ -660,4 +662,11 @@
  {:edit-points "تحرير النقاط"}
 
  :renderer.frame.views
- {:main-canvas "اللوحة الرئيسية"}}
+ {:main-canvas "اللوحة الرئيسية"}
+
+ :renderer.notification.views
+ {:close "إغلاق"
+  :error "خطأ"
+  :validation-error "خطأ في التحقق"
+  :clear-all "مسح الكل"
+  :event "الحدث: "}}

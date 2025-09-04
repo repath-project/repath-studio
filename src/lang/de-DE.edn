@@ -39,6 +39,8 @@
   :save "Speichern"
   :dont-save "Nicht speichern"
   :cancel "Abbrechen"
+  :close "Schließen"
+  :ok "OK"
   :changes-will-be-lost [:p "Ihre Änderungen an %1 gehen verloren, wenn Sie das Dokument
                              ohne Speichern schließen."]}
 
@@ -698,4 +700,11 @@
  {:edit-points "Punkte bearbeiten"}
 
  :renderer.frame.views
- {:main-canvas "Hauptleinwand"}}
+ {:main-canvas "Hauptleinwand"}
+
+ :renderer.notification.views
+ {:close "Schließen"
+  :error "Fehler"
+  :validation-error "Validierungsfehler"
+  :clear-all "Alle löschen"
+  :event "Ereignis: "}}

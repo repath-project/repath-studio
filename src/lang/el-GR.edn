@@ -39,6 +39,8 @@
   :save "Αποθήκευση"
   :dont-save "Μη αποθήκευση"
   :cancel "Ακύρωση"
+  :close "Κλείσιμο"
+  :ok "Εντάξει"
   :changes-will-be-lost [:p "Οι αλλαγές στο %1 θα χαθούνε εάν κλείσετε το έγγραφο χωρίς
                              αποθήκευση."]}
 
@@ -705,4 +707,11 @@
  {:edit-points "Επεξεργασία σημείων"}
 
  :renderer.frame.views
- {:main-canvas "κύριος καμβάς"}}
+ {:main-canvas "κύριος καμβάς"}
+
+ :renderer.notification.views
+ {:close "Κλείσιμο"
+  :error "Σφάλμα"
+  :validation-error "Σφάλμα επικύρωσης"
+  :clear-all "Καθαρισμός όλων"
+  :event "Συμβάν: "}}

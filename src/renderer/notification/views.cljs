@@ -4,6 +4,7 @@
    [renderer.events :as-alias events]
    [renderer.notification.events :as-alias notification.events]
    [renderer.notification.subs :as-alias notification.subs]
+   [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]))
 
 (defn unavailable-feature
@@ -20,45 +21,48 @@
 (defn generic-error
   [{:keys [title message]}]
   [:div
-   [:h2.font-bold.text-error (or title "Error")]
+   [:h2.font-bold.text-error (or title (t [::error "Error"]))]
    (when message [:div.mt-4 message])])
 
 (defn exception
   [^js/Error error]
-  (generic-error {:title (or (.-name error) "Error")
+  (generic-error {:title (or (.-name error) (t [::error "Error"]))
                   :message (or (.-message error) (str error))}))
 
 (defn spec-failed
   [event error]
   [:div
-   [:h2.font-bold.text-error "Validation error"]
+   [:h2.font-bold.text-error (t [::validation-error "Validation error"])]
    [:div.mt-4
-    [:p "Event: " event]
+    [:p (t [::event "Event: "]) event]
     [:p error]]])
 
 (defn main
   []
   (let [notifications @(rf/subscribe [::notification.subs/entities])]
     [:div.fixed.flex.flex-col.m-4.right-0.bottom-0.gap-2.items-end
-     (map-indexed
-      (fn [index notification]
-        [:div.relative.flex.bg-secondary.w-80.p-4.mb-2.rounded.shadow-md
-         {:key index
-          :class "border border-default"}
-         (:content notification)
-         [views/icon-button
-          "times"
-          {:aria-label "Close"
-           :class "icon-button absolute top-3 right-3 small"
-           :on-click #(rf/dispatch [::notification.events/remove-nth index])}]
-         (when (> (:count notification) 1)
-           [:div.absolute.bg-error.left-0.top-0.px-1.py-0.5.rounded
-            {:class "-translate-x-1/2 -translate-y-1/2"}
-            (:count notification)])])
-      notifications)
+     {:class "rtl:right-auto rtl:left-0"}
+     (->> notifications
+          (map-indexed
+           (fn [index notification]
+             [:div.relative.flex.bg-secondary.w-80.p-4.mb-2.rounded.shadow-md
+              {:key index
+               :class "border border-default"}
+              (:content notification)
+              [views/icon-button
+               "times"
+               {:aria-label (t [::close "Close"])
+                :class "icon-button absolute small top-3 right-3 rtl:right-auto
+                        rtl:left-3"
+                :on-click #(rf/dispatch [::notification.events/remove-nth index])}]
+              (when (> (:count notification) 1)
+                [:div.absolute.bg-error.left-0.top-0.px-1.py-0.5.rounded
+                 {:class "-translate-x-1/2 -translate-y-1/2"}
+                 (:count notification)])]))
+          (into [:<>]))
 
      (when (second notifications)
        [:div.bg-primary
         [:button.button.overlay.px-2.rounded
          {:on-click #(rf/dispatch [::notification.events/clear-all])}
-         "Clear all"]])]))
+         (t [::clear-all "Clear all"])]])]))

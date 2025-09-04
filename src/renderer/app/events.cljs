@@ -78,10 +78,8 @@
  (fn [{:keys [db guid language]} _]
    (let [initial-document (:active-document db)]
      {:db (cond-> db
-            (not (:lang db))
-            (assoc :lang (if (utils.i18n/supported-lang? language)
-                           language
-                           "en-US"))
+            :always
+            (assoc :system-lang language)
 
             (not initial-document)
             (-> (document.handlers/create guid)
@@ -108,7 +106,7 @@
 (rf/reg-event-fx
  ::set-lang-attrs
  (fn [{:keys [db]} _]
-   (let [lang (:lang db)
+   (let [lang (utils.i18n/computed-lang (:lang db) (:system-lang db))
          dir (get-in utils.i18n/languages [lang :dir])]
      {:fx [[::effects/set-document-attr ["lang" lang]]
            [::effects/set-document-attr ["dir" dir]]]})))
@@ -117,9 +115,7 @@
  ::set-lang
  [persist]
  (fn [{:keys [db]} [_ lang]]
-   {:db (cond-> db
-          (utils.i18n/supported-lang? lang)
-          (assoc :lang lang))
+   {:db (assoc db :lang lang)
     :dispatch [::set-lang-attrs]}))
 
 (rf/reg-event-db

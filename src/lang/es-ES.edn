@@ -39,6 +39,8 @@
   :save "Guardar"
   :dont-save "No guardar"
   :cancel "Cancelar"
+  :close "Cerrar"
+  :ok "Aceptar"
   :changes-will-be-lost [:p "Sus cambios en %1 se perderán si cierra el documento
                              sin guardar."]}
 
@@ -686,4 +688,11 @@
  {:edit-points "Editar puntos"}
 
  :renderer.frame.views
- {:main-canvas "lienzo principal"}}
+ {:main-canvas "lienzo principal"}
+
+ :renderer.notification.views
+ {:close "Cerrar"
+  :error "Error"
+  :validation-error "Error de validación"
+  :clear-all "Limpiar todo"
+  :event "Evento: "}}

@@ -14,16 +14,12 @@
    [renderer.timeline.db :refer [Timeline]]
    [renderer.tool.db :refer [Handle Tool State Cursor]]
    [renderer.utils.bounds :refer [BBox]]
-   [renderer.utils.i18n :as utils.i18n]
+   [renderer.utils.i18n :refer [Lang]]
    [renderer.utils.math :refer [Vec2]]
    [renderer.window.db :refer [Window]]))
 
 (def Panels
   [:map-of keyword? [:map [:visible boolean?]]])
-
-(def Lang
-  [:fn {:error/fn (fn [{:keys [value]} _] (str value " is not a supported language"))}
-   utils.i18n/supported-lang?])
 
 (def Platform
   [:enum "darwin" "linux" "win32" "web"])
@@ -69,7 +65,8 @@
    [:loading {:default true} boolean?]
    [:pen-mode {:default false} boolean?]
    [:backdrop {:default false} boolean?]
-   [:lang {:optional true :persist true} Lang]
+   [:lang {:default "system" :persist true} [:or Lang [:= "system"]]]
+   [:system-lang {:optional true} string?]
    [:platform {:optional true} Platform]
    [:versions {:optional true} [:maybe map?]]
    [:env {:optional true} [:maybe map?]]

@@ -39,6 +39,8 @@
   :save "Guardar"
   :dont-save "Não guardar"
   :cancel "Cancelar"
+  :close "Fechar"
+  :ok "OK"
   :changes-will-be-lost [:p "As suas alterações em %1 serão perdidas se fechar o
                              documento sem guardar."]}
 
@@ -686,4 +688,11 @@
  {:edit-points "Editar pontos"}
 
  :renderer.frame.views
- {:main-canvas "tela principal"}}
+ {:main-canvas "tela principal"}
+
+ :renderer.notification.views
+ {:close "Fechar"
+  :error "Erro"
+  :validation-error "Erro de validação"
+  :clear-all "Limpar tudo"
+  :event "Evento: "}}
