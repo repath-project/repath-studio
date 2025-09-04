@@ -83,8 +83,9 @@
 
 (defn debug-info
   []
-  [:div
-   (into [:div.absolute.top-1.left-2.pointer-events-none.text-default]
+  [:div.pointer-events-none.text-default
+   {:dir "ltr"}
+   (into [:div.absolute.top-1.left-2]
          (for [[s v] (debug-rows)]
            [:div.flex
             [:strong.mr-1 s]

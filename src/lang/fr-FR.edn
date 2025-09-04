@@ -39,6 +39,8 @@
   :save "Enregistrer"
   :dont-save "Ne pas enregistrer"
   :cancel "Annuler"
+  :close "Fermer"
+  :ok "OK"
   :changes-will-be-lost [:p "Vos modifications de %1 seront perdues si vous fermez le
                              document sans l'enregistrer."]}
 
@@ -687,4 +689,11 @@
  {:edit-points "Éditer les points"}
 
  :renderer.frame.views
- {:main-canvas "canevas principal"}}
+ {:main-canvas "canevas principal"}
+
+ :renderer.notification.views
+ {:close "Fermer"
+  :error "Erreur"
+  :validation-error "Erreur de validation"
+  :clear-all "Tout effacer"
+  :event "Événement : "}}
