@@ -419,7 +419,9 @@
  {:description "overflow 属性设置当元素内容太大而无法适应其块格式化上下文时
                 该做什么。此功能尚未广泛实现。"
   :hidden "隐藏"
-  :visible "可见"}
+  :visible "可见"
+  :scroll "滚动"
+  :auto "自动"}
 
  :renderer.attribute.impl.color
  {:pick-color "选择颜色"}
@@ -458,6 +460,22 @@
  :renderer.attribute.impl.font-weight
  {:description "font-weight 属性是指用于渲染文本的字形的粗细或轻重，相对于
                 同一字体系列中的其他字体。"}
+
+ :renderer.attribute.impl.crossorigin
+ {:description "crossorigin 属性在 <image> 和 <feImage> 元素上有效，为元素
+                获取的数据的跨源资源共享（CORS）请求配置提供支持。"
+  :anonymous "匿名"
+  :use-credentials "使用凭据"}
+
+ :renderer.attribute.impl.decoding
+ {:description "decoding 属性在 <image> 元素上有效，为浏览器提供关于是否应该
+                将图像解码与其他内容的渲染一起执行，在看起来更" 正确 "的单个
+                演示步骤中（sync），或者先渲染并呈现其他内容，然后解码图像
+                并稍后呈现（async）的提示。实际上，async 意味着下一次绘制
+                不会等待图像解码。"
+  :sync "同步"
+  :async "异步"
+  :auto "自动"}
 
  :renderer.tool.impl.base.edit
  {:label "编辑"

@@ -457,7 +457,9 @@
                 big to fit in its block formatting context. This feature is not widely
                 implemented yet."
   :hidden "Hidden"
-  :visible "Visible"}
+  :visible "Visible"
+  :scroll "Scroll"
+  :auto "Auto"}
 
  :renderer.attribute.impl.color
  {:pick-color "Pick color"}
@@ -499,6 +501,24 @@
  {:description "The font-weight attribute refers to the boldness or lightness of the
                 glyphs used to render the text, relative to other fonts in the same font
                 family."}
+
+ :renderer.attribute.impl.crossorigin
+ {:description "The crossorigin attribute, valid on the <image> and <feImage> elements,
+                provides support for configuration of the Cross-Origin Resource Sharing
+                (CORS) requests forthe element's fetched data."
+  :anonymous "Anonymous"
+  :use-credentials "Use credentials"}
+
+ :renderer.attribute.impl.decoding
+ {:description "The decoding attribute, valid on <image> elements, provides a hint to the
+                browser as to whether it should perform image decoding along with
+                rendering other content in a single presentation step that looks more
+                'correct' (sync), or render and present the other content first and then
+                decode the image and present it later (async). In practice, async means
+                that the next paint does not wait for the image to decode."
+  :sync "Synchronously"
+  :async "Asynchronously"
+  :auto "Auto"}
 
  :renderer.tool.impl.base.edit
  {:label "Edit"

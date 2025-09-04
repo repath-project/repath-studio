@@ -467,7 +467,9 @@
                 est trop grand pour tenir dans son contexte de formatage de bloc. Cette
                 fonctionnalité n'est pas encore largement implémentée."
   :hidden "Masqué"
-  :visible "Visible"}
+  :visible "Visible"
+  :scroll "Défilement"
+  :auto "Automatique"}
 
  :renderer.attribute.impl.color
  {:pick-color "Choisir une couleur"}
@@ -509,6 +511,24 @@
  {:description "L'attribut font-weight fait référence à la graisse ou à la légèreté des
                 glyphes utilisés pour rendre le texte, par rapport aux autres polices de
                 la même famille de polices."}
+
+ :renderer.attribute.impl.crossorigin
+ {:description "L'attribut crossorigin, valide sur les éléments <image> et <feImage>,
+                fournit un support pour la configuration des requêtes Cross-Origin
+                Resource Sharing (CORS) pour les données récupérées de l'élément."
+  :anonymous "Anonyme"
+  :use-credentials "Utiliser les identifiants"}
+
+ :renderer.attribute.impl.decoding
+ {:description "L'attribut decoding, valide sur les éléments <image>, fournit un indice
+                au navigateur pour savoir s'il doit effectuer le décodage d'image avec
+                le rendu d'autre contenu en une seule étape de présentation qui semble
+                plus 'correcte' (sync), ou rendre et présenter l'autre contenu d'abord
+                puis décoder l'image et la présenter plus tard (async). En pratique,
+                async signifie que le prochain paint n'attend pas que l'image se décode."
+  :sync "Synchrone"
+  :async "Asynchrone"
+  :auto "Automatique"}
 
  :renderer.tool.impl.base.edit
  {:label "Éditer"

@@ -441,7 +441,9 @@
                 كبيراً جداً ليناسب سياق تنسيق الكتلة الخاص به. هذه الميزة ليست
                 مطبقة على نطاق واسع بعد."
   :hidden "مخفي"
-  :visible "مرئي"}
+  :visible "مرئي"
+  :scroll "تمرير"
+  :auto "تلقائي"}
 
  :renderer.attribute.impl.color
  {:pick-color "اختيار لون"}
@@ -483,6 +485,23 @@
  {:description "خاصية font-weight تشير إلى جرأة أو خفة
                 الرموز المستخدمة لعرض النص، نسبة إلى الخطوط الأخرى في نفس
                 عائلة الخط."}
+
+ :renderer.attribute.impl.crossorigin
+ {:description "خاصية crossorigin، صالحة على عناصر <image> و <feImage>،
+                توفر الدعم لتكوين طلبات Cross-Origin Resource Sharing (CORS)
+                للبيانات المجلبة للعنصر."
+  :anonymous "مجهول الهوية"
+  :use-credentials "استخدام بيانات الاعتماد"}
+
+ :renderer.attribute.impl.decoding
+ {:description "خاصية decoding، صالحة على عناصر <image>، تقدم تلميحاً للمتصفح
+                حول ما إذا كان يجب عليه تنفيذ فك تشفير الصورة مع عرض محتوى آخر
+                في خطوة عرض واحدة تبدو أكثر 'صحة' (sync)، أو عرض وتقديم المحتوى
+                الآخر أولاً ثم فك تشفير الصورة وتقديمها لاحقاً (async). في الممارسة
+                العملية، async يعني أن الرسم التالي لا ينتظر فك تشفير الصورة."
+  :sync "متزامن"
+  :async "غير متزامن"
+  :auto "تلقائي"}
 
  :renderer.tool.impl.base.edit
  {:label "تحرير"

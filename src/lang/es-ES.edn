@@ -465,7 +465,9 @@
                 elemento es demasiado grande para caber en su contexto de formateo de
                 bloque. Esta característica aún no está ampliamente implementada."
   :hidden "Oculto"
-  :visible "Visible"}
+  :visible "Visible"
+  :scroll "Desplazamiento"
+  :auto "Automático"}
 
  :renderer.attribute.impl.color
  {:pick-color "Elegir color"}
@@ -507,6 +509,25 @@
  {:description "El atributo font-weight se refiere a la negrita o ligereza de los
                 glifos usados para renderizar el texto, relativo a otras fuentes en la
                 misma familia de fuente."}
+
+ :renderer.attribute.impl.crossorigin
+ {:description "El atributo crossorigin, válido en los elementos <image> y <feImage>,
+                proporciona soporte para la configuración de las solicitudes Cross-Origin
+                Resource Sharing (CORS) para los datos obtenidos del elemento."
+  :anonymous "Anónimo"
+  :use-credentials "Usar credenciales"}
+
+ :renderer.attribute.impl.decoding
+ {:description "El atributo decoding, válido en elementos <image>, proporciona una pista
+                al navegador sobre si debe realizar la decodificación de imagen junto con
+                la renderización de otro contenido en un solo paso de presentación que
+                se ve más 'correcto' (sync), o renderizar y presentar el otro contenido
+                primero y luego decodificar la imagen y presentarla después (async). En
+                la práctica, async significa que el siguiente paint no espera a que la
+                imagen se decodifique."
+  :sync "Sincrónicamente"
+  :async "Asincrónicamente"
+  :auto "Automático"}
 
  :renderer.tool.impl.base.edit
  {:label "Editar"

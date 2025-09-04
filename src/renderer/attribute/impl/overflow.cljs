@@ -7,7 +7,7 @@
 
 (defmethod attribute.hierarchy/description [:default :overflow]
   []
-  (t [::description 
+  (t [::description
       "The overflow attribute sets what to do when an element's content is too big
        to fit in its block formatting context. This feature is not widely
        implemented yet."]))
@@ -28,9 +28,9 @@
             {:key :hidden
              :value "hidden"
              :label (t [::hidden "Hidden"])}
-            #_{:key :scroll
-               :value "scroll"
-               :label "Scroll"}
-            #_{:key :auto
-               :value "auto"
-               :label "Auto"}]}])
+            {:key :scroll
+             :value "scroll"
+             :label (t [::scroll "Scroll"])}
+            {:key :auto
+             :value "auto"
+             :label (t [::auto "Auto"])}]}])

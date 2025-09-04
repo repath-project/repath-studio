@@ -2,7 +2,9 @@
   (:require
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.attribute.impl.color]
+   [renderer.attribute.impl.crossorigin]
    [renderer.attribute.impl.d]
+   [renderer.attribute.impl.decoding]
    [renderer.attribute.impl.font-family]
    [renderer.attribute.impl.font-size]
    [renderer.attribute.impl.font-style]
@@ -172,7 +174,7 @@
   []
   (t [::attribute-name
       "The attributeName attribute indicates the name of the CSS property or
-       attribute of the target element that is going to be 
+       attribute of the target element that is going to be
        changed during an animation."]))
 
 (defmethod attribute.hierarchy/description [:default :begin]
@@ -191,12 +193,12 @@
 
 (defmethod attribute.hierarchy/description [:default :min]
   []
-  (t [::min "The min attribute specifies the minimum value 
+  (t [::min "The min attribute specifies the minimum value
              of the active animation duration."]))
 
 (defmethod attribute.hierarchy/description [:default :max]
   []
-  (t [::max "The max attribute specifies the maximum value 
+  (t [::max "The max attribute specifies the maximum value
              of the active animation duration."]))
 
 (defmethod attribute.hierarchy/description [:default :restart]
@@ -213,7 +215,7 @@
 (defmethod attribute.hierarchy/description [:default :repeatDur]
   []
   (t [::repeat-dur
-      "The repeatDur attribute specifies 
+      "The repeatDur attribute specifies
        the total duration for repeating an animation."]))
 
 (defmethod attribute.hierarchy/description [:default :calcMode]
@@ -224,7 +226,7 @@
 (defmethod attribute.hierarchy/description [:default :values]
   []
   (t [::values
-      "The values attribute has different meanings, 
+      "The values attribute has different meanings,
        depending upon the context where it's used,
        either it defines a sequence of values used over the course of an animation,
        or it's a list of numbers for a color matrix, which is interpreted differently

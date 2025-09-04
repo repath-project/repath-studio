@@ -444,7 +444,9 @@
                 コンテキストに収まらないときの処理方法を設定します。この機能は
                 まだ広く実装されていません。"
   :hidden "隠す"
-  :visible "表示"}
+  :visible "表示"
+  :scroll "スクロール"
+  :auto "自動"}
 
  :renderer.attribute.impl.color
  {:pick-color "色を選択"}
@@ -486,6 +488,25 @@
  {:description "font-weight属性は、同じフォントファミリーの他のフォントと
                 比較して、テキストのレンダリングに使用されるグリフの太さや
                 細さを指します。"}
+
+ :renderer.attribute.impl.crossorigin
+ {:description "crossorigin属性は、<image>および<feImage>要素で有効で、
+                要素で取得されるデータのCross-Origin Resource Sharing（CORS）
+                リクエストの設定をサポートします。"
+  :anonymous "匿名"
+  :use-credentials "認証情報を使用"}
+
+ :renderer.attribute.impl.decoding
+ {:description "decoding属性は、<image>要素で有効で、ブラウザが画像の
+                デコードを他のコンテンツのレンダリングと共に、より
+                '正しく'見える単一のプレゼンテーションステップで実行する
+                べきか（sync）、または他のコンテンツを最初にレンダリング
+                および表示してから画像をデコードして後で表示するべきか
+                （async）についてのヒントを提供します。実際には、asyncは
+                次のペイントが画像のデコードを待たないことを意味します。"
+  :sync "同期的に"
+  :async "非同期的に"
+  :auto "自動"}
 
  :renderer.tool.impl.base.edit
  {:label "編集"
