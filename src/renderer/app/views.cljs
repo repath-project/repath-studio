@@ -38,7 +38,8 @@
    [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]
    [renderer.views :as views]
-   [renderer.window.views :as window.views]))
+   [renderer.window.views :as window.views]
+   [renderer.worker.subs :as-alias worker.subs]))
 
 (defn coll->str
   [coll]
@@ -111,7 +112,8 @@
         ruler-locked? @(rf/subscribe [::ruler.subs/locked?])
         help-message @(rf/subscribe [::tool.subs/help])
         help-bar @(rf/subscribe [::app.subs/help-bar])
-        debug-info? @(rf/subscribe [::app.subs/debug-info])]
+        debug-info? @(rf/subscribe [::app.subs/debug-info])
+        worker-active? @(rf/subscribe [::worker.subs/some-active?])]
     [:div.flex.flex-col.flex-1.h-full.gap-px
      [:div
       [views/scroll-area [toolbar.tools/root]]
@@ -145,6 +147,9 @@
             [:div.absolute.bg-accent.top-2.left-2.px-1.rounded.text-accent-inverted
              preview-label])])
        (when debug-info? [debug-info])
+       (when worker-active?
+         [:button.icon-button.absolute.bottom-2.right-2
+          [views/loading-indicator]])
        (when @(rf/subscribe [::app.subs/backdrop])
          [:div.absolute.inset-0
           {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])

@@ -16,8 +16,7 @@
    [renderer.timeline.views :as timeline.views]
    [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]
-   [renderer.views :as views]
-   [renderer.worker.subs :as-alias worker.subs]))
+   [renderer.views :as views]))
 
 (defn coordinates []
   (let [[x y] @(rf/subscribe [::app.subs/adjusted-pointer-pos])]
@@ -175,8 +174,7 @@
       [views/shortcuts action]]]]])
 
 (defn root []
-  (let [loading @(rf/subscribe [::worker.subs/loading?])
-        fill @(rf/subscribe [::document.subs/fill])
+  (let [fill @(rf/subscribe [::document.subs/fill])
         stroke @(rf/subscribe [::document.subs/stroke])
         get-hex #(:hex (js->clj % :keywordize-keys true))]
     [:div.toolbar.bg-primary.mt-px.relative
@@ -210,9 +208,6 @@
                   :bottom "9px"
                   :right "9px"}}]]]]
      [:div.grow]
-     (when loading
-       [:button.icon-button
-        [views/loading-indicator]])
      (into [:<>]
            (map radio-button (view-radio-buttons)))
      [snap.views/root]

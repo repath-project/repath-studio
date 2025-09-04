@@ -12,6 +12,7 @@
  :-> :tasks)
 
 (rf/reg-sub
- ::loading?
+ ::some-active?
  :<- [::tasks]
- seq)
+ (fn [tasks _]
+   (boolean (seq tasks))))
