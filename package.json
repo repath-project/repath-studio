@@ -23,6 +23,7 @@
     "dist": "npx electron-builder",
     "format": "clojure -M:format -m cljfmt.main fix src test portfolio",
     "lint": "clojure -M:lint -m clj-kondo.main --lint src test portfolio",
+    "check-links": "npx doc-link-checker lint-cli /src",
     "clean": "rm -rf resources/public/js/* && rm -rf target && rm -rf dist && rm -rf .shadow-cljs",
     "build-report": "npx shadow-cljs run shadow.cljs.build-report renderer target/build-report.html",
     "test": "npx shadow-cljs compile karma-test && npx karma start --browsers ChromeHeadlessNoSandbox --single-run --reporters junit,dots"

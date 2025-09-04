@@ -2,7 +2,7 @@
 
 Thank you for your interest in actively participating in the project's development!
 Please read the [Contributor Covenant Code of Conduct](https://github.com/repath-project/repath-studio/blob/main/CODE_OF_CONDUCT.md)
-and the [Contributor License Agreement](cla.md) first.
+and the [Contributor License Agreement](CLA.md) first.
 
 The project is written in [ClojureScript](https://clojurescript.org/) - a compiler for [Clojure](https://clojure.org/) that targets JavaScript, and is based on [re-frame](https://github.com/day8/re-frame/) - a framework for building Modern Web Apps in ClojureScript.
 You should probably take a look at their [exceptional documentation](https://day8.github.io/re-frame/re-frame/) first.

@@ -53,7 +53,7 @@
       [views/icon "chevron-down"]]]]])
 
 (defn node
-  "https://bkrem.github.io/react-d3-tree/docs/interfaces/_src_tree_types_.treeprops.html#rendercustomnodeelement"
+  "https://bkrem.github.io/react-d3-tree/docs/interfaces/CustomNodeElementProps.html"
   [^js/CustomNodeElementProps props]
   (let [datum (.-nodeDatum props)
         active? (.-active datum)
@@ -74,7 +74,7 @@
       [:title (.-name datum)]])))
 
 (defn on-update
-  "https://bkrem.github.io/react-d3-tree/docs/interfaces/_src_tree_types_.treeprops.html#onupdate"
+  "https://bkrem.github.io/react-d3-tree/docs/interfaces/TreeProps.html#onupdate"
   [target]
   (let [translate (.-translate target)
         zoom (.-zoom target)]
