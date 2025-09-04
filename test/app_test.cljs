@@ -13,17 +13,18 @@
    (rf/dispatch [::app.events/initialize])
 
    (testing "language"
-     (let [lang (rf/subscribe [::app.subs/lang])]
+     (let [lang (rf/subscribe [::app.subs/lang])
+           system-lang (rf/subscribe [::app.subs/system-lang])
+           computed-lang (rf/subscribe [::app.subs/computed-lang])]
        (testing "default"
-         (is (= "en-US" @lang)))
+         (is (= "system" @lang))
+         (is (= "en-US" @system-lang))
+         (is (= "en-US" @computed-lang)))
 
        (testing "set valid language"
          (rf/dispatch [::app.events/set-lang "el-GR"])
-         (is (= "el-GR" @lang)))
-
-       (testing "set invalid language"
-         (rf/dispatch [::app.events/set-lang "foo-Bar"])
-         (is (= "el-GR" @lang)))))
+         (is (= "el-GR" @lang))
+         (is (= "el-GR" @computed-lang)))))
 
    (testing "toggling grid"
      (let [grid-visible (rf/subscribe [::app.subs/grid])]

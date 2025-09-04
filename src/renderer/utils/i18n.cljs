@@ -12,39 +12,62 @@
 (def languages
   {"en-US" {:dir "ltr"
             :native-name "English"
+            :abbreviation "EN"
             :dictionary (load-resource-at-compile-time "lang/en-US.edn")}
    "es-ES" {:dir "ltr"
             :native-name "Español"
+            :abbreviation "ES"
             :dictionary (load-resource-at-compile-time "lang/es-ES.edn")}
    "pt-PT" {:dir "ltr"
             :native-name "Português"
+            :abbreviation "PT"
             :dictionary (load-resource-at-compile-time "lang/pt-PT.edn")}
    "ru-RU" {:dir "ltr"
             :native-name "Русский"
+            :abbreviation "RU"
             :dictionary (load-resource-at-compile-time "lang/ru-RU.edn")}
    "zh-CN" {:dir "ltr"
             :native-name "中文（简体）"
+            :abbreviation "ZH"
             :dictionary (load-resource-at-compile-time "lang/zh-CN.edn")}
    "fr-FR" {:dir "ltr"
             :native-name "Français"
+            :abbreviation "FR"
             :dictionary (load-resource-at-compile-time "lang/fr-FR.edn")}
    "de-DE" {:dir "ltr"
             :native-name "Deutsch"
+            :abbreviation "DE"
             :dictionary (load-resource-at-compile-time "lang/de-DE.edn")}
    "el-GR" {:dir "ltr"
             :native-name "Ελληνικά"
+            :abbreviation "EL"
             :dictionary (load-resource-at-compile-time "lang/el-GR.edn")}
    "ar-EG" {:dir "rtl"
             :native-name "العربية (مصر)"
+            :abbreviation "AR"
             :dictionary (load-resource-at-compile-time "lang/ar-EG.edn")}
    "ja-JP" {:dir "ltr"
             :native-name "日本語"
+            :abbreviation "JA"
             :dictionary (load-resource-at-compile-time "lang/ja-JP.edn")}})
 
-(m/=> supported-lang? [:-> string? boolean?])
+(m/=> supported-lang? [:-> [:maybe string?] boolean?])
 (defn supported-lang?
   [lang]
   (contains? languages lang))
+
+(def Lang
+  [:fn {:error/fn (fn [{:keys [value]} _] (str value " is not a supported language"))}
+   supported-lang?])
+
+(m/=> computed-lang [:-> [:or Lang [:= "system"]] [:maybe string?] Lang])
+(defn computed-lang
+  [lang system-lang]
+  (if (or (not lang) (= lang "system"))
+    (if (supported-lang? system-lang)
+      system-lang
+      "en-US")
+    lang))
 
 (def options
   {:dict (->> languages
@@ -54,5 +77,5 @@
 (defn t
   "Translation function that should be called in a reactive context."
   [& more]
-  (let [lang @(rf/subscribe [::app.subs/lang])]
-    (apply tempura/tr options [(or lang "en-US")] more)))
+  (let [lang @(rf/subscribe [::app.subs/computed-lang])]
+    (apply tempura/tr options [lang] more)))

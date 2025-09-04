@@ -73,10 +73,21 @@
  :-> :lang)
 
 (rf/reg-sub
- ::lang-dir
+ ::system-lang
+ :-> :system-lang)
+
+(rf/reg-sub
+ ::computed-lang
  :<- [::lang]
- (fn [lang _]
-   (get-in utils.i18n/languages [lang :dir])))
+ :<- [::system-lang]
+ (fn [[lang system-lang] _]
+   (utils.i18n/computed-lang lang system-lang)))
+
+(rf/reg-sub
+ ::lang-dir
+ :<- [::computed-lang]
+ (fn [computed-lang _]
+   (get-in utils.i18n/languages [computed-lang :dir])))
 
 (rf/reg-sub
  ::rtl?

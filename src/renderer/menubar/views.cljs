@@ -437,15 +437,23 @@
            :checked @(rf/subscribe [::document.subs/filter-active id])
            :action [::document.events/toggle-filter id]}) filters/accessibility))
 
-(defn languages-submenu []
-  (mapv (fn [[k v]]
-          {:id k
-           :label (:native-name v)
-           :type :checkbox
-           :icon "language"
-           :action [::app.events/set-lang k]
-           :checked (= @(rf/subscribe [::app.subs/lang]) k)})
-        utils.i18n/languages))
+(defn languages-submenu
+  []
+  (->> utils.i18n/languages
+       (mapv (fn [[k v]]
+               {:id k
+                :abbreviation (:abbreviation v)
+                :label (:native-name v)
+                :type :checkbox
+                :icon "language"
+                :action [::app.events/set-lang k]
+                :checked (= @(rf/subscribe [::app.subs/lang]) k)}))
+       (into [{:id "system"
+               :label "System"
+               :type :checkbox
+               :icon "language"
+               :action [::app.events/set-lang "system"]
+               :checked (= @(rf/subscribe [::app.subs/lang]) "system")}])))
 
 (defn panel-submenu
   []

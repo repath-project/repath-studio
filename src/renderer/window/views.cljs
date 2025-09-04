@@ -7,20 +7,24 @@
    [renderer.menubar.views :as menubar.views]
    [renderer.theme.events :as-alias theme.events]
    [renderer.theme.subs :as-alias theme.subs]
-   [renderer.utils.i18n :refer [t]]
+   [renderer.utils.i18n :as utils.i18n :refer [t]]
    [renderer.views :as views]
    [renderer.window.events :as-alias window.events]
    [renderer.window.subs :as-alias window.subs]))
 
 (defn language-dropdown
   []
-  (let [lang @(rf/subscribe [::app.subs/lang])]
+  (let [computed-lang @(rf/subscribe [::app.subs/computed-lang])
+        system-lang @(rf/subscribe [::app.subs/system-lang])
+        system-abbreviation (get-in utils.i18n/languages [system-lang :abbreviation])
+        computed-abbreviation (get-in utils.i18n/languages [computed-lang :abbreviation])
+        languages (menubar.views/languages-submenu)]
     [:> DropdownMenu/Root
      [:> DropdownMenu/Trigger
       {:as-child true}
       [:button.button
        {:class "flex gap-1 items-center px-2 uppercase text-muted bg-primary font-mono"}
-       (take 2 lang)
+       computed-abbreviation
        [views/icon "chevron-down"]]]
      [:> DropdownMenu/Portal
       [:> DropdownMenu/Content
@@ -31,7 +35,7 @@
         :class "menu-content rounded-sm select-content"
         :on-key-down #(.stopPropagation %)
         :on-escape-key-down #(.stopPropagation %)}
-       (for [{:keys [id label action checked]} (menubar.views/languages-submenu)]
+       (for [{:keys [id label action checked abbreviation]} languages]
          ^{:key id}
          [:> DropdownMenu/CheckboxItem
           {:class "menu-checkbox-item inset"
@@ -41,7 +45,9 @@
            {:class "menu-item-indicator"}
            [views/icon "checkmark"]]
           [:div label]
-          [:span.text-muted.uppercase.font-mono (take 2 id)]])]]]))
+          (if (= id "system")
+            [:span.uppercase.font-mono.text-disabled (or system-abbreviation "EN")]
+            [:span.uppercase.font-mono.text-muted  abbreviation])])]]]))
 
 (defn button
   [{:keys [icon action class title]}]
