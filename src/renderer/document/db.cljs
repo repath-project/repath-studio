@@ -29,7 +29,8 @@
    [:centered {:optional true} boolean?]
    [:filter {:optional true} A11yFilter]
    [:attrs {:default {:fill "white" :stroke "black"}} [:map-of keyword? string?]]
-   [:preview-label {:optional true} string?]])
+   [:preview-label {:optional true} string?]
+   [:file-handle {:optional true} any?]])
 
 (def PersistedDocument
   (->> Document

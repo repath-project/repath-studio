@@ -4,6 +4,7 @@
    ["paperjs-offset" :refer [PaperOffset]]
    ["style-to-object" :default parse]
    [clojure.core.matrix :as matrix]
+   [clojure.string :as string]
    [malli.core :as m]
    [reagent.dom.server :as dom.server]
    [renderer.attribute.hierarchy :as attribute.hierarchy]
@@ -131,11 +132,6 @@
         (assoc-in [:attrs :d] new-d)
         (assoc-in [:attrs :fill] (:stroke attrs)))))
 
-(m/=> wrap-to-svg [:-> string? Vec2 string?])
-(defn wrap-to-svg
-  [s [w h]]
-  (str "<svg width='" w "' height='" h "'>" s "</svg>"))
-
 (m/=> ->string [:-> [:sequential Element] string?])
 (defn ->string
   [els]
@@ -146,11 +142,16 @@
 (m/=> ->svg [:-> [:sequential Element] string?])
 (defn ->svg
   [els]
-  (cond-> (->string els)
-    (not (and (seq els)
-              (empty? (rest els))
-              (svg? (first els))))
-    (wrap-to-svg (utils.bounds/->dimensions (united-bbox els)))))
+  (let [bbox (united-bbox els)
+        [min-x min-y _max-x _max-y] bbox
+        [w h] (utils.bounds/->dimensions bbox)
+        viewbox (string/join " " [min-x min-y w h])]
+    (->string [{:tag :svg
+                :children (mapv :id els)
+                :attrs {:width w
+                        :height h
+                        :viewBox viewbox
+                        :xmlns "http://www.w3.org/2000/svg"}}])))
 
 (m/=> style->map [:-> Attrs Attrs])
 (defn style->map

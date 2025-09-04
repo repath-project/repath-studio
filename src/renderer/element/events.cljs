@@ -4,6 +4,7 @@
    [re-frame.core :as rf]
    [renderer.document.events :as-alias document.events]
    [renderer.effects :as-alias effects]
+   [renderer.element.db :as element.db]
    [renderer.element.effects :as-alias element.effects]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
@@ -297,10 +298,11 @@
  ::trace
  (fn [{:keys [db]} [_]]
    (let [images (element.handlers/filter-by-tag db :image)]
-     {::element.effects/trace images})))
+     {::element.effects/trace {:data images
+                               :on-success [::create-traced-image]}})))
 
 (rf/reg-event-db
- ::traced
+ ::create-traced-image
  (fn [db [_ data]]
    (-> (element.handlers/import-svg db data)
        (history.handlers/finalize #(t [::trace-image "Trace image"])))))
@@ -318,8 +320,11 @@
                              :on-fire [::import-svg]}
                      "error" {:on-fire [::notification.events/show-exception]}}]}
 
-       (contains? #{"image/jpeg" "image/png" "image/bmp" "image/gif"} file-type)
-       {::element.effects/import-image [file position]}
+       (contains? element.db/image-mime-types file-type)
+       {::element.effects/import-image {:file file
+                                        :position position
+                                        :on-success [::add]
+                                        :on-error [::notification.events/show-exception]}}
 
        :else
        (let [extension (last (string/split (.-name file) "."))]

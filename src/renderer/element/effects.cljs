@@ -1,69 +1,90 @@
 (ns renderer.element.effects
   (:require
    [re-frame.core :as rf]
-   [renderer.element.events :as-alias element.events]
    [renderer.utils.element :as utils.element]
    [renderer.utils.length :as utils.length]
    [renderer.worker.events :as-alias worker.events]))
 
-(defn data-url->canvas-context!
-  [data-url [w h] f]
-  (let [canvas (js/document.createElement "canvas")
+(defn data-url->canvas!
+  [data-url size on-error f]
+  (let [[w h] size
+        canvas (js/OffscreenCanvas. 0 0)
         context (.getContext canvas "2d")
         image (js/Image.)]
-    (set! (.-onload image)
-          #(do (set! (.-width canvas) w)
-               (set! (.-height canvas) h)
-               (.drawImage context image 0 0 w h)
-               (f context)))
-    (set! (.-src image) data-url)))
+    (set! (.-src image) data-url)
+    (-> (.decode image)
+        (.then #(do (set! (.-width canvas) w)
+                    (set! (.-height canvas) h)
+                    (.drawImage context image 0 0 w h)
+                    (f canvas)))
+        (.catch #(when on-error (rf/dispatch (conj on-error %)))))))
 
 (rf/reg-fx
  ::trace
- (fn [images]
-   (doseq [image images]
+ (fn [{:keys [data on-success on-error]}]
+   (doseq [image data]
      (let [data-url (-> image :attrs :href)
            [x y] (:bbox image)
            ;; TODO: Handle preserveAspectRatio.
            w (utils.length/unit->px (-> image :attrs :width))
            h (utils.length/unit->px (-> image :attrs :height))]
-       (data-url->canvas-context!
+       (data-url->canvas!
         data-url
         [w h]
-        (fn [context]
+        on-error
+        (fn [canvas]
           (rf/dispatch
            [::worker.events/create
             {:action "trace"
              :data {:label (:label image)
-                    :image (.getImageData context 0 0 w h)
-                    :position [x y]}
-             :on-success [::element.events/traced]}])))))))
+                    :position [x y]
+                    :image (-> canvas
+                               (.getContext "2d")
+                               (.getImageData 0 0 w h))}
+             :on-success on-success}])))))))
 
 (rf/reg-fx
  ::import-image
- (fn [[^js/File file [x y]]]
-   (let [reader (js/FileReader.)]
+ (fn [{:keys [^js/File file position on-success on-error]}]
+   (let [[x y] position
+         reader (js/FileReader.)]
      (.addEventListener
       reader
       "load"
-      #(let [data-url (.-result reader)
-             img (js/document.createElement "img")]
-         (set! (.-onload img)
-               (fn []
-                 (let [w (.-width img)
-                       h (.-height img)]
-                   (.remove img)
-                   (rf/dispatch [::element.events/add
-                                 {:type :element
-                                  :tag :image
-                                  :label (.-name file)
-                                  :attrs {:x (- x (/ w 2))
-                                          :y (- y (/ h 2))
-                                          :width w
-                                          :height h
-                                          :href data-url}}]))))
-         (set! (.-src img) data-url)))
+      (fn []
+        (let [data-url (.-result reader)
+              image (js/Image.)]
+          (set! (.-src image) data-url)
+          (-> (.decode image)
+              (.then #(let [w (.-width image)
+                            h (.-height image)]
+                        (when on-success
+                          (rf/dispatch (conj on-success
+                                             {:type :element
+                                              :tag :image
+                                              :label (.-name file)
+                                              :attrs {:x (- x (/ w 2))
+                                                      :y (- y (/ h 2))
+                                                      :width w
+                                                      :height h
+                                                      :href data-url}})))))
+              (.catch #(when on-error (rf/dispatch (conj on-error %))))))))
      (.readAsDataURL reader file))))
+
+(rf/reg-fx
+ ::export-image
+ (fn [{:keys [mime-type size quality data on-success on-error]}]
+   (let [data-url (str "data:image/svg+xml," (js/encodeURIComponent data))]
+     (data-url->canvas!
+      data-url
+      size
+      on-error
+      (fn [canvas]
+        (-> canvas
+            (.convertToBlob #js {:type mime-type
+                                 :quality (or quality 1)})
+            (.then #(when on-success (rf/dispatch (conj on-success % mime-type))))
+            (.catch #(when on-error (rf/dispatch (conj on-error %))))))))))
 
 (rf/reg-fx
  ::->path

@@ -8,11 +8,14 @@
    [renderer.dialog.views :as dialog.views]
    [renderer.document.handlers :as document.handlers]
    [renderer.effects :as-alias effects]
+   [renderer.element.db :as element.db]
+   [renderer.element.effects :as-alias element.effects]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
    [renderer.notification.events :as-alias notification.events]
    [renderer.notification.handlers :as notification.handlers]
    [renderer.notification.views :as notification.views]
+   [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.compatibility :as utils.compatibility]
    [renderer.utils.element :as utils.element]
    [renderer.utils.i18n :refer [t]]
@@ -20,6 +23,7 @@
 
 (def file-picker-options
   {:startIn config/default-path
+   :id "file-picker"
    :types [{:accept {config/mime-type [(str "." config/ext)]}}]})
 
 (rf/reg-event-db
@@ -84,7 +88,7 @@
          (dialog.handlers/create
           {:title (t [::save-changes "Do you want to save your changes?"])
            :close-button true
-           :content (dialog.views/save (get-in db [:documents id]))
+           :content [dialog.views/save (get-in db [:documents id])]
            :attrs {:onOpenAutoFocus #(.preventDefault %)}})))))
 
 (rf/reg-event-fx
@@ -150,12 +154,17 @@
             (history.handlers/finalize #(t [::create-doc-from-template
                                             "Create document from template"])))}))
 
+(defn string->edn
+  [s]
+  (try (cljs.reader/read-string s)
+       (catch :default _e nil)))
+
 (rf/reg-event-fx
  ::open
  (fn [{:keys [db]} [_ file-path]]
    (if (= (:platform db) "web")
      {::effects/file-open
-      {:options file-picker-options
+      {:options (assoc file-picker-options :multiple true)
        :on-success [::file-read]
        :on-error [::notification.events/show-exception]}}
      {::effects/ipc-invoke
@@ -163,15 +172,16 @@
        :data file-path
        :on-success [::load-multiple]
        :on-error [::notification.events/show-exception]
-       :formatter #(mapv cljs.reader/read-string %)}})))
+       :formatter #(mapv string->edn %)}})))
 
 (rf/reg-event-fx
  ::file-read
- (fn [_ [_ file]]
+ (fn [_ [_ ^js/FileSystemFileHandle file-handle ^js/File file]]
    {::effects/file-read-as
-    [file :text {"load" {:formatter #(-> (cljs.reader/read-string %)
+    [file :text {"load" {:formatter #(-> (string->edn %)
                                          (assoc :title (.-name file)
-                                                :path (.-path file)))
+                                                :path (.-path file)
+                                                :file-handle file-handle))
                          :on-fire [::load]}
                  "error" {:on-fire [::notification.events/show-exception]}}]}))
 
@@ -212,20 +222,22 @@
 (rf/reg-event-fx
  ::save
  (fn [{:keys [db]} [_]]
-   (let [document (document.handlers/persisted-format db)]
+   (let [file-handle (:file-handle (document.handlers/active db))
+         persisted-document (document.handlers/persisted-format db)]
      (if (= (:platform db) "web")
        {::effects/file-save
-        {:data (document.handlers/->save-format document)
+        {:data (document.handlers/->save-format persisted-document)
+         :file-handle file-handle
          :options file-picker-options
-         :formatter (partial document.handlers/saved-info document)
+         :formatter (partial document.handlers/saved-info persisted-document)
          :on-success [::saved]
          :on-error [::notification.events/show-exception]}}
        {::effects/ipc-invoke
         {:channel "save-document"
-         :data (pr-str document)
+         :data (pr-str persisted-document)
          :on-success [::saved]
          :on-error [::notification.events/show-exception]
-         :formatter cljs.reader/read-string}}))))
+         :formatter string->edn}}))))
 
 (rf/reg-event-fx
  ::download
@@ -237,20 +249,22 @@
 (rf/reg-event-fx
  ::save-and-close
  (fn [{:keys [db]} [_ id]]
-   (let [document (document.handlers/persisted-format db id)]
+   (let [file-handle (:file-handle (document.handlers/entity db id))
+         persisted-document (document.handlers/persisted-format db id)]
      (if (= (:platform db) "web")
        {::effects/file-save
-        {:data (document.handlers/->save-format document)
+        {:data (document.handlers/->save-format persisted-document)
+         :file-handle file-handle
          :options file-picker-options
-         :formatter (partial document.handlers/saved-info document)
+         :formatter (partial document.handlers/saved-info persisted-document)
          :on-success [::mark-as-saved-and-close]
          :on-error [::notification.events/show-exception]}}
        {::effects/ipc-invoke
         {:channel "save-document"
-         :data (pr-str document)
+         :data (pr-str persisted-document)
          :on-success [::mark-as-saved-and-close]
          :on-error [::notification.events/show-exception]
-         :formatter cljs.reader/read-string}}))))
+         :formatter string->edn}}))))
 
 (rf/reg-event-fx
  ::save-as
@@ -268,7 +282,7 @@
          :data (pr-str document)
          :on-success [::saved]
          :on-error [::notification.events/show-exception]
-         :formatter cljs.reader/read-string}}))))
+         :formatter string->edn}}))))
 
 (rf/reg-event-db
  ::saved
@@ -307,20 +321,36 @@
    (document.handlers/center db)))
 
 (rf/reg-event-fx
- ::export-svg
- (fn [{:keys [db]} _]
+ ::export
+ (fn [{:keys [db]} [_ mime-type]]
    (let [els (element.handlers/root-children db)
          svg (utils.element/->svg els)]
-     (if (:platmform db)
-       {::effects/ipc-invoke
-        {:channel "export"
-         :data svg
-         :on-error [::notification.events/show-exception]}}
+     (case mime-type
+       "image/svg+xml"
        {::effects/file-save
-        [:data svg
+        {:data svg
          :on-error [::notification.events/show-exception]
-         :options {:startIn "pictures"
-                   :types [{:accept {"image/svg+xml" [".svg"]}}]}]}))))
+         :options {:id "export"
+                   :startIn "pictures"
+                   :types [{:accept {"image/svg+xml" [".svg"]}}]}}}
+
+       {::element.effects/export-image
+        {:data svg
+         :mime-type mime-type
+         :size (utils.bounds/->dimensions (utils.element/united-bbox els))
+         :on-success [::save-rasterized-image]
+         :on-error [::notification.events/show-exception]}}))))
+
+(rf/reg-event-fx
+ ::save-rasterized-image
+ (fn [_ [_ data mime-type]]
+   {::effects/file-save
+    {:data data
+     :on-error [::notification.events/show-exception]
+     :options {:id "export"
+               :startIn "pictures"
+               :types [{:accept {mime-type (or (get element.db/image-mime-types mime-type)
+                                               [])}}]}}}))
 
 (rf/reg-event-fx
  ::print

@@ -49,42 +49,51 @@
                                      (cb (first (.. e -target -files)))))
     (.click el)))
 
+(defn write-file!
+  [{:keys [data on-success on-error formatter file-handle]}]
+  (-> (.createWritable file-handle)
+      (.then (fn [^js/FileSystemWritableFileStream writable-stream]
+               (-> (.write writable-stream data)
+                   (.then (fn []
+                            (.close writable-stream)
+                            (when on-success
+                              (rf/dispatch (conj on-success (cond-> file-handle
+                                                              formatter
+                                                              formatter)))))))))
+      (.catch #(when on-error (rf/dispatch (conj on-error %))))))
+
 (rf/reg-fx
  ::file-save
- (fn [{:keys [options data on-success on-error formatter]}]
-   (if (.-showSaveFilePicker js/window)
-     (-> (.showSaveFilePicker js/window (clj->js options))
-         (.then (fn [^js/FileSystemFileHandle file-handle]
-                  (.then (.createWritable file-handle)
-                         (fn [^js/FileSystemWritableFileStream writable-stream]
-                           (.then (.write writable-stream data)
-                                  (fn []
-                                    (.close writable-stream)
-                                    (when on-success
-                                      (rf/dispatch (conj on-success
-                                                         (cond-> file-handle
-                                                           formatter
-                                                           formatter))))))))))
-         (.catch (fn [^js/Error error]
-                   (when (and on-error (not (utils.error/abort-error? error)))
-                     (rf/dispatch (conj on-error error))))))
-     (rf/dispatch
-      [::notification.events/show-unavailable-feature
-       "Save File Picker"
-       "https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker#browser_compatibility"]))))
+ (fn [{:keys [options on-error file-handle] :as args}]
+   (if file-handle
+     (write-file! args)
+     (if (.-showSaveFilePicker js/window)
+       (-> (.showSaveFilePicker js/window (clj->js options))
+           (.then #(write-file! (assoc args :file-handle %)))
+           (.catch (fn [^js/Error error]
+                     (when (and on-error (not (utils.error/abort-error? error)))
+                       (rf/dispatch (conj on-error error))))))
+       (rf/dispatch
+        [::notification.events/show-unavailable-feature
+         "Save File Picker"
+         "https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker#browser_compatibility"])))))
 
 (rf/reg-fx
  ::file-open
  (fn [{:keys [options on-error on-success]}]
-   (let [success-cb #(rf/dispatch (conj on-success %))]
-     (if (.-showOpenFilePicker js/window)
-       (-> (.showOpenFilePicker js/window (clj->js options))
-           (.then (fn [[^js/FileSystemFileHandle file-handle]]
-                    (.then (.getFile file-handle) success-cb)))
-           (.catch (fn [^js/Error error]
-                     (when (and on-error (not (utils.error/abort-error? error)))
-                       (rf/dispatch (conj on-error error))))))
-       (legacy-file-open! success-cb)))))
+   (if (.-showOpenFilePicker js/window)
+     (-> (.showOpenFilePicker js/window (clj->js options))
+         (.then (fn [file-handles]
+                  (when on-success
+                    (doseq [^js/FileSystemFileHandle file-handle file-handles]
+                      (-> (.getFile file-handle)
+                          (.then #(rf/dispatch (conj on-success file-handle %)))
+                          (.catch #(when on-error
+                                     (rf/dispatch (conj on-error file-handle %)))))))))
+         (.catch (fn [^js/Error error]
+                   (when (and on-error (not (utils.error/abort-error? error)))
+                     (rf/dispatch (conj on-error error))))))
+     (legacy-file-open! #(rf/dispatch (conj on-success nil %))))))
 
 (rf/reg-fx
  ::file-read-as

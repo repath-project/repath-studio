@@ -79,6 +79,9 @@
   ([db document-id]
    (let [pos (get-in db [:documents document-id :history :position])]
      (cond-> db
+       :always
+       (update-in [:documents document-id] dissoc :file-handle)
+
        pos
        (update-in [:documents document-id :history :states]
                   #(-> (select-keys % [pos])

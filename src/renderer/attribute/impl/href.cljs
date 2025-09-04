@@ -6,6 +6,7 @@
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.attribute.views :as attribute.views]
    [renderer.effects :as-alias effects]
+   [renderer.element.db :as element.db]
    [renderer.element.events :as-alias element.events]
    [renderer.events :as events]
    [renderer.notification.events :as-alias notification.events]
@@ -36,15 +37,13 @@
        :on-click #(rf/dispatch
                    [::events/file-open
                     {:options {:startIn "pictures"
-                               :types [{:accept {"image/png" [".png"]
-                                                 "image/jpeg" [".jpeg" ".jpg"]
-                                                 "image/bmp" [".fmp"]}}]}
+                               :types [{:accept element.db/image-mime-types}]}
                      :on-success [::success]}])}
       [views/icon "folder"]]]))
 
 (rf/reg-event-fx
  ::success
- (fn [{:keys [db]} [_ file]]
+ (fn [{:keys [db]} [_ _file-handle file]]
    {:db (tool.handlers/activate db :transform)
     ::effects/file-read-as
     [file :data-url {"load" {:on-fire [::element.events/set-attr :href]}

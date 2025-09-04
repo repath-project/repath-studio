@@ -52,7 +52,7 @@
   :save "حفظ"
   :save-as "حفظ باسم..."
   :download "تحميل"
-  :export-as-svg "تصدير كـ SVG"
+  :export-as "تصدير كـ"
   :close "إغلاق"
   :exit "خروج"
   :edit "تحرير"
