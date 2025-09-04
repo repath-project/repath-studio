@@ -218,3 +218,10 @@
   [document]
   (-> (apply dissoc document config/save-excluded-keys)
       (pr-str)))
+
+(m/=> remove-file-handle [:-> App App])
+(defn remove-file-handle
+  ([db]
+   (reduce remove-file-handle db (:document-tabs db)))
+  ([db document-id]
+   (update-in db [:documents document-id] dissoc :file-handle)))

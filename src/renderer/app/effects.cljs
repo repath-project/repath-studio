@@ -6,6 +6,7 @@
    [re-frame.core :as rf]
    [re-frame.db :as rf.db]
    [renderer.app.db :as app.db]
+   [renderer.document.handlers :as document.handlers]
    [renderer.history.handlers :as history.handlers]
    [renderer.notification.events :as-alias notification.events]))
 
@@ -61,7 +62,9 @@
 (rf/reg-fx
  ::persist
  (fn []
-   (let [db (history.handlers/drop-rest @rf.db/app-db)
+   (let [db (-> @rf.db/app-db
+                (history.handlers/drop-rest)
+                (document.handlers/remove-file-handle))
          persisted-db (select-keys db app.db/persisted-keys)
          writer (transit/writer :json)]
      (when-let [json (try (transit/write writer persisted-db)
