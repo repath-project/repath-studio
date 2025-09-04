@@ -83,7 +83,7 @@
         (-> canvas
             (.convertToBlob #js {:type mime-type
                                  :quality (or quality 1)})
-            (.then #(rf/dispatch (conj on-success % mime-type)))
+            (.then #(when on-success (rf/dispatch (conj on-success % mime-type))))
             (.catch #(when on-error (rf/dispatch (conj on-error %))))))))))
 
 (rf/reg-fx

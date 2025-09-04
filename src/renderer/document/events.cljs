@@ -23,6 +23,7 @@
 
 (def file-picker-options
   {:startIn config/default-path
+   :id "file-picker"
    :types [{:accept {config/mime-type [(str "." config/ext)]}}]})
 
 (rf/reg-event-db
@@ -87,7 +88,7 @@
          (dialog.handlers/create
           {:title (t [::save-changes "Do you want to save your changes?"])
            :close-button true
-           :content (dialog.views/save (get-in db [:documents id]))
+           :content [dialog.views/save (get-in db [:documents id])]
            :attrs {:onOpenAutoFocus #(.preventDefault %)}})))))
 
 (rf/reg-event-fx
@@ -153,12 +154,17 @@
             (history.handlers/finalize #(t [::create-doc-from-template
                                             "Create document from template"])))}))
 
+(defn string->edn
+  [s]
+  (try (cljs.reader/read-string s)
+       (catch :default _e nil)))
+
 (rf/reg-event-fx
  ::open
  (fn [{:keys [db]} [_ file-path]]
    (if (= (:platform db) "web")
      {::effects/file-open
-      {:options (assoc file-picker-options :id "open")
+      {:options (assoc file-picker-options :multiple true)
        :on-success [::file-read]
        :on-error [::notification.events/show-exception]}}
      {::effects/ipc-invoke
@@ -166,15 +172,16 @@
        :data file-path
        :on-success [::load-multiple]
        :on-error [::notification.events/show-exception]
-       :formatter #(mapv cljs.reader/read-string %)}})))
+       :formatter #(mapv string->edn %)}})))
 
 (rf/reg-event-fx
  ::file-read
- (fn [_ [_ file]]
+ (fn [_ [_ ^js/FileSystemFileHandle file-handle ^js/File file]]
    {::effects/file-read-as
-    [file :text {"load" {:formatter #(-> (cljs.reader/read-string %)
+    [file :text {"load" {:formatter #(-> (string->edn %)
                                          (assoc :title (.-name file)
-                                                :path (.-path file)))
+                                                :path (.-path file)
+                                                :file-handle file-handle))
                          :on-fire [::load]}
                  "error" {:on-fire [::notification.events/show-exception]}}]}))
 
@@ -215,20 +222,22 @@
 (rf/reg-event-fx
  ::save
  (fn [{:keys [db]} [_]]
-   (let [document (document.handlers/persisted-format db)]
+   (let [file-handle (:file-handle (document.handlers/active db))
+         persisted-document (document.handlers/persisted-format db)]
      (if (= (:platform db) "web")
        {::effects/file-save
-        {:data (document.handlers/->save-format document)
-         :options (assoc file-picker-options :id "save")
-         :formatter (partial document.handlers/saved-info document)
+        {:data (document.handlers/->save-format persisted-document)
+         :file-handle file-handle
+         :options file-picker-options
+         :formatter (partial document.handlers/saved-info persisted-document)
          :on-success [::saved]
          :on-error [::notification.events/show-exception]}}
        {::effects/ipc-invoke
         {:channel "save-document"
-         :data (pr-str document)
+         :data (pr-str persisted-document)
          :on-success [::saved]
          :on-error [::notification.events/show-exception]
-         :formatter cljs.reader/read-string}}))))
+         :formatter string->edn}}))))
 
 (rf/reg-event-fx
  ::download
@@ -240,20 +249,22 @@
 (rf/reg-event-fx
  ::save-and-close
  (fn [{:keys [db]} [_ id]]
-   (let [document (document.handlers/persisted-format db id)]
+   (let [file-handle (:file-handle (document.handlers/entity db id))
+         persisted-document (document.handlers/persisted-format db id)]
      (if (= (:platform db) "web")
        {::effects/file-save
-        {:data (document.handlers/->save-format document)
-         :options (assoc file-picker-options :id "save")
-         :formatter (partial document.handlers/saved-info document)
+        {:data (document.handlers/->save-format persisted-document)
+         :file-handle file-handle
+         :options file-picker-options
+         :formatter (partial document.handlers/saved-info persisted-document)
          :on-success [::mark-as-saved-and-close]
          :on-error [::notification.events/show-exception]}}
        {::effects/ipc-invoke
         {:channel "save-document"
-         :data (pr-str document)
+         :data (pr-str persisted-document)
          :on-success [::mark-as-saved-and-close]
          :on-error [::notification.events/show-exception]
-         :formatter cljs.reader/read-string}}))))
+         :formatter string->edn}}))))
 
 (rf/reg-event-fx
  ::save-as
@@ -262,7 +273,7 @@
      (if (= (:platform db) "web")
        {::effects/file-save
         {:data (document.handlers/->save-format document)
-         :options (assoc file-picker-options :id "save")
+         :options file-picker-options
          :formatter (partial document.handlers/saved-info document)
          :on-success [::saved]
          :on-error [::notification.events/show-exception]}}
@@ -271,7 +282,7 @@
          :data (pr-str document)
          :on-success [::saved]
          :on-error [::notification.events/show-exception]
-         :formatter cljs.reader/read-string}}))))
+         :formatter string->edn}}))))
 
 (rf/reg-event-db
  ::saved

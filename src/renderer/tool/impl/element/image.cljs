@@ -25,13 +25,14 @@
   [db _e]
   (tool.handlers/add-fx db [::effects/file-open
                             {:options {:startIn "pictures"
+                                       :id "image-picker"
                                        :types [{:accept element.db/image-mime-types}]}
                              :on-success [::success]
                              :on-error [::notification.events/show-exception]}]))
 
 (rf/reg-event-fx
  ::success
- (fn [{:keys [db]} [_ file]]
+ (fn [{:keys [db]} [_ _file-handle file]]
    {:db (tool.handlers/activate db :transform)
     ::element.effects/import-image {:file file
                                     :on-success [::element.effects/add]

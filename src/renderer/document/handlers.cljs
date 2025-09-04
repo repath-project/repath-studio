@@ -26,6 +26,11 @@
   ([db k & more]
    (apply conj (path db) k more)))
 
+(m/=> entity [:-> App uuid? Document])
+(defn entity
+  [db id]
+  (get-in db [:documents id]))
+
 (m/=> active [:-> App Document])
 (defn active
   [db]
@@ -44,7 +49,7 @@
   ([db]
    (persisted-format db (:active-document db)))
   ([db id]
-   (let [document (-> (get-in db [:documents id])
+   (let [document (-> (entity db id)
                       (assoc :version (:version db)))]
      (->> (:elements document)
           (keys)
@@ -90,12 +95,11 @@
         (assoc-in (path db :centered) true)
         (snap.handlers/update-viewport-tree))))
 
-(m/=> search-by-path [:-> App string? [:maybe uuid?]])
-(defn search-by-path
-  [db file-path]
+(m/=> search-by [:-> App keyword? any? [:maybe uuid?]])
+(defn search-by
+  [db k v]
   (->> (vals (:documents db))
-       (some #(when (and file-path
-                         (= (:path %) file-path))
+       (some #(when (= (get % k) v)
                 (:id %)))))
 
 (m/=> new-title [:-> App string?])
@@ -162,7 +166,8 @@
 (defn saved-info
   [document ^js/File file]
   {:id (:id document)
-   :title (.-name file)})
+   :title (.-name file)
+   :file-handle file})
 
 (m/=> update-saved-info [:-> App SaveInfo App])
 (defn update-saved-info
@@ -174,7 +179,8 @@
 (m/=> load [:-> App map? App])
 (defn load
   [db document]
-  (let [open-document-id (search-by-path db (:path document))
+  (let [document-path (:path document)
+        open-document-id (when document-path (search-by db :path document-path))
         document (merge document.db/default document)
         document (cond-> document
                    open-document-id
@@ -207,7 +213,7 @@
   [db]
   (filter (partial saved? db) (:document-tabs db)))
 
-(m/=> ->save-format [:-> Document string?])
+(m/=> ->save-format [:-> PersistedDocument string?])
 (defn ->save-format
   [document]
   (-> (apply dissoc document config/save-excluded-keys)

@@ -43,7 +43,7 @@
 
 (rf/reg-event-fx
  ::success
- (fn [{:keys [db]} [_ file]]
+ (fn [{:keys [db]} [_ _file-handle file]]
    {:db (tool.handlers/activate db :transform)
     ::effects/file-read-as
     [file :data-url {"load" {:on-fire [::element.events/set-attr :href]}
