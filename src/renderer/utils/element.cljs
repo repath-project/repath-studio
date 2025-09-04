@@ -92,7 +92,7 @@
     (not (supported-attr? el k))
     utils.attribute/->camel-case-memo))
 
-(m/=> normalize-attrs [:-> map? Element])
+(m/=> normalize-attrs [:-> map? map?])
 (defn normalize-attrs
   [el]
   (-> el

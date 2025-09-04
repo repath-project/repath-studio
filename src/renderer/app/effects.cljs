@@ -49,15 +49,12 @@
                                                                   formatter formatter)))))
          (.catch #(when on-error (rf/dispatch (conj on-error %))))))))
 
-(defn json->clj
-  [json]
-  (transit/read (transit/reader :json) json))
-
 (rf/reg-fx
  ::get-local-db
  (fn [{:keys [on-success on-error on-finally]}]
    (-> (localforage/getItem config/app-name)
-       (.then #(when on-success (rf/dispatch (conj on-success (json->clj %)))))
+       (.then #(when on-success (rf/dispatch (conj on-success (-> (transit/reader :json)
+                                                                  (transit/read %))))))
        (.catch #(when on-error (rf/dispatch (conj on-error %))))
        (.finally #(when on-finally (rf/dispatch on-finally))))))
 
