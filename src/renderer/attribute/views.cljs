@@ -239,6 +239,7 @@
      [title tag k]
      [:div.flex.flex-1
       [attribute.hierarchy/form-element dispatch-tag k v {:disabled locked?
+                                                          :default-value initial
                                                           :placeholder initial}]]]))
 
 (defn tag-info
