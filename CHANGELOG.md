@@ -1,5 +1,50 @@
 # Changelog
 
+## 0.4.9 (2025-9-4)
+
+**Added**
+
+- Export to rasterized image formats (png, jpeg, bmp, gif, webp) 
+- Add system language option
+- Add more languages (French, German, Spanish, Russian, Chinese, Portuguese, Japanese)
+- Top level language dropdown
+- Subsequent file saves support on web after loading/saving
+- Opening multiple files at once on web
+- Basic progressive web app (PWA) support
+- Shortcuts to tooltips
+- Logo to home
+- Decoding and crossorigin attribute dropdown
+  
+**Removed**
+
+- Help text on mobile
+
+**Changed**
+
+- Enhance on focus of attribute input
+- Handle escape on transform key down
+- Enhance color picker styles
+- Prevent multiselect with root
+- Enhance loading state
+- Enhance mobile dialog styles
+- Enable menubar scrolling
+- Always display fullscreen toggle
+- Enhance ruler pointer style
+- Enhance persist error handling
+- Move worker loading indicator on top of canvas
+
+**Fixed**
+
+- Document pan on application load
+- Various language direction issues
+- Attribute key normalization
+- History tree jittering on pan
+- Auto adjust size of canvas labels 
+- Codemirror theme mode, disabled state, multiple values
+- Adjusted point of polygon and polyline
+- Focus on text create
+- SVG pointer down event
+
 ## 0.4.8 (2025-7-3)
 
 **Added**
