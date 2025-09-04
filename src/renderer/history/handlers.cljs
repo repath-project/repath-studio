@@ -87,8 +87,8 @@
                   #(-> (select-keys % [pos])
                        (assoc-in [pos :index] 0)
                        (assoc-in [pos :children] [])
-                       ;; This state needs to be persisted, so we cannot pass a function
-                       ;; as an explanation, because it's not serializable.
+                       ;; REVIEW: This state needs to be persisted, so we cannot pass a
+                       ;; function as an explanation, because it's not serializable.
                        (assoc-in [pos :explanation] "Initial state")
                        (update pos dissoc :parent)))))))
 
