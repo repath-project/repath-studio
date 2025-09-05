@@ -17,7 +17,6 @@
 
 Repath Studio is a cross platform vector graphics editor, that combines procedural tooling with traditional design workflows. It includes an interactive shell, which allows evaluating code to generate shapes, or even extend the editor on the fly. Supporting multiple programming languages and enriching the existing API is planned. The tool relies heavily on the [SVG](https://developer.mozilla.org/en-US/docs/Web/SVG) specification, and aims to educate users about it. Creating and editing [SMIL](https://developer.mozilla.org/en-US/docs/Web/SVG/SVG_animation_with_SMIL) animations - an SVG extension – is an important aspect of the project, that is yet to be fully implemented. An advanced undo/redo mechanism is used to maintain a full history tree of actions in memory, so users will never lose their redo stack.
 
-
 ## Funding
 
 This project is funded through [NGI0 Commons Fund](https://nlnet.nl/commonsfund), a fund established by [NLnet](https://nlnet.nl) with financial support from the European Commission's [Next Generation Internet](https://ngi.eu) program. Learn more at the [NLnet project page](https://nlnet.nl/project/RepathStudio).
@@ -26,7 +25,7 @@ This project is funded through [NGI0 Commons Fund](https://nlnet.nl/commonsfund)
     <div>
         <a href="https://nlnet.nl"><img src="https://nlnet.nl/logo/banner.svg" alt="Logo NLnet: abstract logo of four people seen from above" width="200px"></a>
         &nbsp;&nbsp;
-        <a href="https://nlnet.nl/core"><img src="https://nlnet.nl/image/logos/NGI0Core_tag.svg" alt="Logo NGI Zero: letterlogo shaped like a tag" width="250px"></a>
+        <a href="https://nlnet.nl/core"><img src="https://nlnet.nl/image/logos/NGI0Core_tag.svg" alt="Logo NGI Zero: letter-logo shaped like a tag" width="250px"></a>
     </div>
 </section>
 
@@ -63,6 +62,7 @@ We are currently trying to optimize for hundreds of elements per document. We ar
 ## How to build it locally
 
 ### System Requirements
+
 - [node.js](https://nodejs.org/)
 - Java SDK (8+) [OpenJDK](https://openjdk.org/) or [Oracle](https://www.oracle.com/java/technologies/downloads/)
 - [Clojure](https://clojure.org/guides/install_clojure)
@@ -70,18 +70,25 @@ We are currently trying to optimize for hundreds of elements per document. We ar
 ### Shell instructions
 
 Clone the project.
-```
+
+```bash
 git clone https://github.com/repath-project/repath-studio.git
 ```
+
 Go into the directory.
-```
+
+```bash
 cd repath-studio
 ```
+
 Install the dependencies, build the app and watch the project files.
-```
+
+```bash
 npm install && npm run dev
 ```
+
 Run electron on a different terminal.
-```
+
+```bash
 npm run electron
 ```

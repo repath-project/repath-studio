@@ -10,16 +10,17 @@ This module was originally inspired by [day8/re-frame-undo](https://github.com/d
 - It uses an interceptor to store the changes of re-frame events which is limited in various ways.
 
 See below for implementation details
-https://github.com/day8/re-frame-undo/blob/master/src/day8/re_frame/undo.cljs
+<https://github.com/day8/re-frame-undo/blob/master/src/day8/re_frame/undo.cljs>
 
 ## What we currently do
 
 - Each document has a dedicated `:history` map.
 - We can also cancel an operation by swapping the current state with the last history point (see `renderer.history.handlers/swap`).
 - Our state is normalized to easily access specific points in history. We can then look for a specific state on our tree by id and then retrieve its data with a simple `get-in`.
-- All changes under [:documents :document-key :elements] should be considered undoable and part of the file history.
+- All changes under [:documents :document-key :elements] should be part of the file history.
 
 The end result on our db looks like this
+
 ```clojure
 :history {:position :6
           :states {:907fdbc9-d2ad-4697-bea3-9aa5e2c46054 {...}
