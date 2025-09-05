@@ -69,7 +69,7 @@
   "devDependencies": {
     "@fontsource/noto-sans": "5.2.7",
     "@fontsource/noto-sans-mono": "5.2.7",
-    "@mdn/browser-compat-data": "7.1.0",
+    "@mdn/browser-compat-data": "7.1.2",
     "@radix-ui/react-context-menu": "2.2.7",
     "@radix-ui/react-dialog": "1.1.15",
     "@radix-ui/react-direction": "1.1.1",
@@ -83,7 +83,7 @@
     "@radix-ui/react-switch": "1.2.6",
     "@radix-ui/react-tooltip": "1.2.8",
     "@repath-project/react-color": "2.19.4",
-    "@tailwindcss/cli": "4.1.12",
+    "@tailwindcss/cli": "4.1.13",
     "@xzdarcy/react-timeline-editor": "0.1.9",
     "acorn": "8.15.0",
     "assert": "2.1.0",
@@ -93,7 +93,7 @@
     "codemirror": "5.65.15",
     "constants": "0.0.2",
     "create-react-class": "15.7.0",
-    "electron": "37.3.1",
+    "electron": "38.0.0",
     "electron-builder": "26.0.12",
     "events": "3.3.0",
     "graceful-fs": "4.2.11",
@@ -115,7 +115,7 @@
     "path-browserify": "1.0.1",
     "perfect-freehand": "1.2.2",
     "process": "0.11.10",
-    "puppeteer": "24.17.0",
+    "puppeteer": "24.19.0",
     "react": "19.1.1",
     "react-d3-tree": "3.6.6",
     "react-dom": "19.1.1",
@@ -132,7 +132,7 @@
     "svg-path-bbox": "2.1.0",
     "svgpath": "2.6.0",
     "tailwind-merge": "3.3.1",
-    "tailwindcss": "4.1.12"
+    "tailwindcss": "4.1.13"
   },
   "dependencies": {
     "electron-log": "5.4.3",
