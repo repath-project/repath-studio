@@ -14,7 +14,6 @@
   fill: var(--bg-primary);
 }
 
-
 @utility bg-error {
   background: var(--bg-error);
 }
