@@ -5,6 +5,7 @@
    [renderer.effects :as-alias effects]
    [renderer.element.db :as element.db]
    [renderer.element.effects :as-alias element.effects]
+   [renderer.element.events :as element.events]
    [renderer.notification.events :as-alias notification.events]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
@@ -35,6 +36,7 @@
  (fn [{:keys [db]} [_ _file-handle file]]
    {:db (tool.handlers/activate db :transform)
     ::element.effects/import-image {:file file
-                                    :on-success [::element.effects/add]
+                                    :on-success [::element.events/add]
+                                    :on-error [::notification.events/show-exception]
                                     :position (or (:point (:nearest-neighbor db))
-                                                  (:adjusted-pointer-pos db))}}))
+                                                  (:adjusted-pointer-offset db))}}))
