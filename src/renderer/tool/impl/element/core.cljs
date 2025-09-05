@@ -33,4 +33,4 @@
 
 (defmethod tool.hierarchy/snapping-elements ::tool.hierarchy/element
   [db]
-  (filter :visible (vals (element.handlers/entities db))))
+  (element.handlers/visible db))

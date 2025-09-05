@@ -70,6 +70,15 @@
   ([db]
    (into [] (selected) (entities db))))
 
+(m/=> visible [:function
+               [:-> fn?]
+               [:-> App [:sequential Element]]])
+(defn visible
+  ([]
+   (comp (map val) (filter :visible)))
+  ([db]
+   (into [] (visible) (entities db))))
+
 (m/=> ratio-locked? [:-> App boolean?])
 (defn ratio-locked?
   [db]

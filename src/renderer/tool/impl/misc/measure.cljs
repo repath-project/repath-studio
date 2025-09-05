@@ -91,4 +91,4 @@
 
 (defmethod tool.hierarchy/snapping-elements :measure
   [db]
-  (filter :visible (vals (element.handlers/entities db))))
+  (element.handlers/visible db))

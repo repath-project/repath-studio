@@ -93,8 +93,7 @@
   [db intersecting? f]
   (transduce
    (comp
-    (map val)
-    (filter :visible)
+    (element.handlers/visible)
     (filter #(hovered? % intersecting?))
     (map :id))
    (fn [db id]
