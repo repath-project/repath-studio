@@ -17,7 +17,7 @@
         font-size (utils.length/unit->px font-size)]
     (assoc-in el [:attrs attribute] (str (apply f font-size more)))))
 
-(defonce styles
+(def styles
   ["normal"
    "italic"
    "oblique"])

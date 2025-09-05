@@ -6,10 +6,10 @@
    [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.unit :as utils.unit]))
 
-(defonce ppi 96)
+(def ppi 96)
 
 ;; TODO: Find an agnostic way to handle percentages (we need to pass a base).
-(defonce units
+(def units
   {"px" 1
    "ch" 8
    "ex" 7.15625

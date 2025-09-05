@@ -11,7 +11,7 @@
    [renderer.utils.hiccup :refer [Hiccup]]
    [renderer.utils.math :as utils.math :refer [Vec2]]))
 
-(defonce dash-size 5)
+(def dash-size 5)
 
 (m/=> dot [:-> Vec2 Hiccup any?])
 (defn dot

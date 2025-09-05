@@ -10,14 +10,14 @@
    [renderer.element.hierarchy :as element.hierarchy]))
 
 ;; https://github.com/mdn/data/blob/main/docs/updating_css_json.md
-(defonce mdn-data (js->clj mdn :keywordize-keys true))
+(def mdn-data (js->clj mdn :keywordize-keys true))
 
 ;; https://github.com/mdn/browser-compat-data
-(defonce svg-data (js->clj (.-svg bcd) :keywordize-keys true))
+(def svg-data (js->clj (.-svg bcd) :keywordize-keys true))
 
-(defonce core  #{:id :class :style})
+(def core #{:id :class :style})
 
-(defonce presentation
+(def presentation
   #{:text-anchor :text-rendering :font-style :mask :image-rendering
     :stroke-dasharray :fill-rule :font-stretch :text-overflow :vector-effect
     :stroke :stop-color :clip :glyph-orientation-horizontal :solid-opacity
@@ -33,7 +33,7 @@
     :enable-background :direction :fill-opacity :solid-color :font-family
     :marker-end :paint-order})
 
-(defonce order
+(def order
   [:href
    :d
    :points
@@ -62,7 +62,7 @@
    :style])
 
 ;; https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-weight#common_weight_name_mapping
-(defonce weight-name-mapping
+(def weight-name-mapping
   {"100" ["Thin" "Hairline"]
    "200" ["ExtraLight" "UltraLight"]
    "300" ["Light"]
@@ -73,7 +73,7 @@
    "800" ["ExtraBold" "UltraBold"]
    "900" ["Black" "Heavy"]})
 
-(defonce camelcased
+(def camelcased
   ["accentHeight"
    "alignmentBaseline"
    "allowReorder"
@@ -221,7 +221,7 @@
    "yChannelSelector"
    "zoomAndPan"])
 
-(defonce lowercased (mapv string/lower-case camelcased))
+(def lowercased (mapv string/lower-case camelcased))
 
 (m/=> compatibility [:function
                      [:-> Tag [:maybe map?]]
@@ -252,7 +252,7 @@
 
 (def property-data-memo (memoize property-data))
 
-(defonce whitespace-regex #"\s*[\s,]\s*")
+(def whitespace-regex #"\s*[\s,]\s*")
 
 (m/=> str->seq [:-> string? vector?])
 (defn str->seq

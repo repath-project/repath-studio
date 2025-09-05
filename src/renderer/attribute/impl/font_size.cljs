@@ -11,7 +11,7 @@
   []
   (t [::description
       "The font-size attribute refers to the size of the font from baseline to
-       baseline when multiple lines of text are set 
+       baseline when multiple lines of text are set
        solid in a multiline layout environment."]))
 
 (defmethod attribute.hierarchy/update-attr :font-size
@@ -20,7 +20,7 @@
         font-size (utils.length/unit->px font-size)]
     (assoc-in el [:attrs attribute] (str (apply f font-size more)))))
 
-(defonce sizes
+(def sizes
   ["xx-small"
    "x-small"
    "small"

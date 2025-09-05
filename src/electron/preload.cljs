@@ -3,7 +3,7 @@
   (:require
    ["electron" :refer [contextBridge ipcRenderer]]))
 
-(defonce api
+(def api
   #js {;; Strip event as it includes `sender`.
        ;; https://www.electronjs.org/docs/latest/api/ipc-renderer#ipcrendereronchannel-listener
        :on (fn [channel f] (.on ipcRenderer channel (fn [_event args] (f args))))

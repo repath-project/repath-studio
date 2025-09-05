@@ -3,7 +3,7 @@
    [clojure.string :as string]
    [malli.core :as m]))
 
-(defonce unit-regex #"[\d.\-\+]*\s*(.*)")
+(def unit-regex #"[\d.\-\+]*\s*(.*)")
 
 (m/=> match [:-> string? string?])
 (defn match

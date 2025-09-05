@@ -35,7 +35,7 @@
            :id
            :class]})
 
-(defonce option-keys
+(def option-keys
   [:size :thinning :smoothing :streamline])
 
 (derive :thinning ::attribute.impl.range/range)
