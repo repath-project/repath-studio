@@ -23,12 +23,22 @@
   [db]
   (tool.handlers/set-cursor db "crosshair"))
 
-(defmethod tool.hierarchy/on-pointer-up :fill
-  [db e]
+(defn fill
+  [db]
   (let [color (document.handlers/attr db :fill)
-        el-id (-> e :element :id)]
-    (-> (element.handlers/set-attr db el-id :fill color)
+        el-id (-> db :clicked-element :id)]
+    (-> db
+        (dissoc :clicked-element)
+        (element.handlers/set-attr el-id :fill color)
         (history.handlers/finalize #(t [::fill "Fill"])))))
+
+(defmethod tool.hierarchy/on-pointer-up :fill
+  [db _e]
+  (fill db))
+
+(defmethod tool.hierarchy/on-drag-end :fill
+  [db _e]
+  (fill db))
 
 (defmethod tool.hierarchy/on-pointer-move :fill
   [db e]
@@ -39,5 +49,7 @@
       (element.handlers/set-attr (:id el) :fill color))))
 
 (defmethod tool.hierarchy/on-pointer-down :fill
-  [db _e]
-  (history.handlers/reset-state db))
+  [db e]
+  (-> db
+      (assoc :clicked-element (-> e :element))
+      (history.handlers/reset-state)))
