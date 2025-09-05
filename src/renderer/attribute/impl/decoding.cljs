@@ -28,4 +28,4 @@
                           :label (t [::async "Asynchronously"])}
                          {:key :auto
                           :value "auto"
-                          :label (t [::async "Auto"])}]})])
+                          :label (t [::auto "Auto"])}]})])
