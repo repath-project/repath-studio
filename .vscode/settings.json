@@ -1,0 +1,9 @@
+{
+    "editor.rulers": [
+        90
+    ],
+    "files.associations": {
+        "*.css": "tailwindcss"
+    },
+    "editor.formatOnSave": true
+}
