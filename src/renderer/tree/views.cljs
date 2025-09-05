@@ -218,6 +218,6 @@
    [:> ContextMenu/Portal
     (into [:> ContextMenu/Content
            {:class "menu-content context-menu-content"
-            :on-close-auto-focus #(.preventDefault %)}]
+            :on-escape-key-down #(.stopPropagation %)}]
           (map (fn [menu-item] [views/context-menu-item menu-item])
                (element.views/context-menu)))]])

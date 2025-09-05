@@ -124,7 +124,8 @@
        [:> ContextMenu/Portal
         (into
          [:> ContextMenu/Content
-          {:class "menu-content context-menu-content"}]
+          {:class "menu-content context-menu-content"
+           :on-escape-key-down #(.stopPropagation %)}]
          (map (fn [item]
                 [views/context-menu-item item])
               (context-menu id)))]])))
