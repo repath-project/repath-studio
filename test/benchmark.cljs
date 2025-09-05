@@ -22,7 +22,7 @@
   (rf.test/run-test-sync
    (rf/dispatch [::app.events/initialize])
 
-   ;; Istrumentation and db validation affects performance, so we disable it.
+   ;; Instrumentation and db validation affects performance, so we disable it.
    (m.instrument/unstrument!)
    (rf/clear-global-interceptor ::app.events/schema-validator)
 
