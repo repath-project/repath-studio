@@ -693,7 +693,8 @@
           (assoc-in (path db id) new-el)
 
           (:parent new-el)
-          (update-prop (:parent new-el) :children #(vec (conj % id)))
+          (-> (update-prop (:parent new-el) :children #(vec (conj % id)))
+              (expand (:parent new-el)))
 
           (and (not is-translated) parent-el)
           (translate [(- min-x) (- min-y)])
