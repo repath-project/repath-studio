@@ -173,7 +173,7 @@
 (defn create-state
   [db id explanation]
   (let [new-state {:explanation explanation
-                   :elements (element.handlers/entities db)
+                   :elements (get-in db (element.handlers/path db))
                    :timestamp (.now js/Date) ; REVIEW: Sideffect
                    :index (state-count db)
                    :id id
@@ -206,7 +206,7 @@
 (defn finalize
   "Pushes changes to history."
   [db explanation]
-  (let [elements (element.handlers/entities db)]
+  (let [elements (get-in db (element.handlers/path db))]
     (cond
       (= elements (-> db history state :elements))
       db

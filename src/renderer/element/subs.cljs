@@ -29,6 +29,11 @@
    (get elements id)))
 
 (rf/reg-sub
+ ::entities
+ :<- [::document.subs/elements]
+ vals)
+
+(rf/reg-sub
  ::xml
  :<- [::root-children]
  (fn [root-children _]
@@ -43,9 +48,9 @@
 
 (rf/reg-sub
  ::selected
- :<- [::document.subs/elements]
- (fn [elements _]
-   (filter :selected (vals elements))))
+ :<- [::entities]
+ (fn [entities _]
+   (filter :selected entities)))
 
 (rf/reg-sub
  ::hovered
@@ -69,7 +74,7 @@
  ::selected-locked?
  :<- [::selected]
  (fn [selected-elements _]
-   (not-any? #(not (:locked %)) selected-elements)))
+   (every? :locked selected-elements)))
 
 (rf/reg-sub
  ::multiple-selected?

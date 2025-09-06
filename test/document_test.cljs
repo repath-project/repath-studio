@@ -7,7 +7,8 @@
    [renderer.app.events :as-alias app.events]
    [renderer.document.db :as document.db]
    [renderer.document.events :as-alias document.events]
-   [renderer.document.subs :as-alias document.subs]))
+   [renderer.document.subs :as-alias document.subs]
+   [renderer.element.subs :as element.subs]))
 
 (deftest document
   (rf.test/run-test-sync
@@ -56,8 +57,7 @@
 
        (rf/dispatch [::document.events/new-from-template [800 600]])
        (is (= "• Untitled-2 - Repath Studio" @title-bar))
-       (is (= "800" (->>  @(rf/subscribe [::document.subs/elements])
-                          (vals)
+       (is (= "800" (->>  @(rf/subscribe [::element.subs/entities])
                           (filter #(= (:tag %) :svg))
                           (first)
                           :attrs

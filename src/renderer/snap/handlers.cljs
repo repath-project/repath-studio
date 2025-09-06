@@ -82,14 +82,14 @@
 (m/=> insert-to-tree [:-> App [:maybe [:set uuid?]] App])
 (defn insert-to-tree
   [db element-ids]
-  (let [elements (vals (element.handlers/entities db element-ids))
+  (let [elements (element.handlers/entities db (vec element-ids))
         points (element.handlers/snapping-points db elements)]
     (update-tree db kdtree/insert points)))
 
 (m/=> delete-from-tree [:-> App [:maybe [:set uuid?]] App])
 (defn delete-from-tree
   [db element-ids]
-  (let [elements (vals (element.handlers/entities db element-ids))
+  (let [elements (element.handlers/entities db (vec element-ids))
         points (element.handlers/snapping-points db elements)]
     (update-tree db kdtree/delete points)))
 

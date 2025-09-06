@@ -2,15 +2,14 @@
   (:require
    [clojure.string :as string]
    [re-frame.core :as rf]
-   [renderer.document.subs :as-alias document.subs]
-   [renderer.element.hierarchy :as element.hierarchy]))
+   [renderer.element.hierarchy :as element.hierarchy]
+   [renderer.element.subs :as-alias element.subs]))
 
 (rf/reg-sub
  ::animations
- :<- [::document.subs/elements]
+ :<- [::element.subs/entities]
  (fn [elements]
-   (->> (vals elements)
-        (filter #(contains? (descendants ::element.hierarchy/animation) (:tag %))))))
+   (filter #(contains? (descendants ::element.hierarchy/animation) (:tag %)) elements)))
 
 (defn effect-id
   [el]

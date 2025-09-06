@@ -38,13 +38,13 @@
    (apply conj (path db) id prop more)))
 
 (m/=> entities [:function
-                [:-> App [:maybe [:map-of uuid? Element]]]
-                [:-> App [:maybe [:set uuid?]] [:maybe [:map-of uuid? Element]]]])
+                [:-> App [:maybe [:sequential Element]]]
+                [:-> App [:maybe [:vector uuid?]] [:maybe [:sequential Element]]]])
 (defn entities
   ([db]
-   (get-in db (path db)))
+   (vals (get-in db (path db))))
   ([db ids]
-   (select-keys (entities db) (vec ids))))
+   (vals (select-keys (get-in db (path db)) ids))))
 
 (m/=> entity [:-> App [:maybe uuid?] [:maybe Element]])
 (defn entity
@@ -54,7 +54,7 @@
 (m/=> root [:-> App Element])
 (defn root
   [db]
-  (some #(when (utils.element/root? %) %) (vals (entities db))))
+  (some #(when (utils.element/root? %) %) (entities db)))
 
 (m/=> locked? [:-> App uuid? boolean?])
 (defn locked?
@@ -66,7 +66,7 @@
                 [:-> App [:sequential Element]]])
 (defn selected
   ([]
-   (comp (map val) (filter :selected)))
+   (filter :selected))
   ([db]
    (into [] (selected) (entities db))))
 
@@ -75,7 +75,7 @@
                [:-> App [:sequential Element]]])
 (defn visible
   ([]
-   (comp (map val) (filter :visible)))
+   (filter :visible))
   ([db]
    (into [] (visible) (entities db))))
 
@@ -195,10 +195,10 @@
   ([db id]
    (:children (parent db id))))
 
-(m/=> root-children [:-> App [:sequential Element]])
+(m/=> root-children [:-> App [:maybe [:sequential Element]]])
 (defn root-children
   [db]
-  (into [] (map (entities db)) (:children (root db))))
+  (entities db (:children (root db))))
 
 (m/=> root-svgs [:-> App [:sequential Element]])
 (defn root-svgs
@@ -268,22 +268,20 @@
 (m/=> non-selected-ids [:-> App [:maybe [:set uuid?]]])
 (defn non-selected-ids
   [db]
-  (set/difference (-> db entities keys set) (selected-with-descendant-ids db)))
+  (set/difference (->> (path db) (get-in db) keys (into #{}))
+                  (selected-with-descendant-ids db)))
 
 (m/=> non-selected-visible [:-> App [:sequential Element]])
 (defn non-selected-visible
   [db]
-  (sequence (comp (filter (comp (non-selected-ids db) key))
-                  (map val)
-                  (filter :visible))
+  (sequence (comp (filter (complement :selected))
+                  (visible))
             (entities db)))
 
 (m/=> top-selected-ancestors [:-> App [:sequential Element]])
 (defn top-selected-ancestors
   [db]
-  (->> (top-ancestor-ids db)
-       (entities db)
-       (vals)))
+  (entities db (vec (top-ancestor-ids db))))
 
 (m/=> update-prop [:-> App uuid? ifn? [:* any?] App])
 (defn update-prop
@@ -375,7 +373,7 @@
 (m/=> collapse-all [:-> App App])
 (defn collapse-all
   [db]
-  (transduce (map key) (completing collapse) db (entities db)))
+  (transduce (map :id) (completing collapse) db (entities db)))
 
 (m/=> expand [:-> App uuid? App])
 (defn expand
@@ -433,8 +431,7 @@
 (defn select-same-tags
   [db]
   (let [tags (selected-tags db)]
-    (transduce (comp (map val)
-                     (filter #(contains? tags (:tag %)))
+    (transduce (comp (filter #(contains? tags (:tag %)))
                      (map :id))
                (completing select)
                db
@@ -472,7 +469,6 @@
 (defn invert-selection
   [db]
   (->> (entities db)
-       (vals)
        (reduce (fn [db el]
                  (cond-> db
                    (not (contains? #{:svg :canvas} (:tag el)))
@@ -677,8 +673,7 @@
   (let [id (random-uuid) ; REVIEW: Hard to use a coeffect because of recursion.
         new-el (->> (assoc (utils.element/normalize el) :id id)
                     (assoc-parent-id db))
-        child-els (-> (entities db (set (:children el)))
-                      (vals)
+        child-els (-> (entities db (:children el))
                       (concat (:content el)))
         parent-el (entity db (:parent new-el))
         [min-x min-y] (when parent-el (element.hierarchy/bbox parent-el))
