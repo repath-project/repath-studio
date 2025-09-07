@@ -7,7 +7,7 @@
 
 (defmethod attribute.hierarchy/description [:default :stroke-linejoin]
   []
-  (t [::description 
+  (t [::description
       "The stroke-linejoin attribute is a presentation attribute defining the shape
        to be used at the corners of paths when they are stroked."]))
 
