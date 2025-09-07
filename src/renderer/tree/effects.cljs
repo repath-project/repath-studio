@@ -29,7 +29,7 @@
  (fn [[last-focused-id id]]
    (let [list-elements (get-list-elements!)
          clicked-el (query-by-id! id)
-         last-focus-el (first (query-by-id! last-focused-id))
+         last-focus-el (query-by-id! last-focused-id)
          clicked-index (.indexOf list-elements clicked-el)
          focused-index (.indexOf list-elements last-focus-el)]
      (when-not (neg? focused-index)
