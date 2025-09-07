@@ -24,14 +24,14 @@
          :font-weight font-weight
          :bbox bbox}))))
 
-(defn font-file->path-data!
-  [file content x y font-size]
-  (-> (.blob file)
-      (.then (fn [blob]
+(defn font-data->path-data!
+  [^js/FontData font-data text x y font-size]
+  (-> (.blob font-data)
+      (.then (fn [^js/Blob blob]
                (-> (.arrayBuffer blob)
-                   (.then (fn [buffer]
-                            (let [font (opentype/parse buffer)
-                                  path (.getPath font content x y font-size)]
+                   (.then (fn [^js/ArrayBuffer buffer]
+                            (let [^js/Font font (opentype/parse buffer)
+                                  ^js/Path path (.getPath font text x y font-size)]
                               (.toPathData path)))))))))
 
 (defn includes-prop?

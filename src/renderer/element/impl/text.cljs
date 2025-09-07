@@ -135,9 +135,9 @@
                                                           font-family
                                                           font-style
                                                           font-weight)]
-                     (utils.font/font-file->path-data! font content x y font-size)))))
+                     (utils.font/font-data->path-data! font content x y font-size)))))
       (-> (js/fetch (utils.font/default-font-path font-style font-weight))
-          (.then #(utils.font/font-file->path-data! % content x y font-size))))))
+          (.then #(utils.font/font-data->path-data! % content x y font-size))))))
 
 (defmethod element.hierarchy/bbox :text
   [el]
