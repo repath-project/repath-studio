@@ -15,6 +15,7 @@
    [renderer.events :as-alias events]
    [renderer.frame.events :as-alias frame.events]
    [renderer.tool.subs :as-alias tool.subs]
+   [renderer.tree.effects :as tree.effects]
    [renderer.tree.events :as-alias tree.events]
    [renderer.utils.element :as utils.element]
    [renderer.utils.i18n :refer [t]]
@@ -35,7 +36,9 @@
 
 (defn set-item-label!
   [e id]
-  (rf/dispatch-sync [::element.events/set-prop id :label (.. e -target -value)]))
+  (rf/dispatch-sync [::element.events/set-prop id :label (.. e -target -value)])
+  (when-not (.-relatedTarget e)
+    (.focus (tree.effects/query-by-id! id))))
 
 (defn item-label
   [el]
@@ -51,6 +54,8 @@
           :default-value label
           :placeholder tag-label
           :auto-focus true
+          :draggable true ; Prevents drag of parent.
+          :on-drag-start #(.preventDefault %)
           :on-focus #(.. % -target select)
           :on-key-down #(event.impl.keyboard/input-key-down-handler! % label
                                                                      set-item-label! id)
