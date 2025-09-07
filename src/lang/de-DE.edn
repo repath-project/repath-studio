@@ -531,7 +531,7 @@
  {:description "Das decoding-Attribut, gültig für <image> Elemente, gibt dem Browser
                 einen Hinweis darauf, ob er die Bilddecodierung zusammen mit dem Rendern
                 anderer Inhalte in einem einzigen Präsentationsschritt durchführen soll,
-                der 'korrekter' aussieht (sync), oder andere Inhalte zuerst rendern und
+                der \"korrekter\" aussieht (sync), oder andere Inhalte zuerst rendern und
                 präsentieren und dann das Bild decodieren und später präsentieren soll
                 (async). In der Praxis bedeutet async, dass der nächste Paint nicht auf
                 die Decodierung des Bildes wartet."

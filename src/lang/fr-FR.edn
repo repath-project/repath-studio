@@ -523,7 +523,7 @@
  {:description "L'attribut decoding, valide sur les éléments <image>, fournit un indice
                 au navigateur pour savoir s'il doit effectuer le décodage d'image avec
                 le rendu d'autre contenu en une seule étape de présentation qui semble
-                plus 'correcte' (sync), ou rendre et présenter l'autre contenu d'abord
+                plus \"correcte\" (sync), ou rendre et présenter l'autre contenu d'abord
                 puis décoder l'image et la présenter plus tard (async). En pratique,
                 async signifie que le prochain paint n'attend pas que l'image se décode."
   :sync "Synchrone"

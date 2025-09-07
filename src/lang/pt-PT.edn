@@ -520,7 +520,7 @@
  {:description "O atributo decoding, válido em elementos <image>, fornece uma dica ao
                 navegador sobre se deve realizar a descodificação de imagem juntamente
                 com a renderização de outro conteúdo num único passo de apresentação
-                que parece mais 'correto' (sync), ou renderizar e apresentar o outro
+                que parece mais \"correto\" (sync), ou renderizar e apresentar o outro
                 conteúdo primeiro e depois descodificar a imagem e apresentá-la mais
                 tarde (async). Na prática, async significa que o próximo paint não
                 espera que a imagem seja descodificada."
