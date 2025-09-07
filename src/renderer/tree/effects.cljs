@@ -5,7 +5,7 @@
 
 (defn query-by-id!
   [id]
-  (.querySelectorAll js/document (str "#tree-sidebar [data-id='" id "']")))
+  (.querySelector js/document (str "#tree-sidebar [data-id='" id "']")))
 
 (defn get-list-elements!
   []
@@ -15,7 +15,7 @@
  ::focus-next
  (fn [[id direction]]
    (let [list-elements (get-list-elements!)
-         current-el (first (query-by-id! id))
+         current-el (query-by-id! id)
          i (.indexOf list-elements current-el)
          max-i (dec (count list-elements))
          updated-i (case direction
@@ -28,7 +28,7 @@
  ::select-range
  (fn [[last-focused-id id]]
    (let [list-elements (get-list-elements!)
-         clicked-el (first (query-by-id! id))
+         clicked-el (query-by-id! id)
          last-focus-el (first (query-by-id! last-focused-id))
          clicked-index (.indexOf list-elements clicked-el)
          focused-index (.indexOf list-elements last-focus-el)]
