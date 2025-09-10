@@ -5,9 +5,13 @@ The main SVG canvas is rendered inside the iFrame using
 [react-frame-component](https://github.com/ryanseddon/react-frame-component).
 
 ## Why would you render to an iFrame?
+
 ### Style encapsulation
+
 We won't have to worry about style inheritance.
+
 ### Layout boundaries 
+
 Canvas elements will not affect the parent window.
 
 ## Caveats
