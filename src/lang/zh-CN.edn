@@ -115,16 +115,6 @@
   :zoom-fit-selected "适合选择"
   :zoom-fill-selected "填充选择"
   :accessibility-filter "辅助功能过滤器"
-  :blur "模糊"
-  :blur-x2 "模糊-x2"
-  :protanopia "红色盲"
-  :protanomaly "红色弱"
-  :deuteranopia "绿色盲"
-  :deuteranomaly "绿色弱"
-  :tritanopia "蓝色盲"
-  :tritanomaly "蓝色弱"
-  :achromatopsia "全色盲"
-  :achromatomaly "全色弱"
   :language "语言"
   :grid "网格"
   :rulers "标尺"
@@ -146,6 +136,18 @@
   :changelog "更改日志"
   :submit-an-issue "报告问题"
   :about "关于"}
+
+ :renderer.menubar.filters
+ {:blur "模糊"
+  :blur-x2 "模糊-x2"
+  :protanopia "红色盲"
+  :protanomaly "红色弱"
+  :deuteranopia "绿色盲"
+  :deuteranomaly "绿色弱"
+  :tritanopia "蓝色盲"
+  :tritanomaly "蓝色弱"
+  :achromatopsia "全色盲"
+  :achromatomaly "全色弱"}
 
  :renderer.element.events
  {:modify-selection "修改选择"

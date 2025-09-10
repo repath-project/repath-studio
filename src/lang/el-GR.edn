@@ -116,16 +116,6 @@
   :zoom-fit-selected "Προσαρμογή επιλογής"
   :zoom-fill-selected "Γέμισμα επιλογής"
   :accessibility-filter "Φίλτρο προσβασιμότητας"
-  :blur "θόλωση όρασης"
-  :blur-x2 "έντονη θόλωση όρασης"
-  :protanopia "πρωτανωπία"
-  :protanomaly "πρωτανωμαλία"
-  :deuteranopia "δευτερανωπία"
-  :deuteranomaly "δευτερανωμαλία"
-  :tritanopia "τριτανωπία"
-  :tritanomaly "τριτανωμαλία"
-  :achromatopsia "αχρωματοψία"
-  :achromatomaly "αχρωματομαλία"
   :language "Γλώσσα"
   :grid "Πλέγμα"
   :rulers "Χάρακες"
@@ -147,6 +137,18 @@
   :changelog "Αρχείο αλλαγών"
   :submit-an-issue "Υποβολή προβλήματος"
   :about "Σχετικά"}
+
+ :renderer.menubar.filters
+ {:blur "θόλωση όρασης"
+  :blur-x2 "έντονη θόλωση όρασης"
+  :protanopia "πρωτανωπία"
+  :protanomaly "πρωτανωμαλία"
+  :deuteranopia "δευτερανωπία"
+  :deuteranomaly "δευτερανωμαλία"
+  :tritanopia "τριτανωπία"
+  :tritanomaly "τριτανωμαλία"
+  :achromatopsia "αχρωματοψία"
+  :achromatomaly "αχρωματομαλία"}
 
  :renderer.element.events
  {:modify-selection "Τροποποίηση επιλογής"

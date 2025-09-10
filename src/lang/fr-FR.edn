@@ -116,16 +116,6 @@
   :zoom-fit-selected "Ajuster à la sélection"
   :zoom-fill-selected "Remplir avec la sélection"
   :accessibility-filter "Filtre d'accessibilité"
-  :blur "flou"
-  :blur-x2 "flou-x2"
-  :protanopia "protanopie"
-  :protanomaly "protanomalie"
-  :deuteranopia "deutéranopie"
-  :deuteranomaly "deutéranomalie"
-  :tritanopia "tritanopie"
-  :tritanomaly "tritanomalie"
-  :achromatopsia "achromatopsie"
-  :achromatomaly "achromatoma­lie"
   :language "Langue"
   :grid "Grille"
   :rulers "Règles"
@@ -147,6 +137,18 @@
   :changelog "Journal des modifications"
   :submit-an-issue "Signaler un problème"
   :about "À propos"}
+
+ :renderer.menubar.filters
+ {:blur "flou"
+  :blur-x2 "flou-x2"
+  :protanopia "protanopie"
+  :protanomaly "protanomalie"
+  :deuteranopia "deutéranopie"
+  :deuteranomaly "deutéranomalie"
+  :tritanopia "tritanopie"
+  :tritanomaly "tritanomalie"
+  :achromatopsia "achromatopsie"
+  :achromatomaly "achromatoma­lie"}
 
  :renderer.element.events
  {:modify-selection "Modifier la sélection"

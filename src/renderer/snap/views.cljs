@@ -5,7 +5,6 @@
    [clojure.string :as string]
    [re-frame.core :as rf]
    [renderer.document.subs :as-alias document.subs]
-   [renderer.snap.db :as snap.db]
    [renderer.snap.events :as-alias snap.events]
    [renderer.snap.subs :as-alias snap.subs]
    [renderer.utils.i18n :refer [t]]
@@ -13,17 +12,28 @@
    [renderer.views :as views]))
 
 (defn menu-option
-  [option is-checked]
+  [{:keys [id label]} is-checked]
   [:> DropdownMenu/CheckboxItem
    {:class "menu-checkbox-item inset"
     :on-click #(.stopPropagation %)
     :onSelect #(do (.preventDefault %)
-                   (rf/dispatch [::snap.events/toggle-option option]))
+                   (rf/dispatch [::snap.events/toggle-option id]))
     :checked is-checked}
    [:> DropdownMenu/ItemIndicator
     {:class "menu-item-indicator"}
     [views/icon "checkmark"]]
-   (t [(keyword "renderer.snap.views" (name option)) (name option)])])
+   label])
+
+(defn snap-options
+  []
+  [{:id :centers
+    :label (t [::centers "centers"])}
+   {:id :midpoints
+    :label (t [::midpoints "midpoints"])}
+   {:id :corners
+    :label (t [::corners "corners"])}
+   {:id :nodes
+    :label (t [::nodes "nodes"])}])
 
 (defn options-dropdown
   []
@@ -46,7 +56,7 @@
               :class "menu-content rounded-sm select-content"
               :on-key-down #(.stopPropagation %)
               :on-escape-key-down #(.stopPropagation %)}]
-            (map #(menu-option % (contains? options %)) snap.db/snap-options))]]))
+            (map #(menu-option % (contains? options %)) (snap-options)))]]))
 
 (defn root
   []

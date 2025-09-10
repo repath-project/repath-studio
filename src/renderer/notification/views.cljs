@@ -37,30 +37,27 @@
     [:p (t [::event "Event: "]) event]
     [:p error]]])
 
-(defn main
+(defn notification-popup
+  [index notification]
+  [:div.relative.flex.bg-secondary.w-80.p-4.mb-2.rounded.shadow-md
+   {:class "border border-default"}
+   (:content notification)
+   [views/icon-button
+    "times"
+    {:aria-label (t [::close "Close"])
+     :class "icon-button absolute small top-3 right-3 rtl:right-auto rtl:left-3"
+     :on-click #(rf/dispatch [::notification.events/remove-nth index])}]
+   (when (> (:count notification) 1)
+     [:div.absolute.bg-error.left-0.top-0.px-1.py-0.5.rounded
+      {:class "-translate-x-1/2 -translate-y-1/2"}
+      (:count notification)])])
+
+(defn root
   []
   (let [notifications @(rf/subscribe [::notification.subs/entities])]
     [:div.fixed.flex.flex-col.m-4.right-0.bottom-0.gap-2.items-end
      {:class "rtl:right-auto rtl:left-0"}
-     (->> notifications
-          (map-indexed
-           (fn [index notification]
-             [:div.relative.flex.bg-secondary.w-80.p-4.mb-2.rounded.shadow-md
-              {:key index
-               :class "border border-default"}
-              (:content notification)
-              [views/icon-button
-               "times"
-               {:aria-label (t [::close "Close"])
-                :class "icon-button absolute small top-3 right-3 rtl:right-auto
-                        rtl:left-3"
-                :on-click #(rf/dispatch [::notification.events/remove-nth index])}]
-              (when (> (:count notification) 1)
-                [:div.absolute.bg-error.left-0.top-0.px-1.py-0.5.rounded
-                 {:class "-translate-x-1/2 -translate-y-1/2"}
-                 (:count notification)])]))
-          (into [:<>]))
-
+     (into [:<>] (map-indexed notification-popup notifications))
      (when (second notifications)
        [:div.bg-primary
         [:button.button.overlay.px-2.rounded

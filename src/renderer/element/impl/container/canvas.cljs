@@ -68,7 +68,7 @@
            (map (fn [{:keys [id tag attrs]}]
                   [:filter {:id id :key id}
                    [tag attrs]]))
-           filters/accessibility)
+           (filters/accessibility))
 
      (when grid
        [ruler.views/grid])

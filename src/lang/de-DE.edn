@@ -116,16 +116,6 @@
   :zoom-fit-selected "An Auswahl anpassen"
   :zoom-fill-selected "Auswahl ausfüllen"
   :accessibility-filter "Barrierefreiheitsfilter"
-  :blur "Unschärfe"
-  :blur-x2 "Starke Unschärfe"
-  :protanopia "Protanopie"
-  :protanomaly "Protanomalie"
-  :deuteranopia "Deuteranopie"
-  :deuteranomaly "Deuteranomalie"
-  :tritanopia "Tritanopie"
-  :tritanomaly "Tritanomalie"
-  :achromatopsia "Achromatopsie"
-  :achromatomaly "Achromatoma­lie"
   :language "Sprache"
   :grid "Raster"
   :rulers "Lineale"
@@ -147,6 +137,18 @@
   :changelog "Änderungsprotokoll"
   :submit-an-issue "Problem melden"
   :about "Über"}
+
+ :renderer.menubar.filters
+ {:blur "Unschärfe"
+  :blur-x2 "Starke Unschärfe"
+  :protanopia "Protanopie"
+  :protanomaly "Protanomalie"
+  :deuteranopia "Deuteranopie"
+  :deuteranomaly "Deuteranomalie"
+  :tritanopia "Tritanopie"
+  :tritanomaly "Tritanomalie"
+  :achromatopsia "Achromatopsie"
+  :achromatomaly "Achromatoma­lie"}
 
  :renderer.element.events
  {:modify-selection "Auswahl ändern"

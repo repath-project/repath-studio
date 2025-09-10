@@ -116,16 +116,6 @@
   :zoom-fit-selected "Fit selected"
   :zoom-fill-selected "Fill selected"
   :accessibility-filter "Accessibility filter"
-  :blur "blur"
-  :blur-x2 "blur-x2"
-  :protanopia "protanopia"
-  :protanomaly "protanomaly"
-  :deuteranopia "deuteranopia"
-  :deuteranomaly "deuteranomaly"
-  :tritanopia "tritanopia"
-  :tritanomaly "tritanomaly"
-  :achromatopsia "achromatopsia"
-  :achromatomaly "achromatomaly"
   :language "Language"
   :grid "Grid"
   :rulers "Rulers"
@@ -147,6 +137,18 @@
   :changelog "Changelog"
   :submit-an-issue "Submit an issue"
   :about "About"}
+
+ :renderer.menubar.filters
+ {:blur "blur"
+  :blur-x2 "blur-x2"
+  :protanopia "protanopia"
+  :protanomaly "protanomaly"
+  :deuteranopia "deuteranopia"
+  :deuteranomaly "deuteranomaly"
+  :tritanopia "tritanopia"
+  :tritanomaly "tritanomaly"
+  :achromatopsia "achromatopsia"
+  :achromatomaly "achromatomaly"}
 
  :renderer.element.events
  {:modify-selection "Modify selection"

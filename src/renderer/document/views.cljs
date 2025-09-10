@@ -140,7 +140,7 @@
       [:div.flex.flex-1
        {:class "h-[41px]"}
        (for [document-id tabs
-             :let [title (:title (get documents document-id))
+             :let [title (get-in documents [document-id :title])
                    active? (= document-id active-id)]]
          ^{:key (str document-id)}
          [tab document-id title active?])

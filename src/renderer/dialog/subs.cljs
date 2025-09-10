@@ -5,3 +5,8 @@
 (rf/reg-sub
  ::entities
  :-> :dialogs)
+
+(rf/reg-sub
+ ::active
+ :<- [::entities]
+ last)

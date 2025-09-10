@@ -13,6 +13,13 @@
    [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]))
 
+(defn confirmation-button
+  [{:keys [action confirm-label]}]
+  [:button.button.px-2.rounded.flex-1.accent.w-full
+   {:auto-focus true
+    :on-click #(rf/dispatch [::dialog.events/close action])}
+   (or confirm-label (t [::ok "OK"]))])
+
 (defn about
   []
   (let [user-agent @(rf/subscribe [::app.subs/user-agent])]
@@ -21,10 +28,7 @@
       [:p
        [:span.block [:strong (t [::version "Version:"])] config/version]
        [:span.block [:strong (t [::browser "Browser:"])] user-agent]]]
-     [:button.button.px-2.accent.rounded.w-full
-      {:auto-focus true
-       :on-click #(rf/dispatch [::dialog.events/close])}
-      (t [::ok "OK"])]]))
+     [confirmation-button]]))
 
 (defn confirmation
   [{:keys [description action confirm-label cancel-label]}]
@@ -35,18 +39,14 @@
     [:button.button.px-2.bg-primary.rounded.flex-1
      {:on-click #(rf/dispatch [::dialog.events/close])}
      (or cancel-label (t [::cancel "Cancel"]))]
-    [:button.button.px-2.rounded.flex-1.accent
-     {:auto-focus true
-      :on-click #(rf/dispatch [::dialog.events/close action])}
-     (or confirm-label (t [::ok "OK"]))]]])
+    [confirmation-button {:confirm-label confirm-label
+                          :action action}]]])
 
 (defn save
   [{:keys [id title]}]
   [:div.p-5
    (t [::changes-will-be-lost
-       [:p
-        "Your changes to " [:strong title]
-        " will be lost if you close the document without saving."]]
+       [:p "Your changes to %1 will be lost if you close the document without saving."]]
       [[:strong title]])
    [:div.flex.flex-col.gap-2
     {:class "sm:flex-row"}
@@ -107,28 +107,29 @@
 
 (defn root
   []
-  (let [dialogs @(rf/subscribe [::dialog.subs/entities])]
+  (let [active-dialog @(rf/subscribe [::dialog.subs/active])
+        {:keys [title close-button content attrs]} active-dialog]
     [:> Dialog/Root
-     {:open (seq dialogs)
+     {:open (boolean active-dialog)
       :on-open-change #(rf/dispatch [::dialog.events/close])}
      [:> Dialog/Portal
       [:> Dialog/Overlay {:class "backdrop"}]
       [:> Dialog/Content
-       (views/merge-with-class {:class "fixed bg-secondary rounded-lg overflow-hidden
-                                        shadow-xl border border-default left-1/2 top-1/2
-                                        w-125 max-w-9/10 -translate-1/2"
-                                :on-key-down #(.stopPropagation %)}
-                               (:attrs (last dialogs)))
-       (when-let [title (:title (last dialogs))]
+       (views/merge-with-class
+        {:class "fixed bg-secondary rounded-lg overflow-hidden shadow-xl border
+                 border-default left-1/2 top-1/2 w-125 max-w-9/10 -translate-1/2"
+         :on-key-down #(.stopPropagation %)}
+        attrs)
+       (when title
          [:> Dialog/Title
           (cond->> title
             (string? title)
             (into [:div.text-xl.px-5.pt-5]))])
-       (when (:close-button (last dialogs))
+       (when close-button
          [:> Dialog/Close
           {:class "icon-button absolute top-5 right-5 small rtl:right-auto rtl:left-5"
            :aria-label (t [::close "Close"])}
           [views/icon "times"]])
        [:> Dialog/Description
         {:as-child true}
-        [:div (:content (last dialogs))]]]]]))
+        [:div content]]]]]))

@@ -12,13 +12,26 @@
    [renderer.window.events :as-alias window.events]
    [renderer.window.subs :as-alias window.subs]))
 
+(defn language-item
+  [{:keys [id label action checked abbreviation]} system-abbreviation]
+  [:> DropdownMenu/CheckboxItem
+   {:class "menu-checkbox-item inset"
+    :on-select #(rf/dispatch action)
+    :checked checked}
+   [:> DropdownMenu/ItemIndicator
+    {:class "menu-item-indicator"}
+    [views/icon "checkmark"]]
+   [:div label]
+   (if (= id "system")
+     [:span.uppercase.font-mono.text-disabled (or system-abbreviation "EN")]
+     [:span.uppercase.font-mono.text-muted  abbreviation])])
+
 (defn language-dropdown
   []
   (let [computed-lang @(rf/subscribe [::app.subs/computed-lang])
         system-lang @(rf/subscribe [::app.subs/system-lang])
         system-abbreviation (get-in utils.i18n/languages [system-lang :abbreviation])
-        computed-abbreviation (get-in utils.i18n/languages [computed-lang :abbreviation])
-        languages (menubar.views/languages-submenu)]
+        computed-abbreviation (get-in utils.i18n/languages [computed-lang :abbreviation])]
     [:> DropdownMenu/Root
      [:> DropdownMenu/Trigger
       {:as-child true}
@@ -35,19 +48,9 @@
         :class "menu-content rounded-sm select-content"
         :on-key-down #(.stopPropagation %)
         :on-escape-key-down #(.stopPropagation %)}
-       (for [{:keys [id label action checked abbreviation]} languages]
+       (for [{:keys [id] :as lang} (menubar.views/languages-submenu)]
          ^{:key id}
-         [:> DropdownMenu/CheckboxItem
-          {:class "menu-checkbox-item inset"
-           :on-select #(rf/dispatch action)
-           :checked checked}
-          [:> DropdownMenu/ItemIndicator
-           {:class "menu-item-indicator"}
-           [views/icon "checkmark"]]
-          [:div label]
-          (if (= id "system")
-            [:span.uppercase.font-mono.text-disabled (or system-abbreviation "EN")]
-            [:span.uppercase.font-mono.text-muted  abbreviation])])]]]))
+         [language-item lang system-abbreviation])]]]))
 
 (defn button
   [{:keys [icon action class title]}]

@@ -2,7 +2,6 @@
   (:require
    ["@radix-ui/react-hover-card" :as HoverCard]
    ["@radix-ui/react-select" :as Select]
-   [camel-snake-kebab.core :as camel-snake-kebab]
    [clojure.string :as string]
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.subs]
@@ -18,17 +17,21 @@
    [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]))
 
+(defn browser-icon
+  [browser]
+  (name (case browser
+          :firefox_android :firefox
+          :chrome_android :chrome
+          :opera_android :opera
+          :safari_ios :safari
+          :webview_ios :safari
+          browser)))
+
 (defn browser-support
   [browser version-added]
   [:div.text-center.flex-1
    [:div {:title browser}
-    [views/icon (name (case browser
-                        :firefox_android :firefox
-                        :chrome_android :chrome
-                        :opera_android :opera
-                        :safari_ios :safari
-                        :webview_ios :safari
-                        browser))]]
+    [views/icon (browser-icon browser)]]
    [:div.text-2xs.mt-1
     (case version-added
       true [:div.bg-success (t [::all "all"])]
@@ -176,25 +179,29 @@
          {:class "select-scroll-button"}
          [views/icon "chevron-down"]]]]])])
 
-(defn property-list-item
-  [property k]
-  (when-let [v (get property k)]
+(defn feature
+  [property {:keys [id label]}]
+  (when-let [v (get property id)]
     [:<>
-     [:h3.font-bold (if (= k :appliesto)
-                      (t [::applies-to "Applies to"])
-                      (t [(keyword "renderer.attribute.views" (name k))
-                          (-> (camel-snake-kebab/->kebab-case-string k)
-                              (string/replace "-" " ")
-                              (string/capitalize))]))]
+     [:h3.font-bold label]
      [:p (cond->> v
            (vector? v)
            (string/join " | "))]]))
 
-(defn property-list
-  [property]
-  (into [:<>]
-        (map (partial property-list-item property))
-        [:appliesto :computed :percentages :animatable :animationType :syntax]))
+(defn features
+  []
+  [{:id :appliesto
+    :label (t [::applies-to "Applies to"])}
+   {:id :computed
+    :label (t [::computed "Computed"])}
+   {:id :percentages
+    :label (t [::percentages "Percentages"])}
+   {:id :animatable
+    :label (t [::animatable "Animatable"])}
+   {:id :animationType
+    :label (t [::animation-type "Animation Type"])}
+   {:id :syntax
+    :label (t [::syntax "Syntax"])}])
 
 (defn title
   [tag k]
@@ -224,7 +231,10 @@
            (attribute.hierarchy/description dispatch-tag k)])
         (when (utils.attribute/compatibility tag k)
           [:<>
-           (when property [property-list property])
+           (when property
+             (into [:<>]
+                   (map (partial feature property))
+                   (features)))
            [caniusethis {:tag tag :attr k}]])]
        [:> HoverCard/Arrow
         {:class "fill-secondary"}]]]]))

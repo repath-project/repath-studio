@@ -115,16 +115,6 @@
   :zoom-fit-selected "選択項目にフィット"
   :zoom-fill-selected "選択項目を画面に合わせる"
   :accessibility-filter "アクセシビリティフィルタ"
-  :blur "ブラー"
-  :blur-x2 "ブラーx2"
-  :protanopia "第一色覚異常"
-  :protanomaly "第一色弱"
-  :deuteranopia "第二色覚異常"
-  :deuteranomaly "第二色弱"
-  :tritanopia "第三色覚異常"
-  :tritanomaly "第三色弱"
-  :achromatopsia "全色覚異常"
-  :achromatomaly "全色弱"
   :language "言語"
   :grid "グリッド"
   :rulers "ルーラー"
@@ -146,6 +136,18 @@
   :changelog "変更履歴"
   :submit-an-issue "問題を報告"
   :about "このアプリについて"}
+
+ :renderer.menubar.filters
+ {:blur "ブラー"
+  :blur-x2 "ブラーx2"
+  :protanopia "第一色覚異常"
+  :protanomaly "第一色弱"
+  :deuteranopia "第二色覚異常"
+  :deuteranomaly "第二色弱"
+  :tritanopia "第三色覚異常"
+  :tritanomaly "第三色弱"
+  :achromatopsia "全色覚異常"
+  :achromatomaly "全色弱"}
 
  :renderer.element.events
  {:modify-selection "選択を変更"

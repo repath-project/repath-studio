@@ -429,13 +429,13 @@
 
 (defn a11y-submenu
   []
-  (mapv (fn [{:keys [id]}]
+  (mapv (fn [{:keys [id label]}]
           {:id id
-           :label (t [(keyword "renderer.menubar.views" (name id)) (name id)])
+           :label label
            :type :checkbox
            :icon "a11y"
            :checked @(rf/subscribe [::document.subs/filter-active id])
-           :action [::document.events/toggle-filter id]}) filters/accessibility))
+           :action [::document.events/toggle-filter id]}) (filters/accessibility)))
 
 (defn languages-submenu
   []

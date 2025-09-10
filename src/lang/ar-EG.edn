@@ -116,16 +116,6 @@
   :zoom-fit-selected "ملائمة المحدد"
   :zoom-fill-selected "ملء المحدد"
   :accessibility-filter "مرشح إمكانية الوصول"
-  :blur "ضبابية البصر"
-  :blur-x2 "ضبابية البصر المضاعفة"
-  :protanopia "عمى الألوان الأحمر"
-  :protanomaly "ضعف الألوان الأحمر"
-  :deuteranopia "عمى الألوان الأخضر"
-  :deuteranomaly "ضعف الألوان الأخضر"
-  :tritanopia "عمى الألوان الأزرق"
-  :tritanomaly "ضعف الألوان الأزرق"
-  :achromatopsia "عمى الألوان الكامل"
-  :achromatomaly "ضعف الألوان الكامل"
   :language "اللغة"
   :grid "الشبكة"
   :rulers "المساطر"
@@ -147,6 +137,18 @@
   :changelog "سجل التغييرات"
   :submit-an-issue "إرسال مشكلة"
   :about "حول"}
+
+ :renderer.menubar.filters
+ {:blur "ضبابية البصر"
+  :blur-x2 "ضبابية البصر المضاعفة"
+  :protanopia "عمى الألوان الأحمر"
+  :protanomaly "ضعف الألوان الأحمر"
+  :deuteranopia "عمى الألوان الأخضر"
+  :deuteranomaly "ضعف الألوان الأخضر"
+  :tritanopia "عمى الألوان الأزرق"
+  :tritanomaly "ضعف الألوان الأزرق"
+  :achromatopsia "عمى الألوان الكامل"
+  :achromatomaly "ضعف الألوان الكامل"}
 
  :renderer.element.events
  {:modify-selection "تعديل التحديد"

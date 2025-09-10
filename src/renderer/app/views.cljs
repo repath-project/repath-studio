@@ -392,4 +392,4 @@
            [home recent-documents])
          [:div]]
         [dialog.views/root]
-        [notification.views/main]]])))
+        [notification.views/root]]])))
