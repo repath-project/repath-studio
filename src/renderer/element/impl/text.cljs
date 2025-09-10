@@ -5,7 +5,7 @@
    [clojure.core.matrix :as matrix]
    [clojure.string :as string]
    [re-frame.core :as rf]
-   [renderer.attribute.hierarchy :as attr.hierarchy]
+   [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.effects :as-alias effects]
    [renderer.element.handlers :as element.handlers]
    [renderer.element.hierarchy :as element.hierarchy]
@@ -54,7 +54,7 @@
         offset (utils.element/scale-offset ratio (matrix/sub pivot-point [0 (/ h 2)]))
         ratio (apply min ratio)]
     (-> el
-        (attr.hierarchy/update-attr :font-size * ratio)
+        (attribute.hierarchy/update-attr :font-size * ratio)
         (element.hierarchy/translate offset))))
 
 (defn get-text!

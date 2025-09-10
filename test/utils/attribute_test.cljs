@@ -2,7 +2,7 @@
   (:require
    [cljs.test :refer-macros [deftest testing are]]
    [renderer.utils.attribute :as utils.attribute]
-   [renderer.utils.i18n :as i18n]))
+   [renderer.utils.i18n :refer [t]]))
 
 (deftest test-str->seq
   (testing "string to sequence conversion"
@@ -37,7 +37,7 @@
                                    :Glyphorientationhorizontal))))
 
 (deftest test-defaults
-  (with-redefs [i18n/t (fn [& _] "translation")]
+  (with-redefs [t (fn [& _] "translation")]
     (testing "default tag attributes"
       (are [x y] (= x y)
         {:x ""

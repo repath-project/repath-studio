@@ -4,7 +4,7 @@
   (:require
    [clojure.core.matrix :as matrix]
    [clojure.string :as string]
-   [renderer.attribute.hierarchy :as attr.hierarchy]
+   [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.tool.views :as tool.views]
    [renderer.utils.bounds :as utils.bounds]
@@ -75,8 +75,8 @@
   [el [x y] handle]
   (let [{{:keys [rx ry]} :attrs} el]
     (case handle
-      :rx (attr.hierarchy/update-attr el (if rx :rx :ry) #(abs (+ % x)))
-      :ry (attr.hierarchy/update-attr el (if ry :ry :rx) #(abs (- % y)))
+      :rx (attribute.hierarchy/update-attr el (if rx :rx :ry) #(abs (+ % x)))
+      :ry (attribute.hierarchy/update-attr el (if ry :ry :rx) #(abs (- % y)))
       el)))
 
 (defmethod element.hierarchy/render-edit :ellipse

@@ -4,7 +4,7 @@
   (:require
    [clojure.core.matrix :as matrix]
    [clojure.string :as string]
-   [renderer.attribute.hierarchy :as attr.hierarchy]
+   [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.tool.views :as tool.views]
    [renderer.utils.bounds :as utils.bounds]
@@ -41,7 +41,7 @@
         offset (utils.element/scale-offset ratio pivot-point)
         ratio (apply min ratio)]
     (-> el
-        (attr.hierarchy/update-attr :r * ratio)
+        (attribute.hierarchy/update-attr :r * ratio)
         (element.hierarchy/translate offset))))
 
 (defmethod element.hierarchy/bbox :circle
@@ -70,7 +70,7 @@
 (defmethod element.hierarchy/edit :circle
   [el [x _y] handle]
   (case handle
-    :r (attr.hierarchy/update-attr el :r #(abs (+ % x)))
+    :r (attribute.hierarchy/update-attr el :r #(abs (+ % x)))
     el))
 
 (defmethod element.hierarchy/render-edit :circle

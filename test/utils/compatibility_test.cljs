@@ -1,6 +1,6 @@
 (ns utils.compatibility-test
   (:require
-   [cljs.test :refer-macros [deftest testing are]]
+   [cljs.test :refer-macros [deftest testing are is]]
    [renderer.utils.compatibility :as utils.compatibility]))
 
 (deftest test-version->vec
@@ -11,8 +11,7 @@
 
 (deftest test-requires-migration?
   (testing "migration requirement"
-    (are [x y] (= x y)
-      true (utils.compatibility/requires-migration? [0 3 3] [0 4 0])
-      true (utils.compatibility/requires-migration? [0 3 3] [0 3 4])
-      false (utils.compatibility/requires-migration? [1 3 3] [0 3 4])
-      false (utils.compatibility/requires-migration? [1 3 3] [1 3 3]))))
+    (is (true? (utils.compatibility/requires-migration? [0 3 3] [0 4 0])))
+    (is (true? (utils.compatibility/requires-migration? [0 3 3] [0 3 4])))
+    (is (false? (utils.compatibility/requires-migration? [1 3 3] [0 3 4])))
+    (is (false? (utils.compatibility/requires-migration? [1 3 3] [1 3 3])))))

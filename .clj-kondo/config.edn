@@ -5,10 +5,12 @@
            :shadowed-var {:level :warning}
            :aliased-namespace-symbol {:level :warning}
            :condition-always-true {:level :warning}
+           :case-symbol-test {:level :warning}
            :docstring-leading-trailing-whitespace {:level :warning}
            :def-fn {:level :warning}
            :reduce-without-init {:level :warning}
            :keyword-binding {:level :warning}
+           :equals-float {:level :warning}
            :minus-one {:level :warning}
            :plus-one {:level :warning}
            :if-nil-return {:level :warning}

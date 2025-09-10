@@ -15,8 +15,7 @@
 
 (m/=> dom-el->bbox [:-> DomElement [:maybe BBox]])
 (defn dom-el->bbox
-  "Experimental way of getting the bounds of unknown or complicated elements
-   using the getBBox method.
+  "Experimental way of getting the bounds using the getBBox method.
    https://developer.mozilla.org/en-US/docs/Web/API/SVGGraphicsElement/getBBox"
   [dom-el]
   (when (.-getBBox dom-el)

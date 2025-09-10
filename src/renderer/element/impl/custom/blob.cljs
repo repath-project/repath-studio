@@ -5,8 +5,8 @@
    ["svgpath" :as svgpath]
    [clojure.core.matrix :as matrix]
    [re-frame.core :as rf]
-   [renderer.attribute.hierarchy :as attr.hierarchy]
-   [renderer.attribute.impl.length :as attr.length]
+   [renderer.attribute.hierarchy :as attribute.hierarchy]
+   [renderer.attribute.impl.length :as attribute.impl.length]
    [renderer.attribute.views :as attribute.views]
    [renderer.element.events :as-alias element.events]
    [renderer.element.hierarchy :as element.hierarchy]
@@ -22,23 +22,23 @@
 
 (derive :blob ::element.hierarchy/renderable)
 
-(derive :size ::attr.length/length)
+(derive :size ::attribute.impl.length/length)
 
-(defmethod attr.hierarchy/form-element [:blob :extraPoints]
+(defmethod attribute.hierarchy/form-element [:blob :extraPoints]
   [_ k v attrs]
   [attribute.views/range-input k v (merge attrs {:min 0
                                                  :max 50
                                                  :step 1
                                                  :placeholder 0})])
 
-(defmethod attr.hierarchy/form-element [:blob :randomness]
+(defmethod attribute.hierarchy/form-element [:blob :randomness]
   [_ k v attrs]
   [attribute.views/range-input k v (merge attrs {:min 0
                                                  :max 50
                                                  :step 1
                                                  :placeholder 0})])
 
-(defmethod attr.hierarchy/form-element [:blob :seed]
+(defmethod attribute.hierarchy/form-element [:blob :seed]
   [_ k v {:keys [disabled] :as attrs}]
   (let [random-seed (rand-int 1000000)]
     [:div.flex.flex-row.gap-px.w-full
@@ -49,35 +49,35 @@
        :on-click #(rf/dispatch [::element.events/set-attr k random-seed])}
       [views/icon "refresh"]]]))
 
-(defmethod attr.hierarchy/description [:blob :x]
+(defmethod attribute.hierarchy/description [:blob :x]
   []
   (t [::x "Horizontal coordinate of the blob's center."]))
 
-(defmethod attr.hierarchy/description [:blob :y]
+(defmethod attribute.hierarchy/description [:blob :y]
   []
   (t [::y "Vertical coordinate of the blob's center."]))
 
-(defmethod attr.hierarchy/description [:blob :seed]
+(defmethod attribute.hierarchy/description [:blob :seed]
   []
   (t [::seed "A given seed will always produce the same blob."]))
 
-(defmethod attr.hierarchy/description [:blob :extraPoints]
+(defmethod attribute.hierarchy/description [:blob :extraPoints]
   []
   (t [::extra-points "The actual number of points will be `3 + extraPoints`."]))
 
-(defmethod attr.hierarchy/description [:blob :randomness]
+(defmethod attribute.hierarchy/description [:blob :randomness]
   []
   (t [::randomness "Increases the amount of variation in point position."]))
 
-(defmethod attr.hierarchy/description [:blob :size]
+(defmethod attribute.hierarchy/description [:blob :size]
   []
   (t [::size "The size of the bounding box."]))
 
-(defmethod attr.hierarchy/initial [:blob :extraPoints] [] "0")
+(defmethod attribute.hierarchy/initial [:blob :extraPoints] [] "0")
 
-(defmethod attr.hierarchy/initial [:blob :randomness] [] "0")
+(defmethod attribute.hierarchy/initial [:blob :randomness] [] "0")
 
-(defmethod attr.hierarchy/initial [:blob :size] [] "0")
+(defmethod attribute.hierarchy/initial [:blob :size] [] "0")
 
 (defmethod element.hierarchy/properties :blob
   []
@@ -103,7 +103,7 @@
   (let [offset (utils.element/scale-offset ratio pivot-point)
         ratio (apply min ratio)]
     (-> el
-        (attr.hierarchy/update-attr :size * ratio)
+        (attribute.hierarchy/update-attr :size * ratio)
         (element.hierarchy/translate offset))))
 
 (defmethod element.hierarchy/render :blob
@@ -157,7 +157,7 @@
   [el [x y] handle]
   (case handle
     :size
-    (attr.hierarchy/update-attr el :size #(max 0 (+ % (min x y))))
+    (attribute.hierarchy/update-attr el :size #(max 0 (+ % (min x y))))
     el))
 
 (defmethod element.hierarchy/render-edit :blob

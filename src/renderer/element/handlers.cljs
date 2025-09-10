@@ -8,8 +8,8 @@
    [malli.core :as m]
    [malli.error :as m.error]
    [renderer.app.db :refer [App]]
-   [renderer.attribute.hierarchy :as attr.hierarchy]
-   [renderer.element.db :as db :refer [Element Tag AnimationTag Direction]]
+   [renderer.attribute.hierarchy :as attribute.hierarchy]
+   [renderer.element.db :as element.db :refer [Element Tag AnimationTag Direction]]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.notification.handlers :as notification.handlers]
    [renderer.notification.views :as notification.views]
@@ -346,14 +346,14 @@
   ([db id k f]
    (cond-> db
      (utils.element/supported-attr? (entity db id) k)
-     (update-el id attr.hierarchy/update-attr k f)))
+     (update-el id attribute.hierarchy/update-attr k f)))
   ([db id k f arg]
    (cond-> db
      (utils.element/supported-attr? (entity db id) k)
-     (update-el id attr.hierarchy/update-attr k f arg)))
+     (update-el id attribute.hierarchy/update-attr k f arg)))
   ([db id k f arg & more]
    (if (utils.element/supported-attr? (entity db id) k)
-     (apply update-el db id attr.hierarchy/update-attr k f arg more)
+     (apply update-el db id attribute.hierarchy/update-attr k f arg more)
      db)))
 
 (m/=> deselect [:function
@@ -679,10 +679,10 @@
         [min-x min-y] (when parent-el (element.hierarchy/bbox parent-el))
         add-children (fn [db child-els]
                        (reduce #(cond-> %1
-                                  (db/tag? (:tag %2))
+                                  (element.db/tag? (:tag %2))
                                   (create (assoc %2 :parent id))) db child-els))]
-    (if-not (db/valid? new-el)
-      (let [error-message (-> new-el db/explain m.error/humanize str)]
+    (if-not (element.db/valid? new-el)
+      (let [error-message (-> new-el element.db/explain m.error/humanize str)]
         (->> (notification.views/spec-failed "Invalid element" error-message)
              (notification.handlers/add db)))
       (let [is-translated (or (utils.element/svg? new-el)

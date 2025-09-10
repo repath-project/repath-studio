@@ -8,7 +8,7 @@
    [renderer.attribute.views :as attribute.views]
    [renderer.element.events :as-alias element.events]
    [renderer.tool.subs :as-alias tool.subs]
-   [renderer.utils.attribute :as utils.utils.attribute]
+   [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.i18n :refer [t]]
    [renderer.utils.vec :as utils.vec]
    [renderer.views :as views]))
@@ -73,4 +73,4 @@
     [:div.flex.gap-px.w-full
      [attribute.views/form-input k (if state-idle v "waiting")
       {:disabled (or disabled (not v) (not state-idle))}]
-     (when v [points-popover (utils.utils.attribute/points->vec v) disabled])]))
+     (when v [points-popover (utils.attribute/points->vec v) disabled])]))
