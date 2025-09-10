@@ -8,7 +8,7 @@
    [malli.core :as m]
    [reagent.dom.server :as dom.server]
    [renderer.attribute.hierarchy :as attribute.hierarchy]
-   [renderer.element.db :as db :refer [Element Attrs]]
+   [renderer.element.db :as element.db :refer [Element Attrs]]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.snap.db :refer [SnapOptions]]
    [renderer.utils.attribute :as utils.attribute]
@@ -201,4 +201,4 @@
     (-> (utils.map/remove-nils)
         (normalize-attrs)
         (dissoc :locked)
-        (merge db/default))))
+        (merge element.db/default))))
