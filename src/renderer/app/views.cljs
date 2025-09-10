@@ -47,11 +47,13 @@
 
 (defn map->str
   [m]
-  (interpose ", " (map (fn [[k v]]
-                         ^{:key k}
-                         [:span (str (name k) ": " (if (number? v)
-                                                     (utils.length/->fixed v)
-                                                     (coll->str v)))]) m)))
+  (->> m
+       (map (fn [[k v]]
+              ^{:key k}
+              [:span (str (name k) ": " (if (number? v)
+                                          (utils.length/->fixed v)
+                                          (coll->str v)))]))
+       (interpose ", ")))
 
 (defn debug-rows
   []

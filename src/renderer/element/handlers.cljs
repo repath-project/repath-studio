@@ -667,6 +667,13 @@
                             (overlapping-svg db el-bbox)
                             (root db)))))))
 
+(m/=> add-invalid-element-notification [:-> App any? App])
+(defn add-invalid-element-notification
+  [db el]
+  (let [error-message (-> el element.db/explain m.error/humanize str)]
+    (->> (notification.views/spec-failed "Invalid element" error-message)
+         (notification.handlers/add db))))
+
 (m/=> create [:-> App map? App])
 (defn create
   [db el]
@@ -682,9 +689,7 @@
                                   (element.db/tag? (:tag %2))
                                   (create (assoc %2 :parent id))) db child-els))]
     (if-not (element.db/valid? new-el)
-      (let [error-message (-> new-el element.db/explain m.error/humanize str)]
-        (->> (notification.views/spec-failed "Invalid element" error-message)
-             (notification.handlers/add db)))
+      (add-invalid-element-notification db new-el)
       (let [is-translated (or (utils.element/svg? new-el)
                               (utils.element/root? new-el)
                               (:parent el))]
@@ -714,9 +719,9 @@
              :attrs {:fill "#eeeeee"}})
 
     size
-    (-> (create {:tag :svg
-                 :attrs {:width (first size)
-                         :height (second size)}}))))
+    (create {:tag :svg
+             :attrs {:width (first size)
+                     :height (second size)}})))
 
 (m/=> add [:-> App map? App])
 (defn add

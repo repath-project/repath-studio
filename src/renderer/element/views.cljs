@@ -86,12 +86,10 @@
         [el child-els idle]
         (let [{:keys [attrs tag title content]} el]
           [:<>
-           [tag (->> (-> attrs
-                         (dissoc :style)
-                         (assoc :shape-rendering "geometricPrecision"
-                                :ref ref))
-                     (remove #(empty? (str (second %))))
-                     (into {}))
+           [tag (-> attrs
+                    (dissoc :style)
+                    (assoc :shape-rendering "geometricPrecision"
+                           :ref ref))
             (when title [:title title])
             content
             (for [child child-els]
