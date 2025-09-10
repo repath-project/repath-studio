@@ -114,12 +114,13 @@
                 :title (t [::theme "Theme mode - %1"] [theme-mode])
                 :icon theme-mode
                 :class "bg-primary"}]
-       [button {:action [::window.events/toggle-fullscreen]
-                :title (if fullscreen?
-                         (t [::exit-fullscreen "Exit fullscreen"])
-                         (t [::enter-fullscreen "Enter fullscreen"]))
-                :icon (if fullscreen? "arrow-minimize" "arrow-maximize")
-                :class "bg-primary hidden sm:block"}]
+       (when (or fullscreen? (not electron?))
+         [button {:action [::window.events/toggle-fullscreen]
+                  :title (if fullscreen?
+                           (t [::exit-fullscreen "Exit fullscreen"])
+                           (t [::enter-fullscreen "Enter fullscreen"]))
+                  :icon (if fullscreen? "arrow-minimize" "arrow-maximize")
+                  :class "bg-primary hidden sm:block"}])
        (when (and electron?
                   (not fullscreen?)
                   (not mac?))
