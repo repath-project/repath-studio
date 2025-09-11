@@ -1,5 +1,6 @@
 (ns core-test
   (:require
+   [malli.dev.pretty :as m.dev.pretty]
    [malli.instrument :as m.instrument]
    [re-frame.core :as rf]
    [re-frame.subs :as rf.subs]
@@ -34,7 +35,7 @@
 (set! rf.subs/warn-when-not-reactive (constantly nil))
 
 (defn ^:dev/after-load instrument! []
-  (m.instrument/instrument!)
+  (m.instrument/instrument! {:report (m.dev.pretty/reporter)})
   (rf/reg-global-interceptor app.events/schema-validator))
 
 (instrument!)
