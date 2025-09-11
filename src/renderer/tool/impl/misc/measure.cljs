@@ -77,7 +77,7 @@
          :text-anchor "start"}]
 
        [utils.svg/label
-        (-> hypotenuse js/parseFloat (utils.length/->fixed 2 false) str)
+        (-> hypotenuse js/parseFloat (utils.length/->fixed 2 false))
         {:x (/ (+ x1 x2) 2)
          :y (/ (+ y1 y2) 2)}]])))
 

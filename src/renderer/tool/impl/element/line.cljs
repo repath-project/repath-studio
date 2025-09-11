@@ -43,8 +43,8 @@
         x (utils.length/->fixed x)
         y (utils.length/->fixed y)]
     (element.handlers/update-el db id #(-> %
-                                           (assoc-in [:attrs :x2] (str x))
-                                           (assoc-in [:attrs :y2] (str y))))))
+                                           (assoc-in [:attrs :x2] x)
+                                           (assoc-in [:attrs :y2] y)))))
 
 (defmethod tool.hierarchy/on-drag-end :line
   [db _e]

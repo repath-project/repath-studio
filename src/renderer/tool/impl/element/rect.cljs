@@ -27,12 +27,12 @@
   (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
                                 (:adjusted-pointer-offset db))
         [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
-        width (utils.length/->fixed (abs (- x offset-x)))
-        height (utils.length/->fixed (abs (- y offset-y)))]
+        width (abs (- x offset-x))
+        height (abs (- y offset-y))]
     {:x (utils.length/->fixed (min x offset-x))
      :y (utils.length/->fixed (min y offset-y))
-     :width (cond-> width lock-ratio (min height))
-     :height (cond-> height lock-ratio (min width))}))
+     :width (utils.length/->fixed (cond-> width lock-ratio (min height)))
+     :height (utils.length/->fixed (cond-> height lock-ratio (min width)))}))
 
 (defmethod tool.hierarchy/on-drag-start :rect
   [db e]

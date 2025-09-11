@@ -80,7 +80,7 @@
         r (/ (first (utils.bounds/->dimensions bbox)) 2)]
     [:g
      [utils.svg/line [cx cy] [(+ cx r) cy]]
-     [utils.svg/label (str (utils.length/->fixed r 2 false)) {:x (+ cx (/ r 2)) :y cy}]
+     [utils.svg/label (utils.length/->fixed r 2 false) {:x (+ cx (/ r 2)) :y cy}]
      [utils.svg/times [cx cy]]
      [tool.views/square-handle {:x (+ cx r)
                                 :y cy

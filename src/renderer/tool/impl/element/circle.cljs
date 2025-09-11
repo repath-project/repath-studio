@@ -40,7 +40,7 @@
         position (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
         radius (utils.length/->fixed (matrix/distance position offset))
         id (:id (first (element.handlers/selected db)))]
-    (element.handlers/update-el db id #(assoc-in % [:attrs :r] (str radius)))))
+    (element.handlers/update-el db id #(assoc-in % [:attrs :r] radius))))
 
 (defmethod tool.hierarchy/on-drag-end :circle
   [db _e]
