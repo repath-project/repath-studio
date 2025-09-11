@@ -47,16 +47,17 @@
         :class "hover:pb-1"}
        [views/icon "chevron-up"]]]
      [:> DropdownMenu/Portal
-      (into [:> DropdownMenu/Content
-             {:side "top"
-              :align "end"
-              :sideOffset 5
-              :alignOffset -5
-              :position "popper"
-              :class "menu-content rounded-sm select-content"
-              :on-key-down #(.stopPropagation %)
-              :on-escape-key-down #(.stopPropagation %)}]
-            (map #(menu-option % (contains? options %)) (snap-options)))]]))
+      (->> (snap-options)
+           (map #(menu-option % (contains? options (:id %))))
+           (into [:> DropdownMenu/Content
+                  {:side "top"
+                   :align "end"
+                   :sideOffset 5
+                   :alignOffset -5
+                   :position "popper"
+                   :class "menu-content rounded-sm select-content"
+                   :on-key-down #(.stopPropagation %)
+                   :on-escape-key-down #(.stopPropagation %)}]))]]))
 
 (defn root
   []
