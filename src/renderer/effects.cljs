@@ -156,11 +156,9 @@
 (rf/reg-fx
  ::add-event-listener
  (fn [[target channel event formatter]]
-   (.addEventListener target
-                      channel
-                      #(rf/dispatch (conj event (cond-> %
-                                                  formatter
-                                                  formatter))))))
+   (.addEventListener target channel #(rf/dispatch (conj event (cond-> %
+                                                                 formatter
+                                                                 formatter))))))
 
 (rf/reg-fx
  ::ipc-send

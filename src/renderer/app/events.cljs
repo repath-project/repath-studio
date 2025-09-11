@@ -13,6 +13,7 @@
    [renderer.snap.handlers :as snap.handlers]
    [renderer.theme.effects :as-alias theme.effects]
    [renderer.theme.events :as-alias theme.events]
+   [renderer.utils.font :as utils.font]
    [renderer.utils.i18n :as utils.i18n :refer [t]]
    [renderer.window.events :as-alias window.events]))
 
@@ -156,13 +157,7 @@
    {::app.effects/query-local-fonts
     {:on-success [::set-system-fonts]
      :on-error [::notification.events/show-exception]
-     :formatter #(reduce (fn [fonts ^js/FontData font-data]
-                           (let [family (.-family font-data)
-                                 style (.-style font-data)]
-                             (assoc-in fonts [family style]
-                                       {:postscript-name (.-postscriptName font-data)
-                                        :full-name (.-fullName font-data)})))
-                         {} %)}}))
+     :formatter utils.font/font-data->system-fonts}}))
 
 (def schema-validator
   (rf/->interceptor
@@ -174,6 +169,5 @@
                   event (rf/get-coeffect context :event)]
               (cond-> context
                 db
-                (rf/assoc-effect :fx
-                                 (conj (or fx [])
-                                       [::app.effects/validate [db event]])))))))
+                (rf/assoc-effect :fx (conj (or fx [])
+                                           [::app.effects/validate [db event]])))))))

@@ -29,6 +29,9 @@
                                      [:postscript-name string?]
                                      [:full-name string?]]])
 
+(def SystemFonts
+  [:map-of {:title "name"} string? Font])
+
 (def App
   [:map {:closed true}
    [:tool {:default :transform} Tool]
@@ -58,7 +61,7 @@
    [:document-tabs {:default [] :persist true} [:vector uuid?]]
    [:recent {:max 10 :default [] :persist true} [:vector string?]]
    [:drag-threshold {:default 1} number?]
-   [:system-fonts {:optional true} [:map-of string? Font]]
+   [:system-fonts {:optional true} SystemFonts]
    [:notifications {:default []} [:* Notification]]
    [:debug-info {:default false} boolean?]
    [:help-bar {:default true} boolean?]
