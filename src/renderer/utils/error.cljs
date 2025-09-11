@@ -1,5 +1,6 @@
 (ns renderer.utils.error
-  "https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary"
+  "Catching rendering errors with an error boundary.
+   https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary"
   (:require
    [clojure.string :as string]
    [malli.core :as m]
