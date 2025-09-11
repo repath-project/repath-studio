@@ -2,22 +2,18 @@
 /.calva/
 /.cpcache/
 /.lsp/
+/.shadow-cljs/
+/.clj-kondo/.cache
+/.clj-kondo/metosin/malli-types-cljs/
+
 /resources/public/js/
 /resources/public/css/
 /resources/public/src/
 /resources/*.js
-/target/
+
 /*-init.clj
 /*.log
 
-# Node.js dependencies
 /node_modules/
-
-# shadow-cljs cache, port files
-/.shadow-cljs/
-
-# clj-kondo cache
-/.clj-kondo/.cache
-
-# Build
+/target/
 /dist/

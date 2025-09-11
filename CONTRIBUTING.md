@@ -4,14 +4,19 @@ Thank you for your interest in actively participating in the project's developme
 Please read the [Contributor Covenant Code of Conduct](https://github.com/repath-project/repath-studio/blob/main/CODE_OF_CONDUCT.md)
 and the [Contributor License Agreement](CLA.md) first.
 
-The project is written in [ClojureScript](https://clojurescript.org/) - a compiler for [Clojure](https://clojure.org/) that targets JavaScript, and is based on [re-frame](https://github.com/day8/re-frame/) - a framework for building Modern Web Apps in ClojureScript.
-You should probably take a look at their [exceptional documentation](https://day8.github.io/re-frame/re-frame/) first.
+The project is written in [ClojureScript](https://clojurescript.org/) - a compiler for 
+[Clojure](https://clojure.org/) that targets JavaScript, and is based on
+[re-frame](https://github.com/day8/re-frame/) - a framework for building Modern Web Apps
+in ClojureScript. You should probably take a look at their 
+[exceptional documentation](https://day8.github.io/re-frame/re-frame/) first.
 
 ## Style Guide
 
-We try to follow the [Clojure Style Guide](https://guide.clojure.style/) as much as possible.
+We try to follow the [Clojure Style Guide](https://guide.clojure.style/) as much as
+possible.
 
-An additional resource about [how to name Clojure functions by Stuart Sierra](https://stuartsierra.com/2016/01/09/how-to-name-clojure-functions).
+An additional resource about [how to name Clojure functions](https://stuartsierra.com/2016/01/09/how-to-name-clojure-functions)
+by Stuart Sierra.
 
 In addition to the [idiomatic names](https://guide.clojure.style/#idiomatic-names),
 we use the following conventions
@@ -57,17 +62,28 @@ module\
 
 ## Re-frame recommendations
 
-Avoid chaining events to create new ones. Always prefer composing pure functions that directly transform the db. That is the whole purpose of `handlers` namespace.
+Avoid chaining events to create new ones. Always prefer composing pure functions that
+directly transform the db. That is the whole purpose of `handlers` namespace.
 
-Use interceptors sparingly. Although they look (and probably are) ingenious, it is hard to write and reason with them. Doing things explicitly, is usually easier to grasp and maintain.
+Use interceptors sparingly. Although they look (and probably are) ingenious, it is hard
+to write and reason with them. Doing things explicitly, is usually easier to grasp and
+maintain.
 
-Always use auto-qualified keywords (e.g. `::copy`) for subscriptions, events and effects. You can use `as-alias` to require those namespaces without evaluating the registrations multiple times.
+Always use auto-qualified keywords (e.g. `::copy`) for subscriptions, events and effects.
+You can use `as-alias` to require those namespaces without evaluating the registrations
+multiple times.
 
 ## Spec
 
-We use [malli](https://github.com/metosin/malli) to describe the shape of our app db and selectively validate incoming data (e.g. file loading). We also use this spec to generate default values. You can optionally enable full db validation on dev mode (see `renderer.dev` namespace).
+We use [malli](https://github.com/metosin/malli) to describe the shape of our app db and
+selectively validate incoming data (e.g. file loading). We also use this spec to generate
+default values. Full db validation is enabled on dev mode.
 
-[Function schemas](https://github.com/metosin/malli/blob/master/docs/function-schemas.md#defn-schemas) are selectively applied to pure and critical namespaces, such as utils and handlers. By default, function schemas and full db validation are instrumented only during tests to avoid performance overhead. However, runtime instrumentation can also be enabled in the development environment.
+[Function schemas](https://github.com/metosin/malli/blob/master/docs/function-schemas.md#defn-schemas)
+are selectively applied to pure and critical namespaces, such as utils and handlers.
+By default, function schemas are instrumented only during tests to avoid performance 
+overhead. However, runtime instrumentation can also be enabled in the development 
+environment (see `renderer.dev`).
 
 ## Useful development shortcuts
 
