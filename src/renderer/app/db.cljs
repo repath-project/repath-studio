@@ -45,7 +45,7 @@
    [:nearest-neighbor {:optional true} [:maybe NearestNeighbor]]
    [:nearest-neighbors {:optional true} [:sequential NearestNeighbor]]
    [:drag {:optional true} boolean?]
-   [:zoom-sensitivity {:default 0.75} [:and number? pos?]]
+   [:zoom-sensitivity {:default 0.9} [:and number? [:>= 0.01] [:<= 0.99]]]
    [:event-timestamp {:optional true} number?]
    [:double-click-delta {:default 250} [:and number? pos?]]
    [:state {:default :idle} State]
