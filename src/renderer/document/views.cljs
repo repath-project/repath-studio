@@ -11,6 +11,7 @@
    [renderer.history.events :as-alias history.events]
    [renderer.history.subs :as-alias history.subs]
    [renderer.history.views :as history.views]
+   [renderer.utils.dom :as utils.dom]
    [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]))
 
@@ -110,9 +111,7 @@
           :on-drag-enter #(reset! dragged-over? true)
           :on-drag-leave #(reset! dragged-over? false)
           :on-drop (fn [e]
-                     (let [dropped-id (-> (.-dataTransfer e)
-                                          (.getData "id")
-                                          uuid)]
+                     (let [dropped-id (utils.dom/event->uuid e)]
                        (.preventDefault e)
                        (reset! dragged-over? false)
                        (rf/dispatch [::document.events/swap-position dropped-id id])))

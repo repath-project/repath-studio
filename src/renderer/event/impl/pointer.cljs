@@ -2,6 +2,7 @@
   (:require
    [malli.core :as m]
    [re-frame.core :as rf]
+   [renderer.db :refer [JS_Object]]
    [renderer.element.db :refer [Element]]
    [renderer.event.db :refer [PointerEvent PointerButton]]
    [renderer.event.events :as-alias event.events]
@@ -17,7 +18,7 @@
         3 :back
         4 :forward} button))
 
-(m/=> ->clj [:-> [:maybe [:or Element Handle]] any? PointerEvent])
+(m/=> ->clj [:-> [:maybe [:or Element Handle]] JS_Object PointerEvent])
 (defn ->clj
   "https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent"
   [el ^js/PointerEvent e]
@@ -36,7 +37,7 @@
    :meta-key (.-metaKey e)
    :shift-key (.-shiftKey e)})
 
-(m/=> handler! [:-> [:or Element Handle] any? nil?])
+(m/=> handler! [:-> [:or Element Handle] JS_Object nil?])
 (defn handler!
   "Gathers pointer event props and dispathces the corresponding event.
    https://day8.github.io/re-frame/FAQs/Null-Dispatched-Events/"

@@ -8,12 +8,12 @@
    [malli.core :as m]
    [reagent.dom.server :as dom.server]
    [renderer.attribute.hierarchy :as attribute.hierarchy]
+   [renderer.db :refer [JS_Element]]
    [renderer.element.db :as element.db :refer [Element Attrs]]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.snap.db :refer [SnapOptions]]
    [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.bounds :as utils.bounds :refer [BBox]]
-   [renderer.utils.dom :refer [DomElement]]
    [renderer.utils.map :as utils.map]
    [renderer.utils.math :refer [Vec2]]))
 
@@ -177,7 +177,7 @@
        (matrix/mul pivot-point)
        (matrix/sub pivot-point)))
 
-(m/=> ->dom-element [:-> Element DomElement])
+(m/=> ->dom-element [:-> Element JS_Element])
 (defn ->dom-element
   [el]
   (let [{:keys [tag attrs]} el

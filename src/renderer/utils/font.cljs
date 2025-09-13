@@ -4,6 +4,7 @@
    [clojure.string :as string]
    [malli.core :as m]
    [renderer.app.db :refer [SystemFonts]]
+   [renderer.db :refer [JS_Array JS_Object JS_Promise]]
    [renderer.element.db :refer [Element]]
    [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.bounds :as utils.bounds]
@@ -28,15 +29,15 @@
          :font-weight font-weight
          :bbox bbox}))))
 
-(m/=> font-data->path-data! [:-> any? string? number? number? number? [:maybe string?]])
+(m/=> font-data->path-data! [:-> JS_Object string? number? number? number? JS_Promise])
 (defn font-data->path-data!
   [^js/FontData font-data text x y font-size]
   (-> (.blob font-data)
       (.then (fn [^js/Blob blob]
                (-> (.arrayBuffer blob)
-                   (.then (fn [^js/ArrayBuffer buffer]
-                            (let [^js/Font font (opentype/parse buffer)
-                                  ^js/Path path (.getPath font text x y font-size)]
+                   (.then (fn [buffer]
+                            (let [font (opentype/parse buffer)
+                                  path (.getPath font text x y font-size)]
                               (.toPathData path)))))))))
 
 (m/=> includes-prop? [:-> string? string? boolean?])
@@ -45,9 +46,9 @@
   (when v
     (string/includes? (string/lower-case v) (string/lower-case prop))))
 
-(m/=> match-font-by-weight [:-> string? any? string?])
+(m/=> match-font-by-weight [:-> string? [:sequential JS_Object] [:sequential JS_Object]])
 (defn match-font-by-weight
-  [weight ^js/Array fonts]
+  [weight fonts]
   (let [weight-num (js/parseInt weight)
         weight-names (get utils.attribute/weight-name-mapping weight)
         includes-weight? (fn [font]
@@ -57,9 +58,9 @@
       matched-weight
       (recur (str (- weight-num 100)) fonts))))
 
-(m/=> match-font [:-> any? string? string? string? any?])
+(m/=> match-font [:-> JS_Array string? string? string? [:maybe JS_Object]])
 (defn match-font
-  [^js/Array fonts family style weight]
+  [fonts family style weight]
   (let [matched-family (filter #(includes-prop? family (.-family %)) fonts)
         matched-style (filter #(includes-prop? style (.-style %)) matched-family)
         matched-weight (match-font-by-weight weight (if (seq matched-style)
@@ -75,9 +76,9 @@
   [font-style font-weight]
   (str "./css/files/noto-sans-latin-" font-weight "-" font-style ".woff"))
 
-(m/=> font-data->fonts [:-> any? SystemFonts])
+(m/=> font-data->fonts [:-> JS_Array SystemFonts])
 (defn font-data->system-fonts
-  [^js/Array available-fonts]
+  [available-fonts]
   (->> available-fonts
        (reduce (fn [fonts ^js/FontData font-data]
                  (let [family (.-family font-data)

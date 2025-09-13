@@ -2,10 +2,11 @@
   (:require
    [malli.core :as m]
    [re-frame.core :as rf]
+   [renderer.db :refer [JS_Object]]
    [renderer.event.db :refer [WheelEvent]]
    [renderer.event.events :as event.events]))
 
-(m/=> ->clj [:-> any? WheelEvent])
+(m/=> ->clj [:-> JS_Object WheelEvent])
 (defn ->clj
   "https://developer.mozilla.org/en-US/docs/Web/API/WheelEvent"
   [^js/WheelEvent e]
@@ -20,6 +21,7 @@
    :meta-key (.-metaKey e)
    :shift-key (.-shiftKey e)})
 
+(m/=> handler! [:-> JS_Object nil?])
 (defn handler!
   [^js/WheelEvent e]
   (.stopPropagation e)

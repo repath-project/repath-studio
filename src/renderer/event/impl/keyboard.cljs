@@ -4,6 +4,7 @@
    [malli.core :as m]
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.events]
+   [renderer.db :refer [JS_Object]]
    [renderer.dialog.events :as-alias dialog.events]
    [renderer.document.events :as-alias document.events]
    [renderer.element.events :as-alias element.events]
@@ -30,7 +31,7 @@
   [key-code]
   (get key-chars key-code))
 
-(m/=> ->clj [:-> any? KeyboardEvent])
+(m/=> ->clj [:-> JS_Object KeyboardEvent])
 (defn ->clj
   "https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent"
   [^js/KeyboardEvent e]
@@ -44,6 +45,7 @@
    :meta-key (.-metaKey e)
    :shift-key (.-shiftKey e)})
 
+(m/=> handler! [:-> JS_Object nil?])
 (defn handler!
   [^js/KeyboardEvent e]
   (rf/dispatch-sync [::event.events/keyboard (->clj e)]))
@@ -57,7 +59,7 @@
    user is typing, and also avoid polluting the history stack.
 
    The `default-value` attribute should be used to update the value reactively."
-  [^js/KeyboardEvent e v f & more]
+  [e v f & more]
   (let [target (.-target e)]
     (.stopPropagation e)
 

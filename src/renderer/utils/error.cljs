@@ -47,8 +47,8 @@
                                    (submit-error-url error-message)])}
          "Submit an error report"]
 
-        [:p "You can try to undo your last action in order to recover to a
-             previous working state."]
+        [:p "You can try to undo your last action in order to recover to a previous
+             working state."]
 
         [:button.button.px-2.rounded.w-full.mb-5.overlay
          {:on-click #(do (rf/dispatch [::history.events/undo])
@@ -61,10 +61,9 @@
          {:on-click #(rf/dispatch [::window.events/relaunch])}
          "Restart the application"]
 
-        [:p "If you keep getting the same error after restarting,
-             try clearing your session and options data and restart.
-             Please note that by doing so, you will loose any unsaved changes
-             and your local application settings."]
+        [:p "If you keep getting the same error after restarting, try clearing your
+             session and options data and restart. Please note that by doing so, you will
+             loose any unsaved changes and your local application settings."]
 
         [:button.button.px-2.rounded.w-full.bg-warning
          {:on-click #(rf/dispatch [::window.events/clear-local-storage-and-relaunch])}

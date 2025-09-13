@@ -1,8 +1,8 @@
 (ns renderer.utils.bounds
   (:require
    [malli.core :as m]
+   [renderer.db :refer [JS_Element]]
    [renderer.snap.db :refer [SnapOptions]]
-   [renderer.utils.dom :refer [DomElement]]
    [renderer.utils.i18n :refer [t]]
    [renderer.utils.math :refer [Vec2]]))
 
@@ -13,7 +13,7 @@
    [number? {:title "max-x"}]
    [number? {:title "max-y"}]])
 
-(m/=> dom-el->bbox [:-> DomElement [:maybe BBox]])
+(m/=> dom-el->bbox [:-> JS_Element [:maybe BBox]])
 (defn dom-el->bbox
   "Experimental way of getting the bounds using the getBBox method.
    https://developer.mozilla.org/en-US/docs/Web/API/SVGGraphicsElement/getBBox"

@@ -1,7 +1,7 @@
-(ns renderer.utils.dom)
-
-(def DomElement
-  [:fn (fn [x] (instance? js/Element x))])
+(ns renderer.utils.dom
+  (:require
+   [malli.core :as m]
+   [renderer.db :refer [JS_Object]]))
 
 (defn frame-document!
   []
@@ -13,3 +13,10 @@
   []
   (when-let [document (frame-document!)]
     (.getElementById document "canvas")))
+
+(m/=> event->uuid [:-> JS_Object [:maybe uuid?]])
+(defn event->uuid
+  [e]
+  (-> (.-dataTransfer e)
+      (.getData "id")
+      (uuid)))
