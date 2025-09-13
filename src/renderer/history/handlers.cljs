@@ -167,7 +167,9 @@
 (m/=> set-translate [:-> App Vec2 App])
 (defn set-translate
   [db [x y]]
-  (assoc-in db (path db :translate) [x y]))
+  (cond-> db
+    (and x y)
+    (assoc-in (path db :translate) [x y])))
 
 (m/=> create-state [:-> App uuid? [:or fn? string?] HistoryState])
 (defn create-state
