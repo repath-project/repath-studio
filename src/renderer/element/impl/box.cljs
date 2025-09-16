@@ -49,7 +49,7 @@
                     :id :size}]]
        (let [handle (merge handle {:type :handle
                                    :action :edit
-                                   :element (:id el)})]
+                                   :element-id (:id el)})]
          ^{:key (:id handle)}
          [tool.views/square-handle handle
           ^{:key (str (:id handle) "-title")}

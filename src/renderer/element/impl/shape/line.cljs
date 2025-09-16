@@ -68,7 +68,7 @@
      (map (fn [handle]
             (let [{:keys [x y id]} handle
                   is-active (and (= (:id clicked-element) id)
-                                 (= (:element clicked-element) (:id el)))]
+                                 (= (:element-id clicked-element) (:id el)))]
               ^{:key id}
               [:g
                [tool.views/square-handle handle
@@ -85,13 +85,13 @@
             :id :starting-point
             :type :handle
             :action :edit
-            :element (:id el)}
+            :element-id (:id el)}
            {:x x2
             :y y2
             :id :ending-point
             :type :handle
             :action :edit
-            :element (:id el)}])]))
+            :element-id (:id el)}])]))
 
 (defmethod element.hierarchy/edit :line
   [el [x y] handle]

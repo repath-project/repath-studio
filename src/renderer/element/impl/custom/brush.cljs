@@ -188,5 +188,5 @@
                                                   :y y
                                                   :type :handle
                                                   :action :edit
-                                                  :element (:id el)}]))
+                                                  :element-id (:id el)}]))
                    (-> el :attrs :points points->vec))])

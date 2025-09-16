@@ -73,17 +73,18 @@
 
 (defmethod tool.hierarchy/on-drag :edit
   [db e]
-  (let [clicked-element (:clicked-element db)
+  (let [{:keys [element-id id]} (:clicked-element db)
         db (history.handlers/reset-state db)
-        el-id (:element clicked-element)
-        handle-id (:id clicked-element)
         delta (cond-> (matrix/add (tool.handlers/pointer-delta db)
                                   (snap.handlers/nearest-delta db))
                 (:ctrl-key e)
                 (lock-direction))]
     (cond-> db
-      el-id
-      (element.handlers/update-el el-id element.hierarchy/edit delta handle-id))))
+      element-id
+      (element.handlers/update-el element-id
+                                  element.hierarchy/edit
+                                  delta
+                                  id))))
 
 (defmethod tool.hierarchy/on-drag-end :edit
   [db _e]

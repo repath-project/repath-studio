@@ -64,4 +64,4 @@
    [:y {:optional true} number?]
    [:size {:optional true} number?]
    [:stroke-width {:optional true} number?]
-   [:element {:optional true} uuid?]])
+   [:element-id {:optional true} uuid?]])

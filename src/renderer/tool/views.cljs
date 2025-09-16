@@ -32,14 +32,14 @@
 
 (defn square-handle
   [el & children]
-  (let [{:keys [x y id cursor element]} el
+  (let [{:keys [x y id cursor element-id]} el
         zoom @(rf/subscribe [::document.subs/zoom])
         clicked-element @(rf/subscribe [::app.subs/clicked-element])
         size (/ theme.db/handle-size zoom)
         stroke-width (/ 1 zoom)
         pointer-handler (partial event.impl.pointer/handler! el)
         active (and (= (:id clicked-element) id)
-                    (= (:element clicked-element) element))]
+                    (= (:element-id clicked-element) element-id))]
     (into [:rect {:fill (if active "var(--color-accent)" "var(--color-accent-inverted)")
                   :stroke (if active "var(--color-accent)" "gray")
                   :stroke-width stroke-width

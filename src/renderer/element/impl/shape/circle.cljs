@@ -87,5 +87,5 @@
                                 :id :r
                                 :type :handle
                                 :action :edit
-                                :element (:id el)}
+                                :element-id (:id el)}
       [:title {:key "r-title"} "r"]]]))

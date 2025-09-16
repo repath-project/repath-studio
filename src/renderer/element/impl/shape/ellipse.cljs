@@ -95,7 +95,7 @@
             [tool.views/square-handle
              (merge handle {:type :handle
                             :action :edit
-                            :element (:id el)})
+                            :element-id (:id el)})
              [:title
               {:key (str (:id handle) "-title")}
               (name (:id handle))]])

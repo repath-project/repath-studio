@@ -61,7 +61,7 @@
                                                    :y y
                                                    :type :handle
                                                    :action :edit
-                                                   :element (:id el)}])]
+                                                   :element-id (:id el)}])]
     [:g {:key ::edit-handles}
      (map-indexed (fn [i segment]
                     (case (-> segment first string/lower-case)

@@ -172,7 +172,7 @@
      [tool.views/square-handle
       {:type :handle
        :action :edit
-       :element (:id el)
+       :element-id (:id el)
        :x x2
        :y y2
        :id :size}]

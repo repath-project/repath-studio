@@ -66,7 +66,7 @@
          (map-indexed (fn [index point]
                         (let [id (keyword (str index))
                               is-active (and (= (:id clicked-element) id)
-                                             (= (:element clicked-element)
+                                             (= (:element-id clicked-element)
                                                 (:id el)))
                               offset (utils.element/offset el)
                               [x y] (->> point
@@ -79,7 +79,7 @@
                                                       :label "point"
                                                       :type :handle
                                                       :action :edit
-                                                      :element (:id el)}]
+                                                      :element-id (:id el)}]
                            (when is-active
                              [utils.svg/label
                               (->> [x y]
