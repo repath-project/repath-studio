@@ -12,4 +12,4 @@
 
 (def default-path "documents")
 
-(def save-excluded-keys [:id :title :path])
+(def save-excluded-keys [:id :title :path :file-handle])

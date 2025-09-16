@@ -5,6 +5,7 @@
    [malli.error :as m.error]
    [malli.transform :as m.transform]
    [renderer.app.db :refer [App]]
+   [renderer.db :refer [JS_FileSystemFileHandle]]
    [renderer.document.db :as document.db :refer [Document PersistedDocument SaveInfo]]
    [renderer.element.handlers :as element.handlers]
    [renderer.frame.handlers :as frame.handlers]
@@ -162,12 +163,12 @@
   [db k v]
   (assoc-in db (path db :attrs k) v))
 
-(m/=> saved-info [:-> Document any? SaveInfo])
+(m/=> saved-info [:-> PersistedDocument JS_FileSystemFileHandle SaveInfo])
 (defn saved-info
-  [document ^js/File file]
+  [document file-handle]
   {:id (:id document)
-   :title (.-name file)
-   :file-handle file})
+   :title (.-name file-handle)
+   :file-handle file-handle})
 
 (m/=> update-saved-info [:-> App SaveInfo App])
 (defn update-saved-info
