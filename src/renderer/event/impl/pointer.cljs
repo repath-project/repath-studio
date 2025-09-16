@@ -18,7 +18,7 @@
         3 :back
         4 :forward} button))
 
-(m/=> ->clj [:-> [:maybe [:or Element Handle]] JS_Object PointerEvent])
+(m/=> ->clj [:-> [:or Element Handle] JS_Object PointerEvent])
 (defn ->clj
   "https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent"
   [el ^js/PointerEvent e]
