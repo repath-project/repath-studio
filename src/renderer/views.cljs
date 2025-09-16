@@ -198,13 +198,13 @@
 (defn cm-render-line
   "Line up wrapped text with the base indentation.
    https://codemirror.net/demo/indentwrap.html"
-  [editor line el]
+  [editor line dom-el]
   (let [tab-size (.getOption editor "tabSize")
         off (* (.countColumn codemirror (.-text line) nil tab-size)
                (.defaultCharWidth editor))]
-    (set! (.. el -style -textIndent)
+    (set! (.. dom-el -style -textIndent)
           (str "-" off "px"))
-    (set! (.. el -style -paddingLeft)
+    (set! (.. dom-el -style -paddingLeft)
           (str (+ 4 off) "px"))))
 
 (defn cm-editor
@@ -214,9 +214,9 @@
     (reagent/create-class
      {:component-did-mount
       (fn [_this]
-        (let [el (.-current ref)
+        (let [dom-el (.-current ref)
               options (clj->js (merge cm-defaults options))]
-          (reset! cm (.fromTextArea codemirror el options))
+          (reset! cm (.fromTextArea codemirror dom-el options))
           (.setValue @cm value)
           (.on @cm "renderLine" cm-render-line)
           (.on @cm "keydown" (fn [_editor evt] (.stopPropagation evt)))

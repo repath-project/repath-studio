@@ -70,7 +70,7 @@
 
 (defn register-window-events! []
   (doseq
-   [[window-event f]
+   [[e f]
     [["maximize" #(send-to-renderer! "window-maximized")]
      ["unmaximize" #(send-to-renderer! "window-unmaximized")]
      ["enter-full-screen" #(send-to-renderer! "window-entered-fullscreen")]
@@ -80,7 +80,7 @@
      ["resize" #(send-to-renderer! (if (.isMaximized ^js @main-window)
                                      "window-maximized"
                                      "window-unmaximized"))]]]
-    (.on ^js @main-window window-event f)))
+    (.on ^js @main-window e f)))
 
 (defn register-web-contents-events! []
   (let [web-contents (.-webContents ^js @main-window)]

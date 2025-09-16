@@ -68,8 +68,8 @@
          persisted-db (select-keys db app.db/persisted-keys)
          writer (transit/writer :json)]
      (when-let [json (try (transit/write writer persisted-db)
-                          (catch :default e
-                            (rf/dispatch [::notification.events/show-exception e])))]
+                          (catch :default err
+                            (rf/dispatch [::notification.events/show-exception err])))]
        (-> (localforage/setItem config/app-name json)
            (.catch #(rf/dispatch [::notification.events/show-exception %])))))))
 

@@ -123,13 +123,13 @@
 
 (rf/reg-fx
  ::scroll-into-view
- (fn [el]
-   (.scrollIntoView el #js {:block "nearest"})))
+ (fn [dom-el]
+   (.scrollIntoView dom-el #js {:block "nearest"})))
 
 (rf/reg-fx
  ::scroll-to-bottom
- (fn [el]
-   (set! (.-scrollTop el) (.-scrollHeight el))))
+ (fn [dom-el]
+   (set! (.-scrollTop dom-el) (.-scrollHeight dom-el))))
 
 (rf/reg-fx
  ::eye-dropper

@@ -37,7 +37,7 @@
     (fn []
       (edn/read-string source)
       true)
-    (catch js/Error _
+    (catch js/Error _err
       false)))
 
 (def default-opts
@@ -212,13 +212,13 @@
     (reagent/create-class
      {:component-did-mount
       (fn [_this]
-        (let [el (.-current ref)
+        (let [dom-el (.-current ref)
               ;; On Escape, should we revert to the pre-completion-text?
               cancel-keys #{13 27}
               cmp-ignore #{9 16 17 18 91 93}
               cmp-show #{17 18 91 93}
               inst (codemirror
-                    el
+                    dom-el
                     (clj->js
                      (merge
                       {:lineNumbers false
@@ -305,11 +305,11 @@
     (reagent/create-class
      {:component-did-mount
       (fn [_this]
-        (let [node (.-current ref)]
-          ((aget codemirror "colorize") #js[node] "clojure")
+        (let [dom-el (.-current ref)]
+          ((aget codemirror "colorize") #js[dom-el] "clojure")
           ;; Hacky way to remove the default theme class added by CodeMirror.colorize
           ;; https://codemirror.net/addon/runmode/colorize.js
-          (-> node .-classList (.remove  "cm-s-default"))))
+          (-> dom-el .-classList (.remove  "cm-s-default"))))
 
       :reagent-render
       (fn [_]

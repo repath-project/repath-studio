@@ -8,7 +8,7 @@
    [renderer.events :as-alias events]
    [renderer.reepl.codemirror :as codemirror]
    [renderer.reepl.db :as db]
-   [renderer.reepl.handlers :as h]
+   [renderer.reepl.handlers :as reepl.handlers]
    [renderer.reepl.replumb :as reepl.replumb]
    [renderer.reepl.show-devtools :as show-devtools]
    [renderer.reepl.show-function :as show-function]
@@ -172,7 +172,7 @@
                              go-down
                              clear-items
                              set-text
-                             add-log]} (h/make-handlers state)
+                             add-log]} (reepl.handlers/make-handlers state)
                      items (s/items state)
                      complete-atom (reagent/atom nil)
                      docs (reaction

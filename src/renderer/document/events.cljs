@@ -157,7 +157,7 @@
 (defn string->edn
   [s]
   (try (cljs.reader/read-string s)
-       (catch :default _e nil)))
+       (catch :default _err nil)))
 
 (rf/reg-event-fx
  ::open

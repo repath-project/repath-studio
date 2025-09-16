@@ -23,7 +23,7 @@
              (if (.isSuccess (.-target ^js e))
                (src-cb (.. ^js e -target getResponseText))
                (src-cb nil))))
-    (catch :default _e
+    (catch :default _err
       (src-cb nil))))
 
 (def replumb-opts

@@ -47,8 +47,8 @@
      (testing "string exception"
        (try
          (throw (js/Error. "Error message"))
-         (catch js/Error e
-           (rf/dispatch [::notification.events/show-exception e])
+         (catch js/Error err
+           (rf/dispatch [::notification.events/show-exception err])
            (is (= (:content (first @notifications))
                   [:div
                    [:h2.font-bold.text-error "Error"]

@@ -83,9 +83,9 @@
 
 (defn center
   [ref]
-  (when-let [current (.-current ref)]
-    (matrix/div [(.-clientWidth current)
-                 (.-clientHeight current)] 2)))
+  (when-let [dom-el (.-current ref)]
+    (matrix/div [(.-clientWidth dom-el)
+                 (.-clientHeight dom-el)] 2)))
 
 (defn tree
   [ref]

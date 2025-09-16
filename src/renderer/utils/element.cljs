@@ -82,22 +82,22 @@
 
 (m/=> supported-attr? [:-> map? keyword? boolean?])
 (defn supported-attr?
-  [el k]
-  (-> el attributes k boolean))
+  [props k]
+  (-> props attributes k boolean))
 
 (m/=> normalize-attr-key [:-> map? keyword? keyword?])
 (defn normalize-attr-key
-  [el k]
+  [props k]
   (cond-> k
-    (not (supported-attr? el k))
+    (not (supported-attr? props k))
     utils.attribute/->camel-case-memo))
 
 (m/=> normalize-attrs [:-> map? map?])
 (defn normalize-attrs
-  [el]
-  (-> el
+  [props]
+  (-> props
       (update :attrs update-vals str)
-      (update :attrs update-keys (partial normalize-attr-key el))))
+      (update :attrs update-keys (partial normalize-attr-key props))))
 
 (m/=> ->path [:-> Element Element])
 (defn ->path
@@ -162,7 +162,7 @@
   (try (cond-> (update attrs :style parse)
          (nil? (:style attrs))
          (dissoc :style))
-       (catch :default _e (dissoc attrs :style))))
+       (catch :default _err (dissoc attrs :style))))
 
 (m/=> update-attrs-with [:-> Element ifn? [:vector vector?] Element])
 (defn update-attrs-with
@@ -192,9 +192,9 @@
 
 (m/=> normalize [:-> map? Element])
 (defn normalize
-  [el]
-  (cond-> el
-    (not (string? (:content el)))
+  [props]
+  (cond-> props
+    (not (string? (:content props)))
     (dissoc :content)
 
     :always

@@ -10,13 +10,13 @@
 
 (rf/reg-event-fx
  ::scroll-into-view
- (fn [_ [_ el]]
-   {::effects/scroll-into-view el}))
+ (fn [_ [_ dom-el]]
+   {::effects/scroll-into-view dom-el}))
 
 (rf/reg-event-fx
  ::scroll-to-bottom
- (fn [_ [_ el]]
-   {::effects/scroll-to-bottom el}))
+ (fn [_ [_ dom-el]]
+   {::effects/scroll-to-bottom dom-el}))
 
 (rf/reg-event-fx
  ::file-open
