@@ -1,4 +1,4 @@
-name: Desktop app
+name: Desktop application
 
 on:
   push:

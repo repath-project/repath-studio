@@ -7,7 +7,7 @@
 [![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/repath-project/repath-studio/latest/total?style=for-the-badge)](https://github.com/repath-project/repath-studio/releases/latest/)
 
 [![Build desktop app](https://github.com/repath-project/repath-studio/actions/workflows/studio.yml/badge.svg)](https://github.com/repath-project/repath-studio/actions/workflows/studio.yml)
-[![Deploy demo website](https://github.com/repath-project/repath-studio/actions/workflows/demo.yml/badge.svg)](https://github.com/repath-project/repath-studio/actions/workflows/demo.yml)
+[![Deploy web app](https://github.com/repath-project/repath-studio/actions/workflows/webapp.yml/badge.svg)](https://github.com/repath-project/repath-studio/actions/workflows/webapp.yml)
 [![Outdated dependencies](https://github.com/repath-project/repath-studio/actions/workflows/dependencies.yml/badge.svg)](https://github.com/repath-project/repath-studio/actions/workflows/dependencies.yml)
 [![Static security testing](https://github.com/repath-project/repath-studio/actions/workflows/clj-holmes.yml/badge.svg)](https://github.com/repath-project/repath-studio/actions/workflows/clj-holmes.yml)
 
