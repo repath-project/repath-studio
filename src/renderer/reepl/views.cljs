@@ -43,9 +43,12 @@
   (let [{:keys [_pos _count _text]} @state
         repl-history? @(rf/subscribe [::app.subs/panel-visible? :repl-history])]
     [:div.flex.p-0.5.items-center.m-1
-     [:div.flex.text-xs.self-start {:class "m-0.5"} (replumb/get-prompt)]
+     [:div.flex.text-xs.self-start
+      {:class "m-0.5"}
+      (replumb/get-prompt)]
      ^{:key (str (hash (:js-cm-opts cm-opts)))}
-     [codemirror/code-mirror (reaction (:text @state))
+     [codemirror/code-mirror
+      (reaction (:text @state))
       (merge {:on-eval submit} cm-opts)]
      [:div.self-start.h-full.flex.items-center
       [mode-button :cljs]

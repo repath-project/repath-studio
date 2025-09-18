@@ -43,9 +43,11 @@
       :class "menu-content rounded-sm select-content"
       :on-key-down #(.stopPropagation %)
       :on-escape-key-down #(.stopPropagation %)}
-     [:> Select/ScrollUpButton {:class "select-scroll-button"}
+     [:> Select/ScrollUpButton
+      {:class "select-scroll-button"}
       [views/icon "chevron-up"]]
-     [:> Select/Viewport {:class "select-viewport"}
+     [:> Select/Viewport
+      {:class "select-viewport"}
       (into [:> Select/Group]
             (map select-option options))]
      [:> Select/ScrollDownButton
