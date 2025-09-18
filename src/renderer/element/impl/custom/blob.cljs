@@ -39,13 +39,13 @@
                                                  :placeholder 0})])
 
 (defmethod attribute.hierarchy/form-element [:blob :seed]
-  [_ k v {:keys [disabled] :as attrs}]
+  [_ k v attrs]
   (let [random-seed (rand-int 1000000)]
     [:div.flex.flex-row.gap-px.w-full
      [attribute.views/form-input k v (merge attrs {:placeholder 0})]
      [:button.form-control-button
       {:title (t [::generate-random-seed "Generate random seed"])
-       :disabled disabled
+       :disabled (:disabled attrs)
        :on-click #(rf/dispatch [::element.events/set-attr k random-seed])}
       [views/icon "refresh"]]]))
 

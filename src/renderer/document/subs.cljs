@@ -154,6 +154,7 @@
 
 (rf/reg-sub
  ::active-saved?
- (fn [{:keys [active-document] :as db} [_]]
+ (fn [{:keys [active-document]
+       :as db} [_]]
    (when active-document
      (document.handlers/saved? db active-document))))

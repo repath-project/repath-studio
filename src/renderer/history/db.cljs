@@ -15,7 +15,7 @@
 
 (def History
   [:map {:closed true}
-   [:zoom {:optional true :default 0.5} number?]
+   [:zoom {:optional true} number?]
    [:translate {:optional true} Vec2]
    [:position {:optional true} uuid?]
    [:states {:default {}} [:map-of uuid? HistoryState]]])

@@ -64,7 +64,8 @@
 
 (rf/reg-fx
  ::file-save
- (fn [{:keys [options on-error file-handle] :as args}]
+ (fn [{:keys [options on-error file-handle]
+       :as args}]
    (if file-handle
      (write-file! args)
      (if (.-showSaveFilePicker js/window)

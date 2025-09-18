@@ -111,7 +111,7 @@
         label-height (+ font-size padding)]
     [:g
      [:rect {:ref rect-ref
-             :y (- y  (/ label-height 2))
+             :y (- y (/ label-height 2))
              :fill "var(--color-accent)"
              :rx (/ 4 zoom)
              :height label-height} text]

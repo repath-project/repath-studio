@@ -116,7 +116,8 @@
 
 (m/=> stroke->path [:-> Element Element])
 (defn stroke->path
-  [{:keys [attrs] :as el}]
+  [{:keys [attrs]
+    :as el}]
   (let [paper-path (Path. (:d attrs))
         el-offset (or (:stroke-width attrs) 1)
         stroke-path (PaperOffset.offsetStroke

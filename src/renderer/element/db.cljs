@@ -39,7 +39,7 @@
    [:visible {:optional true} boolean?]
    [:locked {:optional true} boolean?]
    [:selected {:optional true} boolean?]
-   [:children {:default [] :optional true} [:vector uuid?]]
+   [:children {:optional true} [:vector uuid?]]
    [:bbox {:optional true} BBox]
    [:content {:optional true} string?]
    [:attrs {:optional true} Attrs]])

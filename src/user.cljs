@@ -308,7 +308,7 @@
   "Lists available functions."
   []
   (doseq [x (sort-by str (vals (ns-publics 'user)))]
-    (print (:name (meta x))  " - " (:doc (meta x))))
+    (print (:name (meta x)) " - " (:doc (meta x))))
   "")
 
 ;; Expose all commands to global namespace.

@@ -23,7 +23,7 @@
 (defn pointer
   [db e]
   (let [{:keys [pointer-offset tool state cached-tool cached-state
-                dom-rect drag  drag-threshold nearest-neighbor active-pointers
+                dom-rect drag drag-threshold nearest-neighbor active-pointers
                 double-click-delta event-timestamp]} db
         {:keys [button pointer-pos timestamp pointer-id]} e
         adjusted-pointer-pos (frame.handlers/adjusted-pointer-pos db pointer-pos)

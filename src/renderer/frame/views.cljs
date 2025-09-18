@@ -37,7 +37,8 @@
    The iframe is isolated so we don't have access to the css vars of the parent."
   []
   [:html {:data-theme "light"}
-   [:head [:link {:rel "stylesheet" :href "./css/main.css"}]]
+   [:head [:link {:rel "stylesheet"
+                  :href "./css/main.css"}]]
    [:body {:style {:width "100%"
                    :height "100%"
                    :overflow "hidden"

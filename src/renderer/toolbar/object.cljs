@@ -53,15 +53,15 @@
    {:type :divider}
    {:title (t [::align-top "Align top"])
     :icon "objects-align-top"
-    :disabled  disabled
+    :disabled disabled
     :action [::element.events/align :top]}
    {:title (t [::align-center-ver "Align center vertically"])
     :icon "objects-align-center-vertical"
-    :disabled  disabled
+    :disabled disabled
     :action [::element.events/align :center-vertical]}
    {:title (t [::align-bottom "Align bottom"])
     :icon "objects-align-bottom"
-    :disabled  disabled
+    :disabled disabled
     :action [::element.events/align :bottom]}])
 
 (defn boolean-actions

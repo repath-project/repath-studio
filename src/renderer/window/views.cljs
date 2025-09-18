@@ -24,7 +24,7 @@
    [:div label]
    (if (= id "system")
      [:span.uppercase.font-mono.text-disabled (or system-abbreviation "EN")]
-     [:span.uppercase.font-mono.text-muted  abbreviation])])
+     [:span.uppercase.font-mono.text-muted abbreviation])])
 
 (defn language-dropdown
   []
@@ -48,8 +48,8 @@
         :class "menu-content rounded-sm select-content"
         :on-key-down #(.stopPropagation %)
         :on-escape-key-down #(.stopPropagation %)}
-       (for [{:keys [id] :as lang} (menubar.views/languages-submenu)]
-         ^{:key id}
+       (for [lang (menubar.views/languages-submenu)]
+         ^{:key (:id lang)}
          [language-item lang system-abbreviation])]]]))
 
 (defn button

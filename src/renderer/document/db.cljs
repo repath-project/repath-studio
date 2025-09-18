@@ -13,11 +13,16 @@
 
 (def Document
   [:map {:closed true}
-   [:id {:optional true :persist true} uuid?]
-   [:title {:optional true :min 1 :persist true} string?]
-   [:path {:optional true :persist true} [:maybe string?]]
+   [:id {:optional true
+         :persist true} uuid?]
+   [:title {:optional true
+            :min 1
+            :persist true} string?]
+   [:path {:optional true
+           :persist true} [:maybe string?]]
    [:save {:optional true} uuid?]
-   [:version {:optional true :persist true} string?]
+   [:version {:optional true
+              :persist true} string?]
    [:hovered-ids {:default #{}} [:set [:or keyword? uuid?]]]
    [:collapsed-ids {:default #{}} [:set uuid?]]
    [:ignored-ids {:default #{}} [:set [:or keyword? uuid?]]]
@@ -25,10 +30,12 @@
    [:rotate {:default 0} number?]
    [:history {:optional true} History]
    [:pan {:default [0 0]} Vec2]
-   [:elements {:default {} :persist true} [:map-of uuid? Element]]
+   [:elements {:default {}
+               :persist true} [:map-of uuid? Element]]
    [:centered {:optional true} boolean?]
    [:filter {:optional true} A11yFilter]
-   [:attrs {:default {:fill "white" :stroke "black"}} [:map-of keyword? string?]]
+   [:attrs {:default {:fill "white"
+                      :stroke "black"}} [:map-of keyword? string?]]
    [:preview-label {:optional true} string?]
    [:file-handle {:optional true} any?]])
 

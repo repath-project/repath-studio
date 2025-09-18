@@ -176,11 +176,11 @@
                      items (s/items state)
                      complete-atom (reagent/atom nil)
                      docs (reaction
-                           (let [{:keys [pos words] :as state} @complete-atom]
-                             (when state
-                               (let [sym (first (get words pos))]
-                                 (when (symbol? sym)
-                                   (get-docs sym))))))
+                           (when-let [state @complete-atom]
+                             (let [{:keys [pos words]} state
+                                   sym (first (get words pos))]
+                               (when (symbol? sym)
+                                 (get-docs sym)))))
                      submit (fn [text]
                               (if (= "clear" (.trim text))
                                 (do
@@ -201,7 +201,7 @@
       [completion-list
        @docs
        @complete-atom
-        ;; TODO: this should also replace the text....
+       ;; TODO: this should also replace the text....
        identity
        #_(swap! complete-atom assoc :pos % :active true)]
       (let [_items @items] ; TODO: This needs to be removed

@@ -22,7 +22,9 @@
     (-> db
         (assoc :hist-pos 0)
         (update :history conj "")
-        (update :items conj {:type :input :text input :num inum}))))
+        (update :items conj {:type :input
+                             :text input
+                             :num inum}))))
 
 (defn add-result
   [db error? value]
@@ -31,7 +33,8 @@
 
 (defn add-log
   [db v]
-  (update db :items conj {:type :log :value v}))
+  (update db :items conj {:type :log
+                          :value v}))
 
 (defn set-text
   [db text]

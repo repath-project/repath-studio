@@ -6,8 +6,10 @@
 
 (deftest test-root?
   (testing "is root element"
-    (is (true? (utils.element/root? {:type :element :tag :canvas})))
-    (is (false? (utils.element/root? {:type :element :tag :rect})))))
+    (is (true? (utils.element/root? {:type :element
+                                     :tag :canvas})))
+    (is (false? (utils.element/root? {:type :element
+                                      :tag :rect})))))
 
 (deftest test-normalize
   (testing "element normalization"

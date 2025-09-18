@@ -50,16 +50,24 @@
    [:double-click-delta {:default 250} [:and number? pos?]]
    [:state {:default :idle} State]
    [:cached-state {:optional true} State]
-   [:grid {:default false :persist true} boolean?]
-   [:ruler {:default {} :persist true} Ruler]
-   [:snap {:default {} :persist true} Snap]
-   [:active-document {:optional true :persist true} [:maybe uuid?]]
+   [:grid {:default false
+           :persist true} boolean?]
+   [:ruler {:default {}
+            :persist true} Ruler]
+   [:snap {:default {}
+           :persist true} Snap]
+   [:active-document {:optional true
+                      :persist true} [:maybe uuid?]]
    [:cursor {:default "default"} Cursor]
    [:dom-rect {:optional true} DomRect]
    [:dialogs {:default []} [:vector Dialog]]
-   [:documents {:default {} :persist true} [:map-of uuid? Document]]
-   [:document-tabs {:default [] :persist true} [:vector uuid?]]
-   [:recent {:max 10 :default [] :persist true} [:vector string?]]
+   [:documents {:default {}
+                :persist true} [:map-of uuid? Document]]
+   [:document-tabs {:default []
+                    :persist true} [:vector uuid?]]
+   [:recent {:max 10
+             :default []
+             :persist true} [:vector string?]]
    [:drag-threshold {:default 1} number?]
    [:system-fonts {:optional true} SystemFonts]
    [:notifications {:default []} [:* Notification]]
@@ -68,7 +76,8 @@
    [:loading {:default true} boolean?]
    [:pen-mode {:default false} boolean?]
    [:backdrop {:default false} boolean?]
-   [:lang {:default "system" :persist true} [:or Lang [:= "system"]]]
+   [:lang {:default "system"
+           :persist true} [:or Lang [:= "system"]]]
    [:system-lang {:optional true} string?]
    [:platform {:optional true} Platform]
    [:versions {:optional true} [:maybe map?]]
@@ -77,15 +86,18 @@
    [:repl-mode {:default :cljs} keyword?]
    [:worker {:default {:tasks {}}} [:map [:tasks map?]]]
    [:window {:default {}} Window]
-   [:theme {:default {} :persist true} Theme]
+   [:theme {:default {}
+            :persist true} Theme]
    [:timeline {:default {}} Timeline]
    [:panels {:default {:tree {:visible true}
                        :properties {:visible true}
                        :timeline {:visible false}
                        :xml {:visible false}
                        :history {:visible false}
-                       :repl-history {:visible false}} :persist true} Panels]
-   [:version {:optional true :persist true} string?]
+                       :repl-history {:visible false}}
+             :persist true} Panels]
+   [:version {:optional true
+              :persist true} string?]
    [:fx {:default []} vector?]
    [:pivot-point {:optional true} Vec2]
    [:clicked-element {:optional true} [:or Element Handle]]

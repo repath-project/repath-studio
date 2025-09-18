@@ -104,7 +104,8 @@
       (.select target))))
 
 (defn form-input
-  [k v {:keys [disabled placeholder] :as attrs}]
+  [k v {:keys [disabled placeholder]
+        :as attrs}]
   [:div.relative.flex.form-input.flex-1
    [:input.form-element
     (merge attrs
@@ -131,7 +132,8 @@
                    :placeholder (if v placeholder "multiple")}])
 
 (defn range-input
-  [k v {:keys [placeholder disabled] :as attrs}]
+  [k v {:keys [placeholder disabled]
+        :as attrs}]
   [:div.flex.flex-1.gap-px
    [form-input k v {:disabled disabled
                     :placeholder placeholder
@@ -145,7 +147,8 @@
        :on-value-commit (fn [[v]] (rf/dispatch [::element.events/set-attr k v]))})]]])
 
 (defn select-input
-  [k v {:keys [disabled items default-value] :as attrs}]
+  [k v {:keys [disabled items default-value]
+        :as attrs}]
   [:div.flex.w-full.gap-px
    [form-input k v (select-keys attrs [:disabled :placeholder])]
    (when (seq items)
@@ -171,7 +174,8 @@
          (for [item items]
            ^{:key item}
            [:> Select/Item
-            {:value (:value item) :class "menu-item"}
+            {:value (:value item)
+             :class "menu-item"}
             (when (:icon item)
               [:div.absolute.left-2 [views/icon (:icon item)]])
             [:> Select/ItemText (:label item)]])]
@@ -235,7 +239,8 @@
              (into [:<>]
                    (map (partial feature property))
                    (features)))
-           [caniusethis {:tag tag :attr k}]])]
+           [caniusethis {:tag tag
+                         :attr k}]])]
        [:> HoverCard/Arrow
         {:class "fill-secondary"}]]]]))
 

@@ -61,7 +61,7 @@
         y-step (- step 8)
         vertical (= orientation :vertical)]
     [:text {:x (if vertical 19 x-step)
-            :y (if vertical  y-step (inc font-size))
+            :y (if vertical y-step (inc font-size))
             :writing-mode (when vertical "vertical-rl")
             :fill "var(--font-color)"
             :font-size font-size
@@ -107,7 +107,7 @@
 (defn ruler
   [orientation]
   (let [vertical (= orientation :vertical)]
-    [:svg {:width  (if vertical ruler-size "100%")
+    [:svg {:width (if vertical ruler-size "100%")
            :height (if vertical "100%" ruler-size)}
      [bbox-rect orientation]
      [base-lines orientation]

@@ -16,7 +16,8 @@
   (str "effect" (:id el)))
 
 (defn animation->timeline-row
-  [{:keys [id attrs selected locked] :as el}]
+  [{:keys [id attrs selected locked]
+    :as el}]
   (let [start (or (:begin attrs) 0)
         _dur (or (:dur attrs) 0)
         end (or (:end attrs) nil)]
@@ -77,7 +78,7 @@
    (let [m (-> t (/ 60) pad-2)
          s (-> t (rem 60) pad-2)
          ms (-> t (rem 1) (* 100) pad-2 (string/replace "0." ""))]
-     (str m ":"  s ":" ms))))
+     (str m ":" s ":" ms))))
 
 (rf/reg-sub
  ::paused?

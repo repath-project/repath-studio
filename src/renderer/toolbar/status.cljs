@@ -110,7 +110,7 @@
 (defn zoom-decimal-points
   [zoom]
   (condp > zoom
-    1  2
+    1 2
     10 1
     0))
 
@@ -190,7 +190,8 @@
 
       [:button.icon-button
        {:title (t [::swap-color "Swap fill with stroke"])
-        :style {:width "21px" :background "transparent"}
+        :style {:width "21px"
+                :background "transparent"}
         :on-click #(rf/dispatch [::document.events/swap-colors])}
        [views/icon "swap-horizontal"]]
       ;; REVIEW: Can we replace alignOffset with collisionBoundary?

@@ -87,9 +87,11 @@
     [:g ::edit-handles
      [utils.svg/times [cx cy]]
      [utils.svg/line [cx cy] [(+ cx rx) cy]]
-     [utils.svg/label (utils.length/->fixed rx 2 false) {:x (+ cx (/ rx 2)) :y cy}]
+     [utils.svg/label (utils.length/->fixed rx 2 false) {:x (+ cx (/ rx 2))
+                                                         :y cy}]
      [utils.svg/line [cx cy] [cx (- cy ry)]]
-     [utils.svg/label (utils.length/->fixed ry 2 false) {:x cx :y (- cy (/ ry 2))}]
+     [utils.svg/label (utils.length/->fixed ry 2 false) {:x cx
+                                                         :y (- cy (/ ry 2))}]
      (map (fn [handle]
             ^{:key (:id handle)}
             [tool.views/square-handle
@@ -99,5 +101,9 @@
              [:title
               {:key (str (:id handle) "-title")}
               (name (:id handle))]])
-          [{:x (+ cx rx) :y cy :id :rx}
-           {:x cx :y (- cy ry) :id :ry}])]))
+          [{:x (+ cx rx)
+            :y cy
+            :id :rx}
+           {:x cx
+            :y (- cy ry)
+            :id :ry}])]))

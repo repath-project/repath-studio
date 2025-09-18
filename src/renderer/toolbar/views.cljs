@@ -5,7 +5,8 @@
    [renderer.views :as views]))
 
 (defn button
-  [{:keys [title icon disabled action] :as attrs}]
+  [{:keys [title icon disabled action]
+    :as attrs}]
   (if (= (:type attrs) :divider)
     [:span.h-divider]
     [:> Tooltip/Root

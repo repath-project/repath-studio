@@ -113,7 +113,8 @@
                   :width (.-width win-state)
                   :height (.-height win-state)
                   :titleBarStyle (when (= (.platform os) "darwin") "hidden")
-                  :trafficLightPosition #js {:x 8 :y 10}
+                  :trafficLightPosition #js {:x 8
+                                             :y 10}
                   :icon (resource-path "/public/img/icon.png")
                   :frame false
                   :show false

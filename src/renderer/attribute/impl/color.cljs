@@ -14,13 +14,13 @@
 (derive :color ::color)
 
 (defmethod attribute.hierarchy/form-element [:default ::color]
-  [_ k v {:keys [disabled] :as attrs}]
+  [_ k v attrs]
   [:div.flex.gap-px.w-full
    [attribute.views/form-input k v attrs]
    [:> Popover/Root {:modal true}
     [:> Popover/Trigger
      {:as-child true
-      :disabled disabled}
+      :disabled (:disabled attrs)}
      [:button.border-4.form-control-button
       {:title (t [::pick-color "Pick color"])
        :style {:border-color "var(--bg-primary)"

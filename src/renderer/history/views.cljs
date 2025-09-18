@@ -104,7 +104,8 @@
       :zoom zoom
       :translate translate
       :onUpdate on-update
-      :separation #js {:nonSiblings 1 :siblings 1}
+      :separation #js {:nonSiblings 1
+                       :siblings 1}
       :renderCustomNodeElement node}]))
 
 (defn root

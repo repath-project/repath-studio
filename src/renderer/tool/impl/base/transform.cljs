@@ -102,21 +102,22 @@
    db (element.handlers/entities db)))
 
 (defmethod tool.hierarchy/on-pointer-move :transform
-  [db {:keys [element] :as e}]
-  (cond-> db
-    (not (:shift-key e))
-    (element.handlers/clear-ignored)
+  [db e]
+  (let [{:keys [element]} e]
+    (cond-> db
+      (not (:shift-key e))
+      (element.handlers/clear-ignored)
 
-    :always
-    (-> (element.handlers/clear-hovered)
-        (tool.handlers/set-cursor (if (and element
-                                           (or (= (:type element) :handle)
-                                               (not (utils.element/root? element))))
-                                    "move"
-                                    "default")))
+      :always
+      (-> (element.handlers/clear-hovered)
+          (tool.handlers/set-cursor (if (and element
+                                             (or (= (:type element) :handle)
+                                                 (not (utils.element/root? element))))
+                                      "move"
+                                      "default")))
 
-    (:id element)
-    (element.handlers/hover (:id element))))
+      (:id element)
+      (element.handlers/hover (:id element)))))
 
 (defmethod tool.hierarchy/on-key-down :transform
   [db e]
@@ -149,26 +150,28 @@
     (history.handlers/finalize #(t [::move-selection "Move selection"]))))
 
 (defmethod tool.hierarchy/on-pointer-down :transform
-  [db {:keys [button element] :as e}]
-  (cond-> db
-    element
-    (assoc :clicked-element element)
+  [db e]
+  (let [{:keys [button element]} e]
+    (cond-> db
+      element
+      (assoc :clicked-element element)
 
-    (and (= button :right) (not= (:id element) :bbox))
-    (element.handlers/toggle-selection (:id element) (:shift-key e))
+      (and (= button :right) (not= (:id element) :bbox))
+      (element.handlers/toggle-selection (:id element) (:shift-key e))
 
-    :always
-    (element.handlers/ignore :bbox)))
+      :always
+      (element.handlers/ignore :bbox))))
 
 (defmethod tool.hierarchy/on-pointer-up :transform
-  [db {:keys [element] :as e}]
-  (-> db
-      (dissoc :clicked-element)
-      (element.handlers/unignore :bbox)
-      (element.handlers/toggle-selection (:id element) (:shift-key e))
-      (history.handlers/finalize (if (:selected element)
-                                   #(t [::deselect-element "Deselect element"])
-                                   #(t [::select-element "Select element"])))))
+  [db e]
+  (let [{:keys [element]} e]
+    (-> db
+        (dissoc :clicked-element)
+        (element.handlers/unignore :bbox)
+        (element.handlers/toggle-selection (:id element) (:shift-key e))
+        (history.handlers/finalize (if (:selected element)
+                                     #(t [::deselect-element "Deselect element"])
+                                     #(t [::select-element "Select element"]))))))
 
 (defmethod tool.hierarchy/on-double-click :transform
   [db e]
@@ -419,7 +422,8 @@
         text (str (utils.length/->fixed w 2 false)
                   " x "
                   (utils.length/->fixed h 2 false))]
-    [utils.svg/label text {:x x :y y}]))
+    [utils.svg/label text {:x x
+                           :y y}]))
 
 (m/=> area-label [:-> number? BBox any?])
 (defn area-label
@@ -430,7 +434,8 @@
           x (+ min-x (/ (- max-x min-x) 2))
           y (+ min-y (/ (- -15 (/ theme.db/handle-size 2)) zoom))
           text (str (utils.length/->fixed area 2 false) " px²")]
-      [utils.svg/label text {:x x :y y}])))
+      [utils.svg/label text {:x x
+                             :y y}])))
 
 (defmethod tool.hierarchy/render :transform
   []

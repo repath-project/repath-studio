@@ -77,7 +77,8 @@
 
 (defn print!
   [content]
-  (let [window (BrowserWindow. #js {:show false :frame false})]
+  (let [window (BrowserWindow. #js {:show false
+                                    :frame false})]
     (js/Promise.
      (fn [res rej]
        (.on (.-webContents window) "did-finish-load"

@@ -66,7 +66,8 @@
 
      (into [:defs]
            (map (fn [{:keys [id tag attrs]}]
-                  [:filter {:id id :key id}
+                  [:filter {:id id
+                            :key id}
                    [tag attrs]]))
            (filters/accessibility))
 

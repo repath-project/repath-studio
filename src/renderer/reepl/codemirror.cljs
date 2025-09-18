@@ -144,7 +144,8 @@
   evt
     the triggering event. it will be `.preventDefault'd if there are completions
     to cycle through."
-  [{:keys [num pos active from to words initial-text] :as state}
+  [{:keys [num pos active from to words initial-text]
+    :as state}
    go-back? cm evt]
   (when (and state (or (< 1 (count words))
                        (and (< 0 (count words))
@@ -309,11 +310,12 @@
           ((aget codemirror "colorize") #js[dom-el] "clojure")
           ;; Hacky way to remove the default theme class added by CodeMirror.colorize
           ;; https://codemirror.net/addon/runmode/colorize.js
-          (-> dom-el .-classList (.remove  "cm-s-default"))))
+          (-> dom-el .-classList (.remove "cm-s-default"))))
 
       :reagent-render
       (fn [_]
         [:pre.cm-s-tomorrow-night-eighties
-         {:style (merge {:padding 0 :margin 0} style)
+         {:style (merge {:padding 0
+                         :margin 0} style)
           :ref ref}
          text])})))

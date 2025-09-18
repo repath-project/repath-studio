@@ -1,1 +1,4 @@
-{:sort-ns-references? true}
+{:indent-line-comments? true
+ :remove-multiple-non-indenting-spaces? true
+ :split-keypairs-over-multiple-lines? true
+ :sort-ns-references? true}

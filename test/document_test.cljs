@@ -57,11 +57,11 @@
 
        (rf/dispatch [::document.events/new-from-template [800 600]])
        (is (= "• Untitled-2 - Repath Studio" @title-bar))
-       (is (= "800" (->>  @(rf/subscribe [::element.subs/entities])
-                          (filter #(= (:tag %) :svg))
-                          (first)
-                          :attrs
-                          :width))))
+       (is (= "800" (->> @(rf/subscribe [::element.subs/entities])
+                         (filter #(= (:tag %) :svg))
+                         (first)
+                         :attrs
+                         :width))))
 
      (testing "colors"
        (let [fill (rf/subscribe [::document.subs/fill])

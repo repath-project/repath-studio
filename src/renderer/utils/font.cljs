@@ -13,7 +13,8 @@
 
 (m/=> get-computed-styles! [:-> Element [:maybe map?]])
 (defn get-computed-styles!
-  [{:keys [content] :as el}]
+  [{:keys [content]
+    :as el}]
   (when-let [svg (utils.dom/canvas-element!)]
     (let [dom-el (utils.element/->dom-element el)]
       (.appendChild svg dom-el)

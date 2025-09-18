@@ -97,7 +97,8 @@
    [renderer.views/icon icon-name]])
 
 (defn context-menu-item
-  [{:keys [label action checked? disabled?] :as props}]
+  [{:keys [label action checked? disabled?]
+    :as props}]
   (case (:type props)
     :separator
     [:> ContextMenu/Separator {:class "menu-separator"}]
@@ -122,7 +123,8 @@
      [shortcuts action]]))
 
 (defn dropdown-menu-item
-  [{:keys [label action checked?] :as props}]
+  [{:keys [label action checked?]
+    :as props}]
   (case (:type props)
     :separator
     [:> DropdownMenu/Separator {:class "menu-separator"}]

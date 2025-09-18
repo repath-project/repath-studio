@@ -40,10 +40,10 @@
 cljs.js/*load-fn*
 
 #_(defn find-last-expr-pos [text]
-  ;; parse #js {} correctly
+    ;; parse #js {} correctly
     (binding [cljs.tools.reader/*data-readers* tags/*cljs-data-readers*]
       (let [rr (string-push-back-reader text)
-          ;; get a unique js object as a sigil
+            ;; get a unique js object as a sigil
             eof (js-obj)
             read #(cljs.tools.reader/read {:eof eof} rr)]
         (loop [last-pos 0 second-pos 0 last-form nil _second-form nil]
@@ -55,7 +55,7 @@ cljs.js/*load-fn*
 
 #_(defn make-last-expr-set-val [text js-name]
     (let [last-pos (find-last-expr-pos text)]
-    ;; (js/console.log last-pos text)
+      ;; (js/console.log last-pos text)
       (when-not (= last-pos 0)
         (str
          (.slice text 0 last-pos)
@@ -113,7 +113,7 @@ cljs.js/*load-fn*
 ;; TODO: is this a better way? The `do' stuff seems to work alright ... although
 ;; it won't work if there are other `ns' statements inside there...
 #_(defn run-repl-experimental* \
-    [text opts cb]
+ [text opts cb]
     (let [fixed (make-last-expr-set-val text "last_repl_value")]
       (if fixed
         (jsc-run fixed cb)
@@ -122,15 +122,15 @@ cljs.js/*load-fn*
 
 #_(defn fix-ns-do
     [text]
-  ;; parse #js {} correctly
+    ;; parse #js {} correctly
     (binding [cljs.tools.reader/*data-readers* tags/*cljs-data-readers*]
       (let [rr (string-push-back-reader text)
             form (cljs.tools.reader/read rr)
             is-ns (and (sequential? form)
                        (= 'ns (first form)))
-          ;; TODO: this is a bit dependent on tools.reader internals...
+            ;; TODO: this is a bit dependent on tools.reader internals...
             s-pos (.-s-pos (.-rdr ^js rr))]
-      ;; (js/console.log is-ns form s-pos)
+        ;; (js/console.log is-ns form s-pos)
         (if-not is-ns
           (str "(do " text ")")
           (str
