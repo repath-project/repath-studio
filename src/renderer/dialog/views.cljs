@@ -69,7 +69,7 @@
   (when-not (= (:type attrs) :separator)
     [:> Command/CommandItem
      {:on-select #(rf/dispatch [::dialog.events/close action])}
-     [:div.flex.items-center.gap-1.5
+     [:div.flex.items-center.gap-2
       [:div.w-7.h-7.rounded.line-height-6.flex.justify-center.items-center
        {:class (when icon "overlay")}
        (when icon [views/icon icon])]
