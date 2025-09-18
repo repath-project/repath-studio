@@ -38,24 +38,10 @@
  :<- [::history]
  :-> :translate)
 
-(defn state->d3-data
-  [history id save]
-  (let [states (:states history)
-        {:keys [index explanation children]} (get states id)
-        n (count states)]
-    #js {:name (if (string? explanation) explanation (explanation))
-         :id (str id)
-         :saved (= id save)
-         :active (= id (:position history))
-         :color (str "hsla(" (+ (* (/ 100 n) index) 20) ",40%,60%,1)")
-         :children (->> children
-                        (map #(state->d3-data history % save))
-                        (apply array))}))
-
 (rf/reg-sub
  ::tree-data
  :<- [::history]
- :<- [::document.subs/save]
- (fn [[history save] _]
+ :<- [::document.subs/saved-history-id]
+ (fn [[history saved-history-id] _]
    (let [root (:id (first (sort-by :index (vals (:states history)))))]
-     (state->d3-data history root save))))
+     (history.handlers/state->d3-data history root saved-history-id))))

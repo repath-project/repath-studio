@@ -3,9 +3,11 @@
    [renderer.element.db :refer [Element]]
    [renderer.utils.math :refer [Vec2]]))
 
+(def Explanation [:* any?])
+
 (def HistoryState
   [:map {:closed true}
-   [:explanation [:or fn? string?]]
+   [:explanation Explanation]
    [:timestamp number?]
    [:index [:or pos-int? zero?]]
    [:id uuid?]

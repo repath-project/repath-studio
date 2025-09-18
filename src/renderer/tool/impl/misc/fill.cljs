@@ -30,7 +30,7 @@
     (-> db
         (dissoc :clicked-element)
         (element.handlers/set-attr el-id :fill color)
-        (history.handlers/finalize #(t [::fill "Fill"])))))
+        (history.handlers/finalize [::fill "Fill"]))))
 
 (defmethod tool.hierarchy/on-pointer-up :fill
   [db _e]

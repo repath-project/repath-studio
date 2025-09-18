@@ -143,7 +143,7 @@
  [(rf/inject-cofx ::effects/guid)]
  (fn [{:keys [db guid]} [_]]
    {:db (-> (document.handlers/create db guid)
-            (history.handlers/finalize #(t [:create-doc "Create document"])))
+            (history.handlers/finalize [:create-doc "Create document"]))
     ::effects/focus nil}))
 
 (rf/reg-event-fx
@@ -151,8 +151,8 @@
  [(rf/inject-cofx ::effects/guid)]
  (fn [{:keys [db guid]} [_ size]]
    {:db (-> (document.handlers/create db guid size)
-            (history.handlers/finalize #(t [::create-doc-from-template
-                                            "Create document from template"])))}))
+            (history.handlers/finalize [::create-doc-from-template
+                                        "Create document from template"]))}))
 
 (defn string->edn
   [s]
@@ -201,7 +201,7 @@
        {:db (cond-> db
               :always
               (-> (document.handlers/load document)
-                  (history.handlers/finalize #(t [::load-doc "Load document"])))
+                  (history.handlers/finalize [::load-doc "Load document"]))
 
               (not migrated)
               (document.handlers/update-saved-info (select-keys

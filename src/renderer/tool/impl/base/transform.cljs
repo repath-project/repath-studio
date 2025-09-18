@@ -147,7 +147,7 @@
     (element.handlers/clear-ignored)
 
     (contains? #{"ArrowUp" "ArrowDown" "ArrowLeft" "ArrowRight"} (:key e))
-    (history.handlers/finalize #(t [::move-selection "Move selection"]))))
+    (history.handlers/finalize [::move-selection "Move selection"])))
 
 (defmethod tool.hierarchy/on-pointer-down :transform
   [db e]
@@ -170,8 +170,8 @@
         (element.handlers/unignore :bbox)
         (element.handlers/toggle-selection (:id element) (:shift-key e))
         (history.handlers/finalize (if (:selected element)
-                                     #(t [::deselect-element "Deselect element"])
-                                     #(t [::select-element "Select element"]))))))
+                                     [::deselect-element "Deselect element"]
+                                     [::select-element "Select element"])))))
 
 (defmethod tool.hierarchy/on-double-click :transform
   [db e]
@@ -380,11 +380,10 @@
                       (not (:shift-key e)) element.handlers/deselect)
                     (reduce-by-area (:alt-key e) element.handlers/select)
                     (tool.handlers/add-fx [::update nil])
-                    (history.handlers/finalize #(t [::modify-selection
-                                                    "Modify selection"])))
-        :translate (history.handlers/finalize db #(t [::move-selection "Move selection"]))
-        :scale (history.handlers/finalize db #(t [::scale-selection "Scale selection"]))
-        :clone (history.handlers/finalize db #(t [::clone-selection "Clone selection"]))
+                    (history.handlers/finalize [::modify-selection "Modify selection"]))
+        :translate (history.handlers/finalize db [::move-selection "Move selection"])
+        :scale (history.handlers/finalize db [::scale-selection "Scale selection"])
+        :clone (history.handlers/finalize db [::clone-selection "Clone selection"])
         :idle db)
       (tool.handlers/set-state :idle)
       (element.handlers/clear-hovered)

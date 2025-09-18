@@ -34,7 +34,7 @@ The end result on our db looks like this
 :history {:position :6
           :states {:907fdbc9-d2ad-4697-bea3-9aa5e2c46054 {...}
                    :ed0cce51-d00e-43e0-a06a-04c72ccce98f {:elements {...} ; Our actual state
-                                                          :explanation "Set x to 500.3"
+                                                          :explanation [[::move-selection "Move selection"]]
                                                           :id :ed0cce51-d00e-43e0-a06a-04c72ccce98f
                                                           :timestamp 1647882725718
                                                           :index 2

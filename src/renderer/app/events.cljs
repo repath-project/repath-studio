@@ -14,7 +14,7 @@
    [renderer.theme.effects :as-alias theme.effects]
    [renderer.theme.events :as-alias theme.events]
    [renderer.utils.font :as utils.font]
-   [renderer.utils.i18n :as utils.i18n :refer [t]]
+   [renderer.utils.i18n :as utils.i18n]
    [renderer.window.events :as-alias window.events]))
 
 (def persist
@@ -84,7 +84,7 @@
 
             (not initial-document)
             (-> (document.handlers/create guid)
-                (history.handlers/finalize #(t [:create-doc "Create document"])))
+                (history.handlers/finalize [:create-doc "Create document"]))
 
             initial-document
             (snap.handlers/rebuild-tree))

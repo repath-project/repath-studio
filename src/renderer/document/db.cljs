@@ -20,7 +20,7 @@
             :persist true} string?]
    [:path {:optional true
            :persist true} [:maybe string?]]
-   [:save {:optional true} uuid?]
+   [:saved-history-id {:optional true} uuid?]
    [:version {:optional true
               :persist true} string?]
    [:hovered-ids {:default #{}} [:set [:or keyword? uuid?]]]

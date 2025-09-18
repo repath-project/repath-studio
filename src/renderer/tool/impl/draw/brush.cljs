@@ -68,7 +68,7 @@
 (defmethod tool.hierarchy/on-drag-end :brush
   [db _e]
   (-> db
-      (history.handlers/finalize #(t [::draw-brush "Draw brush"]))
+      (history.handlers/finalize [::draw-brush "Draw brush"])
       (tool.handlers/activate :transform)))
 
 (defmethod tool.hierarchy/render :brush

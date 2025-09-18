@@ -130,9 +130,9 @@
  :-> :ignored-ids)
 
 (rf/reg-sub
- ::save
+ ::saved-history-id
  :<- [::active]
- :-> :save)
+ :-> :saved-history-id)
 
 (rf/reg-sub
  ::preview-label

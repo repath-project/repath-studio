@@ -3,12 +3,14 @@
    [malli.core :as m]
    [malli.error :as m.error]
    [renderer.app.db :refer [App]]
+   [renderer.db :refer [JS_Object]]
    [renderer.document.handlers :as document.handlers]
    [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.handlers]
-   [renderer.history.db :refer [History HistoryState]]
+   [renderer.history.db :refer [Explanation History HistoryState]]
    [renderer.notification.handlers :as notification.handlers]
    [renderer.notification.views :as notification.views]
+   [renderer.utils.i18n :refer [t]]
    [renderer.utils.math :refer [Vec2]]
    [renderer.utils.vec :as utils.vec]))
 
@@ -84,9 +86,6 @@
                   #(-> (select-keys % [pos])
                        (assoc-in [pos :index] 0)
                        (assoc-in [pos :children] [])
-                       ;; REVIEW: This state needs to be persisted, so we cannot pass a
-                       ;; function as an explanation, because it's not serializable.
-                       (assoc-in [pos :explanation] "Initial state")
                        (update pos dissoc :parent)))))))
 
 (m/=> preview [:-> App uuid? App])
@@ -171,7 +170,7 @@
     (and x y)
     (assoc-in (path db :translate) [x y])))
 
-(m/=> create-state [:-> App uuid? [:or fn? string?] HistoryState])
+(m/=> create-state [:-> App uuid? Explanation HistoryState])
 (defn create-state
   [db id explanation]
   (let [new-state {:explanation explanation
@@ -183,6 +182,21 @@
     (cond-> new-state
       (position db)
       (assoc :parent (position db)))))
+
+(m/=> state->d3-data [:-> History uuid? [:maybe uuid?] JS_Object])
+(defn state->d3-data
+  [active-history id saved-history-id]
+  (let [states (:states active-history)
+        {:keys [index explanation children]} (get states id)
+        n (count states)]
+    #js {:name (apply t explanation)
+         :id (str id)
+         :saved (= id saved-history-id)
+         :active (= id (:position active-history))
+         :color (str "hsla(" (+ (* (/ 100 n) index) 20) ",40%,60%,1)")
+         :children (->> children
+                        (map #(state->d3-data active-history % saved-history-id))
+                        (apply array))}))
 
 (m/=> update-ancestors [:-> App App])
 (defn update-ancestors
@@ -204,10 +218,10 @@
 
 (def explain-elements (m/explainer [:map-of uuid? Element]))
 
-(m/=> finalize [:-> App [:or fn? string?] App])
+(m/=> finalize [:-> App Explanation App])
 (defn finalize
   "Pushes changes to history."
-  [db explanation]
+  [db & explanation]
   (let [elements (get-in db (element.handlers/path db))]
     (cond
       (= elements (-> db history state :elements))
@@ -216,7 +230,7 @@
       (not (valid-elements? elements))
       (-> (reset-state db)
           (notification.handlers/add (notification.views/spec-failed
-                                      explanation
+                                      "Invalid state"
                                       (-> elements
                                           explain-elements
                                           m.error/humanize

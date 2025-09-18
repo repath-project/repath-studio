@@ -45,7 +45,7 @@
 (defmethod tool.hierarchy/on-drag-end :circle
   [db _e]
   (-> db
-      (history.handlers/finalize #(t [::create-circle "Create circle"]))
+      (history.handlers/finalize [::create-circle "Create circle"])
       (tool.handlers/activate :transform)))
 
 (defmethod tool.hierarchy/snapping-points :circle

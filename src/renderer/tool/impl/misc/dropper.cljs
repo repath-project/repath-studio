@@ -41,7 +41,7 @@
      (-> db
          (document.handlers/assoc-attr :fill srgb-color)
          (element.handlers/assoc-attr :fill srgb-color)
-         (history.handlers/finalize #(t [::pick-color "Pick color"]))
+         (history.handlers/finalize [::pick-color "Pick color"])
          (tool.handlers/activate :transform)))))
 
 (rf/reg-event-db

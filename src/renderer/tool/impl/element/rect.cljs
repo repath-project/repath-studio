@@ -59,5 +59,5 @@
 (defmethod tool.hierarchy/on-drag-end :rect
   [db _e]
   (-> db
-      (history.handlers/finalize #(t [::create-rectangle "Create rectangle"]))
+      (history.handlers/finalize [::create-rectangle "Create rectangle"])
       (tool.handlers/activate :transform)))

@@ -63,5 +63,5 @@
 (defmethod tool.hierarchy/on-drag-end :blob
   [db _e]
   (-> db
-      (history.handlers/finalize #(t [::create-blob "Create blob"]))
+      (history.handlers/finalize [::create-blob "Create blob"])
       (tool.handlers/activate :transform)))

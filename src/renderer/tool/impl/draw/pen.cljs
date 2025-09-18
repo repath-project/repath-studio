@@ -48,5 +48,5 @@
                  (update-in [:attrs :d] utils.path/manipulate :simplify))]
     (-> db
         (element.handlers/swap path)
-        (history.handlers/finalize #(t [::draw-line "Draw line"]))
+        (history.handlers/finalize [::draw-line "Draw line"])
         (tool.handlers/activate :transform))))

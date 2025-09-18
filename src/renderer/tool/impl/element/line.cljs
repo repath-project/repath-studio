@@ -49,5 +49,5 @@
 (defmethod tool.hierarchy/on-drag-end :line
   [db _e]
   (-> db
-      (history.handlers/finalize #(t [::create-line "Create line"]))
+      (history.handlers/finalize [::create-line "Create line"])
       (tool.handlers/activate :transform)))

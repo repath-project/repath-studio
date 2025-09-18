@@ -17,9 +17,7 @@
   [:> Select/Item
    {:value (str id)
     :class "menu-item select-item"}
-   [:> Select/ItemText (if (string? explanation)
-                         explanation
-                         (explanation))]])
+   [:> Select/ItemText (apply t explanation)]])
 
 (defn select
   [label options disabled?]

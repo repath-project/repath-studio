@@ -175,7 +175,7 @@
   [db info]
   (let [id (:id info)
         position (get-in db [:documents id :history :position])]
-    (update-in db [:documents id] merge (assoc info :save position))))
+    (update-in db [:documents id] merge (assoc info :saved-history-id position))))
 
 (m/=> load [:-> App map? App])
 (defn load
@@ -207,7 +207,7 @@
   [db id]
   (let [document (get-in db [:documents id])
         history-position (get-in document [:history :position])]
-    (= (:save document) history-position)))
+    (= (:saved-history-id document) history-position)))
 
 (m/=> saved-ids [:-> App sequential?])
 (defn saved-ids
