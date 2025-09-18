@@ -93,7 +93,7 @@
             [:dispatch [::set-lang-attrs]]
             [::theme.effects/add-native-listener [::theme.events/set-document-attr]]
             [:dispatch [::set-loading false]]
-            ;; We need to render once to get the canvas size right.
+            ;; We use flush-dom to render once so we can get the canvas size.
             [:dispatch ^:flush-dom [::document.events/center]]
             [:dispatch [::window.events/update-focused]]
             [::effects/ipc-send ["initialized"]]]
