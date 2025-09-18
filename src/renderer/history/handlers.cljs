@@ -215,10 +215,12 @@
 
       (not (valid-elements? elements))
       (-> (reset-state db)
-          (notification.handlers/add
-           (notification.views/spec-failed
-            explanation
-            (-> elements explain-elements m.error/humanize str))))
+          (notification.handlers/add (notification.views/spec-failed
+                                      explanation
+                                      (-> elements
+                                          explain-elements
+                                          m.error/humanize
+                                          str))))
 
       :else
       (let [current-position (position db)

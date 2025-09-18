@@ -8,7 +8,7 @@
 
 (def ppi 96)
 
-;; TODO: Find an agnostic way to handle percentages (we need to pass a base).
+;; TODO: Find an agnostic way to handle percentages and em (we need to pass a base).
 (def units
   {"px" 1
    "ch" 8

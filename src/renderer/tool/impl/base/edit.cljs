@@ -81,10 +81,7 @@
                 (lock-direction))]
     (cond-> db
       element-id
-      (element.handlers/update-el element-id
-                                  element.hierarchy/edit
-                                  delta
-                                  id))))
+      (element.handlers/update-el element-id element.hierarchy/edit delta id))))
 
 (defmethod tool.hierarchy/on-drag-end :edit
   [db _e]

@@ -136,8 +136,7 @@
    (into #{}
          (mapcat (fn [style]
                    (->> utils.attribute/weight-name-mapping
-                        (filter (fn [[_k v]]
-                                  (some #(string/includes? style %) v)))
+                        (filter (fn [[_k v]] (some #(string/includes? style %) v)))
                         (map first))))
          font-styles)))
 

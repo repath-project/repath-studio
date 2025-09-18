@@ -97,7 +97,7 @@
 
 (rf/reg-fx
  ::file-read-as
- (fn [[^js/File file method events]]
+ (fn [[^js/File file read-as events]]
    (let [reader (js/FileReader.)]
      (doseq
       [[event {:keys [formatter on-fire]}] events]
@@ -106,7 +106,7 @@
                                               (cond-> (.-result reader)
                                                 formatter
                                                 formatter)))))
-     (case method
+     (case read-as
        :data-url (.readAsDataURL reader file)
        :text (.readAsText reader file)))))
 

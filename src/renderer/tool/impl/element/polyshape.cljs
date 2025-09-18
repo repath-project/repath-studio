@@ -70,16 +70,15 @@
   (let [point (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
         point (adjusted-point db point)
         id (:id (first (element.handlers/selected db)))]
-    (if (= (:state db) :create)
+    (cond-> db
+      (= (:state db) :create)
       (element.handlers/update-attr
-       db id :points
+       id :points
        #(let [point-vector (utils.attribute/points->vec %)]
           (string/join " " (concat (apply concat (if (second point-vector)
                                                    (drop-last point-vector)
                                                    point-vector))
-                                   point))))
-
-      db)))
+                                   point)))))))
 
 (defmethod tool.hierarchy/on-double-click ::tool.hierarchy/polyshape
   [db _e]

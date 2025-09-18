@@ -76,7 +76,7 @@
   [font-style font-weight]
   (str "./css/files/noto-sans-latin-" font-weight "-" font-style ".woff"))
 
-(m/=> font-data->fonts [:-> JS_Array SystemFonts])
+(m/=> font-data->system-fonts [:-> JS_Array SystemFonts])
 (defn font-data->system-fonts
   [available-fonts]
   (->> available-fonts
