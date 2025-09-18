@@ -83,6 +83,7 @@
     "@radix-ui/react-switch": "1.2.6",
     "@radix-ui/react-tooltip": "1.2.8",
     "@repath-project/react-color": "2.19.4",
+    "@sentry/react": "10.12.0",
     "@tailwindcss/cli": "4.1.13",
     "@xzdarcy/react-timeline-editor": "0.1.9",
     "acorn": "8.15.0",
@@ -135,6 +136,7 @@
     "tailwindcss": "4.1.13"
   },
   "dependencies": {
+    "@sentry/electron": "7.0.0",
     "electron-log": "5.4.3",
     "electron-window-state": "5.0.3"
   },

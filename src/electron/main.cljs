@@ -1,6 +1,7 @@
 (ns electron.main
   "https://www.electronjs.org/docs/latest/tutorial/process-model#the-main-process"
   (:require
+   ["@sentry/electron/main" :as sentry-electron-main]
    ["electron" :refer [app shell ipcMain BrowserWindow]]
    ["electron-log/main" :as log]
    ["electron-window-state" :as window-state-keeper]
@@ -159,6 +160,7 @@
          #(.show ^js @loading-window)))
 
 (defn ^:export init! []
+  (sentry-electron-main/init config/sentry)
   (.initialize log)
   (.on app "window-all-closed" #(when-not (= js/process.platform "darwin") (.quit app)))
   (.on app "ready" init-loading-window!))

@@ -135,6 +135,7 @@
   :source-code "Source Code"
   :license "License"
   :changelog "Changelog"
+  :privacy-policy "Privacy Policy"
   :submit-an-issue "Submit an issue"
   :about "About"}
 

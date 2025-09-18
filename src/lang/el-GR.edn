@@ -135,6 +135,7 @@
   :source-code "Πηγαίος κώδικας"
   :license "Άδεια χρήσης"
   :changelog "Αρχείο αλλαγών"
+  :privacy-policy "Πολιτική Απορρήτου"
   :submit-an-issue "Υποβολή προβλήματος"
   :about "Σχετικά"}
 
@@ -585,7 +586,7 @@
 
  :renderer.tool.impl.base.zoom
  {:label "Μεγέθυνση"
-  :zoom-in  [:div "Κάντε κλικ ή επιλέξτε μια περιοχή για μεγέθυνση."]
+  :zoom-in [:div "Κάντε κλικ ή επιλέξτε μια περιοχή για μεγέθυνση."]
   :zoom-out [:div "Κρατήστε %1 για σμίκρυνση."]}
 
  :renderer.tool.impl.draw.brush

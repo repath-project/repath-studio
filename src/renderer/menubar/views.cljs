@@ -587,6 +587,11 @@
             :label (t [::changelog "Changelog"])
             :action [::events/open-remote-url
                      "https://repath.studio/roadmap/changelog/"]}
+           {:id :privacy-policy
+            :icon "list"
+            :label (t [::privacy-policy "Privacy Policy"])
+            :action [::events/open-remote-url
+                     "https://repath.studio/policies/privacy/"]}
            {:id :divider-2
             :type :separator}
            {:id :submit-issue

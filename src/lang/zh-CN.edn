@@ -134,6 +134,7 @@
   :source-code "源代码"
   :license "许可证"
   :changelog "更改日志"
+  :privacy-policy "隐私政策"
   :submit-an-issue "报告问题"
   :about "关于"}
 

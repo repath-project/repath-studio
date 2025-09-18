@@ -135,6 +135,7 @@
   :source-code "Исходный код"
   :license "Лицензия"
   :changelog "Журнал изменений"
+  :privacy-policy "Политика Конфиденциальности"
   :submit-an-issue "Сообщить о проблеме"
   :about "О программе"}
 
