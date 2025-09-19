@@ -115,7 +115,15 @@ Install the dependencies, build the app and watch the project files.
 npm install && npm run dev
 ```
 
-Run electron on a different terminal.
+When the build 
+process is complete, you can then visit the following addresses on your browser:
+
+- `http://localhost:8080` - The web application
+- `http://localhost:8081` - The test runner
+- `http://localhost:8082` - The components portfolio 
+
+
+If you want to open the electron app, execute the following on a different terminal.
 
 ```bash
 npm run electron
