@@ -14,11 +14,17 @@
    [renderer.views :as views]))
 
 (defn confirmation-button
-  [{:keys [action confirm-label]}]
+  [{:keys [action label]}]
   [:button.button.px-2.rounded.flex-1.accent.w-full
    {:auto-focus true
     :on-click #(rf/dispatch [::dialog.events/close action])}
-   (or confirm-label (t [::ok "OK"]))])
+   (or label (t [::ok "OK"]))])
+
+(defn cancel-button
+  [{:keys [action label]}]
+  [:button.button.px-2.bg-primary.rounded.flex-1
+   {:on-click #(rf/dispatch [::dialog.events/close action])}
+   (or label (t [::cancel "Cancel"]))])
 
 (defn about
   []
@@ -31,16 +37,15 @@
      [confirmation-button]]))
 
 (defn confirmation
-  [{:keys [description action confirm-label cancel-label]}]
+  [{:keys [description confirm-action confirm-label cancel-action cancel-label]}]
   [:div.p-5
    [:p description]
    [:div.flex.flex-col.gap-2.flex-wrap
     {:class "sm:flex-row"}
-    [:button.button.px-2.bg-primary.rounded.flex-1
-     {:on-click #(rf/dispatch [::dialog.events/close])}
-     (or cancel-label (t [::cancel "Cancel"]))]
-    [confirmation-button {:confirm-label confirm-label
-                          :action action}]]])
+    [cancel-button {:label cancel-label
+                    :action cancel-action}]
+    [confirmation-button {:label confirm-label
+                          :action confirm-action}]]])
 
 (defn save
   [{:keys [id title]}]

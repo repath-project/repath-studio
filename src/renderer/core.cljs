@@ -1,10 +1,7 @@
 (ns renderer.core
   (:require
-   ["@sentry/electron/renderer" :as sentry-electron-renderer]
-   ["@sentry/react" :as sentry-react]
    ["electron-log/renderer"]
    ["paper" :refer [paper]]
-   [config :as config]
    [re-frame.core :as rf]
    [re-pressed.core :as re-pressed]
    [reagent.dom.client :as ra.dom.client]
@@ -21,6 +18,10 @@
    [renderer.element.events]
    [renderer.element.impl.core]
    [renderer.element.subs]
+   [renderer.error.effects]
+   [renderer.error.events]
+   [renderer.error.subs]
+   [renderer.error.views :as error.views]
    [renderer.event.effects]
    [renderer.event.impl.keyboard :as event.impl.keyboard]
    [renderer.frame.events]
@@ -44,7 +45,6 @@
    [renderer.tool.impl.core]
    [renderer.tool.subs]
    [renderer.tree.events]
-   [renderer.utils.error :as utils.error]
    [renderer.window.effects]
    [renderer.window.events]
    [renderer.window.subs]
@@ -73,7 +73,7 @@
 
 (defn ^:dev/after-load mount-root! []
   (rf/clear-subscription-cache!)
-  (ra.dom.client/render @root [utils.error/boundary [app.views/root]]))
+  (ra.dom.client/render @root [error.views/boundary [app.views/root]]))
 
 (defn bootstrap-cb! []
   (replumb/run-repl "(in-ns 'user)" identity)
@@ -83,10 +83,6 @@
   (print "Type (help) to see a list of commands."))
 
 (defn ^:export init! []
-  (if (.-api js/window)
-    (sentry-electron-renderer/init config/sentry sentry-react/init)
-    (sentry-react/init config/sentry))
-
   (js/console.log (str "%c" easter-egg) (str "color: " "pink"))
 
   ;; https://code.thheller.com/blog/shadow-cljs/2017/10/14/bootstrap-support.html

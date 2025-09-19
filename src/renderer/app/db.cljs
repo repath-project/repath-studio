@@ -84,6 +84,8 @@
    [:env {:optional true} [:maybe map?]]
    [:user-agent {:optional true} string?]
    [:repl-mode {:default :cljs} keyword?]
+   [:error-reporting {:optional true
+                      :persist true} boolean?]
    [:worker {:default {:tasks {}}} [:map [:tasks map?]]]
    [:window {:default {}} Window]
    [:theme {:default {}

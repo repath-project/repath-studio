@@ -6,6 +6,7 @@
    [renderer.document.events :as-alias document.events]
    [renderer.document.handlers :as document.handlers]
    [renderer.effects :as-alias effects]
+   [renderer.error.events :as-alias error.events]
    [renderer.event.events :as-alias event.events]
    [renderer.event.impl.keyboard :as event.impl.keyboard]
    [renderer.history.handlers :as history.handlers]
@@ -89,7 +90,8 @@
             initial-document
             (snap.handlers/rebuild-tree))
       :fx (into
-           [[:dispatch [::theme.events/set-document-attr]]
+           [[:dispatch [::error.events/init-reporting]]
+            [:dispatch [::theme.events/set-document-attr]]
             [:dispatch [::set-lang-attrs]]
             [::theme.effects/add-native-listener [::theme.events/set-document-attr]]
             [:dispatch [::set-loading false]]

@@ -1,9 +1,9 @@
 (ns renderer.effects
   (:require
+   [clojure.string :as string]
    [re-frame.core :as rf]
    [renderer.notification.events :as-alias notification.events]
-   [renderer.utils.dom :as utils.dom]
-   [renderer.utils.error :as utils.error]))
+   [renderer.utils.dom :as utils.dom]))
 
 (rf/reg-cofx
  ::guid
@@ -62,6 +62,10 @@
                                                               formatter)))))))))
       (.catch #(when on-error (rf/dispatch (conj on-error %))))))
 
+(defn- abort-error?
+  [error]
+  (string/includes? (.-message error) "The user aborted a request."))
+
 (rf/reg-fx
  ::file-save
  (fn [{:keys [options on-error file-handle]
@@ -72,7 +76,7 @@
        (-> (.showSaveFilePicker js/window (clj->js options))
            (.then #(write-file! (assoc args :file-handle %)))
            (.catch (fn [^js/Error error]
-                     (when (and on-error (not (utils.error/abort-error? error)))
+                     (when (and on-error (not (abort-error? error)))
                        (rf/dispatch (conj on-error error))))))
        (rf/dispatch
         [::notification.events/show-unavailable-feature
@@ -92,7 +96,7 @@
                           (.catch #(when on-error
                                      (rf/dispatch (conj on-error file-handle %)))))))))
          (.catch (fn [^js/Error error]
-                   (when (and on-error (not (utils.error/abort-error? error)))
+                   (when (and on-error (not (abort-error? error)))
                      (rf/dispatch (conj on-error error))))))
      (legacy-file-open! #(rf/dispatch (conj on-success nil %))))))
 

@@ -1,8 +1,5 @@
-(ns renderer.utils.error
-  "Catching rendering errors with an error boundary.
-   https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary"
+(ns renderer.error.views
   (:require
-   [clojure.string :as string]
    [malli.core :as m]
    [re-frame.core :as rf]
    [reagent.core :as reagent]
@@ -10,10 +7,6 @@
    [renderer.history.events :as-alias history.events]
    [renderer.views :as views]
    [renderer.window.events :as-alias window.events]))
-
-(defn abort-error?
-  [error]
-  (string/includes? (.-message error) "The user aborted a request."))
 
 (m/=> submit-error-url [:-> string? string?])
 (defn submit-error-url
@@ -70,6 +63,8 @@
          "Clear data and restart"]]]]]))
 
 (defn boundary
+  "Catching rendering errors with an error boundary.
+   https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary"
   []
   (let [error (reagent/atom nil)]
     (reagent/create-class

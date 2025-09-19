@@ -108,22 +108,24 @@
                        :siblings 1}
       :renderCustomNodeElement node}]))
 
+(defn clear-dialog
+  []
+  {:title (t [::action-cannot-undone "This action cannot be undone."])
+   :description (t [::clear-history-description
+                    "Are you sure you wish to clear the document history?"])
+   :confirm-label (t [::clear-history "Clear history"])
+   :confirm-action [::history.events/clear]})
+
 (defn root
   []
-  (let [ref (react/createRef)
-        confirmation {:title (t [::action-cannot-undone "This action cannot be undone."])
-                      :description (t [::clear-history-description
-                                       "Are you sure you wish to clear the document
-                                         history?"])
-                      :confirm-label (t [::clear-history "Clear history"])
-                      :action [::history.events/clear]}]
+  (let [ref (react/createRef)]
     [:div.flex.flex-col.h-full
      [:div.flex.p-1
       [:button.button.flex-1
        {:on-click #(rf/dispatch [::history.events/tree-view-updated 0.5 (center ref)])}
        (t [::center-view "Center view"])]
       [:button.button.flex-1
-       {:on-click #(rf/dispatch [::dialog.events/show-confirmation confirmation])}
+       {:on-click #(rf/dispatch [::dialog.events/show-confirmation (clear-dialog)])}
        (t [::clear-history "Clear history"])]]
      [:div.flex-1 {:ref ref}
       [tree ref]]]))

@@ -42,7 +42,8 @@
 (defn open-external!
   [url]
   (let [url-parsed (js/URL. url)]
-    (when (and (secure-url? url-parsed) (allowed-url? url-parsed))
+    (when (and (secure-url? url-parsed)
+               (allowed-url? url-parsed))
       (.openExternal shell url-parsed.href))))
 
 (defn register-ipc-on-events! []
@@ -91,6 +92,12 @@
        ["closed" #(reset! main-window nil)]]]
       (.on web-contents web-contents-event f))))
 
+(defn set-window-open-handler! []
+  (.setWindowOpenHandler (.-webContents ^js @main-window)
+                         (fn [details]
+                           (open-external! (.-url details))
+                           #js {:action "deny"})))
+
 (defn on-ready-to-show!
   [^js window]
   (doseq
@@ -137,6 +144,7 @@
                 "http://localhost:8080"
                 (resource-path "/public/index.html")))
 
+    (set-window-open-handler!)
     (register-web-contents-events!)
     (register-ipc-on-events!)
     (register-ipc-handle-events!)

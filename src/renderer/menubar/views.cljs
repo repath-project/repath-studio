@@ -9,6 +9,8 @@
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.events :as-alias element.events]
    [renderer.element.subs :as-alias element.subs]
+   [renderer.error.events :as-alias error.events]
+   [renderer.error.subs :as-alias error.subs]
    [renderer.events :as-alias events]
    [renderer.frame.events :as-alias frame.events]
    [renderer.history.events :as-alias history.events]
@@ -599,6 +601,12 @@
             :label (t [::submit-an-issue "Submit an issue"])
             :action [::events/open-remote-url
                      "https://github.com/repath-project/repath-studio/issues/new/choose"]}
+           {:id :report-errors
+            :icon "error"
+            :type :checkbox
+            :label (t [::report-errors "Report errors automatically"])
+            :checked @(rf/subscribe [::error.subs/reporting?])
+            :action [::error.events/toggle-reporting]}
            {:id :divider-3
             :type :separator}
            {:id :about
