@@ -18,7 +18,7 @@
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.compatibility :as utils.compatibility]
    [renderer.utils.element :as utils.element]
-   [renderer.utils.i18n :refer [t]]
+   [renderer.utils.i18n :refer [tr]]
    [renderer.utils.vec :as utils.vec]))
 
 (def file-picker-options
@@ -86,7 +86,7 @@
      (-> db
          (document.handlers/set-active id)
          (dialog.handlers/create
-          {:title (t [::save-changes "Do you want to save your changes?"])
+          {:title (tr db [::save-changes "Do you want to save your changes?"])
            :close-button true
            :content [dialog.views/save (get-in db [:documents id])]
            :attrs {:onOpenAutoFocus #(.preventDefault %)}})))))
@@ -209,9 +209,11 @@
                                                     config/save-excluded-keys)))
         ::effects/focus nil})
      {:db (->> (notification.views/generic-error
-                {:title (t [::error-loading "Error while loading %1"] [(:title document)])
-                 :message (t [::unsupported-or-corrupted
-                              "File appears to be unsupported or corrupted."])})
+                {:title (tr db
+                            [::error-loading "Error while loading %1"]
+                            [(:title document)])
+                 :message (tr db [::unsupported-or-corrupted
+                                  "File appears to be unsupported or corrupted."])})
                (notification.handlers/add db))})))
 
 (rf/reg-event-fx

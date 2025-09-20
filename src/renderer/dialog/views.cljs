@@ -39,7 +39,9 @@
 (defn confirmation
   [{:keys [description confirm-action confirm-label cancel-action cancel-label]}]
   [:div.p-5
-   [:p description]
+   (cond->> description
+     (string? description)
+     (into [:p]))
    [:div.flex.flex-col.gap-2.flex-wrap
     {:class "sm:flex-row"}
     [cancel-button {:label cancel-label

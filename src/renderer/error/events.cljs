@@ -7,15 +7,17 @@
    [renderer.dialog.views :as dialog.views]
    [renderer.error.effects :as-alias error.effects]
    [renderer.menubar.views :as-alias menubar.views]
-   [renderer.utils.i18n :refer [t]]))
+   [renderer.utils.i18n :refer [t tr]]))
 
 (defn reporting-confirmation-dialog
   []
   (dialog.views/confirmation
    {:description (t [::reporting-description
-                     [:span "Would you like to help us improve by sending anonymous error
-                             reports? You can change your preference at any time from the
-                             \"%1\" menu. For more information, please read our %2."]]
+                     [:div
+                      [:p "Would you like to help us improve by sending anonymous error
+                          reports? You can change your preference at any time from our
+                          \"%1\" menu."]
+                      [:p "For more information, please read our %2."]]]
                     [[:strong (t [::menubar.views/help "Help"])]
                      [:a.button-link {:href "https://repath.studio/policies/privacy/"
                                       :target "_blank"}
@@ -29,7 +31,9 @@
  (fn [{:keys [db]} _]
    (let [{:keys [error-reporting]} db]
      (if (nil? error-reporting)
-       {:db (dialog.handlers/create db {:title (t [::reporting-title "Error reporting"])
+       {:db (dialog.handlers/create db {:title (tr db
+                                                   [::welcome "Welcome to %1!"]
+                                                   [config/app-name])
                                         :close-button false
                                         :content [reporting-confirmation-dialog]
                                         :attrs {:onOpenAutoFocus #(.preventDefault %)}})}

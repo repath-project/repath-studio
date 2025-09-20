@@ -731,4 +731,14 @@
   :error "Fehler"
   :validation-error "Validierungsfehler"
   :clear-all "Alle löschen"
-  :event "Ereignis: "}}
+  :event "Ereignis: "}
+
+ :renderer.error.events
+ {:welcome "Willkommen bei %1!"
+  :reporting-description [:div
+                          [:p "Möchten Sie uns dabei helfen, uns zu verbessern, indem Sie
+                              anonyme Fehlerberichte senden? Sie können Ihre Einstellung
+                              jederzeit über unser \"%1\"-Menü ändern."]
+                          [:p "Für weitere Informationen lesen Sie bitte unsere %2."]]
+  :privacy-policy "Datenschutzerklärung"
+  :no-thank-you "Nein, danke"}}

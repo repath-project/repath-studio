@@ -74,8 +74,20 @@
               (map (fn [[k v]] [k (:dictionary v)]))
               (into {}))})
 
+(m/=> translate [:-> Lang [:* any?] any?])
+(defn translate
+  [lang args]
+  (apply tempura/tr options [lang] args))
+
+(defn tr
+  "Translation function that can be called outside of a reactive context."
+  [db & more]
+  (let [{:keys [lang system-lang]} db
+        lang (computed-lang lang system-lang)]
+    (translate lang more)))
+
 (defn t
   "Translation function that should be called in a reactive context."
   [& more]
   (let [lang @(rf/subscribe [::app.subs/computed-lang])]
-    (apply tempura/tr options [lang] more)))
+    (translate lang more)))

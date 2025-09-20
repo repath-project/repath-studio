@@ -602,7 +602,7 @@
             :action [::events/open-remote-url
                      "https://github.com/repath-project/repath-studio/issues/new/choose"]}
            {:id :report-errors
-            :icon "error"
+            :icon "bug"
             :type :checkbox
             :label (t [::report-errors "Report errors automatically"])
             :checked @(rf/subscribe [::error.subs/reporting?])

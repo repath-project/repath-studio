@@ -719,4 +719,14 @@
   :error "Erro"
   :validation-error "Erro de validação"
   :clear-all "Limpar tudo"
-  :event "Evento: "}}
+  :event "Evento: "}
+
+ :renderer.error.events
+ {:welcome "Bem-vindo ao %1!"
+  :reporting-description [:div
+                          [:p "Gostaria de nos ajudar a melhorar enviando relatórios de
+                              erro anónimos? Pode alterar a sua preferência a qualquer
+                              momento no nosso menu \"%1\"."]
+                          [:p "Para mais informações, leia a nossa %2."]]
+  :privacy-policy "política de privacidade"
+  :no-thank-you "Não, obrigado"}}
