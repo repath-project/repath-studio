@@ -63,8 +63,8 @@
                                              {:type :element
                                               :tag :image
                                               :label (.-name file)
-                                              :attrs {:x (- x (/ w 2))
-                                                      :y (- y (/ h 2))
+                                              :attrs {:x x
+                                                      :y y
                                                       :width w
                                                       :height h
                                                       :href data-url}})))))

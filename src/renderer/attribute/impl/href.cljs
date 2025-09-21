@@ -5,8 +5,8 @@
    [re-frame.core :as rf]
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.attribute.views :as attribute.views]
-   [renderer.effects :as-alias effects]
    [renderer.element.db :as element.db]
+   [renderer.element.effects :as-alias element.effects]
    [renderer.element.events :as-alias element.events]
    [renderer.events :as events]
    [renderer.notification.events :as-alias notification.events]
@@ -20,7 +20,7 @@
   "The href attribute defines a link to a resource as a reference URL.
    The exact meaning of that link depends on the context of each element using it.")
 
-(defmethod attribute.hierarchy/form-element [:default :href]
+(defmethod attribute.hierarchy/form-element [:image :href]
   [_ k v {:keys [disabled]}]
   (let [state-default? (= @(rf/subscribe [::tool.subs/state]) :idle)
         data-url? (and v (string/starts-with? v "data:"))]
@@ -38,13 +38,20 @@
                    [::events/file-open
                     {:options {:startIn "pictures"
                                :types [{:accept element.db/image-mime-types}]}
-                     :on-success [::success]}])}
+                     :on-success [::success]
+                     :on-error [::notification.events/show-exception]}])}
       [views/icon "folder"]]]))
 
 (rf/reg-event-fx
  ::success
- (fn [{:keys [db]} [_ _file-handle file]]
-   {:db (tool.handlers/activate db :transform)
-    ::effects/file-read-as
-    [file :data-url {"load" {:on-fire [::element.events/set-attr :href]}
-                     "error" {:on-fire [::notification.events/show-exception]}}]}))
+ (fn [_ [_ _file-handle file]]
+   {::element.effects/import-image {:file file
+                                    :on-success [::update-attrs]
+                                    :on-error [::notification.events/show-exception]}}))
+
+(rf/reg-event-fx
+ ::update-attrs
+ (fn [{:keys [db]} [_ el]]
+   (let [attrs (select-keys (:attrs el) [:href :width :height])]
+     {:db (tool.handlers/activate db :transform)
+      :dispatch-n (mapv (fn [[k v]] [::element.events/set-attr k v]) attrs)})))
