@@ -8,11 +8,10 @@
  (fn [{:keys [data on-success on-error]}]
    (let [worker (js/Worker. "js/worker.js")
          id (uuid (:id data))]
-     (.addEventListener
-      worker
-      "message"
-      #(let [response-data (js->clj (.. % -data) :keywordize-keys true)]
-         (rf/dispatch [::worker.events/message id on-success response-data])))
+     (.addEventListener worker
+                        "message"
+                        #(let [data (js->clj (.. % -data) :keywordize-keys true)]
+                           (rf/dispatch [::worker.events/message id on-success data])))
 
      (.addEventListener worker
                         "error"

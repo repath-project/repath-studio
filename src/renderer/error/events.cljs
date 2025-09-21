@@ -15,12 +15,13 @@
    {:description (t [::reporting-description
                      [:div
                       [:p "Would you like to help us improve by sending anonymous error
-                          reports? You can change your preference at any time from our
-                          \"%1\" menu."]
+                           reports? You can change your preference at any time from our
+                           \"%1\" menu."]
                       [:p "For more information, please read our %2."]]]
                     [[:strong (t [::menubar.views/help "Help"])]
-                     [:a.button-link {:href "https://repath.studio/policies/privacy/"
-                                      :target "_blank"}
+                     [:a.button-link
+                      {:href "https://repath.studio/policies/privacy/"
+                       :target "_blank"}
                       (t [::privacy-policy "privacy policy"])]])
     :confirm-action [::set-reporting true]
     :cancel-action [::set-reporting false]
