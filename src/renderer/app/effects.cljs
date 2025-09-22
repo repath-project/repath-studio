@@ -3,6 +3,7 @@
    ["localforage" :as localforage]
    [cognitect.transit :as transit]
    [config :as config]
+   [goog.functions]
    [re-frame.core :as rf]
    [re-frame.db :as rf.db]
    [renderer.app.db :as app.db]
@@ -66,19 +67,24 @@
        (.catch #(when on-error (rf/dispatch (conj on-error %))))
        (.finally #(when on-finally (rf/dispatch on-finally))))))
 
+(defn persist
+  []
+  (let [db (-> @rf.db/app-db
+               (history.handlers/drop-rest)
+               (document.handlers/remove-file-handle))
+        persisted-db (select-keys db app.db/persisted-keys)
+        writer (transit/writer :json)]
+    (when-let [json (try (transit/write writer persisted-db)
+                         (catch :default err
+                           (rf/dispatch [::notification.events/show-exception err])))]
+      (-> (localforage/setItem config/app-name json)
+          (.catch #(rf/dispatch [::notification.events/show-exception %]))))))
+
+(def debounced-persist (goog.functions/debounce persist 500))
+
 (rf/reg-fx
  ::persist
- (fn []
-   (let [db (-> @rf.db/app-db
-                (history.handlers/drop-rest)
-                (document.handlers/remove-file-handle))
-         persisted-db (select-keys db app.db/persisted-keys)
-         writer (transit/writer :json)]
-     (when-let [json (try (transit/write writer persisted-db)
-                          (catch :default err
-                            (rf/dispatch [::notification.events/show-exception err])))]
-       (-> (localforage/setItem config/app-name json)
-           (.catch #(rf/dispatch [::notification.events/show-exception %])))))))
+ debounced-persist)
 
 (rf/reg-fx
  ::validate
