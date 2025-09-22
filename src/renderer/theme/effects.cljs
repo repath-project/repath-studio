@@ -2,7 +2,7 @@
   (:require
    [re-frame.core :as rf]))
 
-(def native-query! (.matchMedia js/window "(prefers-color-scheme: dark)"))
+(def native-query! (js/matchMedia "(prefers-color-scheme: dark)"))
 
 (rf/reg-cofx
  ::native-mode

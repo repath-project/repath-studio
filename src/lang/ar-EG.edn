@@ -597,7 +597,8 @@
   :close "إغلاق"
   :theme "وضع السمة - %1"
   :enter-fullscreen "دخول الشاشة الكاملة"
-  :exit-fullscreen "خروج من الشاشة الكاملة"}
+  :exit-fullscreen "خروج من الشاشة الكاملة"
+  :install "تثبيت"}
 
  :renderer.toolbar.status
  {:select-zoom "اختيار مستوى التكبير"

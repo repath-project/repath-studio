@@ -2,12 +2,16 @@
   "name": "Repath Studio",
   "short_name": "Repath",
   "description": "Scalable Vector Graphics Manipulation",
-  "categories": ["graphics", "productivity", "utilities"],
+  "categories": [
+    "graphics",
+    "productivity",
+    "utilities"
+  ],
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
-  "orientation": "any",
+  "orientation": "natural",
   "scope": "/",
   "icons": [
     {

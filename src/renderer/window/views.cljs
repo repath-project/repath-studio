@@ -2,6 +2,7 @@
   (:require
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    [re-frame.core :as rf]
+   [renderer.app.events :as-alias app.events]
    [renderer.app.subs :as-alias app.subs]
    [renderer.document.subs :as-alias document.subs]
    [renderer.menubar.views :as menubar.views]
@@ -90,7 +91,8 @@
   (let [fullscreen? @(rf/subscribe [::window.subs/fullscreen?])
         theme-mode (name @(rf/subscribe [::theme.subs/mode]))
         mac? @(rf/subscribe [::app.subs/mac?])
-        electron? @(rf/subscribe [::app.subs/electron?])
+        web? @(rf/subscribe [::app.subs/web?])
+        installable? @(rf/subscribe [::app.subs/installable?])
         title-bar @(rf/subscribe [::document.subs/title-bar])]
     [:div.flex.items-center.relative.gap-1
      (when-not (or fullscreen? mac?)
@@ -109,21 +111,23 @@
      [:div.flex.h-full.flex-1.drag]
      [:div.flex
       [:div.flex.gap-px
+       (when installable?
+         [:button.button.px-3.bg-transparent!
+          {:on-click #(rf/dispatch [::app.events/install])}
+          (t [::install "Install"])])
        [language-dropdown]
        [button {:action [::theme.events/cycle-mode]
                 :title (t [::theme "Theme mode - %1"] [theme-mode])
                 :icon theme-mode
                 :class "bg-primary"}]
-       (when (or fullscreen? (not electron?))
+       (when (or fullscreen? web?)
          [button {:action [::window.events/toggle-fullscreen]
                   :title (if fullscreen?
                            (t [::exit-fullscreen "Exit fullscreen"])
                            (t [::enter-fullscreen "Enter fullscreen"]))
                   :icon (if fullscreen? "arrow-minimize" "arrow-maximize")
                   :class "bg-primary hidden sm:block"}])
-       (when (and electron?
-                  (not fullscreen?)
-                  (not mac?))
+       (when-not (or web? fullscreen? mac?)
          (->> (window-control-buttons)
               (map button)
               (into [:div.flex])))]]]))

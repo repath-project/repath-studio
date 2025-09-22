@@ -636,7 +636,8 @@
   :close "Закрыть"
   :theme "Режим темы - %1"
   :enter-fullscreen "Войти в полноэкранный режим"
-  :exit-fullscreen "Выйти из полноэкранного режима"}
+  :exit-fullscreen "Выйти из полноэкранного режима"
+  :install "Установить"}
 
  :renderer.toolbar.status
  {:select-zoom "Выбрать уровень масштаба"

@@ -624,7 +624,8 @@
   :close "Fechar"
   :theme "Modo de tema - %1"
   :enter-fullscreen "Entrar em ecrã inteiro"
-  :exit-fullscreen "Sair do ecrã inteiro"}
+  :exit-fullscreen "Sair do ecrã inteiro"
+  :install "Instalar"}
 
  :renderer.toolbar.status
  {:select-zoom "Selecionar nível de zoom"

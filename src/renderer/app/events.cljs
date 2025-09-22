@@ -41,12 +41,14 @@
  [(rf/inject-cofx ::app.effects/user-agent)
   (rf/inject-cofx ::app.effects/platform)
   (rf/inject-cofx ::app.effects/versions)
-  (rf/inject-cofx ::app.effects/env)]
- (fn [{:keys [user-agent platform versions env]} _]
+  (rf/inject-cofx ::app.effects/env)
+  (rf/inject-cofx ::app.effects/standalone)]
+ (fn [{:keys [user-agent platform versions env standalone]} _]
    {:db (assoc app.db/default
                :platform platform
                :versions (js->clj versions)
                :env (js->clj env)
+               :standalone standalone
                :user-agent user-agent)
     :fx (into [[::app.effects/get-local-db
                 {:on-success [::load-local-db]
@@ -67,12 +69,25 @@
  (fn [db [_ state]]
    (assoc db :loading state)))
 
+(rf/reg-event-db
+ ::set-install-prompt
+ (fn [db [_ prompt]]
+   (assoc db :install-prompt prompt)))
+
+(rf/reg-event-fx
+ ::install
+ (fn [{:keys [db]} _]
+   (when-let [install-prompt (:install-prompt db)]
+     {::app.effects/install {:prompt install-prompt
+                             :outcomes {"accepted" [::set-install-prompt nil]}}})))
+
 (def listeners
   (->> [[js/document "keydown" [::event.events/keyboard] event.impl.keyboard/->clj]
         [js/document "keyup" [::event.events/keyboard] event.impl.keyboard/->clj]
         [js/document "fullscreenchange" [::window.events/update-fullscreen]]
         [js/window "focus" [::window.events/update-focused]]
-        [js/window "blur" [::window.events/update-focused]]]
+        [js/window "blur" [::window.events/update-focused]]
+        [js/window "beforeinstallprompt" [::set-install-prompt]]]
        (mapv (partial vector ::effects/add-event-listener))))
 
 (rf/reg-event-fx

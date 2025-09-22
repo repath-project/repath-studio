@@ -37,6 +37,13 @@
    (assoc coeffects :user-agent (.-userAgent js/navigator))))
 
 (rf/reg-cofx
+ ::standalone
+ (fn [coeffects _]
+   (assoc coeffects :standalone (or (.-standalone js/navigator)
+                                    (.-matches (js/matchMedia
+                                                "(display-mode: standalone"))))))
+
+(rf/reg-cofx
  ::language
  (fn [coeffects _]
    (assoc coeffects :language (.-language js/navigator))))
@@ -84,3 +91,12 @@
  ::clear-local-storage
  (fn []
    (localforage/clear)))
+
+(rf/reg-fx
+ ::install
+ (fn [{:keys [prompt outcomes]}]
+   (.prompt prompt)
+   (-> (.-userChoice prompt)
+       (.then (fn [choice]
+                (when-let [outcome-event (get outcomes (.-outcome choice))]
+                  (rf/dispatch outcome-event)))))))

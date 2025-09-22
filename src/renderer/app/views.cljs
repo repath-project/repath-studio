@@ -362,11 +362,10 @@
         active-tool @(rf/subscribe [::tool.subs/active])
         recent-documents @(rf/subscribe [::document.subs/recent])
         lang-dir @(rf/subscribe [::app.subs/lang-dir])
-        electron? @(rf/subscribe [::app.subs/electron?])
+        web? @(rf/subscribe [::app.subs/web?])
         is-app-loading @(rf/subscribe [::app.subs/loading?])]
     (if is-app-loading
-      (when-not electron?
-        [:div.loader])
+      (when web? [:div.loader])
       [:> Direction/Provider {:dir lang-dir}
        [:> Tooltip/Provider
         [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden.justify-between

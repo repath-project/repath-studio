@@ -100,16 +100,32 @@
  :-> :platform)
 
 (rf/reg-sub
- ::electron?
+ ::web?
  :<- [::platform]
  (fn [platform _]
-   (not= platform "web")))
+   (= platform "web")))
 
 (rf/reg-sub
  ::mac?
  :<- [::platform]
  (fn [platform _]
    (= platform "darwin")))
+
+(rf/reg-sub
+ ::standalone?
+ :-> :standalone)
+
+(rf/reg-sub
+ ::install-prompt
+ :-> :install-prompt)
+
+(rf/reg-sub
+ ::installable?
+ :<- [::web?]
+ :<- [::standalone?]
+ :<- [::install-prompt]
+ (fn [[web? standalone? install-prompt] _]
+   (and web? (not standalone?) install-prompt)))
 
 (rf/reg-sub
  ::user-agent

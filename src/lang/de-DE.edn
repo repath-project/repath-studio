@@ -636,7 +636,8 @@
   :close "Schließen"
   :theme "Themamodus - %1"
   :enter-fullscreen "Vollbild aktivieren"
-  :exit-fullscreen "Vollbild verlassen"}
+  :exit-fullscreen "Vollbild verlassen"
+  :install "Installieren"}
 
  :renderer.toolbar.status
  {:select-zoom "Zoom-Ebene auswählen"

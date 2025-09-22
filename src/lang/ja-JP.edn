@@ -602,7 +602,8 @@
   :close "閉じる"
   :theme "テーマモード - %1"
   :enter-fullscreen "フルスクリーンに入る"
-  :exit-fullscreen "フルスクリーンを終了"}
+  :exit-fullscreen "フルスクリーンを終了"
+  :install "インストール"}
 
  :renderer.toolbar.status
  {:select-zoom "ズームレベルを選択"

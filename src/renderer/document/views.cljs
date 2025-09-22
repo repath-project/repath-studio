@@ -72,7 +72,7 @@
   (let [document @(rf/subscribe [::document.subs/entity id])
         path (:path document)
         tabs @(rf/subscribe [::document.subs/tabs])
-        electron? @(rf/subscribe [::app.subs/electron?])]
+        web? @(rf/subscribe [::app.subs/web?])]
     (cond-> [{:label (t [::close "Close"])
               :action [::document.events/close id true]}
              {:label (t [::close-others "Close others"])
@@ -82,7 +82,7 @@
               :action [::document.events/close-all]}
              {:label (t [::close-saved "Close saved"])
               :action [::document.events/close-saved]}]
-      electron?
+      (not web?)
       (concat [{:type :separator}
                {:label (t [::open-directory "Open containing directory"])
                 :action [::document.events/open-directory path]

@@ -3,6 +3,7 @@
    [config :as config]
    [malli.core :as m]
    [malli.transform :as m.transform]
+   [renderer.db :refer [JS_Object]]
    [renderer.dialog.db :refer [Dialog]]
    [renderer.document.db :refer [Document]]
    [renderer.element.db :refer [Element]]
@@ -82,6 +83,8 @@
    [:platform {:optional true} Platform]
    [:versions {:optional true} [:maybe map?]]
    [:env {:optional true} [:maybe map?]]
+   [:standalone {:optional true} boolean?]
+   [:install-prompt {:optional true} JS_Object]
    [:user-agent {:optional true} string?]
    [:repl-mode {:default :cljs} keyword?]
    [:error-reporting {:optional true
