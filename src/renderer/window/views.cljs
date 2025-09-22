@@ -112,9 +112,10 @@
      [:div.flex
       [:div.flex.gap-px
        (when installable?
-         [:button.button.px-3.bg-transparent!
-          {:on-click #(rf/dispatch [::app.events/install])}
-          (t [::install "Install"])])
+         [views/icon-button "download"
+          {:title (t [::install])
+           :class "rounded-none text-muted bg-transparent!"
+           :on-click #(rf/dispatch [::app.events/install])}])
        [language-dropdown]
        [button {:action [::theme.events/cycle-mode]
                 :title (t [::theme "Theme mode - %1"] [theme-mode])
