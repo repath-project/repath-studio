@@ -3,6 +3,7 @@
    [re-frame.core :as rf]
    [renderer.app.effects :as-alias app.effects]
    [renderer.effects :as-alias effects]
+   [renderer.error.effects :as-alias error.effects]
    [renderer.theme.effects :as-alias theme.effects]
    [renderer.window.effects :as-alias window.effects]))
 
@@ -39,6 +40,10 @@
 
   (rf/reg-fx
    ::theme.effects/add-native-listener
+   (fn [_]))
+
+  (rf/reg-fx
+   ::error.effects/init-reporting
    (fn [_]))
 
   (rf/reg-fx
