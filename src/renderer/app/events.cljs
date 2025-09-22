@@ -28,19 +28,13 @@
                 db
                 (rf/assoc-effect :fx (conj (or fx []) [::app.effects/persist])))))))
 
-(defonce listeners
-  [[js/document "keydown" [::event.events/keyboard] event.impl.keyboard/->clj]
-   [js/document "keyup" [::event.events/keyboard] event.impl.keyboard/->clj]
-   [js/document "fullscreenchange" [::window.events/update-fullscreen]]
-   [js/window "focus" [::window.events/update-focused]]
-   [js/window "blur" [::window.events/update-focused]]])
-
-(defonce ipc-listeners
-  [["window-maximized" [::window.events/set-maximized true]]
-   ["window-unmaximized" [::window.events/set-maximized false]]
-   ["window-entered-fullscreen" [::window.events/set-fullscreen true]]
-   ["window-leaved-fullscreen" [::window.events/set-fullscreen false]]
-   ["window-minimized" [::window.events/set-minimized true]]])
+(def ipc-listeners
+  (->> [["window-maximized" [::window.events/set-maximized true]]
+        ["window-unmaximized" [::window.events/set-maximized false]]
+        ["window-entered-fullscreen" [::window.events/set-fullscreen true]]
+        ["window-leaved-fullscreen" [::window.events/set-fullscreen false]]
+        ["window-minimized" [::window.events/set-minimized true]]]
+       (mapv (partial vector ::effects/ipc-on))))
 
 (rf/reg-event-fx
  ::initialize
@@ -54,13 +48,11 @@
                :versions (js->clj versions)
                :env (js->clj env)
                :user-agent user-agent)
-    :fx (->>
-         ipc-listeners
-         (map (partial vector ::effects/ipc-on))
-         (into [[::app.effects/get-local-db
-                 {:on-success [::load-local-db]
-                  :on-error [::notification.events/show-exception]
-                  :on-finally [::db-loaded]}]]))}))
+    :fx (into [[::app.effects/get-local-db
+                {:on-success [::load-local-db]
+                 :on-error [::notification.events/show-exception]
+                 :on-finally [::db-loaded]}]]
+              ipc-listeners)}))
 
 (rf/reg-event-fx
  ::load-local-db
@@ -74,6 +66,14 @@
  ::set-loading
  (fn [db [_ state]]
    (assoc db :loading state)))
+
+(def listeners
+  (->> [[js/document "keydown" [::event.events/keyboard] event.impl.keyboard/->clj]
+        [js/document "keyup" [::event.events/keyboard] event.impl.keyboard/->clj]
+        [js/document "fullscreenchange" [::window.events/update-fullscreen]]
+        [js/window "focus" [::window.events/update-focused]]
+        [js/window "blur" [::window.events/update-focused]]]
+       (mapv (partial vector ::effects/add-event-listener))))
 
 (rf/reg-event-fx
  ::db-loaded
@@ -91,17 +91,16 @@
 
             initial-document
             (snap.handlers/rebuild-tree))
-      :fx (->> listeners
-               (map (partial vector ::effects/add-event-listener))
-               (into [[:dispatch [::error.events/init-reporting]]
-                      [:dispatch [::theme.events/set-document-attr]]
-                      [:dispatch [::set-lang-attrs]]
-                      [::theme.effects/add-listener [::theme.events/set-document-attr]]
-                      [:dispatch [::set-loading false]]
-                      ;; We use flush-dom to render once so we can get the canvas size.
-                      [:dispatch ^:flush-dom [::document.events/center]]
-                      [:dispatch [::window.events/update-focused]]
-                      [::effects/ipc-send ["initialized"]]]))})))
+      :fx (into [[:dispatch [::error.events/init-reporting]]
+                 [:dispatch [::theme.events/set-document-attr]]
+                 [:dispatch [::set-lang-attrs]]
+                 [::theme.effects/add-listener [::theme.events/set-document-attr]]
+                 [:dispatch [::set-loading false]]
+                 ;; We use flush-dom to render once so we can get the canvas size.
+                 [:dispatch ^:flush-dom [::document.events/center]]
+                 [:dispatch [::window.events/update-focused]]
+                 [::effects/ipc-send ["initialized"]]]
+                listeners)})))
 
 (rf/reg-event-db
  ::set-system-fonts
