@@ -15,9 +15,9 @@
                [:-> ZoomFactor Vec2 DomRect Viewbox]])
 (defn viewbox
   ([db]
-   (let [zoom (get-in db [:documents (:active-document db) :zoom])
-         pan (get-in db [:documents (:active-document db) :pan])]
-     (when-let [dom-rect (:dom-rect db)]
+   (let [{:keys [active-document dom-rect]} db
+         {:keys [zoom pan]} (get-in db [:documents active-document])]
+     (when dom-rect
        (viewbox zoom pan dom-rect))))
   ([zoom pan dom-rect]
    (let [{:keys [width height]} dom-rect]
@@ -38,22 +38,21 @@
 (m/=> recenter-to-dom-rect [:-> App DomRect App])
 (defn recenter-to-dom-rect
   [db updated-dom-rect]
-  (let [delta (merge-with - (:dom-rect db) updated-dom-rect)
-        offset (matrix/div [(:width delta) (:height delta)] 2)]
+  (let [{:keys [document-tabs dom-rect]} db
+        delta-rect (merge-with - dom-rect updated-dom-rect)
+        offset (matrix/div [(:width delta-rect) (:height delta-rect)] 2)]
     (if-not (-> db :window :focused)
       db
-      (->> (:document-tabs db)
-           (reduce (fn [db id] (pan-by db offset id)) db)))))
+      (reduce (fn [db id] (pan-by db offset id)) db document-tabs))))
 
 (m/=> zoom-at-position [:-> App number? Vec2 App])
 (defn zoom-at-position
   [db factor pos]
   (let [active-document (:active-document db)
-        zoom (get-in db [:documents active-document :zoom])
+        {:keys [zoom pan]} (get-in db [:documents active-document])
         updated-zoom (utils.math/clamp (* zoom factor) 0.01 100)
         updated-factor (/ updated-zoom zoom)
-        current-pan (get-in db [:documents active-document :pan])
-        updated-pan (matrix/sub (matrix/div current-pan updated-factor)
+        updated-pan (matrix/sub (matrix/div pan updated-factor)
                                 (matrix/sub (matrix/div pos updated-factor)
                                             pos))]
     (-> db
@@ -76,8 +75,9 @@
 (m/=> zoom-in-place [:-> App number? App])
 (defn zoom-in-place
   [db factor]
-  (let [{:keys [zoom pan]} (get-in db [:documents (:active-document db)])
-        {:keys [width height]} (:dom-rect db)
+  (let [{:keys [active-document dom-rect]} db
+        {:keys [zoom pan]} (get-in db [:documents active-document])
+        {:keys [width height]} dom-rect
         position (matrix/add pan (matrix/div [width height] 2 zoom))]
     (zoom-at-position db factor position)))
 
@@ -107,11 +107,12 @@
           (utils.element/united-bbox (element.handlers/root-children db))))))
   ([db focus-type bbox]
    (let [[w h] (utils.bounds/->dimensions bbox)
-         width-ratio (/ (-> db :dom-rect :width) w)
-         height-ratio (/ (-> db :dom-rect :height) h)
+         {:keys [active-document dom-rect]} db
+         width-ratio (/ (:width dom-rect) w)
+         height-ratio (/ (:height dom-rect) h)
          min-zoom (min width-ratio height-ratio)]
      (-> db
-         (assoc-in [:documents (:active-document db) :zoom]
+         (assoc-in [:documents active-document :zoom]
                    (case focus-type
                      :original (min (* min-zoom 0.9) 1)
                      :fit min-zoom
