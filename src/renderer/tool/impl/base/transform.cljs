@@ -186,7 +186,8 @@
 
 (defmethod tool.hierarchy/on-deactivate :transform
   [db]
-  (-> (element.handlers/clear-ignored db)
+  (-> db
+      (element.handlers/clear-ignored)
       (element.handlers/clear-hovered)
       (dissoc :pivot-point)))
 
@@ -255,7 +256,8 @@
         ratio (cond-> ratio ratio-locked (lock-ratio handle))
         ;; TODO: Handle negative ratio, and position on recursive scale.
         ratio (mapv #(max % 0.01) ratio)]
-    (-> (assoc db :pivot-point pivot-point)
+    (-> db
+        (assoc :pivot-point pivot-point)
         (element.handlers/scale ratio pivot-point recursive))))
 
 (m/=> selectable? [:-> [:or Element Handle nil?] boolean?])
@@ -321,13 +323,16 @@
 
 (defmethod tool.hierarchy/on-drag-start :transform
   [db e]
-  (let [clicked-element (:clicked-element db)
+  (let [{:keys [clicked-element]} db
         state (drag-start->state clicked-element)]
-    (cond-> (-> (tool.handlers/set-state db state)
-                (element.handlers/clear-hovered))
+    (cond-> db
+      :always
+      (-> (tool.handlers/set-state state)
+          (element.handlers/clear-hovered))
+
       (selectable? clicked-element)
-      (-> (element.handlers/toggle-selection (-> db :clicked-element :id) (:shift-key e))
-          (snap.handlers/delete-from-tree #{(-> db :clicked-element :id)})))))
+      (-> (element.handlers/toggle-selection (:id clicked-element) (:shift-key e))
+          (snap.handlers/delete-from-tree #{(:id clicked-element)})))))
 
 (defmethod tool.hierarchy/on-drag :transform
   [db e]
@@ -340,14 +345,16 @@
                  :horizontal))]
     (case (:state db)
       :select
-      (-> (element.handlers/clear-hovered db)
+      (-> db
+          (element.handlers/clear-hovered)
           (tool.handlers/add-fx [::set-select-box (select-rect db (:alt-key e))])
           (reduce-by-area (:alt-key e) element.handlers/hover))
 
       :translate
       (if (:alt-key e)
         (tool.handlers/set-state db :clone)
-        (-> (history.handlers/reset-state db)
+        (-> db
+            (history.handlers/reset-state)
             (select-element (:shift-key e))
             (translate delta axis)
             (snap.handlers/snap-with translate axis)
@@ -355,7 +362,8 @@
 
       :clone
       (if (:alt-key e)
-        (-> (history.handlers/reset-state db)
+        (-> db
+            (history.handlers/reset-state)
             (select-element (:shift-key e))
             (element.handlers/duplicate)
             (translate delta axis)
@@ -367,7 +375,8 @@
       (let [options {:ratio-locked ratio-locked?
                      :in-place (:shift-key e)
                      :recursive (:alt-key e)}]
-        (-> (history.handlers/reset-state db)
+        (-> db
+            (history.handlers/reset-state)
             (tool.handlers/set-cursor "default")
             (scale (matrix/add delta (snap.handlers/nearest-delta db)) options)))
 
@@ -455,7 +464,9 @@
          ^{:key (str (:id el) "-bbox")}
          [utils.svg/bounding-box (:bbox el) true]))
 
-     (when (and (pos? elements-area) (= state :scale) (seq bbox))
+     (when (and (pos? elements-area)
+                (= state :scale)
+                (seq bbox))
        [area-label elements-area bbox])
 
      (when (seq bbox)

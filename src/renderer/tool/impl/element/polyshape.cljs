@@ -82,6 +82,7 @@
 
 (defmethod tool.hierarchy/on-double-click ::tool.hierarchy/polyshape
   [db _e]
-  (-> (drop-last-point db)
+  (-> db
+      (drop-last-point)
       (history.handlers/finalize [::create-tool "Create %1"] [(name (:tool db))])
       (tool.handlers/activate :transform)))

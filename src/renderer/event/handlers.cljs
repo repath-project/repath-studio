@@ -130,13 +130,13 @@
 (m/=> wheel [:-> App WheelEvent App])
 (defn wheel
   [db e]
-  (-> (if (or (:ctrl-key e) (:shift-key e))
-        (let [factor (Math/pow (inc (/ (- 1 (:zoom-sensitivity db)) 100))
-                               (- (:delta-y e)))]
-          (frame.handlers/zoom-at-pointer db factor))
-        (frame.handlers/pan-by db [(:delta-x e) (:delta-y e)]))
-      (snap.handlers/update-viewport-tree)
-      (tool.handlers/add-fx [::app.effects/persist])))
+  (let [{:keys [delta-x delta-y ctrl-key shift-key]} e]
+    (-> (if (or ctrl-key shift-key)
+          (let [factor (-> db :zoom-sensitivity dec (/ 100) inc (Math/pow delta-y))]
+            (frame.handlers/zoom-at-pointer db factor))
+          (frame.handlers/pan-by db [delta-x delta-y]))
+        (snap.handlers/update-viewport-tree)
+        (tool.handlers/add-fx [::app.effects/persist]))))
 
 (m/=> drag [:-> App DragEvent App])
 (defn drag

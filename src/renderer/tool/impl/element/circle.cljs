@@ -25,7 +25,8 @@
         [cx cy] offset
         fill (document.handlers/attr db :fill)
         stroke (document.handlers/attr db :stroke)]
-    (-> (tool.handlers/set-state db :create)
+    (-> db
+        (tool.handlers/set-state :create)
         (element.handlers/add {:type :element
                                :tag :circle
                                :attrs {:cx cx

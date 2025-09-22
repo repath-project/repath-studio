@@ -20,9 +20,8 @@
 (m/=> toggle-option [:-> App SnapOption App])
 (defn toggle-option
   [db option]
-  (if (contains? (-> db :snap :options) option)
-    (update-in db [:snap :options] disj option)
-    (update-in db [:snap :options] conj option)))
+  (let [is-enabled (contains? (-> db :snap :options) option)]
+    (update-in db [:snap :options] (if is-enabled disj conj) option)))
 
 (m/=> nearest-neighbors [:-> App [:sequential NearestNeighbor]])
 (defn nearest-neighbors

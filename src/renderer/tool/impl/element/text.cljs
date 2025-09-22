@@ -28,7 +28,8 @@
             :tag :text
             :attrs {:x offset-x
                     :y offset-y}}]
-    (-> (element.handlers/deselect db)
+    (-> db
+        (element.handlers/deselect)
         (element.handlers/add el)
         (tool.handlers/set-state :type)
         (tool.handlers/activate :edit))))

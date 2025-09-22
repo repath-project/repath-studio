@@ -33,10 +33,12 @@
 
 (defmethod tool.hierarchy/on-drag :pan
   [db e]
-  (frame.handlers/pan-by db (matrix/sub (:pointer-pos db) (:pointer-pos e))))
+  (frame.handlers/pan-by db (matrix/sub (:pointer-pos db)
+                                        (:pointer-pos e))))
 
 (defmethod tool.hierarchy/on-drag-end :pan
   [db _e]
-  (-> (tool.handlers/set-cursor db "grab")
+  (-> db
+      (tool.handlers/set-cursor "grab")
       (snap.handlers/update-viewport-tree)
       (tool.handlers/add-fx [::app.effects/persist])))

@@ -135,7 +135,8 @@
   ([db guid]
    (create db guid [595 842]))
   ([db guid size]
-   (-> (create-tab db (assoc document.db/default :id guid))
+   (-> db
+       (create-tab (assoc document.db/default :id guid))
        (element.handlers/create-default-canvas size)
        (center))))
 
@@ -213,7 +214,8 @@
 (m/=> saved-ids [:-> App sequential?])
 (defn saved-ids
   [db]
-  (filter (partial saved? db) (:document-tabs db)))
+  (->> (:document-tabs db)
+       (filter (partial saved? db))))
 
 (m/=> ->save-format [:-> PersistedDocument string?])
 (defn ->save-format

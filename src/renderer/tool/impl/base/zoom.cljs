@@ -81,7 +81,8 @@
   (let [factor (cond->> (:zoom-sensitivity db)
                  (not (:shift-key e))
                  (/ 1))]
-    (-> (frame.handlers/zoom-at-pointer db factor)
+    (-> db
+        (frame.handlers/zoom-at-pointer factor)
         (snap.handlers/update-viewport-tree)
         (tool.handlers/add-fx [::app.effects/persist]))))
 

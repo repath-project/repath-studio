@@ -37,15 +37,17 @@
 
 (defmethod tool.hierarchy/on-pointer-down :edit
   [db e]
-  (cond-> db
-    (:element e)
-    (assoc :clicked-element (:element e))))
+  (let [{:keys [element]} e]
+    (cond-> db
+      element
+      (assoc :clicked-element element))))
 
 (defmethod tool.hierarchy/on-pointer-up :edit
   [db e]
   (if-not (and (= (:button e) :right)
                (:selected (:element e)))
-    (-> (element.handlers/clear-ignored db)
+    (-> db
+        (element.handlers/clear-ignored)
         (dissoc :clicked-element)
         (element.handlers/toggle-selection (-> e :element :id) (:shift-key e))
         (history.handlers/finalize [::select-element "Select element"]))
@@ -54,7 +56,10 @@
 (defmethod tool.hierarchy/on-pointer-move :edit
   [db e]
   (let [el-id (-> e :element :id)]
-    (cond-> (element.handlers/clear-hovered db)
+    (cond-> db
+      :always
+      (element.handlers/clear-hovered)
+
       el-id
       (element.handlers/hover el-id))))
 
@@ -74,18 +79,21 @@
 (defmethod tool.hierarchy/on-drag :edit
   [db e]
   (let [{:keys [element-id id]} (:clicked-element db)
-        db (history.handlers/reset-state db)
         delta (cond-> (matrix/add (tool.handlers/pointer-delta db)
                                   (snap.handlers/nearest-delta db))
                 (:ctrl-key e)
                 (lock-direction))]
     (cond-> db
+      :always
+      (history.handlers/reset-state)
+
       element-id
       (element.handlers/update-el element-id element.hierarchy/edit delta id))))
 
 (defmethod tool.hierarchy/on-drag-end :edit
   [db _e]
-  (-> (tool.handlers/set-state db :idle)
+  (-> db
+      (tool.handlers/set-state :idle)
       (dissoc :clicked-element)
       (history.handlers/finalize [::edit "Edit"])))
 

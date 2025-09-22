@@ -10,14 +10,16 @@
  ::toggle
  [persist]
  (fn [db [_]]
-   (-> (update-in db [:snap :active] not)
+   (-> db
+       (update-in [:snap :active] not)
        (snap.handlers/rebuild-tree))))
 
 (rf/reg-event-db
  ::toggle-option
  [persist]
  (fn [db [_ option]]
-   (-> (snap.handlers/toggle-option db option)
+   (-> db
+       (snap.handlers/toggle-option option)
        (snap.handlers/rebuild-tree))))
 
 (rf/reg-global-interceptor

@@ -726,13 +726,15 @@
 (m/=> add [:-> App map? App])
 (defn add
   [db el]
-  (-> (deselect db)
+  (-> db
+      (deselect)
       (create (assoc el :selected true))))
 
 (m/=> swap [:-> App Element App])
 (defn swap
   [db el]
-  (-> (assoc-in db (path db (:id el)) el)
+  (-> db
+      (assoc-in (path db (:id el)) el)
       (refresh-bbox (:id el))))
 
 (m/=> boolean-operation [:-> App PathBooleanOperation App])
