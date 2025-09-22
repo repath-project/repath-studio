@@ -31,7 +31,9 @@
 
 (defmethod element.hierarchy/translate :ellipse
   [el [x y]]
-  (utils.element/update-attrs-with el + [[:cx x] [:cy y]]))
+  (-> el
+      (attribute.hierarchy/update-attr :cx + x)
+      (attribute.hierarchy/update-attr :cy + y)))
 
 (defmethod element.hierarchy/scale :ellipse
   [el ratio pivot-point]
@@ -40,7 +42,9 @@
         pivot-point (->> (matrix/div dimensions 2)
                          (matrix/sub pivot-point))
         offset (utils.element/scale-offset ratio pivot-point)]
-    (-> (utils.element/update-attrs-with el * [[:rx x] [:ry y]])
+    (-> el
+        (attribute.hierarchy/update-attr :rx * x)
+        (attribute.hierarchy/update-attr :ry * y)
         (element.hierarchy/translate offset))))
 
 (defmethod element.hierarchy/bbox :ellipse

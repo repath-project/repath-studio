@@ -31,7 +31,9 @@
 
 (defmethod element.hierarchy/translate :circle
   [el [x y]]
-  (utils.element/update-attrs-with el + [[:cx x] [:cy y]]))
+  (-> el
+      (attribute.hierarchy/update-attr :cx + x)
+      (attribute.hierarchy/update-attr :cy + y)))
 
 (defmethod element.hierarchy/scale :circle
   [el ratio pivot-point]

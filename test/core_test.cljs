@@ -12,6 +12,7 @@
    [renderer.element.events]
    [renderer.element.impl.core]
    [renderer.element.subs]
+   [renderer.error.events]
    [renderer.frame.events]
    [renderer.frame.subs]
    [renderer.history.events]

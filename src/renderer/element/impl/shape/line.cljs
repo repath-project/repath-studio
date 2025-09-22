@@ -6,6 +6,7 @@
    [clojure.string :as string]
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.subs]
+   [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.tool.views :as tool.views]
@@ -32,7 +33,11 @@
 
 (defmethod element.hierarchy/translate :line
   [el [x y]]
-  (utils.element/update-attrs-with el + [[:x1 x] [:y1 y] [:x2 x] [:y2 y]]))
+  (-> el
+      (attribute.hierarchy/update-attr :x1 + x)
+      (attribute.hierarchy/update-attr :y1 + y)
+      (attribute.hierarchy/update-attr :x2 + x)
+      (attribute.hierarchy/update-attr :y2 + y)))
 
 (defmethod element.hierarchy/scale :line
   [el ratio pivot-point]
@@ -42,8 +47,9 @@
         [x y] (matrix/sub dimensions (matrix/mul dimensions ratio))
         pivot-diff (matrix/sub pivot-point dimensions)
         offset (utils.element/scale-offset ratio pivot-diff)]
-    (-> (utils.element/update-attrs-with el + [[(if (< x1 x2) :x1 :x2) x]
-                                               [(if (< y1 y2) :y1 :y2) y]])
+    (-> el
+        (attribute.hierarchy/update-attr (if (< x1 x2) :x1 :x2) + x)
+        (attribute.hierarchy/update-attr (if (< y1 y2) :y1 :y2) + y)
         (element.hierarchy/translate offset))))
 
 (defmethod element.hierarchy/path :line
@@ -97,10 +103,14 @@
   [el [x y] handle]
   (case handle
     :starting-point
-    (utils.element/update-attrs-with el + [[:x1 x] [:y1 y]])
+    (-> el
+        (attribute.hierarchy/update-attr :x1 + x)
+        (attribute.hierarchy/update-attr :y1 + y))
 
     :ending-point
-    (utils.element/update-attrs-with el + [[:x2 x] [:y2 y]])
+    (-> el
+        (attribute.hierarchy/update-attr :x2 + x)
+        (attribute.hierarchy/update-attr :y2 + y))
 
     el))
 

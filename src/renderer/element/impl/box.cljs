@@ -2,6 +2,7 @@
   "This serves as an abstraction for box elements that share the
    :x :y :width :height attributes (e.g. rect, svg, image)."
   (:require
+   [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.tool.views :as tool.views]
    [renderer.utils.bounds :as utils.bounds]
@@ -12,13 +13,17 @@
 
 (defmethod element.hierarchy/translate ::element.hierarchy/box
   [el [x y]]
-  (utils.element/update-attrs-with el + [[:x x] [:y y]]))
+  (-> el
+      (attribute.hierarchy/update-attr :x + x)
+      (attribute.hierarchy/update-attr :y + y)))
 
 (defmethod element.hierarchy/scale ::element.hierarchy/box
   [el ratio pivot-point]
   (let [[x y] ratio
         offset (utils.element/scale-offset ratio pivot-point)]
-    (-> (utils.element/update-attrs-with el * [[:width x] [:height y]])
+    (-> el
+        (attribute.hierarchy/update-attr :width * x)
+        (attribute.hierarchy/update-attr :height * y)
         (element.hierarchy/translate offset))))
 
 (defmethod element.hierarchy/edit ::element.hierarchy/box
@@ -27,11 +32,14 @@
     (case handle
       :position
       (-> el
-          (utils.element/update-attrs-with (comp clamp -) [[:width x] [:height y]])
+          (attribute.hierarchy/update-attr :width (comp clamp -) x)
+          (attribute.hierarchy/update-attr :height (comp clamp -) y)
           (element.hierarchy/translate [x y]))
 
       :size
-      (utils.element/update-attrs-with el (comp clamp +) [[:width x] [:height y]])
+      (-> el
+          (attribute.hierarchy/update-attr :width (comp clamp +) x)
+          (attribute.hierarchy/update-attr :height (comp clamp +) y))
 
       el)))
 

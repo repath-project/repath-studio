@@ -45,7 +45,9 @@
 
 (defmethod element.hierarchy/translate :text
   [el [x y]]
-  (utils.element/update-attrs-with el + [[:x x] [:y y]]))
+  (-> el
+      (attribute.hierarchy/update-attr :x + x)
+      (attribute.hierarchy/update-attr :y + y)))
 
 (defmethod element.hierarchy/scale :text
   [el ratio pivot-point]

@@ -7,7 +7,6 @@
    [clojure.string :as string]
    [malli.core :as m]
    [reagent.dom.server :as dom.server]
-   [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.db :refer [JS_Element]]
    [renderer.element.db :as element.db :refer [Element Attrs]]
    [renderer.element.hierarchy :as element.hierarchy]
@@ -164,12 +163,6 @@
          (nil? (:style attrs))
          (dissoc :style))
        (catch :default _err (dissoc attrs :style))))
-
-(m/=> update-attrs-with [:-> Element ifn? [:vector vector?] Element])
-(defn update-attrs-with
-  [el f attrs-map]
-  (reduce (fn [el [k & more]]
-            (apply attribute.hierarchy/update-attr el k f more)) el attrs-map))
 
 (m/=> scale-offset [:-> Vec2 Vec2 Vec2])
 (defn scale-offset
