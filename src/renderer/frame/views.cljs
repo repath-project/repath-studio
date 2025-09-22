@@ -76,11 +76,9 @@
               ;; This is a different browsing context inside an iframe.
               ;; We need to simulate the events to the parent window.
               on-keyboard-event (fn [e]
-                                  ;; TODO: Use re-pressed :prevent-default-keys?
                                   (.preventDefault e)
                                   (.dispatchEvent js/window.parent.document
-                                                  (js/KeyboardEvent. (.-type e)
-                                                                     e)))]
+                                                  (js/KeyboardEvent. (.-type e) e)))]
           [:> Frame
            {:initial-content (server/render-to-static-markup (initial-markup))
             :mount-target "body"
