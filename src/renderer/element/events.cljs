@@ -8,6 +8,7 @@
    [renderer.element.effects :as-alias element.effects]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
+   [renderer.menubar.views :as-alias menubar.views]
    [renderer.notification.events :as-alias notification.events]
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
@@ -224,7 +225,12 @@
  (fn [db [_ operation elements]]
    (-> (reduce element.handlers/swap db elements)
        (element.handlers/boolean-operation operation)
-       (history.handlers/finalize (string/capitalize (name operation))))))
+       (history.handlers/finalize (case operation
+                                    :unite [::menubar.views/unite]
+                                    :intersect [::menubar.views/intersect]
+                                    :subtract [::menubar.views/subtract]
+                                    :exclude [::menubar.views/exclude]
+                                    :divide [::menubar.views/divide])))))
 
 (rf/reg-event-db
  ::add
@@ -242,7 +248,10 @@
  ::animate
  (fn [db [_ tag attrs]]
    (-> (element.handlers/animate db tag attrs)
-       (history.handlers/finalize (string/capitalize (name tag))))))
+       (history.handlers/finalize (case tag
+                                    :animate [::menubar.views/animate]
+                                    :animate-transform [::menubar.views/animate-transform]
+                                    :animate-motion [::menubar.views/animate-motion])))))
 
 (rf/reg-event-db
  ::set-parent
@@ -266,9 +275,11 @@
  ::manipulate-path
  (fn [db [_ action]]
    (-> (element.handlers/manipulate-path db action)
-       (history.handlers/finalize (-> (name action)
-                                      (string/capitalize)
-                                      (str " path"))))))
+       (history.handlers/finalize (case action
+                                    :simplify [::menubar.views/boolean-simplify]
+                                    :smooth [::menubar.views/boolean-smooth]
+                                    :flatten [::menubar.views/boolean-flatten]
+                                    :reverse [::menubar.views/boolean-reverse])))))
 
 (rf/reg-event-fx
  ::copy
