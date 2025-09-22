@@ -6,7 +6,7 @@
 
 (rf/reg-fx
  ::init-reporting
- (fn [config]
-   (if (.-api js/window)
-     (sentry-electron-renderer/init config sentry-react/init)
-     (sentry-react/init config))))
+ (fn [[platform config]]
+   (if (= platform "web")
+     (sentry-react/init config)
+     (sentry-electron-renderer/init config sentry-react/init))))

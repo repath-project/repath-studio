@@ -30,7 +30,7 @@
 (rf/reg-event-fx
  ::init-reporting
  (fn [{:keys [db]} _]
-   (let [{:keys [error-reporting]} db]
+   (let [{:keys [error-reporting platform]} db]
      (if (nil? error-reporting)
        {:db (dialog.handlers/create db {:title (tr db
                                                    [::welcome "Welcome to %1!"]
@@ -38,9 +38,10 @@
                                         :close-button false
                                         :content [reporting-confirmation-dialog]
                                         :attrs {:onOpenAutoFocus #(.preventDefault %)}})}
-       {::error.effects/init-reporting (-> config/sentry
-                                           (assoc :enabled error-reporting)
-                                           (clj->js))}))))
+       (let [config (-> config/sentry
+                        (assoc :enabled error-reporting)
+                        (clj->js))]
+         {::error.effects/init-reporting [platform config]})))))
 
 (rf/reg-event-fx
  ::set-reporting
