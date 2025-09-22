@@ -14,12 +14,12 @@
 
 (derive :measure ::tool.hierarchy/tool)
 
-(defonce attrs (reagent/atom nil))
+(defonce measure-attrs (reagent/atom nil))
 
 (rf/reg-fx
- ::update
+ ::set-measure-attrs
  (fn [value]
-   (reset! attrs value)))
+   (reset! measure-attrs value)))
 
 (defmethod tool.hierarchy/properties :measure
   []
@@ -36,7 +36,7 @@
 
 (defmethod tool.hierarchy/on-deactivate :measure
   [db]
-  (tool.handlers/add-fx db [::update nil]))
+  (tool.handlers/add-fx db [::set-measure-attrs nil]))
 
 (defmethod tool.hierarchy/on-drag :measure
   [db _e]
@@ -45,17 +45,17 @@
         [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
         [adjacent opposite] (matrix/sub [offset-x offset-y] [x y])
         hypotenuse (Math/hypot adjacent opposite)]
-    (tool.handlers/add-fx db [::update {:x1 offset-x
-                                        :y1 offset-y
-                                        :x2 x
-                                        :y2 y
-                                        :hypotenuse hypotenuse
-                                        :stroke "gray"}])))
+    (tool.handlers/add-fx db [::set-measure-attrs {:x1 offset-x
+                                                   :y1 offset-y
+                                                   :x2 x
+                                                   :y2 y
+                                                   :hypotenuse hypotenuse
+                                                   :stroke "gray"}])))
 
 (defmethod tool.hierarchy/render :measure
   []
-  (when @attrs
-    (let [{:keys [x1 x2 y1 y2 hypotenuse]} @attrs
+  (when @measure-attrs
+    (let [{:keys [x1 x2 y1 y2 hypotenuse]} @measure-attrs
           [x1 y1 x2 y2] (map utils.length/unit->px [x1 y1 x2 y2])
           angle (utils.math/angle [x1 y1] [x2 y2])
           zoom @(rf/subscribe [::document.subs/zoom])
@@ -85,7 +85,7 @@
   [db]
   [(with-meta
      (:adjusted-pointer-pos db)
-     {:label (if @attrs
+     {:label (if @measure-attrs
                #(t [::measure-end "measure end"])
                #(t [::measure-start "measure start"]))})])
 

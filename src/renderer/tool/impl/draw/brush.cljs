@@ -21,12 +21,12 @@
   {:icon "brush"
    :label (t [::label "Brush"])})
 
-(defonce brush-element (reagent/atom nil))
+(defonce brush (reagent/atom nil))
 
 (rf/reg-fx
- ::update-brush
+ ::set-brush
  (fn [value]
-   (reset! brush-element value)))
+   (reset! brush value)))
 
 (defmethod tool.hierarchy/on-pointer-move :brush
   [db e]
@@ -35,12 +35,12 @@
         pressure (if (zero? pressure) 1 pressure)
         r (* (/ 16 2) pressure)
         stroke (document.handlers/attr db :stroke)]
-    (tool.handlers/add-fx db [::update-brush {:type :element
-                                              :tag :circle
-                                              :attrs {:cx x
-                                                      :cy y
-                                                      :r r
-                                                      :fill stroke}}])))
+    (tool.handlers/add-fx db [::set-brush {:type :element
+                                           :tag :circle
+                                           :attrs {:cx x
+                                                   :cy y
+                                                   :r r
+                                                   :fill stroke}}])))
 
 (defmethod tool.hierarchy/on-drag-start :brush
   [db e]
@@ -74,4 +74,4 @@
 (defmethod tool.hierarchy/render :brush
   []
   (when-not (= :create @(rf/subscribe [::tool.subs/state]))
-    [element.hierarchy/render @brush-element]))
+    [element.hierarchy/render @brush]))

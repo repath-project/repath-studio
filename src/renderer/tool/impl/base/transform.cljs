@@ -38,12 +38,12 @@
 
 (derive :zoom ::tool.hierarchy/tool)
 
-(defonce bbox-element (reagent/atom nil))
+(defonce select-box (reagent/atom nil))
 
 (rf/reg-fx
- ::update
+ ::set-select-box
  (fn [value]
-   (reset! bbox-element value)))
+   (reset! select-box value)))
 
 (defmethod tool.hierarchy/properties :transform
   []
@@ -81,7 +81,7 @@
 (m/=> hovered? [:-> Element boolean? boolean?])
 (defn hovered?
   [el intersecting?]
-  (or (when-let [selection-bbox (element.hierarchy/bbox @bbox-element)]
+  (or (when-let [selection-bbox (element.hierarchy/bbox @select-box)]
         (when-let [el-bbox (:bbox el)]
           (if intersecting?
             (utils.bounds/intersect? el-bbox selection-bbox)
@@ -341,7 +341,7 @@
     (case (:state db)
       :select
       (-> (element.handlers/clear-hovered db)
-          (tool.handlers/add-fx [::update (select-rect db (:alt-key e))])
+          (tool.handlers/add-fx [::set-select-box (select-rect db (:alt-key e))])
           (reduce-by-area (:alt-key e) element.handlers/hover))
 
       :translate
@@ -379,7 +379,7 @@
         :select (-> (cond-> db
                       (not (:shift-key e)) element.handlers/deselect)
                     (reduce-by-area (:alt-key e) element.handlers/select)
-                    (tool.handlers/add-fx [::update nil])
+                    (tool.handlers/add-fx [::set-select-box nil])
                     (history.handlers/finalize [::modify-selection "Modify selection"]))
         :translate (history.handlers/finalize db [::move-selection "Move selection"])
         :scale (history.handlers/finalize db [::scale-selection "Scale selection"])
@@ -468,5 +468,4 @@
      (when pivot-point
        [utils.svg/times pivot-point])
 
-     (when @bbox-element
-       [element.hierarchy/render @bbox-element])]))
+     [element.hierarchy/render @select-box]]))

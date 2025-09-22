@@ -219,8 +219,7 @@
           :js-cm-opts js-cm-opts
           :on-cm-init on-cm-init}])]]))
 
-(defonce state
-  (reagent/atom db/initial-state))
+(defonce state (reagent/atom db/initial-state))
 
 (defn root
   []
