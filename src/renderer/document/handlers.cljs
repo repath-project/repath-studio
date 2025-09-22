@@ -117,10 +117,11 @@
 (m/=> create-tab [:-> App Document App])
 (defn create-tab
   [db document]
-  (let [id (:id document)
-        active-index (.indexOf (:document-tabs db) (:active-document db))
+  (let [{:keys [id title]} document
+        {:keys [document-tabs active-document]} db
+        active-index (.indexOf document-tabs active-document)
         document (cond-> document
-                   (not (:title document))
+                   (not title)
                    (assoc :title (new-title db)))]
     (-> db
         (assoc-in [:documents id] document)

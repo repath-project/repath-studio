@@ -13,7 +13,10 @@
   "Returns the grid step given a zoom level."
   [zoom]
   (let [raw-step (/ 10 zoom)
-        magnitude (Math/pow 10 (Math/floor (Math/log10 (Math/abs raw-step))))
+        magnitude (->> (Math/abs raw-step)
+                       (Math/log10)
+                       (Math/floor)
+                       (Math/pow 10))
         normalized (/ raw-step magnitude)]
     (* magnitude (condp >= normalized
                    1.5 1

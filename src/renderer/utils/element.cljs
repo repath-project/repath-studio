@@ -117,20 +117,21 @@
 (defn stroke->path
   [{:keys [attrs]
     :as el}]
-  (let [paper-path (Path. (:d attrs))
-        el-offset (or (:stroke-width attrs) 1)
+  (let [{:keys [d stroke stroke-width stroke-linecap stroke-linejoin]} attrs
+        paper-path (Path. d)
+        el-offset (or stroke-width 1)
         stroke-path (PaperOffset.offsetStroke
                      paper-path
                      (/ el-offset 2)
-                     #js {:cap (or (:stroke-linecap attrs) "butt")
-                          :join (or (:stroke-linejoin attrs) "miter")})
+                     #js {:cap (or stroke-linecap "butt")
+                          :join (or stroke-linejoin "miter")})
         new-d (.getAttribute (.exportSVG stroke-path) "d")
         default-attrs (utils.attribute/defaults-memo :path)]
     (-> (assoc el :tag :path)
         (update :attrs dissoc :stroke :stroke-width)
         (update :attrs #(utils.map/merge-common-with str % default-attrs))
         (assoc-in [:attrs :d] new-d)
-        (assoc-in [:attrs :fill] (:stroke attrs)))))
+        (assoc-in [:attrs :fill] stroke))))
 
 (m/=> ->string [:-> [:sequential Element] string?])
 (defn ->string

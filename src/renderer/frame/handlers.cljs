@@ -84,14 +84,15 @@
 (m/=> pan-to-bbox [:-> App BBox App])
 (defn pan-to-bbox
   [db bbox]
-  (let [zoom (get-in db [:documents (:active-document db) :zoom])
-        rect-dimensions [(-> db :dom-rect :width) (-> db :dom-rect :height)]
+  (let [{:keys [active-document dom-rect]} db
+        zoom (get-in db [:documents active-document :zoom])
+        rect-dimensions [(:width dom-rect) (:height dom-rect)]
         [min-x min-y] bbox
         pan (-> (utils.bounds/->dimensions bbox)
                 (matrix/sub (matrix/div rect-dimensions zoom))
                 (matrix/div 2)
                 (matrix/add [min-x min-y]))]
-    (assoc-in db [:documents (:active-document db) :pan] pan)))
+    (assoc-in db [:documents active-document :pan] pan)))
 
 (m/=> focus-bbox [:function
                   [:-> App FocusType App]

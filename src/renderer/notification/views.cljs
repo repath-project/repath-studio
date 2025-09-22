@@ -26,8 +26,10 @@
 
 (defn exception
   [^js/Error error]
-  (generic-error {:title (or (.-name error) (t [::error "Error"]))
-                  :message (or (.-message error) (str error))}))
+  (generic-error {:title (or (.-name error)
+                             (t [::error "Error"]))
+                  :message (or (.-message error)
+                               (str error))}))
 
 (defn spec-failed
   [event error]

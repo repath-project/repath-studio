@@ -22,9 +22,10 @@
    [renderer.utils.vec :as utils.vec]))
 
 (def file-picker-options
-  {:startIn config/default-path
-   :id "file-picker"
-   :types [{:accept {config/mime-type [(str "." config/ext)]}}]})
+  (let [ext (str "." config/ext)]
+    {:startIn config/default-path
+     :id "file-picker"
+     :types [{:accept {config/mime-type [ext]}}]}))
 
 (rf/reg-event-db
  ::set-hovered-id
@@ -60,9 +61,11 @@
  ::swap-colors
  [persist]
  (fn [db [_]]
-   (-> db
-       (document.handlers/assoc-attr :fill (document.handlers/attr db :stroke))
-       (document.handlers/assoc-attr :stroke (document.handlers/attr db :fill)))))
+   (let [fill (document.handlers/attr db :fill)
+         stroke (document.handlers/attr db :stroke)]
+     (-> db
+         (document.handlers/assoc-attr :fill stroke)
+         (document.handlers/assoc-attr :stroke fill)))))
 
 (rf/reg-event-db
  ::set-attr
@@ -100,7 +103,8 @@
  ::close-saved
  [persist]
  (fn [db [_]]
-   (reduce document.handlers/close db (document.handlers/saved-ids db))))
+   (->> (document.handlers/saved-ids db)
+        (reduce document.handlers/close db))))
 
 (rf/reg-event-fx
  ::close-others
@@ -111,8 +115,10 @@
 (rf/reg-event-fx
  ::close-all
  (fn [{:keys [db]} [_]]
-   {:db (document.handlers/set-active db (last (:document-tabs db)))
-    :fx (mapv (fn [id] [:dispatch [::close id true]]) (:document-tabs db))}))
+   (let [document-tabs (:document-tabs db)]
+     {:db (document.handlers/set-active db (last document-tabs))
+      :fx (->> document-tabs
+               (mapv (fn [id] [:dispatch [::close id true]])))})))
 
 (rf/reg-event-db
  ::cycle

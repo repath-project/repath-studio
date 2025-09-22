@@ -7,11 +7,10 @@
 (rf/reg-cofx
  ::native-mode
  (fn [coeffects _]
-   (assoc coeffects :native-mode (if (.-matches native-query!)
-                                   :dark
-                                   :light))))
+   (let [mode (if (.-matches native-query!) :dark :light)]
+     (assoc coeffects :native-mode mode))))
 
 (rf/reg-fx
- ::add-native-listener
+ ::add-listener
  (fn [e]
    (.addListener native-query! #(rf/dispatch e))))

@@ -54,11 +54,13 @@
                :versions (js->clj versions)
                :env (js->clj env)
                :user-agent user-agent)
-    :fx (into
-         [[::app.effects/get-local-db {:on-success [::load-local-db]
-                                       :on-error [::notification.events/show-exception]
-                                       :on-finally [::db-loaded]}]]
-         (map (partial vector ::effects/ipc-on) ipc-listeners))}))
+    :fx (->>
+         ipc-listeners
+         (map (partial vector ::effects/ipc-on))
+         (into [[::app.effects/get-local-db
+                 {:on-success [::load-local-db]
+                  :on-error [::notification.events/show-exception]
+                  :on-finally [::db-loaded]}]]))}))
 
 (rf/reg-event-fx
  ::load-local-db
@@ -89,17 +91,17 @@
 
             initial-document
             (snap.handlers/rebuild-tree))
-      :fx (into
-           [[:dispatch [::error.events/init-reporting]]
-            [:dispatch [::theme.events/set-document-attr]]
-            [:dispatch [::set-lang-attrs]]
-            [::theme.effects/add-native-listener [::theme.events/set-document-attr]]
-            [:dispatch [::set-loading false]]
-            ;; We use flush-dom to render once so we can get the canvas size.
-            [:dispatch ^:flush-dom [::document.events/center]]
-            [:dispatch [::window.events/update-focused]]
-            [::effects/ipc-send ["initialized"]]]
-           (map (partial vector ::effects/add-event-listener) listeners))})))
+      :fx (->> listeners
+               (map (partial vector ::effects/add-event-listener))
+               (into [[:dispatch [::error.events/init-reporting]]
+                      [:dispatch [::theme.events/set-document-attr]]
+                      [:dispatch [::set-lang-attrs]]
+                      [::theme.effects/add-listener [::theme.events/set-document-attr]]
+                      [:dispatch [::set-loading false]]
+                      ;; We use flush-dom to render once so we can get the canvas size.
+                      [:dispatch ^:flush-dom [::document.events/center]]
+                      [:dispatch [::window.events/update-focused]]
+                      [::effects/ipc-send ["initialized"]]]))})))
 
 (rf/reg-event-db
  ::set-system-fonts
@@ -109,7 +111,8 @@
 (rf/reg-event-fx
  ::set-lang-attrs
  (fn [{:keys [db]} _]
-   (let [lang (utils.i18n/computed-lang (:lang db) (:system-lang db))
+   (let [{:keys [lang system-lang]} db
+         lang (utils.i18n/computed-lang lang system-lang)
          dir (get-in utils.i18n/languages [lang :dir])]
      {:fx [[::effects/set-document-attr ["lang" lang]]
            [::effects/set-document-attr ["dir" dir]]]})))

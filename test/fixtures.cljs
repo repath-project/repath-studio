@@ -39,7 +39,7 @@
      (assoc cofx :native-mode :light)))
 
   (rf/reg-fx
-   ::theme.effects/add-native-listener
+   ::theme.effects/add-listener
    (fn [_]))
 
   (rf/reg-fx

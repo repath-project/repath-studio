@@ -10,17 +10,25 @@
 (defn clamp
   "Clamps a number within the provided bounds."
   [x minimum maximum]
-  (min (max x minimum) maximum))
+  (-> x
+      (max minimum)
+      (min maximum)))
 
 (m/=> angle-dx [:-> number? number? number?])
 (defn angle-dx
   [degrees radius]
-  (* radius (Math/cos (math/to-radians degrees))))
+  (-> degrees
+      (math/to-radians)
+      (Math/cos)
+      (* radius)))
 
 (m/=> angle-dy [:-> number? number? number?])
 (defn angle-dy
   [degrees radius]
-  (* radius (Math/sin (math/to-radians degrees))))
+  (-> degrees
+      (math/to-radians)
+      (Math/sin)
+      (* radius)))
 
 (m/=> normalize-angle [:-> number? number?])
 (defn normalize-angle
@@ -33,6 +41,8 @@
 (defn angle
   "Calculates the angle between two points."
   [[x1 y1] [x2 y2]]
-  (-> (Math/atan2 (- y2 y1) (- x2 x1))
-      (normalize-angle)
-      (math/to-degrees)))
+  (let [delta-y (- y2 y1)
+        delta-x (- x2 x1)]
+    (-> (Math/atan2 delta-y delta-x)
+        (normalize-angle)
+        (math/to-degrees))))
