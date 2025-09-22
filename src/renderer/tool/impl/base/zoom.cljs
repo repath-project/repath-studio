@@ -69,7 +69,7 @@
         factor (if (:shift-key e) zoom-sensitivity (/ zoom current-zoom))
         cursor (if (:shift-key e) "zoom-out" "zoom-in")]
     (-> db
-        (tool.handlers/add-fx [::update nil])
+        (tool.handlers/add-fx [::set-select-box nil])
         (tool.handlers/set-cursor cursor)
         (frame.handlers/zoom-in-place factor)
         (frame.handlers/pan-to-bbox [x y offset-x offset-y])
