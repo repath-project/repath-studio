@@ -127,7 +127,7 @@
     "react-frame-component": "5.2.7",
     "react-resizable-panels": "3.0.6",
     "react-svg": "16.3.0",
-    "shadow-cljs": "3.2.0",
+    "shadow-cljs": "3.2.1",
     "shx": "0.4.0",
     "snabbdom": "3.6.2",
     "source-map-support": "0.5.21",
