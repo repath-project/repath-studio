@@ -35,6 +35,7 @@ h, m, s, ms -> hours, minutes, seconds, milliseconds
 
 Main structure
 
+<div class="highlight">
 <pre>
 src\
 ├── renderer\ -> <a href="https://www.electronjs.org/docs/latest/tutorial/process-model#the-renderer-process"
@@ -46,6 +47,7 @@ src\
 └── worker\   -> <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"
                  >Web Workers</a>
 </pre>
+</div>
 
 We are trying to split our code under renderer into relatively independent modules,
 following [re-frame's app structure suggestions](https://day8.github.io/re-frame/App-Structure/)
