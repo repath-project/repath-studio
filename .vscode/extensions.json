@@ -2,6 +2,7 @@
     "recommendations": [
         "betterthantomorrow.calva",
         "bradlc.vscode-tailwindcss",
-        "tekumara.typos-vscode"
+        "tekumara.typos-vscode",
+        "streetsidesoftware.code-spell-checker"
     ]
 }
