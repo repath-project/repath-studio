@@ -3,6 +3,7 @@
         "betterthantomorrow.calva",
         "bradlc.vscode-tailwindcss",
         "tekumara.typos-vscode",
-        "streetsidesoftware.code-spell-checker"
+        "streetsidesoftware.code-spell-checker",
+        "davidanson.vscode-markdownlint"
     ]
 }
