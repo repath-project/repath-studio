@@ -37,10 +37,14 @@ Main structure
 
 <pre>
 src\
-├── renderer\     <--- <a href ="https://www.electronjs.org/docs/latest/tutorial/process-model#the-renderer-process">Renderer Process</a>
-├── electron\     <--- <a href ="https://www.electronjs.org/docs/latest/tutorial/process-model#the-main-process">Main Process</a> & <a href="https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts">Preload script</a>
-├── lang\         <--- Translation files
-└── worker\       <--- <a href ="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API">Web Workers</a>
+├── renderer\ -> <a href="https://www.electronjs.org/docs/latest/tutorial/process-model#the-renderer-process"
+                 >Renderer Process</a>
+├── electron\ -> <a href="https://www.electronjs.org/docs/latest/tutorial/process-model#the-main-process"
+                 >Main Process</a> & <a href="https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts"
+                 >Preload script</a>
+├── lang\     -> Translation files
+└── worker\   -> <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"
+                 >Web Workers</a>
 </pre>
 
 We are trying to split our code under renderer into relatively independent modules,
@@ -49,16 +53,16 @@ with some minor additions.
 
 ```text
 module\
-├── core.cljs      <--- entry point
-├── db.cljs        <--- schema, validation
-├── views.cljs     <--- reagent views
-├── events.cljs    <--- event handlers
-├── subs.cljs      <--- subscription handlers
-├── handlers.cljs  <--- helper functions for db transformations
-├── effects.cljs   <--- effect handlers
-├── hierarchy.cljs <--- multimethods and hierarchies
-├── styles.css     <--- styles
-└── README.md      <--- documentation
+├── core.cljs      -> entry point
+├── db.cljs        -> schema, validation
+├── views.cljs     -> reagent views
+├── events.cljs    -> event handlers
+├── subs.cljs      -> subscription handlers
+├── handlers.cljs  -> helper functions for db transformations
+├── effects.cljs   -> effect handlers
+├── hierarchy.cljs -> multimethods and hierarchies
+├── styles.css     -> styles
+└── README.md      -> documentation
 ```
 
 ## Re-frame recommendations
@@ -89,7 +93,7 @@ environment (see `renderer.dev`).
 ## Useful development shortcuts
 
 ```text
-Ctrl+Shift+I Toggle devtools
-Ctrl+Shift+X Toggle 10x
-Ctrl+R Reload app
+Ctrl+Shift+I -> Toggle devtools
+Ctrl+Shift+X -> Toggle 10x
+Ctrl+R       -> Reload app
 ```
