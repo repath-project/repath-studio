@@ -21,7 +21,7 @@ by Stuart Sierra.
 In addition to the [idiomatic names](https://guide.clojure.style/#idiomatic-names),
 we use the following conventions
 
-```text
+<pre>
 e           -> event
 el, els     -> element, elements
 attr, attrs -> attribute, attributes
@@ -29,13 +29,12 @@ prop, props -> property, properties
 w, h        -> width, height
 t           -> time
 h, m, s, ms -> hours, minutes, seconds, milliseconds
-```
+</pre>
 
 ## App structure
 
 Main structure
 
-<div class="highlight">
 <pre>
 src\
 ├── renderer\ -> <a href="https://www.electronjs.org/docs/latest/tutorial/process-model#the-renderer-process"
@@ -47,13 +46,12 @@ src\
 └── worker\   -> <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"
                  >Web Workers</a>
 </pre>
-</div>
 
 We are trying to split our code under renderer into relatively independent modules,
 following [re-frame's app structure suggestions](https://day8.github.io/re-frame/App-Structure/)
 with some minor additions.
 
-```text
+<pre>
 module\
 ├── core.cljs      -> entry point
 ├── db.cljs        -> schema, validation
@@ -65,7 +63,7 @@ module\
 ├── hierarchy.cljs -> multimethods and hierarchies
 ├── styles.css     -> styles
 └── README.md      -> documentation
-```
+</pre>
 
 ## Re-frame recommendations
 
@@ -94,8 +92,8 @@ environment (see `renderer.dev`).
 
 ## Useful development shortcuts
 
-```text
+<pre>
 Ctrl+Shift+I -> Toggle devtools
 Ctrl+Shift+X -> Toggle 10x
 Ctrl+R       -> Reload app
-```
+</pre>
