@@ -10,11 +10,12 @@ The main SVG canvas is rendered inside the iFrame using
 
 We won't have to worry about style inheritance.
 
-### Layout boundaries 
+### Layout boundaries
 
 Canvas elements will not affect the parent window.
 
 ## Caveats
-The iFrame introduces a different browsing context so we need to simulate 
+
+The iFrame introduces a different browsing context so we need to simulate
 some of the events to the parent window. We also have to redeclare some styles,
 because we can't use the css variables of the parent window.

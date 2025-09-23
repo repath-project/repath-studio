@@ -19,9 +19,9 @@ and conditions constitute a binding legal agreement.
       unrestricted license to exercise all rights under those copyrights. This includes,
       at our option, the right to sublicense these same rights to third parties through
       multiple levels of sublicensees or other licensing arrangements;
-    * you agree that each of us can do all things in relation to your contribution as if 
-      each of us were the sole owners, and if one of us makes a derivative work of your 
-      contribution, the one who makes the derivative work (or has it made) will be the 
+    * you agree that each of us can do all things in relation to your contribution as if
+      each of us were the sole owners, and if one of us makes a derivative work of your
+      contribution, the one who makes the derivative work (or has it made) will be the
       sole owner of that derivative work;
     * you agree that you will not assert any moral rights in your contribution against us,
       our licensees or transferees;
@@ -57,5 +57,5 @@ You agree to notify us if you become aware of any circumstance which would make 
 foregoing representations
 
 This document is a modified version of Oracle Contributor Agreement – version 1.7.1  
-Licensed under a [Creative Commons Attribution-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-sa/3.0/).  
+Licensed under a [Creative Commons Attribution-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-sa/3.0/).
 [![Creative Commons License](https://i.creativecommons.org/l/by-sa/3.0/80x15.png)](http://creativecommons.org/licenses/by-sa/3.0/)

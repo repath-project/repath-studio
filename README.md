@@ -1,7 +1,7 @@
 <div align="center">
 
 ![Repath Studio](https://repath.studio/assets/images/banner.png)
-<br>
+
  :construction: **This project is in alpha stage!**
 
 [![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/repath-project/repath-studio/latest/total?style=for-the-badge)](https://github.com/repath-project/repath-studio/releases/latest/)
@@ -91,7 +91,7 @@ document, but that's not within the current scope of the project.
 ### System Requirements
 
 - [node.js](https://nodejs.org/)
-- Java SDK (8+) [OpenJDK](https://openjdk.org/) or 
+- Java SDK (8+) [OpenJDK](https://openjdk.org/) or
   [Oracle](https://www.oracle.com/java/technologies/downloads/)
 - [Clojure](https://clojure.org/guides/install_clojure)
 
@@ -115,13 +115,12 @@ Install the dependencies, build the app and watch the project files.
 npm install && npm run dev
 ```
 
-When the build 
-process is complete, you can then visit the following addresses on your browser:
+When the build process is complete, you can then visit the following addresses on your
+browser:
 
 - `http://localhost:8080` - The web application
 - `http://localhost:8081` - The test runner
-- `http://localhost:8082` - The components portfolio 
-
+- `http://localhost:8082` - The components portfolio
 
 If you want to open the electron app, execute the following on a different terminal.
 

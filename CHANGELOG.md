@@ -4,7 +4,7 @@
 
 **Added**
 
-- Export to rasterized image formats (png, jpeg, bmp, gif, webp) 
+- Export to rasterized image formats (png, jpeg, bmp, gif, webp)
 - System language option
 - More languages (French, German, Spanish, Russian, Chinese, Portuguese, Japanese)
 - Top level language dropdown
@@ -39,7 +39,7 @@
 - Various language direction issues
 - Attribute key normalization
 - History tree jittering on pan
-- Auto adjust size of canvas labels 
+- Auto adjust size of canvas labels
 - Codemirror theme mode, disabled state, multiple values
 - Adjusted point of polygon and polyline
 - Focus on text create
@@ -684,7 +684,6 @@ Too many fixes to list.
 - shortcuts order
 - no accessibility filter selection
 - zoom validation
-
 
 ## 0.1.0 (2022-03-6)
 

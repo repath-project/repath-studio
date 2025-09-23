@@ -4,10 +4,10 @@ Thank you for your interest in actively participating in the project's developme
 Please read the [Contributor Covenant Code of Conduct](https://github.com/repath-project/repath-studio/blob/main/CODE_OF_CONDUCT.md)
 and the [Contributor License Agreement](CLA.md) first.
 
-The project is written in [ClojureScript](https://clojurescript.org/) - a compiler for 
+The project is written in [ClojureScript](https://clojurescript.org/) - a compiler for
 [Clojure](https://clojure.org/) that targets JavaScript, and is based on
 [re-frame](https://github.com/day8/re-frame/) - a framework for building Modern Web Apps
-in ClojureScript. You should probably take a look at their 
+in ClojureScript. You should probably take a look at their
 [exceptional documentation](https://day8.github.io/re-frame/re-frame/) first.
 
 ## Style Guide
@@ -21,7 +21,7 @@ by Stuart Sierra.
 In addition to the [idiomatic names](https://guide.clojure.style/#idiomatic-names),
 we use the following conventions
 
-<pre>
+```text
 e           -> event
 el, els     -> element, elements
 attr, attrs -> attribute, attributes
@@ -29,11 +29,12 @@ prop, props -> property, properties
 w, h        -> width, height
 t           -> time
 h, m, s, ms -> hours, minutes, seconds, milliseconds
-</pre>
+```
 
 ## App structure
 
 Main structure
+
 <pre>
 src\
 ├── renderer\     <--- <a href ="https://www.electronjs.org/docs/latest/tutorial/process-model#the-renderer-process">Renderer Process</a>
@@ -46,7 +47,7 @@ We are trying to split our code under renderer into relatively independent modul
 following [re-frame's app structure suggestions](https://day8.github.io/re-frame/App-Structure/)
 with some minor additions.
 
-<pre>
+```text
 module\
 ├── core.cljs      <--- entry point
 ├── db.cljs        <--- schema, validation
@@ -58,7 +59,7 @@ module\
 ├── hierarchy.cljs <--- multimethods and hierarchies
 ├── styles.css     <--- styles
 └── README.md      <--- documentation
-</pre>
+```
 
 ## Re-frame recommendations
 
@@ -81,13 +82,13 @@ default values. Full db validation is enabled on dev mode.
 
 [Function schemas](https://github.com/metosin/malli/blob/master/docs/function-schemas.md#defn-schemas)
 are selectively applied to pure and critical namespaces, such as utils and handlers.
-By default, function schemas are instrumented only during tests to avoid performance 
-overhead. However, runtime instrumentation can also be enabled in the development 
+By default, function schemas are instrumented only during tests to avoid performance
+overhead. However, runtime instrumentation can also be enabled in the development
 environment (see `renderer.dev`).
 
 ## Useful development shortcuts
 
-```
+```text
 Ctrl+Shift+I Toggle devtools
 Ctrl+Shift+X Toggle 10x
 Ctrl+R Reload app

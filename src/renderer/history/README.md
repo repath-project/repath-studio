@@ -33,12 +33,13 @@ The end result on our db looks like this
 ```clojure
 :history {:position :6
           :states {:907fdbc9-d2ad-4697-bea3-9aa5e2c46054 {...}
-                   :ed0cce51-d00e-43e0-a06a-04c72ccce98f {:elements {...} ; Our actual state
-                                                          :explanation [[::move-selection "Move selection"]]
-                                                          :id :ed0cce51-d00e-43e0-a06a-04c72ccce98f
-                                                          :timestamp 1647882725718
-                                                          :index 2
-                                                          :parent :907fdbc9-d2ad-4697-bea3-9aa5e2c46054
-                                                          :children [:cded6d1d-619f-4974-af95-8313cefd6f87]}
+                   :ed0cce51-d00e-43e0-a06a-04c72ccce98f 
+                   {:elements {...} ; Our actual state
+                    :explanation [[::move-selection "Move selection"]]
+                    :id :ed0cce51-d00e-43e0-a06a-04c72ccce98f
+                    :timestamp 1647882725718
+                    :index 2
+                    :parent :907fdbc9-d2ad-4697-bea3-9aa5e2c46054
+                    :children [:cded6d1d-619f-4974-af95-8313cefd6f87]}
                    :cded6d1d-619f-4974-af95-8313cefd6f87 {...}}}
 ```
