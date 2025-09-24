@@ -100,11 +100,12 @@
 
 (defn on-ready-to-show!
   [^js window]
-  (doseq
-   [action
-    [(if (.isMaximized window) "window-maximized" "window-unmaximized")
-     (if (.isFullScreen window) "window-entered-fullscreen" "window-leaved-fullscreen")]]
-    (send-to-renderer! action)))
+  (send-to-renderer! (if (.isMaximized window)
+                       "window-maximized"
+                       "window-unmaximized"))
+  (send-to-renderer! (if (.isFullScreen window)
+                       "window-entered-fullscreen"
+                       "window-leaved-fullscreen")))
 
 (defn resource-path
   [s]
@@ -170,5 +171,6 @@
 (defn ^:export init! []
   (sentry-electron-main/init config/sentry)
   (.initialize log)
-  (.on app "window-all-closed" #(when-not (= js/process.platform "darwin") (.quit app)))
+  (.on app "window-all-closed" #(when-not (= js/process.platform "darwin")
+                                  (.quit app)))
   (.on app "ready" init-loading-window!))

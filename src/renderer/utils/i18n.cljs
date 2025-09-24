@@ -5,50 +5,52 @@
    [malli.core :as m]
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.subs]
-   [taoensso.tempura :as tempura :refer-macros [load-resource-at-compile-time]]))
+   [taoensso.tempura
+    :as tempura
+    :refer-macros [load-resource-at-compile-time]]))
 
 ;; We need to load resources at compile time in clojurescript
 ;; https://github.com/taoensso/tempura/issues/25#issuecomment-451742526
 (def languages
   {"en-US" {:dir "ltr"
             :native-name "English"
-            :abbreviation "EN"
+            :abbr "EN"
             :dictionary (load-resource-at-compile-time "lang/en-US.edn")}
    "es-ES" {:dir "ltr"
             :native-name "Español"
-            :abbreviation "ES"
+            :abbr "ES"
             :dictionary (load-resource-at-compile-time "lang/es-ES.edn")}
    "pt-PT" {:dir "ltr"
             :native-name "Português"
-            :abbreviation "PT"
+            :abbr "PT"
             :dictionary (load-resource-at-compile-time "lang/pt-PT.edn")}
    "ru-RU" {:dir "ltr"
             :native-name "Русский"
-            :abbreviation "RU"
+            :abbr "RU"
             :dictionary (load-resource-at-compile-time "lang/ru-RU.edn")}
    "zh-CN" {:dir "ltr"
             :native-name "中文（简体）"
-            :abbreviation "ZH"
+            :abbr "ZH"
             :dictionary (load-resource-at-compile-time "lang/zh-CN.edn")}
    "fr-FR" {:dir "ltr"
             :native-name "Français"
-            :abbreviation "FR"
+            :abbr "FR"
             :dictionary (load-resource-at-compile-time "lang/fr-FR.edn")}
    "de-DE" {:dir "ltr"
             :native-name "Deutsch"
-            :abbreviation "DE"
+            :abbr "DE"
             :dictionary (load-resource-at-compile-time "lang/de-DE.edn")}
    "el-GR" {:dir "ltr"
             :native-name "Ελληνικά"
-            :abbreviation "EL"
+            :abbr "EL"
             :dictionary (load-resource-at-compile-time "lang/el-GR.edn")}
    "ar-EG" {:dir "rtl"
             :native-name "العربية (مصر)"
-            :abbreviation "AR"
+            :abbr "AR"
             :dictionary (load-resource-at-compile-time "lang/ar-EG.edn")}
    "ja-JP" {:dir "ltr"
             :native-name "日本語"
-            :abbreviation "JA"
+            :abbr "JA"
             :dictionary (load-resource-at-compile-time "lang/ja-JP.edn")}})
 
 (m/=> supported-lang? [:-> [:maybe string?] boolean?])
@@ -57,7 +59,8 @@
   (contains? languages lang))
 
 (def Lang
-  [:fn {:error/fn (fn [{:keys [value]} _] (str value " is not a supported language"))}
+  [:fn {:error/fn (fn [{:keys [value]} _]
+                    (str value " is not a supported language"))}
    supported-lang?])
 
 (m/=> computed-lang [:-> [:or Lang [:= "system"]] [:maybe string?] Lang])

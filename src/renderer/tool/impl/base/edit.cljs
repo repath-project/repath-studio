@@ -44,14 +44,15 @@
 
 (defmethod tool.hierarchy/on-pointer-up :edit
   [db e]
-  (if-not (and (= (:button e) :right)
-               (:selected (:element e)))
-    (-> db
-        (element.handlers/clear-ignored)
-        (dissoc :clicked-element)
-        (element.handlers/toggle-selection (-> e :element :id) (:shift-key e))
-        (history.handlers/finalize [::select-element "Select element"]))
-    (dissoc db :clicked-element)))
+  (let [{:keys [shift-key button element]} e]
+    (if-not (and (= button :right)
+                 (:selected element))
+      (-> db
+          (element.handlers/clear-ignored)
+          (dissoc :clicked-element)
+          (element.handlers/toggle-selection (:id element) shift-key)
+          (history.handlers/finalize [::select-element "Select element"]))
+      (dissoc db :clicked-element))))
 
 (defmethod tool.hierarchy/on-pointer-move :edit
   [db e]

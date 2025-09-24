@@ -143,8 +143,10 @@
      (merge
       attrs
       {:value [(if (empty? v) placeholder v)]
-       :on-value-change (fn [[v]] (rf/dispatch [::element.events/preview-attr k v]))
-       :on-value-commit (fn [[v]] (rf/dispatch [::element.events/set-attr k v]))})]]])
+       :on-value-change (fn [[v]]
+                          (rf/dispatch [::element.events/preview-attr k v]))
+       :on-value-commit (fn [[v]]
+                          (rf/dispatch [::element.events/set-attr k v]))})]]])
 
 (defn select-input
   [k v {:keys [disabled items default-value]
@@ -211,9 +213,8 @@
   [tag k]
   (let [clicked-element @(rf/subscribe [::app.subs/clicked-element])
         property (utils.attribute/property-data-memo k)
-        dispatch-tag (if (contains? (methods attribute.hierarchy/description) [tag k])
-                       tag
-                       :default)
+        is-dispatchable (contains? (methods attribute.hierarchy/description) [tag k])
+        dispatch-tag (if is-dispatchable tag :default)
         active (and (= (:type clicked-element) :handle)
                     (= (:key clicked-element) key))]
     [:> HoverCard/Root
@@ -247,9 +248,8 @@
 (defn row
   [k v locked? tag]
   (let [initial (utils.attribute/initial-memo tag k)
-        dispatch-tag (if (contains? (methods attribute.hierarchy/form-element) [tag k])
-                       tag
-                       :default)]
+        dispatchable? (contains? (methods attribute.hierarchy/form-element) [tag k])
+        dispatch-tag (if dispatchable? tag :default)]
     [:<>
      [title tag k]
      [:div.flex.flex-1
@@ -307,7 +307,8 @@
                                (string/capitalize (name tag)))]
              (if (empty? el-label) tag-label el-label))
            (t [::attributes-title "%1 %2 elements"] [(count selected-elements)
-                                                     (when-not multitag? (name tag))]))]
+                                                     (when-not multitag?
+                                                       (name tag))]))]
         (when-not multitag?
           [tag-info tag])]
        (when (seq selected-attrs)

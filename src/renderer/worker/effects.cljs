@@ -10,7 +10,8 @@
          id (uuid (:id data))]
      (.addEventListener worker
                         "message"
-                        #(let [data (js->clj (.. % -data) :keywordize-keys true)]
+                        #(let [data (-> (.. % -data)
+                                        (js->clj :keywordize-keys true))]
                            (rf/dispatch [::worker.events/message id on-success data])))
 
      (.addEventListener worker

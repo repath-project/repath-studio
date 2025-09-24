@@ -116,7 +116,8 @@
 
 (defn zoom-input
   [zoom]
-  (let [value (utils.length/->fixed (* 100 zoom) (zoom-decimal-points zoom) false)]
+  (let [precision (zoom-decimal-points zoom)
+        value (utils.length/->fixed (* 100 zoom) precision false)]
     [:input.form-element.overlay.text-right.font-mono.p-1
      {:key zoom
       :aria-label (t [::zoom "Zoom"])

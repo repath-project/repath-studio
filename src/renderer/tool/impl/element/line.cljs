@@ -38,7 +38,8 @@
   [db _e]
   (let [position (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
         {:keys [id parent]} (first (element.handlers/selected db))
-        [min-x min-y] (element.hierarchy/bbox (element.handlers/entity db parent))
+        parent-el (element.handlers/entity db parent)
+        [min-x min-y] (element.hierarchy/bbox parent-el)
         [x y] (matrix/sub position [min-x min-y])
         x (utils.length/->fixed x)
         y (utils.length/->fixed y)]

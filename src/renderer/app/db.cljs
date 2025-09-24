@@ -117,7 +117,9 @@
 (def explain (m/explainer App))
 
 (def default
-  (m/decode App {:version config/version} m.transform/default-value-transformer))
+  (m/decode App
+            {:version config/version}
+            m.transform/default-value-transformer))
 
 (def persisted-keys
   "Top level keys that should be persisted to local storage."

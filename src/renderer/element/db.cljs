@@ -10,7 +10,8 @@
   (contains? (descendants ::element.hierarchy/element) k))
 
 (def Tag
-  [:fn {:error/fn (fn [{:keys [value]} _] (str value ", is not a supported tag"))}
+  [:fn {:error/fn (fn [{:keys [value]} _]
+                    (str value ", is not a supported tag"))}
    tag?])
 
 (def image-mime-types
@@ -48,6 +49,8 @@
 
 (def explain (m/explainer Element))
 
-(def default (m/decode Element {:type :element
-                                :visible true
-                                :children []} m.transform/default-value-transformer))
+(def default (m/decode Element
+                       {:type :element
+                        :visible true
+                        :children []}
+                       m.transform/default-value-transformer))

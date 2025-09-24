@@ -8,8 +8,8 @@
 (defmethod attribute.hierarchy/description [:default :overflow]
   []
   (t [::description
-      "The overflow attribute sets what to do when an element's content is too big
-       to fit in its block formatting context. This feature is not widely
+      "The overflow attribute sets what to do when an element's content is too
+       big to fit in its block formatting context. This feature is not widely
        implemented yet."]))
 
 (defmethod attribute.hierarchy/form-element [:default :overflow]

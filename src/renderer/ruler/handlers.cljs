@@ -26,7 +26,7 @@
 
 (m/=> steps-coll [:-> number? Viewbox Orientation [:sequential number?]])
 (defn steps-coll
-  "Returns a collection of steps per orientation, contained on the given viewbox."
+  "Returns a collection of steps contained on the given viewbox."
   [ruler-step viewbox orientation]
   (let [[x y width height] viewbox
         sections 10]

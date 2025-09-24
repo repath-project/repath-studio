@@ -51,7 +51,8 @@
   (let [attrs (attributes db (:ctrl-key e))
         assoc-attr (fn [el [k v]] (assoc-in el [:attrs k] (str v)))
         {:keys [id parent]} (first (element.handlers/selected db))
-        [min-x min-y] (element.hierarchy/bbox (element.handlers/entity db parent))]
+        parent-el (element.handlers/entity db parent)
+        [min-x min-y] (element.hierarchy/bbox parent-el)]
     (-> db
         (element.handlers/update-el id #(reduce assoc-attr % attrs))
         (element.handlers/translate [(- min-x) (- min-y)]))))

@@ -53,7 +53,8 @@
   [el ratio pivot-point]
   (let [bounds (element.hierarchy/bbox el)
         [_w h] (utils.bounds/->dimensions bounds)
-        offset (utils.element/scale-offset ratio (matrix/sub pivot-point [0 (/ h 2)]))
+        pivot-point (matrix/sub pivot-point [0 (/ h 2)])
+        offset (utils.element/scale-offset ratio pivot-point)
         ratio (apply min ratio)]
     (-> el
         (attribute.hierarchy/update-attr :font-size * ratio)
@@ -128,7 +129,8 @@
   [el]
   (let [{:keys [attrs content]} el
         {:keys [x y font-family]} attrs
-        {:keys [font-size font-style font-weight]} (utils.font/get-computed-styles! el)
+        computed-styles (utils.font/get-computed-styles! el)
+        {:keys [font-size font-style font-weight]} computed-styles
         [x y font-size] (mapv utils.length/unit->px [x y font-size])]
     (if font-family
       (when-not (undefined? js/window.queryLocalFonts)

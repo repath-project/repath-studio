@@ -30,7 +30,8 @@
 (defn union
   "Returns the bounding box that contains the provided collection of bounds."
   [& bbox]
-  (reduce (fn [[a-min-x a-min-y a-max-x a-max-y] [b-min-x b-min-y b-max-x b-max-y]]
+  (reduce (fn [[a-min-x a-min-y a-max-x a-max-y]
+               [b-min-x b-min-y b-max-x b-max-y]]
             [(min a-min-x b-min-x)
              (min a-min-y b-min-y)
              (max a-max-x b-max-x)

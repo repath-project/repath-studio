@@ -86,5 +86,14 @@
                      0, 0, 0, 1, 0]}}])
 
 (def A11yFilter
-  [:enum :blur :blur-x2 :protanopia :protanomaly :deuteranopia :deuteranomaly :tritanopia
-   :tritanomaly :achromatopsia :achromatomaly])
+  [:enum
+   :blur
+   :blur-x2
+   :protanopia
+   :protanomaly
+   :deuteranopia
+   :deuteranomaly
+   :tritanopia
+   :tritanomaly
+   :achromatopsia
+   :achromatomaly])

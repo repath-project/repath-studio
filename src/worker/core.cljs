@@ -11,7 +11,8 @@
          "trace"
          (let [svg (.imagedataToSVG ImageTracer (.-image data))]
            (js/postMessage #js {:svg svg
-                                :label (str "Traced " (or (.-label data) "image"))
+                                :label (str "Traced " (or (.-label data)
+                                                          "image"))
                                 :position (.-position data)
                                 :id (.-id data)}))
 

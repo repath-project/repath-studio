@@ -86,11 +86,17 @@
 (defscene ^:export shortcut
   :title "Shortcut"
   [:div.toolbar.bg-primary.h-10.p-2.gap-2
-   [:div.flex.gap-2 "Single" [views/shortcuts [::history.events/undo]]]
+   [:div.flex.gap-2
+    "Single"
+    [views/shortcuts [::history.events/undo]]]
    [:span.v-divider]
-   [:div.flex.gap-2 "Multiple" [views/shortcuts [::history.events/redo]]]
+   [:div.flex.gap-2
+    "Multiple"
+    [views/shortcuts [::history.events/redo]]]
    [:span.v-divider]
-   [:div.flex.gap-2 "No shortcuts" [views/shortcuts [:event-id-with-no-shortcut]]]])
+   [:div.flex.gap-2
+    "No shortcuts"
+    [views/shortcuts [:event-id-with-no-shortcut]]]])
 
 (defscene ^:export default
   :title "Icons"

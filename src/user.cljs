@@ -27,7 +27,9 @@
 (defn ^:export scale
   "Scales the selected elements."
   ([ratio]
-   (rf/dispatch [::element.events/scale (if (number? ratio) [ratio ratio] ratio)]))
+   (rf/dispatch [::element.events/scale (if (number? ratio)
+                                          [ratio ratio]
+                                          ratio)]))
   ([x y]
    (rf/dispatch [::element.events/scale [x y]])))
 
@@ -108,7 +110,8 @@
    (polygon points {:stroke "#000000"}))
   ([points attrs]
    (create {:tag :polygon
-            :attrs (merge {:points (string/join " " (flatten points))} attrs)})))
+            :attrs (merge {:points (string/join " " (flatten points))}
+                          attrs)})))
 
 (defn ^:export polyline
   "Creates a polyline."
@@ -116,14 +119,16 @@
    (polyline points {:stroke "#000000"}))
   ([points attrs]
    (create {:tag :polyline
-            :attrs (merge {:points (string/join " " (flatten points))} attrs)})))
+            :attrs (merge {:points (string/join " " (flatten points))}
+                          attrs)})))
 
 (defn ^:export path
   "Creates a path."
   ([path-commands]
    (path path-commands {:stroke "#000000"}))
   ([path-commands attrs]
-   (create {:path (merge {:d (string/join " " (flatten path-commands))} attrs)})))
+   (create {:path (merge {:d (string/join " " (flatten path-commands))}
+                         attrs)})))
 
 (defn ^:export image
   "Creates an image."

@@ -58,8 +58,9 @@
           :draggable true ; Prevents drag of parent.
           :on-drag-start #(.preventDefault %)
           :on-focus #(.. % -target select)
-          :on-key-down #(event.impl.keyboard/input-key-down-handler! % label
-                                                                     set-item-label! id)
+          :on-key-down #(event.impl.keyboard/input-key-down-handler!
+                         % label
+                         set-item-label! id)
           :on-blur (fn [e]
                      (reset! edit-mode? false)
                      (set-item-label! e id))}]

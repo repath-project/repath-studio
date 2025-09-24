@@ -20,11 +20,12 @@
    (doseq [item (.-items data-transfer)]
      (when (= (.-kind item) "string")
        (let [[x y] position]
-         (.getAsString item #(rf/dispatch [::element.events/add {:type :element
-                                                                 :tag :text
-                                                                 :content %
-                                                                 :attrs {:x x
-                                                                         :y y}}])))))
+         (.getAsString item #(rf/dispatch [::element.events/add
+                                           {:type :element
+                                            :tag :text
+                                            :content %
+                                            :attrs {:x x
+                                                    :y y}}])))))
 
    (doseq [file (.-files data-transfer)]
      (rf/dispatch [::element.events/import-file file position]))))

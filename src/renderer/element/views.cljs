@@ -60,7 +60,7 @@
      content]))
 
 (defn render-to-dom
-  "We need a reagent form-3 component in order to set the style attribute manually.
+  "We need a reagent form-3 component to set the style attribute manually.
    React expects a map, but we need to set a string to avoid serializing css."
   [el _child-els _idle?]
   (let [ref (react/createRef)]

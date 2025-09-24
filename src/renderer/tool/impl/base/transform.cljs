@@ -65,18 +65,22 @@
 (defmethod tool.hierarchy/help [:transform :translate]
   []
   (t [::translate [:div "Hold %1 to restrict direction, and %2 to clone."]]
-     [[:span.shortcut-key "Ctrl"] [:span.shortcut-key "Alt"]]))
+     [[:span.shortcut-key "Ctrl"]
+      [:span.shortcut-key "Alt"]]))
 
 (defmethod tool.hierarchy/help [:transform :clone]
   []
   (t [::clone [:div "Hold %1 to restrict direction. or release %2 to move"]]
-     [[:span.shortcut-key "Ctrl"] [:span.shortcut-key "Alt"]]))
+     [[:span.shortcut-key "Ctrl"]
+      [:span.shortcut-key "Alt"]]))
 
 (defmethod tool.hierarchy/help [:transform :scale]
   []
   (t [::scale [:div "Hold %1 to lock proportions, %2 to scale in place,
                      %3 to also scale children."]]
-     [[:span.shortcut-key "Ctrl"] [:span.shortcut-key "⇧"] [:span.shortcut-key "Alt"]]))
+     [[:span.shortcut-key "Ctrl"]
+      [:span.shortcut-key "⇧"]
+      [:span.shortcut-key "Alt"]]))
 
 (m/=> hovered? [:-> Element boolean? boolean?])
 (defn hovered?
@@ -299,7 +303,8 @@
                        (not= (:id (element.handlers/parent db id)) (:id hovered-svg))
                        (not (utils.element/svg? (element.handlers/entity db id))))
                   (-> (element.handlers/set-parent (:id hovered-svg))
-                      (cond-> (:bbox container) ;; FIXME: Handle nested containers.
+                      ;; FIXME: Handle nested containers.
+                      (cond-> (:bbox container)
                         (element.handlers/translate id (start-point container))
 
                         (:bbox hovered-svg)
@@ -324,6 +329,8 @@
 (defmethod tool.hierarchy/on-drag-start :transform
   [db e]
   (let [{:keys [clicked-element]} db
+        {:keys [shift-key]} e
+        {:keys [id]} clicked-element
         state (drag-start->state clicked-element)]
     (cond-> db
       :always
@@ -331,15 +338,16 @@
           (element.handlers/clear-hovered))
 
       (selectable? clicked-element)
-      (-> (element.handlers/toggle-selection (:id clicked-element) (:shift-key e))
-          (snap.handlers/delete-from-tree #{(:id clicked-element)})))))
+      (-> (element.handlers/toggle-selection id shift-key)
+          (snap.handlers/delete-from-tree #{id})))))
 
 (defmethod tool.hierarchy/on-drag :transform
   [db e]
-  (let [ratio-locked? (or (:ctrl-key e) (element.handlers/ratio-locked? db))
+  (let [{:keys [ctrl-key alt-key shift-key]} e
+        ratio-locked? (or ctrl-key (element.handlers/ratio-locked? db))
         db (element.handlers/clear-ignored db)
         delta (tool.handlers/pointer-delta db)
-        axis (when (:ctrl-key e)
+        axis (when ctrl-key
                (if (> (abs (first delta)) (abs (second delta)))
                  :vertical
                  :horizontal))]
@@ -347,24 +355,24 @@
       :select
       (-> db
           (element.handlers/clear-hovered)
-          (tool.handlers/add-fx [::set-select-box (select-rect db (:alt-key e))])
-          (reduce-by-area (:alt-key e) element.handlers/hover))
+          (tool.handlers/add-fx [::set-select-box (select-rect db alt-key)])
+          (reduce-by-area alt-key element.handlers/hover))
 
       :translate
-      (if (:alt-key e)
+      (if alt-key
         (tool.handlers/set-state db :clone)
         (-> db
             (history.handlers/reset-state)
-            (select-element (:shift-key e))
+            (select-element shift-key)
             (translate delta axis)
             (snap.handlers/snap-with translate axis)
             (tool.handlers/set-cursor "move")))
 
       :clone
-      (if (:alt-key e)
+      (if alt-key
         (-> db
             (history.handlers/reset-state)
-            (select-element (:shift-key e))
+            (select-element shift-key)
             (element.handlers/duplicate)
             (translate delta axis)
             (snap.handlers/snap-with translate axis)
@@ -373,30 +381,39 @@
 
       :scale
       (let [options {:ratio-locked ratio-locked?
-                     :in-place (:shift-key e)
-                     :recursive (:alt-key e)}]
+                     :in-place shift-key
+                     :recursive alt-key}]
         (-> db
             (history.handlers/reset-state)
             (tool.handlers/set-cursor "default")
-            (scale (matrix/add delta (snap.handlers/nearest-delta db)) options)))
+            (scale (matrix/add delta (snap.handlers/nearest-delta db))
+                   options)))
 
       :idle db)))
 
 (defmethod tool.hierarchy/on-drag-end :transform
   [db e]
-  (-> (case (:state db)
-        :select (-> (cond-> db
-                      (not (:shift-key e)) element.handlers/deselect)
-                    (reduce-by-area (:alt-key e) element.handlers/select)
-                    (tool.handlers/add-fx [::set-select-box nil])
-                    (history.handlers/finalize [::modify-selection "Modify selection"]))
-        :translate (history.handlers/finalize db [::move-selection "Move selection"])
-        :scale (history.handlers/finalize db [::scale-selection "Scale selection"])
-        :clone (history.handlers/finalize db [::clone-selection "Clone selection"])
-        :idle db)
-      (tool.handlers/set-state :idle)
-      (element.handlers/clear-hovered)
-      (dissoc :clicked-element :pivot-point)))
+  (let [{:keys [state]} db]
+    (cond-> db
+      (= state :select)
+      (-> (cond-> (not (:shift-key e)) element.handlers/deselect)
+          (reduce-by-area (:alt-key e) element.handlers/select)
+          (tool.handlers/add-fx [::set-select-box nil])
+          (history.handlers/finalize [::modify-selection "Modify selection"]))
+
+      (= state :translate)
+      (history.handlers/finalize [::move-selection "Move selection"])
+
+      (= state :scale)
+      (history.handlers/finalize [::scale-selection "Scale selection"])
+
+      (= state :clone)
+      (history.handlers/finalize [::clone-selection "Clone selection"])
+
+      :always
+      (-> (tool.handlers/set-state :idle)
+          (element.handlers/clear-hovered)
+          (dissoc :clicked-element :pivot-point)))))
 
 (defmethod tool.hierarchy/snapping-points :transform
   [db]

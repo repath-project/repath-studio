@@ -40,7 +40,8 @@
                 :stroke-width stroke-width
                 :shape-rendering (when dashed? "crispEdges")}]
      [:g
-      (when dashed? [:line (merge attrs {:stroke "var(--color-accent-inverted)"})])
+      (when dashed?
+        [:line (merge attrs {:stroke "var(--color-accent-inverted)"})])
       [:line (merge attrs
                     {:stroke "var(--color-accent)"
                      :stroke-dasharray (when dashed? stroke-dasharray)})]])))
@@ -124,7 +125,8 @@
                                        (case text-anchor
                                          "start" (- x (/ padding 2))
                                          "middle" (- x (/ rect-width 2))
-                                         "end" (- x rect-width (/ (- padding) 2)))))))
+                                         "end" (- x rect-width (/ (- padding)
+                                                                  2)))))))
              :fill "var(--color-accent-inverted)"
              :dominant-baseline "middle"
              :x x

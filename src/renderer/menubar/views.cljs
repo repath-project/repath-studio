@@ -431,20 +431,21 @@
 
 (defn a11y-submenu
   []
-  (mapv (fn [{:keys [id label]}]
-          {:id id
-           :label label
-           :type :checkbox
-           :icon "a11y"
-           :checked @(rf/subscribe [::document.subs/filter-active id])
-           :action [::document.events/toggle-filter id]}) (filters/accessibility)))
+  (->> (filters/accessibility)
+       (mapv (fn [{:keys [id label]}]
+               {:id id
+                :label label
+                :type :checkbox
+                :icon "a11y"
+                :checked @(rf/subscribe [::document.subs/filter-active id])
+                :action [::document.events/toggle-filter id]}))))
 
 (defn languages-submenu
   []
   (->> utils.i18n/languages
        (mapv (fn [[k v]]
                {:id k
-                :abbreviation (:abbreviation v)
+                :abbr (:abbr v)
                 :label (:native-name v)
                 :type :checkbox
                 :icon "language"

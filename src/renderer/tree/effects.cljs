@@ -9,7 +9,8 @@
 
 (defn get-list-elements!
   []
-  (.from js/Array (.querySelectorAll js/document "#tree-sidebar .list-item-button")))
+  (->> (.querySelectorAll js/document "#tree-sidebar .list-item-button")
+       (.from js/Array)))
 
 (rf/reg-fx
  ::focus-next

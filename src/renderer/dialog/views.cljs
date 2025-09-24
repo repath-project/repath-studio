@@ -89,7 +89,9 @@
     (if (:items i)
       (cmdk-group-inner (:items i) (:label i))
       ^{:key (:id i)}
-      [cmdk-item (update i :label #(string/join " - " (remove nil? [label %])))])))
+      [cmdk-item (update i :label #(->> [label %]
+                                        (remove nil?)
+                                        (string/join " - ")))])))
 
 (defn cmdk-group
   [{:keys [label items]}]

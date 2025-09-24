@@ -26,7 +26,8 @@
                   fx (rf/get-effect context :fx)]
               (cond-> context
                 db
-                (rf/assoc-effect :fx (conj (or fx []) [::app.effects/persist])))))))
+                (rf/assoc-effect :fx (conj (or fx [])
+                                           [::app.effects/persist])))))))
 
 (def ipc-listeners
   (->> [["window-maximized" [::window.events/set-maximized true]]

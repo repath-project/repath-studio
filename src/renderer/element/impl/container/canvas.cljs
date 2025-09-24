@@ -30,7 +30,8 @@
 
 (defmethod element.hierarchy/render :canvas
   [el]
-  (let [child-elements @(rf/subscribe [::element.subs/filter-visible (:children el)])
+  (let [{:keys [id attrs children]} el
+        child-elements @(rf/subscribe [::element.subs/filter-visible children])
         viewbox-attr @(rf/subscribe [::frame.subs/viewbox-attr])
         {:keys [width height]} @(rf/subscribe [::app.subs/dom-rect])
         read-only? @(rf/subscribe [::document.subs/read-only?])
@@ -59,9 +60,9 @@
                   :transform (str "rotate(" rotate ")")
                   :cursor cursor
                   :style {:outline 0
-                          :background (-> el :attrs :fill)}}
+                          :background (:fill attrs)}}
      (for [el child-elements]
-       ^{:key (:id el)}
+       ^{:key id}
        [element.hierarchy/render el])
 
      (into [:defs]
@@ -86,8 +87,9 @@
 
 (defmethod element.hierarchy/render-to-string :canvas
   [el]
-  (let [child-elements @(rf/subscribe [::element.subs/filter-visible (:children el)])
-        attrs (into {} (comp (dissoc (:attrs el) :fill)
+  (let [{:keys [attrs children]} el
+        child-elements @(rf/subscribe [::element.subs/filter-visible children])
+        attrs (into {} (comp (dissoc attrs :fill)
                              (remove #(empty? (str (second %))))))]
     (into [:svg attrs]
           (map element.hierarchy/render-to-string)

@@ -14,7 +14,7 @@
    [renderer.window.subs :as-alias window.subs]))
 
 (defn language-item
-  [{:keys [id label action checked abbreviation]} system-abbreviation]
+  [{:keys [id label action checked abbr]} system-abbr]
   [:> DropdownMenu/CheckboxItem
    {:class "menu-checkbox-item inset"
     :on-select #(rf/dispatch action)
@@ -24,21 +24,21 @@
     [views/icon "checkmark"]]
    [:div label]
    (if (= id "system")
-     [:span.uppercase.font-mono.text-disabled (or system-abbreviation "EN")]
-     [:span.uppercase.font-mono.text-muted abbreviation])])
+     [:span.uppercase.font-mono.text-disabled (or system-abbr "EN")]
+     [:span.uppercase.font-mono.text-muted abbr])])
 
 (defn language-dropdown
   []
   (let [computed-lang @(rf/subscribe [::app.subs/computed-lang])
         system-lang @(rf/subscribe [::app.subs/system-lang])
-        system-abbreviation (get-in utils.i18n/languages [system-lang :abbreviation])
-        computed-abbreviation (get-in utils.i18n/languages [computed-lang :abbreviation])]
+        system-abbr (get-in utils.i18n/languages [system-lang :abbr])
+        computed-abbr (get-in utils.i18n/languages [computed-lang :abbr])]
     [:> DropdownMenu/Root
      [:> DropdownMenu/Trigger
       {:as-child true}
       [:button.button
        {:class "flex gap-1 items-center px-2 uppercase text-muted bg-primary font-mono"}
-       computed-abbreviation
+       computed-abbr
        [views/icon "chevron-down"]]]
      [:> DropdownMenu/Portal
       [:> DropdownMenu/Content
@@ -51,7 +51,7 @@
         :on-escape-key-down #(.stopPropagation %)}
        (for [lang (menubar.views/languages-submenu)]
          ^{:key (:id lang)}
-         [language-item lang system-abbreviation])]]]))
+         [language-item lang system-abbr])]]]))
 
 (defn button
   [{:keys [icon action class title]}]

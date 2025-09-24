@@ -34,7 +34,7 @@
 
 (defn initial-markup
   "https://github.com/ryanseddon/react-frame-component#initialcontent
-   The iframe is isolated so we don't have access to the css vars of the parent."
+   The iframe is isolated, so we cannot access the css vars of the parent."
   []
   [:html {:data-theme "light"}
    [:head [:link {:rel "stylesheet"
@@ -95,10 +95,11 @@
             [:> ContextMenu/Trigger
              [element.hierarchy/render root-el]]
             [:> ContextMenu/Portal
-             (into [:> ContextMenu/Content
-                    {:class "menu-content context-menu-content"
-                     :on-close-auto-focus #(.preventDefault %)
-                     :on-escape-key-down #(.stopPropagation %)
-                     :style {:margin-left (str x "px")
-                             :margin-top (str y "px")}}]
-                   (map views/context-menu-item (element.views/context-menu)))]]]))})))
+             (->> (element.views/context-menu)
+                  (map views/context-menu-item)
+                  (into [:> ContextMenu/Content
+                         {:class "menu-content context-menu-content"
+                          :on-close-auto-focus #(.preventDefault %)
+                          :on-escape-key-down #(.stopPropagation %)
+                          :style {:margin-left (str x "px")
+                                  :margin-top (str y "px")}}]))]]]))})))

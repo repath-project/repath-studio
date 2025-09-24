@@ -76,10 +76,17 @@
         (comp (map (partial into [:span.shortcut-key]))
               (interpose [:span "+"]))
         (cond-> []
-          (:ctrlKey shortcut) (conj "Ctrl")
-          (:shiftKey shortcut) (conj "⇧")
-          (:altKey shortcut) (conj "Alt")
-          :always (conj (event.impl.keyboard/key-code->key (:keyCode shortcut))))))
+          (:ctrlKey shortcut)
+          (conj "Ctrl")
+
+          (:shiftKey shortcut)
+          (conj "⇧")
+
+          (:altKey shortcut)
+          (conj "Alt")
+
+          :always
+          (conj (event.impl.keyboard/key-code->key (:keyCode shortcut))))))
 
 (defn shortcuts
   [event]
@@ -93,7 +100,8 @@
 (defn radio-icon-button
   [icon-name active props]
   [:button.icon-button
-   (merge-with-class {:class (str (when active "accent ") "active:overlay")} props)
+   (merge-with-class {:class (str (when active "accent ") "active:overlay")}
+                     props)
    [renderer.views/icon icon-name]])
 
 (defn context-menu-item

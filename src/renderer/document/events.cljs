@@ -142,7 +142,9 @@
      (cond-> db
        (not (or (= dragged-i -1)
                 (= swapped-i -1)))
-       (assoc :document-tabs (utils.vec/swap document-tabs dragged-i swapped-i))))))
+       (assoc :document-tabs (utils.vec/swap document-tabs
+                                             dragged-i
+                                             swapped-i))))))
 
 (rf/reg-event-fx
  ::new
@@ -218,8 +220,9 @@
                 {:title (tr db
                             [::error-loading "Error while loading %1"]
                             [(:title document)])
-                 :message (tr db [::unsupported-or-corrupted
-                                  "File appears to be unsupported or corrupted."])})
+                 :message (tr db
+                              [::unsupported-or-corrupted
+                               "File appears to be unsupported or corrupted."])})
                (notification.handlers/add db))})))
 
 (rf/reg-event-fx

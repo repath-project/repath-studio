@@ -61,4 +61,5 @@
                                 :fullName "Adwaita Mono Bold Italic"
                                 :postscriptName "Adwaita-Mono-Bold-Italic"
                                 :style "Bold Italic"}])]
-       (rf/dispatch (conj on-success (cond-> font-data formatter formatter)))))))
+       (rf/dispatch (conj on-success (cond-> font-data
+                                       formatter formatter)))))))

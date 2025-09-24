@@ -145,7 +145,8 @@
 (m/=> redos [:-> History [:vector HistoryState]])
 (defn redos
   [active-history]
-  (accumulate active-history (fn [current-state] (-> current-state :children last))))
+  (accumulate active-history (fn [current-state]
+                               (-> current-state :children last))))
 
 (m/=> clear [:-> App App])
 (defn clear
@@ -201,7 +202,7 @@
 (m/=> update-ancestors [:-> App App])
 (defn update-ancestors
   "Makes all ancestors of the active branch the rightmost element.
-   This ensures that when users remain in the latest branch when they undo/redo."
+   This ensures that users will stay in the latest branch when they undo/redo."
   [db]
   (loop [node (state (history db))
          db db]

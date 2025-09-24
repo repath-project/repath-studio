@@ -9,25 +9,28 @@
  ::animations
  :<- [::element.subs/entities]
  (fn [elements]
-   (filter #(contains? (descendants ::element.hierarchy/animation) (:tag %)) elements)))
+   (->> elements
+        (filter #(contains? (descendants ::element.hierarchy/animation)
+                            (:tag %))))))
 
 (defn effect-id
   [el]
   (str "effect" (:id el)))
 
 (defn animation->timeline-row
-  [{:keys [id attrs selected locked]
+  [{:keys [id tag attrs selected locked]
     :as el}]
-  (let [start (or (:begin attrs) 0)
-        _dur (or (:dur attrs) 0)
-        end (or (:end attrs) nil)]
+  (let [{:keys [begin dur end attributeName]} attrs
+        start (or begin 0)
+        _dur (or dur 0)
+        end (or end nil)]
     {:id id
      :selected selected
      :actions [{:id (str id)
                 :selected selected
                 :disable locked
                 :movable (not locked)
-                :name (string/join " " [(name (:tag el)) (:attributeName attrs)])
+                :name (string/join " " [tag attributeName])
                 :start start
                 :end end
                 :effectId (effect-id el)}]}))

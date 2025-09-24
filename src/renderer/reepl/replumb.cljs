@@ -249,7 +249,8 @@ cljs.js/*load-fn*
 
 ;; TODO: fuzzy-match if there are no normal matches
 (defn cljs-completion
-  "Tab completion. Copied w/ extensive modifications from replumb.repl/process-apropos."
+  "Tab completion, copied w/ extensive modifications from
+   replumb.repl/process-apropos."
   [text]
   (let [[only-ns text] (if-not (= -1 (.indexOf text "/"))
                          (.split text "/")

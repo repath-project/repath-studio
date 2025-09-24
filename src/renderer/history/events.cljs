@@ -68,4 +68,5 @@
                                    (history.handlers/position db)))]
              (cond-> context
                (and db (not= (history.handlers/position db) prev-position))
-               (rf/assoc-effect :fx (conj (or fx []) [::app.effects/persist])))))))
+               (rf/assoc-effect :fx (conj (or fx [])
+                                          [::app.effects/persist])))))))

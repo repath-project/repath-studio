@@ -6,7 +6,8 @@
   (isa? tool ::tool.hierarchy/tool))
 
 (def Tool
-  [:fn {:error/fn (fn [{:keys [value]} _] (str value " is not a supported tool"))}
+  [:fn {:error/fn (fn [{:keys [value]} _]
+                    (str value " is not a supported tool"))}
    tool?])
 
 (def State [:enum :idle :translate :clone :scale :select :create :edit :type])

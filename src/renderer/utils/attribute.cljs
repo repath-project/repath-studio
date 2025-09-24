@@ -309,9 +309,8 @@
 (m/=> initial [:-> Tag keyword? string?])
 (defn initial
   [tag k]
-  (let [dispatch-tag (if (contains? (methods attribute.hierarchy/initial) [tag k])
-                       tag
-                       :default)]
+  (let [dispatchable? (contains? (methods attribute.hierarchy/initial) [tag k])
+        dispatch-tag (if dispatchable? tag :default)]
     (or (attribute.hierarchy/initial dispatch-tag k)
         (let [initial-value (:initial (property-data-memo k))]
           (when (string? initial-value) initial-value)))))

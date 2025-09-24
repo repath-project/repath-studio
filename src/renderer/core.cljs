@@ -69,7 +69,8 @@
 ██████╔╝░░░██║░░░╚██████╔╝██████╔╝██║╚█████╔╝
 ╚═════╝░░░░╚═╝░░░░╚═════╝░╚═════╝░╚═╝░╚════╝░")
 
-(defonce root (delay (ra.dom.client/create-root (.getElementById js/document "app"))))
+(defonce root (delay (-> (.getElementById js/document "app")
+                         (ra.dom.client/create-root))))
 
 (defn ^:dev/after-load mount-root! []
   (rf/clear-subscription-cache!)

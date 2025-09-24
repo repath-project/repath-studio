@@ -52,7 +52,8 @@
 (defn adjusted-point
   [db point]
   (let [parent-id (:parent (first (element.handlers/selected db)))
-        [min-x min-y] (element.hierarchy/bbox (element.handlers/entity db parent-id))]
+        parent-el (element.handlers/entity db parent-id)
+        [min-x min-y] (element.hierarchy/bbox parent-el)]
     (matrix/sub point [min-x min-y])))
 
 (defmethod tool.hierarchy/on-pointer-up ::tool.hierarchy/polyshape

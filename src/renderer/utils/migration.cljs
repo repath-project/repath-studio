@@ -30,7 +30,8 @@
                               #(cond-> %
                                  :always
                                  (-> (update :id key->uuid)
-                                     (update :children (fn [ks] (mapv key->uuid ks))))
+                                     (update :children (fn [ks]
+                                                         (mapv key->uuid ks))))
 
                                  (:parent %)
                                  (update :parent key->uuid)))))))]
@@ -49,7 +50,8 @@
                       (fn [el]
                         (cond-> el
                           (= (:tag el) :brush)
-                          (update-in [:attrs :points] #(string/join " " (flatten %)))
+                          (update-in [:attrs :points]
+                                     #(string/join " " (flatten %)))
 
                           :always
                           (utils.element/normalize-attrs)))))]

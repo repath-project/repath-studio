@@ -40,7 +40,9 @@
         pointer-handler (partial event.impl.pointer/handler! el)
         active (and (= (:id clicked-element) id)
                     (= (:element-id clicked-element) element-id))]
-    (into [:rect {:fill (if active "var(--color-accent)" "var(--color-accent-inverted)")
+    (into [:rect {:fill (if active
+                          "var(--color-accent)"
+                          "var(--color-accent-inverted)")
                   :stroke (if active "var(--color-accent)" "gray")
                   :stroke-width stroke-width
                   :x (- x (/ size 2))

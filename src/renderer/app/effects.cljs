@@ -40,9 +40,10 @@
 (rf/reg-cofx
  ::standalone
  (fn [coeffects _]
-   (assoc coeffects :standalone (or (.-standalone js/navigator)
-                                    (.-matches (js/matchMedia
-                                                "(display-mode: standalone"))))))
+   (assoc coeffects
+          :standalone
+          (or (.-standalone js/navigator)
+              (.-matches (js/matchMedia "(display-mode: standalone"))))))
 
 (rf/reg-cofx
  ::language
@@ -54,16 +55,21 @@
  (fn [{:keys [on-success on-error formatter]}]
    (when-not (undefined? js/window.queryLocalFonts)
      (-> (.queryLocalFonts js/window)
-         (.then #(when on-success (rf/dispatch (conj on-success (cond-> %
-                                                                  formatter formatter)))))
+         (.then #(when on-success
+                   (rf/dispatch (conj on-success (cond-> %
+                                                   formatter formatter)))))
          (.catch #(when on-error (rf/dispatch (conj on-error %))))))))
+
+(defn- json->clj
+  [data]
+  (-> (transit/reader :json)
+      (transit/read data)))
 
 (rf/reg-fx
  ::get-local-db
  (fn [{:keys [on-success on-error on-finally]}]
    (-> (localforage/getItem config/app-name)
-       (.then #(when on-success (rf/dispatch (conj on-success (-> (transit/reader :json)
-                                                                  (transit/read %))))))
+       (.then #(when on-success (rf/dispatch (conj on-success (json->clj %)))))
        (.catch #(when on-error (rf/dispatch (conj on-error %))))
        (.finally #(when on-finally (rf/dispatch on-finally))))))
 

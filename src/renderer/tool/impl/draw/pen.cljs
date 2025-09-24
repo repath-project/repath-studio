@@ -35,7 +35,8 @@
 (defmethod tool.hierarchy/on-drag :pen
   [db _e]
   (let [{:keys [id parent]} (first (element.handlers/selected db))
-        [min-x min-y] (element.hierarchy/bbox (element.handlers/entity db parent))
+        parent-el (element.handlers/entity db parent)
+        [min-x min-y] (element.hierarchy/bbox parent-el)
         point (matrix/sub (:adjusted-pointer-pos db) [min-x min-y])
         point (string/join " " point)]
     (element.handlers/update-attr db id :points str " " point)))
