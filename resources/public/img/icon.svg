@@ -1,6 +1,6 @@
 <svg width="512" height="512" version="1.1" viewBox="0 0 135.47 135.47" xmlns="http://www.w3.org/2000/svg">
  <defs>
-  <linearGradient id="linearGradient4" x1="67.735" x2="67.735" y1="131.41" y2="4.0578" gradientTransform="matrix(1.0374,0,0,1.0374,-2.5333,-2.5333)" gradientUnits="userSpaceOnUse">
+  <linearGradient id="linearGradient4" x1="67.735" x2="67.735" y1="131.41" y2="4.0578" gradientTransform="matrix(1.0637 0 0 1.0637 -4.3137 -4.3137)" gradientUnits="userSpaceOnUse">
    <stop stop-color="#d01761" offset="0"/>
    <stop stop-color="#e93976" offset="1"/>
   </linearGradient>
@@ -9,8 +9,7 @@
    <stop stop-color="#fff" stop-opacity="0" offset="1"/>
   </linearGradient>
  </defs>
- <rect x="1.6763" y="3.2638" width="132.12" height="132.12" rx="66.06" ry="66.06" fill="#040002" fill-opacity=".2514" stop-color="#000000" stroke-width=".97525" style="-inkscape-stroke:none;font-variation-settings:normal"/>
- <rect x="1.6763" y="1.6763" width="132.12" height="132.12" rx="66.06" ry="66.06" fill="url(#linearGradient4)" stop-color="#000000" stroke-width=".25792" style="-inkscape-stroke:none;font-variation-settings:normal"/>
+ <rect x=".0025952" y=".0025952" width="135.47" height="135.47" rx="67.734" ry="67.734" fill="url(#linearGradient4)" stop-color="#000000" stroke-width=".26446" style="-inkscape-stroke:none;font-variation-settings:normal"/>
  <path d="m68.296 29.453a38.285 38.285 0 0 0-38.285 38.285 38.285 38.285 0 0 0 0.0044 0.06221h-0.0044v38.222h23.5v-3.0426a38.285 38.285 0 0 0 14.785 3.0426 38.285 38.285 0 0 0 38.285-38.285 38.285 38.285 0 0 0-38.285-38.285zm0 23.5a14.785 14.785 0 0 1 14.785 14.785 14.785 14.785 0 0 1-14.785 14.785 14.785 14.785 0 0 1-14.785-14.785 14.785 14.785 0 0 1 14.785-14.785z" fill="#fff" stroke-width=".27224" style="-inkscape-stroke:none;font-variation-settings:normal"/>
  <path d="m53.514 67.735v35.244a38.285 38.285 0 0 0 14.785 3.0426 38.285 38.285 0 0 0 38.285-38.285 38.285 38.285 0 0 0 0-4.87e-4h-23.5a14.785 14.785 0 0 1 0 4.87e-4 14.785 14.785 0 0 1-14.785 14.785 14.785 14.785 0 0 1-14.785-14.785 14.785 14.785 0 0 1 0-4.87e-4z" fill="url(#linearGradient11)" stop-color="#000000" stroke-width="1.0034" style="-inkscape-stroke:none;font-variation-settings:normal"/>
 </svg>
