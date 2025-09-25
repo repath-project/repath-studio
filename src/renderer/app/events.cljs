@@ -112,7 +112,7 @@
                  [:dispatch [::set-lang-attrs]]
                  [::theme.effects/add-listener [::theme.events/set-document-attr]]
                  [:dispatch [::set-loading false]]
-                 ;; We use flush-dom to render once so we can get the canvas size.
+                 ;; We flush to render once so we can get the canvas size.
                  [:dispatch ^:flush-dom [::document.events/center]]
                  [:dispatch [::window.events/update-focused]]
                  [::effects/ipc-send ["initialized"]]]

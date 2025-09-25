@@ -108,18 +108,19 @@
 
 (defmethod tool.hierarchy/on-pointer-move :transform
   [db e]
-  (let [{:keys [element]} e]
+  (let [{:keys [element]} e
+        cursor (if (and element
+                        (or (= (:type element) :handle)
+                            (not (utils.element/root? element))))
+                 "move"
+                 "default")]
     (cond-> db
       (not (:shift-key e))
       (element.handlers/clear-ignored)
 
       :always
       (-> (element.handlers/clear-hovered)
-          (tool.handlers/set-cursor (if (and element
-                                             (or (= (:type element) :handle)
-                                                 (not (utils.element/root? element))))
-                                      "move"
-                                      "default")))
+          (tool.handlers/set-cursor cursor))
 
       (:id element)
       (element.handlers/hover (:id element)))))
@@ -303,7 +304,8 @@
                        user-translate?
                        (not= (:id (element.handlers/parent db id))
                              (:id hovered-svg))
-                       (not (utils.element/svg? (element.handlers/entity db id))))
+                       (not (-> (element.handlers/entity db id)
+                                (utils.element/svg?))))
                   (-> (element.handlers/set-parent (:id hovered-svg))
                       ;; FIXME: Handle nested containers.
                       (cond-> (:bbox container)

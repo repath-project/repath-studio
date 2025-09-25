@@ -187,9 +187,10 @@
 (rf/reg-event-fx
  ::->path
  (fn [{:keys [db]}]
-   {::element.effects/->path {:data (element.handlers/selected db)
-                              :on-success [::finalize->path]
-                              :on-error [::notification.events/show-exception]}}))
+   {::element.effects/->path
+    {:data (element.handlers/selected db)
+     :on-success [::finalize->path]
+     :on-error [::notification.events/show-exception]}}))
 
 (rf/reg-event-db
  ::finalize->path
@@ -201,9 +202,10 @@
 (rf/reg-event-fx
  ::stroke->path
  (fn [{:keys [db]}]
-   {::element.effects/->path {:data (element.handlers/selected db)
-                              :on-success [::finalize-stroke->path]
-                              :on-error [::notification.events/show-exception]}}))
+   {::element.effects/->path
+    {:data (element.handlers/selected db)
+     :on-success [::finalize-stroke->path]
+     :on-error [::notification.events/show-exception]}}))
 
 (rf/reg-event-db
  ::finalize-stroke->path
@@ -217,9 +219,10 @@
  ::boolean-operation
  (fn [{:keys [db]} [_ operation]]
    (when (seq (rest (element.handlers/selected db)))
-     {::element.effects/->path {:data (element.handlers/selected db)
-                                :on-success [::finalize-boolean-operation operation]
-                                :on-error [::notification.events/show-exception]}})))
+     {::element.effects/->path
+      {:data (element.handlers/selected db)
+       :on-success [::finalize-boolean-operation operation]
+       :on-error [::notification.events/show-exception]}})))
 
 (rf/reg-event-db
  ::finalize-boolean-operation
@@ -250,14 +253,9 @@
  (fn [db [_ tag attrs]]
    (-> (element.handlers/animate db tag attrs)
        (history.handlers/finalize (case tag
-                                    :animate
-                                    [::menubar.views/animate]
-
-                                    :animate-transform
-                                    [::menubar.views/animate-transform]
-
-                                    :animate-motion
-                                    [::menubar.views/animate-motion])))))
+                                    :animate [::menubar.views/animate]
+                                    :animate-transform [::menubar.views/animate-transform]
+                                    :animate-motion [::menubar.views/animate-motion])))))
 
 (rf/reg-event-db
  ::set-parent
@@ -282,17 +280,10 @@
  (fn [db [_ action]]
    (-> (element.handlers/manipulate-path db action)
        (history.handlers/finalize (case action
-                                    :simplify
-                                    [::menubar.views/boolean-simplify]
-
-                                    :smooth
-                                    [::menubar.views/boolean-smooth]
-
-                                    :flatten
-                                    [::menubar.views/boolean-flatten]
-
-                                    :reverse
-                                    [::menubar.views/boolean-reverse])))))
+                                    :simplify [::menubar.views/boolean-simplify]
+                                    :smooth [::menubar.views/boolean-smooth]
+                                    :flatten [::menubar.views/boolean-flatten]
+                                    :reverse [::menubar.views/boolean-reverse])))))
 
 (rf/reg-event-fx
  ::copy
@@ -343,10 +334,11 @@
                      "error" {:on-fire [::notification.events/show-exception]}}]}
 
        (contains? element.db/image-mime-types file-type)
-       {::element.effects/import-image {:file file
-                                        :position position
-                                        :on-success [::add]
-                                        :on-error [::notification.events/show-exception]}}
+       {::element.effects/import-image
+        {:file file
+         :position position
+         :on-success [::add]
+         :on-error [::notification.events/show-exception]}}
 
        :else
        (let [extension (last (string/split (.-name file) "."))]

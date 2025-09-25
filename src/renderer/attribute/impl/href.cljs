@@ -45,9 +45,10 @@
 (rf/reg-event-fx
  ::success
  (fn [_ [_ _file-handle file]]
-   {::element.effects/import-image {:file file
-                                    :on-success [::update-attrs]
-                                    :on-error [::notification.events/show-exception]}}))
+   {::element.effects/import-image
+    {:file file
+     :on-success [::update-attrs]
+     :on-error [::notification.events/show-exception]}}))
 
 (rf/reg-event-fx
  ::update-attrs
