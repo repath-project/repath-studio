@@ -53,7 +53,8 @@
   [{:keys [id title]}]
   [:div.p-5
    (t [::changes-will-be-lost
-       [:p "Your changes to %1 will be lost if you close the document without saving."]]
+       [:p "Your changes to %1 will be lost if you close the document without
+            saving."]]
       [[:strong title]])
    [:div.flex.flex-col.gap-2
     {:class "sm:flex-row"}
@@ -127,7 +128,8 @@
       [:> Dialog/Content
        (views/merge-with-class
         {:class "fixed bg-secondary rounded-lg overflow-hidden shadow-xl border
-                 border-default left-1/2 top-1/2 w-125 max-w-9/10 -translate-1/2"
+                 border-default left-1/2 top-1/2 w-125 max-w-9/10
+                 -translate-1/2"
          :on-key-down #(.stopPropagation %)}
         attrs)
        (when title
@@ -137,7 +139,8 @@
             (into [:div.text-xl.px-5.pt-5]))])
        (when close-button
          [:> Dialog/Close
-          {:class "icon-button absolute top-5 right-5 small rtl:right-auto rtl:left-5"
+          {:class "icon-button absolute top-5 right-5 small rtl:right-auto
+                   rtl:left-5"
            :aria-label (t [::close "Close"])}
           [views/icon "times"]])
        [:> Dialog/Description

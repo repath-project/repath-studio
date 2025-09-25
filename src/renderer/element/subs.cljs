@@ -94,12 +94,11 @@
                              (fn [v1 v2] (when (= v1 v2) v1))))
            attrs (if multiple-selected?
                    (dissoc attrs :id)
-                   (sort-by (fn [[id _]]
-                              (-> (first selected-elements)
-                                  (utils.element/properties)
-                                  :attrs
-                                  (.indexOf id)))
-                            (utils.element/attributes (first selected-elements))))]
+                   (let [el (first selected-elements)
+                         props (utils.element/properties el)]
+                     (->> (utils.element/attributes el)
+                          (sort-by (fn [[id _]]
+                                     (-> props :attrs (.indexOf id)))))))]
        (sort-by (fn [[id _]] (.indexOf utils.attribute/order id)) attrs)))))
 
 (rf/reg-sub

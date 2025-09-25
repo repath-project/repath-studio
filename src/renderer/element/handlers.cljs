@@ -9,7 +9,9 @@
    [malli.error :as m.error]
    [renderer.app.db :refer [App]]
    [renderer.attribute.hierarchy :as attribute.hierarchy]
-   [renderer.element.db :as element.db :refer [Element Tag AnimationTag Direction]]
+   [renderer.element.db
+    :as element.db
+    :refer [Element Tag AnimationTag Direction]]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.notification.handlers :as notification.handlers]
    [renderer.notification.views :as notification.views]
@@ -19,7 +21,9 @@
    [renderer.utils.extra :refer [partial-right]]
    [renderer.utils.hiccup :as utils.hiccup]
    [renderer.utils.math :refer [Vec2]]
-   [renderer.utils.path :as utils.path :refer [PathManipulation PathBooleanOperation]]
+   [renderer.utils.path
+    :as utils.path
+    :refer [PathManipulation PathBooleanOperation]]
    [renderer.utils.vec :as utils.vec]))
 
 (m/=> path [:function
@@ -745,7 +749,9 @@
         new-path (->> (rest selected-elements)
                       (reduce (fn [path-a el]
                                 (let [path-b (-> el :attrs :d)]
-                                  (utils.path/boolean-operation path-a path-b operation)))
+                                  (utils.path/boolean-operation path-a
+                                                                path-b
+                                                                operation)))
                               (:d attrs)))]
     (cond-> db
       (seq new-path)
@@ -771,7 +777,8 @@
 (defn paste
   ([db]
    (let [parent-el (hovered-svg db)]
-     (reduce (partial-right paste parent-el) (deselect db) (:copied-elements db))))
+     (reduce (partial-right paste parent-el) (deselect db)
+             (:copied-elements db))))
   ([db el parent-el]
    (let [center (utils.bounds/center (:copied-bbox db))
          el-center (utils.bounds/center (:bbox el))

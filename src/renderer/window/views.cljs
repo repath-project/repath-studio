@@ -37,7 +37,8 @@
      [:> DropdownMenu/Trigger
       {:as-child true}
       [:button.button
-       {:class "flex gap-1 items-center px-2 uppercase text-muted bg-primary font-mono"}
+       {:class "flex gap-1 items-center px-2 uppercase text-muted bg-primary
+                font-mono"}
        computed-abbr
        [views/icon "chevron-down"]]]
      [:> DropdownMenu/Portal

@@ -139,24 +139,26 @@
          (is @(rf/subscribe [::document.subs/saved? (:id @active-document)]))))
 
      (testing "load"
-       (rf/dispatch [::document.events/load {:version "100000.0.0" ; Skips migrations.
-                                             :path "foo/bar/document.rps"
-                                             :title "document.rps"
-                                             :elements {}}])
+       (rf/dispatch [::document.events/load
+                     {:version "100000.0.0" ; REVIEW: Skips migrations.
+                      :path "foo/bar/document.rps"
+                      :title "document.rps"
+                      :elements {}}])
 
        (is @(rf/subscribe [::document.subs/active-saved?]))
        (is (= "foo/bar/document.rps - Repath Studio" @title-bar)))
 
      (testing "load multiple"
        (let [recent-documents (rf/subscribe [::document.subs/recent])]
-         (rf/dispatch [::document.events/load-multiple [{:version "100000.0.0"
-                                                         :path "foo/bar/document-1.rps"
-                                                         :title "document-1.rps"
-                                                         :elements {}}
-                                                        {:version "100000.0.0"
-                                                         :path "foo/bar/document-2.rps"
-                                                         :title "document-2.rps"
-                                                         :elements {}}]])
+         (rf/dispatch [::document.events/load-multiple
+                       [{:version "100000.0.0"
+                         :path "foo/bar/document-1.rps"
+                         :title "document-1.rps"
+                         :elements {}}
+                        {:version "100000.0.0"
+                         :path "foo/bar/document-2.rps"
+                         :title "document-2.rps"
+                         :elements {}}]])
 
          (is (= (:title @active-document) "document-2.rps"))
          (is (= (take 2 @recent-documents) ["foo/bar/document-2.rps"

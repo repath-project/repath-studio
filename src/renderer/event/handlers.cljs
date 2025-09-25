@@ -34,7 +34,9 @@
             (if (significant-drag? pointer-pos pointer-offset drag-threshold)
               (cond-> db
                 (not= tool :pan)
-                (tool.handlers/pan-out-of-canvas dom-rect pointer-pos pointer-offset)
+                (tool.handlers/pan-out-of-canvas dom-rect
+                                                 pointer-pos
+                                                 pointer-offset)
 
                 (not drag)
                 (-> (assoc :drag true)

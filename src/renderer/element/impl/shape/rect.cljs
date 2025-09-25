@@ -15,9 +15,9 @@
   {:icon "rectangle"
    :label (t [::label "Rectangle"])
    :description (t [::description
-                    "The <rect> element is a basic SVG shape that draws rectangles,
-                     defined by their position, width, and height. The rectangles
-                     may have their corners rounded."])
+                    "The <rect> element is a basic SVG shape that draws
+                     rectangles, defined by their position, width, and height.
+                     The rectangles may have their corners rounded."])
    :attrs [:stroke-width
            :opacity
            :fill

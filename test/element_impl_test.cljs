@@ -1,6 +1,7 @@
 (ns element-impl-test
   (:require
    [cljs.test :refer-macros [deftest is]]
+   [clojure.string :as string]
    [renderer.element.hierarchy :as element.hierarchy]))
 
 (deftest circle
@@ -29,7 +30,11 @@
            [-50 -50 50 50]))
 
     (is (= (element.hierarchy/path circle-el)
-           "M 50 0 A 50 50 0 0 1 0 50 A 50 50 0 0 1 -50 0 A 50 50 0 0 1 50 0 z"))))
+           (string/join " " ["M 50 0"
+                             "A 50 50 0 0 1 0 50"
+                             "A 50 50 0 0 1 -50 0"
+                             "A 50 50 0 0 1 50 0"
+                             "z"])))))
 
 (deftest rect
   (let [rect-el {:type :element
@@ -61,7 +66,11 @@
            [0 0 50 50]))
 
     (is (= (element.hierarchy/path rect-el)
-           "M 0 0 H 50 V 50 H 0 V 0 z"))))
+           (string/join " " ["M 0 0"
+                             "H 50 V 50"
+                             "H 0"
+                             "V 0"
+                             "z"])))))
 
 (deftest ellipse
   (let [ellipse-el {:type :element
@@ -93,7 +102,11 @@
            [-50 -50 50 50]))
 
     (is (= (element.hierarchy/path ellipse-el)
-           "M 50 0 A 50 50 0 0 1 0 50 A 50 50 0 0 1 -50 0 A 50 50 0 0 1 50 0 z"))))
+           (string/join " " ["M 50 0"
+                             "A 50 50 0 0 1 0 50"
+                             "A 50 50 0 0 1 -50 0"
+                             "A 50 50 0 0 1 50 0"
+                             "z"])))))
 
 (deftest line
   (let [line-el {:type :element

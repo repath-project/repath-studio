@@ -355,13 +355,13 @@
 (rf/reg-event-fx
  ::save-rasterized-image
  (fn [_ [_ data mime-type]]
-   {::effects/file-save
-    {:data data
-     :on-error [::notification.events/show-exception]
-     :options {:id "export"
-               :startIn "pictures"
-               :types [{:accept {mime-type (or (get element.db/image-mime-types mime-type)
-                                               [])}}]}}}))
+   (let [extensions (get element.db/image-mime-types mime-type)]
+     {::effects/file-save {:data data
+                           :on-error [::notification.events/show-exception]
+                           :options {:id "export"
+                                     :startIn "pictures"
+                                     :types [{:accept {mime-type (or extensions
+                                                                     [])}}]}}})))
 
 (rf/reg-event-fx
  ::print

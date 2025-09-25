@@ -8,9 +8,9 @@
 (defmethod attribute.hierarchy/description [:default :crossorigin]
   []
   (t [::description
-      "The crossorigin attribute, valid on the <image> and <feImage> elements, provides
-       support for configuration of the Cross-Origin Resource Sharing (CORS) requests for
-       the element's fetched data."]))
+      "The crossorigin attribute, valid on the <image> and <feImage> elements,
+       provides support for configuration of the Cross-Origin Resource Sharing
+       (CORS) requests for the element's fetched data."]))
 
 (defmethod attribute.hierarchy/form-element [:default :crossorigin]
   [_ k v attrs]

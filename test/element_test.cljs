@@ -167,11 +167,13 @@
        (is (-> @selected first :visible)))
 
      (testing "toggle visibility"
-       (rf/dispatch [::element.events/toggle-prop (-> @selected first :id) :visible])
+       (rf/dispatch [::element.events/toggle-prop (-> @selected first :id)
+                     :visible])
        (is (not (-> @selected first :visible))))
 
      (testing "revert visibility"
-       (rf/dispatch [::element.events/toggle-prop (-> @selected first :id) :visible])
+       (rf/dispatch [::element.events/toggle-prop (-> @selected first :id)
+                     :visible])
        (is (-> @selected first :visible))))))
 
 (deftest label
@@ -187,11 +189,13 @@
        (is (not (-> @selected first :label))))
 
      (testing "set label"
-       (rf/dispatch [::element.events/set-prop (-> @selected first :id) :label "rect"])
+       (rf/dispatch [::element.events/set-prop (-> @selected first :id) :label
+                     "rect"])
        (is (= (-> @selected first :label) "rect")))
 
      (testing "clear label"
-       (rf/dispatch [::element.events/set-prop (-> @selected first :id) :label ""])
+       (rf/dispatch [::element.events/set-prop (-> @selected first :id) :label
+                     ""])
        (is (not (-> @selected first :label)))))))
 
 (deftest lock

@@ -158,8 +158,8 @@
           text (if active
                  (get (get words pos) 2)
                  initial-text)]
-      ;; TODO: don't replaceRange here, instead watch the state atom and react to
-      ;; that.
+      ;; TODO: don't replaceRange here, instead watch the state atom and react
+      ;; to that.
       (.replaceRange cm text from to)
       (assoc state
              :pos pos
@@ -249,7 +249,8 @@
                    (if (cmp-show (.-keyCode evt))
                      (swap! complete-atom assoc :show-all false)
                      (when-not (cmp-ignore (.-keyCode evt))
-                       (reset! complete-atom (repl-hint complete-word inst nil)))))))
+                       (reset! complete-atom
+                               (repl-hint complete-word inst nil)))))))
 
           (.on inst "keydown"
                (fn [inst evt]
@@ -308,7 +309,7 @@
       (fn [_this]
         (let [dom-el (.-current ref)]
           ((aget codemirror "colorize") #js[dom-el] "clojure")
-          ;; Hacky way to remove the default theme class added by CodeMirror.colorize
+          ;; Hacky way to remove the theme class added by CodeMirror's colorize
           ;; https://codemirror.net/addon/runmode/colorize.js
           (-> dom-el .-classList (.remove "cm-s-default"))))
 

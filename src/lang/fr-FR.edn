@@ -41,8 +41,8 @@
   :cancel "Annuler"
   :close "Fermer"
   :ok "OK"
-  :changes-will-be-lost [:p "Vos modifications de %1 seront perdues si vous fermez le
-                             document sans l'enregistrer."]}
+  :changes-will-be-lost [:p "Vos modifications de %1 seront perdues si vous
+                             fermez le document sans l'enregistrer."]}
 
  :renderer.menubar.views
  {:file "Fichier"
@@ -178,7 +178,8 @@
   :place-selection "Placer la sélection"
   :scale-selection "Redimensionner la sélection"
   :convert-selection-path "Convertir la sélection en chemin"
-  :convert-selection-stroke-path "Convertir le contour de la sélection en chemin"
+  :convert-selection-stroke-path "Convertir le contour de la sélection en
+                                  chemin"
   :create "Créer %1"
   :import-svg "Importer SVG"
   :set-parent "Définir le parent"
@@ -203,47 +204,50 @@
 
  :renderer.element.impl.shape.circle
  {:label "Cercle"
-  :description "L'élément SVG <circle> est une forme de base SVG, utilisée pour dessiner
-                des cercles basés sur un point central et un rayon."}
+  :description "L'élément SVG <circle> est une forme de base SVG, utilisée pour
+                dessiner des cercles basés sur un point central et un rayon."}
 
  :renderer.element.impl.shape.image
  {:label "Image"
-  :description "L'élément SVG <image> inclut des images dans les documents SVG. Il peut
-                afficher des fichiers d'images raster ou d'autres fichiers SVG."}
+  :description "L'élément SVG <image> inclut des images dans les documents SVG.
+                Il peut afficher des fichiers d'images raster ou d'autres
+                fichiers SVG."}
 
  :renderer.element.impl.shape.ellipse
  {:label "Ellipse"
-  :description "L'élément <ellipse> est une forme de base SVG, utilisée pour créer des
-                ellipses basées sur une coordonnée centrale et leurs rayons x et y."}
+  :description "L'élément <ellipse> est une forme de base SVG, utilisée pour
+                créer des ellipses basées sur une coordonnée centrale et leurs
+                rayons x et y."}
 
  :renderer.element.impl.shape.line
  {:label "Ligne"
-  :description "L'élément <line> est une forme de base SVG utilisée pour créer une ligne
-                reliant deux points."}
+  :description "L'élément <line> est une forme de base SVG utilisée pour créer
+                une ligne reliant deux points."}
 
  :renderer.element.impl.shape.path
  {:label "Chemin"
-  :description "L'élément SVG <path> est l'élément générique pour définir une forme.
-                Toutes les formes de base peuvent être créées avec un élément path."}
+  :description "L'élément SVG <path> est l'élément générique pour définir une
+                forme. Toutes les formes de base peuvent être créées avec un
+                élément path."}
 
  :renderer.element.impl.shape.polygon
  {:label "Polygone"
-  :description "L'élément SVG <polygon> définit une forme fermée constituée d'un ensemble
-                de segments de lignes droites connectés. Le dernier point est connecté au
-                premier point."}
+  :description "L'élément SVG <polygon> définit une forme fermée constituée d'un
+                ensemble de segments de lignes droites connectés. Le dernier
+                point est connecté au premier point."}
 
  :renderer.element.impl.shape.polyline
  {:label "Polyligne"
-  :description "L'élément SVG <polyline> est une forme de base SVG qui crée des lignes
-                droites reliant plusieurs points. Typiquement, une polyligne est utilisée
-                pour créer des formes ouvertes car le dernier point n'a pas besoin d'être
-                connecté au premier point."}
+  :description "L'élément SVG <polyline> est une forme de base SVG qui crée des
+                lignes droites reliant plusieurs points. Typiquement, une
+                polyligne est utilisée pour créer des formes ouvertes car le
+                dernier point n'a pas besoin d'être connecté au premier point."}
 
  :renderer.element.impl.shape.rect
  {:label "Rectangle"
-  :description "L'élément <rect> est une forme SVG de base qui dessine des rectangles,
-                définis par leur position, largeur et hauteur. Les rectangles peuvent
-                avoir leurs coins arrondis."}
+  :description "L'élément <rect> est une forme SVG de base qui dessine des
+                rectangles, définis par leur position, largeur et hauteur. Les
+                rectangles peuvent avoir leurs coins arrondis."}
 
  :renderer.element.impl.custom.blob
  {:x "Coordonnée horizontale du centre du blob."
@@ -263,23 +267,26 @@
   :thinning "L'effet de la pression sur la taille du trait."
   :smoothing "Combien adoucir les bords du trait."
   :stream-line "Combien rationaliser le trait."
-  :description "Dessinez des lignes à main levée sensibles à la pression en utilisant
-                perfect-freehand."}
+  :description "Dessinez des lignes à main levée sensibles à la pression en
+                utilisant perfect-freehand."}
 
  :renderer.element.impl.container.canvas
  {:label "Canevas"
-  :description "Le canevas est le conteneur SVG principal qui héberge tous les éléments."}
+  :description "Le canevas est le conteneur SVG principal qui héberge tous les
+                éléments."}
 
  :renderer.element.impl.container.svg
  {:description "L'élément svg est un conteneur qui définit un nouveau système de
-                coordonnées et une fenêtre d'affichage. Il est utilisé comme élément le
-                plus externe des documents SVG, mais il peut aussi être utilisé pour
-                incorporer un fragment SVG dans un document SVG ou HTML."}
+                coordonnées et une fenêtre d'affichage. Il est utilisé comme
+                élément le plus externe des documents SVG, mais il peut aussi
+                être utilisé pour incorporer un fragment SVG dans un document
+                SVG ou HTML."}
 
  :renderer.element.impl.text
- {:description "L'élément SVG <text> dessine un élément graphique constitué de texte. Il
-                est possible d'appliquer un dégradé, un motif, un chemin de découpage, un
-                masque ou un filtre à <text>, comme tout autre élément graphique SVG."
+ {:description "L'élément SVG <text> dessine un élément graphique constitué de
+                texte. Il est possible d'appliquer un dégradé, un motif, un
+                chemin de découpage, un masque ou un filtre à <text>, comme tout
+                autre élément graphique SVG."
   :label "Texte"
   :remove-text "Supprimer le texte"
   :set-text "Définir le texte"}
@@ -299,105 +306,113 @@
   :attributes-title "%1 %2 éléments"}
 
  :renderer.attribute.impl.core
- {:x "L'attribut x définit une coordonnée de l'axe x dans le système de coordonnées
-      utilisateur."
-  :y "L'attribut y définit une coordonnée de l'axe y dans le système de coordonnées
-      utilisateur."
-  :x1 "L'attribut x1 est utilisé pour spécifier la première coordonnée x pour dessiner
-       un élément SVG qui nécessite plus d'une coordonnée. Les éléments qui n'ont besoin
-       que d'une coordonnée utilisent l'attribut x à la place."
-  :y1 "L'attribut y1 est utilisé pour spécifier la première coordonnée y pour dessiner un
-       élément SVG qui nécessite plus d'une coordonnée. Les éléments qui n'ont besoin que
-       d'une coordonnée utilisent l'attribut y à la place."
-  :x2 "L'attribut x2 est utilisé pour spécifier la deuxième coordonnée x pour dessiner un
-       élément SVG qui nécessite plus d'une coordonnée. Les éléments qui n'ont besoin
-       que d'une coordonnée utilisent l'attribut x à la place."
-  :y2 "L'attribut y2 est utilisé pour spécifier la deuxième coordonnée y pour dessiner un
-       élément SVG qui nécessite plus d'une coordonnée. Les éléments qui n'ont besoin
-       que d'une coordonnée utilisent l'attribut y à la place."
+ {:x "L'attribut x définit une coordonnée de l'axe x dans le système de
+      coordonnées utilisateur."
+  :y "L'attribut y définit une coordonnée de l'axe y dans le système de
+      coordonnées utilisateur."
+  :x1 "L'attribut x1 est utilisé pour spécifier la première coordonnée x pour
+       dessiner un élément SVG qui nécessite plus d'une coordonnée. Les éléments
+       qui n'ont besoin que d'une coordonnée utilisent l'attribut x à la place."
+  :y1 "L'attribut y1 est utilisé pour spécifier la première coordonnée y pour
+       dessiner un élément SVG qui nécessite plus d'une coordonnée. Les éléments
+       qui n'ont besoin que d'une coordonnée utilisent l'attribut y à la place."
+  :x2 "L'attribut x2 est utilisé pour spécifier la deuxième coordonnée x pour
+       dessiner un élément SVG qui nécessite plus d'une coordonnée. Les éléments
+       qui n'ont besoin que d'une coordonnée utilisent l'attribut x à la place."
+  :y2 "L'attribut y2 est utilisé pour spécifier la deuxième coordonnée y pour
+       dessiner un élément SVG qui nécessite plus d'une coordonnée. Les éléments
+       qui n'ont besoin que d'une coordonnée utilisent l'attribut y à la place."
   :cx "L'attribut cx définit la coordonnée de l'axe x d'un point central."
   :cy "L'attribut cy définit la coordonnée de l'axe y d'un point central."
-  :dx "L'attribut dx indique un décalage le long de l'axe x sur la position d'un élément
-       ou de son contenu."
-  :dy "L'attribut dy indique un décalage le long de l'axe y sur la position d'un élément
-       ou de son contenu."
-  :width "L'attribut width définit la longueur horizontale d'un élément dans le système
-          de coordonnées utilisateur."
-  :height "L'attribut height définit la longueur verticale d'un élément dans le système
-           de coordonnées utilisateur."
+  :dx "L'attribut dx indique un décalage le long de l'axe x sur la position d'un
+       élément ou de son contenu."
+  :dy "L'attribut dy indique un décalage le long de l'axe y sur la position d'un
+       élément ou de son contenu."
+  :width "L'attribut width définit la longueur horizontale d'un élément dans le
+          système de coordonnées utilisateur."
+  :height "L'attribut height définit la longueur verticale d'un élément dans le
+           système de coordonnées utilisateur."
   :rx "L'attribut rx définit un rayon sur l'axe x."
   :ry "L'attribut ry définit un rayon sur l'axe y."
   :r "L'attribut r définit le rayon d'un cercle."
-  :rotate "L'attribut rotate spécifie comment l'élément animé tourne lorsqu'il se déplace
-           le long d'un chemin spécifié dans un élément <animateMotion>."
-  :stroke "L'attribut stroke est un attribut de présentation définissant la couleur (ou
-           tout serveur de peinture SVG comme les dégradés ou les motifs) utilisé pour
-           peindre le contour de la forme."
-  :fill "L'attribut fill a deux significations différentes. Pour les formes et le texte,
-         c'est un attribut de présentation qui définit la couleur (ou tout serveur de
-         peinture SVG comme les dégradés ou les motifs) utilisé pour peindre l'élément ;
-         pour l'animation, il définit l'état final de l'animation."
-  :stroke-width "L'attribut stroke-width est un attribut de présentation définissant la
-                 largeur du trait à appliquer à la forme."
+  :rotate "L'attribut rotate spécifie comment l'élément animé tourne lorsqu'il
+           se déplace le long d'un chemin spécifié dans un élément
+           <animateMotion>."
+  :stroke "L'attribut stroke est un attribut de présentation définissant la
+           couleur (ou tout serveur de peinture SVG comme les dégradés ou les
+           motifs) utilisé pour peindre le contour de la forme."
+  :fill "L'attribut fill a deux significations différentes. Pour les formes et
+         le texte, c'est un attribut de présentation qui définit la couleur (ou
+         tout serveur de peinture SVG comme les dégradés ou les motifs) utilisé
+         pour peindre l'élément ; pour l'animation, il définit l'état final de
+         l'animation."
+  :stroke-width "L'attribut stroke-width est un attribut de présentation
+                 définissant la largeur du trait à appliquer à la forme."
   :stroke-dasharray "L'attribut stroke-dasharray est un attribut de présentation
-                     définissant le motif de tirets et d'espaces utilisé pour peindre le
-                     contour de la forme."
-  :opacity "L'attribut opacity spécifie la transparence d'un objet ou d'un groupe
-            d'objets, c'est-à-dire le degré auquel l'arrière-plan derrière l'élément est
-            superposé."
+                     définissant le motif de tirets et d'espaces utilisé pour
+                     peindre le contour de la forme."
+  :opacity "L'attribut opacity spécifie la transparence d'un objet ou d'un
+            groupe d'objets, c'est-à-dire le degré auquel l'arrière-plan
+            derrière l'élément est superposé."
   :id "L'attribut id attribue un nom unique à un élément."
-  :class "Attribue un nom de classe ou un ensemble de noms de classes à un élément. Vous
-          pouvez attribuer le même nom de classe ou noms à n'importe quel nombre
-          d'éléments, cependant, plusieurs noms de classe doivent être séparés par des
-          caractères d'espacement."
-  :tabindex "L'attribut tabindex vous permet de contrôler si un élément est focalisable
-             et de définir l'ordre relatif de l'élément pour les fins de navigation
-             séquentielle de focus."
-  :style "L'attribut style permet de styliser un élément en utilisant des déclarations
-          CSS. Il fonctionne de manière identique à l'attribut style en HTML."
-  :href "L'attribut href définit un lien vers une ressource comme une URL de référence.
-         La signification exacte de ce lien dépend du contexte de chaque élément qui
-         l'utilise."
-  :attribute-name "L'attribut attributeName indique le nom de la propriété CSS ou de
-                   l'attribut de l'élément cible qui va être modifié pendant une
-                   animation."
+  :class "Attribue un nom de classe ou un ensemble de noms de classes à un
+          élément. Vous pouvez attribuer le même nom de classe ou noms à
+          n'importe quel nombre d'éléments, cependant, plusieurs noms de classe
+          doivent être séparés par des caractères d'espacement."
+  :tabindex "L'attribut tabindex vous permet de contrôler si un élément est
+             focalisable et de définir l'ordre relatif de l'élément pour les
+             fins de navigation séquentielle de focus."
+  :style "L'attribut style permet de styliser un élément en utilisant des
+          déclarations CSS. Il fonctionne de manière identique à l'attribut
+          style en HTML."
+  :href "L'attribut href définit un lien vers une ressource comme une URL de
+         référence. La signification exacte de ce lien dépend du contexte de
+         chaque élément qui l'utilise."
+  :attribute-name "L'attribut attributeName indique le nom de la propriété CSS
+                   ou de l'attribut de l'élément cible qui va être modifié
+                   pendant une animation."
   :begin "L'attribut begin définit quand une animation doit commencer."
-  :end "L'attribut end définit une valeur de fin pour l'animation qui peut contraindre
-        la durée active."
+  :end "L'attribut end définit une valeur de fin pour l'animation qui peut
+        contraindre la durée active."
   :dur "L'attribut dur indique la durée simple d'une animation."
-  :min "L'attribut min spécifie la valeur minimale de la durée d'animation active."
-  :max "L'attribut max spécifie la valeur maximale de la durée d'animation active."
-  :restart "L'attribut restart spécifie si une animation peut redémarrer ou non."
-  :repeat-count "L'attribut repeatCount indique le nombre de fois qu'une animation aura
-                 lieu."
-  :repeat-dur "L'attribut repeatDur spécifie la durée totale pour répéter une animation."
-  :calc-mode "L'attribut calcMode spécifie le mode d'interpolation pour l'animation."
-  :values "L'attribut values a différentes significations, selon le contexte où il est
-           utilisé, soit il définit une séquence de valeurs utilisées au cours d'une
-           animation, soit c'est une liste de nombres pour une matrice de couleurs, qui
-           est interprétée différemment selon le type de changement de couleur à
-           effectuer."
-  :key-times "L'attribut keyTimes représente une liste de valeurs temporelles utilisées
-              pour contrôler le rythme de l'animation."
-  :key-splines "L'attribut keySplines définit un ensemble de points de contrôle de courbe
-                de Bézier associés à la liste keyTimes, définissant une fonction de
-                Bézier
-                cubique qui contrôle le rythme d'intervalle"
-  :from "L'attribut from indique la valeur initiale de l'attribut qui sera modifié
-         pendant l'animation."
-  :to "L'attribut to indique la valeur finale de l'attribut qui sera modifié pendant
-       l'animation."
-  :by "L'attribut by spécifie une valeur de décalage relatif pour un attribut qui sera
-       modifié pendant une animation."
+  :min "L'attribut min spécifie la valeur minimale de la durée d'animation
+        active."
+  :max "L'attribut max spécifie la valeur maximale de la durée d'animation
+        active."
+  :restart "L'attribut restart spécifie si une animation peut redémarrer ou
+            non."
+  :repeat-count "L'attribut repeatCount indique le nombre de fois qu'une animation
+                 aura lieu."
+  :repeat-dur "L'attribut repeatDur spécifie la durée totale pour répéter une
+               animation."
+  :calc-mode "L'attribut calcMode spécifie le mode d'interpolation pour
+              l'animation."
+  :values "L'attribut values a différentes significations, selon le contexte où
+           il est utilisé, soit il définit une séquence de valeurs utilisées au
+           cours d'une animation, soit c'est une liste de nombres pour une
+           matrice de couleurs, qui est interprétée différemment selon le type
+           de changement de couleur à effectuer."
+  :key-times "L'attribut keyTimes représente une liste de valeurs temporelles
+              utilisées pour contrôler le rythme de l'animation."
+  :key-splines "L'attribut keySplines définit un ensemble de points de contrôle
+                de courbe de Bézier associés à la liste keyTimes, définissant
+                une fonction de Bézier cubique qui contrôle le rythme
+                d'intervalle"
+  :from "L'attribut from indique la valeur initiale de l'attribut qui sera
+         modifié pendant l'animation."
+  :to "L'attribut to indique la valeur finale de l'attribut qui sera modifié
+       pendant l'animation."
+  :by "L'attribut by spécifie une valeur de décalage relatif pour un attribut
+       qui sera modifié pendant une animation."
   :additive "L'attribut additive contrôle si une animation est additive ou non."
-  :accumulate "L'attribut accumulate contrôle si une animation est cumulative ou non."
-  :view-box "L'attribut viewBox définit la position et la dimension, dans l'espace
-             utilisateur, d'une fenêtre d'affichage SVG."
-  :preserve-aspect-ratio "L'attribut preserveAspectRatio indique comment un élément avec
-                          une viewBox fournissant un rapport d'aspect donné doit
-                          s'adapter
-                          dans une fenêtre d'affichage avec un rapport d'aspect
-                          différent."}
+  :accumulate "L'attribut accumulate contrôle si une animation est cumulative
+               ou non."
+  :view-box "L'attribut viewBox définit la position et la dimension, dans
+             l'espace utilisateur, d'une fenêtre d'affichage SVG."
+  :preserve-aspect-ratio "L'attribut preserveAspectRatio indique comment un
+                          élément avec une viewBox fournissant un rapport
+                          d'aspect donné doit s'adapter dans une fenêtre
+                          d'affichage avec un rapport d'aspect différent."}
 
  :renderer.tool.impl.element.core
  {:help "Cliquez et faites glisser pour créer un élément."}
@@ -451,24 +466,26 @@
  {:label "Image"}
 
  :renderer.attribute.impl.stroke-linecap
- {:description "L'attribut stroke-linecap est un attribut de présentation définissant la
-                forme à utiliser à la fin des sous-chemins ouverts lorsqu'ils sont
-                tracés."
+ {:description "L'attribut stroke-linecap est un attribut de présentation
+                définissant la forme à utiliser à la fin des sous-chemins
+                ouverts lorsqu'ils sont tracés."
   :butt "Bout"
   :round "Rond"
   :square "Carré"}
 
  :renderer.attribute.impl.stroke-linejoin
- {:description "L'attribut stroke-linejoin est un attribut de présentation définissant
-                la forme à utiliser aux coins des chemins lorsqu'ils sont tracés."
+ {:description "L'attribut stroke-linejoin est un attribut de présentation
+                définissant la forme à utiliser aux coins des chemins lorsqu'ils
+                sont tracés."
   :bevel "Biseau"
   :miter "Onglet"
   :round "Rond"}
 
  :renderer.attribute.impl.overflow
- {:description "L'attribut overflow définit quoi faire quand le contenu d'un élément
-                est trop grand pour tenir dans son contexte de formatage de bloc. Cette
-                fonctionnalité n'est pas encore largement implémentée."
+ {:description "L'attribut overflow définit quoi faire quand le contenu d'un
+                élément est trop grand pour tenir dans son contexte de formatage
+                de bloc. Cette fonctionnalité n'est pas encore largement
+                implémentée."
   :hidden "Masqué"
   :visible "Visible"
   :scroll "Défilement"
@@ -498,37 +515,41 @@
   :decrease "Diminuer"}
 
  :renderer.attribute.impl.font-family
- {:description "L'attribut font-family indique quelle famille de polices sera utilisée
-                pour rendre le texte, spécifiée comme une liste priorisée de noms de
-                familles de polices et/ou de noms de familles génériques."
+ {:description "L'attribut font-family indique quelle famille de polices sera
+                utilisée pour rendre le texte, spécifiée comme une liste
+                priorisée de noms de familles de polices et/ou de noms de
+                familles génériques."
   :search-font "Rechercher une police"
   :select-font "Sélectionner une police"
   :no-local-font "Aucune police locale trouvée."}
 
  :renderer.attribute.impl.font-size
- {:description "L'attribut font-size fait référence à la taille de la police de la ligne
-                de base à la ligne de base lorsque plusieurs lignes de texte sont définies
-                solides dans un environnement de mise en page multiligne."}
+ {:description "L'attribut font-size fait référence à la taille de la police de
+                la ligne de base à la ligne de base lorsque plusieurs lignes de
+                texte sont définies solides dans un environnement de mise en
+                page multiligne."}
 
  :renderer.attribute.impl.font-weight
- {:description "L'attribut font-weight fait référence à la graisse ou à la légèreté des
-                glyphes utilisés pour rendre le texte, par rapport aux autres polices de
-                la même famille de polices."}
+ {:description "L'attribut font-weight fait référence à la graisse ou à la
+                légèreté des glyphes utilisés pour rendre le texte, par rapport
+                aux autres polices de la même famille de polices."}
 
  :renderer.attribute.impl.crossorigin
- {:description "L'attribut crossorigin, valide sur les éléments <image> et <feImage>,
-                fournit un support pour la configuration des requêtes Cross-Origin
-                Resource Sharing (CORS) pour les données récupérées de l'élément."
+ {:description "L'attribut crossorigin, valide sur les éléments <image> et
+                <feImage>, fournit un support pour la configuration des requêtes
+                Cross-Origin Resource Sharing (CORS) pour les données récupérées
+                de l'élément."
   :anonymous "Anonyme"
   :use-credentials "Utiliser les identifiants"}
 
  :renderer.attribute.impl.decoding
- {:description "L'attribut decoding, valide sur les éléments <image>, fournit un indice
-                au navigateur pour savoir s'il doit effectuer le décodage d'image avec
-                le rendu d'autre contenu en une seule étape de présentation qui semble
-                plus \"correcte\" (sync), ou rendre et présenter l'autre contenu d'abord
-                puis décoder l'image et la présenter plus tard (async). En pratique,
-                async signifie que le prochain paint n'attend pas que l'image se décode."
+ {:description "L'attribut decoding, valide sur les éléments <image>, fournit un
+                indice au navigateur pour savoir s'il doit effectuer le décodage
+                d'image avec le rendu d'autre contenu en une seule étape de
+                présentation qui semble plus \"correcte\" (sync), ou rendre et
+                présenter l'autre contenu d'abord puis décoder l'image et la
+                présenter plus tard (async). En pratique, async signifie que le
+                prochain paint n'attend pas que l'image se décode."
   :sync "Synchrone"
   :async "Asynchrone"
   :auto "Automatique"}
@@ -547,14 +568,18 @@
  {:label "Transformer"
   :idle-click [:div "Cliquez pour sélectionner un élément ou faites glisser pour
                      sélectionner par zone. "]
-  :idle-hold [:div "Maintenez %1 pour ajouter ou supprimer des éléments de la sélection."]
+  :idle-hold [:div "Maintenez %1 pour ajouter ou supprimer des éléments de la
+                    sélection."]
   :select [:div "Maintenez %1 pour sélectionner les éléments intersectants."]
   :select-element "Sélectionner l'élément"
   :deselect-element "Désélectionner l'élément"
-  :translate [:div "Maintenez %1 pour restreindre la direction, et %2 pour cloner."]
-  :clone [:div "Maintenez %1 pour restreindre la direction. ou relâchez %2 pour déplacer"]
-  :scale [:div "Maintenez %1 pour verrouiller les proportions, %2 pour redimensionner en
-                place, %3 pour aussi redimensionner les enfants."]
+  :translate [:div "Maintenez %1 pour restreindre la direction, et %2 pour
+                    cloner."]
+  :clone [:div "Maintenez %1 pour restreindre la direction. ou relâchez %2 pour
+                déplacer"]
+  :scale [:div "Maintenez %1 pour verrouiller les proportions, %2 pour
+                redimensionner en place, %3 pour aussi redimensionner les
+                enfants."]
   :modify-selection "Modifier la sélection"
   :move-selection "Déplacer la sélection"
   :scale-selection "Redimensionner la sélection"
@@ -603,7 +628,8 @@
   :create-doc-from-template "Créer un document à partir d'un modèle"
   :load-doc "Charger un document"
   :error-loading "Erreur lors du chargement de %1"
-  :unsupported-or-corrupted "Le fichier semble être non pris en charge ou corrompu."}
+  :unsupported-or-corrupted "Le fichier semble être non pris en charge ou
+                             corrompu."}
 
  :renderer.document.views
  {:new "Nouveau"
@@ -688,7 +714,8 @@
  {:center-view "Centrer la vue"
   :clear-history "Effacer l'historique"
   :action-cannot-undone "Cette action ne peut pas être annulée."
-  :clear-history-description "Êtes-vous sûr de vouloir effacer l'historique du document ?"
+  :clear-history-description "Êtes-vous sûr de vouloir effacer l'historique du
+                              document ?"
   :select-element "Sélectionner l'élément"
   :delete-selection "Supprimer la sélection"}
 
@@ -725,9 +752,11 @@
  :renderer.error.events
  {:welcome "Bienvenue dans %1 !"
   :reporting-description [:div
-                          [:p "Souhaitez-vous nous aider à nous améliorer en envoyant des
-                              rapports d'erreur anonymes ? Vous pouvez modifier votre
-                              préférence à tout moment depuis notre menu \"%1\"."]
-                          [:p "Pour plus d'informations, veuillez lire notre %2."]]
+                          [:p "Souhaitez-vous nous aider à nous améliorer en
+                               envoyant des rapports d'erreur anonymes ? Vous
+                               pouvez modifier votre préférence à tout moment
+                               depuis notre menu \"%1\"."]
+                          [:p "Pour plus d'informations, veuillez lire notre
+                               %2."]]
   :privacy-policy "politique de confidentialité"
   :no-thank-you "Non, merci"}}

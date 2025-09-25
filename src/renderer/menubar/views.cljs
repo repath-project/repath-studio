@@ -27,10 +27,11 @@
 (defn recent-submenu
   []
   (let [recent @(rf/subscribe [::document.subs/recent])
-        recent-items (mapv (fn [path] {:id (keyword path)
-                                       :label path
-                                       :icon "folder"
-                                       :action [::document.events/open path]}) recent)]
+        recent-items (mapv (fn [path]
+                             {:id (keyword path)
+                              :label path
+                              :icon "folder"
+                              :action [::document.events/open path]}) recent)]
     (cond-> recent-items
       (seq recent-items)
       (concat [{:id :divider-1

@@ -22,39 +22,41 @@
 
 (defmethod attribute.hierarchy/description [:default :x]
   []
-  (t [::x "The x attribute defines an x-axis coordinate in the user coordinate system."]))
+  (t [::x "The x attribute defines an x-axis coordinate in the user coordinate
+           system."]))
 
 (defmethod attribute.hierarchy/description [:default :y]
   []
-  (t [::y "The y attribute defines a y-axis coordinate in the user coordinate system."]))
+  (t [::y "The y attribute defines a y-axis coordinate in the user coordinate
+           system."]))
 
 (defmethod attribute.hierarchy/description [:default :x1]
   []
   (t [::x1
       "The x1 attribute is used to specify the first x-coordinate for drawing an
-       SVG element that requires more than one coordinate. Elements that only need
-       one coordinate use the x attribute instead."]))
+       SVG element that requires more than one coordinate. Elements that only
+       need one coordinate use the x attribute instead."]))
 
 (defmethod attribute.hierarchy/description [:default :y1]
   []
   (t [::y1
       "The y1 attribute is used to specify the first y-coordinate for drawing an
-       SVG element that requires more than one coordinate. Elements that only need
-       one coordinate use the y attribute instead."]))
+       SVG element that requires more than one coordinate. Elements that only
+       need one coordinate use the y attribute instead."]))
 
 (defmethod attribute.hierarchy/description [:default :x2]
   []
   (t [::x2
-      "The x2 attribute is used to specify the second x-coordinate for drawing an
-       SVG element that requires more than one coordinate. Elements that only need
-       one coordinate use the x attribute instead."]))
+      "The x2 attribute is used to specify the second x-coordinate for drawing
+       an SVG element that requires more than one coordinate. Elements that only
+       need one coordinate use the x attribute instead."]))
 
 (defmethod attribute.hierarchy/description [:default :y2]
   []
   (t [::y2
-      "The y2 attribute is used to specify the second y-coordinate for drawing an
-       SVG element that requires more than one coordinate. Elements that only need
-       one coordinate use the y attribute instead."]))
+      "The y2 attribute is used to specify the second y-coordinate for drawing
+       an SVG element that requires more than one coordinate. Elements that only
+       need one coordinate use the y attribute instead."]))
 
 (defmethod attribute.hierarchy/description [:default :cx]
   []
@@ -79,14 +81,14 @@
 (defmethod attribute.hierarchy/description [:default :width]
   []
   (t [::width
-      "The width attribute defines the horizontal length of an element in the user
-       coordinate system."]))
+      "The width attribute defines the horizontal length of an element in the
+       user coordinate system."]))
 
 (defmethod attribute.hierarchy/description [:default :height]
   []
   (t [::height
-      "The height attribute defines the vertical length of an element in the user
-       coordinate system."]))
+      "The height attribute defines the vertical length of an element in the
+       user coordinate system."]))
 
 (defmethod attribute.hierarchy/description [:default :rx]
   []
@@ -103,8 +105,8 @@
 (defmethod attribute.hierarchy/description [:default :rotate]
   []
   (t [::rotate
-      "The rotate attribute specifies how the animated element rotates as it travels
-       along a path specified in an <animateMotion> element."]))
+      "The rotate attribute specifies how the animated element rotates as it
+       travels along a path specified in an <animateMotion> element."]))
 
 (defmethod attribute.hierarchy/description [:default :stroke]
   []
@@ -131,14 +133,15 @@
   []
   (t [::stroke-dasharray
       "The stroke-dasharray attribute is a presentation attribute defining
-       the pattern of dashes and gaps used to paint the outline of the shape."]))
+       the pattern of dashes and gaps used to paint the outline of the
+       shape."]))
 
 (defmethod attribute.hierarchy/description [:default :opacity]
   []
   (t [::opacity
-      "The opacity attribute specifies the transparency of an object or of a group
-       of objects, that is, the degree to which the background behind the element
-       is overlaid."]))
+      "The opacity attribute specifies the transparency of an object or of a
+       group of objects, that is, the degree to which the background behind the
+       element is overlaid."]))
 
 (defmethod attribute.hierarchy/description [:default :id]
   []
@@ -154,9 +157,9 @@
 (defmethod attribute.hierarchy/description [:default :tabindex]
   []
   (t [::tabindex
-      "The tabindex attribute allows you to control whether an element is focusable
-       and to define the relative order of the element for the purposes
-       of sequential focus navigation."]))
+      "The tabindex attribute allows you to control whether an element is
+       focusable and to define the relative order of the element for the
+       purposes of sequential focus navigation."]))
 
 (defmethod attribute.hierarchy/description [:default :style]
   []
@@ -168,7 +171,8 @@
   []
   (t [::href
       "The href attribute defines a link to a resource as a reference URL.
-       The exact meaning of that link depends on the context of each element using it."]))
+       The exact meaning of that link depends on the context of each element
+       using it."]))
 
 (defmethod attribute.hierarchy/description [:default :attributeName]
   []
@@ -184,12 +188,13 @@
 (defmethod attribute.hierarchy/description [:default :end]
   []
   (t [::end
-      "The end attribute defines an end value for the animation that can constrain
-       the active duration."]))
+      "The end attribute defines an end value for the animation that can
+       constrain the active duration."]))
 
 (defmethod attribute.hierarchy/description [:default :dur]
   []
-  (t [::dur "The dur attribute indicates the simple duration of an animation."]))
+  (t [::dur "The dur attribute indicates the simple duration of an
+             animation."]))
 
 (defmethod attribute.hierarchy/description [:default :min]
   []
@@ -204,7 +209,8 @@
 (defmethod attribute.hierarchy/description [:default :restart]
   []
   (t [::restart
-      "The restart attribute specifies whether or not an animation can restart."]))
+      "The restart attribute specifies whether or not an animation can
+       restart."]))
 
 (defmethod attribute.hierarchy/description [:default :repeatCount]
   []
@@ -221,16 +227,17 @@
 (defmethod attribute.hierarchy/description [:default :calcMode]
   []
   (t [::calc-mode
-      "The calcMode attribute specifies the interpolation mode for the animation."]))
+      "The calcMode attribute specifies the interpolation mode for the
+       animation."]))
 
 (defmethod attribute.hierarchy/description [:default :values]
   []
   (t [::values
-      "The values attribute has different meanings,
-       depending upon the context where it's used,
-       either it defines a sequence of values used over the course of an animation,
-       or it's a list of numbers for a color matrix, which is interpreted differently
-       depending on the type of color change to be performed."]))
+      "The values attribute has different meanings, depending upon the context
+       where it's used, either it defines a sequence of values used over the
+       course of an animation, or it's a list of numbers for a color matrix,
+       which is interpreted differently depending on the type of color change
+       to be performed."]))
 
 (defmethod attribute.hierarchy/description [:default :keyTimes]
   []
@@ -248,8 +255,8 @@
 (defmethod attribute.hierarchy/description [:default :from]
   []
   (t [::from
-      "The from attribute indicates the initial value of the attribute that will be
-       modified during the animation."]))
+      "The from attribute indicates the initial value of the attribute that
+       will be modified during the animation."]))
 
 (defmethod attribute.hierarchy/description [:default :to]
   []
@@ -260,18 +267,20 @@
 (defmethod attribute.hierarchy/description [:default :by]
   []
   (t [::by
-      "The by attribute specifies a relative offset value for an attribute that will
-       be modified during an animation."]))
+      "The by attribute specifies a relative offset value for an attribute that
+       will be modified during an animation."]))
 
 (defmethod attribute.hierarchy/description [:default :additive]
   []
   (t [::additive
-      "The additive attribute controls whether or not an animation is additive."]))
+      "The additive attribute controls whether or not an animation is
+       additive."]))
 
 (defmethod attribute.hierarchy/description [:default :accumulate]
   []
   (t [::accumulate
-      "The accumulate attribute controls whether or not an animation is cumulative."]))
+      "The accumulate attribute controls whether or not an animation is
+       cumulative."]))
 
 (defmethod attribute.hierarchy/description [:default :viewBox]
   []

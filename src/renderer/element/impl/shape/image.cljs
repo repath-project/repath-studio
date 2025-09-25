@@ -13,6 +13,7 @@
   {:icon "image"
    :label (t [::label "Image"])
    :description (t [::description
-                    "The <image> SVG element includes images inside SVG documents.
-                     It can display raster image files or other SVG files."])
+                    "The <image> SVG element includes images inside SVG
+                     documents. It can display raster image files or other SVG
+                     files."])
    :attrs [:href]})

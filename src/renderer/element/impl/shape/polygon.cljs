@@ -11,9 +11,9 @@
   {:icon "polygon"
    :label (t [::label "Polygon"])
    :description (t [::description
-                    "The <polygon> SVG element defines a closed shape consisting of
-                     a set of connected straight line segments. The last point is
-                     connected to the first point."])
+                    "The <polygon> SVG element defines a closed shape consisting
+                     of a set of connected straight line segments. The last
+                     point is connected to the first point."])
    :attrs [:stroke-width
            :fill
            :stroke

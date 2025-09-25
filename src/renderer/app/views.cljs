@@ -107,6 +107,12 @@
       :aria-live "polite"}
      message]]])
 
+(defn read-only-overlay []
+  [:div.absolute.inset-0.border-4.border-accent
+   (when-let [preview-label @(rf/subscribe [::document.subs/preview-label])]
+     [:div.absolute.bg-accent.top-2.left-2.px-1.rounded.text-accent-inverted
+      preview-label])])
+
 (defn frame-panel
   []
   (let [ruler-visible? @(rf/subscribe [::ruler.subs/visible?])
@@ -143,11 +149,7 @@
       [:div.relative.grow.flex
        {:data-theme "light"}
        [frame.views/root]
-       (when read-only?
-         [:div.absolute.inset-0.border-4.border-accent
-          (when-let [preview-label @(rf/subscribe [::document.subs/preview-label])]
-            [:div.absolute.bg-accent.top-2.left-2.px-1.rounded.text-accent-inverted
-             preview-label])])
+       (when read-only? [read-only-overlay])
        (when debug-info? [debug-info])
        (when worker-active?
          [:button.icon-button.absolute.bottom-2.right-2

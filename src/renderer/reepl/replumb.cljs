@@ -256,7 +256,8 @@ cljs.js/*load-fn*
                          (.split text "/")
                          [nil text])
         matches? #(and
-                   ;; TODO: find out what these t_cljs$core things are... seem to be nil
+                   ;; TODO: find out what these t_cljs$core things are...
+                   ;; They seem to be nil.
                    (= -1 (.indexOf (str %) "t_cljs$core"))
                    (< -1 (.indexOf (str %) text)))
         current-ns (repl/current-ns)

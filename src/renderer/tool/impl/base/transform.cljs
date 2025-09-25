@@ -53,7 +53,8 @@
 (defmethod tool.hierarchy/help [:transform :idle]
   []
   [:<>
-   (t [::idle-click [:div "Click to select an element or drag to select by area."]])
+   (t [::idle-click [:div "Click to select an element or drag to select by
+                           area."]])
    (t [::idle-hold [:div "Hold %1 to add or remove elements to selection."]]
       [[:span.shortcut-key "⇧"]])])
 
@@ -300,7 +301,8 @@
                 (cond-> (element.handlers/translate db id offset)
                   (and single-selection?
                        user-translate?
-                       (not= (:id (element.handlers/parent db id)) (:id hovered-svg))
+                       (not= (:id (element.handlers/parent db id))
+                             (:id hovered-svg))
                        (not (utils.element/svg? (element.handlers/entity db id))))
                   (-> (element.handlers/set-parent (:id hovered-svg))
                       ;; FIXME: Handle nested containers.

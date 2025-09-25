@@ -144,7 +144,8 @@
   [el]
   (let [{{:keys [x y]} :attrs} el
         [x y] (mapv utils.length/unit->px [x y])
-        options (->> (select-keys (:attrs el) [:seed :extraPoints :randomness :size])
+        options (->> [:seed :extraPoints :randomness :size]
+                     (select-keys (:attrs el))
                      (merge (utils.attribute/defaults-with-vals :blob))
                      (reduce (fn [options [k v]] (assoc options k (int v))) {})
                      (clj->js))]
@@ -166,7 +167,9 @@
   (let [{{:keys [x y size]} :attrs} el
         [x y size] (mapv utils.length/unit->px [x y size])
         offset (utils.element/offset el)
-        [x1 y1] (cond->> [x y] (not (utils.element/svg? el)) (matrix/add offset))
+        [x1 y1] (cond->> [x y]
+                  (not (utils.element/svg? el))
+                  (matrix/add offset))
         [x2 y2] (matrix/add [x1 y1] size)]
     [:<>
      [utils.svg/line [x1 y1] [x2 y2]]

@@ -6,9 +6,10 @@
 (rf/reg-cofx
  ::focused
  (fn [coeffects _]
-   (assoc coeffects :focused (or (.hasFocus js/document)
-                                 (and (utils.dom/frame-document!)
-                                      (.hasFocus (utils.dom/frame-document!)))))))
+   (assoc coeffects :focused
+          (boolean (or (.hasFocus js/document)
+                       (when-let [frame-document (utils.dom/frame-document!)]
+                         (.hasFocus frame-document)))))))
 
 (rf/reg-cofx
  ::fullscreen

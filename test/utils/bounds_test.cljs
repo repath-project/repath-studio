@@ -38,7 +38,8 @@
 (deftest test-->snapping-points
   (with-redefs [t (fn [& _] "translation")]
     (testing "snapping points of bounds"
-      (is (= (utils.bounds/->snapping-points [0 0 10 10] #{:corners :centers :midpoints})
+      (is (= (utils.bounds/->snapping-points [0 0 10 10]
+                                             #{:corners :centers :midpoints})
              [[0 0] [0 10] [10 0] [10 10] [5 5] [0 5] [10 5] [5 0] [5 10]]))
 
       (is (= (utils.bounds/->snapping-points [0 0 10 10] #{}) [])))))

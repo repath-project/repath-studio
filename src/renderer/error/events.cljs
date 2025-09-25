@@ -10,34 +10,34 @@
    [renderer.utils.i18n :refer [t tr]]))
 
 (defn reporting-confirmation-dialog
-  []
-  (dialog.views/confirmation
-   {:description (t [::reporting-description
-                     [:div
-                      [:p "Would you like to help us improve by sending anonymous error
-                           reports? You can change your preference at any time from our
-                           \"%1\" menu."]
-                      [:p "For more information, please read our %2."]]]
-                    [[:strong (t [::menubar.views/help "Help"])]
-                     [:a.button-link
-                      {:href "https://repath.studio/policies/privacy/"
-                       :target "_blank"}
-                      (t [::privacy-policy "privacy policy"])]])
-    :confirm-action [::set-reporting true]
-    :cancel-action [::set-reporting false]
-    :cancel-label (t [::no-thank-you "No, thank you"])}))
+  [db]
+  {:title (tr db [::welcome "Welcome to %1!"] [config/app-name])
+   :close-button false
+   :content [dialog.views/confirmation
+             {:description (t [::reporting-description
+                               [:div
+                                [:p "Would you like to help us improve by
+                                     sending anonymous error reports? You can
+                                     change your preference at any time from our
+                                     \"%1\" menu."]
+                                [:p "For more information, please read our
+                                     %2."]]]
+                              [[:strong (t [::menubar.views/help "Help"])]
+                               [:a.button-link
+                                {:href "https://repath.studio/policies/privacy/"
+                                 :target "_blank"}
+                                (t [::privacy-policy "privacy policy"])]])
+              :confirm-action [::set-reporting true]
+              :cancel-action [::set-reporting false]
+              :cancel-label (t [::no-thank-you "No, thank you"])}]
+   :attrs {:onOpenAutoFocus #(.preventDefault %)}})
 
 (rf/reg-event-fx
  ::init-reporting
  (fn [{:keys [db]} _]
    (let [{:keys [error-reporting platform]} db]
      (if (nil? error-reporting)
-       {:db (dialog.handlers/create db {:title (tr db
-                                                   [::welcome "Welcome to %1!"]
-                                                   [config/app-name])
-                                        :close-button false
-                                        :content [reporting-confirmation-dialog]
-                                        :attrs {:onOpenAutoFocus #(.preventDefault %)}})}
+       {:db (dialog.handlers/create db (reporting-confirmation-dialog db))}
        (let [config (-> config/sentry
                         (assoc :enabled error-reporting)
                         (clj->js))]

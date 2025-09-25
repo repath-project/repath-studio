@@ -49,7 +49,9 @@
   (set! (.-segments path) (.splice (.-segments path) i 1))
   (rf/dispatch [::element.events/set-attr :p (.toString path)]))
 
-(defmulti segment-form (fn [segment _] (keyword (string/lower-case (first segment)))))
+(defmulti segment-form (fn [segment _] (-> (first segment)
+                                           (string/lower-case)
+                                           (keyword))))
 
 (defmethod segment-form :default
   [segment i]

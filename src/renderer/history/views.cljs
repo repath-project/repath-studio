@@ -63,7 +63,8 @@
      [:circle.transition-fill
       {:class "hover:stroke-accent"
        :on-click #(rf/dispatch [::history.events/go-to id])
-       :on-pointer-enter #(when-not active? (rf/dispatch [::history.events/preview id]))
+       :on-pointer-enter #(when-not active?
+                            (rf/dispatch [::history.events/preview id]))
        :on-pointer-leave #(rf/dispatch [::history.events/reset-state id])
        :cx "0"
        :cy "0"

@@ -6,7 +6,9 @@
    [malli.transform :as m.transform]
    [renderer.app.db :refer [App]]
    [renderer.db :refer [JS_FileSystemFileHandle]]
-   [renderer.document.db :as document.db :refer [Document PersistedDocument SaveInfo]]
+   [renderer.document.db
+    :as document.db
+    :refer [Document PersistedDocument SaveInfo]]
    [renderer.element.handlers :as element.handlers]
    [renderer.frame.handlers :as frame.handlers]
    [renderer.notification.handlers :as notification.handlers]
@@ -176,8 +178,9 @@
 (defn update-saved-info
   [db info]
   (let [id (:id info)
-        position (get-in db [:documents id :history :position])]
-    (update-in db [:documents id] merge (assoc info :saved-history-id position))))
+        position (get-in db [:documents id :history :position])
+        info (assoc info :saved-history-id position)]
+    (update-in db [:documents id] merge info)))
 
 (m/=> load [:-> App map? App])
 (defn load

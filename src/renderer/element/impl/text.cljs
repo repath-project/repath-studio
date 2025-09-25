@@ -31,8 +31,8 @@
    :description (t [::description
                     "The SVG <text> element draws a graphics element consisting
                      of text. It's possible to apply a gradient, pattern,
-                     clipping path, mask, or filter to <text>, like any other SVG
-                     graphics element."])
+                     clipping path, mask, or filter to <text>, like any other
+                     SVG graphics element."])
    :ratio-locked true
    :attrs [:font-family
            :font-size
@@ -96,7 +96,9 @@
         attrs (utils.element/attributes el)
         {:keys [fill font-family font-size font-weight font-style]} attrs
         font-size-px (utils.length/unit->px font-size)
-        font-size (if (zero? font-size-px) font-size (str font-size-px "px"))]
+        font-size (if (zero? font-size-px)
+                    font-size
+                    (str font-size-px "px"))]
     [:foreignObject {:x x
                      :y y
                      :width "1000vw"
@@ -110,7 +112,9 @@
        :on-pointer-up #(.stopPropagation %)
        :on-blur #(rf/dispatch [::set-text id (get-text! %)])
        :on-key-down #(event.impl.keyboard/input-key-down-handler! % content identity id)
-       :ref (fn [this] (when this (rf/dispatch [::tool.events/set-state :type])))
+       :ref (fn [this]
+              (when this
+                (rf/dispatch [::tool.events/set-state :type])))
        :style {:color fill
                :caret-color fill
                :display "block"
@@ -140,9 +144,15 @@
                                                             font-family
                                                             font-style
                                                             font-weight)]
-                       (utils.font/font-data->path-data! font content x y font-size))))))
+                       (utils.font/font-data->path-data! font
+                                                         content
+                                                         x y
+                                                         font-size))))))
       (-> (js/fetch (utils.font/default-font-path font-style font-weight))
-          (.then #(utils.font/font-data->path-data! % content x y font-size))))))
+          (.then #(utils.font/font-data->path-data! %
+                                                    content
+                                                    x y
+                                                    font-size))))))
 
 (defmethod element.hierarchy/bbox :text
   [el]

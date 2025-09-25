@@ -23,7 +23,8 @@
   {:icon "brush"
    :label (t [::label "Brush"])
    :description (t [::description
-                    "Draw pressure-sensitive freehand lines using perfect-freehand."])
+                    "Draw pressure-sensitive freehand lines using
+                     perfect-freehand."])
    :url "https://github.com/steveruizok/perfect-freehand"
    :attrs [:points
            :stroke
@@ -157,20 +158,22 @@
                    (transduce (partition-all 3) (partial translate offset) [])
                    (string/join " "))))
 
+(defn- scale-el
+  [ratio bbox-min offset el]
+  (->> (utils.attribute/str->seq el)
+       (into [] partition-to-px)
+       (reduce (fn [points point]
+                 (let [rel-point (matrix/sub bbox-min (take 2 point))
+                       rel-offset (utils.element/scale-offset ratio rel-point)
+                       offset (matrix/add offset rel-offset)]
+                   (translate offset points point))) [])
+       (string/join " ")))
+
 (defmethod element.hierarchy/scale :brush
   [el ratio pivot-point]
   (let [bbox-min (take 2 (element.hierarchy/bbox el))
         offset (utils.element/scale-offset ratio pivot-point)]
-    (update-in el
-               [:attrs :points]
-               #(->> (into [] partition-to-px (utils.attribute/str->seq %))
-                     (reduce (fn [points point]
-                               (let [rel-point (matrix/sub bbox-min (take 2 point))
-                                     rel-offset (utils.element/scale-offset ratio
-                                                                            rel-point)
-                                     offset (matrix/add offset rel-offset)]
-                                 (translate offset points point))) [])
-                     (string/join " ")))))
+    (update-in el [:attrs :points] (partial scale-el ratio bbox-min offset))))
 
 (defmethod element.hierarchy/path :brush
   [el]
