@@ -346,13 +346,16 @@
                 [::dialog.events/show-cmdk]]
                ["earth"
                 (t [::website "Website"])
-                [::events/open-remote-url "https://repath.studio/"]]
+                [::events/open-remote-url
+                 "https://repath.studio/"]]
                ["commit"
                 (t [::source-code "Source Code"])
-                [::events/open-remote-url "https://github.com/repath-project/repath-studio"]]
+                [::events/open-remote-url
+                 "https://github.com/repath-project/repath-studio"]]
                ["list"
                 (t [::changelog "Changelog"])
-                [::events/open-remote-url "https://repath.studio/roadmap/changelog/"]]]
+                [::events/open-remote-url
+                 "https://repath.studio/roadmap/changelog/"]]]
               (map #(apply help-command %))
               (into [:div]))]]]]]]])
 

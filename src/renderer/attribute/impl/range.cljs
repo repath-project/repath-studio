@@ -7,6 +7,7 @@
 
 (defmethod attribute.hierarchy/form-element [:default ::range]
   [_ k v attrs]
-  [attribute.views/range-input k v (merge attrs {:min 0
-                                                 :max 1
-                                                 :step 0.01})])
+  [attribute.views/range-input k v
+   (merge attrs {:min 0
+                 :max 1
+                 :step 0.01})])

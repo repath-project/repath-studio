@@ -72,5 +72,7 @@
   (let [state-idle (= @(rf/subscribe [::tool.subs/state]) :idle)]
     [:div.flex.gap-px.w-full
      [attribute.views/form-input k (if state-idle v "waiting")
-      {:disabled (or disabled (not v) (not state-idle))}]
+      {:disabled (or disabled
+                     (not v)
+                     (not state-idle))}]
      (when v [points-popover (utils.attribute/points->vec v) disabled])]))
