@@ -13,6 +13,13 @@
 (derive :fill ::color)
 (derive :color ::color)
 
+(defn picker
+  [k v]
+  [:> ChromePicker
+   {:color (or v "")
+    :on-change-complete #(rf/dispatch [::element.events/set-attr k (.-hex %)])
+    :on-change #(rf/dispatch [::element.events/preview-attr k (.-hex %)])}])
+
 (defmethod attribute.hierarchy/form-element [:default ::color]
   [_ k v attrs]
   [:div.flex.gap-px.w-full
@@ -30,8 +37,6 @@
       {:sideOffset 5
        :className "popover-content"
        :align "end"}
-      [:div {:dir "ltr"}
-       [:> ChromePicker
-        {:color (or v "")
-         :on-change-complete #(rf/dispatch [::element.events/set-attr k (.-hex %)])
-         :on-change #(rf/dispatch [::element.events/preview-attr k (.-hex %)])}]]]]]])
+      [:div
+       {:dir "ltr"}
+       [picker k v]]]]]])

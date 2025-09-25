@@ -37,7 +37,8 @@
            (if open? "▼" "▶")]
           (show-el header show-value)]
          (when open?
-           (show-el (devtools.formatters/body-api-call v config) show-value))]))))
+           (show-el (devtools.formatters/body-api-call v config)
+                    show-value))]))))
 
 ;; see https://docs.google.com/document/d/1FTascZXT9cxfetuPRT2eXPQKXui4nWFivUnS_335T3U/preview
 (defn show-devtools

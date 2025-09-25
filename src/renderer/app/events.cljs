@@ -80,7 +80,8 @@
  (fn [{:keys [db]} _]
    (when-let [install-prompt (:install-prompt db)]
      {::app.effects/install {:prompt install-prompt
-                             :outcomes {"accepted" [::set-install-prompt nil]}}})))
+                             :outcomes {"accepted" [::set-install-prompt
+                                                    nil]}}})))
 
 (def listeners
   (->> [[js/document "keydown" [::event.events/keyboard] event.impl.keyboard/->clj]
@@ -189,5 +190,6 @@
                   event (rf/get-coeffect context :event)]
               (cond-> context
                 db
-                (rf/assoc-effect :fx (conj (or fx [])
-                                           [::app.effects/validate [db event]])))))))
+                (rf/assoc-effect :fx
+                                 (conj (or fx [])
+                                       [::app.effects/validate [db event]])))))))
