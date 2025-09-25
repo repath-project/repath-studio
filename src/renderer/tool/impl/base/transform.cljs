@@ -215,8 +215,8 @@
 
 (m/=> delta->offset-with-pivot-point [:-> ScaleHandle Vec2 BBox [:tuple Vec2 Vec2]])
 (defn delta->offset-with-pivot-point
-  "Converts the x/y pointer offset to a scale ratio and a pivot point,
-   to decouple this from the scaling method of the elements.
+  "Converts the x/y pointer offset to a scale ratio and a pivot point, to
+   decouple this tool from the scaling method of the elements.
 
    :pivot-point
    + ─────────□──┬-------□
@@ -289,13 +289,14 @@
 (m/=> translate [:-> App Vec2 [:maybe Orientation] App])
 (defn translate
   [db offset axis]
-  (let [hovered-svg (element.handlers/hovered-svg db)
+  (let [[offset-x offset-y] offset
+        hovered-svg (element.handlers/hovered-svg db)
         user-translate? (contains? #{:translate :clone} (:state db))
         single-selection? (and (seq (element.handlers/selected db))
                                (empty? (rest (element.handlers/selected db))))
         offset (case axis
-                 :vertical [(first offset) 0]
-                 :horizontal [0 (second offset)]
+                 :vertical [offset-x 0]
+                 :horizontal [0 offset-y]
                  offset)]
     (reduce (fn [db id]
               (let [container (element.handlers/parent-container db id)]
@@ -320,14 +321,17 @@
 
 (defn drag-start->state
   [clicked-element]
-  (cond
-    (= (:type clicked-element) :element)
-    (if (= (:tag clicked-element) :canvas) :select :translate)
+  (case (:type clicked-element)
+    :element
+    (if (= (:tag clicked-element) :canvas)
+      :select
+      :translate)
 
-    (= (:type clicked-element) :handle)
-    (if (= (:action clicked-element) :scale) :scale :translate)
+    :handle
+    (if (= (:action clicked-element) :scale)
+      :scale
+      :translate)
 
-    :else
     :idle))
 
 (defmethod tool.hierarchy/on-drag-start :transform
@@ -351,8 +355,9 @@
         ratio-locked? (or ctrl-key (element.handlers/ratio-locked? db))
         db (element.handlers/clear-ignored db)
         delta (tool.handlers/pointer-delta db)
+        [delta-x delta-y] delta
         axis (when ctrl-key
-               (if (> (abs (first delta)) (abs (second delta)))
+               (if (> (abs delta-x) (abs delta-y))
                  :vertical
                  :horizontal))]
     (case (:state db)
@@ -434,7 +439,8 @@
       (not= (:state db) :idle)
       (cond-> (element.handlers/snapping-points db (filter :visible selected))
         (seq (rest selected))
-        (into (utils.bounds/->snapping-points (element.handlers/bbox db) options))))))
+        (into (utils.bounds/->snapping-points (element.handlers/bbox db)
+                                              options))))))
 
 (defmethod tool.hierarchy/snapping-elements :transform
   [db]
