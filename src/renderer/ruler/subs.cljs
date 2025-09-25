@@ -2,7 +2,6 @@
   (:require
    [re-frame.core :as rf]
    [renderer.document.subs :as-alias document.subs]
-   [renderer.element.subs :as-alias element.subs]
    [renderer.frame.subs :as-alias frame.subs]
    [renderer.ruler.handlers :as ruler.handlers]))
 
@@ -31,20 +30,3 @@
  :<- [::frame.subs/viewbox]
  (fn [[step viewbox] [_ orientation]]
    (ruler.handlers/steps-coll step viewbox orientation)))
-
-(rf/reg-sub
- ::bbox-rect-attrs
- :<- [::document.subs/zoom]
- :<- [::document.subs/pan]
- :<- [::element.subs/bbox]
- (fn [[zoom pan bbox] [_ orientation size]]
-   (let [[min-x min-y max-x max-y] (map #(* % zoom) bbox)]
-     (if (= orientation :vertical)
-       {:x 0
-        :y (- min-y (* (second pan) zoom))
-        :width size
-        :height (- max-y min-y)}
-       {:x (- min-x (* (first pan) zoom))
-        :y 0
-        :width (- max-x min-x)
-        :height size}))))

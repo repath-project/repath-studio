@@ -78,7 +78,8 @@
               on-keyboard-event (fn [e]
                                   (.preventDefault e)
                                   (.dispatchEvent js/window.parent.document
-                                                  (js/KeyboardEvent. (.-type e) e)))]
+                                                  (js/KeyboardEvent. (.-type e)
+                                                                     e)))]
           [:> Frame
            {:initial-content (server/render-to-static-markup (initial-markup))
             :mount-target "body"

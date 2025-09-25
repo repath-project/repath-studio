@@ -114,7 +114,9 @@
                      (let [dropped-id (utils.dom/event->uuid e)]
                        (.preventDefault e)
                        (reset! dragged-over? false)
-                       (rf/dispatch [::document.events/swap-position dropped-id id])))
+                       (rf/dispatch [::document.events/swap-position
+                                     dropped-id
+                                     id])))
           :ref (fn [this]
                  (when (and this active?)
                    (rf/dispatch [::events/scroll-into-view this])))}

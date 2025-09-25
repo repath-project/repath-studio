@@ -5,6 +5,7 @@
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.subs]
    [renderer.document.subs :as-alias document.subs]
+   [renderer.element.subs :as-alias element.subs]
    [renderer.frame.subs :as-alias frame.subs]
    [renderer.ruler.subs :as-alias ruler.subs]))
 
@@ -12,7 +13,19 @@
 
 (defn bbox-rect
   [orientation]
-  (when-let [attrs @(rf/subscribe [::ruler.subs/bbox-rect-attrs orientation ruler-size])]
+  (let [zoom @(rf/subscribe [::document.subs/zoom])
+        pan @(rf/subscribe [::document.subs/pan])
+        bbox @(rf/subscribe [::element.subs/bbox])
+        [min-x min-y max-x max-y] (map #(* % zoom) bbox)
+        attrs (if (= orientation :vertical)
+                {:x 0
+                 :y (- min-y (* (second pan) zoom))
+                 :width ruler-size
+                 :height (- max-y min-y)}
+                {:x (- min-x (* (first pan) zoom))
+                 :y 0
+                 :width (- max-x min-x)
+                 :height ruler-size})]
     [:rect (merge attrs {:fill "var(--overlay)"})]))
 
 (defn pointer

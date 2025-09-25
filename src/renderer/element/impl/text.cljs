@@ -111,7 +111,9 @@
        :on-pointer-down #(.stopPropagation %)
        :on-pointer-up #(.stopPropagation %)
        :on-blur #(rf/dispatch [::set-text id (get-text! %)])
-       :on-key-down #(event.impl.keyboard/input-key-down-handler! % content identity id)
+       :on-key-down #(event.impl.keyboard/input-key-down-handler! % content
+                                                                  identity
+                                                                  id)
        :ref (fn [this]
               (when this
                 (rf/dispatch [::tool.events/set-state :type])))

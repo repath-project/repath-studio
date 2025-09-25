@@ -82,7 +82,8 @@
         writer (transit/writer :json)]
     (when-let [json (try (transit/write writer persisted-db)
                          (catch :default err
-                           (rf/dispatch [::notification.events/show-exception err])))]
+                           (rf/dispatch [::notification.events/show-exception
+                                         err])))]
       (-> (localforage/setItem config/app-name json)
           (.catch #(rf/dispatch [::notification.events/show-exception %]))))))
 

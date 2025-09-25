@@ -579,7 +579,8 @@
   [db]
   (let [svgs (reverse (root-svgs db))
         pointer-pos (:adjusted-pointer-pos db)]
-    (or (some #(when (utils.bounds/contained-point? (:bbox %) pointer-pos) %) svgs)
+    (or (some #(when (utils.bounds/contained-point? (:bbox %) pointer-pos) %)
+              svgs)
         (root db))))
 
 (m/=> translate [:function
@@ -691,7 +692,8 @@
         add-children (fn [db child-els]
                        (reduce #(cond-> %1
                                   (element.db/tag? (:tag %2))
-                                  (create (assoc %2 :parent id))) db child-els))]
+                                  (create (assoc %2 :parent id)))
+                               db child-els))]
     (if-not (element.db/valid? new-el)
       (add-invalid-element-notification db new-el)
       (let [is-translated (or (utils.element/svg? new-el)

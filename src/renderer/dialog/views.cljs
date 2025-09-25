@@ -37,7 +37,8 @@
      [confirmation-button]]))
 
 (defn confirmation
-  [{:keys [description confirm-action confirm-label cancel-action cancel-label]}]
+  [{:keys [description confirm-action confirm-label cancel-action
+           cancel-label]}]
   [:div.p-5
    (cond->> description
      (string? description)

@@ -204,8 +204,8 @@
   "Makes all ancestors of the active branch the rightmost element.
    This ensures that users will stay in the latest branch when they undo/redo."
   [db]
-  (loop [node (state (history db))
-         db db]
+  (loop [db db
+         node (state (history db))]
     (let [parent-id (:parent node)
           parent (state (history db) parent-id)]
       (if-not parent
@@ -213,7 +213,8 @@
         (let [index (.indexOf (:children parent) (:id node))
               new-index (dec (count (:children parent)))
               children-path (path db :states parent-id :children)]
-          (recur parent (update-in db children-path utils.vec/move index new-index)))))))
+          (recur (update-in db children-path utils.vec/move index new-index)
+                 parent))))))
 
 (def valid-elements? (m/validator [:map-of uuid? Element]))
 
