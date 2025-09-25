@@ -50,7 +50,7 @@
      {::effects/ipc-send ["relaunch"]})))
 
 (rf/reg-event-fx
- ::clear-local-storage-and-relaunch
+ ::clear-data-and-relaunch
  (fn [_ _]
    {:fx [[::app.effects/clear-local-storage nil]
          [:dispatch [::relaunch]]]}))

@@ -61,7 +61,7 @@
              application settings."]
 
         [:button.button.px-2.rounded.w-full.bg-warning
-         {:on-click #(rf/dispatch [::window.events/clear-local-storage-and-relaunch])}
+         {:on-click #(rf/dispatch [::window.events/clear-data-and-relaunch])}
          "Clear data and restart"]]]]]))
 
 (defn boundary

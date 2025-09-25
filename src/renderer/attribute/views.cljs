@@ -51,10 +51,12 @@
        [browser-support browser version_added])]]])
 
 (defn info-button
-  [url label]
-  [:button.button.px-3.bg-primary.grow
-   {:on-click #(rf/dispatch [::events/open-remote-url url])}
-   label])
+  ([url]
+   [info-button url (t [::more-info "More info"])])
+  ([url label]
+   [:button.button.px-3.bg-primary.grow
+    {:on-click #(rf/dispatch [::events/open-remote-url url])}
+    label]))
 
 (defn construct-mdn-url
   [attr]
@@ -81,7 +83,7 @@
        [browser-compatibility support-data])
      [:div.flex.gap-2
       (when mdn-url
-        [info-button mdn-url (t [::learn-more "Learn more"])])
+        [info-button mdn-url])
       (when spec-url
         [info-button spec-url (t [::specification "Specification"])])]]))
 
@@ -282,9 +284,7 @@
            [:p.text-pretty description])
          [caniusethis {:tag tag}]
          (when-let [url (:url properties)]
-           [:button.button.px-3.bg-primary.w-full
-            {:on-click #(rf/dispatch [::events/open-remote-url url])}
-            (t [::learn-more "Learn more"])])]
+           [:div.flex [info-button url]])]
         [:> HoverCard/Arrow {:class "fill-secondary"}]]]]]))
 
 (defn form
