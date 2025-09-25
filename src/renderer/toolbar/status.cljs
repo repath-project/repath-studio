@@ -201,16 +201,15 @@
                 :background "transparent"}
         :on-click #(rf/dispatch [::document.events/swap-colors])}
        [views/icon "swap-horizontal"]]
-      ;; REVIEW: Can we replace alignOffset with collisionBoundary?
       [views/color-picker
        {:color stroke
+        :align-offset -62 ; REVIEW: Try to use collisionBoundary?
         :on-change-complete #(rf/dispatch [::element.events/set-attr
                                            :stroke
                                            (get-hex %)])
         :on-change #(rf/dispatch [::document.events/preview-attr
                                   :stroke
-                                  (get-hex %)])
-        :align-offset -54}
+                                  (get-hex %)])}
        [:button.button.relative.border.border-default.button-size
         {:title (t [::stroke-color "Pick stroke color"])
          :style {:background stroke}}
