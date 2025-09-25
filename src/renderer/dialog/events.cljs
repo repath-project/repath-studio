@@ -16,14 +16,14 @@
  ::show-about
  (fn [db [_]]
    (dialog.handlers/create db {:title config/app-name
-                               :close-button true
+                               :has-close-button true
                                :content [dialog.views/about]})))
 
 (rf/reg-event-db
  ::show-confirmation
  (fn [db [_ data]]
    (dialog.handlers/create db {:title (:title data)
-                               :close-button true
+                               :has-close-button true
                                :content [dialog.views/confirmation data]})))
 
 (rf/reg-event-fx

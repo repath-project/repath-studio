@@ -6,7 +6,7 @@
   [:map {:closed true}
    [:title {:optional true} Hiccup]
    [:content {:optional true} any?]
-   [:close-button {:optional true} boolean?]
+   [:has-close-button {:optional true} boolean?]
    [:attrs {:optional true} [:map [:as-child {:optional true} boolean?]
                              [:force-mount {:optional true} boolean?]
                              [:on-open-auto-focus {:optional true} ifn?]

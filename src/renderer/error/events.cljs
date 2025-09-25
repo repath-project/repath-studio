@@ -28,7 +28,7 @@
 (defn reporting-confirmation-dialog
   [db]
   {:title (tr db [::welcome "Welcome to %1!"] [config/app-name])
-   :close-button false
+   :has-close-button false
    :content [dialog.views/confirmation (reporting-confirmation-dialog-content)]
    :attrs {:onOpenAutoFocus #(.preventDefault %)}})
 

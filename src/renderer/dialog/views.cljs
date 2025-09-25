@@ -117,10 +117,16 @@
        ^{:key (:id i)}
        [cmdk-group i])]]])
 
+(defn- close-button []
+  [:> Dialog/Close
+   {:class "icon-button absolute top-5 right-5 small rtl:right-auto rtl:left-5"
+    :aria-label (t [::close "Close"])}
+   [views/icon "times"]])
+
 (defn root
   []
   (let [active-dialog @(rf/subscribe [::dialog.subs/active])
-        {:keys [title close-button content attrs]} active-dialog]
+        {:keys [title has-close-button content attrs]} active-dialog]
     [:> Dialog/Root
      {:open (boolean active-dialog)
       :on-open-change #(rf/dispatch [::dialog.events/close])}
@@ -138,12 +144,7 @@
           (cond->> title
             (string? title)
             (into [:div.text-xl.px-5.pt-5]))])
-       (when close-button
-         [:> Dialog/Close
-          {:class "icon-button absolute top-5 right-5 small rtl:right-auto
-                   rtl:left-5"
-           :aria-label (t [::close "Close"])}
-          [views/icon "times"]])
+       (when has-close-button [close-button])
        [:> Dialog/Description
         {:as-child true}
         [:div content]]]]]))

@@ -90,7 +90,7 @@
          (document.handlers/set-active id)
          (dialog.handlers/create
           {:title (tr db [::save-changes "Do you want to save your changes?"])
-           :close-button true
+           :has-close-button true
            :content [dialog.views/save (get-in db [:documents id])]
            :attrs {:onOpenAutoFocus #(.preventDefault %)}})))))
 
