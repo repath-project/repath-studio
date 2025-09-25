@@ -17,5 +17,5 @@ Based on [reepl](https://github.com/jaredly/reepl) by Jared Forsyth under
 
 ## Considerations
 
-Maybe switch to [SCI](https://github.com/borkdude/sci) that is simpler, safer and it
-works when compiled with :advanced.
+Maybe switch to [SCI](https://github.com/borkdude/sci) that is simpler, safer
+and it works when compiled with :advanced.

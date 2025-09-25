@@ -10,17 +10,18 @@ In order to achieve this, our icons will be small, thin and single tone SVGs.
 - Elements should be converted to strokeless paths.
 - Those paths should be united into a single path.
 - All external edges should be rounded.
-- The suggested distance between two shapes is two pixels in order to be distinguishable.
+- The suggested distance between two shapes is two pixels in order to be
+  distinguishable.
 - Use of filters is prohibited.
 - The exported SVG should be optimized (unneeded elements should be removed).
 
 ## Creating sharp icons
 
-A common misconception is that vector icons look good regardless of their rendered size.
-Although they behave a lot better than rasterized images when resized, they can also end
-up slightly blurry. That is why we need to design the icons in the exact size that they
-are going to be rendered. We also need to use a pixel grid and make sure that we follow it
-as much us we can.
+A common misconception is that vector icons look good regardless of their
+rendered size. Although they behave a lot better than rasterized images when
+resized, they can also end up slightly blurry. That is why we need to design the
+icons in the exact size that they are going to be rendered. We also need to use
+a pixel grid and make sure that we follow it as much us we can.
 
 You can take a look at the icon-template.svg below
 
@@ -29,8 +30,8 @@ You can take a look at the icon-template.svg below
 ## Why 17 pixels?
 
 A size near 16 pixels seems to be good for our case.
-Since we decided to use one pixel wide lines, having an odd size would help us render
-sharp 1px lines at the center of the icon.
+Since we decided to use one pixel wide lines, having an odd size would help us
+render sharp 1px lines at the center of the icon.
 
 ## Sample source
 
