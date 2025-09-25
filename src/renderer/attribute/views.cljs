@@ -122,7 +122,8 @@
                            on-change-handler! k v)})]
    (when-not (or (empty? (str v)) disabled)
      [:button.button.bg-primary.text-muted.absolute.h-full.right-0.p-1.invisible
-      {:class "clear-input-button hover:bg-transparent rtl:right-auto rtl:left-0"
+      {:class "clear-input-button hover:bg-transparent rtl:right-auto
+               rtl:left-0"
        :on-click #(rf/dispatch [::element.events/remove-attr k])}
       [views/icon "times"]])])
 
@@ -213,7 +214,8 @@
   [tag k]
   (let [clicked-element @(rf/subscribe [::app.subs/clicked-element])
         property (utils.attribute/property-data-memo k)
-        is-dispatchable (contains? (methods attribute.hierarchy/description) [tag k])
+        is-dispatchable (contains? (methods attribute.hierarchy/description)
+                                   [tag k])
         dispatch-tag (if is-dispatchable tag :default)
         active (and (= (:type clicked-element) :handle)
                     (= (:key clicked-element) key))]
@@ -248,14 +250,16 @@
 (defn row
   [k v locked? tag]
   (let [initial (utils.attribute/initial-memo tag k)
-        dispatchable? (contains? (methods attribute.hierarchy/form-element) [tag k])
+        dispatchable? (contains? (methods attribute.hierarchy/form-element)
+                                 [tag k])
         dispatch-tag (if dispatchable? tag :default)]
     [:<>
      [title tag k]
      [:div.flex.flex-1
-      [attribute.hierarchy/form-element dispatch-tag k v {:disabled locked?
-                                                          :default-value initial
-                                                          :placeholder initial}]]]))
+      [attribute.hierarchy/form-element dispatch-tag k v
+       {:disabled locked?
+        :default-value initial
+        :placeholder initial}]]]))
 
 (defn tag-info
   [tag]

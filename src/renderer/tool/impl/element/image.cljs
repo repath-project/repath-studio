@@ -35,8 +35,9 @@
  ::success
  (fn [{:keys [db]} [_ _file-handle file]]
    {:db (tool.handlers/activate db :transform)
-    ::element.effects/import-image {:file file
-                                    :on-success [::element.events/add]
-                                    :on-error [::notification.events/show-exception]
-                                    :position (or (:point (:nearest-neighbor db))
-                                                  (:adjusted-pointer-offset db))}}))
+    ::element.effects/import-image
+    {:file file
+     :on-success [::element.events/add]
+     :on-error [::notification.events/show-exception]
+     :position (or (:point (:nearest-neighbor db))
+                   (:adjusted-pointer-offset db))}}))

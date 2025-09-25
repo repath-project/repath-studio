@@ -381,8 +381,8 @@
         active."
   :restart "L'attribut restart spécifie si une animation peut redémarrer ou
             non."
-  :repeat-count "L'attribut repeatCount indique le nombre de fois qu'une animation
-                 aura lieu."
+  :repeat-count "L'attribut repeatCount indique le nombre de fois qu'une
+                 animation aura lieu."
   :repeat-dur "L'attribut repeatDur spécifie la durée totale pour répéter une
                animation."
   :calc-mode "L'attribut calcMode spécifie le mode d'interpolation pour

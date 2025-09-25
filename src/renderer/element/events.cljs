@@ -124,7 +124,8 @@
  (fn [db]
    (-> (element.handlers/update-index db (fn [_i sibling-count]
                                            (dec sibling-count)))
-       (history.handlers/finalize [::raise-selection-top "Raise selection to top"]))))
+       (history.handlers/finalize [::raise-selection-top
+                                   "Raise selection to top"]))))
 
 (rf/reg-event-db
  ::lower-to-bottom
@@ -163,7 +164,8 @@
  ::duplicate
  (fn [db]
    (-> (element.handlers/duplicate db)
-       (history.handlers/finalize [::duplicate-selection "Duplicate selection"]))))
+       (history.handlers/finalize [::duplicate-selection
+                                   "Duplicate selection"]))))
 
 (rf/reg-event-db
  ::translate

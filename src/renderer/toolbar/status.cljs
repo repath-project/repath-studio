@@ -130,7 +130,9 @@
               :appearance "textfield"}
       :default-value value
       :on-blur #(set-zoom % value)
-      :on-key-down #(event.impl.keyboard/input-key-down-handler! % value set-zoom % value)
+      :on-key-down #(event.impl.keyboard/input-key-down-handler! % value
+                                                                 set-zoom
+                                                                 % value)
       :on-wheel #(rf/dispatch (if (pos? (.-deltaY %))
                                 [::frame.events/zoom-out]
                                 [::frame.events/zoom-in]))}]))
@@ -182,8 +184,12 @@
      [:div.flex.gap-1
       [views/color-picker
        {:color fill
-        :on-change-complete #(rf/dispatch [::element.events/set-attr :fill (get-hex %)])
-        :on-change #(rf/dispatch [::document.events/preview-attr :fill (get-hex %)])}
+        :on-change-complete #(rf/dispatch [::element.events/set-attr
+                                           :fill
+                                           (get-hex %)])
+        :on-change #(rf/dispatch [::document.events/preview-attr
+                                  :fill
+                                  (get-hex %)])}
 
        [:button.button.border.border-default.button-size
         {:title (t [::fill-color "Pick fill color"])
@@ -198,8 +204,12 @@
       ;; REVIEW: Can we replace alignOffset with collisionBoundary?
       [views/color-picker
        {:color stroke
-        :on-change-complete #(rf/dispatch [::element.events/set-attr :stroke (get-hex %)])
-        :on-change #(rf/dispatch [::document.events/preview-attr :stroke (get-hex %)])
+        :on-change-complete #(rf/dispatch [::element.events/set-attr
+                                           :stroke
+                                           (get-hex %)])
+        :on-change #(rf/dispatch [::document.events/preview-attr
+                                  :stroke
+                                  (get-hex %)])
         :align-offset -54}
        [:button.button.relative.border.border-default.button-size
         {:title (t [::stroke-color "Pick stroke color"])

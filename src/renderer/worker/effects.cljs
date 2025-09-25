@@ -12,7 +12,10 @@
                         "message"
                         #(let [data (-> (.. % -data)
                                         (js->clj :keywordize-keys true))]
-                           (rf/dispatch [::worker.events/message id on-success data])))
+                           (rf/dispatch [::worker.events/message
+                                         id
+                                         on-success
+                                         data])))
 
      (.addEventListener worker
                         "error"

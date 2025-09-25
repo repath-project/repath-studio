@@ -37,17 +37,20 @@
   [db point]
   (let [id (:id (first (element.handlers/selected db)))]
     (if (= (:state db) :create)
-      (element.handlers/update-attr db id :points str " " (string/join " " point))
+      (element.handlers/update-attr db id
+                                    :points
+                                    str " " (string/join " " point))
       (create-polyline db point))))
 
 (defn drop-last-point
   [db]
   (let [id (:id (first (element.handlers/selected db)))]
-    (element.handlers/update-attr db id :points #(->> %
-                                                      utils.attribute/points->vec
-                                                      drop-last
-                                                      flatten
-                                                      (string/join " ")))))
+    (element.handlers/update-attr db id
+                                  :points
+                                  #(->> (utils.attribute/points->vec %)
+                                        (drop-last)
+                                        (flatten)
+                                        (string/join " ")))))
 
 (defn adjusted-point
   [db point]
