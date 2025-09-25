@@ -1,7 +1,7 @@
 # Contributing
 
 Thank you for your interest in actively participating in the project's development!
-Please read the [Contributor Covenant Code of Conduct](https://github.com/repath-project/repath-studio/blob/main/CODE_OF_CONDUCT.md)
+Please read the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md)
 and the [Contributor License Agreement](CLA.md) first.
 
 The project is written in [ClojureScript](https://clojurescript.org/) - a
