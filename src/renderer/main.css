@@ -77,7 +77,8 @@ input {
 }
 
 label {
-  @apply block text-right h-full text-muted overflow-hidden text-ellipsis w-auto;
+  @apply block text-right h-full text-muted overflow-hidden text-ellipsis
+  w-auto;
 
   &:hover {
     color: var(--font-color-hovered);

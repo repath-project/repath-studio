@@ -1,5 +1,6 @@
 .menubar-trigger {
-  @apply px-3 py-1.5 flex rounded-sm outline-none select-none items-center leading-none;
+  @apply px-3 py-1.5 flex rounded-sm outline-none select-none items-center
+  leading-none;
 
   &[data-highlighted],
   &[data-state='open'] {
@@ -52,7 +53,8 @@
 }
 
 .menu-item-indicator {
-  @apply inline-flex absolute left-0 items-center justify-center rtl:right-0 rtl:left-auto w-8;
+  @apply inline-flex absolute left-0 items-center justify-center rtl:right-0
+  rtl:left-auto w-8;
 }
 
 .menu-separator {

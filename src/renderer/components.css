@@ -186,8 +186,8 @@
 }
 
 @utility tab {
-  @apply flex items-center h-full text-left bg-secondary text-muted hover:text-default
-  relative outline-none px-2 py-0;
+  @apply flex items-center h-full text-left bg-secondary text-muted
+  hover:text-default relative outline-none px-2 py-0;
   flex: 0 1 130px;
 
   .close {
