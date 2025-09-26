@@ -38,7 +38,7 @@ jobs:
       - name: Install clojure tools
         uses: DeLaGuardo/setup-clojure@13.4
         with:
-          cli: 1.12.2.1571
+          cli: 1.12.3.1577
 
       - name: Electron Builder Action
         uses: samuelmeuli/action-electron-builder@v1.6.0
