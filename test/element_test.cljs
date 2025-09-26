@@ -189,13 +189,11 @@
        (is (not (-> @selected first :label))))
 
      (testing "set label"
-       (rf/dispatch [::element.events/set-prop (-> @selected first :id) :label
-                     "rect"])
+       (rf/dispatch [::element.events/set-label (-> @selected first :id) "rect"])
        (is (= (-> @selected first :label) "rect")))
 
      (testing "clear label"
-       (rf/dispatch [::element.events/set-prop (-> @selected first :id) :label
-                     ""])
+       (rf/dispatch [::element.events/set-label (-> @selected first :id) ""])
        (is (not (-> @selected first :label)))))))
 
 (deftest lock

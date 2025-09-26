@@ -24,20 +24,23 @@
 
 (defn item-prop-toggle
   [id state k active-icon inactive-icon active-title inactive-title]
-  [views/icon-button
-   (if state active-icon inactive-icon)
-   {:class ["hover:bg-transparent text-inherit hover:text-inherit
+  (let [title (if state active-title inactive-title)]
+    [views/icon-button
+     (if state
+       active-icon
+       inactive-icon)
+     {:class ["hover:bg-transparent text-inherit hover:text-inherit
              focus:outline-hidden small"
-            (when-not state "invisible")]
-    :title (if state active-title inactive-title)
-    :on-double-click #(.stopPropagation %)
-    :on-click (fn [e]
-                (.stopPropagation e)
-                (rf/dispatch [::element.events/toggle-prop id k]))}])
+              (when-not state "invisible")]
+      :title (t title)
+      :on-double-click #(.stopPropagation %)
+      :on-click (fn [e]
+                  (.stopPropagation e)
+                  (rf/dispatch [::element.events/toggle-prop id k title]))}]))
 
 (defn set-item-label!
   [e id]
-  (rf/dispatch-sync [::element.events/set-prop id :label (.. e -target -value)])
+  (rf/dispatch-sync [::element.events/set-label id (.. e -target -value)])
   (when-not (.-relatedTarget e)
     (.focus (tree.effects/query-by-id! id))))
 
@@ -169,10 +172,12 @@
        (when-let [icon (:icon (utils.element/properties el))]
          [views/icon icon {:class (when-not visible "opacity-60")}])
        [item-label el]]
-      [item-prop-toggle id locked :locked "lock" "unlock"
-       (t [::unlock "Unlock"]) (t [::lock "Lock"])]
-      [item-prop-toggle id (not visible) :visible "eye-closed" "eye"
-       (t [::show "Show"]) (t [::hide "Hide"])]]]))
+      [item-prop-toggle id locked :locked
+       "lock" "unlock"
+       [::unlock "Unlock"]  [::lock "Lock"]]
+      [item-prop-toggle id (not visible) :visible
+       "eye-closed" "eye"
+       [::show "Show"] [::hide "Hide"]]]]))
 
 (defn item [el depth elements]
   (let [{:keys [selected children id]} el

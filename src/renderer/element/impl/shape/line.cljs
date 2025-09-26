@@ -23,8 +23,8 @@
   {:icon "line"
    :label (t [::label "Line"])
    :description (t [::description
-                    "The <line> element is an SVG basic shape
-                     used to create a line connecting two points."])
+                    "The <line> element is an SVG basic shape used to create a
+                     line connecting two points."])
    :attrs [:stroke
            :stroke-width
            :stroke-linecap

@@ -31,15 +31,15 @@
 
 (rf/reg-event-db
  ::toggle-prop
- (fn [db [_ id k]]
+ (fn [db [_ id k explanation]]
    (-> (element.handlers/update-prop db id k not)
-       (history.handlers/finalize [::toggle "Toggle %1"] [(name k)]))))
+       (history.handlers/finalize explanation))))
 
 (rf/reg-event-db
- ::set-prop
- (fn [db [_ id k v]]
-   (-> (element.handlers/assoc-prop db id k v)
-       (history.handlers/finalize [::set "Set %1"] [(name k)]))))
+ ::set-label
+ (fn [db [_ id v]]
+   (-> (element.handlers/assoc-prop db id :label v)
+       (history.handlers/finalize [::set-label "Set label"]))))
 
 (rf/reg-event-db
  ::lock
