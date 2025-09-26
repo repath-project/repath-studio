@@ -285,7 +285,9 @@
 (m/=> top-selected-ancestors [:-> App [:sequential Element]])
 (defn top-selected-ancestors
   [db]
-  (entities db (vec (top-ancestor-ids db))))
+  (entities db (-> (top-ancestor-ids db)
+                   (disj (:id (root db)))
+                   (vec))))
 
 (m/=> update-prop [:-> App uuid? ifn? [:* any?] App])
 (defn update-prop
