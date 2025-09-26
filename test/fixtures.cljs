@@ -20,13 +20,13 @@
 
   (rf/reg-cofx
    ::window.effects/fullscreen
-   (fn [cofx _]
-     (assoc cofx :fullscreen true)))
+   (fn [coeffects _]
+     (assoc coeffects :fullscreen true)))
 
   (rf/reg-cofx
    ::window.effects/focused
-   (fn [cofx _]
-     (assoc cofx :focused false)))
+   (fn [coeffects _]
+     (assoc coeffects :focused false)))
 
   (rf/reg-cofx
    ::app.effects/language
@@ -35,8 +35,8 @@
 
   (rf/reg-cofx
    ::theme.effects/native-mode
-   (fn [cofx _]
-     (assoc cofx :native-mode :light)))
+   (fn [coeffects _]
+     (assoc coeffects :native-mode :light)))
 
   (rf/reg-fx
    ::theme.effects/add-listener
@@ -62,4 +62,9 @@
                                 :postscriptName "Adwaita-Mono-Bold-Italic"
                                 :style "Bold Italic"}])]
        (rf/dispatch (conj on-success (cond-> font-data
-                                       formatter formatter)))))))
+                                       formatter formatter))))))
+
+  (rf/reg-cofx
+   ::app.effects/features
+   (fn [coeffects _]
+     (assoc coeffects :features #{:file-system :local-fonts}))))

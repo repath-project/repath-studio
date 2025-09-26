@@ -143,3 +143,13 @@
  ::panel-visible?
  (fn [db [_ k]]
    (-> db :panels k :visible)))
+
+(rf/reg-sub
+ ::features
+ :-> :features)
+
+(rf/reg-sub
+ ::feature-available?
+ :<- [::features]
+ (fn [features [_ k]]
+   (contains? features k)))

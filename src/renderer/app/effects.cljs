@@ -50,6 +50,20 @@
  (fn [coeffects _]
    (assoc coeffects :language (.-language js/navigator))))
 
+(rf/reg-cofx
+ ::features
+ (fn [coeffects _]
+   (assoc coeffects :features
+          (cond-> #{}
+            (.-showSaveFilePicker js/window)
+            (conj :file-system)
+
+            (.-queryLocalFonts js/window)
+            (conj :local-fonts)
+
+            (.-EyeDropper js/window)
+            (conj :eye-dropper)))))
+
 (rf/reg-fx
  ::query-local-fonts
  (fn [{:keys [on-success on-error formatter]}]

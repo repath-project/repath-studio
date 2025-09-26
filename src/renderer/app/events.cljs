@@ -43,14 +43,16 @@
   (rf/inject-cofx ::app.effects/platform)
   (rf/inject-cofx ::app.effects/versions)
   (rf/inject-cofx ::app.effects/env)
-  (rf/inject-cofx ::app.effects/standalone)]
- (fn [{:keys [user-agent platform versions env standalone]} _]
+  (rf/inject-cofx ::app.effects/standalone)
+  (rf/inject-cofx ::app.effects/features)]
+ (fn [{:keys [user-agent platform versions env standalone features]} _]
    {:db (assoc app.db/default
                :platform platform
                :versions (js->clj versions)
                :env (js->clj env)
                :standalone standalone
-               :user-agent user-agent)
+               :user-agent user-agent
+               :features features)
     :fx (into [[::app.effects/get-local-db
                 {:on-success [::load-local-db]
                  :on-error [::notification.events/show-exception]

@@ -93,25 +93,27 @@
             :items (recent-submenu)}
            {:id :divider-2
             :type :separator}
-           {:id :save
-            :label (t [::save "Save"])
-            :icon "save"
-            :action [::document.events/save]
-            :disabled (or (not @(rf/subscribe [::document.subs/entities?]))
-                          @(rf/subscribe [::document.subs/active-saved?]))}
+           (if @(rf/subscribe [::app.subs/feature-available? :file-system])
+             {:id :save
+              :label (t [::save "Save"])
+              :icon "save"
+              :action [::document.events/save]
+              :disabled (or (not @(rf/subscribe [::document.subs/entities?]))
+                            @(rf/subscribe [::document.subs/active-saved?]))}
+             {:id :download
+              :icon "download"
+              :label (t [::download "Download"])
+              :disabled (not @(rf/subscribe [::document.subs/entities?]))
+              :action [::document.events/download]})
            {:id :save-as
             :label (t [::save-as "Save as..."])
             :icon "save-as"
             :action [::document.events/save-as]
             :disabled (not @(rf/subscribe [::document.subs/entities?]))}
-           {:id :download
-            :icon "download"
-            :label (t [::download "Download"])
-            :disabled (not @(rf/subscribe [::document.subs/entities?]))
-            :action [::document.events/download]}
            {:id :export
             :label (t [::export-as "Export as"])
             :type :sub-menu
+            :disabled (not @(rf/subscribe [::document.subs/entities?]))
             :items (export-submenu)}
            {:id :divider-3
             :type :separator}

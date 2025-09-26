@@ -30,6 +30,9 @@
                                      [:postscript-name string?]
                                      [:full-name string?]]])
 
+(def Feature
+  [:enum :file-system :local-fonts :eye-dropper])
+
 (def SystemFonts
   [:map-of {:title "name"} string? Font])
 
@@ -48,6 +51,7 @@
    [:drag {:optional true} boolean?]
    [:zoom-sensitivity {:default 0.9} [:and number? [:>= 0.01] [:<= 0.99]]]
    [:event-timestamp {:optional true} number?]
+   [:features {:optional true} [:set Feature]]
    [:double-click-delta {:default 250} [:and number? pos?]]
    [:state {:default :idle} State]
    [:cached-state {:optional true} State]
