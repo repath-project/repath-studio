@@ -61,8 +61,11 @@
 
 (defmethod tool.hierarchy/on-pointer-up ::tool.hierarchy/polyshape
   [db _e]
-  (let [point (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
-        point (cond-> point (= (:state db) :create) (adjusted-point db))]
+  (let [point (or (:point (:nearest-neighbor db))
+                  (:adjusted-pointer-pos db))
+        point (cond->> point
+                (= (:state db) :create)
+                (adjusted-point db))]
     (add-point db point)))
 
 (defmethod tool.hierarchy/on-drag-end ::tool.hierarchy/polyshape
