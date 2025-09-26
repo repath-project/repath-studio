@@ -691,6 +691,7 @@
   (into [:> Menubar/Root
          {:class "flex"
           :on-key-down #(.stopPropagation %)
-          :on-value-change #(rf/dispatch [::app.events/set-backdrop (-> (seq %)
-                                                                        (boolean))])}]
+          :on-value-change #(rf/dispatch [::app.events/set-backdrop
+                                          (-> (seq %)
+                                              (boolean))])}]
         (map menu-item (submenus))))

@@ -4,7 +4,7 @@
   (:require [renderer.element.hierarchy :as element.hierarchy]
             [renderer.utils.i18n :refer [t]]))
 
-(derive :polyline ::element.hierarchy/polyshape)
+(derive :polyline ::element.hierarchy/poly)
 
 (defmethod element.hierarchy/properties :polyline
   []

@@ -4,7 +4,7 @@
   (:require [renderer.element.hierarchy :as element.hierarchy]
             [renderer.utils.i18n :refer [t]]))
 
-(derive :polygon ::element.hierarchy/polyshape)
+(derive :polygon ::element.hierarchy/poly)
 
 (defmethod element.hierarchy/properties :polygon
   []

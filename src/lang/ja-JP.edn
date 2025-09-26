@@ -380,7 +380,7 @@
  :renderer.tool.impl.element.core
  {:help "クリックしてドラッグして要素を作成します。"}
 
- :renderer.tool.impl.element.polyshape
+ :renderer.tool.impl.element.poly
  {:add-points "クリックしてポイントを追加。"
   :finalize-shape "ダブルクリックして形状を確定。"
   :create-tool "%1を作成"}

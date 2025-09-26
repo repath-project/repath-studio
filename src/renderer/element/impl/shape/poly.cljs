@@ -1,4 +1,4 @@
-(ns renderer.element.impl.shape.polyshape
+(ns renderer.element.impl.shape.poly
   "An abstraction for polygons and polylines that have similar hehavior."
   (:require
    [clojure.core.matrix :as matrix]
@@ -13,7 +13,7 @@
    [renderer.utils.length :as utils.length]
    [renderer.utils.svg :as utils.svg]))
 
-(derive ::element.hierarchy/polyshape ::element.hierarchy/shape)
+(derive ::element.hierarchy/poly ::element.hierarchy/shape)
 
 (def partition-to-px
   (comp (map utils.length/unit->px)
@@ -29,7 +29,7 @@
         (when point-x (utils.length/transform point-x + offset-x))
         (when point-y (utils.length/transform point-y + offset-y))))
 
-(defmethod element.hierarchy/translate ::element.hierarchy/polyshape
+(defmethod element.hierarchy/translate ::element.hierarchy/poly
   [el offset]
   (update-in el
              [:attrs :points]
@@ -38,7 +38,7 @@
                    (string/join " ")
                    (string/trim))))
 
-(defmethod element.hierarchy/scale ::element.hierarchy/polyshape
+(defmethod element.hierarchy/scale ::element.hierarchy/poly
   [el ratio pivot-point]
   (let [bounds-min (take 2 (element.hierarchy/bbox el))
         offset (utils.element/scale-offset ratio pivot-point)]
@@ -57,7 +57,7 @@
                      (string/join " ")
                      (string/trim)))))
 
-(defmethod element.hierarchy/render-edit ::element.hierarchy/polyshape
+(defmethod element.hierarchy/render-edit ::element.hierarchy/poly
   [el]
   (let [clicked-element @(rf/subscribe [::app.subs/clicked-element])
         zoom @(rf/subscribe [::document.subs/zoom])
@@ -90,7 +90,7 @@
                                :text-anchor "end"}])])))
          (into [:g]))))
 
-(defmethod element.hierarchy/edit ::element.hierarchy/polyshape
+(defmethod element.hierarchy/edit ::element.hierarchy/poly
   [el [x y] handle]
   (let [index (js/parseInt (name handle))
         transform-point (fn [[px py]]
@@ -102,7 +102,7 @@
                                         (->> (string/join " ")
                                              (string/trim))))))
 
-(defmethod element.hierarchy/bbox ::element.hierarchy/polyshape
+(defmethod element.hierarchy/bbox ::element.hierarchy/poly
   [el]
   (let [points (-> el :attrs :points utils.attribute/points->vec)
         min-x (apply min (map #(utils.length/unit->px (first %)) points))
@@ -115,7 +115,7 @@
   [el]
   (-> el :attrs :points points->px))
 
-(defmethod element.hierarchy/area ::element.hierarchy/polyshape
+(defmethod element.hierarchy/area ::element.hierarchy/poly
   [el]
   (let [vertices (->vertices el)
         count-v (count vertices)]
@@ -129,12 +129,12 @@
                   0
                   vertices) 2)))
 
-(defmethod element.hierarchy/centroid ::element.hierarchy/polyshape
+(defmethod element.hierarchy/centroid ::element.hierarchy/poly
   [el]
   (let [vertices (->vertices el)]
     (-> (reduce matrix/add [0 0] vertices)
         (matrix/div (count vertices)))))
 
-(defmethod element.hierarchy/snapping-points ::element.hierarchy/polyshape
+(defmethod element.hierarchy/snapping-points ::element.hierarchy/poly
   [el]
   (->vertices el))

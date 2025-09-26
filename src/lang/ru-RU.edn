@@ -409,7 +409,7 @@
  :renderer.tool.impl.element.core
  {:help "Щёлкните и перетащите для создания элемента."}
 
- :renderer.tool.impl.element.polyshape
+ :renderer.tool.impl.element.poly
  {:add-points "Щёлкните для добавления дополнительных точек."
   :finalize-shape "Двойной щелчок для завершения формы."
   :create-tool "Создать %1"}

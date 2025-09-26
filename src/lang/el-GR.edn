@@ -416,7 +416,7 @@
  :renderer.tool.impl.element.core
  {:help "Κάντε κλίκ και σύρετε για να δημιουργήσετε ένα στοιχείο"}
 
- :renderer.tool.impl.element.polyshape
+ :renderer.tool.impl.element.poly
  {:add-points "Κάντε κλικ για να προσθέτε σημεία."
   :finalize-shape "Διπλό κλικ για να οριστικοποιήσετε το σχήμα."
   :create-tool "Δημιουργία %1"}

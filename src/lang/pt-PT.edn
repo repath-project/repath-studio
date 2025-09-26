@@ -400,7 +400,7 @@
  :renderer.tool.impl.element.core
  {:help "Clique e arraste para criar um elemento."}
 
- :renderer.tool.impl.element.polyshape
+ :renderer.tool.impl.element.poly
  {:add-points "Clique para adicionar mais pontos."
   :finalize-shape "Duplo clique para finalizar a forma."
   :create-tool "Criar %1"}

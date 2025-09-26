@@ -377,7 +377,7 @@
  :renderer.tool.impl.element.core
  {:help "انقر واسحب لإنشاء عنصر."}
 
- :renderer.tool.impl.element.polyshape
+ :renderer.tool.impl.element.poly
  {:add-points "انقر لإضافة المزيد من النقاط."
   :finalize-shape "انقر مرتين لإنهاء الشكل."
   :create-tool "إنشاء %1"}

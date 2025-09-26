@@ -356,7 +356,7 @@
  :renderer.tool.impl.element.core
  {:help "点击并拖动以创建元素。"}
 
- :renderer.tool.impl.element.polyshape
+ :renderer.tool.impl.element.poly
  {:add-points "点击添加更多点。"
   :finalize-shape "双击完成形状。"
   :create-tool "创建 %1"}

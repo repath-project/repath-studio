@@ -1,4 +1,4 @@
-(ns renderer.tool.impl.element.polyshape
+(ns renderer.tool.impl.element.poly
   "This serves as an abstraction for polygons and polylines that have similar
    attributes and hehavior"
   (:require
@@ -13,9 +13,9 @@
    [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.i18n :refer [t]]))
 
-(derive ::tool.hierarchy/polyshape ::tool.hierarchy/element)
+(derive ::tool.hierarchy/poly ::tool.hierarchy/element)
 
-(defmethod tool.hierarchy/help [::tool.hierarchy/polyshape :idle]
+(defmethod tool.hierarchy/help [::tool.hierarchy/poly :idle]
   []
   [:<>
    [:div (t [::add-points "Click to add more points."])]
@@ -63,7 +63,7 @@
         [min-x min-y] (element.hierarchy/bbox parent-el)]
     (matrix/sub point [min-x min-y])))
 
-(defmethod tool.hierarchy/on-pointer-up ::tool.hierarchy/polyshape
+(defmethod tool.hierarchy/on-pointer-up ::tool.hierarchy/poly
   [db _e]
   (let [point (or (:point (:nearest-neighbor db))
                   (:adjusted-pointer-pos db))
@@ -72,12 +72,12 @@
                 (adjusted-point db))]
     (add-point db point)))
 
-(defmethod tool.hierarchy/on-drag-end ::tool.hierarchy/polyshape
+(defmethod tool.hierarchy/on-drag-end ::tool.hierarchy/poly
   [db e]
 
   (tool.hierarchy/on-pointer-up db e))
 
-(defmethod tool.hierarchy/on-pointer-move ::tool.hierarchy/polyshape
+(defmethod tool.hierarchy/on-pointer-move ::tool.hierarchy/poly
   [db _e]
   (let [point (or (:point (:nearest-neighbor db))
                   (:adjusted-pointer-pos db))
@@ -95,7 +95,7 @@
                (flatten)
                (string/join " ")))))))
 
-(defmethod tool.hierarchy/on-double-click ::tool.hierarchy/polyshape
+(defmethod tool.hierarchy/on-double-click ::tool.hierarchy/poly
   [db _e]
   (-> db
       (drop-last-point)

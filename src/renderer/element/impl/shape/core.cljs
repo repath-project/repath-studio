@@ -8,9 +8,9 @@
    [renderer.element.impl.shape.image]
    [renderer.element.impl.shape.line]
    [renderer.element.impl.shape.path]
+   [renderer.element.impl.shape.poly]
    [renderer.element.impl.shape.polygon]
    [renderer.element.impl.shape.polyline]
-   [renderer.element.impl.shape.polyshape]
    [renderer.element.impl.shape.rect]
    [renderer.element.subs :as-alias element.subs]
    [renderer.utils.element :as utils.element]))
