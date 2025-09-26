@@ -33,9 +33,13 @@
                                        :stroke stroke
                                        :fill fill}}))))
 
+(defn creating-el
+  [db]
+  (-> db element.handlers/selected first))
+
 (defn add-point
   [db point]
-  (let [id (:id (first (element.handlers/selected db)))]
+  (let [id (:id (creating-el db))]
     (if (= (:state db) :create)
       (element.handlers/update-attr db id
                                     :points
@@ -44,7 +48,7 @@
 
 (defn drop-last-point
   [db]
-  (let [id (:id (first (element.handlers/selected db)))]
+  (let [id (:id (creating-el db))]
     (element.handlers/update-attr db id
                                   :points
                                   #(->> (utils.attribute/points->vec %)
@@ -54,7 +58,7 @@
 
 (defn adjusted-point
   [db point]
-  (let [parent-id (:parent (first (element.handlers/selected db)))
+  (let [parent-id (:parent (creating-el db))
         parent-el (element.handlers/entity db parent-id)
         [min-x min-y] (element.hierarchy/bbox parent-el)]
     (matrix/sub point [min-x min-y])))
@@ -69,12 +73,14 @@
     (add-point db point)))
 
 (defmethod tool.hierarchy/on-drag-end ::tool.hierarchy/polyshape
-  [db _e]
-  (add-point db (:adjusted-pointer-pos db)))
+  [db e]
+
+  (tool.hierarchy/on-pointer-up db e))
 
 (defmethod tool.hierarchy/on-pointer-move ::tool.hierarchy/polyshape
   [db _e]
-  (let [point (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
+  (let [point (or (:point (:nearest-neighbor db))
+                  (:adjusted-pointer-pos db))
         point (adjusted-point db point)
         id (:id (first (element.handlers/selected db)))]
     (cond-> db
