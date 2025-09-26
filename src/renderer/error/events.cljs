@@ -7,29 +7,30 @@
    [renderer.dialog.views :as dialog.views]
    [renderer.error.effects :as-alias error.effects]
    [renderer.menubar.views :as-alias menubar.views]
-   [renderer.utils.i18n :refer [t tr]]))
+   [renderer.utils.i18n :refer [tr]]))
 
-(defn reporting-confirmation-dialog-content []
-  {:description (t [::reporting-description
-                    [:div
-                     [:p "Would you like to help us improve by sending anonymous
-                          error reports? You can change your preference at any
-                          time from our \"%1\" menu."]
-                     [:p "For more information, please read our %2."]]]
-                   [[:strong (t [::menubar.views/help "Help"])]
-                    [:a.button-link
-                     {:href "https://repath.studio/policies/privacy/"
-                      :target "_blank"}
-                     (t [::privacy-policy "privacy policy"])]])
+(defn reporting-confirmation-dialog-content
+  [db]
+  {:description (tr db [::reporting-description
+                        [:div
+                         [:p "Would you like to help us improve by sending
+                              anonymous error reports? You can change your
+                              preference at any time from our \"%1\" menu."]
+                         [:p "For more information, please read our %2."]]]
+                    [[:strong (tr db [::menubar.views/help "Help"])]
+                     [:a.button-link
+                      {:href "https://repath.studio/policies/privacy/"
+                       :target "_blank"}
+                      (tr db [::privacy-policy "privacy policy"])]])
    :confirm-action [::set-reporting true]
    :cancel-action [::set-reporting false]
-   :cancel-label (t [::no-thank-you "No, thank you"])})
+   :cancel-label (tr db [::no-thank-you "No, thank you"])})
 
 (defn reporting-confirmation-dialog
   [db]
   {:title (tr db [::welcome "Welcome to %1!"] [config/app-name])
    :has-close-button false
-   :content [dialog.views/confirmation (reporting-confirmation-dialog-content)]
+   :content [dialog.views/confirmation (reporting-confirmation-dialog-content db)]
    :attrs {:onOpenAutoFocus #(.preventDefault %)}})
 
 (rf/reg-event-fx
