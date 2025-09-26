@@ -402,8 +402,7 @@
 
  :renderer.tool.impl.element.poly
  {:add-points "Clique para adicionar mais pontos."
-  :finalize-shape "Duplo clique para finalizar a forma."
-  :create-tool "Criar %1"}
+  :finalize-shape "Duplo clique para finalizar a forma."}
 
  :renderer.tool.impl.element.rect
  {:label "Retângulo"
@@ -440,10 +439,12 @@
   :help "Clique para começar a escrever."}
 
  :renderer.tool.impl.element.polyline
- {:label "Polilinha"}
+ {:label "Polilinha"
+  :create-polyline "Criar polilinha"}
 
  :renderer.tool.impl.element.polygon
- {:label "Polígono"}
+ {:label "Polígono"
+  :create-polygon "Criar polígono"}
 
  :renderer.tool.impl.element.image
  {:label "Imagem"}
@@ -543,9 +544,10 @@
 
  :renderer.tool.impl.base.transform
  {:label "Transformar"
-  :idle-click [:div "Clique para selecionar um elemento ou arraste para selecionar
-                     por área. "]
-  :idle-hold [:div "Mantenha %1 para adicionar ou remover elementos da seleção."]
+  :idle-click [:div "Clique para selecionar um elemento ou arraste para
+                     selecionar por área. "]
+  :idle-hold [:div "Mantenha %1 para adicionar ou remover elementos da
+                    seleção."]
   :select [:div "Mantenha %1 para selecionar elementos que se intersetam."]
   :select-element "Selecionar elemento"
   :deselect-element "Desselecionar elemento"
@@ -725,9 +727,10 @@
  :renderer.error.events
  {:welcome "Bem-vindo ao %1!"
   :reporting-description [:div
-                          [:p "Gostaria de nos ajudar a melhorar enviando relatórios de
-                              erro anónimos? Pode alterar a sua preferência a qualquer
-                              momento no nosso menu \"%1\"."]
+                          [:p "Gostaria de nos ajudar a melhorar enviando
+                               relatórios de erro anónimos? Pode alterar a sua
+                               preferência a qualquer momento no nosso menu
+                               \"%1\"."]
                           [:p "Para mais informações, leia a nossa %2."]]
   :privacy-policy "política de privacidade"
   :no-thank-you "Não, obrigado"}}

@@ -104,7 +104,7 @@
 
             (not initial-document)
             (-> (document.handlers/create guid)
-                (history.handlers/finalize [:create-doc "Create document"]))
+                (history.handlers/finalize [::create-doc "Create document"]))
 
             initial-document
             (snap.handlers/rebuild-tree))

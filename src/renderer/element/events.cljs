@@ -45,13 +45,13 @@
  ::lock
  (fn [db]
    (-> (element.handlers/assoc-prop db :locked true)
-       (history.handlers/finalize [:lock-selection "Lock selection"]))))
+       (history.handlers/finalize [::lock-selection "Lock selection"]))))
 
 (rf/reg-event-db
  ::unlock
  (fn [db]
    (-> (element.handlers/assoc-prop db :locked false)
-       (history.handlers/finalize [:unlock-selection "Unlock selection"]))))
+       (history.handlers/finalize [::unlock-selection "Unlock selection"]))))
 
 (rf/reg-event-db
  ::set-attr

@@ -411,8 +411,7 @@
 
  :renderer.tool.impl.element.poly
  {:add-points "Щёлкните для добавления дополнительных точек."
-  :finalize-shape "Двойной щелчок для завершения формы."
-  :create-tool "Создать %1"}
+  :finalize-shape "Двойной щелчок для завершения формы."}
 
  :renderer.tool.impl.element.rect
  {:label "Прямоугольник"
@@ -449,10 +448,12 @@
   :help "Щёлкните для начала ввода."}
 
  :renderer.tool.impl.element.polyline
- {:label "Ломаная"}
+ {:label "Ломаная"
+  :create-polyline "Создать ломаную"}
 
  :renderer.tool.impl.element.polygon
- {:label "Многоугольник"}
+ {:label "Многоугольник"
+  :create-polygon "Создать многоугольник"}
 
  :renderer.tool.impl.element.image
  {:label "Изображение"}

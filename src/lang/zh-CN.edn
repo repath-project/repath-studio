@@ -358,8 +358,7 @@
 
  :renderer.tool.impl.element.poly
  {:add-points "点击添加更多点。"
-  :finalize-shape "双击完成形状。"
-  :create-tool "创建 %1"}
+  :finalize-shape "双击完成形状。"}
 
  :renderer.tool.impl.element.rect
  {:label "矩形"
@@ -396,10 +395,12 @@
   :help "点击开始输入."}
 
  :renderer.tool.impl.element.polyline
- {:label "折线"}
+ {:label "折线"
+  :create-polyline "创建折线"}
 
  :renderer.tool.impl.element.polygon
- {:label "多边形"}
+ {:label "多边形"
+  :create-polygon "创建多边形"}
 
  :renderer.tool.impl.element.image
  {:label "图像"}

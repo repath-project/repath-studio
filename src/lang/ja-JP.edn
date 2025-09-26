@@ -382,8 +382,7 @@
 
  :renderer.tool.impl.element.poly
  {:add-points "クリックしてポイントを追加。"
-  :finalize-shape "ダブルクリックして形状を確定。"
-  :create-tool "%1を作成"}
+  :finalize-shape "ダブルクリックして形状を確定。"}
 
  :renderer.tool.impl.element.rect
  {:label "矩形"
@@ -420,10 +419,12 @@
   :help "クリックして入力を開始。"}
 
  :renderer.tool.impl.element.polyline
- {:label "複線"}
+ {:label "複線"
+  :create-polyline "複線を作成"}
 
  :renderer.tool.impl.element.polygon
- {:label "多角形"}
+ {:label "多角形"
+  :create-polygon "多角形を作成"}
 
  :renderer.tool.impl.element.image
  {:label "画像"}

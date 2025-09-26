@@ -403,8 +403,7 @@
 
  :renderer.tool.impl.element.poly
  {:add-points "Haga clic para agregar más puntos."
-  :finalize-shape "Doble clic para finalizar la forma."
-  :create-tool "Crear %1"}
+  :finalize-shape "Doble clic para finalizar la forma."}
 
  :renderer.tool.impl.element.rect
  {:label "Rectángulo"
@@ -441,10 +440,12 @@
   :help "Haga clic para comenzar a escribir."}
 
  :renderer.tool.impl.element.polyline
- {:label "Polilínea"}
+ {:label "Polilínea"
+  :create-polyline "Crear polilínea"}
 
  :renderer.tool.impl.element.polygon
- {:label "Polígono"}
+ {:label "Polígono"
+  :create-polygon "Crear polígono"}
 
  :renderer.tool.impl.element.image
  {:label "Imagen"}

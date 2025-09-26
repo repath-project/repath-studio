@@ -379,8 +379,7 @@
 
  :renderer.tool.impl.element.poly
  {:add-points "انقر لإضافة المزيد من النقاط."
-  :finalize-shape "انقر مرتين لإنهاء الشكل."
-  :create-tool "إنشاء %1"}
+  :finalize-shape "انقر مرتين لإنهاء الشكل."}
 
  :renderer.tool.impl.element.rect
  {:label "مستطيل"
@@ -417,10 +416,12 @@
   :help "انقر لبدء الكتابة."}
 
  :renderer.tool.impl.element.polyline
- {:label "خط متعدد"}
+ {:label "خط متعدد"
+  :create-polyline "إنشاء خط متعدد"}
 
  :renderer.tool.impl.element.polygon
- {:label "مضلع"}
+ {:label "مضلع"
+  :create-polygon "إنشاء مضلع"}
 
  :renderer.tool.impl.element.image
  {:label "صورة"}

@@ -1,6 +1,9 @@
 (ns renderer.tool.impl.element.polygon
   "https://www.w3.org/TR/SVG/shapes.html#PolygonElement"
-  (:require [renderer.tool.hierarchy :as tool.hierarchy]
+  (:require [renderer.history.handlers :as history.handlers]
+            [renderer.tool.handlers :as tool.handlers]
+            [renderer.tool.hierarchy :as tool.hierarchy]
+            [renderer.tool.impl.element.poly :as poly]
             [renderer.utils.i18n :refer [t]]))
 
 (derive :polygon ::tool.hierarchy/poly)
@@ -9,3 +12,10 @@
   []
   {:icon "polygon-tool"
    :label (t [::label "Polygon"])})
+
+(defmethod tool.hierarchy/on-double-click :polygon
+  [db _e]
+  (-> db
+      (poly/drop-last-point)
+      (history.handlers/finalize [::create-polygon "Create polygon"])
+      (tool.handlers/activate :transform)))

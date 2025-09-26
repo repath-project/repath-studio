@@ -1,6 +1,9 @@
 (ns renderer.tool.impl.element.polyline
   "https://www.w3.org/TR/SVG/shapes.html#PolylineElement"
-  (:require [renderer.tool.hierarchy :as tool.hierarchy]
+  (:require [renderer.history.handlers :as history.handlers]
+            [renderer.tool.handlers :as tool.handlers]
+            [renderer.tool.hierarchy :as tool.hierarchy]
+            [renderer.tool.impl.element.poly :as poly]
             [renderer.utils.i18n :refer [t]]))
 
 (derive :polyline ::tool.hierarchy/poly)
@@ -9,3 +12,10 @@
   []
   {:icon "polyline"
    :label (t [::label "Polyline"])})
+
+(defmethod tool.hierarchy/on-double-click :polyline
+  [db _e]
+  (-> db
+      (poly/drop-last-point)
+      (history.handlers/finalize [::create-polyline "Create polyline"])
+      (tool.handlers/activate :transform)))

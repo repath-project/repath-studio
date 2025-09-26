@@ -1,13 +1,11 @@
 (ns renderer.tool.impl.element.poly
-  "This serves as an abstraction for polygons and polylines that have similar
-   attributes and hehavior"
+  "An abstraction for polygons and polylines that have similar hehavior."
   (:require
    [clojure.core.matrix :as matrix]
    [clojure.string :as string]
    [renderer.document.handlers :as document.handlers]
    [renderer.element.handlers :as element.handlers]
    [renderer.element.hierarchy :as element.hierarchy]
-   [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.attribute :as utils.attribute]
@@ -21,7 +19,7 @@
    [:div (t [::add-points "Click to add more points."])]
    [:div (t [::finalize-shape "Double click to finalize the shape."])]])
 
-(defn create-polyline
+(defn create-el
   [db initial-point]
   (let [stroke (document.handlers/attr db :stroke)
         fill (document.handlers/attr db :fill)]
@@ -44,7 +42,7 @@
       (element.handlers/update-attr db id
                                     :points
                                     str " " (string/join " " point))
-      (create-polyline db point))))
+      (create-el db point))))
 
 (defn drop-last-point
   [db]
@@ -74,7 +72,6 @@
 
 (defmethod tool.hierarchy/on-drag-end ::tool.hierarchy/poly
   [db e]
-
   (tool.hierarchy/on-pointer-up db e))
 
 (defmethod tool.hierarchy/on-pointer-move ::tool.hierarchy/poly
@@ -94,10 +91,3 @@
           (->> (concat point-vector point)
                (flatten)
                (string/join " ")))))))
-
-(defmethod tool.hierarchy/on-double-click ::tool.hierarchy/poly
-  [db _e]
-  (-> db
-      (drop-last-point)
-      (history.handlers/finalize [::create-tool "Create %1"] [(name (:tool db))])
-      (tool.handlers/activate :transform)))

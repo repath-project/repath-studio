@@ -151,7 +151,7 @@
  [(rf/inject-cofx ::effects/guid)]
  (fn [{:keys [db guid]} [_]]
    {:db (-> (document.handlers/create db guid)
-            (history.handlers/finalize [:create-doc "Create document"]))
+            (history.handlers/finalize [::create-doc "Create document"]))
     ::effects/focus nil}))
 
 (rf/reg-event-fx
