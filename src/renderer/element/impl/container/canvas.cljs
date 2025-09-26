@@ -30,7 +30,7 @@
 
 (defmethod element.hierarchy/render :canvas
   [el]
-  (let [{:keys [id attrs children]} el
+  (let [{:keys [attrs children]} el
         child-elements @(rf/subscribe [::element.subs/filter-visible children])
         viewbox-attr @(rf/subscribe [::frame.subs/viewbox-attr])
         {:keys [width height]} @(rf/subscribe [::app.subs/dom-rect])
@@ -62,7 +62,7 @@
                   :style {:outline 0
                           :background (:fill attrs)}}
      (for [el child-elements]
-       ^{:key id}
+       ^{:key (:id el)}
        [element.hierarchy/render el])
 
      (into [:defs]
