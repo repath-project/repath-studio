@@ -81,11 +81,13 @@
       (= (:state db) :create)
       (element.handlers/update-attr
        id :points
-       #(let [point-vector (utils.attribute/points->vec %)]
-          (string/join " " (concat (apply concat (if (second point-vector)
-                                                   (drop-last point-vector)
-                                                   point-vector))
-                                   point)))))))
+       #(let [point-vector (utils.attribute/points->vec %)
+              point-vector (cond-> point-vector
+                             (second point-vector)
+                             (drop-last))]
+          (->> (concat point-vector point)
+               (flatten)
+               (string/join " ")))))))
 
 (defmethod tool.hierarchy/on-double-click ::tool.hierarchy/polyshape
   [db _e]
