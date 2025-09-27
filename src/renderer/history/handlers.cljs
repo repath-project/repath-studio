@@ -1,15 +1,11 @@
 (ns renderer.history.handlers
   (:require
    [malli.core :as m]
-   [malli.error :as m.error]
    [renderer.app.db :refer [App]]
    [renderer.db :refer [JS_Object]]
    [renderer.document.handlers :as document.handlers]
-   [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.db :refer [Explanation History HistoryState]]
-   [renderer.notification.handlers :as notification.handlers]
-   [renderer.notification.views :as notification.views]
    [renderer.utils.i18n :refer [t]]
    [renderer.utils.math :refer [Vec2]]
    [renderer.utils.vec :as utils.vec]))
@@ -235,36 +231,20 @@
           (recur (update-in db children-path utils.vec/move index new-index)
                  parent))))))
 
-(def valid-elements? (m/validator [:map-of uuid? Element]))
-
-(def explain-elements (m/explainer [:map-of uuid? Element]))
-
 (m/=> finalize [:-> App Explanation App])
 (defn finalize
   "Pushes changes to history."
   [db & explanation]
-  (let [elements (get-in db (element.handlers/path db))]
-    (cond
-      (= elements (-> db history state :elements))
-      db
-
-      (not (valid-elements? elements))
-      (-> (reset-state db)
-          (notification.handlers/add (notification.views/spec-failed
-                                      "Invalid state"
-                                      (-> elements
-                                          explain-elements
-                                          m.error/humanize
-                                          str))))
-
-      :else
-      (let [current-position (position db)
-            id (random-uuid)]
-        (-> db
-            (assoc-in (path db :position) id)
-            (assoc-in (path db :states id)
-                      (create-state db id explanation))
-            (cond->
-             current-position
-              (-> (update-in (path db :states current-position :children) conj id)
-                  (update-ancestors))))))))
+  (if (= (get-in db (element.handlers/path db))
+         (-> db history state :elements))
+    db
+    (let [current-position (position db)
+          id (random-uuid)]
+      (-> db
+          (assoc-in (path db :position) id)
+          (assoc-in (path db :states id)
+                    (create-state db id explanation))
+          (cond->
+           current-position
+            (-> (update-in (path db :states current-position :children) conj id)
+                (update-ancestors)))))))
