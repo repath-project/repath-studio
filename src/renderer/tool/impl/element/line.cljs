@@ -22,7 +22,8 @@
   [db _e]
   (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
                                 (:adjusted-pointer-offset db))
-        [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
+        [x y] (or (:point (:nearest-neighbor db))
+                  (:adjusted-pointer-pos db))
         stroke (document.handlers/attr db :stroke)]
     (-> db
         (tool.handlers/set-state :create)
@@ -36,7 +37,8 @@
 
 (defmethod tool.hierarchy/on-drag :line
   [db _e]
-  (let [position (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
+  (let [position (or (:point (:nearest-neighbor db))
+                     (:adjusted-pointer-pos db))
         {:keys [id parent]} (first (element.handlers/selected db))
         parent-el (element.handlers/entity db parent)
         [min-x min-y] (element.hierarchy/bbox parent-el)

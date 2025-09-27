@@ -25,7 +25,8 @@
   [db lock-ratio]
   (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
                                 (:adjusted-pointer-offset db))
-        [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
+        [x y] (or (:point (:nearest-neighbor db))
+                  (:adjusted-pointer-pos db))
         rx (abs (- x offset-x))
         ry (abs (- y offset-y))]
     {:rx (utils.length/->fixed (cond-> rx lock-ratio (min ry)))
