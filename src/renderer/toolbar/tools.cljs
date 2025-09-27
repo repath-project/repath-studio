@@ -19,7 +19,8 @@
                   (string/capitalize (name tool)))]
     (when (:icon properties)
       [:> Tooltip/Root
-       [:> Tooltip/Trigger {:as-child true}
+       [:> Tooltip/Trigger
+        {:as-child true}
         [:span
          [views/radio-icon-button (:icon properties) active
           {:class (when primary "outline outline-offset-[-1px] outline-accent")

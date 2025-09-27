@@ -24,12 +24,14 @@
 
 (defmethod tool.hierarchy/on-pointer-up :image
   [db _e]
-  (tool.handlers/add-fx db [::effects/file-open
-                            {:options {:startIn "pictures"
-                                       :id "image-picker"
-                                       :types [{:accept element.db/image-mime-types}]}
-                             :on-success [::success]
-                             :on-error [::notification.events/show-exception]}]))
+  (tool.handlers/add-fx
+   db
+   [::effects/file-open
+    {:options {:startIn "pictures"
+               :id "image-picker"
+               :types [{:accept element.db/image-mime-types}]}
+     :on-success [::success]
+     :on-error [::notification.events/show-exception]}]))
 
 (rf/reg-event-fx
  ::success
