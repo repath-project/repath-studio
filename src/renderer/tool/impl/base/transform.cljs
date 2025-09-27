@@ -271,53 +271,66 @@
   [clicked-element]
   (and clicked-element
        (not (:selected clicked-element))
-       (not= (:type clicked-element) :handle)
-       (not= (:tag clicked-element) :canvas)))
+       (not= :handle (:type clicked-element))
+       (not= :canvas (:tag clicked-element))))
 
 (m/=> select-element [:-> App boolean? App])
 (defn select-element
   [db multiple]
-  (cond-> db
-    (selectable? (:clicked-element db))
-    (element.handlers/toggle-selection (-> db :clicked-element :id) multiple)))
+  (let [{:keys [clicked-element]} db]
+    (cond-> db
+      (selectable? clicked-element)
+      (element.handlers/toggle-selection (:id clicked-element) multiple))))
 
 (m/=> start-point [:-> Element Vec2])
 (defn start-point
   [el]
   (into [] (take 2) (:bbox el)))
 
+(m/=> swap-parent [:-> App uuid? Element Element App])
+(defn swap-parent
+  [db id hovered-svg container-el]
+  (cond-> db
+    :always
+    (element.handlers/set-parent (:id hovered-svg))
+
+    (:bbox container-el)
+    (element.handlers/translate id (start-point container-el))
+
+    (:bbox hovered-svg)
+    (element.handlers/translate id (matrix/mul (start-point hovered-svg) -1))))
+
+(m/=> translate-el [:-> App uuid? Vec2 Element boolean? App])
+(defn translate-el
+  [db id offset hovered-svg auto-parent?]
+  (let [el (element.handlers/entity db id)
+        container-el (element.handlers/parent-container db id)
+        parent-el (element.handlers/parent db id)]
+    (cond-> db
+      :always
+      (element.handlers/translate id offset)
+
+      (and auto-parent?
+           (not= (:id parent-el) (:id hovered-svg))
+           (not (utils.element/svg? el)))
+      (swap-parent id hovered-svg container-el))))
+
 (m/=> translate [:-> App Vec2 [:maybe Orientation] App])
 (defn translate
   [db offset axis]
   (let [[offset-x offset-y] offset
         hovered-svg (element.handlers/hovered-svg db)
-        user-translate? (contains? #{:translate :clone} (:state db))
-        single-selection? (and (seq (element.handlers/selected db))
-                               (empty? (rest (element.handlers/selected db))))
+        selected-els (element.handlers/selected db)
+        auto-parent? (and (contains? #{:translate :clone} (:state db))
+                          (seq selected-els)
+                          (empty? (rest selected-els)))
         offset (case axis
                  :vertical [offset-x 0]
                  :horizontal [0 offset-y]
                  offset)]
-    (reduce (fn [db id]
-              (let [container (element.handlers/parent-container db id)]
-                (cond-> (element.handlers/translate db id offset)
-                  (and single-selection?
-                       user-translate?
-                       (not= (:id (element.handlers/parent db id))
-                             (:id hovered-svg))
-                       (not (-> (element.handlers/entity db id)
-                                (utils.element/svg?))))
-                  (-> (element.handlers/set-parent (:id hovered-svg))
-                      ;; FIXME: Handle nested containers.
-                      (cond-> (:bbox container)
-                        (element.handlers/translate id (start-point container))
-
-                        (:bbox hovered-svg)
-                        (element.handlers/translate id (matrix/mul
-                                                        (start-point hovered-svg)
-                                                        -1)))))))
-            db
-            (element.handlers/top-ancestor-ids db))))
+    (->> (element.handlers/top-ancestor-ids db)
+         (reduce (fn [db id]
+                   (translate-el db id offset hovered-svg auto-parent?)) db))))
 
 (defn drag-start->state
   [clicked-element]

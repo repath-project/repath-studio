@@ -84,7 +84,8 @@
  (fn [{:keys [db]} _]
    (when-let [install-prompt (:install-prompt db)]
      {::app.effects/install {:prompt install-prompt
-                             :outcomes {"accepted" [::set-install-prompt
+                             :outcomes {"dismissed" nil
+                                        "accepted" [::set-install-prompt
                                                     nil]}}})))
 
 (def listeners
