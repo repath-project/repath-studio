@@ -109,8 +109,10 @@
 (rf/reg-event-fx
  ::close-others
  (fn [{:keys [db]} [_ id]]
-   (let [to-be-closed (disj (apply sorted-set (:document-tabs db)) id)]
-     {:dispatch-n (mapv (fn [id] [::close id true]) to-be-closed)})))
+   (let [to-be-closed (-> (apply sorted-set (:document-tabs db))
+                          (disj id))]
+     {:dispatch-n (->> to-be-closed
+                       (mapv (fn [id] [::close id true])))})))
 
 (rf/reg-event-fx
  ::close-all

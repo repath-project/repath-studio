@@ -26,8 +26,8 @@
 (defn translate
   [[offset-x offset-y] points [point-x point-y]]
   (conj points
-        (when point-x (utils.length/transform point-x + offset-x))
-        (when point-y (utils.length/transform point-y + offset-y))))
+        (some-> point-x (utils.length/transform + offset-x))
+        (some-> point-y (utils.length/transform + offset-y))))
 
 (defmethod element.hierarchy/translate ::element.hierarchy/poly
   [el offset]

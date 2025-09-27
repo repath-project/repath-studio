@@ -43,9 +43,5 @@
  :<- [::history]
  :<- [::document.subs/saved-history-id]
  (fn [[history saved-history-id] _]
-   (let [root-id (->> (:states history)
-                      (vals)
-                      (sort-by :index)
-                      (first)
-                      :id)]
+   (let [root-id (history.handlers/root-id history)]
      (history.handlers/state->d3-data history root-id saved-history-id))))

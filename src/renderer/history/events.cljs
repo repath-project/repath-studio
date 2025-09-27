@@ -27,8 +27,9 @@
 (rf/reg-event-db
  ::reset-state
  (fn [db _]
-   (-> (history.handlers/reset-state db)
-       (update-in [:documents (:active-document db)] dissoc :preview-label))))
+   (-> db
+       (history.handlers/reset-state)
+       (history.handlers/clear-preview-label))))
 
 (rf/reg-event-db
  ::preview
@@ -38,13 +39,15 @@
 (rf/reg-event-db
  ::go-to
  (fn [db [_ id]]
-   (-> (history.handlers/go-to db id)
-       (update-in [:documents (:active-document db)] dissoc :preview-label))))
+   (-> db
+       (history.handlers/go-to id)
+       (history.handlers/clear-preview-label))))
 
 (rf/reg-event-db
  ::clear
  (fn [db _]
-   (-> (history.handlers/clear db)
+   (-> db
+       (history.handlers/clear)
        (history.handlers/finalize [::clear-history "Clear history"]))))
 
 (rf/reg-event-db

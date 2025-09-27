@@ -214,7 +214,7 @@
   [{:id :align-left
     :label (t [::align-left "Left"])
     :icon "objects-align-left"
-    :disabled @(rf/subscribe [::element.subs/every-top-level])
+    :disabled @(rf/subscribe [::element.subs/every-top-level?])
     :action [::element.events/align :left]}
    {:id :align-center-horizontally
     :label (t [::align-center-horizontally "Center horizontally"])
@@ -348,7 +348,7 @@
            {:id :path
             :label (t [::align "Align"])
             :type :sub-menu
-            :disabled @(rf/subscribe [::element.subs/every-top-level])
+            :disabled @(rf/subscribe [::element.subs/every-top-level?])
             :items (align-submenu)}
            {:id :boolean
             :label (t [::animate "Animate"])

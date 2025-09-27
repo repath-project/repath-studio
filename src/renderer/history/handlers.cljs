@@ -111,9 +111,11 @@
   ([db]
    (undo db 1))
   ([db n]
-   (if-not (and (pos? n) (undos? (history db)))
+   (if-not (and (pos? n)
+                (undos? (history db)))
      db
-     (recur (go-to db (previous-position (history db))) (dec n)))))
+     (recur (go-to db (previous-position (history db)))
+            (dec n)))))
 
 (m/=> redo [:function
             [:-> App App]
@@ -122,9 +124,11 @@
   ([db]
    (redo db 1))
   ([db n]
-   (if-not (and (pos? n) (redos? (history db)))
+   (if-not (and (pos? n)
+                (redos? (history db)))
      db
-     (recur (go-to db (next-position (history db))) (dec n)))))
+     (recur (go-to db (next-position (history db)))
+            (dec n)))))
 
 (m/=> accumulate [:-> History ifn? [:vector HistoryState]])
 (defn accumulate
@@ -148,6 +152,16 @@
   (accumulate active-history (fn [current-state]
                                (-> current-state :children last))))
 
+(m/=> root-id [:-> History uuid?])
+(defn root-id
+  [active-history]
+  (->> active-history
+       :states
+       (vals)
+       (sort-by :index)
+       (first)
+       :id))
+
 (m/=> clear [:-> App App])
 (defn clear
   [db]
@@ -170,6 +184,11 @@
   (cond-> db
     (and x y)
     (assoc-in (path db :translate) [x y])))
+
+(m/=> clear-preview-label [:-> App App])
+(defn clear-preview-label
+  [db]
+  (update-in db (path db) dissoc :preview-label))
 
 (m/=> create-state [:-> App uuid? Explanation HistoryState])
 (defn create-state

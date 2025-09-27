@@ -139,20 +139,19 @@
         {:keys [font-size font-style font-weight]} computed-styles
         [x y font-size] (mapv utils.length/unit->px [x y font-size])]
     (if font-family
-      (when-not (undefined? js/window.queryLocalFonts)
-        (-> (js/window.queryLocalFonts)
-            (.then (fn [fonts]
-                     (when-let [font (utils.font/match-font fonts
-                                                            font-family
-                                                            font-style
-                                                            font-weight)]
-                       (utils.font/font-data->path-data! font
-                                                         content
-                                                         x y
-                                                         font-size))))))
-      (-> (js/fetch (utils.font/default-font-path font-style font-weight))
-          (.then #(utils.font/font-data->path-data! %
-                                                    content
+      (some-> (.-queryLocalFonts js/window)
+              (.call)
+              (.then (fn [fonts]
+                       (some-> fonts
+                               (utils.font/match-font font-family
+                                                      font-style
+                                                      font-weight)
+                               (utils.font/font-data->path-data! content
+                                                                 x y
+                                                                 font-size)))))
+      (-> (utils.font/default-font-path font-style font-weight)
+          (js/fetch)
+          (.then #(utils.font/font-data->path-data! % content
                                                     x y
                                                     font-size))))))
 

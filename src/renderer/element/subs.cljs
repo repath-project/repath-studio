@@ -140,8 +140,10 @@
          font-styles)))
 
 (rf/reg-sub
- ::every-top-level
+ ::every-top-level?
  :<- [::root]
  :<- [::ancestor-ids]
  (fn [[root ancestor-ids] _]
-   (empty? (disj (set ancestor-ids) (:id root)))))
+   (->> (:id root)
+        (disj (set ancestor-ids))
+        (empty?))))

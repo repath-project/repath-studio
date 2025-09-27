@@ -14,23 +14,22 @@
 (rf/reg-cofx
  ::platform
  (fn [coeffects _]
-   (assoc coeffects :platform (if js/window.api
-                                js/window.api.platform
-                                "web"))))
+   (assoc coeffects :platform (or (some-> js/window.api (.-platform))
+                                  "web"))))
 
 (rf/reg-cofx
  ::versions
  (fn [coeffects _]
    (cond-> coeffects
      js/window.api
-     (assoc :versions js/window.api.versions))))
+     (assoc :versions (js->clj js/window.api.versions)))))
 
 (rf/reg-cofx
  ::env
  (fn [coeffects _]
    (cond-> coeffects
      js/window.api
-     (assoc :env js/window.api.env))))
+     (assoc :env (js->clj js/window.api.env)))))
 
 (rf/reg-cofx
  ::user-agent
@@ -67,12 +66,12 @@
 (rf/reg-fx
  ::query-local-fonts
  (fn [{:keys [on-success on-error formatter]}]
-   (when-not (undefined? js/window.queryLocalFonts)
-     (-> (.queryLocalFonts js/window)
-         (.then #(when on-success
-                   (rf/dispatch (conj on-success (cond-> %
-                                                   formatter formatter)))))
-         (.catch #(when on-error (rf/dispatch (conj on-error %))))))))
+   (some-> (.-queryLocalFonts js/window)
+           (.call)
+           (.then #(some-> on-success
+                           (conj (cond-> % formatter formatter))
+                           (rf/dispatch)))
+           (.catch #(some-> on-error (conj %) rf/dispatch)))))
 
 (defn- json->clj
   [data]
@@ -83,21 +82,24 @@
  ::get-local-db
  (fn [{:keys [on-success on-error on-finally]}]
    (-> (localforage/getItem config/app-name)
-       (.then #(when on-success (rf/dispatch (conj on-success (json->clj %)))))
-       (.catch #(when on-error (rf/dispatch (conj on-error %))))
-       (.finally #(when on-finally (rf/dispatch on-finally))))))
+       (.then #(some-> on-success (conj (json->clj %)) rf/dispatch))
+       (.catch #(some-> on-error (conj %) rf/dispatch))
+       (.finally #(some-> on-finally rf/dispatch)))))
+
+(defn- ->json
+  [db]
+  (let [writer (transit/writer :json)]
+    (try (transit/write writer db)
+         (catch :default err
+           (rf/dispatch [::notification.events/show-exception err])))))
 
 (defn persist
   []
-  (let [db (-> @rf.db/app-db
-               (history.handlers/drop-rest)
-               (document.handlers/remove-file-handle))
-        persisted-db (select-keys db app.db/persisted-keys)
-        writer (transit/writer :json)]
-    (when-let [json (try (transit/write writer persisted-db)
-                         (catch :default err
-                           (rf/dispatch [::notification.events/show-exception
-                                         err])))]
+  (let [persisted-db (-> @rf.db/app-db
+                         (history.handlers/drop-rest)
+                         (document.handlers/remove-file-handle)
+                         (select-keys app.db/persisted-keys))]
+    (when-let [json (->json persisted-db)]
       (-> (localforage/setItem config/app-name json)
           (.catch #(rf/dispatch [::notification.events/show-exception %]))))))
 
@@ -125,5 +127,5 @@
    (.prompt prompt)
    (-> (.-userChoice prompt)
        (.then (fn [choice]
-                (when-let [outcome-event (get outcomes (.-outcome choice))]
-                  (rf/dispatch outcome-event)))))))
+                (some-> (get outcomes (.-outcome choice))
+                        (rf/dispatch)))))))

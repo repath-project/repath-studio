@@ -178,9 +178,10 @@
   (let [{:keys [tag attrs]} el
         dom-el (js/document.createElementNS "http://www.w3.org/2000/svg" (name tag))
         el (dissoc el :attrs)
-        supported-attrs (keep (fn [[k v]]
-                                (when (supported-attr? el k)
-                                  [k v])) attrs)]
+        supported-attrs (->> attrs
+                             (keep (fn [[k v]]
+                                     (when (supported-attr? el k)
+                                       [k v]))))]
     (doseq [[k v] supported-attrs]
       (.setAttributeNS dom-el nil (name k) v))
     dom-el))

@@ -48,8 +48,8 @@
  (fn [{:keys [user-agent platform versions env standalone features]} _]
    {:db (assoc app.db/default
                :platform platform
-               :versions (js->clj versions)
-               :env (js->clj env)
+               :versions versions
+               :env env
                :standalone standalone
                :user-agent user-agent
                :features features)

@@ -134,7 +134,9 @@
   [db e]
   (let [{:keys [delta-x delta-y ctrl-key shift-key]} e]
     (-> (if (or ctrl-key shift-key)
-          (let [factor (-> db :zoom-sensitivity dec (/ 100) inc (Math/pow delta-y))]
+          (let [factor (-> (:zoom-sensitivity db)
+                           dec (/ 100) inc
+                           (Math/pow delta-y))]
             (frame.handlers/zoom-at-pointer db factor))
           (frame.handlers/pan-by db [delta-x delta-y]))
         (snap.handlers/update-viewport-tree)

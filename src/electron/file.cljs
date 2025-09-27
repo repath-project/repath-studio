@@ -52,8 +52,8 @@
                   (update :defaultPath #(.join path % (:title document))))]
     (-> (save-dialog! options)
         (.then (fn [file-path]
-                 (when file-path
-                   (write-file! file-path document)))))))
+                 (some-> file-path
+                         (write-file! document)))))))
 
 (defn save!
   [data]

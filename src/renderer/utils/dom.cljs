@@ -5,18 +5,18 @@
 
 (defn frame-document!
   []
-  (when-let [frame (.getElementById js/document "frame")]
-    (when-let [window (.-contentWindow frame)]
-      (.-document window))))
+  (some-> (.getElementById js/document "frame")
+          (.-contentWindow)
+          (.-document)))
 
 (defn canvas-element!
   []
-  (when-let [document (frame-document!)]
-    (.getElementById document "canvas")))
+  (some-> (frame-document!)
+          (.getElementById "canvas")))
 
 (m/=> event->uuid [:-> JS_Object [:maybe uuid?]])
 (defn event->uuid
   [e]
-  (-> (.-dataTransfer e)
-      (.getData "id")
-      (uuid)))
+  (some-> (.-dataTransfer e)
+          (.getData "id")
+          (uuid)))

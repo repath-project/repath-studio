@@ -17,7 +17,7 @@
                     (set! (.-height canvas) h)
                     (.drawImage context image 0 0 w h)
                     (f canvas)))
-        (.catch #(when on-error (rf/dispatch (conj on-error %)))))))
+        (.catch #(some-> on-error (conj %) rf/dispatch)))))
 
 (rf/reg-fx
  ::trace
@@ -58,17 +58,17 @@
           (-> (.decode image)
               (.then #(let [w (.-width image)
                             h (.-height image)]
-                        (when on-success
-                          (rf/dispatch (conj on-success
-                                             {:type :element
-                                              :tag :image
-                                              :label (.-name file)
-                                              :attrs {:x x
-                                                      :y y
-                                                      :width w
-                                                      :height h
-                                                      :href data-url}})))))
-              (.catch #(when on-error (rf/dispatch (conj on-error %))))))))
+                        (some-> on-success
+                                (conj {:type :element
+                                       :tag :image
+                                       :label (.-name file)
+                                       :attrs {:x x
+                                               :y y
+                                               :width w
+                                               :height h
+                                               :href data-url}})
+                                rf/dispatch)))
+              (.catch #(some-> on-error (conj %) rf/dispatch))))))
      (.readAsDataURL reader file))))
 
 (rf/reg-fx
@@ -83,13 +83,13 @@
         (-> canvas
             (.convertToBlob #js {:type mime-type
                                  :quality (or quality 1)})
-            (.then #(when on-success (rf/dispatch (conj on-success % mime-type))))
-            (.catch #(when on-error (rf/dispatch (conj on-error %))))))))))
+            (.then #(some-> on-success (conj % mime-type) rf/dispatch))
+            (.catch #(some-> on-error (conj %) rf/dispatch))))))))
 
 (rf/reg-fx
  ::->path
  (fn [{:keys [data on-success on-error]}]
    (-> (mapv utils.element/->path data)
        (js/Promise.all)
-       (.then #(when on-success (rf/dispatch (conj on-success %))))
-       (.catch #(when on-error (rf/dispatch (conj on-error %)))))))
+       (.then #(some-> on-success (conj %) rf/dispatch))
+       (.catch #(some-> on-error (conj %) rf/dispatch)))))

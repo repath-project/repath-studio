@@ -185,8 +185,7 @@
 (m/=> load [:-> App map? App])
 (defn load
   [db document]
-  (let [document-path (:path document)
-        open-document-id (when document-path (search-by db :path document-path))
+  (let [open-document-id (some->> document :path (search-by db :path))
         document (merge document.db/default document)
         document (cond-> document
                    open-document-id
@@ -203,7 +202,10 @@
         :always
         (set-active (:id document)))
 
-      (let [explanation (-> document document.db/explain m.error/humanize str)]
+      (let [explanation (-> document
+                            document.db/explain
+                            m.error/humanize
+                            str)]
         (->> (notification.views/spec-failed "Load document" explanation)
              (notification.handlers/add db))))))
 

@@ -32,17 +32,18 @@
   [orientation]
   (let [[x y] @(rf/subscribe [::app.subs/pointer-pos])
         pointer-size (/ ruler-size 5)
-        color "var(--color-accent)"]
+        color "var(--color-accent)"
+        vertical (= orientation :vertical)]
     [:g
      [:polygon {:fill color
-                :points (string/join " " (if (= orientation :vertical)
+                :points (string/join " " (if vertical
                                            [pointer-size "," y
                                             0 "," (- y pointer-size)
                                             0 "," (+ y pointer-size)]
                                            [x "," pointer-size
                                             (- x pointer-size) "," 0
                                             (+ x pointer-size) "," 0]))}]
-     [:line (if (= orientation :vertical)
+     [:line (if vertical
               {:x1 0
                :y1 y
                :x2 ruler-size
@@ -86,15 +87,17 @@
   [orientation]
   (let [[x y] @(rf/subscribe [::frame.subs/viewbox])
         zoom @(rf/subscribe [::document.subs/zoom])
-        steps-coll @(rf/subscribe [::ruler.subs/steps-coll orientation])]
+        steps-coll @(rf/subscribe [::ruler.subs/steps-coll orientation])
+        vertical (= orientation :vertical)]
     (into [:g]
           (map-indexed
            (fn [i step]
              (let [adjusted-step (* zoom step)
                    font-size 9
-                   text (-> (+ step (if (= orientation :vertical) y x))
-                            Math/round
-                            str)]
+                   text (-> step
+                            (+ (if vertical y x))
+                            (Math/round)
+                            (str))]
                (cond
                  (zero? (rem i 10))
                  [:<>

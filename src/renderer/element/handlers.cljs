@@ -121,17 +121,17 @@
        (entity db (first ids))
        (root db))))
   ([db id]
-   (when-let [parent-id (:parent (entity db id))]
-     (entity db parent-id))))
+   (some->> (entity db id)
+            :parent
+            (entity db))))
 
 (m/=> parent-container [:-> App uuid? [:maybe Element]])
 (defn parent-container
   [db id]
-  (loop [parent-el (parent db id)]
-    (when parent-el
-      (if (utils.element/container? parent-el)
-        parent-el
-        (recur (parent db (:id parent-el)))))))
+  (when-let [parent-el (parent db id)]
+    (if (utils.element/container? parent-el)
+      parent-el
+      (recur db (:id parent-el)))))
 
 (m/=> adjusted-bbox [:-> App uuid? [:maybe BBox]])
 (defn adjusted-bbox
@@ -229,8 +229,8 @@
 (defn index
   "Returns the index of an element on its parent children vector."
   [db id]
-  (when-let [sibling-els (siblings db id)]
-    (.indexOf sibling-els id)))
+  (some-> (siblings db id)
+          (.indexOf id)))
 
 (m/=> index-path [:-> App uuid? [:vector int?]])
 (defn index-path
@@ -690,7 +690,7 @@
         child-els (-> (entities db (:children el))
                       (concat (:content el)))
         parent-el (entity db (:parent new-el))
-        [min-x min-y] (when parent-el (element.hierarchy/bbox parent-el))
+        [min-x min-y] (some-> parent-el element.hierarchy/bbox)
         add-children (fn [db child-els]
                        (reduce #(cond-> %1
                                   (element.db/tag? (:tag %2))

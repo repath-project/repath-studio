@@ -255,9 +255,14 @@
  (fn [db [_ tag attrs]]
    (-> (element.handlers/animate db tag attrs)
        (history.handlers/finalize (case tag
-                                    :animate [::menubar.views/animate]
-                                    :animate-transform [::menubar.views/animate-transform]
-                                    :animate-motion [::menubar.views/animate-motion])))))
+                                    :animate
+                                    [::menubar.views/animate]
+
+                                    :animate-transform
+                                    [::menubar.views/animate-transform]
+
+                                    :animate-motion
+                                    [::menubar.views/animate-motion])))))
 
 (rf/reg-event-db
  ::set-parent
@@ -282,10 +287,17 @@
  (fn [db [_ action]]
    (-> (element.handlers/manipulate-path db action)
        (history.handlers/finalize (case action
-                                    :simplify [::menubar.views/boolean-simplify]
-                                    :smooth [::menubar.views/boolean-smooth]
-                                    :flatten [::menubar.views/boolean-flatten]
-                                    :reverse [::menubar.views/boolean-reverse])))))
+                                    :simplify
+                                    [::menubar.views/boolean-simplify]
+
+                                    :smooth
+                                    [::menubar.views/boolean-smooth]
+
+                                    :flatten
+                                    [::menubar.views/boolean-flatten]
+
+                                    :reverse
+                                    [::menubar.views/boolean-reverse])))))
 
 (rf/reg-event-fx
  ::copy

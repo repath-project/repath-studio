@@ -37,8 +37,8 @@
  :<- [::entities]
  :<- [::active-id]
  (fn [[documents active-document] _]
-   (when active-document
-     (get documents active-document))))
+   (some->> active-document
+            (get documents))))
 
 (rf/reg-sub
  ::entity
@@ -95,7 +95,7 @@
  (fn [[title path active saved] _]
    (let [title (or path title)]
      (str (when (and active (not saved)) "• ")
-          (when title (str title " - "))
+          (some-> title (str " - "))
           config/app-name))))
 
 (rf/reg-sub
@@ -156,5 +156,5 @@
  ::active-saved?
  (fn [{:keys [active-document]
        :as db} [_]]
-   (when active-document
-     (document.handlers/saved? db active-document))))
+   (some->> active-document
+            (document.handlers/saved? db))))

@@ -5,15 +5,19 @@
 
 (defn svg-elements!
   []
-  (when-let [document (utils.dom/frame-document!)]
-    (.querySelectorAll document "svg")))
+  (some-> (utils.dom/frame-document!)
+          (.querySelectorAll "svg")))
 
 (rf/reg-fx
  ::set-current-time
  (fn [t]
-   (doall (map #(.setCurrentTime % t) (svg-elements!)))))
+   (->> (svg-elements!)
+        (map #(.setCurrentTime % t))
+        (doall))))
 
 (rf/reg-fx
  ::pause-animations
  (fn []
-   (doall (map #(.pauseAnimations %) (svg-elements!)))))
+   (->> (svg-elements!)
+        (map #(.pauseAnimations %))
+        (doall))))

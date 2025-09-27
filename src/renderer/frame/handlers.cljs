@@ -17,8 +17,8 @@
   ([db]
    (let [{:keys [active-document dom-rect]} db
          {:keys [zoom pan]} (get-in db [:documents active-document])]
-     (when dom-rect
-       (viewbox zoom pan dom-rect))))
+     (some->> dom-rect
+              (viewbox zoom pan))))
   ([zoom pan dom-rect]
    (let [{:keys [width height]} dom-rect]
      (into pan

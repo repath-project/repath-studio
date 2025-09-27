@@ -24,16 +24,16 @@
                             data-type
                             (js/Blob. (array data) #js {:type data-type}))))
                   blob-array))))
-       (.then #(when on-success (rf/dispatch on-success)))
-       (.catch #(when on-error (rf/dispatch (conj on-error %)))))))
+       (.then #(some-> on-success rf/dispatch))
+       (.catch #(some-> on-error (conj %) rf/dispatch)))))
 
 (rf/reg-fx
  ::focus
  (fn [id]
-   (when-let [element (if id
-                        (.getElementById js/document id)
-                        (utils.dom/canvas-element!))]
-     (.focus element))))
+   (some-> (if id
+             (.getElementById js/document id)
+             (utils.dom/canvas-element!))
+           (.focus))))
 
 (rf/reg-fx
  ::set-document-attr
@@ -56,11 +56,12 @@
                (-> (.write writable-stream data)
                    (.then (fn []
                             (.close writable-stream)
-                            (when on-success
-                              (rf/dispatch (conj on-success (cond-> file-handle
-                                                              formatter
-                                                              formatter)))))))))
-      (.catch #(when on-error (rf/dispatch (conj on-error %))))))
+                            (some-> on-success
+                                    (conj (cond-> file-handle
+                                            formatter
+                                            formatter))
+                                    rf/dispatch))))))
+      (.catch #(some-> on-error (conj %) rf/dispatch))))
 
 (defn- abort-error?
   [error]
@@ -93,10 +94,9 @@
                     (doseq [^js/FileSystemFileHandle file-handle file-handles]
                       (-> (.getFile file-handle)
                           (.then #(rf/dispatch (conj on-success file-handle %)))
-                          (.catch #(when on-error
-                                     (rf/dispatch (conj on-error
-                                                        file-handle
-                                                        %)))))))))
+                          (.catch #(some-> on-error
+                                           (conj file-handle %)
+                                           (rf/dispatch))))))))
          (.catch (fn [^js/Error error]
                    (when (and on-error (not (abort-error? error)))
                      (rf/dispatch (conj on-error error))))))
@@ -143,8 +143,8 @@
  (fn [{:keys [on-success on-error]}]
    (-> (js/EyeDropper.)
        (.open)
-       (.then #(when on-success (rf/dispatch (conj on-success %))))
-       (.catch #(when on-error (rf/dispatch (conj on-error %)))))))
+       (.then #(some-> on-success (conj %) rf/dispatch))
+       (.catch #(some-> on-error (conj %) rf/dispatch)))))
 
 (rf/reg-fx
  ::print
@@ -170,21 +170,21 @@
 (rf/reg-fx
  ::ipc-send
  (fn [[channel data]]
-   (when js/window.api
-     (js/window.api.send channel (clj->js data)))))
+   (some-> js/window.api
+           (.send channel (clj->js data)))))
 
 (rf/reg-fx
  ::ipc-invoke
  (fn [{:keys [channel data formatter on-success on-error]}]
-   (when js/window.api
-     (-> (js/window.api.invoke channel (clj->js data))
-         (.then #(when on-success
-                   (rf/dispatch (conj on-success (cond-> %
-                                                   formatter formatter)))))
-         (.catch #(when on-error (rf/dispatch (conj on-error %))))))))
+   (some-> js/window.api
+           (.invoke channel (clj->js data))
+           (.then #(some-> on-success
+                           (conj (cond-> % formatter formatter))
+                           (rf/dispatch)))
+           (.catch #(some-> on-error (conj %) rf/dispatch)))))
 
 (rf/reg-fx
  ::ipc-on
  (fn [[channel listener]]
-   (when js/window.api
-     (js/window.api.on channel #(rf/dispatch listener)))))
+   (some-> js/window.api
+           (.on channel #(rf/dispatch listener)))))

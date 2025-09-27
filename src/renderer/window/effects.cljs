@@ -8,8 +8,8 @@
  (fn [coeffects _]
    (assoc coeffects :focused
           (boolean (or (.hasFocus js/document)
-                       (when-let [frame-document (utils.dom/frame-document!)]
-                         (.hasFocus frame-document)))))))
+                       (some-> (utils.dom/frame-document!)
+                               (.hasFocus)))))))
 
 (rf/reg-cofx
  ::fullscreen

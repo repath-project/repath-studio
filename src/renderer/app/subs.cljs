@@ -31,8 +31,9 @@
  ::font-list
  :<- [::system-fonts]
  (fn [system-fonts _]
-   (when system-fonts
-     (->> system-fonts keys sort))))
+   (some->> system-fonts
+            keys
+            sort)))
 
 (rf/reg-sub
  ::backdrop

@@ -45,7 +45,8 @@
 (defn includes-prop?
   [v prop]
   (when v
-    (string/includes? (string/lower-case v) (string/lower-case prop))))
+    (string/includes? (string/lower-case v)
+                      (string/lower-case prop))))
 
 (m/=> match-font-by-weight [:-> string? [:sequential JS_Object] [:sequential JS_Object]])
 (defn match-font-by-weight

@@ -29,11 +29,12 @@
   "Returns a collection of steps contained on the given viewbox."
   [ruler-step viewbox orientation]
   (let [[x y width height] viewbox
-        sections 10]
+        sections 10
+        vertical (= orientation :vertical)]
     (range (- (+ (* sections ruler-step)
-                 (rem (if (= orientation :vertical) y x)
+                 (rem (if vertical y x)
                       (* sections ruler-step))))
-           (if (= orientation :vertical) height width)
+           (if vertical height width)
            ruler-step)))
 
 (m/=> steps-intersections [:-> App [:sequential [:sequential number?]]])

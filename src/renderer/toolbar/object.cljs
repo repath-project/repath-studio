@@ -124,10 +124,10 @@
   []
   (let [some-selected? @(rf/subscribe [::element.subs/some-selected?])
         multiple-selected? @(rf/subscribe [::element.subs/multiple-selected?])
-        every-top-level @(rf/subscribe [::element.subs/every-top-level])
+        every-top-level? @(rf/subscribe [::element.subs/every-top-level?])
         object-actions [(index-actions (not some-selected?))
                         (group-actions (not some-selected?))
-                        (alignment-actions every-top-level)
+                        (alignment-actions every-top-level?)
                         (boolean-actions (not multiple-selected?))]]
     (->> object-actions
          (interpose [{:type :divider}])
