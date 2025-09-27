@@ -1,6 +1,6 @@
 (ns renderer.reepl.views
   (:require
-   ["react-resizable-panels" :refer [Panel PanelResizeHandle]]
+   ["react-resizable-panels" :refer [Panel]]
    [re-frame.core :as rf]
    [reagent.core :as reagent]
    [renderer.app.events :as-alias app.events]
@@ -104,9 +104,7 @@
 (defn repl-items-panel
   [items show-value-opts set-text]
   [:<>
-   [:> PanelResizeHandle
-    {:id "repl-resize-handle"
-     :className "resize-handle"}]
+   [views/resize-handle "repl-resize-handle"]
    [:> Panel
     {:id "repl-panel"
      :minSize 10

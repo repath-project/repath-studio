@@ -5,7 +5,7 @@
    ["@radix-ui/react-tooltip" :as Tooltip]
    ["path-browserify" :as path]
    ["react-fps" :refer [FpsView]]
-   ["react-resizable-panels" :refer [Panel PanelGroup PanelResizeHandle]]
+   ["react-resizable-panels" :refer [Panel PanelGroup]]
    [clojure.string :as string]
    [config :as config]
    [re-frame.core :as rf]
@@ -174,9 +174,7 @@
       [frame-panel]]
      (when @(rf/subscribe [::app.subs/panel-visible? :history])
        [:<>
-        [:> PanelResizeHandle
-         {:id "history-resize-handle"
-          :className "resize-handle"}]
+        [views/resize-handle "history-resize-handle"]
         [:> Panel {:id "history-panel"
                    :defaultSize 30
                    :minSize 5
@@ -188,9 +186,7 @@
        (let [xml @(rf/subscribe [::element.subs/xml])
              codemirror-theme @(rf/subscribe [::theme.subs/codemirror])]
          [:<>
-          [:> PanelResizeHandle
-           {:id "xml-resize-handle"
-            :className "resize-handle"}]
+          [views/resize-handle "xml-resize-handle"]
           [:> Panel {:id "xml-panel"
                      :defaultSize 30
                      :minSize 5
@@ -217,9 +213,7 @@
       [center-top-group]]
      [toolbar.status/root]
      (when timeline-visible
-       [:> PanelResizeHandle
-        {:id "timeline-resize-handle"
-         :className "resize-handle"}])
+       [views/resize-handle "timeline-resize-handle"])
      (when timeline-visible
        [:> Panel
         {:id "timeline-panel"

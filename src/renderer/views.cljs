@@ -16,6 +16,7 @@
    ["codemirror/mode/css/css.js"]
    ["codemirror/mode/xml/xml.js"]
    ["react" :as react]
+   ["react-resizable-panels" :refer [PanelResizeHandle]]
    ["react-svg" :refer [ReactSVG]]
    ["tailwind-merge" :refer [twMerge]]
    [re-frame.core :as rf]
@@ -33,6 +34,12 @@
   [:> ReactSVG
    (merge-with-class {:class "flex justify-center [&_svg]:fill-current"
                       :src (str "icons/" icon-name ".svg")} props)])
+
+(defn resize-handle
+  [id]
+  [:> PanelResizeHandle
+   {:id id
+    :className "resize-handle"}])
 
 (defn icon-button
   [icon-name props]
