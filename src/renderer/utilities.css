@@ -76,7 +76,7 @@
 
 @utility outline-default {
   @apply focus:outline focus:outline-offset-[-1px] hover:outline-none;
-  outline-color: var(--overlay-2x);
+  outline-color: var(--border-color);
 }
 
 @utility button-size {
