@@ -193,7 +193,8 @@
     options passed into the CodeMirror constructor
 
   :on-cm-init (fn [cm] -> nil)
-    called with the CodeMirror instance, for whatever extra fiddling you want to do."
+    called with the CodeMirror instance, for whatever extra fiddling you want to
+    do."
   [value-atom options]
   (let [cm (atom nil)
         ref (react/createRef)

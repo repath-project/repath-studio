@@ -189,11 +189,13 @@
        (is (not (-> @selected first :label))))
 
      (testing "set label"
-       (rf/dispatch [::element.events/set-label (-> @selected first :id) "rect"])
+       (rf/dispatch [::element.events/set-label (-> @selected first :id)
+                     "rect"])
        (is (= (-> @selected first :label) "rect")))
 
      (testing "clear label"
-       (rf/dispatch [::element.events/set-label (-> @selected first :id) ""])
+       (rf/dispatch [::element.events/set-label (-> @selected first :id)
+                     ""])
        (is (not (-> @selected first :label)))))))
 
 (deftest lock
@@ -379,7 +381,7 @@
 
    (let [selected (rf/subscribe [::element.subs/selected])]
      (rf/dispatch [::element.events/import-svg
-                   {:svg "<svg x=\"100\" y=\"100\" width=\"200\" height=\"200\"></svg>"
+                   {:svg "<svg x=\"10\" width=\"200\" height=\"200\"></svg>"
                     :label "filename.svg"
                     :position [500 500]}])
      (is (= (-> @selected first :tag) :svg))

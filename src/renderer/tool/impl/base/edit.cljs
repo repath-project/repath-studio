@@ -122,5 +122,6 @@
                  (when-let [pos (element.hierarchy/centroid el)]
                    (let [offset (utils.element/offset el)
                          pos (matrix/add offset pos)]
-                     [utils.svg/dot pos [:title (t [::centroid "Centroid"])]]))]))
+                     [utils.svg/dot pos
+                      [:title (t [::centroid "Centroid"])]]))]))
          (into [:g]))))

@@ -5,16 +5,17 @@
 (def Props [:? [:map-of keyword? any?]])
 
 (def Hiccup
-  [:schema {:registry {"hiccup" [:orn
-                                 [:node [:catn
-                                         [:name keyword?]
-                                         [:props Props]
-                                         [:children [:* [:schema [:ref "hiccup"]]]]]]
-                                 [:primitive [:orn
-                                              [:nil nil?]
-                                              [:boolean boolean?]
-                                              [:number number?]
-                                              [:text string?]]]]}}
+  [:schema {:registry {"hiccup"
+                       [:orn
+                        [:node [:catn
+                                [:name keyword?]
+                                [:props Props]
+                                [:children [:* [:schema [:ref "hiccup"]]]]]]
+                        [:primitive [:orn
+                                     [:nil nil?]
+                                     [:boolean boolean?]
+                                     [:number number?]
+                                     [:text string?]]]]}}
    "hiccup"])
 
 (defn find-svg

@@ -29,7 +29,8 @@
    (testing "creating elements"
      (let [points (string/join " " (repeatedly 100 #(rand-int 1000)))]
        (is (> 1000 (bench [::element.events/add {:tag :polygon
-                                                 :attrs {:points points}}] 20)))))
+                                                 :attrs {:points points}}]
+                          20)))))
 
    (testing "selecting elements"
      (is (> 1000 (bench [::element.events/select-all]))))
