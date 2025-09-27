@@ -52,23 +52,25 @@
 
 (defmethod attribute.hierarchy/form-element [:default :font-family]
   [_ k v attrs]
-  (let [font-list @(rf/subscribe [::app.subs/font-list])]
+  (let [font-list @(rf/subscribe [::app.subs/font-list])
+        local-fonts @(rf/subscribe [::app.subs/feature-available? :local-fonts])]
     [:div.flex.gap-px.w-full
      [attribute.views/form-input k v attrs]
-     [:> Popover/Root
-      {:modal true
-       :onOpenChange (fn [state]
-                       (when (and state (empty? font-list))
-                         (rf/dispatch [::app.events/load-system-fonts])))}
-      [:> Popover/Trigger
-       {:title (t [::select-font "Select font"])
-        :class "form-control-button"
-        :disabled (:disabled attrs)}
-       [views/icon "magnifier"]]
-      [:> Popover/Portal
-       [:> Popover/Content
-        {:sideOffset 5
-         :className "popover-content"
-         :align "end"}
-        [suggestions-list font-list]
-        [:> Popover/Arrow {:class "fill-secondary"}]]]]]))
+     (when local-fonts
+       [:> Popover/Root
+        {:modal true
+         :onOpenChange (fn [state]
+                         (when (and state (empty? font-list))
+                           (rf/dispatch [::app.events/load-system-fonts])))}
+        [:> Popover/Trigger
+         {:title (t [::select-font "Select font"])
+          :class "form-control-button"
+          :disabled (:disabled attrs)}
+         [views/icon "magnifier"]]
+        [:> Popover/Portal
+         [:> Popover/Content
+          {:sideOffset 5
+           :className "popover-content"
+           :align "end"}
+          [suggestions-list font-list]
+          [:> Popover/Arrow {:class "fill-secondary"}]]]])]))
