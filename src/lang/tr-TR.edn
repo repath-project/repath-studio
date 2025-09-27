@@ -1,0 +1,746 @@
+{:missing ":tr-TR için çeviri bulunamadı"
+
+ :renderer.app.views
+ {:lock "Kilitle"
+  :unlock "Kilidi Aç"
+  :svg-description "Ölçeklenebilir Vektör Grafik Manipülasyonu"
+  :start "Başla"
+  :new "Yeni"
+  :or "veya"
+  :open "Aç"
+  :recent "Son Kullanılan"
+  :select-size "Boyut seç"
+  :select-template "Şablon seç"
+  :empty-canvas "Boş tuval"
+  :help "Yardım"
+  :command-panel "Komut paneli"
+  :website "Web sitesi"
+  :source-code "Kaynak Kodu"
+  :changelog "Değişiklik Günlüğü"}
+
+ :renderer.tree.views
+ {:lock "Kilitle"
+  :unlock "Kilidi Aç"
+  :show "Göster"
+  :hide "Gizle"}
+
+ :renderer.reepl.views
+ {:hide-command-output "Komut çıktısını gizle"
+  :show-command-output "Komut çıktısını göster"}
+
+ :renderer.app.events
+ {:create-doc "Belge oluştur"}
+
+ :renderer.dialog.views
+ {:search-command "Komut ara"
+  :no-results "Sonuç bulunamadı."
+  :version "Sürüm: "
+  :browser "Tarayıcı: "
+  :save "Kaydet"
+  :dont-save "Kaydetme"
+  :cancel "İptal"
+  :close "Kapat"
+  :ok "Tamam"
+  :changes-will-be-lost [:p "Belgeyi kaydetmeden kapatırsanız
+                             %1 için yaptığınız değişiklikler kaybolacak."]}
+
+ :renderer.menubar.views
+ {:file "Dosya"
+  :new "Yeni"
+  :open "Aç..."
+  :recent "Son Kullanılan"
+  :recent-clear "Son kullanılanları temizle"
+  :print "Yazdır"
+  :save "Kaydet"
+  :save-as "Farklı kaydet..."
+  :download "İndir"
+  :export-as "Farklı dışa aktar"
+  :close "Kapat"
+  :exit "Çıkış"
+  :edit "Düzenle"
+  :undo "Geri al"
+  :redo "Yinele"
+  :cut "Kes"
+  :copy "Kopyala"
+  :paste "Yapıştır"
+  :paste-in-place "Yerinde yapıştır"
+  :paste-styles "Stilleri yapıştır"
+  :duplicate "Çoğalt"
+  :select-all "Tümünü seç"
+  :deselect-all "Tüm seçimi kaldır"
+  :invert-selection "Seçimi ters çevir"
+  :select-same-tags "Aynı etiketleri seç"
+  :delete "Sil"
+  :object "Nesne"
+  :object-to-path "Nesneyi yola dönüştür"
+  :stroke-to-path "Çizgiyi yola dönüştür"
+  :group "Grupla"
+  :ungroup "Grubu çöz"
+  :lock "Kilitle"
+  :unlock "Kilidi aç"
+  :align "Hizala"
+  :align-left "Sola hizala"
+  :align-right "Sağa hizala"
+  :align-top "Yukarı hizala"
+  :align-bottom "Aşağı hizala"
+  :align-center-vertically "Dikey ortala"
+  :align-center-horizontally "Yatay ortala"
+  :animate "Animasyon"
+  :animate-transform "Dönüşüm Animasyonu"
+  :animate-motion "Hareket Animasyonu"
+  :boolean-operation "Boolean işlem"
+  :boolean-exclude "Dışla"
+  :boolean-unite "Birleştir"
+  :boolean-intersect "Kesişim"
+  :boolean-subtract "Çıkar"
+  :boolean-divide "Böl"
+  :raise "Öne getir"
+  :lower "Arkaya gönder"
+  :raise-to-top "En öne getir"
+  :lower-to-bottom "En arkaya gönder"
+  :image "Resim"
+  :image-trace "İz sür"
+  :path "Yol"
+  :path-simplify "Basitleştir"
+  :path-smooth "Yumuşat"
+  :path-flatten "Düzleştir"
+  :path-reverse "Ters çevir"
+  :view "Görünüm"
+  :zoom "Yakınlaştır"
+  :zoom-in "Yakınlaştır"
+  :zoom-out "Uzaklaştır"
+  :zoom-set-50 "%50'ye ayarla"
+  :zoom-set-100 "%100'e ayarla"
+  :zoom-set-200 "%200'e ayarla"
+  :zoom-focus-selected "Seçilene odaklan"
+  :zoom-fit-selected "Seçilene sığdır"
+  :zoom-fill-selected "Seçileni doldur"
+  :accessibility-filter "Erişilebilirlik filtresi"
+  :language "Dil"
+  :grid "Izgara"
+  :rulers "Cetveller"
+  :help-bar "Yardım çubuğu"
+  :debug-info "Hata ayıklama bilgisi"
+  :panel "Panel"
+  :panel-element-tree "Öğe ağacı"
+  :panel-properties "Özellikler"
+  :panel-xml-view "XML görünümü"
+  :panel-history-tree "Geçmiş ağacı"
+  :panel-shell-history "Kabuk geçmişi"
+  :panel-timeline-editor "Zaman çizelgesi düzenleyicisi"
+  :fullscreen "Tam ekran"
+  :help "Yardım"
+  :command-panel "Komut paneli"
+  :website "Web sitesi"
+  :source-code "Kaynak kodu"
+  :license "Lisans"
+  :changelog "Değişiklik günlüğü"
+  :privacy-policy "Gizlilik Politikası"
+  :submit-an-issue "Sorun bildir"
+  :about "Hakkında"}
+
+ :renderer.menubar.filters
+ {:blur "bulanık"
+  :blur-x2 "bulanık-x2"
+  :protanopia "protanopi"
+  :protanomaly "protanomali"
+  :deuteranopia "döteranopi"
+  :deuteranomaly "döteranomali"
+  :tritanopia "tritanopi"
+  :tritanomaly "tritanomali"
+  :achromatopsia "akromatopsi"
+  :achromatomaly "akromatomali"}
+
+ :renderer.element.events
+ {:modify-selection "Seçimi değiştir"
+  :select-element "Öğe seç"
+  :select-elements "Öğeleri seç"
+  :delete-selection "Seçimi sil"
+  :set-label "Etiket ayarla"
+  :lock-selection "Seçimi kilitle"
+  :unlock-selection "Seçim kilidini aç"
+  :remove "%1 kaldır"
+  :update "%1 güncelle"
+  :deselect-all "Tüm seçimi kaldır"
+  :select-all "Tümünü seç"
+  :select-same-tags "Aynı etiketleri seç"
+  :invert-selection "Seçimi ters çevir"
+  :raise-selection "Seçimi öne getir"
+  :lower-selection "Seçimi arkaya gönder"
+  :raise-selection-top "Seçimi en öne getir"
+  :lower-selection-bottom "Seçimi en arkaya gönder"
+  :paste-selection "Seçimi yapıştır"
+  :paste-selection-in-place "Seçimi yerinde yapıştır"
+  :paste-styles-to-selection "Seçime stilleri yapıştır"
+  :duplicate-selection "Seçimi çoğalt"
+  :move-selection "Seçimi taşı"
+  :place-selection "Seçimi yerleştir"
+  :scale-selection "Seçimi ölçeklendir"
+  :convert-selection-path "Seçimi yola dönüştür"
+  :convert-selection-stroke-path "Seçim çizgisini yola dönüştür"
+  :create "%1 oluştur"
+  :import-svg "SVG içe aktar"
+  :set-parent "Ebeveyn ayarla"
+  :group-selection "Seçimi grupla"
+  :ungroup-selection "Seçim grubunu çöz"
+  :cut-selection "Seçimi kes"
+  :trace-image "Resim izini sür"}
+
+ :renderer.element.views
+ {:cut "Kes"
+  :copy "Kopyala"
+  :paste "Yapıştır"
+  :raise "Öne getir"
+  :lower "Arkaya gönder"
+  :raise-top "En öne getir"
+  :lower-bottom "En arkaya gönder"
+  :animate "Animasyon"
+  :animate-transform "Dönüşüm Animasyonu"
+  :animate-motion "Hareket Animasyonu"
+  :duplicate "Çoğalt"
+  :delete "Sil"}
+
+ :renderer.element.impl.shape.circle
+ {:label "Daire"
+  :description "<circle> SVG öğesi, merkez nokta ve yarıçapa dayalı olarak
+                daireler çizmek için kullanılan bir SVG temel şeklidir."}
+
+ :renderer.element.impl.shape.image
+ {:label "Resim"
+  :description "<image> SVG öğesi, SVG belgeleri içinde resimler içerir.
+                Raster resim dosyalarını veya diğer SVG dosyalarını
+                görüntüleyebilir."}
+
+ :renderer.element.impl.shape.ellipse
+ {:label "Elips"
+  :description "<ellipse> öğesi, merkez koordinatları ve hem x hem de y
+                yarıçaplarına dayalı olarak elipsler oluşturmak için
+                kullanılan bir SVG temel şeklidir."}
+
+ :renderer.element.impl.shape.line
+ {:label "Çizgi"
+  :description "<line> öğesi, iki noktayı birleştiren bir çizgi oluşturmak
+                için kullanılan bir SVG temel şeklidir."}
+
+ :renderer.element.impl.shape.path
+ {:label "Yol"
+  :description "<path> SVG öğesi, bir şekli tanımlamak için kullanılan
+                genel öğedir. Tüm temel şekiller bir path öğesiyle
+                oluşturulabilir."}
+
+ :renderer.element.impl.shape.polygon
+ {:label "Çokgen"
+  :description "<polygon> SVG öğesi, bir dizi bağlı düz çizgi segmentinden
+                oluşan kapalı bir şekil tanımlar. Son nokta ilk noktaya
+                bağlanır."}
+
+ :renderer.element.impl.shape.polyline
+ {:label "Çoklu çizgi"
+  :description "<polyline> SVG öğesi, birkaç noktayı birleştiren düz çizgiler
+                oluşturan bir SVG temel şeklidir. Genellikle son nokta ilk
+                noktaya bağlanmadığı için açık şekiller oluşturmak için
+                kullanılır."}
+
+ :renderer.element.impl.shape.rect
+ {:label "Dikdörtgen"
+  :description "<rect> öğesi, konumları, genişlikleri ve yükseklikleriyle
+                tanımlanan dikdörtgenler çizen temel bir SVG şeklidir.
+                Dikdörtgenlerin köşeleri yuvarlatılabilir."}
+
+ :renderer.element.impl.custom.blob
+ {:x "Blob'un merkezi için yatay koordinat."
+  :y "Blob'un merkezi için dikey koordinat."
+  :seed "Belirli bir tohum her zaman aynı blob'u üretir."
+  :extra-points "Gerçek nokta sayısı `3 + extraPoints` olacaktır."
+  :randomness "Nokta konumundaki varyasyon miktarını artırır."
+  :size "Sınırlayıcı kutunun boyutu."
+  :description "Vektör tabanlı blob."
+  :generate-random-seed "Rastgele tohum oluştur"}
+
+ :renderer.element.impl.custom.brush
+ {:label "Fırça"
+  :points "Kullanıcının fare hareketinden kaydedilen girdi noktaları."
+  :size "Çizginin temel boyutu (çap)."
+  :thinning "Çizginin boyutu üzerindeki basıncın etkisi."
+  :smoothing "Çizginin kenarlarını ne kadar yumuşatacağı."
+  :stream-line "Çizgiyi ne kadar akıcı hale getireceği."
+  :description "perfect-freehand kullanarak basınç duyarlı serbest çizgiler
+                çizin."}
+
+ :renderer.element.impl.container.canvas
+ {:label "Tuval"
+  :description "Tuval, tüm öğeleri barındıran ana SVG kapsayıcısıdır."}
+
+ :renderer.element.impl.container.svg
+ {:description "svg öğesi, yeni bir koordinat sistemi ve görünüm alanı
+                tanımlayan bir kapsayıcıdır. SVG belgelerinin en dış öğesi
+                olarak kullanılır, ancak bir SVG parçasını bir SVG veya HTML
+                belgesi içine gömmek için de kullanılabilir."}
+
+ :renderer.element.impl.text
+ {:description "SVG <text> öğesi, metinden oluşan bir grafik öğesi çizer.
+                Diğer SVG grafik öğeleri gibi <text>'e de gradyan, desen,
+                kırpma yolu, maske veya filtre uygulamak mümkündür."
+  :label "Metin"
+  :remove-text "Metni kaldır"
+  :set-text "Metin ayarla"}
+
+ :renderer.attribute.views
+ {:all "tümü"
+  :browser-compatibility "Tarayıcı uyumluluğu"
+  :learn-more "Daha fazla öğren"
+  :specification "Belirtim"
+  :applies-to "Şunlara uygulanır"
+  :computed "Hesaplanan"
+  :percentages "Yüzdeler"
+  :animatable "Animasyon yapılabilir"
+  :animationType "Animasyon türü"
+  :syntax "Sözdizimi"
+  :mdn-info "MDN Bilgisi"
+  :attributes-title "%1 %2 öğeleri"}
+
+ :renderer.attribute.impl.core
+ {:x "x özniteliği, kullanıcı koordinat sisteminde bir x ekseni koordinatı
+      tanımlar."
+  :y "y özniteliği, kullanıcı koordinat sisteminde bir y ekseni koordinatı
+      tanımlar."
+  :x1 "x1 özniteliği, birden fazla koordinat gerektiren bir SVG öğesi çizmek
+       için ilk x koordinatını belirtmek için kullanılır. Yalnızca bir koordinat
+       gereken öğeler bunun yerine x özniteliğini kullanır."
+  :y1 "y1 özniteliği, birden fazla koordinat gerektiren bir SVG öğesi çizmek
+       için ilk y koordinatını belirtmek için kullanılır. Yalnızca bir koordinat
+       gereken öğeler bunun yerine y özniteliğini kullanır."
+  :x2 "x2 özniteliği, birden fazla koordinat gerektiren bir SVG öğesi çizmek
+       için ikinci x koordinatını belirtmek için kullanılır. Yalnızca bir
+       koordinat gereken öğeler bunun yerine x özniteliğini kullanır."
+  :y2 "y2 özniteliği, birden fazla koordinat gerektiren bir SVG öğesi çizmek
+       için ikinci y koordinatını belirtmek için kullanılır. Yalnızca bir
+       koordinat gereken öğeler bunun yerine y özniteliğini kullanır."
+  :cx "cx özniteliği, bir merkez noktasının x ekseni koordinatını tanımlar."
+  :cy "cy özniteliği, bir merkez noktasının y ekseni koordinatını tanımlar."
+  :dx "dx özniteliği, bir öğenin veya içeriğinin konumunda x ekseni boyunca
+       bir kayma gösterir."
+  :dy "dy özniteliği, bir öğenin veya içeriğinin konumunda y ekseni boyunca
+       bir kayma gösterir."
+  :width "width özniteliği, kullanıcı koordinat sisteminde bir öğenin yatay
+          uzunluğunu tanımlar."
+  :height "height özniteliği, kullanıcı koordinat sisteminde bir öğenin dikey
+           uzunluğunu tanımlar."
+  :rx "rx özniteliği, x ekseni üzerinde bir yarıçap tanımlar."
+  :ry "ry özniteliği, y ekseni üzerinde bir yarıçap tanımlar."
+  :r "r özniteliği, bir dairenin yarıçapını tanımlar."
+  :rotate "rotate özniteliği, bir <animateMotion> öğesinde belirtilen bir yol
+           boyunca hareket ederken animasyon öğesinin nasıl döneceğini
+           belirtir."
+  :stroke "stroke özniteliği, şeklin ana hattını boyamak için kullanılan rengi
+           (veya gradyanlar veya desenler gibi SVG boyama sunucularını)
+           tanımlayan bir sunum özniteliğidir."
+  :fill "fill özniteliği iki farklı anlama sahiptir. Şekiller ve metin için,
+         öğeyi boyamak için kullanılan rengi (veya gradyanlar veya desenler
+         gibi SVG boyama sunucularını) tanımlayan bir sunum özniteliğidir;
+         animasyon için animasyonun son durumunu tanımlar."
+  :stroke-width "stroke-width özniteliği, şekle uygulanacak çizginin genişliğini
+                 tanımlayan bir sunum özniteliğidir."
+  :stroke-dasharray "stroke-dasharray özniteliği, şeklin ana hattını boyamak
+                     için kullanılan çizgi ve boşluk desenini tanımlayan
+                     bir sunum özniteliğidir."
+  :opacity "opacity özniteliği, bir nesnenin veya nesne grubunun şeffaflığını,
+            yani öğenin arkasındaki arka planın ne kadar üst üste
+            bindirildiğinin derecesini belirtir."
+  :id "id özniteliği, bir öğeye benzersiz bir ad atar."
+  :class "Bir öğeye bir sınıf adı veya sınıf adları kümesi atar.
+          Aynı sınıf adını herhangi bir sayıda öğeye atayabilirsiniz,
+          ancak birden çok sınıf adı boşluk karakterleri ile ayrılmalıdır."
+  :tabindex "tabindex özniteliği, bir öğenin odaklanabilir olup olmadığını
+             kontrol etmenizi ve sıralı odak navigasyonu amaçları için
+             öğenin göreceli sırasını tanımlamanızı sağlar."
+  :style "style özniteliği, CSS bildirimleri kullanarak bir öğenin stilini
+          belirlemenizi sağlar. HTML'deki style özniteliğiyle aynı şekilde
+          çalışır."
+  :href "href özniteliği, bir referans URL olarak bir kaynağa bağlantı tanımlar.
+         Bu bağlantının tam anlamı, onu kullanan her öğenin bağlamına bağlıdır."
+  :attribute-name "attributeName özniteliği, animasyon sırasında değiştirilecek
+                   hedef öğenin CSS özelliği veya özniteliğinin adını gösterir."
+  :begin "begin özniteliği, bir animasyonun ne zaman başlaması gerektiğini
+          tanımlar."
+  :end "end özniteliği, etkin süreyi kısıtlayabilen animasyon için bir bitiş
+        değeri tanımlar."
+  :dur "dur özniteliği, bir animasyonun basit süresini gösterir."
+  :min "min özniteliği, etkin animasyon süresinin minimum değerini belirtir."
+  :max "max özniteliği, etkin animasyon süresinin maksimum değerini belirtir."
+  :restart "restart özniteliği, bir animasyonun yeniden başlatılıp
+            başlatılamayacağını belirtir."
+  :repeat-count "repeatCount özniteliği, bir animasyonun gerçekleşeceği
+                 sayısını gösterir."
+  :repeat-dur "repeatDur özniteliği, bir animasyonu tekrarlamanın toplam
+               süresini belirtir."
+  :calc-mode "calcMode özniteliği, animasyon için enterpolasyon modunu
+              belirtir."
+  :values "values özniteliği, kullanıldığı bağlama bağlı olarak farklı anlamlara
+           sahiptir; ya animasyon boyunca kullanılan değer dizisini tanımlar
+           ya da gerçekleştirilecek renk değişikliği türüne bağlı olarak
+           farklı şekilde yorumlanan bir renk matrisinin sayılar listesidir."
+  :key-times "keyTimes özniteliği, animasyonun hızını kontrol etmek için
+              kullanılan zaman değerleri listesini temsil eder."
+  :key-splines "keySplines özniteliği, keyTimes listesiyle ilişkili Bézier
+                eğrisi kontrol noktaları kümesini tanımlayarak aralık hızını
+                kontrol eden kübik Bézier fonksiyonunu tanımlar."
+  :from "from özniteliği, animasyon sırasında değiştirilecek özniteliğin
+         başlangıç değerini gösterir."
+  :to "to özniteliği, animasyon sırasında değiştirilecek özniteliğin
+       son değerini gösterir."
+  :by "by özniteliği, animasyon sırasında değiştirilecek öznitelik için
+       göreceli ofset değerini belirtir."
+  :additive "additive özniteliği, bir animasyonun eklemeli olup olmadığını
+             kontrol eder."
+  :accumulate "accumulate özniteliği, bir animasyonun kümülatif olup olmadığını
+               kontrol eder."
+  :view-box "viewBox özniteliği, kullanıcı alanında bir SVG görünüm alanının
+             konumunu ve boyutunu tanımlar."
+  :preserve-aspect-ratio "preserveAspectRatio özniteliği, belirli bir en boy
+                          oranı sağlayan viewBox'a sahip bir öğenin, farklı
+                          en boy oranına sahip bir görünüm alanına nasıl
+                          sığdırılması gerektiğini gösterir."}
+
+ :renderer.tool.impl.element.polyline
+ {:label "Çoklu çizgi"
+  :create-polyline "Çoklu çizgi oluştur"}
+
+ :renderer.tool.impl.element.polygon
+ {:label "Çokgen"
+  :create-polygon "Çokgen oluştur"}
+
+ :renderer.tool.impl.element.image
+ {:label "Resim"}
+
+ :renderer.tool.impl.element.core
+ {:help "Bir öğe oluşturmak için tıklayın ve sürükleyin."}
+
+ :renderer.tool.impl.element.poly
+ {:add-points "Daha fazla nokta eklemek için tıklayın."
+  :finalize-shape "Şekli sonlandırmak için çift tıklayın."}
+
+ :renderer.tool.impl.element.rect
+ {:label "Dikdörtgen"
+  :help [:div "Oranları kilitlemek için %1 tuşunu basılı tutun."]
+  :create-rectangle "Dikdörtgen oluştur"}
+
+ :renderer.tool.impl.element.svg
+ {:label "SVG"
+  :help [:div "Oranları kilitlemek için %1 tuşunu basılı tutun."]
+  :create-svg "SVG oluştur"}
+
+ :renderer.tool.impl.extension.blob
+ {:label "Blob"
+  :create-blob "Blob oluştur"}
+
+ :renderer.tool.impl.misc.dropper
+ {:label "Damlalık"
+  :help "Bir renk seçmek için herhangi bir yere tıklayın."
+  :pick-color "Renk seç"}
+
+ :renderer.tool.impl.misc.fill
+ {:label "Doldur"
+  :help "Doldurmak için bir öğeye tıklayın."
+  :fill "Doldur"}
+
+ :renderer.tool.impl.misc.measure
+ {:label "Ölç"
+  :help "Bir mesafeyi ölçmek için tıklayın ve sürükleyin."
+  :measure-end "ölçüm sonu"
+  :measure-start "ölçüm başı"}
+
+ :renderer.tool.impl.element.text
+ {:label "Metin"
+  :help "Yazmaya başlamak için tıklayın."}
+
+ :renderer.attribute.impl.stroke-linecap
+ {:description "stroke-linecap özniteliği, açık alt yolların ucunda
+                çizgi çekildiğinde kullanılacak şekli tanımlayan
+                bir sunum özniteliğidir."
+  :butt "Düz"
+  :round "Yuvarlak"
+  :square "Kare"}
+
+ :renderer.attribute.impl.stroke-linejoin
+ {:description "stroke-linejoin özniteliği, yolların köşelerinde
+                çizgi çekildiğinde kullanılacak şekli tanımlayan
+                bir sunum özniteliğidir."
+  :bevel "Eğim"
+  :miter "Gönye"
+  :round "Yuvarlak"}
+
+ :renderer.attribute.impl.overflow
+ {:description "overflow özniteliği, bir öğenin içeriği blok biçimlendirme
+                bağlamına sığmadığında ne yapılacağını ayarlar. Bu özellik
+                henüz yaygın olarak uygulanmamıştır."
+  :hidden "Gizli"
+  :visible "Görünür"
+  :scroll "Kaydır"
+  :auto "Otomatik"}
+
+ :renderer.attribute.impl.color
+ {:pick-color "Renk seç"}
+
+ :renderer.attribute.impl.d
+ {:description "d özniteliği çizilecek yolu tanımlar."
+  :edit "Yolu düzenle"
+  :absolute "(Mutlak)"
+  :relative "(Göreceli)"
+  :move-to "Şuraya Taşı"
+  :line-to "Şuraya Çizgi"
+  :vertical-line "Dikey Çizgi"
+  :horizontal-line "Yatay Çizgi"
+  :cubic-bezier "Kübik Bézier Eğrisi"
+  :shortcut-cubic-bezier "Kısayol Kübik Bézier Eğrisi"
+  :quadratic-bezier-curve "Kuadratik Bézier Eğrisi"
+  :shortcut-quadratic "Kısayol Kuadratik Bézier Eğrisi"
+  :elliptical-arc-curve "Eliptik Yay Eğrisi"
+  :close-path "Yolu Kapat"}
+
+ :renderer.attribute.impl.length
+ {:increase "Artır"
+  :decrease "Azalt"}
+
+ :renderer.attribute.impl.font-family
+ {:description "font-family özniteliği, metni oluşturmak için kullanılacak
+                yazı tipi ailesini gösterir, yazı tipi ailesi adları ve/veya
+                genel aile adlarının öncelikli listesi olarak belirtilir."
+  :search-font "Yazı tipi ara"
+  :select-font "Yazı tipi seç"
+  :no-local-font "Yerel yazı tipi bulunamadı."}
+
+ :renderer.attribute.impl.font-size
+ {:description "font-size özniteliği, çok satırlı metin çok satırlı düzen
+                ortamında katı olarak ayarlandığında taban çizgisinden
+                taban çizgisine yazı tipi boyutunu ifade eder."}
+
+ :renderer.attribute.impl.font-weight
+ {:description "font-weight özniteliği, aynı yazı tipi ailesindeki diğer
+                yazı tiplerine göre metni oluşturmak için kullanılan
+                gliflerin kalınlığını veya hafifliğini ifade eder."}
+
+ :renderer.attribute.impl.crossorigin
+ {:description "crossorigin özniteliği, <image> ve <feImage> öğelerinde
+                geçerlidir, öğenin getirilen verileri için Çapraz Kaynak
+                Kaynak Paylaşımı (CORS) isteklerinin yapılandırılması
+                için destek sağlar."
+  :anonymous "Anonim"
+  :use-credentials "Kimlik bilgilerini kullan"}
+
+ :renderer.attribute.impl.decoding
+ {:description "decoding özniteliği, <image> öğelerinde geçerlidir,
+                tarayıcının görüntü kodunu çözme işlemini diğer içerikle
+                birlikte daha 'doğru' görünen tek bir sunum adımında mı
+                ('sync') gerçekleştirmesi gerektiği, yoksa diğer içeriği
+                önce oluşturup sunması ve daha sonra görüntüyü kodunu
+                çözüp sunması mı ('async') gerektiği konusunda tarayıcıya
+                bir ipucu sağlar. Pratikte, async bir sonraki boyamanın
+                görüntü kodunu çözmeyi beklemediği anlamına gelir."
+  :sync "Eşzamanlı"
+  :async "Eşzamansız"
+  :auto "Otomatik"}
+
+ :renderer.tool.impl.base.edit
+ {:label "Düzenle"
+  :help-idle-drag [:div "Şeklinizi değiştirmek için bir tutamacı sürükleyin."]
+  :help-idle-click [:div "Seçimi değiştirmek için bir öğeye tıklayın"]
+  :help-edit [:div "Yönü kısıtlamak için %1 tuşunu basılı tutun."]
+  :help-type [:div "Metninizi girin."]
+  :select-element "Öğe seç"
+  :edit "Düzenle"
+  :centroid "Merkez"}
+
+ :renderer.tool.impl.base.transform
+ {:label "Dönüştür"
+  :idle-click [:div "Bir öğe seçmek için tıklayın veya alanla seçmek için
+                     sürükleyin."]
+  :idle-hold [:div "Seçime öğe eklemek veya çıkarmak için %1 tuşunu basılı
+                    tutun."]
+  :select [:div "Kesişen öğeleri seçmek için %1 tuşunu basılı tutun."]
+  :select-element "Öğe seç"
+  :deselect-element "Öğe seçimini kaldır"
+  :translate [:div "Yönü kısıtlamak için %1, klonlamak için %2 tuşunu basılı
+                    tutun."]
+  :clone [:div "Yönü kısıtlamak için %1 tuşunu basılı tutun. veya taşımak için
+                %2 tuşunu bırakın"]
+  :scale [:div "Oranları kilitlemek için %1, yerinde ölçeklendirmek için %2,
+                  alt öğeleri de ölçeklendirmek için %3 tuşunu basılı tutun."]
+  :modify-selection "Seçimi değiştir"
+  :move-selection "Seçimi taşı"
+  :scale-selection "Seçimi ölçeklendir"
+  :clone-selection "Seçimi klonla"
+  :scale-handle "ölçeklendirme tutamacı"}
+
+ :renderer.tool.impl.base.pan
+ {:label "Kaydır"
+  :idle-help "Kaydırmak için tıklayın ve sürükleyin."
+  :pan-help "Kaydırmak için sürükleyin."}
+
+ :renderer.tool.impl.base.zoom
+ {:label "Yakınlaştır"
+  :zoom-in [:div "Yakınlaştırmak için tıklayın veya bir alan seçin."]
+  :zoom-out [:div "Uzaklaştırmak için %1 tuşunu basılı tutun."]}
+
+ :renderer.tool.impl.draw.brush
+ {:label "Fırça"
+  :draw-brush "Fırça çiz"}
+
+ :renderer.tool.impl.draw.pen
+ {:label "Kalem"
+  :draw-line "Çizgi çiz"}
+
+ :renderer.tool.impl.draw.core
+ {:help "Çizmek için tıklayın ve sürükleyin."}
+
+ :renderer.tool.impl.element.circle
+ {:label "Daire"
+  :create-circle "Daire oluştur"
+  :circle-radius "daire yarıçapı"
+  :circle-center "daire merkezi"}
+
+ :renderer.tool.impl.element.ellipse
+ {:label "Elips"
+  :create-ellipse "Elips oluştur"
+  :help [:div "Oranları kilitlemek için %1 tuşunu basılı tutun."]}
+
+ :renderer.tool.impl.element.line
+ {:label "Çizgi"
+  :create-line "Çizgi oluştur"}
+
+ :renderer.document.events
+ {:save-changes "Değişikliklerinizi kaydetmek istiyor musunuz?"
+  :create-doc "Belge oluştur"
+  :create-doc-from-template "Şablondan belge oluştur"
+  :load-doc "Belge yükle"
+  :error-loading "%1 yüklenirken hata"
+  :unsupported-or-corrupted "Dosya desteklenmiyor veya bozuk görünüyor."}
+
+ :renderer.document.views
+ {:new "Yeni"
+  :open "Aç"
+  :open-directory "İçeren dizini aç"
+  :save "Kaydet"
+  :undo "Geri al"
+  :redo "Yinele"
+  :close "Kapat"
+  :close-doc "Belgeyi kapat"
+  :close-all "Tümünü kapat"
+  :close-saved "Kaydedilenleri kapat"
+  :close-others "Diğerlerini kapat"}
+
+ :renderer.window.views
+ {:minimize "Küçült"
+  :maximize "Büyüt"
+  :restore "Geri yükle"
+  :close "Kapat"
+  :theme "Tema modu - %1"
+  :enter-fullscreen "Tam ekrana geç"
+  :exit-fullscreen "Tam ekrandan çık"
+  :install "Kur"}
+
+ :renderer.toolbar.status
+ {:select-zoom "Yakınlaştırma seviyesi seç"
+  :zoom "Yakınlaştır"
+  :zoom-out "Uzaklaştır"
+  :zoom-in "Yakınlaştır"
+  :zoom-set-50 "%50'ye ayarla"
+  :zoom-set-100 "%100'e ayarla"
+  :zoom-set-200 "%200'e ayarla"
+  :zoom-focus-selected "Seçilene odaklan"
+  :zoom-fit-selected "Seçilene sığdır"
+  :zoom-fill-selected "Seçileni doldur"
+  :timeline "Zaman çizelgesi"
+  :grid "Izgara"
+  :rulers "Cetveller"
+  :history "Geçmiş"
+  :xml "XML"
+  :fill-color "Dolgu rengi seç"
+  :stroke-color "Çizgi rengi seç"
+  :swap-color "Dolgu ile çizgi rengini değiştir"}
+
+ :renderer.snap.views
+ {:snap "Yapış"
+  :snap-options "Yapışma seçenekleri"
+  :centers "merkezler"
+  :midpoints "orta noktalar"
+  :corners "köşeler"
+  :nodes "düğümler"
+  :to " ile "}
+
+ :renderer.toolbar.object
+ {:bring-front "En öne getir"
+  :send-back "En arkaya gönder"
+  :bring-forward "Öne getir"
+  :send-backward "Arkaya gönder"
+  :group "Grupla"
+  :ungroup "Grubu çöz"
+  :align-left "Sola hizala"
+  :align-center-hor "Yatay ortala"
+  :align-right "Sağa hizala"
+  :align-top "Yukarı hizala"
+  :align-center-ver "Dikey ortala"
+  :align-bottom "Aşağı hizala"
+  :unite "Birleştir"
+  :intersect "Kesişim"
+  :subtract "Çıkar"
+  :exclude "Dışla"
+  :divide "Böl"}
+
+ :renderer.utils.bounds
+ {:bounds-corner "sınır köşesi"
+  :bounds-center "sınır merkezi"
+  :bounds-midpoint "sınır orta noktası"}
+
+ :renderer.history.events
+ {:clear-history "Geçmişi temizle"}
+
+ :renderer.history.views
+ {:center-view "Görünümü ortala"
+  :clear-history "Geçmişi temizle"
+  :action-cannot-undone "Bu eylem geri alınamaz."
+  :clear-history-description "Belge geçmişini temizlemek istediğinizden emin
+                              misiniz?"
+  :select-element "Öğe seç"
+  :delete-selection "Seçimi sil"}
+
+ :renderer.timeline.views
+ {:speed "Hız"
+  :no-filter "Filtre yok"
+  :filter "Filtre"
+  :grid-snap "Izgara yapışı"
+  :guide-snap "Kılavuz yapışı"
+  :play "Oynat"
+  :replay "Tekrar oynat"
+  :pause "Duraklat"
+  :hide-timeline "Zaman çizelgesini gizle"}
+
+ :renderer.attribute.impl.angle
+ {:pick-angle "Açı seç"}
+
+ :renderer.attribute.impl.href
+ {:select-file "Dosya seç"}
+
+ :renderer.attribute.impl.points
+ {:edit-points "Noktaları düzenle"}
+
+ :renderer.frame.views
+ {:main-canvas "ana tuval"}
+
+ :renderer.notification.views
+ {:close "Kapat"
+  :error "Hata"
+  :validation-error "Doğrulama hatası"
+  :clear-all "Tümünü temizle"
+  :event "Olay: "}
+
+ :renderer.error.events
+ {:welcome "%1'e hoş geldiniz!"
+  :reporting-description [:div
+                          [:p "Anonim hata raporları göndererek iyileştirmemize
+                               yardımcı olmak ister misiniz? Tercihinizi
+                               istediğiniz zaman \"%1\" menümüzden
+                               değiştirebilirsiniz."]
+                          [:p "Daha fazla bilgi için lütfen %2 okuyun."]]
+  :privacy-policy "gizlilik politikası"
+  :no-thank-you "Hayır, teşekkürler"}}

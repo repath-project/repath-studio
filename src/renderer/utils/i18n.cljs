@@ -51,7 +51,15 @@
    "ja-JP" {:dir "ltr"
             :native-name "日本語"
             :abbr "JA"
-            :dictionary (load-resource-at-compile-time "lang/ja-JP.edn")}})
+            :dictionary (load-resource-at-compile-time "lang/ja-JP.edn")}
+   "ko-KR" {:dir "ltr"
+            :native-name "한국어"
+            :abbr "KO"
+            :dictionary (load-resource-at-compile-time "lang/ko-KR.edn")}
+   "tr-TR" {:dir "ltr"
+            :native-name "Türkçe"
+            :abbr "TR"
+            :dictionary (load-resource-at-compile-time "lang/tr-TR.edn")}})
 
 (m/=> supported-lang? [:-> [:maybe string?] boolean?])
 (defn supported-lang?

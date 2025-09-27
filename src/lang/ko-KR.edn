@@ -1,0 +1,706 @@
+{:missing ":ko-KR에 대한 번역이 없습니다"
+
+ :renderer.app.views
+ {:lock "잠금"
+  :unlock "잠금 해제"
+  :svg-description "확장 가능한 벡터 그래픽 조작"
+  :start "시작"
+  :new "새로 만들기"
+  :or "또는"
+  :open "열기"
+  :recent "최근"
+  :select-size "크기 선택"
+  :select-template "템플릿 선택"
+  :empty-canvas "빈 캔버스"
+  :help "도움말"
+  :command-panel "명령 패널"
+  :website "웹사이트"
+  :source-code "소스 코드"
+  :changelog "변경 로그"}
+
+ :renderer.tree.views
+ {:lock "잠금"
+  :unlock "잠금 해제"
+  :show "보이기"
+  :hide "숨기기"}
+
+ :renderer.reepl.views
+ {:hide-command-output "명령 출력 숨기기"
+  :show-command-output "명령 출력 보이기"}
+
+ :renderer.app.events
+ {:create-doc "문서 생성"}
+
+ :renderer.dialog.views
+ {:search-command "명령 검색"
+  :no-results "검색 결과가 없습니다."
+  :version "버전: "
+  :browser "브라우저: "
+  :save "저장"
+  :dont-save "저장하지 않음"
+  :cancel "취소"
+  :close "닫기"
+  :ok "확인"
+  :changes-will-be-lost [:p "저장하지 않고 문서를 닫으면
+                             %1에 대한 변경사항이 손실됩니다."]}
+
+ :renderer.menubar.views
+ {:file "파일"
+  :new "새로 만들기"
+  :open "열기..."
+  :recent "최근"
+  :recent-clear "최근 기록 지우기"
+  :print "인쇄"
+  :save "저장"
+  :save-as "다른 이름으로 저장..."
+  :download "다운로드"
+  :export-as "내보내기"
+  :close "닫기"
+  :exit "종료"
+  :edit "편집"
+  :undo "실행 취소"
+  :redo "다시 실행"
+  :cut "잘라내기"
+  :copy "복사"
+  :paste "붙여넣기"
+  :paste-in-place "제자리에 붙여넣기"
+  :paste-styles "스타일 붙여넣기"
+  :duplicate "복제"
+  :select-all "모두 선택"
+  :deselect-all "모두 선택 해제"
+  :invert-selection "선택 반전"
+  :select-same-tags "같은 태그 선택"
+  :delete "삭제"
+  :object "객체"
+  :object-to-path "객체를 패스로"
+  :stroke-to-path "획을 패스로"
+  :group "그룹"
+  :ungroup "그룹 해제"
+  :lock "잠금"
+  :unlock "잠금 해제"
+  :align "정렬"
+  :align-left "왼쪽 정렬"
+  :align-right "오른쪽 정렬"
+  :align-top "위쪽 정렬"
+  :align-bottom "아래쪽 정렬"
+  :align-center-vertically "수직 중앙 정렬"
+  :align-center-horizontally "수평 중앙 정렬"
+  :animate "애니메이션"
+  :animate-transform "변환 애니메이션"
+  :animate-motion "모션 애니메이션"
+  :boolean-operation "불린 연산"
+  :boolean-exclude "제외"
+  :boolean-unite "합치기"
+  :boolean-intersect "교집합"
+  :boolean-subtract "빼기"
+  :boolean-divide "나누기"
+  :raise "앞으로"
+  :lower "뒤로"
+  :raise-to-top "맨 앞으로"
+  :lower-to-bottom "맨 뒤로"
+  :image "이미지"
+  :image-trace "추적"
+  :path "패스"
+  :path-simplify "단순화"
+  :path-smooth "매끄럽게"
+  :path-flatten "평면화"
+  :path-reverse "역방향"
+  :view "보기"
+  :zoom "확대/축소"
+  :zoom-in "확대"
+  :zoom-out "축소"
+  :zoom-set-50 "50%로 설정"
+  :zoom-set-100 "100%로 설정"
+  :zoom-set-200 "200%로 설정"
+  :zoom-focus-selected "선택 항목에 초점"
+  :zoom-fit-selected "선택 항목에 맞춤"
+  :zoom-fill-selected "선택 항목 채우기"
+  :accessibility-filter "접근성 필터"
+  :language "언어"
+  :grid "격자"
+  :rulers "눈금자"
+  :help-bar "도움말 바"
+  :debug-info "디버그 정보"
+  :panel "패널"
+  :panel-element-tree "요소 트리"
+  :panel-properties "속성"
+  :panel-xml-view "XML 보기"
+  :panel-history-tree "기록 트리"
+  :panel-shell-history "쉘 기록"
+  :panel-timeline-editor "타임라인 편집기"
+  :fullscreen "전체화면"
+  :help "도움말"
+  :command-panel "명령 패널"
+  :website "웹사이트"
+  :source-code "소스 코드"
+  :license "라이선스"
+  :changelog "변경 로그"
+  :privacy-policy "개인정보 보호정책"
+  :submit-an-issue "이슈 제출"
+  :about "정보"}
+
+ :renderer.menubar.filters
+ {:blur "흐림"
+  :blur-x2 "흐림-x2"
+  :protanopia "적색맹"
+  :protanomaly "적색약"
+  :deuteranopia "녹색맹"
+  :deuteranomaly "녹색약"
+  :tritanopia "청색맹"
+  :tritanomaly "청색약"
+  :achromatopsia "전색맹"
+  :achromatomaly "전색약"}
+
+ :renderer.element.events
+ {:modify-selection "선택 수정"
+  :select-element "요소 선택"
+  :select-elements "요소들 선택"
+  :delete-selection "선택 삭제"
+  :set-label "레이블 설정"
+  :lock-selection "선택 잠금"
+  :unlock-selection "선택 잠금 해제"
+  :remove "%1 제거"
+  :update "%1 업데이트"
+  :deselect-all "모두 선택 해제"
+  :select-all "모두 선택"
+  :select-same-tags "같은 태그 선택"
+  :invert-selection "선택 반전"
+  :raise-selection "선택 앞으로"
+  :lower-selection "선택 뒤로"
+  :raise-selection-top "선택을 맨 앞으로"
+  :lower-selection-bottom "선택을 맨 뒤로"
+  :paste-selection "선택 붙여넣기"
+  :paste-selection-in-place "선택을 제자리에 붙여넣기"
+  :paste-styles-to-selection "선택에 스타일 붙여넣기"
+  :duplicate-selection "선택 복제"
+  :move-selection "선택 이동"
+  :place-selection "선택 배치"
+  :scale-selection "선택 크기 조정"
+  :convert-selection-path "선택을 패스로 변환"
+  :convert-selection-stroke-path "선택의 획을 패스로 변환"
+  :create "%1 생성"
+  :import-svg "SVG 가져오기"
+  :set-parent "부모 설정"
+  :group-selection "선택 그룹화"
+  :ungroup-selection "선택 그룹 해제"
+  :cut-selection "선택 잘라내기"
+  :trace-image "이미지 추적"}
+
+ :renderer.element.views
+ {:cut "잘라내기"
+  :copy "복사"
+  :paste "붙여넣기"
+  :raise "앞으로"
+  :lower "뒤로"
+  :raise-top "맨 앞으로"
+  :lower-bottom "맨 뒤로"
+  :animate "애니메이션"
+  :animate-transform "변환 애니메이션"
+  :animate-motion "모션 애니메이션"
+  :duplicate "복제"
+  :delete "삭제"}
+
+ :renderer.element.impl.shape.circle
+ {:label "원"
+  :description "<circle> SVG 요소는 중심점과 반지름을 기반으로
+                원을 그리는 데 사용되는 SVG 기본 모양입니다."}
+
+ :renderer.element.impl.shape.image
+ {:label "이미지"
+  :description "<image> SVG 요소는 SVG 문서 내에 이미지를 포함합니다.
+                래스터 이미지 파일이나 다른 SVG 파일을 표시할 수 있습니다."}
+
+ :renderer.element.impl.shape.ellipse
+ {:label "타원"
+  :description "<ellipse> 요소는 중심 좌표와 x, y 반지름을 기반으로
+                타원을 만드는 데 사용되는 SVG 기본 모양입니다."}
+
+ :renderer.element.impl.shape.line
+ {:label "선"
+  :description "<line> 요소는 두 점을 연결하는 선을 만드는 데
+                사용되는 SVG 기본 모양입니다."}
+
+ :renderer.element.impl.shape.path
+ {:label "패스"
+  :description "<path> SVG 요소는 모양을 정의하는 일반적인 요소입니다.
+                모든 기본 모양은 path 요소로 만들 수 있습니다."}
+
+ :renderer.element.impl.shape.polygon
+ {:label "다각형"
+  :description "<polygon> SVG 요소는 연결된 직선 세그먼트 집합으로
+                구성된 닫힌 모양을 정의합니다. 마지막 점이
+                첫 번째 점에 연결됩니다."}
+
+ :renderer.element.impl.shape.polyline
+ {:label "다중선"
+  :description "<polyline> SVG 요소는 여러 점을 연결하는 직선을 만드는
+                SVG 기본 모양입니다. 일반적으로 마지막 점이 첫 번째 점에
+                연결되지 않는 열린 모양을 만드는 데 사용됩니다."}
+
+ :renderer.element.impl.shape.rect
+ {:label "사각형"
+  :description "<rect> 요소는 위치, 너비, 높이로 정의된 사각형을
+                그리는 기본 SVG 모양입니다. 사각형의 모서리는
+                둥글게 할 수 있습니다."}
+
+ :renderer.element.impl.custom.blob
+ {:x "블롭 중심의 수평 좌표입니다."
+  :y "블롭 중심의 수직 좌표입니다."
+  :seed "주어진 시드는 항상 같은 블롭을 생성합니다."
+  :extra-points "실제 점의 수는 `3 + extraPoints`입니다."
+  :randomness "점 위치의 변화량을 증가시킵니다."
+  :size "경계 상자의 크기입니다."
+  :description "벡터 기반 블롭입니다."
+  :generate-random-seed "랜덤 시드 생성"}
+
+ :renderer.element.impl.custom.brush
+ {:label "브러시"
+  :points "사용자의 마우스 움직임에서 기록된 입력 점들입니다."
+  :size "획의 기본 크기(직경)입니다."
+  :thinning "획의 크기에 대한 압력의 효과입니다."
+  :smoothing "획의 가장자리를 얼마나 부드럽게 할지입니다."
+  :stream-line "획을 얼마나 유선형으로 만들지입니다."
+  :description "perfect-freehand를 사용하여 압력 감지 자유 선을 그립니다."}
+
+ :renderer.element.impl.container.canvas
+ {:label "캔버스"
+  :description "캔버스는 모든 요소를 포함하는 주요 SVG 컨테이너입니다."}
+
+ :renderer.element.impl.container.svg
+ {:description "svg 요소는 새로운 좌표계와 뷰포트를 정의하는 컨테이너입니다.
+                SVG 문서의 가장 바깥쪽 요소로 사용되지만, SVG나 HTML 문서 내에
+                SVG 조각을 포함하는 데도 사용할 수 있습니다."}
+
+ :renderer.element.impl.text
+ {:description "SVG <text> 요소는 텍스트로 구성된 그래픽 요소를 그립니다.
+                다른 SVG 그래픽 요소와 마찬가지로 <text>에도 그래디언트, 패턴,
+                클리핑 패스, 마스크 또는 필터를 적용할 수 있습니다."
+  :label "텍스트"
+  :remove-text "텍스트 제거"
+  :set-text "텍스트 설정"}
+
+ :renderer.attribute.views
+ {:all "모두"
+  :browser-compatibility "브라우저 호환성"
+  :learn-more "더 알아보기"
+  :specification "사양"
+  :applies-to "적용 대상"
+  :computed "계산됨"
+  :percentages "백분율"
+  :animatable "애니메이션 가능"
+  :animationType "애니메이션 유형"
+  :syntax "구문"
+  :mdn-info "MDN 정보"
+  :attributes-title "%1 %2 요소"}
+
+ :renderer.attribute.impl.core
+ {:x "x 속성은 사용자 좌표계에서 x축 좌표를 정의합니다."
+  :y "y 속성은 사용자 좌표계에서 y축 좌표를 정의합니다."
+  :x1 "x1 속성은 둘 이상의 좌표가 필요한 SVG 요소를 그리기 위한
+       첫 번째 x 좌표를 지정하는 데 사용됩니다. 하나의 좌표만
+       필요한 요소는 대신 x 속성을 사용합니다."
+  :y1 "y1 속성은 둘 이상의 좌표가 필요한 SVG 요소를 그리기 위한
+       첫 번째 y 좌표를 지정하는 데 사용됩니다. 하나의 좌표만
+       필요한 요소는 대신 y 속성을 사용합니다."
+  :x2 "x2 속성은 둘 이상의 좌표가 필요한 SVG 요소를 그리기 위한
+       두 번째 x 좌표를 지정하는 데 사용됩니다. 하나의 좌표만
+       필요한 요소는 대신 x 속성을 사용합니다."
+  :y2 "y2 속성은 둘 이상의 좌표가 필요한 SVG 요소를 그리기 위한
+       두 번째 y 좌표를 지정하는 데 사용됩니다. 하나의 좌표만
+       필요한 요소는 대신 y 속성을 사용합니다."
+  :cx "cx 속성은 중심점의 x축 좌표를 정의합니다."
+  :cy "cy 속성은 중심점의 y축 좌표를 정의합니다."
+  :dx "dx 속성은 요소나 그 내용의 위치에서 x축을 따른 이동을 나타냅니다."
+  :dy "dy 속성은 요소나 그 내용의 위치에서 y축을 따른 이동을 나타냅니다."
+  :width "width 속성은 사용자 좌표계에서 요소의 수평 길이를 정의합니다."
+  :height "height 속성은 사용자 좌표계에서 요소의 수직 길이를 정의합니다."
+  :rx "rx 속성은 x축에서 반지름을 정의합니다."
+  :ry "ry 속성은 y축에서 반지름을 정의합니다."
+  :r "r 속성은 원의 반지름을 정의합니다."
+  :rotate "rotate 속성은 <animateMotion> 요소에서 지정된 패스를 따라
+           이동할 때 애니메이션 요소가 회전하는 방법을 지정합니다."
+  :stroke "stroke 속성은 모양의 외곽선을 칠하는 데 사용되는 색상
+           (또는 그래디언트나 패턴과 같은 SVG 페인트 서버)을 정의하는
+           프레젠테이션 속성입니다."
+  :fill "fill 속성에는 두 가지 다른 의미가 있습니다. 모양과 텍스트의 경우
+         요소를 칠하는 데 사용되는 색상(또는 그래디언트나 패턴과 같은
+         SVG 페인트 서버)을 정의하는 프레젠테이션 속성이고,
+         애니메이션의 경우 애니메이션의 최종 상태를 정의합니다."
+  :stroke-width "stroke-width 속성은 모양에 적용될 획의 너비를 정의하는
+                 프레젠테이션 속성입니다."
+  :stroke-dasharray "stroke-dasharray 속성은 모양의 외곽선을 칠하는 데
+                     사용되는 대시와 간격의 패턴을 정의하는
+                     프레젠테이션 속성입니다."
+  :opacity "opacity 속성은 객체나 객체 그룹의 투명도, 즉 요소 뒤의 배경이
+            얼마나 오버레이되는지의 정도를 지정합니다."
+  :id "id 속성은 요소에 고유한 이름을 할당합니다."
+  :class "요소에 클래스 이름 또는 클래스 이름 집합을 할당합니다.
+          동일한 클래스 이름을 여러 요소에 할당할 수 있지만,
+          여러 클래스 이름은 공백 문자로 구분해야 합니다."
+  :tabindex "tabindex 속성을 사용하면 요소가 포커스 가능한지 제어하고
+             순차적 포커스 탐색 목적으로 요소의 상대적 순서를 정의할 수 있습니다."
+  :style "style 속성을 사용하면 CSS 선언을 사용하여 요소의 스타일을 지정할 수 있습니다.
+          HTML의 style 속성과 동일하게 작동합니다."
+  :href "href 속성은 참조 URL로 리소스에 대한 링크를 정의합니다.
+         해당 링크의 정확한 의미는 이를 사용하는 각 요소의 컨텍스트에 따라 다릅니다."
+  :attribute-name "attributeName 속성은 애니메이션 중에 변경될 대상 요소의
+                   CSS 속성이나 속성의 이름을 나타냅니다."
+  :begin "begin 속성은 애니메이션이 언제 시작되어야 하는지 정의합니다."
+  :end "end 속성은 활성 지속 시간을 제한할 수 있는 애니메이션의 종료 값을 정의합니다."
+  :dur "dur 속성은 애니메이션의 단순 지속 시간을 나타냅니다."
+  :min "min 속성은 활성 애니메이션 지속 시간의 최솟값을 지정합니다."
+  :max "max 속성은 활성 애니메이션 지속 시간의 최댓값을 지정합니다."
+  :restart "restart 속성은 애니메이션을 다시 시작할 수 있는지 여부를 지정합니다."
+  :repeat-count "repeatCount 속성은 애니메이션이 실행될 횟수를 나타냅니다."
+  :repeat-dur "repeatDur 속성은 애니메이션을 반복하는 총 지속 시간을 지정합니다."
+  :calc-mode "calcMode 속성은 애니메이션의 보간 모드를 지정합니다."
+  :values "values 속성은 사용되는 컨텍스트에 따라 다른 의미를 가지며,
+           애니메이션 과정에서 사용되는 값 순서를 정의하거나
+           색상 매트릭스의 숫자 목록으로, 수행할 색상 변경 유형에 따라
+           다르게 해석됩니다."
+  :key-times "keyTimes 속성은 애니메이션의 페이싱을 제어하는 데 사용되는
+              시간 값 목록을 나타냅니다."
+  :key-splines "keySplines 속성은 keyTimes 목록과 연결된 베지어 곡선
+                제어점 집합을 정의하여 구간 페이싱을 제어하는
+                3차 베지어 함수를 정의합니다."
+  :from "from 속성은 애니메이션 중에 수정될 속성의 초기 값을 나타냅니다."
+  :to "to 속성은 애니메이션 중에 수정될 속성의 최종 값을 나타냅니다."
+  :by "by 속성은 애니메이션 중에 수정될 속성의 상대적 오프셋 값을 지정합니다."
+  :additive "additive 속성은 애니메이션이 첨가적인지 여부를 제어합니다."
+  :accumulate "accumulate 속성은 애니메이션이 누적적인지 여부를 제어합니다."
+  :view-box "viewBox 속성은 사용자 공간에서 SVG 뷰포트의 위치와 치수를 정의합니다."
+  :preserve-aspect-ratio "preserveAspectRatio 속성은 주어진 종횡비를 제공하는
+                          viewBox가 있는 요소가 다른 종횡비를 가진 뷰포트에
+                          어떻게 맞춰져야 하는지를 나타냅니다."}
+
+ :renderer.tool.impl.element.polyline
+ {:label "다중선"
+  :create-polyline "다중선 생성"}
+
+ :renderer.tool.impl.element.polygon
+ {:label "다각형"
+  :create-polygon "다각형 생성"}
+
+ :renderer.tool.impl.element.image
+ {:label "이미지"}
+
+ :renderer.tool.impl.element.core
+ {:help "클릭하고 드래그하여 요소를 생성합니다."}
+
+ :renderer.tool.impl.element.poly
+ {:add-points "클릭하여 더 많은 점을 추가합니다."
+  :finalize-shape "더블 클릭하여 모양을 완료합니다."}
+
+ :renderer.tool.impl.element.rect
+ {:label "사각형"
+  :help [:div "%1을 누르면 비율을 고정합니다."]
+  :create-rectangle "사각형 생성"}
+
+ :renderer.tool.impl.element.svg
+ {:label "SVG"
+  :help [:div "%1을 누르면 비율을 고정합니다."]
+  :create-svg "SVG 생성"}
+
+ :renderer.tool.impl.extension.blob
+ {:label "블롭"
+  :create-blob "블롭 생성"}
+
+ :renderer.tool.impl.misc.dropper
+ {:label "스포이드"
+  :help "아무 곳이나 클릭하여 색상을 선택합니다."
+  :pick-color "색상 선택"}
+
+ :renderer.tool.impl.misc.fill
+ {:label "채우기"
+  :help "요소를 클릭하여 채웁니다."
+  :fill "채우기"}
+
+ :renderer.tool.impl.misc.measure
+ {:label "측정"
+  :help "클릭하고 드래그하여 거리를 측정합니다."
+  :measure-end "측정 끝"
+  :measure-start "측정 시작"}
+
+ :renderer.tool.impl.element.text
+ {:label "텍스트"
+  :help "클릭하여 입력을 시작합니다."}
+
+ :renderer.attribute.impl.stroke-linecap
+ {:description "stroke-linecap 속성은 획이 있을 때 열린 하위 패스의
+                끝에서 사용할 모양을 정의하는 프레젠테이션 속성입니다."
+  :butt "끝점"
+  :round "둥근"
+  :square "사각"}
+
+ :renderer.attribute.impl.stroke-linejoin
+ {:description "stroke-linejoin 속성은 패스에 획이 있을 때
+                모서리에서 사용할 모양을 정의하는 프레젠테이션 속성입니다."
+  :bevel "빗면"
+  :miter "마이터"
+  :round "둥근"}
+
+ :renderer.attribute.impl.overflow
+ {:description "overflow 속성은 요소의 내용이 블록 서식 컨텍스트에
+                맞지 않을 때 어떻게 할지를 설정합니다. 이 기능은
+                아직 널리 구현되지 않았습니다."
+  :hidden "숨김"
+  :visible "보임"
+  :scroll "스크롤"
+  :auto "자동"}
+
+ :renderer.attribute.impl.color
+ {:pick-color "색상 선택"}
+
+ :renderer.attribute.impl.d
+ {:description "d 속성은 그릴 패스를 정의합니다."
+  :edit "패스 편집"
+  :absolute "(절대)"
+  :relative "(상대)"
+  :move-to "이동"
+  :line-to "직선"
+  :vertical-line "수직선"
+  :horizontal-line "수평선"
+  :cubic-bezier "3차 베지어 곡선"
+  :shortcut-cubic-bezier "단축 3차 베지어 곡선"
+  :quadratic-bezier-curve "2차 베지어 곡선"
+  :shortcut-quadratic "단축 2차 베지어 곡선"
+  :elliptical-arc-curve "타원 호 곡선"
+  :close-path "패스 닫기"}
+
+ :renderer.attribute.impl.length
+ {:increase "증가"
+  :decrease "감소"}
+
+ :renderer.attribute.impl.font-family
+ {:description "font-family 속성은 텍스트를 렌더링하는 데 사용될
+                글꼴 패밀리를 나타내며, 글꼴 패밀리 이름 및/또는
+                일반 패밀리 이름의 우선순위 목록으로 지정됩니다."
+  :search-font "글꼴 검색"
+  :select-font "글꼴 선택"
+  :no-local-font "로컬 글꼴을 찾을 수 없습니다."}
+
+ :renderer.attribute.impl.font-size
+ {:description "font-size 속성은 여러 줄의 텍스트가 다중 줄 레이아웃
+                환경에서 단색으로 설정될 때 기준선에서 기준선까지의
+                글꼴 크기를 나타냅니다."}
+
+ :renderer.attribute.impl.font-weight
+ {:description "font-weight 속성은 같은 글꼴 패밀리의 다른 글꼴과 비교하여
+                텍스트를 렌더링하는 데 사용되는 글리프의 굵기나 가벼움을
+                나타냅니다."}
+
+ :renderer.attribute.impl.crossorigin
+ {:description "crossorigin 속성은 <image> 및 <feImage> 요소에서
+                유효하며, 요소의 가져온 데이터에 대한 교차 출처
+                리소스 공유(CORS) 요청 구성을 지원합니다."
+  :anonymous "익명"
+  :use-credentials "자격 증명 사용"}
+
+ :renderer.attribute.impl.decoding
+ {:description "decoding 속성은 <image> 요소에서 유효하며,
+                브라우저가 다른 내용과 함께 단일 프레젠테이션 단계에서
+                이미지 디코딩을 수행해야 하는지('sync')와 더 '올바른'
+                것처럼 보이는지, 아니면 다른 내용을 먼저 렌더링하고
+                제시한 다음 나중에 이미지를 디코딩하고 제시해야 하는지('async')에
+                대한 힌트를 브라우저에 제공합니다. 실제로 async는
+                다음 페인트가 이미지 디코딩을 기다리지 않는다는 의미입니다."
+  :sync "동기식"
+  :async "비동기식"
+  :auto "자동"}
+
+ :renderer.tool.impl.base.edit
+ {:label "편집"
+  :help-idle-drag [:div "핸들을 드래그하여 모양을 수정합니다."]
+  :help-idle-click [:div "요소를 클릭하여 선택을 변경합니다"]
+  :help-edit [:div "%1을 누르면 방향을 제한합니다."]
+  :help-type [:div "텍스트를 입력하세요."]
+  :select-element "요소 선택"
+  :edit "편집"
+  :centroid "중심"}
+
+ :renderer.tool.impl.base.transform
+ {:label "변환"
+  :idle-click [:div "클릭하여 요소를 선택하거나 드래그하여 영역으로 선택합니다. "]
+  :idle-hold [:div "%1을 누르면 선택에 요소를 추가하거나 제거합니다."]
+  :select [:div "%1을 누르면 교차하는 요소를 선택합니다."]
+  :select-element "요소 선택"
+  :deselect-element "요소 선택 해제"
+  :translate [:div "%1을 누르면 방향을 제한하고, %2를 누르면 복제합니다."]
+  :clone [:div "%1을 누르면 방향을 제한하거나 %2를 놓으면 이동합니다"]
+  :scale [:div "%1을 누르면 비율을 고정하고, %2를 누르면 제자리에서 크기를 조정하며,
+                  %3을 누르면 하위 요소도 크기를 조정합니다."]
+  :modify-selection "선택 수정"
+  :move-selection "선택 이동"
+  :scale-selection "선택 크기 조정"
+  :clone-selection "선택 복제"
+  :scale-handle "크기 조정 핸들"}
+
+ :renderer.tool.impl.base.pan
+ {:label "팬"
+  :idle-help "클릭하고 드래그하여 팬합니다."
+  :pan-help "드래그하여 팬합니다."}
+
+ :renderer.tool.impl.base.zoom
+ {:label "확대/축소"
+  :zoom-in [:div "클릭하거나 영역을 선택하여 확대합니다."]
+  :zoom-out [:div "%1을 누르면 축소합니다."]}
+
+ :renderer.tool.impl.draw.brush
+ {:label "브러시"
+  :draw-brush "브러시 그리기"}
+
+ :renderer.tool.impl.draw.pen
+ {:label "펜"
+  :draw-line "선 그리기"}
+
+ :renderer.tool.impl.draw.core
+ {:help "클릭하고 드래그하여 그립니다."}
+
+ :renderer.tool.impl.element.circle
+ {:label "원"
+  :create-circle "원 생성"
+  :circle-radius "원 반지름"
+  :circle-center "원 중심"}
+
+ :renderer.tool.impl.element.ellipse
+ {:label "타원"
+  :create-ellipse "타원 생성"
+  :help [:div "%1을 누르면 비율을 고정합니다."]}
+
+ :renderer.tool.impl.element.line
+ {:label "선"
+  :create-line "선 생성"}
+
+ :renderer.document.events
+ {:save-changes "변경사항을 저장하시겠습니까?"
+  :create-doc "문서 생성"
+  :create-doc-from-template "템플릿으로 문서 생성"
+  :load-doc "문서 로드"
+  :error-loading "%1 로드 중 오류"
+  :unsupported-or-corrupted "파일이 지원되지 않거나 손상된 것 같습니다."}
+
+ :renderer.document.views
+ {:new "새로 만들기"
+  :open "열기"
+  :open-directory "포함 디렉토리 열기"
+  :save "저장"
+  :undo "실행 취소"
+  :redo "다시 실행"
+  :close "닫기"
+  :close-doc "문서 닫기"
+  :close-all "모두 닫기"
+  :close-saved "저장된 것 닫기"
+  :close-others "다른 것들 닫기"}
+
+ :renderer.window.views
+ {:minimize "최소화"
+  :maximize "최대화"
+  :restore "복원"
+  :close "닫기"
+  :theme "테마 모드 - %1"
+  :enter-fullscreen "전체화면 모드"
+  :exit-fullscreen "전체화면 종료"
+  :install "설치"}
+
+ :renderer.toolbar.status
+ {:select-zoom "확대/축소 레벨 선택"
+  :zoom "확대/축소"
+  :zoom-out "축소"
+  :zoom-in "확대"
+  :zoom-set-50 "50%로 설정"
+  :zoom-set-100 "100%로 설정"
+  :zoom-set-200 "200%로 설정"
+  :zoom-focus-selected "선택 항목에 초점"
+  :zoom-fit-selected "선택 항목에 맞춤"
+  :zoom-fill-selected "선택 항목 채우기"
+  :timeline "타임라인"
+  :grid "격자"
+  :rulers "눈금자"
+  :history "기록"
+  :xml "XML"
+  :fill-color "채우기 색상 선택"
+  :stroke-color "획 색상 선택"
+  :swap-color "채우기와 획 색상 바꾸기"}
+
+ :renderer.snap.views
+ {:snap "스냅"
+  :snap-options "스냅 옵션"
+  :centers "중심"
+  :midpoints "중점"
+  :corners "모서리"
+  :nodes "노드"
+  :to " ~ "}
+
+ :renderer.toolbar.object
+ {:bring-front "맨 앞으로"
+  :send-back "맨 뒤로"
+  :bring-forward "앞으로"
+  :send-backward "뒤로"
+  :group "그룹"
+  :ungroup "그룹 해제"
+  :align-left "왼쪽 정렬"
+  :align-center-hor "수평 중앙 정렬"
+  :align-right "오른쪽 정렬"
+  :align-top "위쪽 정렬"
+  :align-center-ver "수직 중앙 정렬"
+  :align-bottom "아래쪽 정렬"
+  :unite "합치기"
+  :intersect "교집합"
+  :subtract "빼기"
+  :exclude "제외"
+  :divide "나누기"}
+
+ :renderer.utils.bounds
+ {:bounds-corner "경계 모서리"
+  :bounds-center "경계 중심"
+  :bounds-midpoint "경계 중점"}
+
+ :renderer.history.events
+ {:clear-history "기록 지우기"}
+
+ :renderer.history.views
+ {:center-view "뷰 중앙"
+  :clear-history "기록 지우기"
+  :action-cannot-undone "이 작업은 실행 취소할 수 없습니다."
+  :clear-history-description "문서 기록을 지우시겠습니까?"
+  :select-element "요소 선택"
+  :delete-selection "선택 삭제"}
+
+ :renderer.timeline.views
+ {:speed "속도"
+  :no-filter "필터 없음"
+  :filter "필터"
+  :grid-snap "격자 스냅"
+  :guide-snap "가이드 스냅"
+  :play "재생"
+  :replay "다시 재생"
+  :pause "일시정지"
+  :hide-timeline "타임라인 숨기기"}
+
+ :renderer.attribute.impl.angle
+ {:pick-angle "각도 선택"}
+
+ :renderer.attribute.impl.href
+ {:select-file "파일 선택"}
+
+ :renderer.attribute.impl.points
+ {:edit-points "점 편집"}
+
+ :renderer.frame.views
+ {:main-canvas "메인 캔버스"}
+
+ :renderer.notification.views
+ {:close "닫기"
+  :error "오류"
+  :validation-error "검증 오류"
+  :clear-all "모두 지우기"
+  :event "이벤트: "}
+
+ :renderer.error.events
+ {:welcome "%1에 오신 것을 환영합니다!"
+  :reporting-description [:div
+                          [:p "익명 오류 보고서를 보내서 개선에 도움을 주시겠습니까?
+                               언제든지 \"%1\" 메뉴에서 환경설정을 변경할 수 있습니다."]
+                          [:p "자세한 정보는 %2를 읽어보세요."]]
+  :privacy-policy "개인정보 보호정책"
+  :no-thank-you "아니요, 괜찮습니다"}}
