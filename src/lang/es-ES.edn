@@ -41,8 +41,8 @@
   :cancel "Cancelar"
   :close "Cerrar"
   :ok "Aceptar"
-  :changes-will-be-lost [:p "Sus cambios en %1 se perderán si cierra el documento
-                             sin guardar."]}
+  :changes-will-be-lost [:p "Sus cambios en %1 se perderán si cierra el
+                             documento sin guardar."]}
 
  :renderer.menubar.views
  {:file "Archivo"
@@ -202,47 +202,50 @@
 
  :renderer.element.impl.shape.circle
  {:label "Círculo"
-  :description "El elemento SVG <circle> es una forma básica SVG, usado para dibujar
-                círculos basados en un punto central y un radio."}
+  :description "El elemento SVG <circle> es una forma básica SVG, usado para
+                dibujar círculos basados en un punto central y un radio."}
 
  :renderer.element.impl.shape.image
  {:label "Imagen"
-  :description "El elemento SVG <image> incluye imágenes dentro de documentos SVG.
-                Puede mostrar archivos de imagen raster u otros archivos SVG."}
+  :description "El elemento SVG <image> incluye imágenes dentro de documentos
+                SVG. Puede mostrar archivos de imagen raster u otros archivos
+                SVG."}
 
  :renderer.element.impl.shape.ellipse
  {:label "Elipse"
-  :description "El elemento <ellipse> es una forma básica SVG, usado para crear elipses
-                basadas en una coordenada central y sus radios x e y."}
+  :description "El elemento <ellipse> es una forma básica SVG, usado para
+                crear elipses basadas en una coordenada central y sus radios
+                x e y."}
 
  :renderer.element.impl.shape.line
  {:label "Línea"
-  :description "El elemento <line> es una forma básica SVG usado para crear una línea
-                que conecta dos puntos."}
+  :description "El elemento <line> es una forma básica SVG usado para crear
+                una línea que conecta dos puntos."}
 
  :renderer.element.impl.shape.path
  {:label "Trazado"
-  :description "El elemento SVG <path> es el elemento genérico para definir una forma.
-                Todas las formas básicas pueden ser creadas con un elemento path."}
+  :description "El elemento SVG <path> es el elemento genérico para definir
+                una forma. Todas las formas básicas pueden ser creadas con un
+                elemento path."}
 
  :renderer.element.impl.shape.polygon
  {:label "Polígono"
-  :description "El elemento SVG <polygon> define una forma cerrada que consiste en un
-                conjunto de segmentos de línea recta conectados. El último punto está
-                conectado al primer punto."}
+  :description "El elemento SVG <polygon> define una forma cerrada que
+                consiste en un conjunto de segmentos de línea recta
+                conectados. El último punto está conectado al primer punto."}
 
  :renderer.element.impl.shape.polyline
  {:label "Polilínea"
-  :description "El elemento SVG <polyline> es una forma básica SVG que crea líneas
-                rectas conectando varios puntos. Típicamente una polilínea se usa para
-                crear formas abiertas ya que el último punto no tiene que estar conectado
-                al primer punto."}
+  :description "El elemento SVG <polyline> es una forma básica SVG que crea
+                líneas rectas conectando varios puntos. Típicamente una
+                polilínea se usa para crear formas abiertas ya que el último
+                punto no tiene que estar conectado al primer punto."}
 
  :renderer.element.impl.shape.rect
  {:label "Rectángulo"
-  :description "El elemento <rect> es una forma SVG básica que dibuja rectángulos,
-                definidos por su posición, ancho y alto. Los rectángulos pueden tener
-                sus esquinas redondeadas."}
+  :description "El elemento <rect> es una forma SVG básica que dibuja
+                rectángulos, definidos por su posición, ancho y alto. Los
+                rectángulos pueden tener sus esquinas redondeadas."}
 
  :renderer.element.impl.custom.blob
  {:x "Coordenada horizontal del centro del blob."
@@ -266,18 +269,20 @@
 
  :renderer.element.impl.container.canvas
  {:label "Lienzo"
-  :description "El lienzo es el contenedor SVG principal que aloja todos los elementos."}
+  :description "El lienzo es el contenedor SVG principal que aloja todos los
+                elementos."}
 
  :renderer.element.impl.container.svg
- {:description "El elemento svg es un contenedor que define un nuevo sistema de
-                coordenadas y viewport. Se usa como el elemento más externo de documentos
-                SVG, pero también puede usarse para incrustar un fragmento SVG dentro de
-                un documento SVG o HTML."}
+ {:description "El elemento svg es un contenedor que define un nuevo sistema
+                de coordenadas y viewport. Se usa como el elemento más externo
+                de documentos SVG, pero también puede usarse para incrustar
+                un fragmento SVG dentro de un documento SVG o HTML."}
 
  :renderer.element.impl.text
- {:description "El elemento SVG <text> dibuja un elemento gráfico que consiste en texto.
-                Es posible aplicar un degradado, patrón, trazado de recorte, máscara o
-                filtro a <text>, como cualquier otro elemento gráfico SVG."
+ {:description "El elemento SVG <text> dibuja un elemento gráfico que
+                consiste en texto. Es posible aplicar un degradado, patrón,
+                trazado de recorte, máscara o filtro a <text>, como cualquier
+                otro elemento gráfico SVG."
   :label "Texto"
   :remove-text "Eliminar texto"
   :set-text "Establecer texto"}
@@ -297,105 +302,111 @@
   :attributes-title "%1 %2 elementos"}
 
  :renderer.attribute.impl.core
- {:x "El atributo x define una coordenada del eje x en el sistema de coordenadas
-      del usuario."
-  :y "El atributo y define una coordenada del eje y en el sistema de coordenadas
-      del usuario."
-  :x1 "El atributo x1 se usa para especificar la primera coordenada x para dibujar un
-       elemento SVG que requiere más de una coordenada. Elementos que solo necesitan
-       una coordenada usan el atributo x en su lugar."
-  :y1 "El atributo y1 se usa para especificar la primera coordenada y para dibujar un
-       elemento SVG que requiere más de una coordenada. Elementos que solo necesitan
-       una coordenada usan el atributo y en su lugar."
-  :x2 "El atributo x2 se usa para especificar la segunda coordenada x para dibujar un
-       elemento SVG que requiere más de una coordenada. Elementos que solo necesitan
-       una coordenada usan el atributo x en su lugar."
-  :y2 "El atributo y2 se usa para especificar la segunda coordenada y para dibujar un
-       elemento SVG que requiere más de una coordenada. Elementos que solo necesitan
-       una coordenada usan el atributo y en su lugar."
+ {:x "El atributo x define una coordenada del eje x en el sistema de
+      coordenadas del usuario."
+  :y "El atributo y define una coordenada del eje y en el sistema de
+      coordenadas del usuario."
+  :x1 "El atributo x1 se usa para especificar la primera coordenada x para
+       dibujar un elemento SVG que requiere más de una coordenada. Elementos
+       que solo necesitan una coordenada usan el atributo x en su lugar."
+  :y1 "El atributo y1 se usa para especificar la primera coordenada y para
+       dibujar un elemento SVG que requiere más de una coordenada. Elementos
+       que solo necesitan una coordenada usan el atributo y en su lugar."
+  :x2 "El atributo x2 se usa para especificar la segunda coordenada x para
+       dibujar un elemento SVG que requiere más de una coordenada. Elementos
+       que solo necesitan una coordenada usan el atributo x en su lugar."
+  :y2 "El atributo y2 se usa para especificar la segunda coordenada y para
+       dibujar un elemento SVG que requiere más de una coordenada. Elementos
+       que solo necesitan una coordenada usan el atributo y en su lugar."
   :cx "El atributo cx define la coordenada del eje x de un punto central."
   :cy "El atributo cy define la coordenada del eje y de un punto central."
-  :dx "El atributo dx indica un desplazamiento a lo largo del eje x en la posición
-       de un elemento o su contenido."
-  :dy "El atributo dy indica un desplazamiento a lo largo del eje y en la posición
-       de un elemento o su contenido."
-  :width "El atributo width define la longitud horizontal de un elemento en el
-          sistema de coordenadas del usuario."
-  :height "El atributo height define la longitud vertical de un elemento en el
-           sistema de coordenadas del usuario."
+  :dx "El atributo dx indica un desplazamiento a lo largo del eje x en la
+       posición de un elemento o su contenido."
+  :dy "El atributo dy indica un desplazamiento a lo largo del eje y en la
+       posición de un elemento o su contenido."
+  :width "El atributo width define la longitud horizontal de un elemento en
+          el sistema de coordenadas del usuario."
+  :height "El atributo height define la longitud vertical de un elemento en
+           el sistema de coordenadas del usuario."
   :rx "El atributo rx define un radio en el eje x."
   :ry "El atributo ry define un radio en el eje y."
   :r "El atributo r define el radio de un círculo."
-  :rotate "El atributo rotate especifica cómo rota el elemento animado mientras
-           viaja a lo largo de un trazado especificado en un elemento <animateMotion>."
-  :stroke "El atributo stroke es un atributo de presentación que define el color
-           (o cualquier servidor de pintura SVG como degradados o patrones) usado para
-           pintar el contorno de la forma."
-  :fill "El atributo fill tiene dos significados diferentes. Para formas y texto es un
-         atributo de presentación que define el color (o cualquier servidor de pintura
-         SVG como degradados o patrones) usado para pintar el elemento; para animación
-         define el estado final de la animación."
-  :stroke-width "El atributo stroke-width es un atributo de presentación que define
-                 el ancho del trazo a aplicar a la forma."
-  :stroke-dasharray "El atributo stroke-dasharray es un atributo de presentación que
-                     define el patrón de rayas y espacios usado para pintar el contorno
-                     de la forma."
-  :opacity "El atributo opacity especifica la transparencia de un objeto o de un grupo
-            de objetos, es decir, el grado al cual el fondo detrás del elemento está
-            superpuesto."
+  :rotate "El atributo rotate especifica cómo rota el elemento animado
+           mientras viaja a lo largo de un trazado especificado en un elemento
+           <animateMotion>."
+  :stroke "El atributo stroke es un atributo de presentación que define el
+           color (o cualquier servidor de pintura SVG como degradados o
+           patrones) usado para pintar el contorno de la forma."
+  :fill "El atributo fill tiene dos significados diferentes. Para formas y
+         texto es un atributo de presentación que define el color (o cualquier
+         servidor de pintura SVG como degradados o patrones) usado para pintar
+         el elemento; para animación define el estado final de la animación."
+  :stroke-width "El atributo stroke-width es un atributo de presentación que
+                 define el ancho del trazo a aplicar a la forma."
+  :stroke-dasharray "El atributo stroke-dasharray es un atributo de
+                     presentación que define el patrón de rayas y espacios
+                     usado para pintar el contorno de la forma."
+  :opacity "El atributo opacity especifica la transparencia de un objeto o
+            de un grupo de objetos, es decir, el grado al cual el fondo detrás
+            del elemento está superpuesto."
   :id "El atributo id asigna un nombre único a un elemento."
-  :class "Asigna un nombre de clase o conjunto de nombres de clase a un elemento.
-          Puede asignar el mismo nombre de clase o nombres a cualquier número de
-          elementos, sin embargo, múltiples nombres de clase deben estar separados por
-          caracteres de espacio en blanco."
-  :tabindex "El atributo tabindex le permite controlar si un elemento es enfocable
-             y definir el orden relativo del elemento para propósitos de navegación
-             secuencial de foco."
-  :style "El atributo style permite estilizar un elemento usando declaraciones CSS.
-          Funciona idénticamente al atributo style en HTML."
-  :href "El atributo href define un enlace a un recurso como una URL de referencia.
-         El significado exacto de ese enlace depende del contexto de cada elemento
-         que lo usa."
-  :attribute-name "El atributo attributeName indica el nombre de la propiedad CSS o
-                   atributo del elemento objetivo que va a ser cambiado durante una
-                   animación."
+  :class "Asigna un nombre de clase o conjunto de nombres de clase a un
+          elemento. Puede asignar el mismo nombre de clase o nombres a
+          cualquier número de elementos, sin embargo, múltiples nombres de
+          clase deben estar separados por caracteres de espacio en blanco."
+  :tabindex "El atributo tabindex le permite controlar si un elemento es
+             enfocable y definir el orden relativo del elemento para propósitos
+             de navegación secuencial de foco."
+  :style "El atributo style permite estilizar un elemento usando
+          declaraciones CSS. Funciona idénticamente al atributo style en HTML."
+  :href "El atributo href define un enlace a un recurso como una URL de
+         referencia. El significado exacto de ese enlace depende del contexto
+         de cada elemento que lo usa."
+  :attribute-name "El atributo attributeName indica el nombre de la propiedad
+                   CSS o atributo del elemento objetivo que va a ser cambiado
+                   durante una animación."
   :begin "El atributo begin define cuándo debe comenzar una animación."
-  :end "El atributo end define un valor final para la animación que puede restringir
-        la duración activa."
+  :end "El atributo end define un valor final para la animación que puede
+        restringir la duración activa."
   :dur "El atributo dur indica la duración simple de una animación."
-  :min "El atributo min especifica el valor mínimo de la duración de animación activa."
-  :max "El atributo max especifica el valor máximo de la duración de animación activa."
-  :restart "El atributo restart especifica si una animación puede reiniciarse o no."
-  :repeat-count "El atributo repeatCount indica el número de veces que una animación
-                 tendrá lugar."
-  :repeat-dur "El atributo repeatDur especifica la duración total para repetir una
-               animación."
-  :calc-mode "El atributo calcMode especifica el modo de interpolación para la
-              animación."
-  :values "El atributo values tiene diferentes significados, dependiendo del contexto
-           donde se usa, ya sea define una secuencia de valores usados durante el
-           curso de una animación, o es una lista de números para una matriz de color,
-           que se interpreta de manera diferente dependiendo del tipo de cambio de
-           color a realizar."
-  :key-times "El atributo keyTimes representa una lista de valores de tiempo usados
-              para controlar el ritmo de la animación."
-  :key-splines "El atributo keySplines define un conjunto de puntos de control de
-                curva de Bézier asociados con la lista keyTimes, definiendo una función
-                de Bézier cúbica que controla el ritmo del intervalo"
-  :from "El atributo from indica el valor inicial del atributo que será modificado
-         durante la animación."
-  :to "El atributo to indica el valor final del atributo que será modificado durante
-       la animación."
-  :by "El atributo by especifica un valor de desplazamiento relativo para un atributo
-       que será modificado durante una animación."
+  :min "El atributo min especifica el valor mínimo de la duración de animación
+        activa."
+  :max "El atributo max especifica el valor máximo de la duración de animación
+        activa."
+  :restart "El atributo restart especifica si una animación puede
+            reiniciarse o no."
+  :repeat-count "El atributo repeatCount indica el número de veces que una
+                 animación tendrá lugar."
+  :repeat-dur "El atributo repeatDur especifica la duración total para
+               repetir una animación."
+  :calc-mode "El atributo calcMode especifica el modo de interpolación para
+              la animación."
+  :values "El atributo values tiene diferentes significados, dependiendo del
+           contexto donde se usa, ya sea define una secuencia de valores
+           usados durante el curso de una animación, o es una lista de números
+           para una matriz de color, que se interpreta de manera diferente
+           dependiendo del tipo de cambio de color a realizar."
+  :key-times "El atributo keyTimes representa una lista de valores de tiempo
+              usados para controlar el ritmo de la animación."
+  :key-splines "El atributo keySplines define un conjunto de puntos de
+                control de curva de Bézier asociados con la lista keyTimes,
+                definiendo una función de Bézier cúbica que controla el ritmo
+                del intervalo"
+  :from "El atributo from indica el valor inicial del atributo que será
+         modificado durante la animación."
+  :to "El atributo to indica el valor final del atributo que será modificado
+       durante la animación."
+  :by "El atributo by especifica un valor de desplazamiento relativo para
+       un atributo que será modificado durante una animación."
   :additive "El atributo additive controla si una animación es aditiva o no."
-  :accumulate "El atributo accumulate controla si una animación es acumulativa o no."
-  :view-box "El atributo viewBox define la posición y dimensión, en espacio de usuario,
-             de un viewport SVG."
-  :preserve-aspect-ratio "El atributo preserveAspectRatio indica cómo un elemento con
-                          un viewBox que proporciona una proporción de aspecto dada
-                          debe ajustarse en un viewport con una proporción de aspecto
-                          diferente."}
+  :accumulate "El atributo accumulate controla si una animación es
+               acumulativa o no."
+  :view-box "El atributo viewBox define la posición y dimensión, en espacio
+             de usuario, de un viewport SVG."
+  :preserve-aspect-ratio "El atributo preserveAspectRatio indica cómo un
+                          elemento con un viewBox que proporciona una
+                          proporción de aspecto dada debe ajustarse en un
+                          viewport con una proporción de aspecto diferente."}
 
  :renderer.tool.impl.element.core
  {:help "Haga clic y arrastre para crear un elemento."}
@@ -450,23 +461,26 @@
  {:label "Imagen"}
 
  :renderer.attribute.impl.stroke-linecap
- {:description "El atributo stroke-linecap es un atributo de presentación que define
-                la forma a usar al final de subtrazados abiertos cuando son trazados."
+ {:description "El atributo stroke-linecap es un atributo de presentación que
+                define la forma a usar al final de subtrazados abiertos cuando
+                son trazados."
   :butt "Romo"
   :round "Redondo"
   :square "Cuadrado"}
 
  :renderer.attribute.impl.stroke-linejoin
- {:description "El atributo stroke-linejoin es un atributo de presentación que define
-                la forma a usar en las esquinas de trazados cuando son trazados."
+ {:description "El atributo stroke-linejoin es un atributo de presentación
+                que define la forma a usar en las esquinas de trazados cuando
+                son trazados."
   :bevel "Bisel"
   :miter "Ingleteado"
   :round "Redondo"}
 
  :renderer.attribute.impl.overflow
- {:description "El atributo overflow establece qué hacer cuando el contenido de un
-                elemento es demasiado grande para caber en su contexto de formateo de
-                bloque. Esta característica aún no está ampliamente implementada."
+ {:description "El atributo overflow establece qué hacer cuando el contenido
+                de un elemento es demasiado grande para caber en su contexto
+                de formateo de bloque. Esta característica aún no está
+                ampliamente implementada."
   :hidden "Oculto"
   :visible "Visible"
   :scroll "Desplazamiento"
@@ -496,38 +510,41 @@
   :decrease "Disminuir"}
 
  :renderer.attribute.impl.font-family
- {:description "El atributo font-family indica qué familia de fuente se usará para
-                renderizar el texto, especificada como una lista priorizada de nombres
-                de familia de fuente y/o nombres de familia genérica."
+ {:description "El atributo font-family indica qué familia de fuente se usará
+                para renderizar el texto, especificada como una lista
+                priorizada de nombres de familia de fuente y/o nombres de
+                familia genérica."
   :search-font "Buscar una fuente"
   :select-font "Seleccionar fuente"
   :no-local-font "No se encontraron fuentes locales."}
 
  :renderer.attribute.impl.font-size
- {:description "El atributo font-size se refiere al tamaño de la fuente de línea base
-                a línea base cuando múltiples líneas de texto se establecen sólidas en
-                un entorno de diseño multilínea."}
+ {:description "El atributo font-size se refiere al tamaño de la fuente de
+                línea base a línea base cuando múltiples líneas de texto se
+                establecen sólidas en un entorno de diseño multilínea."}
 
  :renderer.attribute.impl.font-weight
- {:description "El atributo font-weight se refiere a la negrita o ligereza de los
-                glifos usados para renderizar el texto, relativo a otras fuentes en la
-                misma familia de fuente."}
+ {:description "El atributo font-weight se refiere a la negrita o ligereza
+                de los glifos usados para renderizar el texto, relativo a
+                otras fuentes en la misma familia de fuente."}
 
  :renderer.attribute.impl.crossorigin
- {:description "El atributo crossorigin, válido en los elementos <image> y <feImage>,
-                proporciona soporte para la configuración de las solicitudes Cross-Origin
-                Resource Sharing (CORS) para los datos obtenidos del elemento."
+ {:description "El atributo crossorigin, válido en los elementos <image> y
+                <feImage>, proporciona soporte para la configuración de las
+                solicitudes Cross-Origin Resource Sharing (CORS) para los
+                datos obtenidos del elemento."
   :anonymous "Anónimo"
   :use-credentials "Usar credenciales"}
 
  :renderer.attribute.impl.decoding
- {:description "El atributo decoding, válido en elementos <image>, proporciona una pista
-                al navegador sobre si debe realizar la decodificación de imagen junto con
-                la renderización de otro contenido en un solo paso de presentación que
-                se ve más \"correcto\" (sync), o renderizar y presentar el otro contenido
-                primero y luego decodificar la imagen y presentarla después (async). En
-                la práctica, async significa que el siguiente paint no espera a que la
-                imagen se decodifique."
+ {:description "El atributo decoding, válido en elementos <image>, proporciona
+                una pista al navegador sobre si debe realizar la decodificación
+                de imagen junto con la renderización de otro contenido en un
+                solo paso de presentación que se ve más \"correcto\" (sync), o
+                renderizar y presentar el otro contenido primero y luego
+                decodificar la imagen y presentarla después (async). En la
+                práctica, async significa que el siguiente paint no espera a
+                que la imagen se decodifique."
   :sync "Sincrónicamente"
   :async "Asincrónicamente"
   :auto "Automático"}
@@ -546,14 +563,17 @@
  {:label "Transformar"
   :idle-click [:div "Haga clic para seleccionar un elemento o arrastre para
                      seleccionar por área. "]
-  :idle-hold [:div "Mantenga %1 para agregar o quitar elementos de la selección."]
+  :idle-hold [:div "Mantenga %1 para agregar o quitar elementos de la
+                    selección."]
   :select [:div "Mantenga %1 para seleccionar elementos que se intersecan."]
   :select-element "Seleccionar elemento"
   :deselect-element "Deseleccionar elemento"
-  :translate [:div "Mantenga %1 para restringir la dirección, y %2 para clonar."]
-  :clone [:div "Mantenga %1 para restringir la dirección. o suelte %2 para mover"]
-  :scale [:div "Mantenga %1 para bloquear proporciones, %2 para escalar en el lugar,
-                %3 para también escalar hijos."]
+  :translate [:div "Mantenga %1 para restringir la dirección, y %2 para
+                    clonar."]
+  :clone [:div "Mantenga %1 para restringir la dirección. o suelte %2 para
+                mover"]
+  :scale [:div "Mantenga %1 para bloquear proporciones, %2 para escalar en el
+                lugar, %3 para también escalar hijos."]
   :modify-selection "Modificar selección"
   :move-selection "Mover selección"
   :scale-selection "Escalar selección"
@@ -602,7 +622,8 @@
   :create-doc-from-template "Crear documento desde plantilla"
   :load-doc "Cargar documento"
   :error-loading "Error al cargar %1"
-  :unsupported-or-corrupted "El archivo parece no ser compatible o estar corrupto."}
+  :unsupported-or-corrupted "El archivo parece no ser compatible o estar
+                             corrupto."}
 
  :renderer.document.views
  {:new "Nuevo"
@@ -687,8 +708,8 @@
  {:center-view "Centrar vista"
   :clear-history "Limpiar historial"
   :action-cannot-undone "Esta acción no se puede deshacer."
-  :clear-history-description "¿Está seguro de que desea limpiar el historial del
-                              documento?"
+  :clear-history-description "¿Está seguro de que desea limpiar el historial
+                              del documento?"
   :select-element "Seleccionar elemento"
   :delete-selection "Eliminar selección"}
 
@@ -725,9 +746,11 @@
  :renderer.error.events
  {:welcome "¡Bienvenido a %1!"
   :reporting-description [:div
-                          [:p "¿Te gustaría ayudarnos a mejorar enviando informes de
-                              errores anónimos? Puedes cambiar tu preferencia en cualquier
-                              momento desde nuestro menú \"%1\"."]
-                          [:p "Para más información, por favor lee nuestra %2."]]
+                          [:p "¿Te gustaría ayudarnos a mejorar enviando
+                               informes de errores anónimos? Puedes cambiar tu
+                               preferencia en cualquier momento desde nuestro
+                               menú \"%1\"."]
+                          [:p "Para más información, por favor lee nuestra
+                               %2."]]
   :privacy-policy "política de privacidad"
   :no-thank-you "No, gracias"}}
