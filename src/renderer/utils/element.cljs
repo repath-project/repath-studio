@@ -111,7 +111,10 @@
            (assoc-in [:attrs :d] d))
 
        (instance? js/Promise d)
-       (.then d (fn [d] (->path el d)))))))
+       (.then d (partial ->path el))
+
+       :else
+       el))))
 
 (m/=> stroke->path [:-> Element Element])
 (defn stroke->path
