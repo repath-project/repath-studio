@@ -24,7 +24,7 @@
 
 (defmethod tool.hierarchy/on-activate :dropper
   [db]
-  (if (.-EyeDropper js/window)
+  (if (contains? (:features db) :eye-dropper)
     (tool.handlers/add-fx db [::effects/eye-dropper {:on-success [::success]
                                                      :on-error [::error]}])
     (-> db
