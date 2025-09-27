@@ -44,15 +44,17 @@
   (rf/inject-cofx ::app.effects/versions)
   (rf/inject-cofx ::app.effects/env)
   (rf/inject-cofx ::app.effects/standalone)
-  (rf/inject-cofx ::app.effects/features)]
- (fn [{:keys [user-agent platform versions env standalone features]} _]
+  (rf/inject-cofx ::app.effects/features)
+  (rf/inject-cofx ::app.effects/language)]
+ (fn [{:keys [user-agent platform versions env standalone features language]} _]
    {:db (assoc app.db/default
                :platform platform
                :versions versions
                :env env
                :standalone standalone
                :user-agent user-agent
-               :features features)
+               :features features
+               :system-lang language)
     :fx (into [[::app.effects/get-local-db
                 {:on-success [::load-local-db]
                  :on-error [::notification.events/show-exception]
@@ -96,20 +98,14 @@
 
 (rf/reg-event-fx
  ::db-loaded
- [(rf/inject-cofx ::effects/guid)
-  (rf/inject-cofx ::app.effects/language)]
- (fn [{:keys [db guid language]} _]
+ [(rf/inject-cofx ::effects/guid)]
+ (fn [{:keys [db guid]} _]
    (let [initial-document (:active-document db)]
-     {:db (cond-> db
-            :always
-            (assoc :system-lang language)
-
-            (not initial-document)
-            (-> (document.handlers/create guid)
-                (history.handlers/finalize [::create-doc "Create document"]))
-
-            initial-document
-            (snap.handlers/rebuild-tree))
+     {:db (if initial-document
+            (snap.handlers/rebuild-tree db)
+            (-> db
+                (document.handlers/create guid)
+                (history.handlers/finalize [::create-doc "Create document"])))
       :fx (into [[:dispatch [::error.events/init-reporting]]
                  [:dispatch [::theme.events/set-document-attr]]
                  [:dispatch [::set-lang-attrs]]
