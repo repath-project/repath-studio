@@ -108,7 +108,7 @@
            {:id :save-as
             :label (t [::save-as "Save as..."])
             :icon "save-as"
-            :action [::document.events/save-as]
+            :action [::document.events/save {:as true}]
             :disabled (not @(rf/subscribe [::document.subs/entities?]))}
            {:id :export
             :label (t [::export-as "Export as"])

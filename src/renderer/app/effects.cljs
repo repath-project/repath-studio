@@ -75,23 +75,25 @@
 
 (defn- json->clj
   [data]
-  (-> (transit/reader :json)
-      (transit/read data)))
+  (let [reader (transit/reader :json)]
+    (try (transit/read reader data)
+         (catch :default err
+           (rf/dispatch [::notification.events/show-exception err])))))
+
+(defn- clj->json
+  [data]
+  (let [writer (transit/writer :json)]
+    (try (transit/write writer data)
+         (catch :default err
+           (rf/dispatch [::notification.events/show-exception err])))))
 
 (rf/reg-fx
- ::get-local-db
- (fn [{:keys [on-success on-error on-finally]}]
-   (-> (localforage/getItem config/app-name)
+ ::get-local-store
+ (fn [{:keys [store-key on-success on-error on-finally]}]
+   (-> (localforage/getItem store-key)
        (.then #(some-> on-success (conj (json->clj %)) rf/dispatch))
        (.catch #(some-> on-error (conj %) rf/dispatch))
        (.finally #(some-> on-finally rf/dispatch)))))
-
-(defn- ->json
-  [db]
-  (let [writer (transit/writer :json)]
-    (try (transit/write writer db)
-         (catch :default err
-           (rf/dispatch [::notification.events/show-exception err])))))
 
 (defn persist
   []
@@ -99,7 +101,7 @@
                          (history.handlers/drop-rest)
                          (document.handlers/remove-file-handle)
                          (select-keys app.db/persisted-keys))]
-    (when-let [json (->json persisted-db)]
+    (when-let [json (clj->json persisted-db)]
       (-> (localforage/setItem config/app-name json)
           (.catch #(rf/dispatch [::notification.events/show-exception %]))))))
 

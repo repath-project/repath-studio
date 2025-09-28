@@ -45,22 +45,18 @@
   (-> (assoc db :active-document id)
       (snap.handlers/rebuild-tree)))
 
-(m/=> persisted-format [:function
-                        [:-> App PersistedDocument]
-                        [:-> App uuid? PersistedDocument]])
+(m/=> persisted-format [:-> App uuid? PersistedDocument])
 (defn persisted-format
-  ([db]
-   (persisted-format db (:active-document db)))
-  ([db id]
-   (let [document (-> (entity db id)
-                      (assoc :version (:version db)))]
-     (->> (:elements document)
-          (keys)
-          (reduce (fn [document el-id]
-                    (update-in document [:elements el-id] dissoc :selected))
-                  (m/decode PersistedDocument
-                            document
-                            m.transform/strip-extra-keys-transformer))))))
+  [db id]
+  (let [document (-> (entity db id)
+                     (assoc :version (:version db)))]
+    (->> (:elements document)
+         (keys)
+         (reduce (fn [document el-id]
+                   (update-in document [:elements el-id] dissoc :selected))
+                 (m/decode PersistedDocument
+                           document
+                           m.transform/strip-extra-keys-transformer)))))
 
 (m/=> close [:-> App uuid? App])
 (defn close

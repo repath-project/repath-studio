@@ -1,5 +1,6 @@
 (ns renderer.app.events
   (:require
+   [config :as config]
    [re-frame.core :as rf]
    [renderer.app.db :as app.db]
    [renderer.app.effects :as-alias app.effects]
@@ -55,16 +56,17 @@
                :user-agent user-agent
                :features features
                :system-lang language)
-    :fx (into [[::app.effects/get-local-db
-                {:on-success [::load-local-db]
+    :fx (into [[::app.effects/get-local-store
+                {:store-key config/app-name
+                 :on-success [::load-local-db]
                  :on-error [::notification.events/show-exception]
                  :on-finally [::db-loaded]}]]
               ipc-listeners)}))
 
 (rf/reg-event-fx
  ::load-local-db
- (fn [{:keys [db]} [_ local-stored-db]]
-   (let [app-db (merge db local-stored-db)]
+ (fn [{:keys [db]} [_ persisted-db]]
+   (let [app-db (merge db persisted-db)]
      (if (app.db/valid? app-db)
        {:db app-db}
        {::app.effects/clear-local-storage nil}))))
@@ -101,22 +103,21 @@
  ::db-loaded
  [(rf/inject-cofx ::effects/guid)]
  (fn [{:keys [db guid]} _]
-   (let [initial-document (:active-document db)]
-     {:db (if initial-document
-            (snap.handlers/rebuild-tree db)
-            (-> db
-                (document.handlers/create guid)
-                (history.handlers/finalize [::create-doc "Create document"])))
-      :fx (into [[:dispatch [::error.events/init-reporting]]
-                 [:dispatch [::theme.events/set-document-attr]]
-                 [:dispatch [::set-lang-attrs]]
-                 [::theme.effects/add-listener [::theme.events/set-document-attr]]
-                 [:dispatch [::set-loading false]]
-                 ;; We flush to render once so we can get the canvas size.
-                 [:dispatch ^:flush-dom [::document.events/center]]
-                 [:dispatch [::window.events/update-focused]]
-                 [::effects/ipc-send ["initialized"]]]
-                listeners)})))
+   {:db (if (:active-document db)
+          (snap.handlers/rebuild-tree db)
+          (-> db
+              (document.handlers/create guid)
+              (history.handlers/finalize [::create-doc "Create document"])))
+    :fx (into [[:dispatch [::error.events/init-reporting]]
+               [:dispatch [::theme.events/set-document-attr]]
+               [:dispatch [::set-lang-attrs]]
+               [::theme.effects/add-listener [::theme.events/set-document-attr]]
+               [:dispatch [::set-loading false]]
+               ;; We flush to render once so we can get the canvas size.
+               [:dispatch ^:flush-dom [::document.events/center]]
+               [:dispatch [::window.events/update-focused]]
+               [::effects/ipc-send ["initialized"]]]
+              listeners)}))
 
 (rf/reg-event-db
  ::set-system-fonts

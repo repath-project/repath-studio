@@ -69,7 +69,8 @@
     [:button.button.px-2.rounded.flex-1.accent
      {:auto-focus true
       :on-click #(rf/dispatch [::dialog.events/close
-                               [::document.events/save-and-close id]])}
+                               [::document.events/save {:id id
+                                                        :close true}]])}
      (t [::save "Save"])]]])
 
 (defn cmdk-item

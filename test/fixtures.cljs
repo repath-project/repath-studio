@@ -1,11 +1,14 @@
 (ns fixtures
   (:require
+   [config :as config]
    [re-frame.core :as rf]
    [renderer.app.effects :as-alias app.effects]
    [renderer.effects :as-alias effects]
    [renderer.error.effects :as-alias error.effects]
    [renderer.theme.effects :as-alias theme.effects]
    [renderer.window.effects :as-alias window.effects]))
+
+(def local-store {config/app-name {}})
 
 (defn test-fixtures
   []
@@ -14,9 +17,10 @@
    (fn [_]))
 
   (rf/reg-fx
-   ::app.effects/get-local-db
-   (fn [{:keys [on-finally]}]
-     (rf/dispatch on-finally)))
+   ::app.effects/get-local-store
+   (fn [{:keys [store-key on-success on-finally]}]
+     (some-> on-success (conj (get local-store store-key)) rf/dispatch)
+     (some-> on-finally rf/dispatch)))
 
   (rf/reg-cofx
    ::window.effects/fullscreen

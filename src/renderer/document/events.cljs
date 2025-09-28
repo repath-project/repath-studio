@@ -234,85 +234,48 @@
 
 (rf/reg-event-fx
  ::save
- (fn [{:keys [db]} [_]]
-   (let [file-handle (:file-handle (document.handlers/active db))
-         persisted-document (document.handlers/persisted-format db)]
+ (fn [{:keys [db]} [_ {:keys [as close id]}]]
+   (let [id (or id (:active-document db))
+         document (document.handlers/entity db id)
+         persisted-document (document.handlers/persisted-format db id)
+         on-success [::saved close]
+         on-error [::notification.events/show-exception]]
      (if (= (:platform db) "web")
        {::effects/file-save
         {:data (document.handlers/->save-format persisted-document)
-         :file-handle file-handle
+         :file-handle (when-not as (:file-handle document))
          :options file-picker-options
          :formatter (partial document.handlers/saved-info persisted-document)
-         :on-success [::saved]
-         :on-error [::notification.events/show-exception]}}
+         :on-success on-success
+         :on-error on-error}}
        {::effects/ipc-invoke
-        {:channel "save-document"
+        {:channel (if as "save-document-as" "save-document")
          :data (pr-str persisted-document)
-         :on-success [::saved]
-         :on-error [::notification.events/show-exception]
+         :on-success on-success
+         :on-error on-error
          :formatter string->edn}}))))
 
 (rf/reg-event-fx
  ::download
  (fn [{:keys [db]} [_]]
-   (let [document (document.handlers/persisted-format db)]
+   (when-let [document (some->> (:active-document db)
+                                (document.handlers/persisted-format db))]
      {::effects/download {:data (document.handlers/->save-format document)
                           :title (str "document." config/ext)}})))
 
 (rf/reg-event-fx
- ::save-and-close
- (fn [{:keys [db]} [_ id]]
-   (let [file-handle (:file-handle (document.handlers/entity db id))
-         persisted-document (document.handlers/persisted-format db id)]
-     (if (= (:platform db) "web")
-       {::effects/file-save
-        {:data (document.handlers/->save-format persisted-document)
-         :file-handle file-handle
-         :options file-picker-options
-         :formatter (partial document.handlers/saved-info persisted-document)
-         :on-success [::mark-as-saved-and-close]
-         :on-error [::notification.events/show-exception]}}
-       {::effects/ipc-invoke
-        {:channel "save-document"
-         :data (pr-str persisted-document)
-         :on-success [::mark-as-saved-and-close]
-         :on-error [::notification.events/show-exception]
-         :formatter string->edn}}))))
-
-(rf/reg-event-fx
- ::save-as
- (fn [{:keys [db]} [_]]
-   (let [document (document.handlers/persisted-format db)]
-     (if (= (:platform db) "web")
-       {::effects/file-save
-        {:data (document.handlers/->save-format document)
-         :options file-picker-options
-         :formatter (partial document.handlers/saved-info document)
-         :on-success [::saved]
-         :on-error [::notification.events/show-exception]}}
-       {::effects/ipc-invoke
-        {:channel "save-document-as"
-         :data (pr-str document)
-         :on-success [::saved]
-         :on-error [::notification.events/show-exception]
-         :formatter string->edn}}))))
-
-(rf/reg-event-db
  ::saved
  [persist]
- (fn [db [_ save-info]]
-   (cond-> db
-     save-info
-     (document.handlers/update-saved-info save-info)
+ (fn [{:keys [db]} [_ close save-info]]
+   {:db (cond-> db
+          save-info
+          (document.handlers/update-saved-info save-info)
 
-     (:path save-info)
-     (document.handlers/add-recent (:path save-info)))))
+          (:path save-info)
+          (document.handlers/add-recent (:path save-info))
 
-(rf/reg-event-fx
- ::mark-as-saved-and-close
- (fn [_ [_ document-info]]
-   {:dispatch-n [[::saved document-info]
-                 [::close (:id document-info) false]]}))
+          close
+          (document.handlers/close (:id save-info)))}))
 
 (rf/reg-event-db
  ::clear-recent

@@ -210,7 +210,7 @@
                 [[::document.events/open nil]
                  [{:keyCode (key-codes "O")
                    :ctrlKey true}]]
-                [[::document.events/save-as]
+                [[::document.events/save {:as true}]
                  [{:keyCode (key-codes "S")
                    :ctrlKey true
                    :shiftKey true}]]

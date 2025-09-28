@@ -105,7 +105,8 @@
 
       (= (:key e) "Shift")
       (-> (assoc-in [:snap :transient-active] true)
-          (cond-> (not (-> db :snap :active))
+          (cond->
+           (not (-> db :snap :active))
             (-> (dissoc :nearest-neighbor)
                 (snap.handlers/rebuild-tree))))
 
