@@ -80,12 +80,11 @@
       :icon "window-close"}]))
 
 (defn app-icon []
-  (let [rtl? @(rf/subscribe [::app.subs/rtl?])]
-    [:div.drag.shrink-0.hidden.sm:block
-     {:class (if rtl? "pr-2" "pl-2")}
-     [:img.h-4.w-4
-      {:src "img/icon-no-bg.svg"
-       :alt "logo"}]]))
+  [:div.drag.shrink-0.hidden.sm:block
+   {:class "px-2"}
+   [:img.h-4.w-4
+    {:src "img/icon-no-bg.svg"
+     :alt "logo"}]])
 
 (defn app-header
   []
@@ -95,15 +94,14 @@
         web? @(rf/subscribe [::app.subs/web?])
         installable? @(rf/subscribe [::app.subs/installable?])
         title-bar @(rf/subscribe [::document.subs/title-bar])]
-    [:div.flex.items-center.relative.gap-1
+    [:div.flex.items-center.relative
      (when-not (or fullscreen? mac?)
        [app-icon])
      [:div.overflow-hidden
       [views/scroll-area
        [:div.flex.relative.bg-secondary
-        {:class ["px-1"
-                 (when (and mac? (not fullscreen?))
-                   "ml-16")]}
+        {:class ["px-1 sm:px-0"
+                 (when (and mac? (not fullscreen?)) "ml-16")]}
         [menubar.views/root]]]]
      [:div.absolute.hidden.justify-center.drag.grow.h-full.items-center
       {:class "pointer-events-none md:flex left-1/2 -translate-x-1/2 z-[-1]"

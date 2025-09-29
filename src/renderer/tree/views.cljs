@@ -4,7 +4,6 @@
    [clojure.string :as string]
    [re-frame.core :as rf]
    [reagent.core :as reagent]
-   [renderer.app.subs :as-alias app.subs]
    [renderer.document.events :as-alias document.events]
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.events :as-alias element.events]
@@ -135,8 +134,7 @@
   [el {:keys [depth collapsed hovered]}]
   (let [{:keys [id selected children locked visible]} el
         collapse-button-width 21
-        padding (* collapse-button-width (cond-> depth (seq children) dec))
-        rtl? @(rf/subscribe [::app.subs/rtl?])]
+        padding (* collapse-button-width (cond-> depth (seq children) dec))]
     [:div.list-item-button.button.flex.px-1.items-center.text-start
      {:class ["hover:overlay [&.hovered]:overlay hover:[&_button]:visible"
               (when selected "accent")
@@ -162,9 +160,9 @@
                   (if (.-shiftKey e)
                     (rf/dispatch-sync [::tree.events/select-range @last-focused-id id])
                     (do (rf/dispatch [::element.events/select id (.-ctrlKey e)])
-                        (reset! last-focused-id id))))
-      :style (if rtl? {:padding-right padding} {:padding-left padding})}
-     [:div.flex.items-center.justify-between.w-full
+                        (reset! last-focused-id id))))}
+     [:div.shrink-0 {:style {:flex-basis padding}}]
+     [:div.flex-1.flex.items-center.justify-between.w-full.overflow-hidden
       (when (seq children)
         [collapse-button id collapsed])
       [:div.flex-1.overflow-hidden.flex.items-center
@@ -174,7 +172,7 @@
        [item-label el]]
       [item-prop-toggle id locked :locked
        "lock" "unlock"
-       [::unlock "Unlock"]  [::lock "Lock"]]
+       [::unlock "Unlock"] [::lock "Lock"]]
       [item-prop-toggle id (not visible) :visible
        "eye-closed" "eye"
        [::show "Show"] [::hide "Hide"]]]]))
