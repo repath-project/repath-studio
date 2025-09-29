@@ -30,7 +30,9 @@
          :font-weight font-weight
          :bbox bbox}))))
 
-(m/=> font-data->path-data! [:-> JS_Object string? number? number? number? JS_Promise])
+(m/=> font-data->path-data! [:->
+                             JS_Object string? number? number? number?
+                             JS_Promise])
 (defn font-data->path-data!
   [^js/FontData font-data text x y font-size]
   (-> (.blob font-data)
@@ -48,7 +50,9 @@
     (string/includes? (string/lower-case v)
                       (string/lower-case prop))))
 
-(m/=> match-font-by-weight [:-> string? [:sequential JS_Object] [:sequential JS_Object]])
+(m/=> match-font-by-weight [:-> string?
+                            [:sequential JS_Object]
+                            [:sequential JS_Object]])
 (defn match-font-by-weight
   [weight fonts]
   (let [weight-num (js/parseInt weight)

@@ -219,12 +219,14 @@
                                                     config/save-excluded-keys)))
         ::effects/focus nil})
      {:db (->> (notification.views/generic-error
-                {:title (tr db
-                            [::error-loading "Error while loading %1"]
-                            [(:title document)])
-                 :message (tr db
-                              [::unsupported-or-corrupted
-                               "File appears to be unsupported or corrupted."])})
+                {:title
+                 (tr db
+                     [::error-loading "Error while loading %1"]
+                     [(:title document)])
+                 :message
+                 (tr db
+                     [::unsupported-or-corrupted
+                      "File appears to be unsupported or corrupted."])})
                (notification.handlers/add db))})))
 
 (rf/reg-event-fx
@@ -287,7 +289,8 @@
  ::set-active
  [persist]
  (fn [db [_ id]]
-   (-> (document.handlers/set-active db id)
+   (-> db
+       (document.handlers/set-active id)
        (document.handlers/center))))
 
 (rf/reg-event-db
