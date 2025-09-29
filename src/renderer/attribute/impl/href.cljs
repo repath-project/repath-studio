@@ -8,7 +8,7 @@
    [renderer.element.db :as element.db]
    [renderer.element.effects :as-alias element.effects]
    [renderer.element.events :as-alias element.events]
-   [renderer.events :as events]
+   [renderer.events :as-alias events]
    [renderer.notification.events :as-alias notification.events]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.subs :as-alias tool.subs]

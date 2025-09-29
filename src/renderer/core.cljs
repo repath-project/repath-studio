@@ -24,6 +24,7 @@
    [renderer.error.views :as error.views]
    [renderer.event.effects]
    [renderer.event.impl.keyboard :as event.impl.keyboard]
+   [renderer.events]
    [renderer.frame.events]
    [renderer.frame.subs]
    [renderer.history.events]
