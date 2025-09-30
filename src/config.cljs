@@ -12,7 +12,7 @@
 
 (def default-path "documents")
 
-(def save-excluded-keys [:id :title :path :file-handle])
+(def save-info-keys [:id :title :path]) ; Should not be saved to disk.
 
 (def sentry {:dsn "https://4098ce3035c6f04b92b636bda55790ac@o4510040121933824.ingest.de.sentry.io/4510040141201488"
              :environment (if debug? "development" "production")

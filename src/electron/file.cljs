@@ -1,4 +1,6 @@
 (ns electron.file
+  "File operations using Electron APIs.
+   The end goal is to eventually replace this with the File System Access API."
   (:require
    ["electron" :refer [app dialog BrowserWindow]]
    ["fs" :as fs]
@@ -20,7 +22,7 @@
 
 (defn write-file!
   [file-path data]
-  (let [document (-> (apply dissoc data config/save-excluded-keys)
+  (let [document (-> (apply dissoc data config/save-info-keys)
                      (pr-str))]
     (-> (.writeFile fs/promises file-path document "utf-8")
         (.then #(-> (select-keys data [:id])

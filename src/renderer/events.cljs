@@ -24,6 +24,11 @@
    {::effects/file-open options}))
 
 (rf/reg-event-fx
+ ::file-save
+ (fn [_ [_ options]]
+   {::effects/file-save options}))
+
+(rf/reg-event-fx
  ::open-remote-url
  (fn [{:keys [db]} [_ url]]
    (if (= (:platform db) "web")

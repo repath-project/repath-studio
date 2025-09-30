@@ -8,7 +8,10 @@
    [renderer.theme.effects :as-alias theme.effects]
    [renderer.window.effects :as-alias window.effects]))
 
-(def local-store {config/app-name {}})
+(def local-store
+  (atom {config/app-name {:error-reporting false
+                          :recent [{:id #uuid "123e4567-e89b-12d3-a456-426614174000"
+                                    :title "drawing-1.rps"}]}}))
 
 (defn test-fixtures
   []
@@ -19,8 +22,28 @@
   (rf/reg-fx
    ::app.effects/get-local-store
    (fn [{:keys [store-key on-success on-finally]}]
-     (some-> on-success (conj (get local-store store-key)) rf/dispatch)
+     (some-> on-success (conj (get @local-store store-key)) rf/dispatch)
      (some-> on-finally rf/dispatch)))
+
+  (rf/reg-fx
+   ::app.effects/set-local-store
+   (fn [{:keys [store-key data on-success]}]
+     (swap! local-store assoc store-key data)
+     (some-> on-success (conj data) rf/dispatch)))
+
+  (rf/reg-fx
+   ::app.effects/local-store-keys
+   (fn [{:keys [on-success]}]
+     (some-> on-success (conj (keys @local-store)) rf/dispatch)))
+
+  (rf/reg-fx
+   ::app.effects/remove-local-store
+   (fn [{:keys [store-key]}]
+     (swap! local-store dissoc store-key)))
+
+  (rf/reg-fx
+   ::app.effects/persist
+   (fn []))
 
   (rf/reg-cofx
    ::window.effects/fullscreen

@@ -26,12 +26,15 @@
 
 (defn recent-submenu
   []
-  (let [recent @(rf/subscribe [::document.subs/recent])
-        recent-items (mapv (fn [path]
-                             {:id (keyword path)
-                              :label path
-                              :icon "folder"
-                              :action [::document.events/open path]}) recent)]
+  (let [recent-documents @(rf/subscribe [::document.subs/recent])
+        recent-items (->> recent-documents
+                          (mapv (fn [{:keys [path title id]
+                                      :as recent}]
+                                  {:id id
+                                   :label (or path title)
+                                   :icon "folder"
+                                   :action [::document.events/open-recent
+                                            recent]})))]
     (cond-> recent-items
       (seq recent-items)
       (concat [{:id :divider-1
@@ -85,7 +88,7 @@
            {:id :open-file
             :label (t [::open "Open..."])
             :icon "folder"
-            :action [::document.events/open nil]}
+            :action [::document.events/open]}
            {:id :recent
             :label (t [::recent "Recent"])
             :type :sub-menu
@@ -108,7 +111,7 @@
            {:id :save-as
             :label (t [::save-as "Save as..."])
             :icon "save-as"
-            :action [::document.events/save {:as true}]
+            :action [::document.events/save-as]
             :disabled (not @(rf/subscribe [::document.subs/entities?]))}
            {:id :export
             :label (t [::export-as "Export as"])

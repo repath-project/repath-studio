@@ -52,7 +52,7 @@
 (rf/reg-event-fx
  ::clear-data-and-relaunch
  (fn [_ _]
-   {:fx [[::app.effects/clear-local-storage nil]
+   {:fx [[::app.effects/clear-local-store nil]
          [:dispatch [::relaunch]]]}))
 
 (rf/reg-event-fx

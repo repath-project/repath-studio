@@ -19,7 +19,7 @@
             :min 1
             :persist true} string?]
    [:path {:optional true
-           :persist true} [:maybe string?]]
+           :persist true} string?]
    [:saved-history-id {:optional true} uuid?]
    [:version {:optional true
               :persist true} string?]
@@ -36,8 +36,7 @@
    [:filter {:optional true} A11yFilter]
    [:attrs {:default {:fill "white"
                       :stroke "black"}} [:map-of keyword? string?]]
-   [:preview-label {:optional true} string?]
-   [:file-handle {:optional true} any?]])
+   [:preview-label {:optional true} string?]])
 
 (def PersistedDocument
   (->> Document
@@ -48,11 +47,13 @@
 (def SaveInfo
   (->> Document
        (m/children)
-       (filter (comp #(some #{%} config/save-excluded-keys) first))
+       (filter (comp #(some #{%} config/save-info-keys) first))
        (into [:map {:closed true}])))
 
 (def valid? (m/validator Document))
 
 (def explain (m/explainer Document))
 
-(def default (m/decode Document {} m.transform/default-value-transformer))
+(def default (m/decode Document
+                       {}
+                       m.transform/default-value-transformer))
