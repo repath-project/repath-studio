@@ -4,7 +4,7 @@
    ["react" :as react]
    ["react-frame-component" :default Frame :refer [useFrame]]
    [re-frame.core :as rf]
-   [reagent.core :as reagent]
+   [reagent.core :as reagent :refer-macros [defc]]
    [reagent.dom.server :as server]
    [renderer.app.subs :as-alias app.subs]
    [renderer.element.hierarchy :as element.hierarchy]
@@ -15,7 +15,7 @@
    [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]))
 
-(defn inner-component
+(defc inner-component
   "We need access to the iframe's window to add the wheel listener.
    This is required in order to prevent the default zoom behavior.
    https://github.com/ryanseddon/react-frame-component#accessing-the-iframes-window-and-document
@@ -91,7 +91,7 @@
             :ref ref
             :sandbox "allow-same-origin"
             :style {:background (-> root-el :attrs :fill)}}
-           [:f> inner-component]
+           [inner-component]
            [:> ContextMenu/Root
             [:> ContextMenu/Trigger
              [element.hierarchy/render root-el]]
