@@ -207,10 +207,10 @@
                 [[::window.events/close]
                  [{:keyCode (key-codes "Q")
                    :ctrlKey true}]]
-                [[::document.events/open nil]
+                [[::document.events/open]
                  [{:keyCode (key-codes "O")
                    :ctrlKey true}]]
-                [[::document.events/save {:as true}]
+                [[::document.events/save-as]
                  [{:keyCode (key-codes "S")
                    :ctrlKey true
                    :shiftKey true}]]

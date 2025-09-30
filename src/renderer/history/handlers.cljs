@@ -72,6 +72,8 @@
                  [:-> App App]
                  [:-> App uuid? App]])
 (defn drop-rest
+  "Drops all but the current state from history.
+   Useful to avoid persisting the rest if the history."
   ([db]
    (reduce drop-rest db (:document-tabs db)))
   ([db document-id]

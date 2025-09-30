@@ -1,5 +1,6 @@
 (ns renderer.app.events
   (:require
+   [cognitect.transit :as transit]
    [config :as config]
    [re-frame.core :as rf]
    [renderer.app.db :as app.db]
@@ -38,6 +39,13 @@
         ["window-minimized" [::window.events/set-minimized true]]]
        (mapv (partial vector ::effects/ipc-on))))
 
+(defn- json->clj
+  [data]
+  (let [reader (transit/reader :json)]
+    (try (transit/read reader data)
+         (catch :default err
+           (rf/dispatch [::notification.events/show-exception err])))))
+
 (rf/reg-event-fx
  ::initialize
  [(rf/inject-cofx ::app.effects/user-agent)
@@ -58,6 +66,7 @@
                :system-lang language)
     :fx (into [[::app.effects/get-local-store
                 {:store-key config/app-name
+                 :formatter json->clj
                  :on-success [::load-local-db]
                  :on-error [::notification.events/show-exception]
                  :on-finally [::db-loaded]}]]
@@ -69,7 +78,7 @@
    (let [app-db (merge db persisted-db)]
      (if (app.db/valid? app-db)
        {:db app-db}
-       {::app.effects/clear-local-storage nil}))))
+       {::app.effects/clear-local-store nil}))))
 
 (rf/reg-event-db
  ::set-loading

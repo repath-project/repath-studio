@@ -3,7 +3,7 @@
    ["@radix-ui/react-direction" :as Direction]
    ["@radix-ui/react-select" :as Select]
    ["@radix-ui/react-tooltip" :as Tooltip]
-   ["path-browserify" :as path]
+   ["path-browserify" :as path-browserify]
    ["react-fps" :refer [FpsView]]
    ["react-resizable-panels" :refer [Panel PanelGroup]]
    [clojure.string :as string]
@@ -269,13 +269,14 @@
           [:> Select/ItemText (str "A" k)]])]]]]])
 
 (defn recent-document
-  [file-path]
+  [{:keys [path title]
+    :as recent}]
   [:div.flex.items-center.gap-x-2.flex-wrap
    [views/icon "folder"]
    [:button.button-link.text-lg
-    {:on-click #(rf/dispatch [::document.events/open file-path])}
-    (.basename path file-path)]
-   [:span.text-lg.text-muted (.dirname path file-path)]])
+    {:on-click #(rf/dispatch [::document.events/open-recent recent])}
+    (or title (.basename path-browserify path))]
+   (when path [:span.text-lg.text-muted (.dirname path-browserify path)])])
 
 (defn help-command
   [icon label event]
@@ -320,17 +321,17 @@
          [:div.flex.items-center.gap-2
           [views/icon "folder"]
           [:button.button-link.text-lg
-           {:on-click #(rf/dispatch [::document.events/open nil])}
+           {:on-click #(rf/dispatch [::document.events/open])}
            (t [::open "Open"])]
-          [views/shortcuts [::document.events/open nil]]]
+          [views/shortcuts [::document.events/open]]]
 
          (when (seq recent-documents)
            [:<> [:h2.mb-3.mt-8.text-2xl
                  (t [::recent "Recent"])]
 
-            (for [file-path (take 5 recent-documents)]
-              ^{:key file-path}
-              [recent-document file-path])])
+            (for [recent (take 5 recent-documents)]
+              ^{:key (:id recent)}
+              [recent-document recent])])
 
          [:h2.mb-3.mt-8.text-2xl
           (t [::help "Help"])]

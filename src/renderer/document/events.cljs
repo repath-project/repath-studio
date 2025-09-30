@@ -3,6 +3,7 @@
    [cljs.reader :as cljs.reader]
    [config :as config]
    [re-frame.core :as rf]
+   [renderer.app.effects :as-alias app.effects]
    [renderer.app.events :refer [persist]]
    [renderer.dialog.handlers :as dialog.handlers]
    [renderer.dialog.views :as dialog.views]
@@ -11,6 +12,7 @@
    [renderer.element.db :as element.db]
    [renderer.element.effects :as-alias element.effects]
    [renderer.element.handlers :as element.handlers]
+   [renderer.events :as-alias events]
    [renderer.history.handlers :as history.handlers]
    [renderer.notification.events :as-alias notification.events]
    [renderer.notification.handlers :as notification.handlers]
@@ -79,20 +81,21 @@
        (document.handlers/assoc-attr k v)
        (element.handlers/set-attr k v))))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::close
  [persist]
- (fn [db [_ id confirm?]]
-   (if (or (document.handlers/saved? db id)
-           (not confirm?))
-     (document.handlers/close db id)
-     (-> db
-         (document.handlers/set-active id)
-         (dialog.handlers/create
-          {:title (tr db [::save-changes "Do you want to save your changes?"])
-           :has-close-button true
-           :content [dialog.views/save (get-in db [:documents id])]
-           :attrs {:onOpenAutoFocus #(.preventDefault %)}})))))
+ (fn [{:keys [db]} [_ id confirm?]]
+   {:db (if (or (document.handlers/saved? db id)
+                (not confirm?))
+          (document.handlers/close db id)
+          (-> db
+              (document.handlers/set-active id)
+              (dialog.handlers/create
+               {:title (tr db [::save-changes "Do you want to save your changes?"])
+                :has-close-button true
+                :content [dialog.views/save (get-in db [:documents id])]
+                :attrs {:onOpenAutoFocus #(.preventDefault %)}})))
+    ::app.effects/local-store-keys {:on-success [::clear-stale-keys]}}))
 
 (rf/reg-event-fx
  ::close-active
@@ -171,62 +174,98 @@
 
 (rf/reg-event-fx
  ::open
- (fn [{:keys [db]} [_ file-path]]
+ (fn [{:keys [db]} [_]]
    (if (= (:platform db) "web")
      {::effects/file-open
       {:options (assoc file-picker-options :multiple true)
-       :on-success [::file-read]
+       :on-success [::file-read nil]
        :on-error [::notification.events/show-exception]}}
      {::effects/ipc-invoke
       {:channel "open-documents"
-       :data file-path
        :on-success [::load-multiple]
        :on-error [::notification.events/show-exception]
        :formatter #(mapv string->edn %)}})))
 
 (rf/reg-event-fx
+ ::open-recent
+ (fn [{:keys [db]} [_ {:keys [id path]}]]
+   (if (document.handlers/open? db id)
+     {:db (document.handlers/set-active db id)}
+     (if (= (:platform db) "web")
+       {::app.effects/get-local-store
+        {:store-key (str id)
+         :formatter (fn [file-handle]
+                      {:on-success [::file-read id]
+                       :on-error [::notification.events/show-exception]
+                       :file-handle file-handle})
+         :on-success [::events/file-open]
+         :on-error [::notification.events/show-exception]}}
+       {::effects/ipc-invoke
+        {:channel "open-documents"
+         :data path
+         :on-success [::load-multiple]
+         :on-error [::notification.events/show-exception]
+         :formatter #(mapv string->edn %)}}))))
+
+(rf/reg-event-fx
  ::file-read
- (fn [_ [_ ^js/FileSystemFileHandle file-handle ^js/File file]]
+ (fn [_ [_ id ^js/FileSystemFileHandle file-handle ^js/File file]]
    {::effects/file-read-as
-    [file :text {"load" {:formatter #(-> (string->edn %)
-                                         (assoc :title (.-name file)
-                                                :path (.-path file)
-                                                :file-handle file-handle))
+    [file :text {"load" {:formatter #(when-let [data (string->edn %)]
+                                       (when (map? data)
+                                         (cond-> data
+                                           id
+                                           (assoc :id id)
+
+                                           (.-name file)
+                                           (assoc :title (.-name file))
+
+                                           (.-path file)
+                                           (assoc :path (.-path file))
+
+                                           file-handle
+                                           (assoc :file-handle file-handle))))
                          :on-fire [::load]}
                  "error" {:on-fire [::notification.events/show-exception]}}]}))
 
 (rf/reg-event-fx
  ::open-directory
  (fn [_ [_ path]]
-   {:ipc-send ["open-directory" path]}))
+   {::effects/ipc-send ["open-directory" path]}))
+
+(defn- unsupported-file-notification
+  [db document]
+  (notification.views/generic-error
+   {:title
+    (tr db [::error-loading "Error while loading %1"] [(:title document)])
+    :message
+    (tr db [::unsupported-or-corrupted
+            "File appears to be unsupported or corrupted."])}))
 
 (rf/reg-event-fx
  ::load
  [(rf/inject-cofx ::effects/guid)]
  (fn [{:keys [db guid]} [_ document]]
-   (if (and document (map? document) (:elements document))
+   (if (map? document)
      (let [migrated-document (utils.compatibility/migrate-document document)
-           migrated (not= document migrated-document)
-           document (assoc migrated-document :id guid)]
+           is-migrated (not= document migrated-document)
+           document (merge {:id guid} migrated-document)
+           {:keys [id file-handle]} document]
        {:db (cond-> db
               :always
-              (-> (document.handlers/load document)
+              (-> (document.handlers/load (dissoc document :file-handle))
                   (history.handlers/finalize [::load-doc "Load document"]))
 
-              (not migrated)
-              (document.handlers/update-saved-info (select-keys
-                                                    document
-                                                    config/save-excluded-keys)))
-        ::effects/focus nil})
-     {:db (->> (notification.views/generic-error
-                {:title
-                 (tr db
-                     [::error-loading "Error while loading %1"]
-                     [(:title document)])
-                 :message
-                 (tr db
-                     [::unsupported-or-corrupted
-                      "File appears to be unsupported or corrupted."])})
+              (not is-migrated)
+              (document.handlers/update-save-info (document.handlers/save-info
+                                                   document)))
+        :fx [(when file-handle
+               [::app.effects/set-local-store
+                {:data file-handle
+                 :store-key (str id)
+                 :on-error [::notification.events/show-exception]}])
+             [::effects/focus nil]]})
+     {:db (->> (unsupported-file-notification db document)
                (notification.handlers/add db))})))
 
 (rf/reg-event-fx
@@ -234,25 +273,51 @@
  (fn [_ [_ documents]]
    {:dispatch-n (mapv #(vector ::load %) documents)}))
 
+(defn- file-save-options
+  [document on-success on-error]
+  {:data (document.handlers/->save-format document)
+   :options file-picker-options
+   :formatter (fn [file-handle]
+                {:id (:id document)
+                 :title (.-name file-handle)
+                 :file-handle file-handle})
+   :on-success on-success
+   :on-error on-error})
+
 (rf/reg-event-fx
  ::save
- (fn [{:keys [db]} [_ {:keys [as close id]}]]
+ (fn [{:keys [db]} [_ {:keys [close id]}]]
    (let [id (or id (:active-document db))
-         document (document.handlers/entity db id)
-         persisted-document (document.handlers/persisted-format db id)
+         document (document.handlers/persisted-format db id)
          on-success [::saved close]
          on-error [::notification.events/show-exception]]
      (if (= (:platform db) "web")
-       {::effects/file-save
-        {:data (document.handlers/->save-format persisted-document)
-         :file-handle (when-not as (:file-handle document))
-         :options file-picker-options
-         :formatter (partial document.handlers/saved-info persisted-document)
-         :on-success on-success
+       {::app.effects/get-local-store
+        {:store-key (str id)
+         :formatter #(-> document
+                         (file-save-options on-success on-error)
+                         (assoc :file-handle %))
+         :on-success [::events/file-save]
          :on-error on-error}}
        {::effects/ipc-invoke
-        {:channel (if as "save-document-as" "save-document")
-         :data (pr-str persisted-document)
+        {:channel "save-document"
+         :data (pr-str document)
+         :on-success [::saved close]
+         :on-error on-error
+         :formatter string->edn}}))))
+
+(rf/reg-event-fx
+ ::save-as
+ (fn [{:keys [db]} [_ _]]
+   (let [id (:active-document db)
+         document (document.handlers/persisted-format db id)
+         on-success [::saved false]
+         on-error [::notification.events/show-exception]]
+     (if (= (:platform db) "web")
+       {::effects/file-save (file-save-options document on-success on-error)}
+       {::effects/ipc-invoke
+        {:channel "save-document-as"
+         :data (pr-str document)
          :on-success on-success
          :on-error on-error
          :formatter string->edn}}))))
@@ -260,30 +325,49 @@
 (rf/reg-event-fx
  ::download
  (fn [{:keys [db]} [_]]
-   (when-let [document (some->> (:active-document db)
-                                (document.handlers/persisted-format db))]
-     {::effects/download {:data (document.handlers/->save-format document)
+   (when-let [data (some->> (:active-document db)
+                            (document.handlers/persisted-format db)
+                            (document.handlers/->save-format))]
+     {::effects/download {:data data
                           :title (str "document." config/ext)}})))
 
 (rf/reg-event-fx
  ::saved
  [persist]
- (fn [{:keys [db]} [_ close save-info]]
-   {:db (cond-> db
-          save-info
-          (document.handlers/update-saved-info save-info)
+ (fn [{:keys [db]} [_ close info]]
+   (let [{:keys [id file-handle]} info
+         save-info (document.handlers/save-info info)]
+     {:db (cond-> db
+            :always
+            (-> (document.handlers/update-save-info save-info)
+                (document.handlers/add-recent save-info))
 
-          (:path save-info)
-          (document.handlers/add-recent (:path save-info))
+            close
+            (document.handlers/close id))
+      :fx [(when file-handle
+             [::app.effects/set-local-store
+              {:data file-handle
+               :store-key (str id)
+               :on-error [::notification.events/show-exception]}])]})))
 
-          close
-          (document.handlers/close (:id save-info)))}))
-
-(rf/reg-event-db
+(rf/reg-event-fx
  ::clear-recent
  [persist]
- (fn [db [_]]
-   (assoc db :recent [])))
+ (fn [{:keys [db]} [_]]
+   {:db (assoc db :recent [])
+    ::app.effects/local-store-keys {:on-success [::clear-stale-keys]}}))
+
+(rf/reg-event-fx
+ ::clear-stale-keys
+ (fn [{:keys [db]} [_ storage-keys]]
+   {:fx [(->> storage-keys
+              (remove #(= % config/app-name))
+              (map uuid)
+              (remove #(or (document.handlers/open? db %)
+                           (document.handlers/recent? db %)))
+              (map #(vector ::app.effects/remove-local-store
+                            {:store-key (str %)}))
+              (into []))]}))
 
 (rf/reg-event-db
  ::set-active

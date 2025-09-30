@@ -5,7 +5,6 @@
    [malli.error :as m.error]
    [malli.transform :as m.transform]
    [renderer.app.db :refer [App]]
-   [renderer.db :refer [JS_FileSystemFileHandle]]
    [renderer.document.db
     :as document.db
     :refer [Document PersistedDocument SaveInfo]]
@@ -73,15 +72,16 @@
         (update :document-tabs #(filterv (complement #{id}) %))
         (update :documents dissoc id))))
 
-(m/=> add-recent [:-> App string? App])
+(m/=> add-recent [:-> App SaveInfo App])
 (defn add-recent
-  [db file-path]
-  (cond-> db
-    file-path
-    (update :recent #(->> file-path
-                          (conj (filterv (complement #{file-path}) %))
-                          (take-last 10)
-                          (vec)))))
+  [db save-info]
+  (let [equals? (fn [x] (or (and (:path x)
+                                 (= (:path x) (:path save-info)))
+                            (= (:id x) (:id save-info))))]
+    (update db :recent #(->> save-info
+                             (conj (filterv (complement equals?) %))
+                             (take-last 10)
+                             (vec)))))
 
 (m/=> center [:-> App App])
 (defn center
@@ -163,15 +163,13 @@
   [db k v]
   (assoc-in db (path db :attrs k) v))
 
-(m/=> saved-info [:-> PersistedDocument JS_FileSystemFileHandle SaveInfo])
-(defn saved-info
-  [document file-handle]
-  {:id (:id document)
-   :title (.-name file-handle)
-   :file-handle file-handle})
+(m/=> save-info [:-> map? SaveInfo])
+(defn save-info
+  [document]
+  (select-keys document config/save-info-keys))
 
-(m/=> update-saved-info [:-> App SaveInfo App])
-(defn update-saved-info
+(m/=> update-save-info [:-> App SaveInfo App])
+(defn update-save-info
   [db info]
   (let [id (:id info)
         position (get-in db [:documents id :history :position])
@@ -192,11 +190,9 @@
         (-> (create-tab document)
             (center))
 
-        (:path document)
-        (add-recent (:path document))
-
         :always
-        (set-active (:id document)))
+        (-> (set-active (:id document))
+            (add-recent (save-info document))))
 
       (let [explanation (-> document
                             document.db/explain
@@ -212,6 +208,16 @@
         history-position (get-in document [:history :position])]
     (= (:saved-history-id document) history-position)))
 
+(m/=> open? [:-> App uuid? boolean?])
+(defn open?
+  [db id]
+  (some #{id} (:document-tabs db)))
+
+(m/=> recent? [:-> App uuid? boolean?])
+(defn recent?
+  [db id]
+  (some #(= id (:id %)) (:recent db)))
+
 (m/=> saved-ids [:-> App sequential?])
 (defn saved-ids
   [db]
@@ -221,12 +227,5 @@
 (m/=> ->save-format [:-> PersistedDocument string?])
 (defn ->save-format
   [document]
-  (-> (apply dissoc document config/save-excluded-keys)
+  (-> (apply dissoc document config/save-info-keys)
       (pr-str)))
-
-(m/=> remove-file-handle [:-> App App])
-(defn remove-file-handle
-  ([db]
-   (reduce remove-file-handle db (:document-tabs db)))
-  ([db document-id]
-   (update-in db [:documents document-id] dissoc :file-handle)))

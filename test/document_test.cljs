@@ -152,14 +152,21 @@
        (let [recent-documents (rf/subscribe [::document.subs/recent])]
          (rf/dispatch [::document.events/load-multiple
                        [{:version "100000.0.0"
+                         :id #uuid "58c1f2bb-94ea-4b95-b042-c42121384b9a"
                          :path "foo/bar/document-1.rps"
                          :title "document-1.rps"
                          :elements {}}
                         {:version "100000.0.0"
+                         :id #uuid "01eafc60-3ce3-41d2-a138-1fe1759ad4f2"
                          :path "foo/bar/document-2.rps"
                          :title "document-2.rps"
                          :elements {}}]])
 
          (is (= (:title @active-document) "document-2.rps"))
-         (is (= (take 2 @recent-documents) ["foo/bar/document-2.rps"
-                                            "foo/bar/document-1.rps"])))))))
+         (is (= (take 2 @recent-documents)
+                [{:id #uuid "01eafc60-3ce3-41d2-a138-1fe1759ad4f2"
+                  :title "document-2.rps"
+                  :path "foo/bar/document-2.rps"}
+                 {:id #uuid "58c1f2bb-94ea-4b95-b042-c42121384b9a"
+                  :title "document-1.rps"
+                  :path "foo/bar/document-1.rps"}])))))))

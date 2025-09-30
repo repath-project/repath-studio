@@ -5,7 +5,7 @@
    [malli.transform :as m.transform]
    [renderer.db :refer [JS_Object]]
    [renderer.dialog.db :refer [Dialog]]
-   [renderer.document.db :refer [Document]]
+   [renderer.document.db :refer [Document SaveInfo]]
    [renderer.element.db :refer [Element]]
    [renderer.frame.db :refer [DomRect]]
    [renderer.notification.db :refer [Notification]]
@@ -72,7 +72,7 @@
                     :persist true} [:vector uuid?]]
    [:recent {:max 10
              :default []
-             :persist true} [:vector string?]]
+             :persist true} [:vector SaveInfo]]
    [:drag-threshold {:default 1} number?]
    [:system-fonts {:optional true} SystemFonts]
    [:notifications {:default []} [:* Notification]]
@@ -120,10 +120,9 @@
 
 (def explain (m/explainer App))
 
-(def default
-  (m/decode App
-            {:version config/version}
-            m.transform/default-value-transformer))
+(def default (m/decode App
+                       {:version config/version}
+                       m.transform/default-value-transformer))
 
 (def persisted-keys
   "Top level keys that should be persisted to local storage."

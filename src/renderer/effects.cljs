@@ -49,7 +49,7 @@
                                      (cb (first (.. e -target -files)))))
     (.click el)))
 
-(defn write-file!
+(defn- write-file!
   [{:keys [data on-success on-error formatter file-handle]}]
   (-> (.createWritable file-handle)
       (.then (fn [^js/FileSystemWritableFileStream writable-stream]
@@ -84,23 +84,28 @@
          "Save File Picker"
          "https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker#browser_compatibility"])))))
 
+(defn- get-file!
+  [{:keys [on-success on-error file-handle]}]
+  (-> (.getFile file-handle)
+      (.then #(some-> on-success (conj file-handle %) rf/dispatch))
+      (.catch #(some-> on-error (conj %) rf/dispatch))))
+
 (rf/reg-fx
  ::file-open
- (fn [{:keys [options on-error on-success]}]
-   (if (.-showOpenFilePicker js/window)
-     (-> (.showOpenFilePicker js/window (clj->js options))
-         (.then (fn [file-handles]
-                  (when on-success
-                    (doseq [^js/FileSystemFileHandle file-handle file-handles]
-                      (-> (.getFile file-handle)
-                          (.then #(rf/dispatch (conj on-success file-handle %)))
-                          (.catch #(some-> on-error
-                                           (conj file-handle %)
-                                           (rf/dispatch))))))))
-         (.catch (fn [^js/Error error]
-                   (when (and on-error (not (abort-error? error)))
-                     (rf/dispatch (conj on-error error))))))
-     (legacy-file-open! #(rf/dispatch (conj on-success nil %))))))
+ (fn [{:keys [options on-error on-success file-handle]
+       :as args}]
+   (if file-handle
+     (get-file! args)
+     (if (.-showOpenFilePicker js/window)
+       (-> (.showOpenFilePicker js/window (clj->js options))
+           (.then (fn [file-handles]
+                    (when on-success
+                      (doseq [^js/FileSystemFileHandle file-handle file-handles]
+                        (get-file! (assoc args :file-handle file-handle))))))
+           (.catch (fn [^js/Error error]
+                     (when (and on-error (not (abort-error? error)))
+                       (rf/dispatch (conj on-error error))))))
+       (legacy-file-open! #(rf/dispatch (conj on-success nil %)))))))
 
 (rf/reg-fx
  ::file-read-as

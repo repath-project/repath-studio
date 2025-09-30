@@ -7,7 +7,6 @@
    [re-frame.core :as rf]
    [re-frame.db :as rf.db]
    [renderer.app.db :as app.db]
-   [renderer.document.handlers :as document.handlers]
    [renderer.history.handlers :as history.handlers]
    [renderer.notification.events :as-alias notification.events]))
 
@@ -73,13 +72,6 @@
                            (rf/dispatch)))
            (.catch #(some-> on-error (conj %) rf/dispatch)))))
 
-(defn- json->clj
-  [data]
-  (let [reader (transit/reader :json)]
-    (try (transit/read reader data)
-         (catch :default err
-           (rf/dispatch [::notification.events/show-exception err])))))
-
 (defn- clj->json
   [data]
   (let [writer (transit/writer :json)]
@@ -89,17 +81,45 @@
 
 (rf/reg-fx
  ::get-local-store
- (fn [{:keys [store-key on-success on-error on-finally]}]
+ (fn [{:keys [store-key on-success on-error on-finally formatter]}]
    (-> (localforage/getItem store-key)
-       (.then #(some-> on-success (conj (json->clj %)) rf/dispatch))
+       (.then #(some-> on-success
+                       (conj (cond-> % formatter formatter))
+                       rf/dispatch))
        (.catch #(some-> on-error (conj %) rf/dispatch))
        (.finally #(some-> on-finally rf/dispatch)))))
+
+(rf/reg-fx
+ ::set-local-store
+ (fn [{:keys [store-key data on-success on-error on-finally]}]
+   (-> (localforage/setItem store-key data)
+       (.then #(some-> on-success (conj %) rf/dispatch))
+       (.catch #(some-> on-error (conj %) rf/dispatch))
+       (.finally #(some-> on-finally rf/dispatch)))))
+
+(rf/reg-fx
+ ::local-store-keys
+ (fn [{:keys [on-success on-error]}]
+   (-> (localforage/keys)
+       (.then #(some-> on-success (conj %) rf/dispatch))
+       (.catch #(some-> on-error (conj %) rf/dispatch)))))
+
+(rf/reg-fx
+ ::remove-local-store
+ (fn [{:keys [store-key on-error]}]
+   (-> (localforage/removeItem store-key)
+       (.catch #(some-> on-error (conj %) rf/dispatch)))))
+
+(rf/reg-fx
+ ::clear-local-store
+ (fn [{:keys [on-error]}]
+   (-> (localforage/clear)
+       (.catch #(some-> on-error (conj %) rf/dispatch)))))
 
 (defn persist
   []
   (let [persisted-db (-> @rf.db/app-db
                          (history.handlers/drop-rest)
-                         (document.handlers/remove-file-handle)
                          (select-keys app.db/persisted-keys))]
     (when-let [json (clj->json persisted-db)]
       (-> (localforage/setItem config/app-name json)
@@ -117,11 +137,6 @@
    (when (not (app.db/valid? db))
      (js/console.error (str "Event: " (first event)))
      (throw (js/Error. (str "Spec check failed: " (app.db/explain db)))))))
-
-(rf/reg-fx
- ::clear-local-storage
- (fn []
-   (localforage/clear)))
 
 (rf/reg-fx
  ::install

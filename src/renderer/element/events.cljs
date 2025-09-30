@@ -357,4 +357,4 @@
        :else
        (let [extension (last (string/split (.-name file) "."))]
          (when (= extension "rps")
-           {:dispatch [::document.events/file-read file]}))))))
+           {:dispatch [::document.events/file-read nil file]}))))))
