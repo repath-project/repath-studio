@@ -11,6 +11,3 @@
 
 (def JS_Promise
   [:fn (fn [x] (instance? js/Promise x))])
-
-(def JS_FileSystemFileHandle
-  [:fn (fn [x] (instance? js/FileSystemFileHandle x))])
