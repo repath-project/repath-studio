@@ -4,12 +4,12 @@
    [kdtree :as kdtree]
    [malli.core :as m]
    [renderer.app.db :refer [App]]
+   [renderer.db :refer [Vec2]]
    [renderer.element.handlers :as element.handlers]
    [renderer.frame.handlers :as frame.handlers]
    [renderer.ruler.handlers :as ruler.handlers]
    [renderer.snap.db :refer [SnapOption NearestNeighbor]]
-   [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.math :refer [Vec2]]))
+   [renderer.tool.hierarchy :as tool.hierarchy]))
 
 (m/=> active? [:-> App boolean?])
 (defn active?

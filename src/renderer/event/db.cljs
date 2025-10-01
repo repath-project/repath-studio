@@ -1,8 +1,8 @@
 (ns renderer.event.db
   (:require
+   [renderer.db :refer [Vec2]]
    [renderer.element.db :refer [Element]]
-   [renderer.tool.db :refer [Handle]]
-   [renderer.utils.math :refer [Vec2]]))
+   [renderer.tool.db :refer [Handle]]))
 
 (def PointerButton [:enum :left :middle :right :back :forward])
 

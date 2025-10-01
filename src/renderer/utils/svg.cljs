@@ -5,11 +5,12 @@
    [malli.core :as m]
    [re-frame.core :as rf]
    [renderer.app.db :refer [App]]
+   [renderer.db :refer [BBox Vec2]]
    [renderer.document.subs :as-alias document.subs]
    [renderer.theme.db :as theme.db]
-   [renderer.utils.bounds :as utils.bounds :refer [BBox]]
+   [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.hiccup :refer [Hiccup]]
-   [renderer.utils.math :as utils.math :refer [Vec2]]))
+   [renderer.utils.math :as utils.math]))
 
 (def dash-size 5)
 

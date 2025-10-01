@@ -31,4 +31,5 @@
        "file"
        (let [file (.getAsFile item)
              file-handle (.getAsFileSystemHandle item)]
-         (rf/dispatch [::element.events/import-file file-handle file position]))))))
+         (rf/dispatch [::element.events/import-file
+                       file-handle file position]))))))

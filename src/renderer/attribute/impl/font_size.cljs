@@ -11,8 +11,8 @@
   []
   (t [::description
       "The font-size attribute refers to the size of the font from baseline to
-       baseline when multiple lines of text are set
-       solid in a multiline layout environment."]))
+       baseline when multiple lines of text are set solid in a multiline layout
+       environment."]))
 
 (defmethod attribute.hierarchy/update-attr :font-size
   [el attribute f & more]

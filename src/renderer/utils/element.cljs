@@ -7,14 +7,13 @@
    [clojure.string :as string]
    [malli.core :as m]
    [reagent.dom.server :as dom.server]
-   [renderer.db :refer [JS_Element]]
+   [renderer.db :refer [BBox Vec2 JS_Element]]
    [renderer.element.db :as element.db :refer [Element ElementAttrs]]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.snap.db :refer [SnapOptions]]
    [renderer.utils.attribute :as utils.attribute]
-   [renderer.utils.bounds :as utils.bounds :refer [BBox]]
-   [renderer.utils.map :as utils.map]
-   [renderer.utils.math :refer [Vec2]]))
+   [renderer.utils.bounds :as utils.bounds]
+   [renderer.utils.map :as utils.map]))
 
 (m/=> root? [:-> Element boolean?])
 (defn root?

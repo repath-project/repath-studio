@@ -5,6 +5,7 @@
    [re-frame.core :as rf]
    [reagent.core :as reagent]
    [renderer.app.db :refer [App]]
+   [renderer.db :refer [BBox Vec2]]
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.db :refer [Element]]
    [renderer.element.handlers :as element.handlers]
@@ -19,11 +20,10 @@
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.subs :as-alias tool.subs]
    [renderer.tool.views :as tool.views]
-   [renderer.utils.bounds :as utils.bounds :refer [BBox]]
+   [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
    [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]
-   [renderer.utils.math :refer [Vec2]]
    [renderer.utils.svg :as utils.svg]))
 
 (def ScaleHandle [:enum

@@ -4,11 +4,12 @@
    [malli.core :as m]
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.subs]
+   [renderer.db :refer [BBox]]
    [renderer.document.subs :as-alias document.subs]
    [renderer.event.impl.pointer :as event.impl.pointer]
    [renderer.theme.db :as theme.db]
    [renderer.tool.subs :as-alias tool.subs]
-   [renderer.utils.bounds :as utils.bounds :refer [BBox]]))
+   [renderer.utils.bounds :as utils.bounds]))
 
 #_(defn circle-handle
     [el & children]

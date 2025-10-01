@@ -1,5 +1,5 @@
 (ns renderer.snap.db
-  (:require [renderer.utils.math :refer [Vec2]]))
+  (:require [renderer.db :refer [Vec2]]))
 
 (def snap-options
   #{:centers :midpoints :corners :nodes #_:grid})

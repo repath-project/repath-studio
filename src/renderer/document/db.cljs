@@ -3,11 +3,11 @@
    [config :as config]
    [malli.core :as m]
    [malli.transform :as m.transform]
+   [renderer.db :refer [Vec2]]
    [renderer.element.db :refer [Element ElementId]]
    [renderer.history.db :refer [History HistoryId]]
    [renderer.menubar.filters :refer [A11yFilter]]
-   [renderer.tool.db :refer [HandleId]]
-   [renderer.utils.math :refer [Vec2]]))
+   [renderer.tool.db :refer [HandleId]]))
 
 (def ZoomFactor
   [:and number? [:>= 0.01] [:<= 100]])

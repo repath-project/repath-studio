@@ -1,7 +1,7 @@
 (ns renderer.history.db
   (:require
-   [renderer.element.db :refer [Element ElementId]]
-   [renderer.utils.math :refer [Vec2]]))
+   [renderer.db :refer [Vec2]]
+   [renderer.element.db :refer [Element ElementId]]))
 
 (def Explanation [:* any?])
 

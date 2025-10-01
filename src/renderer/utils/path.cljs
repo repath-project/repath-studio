@@ -1,13 +1,8 @@
 (ns renderer.utils.path
   (:require
    ["paper" :refer [Path]]
-   [malli.core :as m]))
-
-(def PathBooleanOperation
-  [:enum :unite :intersect :subtract :exclude :divide])
-
-(def PathManipulation
-  [:enum :simplify :smooth :flatten :reverse])
+   [malli.core :as m]
+   [renderer.db :refer [BooleanOperation PathManipulation]]))
 
 (m/=> get-d [:-> any? string?])
 (defn get-d
@@ -27,7 +22,7 @@
       :reverse (.reverse path))
     (get-d path)))
 
-(m/=> boolean-operation [:-> string? string? PathBooleanOperation string?])
+(m/=> boolean-operation [:-> string? string? BooleanOperation string?])
 (defn boolean-operation
   [path-a path-b operation]
   (let [path-a (Path. path-a)

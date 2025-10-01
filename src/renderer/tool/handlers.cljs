@@ -3,13 +3,13 @@
    [clojure.core.matrix :as matrix]
    [malli.core :as m]
    [renderer.app.db :refer [App]]
+   [renderer.db :refer [Vec2]]
    [renderer.frame.db :refer [DomRect]]
    [renderer.frame.handlers :as frame.handlers]
    [renderer.history.handlers :as history.handlers]
    [renderer.snap.handlers :as snap.handlers]
    [renderer.tool.db :refer [Tool State Cursor]]
-   [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.math :refer [Vec2]]))
+   [renderer.tool.hierarchy :as tool.hierarchy]))
 
 (m/=> add-fx [:-> App vector? App])
 (defn add-fx

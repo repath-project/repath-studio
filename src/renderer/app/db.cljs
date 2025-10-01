@@ -3,7 +3,7 @@
    [config :as config]
    [malli.core :as m]
    [malli.transform :as m.transform]
-   [renderer.db :refer [JS_Object]]
+   [renderer.db :refer [BBox Vec2 JS_Object]]
    [renderer.dialog.db :refer [Dialog]]
    [renderer.document.db :refer [Document DocumentId SaveInfo]]
    [renderer.element.db :refer [Element]]
@@ -14,9 +14,7 @@
    [renderer.theme.db :refer [Theme]]
    [renderer.timeline.db :refer [Timeline]]
    [renderer.tool.db :refer [Handle Tool State Cursor]]
-   [renderer.utils.bounds :refer [BBox]]
    [renderer.utils.i18n :refer [Lang]]
-   [renderer.utils.math :refer [Vec2]]
    [renderer.window.db :refer [Window]]))
 
 (def Panels

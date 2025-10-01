@@ -1,17 +1,9 @@
 (ns renderer.utils.bounds
   (:require
    [malli.core :as m]
-   [renderer.db :refer [JS_Element]]
+   [renderer.db :refer [BBox JS_Element Vec2]]
    [renderer.snap.db :refer [SnapOptions]]
-   [renderer.utils.i18n :refer [t]]
-   [renderer.utils.math :refer [Vec2]]))
-
-(def BBox
-  [:tuple
-   [number? {:title "min-x"}]
-   [number? {:title "min-y"}]
-   [number? {:title "max-x"}]
-   [number? {:title "max-y"}]])
+   [renderer.utils.i18n :refer [t]]))
 
 (m/=> dom-el->bbox [:-> JS_Element [:maybe BBox]])
 (defn dom-el->bbox

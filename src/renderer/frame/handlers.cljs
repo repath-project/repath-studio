@@ -3,12 +3,13 @@
    [clojure.core.matrix :as matrix]
    [malli.core :as m]
    [renderer.app.db :refer [App]]
+   [renderer.db :refer [BBox Vec2]]
    [renderer.document.db :refer [ZoomFactor]]
    [renderer.element.handlers :as element.handlers]
    [renderer.frame.db :refer [DomRect Viewbox FocusType]]
-   [renderer.utils.bounds :as utils.bounds :refer [BBox]]
+   [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
-   [renderer.utils.math :as utils.math :refer [Vec2]]))
+   [renderer.utils.math :as utils.math]))
 
 (m/=> viewbox [:function
                [:-> App [:maybe Viewbox]]

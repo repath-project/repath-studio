@@ -9,6 +9,7 @@
    [malli.error :as m.error]
    [renderer.app.db :refer [App]]
    [renderer.attribute.hierarchy :as attribute.hierarchy]
+   [renderer.db :refer [BBox BooleanOperation PathManipulation Vec2]]
    [renderer.element.db
     :as element.db
     :refer [ElementAttrs Element ElementId ElementTag AnimationTag Direction]]
@@ -17,14 +18,11 @@
    [renderer.notification.views :as notification.views]
    [renderer.tool.db :refer [HandleId]]
    [renderer.utils.attribute :as utils.attribute]
-   [renderer.utils.bounds :as utils.bounds :refer [BBox]]
+   [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
    [renderer.utils.extra :refer [partial-right]]
    [renderer.utils.hiccup :as utils.hiccup]
-   [renderer.utils.math :refer [Vec2]]
-   [renderer.utils.path
-    :as utils.path
-    :refer [PathManipulation PathBooleanOperation]]
+   [renderer.utils.path :as utils.path]
    [renderer.utils.vec :as utils.vec]))
 
 (m/=> path [:function
@@ -746,7 +744,7 @@
       (assoc-in (path db (:id el)) el)
       (refresh-bbox (:id el))))
 
-(m/=> boolean-operation [:-> App PathBooleanOperation App])
+(m/=> boolean-operation [:-> App BooleanOperation App])
 (defn boolean-operation
   [db operation]
   (let [selected-elements (top-selected-sorted db)

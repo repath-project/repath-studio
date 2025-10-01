@@ -2,13 +2,12 @@
   (:require
    [malli.core :as m]
    [renderer.app.db :refer [App]]
-   [renderer.db :refer [JS_Object]]
+   [renderer.db :refer [JS_Object Vec2]]
    [renderer.document.db :refer [DocumentId]]
    [renderer.document.handlers :as document.handlers]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.db :refer [Explanation History HistoryId HistoryState]]
    [renderer.utils.i18n :refer [t]]
-   [renderer.utils.math :refer [Vec2]]
    [renderer.utils.vec :as utils.vec]))
 
 (m/=> path [:function

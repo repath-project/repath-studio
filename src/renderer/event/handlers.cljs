@@ -4,14 +4,14 @@
    [malli.core :as m]
    [renderer.app.db :refer [App]]
    [renderer.app.effects :as-alias app.effects]
+   [renderer.db :refer [Vec2]]
    [renderer.effects :as-alias effects]
    [renderer.event.db :refer [PointerEvent KeyboardEvent WheelEvent DragEvent]]
    [renderer.event.effects :as-alias event.effects]
    [renderer.frame.handlers :as frame.handlers]
    [renderer.snap.handlers :as snap.handlers]
    [renderer.tool.handlers :as tool.handlers]
-   [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.math :refer [Vec2]]))
+   [renderer.tool.hierarchy :as tool.hierarchy]))
 
 (m/=> significant-drag? [:-> Vec2 Vec2 number? boolean?])
 (defn significant-drag?

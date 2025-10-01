@@ -2,8 +2,8 @@
   (:require
    [malli.core :as m]
    [malli.transform :as m.transform]
-   [renderer.element.hierarchy :as element.hierarchy]
-   [renderer.utils.bounds :refer [BBox]]))
+   [renderer.db :refer [BBox]]
+   [renderer.element.hierarchy :as element.hierarchy]))
 
 (defn tag?
   [k]

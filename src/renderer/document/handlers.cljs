@@ -5,6 +5,7 @@
    [malli.error :as m.error]
    [malli.transform :as m.transform]
    [renderer.app.db :refer [App]]
+   [renderer.db :refer [Vec2]]
    [renderer.document.db
     :as document.db
     :refer [Document DocumentId PersistedDocument SaveInfo]]
@@ -14,7 +15,6 @@
    [renderer.notification.handlers :as notification.handlers]
    [renderer.notification.views :as notification.views]
    [renderer.snap.handlers :as snap.handlers]
-   [renderer.utils.math :refer [Vec2]]
    [renderer.utils.vec :as utils.vec]))
 
 (m/=> path [:function

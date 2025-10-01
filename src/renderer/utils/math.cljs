@@ -1,10 +1,8 @@
 (ns renderer.utils.math
   (:require
    [clojure.math :as math]
-   [malli.core :as m]))
-
-(def Vec2
-  [:tuple number? number?])
+   [malli.core :as m]
+   [renderer.db :refer [Vec2]]))
 
 (m/=> clamp [:-> number? number? number? number?])
 (defn clamp
