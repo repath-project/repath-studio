@@ -91,7 +91,8 @@
           (-> db
               (document.handlers/set-active id)
               (dialog.handlers/create
-               {:title (tr db [::save-changes "Do you want to save your changes?"])
+               {:title (tr db [::save-changes
+                               "Do you want to save your changes?"])
                 :has-close-button true
                 :content [dialog.views/save (get-in db [:documents id])]
                 :attrs {:onOpenAutoFocus #(.preventDefault %)}})))
@@ -237,10 +238,13 @@
   [db document]
   (notification.views/generic-error
    {:title
-    (tr db [::error-loading "Error while loading %1"] [(:title document)])
+    (tr db
+        [::error-loading "Error while loading %1"]
+        [(:title document)])
     :message
-    (tr db [::unsupported-or-corrupted
-            "File appears to be unsupported or corrupted."])}))
+    (tr db
+        [::unsupported-or-corrupted
+         "File appears to be unsupported or corrupted."])}))
 
 (rf/reg-event-fx
  ::load
@@ -250,6 +254,7 @@
      (let [migrated-document (utils.compatibility/migrate-document document)
            is-migrated (not= document migrated-document)
            document (merge {:id guid} migrated-document)
+           save-info (document.handlers/save-info document)
            {:keys [id file-handle]} document]
        {:db (cond-> db
               :always
@@ -257,8 +262,7 @@
                   (history.handlers/finalize [::load-doc "Load document"]))
 
               (not is-migrated)
-              (document.handlers/update-save-info (document.handlers/save-info
-                                                   document)))
+              (document.handlers/update-save-info save-info))
         :fx [(when file-handle
                [::app.effects/set-local-store
                 {:data file-handle
