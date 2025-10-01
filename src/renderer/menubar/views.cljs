@@ -501,9 +501,7 @@
     :label (t [::panel-timeline-editor "Timeline editor"])
     :icon "timeline"
     :checked @(rf/subscribe [::app.subs/panel-visible? :timeline])
-    :action [::app.events/toggle-panel :timeline]}
-   {:id :divider-2
-    :type :separator}])
+    :action [::app.events/toggle-panel :timeline]}])
 
 (defn view-menu
   []
