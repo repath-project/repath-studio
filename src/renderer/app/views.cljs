@@ -6,6 +6,7 @@
    ["path-browserify" :as path-browserify]
    ["react-fps" :refer [FpsView]]
    ["react-resizable-panels" :refer [Panel PanelGroup]]
+   ["vaul" :refer [Drawer]]
    [clojure.string :as string]
    [config :as config]
    [re-frame.core :as rf]
@@ -38,6 +39,7 @@
    [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]
    [renderer.views :as views]
+   [renderer.window.subs :as-alias window.subs]
    [renderer.window.views :as window.views]
    [renderer.worker.subs :as-alias worker.subs]))
 
@@ -113,6 +115,13 @@
      [:div.absolute.bg-accent.top-2.left-2.px-1.rounded.text-accent-inverted
       preview-label])])
 
+(defn right-panel
+  [active-tool]
+  [:div.flex.flex-col.h-full.w-80.bg-secondary
+   [views/scroll-area
+    (tool.hierarchy/right-panel active-tool)]
+   [:div.bg-primary.grow.flex]])
+
 (defn frame-panel
   []
   (let [ruler-visible? @(rf/subscribe [::ruler.subs/visible?])
@@ -121,7 +130,10 @@
         help-message @(rf/subscribe [::tool.subs/help])
         help-bar @(rf/subscribe [::app.subs/help-bar])
         debug-info? @(rf/subscribe [::app.subs/debug-info])
-        worker-active? @(rf/subscribe [::worker.subs/some-active?])]
+        md? @(rf/subscribe [::window.subs/breakpoint? :md])
+        some-selected? @(rf/subscribe [::element.subs/some-selected?])
+        worker-active? @(rf/subscribe [::worker.subs/some-active?])
+        active-tool @(rf/subscribe [::tool.subs/active])]
     [:div.flex.flex-col.flex-1.h-full.gap-px
      [:div
       [views/scroll-area [toolbar.tools/root]]
@@ -132,7 +144,7 @@
                    :height ruler.views/ruler-size}}
           [views/icon-button
            (if ruler-locked? "lock" "unlock")
-           {:class "small hidden"
+           {:class "small"
             :title (if ruler-locked?
                      (t [::unlock "Unlock"])
                      (t [::lock "Lock"]))
@@ -147,18 +159,46 @@
           :class "rtl:scale-x-[-1]"}
          [ruler.views/ruler :vertical]])
       [:div.relative.grow.flex
-       {:data-theme "light"}
-       [frame.views/root]
-       (when read-only? [read-only-overlay])
-       (when debug-info? [debug-info])
-       (when worker-active?
-         [:button.icon-button.absolute.bottom-2.right-2
-          [views/loading-indicator]])
-       (when @(rf/subscribe [::app.subs/backdrop])
-         [:div.absolute.inset-0
-          {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])
-       (when (and help-bar (seq help-message))
-         [help help-message])]]]))
+       [:div.relative.grow.flex
+        {:data-theme "light"}
+        [frame.views/root]
+        (when read-only? [read-only-overlay])
+        (when debug-info? [debug-info])
+        (when worker-active?
+          [:button.icon-button.absolute.bottom-2.right-2
+           [views/loading-indicator]])
+        (when @(rf/subscribe [::app.subs/backdrop])
+          [:div.absolute.inset-0
+           {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])
+        (when (and help-bar (seq help-message))
+          [help help-message])]
+       (when (and (not md?)
+                  some-selected?)
+         [:> Drawer.Root {:direction "right"}
+          [:> Drawer.Trigger
+           {:class "button px-2 absolute bottom-2 right-2 rounded bg-primary!"
+            :aria-label (t [::toggle-properties "Toggle attributes panel"])}
+           [views/icon "properties"]]
+          [:> Drawer.Portal
+           [:> Drawer.Overlay {:class "backdrop"}]
+           [:> Drawer.Content
+            {:class "inset-0 left-auto fixed z-10 outline-none w-80 flex"}
+            [:> Drawer.Title {:class "sr-only"}
+             (t [::properties-panel "Attributes panel"])]
+            [right-panel active-tool]]]])
+       (when (not md?)
+         [:> Drawer.Root {:direction "left"}
+          [:> Drawer.Trigger
+           {:class "button px-2 absolute bottom-2 left-2 rounded bg-primary!"
+            :aria-label (t [::toggle-properties "Toggle tree panel"])}
+           [views/icon "tree"]]
+          [:> Drawer.Portal
+           [:> Drawer.Overlay {:class "backdrop"}]
+           [:> Drawer.Content
+            {:class "inset-0 right-auto fixed z-10 outline-none w-80 flex"}
+            [:> Drawer.Title {:class "sr-only"}
+             (t [::properties-panel "Tree panel"])]
+            [tree.views/root]]]])]]]))
 
 (defn center-top-group
   []
@@ -363,6 +403,7 @@
         recent-documents @(rf/subscribe [::document.subs/recent])
         lang-dir @(rf/subscribe [::app.subs/lang-dir])
         web? @(rf/subscribe [::app.subs/web?])
+        md? @(rf/subscribe [::window.subs/breakpoint? :md])
         is-app-loading @(rf/subscribe [::app.subs/loading?])]
     (if is-app-loading
       (when web? [:div.loader])
@@ -374,8 +415,7 @@
            [:div.flex.h-full.flex-1.overflow-hidden.gap-px
             (when tree-visible
               [:div.flex-col.hidden.overflow-hidden
-               {:class "md:flex"
-                :style {:width "227px"}}
+               {:class "md:flex w-[227px]"}
                [document.views/actions]
                [tree.views/root]])
             [:div.flex.flex-col.flex-1.overflow-hidden.h-full
@@ -384,13 +424,8 @@
               [:div.flex.h-full.flex-col.flex-1.overflow-hidden.gap-px
                [editor]]
               [:div.flex.gap-px
-               (when properties-visible
-                 [:div.hidden
-                  {:class "md:flex"}
-                  [:div.flex.flex-col.h-full.w-80
-                   [views/scroll-area
-                    (tool.hierarchy/right-panel active-tool)]
-                   [:div.bg-primary.grow.flex]]])
+               (when (and md? properties-visible)
+                 [right-panel active-tool])
                [:div.bg-primary.flex
                 [views/scroll-area [toolbar.object/root]]]]]]]
            [home recent-documents])

@@ -136,7 +136,8 @@
     "svg-path-bbox": "2.1.0",
     "svgpath": "2.6.0",
     "tailwind-merge": "3.3.1",
-    "tailwindcss": "4.1.13"
+    "tailwindcss": "4.1.13",
+    "vaul": "1.1.2"
   },
   "dependencies": {
     "@sentry/electron": "7.1.1",

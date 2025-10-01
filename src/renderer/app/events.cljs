@@ -105,6 +105,8 @@
         [js/document "fullscreenchange" [::window.events/update-fullscreen]]
         [js/window "focus" [::window.events/update-focused]]
         [js/window "blur" [::window.events/update-focused]]
+        [js/window "resize" [::window.events/update-width]]
+        [js/window "load" [::window.events/update-width]]
         [js/window "beforeinstallprompt" [::set-install-prompt]]]
        (mapv (partial vector ::effects/add-event-listener))))
 

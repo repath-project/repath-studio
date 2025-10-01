@@ -16,6 +16,11 @@
  (fn [coeffects _]
    (assoc coeffects :fullscreen (boolean (.-fullscreenElement js/document)))))
 
+(rf/reg-cofx
+ ::width
+ (fn [coeffects _]
+   (assoc coeffects :width (.-innerWidth js/window))))
+
 (rf/reg-fx
  ::close
  (fn [_]

@@ -32,6 +32,12 @@
    {:db (assoc-in db [:window :focused] focused)}))
 
 (rf/reg-event-fx
+ ::update-width
+ [(rf/inject-cofx ::window.effects/width)]
+ (fn [{:keys [db width]} _]
+   {:db (assoc-in db [:window :width] width)}))
+
+(rf/reg-event-fx
  ::update-fullscreen
  [(rf/inject-cofx ::window.effects/fullscreen)]
  (fn [{:keys [db fullscreen]} _]

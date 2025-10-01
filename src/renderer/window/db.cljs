@@ -5,4 +5,5 @@
    [:maximized {:default true} boolean?]
    [:minimized {:default false} boolean?]
    [:fullscreen {:default false} boolean?]
-   [:focused {:default false} boolean?]])
+   [:focused {:default false} boolean?]
+   [:width {:optional true} int?]])
