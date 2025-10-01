@@ -51,5 +51,5 @@
            (rf/dispatch [::notification.events/show-exception err])
            (is (= (:content (first @notifications))
                   [:div
-                   [:h2.font-bold.text-error "Error"]
+                   [:h2.font-bold.text-error.pr-5 "Error"]
                    [:div.mt-4 "Error message"]]))))))))
