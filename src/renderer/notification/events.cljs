@@ -8,19 +8,27 @@
 (rf/reg-event-db
  ::add
  (fn [db [_ notification]]
-   (cond-> db notification (notification.handlers/add notification))))
+   (cond-> db
+     notification
+     (notification.handlers/add notification))))
 
 (rf/reg-event-db
  ::show-unavailable-feature
  (fn [db [_ feature compatibility-url]]
-   (notification.handlers/add db (notification.views/unavailable-feature
-                                  feature
-                                  compatibility-url))))
+   (->> (notification.views/unavailable-feature feature compatibility-url)
+        (notification.handlers/add db))))
+
+(rf/reg-event-db
+ ::show-error
+ (fn [db [_ error]]
+   (->> (notification.views/generic-error error)
+        (notification.handlers/add db))))
 
 (rf/reg-event-db
  ::show-exception
  (fn [db [_ ^js/Error error]]
-   (notification.handlers/add db (notification.views/exception error))))
+   (->> (notification.views/exception error)
+        (notification.handlers/add db))))
 
 (rf/reg-event-db
  ::remove-nth

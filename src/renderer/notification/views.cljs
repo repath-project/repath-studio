@@ -10,7 +10,8 @@
 (defn unavailable-feature
   [feature compatibility-url]
   [:div
-   [:h2.font-bold.text-error (str feature " is unavailable")]
+   [:h2.font-bold.text-error.pr-5
+    (str feature " is unavailable")]
    [:div.mt-4
     "Your browser does not support this API."
     "You can check the "
@@ -21,8 +22,10 @@
 (defn generic-error
   [{:keys [title message]}]
   [:div
-   [:h2.font-bold.text-error (or title (t [::error "Error"]))]
-   (when message [:div.mt-4 message])])
+   [:h2.font-bold.text-error.pr-5
+    (or title (t [::error "Error"]))]
+   (when message
+     [:div.mt-4 message])])
 
 (defn exception
   [^js/Error error]
@@ -34,7 +37,8 @@
 (defn spec-failed
   [event error]
   [:div
-   [:h2.font-bold.text-error (t [::validation-error "Validation error"])]
+   [:h2.font-bold.text-error.pr-5
+    (t [::validation-error "Validation error"])]
    [:div.mt-4
     [:p (t [::event "Event: "]) event]
     [:p error]]])
@@ -44,10 +48,9 @@
   [:div.relative.flex.bg-secondary.w-80.p-4.mb-2.rounded.shadow-md
    {:class "border border-default"}
    (:content notification)
-   [views/icon-button
-    "times"
+   [views/icon-button "times"
     {:aria-label (t [::close "Close"])
-     :class "icon-button absolute small top-3 right-3 rtl:right-auto rtl:left-3"
+     :class "icon-button absolute small right-3 rtl:right-auto rtl:left-3"
      :on-click #(rf/dispatch [::notification.events/remove-nth index])}]
    (when (> (:count notification) 1)
      [:div.absolute.bg-error.left-0.top-0.px-1.py-0.5.rounded

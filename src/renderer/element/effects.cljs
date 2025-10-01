@@ -43,32 +43,32 @@
                                (.getImageData 0 0 w h))}
              :on-success on-success}])))))))
 
+(defn- decode-image
+  [data-url {:keys [^js/File file position on-success on-error]}]
+  (let [[x y] position
+        image (js/Image.)]
+    (set! (.-src image) data-url)
+    (-> (.decode image)
+        (.then #(let [w (.-width image)
+                      h (.-height image)]
+                  (some-> on-success
+                          (conj {:type :element
+                                 :tag :image
+                                 :label (.-name file)
+                                 :attrs {:x x
+                                         :y y
+                                         :width w
+                                         :height h
+                                         :href data-url}})
+                          rf/dispatch)))
+        (.catch #(some-> on-error (conj %) rf/dispatch)))))
+
 (rf/reg-fx
  ::import-image
- (fn [{:keys [^js/File file position on-success on-error]}]
-   (let [[x y] position
-         reader (js/FileReader.)]
-     (.addEventListener
-      reader
-      "load"
-      (fn []
-        (let [data-url (.-result reader)
-              image (js/Image.)]
-          (set! (.-src image) data-url)
-          (-> (.decode image)
-              (.then #(let [w (.-width image)
-                            h (.-height image)]
-                        (some-> on-success
-                                (conj {:type :element
-                                       :tag :image
-                                       :label (.-name file)
-                                       :attrs {:x x
-                                               :y y
-                                               :width w
-                                               :height h
-                                               :href data-url}})
-                                rf/dispatch)))
-              (.catch #(some-> on-error (conj %) rf/dispatch))))))
+ (fn [{:keys [^js/File file]
+       :as args}]
+   (let [reader (js/FileReader.)]
+     (.addEventListener reader "load" #(decode-image (.-result reader) args))
      (.readAsDataURL reader file))))
 
 (rf/reg-fx
