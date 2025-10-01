@@ -1,23 +1,27 @@
 (ns renderer.history.db
   (:require
-   [renderer.element.db :refer [Element]]
+   [renderer.element.db :refer [Element ElementId]]
    [renderer.utils.math :refer [Vec2]]))
 
 (def Explanation [:* any?])
+
+(def HistoryId uuid?)
+
+(def HistoryIndex [:or pos-int? zero?])
 
 (def HistoryState
   [:map {:closed true}
    [:explanation Explanation]
    [:timestamp number?]
-   [:index [:or pos-int? zero?]]
-   [:id uuid?]
-   [:elements {:optional true} [:map-of uuid? Element]]
-   [:parent {:optional true} uuid?]
-   [:children [:vector uuid?]]])
+   [:index HistoryIndex]
+   [:id HistoryId]
+   [:elements {:optional true} [:map-of ElementId Element]]
+   [:parent {:optional true} HistoryId]
+   [:children [:vector HistoryId]]])
 
 (def History
   [:map {:closed true}
    [:zoom {:optional true} number?]
    [:translate {:optional true} Vec2]
-   [:position {:optional true} uuid?]
+   [:position {:optional true} HistoryId]
    [:states {:default {}} [:map-of uuid? HistoryState]]])

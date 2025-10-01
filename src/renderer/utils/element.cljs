@@ -8,7 +8,7 @@
    [malli.core :as m]
    [reagent.dom.server :as dom.server]
    [renderer.db :refer [JS_Element]]
-   [renderer.element.db :as element.db :refer [Element Attrs]]
+   [renderer.element.db :as element.db :refer [Element ElementAttrs]]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.snap.db :refer [SnapOptions]]
    [renderer.utils.attribute :as utils.attribute]
@@ -157,7 +157,7 @@
                         :viewBox viewbox
                         :xmlns "http://www.w3.org/2000/svg"}}])))
 
-(m/=> style->map [:-> Attrs Attrs])
+(m/=> style->map [:-> ElementAttrs ElementAttrs])
 (defn style->map
   "Converts :style attribute to map.
    Parsing might throw an exception. When that happens, we remove the attribute

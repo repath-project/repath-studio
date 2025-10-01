@@ -3,35 +3,38 @@
    [config :as config]
    [malli.core :as m]
    [malli.transform :as m.transform]
-   [renderer.element.db :refer [Element]]
-   [renderer.history.db :refer [History]]
+   [renderer.element.db :refer [Element ElementId]]
+   [renderer.history.db :refer [History HistoryId]]
    [renderer.menubar.filters :refer [A11yFilter]]
+   [renderer.tool.db :refer [HandleId]]
    [renderer.utils.math :refer [Vec2]]))
 
 (def ZoomFactor
   [:and number? [:>= 0.01] [:<= 100]])
 
+(def DocumentId uuid?)
+
 (def Document
   [:map {:closed true}
    [:id {:optional true
-         :persist true} uuid?]
+         :persist true} DocumentId]
    [:title {:optional true
             :min 1
             :persist true} string?]
    [:path {:optional true
            :persist true} string?]
-   [:saved-history-id {:optional true} uuid?]
+   [:saved-history-id {:optional true} HistoryId]
    [:version {:optional true
               :persist true} string?]
-   [:hovered-ids {:default #{}} [:set [:or keyword? uuid?]]]
-   [:collapsed-ids {:default #{}} [:set uuid?]]
-   [:ignored-ids {:default #{}} [:set [:or keyword? uuid?]]]
+   [:hovered-ids {:default #{}} [:set [:or HandleId ElementId]]]
+   [:collapsed-ids {:default #{}} [:set ElementId]]
+   [:ignored-ids {:default #{}} [:set [:or HandleId ElementId]]]
    [:zoom {:default 1} ZoomFactor]
    [:rotate {:default 0} number?]
    [:history {:optional true} History]
    [:pan {:default [0 0]} Vec2]
    [:elements {:default {}
-               :persist true} [:map-of uuid? Element]]
+               :persist true} [:map-of ElementId Element]]
    [:centered {:optional true} boolean?]
    [:filter {:optional true} A11yFilter]
    [:attrs {:default {:fill "white"

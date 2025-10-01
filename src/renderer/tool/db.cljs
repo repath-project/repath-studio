@@ -54,9 +54,11 @@
 (def HandleAction
   [:enum :translate :scale :edit])
 
+(def HandleId keyword?)
+
 (def Handle
   [:map {:closed true}
-   [:id keyword?]
+   [:id HandleId]
    [:label {:optional true} string?]
    [:action HandleAction]
    [:type [:= :handle]]

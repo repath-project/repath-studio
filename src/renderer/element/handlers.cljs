@@ -11,10 +11,11 @@
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.element.db
     :as element.db
-    :refer [Element Tag AnimationTag Direction]]
+    :refer [ElementAttrs Element ElementId ElementTag AnimationTag Direction]]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.notification.handlers :as notification.handlers]
    [renderer.notification.views :as notification.views]
+   [renderer.tool.db :refer [HandleId]]
    [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.bounds :as utils.bounds :refer [BBox]]
    [renderer.utils.element :as utils.element]
@@ -28,9 +29,9 @@
 
 (m/=> path [:function
             [:-> App vector?]
-            [:-> App uuid? vector?]
-            [:-> App uuid? keyword? vector?]
-            [:-> App uuid? keyword? [:* any?] vector?]])
+            [:-> App ElementId vector?]
+            [:-> App ElementId keyword? vector?]
+            [:-> App ElementId keyword? [:* any?] vector?]])
 (defn path
   ([db]
    [:documents (:active-document db) :elements])
@@ -43,14 +44,14 @@
 
 (m/=> entities [:function
                 [:-> App [:maybe [:sequential Element]]]
-                [:-> App [:maybe [:vector uuid?]] [:maybe [:sequential Element]]]])
+                [:-> App [:maybe [:vector ElementId]] [:maybe [:sequential Element]]]])
 (defn entities
   ([db]
    (vals (get-in db (path db))))
   ([db ids]
    (vals (select-keys (get-in db (path db)) ids))))
 
-(m/=> entity [:-> App [:maybe uuid?] [:maybe Element]])
+(m/=> entity [:-> App [:maybe ElementId] [:maybe Element]])
 (defn entity
   [db id]
   (get-in db (path db id)))
@@ -60,7 +61,7 @@
   [db]
   (some #(when (utils.element/root? %) %) (entities db)))
 
-(m/=> locked? [:-> App uuid? boolean?])
+(m/=> locked? [:-> App ElementId boolean?])
 (defn locked?
   [db id]
   (-> db (entity id) :locked boolean))
@@ -90,21 +91,21 @@
 
 (m/=> selected-ids [:function
                     [:-> fn?]
-                    [:-> App [:set uuid?]]])
+                    [:-> App [:set ElementId]]])
 (defn selected-ids
   ([]
    (comp (selected) (map :id)))
   ([db]
    (into #{} (selected-ids) (entities db))))
 
-(m/=> children-ids [:-> App uuid? [:vector uuid?]])
+(m/=> children-ids [:-> App ElementId [:vector ElementId]])
 (defn children-ids
   [db id]
   (:children (entity db id)))
 
 (m/=> parent-ids [:function
                   [:-> fn?]
-                  [:-> App [:set uuid?]]])
+                  [:-> App [:set ElementId]]])
 (defn parent-ids
   ([]
    (comp (selected) (keep :parent)))
@@ -113,7 +114,7 @@
 
 (m/=> parent [:function
               [:-> App [:maybe Element]]
-              [:-> App [:maybe uuid?] [:maybe Element]]])
+              [:-> App [:maybe ElementId] [:maybe Element]]])
 (defn parent
   ([db]
    (let [ids (parent-ids db)]
@@ -125,7 +126,7 @@
             :parent
             (entity db))))
 
-(m/=> parent-container [:-> App uuid? [:maybe Element]])
+(m/=> parent-container [:-> App ElementId [:maybe Element]])
 (defn parent-container
   [db id]
   (when-let [parent-el (parent db id)]
@@ -133,7 +134,7 @@
       parent-el
       (recur db (:id parent-el)))))
 
-(m/=> adjusted-bbox [:-> App uuid? [:maybe BBox]])
+(m/=> adjusted-bbox [:-> App ElementId [:maybe BBox]])
 (defn adjusted-bbox
   [db id]
   (loop [container (parent-container db id)
@@ -149,7 +150,7 @@
           (+ max-x offset-x)
           (+ max-y offset-y)])))))
 
-(m/=> refresh-bbox [:-> App uuid? App])
+(m/=> refresh-bbox [:-> App ElementId App])
 (defn refresh-bbox
   [db id]
   (let [el (entity db id)
@@ -163,7 +164,7 @@
       (-> (reduce refresh-bbox db children)
           (update-in (path db id) assoc :bbox bbox)))))
 
-(m/=> update-el [:-> App uuid? ifn? [:* any?] App])
+(m/=> update-el [:-> App ElementId ifn? [:* any?] App])
 (defn update-el
   ([db id f]
    (if (locked? db id)
@@ -191,8 +192,8 @@
             (count (children-ids db (first ids)))))))
 
 (m/=> siblings [:function
-                [:-> App [:maybe [:vector uuid?]]]
-                [:-> App uuid? [:maybe [:vector uuid?]]]])
+                [:-> App [:maybe [:vector ElementId]]]
+                [:-> App ElementId [:maybe [:vector ElementId]]]])
 (defn siblings
   ([db]
    (:children (parent db)))
@@ -211,8 +212,8 @@
        (filter utils.element/svg?)))
 
 (m/=> ancestor-ids [:function
-                    [:-> App [:sequential uuid?]]
-                    [:-> App uuid? [:sequential uuid?]]])
+                    [:-> App [:sequential ElementId]]
+                    [:-> App ElementId [:sequential ElementId]]])
 (defn ancestor-ids
   ([db]
    (reduce #(concat %1 (ancestor-ids db %2)) [] (selected-ids db)))
@@ -225,14 +226,14 @@
         (conj ids parent-id))
        ids))))
 
-(m/=> index [:-> App uuid? [:maybe int?]])
+(m/=> index [:-> App ElementId [:maybe int?]])
 (defn index
   "Returns the index of an element on its parent children vector."
   [db id]
   (some-> (siblings db id)
           (.indexOf id)))
 
-(m/=> index-path [:-> App uuid? [:vector int?]])
+(m/=> index-path [:-> App ElementId [:vector int?]])
 (defn index-path
   "Returns a sequence that represents the index path of an element.
    For example, the seventh element of the second svg on the canvas will
@@ -244,8 +245,8 @@
           (index db id))))
 
 (m/=> descendant-ids [:function
-                      [:-> App [:set uuid?]]
-                      [:-> App uuid? [:set uuid?]]])
+                      [:-> App [:set ElementId]]
+                      [:-> App ElementId [:set ElementId]]])
 (defn descendant-ids
   ([db]
    (into #{} (comp (selected-ids)
@@ -259,17 +260,17 @@
         (set/union child-keys children-set))
        child-keys))))
 
-(m/=> top-ancestor-ids [:-> App [:set uuid?]])
+(m/=> top-ancestor-ids [:-> App [:set ElementId]])
 (defn top-ancestor-ids
   [db]
   (set/difference (selected-ids db) (descendant-ids db)))
 
-(m/=> selected-with-descendant-ids [:-> App [:set uuid?]])
+(m/=> selected-with-descendant-ids [:-> App [:set ElementId]])
 (defn selected-with-descendant-ids
   [db]
   (set/union (selected-ids db) (descendant-ids db)))
 
-(m/=> non-selected-ids [:-> App [:maybe [:set uuid?]]])
+(m/=> non-selected-ids [:-> App [:maybe [:set ElementId]]])
 (defn non-selected-ids
   [db]
   (set/difference (->> (path db) (get-in db) keys (into #{}))
@@ -289,7 +290,7 @@
                    (disj (:id (root db)))
                    (vec))))
 
-(m/=> update-prop [:-> App uuid? ifn? [:* any?] App])
+(m/=> update-prop [:-> App ElementId ifn? [:* any?] App])
 (defn update-prop
   ([db id k f]
    (update-in db (path db id k) f))
@@ -300,7 +301,7 @@
 
 (m/=> assoc-prop [:function
                   [:-> App keyword? any? App]
-                  [:-> App uuid? keyword? any? App]])
+                  [:-> App ElementId keyword? any? App]])
 (defn assoc-prop
   ([db k v]
    (reduce (partial-right assoc-prop k v) db (selected-ids db)))
@@ -311,7 +312,7 @@
 
 (m/=> dissoc-attr [:function
                    [:-> App keyword? App]
-                   [:-> App uuid? keyword? App]])
+                   [:-> App ElementId keyword? App]])
 (defn dissoc-attr
   ([db k]
    (reduce (partial-right dissoc-attr k) db (selected-ids db)))
@@ -323,7 +324,7 @@
 
 (m/=> assoc-attr [:function
                   [:-> App keyword? string? App]
-                  [:-> App uuid? keyword? string? App]])
+                  [:-> App ElementId keyword? string? App]])
 (defn assoc-attr
   ([db k v]
    (reduce (partial-right assoc-attr k v) db (selected-ids db)))
@@ -335,7 +336,7 @@
 
 (m/=> set-attr [:function
                 [:-> App keyword? any? App]
-                [:-> App uuid? keyword? any? App]])
+                [:-> App ElementId keyword? any? App]])
 (defn set-attr
   ([db k v]
    (reduce (partial-right set-attr k v) db (selected-ids db)))
@@ -347,7 +348,7 @@
        (assoc-attr db id k (string/trim (str v))))
      db)))
 
-(m/=> update-attr [:-> App uuid? keyword? ifn? [:* any?] App])
+(m/=> update-attr [:-> App ElementId keyword? ifn? [:* any?] App])
 (defn update-attr
   ([db id k f]
    (cond-> db
@@ -364,14 +365,14 @@
 
 (m/=> deselect [:function
                 [:-> App App]
-                [:-> App uuid? App]])
+                [:-> App ElementId App]])
 (defn deselect
   ([db]
    (transduce (selected-ids) (completing deselect) db (entities db)))
   ([db id]
    (assoc-prop db id :selected false)))
 
-(m/=> collapse [:-> App uuid? App])
+(m/=> collapse [:-> App ElementId App])
 (defn collapse
   [db id]
   (update-in db [:documents (:active-document db) :collapsed-ids] conj id))
@@ -381,27 +382,27 @@
   [db]
   (transduce (map :id) (completing collapse) db (entities db)))
 
-(m/=> expand [:-> App uuid? App])
+(m/=> expand [:-> App ElementId App])
 (defn expand
   [db id]
   (update-in db [:documents (:active-document db) :collapsed-ids] disj id))
 
-(m/=> expand-ancestors [:-> App uuid? App])
+(m/=> expand-ancestors [:-> App ElementId App])
 (defn expand-ancestors
   [db id]
   (reduce expand db (ancestor-ids db id)))
 
-(m/=> select [:-> App uuid? App])
+(m/=> select [:-> App ElementId App])
 (defn select
   [db id]
   (-> db
       (expand-ancestors id)
       (assoc-prop id :selected true)))
 
-(m/=> toggle-selection [:-> App [:or uuid? keyword?] boolean? App])
+(m/=> toggle-selection [:-> App [:or ElementId HandleId] boolean? App])
 (defn toggle-selection
   [db id additive]
-  (if-not (uuid? id)
+  (if-not (m/validate ElementId id)
     db
     (let [root-id (:id (root db))]
       (if (entity db id)
@@ -419,13 +420,13 @@
                       (children-ids db (:id (parent db (:id (parent db)))))
                       (siblings db))))
 
-(m/=> selected-tags [:-> App [:set Tag]])
+(m/=> selected-tags [:-> App [:set ElementTag]])
 (defn selected-tags
   [db]
   (into #{} (comp (selected)
                   (map :tag)) (entities db)))
 
-(m/=> filter-by-tag [:-> App Tag [:sequential Element]])
+(m/=> filter-by-tag [:-> App ElementTag [:sequential Element]])
 (defn filter-by-tag
   ([tag]
    (comp (selected)
@@ -460,12 +461,12 @@
   (->> (top-selected-ancestors db)
        (sort-by-index-path db)))
 
-(m/=> selected-sorted-ids [:-> App [:vector uuid?]])
+(m/=> selected-sorted-ids [:-> App [:vector ElementId]])
 (defn selected-sorted-ids
   [db]
   (mapv :id (selected-sorted db)))
 
-(m/=> top-selected-sorted-ids [:-> App [:vector uuid?]])
+(m/=> top-selected-sorted-ids [:-> App [:vector ElementId]])
 (defn top-selected-sorted-ids
   [db]
   (->> (top-selected-sorted db)
@@ -480,12 +481,12 @@
                    (not (contains? #{:svg :canvas} (:tag el)))
                    (update-prop (:id el) :selected not))) db)))
 
-(m/=> hover [:-> App [:or uuid? keyword?] App])
+(m/=> hover [:-> App [:or ElementId HandleId] App])
 (defn hover
   [db id]
   (update-in db [:documents (:active-document db) :hovered-ids] conj id))
 
-(m/=> ignore [:-> App [:or uuid? keyword?] App])
+(m/=> ignore [:-> App [:or ElementId HandleId] App])
 (defn ignore
   [db id]
   (cond-> db
@@ -499,7 +500,7 @@
     (:active-document db)
     (assoc-in [:documents (:active-document db) :hovered-ids] #{})))
 
-(m/=> unignore [:-> App [:or uuid? keyword?] App])
+(m/=> unignore [:-> App [:or ElementId HandleId] App])
 (defn unignore
   [db id]
   (cond-> db
@@ -529,7 +530,7 @@
 
 (m/=> delete [:function
               [:-> App App]
-              [:-> App uuid? App]])
+              [:-> App ElementId App]])
 (defn delete
   ([db]
    (reduce delete db (reverse (selected-sorted-ids db))))
@@ -544,7 +545,7 @@
 
 (m/=> update-index [:function
                     [:-> App ifn? App]
-                    [:-> App uuid? ifn? App]])
+                    [:-> App ElementId ifn? App]])
 (defn update-index
   ([db f]
    (reduce (partial-right update-index f) db (selected-sorted-ids db)))
@@ -557,9 +558,9 @@
        (update-prop (:id (parent db id)) :children utils.vec/move i new-index)))))
 
 (m/=> set-parent [:function
-                  [:-> App uuid? App]
-                  [:-> App uuid? uuid? App]
-                  [:-> App uuid? uuid? int? App]])
+                  [:-> App ElementId App]
+                  [:-> App ElementId ElementId App]
+                  [:-> App ElementId ElementId int? App]])
 (defn set-parent
   ([db parent-id]
    (reduce (partial-right set-parent parent-id) db (selected-sorted-ids db)))
@@ -587,7 +588,7 @@
 
 (m/=> translate [:function
                  [:-> App Vec2 App]
-                 [:-> App uuid? Vec2 App]])
+                 [:-> App ElementId Vec2 App]])
 (defn translate
   "Moves elements by a given offset."
   ([db offset]
@@ -597,7 +598,7 @@
 
 (m/=> place [:function
              [:-> App Vec2 App]
-             [:-> App uuid? Vec2 App]])
+             [:-> App ElementId Vec2 App]])
 (defn place
   "Positions elements to a given global position."
   ([db position]
@@ -626,7 +627,7 @@
 
 (m/=> align [:function
              [:-> App Direction App]
-             [:-> App uuid? Direction App]])
+             [:-> App ElementId Direction App]])
 (defn align
   ([db direction]
    (reduce (partial-right align direction) db (selected-ids db)))
@@ -648,7 +649,7 @@
 
 (m/=> stroke->path [:function
                     [:-> App App]
-                    [:-> App uuid? App]])
+                    [:-> App ElementId App]])
 (defn stroke->path
   ([db]
    (reduce stroke->path db (selected-ids db)))
@@ -808,8 +809,8 @@
 
 (m/=> animate [:function
                [:-> App AnimationTag App]
-               [:-> App AnimationTag map? App]
-               [:-> App uuid? AnimationTag map? App]])
+               [:-> App AnimationTag ElementAttrs App]
+               [:-> App ElementId AnimationTag ElementAttrs App]])
 (defn animate
   ([db tag]
    (animate db tag {}))
@@ -822,7 +823,7 @@
 
 (m/=> paste-styles [:function
                     [:-> App App]
-                    [:-> App uuid? App]])
+                    [:-> App ElementId App]])
 (defn paste-styles
   ([db]
    (reduce paste-styles db (selected-ids db)))
@@ -837,7 +838,7 @@
                    (update-attr id attr #(if % (-> attrs attr) disj))))
                db style-attrs)) db)))
 
-(m/=> inherit-attrs [:-> App Element uuid? App])
+(m/=> inherit-attrs [:-> App Element ElementId App])
 (defn inherit-attrs
   [db source-el id]
   (reduce
@@ -850,7 +851,7 @@
 
 (m/=> group [:function
              [:-> App App]
-             [:-> App [:sequential uuid?] App]])
+             [:-> App [:sequential ElementId] App]])
 (defn group
   ([db]
    (group db (top-selected-sorted-ids db)))
@@ -861,7 +862,7 @@
 
 (m/=> ungroup [:function
                [:-> App App]
-               [:-> App uuid? App]])
+               [:-> App ElementId App]])
 (defn ungroup
   ([db]
    (reduce ungroup db (selected-ids db)))
@@ -883,7 +884,7 @@
 
 (m/=> manipulate-path [:function
                        [:-> App PathManipulation App]
-                       [:-> App uuid? PathManipulation App]])
+                       [:-> App ElementId PathManipulation App]])
 (defn manipulate-path
   ([db action]
    (reduce (partial-right manipulate-path action) db (selected-ids db)))

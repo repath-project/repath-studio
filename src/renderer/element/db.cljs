@@ -9,7 +9,7 @@
   [k]
   (contains? (descendants ::element.hierarchy/element) k))
 
-(def Tag
+(def ElementTag
   [:fn {:error/fn (fn [{:keys [value]} _]
                     (str value ", is not a supported tag"))}
    tag?])
@@ -24,26 +24,28 @@
 (def AnimationTag
   [:enum :animate :animateTransform :animateMotion])
 
-(def Attrs
+(def ElementAttrs
   [:map-of keyword? string?])
 
 (def Direction
   [:enum :top :center-vertical :bottom :left :center-horizontal :right])
 
+(def ElementId uuid?)
+
 (def Element
   [:map {:closed true}
-   [:id {:optional true} uuid?]
-   [:tag Tag]
+   [:id {:optional true} ElementId]
+   [:tag ElementTag]
    [:label {:optional true} string?]
-   [:parent {:optional true} uuid?]
+   [:parent {:optional true} ElementId]
    [:type {:optional true} [:= :element]]
    [:visible {:optional true} boolean?]
    [:locked {:optional true} boolean?]
    [:selected {:optional true} boolean?]
-   [:children {:optional true} [:vector uuid?]]
+   [:children {:optional true} [:vector ElementId]]
    [:bbox {:optional true} BBox]
    [:content {:optional true} string?]
-   [:attrs {:optional true} Attrs]])
+   [:attrs {:optional true} ElementAttrs]])
 
 (def valid? (m/validator Element))
 

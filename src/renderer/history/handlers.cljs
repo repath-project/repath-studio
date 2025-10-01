@@ -3,9 +3,10 @@
    [malli.core :as m]
    [renderer.app.db :refer [App]]
    [renderer.db :refer [JS_Object]]
+   [renderer.document.db :refer [DocumentId]]
    [renderer.document.handlers :as document.handlers]
    [renderer.element.handlers :as element.handlers]
-   [renderer.history.db :refer [Explanation History HistoryState]]
+   [renderer.history.db :refer [Explanation History HistoryId HistoryState]]
    [renderer.utils.i18n :refer [t]]
    [renderer.utils.math :refer [Vec2]]
    [renderer.utils.vec :as utils.vec]))
@@ -27,26 +28,26 @@
   [db]
   (get-in db (path db)))
 
-(m/=> position [:-> App [:maybe uuid?]])
+(m/=> position [:-> App [:maybe HistoryId]])
 (defn position
   [db]
   (:position (history db)))
 
 (m/=> state [:function
              [:-> [:maybe History] [:maybe HistoryState]]
-             [:-> [:maybe History] [:maybe uuid?] [:maybe HistoryState]]])
+             [:-> [:maybe History] [:maybe HistoryId] [:maybe HistoryState]]])
 (defn state
   ([active-history]
    (state active-history (:position active-history)))
   ([active-history current-position]
    (get-in active-history [:states current-position])))
 
-(m/=> previous-position [:-> History [:maybe uuid?]])
+(m/=> previous-position [:-> History [:maybe HistoryId]])
 (defn previous-position
   [active-history]
   (-> active-history state :parent))
 
-(m/=> next-position [:-> History [:maybe uuid?]])
+(m/=> next-position [:-> History [:maybe HistoryId]])
 (defn next-position
   [active-history]
   (-> active-history state :children last))
@@ -70,7 +71,7 @@
 
 (m/=> drop-rest [:function
                  [:-> App App]
-                 [:-> App uuid? App]])
+                 [:-> App DocumentId App]])
 (defn drop-rest
   "Drops all but the current state from history.
    Useful to avoid persisting the rest if the history."
@@ -86,7 +87,7 @@
                        (assoc-in [pos :children] [])
                        (update pos dissoc :parent)))))))
 
-(m/=> preview [:-> App uuid? App])
+(m/=> preview [:-> App HistoryId App])
 (defn preview
   [db pos]
   (let [preview-state (-> db history (state pos))
@@ -95,7 +96,7 @@
         (assoc-in (document.handlers/path db :preview-label) (str timestamp))
         (assoc-in (element.handlers/path db) (:elements preview-state)))))
 
-(m/=> go-to [:-> App uuid? App])
+(m/=> go-to [:-> App HistoryId App])
 (defn go-to
   [db pos]
   (-> db
@@ -150,7 +151,7 @@
   (accumulate active-history (fn [current-state]
                                (-> current-state :children last))))
 
-(m/=> root-id [:-> History uuid?])
+(m/=> root-id [:-> History HistoryId])
 (defn root-id
   [active-history]
   (->> active-history
@@ -188,7 +189,7 @@
   [db]
   (update-in db (path db) dissoc :preview-label))
 
-(m/=> create-state [:-> App uuid? Explanation HistoryState])
+(m/=> create-state [:-> App HistoryId Explanation HistoryState])
 (defn create-state
   [db id explanation]
   (let [new-state {:explanation explanation
@@ -201,7 +202,7 @@
       (position db)
       (assoc :parent (position db)))))
 
-(m/=> state->d3-data [:-> History uuid? [:maybe uuid?] JS_Object])
+(m/=> state->d3-data [:-> History HistoryId [:maybe HistoryId] JS_Object])
 (defn state->d3-data
   [active-history id saved-history-id]
   (let [states (:states active-history)

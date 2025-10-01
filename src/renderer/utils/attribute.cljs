@@ -6,7 +6,7 @@
    [clojure.string :as string]
    [malli.core :as m]
    [renderer.attribute.hierarchy :as attribute.hierarchy]
-   [renderer.element.db :as element.db :refer [Attrs Tag]]
+   [renderer.element.db :as element.db :refer [ElementAttrs ElementTag]]
    [renderer.element.hierarchy :as element.hierarchy]))
 
 ;; https://github.com/mdn/data/blob/main/docs/updating_css_json.md
@@ -224,8 +224,8 @@
 (def lowercased (mapv string/lower-case camelcased))
 
 (m/=> compatibility [:function
-                     [:-> Tag [:maybe map?]]
-                     [:-> Tag keyword? [:maybe map?]]])
+                     [:-> ElementTag [:maybe map?]]
+                     [:-> ElementTag keyword? [:maybe map?]]])
 (defn compatibility
   "Returns compatibility data for tags or attributes."
   ([tag]
@@ -278,7 +278,7 @@
 
 (def ->camel-case-memo (memoize ->camel-case))
 
-(m/=> ->attrs [:-> map? Attrs])
+(m/=> ->attrs [:-> map? ElementAttrs])
 (defn ->attrs
   [attrs]
   (let [deprecated-path [:__compat :status :deprecated]
@@ -292,7 +292,7 @@
 
 (def ->attrs-memo (memoize ->attrs))
 
-(m/=> defaults [:-> Tag Attrs])
+(m/=> defaults [:-> ElementTag ElementAttrs])
 (defn defaults
   [tag]
   (merge (when (element.db/tag? tag)
@@ -306,7 +306,7 @@
 
 (def defaults-memo (memoize defaults))
 
-(m/=> initial [:-> Tag keyword? string?])
+(m/=> initial [:-> ElementTag keyword? string?])
 (defn initial
   [tag k]
   (let [dispatchable? (contains? (methods attribute.hierarchy/initial) [tag k])
@@ -317,7 +317,7 @@
 
 (def initial-memo (memoize initial))
 
-(m/=> defaults-with-vals [:-> Tag Attrs])
+(m/=> defaults-with-vals [:-> ElementTag ElementAttrs])
 (defn defaults-with-vals
   [tag]
   (->> (defaults-memo tag)

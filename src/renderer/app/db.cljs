@@ -5,7 +5,7 @@
    [malli.transform :as m.transform]
    [renderer.db :refer [JS_Object]]
    [renderer.dialog.db :refer [Dialog]]
-   [renderer.document.db :refer [Document SaveInfo]]
+   [renderer.document.db :refer [Document DocumentId SaveInfo]]
    [renderer.element.db :refer [Element]]
    [renderer.frame.db :refer [DomRect]]
    [renderer.notification.db :refer [Notification]]
@@ -62,14 +62,14 @@
    [:snap {:default {}
            :persist true} Snap]
    [:active-document {:optional true
-                      :persist true} [:maybe uuid?]]
+                      :persist true} [:maybe DocumentId]]
    [:cursor {:default "default"} Cursor]
    [:dom-rect {:optional true} DomRect]
    [:dialogs {:default []} [:vector Dialog]]
    [:documents {:default {}
-                :persist true} [:map-of uuid? Document]]
+                :persist true} [:map-of DocumentId Document]]
    [:document-tabs {:default []
-                    :persist true} [:vector uuid?]]
+                    :persist true} [:vector DocumentId]]
    [:recent {:max 10
              :default []
              :persist true} [:vector SaveInfo]]

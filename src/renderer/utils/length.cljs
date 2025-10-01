@@ -2,7 +2,7 @@
   (:require
    [clojure.string :as string]
    [malli.core :as m]
-   [renderer.element.db :refer [Tag]]
+   [renderer.element.db :refer [ElementTag]]
    [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.unit :as utils.unit]))
 
@@ -48,7 +48,7 @@
 (m/=> unit->px [:function
                 [:-> [:or string? number? nil?] number?]
                 [:-> [:or string? number? nil?] number? number?]
-                [:-> [:or string? number? nil?] Tag keyword? number?]])
+                [:-> [:or string? number? nil?] ElementTag keyword? number?]])
 (defn unit->px
   ([v]
    (unit->px v 0))

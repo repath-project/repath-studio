@@ -7,7 +7,8 @@
    [renderer.app.db :refer [App]]
    [renderer.document.db
     :as document.db
-    :refer [Document PersistedDocument SaveInfo]]
+    :refer [Document DocumentId PersistedDocument SaveInfo]]
+   [renderer.element.db :refer [ElementId]]
    [renderer.element.handlers :as element.handlers]
    [renderer.frame.handlers :as frame.handlers]
    [renderer.notification.handlers :as notification.handlers]
@@ -28,7 +29,7 @@
   ([db k & more]
    (apply conj (path db) k more)))
 
-(m/=> entity [:-> App uuid? Document])
+(m/=> entity [:-> App DocumentId Document])
 (defn entity
   [db id]
   (get-in db [:documents id]))
@@ -38,13 +39,13 @@
   [db]
   (get-in db (path db)))
 
-(m/=> set-active [:-> App uuid? App])
+(m/=> set-active [:-> App DocumentId App])
 (defn set-active
   [db id]
   (-> (assoc db :active-document id)
       (snap.handlers/rebuild-tree)))
 
-(m/=> persisted-format [:-> App uuid? PersistedDocument])
+(m/=> persisted-format [:-> App DocumentId PersistedDocument])
 (defn persisted-format
   [db id]
   (let [document (-> (entity db id)
@@ -57,7 +58,7 @@
                            document
                            m.transform/strip-extra-keys-transformer)))))
 
-(m/=> close [:-> App uuid? App])
+(m/=> close [:-> App DocumentId App])
 (defn close
   [db id]
   (let [{:keys [active-document document-tabs]} db
@@ -94,7 +95,7 @@
         (assoc-in (path db :centered) true)
         (snap.handlers/update-viewport-tree))))
 
-(m/=> search-by [:-> App keyword? any? [:maybe uuid?]])
+(m/=> search-by [:-> App keyword? any? [:maybe DocumentId]])
 (defn search-by
   [db k v]
   (->> (vals (:documents db))
@@ -138,17 +139,17 @@
        (element.handlers/create-default-canvas size)
        (center))))
 
-(m/=> set-hovered-ids [:-> App [:set uuid?] App])
+(m/=> set-hovered-ids [:-> App [:set ElementId] App])
 (defn set-hovered-ids
   [db ids]
   (assoc-in db (path db :hovered-ids) ids))
 
-(m/=> collapse-el [:-> App uuid? App])
+(m/=> collapse-el [:-> App ElementId App])
 (defn collapse-el
   [db id]
   (update-in db (path db :collapsed-ids) conj id))
 
-(m/=> expand-el [:-> App uuid? App])
+(m/=> expand-el [:-> App ElementId App])
 (defn expand-el
   [db id]
   (update-in db (path db :collapsed-ids) disj id))
@@ -201,19 +202,19 @@
         (->> (notification.views/spec-failed "Load document" explanation)
              (notification.handlers/add db))))))
 
-(m/=> saved? [:-> App uuid? boolean?])
+(m/=> saved? [:-> App DocumentId boolean?])
 (defn saved?
   [db id]
   (let [document (get-in db [:documents id])
         history-position (get-in document [:history :position])]
     (= (:saved-history-id document) history-position)))
 
-(m/=> open? [:-> App uuid? boolean?])
+(m/=> open? [:-> App DocumentId boolean?])
 (defn open?
   [db id]
   (some #{id} (:document-tabs db)))
 
-(m/=> recent? [:-> App uuid? boolean?])
+(m/=> recent? [:-> App DocumentId boolean?])
 (defn recent?
   [db id]
   (some #(= id (:id %)) (:recent db)))
