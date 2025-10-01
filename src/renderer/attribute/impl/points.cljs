@@ -56,7 +56,7 @@
    [:> Popover/Portal
     [:> Popover/Content
      {:sideOffset 5
-      :className "popover-content"
+      :class "popover-content"
       :align "end"}
      [:div.flex.overflow-hidden
       {:style {:max-height "50vh"}}

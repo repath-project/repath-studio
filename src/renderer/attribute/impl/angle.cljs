@@ -19,7 +19,7 @@
     [:> Popover/Portal
      [:> Popover/Content
       {:sideOffset 5
-       :className "popover-content"
+       :class "popover-content"
        :align "end"}
       [:div.circular-slider]
       [:> Popover/Arrow {:class "fill-secondary"}]]]]])

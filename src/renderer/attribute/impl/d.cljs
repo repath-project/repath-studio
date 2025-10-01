@@ -160,7 +160,7 @@
          [views/icon "pencil"]]
         [:> Popover/Portal
          [:> Popover/Content {:sideOffset 5
-                              :className "popover-content"
+                              :class "popover-content"
                               :align "end"}
           (when idle [edit-form v])
           [:> Popover/Arrow {:class "fill-secondary"}]]]])]))

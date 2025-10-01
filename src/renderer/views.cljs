@@ -39,7 +39,7 @@
   [id]
   [:> PanelResizeHandle
    {:id id
-    :className "resize-handle"}])
+    :class "resize-handle"}])
 
 (defn icon-button
   [icon-name props]

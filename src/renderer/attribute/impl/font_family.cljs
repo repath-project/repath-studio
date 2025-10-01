@@ -70,7 +70,7 @@
         [:> Popover/Portal
          [:> Popover/Content
           {:sideOffset 5
-           :className "popover-content"
+           :class "popover-content"
            :align "end"}
           [suggestions-list font-list]
           [:> Popover/Arrow {:class "fill-secondary"}]]]])]))
