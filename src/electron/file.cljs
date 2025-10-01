@@ -68,7 +68,7 @@
 
 (defn open!
   [file-path]
-  (if (and file-path (.existsSync fs file-path))
+  (if file-path
     (array (read! file-path))
     (-> (.showOpenDialog dialog (clj->js dialog-options))
         (.then (fn [^js/Object result]

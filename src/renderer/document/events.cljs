@@ -197,16 +197,30 @@
         {:store-key (str id)
          :formatter (fn [file-handle]
                       {:on-success [::file-read id]
-                       :on-error [::notification.events/show-exception]
+                       :on-error [::recent-error id]
                        :file-handle file-handle})
          :on-success [::events/file-open]
-         :on-error [::notification.events/show-exception]}}
+         :on-error [::remove-recent id]}}
        {::effects/ipc-invoke
         {:channel "open-documents"
          :data path
          :on-success [::load-multiple]
-         :on-error [::notification.events/show-exception]
+         :on-error [::remove-recent id]
          :formatter #(mapv string->edn %)}}))))
+
+(rf/reg-event-fx
+ ::recent-error
+ [persist]
+ (fn [{:keys [db]} [_ id err]]
+   {:db (cond-> db
+          :always
+          (document.handlers/remove-recent id)
+
+          err
+          (notification.handlers/add (notification.views/exception err)))
+    :fx [[::app.effects/remove-local-store
+          {:store-key (str id)
+           :on-error [::notification.events/show-exception]}]]}))
 
 (rf/reg-event-fx
  ::file-read

@@ -84,6 +84,12 @@
                              (take-last 10)
                              (vec)))))
 
+(m/=> remove-recent [:-> App DocumentId App])
+(defn remove-recent
+  [db id]
+  (update db :recent #(->> (remove (fn [x] (= id (:id x))) %)
+                           (vec))))
+
 (m/=> center [:-> App App])
 (defn center
   [db]
