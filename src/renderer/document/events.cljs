@@ -200,12 +200,12 @@
                        :on-error [::recent-error id]
                        :file-handle file-handle})
          :on-success [::events/file-open]
-         :on-error [::remove-recent id]}}
+         :on-error [::recent-error id]}}
        {::effects/ipc-invoke
         {:channel "open-documents"
          :data path
          :on-success [::load-multiple]
-         :on-error [::remove-recent id]
+         :on-error [::recent-error id]
          :formatter #(mapv string->edn %)}}))))
 
 (rf/reg-event-fx
