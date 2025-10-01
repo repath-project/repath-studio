@@ -336,14 +336,15 @@
 
 (rf/reg-event-fx
  ::import-file
- (fn [_ [_ file position]]
+ (fn [_ [_ ^js/FileSystemFileHandle file-handle ^js/File file position]]
    (when-let [file-type (.-type file)]
      (cond
        (= file-type "image/svg+xml")
        {::effects/file-read-as
-        [file :text {"load" {:formatter #(hash-map :svg %
-                                                   :label (.-name file)
-                                                   :position position)
+        [file :text {"load" {:formatter (fn [data]
+                                          {:svg data
+                                           :label (.-name file)
+                                           :position position})
                              :on-fire [::import-svg]}
                      "error" {:on-fire [::notification.events/show-exception]}}]}
 
@@ -357,4 +358,4 @@
        :else
        (let [extension (last (string/split (.-name file) "."))]
          (when (= extension "rps")
-           {:dispatch [::document.events/file-read nil nil file]}))))))
+           {:dispatch [::document.events/file-read nil file-handle file]}))))))
