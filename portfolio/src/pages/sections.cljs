@@ -6,7 +6,7 @@
 
 (defscene ^:export home
   :title "Home"
-  :params (atom ["path/to/file/name.rps"])
+  :params (atom [{:path "path/to/file/name.rps"}])
   [store]
   [:div.flex.flex-col.h-dvh.overflow-hidden
    [app.views/home @store]])
