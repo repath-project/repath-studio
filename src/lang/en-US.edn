@@ -719,21 +719,24 @@
  {:edit-points "Edit points"}
 
  :renderer.frame.views
- {:main-canvas "main canvas"}}
+ {:main-canvas "main canvas"}
 
-:renderer.notification.views
-{:close "Close"
- :error "Error"
- :validation-error "Validation error"
- :clear-all "Clear all"
- :event "Event: "}
+ :renderer.notification.views
+ {:close "Close"
+  :error "Error"
+  :validation-error "Validation error"
+  :clear-all "Clear all"
+  :event "Event: "}
 
-:renderer.error.events
-{:welcome "Welcome to %1!"
- :reporting-description [:div
-                         [:p "Would you like to help us improve by sending
+ :renderer.error.events
+ {:welcome "Welcome to %1!"
+  :reporting-description [:div
+                          [:p "Would you like to help us improve by sending
                               anonymous error reports? You can change your
                               preference at any time from our \"%1\" menu."]
-                         [:p "For more information, please read our %2."]]
- :privacy-policy "privacy policy"
- :no-thank-you "No, thank you"}
+                          [:p "For more information, please read our %2."]]
+  :privacy-policy "privacy policy"
+  :no-thank-you "No, thank you"}
+
+ :renderer.effects
+ {:permission-denied "Permission to access the file was denied."}}

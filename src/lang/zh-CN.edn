@@ -674,4 +674,7 @@
                               您可以随时在我们的 \"%1\" 菜单中更改您的偏好设置。"]
                           [:p "更多信息，请阅读我们的 %2。"]]
   :privacy-policy "隐私政策"
-  :no-thank-you "不用了，谢谢"}}
+  :no-thank-you "不用了，谢谢"}
+
+ :renderer.effects
+ {:permission-denied "访问文件的权限被拒绝。"}}

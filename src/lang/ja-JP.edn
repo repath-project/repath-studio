@@ -706,4 +706,7 @@
                               設定はいつでも\"%1\"メニューから変更できます。"]
                           [:p "詳細については、%2をお読みください。"]]
   :privacy-policy "プライバシーポリシー"
-  :no-thank-you "いいえ、結構です"}}
+  :no-thank-you "いいえ、結構です"}
+
+ :renderer.effects
+ {:permission-denied "ファイルへのアクセス許可が拒否されました。"}}

@@ -3,7 +3,8 @@
    [clojure.string :as string]
    [re-frame.core :as rf]
    [renderer.notification.events :as-alias notification.events]
-   [renderer.utils.dom :as utils.dom]))
+   [renderer.utils.dom :as utils.dom]
+   [renderer.utils.i18n :refer [t]]))
 
 (rf/reg-cofx
  ::guid
@@ -44,10 +45,32 @@
   [cb]
   (let [el (js/document.createElement "input")]
     (set! (.-type el) "file")
-    (.addEventListener el "change" (fn [e]
-                                     (.remove el)
-                                     (cb (first (.. e -target -files)))))
+    (.addEventListener el "change"
+                       (fn [e]
+                         (.remove el)
+                         (cb (first (.. e -target -files)))))
     (.click el)))
+
+(defn- request-permission-and-run
+  [mode f {:keys [file-handle]
+           :as args}]
+  (-> (.requestPermission file-handle #js {:mode mode})
+      (.then (fn [result]
+               (if (= result "granted")
+                 (f args)
+                 (rf/dispatch [::notification.events/show-error
+                               {:title (t [::permission-denied
+                                           "Permission to access the file was
+                                            denied."])}]))))))
+
+(defn- query-permission-and-run
+  [mode f {:keys [file-handle]
+           :as args}]
+  (-> (.queryPermission file-handle #js {:mode mode})
+      (.then (fn [result]
+               (if (= result "granted")
+                 (f args)
+                 (request-permission-and-run mode f args))))))
 
 (defn- write-file!
   [{:keys [data on-success on-error formatter file-handle]}]
@@ -72,7 +95,7 @@
  (fn [{:keys [options on-error file-handle]
        :as args}]
    (if file-handle
-     (write-file! args)
+     (query-permission-and-run "readwrite" write-file! args)
      (if (.-showSaveFilePicker js/window)
        (-> (.showSaveFilePicker js/window (clj->js options))
            (.then #(write-file! (assoc args :file-handle %)))
@@ -95,7 +118,7 @@
  (fn [{:keys [options on-error on-success file-handle]
        :as args}]
    (if file-handle
-     (get-file! args)
+     (query-permission-and-run "readwrite" get-file! args)
      (if (.-showOpenFilePicker js/window)
        (-> (.showOpenFilePicker js/window (clj->js options))
            (.then (fn [file-handles]
@@ -168,9 +191,10 @@
 (rf/reg-fx
  ::add-event-listener
  (fn [[target channel event formatter]]
-   (.addEventListener target channel #(rf/dispatch (conj event (cond-> %
-                                                                 formatter
-                                                                 formatter))))))
+   (.addEventListener target channel
+                      #(rf/dispatch (conj event (cond-> %
+                                                  formatter
+                                                  formatter))))))
 
 (rf/reg-fx
  ::ipc-send

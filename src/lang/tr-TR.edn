@@ -743,4 +743,7 @@
                                değiştirebilirsiniz."]
                           [:p "Daha fazla bilgi için lütfen %2 okuyun."]]
   :privacy-policy "gizlilik politikası"
-  :no-thank-you "Hayır, teşekkürler"}}
+  :no-thank-you "Hayır, teşekkürler"}
+
+ :renderer.effects
+ {:permission-denied "Dosyaya erişim izni reddedildi."}}

@@ -759,4 +759,7 @@
                           [:p "Pour plus d'informations, veuillez lire notre
                                %2."]]
   :privacy-policy "politique de confidentialité"
-  :no-thank-you "Non, merci"}}
+  :no-thank-you "Non, merci"}
+
+ :renderer.effects
+ {:permission-denied "L'autorisation d'accéder au fichier a été refusée."}}

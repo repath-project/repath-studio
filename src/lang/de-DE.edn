@@ -766,4 +766,8 @@
                           [:p "Für weitere Informationen lesen Sie bitte unsere
                                %2."]]
   :privacy-policy "Datenschutzerklärung"
-  :no-thank-you "Nein, danke"}}
+  :no-thank-you "Nein, danke"}
+
+ :renderer.effects
+ {:permission-denied "Die Berechtigung zum Zugriff auf die Datei wurde
+                      verweigert."}}

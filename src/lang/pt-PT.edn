@@ -746,4 +746,7 @@
                                \"%1\"."]
                           [:p "Para mais informações, leia a nossa %2."]]
   :privacy-policy "política de privacidade"
-  :no-thank-you "Não, obrigado"}}
+  :no-thank-you "Não, obrigado"}
+
+ :renderer.effects
+ {:permission-denied "A permissão para aceder ao ficheiro foi negada."}}
