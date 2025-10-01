@@ -360,14 +360,14 @@
 (rf/reg-event-fx
  ::clear-stale-keys
  (fn [{:keys [db]} [_ storage-keys]]
-   {:fx [(->> storage-keys
-              (remove #(= % config/app-name))
-              (map uuid)
-              (remove #(or (document.handlers/open? db %)
-                           (document.handlers/recent? db %)))
-              (map #(vector ::app.effects/remove-local-store
-                            {:store-key (str %)}))
-              (into []))]}))
+   {:fx (->> storage-keys
+             (remove #(= % config/app-name))
+             (map uuid)
+             (remove #(or (document.handlers/open? db %)
+                          (document.handlers/recent? db %)))
+             (map #(vector ::app.effects/remove-local-store
+                           {:store-key (str %)}))
+             (into []))}))
 
 (rf/reg-event-db
  ::set-active
