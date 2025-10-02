@@ -14,17 +14,17 @@
 (rf/reg-fx
  ::clipboard-write
  (fn [{:keys [data on-success on-error]}]
-   (-> (js/navigator.clipboard.write
-        (array (js/ClipboardItem.
-                (let [blob-array (js-obj)]
-                  (doseq
-                   [[data-type data] [["image/svg+xml" data]
-                                      ["text/html" data]]]
-                    (when (.supports js/ClipboardItem data-type)
-                      (aset blob-array
-                            data-type
-                            (js/Blob. (array data) #js {:type data-type}))))
-                  blob-array))))
+   (-> (let [blob-array (js-obj)]
+         (doseq
+          [[data-type data] [["image/svg+xml" data]
+                             ["text/html" data]]]
+           (when (.supports js/ClipboardItem data-type)
+             (aset blob-array
+                   data-type
+                   (js/Blob. (array data) #js {:type data-type}))))
+         blob-array)
+       (js/ClipboardItem.)
+       (array)
        (.then #(some-> on-success rf/dispatch))
        (.catch #(some-> on-error (conj %) rf/dispatch)))))
 

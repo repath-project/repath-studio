@@ -94,10 +94,10 @@
  ::install
  (fn [{:keys [db]} _]
    (when-let [install-prompt (:install-prompt db)]
-     {::app.effects/install {:prompt install-prompt
-                             :outcomes {"dismissed" nil
-                                        "accepted" [::set-install-prompt
-                                                    nil]}}})))
+     {::app.effects/install
+      {:prompt install-prompt
+       :outcomes {"dismissed" nil
+                  "accepted" [::set-install-prompt nil]}}})))
 
 (def listeners
   (->> [[js/document "keydown" [::event.events/keyboard] event.impl.keyboard/->clj]
