@@ -24,8 +24,14 @@
 
 (defn word-in-line
   [line lno cno]
-  (let [back (get (.match (.slice line 0 cno) (js/RegExp. (str wordChars "$"))) 0)
-        forward (get (.match (.slice line cno) (js/RegExp. (str "^" wordChars))) 0)]
+  (let [back (-> line
+                 (.slice 0 cno)
+                 (.match (js/RegExp. (str wordChars "$")))
+                 (first))
+        forward (-> line
+                    (.slice cno)
+                    (.match (js/RegExp. (str "^" wordChars)))
+                    (first))]
     {:start #js {:line lno
                  :ch (- cno (count back))}
      :end #js {:line lno
