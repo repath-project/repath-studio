@@ -224,8 +224,8 @@
         (conj ids parent-id))
        ids))))
 
-(m/=> index [:-> App ElementId [:maybe int?]])
-(defn index
+(m/=> children-index [:-> App ElementId [:maybe int?]])
+(defn children-index
   "Returns the index of an element on its parent children vector."
   [db id]
   (some-> (siblings db id)
@@ -239,8 +239,8 @@
    of nested elements."
   [db id]
   (let [ancestor-els (reverse (ancestor-ids db id))]
-    (conj (into [] (keep (partial index db)) ancestor-els)
-          (index db id))))
+    (conj (into [] (keep (partial children-index db)) ancestor-els)
+          (children-index db id))))
 
 (m/=> descendant-ids [:function
                       [:-> App [:set ElementId]]
@@ -537,7 +537,8 @@
          db (if (utils.element/root? el) db (reduce delete db (:children el)))]
      (cond-> db
        (not (utils.element/root? el))
-       (-> (update-prop (:parent el) :children utils.vec/remove-nth (index db id))
+       (-> (update-prop (:parent el) :children
+                        utils.vec/remove-nth (children-index db id))
            (update-in (path db) dissoc id)
            (expand id))))))
 
@@ -549,7 +550,7 @@
    (reduce (partial-right update-index f) db (selected-sorted-ids db)))
   ([db id f]
    (let [sibling-count (count (siblings db id))
-         i (index db id)
+         i (children-index db id)
          new-index (f i sibling-count)]
      (cond-> db
        (<= 0 new-index (dec sibling-count))
@@ -868,11 +869,11 @@
    (cond-> db
      (and (not (locked? db id)) (= (:tag (entity db id)) :g))
      (as-> db db
-       (let [i (index db id)]
+       (let [index (children-index db id)]
          (reduce
           (fn [db child-id]
             (-> db
-                (set-parent child-id (:parent (entity db id)) i)
+                (set-parent child-id (:parent (entity db id)) index)
                 ;; Group attributes are inherited by its children,
                 ;; so we need to maintain the presentation attrs.
                 (inherit-attrs (entity db id) child-id)

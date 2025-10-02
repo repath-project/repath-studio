@@ -88,13 +88,13 @@
 
 (defn cmdk-group-inner
   [items label]
-  (for [i items]
-    (if (:items i)
-      (cmdk-group-inner (:items i) (:label i))
-      ^{:key (:id i)}
-      [cmdk-item (update i :label #(->> [label %]
-                                        (remove nil?)
-                                        (string/join " - ")))])))
+  (for [item items]
+    (if (:items item)
+      (cmdk-group-inner (:items item) (:label item))
+      ^{:key (:id item)}
+      [cmdk-item (update item :label #(->> [label %]
+                                           (remove nil?)
+                                           (string/join " - ")))])))
 
 (defn cmdk-group
   [{:keys [label items]}]
@@ -114,9 +114,9 @@
      {:class "p-1"}
      [:> Command/CommandEmpty
       (t [::no-results "No results found."])]
-     (for [i (menubar.views/submenus)]
-       ^{:key (:id i)}
-       [cmdk-group i])]]])
+     (for [menu (menubar.views/submenus)]
+       ^{:key (:id menu)}
+       [cmdk-group menu])]]])
 
 (defn- close-button []
   [:> Dialog/Close

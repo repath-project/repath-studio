@@ -91,7 +91,7 @@
         vertical (= orientation :vertical)]
     (into [:g]
           (map-indexed
-           (fn [i step]
+           (fn [index step]
              (let [adjusted-step (* zoom step)
                    font-size 9
                    text (-> step
@@ -99,7 +99,7 @@
                             (Math/round)
                             (str))]
                (cond
-                 (zero? (rem i 10))
+                 (zero? (rem index 10))
                  [:<>
                   [line {:orientation orientation
                          :adjusted-step adjusted-step
@@ -107,7 +107,7 @@
                          :starting-point 0}]
                   [label orientation adjusted-step font-size text]]
 
-                 (and (odd? i) (zero? (rem i 5)))
+                 (and (odd? index) (zero? (rem index 5)))
                  [line {:orientation orientation
                         :adjusted-step adjusted-step
                         :size ruler-size

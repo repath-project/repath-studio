@@ -32,8 +32,8 @@
 
 (rf/reg-event-db
  ::remove-nth
- (fn [db [_ i]]
-   (update db :notifications utils.vec/remove-nth i)))
+ (fn [db [_ index]]
+   (update db :notifications utils.vec/remove-nth index)))
 
 (rf/reg-event-db
  ::clear-all

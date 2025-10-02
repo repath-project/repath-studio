@@ -271,8 +271,8 @@
 (m/=> ->camel-case [:-> keyword? keyword?])
 (defn ->camel-case
   [k]
-  (let [i (->> k name string/lower-case (.indexOf lowercased))]
-    (-> (if (= i -1) k (get camelcased i))
+  (let [index (->> k name string/lower-case (.indexOf lowercased))]
+    (-> (if (= index -1) k (get camelcased index))
         (camel-snake-kebab/->camelCaseString)
         (keyword))))
 

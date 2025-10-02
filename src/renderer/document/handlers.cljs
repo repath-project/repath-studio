@@ -113,11 +113,11 @@
   [db]
   (let [documents (vals (:documents db))
         existing-titles (->> documents (map :title) set)]
-    (loop [i 1]
-      (let [title (str "Untitled-" i)]
+    (loop [n 1]
+      (let [title (str "Untitled-" n)]
         (if-not (contains? existing-titles title)
           title
-          (recur (inc i)))))))
+          (recur (inc n)))))))
 
 (m/=> create-tab [:-> App Document App])
 (defn create-tab

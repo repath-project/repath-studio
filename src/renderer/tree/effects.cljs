@@ -17,11 +17,11 @@
  (fn [[id direction]]
    (let [list-elements (get-list-elements!)
          current-el (query-by-id! id)
-         i (.indexOf list-elements current-el)
-         max-i (dec (count list-elements))
+         index (.indexOf list-elements current-el)
+         max-index (dec (count list-elements))
          updated-i (case direction
-                     :up (if (zero? i) max-i (dec i))
-                     :down (if (< i max-i) (inc i) 0))
+                     :up (if (zero? index) max-index (dec index))
+                     :down (if (< index max-index) (inc index) 0))
          element (get list-elements updated-i)]
      (.focus element))))
 

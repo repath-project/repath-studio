@@ -54,68 +54,68 @@
                                            (keyword))))
 
 (defmethod segment-form :default
-  [segment i]
+  [segment index]
   [:div.grid.grid-cols-4.gap-px
    [:label.form-element.px-1 "x"]
    [:input.form-element
-    {:key (str "x-" i)
+    {:key (str "x-" index)
      :default-value (nth segment 1)}]
    [:label.form-element.px-1 "y"]
    [:input.form-element
-    {:key (str "y-" i)
+    {:key (str "y-" index)
      :default-value (nth segment 2)}]])
 
 (defmethod segment-form :h
-  [segment i]
-  [:input.form-element {:key (str "width-" i)
+  [segment index]
+  [:input.form-element {:key (str "width-" index)
                         :default-value (nth segment 1)}])
 
 (defmethod segment-form :v
-  [segment i]
-  [:input.form-element {:key (str "height-" i)
+  [segment index]
+  [:input.form-element {:key (str "height-" index)
                         :default-value (nth segment 1)}])
 
-(defmethod segment-form :z [_segment _i])
+(defmethod segment-form :z [_segment _index])
 
 (defmethod segment-form :a
-  [segment i]
+  [segment index]
   [:div
    [:div.grid.grid-cols-4.gap-px
     [:label.form-element.px-1 "rx"]
     [:input.form-element
-     {:key (str "rx-" i)
+     {:key (str "rx-" index)
       :default-value (nth segment 1)}]
     [:label.form-element.px-1 "ry"]
     [:input.form-element
-     {:key (str "ry-" i)
+     {:key (str "ry-" index)
       :default-value (nth segment 2)}]]
    [:div.grid.grid-cols-2.gap-px
     [:label.form-element.px-1.text-nowrap "x-axis-rotation"]
     [:input.form-element
-     {:key (str "x-axis-rotation-" i)
+     {:key (str "x-axis-rotation-" index)
       :default-value (nth segment 3)}]]
    [:div.grid.grid-cols-2.gap-px
     [:label.form-element.px-1.text-nowrap "large-arc-flag"]
     [:input.form-element
-     {:key (str "large-arc-flag-" i)
+     {:key (str "large-arc-flag-" index)
       :default-value (nth segment 4)}]]
    [:div.grid.grid-cols-2.gap-px
     [:label.form-element.px-1.text-nowrap "sweep-flag"]
     [:input.form-element
-     {:key (str "sweep-flag" i)
+     {:key (str "sweep-flag" index)
       :default-value (nth segment 5)}]]
    [:div.grid.grid-cols-4.gap-px
     [:label.form-element.px-1 "x"]
     [:input.form-element
-     {:key (str "x-" i)
+     {:key (str "x-" index)
       :default-value (nth segment 6)}]
     [:label.form-element.px-1. "y"]
     [:input.form-element
-     {:key (str "y-" i)
+     {:key (str "y-" index)
       :default-value (nth segment 7)}]]])
 
 (defn segment-row
-  [i segment path]
+  [index segment path]
   (let [command (first segment)
         {:keys [label url]} (->command command)]
     [:div.my-2
@@ -129,9 +129,9 @@
        (if (= command (string/lower-case command))
          (t [::relative "(Relative)"]) (t [::absolute "(Absolute)"]))]
       [:button.icon-button.small.bg-transparent.text-muted
-       {:on-click #(remove-segment-by-index path i)}
+       {:on-click #(remove-segment-by-index path index)}
        [views/icon "times"]]]
-     [segment-form segment i]]))
+     [segment-form segment index]]))
 
 (defn edit-form
   [v]
@@ -141,9 +141,9 @@
      {:style {:max-height "50vh"}}
      [views/scroll-area
       [:div.p-4.flex.flex-col
-       (map-indexed (fn [i segment]
-                      ^{:key (str "segment-" i)}
-                      [segment-row i segment path]) segments)]]]))
+       (map-indexed (fn [index segment]
+                      ^{:key (str "segment-" index)}
+                      [segment-row index segment path]) segments)]]]))
 
 (defmethod attribute.hierarchy/form-element [:default :d]
   [_ k v {:keys [disabled]}]

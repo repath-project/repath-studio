@@ -21,28 +21,30 @@
    will be ignored.")
 
 (defn remove-nth
-  [points i]
-  (let [points (string/join " " (flatten (utils.vec/remove-nth points i)))]
+  [points index]
+  (let [points (->> (utils.vec/remove-nth points index)
+                    (flatten)
+                    (string/join " "))]
     (rf/dispatch [::element.events/set-attr :points points])))
 
 (defn point-row
-  [i [x y] points]
+  [index [x y] points]
   [:div.grid.grid-flow-col.gap-px
    {:dir "ltr"
     :style {:grid-template-columns "minmax(0, 40px) 3fr 3fr 26px"}}
-   [:label.form-element.px-1.bg-transparent i]
+   [:label.form-element.px-1.bg-transparent index]
    [:input.form-element.bg-transparent
-    {:key (str "x-" i)
+    {:key (str "x-" index)
      :default-value x
      :disabled true
      :on-pointer-up attribute.views/pointer-up-handler!}]
    [:input.form-element.bg-transparent
-    {:key (str "y-" i)
+    {:key (str "y-" index)
      :default-value y
      :disabled true
      :on-pointer-up attribute.views/pointer-up-handler!}]
    [:button.button.bg-transparent.text-muted.h-full.rounded
-    {:on-click #(remove-nth points i)}
+    {:on-click #(remove-nth points index)}
     [views/icon "times"]]])
 
 (defn points-popover

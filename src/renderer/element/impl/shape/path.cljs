@@ -55,9 +55,9 @@
   [el]
   (let [offset (utils.element/offset el)
         segments (-> el :attrs :d svgpath .-segments)
-        square-handle (fn [i [x y]]
-                        ^{:key i}
-                        [tool.views/square-handle {:id (keyword (str i))
+        square-handle (fn [index [x y]]
+                        ^{:key index}
+                        [tool.views/square-handle {:id (keyword (str index))
                                                    :x x
                                                    :y y
                                                    :type :handle
@@ -80,12 +80,12 @@
                   segments)]))
 
 (defn translate-segment
-  [path i [x y]]
-  (let [segment (aget (.-segments path) i)
+  [path index [x y]]
+  (let [segment (aget (.-segments path) index)
         segment (array (aget segment 0)
                        (utils.length/transform (aget segment 1) + x)
                        (utils.length/transform (aget segment 2) + y))]
-    (aset (.-segments path) i segment)
+    (aset (.-segments path) index segment)
     path))
 
 (defmethod element.hierarchy/edit :path
