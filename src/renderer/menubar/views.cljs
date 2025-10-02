@@ -96,7 +96,7 @@
             :items (recent-submenu)}
            {:id :divider-2
             :type :separator}
-           (if @(rf/subscribe [::app.subs/feature-available? :file-system])
+           (if @(rf/subscribe [::app.subs/feature? :file-system])
              {:id :save
               :label (t [::save "Save"])
               :icon "save"
