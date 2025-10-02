@@ -51,6 +51,15 @@
   }
 }
 
+@keyframes show {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @keyframes slideIn {
   from {
     transform: translateX(calc(100% + var(--viewport-padding)));
