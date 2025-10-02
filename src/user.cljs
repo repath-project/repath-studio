@@ -327,21 +327,4 @@
     (circle [(+ (* x 30) 40) (+ (* (js/Math.sin x) 10) 200)]
             10
             {:fill (str "hsl(" (* x 10) " ,50% , 50%)")}))
-
-  (defn kitty [[x y] width height]
-    (-> (js/fetch "https://api.thecatapi.com/v1/images/search" #js {:method "GET"})
-        (.then (fn [response]
-                 (-> (.json response)
-                     (.then (fn [body]
-                              (let [body (js->clj body :keywordize-keys true)]
-                                (image [x y]
-                                       width
-                                       height
-                                       (:url (first body))
-                                       {:preserveAspectRatio "xMidYMid slice"})))))))))
-
-  (dotimes [x 5]
-    (dotimes [y 5]
-      (kitty [(* x 100) (* y 100)] 100 100)))
-
   #())
