@@ -74,9 +74,10 @@
      (t [::save "Save"])]]])
 
 (defn cmdk-item
-  [{:keys [label action icon]
+  [{:keys [label action icon disabled]
     :as attrs}]
-  (when-not (= (:type attrs) :separator)
+  (when-not (or (= (:type attrs) :separator)
+                disabled)
     [:> Command/CommandItem
      {:on-select #(rf/dispatch [::dialog.events/close action])}
      [:div.flex.items-center.gap-2
