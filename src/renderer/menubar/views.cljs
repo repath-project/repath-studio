@@ -466,42 +466,46 @@
 
 (defn panel-submenu
   []
-  [{:id :toggle-tree
-    :type :checkbox
-    :icon "tree"
-    :label (t [::panel-element-tree "Element tree"])
-    :checked @(rf/subscribe [::app.subs/panel-visible? :tree])
-    :action [::app.events/toggle-panel :tree]}
-   {:id :toggle-props
-    :type :checkbox
-    :icon "properties"
-    :label (t [::panel-properties "Properties"])
-    :checked @(rf/subscribe [::app.subs/panel-visible? :properties])
-    :action [::app.events/toggle-panel :properties]}
-   {:id :toggle-xml
-    :label (t [::panel-xml-view "XML view"])
-    :type :checkbox
-    :icon "code"
-    :checked @(rf/subscribe [::app.subs/panel-visible? :xml])
-    :action [::app.events/toggle-panel :xml]}
-   {:id :toggle-history
-    :label (t [::panel-history-tree "History tree"])
-    :icon "history"
-    :type :checkbox
-    :checked @(rf/subscribe [::app.subs/panel-visible? :history])
-    :action [::app.events/toggle-panel :history]}
-   {:id :toggle-command-history
-    :type :checkbox
-    :label (t [::panel-shell-history "Shell history"])
-    :icon "shell"
-    :checked @(rf/subscribe [::app.subs/panel-visible? :repl-history])
-    :action [::app.events/toggle-panel :repl-history]}
-   {:id :toggle-timeline-panel
-    :type :checkbox
-    :label (t [::panel-timeline-editor "Timeline editor"])
-    :icon "timeline"
-    :checked @(rf/subscribe [::app.subs/panel-visible? :timeline])
-    :action [::app.events/toggle-panel :timeline]}])
+  (cond-> []
+    @(rf/subscribe [::window.subs/breakpoint? :md])
+    (into [{:id :toggle-tree
+            :type :checkbox
+            :icon "tree"
+            :label (t [::panel-element-tree "Element tree"])
+            :checked @(rf/subscribe [::app.subs/panel-visible? :tree])
+            :action [::app.events/toggle-panel :tree]}
+           {:id :toggle-props
+            :type :checkbox
+            :icon "properties"
+            :label (t [::panel-properties "Properties"])
+            :checked @(rf/subscribe [::app.subs/panel-visible? :properties])
+            :action [::app.events/toggle-panel :properties]}])
+
+    :always
+    (into [{:id :toggle-xml
+            :label (t [::panel-xml-view "XML view"])
+            :type :checkbox
+            :icon "code"
+            :checked @(rf/subscribe [::app.subs/panel-visible? :xml])
+            :action [::app.events/toggle-panel :xml]}
+           {:id :toggle-history
+            :label (t [::panel-history-tree "History tree"])
+            :icon "history"
+            :type :checkbox
+            :checked @(rf/subscribe [::app.subs/panel-visible? :history])
+            :action [::app.events/toggle-panel :history]}
+           {:id :toggle-command-history
+            :type :checkbox
+            :label (t [::panel-shell-history "Shell history"])
+            :icon "shell"
+            :checked @(rf/subscribe [::app.subs/panel-visible? :repl-history])
+            :action [::app.events/toggle-panel :repl-history]}
+           {:id :toggle-timeline-panel
+            :type :checkbox
+            :label (t [::panel-timeline-editor "Timeline editor"])
+            :icon "timeline"
+            :checked @(rf/subscribe [::app.subs/panel-visible? :timeline])
+            :action [::app.events/toggle-panel :timeline]}])))
 
 (defn view-menu
   []

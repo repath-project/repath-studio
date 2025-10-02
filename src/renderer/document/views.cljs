@@ -13,7 +13,8 @@
    [renderer.history.views :as history.views]
    [renderer.utils.dom :as utils.dom]
    [renderer.utils.i18n :refer [t]]
-   [renderer.views :as views]))
+   [renderer.views :as views]
+   [renderer.window.subs :as-alias window.subs]))
 
 (defn actions
   []
@@ -135,17 +136,24 @@
   []
   (let [documents @(rf/subscribe [::document.subs/entities])
         tabs @(rf/subscribe [::document.subs/tabs])
-        active-id @(rf/subscribe [::document.subs/active-id])]
+        active-id @(rf/subscribe [::document.subs/active-id])
+        md? @(rf/subscribe [::window.subs/breakpoint? :md])
+        tree-visible @(rf/subscribe [::app.subs/panel-visible? :tree])]
     [:div.flex.justify-between.gap-px
-     [views/scroll-area
-      [:div.flex.flex-1
-       {:class "h-[41px]"}
-       (for [document-id tabs
-             :let [title (get-in documents [document-id :title])
-                   active? (= document-id active-id)]]
-         ^{:key (str document-id)}
-         [tab document-id title active?])
-       [:div.drag.flex-1]]]
+     [:div.flex.flex-1.overflow-hidden
+      [:div.overflow-hidden
+       [views/scroll-area
+        [:div.flex
+         {:class "h-[41px]"}
+         (for [document-id tabs
+               :let [title (get-in documents [document-id :title])
+                     active? (= document-id active-id)]]
+           ^{:key (str document-id)}
+           [tab document-id title active?])]]]
+      (when-not (and md? tree-visible)
+        [actions])
+      [:div.drag.flex-1]]
+
      [:div.toolbar
       [:> DropdownMenu/Root
        [:> DropdownMenu/Trigger
