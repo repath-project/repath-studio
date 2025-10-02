@@ -106,7 +106,6 @@
         [js/window "focus" [::window.events/update-focused]]
         [js/window "blur" [::window.events/update-focused]]
         [js/window "resize" [::window.events/update-width]]
-        [js/window "load" [::window.events/update-width]]
         [js/window "beforeinstallprompt" [::set-install-prompt]]]
        (mapv (partial vector ::effects/add-event-listener))))
 
@@ -123,6 +122,7 @@
                [:dispatch [::theme.events/set-document-attr]]
                [:dispatch [::set-lang-attrs]]
                [::theme.effects/add-listener [::theme.events/set-document-attr]]
+               [:dispatch [::window.events/update-width]]
                [:dispatch [::set-loading false]]
                ;; We flush to render once so we can get the canvas size.
                [:dispatch ^:flush-dom [::document.events/center]]
