@@ -172,6 +172,19 @@
            {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])
         (when (and help-bar (seq help-message))
           [help help-message])]
+       (when (not md?)
+         [:> Drawer.Root {:direction "left"}
+          [:> Drawer.Trigger
+           {:class "button px-2 absolute bottom-2 left-2 rounded bg-primary!"
+            :aria-label (t [::toggle-properties "Toggle tree panel"])}
+           [views/icon "tree"]]
+          [:> Drawer.Portal
+           [:> Drawer.Overlay {:class "backdrop"}]
+           [:> Drawer.Content
+            {:class "inset-0 right-auto fixed z-10 outline-none w-[227px] flex"}
+            [:> Drawer.Title {:class "sr-only"}
+             (t [::properties-panel "Tree panel"])]
+            [tree.views/root]]]])
        (when (and (not md?)
                   some-selected?)
          [:> Drawer.Root {:direction "right"}
@@ -185,20 +198,7 @@
             {:class "inset-0 left-auto fixed z-10 outline-none w-80 flex"}
             [:> Drawer.Title {:class "sr-only"}
              (t [::properties-panel "Attributes panel"])]
-            [right-panel active-tool]]]])
-       (when (not md?)
-         [:> Drawer.Root {:direction "left"}
-          [:> Drawer.Trigger
-           {:class "button px-2 absolute bottom-2 left-2 rounded bg-primary!"
-            :aria-label (t [::toggle-properties "Toggle tree panel"])}
-           [views/icon "tree"]]
-          [:> Drawer.Portal
-           [:> Drawer.Overlay {:class "backdrop"}]
-           [:> Drawer.Content
-            {:class "inset-0 right-auto fixed z-10 outline-none w-80 flex"}
-            [:> Drawer.Title {:class "sr-only"}
-             (t [::properties-panel "Tree panel"])]
-            [tree.views/root]]]])]]]))
+            [right-panel active-tool]]]])]]]))
 
 (defn center-top-group
   []
