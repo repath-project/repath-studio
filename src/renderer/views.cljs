@@ -70,7 +70,8 @@
   [props]
   [:> Slider/Root
    (merge-with-class
-    {:class "relative flex items-center select-none w-full touch-none h-full"}
+    {:class "relative flex items-center select-none w-full touch-none h-full"
+     :on-pointer-move #(.stopPropagation %)}
     props)
    [:> Slider/Track {:class "relative h-1 bg-secondary flex-1"}
     [:> Slider/Range {:class "absolute h-full overlay-2x"}]]

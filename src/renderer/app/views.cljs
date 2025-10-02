@@ -144,7 +144,7 @@
                    :height ruler.views/ruler-size}}
           [views/icon-button
            (if ruler-locked? "lock" "unlock")
-           {:class "small"
+           {:class "small bg-transparent!"
             :title (if ruler-locked?
                      (t [::unlock "Unlock"])
                      (t [::lock "Lock"]))
@@ -181,10 +181,11 @@
           [:> Drawer.Portal
            [:> Drawer.Overlay {:class "backdrop"}]
            [:> Drawer.Content
-            {:class "inset-0 right-auto fixed z-10 outline-none w-[227px] flex"}
+            {:class "inset-0 p-4 right-auto fixed z-10 outline-none flex"}
             [:> Drawer.Title {:class "sr-only"}
              (t [::properties-panel "Tree panel"])]
-            [tree.views/root]]]])
+            [:div.rounded-xl.flex.overflow-hidden
+             [tree.views/root]]]]])
        (when (and (not md?)
                   some-selected?)
          [:> Drawer.Root {:direction "right"}
@@ -195,10 +196,12 @@
           [:> Drawer.Portal
            [:> Drawer.Overlay {:class "backdrop"}]
            [:> Drawer.Content
-            {:class "inset-0 left-auto fixed z-10 outline-none w-80 flex"}
+            {:class "inset-0 p-4 left-auto fixed z-10 overflow-hidden
+                     outline-none flex"}
             [:> Drawer.Title {:class "sr-only"}
              (t [::properties-panel "Attributes panel"])]
-            [right-panel active-tool]]]])]]]))
+            [:div.rounded-xl.flex.overflow-hidden
+             [right-panel active-tool]]]]])]]]))
 
 (defn center-top-group
   []
