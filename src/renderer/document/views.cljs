@@ -154,7 +154,7 @@
        {:class "aria-expanded:overlay"
         :aria-label "More document actions"}
        [:div.flex.gap-1.items-center
-        (when-not (and md? (= document-count 1))
+        (when-not (or md? (= document-count 1))
           document-count)
         [views/icon (if md?
                       "ellipsis-h"
