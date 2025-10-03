@@ -25,6 +25,7 @@
          blob-array)
        (js/ClipboardItem.)
        (array)
+       (js/navigator.clipboard.write)
        (.then #(some-> on-success rf/dispatch))
        (.catch #(some-> on-error (conj %) rf/dispatch)))))
 
