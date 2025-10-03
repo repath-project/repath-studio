@@ -59,4 +59,9 @@
    [[0 4 6] (fn [document]
               (update document :elements update-vals
                       (fn [el]
-                        (update-keys el #(if (= :bounds %) :bbox %)))))]])
+                        (update-keys el #(if (= :bounds %) :bbox %)))))]
+
+   [[0 4 10] (fn [document]
+               (-> document
+                   (assoc :saved-history-id (:save document))
+                   (dissoc :save)))]])
