@@ -86,7 +86,7 @@
 }
 
 [cmdk-input] {
-  @apply p-3 bg-secondary text-sm border-b border-default w-full;
+  @apply p-3 bg-primary text-sm border-b border-default w-full;
 }
 
 [cmdk-list] {

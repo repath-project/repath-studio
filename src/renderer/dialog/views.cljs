@@ -22,7 +22,7 @@
 
 (defn cancel-button
   [{:keys [action label]}]
-  [:button.button.px-2.bg-primary.rounded.flex-1
+  [:button.button.px-2.rounded.flex-1
    {:on-click #(rf/dispatch [::dialog.events/close action])}
    (or label (t [::cancel "Cancel"]))])
 
@@ -136,7 +136,7 @@
       [:> Dialog/Overlay {:class "backdrop"}]
       [:> Dialog/Content
        (views/merge-with-class
-        {:class "fixed bg-secondary rounded-lg overflow-hidden shadow-xl border
+        {:class "fixed bg-primary rounded-lg overflow-hidden shadow-xl border
                  border-default left-1/2 top-1/2 w-125 max-w-9/10
                  -translate-1/2"
          :on-key-down #(.stopPropagation %)}

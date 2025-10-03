@@ -54,7 +54,7 @@
   ([url]
    [info-button url (t [::more-info "More info"])])
   ([url label]
-   [:button.button.px-3.bg-primary.grow
+   [:button.button.px-3.grow
     {:on-click #(rf/dispatch [::events/open-remote-url url])}
     label]))
 
