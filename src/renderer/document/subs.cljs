@@ -10,8 +10,13 @@
  :-> :active-document)
 
 (rf/reg-sub
- ::entities
+ ::documents
  :-> :documents)
+
+(rf/reg-sub
+ ::entities
+ :<- [::documents]
+ vals)
 
 (rf/reg-sub
  ::tabs
@@ -34,7 +39,7 @@
 
 (rf/reg-sub
  ::active
- :<- [::entities]
+ :<- [::documents]
  :<- [::active-id]
  (fn [[documents active-document] _]
    (some->> active-document
@@ -42,7 +47,7 @@
 
 (rf/reg-sub
  ::entity
- :<- [::entities]
+ :<- [::documents]
  (fn [documents [_ k]]
    (get documents k)))
 

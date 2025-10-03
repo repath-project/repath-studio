@@ -63,7 +63,7 @@
   (let [target (.-target e)]
     (.stopPropagation e)
 
-    (case (.-code e)
+    (case (.-key e)
       "Enter" (do (apply f e more)
                   (.blur target))
       "Escape" (do (set! (.-value target) v)

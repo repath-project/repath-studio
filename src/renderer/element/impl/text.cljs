@@ -107,6 +107,7 @@
       {:key id
        :default-value content
        :auto-focus true
+       :enterkeyhint "done"
        :on-focus #(.. % -target select)
        :on-pointer-down #(.stopPropagation %)
        :on-pointer-up #(.stopPropagation %)

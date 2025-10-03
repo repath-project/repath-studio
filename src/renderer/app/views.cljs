@@ -407,7 +407,7 @@
 
 (defn root
   []
-  (let [documents @(rf/subscribe [::document.subs/entities])
+  (let [documents? @(rf/subscribe [::document.subs/entities?])
         tree-visible @(rf/subscribe [::app.subs/panel-visible? :tree])
         properties-visible @(rf/subscribe [::app.subs/panel-visible? :properties])
         active-tool @(rf/subscribe [::tool.subs/active])
@@ -422,7 +422,7 @@
        [:> Tooltip/Provider
         [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden.justify-between
          [window.views/app-header]
-         (if (seq documents)
+         (if documents?
            [:div.flex.h-full.flex-1.overflow-hidden.gap-px
             (when tree-visible
               [:div.flex-col.hidden.overflow-hidden

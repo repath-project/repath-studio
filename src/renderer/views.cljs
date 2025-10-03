@@ -143,27 +143,28 @@
 (defn dropdown-menu-item
   [{:keys [label action checked]
     :as props}]
-  (case (:type props)
-    :separator
-    [:> DropdownMenu/Separator {:class "menu-separator"}]
+  (let [sm? @(rf/subscribe [::window.subs/breakpoint? :sm])]
+    (case (:type props)
+      :separator
+      [:> DropdownMenu/Separator {:class "menu-separator"}]
 
-    :checkbox
-    [:> DropdownMenu/CheckboxItem
-     {:class "menu-checkbox-item inset"
-      :onSelect #(do (.preventDefault %)
-                     (rf/dispatch action))
-      :checked checked}
-     [:> DropdownMenu/ItemIndicator
-      {:class "menu-item-indicator"}
-      [icon "checkmark"]]
-     [:div label]
-     [shortcuts action]]
+      :checkbox
+      [:> DropdownMenu/CheckboxItem
+       {:class "menu-checkbox-item inset"
+        :onSelect #(do (.preventDefault %)
+                       (rf/dispatch action))
+        :checked checked}
+       [:> DropdownMenu/ItemIndicator
+        {:class "menu-item-indicator"}
+        [icon "checkmark"]]
+       [:div label]
+       (when sm? [shortcuts action])]
 
-    [:> DropdownMenu/Item
-     {:class "menu-item dropdown-menu-item"
-      :onSelect #(rf/dispatch action)}
-     [:div label]
-     [shortcuts action]]))
+      [:> DropdownMenu/Item
+       {:class "menu-item dropdown-menu-item"
+        :onSelect #(rf/dispatch action)}
+       [:div label]
+       (when sm? [shortcuts action])])))
 
 (defn scroll-area
   [& more]
