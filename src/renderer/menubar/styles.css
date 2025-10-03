@@ -15,8 +15,8 @@
 
 .menu-content,
 .menu-sub-content {
-  @apply bg-primary drop-shadow-lg p-1 z-10 rounded-sm no-drag;
-  min-width: 200px;
+  @apply bg-primary drop-shadow-lg p-1 z-10 rounded-sm no-drag min-w-[160px]
+  sm:min-w-[200px];
   will-change: transform, opacity;
   border: 1px solid var(--border-color);
 }

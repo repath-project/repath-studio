@@ -22,7 +22,8 @@
    [re-frame.core :as rf]
    [reagent.core :as reagent]
    [renderer.app.subs :as-alias app.subs]
-   [renderer.event.impl.keyboard :as event.impl.keyboard]))
+   [renderer.event.impl.keyboard :as event.impl.keyboard]
+   [renderer.window.subs :as-alias window.subs]))
 
 (defn merge-with-class
   [& maps]
@@ -115,28 +116,29 @@
 (defn context-menu-item
   [{:keys [label action checked disabled]
     :as props}]
-  (case (:type props)
-    :separator
-    [:> ContextMenu/Separator {:class "menu-separator"}]
+  (let [sm? @(rf/subscribe [::window.subs/breakpoint? :sm])]
+    (case (:type props)
+      :separator
+      [:> ContextMenu/Separator {:class "menu-separator"}]
 
-    :checkbox
-    [:> ContextMenu/CheckboxItem
-     {:class "menu-checkbox-item inset"
-      :onSelect #(rf/dispatch action)
-      :checked checked
-      :disabled disabled}
-     [:> ContextMenu/ItemIndicator
-      {:class "menu-item-indicator"}
-      [icon "checkmark"]]
-     [:div label]
-     [shortcuts action]]
+      :checkbox
+      [:> ContextMenu/CheckboxItem
+       {:class "menu-checkbox-item inset"
+        :onSelect #(rf/dispatch action)
+        :checked checked
+        :disabled disabled}
+       [:> ContextMenu/ItemIndicator
+        {:class "menu-item-indicator"}
+        [icon "checkmark"]]
+       [:div label]
+       (when sm? [shortcuts action])]
 
-    [:> ContextMenu/Item
-     {:class "menu-item context-menu-item"
-      :onSelect #(rf/dispatch action)
-      :disabled disabled}
-     [:div label]
-     [shortcuts action]]))
+      [:> ContextMenu/Item
+       {:class "menu-item context-menu-item"
+        :onSelect #(rf/dispatch action)
+        :disabled disabled}
+       [:div label]
+       (when sm? [shortcuts action])])))
 
 (defn dropdown-menu-item
   [{:keys [label action checked]
