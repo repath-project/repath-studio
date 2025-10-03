@@ -21,7 +21,8 @@
   (let [undos @(rf/subscribe [::history.subs/undos])
         redos @(rf/subscribe [::history.subs/redos])
         undos? @(rf/subscribe [::history.subs/undos?])
-        redos? @(rf/subscribe [::history.subs/redos?])]
+        redos? @(rf/subscribe [::history.subs/redos?])
+        md? @(rf/subscribe [::window.subs/breakpoint? :md])]
     [:div.toolbar
 
      [views/icon-button
@@ -44,17 +45,21 @@
 
      [:button.icon-button.items-center.px-1.gap-1.flex.w-auto
       {:title (t [::undo "Undo"])
+       :class (if md? "px-1" "px-2")
        :on-click #(rf/dispatch [::history.events/undo])
        :disabled (not undos?)}
       [views/icon "undo"]
-      [history.views/select "Undo stack" undos (not undos?)]]
+      (when md?
+        [history.views/select "Undo stack" undos (not undos?)])]
 
      [:button.icon-button.items-center.px-1.gap-1.flex.w-auto
       {:title (t [::redo "Redo"])
+       :class (if md? "px-1" "px-2")
        :on-click #(rf/dispatch [::history.events/redo])
        :disabled (not redos?)}
       [views/icon "redo"]
-      [history.views/select "Redo stack" redos (not redos?)]]]))
+      (when md?
+        [history.views/select "Redo stack" redos (not redos?)])]]))
 
 (defn close-button
   [id saved]

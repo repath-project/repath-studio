@@ -159,6 +159,7 @@
           :class "rtl:scale-x-[-1]"}
          [ruler.views/ruler :vertical]])
       [:div.relative.grow.flex
+
        [:div.relative.grow.flex
         {:data-theme "light"}
         [frame.views/root]
@@ -172,36 +173,43 @@
            {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])
         (when (and help-bar (seq help-message))
           [help help-message])]
+       [:div.absolute.inset-0.pointer-events-none.inset-shadow-md]
        (when (not md?)
          [:> Drawer.Root {:direction "left"}
           [:> Drawer.Trigger
-           {:class "button px-2 absolute bottom-2 left-2 rounded bg-primary!"
+           {:class "button px-2 absolute bottom-2 left-2 rounded bg-primary!
+                    shadow-md"
             :aria-label (t [::toggle-properties "Toggle tree panel"])}
            [views/icon "tree"]]
           [:> Drawer.Portal
            [:> Drawer.Overlay {:class "backdrop"}]
            [:> Drawer.Content
-            {:class "inset-0 p-4 right-auto fixed z-10 outline-none flex"}
+            {:class "inset-0 right-auto fixed z-10 outline-none flex"}
             [:> Drawer.Title {:class "sr-only"}
              (t [::properties-panel "Tree panel"])]
-            [:div.rounded-xl.flex.overflow-hidden
-             [tree.views/root]]]]])
+            [:> Drawer.Description
+             {:as-child true}
+             [:div.flex.overflow-hidden.shadow-xl
+              [tree.views/root]]]]]])
        (when (and (not md?)
                   some-selected?)
          [:> Drawer.Root {:direction "right"}
           [:> Drawer.Trigger
-           {:class "button px-2 absolute bottom-2 right-2 rounded bg-primary!"
+           {:class "button px-2 absolute bottom-2 right-2 rounded bg-primary!
+                    shadow-md"
             :aria-label (t [::toggle-properties "Toggle attributes panel"])}
            [views/icon "properties"]]
           [:> Drawer.Portal
            [:> Drawer.Overlay {:class "backdrop"}]
            [:> Drawer.Content
-            {:class "inset-0 p-4 left-auto fixed z-10 overflow-hidden
-                     outline-none flex"}
+            {:class "inset-0 left-auto fixed z-10 overflow-hidden
+                     flex"}
             [:> Drawer.Title {:class "sr-only"}
              (t [::properties-panel "Attributes panel"])]
-            [:div.rounded-xl.flex.overflow-hidden
-             [right-panel active-tool]]]]])]]]))
+            [:> Drawer.Description
+             {:as-child true}
+             [:div.flex.overflow-hidden.shadow-xl
+              [right-panel active-tool]]]]]])]]]))
 
 (defn center-top-group
   []
