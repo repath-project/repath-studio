@@ -186,7 +186,7 @@
 (m/=> clear-preview-label [:-> App App])
 (defn clear-preview-label
   [db]
-  (update-in db (path db) dissoc :preview-label))
+  (update-in db [:documents (:active-document db)] dissoc :preview-label))
 
 (m/=> create-state [:-> App HistoryId Explanation HistoryState])
 (defn create-state
