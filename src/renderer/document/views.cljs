@@ -83,7 +83,7 @@
               :action [::document.events/close id true]}
              {:label (t [::close-others "Close others"])
               :action [::document.events/close-others id]
-              :disabled? (empty? (rest tabs))}
+              :disabled (empty? (rest tabs))}
              {:label (t [::close-all "Close all"])
               :action [::document.events/close-all]}
              {:label (t [::close-saved "Close saved"])
@@ -92,7 +92,7 @@
       (concat [{:type :separator}
                {:label (t [::open-directory "Open containing directory"])
                 :action [::document.events/open-directory path]
-                :disabled? (nil? path)}]))))
+                :disabled (nil? path)}]))))
 
 (defn tab
   [id title active?]
@@ -100,6 +100,7 @@
     (let [saved? @(rf/subscribe [::document.subs/saved? id])]
       [:> ContextMenu/Root
        [:> ContextMenu/Trigger
+        {:as-child true}
         [:div.tab
          {:class [(when active? "active")
                   (when saved? "saved")]
@@ -137,6 +138,55 @@
                 [views/context-menu-item item])
               (context-menu id)))]])))
 
+(defn more-button
+  []
+  [:> DropdownMenu/Root
+   [:> DropdownMenu/Trigger
+    {:as-child true}
+    [:button.button.flex.items-center.justify-center.px-2.font-mono.rounded
+     {:class "aria-expanded:overlay"
+      :aria-label "More document actions"}
+     [views/icon "ellipsis-h"]]]
+   [:> DropdownMenu/Portal
+    [:> DropdownMenu/Content
+     {:class "menu-content rounded-sm"
+      :on-key-down #(.stopPropagation %)
+      :on-escape-key-down #(.stopPropagation %)}
+     (for [item [{:label (t [::close-all "Close all"])
+                  :key :close-all
+                  :action [::document.events/close-all]}
+                 {:label (t [::close-saved "Close saved"])
+                  :key :close-saved
+                  :action [::document.events/close-saved]}]]
+       ^{:key (:key item)}
+       [views/dropdown-menu-item item])
+     [:> DropdownMenu/Arrow {:class "fill-primary"}]]]])
+
+(defn documents-dropdown-button
+  [documents active-id]
+  [:> DropdownMenu/Root
+   [:> DropdownMenu/Trigger
+    {:as-child true}
+    [:button.button.flex.items-center.px-1.justify-center.font-mono.rounded
+     {:class "aria-expanded:overlay"
+      :aria-label "Open documents"}
+     [:div.flex.gap-1.items-center
+      (count documents)
+      [views/icon "chevron-down"]]]]
+   [:> DropdownMenu/Portal
+    [:> DropdownMenu/Content
+     {:class "menu-content rounded-sm"
+      :on-key-down #(.stopPropagation %)
+      :on-escape-key-down #(.stopPropagation %)}
+     (for [{:keys [id title]} documents]
+       ^{:key id}
+       [views/dropdown-menu-item {:key id
+                                  :type :checkbox
+                                  :label title
+                                  :action [::document.events/set-active id]
+                                  :checked (= active-id id)}])
+     [:> DropdownMenu/Arrow {:class "fill-primary"}]]]])
+
 (defn tab-bar
   []
   (let [documents @(rf/subscribe [::document.subs/entities])
@@ -146,38 +196,19 @@
         tree-visible @(rf/subscribe [::app.subs/panel-visible? :tree])]
     [:div.flex.justify-between.gap-px
      [:div.flex.flex-1.overflow-hidden
-      [:div.overflow-hidden
-       [views/scroll-area
-        [:div.flex
-         {:class "h-[41px]"}
-         (for [document-id tabs
-               :let [title (get-in documents [document-id :title])
-                     active? (= document-id active-id)]]
-           ^{:key (str document-id)}
-           [tab document-id title active?])]]]
+      (if md?
+        (for [document-id tabs
+              :let [title (get-in documents [document-id :title])
+                    active? (= document-id active-id)]]
+          ^{:key document-id}
+          [tab document-id title active?])
+        [:div.flex.overflow-hidden.gap-px
+         [tab active-id (get-in documents [active-id :title]) true]
+         (when (second documents)
+           [:div.toolbar.bg-primary
+            [documents-dropdown-button (vals documents) active-id]])])
       (when-not (and md? tree-visible)
         [actions])
       [:div.drag.flex-1]]
 
-     [:div.toolbar
-      [:> DropdownMenu/Root
-       [:> DropdownMenu/Trigger
-        {:as-child true}
-        [:button.button.flex.items-center.justify-center.px-2.font-mono.rounded
-         {:class "aria-expanded:overlay"
-          :aria-label "More document actions"}
-         [views/icon "ellipsis-h"]]]
-       [:> DropdownMenu/Portal
-        [:> DropdownMenu/Content
-         {:class "menu-content rounded-sm"
-          :on-key-down #(.stopPropagation %)
-          :on-escape-key-down #(.stopPropagation %)}
-         (for [item [{:label (t [::close-all "Close all"])
-                      :key :close-all
-                      :action [::document.events/close-all]}
-                     {:label (t [::close-saved "Close saved"])
-                      :key :close-saved
-                      :action [::document.events/close-saved]}]]
-           ^{:key (:key item)}
-           [views/dropdown-menu-item item])
-         [:> DropdownMenu/Arrow {:class "fill-secondary"}]]]]]]))
+     [:div.toolbar [more-button]]]))

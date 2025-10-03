@@ -71,7 +71,7 @@
      (for [item (zoom-options)]
        ^{:key (:id item)}
        [views/dropdown-menu-item item])
-     [:> DropdownMenu/Arrow {:class "fill-secondary"}]]]])
+     [:> DropdownMenu/Arrow {:class "fill-primary"}]]]])
 
 (defn view-radio-buttons []
   [{:title (t [::timeline "Timeline"])

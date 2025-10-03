@@ -73,4 +73,4 @@
            :class "popover-content"
            :align "end"}
           [suggestions-list font-list]
-          [:> Popover/Arrow {:class "fill-secondary"}]]]])]))
+          [:> Popover/Arrow {:class "fill-primary"}]]]])]))

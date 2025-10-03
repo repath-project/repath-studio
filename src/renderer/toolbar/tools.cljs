@@ -6,7 +6,8 @@
    [renderer.tool.events :as-alias tool.events]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.subs :as-alias tool.subs]
-   [renderer.views :as views]))
+   [renderer.views :as views]
+   [renderer.window.subs :as-alias window.subs]))
 
 (defn button
   [tool]
@@ -40,16 +41,28 @@
   (into [:div.flex.gap-1]
         (map button items)))
 
-(def groups
-  [[:transform :edit :pan :zoom]
-   [:svg]
-   [:circle :ellipse :rect :line :polyline :polygon :image :text]
-   [:blob]
-   [:brush :pen]
-   [:dropper :fill :measure]])
+(defn groups
+  [sm?]
+  (if sm?
+    [[:transform :edit :pan :zoom]
+     [:svg]
+     [:circle :ellipse :rect :line :polyline :polygon :image :text]
+     [:blob]
+     [:brush :pen]
+     [:dropper :fill :measure]]
+    [[:transform :edit :pan :zoom]
+     [:brush :pen]
+     [:dropper :fill :measure]
+     [:svg]
+     [:circle :ellipse :rect :line :polyline :polygon :image :text]]))
 
 (defn root
   []
-  (into [:div.justify-center.bg-primary.toolbar]
-        (interpose [:span.v-divider]
-                   (map group groups))))
+  (let [sm? @(rf/subscribe [::window.subs/breakpoint? :sm])]
+    (cond->> (map group (groups sm?))
+      sm?
+      (interpose [:span.v-divider])
+
+      :always
+      (into [:div.justify-center.bg-primary.toolbar
+             {:class [(when-not sm? "flex-wrap")]}]))))

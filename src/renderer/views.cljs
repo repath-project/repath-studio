@@ -113,7 +113,7 @@
    [renderer.views/icon icon-name]])
 
 (defn context-menu-item
-  [{:keys [label action checked? disabled?]
+  [{:keys [label action checked disabled]
     :as props}]
   (case (:type props)
     :separator
@@ -123,8 +123,8 @@
     [:> ContextMenu/CheckboxItem
      {:class "menu-checkbox-item inset"
       :onSelect #(rf/dispatch action)
-      :checked @(rf/subscribe checked?)
-      :disabled disabled?}
+      :checked checked
+      :disabled disabled}
      [:> ContextMenu/ItemIndicator
       {:class "menu-item-indicator"}
       [icon "checkmark"]]
@@ -134,12 +134,12 @@
     [:> ContextMenu/Item
      {:class "menu-item context-menu-item"
       :onSelect #(rf/dispatch action)
-      :disabled disabled?}
+      :disabled disabled}
      [:div label]
      [shortcuts action]]))
 
 (defn dropdown-menu-item
-  [{:keys [label action checked?]
+  [{:keys [label action checked]
     :as props}]
   (case (:type props)
     :separator
@@ -150,7 +150,7 @@
      {:class "menu-checkbox-item inset"
       :onSelect #(do (.preventDefault %)
                      (rf/dispatch action))
-      :checked @(rf/subscribe checked?)}
+      :checked checked}
      [:> DropdownMenu/ItemIndicator
       {:class "menu-item-indicator"}
       [icon "checkmark"]]
@@ -200,7 +200,7 @@
       :align-offset (:align-offset props)}
      [:div {:dir "ltr"}
       [:> PhotoshopPicker props]]
-     [:> Popover/Arrow {:class "fill-secondary"}]]]])
+     [:> Popover/Arrow {:class "fill-primary"}]]]])
 
 (def cm-defaults
   {:lineNumbers false

@@ -29,9 +29,9 @@
      (if state
        active-icon
        inactive-icon)
-     {:class ["hover:bg-transparent text-inherit hover:text-inherit
-             focus:outline-hidden"
-              (when (and (not state) small?) "invisible")
+     {:class ["hover:bg-transparent text-inherit focus:outline-hidden
+               focus:text-inherit active:text-inherit hover:text-inherit"
+              (when (not state) (if small? "invisible" "opacity-30"))
               (when small? "small")]
       :title (t title)
       :on-double-click #(.stopPropagation %)

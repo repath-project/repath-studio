@@ -116,6 +116,7 @@
             :class "rtl:text-right"
             :id (name k)
             :default-value v
+            :enterkeyhint "enter"
             :on-pointer-up pointer-up-handler!
             :placeholder (if v placeholder "multiple")
             :on-blur #(on-change-handler! % k v)
@@ -247,7 +248,7 @@
            [caniusethis {:tag tag
                          :attr k}]])]
        [:> HoverCard/Arrow
-        {:class "fill-secondary"}]]]]))
+        {:class "fill-primary"}]]]]))
 
 (defn row
   [k v locked? tag]
@@ -285,7 +286,7 @@
          [caniusethis {:tag tag}]
          (when-let [url (:url properties)]
            [:div.flex [info-button url]])]
-        [:> HoverCard/Arrow {:class "fill-secondary"}]]]]]))
+        [:> HoverCard/Arrow {:class "fill-primary"}]]]]]))
 
 (defn form
   []

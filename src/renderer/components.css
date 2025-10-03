@@ -126,7 +126,7 @@
 }
 
 @utility popover-content {
-  @apply bg-secondary drop-shadow-lg z-10 rounded-sm break-words;
+  @apply bg-primary drop-shadow-lg z-10 rounded-sm break-words;
   max-width: 350px;
   border: 1px solid var(--border-color);
   animation-duration: 400ms;
@@ -151,7 +151,7 @@
 }
 
 @utility tooltip-content {
-  @apply bg-secondary px-2 py-1 rounded-sm drop-shadow-md;
+  @apply bg-primary px-2 py-1 rounded-sm drop-shadow-md;
   max-width: 300px;
   border: 1px solid var(--border-color);
   animation-duration: 200ms;
@@ -186,9 +186,8 @@
 }
 
 @utility tab {
-  @apply flex items-center h-full text-left bg-secondary text-muted
-  hover:text-default relative outline-none px-2 py-0;
-  flex: 0 1 130px;
+  @apply flex items-center h-full text-left bg-secondary text-muted max-w-40
+  hover:text-default relative outline-none px-2 py-0 overflow-hidden;
 
   .close {
     @apply icon-button invisible relative bg-inherit;
