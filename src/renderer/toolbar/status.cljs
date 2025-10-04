@@ -56,8 +56,7 @@
   [:> DropdownMenu/Root
    [:> DropdownMenu/Trigger
     {:title (t [::select-zoom "Select zoom level"])
-     :class "button flex items-center justify-center overlay px-2
-             font-mono rounded-sm hover:overlay-2x"
+     :class "button flex items-center justify-center px-2 font-mono rounded-sm"
      :side "top"}
     [:div.flex.items-center
      [views/icon "chevron-up"]]]
@@ -118,7 +117,7 @@
   [zoom]
   (let [precision (zoom-decimal-points zoom)
         value (utils.length/->fixed (* 100 zoom) precision false)]
-    [:input.form-element.overlay.text-right.font-mono.p-1
+    [:input.form-element.text-right.font-mono.p-1
      {:key zoom
       :aria-label (t [::zoom "Zoom"])
       :type "number"
@@ -141,13 +140,13 @@
   []
   (let [zoom @(rf/subscribe [::document.subs/zoom])]
     [:div.button-group
-     [:button.button.overlay.px-2.font-mono.rounded.hover:overlay-2x
+     [:button.button.px-2.font-mono.rounded
       {:disabled (<= zoom 0.01)
        :title (t [::zoom-out "Zoom out"])
        :on-click #(rf/dispatch [::frame.events/zoom-out])}
       [views/icon "minus"]]
 
-     [:button.button.overlay.px-2.font-mono.rounded.hover:overlay-2x
+     [:button.button.px-2.font-mono.rounded
       {:disabled (>= zoom 100)
        :title (t [::zoom-in "Zoom in"])
        :on-click #(rf/dispatch [::frame.events/zoom-in])}
@@ -156,7 +155,7 @@
       {:class "md:flex"
        :dir "ltr"}
       [zoom-input zoom]
-      [:div.px-2.overlay.flex.items-center.font-mono "%"]]
+      [:div.px-2.flex.items-center.font-mono "%"]]
      [zoom-menu]]))
 
 (defn radio-button

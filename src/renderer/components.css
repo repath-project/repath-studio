@@ -63,19 +63,19 @@
 }
 
 @utility button-group {
-  @apply flex gap-px;
+  @apply flex rounded relative;
 
-  > .button,
-  > input {
-    @apply overlay m-0 rounded-none;
+  > * {
+    @apply m-0 rounded-none border-l border-default;
 
     &:first-child {
-      @apply rounded-l;
+      @apply border-l-0;
     }
+  }
 
-    &:last-child {
-      @apply rounded-r;
-    }
+  &:before {
+    @apply absolute inset-0 rounded border border-default;
+    content: '';
   }
 }
 
