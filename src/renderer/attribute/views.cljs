@@ -116,7 +116,7 @@
             :class "rtl:text-right"
             :id (name k)
             :default-value v
-            :enterkeyhint "done"
+            :enter-key-hint "done"
             :on-pointer-up pointer-up-handler!
             :placeholder (if v placeholder "multiple")
             :on-blur #(on-change-handler! % k v)

@@ -60,7 +60,7 @@
           :placeholder tag-label
           :auto-focus true
           :draggable true ; Prevents drag of parent.
-          :enterkeyhint "done"
+          :enter-key-hint "done"
           :on-drag-start #(.preventDefault %)
           :on-focus #(.. % -target select)
           :on-key-down #(event.impl.keyboard/input-key-down-handler!
