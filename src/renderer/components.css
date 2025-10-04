@@ -75,6 +75,7 @@
 
   &:before {
     @apply absolute inset-0 rounded border border-default;
+    pointer-events: none;
     content: '';
   }
 }
