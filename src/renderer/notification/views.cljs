@@ -45,7 +45,7 @@
 
 (defn notification-popup
   [index notification]
-  [:div.relative.flex.bg-secondary.w-80.p-4.mb-2.rounded.shadow-md
+  [:div.relative.flex.bg-primary.w-80.p-4.mb-2.rounded.shadow-md
    {:class "border border-default"}
    (:content notification)
    [views/icon-button "times"
@@ -64,7 +64,7 @@
      {:class "rtl:right-auto rtl:left-0"}
      (into [:<>] (map-indexed notification-popup notifications))
      (when (second notifications)
-       [:div.bg-primary
-        [:button.button.overlay.px-2.rounded
+       [:div.bg-primary.border.border-default.rounded.shadow-md
+        [:button.button.px-2.rounded
          {:on-click #(rf/dispatch [::notification.events/clear-all])}
          (t [::clear-all "Clear all"])]])]))
