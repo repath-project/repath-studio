@@ -17,14 +17,14 @@
    (let [theme-mode (rf/subscribe [::theme.subs/mode])]
 
      (testing "default theme"
-       (is (= :dark @theme-mode)))
+       (is (= :system @theme-mode)))
 
      (testing "theme cycling"
+       (rf/dispatch [::theme.events/cycle-mode])
+       (is (= :dark @theme-mode))
+
        (rf/dispatch [::theme.events/cycle-mode])
        (is (= :light @theme-mode))
 
        (rf/dispatch [::theme.events/cycle-mode])
-       (is (= :system @theme-mode))
-
-       (rf/dispatch [::theme.events/cycle-mode])
-       (is (= :dark @theme-mode))))))
+       (is (= :system @theme-mode))))))

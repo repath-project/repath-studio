@@ -49,8 +49,8 @@
      [:svg]
      [:circle :ellipse :rect :line :polyline :polygon :image :text]
      [:brush :pen]
-     (cond->> [:fill :measure]
-       dropper? (conj [:dropper]))]))
+     (cond-> [:fill :measure]
+       dropper? (conj :dropper))]))
 
 (defn root
   []
