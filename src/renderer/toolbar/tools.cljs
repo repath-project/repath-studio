@@ -3,6 +3,7 @@
    ["@radix-ui/react-tooltip" :as Tooltip]
    [clojure.string :as string]
    [re-frame.core :as rf]
+   [renderer.app.subs :as-alias app.subs]
    [renderer.tool.events :as-alias tool.events]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.subs :as-alias tool.subs]
@@ -38,31 +39,22 @@
 
 (defn group
   [items]
-  (into [:div.flex.gap-1]
+  (into [:div.flex.flex-wrap.justify-center.gap-1]
         (map button items)))
 
 (defn groups
-  [sm?]
-  (if sm?
+  []
+  (let [dropper? @(rf/subscribe [::app.subs/feature? :eye-dropper])]
     [[:transform :edit :pan :zoom]
      [:svg]
      [:circle :ellipse :rect :line :polyline :polygon :image :text]
-     [:blob]
      [:brush :pen]
-     [:dropper :fill :measure]]
-    [[:transform :edit :pan :zoom]
-     [:brush :pen]
-     [:dropper :fill :measure]
-     [:svg]
-     [:circle :ellipse :rect :line :polyline :polygon :image :text]]))
+     (cond->> [:fill :measure]
+       dropper? (conj [:dropper]))]))
 
 (defn root
   []
   (let [sm? @(rf/subscribe [::window.subs/breakpoint? :sm])]
-    (cond->> (map group (groups sm?))
-      sm?
-      (interpose [:span.v-divider])
-
-      :always
-      (into [:div.justify-center.bg-primary.toolbar
-             {:class [(when-not sm? "flex-wrap")]}]))))
+    (->> (map group (groups))
+         (interpose [:span.v-divider {:class (when-not sm? "mx-0")}])
+         (into [:div.justify-center.bg-primary.toolbar]))))
