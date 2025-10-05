@@ -56,6 +56,11 @@
      (assoc coeffects :focused false)))
 
   (rf/reg-cofx
+   ::window.effects/width
+   (fn [coeffects _]
+     (assoc coeffects :width 800)))
+
+  (rf/reg-cofx
    ::app.effects/language
    (fn [coeffects _]
      (assoc coeffects :language "en-US")))
