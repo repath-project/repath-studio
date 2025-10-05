@@ -39,7 +39,6 @@
   :save "Enregistrer"
   :dont-save "Ne pas enregistrer"
   :cancel "Annuler"
-  :close "Fermer"
   :ok "OK"
   :changes-will-be-lost [:p "Vos modifications de %1 seront perdues si vous
                              fermez le document sans l'enregistrer."]}

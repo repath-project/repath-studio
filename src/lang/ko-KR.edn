@@ -39,7 +39,6 @@
   :save "저장"
   :dont-save "저장하지 않음"
   :cancel "취소"
-  :close "닫기"
   :ok "확인"
   :changes-will-be-lost [:p "저장하지 않고 문서를 닫으면
                              %1에 대한 변경사항이 손실됩니다."]}

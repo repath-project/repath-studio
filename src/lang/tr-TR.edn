@@ -39,7 +39,6 @@
   :save "Kaydet"
   :dont-save "Kaydetme"
   :cancel "İptal"
-  :close "Kapat"
   :ok "Tamam"
   :changes-will-be-lost [:p "Belgeyi kaydetmeden kapatırsanız
                              %1 için yaptığınız değişiklikler kaybolacak."]}

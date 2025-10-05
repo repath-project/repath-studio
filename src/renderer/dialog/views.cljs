@@ -13,18 +13,17 @@
    [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]))
 
-(defn confirmation-button
-  [{:keys [action label]}]
-  [:button.button.px-2.rounded.flex-1.accent.w-full
-   {:auto-focus true
+(defn button
+  [{:keys [action label auto-focus class]}]
+  [:button.button.px-4.rounded.flex-1
+   {:class class
+    :auto-focus auto-focus
     :on-click #(rf/dispatch [::dialog.events/close action])}
-   (or label (t [::ok "OK"]))])
-
-(defn cancel-button
-  [{:keys [action label]}]
-  [:button.button.px-2.rounded.flex-1
-   {:on-click #(rf/dispatch [::dialog.events/close action])}
    (or label (t [::cancel "Cancel"]))])
+
+(defn button-bar
+  [& children]
+  (into [:div.flex.gap-2] children))
 
 (defn about
   []
@@ -34,7 +33,10 @@
       [:p
        [:span.block [:strong (t [::version "Version:"])] config/version]
        [:span.block [:strong (t [::browser "Browser:"])] user-agent]]]
-     [confirmation-button]]))
+     [button-bar
+      [button {:label (t [::ok "OK"])
+               :auto-focus true
+               :class "accent"}]]]))
 
 (defn confirmation
   [{:keys [description confirm-action confirm-label cancel-action
@@ -43,12 +45,13 @@
    (cond->> description
      (string? description)
      (into [:p]))
-   [:div.flex.flex-col.gap-2.flex-wrap
-    {:class "sm:flex-row"}
-    [cancel-button {:label cancel-label
-                    :action cancel-action}]
-    [confirmation-button {:label confirm-label
-                          :action confirm-action}]]])
+   [button-bar
+    [button {:label (or cancel-label (t [::cancel "Cancel"]))
+             :action cancel-action}]
+    [button {:label (or confirm-label (t [::ok "OK"]))
+             :action confirm-action
+             :auto-focus true
+             :class "accent"}]]])
 
 (defn save
   [{:keys [id title]}]
@@ -57,21 +60,15 @@
        [:p "Your changes to %1 will be lost if you close the document without
             saving."]]
       [[:strong title]])
-   [:div.flex.flex-col.gap-2
-    {:class "sm:flex-row"}
-    [:button.button.px-2.bg-primary.rounded.flex-1
-     {:on-click #(rf/dispatch [::dialog.events/close
-                               [::document.events/close id false]])}
-     (t [::dont-save "Don't save"])]
-    [:button.button.px-2.bg-primary.rounded.flex-1
-     {:on-click #(rf/dispatch [::dialog.events/close])}
-     (t [::cancel "Cancel"])]
-    [:button.button.px-2.rounded.flex-1.accent
-     {:auto-focus true
-      :on-click #(rf/dispatch [::dialog.events/close
-                               [::document.events/save {:id id
-                                                        :close true}]])}
-     (t [::save "Save"])]]])
+   [button-bar
+    [button {:label (t [::dont-save "Don't save"])
+             :action [::document.events/close id false]}]
+    [button {:label (t [::cancel "Cancel"])}]
+    [button {:label (t [::save "Save"])
+             :auto-focus true
+             :class "accent"
+             :action [::document.events/save {:id id
+                                              :close true}]}]]])
 
 (defn cmdk-item
   [{:keys [label action icon disabled]
@@ -119,16 +116,10 @@
        ^{:key (:id menu)}
        [cmdk-group menu])]]])
 
-(defn- close-button []
-  [:> Dialog/Close
-   {:class "icon-button absolute top-5 right-5 small rtl:right-auto rtl:left-5"
-    :aria-label (t [::close "Close"])}
-   [views/icon "times"]])
-
 (defn root
   []
   (let [active-dialog @(rf/subscribe [::dialog.subs/active])
-        {:keys [title has-close-button content attrs]} active-dialog]
+        {:keys [title content attrs]} active-dialog]
     [:> Dialog/Root
      {:open (boolean active-dialog)
       :on-open-change #(rf/dispatch [::dialog.events/close])}
@@ -146,7 +137,6 @@
           (cond->> title
             (string? title)
             (into [:div.text-xl.px-5.pt-5]))])
-       (when has-close-button [close-button])
        [:> Dialog/Description
         {:as-child true}
         [:div content]]]]]))

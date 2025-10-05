@@ -39,7 +39,6 @@
   :save "保存"
   :dont-save "不保存"
   :cancel "取消"
-  :close "关闭"
   :ok "确定"
   :changes-will-be-lost [:p "如果您不保存就关闭文档，您对 %1 的更改将丢失。"]}
 

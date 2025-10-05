@@ -39,7 +39,6 @@
   :save "Speichern"
   :dont-save "Nicht speichern"
   :cancel "Abbrechen"
-  :close "Schließen"
   :ok "OK"
   :changes-will-be-lost [:p "Ihre Änderungen an %1 gehen verloren, wenn Sie das
                              Dokument ohne Speichern schließen."]}

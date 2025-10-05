@@ -39,7 +39,6 @@
   :save "保存"
   :dont-save "保存しない"
   :cancel "キャンセル"
-  :close "閉じる"
   :ok "OK"
   :changes-will-be-lost [:p "%1への変更は、ドキュメントを保存せずに閉じると失われます。"]}
 
