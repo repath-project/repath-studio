@@ -1,12 +1,13 @@
 (ns renderer.tool.impl.misc.dropper
   (:require
    [re-frame.core :as rf]
+   [renderer.app.effects :as-alias app.effects]
+   [renderer.app.events :as-alias app.events]
+   [renderer.app.handlers :as app.handlers]
    [renderer.document.handlers :as document.handlers]
    [renderer.effects :as effects]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
-   [renderer.notification.handlers :as notification.handlers]
-   [renderer.notification.views :as notification.views]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.i18n :refer [t]]))
@@ -25,14 +26,13 @@
 (defmethod tool.hierarchy/on-activate :dropper
   [db]
   (if (contains? (:features db) :eye-dropper)
-    (tool.handlers/add-fx db [::effects/eye-dropper {:on-success [::success]
-                                                     :on-error [::error]}])
+    (app.handlers/add-fx db [::effects/eye-dropper {:on-success [::success]
+                                                    :on-error [::error]}])
     (-> db
         (tool.handlers/activate :transform)
-        (notification.handlers/add
-         (notification.views/unavailable-feature
-          "EyeDropper"
-          "https://developer.mozilla.org/en-US/docs/Web/API/EyeDropper_API#browser_compatibility")))))
+        (app.handlers/add-fx [::app.effects/toast
+                              [:error ["Eye Dropper is not available in this
+                                        environment."]]]))))
 
 (rf/reg-event-db
  ::success
@@ -49,4 +49,4 @@
  (fn [db [_ error]]
    (-> db
        (tool.handlers/activate :transform)
-       (notification.handlers/add (notification.views/exception error)))))
+       (app.handlers/add-fx [:dispatch [::app.events/toast-error error]]))))

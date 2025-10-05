@@ -33,6 +33,7 @@
    [:div {:title browser}
     [views/icon (browser-icon browser)]]
    [:div.text-2xs.mt-1
+    {:class "light:text-white dark:text-black"}
     (case version-added
       true [:div.bg-success (t [::all "all"])]
       false [:div.bg-error "x"]

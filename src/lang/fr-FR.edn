@@ -742,13 +742,6 @@
  :renderer.frame.views
  {:main-canvas "canevas principal"}
 
- :renderer.notification.views
- {:close "Fermer"
-  :error "Erreur"
-  :validation-error "Erreur de validation"
-  :clear-all "Tout effacer"
-  :event "Événement : "}
-
  :renderer.error.events
  {:welcome "Bienvenue dans %1 !"
   :reporting-description [:div

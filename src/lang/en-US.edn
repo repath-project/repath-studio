@@ -721,13 +721,6 @@
  :renderer.frame.views
  {:main-canvas "main canvas"}
 
- :renderer.notification.views
- {:close "Close"
-  :error "Error"
-  :validation-error "Validation error"
-  :clear-all "Clear all"
-  :event "Event: "}
-
  :renderer.error.events
  {:welcome "Welcome to %1!"
   :reporting-description [:div

@@ -11,11 +11,6 @@
    [renderer.tool.db :refer [Tool State Cursor]]
    [renderer.tool.hierarchy :as tool.hierarchy]))
 
-(m/=> add-fx [:-> App vector? App])
-(defn add-fx
-  [db effect]
-  (update db :fx conj effect))
-
 (m/=> set-state [:-> App State App])
 (defn set-state
   [db state]

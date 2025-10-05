@@ -733,13 +733,6 @@
  :renderer.frame.views
  {:main-canvas "основной холст"}
 
- :renderer.notification.views
- {:close "Закрыть"
-  :error "Ошибка"
-  :validation-error "Ошибка валидации"
-  :clear-all "Очистить всё"
-  :event "Событие: "}
-
  :renderer.error.events
  {:welcome "Добро пожаловать в %1!"
   :reporting-description [:div

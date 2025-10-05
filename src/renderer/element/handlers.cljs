@@ -3,25 +3,25 @@
    [clojure.core.matrix :as matrix]
    [clojure.set :as set]
    [clojure.string :as string]
+   [clojure.zip :as zip]
    [hickory.core :as hickory]
    [hickory.zip]
    [malli.core :as m]
    [malli.error :as m.error]
    [renderer.app.db :refer [App]]
+   [renderer.app.events :as-alias app.events]
+   [renderer.app.handlers :as app.handlers]
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.db :refer [BBox BooleanOperation PathManipulation Vec2]]
    [renderer.element.db
     :as element.db
     :refer [ElementAttrs Element ElementId ElementTag AnimationTag Direction]]
    [renderer.element.hierarchy :as element.hierarchy]
-   [renderer.notification.handlers :as notification.handlers]
-   [renderer.notification.views :as notification.views]
    [renderer.tool.db :refer [HandleId]]
    [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
    [renderer.utils.extra :refer [partial-right]]
-   [renderer.utils.hiccup :as utils.hiccup]
    [renderer.utils.path :as utils.path]
    [renderer.utils.vec :as utils.vec]))
 
@@ -674,12 +674,14 @@
                             (overlapping-svg db el-bbox)
                             (root db)))))))
 
-(m/=> add-invalid-element-notification [:-> App any? App])
-(defn add-invalid-element-notification
+(m/=> toast-invalid-element [:-> App any? App])
+(defn toast-invalid-element
   [db el]
-  (let [error-message (-> el element.db/explain m.error/humanize str)]
-    (->> (notification.views/spec-failed "Invalid element" error-message)
-         (notification.handlers/add db))))
+  (let [explanation (-> el element.db/explain m.error/humanize str)]
+    (app.handlers/add-fx db [::app.events/toast
+                             :error
+                             "Invalid element"
+                             {:description explanation}])))
 
 (m/=> create [:-> App map? App])
 (defn create
@@ -697,7 +699,7 @@
                                   (create (assoc %2 :parent id)))
                                db child-els))]
     (if-not (element.db/valid? new-el)
-      (add-invalid-element-notification db new-el)
+      (toast-invalid-element db new-el)
       (let [is-translated (or (utils.element/svg? new-el)
                               (utils.element/root? new-el)
                               (:parent el))]
@@ -897,6 +899,15 @@
               [:label string?]
               [:position Vec2]])
 
+(defn find-svg
+  [zipper]
+  (loop [loc zipper]
+    (if (zip/end? loc)
+      (zip/root loc)
+      (if (= (:tag (zip/node loc)) :svg)
+        (zip/node loc)
+        (recur (zip/next loc))))))
+
 (m/=> import-svg [:-> App SvgData App])
 (defn import-svg
   [db data]
@@ -904,7 +915,7 @@
         [x y] position
         hickory (hickory/as-hickory (hickory/parse svg))
         zipper (hickory.zip/hickory-zip hickory)
-        svg (utils.hiccup/find-svg zipper)
+        svg (find-svg zipper)
         svg (-> svg
                 (assoc :label label)
                 (update :attrs dissoc :desc :version :xmlns)

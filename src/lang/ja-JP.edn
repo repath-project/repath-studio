@@ -692,13 +692,6 @@
  :renderer.frame.views
  {:main-canvas "メインキャンバス"}
 
- :renderer.notification.views
- {:close "閉じる"
-  :error "エラー"
-  :validation-error "検証エラー"
-  :clear-all "すべてクリア"
-  :event "イベント: "}
-
  :renderer.error.events
  {:welcome "%1へようこそ！"
   :reporting-description [:div

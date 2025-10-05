@@ -14,18 +14,6 @@
   fill: var(--bg-primary);
 }
 
-@utility bg-error {
-  background: var(--bg-error);
-}
-
-@utility bg-warning {
-  background: var(--bg-warning);
-}
-
-@utility bg-success {
-  background: var(--bg-success);
-}
-
 @utility drag {
   -webkit-app-region: drag;
 }
@@ -48,18 +36,6 @@
 
 @utility text-muted {
   color: var(--font-color-muted);
-}
-
-@utility text-error {
-  color: var(--text-error);
-}
-
-@utility text-warning {
-  color: var(--text-warning);
-}
-
-@utility text-success {
-  color: var(--text-success);
 }
 
 @utility text-disabled {

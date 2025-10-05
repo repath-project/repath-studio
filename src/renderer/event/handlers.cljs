@@ -4,6 +4,7 @@
    [malli.core :as m]
    [renderer.app.db :refer [App]]
    [renderer.app.effects :as-alias app.effects]
+   [renderer.app.handlers :as app.handlers]
    [renderer.db :refer [Vec2]]
    [renderer.effects :as-alias effects]
    [renderer.event.db :refer [PointerEvent KeyboardEvent WheelEvent DragEvent]]
@@ -41,8 +42,8 @@
                 (not drag)
                 (-> (assoc :drag true)
                     (tool.hierarchy/on-drag-start e)
-                    (tool.handlers/add-fx [::event.effects/set-pointer-capture
-                                           pointer-id]))
+                    (app.handlers/add-fx [::event.effects/set-pointer-capture
+                                          pointer-id]))
 
                 :always
                 (tool.hierarchy/on-drag e))
@@ -65,14 +66,14 @@
                    :nearest-neighbor-offset (:point nearest-neighbor)))
         :always
         (-> (tool.hierarchy/on-pointer-down e)
-            (tool.handlers/add-fx [::effects/focus nil])))
+            (app.handlers/add-fx [::effects/focus nil])))
 
       "pointerup"
       (if (contains? active-pointers pointer-id)
         (cond-> (if drag
                   (-> (tool.hierarchy/on-drag-end db e)
-                      (tool.handlers/add-fx [::event.effects/release-pointer-capture
-                                             pointer-id]))
+                      (app.handlers/add-fx [::event.effects/release-pointer-capture
+                                            pointer-id]))
                   (if (= button :right)
                     db
                     (if (< 0 (- timestamp event-timestamp) double-click-delta)
@@ -141,7 +142,7 @@
             (frame.handlers/zoom-at-pointer db factor))
           (frame.handlers/pan-by db [delta-x delta-y]))
         (snap.handlers/update-viewport-tree)
-        (tool.handlers/add-fx [::app.effects/persist]))))
+        (app.handlers/add-fx [::app.effects/persist]))))
 
 (m/=> drag [:-> App DragEvent App])
 (defn drag
@@ -150,6 +151,6 @@
     "drop"
     (let [{:keys [data-transfer pointer-pos]} e
           position (frame.handlers/adjusted-pointer-pos db pointer-pos)]
-      (tool.handlers/add-fx db [::event.effects/drop [position data-transfer]]))
+      (app.handlers/add-fx db [::event.effects/drop [position data-transfer]]))
 
     db))

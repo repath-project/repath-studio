@@ -5,6 +5,7 @@
    [clojure.string :as string]
    [re-frame.core :as rf]
    [reagent.core :as reagent]
+   [renderer.app.handlers :as app.handlers]
    [renderer.document.handlers :as document.handlers]
    [renderer.element.handlers :as element.handlers]
    [renderer.element.hierarchy :as element.hierarchy]
@@ -35,12 +36,12 @@
         pressure (if (zero? pressure) 1 pressure)
         r (* (/ 16 2) pressure)
         stroke (document.handlers/attr db :stroke)]
-    (tool.handlers/add-fx db [::set-brush {:type :element
-                                           :tag :circle
-                                           :attrs {:cx x
-                                                   :cy y
-                                                   :r r
-                                                   :fill stroke}}])))
+    (app.handlers/add-fx db [::set-brush {:type :element
+                                          :tag :circle
+                                          :attrs {:cx x
+                                                  :cy y
+                                                  :r r
+                                                  :fill stroke}}])))
 
 (defmethod tool.hierarchy/on-drag-start :brush
   [db e]

@@ -9,12 +9,11 @@
    [renderer.document.subs :as-alias document.subs]
    [renderer.theme.db :as theme.db]
    [renderer.utils.bounds :as utils.bounds]
-   [renderer.utils.hiccup :refer [Hiccup]]
    [renderer.utils.math :as utils.math]))
 
 (def dash-size 5)
 
-(m/=> dot [:-> Vec2 Hiccup any?])
+(m/=> dot [:-> Vec2 any? any?])
 (defn dot
   [[x y] & children]
   (let [zoom @(rf/subscribe [::document.subs/zoom])]

@@ -753,13 +753,6 @@
  :renderer.frame.views
  {:main-canvas "κύριος καμβάς"}
 
- :renderer.notification.views
- {:close "Κλείσιμο"
-  :error "Σφάλμα"
-  :validation-error "Σφάλμα επικύρωσης"
-  :clear-all "Καθαρισμός όλων"
-  :event "Συμβάν: "}
-
  :renderer.error.events
  {:welcome "Καλώς ήρθατε στο %1!"
   :reporting-description [:div

@@ -689,13 +689,6 @@
  :renderer.frame.views
  {:main-canvas "메인 캔버스"}
 
- :renderer.notification.views
- {:close "닫기"
-  :error "오류"
-  :validation-error "검증 오류"
-  :clear-all "모두 지우기"
-  :event "이벤트: "}
-
  :renderer.error.events
  {:welcome "%1에 오신 것을 환영합니다!"
   :reporting-description [:div

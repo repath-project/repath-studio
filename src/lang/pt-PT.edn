@@ -730,13 +730,6 @@
  :renderer.frame.views
  {:main-canvas "tela principal"}
 
- :renderer.notification.views
- {:close "Fechar"
-  :error "Erro"
-  :validation-error "Erro de validação"
-  :clear-all "Limpar tudo"
-  :event "Evento: "}
-
  :renderer.error.events
  {:welcome "Bem-vindo ao %1!"
   :reporting-description [:div

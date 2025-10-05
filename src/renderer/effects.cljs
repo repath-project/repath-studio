@@ -2,7 +2,7 @@
   (:require
    [clojure.string :as string]
    [re-frame.core :as rf]
-   [renderer.notification.events :as-alias notification.events]
+   [renderer.app.events :as-alias app.events]
    [renderer.utils.dom :as utils.dom]
    [renderer.utils.i18n :refer [t]]))
 
@@ -59,10 +59,10 @@
       (.then (fn [result]
                (if (= result "granted")
                  (f args)
-                 (rf/dispatch [::notification.events/show-error
-                               {:title (t [::permission-denied
-                                           "Permission to access the file was
-                                            denied."])}]))))))
+                 (rf/dispatch [::app.events/toast :error
+                               (t [::permission-denied
+                                   "Permission to access the file was
+                                    denied."])]))))))
 
 (defn- query-permission-and-run
   [mode f {:keys [file-handle]
@@ -97,16 +97,11 @@
        :as args}]
    (if file-handle
      (query-permission-and-run "readwrite" write-file! args)
-     (if (.-showSaveFilePicker js/window)
-       (-> (.showSaveFilePicker js/window (clj->js options))
-           (.then #(write-file! (assoc args :file-handle %)))
-           (.catch (fn [^js/Error error]
-                     (when (and on-error (not (abort-error? error)))
-                       (rf/dispatch (conj on-error error))))))
-       (rf/dispatch
-        [::notification.events/show-unavailable-feature
-         "Save File Picker"
-         "https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker#browser_compatibility"])))))
+     (-> (.showSaveFilePicker js/window (clj->js options))
+         (.then #(write-file! (assoc args :file-handle %)))
+         (.catch (fn [^js/Error error]
+                   (when (and on-error (not (abort-error? error)))
+                     (rf/dispatch (conj on-error error)))))))))
 
 (defn- get-file!
   [{:keys [on-success on-error file-handle]}]

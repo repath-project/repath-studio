@@ -3,6 +3,7 @@
    [clojure.core.matrix :as matrix]
    [re-frame.core :as rf]
    [reagent.core :as reagent]
+   [renderer.app.handlers :as app.handlers]
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.handlers :as element.handlers]
    [renderer.tool.handlers :as tool.handlers]
@@ -36,7 +37,7 @@
 
 (defmethod tool.hierarchy/on-deactivate :measure
   [db]
-  (tool.handlers/add-fx db [::set-measure-attrs nil]))
+  (app.handlers/add-fx db [::set-measure-attrs nil]))
 
 (defmethod tool.hierarchy/on-drag :measure
   [db _e]
@@ -45,12 +46,12 @@
         [x y] (or (:point (:nearest-neighbor db)) (:adjusted-pointer-pos db))
         [adjacent opposite] (matrix/sub [offset-x offset-y] [x y])
         hypotenuse (Math/hypot adjacent opposite)]
-    (tool.handlers/add-fx db [::set-measure-attrs {:x1 offset-x
-                                                   :y1 offset-y
-                                                   :x2 x
-                                                   :y2 y
-                                                   :hypotenuse hypotenuse
-                                                   :stroke "gray"}])))
+    (app.handlers/add-fx db [::set-measure-attrs {:x1 offset-x
+                                                  :y1 offset-y
+                                                  :x2 x
+                                                  :y2 y
+                                                  :hypotenuse hypotenuse
+                                                  :stroke "gray"}])))
 
 (defmethod tool.hierarchy/render :measure
   []

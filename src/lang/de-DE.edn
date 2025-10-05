@@ -749,13 +749,6 @@
  :renderer.frame.views
  {:main-canvas "Hauptleinwand"}
 
- :renderer.notification.views
- {:close "Schließen"
-  :error "Fehler"
-  :validation-error "Validierungsfehler"
-  :clear-all "Alle löschen"
-  :event "Ereignis: "}
-
  :renderer.error.events
  {:welcome "Willkommen bei %1!"
   :reporting-description [:div

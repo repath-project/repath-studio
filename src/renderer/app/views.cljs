@@ -6,10 +6,12 @@
    ["path-browserify" :as path-browserify]
    ["react-fps" :refer [FpsView]]
    ["react-resizable-panels" :refer [Panel PanelGroup]]
+   ["sonner" :refer [Toaster]]
    ["vaul" :refer [Drawer]]
    [clojure.string :as string]
    [config :as config]
    [re-frame.core :as rf]
+   [reagent.core :as reagent]
    [renderer.app.events :as app.events]
    [renderer.app.subs :as-alias app.subs]
    [renderer.dialog.events :as-alias dialog.events]
@@ -22,7 +24,6 @@
    [renderer.frame.subs :as-alias frame.subs]
    [renderer.frame.views :as frame.views]
    [renderer.history.views :as history.views]
-   [renderer.notification.views :as notification.views]
    [renderer.reepl.views :as repl.views]
    [renderer.ruler.events :as-alias ruler.events]
    [renderer.ruler.subs :as-alias ruler.subs]
@@ -415,7 +416,8 @@
         lang-dir @(rf/subscribe [::app.subs/lang-dir])
         web? @(rf/subscribe [::app.subs/web?])
         md? @(rf/subscribe [::window.subs/breakpoint? :md])
-        is-app-loading @(rf/subscribe [::app.subs/loading?])]
+        is-app-loading @(rf/subscribe [::app.subs/loading?])
+        theme @(rf/subscribe [::theme.subs/theme])]
     (if is-app-loading
       (when web? [:div.loader])
       [:> Direction/Provider {:dir lang-dir}
@@ -442,4 +444,20 @@
            [home recent-documents])
          [:div]]
         [dialog.views/root]
-        [notification.views/root]]])))
+        [:> Toaster
+         {:theme theme
+          :toastOptions
+          {:classNames {:toast "bg-primary! border! border-default! shadow-md!
+                                p-4! rounded-md!"
+                        :description "text-default text-sm mt-1"}}
+          :icons {:success
+                  (reagent/as-element
+                   [views/icon "success" {:class "text-success"}])
+                  :error
+                  (reagent/as-element
+                   [views/icon "error" {:class "text-error"}])
+                  :warning
+                  (reagent/as-element
+                   [views/icon "warning" {:class "text-warning"}])
+                  :info
+                  (reagent/as-element [views/icon "info"])}}]]])))

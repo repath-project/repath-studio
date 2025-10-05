@@ -3,6 +3,7 @@
    [re-frame.core :as rf]
    [reagent.core :as reagent]
    [renderer.app.effects :as-alias app.effects]
+   [renderer.app.handlers :as app.handlers]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.frame.handlers :as frame.handlers]
    [renderer.snap.handlers :as snap.handlers]
@@ -37,7 +38,7 @@
 
 (defmethod tool.hierarchy/on-deactivate :zoom
   [db]
-  (tool.handlers/add-fx db [::set-select-box nil]))
+  (app.handlers/add-fx db [::set-select-box nil]))
 
 (defmethod tool.hierarchy/on-key-down :zoom
   [db e]
@@ -53,7 +54,7 @@
 
 (defmethod tool.hierarchy/on-drag :zoom
   [db _e]
-  (tool.handlers/add-fx db [::set-select-box (utils.svg/select-box db)]))
+  (app.handlers/add-fx db [::set-select-box (utils.svg/select-box db)]))
 
 (defmethod tool.hierarchy/on-drag-end :zoom
   [db e]
@@ -69,12 +70,12 @@
         factor (if (:shift-key e) zoom-sensitivity (/ zoom current-zoom))
         cursor (if (:shift-key e) "zoom-out" "zoom-in")]
     (-> db
-        (tool.handlers/add-fx [::set-select-box nil])
+        (app.handlers/add-fx [::set-select-box nil])
         (tool.handlers/set-cursor cursor)
         (frame.handlers/zoom-in-place factor)
         (frame.handlers/pan-to-bbox [x y offset-x offset-y])
         (snap.handlers/update-viewport-tree)
-        (tool.handlers/add-fx [::app.effects/persist]))))
+        (app.handlers/add-fx [::app.effects/persist]))))
 
 (defmethod tool.hierarchy/on-pointer-up :zoom
   [db e]
@@ -84,7 +85,7 @@
     (-> db
         (frame.handlers/zoom-at-pointer factor)
         (snap.handlers/update-viewport-tree)
-        (tool.handlers/add-fx [::app.effects/persist]))))
+        (app.handlers/add-fx [::app.effects/persist]))))
 
 (defmethod tool.hierarchy/render :zoom
   []

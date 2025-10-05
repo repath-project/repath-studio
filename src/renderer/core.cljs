@@ -30,8 +30,6 @@
    [renderer.history.events]
    [renderer.history.subs]
    [renderer.menubar.events]
-   [renderer.notification.events]
-   [renderer.notification.subs]
    [renderer.reepl.replumb :as replumb]
    [renderer.ruler.events]
    [renderer.ruler.subs]
