@@ -3,6 +3,7 @@
    [clojure.core.matrix :as matrix]
    [clojure.set :as set]
    [clojure.string :as string]
+   [clojure.zip :as zip]
    [hickory.core :as hickory]
    [hickory.zip]
    [malli.core :as m]
@@ -21,7 +22,6 @@
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
    [renderer.utils.extra :refer [partial-right]]
-   [renderer.utils.hiccup :as utils.hiccup]
    [renderer.utils.path :as utils.path]
    [renderer.utils.vec :as utils.vec]))
 
@@ -899,6 +899,15 @@
               [:label string?]
               [:position Vec2]])
 
+(defn find-svg
+  [zipper]
+  (loop [loc zipper]
+    (if (zip/end? loc)
+      (zip/root loc)
+      (if (= (:tag (zip/node loc)) :svg)
+        (zip/node loc)
+        (recur (zip/next loc))))))
+
 (m/=> import-svg [:-> App SvgData App])
 (defn import-svg
   [db data]
@@ -906,7 +915,7 @@
         [x y] position
         hickory (hickory/as-hickory (hickory/parse svg))
         zipper (hickory.zip/hickory-zip hickory)
-        svg (utils.hiccup/find-svg zipper)
+        svg (find-svg zipper)
         svg (-> svg
                 (assoc :label label)
                 (update :attrs dissoc :desc :version :xmlns)
