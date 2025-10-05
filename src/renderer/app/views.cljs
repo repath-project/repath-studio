@@ -449,7 +449,8 @@
           :toastOptions
           {:classNames {:toast "bg-primary! border! border-default! shadow-md!
                                 p-4! rounded-md!"
-                        :description "text-default text-sm mt-1"}}
+                        :title "text-active!"
+                        :description "text-default! text-xs"}}
           :icons {:success
                   (reagent/as-element
                    [views/icon "success" {:class "text-success"}])

@@ -15,7 +15,7 @@
 
 (defn button
   [{:keys [action label auto-focus class]}]
-  [:button.button.px-4.rounded.flex-1
+  [:button.button.px-4.rounded.flex-1.font-medium
    {:class class
     :auto-focus auto-focus
     :on-click #(rf/dispatch [::dialog.events/close action])}
@@ -136,7 +136,7 @@
          [:> Dialog/Title
           (cond->> title
             (string? title)
-            (into [:div.text-xl.px-5.pt-5]))])
+            (into [:div.text-xl.px-5.pt-5.text-active]))])
        [:> Dialog/Description
         {:as-child true}
         [:div content]]]]]))
