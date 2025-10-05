@@ -104,8 +104,8 @@
   [message]
   [:div.hidden.absolute.justify-center.w-full.pointer-events-none.p-4
    {:class "sm:flex"}
-   [:div.bg-primary.overflow-hidden.shadow-lg.rounded-full
-    [:div.overlay.text-default.text-xs.gap-1.flex.flex-wrap.py-2.px-4
+   [:div.bg-primary.overflow-hidden.shadow.rounded-full
+    [:div.text-default.text-xs.gap-1.flex.flex-wrap.py-2.px-4
      {:class "justify-center truncate"
       :aria-live "polite"}
      message]]])
@@ -174,7 +174,7 @@
            {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])
         (when (and help-bar (seq help-message))
           [help help-message])]
-       [:div.absolute.inset-0.pointer-events-none.inset-shadow-md]
+       [:div.absolute.inset-0.pointer-events-none.inset-shadow]
        (when (not md?)
          [:> Drawer.Root {:direction "left"}
           [:> Drawer.Trigger
