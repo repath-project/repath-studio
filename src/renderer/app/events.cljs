@@ -207,13 +207,13 @@
 
 (rf/reg-event-fx
  ::toast
- (fn [_ [_ title toast-type options]]
-   {::effects/toast [title toast-type options]}))
+ (fn [_ [_ toast-type title options]]
+   {::app.effects/toast [toast-type title options]}))
 
 (rf/reg-event-fx
  ::toast-error
  (fn [_ [_ ^js/Error error]]
-   {::effects/toast [:error
-                     (.-name error)
-                     {:description (or (.-message error)
-                                       (str error))}]}))
+   {::app.effects/toast [:error
+                         (.-name error)
+                         {:description (or (.-message error)
+                                           (str error))}]}))
