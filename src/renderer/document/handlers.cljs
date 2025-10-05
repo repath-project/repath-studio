@@ -5,6 +5,8 @@
    [malli.error :as m.error]
    [malli.transform :as m.transform]
    [renderer.app.db :refer [App]]
+   [renderer.app.events :as-alias app.events]
+   [renderer.app.handlers :as app.handlers]
    [renderer.db :refer [Vec2]]
    [renderer.document.db
     :as document.db
@@ -12,8 +14,6 @@
    [renderer.element.db :refer [ElementId]]
    [renderer.element.handlers :as element.handlers]
    [renderer.frame.handlers :as frame.handlers]
-   [renderer.notification.handlers :as notification.handlers]
-   [renderer.notification.views :as notification.views]
    [renderer.snap.handlers :as snap.handlers]
    [renderer.utils.vec :as utils.vec]))
 
@@ -205,8 +205,10 @@
                             document.db/explain
                             m.error/humanize
                             str)]
-        (->> (notification.views/spec-failed "Load document" explanation)
-             (notification.handlers/add db))))))
+        (app.handlers/add-fx db [::app.events/toast
+                                 :error
+                                 "Invalid document"
+                                 {:description explanation}])))))
 
 (m/=> saved? [:-> App DocumentId boolean?])
 (defn saved?

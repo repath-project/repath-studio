@@ -5,6 +5,7 @@
    [re-frame.core :as rf]
    [renderer.app.db :as app.db]
    [renderer.app.effects :as-alias app.effects]
+   [renderer.app.events :as-alias app.events]
    [renderer.document.events :as-alias document.events]
    [renderer.document.handlers :as document.handlers]
    [renderer.effects :as-alias effects]
@@ -12,7 +13,6 @@
    [renderer.event.events :as-alias event.events]
    [renderer.event.impl.keyboard :as event.impl.keyboard]
    [renderer.history.handlers :as history.handlers]
-   [renderer.notification.events :as-alias notification.events]
    [renderer.snap.handlers :as snap.handlers]
    [renderer.theme.effects :as-alias theme.effects]
    [renderer.theme.events :as-alias theme.events]
@@ -44,7 +44,7 @@
   (let [reader (transit/reader :json)]
     (try (transit/read reader data)
          (catch :default err
-           (rf/dispatch [::notification.events/show-exception err])))))
+           (rf/dispatch [::app.events/toast-error err])))))
 
 (rf/reg-event-fx
  ::initialize
@@ -68,7 +68,7 @@
                 {:store-key config/app-name
                  :formatter json->clj
                  :on-success [::load-local-db]
-                 :on-error [::notification.events/show-exception]
+                 :on-error [::app.events/toast-error]
                  :on-finally [::db-loaded]}]]
               ipc-listeners)}))
 
@@ -188,7 +188,7 @@
  (fn [_ _]
    {::app.effects/query-local-fonts
     {:on-success [::set-system-fonts]
-     :on-error [::notification.events/show-exception]
+     :on-error [::app.events/toast-error]
      :formatter utils.font/font-data->system-fonts}}))
 
 (def schema-validator
@@ -204,3 +204,16 @@
                 (rf/assoc-effect :fx
                                  (conj (or fx [])
                                        [::app.effects/validate [db event]])))))))
+
+(rf/reg-event-fx
+ ::toast
+ (fn [_ [_ title toast-type options]]
+   {::effects/toast [title toast-type options]}))
+
+(rf/reg-event-fx
+ ::toast-error
+ (fn [_ [_ ^js/Error error]]
+   {::effects/toast [:error
+                     (.-name error)
+                     {:description (or (.-message error)
+                                       (str error))}]}))

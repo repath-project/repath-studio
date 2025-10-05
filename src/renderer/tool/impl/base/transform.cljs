@@ -5,6 +5,7 @@
    [re-frame.core :as rf]
    [reagent.core :as reagent]
    [renderer.app.db :refer [App]]
+   [renderer.app.handlers :as app.handlers]
    [renderer.db :refer [BBox Vec2]]
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.db :refer [Element]]
@@ -377,7 +378,7 @@
       :select
       (-> db
           (element.handlers/clear-hovered)
-          (tool.handlers/add-fx [::set-select-box (select-rect db alt-key)])
+          (app.handlers/add-fx [::set-select-box (select-rect db alt-key)])
           (reduce-by-area alt-key element.handlers/hover))
 
       :translate
@@ -420,7 +421,7 @@
       (= state :select)
       (-> (cond-> (not (:shift-key e)) element.handlers/deselect)
           (reduce-by-area (:alt-key e) element.handlers/select)
-          (tool.handlers/add-fx [::set-select-box nil])
+          (app.handlers/add-fx [::set-select-box nil])
           (history.handlers/finalize [::modify-selection "Modify selection"]))
 
       (= state :translate)

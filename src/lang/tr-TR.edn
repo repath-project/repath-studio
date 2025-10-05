@@ -727,13 +727,6 @@
  :renderer.frame.views
  {:main-canvas "ana tuval"}
 
- :renderer.notification.views
- {:close "Kapat"
-  :error "Hata"
-  :validation-error "Doğrulama hatası"
-  :clear-all "Tümünü temizle"
-  :event "Olay: "}
-
  :renderer.error.events
  {:welcome "%1'e hoş geldiniz!"
   :reporting-description [:div

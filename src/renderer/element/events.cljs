@@ -2,6 +2,7 @@
   (:require
    [clojure.string :as string]
    [re-frame.core :as rf]
+   [renderer.app.events :as-alias app.events]
    [renderer.document.events :as-alias document.events]
    [renderer.effects :as-alias effects]
    [renderer.element.db :as element.db]
@@ -9,7 +10,6 @@
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
    [renderer.menubar.views :as-alias menubar.views]
-   [renderer.notification.events :as-alias notification.events]
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
    [renderer.utils.extra :refer [partial-right]]))
@@ -192,7 +192,7 @@
    {::element.effects/->path
     {:data (element.handlers/selected db)
      :on-success [::finalize->path]
-     :on-error [::notification.events/show-exception]}}))
+     :on-error [::app.events/toast-error]}}))
 
 (rf/reg-event-db
  ::finalize->path
@@ -207,7 +207,7 @@
    {::element.effects/->path
     {:data (element.handlers/selected db)
      :on-success [::finalize-stroke->path]
-     :on-error [::notification.events/show-exception]}}))
+     :on-error [::app.events/toast-error]}}))
 
 (rf/reg-event-db
  ::finalize-stroke->path
@@ -224,7 +224,7 @@
      {::element.effects/->path
       {:data (element.handlers/selected db)
        :on-success [::finalize-boolean-operation operation]
-       :on-error [::notification.events/show-exception]}})))
+       :on-error [::app.events/toast-error]}})))
 
 (rf/reg-event-db
  ::finalize-boolean-operation
@@ -307,7 +307,7 @@
       :fx [(when (seq els)
              [::effects/clipboard-write
               {:data (utils.element/->svg els)
-               :on-error [::notification.events/show-exception]}])]})))
+               :on-error [::app.events/toast-error]}])]})))
 
 (rf/reg-event-fx
  ::cut
@@ -319,7 +319,7 @@
       :fx [(when (seq els)
              [::effects/clipboard-write
               {:data (utils.element/->svg els)
-               :on-error [::notification.events/show-exception]}])]})))
+               :on-error [::app.events/toast-error]}])]})))
 
 (rf/reg-event-fx
  ::trace
@@ -346,14 +346,14 @@
                                            :label (.-name file)
                                            :position position})
                              :on-fire [::import-svg]}
-                     "error" {:on-fire [::notification.events/show-exception]}}]}
+                     "error" {:on-fire [::app.events/toast-error]}}]}
 
        (contains? element.db/image-mime-types file-type)
        {::element.effects/import-image
         {:file file
          :position position
          :on-success [::add]
-         :on-error [::notification.events/show-exception]}}
+         :on-error [::app.events/toast-error]}}
 
        :else
        (let [extension (last (string/split (.-name file) "."))]

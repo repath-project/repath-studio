@@ -2,6 +2,7 @@
   (:require
    [clojure.core.matrix :as matrix]
    [renderer.app.effects :as-alias app.effects]
+   [renderer.app.handlers :as app.handlers]
    [renderer.frame.handlers :as frame.handlers]
    [renderer.snap.handlers :as snap.handlers]
    [renderer.tool.handlers :as tool.handlers]
@@ -41,4 +42,4 @@
   (-> db
       (tool.handlers/set-cursor "grab")
       (snap.handlers/update-viewport-tree)
-      (tool.handlers/add-fx [::app.effects/persist])))
+      (app.handlers/add-fx [::app.effects/persist])))

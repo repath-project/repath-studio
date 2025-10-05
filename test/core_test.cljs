@@ -17,8 +17,6 @@
    [renderer.frame.subs]
    [renderer.history.events]
    [renderer.history.subs]
-   [renderer.notification.events]
-   [renderer.notification.subs]
    [renderer.ruler.events]
    [renderer.snap.events]
    [renderer.theme.events]

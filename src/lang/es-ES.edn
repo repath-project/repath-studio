@@ -736,13 +736,6 @@
  :renderer.frame.views
  {:main-canvas "lienzo principal"}
 
- :renderer.notification.views
- {:close "Cerrar"
-  :error "Error"
-  :validation-error "Error de validación"
-  :clear-all "Limpiar todo"
-  :event "Evento: "}
-
  :renderer.error.events
  {:welcome "¡Bienvenido a %1!"
   :reporting-description [:div

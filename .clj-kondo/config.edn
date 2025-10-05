@@ -73,11 +73,6 @@
                       renderer.history.views history.views
                       renderer.menubar.events menubar.events
                       renderer.menubar.views menubar.views
-                      renderer.notification.db notification.db
-                      renderer.notification.events notification.events
-                      renderer.notification.handlers notification.handlers
-                      renderer.notification.subs notification.subs
-                      renderer.notification.views notification.views
                       renderer.ruler.db ruler.db
                       renderer.ruler.events ruler.events
                       renderer.ruler.handlers ruler.handlers

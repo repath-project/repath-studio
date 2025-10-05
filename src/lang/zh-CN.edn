@@ -660,13 +660,6 @@
  :renderer.frame.views
  {:main-canvas "主画布"}
 
- :renderer.notification.views
- {:close "关闭"
-  :error "错误"
-  :validation-error "验证错误"
-  :clear-all "清除全部"
-  :event "事件: "}
-
  :renderer.error.events
  {:welcome "欢迎使用 %1！"
   :reporting-description [:div

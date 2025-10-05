@@ -130,6 +130,7 @@
     "shadow-cljs": "3.2.1",
     "shx": "0.4.0",
     "snabbdom": "3.6.2",
+    "sonner": "2.0.7",
     "source-map-support": "0.5.21",
     "stream-browserify": "3.0.0",
     "style-to-object": "1.0.9",

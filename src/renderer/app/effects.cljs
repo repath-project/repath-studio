@@ -1,14 +1,15 @@
 (ns renderer.app.effects
   (:require
    ["localforage" :as localforage]
+   ["sonner" :refer [toast]]
    [cognitect.transit :as transit]
    [config :as config]
    [goog.functions]
    [re-frame.core :as rf]
    [re-frame.db :as rf.db]
    [renderer.app.db :as app.db]
-   [renderer.history.handlers :as history.handlers]
-   [renderer.notification.events :as-alias notification.events]))
+   [renderer.app.events :as-alias app.events]
+   [renderer.history.handlers :as history.handlers]))
 
 (rf/reg-cofx
  ::platform
@@ -77,7 +78,7 @@
   (let [writer (transit/writer :json)]
     (try (transit/write writer data)
          (catch :default err
-           (rf/dispatch [::notification.events/show-exception err])))))
+           (rf/dispatch [::app.events/toast-error err])))))
 
 (rf/reg-fx
  ::get-local-store
@@ -123,7 +124,7 @@
                          (select-keys app.db/persisted-keys))]
     (when-let [json (clj->json persisted-db)]
       (-> (localforage/setItem config/app-name json)
-          (.catch #(rf/dispatch [::notification.events/show-exception %]))))))
+          (.catch #(rf/dispatch [::app.events/toast-error %]))))))
 
 (def debounced-persist (goog.functions/debounce persist 500))
 
@@ -146,3 +147,14 @@
        (.then (fn [choice]
                 (some-> (get outcomes (.-outcome choice))
                         (rf/dispatch)))))))
+
+(rf/reg-fx
+ ::toast
+ (fn [[toast-type title options]]
+   (let [options (clj->js options)]
+     (case toast-type
+       :success (.success toast title options)
+       :error (.error toast title options)
+       :warning (.warning toast title options)
+       :info (.info toast title options)
+       (toast title (clj->js options))))))

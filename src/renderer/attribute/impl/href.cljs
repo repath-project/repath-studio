@@ -3,13 +3,13 @@
   (:require
    [clojure.string :as string]
    [re-frame.core :as rf]
+   [renderer.app.events :as-alias app.events]
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.attribute.views :as attribute.views]
    [renderer.element.db :as element.db]
    [renderer.element.effects :as-alias element.effects]
    [renderer.element.events :as-alias element.events]
    [renderer.events :as-alias events]
-   [renderer.notification.events :as-alias notification.events]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.subs :as-alias tool.subs]
    [renderer.utils.i18n :refer [t]]
@@ -39,7 +39,7 @@
                     {:options {:startIn "pictures"
                                :types [{:accept element.db/image-mime-types}]}
                      :on-success [::success]
-                     :on-error [::notification.events/show-exception]}])}
+                     :on-error [::app.events/toast-error]}])}
       [views/icon "folder"]]]))
 
 (rf/reg-event-fx
@@ -48,7 +48,7 @@
    {::element.effects/import-image
     {:file file
      :on-success [::update-attrs]
-     :on-error [::notification.events/show-exception]}}))
+     :on-error [::app.events/toast-error]}}))
 
 (rf/reg-event-fx
  ::update-attrs

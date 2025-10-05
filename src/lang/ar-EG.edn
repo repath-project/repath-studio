@@ -711,13 +711,6 @@
  :renderer.frame.views
  {:main-canvas "اللوحة الرئيسية"}
 
- :renderer.notification.views
- {:close "إغلاق"
-  :error "خطأ"
-  :validation-error "خطأ في التحقق"
-  :clear-all "مسح الكل"
-  :event "الحدث: "}
-
  :renderer.error.events
  {:welcome "مرحباً بك في %1!"
   :reporting-description [:div

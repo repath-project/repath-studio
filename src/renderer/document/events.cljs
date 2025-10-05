@@ -4,7 +4,7 @@
    [config :as config]
    [re-frame.core :as rf]
    [renderer.app.effects :as-alias app.effects]
-   [renderer.app.events :refer [persist]]
+   [renderer.app.events :as-alias app.events :refer [persist]]
    [renderer.dialog.handlers :as dialog.handlers]
    [renderer.dialog.views :as dialog.views]
    [renderer.document.handlers :as document.handlers]
@@ -14,9 +14,6 @@
    [renderer.element.handlers :as element.handlers]
    [renderer.events :as-alias events]
    [renderer.history.handlers :as history.handlers]
-   [renderer.notification.events :as-alias notification.events]
-   [renderer.notification.handlers :as notification.handlers]
-   [renderer.notification.views :as notification.views]
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.compatibility :as utils.compatibility]
    [renderer.utils.element :as utils.element]
@@ -180,11 +177,11 @@
      {::effects/file-open
       {:options (assoc file-picker-options :multiple true)
        :on-success [::file-read nil]
-       :on-error [::notification.events/show-exception]}}
+       :on-error [::app.events/toast-error]}}
      {::effects/ipc-invoke
       {:channel "open-documents"
        :on-success [::load-multiple]
-       :on-error [::notification.events/show-exception]
+       :on-error [::app.events/toast-error]
        :formatter #(mapv string->edn %)}})))
 
 (rf/reg-event-fx
@@ -211,16 +208,13 @@
 (rf/reg-event-fx
  ::recent-error
  [persist]
- (fn [{:keys [db]} [_ id err]]
-   {:db (cond-> db
-          :always
-          (document.handlers/remove-recent id)
-
-          err
-          (notification.handlers/add (notification.views/exception err)))
+ (fn [{:keys [db]} [_ id error]]
+   {:db (document.handlers/remove-recent db id)
     :fx [[::app.effects/remove-local-store
           {:store-key (str id)
-           :on-error [::notification.events/show-exception]}]]}))
+           :on-error [::app.events/toast-error]}]
+         (when error
+           [:dispatch [::app.events/toast-error error]])]}))
 
 (rf/reg-event-fx
  ::file-read
@@ -241,24 +235,12 @@
                                            file-handle
                                            (assoc :file-handle file-handle))))
                          :on-fire [::load]}
-                 "error" {:on-fire [::notification.events/show-exception]}}]}))
+                 "error" {:on-fire [::app.events/toast-error]}}]}))
 
 (rf/reg-event-fx
  ::open-directory
  (fn [_ [_ path]]
    {::effects/ipc-send ["open-directory" path]}))
-
-(defn- unsupported-file-notification
-  [db document]
-  (notification.views/generic-error
-   {:title
-    (tr db
-        [::error-loading "Error while loading %1"]
-        [(:title document)])
-    :message
-    (tr db
-        [::unsupported-or-corrupted
-         "File appears to be unsupported or corrupted."])}))
 
 (rf/reg-event-fx
  ::load
@@ -281,10 +263,13 @@
                [::app.effects/set-local-store
                 {:data file-handle
                  :store-key (str id)
-                 :on-error [::notification.events/show-exception]}])
+                 :on-error [::app.events/toast-error]}])
              [::effects/focus nil]]})
-     {:db (->> (unsupported-file-notification db document)
-               (notification.handlers/add db))})))
+     {::app.effects/toast
+      [:error
+       (tr db [::error-loading "Error while loading %1"] [(:title document)])
+       {:description (tr db [::unsupported-or-corrupted
+                             "File appears to be unsupported or corrupted."])}]})))
 
 (rf/reg-event-fx
  ::load-multiple
@@ -308,7 +293,7 @@
    (let [id (or id (:active-document db))
          document (document.handlers/persisted-format db id)
          on-success [::saved close]
-         on-error [::notification.events/show-exception]]
+         on-error [::app.events/toast-error]]
      (if (= (:platform db) "web")
        {::app.effects/get-local-store
         {:store-key (str id)
@@ -330,7 +315,7 @@
    (let [id (:active-document db)
          document (document.handlers/persisted-format db id)
          on-success [::saved false]
-         on-error [::notification.events/show-exception]]
+         on-error [::app.events/toast-error]]
      (if (= (:platform db) "web")
        {::effects/file-save (file-save-options document on-success on-error)}
        {::effects/ipc-invoke
@@ -366,7 +351,7 @@
              [::app.effects/set-local-store
               {:data file-handle
                :store-key (str id)
-               :on-error [::notification.events/show-exception]}])]})))
+               :on-error [::app.events/toast-error]}])]})))
 
 (rf/reg-event-fx
  ::clear-recent
@@ -410,7 +395,7 @@
        "image/svg+xml"
        {::effects/file-save
         {:data svg
-         :on-error [::notification.events/show-exception]
+         :on-error [::app.events/toast-error]
          :options {:id "export"
                    :startIn "pictures"
                    :types [{:accept {"image/svg+xml" [".svg"]}}]}}}
@@ -420,7 +405,7 @@
          :mime-type mime-type
          :size (utils.bounds/->dimensions (utils.element/united-bbox els))
          :on-success [::save-rasterized-image]
-         :on-error [::notification.events/show-exception]}}))))
+         :on-error [::app.events/toast-error]}}))))
 
 (rf/reg-event-fx
  ::save-rasterized-image
@@ -428,7 +413,7 @@
    (let [extensions (get element.db/image-mime-types mime-type)]
      {::effects/file-save
       {:data data
-       :on-error [::notification.events/show-exception]
+       :on-error [::app.events/toast-error]
        :options {:id "export"
                  :startIn "pictures"
                  :types [{:accept {mime-type (or extensions
@@ -443,6 +428,6 @@
        {::effects/ipc-invoke
         {:channel "print"
          :data svg
-         :on-success [::notification.events/add]
-         :on-error [::notification.events/show-exception]}}
+         :on-success [::app.events/toast :success]
+         :on-error [::app.events/toast-error]}}
        {::effects/print svg}))))
