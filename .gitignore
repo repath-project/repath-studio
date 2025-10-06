@@ -4,7 +4,7 @@
 /.lsp/
 /.shadow-cljs/
 /.clj-kondo/.cache
-/.clj-kondo/metosin/malli-types-cljs/
+/.clj-kondo/imports/metosin/malli-types-cljs/
 
 /resources/public/js/
 /resources/public/css/
