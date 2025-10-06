@@ -39,7 +39,7 @@
 
 (defn group
   [items]
-  (into [:div.flex.flex-wrap.justify-center.gap-1]
+  (into [:div.flex.flex-wrap.justify-center.sm:gap-1 {:class "gap-0.5"}]
         (map button items)))
 
 (defn groups
