@@ -59,7 +59,7 @@
 }
 
 @utility toolbar {
-  @apply flex gap-1 p-1 items-center;
+  @apply flex gap-0.5 p-1 items-center sm:gap-1;
 }
 
 @utility button-group {
