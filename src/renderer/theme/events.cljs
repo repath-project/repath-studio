@@ -16,7 +16,7 @@
      {:db (theme.handlers/set-native-mode db native-mode)
       :fx [[::effects/set-document-attr ["data-theme" (name mode)]]
            [::effects/set-meta ["theme-color" (if (= mode :dark)
-                                                "#000000"
+                                                "#2d2d2d"
                                                 "#ffffff")]]]})))
 
 (rf/reg-event-fx
