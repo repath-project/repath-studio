@@ -65,11 +65,16 @@
 @utility button-group {
   @apply flex rounded relative;
 
+  > button,
   > * {
     @apply m-0 rounded-none border-l border-default;
 
     &:first-child {
-      @apply border-l-0;
+      @apply border-l-0 rounded-l;
+    }
+
+    &:last-child {
+      @apply rounded-r;
     }
   }
 
