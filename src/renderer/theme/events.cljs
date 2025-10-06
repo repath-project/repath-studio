@@ -14,7 +14,10 @@
    (let [mode (-> db :theme :mode)
          mode (if (= mode :system) native-mode mode)]
      {:db (theme.handlers/set-native-mode db native-mode)
-      ::effects/set-document-attr ["data-theme" (name mode)]})))
+      :fx [[::effects/set-document-attr ["data-theme" (name mode)]]
+           [::effects/set-meta ["theme-color" (if (= mode :dark)
+                                                "#000000"
+                                                "#ffffff")]]]})))
 
 (rf/reg-event-fx
  ::cycle-mode

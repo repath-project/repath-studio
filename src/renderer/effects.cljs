@@ -42,6 +42,13 @@
  (fn [[k v]]
    (.setAttribute js/window.document.documentElement k v)))
 
+(rf/reg-fx
+ ::set-meta
+ (fn [[k v]]
+   (some-> js/document
+           (.querySelector (str "meta[name='" k "']"))
+           (.setAttribute "content" v))))
+
 (defn legacy-file-open!
   [cb]
   (let [el (js/document.createElement "input")]
