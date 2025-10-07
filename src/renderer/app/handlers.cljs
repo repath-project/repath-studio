@@ -7,3 +7,7 @@
 (defn add-fx
   [db effect]
   (update db :fx conj effect))
+
+(defn feature?
+  [db k]
+  (contains? (:features db) k))

@@ -76,66 +76,78 @@
 
 (defn file-menu
   []
-  {:id :file
-   :label (t [::file "File"])
-   :type :root
-   :items [{:id :new-file
-            :label (t [::new "New"])
-            :icon "file"
-            :action [::document.events/new]}
-           {:id :divider-1
-            :type :separator}
-           {:id :open-file
-            :label (t [::open "Open..."])
-            :icon "folder"
-            :action [::document.events/open]}
-           {:id :recent
-            :label (t [::recent "Recent"])
-            :type :sub-menu
-            :disabled (not @(rf/subscribe [::document.subs/recent?]))
-            :items (recent-submenu)}
-           {:id :divider-2
-            :type :separator}
-           (if @(rf/subscribe [::app.subs/feature? :file-system])
-             {:id :save
-              :label (t [::save "Save"])
-              :icon "save"
-              :action [::document.events/save]
-              :disabled (or (not @(rf/subscribe [::document.subs/entities?]))
-                            @(rf/subscribe [::document.subs/active-saved?]))}
-             {:id :download
-              :icon "download"
-              :label (t [::download "Download"])
-              :disabled (not @(rf/subscribe [::document.subs/entities?]))
-              :action [::document.events/download]})
-           {:id :save-as
-            :label (t [::save-as "Save as..."])
-            :icon "save-as"
-            :action [::document.events/save-as]
-            :disabled (not @(rf/subscribe [::document.subs/entities?]))}
-           {:id :export
-            :label (t [::export-as "Export as"])
-            :type :sub-menu
-            :disabled (not @(rf/subscribe [::document.subs/entities?]))
-            :items (export-submenu)}
-           {:id :divider-3
-            :type :separator}
-           {:id :print
-            :label (t [::print "Print"])
-            :icon "printer"
-            :disabled (not @(rf/subscribe [::document.subs/entities?]))
-            :action [::document.events/print]}
-           {:id :divider-4
-            :type :separator}
-           {:id :close
-            :label (t [::close "Close"])
-            :icon "window-close"
-            :disabled (not @(rf/subscribe [::document.subs/entities?]))
-            :action [::document.events/close-active]}
-           {:id :exit
-            :label (t [::exit "Exit"])
-            :icon "exit"
-            :action [::window.events/close]}]})
+  (let [file-system? @(rf/subscribe [::app.subs/feature? :file-system])
+        document-entities? @(rf/subscribe [::document.subs/entities?])
+        active-document-saved? @(rf/subscribe [::document.subs/active-saved?])]
+    {:id :file
+     :label (t [::file "File"])
+     :type :root
+     :items (cond-> [{:id :new-file
+                      :label (t [::new "New"])
+                      :icon "file"
+                      :action [::document.events/new]}
+                     {:id :divider-1
+                      :type :separator}
+                     {:id :open-file
+                      :label (t [::open "Open..."])
+                      :icon "folder"
+                      :action [::document.events/open]}]
+
+              file-system?
+              (conj {:id :recent
+                     :label (t [::recent "Recent"])
+                     :type :sub-menu
+                     :disabled (not @(rf/subscribe [::document.subs/recent?]))
+                     :items (recent-submenu)})
+
+              :always
+              (conj {:id :divider-2
+                     :type :separator})
+
+              file-system?
+              (into [{:id :save
+                      :label (t [::save "Save"])
+                      :icon "save"
+                      :action [::document.events/save]
+                      :disabled (or (not document-entities?)
+                                    active-document-saved?)}
+                     {:id :save-as
+                      :label (t [::save-as "Save as..."])
+                      :icon "save-as"
+                      :action [::document.events/save-as]
+                      :disabled (not document-entities?)}])
+
+              (not file-system?)
+              (conj {:id :download
+                     :icon "download"
+                     :label (t [::download "Download"])
+                     :disabled (not document-entities?)
+                     :action [::document.events/download]})
+
+              :always
+              (into [{:id :export
+                      :label (t [::export-as "Export as"])
+                      :type :sub-menu
+                      :disabled (not document-entities?)
+                      :items (export-submenu)}
+                     {:id :divider-3
+                      :type :separator}
+                     {:id :print
+                      :label (t [::print "Print"])
+                      :icon "printer"
+                      :disabled (not document-entities?)
+                      :action [::document.events/print]}
+                     {:id :divider-4
+                      :type :separator}
+                     {:id :close
+                      :label (t [::close "Close"])
+                      :icon "window-close"
+                      :disabled (not document-entities?)
+                      :action [::document.events/close-active]}
+                     {:id :exit
+                      :label (t [::exit "Exit"])
+                      :icon "exit"
+                      :action [::window.events/close]}]))}))
 
 (defn edit-menu
   []

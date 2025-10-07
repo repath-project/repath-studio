@@ -6,6 +6,7 @@
    [re-frame.core :as rf]
    [renderer.app.effects :as-alias app.effects]
    [renderer.app.events :as-alias app.events :refer [persist]]
+   [renderer.app.handlers :as app.handlers]
    [renderer.dialog.handlers :as dialog.handlers]
    [renderer.dialog.views :as dialog.views]
    [renderer.document.db :as document.db]
@@ -332,13 +333,15 @@
          on-success [::saved close]
          on-error [::app.events/toast-error]]
      (if (= (:platform db) "web")
-       {::app.effects/get-local-store
-        {:store-key (str id)
-         :formatter #(-> document
-                         (file-save-options on-success on-error)
-                         (assoc :file-handle %))
-         :on-success [::events/file-save]
-         :on-error on-error}}
+       (if (app.handlers/feature? db :file-system)
+         {::app.effects/get-local-store
+          {:store-key (str id)
+           :formatter #(-> document
+                           (file-save-options on-success on-error)
+                           (assoc :file-handle %))
+           :on-success [::events/file-save]
+           :on-error on-error}}
+         {:dispatch [::download]})
        {::effects/ipc-invoke
         {:channel "save-document"
          :data (pr-str document)
@@ -354,7 +357,9 @@
          on-success [::saved false]
          on-error [::app.events/toast-error]]
      (if (= (:platform db) "web")
-       {::effects/file-save (file-save-options document on-success on-error)}
+       (if (app.handlers/feature? db :file-system)
+         {::effects/file-save (file-save-options document on-success on-error)}
+         {:dispatch [::download]})
        {::effects/ipc-invoke
         {:channel "save-document-as"
          :data (pr-str document)
@@ -368,7 +373,8 @@
    (when-let [data (some->> (:active-document db)
                             (document.handlers/persisted-format db)
                             (document.handlers/->save-format))]
-     {::effects/download {:data data
+     {:db (document.handlers/update-saved-history-id db (:active-document db))
+      ::effects/download {:data data
                           :title (str "document." config/ext)}})))
 
 (rf/reg-event-fx
