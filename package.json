@@ -72,7 +72,7 @@
   "devDependencies": {
     "@fontsource/noto-sans": "5.2.10",
     "@fontsource/noto-sans-mono": "5.2.10",
-    "@mdn/browser-compat-data": "7.1.7",
+    "@mdn/browser-compat-data": "7.1.10",
     "@radix-ui/react-context-menu": "2.2.7",
     "@radix-ui/react-dialog": "1.1.15",
     "@radix-ui/react-direction": "1.1.1",
@@ -86,8 +86,8 @@
     "@radix-ui/react-switch": "1.2.6",
     "@radix-ui/react-tooltip": "1.2.8",
     "@repath-project/react-color": "2.19.4",
-    "@sentry/react": "10.15.0",
-    "@tailwindcss/cli": "4.1.13",
+    "@sentry/react": "10.17.0",
+    "@tailwindcss/cli": "4.1.14",
     "@xzdarcy/react-timeline-editor": "0.1.9",
     "acorn": "8.15.0",
     "assert": "2.1.0",
@@ -119,25 +119,25 @@
     "path-browserify": "1.0.1",
     "perfect-freehand": "1.2.2",
     "process": "0.11.10",
-    "puppeteer": "24.22.3",
-    "react": "19.1.1",
+    "puppeteer": "24.23.0",
+    "react": "19.2.0",
     "react-d3-tree": "3.6.6",
-    "react-dom": "19.1.1",
+    "react-dom": "19.2.0",
     "react-fps": "1.0.6",
     "react-frame-component": "5.2.7",
     "react-resizable-panels": "3.0.6",
     "react-svg": "16.3.0",
     "shadow-cljs": "3.2.1",
     "shx": "0.4.0",
-    "snabbdom": "3.6.2",
+    "snabbdom": "3.6.3",
     "sonner": "2.0.7",
     "source-map-support": "0.5.21",
     "stream-browserify": "3.0.0",
-    "style-to-object": "1.0.9",
+    "style-to-object": "1.0.11",
     "svg-path-bbox": "2.1.0",
     "svgpath": "2.6.0",
     "tailwind-merge": "3.3.1",
-    "tailwindcss": "4.1.13",
+    "tailwindcss": "4.1.14",
     "vaul": "1.1.2"
   },
   "dependencies": {
@@ -146,7 +146,7 @@
     "electron-window-state": "5.0.3"
   },
   "overrides": {
-    "react": "19.1.1",
-    "react-dom": "19.1.1"
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
   }
 }
