@@ -12,6 +12,7 @@
    [renderer.attribute.impl.core]
    [renderer.dialog.events]
    [renderer.dialog.subs]
+   [renderer.document.effects]
    [renderer.document.events]
    [renderer.document.subs]
    [renderer.element.effects]

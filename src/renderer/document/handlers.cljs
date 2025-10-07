@@ -2,15 +2,12 @@
   (:require
    [config :as config]
    [malli.core :as m]
-   [malli.error :as m.error]
    [malli.transform :as m.transform]
    [renderer.app.db :refer [App]]
-   [renderer.app.events :as-alias app.events]
-   [renderer.app.handlers :as app.handlers]
    [renderer.db :refer [Vec2]]
    [renderer.document.db
     :as document.db
-    :refer [Document DocumentId PersistedDocument SaveInfo]]
+    :refer [Document DocumentId DocumentTitle PersistedDocument RecentDocument]]
    [renderer.element.db :refer [ElementId]]
    [renderer.element.handlers :as element.handlers]
    [renderer.frame.handlers :as frame.handlers]
@@ -73,16 +70,21 @@
         (update :document-tabs #(filterv (complement #{id}) %))
         (update :documents dissoc id))))
 
-(m/=> add-recent [:-> App SaveInfo App])
+(m/=> add-recent [:-> App map? App])
 (defn add-recent
-  [db save-info]
+  [db document]
   (let [equals? (fn [x] (or (and (:path x)
-                                 (= (:path x) (:path save-info)))
-                            (= (:id x) (:id save-info))))]
-    (update db :recent #(->> save-info
-                             (conj (filterv (complement equals?) %))
-                             (take-last 10)
-                             (vec)))))
+                                 (= (:path x) (:path document)))
+                            (= (:id x) (:id document))))]
+    (cond-> db
+      (or (:path document)
+          (:file-handle document))
+      (update :recent #(->> (m/decode RecentDocument
+                                      document
+                                      m.transform/strip-extra-keys-transformer)
+                            (conj (filterv (complement equals?) %))
+                            (take-last 10)
+                            (vec))))))
 
 (m/=> remove-recent [:-> App DocumentId App])
 (defn remove-recent
@@ -101,14 +103,7 @@
         (assoc-in (path db :centered) true)
         (snap.handlers/update-viewport-tree))))
 
-(m/=> search-by [:-> App keyword? any? [:maybe DocumentId]])
-(defn search-by
-  [db k v]
-  (->> (vals (:documents db))
-       (some #(when (= (get % k) v)
-                (:id %)))))
-
-(m/=> new-title [:-> App string?])
+(m/=> new-title [:-> App DocumentTitle])
 (defn new-title
   [db]
   (let [documents (vals (:documents db))
@@ -170,45 +165,19 @@
   [db k v]
   (assoc-in db (path db :attrs k) v))
 
-(m/=> save-info [:-> map? SaveInfo])
-(defn save-info
-  [document]
-  (select-keys document config/save-info-keys))
+(m/=> update-saved-history-id [:-> App DocumentId App])
+(defn update-saved-history-id
+  [db id]
+  (let [position (get-in db [:documents id :history :position])]
+    (assoc-in db [:documents id :saved-history-id] position)))
 
-(m/=> update-save-info [:-> App SaveInfo App])
-(defn update-save-info
-  [db info]
-  (let [id (:id info)
-        position (get-in db [:documents id :history :position])
-        info (assoc info :saved-history-id position)]
-    (update-in db [:documents id] merge info)))
-
-(m/=> load [:-> App map? App])
-(defn load
-  [db document]
-  (let [open-document-id (some->> document :path (search-by db :path))
-        document (merge document.db/default document)
-        document (cond-> document
-                   open-document-id
-                   (assoc :id open-document-id))]
-    (if (document.db/valid? document)
-      (cond-> db
-        (not open-document-id)
-        (-> (create-tab document)
-            (center))
-
-        :always
-        (-> (set-active (:id document))
-            (add-recent (save-info document))))
-
-      (let [explanation (-> document
-                            document.db/explain
-                            m.error/humanize
-                            str)]
-        (app.handlers/add-fx db [::app.events/toast
-                                 :error
-                                 "Invalid document"
-                                 {:description explanation}])))))
+(m/=> search-by-path [:-> App string? [:maybe DocumentId]])
+(defn search-by-path
+  [db document-path]
+  (->> (:documents db)
+       (vals)
+       (some #(when (= document-path (:path %))
+                (:id %)))))
 
 (m/=> saved? [:-> App DocumentId boolean?])
 (defn saved?
