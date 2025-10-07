@@ -5,7 +5,7 @@
    [malli.transform :as m.transform]
    [renderer.db :refer [BBox Vec2 JS_Object]]
    [renderer.dialog.db :refer [Dialog]]
-   [renderer.document.db :refer [Document DocumentId SaveInfo]]
+   [renderer.document.db :refer [Document DocumentId RecentDocument]]
    [renderer.element.db :refer [Element]]
    [renderer.frame.db :refer [DomRect]]
    [renderer.ruler.db :refer [Ruler]]
@@ -69,7 +69,7 @@
                     :persist true} [:vector DocumentId]]
    [:recent {:max 10
              :default []
-             :persist true} [:vector SaveInfo]]
+             :persist true} [:vector RecentDocument]]
    [:drag-threshold {:default 1} number?]
    [:system-fonts {:optional true} SystemFonts]
    [:debug-info {:default false} boolean?]

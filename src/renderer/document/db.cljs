@@ -1,9 +1,8 @@
 (ns renderer.document.db
   (:require
-   [config :as config]
    [malli.core :as m]
    [malli.transform :as m.transform]
-   [renderer.db :refer [Vec2]]
+   [renderer.db :refer [Vec2 JS_Object]]
    [renderer.element.db :refer [Element ElementId]]
    [renderer.history.db :refer [History HistoryId]]
    [renderer.menubar.filters :refer [A11yFilter]]
@@ -14,18 +13,15 @@
 
 (def DocumentId uuid?)
 
+(def DocumentTitle [:string {:min 1}])
+
 (def Document
   [:map {:closed true}
-   [:id {:optional true
-         :persist true} DocumentId]
-   [:title {:optional true
-            :min 1
-            :persist true} string?]
-   [:path {:optional true
-           :persist true} string?]
+   [:id {:optional true} DocumentId]
+   [:title {:optional true} DocumentTitle]
+   [:path {:optional true} string?]
    [:saved-history-id {:optional true} HistoryId]
-   [:version {:optional true
-              :persist true} string?]
+   [:version {:optional true} string?]
    [:hovered-ids {:default #{}} [:set [:or HandleId ElementId]]]
    [:collapsed-ids {:default #{}} [:set ElementId]]
    [:ignored-ids {:default #{}} [:set [:or HandleId ElementId]]]
@@ -33,24 +29,24 @@
    [:rotate {:default 0} number?]
    [:history {:optional true} History]
    [:pan {:default [0 0]} Vec2]
-   [:elements {:default {}
-               :persist true} [:map-of ElementId Element]]
+   [:elements {:default {}} [:map-of ElementId Element]]
    [:centered {:optional true} boolean?]
    [:filter {:optional true} A11yFilter]
    [:attrs {:default {:fill "white"
                       :stroke "black"}} [:map-of keyword? string?]]
-   [:preview-label {:optional true} string?]])
+   [:preview-label {:optional true} string?]
+   [:file-handle {:optional true} JS_Object]])
 
 (def PersistedDocument
   (->> Document
        (m/children)
-       (filter (comp :persist second))
+       (filter (comp #(some #{%} [:id :title :path :version :elements]) first))
        (into [:map {:closed true}])))
 
-(def SaveInfo
+(def RecentDocument
   (->> Document
        (m/children)
-       (filter (comp #(some #{%} config/save-info-keys) first))
+       (filter (comp #(some #{%} [:id :title :path]) first))
        (into [:map {:closed true}])))
 
 (def valid? (m/validator Document))

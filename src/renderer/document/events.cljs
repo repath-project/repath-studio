@@ -2,11 +2,14 @@
   (:require
    [cljs.reader :as cljs.reader]
    [config :as config]
+   [malli.error :as m.error]
    [re-frame.core :as rf]
    [renderer.app.effects :as-alias app.effects]
    [renderer.app.events :as-alias app.events :refer [persist]]
    [renderer.dialog.handlers :as dialog.handlers]
    [renderer.dialog.views :as dialog.views]
+   [renderer.document.db :as document.db]
+   [renderer.document.effects :as-alias document.effects]
    [renderer.document.handlers :as document.handlers]
    [renderer.effects :as-alias effects]
    [renderer.element.db :as element.db]
@@ -219,21 +222,15 @@
  ::file-read
  (fn [_ [_ id ^js/FileSystemFileHandle file-handle ^js/File file]]
    {::effects/file-read-as
-    [file :text {"load" {:formatter #(when-let [data (string->edn %)]
-                                       (when (map? data)
-                                         (cond-> data
-                                           id
-                                           (assoc :id id)
-
-                                           (.-name file)
-                                           (assoc :title (.-name file))
-
-                                           (.-path file)
-                                           (assoc :path (.-path file))
-
-                                           file-handle
-                                           (assoc :file-handle file-handle))))
-                         :on-fire [::load]}
+    [file :text {"load" {:formatter
+                         #(when-let [data (string->edn %)]
+                            (when (map? data)
+                              (cond-> data
+                                id (assoc :id id)
+                                (.-name file) (assoc :title (.-name file))
+                                (.-path file) (assoc :path (.-path file))
+                                file-handle (assoc :file-handle file-handle))))
+                         :on-fire [::check-if-open]}
                  "error" {:on-fire [::app.events/toast-error]}}]}))
 
 (rf/reg-event-fx
@@ -242,38 +239,79 @@
    {::effects/ipc-send ["open-directory" path]}))
 
 (rf/reg-event-fx
- ::load
- [(rf/inject-cofx ::effects/guid)]
- (fn [{:keys [db guid]} [_ document]]
-   (if (map? document)
-     (let [migrated-document (utils.compatibility/migrate-document document)
-           is-migrated (not= document migrated-document)
-           document (merge {:id guid} migrated-document)
-           save-info (document.handlers/save-info document)
-           {:keys [id file-handle]} document]
-       {:db (cond-> db
-              :always
-              (-> (document.handlers/load (dissoc document :file-handle))
-                  (history.handlers/finalize [::load-doc "Load document"]))
+ ::check-if-open
+ (fn [{:keys [db]} [_ document]]
+   (if document
+     (if-let [open-id (some->> (:path document)
+                               (document.handlers/search-by-path db))]
+       {:db (document.handlers/set-active db open-id)
+        ::effects/focus nil}
 
-              (not is-migrated)
-              (document.handlers/update-save-info save-info))
-        :fx [(when file-handle
-               [::app.effects/set-local-store
-                {:data file-handle
-                 :store-key (str id)
-                 :on-error [::app.events/toast-error]}])
-             [::effects/focus nil]]})
+       (if-let [file-handle (:file-handle document)]
+         {::document.effects/query-file-handle
+          {:file-handle file-handle
+           :on-found [::load-or-activate document]
+           :on-not-found [::load document]
+           :on-error [::app.events/toast-error]}}
+         {:dispatch [::load document]}))
      {::app.effects/toast
       [:error
        (tr db [::error-loading "Error while loading %1"] [(:title document)])
-       {:description (tr db [::unsupported-or-corrupted
-                             "File appears to be unsupported or corrupted."])}]})))
+       {:description (tr db
+                         [::unsupported-or-corrupted
+                          "File appears to be unsupported or corrupted."])}]})))
+
+(rf/reg-event-fx
+ ::load-or-activate
+ (fn [{:keys [db]} [_ document id]]
+   (if (document.handlers/open? db id)
+     {:db (document.handlers/set-active db id)
+      ::effects/focus nil}
+     {:dispatch [::load (assoc document :id id)]})))
+
+(rf/reg-event-fx
+ ::load
+ [(rf/inject-cofx ::effects/guid)]
+ (fn [{:keys [db guid]} [_ document]]
+   (let [migrated-document (utils.compatibility/migrate-document document)
+         is-migrated (not= document migrated-document)
+         document (merge document.db/default {:id guid} migrated-document)
+         {:keys [id file-handle]} document]
+     (if (document.db/valid? document)
+       {:db (cond-> db
+              :always
+              (-> (document.handlers/create-tab (dissoc document :file-handle))
+                  (document.handlers/center)
+                  (document.handlers/add-recent document)
+                  (history.handlers/finalize [::load-doc "Load document"]))
+
+              (not is-migrated)
+              (document.handlers/update-saved-history-id id))
+        :fx [[::effects/focus nil]
+             (when is-migrated
+               [::app.effects/toast
+                [:success (tr db [::document-migrated "Document migrated"])
+                 {:description
+                  (tr db [::document-migrated-description
+                          "The document was created with an older version of the
+                           app and was migrated to the latest version."])}]])
+             (when file-handle
+               [::app.effects/set-local-store
+                {:data file-handle
+                 :store-key (str id)
+                 :on-error [::app.events/toast-error]}])]}
+       (let [explanation (-> document
+                             document.db/explain
+                             m.error/humanize
+                             str)]
+         {::app.effects/toast
+          [:error "Invalid document" {:description explanation}]})))))
 
 (rf/reg-event-fx
  ::load-multiple
  (fn [_ [_ documents]]
-   {:dispatch-n (mapv #(vector ::load %) documents)}))
+   {:dispatch-n (->> documents
+                     (mapv (partial vector ::check-if-open)))}))
 
 (defn- file-save-options
   [document on-success on-error]
@@ -336,15 +374,15 @@
 (rf/reg-event-fx
  ::saved
  [persist]
- (fn [{:keys [db]} [_ close info]]
-   (let [{:keys [id file-handle]} info
-         save-info (document.handlers/save-info info)]
+ (fn [{:keys [db]} [_ close? info]]
+   (let [{:keys [id file-handle]} info]
      {:db (cond-> db
             :always
-            (-> (document.handlers/update-save-info save-info)
-                (document.handlers/add-recent save-info))
+            (-> (update-in [:documents id] merge (dissoc info :file-handle))
+                (document.handlers/update-saved-history-id id)
+                (document.handlers/add-recent info))
 
-            close
+            close?
             (document.handlers/close id))
       :fx [(when file-handle
              [::app.effects/set-local-store
