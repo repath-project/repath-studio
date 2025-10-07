@@ -1,13 +1,10 @@
 (ns renderer.reepl.codemirror
   (:require
-   ["codemirror" :as codemirror]
-   ["codemirror/addon/edit/closebrackets.js"]
-   ["codemirror/addon/edit/matchbrackets.js"]
-   ["codemirror/addon/hint/show-hint.js"]
-   ["codemirror/addon/runmode/colorize.js"]
-   ["codemirror/addon/runmode/runmode.js"]
-   ["codemirror/mode/clojure/clojure.js"]
-   ["codemirror/mode/javascript/javascript.js"]
+   ["@codemirror/lang-css" :as css]
+   ["@codemirror/lang-javascript" :as javascript]
+   ["@codemirror/language" :refer [StreamLanguage syntaxHighlighting]]
+   ["@codemirror/legacy-modes/mode/clojure" :as clojure]
+   ["@codemirror/view" :refer [EditorView]]
    ["react" :as react]
    [clojure.edn :as edn]
    [clojure.string :as string]
@@ -70,7 +67,7 @@
        false
        (if (.-metaKey evt)
          true
-         (let [lines (.lineCount inst)
+         (let [lines (.. inst -state -doc -lines)
                in-place (or (= 1 lines)
                             (let [pos (.getCursor inst)
                                   last-line (dec lines)]
@@ -94,9 +91,9 @@
 
 (defn repl-hint
   "Get a new completion state."
-  [complete-word cm _options]
+  [complete-word ^js cm _options]
   (let [result (cm-current-word cm)
-        text (.getRange cm
+        text (.sliceDoc (.-state cm)
                         (:start result)
                         (:end result))
         words (when-not (empty? text)
@@ -164,9 +161,9 @@
           text (if active
                  (get (get words pos) 2)
                  initial-text)]
-      ;; TODO: don't replaceRange here, instead watch the state atom and react
-      ;; to that.
-      (.replaceRange cm text from to)
+      ;; TODO: don't replaceRange here, instead watch the state atom and react to
+      ;; that.
+      (.dispatch cm #js {:changes #js {:from from :to to :insert text}})
       (assoc state
              :pos pos
              :active active
@@ -225,80 +222,87 @@
               cancel-keys #{13 27}
               cmp-ignore #{9 16 17 18 91 93}
               cmp-show #{17 18 91 93}
-              inst (codemirror
-                    dom-el
+              inst (EditorView.
                     (clj->js
-                     (merge
-                      {:lineNumbers false
-                       :viewportMargin js/Infinity
-                       :matchBrackets true
-                       :lineWrapping true
-                       :theme "tomorrow-night-eighties"
-                       :autofocus false
-                       :extraKeys #js {"Shift-Enter" "newlineAndIndent"}
-                       :value @value-atom
-                       :autoCloseBrackets true
-                       :mode "clojure"}
-                      js-cm-opts)))]
+                     {:extensions
+                      [(StreamLanguage.define clojure)
+                       (syntaxHighlighting css/highlightStyle)
+                       (syntaxHighlighting javascript/highlightStyle)
+                       (.domEventHandlers
+                        EditorView
+                        (clj->js {:keyup
+                                  (fn [evt]
+                                    (.stopPropagation evt)
+                                    #_(if (cancel-keys (.-keyCode evt))
+                                        (reset! complete-atom nil)
+                                        (if (cmp-show (.-keyCode evt))
+                                          (swap! complete-atom assoc :show-all false)
+                                          (when-not (cmp-ignore (.-keyCode evt))
+                                            (reset! complete-atom (repl-hint complete-word inst nil))))))
+
+                                  :keydown
+                                  (fn [evt]
+                                    (.stopPropagation evt)
+                                    #_(case (.-keyCode evt)
+                                        (17 18 91 93)
+                                        (swap! complete-atom assoc :show-all true)
+                                                     ;; tab
+                                                     ;; TODO: do I ever want to use TAB normally?
+                                                     ;; Maybe if there are no completions...
+                                                     ;; Then I'd move this into cycle-completions?
+                                        9 (swap! complete-atom
+                                                 cycle-completions
+                                                 (.-shiftKey evt)
+                                                 inst
+                                                 evt)
+                                                     ;; enter
+                                        13 (let [source (.. inst -state -doc toString)]
+                                             (when (should-eval source inst evt)
+                                               (.preventDefault evt)
+                                               (on-eval source)))
+                                                     ;; up
+                                        38 (let [source (.. inst -state -doc toString)]
+                                             (when (and (not (.-shiftKey evt))
+                                                        (should-go-up source inst))
+                                               (.preventDefault evt)
+                                               (on-up)))
+                                                     ;; down
+                                        40 (let [source (.. inst -state -doc toString)]
+                                             (when (and (not (.-shiftKey evt))
+                                                        (should-go-down source inst))
+                                               (.preventDefault evt)
+                                               (on-down)))
+                                        :none))}))]
+                      :parent el}
+                     #_(merge
+                        {:lineNumbers false
+                         :viewportMargin js/Infinity
+                         :matchBrackets true
+                         :lineWrapping true
+                         :theme "tomorrow-night-eighties"
+                         :autofocus false
+                         :extraKeys #js {"Shift-Enter" "newlineAndIndent"}
+                         :value @value-atom
+                         :autoCloseBrackets true
+                         :mode "clojure"}
+                        js-cm-opts)))]
 
           (reset! cm inst)
-          (.on inst "change"
-               (fn []
-                 (let [value (.getValue inst)]
-                   (when-not (= value @value-atom)
-                     (on-change value)))))
+          #_(.on inst "change"
+                 (fn []
+                   (let [value (.. inst -state -doc toString)]
+                     (when-not (= value @value-atom)
+                       (on-change value)))))
 
-          (.on inst "keyup"
-               (fn [inst evt]
-                 (.stopPropagation evt)
-                 (if (cancel-keys (.-keyCode evt))
-                   (reset! complete-atom nil)
-                   (if (cmp-show (.-keyCode evt))
-                     (swap! complete-atom assoc :show-all false)
-                     (when-not (cmp-ignore (.-keyCode evt))
-                       (reset! complete-atom
-                               (repl-hint complete-word inst nil)))))))
-
-          (.on inst "keydown"
-               (fn [inst evt]
-                 (.stopPropagation evt)
-                 (case (.-keyCode evt)
-                   (17 18 91 93)
-                   (swap! complete-atom assoc :show-all true)
-                   ;; tab
-                   ;; TODO: do I ever want to use TAB normally?
-                   ;; Maybe if there are no completions...
-                   ;; Then I'd move this into cycle-completions?
-                   9 (swap! complete-atom
-                            cycle-completions
-                            (.-shiftKey evt)
-                            inst
-                            evt)
-                   ;; enter
-                   13 (let [source (.getValue inst)]
-                        (when (should-eval source inst evt)
-                          (.preventDefault evt)
-                          (on-eval source)))
-                   ;; up
-                   38 (let [source (.getValue inst)]
-                        (when (and (not (.-shiftKey evt))
-                                   (should-go-up source inst))
-                          (.preventDefault evt)
-                          (on-up)))
-                   ;; down
-                   40 (let [source (.getValue inst)]
-                        (when (and (not (.-shiftKey evt))
-                                   (should-go-down source inst))
-                          (.preventDefault evt)
-                          (on-down)))
-                   :none)))
           (when on-cm-init
             (on-cm-init inst))))
 
       :component-did-update
       (fn [_this _old-argv]
-        (when-not (= @value-atom (.getValue @cm))
-          (.setValue @cm @value-atom)
+        (when-not (= @value-atom (.. @cm -state -doc toString))
+          (.dispatch cm #js {:changes #js {:from 0
+                                           :to (.. cm -state doc length)
+                                           :insert @value-atom}})
           (let [last-line (.lastLine @cm)
                 last-ch (count (.getLine @cm last-line))]
             (.setCursor @cm last-line last-ch))))
@@ -309,21 +313,20 @@
         [:div {:ref ref
                :style style}])})))
 
-(defn colored-text [text style]
-  (let [ref (react/createRef)]
-    (reagent/create-class
-     {:component-did-mount
-      (fn [_this]
-        (let [dom-el (.-current ref)]
-          ((aget codemirror "colorize") #js[dom-el] "clojure")
-          ;; Hacky way to remove the theme class added by CodeMirror's colorize
+#_(defn colored-text [text style]
+    (let [ref (react/createRef)]
+      (reagent/create-class
+       {:component-did-mount
+        (fn [_this]
+          (let [node (.-current ref)]
+            ((aget codemirror "colorize") #js[node] "clojure")
+          ;; Hacky way to remove the default theme class added by CodeMirror.colorize
           ;; https://codemirror.net/addon/runmode/colorize.js
-          (-> dom-el .-classList (.remove "cm-s-default"))))
+            (-> node .-classList (.remove  "cm-s-default"))))
 
-      :reagent-render
-      (fn [_]
-        [:pre.cm-s-tomorrow-night-eighties
-         {:style (merge {:padding 0
-                         :margin 0} style)
-          :ref ref}
-         text])})))
+        :reagent-render
+        (fn [_]
+          [:pre.cm-s-tomorrow-night-eighties
+           {:style (merge {:padding 0 :margin 0} style)
+            :ref ref}
+           text])})))

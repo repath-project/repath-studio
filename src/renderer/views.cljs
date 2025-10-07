@@ -2,6 +2,10 @@
   "A collection of stateless reusable ui components.
    Avoid using subscriptions to keep the components pure."
   (:require
+   ["@codemirror/lang-css" :as css]
+   ["@codemirror/lang-xml" :as xml]
+   ["@codemirror/language" :refer [StreamLanguage syntaxHighlighting]]
+   ["@codemirror/view" :refer [EditorView]]
    ["@radix-ui/react-context-menu" :as ContextMenu]
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    ["@radix-ui/react-popover" :as Popover]
@@ -9,12 +13,6 @@
    ["@radix-ui/react-slider" :as Slider]
    ["@radix-ui/react-switch" :as Switch]
    ["@repath-project/react-color" :refer [PhotoshopPicker]]
-   ["codemirror" :as codemirror]
-   ["codemirror/addon/display/placeholder.js"]
-   ["codemirror/addon/hint/css-hint.js"]
-   ["codemirror/addon/hint/show-hint.js"]
-   ["codemirror/mode/css/css.js"]
-   ["codemirror/mode/xml/xml.js"]
    ["react" :as react]
    ["react-resizable-panels" :refer [PanelResizeHandle]]
    ["react-svg" :refer [ReactSVG]]
@@ -216,9 +214,10 @@
    :theme "tomorrow-night-eighties"
    :autoCloseBrackets true})
 
-(defn cm-render-line
-  "Line up wrapped text with the base indentation.
+#_(defn cm-render-line
+    "Line up wrapped text with the base indentation.
    https://codemirror.net/demo/indentwrap.html"
+<<<<<<< Updated upstream
   [editor line dom-el]
   (let [tab-size (.getOption editor "tabSize")
         off (* (.countColumn codemirror (.-text line) nil tab-size)
@@ -227,6 +226,16 @@
           (str "-" off "px"))
     (set! (.. dom-el -style -paddingLeft)
           (str (+ 4 off) "px"))))
+=======
+    [editor line el]
+    (let [tab-size (.getOption editor "tabSize")
+          off (* (.countColumn codemirror (.-text line) nil tab-size)
+                 (.defaultCharWidth editor))]
+      (set! (.. el -style -textIndent)
+            (str "-" off "px"))
+      (set! (.. el -style -paddingLeft)
+            (str (+ 4 off) "px"))))
+>>>>>>> Stashed changes
 
 (defn cm-editor
   [value {:keys [attrs options on-init on-blur]}]
@@ -237,6 +246,7 @@
       (fn [_this]
         (let [dom-el (.-current ref)
               options (clj->js (merge cm-defaults options))]
+<<<<<<< Updated upstream
           (reset! cm (.fromTextArea codemirror dom-el options))
           (.setValue @cm value)
           (.on @cm "renderLine" cm-render-line)
@@ -245,6 +255,18 @@
           (.refresh @cm)
           (when on-blur (.on @cm "blur" #(on-blur (.getValue %))))
           (when on-init (on-init @cm))))
+=======
+          (reset! cm (EditorView. (clj->js {:parent el})))
+          (.dispatch @cm #js {:changes #js {:from 0
+                                            :to (.. ^js @cm -state -doc -length)
+                                            :insert value}})
+          #_(.on @cm "renderLine" cm-render-line)
+          #_(.on @cm "keydown" (fn [_editor evt] (.stopPropagation evt)))
+          #_(.on @cm "keyup" (fn [_editor evt] (.stopPropagation evt)))
+          #_(.refresh @cm)
+          #_(when on-blur (.on @cm "blur" #(on-blur (.. % -state -doc toString))))
+          #_(when on-init (on-init @cm))))
+>>>>>>> Stashed changes
 
       :component-will-unmount
       #(when @cm (reset! cm nil))
@@ -253,9 +275,11 @@
       (fn [this _]
         (let [value (second (reagent/argv this))
               options (:options (last (reagent/argv this)))]
-          (.setValue @cm value)
-          (doseq [[k v] options]
-            (.setOption @cm (name k) v))))
+          (.dispatch @cm #js {:changes #js {:from 0
+                                            :to (.. ^js @cm -state -doc -length)
+                                            :insert value}})
+          #_(doseq [[k v] options]
+              (.setOption @cm (name k) v))))
 
       :reagent-render
       (fn [value]

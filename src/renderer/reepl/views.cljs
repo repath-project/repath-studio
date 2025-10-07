@@ -70,7 +70,8 @@
   [:div.text-disabled.font-bold "=>"]
   [:div.flex-1.cursor-pointer.break-words
    {:on-click #((:set-text opts) text)}
-   [codemirror/colored-text text]])
+   text
+   #_[codemirror/colored-text text]])
 
 (defmethod item :log
   [{:keys [value]} opts]
