@@ -60,7 +60,7 @@
              doing so, you will loose any unsaved changes and your local
              application settings."]
 
-        [:button.button.px-2.rounded.w-full.bg-warning
+        [:button.button.px-2.rounded.w-full.overlay.text-warning!
          {:on-click #(rf/dispatch [::window.events/clear-data-and-relaunch])}
          "Clear data and restart"]]]]]))
 
