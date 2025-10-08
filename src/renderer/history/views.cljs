@@ -59,7 +59,7 @@
       [:button.icon-button.items-center.px-1.gap-1.flex.w-auto
        {:title title
         :class [(if show-options "px-1" "px-2")
-                (when @open "overlay!")]
+                (when @open "bg-overlay!")]
         :on-click #(rf/dispatch action)
         :disabled (empty? options)}
        [views/icon icon]

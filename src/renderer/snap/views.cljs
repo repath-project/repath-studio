@@ -40,10 +40,10 @@
   []
   (let [active? (rf/subscribe [::snap.subs/active?])]
     (reagent/with-let [open (reagent/atom false)]
-      [:button.icon-button.items-center.px-1.gap-1.w-auto.flex.active:overlay
+      [:button.icon-button.items-center.px-1.gap-1.w-auto.flex.active:bg-overlay
        {:title (t [::snap "Snap"])
         :class [(when @active? "accent")
-                (when @open "overlay!")]
+                (when @open "bg-overlay!")]
         :on-click #(rf/dispatch [::snap.events/toggle])}
        [views/icon "magnet"]
        (let [options @(rf/subscribe [::snap.subs/options])]
