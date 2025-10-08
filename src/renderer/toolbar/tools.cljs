@@ -39,7 +39,8 @@
 
 (defn group
   [items]
-  (into [:div.flex.flex-wrap.justify-center.sm:gap-1 {:class "gap-0.5"}]
+  (into [:div.flex.flex-wrap.justify-center.sm:gap-1.sm:flex-nowrap
+         {:class "gap-0.5"}]
         (map button items)))
 
 (defn groups
@@ -57,4 +58,4 @@
   (let [sm? @(rf/subscribe [::window.subs/breakpoint? :sm])]
     (->> (map group (groups))
          (interpose [:span.v-divider {:class (when-not sm? "mx-0")}])
-         (into [:div.justify-center.bg-primary.toolbar]))))
+         (into [:div.justify-center.bg-primary.toolbar.sm:flex-wrap]))))
