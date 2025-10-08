@@ -370,6 +370,8 @@
         db (element.handlers/clear-ignored db)
         delta (tool.handlers/pointer-delta db)
         [delta-x delta-y] delta
+        selected-elements (element.handlers/selected db)
+        locked? (every? :locked selected-elements)
         axis (when ctrl-key
                (if (> (abs delta-x) (abs delta-y))
                  :vertical
@@ -389,7 +391,7 @@
             (select-element shift-key)
             (translate delta axis)
             (snap.handlers/snap-with translate axis)
-            (tool.handlers/set-cursor "move")))
+            (tool.handlers/set-cursor (if locked? "not-allowed" "move"))))
 
       :clone
       (if alt-key
@@ -408,7 +410,7 @@
                      :recursive alt-key}]
         (-> db
             (history.handlers/reset-state)
-            (tool.handlers/set-cursor "default")
+            (tool.handlers/set-cursor (if locked? "not-allowed" "default"))
             (scale (matrix/add delta (snap.handlers/nearest-delta db))
                    options)))
 
