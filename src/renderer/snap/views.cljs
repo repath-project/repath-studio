@@ -57,7 +57,8 @@
                    :position "popper"
                    :class "menu-content rounded-sm select-content"
                    :on-key-down #(.stopPropagation %)
-                   :on-escape-key-down #(.stopPropagation %)}]))]]))
+                   :on-escape-key-down #(.stopPropagation %)}
+                  [:> DropdownMenu/Arrow {:class "fill-primary"}]]))]]))
 
 (defn root
   []

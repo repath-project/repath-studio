@@ -43,16 +43,16 @@
        [views/icon "chevron-down"]]]
      [:> DropdownMenu/Portal
       [:> DropdownMenu/Content
-       {:side "top"
+       {:side "bottom"
         :align "end"
-        :sideOffset 5
         :position "popper"
         :class "menu-content rounded-sm select-content"
         :on-key-down #(.stopPropagation %)
         :on-escape-key-down #(.stopPropagation %)}
        (for [lang (menubar.views/languages-submenu)]
          ^{:key (:id lang)}
-         [language-item lang system-abbr])]]]))
+         [language-item lang system-abbr])
+       [:> DropdownMenu/Arrow {:class "fill-primary"}]]]]))
 
 (defn button
   [{:keys [icon action class title]}]
