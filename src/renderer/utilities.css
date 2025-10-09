@@ -164,13 +164,6 @@
   animate-in fade-in max-w-3xs;
 }
 
-@utility slider-thumb {
-  @apply bg-foreground focus:outline-hidden;
-
-  &:focus {
-    box-shadow: 0 0 0 4px var(--border);
-  }
-}
 
 @utility form-control-button {
   @apply button bg-primary text-foreground-muted p-1;
