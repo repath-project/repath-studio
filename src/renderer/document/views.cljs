@@ -55,7 +55,7 @@
 
 (defn close-button
   [id saved]
-  [:button.close-button.small.icon-button.invisible.relative.bg-inherit
+  [:button.small.icon-button.invisible.relative.bg-inherit
    {:key id
     :class "hover:[&_.dot-icon]:hidden focus:[&_.dot-icon]:hidden"
     :title (t [::close-doc "Close document"])
@@ -66,7 +66,7 @@
    (when-not saved
      [views/icon "dot"
       {:class "dot-icon absolute inset-0 bg-inherit flex items-center
-               text-muted"}])])
+               text-foreground-muted"}])])
 
 (defn context-menu
   [id]
@@ -100,12 +100,12 @@
          [:> ContextMenu/Trigger
           {:as-child true}
           [:div.tab
-           {:class ["flex items-center h-full text-left bg-secondary text-muted
-                     hover:text-default relative outline-none px-2 py-0
-                     overflow-hidden focus:text-default [&.active]:bg-primary
-                     [&.active]:text-default hover:[&_.close-button]:visible
-                     [&.active]:[&_.close-button]:visible
-                     not-[&.saved]:[&_.close-button]:visible"
+           {:class ["flex items-center h-full text-left bg-secondary text-foreground-muted
+                    hover:text-foreground relative outline-none px-2 py-0
+                    overflow-hidden focus:text-foreground [&.active]:bg-primary
+                    [&.active]:text-foreground hover:[&_button]:visible
+                    [&.active]:[&_button]:visible
+                    not-[&.saved]:[&_button]:visible"
                     (when active? "active")
                     (when saved? "saved")]
             :on-wheel #(when-not (zero? (.-deltaY %))
