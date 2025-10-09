@@ -89,13 +89,12 @@
    {:db (if (or (document.handlers/saved? db id)
                 (not confirm?))
           (document.handlers/close db id)
-          (-> db
-              (document.handlers/set-active id)
-              (dialog.handlers/create
-               {:title (tr db [::save-changes
-                               "Do you want to save your changes?"])
-                :content [dialog.views/save (get-in db [:documents id])]
-                :attrs {:onOpenAutoFocus #(.preventDefault %)}})))
+          (dialog.handlers/create
+           db
+           {:title (tr db [::save-changes
+                           "Do you want to save your changes?"])
+            :content [dialog.views/save (get-in db [:documents id])]
+            :attrs {:onOpenAutoFocus #(.preventDefault %)}}))
     ::app.effects/local-store-keys {:on-success [::clear-stale-keys]}}))
 
 (rf/reg-event-fx
