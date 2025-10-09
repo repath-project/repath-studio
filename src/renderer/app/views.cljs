@@ -4,16 +4,15 @@
    ["@radix-ui/react-select" :as Select]
    ["@radix-ui/react-tooltip" :as Tooltip]
    ["path-browserify" :as path-browserify]
-   ["react-fps" :refer [FpsView]]
    ["react-resizable-panels" :refer [Panel PanelGroup]]
    ["sonner" :refer [Toaster]]
    ["vaul" :refer [Drawer]]
-   [clojure.string :as string]
    [config :as config]
    [re-frame.core :as rf]
    [reagent.core :as reagent]
-   [renderer.app.events :as app.events]
+   [renderer.app.events :as-alias app.events]
    [renderer.app.subs :as-alias app.subs]
+   [renderer.db :as db]
    [renderer.dialog.events :as-alias dialog.events]
    [renderer.dialog.views :as dialog.views]
    [renderer.document.events :as-alias document.events]
@@ -21,14 +20,12 @@
    [renderer.document.views :as document.views]
    [renderer.element.subs :as-alias element.subs]
    [renderer.events :as-alias events]
-   [renderer.frame.subs :as-alias frame.subs]
    [renderer.frame.views :as frame.views]
    [renderer.history.views :as history.views]
    [renderer.reepl.views :as repl.views]
    [renderer.ruler.events :as-alias ruler.events]
    [renderer.ruler.subs :as-alias ruler.subs]
    [renderer.ruler.views :as ruler.views]
-   [renderer.snap.subs :as-alias snap.subs]
    [renderer.theme.subs :as-alias theme.subs]
    [renderer.timeline.views :as timeline.views]
    [renderer.tool.hierarchy :as tool.hierarchy]
@@ -38,83 +35,9 @@
    [renderer.toolbar.tools :as toolbar.tools]
    [renderer.tree.views :as tree.views]
    [renderer.utils.i18n :refer [t]]
-   [renderer.utils.length :as utils.length]
    [renderer.views :as views]
    [renderer.window.subs :as-alias window.subs]
-   [renderer.window.views :as window.views]
-   [renderer.worker.subs :as-alias worker.subs]))
-
-(defn coll->str
-  [coll]
-  (str "[" (string/join " " (map utils.length/->fixed coll)) "]"))
-
-(defn map->str
-  [m]
-  (->> m
-       (map (fn [[k v]]
-              ^{:key k}
-              [:span (str (name k) ": " (if (number? v)
-                                          (utils.length/->fixed v)
-                                          (coll->str v)))]))
-       (interpose ", ")))
-
-(defn debug-rows
-  []
-  (let [viewbox (rf/subscribe [::frame.subs/viewbox])
-        pointer-pos (rf/subscribe [::app.subs/pointer-pos])
-        adjusted-pointer-pos (rf/subscribe [::app.subs/adjusted-pointer-pos])
-        pointer-offset (rf/subscribe [::app.subs/pointer-offset])
-        adjusted-pointer-offset (rf/subscribe [::app.subs/adjusted-pointer-offset])
-        drag? (rf/subscribe [::tool.subs/drag?])
-        pan (rf/subscribe [::document.subs/pan])
-        active-tool (rf/subscribe [::tool.subs/active])
-        cached-tool (rf/subscribe [::tool.subs/cached])
-        tool-state (rf/subscribe [::tool.subs/state])
-        clicked-element (rf/subscribe [::app.subs/clicked-element])
-        ignored-ids (rf/subscribe [::document.subs/ignored-ids])
-        nearest-neighbor (rf/subscribe [::snap.subs/nearest-neighbor])]
-    [["Viewbox" (coll->str @viewbox)]
-     ["Pointer position" (coll->str @pointer-pos)]
-     ["Adjusted pointer position" (coll->str @adjusted-pointer-pos)]
-     ["Pointer offset" (coll->str @pointer-offset)]
-     ["Adjusted pointer offset" (coll->str @adjusted-pointer-offset)]
-     ["Pointer drag?" (str @drag?)]
-     ["Pan" (coll->str @pan)]
-     ["Active tool" @active-tool]
-     ["Cached tool" @cached-tool]
-     ["State" @tool-state]
-     ["Clicked element" (:id @clicked-element)]
-     ["Ignored elements" @ignored-ids]
-     ["Snap" (map->str @nearest-neighbor)]]))
-
-(defn debug-info
-  []
-  [:div.pointer-events-none.text-foreground
-   {:dir "ltr"}
-   (into [:div.absolute.top-1.left-2]
-         (for [[s v] (debug-rows)]
-           [:div.flex
-            [:strong.mr-1 s]
-            [:div v]]))
-   [:div.fps-wrapper
-    [:> FpsView #js {:width 240
-                     :height 180}]]])
-
-(defn help
-  [message]
-  [:div.hidden.absolute.justify-center.w-full.pointer-events-none.p-4
-   {:class "sm:flex"}
-   [:div.bg-primary.overflow-hidden.shadow.rounded-full
-    [:div.text-foreground.text-xs.gap-1.flex.flex-wrap.py-2.px-4
-     {:class "justify-center truncate"
-      :aria-live "polite"}
-     message]]])
-
-(defn read-only-overlay []
-  [:div.absolute.inset-0.border-4.border-accent
-   (when-let [preview-label @(rf/subscribe [::document.subs/preview-label])]
-     [:div.absolute.bg-accent.top-2.left-2.px-1.rounded.text-accent-foreground
-      preview-label])])
+   [renderer.window.views :as window.views]))
 
 (defn right-panel
   [active-tool]
@@ -126,14 +49,10 @@
 (defn frame-panel
   []
   (let [ruler-visible? @(rf/subscribe [::ruler.subs/visible?])
-        read-only? @(rf/subscribe [::document.subs/read-only?])
         ruler-locked? @(rf/subscribe [::ruler.subs/locked?])
-        help-message @(rf/subscribe [::tool.subs/help])
-        help-bar @(rf/subscribe [::app.subs/help-bar])
-        debug-info? @(rf/subscribe [::app.subs/debug-info])
+        backdrop @(rf/subscribe [::app.subs/backdrop])
         md? @(rf/subscribe [::window.subs/breakpoint? :md])
         some-selected? @(rf/subscribe [::element.subs/some-selected?])
-        worker-active? @(rf/subscribe [::worker.subs/some-active?])
         active-tool @(rf/subscribe [::tool.subs/active])]
     [:div.flex.flex-col.flex-1.h-full.gap-px
      [:div
@@ -161,20 +80,11 @@
          [ruler.views/ruler :vertical]])
       [:div.relative.grow.flex
 
-       [:div.relative.grow.flex
-        {:data-theme "light"}
-        [frame.views/root]
-        (when read-only? [read-only-overlay])
-        (when debug-info? [debug-info])
-        (when worker-active?
-          [:button.icon-button.absolute.bottom-2.right-2
-           [views/loading-indicator]])
-        (when @(rf/subscribe [::app.subs/backdrop])
-          [:div.absolute.inset-0
-           {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])
-        (when (and help-bar (seq help-message))
-          [help help-message])]
-       [:div.absolute.inset-0.pointer-events-none.inset-shadow]
+       [frame.views/root]
+       (when backdrop
+         [:div.absolute.inset-0
+          {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])
+
        (when (not md?)
          [:> Drawer.Root {:direction "left"}
           [:> Drawer.Trigger
@@ -275,23 +185,10 @@
         [timeline.views/root]])
      [repl.views/root]]))
 
-(def paper-size
-  {0 [2384 3370]
-   1 [1684 2384]
-   2 [1191 1684]
-   3 [842 1191]
-   4 [595 842]
-   5 [420 595]
-   6 [298 420]
-   7 [210 298]
-   8 [147 210]
-   9 [105 147]
-   10 [74 105]})
-
 (defn document-size-select []
   [:> Select/Root
    {:onValueChange #(rf/dispatch [::document.events/new-from-template
-                                  (get paper-size %)])}
+                                  (get db/a-series-paper-sizes %)])}
    [:> Select/Trigger
     {:class "button px-2 bg-overlay rounded-sm"
      :aria-label (t [::select-size "Select size"])}
@@ -313,7 +210,7 @@
          :class "menu-item select-item"}
         [:> Select/ItemText
          (t [::empty-canvas "Empty canvas"])]]
-       (for [[k _v] (sort paper-size)]
+       (for [[k _v] (sort db/a-series-paper-sizes)]
          ^{:key k}
          [:> Select/Item
           {:value k
@@ -328,7 +225,8 @@
    [:button.button-link.text-lg
     {:on-click #(rf/dispatch [::document.events/open-recent recent])}
     (or title (.basename path-browserify path))]
-   (when path [:span.text-lg.text-foreground-muted (.dirname path-browserify path)])])
+   (when path
+     [:span.text-lg.text-foreground-muted (.dirname path-browserify path)])])
 
 (defn help-command
   [icon label event]
