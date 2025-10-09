@@ -108,8 +108,8 @@
 
 (defn radio-icon-button
   [icon-name active props]
-  [:button.icon-button
-   (merge-with-class {:class (str (when active "accent ") "active:overlay")}
+  [:button.icon-button.active:overlay
+   (merge-with-class {:class (str (when active "accent"))}
                      props)
    [renderer.views/icon icon-name]])
 

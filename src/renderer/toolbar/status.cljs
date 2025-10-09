@@ -56,9 +56,10 @@
   [:> DropdownMenu/Root
    [:> DropdownMenu/Trigger
     {:title (t [::select-zoom "Select zoom level"])
-     :class "button flex items-center justify-center px-2 font-mono rounded-sm"
-     :side "top"}
-    [:div.flex.items-center
+     :side "top"
+     :as-child true}
+    [:button.button.flex.items-center.justify-center.px-2.font-mono
+
      [views/icon "chevron-up"]]]
    [:> DropdownMenu/Portal
     [:> DropdownMenu/Content

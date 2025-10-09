@@ -29,7 +29,8 @@
 }
 
 @utility button {
-  @apply relative text-center text-nowrap outline-default bg-transparent no-drag;
+  @apply relative text-center text-nowrap outline-default bg-transparent
+  no-drag aria-expanded:overlay;
   color: var(--font-color);
   fill: var(--font-color);
   font-size: 1em;
@@ -188,42 +189,6 @@
   &:focus {
     @apply outline-hidden;
     box-shadow: 0 0 0 4px var(--border-color);
-  }
-}
-
-@utility tab {
-  @apply flex items-center h-full text-left bg-secondary text-muted max-w-40
-  hover:text-default relative outline-none px-2 py-0 overflow-hidden;
-
-  .close {
-    @apply icon-button invisible relative bg-inherit;
-
-    .dot {
-      @apply absolute inset-0 bg-inherit flex items-center text-muted;
-    }
-
-    &:hover,
-    &:focus {
-      .dot {
-        @apply hidden;
-      }
-    }
-  }
-
-  &:hover,
-  &.active,
-  &:not(.saved) {
-    .close {
-      @apply visible;
-    }
-  }
-
-  &.active {
-    @apply bg-primary text-default;
-  }
-
-  &:focus {
-    @apply text-default;
   }
 }
 
