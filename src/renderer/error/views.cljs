@@ -29,29 +29,28 @@
         (when stack
           [:details.mb-5
            [:summary "Stacktrace"]
-           [:pre.border.mt-2.p-2.border-default.text-wrap.text-2xs.overflow-hidden
+           [:pre.border.mt-2.p-2.border-border.text-wrap.text-2xs.overflow-hidden
             stack]])
 
         [:p "Please consider submitting an error report to improve your
              experience."]
 
-        [:button.button.px-2.rounded.w-full.mb-5.border.border-default
-         {:class "hover:bg-transparent"
-          :on-click #(rf/dispatch [::events/open-remote-url
+        [:button.button.px-2.rounded.w-full.mb-5.border.border-border
+         {:on-click #(rf/dispatch [::events/open-remote-url
                                    (submit-error-url error-message)])}
          "Submit an error report"]
 
         [:p "You can try to undo your last action in order to recover to a
              previous working state."]
 
-        [:button.button.px-2.rounded.w-full.mb-5.overlay
+        [:button.button.px-2.rounded.w-full.mb-5.border.border-border
          {:on-click #(do (rf/dispatch [::history.events/undo])
                          (reset! error nil))}
          "Undo your last action"]
 
         [:p "If undoing did't work, you can try restarting the application."]
 
-        [:button.button.px-2.rounded.w-full.mb-5.overlay
+        [:button.button.px-2.rounded.w-full.mb-5.border.border-border
          {:on-click #(rf/dispatch [::window.events/relaunch])}
          "Restart the application"]
 
@@ -60,7 +59,7 @@
              doing so, you will loose any unsaved changes and your local
              application settings."]
 
-        [:button.button.px-2.rounded.w-full.overlay.text-warning!
+        [:button.button.px-2.rounded.w-full.border.border-border.text-error!
          {:on-click #(rf/dispatch [::window.events/clear-data-and-relaunch])}
          "Clear data and restart"]]]]]))
 

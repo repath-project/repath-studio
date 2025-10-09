@@ -110,6 +110,8 @@
   [k v {:keys [disabled placeholder]
         :as attrs}]
   [:div.relative.flex.form-input.flex-1
+   {:class "hover:[&_button]:visible
+            active:[&_button]:visible"}
    [:input.form-element
     (merge attrs
            {:key v
@@ -125,9 +127,8 @@
                            % v
                            on-change-handler! k v)})]
    (when-not (or (empty? (str v)) disabled)
-     [:button.button.bg-primary.text-muted.absolute.h-full.right-0.p-1.invisible
-      {:class "clear-input-button hover:bg-transparent rtl:right-auto
-               rtl:left-0"
+     [:button.button.bg-primary.text-foreground-muted.absolute.h-full.right-0
+      {:class "hover:bg-transparent rtl:right-auto rtl:left-0 p-1 invisible"
        :on-click #(rf/dispatch [::element.events/remove-attr k])}
       [views/icon "times"]])])
 
@@ -229,7 +230,7 @@
       [:label.form-element.w-28.truncate
        {:for (name k)
         :dir "ltr"
-        :class ["rtl:text-left!" (when active "text-active")]} k]]
+        :class ["rtl:text-left!" (when active "text-foreground-active")]} k]]
      [:> HoverCard/Portal
       [:> HoverCard/Content
        {:side "left"

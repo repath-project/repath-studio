@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import "tw-animate-css";
 
 @import 'codemirror/lib/codemirror.css';
 @import 'codemirror/addon/hint/show-hint.css';
@@ -47,16 +48,14 @@
 @import "@fontsource/noto-sans-mono/600.css";
 
 @import './utilities.css';
-@import './components.css';
-@import './animations.css';
 @import './overrides.css';
 
 @import './theme/styles.css';
 @import './menubar/styles.css';
 
 body {
+  @apply text-foreground;
   font-size: var(--font-size);
-  color: var(--font-color);
 }
 
 p {
@@ -77,11 +76,6 @@ input {
 }
 
 label {
-  @apply block text-right h-full text-muted overflow-hidden text-ellipsis
-  w-auto;
-
-  &:hover {
-    color: var(--font-color-hovered);
-    cursor: pointer;
-  }
+  @apply block text-right h-full text-foreground-muted overflow-hidden text-ellipsis
+  w-auto hover:text-foreground-hovered hover:cursor-pointer;
 }

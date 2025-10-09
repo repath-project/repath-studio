@@ -128,7 +128,7 @@
         label]
        (if (= command (string/lower-case command))
          (t [::relative "(Relative)"]) (t [::absolute "(Absolute)"]))]
-      [:button.icon-button.small.bg-transparent.text-muted
+      [:button.icon-button.small.bg-transparent.text-foreground-muted
        {:on-click #(remove-segment-by-index path index)}
        [views/icon "times"]]]
      [segment-form segment index]]))

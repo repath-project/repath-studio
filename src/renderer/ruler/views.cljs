@@ -62,12 +62,12 @@
             :y1 adjusted-step
             :x2 size
             :y2 adjusted-step
-            :stroke "var(--font-color-muted)"}
+            :stroke "var(--foreground-muted)"}
            {:x1 adjusted-step
             :y1 starting-point
             :x2 adjusted-step
             :y2 size
-            :stroke "var(--font-color-muted)"})])
+            :stroke "var(--foreground-muted)"})])
 
 (defn label
   [orientation step font-size text]
@@ -77,7 +77,7 @@
     [:text {:x (if vertical 19 x-step)
             :y (if vertical y-step (inc font-size))
             :writing-mode (when vertical "vertical-rl")
-            :fill "var(--font-color)"
+            :fill "var(--foreground)"
             :font-size font-size
             :rotate (when vertical 180)
             :font-family "var(--font-mono)"}
@@ -149,7 +149,7 @@
                          :y2 (if vertical step-y h)
                          :stroke-width (/ 1 zoom)
                          :opacity (when-not main? ".5")
-                         :stroke "var(--border-color)"
+                         :stroke "var(--border)"
                          :pointer-events "none"}]))) steps-coll))))
 
 (defn grid

@@ -792,16 +792,16 @@
          el (dissoc el :bbox)
          [s-x1 s-y1] (:bbox parent-el)
          pointer-pos (:adjusted-pointer-pos db)]
-     (reduce
-      select
-      (cond-> db
-        :always
-        (-> (deselect)
-            (add (assoc el :parent (:id parent-el)))
-            (place (matrix/add pointer-pos offset)))
+     (reduce select
+             (cond-> db
+               :always
+               (-> (deselect)
+                   (add (assoc el :parent (:id parent-el)))
+                   (place (matrix/add pointer-pos offset)))
 
-        (not= (:id (root db)) (:id parent-el))
-        (translate [(- s-x1) (- s-y1)])) (selected-ids db)))))
+               (not= (:id (root db)) (:id parent-el))
+               (translate [(- s-x1) (- s-y1)]))
+             (selected-ids db)))))
 
 (m/=> duplicate [:-> App App])
 (defn duplicate

@@ -58,7 +58,7 @@
     label]
    [:> Switch/Root
     (merge-with-class
-     {:class "overlay relative rounded-full w-10 h-6
+     {:class "bg-overlay relative rounded-full w-10 h-6
               data-[state=checked]:bg-accent data-disabled:opacity-50"
       :dir "ltr"}
      props)
@@ -75,8 +75,9 @@
      :on-pointer-move #(.stopPropagation %)}
     props)
    [:> Slider/Track {:class "relative h-1 bg-secondary flex-1"}
-    [:> Slider/Range {:class "absolute h-full overlay-2x"}]]
-   [:> Slider/Thumb {:class "slider-thumb"
+    [:> Slider/Range {:class "absolute h-full bg-overlay-2x"}]]
+   [:> Slider/Thumb {:class "flex shadow-sm h-5 w-2 rounded-xs bg-foreground
+                             data-disabled:opacity-50"
                      :aria-label "Resize panel thumb"}]])
 
 (defn format-shortcut
@@ -101,7 +102,7 @@
   [event]
   (let [event-shortcuts @(rf/subscribe [::app.subs/event-shortcuts event])]
     (when (seq event-shortcuts)
-      (into [:span.inline-flex.text-muted {:class "gap-1.5"}]
+      (into [:span.inline-flex.text-foreground-muted {:class "gap-1.5"}]
             (comp (map format-shortcut)
                   (interpose [:span]))
             event-shortcuts))))
@@ -109,7 +110,7 @@
 (defn radio-icon-button
   [icon-name active props]
   [:button.icon-button
-   (merge-with-class {:class (str (when active "accent ") "active:overlay")}
+   (merge-with-class {:class (str (when active "accent ") "active:bg-overlay")}
                      props)
    [renderer.views/icon icon-name]])
 
@@ -180,13 +181,13 @@
       {:class "flex touch-none p-0.5 select-none w-2.5"
        :orientation "vertical"}
       [:> ScrollArea/Thumb
-       {:class "relative flex-1 overlay rounded-full"}]]
+       {:class "relative flex-1 bg-overlay rounded-full"}]]
 
      [:> ScrollArea/Scrollbar
       {:class "flex touch-none p-0.5 select-none flex-col h-2.5"
        :orientation "horizontal"}
       [:> ScrollArea/Thumb
-       {:class "relative flex-1 overlay hover:overlay-2x rounded-full"}]]
+       {:class "relative flex-1 bg-overlay hover:bg-overlay-2x rounded-full"}]]
 
      [:> ScrollArea/Corner]]))
 

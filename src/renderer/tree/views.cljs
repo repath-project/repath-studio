@@ -140,7 +140,7 @@
         collapse-button-width (if small 21 33)
         padding (* collapse-button-width (cond-> depth (seq children) dec))]
     [:div.list-item-button.button.flex.px-1.items-center.text-start
-     {:class ["hover:overlay [&.hovered]:overlay hover:[&_button]:visible"
+     {:class ["hover:bg-overlay [&.hovered]:bg-overlay hover:[&_button]:visible"
               (when selected "accent")
               (when hovered "hovered")
               (when-not small "h-[45px]")]
@@ -190,7 +190,7 @@
         hovered-ids @(rf/subscribe [::document.subs/hovered-ids])
         collapsed-ids @(rf/subscribe [::document.subs/collapsed-ids])
         collapsed (contains? collapsed-ids id)]
-    [:li {:class (when selected "overlay")
+    [:li {:class (when selected "bg-overlay")
           :role "menuitem"}
      [list-item-button el {:depth depth
                            :collapsed collapsed

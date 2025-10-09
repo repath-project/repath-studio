@@ -26,7 +26,7 @@
    {:on-select #(rf/dispatch [::element.events/set-attr :font-family font])}
    [:div.flex.justify-between.items-center.w-full.gap-2
     [:div font]
-    [:div.leading-none.text-muted
+    [:div.leading-none.text-foreground-muted
      {:style {:font-family font}}
      "AaBbCc 0123"]]])
 
@@ -37,7 +37,7 @@
     {:label "Command Menu"
      :on-key-down #(.stopPropagation %)}
     [:> Command/CommandInput
-     {:class "p-2 text-sm bg-secondary border-b border-default"
+     {:class "p-2 text-sm bg-secondary border-b border-border"
       :placeholder (t [::search-font "Search for a font"])}]
     [views/scroll-area
      [:> Command/CommandList

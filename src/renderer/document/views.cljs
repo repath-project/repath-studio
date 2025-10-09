@@ -151,7 +151,7 @@
      [:> DropdownMenu/Trigger
       {:as-child true}
       [:button.button.flex.items-center.justify-center.px-2.font-mono.rounded
-       {:class "aria-expanded:overlay"
+       {:class "aria-expanded:bg-overlay"
         :aria-label "More document actions"}
        [:div.flex.gap-1.items-center
         (when-not (or md? (= document-count 1))

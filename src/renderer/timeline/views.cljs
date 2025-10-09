@@ -41,7 +41,7 @@
       {:value speed
        :onValueChange #(.setPlayRate (.-current editor-ref) %)}
       [:> Select/Trigger
-       {:class "button px-2 overlay rounded-sm"
+       {:class "button px-2 bg-overlay rounded-sm"
         :id "animation-speed"
         :aria-label (t [::no-filter "No filter"])}
        [:> Select/Value

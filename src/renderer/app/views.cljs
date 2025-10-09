@@ -89,7 +89,7 @@
 
 (defn debug-info
   []
-  [:div.pointer-events-none.text-default
+  [:div.pointer-events-none.text-foreground
    {:dir "ltr"}
    (into [:div.absolute.top-1.left-2]
          (for [[s v] (debug-rows)]
@@ -105,7 +105,7 @@
   [:div.hidden.absolute.justify-center.w-full.pointer-events-none.p-4
    {:class "sm:flex"}
    [:div.bg-primary.overflow-hidden.shadow.rounded-full
-    [:div.text-default.text-xs.gap-1.flex.flex-wrap.py-2.px-4
+    [:div.text-foreground.text-xs.gap-1.flex.flex-wrap.py-2.px-4
      {:class "justify-center truncate"
       :aria-live "polite"}
      message]]])
@@ -113,7 +113,7 @@
 (defn read-only-overlay []
   [:div.absolute.inset-0.border-4.border-accent
    (when-let [preview-label @(rf/subscribe [::document.subs/preview-label])]
-     [:div.absolute.bg-accent.top-2.left-2.px-1.rounded.text-accent-inverted
+     [:div.absolute.bg-accent.top-2.left-2.px-1.rounded.text-accent-foreground
       preview-label])])
 
 (defn right-panel
@@ -293,7 +293,7 @@
    {:onValueChange #(rf/dispatch [::document.events/new-from-template
                                   (get paper-size %)])}
    [:> Select/Trigger
-    {:class "button px-2 overlay rounded-sm"
+    {:class "button px-2 bg-overlay rounded-sm"
      :aria-label (t [::select-size "Select size"])}
     [:div.flex.items-center.gap-2
      [:> Select/Value
@@ -328,7 +328,7 @@
    [:button.button-link.text-lg
     {:on-click #(rf/dispatch [::document.events/open-recent recent])}
     (or title (.basename path-browserify path))]
-   (when path [:span.text-lg.text-muted (.dirname path-browserify path)])])
+   (when path [:span.text-lg.text-foreground-muted (.dirname path-browserify path)])])
 
 (defn help-command
   [icon label event]
@@ -354,7 +354,7 @@
            :alt "logo"}]
          [:h1.text-4xl.mb-1.font-light config/app-name]
 
-         [:p.text-xl.text-muted.font-bold
+         [:p.text-xl.text-foreground-muted.font-bold
           (t [::svg-description "Scalable Vector Graphics Manipulation"])]
 
          [:h2.mb-3.mt-8.text-2xl (t [::start "Start"])]
@@ -447,10 +447,10 @@
         [:> Toaster
          {:theme theme
           :toastOptions
-          {:classNames {:toast "bg-primary! border! border-default! shadow-md!
+          {:classNames {:toast "bg-primary! border! border-border! shadow-md!
                                 p-4! rounded-md!"
-                        :title "text-active!"
-                        :description "text-default! text-xs"}}
+                        :title "text-foreground-active!"
+                        :description "text-foreground! text-xs"}}
           :icons {:success
                   (reagent/as-element
                    [views/icon "success" {:class "text-success"}])

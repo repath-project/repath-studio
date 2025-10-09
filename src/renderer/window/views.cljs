@@ -24,8 +24,8 @@
     [views/icon "checkmark"]]
    [:div label]
    (if (= id "system")
-     [:span.uppercase.font-mono.text-disabled (or system-abbr "EN")]
-     [:span.uppercase.font-mono.text-muted abbr])])
+     [:span.uppercase.font-mono.text-foreground-disabled (or system-abbr "EN")]
+     [:span.uppercase.font-mono.text-foreground-muted abbr])])
 
 (defn language-dropdown
   []
@@ -37,7 +37,7 @@
      [:> DropdownMenu/Trigger
       {:as-child true}
       [:button.button
-       {:class "flex gap-1 items-center px-2 uppercase text-muted bg-primary
+       {:class "flex gap-1 items-center px-2 uppercase text-foreground-muted bg-primary
                 font-mono"}
        computed-abbr
        [views/icon "chevron-down"]]]
@@ -56,7 +56,7 @@
 
 (defn button
   [{:keys [icon action class title]}]
-  [:button.button.text-muted.focus:outline-none
+  [:button.button.text-foreground-muted.focus:outline-none
    {:class ["px-3" class]
     :title title
     :on-click #(rf/dispatch action)}
@@ -113,7 +113,7 @@
        (when installable?
          [views/icon-button "download"
           {:title (t [::install])
-           :class "rounded-none text-muted bg-transparent!"
+           :class "rounded-none text-foreground-muted bg-transparent!"
            :on-click #(rf/dispatch [::app.events/install])}])
        [language-dropdown]
        [button {:action [::theme.events/cycle-mode]

@@ -41,7 +41,7 @@
                 :shape-rendering (when dashed? "crispEdges")}]
      [:g
       (when dashed?
-        [:line (merge attrs {:stroke "var(--color-accent-inverted)"})])
+        [:line (merge attrs {:stroke "var(--color-accent-foreground)"})])
       [:line (merge attrs
                     {:stroke "var(--color-accent)"
                      :stroke-dasharray (when dashed? stroke-dasharray)})]])))
@@ -79,7 +79,7 @@
                :fill "transparent"
                :stroke-width stroke-width}]
     [:g
-     [:path (merge {:stroke "var(--color-accent-inverted)"} attrs)]
+     [:path (merge {:stroke "var(--color-accent-foreground)"} attrs)]
      [:path (merge {:stroke "var(--color-accent)"
                     :stroke-dasharray stroke-dasharray} attrs)]]))
 
@@ -127,7 +127,7 @@
                                          "middle" (- x (/ rect-width 2))
                                          "end" (- x rect-width (/ (- padding)
                                                                   2)))))))
-             :fill "var(--color-accent-inverted)"
+             :fill "var(--color-accent-foreground)"
              :dominant-baseline "middle"
              :x x
              :y y
@@ -154,7 +154,7 @@
     [:g {:style {:pointer-events "none"}}
      [:rect (merge attrs {:stroke "var(--color-accent)"})]
      (when dashed?
-       [:rect (merge attrs {:stroke "var(--color-accent-inverted)"
+       [:rect (merge attrs {:stroke "var(--color-accent-foreground)"
                             :stroke-dasharray stroke-dasharray})])]))
 
 (m/=> select-box [:-> App any?])
