@@ -20,15 +20,15 @@
    [:> Select/ItemText (apply t explanation)]])
 
 (defn select
-  [label options disabled?]
+  [label options open]
   [:> Select/Root
-   {:onValueChange #(rf/dispatch [::history.events/go-to (uuid %)])
-    :disabled disabled?}
+   {:on-value-change #(rf/dispatch [::history.events/go-to (uuid %)])
+    :on-open-change #(reset! open %)
+    :disabled (empty? options)}
    [:> Select/Trigger
     {:aria-label label
      :as-child true}
-    [:div.w-4.m-0.bg-transparent.h-full.flex.items-center
-     {:class "hover:pt-1"}
+    [:div.w-4.m-0.bg-transparent.h-full.flex.items-center.hover:pt-1
      [:> Select/Value ""]
      [:> Select/Icon
       [views/icon "chevron-down"]]]]
@@ -51,6 +51,20 @@
      [:> Select/ScrollDownButton
       {:class "select-scroll-button"}
       [views/icon "chevron-down"]]]]])
+
+(defn action-button
+  [args]
+  (let [{:keys [icon title options action show-options]} args]
+    (reagent/with-let [open (reagent/atom false)]
+      [:button.icon-button.items-center.px-1.gap-1.flex.w-auto
+       {:title title
+        :class [(if show-options "px-1" "px-2")
+                (when @open "overlay!")]
+        :on-click #(rf/dispatch action)
+        :disabled (empty? options)}
+       [views/icon icon]
+       (when show-options
+         [select "Undo stack" options open])])))
 
 (defn node
   "https://bkrem.github.io/react-d3-tree/docs/interfaces/CustomNodeElementProps.html"

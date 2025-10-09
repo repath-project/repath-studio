@@ -20,8 +20,6 @@
   []
   (let [undos @(rf/subscribe [::history.subs/undos])
         redos @(rf/subscribe [::history.subs/redos])
-        undos? @(rf/subscribe [::history.subs/undos?])
-        redos? @(rf/subscribe [::history.subs/redos?])
         md? @(rf/subscribe [::window.subs/breakpoint? :md])]
     [:div.toolbar
 
@@ -43,35 +41,32 @@
 
      [:span.v-divider]
 
-     [:button.icon-button.items-center.px-1.gap-1.flex.w-auto
-      {:title (t [::undo "Undo"])
-       :class (if md? "px-1" "px-2")
-       :on-click #(rf/dispatch [::history.events/undo])
-       :disabled (not undos?)}
-      [views/icon "undo"]
-      (when md?
-        [history.views/select "Undo stack" undos (not undos?)])]
+     [history.views/action-button {:icon "undo"
+                                   :title (t [::undo "Undo"])
+                                   :options undos
+                                   :show-options md?
+                                   :action [::history.events/undo]}]
 
-     [:button.icon-button.items-center.px-1.gap-1.flex.w-auto
-      {:title (t [::redo "Redo"])
-       :class (if md? "px-1" "px-2")
-       :on-click #(rf/dispatch [::history.events/redo])
-       :disabled (not redos?)}
-      [views/icon "redo"]
-      (when md?
-        [history.views/select "Redo stack" redos (not redos?)])]]))
+     [history.views/action-button {:icon "redo"
+                                   :title (t [::redo "Redo"])
+                                   :options redos
+                                   :show-options md?
+                                   :action [::history.events/redo]}]]))
 
 (defn close-button
   [id saved]
-  [:button.close.small
+  [:button.close-button.small.icon-button.invisible.relative.bg-inherit
    {:key id
+    :class "hover:[&_.dot-icon]:hidden focus:[&_.dot-icon]:hidden"
     :title (t [::close-doc "Close document"])
     :on-click (fn [e]
                 (.stopPropagation e)
                 (rf/dispatch [::document.events/close id true]))}
    [views/icon "times"]
    (when-not saved
-     [views/icon "dot" {:class "dot"}])])
+     [views/icon "dot"
+      {:class "dot-icon absolute inset-0 bg-inherit flex items-center
+               text-muted"}])])
 
 (defn context-menu
   [id]
@@ -105,7 +100,13 @@
          [:> ContextMenu/Trigger
           {:as-child true}
           [:div.tab
-           {:class [(when active? "active")
+           {:class ["flex items-center h-full text-left bg-secondary text-muted
+                     hover:text-default relative outline-none px-2 py-0
+                     overflow-hidden focus:text-default [&.active]:bg-primary
+                     [&.active]:text-default hover:[&_.close-button]:visible
+                     [&.active]:[&_.close-button]:visible
+                     not-[&.saved]:[&_.close-button]:visible"
+                    (when active? "active")
                     (when saved? "saved")]
             :on-wheel #(when-not (zero? (.-deltaY %))
                          (rf/dispatch [::document.events/cycle (.-deltaY %)]))
@@ -151,8 +152,7 @@
      [:> DropdownMenu/Trigger
       {:as-child true}
       [:button.button.flex.items-center.justify-center.px-2.font-mono.rounded
-       {:class "aria-expanded:bg-overlay"
-        :aria-label "More document actions"}
+       {:aria-label "More document actions"}
        [:div.flex.gap-1.items-center
         (when-not (or md? (= document-count 1))
           document-count)
@@ -178,14 +178,14 @@
                 [{:type :separator}])
 
         :always
-        (map views/dropdown-menu-item)
-
-        :always
         (into [:> DropdownMenu/Content
-               {:class "menu-content rounded-sm"
+               {:side "bottom"
+                :align "start"
+                :class "menu-content rounded-sm"
                 :on-key-down #(.stopPropagation %)
                 :on-escape-key-down #(.stopPropagation %)}
-               [:> DropdownMenu/Arrow {:class "fill-primary"}]]))]]))
+               [:> DropdownMenu/Arrow {:class "fill-primary"}]]
+              (map views/dropdown-menu-item)))]]))
 
 (defn tab-bar
   []
@@ -201,10 +201,10 @@
           ^{:key document-id}
           [tab document-id])
         [:div.flex.overflow-hidden.gap-px
-         [tab active-id]
          (when (second documents)
            [:div.toolbar.bg-primary
-            [documents-dropdown-button]])])
+            [documents-dropdown-button]])
+         [tab active-id]])
       (when-not (and md? tree-visible)
         [actions])
       [:div.drag.flex-1]]

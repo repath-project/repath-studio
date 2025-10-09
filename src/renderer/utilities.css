@@ -55,7 +55,7 @@
 
 @utility button {
   @apply relative text-center text-nowrap outline-default bg-transparent no-drag
-  text-foreground fill-foreground;
+  text-foreground fill-foreground aria-expanded:overlay;
   font-size: 1em;
   height: var(--button-size);
   line-height: var(--button-size);
@@ -169,44 +169,6 @@
 
   &:focus {
     box-shadow: 0 0 0 4px var(--border);
-  }
-}
-
-@utility tab {
-  @apply flex items-center h-full text-left bg-secondary text-foreground-muted
-  max-w-40 hover:text-foreground relative outline-none px-2 py-0
-  overflow-hidden;
-
-  .close {
-    @apply icon-button invisible relative bg-inherit;
-
-    .dot {
-      @apply absolute inset-0 bg-inherit flex items-center
-      text-foreground-muted;
-    }
-
-    &:hover,
-    &:focus {
-      .dot {
-        @apply hidden;
-      }
-    }
-  }
-
-  &:hover,
-  &.active,
-  &:not(.saved) {
-    .close {
-      @apply visible;
-    }
-  }
-
-  &.active {
-    @apply bg-primary text-foreground;
-  }
-
-  &:focus {
-    @apply text-foreground;
   }
 }
 
