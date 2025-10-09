@@ -57,7 +57,9 @@
   [id saved]
   [:button.small.icon-button.invisible.relative.bg-inherit
    {:key id
-    :class "hover:[&_.dot-icon]:hidden focus:[&_.dot-icon]:hidden"
+    :class "hover:[&_.dot-icon]:hidden
+            focus:[&_.dot-icon]:hidden
+            active:[&_.dot-icon]:hidden"
     :title (t [::close-doc "Close document"])
     :on-click (fn [e]
                 (.stopPropagation e)
@@ -100,14 +102,15 @@
          [:> ContextMenu/Trigger
           {:as-child true}
           [:div.tab
-           {:class ["flex items-center h-full text-left bg-secondary text-foreground-muted
-                    hover:text-foreground relative outline-none px-2 py-0
-                    overflow-hidden focus:text-foreground [&.active]:bg-primary
-                    [&.active]:text-foreground hover:[&_button]:visible
-                    [&.active]:[&_button]:visible
-                    not-[&.saved]:[&_button]:visible"
-                    (when active? "active")
-                    (when saved? "saved")]
+           {:class ["flex items-center h-full relative text-left px-2 py-0
+                     hover:text-foreground  outline-none overflow-hidden
+                     focus:text-foreground text-foreground-muted
+                     hover:[&_button]:visible"
+                    (if active?
+                      "bg-primary text-foreground [&_button]:visible"
+                      "bg-secondary")
+                    (when-not saved?
+                      "[&_button]:visible")]
             :on-wheel #(when-not (zero? (.-deltaY %))
                          (rf/dispatch [::document.events/cycle (.-deltaY %)]))
             :on-click #(rf/dispatch [::document.events/set-active id])
