@@ -1,7 +1,6 @@
 (ns renderer.tool.events
   (:require
    [re-frame.core :as rf]
-   [renderer.effects :as-alias effects]
    [renderer.element.events :as element.events]
    [renderer.tool.handlers :as tool.handlers]))
 

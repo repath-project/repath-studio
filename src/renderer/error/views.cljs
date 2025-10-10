@@ -29,7 +29,8 @@
         (when stack
           [:details.mb-5
            [:summary "Stacktrace"]
-           [:pre.border.mt-2.p-2.border-border.text-wrap.text-2xs.overflow-hidden
+           [:pre.border.mt-2.p-2.border-border.text-wrap.text-2xs
+            {:class "overflow-hidden"}
             stack]])
 
         [:p "Please consider submitting an error report to improve your

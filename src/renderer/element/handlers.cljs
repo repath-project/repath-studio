@@ -42,7 +42,8 @@
 
 (m/=> entities [:function
                 [:-> App [:maybe [:sequential Element]]]
-                [:-> App [:maybe [:vector ElementId]] [:maybe [:sequential Element]]]])
+                [:-> App [:maybe [:vector ElementId]] [:maybe
+                                                       [:sequential Element]]]])
 (defn entities
   ([db]
    (vals (get-in db (path db))))
@@ -554,7 +555,8 @@
          new-index (f i sibling-count)]
      (cond-> db
        (<= 0 new-index (dec sibling-count))
-       (update-prop (:id (parent db id)) :children utils.vec/move i new-index)))))
+       (update-prop (:id (parent db id)) :children
+                    utils.vec/move i new-index)))))
 
 (m/=> set-parent [:function
                   [:-> App ElementId App]

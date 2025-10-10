@@ -214,8 +214,8 @@
         ratio (if (< (abs x) (abs y)) x y)]
     [ratio ratio]))
 
-(m/=> delta->offset-with-pivot-point [:-> ScaleHandle Vec2 BBox [:tuple Vec2 Vec2]])
-(defn delta->offset-with-pivot-point
+(m/=> delta->offset-with-pivot [:-> ScaleHandle Vec2 BBox [:tuple Vec2 Vec2]])
+(defn delta->offset-with-pivot
   "Converts the x/y pointer offset to a scale ratio and a pivot point, to
    decouple this tool from the scaling method of the elements.
 
@@ -255,7 +255,7 @@
   (let [{:keys [ratio-locked in-place recursive]} options
         handle (-> db :clicked-element :id)
         bbox (element.handlers/bbox db)
-        [offset pivot-point] (delta->offset-with-pivot-point handle offset bbox)
+        [offset pivot-point] (delta->offset-with-pivot handle offset bbox)
         pivot-point (if in-place (utils.bounds/center bbox) pivot-point)
         offset (cond-> offset in-place (matrix/mul 2))
         dimensions (utils.bounds/->dimensions bbox)

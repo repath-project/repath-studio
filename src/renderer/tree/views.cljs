@@ -159,11 +159,13 @@
       :on-drag-over #(.preventDefault %)
       :on-drop #(drop-handler! % id)
       :on-pointer-down #(when (= (.-button %) 2)
-                          (rf/dispatch [::element.events/select id (.-ctrlKey %)]))
+                          (rf/dispatch [::element.events/select
+                                        id (.-ctrlKey %)]))
       :on-click (fn [e]
                   (.stopPropagation e)
                   (if (.-shiftKey e)
-                    (rf/dispatch-sync [::tree.events/select-range @last-focused-id id])
+                    (rf/dispatch-sync [::tree.events/select-range
+                                       @last-focused-id id])
                     (do (rf/dispatch [::element.events/select id (.-ctrlKey e)])
                         (reset! last-focused-id id))))}
      [:div.shrink-0 {:style {:flex-basis padding}}]

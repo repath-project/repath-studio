@@ -41,9 +41,9 @@
   []
   (let [viewbox (rf/subscribe [::frame.subs/viewbox])
         pointer-pos (rf/subscribe [::app.subs/pointer-pos])
-        adjusted-pointer-pos (rf/subscribe [::app.subs/adjusted-pointer-pos])
+        adjusted-pos (rf/subscribe [::app.subs/adjusted-pointer-pos])
         pointer-offset (rf/subscribe [::app.subs/pointer-offset])
-        adjusted-pointer-offset (rf/subscribe [::app.subs/adjusted-pointer-offset])
+        adjusted-offset (rf/subscribe [::app.subs/adjusted-pointer-offset])
         drag? (rf/subscribe [::tool.subs/drag?])
         pan (rf/subscribe [::document.subs/pan])
         active-tool (rf/subscribe [::tool.subs/active])
@@ -54,9 +54,9 @@
         nearest-neighbor (rf/subscribe [::snap.subs/nearest-neighbor])]
     [["Viewbox" (coll->str @viewbox)]
      ["Pointer position" (coll->str @pointer-pos)]
-     ["Adjusted pointer position" (coll->str @adjusted-pointer-pos)]
+     ["Adjusted pointer position" (coll->str @adjusted-pos)]
      ["Pointer offset" (coll->str @pointer-offset)]
-     ["Adjusted pointer offset" (coll->str @adjusted-pointer-offset)]
+     ["Adjusted pointer offset" (coll->str @adjusted-offset)]
      ["Pointer drag?" (str @drag?)]
      ["Pan" (coll->str @pan)]
      ["Active tool" @active-tool]

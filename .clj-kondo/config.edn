@@ -22,7 +22,7 @@
            :unused-alias {:level :warning}
            :redundant-call {:level :warning}
            :redundant-str-call {:level :warning}
-           :line-length {:max-line-length 90
+           :line-length {:max-line-length 80
                          :exclude-urls true}
            :consistent-alias
            {:level :warning

@@ -27,7 +27,7 @@
                 dom-rect drag drag-threshold nearest-neighbor active-pointers
                 double-click-delta event-timestamp]} db
         {:keys [button pointer-pos timestamp pointer-id]} e
-        adjusted-pointer-pos (frame.handlers/adjusted-pointer-pos db pointer-pos)
+        adjusted-pos (frame.handlers/adjusted-pointer-pos db pointer-pos)
         db (snap.handlers/update-nearest-neighbors db)]
     (case (:type e)
       "pointermove"
@@ -50,7 +50,7 @@
               db)
             (tool.hierarchy/on-pointer-move db e))
           (assoc :pointer-pos pointer-pos
-                 :adjusted-pointer-pos adjusted-pointer-pos))
+                 :adjusted-pointer-pos adjusted-pos))
 
       "pointerdown"
       (cond-> db
@@ -62,7 +62,7 @@
         (not= button :right)
         (-> (update :active-pointers conj pointer-id)
             (assoc :pointer-offset pointer-pos
-                   :adjusted-pointer-offset adjusted-pointer-pos
+                   :adjusted-pointer-offset adjusted-pos
                    :nearest-neighbor-offset (:point nearest-neighbor)))
         :always
         (-> (tool.hierarchy/on-pointer-down e)
@@ -72,8 +72,8 @@
       (if (contains? active-pointers pointer-id)
         (cond-> (if drag
                   (-> (tool.hierarchy/on-drag-end db e)
-                      (app.handlers/add-fx [::event.effects/release-pointer-capture
-                                            pointer-id]))
+                      (app.handlers/add-fx
+                       [::event.effects/release-pointer-capture pointer-id]))
                   (if (= button :right)
                     db
                     (if (< 0 (- timestamp event-timestamp) double-click-delta)

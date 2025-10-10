@@ -100,8 +100,10 @@
                   "accepted" [::set-install-prompt nil]}}})))
 
 (def listeners
-  (->> [[js/document "keydown" [::event.events/keyboard] event.impl.keyboard/->clj]
-        [js/document "keyup" [::event.events/keyboard] event.impl.keyboard/->clj]
+  (->> [[js/document "keydown" [::event.events/keyboard]
+         event.impl.keyboard/->clj]
+        [js/document "keyup" [::event.events/keyboard]
+         event.impl.keyboard/->clj]
         [js/document "fullscreenchange" [::window.events/update-fullscreen]]
         [js/window "focus" [::window.events/update-focused]]
         [js/window "blur" [::window.events/update-focused]]
@@ -203,7 +205,8 @@
                 db
                 (rf/assoc-effect :fx
                                  (conj (or fx [])
-                                       [::app.effects/validate [db event]])))))))
+                                       [::app.effects/validate
+                                        [db event]])))))))
 
 (rf/reg-event-fx
  ::toast

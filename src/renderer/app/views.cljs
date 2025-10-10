@@ -307,16 +307,16 @@
 (defn root
   []
   (let [documents? @(rf/subscribe [::document.subs/entities?])
-        tree-visible @(rf/subscribe [::app.subs/panel-visible? :tree])
-        properties-visible @(rf/subscribe [::app.subs/panel-visible? :properties])
+        tree? @(rf/subscribe [::app.subs/panel-visible? :tree])
+        properties? @(rf/subscribe [::app.subs/panel-visible? :properties])
         active-tool @(rf/subscribe [::tool.subs/active])
         recent-documents @(rf/subscribe [::document.subs/recent])
         lang-dir @(rf/subscribe [::app.subs/lang-dir])
         web? @(rf/subscribe [::app.subs/web?])
         md? @(rf/subscribe [::window.subs/breakpoint? :md])
-        is-app-loading @(rf/subscribe [::app.subs/loading?])
+        loading? @(rf/subscribe [::app.subs/loading?])
         theme @(rf/subscribe [::theme.subs/theme])]
-    (if is-app-loading
+    (if loading?
       (when web? [:div.loader])
       [:> Direction/Provider {:dir lang-dir}
        [:> Tooltip/Provider
@@ -324,7 +324,7 @@
          [window.views/app-header]
          (if documents?
            [:div.flex.h-full.flex-1.overflow-hidden.gap-px
-            (when tree-visible
+            (when tree?
               [:div.flex-col.hidden.overflow-hidden
                {:class "md:flex w-[227px]"}
                [document.views/actions]
@@ -335,7 +335,7 @@
               [:div.flex.h-full.flex-col.flex-1.overflow-hidden.gap-px
                [editor]]
               [:div.flex.gap-px
-               (when (and md? properties-visible)
+               (when (and md? properties?)
                  [right-panel active-tool])
                [:div.bg-primary.flex
                 [views/scroll-area [toolbar.object/root]]]]]]]
