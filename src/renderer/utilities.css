@@ -54,7 +54,7 @@
 
 @utility button {
   @apply relative text-center text-nowrap bg-transparent no-drag text-foreground
-  outline-default;
+  outline-default fill-foreground aria-expanded:bg-overlay;
   font-size: 1em;
   height: var(--button-size);
   line-height: var(--button-size);
