@@ -101,8 +101,8 @@
           {:as-child true}
           [:div.tab
            {:class ["flex items-center h-full relative text-left px-2 py-0
-                     overflow-hidden hover:[&_button]:visible
-                     hover:text-foreground"
+                     overflow-hidden hover:[&_button]:visible outline-default
+                     hover:text-foreground outline-offset-[-1px]"
                     (if active?
                       "bg-primary text-foreground [&_button]:visible"
                       "bg-secondary text-foreground-muted")

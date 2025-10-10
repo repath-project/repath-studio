@@ -29,7 +29,8 @@
      (if state
        active-icon
        inactive-icon)
-     {:class ["text-inherit! bg-transparent! group-hover:visible"
+     {:class ["text-inherit! bg-transparent! group-hover:visible
+               outline-offset-[-1px] outline-inherit"
               (when (not state) (if small? "invisible" "opacity-30"))
               (when small? "small")]
       :title (t title)
@@ -124,7 +125,8 @@
   [views/icon-button
    (if collapsed "chevron-right" "chevron-down")
    {:title (if collapsed "expand" "collapse")
-    :class ["bg-transparent! text-inherit! rtl:scale-x-[-1]"
+    :class ["bg-transparent! text-inherit! rtl:scale-x-[-1]
+             outline-offset-[-1px] outline-inherit"
             (when small? "small")]
     :on-double-click #(.stopPropagation %)
     :on-click #(do (.stopPropagation %)
@@ -138,7 +140,7 @@
         collapse-button-width (if small 21 33)
         padding (* collapse-button-width (cond-> depth (seq children) dec))]
     [:div.list-item-button.button.flex.px-1.items-center.text-start.group
-     {:class ["hover:bg-overlay [&.hovered]:bg-overlay"
+     {:class ["hover:bg-overlay [&.hovered]:bg-overlay outline-offset-[-1px]"
               (when selected "accent")
               (when hovered "hovered")
               (when-not small "h-[45px]")]

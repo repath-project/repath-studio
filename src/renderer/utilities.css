@@ -48,9 +48,13 @@
   font-size: 12px;
 }
 
+@utility outline-default {
+  @apply outline-foreground outline-offset-1 focus-visible:outline-1;
+}
+
 @utility button {
-  @apply relative text-center text-nowrap bg-transparent no-drag
-  text-foreground fill-foreground aria-expanded:bg-overlay;
+  @apply relative text-center text-nowrap bg-transparent no-drag text-foreground
+  outline-default;
   font-size: 1em;
   height: var(--button-size);
   line-height: var(--button-size);
@@ -161,7 +165,7 @@
 
 
 @utility form-control-button {
-  @apply button bg-primary text-foreground-muted p-1;
+  @apply button bg-primary text-foreground-muted p-1 outline-offset-[-1px];
   width: 26px;
   height: 26px;
 }

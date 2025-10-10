@@ -38,7 +38,7 @@
       {:as-child true}
       [:button.button
        {:class "flex gap-1 items-center px-2 uppercase text-foreground-muted
-                bg-primary font-mono"}
+                bg-primary font-mono outline-offset-[-1px]"}
        computed-abbr
        [views/icon "chevron-down"]]]
      [:> DropdownMenu/Portal
@@ -57,7 +57,7 @@
 (defn button
   [{:keys [icon action class title]}]
   [:button.button.text-foreground-muted
-   {:class ["px-3" class]
+   {:class ["px-3 outline-offset-[-1px]" class]
     :title title
     :on-click #(rf/dispatch action)}
    [views/icon icon]])
@@ -113,7 +113,8 @@
        (when installable?
          [views/icon-button "download"
           {:title (t [::install])
-           :class "rounded-none text-foreground-muted bg-transparent!"
+           :class "rounded-none text-foreground-muted outline-offset-[-1px]
+                   bg-transparent!"
            :on-click #(rf/dispatch [::app.events/install])}])
        [language-dropdown]
        [button {:action [::theme.events/cycle-mode]
