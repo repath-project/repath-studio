@@ -29,8 +29,7 @@
      (if state
        active-icon
        inactive-icon)
-     {:class ["text-inherit hover:bg-transparent hover:text-inherit
-               focus:text-inherit active:text-inherit"
+     {:class ["text-inherit! bg-transparent!"
               (when (not state) (if small? "invisible" "opacity-30"))
               (when small? "small")]
       :title (t title)
@@ -125,8 +124,7 @@
   [views/icon-button
    (if collapsed "chevron-right" "chevron-down")
    {:title (if collapsed "expand" "collapse")
-    :class ["hover:bg-transparent text-inherit hover:text-inherit
-             focus:text-inherit rtl:scale-x-[-1]"
+    :class ["bg-transparent! text-inherit! rtl:scale-x-[-1]"
             (when small? "small")]
     :on-double-click #(.stopPropagation %)
     :on-click #(do (.stopPropagation %)

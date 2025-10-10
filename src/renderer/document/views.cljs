@@ -104,7 +104,7 @@
           [:div.tab
            {:class ["flex items-center h-full relative text-left px-2 py-0
                      overflow-hidden hover:[&_button]:visible
-                     hover:text-foreground focus:text-foreground"
+                     hover:text-foreground"
                     (if active?
                       "bg-primary text-foreground [&_button]:visible"
                       "bg-secondary text-foreground-muted")

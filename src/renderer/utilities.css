@@ -50,8 +50,7 @@
 
 @utility button {
   @apply relative text-center text-nowrap bg-transparent no-drag
-  text-foreground fill-foreground aria-expanded:bg-overlay
-  focus-visible:outline focus-visible:outline-offset-[-2px] outline-inherit;
+  text-foreground fill-foreground aria-expanded:bg-overlay;
   font-size: 1em;
   height: var(--button-size);
   line-height: var(--button-size);
