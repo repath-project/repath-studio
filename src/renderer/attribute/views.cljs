@@ -230,7 +230,7 @@
       [:label.form-element.w-28.truncate
        {:for (name k)
         :dir "ltr"
-        :class ["rtl:text-left!" (when active "text-foreground-active")]} k]]
+        :class ["rtl:text-left!" (when active "text-foreground-hovered")]} k]]
      [:> HoverCard/Portal
       [:> HoverCard/Content
        {:side "left"

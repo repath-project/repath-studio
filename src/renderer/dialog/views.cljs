@@ -136,7 +136,7 @@
          [:> Dialog/Title
           (cond->> title
             (string? title)
-            (into [:div.text-xl.px-5.pt-5.text-foreground-active]))])
+            (into [:div.text-xl.px-5.pt-5.text-foreground-hovered]))])
        [:> Dialog/Description
         {:as-child true}
         [:div content]]]]]))

@@ -6,11 +6,6 @@
   -webkit-app-region: no-drag;
 }
 
-@utility outline-default {
-  @apply focus:outline focus:outline-offset-[-1px] hover:outline-none
-  outline-border;
-}
-
 @utility button-size {
   width: var(--button-size);
   height: var(--button-size);
@@ -35,7 +30,7 @@
 }
 
 @utility button-link {
-  @apply text-foreground-active inline-block text-left text-wrap break-all
+  @apply text-foreground-hovered inline-block text-left text-wrap break-all
   hover:cursor-pointer hover:underline;
 }
 
@@ -45,17 +40,18 @@
 }
 
 @utility form-element {
-  @apply bg-primary border-0 w-full outline-none px-3 py-1 shadow-none!
+  @apply bg-primary border-0 w-full px-3 py-1 shadow-none!
   text-foreground! disabled:text-foreground-disabled!
-  hover:text-foreground-active! focus:text-foreground-active! box-border
+  hover:text-foreground-hovered! focus:text-foreground-hovered! box-border
   placeholder:text-foreground-disabled;
 
   font-size: 12px;
 }
 
 @utility button {
-  @apply relative text-center text-nowrap outline-default bg-transparent no-drag
-  text-foreground fill-foreground aria-expanded:bg-overlay;
+  @apply relative text-center text-nowrap bg-transparent no-drag
+  text-foreground fill-foreground aria-expanded:bg-overlay
+  focus-visible:outline focus-visible:outline-offset-[-2px] outline-inherit;
   font-size: 1em;
   height: var(--button-size);
   line-height: var(--button-size);

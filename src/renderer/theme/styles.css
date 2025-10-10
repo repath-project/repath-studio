@@ -18,8 +18,7 @@
   --foreground: rgba(255, 255, 255, .7);
   --foreground-disabled: rgba(255, 255, 255, .3);
   --foreground-muted: rgba(255, 255, 255, .5);
-  --foreground-hovered: rgba(255, 255, 255, .9);
-  --foreground-active: rgba(255, 255, 255, 1);
+  --foreground-hovered: rgba(255, 255, 255, 1);
 
   --border: rgba(255, 255, 255, .15);
 
@@ -44,8 +43,7 @@
   --foreground: rgba(0, 0, 0, .8);
   --foreground-disabled: rgba(0, 0, 0, .3);
   --foreground-muted: rgba(0, 0, 0, .5);
-  --foreground-hovered: rgba(0, 0, 0, .9);
-  --foreground-active: rgba(0, 0, 0, 1);
+  --foreground-hovered: rgba(0, 0, 0, 1);
 
   --border: rgba(0, 0, 0, .15);
 
@@ -81,7 +79,6 @@
   --color-foreground-disabled: var(--foreground-disabled);
   --color-foreground-muted: var(--foreground-muted);
   --color-foreground-hovered: var(--foreground-hovered);
-  --color-foreground-active: var(--foreground-active);
 
   --color-error: var(--error);
   --color-warning: var(--warning);

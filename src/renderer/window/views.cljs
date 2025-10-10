@@ -37,8 +37,8 @@
      [:> DropdownMenu/Trigger
       {:as-child true}
       [:button.button
-       {:class "flex gap-1 items-center px-2 uppercase text-foreground-muted bg-primary
-                font-mono"}
+       {:class "flex gap-1 items-center px-2 uppercase text-foreground-muted
+                bg-primary font-mono"}
        computed-abbr
        [views/icon "chevron-down"]]]
      [:> DropdownMenu/Portal
@@ -56,7 +56,7 @@
 
 (defn button
   [{:keys [icon action class title]}]
-  [:button.button.text-foreground-muted.focus:outline-none
+  [:button.button.text-foreground-muted
    {:class ["px-3" class]
     :title title
     :on-click #(rf/dispatch action)}

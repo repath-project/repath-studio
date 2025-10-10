@@ -156,8 +156,7 @@
  [(rf/inject-cofx ::effects/guid)]
  (fn [{:keys [db guid]} [_]]
    {:db (-> (document.handlers/create db guid)
-            (history.handlers/finalize [::create-doc "Create document"]))
-    ::effects/focus nil}))
+            (history.handlers/finalize [::create-doc "Create document"]))}))
 
 (rf/reg-event-fx
  ::new-from-template
@@ -244,8 +243,7 @@
    (if document
      (if-let [open-id (some->> (:path document)
                                (document.handlers/search-by-path db))]
-       {:db (document.handlers/set-active db open-id)
-        ::effects/focus nil}
+       {:db (document.handlers/set-active db open-id)}
 
        (if-let [file-handle (:file-handle document)]
          {::document.effects/query-file-handle
@@ -265,8 +263,7 @@
  ::load-or-activate
  (fn [{:keys [db]} [_ document id]]
    (if (document.handlers/open? db id)
-     {:db (document.handlers/set-active db id)
-      ::effects/focus nil}
+     {:db (document.handlers/set-active db id)}
      {:dispatch [::load (assoc document :id id)]})))
 
 (rf/reg-event-fx
@@ -287,8 +284,7 @@
 
               (not is-migrated)
               (document.handlers/update-saved-history-id id))
-        :fx [[::effects/focus nil]
-             (when is-migrated
+        :fx [(when is-migrated
                [::app.effects/toast
                 [:success (tr db [::document-migrated "Document migrated"])
                  {:description

@@ -347,7 +347,7 @@
           :toastOptions
           {:classNames {:toast "bg-primary! border! border-border! shadow-md!
                                 p-4! rounded-md!"
-                        :title "text-foreground-active!"
+                        :title "text-foreground-hovered!"
                         :description "text-foreground! text-xs"}}
           :icons {:success
                   (reagent/as-element

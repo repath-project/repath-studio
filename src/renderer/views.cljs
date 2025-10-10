@@ -77,8 +77,9 @@
    [:> Slider/Track {:class "relative h-1 bg-secondary flex-1"}
     [:> Slider/Range {:class "absolute h-full bg-overlay-2x"}]]
    [:> Slider/Thumb {:class "flex shadow-sm h-5 w-2 rounded-xs bg-foreground
-                             data-disabled:bg-foreground-muted focus:outline-4
-                             focus:outline-border"
+                             data-disabled:bg-foreground-muted
+                             focus-visible:outline-4
+                             focus-visible:outline-border"
                      :aria-label "Resize panel thumb"}]])
 
 (defn format-shortcut

@@ -10,8 +10,7 @@
  (fn [{:keys [db]} [_ tool]]
    {:db (cond-> db
           (:active-document db)
-          (tool.handlers/activate tool))
-    ::effects/focus nil}))
+          (tool.handlers/activate tool))}))
 
 (rf/reg-event-db
  ::set-state
