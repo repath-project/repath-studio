@@ -34,7 +34,10 @@
   [icon-name props]
   [:> ReactSVG
    (merge-with-class {:class "flex justify-center [&_svg]:fill-current"
-                      :src (str "icons/" icon-name ".svg")} props)])
+                      :src (str "icons/" icon-name ".svg")
+                      :loading #(reagent/as-element
+                                 [:div {:class "w-[17px] h-[17px]"}])}
+                     props)])
 
 (defn resize-handle
   [id]
