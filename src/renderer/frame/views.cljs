@@ -122,6 +122,7 @@
                    :overflow "hidden"
                    :user-select "none"
                    :touch-action "none"
+                   :background "var(--secondary)"
                    :margin 0}}]])
 
 (def resize-observer
