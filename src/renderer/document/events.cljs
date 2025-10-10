@@ -194,9 +194,11 @@
        {::app.effects/get-local-store
         {:store-key (str id)
          :formatter (fn [file-handle]
-                      {:on-success [::file-read id]
-                       :on-error [::recent-error id]
-                       :file-handle file-handle})
+                      (if file-handle
+                        {:on-success [::file-read id]
+                         :on-error [::recent-error id]
+                         :file-handle file-handle}
+                        (throw (js/Error. "File handle not found"))))
          :on-success [::events/file-open]
          :on-error [::recent-error id]}}
        {::effects/ipc-invoke
