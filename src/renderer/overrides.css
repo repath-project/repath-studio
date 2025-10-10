@@ -183,7 +183,7 @@
 
 .timeline-editor-edit-row {
   background-image: linear-gradient(var(--primary), var(--primary)),
-                    linear-gradient(90deg, var(--border-color) 1px, transparent 0) !important;
+                    linear-gradient(90deg, var(--border) 1px, transparent 0) !important;
 }
 
 /* react-d3-tree */
