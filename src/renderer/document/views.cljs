@@ -55,11 +55,11 @@
 
 (defn close-button
   [id saved]
-  [:button.small.icon-button.invisible.relative.bg-inherit
+  [:button.small.icon-button.invisible.relative.shrink-0.bg-inherit
    {:key id
-    :class "hover:[&_.dot-icon]:hidden
-            focus:[&_.dot-icon]:hidden
-            active:[&_.dot-icon]:hidden"
+    :class "hover:[&_.dot-icon]:invisible
+            focus:[&_.dot-icon]:invisible
+            active:[&_.dot-icon]:invisible"
     :title (t [::close-doc "Close document"])
     :on-click (fn [e]
                 (.stopPropagation e)
@@ -67,8 +67,8 @@
    [views/icon "times"]
    (when-not saved
      [views/icon "dot"
-      {:class "dot-icon absolute inset-0 bg-inherit flex items-center
-               text-foreground-muted"}])])
+      {:class "dot-icon absolute inset-0 bg-inherit items-center
+               text-foreground-muted sm:visible invisible"}])])
 
 (defn context-menu
   [id]
@@ -103,12 +103,11 @@
           {:as-child true}
           [:div.tab
            {:class ["flex items-center h-full relative text-left px-2 py-0
-                     hover:text-foreground  outline-none overflow-hidden
-                     focus:text-foreground text-foreground-muted
-                     hover:[&_button]:visible"
+                     overflow-hidden hover:[&_button]:visible
+                     hover:text-foreground focus:text-foreground"
                     (if active?
                       "bg-primary text-foreground [&_button]:visible"
-                      "bg-secondary")
+                      "bg-secondary text-foreground-muted")
                     (when-not saved?
                       "[&_button]:visible")]
             :on-wheel #(when-not (zero? (.-deltaY %))
@@ -134,7 +133,9 @@
             :ref (fn [this]
                    (when (and this active?)
                      (rf/dispatch [::events/scroll-into-view this])))}
-           [:span.truncate.pointer-events-none.px-2 title]
+           [:div.pointer-events-none.px-2.gap-1.flex.overflow-hidden
+            (when-not saved? [:span.sm:hidden "•"])
+            [:span.truncate title]]
            [close-button id saved?]]]
          [:> ContextMenu/Portal
           (into
