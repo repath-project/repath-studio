@@ -13,8 +13,8 @@
 [![Static security testing](https://github.com/repath-project/repath-studio/actions/workflows/clj-holmes.yml/badge.svg)](https://github.com/repath-project/repath-studio/actions/workflows/clj-holmes.yml)
 [![CodeFactor](https://codescene.io/projects/72168/status-badges/average-code-health)](https://codescene.io/projects/72168)
 
-![Discord](https://img.shields.io/discord/890005586958237716?label=Discord&logo=discord&logoColor=aaa)
-![Matrix](https://img.shields.io/matrix/repath.studio%3Amatrix.org?label=Matrix&logo=matrix&logoColor=aaa)
+[![Discord](https://img.shields.io/discord/890005586958237716?label=Discord&logo=discord&logoColor=aaa)](https://discord.gg/yzjY6W6ame)
+[![Matrix](https://img.shields.io/matrix/repath.studio%3Amatrix.org?label=Matrix&logo=matrix&logoColor=aaa)](https://matrix.to/#/#repath.studio:matrix.org)
 
 </div>
 
