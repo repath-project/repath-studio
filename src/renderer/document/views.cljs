@@ -55,11 +55,8 @@
 
 (defn close-button
   [id saved]
-  [:button.small.icon-button.invisible.relative.shrink-0.bg-inherit
+  [:button.small.icon-button.invisible.relative.shrink-0.bg-inherit.group
    {:key id
-    :class "hover:[&_.dot-icon]:invisible
-            focus:[&_.dot-icon]:invisible
-            active:[&_.dot-icon]:invisible"
     :title (t [::close-doc "Close document"])
     :on-click (fn [e]
                 (.stopPropagation e)
@@ -67,8 +64,9 @@
    [views/icon "times"]
    (when-not saved
      [views/icon "dot"
-      {:class "dot-icon absolute inset-0 bg-inherit items-center
-               text-foreground-muted sm:visible invisible"}])])
+      {:class "absolute inset-0 bg-inherit items-center text-foreground-muted
+               sm:visible invisible group-hover:invisible group-focus:invisible
+               group-active:invisible"}])])
 
 (defn context-menu
   [id]

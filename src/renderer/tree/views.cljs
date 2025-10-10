@@ -29,7 +29,7 @@
      (if state
        active-icon
        inactive-icon)
-     {:class ["text-inherit! bg-transparent!"
+     {:class ["text-inherit! bg-transparent! group-hover:visible"
               (when (not state) (if small? "invisible" "opacity-30"))
               (when small? "small")]
       :title (t title)
@@ -137,8 +137,8 @@
   (let [{:keys [id selected children locked visible]} el
         collapse-button-width (if small 21 33)
         padding (* collapse-button-width (cond-> depth (seq children) dec))]
-    [:div.list-item-button.button.flex.px-1.items-center.text-start
-     {:class ["hover:bg-overlay [&.hovered]:bg-overlay hover:[&_button]:visible"
+    [:div.list-item-button.button.flex.px-1.items-center.text-start.group
+     {:class ["hover:bg-overlay [&.hovered]:bg-overlay"
               (when selected "accent")
               (when hovered "hovered")
               (when-not small "h-[45px]")]
@@ -175,11 +175,13 @@
        (when-let [icon (:icon (utils.element/properties el))]
          [views/icon icon {:class (when-not visible "opacity-60")}])
        [item-label el]]
-      [item-prop-toggle id locked :locked
+      [item-prop-toggle id
+       locked :locked
        "lock" "unlock"
        [::unlock "Unlock"] [::lock "Lock"]
        small]
-      [item-prop-toggle id (not visible) :visible
+      [item-prop-toggle id
+       (not visible) :visible
        "eye-closed" "eye"
        [::show "Show"] [::hide "Hide"]
        small]]]))

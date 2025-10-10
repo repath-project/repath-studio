@@ -676,7 +676,11 @@
   [{:keys [label items id disabled]}]
   [:> Menubar/Menu
    [:> Menubar/Trigger
-    {:class "menubar-trigger"
+    {:class "px-3 py-1.5 flex rounded-sm outline-none select-none items-center
+             leading-none data-[state=open]:bg-overlay
+             hover:bg-overlay hover:text-foreground-hovered
+             focus:bg-overlay focus:text-foreground-hovered
+             disabled:text-foreground-disabled disabled:pointer-events-none"
      :id (name id)
      :disabled disabled}
     label]
