@@ -8,8 +8,13 @@
 
 [![Build desktop app](https://github.com/repath-project/repath-studio/actions/workflows/desktop-app.yml/badge.svg)](https://github.com/repath-project/repath-studio/actions/workflows/desktop-app.yml)
 [![Deploy web app](https://github.com/repath-project/repath-studio/actions/workflows/web-app.yml/badge.svg)](https://github.com/repath-project/repath-studio/actions/workflows/web-app.yml)
+
 [![Outdated dependencies](https://github.com/repath-project/repath-studio/actions/workflows/dependencies.yml/badge.svg)](https://github.com/repath-project/repath-studio/actions/workflows/dependencies.yml)
 [![Static security testing](https://github.com/repath-project/repath-studio/actions/workflows/clj-holmes.yml/badge.svg)](https://github.com/repath-project/repath-studio/actions/workflows/clj-holmes.yml)
+[![CodeFactor](https://codescene.io/projects/72168/status-badges/average-code-health)](https://codescene.io/projects/72168)
+
+![Discord](https://img.shields.io/discord/890005586958237716?label=Discord&logo=discord&logoColor=aaa)
+![Matrix](https://img.shields.io/matrix/repath.studio%3Amatrix.org?label=Matrix&logo=matrix&logoColor=aaa)
 
 </div>
 
