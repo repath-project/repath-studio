@@ -12,12 +12,13 @@
 (defn reporting-confirmation-dialog-content
   [db]
   [dialog.views/confirmation
-   {:description (tr db [::reporting-description
-                         [:div
-                          [:p "Would you like to help us improve by sending
-                              anonymous error reports? You can change your
-                              preference at any time from our \"%1\" menu."]
-                          [:p "For more information, please read our %2."]]]
+   {:description (tr db
+                     [::reporting-description
+                      [:div
+                       [:p "Would you like to help us improve by sending
+                            anonymous error reports? You can change your
+                            preference at any time from our \"%1\" menu."]
+                       [:p "For more information, please read our %2."]]]
                      [[:strong (tr db [::menubar.views/help "Help"])]
                       [:a.button-link.underline
                        {:href "https://repath.studio/policies/privacy/"
