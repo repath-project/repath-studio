@@ -30,6 +30,8 @@
   label {
     font-size: 12px !important;
     line-height: 12px !important;
+    width: 20% !important;
+    top: 5px !important;
   }
 
   >div {
@@ -61,11 +63,6 @@
   input {
     width: 70% !important;
     margin-left: 30px !important;
-  }
-
-  label {
-    width: 20% !important;
-    top: 5px !important;
   }
 
   >div:first-of-type {
