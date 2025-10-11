@@ -10,13 +10,13 @@
     (?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?
     (?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$")
 
-(def Version
+(def SemanticVersion
   [:tuple
    [number? {:title "major"}]
    [number? {:title "minor"}]
    [number? {:title "patch"}]])
 
-(m/=> version->vec [:-> string? Version])
+(m/=> version->vec [:-> string? SemanticVersion])
 (defn version->vec
   [s]
   (into []
@@ -25,7 +25,7 @@
               (map js/parseInt))
         (re-find ver-regex s)))
 
-(m/=> requires-migration? [:-> Version Version boolean?])
+(m/=> requires-migration? [:-> SemanticVersion SemanticVersion boolean?])
 (defn requires-migration?
   [document-version migration-version]
   (let [[m-major m-minor m-patch] migration-version
@@ -39,7 +39,7 @@
 
 (m/=> migrate-document [:function
                         [:-> map? map?]
-                        [:-> map? [:tuple Version ifn?] map?]])
+                        [:-> map? [:tuple SemanticVersion ifn?] map?]])
 (defn migrate-document
   ([document]
    (reduce migrate-document document utils.migration/migrations))
