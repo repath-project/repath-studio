@@ -49,7 +49,14 @@
 
 @import './utilities.css';
 @import './overrides.css';
+@import './theme/default.css';
 @import './theme/styles.css';
+
+:root {
+  --button-size: 33px;
+  --button-size-sm: 21px;
+  --font-size: 13px;
+}
 
 body {
   @apply text-foreground;
@@ -74,8 +81,8 @@ input {
 }
 
 label {
-  @apply block text-right h-full text-foreground-muted overflow-hidden text-ellipsis
-  w-auto hover:text-foreground-hovered hover:cursor-pointer;
+  @apply block text-right h-full text-foreground-muted overflow-hidden
+  text-ellipsis w-auto hover:text-foreground-hovered hover:cursor-pointer;
 }
 
 .menu-content {

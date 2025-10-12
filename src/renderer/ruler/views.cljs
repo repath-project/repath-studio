@@ -77,7 +77,7 @@
     [:text {:x (if vertical 19 x-step)
             :y (if vertical y-step (inc font-size))
             :writing-mode (when vertical "vertical-rl")
-            :fill "var(--foreground)"
+            :fill "var(--foreground-default)"
             :font-size font-size
             :rotate (when vertical 180)
             :font-family "var(--font-mono)"}

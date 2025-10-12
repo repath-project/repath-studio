@@ -106,7 +106,8 @@
    {:label "Command Menu"
     :on-key-down #(.stopPropagation %)}
    [:> Command/CommandInput
-    {:placeholder (t [::search-command "Search for a command"])}]
+    {:class "p-3 bg-primary text-sm border-b border-border w-full"
+     :placeholder (t [::search-command "Search for a command"])}]
    [views/scroll-area
     [:> Command/CommandList
      {:class "p-1"}
@@ -134,9 +135,10 @@
         attrs)
        (when title
          [:> Dialog/Title
-          (cond->> title
-            (string? title)
-            (into [:div.text-xl.px-5.pt-5.text-foreground-hovered]))])
+          {:as-child true}
+          (if (string? title)
+            [:h2.text-xl.px-5.pt-5.text-foreground-hovered title]
+            title)])
        [:> Dialog/Description
         {:as-child true}
         [:div content]]]]]))

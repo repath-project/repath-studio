@@ -81,10 +81,6 @@
   }
 }
 
-[cmdk-input] {
-  @apply p-3 bg-primary text-sm border-b border-border w-full;
-}
-
 [cmdk-list] {
   max-height: 50vh;
 }
@@ -100,7 +96,7 @@
 }
 
 .CodeMirror-cursor {
-  border-left: 1px solid var(--foreground) !important;
+  border-left: 1px solid var(--foreground-default) !important;
   height: 16px !important;
 }
 

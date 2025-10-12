@@ -141,7 +141,7 @@
         padding (* collapse-button-width (cond-> depth (seq children) dec))]
     [:div.list-item-button.button.flex.px-1.items-center.text-start.group
      {:class ["hover:bg-overlay [&.hovered]:bg-overlay outline-offset-[-1px]"
-              (when selected "accent")
+              (when selected "accent focus-visible:outline-accent-foreground")
               (when hovered "hovered")
               (when-not small "h-[45px]")]
       :tab-index 0

@@ -78,8 +78,9 @@
      :on-pointer-move #(.stopPropagation %)}
     props)
    [:> Slider/Track {:class "relative h-1 bg-secondary flex-1"}
-    [:> Slider/Range {:class "absolute h-full bg-overlay-2x"}]]
-   [:> Slider/Thumb {:class "flex shadow-sm h-5 w-2 rounded-xs bg-foreground
+    [:> Slider/Range {:class "absolute h-full bg-foreground-muted"}]]
+   [:> Slider/Thumb {:class "flex shadow-sm h-5 w-2 rounded-xs
+                             bg-foreground-hovered
                              data-disabled:bg-foreground-muted"
                      :aria-label "Resize panel thumb"}]])
 
@@ -190,7 +191,7 @@
       {:class "flex touch-none p-0.5 select-none flex-col h-2.5"
        :orientation "horizontal"}
       [:> ScrollArea/Thumb
-       {:class "relative flex-1 bg-overlay hover:bg-overlay-2x rounded-full"}]]
+       {:class "relative flex-1 bg-overlay rounded-full"}]]
 
      [:> ScrollArea/Corner]]))
 

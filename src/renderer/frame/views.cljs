@@ -156,7 +156,6 @@
               debug-info? @(rf/subscribe [::app.subs/debug-info])
               worker-active? @(rf/subscribe [::worker.subs/some-active?])
               root-el @(rf/subscribe [::element.subs/root])
-
               {:keys [x y]} @(rf/subscribe [::app.subs/dom-rect])
               ;; This is a different browsing context inside an iframe.
               ;; We need to simulate the events to the parent window.
