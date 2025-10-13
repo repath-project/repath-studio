@@ -33,6 +33,7 @@
                                 :output-feature-set :es-next
                                 :pseudo-names true
                                 :pretty-print true
+                                :source-map true
                                 :closure-defines
                                 {config/version :shadow-git-inject/version}}
 
