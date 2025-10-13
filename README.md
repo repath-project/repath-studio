@@ -1,13 +1,6 @@
-<div align="center">
-
-<img
-  src="https://raw.githubusercontent.com/repath-project/repath-studio/refs/heads/main/resources/public/img/icon.svg"
-  alt="drawing"
-  width="100"/>
-
 # Repath Studio
 
- :construction: **This project is in alpha stage!** :construction:
+ :construction: **This project is in alpha stage!**
 
 [![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/repath-project/repath-studio/latest/total?style=for-the-badge)](https://github.com/repath-project/repath-studio/releases/latest/)
 
@@ -20,8 +13,6 @@
 
 [![Discord](https://img.shields.io/discord/890005586958237716?label=Discord&logo=discord&logoColor=aaa)](https://discord.gg/yzjY6W6ame)
 [![Matrix](https://img.shields.io/matrix/repath.studio%3Amatrix.org?label=Matrix&logo=matrix&logoColor=aaa)](https://matrix.to/#/#repath.studio:matrix.org)
-
-</div>
 
 ![Studio Screenshot](https://repath.studio/assets/images/studio.png)
 
@@ -52,15 +43,13 @@ This project is funded through
             <img
              src="https://nlnet.nl/logo/banner.svg"
              alt="Logo NLnet: abstract logo of four people seen from above"
-             width="200px">
-        </a>
+             width="200px"></a>
         &nbsp;&nbsp;
         <a href="https://nlnet.nl/core">
             <img
              src="https://nlnet.nl/image/logos/NGI0Core_tag.svg"
              alt="Logo NGI Zero: letter-logo shaped like a tag"
-             width="250px">
-        </a>
+             width="250px"></a>
     </div>
 </section>
 
