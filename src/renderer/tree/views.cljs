@@ -29,9 +29,10 @@
      (if state
        active-icon
        inactive-icon)
-     {:class ["text-inherit! bg-transparent! group-hover:visible
-               outline-offset-[-1px] outline-inherit"
-              (when (not state) (if small? "invisible" "opacity-30"))
+     {:class ["text-inherit! bg-transparent! outline-offset-[-1px]
+               group-hover:opacity-100 group-focus:opacity-100 focus:opacity-100
+               outline-inherit"
+              (when (not state) (if small? "opacity-0" "opacity-30"))
               (when small? "small")]
       :title (t title)
       :on-double-click #(.stopPropagation %)
@@ -140,9 +141,9 @@
         collapse-button-width (if small 21 33)
         padding (* collapse-button-width (cond-> depth (seq children) dec))]
     [:div.list-item-button.button.flex.px-1.items-center.text-start.group
-     {:class ["hover:bg-overlay [&.hovered]:bg-overlay outline-offset-[-1px]"
-              (when selected "accent focus-visible:outline-accent-foreground")
-              (when hovered "hovered")
+     {:class ["hover:bg-overlay outline-offset-[-1px]"
+              (when selected "accent")
+              (when hovered "bg-overlay")
               (when-not small "h-[45px]")]
       :tab-index 0
       :data-id (str id)

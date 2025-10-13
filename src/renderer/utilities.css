@@ -49,7 +49,7 @@
 }
 
 @utility outline-default {
-  @apply outline-accent outline-offset-1 focus-visible:outline-1;
+  @apply outline-foreground outline-offset-1 focus-visible:outline-1;
 }
 
 @utility button {
