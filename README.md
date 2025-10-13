@@ -1,8 +1,13 @@
 <div align="center">
 
-![Repath Studio](https://repath.studio/assets/images/banner.png)
+<img
+  src="https://raw.githubusercontent.com/repath-project/repath-studio/refs/heads/main/resources/public/img/icon.png"
+  alt="drawing"
+  width="100"/>
 
- :construction: **This project is in alpha stage!**
+# Repath Studio
+
+ :construction: **This project is in alpha stage!** :construction:
 
 [![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/repath-project/repath-studio/latest/total?style=for-the-badge)](https://github.com/repath-project/repath-studio/releases/latest/)
 

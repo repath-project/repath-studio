@@ -1,5 +1,5 @@
 {
-    "no-inline-html": false,
-    "first-line-heading": false,
-    "no-emphasis-as-heading": false
+  "no-inline-html": false,
+  "first-line-heading": false,
+  "no-emphasis-as-heading": false
 }
