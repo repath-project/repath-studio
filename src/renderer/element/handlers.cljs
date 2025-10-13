@@ -727,8 +727,7 @@
   [db size]
   (cond-> db
     :always
-    (create {:tag :canvas
-             :attrs {:fill "#eeeeee"}})
+    (create {:tag :canvas})
 
     size
     (create {:tag :svg
