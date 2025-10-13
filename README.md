@@ -1,7 +1,7 @@
 <div align="center">
 
 <img
-  src="https://raw.githubusercontent.com/repath-project/repath-studio/refs/heads/main/resources/public/img/icon.png"
+  src="https://raw.githubusercontent.com/repath-project/repath-studio/refs/heads/main/resources/public/img/icon.svg"
   alt="drawing"
   width="100"/>
 
