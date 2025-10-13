@@ -152,7 +152,7 @@
        :title (t [::zoom-in "Zoom in"])
        :on-click #(rf/dispatch [::frame.events/zoom-in])}
       [views/icon "plus"]]
-     [:div.flex.hidden
+     [:div.flex.hidden.items-center
       {:class "md:flex"
        :dir "ltr"}
       [zoom-input zoom]

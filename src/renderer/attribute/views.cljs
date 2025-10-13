@@ -108,9 +108,7 @@
 (defn form-input
   [k v {:keys [disabled placeholder]
         :as attrs}]
-  [:div.relative.flex.form-input.flex-1
-   {:class "hover:[&_button]:visible
-            active:[&_button]:visible"}
+  [:div.relative.flex.flex-1.group
    [:input.form-element
     (merge attrs
            {:key v
@@ -126,8 +124,9 @@
                            % v
                            on-change-handler! k v)})]
    (when-not (or (empty? (str v)) disabled)
-     [:button.button.bg-primary.text-foreground-muted.absolute.h-full.right-0
-      {:class "hover:bg-transparent rtl:right-auto rtl:left-0 p-1 invisible"
+     [:button.form-control-button.bg-primary.absolute.right-0.p1.invisible
+      {:class "hover:bg-transparent rtl:right-auto rtl:left-0
+               group-hover:visible"
        :on-click #(rf/dispatch [::element.events/remove-attr k])}
       [views/icon "times"]])])
 

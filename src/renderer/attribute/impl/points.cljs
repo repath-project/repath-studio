@@ -31,7 +31,7 @@
   [index [x y] points]
   [:div.grid.grid-flow-col.gap-px
    {:dir "ltr"
-    :style {:grid-template-columns "minmax(0, 40px) 3fr 3fr 26px"}}
+    :style {:grid-template-columns "minmax(0, 40px) 3fr 3fr 27px"}}
    [:label.form-element.px-1.bg-transparent index]
    [:input.form-element.bg-transparent
     {:key (str "x-" index)
