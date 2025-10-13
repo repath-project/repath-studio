@@ -49,7 +49,7 @@
 (defn frame-panel
   []
   (let [ruler-visible? @(rf/subscribe [::ruler.subs/visible?])
-        _ruler-locked? @(rf/subscribe [::ruler.subs/locked?])
+        ruler-locked? @(rf/subscribe [::ruler.subs/locked?])
         backdrop @(rf/subscribe [::app.subs/backdrop])
         md? @(rf/subscribe [::window.subs/breakpoint? :md])
         some-selected? @(rf/subscribe [::element.subs/some-selected?])
@@ -62,13 +62,13 @@
          [:div.bg-primary
           {:style {:width ruler.views/ruler-size
                    :height ruler.views/ruler-size}}
-          #_[views/icon-button
-             (if ruler-locked? "lock" "unlock")
-             {:class "small bg-transparent!"
-              :title (if ruler-locked?
-                       (t [::unlock "Unlock"])
-                       (t [::lock "Lock"]))
-              :on-click #(rf/dispatch [::ruler.events/toggle-locked])}]]
+          [views/icon-button
+           (if ruler-locked? "lock" "unlock")
+           {:class "small bg-transparent! hidden"
+            :title (if ruler-locked?
+                     (t [::unlock "Unlock"])
+                     (t [::lock "Lock"]))
+            :on-click #(rf/dispatch [::ruler.events/toggle-locked])}]]
          [:div.bg-primary.flex-1
           {:dir "ltr"}
           [ruler.views/ruler :horizontal]]])]
