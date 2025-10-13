@@ -160,6 +160,7 @@
               [views/cm-editor xml
                {:options {:mode "text/xml"
                           :readOnly true
+                          :screenReaderLabel "XML"
                           :theme codemirror-theme}}]]]]]]))]]])
 
 (defn editor

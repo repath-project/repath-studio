@@ -19,4 +19,5 @@
        :options {:mode "css"
                  :placeholder (when-not v "multiple")
                  :readOnly disabled
+                 :screenReaderLabel (name k)
                  :theme codemirror-theme}}]]))

@@ -166,6 +166,7 @@
     [:span
      [views/radio-icon-button icon @(rf/subscribe active)
       {:class class
+       :aria-label title
        :on-click #(rf/dispatch action)}]]]
    [:> Tooltip/Portal
     [:> Tooltip/Content
