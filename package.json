@@ -142,6 +142,7 @@
     "vaul": "1.1.2"
   },
   "dependencies": {
+    "@electron/devtron": "2.1.0",
     "@sentry/electron": "7.1.1",
     "electron-log": "5.4.3",
     "electron-window-state": "5.0.3"

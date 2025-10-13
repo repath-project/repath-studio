@@ -1,6 +1,7 @@
 (ns electron.main
   "https://www.electronjs.org/docs/latest/tutorial/process-model#the-main-process"
   (:require
+   ["@electron/devtron" :refer [devtron]]
    ["@sentry/electron/main" :as sentry-electron-main]
    ["electron" :refer [app shell ipcMain BrowserWindow]]
    ["electron-log/main" :as log]
@@ -73,17 +74,14 @@
 
 (defn register-window-events! []
   (doseq
-   [[e f]
-    [["maximize" #(send-to-renderer! "window-maximized")]
-     ["unmaximize" #(send-to-renderer! "window-unmaximized")]
-     ["enter-full-screen" #(send-to-renderer! "window-entered-fullscreen")]
-     ["leave-full-screen" #(send-to-renderer! "window-leaved-fullscreen")]
-     ["minimize" #(send-to-renderer! "window-minimized")]
-     ["restore" #(send-to-renderer! "window-restored")]
-     ["resize" #(send-to-renderer! (if (.isMaximized ^js @main-window)
-                                     "window-maximized"
-                                     "window-unmaximized"))]]]
-    (.on ^js @main-window e f)))
+   [[window-event renderer-event]
+    [["maximize" "window-maximized"]
+     ["unmaximize" "window-unmaximized"]
+     ["enter-full-screen" "window-entered-fullscreen"]
+     ["leave-full-screen" "window-leaved-fullscreen"]
+     ["minimize" "window-minimized"]
+     ["restore" "window-restored"]]]
+    (.on ^js @main-window window-event #(send-to-renderer! renderer-event))))
 
 (defn register-web-contents-events! []
   (let [web-contents (.-webContents ^js @main-window)]
@@ -133,11 +131,15 @@
                   #js {:sandbox false
                        :preload (.join path js/__dirname "preload.js")}}))
 
+    (when config/debug?
+      (.install devtron))
+
     (.once ^js @main-window
            "ready-to-show"
            (fn []
              (.show ^js @main-window)
-             (.manage win-state ^js @main-window)))
+             (.manage win-state ^js @main-window)
+             (.initialize log)))
 
     (.on ^js @main-window "ready-to-show" #(on-ready-to-show! @main-window))
 
@@ -171,7 +173,6 @@
 
 (defn ^:export init! []
   (sentry-electron-main/init config/sentry)
-  (.initialize log)
   (.on app "window-all-closed" #(when-not (= js/process.platform "darwin")
                                   (.quit app)))
   (.on app "ready" init-loading-window!))
