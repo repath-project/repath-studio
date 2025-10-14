@@ -79,8 +79,10 @@
           :class "rtl:scale-x-[-1]"}
          [ruler.views/ruler :vertical]])
       [:div.relative.grow.flex
-
-       [frame.views/root]
+       [:div.grow.flex.bg
+        {:data-theme "light"
+         :style {:background "var(--secondary)"}}
+        [frame.views/root]]
        (when backdrop
          [:div.absolute.inset-0
           {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])
