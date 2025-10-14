@@ -27,7 +27,7 @@
    [:> Popover/Root {:modal true}
     [:> Popover/Trigger
      {:as-child true}
-     [:button.form-control-button
+     [:button.form-control-button.p-2
       {:disabled (:disabled attrs)
        :title (t [::pick-color "Pick color"])}
       [:div.w-full.h-full.bg-overlay
