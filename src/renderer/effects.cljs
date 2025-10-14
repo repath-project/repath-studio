@@ -104,11 +104,12 @@
        :as args}]
    (if file-handle
      (query-permission-and-run "readwrite" write-file! args)
-     (-> (.showSaveFilePicker js/window (clj->js options))
-         (.then #(write-file! (assoc args :file-handle %)))
-         (.catch (fn [^js/Error error]
-                   (when (and on-error (not (abort-error? error)))
-                     (rf/dispatch (conj on-error error)))))))))
+     (some-> (.-showSaveFilePicker js/window)
+             (.call js/window (clj->js options))
+             (.then #(write-file! (assoc args :file-handle %)))
+             (.catch (fn [^js/Error error]
+                       (when (and on-error (not (abort-error? error)))
+                         (rf/dispatch (conj on-error error)))))))))
 
 (defn- get-file!
   [{:keys [on-success on-error file-handle]}]
