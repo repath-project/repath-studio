@@ -225,10 +225,9 @@
     [:> HoverCard/Root
      [:> HoverCard/Trigger
       {:as-child true}
-      [:label.form-element.w-28.truncate
+      [:label.form-element.w-28.truncate.inline-flex!.items-center.justify-end
        {:for (name k)
-        :dir "ltr"
-        :class ["rtl:text-left!" (when active "text-foreground-hovered")]} k]]
+        :class (when active "text-foreground-hovered")} k]]
      [:> HoverCard/Portal
       [:> HoverCard/Content
        {:side "left"

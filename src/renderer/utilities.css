@@ -43,7 +43,7 @@
   @apply bg-primary border-0 w-full px-3 py-1 h-[27px]! shadow-none!
   text-foreground! disabled:text-foreground-disabled!
   hover:text-foreground-hovered! focus:text-foreground-hovered! box-border
-  placeholder:text-foreground-disabled;
+  placeholder:text-foreground-disabled text-xs!;
 }
 
 @utility outline-default {
