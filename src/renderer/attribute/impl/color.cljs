@@ -36,7 +36,8 @@
      [:> Popover/Content
       {:sideOffset 5
        :class "popover-content"
-       :align "end"}
+       :align "end"
+       :on-open-auto-focus #(.preventDefault %)}
       [:div
        {:dir "ltr"}
        [picker k v]]]]]])
