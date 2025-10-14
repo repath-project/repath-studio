@@ -95,7 +95,8 @@
         time-formatted @(rf/subscribe [::timeline.subs/time-formatted])
         paused? @(rf/subscribe [::timeline.subs/paused?])
         replay? @(rf/subscribe [::timeline.subs/replay?])
-        end @(rf/subscribe [::timeline.subs/end])]
+        end @(rf/subscribe [::timeline.subs/end])
+        speed @(rf/subscribe [::timeline.subs/speed])]
     [:div.toolbar.bg-primary
      [views/icon-button "go-to-start"
       {:on-click #(.setTime (.-current timeline-ref) 0)
@@ -104,7 +105,8 @@
       {:title (if paused? (t [::play "Play"]) (t [::pause "Pause"]))
        :class (when (pos? tm) "border border-accent")
        :on-click #(if paused?
-                    (.play (.-current timeline-ref) #js {:autoEnd true})
+                    (do (.setPlayRate (.-current timeline-ref) speed)
+                        (.play (.-current timeline-ref) #js {:autoEnd true}))
                     (.pause (.-current timeline-ref)))}]
      [views/icon-button "go-to-end"
       {:on-click #(.setTime (.-current timeline-ref) end)
@@ -136,7 +138,7 @@
       #(rf/dispatch [::timeline.events/set-speed (.-rate %)])]
      ["ended"
       #(do (.setTime (.-current timeline-ref) 0)
-           (when @(rf/subscribe [::timeline.events/replay?])
+           (when @(rf/subscribe [::timeline.subs/replay?])
              (.play (.-current timeline-ref) #js {:autoEnd true})))]]]
     (.on (.-listener (.-current timeline-ref)) e f)))
 
