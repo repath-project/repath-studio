@@ -20,7 +20,7 @@
 
 (defn coordinates []
   (let [[x y] @(rf/subscribe [::app.subs/adjusted-pointer-pos])]
-    [:div.flex-col.font-mono.hidden.text-xs
+    [:div.flex-col.font-mono.leading-tight.hidden
      {:class "xl:flex"
       :style {:min-width "90px"}
       :dir "ltr"}

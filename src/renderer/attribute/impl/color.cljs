@@ -28,8 +28,9 @@
     [:> Popover/Trigger
      {:as-child true
       :disabled (:disabled attrs)}
-     [:button.border-4.border-primary.form-control-button
-      {:title (t [::pick-color "Pick color"])
+     [:button.border-4.border-primary.form-control-button.bg-overlay
+      {:class "hover:border-0"
+       :title (t [::pick-color "Pick color"])
        :style {:background v}}]]
     [:> Popover/Portal
      [:> Popover/Content

@@ -269,6 +269,15 @@
      {:dispatch [::load (assoc document :id id)]})))
 
 (rf/reg-event-fx
+ ::persist-file-handle
+ (fn [_ [_ file-handle id]]
+   (when file-handle
+     {::app.effects/set-local-store
+      {:data file-handle
+       :store-key (str id)
+       :on-error [::app.events/toast-error]}})))
+
+(rf/reg-event-fx
  ::load
  [(rf/inject-cofx ::effects/guid)]
  (fn [{:keys [db guid]} [_ document]]
@@ -293,15 +302,8 @@
                   (tr db [::document-migrated-description
                           "The document was created with an older version of the
                            app and was migrated to the latest version."])}]])
-             (when file-handle
-               [::app.effects/set-local-store
-                {:data file-handle
-                 :store-key (str id)
-                 :on-error [::app.events/toast-error]}])]}
-       (let [explanation (-> document
-                             document.db/explain
-                             m.error/humanize
-                             str)]
+             [:dispatch [::persist-file-handle file-handle id]]]}
+       (let [explanation (-> document document.db/explain m.error/humanize str)]
          {::app.effects/toast
           [:error "Invalid document" {:description explanation}]})))))
 
@@ -387,11 +389,7 @@
 
             close?
             (document.handlers/close id))
-      :fx [(when file-handle
-             [::app.effects/set-local-store
-              {:data file-handle
-               :store-key (str id)
-               :on-error [::app.events/toast-error]}])]})))
+      :dispatch [::persist-file-handle file-handle id]})))
 
 (rf/reg-event-fx
  ::clear-recent

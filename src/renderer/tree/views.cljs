@@ -30,7 +30,7 @@
        active-icon
        inactive-icon)
      {:class ["text-inherit! bg-transparent! outline-offset-[-1px]
-               group-hover:opacity-100 group-focus:opacity-100 focus:opacity-100
+               group-hover:opacity-100 focus:opacity-100
                outline-inherit"
               (when (not state) (if small? "opacity-0" "opacity-30"))
               (when small? "small")]

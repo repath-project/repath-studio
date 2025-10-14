@@ -17,8 +17,10 @@
 
 (defmethod attribute.hierarchy/description [:default :href]
   []
-  "The href attribute defines a link to a resource as a reference URL. The exact
-   meaning of that link depends on the context of each element using it.")
+  (t [::description
+      "The href attribute defines a link to a resource as a reference URL.
+       The exact meaning of that link depends on the context of each element
+       using it."]))
 
 (defmethod attribute.hierarchy/form-element [:image :href]
   [_ k v {:keys [disabled]}]

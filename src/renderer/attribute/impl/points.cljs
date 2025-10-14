@@ -15,10 +15,10 @@
 
 (defmethod attribute.hierarchy/description [:default :points]
   []
-  "The points attribute defines a list of points. Each point is defined by a
-   pair of number representing a X and a Y coordinate in the user coordinate
-   system. If the attribute contains an odd number of coordinates, the last one
-   will be ignored.")
+  (t ["The points attribute defines a list of points. Each point is defined by a
+       pair of number representing a X and a Y coordinate in the user coordinate
+       system. If the attribute contains an odd number of coordinates, the last
+       one will be ignored."]))
 
 (defn remove-nth
   [points index]
