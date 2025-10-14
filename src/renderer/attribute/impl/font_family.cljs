@@ -37,7 +37,7 @@
     {:label "Command Menu"
      :on-key-down #(.stopPropagation %)}
     [:> Command/CommandInput
-     {:class "p-3 bg-primary text-sm border-b border-border w-full"
+     {:class "p-3 bg-primary border-b border-border w-full"
       :placeholder (t [::search-font "Search for a font"])}]
     [views/scroll-area
      [:> Command/CommandList

@@ -74,7 +74,7 @@
 
 [cmdk-item],
 [cmdk-empty] {
-  @apply flex p-2 rounded-sm items-center text-sm justify-between;
+  @apply flex p-2 rounded-sm items-center justify-between;
 
   &[data-selected="true"] {
     @apply bg-overlay;
