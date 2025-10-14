@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import "tw-animate-css";
 
 @import 'codemirror/lib/codemirror.css';
 @import 'codemirror/addon/hint/show-hint.css';
@@ -47,16 +48,19 @@
 @import "@fontsource/noto-sans-mono/600.css";
 
 @import './utilities.css';
-@import './components.css';
-@import './animations.css';
 @import './overrides.css';
-
+@import './theme/default.css';
 @import './theme/styles.css';
-@import './menubar/styles.css';
+
+:root {
+  --button-size: 33px;
+  --button-size-sm: 21px;
+  --font-size: 13px;
+}
 
 body {
+  @apply text-foreground;
   font-size: var(--font-size);
-  color: var(--font-color);
 }
 
 p {
@@ -77,11 +81,63 @@ input {
 }
 
 label {
-  @apply block text-right h-full text-muted overflow-hidden text-ellipsis
-  w-auto;
+  @apply block text-right h-full text-foreground-muted overflow-hidden
+  text-ellipsis w-auto hover:text-foreground-hovered hover:cursor-pointer;
+}
 
-  &:hover {
-    color: var(--font-color-hovered);
-    cursor: pointer;
-  }
+.menu-content {
+  @apply bg-primary drop-shadow-lg p-1 z-10 rounded-sm no-drag min-w-[160px]
+  sm:min-w-[200px] border border-border;
+}
+
+.menu-item,
+.menu-sub-trigger,
+.menu-checkbox-item,
+.menu-radio-item {
+  all: unset;
+  @apply flex justify-between gap-4 text-foreground items-center relative h-8;
+  line-height: 1;
+  padding: 0 30px;
+  user-select: none;
+}
+
+.menu-item[data-state='open'],
+.menu-sub-trigger[data-state='open'] {
+  @apply bg-overlay;
+}
+
+.menu-item[data-highlighted],
+.menu-sub-trigger[data-highlighted],
+.menu-checkbox-item[data-highlighted],
+.menu-radio-item[data-highlighted] {
+  @apply text-foreground-hovered bg-overlay;
+}
+
+.menu-item[data-disabled],
+.menu-sub-trigger[data-disabled],
+.menu-checkbox-item[data-disabled],
+.menu-radio-item[data-disabled] {
+  @apply opacity-50 pointer-events-none;
+}
+
+.menu-item-indicator {
+  @apply inline-flex absolute left-0 items-center justify-center rtl:right-0
+  rtl:left-auto w-8;
+}
+
+.menu-separator {
+  @apply h-divider mx-0;
+}
+
+.sub-menu-chevron {
+  @apply mr-[-1rem] rtl:ml-[-1rem] rtl:mr-auto text-inherit;
+}
+
+.select-content {
+  min-width: 127px;
+  max-height: 80vh;
+}
+
+.select-item {
+  @apply px-2;
 }

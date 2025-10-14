@@ -29,9 +29,10 @@
            (let [db (rf/get-effect context :db)]
              (if (:active-document db)
                (let [non-selected-ids (element.handlers/non-selected-ids db)
-                     prev-non-selected-ids (let [db (rf/get-coeffect context :db)]
-                                             (when (:active-document db)
-                                               (element.handlers/non-selected-ids db)))]
+                     prev-non-selected-ids
+                     (let [db (rf/get-coeffect context :db)]
+                       (when (:active-document db)
+                         (element.handlers/non-selected-ids db)))]
                  (cond-> context
                    (not= non-selected-ids prev-non-selected-ids)
                    (rf/assoc-effect :db

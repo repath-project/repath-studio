@@ -42,7 +42,8 @@
 
 (m/=> entities [:function
                 [:-> App [:maybe [:sequential Element]]]
-                [:-> App [:maybe [:vector ElementId]] [:maybe [:sequential Element]]]])
+                [:-> App [:maybe [:vector ElementId]] [:maybe
+                                                       [:sequential Element]]]])
 (defn entities
   ([db]
    (vals (get-in db (path db))))
@@ -554,7 +555,8 @@
          new-index (f i sibling-count)]
      (cond-> db
        (<= 0 new-index (dec sibling-count))
-       (update-prop (:id (parent db id)) :children utils.vec/move i new-index)))))
+       (update-prop (:id (parent db id)) :children
+                    utils.vec/move i new-index)))))
 
 (m/=> set-parent [:function
                   [:-> App ElementId App]
@@ -725,8 +727,7 @@
   [db size]
   (cond-> db
     :always
-    (create {:tag :canvas
-             :attrs {:fill "#eeeeee"}})
+    (create {:tag :canvas})
 
     size
     (create {:tag :svg
@@ -792,16 +793,16 @@
          el (dissoc el :bbox)
          [s-x1 s-y1] (:bbox parent-el)
          pointer-pos (:adjusted-pointer-pos db)]
-     (reduce
-      select
-      (cond-> db
-        :always
-        (-> (deselect)
-            (add (assoc el :parent (:id parent-el)))
-            (place (matrix/add pointer-pos offset)))
+     (reduce select
+             (cond-> db
+               :always
+               (-> (deselect)
+                   (add (assoc el :parent (:id parent-el)))
+                   (place (matrix/add pointer-pos offset)))
 
-        (not= (:id (root db)) (:id parent-el))
-        (translate [(- s-x1) (- s-y1)])) (selected-ids db)))))
+               (not= (:id (root db)) (:id parent-el))
+               (translate [(- s-x1) (- s-y1)]))
+             (selected-ids db)))))
 
 (m/=> duplicate [:-> App App])
 (defn duplicate

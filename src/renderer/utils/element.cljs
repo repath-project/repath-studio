@@ -178,7 +178,8 @@
 (defn ->dom-element
   [el]
   (let [{:keys [tag attrs]} el
-        dom-el (js/document.createElementNS "http://www.w3.org/2000/svg" (name tag))
+        dom-el (->> (name tag)
+                    (js/document.createElementNS "http://www.w3.org/2000/svg"))
         el (dissoc el :attrs)
         supported-attrs (->> attrs
                              (keep (fn [[k v]]

@@ -33,6 +33,7 @@
                                 :output-feature-set :es-next
                                 :pseudo-names true
                                 :pretty-print true
+                                :source-map true
                                 :closure-defines
                                 {config/version :shadow-git-inject/version}}
 
@@ -64,12 +65,10 @@
               :entries [cljs.js user]}
 
   :browser-test {:target :browser-test
-                 :ns-regexp "-test$"
                  :runner-ns shadow.test.browser
                  :test-dir "target/browser-test"}
 
   :karma-test {:target :karma
-               :ns-regexp "-test$"
                :output-to "target/karma-test.js"}
 
   :portfolio {:target :browser

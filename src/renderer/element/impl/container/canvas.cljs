@@ -3,6 +3,7 @@
   (:require
    [re-frame.core :as rf]
    [renderer.app.subs :as-alias app.subs]
+   [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
@@ -27,6 +28,8 @@
    :description (t [::description "The canvas is the main SVG container that
                                    hosts all elements."])
    :attrs [:fill]})
+
+(defmethod attribute.hierarchy/initial [:canvas :fill] [] "")
 
 (defmethod element.hierarchy/render :canvas
   [el]

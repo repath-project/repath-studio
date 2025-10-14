@@ -7,21 +7,20 @@
 
 .chrome-picker,
 .photoshop-picker {
-  @apply text-default! bg-transparent! shadow-none!;
+  @apply text-foreground! bg-transparent! shadow-none!;
   font-family: inherit !important;
 
   div {
-    @apply text-default! border-0!;
+    @apply text-foreground! border-0!;
   }
 
   svg {
-    fill: var(--font-color) !important;
-    background: transparent !important;
+    @apply fill-foreground! bg-transparent!;
     display: initial;
   }
 
   input {
-    @apply text-default! border-0! shadow-none!;
+    @apply text-foreground! border-0! shadow-none!;
   }
 }
 
@@ -31,6 +30,8 @@
   label {
     font-size: 12px !important;
     line-height: 12px !important;
+    width: 20% !important;
+    top: 5px !important;
   }
 
   >div {
@@ -64,11 +65,6 @@
     margin-left: 30px !important;
   }
 
-  label {
-    width: 20% !important;
-    top: 5px !important;
-  }
-
   >div:first-of-type {
     display: none;
   }
@@ -81,12 +77,8 @@
   @apply flex p-2 rounded-sm items-center text-sm justify-between;
 
   &[data-selected="true"] {
-    @apply overlay;
+    @apply bg-overlay;
   }
-}
-
-[cmdk-input] {
-  @apply p-3 bg-primary text-sm border-b border-default w-full;
 }
 
 [cmdk-list] {
@@ -94,22 +86,22 @@
 }
 
 [cmdk-group-heading] {
-  @apply p-2 text-muted uppercase font-bold text-2xs;
+  @apply p-2 text-foreground-muted uppercase font-bold text-2xs;
 }
 
 /* codemirror */
 
 .CodeMirror-selected {
-  @apply overlay!;
+  @apply bg-overlay!;
 }
 
 .CodeMirror-cursor {
-  border-left: 1px solid var(--font-color) !important;
+  border-left: 1px solid var(--foreground-default) !important;
   height: 16px !important;
 }
 
 .CodeMirror-matchingbracket {
-  @apply overlay!;
+  @apply bg-overlay!;
   text-decoration: none !important;
 }
 
@@ -126,12 +118,11 @@
 }
 
 .CodeMirror-placeholder {
-  @apply text-disabled! font-sans!;
+  @apply text-foreground-disabled! font-sans!;
 }
 
 .CodeMirror {
-  @apply font-mono h-auto z-0;
-  background: transparent !important;
+  @apply font-mono h-auto z-0 bg-transparent!;
 }
 
 .CodeMirror-sizer {
@@ -145,13 +136,12 @@
 /* react-timeline-editor */
 
 .timeline-editor {
-  @apply bg-primary! w-full! min-h-0! h-full!;
+  @apply bg-primary! w-full! min-h-0! h-full! text-foreground-muted!;
   font-family: inherit !important;
-  color: var(--font-color-muted) !important;
  }
 
  .timeline-editor-action {
-  @apply overlay! flex! justify-around! items-center! pointer-events-none!;
+  @apply bg-overlay! flex! justify-around! items-center! pointer-events-none!;
 
   &-selected {
     @apply border border-accent;
@@ -177,28 +167,26 @@
 }
 
 .timeline-editor-time-unit {
-  border-color: var(--border-color) !important;
+  @apply border-border!;
 }
 
 .timeline-editor-time-unit-scale {
-  color: var(--font-color-muted) !important;
+  @apply text-foreground-muted!;
 }
 
 .timeline-editor-edit-row {
-  background-image: linear-gradient(var(--bg-primary), var(--bg-primary)),
-                    linear-gradient(90deg, var(--border-color) 1px, transparent 0) !important;
+  background-image: linear-gradient(var(--primary), var(--primary)),
+                    linear-gradient(90deg, var(--border) 1px, transparent 0) !important;
 }
 
 /* react-d3-tree */
 
 .rd3t-link {
-  stroke : var(--border-color) !important;
-  stroke-width: 3;
+  @apply stroke-3 stroke-border!;
 }
 
 .rd3t-label__title {
-  font-weight: normal !important;
-  fill: inherit !important;
+  @apply fill-inherit! font-normal!;
 }
 
 /* devtools */
@@ -210,7 +198,7 @@
 .fps-wrapper {
   > div {
     @apply absolute! left-auto! top-2! right-2! drop-shadow-md overflow-hidden!
-    px-1! font-sans! text-xs! bg-primary! text-default! z-auto!;
+    px-1! font-sans! text-xs! bg-primary! text-foreground! z-auto!;
 
     > div {
       @apply left-0! right-0! bottom-0! bg-primary!;

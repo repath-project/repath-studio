@@ -50,7 +50,8 @@
     (string/includes? (string/lower-case v)
                       (string/lower-case prop))))
 
-(m/=> match-font-by-weight [:-> string?
+(m/=> match-font-by-weight [:->
+                            string?
                             [:sequential JS_Object]
                             [:sequential JS_Object]])
 (defn match-font-by-weight
@@ -58,23 +59,22 @@
   (let [weight-num (js/parseInt weight)
         weight-names (get utils.attribute/weight-name-mapping weight)
         includes-weight? (fn [font]
-                           (some #(includes-prop? % (.-style font)) weight-names))
-        matched-weight (filter includes-weight? fonts)]
-    (if (or (seq matched-weight) (< weight-num 100))
-      matched-weight
+                           (->> weight-names
+                                (some #(includes-prop? % (.-style font)))))
+        weights (filter includes-weight? fonts)]
+    (if (or (seq weights) (< weight-num 100))
+      weights
       (recur (str (- weight-num 100)) fonts))))
 
 (m/=> match-font [:-> JS_Array string? string? string? [:maybe JS_Object]])
 (defn match-font
   [fonts family style weight]
-  (let [matched-family (filter #(includes-prop? family (.-family %)) fonts)
-        matched-style (filter #(includes-prop? style (.-style %)) matched-family)
-        matched-weight (match-font-by-weight weight (if (seq matched-style)
-                                                      matched-style
-                                                      matched-family))]
-    (or (first matched-weight)
-        (first matched-style)
-        (first matched-family)
+  (let [families (filter #(includes-prop? family (.-family %)) fonts)
+        styles (filter #(includes-prop? style (.-style %)) families)
+        weights (match-font-by-weight weight (if (seq styles) styles families))]
+    (or (first weights)
+        (first styles)
+        (first families)
         (first fonts))))
 
 (m/=> default-font-path [:-> string? string? string?])

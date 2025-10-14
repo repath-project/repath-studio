@@ -28,10 +28,9 @@
     [:> Popover/Trigger
      {:as-child true
       :disabled (:disabled attrs)}
-     [:button.border-4.form-control-button
+     [:button.border-4.border-primary.form-control-button
       {:title (t [::pick-color "Pick color"])
-       :style {:border-color "var(--bg-primary)"
-               :background v}}]]
+       :style {:background v}}]]
     [:> Popover/Portal
      [:> Popover/Content
       {:sideOffset 5

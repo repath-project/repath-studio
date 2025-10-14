@@ -29,9 +29,10 @@
      (if state
        active-icon
        inactive-icon)
-     {:class ["hover:bg-transparent text-inherit focus:outline-hidden
-               focus:text-inherit active:text-inherit hover:text-inherit"
-              (when (not state) (if small? "invisible" "opacity-30"))
+     {:class ["text-inherit! bg-transparent! outline-offset-[-1px]
+               group-hover:opacity-100 group-focus:opacity-100 focus:opacity-100
+               outline-inherit"
+              (when (not state) (if small? "opacity-0" "opacity-30"))
               (when small? "small")]
       :title (t title)
       :on-double-click #(.stopPropagation %)
@@ -125,8 +126,8 @@
   [views/icon-button
    (if collapsed "chevron-right" "chevron-down")
    {:title (if collapsed "expand" "collapse")
-    :class ["hover:bg-transparent text-inherit hover:text-inherit
-             focus:outline-hidden rtl:scale-x-[-1]"
+    :class ["bg-transparent! text-inherit! rtl:scale-x-[-1]
+             outline-offset-[-1px] outline-inherit"
             (when small? "small")]
     :on-double-click #(.stopPropagation %)
     :on-click #(do (.stopPropagation %)
@@ -139,10 +140,10 @@
   (let [{:keys [id selected children locked visible]} el
         collapse-button-width (if small 21 33)
         padding (* collapse-button-width (cond-> depth (seq children) dec))]
-    [:div.list-item-button.button.flex.px-1.items-center.text-start
-     {:class ["hover:overlay [&.hovered]:overlay hover:[&_button]:visible"
+    [:div.list-item-button.button.flex.px-1.items-center.text-start.group
+     {:class ["hover:bg-overlay outline-offset-[-1px]"
               (when selected "accent")
-              (when hovered "hovered")
+              (when hovered "bg-overlay")
               (when-not small "h-[45px]")]
       :tab-index 0
       :data-id (str id)
@@ -159,11 +160,13 @@
       :on-drag-over #(.preventDefault %)
       :on-drop #(drop-handler! % id)
       :on-pointer-down #(when (= (.-button %) 2)
-                          (rf/dispatch [::element.events/select id (.-ctrlKey %)]))
+                          (rf/dispatch [::element.events/select
+                                        id (.-ctrlKey %)]))
       :on-click (fn [e]
                   (.stopPropagation e)
                   (if (.-shiftKey e)
-                    (rf/dispatch-sync [::tree.events/select-range @last-focused-id id])
+                    (rf/dispatch-sync [::tree.events/select-range
+                                       @last-focused-id id])
                     (do (rf/dispatch [::element.events/select id (.-ctrlKey e)])
                         (reset! last-focused-id id))))}
      [:div.shrink-0 {:style {:flex-basis padding}}]
@@ -175,11 +178,13 @@
        (when-let [icon (:icon (utils.element/properties el))]
          [views/icon icon {:class (when-not visible "opacity-60")}])
        [item-label el]]
-      [item-prop-toggle id locked :locked
+      [item-prop-toggle id
+       locked :locked
        "lock" "unlock"
        [::unlock "Unlock"] [::lock "Lock"]
        small]
-      [item-prop-toggle id (not visible) :visible
+      [item-prop-toggle id
+       (not visible) :visible
        "eye-closed" "eye"
        [::show "Show"] [::hide "Hide"]
        small]]]))
@@ -190,7 +195,7 @@
         hovered-ids @(rf/subscribe [::document.subs/hovered-ids])
         collapsed-ids @(rf/subscribe [::document.subs/collapsed-ids])
         collapsed (contains? collapsed-ids id)]
-    [:li {:class (when selected "overlay")
+    [:li {:class (when selected "bg-overlay")
           :role "menuitem"}
      [list-item-button el {:depth depth
                            :collapsed collapsed

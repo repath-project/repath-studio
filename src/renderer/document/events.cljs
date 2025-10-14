@@ -89,13 +89,12 @@
    {:db (if (or (document.handlers/saved? db id)
                 (not confirm?))
           (document.handlers/close db id)
-          (-> db
-              (document.handlers/set-active id)
-              (dialog.handlers/create
-               {:title (tr db [::save-changes
-                               "Do you want to save your changes?"])
-                :content [dialog.views/save (get-in db [:documents id])]
-                :attrs {:onOpenAutoFocus #(.preventDefault %)}})))
+          (dialog.handlers/create
+           db
+           {:title (tr db [::save-changes
+                           "Do you want to save your changes?"])
+            :content [dialog.views/save (get-in db [:documents id])]
+            :attrs {:onOpenAutoFocus #(.preventDefault %)}}))
     ::app.effects/local-store-keys {:on-success [::clear-stale-keys]}}))
 
 (rf/reg-event-fx
@@ -157,8 +156,7 @@
  [(rf/inject-cofx ::effects/guid)]
  (fn [{:keys [db guid]} [_]]
    {:db (-> (document.handlers/create db guid)
-            (history.handlers/finalize [::create-doc "Create document"]))
-    ::effects/focus nil}))
+            (history.handlers/finalize [::create-doc "Create document"]))}))
 
 (rf/reg-event-fx
  ::new-from-template
@@ -196,9 +194,11 @@
        {::app.effects/get-local-store
         {:store-key (str id)
          :formatter (fn [file-handle]
-                      {:on-success [::file-read id]
-                       :on-error [::recent-error id]
-                       :file-handle file-handle})
+                      (if file-handle
+                        {:on-success [::file-read id]
+                         :on-error [::recent-error id]
+                         :file-handle file-handle}
+                        (throw (js/Error. "File handle not found"))))
          :on-success [::events/file-open]
          :on-error [::recent-error id]}}
        {::effects/ipc-invoke
@@ -245,8 +245,7 @@
    (if document
      (if-let [open-id (some->> (:path document)
                                (document.handlers/search-by-path db))]
-       {:db (document.handlers/set-active db open-id)
-        ::effects/focus nil}
+       {:db (document.handlers/set-active db open-id)}
 
        (if-let [file-handle (:file-handle document)]
          {::document.effects/query-file-handle
@@ -266,8 +265,7 @@
  ::load-or-activate
  (fn [{:keys [db]} [_ document id]]
    (if (document.handlers/open? db id)
-     {:db (document.handlers/set-active db id)
-      ::effects/focus nil}
+     {:db (document.handlers/set-active db id)}
      {:dispatch [::load (assoc document :id id)]})))
 
 (rf/reg-event-fx
@@ -288,8 +286,7 @@
 
               (not is-migrated)
               (document.handlers/update-saved-history-id id))
-        :fx [[::effects/focus nil]
-             (when is-migrated
+        :fx [(when is-migrated
                [::app.effects/toast
                 [:success (tr db [::document-migrated "Document migrated"])
                  {:description

@@ -31,7 +31,7 @@
   [index [x y] points]
   [:div.grid.grid-flow-col.gap-px
    {:dir "ltr"
-    :style {:grid-template-columns "minmax(0, 40px) 3fr 3fr 26px"}}
+    :style {:grid-template-columns "minmax(0, 40px) 3fr 3fr 27px"}}
    [:label.form-element.px-1.bg-transparent index]
    [:input.form-element.bg-transparent
     {:key (str "x-" index)
@@ -43,7 +43,7 @@
      :default-value y
      :disabled true
      :on-pointer-up attribute.views/pointer-up-handler!}]
-   [:button.button.bg-transparent.text-muted.h-full.rounded
+   [:button.button.bg-transparent.text-foreground-muted.h-full.rounded
     {:on-click #(remove-nth points index)}
     [views/icon "times"]]])
 

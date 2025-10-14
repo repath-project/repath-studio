@@ -41,7 +41,7 @@
       {:value speed
        :onValueChange #(.setPlayRate (.-current editor-ref) %)}
       [:> Select/Trigger
-       {:class "button px-2 overlay rounded-sm"
+       {:class "button px-2 bg-overlay rounded-sm"
         :id "animation-speed"
         :aria-label (t [::no-filter "No filter"])}
        [:> Select/Value
@@ -86,7 +86,8 @@
       (t [::guide-snap "Guide snap"])
       {:id "guide-snap"
        :default-checked guide-snap?
-       :on-checked-change #(rf/dispatch [::timeline.events/set-guide-snap %])}]]))
+       :on-checked-change #(rf/dispatch [::timeline.events/set-guide-snap
+                                         %])}]]))
 
 (defn toolbar
   [timeline-ref]
@@ -123,14 +124,20 @@
   [timeline-ref]
   (doseq
    [[e f]
-    [["play" #(rf/dispatch-sync [::timeline.events/play])] ;; Prevent navigation
-     ["paused" #(rf/dispatch-sync [::timeline.events/pause])]
-     ["ended" #(do (.setTime (.-current timeline-ref) 0)
-                   (when @(rf/subscribe [::timeline.events/replay?])
-                     (.play (.-current timeline-ref) #js {:autoEnd true})))]
-     ["afterSetTime" #(rf/dispatch-sync [::timeline.events/set-time (.-time %)])]
-     ["setTimeByTick" #(rf/dispatch-sync [::timeline.events/set-time (.-time %)])]
-     ["afterSetPlayRate" #(rf/dispatch [::timeline.events/set-speed (.-rate %)])]]]
+    [["play"
+      #(rf/dispatch-sync [::timeline.events/play])] ;; Prevent navigation
+     ["paused"
+      #(rf/dispatch-sync [::timeline.events/pause])]
+     ["afterSetTime"
+      #(rf/dispatch-sync [::timeline.events/set-time (.-time %)])]
+     ["setTimeByTick"
+      #(rf/dispatch-sync [::timeline.events/set-time (.-time %)])]
+     ["afterSetPlayRate"
+      #(rf/dispatch [::timeline.events/set-speed (.-rate %)])]
+     ["ended"
+      #(do (.setTime (.-current timeline-ref) 0)
+           (when @(rf/subscribe [::timeline.events/replay?])
+             (.play (.-current timeline-ref) #js {:autoEnd true})))]]]
     (.on (.-listener (.-current timeline-ref)) e f)))
 
 (defn custom-renderer
@@ -153,7 +160,8 @@
       :auto-scroll true
       :getActionRender custom-renderer
       :on-click-action #(let [el-id (keyword (.. %2 -action -id))]
-                          (rf/dispatch [::element.events/select el-id false]))}]))
+                          (rf/dispatch [::element.events/select
+                                        el-id false]))}]))
 
 (defn time-bar
   []

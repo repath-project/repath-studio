@@ -92,7 +92,8 @@
 
   (rf/dispatch-sync [::app.events/initialize])
   (rf/dispatch-sync [::re-pressed/add-keyboard-event-listener "keydown"])
-  (rf/dispatch-sync [::re-pressed/set-keydown-rules event.impl.keyboard/keydown-rules])
+  (rf/dispatch-sync [::re-pressed/set-keydown-rules
+                     event.impl.keyboard/keydown-rules])
 
   (.setup paper)
 

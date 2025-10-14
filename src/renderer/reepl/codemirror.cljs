@@ -238,7 +238,8 @@
                        :extraKeys #js {"Shift-Enter" "newlineAndIndent"}
                        :value @value-atom
                        :autoCloseBrackets true
-                       :mode "clojure"}
+                       :mode "clojure"
+                       :screenReaderLabel "REPL"}
                       js-cm-opts)))]
 
           (reset! cm inst)

@@ -203,17 +203,17 @@
 
 (m/=> state->d3-data [:-> History HistoryId [:maybe HistoryId] JS_Object])
 (defn state->d3-data
-  [active-history id saved-history-id]
+  [active-history id saved-id]
   (let [states (:states active-history)
         {:keys [index explanation children]} (get states id)
         n (count states)]
     #js {:name (apply t explanation)
          :id (str id)
-         :saved (= id saved-history-id)
+         :saved (= id saved-id)
          :active (= id (:position active-history))
          :color (str "hsla(" (+ (* (/ 100 n) index) 20) ",40%,60%,1)")
          :children (->> children
-                        (map #(state->d3-data active-history % saved-history-id))
+                        (map #(state->d3-data active-history % saved-id))
                         (apply array))}))
 
 (m/=> update-ancestors [:-> App App])

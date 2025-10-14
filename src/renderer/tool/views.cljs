@@ -24,7 +24,7 @@
                       :stroke-width (/ 1 zoom)
                       :fill (if (= (:key clicked-element) id)
                               "var(--color-accent)"
-                              "var(--color-accent-inverted)")
+                              "var(--color-accent-foreground)")
                       :r (/ 4 zoom)
                       :cursor "default"
                       :on-pointer-up pointer-handler
@@ -43,7 +43,7 @@
                     (= (:element-id clicked-element) element-id))]
     (into [:rect {:fill (if active
                           "var(--color-accent)"
-                          "var(--color-accent-inverted)")
+                          "var(--color-accent-foreground)")
                   :stroke (if active "var(--color-accent)" "gray")
                   :stroke-width stroke-width
                   :x (- x (/ size 2))

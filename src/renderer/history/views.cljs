@@ -59,7 +59,7 @@
       [:button.icon-button.items-center.px-1.gap-1.flex.w-auto
        {:title title
         :class [(if show-options "px-1" "px-2")
-                (when @open "overlay!")]
+                (when @open "bg-overlay!")]
         :on-click #(rf/dispatch action)
         :disabled (empty? options)}
        [views/icon icon]
@@ -139,10 +139,12 @@
     [:div.flex.flex-col.h-full
      [:div.flex.p-1
       [:button.button.flex-1
-       {:on-click #(rf/dispatch [::history.events/tree-view-updated 0.5 (center ref)])}
+       {:on-click #(rf/dispatch [::history.events/tree-view-updated
+                                 0.5 (center ref)])}
        (t [::center-view "Center view"])]
       [:button.button.flex-1
-       {:on-click #(rf/dispatch [::dialog.events/show-confirmation (clear-dialog)])}
+       {:on-click #(rf/dispatch [::dialog.events/show-confirmation
+                                 (clear-dialog)])}
        (t [::clear-history "Clear history"])]]
      [:div.flex-1 {:ref ref}
       [tree ref]]]))

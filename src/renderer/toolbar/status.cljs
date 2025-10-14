@@ -20,9 +20,9 @@
 
 (defn coordinates []
   (let [[x y] @(rf/subscribe [::app.subs/adjusted-pointer-pos])]
-    [:div.flex-col.font-mono.leading-tight.hidden
+    [:div.flex-col.font-mono.hidden.text-xs
      {:class "xl:flex"
-      :style {:min-width "100px"}
+      :style {:min-width "90px"}
       :dir "ltr"}
      [:div.flex.justify-between
       [:span.mr-1 "X:"] [:span (utils.length/->fixed x 2 false)]]
@@ -152,7 +152,7 @@
        :title (t [::zoom-in "Zoom in"])
        :on-click #(rf/dispatch [::frame.events/zoom-in])}
       [views/icon "plus"]]
-     [:div.flex.hidden
+     [:div.flex.hidden.items-center
       {:class "md:flex"
        :dir "ltr"}
       [zoom-input zoom]
@@ -166,6 +166,7 @@
     [:span
      [views/radio-icon-button icon @(rf/subscribe active)
       {:class class
+       :aria-label title
        :on-click #(rf/dispatch action)}]]]
    [:> Tooltip/Portal
     [:> Tooltip/Content
@@ -191,7 +192,7 @@
                                   :fill
                                   (get-hex %)])}
 
-       [:button.button.border.border-default.button-size
+       [:button.button.border.border-border.button-size
         {:title (t [::fill-color "Pick fill color"])
          :style {:background fill}}]]
 
@@ -210,10 +211,10 @@
         :on-change #(rf/dispatch [::document.events/preview-attr
                                   :stroke
                                   (get-hex %)])}
-       [:button.button.relative.border.border-default.button-size
+       [:button.button.relative.border.border-border.button-size
         {:title (t [::stroke-color "Pick stroke color"])
          :style {:background stroke}}
-        [:div.bg-primary.absolute.border.border-default
+        [:div.bg-primary.absolute.border.border-border
          {:style {:width "13px"
                   :height "13px"
                   :bottom "9px"

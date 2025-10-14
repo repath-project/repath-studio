@@ -79,7 +79,7 @@
      {:on-select #(rf/dispatch [::dialog.events/close action])}
      [:div.flex.items-center.gap-2
       [:div.w-7.h-7.rounded.line-height-6.flex.justify-center.items-center
-       {:class (when icon "overlay")}
+       {:class (when icon "bg-overlay")}
        (when icon [views/icon icon])]
       [:div label]]
      [views/shortcuts action]]))
@@ -106,7 +106,8 @@
    {:label "Command Menu"
     :on-key-down #(.stopPropagation %)}
    [:> Command/CommandInput
-    {:placeholder (t [::search-command "Search for a command"])}]
+    {:class "p-3 bg-primary text-sm border-b border-border w-full"
+     :placeholder (t [::search-command "Search for a command"])}]
    [views/scroll-area
     [:> Command/CommandList
      {:class "p-1"}
@@ -128,15 +129,16 @@
       [:> Dialog/Content
        (views/merge-with-class
         {:class "fixed bg-primary rounded-lg overflow-hidden shadow-xl border
-                 border-default left-1/2 top-1/2 w-125 max-w-9/10
-                 -translate-1/2"
+                 border-border left-1/2 top-1/2 w-125 max-w-9/10 -translate-1/2
+                 animate-in zoom-in-95"
          :on-key-down #(.stopPropagation %)}
         attrs)
        (when title
          [:> Dialog/Title
-          (cond->> title
-            (string? title)
-            (into [:div.text-xl.px-5.pt-5.text-active]))])
+          {:as-child true}
+          (if (string? title)
+            [:h2.text-xl.px-5.pt-5.text-foreground-hovered title]
+            title)])
        [:> Dialog/Description
         {:as-child true}
         [:div content]]]]]))

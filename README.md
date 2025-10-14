@@ -1,6 +1,4 @@
-<div align="center">
-
-![Repath Studio](https://repath.studio/assets/images/banner.png)
+# Repath Studio
 
  :construction: **This project is in alpha stage!**
 
@@ -8,10 +6,13 @@
 
 [![Build desktop app](https://github.com/repath-project/repath-studio/actions/workflows/desktop-app.yml/badge.svg)](https://github.com/repath-project/repath-studio/actions/workflows/desktop-app.yml)
 [![Deploy web app](https://github.com/repath-project/repath-studio/actions/workflows/web-app.yml/badge.svg)](https://github.com/repath-project/repath-studio/actions/workflows/web-app.yml)
+
 [![Outdated dependencies](https://github.com/repath-project/repath-studio/actions/workflows/dependencies.yml/badge.svg)](https://github.com/repath-project/repath-studio/actions/workflows/dependencies.yml)
 [![Static security testing](https://github.com/repath-project/repath-studio/actions/workflows/clj-holmes.yml/badge.svg)](https://github.com/repath-project/repath-studio/actions/workflows/clj-holmes.yml)
+[![CodeFactor](https://codescene.io/projects/72168/status-badges/average-code-health)](https://codescene.io/projects/72168)
 
-</div>
+[![Discord](https://img.shields.io/discord/890005586958237716?label=Discord&logo=discord&logoColor=aaa)](https://discord.gg/yzjY6W6ame)
+[![Matrix](https://img.shields.io/matrix/repath.studio%3Amatrix.org?label=Matrix&logo=matrix&logoColor=aaa)](https://matrix.to/#/#repath.studio:matrix.org)
 
 ![Studio Screenshot](https://repath.studio/assets/images/studio.png)
 
@@ -42,15 +43,13 @@ This project is funded through
             <img
              src="https://nlnet.nl/logo/banner.svg"
              alt="Logo NLnet: abstract logo of four people seen from above"
-             width="200px">
-        </a>
+             width="200px"></a>
         &nbsp;&nbsp;
         <a href="https://nlnet.nl/core">
             <img
              src="https://nlnet.nl/image/logos/NGI0Core_tag.svg"
              alt="Logo NGI Zero: letter-logo shaped like a tag"
-             width="250px">
-        </a>
+             width="250px"></a>
     </div>
 </section>
 

@@ -8,16 +8,17 @@
    [renderer.element.subs :as-alias element.subs]
    [renderer.event.impl.pointer :as event.impl.pointer]
    [renderer.utils.bounds :as utils.bounds]
-   [renderer.utils.element :as utils.element]))
+   [renderer.utils.element :as utils.element]
+   [renderer.utils.i18n :refer [t]]))
 
 (derive :g ::element.hierarchy/container)
 
 (defmethod element.hierarchy/properties :g
   []
   {:icon "group"
-   :label "Group"
-   :description "The <g> SVG element is a container used to group other
-                 SVG elements."
+   :label (t [::label "Group"])
+   :description (t [::description "The <g> SVG element is a container used to
+                                   group other SVG elements."])
    :attrs [:transform]})
 
 (defn translate!

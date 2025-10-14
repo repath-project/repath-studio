@@ -67,7 +67,7 @@
 
 (defmethod item :input
   [{:keys [_num text]} opts]
-  [:div.text-disabled.font-bold "=>"]
+  [:div.text-foreground-disabled.font-bold "=>"]
   [:div.flex-1.cursor-pointer.break-words
    {:on-click #((:set-text opts) text)}
    [codemirror/colored-text text]])
@@ -91,7 +91,7 @@
   [:div.flex-1.break-words [show-value value nil opts]])
 
 (defn repl-items [items opts]
-  [:div.flex-1.border-b.border-default.h-full.overflow-hidden.flex
+  [:div.flex-1.border-b.border-border.h-full.overflow-hidden.flex
    [views/scroll-area
     {:ref (fn [this]
             (when this

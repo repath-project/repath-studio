@@ -32,8 +32,7 @@
   [:div.text-center.flex-1
    [:div {:title browser}
     [views/icon (browser-icon browser)]]
-   [:div.text-2xs.mt-1
-    {:class "light:text-white dark:text-black"}
+   [:div.text-2xs.mt-1.text-primary
     (case version-added
       true [:div.bg-success (t [::all "all"])]
       false [:div.bg-error "x"]
@@ -55,7 +54,7 @@
   ([url]
    [info-button url (t [::more-info "More info"])])
   ([url label]
-   [:button.button.px-3.grow
+   [:button.button.px-3.flex-1
     {:on-click #(rf/dispatch [::events/open-remote-url url])}
     label]))
 
@@ -109,7 +108,7 @@
 (defn form-input
   [k v {:keys [disabled placeholder]
         :as attrs}]
-  [:div.relative.flex.form-input.flex-1
+  [:div.relative.flex.flex-1.group
    [:input.form-element
     (merge attrs
            {:key v
@@ -125,9 +124,9 @@
                            % v
                            on-change-handler! k v)})]
    (when-not (or (empty? (str v)) disabled)
-     [:button.button.bg-primary.text-muted.absolute.h-full.right-0.p-1.invisible
-      {:class "clear-input-button hover:bg-transparent rtl:right-auto
-               rtl:left-0"
+     [:button.form-control-button.bg-primary.absolute.right-0.p1.invisible
+      {:class "hover:bg-transparent rtl:right-auto rtl:left-0
+               group-hover:visible"
        :on-click #(rf/dispatch [::element.events/remove-attr k])}
       [views/icon "times"]])])
 
@@ -225,18 +224,20 @@
                     (= (:key clicked-element) key))]
     [:> HoverCard/Root
      [:> HoverCard/Trigger
-      {:as-child true}
-      [:label.form-element.w-28.truncate
+      {:class "flex items-center overflow-hidden"}
+      [:label.form-element.w-28.truncate.flex-1
        {:for (name k)
         :dir "ltr"
-        :class ["rtl:text-left!" (when active "text-active")]} k]]
+        :class ["rtl:text-left!"
+                (when active "text-foreground-hovered")]}
+       k]]
      [:> HoverCard/Portal
       [:> HoverCard/Content
        {:side "left"
         :class "popover-content"
         :align "start"}
        [:div.p-5
-        [:h2.mb-4.text-lg.font-mono k]
+        [:h2.mb-4.text-lg.font-mono.text-foreground-hovered k]
         (when (get-method attribute.hierarchy/description [dispatch-tag k])
           [:p.text-pretty
            (attribute.hierarchy/description dispatch-tag k)])
@@ -281,7 +282,8 @@
          :class "popover-content"
          :align "end"}
         [:div.p-5
-         [:h2.mb-4.text-lg.font-mono (str "<" (name tag) ">")]
+         [:h2.mb-4.text-lg.font-mono.text-foreground-hovered
+          (str "<" (name tag) ">")]
          (when-let [description (:description properties)]
            [:p.text-pretty description])
          [caniusethis {:tag tag}]

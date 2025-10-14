@@ -55,7 +55,7 @@
 
 (defn close-button
   [id saved]
-  [:button.close-button.small.icon-button.invisible.relative.bg-inherit
+  [:button.small.icon-button.invisible.relative.shrink-0.bg-inherit.group
    {:key id
     :class "hover:[&_.dot-icon]:hidden focus:[&_.dot-icon]:hidden"
     :title (t [::close-doc "Close document"])
@@ -65,8 +65,9 @@
    [views/icon "times"]
    (when-not saved
      [views/icon "dot"
-      {:class "dot-icon absolute inset-0 bg-inherit flex items-center
-               text-muted"}])])
+      {:class "absolute inset-0 bg-inherit items-center text-foreground-muted
+               sm:visible invisible group-hover:invisible group-focus:invisible
+               group-active:invisible"}])])
 
 (defn context-menu
   [id]
@@ -100,14 +101,14 @@
          [:> ContextMenu/Trigger
           {:as-child true}
           [:div.tab
-           {:class ["flex items-center h-full text-left bg-secondary text-muted
-                     hover:text-default relative outline-none px-2 py-0
-                     overflow-hidden focus:text-default [&.active]:bg-primary
-                     [&.active]:text-default hover:[&_.close-button]:visible
-                     [&.active]:[&_.close-button]:visible
-                     not-[&.saved]:[&_.close-button]:visible"
-                    (when active? "active")
-                    (when saved? "saved")]
+           {:class ["flex items-center h-full relative text-left px-2 py-0
+                     overflow-hidden hover:[&_button]:visible outline-default
+                     hover:text-foreground outline-offset-[-1px]"
+                    (if active?
+                      "bg-primary text-foreground [&_button]:visible"
+                      "bg-secondary text-foreground-muted")
+                    (when-not saved?
+                      "[&_button]:visible")]
             :on-wheel #(when-not (zero? (.-deltaY %))
                          (rf/dispatch [::document.events/cycle (.-deltaY %)]))
             :on-click #(rf/dispatch [::document.events/set-active id])
@@ -131,7 +132,9 @@
             :ref (fn [this]
                    (when (and this active?)
                      (rf/dispatch [::events/scroll-into-view this])))}
-           [:span.truncate.pointer-events-none.px-2 title]
+           [:div.pointer-events-none.px-2.gap-1.flex.overflow-hidden
+            (when-not saved? [:span.sm:hidden "•"])
+            [:span.truncate title]]
            [close-button id saved?]]]
          [:> ContextMenu/Portal
           (into

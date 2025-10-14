@@ -1,78 +1,37 @@
 
-:root {
-  --font-size: 13px;
-  --button-size: 33px;
-  --button-size-sm: 21px;
-}
-
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 @custom-variant light (&:where([data-theme=light], [data-theme=light] *));
 
-[data-theme='dark'] {
-  --bg-secondary: #222;
-  --bg-primary: #2d2d2d;
-
-  --overlay: rgba(255, 255, 255, .05);
-  --overlay-2x: rgba(255, 255, 255, .1);
-
-  --font-color: rgba(255, 255, 255, .7);
-  --font-color-disabled: rgba(255, 255, 255, .3);
-  --font-color-muted: rgba(255, 255, 255, .5);
-  --font-color-hovered: rgba(255, 255, 255, .9);
-  --font-color-active: rgba(255, 255, 255, 1);
-
-  --border-color: rgba(255, 255, 255, .15);
-
-  --error: #f56464;
-  --warning: #ffc252;
-  --success: #63c263;
-
-  --color-backdrop: rgb(0 0 0 / 0.7);
-
-  .devtools {
-    filter:invert(1);
-  }
-}
-
-[data-theme='light'] {
-  --bg-secondary: #eee;
-  --bg-primary: #fff;
-
-  --overlay: rgba(0, 0, 0, .1);
-  --overlay-2x: rgba(0, 0, 0, .2);
-
-  --font-color: rgba(0, 0, 0, .8);
-  --font-color-disabled: rgba(0, 0, 0, .3);
-  --font-color-muted: rgba(0, 0, 0, .5);
-  --font-color-hovered: rgba(0, 0, 0, .9);
-  --font-color-active: rgba(0, 0, 0, 1);
-
-  --border-color: rgba(0, 0, 0, .15);
-
-  --error: #962121;
-  --warning: #a56a00;
-  --success: #1c611c;
-
-  --color-backdrop: rgb(0 0 0 / 0.3);
-}
-
 @theme {
-  --font-sans: 'Noto Sans', sans;
-  --font-mono: 'Noto Sans Mono', monospace;
-
   --text-2xs: 10px;
   --text-2xs--line-height: 14px;
+
   --transition-property-fill: fill;
 
-  --color-accent: #d12b65;
-  --color-accent-light: #e23572;
-  --color-accent-inverted: #fff;
+  --inset-shadow: inset 1px 1px 3px 0 rgb(0 0 0 / 0.1);
+
+  --font-sans: var(--sans);
+  --font-mono: var(--mono);
+
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+
+  --color-border: var(--border);
+
+  --color-overlay: var(--overlay);
+
+  --color-accent: var(--accent);
+  --color-accent-light: var(--accent-light);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-foreground: var(--foreground-default);
+  --color-foreground-disabled: var(--foreground-disabled);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-foreground-hovered: var(--foreground-hovered);
 
   --color-error: var(--error);
   --color-warning: var(--warning);
   --color-success: var(--success);
 
-  --animate-show: show 150ms cubic-bezier(0.16, 1, 0.3, 1);
-
-  --inset-shadow: inset 1px 1px 3px 0 rgb(0 0 0 / 0.1);
+  --color-backdrop: var(--backdrop);
 }

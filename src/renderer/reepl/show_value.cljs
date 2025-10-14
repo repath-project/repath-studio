@@ -18,7 +18,9 @@
   (loop [shower-list showers]
     (if (empty? shower-list)
       (throw (js/Error. (str "No shower for value " v)))
-      (let [res ((first shower-list) v config (partial-right show-value- showers))]
+      (let [res (->> showers
+                     (partial-right show-value-)
+                     ((first shower-list) v config))]
         (if res
           [:div.inline-flex res]
           (recur (rest shower-list)))))))
