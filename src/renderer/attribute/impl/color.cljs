@@ -26,12 +26,13 @@
    [attribute.views/form-input k v attrs]
    [:> Popover/Root {:modal true}
     [:> Popover/Trigger
-     {:as-child true
-      :disabled (:disabled attrs)}
-     [:button.border-4.border-primary.form-control-button.bg-overlay
-      {:class "hover:border-0"
-       :title (t [::pick-color "Pick color"])
-       :style {:background v}}]]
+     {:as-child true}
+     [:button.form-control-button.p-2
+      {:disabled (:disabled attrs)
+       :title (t [::pick-color "Pick color"])}
+      [:div.w-full.h-full.bg-overlay
+       {:class (when (:disabled attrs) "opacity-30")
+        :style {:background v}}]]]
     [:> Popover/Portal
      [:> Popover/Content
       {:sideOffset 5
