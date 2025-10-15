@@ -32,9 +32,13 @@
 (rf/reg-fx
  ::focus
  (fn [id]
-   (some-> (if id
-             (.getElementById js/document id)
-             (utils.dom/canvas-element!))
+   (some-> (.getElementById js/document id)
+           (.focus))))
+
+(rf/reg-fx
+ ::focus-canvas
+ (fn []
+   (some-> (utils.dom/canvas-element!)
            (.focus))))
 
 (rf/reg-fx

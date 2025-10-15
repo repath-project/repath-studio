@@ -32,7 +32,6 @@
    [renderer.frame.subs]
    [renderer.history.events]
    [renderer.history.subs]
-   [renderer.menubar.events]
    [renderer.reepl.replumb :as replumb]
    [renderer.ruler.events]
    [renderer.ruler.subs]
