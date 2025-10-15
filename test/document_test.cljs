@@ -8,7 +8,7 @@
    [renderer.document.db :as document.db]
    [renderer.document.events :as-alias document.events]
    [renderer.document.subs :as-alias document.subs]
-   [renderer.element.subs :as element.subs]))
+   [renderer.element.subs :as-alias element.subs]))
 
 (deftest document
   (rf.test/run-test-sync

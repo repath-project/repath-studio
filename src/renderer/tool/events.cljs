@@ -1,7 +1,7 @@
 (ns renderer.tool.events
   (:require
    [re-frame.core :as rf]
-   [renderer.element.events :as element.events]
+   [renderer.element.events :as-alias element.events]
    [renderer.tool.handlers :as tool.handlers]))
 
 (rf/reg-event-fx

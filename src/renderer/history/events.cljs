@@ -1,7 +1,7 @@
 (ns renderer.history.events
   (:require
    [re-frame.core :as rf]
-   [renderer.app.effects :as app.effects]
+   [renderer.app.effects :as-alias app.effects]
    [renderer.history.handlers :as history.handlers]))
 
 (rf/reg-event-db

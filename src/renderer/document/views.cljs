@@ -41,17 +41,19 @@
 
      [:span.v-divider]
 
-     [history.views/action-button {:icon "undo"
-                                   :title (t [::undo "Undo"])
-                                   :options undos
-                                   :show-options md?
-                                   :action [::history.events/undo]}]
+     [history.views/action-button
+      {:icon "undo"
+       :title (t [::undo "Undo"])
+       :options undos
+       :show-options md?
+       :action [::history.events/undo]}]
 
-     [history.views/action-button {:icon "redo"
-                                   :title (t [::redo "Redo"])
-                                   :options redos
-                                   :show-options md?
-                                   :action [::history.events/redo]}]]))
+     [history.views/action-button
+      {:icon "redo"
+       :title (t [::redo "Redo"])
+       :options redos
+       :show-options md?
+       :action [::history.events/redo]}]]))
 
 (defn close-button
   [id saved]

@@ -1,4 +1,4 @@
-(ns renderer.menubar.views
+(ns renderer.window.menubar
   (:require
    ["@radix-ui/react-menubar" :as Menubar]
    [re-frame.core :as rf]
@@ -12,11 +12,10 @@
    [renderer.error.events :as-alias error.events]
    [renderer.error.subs :as-alias error.subs]
    [renderer.events :as-alias events]
+   [renderer.filters :as filters]
    [renderer.frame.events :as-alias frame.events]
    [renderer.history.events :as-alias history.events]
    [renderer.history.subs :as-alias history.subs]
-   [renderer.menubar.events :as-alias menubar.events]
-   [renderer.menubar.filters :as filters]
    [renderer.ruler.events :as-alias ruler.events]
    [renderer.ruler.subs :as-alias ruler.subs]
    [renderer.utils.i18n :as utils.i18n :refer [t]]
@@ -679,18 +678,19 @@
     {:class "px-3 py-1.5 flex rounded-sm outline-none select-none items-center
              leading-none data-[state=open]:bg-overlay
              hover:bg-overlay hover:text-foreground-hovered
-             focus:bg-overlay focus:text-foreground-hovered
+             focus:[&_span]:first-letter:underline
              disabled:text-foreground-disabled disabled:pointer-events-none"
      :id (name id)
      :disabled disabled}
-    label]
+    [:span label]]
    [:> Menubar/Portal
     (into [:> Menubar/Content
            {:class (when items "menu-content")
             :align "start"
             :side-offset 3
             :loop true
-            :on-escape-key-down #(.stopPropagation %)}]
+            :on-escape-key-down #(.stopPropagation %)
+            :on-close-auto-focus #(.preventDefault %)}]
           (map menu-item items))]])
 
 (defmethod menu-item :default
@@ -698,7 +698,7 @@
   (let [sm? @(rf/subscribe [::window.subs/breakpoint? :sm])]
     [:> Menubar/Item
      {:class "menu-item"
-      :on-select #(rf/dispatch [::menubar.events/select-item action])
+      :on-select #(rf/dispatch action)
       :disabled disabled}
      [:div label]
      (when sm? [views/shortcuts action])]))

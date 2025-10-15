@@ -4,8 +4,8 @@
    [malli.transform :as m.transform]
    [renderer.db :refer [Vec2 JS_Object]]
    [renderer.element.db :refer [Element ElementId]]
+   [renderer.filters :refer [A11yFilter]]
    [renderer.history.db :refer [History HistoryId]]
-   [renderer.menubar.filters :refer [A11yFilter]]
    [renderer.tool.db :refer [HandleId]]))
 
 (def ZoomFactor

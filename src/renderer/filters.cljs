@@ -1,4 +1,4 @@
-(ns renderer.menubar.filters
+(ns renderer.filters
   (:require
    [renderer.utils.i18n :refer [t]]))
 

@@ -1,7 +1,7 @@
 (ns renderer.timeline.events
   (:require
    [re-frame.core :as rf]
-   [renderer.timeline.effects :as timeline.effects]))
+   [renderer.timeline.effects :as-alias timeline.effects]))
 
 (rf/reg-event-db
  ::pause

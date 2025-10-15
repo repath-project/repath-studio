@@ -9,7 +9,7 @@
    [renderer.element.effects :as-alias element.effects]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
-   [renderer.menubar.views :as-alias menubar.views]
+   [renderer.menubar.menubar :as-alias menubar.views]
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
    [renderer.utils.extra :refer [partial-right]]))

@@ -5,7 +5,7 @@
    [renderer.app.events :as-alias app.events]
    [renderer.app.handlers :as app.handlers]
    [renderer.document.handlers :as document.handlers]
-   [renderer.effects :as effects]
+   [renderer.effects :as-alias effects]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]

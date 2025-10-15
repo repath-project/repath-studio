@@ -13,7 +13,7 @@
    [renderer.reepl.show-devtools :as show-devtools]
    [renderer.reepl.show-function :as show-function]
    [renderer.reepl.show-value :refer [show-value]]
-   [renderer.reepl.subs :as s]
+   [renderer.reepl.subs :as reepl.subs]
    [renderer.theme.subs :as-alias theme.subs]
    [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]
@@ -174,7 +174,7 @@
                              clear-items
                              set-text
                              add-log]} (reepl.handlers/make-handlers state)
-                     items (s/items state)
+                     items (reepl.subs/items state)
                      complete-atom (reagent/atom nil)
                      docs (reaction
                            (when-let [state @complete-atom]
@@ -207,7 +207,7 @@
        #_(swap! complete-atom assoc :pos % :active true)]
       (let [_items @items] ; TODO: This needs to be removed
         [repl-input
-         (s/current-text state)
+         (reepl.subs/current-text state)
          submit
          {:complete-word complete-word
           :on-up go-up

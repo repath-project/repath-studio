@@ -1,7 +1,7 @@
 (ns renderer.tree.events
   (:require
    [re-frame.core :as rf]
-   [renderer.tree.effects :as tree.effects]))
+   [renderer.tree.effects :as-alias tree.effects]))
 
 (rf/reg-event-fx
  ::focus-up
