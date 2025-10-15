@@ -15,7 +15,7 @@
 
 (defn button
   [{:keys [action label auto-focus class]}]
-  [:button.button.px-2.rounded.flex-1.font-medium
+  [:button.button.px-4.rounded.flex-1.font-medium
    {:class class
     :auto-focus auto-focus
     :on-click #(rf/dispatch [::dialog.events/close action])}
@@ -23,12 +23,12 @@
 
 (defn button-bar
   [& children]
-  (into [:div.flex.flex-wrap.gap-2] children))
+  (into [:div.flex.gap-2] children))
 
 (defn about
   []
   (let [user-agent @(rf/subscribe [::app.subs/user-agent])]
-    [:div.p-5
+    [:div
      [:div.flex.gap-3.items-start.pb-2
       [:p
        [:span.block [:strong (t [::version "Version:"])] config/version]
@@ -41,7 +41,7 @@
 (defn confirmation
   [{:keys [description confirm-action confirm-label cancel-action
            cancel-label]}]
-  [:div.p-5
+  [:div
    (cond->> description
      (string? description)
      (into [:p]))
@@ -55,7 +55,7 @@
 
 (defn save
   [{:keys [id title]}]
-  [:div.p-5
+  [:div
    (t [::changes-will-be-lost
        [:p "Your changes to %1 will be lost if you close the document without
             saving."]]
@@ -76,7 +76,9 @@
   (when-not (or (= (:type attrs) :separator)
                 disabled)
     [:> Command/CommandItem
-     {:on-select #(rf/dispatch [::dialog.events/close action])}
+     {:on-select #(rf/dispatch [::dialog.events/close action])
+      :class "flex p-2 rounded-sm items-center justify-between
+              data-[selected=true]:bg-overlay"}
      [:div.flex.items-center.gap-2
       [:div.w-7.h-7.rounded.line-height-6.flex.justify-center.items-center
        {:class (when icon "bg-overlay")}
@@ -110,8 +112,10 @@
      :placeholder (t [::search-command "Search for a command"])}]
    [views/scroll-area
     [:> Command/CommandList
-     {:class "p-1"}
+     {:class "p-1 sm:max-h-[50dvh]!"
+      :style {:max-height "calc(100dvh - 125px)"}}
      [:> Command/CommandEmpty
+      {:class "p-2"}
       (t [::no-results "No results found."])]
      (for [menu (menubar.views/submenus)]
        ^{:key (:id menu)}
@@ -130,14 +134,14 @@
        (views/merge-with-class
         {:class "fixed bg-primary rounded-lg overflow-hidden shadow-xl border
                  border-border left-1/2 top-1/2 w-125 max-w-9/10 -translate-1/2
-                 animate-in zoom-in-95"
+                 animate-in zoom-in-95 p-6"
          :on-key-down #(.stopPropagation %)}
         attrs)
        (when title
          [:> Dialog/Title
           {:as-child true}
           (if (string? title)
-            [:h2.text-xl.px-5.pt-5.text-foreground-hovered title]
+            [:h2.text-xl.pb-4.text-foreground-hovered title]
             title)])
        [:> Dialog/Description
         {:as-child true}
