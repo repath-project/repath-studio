@@ -100,7 +100,10 @@
 (m/=> ->path [:-> Element Element])
 (defn ->path
   ([el]
-   (->path el (element.hierarchy/path el)))
+   (if (get-method element.hierarchy/path (:tag el))
+     (->path el (element.hierarchy/path el))
+     (js/Promise.reject (str "No path implementation for " (name (:tag el))
+                             " elements."))))
   ([el d]
    (let [default-attrs (utils.attribute/defaults-memo :path)]
      (cond
