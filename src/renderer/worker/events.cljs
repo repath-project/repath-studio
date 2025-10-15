@@ -2,7 +2,7 @@
   (:require
    [re-frame.core :as rf]
    [renderer.effects :as-alias effects]
-   [renderer.worker.effects :as worker.effects]))
+   [renderer.worker.effects :as-alias worker.effects]))
 
 (rf/reg-event-fx
  ::create

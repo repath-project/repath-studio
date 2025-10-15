@@ -4,7 +4,7 @@
    [re-frame.core :as rf]
    [renderer.db :refer [JS_Object]]
    [renderer.event.db :refer [WheelEvent]]
-   [renderer.event.events :as event.events]))
+   [renderer.event.events :as-alias event.events]))
 
 (m/=> ->clj [:-> JS_Object WheelEvent])
 (defn ->clj

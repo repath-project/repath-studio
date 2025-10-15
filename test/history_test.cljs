@@ -8,7 +8,7 @@
    [renderer.element.events :as-alias element.events]
    [renderer.element.subs :as-alias element.subs]
    [renderer.history.events :as-alias history.events]
-   [renderer.history.subs :as history.subs]))
+   [renderer.history.subs :as-alias history.subs]))
 
 (deftest history
   (rf.test/run-test-sync

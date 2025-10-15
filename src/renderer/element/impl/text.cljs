@@ -13,7 +13,7 @@
    [renderer.element.views :as element.views]
    [renderer.event.impl.keyboard :as event.impl.keyboard]
    [renderer.history.handlers :as history.handlers]
-   [renderer.tool.events :as tool.events]
+   [renderer.tool.events :as-alias tool.events]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.subs :as-alias tool.subs]
    [renderer.utils.bounds :as utils.bounds]

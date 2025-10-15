@@ -5,7 +5,7 @@
    [clojure.string :as string]
    [config :as config]
    [re-frame.core :as rf]
-   [renderer.app.subs :as app.subs]
+   [renderer.app.subs :as-alias app.subs]
    [renderer.dialog.events :as-alias dialog.events]
    [renderer.dialog.subs :as-alias dialog.subs]
    [renderer.document.events :as-alias document.events]

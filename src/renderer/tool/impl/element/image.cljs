@@ -7,7 +7,7 @@
    [renderer.effects :as-alias effects]
    [renderer.element.db :as element.db]
    [renderer.element.effects :as-alias element.effects]
-   [renderer.element.events :as element.events]
+   [renderer.element.events :as-alias element.events]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.i18n :refer [t]]))
