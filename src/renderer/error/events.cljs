@@ -6,8 +6,8 @@
    [renderer.dialog.handlers :as dialog.handlers]
    [renderer.dialog.views :as dialog.views]
    [renderer.error.effects :as-alias error.effects]
-   [renderer.menubar.views :as-alias menubar.views]
-   [renderer.utils.i18n :refer [tr]]))
+   [renderer.utils.i18n :refer [tr]]
+   [renderer.window.menubarar :as-alias menubar.views]))
 
 (defn reporting-confirmation-dialog-content
   [db]

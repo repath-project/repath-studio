@@ -1,4 +1,4 @@
-(ns renderer.menubar.views
+(ns renderer.window.menubar
   (:require
    ["@radix-ui/react-menubar" :as Menubar]
    [re-frame.core :as rf]
@@ -12,10 +12,10 @@
    [renderer.error.events :as-alias error.events]
    [renderer.error.subs :as-alias error.subs]
    [renderer.events :as-alias events]
+   [renderer.filters :as filters]
    [renderer.frame.events :as-alias frame.events]
    [renderer.history.events :as-alias history.events]
    [renderer.history.subs :as-alias history.subs]
-   [renderer.menubar.filters :as filters]
    [renderer.ruler.events :as-alias ruler.events]
    [renderer.ruler.subs :as-alias ruler.subs]
    [renderer.utils.i18n :as utils.i18n :refer [t]]
