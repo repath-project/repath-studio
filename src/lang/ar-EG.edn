@@ -43,7 +43,7 @@
   :changes-will-be-lost [:p "ستفقد التغييرات في %1 إذا أغلقت المستند
                              بدون حفظ."]}
 
- :renderer.menubar.views
+ :renderer.window.menubar
  {:file "ملف"
   :new "جديد"
   :open "فتح..."
@@ -138,7 +138,7 @@
   :submit-an-issue "إرسال مشكلة"
   :about "حول"}
 
- :renderer.menubar.filters
+ :renderer.filters
  {:blur "ضبابية البصر"
   :blur-x2 "ضبابية البصر المضاعفة"
   :protanopia "عمى الألوان الأحمر"

@@ -43,7 +43,7 @@
   :changes-will-be-lost [:p "저장하지 않고 문서를 닫으면
                              %1에 대한 변경사항이 손실됩니다."]}
 
- :renderer.menubar.views
+ :renderer.window.menubar
  {:file "파일"
   :new "새로 만들기"
   :open "열기..."
@@ -138,7 +138,7 @@
   :submit-an-issue "이슈 제출"
   :about "정보"}
 
- :renderer.menubar.filters
+ :renderer.filters
  {:blur "흐림"
   :blur-x2 "흐림-x2"
   :protanopia "적색맹"

@@ -43,7 +43,7 @@
   :changes-will-be-lost [:p "Ihre Änderungen an %1 gehen verloren, wenn Sie das
                              Dokument ohne Speichern schließen."]}
 
- :renderer.menubar.views
+ :renderer.window.menubar
  {:file "Datei"
   :new "Neu"
   :open "Öffnen..."
@@ -138,7 +138,7 @@
   :submit-an-issue "Problem melden"
   :about "Über"}
 
- :renderer.menubar.filters
+ :renderer.filters
  {:blur "Unschärfe"
   :blur-x2 "Starke Unschärfe"
   :protanopia "Protanopie"

@@ -42,7 +42,7 @@
   :ok "OK"
   :changes-will-be-lost [:p "%1への変更は、ドキュメントを保存せずに閉じると失われます。"]}
 
- :renderer.menubar.views
+ :renderer.window.menubar
  {:file "ファイル"
   :new "新規"
   :open "開く..."
@@ -137,7 +137,7 @@
   :submit-an-issue "問題を報告"
   :about "このアプリについて"}
 
- :renderer.menubar.filters
+ :renderer.filters
  {:blur "ブラー"
   :blur-x2 "ブラーx2"
   :protanopia "第一色覚異常"

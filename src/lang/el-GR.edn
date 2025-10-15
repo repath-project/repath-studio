@@ -43,7 +43,7 @@
   :changes-will-be-lost [:p "Οι αλλαγές στο %1 θα χαθούνε εάν κλείσετε το
                              έγγραφο χωρίς αποθήκευση."]}
 
- :renderer.menubar.views
+ :renderer.window.menubar
  {:file "Αρχείο"
   :new "Νέο"
   :open "Άνοιγμα..."
@@ -138,7 +138,7 @@
   :submit-an-issue "Υποβολή προβλήματος"
   :about "Σχετικά"}
 
- :renderer.menubar.filters
+ :renderer.filters
  {:blur "θόλωση όρασης"
   :blur-x2 "έντονη θόλωση όρασης"
   :protanopia "πρωτανωπία"

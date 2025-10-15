@@ -43,7 +43,7 @@
   :changes-will-be-lost [:p "Ваши изменения в %1 будут потеряны, если вы
                              закроете документ без сохранения."]}
 
- :renderer.menubar.views
+ :renderer.window.menubar
  {:file "Файл"
   :new "Новый"
   :open "Открыть..."
@@ -138,7 +138,7 @@
   :submit-an-issue "Сообщить о проблеме"
   :about "О программе"}
 
- :renderer.menubar.filters
+ :renderer.filters
  {:blur "размытие"
   :blur-x2 "размытие-x2"
   :protanopia "протанопия"

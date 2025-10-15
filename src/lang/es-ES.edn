@@ -43,7 +43,7 @@
   :changes-will-be-lost [:p "Sus cambios en %1 se perderán si cierra el
                              documento sin guardar."]}
 
- :renderer.menubar.views
+ :renderer.window.menubar
  {:file "Archivo"
   :new "Nuevo"
   :open "Abrir..."
@@ -138,7 +138,7 @@
   :submit-an-issue "Reportar un problema"
   :about "Acerca de"}
 
- :renderer.menubar.filters
+ :renderer.filters
  {:blur "desenfoque"
   :blur-x2 "desenfoque-x2"
   :protanopia "protanopia"

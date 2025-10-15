@@ -43,7 +43,7 @@
   :changes-will-be-lost [:p "Your changes to %1 will be lost if you close the
                              document without saving."]}
 
- :renderer.menubar.views
+ :renderer.window.menubar
  {:file "File"
   :new "New"
   :open "Open..."
@@ -138,7 +138,7 @@
   :submit-an-issue "Submit an issue"
   :about "About"}
 
- :renderer.menubar.filters
+ :renderer.filters
  {:blur "blur"
   :blur-x2 "blur-x2"
   :protanopia "protanopia"
