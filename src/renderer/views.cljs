@@ -207,7 +207,8 @@
         :align "start"
         :side "top"
         :align-offset (:align-offset props)
-        :on-open-auto-focus #(.preventDefault %)}
+        :on-open-auto-focus #(.preventDefault %)
+        :on-escape-key-down #(.stopPropagation %)}
        [:div {:dir "ltr"}
         (if sm?
           [:> PhotoshopPicker props]

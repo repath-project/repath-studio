@@ -159,8 +159,10 @@
           :disabled disabled}
          [views/icon "pencil"]]
         [:> Popover/Portal
-         [:> Popover/Content {:sideOffset 5
-                              :class "popover-content"
-                              :align "end"}
+         [:> Popover/Content
+          {:sideOffset 5
+           :class "popover-content"
+           :align "end"
+           :on-escape-key-down #(.stopPropagation %)}
           (when idle [edit-form v])
           [:> Popover/Arrow {:class "fill-primary"}]]]])]))

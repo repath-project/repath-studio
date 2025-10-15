@@ -172,7 +172,8 @@
     [:> Tooltip/Content
      {:class "tooltip-content"
       :sideOffset 5
-      :side "top"}
+      :side "top"
+      :on-escape-key-down #(.stopPropagation %)}
      [:div.flex.gap-2.items-center
       title
       [views/shortcuts action]]]]])

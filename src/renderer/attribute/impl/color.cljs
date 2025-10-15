@@ -38,7 +38,8 @@
       {:sideOffset 5
        :class "popover-content"
        :align "end"
-       :on-open-auto-focus #(.preventDefault %)}
+       :on-open-auto-focus #(.preventDefault %)
+       :on-escape-key-down #(.stopPropagation %)}
       [:div
        {:dir "ltr"}
        [picker k v]]]]]])

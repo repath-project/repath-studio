@@ -171,7 +171,8 @@
       [:> Select/Portal
        [:> Select/Content
         {:class "menu-content rounded-sm select-content"
-         :on-key-down #(.stopPropagation %)}
+         :on-key-down #(.stopPropagation %)
+         :on-escape-key-down #(.stopPropagation %)}
         [:> Select/ScrollUpButton
          {:class "select-scroll-button"}
          [views/icon "chevron-up"]]
@@ -234,7 +235,8 @@
       [:> HoverCard/Content
        {:side "left"
         :class "popover-content"
-        :align "start"}
+        :align "start"
+        :on-escape-key-down #(.stopPropagation %)}
        [:div.p-5
         [:h2.mb-4.text-lg.font-mono.text-foreground-hovered k]
         (when (get-method attribute.hierarchy/description [dispatch-tag k])
@@ -279,7 +281,8 @@
        [:> HoverCard/Content
         {:sideOffset 5
          :class "popover-content"
-         :align "end"}
+         :align "end"
+         :on-escape-key-down #(.stopPropagation %)}
         [:div.p-5
          [:h2.mb-4.text-lg.font-mono.text-foreground-hovered
           (str "<" (name tag) ">")]

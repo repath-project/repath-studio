@@ -59,7 +59,8 @@
     [:> Popover/Content
      {:sideOffset 5
       :class "popover-content"
-      :align "end"}
+      :align "end"
+      :on-escape-key-down #(.stopPropagation %)}
      [:div.flex.overflow-hidden
       {:style {:max-height "50vh"}}
       [views/scroll-area

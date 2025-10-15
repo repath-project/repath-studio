@@ -55,7 +55,8 @@
       [:> Select/Portal
        [:> Select/Content
         {:class "menu-content rounded-sm select-content"
-         :style {:min-width "auto"}}
+         :style {:min-width "auto"}
+         :on-escape-key-down #(.stopPropagation %)}
         [:> Select/ScrollUpButton
          {:class "select-scroll-button"}
          [views/icon "chevron-up"]]
