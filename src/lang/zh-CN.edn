@@ -42,7 +42,7 @@
   :ok "确定"
   :changes-will-be-lost [:p "如果您不保存就关闭文档，您对 %1 的更改将丢失。"]}
 
- :renderer.menubar.views
+ :renderer.window.menubar
  {:file "文件"
   :new "新建"
   :open "打开..."
@@ -137,7 +137,7 @@
   :submit-an-issue "报告问题"
   :about "关于"}
 
- :renderer.menubar.filters
+ :renderer.filters
  {:blur "模糊"
   :blur-x2 "模糊-x2"
   :protanopia "红色盲"

@@ -43,7 +43,7 @@
   :changes-will-be-lost [:p "Belgeyi kaydetmeden kapatırsanız
                              %1 için yaptığınız değişiklikler kaybolacak."]}
 
- :renderer.menubar.views
+ :renderer.window.menubar
  {:file "Dosya"
   :new "Yeni"
   :open "Aç..."
@@ -138,7 +138,7 @@
   :submit-an-issue "Sorun bildir"
   :about "Hakkında"}
 
- :renderer.menubar.filters
+ :renderer.filters
  {:blur "bulanık"
   :blur-x2 "bulanık-x2"
   :protanopia "protanopi"

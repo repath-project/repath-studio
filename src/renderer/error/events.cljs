@@ -7,7 +7,7 @@
    [renderer.dialog.views :as dialog.views]
    [renderer.error.effects :as-alias error.effects]
    [renderer.utils.i18n :refer [tr]]
-   [renderer.window.menubarar :as-alias menubar.views]))
+   [renderer.window.menubarar :as-alias window.menubar]))
 
 (defn reporting-confirmation-dialog-content
   [db]
@@ -19,7 +19,7 @@
                             anonymous error reports? You can change your
                             preference at any time from our \"%1\" menu."]
                        [:p "For more information, please read our %2."]]]
-                     [[:strong (tr db [::menubar.views/help "Help"])]
+                     [[:strong (tr db [::window.menubar/help "Help"])]
                       [:a.button-link.underline
                        {:href "https://repath.studio/policies/privacy/"
                         :target "_blank"}

@@ -43,7 +43,7 @@
   :changes-will-be-lost [:p "Vos modifications de %1 seront perdues si vous
                              fermez le document sans l'enregistrer."]}
 
- :renderer.menubar.views
+ :renderer.window.menubar
  {:file "Fichier"
   :new "Nouveau"
   :open "Ouvrir..."
@@ -138,7 +138,7 @@
   :submit-an-issue "Signaler un problème"
   :about "À propos"}
 
- :renderer.menubar.filters
+ :renderer.filters
  {:blur "flou"
   :blur-x2 "flou-x2"
   :protanopia "protanopie"
