@@ -8,7 +8,7 @@
    ["@radix-ui/react-scroll-area" :as ScrollArea]
    ["@radix-ui/react-slider" :as Slider]
    ["@radix-ui/react-switch" :as Switch]
-   ["@repath-project/react-color" :refer [PhotoshopPicker]]
+   ["@repath-project/react-color" :refer [ChromePicker PhotoshopPicker]]
    ["codemirror" :as codemirror]
    ["codemirror/addon/display/placeholder.js"]
    ["codemirror/addon/hint/css-hint.js"]
@@ -197,19 +197,22 @@
 
 (defn color-picker
   [props & children]
-  [:> Popover/Root {:modal true}
-   (into [:> Popover/Trigger {:as-child true}]
-         children)
-   [:> Popover/Portal
-    [:> Popover/Content
-     {:class "popover-content max-w-fit"
-      :align "start"
-      :side "top"
-      :align-offset (:align-offset props)
-      :on-open-auto-focus #(.preventDefault %)}
-     [:div {:dir "ltr"}
-      [:> PhotoshopPicker props]]
-     [:> Popover/Arrow {:class "fill-primary"}]]]])
+  (let [sm? @(rf/subscribe [::window.subs/breakpoint? :sm])]
+    [:> Popover/Root {:modal true}
+     (into [:> Popover/Trigger {:as-child true}]
+           children)
+     [:> Popover/Portal
+      [:> Popover/Content
+       {:class "popover-content max-w-fit"
+        :align "start"
+        :side "top"
+        :align-offset (:align-offset props)
+        :on-open-auto-focus #(.preventDefault %)}
+       [:div {:dir "ltr"}
+        (if sm?
+          [:> PhotoshopPicker props]
+          [:> ChromePicker props])]
+       [:> Popover/Arrow {:class "fill-primary"}]]]]))
 
 (def cm-defaults
   {:lineNumbers false
