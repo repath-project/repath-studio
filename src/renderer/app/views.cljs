@@ -203,8 +203,8 @@
    [:> Select/Portal
     [:> Select/Content
      {:class "menu-content rounded-sm select-content"
-      :style {:min-width "auto"}}
-
+      :style {:min-width "auto"}
+      :on-escape-key-down #(.stopPropagation %)}
      [:> Select/Viewport
       {:class "select-viewport"}
       [:> Select/Group

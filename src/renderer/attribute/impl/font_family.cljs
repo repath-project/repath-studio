@@ -71,6 +71,7 @@
          [:> Popover/Content
           {:sideOffset 5
            :class "popover-content"
-           :align "end"}
+           :align "end"
+           :on-escape-key-down #(.stopPropagation %)}
           [suggestions-list font-list]
           [:> Popover/Arrow {:class "fill-primary"}]]]])]))

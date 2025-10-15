@@ -205,7 +205,8 @@
      {:class "popover-content max-w-fit"
       :align "start"
       :side "top"
-      :align-offset (:align-offset props)}
+      :align-offset (:align-offset props)
+      :on-escape-key-down #(.stopPropagation %)}
      [:div {:dir "ltr"}
       [:> PhotoshopPicker props]]
      [:> Popover/Arrow {:class "fill-primary"}]]]])

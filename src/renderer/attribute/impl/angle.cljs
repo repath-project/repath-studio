@@ -20,6 +20,7 @@
      [:> Popover/Content
       {:sideOffset 5
        :class "popover-content"
-       :align "end"}
+       :align "end"
+       :on-escape-key-down #(.stopPropagation %)}
       [:div.circular-slider]
       [:> Popover/Arrow {:class "fill-primary"}]]]]])
