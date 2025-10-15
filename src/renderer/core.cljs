@@ -40,6 +40,7 @@
    [renderer.theme.effects]
    [renderer.theme.events]
    [renderer.theme.subs]
+   [renderer.timeline.effects]
    [renderer.timeline.events]
    [renderer.timeline.subs]
    [renderer.tool.events]
