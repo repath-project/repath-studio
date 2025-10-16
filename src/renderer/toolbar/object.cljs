@@ -124,20 +124,18 @@
       :disabled true
       :action [::element.events/flip :vertical]}])
 
-(defn more-button
-  [disabled]
+(defn more-button []
   [:> DropdownMenu/Root
    [:> DropdownMenu/Trigger
     {:as-child true}
     [:button.button.flex.items-center.justify-center.px-2.font-mono.rounded
-     {:aria-label "More object actions"
-      :disabled disabled}
+     {:aria-label "More object actions"}
      [views/icon "ellipsis-h"]]]
    [:> DropdownMenu/Portal
     (->> (element.views/context-menu)
          (map views/dropdown-menu-item)
          (into [:> DropdownMenu/Content
-                {:side "left"
+                {:side "top"
                  :align "end"
                  :class "menu-content rounded-sm"
                  :on-key-down #(.stopPropagation %)
