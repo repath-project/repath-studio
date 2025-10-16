@@ -106,26 +106,27 @@
       {:id "frame-panel"
        :order 1}
       [frame-panel]]
-     (when @(rf/subscribe [::app.subs/panel-visible? :history])
-       [:<>
-        [views/resize-handle "history-resize-handle"]
-        [:> Panel {:id "history-panel"
-                   :defaultSize 30
-                   :minSize 5
-                   :order 2}
-         [:div.bg-primary.h-full
-          [history.views/root]]]])
+     (when @(rf/subscribe [::window.subs/breakpoint? :md])
+       (when @(rf/subscribe [::app.subs/panel-visible? :history])
+         [:<>
+          [views/resize-handle "history-resize-handle"]
+          [:> Panel {:id "history-panel"
+                     :defaultSize 30
+                     :minSize 5
+                     :order 2}
+           [:div.bg-primary.h-full
+            [history.views/root]]]])
 
-     (when @(rf/subscribe [::app.subs/panel-visible? :xml])
-       [:<>
-        [views/resize-handle "xml-resize-handle"]
-        [:> Panel {:id "xml-panel"
-                   :defaultSize 30
-                   :minSize 5
-                   :order 3}
+       (when @(rf/subscribe [::app.subs/panel-visible? :xml])
+         [:<>
+          [views/resize-handle "xml-resize-handle"]
+          [:> Panel {:id "xml-panel"
+                     :defaultSize 30
+                     :minSize 5
+                     :order 3}
 
-         [:div.h-full.bg-primary.flex
-          [xml-panel]]]])]]])
+           [:div.h-full.bg-primary.flex
+            [xml-panel]]]]))]]])
 
 (defn editor
   []
@@ -353,6 +354,7 @@
                [:div.bg-primary.flex
                 [views/scroll-area [toolbar.object/root]]]]]]]
            [home recent-documents])
+         [:div]
          (when (and documents? (not md?))
            [bottom-bar])]
         [dialog.views/root]
