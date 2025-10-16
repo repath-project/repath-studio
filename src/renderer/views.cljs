@@ -19,6 +19,7 @@
    ["react-resizable-panels" :refer [PanelResizeHandle]]
    ["react-svg" :refer [ReactSVG]]
    ["tailwind-merge" :refer [twMerge]]
+   ["vaul" :refer [Drawer]]
    [re-frame.core :as rf]
    [reagent.core :as reagent]
    [renderer.app.subs :as-alias app.subs]
@@ -273,3 +274,36 @@
                            :on-blur #()
                            :on-change #()
                            :ref ref} attrs)])})))
+
+(defn drawer
+  [{:keys [label direction content disabled snap-points]
+    :as attrs}]
+  (reagent/with-let [snap (reagent/atom nil)]
+    [:> Drawer.Root
+     (cond-> {:direction direction}
+       snap-points
+       (assoc :snapPoints (clj->js snap-points)
+              :activeSnapPoint @snap
+              :setActiveSnapPoint (fn [v] (reset! snap v))))
+     [:> Drawer.Trigger
+      {:class "button p-1 rounded h-auto flex flex-col flex-1 text-xs gap-1
+               overflow-hidden"
+       :disabled disabled}
+      [icon (:icon attrs)]
+      [:span.truncate label]]
+     [:> Drawer.Portal
+      [:> Drawer.Overlay
+       {:class "backdrop"}]
+      [:> Drawer.Content
+       {:class ["inset-0 fixed z-9 outline-none flex"
+                (case direction
+                  "left" "right-auto max-w-[80dvw] min-w-[40dvw]"
+                  "right" "left-auto max-w-[80dvw] min-w-[40dvw]"
+                  "bottom" "top-auto h-[30dvh]"
+                  "top" "bottom-auto h-[30dvh]")]}
+       [:> Drawer.Title {:class "sr-only"} label]
+       [:> Drawer.Description
+        {:as-child true}
+        [:div.flex.overflow-hidden.bg-primary.shadow-xl.flex-1
+         {:class (when (= direction "bottom") "w-full")}
+         content]]]]]))

@@ -11,7 +11,8 @@
    [renderer.timeline.events :as-alias timeline.events]
    [renderer.timeline.subs :as-alias timeline.subs]
    [renderer.utils.i18n :refer [t]]
-   [renderer.views :as views]))
+   [renderer.views :as views]
+   [renderer.window.subs :as-alias window.subs]))
 
 (def speed-options
   [{:id :0.25
@@ -34,7 +35,7 @@
   [editor-ref]
   (let [speed @(rf/subscribe [::timeline.subs/speed])]
     [:div.inline-flex.items-center
-     [:label.form-element
+     [:label.form-element.sr-only
       {:for "animation-speed"}
       (t [::speed "Speed"])]
      [:> Select/Root
@@ -97,7 +98,9 @@
         paused? @(rf/subscribe [::timeline.subs/paused?])
         replay? @(rf/subscribe [::timeline.subs/replay?])
         end @(rf/subscribe [::timeline.subs/end])
-        speed @(rf/subscribe [::timeline.subs/speed])]
+        speed @(rf/subscribe [::timeline.subs/speed])
+        md? @(rf/subscribe [::window.subs/breakpoint? :md])
+        sm? @(rf/subscribe [::window.subs/breakpoint? :sm])]
     [:div.toolbar.bg-primary
      [views/icon-button "go-to-start"
       {:on-click #(.setTime (.-current timeline-ref) 0)
@@ -117,11 +120,16 @@
        :on-click #(rf/dispatch [::timeline.events/toggle-replay])}]
      [speed-select timeline-ref]
      [:span.font-mono.px-2 time-formatted]
-     [:span.v-divider]
-     [snap-controls]
-     [views/icon-button "window-close"
-      {:title (t [::hide-timeline "Hide timeline"])
-       :on-click #(rf/dispatch [::app.events/toggle-panel :timeline])}]]))
+     (when sm?
+       [:<>
+        [:span.v-divider]
+        [snap-controls]
+        (when md?
+          [:<>
+           [views/icon-button "window-close"
+            {:title (t [::hide-timeline "Hide timeline"])
+             :on-click #(rf/dispatch [::app.events/toggle-panel
+                                      :timeline])}]])])]))
 
 (defn register-listeners
   [timeline-ref]
@@ -191,6 +199,6 @@
 
       :reagent-render
       (fn []
-        [:div.flex-col.h-full
+        [:div.flex-col.h-full.w-full
          [toolbar timeline-ref]
          [timeline timeline-ref]])})))
