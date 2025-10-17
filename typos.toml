@@ -1,5 +1,6 @@
+
 [default.extend-words]
 edn = "edn"
 
 [files]
-extend-exclude = ["src/lang/*.edn"]
+extend-exclude = ["src/lang/*.edn", "android", "ios"]
