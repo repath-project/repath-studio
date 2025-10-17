@@ -8,7 +8,7 @@
   "version": "0.4.9",
   "scripts": {
     "upgrade": "npx npm-check-updates -u -x 'codemirror @radix-ui/react-context-menu @radix-ui/react-dropdown-menu @radix-ui/react-menubar @radix-ui/react-select @radix-ui/react-slider' && npm install && npm upgrade",
-    "postinstall": "electron-builder install-app-deps",
+    "postinstall": "npx electron-builder install-app-deps",
     "tailwindcss:build": "npx @tailwindcss/cli -i ./src/renderer/styles.css -o ./resources/public/css/styles.css --minify",
     "tailwindcss:watch": "npx @tailwindcss/cli -i ./src/renderer/styles.css -o ./resources/public/css/styles.css --watch=always",
     "fonts:sans": "npx shx cp -r node_modules/@fontsource/noto-sans/files/. resources/public/css/files",
@@ -29,7 +29,8 @@
     "lint": "npx npm-run-all --parallel clj-lint spellcheck markdown-lint check-links",
     "clean": "rm -rf resources/public/js/* && rm -rf target && rm -rf dist && rm -rf .shadow-cljs",
     "build-report": "npx shadow-cljs run shadow.cljs.build-report renderer target/build-report.html",
-    "test": "npx shadow-cljs compile karma-test && npx karma start --browsers ChromeHeadlessNoSandbox --single-run --reporters junit,dots"
+    "test": "npx shadow-cljs compile karma-test && npx karma start --browsers ChromeHeadlessNoSandbox --single-run --reporters junit,dots",
+    "mobile-assets": "npx @capacitor/assets generate --pwaManifestPath=/resources/public/manifest.json --splashBackgroundColor=#dd286c --splashBackgroundColorDark=#dd286c --logoSplashScale=0.4 --iconBackgroundColor=#dd286c --iconBackgroundColorDark=#dd286c --assetPath=/resources/public/img --android --ios"
   },
   "keywords": [
     "clojurescript",
@@ -70,6 +71,11 @@
   },
   "main": "resources/main.js",
   "devDependencies": {
+    "@capacitor/android": "7.4.3",
+    "@capacitor/assets": "3.0.5",
+    "@capacitor/cli": "7.4.3",
+    "@capacitor/core": "7.4.3",
+    "@capacitor/ios": "7.4.3",
     "@fontsource/noto-sans": "5.2.10",
     "@fontsource/noto-sans-mono": "5.2.10",
     "@mdn/browser-compat-data": "7.1.12",
