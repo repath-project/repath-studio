@@ -71,6 +71,17 @@ jobs:
         with:
           path: './resources/public'
 
+      - name: Sentry release
+        uses: getsentry/action-release@v3.3
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          environment: 'production'
+          inject: true
+          sourcemaps: './resources'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
