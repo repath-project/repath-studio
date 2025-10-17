@@ -10,6 +10,7 @@
 /resources/public/css/
 /resources/public/src/
 /resources/*.js
+/resources/*.js.map
 
 /*-init.clj
 /*.log
@@ -17,3 +18,5 @@
 /node_modules/
 /target/
 /dist/
+
+.sentryclirc
