@@ -35,6 +35,7 @@
    [renderer.tree.views :as tree.views]
    [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]
+   [renderer.window.menubar :as window.menubar]
    [renderer.window.subs :as-alias window.subs]
    [renderer.window.views :as window.views]))
 
@@ -335,16 +336,19 @@
       [:> Direction/Provider {:dir lang-dir}
        [:> Tooltip/Provider
         [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden.justify-between
-         [window.views/app-header]
+         (when md? [window.views/app-header])
          (if documents?
            [:div.flex.h-full.flex-1.overflow-hidden.gap-px
-            (when tree?
-              [:div.flex-col.hidden.overflow-hidden
-               {:class "md:flex"}
+            (when (and tree? md?)
+              [:div.flex.flex-col.overflow-hidden
                [document.views/actions]
                [tree.views/root]])
             [:div.flex.flex-col.flex-1.overflow-hidden.h-full
-             [document.views/tab-bar]
+             (if md?
+               [document.views/tab-bar]
+               [:div.flex.overflow-hidden
+                [:div.toolbar [window.menubar/root]]
+                [document.views/tab-bar]])
              [:div.flex.h-full.flex-1.gap-px.overflow-hidden
               [:div.flex.h-full.flex-col.flex-1.overflow-hidden.gap-px
                [editor]]

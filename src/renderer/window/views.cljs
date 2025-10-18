@@ -80,7 +80,7 @@
       :icon "window-close"}]))
 
 (defn app-icon []
-  [:div.drag.shrink-0.hidden.sm:block
+  [:div.drag.shrink-0
    {:class "px-2"}
    [:img.h-4.w-4
     {:src "img/icon-no-bg.svg"
@@ -100,8 +100,7 @@
      [:div.overflow-hidden
       [views/scroll-area
        [:div.flex.relative.bg-secondary
-        {:class ["px-1 sm:px-0"
-                 (when (and mac? (not fullscreen?)) "ml-16")]}
+        {:class (when (and mac? (not fullscreen?)) "ml-16")}
         [window.menubar/root]]]]
      [:div.absolute.hidden.justify-center.drag.grow.h-full.items-center
       {:class "pointer-events-none md:flex left-1/2 -translate-x-1/2 z-[-1]"
@@ -126,7 +125,7 @@
                            (t [::exit-fullscreen "Exit fullscreen"])
                            (t [::enter-fullscreen "Enter fullscreen"]))
                   :icon (if fullscreen? "arrow-minimize" "arrow-maximize")
-                  :class "bg-primary hidden sm:block"}])
+                  :class "bg-primary"}])
        (when-not (or web? fullscreen? mac?)
          (->> (window-control-buttons)
               (map button)

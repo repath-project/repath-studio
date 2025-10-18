@@ -18,6 +18,9 @@
    [renderer.history.subs :as-alias history.subs]
    [renderer.ruler.events :as-alias ruler.events]
    [renderer.ruler.subs :as-alias ruler.subs]
+   [renderer.theme.db :as theme.db]
+   [renderer.theme.events :as-alias theme.events]
+   [renderer.theme.subs :as-alias theme.subs]
    [renderer.utils.i18n :as utils.i18n :refer [t]]
    [renderer.views :as views]
    [renderer.window.events :as-alias window.events]
@@ -475,6 +478,17 @@
                :action [::app.events/set-lang "system"]
                :checked (= @(rf/subscribe [::app.subs/lang]) "system")}])))
 
+(defn theme-mode-submenu
+  []
+  (->> theme.db/modes
+       (mapv (fn [k]
+               {:id k
+                :label (name k)
+                :type :checkbox
+                :icon (name k)
+                :action [::theme.events/set-mode k]
+                :checked (= @(rf/subscribe [::theme.subs/mode]) k)}))))
+
 (defn panel-submenu
   []
   [{:id :toggle-tree
@@ -524,6 +538,10 @@
                     :type :sub-menu
                     :disabled (not @(rf/subscribe [::document.subs/entities?]))
                     :items (zoom-submenu)}
+                   {:id :theme-mode
+                    :label (t [::theme-mode "Theme mode"])
+                    :type :sub-menu
+                    :items (theme-mode-submenu)}
                    {:id :a11y
                     :label (t [::accessibility-filter "Accessibility filter"])
                     :type :sub-menu
@@ -673,38 +691,37 @@
 
 (defmethod menu-item :root
   [{:keys [label items id disabled]}]
-  (let [sm? @(rf/subscribe [::window.subs/breakpoint? :sm])]
-    [:> Menubar/Menu
-     [:> Menubar/Trigger
-      {:class "px-3 py-1.5 flex rounded-sm outline-none select-none items-center
-             leading-none data-[state=open]:bg-overlay
-             hover:bg-overlay hover:text-foreground-hovered
-             focus:bg-overlay focus:text-foreground-hovered
-             disabled:text-foreground-disabled disabled:pointer-events-none"
-       :id (name id)
-       :disabled disabled}
-      [:span label]]
-     [:> Menubar/Portal
-      (into [:> Menubar/Content
-             {:class [(when items "menu-content")
-                      (when-not sm? "mx-1")]
-              :align "start"
-              :side-offset 3
-              :align-offset (when-not sm? -1000)
-              :loop true
-              :on-escape-key-down #(.stopPropagation %)
-              :on-close-auto-focus #(.preventDefault %)}]
-            (map menu-item items))]]))
+  [:> Menubar/Menu
+   [:> Menubar/Trigger
+    {:class ["button-size md:w-auto md:h-auto md:px-3 md:py-1.5 flex rounded-sm
+              outline-none select-none items-center justify-center leading-none
+              data-[state=open]:bg-overlay
+              hover:bg-overlay hover:text-foreground-hovered
+              focus:bg-overlay focus:text-foreground-hovered
+              disabled:text-foreground-disabled disabled:pointer-events-none"]
+     :id (name id)
+     :disabled disabled}
+    [:span label]]
+   [:> Menubar/Portal
+    (into [:> Menubar/Content
+           {:class (when items "menu-content")
+            :align "start"
+            :side-offset 3
+            :loop true
+            :on-escape-key-down #(.stopPropagation %)
+            :on-close-auto-focus #(.preventDefault %)}]
+          (map menu-item items))]])
 
 (defmethod menu-item :default
   [{:keys [label action disabled]}]
-  (let [sm? @(rf/subscribe [::window.subs/breakpoint? :sm])]
+  (let [md? @(rf/subscribe [::window.subs/breakpoint? :md?])]
     [:> Menubar/Item
      {:class "menu-item"
       :on-select #(rf/dispatch action)
       :disabled disabled}
      [:div label]
-     (when sm? [views/shortcuts action])]))
+     (when md?
+       [views/shortcuts action])]))
 
 (defn submenus []
   [(file-menu)
@@ -713,9 +730,18 @@
    (view-menu)
    (help-menu)])
 
+(defn mobile-root
+  []
+  [{:id :root
+    :label [views/icon "menu"]
+    :type :root
+    :items (mapv #(assoc % :type :sub-menu) (submenus))}])
+
 (defn root
   []
-  (->> (submenus)
+  (->> (if @(rf/subscribe [::window.subs/breakpoint? :md])
+         (submenus)
+         (mobile-root))
        (map menu-item)
        (into [:> Menubar/Root
               {:class "flex overflow-hidden"
