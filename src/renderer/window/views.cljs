@@ -38,7 +38,7 @@
       {:as-child true}
       [:button.button
        {:class "flex gap-1 items-center px-2 uppercase bg-primary font-mono
-                outline-offset-[-1px]"}
+                outline-inset"}
        computed-abbr
        [views/icon "chevron-down"]]]
      [:> DropdownMenu/Portal
@@ -56,8 +56,8 @@
 
 (defn button
   [{:keys [icon action class title]}]
-  [:button.button
-   {:class ["px-3 outline-offset-[-1px]" class]
+  [:button.button.px-3.outline-inset
+   {:class class
     :title title
     :on-click #(rf/dispatch action)}
    [views/icon icon]])
@@ -80,7 +80,7 @@
       :icon "window-close"}]))
 
 (defn app-icon []
-  [:div.drag.shrink-0.hidden.sm:block
+  [:div.drag.shrink-0
    {:class "px-2"}
    [:img.h-4.w-4
     {:src "img/icon-no-bg.svg"
@@ -93,16 +93,15 @@
         mac? @(rf/subscribe [::app.subs/mac?])
         web? @(rf/subscribe [::app.subs/web?])
         installable? @(rf/subscribe [::app.subs/installable?])
-        title-bar @(rf/subscribe [::document.subs/title-bar])]
+        title-bar @(rf/subscribe [::document.subs/title-bar])
+        md? @(rf/subscribe [::window.subs/breakpoint? :md])]
     [:div.flex.items-center.relative
      (when-not (or fullscreen? mac?)
        [app-icon])
-     [:div.overflow-hidden
-      [views/scroll-area
+     (when md?
        [:div.flex.relative.bg-secondary
-        {:class ["px-1 sm:px-0"
-                 (when (and mac? (not fullscreen?)) "ml-16")]}
-        [window.menubar/root]]]]
+        {:class (when (and mac? (not fullscreen?)) "ml-16")}
+        [window.menubar/root]])
      [:div.absolute.hidden.justify-center.drag.grow.h-full.items-center
       {:class "pointer-events-none md:flex left-1/2 -translate-x-1/2 z-[-1]"
        :dir "ltr"}
@@ -113,20 +112,22 @@
        (when installable?
          [views/icon-button "download"
           {:title (t [::install])
-           :class "rounded-none outline-offset-[-1px] bg-transparent!"
+           :class "rounded-none outline-inset bg-transparent!"
            :on-click #(rf/dispatch [::app.events/install])}])
-       [language-dropdown]
-       [button {:action [::theme.events/cycle-mode]
-                :title (t [::theme "Theme mode - %1"] [theme-mode])
-                :icon theme-mode
-                :class "bg-primary"}]
+       (when md?
+         [:<>
+          [language-dropdown]
+          [button {:action [::theme.events/cycle-mode]
+                   :title (t [::theme "Theme mode - %1"] [theme-mode])
+                   :icon theme-mode
+                   :class "bg-primary"}]])
        (when (or fullscreen? web?)
          [button {:action [::window.events/toggle-fullscreen]
                   :title (if fullscreen?
                            (t [::exit-fullscreen "Exit fullscreen"])
                            (t [::enter-fullscreen "Enter fullscreen"]))
                   :icon (if fullscreen? "arrow-minimize" "arrow-maximize")
-                  :class "bg-primary hidden sm:block"}])
+                  :class "bg-primary"}])
        (when-not (or web? fullscreen? mac?)
          (->> (window-control-buttons)
               (map button)

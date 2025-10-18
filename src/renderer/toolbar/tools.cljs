@@ -25,7 +25,7 @@
         {:as-child true}
         [:span
          [views/radio-icon-button (:icon properties) active
-          {:class (when primary "outline outline-offset-[-1px] outline-accent")
+          {:class (when primary "outline outline-inset outline-accent")
            :aria-label label
            :on-click #(rf/dispatch [::tool.events/activate tool])}]]]
        [:> Tooltip/Portal
@@ -40,7 +40,8 @@
 
 (defn group
   [items]
-  (into [:div.flex.flex-wrap.justify-center.sm:gap-1 {:class "gap-0.5"}]
+  (into [:div.flex.flex-wrap.justify-center.md:gap-1.flex-nowrap
+         {:class "gap-0.5"}]
         (map button items)))
 
 (defn groups

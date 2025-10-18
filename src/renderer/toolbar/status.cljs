@@ -16,7 +16,8 @@
    [renderer.timeline.views :as timeline.views]
    [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]
-   [renderer.views :as views]))
+   [renderer.views :as views]
+   [renderer.window.subs :as-alias window.subs]))
 
 (defn coordinates []
   (let [[x y] @(rf/subscribe [::app.subs/adjusted-pointer-pos])]
@@ -74,31 +75,30 @@
      [:> DropdownMenu/Arrow {:class "fill-primary"}]]]])
 
 (defn view-radio-buttons []
-  [{:title (t [::timeline "Timeline"])
-    :active [::app.subs/panel-visible? :timeline]
-    :icon "animation"
-    :class "hidden sm:inline-block shrink-0"
-    :action [::app.events/toggle-panel :timeline]}
-   {:title (t [::grid "Grid"])
-    :active [::app.subs/grid]
-    :icon "grid"
-    :class "shrink-0"
-    :action [::app.events/toggle-grid]}
-   {:title (t [::rulers "Rulers"])
-    :active [::ruler.subs/visible?]
-    :icon "ruler-combined"
-    :class "shrink-0"
-    :action [::ruler.events/toggle-visible]}
-   {:title (t [::history "History"])
-    :active [::app.subs/panel-visible? :history]
-    :icon "history"
-    :class "hidden sm:inline-block shrink-0"
-    :action [::app.events/toggle-panel :history]}
-   {:title (t [::xml "XML"])
-    :class "hidden sm:inline-block shrink-0"
-    :active [::app.subs/panel-visible? :xml]
-    :icon "code"
-    :action [::app.events/toggle-panel :xml]}])
+  (cond-> []
+    @(rf/subscribe [::window.subs/breakpoint? :md])
+    (into [{:title (t [::timeline "Timeline"])
+            :active [::app.subs/panel-visible? :timeline]
+            :icon "animation"
+            :action [::app.events/toggle-panel :timeline]}
+           {:title (t [::history "History"])
+            :active [::app.subs/panel-visible? :history]
+            :icon "history"
+            :action [::app.events/toggle-panel :history]}
+           {:title (t [::xml "XML"])
+            :active [::app.subs/panel-visible? :xml]
+            :icon "code"
+            :action [::app.events/toggle-panel :xml]}])
+
+    :always
+    (into [{:title (t [::grid "Grid"])
+            :active [::app.subs/grid]
+            :icon "grid"
+            :action [::app.events/toggle-grid]}
+           {:title (t [::rulers "Rulers"])
+            :active [::ruler.subs/visible?]
+            :icon "ruler-combined"
+            :action [::ruler.events/toggle-visible]}])))
 
 (defn set-zoom
   [e v]
@@ -118,7 +118,7 @@
   [zoom]
   (let [precision (zoom-decimal-points zoom)
         value (utils.length/->fixed (* 100 zoom) precision false)]
-    [:input.form-element.text-right.font-mono.p-1
+    [:input.text-right.font-mono.p-1
      {:key zoom
       :aria-label (t [::zoom "Zoom"])
       :type "number"
@@ -153,7 +153,7 @@
        :on-click #(rf/dispatch [::frame.events/zoom-in])}
       [views/icon "plus"]]
      [:div.flex.hidden.items-center
-      {:class "md:flex"
+      {:class "lg:flex"
        :dir "ltr"}
       [zoom-input zoom]
       [:div.px-2.flex.items-center.font-mono "%"]]
@@ -197,10 +197,8 @@
         {:title (t [::fill-color "Pick fill color"])
          :style {:background fill}}]]
 
-      [:button.icon-button
+      [:button.icon-button.bg-transparent!
        {:title (t [::swap-color "Swap fill with stroke"])
-        :style {:width "21px"
-                :background "transparent"}
         :on-click #(rf/dispatch [::document.events/swap-colors])}
        [views/icon "swap-horizontal"]]
       [views/color-picker
@@ -212,14 +210,11 @@
         :on-change #(rf/dispatch [::document.events/preview-attr
                                   :stroke
                                   (get-hex %)])}
-       [:button.button.relative.border.border-border.button-size
+       [:button.relative.border.border-border.button-size
         {:title (t [::stroke-color "Pick stroke color"])
          :style {:background stroke}}
         [:div.bg-primary.absolute.border.border-border
-         {:style {:width "13px"
-                  :height "13px"
-                  :bottom "9px"
-                  :right "9px"}}]]]]
+         {:class "w-1/2 h-1/2 bottom-1/4 right-1/4"}]]]]
      [:div.grow]
      (into [:<>]
            (map radio-button (view-radio-buttons)))

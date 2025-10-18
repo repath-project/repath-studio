@@ -6,7 +6,6 @@
    ["path-browserify" :as path-browserify]
    ["react-resizable-panels" :refer [Panel PanelGroup]]
    ["sonner" :refer [Toaster]]
-   ["vaul" :refer [Drawer]]
    [config :as config]
    [re-frame.core :as rf]
    [reagent.core :as reagent]
@@ -36,12 +35,13 @@
    [renderer.tree.views :as tree.views]
    [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]
+   [renderer.window.menubar :as window.menubar]
    [renderer.window.subs :as-alias window.subs]
    [renderer.window.views :as window.views]))
 
 (defn right-panel
   [active-tool]
-  [:div.flex.flex-col.h-full.w-80.bg-secondary
+  [:div.flex.flex-col.h-full.bg-secondary
    [views/scroll-area
     (tool.hierarchy/right-panel active-tool)]
    [:div.bg-primary.grow.flex]])
@@ -50,10 +50,7 @@
   []
   (let [ruler-visible? @(rf/subscribe [::ruler.subs/visible?])
         ruler-locked? @(rf/subscribe [::ruler.subs/locked?])
-        backdrop @(rf/subscribe [::app.subs/backdrop])
-        md? @(rf/subscribe [::window.subs/breakpoint? :md])
-        some-selected? @(rf/subscribe [::element.subs/some-selected?])
-        active-tool @(rf/subscribe [::tool.subs/active])]
+        backdrop @(rf/subscribe [::app.subs/backdrop])]
     [:div.flex.flex-col.flex-1.h-full.gap-px
      [:div
       [views/scroll-area [toolbar.tools/root]]
@@ -85,45 +82,19 @@
         [frame.views/root]]
        (when backdrop
          [:div.absolute.inset-0
-          {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])
+          {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])]]]))
 
-       (when (not md?)
-         [:> Drawer.Root {:direction "left"}
-          [:> Drawer.Trigger
-           {:class "button px-2 absolute bottom-2 left-2 rounded bg-primary!
-                    shadow-md"
-            :aria-label (t [::toggle-properties "Toggle tree panel"])}
-           [views/icon "tree"]]
-          [:> Drawer.Portal
-           [:> Drawer.Overlay {:class "backdrop"}]
-           [:> Drawer.Content
-            {:class "inset-0 right-auto fixed z-10 outline-none flex"}
-            [:> Drawer.Title {:class "sr-only"}
-             (t [::properties-panel "Tree panel"])]
-            [:> Drawer.Description
-             {:as-child true}
-             [:div.flex.overflow-hidden.shadow-xl
-              [tree.views/root]]]]]])
-       (when (and (not md?)
-                  some-selected?)
-         [:> Drawer.Root {:direction "right"}
-          [:> Drawer.Trigger
-           {:class "button px-2 absolute bottom-2 right-2 rounded bg-primary!
-                    shadow-md"
-            :aria-label (t [::toggle-properties "Toggle attributes panel"])}
-           [views/icon "properties"]]
-          [:> Drawer.Portal
-           [:> Drawer.Overlay {:class "backdrop"}]
-           [:> Drawer.Content
-            {:class "inset-0 left-auto fixed z-10 overflow-hidden
-                     flex"}
-            [:> Drawer.Title {:class "sr-only"}
-             (t [::properties-panel "Attributes panel"])]
-            [:> Drawer.Description
-             {:as-child true}
-             [:div.flex.overflow-hidden.shadow-xl
-              [right-panel active-tool]]]]]])]]]))
-
+(defn xml-panel
+  []
+  (let [xml @(rf/subscribe [::element.subs/xml])
+        codemirror-theme @(rf/subscribe [::theme.subs/codemirror])]
+    [views/scroll-area
+     [:div.p-1
+      [views/cm-editor xml
+       {:options {:mode "text/xml"
+                  :readOnly true
+                  :screenReaderLabel "XML"
+                  :theme codemirror-theme}}]]]))
 (defn center-top-group
   []
   [:div.flex.flex-col.flex-1.h-full
@@ -136,38 +107,33 @@
       {:id "frame-panel"
        :order 1}
       [frame-panel]]
-     (when @(rf/subscribe [::app.subs/panel-visible? :history])
+     (when @(rf/subscribe [::window.subs/breakpoint? :md])
        [:<>
-        [views/resize-handle "history-resize-handle"]
-        [:> Panel {:id "history-panel"
-                   :defaultSize 30
-                   :minSize 5
-                   :order 2}
-         [:div.bg-primary.h-full
-          [history.views/root]]]])
+        (when @(rf/subscribe [::app.subs/panel-visible? :history])
+          [:<>
+           [views/resize-handle "history-resize-handle"]
+           [:> Panel {:id "history-panel"
+                      :defaultSize 30
+                      :minSize 5
+                      :order 2}
+            [:div.bg-primary.h-full
+             [history.views/root]]]])
 
-     (when @(rf/subscribe [::app.subs/panel-visible? :xml])
-       (let [xml @(rf/subscribe [::element.subs/xml])
-             codemirror-theme @(rf/subscribe [::theme.subs/codemirror])]
-         [:<>
-          [views/resize-handle "xml-resize-handle"]
-          [:> Panel {:id "xml-panel"
-                     :defaultSize 30
-                     :minSize 5
-                     :order 3}
+        (when @(rf/subscribe [::app.subs/panel-visible? :xml])
+          [:<>
+           [views/resize-handle "xml-resize-handle"]
+           [:> Panel {:id "xml-panel"
+                      :defaultSize 30
+                      :minSize 5
+                      :order 3}
 
-           [:div.h-full.bg-primary.flex
-            [views/scroll-area
-             [:div.p-1
-              [views/cm-editor xml
-               {:options {:mode "text/xml"
-                          :readOnly true
-                          :screenReaderLabel "XML"
-                          :theme codemirror-theme}}]]]]]]))]]])
+            [:div.h-full.bg-primary.flex
+             [xml-panel]]]])])]]])
 
 (defn editor
   []
-  (let [timeline-visible @(rf/subscribe [::app.subs/panel-visible? :timeline])]
+  (let [timeline-visible @(rf/subscribe [::app.subs/panel-visible? :timeline])
+        md? @(rf/subscribe [::window.subs/breakpoint? :md])]
     [:> PanelGroup
      {:direction "vertical"
       :id "editor-group"
@@ -177,16 +143,18 @@
                 :order 1}
       [center-top-group]]
      [toolbar.status/root]
-     (when timeline-visible
-       [views/resize-handle "timeline-resize-handle"])
-     (when timeline-visible
-       [:> Panel
-        {:id "timeline-panel"
-         :minSize 10
-         :defaultSize 20
-         :order 2}
-        [timeline.views/root]])
-     [repl.views/root]]))
+     (when md?
+       [:<>
+        (when timeline-visible
+          [:<>
+           [views/resize-handle "timeline-resize-handle"]
+           [:> Panel
+            {:id "timeline-panel"
+             :minSize 10
+             :defaultSize 20
+             :order 2}
+            [timeline.views/root]]])
+        [repl.views/root]])]))
 
 (defn document-size-select []
   [:> Select/Root
@@ -307,6 +275,52 @@
               (map #(apply help-command %))
               (into [:div]))]]]]]]])
 
+(defn bottom-bar
+  []
+  (let [some-selected? @(rf/subscribe [::element.subs/some-selected?])
+        active-tool @(rf/subscribe [::tool.subs/active])]
+    [:div.flex.justify-evenly.p-2.gap-1
+
+     [views/drawer
+      {:icon "tree"
+       :label "Tree"
+       :direction "left"
+       :content [tree.views/root]}]
+
+     [views/drawer
+      {:icon "code"
+       :label "XML"
+       :direction "left"
+       :content [xml-panel]}]
+     [:span.v-divider]
+
+     [views/drawer
+      {:icon "animation"
+       :label "Timeline"
+       :direction "bottom"
+       :content [timeline.views/root]}]
+
+     [views/drawer
+      {:icon "shell"
+       :label "Shell"
+       :direction "bottom"
+       :content [repl.views/root]}]
+
+     [:span.v-divider]
+
+     [views/drawer
+      {:icon "history"
+       :label "History"
+       :direction "right"
+       :content [history.views/root]}]
+
+     [views/drawer
+      {:icon "properties"
+       :label "Attributes"
+       :direction "right"
+       :disabled (not some-selected?)
+       :content [right-panel active-tool]}]]))
+
 (defn root
   []
   (let [documents? @(rf/subscribe [::document.subs/entities?])
@@ -324,26 +338,33 @@
       [:> Direction/Provider {:dir lang-dir}
        [:> Tooltip/Provider
         [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden.justify-between
-         [window.views/app-header]
+         (if (or md? (not web?))
+           [window.views/app-header]
+           [:div])
          (if documents?
            [:div.flex.h-full.flex-1.overflow-hidden.gap-px
-            (when tree?
-              [:div.flex-col.hidden.overflow-hidden
-               {:class "md:flex w-[227px]"}
+            (when (and tree? md?)
+              [:div.flex.flex-col.overflow-hidden
                [document.views/actions]
                [tree.views/root]])
             [:div.flex.flex-col.flex-1.overflow-hidden.h-full
-             [document.views/tab-bar]
+             (if md?
+               [document.views/tab-bar]
+               [:div.flex.overflow-hidden
+                [:div.toolbar [window.menubar/root]]
+                [document.views/tab-bar]])
              [:div.flex.h-full.flex-1.gap-px.overflow-hidden
               [:div.flex.h-full.flex-col.flex-1.overflow-hidden.gap-px
                [editor]]
               [:div.flex.gap-px
                (when (and md? properties?)
-                 [right-panel active-tool])
+                 [:div.w-80 [right-panel active-tool]])
                [:div.bg-primary.flex
                 [views/scroll-area [toolbar.object/root]]]]]]]
            [home recent-documents])
-         [:div]]
+         [:div]
+         (when (and documents? (not md?))
+           [bottom-bar])]
         [dialog.views/root]
         [:> Toaster
          {:theme theme

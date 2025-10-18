@@ -5,8 +5,8 @@
    <stop stop-color="#fff" stop-opacity="0" offset="1"/>
   </linearGradient>
  </defs>
- <g transform="matrix(.24082 0 0 .24082 -442.03 -81.448)" fill="#e93976" stop-color="#000000" stroke-width="4.5495" style="-inkscape-stroke:none;font-variation-settings:normal">
-  <path d="m1976.1 338.21a140.63 140.63 0 0 0-140.63 140.63 140.63 140.63 0 0 0 0.016 0.22852h-0.016v140.4h86.32v-11.176a140.63 140.63 0 0 0 54.309 11.176 140.63 140.63 0 0 0 140.63-140.63 140.63 140.63 0 0 0-140.63-140.63zm0 86.32a54.309 54.309 0 0 1 54.309 54.309 54.309 54.309 0 0 1-54.309 54.309 54.309 54.309 0 0 1-54.309-54.309 54.309 54.309 0 0 1 54.309-54.309z" fill="#e93976" stop-color="#000000" stroke-width="4.5495" style="-inkscape-stroke:none;font-variation-settings:normal"/>
+ <g transform="matrix(.24082 0 0 .24082 -442.03 -81.448)" fill="#dd286c" stop-color="#000000" stroke-width="4.5495" style="-inkscape-stroke:none;font-variation-settings:normal">
+  <path d="m1976.1 338.21a140.63 140.63 0 0 0-140.63 140.63 140.63 140.63 0 0 0 0.016 0.22852h-0.016v140.4h86.32v-11.176a140.63 140.63 0 0 0 54.309 11.176 140.63 140.63 0 0 0 140.63-140.63 140.63 140.63 0 0 0-140.63-140.63zm0 86.32a54.309 54.309 0 0 1 54.309 54.309 54.309 54.309 0 0 1-54.309 54.309 54.309 54.309 0 0 1-54.309-54.309 54.309 54.309 0 0 1 54.309-54.309z" fill="#dd286c" stop-color="#000000" stroke-width="4.5495" style="-inkscape-stroke:none;font-variation-settings:normal"/>
  </g>
  <g transform="matrix(.88455 0 0 .88455 -26.56 -26.049)">
   <path d="m53.514 67.735v35.244a38.285 38.285 0 0 0 14.785 3.0426 38.285 38.285 0 0 0 38.285-38.285 38.285 38.285 0 0 0 0-4.87e-4h-23.5a14.785 14.785 0 0 1 0 4.87e-4 14.785 14.785 0 0 1-14.785 14.785 14.785 14.785 0 0 1-14.785-14.785 14.785 14.785 0 0 1 0-4.87e-4z" fill="url(#linearGradient11)" stop-color="#000000" stroke-width="1.0034" style="-inkscape-stroke:none;font-variation-settings:normal"/>

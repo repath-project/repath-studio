@@ -59,6 +59,7 @@
   [id saved]
   [:button.small.icon-button.invisible.relative.shrink-0.bg-inherit.group
    {:key id
+    :class "hover:[&_.dot-icon]:hidden focus:[&_.dot-icon]:hidden"
     :title (t [::close-doc "Close document"])
     :on-click (fn [e]
                 (.stopPropagation e)
@@ -67,7 +68,7 @@
    (when-not saved
      [views/icon "dot"
       {:class "absolute inset-0 bg-inherit items-center text-foreground-muted
-               sm:visible invisible group-hover:invisible group-focus:invisible
+               md:visible invisible group-hover:invisible group-focus:invisible
                group-active:invisible"}])])
 
 (defn context-menu
@@ -104,7 +105,7 @@
           [:div.tab
            {:class ["flex items-center h-full relative text-left px-2 py-0
                      overflow-hidden hover:[&_button]:visible outline-default
-                     hover:text-foreground outline-offset-[-1px]"
+                     hover:text-foreground outline-inset"
                     (if active?
                       "bg-primary text-foreground [&_button]:visible"
                       "bg-secondary text-foreground-muted")
@@ -134,7 +135,7 @@
                    (when (and this active?)
                      (rf/dispatch [::events/scroll-into-view this])))}
            [:div.pointer-events-none.px-2.gap-1.flex.overflow-hidden
-            (when-not saved? [:span.sm:hidden "•"])
+            (when-not saved? [:span.md:hidden "•"])
             [:span.truncate title]]
            [close-button id saved?]]]
          [:> ContextMenu/Portal
@@ -198,7 +199,7 @@
         active-id @(rf/subscribe [::document.subs/active-id])
         md? @(rf/subscribe [::window.subs/breakpoint? :md])
         tree-visible @(rf/subscribe [::app.subs/panel-visible? :tree])]
-    [:div.flex.justify-between.gap-px
+    [:div.flex.justify-between.gap-px.overflow-hidden
      [:div.flex.flex-1.overflow-hidden
       (if md?
         (for [document-id tabs]

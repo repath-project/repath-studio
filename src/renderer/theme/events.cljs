@@ -15,9 +15,20 @@
          mode (if (= mode :system) native-mode mode)]
      {:db (theme.handlers/set-native-mode db native-mode)
       :fx [[::effects/set-document-attr ["data-theme" (name mode)]]
-           [::effects/set-meta ["theme-color" (if (= mode :dark)
-                                                "#000000"
-                                                "#ffffff")]]]})))
+           [:dispatch [::set-meta-color]]]})))
+
+(rf/reg-event-fx
+ ::set-meta-color
+ [(rf/inject-cofx ::theme.effects/theme-color)]
+ (fn [{:keys [theme-color]} _]
+   {::effects/set-meta ["theme-color" theme-color]}))
+
+(rf/reg-event-fx
+ ::set-mode
+ [persist]
+ (fn [{:keys [db]} [_ mode]]
+   {:db (theme.handlers/set-mode db mode)
+    :dispatch [::set-document-attr]}))
 
 (rf/reg-event-fx
  ::cycle-mode
@@ -26,5 +37,4 @@
    (let [index (.indexOf theme.db/modes (-> db :theme :mode))
          mode (or (get theme.db/modes (inc index))
                   (first theme.db/modes))]
-     {:db (theme.handlers/set-mode db mode)
-      :dispatch [::set-document-attr]})))
+     {:dispatch [::set-mode mode]})))
