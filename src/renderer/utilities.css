@@ -73,8 +73,9 @@
 }
 
 @utility button {
-  @apply button-size relative text-center text-nowrap bg-transparent no-drag text-foreground
-  outline-default fill-foreground aria-expanded:bg-overlay active:bg-overlay;
+  @apply button-size relative text-center text-nowrap bg-transparent no-drag
+  text-foreground outline-default fill-foreground aria-expanded:bg-overlay
+  truncate active:bg-overlay;
 
   &:hover {
     @apply bg-overlay text-foreground-hovered;

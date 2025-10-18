@@ -108,26 +108,27 @@
        :order 1}
       [frame-panel]]
      (when @(rf/subscribe [::window.subs/breakpoint? :md])
-       (when @(rf/subscribe [::app.subs/panel-visible? :history])
-         [:<>
-          [views/resize-handle "history-resize-handle"]
-          [:> Panel {:id "history-panel"
-                     :defaultSize 30
-                     :minSize 5
-                     :order 2}
-           [:div.bg-primary.h-full
-            [history.views/root]]]])
+       [:<>
+        (when @(rf/subscribe [::app.subs/panel-visible? :history])
+          [:<>
+           [views/resize-handle "history-resize-handle"]
+           [:> Panel {:id "history-panel"
+                      :defaultSize 30
+                      :minSize 5
+                      :order 2}
+            [:div.bg-primary.h-full
+             [history.views/root]]]])
 
-       (when @(rf/subscribe [::app.subs/panel-visible? :xml])
-         [:<>
-          [views/resize-handle "xml-resize-handle"]
-          [:> Panel {:id "xml-panel"
-                     :defaultSize 30
-                     :minSize 5
-                     :order 3}
+        (when @(rf/subscribe [::app.subs/panel-visible? :xml])
+          [:<>
+           [views/resize-handle "xml-resize-handle"]
+           [:> Panel {:id "xml-panel"
+                      :defaultSize 30
+                      :minSize 5
+                      :order 3}
 
-           [:div.h-full.bg-primary.flex
-            [xml-panel]]]]))]]])
+            [:div.h-full.bg-primary.flex
+             [xml-panel]]]])])]]])
 
 (defn editor
   []
@@ -337,8 +338,9 @@
       [:> Direction/Provider {:dir lang-dir}
        [:> Tooltip/Provider
         [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden.justify-between
-         (when (or md? (not web?))
-           [window.views/app-header])
+         (if (or md? (not web?))
+           [window.views/app-header]
+           [:div])
          (if documents?
            [:div.flex.h-full.flex-1.overflow-hidden.gap-px
             (when (and tree? md?)
