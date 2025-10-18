@@ -42,6 +42,7 @@
   ],
   "build": {
     "productName": "Repath Studio",
+    "appId": "studio.repath.app",
     "artifactName": "${name}-${os}.${ext}",
     "icon": "resources/public/img/icon",
     "fileAssociations": [
@@ -56,7 +57,17 @@
       "github"
     ],
     "mac": {
-      "category": "public.app-category.graphics-design"
+      "category": "public.app-category.graphics-design",
+      "target": [
+        {
+          "target": "default",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
+      "entitlements": "resources/entitlements.mac.plist",
+      "entitlementsInherit": "resources/entitlements.mac.plist"
     },
     "dmg": {
       "icon": false
