@@ -199,7 +199,7 @@
         active-id @(rf/subscribe [::document.subs/active-id])
         md? @(rf/subscribe [::window.subs/breakpoint? :md])
         tree-visible @(rf/subscribe [::app.subs/panel-visible? :tree])]
-    [:div.flex.justify-between.gap-px
+    [:div.flex.justify-between.gap-px.overflow-hidden
      [:div.flex.flex-1.overflow-hidden
       (if md?
         (for [document-id tabs]

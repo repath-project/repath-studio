@@ -177,10 +177,9 @@
   (let [children (if (map? (first more)) (rest more) more)]
     [:> ScrollArea/Root
      {:class "overflow-hidden w-full"}
-     (into
-      [:> ScrollArea/Viewport
-       {:ref (:ref (first more))
-        :class "w-full h-full"}] children)
+     (into [:> ScrollArea/Viewport
+            {:ref (:ref (first more))
+             :class "w-full h-full [&>div]:block!"}] children)
 
      [:> ScrollArea/Scrollbar
       {:class "flex touch-none p-0.5 select-none w-2.5"
@@ -286,7 +285,7 @@
               :activeSnapPoint @snap
               :setActiveSnapPoint (fn [v] (reset! snap v))))
      [:> Drawer.Trigger
-      {:class "button p-1 rounded h-auto flex flex-col flex-1 text-xs gap-1
+      {:class "button p-1 rounded h-auto flex flex-col flex-1 text-2xs gap-1
                overflow-hidden"
        :disabled disabled}
       [icon (:icon attrs)]
@@ -297,10 +296,10 @@
       [:> Drawer.Content
        {:class ["inset-0 fixed z-9 outline-none flex"
                 (case direction
-                  "left" "right-auto max-w-[80dvw] min-w-[40dvw]"
-                  "right" "left-auto max-w-[80dvw] min-w-[40dvw]"
-                  "bottom" "top-auto h-[30dvh]"
-                  "top" "bottom-auto h-[30dvh]")]}
+                  "left" "right-auto max-w-[80dvw] min-w-[60dvw]"
+                  "right" "left-auto max-w-[80dvw] min-w-[60dvw]"
+                  "bottom" "top-auto max-h-[60dvh] min-h-[30dvh]"
+                  "top" "bottom-auto max-h-[60dvh] min-h-[30dvh]")]}
        [:> Drawer.Title {:class "sr-only"} label]
        [:> Drawer.Description
         {:as-child true}

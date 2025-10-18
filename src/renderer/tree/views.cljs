@@ -215,9 +215,10 @@
    {:class "hover:**:[&.list-item-button]:not-hover:bg-inherit"
     :on-click #(rf/dispatch [::element.events/deselect-all])}
    [views/scroll-area
-    [:ul {:role "menu"
-          :on-pointer-leave #(rf/dispatch [::document.events/clear-hovered])
-          :class (if small? "w-[227px]" "w-80")}
+    [:ul.overflow-hidden
+     {:role "menu"
+      :on-pointer-leave #(rf/dispatch [::document.events/clear-hovered])
+      :class (if small? "w-[227px]" "w-full")}
      (for [el (reverse root-children)]
        ^{:key (:id el)}
        [item el 1 elements small?])]]])
@@ -237,7 +238,7 @@
   []
   [:> ContextMenu/Root
    [:> ContextMenu/Trigger
-    {:class "flex h-full overflow-hidden"}
+    {:class "flex h-full w-full overflow-hidden"}
     [inner-sidebar]]
    [:> ContextMenu/Portal
     (into [:> ContextMenu/Content
