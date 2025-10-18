@@ -6,14 +6,36 @@
   -webkit-app-region: no-drag;
 }
 
-@utility button-size {
-  width: var(--button-size);
-  height: var(--button-size);
+@utility outline-inset {
+  @apply outline-offset-[-1px];
+}
+
+@utility button-size-lg {
+  min-width: var(--button-size-lg);
+  height: var(--button-size-lg);
+}
+
+@utility button-size-md {
+  min-width: var(--button-size-md);
+  height: var(--button-size-md);
 }
 
 @utility button-size-sm {
-  width: var(--button-size-sm);
+  min-width: var(--button-size-sm);
   height: var(--button-size-sm);
+}
+
+@utility button-size-xs {
+  min-width: var(--button-size-xs);
+  height: var(--button-size-xs);
+}
+
+@utility button-size {
+  @apply button-size-lg md:button-size-md;
+}
+
+@utility button-size-small {
+  @apply button-size-sm md:button-size-xs;
 }
 
 @utility v-divider {
@@ -51,11 +73,8 @@
 }
 
 @utility button {
-  @apply relative text-center text-nowrap bg-transparent no-drag text-foreground
+  @apply button-size relative text-center text-nowrap bg-transparent no-drag text-foreground
   outline-default fill-foreground aria-expanded:bg-overlay active:bg-overlay;
-  font-size: 1em;
-  height: var(--button-size);
-  line-height: var(--button-size);
 
   &:hover {
     @apply bg-overlay text-foreground-hovered;
@@ -105,7 +124,7 @@
   @apply button button-size rounded-sm;
 
   &.small {
-    @apply button-size-sm rounded-xs m-0;
+    @apply button-size-small rounded-xs m-0;
   }
 }
 
@@ -157,11 +176,9 @@
   animate-in fade-in max-w-3xs;
 }
 
-
 @utility form-control-button {
-  @apply button bg-primary text-foreground-muted p-1 outline-offset-[-1px];
-  width: 27px;
-  height: 27px;
+  @apply button bg-primary text-foreground-muted p-1 outline-inset
+  h-[27px] min-w-[27px]!;
 }
 
 @keyframes rotationBreak {

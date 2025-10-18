@@ -25,7 +25,7 @@
         {:as-child true}
         [:span
          [views/radio-icon-button (:icon properties) active
-          {:class (when primary "outline outline-offset-[-1px] outline-accent")
+          {:class (when primary "outline outline-inset outline-accent")
            :aria-label label
            :on-click #(rf/dispatch [::tool.events/activate tool])}]]]
        [:> Tooltip/Portal

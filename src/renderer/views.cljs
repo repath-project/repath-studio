@@ -56,8 +56,8 @@
 
 (defn switch
   [label props]
-  [:span.inline-flex.items-center
-   [:label.form-element.h-auto.bg-transparent
+  [:div.inline-flex.items-center.gap-2
+   [:label.bg-transparent
     {:for (:id props)}
     label]
    [:> Switch/Root

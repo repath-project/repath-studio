@@ -30,6 +30,13 @@
 }
 
 :root {
+  --button-size-lg: 35px;
+  --button-size-md: 33px;
+  --button-size-sm: 27px;
+  --button-size-xs: 21px;
+
+  --font-size: 13px;
+
   --sans: 'Noto Sans', sans;
   --mono: 'Noto Sans Mono', monospace;
 

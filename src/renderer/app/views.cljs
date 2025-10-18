@@ -142,17 +142,18 @@
                 :order 1}
       [center-top-group]]
      [toolbar.status/root]
-     (when timeline-visible
-       [views/resize-handle "timeline-resize-handle"])
-     (when timeline-visible
-       [:> Panel
-        {:id "timeline-panel"
-         :minSize 10
-         :defaultSize 20
-         :order 2}
-        [timeline.views/root]])
      (when md?
-       [repl.views/root])]))
+       [:<>
+        (when timeline-visible
+          [:<>
+           [views/resize-handle "timeline-resize-handle"]
+           [:> Panel
+            {:id "timeline-panel"
+             :minSize 10
+             :defaultSize 20
+             :order 2}
+            [timeline.views/root]]])
+        [repl.views/root]])]))
 
 (defn document-size-select []
   [:> Select/Root
@@ -336,7 +337,8 @@
       [:> Direction/Provider {:dir lang-dir}
        [:> Tooltip/Provider
         [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden.justify-between
-         (when md? [window.views/app-header])
+         (when (or md? (not web?))
+           [window.views/app-header])
          (if documents?
            [:div.flex.h-full.flex-1.overflow-hidden.gap-px
             (when (and tree? md?)

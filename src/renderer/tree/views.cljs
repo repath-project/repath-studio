@@ -23,17 +23,16 @@
    [renderer.window.subs :as-alias window.subs]))
 
 (defn item-prop-toggle
-  [id state k active-icon inactive-icon active-title inactive-title small?]
+  [id state k active-icon inactive-icon active-title inactive-title]
   (let [title (if state active-title inactive-title)]
     [views/icon-button
      (if state
        active-icon
        inactive-icon)
-     {:class ["text-inherit! bg-transparent! outline-offset-[-1px]
+     {:class ["text-inherit! bg-transparent! outline-inset
                group-hover:opacity-100 focus:opacity-100
-               outline-inherit"
-              (when (not state) (if small? "opacity-0" "opacity-30"))
-              (when small? "small")]
+               outline-inherit small"
+              (when (not state) "opacity-30 md:opacity-0")]
       :title (t title)
       :on-double-click #(.stopPropagation %)
       :on-click (fn [e]
@@ -122,13 +121,12 @@
     nil))
 
 (defn collapse-button
-  [id collapsed small?]
+  [id collapsed]
   [views/icon-button
    (if collapsed "chevron-right" "chevron-down")
    {:title (if collapsed "expand" "collapse")
-    :class ["bg-transparent! text-inherit! rtl:scale-x-[-1]
-             outline-offset-[-1px] outline-inherit"
-            (when small? "small")]
+    :class ["bg-transparent! text-inherit! rtl:scale-x-[-1] small outline-inset
+             outline-inherit"]
     :on-double-click #(.stopPropagation %)
     :on-click #(do (.stopPropagation %)
                    (rf/dispatch (if collapsed
@@ -136,15 +134,16 @@
                                   [::document.events/collapse-el id])))}])
 
 (defn list-item-button
-  [el {:keys [depth collapsed hovered small]}]
+  [el {:keys [depth collapsed hovered]}]
   (let [{:keys [id selected children locked visible]} el
-        collapse-button-width (if small 21 33)
+        md? @(rf/subscribe [::window.subs/breakpoint? :md])
+        collapse-button-width (if md? 21 27) ; TODO: Get from CSS variable.
         padding (* collapse-button-width (cond-> depth (seq children) dec))]
     [:div.list-item-button.button.flex.px-1.items-center.text-start.group
-     {:class ["hover:bg-overlay outline-offset-[-1px]"
+     {:class ["hover:bg-overlay outline-inset"
               (when selected "accent")
               (when hovered "bg-overlay")
-              (when-not small "h-[45px]")]
+              (when-not md? "h-10")]
       :tab-index 0
       :data-id (str id)
       :on-double-click #(rf/dispatch [::frame.events/pan-to-element id])
@@ -172,7 +171,7 @@
      [:div.shrink-0 {:style {:flex-basis padding}}]
      [:div.flex-1.flex.items-center.justify-between.w-full.overflow-hidden
       (when (seq children)
-        [collapse-button id collapsed small])
+        [collapse-button id collapsed])
       [:div.flex-1.overflow-hidden.flex.items-center
        {:class "gap-1.5"}
        (when-let [icon (:icon (utils.element/properties el))]
@@ -181,15 +180,13 @@
       [item-prop-toggle id
        locked :locked
        "lock" "unlock"
-       [::unlock "Unlock"] [::lock "Lock"]
-       small]
+       [::unlock "Unlock"] [::lock "Lock"]]
       [item-prop-toggle id
        (not visible) :visible
        "eye-closed" "eye"
-       [::show "Show"] [::hide "Hide"]
-       small]]]))
+       [::show "Show"] [::hide "Hide"]]]]))
 
-(defn item [el depth elements small?]
+(defn item [el depth elements]
   (let [{:keys [selected children id]} el
         has-children (seq children)
         hovered-ids @(rf/subscribe [::document.subs/hovered-ids])
@@ -199,40 +196,39 @@
           :role "menuitem"}
      [list-item-button el {:depth depth
                            :collapsed collapsed
-                           :hovered (contains? hovered-ids id)
-                           :small small?}]
+                           :hovered (contains? hovered-ids id)}]
      (when (and has-children (not collapsed))
        [:ul {:role "menu"}
         (for [el (mapv (fn [k] (get elements k)) (reverse children))]
           ^{:key (:id el)}
-          [item el (inc depth) elements small?])])]))
+          [item el (inc depth) elements])])]))
 
 (defn inner-sidebar-render
-  [root-children elements small?]
-  [:div#tree-sidebar.flex.flex-1.bg-primary.h-full.overflow-hidden
-   ;; When the tree is hovered, ignore the hovered class of the elements,
-   ;; if the element itself is not also hovered.
-   {:class "hover:**:[&.list-item-button]:not-hover:bg-inherit"
-    :on-click #(rf/dispatch [::element.events/deselect-all])}
-   [views/scroll-area
-    [:ul.overflow-hidden
-     {:role "menu"
-      :on-pointer-leave #(rf/dispatch [::document.events/clear-hovered])
-      :class (if small? "w-[227px]" "w-full")}
-     (for [el (reverse root-children)]
-       ^{:key (:id el)}
-       [item el 1 elements small?])]]])
+  [root-children elements]
+  (let [md? @(rf/subscribe [::window.subs/breakpoint? :md])]
+    [:div#tree-sidebar.flex.flex-1.bg-primary.h-full.overflow-hidden
+     ;; When the tree is hovered, ignore the hovered class of the elements,
+     ;; if the element itself is not also hovered.
+     {:class "hover:**:[&.list-item-button]:not-hover:bg-inherit"
+      :on-click #(rf/dispatch [::element.events/deselect-all])}
+     [views/scroll-area
+      [:ul.overflow-hidden
+       {:role "menu"
+        :on-pointer-leave #(rf/dispatch [::document.events/clear-hovered])
+        :class (if md? "w-[227px]" "w-full")}
+       (for [el (reverse root-children)]
+         ^{:key (:id el)}
+         [item el 1 elements])]]]))
 
 (defn inner-sidebar []
   (let [state @(rf/subscribe [::tool.subs/state])
         root-children @(rf/subscribe [::element.subs/root-children])
-        elements @(rf/subscribe [::document.subs/elements])
-        md? @(rf/subscribe [::window.subs/breakpoint? :md])]
+        elements @(rf/subscribe [::document.subs/elements])]
     (if (= state :idle)
-      [inner-sidebar-render root-children elements md?]
+      [inner-sidebar-render root-children elements]
       (reagent/with-let [root-children root-children
                          elements elements]
-        [inner-sidebar-render root-children elements md?]))))
+        [inner-sidebar-render root-children elements]))))
 
 (defn root
   []

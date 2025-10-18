@@ -52,12 +52,6 @@
 @import './theme/default.css';
 @import './theme/styles.css';
 
-:root {
-  --button-size: 33px;
-  --button-size-sm: 21px;
-  --font-size: 13px;
-}
-
 body {
   @apply text-foreground;
   font-size: var(--font-size);
@@ -81,8 +75,8 @@ input {
 }
 
 label {
-  @apply block text-right h-full text-foreground-muted overflow-hidden
-  text-ellipsis w-auto hover:text-foreground-hovered hover:cursor-pointer;
+  @apply text-right overflow-hidden text-ellipsis hover:text-foreground-hovered
+  hover:cursor-pointer px-1;
 }
 
 .menu-content {
@@ -95,7 +89,8 @@ label {
 .menu-checkbox-item,
 .menu-radio-item {
   all: unset;
-  @apply flex justify-between gap-4 text-foreground items-center relative h-8;
+  @apply button-size flex justify-between gap-4 text-foreground items-center
+  relative;
   line-height: 1;
   padding: 0 30px;
   user-select: none;

@@ -118,7 +118,7 @@
   [zoom]
   (let [precision (zoom-decimal-points zoom)
         value (utils.length/->fixed (* 100 zoom) precision false)]
-    [:input.form-element.text-right.font-mono.p-1
+    [:input.text-right.font-mono.p-1
      {:key zoom
       :aria-label (t [::zoom "Zoom"])
       :type "number"
@@ -197,10 +197,8 @@
         {:title (t [::fill-color "Pick fill color"])
          :style {:background fill}}]]
 
-      [:button.icon-button
+      [:button.icon-button.bg-transparent!
        {:title (t [::swap-color "Swap fill with stroke"])
-        :style {:width "21px"
-                :background "transparent"}
         :on-click #(rf/dispatch [::document.events/swap-colors])}
        [views/icon "swap-horizontal"]]
       [views/color-picker
@@ -212,14 +210,11 @@
         :on-change #(rf/dispatch [::document.events/preview-attr
                                   :stroke
                                   (get-hex %)])}
-       [:button.button.relative.border.border-border.button-size
+       [:button.relative.border.border-border.button-size
         {:title (t [::stroke-color "Pick stroke color"])
          :style {:background stroke}}
         [:div.bg-primary.absolute.border.border-border
-         {:style {:width "13px"
-                  :height "13px"
-                  :bottom "9px"
-                  :right "9px"}}]]]]
+         {:class "w-1/2 h-1/2 bottom-1/4 right-1/4"}]]]]
      [:div.grow]
      (into [:<>]
            (map radio-button (view-radio-buttons)))

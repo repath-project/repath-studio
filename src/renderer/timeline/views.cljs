@@ -34,8 +34,8 @@
 (defn speed-select
   [editor-ref]
   (let [speed @(rf/subscribe [::timeline.subs/speed])]
-    [:div.inline-flex.items-center
-     [:label.form-element.sr-only
+    [:div.inline-flex.items-center.gap-2
+     [:label.hidden.md:block
       {:for "animation-speed"}
       (t [::speed "Speed"])]
      [:> Select/Root
@@ -78,7 +78,7 @@
   []
   (let [grid-snap? @(rf/subscribe [::timeline.subs/grid-snap?])
         guide-snap? @(rf/subscribe [::timeline.subs/guide-snap?])]
-    [:div.grow
+    [:div.grow.flex.gap-1
      [views/switch
       (t [::grid-snap "Grid snap"])
       {:id "grid-snap"

@@ -693,7 +693,7 @@
   [{:keys [label items id disabled]}]
   [:> Menubar/Menu
    [:> Menubar/Trigger
-    {:class ["button-size md:w-auto md:h-auto md:px-3 md:py-1.5 flex rounded-sm
+    {:class ["button-size md:h-auto md:px-3 md:py-1.5 flex rounded-sm
               outline-none select-none items-center justify-center leading-none
               data-[state=open]:bg-overlay
               hover:bg-overlay hover:text-foreground-hovered
@@ -739,7 +739,7 @@
 
 (defn root
   []
-  (->> (if @(rf/subscribe [::window.subs/breakpoint? :md])
+  (->> (if @(rf/subscribe [::window.subs/breakpoint? :lg])
          (submenus)
          (mobile-root))
        (map menu-item)

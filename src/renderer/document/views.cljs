@@ -68,7 +68,7 @@
    (when-not saved
      [views/icon "dot"
       {:class "absolute inset-0 bg-inherit items-center text-foreground-muted
-               sm:visible invisible group-hover:invisible group-focus:invisible
+               md:visible invisible group-hover:invisible group-focus:invisible
                group-active:invisible"}])])
 
 (defn context-menu
@@ -105,7 +105,7 @@
           [:div.tab
            {:class ["flex items-center h-full relative text-left px-2 py-0
                      overflow-hidden hover:[&_button]:visible outline-default
-                     hover:text-foreground outline-offset-[-1px]"
+                     hover:text-foreground outline-inset"
                     (if active?
                       "bg-primary text-foreground [&_button]:visible"
                       "bg-secondary text-foreground-muted")
@@ -135,7 +135,7 @@
                    (when (and this active?)
                      (rf/dispatch [::events/scroll-into-view this])))}
            [:div.pointer-events-none.px-2.gap-1.flex.overflow-hidden
-            (when-not saved? [:span.sm:hidden "•"])
+            (when-not saved? [:span.md:hidden "•"])
             [:span.truncate title]]
            [close-button id saved?]]]
          [:> ContextMenu/Portal
