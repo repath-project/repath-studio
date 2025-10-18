@@ -10,6 +10,13 @@
    (let [mode (if (.-matches native-query!) :dark :light)]
      (assoc coeffects :native-mode mode))))
 
+(rf/reg-cofx
+ ::theme-color
+ (fn [coeffects _]
+   (let [style (.getComputedStyle js/window (.-documentElement js/document))
+         color (.getPropertyValue style "--primary")]
+     (assoc coeffects :theme-color color))))
+
 (rf/reg-fx
  ::add-listener
  (fn [e]
