@@ -45,6 +45,7 @@
     "appId": "studio.repath.app",
     "artifactName": "${name}-${os}.${ext}",
     "icon": "resources/public/img/icon",
+    "afterSign": "electron-builder-notarize",
     "fileAssociations": [
       {
         "ext": "rps",
@@ -58,6 +59,8 @@
     ],
     "mac": {
       "category": "public.app-category.graphics-design",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
       "target": [
         {
           "target": "default",
@@ -66,11 +69,12 @@
           ]
         }
       ],
-      "entitlements": "resources/entitlements.mac.plist",
-      "entitlementsInherit": "resources/entitlements.mac.plist"
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist"
     },
     "dmg": {
-      "icon": false
+      "icon": false,
+      "sign": false
     },
     "linux": {
       "target": [
@@ -111,6 +115,7 @@
     "create-react-class": "15.7.0",
     "electron": "38.1.2",
     "electron-builder": "26.0.12",
+    "electron-builder-notarize": "1.5.2",
     "events": "3.3.0",
     "graceful-fs": "4.2.11",
     "highlight.js": "11.11.1",
