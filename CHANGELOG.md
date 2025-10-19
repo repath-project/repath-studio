@@ -6,6 +6,7 @@
 
 - Persist file handles to open recent and save open files on future sessions [#91](https://github.com/repath-project/repath-studio/pull/91)
 - Code sign and notarize macOS build
+- Auto updates
 - Preview fill color on pointer over element
 - Error reporting dialog
 - PWA install button
