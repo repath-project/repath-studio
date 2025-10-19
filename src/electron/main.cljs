@@ -5,6 +5,7 @@
    ["@sentry/electron/main" :as sentry-electron-main]
    ["electron" :refer [app shell ipcMain BrowserWindow]]
    ["electron-log/main" :as log]
+   ["electron-updater" :refer [autoUpdater]]
    ["electron-window-state" :as window-state-keeper]
    ["os" :as os]
    ["path" :as path]
@@ -152,7 +153,9 @@
     (register-web-contents-events!)
     (register-ipc-on-events!)
     (register-ipc-handle-events!)
-    (register-window-events!)))
+    (register-window-events!)
+
+    (.checkForUpdatesAndNotify autoUpdater)))
 
 (defn init-loading-window! []
   (set! (.-allowRendererProcessReuse app) false)
