@@ -1,9 +1,8 @@
 {
-    "recommendations": [
-        "betterthantomorrow.calva",
-        "bradlc.vscode-tailwindcss",
-        "tekumara.typos-vscode",
-        "streetsidesoftware.code-spell-checker",
-        "davidanson.vscode-markdownlint"
-    ]
+  "recommendations": [
+    "betterthantomorrow.calva",
+    "bradlc.vscode-tailwindcss",
+    "tekumara.typos-vscode",
+    "davidanson.vscode-markdownlint"
+  ]
 }
