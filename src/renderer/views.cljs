@@ -105,8 +105,9 @@
 
 (defn shortcuts
   [event]
-  (let [event-shortcuts @(rf/subscribe [::app.subs/event-shortcuts event])]
-    (when (seq event-shortcuts)
+  (let [event-shortcuts @(rf/subscribe [::app.subs/event-shortcuts event])
+        md? @(rf/subscribe [::window.subs/breakpoint? :md])]
+    (when (and (seq event-shortcuts) md?)
       (into [:span.inline-flex.text-foreground-muted {:class "gap-1.5"}]
             (comp (map format-shortcut)
                   (interpose [:span]))

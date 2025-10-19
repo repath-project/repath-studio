@@ -660,16 +660,15 @@
 
 (defmethod menu-item :checkbox
   [{:keys [label action checked]}]
-  (let [sm? @(rf/subscribe [::window.subs/breakpoint? :sm])]
-    [:> Menubar/CheckboxItem
-     {:class "menu-checkbox-item inset"
-      :on-select #(rf/dispatch action)
-      :checked checked}
-     [:> Menubar/ItemIndicator
-      {:class "menu-item-indicator"}
-      [views/icon "checkmark"]]
-     [:div label]
-     (when sm? [views/shortcuts action])]))
+  [:> Menubar/CheckboxItem
+   {:class "menu-checkbox-item inset"
+    :on-select #(rf/dispatch action)
+    :checked checked}
+   [:> Menubar/ItemIndicator
+    {:class "menu-item-indicator"}
+    [views/icon "checkmark"]]
+   [:div label]
+   [views/shortcuts action]])
 
 (defmethod menu-item :sub-menu
   [{:keys [label items disabled]}]
@@ -714,14 +713,12 @@
 
 (defmethod menu-item :default
   [{:keys [label action disabled]}]
-  (let [md? @(rf/subscribe [::window.subs/breakpoint? :md?])]
-    [:> Menubar/Item
-     {:class "menu-item"
-      :on-select #(rf/dispatch action)
-      :disabled disabled}
-     [:div label]
-     (when md?
-       [views/shortcuts action])]))
+  [:> Menubar/Item
+   {:class "menu-item"
+    :on-select #(rf/dispatch action)
+    :disabled disabled}
+   [:div label]
+   [views/shortcuts action]])
 
 (defn submenus []
   [(file-menu)

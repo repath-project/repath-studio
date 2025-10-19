@@ -80,8 +80,8 @@ label {
 }
 
 .menu-content {
-  @apply bg-primary drop-shadow-lg p-1 z-10 rounded-sm no-drag min-w-[160px]
-  sm:min-w-[200px] border border-border;
+  @apply bg-primary drop-shadow-lg p-1 z-10 rounded-sm no-drag min-w-[50dvw]
+  sm:min-w-[200px] max-w-[50dvw] border border-border;
 }
 
 .menu-item,
@@ -90,10 +90,8 @@ label {
 .menu-radio-item {
   all: unset;
   @apply button-size flex justify-between gap-4 text-foreground items-center
-  relative;
-  line-height: 1;
+  relative select-none h-auto;
   padding: 0 30px;
-  user-select: none;
 }
 
 .menu-item[data-state='open'],

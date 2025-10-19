@@ -183,7 +183,7 @@
         stroke @(rf/subscribe [::document.subs/stroke])
         get-hex #(:hex (js->clj % :keywordize-keys true))]
     [:div.toolbar.bg-primary.mt-px.relative
-     [:div.flex.gap-1
+     [:div.flex.sm:gap-1
       [views/color-picker
        {:color fill
         :on-change-complete #(rf/dispatch [::element.events/set-attr

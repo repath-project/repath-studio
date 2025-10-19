@@ -12,22 +12,22 @@
 
 @utility button-size-lg {
   min-width: var(--button-size-lg);
-  height: var(--button-size-lg);
+  min-height: var(--button-size-lg);
 }
 
 @utility button-size-md {
   min-width: var(--button-size-md);
-  height: var(--button-size-md);
+  min-height: var(--button-size-md);
 }
 
 @utility button-size-sm {
   min-width: var(--button-size-sm);
-  height: var(--button-size-sm);
+  min-height: var(--button-size-sm);
 }
 
 @utility button-size-xs {
   min-width: var(--button-size-xs);
-  height: var(--button-size-xs);
+  min-height: var(--button-size-xs);
 }
 
 @utility button-size {
@@ -179,7 +179,7 @@
 
 @utility form-control-button {
   @apply button bg-primary text-foreground-muted p-1 outline-inset
-  h-[27px] min-w-[27px]!;
+  min-h-[27px] min-w-[27px]!;
 }
 
 @keyframes rotationBreak {
