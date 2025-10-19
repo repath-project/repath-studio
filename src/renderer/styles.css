@@ -58,6 +58,7 @@ body {
 }
 
 p {
+  @apply text-pretty;
   margin-bottom: 1rem;
 }
 
