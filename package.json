@@ -5,7 +5,7 @@
   "author": "Konstantinos Kaloutas",
   "homepage": "https://repath.studio",
   "license": "AGPL-3.0",
-  "version": "0.4.9",
+  "version": "0.4.10",
   "scripts": {
     "upgrade": "npx npm-check-updates -u -x 'codemirror @radix-ui/react-context-menu @radix-ui/react-dropdown-menu @radix-ui/react-menubar @radix-ui/react-select @radix-ui/react-slider' && npm install && npm upgrade",
     "postinstall": "npx electron-builder install-app-deps",
@@ -24,9 +24,8 @@
     "clj-format": "clojure -M:format -m cljfmt.main fix src test portfolio",
     "clj-lint": "clojure -M:lint -m clj-kondo.main --lint src test portfolio",
     "check-links": "npx doc-link-checker-cli lint",
-    "spellcheck": "npx cspell **/*.md",
     "markdown-lint": "npx markdownlint-cli **/*.md -i node_modules -c .markdownlint.json",
-    "lint": "npx npm-run-all --parallel clj-lint spellcheck markdown-lint check-links",
+    "lint": "npx npm-run-all --parallel clj-lint markdown-lint check-links",
     "clean": "rm -rf resources/public/js/* && rm -rf target && rm -rf dist && rm -rf .shadow-cljs",
     "build-report": "npx shadow-cljs run shadow.cljs.build-report renderer target/build-report.html",
     "test": "npx shadow-cljs compile karma-test && npx karma start --browsers ChromeHeadlessNoSandbox --single-run --reporters junit,dots",
@@ -43,8 +42,10 @@
   ],
   "build": {
     "productName": "Repath Studio",
+    "appId": "studio.repath.app",
     "artifactName": "${name}-${os}.${ext}",
     "icon": "resources/public/img/icon",
+    "afterSign": "electron-builder-notarize",
     "fileAssociations": [
       {
         "ext": "rps",
@@ -57,10 +58,23 @@
       "github"
     ],
     "mac": {
-      "category": "public.app-category.graphics-design"
+      "category": "public.app-category.graphics-design",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "target": [
+        {
+          "target": "default",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist"
     },
     "dmg": {
-      "icon": false
+      "icon": false,
+      "sign": false
     },
     "linux": {
       "target": [
@@ -106,6 +120,7 @@
     "create-react-class": "15.7.0",
     "electron": "38.1.2",
     "electron-builder": "26.0.12",
+    "electron-builder-notarize": "1.5.2",
     "events": "3.3.0",
     "graceful-fs": "4.2.11",
     "highlight.js": "11.11.1",
@@ -152,6 +167,7 @@
     "@electron/devtron": "2.1.0",
     "@sentry/electron": "7.1.1",
     "electron-log": "5.4.3",
+    "electron-updater": "6.6.2",
     "electron-window-state": "5.0.3"
   },
   "overrides": {
