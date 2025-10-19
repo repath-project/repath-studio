@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.4.10 (2025-10-19)
+
+**Added**
+
+- Persist file handles to open recent and save open files on future sessions [#91](https://github.com/repath-project/repath-studio/pull/91)
+- Code sign and notorize macOS build
+- Preview fill color on pointer over element
+- Error reporting dialog
+- PWA install button
+- Korean and Turkish languages
+- Toast notifications [#92](https://github.com/repath-project/repath-studio/pull/92)
+- Icon loading placeholder
+
+**Removed**
+
+- Default canvas fill attribute value
+
+**Changed**
+
+- Expand parent on element create
+- Improve behavior of tree item label
+- Hide fullscreen button on desktop app
+- Hide loader on electron app
+- Increase default zoom sensitivity
+- Icon update
+- Hide disabled commands from command panel
+- Set default theme mode to system
+- Simplify dialogs
+- Set cursor to not-allowed when all elements are locked
+- Enhance outline styles
+- Show tree item prop toggles on focus
+- Update boolean operation icons
+
+**Fixed**
+
+- Context menu escape propagation
+- Various translation issues
+- Update image size on image href update
+- Polygon and polyline drag end
+
 ## 0.4.9 (2025-9-4)
 
 **Added**
