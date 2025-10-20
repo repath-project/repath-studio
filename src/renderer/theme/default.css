@@ -10,10 +10,6 @@
   --success: #63c263;
 
   --backdrop: rgb(0 0 0 / 0.7);
-
-  .devtools {
-    filter:invert(1);
-  }
 }
 
 [data-theme='light'] {

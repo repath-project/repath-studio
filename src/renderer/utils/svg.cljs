@@ -20,7 +20,7 @@
     (into [:circle {:cx x
                     :cy y
                     :stroke-width 0
-                    :fill "var(--color-accent)"
+                    :fill "var(--accent)"
                     :r (/ 3 zoom)}] children)))
 
 (m/=> line [:function
@@ -41,9 +41,9 @@
                 :shape-rendering (when dashed? "crispEdges")}]
      [:g
       (when dashed?
-        [:line (merge attrs {:stroke "var(--color-accent-foreground)"})])
+        [:line (merge attrs {:stroke "var(--accent-foreground)"})])
       [:line (merge attrs
-                    {:stroke "var(--color-accent)"
+                    {:stroke "var(--accent)"
                      :stroke-dasharray (when dashed? stroke-dasharray)})]])))
 
 (m/=> cross [:-> Vec2 any?])
@@ -79,8 +79,8 @@
                :fill "transparent"
                :stroke-width stroke-width}]
     [:g
-     [:path (merge {:stroke "var(--color-accent-foreground)"} attrs)]
-     [:path (merge {:stroke "var(--color-accent)"
+     [:path (merge {:stroke "var(--accent-foreground)"} attrs)]
+     [:path (merge {:stroke "var(--accent)"
                     :stroke-dasharray stroke-dasharray} attrs)]]))
 
 (m/=> times [:-> Vec2 any?])
@@ -107,13 +107,13 @@
         zoom @(rf/subscribe [::document.subs/zoom])
         text-anchor (or text-anchor "middle")
         font-size (/ (or font-size 10) zoom)
-        font-family (or font-family "var(--font-mono)")
+        font-family (or font-family "var(--mono)")
         padding (/ 8 zoom)
         label-height (+ font-size padding)]
     [:g
      [:rect {:ref rect-ref
              :y (- y (/ label-height 2))
-             :fill "var(--color-accent)"
+             :fill "var(--accent)"
              :rx (/ 4 zoom)
              :height label-height} text]
      [:text {:ref (fn [this]
@@ -127,7 +127,7 @@
                                          "middle" (- x (/ rect-width 2))
                                          "end" (- x rect-width (/ (- padding)
                                                                   2)))))))
-             :fill "var(--color-accent-foreground)"
+             :fill "var(--accent-foreground)"
              :dominant-baseline "middle"
              :x x
              :y y
@@ -152,9 +152,9 @@
                :fill "transparent"}]
 
     [:g {:style {:pointer-events "none"}}
-     [:rect (merge attrs {:stroke "var(--color-accent)"})]
+     [:rect (merge attrs {:stroke "var(--accent)"})]
      (when dashed?
-       [:rect (merge attrs {:stroke "var(--color-accent-foreground)"
+       [:rect (merge attrs {:stroke "var(--accent-foreground)"
                             :stroke-dasharray stroke-dasharray})])]))
 
 (m/=> select-box [:-> App any?])
@@ -170,7 +170,7 @@
              :height (abs (- pos-y offset-y))
              :shape-rendering "crispEdges"
              :fill-opacity ".1"
-             :fill "var(--color-accent)"
-             :stroke "var(--color-accent)"
+             :fill "var(--accent)"
+             :stroke "var(--accent)"
              :stroke-opacity ".5"
              :stroke-width (/ 1 zoom)}}))
