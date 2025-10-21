@@ -181,8 +181,7 @@
 (defn root []
   (let [fill @(rf/subscribe [::document.subs/fill])
         stroke @(rf/subscribe [::document.subs/stroke])
-        get-hex #(:hex (js->clj % :keywordize-keys true))
-        md? @(rf/subscribe [::window.subs/breakpoint? :md])]
+        get-hex #(:hex (js->clj % :keywordize-keys true))]
     [:div.toolbar.bg-primary.mt-px.relative
      [views/color-picker
       {:color fill
@@ -201,7 +200,6 @@
       [views/icon "swap-horizontal"]]
      [views/color-picker
       {:color stroke
-       :align-offset (when md? -62) ; REVIEW: Try to use collisionBoundary?
        :on-change-complete #(rf/dispatch [::element.events/set-attr
                                           :stroke
                                           (get-hex %)])
