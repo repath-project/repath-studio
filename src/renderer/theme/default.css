@@ -9,7 +9,7 @@
   --warning: #ffc252;
   --success: #63c263;
 
-  --backdrop: rgba(34, 34, 34, 0.7);
+  --backdrop: rgb(0 0 0 / 0.7);
 
   .devtools {
     filter:invert(1);
