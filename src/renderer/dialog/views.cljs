@@ -15,7 +15,7 @@
 
 (defn button
   [{:keys [action label auto-focus class]}]
-  [:button.button.px-4.rounded.font-medium.sm:flex-1.w-full
+  [:button.button.px-1.rounded.font-medium.w-full
    {:class class
     :auto-focus auto-focus
     :on-click #(rf/dispatch [::dialog.events/close action])}
@@ -23,7 +23,7 @@
 
 (defn button-bar
   [& children]
-  (into [:div.flex.gap-2.flex-wrap.sm:no-wrap] children))
+  (into [:div.flex.gap-2] children))
 
 (defn about
   []
