@@ -40,7 +40,7 @@
 
 (defn button-group
   [items]
-  (into [:div.flex.flex-wrap.justify-center.md:gap-1.flex-nowrap
+  (into [:div.flex.justify-center.md:gap-1
          {:class "gap-0.5"}]
         (map button items)))
 
@@ -50,8 +50,7 @@
         md? @(rf/subscribe [::window.subs/breakpoint? :md])
         top-tool (if (some #{active-tool} tools)
                    active-tool
-                   (first tools))
-        active (= active-tool top-tool)]
+                   (first tools))]
     [:div.button-group
      [button top-tool]
      (when (second tools)

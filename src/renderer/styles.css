@@ -105,7 +105,7 @@ label {
   all: unset;
   @apply button-size flex justify-between gap-4 text-foreground items-center
   relative select-none h-auto;
-  padding: 0 30px;
+  padding: 0 33px;
 }
 
 .menu-item[data-state='open'],
