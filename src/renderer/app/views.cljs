@@ -4,8 +4,10 @@
    ["@radix-ui/react-select" :as Select]
    ["@radix-ui/react-tooltip" :as Tooltip]
    ["path-browserify" :as path-browserify]
+   ["react-fps" :refer [FpsView]]
    ["react-resizable-panels" :refer [Panel PanelGroup]]
    ["sonner" :refer [Toaster]]
+   [clojure.string :as string]
    [config :as config]
    [re-frame.core :as rf]
    [reagent.core :as reagent]
@@ -19,12 +21,14 @@
    [renderer.document.views :as document.views]
    [renderer.element.subs :as-alias element.subs]
    [renderer.events :as-alias events]
+   [renderer.frame.subs :as-alias frame.subs]
    [renderer.frame.views :as frame.views]
    [renderer.history.views :as history.views]
    [renderer.reepl.views :as repl.views]
    [renderer.ruler.events :as-alias ruler.events]
    [renderer.ruler.subs :as-alias ruler.subs]
    [renderer.ruler.views :as ruler.views]
+   [renderer.snap.subs :as-alias snap.subs]
    [renderer.theme.subs :as-alias theme.subs]
    [renderer.timeline.views :as timeline.views]
    [renderer.tool.hierarchy :as tool.hierarchy]
@@ -34,10 +38,82 @@
    [renderer.toolbar.tools :as toolbar.tools]
    [renderer.tree.views :as tree.views]
    [renderer.utils.i18n :refer [t]]
+   [renderer.utils.length :as utils.length]
    [renderer.views :as views]
    [renderer.window.menubar :as window.menubar]
    [renderer.window.subs :as-alias window.subs]
-   [renderer.window.views :as window.views]))
+   [renderer.window.views :as window.views]
+   [renderer.worker.subs :as-alias worker.subs]))
+
+(defn coll->str
+  [coll]
+  (str "[" (string/join " " (map utils.length/->fixed coll)) "]"))
+
+(defn map->str
+  [m]
+  (->> m
+       (map (fn [[k v]]
+              ^{:key k}
+              [:span (str (name k) ": " (if (number? v)
+                                          (utils.length/->fixed v)
+                                          (coll->str v)))]))
+       (interpose ", ")))
+
+(defn debug-rows
+  []
+  (let [viewbox (rf/subscribe [::frame.subs/viewbox])
+        pointer-pos (rf/subscribe [::app.subs/pointer-pos])
+        adjusted-pos (rf/subscribe [::app.subs/adjusted-pointer-pos])
+        pointer-offset (rf/subscribe [::app.subs/pointer-offset])
+        adjusted-offset (rf/subscribe [::app.subs/adjusted-pointer-offset])
+        drag? (rf/subscribe [::tool.subs/drag?])
+        pan (rf/subscribe [::document.subs/pan])
+        active-tool (rf/subscribe [::tool.subs/active])
+        cached-tool (rf/subscribe [::tool.subs/cached])
+        tool-state (rf/subscribe [::tool.subs/state])
+        clicked-element (rf/subscribe [::app.subs/clicked-element])
+        ignored-ids (rf/subscribe [::document.subs/ignored-ids])
+        nearest-neighbor (rf/subscribe [::snap.subs/nearest-neighbor])]
+    [["Viewbox" (coll->str @viewbox)]
+     ["Pointer position" (coll->str @pointer-pos)]
+     ["Adjusted pointer position" (coll->str @adjusted-pos)]
+     ["Pointer offset" (coll->str @pointer-offset)]
+     ["Adjusted pointer offset" (coll->str @adjusted-offset)]
+     ["Pointer drag?" (str @drag?)]
+     ["Pan" (coll->str @pan)]
+     ["Active tool" @active-tool]
+     ["Cached tool" @cached-tool]
+     ["State" @tool-state]
+     ["Clicked element" (:id @clicked-element)]
+     ["Ignored elements" @ignored-ids]
+     ["Snap" (map->str @nearest-neighbor)]]))
+
+(defn debug-info
+  []
+  [:div
+   {:dir "ltr"}; }
+   (into [:div.absolute.bottom-2.left-2.bg-primary.p-2.shadow]
+         (for [[s v] (debug-rows)]
+           [:div.flex
+            [:strong.mr-1 s]
+            [:div v]]))
+   [:div.fps-wrapper
+    [:> FpsView #js {:width 240
+                     :height 180}]]])
+
+(defn help
+  [message]
+  [:div.hidden.justify-center.w-full.p-4.sm:flex
+   [:div.bg-primary.overflow-hidden.shadow.rounded-full
+    [:div.text-xs.gap-1.flex.flex-wrap.py-2.px-4.justify-center.truncate
+     {:aria-live "polite"}
+     message]]])
+
+(defn read-only-overlay []
+  [:div.absolute.inset-0.border-4.border-accent
+   (when-let [preview-label @(rf/subscribe [::document.subs/preview-label])]
+     [:div.absolute.bg-accent.top-2.left-2.px-1.rounded.text-accent-foreground
+      preview-label])])
 
 (defn right-panel
   [active-tool]
@@ -50,7 +126,12 @@
   []
   (let [ruler-visible? @(rf/subscribe [::ruler.subs/visible?])
         ruler-locked? @(rf/subscribe [::ruler.subs/locked?])
-        backdrop @(rf/subscribe [::app.subs/backdrop])]
+        backdrop @(rf/subscribe [::app.subs/backdrop])
+        read-only? @(rf/subscribe [::document.subs/read-only?])
+        help-message @(rf/subscribe [::tool.subs/help])
+        help-bar @(rf/subscribe [::app.subs/help-bar])
+        debug-info? @(rf/subscribe [::app.subs/debug-info])
+        worker-active? @(rf/subscribe [::worker.subs/some-active?])]
     [:div.flex.flex-col.flex-1.h-full.gap-px
      [:div
       [views/scroll-area [toolbar.tools/root]]
@@ -76,10 +157,20 @@
           :class "rtl:scale-x-[-1]"}
          [ruler.views/ruler :vertical]])
       [:div.relative.grow.flex
-       [:div.grow.flex.bg
+       [:div.grow.flex
         {:data-theme "light"
          :style {:background "var(--secondary)"}}
         [frame.views/root]]
+       [:div.absolute.inset-0.pointer-events-none.inset-shadow
+        (when read-only?
+          [read-only-overlay])
+        (when debug-info?
+          [debug-info])
+        (when worker-active?
+          [:button.icon-button.absolute.bottom-2.right-2
+           [views/loading-indicator]])
+        (when (and help-bar (seq help-message))
+          [help help-message])]
        (when backdrop
          [:div.absolute.inset-0
           {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])]]]))

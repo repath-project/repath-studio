@@ -20,11 +20,11 @@
       (into [:circle {:key id
                       :cx x
                       :cy y
-                      :stroke "var(--color-accent)"
+                      :stroke "var(--accent)"
                       :stroke-width (/ 1 zoom)
                       :fill (if (= (:key clicked-element) id)
-                              "var(--color-accent)"
-                              "var(--color-accent-foreground)")
+                              "var(--accent)"
+                              "var(--accent-foreground)")
                       :r (/ 4 zoom)
                       :cursor "default"
                       :on-pointer-up pointer-handler
@@ -42,9 +42,9 @@
         active (and (= (:id clicked-element) id)
                     (= (:element-id clicked-element) element-id))]
     (into [:rect {:fill (if active
-                          "var(--color-accent)"
-                          "var(--color-accent-foreground)")
-                  :stroke (if active "var(--color-accent)" "gray")
+                          "var(--accent)"
+                          "var(--accent-foreground)")
+                  :stroke (if active "var(--accent)" "gray")
                   :stroke-width stroke-width
                   :x (- x (/ size 2))
                   :y (- y (/ size 2))
@@ -82,7 +82,7 @@
                     :stroke-opacity ".3"
                     :fill "transparent"
                     :shape-rendering "crispEdges"
-                    :stroke "var(--color-accent)"
+                    :stroke "var(--accent)"
                     :pointer-events (when ignored? "none")}]
     [:rect (merge rect-attrs {:on-pointer-up pointer-handler
                               :on-pointer-down pointer-handler

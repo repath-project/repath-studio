@@ -2,6 +2,10 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 @custom-variant light (&:where([data-theme=light], [data-theme=light] *));
 
+.devtools {
+  filter:invert(1);
+}
+
 @theme {
   --text-2xs: 0.625rem;
   --text-2xs--line-height: 0.75rem;

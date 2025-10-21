@@ -185,7 +185,7 @@
 
 .fps-wrapper {
   > div {
-    @apply absolute! left-auto! top-2! right-2! drop-shadow-md overflow-hidden!
+    @apply absolute! left-2! top-2! shadow overflow-hidden!
     px-1! font-sans! text-xs! bg-primary! text-foreground! z-auto!;
 
     > div {
