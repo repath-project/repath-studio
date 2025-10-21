@@ -337,34 +337,35 @@
       (when web? [:div.loader])
       [:> Direction/Provider {:dir lang-dir}
        [:> Tooltip/Provider
-        [:div.flex.flex-col.flex-1.h-dvh.overflow-hidden.justify-between
+        [:div.flex.flex-col.h-full.overflow-hidden.justify-between
          (if (or md? (not web?))
            [window.views/app-header]
            [:div])
          (if documents?
-           [:div.flex.h-full.flex-1.overflow-hidden.gap-px
-            (when (and tree? md?)
-              [:div.flex.flex-col.overflow-hidden
-               [document.views/actions]
-               [tree.views/root]])
-            [:div.flex.flex-col.flex-1.overflow-hidden.h-full
-             (if md?
-               [document.views/tab-bar]
-               [:div.flex.overflow-hidden
-                [:div.toolbar [window.menubar/root]]
-                [document.views/tab-bar]])
-             [:div.flex.h-full.flex-1.gap-px.overflow-hidden
-              [:div.flex.h-full.flex-col.flex-1.overflow-hidden.gap-px
-               [editor]]
-              [:div.flex.gap-px
-               (when (and md? properties?)
-                 [:div.w-80 [right-panel active-tool]])
-               [:div.bg-primary.flex
-                [views/scroll-area [toolbar.object/root]]]]]]]
+           [:div.flex.flex-col.h-full.overflow-hidden
+            [:div.flex.flex-1.overflow-hidden.gap-px
+             (when (and tree? md?)
+               [:div.flex.flex-col.overflow-hidden
+                [document.views/actions]
+                [tree.views/root]])
+             [:div.flex.flex-col.flex-1.overflow-hidden.h-full
+              (if md?
+                [document.views/tab-bar]
+                [:div.flex.overflow-hidden
+                 [:div.toolbar [window.menubar/root]]
+                 [document.views/tab-bar]])
+              [:div.flex.h-full.flex-1.gap-px.overflow-hidden
+               [:div.flex.h-full.flex-col.flex-1.overflow-hidden.gap-px
+                [editor]]
+               [:div.flex.gap-px
+                (when (and md? properties?)
+                  [:div.w-80 [right-panel active-tool]])
+                [:div.bg-primary.flex
+                 [views/scroll-area [toolbar.object/root]]]]]]]
+            (when-not md?
+              [bottom-bar])]
            [home recent-documents])
-         [:div]
-         (when (and documents? (not md?))
-           [bottom-bar])]
+         [:div]]
         [dialog.views/root]
         [:> Toaster
          {:theme theme

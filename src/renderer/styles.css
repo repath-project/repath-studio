@@ -52,9 +52,22 @@
 @import './theme/default.css';
 @import './theme/styles.css';
 
+html, body, #app {
+  @apply h-full;
+}
+
+html {
+  padding: env(safe-area-inset-top)
+           env(safe-area-inset-right)
+           env(safe-area-inset-bottom)
+           env(safe-area-inset-left);
+}
+
 body {
-  @apply text-foreground;
+  @apply m-0 text-foreground relative bg-secondary select-none font-sans
+  overflow-hidden;
   font-size: var(--font-size);
+
 }
 
 p {

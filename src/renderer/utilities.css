@@ -57,7 +57,7 @@
 }
 
 @utility backdrop {
-  @apply absolute inset-0 flex items-center justify-center bg-backdrop
+  @apply fixed inset-0 flex items-center justify-center bg-backdrop
   animate-in fade-in;
 }
 
@@ -95,7 +95,7 @@
 }
 
 @utility toolbar {
-  @apply flex gap-0.5 p-1 items-center sm:gap-1;
+  @apply flex gap-1 p-1 items-center;
 }
 
 @utility button-group {

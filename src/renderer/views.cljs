@@ -295,7 +295,7 @@
       [:> Drawer.Overlay
        {:class "backdrop"}]
       [:> Drawer.Content
-       {:class ["inset-0 fixed z-9 outline-none flex"
+       {:class ["inset-0 absolute z-9 outline-none flex"
                 (case direction
                   "left" "right-auto max-w-[80dvw] min-w-[60dvw]"
                   "right" "left-auto max-w-[80dvw] min-w-[60dvw]"
