@@ -112,8 +112,7 @@
      :placeholder (t [::search-command "Search for a command"])}]
    [views/scroll-area
     [:> Command/CommandList
-     {:class "p-1 sm:max-h-[50dvh]!"
-      :style {:max-height "calc(100dvh - 125px)"}}
+     {:class "p-1 max-h-[50dvh]"}
      [:> Command/CommandEmpty
       {:class "p-2"}
       (t [::no-results "No results found."])]
