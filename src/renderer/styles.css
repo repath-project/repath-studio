@@ -94,7 +94,7 @@ label {
 }
 
 .menu-content {
-  @apply bg-primary drop-shadow-lg p-1 z-10 rounded-sm no-drag min-w-[50dvw]
+  @apply bg-primary drop-shadow-lg p-1 z-10 rounded-sm no-drag min-w-[100px]
   sm:min-w-[200px] max-w-[50dvw] border border-border;
 }
 

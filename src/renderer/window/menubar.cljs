@@ -682,7 +682,7 @@
      [views/icon "chevron-right"]]]
    [:> Menubar/Portal
     (into [:> Menubar/SubContent
-           {:class "menu-content"
+           {:class "menu-content min-w-[50dvw]!"
             :align "start"
             :loop true
             :on-escape-key-down #(.stopPropagation %)}]
@@ -703,7 +703,7 @@
     [:span label]]
    [:> Menubar/Portal
     (into [:> Menubar/Content
-           {:class (when items "menu-content")
+           {:class (when items "menu-content min-w-[50dvw]!")
             :align "start"
             :side-offset 4
             :loop true
