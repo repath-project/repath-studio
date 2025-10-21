@@ -170,6 +170,9 @@
       [:> DropdownMenu/Item
        {:class "menu-item dropdown-menu-item"
         :onSelect #(rf/dispatch action)}
+       (when (:icon props)
+         [icon (:icon props)
+          {:class "menu-item-indicator"}])
        [:div label]
        (when sm? [shortcuts action])])))
 

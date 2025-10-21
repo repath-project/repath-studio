@@ -1,5 +1,6 @@
 (ns renderer.toolbar.tools
   (:require
+   ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
    ["@radix-ui/react-tooltip" :as Tooltip]
    [clojure.string :as string]
    [re-frame.core :as rf]
@@ -23,11 +24,10 @@
       [:> Tooltip/Root
        [:> Tooltip/Trigger
         {:as-child true}
-        [:span
-         [views/radio-icon-button (:icon properties) active
-          {:class (when primary "outline outline-inset outline-accent")
-           :aria-label label
-           :on-click #(rf/dispatch [::tool.events/activate tool])}]]]
+        [views/radio-icon-button (:icon properties) active
+         {:class (when primary "outline outline-inset outline-accent")
+          :aria-label label
+          :on-click #(rf/dispatch [::tool.events/activate tool])}]]
        [:> Tooltip/Portal
         [:> Tooltip/Content
          {:class "tooltip-content"
@@ -38,25 +38,78 @@
           label
           [views/shortcuts [::tool.events/activate tool]]]]]])))
 
-(defn group
+(defn button-group
   [items]
   (into [:div.flex.flex-wrap.justify-center.md:gap-1.flex-nowrap
          {:class "gap-0.5"}]
         (map button items)))
 
-(defn groups
-  []
+(defn dropdown-button
+  [{:keys [label tools]}]
+  (let [active-tool @(rf/subscribe [::tool.subs/active])
+        md? @(rf/subscribe [::window.subs/breakpoint? :md])
+        top-tool (if (some #{active-tool} tools)
+                   active-tool
+                   (first tools))
+        active (= active-tool top-tool)]
+    [:div.button-group
+     [button top-tool]
+     (when (second tools)
+       [:> DropdownMenu/Root
+        [:> DropdownMenu/Trigger
+         {:as-child true}
+         [:button.button.flex.items-center.justify-center.px-2.font-mono
+          {:aria-label label}
+          [views/icon "chevron-down"]]]
+        [:> DropdownMenu/Portal
+         (->> tools
+              (mapv (fn [tool]
+                      (let [properties (tool.hierarchy/properties tool)]
+                        {:label (:label properties)
+                         :action [::tool.events/activate tool]
+                         :icon (:icon properties)})))
+              (into [:> DropdownMenu/Content
+                     {:side "bottom"
+                      :align-offset (if md? -33 -35)
+                      :align "start"
+                      :class "menu-content rounded-sm"
+                      :on-key-down #(.stopPropagation %)
+                      :on-escape-key-down #(.stopPropagation %)}
+                     [:> DropdownMenu/Arrow {:class "fill-primary"}]]
+                    (map views/dropdown-menu-item)))]])]))
+
+(defn base-tools []
+  {:label "Transform"
+   :tools [:transform :edit :pan :zoom]})
+
+(defn parent-tools []
+  {:label "Containers"
+   :tools [:svg]})
+
+(defn shape-tools []
+  {:label "Shapes"
+   :tools [:circle :ellipse :rect :line :polyline :polygon :image :text]})
+
+(defn draw-tools []
+  {:label "Drawing"
+   :tools [:brush :pen]})
+
+(defn misc-tools []
   (let [dropper? @(rf/subscribe [::app.subs/feature? :eye-dropper])]
-    [[:transform :edit :pan :zoom]
-     [:svg]
-     [:circle :ellipse :rect :line :polyline :polygon :image :text]
-     [:brush :pen]
-     (cond-> [:fill :measure]
-       dropper? (conj :dropper))]))
+    {:label "Misc"
+     :tools (cond-> [:fill :measure]
+              dropper? (update :tools conj :dropper))}))
 
 (defn root
   []
-  (let [sm? @(rf/subscribe [::window.subs/breakpoint? :sm])]
-    (->> (map group (groups))
-         (interpose [:span.v-divider {:class (when-not sm? "mx-0")}])
-         (into [:div.justify-center.bg-primary.toolbar]))))
+  (let [lg? @(rf/subscribe [::window.subs/breakpoint? :lg])]
+    (if lg?
+      (->> [(base-tools) (parent-tools) (shape-tools) (draw-tools) (misc-tools)]
+           (map :tools)
+           (map button-group)
+           (interpose [:span.v-divider])
+           (into [:div.justify-center.bg-primary.toolbar]))
+      (->> [(base-tools) (parent-tools) (shape-tools) (draw-tools) (misc-tools)]
+           (map dropdown-button)
+           (into [:div.bg-primary.toolbar.justify-evenly.sm:justify-center
+                  {:class "py-2"}])))))
