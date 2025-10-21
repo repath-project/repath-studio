@@ -705,7 +705,7 @@
     (into [:> Menubar/Content
            {:class (when items "menu-content")
             :align "start"
-            :side-offset 3
+            :side-offset 4
             :loop true
             :on-escape-key-down #(.stopPropagation %)
             :on-close-auto-focus #(.preventDefault %)}]

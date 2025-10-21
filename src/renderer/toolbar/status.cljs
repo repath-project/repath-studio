@@ -181,40 +181,38 @@
 (defn root []
   (let [fill @(rf/subscribe [::document.subs/fill])
         stroke @(rf/subscribe [::document.subs/stroke])
-        get-hex #(:hex (js->clj % :keywordize-keys true))]
+        get-hex #(:hex (js->clj % :keywordize-keys true))
+        md? @(rf/subscribe [::window.subs/breakpoint? :md])]
     [:div.toolbar.bg-primary.mt-px.relative
-     [:div.flex.sm:gap-1
-      [views/color-picker
-       {:color fill
-        :on-change-complete #(rf/dispatch [::element.events/set-attr
-                                           :fill
-                                           (get-hex %)])
-        :on-change #(rf/dispatch [::document.events/preview-attr
-                                  :fill
-                                  (get-hex %)])}
+     [views/color-picker
+      {:color fill
+       :on-change-complete #(rf/dispatch [::element.events/set-attr :fill
+                                          (get-hex %)])
+       :on-change #(rf/dispatch [::document.events/preview-attr :fill
+                                 (get-hex %)])}
 
-       [:button.button.border.border-border.button-size
-        {:title (t [::fill-color "Pick fill color"])
-         :style {:background fill}}]]
+      [:button.button.border.border-border.button-size
+       {:title (t [::fill-color "Pick fill color"])
+        :style {:background fill}}]]
 
-      [:button.icon-button.bg-transparent!
-       {:title (t [::swap-color "Swap fill with stroke"])
-        :on-click #(rf/dispatch [::document.events/swap-colors])}
-       [views/icon "swap-horizontal"]]
-      [views/color-picker
-       {:color stroke
-        :align-offset -62 ; REVIEW: Try to use collisionBoundary?
-        :on-change-complete #(rf/dispatch [::element.events/set-attr
-                                           :stroke
-                                           (get-hex %)])
-        :on-change #(rf/dispatch [::document.events/preview-attr
-                                  :stroke
-                                  (get-hex %)])}
-       [:button.relative.border.border-border.button-size
-        {:title (t [::stroke-color "Pick stroke color"])
-         :style {:background stroke}}
-        [:div.bg-primary.absolute.border.border-border
-         {:class "w-1/2 h-1/2 bottom-1/4 right-1/4"}]]]]
+     [:button.icon-button.bg-transparent!
+      {:title (t [::swap-color "Swap fill with stroke"])
+       :on-click #(rf/dispatch [::document.events/swap-colors])}
+      [views/icon "swap-horizontal"]]
+     [views/color-picker
+      {:color stroke
+       :align-offset (when md? -62) ; REVIEW: Try to use collisionBoundary?
+       :on-change-complete #(rf/dispatch [::element.events/set-attr
+                                          :stroke
+                                          (get-hex %)])
+       :on-change #(rf/dispatch [::document.events/preview-attr
+                                 :stroke
+                                 (get-hex %)])}
+      [:button.relative.border.border-border.button-size
+       {:title (t [::stroke-color "Pick stroke color"])
+        :style {:background stroke}}
+       [:div.bg-primary.absolute.border.border-border
+        {:class "w-1/2 h-1/2 bottom-1/4 right-1/4"}]]]
      [:div.grow]
      (into [:<>]
            (map radio-button (view-radio-buttons)))
