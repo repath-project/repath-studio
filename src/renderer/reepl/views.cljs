@@ -26,9 +26,8 @@
   [mode]
   (let [repl-mode @(rf/subscribe [::app.subs/repl-mode])
         active (= repl-mode mode)]
-    [:button.button.rounded.px-1.leading-none.text-2xs.h-4
-     {:class [(when active "accent")
-              "m-0.5"]
+    [:button.button.rounded.px-1.leading-none.text-2xs.min-h-5
+     {:class [(when active "accent")]
       :on-click #(rf/dispatch [::app.events/set-repl-mode mode])}
      mode]))
 
@@ -51,20 +50,19 @@
      [codemirror/code-mirror
       (reaction (:text @state))
       (merge {:on-eval submit} cm-opts)]
-     [:div.self-start.h-full.flex.items-center
+     [:div.self-start.h-full.flex.items-center.gap-1
       [mode-button :cljs]
-      [mode-button :js]]
-     (when @(rf/subscribe [::window.subs/breakpoint? :md])
-       [:div.self-start.flex
-        [views/icon-button
-         (if repl-history? "chevron-down" "chevron-up")
-         {:class "my-0.5 ml-0.5"
-          :style {:height "16px"}
-          :title (if repl-history?
-                   (t [::hide-command-output "Hide command output"])
-                   (t [::show-command-output "Show command output"]))
-          :on-click #(rf/dispatch [::app.events/toggle-panel
-                                   :repl-history])}]])]))
+      [mode-button :js]
+      (when @(rf/subscribe [::window.subs/breakpoint? :md])
+        [:div.self-start.flex
+         [views/icon-button
+          (if repl-history? "chevron-down" "chevron-up")
+          {:class "min-h-5"
+           :title (if repl-history?
+                    (t [::hide-command-output "Hide command output"])
+                    (t [::show-command-output "Show command output"]))
+           :on-click #(rf/dispatch [::app.events/toggle-panel
+                                    :repl-history])}]])]]))
 
 (defmulti item (fn [i _opts] (:type i)))
 
