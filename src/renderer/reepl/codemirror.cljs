@@ -39,11 +39,8 @@
 
 (defn valid-cljs?
   [source]
-  (try
-    (do (edn/read-string source)
-        true)
-    (catch js/Error _err
-      false)))
+  (try (boolean (edn/read-string source))
+       (catch js/Error _err false)))
 
 (def default-opts
   {:style {:height "auto"
