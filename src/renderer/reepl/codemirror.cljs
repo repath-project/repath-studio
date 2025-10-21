@@ -40,9 +40,8 @@
 (defn valid-cljs?
   [source]
   (try
-    (fn []
-      (edn/read-string source)
-      true)
+    (do (edn/read-string source)
+        true)
     (catch js/Error _err
       false)))
 
