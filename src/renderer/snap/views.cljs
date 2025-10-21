@@ -10,7 +10,8 @@
    [renderer.snap.subs :as-alias snap.subs]
    [renderer.utils.i18n :refer [t]]
    [renderer.utils.svg :as utils.svg]
-   [renderer.views :as views]))
+   [renderer.views :as views]
+   [renderer.window.subs :as-alias window.subs]))
 
 (defn menu-option
   [{:keys [id label]} is-checked]
@@ -38,36 +39,40 @@
 
 (defn root
   []
-  (let [active? (rf/subscribe [::snap.subs/active?])]
+  (let [active? (rf/subscribe [::snap.subs/active?])
+        md? @(rf/subscribe [::window.subs/breakpoint? :md])]
     (reagent/with-let [open (reagent/atom false)]
-      [:button.icon-button.items-center.px-1.gap-1.w-auto.flex.active:bg-overlay
+      [:button.icon-button.items-center.gap-1.w-auto.flex.active:bg-overlay
        {:title (t [::snap "Snap"])
-        :class [(when @active? "accent")
+        :class [(if md? "px-1" "px-2")
+                (when @active? "accent")
                 (when @open "bg-overlay!")]
         :on-click #(rf/dispatch [::snap.events/toggle])}
        [views/icon "magnet"]
-       (let [options @(rf/subscribe [::snap.subs/options])]
-         [:> DropdownMenu/Root
-          {:on-open-change #(reset! open %)}
-          [:> DropdownMenu/Trigger
-           {:as-child true}
-           [:div.h-full.flex.items-center.hover:pb-1
-            {:role "button"
-             :title (t [::snap-options "Snap options"])}
-            [views/icon "chevron-up"]]]
-          [:> DropdownMenu/Portal
-           (->> (snap-options)
-                (map #(menu-option % (contains? options (:id %))))
-                (into [:> DropdownMenu/Content
-                       {:side "top"
-                        :align "end"
-                        :sideOffset 5
-                        :alignOffset -5
-                        :position "popper"
-                        :class "menu-content rounded-sm select-content"
-                        :on-key-down #(.stopPropagation %)
-                        :on-escape-key-down #(.stopPropagation %)}
-                       [:> DropdownMenu/Arrow {:class "fill-primary"}]]))]])])))
+       (when md?
+         (let [options @(rf/subscribe [::snap.subs/options])]
+           [:> DropdownMenu/Root
+            {:on-open-change #(reset! open %)}
+            [:> DropdownMenu/Trigger
+             {:as-child true}
+             [:div.h-full.flex.items-center.hover:pb-1
+              {:role "button"
+               :title (t [::snap-options "Snap options"])}
+              [views/icon "chevron-up"]]]
+            [:> DropdownMenu/Portal
+             (->> (snap-options)
+                  (map #(menu-option % (contains? options (:id %))))
+                  (into [:> DropdownMenu/Content
+                         {:side "top"
+                          :align "end"
+                          :sideOffset 5
+                          :alignOffset -5
+                          :position "popper"
+                          :class "menu-content rounded-sm select-content"
+                          :on-key-down #(.stopPropagation %)
+                          :on-escape-key-down #(.stopPropagation %)}
+                         [:> DropdownMenu/Arrow
+                          {:class "fill-primary"}]]))]]))])))
 
 (defn get-label [label]
   (when label
