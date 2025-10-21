@@ -1,7 +1,8 @@
 {:deps {:aliases [:dev]}
 
  :build-defaults {:build-hooks [(shadow-git-inject.core/hook)]
-                  :compiler-options {:source-map true}
+                  :compiler-options {:source-map true
+                                     :silence-optimizations-warning true}
                   :js-options {:resolve {"fs" {:target :npm
                                                :require "graceful-fs"}
                                          "stream" {:target :npm
@@ -29,7 +30,6 @@
   :renderer {:target :browser
              :output-dir "resources/public/js"
              :compiler-options {:optimizations :simple
-                                :silence-optimizations-warning true
                                 :output-wrapper false
                                 :output-feature-set :es-next
                                 :pseudo-names true
