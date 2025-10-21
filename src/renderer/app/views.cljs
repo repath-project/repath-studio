@@ -88,8 +88,7 @@
      ["Ignored elements" @ignored-ids]
      ["Snap" (map->str @nearest-neighbor)]]))
 
-(defn debug-info
-  []
+(defn debug-info []
   [:div
    {:dir "ltr"}; }
    (into [:div.absolute.bottom-2.left-2.bg-primary.p-2.shadow]
@@ -103,7 +102,7 @@
 
 (defn help
   [message]
-  [:div.hidden.justify-center.w-full.p-4.sm:flex
+  [:div.hidden.justify-center.w-full.p-4.lg:flex
    [:div.bg-primary.overflow-hidden.shadow.rounded-full
     [:div.text-xs.gap-1.flex.flex-wrap.py-2.px-4.justify-center.truncate
      {:aria-live "polite"}
@@ -122,8 +121,7 @@
     (tool.hierarchy/right-panel active-tool)]
    [:div.bg-primary.grow.flex]])
 
-(defn frame-panel
-  []
+(defn frame-panel []
   (let [ruler-visible? @(rf/subscribe [::ruler.subs/visible?])
         ruler-locked? @(rf/subscribe [::ruler.subs/locked?])
         backdrop @(rf/subscribe [::app.subs/backdrop])
@@ -353,16 +351,13 @@
                 [::dialog.events/show-cmdk]]
                ["earth"
                 (t [::website "Website"])
-                [::events/open-remote-url
-                 "https://repath.studio/"]]
+                [::events/open-remote-url "https://repath.studio/"]]
                ["commit"
                 (t [::source-code "Source Code"])
-                [::events/open-remote-url
-                 "https://github.com/repath-project/repath-studio"]]
+                [::events/open-remote-url "https://github.com/repath-project/repath-studio"]]
                ["list"
                 (t [::changelog "Changelog"])
-                [::events/open-remote-url
-                 "https://repath.studio/roadmap/changelog/"]]]
+                [::events/open-remote-url "https://repath.studio/roadmap/changelog/"]]]
               (map #(apply help-command %))
               (into [:div]))]]]]]]])
 
@@ -451,8 +446,8 @@
                [:div.flex.gap-px
                 (when (and md? properties?)
                   [:div.w-80 [right-panel active-tool]])
-                [:div.bg-primary.flex
-                 [views/scroll-area [toolbar.object/root]]]]]]]
+                [:div.bg-primary.flex.items-center.md:items-start
+                 [toolbar.object/root]]]]]]
             (when-not md?
               [bottom-bar])]
            [home recent-documents])
