@@ -692,7 +692,7 @@
   [{:keys [label items id disabled]}]
   [:> Menubar/Menu
    [:> Menubar/Trigger
-    {:class ["button-size md:min-h-auto md:px-3 md:py-1.5 flex rounded-sm
+    {:class ["button-size md:min-h-auto md:px-3 py-1.5 flex rounded-sm
               outline-none select-none items-center justify-center leading-none
               data-[state=open]:bg-overlay
               hover:bg-overlay hover:text-foreground-hovered

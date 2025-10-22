@@ -153,7 +153,7 @@
        :on-click #(rf/dispatch [::frame.events/zoom-in])}
       [views/icon "plus"]]
      [:div.flex.hidden.items-center
-      {:class "lg:flex"
+      {:class "xl:flex"
        :dir "ltr"}
       [zoom-input zoom]
       [:div.px-2.flex.items-center.font-mono "%"]]

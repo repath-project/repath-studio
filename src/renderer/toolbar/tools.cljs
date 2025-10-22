@@ -99,8 +99,8 @@
 
 (defn root
   []
-  (let [lg? @(rf/subscribe [::window.subs/breakpoint? :lg])]
-    (if lg?
+  (let [xl @(rf/subscribe [::window.subs/breakpoint? :xl])]
+    (if xl
       (->> (groups)
            (map :tools)
            (map button-group)

@@ -148,7 +148,7 @@
         multiple-selected? @(rf/subscribe [::element.subs/multiple-selected?])
         every-top-level? @(rf/subscribe [::element.subs/every-top-level?])
         object-actions [(index-actions (not some-selected?))
-                        (group-actions (not some-selected?))
+                        #_(group-actions (not some-selected?))
                         (alignment-actions every-top-level?)
                         (boolean-actions (not multiple-selected?))]]
     (->> object-actions

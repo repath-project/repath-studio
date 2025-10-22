@@ -129,7 +129,9 @@
         help-message @(rf/subscribe [::tool.subs/help])
         help-bar @(rf/subscribe [::app.subs/help-bar])
         debug-info? @(rf/subscribe [::app.subs/debug-info])
-        worker-active? @(rf/subscribe [::worker.subs/some-active?])]
+        worker-active? @(rf/subscribe [::worker.subs/some-active?])
+        md? @(rf/subscribe [::window.subs/breakpoint? :md])
+        lg? @(rf/subscribe [::window.subs/breakpoint? :lg])]
     [:div.flex.flex-col.flex-1.h-full.gap-px
      [:div
       [views/scroll-area [toolbar.tools/root]]
@@ -158,7 +160,10 @@
        [:div.grow.flex
         {:data-theme "light"
          :style {:background "var(--secondary)"}}
-        [frame.views/root]]
+        [frame.views/root]
+        (when-not md?
+          [:div.bg-primary.flex.items-center
+           [toolbar.object/root]])]
        [:div.absolute.inset-0.pointer-events-none.inset-shadow
         (when read-only?
           [read-only-overlay])
@@ -167,7 +172,7 @@
         (when worker-active?
           [:button.icon-button.absolute.bottom-2.right-2
            [views/loading-indicator]])
-        (when (and help-bar (seq help-message))
+        (when (and help-bar (seq help-message) lg?)
           [help help-message])]
        (when backdrop
          [:div.absolute.inset-0
@@ -447,7 +452,7 @@
                  [:div.flex.gap-px
                   (when properties?
                     [:div.w-80 [right-panel active-tool]])
-                  [:div.bg-primary.flex.items-center.md:items-start
+                  [:div.bg-primary.flex
                    [toolbar.object/root]]])]]]
             (when-not md?
               [bottom-bar])]
