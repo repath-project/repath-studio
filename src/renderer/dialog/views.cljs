@@ -77,7 +77,7 @@
                 disabled)
     [:> Command/CommandItem
      {:on-select #(rf/dispatch [::dialog.events/close action])
-      :class "flex p-2 rounded-sm items-center justify-between
+      :class "flex p-2 rounded-md items-center justify-between
               data-[selected=true]:bg-overlay"}
      [:div.flex.items-center.gap-2
       [:div.w-7.h-7.rounded.line-height-6.flex.justify-center.items-center
@@ -112,7 +112,7 @@
      :placeholder (t [::search-command "Search for a command"])}]
    [views/scroll-area
     [:> Command/CommandList
-     {:class "p-1 max-h-[40dvh] sm:max-h-[50dvh]"}
+     {:class "p-1 max-h-[30dvh] sm:max-h-[50dvh]"}
      [:> Command/CommandEmpty
       {:class "p-2"}
       (t [::no-results "No results found."])]
@@ -133,7 +133,7 @@
        (views/merge-with-class
         {:class "fixed bg-primary rounded-lg overflow-hidden shadow-xl border
                  border-border left-1/2 top-1/2 w-125 max-w-9/10 -translate-1/2
-                 animate-in zoom-in-95 p-6"
+                 animate-in zoom-in-95 p-6 m-safe"
          :on-key-down #(.stopPropagation %)}
         attrs)
        (when title

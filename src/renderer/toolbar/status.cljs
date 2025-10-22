@@ -178,11 +178,11 @@
       title
       [views/shortcuts action]]]]])
 
-(defn root []
+(defn color-selectors []
   (let [fill @(rf/subscribe [::document.subs/fill])
         stroke @(rf/subscribe [::document.subs/stroke])
         get-hex #(:hex (js->clj % :keywordize-keys true))]
-    [:div.toolbar.bg-primary.mt-px.relative
+    [:div.flex
      [views/color-picker
       {:color fill
        :on-change-complete #(rf/dispatch [::element.events/set-attr :fill
@@ -198,6 +198,7 @@
       {:title (t [::swap-color "Swap fill with stroke"])
        :on-click #(rf/dispatch [::document.events/swap-colors])}
       [views/icon "swap-horizontal"]]
+
      [views/color-picker
       {:color stroke
        :on-change-complete #(rf/dispatch [::element.events/set-attr
@@ -210,11 +211,16 @@
        {:title (t [::stroke-color "Pick stroke color"])
         :style {:background stroke}}
        [:div.bg-primary.absolute.border.border-border
-        {:class "w-1/2 h-1/2 bottom-1/4 right-1/4"}]]]
-     [:div.grow]
-     (into [:<>]
-           (map radio-button (view-radio-buttons)))
-     [snap.views/root]
-     [zoom-button-group]
-     [coordinates]
-     [timeline.views/time-bar]]))
+        {:class "w-1/2 h-1/2 bottom-1/4 right-1/4"}]]]]))
+
+(defn root []
+  [:div.toolbar.bg-primary.mt-px.relative.justify-center.md:justify-start
+   {:class "py-2 md:py-1"}
+   [color-selectors]
+   [:div.grow.hidden.md:block]
+   (into [:<>]
+         (map radio-button (view-radio-buttons)))
+   [snap.views/root]
+   [zoom-button-group]
+   [coordinates]
+   [timeline.views/time-bar]])

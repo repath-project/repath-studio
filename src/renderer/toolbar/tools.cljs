@@ -8,6 +8,7 @@
    [renderer.tool.events :as-alias tool.events]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.subs :as-alias tool.subs]
+   [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]
    [renderer.window.subs :as-alias window.subs]))
 
@@ -77,38 +78,34 @@
                      [:> DropdownMenu/Arrow {:class "fill-primary"}]]
                     (map views/dropdown-menu-item)))]])]))
 
-(defn base-tools []
-  {:label "Transform"
-   :tools [:transform :edit :pan :zoom]})
-
-(defn parent-tools []
-  {:label "Containers"
-   :tools [:svg]})
-
-(defn shape-tools []
-  {:label "Shapes"
-   :tools [:circle :ellipse :rect :line :polyline :polygon :image :text]})
-
-(defn draw-tools []
-  {:label "Drawing"
-   :tools [:brush :pen]})
-
-(defn misc-tools []
-  (let [dropper? @(rf/subscribe [::app.subs/feature? :eye-dropper])]
-    {:label "Misc"
-     :tools (cond-> [:fill :measure]
-              dropper? (update :tools conj :dropper))}))
+(defn groups []
+  [{:id :transform
+    :label (t [::transform "Transform tools"])
+    :tools [:transform :edit :pan :zoom]}
+   {:id :containers
+    :label (t [::containers "Container tools"])
+    :tools [:svg]}
+   {:id :shapes
+    :label (t [::shapes "Shape tools"])
+    :tools [:circle :ellipse :rect :line :polyline :polygon :image :text]}
+   {:id :drawing
+    :label (t [::drawing "Drawing tools"])
+    :tools [:brush :pen]}
+   {:id :misc
+    :label (t [::misc "Miscallaneous tools"])
+    :tools (cond-> [:fill :measure]
+             @(rf/subscribe [::app.subs/feature? :eye-dropper])
+             (update :tools conj :dropper))}])
 
 (defn root
   []
   (let [lg? @(rf/subscribe [::window.subs/breakpoint? :lg])]
     (if lg?
-      (->> [(base-tools) (parent-tools) (shape-tools) (draw-tools) (misc-tools)]
+      (->> (groups)
            (map :tools)
            (map button-group)
            (interpose [:span.v-divider])
            (into [:div.justify-center.bg-primary.toolbar]))
-      (->> [(base-tools) (parent-tools) (shape-tools) (draw-tools) (misc-tools)]
+      (->> (groups)
            (map dropdown-button)
-           (into [:div.bg-primary.toolbar.justify-evenly.sm:justify-center
-                  {:class "py-2"}])))))
+           (into [:div.bg-primary.toolbar.justify-center.py-2])))))

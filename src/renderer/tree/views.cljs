@@ -215,7 +215,7 @@
       [:ul.overflow-hidden
        {:role "menu"
         :on-pointer-leave #(rf/dispatch [::document.events/clear-hovered])
-        :class (if md? "w-[227px]" "w-full")}
+        :class (if md? "w-[227px]" "w-80")}
        (for [el (reverse root-children)]
          ^{:key (:id el)}
          [item el 1 elements])]]]))

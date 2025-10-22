@@ -7,7 +7,8 @@
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.subs :as-alias element.subs]
    [renderer.frame.subs :as-alias frame.subs]
-   [renderer.ruler.subs :as-alias ruler.subs]))
+   [renderer.ruler.subs :as-alias ruler.subs]
+   [renderer.window.subs :as-alias window.subs]))
 
 (def ruler-size 24)
 
@@ -122,12 +123,13 @@
 
 (defn ruler
   [orientation]
-  (let [vertical (= orientation :vertical)]
+  (let [vertical (= orientation :vertical)
+        md? @(rf/subscribe [::window.subs/breakpoint? :md])]
     [:svg {:width (if vertical ruler-size "100%")
            :height (if vertical "100%" ruler-size)}
-     [bbox-rect orientation]
+     (when md? [bbox-rect orientation])
      [base-lines orientation]
-     [pointer orientation]]))
+     (when md? [pointer orientation])]))
 
 (defn grid-lines
   [orientation]

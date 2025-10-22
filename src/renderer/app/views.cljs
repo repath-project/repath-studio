@@ -369,26 +369,26 @@
 
      [views/drawer
       {:icon "tree"
-       :label "Tree"
+       :label (t [::tree "Tree"])
        :direction "left"
        :content [tree.views/root]}]
 
      [views/drawer
       {:icon "code"
-       :label "XML"
+       :label (t [::xml "XML"])
        :direction "left"
        :content [xml-panel]}]
      [:span.v-divider]
 
      [views/drawer
       {:icon "animation"
-       :label "Timeline"
+       :label (t [::timeline "Timeline"])
        :direction "bottom"
        :content [timeline.views/root]}]
 
      [views/drawer
       {:icon "shell"
-       :label "Shell"
+       :label (t [::shell "Shell"])
        :direction "bottom"
        :content [repl.views/root]}]
 
@@ -396,13 +396,13 @@
 
      [views/drawer
       {:icon "history"
-       :label "History"
+       :label (t [::history "History"])
        :direction "right"
        :content [history.views/root]}]
 
      [views/drawer
       {:icon "properties"
-       :label "Attributes"
+       :label (t [::attributes "Attributes"])
        :direction "right"
        :disabled (not some-selected?)
        :content [right-panel active-tool]}]]))
@@ -443,11 +443,12 @@
               [:div.flex.h-full.flex-1.gap-px.overflow-hidden
                [:div.flex.h-full.flex-col.flex-1.overflow-hidden.gap-px
                 [editor]]
-               [:div.flex.gap-px
-                (when (and md? properties?)
-                  [:div.w-80 [right-panel active-tool]])
-                [:div.bg-primary.flex.items-center.md:items-start
-                 [toolbar.object/root]]]]]]
+               (when md?
+                 [:div.flex.gap-px
+                  (when properties?
+                    [:div.w-80 [right-panel active-tool]])
+                  [:div.bg-primary.flex.items-center.md:items-start
+                   [toolbar.object/root]]])]]]
             (when-not md?
               [bottom-bar])]
            [home recent-documents])

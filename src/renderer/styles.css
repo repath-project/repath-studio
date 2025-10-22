@@ -52,27 +52,18 @@
 @import './theme/default.css';
 @import './theme/styles.css';
 
-html, body, #app {
-  @apply h-full;
-}
-
 html {
-  padding: env(safe-area-inset-top)
-           env(safe-area-inset-right)
-           env(safe-area-inset-bottom)
-           env(safe-area-inset-left);
+  @apply h-full p-safe;
 }
 
 body {
   @apply m-0 text-foreground relative bg-secondary select-none font-sans
-  overflow-hidden;
+  overflow-hidden h-full;
   font-size: var(--font-size);
-
 }
 
 p {
-  @apply text-pretty;
-  margin-bottom: 1rem;
+  @apply text-pretty mb-4;
 }
 
 input {
@@ -95,7 +86,7 @@ label {
 
 .menu-content {
   @apply bg-primary drop-shadow-lg p-1 z-10 rounded-sm no-drag min-w-[100px]
-  sm:min-w-[200px] max-w-[50dvw] border border-border;
+  sm:min-w-[200px] border border-border;
 }
 
 .menu-item,
@@ -104,8 +95,7 @@ label {
 .menu-radio-item {
   all: unset;
   @apply button-size flex justify-between gap-4 text-foreground items-center
-  relative select-none h-auto;
-  padding: 0 33px;
+  rounded-sm relative select-none px-[33px] py-1 md:py-0;
 }
 
 .menu-item[data-state='open'],

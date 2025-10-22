@@ -298,15 +298,32 @@
       [:> Drawer.Overlay
        {:class "backdrop"}]
       [:> Drawer.Content
-       {:class ["inset-0 absolute z-9 outline-none flex"
+       {:class ["inset-0 fixed z-0 outline-none bg-primary flex
+                 shadow-xl"
                 (case direction
-                  "left" "right-auto max-w-[80dvw] min-w-[60dvw]"
-                  "right" "left-auto max-w-[80dvw] min-w-[60dvw]"
-                  "bottom" "top-auto max-h-[60dvh] min-h-[30dvh]"
-                  "top" "bottom-auto max-h-[60dvh] min-h-[30dvh]")]}
+                  "left"
+                  "right-auto max-w-[80dvw] min-w-[60dvw] py-safe pl-safe"
+
+                  "right"
+                  "left-auto max-w-[80dvw] min-w-[60dvw] py-safe pr-safe"
+
+                  "bottom"
+                  "top-auto max-h-[60dvh] min-h-[30dvh] px-safe pb-safe"
+
+                  "top"
+                  "bottom-auto max-h-[60dvh] min-h-[30dvh] px-safe pt-safe")]
+        :style {:margin (case direction
+                          "left" "- env(safe-area-inset-top)  0
+                                  - env(safe-area-inset-bottom) 0"
+                          "right" "- env(safe-area-inset-top) 0
+                                   - env(safe-area-inset-bottom) 0"
+                          "bottom" "0 - env(safe-area-inset-right)
+                                    0 - env(safe-area-inset-left)"
+                          "top" "0 - env(safe-area-inset-right)
+                                 0 - env(safe-area-inset-left)")}}
        [:> Drawer.Title {:class "sr-only"} label]
        [:> Drawer.Description
         {:as-child true}
-        [:div.flex.overflow-hidden.bg-primary.shadow-xl.flex-1
+        [:div.flex.flex-1.overflow-hidden
          {:class (when (= direction "bottom") "w-full")}
          content]]]]]))

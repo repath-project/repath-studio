@@ -135,8 +135,8 @@
     (->> (element.views/context-menu)
          (map views/dropdown-menu-item)
          (into [:> DropdownMenu/Content
-                {:side "top"
-                 :align "end"
+                {:side "left"
+                 :align "center"
                  :class "menu-content rounded-sm"
                  :on-key-down #(.stopPropagation %)
                  :on-escape-key-down #(.stopPropagation %)}
