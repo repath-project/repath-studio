@@ -14,7 +14,7 @@
  ::theme-color
  (fn [coeffects _]
    (let [style (.getComputedStyle js/window (.-documentElement js/document))
-         color (.getPropertyValue style "--primary")]
+         color (.getPropertyValue style "--secondary")]
      (assoc coeffects :theme-color color))))
 
 (rf/reg-fx
