@@ -225,12 +225,13 @@
                     (= (:key clicked-element) key))]
     [:> HoverCard/Root
      [:> HoverCard/Trigger
-      {:class "flex items-center overflow-hidden"}
-      [:label.form-element.w-28.truncate.flex-1.rtl:text-left!.py-0
-       {:for (name k)
-        :dir "ltr"
-        :class ["leading-[27px]" (when active "text-foreground-hovered")]}
-       k]]
+      {:as-child true}
+      [:div.flex.items-center.overflow-hidden
+       [:label.form-element.w-28.truncate.flex-1.rtl:text-left!.py-0
+        {:for (name k)
+         :dir "ltr"
+         :class ["leading-[27px]" (when active "text-foreground-hovered")]}
+        k]]]
      [:> HoverCard/Portal
       [:> HoverCard/Content
        {:side "left"
