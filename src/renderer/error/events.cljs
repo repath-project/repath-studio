@@ -32,7 +32,7 @@
   [db]
   {:title (tr db [::welcome "Welcome to %1!"] [config/app-name])
    :content [reporting-confirmation-dialog-content db]
-   :attrs {:onOpenAutoFocus #(.preventDefault %)}})
+   :attrs {:on-open-auto-focus #(.preventDefault %)}})
 
 (rf/reg-event-fx
  ::init-reporting

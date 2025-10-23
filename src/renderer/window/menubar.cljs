@@ -18,6 +18,9 @@
    [renderer.history.subs :as-alias history.subs]
    [renderer.ruler.events :as-alias ruler.events]
    [renderer.ruler.subs :as-alias ruler.subs]
+   [renderer.theme.db :as theme.db]
+   [renderer.theme.events :as-alias theme.events]
+   [renderer.theme.subs :as-alias theme.subs]
    [renderer.utils.i18n :as utils.i18n :refer [t]]
    [renderer.views :as views]
    [renderer.window.events :as-alias window.events]
@@ -475,108 +478,123 @@
                :action [::app.events/set-lang "system"]
                :checked (= @(rf/subscribe [::app.subs/lang]) "system")}])))
 
+(defn theme-mode-submenu
+  []
+  (->> theme.db/modes
+       (mapv (fn [k]
+               {:id k
+                :label (name k)
+                :type :checkbox
+                :icon (name k)
+                :action [::theme.events/set-mode k]
+                :checked (= @(rf/subscribe [::theme.subs/mode]) k)}))))
+
 (defn panel-submenu
   []
-  (cond-> []
-    @(rf/subscribe [::window.subs/breakpoint? :md])
-    (into [{:id :toggle-tree
-            :type :checkbox
-            :icon "tree"
-            :label (t [::panel-element-tree "Element tree"])
-            :checked @(rf/subscribe [::app.subs/panel-visible? :tree])
-            :action [::app.events/toggle-panel :tree]}
-           {:id :toggle-props
-            :type :checkbox
-            :icon "properties"
-            :label (t [::panel-properties "Properties"])
-            :checked @(rf/subscribe [::app.subs/panel-visible? :properties])
-            :action [::app.events/toggle-panel :properties]}])
-
-    :always
-    (into [{:id :toggle-xml
-            :label (t [::panel-xml-view "XML view"])
-            :type :checkbox
-            :icon "code"
-            :checked @(rf/subscribe [::app.subs/panel-visible? :xml])
-            :action [::app.events/toggle-panel :xml]}
-           {:id :toggle-history
-            :label (t [::panel-history-tree "History tree"])
-            :icon "history"
-            :type :checkbox
-            :checked @(rf/subscribe [::app.subs/panel-visible? :history])
-            :action [::app.events/toggle-panel :history]}
-           {:id :toggle-command-history
-            :type :checkbox
-            :label (t [::panel-shell-history "Shell history"])
-            :icon "shell"
-            :checked @(rf/subscribe [::app.subs/panel-visible? :repl-history])
-            :action [::app.events/toggle-panel :repl-history]}
-           {:id :toggle-timeline-panel
-            :type :checkbox
-            :label (t [::panel-timeline-editor "Timeline editor"])
-            :icon "timeline"
-            :checked @(rf/subscribe [::app.subs/panel-visible? :timeline])
-            :action [::app.events/toggle-panel :timeline]}])))
+  [{:id :toggle-tree
+    :type :checkbox
+    :icon "tree"
+    :label (t [::panel-element-tree "Element tree"])
+    :checked @(rf/subscribe [::app.subs/panel-visible? :tree])
+    :action [::app.events/toggle-panel :tree]}
+   {:id :toggle-props
+    :type :checkbox
+    :icon "properties"
+    :label (t [::panel-properties "Properties"])
+    :checked @(rf/subscribe [::app.subs/panel-visible? :properties])
+    :action [::app.events/toggle-panel :properties]}
+   {:id :toggle-xml
+    :label (t [::panel-xml-view "XML view"])
+    :type :checkbox
+    :icon "code"
+    :checked @(rf/subscribe [::app.subs/panel-visible? :xml])
+    :action [::app.events/toggle-panel :xml]}
+   {:id :toggle-history
+    :label (t [::panel-history-tree "History tree"])
+    :icon "history"
+    :type :checkbox
+    :checked @(rf/subscribe [::app.subs/panel-visible? :history])
+    :action [::app.events/toggle-panel :history]}
+   {:id :toggle-command-history
+    :type :checkbox
+    :label (t [::panel-shell-history "Shell history"])
+    :icon "shell"
+    :checked @(rf/subscribe [::app.subs/panel-visible? :repl-history])
+    :action [::app.events/toggle-panel :repl-history]}
+   {:id :toggle-timeline-panel
+    :type :checkbox
+    :label (t [::panel-timeline-editor "Timeline editor"])
+    :icon "timeline"
+    :checked @(rf/subscribe [::app.subs/panel-visible? :timeline])
+    :action [::app.events/toggle-panel :timeline]}])
 
 (defn view-menu
   []
   {:id :view
    :label (t [::view "View"])
    :type :root
-   :items [{:id :zoom
-            :label (t [::zoom "Zoom"])
-            :type :sub-menu
-            :disabled (not @(rf/subscribe [::document.subs/entities?]))
-            :items (zoom-submenu)}
-           {:id :a11y
-            :label (t [::accessibility-filter "Accessibility filter"])
-            :type :sub-menu
-            :disabled (not @(rf/subscribe [::document.subs/entities?]))
-            :items (a11y-submenu)}
-           {:id :lang
-            :label (t [::language "Language"])
-            :type :sub-menu
-            :items (languages-submenu)}
-           {:id :divider-1
-            :type :separator}
-           {:id :toggle-grid
-            :type :checkbox
-            :label (t [::grid "Grid"])
-            :icon "grid"
-            :checked @(rf/subscribe [::app.subs/grid])
-            :action [::app.events/toggle-grid]}
-           {:id :toggle-ruler
-            :type :checkbox
-            :label (t [::rulers "Rulers"])
-            :icon "ruler-combined"
-            :checked @(rf/subscribe [::ruler.subs/visible?])
-            :action [::ruler.events/toggle-visible]}
-           {:id :help-bar
-            :type :checkbox
-            :label (t [::help-bar "Help bar"])
-            :icon "info"
-            :checked @(rf/subscribe [::app.subs/help-bar])
-            :action [::app.events/toggle-help-bar]}
-           {:id :toggle-debug-info
-            :type :checkbox
-            :label (t [::debug-info "Debug info"])
-            :icon "bug"
-            :checked @(rf/subscribe [::app.subs/debug-info])
-            :action [::app.events/toggle-debug-info]}
-           {:id :divider-2
-            :type :separator}
-           {:id :panel
-            :label (t [::panel "Panel"])
-            :type :sub-menu
-            :items (panel-submenu)}
-           {:id :divider-3
-            :type :separator}
-           {:id :toggle-fullscreen
-            :label (t [::fullscreen "Fullscreen"])
-            :icon "arrow-minimize"
-            :type :checkbox
-            :checked @(rf/subscribe [::window.subs/fullscreen?])
-            :action [::window.events/toggle-fullscreen]}]})
+   :items (cond-> [{:id :zoom
+                    :label (t [::zoom "Zoom"])
+                    :type :sub-menu
+                    :disabled (not @(rf/subscribe [::document.subs/entities?]))
+                    :items (zoom-submenu)}
+                   {:id :theme-mode
+                    :label (t [::theme-mode "Theme mode"])
+                    :type :sub-menu
+                    :items (theme-mode-submenu)}
+                   {:id :a11y
+                    :label (t [::accessibility-filter "Accessibility filter"])
+                    :type :sub-menu
+                    :disabled (not @(rf/subscribe [::document.subs/entities?]))
+                    :items (a11y-submenu)}
+                   {:id :lang
+                    :label (t [::language "Language"])
+                    :type :sub-menu
+                    :items (languages-submenu)}
+                   {:id :divider-1
+                    :type :separator}
+                   {:id :toggle-grid
+                    :type :checkbox
+                    :label (t [::grid "Grid"])
+                    :icon "grid"
+                    :checked @(rf/subscribe [::app.subs/grid])
+                    :action [::app.events/toggle-grid]}
+                   {:id :toggle-ruler
+                    :type :checkbox
+                    :label (t [::rulers "Rulers"])
+                    :icon "ruler-combined"
+                    :checked @(rf/subscribe [::ruler.subs/visible?])
+                    :action [::ruler.events/toggle-visible]}
+                   {:id :help-bar
+                    :type :checkbox
+                    :label (t [::help-bar "Help bar"])
+                    :icon "info"
+                    :checked @(rf/subscribe [::app.subs/help-bar])
+                    :action [::app.events/toggle-help-bar]}
+                   {:id :toggle-debug-info
+                    :type :checkbox
+                    :label (t [::debug-info "Debug info"])
+                    :icon "bug"
+                    :checked @(rf/subscribe [::app.subs/debug-info])
+                    :action [::app.events/toggle-debug-info]}]
+
+            @(rf/subscribe [::window.subs/breakpoint? :md])
+            (into [{:id :divider-2
+                    :type :separator}
+                   {:id :panel
+                    :label (t [::panel "Panel"])
+                    :type :sub-menu
+                    :items (panel-submenu)}
+                   {:id :divider-3
+                    :type :separator}])
+
+            :always
+            (conj {:id :toggle-fullscreen
+                   :label (t [::fullscreen "Fullscreen"])
+                   :icon "arrow-minimize"
+                   :type :checkbox
+                   :checked @(rf/subscribe [::window.subs/fullscreen?])
+                   :action [::window.events/toggle-fullscreen]}))})
 
 (defn help-menu
   []
@@ -642,16 +660,15 @@
 
 (defmethod menu-item :checkbox
   [{:keys [label action checked]}]
-  (let [sm? @(rf/subscribe [::window.subs/breakpoint? :sm])]
-    [:> Menubar/CheckboxItem
-     {:class "menu-checkbox-item inset"
-      :on-select #(rf/dispatch action)
-      :checked checked}
-     [:> Menubar/ItemIndicator
-      {:class "menu-item-indicator"}
-      [views/icon "checkmark"]]
-     [:div label]
-     (when sm? [views/shortcuts action])]))
+  [:> Menubar/CheckboxItem
+   {:class "menu-checkbox-item inset"
+    :on-select #(rf/dispatch action)
+    :checked checked}
+   [:> Menubar/ItemIndicator
+    {:class "menu-item-indicator"}
+    [views/icon "checkmark"]]
+   [:div label]
+   [views/shortcuts action]])
 
 (defmethod menu-item :sub-menu
   [{:keys [label items disabled]}]
@@ -665,7 +682,7 @@
      [views/icon "chevron-right"]]]
    [:> Menubar/Portal
     (into [:> Menubar/SubContent
-           {:class "menu-content"
+           {:class "menu-content min-w-[50dvw]! sm:min-w-[200px]! max-w-[50dvw]"
             :align "start"
             :loop true
             :on-escape-key-down #(.stopPropagation %)}]
@@ -675,19 +692,21 @@
   [{:keys [label items id disabled]}]
   [:> Menubar/Menu
    [:> Menubar/Trigger
-    {:class "px-3 py-1.5 flex rounded-sm outline-none select-none items-center
-             leading-none data-[state=open]:bg-overlay
-             hover:bg-overlay hover:text-foreground-hovered
-             focus:[&_span]:first-letter:underline
-             disabled:text-foreground-disabled disabled:pointer-events-none"
+    {:class ["button-size md:min-h-auto md:px-3 py-1.5 flex rounded-sm
+              outline-none select-none items-center justify-center leading-none
+              data-[state=open]:bg-overlay
+              hover:bg-overlay hover:text-foreground-hovered
+              focus:bg-overlay focus:text-foreground-hovered
+              disabled:text-foreground-disabled disabled:pointer-events-none"]
      :id (name id)
      :disabled disabled}
     [:span label]]
    [:> Menubar/Portal
     (into [:> Menubar/Content
-           {:class (when items "menu-content")
+           {:class (when items "menu-content min-w-[50dvw]! sm:min-w-[200px]!
+                                max-w-[50dvw]")
             :align "start"
-            :side-offset 3
+            :side-offset 4
             :loop true
             :on-escape-key-down #(.stopPropagation %)
             :on-close-auto-focus #(.preventDefault %)}]
@@ -695,28 +714,36 @@
 
 (defmethod menu-item :default
   [{:keys [label action disabled]}]
-  (let [sm? @(rf/subscribe [::window.subs/breakpoint? :sm])]
-    [:> Menubar/Item
-     {:class "menu-item"
-      :on-select #(rf/dispatch action)
-      :disabled disabled}
-     [:div label]
-     (when sm? [views/shortcuts action])]))
+  [:> Menubar/Item
+   {:class "menu-item"
+    :on-select #(rf/dispatch action)
+    :disabled disabled}
+   [:div label]
+   [views/shortcuts action]])
 
-(defn submenus
-  []
+(defn submenus []
   [(file-menu)
    (edit-menu)
    (object-menu)
    (view-menu)
    (help-menu)])
 
+(defn mobile-root
+  []
+  [{:id :root
+    :label [views/icon "menu"]
+    :type :root
+    :items (mapv #(assoc % :type :sub-menu) (submenus))}])
+
 (defn root
   []
-  (into [:> Menubar/Root
-         {:class "flex"
-          :on-key-down #(.stopPropagation %)
-          :on-value-change #(rf/dispatch [::app.events/set-backdrop
-                                          (-> (seq %)
-                                              (boolean))])}]
-        (map menu-item (submenus))))
+  (->> (if @(rf/subscribe [::window.subs/breakpoint? :lg])
+         (submenus)
+         (mobile-root))
+       (map menu-item)
+       (into [:> Menubar/Root
+              {:class "flex overflow-hidden"
+               :on-key-down #(.stopPropagation %)
+               :on-value-change #(rf/dispatch [::app.events/set-backdrop
+                                               (-> (seq %)
+                                                   (boolean))])}])))

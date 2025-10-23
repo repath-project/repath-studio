@@ -8,7 +8,7 @@
    ["@radix-ui/react-scroll-area" :as ScrollArea]
    ["@radix-ui/react-slider" :as Slider]
    ["@radix-ui/react-switch" :as Switch]
-   ["@repath-project/react-color" :refer [PhotoshopPicker]]
+   ["@repath-project/react-color" :refer [ChromePicker PhotoshopPicker]]
    ["codemirror" :as codemirror]
    ["codemirror/addon/display/placeholder.js"]
    ["codemirror/addon/hint/css-hint.js"]
@@ -19,6 +19,7 @@
    ["react-resizable-panels" :refer [PanelResizeHandle]]
    ["react-svg" :refer [ReactSVG]]
    ["tailwind-merge" :refer [twMerge]]
+   ["vaul" :refer [Drawer]]
    [re-frame.core :as rf]
    [reagent.core :as reagent]
    [renderer.app.subs :as-alias app.subs]
@@ -55,8 +56,8 @@
 
 (defn switch
   [label props]
-  [:span.inline-flex.items-center
-   [:label.form-element.h-auto.bg-transparent
+  [:div.inline-flex.items-center.gap-2
+   [:label.bg-transparent
     {:for (:id props)}
     label]
    [:> Switch/Root
@@ -104,8 +105,9 @@
 
 (defn shortcuts
   [event]
-  (let [event-shortcuts @(rf/subscribe [::app.subs/event-shortcuts event])]
-    (when (seq event-shortcuts)
+  (let [event-shortcuts @(rf/subscribe [::app.subs/event-shortcuts event])
+        md? @(rf/subscribe [::window.subs/breakpoint? :md])]
+    (when (and (seq event-shortcuts) md?)
       (into [:span.inline-flex.text-foreground-muted {:class "gap-1.5"}]
             (comp (map format-shortcut)
                   (interpose [:span]))
@@ -113,8 +115,8 @@
 
 (defn radio-icon-button
   [icon-name active props]
-  [:button.icon-button
-   (merge-with-class {:class (str (when active "accent ") "active:bg-overlay")}
+  [:button.icon-button.active:overlay
+   (merge-with-class {:class (str (when active "accent"))}
                      props)
    [renderer.views/icon icon-name]])
 
@@ -168,6 +170,9 @@
       [:> DropdownMenu/Item
        {:class "menu-item dropdown-menu-item"
         :onSelect #(rf/dispatch action)}
+       (when (:icon props)
+         [icon (:icon props)
+          {:class "menu-item-indicator"}])
        [:div label]
        (when sm? [shortcuts action])])))
 
@@ -176,10 +181,9 @@
   (let [children (if (map? (first more)) (rest more) more)]
     [:> ScrollArea/Root
      {:class "overflow-hidden w-full"}
-     (into
-      [:> ScrollArea/Viewport
-       {:ref (:ref (first more))
-        :class "w-full h-full"}] children)
+     (into [:> ScrollArea/Viewport
+            {:ref (:ref (first more))
+             :class "w-full h-full [&>div]:block!"}] children)
 
      [:> ScrollArea/Scrollbar
       {:class "flex touch-none p-0.5 select-none w-2.5"
@@ -197,19 +201,23 @@
 
 (defn color-picker
   [props & children]
-  [:> Popover/Root {:modal true}
-   (into [:> Popover/Trigger {:as-child true}]
-         children)
-   [:> Popover/Portal
-    [:> Popover/Content
-     {:class "popover-content max-w-fit"
-      :align "start"
-      :side "top"
-      :align-offset (:align-offset props)
-      :on-escape-key-down #(.stopPropagation %)}
-     [:div {:dir "ltr"}
-      [:> PhotoshopPicker props]]
-     [:> Popover/Arrow {:class "fill-primary"}]]]])
+  (let [sm? @(rf/subscribe [::window.subs/breakpoint? :sm])]
+    [:> Popover/Root {:modal true}
+     (into [:> Popover/Trigger {:as-child true}]
+           children)
+     [:> Popover/Portal
+      [:> Popover/Content
+       {:class "popover-content max-w-fit"
+        :align "start"
+        :side "top"
+        :align-offset (:align-offset props)
+        :on-open-auto-focus #(.preventDefault %)
+        :on-escape-key-down #(.stopPropagation %)}
+       [:div {:dir "ltr"}
+        (if sm?
+          [:> PhotoshopPicker props]
+          [:> ChromePicker props])]
+       [:> Popover/Arrow {:class "fill-primary"}]]]]))
 
 (def cm-defaults
   {:lineNumbers false
@@ -269,3 +277,53 @@
                            :on-blur #()
                            :on-change #()
                            :ref ref} attrs)])})))
+
+(defn drawer
+  [{:keys [label direction content disabled snap-points]
+    :as attrs}]
+  (reagent/with-let [snap (reagent/atom nil)]
+    [:> Drawer.Root
+     (cond-> {:direction direction}
+       snap-points
+       (assoc :snapPoints (clj->js snap-points)
+              :activeSnapPoint @snap
+              :setActiveSnapPoint (fn [v] (reset! snap v))))
+     [:> Drawer.Trigger
+      {:class "button p-1 rounded h-auto flex flex-col flex-1 text-2xs gap-1
+               overflow-hidden"
+       :disabled disabled}
+      [icon (:icon attrs)]
+      [:span.truncate label]]
+     [:> Drawer.Portal
+      [:> Drawer.Overlay
+       {:class "backdrop"}]
+      [:> Drawer.Content
+       {:class ["inset-0 fixed z-0 outline-none bg-primary flex
+                 shadow-xl"
+                (case direction
+                  "left"
+                  "right-auto max-w-[80dvw] min-w-[60dvw] py-safe pl-safe"
+
+                  "right"
+                  "left-auto max-w-[80dvw] min-w-[60dvw] py-safe pr-safe"
+
+                  "bottom"
+                  "top-auto max-h-[60dvh] min-h-[30dvh] px-safe pb-safe"
+
+                  "top"
+                  "bottom-auto max-h-[60dvh] min-h-[30dvh] px-safe pt-safe")]
+        :style {:margin (case direction
+                          "left" "- env(safe-area-inset-top)  0
+                                  - env(safe-area-inset-bottom) 0"
+                          "right" "- env(safe-area-inset-top) 0
+                                   - env(safe-area-inset-bottom) 0"
+                          "bottom" "0 - env(safe-area-inset-right)
+                                    0 - env(safe-area-inset-left)"
+                          "top" "0 - env(safe-area-inset-right)
+                                 0 - env(safe-area-inset-left)")}}
+       [:> Drawer.Title {:class "sr-only"} label]
+       [:> Drawer.Description
+        {:as-child true}
+        [:div.flex.flex-1.overflow-hidden
+         {:class (when (= direction "bottom") "w-full")}
+         content]]]]]))

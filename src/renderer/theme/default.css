@@ -1,7 +1,7 @@
 
 [data-theme='dark'] {
   --primary: #2d2d2d;
-  --secondary: #222;
+  --secondary: #222222;
 
   --foreground-rgb: 255, 255, 255;
 
@@ -13,8 +13,8 @@
 }
 
 [data-theme='light'] {
-  --primary: #fff;
-  --secondary: #eee;
+  --primary: #ffffff;
+  --secondary: #eeeeee;
 
   --foreground-rgb: 0, 0, 0;
 
@@ -26,6 +26,13 @@
 }
 
 :root {
+  --button-size-lg: 35px;
+  --button-size-md: 33px;
+  --button-size-sm: 27px;
+  --button-size-xs: 21px;
+
+  --font-size: 13px;
+
   --sans: 'Noto Sans', sans;
   --mono: 'Noto Sans Mono', monospace;
 

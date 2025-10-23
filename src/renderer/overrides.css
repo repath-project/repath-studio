@@ -72,19 +72,7 @@
 
 /* cmdk */
 
-[cmdk-item],
-[cmdk-empty] {
-  @apply flex p-2 rounded-sm items-center justify-between;
-
-  &[data-selected="true"] {
-    @apply bg-overlay;
-  }
-}
-
-[cmdk-list] {
-  max-height: 50vh;
-}
-
+/* https://github.com/pacocoursey/cmdk/issues/261 */
 [cmdk-group-heading] {
   @apply p-2 text-foreground-muted uppercase font-bold text-2xs;
 }

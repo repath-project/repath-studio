@@ -17,6 +17,7 @@
    [renderer.theme.subs :as-alias theme.subs]
    [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]
+   [renderer.window.subs :as-alias window.subs]
    [replumb.core :as replumb])
   (:require-macros
    [reagent.ratom :refer [reaction]]))
@@ -25,9 +26,8 @@
   [mode]
   (let [repl-mode @(rf/subscribe [::app.subs/repl-mode])
         active (= repl-mode mode)]
-    [:button.button.rounded.px-1.leading-none.text-2xs.h-4
-     {:class [(when active "accent")
-              "m-0.5"]
+    [:button.button.rounded.px-1.leading-none.text-2xs.min-h-5
+     {:class [(when active "accent")]
       :on-click #(rf/dispatch [::app.events/set-repl-mode mode])}
      mode]))
 
@@ -42,7 +42,7 @@
                        :on-change]))]}
   (let [{:keys [_pos _count _text]} @state
         repl-history? @(rf/subscribe [::app.subs/panel-visible? :repl-history])]
-    [:div.flex.p-0.5.items-center.m-1
+    [:div.flex.p-1.5.items-center
      [:div.flex.text-xs.self-start
       {:class "m-0.5"}
       (replumb/get-prompt)]
@@ -50,18 +50,19 @@
      [codemirror/code-mirror
       (reaction (:text @state))
       (merge {:on-eval submit} cm-opts)]
-     [:div.self-start.h-full.flex.items-center
+     [:div.self-start.h-full.flex.items-center.gap-1
       [mode-button :cljs]
-      [mode-button :js]]
-     [:div.self-start.flex
-      [views/icon-button
-       (if repl-history? "chevron-down" "chevron-up")
-       {:class "my-0.5 ml-0.5"
-        :style {:height "16px"}
-        :title (if repl-history?
-                 (t [::hide-command-output "Hide command output"])
-                 (t [::show-command-output "Show command output"]))
-        :on-click #(rf/dispatch [::app.events/toggle-panel :repl-history])}]]]))
+      [mode-button :js]
+      (when @(rf/subscribe [::window.subs/breakpoint? :md])
+        [:div.self-start.flex
+         [views/icon-button
+          (if repl-history? "chevron-down" "chevron-up")
+          {:class "min-h-5"
+           :title (if repl-history?
+                    (t [::hide-command-output "Hide command output"])
+                    (t [::show-command-output "Show command output"]))
+           :on-click #(rf/dispatch [::app.events/toggle-panel
+                                    :repl-history])}]])]]))
 
 (defmulti item (fn [i _opts] (:type i)))
 
@@ -101,17 +102,6 @@
      (map (fn [i]
             [:div.font-mono.p-1.flex.text-xs.min-h-4 (item i opts)]) items))]])
 
-(defn repl-items-panel
-  [items show-value-opts set-text]
-  [:<>
-   [views/resize-handle "repl-resize-handle"]
-   [:> Panel
-    {:id "repl-panel"
-     :minSize 10
-     :defaultSize 20
-     :order 3}
-    [repl-items items (assoc show-value-opts :set-text set-text)]]])
-
 (defn completion-item
   [text selected active set-active]
   [:div.p-1.bg-secondary.text-nowrap
@@ -119,7 +109,9 @@
            (when (and this selected)
              (rf/dispatch [::events/scroll-into-view this])))
     :on-click set-active
-    :class (when selected (if active "bg-accent!" "bg-primary!"))}
+    :class (when selected (if active
+                            "bg-accent! text-accent-foreground!"
+                            "bg-primary!"))}
    text])
 
 (defn completion-list
@@ -193,11 +185,25 @@
                                   (execute text #(add-result (not %1) %2)))))]
 
     (set-print! add-log)
-    [:<>
-     (when @(rf/subscribe [::app.subs/panel-visible? :repl-history])
-       [repl-items-panel @items show-value-opts set-text])
+    [:div
+     {:class (if @(rf/subscribe [::window.subs/breakpoint? :md])
+               "contents"
+               "flex flex-col flex-1")}
+     (when (and @(rf/subscribe [::app.subs/panel-visible? :repl-history])
+                @(rf/subscribe [::window.subs/breakpoint? :md]))
+       [:<>
+        [views/resize-handle "repl-resize-handle"]
+        [:> Panel
+         {:id "repl-panel"
+          :minSize 10
+          :defaultSize 20
+          :order 3}
+         [repl-items @items (assoc show-value-opts :set-text set-text)]]])
 
-     [:div.relative.whitespace-pre-wrap.font-mono
+     (when-not @(rf/subscribe [::window.subs/breakpoint? :md])
+       [repl-items @items (assoc show-value-opts :set-text set-text)])
+
+     [:div.relative.whitespace-pre-wrap.font-mono.w-full
       {:dir "ltr"}
       [completion-list
        @docs

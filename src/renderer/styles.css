@@ -52,19 +52,18 @@
 @import './theme/default.css';
 @import './theme/styles.css';
 
-:root {
-  --button-size: 33px;
-  --button-size-sm: 21px;
-  --font-size: 13px;
+html {
+  @apply h-full p-safe;
 }
 
 body {
-  @apply text-foreground;
+  @apply m-0 text-foreground relative bg-secondary select-none font-sans
+  overflow-hidden h-full;
   font-size: var(--font-size);
 }
 
 p {
-  margin-bottom: 1rem;
+  @apply text-pretty mb-4;
 }
 
 input {
@@ -81,12 +80,12 @@ input {
 }
 
 label {
-  @apply block text-right h-full text-foreground-muted overflow-hidden
-  text-ellipsis w-auto hover:text-foreground-hovered hover:cursor-pointer;
+  @apply text-right overflow-hidden text-ellipsis hover:text-foreground-hovered
+  hover:cursor-pointer px-1;
 }
 
 .menu-content {
-  @apply bg-primary drop-shadow-lg p-1 z-10 rounded-sm no-drag min-w-[160px]
+  @apply bg-primary drop-shadow-lg p-1 z-10 rounded-sm no-drag min-w-[100px]
   sm:min-w-[200px] border border-border;
 }
 
@@ -95,10 +94,8 @@ label {
 .menu-checkbox-item,
 .menu-radio-item {
   all: unset;
-  @apply flex justify-between gap-4 text-foreground items-center relative h-8;
-  line-height: 1;
-  padding: 0 30px;
-  user-select: none;
+  @apply button-size flex justify-between gap-4 text-foreground items-center
+  rounded-sm relative select-none px-[33px] py-1 md:py-0;
 }
 
 .menu-item[data-state='open'],

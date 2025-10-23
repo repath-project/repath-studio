@@ -6,14 +6,77 @@
   -webkit-app-region: no-drag;
 }
 
-@utility button-size {
-  width: var(--button-size);
-  height: var(--button-size);
+@utility outline-inset {
+  @apply outline-offset-[-1px];
+}
+
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@utility pl-safe {
+  padding-left: env(safe-area-inset-left);
+}
+
+@utility pr-safe {
+  padding-right: env(safe-area-inset-right);
+}
+
+@utility pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+
+
+@utility py-safe {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@utility px-safe {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+@utility m-safe {
+  margin: env(safe-area-inset-top)
+          env(safe-area-inset-right)
+          env(safe-area-inset-bottom)
+          env(safe-area-inset-left);
+}
+
+@utility p-safe {
+  padding: env(safe-area-inset-top)
+           env(safe-area-inset-right)
+           env(safe-area-inset-bottom)
+           env(safe-area-inset-left);
+}
+
+@utility button-size-lg {
+  min-width: var(--button-size-lg);
+  min-height: var(--button-size-lg);
+}
+
+@utility button-size-md {
+  min-width: var(--button-size-md);
+  min-height: var(--button-size-md);
 }
 
 @utility button-size-sm {
-  width: var(--button-size-sm);
-  height: var(--button-size-sm);
+  min-width: var(--button-size-sm);
+  min-height: var(--button-size-sm);
+}
+
+@utility button-size-xs {
+  min-width: var(--button-size-xs);
+  min-height: var(--button-size-xs);
+}
+
+@utility button-size {
+  @apply button-size-lg md:button-size-md;
+}
+
+@utility button-size-small {
+  @apply button-size-sm md:button-size-xs;
 }
 
 @utility v-divider {
@@ -35,7 +98,7 @@
 }
 
 @utility backdrop {
-  @apply absolute inset-0 flex items-center justify-center bg-backdrop
+  @apply fixed inset-0 flex items-center justify-center bg-backdrop
   animate-in fade-in;
 }
 
@@ -51,11 +114,9 @@
 }
 
 @utility button {
-  @apply relative text-center text-nowrap bg-transparent no-drag text-foreground
-  outline-default fill-foreground aria-expanded:bg-overlay active:bg-overlay;
-  font-size: 1em;
-  height: var(--button-size);
-  line-height: var(--button-size);
+  @apply button-size relative text-center text-nowrap bg-transparent no-drag
+  text-foreground outline-default fill-foreground aria-expanded:bg-overlay
+  truncate active:bg-overlay;
 
   &:hover {
     @apply bg-overlay text-foreground-hovered;
@@ -75,7 +136,7 @@
 }
 
 @utility toolbar {
-  @apply flex gap-0.5 p-1 items-center sm:gap-1;
+  @apply flex gap-1 p-1 items-center;
 }
 
 @utility button-group {
@@ -105,7 +166,7 @@
   @apply button button-size rounded-sm;
 
   &.small {
-    @apply button-size-sm rounded-xs m-0;
+    @apply button-size-small rounded-xs m-0;
   }
 }
 
@@ -157,11 +218,9 @@
   animate-in fade-in max-w-3xs;
 }
 
-
 @utility form-control-button {
-  @apply button bg-primary text-foreground-muted p-1 outline-offset-[-1px];
-  width: 27px;
-  height: 27px;
+  @apply button bg-primary text-foreground-muted p-1 outline-inset
+  min-h-[27px] min-w-[27px]!;
 }
 
 @keyframes rotationBreak {

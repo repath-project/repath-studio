@@ -14,16 +14,16 @@
 
 (defmethod attribute.hierarchy/description [:default :font-family]
   []
-  (t [::description
-      "The font-family attribute indicates which font family
-       will be used to render the text,
-       specified as a prioritized list of font
-       family names and/or generic family names."]))
+  (t [::description "The font-family attribute indicates which font family will
+                     be used to render the text, specified as a prioritized list
+                     of font family names and/or generic family names."]))
 
 (defn font-item
   [font]
   [:> Command/CommandItem
-   {:on-select #(rf/dispatch [::element.events/set-attr :font-family font])}
+   {:class "flex p-2 rounded-sm items-center justify-between
+            data-[selected=true]:bg-overlay"
+    :on-select #(rf/dispatch [::element.events/set-attr :font-family font])}
    [:div.flex.justify-between.items-center.w-full.gap-2
     [:div font]
     [:div.leading-none.text-foreground-muted
@@ -39,16 +39,17 @@
     [:> Command/CommandInput
      {:class "p-3 bg-primary border-b border-border w-full"
       :placeholder (t [::search-font "Search for a font"])}]
-    [views/scroll-area
-     [:> Command/CommandList
-      {:class "p-1"}
-      [:> Command/CommandEmpty
-       (if-not font-list
-         [:div.w-full [views/loading-indicator]]
-         (t [::no-local-font "No local fonts found."]))]
-      (for [font font-list]
-        ^{:key font}
-        [font-item font])]]]])
+    [:div.flex.max-h-80.overflow-hidden
+     [views/scroll-area
+      [:> Command/CommandList
+       {:class "p-1"}
+       [:> Command/CommandEmpty
+        (if-not font-list
+          [:div.w-full [views/loading-indicator]]
+          (t [::no-local-font "No local fonts found."]))]
+       (for [font font-list]
+         ^{:key font}
+         [font-item font])]]]]])
 
 (defmethod attribute.hierarchy/form-element [:default :font-family]
   [_ k v attrs]

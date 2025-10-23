@@ -27,8 +27,9 @@
    [:> Popover/Root {:modal true}
     [:> Popover/Trigger
      {:as-child true}
-     [:button.form-control-button.p-2
-      {:disabled (:disabled attrs)
+     [:button.form-control-button
+      {:class "p-1.5"
+       :disabled (:disabled attrs)
        :title (t [::pick-color "Pick color"])}
       [:div.w-full.h-full.bg-overlay
        {:class (when (:disabled attrs) "opacity-30")
@@ -38,6 +39,7 @@
       {:sideOffset 5
        :class "popover-content"
        :align "end"
+       :on-open-auto-focus #(.preventDefault %)
        :on-escape-key-down #(.stopPropagation %)}
       [:div
        {:dir "ltr"}

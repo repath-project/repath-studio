@@ -10,7 +10,8 @@
  (fn [db [_]]
    (dialog.handlers/create db {:title [:div.sr-only "Command panel"]
                                :content [dialog.views/cmdk]
-                               :attrs {:class "top-10 translate-y-0 w-150"}})))
+                               :attrs {:class "top-5 md:top-10 translate-y-0 p-0
+                                               w-150"}})))
 
 (rf/reg-event-db
  ::show-about

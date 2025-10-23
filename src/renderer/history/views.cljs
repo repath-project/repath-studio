@@ -28,14 +28,14 @@
    [:> Select/Trigger
     {:aria-label label
      :as-child true}
-    [:div.w-4.m-0.bg-transparent.h-full.flex.items-center.hover:pt-1
+    [:div.w-4.m-0.bg-transparent.flex.items-center.hover:pt-1
+     {:class "min-h-[inherit]"}
      [:> Select/Value ""]
      [:> Select/Icon
       [views/icon "chevron-down"]]]]
    [:> Select/Portal
     [:> Select/Content
-     {:side "top"
-      :sideOffset 5
+     {:side "bottom"
       :alignOffset -24
       :position "popper"
       :class "menu-content rounded-sm select-content"
@@ -50,7 +50,8 @@
             (map select-option options))]
      [:> Select/ScrollDownButton
       {:class "select-scroll-button"}
-      [views/icon "chevron-down"]]]]])
+      [views/icon "chevron-down"]]
+     [:> Select/Arrow {:class "fill-primary"}]]]])
 
 (defn action-button
   [args]
@@ -137,6 +138,8 @@
   []
   (let [ref (react/createRef)]
     [:div.flex.flex-col.h-full
+     [:div.flex-1 {:ref ref}
+      [tree ref]]
      [:div.flex.p-1
       [:button.button.flex-1
        {:on-click #(rf/dispatch [::history.events/tree-view-updated
@@ -145,6 +148,4 @@
       [:button.button.flex-1
        {:on-click #(rf/dispatch [::dialog.events/show-confirmation
                                  (clear-dialog)])}
-       (t [::clear-history "Clear history"])]]
-     [:div.flex-1 {:ref ref}
-      [tree ref]]]))
+       (t [::clear-history "Clear history"])]]]))

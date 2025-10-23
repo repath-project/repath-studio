@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Repath Studio</string>
+    <string name="title_activity_main">Repath Studio</string>
+    <string name="package_name">studio.repath.app</string>
+    <string name="custom_url_scheme">studio.repath.app</string>
+</resources>

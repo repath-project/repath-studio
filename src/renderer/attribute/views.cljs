@@ -240,7 +240,7 @@
        [:div.p-5
         [:h2.mb-4.text-lg.font-mono.text-foreground-hovered k]
         (when (get-method attribute.hierarchy/description [dispatch-tag k])
-          [:p.text-pretty
+          [:p
            (attribute.hierarchy/description dispatch-tag k)])
         (when (utils.attribute/compatibility tag k)
           [:<>
@@ -287,7 +287,7 @@
          [:h2.mb-4.text-lg.font-mono.text-foreground-hovered
           (str "<" (name tag) ">")]
          (when-let [description (:description properties)]
-           [:p.text-pretty description])
+           [:p description])
          [caniusethis {:tag tag}]
          (when-let [url (:url properties)]
            [:div.flex [info-button url]])]
