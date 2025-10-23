@@ -92,6 +92,7 @@
     "@capacitor/cli": "7.4.3",
     "@capacitor/core": "7.4.3",
     "@capacitor/ios": "7.4.3",
+    "@capacitor/splash-screen": "7.0.3",
     "@fontsource/noto-sans": "5.2.10",
     "@fontsource/noto-sans-mono": "5.2.10",
     "@mdn/browser-compat-data": "7.1.12",
