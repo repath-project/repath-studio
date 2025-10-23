@@ -307,12 +307,11 @@
   [recent-documents]
   [:div.flex.overflow-hidden
    [views/scroll-area
-    [:div.flex.justify-center.p-2
+    [:div.flex.sm:justify-center.p-2
      [:div.justify-around.flex
       [:div.flex.w-full
        [:div.flex-1
-        [:div.p-4
-         {:class "lg:p-12"}
+        [:div.p-4.lg:p-12
          [:img.h-24.w-24.mb-3
           {:src "img/icon-no-bg.svg"
            :alt "logo"}]
