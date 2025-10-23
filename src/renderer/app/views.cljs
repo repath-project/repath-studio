@@ -6,11 +6,9 @@
    ["path-browserify" :as path-browserify]
    ["react-fps" :refer [FpsView]]
    ["react-resizable-panels" :refer [Panel PanelGroup]]
-   ["sonner" :refer [Toaster]]
    [clojure.string :as string]
    [config :as config]
    [re-frame.core :as rf]
-   [reagent.core :as reagent]
    [renderer.app.events :as-alias app.events]
    [renderer.app.subs :as-alias app.subs]
    [renderer.db :as db]
@@ -459,21 +457,4 @@
            [home recent-documents])
          [:div]]
         [dialog.views/root]
-        [:> Toaster
-         {:theme theme
-          :toastOptions
-          {:classNames {:toast "bg-primary! border! border-border! shadow-md!
-                                p-4! rounded-md!"
-                        :title "text-foreground-hovered!"
-                        :description "text-foreground! text-xs"}}
-          :icons {:success
-                  (reagent/as-element
-                   [views/icon "success" {:class "text-success"}])
-                  :error
-                  (reagent/as-element
-                   [views/icon "error" {:class "text-error"}])
-                  :warning
-                  (reagent/as-element
-                   [views/icon "warning" {:class "text-warning"}])
-                  :info
-                  (reagent/as-element [views/icon "info"])}}]]])))
+        [views/toaster theme]]])))

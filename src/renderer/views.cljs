@@ -18,6 +18,7 @@
    ["react" :as react]
    ["react-resizable-panels" :refer [PanelResizeHandle]]
    ["react-svg" :refer [ReactSVG]]
+   ["sonner" :refer [Toaster]]
    ["tailwind-merge" :refer [twMerge]]
    ["vaul" :refer [Drawer]]
    [re-frame.core :as rf]
@@ -326,3 +327,20 @@
         [:div.flex.flex-1.overflow-hidden
          {:class (when (= direction "bottom") "w-full")}
          content]]]]]))
+
+(defn toaster
+  [theme]
+  [:> Toaster
+   {:theme theme
+    :toastOptions {:classNames {:toast "bg-primary! border! border-border!
+                                        shadow-md! p-4! rounded-md!"
+                                :title "text-foreground-hovered!"
+                                :description "text-foreground! text-xs"}}
+    :icons {:success
+            (reagent/as-element [icon "success" {:class "text-success"}])
+            :error
+            (reagent/as-element [icon "error" {:class "text-error"}])
+            :warning
+            (reagent/as-element [icon "warning" {:class "text-warning"}])
+            :info
+            (reagent/as-element [icon "info"])}}])
