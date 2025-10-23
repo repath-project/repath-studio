@@ -102,11 +102,12 @@
 
 (defn help
   [message]
-  [:div.hidden.justify-center.w-full.p-4.lg:flex
-   [:div.bg-primary.overflow-hidden.shadow.rounded-full
-    [:div.text-xs.gap-1.flex.flex-wrap.py-2.px-4.justify-center.truncate
-     {:aria-live "polite"}
-     message]]])
+  [:div.absolute.top-0.left-0.w-full
+   [:div.hidden.justify-center.w-full.p-4.lg:flex
+    [:div.bg-primary.overflow-hidden.shadow.rounded-full
+     [:div.text-xs.gap-1.flex.flex-wrap.py-2.px-4.justify-center.truncate
+      {:aria-live "polite"}
+      message]]]])
 
 (defn read-only-overlay []
   [:div.absolute.inset-0.border-4.border-accent
@@ -157,26 +158,26 @@
           :class "rtl:scale-x-[-1]"}
          [ruler.views/ruler :vertical]])
       [:div.relative.grow.flex
-       [:div.grow.flex
+       [:div.grow.flex.relative
         {:data-theme "light"
          :style {:background "var(--secondary)"}}
         [frame.views/root]
-        (when-not md?
-          [:div.bg-primary.flex.items-center
-           [toolbar.object/root]])]
-       [:div.absolute.inset-0.pointer-events-none.inset-shadow
-        (when read-only?
-          [read-only-overlay])
-        (when debug-info?
-          [debug-info])
-        (when worker-active?
-          [:button.icon-button.absolute.bottom-2.right-2
-           [views/loading-indicator]])
-        (when (and help-bar (seq help-message) lg?)
-          [help help-message])]
+        [:div.absolute.inset-0.pointer-events-none.inset-shadow]]
+       (when read-only?
+         [read-only-overlay])
+       (when debug-info?
+         [debug-info])
+       (when worker-active?
+         [:button.icon-button.absolute.bottom-2.right-2
+          [views/loading-indicator]])
+       (when (and help-bar (seq help-message) lg?)
+         [help help-message])
        (when backdrop
          [:div.absolute.inset-0
-          {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])]]]))
+          {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])
+       (when-not md?
+         [:div.bg-primary.flex.items-center
+          [toolbar.object/root]])]]]))
 
 (defn xml-panel
   []

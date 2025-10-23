@@ -215,7 +215,7 @@
 
 (defn root []
   [:div.toolbar.bg-primary.mt-px.relative.justify-center.md:justify-start
-   {:class "py-2 md:py-1"}
+   {:class "py-2 md:py-1 gap-2 md:gap-1"}
    [color-selectors]
    [:div.grow.hidden.md:block]
    (into [:<>]

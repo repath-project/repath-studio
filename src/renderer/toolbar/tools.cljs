@@ -49,9 +49,8 @@
   [{:keys [label tools]}]
   (let [active-tool @(rf/subscribe [::tool.subs/active])
         md? @(rf/subscribe [::window.subs/breakpoint? :md])
-        top-tool (if (some #{active-tool} tools)
-                   active-tool
-                   (first tools))]
+        contains-active? (some #{active-tool} tools)
+        top-tool (if contains-active? active-tool (first tools))]
     [:div.button-group
      [button top-tool]
      (when (second tools)
@@ -59,7 +58,10 @@
         [:> DropdownMenu/Trigger
          {:as-child true}
          [:button.button.flex.items-center.justify-center.px-2.font-mono
-          {:aria-label label}
+          {:class (when contains-active?
+                    "bg-accent text-accent-foreground!
+                     aria-expanded:bg-accent-light active:bg-accent-light")
+           :aria-label label}
           [views/icon "chevron-down"]]]
         [:> DropdownMenu/Portal
          (->> tools
@@ -108,4 +110,4 @@
            (into [:div.justify-center.bg-primary.toolbar]))
       (->> (groups)
            (map dropdown-button)
-           (into [:div.bg-primary.toolbar.justify-center.py-2])))))
+           (into [:div.bg-primary.toolbar.justify-center.py-2.gap-2])))))

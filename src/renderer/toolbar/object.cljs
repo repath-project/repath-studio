@@ -29,16 +29,16 @@
     :action [::element.events/lower]
     :disabled disabled}])
 
-(defn group-actions
-  [disabled]
-  [{:label (t [::group "Group"])
-    :icon "group"
-    :disabled disabled
-    :action [::element.events/group]}
-   {:label (t [::ungroup "Ungroup"])
-    :icon "ungroup"
-    :disabled disabled
-    :action [::element.events/ungroup]}])
+#_(defn group-actions
+    [disabled]
+    [{:label (t [::group "Group"])
+      :icon "group"
+      :disabled disabled
+      :action [::element.events/group]}
+     {:label (t [::ungroup "Ungroup"])
+      :icon "ungroup"
+      :disabled disabled
+      :action [::element.events/ungroup]}])
 
 (defn alignment-actions
   [disabled]
@@ -136,7 +136,7 @@
          (map views/dropdown-menu-item)
          (into [:> DropdownMenu/Content
                 {:side "left"
-                 :align "center"
+                 :align "end"
                  :class "menu-content rounded-sm"
                  :on-key-down #(.stopPropagation %)
                  :on-escape-key-down #(.stopPropagation %)}
@@ -147,11 +147,11 @@
   (let [some-selected? @(rf/subscribe [::element.subs/some-selected?])
         multiple-selected? @(rf/subscribe [::element.subs/multiple-selected?])
         every-top-level? @(rf/subscribe [::element.subs/every-top-level?])
+        md? @(rf/subscribe [::window.subs/breakpoint? :md])
         object-actions [(index-actions (not some-selected?))
-                        #_(group-actions (not some-selected?))
-                        (alignment-actions every-top-level?)
+                        (when md? (alignment-actions every-top-level?))
                         (boolean-actions (not multiple-selected?))]]
-    (->> object-actions
+    (->> (keep identity object-actions)
          (interpose [{:type :divider}])
          (flatten)
          (map toolbar.views/button))))
