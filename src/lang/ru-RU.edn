@@ -3,7 +3,7 @@
  :renderer.app.views
  {:lock "Заблокировать"
   :unlock "Разблокировать"
-  :svg-description "Работа с масштабируемой векторной графикой"
+  :svg-description "Редактор Векторной Графики"
   :start "Начать"
   :new "Новый"
   :or "или"

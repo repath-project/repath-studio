@@ -3,7 +3,7 @@
  :renderer.app.views
  {:lock "ロック"
   :unlock "ロック解除"
-  :svg-description "スケーラブルベクターグラフィックス操作"
+  :svg-description "ベクターグラフィックスエディター"
   :start "開始"
   :new "新規"
   :or "または"

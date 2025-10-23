@@ -3,7 +3,7 @@
  :renderer.app.views
  {:lock "Κλείδωμα"
   :unlock "Ξεκλείδωμα"
-  :svg-description "Επεξεργασία διανυσματικών γραφικών"
+  :svg-description "Επεξεργαστής Διανυσματικών Γραφικών"
   :start "Έναρξη"
   :new "Νέο"
   :or "ή"

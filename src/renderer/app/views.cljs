@@ -319,7 +319,7 @@
          [:h1.text-4xl.mb-1.font-light config/app-name]
 
          [:p.text-xl.text-foreground-muted.font-bold
-          (t [::svg-description "Scalable Vector Graphics Manipulation"])]
+          (t [::svg-description "Vector Graphics Editor"])]
 
          [:h2.mb-3.mt-8.text-2xl (t [::start "Start"])]
 

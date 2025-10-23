@@ -3,7 +3,7 @@
  :renderer.app.views
  {:lock "Bloquear"
   :unlock "Desbloquear"
-  :svg-description "Manipulación de Gráficos Vectoriales Escalables"
+  :svg-description "Editor de Gráficos Vectoriales"
   :start "Iniciar"
   :new "Nuevo"
   :or "o"

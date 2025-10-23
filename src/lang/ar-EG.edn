@@ -3,7 +3,7 @@
  :renderer.app.views
  {:lock "قفل"
   :unlock "فتح"
-  :svg-description "معالجة الرسوميات المتجهة القابلة للتحجيم"
+  :svg-description "محرر الرسوميات المتجهة"
   :start "ابدأ"
   :new "جديد"
   :or "أو"

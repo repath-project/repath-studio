@@ -3,7 +3,7 @@
  :renderer.app.views
  {:lock "Verrouiller"
   :unlock "Déverrouiller"
-  :svg-description "Manipulation de graphiques vectoriels évolutifs"
+  :svg-description "Éditeur de Graphiques Vectoriels"
   :start "Commencer"
   :new "Nouveau"
   :or "ou"

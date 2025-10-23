@@ -3,7 +3,7 @@
  :renderer.app.views
  {:lock "锁定"
   :unlock "解锁"
-  :svg-description "可缩放矢量图形操作"
+  :svg-description "矢量图形编辑器"
   :start "开始"
   :new "新建"
   :or "或"

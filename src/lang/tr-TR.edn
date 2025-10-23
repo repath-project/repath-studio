@@ -3,7 +3,7 @@
  :renderer.app.views
  {:lock "Kilitle"
   :unlock "Kilidi Aç"
-  :svg-description "Ölçeklenebilir Vektör Grafik Manipülasyonu"
+  :svg-description "Vektör Grafik Editörü"
   :start "Başla"
   :new "Yeni"
   :or "veya"
