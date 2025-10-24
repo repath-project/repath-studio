@@ -71,11 +71,11 @@
 }
 
 @utility button-size {
-  @apply button-size-lg md:button-size-md;
+  @apply button-size-lg sm:button-size-md;
 }
 
 @utility button-size-small {
-  @apply button-size-sm md:button-size-xs;
+  @apply button-size-sm sm:button-size-xs;
 }
 
 @utility v-divider {

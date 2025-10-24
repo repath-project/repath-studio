@@ -95,7 +95,7 @@
         title-bar @(rf/subscribe [::document.subs/title-bar])
         md? @(rf/subscribe [::window.subs/md?])]
     [:div.flex.relative
-     [:div.md:p-1.gap-1.flex.items-center
+     [:div.px-1.gap-1.flex.items-center
       (when-not (or fullscreen? mac?)
         [app-icon])
       (when md?
