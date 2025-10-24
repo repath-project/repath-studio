@@ -114,14 +114,12 @@
           {:title (t [::install])
            :class "rounded-none outline-inset bg-transparent!"
            :on-click #(rf/dispatch [::app.events/install])}])
-       (when md?
-         [:<>
-          [language-dropdown]
-          [button {:action [::theme.events/cycle-mode]
-                   :title (t [::theme "Theme mode - %1"] [theme-mode])
-                   :icon theme-mode
-                   :class "bg-primary"}]])
-       (when (or fullscreen? web?)
+       [language-dropdown]
+       [button {:action [::theme.events/cycle-mode]
+                :title (t [::theme "Theme mode - %1"] [theme-mode])
+                :icon theme-mode
+                :class "bg-primary"}]
+       (when (or fullscreen? web? mac?)
          [button {:action [::window.events/toggle-fullscreen]
                   :title (if fullscreen?
                            (t [::exit-fullscreen "Exit fullscreen"])

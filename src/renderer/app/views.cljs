@@ -421,9 +421,7 @@
         web? @(rf/subscribe [::app.subs/web?])
         md? @(rf/subscribe [::window.subs/md?])
         loading? @(rf/subscribe [::app.subs/loading?])
-        theme @(rf/subscribe [::theme.subs/theme])
-        fullscreen? @(rf/subscribe [::window.subs/fullscreen?])
-        mac? @(rf/subscribe [::app.subs/mac?])]
+        theme @(rf/subscribe [::theme.subs/theme])]
     (if loading?
       (when web? [:div.loader])
       [:> Direction/Provider {:dir lang-dir}
@@ -443,7 +441,6 @@
               (if md?
                 [document.views/tab-bar]
                 [:div.flex.overflow-hidden
-                 {:class (when (and mac? (not fullscreen?)) "ml-16")}
                  [views/toolbar [window.menubar/root]]
                  [document.views/tab-bar]
                  [:div.drag.flex-1]])
