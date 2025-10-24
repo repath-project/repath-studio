@@ -1,7 +1,5 @@
 (ns renderer.theme.db)
 
-(def handle-size 13)
-
 (def modes
   [:dark :light :system])
 

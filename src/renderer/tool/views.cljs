@@ -7,7 +7,6 @@
    [renderer.db :refer [BBox]]
    [renderer.document.subs :as-alias document.subs]
    [renderer.event.impl.pointer :as event.impl.pointer]
-   [renderer.theme.db :as theme.db]
    [renderer.tool.subs :as-alias tool.subs]
    [renderer.utils.bounds :as utils.bounds]))
 

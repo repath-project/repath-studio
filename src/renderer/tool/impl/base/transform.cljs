@@ -15,7 +15,6 @@
    [renderer.history.handlers :as history.handlers]
    [renderer.ruler.db :refer [Orientation]]
    [renderer.snap.handlers :as snap.handlers]
-   [renderer.theme.db :as theme.db]
    [renderer.tool.db :refer [Handle]]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
