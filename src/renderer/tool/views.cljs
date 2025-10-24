@@ -47,6 +47,7 @@
                   :stroke-width stroke-width
                   :x (- x (/ handle-size 2))
                   :y (- y (/ handle-size 2))
+                  :rx (/ 2 zoom)
                   :width handle-size
                   :height handle-size
                   :cursor (or cursor "move")

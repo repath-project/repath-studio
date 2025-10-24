@@ -184,6 +184,7 @@
         stroke @(rf/subscribe [::document.subs/stroke])
         get-hex #(:hex (js->clj % :keywordize-keys true))]
     [:div.flex
+     {:class "gap-0.5"}
      [views/color-picker
       {:color fill
        :on-change-complete #(rf/dispatch [::element.events/set-attr :fill
@@ -191,12 +192,11 @@
        :on-change #(rf/dispatch [::document.events/preview-attr :fill
                                  (get-hex %)])}
 
-      [:button.button.border.border-border.button-size
-       {:class "rounded-sm md:rounded-none"
-        :title (t [::fill-color "Pick fill color"])
+      [:button.button.border.border-border.button-size.rounded.md:rounded-none
+       {:title (t [::fill-color "Pick fill color"])
         :style {:background fill}}]]
 
-     [:button.button.bg-transparent!
+     [:button.button.bg-transparent!.rounded-sm.md:rounded-none
       {:title (t [::swap-color "Swap fill with stroke"])
        :on-click #(rf/dispatch [::document.events/swap-colors])}
       [views/icon "swap-horizontal"]]
