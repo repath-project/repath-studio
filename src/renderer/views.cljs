@@ -301,7 +301,7 @@
               :setActiveSnapPoint (fn [v] (reset! snap v))))
      [:> Drawer.Trigger
       {:class "button p-1 rounded h-auto flex flex-col flex-1 text-2xs gap-1
-               overflow-hidden"
+               overflow-hidden items-center"
        :disabled disabled}
       [icon (:icon attrs)]
       [:span.truncate label]]
