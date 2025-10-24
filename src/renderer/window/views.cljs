@@ -102,8 +102,8 @@
         [:div.flex.relative.bg-secondary
          {:class (when (and mac? (not fullscreen?)) "ml-16")}
          [window.menubar/root]])]
-     [:div.absolute.hidden.justify-center.drag.grow.h-full.items-center
-      {:class "pointer-events-none sm:flex left-1/2 -translate-x-1/2 z-[-1]"
+     [:div.absolute.hidden.justify-center.drag.grow.h-full.items-center.sm:flex
+      {:class "pointer-events-none truncate left-1/2 -translate-x-1/2 z-[-1]"
        :dir "ltr"}
       title-bar]
      [:div.flex.h-full.flex-1.drag]
@@ -114,11 +114,13 @@
           {:title (t [::install])
            :class "rounded-none outline-inset bg-transparent!"
            :on-click #(rf/dispatch [::app.events/install])}])
-       [language-dropdown]
-       [button {:action [::theme.events/cycle-mode]
-                :title (t [::theme "Theme mode - %1"] [theme-mode])
-                :icon theme-mode
-                :class "bg-primary"}]
+       (when (or md? mac?)
+         [:<>
+          [language-dropdown]
+          [button {:action [::theme.events/cycle-mode]
+                   :title (t [::theme "Theme mode - %1"] [theme-mode])
+                   :icon theme-mode
+                   :class "bg-primary"}]])
        (when (or fullscreen? web? mac?)
          [button {:action [::window.events/toggle-fullscreen]
                   :title (if fullscreen?

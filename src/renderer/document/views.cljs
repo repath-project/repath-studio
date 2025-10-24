@@ -203,7 +203,9 @@
         md? @(rf/subscribe [::window.subs/md?])
         tree-visible @(rf/subscribe [::app.subs/panel-visible? :tree])]
     [:div.flex.justify-between.gap-px.overflow-hidden
-     [:div.flex.flex-1.overflow-hidden
+     [:div.flex.flex-1.overflow-hidden.gap-px
+      (when (and md? (not tree-visible))
+        [actions])
       (if md?
         (for [document-id tabs]
           ^{:key document-id}
@@ -214,7 +216,7 @@
             {:class "bg-primary"}
             [documents-dropdown-button]])
          [tab active-id]])
-      (when-not (and md? tree-visible)
+      (when-not md?
         [actions])
       [:div.drag.flex-1]]
 
