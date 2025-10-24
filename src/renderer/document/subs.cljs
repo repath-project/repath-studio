@@ -172,4 +172,4 @@
  (fn [[zoom md?] [_]]
    (let [base-size 13]
      (cond-> (/ base-size zoom)
-       (not md?) (* 1.4)))))
+       (not md?) (* 1.5)))))
