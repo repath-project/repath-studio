@@ -7,7 +7,6 @@
    [renderer.app.db :refer [App]]
    [renderer.db :refer [BBox Vec2]]
    [renderer.document.subs :as-alias document.subs]
-   [renderer.theme.db :as theme.db]
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.math :as utils.math]))
 
@@ -49,16 +48,15 @@
 (m/=> cross [:-> Vec2 any?])
 (defn cross
   [[x y]]
-  (let [zoom @(rf/subscribe [::document.subs/zoom])
-        size (/ theme.db/handle-size zoom)]
+  (let [handle-size @(rf/subscribe [::document.subs/handle-size])]
     [:g
      [line
-      [(- x (/ size 2)) y]
-      [(+ x (/ size 2)) y]
+      [(- x (/ handle-size 2)) y]
+      [(+ x (/ handle-size 2)) y]
       false]
      [line
-      [x (- y (/ size 2))]
-      [x (+ y (/ size 2))]
+      [x (- y (/ handle-size 2))]
+      [x (+ y (/ handle-size 2))]
       false]]))
 
 (m/=> arc [:-> Vec2 number? number? number? any?])
@@ -86,9 +84,8 @@
 (m/=> times [:-> Vec2 any?])
 (defn times
   [[x y]]
-  (let [zoom @(rf/subscribe [::document.subs/zoom])
-        size (/ theme.db/handle-size zoom)
-        mid (/ size Math/PI)]
+  (let [handle-size @(rf/subscribe [::document.subs/handle-size])
+        mid (/ handle-size Math/PI)]
     [:g {:style {:pointer-events "none"}}
      [line
       [(- x mid) (- y mid)]

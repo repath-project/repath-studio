@@ -36,7 +36,7 @@
   (let [{:keys [x y id cursor element-id]} el
         zoom @(rf/subscribe [::document.subs/zoom])
         clicked-element @(rf/subscribe [::app.subs/clicked-element])
-        size (/ theme.db/handle-size zoom)
+        handle-size @(rf/subscribe [::document.subs/handle-size])
         stroke-width (/ 1 zoom)
         pointer-handler (partial event.impl.pointer/handler! el)
         active (and (= (:id clicked-element) id)
@@ -46,10 +46,10 @@
                           "var(--accent-foreground)")
                   :stroke (if active "var(--accent)" "gray")
                   :stroke-width stroke-width
-                  :x (- x (/ size 2))
-                  :y (- y (/ size 2))
-                  :width size
-                  :height size
+                  :x (- x (/ handle-size 2))
+                  :y (- y (/ handle-size 2))
+                  :width handle-size
+                  :height handle-size
                   :cursor (or cursor "move")
                   :on-pointer-up pointer-handler
                   :on-pointer-down pointer-handler
@@ -92,10 +92,10 @@
 (defn min-bbox
   "Ensures the bounding box is large enough to avoid overlapping handles."
   [bbox]
-  (let [zoom @(rf/subscribe [::document.subs/zoom])
-        dimensions (utils.bounds/->dimensions bbox)
+  (let [dimensions (utils.bounds/->dimensions bbox)
         [w h] dimensions
-        min-size (/ (* theme.db/handle-size 2) zoom)]
+        handle-size @(rf/subscribe [::document.subs/handle-size])
+        min-size (* handle-size 2)]
     (cond-> bbox
       (< w min-size)
       (matrix/add [(- (/ (- min-size w) 2)) 0

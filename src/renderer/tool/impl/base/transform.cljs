@@ -467,9 +467,10 @@
 (defn size-label
   [bbox]
   (let [zoom @(rf/subscribe [::document.subs/zoom])
+        handle-size @(rf/subscribe [::document.subs/handle-size])
         [min-x _min-y max-x y2] bbox
         x (+ min-x (/ (- max-x min-x) 2))
-        y (+ y2 (/ (+ (/ theme.db/handle-size 2) 15) zoom))
+        y (+ y2 (/ handle-size 2) (/ 15 zoom))
         [w h] (utils.bounds/->dimensions bbox)
         text (str (utils.length/->fixed w 2 false)
                   " x "
@@ -482,9 +483,10 @@
   [area bbox]
   (when area
     (let [zoom @(rf/subscribe [::document.subs/zoom])
+          handle-size @(rf/subscribe [::document.subs/handle-size])
           [min-x min-y max-x] bbox
           x (+ min-x (/ (- max-x min-x) 2))
-          y (+ min-y (/ (- -15 (/ theme.db/handle-size 2)) zoom))
+          y (- min-y (/ handle-size 2) (/ 15 zoom))
           text (str (utils.length/->fixed area 2 false) " px²")]
       [utils.svg/label text {:x x
                              :y y}])))

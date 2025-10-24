@@ -3,7 +3,8 @@
    [config :as config]
    [re-frame.core :as rf]
    [renderer.document.handlers :as document.handlers]
-   [renderer.timeline.subs :as-alias timeline.subs]))
+   [renderer.timeline.subs :as-alias timeline.subs]
+   [renderer.window.subs :as-alias window.subs]))
 
 (rf/reg-sub
  ::active-id
@@ -163,3 +164,12 @@
        :as db} [_]]
    (some->> active-document
             (document.handlers/saved? db))))
+
+(rf/reg-sub
+ ::handle-size
+ :<- [::zoom]
+ :<- [::window.subs/breakpoint? :md]
+ (fn [[zoom md?] [_]]
+   (let [base-size 13]
+     (cond-> (/ base-size zoom)
+       (not md?) (* 1.4)))))
