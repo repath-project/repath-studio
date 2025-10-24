@@ -312,7 +312,9 @@
        {:class ["inset-0 fixed z-0 outline-none bg-primary flex shadow-lg"
                 (case direction
                   "left"
-                  "right-auto max-w-[80dvw] min-w-[60dvw] py-safe pl-safe"
+                  (cond->
+                   "right-auto max-w-[80dvw] min-w-[60dvw] py-safe pl-safe"
+                    @(rf/subscribe [::app.subs/mac?]) (str " pt-8"))
 
                   "right"
                   "left-auto max-w-[80dvw] min-w-[60dvw] py-safe pr-safe"
