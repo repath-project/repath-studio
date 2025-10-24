@@ -103,7 +103,7 @@
          {:class (when (and mac? (not fullscreen?)) "ml-16")}
          [window.menubar/root]])]
      [:div.drag.grow.h-full.items-center.flex
-      {:class "pointer-events-none truncate lg:absolute lg:justify-center
+      {:class "pointer-events-none truncate lg:absolute lg:justify-center px-1
                lg:left-1/2 lg:-translate-x-1/2 z-[-1] sm:flex hidden"
        :dir "ltr"}
       title-bar]
