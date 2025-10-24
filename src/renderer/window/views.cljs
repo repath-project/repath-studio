@@ -102,8 +102,9 @@
         [:div.flex.relative.bg-secondary
          {:class (when (and mac? (not fullscreen?)) "ml-16")}
          [window.menubar/root]])]
-     [:div.absolute.hidden.justify-center.drag.grow.h-full.items-center.sm:flex
-      {:class "pointer-events-none truncate left-1/2 -translate-x-1/2 z-[-1]"
+     [:div.drag.grow.h-full.items-center.flex
+      {:class "pointer-events-none truncate lg:absolute lg:justify-center
+               lg:left-1/2 lg:-translate-x-1/2 z-[-1] sm:flex hidden"
        :dir "ltr"}
       title-bar]
      [:div.flex.h-full.flex-1.drag]
