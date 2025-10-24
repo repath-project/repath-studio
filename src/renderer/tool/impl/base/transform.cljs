@@ -25,7 +25,8 @@
    [renderer.utils.element :as utils.element]
    [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]
-   [renderer.utils.svg :as utils.svg]))
+   [renderer.utils.svg :as utils.svg]
+   [renderer.views :as views]))
 
 (def ScaleHandle [:enum
                   :middle-right
@@ -57,32 +58,32 @@
    (t [::idle-click [:div "Click to select an element or drag to select by
                            area."]])
    (t [::idle-hold [:div "Hold %1 to add or remove elements to selection."]]
-      [[:span.shortcut-key "⇧"]])])
+      [[views/kbd "⇧"]])])
 
 (defmethod tool.hierarchy/help [:transform :select]
   []
   (t [::select [:div "Hold %1 to select intersecting elements."]]
-     [[:span.shortcut-key "Alt"]]))
+     [[views/kbd "Alt"]]))
 
 (defmethod tool.hierarchy/help [:transform :translate]
   []
   (t [::translate [:div "Hold %1 to restrict direction, and %2 to clone."]]
-     [[:span.shortcut-key "Ctrl"]
-      [:span.shortcut-key "Alt"]]))
+     [[views/kbd "Ctrl"]
+      [views/kbd "Alt"]]))
 
 (defmethod tool.hierarchy/help [:transform :clone]
   []
   (t [::clone [:div "Hold %1 to restrict direction. or release %2 to move"]]
-     [[:span.shortcut-key "Ctrl"]
-      [:span.shortcut-key "Alt"]]))
+     [[views/kbd "Ctrl"]
+      [views/kbd "Alt"]]))
 
 (defmethod tool.hierarchy/help [:transform :scale]
   []
   (t [::scale [:div "Hold %1 to lock proportions, %2 to scale in place,
                      %3 to also scale children."]]
-     [[:span.shortcut-key "Ctrl"]
-      [:span.shortcut-key "⇧"]
-      [:span.shortcut-key "Alt"]]))
+     [[views/kbd "Ctrl"]
+      [views/kbd "⇧"]
+      [views/kbd "Alt"]]))
 
 (m/=> hovered? [:-> Element boolean? boolean?])
 (defn hovered?

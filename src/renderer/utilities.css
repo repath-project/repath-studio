@@ -87,11 +87,6 @@
   @apply m-1 border-t border-border self-stretch;
 }
 
-@utility shortcut-key {
-  @apply p-1 text-2xs bg-overlay rounded-sm font-bold text-foreground-muted
-  uppercase;
-}
-
 @utility button-link {
   @apply text-foreground-hovered inline-block text-left text-wrap break-all
   hover:cursor-pointer hover:underline outline-default;

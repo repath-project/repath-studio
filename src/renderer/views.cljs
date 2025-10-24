@@ -41,6 +41,11 @@
                                  [:div {:class "w-[17px] h-[17px]"}])}
                      props)])
 
+(defn kbd
+  [k]
+  [:span {:class "p-1 text-2xs bg-overlay rounded-sm font-bold
+                  text-foreground-muted uppercase"} k])
+
 (defn resize-handle
   [id]
   [:> PanelResizeHandle
@@ -89,7 +94,7 @@
 (defn format-shortcut
   [[shortcut]]
   (into [:div.flex.gap-1.items-center {:dir "ltr"}]
-        (comp (map (partial into [:span.shortcut-key]))
+        (comp (map (partial into [kbd]))
               (interpose [:span "+"]))
         (cond-> []
           (:ctrlKey shortcut)

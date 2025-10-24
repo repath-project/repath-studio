@@ -8,7 +8,8 @@
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.i18n :refer [t]]
-   [renderer.utils.length :as utils.length]))
+   [renderer.utils.length :as utils.length]
+   [renderer.views :as views]))
 
 (derive :rect ::tool.hierarchy/element)
 
@@ -20,7 +21,7 @@
 (defmethod tool.hierarchy/help [:rect :create]
   []
   (t [::help [:div "Hold %1 to lock proportions."]]
-     [[:span.shortcut-key "Ctrl"]]))
+     [[views/kbd "Ctrl"]]))
 
 (defn attributes
   [db lock-ratio]

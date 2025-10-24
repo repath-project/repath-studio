@@ -10,7 +10,8 @@
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.i18n :refer [t]]
-   [renderer.utils.svg :as utils.svg]))
+   [renderer.utils.svg :as utils.svg]
+   [renderer.views :as views]))
 
 (derive :zoom ::tool.hierarchy/tool)
 
@@ -30,7 +31,7 @@
   []
   [:<>
    (t [::zoom-in "Click or select an area to zoom in."])
-   (t [::zoom-out "Hold %1 to zoom out."] [[:span.shortcut-key "⇧"]])])
+   (t [::zoom-out "Hold %1 to zoom out."] [[views/kbd "⇧"]])])
 
 (defmethod tool.hierarchy/on-activate :zoom
   [db]

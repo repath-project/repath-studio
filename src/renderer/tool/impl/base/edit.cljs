@@ -11,7 +11,8 @@
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.element :as utils.element]
    [renderer.utils.i18n :refer [t]]
-   [renderer.utils.svg :as utils.svg]))
+   [renderer.utils.svg :as utils.svg]
+   [renderer.views :as views]))
 
 (derive :edit ::tool.hierarchy/tool)
 
@@ -29,7 +30,7 @@
 (defmethod tool.hierarchy/help [:edit :edit]
   []
   (t [::help-edit "Hold %1 to restrict direction."]
-     [[:span.shortcut-key "Ctrl"]]))
+     [[views/kbd "Ctrl"]]))
 
 (defmethod tool.hierarchy/help [:edit :type]
   []
