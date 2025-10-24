@@ -94,7 +94,7 @@
         web? @(rf/subscribe [::app.subs/web?])
         installable? @(rf/subscribe [::app.subs/installable?])
         title-bar @(rf/subscribe [::document.subs/title-bar])
-        md? @(rf/subscribe [::window.subs/breakpoint? :md])]
+        md? @(rf/subscribe [::window.subs/md?])]
     [:div.flex.items-center.relative
      (when-not (or fullscreen? mac?)
        [app-icon])

@@ -40,7 +40,7 @@
 (defn root
   []
   (let [active? (rf/subscribe [::snap.subs/active?])
-        md? @(rf/subscribe [::window.subs/breakpoint? :md])]
+        md? @(rf/subscribe [::window.subs/md?])]
     (reagent/with-let [open (reagent/atom false)]
       [:button.button.rounded-sm.items-center.gap-1.w-auto.flex
        {:title (t [::snap "Snap"])

@@ -53,7 +53,7 @@
      [:div.self-start.h-full.flex.items-center.gap-1
       [mode-button :cljs]
       [mode-button :js]
-      (when @(rf/subscribe [::window.subs/breakpoint? :md])
+      (when @(rf/subscribe [::window.subs/md?])
         [:div.self-start.flex
          [views/icon-button
           (if repl-history? "chevron-down" "chevron-up")
@@ -186,11 +186,11 @@
 
     (set-print! add-log)
     [:div
-     {:class (if @(rf/subscribe [::window.subs/breakpoint? :md])
+     {:class (if @(rf/subscribe [::window.subs/md?])
                "contents"
                "flex flex-col flex-1")}
      (when (and @(rf/subscribe [::app.subs/panel-visible? :repl-history])
-                @(rf/subscribe [::window.subs/breakpoint? :md]))
+                @(rf/subscribe [::window.subs/md?]))
        [:<>
         [views/resize-handle "repl-resize-handle"]
         [:> Panel
@@ -200,7 +200,7 @@
           :order 3}
          [repl-items @items (assoc show-value-opts :set-text set-text)]]])
 
-     (when-not @(rf/subscribe [::window.subs/breakpoint? :md])
+     (when-not @(rf/subscribe [::window.subs/md?])
        [repl-items @items (assoc show-value-opts :set-text set-text)])
 
      [:div.relative.whitespace-pre-wrap.font-mono.w-full

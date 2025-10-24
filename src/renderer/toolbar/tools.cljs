@@ -49,7 +49,7 @@
 (defn dropdown-button
   [{:keys [label tools]}]
   (let [active-tool @(rf/subscribe [::tool.subs/active])
-        md? @(rf/subscribe [::window.subs/breakpoint? :md])
+        md? @(rf/subscribe [::window.subs/md?])
         contains-active? (some #{active-tool} tools)
         top-tool (if contains-active? active-tool (first tools))]
     [:div.button-group.group
@@ -102,7 +102,7 @@
 
 (defn root
   []
-  (let [xl @(rf/subscribe [::window.subs/breakpoint? :xl])]
+  (let [xl @(rf/subscribe [::window.subs/xl?])]
     (if xl
       (->> (groups)
            (map :tools)

@@ -36,3 +36,23 @@
                    :lg 1024
                    :md 768
                    :sm 640} breakpoint))))
+
+(rf/reg-sub
+ ::xl?
+ :<- [::breakpoint? :xl]
+ :-> identity)
+
+(rf/reg-sub
+ ::lg?
+ :<- [::breakpoint? :lg]
+ :-> identity)
+
+(rf/reg-sub
+ ::md?
+ :<- [::breakpoint? :md]
+ :-> identity)
+
+(rf/reg-sub
+ ::sm?
+ :<- [::breakpoint? :sm]
+ :-> identity)

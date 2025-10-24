@@ -578,7 +578,7 @@
                     :checked @(rf/subscribe [::app.subs/debug-info])
                     :action [::app.events/toggle-debug-info]}]
 
-            @(rf/subscribe [::window.subs/breakpoint? :md])
+            @(rf/subscribe [::window.subs/md?])
             (into [{:id :divider-2
                     :type :separator}
                    {:id :panel
@@ -737,7 +737,7 @@
 
 (defn root
   []
-  (->> (if @(rf/subscribe [::window.subs/breakpoint? :lg])
+  (->> (if @(rf/subscribe [::window.subs/lg?])
          (submenus)
          (mobile-root))
        (map menu-item)

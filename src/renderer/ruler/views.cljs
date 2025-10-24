@@ -124,7 +124,7 @@
 (defn ruler
   [orientation]
   (let [vertical (= orientation :vertical)
-        md? @(rf/subscribe [::window.subs/breakpoint? :md])]
+        md? @(rf/subscribe [::window.subs/md?])]
     [:svg {:width (if vertical ruler-size "100%")
            :height (if vertical "100%" ruler-size)}
      (when md? [bbox-rect orientation])

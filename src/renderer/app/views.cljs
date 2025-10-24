@@ -129,8 +129,8 @@
         help-bar @(rf/subscribe [::app.subs/help-bar])
         debug-info? @(rf/subscribe [::app.subs/debug-info])
         worker-active? @(rf/subscribe [::worker.subs/some-active?])
-        md? @(rf/subscribe [::window.subs/breakpoint? :md])
-        lg? @(rf/subscribe [::window.subs/breakpoint? :lg])]
+        md? @(rf/subscribe [::window.subs/md?])
+        lg? @(rf/subscribe [::window.subs/lg?])]
     [:div.flex.flex-col.flex-1.h-full.gap-px
      [:div
       [views/scroll-area [toolbar.tools/root]]
@@ -200,7 +200,7 @@
       {:id "frame-panel"
        :order 1}
       [frame-panel]]
-     (when @(rf/subscribe [::window.subs/breakpoint? :md])
+     (when @(rf/subscribe [::window.subs/md?])
        [:<>
         (when @(rf/subscribe [::app.subs/panel-visible? :history])
           [:<>
@@ -226,7 +226,7 @@
 (defn editor
   []
   (let [timeline-visible @(rf/subscribe [::app.subs/panel-visible? :timeline])
-        md? @(rf/subscribe [::window.subs/breakpoint? :md])]
+        md? @(rf/subscribe [::window.subs/md?])]
     [:> PanelGroup
      {:direction "vertical"
       :id "editor-group"
@@ -419,7 +419,7 @@
         recent-documents @(rf/subscribe [::document.subs/recent])
         lang-dir @(rf/subscribe [::app.subs/lang-dir])
         web? @(rf/subscribe [::app.subs/web?])
-        md? @(rf/subscribe [::window.subs/breakpoint? :md])
+        md? @(rf/subscribe [::window.subs/md?])
         loading? @(rf/subscribe [::app.subs/loading?])
         theme @(rf/subscribe [::theme.subs/theme])]
     (if loading?

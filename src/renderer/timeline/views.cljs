@@ -99,8 +99,8 @@
         replay? @(rf/subscribe [::timeline.subs/replay?])
         end @(rf/subscribe [::timeline.subs/end])
         speed @(rf/subscribe [::timeline.subs/speed])
-        md? @(rf/subscribe [::window.subs/breakpoint? :md])
-        sm? @(rf/subscribe [::window.subs/breakpoint? :sm])]
+        md? @(rf/subscribe [::window.subs/md?])
+        sm? @(rf/subscribe [::window.subs/sm?])]
     [views/toolbar
      {:class "bg-primary"}
      [views/icon-button "go-to-start"

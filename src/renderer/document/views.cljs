@@ -20,7 +20,7 @@
   []
   (let [undos @(rf/subscribe [::history.subs/undos])
         redos @(rf/subscribe [::history.subs/redos])
-        md? @(rf/subscribe [::window.subs/breakpoint? :md])]
+        md? @(rf/subscribe [::window.subs/md?])]
     [views/toolbar
 
      [views/icon-button
@@ -154,7 +154,7 @@
   []
   (let [documents @(rf/subscribe [::document.subs/entities])
         active-id @(rf/subscribe [::document.subs/active-id])
-        md? @(rf/subscribe [::window.subs/breakpoint? :md])
+        md? @(rf/subscribe [::window.subs/md?])
         document-count (count documents)]
     [:> DropdownMenu/Root
      [:> DropdownMenu/Trigger
@@ -200,7 +200,7 @@
   (let [documents @(rf/subscribe [::document.subs/entities])
         tabs @(rf/subscribe [::document.subs/tabs])
         active-id @(rf/subscribe [::document.subs/active-id])
-        md? @(rf/subscribe [::window.subs/breakpoint? :md])
+        md? @(rf/subscribe [::window.subs/md?])
         tree-visible @(rf/subscribe [::app.subs/panel-visible? :tree])]
     [:div.flex.justify-between.gap-px.overflow-hidden
      [:div.flex.flex-1.overflow-hidden

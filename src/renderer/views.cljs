@@ -117,7 +117,7 @@
 (defn shortcuts
   [event]
   (let [event-shortcuts @(rf/subscribe [::app.subs/event-shortcuts event])
-        md? @(rf/subscribe [::window.subs/breakpoint? :md])]
+        md? @(rf/subscribe [::window.subs/md?])]
     (when (and (seq event-shortcuts) md?)
       (into [:span.inline-flex.text-foreground-muted {:class "gap-1.5"}]
             (comp (map format-shortcut)
@@ -134,7 +134,7 @@
 (defn context-menu-item
   [{:keys [label action checked disabled]
     :as props}]
-  (let [sm? @(rf/subscribe [::window.subs/breakpoint? :sm])]
+  (let [sm? @(rf/subscribe [::window.subs/sm?])]
     (case (:type props)
       :separator
       [:> ContextMenu/Separator {:class "menu-separator"}]
@@ -161,7 +161,7 @@
 (defn dropdown-menu-item
   [{:keys [label action checked]
     :as props}]
-  (let [sm? @(rf/subscribe [::window.subs/breakpoint? :sm])]
+  (let [sm? @(rf/subscribe [::window.subs/sm?])]
     (case (:type props)
       :separator
       [:> DropdownMenu/Separator {:class "menu-separator"}]
@@ -212,7 +212,7 @@
 
 (defn color-picker
   [props & children]
-  (let [sm? @(rf/subscribe [::window.subs/breakpoint? :sm])]
+  (let [sm? @(rf/subscribe [::window.subs/sm?])]
     [:> Popover/Root {:modal true}
      (into [:> Popover/Trigger {:as-child true}]
            children)

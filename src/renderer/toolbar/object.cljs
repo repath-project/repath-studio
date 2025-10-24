@@ -147,7 +147,7 @@
   (let [some-selected? @(rf/subscribe [::element.subs/some-selected?])
         multiple-selected? @(rf/subscribe [::element.subs/multiple-selected?])
         every-top-level? @(rf/subscribe [::element.subs/every-top-level?])
-        md? @(rf/subscribe [::window.subs/breakpoint? :md])
+        md? @(rf/subscribe [::window.subs/md?])
         object-actions [(index-actions (not some-selected?))
                         (when md? (alignment-actions every-top-level?))
                         (boolean-actions (not multiple-selected?))]]
@@ -159,7 +159,7 @@
 (defn root
   []
   (let [some-selected? @(rf/subscribe [::element.subs/some-selected?])
-        md? @(rf/subscribe [::window.subs/breakpoint? :md])]
+        md? @(rf/subscribe [::window.subs/md?])]
     [views/toolbar {:class "flex-col"}
      (into [:<>] (object-buttons))
      (when-not md?

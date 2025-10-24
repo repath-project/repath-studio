@@ -168,7 +168,7 @@
 (rf/reg-sub
  ::handle-size
  :<- [::zoom]
- :<- [::window.subs/breakpoint? :md]
+ :<- [::window.subs/md?]
  (fn [[zoom md?] [_]]
    (let [base-size 13]
      (cond-> (/ base-size zoom)

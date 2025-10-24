@@ -137,7 +137,7 @@
 (defn list-item-button
   [el {:keys [depth collapsed hovered]}]
   (let [{:keys [id selected children locked visible]} el
-        md? @(rf/subscribe [::window.subs/breakpoint? :md])
+        md? @(rf/subscribe [::window.subs/md?])
         collapse-button-width (if md? 21 27) ; TODO: Get from CSS variable.
         padding (* collapse-button-width (cond-> depth (seq children) dec))]
     [:div.list-item-button.button.flex.px-1.items-center.text-start.group
@@ -206,7 +206,7 @@
 
 (defn inner-sidebar-render
   [root-children elements]
-  (let [md? @(rf/subscribe [::window.subs/breakpoint? :md])]
+  (let [md? @(rf/subscribe [::window.subs/md?])]
     [:div#tree-sidebar.flex.flex-1.bg-primary.h-full.overflow-hidden
      ;; When the tree is hovered, ignore the hovered class of the elements,
      ;; if the element itself is not also hovered.
@@ -216,7 +216,7 @@
       [:ul.overflow-hidden
        {:role "menu"
         :on-pointer-leave #(rf/dispatch [::document.events/clear-hovered])
-        :class (if md? "w-[227px]" "w-full min-w-80")}
+        :class (if md? "w-[227px]" "w-full")}
        (for [el (reverse root-children)]
          ^{:key (:id el)}
          [item el 1 elements])]]]))
