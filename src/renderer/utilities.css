@@ -130,13 +130,15 @@
 }
 
 @utility button-group {
-  @apply flex rounded-sm relative overflow-hidden;
+  @apply flex rounded-sm relative;
 
-  > * {
-    @apply border-l border-border;
+  > *,
+  > * > button {
+    @apply border-l border-border rounded-none! rounded-r!;
 
-    &:first-child {
-      @apply border-l-0;
+    &:first-child,
+    &:first-child > button {
+      @apply border-l-0 rounded-l!;
     }
   }
 
