@@ -16,7 +16,7 @@
   [{:keys [id explanation]}]
   [:> Select/Item
    {:value (str id)
-    :class "menu-item select-item"}
+    :class "menu-item px-2"}
    [:> Select/ItemText (apply t explanation)]])
 
 (defn select
@@ -57,7 +57,7 @@
   [args]
   (let [{:keys [icon title options action show-options]} args]
     (reagent/with-let [open (reagent/atom false)]
-      [:button.icon-button.items-center.px-1.gap-1.flex.w-auto
+      [:button.button.rounded-sm.items-center.px-1.gap-1.flex.w-auto
        {:title title
         :class [(if show-options "px-1" "px-2")
                 (when @open "bg-overlay!")]

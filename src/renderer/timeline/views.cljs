@@ -68,7 +68,7 @@
             ^{:key id}
             [:> Select/Item
              {:value value
-              :class "menu-item select-item"}
+              :class "menu-item px-2"}
              [:> Select/ItemText label]])]]
         [:> Select/ScrollDownButton
          {:class "select-scroll-button"}
@@ -101,7 +101,8 @@
         speed @(rf/subscribe [::timeline.subs/speed])
         md? @(rf/subscribe [::window.subs/breakpoint? :md])
         sm? @(rf/subscribe [::window.subs/breakpoint? :sm])]
-    [:div.toolbar.bg-primary
+    [views/toolbar
+     {:class "bg-primary"}
      [views/icon-button "go-to-start"
       {:on-click #(.setTime (.-current timeline-ref) 0)
        :disabled (zero? tm)}]

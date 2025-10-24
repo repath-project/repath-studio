@@ -12,7 +12,8 @@
   :title "Buttons"
   :params (atom false)
   [store]
-  [:div.toolbar.bg-primary
+  [views/toolbar
+   {:class "bg-primary"}
    [views/icon-button
     "download"
     {:title "download"
@@ -37,7 +38,8 @@
   :title "Switch"
   :params (atom true)
   [store]
-  [:div.toolbar.bg-primary.h-10.gap-2
+  [views/toolbar
+   {:class "bg-primary h-10 gap-2"}
    [views/switch
     "Default"
     {:id "default-switch"
@@ -62,7 +64,8 @@
   :title "Slider"
   :params (atom [25])
   [store]
-  [:div.toolbar.bg-primary.flex.gap-2.px-2
+  [views/toolbar
+   {:class "bg-primary flex gap-2 px-2"}
    [:div.w-64.h-8
     [views/slider
      {:min 0
@@ -85,7 +88,8 @@
 
 (defscene ^:export shortcut
   :title "Shortcut"
-  [:div.toolbar.bg-primary.h-10.p-2.gap-2
+  [views/toolbar
+   {:class "bg-primary h-10 p-2 gap-2"}
    [:div.flex.gap-2
     "Single"
     [views/shortcuts [::history.events/undo]]]

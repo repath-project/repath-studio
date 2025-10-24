@@ -42,9 +42,10 @@
   (let [active? (rf/subscribe [::snap.subs/active?])
         md? @(rf/subscribe [::window.subs/breakpoint? :md])]
     (reagent/with-let [open (reagent/atom false)]
-      [:button.icon-button.items-center.gap-1.w-auto.flex.active:bg-overlay
+      [:button.button.rounded-sm.items-center.gap-1.w-auto.flex
        {:title (t [::snap "Snap"])
-        :class [(if md? "px-1" "px-2")
+        :class ["active:bg-overlay"
+                (if md? "px-1" "px-2")
                 (when @active? "accent")
                 (when @open "bg-overlay!")]
         :on-click #(rf/dispatch [::snap.events/toggle])}
@@ -56,7 +57,8 @@
             [:> DropdownMenu/Trigger
              {:as-child true}
              [:div.h-full.flex.items-center.hover:pb-1
-              {:role "button"
+              {:class "min-h-[inherit]"
+               :role "button"
                :title (t [::snap-options "Snap options"])}
               [views/icon "chevron-up"]]]
             [:> DropdownMenu/Portal

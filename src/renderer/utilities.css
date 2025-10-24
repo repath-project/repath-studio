@@ -26,7 +26,6 @@
   padding-top: env(safe-area-inset-top);
 }
 
-
 @utility py-safe {
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
@@ -130,10 +129,6 @@
   }
 }
 
-@utility toolbar {
-  @apply flex gap-1 p-1 items-center;
-}
-
 @utility button-group {
   @apply flex rounded-sm relative overflow-hidden;
 
@@ -152,52 +147,6 @@
   }
 }
 
-@utility icon-button {
-  @apply button button-size rounded-sm group-[&.button-group]:rounded-none;
-
-  &.small {
-    @apply button-size-small rounded-xs m-0;
-  }
-}
-
-@utility resize-handle {
-  @apply relative;
-
-  &:after {
-    content: '';
-    display: block;
-    z-index: 1;
-    position: absolute;
-    transition: background-color 0.3s;
-  }
-
-  &[data-panel-group-direction='vertical'] {
-    @apply h-px;
-
-    &:after {
-      @apply w-full h-1;
-
-      top: -50%;
-    }
-  }
-
-  &[data-panel-group-direction='horizontal'] {
-    @apply w-px;
-
-    &:after {
-      @apply h-full w-1;
-
-      left: -50%;
-    }
-  }
-
-  &[data-resize-handle-state='drag'] {
-    &:after {
-      @apply bg-accent;
-    }
-  }
-}
-
 @utility popover-content {
   @apply bg-primary drop-shadow-lg z-10 rounded-sm break-words border
   border-border animate-in fade-in max-w-xs;
@@ -211,46 +160,4 @@
 @utility form-control-button {
   @apply button bg-primary text-foreground-muted p-1 outline-inset
   min-h-[27px] min-w-[27px]!;
-}
-
-@keyframes rotationBreak {
-  0% {
-    transform: rotate(0);
-  }
-  25% {
-    transform: rotate(90deg);
-  }
-  50% {
-    transform: rotate(180deg);
-  }
-  75% {
-    transform: rotate(270deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-@utility loader {
-  @apply inline-block absolute;
-  width: 24px;
-  height: 24px;
-  top: 50%;
-  left: 50%;
-  margin: -12px 0 0 -12px;
-
-  &:after,
-  &:before {
-    @apply absolute top-0 left-0 bg-white;
-    content: '';
-    width: 24px;
-    height: 24px;
-    border: 1px solid gray;
-    animation: rotationBreak 3s ease-in-out infinite alternate;
-  }
-
-  &:after {
-    @apply border-accent;
-    animation-direction: alternate-reverse;
-  }
 }

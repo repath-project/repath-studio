@@ -162,7 +162,8 @@
 (defn radio-button
   [{:keys [title active icon action class]}]
   [:> Tooltip/Root
-   [:> Tooltip/Trigger {:as-child true}
+   [:> Tooltip/Trigger
+    {:as-child true}
     [:span
      [views/radio-icon-button icon @(rf/subscribe active)
       {:class class
@@ -194,7 +195,7 @@
        {:title (t [::fill-color "Pick fill color"])
         :style {:background fill}}]]
 
-     [:button.icon-button.bg-transparent!
+     [:button.button.bg-transparent!
       {:title (t [::swap-color "Swap fill with stroke"])
        :on-click #(rf/dispatch [::document.events/swap-colors])}
       [views/icon "swap-horizontal"]]
@@ -214,8 +215,9 @@
         {:class "w-1/2 h-1/2 bottom-1/4 right-1/4"}]]]]))
 
 (defn root []
-  [:div.toolbar.bg-primary.mt-px.relative.justify-center.md:justify-start
-   {:class "py-2 md:py-1 gap-2 md:gap-1"}
+  [views/toolbar
+   {:class "bg-primary mt-px relative justify-center md:justify-start py-2
+            md:py-1 gap-2 md:gap-1"}
    [color-selectors]
    [:div.grow.hidden.md:block]
    (into [:<>]

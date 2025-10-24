@@ -160,7 +160,7 @@
   []
   (let [some-selected? @(rf/subscribe [::element.subs/some-selected?])
         md? @(rf/subscribe [::window.subs/breakpoint? :md])]
-    [:div.flex.flex-col.text-center.flex-0.toolbar
+    [views/toolbar {:class "flex-col"}
      (into [:<>] (object-buttons))
      (when-not md?
        [:<>

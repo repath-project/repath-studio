@@ -141,7 +141,7 @@
                    :height ruler.views/ruler-size}}
           [views/icon-button
            (if ruler-locked? "lock" "unlock")
-           {:class "small bg-transparent! hidden"
+           {:class "button-size-small rounded-xs m-0 bg-transparent! hidden"
             :title (if ruler-locked?
                      (t [::unlock "Unlock"])
                      (t [::lock "Lock"]))
@@ -166,7 +166,7 @@
        (when debug-info?
          [debug-info])
        (when worker-active?
-         [:button.icon-button.absolute.bottom-2.right-2
+         [:div.absolute.bottom-2.right-2
           [views/loading-indicator]])
        (when (and help-bar (seq help-message) lg?)
          [help help-message])
@@ -271,14 +271,14 @@
       [:> Select/Group
        [:> Select/Item
         {:value :empty-canvas
-         :class "menu-item select-item"}
+         :class "menu-item px-2"}
         [:> Select/ItemText
          (t [::empty-canvas "Empty canvas"])]]
        (for [[k _v] (sort db/a-series-paper-sizes)]
          ^{:key k}
          [:> Select/Item
           {:value k
-           :class "menu-item select-item"}
+           :class "menu-item px-2"}
           [:> Select/ItemText (str "A" k)]])]]]]])
 
 (defn recent-document
@@ -441,7 +441,7 @@
               (if md?
                 [document.views/tab-bar]
                 [:div.flex.overflow-hidden
-                 [:div.toolbar [window.menubar/root]]
+                 [views/toolbar [window.menubar/root]]
                  [document.views/tab-bar]])
               [:div.flex.h-full.flex-1.gap-px.overflow-hidden
                [:div.flex.h-full.flex-col.flex-1.overflow-hidden.gap-px

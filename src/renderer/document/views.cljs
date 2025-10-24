@@ -21,7 +21,7 @@
   (let [undos @(rf/subscribe [::history.subs/undos])
         redos @(rf/subscribe [::history.subs/redos])
         md? @(rf/subscribe [::window.subs/breakpoint? :md])]
-    [:div.toolbar
+    [views/toolbar
 
      [views/icon-button
       "file"
@@ -57,9 +57,9 @@
 
 (defn close-button
   [id saved]
-  [:button.small.icon-button.invisible.relative.shrink-0.bg-inherit.group
+  [:button.button.button-size-small.invisible.relative.shrink-0.bg-inherit.group
    {:key id
-    :class "hover:[&_.dot-icon]:hidden focus:[&_.dot-icon]:hidden"
+    :class "hover:[&_.dot-icon]:hidden focus:[&_.dot-icon]:hidden rounded-xs"
     :title (t [::close-doc "Close document"])
     :on-click (fn [e]
                 (.stopPropagation e)
@@ -207,7 +207,8 @@
           [tab document-id])
         [:div.flex.overflow-hidden.gap-px
          (when (second documents)
-           [:div.toolbar.bg-primary
+           [views/toolbar
+            {:class "bg-primary"}
             [documents-dropdown-button]])
          [tab active-id]])
       (when-not (and md? tree-visible)
@@ -215,5 +216,4 @@
       [:div.drag.flex-1]]
 
      (when md?
-       [:div.toolbar
-        [documents-dropdown-button]])]))
+       [views/toolbar [documents-dropdown-button]])]))

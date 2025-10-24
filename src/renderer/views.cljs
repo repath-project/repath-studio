@@ -21,6 +21,7 @@
    ["sonner" :refer [Toaster]]
    ["tailwind-merge" :refer [twMerge]]
    ["vaul" :refer [Drawer]]
+   [clojure.string :as string]
    [re-frame.core :as rf]
    [reagent.core :as reagent]
    [renderer.app.subs :as-alias app.subs]
@@ -28,9 +29,9 @@
    [renderer.window.subs :as-alias window.subs]))
 
 (defn merge-with-class
-  [& maps]
-  (-> (apply merge maps)
-      (assoc :class (apply twMerge (map :class maps)))))
+  [& props]
+  (-> (apply merge props)
+      (assoc :class (apply twMerge (map :class props)))))
 
 (defn icon
   [icon-name props]
@@ -54,7 +55,11 @@
 
 (defn icon-button
   [icon-name props]
-  [:button.icon-button props [icon icon-name]])
+  [:button
+   (merge-with-class {:class "button rounded-sm
+                              group-[&.button-group]:rounded-none"}
+                     props)
+   [icon icon-name]])
 
 (defn loading-indicator
   []
@@ -94,7 +99,7 @@
 (defn format-shortcut
   [[shortcut]]
   (into [:div.flex.gap-1.items-center {:dir "ltr"}]
-        (comp (map (partial into [kbd]))
+        (comp (map kbd)
               (interpose [:span "+"]))
         (cond-> []
           (:ctrlKey shortcut)
@@ -121,10 +126,10 @@
 
 (defn radio-icon-button
   [icon-name active props]
-  [:button.icon-button.active:overlay
-   (merge-with-class {:class (str (when active "accent"))}
-                     props)
-   [renderer.views/icon icon-name]])
+  [icon-button icon-name
+   (merge-with-class {:class (string/join " " ["active:overlay"
+                                               (when active "accent")])}
+                     props)])
 
 (defn context-menu-item
   [{:keys [label action checked disabled]
@@ -349,3 +354,11 @@
             (reagent/as-element [icon "warning" {:class "text-warning"}])
             :info
             (reagent/as-element [icon "info"])}}])
+
+(defn toolbar
+  [& more]
+  (let [has-props (map? (first more))
+        children (if has-props (rest more) more)
+        props (if has-props (first more) {})]
+    (into [:div (merge-with-class {:class "flex gap-1 p-1 items-center"} props)]
+          children)))

@@ -29,10 +29,11 @@
      (if state
        active-icon
        inactive-icon)
-     {:class ["text-inherit! bg-transparent! outline-inset
-               group-hover:opacity-100 focus:opacity-100
-               outline-inherit small"
-              (when (not state) "opacity-30 md:opacity-0")]
+     {:class (string/join " "
+                          ["text-inherit! bg-transparent! outline-inset
+                            group-hover:opacity-100 focus:opacity-100
+                            outline-inherit button-size-small rounded-xs m-0"
+                           (when (not state) "opacity-30 md:opacity-0")])
       :title (t title)
       :on-double-click #(.stopPropagation %)
       :on-click (fn [e]
@@ -125,8 +126,8 @@
   [views/icon-button
    (if collapsed "chevron-right" "chevron-down")
    {:title (if collapsed "expand" "collapse")
-    :class ["bg-transparent! text-inherit! rtl:scale-x-[-1] small outline-inset
-             outline-inherit"]
+    :class "bg-transparent! text-inherit! rtl:scale-x-[-1] outline-inset m-0
+            outline-inherit button-size-small rounded-xs"
     :on-double-click #(.stopPropagation %)
     :on-click #(do (.stopPropagation %)
                    (rf/dispatch (if collapsed
