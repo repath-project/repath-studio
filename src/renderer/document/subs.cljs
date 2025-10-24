@@ -2,6 +2,7 @@
   (:require
    [config :as config]
    [re-frame.core :as rf]
+   [renderer.app.subs :as-alias app.subs]
    [renderer.document.handlers :as document.handlers]
    [renderer.timeline.subs :as-alias timeline.subs]
    [renderer.window.subs :as-alias window.subs]))
@@ -169,7 +170,9 @@
  ::handle-size
  :<- [::zoom]
  :<- [::window.subs/md?]
- (fn [[zoom md?] [_]]
+ :<- [::app.subs/feature? :touch]
+ (fn [[zoom md? touch?] [_]]
    (let [base-size 13]
      (cond-> (/ base-size zoom)
-       (not md?) (* 1.5)))))
+       (and touch? (not md?))
+       (* 1.5)))))

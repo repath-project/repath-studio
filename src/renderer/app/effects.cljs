@@ -61,7 +61,12 @@
             (conj :local-fonts)
 
             (.-EyeDropper js/window)
-            (conj :eye-dropper)))))
+            (conj :eye-dropper)
+
+            (or (.-ontouchstart js/window)
+                (pos? (.-maxTouchPoints js/navigator))
+                (pos? (.-msMaxTouchPoints js/navigator)))
+            (conj :touch)))))
 
 (rf/reg-fx
  ::query-local-fonts

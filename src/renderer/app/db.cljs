@@ -28,7 +28,7 @@
                                      [:full-name string?]]])
 
 (def Feature
-  [:enum :file-system :local-fonts :eye-dropper])
+  [:enum :file-system :local-fonts :eye-dropper :touch])
 
 (def SystemFonts
   [:map-of {:title "name"} string? Font])
