@@ -80,8 +80,7 @@
       :icon "window-close"}]))
 
 (defn app-icon []
-  [:div.drag.shrink-0
-   {:class "px-2"}
+  [:div.drag.shrink-0.px-1
    [:img.h-4.w-4
     {:src "img/icon-no-bg.svg"
      :alt "logo"}]])
@@ -95,13 +94,14 @@
         installable? @(rf/subscribe [::app.subs/installable?])
         title-bar @(rf/subscribe [::document.subs/title-bar])
         md? @(rf/subscribe [::window.subs/md?])]
-    [:div.flex.items-center.relative
-     (when-not (or fullscreen? mac?)
-       [app-icon])
-     (when md?
-       [:div.flex.relative.bg-secondary
-        {:class (when (and mac? (not fullscreen?)) "ml-16")}
-        [window.menubar/root]])
+    [:div.flex.relative
+     [:div.md:p-1.gap-1.flex.items-center
+      (when-not (or fullscreen? mac?)
+        [app-icon])
+      (when md?
+        [:div.flex.relative.bg-secondary
+         {:class (when (and mac? (not fullscreen?)) "ml-16")}
+         [window.menubar/root]])]
      [:div.absolute.hidden.justify-center.drag.grow.h-full.items-center
       {:class "pointer-events-none md:flex left-1/2 -translate-x-1/2 z-[-1]"
        :dir "ltr"}

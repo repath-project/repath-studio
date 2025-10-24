@@ -60,7 +60,7 @@
          {:as-child true}
          [:button.button.flex.items-center.justify-center.px-2.font-mono
           {:class (when contains-active?
-                    "bg-accent text-accent-foreground!
+                    "bg-accent text-accent-foreground! hover:bg-accent-light
                      aria-expanded:bg-accent-light active:bg-accent-light")
            :aria-label label}
           [views/icon "chevron-down"]]]
