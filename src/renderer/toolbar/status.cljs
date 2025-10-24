@@ -140,7 +140,7 @@
 (defn zoom-button-group
   []
   (let [zoom @(rf/subscribe [::document.subs/zoom])]
-    [:div.button-group
+    [:div.button-group.group
      [:button.button.px-2.font-mono.rounded
       {:disabled (<= zoom 0.01)
        :title (t [::zoom-out "Zoom out"])

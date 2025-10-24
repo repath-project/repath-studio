@@ -140,18 +140,13 @@
 }
 
 @utility button-group {
-  @apply flex rounded relative;
+  @apply flex rounded-sm relative overflow-hidden;
 
-  > button,
   > * {
-    @apply m-0 rounded-none border-l border-border;
+    @apply border-l border-border;
 
     &:first-child {
-      @apply border-l-0 rounded-l;
-    }
-
-    &:last-child {
-      @apply rounded-r;
+      @apply border-l-0;
     }
   }
 
@@ -163,7 +158,7 @@
 }
 
 @utility icon-button {
-  @apply button button-size rounded-sm;
+  @apply button button-size rounded-sm group-[&.button-group]:rounded-none;
 
   &.small {
     @apply button-size-small rounded-xs m-0;

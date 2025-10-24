@@ -25,10 +25,11 @@
       [:> Tooltip/Root
        [:> Tooltip/Trigger
         {:as-child true}
-        [views/radio-icon-button (:icon properties) active
-         {:class (when primary "outline outline-inset outline-accent")
-          :aria-label label
-          :on-click #(rf/dispatch [::tool.events/activate tool])}]]
+        [:span
+         [views/radio-icon-button (:icon properties) active
+          {:class (when primary "outline outline-inset outline-accent")
+           :aria-label label
+           :on-click #(rf/dispatch [::tool.events/activate tool])}]]]
        [:> Tooltip/Portal
         [:> Tooltip/Content
          {:class "tooltip-content"
@@ -51,7 +52,7 @@
         md? @(rf/subscribe [::window.subs/breakpoint? :md])
         contains-active? (some #{active-tool} tools)
         top-tool (if contains-active? active-tool (first tools))]
-    [:div.button-group
+    [:div.button-group.group
      [button top-tool]
      (when (second tools)
        [:> DropdownMenu/Root
