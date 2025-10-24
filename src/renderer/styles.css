@@ -120,10 +120,6 @@ label {
   @apply h-divider mx-0;
 }
 
-.sub-menu-chevron {
-  @apply mr-[-1rem] rtl:ml-[-1rem] rtl:mr-auto text-inherit;
-}
-
 .select-content {
   min-width: 127px;
   max-height: 80vh;

@@ -677,8 +677,8 @@
     {:class "sub-menu-item menu-item"
      :disabled disabled}
     [:div label]
-    [:div.sub-menu-chevron
-     {:class "rtl:scale-x-[-1]"}
+    [:div.rtl:mr-auto.text-inherit
+     {:class "mr-[-1rem] rtl:ml-[-1rem] rtl:scale-x-[-1]"}
      [views/icon "chevron-right"]]]
    [:> Menubar/Portal
     (into [:> Menubar/SubContent
