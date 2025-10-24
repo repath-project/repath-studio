@@ -157,6 +157,8 @@
          [ruler.views/ruler :vertical]])
       [:div.relative.grow.flex
        [:div.grow.flex.relative
+        {:data-theme "light"
+         :style {:background "var(--secondary)"}}
         [frame.views/root]
         [:div.absolute.inset-0.pointer-events-none.inset-shadow]
         (when read-only?
