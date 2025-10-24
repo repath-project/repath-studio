@@ -135,8 +135,11 @@
                    (when (and this active?)
                      (rf/dispatch [::events/scroll-into-view this])))}
            [:div.pointer-events-none.px-2.gap-1.flex.overflow-hidden
-            (when-not saved? [:span.md:hidden "•"])
             [:span.truncate title]]
+           (when-not saved?
+             [:span.md:hidden.absolute.text-foreground-muted
+              {:class "left-1.5"}
+              "•"])
            [close-button id saved?]]]
          [:> ContextMenu/Portal
           (into
