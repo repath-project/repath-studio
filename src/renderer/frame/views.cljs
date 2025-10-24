@@ -91,7 +91,6 @@
             :id "frame"
             :title (t [::main-canvas "main canvas"])
             :ref ref
-            :sandbox "allow-same-origin"
             :style {:background (-> root-el :attrs :fill)}}
            [:f> inner-component]
            [:> ContextMenu/Root
