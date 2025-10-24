@@ -88,8 +88,8 @@
 
 (defn debug-info []
   [:div
-   {:dir "ltr"}; }
-   (into [:div.absolute.bottom-2.left-2.bg-primary.p-2.shadow]
+   {:dir "ltr"}
+   (into [:div.absolute.top-2.left-2.pointer-events-none.text-gray-500]
          (for [[s v] (debug-rows)]
            [:div.flex
             [:strong.mr-1 s]
@@ -100,7 +100,7 @@
 
 (defn help
   [message]
-  [:div.absolute.top-0.left-0.w-full
+  [:div.absolute.top-0.left-0.w-full.pointer-events-none
    [:div.hidden.justify-center.w-full.p-4.lg:flex
     [:div.bg-primary.overflow-hidden.shadow.rounded-full
      [:div.text-xs.gap-1.flex.flex-wrap.py-2.px-4.justify-center.truncate
@@ -108,7 +108,7 @@
       message]]]])
 
 (defn read-only-overlay []
-  [:div.absolute.inset-0.border-4.border-accent
+  [:div.absolute.inset-0.border-4.border-accent.pointer-events-none
    (when-let [preview-label @(rf/subscribe [::document.subs/preview-label])]
      [:div.absolute.bg-accent.top-2.left-2.px-1.rounded.text-accent-foreground
       preview-label])])
@@ -157,22 +157,20 @@
          [ruler.views/ruler :vertical]])
       [:div.relative.grow.flex
        [:div.grow.flex.relative
-        {:data-theme "light"
-         :style {:background "var(--secondary)"}}
         [frame.views/root]
-        [:div.absolute.inset-0.pointer-events-none.inset-shadow]]
-       (when read-only?
-         [read-only-overlay])
-       (when debug-info?
-         [debug-info])
-       (when worker-active?
-         [:div.absolute.bottom-2.right-2
-          [views/loading-indicator]])
-       (when (and help-bar (seq help-message) lg?)
-         [help help-message])
-       (when backdrop
-         [:div.absolute.inset-0
-          {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])
+        [:div.absolute.inset-0.pointer-events-none.inset-shadow]
+        (when read-only?
+          [read-only-overlay])
+        (when debug-info?
+          [debug-info])
+        (when worker-active?
+          [:div.absolute.bottom-2.right-2.text-gray-500
+           [views/loading-indicator]])
+        (when (and help-bar (seq help-message) lg?)
+          [help help-message])
+        (when backdrop
+          [:div.absolute.inset-0
+           {:on-click #(rf/dispatch [::app.events/set-backdrop false])}])]
        (when-not md?
          [:div.bg-primary.flex.items-center
           [toolbar.object/root]])]]]))

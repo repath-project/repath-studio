@@ -50,6 +50,7 @@
    [renderer.window.effects]
    [renderer.window.events]
    [renderer.window.subs]
+   [renderer.worker.effects]
    [renderer.worker.events]
    [renderer.worker.subs]
    [replumb.repl :as replumb.repl]
