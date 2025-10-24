@@ -52,13 +52,7 @@
 @import './theme/default.css';
 @import './theme/styles.css';
 
-html {
-  @apply h-full p-safe;
-}
-
 body {
-  @apply m-0 text-foreground relative bg-secondary select-none font-sans
-  overflow-hidden h-full!;
   font-size: var(--font-size);
 }
 
