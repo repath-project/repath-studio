@@ -191,7 +191,7 @@
        :on-change #(rf/dispatch [::document.events/preview-attr :fill
                                  (get-hex %)])}
 
-      [:button.button.border.border-border.button-size
+      [:button.button.border.border-border.button-size.rounded-sm
        {:title (t [::fill-color "Pick fill color"])
         :style {:background fill}}]]
 
@@ -208,10 +208,10 @@
        :on-change #(rf/dispatch [::document.events/preview-attr
                                  :stroke
                                  (get-hex %)])}
-      [:button.relative.border.border-border.button-size
+      [:button.relative.border.border-border.button-size.rounded-sm
        {:title (t [::stroke-color "Pick stroke color"])
         :style {:background stroke}}
-       [:div.bg-primary.absolute.border.border-border
+       [:div.bg-primary.absolute.border.border-border.rounded-xs
         {:class "w-1/2 h-1/2 bottom-1/4 right-1/4"}]]]]))
 
 (defn root []
