@@ -731,7 +731,7 @@
 (defn mobile-root
   []
   [{:id :root
-    :label [views/icon "menu"]
+    :label [views/icon "menu" {:aria-label (t [::menu "Menu"])}]
     :type :root
     :items (mapv #(assoc % :type :sub-menu) (submenus))}])
 
