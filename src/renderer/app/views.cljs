@@ -419,6 +419,7 @@
         recent-documents @(rf/subscribe [::document.subs/recent])
         lang-dir @(rf/subscribe [::app.subs/lang-dir])
         web? @(rf/subscribe [::app.subs/web?])
+        desktop? @(rf/subscribe [::app.subs/desktop?])
         md? @(rf/subscribe [::window.subs/md?])
         loading? @(rf/subscribe [::app.subs/loading?])
         theme @(rf/subscribe [::theme.subs/theme])]
@@ -427,7 +428,7 @@
       [:> Direction/Provider {:dir lang-dir}
        [:> Tooltip/Provider
         [:div.flex.flex-col.h-full.overflow-hidden.justify-between
-         (if (or md? (not web?))
+         (if (or md? desktop?)
            [window.views/app-header]
            [:div])
          (if documents?
@@ -441,7 +442,8 @@
               (if md?
                 [document.views/tab-bar]
                 [:div.flex.overflow-hidden
-                 [views/toolbar [window.menubar/root]]
+                 (when-not desktop?
+                   [views/toolbar [window.menubar/root]])
                  [document.views/tab-bar]
                  [:div.drag.flex-1]])
               [:div.flex.h-full.flex-1.gap-px.overflow-hidden

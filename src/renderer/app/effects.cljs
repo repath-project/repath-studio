@@ -1,5 +1,6 @@
 (ns renderer.app.effects
   (:require
+   ["@capacitor/core" :refer [Capacitor]]
    ["localforage" :as localforage]
    ["sonner" :refer [toast]]
    [cognitect.transit :as transit]
@@ -15,7 +16,7 @@
  ::platform
  (fn [coeffects _]
    (assoc coeffects :platform (or (some-> js/window.api (.-platform))
-                                  "web"))))
+                                  (.getPlatform Capacitor)))))
 
 (rf/reg-cofx
  ::versions

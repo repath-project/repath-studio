@@ -667,7 +667,7 @@
    [:> Menubar/ItemIndicator
     {:class "menu-item-indicator"}
     [views/icon "checkmark"]]
-   [:div label]
+   [:div.truncate label]
    [views/shortcuts action]])
 
 (defmethod menu-item :sub-menu
@@ -682,7 +682,7 @@
      [views/icon "chevron-right"]]]
    [:> Menubar/Portal
     (into [:> Menubar/SubContent
-           {:class "menu-content min-w-[50dvw]! sm:min-w-[200px]! max-w-[50dvw]"
+           {:class "menu-content min-w-[45dvw]! sm:min-w-[200px]! max-w-[50dvw]"
             :align "start"
             :loop true
             :on-escape-key-down #(.stopPropagation %)}]
@@ -690,27 +690,29 @@
 
 (defmethod menu-item :root
   [{:keys [label items id disabled]}]
-  [:> Menubar/Menu
-   [:> Menubar/Trigger
-    {:class ["button-size md:min-h-auto md:px-3 py-1.5 flex rounded-sm
-              outline-none select-none items-center justify-center leading-none
-              data-[state=open]:bg-overlay
-              hover:bg-overlay hover:text-foreground-hovered
-              focus:bg-overlay focus:text-foreground-hovered
-              disabled:text-foreground-disabled disabled:pointer-events-none"]
-     :id (name id)
-     :disabled disabled}
-    [:span label]]
-   [:> Menubar/Portal
-    (into [:> Menubar/Content
-           {:class (when items "menu-content min-w-[50dvw]! sm:min-w-[200px]!
-                                max-w-[50dvw]")
-            :align "start"
-            :side-offset 4
-            :loop true
-            :on-escape-key-down #(.stopPropagation %)
-            :on-close-auto-focus #(.preventDefault %)}]
-          (map menu-item items))]])
+  (let [desktop? @(rf/subscribe [::app.subs/desktop?])]
+    [:> Menubar/Menu
+     [:> Menubar/Trigger
+      {:class ["button-size py-1 md:min-h-auto md:px-3 lg:py-1.5 flex rounded-sm
+                outline-none select-none items-center justify-center
+                data-[state=open]:bg-overlay leading-none
+                hover:bg-overlay hover:text-foreground-hovered
+                focus:bg-overlay focus:text-foreground-hovered
+                disabled:text-foreground-disabled disabled:pointer-events-none"
+               (when desktop? "min-h-auto")]
+       :id (name id)
+       :disabled disabled}
+      [:span label]]
+     [:> Menubar/Portal
+      (into [:> Menubar/Content
+             {:class (when items "menu-content min-w-[45dvw]! sm:min-w-[200px]!
+                                max-w-[45dvw]")
+              :align "start"
+              :side-offset 4
+              :loop true
+              :on-escape-key-down #(.stopPropagation %)
+              :on-close-auto-focus #(.preventDefault %)}]
+            (map menu-item items))]]))
 
 (defmethod menu-item :default
   [{:keys [label action disabled]}]
@@ -718,7 +720,7 @@
    {:class "menu-item"
     :on-select #(rf/dispatch action)
     :disabled disabled}
-   [:div label]
+   [:div.truncate label]
    [views/shortcuts action]])
 
 (defn submenus []

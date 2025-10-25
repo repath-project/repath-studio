@@ -42,10 +42,10 @@
   (let [active? (rf/subscribe [::snap.subs/active?])
         md? @(rf/subscribe [::window.subs/md?])]
     (reagent/with-let [open (reagent/atom false)]
-      [:button.button.rounded-sm.items-center.gap-1.w-auto.flex
+      [:button.button.rounded-sm.items-center.gap-1.md:flex
        {:title (t [::snap "Snap"])
         :class ["active:bg-overlay"
-                (if md? "px-1" "px-2")
+                (when md? "px-1")
                 (when @active? "accent")
                 (when @open "bg-overlay!")]
         :on-click #(rf/dispatch [::snap.events/toggle])}

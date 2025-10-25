@@ -101,6 +101,12 @@
    (= platform "web")))
 
 (rf/reg-sub
+ ::desktop?
+ :<- [::platform]
+ (fn [platform _]
+   (contains? #{"darwin" "linux" "win32"} platform)))
+
+(rf/reg-sub
  ::mac?
  :<- [::platform]
  (fn [platform _]

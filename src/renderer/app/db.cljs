@@ -20,7 +20,7 @@
   [:map-of keyword? [:map [:visible boolean?]]])
 
 (def Platform
-  [:enum "darwin" "linux" "win32" "web"])
+  [:enum "darwin" "linux" "win32" "ios" "android" "web"])
 
 (def Font
   [:map-of {:title "style"} string? [:map

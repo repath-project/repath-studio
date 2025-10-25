@@ -91,6 +91,7 @@
         theme-mode (name @(rf/subscribe [::theme.subs/mode]))
         mac? @(rf/subscribe [::app.subs/mac?])
         web? @(rf/subscribe [::app.subs/web?])
+        desktop? @(rf/subscribe [::app.subs/desktop?])
         installable? @(rf/subscribe [::app.subs/installable?])
         title-bar @(rf/subscribe [::document.subs/title-bar])
         md? @(rf/subscribe [::window.subs/md?])]
@@ -98,7 +99,7 @@
      [:div.px-1.gap-1.flex.items-center
       (when-not (or fullscreen? mac?)
         [app-icon])
-      (when md?
+      (when (or md? desktop?)
         [:div.flex.relative.bg-secondary
          {:class (when (and mac? (not fullscreen?)) "ml-16")}
          [window.menubar/root]])]
@@ -122,14 +123,14 @@
                    :title (t [::theme "Theme mode - %1"] [theme-mode])
                    :icon theme-mode
                    :class "bg-primary"}]])
-       (when (or fullscreen? web? mac?)
+       (when (or fullscreen? mac? (and web? md?))
          [button {:action [::window.events/toggle-fullscreen]
                   :title (if fullscreen?
                            (t [::exit-fullscreen "Exit fullscreen"])
                            (t [::enter-fullscreen "Enter fullscreen"]))
                   :icon (if fullscreen? "arrow-minimize" "arrow-maximize")
                   :class "bg-primary"}])
-       (when-not (or web? fullscreen? mac?)
+       (when (and desktop? (not (or fullscreen? mac?)))
          (->> (window-control-buttons)
               (map button)
               (into [:div.flex])))]]]))
