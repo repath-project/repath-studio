@@ -175,4 +175,4 @@
    (let [base-size 13]
      (cond-> (/ base-size zoom)
        (and touch? (not md?))
-       (* 1.5)))))
+       (* 1.8)))))
