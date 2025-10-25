@@ -160,7 +160,8 @@
   []
   (let [some-selected? @(rf/subscribe [::element.subs/some-selected?])
         md? @(rf/subscribe [::window.subs/md?])]
-    [views/toolbar {:class "flex-col"}
+    [views/toolbar
+     {:class "flex-col px-2 md:px-1 gap-2 md:gap-1"}
      (into [:<>] (object-buttons))
      (when-not md?
        [:<>

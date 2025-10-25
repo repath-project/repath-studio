@@ -667,7 +667,7 @@
    [:> Menubar/ItemIndicator
     {:class "menu-item-indicator"}
     [views/icon "checkmark"]]
-   [:div.truncate label]
+   [:div label]
    [views/shortcuts action]])
 
 (defmethod menu-item :sub-menu
@@ -693,7 +693,7 @@
   (let [desktop? @(rf/subscribe [::app.subs/desktop?])]
     [:> Menubar/Menu
      [:> Menubar/Trigger
-      {:class ["button-size py-1 md:min-h-auto md:px-3 lg:py-1.5 flex rounded-sm
+      {:class ["button-size py-1 md:min-h-auto md:px-3 xl:py-1.5 flex rounded-sm
                 outline-none select-none items-center justify-center
                 data-[state=open]:bg-overlay leading-none
                 hover:bg-overlay hover:text-foreground-hovered
@@ -720,7 +720,7 @@
    {:class "menu-item"
     :on-select #(rf/dispatch action)
     :disabled disabled}
-   [:div.truncate label]
+   [:div label]
    [views/shortcuts action]])
 
 (defn submenus []
@@ -739,7 +739,7 @@
 
 (defn root
   []
-  (->> (if @(rf/subscribe [::window.subs/lg?])
+  (->> (if @(rf/subscribe [::window.subs/xl?])
          (submenus)
          (mobile-root))
        (map menu-item)

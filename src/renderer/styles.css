@@ -89,7 +89,7 @@ label {
 .menu-radio-item {
   all: unset;
   @apply button-size flex justify-between gap-4 text-foreground items-center
-  rounded-sm relative select-none px-[33px] py-1 md:py-0;
+  rounded-sm relative select-none px-[33px] py-1 md:py-0 wrap-anywhere;
 }
 
 .menu-item[data-state='open'],
