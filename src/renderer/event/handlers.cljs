@@ -28,30 +28,29 @@
                 double-click-delta event-timestamp]} db
         {:keys [button pointer-pos timestamp pointer-id]} e
         adjusted-pos (frame.handlers/adjusted-pointer-pos db pointer-pos)
-        db (-> db
-               (snap.handlers/update-nearest-neighbors)
-               (assoc :pointer-pos pointer-pos
-                      :adjusted-pointer-pos adjusted-pos))]
+        db (snap.handlers/update-nearest-neighbors db)]
     (case (:type e)
       "pointermove"
-      (if pointer-offset
-        (if (significant-drag? pointer-pos pointer-offset drag-threshold)
-          (cond-> db
-            (not= tool :pan)
-            (tool.handlers/pan-out-of-canvas dom-rect
-                                             pointer-pos
-                                             pointer-offset)
+      (-> (if pointer-offset
+            (if (significant-drag? pointer-pos pointer-offset drag-threshold)
+              (cond-> db
+                (not= tool :pan)
+                (tool.handlers/pan-out-of-canvas dom-rect
+                                                 pointer-pos
+                                                 pointer-offset)
 
-            (not drag)
-            (-> (assoc :drag true)
-                (tool.hierarchy/on-drag-start e)
-                (app.handlers/add-fx [::event.effects/set-pointer-capture
-                                      pointer-id]))
+                (not drag)
+                (-> (assoc :drag true)
+                    (tool.hierarchy/on-drag-start e)
+                    (app.handlers/add-fx [::event.effects/set-pointer-capture
+                                          pointer-id]))
 
-            :always
-            (tool.hierarchy/on-drag e))
-          db)
-        (tool.hierarchy/on-pointer-move db e))
+                :always
+                (tool.hierarchy/on-drag e))
+              db)
+            (tool.hierarchy/on-pointer-move db e))
+          (assoc :pointer-pos pointer-pos
+                 :adjusted-pointer-pos adjusted-pos))
 
       "pointerdown"
       (cond-> db
