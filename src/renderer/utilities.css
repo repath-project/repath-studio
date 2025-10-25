@@ -65,17 +65,12 @@
   min-height: var(--button-size-sm);
 }
 
-@utility button-size-xs {
-  min-width: var(--button-size-xs);
-  min-height: var(--button-size-xs);
-}
-
 @utility button-size {
-  @apply button-size-lg md:button-size-md;
+  @apply button-size-lg;
 }
 
 @utility button-size-small {
-  @apply button-size-sm md:button-size-xs;
+  @apply button-size-md md:button-size-sm;
 }
 
 @utility v-divider {

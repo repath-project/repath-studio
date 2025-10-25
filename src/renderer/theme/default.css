@@ -26,10 +26,9 @@
 }
 
 :root {
-  --button-size-lg: 35px;
-  --button-size-md: 33px;
-  --button-size-sm: 27px;
-  --button-size-xs: 21px;
+  --button-size-lg: 33px;
+  --button-size-md: 27px;
+  --button-size-sm: 21px;
 
   --font-size: 13px;
 
