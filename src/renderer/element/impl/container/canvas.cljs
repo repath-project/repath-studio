@@ -43,6 +43,7 @@
         cached-tool @(rf/subscribe [::tool.subs/cached])
         rotate @(rf/subscribe [::document.subs/rotate])
         grid @(rf/subscribe [::app.subs/grid])
+        state @(rf/subscribe [::tool.subs/state])
         pointer-handler (partial event.impl.pointer/handler! el)
         snap? @(rf/subscribe [::snap.subs/active?])
         nearest-neighbor @(rf/subscribe [::snap.subs/nearest-neighbor])
@@ -78,7 +79,7 @@
      (when grid
        [ruler.views/grid])
 
-     (when snap?
+     (when (and snap? (not= state :select))
        [:<>
         (when snapped-el
           [utils.svg/bounding-box (:bbox snapped-el) true])
