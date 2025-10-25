@@ -66,7 +66,7 @@
   {"100" ["Thin" "Hairline"]
    "200" ["ExtraLight" "UltraLight"]
    "300" ["Light"]
-   "400" ["Regular" "Normal" "Book"]
+   "400" ["Normal" "Regular" "Book"]
    "500" ["Medium"]
    "600" ["SemiBold" "DemiBold"]
    "700" ["Bold"]
