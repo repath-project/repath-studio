@@ -95,17 +95,17 @@
         installable? @(rf/subscribe [::app.subs/installable?])
         title-bar @(rf/subscribe [::document.subs/title-bar])
         md? @(rf/subscribe [::window.subs/md?])]
-    [:div.flex.relative
-     [:div.px-1.gap-1.flex.items-center
+    [:div.flex.relative.overflow-hidden.items-center
+     [:div.px-1.gap-1.flex.items-center.shrink-0
       (when-not (or fullscreen? mac?)
         [app-icon])
       (when (or md? desktop?)
         [:div.flex.relative.bg-secondary
          {:class (when (and mac? (not fullscreen?)) "ml-16")}
          [window.menubar/root]])]
-     [:div.drag.grow.h-full.items-center.flex
+     [:div.drag.grow.items-center
       {:class "pointer-events-none truncate lg:absolute lg:justify-center px-1
-               lg:left-1/2 lg:-translate-x-1/2 z-[-1] sm:flex hidden"
+               lg:left-1/2 lg:-translate-x-1/2 z-[-1] lg:flex"
        :dir "ltr"}
       title-bar]
      [:div.flex.h-full.flex-1.drag]
