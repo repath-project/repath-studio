@@ -50,11 +50,11 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
           restore-keys: ${{ runner.os }}-node-
 
-      - name: Lint
-        run: npm run lint
-
       - name: Install packages
         run: npm ci
+
+      - name: Lint
+        run: npm run lint
 
       - name: Test
         run: npm run test
