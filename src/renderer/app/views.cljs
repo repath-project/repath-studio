@@ -133,7 +133,7 @@
         lg? @(rf/subscribe [::window.subs/lg?])]
     [:div.flex.flex-col.flex-1.h-full.gap-px
      [:div
-      [views/scroll-area [toolbar.tools/root]]
+      [toolbar.tools/root]
       (when ruler-visible?
         [:div.flex.gap-px
          [:div.bg-primary
