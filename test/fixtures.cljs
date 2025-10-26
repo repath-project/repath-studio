@@ -2,10 +2,13 @@
   (:require
    [config :as config]
    [re-frame.core :as rf]
+   [renderer.app.db :as app.db]
    [renderer.app.effects :as-alias app.effects]
    [renderer.effects :as-alias effects]
+   [renderer.element.effects :as-alias element.effects]
    [renderer.error.effects :as-alias error.effects]
    [renderer.theme.effects :as-alias theme.effects]
+   [renderer.utils.element :as utils.element]
    [renderer.window.effects :as-alias window.effects]))
 
 (def local-store
@@ -43,8 +46,31 @@
      (swap! local-store dissoc store-key)))
 
   (rf/reg-fx
+   ::app.effects/validate
+   (fn [[db event]]
+     (when (not (app.db/valid? db))
+       (js/console.error (str "Event: " (first event)))
+       (throw (js/Error. (str "Spec check failed: " (app.db/explain db)))))))
+
+  (rf/reg-cofx
+   ::app.effects/platform
+   (fn [coeffects _]
+     (assoc coeffects :platform "web")))
+
+  (rf/reg-cofx
+   ::app.effects/versions
+   (fn [coeffects _]
+     coeffects))
+
+  (rf/reg-cofx
+   ::app.effects/env
+   (fn [coeffects _]
+     coeffects))
+
+  (rf/reg-fx
    ::app.effects/persist
-   (fn []))
+   (fn [coeffects _]
+     coeffects))
 
   (rf/reg-cofx
    ::window.effects/fullscreen
@@ -65,6 +91,11 @@
    ::app.effects/language
    (fn [coeffects _]
      (assoc coeffects :language "en-US")))
+
+  (rf/reg-cofx
+   ::theme.effects/theme-color
+   (fn [coeffects _]
+     (assoc coeffects :theme-color "#ffffff")))
 
   (rf/reg-cofx
    ::theme.effects/native-mode
@@ -100,4 +131,46 @@
   (rf/reg-cofx
    ::app.effects/features
    (fn [coeffects _]
-     (assoc coeffects :features #{:file-system :local-fonts}))))
+     (assoc coeffects :features #{:file-system :local-fonts})))
+
+  (rf/reg-cofx
+   ::app.effects/user-agent
+   (fn [coeffects _]
+     (assoc coeffects
+            :user-agent
+            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36
+           (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36")))
+
+  (rf/reg-cofx
+   ::app.effects/standalone
+   (fn [coeffects _]
+     (assoc coeffects :standalone false)))
+
+  (rf/reg-fx
+   ::element.effects/->path
+   (fn [{:keys [data on-success on-error]}]
+     (-> (mapv utils.element/->path data)
+         (js/Promise.all)
+         (.then #(some-> on-success (conj %) rf/dispatch))
+         (.catch #(some-> on-error (conj %) rf/dispatch)))))
+
+  (rf/reg-cofx
+   ::effects/guid
+   (fn [coeffects _]
+     (assoc coeffects :guid (random-uuid))))
+
+  (rf/reg-fx
+   ::effects/ipc-on
+   (fn [_]))
+
+  (rf/reg-fx
+   ::effects/ipc-send
+   (fn [_]))
+
+  (rf/reg-fx
+   ::effects/set-document-attr
+   (fn [_]))
+
+  (rf/reg-fx
+   ::effects/set-meta
+   (fn [_])))

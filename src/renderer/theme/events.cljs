@@ -14,8 +14,7 @@
    (let [mode (-> db :theme :mode)
          mode (if (= mode :system) native-mode mode)]
      {:db (theme.handlers/set-native-mode db native-mode)
-      :fx [[::effects/set-document-attr ["data-theme" (name mode)]]
-           [:dispatch [::set-meta-color]]]})))
+      ::effects/set-document-attr ["data-theme" (name mode)]})))
 
 (rf/reg-event-fx
  ::set-meta-color
@@ -28,7 +27,8 @@
  [persist]
  (fn [{:keys [db]} [_ mode]]
    {:db (theme.handlers/set-mode db mode)
-    :dispatch [::set-document-attr]}))
+    :fx [[:dispatch [::set-document-attr]]
+         [:dispatch ^:flush-dom [::set-meta-color]]]}))
 
 (rf/reg-event-fx
  ::cycle-mode

@@ -122,6 +122,7 @@
               (history.handlers/finalize [::create-doc "Create document"])))
     :fx (into [[:dispatch [::error.events/init-reporting]]
                [:dispatch [::theme.events/set-document-attr]]
+               [:dispatch ^:flush-dom [::theme.events/set-meta-color]]
                [:dispatch [::set-lang-attrs]]
                [::theme.effects/add-listener [::theme.events/set-document-attr]]
                [:dispatch [::window.events/update-width]]

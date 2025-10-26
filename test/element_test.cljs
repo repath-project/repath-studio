@@ -1,7 +1,7 @@
 (ns element-test
   (:require
    ["paper" :refer [paper]]
-   [cljs.test :refer-macros [deftest are is testing]]
+   [cljs.test :refer-macros [deftest are is testing use-fixtures]]
    [day8.re-frame.test :as rf.test]
    [fixtures :as fixtures]
    [re-frame.core :as rf]
@@ -13,9 +13,11 @@
 
 (.setup paper)
 
+(use-fixtures :each
+  {:before fixtures/test-fixtures})
+
 (deftest init
   (rf.test/run-test-sync
-   (fixtures/test-fixtures)
    (rf/dispatch [::app.events/initialize])
 
    (let [root (rf/subscribe [::element.subs/root])
@@ -28,7 +30,6 @@
 
 (deftest select
   (rf.test/run-test-sync
-   (fixtures/test-fixtures)
    (rf/dispatch [::app.events/initialize])
 
    (let [selected (rf/subscribe [::element.subs/selected])]
@@ -57,7 +58,6 @@
 
 (deftest index
   (rf.test/run-test-sync
-   (fixtures/test-fixtures)
    (rf/dispatch [::app.events/initialize])
    (rf/dispatch [::document.events/new-from-template nil])
 
@@ -101,7 +101,6 @@
 
 (deftest align
   (rf.test/run-test-sync
-   (fixtures/test-fixtures)
    (rf/dispatch [::app.events/initialize])
    (rf/dispatch [::document.events/new-from-template [800 600]])
 
@@ -156,7 +155,6 @@
 
 (deftest visibility
   (rf.test/run-test-sync
-   (fixtures/test-fixtures)
    (rf/dispatch [::app.events/initialize])
 
    (let [selected (rf/subscribe [::element.subs/selected])]
@@ -178,7 +176,6 @@
 
 (deftest label
   (rf.test/run-test-sync
-   (fixtures/test-fixtures)
    (rf/dispatch [::app.events/initialize])
 
    (let [selected (rf/subscribe [::element.subs/selected])]
@@ -200,7 +197,6 @@
 
 (deftest lock
   (rf.test/run-test-sync
-   (fixtures/test-fixtures)
    (rf/dispatch [::app.events/initialize])
 
    (let [selected (rf/subscribe [::element.subs/selected])]
@@ -220,7 +216,6 @@
 
 (deftest attribute
   (rf.test/run-test-sync
-   (fixtures/test-fixtures)
    (rf/dispatch [::app.events/initialize])
 
    (let [selected (rf/subscribe [::element.subs/selected])]
@@ -244,7 +239,6 @@
 
 (deftest delete
   (rf.test/run-test-sync
-   (fixtures/test-fixtures)
    (rf/dispatch [::app.events/initialize])
 
    (let [selected (rf/subscribe [::element.subs/selected])]
@@ -261,7 +255,6 @@
 
 (deftest scale
   (rf.test/run-test-sync
-   (fixtures/test-fixtures)
    (rf/dispatch [::app.events/initialize])
 
    (let [selected (rf/subscribe [::element.subs/selected])]
@@ -274,7 +267,6 @@
 
 (deftest translate
   (rf.test/run-test-sync
-   (fixtures/test-fixtures)
    (rf/dispatch [::app.events/initialize])
 
    (let [selected (rf/subscribe [::element.subs/selected])]
@@ -289,7 +281,6 @@
 
 (deftest place
   (rf.test/run-test-sync
-   (fixtures/test-fixtures)
    (rf/dispatch [::app.events/initialize])
 
    (let [selected (rf/subscribe [::element.subs/selected])]
@@ -304,7 +295,6 @@
 
 (deftest ->path
   (rf.test/run-test-async
-   (fixtures/test-fixtures)
    (rf/dispatch-sync [::app.events/initialize])
 
    (let [selected (rf/subscribe [::element.subs/selected])]
@@ -325,7 +315,6 @@
 
 (deftest stroke->path
   (rf.test/run-test-async
-   (fixtures/test-fixtures)
    (rf/dispatch-sync [::app.events/initialize])
 
    (rf.test/wait-for
@@ -349,7 +338,6 @@
 
 (deftest boolean-operation
   (rf.test/run-test-async
-   (fixtures/test-fixtures)
    (rf/dispatch-sync [::app.events/initialize])
 
    (let [selected (rf/subscribe [::element.subs/selected])]
@@ -376,7 +364,6 @@
 
 (deftest import-svg
   (rf.test/run-test-sync
-   (fixtures/test-fixtures)
    (rf/dispatch [::app.events/initialize])
 
    (let [selected (rf/subscribe [::element.subs/selected])]
@@ -391,7 +378,6 @@
 
 (deftest animate
   (rf.test/run-test-sync
-   (fixtures/test-fixtures)
    (rf/dispatch [::app.events/initialize])
 
    (rf/dispatch [::element.events/add {:tag :rect
@@ -407,7 +393,6 @@
 
 (deftest set-parent
   (rf.test/run-test-sync
-   (fixtures/test-fixtures)
    (rf/dispatch [::app.events/initialize])
 
    (rf/dispatch [::element.events/add {:tag :rect
@@ -425,7 +410,6 @@
 
 (deftest group
   (rf.test/run-test-sync
-   (fixtures/test-fixtures)
    (rf/dispatch [::app.events/initialize])
 
    (rf/dispatch [::element.events/add {:tag :rect
@@ -446,7 +430,6 @@
 
 (deftest fonts
   (rf.test/run-test-sync
-   (fixtures/test-fixtures)
    (rf/dispatch [::app.events/initialize])
    (rf/dispatch [::app.events/load-system-fonts])
 

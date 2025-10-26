@@ -1,6 +1,6 @@
 (ns theme-test
   (:require
-   [cljs.test :refer-macros [deftest is testing]]
+   [cljs.test :refer-macros [deftest is testing use-fixtures]]
    [day8.re-frame.test :as rf.test]
    [fixtures :as fixtures]
    [re-frame.core :as rf]
@@ -8,11 +8,12 @@
    [renderer.theme.events :as-alias theme.events]
    [renderer.theme.subs :as-alias theme.subs]))
 
+(use-fixtures :each
+  {:before fixtures/test-fixtures})
+
 (deftest mode
   (rf.test/run-test-sync
-   (fixtures/test-fixtures)
    (rf/dispatch [::app.events/initialize])
-   (rf/dispatch [::theme.events/set-document-attr])
 
    (let [theme-mode (rf/subscribe [::theme.subs/mode])]
 

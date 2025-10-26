@@ -1,15 +1,17 @@
 (ns app-test
   (:require
-   [cljs.test :refer-macros [deftest is testing]]
+   [cljs.test :refer-macros [deftest is testing use-fixtures]]
    [day8.re-frame.test :as rf.test]
    [fixtures :as fixtures]
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.events]
    [renderer.app.subs :as-alias app.subs]))
 
+(use-fixtures :each
+  {:before fixtures/test-fixtures})
+
 (deftest app
   (rf.test/run-test-sync
-   (fixtures/test-fixtures)
    (rf/dispatch [::app.events/initialize])
 
    (testing "language"
@@ -42,7 +44,6 @@
 
 (deftest fonts
   (rf.test/run-test-async
-   (fixtures/test-fixtures)
    (rf/dispatch-sync [::app.events/initialize])
 
    (testing "loading system fonts"

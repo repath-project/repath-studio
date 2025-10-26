@@ -1,6 +1,6 @@
 (ns history-test
   (:require
-   [cljs.test :refer-macros [deftest is testing]]
+   [cljs.test :refer-macros [deftest is testing use-fixtures]]
    [day8.re-frame.test :as rf.test]
    [fixtures :as fixtures]
    [re-frame.core :as rf]
@@ -10,9 +10,11 @@
    [renderer.history.events :as-alias history.events]
    [renderer.history.subs :as-alias history.subs]))
 
+(use-fixtures :each
+  {:before fixtures/test-fixtures})
+
 (deftest history
   (rf.test/run-test-sync
-   (fixtures/test-fixtures)
    (rf/dispatch [::app.events/initialize])
 
    (let [undos? (rf/subscribe [::history.subs/undos?])
