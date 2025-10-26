@@ -25,12 +25,12 @@ the [official clojurescript testing guide](https://clojurescript.org/tools/testi
 
 We use [re-frame-test](https://github.com/day8/re-frame-test) that provides
 utilities for testing re-frame applications. Those are not integration tests,
-but they should be enough if we avoid computations on views. We should avoid
-requiring effects. We register the [effects](https://day8.github.io/re-frame/Effects/)
+but they should be enough if we avoid computations on views. We should also
+avoid requiring effects on tests. We register the [effects](https://day8.github.io/re-frame/Effects/)
 and the [coeffects](https://day8.github.io/re-frame/Coeffects/)
-that we need on `test/fixtures.cljs` to make them deterministic.
-Please also read the [testing guide of re-frame](https://github.com/day8/re-frame/blob/master/docs/Testing.md).
-In general, we dispatch events and the test the result of subscriptions.
+that we need on [`fixtures`](fixtures.cljs) to make them deterministic. Please
+also read the [testing guide of re-frame](https://github.com/day8/re-frame/blob/master/docs/Testing.md).
+In general, we dispatch events, and then test the result of subscriptions.
 We don't test view functions for now.
 
 ## CI/CD
