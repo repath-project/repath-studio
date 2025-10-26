@@ -28,7 +28,7 @@
  (fn [{:keys [db]} [_ mode]]
    {:db (theme.handlers/set-mode db mode)
     :fx [[:dispatch [::set-document-attr]]
-         [:dispatch ^:flush-dom [::set-meta-color]]]}))
+         [:dispatch [::set-meta-color]]]}))
 
 (rf/reg-event-fx
  ::cycle-mode
