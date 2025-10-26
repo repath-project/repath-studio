@@ -1,5 +1,6 @@
 (ns core-test
   (:require
+   [fixtures]
    [malli.instrument :as m.instrument]
    [re-frame.core :as rf]
    [re-frame.subs :as rf.subs]

@@ -1,16 +1,12 @@
 (ns frame-test
   (:require
-   [cljs.test :refer-macros [deftest is testing use-fixtures]]
+   [cljs.test :refer-macros [deftest is testing]]
    [day8.re-frame.test :as rf.test]
-   [fixtures :as fixtures]
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.events]
    [renderer.document.subs :as-alias document.subs]
    [renderer.frame.events :as-alias frame.events]
    [renderer.frame.subs :as-alias frame.subs]))
-
-(use-fixtures :each
-  {:before fixtures/test-fixtures})
 
 (deftest frame
   (rf.test/run-test-sync

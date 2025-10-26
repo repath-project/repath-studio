@@ -1,9 +1,8 @@
 (ns element-test
   (:require
    ["paper" :refer [paper]]
-   [cljs.test :refer-macros [deftest are is testing use-fixtures]]
+   [cljs.test :refer-macros [deftest are is testing]]
    [day8.re-frame.test :as rf.test]
-   [fixtures :as fixtures]
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.events]
    [renderer.document.events :as-alias document.events]
@@ -12,9 +11,6 @@
    [renderer.element.subs :as-alias element.subs]))
 
 (.setup paper)
-
-(use-fixtures :each
-  {:before fixtures/test-fixtures})
 
 (deftest init
   (rf.test/run-test-sync

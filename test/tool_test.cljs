@@ -1,17 +1,13 @@
 (ns tool-test
   (:require
-   [cljs.test :refer-macros [deftest is testing use-fixtures]]
+   [cljs.test :refer-macros [deftest is testing]]
    [day8.re-frame.test :as rf.test]
-   [fixtures :as fixtures]
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.events]
    [renderer.element.events :as-alias element.events]
    [renderer.tool.events :as-alias tool.events]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.subs :as-alias tool.subs]))
-
-(use-fixtures :each
-  {:before fixtures/test-fixtures})
 
 (deftest tool
   (rf.test/run-test-sync
