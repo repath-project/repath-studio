@@ -16,7 +16,7 @@
   [{:keys [id explanation]}]
   [:> Select/Item
    {:value (str id)
-    :class "menu-item px-2"}
+    :class "menu-item px-2!"}
    [:> Select/ItemText (apply t explanation)]])
 
 (defn select

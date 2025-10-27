@@ -271,14 +271,14 @@
       [:> Select/Group
        [:> Select/Item
         {:value :empty-canvas
-         :class "menu-item px-2"}
+         :class "menu-item px-2!"}
         [:> Select/ItemText
          (t [::empty-canvas "Empty canvas"])]]
        (for [[k _v] (sort db/a-series-paper-sizes)]
          ^{:key k}
          [:> Select/Item
           {:value k
-           :class "menu-item px-2"}
+           :class "menu-item px-2!"}
           [:> Select/ItemText (str "A" k)]])]]]]])
 
 (defn recent-document

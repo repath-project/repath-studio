@@ -68,7 +68,7 @@
             ^{:key id}
             [:> Select/Item
              {:value value
-              :class "menu-item px-2"}
+              :class "menu-item px-2!"}
              [:> Select/ItemText label]])]]
         [:> Select/ScrollDownButton
          {:class "select-scroll-button"}
