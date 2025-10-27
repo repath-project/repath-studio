@@ -1,4 +1,4 @@
-name: Ionic CI/CD with Cypress
+name: Android application
 
 on:
   push:
@@ -12,31 +12,39 @@ jobs:
   build-release-apk:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout source
+      - name: Check out Git repository
         uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          fetch-tags: true
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v6
         with:
           node-version: 20
-          cache: npm
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
+      - name: Prepare java
+        uses: actions/setup-java@v5
         with:
-          distribution: 'temurin'
+          distribution: 'zulu'
           java-version: '21'
-      - name: Install Ionic and Capacitor dependencies
-        run: npm install -g @ionic/cli @capacitor/core @capacitor/cli
 
-      - name: Install app dependencies
-        run: |
-            npm install
-            npm run build
+      - name: Install packages
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm run test
+
+      - name: Build
+        run: npm run build
         env:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
 
-      - name: Build Ionic app
+      - name: Build app
         env:
             KEYSTOREALIAS_PASS: ${{ secrets.KEYSTOREALIAS_PASS }}
             KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
@@ -50,9 +58,10 @@ jobs:
                                   --keystorealias $KEYSTOREALIAS \
                                   --keystorealiaspass "$KEYSTOREALIAS_PASS" \
                                   --androidreleasetype APK
+
       - name: Release with Notes
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2.4.1
         with:
           tag_name: ${{ github.ref_name }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          files: |
+          files: android/app/build/outputs/apk/release/app-release-signed.apk
