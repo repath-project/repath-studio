@@ -31,7 +31,7 @@
     "clean": "rm -rf resources/public/js/* && rm -rf target && rm -rf dist && rm -rf .shadow-cljs",
     "build-report": "npx shadow-cljs run shadow.cljs.build-report renderer target/build-report.html",
     "test": "npx shadow-cljs compile karma-test && npx karma start --browsers ChromeHeadlessNoSandbox --single-run --reporters junit,dots",
-    "mobile-assets": "npx @capacitor/assets generate --pwaManifestPath=/resources/public/manifest.json --splashBackgroundColor=#dd286c --splashBackgroundColorDark=#dd286c --logoSplashScale=0.4 --iconBackgroundColor=#dd286c --iconBackgroundColorDark=#dd286c --android --ios",
+    "mobile-assets": "npx @capacitor/assets generate --pwaManifestPath=/resources/public/manifest.json --assetPath=/resources/public/img --splashBackgroundColor=#dd286c --splashBackgroundColorDark=#dd286c --logoSplashScale=0.4 --iconBackgroundColor=#dd286c --iconBackgroundColorDark=#dd286c --android --ios",
     "pwa-assets": "npx @capacitor/assets generate --pwaManifestPath=/resources/public/manifest.json --assetPath=/resources/public/img/pwa --pwa"
   },
   "keywords": [
