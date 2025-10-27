@@ -80,6 +80,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

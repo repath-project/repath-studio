@@ -1,0 +1,58 @@
+name: Ionic CI/CD with Cypress
+
+on:
+  push:
+    tags:
+      - '*'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build-release-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      - name: Install Ionic and Capacitor dependencies
+        run: npm install -g @ionic/cli @capacitor/core @capacitor/cli
+
+      - name: Install app dependencies
+        run: |
+            npm install
+            npm run build
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+
+      - name: Build Ionic app
+        env:
+            KEYSTOREALIAS_PASS: ${{ secrets.KEYSTOREALIAS_PASS }}
+            KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
+            KEYSTOREALIAS: ${{ secrets.KEYSTOREALIAS }}
+            KEYSTORE: ${{ secrets.KEYSTORE }}
+        run: |
+            echo "$KEYSTORE" | base64 --decode > android/official.jks
+            npx cap sync
+            npx cap build android --keystorepath official.jks \
+                                  --keystorepass "$KEYSTORE_PASS" \
+                                  --keystorealias $KEYSTOREALIAS \
+                                  --keystorealiaspass "$KEYSTOREALIAS_PASS" \
+                                  --androidreleasetype APK
+      - name: Release with Notes
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: |
