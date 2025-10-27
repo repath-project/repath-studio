@@ -1,6 +1,7 @@
 (ns renderer.app.effects
   (:require
    ["@capacitor/core" :refer [Capacitor]]
+   ["@capacitor/splash-screen" :refer [SplashScreen]]
    ["localforage" :as localforage]
    ["sonner" :refer [toast]]
    [cognitect.transit :as transit]
@@ -164,3 +165,8 @@
        :warning (.warning toast title options)
        :info (.info toast title options)
        (toast title (clj->js options))))))
+
+(rf/reg-fx
+ ::hide-splash-screen
+ (fn []
+   (.hide SplashScreen)))

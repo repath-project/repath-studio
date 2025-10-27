@@ -130,7 +130,8 @@
                ;; We flush to render once so we can get the canvas size.
                [:dispatch ^:flush-dom [::document.events/center]]
                [:dispatch [::window.events/update-focused]]
-               [::effects/ipc-send ["initialized"]]]
+               [::effects/ipc-send ["initialized"]]
+               [::app.effects/hide-splash-screen]]
               listeners)}))
 
 (rf/reg-event-db
