@@ -1,6 +1,7 @@
 (ns renderer.app.subs
   (:require
    [re-frame.core :as rf]
+   [renderer.app.handlers :as app.handlers]
    [renderer.utils.i18n :as utils.i18n]))
 
 (rf/reg-sub
@@ -104,7 +105,13 @@
  ::desktop?
  :<- [::platform]
  (fn [platform _]
-   (contains? #{"darwin" "linux" "win32"} platform)))
+   (app.handlers/desktop? platform)))
+
+(rf/reg-sub
+ ::mobile?
+ :<- [::platform]
+ (fn [platform _]
+   (app.handlers/mobile? platform)))
 
 (rf/reg-sub
  ::mac?

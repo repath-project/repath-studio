@@ -2,6 +2,7 @@
   (:require
    [re-frame.core :as rf]
    [renderer.app.effects :as-alias app.effects]
+   [renderer.app.handlers :as app.handlers]
    [renderer.effects :as-alias effects]
    [renderer.window.effects :as-alias window.effects]))
 
@@ -51,9 +52,9 @@
 (rf/reg-event-fx
  ::relaunch
  (fn [{:keys [db]} _]
-   (if (= (:platform db) "web")
-     {::window.effects/reload nil}
-     {::effects/ipc-send ["relaunch"]})))
+   (if (app.handlers/desktop? (:platform db))
+     {::effects/ipc-send ["relaunch"]}
+     {::window.effects/reload nil})))
 
 (rf/reg-event-fx
  ::clear-data-and-relaunch
@@ -69,9 +70,9 @@
 (rf/reg-event-fx
  ::toggle-fullscreen
  (fn [{:keys [db]} _]
-   (if (= (:platform db) "web")
-     {::window.effects/toggle-fullscreen nil}
-     {::effects/ipc-send ["window-toggle-fullscreen"]})))
+   (if (app.handlers/desktop? (:platform db))
+     {::effects/ipc-send ["window-toggle-fullscreen"]}
+     {::window.effects/toggle-fullscreen nil})))
 
 (rf/reg-event-fx
  ::minimize

@@ -174,23 +174,29 @@
 (rf/reg-event-fx
  ::open
  (fn [{:keys [db]} [_]]
-   (if (= (:platform db) "web")
-     {::effects/file-open
-      {:options (assoc file-picker-options :multiple true)
-       :on-success [::file-read nil]
-       :on-error [::app.events/toast-error]}}
+   (if (app.handlers/desktop? (:platform db))
      {::effects/ipc-invoke
       {:channel "open-documents"
        :on-success [::load-multiple]
        :on-error [::app.events/toast-error]
-       :formatter #(mapv string->edn %)}})))
+       :formatter #(mapv string->edn %)}}
+     {::effects/file-open
+      {:options (assoc file-picker-options :multiple true)
+       :on-success [::file-read nil]
+       :on-error [::app.events/toast-error]}})))
 
 (rf/reg-event-fx
  ::open-recent
  (fn [{:keys [db]} [_ {:keys [id path]}]]
    (if (document.handlers/open? db id)
      {:db (document.handlers/set-active db id)}
-     (if (= (:platform db) "web")
+     (if (app.handlers/desktop? (:platform db))
+       {::effects/ipc-invoke
+        {:channel "open-documents"
+         :data path
+         :on-success [::load-multiple]
+         :on-error [::recent-error id]
+         :formatter #(mapv string->edn %)}}
        {::app.effects/get-local-store
         {:store-key (str id)
          :formatter (fn [file-handle]
@@ -200,13 +206,7 @@
                          :file-handle file-handle}
                         (throw (js/Error. "File handle not found"))))
          :on-success [::events/file-open]
-         :on-error [::recent-error id]}}
-       {::effects/ipc-invoke
-        {:channel "open-documents"
-         :data path
-         :on-success [::load-multiple]
-         :on-error [::recent-error id]
-         :formatter #(mapv string->edn %)}}))))
+         :on-error [::recent-error id]}}))))
 
 (rf/reg-event-fx
  ::recent-error
@@ -331,7 +331,13 @@
          document (document.handlers/persisted-format db id)
          on-success [::saved close]
          on-error [::app.events/toast-error]]
-     (if (= (:platform db) "web")
+     (if (app.handlers/desktop? (:platform db))
+       {::effects/ipc-invoke
+        {:channel "save-document"
+         :data (pr-str document)
+         :on-success [::saved close]
+         :on-error on-error
+         :formatter string->edn}}
        (if (app.handlers/feature? db :file-system)
          {::app.effects/get-local-store
           {:store-key (str id)
@@ -340,13 +346,7 @@
                            (assoc :file-handle %))
            :on-success [::events/file-save]
            :on-error on-error}}
-         {:dispatch [::download]})
-       {::effects/ipc-invoke
-        {:channel "save-document"
-         :data (pr-str document)
-         :on-success [::saved close]
-         :on-error on-error
-         :formatter string->edn}}))))
+         {:dispatch [::download]})))))
 
 (rf/reg-event-fx
  ::save-as
@@ -355,16 +355,16 @@
          document (document.handlers/persisted-format db id)
          on-success [::saved false]
          on-error [::app.events/toast-error]]
-     (if (= (:platform db) "web")
-       (if (app.handlers/feature? db :file-system)
-         {::effects/file-save (file-save-options document on-success on-error)}
-         {:dispatch [::download]})
+     (if (app.handlers/desktop? (:platform db))
        {::effects/ipc-invoke
         {:channel "save-document-as"
          :data (pr-str document)
          :on-success on-success
          :on-error on-error
-         :formatter string->edn}}))))
+         :formatter string->edn}}
+       (if (app.handlers/feature? db :file-system)
+         {::effects/file-save (file-save-options document on-success on-error)}
+         {:dispatch [::download]})))))
 
 (rf/reg-event-fx
  ::download

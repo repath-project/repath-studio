@@ -588,7 +588,7 @@
                    {:id :divider-3
                     :type :separator}])
 
-            :always
+            (not @(rf/subscribe [::app.subs/mobile?]))
             (conj {:id :toggle-fullscreen
                    :label (t [::fullscreen "Fullscreen"])
                    :icon "arrow-minimize"

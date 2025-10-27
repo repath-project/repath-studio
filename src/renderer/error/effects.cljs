@@ -8,12 +8,11 @@
 (rf/reg-fx
  ::init-reporting
  (fn [[platform config]]
-   (cond
-     (= platform "web")
-     (sentry-react/init config)
-
-     (contains? #{"darwin" "win32" "linux"} platform)
+   (condp contains? platform
+     #{"darwin" "win32" "linux"}
      (sentry-electron-renderer/init config sentry-react/init)
 
-     (contains? #{"ios" "android"} platform)
-     (sentry-capacitor/init config sentry-react/init))))
+     #{"ios" "android"}
+     (sentry-capacitor/init config sentry-react/init)
+
+     (sentry-react/init config))))

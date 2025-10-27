@@ -1,6 +1,7 @@
 (ns renderer.events
   (:require
    [re-frame.core :as rf]
+   [renderer.app.handlers :as app.handlers]
    [renderer.effects :as-alias effects]))
 
 (rf/reg-event-fx
@@ -31,6 +32,6 @@
 (rf/reg-event-fx
  ::open-remote-url
  (fn [{:keys [db]} [_ url]]
-   (if (= (:platform db) "web")
-     {::effects/open-remote-url url}
-     {::effects/ipc-send ["open-remote-url" url]})))
+   (if (app.handlers/desktop? (:platform db))
+     {::effects/ipc-send ["open-remote-url" url]}
+     {::effects/open-remote-url url})))
