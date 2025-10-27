@@ -16,7 +16,13 @@
   :command-panel "Painel de comandos"
   :website "Website"
   :source-code "Código-fonte"
-  :changelog "Registo de alterações"}
+  :changelog "Registo de alterações"
+  :tree "Árvore"
+  :xml "XML"
+  :timeline "Cronologia"
+  :shell "Terminal"
+  :history "Histórico"
+  :attributes "Atributos"}
 
  :renderer.tree.views
  {:lock "Bloquear"

@@ -16,7 +16,13 @@
   :command-panel "Komut paneli"
   :website "Web sitesi"
   :source-code "Kaynak Kodu"
-  :changelog "Değişiklik Günlüğü"}
+  :changelog "Değişiklik Günlüğü"
+  :tree "Ağaç"
+  :xml "XML"
+  :timeline "Zaman çizelgesi"
+  :shell "Kabuk"
+  :history "Geçmiş"
+  :attributes "Özellikler"}
 
  :renderer.tree.views
  {:lock "Kilitle"

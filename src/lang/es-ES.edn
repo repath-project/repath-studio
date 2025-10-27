@@ -8,7 +8,7 @@
   :new "Nuevo"
   :or "o"
   :open "Abrir"
-  :recent "Reciente"
+  :recent "Recientes"
   :select-size "Seleccionar tamaño"
   :select-template "Seleccionar plantilla"
   :empty-canvas "Lienzo vacío"
@@ -16,7 +16,13 @@
   :command-panel "Panel de comandos"
   :website "Sitio web"
   :source-code "Código fuente"
-  :changelog "Registro de cambios"}
+  :changelog "Registro de cambios"
+  :tree "Árbol"
+  :xml "XML"
+  :timeline "Línea de tiempo"
+  :shell "Terminal"
+  :history "Historial"
+  :attributes "Atributos"}
 
  :renderer.tree.views
  {:lock "Bloquear"

@@ -16,7 +16,13 @@
   :command-panel "命令面板"
   :website "网站"
   :source-code "源代码"
-  :changelog "更改日志"}
+  :changelog "更改日志"
+  :tree "树"
+  :xml "XML"
+  :timeline "时间轴"
+  :shell "终端"
+  :history "历史"
+  :attributes "属性"}
 
  :renderer.tree.views
  {:lock "锁定"

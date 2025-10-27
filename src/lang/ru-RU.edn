@@ -16,7 +16,13 @@
   :command-panel "Панель команд"
   :website "Веб-сайт"
   :source-code "Исходный код"
-  :changelog "Журнал изменений"}
+  :changelog "Журнал изменений"
+  :tree "Дерево"
+  :xml "XML"
+  :timeline "Временная шкала"
+  :shell "Консоль"
+  :history "История"
+  :attributes "Атрибуты"}
 
  :renderer.tree.views
  {:lock "Заблокировать"

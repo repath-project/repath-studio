@@ -16,7 +16,13 @@
   :command-panel "명령 패널"
   :website "웹사이트"
   :source-code "소스 코드"
-  :changelog "변경 로그"}
+  :changelog "변경 로그"
+  :tree "트리"
+  :xml "XML"
+  :timeline "타임라인"
+  :shell "쉘"
+  :history "기록"
+  :attributes "속성"}
 
  :renderer.tree.views
  {:lock "잠금"

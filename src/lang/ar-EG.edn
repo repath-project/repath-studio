@@ -16,7 +16,13 @@
   :command-panel "لوحة الأوامر"
   :website "الموقع الإلكتروني"
   :source-code "الكود المصدري"
-  :changelog "سجل التغييرات"}
+  :changelog "سجل التغييرات"
+  :tree "الشجرة"
+  :xml "XML"
+  :timeline "الجدول الزمني"
+  :shell "الطرفية"
+  :history "التاريخ"
+  :attributes "الخصائص"}
 
  :renderer.tree.views
  {:lock "قفل"

@@ -16,7 +16,13 @@
   :command-panel "Command panel"
   :website "Website"
   :source-code "Source Code"
-  :changelog "Changelog"}
+  :changelog "Changelog"
+  :tree "Tree"
+  :xml "XML"
+  :timeline "Timeline"
+  :shell "Shell"
+  :history "History"
+  :attributes "Attributes"}
 
  :renderer.tree.views
  {:lock "Lock"

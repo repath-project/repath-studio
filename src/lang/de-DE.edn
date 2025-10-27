@@ -16,23 +16,29 @@
   :command-panel "Befehlsfeld"
   :website "Website"
   :source-code "Quellcode"
-  :changelog "Änderungsprotokoll"}
+  :changelog "Änderungsprotokoll"
+  :tree "Baum"
+  :xml "XML"
+  :timeline "Zeitleiste"
+  :shell "Terminal"
+  :history "Verlauf"
+  :attributes "Attribute"}
 
  :renderer.tree.views
  {:lock "Sperren"
   :unlock "Entsperren"
   :show "Anzeigen"
-  :hide "Ausblenden"}
+  :hide "Verbergen"}
 
  :renderer.reepl.views
- {:hide-command-output "Befehlsausgabe ausblenden"
+ {:hide-command-output "Befehlsausgabe verbergen"
   :show-command-output "Befehlsausgabe anzeigen"}
 
  :renderer.app.events
  {:create-doc "Dokument erstellen"}
 
  :renderer.dialog.views
- {:search-command "Nach Befehl suchen"
+ {:search-command "Nach einem Befehl suchen"
   :no-results "Keine Ergebnisse gefunden."
   :version "Version: "
   :browser "Browser: "
@@ -40,8 +46,8 @@
   :dont-save "Nicht speichern"
   :cancel "Abbrechen"
   :ok "OK"
-  :changes-will-be-lost [:p "Ihre Änderungen an %1 gehen verloren, wenn Sie das
-                             Dokument ohne Speichern schließen."]}
+  :changes-will-be-lost [:p "Ihre Änderungen an %1 gehen verloren, wenn Sie
+                             das Dokument ohne Speichern schließen."]}
 
  :renderer.window.menubar
  {:file "Datei"
@@ -761,5 +767,4 @@
   :no-thank-you "Nein, danke"}
 
  :renderer.effects
- {:permission-denied "Die Berechtigung zum Zugriff auf die Datei wurde
-                      verweigert."}}
+ {:permission-denied "Berechtigung zum Zugriff auf die Datei verweigert."}}
