@@ -14,8 +14,9 @@
 (m/=> active? [:-> App boolean?])
 (defn active?
   [db]
-  (or (-> db :snap :active)
-      (-> db :snap :transient-active)))
+  (and (:active-document db)
+       (or (-> db :snap :active)
+           (-> db :snap :transient-active))))
 
 (m/=> toggle-option [:-> App SnapOption App])
 (defn toggle-option
