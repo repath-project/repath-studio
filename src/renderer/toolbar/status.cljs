@@ -76,7 +76,7 @@
 
 (defn view-radio-buttons []
   (cond-> []
-    @(rf/subscribe [::window.subs/md?])
+    @(rf/subscribe [::window.subs/lg?])
     (into [{:title (t [::timeline "Timeline"])
             :active [::app.subs/panel-visible? :timeline]
             :icon "animation"

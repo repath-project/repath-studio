@@ -304,7 +304,7 @@
                overflow-hidden items-center"
        :disabled disabled}
       [icon (:icon attrs)]
-      [:span.truncate label]]
+      [:span.truncate.w-full label]]
      [:> Drawer.Portal
       [:> Drawer.Overlay
        {:class "backdrop"}]
