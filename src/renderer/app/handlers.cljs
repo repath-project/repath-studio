@@ -22,3 +22,8 @@
 (defn mobile?
   [platform]
   (contains? #{"android" "ios"} platform))
+
+(m/=> web? [:-> App Platform boolean?])
+(defn web?
+  [platform]
+  (= platform "web"))

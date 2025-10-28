@@ -99,7 +99,7 @@
  ::web?
  :<- [::platform]
  (fn [platform _]
-   (= platform "web")))
+   (app.handlers/web? platform)))
 
 (rf/reg-sub
  ::desktop?

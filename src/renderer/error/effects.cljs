@@ -3,16 +3,18 @@
    ["@sentry/capacitor" :as sentry-capacitor]
    ["@sentry/electron/renderer" :as sentry-electron-renderer]
    ["@sentry/react" :as sentry-react]
-   [re-frame.core :as rf]))
+   [re-frame.core :as rf]
+   [renderer.app.handlers :as app.handlers]))
 
 (rf/reg-fx
  ::init-reporting
  (fn [[platform config]]
-   (condp contains? platform
-     #{"darwin" "win32" "linux"}
-     (sentry-electron-renderer/init config sentry-react/init)
+   (cond-> config
+     (app.handlers/desktop? platform)
+     (sentry-electron-renderer/init sentry-react/init)
 
-     #{"ios" "android"}
-     (sentry-capacitor/init config sentry-react/init)
+     (app.handlers/mobile? platform)
+     (sentry-capacitor/init sentry-react/init)
 
-     (sentry-react/init config))))
+     (app.handlers/web? platform)
+     (sentry-react/init))))
