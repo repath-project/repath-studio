@@ -66,14 +66,13 @@
                :user-agent user-agent
                :features features
                :system-lang language)
-    :fx (cond-> [[::app.effects/get-local-store
-                  {:store-key config/app-name
-                   :formatter json->clj
-                   :on-success [::load-local-db]
-                   :on-error [::app.events/toast-error]
-                   :on-finally [::db-loaded]}]]
-          (app.handlers/desktop? platform)
-          (into ipc-listeners))}))
+    :fx (into [[::app.effects/get-local-store
+                {:store-key config/app-name
+                 :formatter json->clj
+                 :on-success [::load-local-db]
+                 :on-error [::app.events/toast-error]
+                 :on-finally [::db-loaded]}]]
+              ipc-listeners)}))
 
 (rf/reg-event-fx
  ::load-local-db
@@ -122,15 +121,16 @@
               (document.handlers/create guid)
               (history.handlers/finalize [::create-doc "Create document"])))
     :fx (into [[:dispatch [::error.events/init-reporting]]
+               ;; Initialize values that might flicker the view first.
                [:dispatch [::theme.events/set-document-attr]]
                [:dispatch [::theme.events/set-meta-color]]
                [:dispatch [::window.events/update-width]]
                [:dispatch [::set-lang-attrs]]
                [:dispatch [::set-loading false]]
-               [::app.effects/hide-splash-screen]
                ;; We flush to render once so we can get the canvas size.
                [:dispatch ^:flush-dom [::document.events/center]]
                [:dispatch [::window.events/update-focused]]
+               [::app.effects/hide-splash-screen]
                [::effects/ipc-send ["initialized"]]
                [::theme.effects/add-listener [::theme.events/set-document-attr]]
                [::app.effects/setup-paper]

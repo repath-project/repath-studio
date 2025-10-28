@@ -1,5 +1,6 @@
 (ns fixtures
   (:require
+   ["paper" :refer [paper]]
    [config :as config]
    [re-frame.core :as rf]
    [renderer.app.db :as app.db]
@@ -143,6 +144,15 @@
  ::app.effects/standalone
  (fn [coeffects _]
    (assoc coeffects :standalone false)))
+
+(rf/reg-fx
+ ::app.effects/setup-paper
+ (fn [_]
+   (.setup paper)))
+
+(rf/reg-fx
+ ::app.effects/hide-splash-screen
+ (fn [_]))
 
 (rf/reg-fx
  ::element.effects/->path

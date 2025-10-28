@@ -1,6 +1,5 @@
 (ns element-test
   (:require
-   ["paper" :refer [paper]]
    [cljs.test :refer-macros [deftest are is testing]]
    [day8.re-frame.test :as rf.test]
    [re-frame.core :as rf]
@@ -9,8 +8,6 @@
    [renderer.element.db :as element.db]
    [renderer.element.events :as-alias element.events]
    [renderer.element.subs :as-alias element.subs]))
-
-(.setup paper)
 
 (deftest init
   (rf.test/run-test-sync
