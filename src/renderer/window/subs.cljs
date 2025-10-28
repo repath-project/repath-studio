@@ -43,11 +43,6 @@
  :-> identity)
 
 (rf/reg-sub
- ::lg?
- :<- [::breakpoint? :lg]
- :-> identity)
-
-(rf/reg-sub
  ::md?
  :<- [::breakpoint? :md]
  :-> identity)
