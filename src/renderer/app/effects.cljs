@@ -3,6 +3,7 @@
    ["@capacitor/core" :refer [Capacitor]]
    ["@capacitor/splash-screen" :refer [SplashScreen]]
    ["localforage" :as localforage]
+   ["paper" :refer [paper]]
    ["sonner" :refer [toast]]
    [cognitect.transit :as transit]
    [config :as config]
@@ -170,3 +171,8 @@
  ::hide-splash-screen
  (fn []
    (.hide SplashScreen)))
+
+(rf/reg-fx
+ ::setup-paper
+ (fn []
+   (.setup paper)))

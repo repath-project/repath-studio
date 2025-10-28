@@ -1,9 +1,7 @@
 (ns renderer.core
   (:require
    ["electron-log/renderer"]
-   ["paper" :refer [paper]]
    [re-frame.core :as rf]
-   [re-pressed.core :as re-pressed]
    [reagent.dom.client :as ra.dom.client]
    [renderer.app.effects]
    [renderer.app.events :as app.events]
@@ -26,7 +24,6 @@
    [renderer.error.views :as error.views]
    [renderer.event.effects]
    [renderer.event.events]
-   [renderer.event.impl.keyboard :as event.impl.keyboard]
    [renderer.events]
    [renderer.frame.events]
    [renderer.frame.subs]
@@ -87,17 +84,11 @@
   (print "Type (help) to see a list of commands."))
 
 (defn ^:export init! []
-  (js/console.log (str "%c" easter-egg) (str "color: " "pink"))
-
   ;; https://code.thheller.com/blog/shadow-cljs/2017/10/14/bootstrap-support.html
   (bootstrap/init replumb.repl/st {:path "js/bootstrap"
                                    :load-on-init '[user]} bootstrap-cb!)
 
   (rf/dispatch-sync [::app.events/initialize])
-  (rf/dispatch-sync [::re-pressed/add-keyboard-event-listener "keydown"])
-  (rf/dispatch-sync [::re-pressed/set-keydown-rules
-                     event.impl.keyboard/keydown-rules])
 
-  (.setup paper)
-
-  (mount-root!))
+  (mount-root!)
+  (js/console.log easter-egg))

@@ -3,15 +3,17 @@
    [cognitect.transit :as transit]
    [config :as config]
    [re-frame.core :as rf]
+   [re-pressed.core :as re-pressed]
    [renderer.app.db :as app.db]
    [renderer.app.effects :as-alias app.effects]
    [renderer.app.events :as-alias app.events]
+   [renderer.app.handlers :as app.handlers]
    [renderer.document.events :as-alias document.events]
    [renderer.document.handlers :as document.handlers]
    [renderer.effects :as-alias effects]
    [renderer.error.events :as-alias error.events]
    [renderer.event.events :as-alias event.events]
-   [renderer.event.impl.keyboard :as event.impl.keyboard]
+   [renderer.event.impl.keyboard :as impl.keyboard]
    [renderer.history.handlers :as history.handlers]
    [renderer.snap.handlers :as snap.handlers]
    [renderer.theme.effects :as-alias theme.effects]
@@ -64,13 +66,14 @@
                :user-agent user-agent
                :features features
                :system-lang language)
-    :fx (into [[::app.effects/get-local-store
-                {:store-key config/app-name
-                 :formatter json->clj
-                 :on-success [::load-local-db]
-                 :on-error [::app.events/toast-error]
-                 :on-finally [::db-loaded]}]]
-              ipc-listeners)}))
+    :fx (cond-> [[::app.effects/get-local-store
+                  {:store-key config/app-name
+                   :formatter json->clj
+                   :on-success [::load-local-db]
+                   :on-error [::app.events/toast-error]
+                   :on-finally [::db-loaded]}]]
+          (app.handlers/desktop? platform)
+          (into ipc-listeners))}))
 
 (rf/reg-event-fx
  ::load-local-db
@@ -100,10 +103,8 @@
                   "accepted" [::set-install-prompt nil]}}})))
 
 (def listeners
-  (->> [[js/document "keydown" [::event.events/keyboard]
-         event.impl.keyboard/->clj]
-        [js/document "keyup" [::event.events/keyboard]
-         event.impl.keyboard/->clj]
+  (->> [[js/document "keydown" [::event.events/keyboard] impl.keyboard/->clj]
+        [js/document "keyup" [::event.events/keyboard] impl.keyboard/->clj]
         [js/document "fullscreenchange" [::window.events/update-fullscreen]]
         [js/window "focus" [::window.events/update-focused]]
         [js/window "blur" [::window.events/update-focused]]
@@ -123,15 +124,19 @@
     :fx (into [[:dispatch [::error.events/init-reporting]]
                [:dispatch [::theme.events/set-document-attr]]
                [:dispatch [::theme.events/set-meta-color]]
-               [:dispatch [::set-lang-attrs]]
-               [::theme.effects/add-listener [::theme.events/set-document-attr]]
                [:dispatch [::window.events/update-width]]
+               [:dispatch [::set-lang-attrs]]
                [:dispatch [::set-loading false]]
+               [::app.effects/hide-splash-screen]
                ;; We flush to render once so we can get the canvas size.
                [:dispatch ^:flush-dom [::document.events/center]]
                [:dispatch [::window.events/update-focused]]
                [::effects/ipc-send ["initialized"]]
-               [::app.effects/hide-splash-screen]]
+               [::theme.effects/add-listener [::theme.events/set-document-attr]]
+               [::app.effects/setup-paper]
+               [:dispatch [::re-pressed/add-keyboard-event-listener "keydown"]]
+               [:dispatch [::re-pressed/set-keydown-rules
+                           impl.keyboard/keydown-rules]]]
               listeners)}))
 
 (rf/reg-event-db
