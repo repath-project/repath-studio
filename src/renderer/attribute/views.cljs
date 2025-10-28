@@ -52,7 +52,7 @@
 
 (defn info-button
   ([url]
-   [info-button url (t [::more-info "More info"])])
+   [info-button url (t [::learn-more "Learn more"])])
   ([url label]
    [:button.button.px-3.flex-1.rounded
     {:on-click #(rf/dispatch [::events/open-remote-url url])}
