@@ -130,7 +130,7 @@
         debug-info? @(rf/subscribe [::app.subs/debug-info])
         worker-active? @(rf/subscribe [::worker.subs/some-active?])
         md? @(rf/subscribe [::window.subs/md?])
-        lg? @(rf/subscribe [::window.subs/lg?])]
+        xl? @(rf/subscribe [::window.subs/xl?])]
     [:div.flex.flex-col.flex-1.h-full.gap-px
      [:div
       [toolbar.tools/root]
@@ -168,7 +168,7 @@
         (when worker-active?
           [:div.absolute.bottom-2.right-2.text-gray-500
            [views/loading-indicator]])
-        (when (and help-bar (seq help-message) lg?)
+        (when (and help-bar (seq help-message) xl?)
           [help help-message])
         (when backdrop
           [:div.absolute.inset-0
