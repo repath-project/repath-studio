@@ -7,7 +7,6 @@
    [renderer.app.db :as app.db]
    [renderer.app.effects :as-alias app.effects]
    [renderer.app.events :as-alias app.events]
-   [renderer.app.handlers :as app.handlers]
    [renderer.document.events :as-alias document.events]
    [renderer.document.handlers :as document.handlers]
    [renderer.effects :as-alias effects]
