@@ -31,8 +31,8 @@
   []
   (let [computed-lang @(rf/subscribe [::app.subs/computed-lang])
         system-lang @(rf/subscribe [::app.subs/system-lang])
-        system-abbr (get-in utils.i18n/languages [system-lang :abbr])
-        computed-abbr (get-in utils.i18n/languages [computed-lang :abbr])]
+        system-abbr (get-in utils.i18n/languages [system-lang :code])
+        computed-abbr (get-in utils.i18n/languages [computed-lang :code])]
     [:> DropdownMenu/Root
      [:> DropdownMenu/Trigger
       {:as-child true}

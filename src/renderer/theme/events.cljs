@@ -8,7 +8,7 @@
    [renderer.theme.handlers :as theme.handlers]))
 
 (rf/reg-event-fx
- ::set-document-attr
+ ::set-data-theme
  [(rf/inject-cofx ::theme.effects/native-mode)]
  (fn [{:keys [db native-mode]} _]
    (let [mode (-> db :theme :mode)
@@ -27,7 +27,7 @@
  [persist]
  (fn [{:keys [db]} [_ mode]]
    {:db (theme.handlers/set-mode db mode)
-    :fx [[:dispatch [::set-document-attr]]
+    :fx [[:dispatch [::set-data-theme]]
          [:dispatch [::set-meta-color]]]}))
 
 (rf/reg-event-fx

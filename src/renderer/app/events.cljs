@@ -121,7 +121,7 @@
               (history.handlers/finalize [::create-doc "Create document"])))
     :fx (into [[:dispatch [::error.events/init-reporting]]
                ;; Initialize values that might flicker the view first.
-               [:dispatch [::theme.events/set-document-attr]]
+               [:dispatch [::theme.events/set-data-theme]]
                [:dispatch [::theme.events/set-meta-color]]
                [:dispatch [::window.events/update-width]]
                [:dispatch [::set-lang-attrs]]
@@ -131,7 +131,7 @@
                [:dispatch [::window.events/update-focused]]
                [::app.effects/hide-splash-screen]
                [::effects/ipc-send ["initialized"]]
-               [::theme.effects/add-listener [::theme.events/set-document-attr]]
+               [::theme.effects/add-listener [::theme.events/set-data-theme]]
                [::app.effects/setup-paper]
                [:dispatch [::re-pressed/add-keyboard-event-listener "keydown"]]
                [:dispatch [::re-pressed/set-keydown-rules

@@ -465,8 +465,8 @@
   (->> utils.i18n/languages
        (mapv (fn [[k v]]
                {:id k
-                :abbr (:abbr v)
-                :label (:native-name v)
+                :abbr (:code v)
+                :label (:locale v)
                 :type :checkbox
                 :icon "language"
                 :action [::app.events/set-lang k]

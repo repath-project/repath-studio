@@ -13,52 +13,52 @@
 ;; https://github.com/taoensso/tempura/issues/25#issuecomment-451742526
 (def languages
   {"en-US" {:dir "ltr"
-            :native-name "English"
-            :abbr "EN"
+            :locale "English"
+            :code "EN"
             :dictionary (load-resource-at-compile-time "lang/en-US.edn")}
    "es-ES" {:dir "ltr"
-            :native-name "Español"
-            :abbr "ES"
+            :locale "Español"
+            :code "ES"
             :dictionary (load-resource-at-compile-time "lang/es-ES.edn")}
    "pt-PT" {:dir "ltr"
-            :native-name "Português"
-            :abbr "PT"
+            :locale "Português"
+            :code "PT"
             :dictionary (load-resource-at-compile-time "lang/pt-PT.edn")}
    "ru-RU" {:dir "ltr"
-            :native-name "Русский"
-            :abbr "RU"
+            :locale "Русский"
+            :code "RU"
             :dictionary (load-resource-at-compile-time "lang/ru-RU.edn")}
    "zh-CN" {:dir "ltr"
-            :native-name "中文（简体）"
-            :abbr "ZH"
+            :locale "中文（简体）"
+            :code "ZH"
             :dictionary (load-resource-at-compile-time "lang/zh-CN.edn")}
    "fr-FR" {:dir "ltr"
-            :native-name "Français"
-            :abbr "FR"
+            :locale "Français"
+            :code "FR"
             :dictionary (load-resource-at-compile-time "lang/fr-FR.edn")}
    "de-DE" {:dir "ltr"
-            :native-name "Deutsch"
-            :abbr "DE"
+            :locale "Deutsch"
+            :code "DE"
             :dictionary (load-resource-at-compile-time "lang/de-DE.edn")}
    "el-GR" {:dir "ltr"
-            :native-name "Ελληνικά"
-            :abbr "EL"
+            :locale "Ελληνικά"
+            :code "EL"
             :dictionary (load-resource-at-compile-time "lang/el-GR.edn")}
    "ar-EG" {:dir "rtl"
-            :native-name "العربية (مصر)"
-            :abbr "AR"
+            :locale "العربية (مصر)"
+            :code "AR"
             :dictionary (load-resource-at-compile-time "lang/ar-EG.edn")}
    "ja-JP" {:dir "ltr"
-            :native-name "日本語"
-            :abbr "JA"
+            :locale "日本語"
+            :code "JA"
             :dictionary (load-resource-at-compile-time "lang/ja-JP.edn")}
    "ko-KR" {:dir "ltr"
-            :native-name "한국어"
-            :abbr "KO"
+            :locale "한국어"
+            :code "KO"
             :dictionary (load-resource-at-compile-time "lang/ko-KR.edn")}
    "tr-TR" {:dir "ltr"
-            :native-name "Türkçe"
-            :abbr "TR"
+            :locale "Türkçe"
+            :code "TR"
             :dictionary (load-resource-at-compile-time "lang/tr-TR.edn")}})
 
 (m/=> supported-lang? [:-> [:maybe string?] boolean?])
