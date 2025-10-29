@@ -3,4 +3,4 @@
 edn = "edn"
 
 [files]
-extend-exclude = ["src/lang/*.edn", "android", "ios"]
+extend-exclude = ["src/lang/*.edn", "SECURITY.md", "android", "ios"]

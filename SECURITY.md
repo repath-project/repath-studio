@@ -11,7 +11,7 @@ not discuss the issue anywhere else.
 If reporting through email, please encrypt sensitive information using our PGP
 key.
 
-```
+```text
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 
 mQENBGkBsQYBCAC5mnbk3Eb5PvDTKNEDhk2ze+lUXWX9fnL3a0YewXiv1VIoljSJ
