@@ -7,3 +7,39 @@ or send a detailed mail to [contact@repath.studio](mailto:contact@repath.studio)
 to report security vulnerabilities. Even when unsure whether the bug in question
 is an exploitable vulnerability, it is recommended to use the above methods and
 not discuss the issue anywhere else.
+
+If reporting through email, please encrypt sensitive information using our PGP
+key.
+
+```
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mQENBGkBsQYBCAC5mnbk3Eb5PvDTKNEDhk2ze+lUXWX9fnL3a0YewXiv1VIoljSJ
+NYxHQwb00Cpgx7qYQsIZxJAwdsg2SmOBB6SVDMild/m2l+3wVt2he3fmyi7+GGvB
+CXhz51qlwuUJ6vG74y0hx3pH5TvTrEjh5AAtwyKp8ZMf1iN/pAnSDXP9v/iCSDdA
+jjIcUgY7+bEEX82AV92FrpR+NZtxDXFGBtCN81zftxFJsFV9xID4P0jxOXexxEkS
+UwbmRt4im4Lxo0J6DBXUwJDm6m2alS1ghwXs0EeiO8a9lWkZ4XL8CBwUStWBpKJV
+CgLeMf1m1WL4HT+j9BMfCg/z9pbdqOijGiP3ABEBAAG0JVJlcGF0aCBTdHVkaW8g
+PGNvbnRhY3RAcmVwYXRoLnN0dWRpbz6JAVQEEwEKAD4WIQQsxrrPemgRCm8UyFXi
+07pF4EfHtgUCaQGxBgIbAwUJAeFoGgULCQgHAgYVCgkICwIEFgIDAQIeAQIXgAAK
+CRDi07pF4EfHtk6mB/9qayrRdesqWAInadGL8chMvflfUPLpdEQkkhdctrHdRG8g
+kNpcW9xPidrgDfk5+R26FOlM4heYvbfi6XArkDamP4WE7h6WYEBUwNjF5V2NwbiI
+ynJkHt/6RTNO7RVJbSZ59Mz+Jn4qt7kzb95AXxDSpCUovFQ92UnzimItxHIvi+7L
+dummGoBo/AdKu+5oyPNNhaDlP8ft/VQYQQVK3D15YguNi7u4xLWA5/jJXeU4IrJj
+Uq21Nl+ZB2gOaZuPHxP97SblnZIKqe390nbH7SNF1PrGAcf18OImVJszYBT2QUMV
+Q1OZBBjwl5yJYGWMqFQJCADcz2Rmh878WBLRKWIWuQENBGkBsQYBCADIaoEpTcwF
+TQw7FwjaEX8fHsz0fQO1150vl7nGMxqc/ZaGO5Kn7lklTNh8dybH/HQle+V/fc4k
+MEoUd9lYTDqMnbg7DfOmR6EvPk0iMKWOxwBMbsaFQ2SwAlHpvKO7lCfpwHt3nYBu
+vJvyav7409XteiagrQzcySojvzI47vU/CmcXbksx5PqGiDgnKKzfrRdpSnfv/Jey
+oaprnGThQUe97j7RULCyQuzh85jA6m1hD3I03c/bqGQJ/qXvecnfLbpHvrBe0/9T
+IU9Js5ROmCCIf0IN10RucxFhsTxZQjLOLZ645CjtMue6ZGyFXEOjUNlU5MgQK+BO
+1BAK+rRZvZVdABEBAAGJATwEGAEKACYWIQQsxrrPemgRCm8UyFXi07pF4EfHtgUC
+aQGxBgIbDAUJAeFoGgAKCRDi07pF4EfHttnwCACGvjlw3t0S8gNN01DTfRZ+6OFf
+LjE90CEKkMCtGaae8xZM546MCX4cy3j4cKwoXbOLW2fuZfSCCQsw6aNOMsF1DLEl
+J/VU5GwhFn0Q4kVV+y4ehdbXVCw983nqpjtTLh6tMauc6TWXJFEse6PFq2DHulxY
+73SWRcwBrlSGjXdymDM31EopBRziqGYTaTKd8H9xeHTtkGG8MrahnIbPtLvUbu1a
+OOd8nAbou8CFbHXtvMH+EXmCymACfQwBoUra8MQ3HF6qEGhhw/G3wQR2JLDam2bo
+FXcTQ+RPibRQstExkSlFEFlbme8GkWxHE8BeW+yax1NiFlw3zwgYILhp8QfF
+=gq5g
+-----END PGP PUBLIC KEY BLOCK-----
+```
