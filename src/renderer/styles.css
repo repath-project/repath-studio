@@ -52,6 +52,13 @@
 @import './theme/default.css';
 @import './theme/styles.css';
 
+::-webkit-scrollbar,
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-corner,
+::-webkit-scrollbar-track {
+  all: unset;
+}
+
 body {
   font-size: var(--font-size);
 }
