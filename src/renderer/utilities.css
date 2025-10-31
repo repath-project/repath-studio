@@ -129,7 +129,7 @@
 
   > *,
   > * > button {
-    @apply border-l border-border rounded-none!;
+    @apply border-l border-border rounded-none! outline-inset!;
 
     &:first-child,
     &:first-child > button {

@@ -95,7 +95,7 @@
         installable? @(rf/subscribe [::app.subs/installable?])
         title-bar @(rf/subscribe [::document.subs/title-bar])
         md? @(rf/subscribe [::window.subs/md?])]
-    [:div.flex.relative.overflow-hidden.items-center
+    [:div.flex.relative.items-center
      [:div.px-1.gap-1.flex.items-center.shrink-0
       (when-not (or fullscreen? mac?)
         [app-icon])
