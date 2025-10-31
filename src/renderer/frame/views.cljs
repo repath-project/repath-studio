@@ -46,6 +46,7 @@
                    :touch-action "none"
                    :background "var(--secondary)"
                    :font-family "var(--sans)"
+                   :font-size "var(--font-size)"
                    :margin 0}}]])
 
 (def resize-observer
