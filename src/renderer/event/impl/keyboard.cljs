@@ -261,6 +261,10 @@
                           {:keyCode (key-codes "DOWN")}
                           {:keyCode (key-codes "F1")}
                           {:keyCode (key-codes "F11")}
+                          {:keyCode (key-codes "F")
+                           :altKey true}
+                          {:keyCode (key-codes "E")
+                           :altKey true}
                           {:keyCode (key-codes "A")
                            :ctrlKey true}
                           {:keyCode (key-codes "O")
