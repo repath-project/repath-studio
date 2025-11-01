@@ -128,7 +128,7 @@
                :outline "none"
                :background "transparent"
                :font-style font-style
-               :font-family font-family
+               :font-family (if (empty? font-family) "var(--sans)" font-family)
                :font-size font-size
                :font-weight font-weight}}]]))
 
