@@ -138,7 +138,9 @@
   []
   (let [ref (react/createRef)]
     [:div.flex.flex-col.h-full
-     [:div.flex-1 {:ref ref}
+     [:div.flex-1
+      {:ref ref
+       :on-pointer-move #(.stopPropagation %)}
       [tree ref]]
      [:div.flex.p-1
       [:button.button.flex-1
