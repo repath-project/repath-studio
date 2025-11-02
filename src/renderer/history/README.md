@@ -24,23 +24,21 @@ See below for implementation details
 - We can also cancel an operation by swapping the current state with the last
   history point (see `renderer.history.handlers/swap`).
 - Our state is normalized to easily access specific points in history. We can
-  then look for a specific state on our tree by id and then retrieve its data
+  then look for a specific state on our tree by index and then retrieve its data
   with `get-in`.
-- All changes under [:documents :document-key :elements] should be part of the
+- All changes under [:documents document-key :elements] should be part of the
   file history.
 
 The end result on our db looks like this
 
 ```clojure
-:history {:position :6
-          :states {:907fdbc9-d2ad-4697-bea3-9aa5e2c46054 {...}
-                   :ed0cce51-d00e-43e0-a06a-04c72ccce98f 
-                   {:elements {...} ; Our actual state
+:history {:position 2
+          :states {0 {...}
+                   1 {:elements {...} ; Our actual state
                     :explanation [[::move-selection "Move selection"]]
-                    :id :ed0cce51-d00e-43e0-a06a-04c72ccce98f
                     :timestamp 1647882725718
-                    :index 2
-                    :parent :907fdbc9-d2ad-4697-bea3-9aa5e2c46054
-                    :children [:cded6d1d-619f-4974-af95-8313cefd6f87]}
-                   :cded6d1d-619f-4974-af95-8313cefd6f87 {...}}}
+                    :index 1
+                    :parent 0
+                    :children [2]}
+                  2 {...}}}
 ```
