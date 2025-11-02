@@ -13,16 +13,16 @@
    [renderer.views :as views]))
 
 (defn select-option
-  [{:keys [id explanation]}]
+  [{:keys [index explanation]}]
   [:> Select/Item
-   {:value (str id)
+   {:value index
     :class "menu-item px-2!"}
    [:> Select/ItemText (apply t explanation)]])
 
 (defn select
   [label options open]
   [:> Select/Root
-   {:on-value-change #(rf/dispatch [::history.events/go-to (uuid %)])
+   {:on-value-change #(rf/dispatch [::history.events/go-to %])
     :on-open-change #(reset! open %)
     :disabled (empty? options)}
    [:> Select/Trigger
@@ -72,7 +72,7 @@
   [^js/CustomNodeElementProps props]
   (let [datum (.-nodeDatum props)
         active? (.-active datum)
-        id (uuid (.-id datum))
+        id (.-id datum)
         color (if active? "var(--color-accent)" (.-color datum))]
     (reagent/as-element
      [:circle.transition-fill

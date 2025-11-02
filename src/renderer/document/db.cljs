@@ -5,7 +5,7 @@
    [renderer.db :refer [Vec2 JS_Object]]
    [renderer.element.db :refer [Element ElementId]]
    [renderer.filters :refer [A11yFilter]]
-   [renderer.history.db :refer [History HistoryId]]
+   [renderer.history.db :refer [History HistoryIndex]]
    [renderer.tool.db :refer [HandleId]]))
 
 (def ZoomFactor
@@ -20,7 +20,7 @@
    [:id {:optional true} DocumentId]
    [:title {:optional true} DocumentTitle]
    [:path {:optional true} string?]
-   [:saved-history-id {:optional true} HistoryId]
+   [:saved-history-id {:optional true} HistoryIndex]
    [:version {:optional true} string?]
    [:hovered-ids {:default #{}} [:set [:or HandleId ElementId]]]
    [:collapsed-ids {:default #{}} [:set ElementId]]
