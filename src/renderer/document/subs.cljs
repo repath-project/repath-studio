@@ -137,9 +137,9 @@
  :-> :ignored-ids)
 
 (rf/reg-sub
- ::saved-history-id
+ ::saved-history-index
  :<- [::active]
- :-> :saved-history-id)
+ :-> :saved-history-index)
 
 (rf/reg-sub
  ::preview-label

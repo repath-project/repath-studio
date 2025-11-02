@@ -165,11 +165,15 @@
   [db k v]
   (assoc-in db (path db :attrs k) v))
 
-(m/=> update-saved-history-id [:-> App DocumentId App])
-(defn update-saved-history-id
-  [db id]
-  (let [position (get-in db [:documents id :history :position])]
-    (assoc-in db [:documents id :saved-history-id] position)))
+(m/=> update-saved-history-index [:function
+                                  [:-> App App]
+                                  [:-> App DocumentId App]])
+(defn update-saved-history-index
+  ([db]
+   (update-saved-history-index db (:active-document db)))
+  ([db id]
+   (let [position (get-in db [:documents id :history :position])]
+     (assoc-in db [:documents id :saved-history-index] position))))
 
 (m/=> search-by-path [:-> App string? [:maybe DocumentId]])
 (defn search-by-path
@@ -184,7 +188,7 @@
   [db id]
   (let [document (get-in db [:documents id])
         history-position (get-in document [:history :position])]
-    (= (:saved-history-id document) history-position)))
+    (= (:saved-history-index document) history-position)))
 
 (m/=> open? [:-> App DocumentId boolean?])
 (defn open?

@@ -20,7 +20,7 @@
    [:id {:optional true} DocumentId]
    [:title {:optional true} DocumentTitle]
    [:path {:optional true} string?]
-   [:saved-history-id {:optional true} HistoryIndex]
+   [:saved-history-index {:optional true} HistoryIndex]
    [:version {:optional true} string?]
    [:hovered-ids {:default #{}} [:set [:or HandleId ElementId]]]
    [:collapsed-ids {:default #{}} [:set ElementId]]

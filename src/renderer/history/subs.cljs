@@ -41,6 +41,6 @@
 (rf/reg-sub
  ::tree-data
  :<- [::history]
- :<- [::document.subs/saved-history-id]
- (fn [[history saved-history-id] _]
-   (history.handlers/state->d3-data history saved-history-id)))
+ :<- [::document.subs/saved-history-index]
+ (fn [[history saved-history-index] _]
+   (history.handlers/state->d3-data history saved-history-index)))

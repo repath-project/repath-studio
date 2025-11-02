@@ -78,14 +78,16 @@
   ([db]
    (reduce drop-rest db (:document-tabs db)))
   ([db document-id]
-   (let [pos (get-in db [:documents document-id :history :position])]
+   (let [pos (get-in db [:documents document-id :history :position])
+         v (get-in db [:documents document-id :history :states pos])]
      (cond-> db
        pos
-       (update-in [:documents document-id :history :states]
-                  #(-> (select-keys % [pos])
-                       (assoc-in [pos :index] 0)
-                       (assoc-in [pos :children] [])
-                       (update pos dissoc :parent)))))))
+       (-> (assoc-in [:documents document-id :history :position] 0)
+           (assoc-in [:documents document-id :history :states]
+                     {0 (-> v
+                            (dissoc :parent)
+                            (assoc :index 0
+                                   :children []))}))))))
 
 (m/=> preview [:-> App HistoryIndex App])
 (defn preview
@@ -154,7 +156,8 @@
 (m/=> clear [:-> App App])
 (defn clear
   [db]
-  (-> (assoc-in db (path db :states) {})
+  (-> db
+      (assoc-in (path db :states) {})
       (update-in (path db) dissoc :position)))
 
 (m/=> state-count [:-> App int?])

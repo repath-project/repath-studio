@@ -294,7 +294,7 @@
                   (history.handlers/finalize [::load-doc "Load document"]))
 
               (not is-migrated)
-              (document.handlers/update-saved-history-id id))
+              (document.handlers/update-saved-history-index id))
         :fx [(when is-migrated
                [::app.effects/toast
                 [:success (tr db [::document-migrated "Document migrated"])
@@ -372,7 +372,7 @@
    (when-let [data (some->> (:active-document db)
                             (document.handlers/persisted-format db)
                             (document.handlers/->save-format))]
-     {:db (document.handlers/update-saved-history-id db (:active-document db))
+     {:db (document.handlers/update-saved-history-index db)
       ::effects/download {:data data
                           :title (str "document." config/ext)}})))
 
@@ -384,7 +384,7 @@
      {:db (cond-> db
             :always
             (-> (update-in [:documents id] merge (dissoc info :file-handle))
-                (document.handlers/update-saved-history-id id)
+                (document.handlers/update-saved-history-index id)
                 (document.handlers/add-recent info))
 
             close?
