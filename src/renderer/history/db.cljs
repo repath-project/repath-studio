@@ -5,8 +5,6 @@
 
 (def Explanation [:* any?])
 
-(def HistoryId uuid?)
-
 (def HistoryIndex [:or pos-int? zero?])
 
 (def HistoryState
@@ -14,14 +12,13 @@
    [:explanation Explanation]
    [:timestamp number?]
    [:index HistoryIndex]
-   [:id HistoryId]
    [:elements {:optional true} [:map-of ElementId Element]]
-   [:parent {:optional true} HistoryId]
-   [:children [:vector HistoryId]]])
+   [:parent {:optional true} HistoryIndex]
+   [:children [:vector HistoryIndex]]])
 
 (def History
   [:map {:closed true}
    [:zoom {:optional true} number?]
    [:translate {:optional true} Vec2]
-   [:position {:optional true} HistoryId]
-   [:states {:default {}} [:map-of uuid? HistoryState]]])
+   [:position {:optional true} HistoryIndex]
+   [:states {:default {}} [:map-of HistoryIndex HistoryState]]])

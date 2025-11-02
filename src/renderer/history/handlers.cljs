@@ -6,7 +6,7 @@
    [renderer.document.db :refer [DocumentId]]
    [renderer.document.handlers :as document.handlers]
    [renderer.element.handlers :as element.handlers]
-   [renderer.history.db :refer [Explanation History HistoryId HistoryState]]
+   [renderer.history.db :refer [Explanation History HistoryIndex HistoryState]]
    [renderer.utils.i18n :refer [t]]
    [renderer.utils.vec :as utils.vec]))
 
@@ -27,26 +27,27 @@
   [db]
   (get-in db (path db)))
 
-(m/=> position [:-> App [:maybe HistoryId]])
+(m/=> position [:-> App [:maybe HistoryIndex]])
 (defn position
   [db]
   (:position (history db)))
 
 (m/=> state [:function
              [:-> [:maybe History] [:maybe HistoryState]]
-             [:-> [:maybe History] [:maybe HistoryId] [:maybe HistoryState]]])
+             [:-> [:maybe History] [:maybe HistoryIndex]
+              [:maybe HistoryState]]])
 (defn state
   ([active-history]
    (state active-history (:position active-history)))
   ([active-history current-position]
    (get-in active-history [:states current-position])))
 
-(m/=> previous-position [:-> History [:maybe HistoryId]])
+(m/=> previous-position [:-> History [:maybe HistoryIndex]])
 (defn previous-position
   [active-history]
   (-> active-history state :parent))
 
-(m/=> next-position [:-> History [:maybe HistoryId]])
+(m/=> next-position [:-> History [:maybe HistoryIndex]])
 (defn next-position
   [active-history]
   (-> active-history state :children last))
@@ -86,7 +87,7 @@
                        (assoc-in [pos :children] [])
                        (update pos dissoc :parent)))))))
 
-(m/=> preview [:-> App HistoryId App])
+(m/=> preview [:-> App HistoryIndex App])
 (defn preview
   [db pos]
   (let [preview-state (-> db history (state pos))
@@ -95,7 +96,7 @@
         (assoc-in (document.handlers/path db :preview-label) (str timestamp))
         (assoc-in (element.handlers/path db) (:elements preview-state)))))
 
-(m/=> go-to [:-> App HistoryId App])
+(m/=> go-to [:-> App HistoryIndex App])
 (defn go-to
   [db pos]
   (-> db
@@ -150,16 +151,6 @@
   (accumulate active-history (fn [current-state]
                                (-> current-state :children last))))
 
-(m/=> root-id [:-> History HistoryId])
-(defn root-id
-  [active-history]
-  (->> active-history
-       :states
-       (vals)
-       (sort-by :index)
-       (first)
-       :id))
-
 (m/=> clear [:-> App App])
 (defn clear
   [db]
@@ -188,33 +179,41 @@
   [db]
   (update-in db [:documents (:active-document db)] dissoc :preview-label))
 
-(m/=> create-state [:-> App HistoryId Explanation HistoryState])
+(m/=> create-state [:-> App HistoryIndex Explanation HistoryState])
 (defn create-state
-  [db id explanation]
+  [db index explanation]
   (let [new-state {:explanation explanation
                    :elements (get-in db (element.handlers/path db))
                    :timestamp (.now js/Date) ; REVIEW: Sideffect
-                   :index (state-count db)
-                   :id id
+                   :index index
                    :children []}]
     (cond-> new-state
       (position db)
       (assoc :parent (position db)))))
 
-(m/=> state->d3-data [:-> History HistoryId [:maybe HistoryId] JS_Object])
+(m/=> state->d3-data [:-> History [:maybe HistoryIndex] JS_Object])
 (defn state->d3-data
-  [active-history id saved-id]
+  [active-history saved-index]
   (let [states (:states active-history)
-        {:keys [index explanation children]} (get states id)
         n (count states)]
-    #js {:name (apply t explanation)
-         :id (str id)
-         :saved (= id saved-id)
-         :active (= id (:position active-history))
-         :color (str "hsla(" (+ (* (/ 100 n) index) 20) ",40%,60%,1)")
-         :children (->> children
-                        (map #(state->d3-data active-history % saved-id))
-                        (apply array))}))
+    (loop [queue [[0 nil]]
+           result-map {}]
+      (if (empty? queue)
+        (get result-map 0)
+        (let [[index parent-obj] (first queue)
+              {:keys [index explanation children]} (get states index)
+              js-node #js {:name (apply t explanation)
+                           :id index
+                           :saved (= index saved-index)
+                           :active (= index (:position active-history))
+                           :color (str "hsla(" (+ (* (/ 100 n) index)
+                                                  20) ",40%,60%,1)")
+                           :children #js []}]
+          (when parent-obj
+            (.push (.-children parent-obj) js-node))
+          (recur (into (rest queue)
+                       (map (fn [child-id] [child-id js-node]) children))
+                 (assoc result-map index js-node)))))))
 
 (m/=> update-ancestors [:-> App App])
 (defn update-ancestors
@@ -223,13 +222,13 @@
   [db]
   (loop [db db
          node (state (history db))]
-    (let [parent-id (:parent node)
-          parent (state (history db) parent-id)]
+    (let [parent-index (:parent node)
+          parent (state (history db) parent-index)]
       (if-not parent
         db
-        (let [index (.indexOf (:children parent) (:id node))
+        (let [index (.indexOf (:children parent) (:index node))
               new-index (dec (count (:children parent)))
-              children-path (path db :states parent-id :children)]
+              children-path (path db :states parent-index :children)]
           (recur (update-in db children-path utils.vec/move index new-index)
                  parent))))))
 
@@ -241,12 +240,13 @@
          (-> db history state :elements))
     db
     (let [current-position (position db)
-          id (random-uuid)]
+          index (state-count db)]
       (-> db
-          (assoc-in (path db :position) id)
-          (assoc-in (path db :states id)
-                    (create-state db id explanation))
+          (assoc-in (path db :position) index)
+          (assoc-in (path db :states index)
+                    (create-state db index explanation))
           (cond->
            current-position
-            (-> (update-in (path db :states current-position :children) conj id)
+            (-> (update-in (path db :states current-position :children)
+                           conj index)
                 (update-ancestors)))))))
