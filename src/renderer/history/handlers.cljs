@@ -78,13 +78,20 @@
   ([db]
    (reduce drop-rest db (:document-tabs db)))
   ([db document-id]
-   (let [pos (get-in db [:documents document-id :history :position])
-         v (get-in db [:documents document-id :history :states pos])]
+   (let [document (get-in db [:documents document-id])
+         pos (get-in document [:history :position])
+         saved-history-index (:saved-history-index document)]
      (cond-> db
+       :always
+       (update-in [:documents document-id] dissoc :saved-history-index)
+
+       (= saved-history-index pos)
+       (assoc-in [:documents document-id :saved-history-index] 0)
+
        pos
        (-> (assoc-in [:documents document-id :history :position] 0)
            (assoc-in [:documents document-id :history :states]
-                     {0 (-> v
+                     {0 (-> (get-in document [:history :states pos])
                             (dissoc :parent)
                             (assoc :index 0
                                    :children []))}))))))
