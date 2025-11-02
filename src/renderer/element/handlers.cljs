@@ -618,10 +618,10 @@
                        (set/union (descendant-ids db)))]
     (reduce
      (fn [db id]
-       (let [adjusted-pivot-point (->> (entity db id)
-                                       :bbox
-                                       (take 2)
-                                       (matrix/sub pivot-point))]
+       (let [adjusted-pivot-point (some->> (entity db id)
+                                           :bbox
+                                           (take 2)
+                                           (matrix/sub pivot-point))]
          (update-el db id element.hierarchy/scale ratio adjusted-pivot-point)))
      db
      ids-to-scale)))
