@@ -35,10 +35,10 @@ The end result on our db looks like this
 :history {:position 2
           :states {0 {...}
                    1 {:elements {...} ; Our actual state
-                    :explanation [[::move-selection "Move selection"]]
-                    :timestamp 1647882725718
-                    :index 1
-                    :parent 0
-                    :children [2]}
+                      :explanation [[::move-selection "Move selection"]]
+                      :timestamp 1647882725718
+                      :index 1
+                      :parent 0
+                      :children [2]}
                   2 {...}}}
 ```
