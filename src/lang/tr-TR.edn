@@ -707,7 +707,9 @@
   :clear-history-description "Belge geçmişini temizlemek istediğinizden emin
                               misiniz?"
   :select-element "Öğe seç"
-  :delete-selection "Seçimi sil"}
+  :delete-selection "Seçimi sil"
+  :oldest "En eski"
+  :newest "En yeni"}
 
  :renderer.timeline.views
  {:speed "Hız"

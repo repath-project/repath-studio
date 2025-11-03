@@ -691,7 +691,9 @@
   :clear-history-description "هل أنت متأكد من رغبتك في مسح تاريخ
                               المستند؟"
   :select-element "تحديد عنصر"
-  :delete-selection "حذف التحديد"}
+  :delete-selection "حذف التحديد"
+  :oldest "الأقدم"
+  :newest "الأحدث"}
 
  :renderer.timeline.views
  {:speed "السرعة"

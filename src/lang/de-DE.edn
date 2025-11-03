@@ -729,7 +729,9 @@
   :clear-history-description "Sind Sie sicher, dass Sie den Dokumentverlauf
                               löschen möchten?"
   :select-element "Element auswählen"
-  :delete-selection "Auswahl löschen"}
+  :delete-selection "Auswahl löschen"
+  :oldest "Älteste"
+  :newest "Neueste"}
 
  :renderer.timeline.views
  {:speed "Geschwindigkeit"

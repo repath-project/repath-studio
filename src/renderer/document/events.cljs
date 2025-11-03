@@ -91,8 +91,7 @@
           (document.handlers/close db id)
           (dialog.handlers/create
            db
-           {:title (tr db [::save-changes
-                           "Do you want to save your changes?"])
+           {:title (tr db [::save-changes "Do you want to save your changes?"])
             :content [dialog.views/save (get-in db [:documents id])]
             :attrs {:on-open-auto-focus #(.preventDefault %)}}))
     ::app.effects/local-store-keys {:on-success [::clear-stale-keys]}}))

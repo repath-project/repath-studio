@@ -710,7 +710,9 @@
   :clear-history-description "Tem a certeza de que deseja limpar o histórico do
                               documento?"
   :select-element "Selecionar elemento"
-  :delete-selection "Eliminar seleção"}
+  :delete-selection "Eliminar seleção"
+  :oldest "Mais antigo"
+  :newest "Mais recente"}
 
  :renderer.timeline.views
  {:speed "Velocidade"

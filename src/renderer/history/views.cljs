@@ -8,6 +8,7 @@
    [reagent.core :as reagent]
    [renderer.dialog.events :as-alias dialog.events]
    [renderer.history.events :as-alias history.events]
+   [renderer.history.handlers :as history.handlers]
    [renderer.history.subs :as-alias history.subs]
    [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]))
@@ -134,20 +135,41 @@
    :confirm-label (t [::clear-history "Clear history"])
    :confirm-action [::history.events/clear]})
 
+(defn legend
+  []
+  (let [start-color (history.handlers/age-ratio->color 0)
+        end-color (history.handlers/age-ratio->color 1)]
+    [:div.flex.flex-col
+     [:div.flex.justify-between.text-2xs.text-foreground-muted
+      [:div.flex.gap-1
+       [:div.h-5.w-px {:style {:background start-color}}]
+       [:span (t [::oldest "Oldest"])]]
+
+      [:div.flex.gap-1
+       [:span (t [::newest "Newest"])]
+       [:div.h-5.w-px {:style {:background end-color}}]]]
+     [:div.w-full.h-2
+      {:style {:background (str "linear-gradient(to right, "
+                                start-color ", "
+                                end-color ")")}}]]))
+
 (defn root
   []
   (let [ref (react/createRef)]
-    [:div.flex.flex-col.h-full
+    [:div.flex.flex-col.h-full.p-2.gap-2.w-full
      [:div.flex-1
       {:ref ref
        :on-pointer-move #(.stopPropagation %)}
       [tree ref]]
-     [:div.flex.p-1
-      [:button.button.flex-1
-       {:on-click #(rf/dispatch [::history.events/tree-view-updated
-                                 0.5 (center ref)])}
-       (t [::center-view "Center view"])]
-      [:button.button.flex-1
-       {:on-click #(rf/dispatch [::dialog.events/show-confirmation
-                                 (clear-dialog)])}
-       (t [::clear-history "Clear history"])]]]))
+
+     [:div.flex.gap-2.flex-col
+      [legend]
+      [:div.button-group
+       [:button.button.flex-1
+        {:on-click #(rf/dispatch [::history.events/tree-view-updated
+                                  0.5 (center ref)])}
+        (t [::center-view "Center view"])]
+       [:button.button.flex-1
+        {:on-click #(rf/dispatch [::dialog.events/show-confirmation
+                                  (clear-dialog)])}
+        (t [::clear-history "Clear history"])]]]]))

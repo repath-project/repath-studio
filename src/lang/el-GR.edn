@@ -733,7 +733,9 @@
   :clear-history-description "Είστε σίγουροι οτι θέλετε να διαγράψετε το
                               ιστορικό του εγγράφου?"
   :select-element "Επιλογή στοιχείου"
-  :delete-selection "Διαγραφή επιλεγμένου"}
+  :delete-selection "Διαγραφή επιλεγμένου"
+  :oldest "Παλαιότερο"
+  :newest "Νεότερο"}
 
  :renderer.timeline.views
  {:speed "Ταχύτητα"

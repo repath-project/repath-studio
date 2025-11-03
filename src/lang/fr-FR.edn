@@ -722,7 +722,9 @@
   :clear-history-description "Êtes-vous sûr de vouloir effacer l'historique du
                               document ?"
   :select-element "Sélectionner l'élément"
-  :delete-selection "Supprimer la sélection"}
+  :delete-selection "Supprimer la sélection"
+  :oldest "Plus ancien"
+  :newest "Plus récent"}
 
  :renderer.timeline.views
  {:speed "Vitesse"

@@ -713,7 +713,9 @@
   :clear-history-description "Вы уверены, что хотите очистить историю
                               документа?"
   :select-element "Выделить элемент"
-  :delete-selection "Удалить выделенное"}
+  :delete-selection "Удалить выделенное"
+  :oldest "Самые старые"
+  :newest "Самые новые"}
 
  :renderer.timeline.views
  {:speed "Скорость"

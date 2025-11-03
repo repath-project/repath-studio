@@ -201,6 +201,15 @@
       (position db)
       (assoc :parent (position db)))))
 
+(defn age-ratio->color
+  "Computes a color from age-ratio (/ age max-age).
+   https://developer.mozilla.org/en-US/docs/Web/CSS/hue"
+  [ratio]
+  (let [start-hue 20 ; Brownish/Orange
+        end-hue 120 ; Green
+        hue (+ start-hue (* ratio (- end-hue start-hue)))]
+    (str "hsl(" hue ", 40%, 60%)")))
+
 (m/=> state->d3-data [:-> History [:maybe HistoryIndex] JS_Object])
 (defn state->d3-data
   [active-history saved-index]
@@ -216,8 +225,7 @@
                            :id index
                            :saved (= index saved-index)
                            :active (= index (:position active-history))
-                           :color (str "hsla(" (+ (* (/ 100 n) index)
-                                                  20) ",40%,60%,1)")
+                           :color (age-ratio->color (/ index n))
                            :children #js []}]
           (when parent-obj
             (.push (.-children parent-obj) js-node))

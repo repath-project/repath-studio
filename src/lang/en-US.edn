@@ -701,7 +701,9 @@
   :clear-history-description "Are you sure you wish to clear the document
                               history?"
   :select-element "Select element"
-  :delete-selection "Delete selection"}
+  :delete-selection "Delete selection"
+  :oldest "Oldest"
+  :newest "Newest"}
 
  :renderer.timeline.views
  {:speed "Speed"

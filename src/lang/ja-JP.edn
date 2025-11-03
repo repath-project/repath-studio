@@ -673,7 +673,9 @@
   :action-cannot-undone "この操作は元に戻せません。"
   :clear-history-description "ドキュメントの履歴をクリアしてもよろしいですか？"
   :select-element "要素を選択"
-  :delete-selection "選択を削除"}
+  :delete-selection "選択を削除"
+  :oldest "最古"
+  :newest "最新"}
 
  :renderer.timeline.views
  {:speed "速度"

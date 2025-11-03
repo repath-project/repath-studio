@@ -640,7 +640,9 @@
   :action-cannot-undone "此操作无法撤销。"
   :clear-history-description "您确定要清除文档历史吗？"
   :select-element "选择元素"
-  :delete-selection "删除选择"}
+  :delete-selection "删除选择"
+  :oldest "最旧的"
+  :newest "最新的"}
 
  :renderer.timeline.views
  {:speed "速度"
