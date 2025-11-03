@@ -160,13 +160,6 @@
   (accumulate active-history (fn [current-state]
                                (-> current-state :children last))))
 
-(m/=> clear [:-> App App])
-(defn clear
-  [db]
-  (-> db
-      (assoc-in (path db :states) {})
-      (update-in (path db) dissoc :position)))
-
 (m/=> state-count [:-> App int?])
 (defn state-count
   [db]
@@ -201,6 +194,7 @@
       (position db)
       (assoc :parent (position db)))))
 
+(m/=> age-ratio->color [:-> number? string?])
 (defn age-ratio->color
   "Computes a color from age-ratio (/ age max-age).
    https://developer.mozilla.org/en-US/docs/Web/CSS/hue"

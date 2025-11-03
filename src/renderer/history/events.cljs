@@ -46,9 +46,7 @@
 (rf/reg-event-db
  ::clear
  (fn [db _]
-   (-> db
-       (history.handlers/clear)
-       (history.handlers/finalize [::clear-history "Clear history"]))))
+   (history.handlers/drop-rest db)))
 
 (rf/reg-event-db
  ::tree-view-updated
