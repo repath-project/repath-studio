@@ -92,7 +92,7 @@ jobs:
           path: './resources/public'
 
       - name: Sentry release
-        uses: getsentry/action-release@v3.3
+        uses: getsentry/action-release@v3.4
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
