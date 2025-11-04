@@ -161,3 +161,7 @@
  :<- [::features]
  (fn [features [_ k]]
    (contains? features k)))
+
+(rf/reg-sub
+ ::menubar-active?
+ :-> :menubar-active)

@@ -111,6 +111,10 @@
             (-> (dissoc :nearest-neighbor)
                 (snap.handlers/rebuild-tree))))
 
+      (and (= (:key e) "Alt")
+           (= (:state db) :idle))
+      (assoc :menubar-active true)
+
       :always
       (tool.hierarchy/on-key-down e))
 
@@ -126,6 +130,9 @@
           (cond->
            (not (-> db :snap :active))
             (dissoc :nearest-neighbor)))
+
+      (= (:key e) "Alt")
+      (dissoc :menubar-active)
 
       :always
       (tool.hierarchy/on-key-up e))

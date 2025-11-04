@@ -226,3 +226,9 @@
                          (.-name error)
                          {:description (or (.-message error)
                                            (str error))}]}))
+
+(rf/reg-event-fx
+ ::activate-menu
+ (fn [{:keys [db]} [_ k]]
+   {:db (assoc db :menubar-active false)
+    ::effects/focus k}))

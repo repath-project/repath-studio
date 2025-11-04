@@ -84,6 +84,7 @@
    [:versions {:optional true} [:maybe map?]]
    [:env {:optional true} [:maybe map?]]
    [:standalone {:optional true} boolean?]
+   [:menubar-active {:optional true} boolean?]
    [:install-prompt {:optional true} JS_Object]
    [:user-agent {:optional true} string?]
    [:repl-mode {:default :cljs} keyword?]

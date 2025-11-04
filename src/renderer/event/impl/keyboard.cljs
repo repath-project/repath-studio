@@ -189,19 +189,19 @@
                 [[::element.events/select-all]
                  [{:keyCode (key-codes "A")
                    :ctrlKey true}]]
-                [[::events/focus "file"]
+                [[::app.events/activate-menu "file"]
                  [{:keyCode (key-codes "F")
                    :altKey true}]]
-                [[::events/focus "edit"]
+                [[::app.events/activate-menu "edit"]
                  [{:keyCode (key-codes "E")
                    :altKey true}]]
-                [[::events/focus "object"]
+                [[::app.events/activate-menu "object"]
                  [{:keyCode (key-codes "O")
                    :altKey true}]]
-                [[::events/focus "view"]
+                [[::app.events/activate-menu "view"]
                  [{:keyCode (key-codes "V")
                    :altKey true}]]
-                [[::events/focus "help"]
+                [[::app.events/activate-menu "help"]
                  [{:keyCode (key-codes "H")
                    :altKey true}]]
                 [[::window.events/close]

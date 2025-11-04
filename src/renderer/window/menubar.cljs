@@ -691,7 +691,8 @@
 (defmethod menu-item :root
   [{:keys [label items id disabled]}]
   (let [desktop? @(rf/subscribe [::app.subs/desktop?])
-        computed-lang @(rf/subscribe [::app.subs/computed-lang])]
+        computed-lang @(rf/subscribe [::app.subs/computed-lang])
+        menubar-active? @(rf/subscribe [::app.subs/menubar-active?])]
     [:> Menubar/Menu
      [:> Menubar/Trigger
       {:class ["button-size py-1 md:min-h-auto md:px-3 xl:py-1.5 flex rounded-sm
@@ -704,7 +705,8 @@
        :id (name id)
        :disabled disabled}
       [:span
-       {:class (when (= computed-lang "en-US") "md:first-letter:underline")}
+       {:class (when (and menubar-active? (= computed-lang "en-US"))
+                 "md:first-letter:underline")}
        label]]
      [:> Menubar/Portal
       (into [:> Menubar/Content
