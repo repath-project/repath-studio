@@ -5,11 +5,6 @@
    [renderer.effects :as-alias effects]))
 
 (rf/reg-event-fx
- ::focus
- (fn [_ [_ id]]
-   {::effects/focus id}))
-
-(rf/reg-event-fx
  ::scroll-into-view
  (fn [_ [_ dom-el]]
    {::effects/scroll-into-view dom-el}))

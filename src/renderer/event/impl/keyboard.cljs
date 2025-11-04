@@ -10,7 +10,6 @@
    [renderer.element.events :as-alias element.events]
    [renderer.event.db :refer [KeyboardEvent]]
    [renderer.event.events :as-alias event.events]
-   [renderer.events :as-alias events]
    [renderer.frame.events :as-alias frame.events]
    [renderer.history.events :as-alias history.events]
    [renderer.ruler.events :as-alias ruler.events]
