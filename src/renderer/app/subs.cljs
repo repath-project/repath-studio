@@ -168,10 +168,6 @@
 
 (rf/reg-sub
  ::menubar-indicator?
- :-> :menubar-indicator)
-
-(rf/reg-sub
- ::menubar-indicator?
  :<- [::menubar]
  :-> :indicator)
 
