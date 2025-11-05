@@ -12,6 +12,7 @@
    [renderer.event.events :as-alias event.events]
    [renderer.frame.events :as-alias frame.events]
    [renderer.history.events :as-alias history.events]
+   [renderer.menubar.events :as-alias menubar.events]
    [renderer.ruler.events :as-alias ruler.events]
    [renderer.tool.events :as-alias tool.events]
    [renderer.window.events :as-alias window.events])
@@ -188,19 +189,19 @@
                 [[::element.events/select-all]
                  [{:keyCode (key-codes "A")
                    :ctrlKey true}]]
-                [[::app.events/activate-menu :file]
+                [[::menubar.events/activate :file]
                  [{:keyCode (key-codes "F")
                    :altKey true}]]
-                [[::app.events/activate-menu :edit]
+                [[::menubar.events/activate :edit]
                  [{:keyCode (key-codes "E")
                    :altKey true}]]
-                [[::app.events/activate-menu :object]
+                [[::menubar.events/activate :object]
                  [{:keyCode (key-codes "O")
                    :altKey true}]]
-                [[::app.events/activate-menu :view]
+                [[::menubar.events/activate :view]
                  [{:keyCode (key-codes "V")
                    :altKey true}]]
-                [[::app.events/activate-menu :help]
+                [[::menubar.events/activate :help]
                  [{:keyCode (key-codes "H")
                    :altKey true}]]
                 [[::window.events/close]

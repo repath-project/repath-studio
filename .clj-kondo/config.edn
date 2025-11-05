@@ -71,7 +71,8 @@
                       renderer.history.handlers history.handlers
                       renderer.history.subs history.subs
                       renderer.history.views history.views
-                      renderer.window.menubar window.menubar
+                      renderer.menubar.events menubar.events
+                      renderer.menubar.views menubar.views
                       renderer.ruler.db ruler.db
                       renderer.ruler.events ruler.events
                       renderer.ruler.handlers ruler.handlers

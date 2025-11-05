@@ -5,12 +5,12 @@
    [renderer.app.events :as-alias app.events]
    [renderer.app.subs :as-alias app.subs]
    [renderer.document.subs :as-alias document.subs]
+   [renderer.menubar.views :as menubar.views]
    [renderer.theme.events :as-alias theme.events]
    [renderer.theme.subs :as-alias theme.subs]
    [renderer.utils.i18n :as utils.i18n :refer [t]]
    [renderer.views :as views]
    [renderer.window.events :as-alias window.events]
-   [renderer.window.menubar :as window.menubar]
    [renderer.window.subs :as-alias window.subs]))
 
 (defn language-item
@@ -49,7 +49,7 @@
         :class "menu-content rounded-sm select-content"
         :on-key-down #(.stopPropagation %)
         :on-escape-key-down #(.stopPropagation %)}
-       (for [lang (window.menubar/languages-submenu)]
+       (for [lang (menubar.views/languages-submenu)]
          ^{:key (:id lang)}
          [language-item lang system-abbr])
        [:> DropdownMenu/Arrow {:class "fill-primary"}]]]]))
@@ -102,7 +102,7 @@
       (when (or md? desktop?)
         [:div.flex.relative.bg-secondary
          {:class (when (and mac? (not fullscreen?)) "ml-16")}
-         [window.menubar/root]])]
+         [menubar.views/root]])]
      [:div.drag.grow.items-center
       {:class "pointer-events-none truncate lg:absolute lg:justify-center px-1
                lg:left-1/2 lg:-translate-x-1/2 z-[-1] lg:flex"

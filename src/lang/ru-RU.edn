@@ -49,7 +49,7 @@
   :changes-will-be-lost [:p "Ваши изменения в %1 будут потеряны, если вы
                              закроете документ без сохранения."]}
 
- :renderer.window.menubar
+ :renderer.menubar.views
  {:file "Файл"
   :new "Новый"
   :open "Открыть..."

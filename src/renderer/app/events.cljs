@@ -2,7 +2,7 @@
   (:require
    [cognitect.transit :as transit]
    [config :as config]
-   [re-frame.core :as rf :refer [path]]
+   [re-frame.core :as rf]
    [re-pressed.core :as re-pressed]
    [renderer.app.db :as app.db]
    [renderer.app.effects :as-alias app.effects]
@@ -226,12 +226,3 @@
                          (.-name error)
                          {:description (or (.-message error)
                                            (str error))}]}))
-
-(rf/reg-event-db
- ::activate-menu
- [(path :menubar)]
- (fn [db [_ k]]
-   (assoc db
-          :indicator false
-          :active k
-          :backdrop (boolean k))))

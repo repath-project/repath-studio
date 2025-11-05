@@ -49,7 +49,7 @@
   :changes-will-be-lost [:p "ستفقد التغييرات في %1 إذا أغلقت المستند
                              بدون حفظ."]}
 
- :renderer.window.menubar
+ :renderer.menubar.views
  {:file "ملف"
   :new "جديد"
   :open "فتح..."

@@ -48,7 +48,7 @@
   :ok "确定"
   :changes-will-be-lost [:p "如果您不保存就关闭文档，您对 %1 的更改将丢失。"]}
 
- :renderer.window.menubar
+ :renderer.menubar.views
  {:file "文件"
   :new "新建"
   :open "打开..."

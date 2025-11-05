@@ -49,7 +49,7 @@
   :changes-will-be-lost [:p "Οι αλλαγές στο %1 θα χαθούνε εάν κλείσετε το
                              έγγραφο χωρίς αποθήκευση."]}
 
- :renderer.window.menubar
+ :renderer.menubar.views
  {:file "Αρχείο"
   :new "Νέο"
   :open "Άνοιγμα..."

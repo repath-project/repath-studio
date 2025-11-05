@@ -9,10 +9,10 @@
    [renderer.element.effects :as-alias element.effects]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
+   [renderer.menubar.views :as-alias menubar.views]
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
-   [renderer.utils.extra :refer [partial-right]]
-   [renderer.window.menubar :as-alias window.menubar]))
+   [renderer.utils.extra :refer [partial-right]]))
 
 (rf/reg-event-db
  ::select
@@ -232,11 +232,11 @@
    (-> (reduce element.handlers/swap db elements)
        (element.handlers/boolean-operation operation)
        (history.handlers/finalize (case operation
-                                    :unite [::window.menubar/unite]
-                                    :intersect [::window.menubar/intersect]
-                                    :subtract [::window.menubar/subtract]
-                                    :exclude [::window.menubar/exclude]
-                                    :divide [::window.menubar/divide])))))
+                                    :unite [::menubar.views/unite]
+                                    :intersect [::menubar.views/intersect]
+                                    :subtract [::menubar.views/subtract]
+                                    :exclude [::menubar.views/exclude]
+                                    :divide [::menubar.views/divide])))))
 
 (rf/reg-event-db
  ::add
@@ -256,13 +256,13 @@
    (-> (element.handlers/animate db tag attrs)
        (history.handlers/finalize (case tag
                                     :animate
-                                    [::window.menubar/animate]
+                                    [::menubar.views/animate]
 
                                     :animate-transform
-                                    [::window.menubar/animate-transform]
+                                    [::menubar.views/animate-transform]
 
                                     :animate-motion
-                                    [::window.menubar/animate-motion])))))
+                                    [::menubar.views/animate-motion])))))
 
 (rf/reg-event-db
  ::set-parent
@@ -288,16 +288,16 @@
    (-> (element.handlers/manipulate-path db action)
        (history.handlers/finalize (case action
                                     :simplify
-                                    [::window.menubar/boolean-simplify]
+                                    [::menubar.views/boolean-simplify]
 
                                     :smooth
-                                    [::window.menubar/boolean-smooth]
+                                    [::menubar.views/boolean-smooth]
 
                                     :flatten
-                                    [::window.menubar/boolean-flatten]
+                                    [::menubar.views/boolean-flatten]
 
                                     :reverse
-                                    [::window.menubar/boolean-reverse])))))
+                                    [::menubar.views/boolean-reverse])))))
 
 (rf/reg-event-fx
  ::copy

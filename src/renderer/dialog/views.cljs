@@ -9,9 +9,9 @@
    [renderer.dialog.events :as-alias dialog.events]
    [renderer.dialog.subs :as-alias dialog.subs]
    [renderer.document.events :as-alias document.events]
+   [renderer.menubar.views :as menubar.views]
    [renderer.utils.i18n :refer [t]]
-   [renderer.views :as views]
-   [renderer.window.menubar :as window.menubar]))
+   [renderer.views :as views]))
 
 (defn button
   [{:keys [action label auto-focus class]}]
@@ -116,7 +116,7 @@
      [:> Command/CommandEmpty
       {:class "p-2"}
       (t [::no-results "No results found."])]
-     (for [menu (window.menubar/submenus)]
+     (for [menu (menubar.views/submenus)]
        ^{:key (:id menu)}
        [cmdk-group menu])]]])
 

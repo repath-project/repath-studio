@@ -49,7 +49,7 @@
   :changes-will-be-lost [:p "%1 への変更は、保存せずにドキュメントを
                              閉じると失われます。"]}
 
- :renderer.window.menubar
+ :renderer.menubar.views
  {:file "ファイル"
   :new "新規"
   :open "開く..."

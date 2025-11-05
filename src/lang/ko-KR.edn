@@ -49,7 +49,7 @@
   :changes-will-be-lost [:p "저장하지 않고 문서를 닫으면
                              %1에 대한 변경사항이 손실됩니다."]}
 
- :renderer.window.menubar
+ :renderer.menubar.views
  {:file "파일"
   :new "새로 만들기"
   :open "열기..."

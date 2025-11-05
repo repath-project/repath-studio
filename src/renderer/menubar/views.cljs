@@ -1,4 +1,4 @@
-(ns renderer.window.menubar
+(ns renderer.menubar.views
   (:require
    ["@radix-ui/react-menubar" :as Menubar]
    [re-frame.core :as rf]
@@ -16,6 +16,7 @@
    [renderer.frame.events :as-alias frame.events]
    [renderer.history.events :as-alias history.events]
    [renderer.history.subs :as-alias history.subs]
+   [renderer.menubar.events :as-alias menubar.events]
    [renderer.ruler.events :as-alias ruler.events]
    [renderer.ruler.subs :as-alias ruler.subs]
    [renderer.theme.db :as theme.db]
@@ -746,7 +747,6 @@
   []
   (let [active-menu @(rf/subscribe [::app.subs/menubar-active])
         xl? @(rf/subscribe [::window.subs/xl?])]
-    (print active-menu)
     (->> (if xl?
            (submenus)
            (mobile-root))
@@ -755,5 +755,7 @@
                 {:class "flex overflow-hidden"
                  :on-key-down #(.stopPropagation %)
                  :value (when active-menu (name active-menu))
-                 :on-value-change #(rf/dispatch [::app.events/activate-menu
-                                                 (keyword %)])}]))))
+                 :on-value-change #(if (empty? %)
+                                     (rf/dispatch [::menubar.events/deactivate])
+                                     (rf/dispatch [::menubar.events/activate
+                                                   (keyword %)]))}]))))

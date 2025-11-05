@@ -49,7 +49,7 @@
   :changes-will-be-lost [:p "Belgeyi kaydetmeden kapatırsanız
                              %1 için yaptığınız değişiklikler kaybolacak."]}
 
- :renderer.window.menubar
+ :renderer.menubar.views
  {:file "Dosya"
   :new "Yeni"
   :open "Aç..."

@@ -22,6 +22,7 @@
    [renderer.frame.subs :as-alias frame.subs]
    [renderer.frame.views :as frame.views]
    [renderer.history.views :as history.views]
+   [renderer.menubar.views :as menubar.views]
    [renderer.reepl.views :as repl.views]
    [renderer.ruler.events :as-alias ruler.events]
    [renderer.ruler.subs :as-alias ruler.subs]
@@ -38,7 +39,6 @@
    [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]
    [renderer.views :as views]
-   [renderer.window.menubar :as window.menubar]
    [renderer.window.subs :as-alias window.subs]
    [renderer.window.views :as window.views]
    [renderer.worker.subs :as-alias worker.subs]))
@@ -443,7 +443,7 @@
                 [document.views/tab-bar]
                 [:div.flex.overflow-hidden
                  (when-not desktop?
-                   [views/toolbar [window.menubar/root]])
+                   [views/toolbar [menubar.views/root]])
                  [document.views/tab-bar]
                  [:div.drag.flex-1]])
               [:div.flex.h-full.flex-1.gap-px.overflow-hidden
