@@ -4,6 +4,7 @@
    [renderer.app.effects :as-alias app.effects]
    [renderer.app.handlers :as app.handlers]
    [renderer.effects :as-alias effects]
+   [renderer.menubar.handlers :as menubar.handlers]
    [renderer.window.effects :as-alias window.effects]))
 
 (rf/reg-event-db
@@ -30,7 +31,12 @@
  ::update-focused
  [(rf/inject-cofx ::window.effects/focused)]
  (fn [{:keys [db focused]} _]
-   {:db (assoc-in db [:window :focused] focused)}))
+   {:db (cond-> db
+          :always
+          (assoc-in [:window :focused] focused)
+
+          (not focused)
+          (menubar.handlers/deactivate))}))
 
 (rf/reg-event-fx
  ::update-width
