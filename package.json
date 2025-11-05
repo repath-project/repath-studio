@@ -109,7 +109,7 @@
     "@radix-ui/react-slider": "1.2.4",
     "@radix-ui/react-switch": "1.2.6",
     "@radix-ui/react-tooltip": "1.2.8",
-    "@repath-project/react-color": "2.19.4",
+    "@repath-studio/react-color": "2.19.4",
     "@sentry/capacitor": "2.4.0",
     "@sentry/cli": "2.57.0",
     "@sentry/react": "9.46.0",

@@ -8,7 +8,7 @@
    ["@radix-ui/react-scroll-area" :as ScrollArea]
    ["@radix-ui/react-slider" :as Slider]
    ["@radix-ui/react-switch" :as Switch]
-   ["@repath-project/react-color" :refer [ChromePicker PhotoshopPicker]]
+   ["@repath-studio/react-color" :refer [ChromePicker PhotoshopPicker]]
    ["codemirror" :as codemirror]
    ["codemirror/addon/display/placeholder.js"]
    ["codemirror/addon/hint/css-hint.js"]

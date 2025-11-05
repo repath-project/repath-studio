@@ -11,7 +11,7 @@
 (m/=> submit-error-url [:-> string? string?])
 (defn submit-error-url
   [message]
-  (str "https://github.com/repath-project/repath-studio/issues/new?"
+  (str "https://github.com/repath-studio/repath-studio/issues/new?"
        "&title=" message
        "&template=bug_report.md"))
 

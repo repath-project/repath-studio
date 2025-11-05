@@ -616,12 +616,12 @@
             :label (t [::source-code "Source Code"])
             :icon "commit"
             :action [::events/open-remote-url
-                     "https://github.com/repath-project/repath-studio"]}
+                     "https://github.com/repath-studio/repath-studio"]}
            {:id :license
             :label (t [::license "License"])
             :icon "lgpl"
             :action [::events/open-remote-url
-                     "https://github.com/repath-project/repath-studio/blob/main/LICENSE"]}
+                     "https://github.com/repath-studio/repath-studio/blob/main/LICENSE"]}
            {:id :changelog
             :icon "list"
             :label (t [::changelog "Changelog"])
@@ -638,7 +638,7 @@
             :icon "warning"
             :label (t [::submit-an-issue "Submit an issue"])
             :action [::events/open-remote-url
-                     "https://github.com/repath-project/repath-studio/issues/new/choose"]}
+                     "https://github.com/repath-studio/repath-studio/issues/new/choose"]}
            {:id :report-errors
             :icon "bug"
             :type :checkbox

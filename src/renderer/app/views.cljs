@@ -357,7 +357,7 @@
                 [::events/open-remote-url "https://repath.studio/"]]
                ["commit"
                 (t [::source-code "Source Code"])
-                [::events/open-remote-url "https://github.com/repath-project/repath-studio"]]
+                [::events/open-remote-url "https://github.com/repath-studio/repath-studio"]]
                ["list"
                 (t [::changelog "Changelog"])
                 [::events/open-remote-url "https://repath.studio/roadmap/changelog/"]]]

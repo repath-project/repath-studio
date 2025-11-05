@@ -4,14 +4,14 @@
 
 **Added**
 
-- Persist file handles to open recent and save open files on future sessions [#91](https://github.com/repath-project/repath-studio/pull/91)
+- Persist file handles to open recent and save open files on future sessions [#91](https://github.com/repath-studio/repath-studio/pull/91)
 - Code sign and notarize macOS build
 - Auto updates
 - Preview fill color on pointer over element
 - Error reporting dialog
 - PWA install button
 - Korean and Turkish languages
-- Toast notifications [#92](https://github.com/repath-project/repath-studio/pull/92)
+- Toast notifications [#92](https://github.com/repath-studio/repath-studio/pull/92)
 - Icon loading placeholder
 
 **Removed**
@@ -90,23 +90,23 @@
 
 **Added**
 
-- Internationalization support [#87](https://github.com/repath-project/repath-studio/pull/87)
+- Internationalization support [#87](https://github.com/repath-studio/repath-studio/pull/87)
 - Initial attribute value support
 - Reintroduce FPS component
 - Core attributes to container elements
 
 **Changed**
 
-- Font enhancements [#84](https://github.com/repath-project/repath-studio/pull/84)
+- Font enhancements [#84](https://github.com/repath-studio/repath-studio/pull/84)
   - Converting text elements to paths works on web
   - Noto Sans bundled with the app
   - Text elements without a font family set can be converted to paths
   - Font weight filtering based on the selected font-family also works on web
   - Improved scaling of text elements
-- Persist enhancements [#86](https://github.com/repath-project/repath-studio/pull/86)
+- Persist enhancements [#86](https://github.com/repath-studio/repath-studio/pull/86)
   - Persisting is not constrained to local storage limitations
   - Some loading issues on we are now fixed
-- Tool enhancements [#85](https://github.com/repath-project/repath-studio/pull/85)
+- Tool enhancements [#85](https://github.com/repath-studio/repath-studio/pull/85)
   - Preview attributes while creating elements
   - Disable attributes while modifying elements
 - Enhance performance
