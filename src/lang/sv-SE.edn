@@ -142,6 +142,7 @@
   :changelog "Ändringslogg"
   :privacy-policy "Integritetspolicy"
   :submit-an-issue "Rapportera ett problem"
+  :report-errors "Rapportera fel automatiskt"
   :about "Om"}
 
  :renderer.filters

@@ -142,6 +142,7 @@
   :changelog "Wijzigingslog"
   :privacy-policy "Privacybeleid"
   :submit-an-issue "Een probleem melden"
+  :report-errors "Fouten automatisch melden"
   :about "Over"}
 
  :renderer.filters

@@ -142,6 +142,7 @@
   :changelog "변경 로그"
   :privacy-policy "개인정보 보호정책"
   :submit-an-issue "이슈 제출"
+  :report-errors "오류 자동 보고"
   :about "정보"}
 
  :renderer.filters

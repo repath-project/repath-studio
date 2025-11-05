@@ -141,6 +141,7 @@
   :changelog "更改日志"
   :privacy-policy "隐私政策"
   :submit-an-issue "报告问题"
+  :report-errors "自动报告错误"
   :about "关于"}
 
  :renderer.filters

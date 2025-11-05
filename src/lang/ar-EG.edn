@@ -142,6 +142,7 @@
   :changelog "سجل التغييرات"
   :privacy-policy "سياسة الخصوصية"
   :submit-an-issue "إرسال مشكلة"
+  :report-errors "الإبلاغ عن الأخطاء تلقائياً"
   :about "حول"}
 
  :renderer.filters

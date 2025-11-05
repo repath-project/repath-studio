@@ -142,6 +142,7 @@
   :changelog "Änderungsprotokoll"
   :privacy-policy "Datenschutzrichtlinie"
   :submit-an-issue "Problem melden"
+  :report-errors "Fehler automatisch melden"
   :about "Über"}
 
  :renderer.filters
