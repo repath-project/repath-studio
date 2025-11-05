@@ -113,7 +113,7 @@
 
       (and (= (:key e) "Alt")
            (= (:state db) :idle))
-      (assoc :menubar-active true)
+      (assoc-in [:menubar :indicator] true)
 
       :always
       (tool.hierarchy/on-key-down e))
@@ -132,7 +132,7 @@
             (dissoc :nearest-neighbor)))
 
       (= (:key e) "Alt")
-      (dissoc :menubar-active)
+      (assoc-in [:menubar :indicator] false)
 
       :always
       (tool.hierarchy/on-key-up e))

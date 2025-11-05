@@ -163,5 +163,19 @@
    (contains? features k)))
 
 (rf/reg-sub
- ::menubar-active?
- :-> :menubar-active)
+ ::menubar
+ :-> :menubar)
+
+(rf/reg-sub
+ ::menubar-indicator?
+ :-> :menubar-indicator)
+
+(rf/reg-sub
+ ::menubar-indicator?
+ :<- [::menubar]
+ :-> :indicator)
+
+(rf/reg-sub
+ ::menubar-active
+ :<- [::menubar]
+ :-> :active)

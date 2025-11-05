@@ -692,8 +692,9 @@
   [{:keys [label items id disabled]}]
   (let [desktop? @(rf/subscribe [::app.subs/desktop?])
         computed-lang @(rf/subscribe [::app.subs/computed-lang])
-        menubar-active? @(rf/subscribe [::app.subs/menubar-active?])]
+        menubar-indicator? @(rf/subscribe [::app.subs/menubar-indicator?])]
     [:> Menubar/Menu
+     {:value (name id)}
      [:> Menubar/Trigger
       {:class ["button-size py-1 md:min-h-auto md:px-3 xl:py-1.5 flex rounded-sm
                 outline-none select-none items-center justify-center
@@ -702,10 +703,9 @@
                 focus:bg-overlay focus:text-foreground-hovered
                 disabled:text-foreground-disabled disabled:pointer-events-none"
                (when desktop? "min-h-auto")]
-       :id (name id)
        :disabled disabled}
       [:span
-       {:class (when (and menubar-active? (= computed-lang "en-US"))
+       {:class (when (and menubar-indicator? (= computed-lang "en-US"))
                  "md:first-letter:underline")}
        label]]
      [:> Menubar/Portal
@@ -744,13 +744,16 @@
 
 (defn root
   []
-  (->> (if @(rf/subscribe [::window.subs/xl?])
-         (submenus)
-         (mobile-root))
-       (map menu-item)
-       (into [:> Menubar/Root
-              {:class "flex overflow-hidden"
-               :on-key-down #(.stopPropagation %)
-               :on-value-change #(rf/dispatch [::app.events/set-backdrop
-                                               (-> (seq %)
-                                                   (boolean))])}])))
+  (let [active-menu @(rf/subscribe [::app.subs/menubar-active])
+        xl? @(rf/subscribe [::window.subs/xl?])]
+    (print active-menu)
+    (->> (if xl?
+           (submenus)
+           (mobile-root))
+         (map menu-item)
+         (into [:> Menubar/Root
+                {:class "flex overflow-hidden"
+                 :on-key-down #(.stopPropagation %)
+                 :value (when active-menu (name active-menu))
+                 :on-value-change #(rf/dispatch [::app.events/activate-menu
+                                                 (keyword %)])}]))))
