@@ -1,0 +1,754 @@
+{:missing "Saknad översättning för :sv-SE"
+
+ :renderer.app.views
+ {:lock "Lås"
+  :unlock "Lås upp"
+  :svg-description "Vektorgrafik-editor"
+  :start "Start"
+  :new "Ny"
+  :or "eller"
+  :open "Öppna"
+  :recent "Senaste"
+  :select-size "Välj storlek"
+  :select-template "Välj mall"
+  :empty-canvas "Tom duk"
+  :help "Hjälp"
+  :command-panel "Kommandopanel"
+  :website "Webbplats"
+  :source-code "Källkod"
+  :changelog "Ändringslogg"
+  :tree "Träd"
+  :xml "XML"
+  :timeline "Tidslinje"
+  :shell "Skal"
+  :history "Historik"
+  :attributes "Attribut"}
+
+ :renderer.tree.views
+ {:lock "Lås"
+  :unlock "Lås upp"
+  :show "Visa"
+  :hide "Dölj"}
+
+ :renderer.reepl.views
+ {:hide-command-output "Dölj kommandoutdata"
+  :show-command-output "Visa kommandoutdata"}
+
+ :renderer.app.events
+ {:create-doc "Skapa dokument"}
+
+ :renderer.dialog.views
+ {:search-command "Sök efter ett kommando"
+  :no-results "Inga resultat hittades."
+  :version "Version: "
+  :browser "Webbläsare: "
+  :save "Spara"
+  :dont-save "Spara inte"
+  :cancel "Avbryt"
+  :ok "OK"
+  :changes-will-be-lost [:p "Dina ändringar av %1 kommer att förloras om du
+                             stänger dokumentet utan att spara."]}
+
+ :renderer.menubar.views
+ {:file "Arkiv"
+  :new "Ny"
+  :open "Öppna..."
+  :recent "Senaste"
+  :recent-clear "Rensa senaste"
+  :print "Skriv ut"
+  :save "Spara"
+  :save-as "Spara som..."
+  :download "Ladda ner"
+  :export-as "Exportera som"
+  :close "Stäng"
+  :exit "Avsluta"
+  :edit "Redigera"
+  :undo "Ångra"
+  :redo "Gör om"
+  :cut "Klipp ut"
+  :copy "Kopiera"
+  :paste "Klistra in"
+  :paste-in-place "Klistra in på plats"
+  :paste-styles "Klistra in stilar"
+  :duplicate "Duplicera"
+  :select-all "Markera allt"
+  :deselect-all "Avmarkera allt"
+  :invert-selection "Invertera markering"
+  :select-same-tags "Markera samma taggar"
+  :delete "Ta bort"
+  :object "Objekt"
+  :object-to-path "Objekt till bana"
+  :stroke-to-path "Linje till bana"
+  :group "Gruppera"
+  :ungroup "Dela upp grupp"
+  :lock "Lås"
+  :unlock "Lås upp"
+  :align "Justera"
+  :align-left "Vänster"
+  :align-right "Höger"
+  :align-top "Topp"
+  :align-bottom "Botten"
+  :align-center-vertically "Centrera vertikalt"
+  :align-center-horizontally "Centrera horisontellt"
+  :animate "Animera"
+  :animate-transform "Animera transformation"
+  :animate-motion "Animera rörelse"
+  :boolean-operation "Boolesk operation"
+  :boolean-exclude "Exkludera"
+  :boolean-unite "Förena"
+  :boolean-intersect "Skära"
+  :boolean-subtract "Subtrahera"
+  :boolean-divide "Dela"
+  :raise "Lyft fram"
+  :lower "Lägg bak"
+  :raise-to-top "Lyft till toppen"
+  :lower-to-bottom "Lägg längst bak"
+  :image "Bild"
+  :image-trace "Spåra"
+  :path "Bana"
+  :path-simplify "Förenkla"
+  :path-smooth "Jämna ut"
+  :path-flatten "Platta ut"
+  :path-reverse "Vänd"
+  :view "Visa"
+  :zoom "Zoom"
+  :zoom-in "Zooma in"
+  :zoom-out "Zooma ut"
+  :zoom-set-50 "Sätt till 50%"
+  :zoom-set-100 "Sätt till 100%"
+  :zoom-set-200 "Sätt till 200%"
+  :zoom-focus-selected "Fokusera markerat"
+  :zoom-fit-selected "Anpassa markerat"
+  :zoom-fill-selected "Fyll markerat"
+  :accessibility-filter "Tillgänglighetsfilter"
+  :language "Språk"
+  :grid "Rutnät"
+  :rulers "Linjaler"
+  :help-bar "Hjälpfält"
+  :debug-info "Felsökningsinformation"
+  :panel "Panel"
+  :panel-element-tree "Elementträd"
+  :panel-properties "Egenskaper"
+  :panel-xml-view "XML-vy"
+  :panel-history-tree "Historikträd"
+  :panel-shell-history "Skalhistorik"
+  :panel-timeline-editor "Tidslinjeeditor"
+  :fullscreen "Helskärm"
+  :help "Hjälp"
+  :command-panel "Kommandopanel"
+  :website "Webbplats"
+  :source-code "Källkod"
+  :license "Licens"
+  :changelog "Ändringslogg"
+  :privacy-policy "Integritetspolicy"
+  :submit-an-issue "Rapportera ett problem"
+  :about "Om"}
+
+ :renderer.filters
+ {:blur "suddig"
+  :blur-x2 "suddig-x2"
+  :protanopia "protanopi"
+  :protanomaly "protanomali"
+  :deuteranopia "deuteranopi"
+  :deuteranomaly "deuteranomali"
+  :tritanopia "tritanopi"
+  :tritanomaly "tritanomali"
+  :achromatopsia "akromatopsi"
+  :achromatomaly "akromatopsi partiell"}
+
+ :renderer.element.events
+ {:modify-selection "Ändra markering"
+  :select-element "Markera element"
+  :select-elements "Markera element"
+  :delete-selection "Ta bort markering"
+  :set-label "Sätt etikett"
+  :lock-selection "Lås markering"
+  :unlock-selection "Lås upp markering"
+  :remove "Ta bort %1"
+  :update "Uppdatera %1"
+  :deselect-all "Avmarkera allt"
+  :select-all "Markera allt"
+  :select-same-tags "Markera samma taggar"
+  :invert-selection "Invertera markering"
+  :raise-selection "Lyft fram markering"
+  :lower-selection "Lägg bak markering"
+  :raise-selection-top "Lyft markering till toppen"
+  :lower-selection-bottom "Lägg markering längst bak"
+  :paste-selection "Klistra in markering"
+  :paste-selection-in-place "Klistra in markering på plats"
+  :paste-styles-to-selection "Klistra in stilar till markering"
+  :duplicate-selection "Duplicera markering"
+  :move-selection "Flytta markering"
+  :place-selection "Placera markering"
+  :scale-selection "Skala markering"
+  :convert-selection-path "Konvertera markering till bana"
+  :convert-selection-stroke-path "Konvertera markeringslinje till bana"
+  :create "Skapa %1"
+  :import-svg "Importera SVG"
+  :set-parent "Sätt förälder"
+  :group-selection "Gruppera markering"
+  :ungroup-selection "Dela upp markeringsgrupp"
+  :cut-selection "Klipp ut markering"
+  :trace-image "Spåra bild"}
+
+ :renderer.element.views
+ {:cut "Klipp ut"
+  :copy "Kopiera"
+  :paste "Klistra in"
+  :raise "Lyft fram"
+  :lower "Lägg bak"
+  :raise-top "Lyft till toppen"
+  :lower-bottom "Lägg längst bak"
+  :animate "Animera"
+  :animate-transform "Animera transformation"
+  :animate-motion "Animera rörelse"
+  :duplicate "Duplicera"
+  :delete "Ta bort"}
+
+ :renderer.element.impl.shape.circle
+ {:label "Cirkel"
+  :description "SVG <circle> elementet är en SVG grundform, använd för att rita
+                cirklar baserat på en mittpunkt och radie."}
+
+ :renderer.element.impl.shape.image
+ {:label "Bild"
+  :description "SVG <image> elementet inkluderar bilder inom SVG dokument. Det
+                kan visa rasterbildfiler eller andra SVG-filer."}
+
+ :renderer.element.impl.shape.ellipse
+ {:label "Ellips"
+  :description "Elementet <ellipse> är en SVG grundform, använd för att skapa
+                ellipser baserat på en mittkoordinat och både deras x- och
+                y-radie."}
+
+ :renderer.element.impl.shape.line
+ {:label "Linje"
+  :description "Elementet <line> är en SVG grundform använd för att skapa en
+                linje som förbinder två punkter."}
+
+ :renderer.element.impl.shape.path
+ {:label "Bana"
+  :description "SVG <path> elementet är det generiska elementet för att
+                definiera en form. Alla grundformer kan skapas med ett path
+                element."}
+
+ :renderer.element.impl.shape.polygon
+ {:label "Polygon"
+  :description "SVG <polygon> elementet definierar en sluten form bestående av
+                en uppsättning sammankopplade raka linjesegment. Den sista
+                punkten är kopplad till den första punkten."}
+
+ :renderer.element.impl.shape.polyline
+ {:label "Polylinje"
+  :description "SVG <polyline> elementet är en SVG grundform som skapar raka
+                linjer som förbinder flera punkter. Vanligtvis används en
+                polylinje för att skapa öppna former eftersom den sista punkten
+                inte behöver vara kopplad till den första punkten."}
+
+ :renderer.element.impl.shape.rect
+ {:label "Rektangel"
+  :description "Elementet <rect> är en SVG grundform som ritar rektanglar,
+                definierade av deras position, bredd och höjd. Rektanglarna kan
+                ha rundade hörn."}
+
+ :renderer.element.impl.custom.blob
+ {:x "Horisontell koordinat för blob:ens centrum."
+  :y "Vertikal koordinat för blob:ens centrum."
+  :seed "Ett givet frö kommer alltid producera samma blob."
+  :extra-points "Det verkliga antalet punkter kommer att vara
+                 `3 + extraPoints`."
+  :randomness "Ökar mängden variation i punktposition."
+  :size "Storleken på gränsrutan."
+  :description "Vektorbaserad blob."
+  :generate-random-seed "Generera slumpmässigt frö"}
+
+ :renderer.element.impl.custom.brush
+ {:label "Pensel"
+  :points "Inmatningspunkter inspelade från användarens musrörelse."
+  :size "Basstorleken (diameter) på linjen."
+  :thinning "Effekten av tryck på linjens storlek."
+  :smoothing "Hur mycket linjens kanter ska mjukas upp."
+  :stream-line "Hur mycket linjen ska strömlinjeformas."
+  :description "Rita tryckkänsliga frihandslinjer med perfect-freehand."}
+
+ :renderer.element.impl.container.canvas
+ {:label "Duk"
+  :description "Duken är huvud-SVG behållaren som innehåller alla element."}
+
+ :renderer.element.impl.container.svg
+ {:description "SVG elementet är en behållare som definierar ett nytt
+                koordinatsystem och visningsområde. Det används som det
+                yttersta elementet i SVG dokument, men kan också användas för
+                att bädda in ett SVG fragment inuti ett SVG eller HTML
+                dokument."}
+
+ :renderer.element.impl.text
+ {:description "SVG <text> elementet ritar ett grafiskt element bestående av
+                text. Det är möjligt att applicera en gradient, mönster,
+                klippbana, mask eller filter på <text>, som vilket annat SVG
+                grafiskt element som helst."
+  :label "Text"
+  :remove-text "Ta bort text"
+  :set-text "Sätt text"}
+
+ :renderer.attribute.views
+ {:all "alla"
+  :browser-compatibility "Webbläsarkompatibilitet"
+  :learn-more "Lär dig mer"
+  :specification "Specifikation"
+  :applies-to "Gäller för"
+  :computed "Beräknad"
+  :percentages "Procentsatser"
+  :animatable "Animerbar"
+  :animationType "Animationstyp"
+  :syntax "Syntax"
+  :mdn-info "MDN Info"
+  :attributes-title "%1 %2 element"}
+
+ :renderer.attribute.impl.core
+ {:x "Attributet x definierar en x-axelkoordinat i användarens
+      koordinatsystem."
+  :y "Attributet y definierar en y-axelkoordinat i användarens
+      koordinatsystem."
+  :x1 "Attributet x1 används för att specificera den första x-koordinaten för
+       att rita ett SVG element som kräver mer än en koordinat. Element som
+       bara behöver en koordinat använder x attributet istället."
+  :y1 "Attributet y1 används för att specificera den första y-koordinaten för
+       att rita ett SVG element som kräver mer än en koordinat. Element som
+       bara behöver en koordinat använder y attributet istället."
+  :x2 "Attributet x2 används för att specificera den andra x-koordinaten för
+       att rita ett SVG element som kräver mer än en koordinat. Element som
+       bara behöver en koordinat använder x attributet istället."
+  :y2 "Attributet y2 används för att specificera den andra y-koordinaten för
+       att rita ett SVG element som kräver mer än en koordinat. Element som
+       bara behöver en koordinat använder y attributet istället."
+  :cx "Attributet cx definierar x-axelkoordinaten för en mittpunkt."
+  :cy "Attributet cy definierar y-axelkoordinaten för en mittpunkt."
+  :dx "Attributet dx indikerar en förskjutning längs x-axeln på positionen för
+       ett element eller dess innehåll."
+  :dy "Attributet dy indikerar en förskjutning längs y-axeln på positionen för
+       ett element eller dess innehåll."
+  :width "Attributet width definierar den horisontella längden av ett element
+          i användarens koordinatsystem."
+  :height "Attributet height definierar den vertikala längden av ett element i
+           användarens koordinatsystem."
+  :rx "Attributet rx definierar en radie på x-axeln."
+  :ry "Attributet ry definierar en radie på y-axeln."
+  :r "Attributet r definierar radien för en cirkel."
+  :rotate "Attributet rotate specificerar hur det animerade elementet roterar
+           medan det färdas längs en bana specificerad i ett <animateMotion>
+           element."
+  :stroke "Attributet stroke är ett presentationsattribut som definierar
+           färgen (eller vilken SVG färgserver som helst som gradienter eller
+           mönster) som används för att måla konturerna av formen."
+  :fill "Attributet fill har två olika betydelser. För former och text är det
+         ett presentationsattribut som definierar färgen (eller vilken SVG
+         färgserver som helst som gradienter eller mönster) som används för
+         att måla elementet; för animation definierar det sluttillståndet för
+         animationen."
+  :stroke-width "Attributet stroke-width är ett presentationsattribut som
+                 definierar bredden på linjen som ska appliceras på formen."
+  :stroke-dasharray "Attributet stroke-dasharray är ett presentationsattribut
+                     som definierar mönstret av streck och luckor som används
+                     för att måla konturerna av formen."
+  :opacity "Attributet opacity specificerar transparensen för ett objekt eller
+            en grupp objekt, det vill säga graden till vilken bakgrunden bakom
+            elementet överläggs."
+  :id "Attributet id tilldelar ett unikt namn till ett element."
+  :class "Tilldelar ett klassnamn eller uppsättning klassnamn till ett element.
+          Du kan tilldela samma klassnamn eller namn till vilket antal element
+          som helst, emellertid måste flera klassnamn separeras av
+          blankstegstecken."
+  :tabindex "Attributet tabindex låter dig kontrollera om ett element är
+             fokuserbart och definiera den relativa ordningen för elementet för
+             ändamål av sekventiell fokusnavigering."
+  :style "Attributet style gör det möjligt att styla ett element med CSS
+          deklarationer. Det fungerar identiskt med style attributet i HTML."
+  :href "Attributet href definierar en länk till en resurs som en referens-URL.
+         Den exakta betydelsen av den länken beror på kontexten för varje
+         element som använder den."
+  :attribute-name "Attributet attributeName indikerar namnet på CSS
+                   egenskapen eller attributet för målelementet som kommer att
+                   ändras under en animation."
+  :begin "Attributet begin definierar när en animation ska börja."
+  :end "Attributet end definierar ett slutvärde för animationen som kan
+        begränsa den aktiva varaktigheten."
+  :dur "Attributet dur indikerar den enkla varaktigheten för en animation."
+  :min "Attributet min specificerar minimivärdet för den aktiva
+        animationsvaraktigheten."
+  :max "Attributet max specificerar maximivärdet för den aktiva
+        animationsvaraktigheten."
+  :restart "Attributet restart specificerar om en animation kan starta om
+            eller inte."
+  :repeat-count "Attributet repeatCount indikerar antalet gånger en animation
+                 kommer att äga rum."
+  :repeat-dur "Attributet repeatDur specificerar den totala varaktigheten för
+               att upprepa en animation."
+  :calc-mode "Attributet calcMode specificerar interpolationsläget för
+              animationen."
+  :values "Attributet values har olika betydelser, beroende på kontexten där
+           det används, antingen definierar det en sekvens av värden som
+           används under loppet av en animation, eller så är det en lista med
+           nummer för en färgmatris, som tolkas olika beroende på typen av
+           färgändring som ska utföras."
+  :key-times "Attributet keyTimes representerar en lista med tidsvärden som
+              används för att kontrollera tajmingen av animationen."
+  :key-splines "Attributet keySplines definierar en uppsättning Bézier-kurva
+                kontrollpunkter associerade med keyTimes listan, som definierar
+                en kubisk Bézier funktion som kontrollerar intervalltajming"
+  :from "Attributet from indikerar det initiala värdet för attributet som
+         kommer att ändras under animationen."
+  :to "Attributet to indikerar slutvärdet för attributet som kommer att ändras
+       under animationen."
+  :by "Attributet by specificerar ett relativt offset-värde för ett attribut
+       som kommer att ändras under en animation."
+  :additive "Attributet additive kontrollerar om en animation är additiv eller
+             inte."
+  :accumulate "Attributet accumulate kontrollerar om en animation är
+               kumulativ eller inte."
+  :view-box "Attributet viewBox definierar positionen och dimensionen, i
+             användarutrymme, för en SVG viewport."
+  :preserve-aspect-ratio "Attributet preserveAspectRatio indikerar hur ett
+                          element med en viewBox som tillhandahåller ett givet
+                          bildförhållande måste passa in i en viewport med ett
+                          annat bildförhållande."}
+
+ :renderer.tool.impl.element.polyline
+ {:label "Polylinje"
+  :create-polyline "Skapa polylinje"}
+
+ :renderer.tool.impl.element.polygon
+ {:label "Polygon"
+  :create-polygon "Skapa polygon"}
+
+ :renderer.tool.impl.element.image
+ {:label "Bild"}
+
+ :renderer.tool.impl.element.core
+ {:help "Klicka och dra för att skapa ett element."}
+
+ :renderer.tool.impl.element.poly
+ {:add-points "Klicka för att lägga till fler punkter."
+  :finalize-shape "Dubbelklicka för att slutföra formen."}
+
+ :renderer.tool.impl.element.rect
+ {:label "Rektangel"
+  :help [:div "Håll %1 för att låsa proportioner."]
+  :create-rectangle "Skapa rektangel"}
+
+ :renderer.tool.impl.element.svg
+ {:label "Svg"
+  :help [:div "Håll %1 för att låsa proportioner."]
+  :create-svg "Skapa svg"}
+
+ :renderer.tool.impl.extension.blob
+ {:label "Blob"
+  :create-blob "Skapa blob"}
+
+ :renderer.tool.impl.misc.dropper
+ {:label "Pipett"
+  :help "Klicka var som helst för att välja en färg."
+  :pick-color "Välj färg"}
+
+ :renderer.tool.impl.misc.fill
+ {:label "Fyllning"
+  :help "Klicka på ett element för att fylla."
+  :fill "Fyll"}
+
+ :renderer.tool.impl.misc.measure
+ {:label "Mäta"
+  :help "Klicka och dra för att mäta ett avstånd."
+  :measure-end "mätslut"
+  :measure-start "mätstart"}
+
+ :renderer.tool.impl.element.text
+ {:label "Text"
+  :help "Klicka för att börja skriva."}
+
+ :renderer.attribute.impl.stroke-linecap
+ {:description "Attributet stroke-linecap är ett presentationsattribut som
+                definierar formen som ska användas i slutet av öppna delbanor
+                när de stryks."
+  :butt "Rak"
+  :round "Rund"
+  :square "Fyrkantig"}
+
+ :renderer.attribute.impl.stroke-linejoin
+ {:description "Attributet stroke-linejoin är ett presentationsattribut som
+                definierar formen som ska användas i hörnen av banor när de
+                stryks."
+  :bevel "Avfasad"
+  :miter "Spetsig"
+  :round "Rund"}
+
+ :renderer.attribute.impl.overflow
+ {:description "Attributet overflow ställer in vad som ska hända när ett
+                elements innehåll är för stort för att passa i dess
+                blockformateringskontext. Denna funktion är inte allmänt
+                implementerad ännu."
+  :hidden "Dold"
+  :visible "Synlig"
+  :scroll "Rulla"
+  :auto "Automatisk"}
+
+ :renderer.attribute.impl.color
+ {:pick-color "Välj färg"}
+
+ :renderer.attribute.impl.d
+ {:description "Attributet d definierar en bana att rita."
+  :edit "Redigera bana"
+  :absolute "(Absolut)"
+  :relative "(Relativ)"
+  :move-to "Flytta till"
+  :line-to "Linje till"
+  :vertical-line "Vertikal linje"
+  :horizontal-line "Horisontell linje"
+  :cubic-bezier "Kubisk Bézier kurva"
+  :shortcut-cubic-bezier "Genväg kubisk Bézier kurva"
+  :quadratic-bezier-curve "Kvadratisk Bézier kurva"
+  :shortcut-quadratic "Genväg kvadratisk Bézier kurva"
+  :elliptical-arc-curve "Elliptisk båge kurva"
+  :close-path "Stäng bana"}
+
+ :renderer.attribute.impl.length
+ {:increase "Öka"
+  :decrease "Minska"}
+
+ :renderer.attribute.impl.font-family
+ {:description "Attributet font-family indikerar vilken typsnittsfamilj som
+                kommer att användas för att rendera texten, specificerad som
+                en prioriterad lista med typsnittsfamiljnamn och/eller generiska
+                familjnamn."
+  :search-font "Sök efter ett typsnitt"
+  :select-font "Välj typsnitt"
+  :no-local-font "Inga lokala typsnitt hittades."}
+
+ :renderer.attribute.impl.font-size
+ {:description "Attributet font-size refererar till storleken på typsnittet
+                från baslinje till baslinje när flera textrader är satta fast i
+                en flerradig layoutmiljö."}
+
+ :renderer.attribute.impl.font-weight
+ {:description "Attributet font-weight refererar till tjockleken eller
+                lättheten hos glyfer som används för att rendera texten, i
+                förhållande till andra typsnitt i samma typsnittsfamilj."}
+
+ :renderer.attribute.impl.crossorigin
+ {:description "Attributet crossorigin, giltigt på <image> och <feImage>
+                elementen, ger stöd för konfiguration av Cross-Origin Resource
+                Sharing (CORS) förfrågningar för elementets hämtade data."
+  :anonymous "Anonym"
+  :use-credentials "Använd autentiseringsuppgifter"}
+
+ :renderer.attribute.impl.decoding
+ {:description "Attributet decoding, giltigt på <image> element, ger en
+                ledtråd till webbläsaren om den ska utföra bildavkodning
+                tillsammans med rendering av annat innehåll i ett enda
+                presentationssteg som ser mer \"korrekt\" ut (sync), eller
+                rendera och presentera det andra innehållet först och sedan
+                avkoda bilden och presentera den senare (async). I praktiken
+                betyder async att nästa paint inte väntar på att bilden ska
+                avkodas."
+  :sync "Synkront"
+  :async "Asynkront"
+  :auto "Automatisk"}
+
+ :renderer.tool.impl.base.edit
+ {:label "Redigera"
+  :help-idle-drag [:div "Dra ett handtag för att ändra din form."]
+  :help-idle-click [:div "Klicka på ett element för att ändra markering"]
+  :help-edit [:div "Håll %1 för att begränsa riktning."]
+  :help-type [:div "Ange din text."]
+  :select-element "Markera element"
+  :edit "Redigera"
+  :centroid "Tyngdpunkt"}
+
+ :renderer.tool.impl.base.transform
+ {:label "Transformera"
+  :idle-click [:div "Klicka för att markera ett element eller dra för att
+                     markera per område. "]
+  :idle-hold [:div "Håll %1 för att lägga till eller ta bort element från
+                    markering."]
+  :select [:div "Håll %1 för att markera överlappande element."]
+  :select-element "Markera element"
+  :deselect-element "Avmarkera element"
+  :translate [:div "Håll %1 för att begränsa riktning, och %2 för att klona."]
+  :clone [:div "Håll %1 för att begränsa riktning. eller släpp %2 för att
+                flytta"]
+  :scale [:div "Håll %1 för att låsa proportioner, %2 för att skala på plats,
+                %3 för att också skala barn."]
+  :modify-selection "Ändra markering"
+  :move-selection "Flytta markering"
+  :scale-selection "Skala markering"
+  :clone-selection "Klona markering"
+  :scale-handle "skalhandtag"}
+
+ :renderer.tool.impl.base.pan
+ {:label "Panorera"
+  :idle-help "Klicka och dra för att panorera."
+  :pan-help "Dra för att panorera."}
+
+ :renderer.tool.impl.base.zoom
+ {:label "Zoom"
+  :zoom-in [:div "Klicka eller markera ett område för att zooma in."]
+  :zoom-out [:div "Håll %1 för att zooma ut."]}
+
+ :renderer.tool.impl.draw.brush
+ {:label "Pensel"
+  :draw-brush "Rita pensel"}
+
+ :renderer.tool.impl.draw.pen
+ {:label "Penna"
+  :draw-line "Rita linje"}
+
+ :renderer.tool.impl.draw.core
+ {:help "Klicka och dra för att rita."}
+
+ :renderer.tool.impl.element.circle
+ {:label "Cirkel"
+  :create-circle "Skapa cirkel"
+  :circle-radius "cirkelradie"
+  :circle-center "cirkelcentrum"}
+
+ :renderer.tool.impl.element.ellipse
+ {:label "Ellips"
+  :create-ellipse "Skapa ellips"
+  :help [:div "Håll %1 för att låsa proportioner."]}
+
+ :renderer.tool.impl.element.line
+ {:label "Linje"
+  :create-line "Skapa linje"}
+
+ :renderer.document.events
+ {:save-changes "Vill du spara dina ändringar?"
+  :create-doc "Skapa dokument"
+  :create-doc-from-template "Skapa dokument från mall"
+  :load-doc "Ladda dokument"
+  :error-loading "Fel vid laddning av %1"
+  :unsupported-or-corrupted "Filen verkar vara ostödd eller skadad."}
+
+ :renderer.document.views
+ {:new "Ny"
+  :open "Öppna"
+  :open-directory "Öppna innehållande katalog"
+  :save "Spara"
+  :undo "Ångra"
+  :redo "Gör om"
+  :close "Stäng"
+  :close-doc "Stäng dokument"
+  :close-all "Stäng alla"
+  :close-saved "Stäng sparade"
+  :close-others "Stäng andra"}
+
+ :renderer.window.views
+ {:minimize "Minimera"
+  :maximize "Maximera"
+  :restore "Återställ"
+  :close "Stäng"
+  :theme "Tema läge - %1"
+  :enter-fullscreen "Aktivera helskärm"
+  :exit-fullscreen "Lämna helskärm"
+  :install "Installera"}
+
+ :renderer.toolbar.status
+ {:select-zoom "Välj zoomnivå"
+  :zoom "Zoom"
+  :zoom-out "Zooma ut"
+  :zoom-in "Zooma in"
+  :zoom-set-50 "Sätt till 50%"
+  :zoom-set-100 "Sätt till 100%"
+  :zoom-set-200 "Sätt till 200%"
+  :zoom-focus-selected "Fokusera markerat"
+  :zoom-fit-selected "Anpassa markerat"
+  :zoom-fill-selected "Fyll markerat"
+  :timeline "Tidslinje"
+  :grid "Rutnät"
+  :rulers "Linjaler"
+  :history "Historik"
+  :xml "XML"
+  :fill-color "Välj fyllnadsfärg"
+  :stroke-color "Välj linjefärg"
+  :swap-color "Växla fyllning med linje"}
+
+ :renderer.snap.views
+ {:snap "Fäst"
+  :snap-options "Fästalternativ"
+  :centers "centrum"
+  :midpoints "mittpunkter"
+  :corners "hörn"
+  :nodes "noder"
+  :to " till "}
+
+ :renderer.toolbar.object
+ {:bring-front "Ta till förgrund"
+  :send-back "Skicka till bakgrund"
+  :bring-forward "Ta framåt"
+  :send-backward "Skicka bakåt"
+  :group "Gruppera"
+  :ungroup "Dela upp grupp"
+  :align-left "Justera vänster"
+  :align-center-hor "Justera centrum horisontellt"
+  :align-right "Justera höger"
+  :align-top "Justera topp"
+  :align-center-ver "Justera centrum vertikalt"
+  :align-bottom "Justera botten"
+  :unite "Förena"
+  :intersect "Skära"
+  :subtract "Subtrahera"
+  :exclude "Exkludera"
+  :divide "Dela"}
+
+ :renderer.utils.bounds
+ {:bounds-corner "gränshörn"
+  :bounds-center "gränscentrum"
+  :bounds-midpoint "gränsmittpunkt"}
+
+ :renderer.history.events
+ {:clear-history "Rensa historik"}
+
+ :renderer.history.views
+ {:center-view "Centrera vy"
+  :clear-history "Rensa historik"
+  :action-cannot-undone "Denna åtgärd kan inte ångras."
+  :clear-history-description "Är du säker på att du vill rensa
+                              dokumenthistoriken?"
+  :select-element "Markera element"
+  :delete-selection "Ta bort markering"
+  :oldest "Äldsta"
+  :newest "Nyaste"}
+
+ :renderer.timeline.views
+ {:speed "Hastighet"
+  :no-filter "Inget filter"
+  :filter "Filter"
+  :grid-snap "Rutnätsfäst"
+  :guide-snap "Hjälplinjefäst"
+  :play "Spela"
+  :replay "Spela om"
+  :pause "Pausa"
+  :hide-timeline "Dölj tidslinje"}
+
+ :renderer.attribute.impl.angle
+ {:pick-angle "Välj vinkel"}
+
+ :renderer.attribute.impl.href
+ {:select-file "Välj fil"}
+
+ :renderer.attribute.impl.points
+ {:edit-points "Redigera punkter"}
+
+ :renderer.frame.views
+ {:main-canvas "huvudduk"}
+
+ :renderer.error.events
+ {:welcome "Välkommen till %1!"
+  :reporting-description [:div
+                          [:p "Skulle du vilja hjälpa oss förbättra genom att
+                               skicka anonyma felrapporter? Du kan ändra din
+                               inställning när som helst från vår \"%1\" meny."]
+                          [:p "För mer information, läs vår %2."]]
+  :privacy-policy "integritetspolicy"
+  :no-thank-you "Nej tack"}
+
+ :renderer.effects
+ {:permission-denied "Tillstånd att komma åt filen nekades."}}

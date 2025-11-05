@@ -59,7 +59,19 @@
    "tr-TR" {:dir "ltr"
             :locale "Türkçe"
             :code "TR"
-            :dictionary (load-resource-at-compile-time "lang/tr-TR.edn")}})
+            :dictionary (load-resource-at-compile-time "lang/tr-TR.edn")}
+   "it-IT" {:dir "ltr"
+            :locale "Italiano"
+            :code "IT"
+            :dictionary (load-resource-at-compile-time "lang/it-IT.edn")}
+   "nl-NL" {:dir "ltr"
+            :locale "Nederlands"
+            :code "NL"
+            :dictionary (load-resource-at-compile-time "lang/nl-NL.edn")}
+   "sv-SE" {:dir "ltr"
+            :locale "Svenska"
+            :code "SV"
+            :dictionary (load-resource-at-compile-time "lang/sv-SE.edn")}})
 
 (m/=> supported-lang? [:-> [:maybe string?] boolean?])
 (defn supported-lang?

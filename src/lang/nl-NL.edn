@@ -1,0 +1,767 @@
+{:missing "Ontbrekende vertaling voor :nl-NL"
+
+ :renderer.app.views
+ {:lock "Vergrendelen"
+  :unlock "Ontgrendelen"
+  :svg-description "Vector Graphics Editor"
+  :start "Start"
+  :new "Nieuw"
+  :or "of"
+  :open "Openen"
+  :recent "Recent"
+  :select-size "Selecteer grootte"
+  :select-template "Selecteer sjabloon"
+  :empty-canvas "Leeg canvas"
+  :help "Help"
+  :command-panel "Commandopaneel"
+  :website "Website"
+  :source-code "Broncode"
+  :changelog "Wijzigingslog"
+  :tree "Boom"
+  :xml "XML"
+  :timeline "Tijdlijn"
+  :shell "Shell"
+  :history "Geschiedenis"
+  :attributes "Attributen"}
+
+ :renderer.tree.views
+ {:lock "Vergrendelen"
+  :unlock "Ontgrendelen"
+  :show "Tonen"
+  :hide "Verbergen"}
+
+ :renderer.reepl.views
+ {:hide-command-output "Commando-uitvoer verbergen"
+  :show-command-output "Commando-uitvoer tonen"}
+
+ :renderer.app.events
+ {:create-doc "Document aanmaken"}
+
+ :renderer.dialog.views
+ {:search-command "Zoek naar een commando"
+  :no-results "Geen resultaten gevonden."
+  :version "Versie: "
+  :browser "Browser: "
+  :save "Opslaan"
+  :dont-save "Niet opslaan"
+  :cancel "Annuleren"
+  :ok "OK"
+  :changes-will-be-lost [:p "Uw wijzigingen aan %1 gaan verloren als u het
+                             document sluit zonder op te slaan."]}
+
+ :renderer.menubar.views
+ {:file "Bestand"
+  :new "Nieuw"
+  :open "Openen..."
+  :recent "Recent"
+  :recent-clear "Recent wissen"
+  :print "Afdrukken"
+  :save "Opslaan"
+  :save-as "Opslaan als..."
+  :download "Downloaden"
+  :export-as "Exporteren als"
+  :close "Sluiten"
+  :exit "Afsluiten"
+  :edit "Bewerken"
+  :undo "Ongedaan maken"
+  :redo "Opnieuw"
+  :cut "Knippen"
+  :copy "Kopiëren"
+  :paste "Plakken"
+  :paste-in-place "Plakken op locatie"
+  :paste-styles "Stijlen plakken"
+  :duplicate "Dupliceren"
+  :select-all "Alles selecteren"
+  :deselect-all "Alles deselecteren"
+  :invert-selection "Selectie omkeren"
+  :select-same-tags "Zelfde tags selecteren"
+  :delete "Verwijderen"
+  :object "Object"
+  :object-to-path "Object naar pad"
+  :stroke-to-path "Lijn naar pad"
+  :group "Groeperen"
+  :ungroup "Groepering opheffen"
+  :lock "Vergrendelen"
+  :unlock "Ontgrendelen"
+  :align "Uitlijnen"
+  :align-left "Links"
+  :align-right "Rechts"
+  :align-top "Boven"
+  :align-bottom "Onder"
+  :align-center-vertically "Verticaal centreren"
+  :align-center-horizontally "Horizontaal centreren"
+  :animate "Animeren"
+  :animate-transform "Transformatie animeren"
+  :animate-motion "Beweging animeren"
+  :boolean-operation "Booleaanse bewerking"
+  :boolean-exclude "Uitsluiten"
+  :boolean-unite "Verenigen"
+  :boolean-intersect "Doorsnede"
+  :boolean-subtract "Aftrekken"
+  :boolean-divide "Verdelen"
+  :raise "Naar voren"
+  :lower "Naar achteren"
+  :raise-to-top "Naar voorgrond"
+  :lower-to-bottom "Naar achtergrond"
+  :image "Afbeelding"
+  :image-trace "Traceren"
+  :path "Pad"
+  :path-simplify "Vereenvoudigen"
+  :path-smooth "Gladmaken"
+  :path-flatten "Afvlakken"
+  :path-reverse "Omkeren"
+  :view "Weergave"
+  :zoom "Zoom"
+  :zoom-in "Inzoomen"
+  :zoom-out "Uitzoomen"
+  :zoom-set-50 "Instellen op 50%"
+  :zoom-set-100 "Instellen op 100%"
+  :zoom-set-200 "Instellen op 200%"
+  :zoom-focus-selected "Focus op geselecteerd"
+  :zoom-fit-selected "Geselecteerd passend maken"
+  :zoom-fill-selected "Geselecteerd vullen"
+  :accessibility-filter "Toegankelijkheidsfilter"
+  :language "Taal"
+  :grid "Raster"
+  :rulers "Linealen"
+  :help-bar "Helpbalk"
+  :debug-info "Debug-informatie"
+  :panel "Paneel"
+  :panel-element-tree "Elementenboom"
+  :panel-properties "Eigenschappen"
+  :panel-xml-view "XML-weergave"
+  :panel-history-tree "Geschiedenisboom"
+  :panel-shell-history "Shell-geschiedenis"
+  :panel-timeline-editor "Tijdlijn-editor"
+  :fullscreen "Volledig scherm"
+  :help "Help"
+  :command-panel "Commandopaneel"
+  :website "Website"
+  :source-code "Broncode"
+  :license "Licentie"
+  :changelog "Wijzigingslog"
+  :privacy-policy "Privacybeleid"
+  :submit-an-issue "Een probleem melden"
+  :about "Over"}
+
+ :renderer.filters
+ {:blur "vervaging"
+  :blur-x2 "vervaging-x2"
+  :protanopia "protanopie"
+  :protanomaly "protanomalie"
+  :deuteranopia "deuteranopie"
+  :deuteranomaly "deuteranomalie"
+  :tritanopia "tritanopie"
+  :tritanomaly "tritanomalie"
+  :achromatopsia "achromatopsie"
+  :achromatomaly "achromatopsie gedeeltelijk"}
+
+ :renderer.element.events
+ {:modify-selection "Selectie wijzigen"
+  :select-element "Element selecteren"
+  :select-elements "Elementen selecteren"
+  :delete-selection "Selectie verwijderen"
+  :set-label "Label instellen"
+  :lock-selection "Selectie vergrendelen"
+  :unlock-selection "Selectie ontgrendelen"
+  :remove "Verwijder %1"
+  :update "Update %1"
+  :deselect-all "Alles deselecteren"
+  :select-all "Alles selecteren"
+  :select-same-tags "Zelfde tags selecteren"
+  :invert-selection "Selectie omkeren"
+  :raise-selection "Selectie naar voren"
+  :lower-selection "Selectie naar achteren"
+  :raise-selection-top "Selectie naar voorgrond"
+  :lower-selection-bottom "Selectie naar achtergrond"
+  :paste-selection "Selectie plakken"
+  :paste-selection-in-place "Selectie plakken op locatie"
+  :paste-styles-to-selection "Stijlen plakken naar selectie"
+  :duplicate-selection "Selectie dupliceren"
+  :move-selection "Selectie verplaatsen"
+  :place-selection "Selectie plaatsen"
+  :scale-selection "Selectie schalen"
+  :convert-selection-path "Selectie naar pad converteren"
+  :convert-selection-stroke-path "Selectielijn naar pad converteren"
+  :create "Maak %1"
+  :import-svg "SVG importeren"
+  :set-parent "Ouder instellen"
+  :group-selection "Selectie groeperen"
+  :ungroup-selection "Selectiegroepering opheffen"
+  :cut-selection "Selectie knippen"
+  :trace-image "Afbeelding traceren"}
+
+ :renderer.element.views
+ {:cut "Knippen"
+  :copy "Kopiëren"
+  :paste "Plakken"
+  :raise "Naar voren"
+  :lower "Naar achteren"
+  :raise-top "Naar voorgrond"
+  :lower-bottom "Naar achtergrond"
+  :animate "Animeren"
+  :animate-transform "Transformatie animeren"
+  :animate-motion "Beweging animeren"
+  :duplicate "Dupliceren"
+  :delete "Verwijderen"}
+
+ :renderer.element.impl.shape.circle
+ {:label "Cirkel"
+  :description "Het SVG <circle> element is een SVG basisvorm, gebruikt om
+                cirkels te tekenen gebaseerd op een middelpunt en straal."}
+
+ :renderer.element.impl.shape.image
+ {:label "Afbeelding"
+  :description "Het SVG <image> element bevat afbeeldingen binnen SVG
+                documenten. Het kan rasterafbeeldingen of andere SVG bestanden
+                weergeven."}
+
+ :renderer.element.impl.shape.ellipse
+ {:label "Ellips"
+  :description "Het <ellipse> element is een SVG basisvorm, gebruikt om
+                ellipsen te maken gebaseerd op een middelpunt en zowel hun x als
+                y straal."}
+
+ :renderer.element.impl.shape.line
+ {:label "Lijn"
+  :description "Het <line> element is een SVG basisvorm gebruikt om een lijn te
+                maken die twee punten verbindt."}
+
+ :renderer.element.impl.shape.path
+ {:label "Pad"
+  :description "Het SVG <path> element is het generieke element om een vorm te
+                definiëren. Alle basisvormen kunnen gemaakt worden met een path
+                element."}
+
+ :renderer.element.impl.shape.polygon
+ {:label "Polygoon"
+  :description "Het SVG <polygon> element definieert een gesloten vorm
+                bestaande uit een reeks verbonden rechte lijnsegmenten. Het
+                laatste punt is verbonden met het eerste punt."}
+
+ :renderer.element.impl.shape.polyline
+ {:label "Polylijn"
+  :description "Het SVG <polyline> element is een SVG basisvorm die rechte
+                lijnen maakt die verschillende punten verbinden. Meestal wordt
+                een polylijn gebruikt om open vormen te maken omdat het laatste
+                punt niet verbonden hoeft te zijn met het eerste punt."}
+
+ :renderer.element.impl.shape.rect
+ {:label "Rechthoek"
+  :description "Het <rect> element is een SVG basisvorm die rechthoeken tekent,
+                gedefinieerd door hun positie, breedte en hoogte. De rechthoeken
+                kunnen afgeronde hoeken hebben."}
+
+ :renderer.element.impl.custom.blob
+ {:x "Horizontale coördinaat van het middelpunt van de blob."
+  :y "Verticale coördinaat van het middelpunt van de blob."
+  :seed "Een gegeven seed zal altijd dezelfde blob produceren."
+  :extra-points "Het werkelijke aantal punten zal `3 + extraPoints` zijn."
+  :randomness "Vergroot de hoeveelheid variatie in puntpositie."
+  :size "De grootte van de begrenzingsbox."
+  :description "Vector gebaseerde blob."
+  :generate-random-seed "Genereer willekeurige seed"}
+
+ :renderer.element.impl.custom.brush
+ {:label "Penseel"
+  :points "Invoerpunten opgenomen van de muisbeweging van de gebruiker."
+  :size "De basisgrootte (diameter) van de streek."
+  :thinning "Het effect van druk op de grootte van de streek."
+  :smoothing "Hoeveel de randen van de streek verzacht moeten worden."
+  :stream-line "Hoeveel de streek gestroomlijnd moet worden."
+  :description "Teken drukgevoelige vrijhand lijnen met perfect-freehand."}
+
+ :renderer.element.impl.container.canvas
+ {:label "Canvas"
+  :description "Het canvas is de hoofd-SVG container die alle elementen bevat."}
+
+ :renderer.element.impl.container.svg
+ {:description "Het svg element is een container die een nieuw
+                coördinatensysteem en viewport definieert. Het wordt gebruikt
+                als het buitenste element van SVG documenten, maar kan ook
+                gebruikt worden om een SVG fragment in te bedden binnen een SVG
+                of HTML document."}
+
+ :renderer.element.impl.text
+ {:description "Het SVG <text> element tekent een grafisch element bestaande
+                uit tekst. Het is mogelijk om een verloop, patroon, clipping
+                path, masker of filter toe te passen op <text>, zoals elk ander
+                SVG grafisch element."
+  :label "Tekst"
+  :remove-text "Tekst verwijderen"
+  :set-text "Tekst instellen"}
+
+ :renderer.attribute.views
+ {:all "alle"
+  :browser-compatibility "Browser compatibiliteit"
+  :learn-more "Meer leren"
+  :specification "Specificatie"
+  :applies-to "Van toepassing op"
+  :computed "Berekend"
+  :percentages "Percentages"
+  :animatable "Animeerbaar"
+  :animationType "Animatietype"
+  :syntax "Syntaxis"
+  :mdn-info "MDN Info"
+  :attributes-title "%1 %2 elementen"}
+
+ :renderer.attribute.impl.core
+ {:x "Het x attribuut definieert een x-as coördinaat in het gebruiker
+      coördinatensysteem."
+  :y "Het y attribuut definieert een y-as coördinaat in het gebruiker
+      coördinatensysteem."
+  :x1 "Het x1 attribuut wordt gebruikt om de eerste x-coördinaat te
+       specificeren voor het tekenen van een SVG element dat meer dan één
+       coördinaat vereist. Elementen die slechts één coördinaat nodig hebben
+       gebruiken in plaats daarvan het x attribuut."
+  :y1 "Het y1 attribuut wordt gebruikt om de eerste y-coördinaat te
+       specificeren voor het tekenen van een SVG element dat meer dan één
+       coördinaat vereist. Elementen die slechts één coördinaat nodig hebben
+       gebruiken in plaats daarvan het y attribuut."
+  :x2 "Het x2 attribuut wordt gebruikt om de tweede x-coördinaat te
+       specificeren voor het tekenen van een SVG element dat meer dan één
+       coördinaat vereist. Elementen die slechts één coördinaat nodig hebben
+       gebruiken in plaats daarvan het x attribuut."
+  :y2 "Het y2 attribuut wordt gebruikt om de tweede y-coördinaat te
+       specificeren voor het tekenen van een SVG element dat meer dan één
+       coördinaat vereist. Elementen die slechts één coördinaat nodig hebben
+       gebruiken in plaats daarvan het y attribuut."
+  :cx "Het cx attribuut definieert de x-as coördinaat van een middelpunt."
+  :cy "Het cy attribuut definieert de y-as coördinaat van een middelpunt."
+  :dx "Het dx attribuut geeft een verschuiving aan langs de x-as op de positie
+       van een element of zijn inhoud."
+  :dy "Het dy attribuut geeft een verschuiving aan langs de y-as op de positie
+       van een element of zijn inhoud."
+  :width "Het width attribuut definieert de horizontale lengte van een element
+          in het gebruiker coördinatensysteem."
+  :height "Het height attribuut definieert de verticale lengte van een element
+           in het gebruiker coördinatensysteem."
+  :rx "Het rx attribuut definieert een straal op de x-as."
+  :ry "Het ry attribuut definieert een straal op de y-as."
+  :r "Het r attribuut definieert de straal van een cirkel."
+  :rotate "Het rotate attribuut specificeert hoe het geanimeerde element
+           roteert terwijl het langs een pad beweegt dat gespecificeerd is in
+           een <animateMotion> element."
+  :stroke "Het stroke attribuut is een presentatie attribuut dat de kleur (of
+           elke SVG paint server zoals verlopen of patronen) definieert die
+           gebruikt wordt om de omtrek van de vorm te schilderen."
+  :fill "Het fill attribuut heeft twee verschillende betekenissen. Voor vormen
+         en tekst is het een presentatie attribuut dat de kleur (of elke SVG
+         paint server zoals verlopen of patronen) definieert die gebruikt wordt
+         om het element te schilderen; voor animatie definieert het de
+         eindtoestand van de animatie."
+  :stroke-width "Het stroke-width attribuut is een presentatie attribuut dat
+                 de breedte van de lijn definieert die toegepast wordt op de
+                 vorm."
+  :stroke-dasharray "Het stroke-dasharray attribuut is een presentatie
+                     attribuut dat het patroon van streepjes en gaten
+                     definieert dat gebruikt wordt om de omtrek van de vorm te
+                     schilderen."
+  :opacity "Het opacity attribuut specificeert de transparantie van een object
+            of van een groep objecten, dat wil zeggen de mate waarin de
+            achtergrond achter het element bedekt wordt."
+  :id "Het id attribuut wijst een unieke naam toe aan een element."
+  :class "Wijst een klassenaam of set van klassenamen toe aan een element. U
+          kunt dezelfde klassenaam of namen toewijzen aan elk aantal elementen,
+          echter, meerdere klassenamen moeten gescheiden worden door
+          witruimte-karakters."
+  :tabindex "Het tabindex attribuut stelt u in staat om te controleren of een
+             element focusbaar is en om de relatieve volgorde van het element
+             te definiëren voor doeleinden van sequentiële focus navigatie."
+  :style "Het style attribuut maakt het mogelijk om een element te stylen met
+          CSS declaraties. Het functioneert identiek aan het style attribuut
+          in HTML."
+  :href "Het href attribuut definieert een link naar een bron als een
+         referentie URL. De exacte betekenis van die link hangt af van de
+         context van elk element dat het gebruikt."
+  :attribute-name "Het attributeName attribuut geeft de naam van de CSS
+                   eigenschap of attribuut van het doelelement aan dat
+                   gewijzigd gaat worden tijdens een animatie."
+  :begin "Het begin attribuut definieert wanneer een animatie moet beginnen."
+  :end "Het end attribuut definieert een eindwaarde voor de animatie die de
+        actieve duur kan beperken."
+  :dur "Het dur attribuut geeft de eenvoudige duur van een animatie aan."
+  :min "Het min attribuut specificeert de minimumwaarde van de actieve
+        animatieduur."
+  :max "Het max attribuut specificeert de maximumwaarde van de actieve
+        animatieduur."
+  :restart "Het restart attribuut specificeert of een animatie opnieuw kan
+            starten of niet."
+  :repeat-count "Het repeatCount attribuut geeft het aantal keren aan dat een
+                 animatie zal plaatsvinden."
+  :repeat-dur "Het repeatDur attribuut specificeert de totale duur voor het
+               herhalen van een animatie."
+  :calc-mode "Het calcMode attribuut specificeert de interpolatiemodus voor de
+              animatie."
+  :values "Het values attribuut heeft verschillende betekenissen, afhankelijk
+           van de context waarin het gebruikt wordt, ofwel definieert het een
+           reeks waarden gebruikt gedurende de loop van een animatie, of het is
+           een lijst van nummers voor een kleurenmatrix, die anders
+           geïnterpreteerd wordt afhankelijk van het type kleurverandering dat
+           uitgevoerd moet worden."
+  :key-times "Het keyTimes attribuut vertegenwoordigt een lijst van tijdwaarden
+              gebruikt om de timing van de animatie te controleren."
+  :key-splines "Het keySplines attribuut definieert een set van Bézier curve
+                controlepunten geassocieerd met de keyTimes lijst, die een
+                kubieke Bézier functie definieert die interval timing
+                controleert"
+  :from "Het from attribuut geeft de initiële waarde van het attribuut aan dat
+         gewijzigd zal worden tijdens de animatie."
+  :to "Het to attribuut geeft de eindwaarde van het attribuut aan dat
+       gewijzigd zal worden tijdens de animatie."
+  :by "Het by attribuut specificeert een relatieve offset waarde voor een
+       attribuut dat gewijzigd zal worden tijdens een animatie."
+  :additive "Het additive attribuut controleert of een animatie additief is of
+             niet."
+  :accumulate "Het accumulate attribuut controleert of een animatie cumulatief
+               is of niet."
+  :view-box "Het viewBox attribuut definieert de positie en dimensie, in
+             gebruikersruimte, van een SVG viewport."
+  :preserve-aspect-ratio "Het preserveAspectRatio attribuut geeft aan hoe een
+                          element met een viewBox die een gegeven
+                          beeldverhouding biedt moet passen in een viewport met
+                          een andere beeldverhouding."}
+
+ :renderer.tool.impl.element.polyline
+ {:label "Polylijn"
+  :create-polyline "Polylijn maken"}
+
+ :renderer.tool.impl.element.polygon
+ {:label "Polygoon"
+  :create-polygon "Polygoon maken"}
+
+ :renderer.tool.impl.element.image
+ {:label "Afbeelding"}
+
+ :renderer.tool.impl.element.core
+ {:help "Klik en sleep om een element te maken."}
+
+ :renderer.tool.impl.element.poly
+ {:add-points "Klik om meer punten toe te voegen."
+  :finalize-shape "Dubbelklik om de vorm te voltooien."}
+
+ :renderer.tool.impl.element.rect
+ {:label "Rechthoek"
+  :help [:div "Houd %1 ingedrukt om verhoudingen te vergrendelen."]
+  :create-rectangle "Rechthoek maken"}
+
+ :renderer.tool.impl.element.svg
+ {:label "Svg"
+  :help [:div "Houd %1 ingedrukt om verhoudingen te vergrendelen."]
+  :create-svg "Svg maken"}
+
+ :renderer.tool.impl.extension.blob
+ {:label "Blob"
+  :create-blob "Blob maken"}
+
+ :renderer.tool.impl.misc.dropper
+ {:label "Pipet"
+  :help "Klik ergens om een kleur te kiezen."
+  :pick-color "Kleur kiezen"}
+
+ :renderer.tool.impl.misc.fill
+ {:label "Vulling"
+  :help "Klik op een element om te vullen."
+  :fill "Vullen"}
+
+ :renderer.tool.impl.misc.measure
+ {:label "Meten"
+  :help "Klik en sleep om een afstand te meten."
+  :measure-end "meeteinde"
+  :measure-start "meetbegin"}
+
+ :renderer.tool.impl.element.text
+ {:label "Tekst"
+  :help "Klik om te beginnen met typen."}
+
+ :renderer.attribute.impl.stroke-linecap
+ {:description "Het stroke-linecap attribuut is een presentatie attribuut dat
+                de vorm definieert die gebruikt wordt aan het einde van open
+                subpaden wanneer ze gestreken worden."
+  :butt "Stomp"
+  :round "Rond"
+  :square "Vierkant"}
+
+ :renderer.attribute.impl.stroke-linejoin
+ {:description "Het stroke-linejoin attribuut is een presentatie attribuut dat
+                de vorm definieert die gebruikt wordt op de hoeken van paden
+                wanneer ze gestreken worden."
+  :bevel "Afgeschuind"
+  :miter "Versteken"
+  :round "Rond"}
+
+ :renderer.attribute.impl.overflow
+ {:description "Het overflow attribuut stelt in wat er moet gebeuren wanneer
+                de inhoud van een element te groot is om in zijn
+                blokopmaakcontext te passen. Deze functie is nog niet breed
+                geïmplementeerd."
+  :hidden "Verborgen"
+  :visible "Zichtbaar"
+  :scroll "Scrollen"
+  :auto "Automatisch"}
+
+ :renderer.attribute.impl.color
+ {:pick-color "Kleur kiezen"}
+
+ :renderer.attribute.impl.d
+ {:description "Het d attribuut definieert een pad om te tekenen."
+  :edit "Pad bewerken"
+  :absolute "(Absoluut)"
+  :relative "(Relatief)"
+  :move-to "Verplaats naar"
+  :line-to "Lijn naar"
+  :vertical-line "Verticale lijn"
+  :horizontal-line "Horizontale lijn"
+  :cubic-bezier "Kubieke Bézier curve"
+  :shortcut-cubic-bezier "Snelkoppeling kubieke Bézier curve"
+  :quadratic-bezier-curve "Kwadratische Bézier curve"
+  :shortcut-quadratic "Snelkoppeling kwadratische Bézier curve"
+  :elliptical-arc-curve "Elliptische boog curve"
+  :close-path "Pad sluiten"}
+
+ :renderer.attribute.impl.length
+ {:increase "Verhogen"
+  :decrease "Verlagen"}
+
+ :renderer.attribute.impl.font-family
+ {:description "Het font-family attribuut geeft aan welke lettertypefamilie
+                gebruikt zal worden om de tekst te renderen, gespecificeerd als
+                een geprioriteerde lijst van lettertypefamilienamen en/of
+                generieke familienamen."
+  :search-font "Zoek naar een lettertype"
+  :select-font "Lettertype selecteren"
+  :no-local-font "Geen lokale lettertypen gevonden."}
+
+ :renderer.attribute.impl.font-size
+ {:description "Het font-size attribuut verwijst naar de grootte van het
+                lettertype van baseline tot baseline wanneer meerdere regels
+                tekst vast ingesteld zijn in een meerregelige lay-out
+                omgeving."}
+
+ :renderer.attribute.impl.font-weight
+ {:description "Het font-weight attribuut verwijst naar de dikte of lichtheid
+                van de glyphs gebruikt om de tekst te renderen, relatief aan
+                andere lettertypen in dezelfde lettertypefamilie."}
+
+ :renderer.attribute.impl.crossorigin
+ {:description "Het crossorigin attribuut, geldig op de <image> en <feImage>
+                elementen, biedt ondersteuning voor configuratie van de
+                Cross-Origin Resource Sharing (CORS) verzoeken voor de
+                opgehaalde data van het element."
+  :anonymous "Anoniem"
+  :use-credentials "Gebruik inloggegevens"}
+
+ :renderer.attribute.impl.decoding
+ {:description "Het decoding attribuut, geldig op <image> elementen, biedt een
+                hint aan de browser over of het afbeeldingsdecodering moet
+                uitvoeren samen met het renderen van andere inhoud in een
+                enkele presentatiestap die er meer \"correct\" uitziet (sync),
+                of de andere inhoud eerst renderen en presenteren en dan de
+                afbeelding decoderen en later presenteren (async). In de
+                praktijk betekent async dat de volgende paint niet wacht tot de
+                afbeelding gedecodeerd is."
+  :sync "Synchroon"
+  :async "Asynchroon"
+  :auto "Automatisch"}
+
+ :renderer.tool.impl.base.edit
+ {:label "Bewerken"
+  :help-idle-drag [:div "Sleep een handvat om uw vorm te wijzigen."]
+  :help-idle-click [:div "Klik op een element om selectie te wijzigen"]
+  :help-edit [:div "Houd %1 ingedrukt om richting te beperken."]
+  :help-type [:div "Voer uw tekst in."]
+  :select-element "Element selecteren"
+  :edit "Bewerken"
+  :centroid "Middelpunt"}
+
+ :renderer.tool.impl.base.transform
+ {:label "Transformeren"
+  :idle-click [:div "Klik om een element te selecteren of sleep om te
+                     selecteren per gebied. "]
+  :idle-hold [:div "Houd %1 ingedrukt om elementen toe te voegen aan of te
+                    verwijderen uit selectie."]
+  :select [:div "Houd %1 ingedrukt om overlappende elementen te selecteren."]
+  :select-element "Element selecteren"
+  :deselect-element "Element deselecteren"
+  :translate [:div "Houd %1 ingedrukt om richting te beperken, en %2 om te
+                    klonen."]
+  :clone [:div "Houd %1 ingedrukt om richting te beperken. of laat %2 los om
+                te verplaatsen"]
+  :scale [:div "Houd %1 ingedrukt om verhoudingen te vergrendelen, %2 om op
+                plaats te schalen, %3 om ook kinderen te schalen."]
+  :modify-selection "Selectie wijzigen"
+  :move-selection "Selectie verplaatsen"
+  :scale-selection "Selectie schalen"
+  :clone-selection "Selectie klonen"
+  :scale-handle "schaalhandvat"}
+
+ :renderer.tool.impl.base.pan
+ {:label "Pannen"
+  :idle-help "Klik en sleep om te pannen."
+  :pan-help "Sleep om te pannen."}
+
+ :renderer.tool.impl.base.zoom
+ {:label "Zoom"
+  :zoom-in [:div "Klik of selecteer een gebied om in te zoomen."]
+  :zoom-out [:div "Houd %1 ingedrukt om uit te zoomen."]}
+
+ :renderer.tool.impl.draw.brush
+ {:label "Penseel"
+  :draw-brush "Penseel tekenen"}
+
+ :renderer.tool.impl.draw.pen
+ {:label "Pen"
+  :draw-line "Lijn tekenen"}
+
+ :renderer.tool.impl.draw.core
+ {:help "Klik en sleep om te tekenen."}
+
+ :renderer.tool.impl.element.circle
+ {:label "Cirkel"
+  :create-circle "Cirkel maken"
+  :circle-radius "cirkelstraal"
+  :circle-center "cirkelmiddelpunt"}
+
+ :renderer.tool.impl.element.ellipse
+ {:label "Ellips"
+  :create-ellipse "Ellips maken"
+  :help [:div "Houd %1 ingedrukt om verhoudingen te vergrendelen."]}
+
+ :renderer.tool.impl.element.line
+ {:label "Lijn"
+  :create-line "Lijn maken"}
+
+ :renderer.document.events
+ {:save-changes "Wilt u uw wijzigingen opslaan?"
+  :create-doc "Document maken"
+  :create-doc-from-template "Document maken van sjabloon"
+  :load-doc "Document laden"
+  :error-loading "Fout bij het laden van %1"
+  :unsupported-or-corrupted "Bestand lijkt niet ondersteund of beschadigd."}
+
+ :renderer.document.views
+ {:new "Nieuw"
+  :open "Openen"
+  :open-directory "Containing directory openen"
+  :save "Opslaan"
+  :undo "Ongedaan maken"
+  :redo "Opnieuw"
+  :close "Sluiten"
+  :close-doc "Document sluiten"
+  :close-all "Alles sluiten"
+  :close-saved "Opgeslagen sluiten"
+  :close-others "Anderen sluiten"}
+
+ :renderer.window.views
+ {:minimize "Minimaliseren"
+  :maximize "Maximaliseren"
+  :restore "Herstellen"
+  :close "Sluiten"
+  :theme "Thema modus - %1"
+  :enter-fullscreen "Volledig scherm activeren"
+  :exit-fullscreen "Volledig scherm verlaten"
+  :install "Installeren"}
+
+ :renderer.toolbar.status
+ {:select-zoom "Zoomniveau selecteren"
+  :zoom "Zoom"
+  :zoom-out "Uitzoomen"
+  :zoom-in "Inzoomen"
+  :zoom-set-50 "Instellen op 50%"
+  :zoom-set-100 "Instellen op 100%"
+  :zoom-set-200 "Instellen op 200%"
+  :zoom-focus-selected "Focus op geselecteerd"
+  :zoom-fit-selected "Geselecteerd passend maken"
+  :zoom-fill-selected "Geselecteerd vullen"
+  :timeline "Tijdlijn"
+  :grid "Raster"
+  :rulers "Linealen"
+  :history "Geschiedenis"
+  :xml "XML"
+  :fill-color "Vulkleur kiezen"
+  :stroke-color "Lijnkleur kiezen"
+  :swap-color "Vulling en lijn verwisselen"}
+
+ :renderer.snap.views
+ {:snap "Uitlijnen"
+  :snap-options "Uitlijnopties"
+  :centers "middelpunten"
+  :midpoints "middenpunten"
+  :corners "hoeken"
+  :nodes "knooppunten"
+  :to " naar "}
+
+ :renderer.toolbar.object
+ {:bring-front "Naar voorgrond"
+  :send-back "Naar achtergrond"
+  :bring-forward "Naar voren"
+  :send-backward "Naar achteren"
+  :group "Groeperen"
+  :ungroup "Groepering opheffen"
+  :align-left "Links uitlijnen"
+  :align-center-hor "Horizontaal centreren"
+  :align-right "Rechts uitlijnen"
+  :align-top "Boven uitlijnen"
+  :align-center-ver "Verticaal centreren"
+  :align-bottom "Onder uitlijnen"
+  :unite "Verenigen"
+  :intersect "Doorsnede"
+  :subtract "Aftrekken"
+  :exclude "Uitsluiten"
+  :divide "Verdelen"}
+
+ :renderer.utils.bounds
+ {:bounds-corner "grenshoek"
+  :bounds-center "grensmiddelpunt"
+  :bounds-midpoint "grensmiddenpunt"}
+
+ :renderer.history.events
+ {:clear-history "Geschiedenis wissen"}
+
+ :renderer.history.views
+ {:center-view "Weergave centreren"
+  :clear-history "Geschiedenis wissen"
+  :action-cannot-undone "Deze actie kan niet ongedaan gemaakt worden."
+  :clear-history-description "Weet u zeker dat u de documentgeschiedenis wilt
+                              wissen?"
+  :select-element "Element selecteren"
+  :delete-selection "Selectie verwijderen"
+  :oldest "Oudste"
+  :newest "Nieuwste"}
+
+ :renderer.timeline.views
+ {:speed "Snelheid"
+  :no-filter "Geen filter"
+  :filter "Filter"
+  :grid-snap "Rasteruitlijning"
+  :guide-snap "Hulplijnuitlijning"
+  :play "Afspelen"
+  :replay "Opnieuw afspelen"
+  :pause "Pauzeren"
+  :hide-timeline "Tijdlijn verbergen"}
+
+ :renderer.attribute.impl.angle
+ {:pick-angle "Hoek kiezen"}
+
+ :renderer.attribute.impl.href
+ {:select-file "Bestand selecteren"}
+
+ :renderer.attribute.impl.points
+ {:edit-points "Punten bewerken"}
+
+ :renderer.frame.views
+ {:main-canvas "hoofdcanvas"}
+
+ :renderer.error.events
+ {:welcome "Welkom bij %1!"
+  :reporting-description [:div
+                          [:p "Zou u ons willen helpen verbeteren door
+                               anonieme foutrapportages te sturen? U kunt uw
+                               voorkeur op elk moment wijzigen vanuit ons \"%1\"
+                               menu."]
+                          [:p "Voor meer informatie, lees ons %2."]]
+  :privacy-policy "privacybeleid"
+  :no-thank-you "Nee, dank je"}
+
+ :renderer.effects
+ {:permission-denied "Toestemming om het bestand te benaderen is geweigerd."}}

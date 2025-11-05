@@ -732,8 +732,8 @@
  {:welcome "Welcome to %1!"
   :reporting-description [:div
                           [:p "Would you like to help us improve by sending
-                              anonymous error reports? You can change your
-                              preference at any time from our \"%1\" menu."]
+                               anonymous error reports? You can change your
+                               preference at any time from our \"%1\" menu."]
                           [:p "For more information, please read our %2."]]
   :privacy-policy "privacy policy"
   :no-thank-you "No, thank you"}
