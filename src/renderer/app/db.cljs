@@ -8,6 +8,7 @@
    [renderer.document.db :refer [Document DocumentId RecentDocument]]
    [renderer.element.db :refer [Element]]
    [renderer.frame.db :refer [DomRect]]
+   [renderer.menubar.db :refer [Menubar]]
    [renderer.ruler.db :refer [Ruler]]
    [renderer.snap.db :refer [Snap NearestNeighbor]]
    [renderer.theme.db :refer [Theme]]
@@ -84,9 +85,7 @@
    [:versions {:optional true} [:maybe map?]]
    [:env {:optional true} [:maybe map?]]
    [:standalone {:optional true} boolean?]
-   [:menubar {:default {}} [:map {:closed true}
-                            [:indicator {:optional true} boolean?]
-                            [:active {:optional true} keyword?]]]
+   [:menubar {:default {}} Menubar]
    [:install-prompt {:optional true} JS_Object]
    [:user-agent {:optional true} string?]
    [:repl-mode {:default :cljs} keyword?]
