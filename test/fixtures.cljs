@@ -12,7 +12,7 @@
    [renderer.utils.element :as utils.element]
    [renderer.window.effects :as-alias window.effects]))
 
-(def local-store
+(defonce local-store
   (atom {config/app-name
          {:error-reporting false
           :recent [{:id #uuid "123e4567-e89b-12d3-a456-426614174000"
@@ -47,7 +47,7 @@
 (rf/reg-fx
  ::app.effects/validate
  (fn [[db event]]
-   (when (not (app.db/valid? db))
+   (when (and (not (app.db/valid? db)) (not= db {}))
      (js/console.error (str "Event: " (first event)))
      (throw (js/Error. (str "Spec check failed: " (app.db/explain db)))))))
 

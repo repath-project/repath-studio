@@ -42,15 +42,18 @@
   (rf.test/run-test-async
    (rf/dispatch-sync [::app.events/initialize])
 
-   (testing "loading system fonts"
-     (let [system-fonts (rf/subscribe [::app.subs/system-fonts])
-           font-list (rf/subscribe [::app.subs/font-list])]
-       (is (not @system-fonts))
-       (is (not @font-list))
+   (rf.test/wait-for
+    [::app.events/set-loading false]
 
-       (rf/dispatch [::app.events/load-system-fonts])
+    (testing "loading system fonts"
+      (let [system-fonts (rf/subscribe [::app.subs/system-fonts])
+            font-list (rf/subscribe [::app.subs/font-list])]
+        (is (not @system-fonts))
+        (is (not @font-list))
 
-       (rf.test/wait-for
-        [::app.events/set-system-fonts]
+        (rf/dispatch [::app.events/load-system-fonts])
 
-        (is (= @font-list ["Adwaita Mono" "Noto Sans"])))))))
+        (rf.test/wait-for
+         [::app.events/set-system-fonts]
+
+         (is (= @font-list ["Adwaita Mono" "Noto Sans"]))))))))

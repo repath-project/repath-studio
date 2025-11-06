@@ -45,7 +45,7 @@
 
                    :devtools {:preloads [devtools.preload
                                          day8.re-frame-10x.preload.react-18
-                                         #_malli.dev.cljs-kondo-preload
+                                         malli.dev.cljs-kondo-preload
                                          dev]}}
 
              :release {:build-options {:ns-aliases

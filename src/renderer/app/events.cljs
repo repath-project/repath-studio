@@ -119,11 +119,11 @@
           (-> db
               (document.handlers/create guid)
               (history.handlers/finalize [::create-doc "Create document"])))
+    ;; The order of the following events is important.
+    ;; Changes require thorough testing on all platforms.
     :fx (into [[:dispatch [::error.events/init-reporting]]
-               ;; Initialize values that might flicker the view first.
+               ;; We initialize values that might flicker the view first.
                [:dispatch [::theme.events/set-native-mode]]
-               [:dispatch [::theme.events/update-data-theme]]
-               [:dispatch [::theme.events/update-meta-color]]
                [:dispatch [::window.events/update-width]]
                [:dispatch [::set-lang-attrs]]
                [:dispatch [::set-loading false]]
@@ -134,6 +134,7 @@
                [::effects/ipc-send ["initialized"]]
                [::theme.effects/add-listener [::theme.events/set-native-mode]]
                [::app.effects/setup-paper]
+               ;; The status bar needs to be updated later for some reason.
                [:dispatch [::theme.events/update-status-bar]]
                [:dispatch [::re-pressed/add-keyboard-event-listener "keydown"]]
                [:dispatch [::re-pressed/set-keydown-rules
