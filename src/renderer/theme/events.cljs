@@ -8,16 +8,28 @@
    [renderer.theme.handlers :as theme.handlers]))
 
 (rf/reg-event-fx
- ::set-data-theme
+ ::set-native-mode
  [(rf/inject-cofx ::theme.effects/native-mode)]
  (fn [{:keys [db native-mode]} _]
-   (let [mode (-> db :theme :mode)
-         mode (if (= mode :system) native-mode mode)]
-     {:db (theme.handlers/set-native-mode db native-mode)
-      ::effects/set-document-attr ["data-theme" (name mode)]})))
+   {:db (theme.handlers/set-native-mode db native-mode)
+    :fx [[:dispatch [::update-data-theme]]
+         [:dispatch [::update-status-bar]]
+         [:dispatch [::update-meta-color]]]}))
 
 (rf/reg-event-fx
- ::set-meta-color
+ ::update-data-theme
+ (fn [{:keys [db]} _]
+   (let [mode (theme.handlers/computed-mode db)]
+     {::effects/set-document-attr ["data-theme" (name mode)]})))
+
+(rf/reg-event-fx
+ ::update-status-bar
+ (fn [{:keys [db]} _]
+   (let [mode (theme.handlers/computed-mode db)]
+     {::theme.effects/set-status-bar-style mode})))
+
+(rf/reg-event-fx
+ ::update-meta-color
  [(rf/inject-cofx ::theme.effects/theme-color)]
  (fn [{:keys [theme-color]} _]
    {::effects/set-meta ["theme-color" theme-color]}))
@@ -27,8 +39,9 @@
  [persist]
  (fn [{:keys [db]} [_ mode]]
    {:db (theme.handlers/set-mode db mode)
-    :fx [[:dispatch [::set-data-theme]]
-         [:dispatch [::set-meta-color]]]}))
+    :fx [[:dispatch [::update-data-theme]]
+         [:dispatch [::update-status-bar]]
+         [:dispatch [::update-meta-color]]]}))
 
 (rf/reg-event-fx
  ::cycle-mode

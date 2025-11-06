@@ -13,3 +13,12 @@
 (defn set-native-mode
   [db native-mode]
   (assoc-in db [:theme :native-mode] native-mode))
+
+(m/=> computed-mode [:-> App NativeMode])
+(defn computed-mode
+  [db]
+  (let [mode (-> db :theme :mode)
+        native-mode (-> db :theme :native-mode)]
+    (if (= mode :system)
+      native-mode
+      mode)))

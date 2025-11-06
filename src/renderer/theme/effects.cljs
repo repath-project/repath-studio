@@ -1,5 +1,6 @@
 (ns renderer.theme.effects
   (:require
+   ["@capacitor/status-bar" :refer [StatusBar Style]]
    [re-frame.core :as rf]))
 
 (def native-query! (js/matchMedia "(prefers-color-scheme: dark)"))
@@ -21,3 +22,10 @@
  ::add-listener
  (fn [e]
    (.addListener native-query! #(rf/dispatch e))))
+
+(rf/reg-fx
+ ::set-status-bar-style
+ (fn [theme-mode]
+   (.setStyle StatusBar (clj->js {:style (if (= theme-mode :dark)
+                                           Style.Dark
+                                           Style.Light)}))))

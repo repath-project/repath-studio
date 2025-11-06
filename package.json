@@ -94,6 +94,7 @@
     "@capacitor/core": "7.4.4",
     "@capacitor/ios": "7.4.4",
     "@capacitor/splash-screen": "7.0.3",
+    "@capacitor/status-bar": "7.0.3",
     "@fontsource/noto-sans": "5.2.10",
     "@fontsource/noto-sans-mono": "5.2.10",
     "@mdn/browser-compat-data": "7.1.18",
