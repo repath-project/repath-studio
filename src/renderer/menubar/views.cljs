@@ -79,7 +79,7 @@
 
 (defn file-menu
   []
-  (let [file-system? @(rf/subscribe [::app.subs/feature? :file-system])
+  (let [fs? @(rf/subscribe [::app.subs/supported-feature? :file-system])
         document-entities? @(rf/subscribe [::document.subs/entities?])
         active-document-saved? @(rf/subscribe [::document.subs/active-saved?])]
     {:id :file
@@ -96,7 +96,7 @@
                       :icon "folder"
                       :action [::document.events/open]}]
 
-              file-system?
+              fs?
               (conj {:id :recent
                      :label (t [::recent "Recent"])
                      :type :sub-menu
@@ -107,7 +107,7 @@
               (conj {:id :divider-2
                      :type :separator})
 
-              file-system?
+              fs?
               (into [{:id :save
                       :label (t [::save "Save"])
                       :icon "save"
@@ -120,7 +120,7 @@
                       :action [::document.events/save-as]
                       :disabled (not document-entities?)}])
 
-              (not file-system?)
+              (not fs?)
               (conj {:id :download
                      :icon "download"
                      :label (t [::download "Download"])

@@ -8,22 +8,22 @@
   [db effect]
   (update db :fx conj effect))
 
-(m/=> feature? [:-> App Feature boolean?])
-(defn feature?
+(m/=> supported-feature? [:-> App Feature boolean?])
+(defn supported-feature?
   [db k]
   (contains? (:features db) k))
 
-(m/=> desktop? [:-> App Platform boolean?])
+(m/=> desktop? [:-> Platform boolean?])
 (defn desktop?
   [platform]
   (contains? #{"darwin" "win32" "linux"} platform))
 
-(m/=> mobile? [:-> App Platform boolean?])
+(m/=> mobile? [:-> Platform boolean?])
 (defn mobile?
   [platform]
   (contains? #{"android" "ios"} platform))
 
-(m/=> web? [:-> App Platform boolean?])
+(m/=> web? [:-> Platform boolean?])
 (defn web?
   [platform]
   (= platform "web"))
