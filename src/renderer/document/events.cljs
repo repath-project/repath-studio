@@ -337,7 +337,7 @@
          :on-success [::saved close]
          :on-error on-error
          :formatter string->edn}}
-       (if (app.handlers/supported-feature? db :file-system)
+       (if (app.handlers/feature? db :file-system)
          {::app.effects/get-local-store
           {:store-key (str id)
            :formatter #(-> document
@@ -361,7 +361,7 @@
          :on-success on-success
          :on-error on-error
          :formatter string->edn}}
-       (if (app.handlers/supported-feature? db :file-system)
+       (if (app.handlers/feature? db :file-system)
          {::effects/file-save (file-save-options document on-success on-error)}
          {:dispatch [::download]})))))
 

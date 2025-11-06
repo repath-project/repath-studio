@@ -7,10 +7,9 @@
    [re-frame.core :as rf]
    [renderer.app.events :as app.events]))
 
-(rf/reg-global-interceptor app.events/schema-validator)
-
 (comment
   ;; Enable full db validation
+  (rf/reg-global-interceptor app.events/schema-validator)
   (rf/clear-global-interceptor ::app.events/schema-validator)
 
   ;; Enable function instrumentation

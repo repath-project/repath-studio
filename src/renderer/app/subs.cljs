@@ -157,7 +157,7 @@
  :-> :features)
 
 (rf/reg-sub
- ::supported-feature?
+ ::feature?
  :<- [::features]
  (fn [features [_ k]]
    (contains? features k)))
