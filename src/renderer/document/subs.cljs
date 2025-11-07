@@ -111,13 +111,13 @@
  :-> :elements)
 
 (rf/reg-sub
- ::filter
+ ::a11y-filter
  :<- [::active]
- :-> :filter)
+ :-> :a11y-filter)
 
 (rf/reg-sub
- ::filter-active
- :<- [::filter]
+ ::a11y-filter-active?
+ :<- [::a11y-filter]
  (fn [active-filter [_ k]]
    (= active-filter k)))
 

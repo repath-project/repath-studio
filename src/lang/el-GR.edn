@@ -145,7 +145,7 @@
   :report-errors "Αναφορά σφαλμάτων αυτόματα"
   :about "Σχετικά"}
 
- :renderer.filters
+ :renderer.a11y.db
  {:blur "θόλωση όρασης"
   :blur-x2 "έντονη θόλωση όρασης"
   :protanopia "πρωτανωπία"

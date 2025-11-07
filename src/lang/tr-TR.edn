@@ -145,7 +145,7 @@
   :report-errors "Hataları otomatik olarak bildir"
   :about "Hakkında"}
 
- :renderer.filters
+ :renderer.a11y.db
  {:blur "bulanık"
   :blur-x2 "bulanık-x2"
   :protanopia "protanopi"

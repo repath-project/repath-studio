@@ -1,15 +1,14 @@
 (ns renderer.history.db
   (:require
    [renderer.db :refer [Vec2]]
-   [renderer.element.db :refer [Element ElementId]]))
-
-(def Explanation [:* any?])
+   [renderer.element.db :refer [Element ElementId]]
+   [renderer.utils.i18n :refer [Translation]]))
 
 (def HistoryIndex [:or pos-int? zero?])
 
 (def HistoryState
   [:map {:closed true}
-   [:explanation Explanation]
+   [:explanation Translation]
    [:timestamp number?]
    [:index HistoryIndex]
    [:elements {:optional true} [:map-of ElementId Element]]

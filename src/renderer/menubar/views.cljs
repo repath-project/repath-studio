@@ -2,6 +2,7 @@
   (:require
    ["@radix-ui/react-menubar" :as Menubar]
    [re-frame.core :as rf]
+   [renderer.a11y.subs :as-alias a11y.subs]
    [renderer.app.events :as-alias app.events]
    [renderer.app.subs :as-alias app.subs]
    [renderer.dialog.events :as-alias dialog.events]
@@ -12,7 +13,6 @@
    [renderer.error.events :as-alias error.events]
    [renderer.error.subs :as-alias error.subs]
    [renderer.events :as-alias events]
-   [renderer.filters :as filters]
    [renderer.frame.events :as-alias frame.events]
    [renderer.history.events :as-alias history.events]
    [renderer.history.subs :as-alias history.subs]
@@ -452,14 +452,14 @@
 
 (defn a11y-submenu
   []
-  (->> (filters/accessibility)
-       (mapv (fn [{:keys [id label]}]
-               {:id id
-                :label label
-                :type :checkbox
-                :icon "a11y"
-                :checked @(rf/subscribe [::document.subs/filter-active id])
-                :action [::document.events/toggle-filter id]}))))
+  (mapv (fn [{:keys [id label]}]
+          {:id id
+           :label (apply t label)
+           :type :checkbox
+           :icon "a11y"
+           :checked @(rf/subscribe [::document.subs/a11y-filter-active? id])
+           :action [::document.events/toggle-a11y-filter id]})
+        @(rf/subscribe [::a11y.subs/filters])))
 
 (defn languages-submenu
   []

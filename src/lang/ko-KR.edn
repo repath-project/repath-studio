@@ -145,7 +145,7 @@
   :report-errors "오류 자동 보고"
   :about "정보"}
 
- :renderer.filters
+ :renderer.a11y.db
  {:blur "흐림"
   :blur-x2 "흐림-x2"
   :protanopia "적색맹"

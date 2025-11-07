@@ -145,7 +145,7 @@
   :report-errors "Сообщать об ошибках автоматически"
   :about "О программе"}
 
- :renderer.filters
+ :renderer.a11y.db
  {:blur "размытие"
   :blur-x2 "размытие-x2"
   :protanopia "протанопия"

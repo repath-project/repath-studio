@@ -145,7 +145,7 @@
   :report-errors "الإبلاغ عن الأخطاء تلقائياً"
   :about "حول"}
 
- :renderer.filters
+ :renderer.a11y.db
  {:blur "ضبابية البصر"
   :blur-x2 "ضبابية البصر المضاعفة"
   :protanopia "عمى الألوان الأحمر"

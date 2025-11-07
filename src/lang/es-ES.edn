@@ -145,7 +145,7 @@
   :report-errors "Reportar errores automáticamente"
   :about "Acerca de"}
 
- :renderer.filters
+ :renderer.a11y.db
  {:blur "desenfoque"
   :blur-x2 "desenfoque-x2"
   :protanopia "protanopia"

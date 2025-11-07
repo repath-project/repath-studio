@@ -6,8 +6,8 @@
    [renderer.document.db :refer [DocumentId]]
    [renderer.document.handlers :as document.handlers]
    [renderer.element.handlers :as element.handlers]
-   [renderer.history.db :refer [Explanation History HistoryIndex HistoryState]]
-   [renderer.utils.i18n :refer [t]]
+   [renderer.history.db :refer [History HistoryIndex HistoryState]]
+   [renderer.utils.i18n :refer [t Translation]]
    [renderer.utils.vec :as utils.vec]))
 
 (m/=> path [:function
@@ -182,7 +182,7 @@
   [db]
   (update-in db [:documents (:active-document db)] dissoc :preview-label))
 
-(m/=> create-state [:-> App HistoryIndex Explanation HistoryState])
+(m/=> create-state [:-> App HistoryIndex Translation HistoryState])
 (defn create-state
   [db index explanation]
   (let [new-state {:explanation explanation
@@ -244,7 +244,7 @@
           (recur (update-in db children-path utils.vec/move index new-index)
                  parent))))))
 
-(m/=> finalize [:-> App Explanation App])
+(m/=> finalize [:-> App Translation App])
 (defn finalize
   "Pushes changes to history."
   [db & explanation]

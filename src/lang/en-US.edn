@@ -145,7 +145,7 @@
   :report-errors "Report errors automatically"
   :about "About"}
 
- :renderer.filters
+ :renderer.a11y.db
  {:blur "blur"
   :blur-x2 "blur-x2"
   :protanopia "protanopia"
