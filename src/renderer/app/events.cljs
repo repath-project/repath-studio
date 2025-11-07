@@ -124,13 +124,15 @@
     :fx (into [[:dispatch [::error.events/init-reporting]]
                ;; We initialize values that might flicker the view first.
                [:dispatch [::theme.events/set-native-mode]]
+               [:dispatch [::theme.events/update-data-theme]]
+               [:dispatch [::theme.events/update-meta-color]]
                [:dispatch [::window.events/update-width]]
                [:dispatch [::set-lang-attrs]]
                [:dispatch [::set-loading false]]
+               [::app.effects/hide-splash-screen]
                ;; We flush to render once so we can get the canvas size.
                [:dispatch ^:flush-dom [::document.events/center]]
                [:dispatch [::window.events/update-focused]]
-               [::app.effects/hide-splash-screen]
                [::effects/ipc-send ["initialized"]]
                [::theme.effects/add-listener [::theme.events/set-native-mode]]
                [::app.effects/setup-paper]
