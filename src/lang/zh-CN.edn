@@ -144,7 +144,7 @@
   :report-errors "自动报告错误"
   :about "关于"}
 
- :renderer.filters
+ :renderer.a11y.db
  {:blur "模糊"
   :blur-x2 "模糊-x2"
   :protanopia "红色盲"

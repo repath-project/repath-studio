@@ -145,7 +145,7 @@
   :report-errors "Segnala errori automaticamente"
   :about "Informazioni"}
 
- :renderer.filters
+ :renderer.a11y.db
  {:blur "sfocatura"
   :blur-x2 "sfocatura-x2"
   :protanopia "protanopia"

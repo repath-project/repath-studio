@@ -145,7 +145,7 @@
   :report-errors "Rapportera fel automatiskt"
   :about "Om"}
 
- :renderer.filters
+ :renderer.a11y.db
  {:blur "suddig"
   :blur-x2 "suddig-x2"
   :protanopia "protanopi"

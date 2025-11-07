@@ -145,7 +145,7 @@
   :report-errors "Fouten automatisch melden"
   :about "Over"}
 
- :renderer.filters
+ :renderer.a11y.db
  {:blur "vervaging"
   :blur-x2 "vervaging-x2"
   :protanopia "protanopie"

@@ -3,6 +3,7 @@
    [config :as config]
    [malli.core :as m]
    [malli.transform :as m.transform]
+   [renderer.a11y.db :as a11y.db :refer [A11yFilter]]
    [renderer.db :refer [BBox Vec2 JS_Object]]
    [renderer.dialog.db :refer [Dialog]]
    [renderer.document.db :refer [Document DocumentId RecentDocument]]
@@ -112,6 +113,7 @@
    [:copied-elements {:optional true} [:* Element]]
    [:kdtree {:optional true} [:maybe map?]]
    [:viewbox-kdtree {:optional true} [:maybe map?]]
+   [:a11y-filters {:default a11y.db/default} [:vector A11yFilter]]
    [:re-pressed.core/keydown {:optional true} map?]])
 
 (def valid? (m/validator App))

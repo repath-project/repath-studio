@@ -145,7 +145,7 @@
   :report-errors "Fehler automatisch melden"
   :about "Über"}
 
- :renderer.filters
+ :renderer.a11y.db
  {:blur "Unschärfe"
   :blur-x2 "Starke Unschärfe"
   :protanopia "Protanopie"

@@ -145,7 +145,7 @@
   :report-errors "Signaler les erreurs automatiquement"
   :about "À propos"}
 
- :renderer.filters
+ :renderer.a11y.db
  {:blur "flou"
   :blur-x2 "flou-x2"
   :protanopia "protanopie"

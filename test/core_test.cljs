@@ -4,6 +4,8 @@
    [malli.instrument :as m.instrument]
    [re-frame.core :as rf]
    [re-frame.subs :as rf.subs]
+   [renderer.a11y.events]
+   [renderer.a11y.subs]
    [renderer.app.events :as app.events]
    [renderer.app.subs]
    [renderer.dialog.events]

@@ -83,6 +83,8 @@
                     (str value " is not a supported language"))}
    supported-lang?])
 
+(def Translation [:* any?])
+
 (m/=> computed-lang [:-> [:or Lang [:= "system"]] [:maybe string?] Lang])
 (defn computed-lang
   [lang system-lang]
@@ -97,10 +99,10 @@
               (map (fn [[k v]] [k (:dictionary v)]))
               (into {}))})
 
-(m/=> translate [:-> Lang [:* any?] any?])
+(m/=> translate [:-> Lang Translation any?])
 (defn translate
-  [lang args]
-  (apply tempura/tr options [lang] args))
+  [lang translation]
+  (apply tempura/tr options [lang] translation))
 
 (defn tr
   "Translation function that can be called outside of a reactive context."

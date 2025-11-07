@@ -27,7 +27,7 @@
         child-els @(rf/subscribe [::element.subs/filter-visible (:children el)])
         rect-attrs (select-keys attrs [:x :y :width :height])
         text-attrs (select-keys attrs [:x :y])
-        active-filter @(rf/subscribe [::document.subs/filter])
+        active-filter @(rf/subscribe [::document.subs/a11y-filter])
         zoom @(rf/subscribe [::document.subs/zoom])
         pointer-handler (partial event.impl.pointer/handler! el)
         shadow-size (/ 2 zoom)]

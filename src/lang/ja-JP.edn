@@ -145,7 +145,7 @@
   :report-errors "エラーを自動的に報告"
   :about "このアプリについて"}
 
- :renderer.filters
+ :renderer.a11y.db
  {:blur "ブラー"
   :blur-x2 "ブラーx2"
   :protanopia "第一色覚異常"

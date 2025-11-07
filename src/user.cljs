@@ -5,6 +5,7 @@
    [config :as config]
    [re-frame.core :as rf]
    [re-frame.db :as rf.db]
+   [renderer.a11y.events :as-alias a11y.events]
    [renderer.document.events :as-alias document.events]
    [renderer.element.events :as-alias element.events]
    [renderer.history.events :as-alias history.events]
@@ -308,6 +309,16 @@
   "Closes the application."
   []
   (rf/dispatch [::window.events/close]))
+
+(defn ^:export register-a11y-filter
+  "Registers an accessibility filter."
+  [v]
+  (rf/dispatch [::a11y.events/register-filter v]))
+
+(defn ^:export deregister-a11y-filter
+  "Deregisters an accessibility filter."
+  [v]
+  (rf/dispatch [::a11y.events/deregister-filter v]))
 
 (defn ^:export help
   "Lists available functions."

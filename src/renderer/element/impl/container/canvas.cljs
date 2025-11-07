@@ -2,6 +2,7 @@
   "The main SVG element that hosts all pages."
   (:require
    [re-frame.core :as rf]
+   [renderer.a11y.subs :as-alias a11y.subs]
    [renderer.app.subs :as-alias app.subs]
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.document.subs :as-alias document.subs]
@@ -10,7 +11,6 @@
    [renderer.event.impl.drag :as event.impl.drag]
    [renderer.event.impl.keyboard :as event.impl.keyboard]
    [renderer.event.impl.pointer :as event.impl.pointer]
-   [renderer.filters :as filters]
    [renderer.frame.subs :as-alias frame.subs]
    [renderer.ruler.views :as ruler.views]
    [renderer.snap.subs :as-alias snap.subs]
@@ -47,6 +47,7 @@
         pointer-handler (partial event.impl.pointer/handler! el)
         snap? @(rf/subscribe [::snap.subs/active?])
         nearest-neighbor @(rf/subscribe [::snap.subs/nearest-neighbor])
+        a11y-filters @(rf/subscribe [::a11y.subs/filters])
         snapped-el-id (-> nearest-neighbor meta :id)
         snapped-el (when snapped-el-id
                      @(rf/subscribe [::element.subs/entity snapped-el-id]))]
@@ -74,7 +75,7 @@
                   [:filter {:id id
                             :key id}
                    [tag attrs]]))
-           (filters/accessibility))
+           a11y-filters)
 
      (when grid
        [ruler.views/grid])

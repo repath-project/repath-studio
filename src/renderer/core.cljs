@@ -3,6 +3,8 @@
    ["electron-log/renderer"]
    [re-frame.core :as rf]
    [reagent.dom.client :as ra.dom.client]
+   [renderer.a11y.events]
+   [renderer.a11y.subs]
    [renderer.app.effects]
    [renderer.app.events :as app.events]
    [renderer.app.subs]
