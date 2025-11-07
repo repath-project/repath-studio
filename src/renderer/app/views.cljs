@@ -418,13 +418,12 @@
         active-tool @(rf/subscribe [::tool.subs/active])
         recent-documents @(rf/subscribe [::document.subs/recent])
         lang-dir @(rf/subscribe [::app.subs/lang-dir])
-        web? @(rf/subscribe [::app.subs/web?])
         desktop? @(rf/subscribe [::app.subs/desktop?])
         md? @(rf/subscribe [::window.subs/md?])
         loading? @(rf/subscribe [::app.subs/loading?])
         theme @(rf/subscribe [::theme.subs/theme])]
     (if loading?
-      (when web? [:div.loader])
+      (when-not desktop? [:div.loader])
       [:> Direction/Provider {:dir lang-dir}
        [:> Tooltip/Provider
         [:div.flex.flex-col.h-full.overflow-hidden.justify-between
