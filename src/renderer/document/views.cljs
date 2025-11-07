@@ -11,6 +11,7 @@
    [renderer.history.events :as-alias history.events]
    [renderer.history.subs :as-alias history.subs]
    [renderer.history.views :as history.views]
+   [renderer.panel.subs :as-alias panel.subs]
    [renderer.utils.dom :as utils.dom]
    [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]
@@ -199,7 +200,7 @@
         tabs @(rf/subscribe [::document.subs/tabs])
         active-id @(rf/subscribe [::document.subs/active-id])
         md? @(rf/subscribe [::window.subs/md?])
-        tree-visible @(rf/subscribe [::app.subs/panel-visible? :tree])]
+        tree-visible @(rf/subscribe [::panel.subs/visible? :tree])]
     [:div.flex.justify-between.gap-px.overflow-hidden
      [:div.flex.flex-1.overflow-hidden.gap-px
       (when (and md? (not tree-visible))

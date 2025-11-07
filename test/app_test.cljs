@@ -4,7 +4,9 @@
    [day8.re-frame.test :as rf.test]
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.events]
-   [renderer.app.subs :as-alias app.subs]))
+   [renderer.app.subs :as-alias app.subs]
+   [renderer.panel.events :as-alias panel.events]
+   [renderer.panel.subs :as-alias panel.subs]))
 
 (deftest app
   (rf.test/run-test-sync
@@ -32,10 +34,10 @@
        (is @grid-visible)))
 
    (testing "toggling panel"
-     (let [tree-visible (rf/subscribe [::app.subs/panel-visible? :tree])]
+     (let [tree-visible (rf/subscribe [::panel.subs/visible? :tree])]
        (is @tree-visible)
 
-       (rf/dispatch [::app.events/toggle-panel :tree])
+       (rf/dispatch [::panel.events/toggle :tree])
        (is (not @tree-visible))))))
 
 (deftest fonts

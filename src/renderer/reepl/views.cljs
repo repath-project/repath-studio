@@ -6,6 +6,9 @@
    [renderer.app.events :as-alias app.events]
    [renderer.app.subs :as-alias app.subs]
    [renderer.events :as-alias events]
+   [renderer.panel.events :as-alias panel.events]
+   [renderer.panel.subs :as-alias panel.subs]
+   [renderer.panel.views :as panel.views]
    [renderer.reepl.codemirror :as codemirror]
    [renderer.reepl.db :as db]
    [renderer.reepl.handlers :as reepl.handlers]
@@ -41,7 +44,7 @@
                        :complete-word
                        :on-change]))]}
   (let [{:keys [_pos _count _text]} @state
-        repl-history? @(rf/subscribe [::app.subs/panel-visible? :repl-history])]
+        repl-history? @(rf/subscribe [::panel.subs/visible? :repl-history])]
     [:div.flex.p-1.5.items-center
      [:div.flex.text-xs.self-start
       {:class "m-0.5"}
@@ -61,7 +64,7 @@
            :title (if repl-history?
                     (t [::hide-command-output "Hide command output"])
                     (t [::show-command-output "Show command output"]))
-           :on-click #(rf/dispatch [::app.events/toggle-panel
+           :on-click #(rf/dispatch [::panel.events/toggle
                                     :repl-history])}]])]]))
 
 (defmulti item (fn [i _opts] (:type i)))
@@ -189,10 +192,10 @@
      {:class (if @(rf/subscribe [::window.subs/md?])
                "contents"
                "flex flex-col flex-1")}
-     (when (and @(rf/subscribe [::app.subs/panel-visible? :repl-history])
+     (when (and @(rf/subscribe [::panel.subs/visible? :repl-history])
                 @(rf/subscribe [::window.subs/md?]))
        [:<>
-        [views/resize-handle "repl-resize-handle"]
+        [panel.views/resize-handle "repl-resize-handle"]
         [:> Panel
          {:id "repl-panel"
           :minSize 10

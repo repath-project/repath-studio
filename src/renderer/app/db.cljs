@@ -10,6 +10,7 @@
    [renderer.element.db :refer [Element]]
    [renderer.frame.db :refer [DomRect]]
    [renderer.menubar.db :refer [Menubar]]
+   [renderer.panel.db :as panel.db :refer [Panel PanelId]]
    [renderer.ruler.db :refer [Ruler]]
    [renderer.snap.db :refer [Snap NearestNeighbor]]
    [renderer.theme.db :refer [Theme]]
@@ -17,9 +18,6 @@
    [renderer.tool.db :refer [Handle Tool State Cursor]]
    [renderer.utils.i18n :refer [Lang]]
    [renderer.window.db :refer [Window]]))
-
-(def Panels
-  [:map-of keyword? [:map [:visible boolean?]]])
 
 (def Platform
   [:enum "darwin" "linux" "win32" "ios" "android" "web"])
@@ -97,21 +95,16 @@
    [:theme {:default {}
             :persist true} Theme]
    [:timeline {:default {}} Timeline]
-   [:panels {:default {:tree {:visible true}
-                       :properties {:visible true}
-                       :timeline {:visible false}
-                       :xml {:visible false}
-                       :history {:visible false}
-                       :repl-history {:visible false}}
-             :persist true} Panels]
+   [:panels {:default panel.db/default
+             :persist true} [:map-of PanelId Panel]]
    [:version {:optional true
               :persist true} string?]
    [:fx {:default []} vector?]
    [:pivot-point {:optional true} Vec2]
    [:clicked-element {:optional true} [:or Element Handle]]
-   [:clipboard [:map {:closed true}
-                [:bbox {:optional true} BBox]
-                [:elements {:optional true} [:* Element]]]]
+   [:clipboard {:default {}} [:map {:closed true}
+                              [:bbox {:optional true} BBox]
+                              [:elements {:optional true} [:* Element]]]]
    [:kdtree {:optional true} [:maybe map?]]
    [:viewbox-kdtree {:optional true} [:maybe map?]]
    [:a11y-filters {:default a11y.db/default} [:vector A11yFilter]]

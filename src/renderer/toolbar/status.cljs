@@ -10,6 +10,8 @@
    [renderer.element.events :as-alias element.events]
    [renderer.event.impl.keyboard :as event.impl.keyboard]
    [renderer.frame.events :as-alias frame.events]
+   [renderer.panel.events :as-alias panel.events]
+   [renderer.panel.subs :as-alias panel.subs]
    [renderer.ruler.events :as-alias ruler.events]
    [renderer.ruler.subs :as-alias ruler.subs]
    [renderer.snap.views :as snap.views]
@@ -78,17 +80,17 @@
   (cond-> []
     @(rf/subscribe [::window.subs/xl?])
     (into [{:title (t [::timeline "Timeline"])
-            :active [::app.subs/panel-visible? :timeline]
+            :active [::panel.subs/visible? :timeline]
             :icon "animation"
-            :action [::app.events/toggle-panel :timeline]}
+            :action [::panel.events/toggle :timeline]}
            {:title (t [::history "History"])
-            :active [::app.subs/panel-visible? :history]
+            :active [::panel.subs/visible? :history]
             :icon "history"
-            :action [::app.events/toggle-panel :history]}
+            :action [::panel.events/toggle :history]}
            {:title (t [::xml "XML"])
-            :active [::app.subs/panel-visible? :xml]
+            :active [::panel.subs/visible? :xml]
             :icon "code"
-            :action [::app.events/toggle-panel :xml]}])
+            :action [::panel.events/toggle :xml]}])
 
     :always
     (into [{:title (t [::grid "Grid"])

@@ -23,6 +23,8 @@
    [renderer.frame.views :as frame.views]
    [renderer.history.views :as history.views]
    [renderer.menubar.views :as menubar.views]
+   [renderer.panel.subs :as-alias panel.subs]
+   [renderer.panel.views :as panel.views]
    [renderer.reepl.views :as repl.views]
    [renderer.ruler.events :as-alias ruler.events]
    [renderer.ruler.subs :as-alias ruler.subs]
@@ -202,9 +204,9 @@
       [frame-panel]]
      (when @(rf/subscribe [::window.subs/md?])
        [:<>
-        (when @(rf/subscribe [::app.subs/panel-visible? :history])
+        (when @(rf/subscribe [::panel.subs/visible? :history])
           [:<>
-           [views/resize-handle "history-resize-handle"]
+           [panel.views/resize-handle "history-resize-handle"]
            [:> Panel {:id "history-panel"
                       :defaultSize 30
                       :minSize 5
@@ -212,9 +214,9 @@
             [:div.bg-primary.h-full
              [history.views/root]]]])
 
-        (when @(rf/subscribe [::app.subs/panel-visible? :xml])
+        (when @(rf/subscribe [::panel.subs/visible? :xml])
           [:<>
-           [views/resize-handle "xml-resize-handle"]
+           [panel.views/resize-handle "xml-resize-handle"]
            [:> Panel {:id "xml-panel"
                       :defaultSize 30
                       :minSize 5
@@ -225,7 +227,7 @@
 
 (defn editor
   []
-  (let [timeline-visible @(rf/subscribe [::app.subs/panel-visible? :timeline])
+  (let [timeline-visible @(rf/subscribe [::panel.subs/visible? :timeline])
         md? @(rf/subscribe [::window.subs/md?])]
     [:> PanelGroup
      {:direction "vertical"
@@ -240,7 +242,7 @@
        [:<>
         (when timeline-visible
           [:<>
-           [views/resize-handle "timeline-resize-handle"]
+           [panel.views/resize-handle "timeline-resize-handle"]
            [:> Panel
             {:id "timeline-panel"
              :minSize 10
@@ -413,8 +415,8 @@
 (defn root
   []
   (let [documents? @(rf/subscribe [::document.subs/entities?])
-        tree? @(rf/subscribe [::app.subs/panel-visible? :tree])
-        properties? @(rf/subscribe [::app.subs/panel-visible? :properties])
+        tree? @(rf/subscribe [::panel.subs/visible? :tree])
+        properties? @(rf/subscribe [::panel.subs/visible? :properties])
         active-tool @(rf/subscribe [::tool.subs/active])
         recent-documents @(rf/subscribe [::document.subs/recent])
         lang-dir @(rf/subscribe [::app.subs/lang-dir])

@@ -13,6 +13,7 @@
    [renderer.frame.events :as-alias frame.events]
    [renderer.history.events :as-alias history.events]
    [renderer.menubar.events :as-alias menubar.events]
+   [renderer.panel.events :as-alias panel.events]
    [renderer.ruler.events :as-alias ruler.events]
    [renderer.tool.events :as-alias tool.events]
    [renderer.window.events :as-alias window.events])
@@ -93,13 +94,13 @@
                  [{:keyCode (key-codes "P")
                    :ctrlKey true
                    :shiftKey true}]]
-                [[::app.events/toggle-panel :tree]
+                [[::panel.events/toggle :tree]
                  [{:keyCode (key-codes "T")
                    :ctrlKey true}]]
-                [[::app.events/toggle-panel :properties]
+                [[::panel.events/toggle :properties]
                  [{:keyCode (key-codes "P")
                    :ctrlKey true}]]
-                [[::app.events/toggle-panel :history]
+                [[::panel.events/toggle :history]
                  [{:keyCode (key-codes "H")
                    :ctrlKey true}]]
                 [[::app.events/toggle-grid]

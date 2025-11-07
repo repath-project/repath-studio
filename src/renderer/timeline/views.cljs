@@ -5,9 +5,9 @@
    ["react" :as react]
    [re-frame.core :as rf]
    [reagent.core :as reagent]
-   [renderer.app.events :as-alias app.events]
-   [renderer.app.subs :as-alias app.subs]
    [renderer.element.events :as-alias element.events]
+   [renderer.panel.events :as-alias panel.events]
+   [renderer.panel.subs :as-alias panel.subs]
    [renderer.timeline.events :as-alias timeline.events]
    [renderer.timeline.subs :as-alias timeline.subs]
    [renderer.utils.i18n :refer [t]]
@@ -129,8 +129,7 @@
           [:<>
            [views/icon-button "window-close"
             {:title (t [::hide-timeline "Hide timeline"])
-             :on-click #(rf/dispatch [::app.events/toggle-panel
-                                      :timeline])}]])])]))
+             :on-click #(rf/dispatch [::panel.events/toggle :timeline])}]])])]))
 
 (defn register-listeners
   [timeline-ref]
@@ -179,7 +178,7 @@
   []
   (let [tm @(rf/subscribe [::timeline.subs/time])
         end @(rf/subscribe [::timeline.subs/end])
-        timeline? @(rf/subscribe [::app.subs/panel-visible? :timeline])]
+        timeline? @(rf/subscribe [::panel.subs/visible? :timeline])]
     [:div.h-px.block.absolute.bottom-0.left-0
      {:style {:width (str (* (/ tm end) 100) "%")
               :background (when-not (or (zero? tm) (zero? end) timeline?)

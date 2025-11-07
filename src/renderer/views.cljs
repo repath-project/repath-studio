@@ -16,7 +16,6 @@
    ["codemirror/mode/css/css.js"]
    ["codemirror/mode/xml/xml.js"]
    ["react" :as react]
-   ["react-resizable-panels" :refer [PanelResizeHandle]]
    ["react-svg" :refer [ReactSVG]]
    ["sonner" :refer [Toaster]]
    ["tailwind-merge" :refer [twMerge]]
@@ -46,12 +45,6 @@
   [k]
   [:span {:class "p-1 text-2xs bg-overlay rounded-sm font-bold
                   text-foreground-muted uppercase"} k])
-
-(defn resize-handle
-  [id]
-  [:> PanelResizeHandle
-   {:id id
-    :class "resize-handle"}])
 
 (defn icon-button
   [icon-name props]

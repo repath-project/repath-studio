@@ -2,6 +2,7 @@
   (:require
    [re-frame.core :as rf]
    [renderer.app.events :refer [persist]]
+   [renderer.app.handlers :as app.handlers]
    [renderer.effects :as-alias effects]
    [renderer.theme.db :as theme.db]
    [renderer.theme.effects :as-alias theme.effects]
@@ -25,8 +26,10 @@
 (rf/reg-event-fx
  ::update-status-bar
  (fn [{:keys [db]} _]
-   (let [mode (theme.handlers/computed-mode db)]
-     {::theme.effects/set-status-bar-style mode})))
+   (cond-> {:db db}
+     (app.handlers/mobile? (:platform db))
+     (assoc ::theme.effects/set-status-bar-style
+            (theme.handlers/computed-mode db)))))
 
 (rf/reg-event-fx
  ::update-meta-color

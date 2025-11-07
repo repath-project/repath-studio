@@ -17,6 +17,8 @@
    [renderer.history.events :as-alias history.events]
    [renderer.history.subs :as-alias history.subs]
    [renderer.menubar.events :as-alias menubar.events]
+   [renderer.panel.events :as-alias panel.events]
+   [renderer.panel.subs :as-alias panel.subs]
    [renderer.ruler.events :as-alias ruler.events]
    [renderer.ruler.subs :as-alias ruler.subs]
    [renderer.theme.db :as theme.db]
@@ -496,38 +498,38 @@
     :type :checkbox
     :icon "tree"
     :label (t [::panel-element-tree "Element tree"])
-    :checked @(rf/subscribe [::app.subs/panel-visible? :tree])
-    :action [::app.events/toggle-panel :tree]}
+    :checked @(rf/subscribe [::panel.subs/visible? :tree])
+    :action [::panel.events/toggle :tree]}
    {:id :toggle-props
     :type :checkbox
     :icon "properties"
     :label (t [::panel-properties "Properties"])
-    :checked @(rf/subscribe [::app.subs/panel-visible? :properties])
-    :action [::app.events/toggle-panel :properties]}
+    :checked @(rf/subscribe [::panel.subs/visible? :properties])
+    :action [::panel.events/toggle :properties]}
    {:id :toggle-xml
     :label (t [::panel-xml-view "XML view"])
     :type :checkbox
     :icon "code"
-    :checked @(rf/subscribe [::app.subs/panel-visible? :xml])
-    :action [::app.events/toggle-panel :xml]}
+    :checked @(rf/subscribe [::panel.subs/visible? :xml])
+    :action [::panel.events/toggle :xml]}
    {:id :toggle-history
     :label (t [::panel-history-tree "History tree"])
     :icon "history"
     :type :checkbox
-    :checked @(rf/subscribe [::app.subs/panel-visible? :history])
-    :action [::app.events/toggle-panel :history]}
+    :checked @(rf/subscribe [::panel.subs/visible? :history])
+    :action [::panel.events/toggle :history]}
    {:id :toggle-command-history
     :type :checkbox
     :label (t [::panel-shell-history "Shell history"])
     :icon "shell"
-    :checked @(rf/subscribe [::app.subs/panel-visible? :repl-history])
-    :action [::app.events/toggle-panel :repl-history]}
+    :checked @(rf/subscribe [::panel.subs/visible? :repl-history])
+    :action [::panel.events/toggle :repl-history]}
    {:id :toggle-timeline-panel
     :type :checkbox
     :label (t [::panel-timeline-editor "Timeline editor"])
     :icon "timeline"
-    :checked @(rf/subscribe [::app.subs/panel-visible? :timeline])
-    :action [::app.events/toggle-panel :timeline]}])
+    :checked @(rf/subscribe [::panel.subs/visible? :timeline])
+    :action [::panel.events/toggle :timeline]}])
 
 (defn view-menu
   []

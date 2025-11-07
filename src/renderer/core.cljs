@@ -32,6 +32,8 @@
    [renderer.history.events]
    [renderer.history.subs]
    [renderer.menubar.events]
+   [renderer.panel.events]
+   [renderer.panel.subs]
    [renderer.reepl.replumb :as replumb]
    [renderer.ruler.events]
    [renderer.ruler.subs]
