@@ -137,7 +137,7 @@
 
      (testing "load"
        (rf/dispatch [::document.events/load
-                     {:version "100000.0.0" ; REVIEW: Skips migrations.
+                     {:version "100000.0.0" ; Skips migrations.
                       :path "foo/bar/document.rps"
                       :title "document.rps"
                       :elements {}}])
