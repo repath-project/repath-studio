@@ -26,7 +26,7 @@
 (rf/reg-event-fx
  ::update-status-bar
  (fn [{:keys [db]} _]
-   (cond-> {:db db}
+   (cond-> {}
      (app.handlers/mobile? (:platform db))
      (assoc ::theme.effects/set-status-bar-style
             (theme.handlers/computed-mode db)))))
