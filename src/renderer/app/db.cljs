@@ -109,8 +109,9 @@
    [:fx {:default []} vector?]
    [:pivot-point {:optional true} Vec2]
    [:clicked-element {:optional true} [:or Element Handle]]
-   [:copied-bbox {:optional true} BBox]
-   [:copied-elements {:optional true} [:* Element]]
+   [:clipboard [:map {:closed true}
+                [:bbox {:optional true} BBox]
+                [:elements {:optional true} [:* Element]]]]
    [:kdtree {:optional true} [:maybe map?]]
    [:viewbox-kdtree {:optional true} [:maybe map?]]
    [:a11y-filters {:default a11y.db/default} [:vector A11yFilter]]

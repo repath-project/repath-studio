@@ -524,8 +524,8 @@
   (let [els (top-selected-sorted db)]
     (cond-> db
       (seq els)
-      (assoc :copied-elements els
-             :copied-bbox (bbox db)))))
+      (assoc :clipboard {:elements els
+                         :bbox (bbox db)}))))
 
 (m/=> delete [:function
               [:-> App App]
@@ -773,7 +773,7 @@
                       [:-> App Element App]])
 (defn paste-in-place
   ([db]
-   (reduce paste-in-place (deselect db) (:copied-elements db)))
+   (reduce paste-in-place (deselect db) (-> db :clipboard :elements)))
   ([db el]
    (->> (selected-ids db)
         (reduce select (add db el)))))
@@ -785,9 +785,9 @@
   ([db]
    (let [parent-el (hovered-svg db)]
      (reduce (partial-right paste parent-el) (deselect db)
-             (:copied-elements db))))
+             (-> db :clipboard :elements))))
   ([db el parent-el]
-   (let [center (utils.bounds/center (:copied-bbox db))
+   (let [center (utils.bounds/center (-> db :clipboard :bbox))
          el-center (utils.bounds/center (:bbox el))
          offset (matrix/sub el-center center)
          el (dissoc el :bbox)
@@ -831,8 +831,8 @@
    (reduce paste-styles db (selected-ids db)))
   ([db id]
    ;; TODO: Merge attributes from multiple selected elements.
-   (if (= 1 (count (:copied-elements db)))
-     (let [attrs (-> db :copied-elements first :attrs)
+   (if (= 1 (count (-> db :clipboard :elements)))
+     (let [attrs (-> db :clipboard :elements first :attrs)
            style-attrs (disj utils.attribute/presentation :transform)]
        (reduce (fn [db attr]
                  (cond-> db
