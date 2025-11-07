@@ -106,6 +106,10 @@
  (fn [_]))
 
 (rf/reg-fx
+ ::theme.effects/set-status-bar-style
+ (fn [_]))
+
+(rf/reg-fx
  ::error.effects/init-reporting
  (fn [_]))
 
