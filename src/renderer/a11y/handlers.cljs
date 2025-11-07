@@ -14,4 +14,6 @@
   [db a11y-filter-id]
   (update db :a11y-filters
           (fn [filters]
-            (remove #(= (:id %) a11y-filter-id) filters))))
+            (->> filters
+                 (remove #(= (:id %) a11y-filter-id))
+                 (into [])))))

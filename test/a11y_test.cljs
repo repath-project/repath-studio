@@ -14,14 +14,13 @@
    (let [a11y-filters (rf/subscribe [::a11y.subs/filters])]
 
      (testing "defaults"
-
        (is (= (count @a11y-filters) 10)))
 
      (testing "register"
        (rf/dispatch [::a11y.events/register-filter
                      {:id :blur-x3
                       :tag :feGaussianBlur
-                      :label [[::blur-x3 "blur-x3"]]
+                      :label [[:a11y-filter/blur-x3 "blur-x3"]]
                       :attrs {:in "SourceGraphic"
                               :type "matrix"
                               :stdDeviation "3"}}])
