@@ -8,6 +8,7 @@
    [renderer.effects :as-alias effects]
    [renderer.element.effects :as-alias element.effects]
    [renderer.error.effects :as-alias error.effects]
+   [renderer.i18n.effects :as-alias i18n.effects]
    [renderer.theme.effects :as-alias theme.effects]
    [renderer.utils.element :as utils.element]
    [renderer.window.effects :as-alias window.effects]))
@@ -87,7 +88,7 @@
    (assoc coeffects :width 800)))
 
 (rf/reg-cofx
- ::app.effects/language
+ ::i18n.effects/language
  (fn [coeffects _]
    (assoc coeffects :language "en-US")))
 

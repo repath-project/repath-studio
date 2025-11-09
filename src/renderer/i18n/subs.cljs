@@ -1,0 +1,43 @@
+(ns renderer.i18n.subs
+  (:require
+   [re-frame.core :as rf]
+   [renderer.i18n.handlers :as i18n.handlers]))
+
+(rf/reg-sub
+ ::user-lang
+ :-> :user-lang)
+
+(rf/reg-sub
+ ::selected-lang?
+ :<- [::user-lang]
+ (fn [user-lang [_ lang]]
+   (= user-lang lang)))
+
+(rf/reg-sub
+ ::system-lang
+ :-> :system-lang)
+
+(rf/reg-sub
+ ::languages
+ :-> :languages)
+
+(rf/reg-sub
+ ::lang
+ :<- [::languages]
+ :<- [::user-lang]
+ :<- [::system-lang]
+ (fn [[languages user-lang system-lang] _]
+   (i18n.handlers/computed-lang languages user-lang system-lang)))
+
+(rf/reg-sub
+ ::options
+ :<- [::languages]
+ (fn [languages _]
+   (i18n.handlers/tempura-options languages)))
+
+(rf/reg-sub
+ ::lang-dir
+ :<- [::languages]
+ :<- [::lang]
+ (fn [[languages lang] _]
+   (get-in languages [lang :dir])))

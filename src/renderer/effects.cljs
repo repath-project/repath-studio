@@ -3,8 +3,8 @@
    [clojure.string :as string]
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.events]
-   [renderer.utils.dom :as utils.dom]
-   [renderer.utils.i18n :refer [t]]))
+   [renderer.i18n.views :as i18n.views]
+   [renderer.utils.dom :as utils.dom]))
 
 (rf/reg-cofx
  ::guid
@@ -71,9 +71,9 @@
                (if (= result "granted")
                  (f args)
                  (rf/dispatch [::app.events/toast :error
-                               (t [::permission-denied
-                                   "Permission to access the file was
-                                    denied."])]))))))
+                               (i18n.views/t [::permission-denied
+                                              "Permission to access the file was
+                                               denied."])]))))))
 
 (defn- query-permission-and-run
   [mode f {:keys [file-handle]

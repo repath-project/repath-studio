@@ -12,10 +12,10 @@
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
    [renderer.event.impl.pointer :as event.impl.pointer]
+   [renderer.i18n.views :as i18n.views]
    [renderer.tool.views :as tool.views]
    [renderer.utils.attribute :as utils.attribute]
    [renderer.utils.element :as utils.element]
-   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]
    [renderer.utils.svg :as utils.svg]
    [renderer.views :as views]))
@@ -44,34 +44,34 @@
     [:div.flex.flex-row.gap-px.w-full
      [attribute.views/form-input k v (merge attrs {:placeholder 0})]
      [:button.form-control-button
-      {:title (t [::generate-random-seed "Generate random seed"])
+      {:title (i18n.views/t [::generate-random-seed "Generate random seed"])
        :disabled (:disabled attrs)
        :on-click #(rf/dispatch [::element.events/set-attr k random-seed])}
       [views/icon "refresh"]]]))
 
 (defmethod attribute.hierarchy/description [:blob :x]
   []
-  (t [::x "Horizontal coordinate of the blob's center."]))
+  [::x "Horizontal coordinate of the blob's center."])
 
 (defmethod attribute.hierarchy/description [:blob :y]
   []
-  (t [::y "Vertical coordinate of the blob's center."]))
+  [::y "Vertical coordinate of the blob's center."])
 
 (defmethod attribute.hierarchy/description [:blob :seed]
   []
-  (t [::seed "A given seed will always produce the same blob."]))
+  [::seed "A given seed will always produce the same blob."])
 
 (defmethod attribute.hierarchy/description [:blob :extraPoints]
   []
-  (t [::extra-points "The actual number of points will be `3 + extraPoints`."]))
+  [::extra-points "The actual number of points will be `3 + extraPoints`."])
 
 (defmethod attribute.hierarchy/description [:blob :randomness]
   []
-  (t [::randomness "Increases the amount of variation in point position."]))
+  [::randomness "Increases the amount of variation in point position."])
 
 (defmethod attribute.hierarchy/description [:blob :size]
   []
-  (t [::size "The size of the bounding box."]))
+  [::size "The size of the bounding box."])
 
 (defmethod attribute.hierarchy/initial [:blob :extraPoints] [] "0")
 
@@ -82,7 +82,7 @@
 (defmethod element.hierarchy/properties :blob
   []
   {:icon "blob"
-   :description (t [::description "Vector based blob."])
+   :description [::description "Vector based blob."]
    :url "https://blobs.dev/"
    :ratio-locked true
    :attrs [:x

@@ -5,10 +5,11 @@
    [renderer.app.events :as-alias app.events]
    [renderer.app.subs :as-alias app.subs]
    [renderer.document.subs :as-alias document.subs]
+   [renderer.i18n.subs :as-alias i18n.subs]
+   [renderer.i18n.views :as i18n.views]
    [renderer.menubar.views :as menubar.views]
    [renderer.theme.events :as-alias theme.events]
    [renderer.theme.subs :as-alias theme.subs]
-   [renderer.utils.i18n :as utils.i18n :refer [t]]
    [renderer.views :as views]
    [renderer.window.events :as-alias window.events]
    [renderer.window.subs :as-alias window.subs]))
@@ -29,10 +30,11 @@
 
 (defn language-dropdown
   []
-  (let [computed-lang @(rf/subscribe [::app.subs/computed-lang])
-        system-lang @(rf/subscribe [::app.subs/system-lang])
-        system-abbr (get-in utils.i18n/languages [system-lang :code])
-        computed-abbr (get-in utils.i18n/languages [computed-lang :code])]
+  (let [computed-lang @(rf/subscribe [::i18n.subs/lang])
+        system-lang @(rf/subscribe [::i18n.subs/system-lang])
+        languages @(rf/subscribe [::i18n.subs/languages])
+        system-abbr (get-in languages [system-lang :code])
+        computed-abbr (get-in languages [computed-lang :code])]
     [:> DropdownMenu/Root
      [:> DropdownMenu/Trigger
       {:as-child true}
@@ -66,17 +68,17 @@
   []
   (let [maximized @(rf/subscribe [::window.subs/maximized?])]
     [{:action [::window.events/minimize]
-      :title (t [::minimize "Minimize"])
+      :title (i18n.views/t [::minimize "Minimize"])
       :icon "window-minimize"}
      {:action [::window.events/toggle-maximized]
       :title (if maximized
-               (t [::restore "Restore"])
-               (t [::maximize "Maximize"]))
+               (i18n.views/t [::restore "Restore"])
+               (i18n.views/t [::maximize "Maximize"]))
       :icon (if maximized
               "window-restore"
               "window-maximize")}
      {:action [::window.events/close]
-      :title (t [::close "Close"])
+      :title (i18n.views/t [::close "Close"])
       :icon "window-close"}]))
 
 (defn app-icon []
@@ -113,21 +115,23 @@
       [:div.flex.gap-px
        (when installable?
          [views/icon-button "download"
-          {:title (t [::install])
+          {:title (i18n.views/t [::install "Install"])
            :class "rounded-none outline-inset bg-transparent!"
            :on-click #(rf/dispatch [::app.events/install])}])
        (when (or md? mac?)
          [:<>
           [language-dropdown]
           [button {:action [::theme.events/cycle-mode]
-                   :title (t [::theme "Theme mode - %1"] [theme-mode])
+                   :title (i18n.views/t [::theme "Theme mode - %1"]
+                                        [theme-mode])
                    :icon theme-mode
                    :class "bg-primary"}]])
        (when (or fullscreen? mac? (and web? md?))
          [button {:action [::window.events/toggle-fullscreen]
                   :title (if fullscreen?
-                           (t [::exit-fullscreen "Exit fullscreen"])
-                           (t [::enter-fullscreen "Enter fullscreen"]))
+                           (i18n.views/t [::exit-fullscreen "Exit fullscreen"])
+                           (i18n.views/t [::enter-fullscreen
+                                          "Enter fullscreen"]))
                   :icon (if fullscreen? "arrow-minimize" "arrow-maximize")
                   :class "bg-primary"}])
        (when (and desktop? (not (or fullscreen? mac?)))

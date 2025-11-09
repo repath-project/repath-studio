@@ -61,6 +61,7 @@
                       renderer.event.effects event.effects
                       renderer.event.events event.events
                       renderer.event.handlers event.handlers
+                      renderer.i18n.views i18n.views
                       renderer.frame.db frame.db
                       renderer.frame.events frame.events
                       renderer.frame.handlers frame.handlers

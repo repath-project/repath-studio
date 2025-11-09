@@ -9,7 +9,6 @@
    [renderer.tool.views :as tool.views]
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
-   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]
    [renderer.utils.svg :as utils.svg]))
 
@@ -18,10 +17,10 @@
 (defmethod element.hierarchy/properties :circle
   []
   {:icon "circle"
-   :label (t [::label "Circle"])
-   :description (t [::description
-                    "The <circle> SVG element is an SVG basic shape, used to
-                     draw circles based on a center point and a radius."])
+   :label [::label "Circle"]
+   :description [::description
+                 "The <circle> SVG element is an SVG basic shape, used to
+                  draw circles based on a center point and a radius."]
    :ratio-locked true
    :attrs [:stroke-width
            :opacity

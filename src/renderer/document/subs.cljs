@@ -32,12 +32,12 @@
 (rf/reg-sub
  ::entities?
  :<- [::entities]
- seq)
+ (comp boolean seq))
 
 (rf/reg-sub
  ::recent?
  :<- [::recent]
- seq)
+ (comp boolean seq))
 
 (rf/reg-sub
  ::active
@@ -165,6 +165,13 @@
        :as db} [_]]
    (some->> active-document
             (document.handlers/saved? db))))
+(rf/reg-sub
+ ::saveable?
+ :<- [::entities?]
+ :<- [::active-saved?]
+ (fn [[entities? active-saved?] [_]]
+   (and entities?
+        (not active-saved?))))
 
 (rf/reg-sub
  ::handle-size

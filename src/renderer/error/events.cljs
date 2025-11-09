@@ -6,31 +6,32 @@
    [renderer.dialog.handlers :as dialog.handlers]
    [renderer.dialog.views :as dialog.views]
    [renderer.error.effects :as-alias error.effects]
-   [renderer.menubar.viewsar :as-alias menubar.views]
-   [renderer.utils.i18n :refer [tr]]))
+   [renderer.i18n.handlers :as i18n.handlers]
+   [renderer.menubar.viewsar :as-alias menubar.views]))
 
 (defn reporting-confirmation-dialog-content
   [db]
   [dialog.views/confirmation
-   {:description (tr db
-                     [::reporting-description
-                      [:div
-                       [:p "Would you like to help us improve by sending
-                            anonymous error reports? You can change your
-                            preference at any time from our \"%1\" menu."]
-                       [:p "For more information, please read our %2."]]]
-                     [[:strong (tr db [::menubar.views/help "Help"])]
-                      [:a.button-link.underline
-                       {:href "https://repath.studio/policies/privacy/"
-                        :target "_blank"}
-                       (tr db [::privacy-policy "privacy policy"])]])
+   {:description (i18n.handlers/t
+                  db
+                  [::reporting-description
+                   [:div
+                    [:p "Would you like to help us improve by sending anonymous
+                         error reports? You can change your preference at any
+                         time from our \"%1\" menu."]
+                    [:p "For more information, please read our %2."]]]
+                  [[:strong (i18n.handlers/t db [::menubar.views/help "Help"])]
+                   [:a.button-link.underline
+                    {:href "https://repath.studio/policies/privacy/"
+                     :target "_blank"}
+                    (i18n.handlers/t db [::privacy-policy "privacy policy"])]])
     :confirm-action [::set-reporting true]
     :cancel-action [::set-reporting false]
-    :cancel-label (tr db [::no-thank-you "No, thank you"])}])
+    :cancel-label (i18n.handlers/t db [::no-thank-you "No, thank you"])}])
 
 (defn reporting-confirmation-dialog
   [db]
-  {:title (tr db [::welcome "Welcome to %1!"] [config/app-name])
+  {:title (i18n.handlers/t db [::welcome "Welcome to %1!"] [config/app-name])
    :content [reporting-confirmation-dialog-content db]
    :attrs {:on-open-auto-focus #(.preventDefault %)}})
 

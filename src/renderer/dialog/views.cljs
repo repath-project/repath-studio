@@ -9,8 +9,8 @@
    [renderer.dialog.events :as-alias dialog.events]
    [renderer.dialog.subs :as-alias dialog.subs]
    [renderer.document.events :as-alias document.events]
+   [renderer.i18n.views :as i18n.views]
    [renderer.menubar.views :as menubar.views]
-   [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]))
 
 (defn button
@@ -19,7 +19,7 @@
    {:class class
     :auto-focus auto-focus
     :on-click #(rf/dispatch [::dialog.events/close action])}
-   (or label (t [::cancel "Cancel"]))])
+   (or label (i18n.views/t [::cancel "Cancel"]))])
 
 (defn button-bar
   [& children]
@@ -31,10 +31,12 @@
     [:div
      [:div.flex.gap-3.items-start.pb-2
       [:p
-       [:span.block [:strong (t [::version "Version:"])] config/version]
-       [:span.block [:strong (t [::browser "Browser:"])] user-agent]]]
+       [:span.block
+        [:strong (i18n.views/t [::version "Version:"])] config/version]
+       [:span.block
+        [:strong (i18n.views/t [::browser "Browser:"])] user-agent]]]
      [button-bar
-      [button {:label (t [::ok "OK"])
+      [button {:label (i18n.views/t [::ok "OK"])
                :auto-focus true
                :class "accent"}]]]))
 
@@ -46,9 +48,9 @@
      (string? description)
      (into [:p]))
    [button-bar
-    [button {:label (or cancel-label (t [::cancel "Cancel"]))
+    [button {:label (or cancel-label (i18n.views/t [::cancel "Cancel"]))
              :action cancel-action}]
-    [button {:label (or confirm-label (t [::ok "OK"]))
+    [button {:label (or confirm-label (i18n.views/t [::ok "OK"]))
              :action confirm-action
              :auto-focus true
              :class "accent"}]]])
@@ -56,15 +58,16 @@
 (defn save
   [{:keys [id title]}]
   [:div
-   (t [::changes-will-be-lost
-       [:p "Your changes to %1 will be lost if you close the document without
-            saving."]]
-      [[:strong title]])
+   (i18n.views/t
+    [::changes-will-be-lost
+     [:p "Your changes to %1 will be lost if you close the document without
+          saving."]]
+    [[:strong title]])
    [button-bar
-    [button {:label (t [::dont-save "Don't save"])
+    [button {:label (i18n.views/t [::dont-save "Don't save"])
              :action [::document.events/close id false]}]
-    [button {:label (t [::cancel "Cancel"])}]
-    [button {:label (t [::save "Save"])
+    [button {:label (i18n.views/t [::cancel "Cancel"])}]
+    [button {:label (i18n.views/t [::save "Save"])
              :auto-focus true
              :class "accent"
              :action [::document.events/save {:id id
@@ -83,7 +86,10 @@
       [:div.w-7.h-7.rounded.line-height-6.flex.justify-center.items-center
        {:class (when icon "bg-overlay")}
        (when icon [views/icon icon])]
-      [:div label]]
+      [:div (->> label
+                 (remove nil?)
+                 (map i18n.views/t)
+                 (string/join " - "))]]
      [views/shortcuts action]]))
 
 (defn cmdk-group-inner
@@ -92,14 +98,12 @@
     (if (:items item)
       (cmdk-group-inner (:items item) (:label item))
       ^{:key (:id item)}
-      [cmdk-item (update item :label #(->> [label %]
-                                           (remove nil?)
-                                           (string/join " - ")))])))
+      [cmdk-item (update item :label #(vector label %))])))
 
 (defn cmdk-group
   [{:keys [label items]}]
   [:> Command/CommandGroup
-   {:heading label}
+   {:heading (i18n.views/t label)}
    (cmdk-group-inner items nil)])
 
 (defn cmdk
@@ -109,13 +113,13 @@
     :on-key-down #(.stopPropagation %)}
    [:> Command/CommandInput
     {:class "p-3 bg-primary border-b border-border w-full"
-     :placeholder (t [::search-command "Search for a command"])}]
+     :placeholder (i18n.views/t [::search-command "Search for a command"])}]
    [views/scroll-area
     [:> Command/CommandList
      {:class "p-1 max-h-[30dvh] sm:max-h-[50dvh]"}
      [:> Command/CommandEmpty
       {:class "p-2"}
-      (t [::no-results "No results found."])]
+      (i18n.views/t [::no-results "No results found."])]
      (for [menu (menubar.views/submenus)]
        ^{:key (:id menu)}
        [cmdk-group menu])]]])

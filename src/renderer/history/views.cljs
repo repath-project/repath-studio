@@ -10,7 +10,7 @@
    [renderer.history.events :as-alias history.events]
    [renderer.history.handlers :as history.handlers]
    [renderer.history.subs :as-alias history.subs]
-   [renderer.utils.i18n :refer [t]]
+   [renderer.i18n.views :as i18n.views]
    [renderer.views :as views]))
 
 (defn select-option
@@ -18,7 +18,7 @@
   [:> Select/Item
    {:value index
     :class "menu-item px-2!"}
-   [:> Select/ItemText (apply t explanation)]])
+   [:> Select/ItemText (apply i18n.views/t explanation)]])
 
 (defn select
   [label options open]
@@ -27,7 +27,7 @@
     :on-open-change #(reset! open %)
     :disabled (empty? options)}
    [:> Select/Trigger
-    {:aria-label label
+    {:aria-label (i18n.views/t label)
      :as-child true}
     [:div.w-4.m-0.bg-transparent.flex.items-center.hover:pt-1
      {:class "min-h-[inherit]"}
@@ -56,17 +56,17 @@
 
 (defn action-button
   [args]
-  (let [{:keys [icon title options action show-options]} args]
+  (let [{:keys [icon title options action show-options options-label]} args]
     (reagent/with-let [open (reagent/atom false)]
       [:button.button.rounded-sm.items-center.px-1.gap-1.flex.w-auto
-       {:title title
+       {:title (i18n.views/t title)
         :class [(if show-options "px-1" "px-2")
                 (when @open "bg-overlay!")]
         :on-click #(rf/dispatch action)
         :disabled (empty? options)}
        [views/icon icon]
        (when show-options
-         [select "Undo stack" options open])])))
+         [select options-label options open])])))
 
 (defn node
   "https://bkrem.github.io/react-d3-tree/docs/interfaces/CustomNodeElementProps.html"
@@ -129,10 +129,12 @@
 
 (defn clear-dialog
   []
-  {:title (t [::action-cannot-undone "This action cannot be undone."])
-   :description (t [::clear-history-description
-                    "Are you sure you wish to clear the document history?"])
-   :confirm-label (t [::clear-history "Clear history"])
+  {:title (i18n.views/t [::action-cannot-undone
+                         "This action cannot be undone."])
+   :description (i18n.views/t [::clear-history-description
+                               "Are you sure you wish to clear the document
+                                history?"])
+   :confirm-label (i18n.views/t [::clear-history "Clear history"])
    :confirm-action [::history.events/clear]})
 
 (defn legend
@@ -143,10 +145,10 @@
      [:div.flex.justify-between.text-2xs.text-foreground-muted
       [:div.flex.gap-1
        [:div.h-5.w-px {:style {:background start-color}}]
-       [:span (t [::oldest "Oldest"])]]
+       [:span (i18n.views/t [::oldest "Oldest"])]]
 
       [:div.flex.gap-1
-       [:span (t [::newest "Newest"])]
+       [:span (i18n.views/t [::newest "Newest"])]
        [:div.h-5.w-px {:style {:background end-color}}]]]
      [:div.w-full.h-2
       {:style {:background (str "linear-gradient(to right, "
@@ -168,8 +170,8 @@
        [:button.button.flex-1
         {:on-click #(rf/dispatch [::history.events/tree-view-updated
                                   0.5 (center ref)])}
-        (t [::center-view "Center view"])]
+        (i18n.views/t [::center-view "Center view"])]
        [:button.button.flex-1
         {:on-click #(rf/dispatch [::dialog.events/show-confirmation
                                   (clear-dialog)])}
-        (t [::clear-history "Clear history"])]]]]))
+        (i18n.views/t [::clear-history "Clear history"])]]]]))

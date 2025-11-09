@@ -5,6 +5,8 @@
    [re-frame.core :as rf]
    [renderer.app.events :as-alias app.events]
    [renderer.app.subs :as-alias app.subs]
+   [renderer.i18n.events :as-alias i18n.events]
+   [renderer.i18n.subs :as-alias i18n.subs]
    [renderer.panel.events :as-alias panel.events]
    [renderer.panel.subs :as-alias panel.subs]))
 
@@ -13,16 +15,16 @@
    (rf/dispatch [::app.events/initialize])
 
    (testing "language"
-     (let [lang (rf/subscribe [::app.subs/lang])
-           system-lang (rf/subscribe [::app.subs/system-lang])
-           computed-lang (rf/subscribe [::app.subs/computed-lang])]
+     (let [lang (rf/subscribe [::i18n.subs/user-lang])
+           system-lang (rf/subscribe [::i18n.subs/system-lang])
+           computed-lang (rf/subscribe [::i18n.subs/lang])]
        (testing "default"
          (is (= "system" @lang))
          (is (= "en-US" @system-lang))
          (is (= "en-US" @computed-lang)))
 
        (testing "set valid language"
-         (rf/dispatch [::app.events/set-lang "el-GR"])
+         (rf/dispatch [::i18n.events/set-user-lang "el-GR"])
          (is (= "el-GR" @lang))
          (is (= "el-GR" @computed-lang)))))
 

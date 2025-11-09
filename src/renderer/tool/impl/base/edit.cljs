@@ -6,11 +6,11 @@
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
    [renderer.history.handlers :as history.handlers]
+   [renderer.i18n.views :as i18n.views]
    [renderer.snap.handlers :as snap.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.utils.element :as utils.element]
-   [renderer.utils.i18n :refer [t]]
    [renderer.utils.svg :as utils.svg]
    [renderer.views :as views]))
 
@@ -19,22 +19,23 @@
 (defmethod tool.hierarchy/properties :edit
   []
   {:icon "edit"
-   :label (t [::label "Edit"])})
+   :label [::label "Edit"]})
 
 (defmethod tool.hierarchy/help [:edit :idle]
   []
   [:<>
-   (t [::help-idle-drag "Drag a handle to modify your shape."])
-   (t [::help-idle-click "Click on an element to change selection"])])
+   (i18n.views/t [::help-idle-drag "Drag a handle to modify your shape."])
+   (i18n.views/t [::help-idle-click
+                  "Click on an element to change selection"])])
 
 (defmethod tool.hierarchy/help [:edit :edit]
   []
-  (t [::help-edit "Hold %1 to restrict direction."]
-     [[views/kbd "Ctrl"]]))
+  (i18n.views/t [::help-edit "Hold %1 to restrict direction."]
+                [[views/kbd "Ctrl"]]))
 
 (defmethod tool.hierarchy/help [:edit :type]
   []
-  (t [::help-type "Enter your text."]))
+  (i18n.views/t [::help-type "Enter your text."]))
 
 (defmethod tool.hierarchy/on-pointer-down :edit
   [db e]
@@ -124,5 +125,5 @@
                    (let [offset (utils.element/offset el)
                          pos (matrix/add offset pos)]
                      [utils.svg/dot pos
-                      [:title (t [::centroid "Centroid"])]]))]))
+                      [:title (i18n.views/t [::centroid "Centroid"])]]))]))
          (into [:g]))))

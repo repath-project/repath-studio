@@ -6,9 +6,9 @@
    [re-frame.core :as rf]
    [reagent.core :as reagent]
    [renderer.document.subs :as-alias document.subs]
+   [renderer.i18n.views :as i18n.views]
    [renderer.snap.events :as-alias snap.events]
    [renderer.snap.subs :as-alias snap.subs]
-   [renderer.utils.i18n :refer [t]]
    [renderer.utils.svg :as utils.svg]
    [renderer.views :as views]
    [renderer.window.subs :as-alias window.subs]))
@@ -24,18 +24,18 @@
    [:> DropdownMenu/ItemIndicator
     {:class "menu-item-indicator"}
     [views/icon "checkmark"]]
-   label])
+   (i18n.views/t label)])
 
 (defn snap-options
   []
   [{:id :centers
-    :label (t [::centers "centers"])}
+    :label [::centers "centers"]}
    {:id :midpoints
-    :label (t [::midpoints "midpoints"])}
+    :label [::midpoints "midpoints"]}
    {:id :corners
-    :label (t [::corners "corners"])}
+    :label [::corners "corners"]}
    {:id :nodes
-    :label (t [::nodes "nodes"])}])
+    :label [::nodes "nodes"]}])
 
 (defn root
   []
@@ -43,7 +43,7 @@
         md? @(rf/subscribe [::window.subs/md?])]
     (reagent/with-let [open (reagent/atom false)]
       [:button.button.rounded-sm.items-center.gap-1.md:flex
-       {:title (t [::snap "Snap"])
+       {:title (i18n.views/t [::snap "Snap"])
         :class ["active:bg-overlay"
                 (when md? "px-1")
                 (when @active? "accent")
@@ -59,7 +59,7 @@
              [:div.h-full.flex.items-center.hover:pb-1
               {:class "min-h-[inherit]"
                :role "button"
-               :title (t [::snap-options "Snap options"])}
+               :title (i18n.views/t [::snap-options "Snap options"])}
               [views/icon "chevron-up"]]]
             [:> DropdownMenu/Portal
              (->> (snap-options)
@@ -76,12 +76,6 @@
                          [:> DropdownMenu/Arrow
                           {:class "fill-primary"}]]))]]))])))
 
-(defn get-label [label]
-  (when label
-    (if (string? label)
-      label
-      (label))))
-
 (defn canvas-label
   [nearest-neighbor]
   (let [zoom @(rf/subscribe [::document.subs/zoom])
@@ -91,8 +85,8 @@
         point (:point nearest-neighbor)
         [x y] (matrix/add point margin)
         label (->> [base-label point-label]
-                   (keep get-label)
-                   (string/join (t [::to " to "])))]
+                   (keep i18n.views/t)
+                   (string/join (i18n.views/t [::to " to "])))]
     [:<>
      [utils.svg/times point]
      (when (not-empty label)

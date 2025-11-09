@@ -1,8 +1,8 @@
 (ns utils.bounds-test
   (:require
    [cljs.test :refer-macros [deftest testing are is]]
-   [renderer.utils.bounds :as utils.bounds]
-   [renderer.utils.i18n :refer [t]]))
+   [renderer.i18n.views :refer [t]]
+   [renderer.utils.bounds :as utils.bounds]))
 
 (deftest test-union
   (testing "united bounds"

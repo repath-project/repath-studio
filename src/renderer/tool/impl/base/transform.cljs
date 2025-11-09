@@ -13,6 +13,7 @@
    [renderer.element.hierarchy :as element.hierarchy]
    [renderer.element.subs :as-alias element.subs]
    [renderer.history.handlers :as history.handlers]
+   [renderer.i18n.views :as i18n.views]
    [renderer.ruler.db :refer [Orientation]]
    [renderer.snap.handlers :as snap.handlers]
    [renderer.tool.db :refer [Handle]]
@@ -22,7 +23,6 @@
    [renderer.tool.views :as tool.views]
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
-   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]
    [renderer.utils.svg :as utils.svg]
    [renderer.views :as views]))
@@ -49,40 +49,45 @@
 (defmethod tool.hierarchy/properties :transform
   []
   {:icon "pointer"
-   :label (t [::label "Transform"])})
+   :label [::label "Transform"]})
 
 (defmethod tool.hierarchy/help [:transform :idle]
   []
   [:<>
-   (t [::idle-click [:div "Click to select an element or drag to select by
-                           area."]])
-   (t [::idle-hold [:div "Hold %1 to add or remove elements to selection."]]
-      [[views/kbd "⇧"]])])
+   (i18n.views/t [::idle-click
+                  [:div "Click to select an element or drag to select by
+                         area."]])
+   (i18n.views/t [::idle-hold
+                  [:div "Hold %1 to add or remove elements to selection."]]
+                 [[views/kbd "⇧"]])])
 
 (defmethod tool.hierarchy/help [:transform :select]
   []
-  (t [::select [:div "Hold %1 to select intersecting elements."]]
-     [[views/kbd "Alt"]]))
+  (i18n.views/t [::select [:div "Hold %1 to select intersecting elements."]]
+                [[views/kbd "Alt"]]))
 
 (defmethod tool.hierarchy/help [:transform :translate]
   []
-  (t [::translate [:div "Hold %1 to restrict direction, and %2 to clone."]]
-     [[views/kbd "Ctrl"]
-      [views/kbd "Alt"]]))
+  (i18n.views/t [::translate
+                 [:div "Hold %1 to restrict direction, and %2 to clone."]]
+                [[views/kbd "Ctrl"]
+                 [views/kbd "Alt"]]))
 
 (defmethod tool.hierarchy/help [:transform :clone]
   []
-  (t [::clone [:div "Hold %1 to restrict direction. or release %2 to move"]]
-     [[views/kbd "Ctrl"]
-      [views/kbd "Alt"]]))
+  (i18n.views/t [::clone
+                 [:div "Hold %1 to restrict direction. or release %2 to move"]]
+                [[views/kbd "Ctrl"]
+                 [views/kbd "Alt"]]))
 
 (defmethod tool.hierarchy/help [:transform :scale]
   []
-  (t [::scale [:div "Hold %1 to lock proportions, %2 to scale in place,
-                     %3 to also scale children."]]
-     [[views/kbd "Ctrl"]
-      [views/kbd "⇧"]
-      [views/kbd "Alt"]]))
+  (i18n.views/t [::scale
+                 [:div "Hold %1 to lock proportions, %2 to scale in place,
+                        %3 to also scale children."]]
+                [[views/kbd "Ctrl"]
+                 [views/kbd "⇧"]
+                 [views/kbd "Alt"]]))
 
 (m/=> hovered? [:-> Element boolean? boolean?])
 (defn hovered?
@@ -450,7 +455,7 @@
         [(with-meta
            (matrix/add [(:x el) (:y el)]
                        (tool.handlers/pointer-delta db))
-           {:label #(t [::scale-handle "scale handle"])})])
+           {:label [::scale-handle "scale handle"]})])
 
       (not= (:state db) :idle)
       (cond-> (element.handlers/snapping-points db (filter :visible selected))

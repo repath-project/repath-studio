@@ -48,11 +48,6 @@
               (.-matches (js/matchMedia "(display-mode: standalone"))))))
 
 (rf/reg-cofx
- ::language
- (fn [coeffects _]
-   (assoc coeffects :language (.-language js/navigator))))
-
-(rf/reg-cofx
  ::features
  (fn [coeffects _]
    (assoc coeffects :features

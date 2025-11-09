@@ -1,20 +1,20 @@
 (ns renderer.tool.impl.element.text
   (:require
    [renderer.element.handlers :as element.handlers]
+   [renderer.i18n.views :as i18n.views]
    [renderer.tool.handlers :as tool.handlers]
-   [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.i18n :refer [t]]))
+   [renderer.tool.hierarchy :as tool.hierarchy]))
 
 (derive :text ::tool.hierarchy/element)
 
 (defmethod tool.hierarchy/properties :text
   []
   {:icon "text"
-   :label (t [::label "Text"])})
+   :label [::label "Text"]})
 
 (defmethod tool.hierarchy/help [:text :idle]
   []
-  (t [::help "Click to start typing."]))
+  (i18n.views/t [::help "Click to start typing."]))
 
 (defmethod tool.hierarchy/on-activate :text
   [db]

@@ -3,15 +3,14 @@
   (:require [renderer.history.handlers :as history.handlers]
             [renderer.tool.handlers :as tool.handlers]
             [renderer.tool.hierarchy :as tool.hierarchy]
-            [renderer.tool.impl.element.poly :as poly]
-            [renderer.utils.i18n :refer [t]]))
+            [renderer.tool.impl.element.poly :as poly]))
 
 (derive :polyline ::tool.hierarchy/poly)
 
 (defmethod tool.hierarchy/properties :polyline
   []
   {:icon "polyline"
-   :label (t [::label "Polyline"])})
+   :label [::label "Polyline"]})
 
 (defmethod tool.hierarchy/on-double-click :polyline
   [db _e]

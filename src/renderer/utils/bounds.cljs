@@ -2,8 +2,7 @@
   (:require
    [malli.core :as m]
    [renderer.db :refer [BBox JS_Element Vec2]]
-   [renderer.snap.db :refer [SnapOptions]]
-   [renderer.utils.i18n :refer [t]]))
+   [renderer.snap.db :refer [SnapOptions]]))
 
 (m/=> dom-el->bbox [:-> JS_Element [:maybe BBox]])
 (defn dom-el->bbox
@@ -75,9 +74,9 @@
   [bbox options]
   (let [[min-x min-y max-x max-y] bbox
         [cx cy] (center bbox)
-        bounds-corner-label #(t [::bounds-corner "bounds corner"])
-        bounds-center-label #(t [::bounds-center "bounds center"])
-        bounds-midpoints-label #(t [::bounds-midpoint "bounds midpoint"])]
+        bounds-corner-label [::bounds-corner "bounds corner"]
+        bounds-center-label [::bounds-center "bounds center"]
+        bounds-midpoints-label [::bounds-midpoint "bounds midpoint"]]
     (cond-> []
       (:corners options)
       (into [(with-meta [min-x min-y] {:label bounds-corner-label})

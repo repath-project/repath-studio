@@ -19,6 +19,8 @@
    [renderer.frame.subs]
    [renderer.history.events]
    [renderer.history.subs]
+   [renderer.i18n.events]
+   [renderer.i18n.subs]
    [renderer.panel.events]
    [renderer.panel.subs]
    [renderer.ruler.events]

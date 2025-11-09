@@ -14,11 +14,12 @@
    [renderer.event.events :as-alias event.events]
    [renderer.event.impl.keyboard :as impl.keyboard]
    [renderer.history.handlers :as history.handlers]
+   [renderer.i18n.effects :as-alias i18n.effects]
+   [renderer.i18n.events :as-alias i18n.events]
    [renderer.snap.handlers :as snap.handlers]
    [renderer.theme.effects :as-alias theme.effects]
    [renderer.theme.events :as-alias theme.events]
    [renderer.utils.font :as utils.font]
-   [renderer.utils.i18n :as utils.i18n]
    [renderer.window.events :as-alias window.events]))
 
 (def persist
@@ -55,7 +56,7 @@
   (rf/inject-cofx ::app.effects/env)
   (rf/inject-cofx ::app.effects/standalone)
   (rf/inject-cofx ::app.effects/features)
-  (rf/inject-cofx ::app.effects/language)]
+  (rf/inject-cofx ::i18n.effects/language)]
  (fn [{:keys [user-agent platform versions env standalone features language]} _]
    {:db (assoc app.db/default
                :platform platform
@@ -127,7 +128,7 @@
                [:dispatch [::theme.events/update-data-theme]]
                [:dispatch [::theme.events/update-meta-color]]
                [:dispatch [::window.events/update-width]]
-               [:dispatch [::set-lang-attrs]]
+               [:dispatch [::i18n.events/set-lang-attrs]]
                [:dispatch [::set-loading false]]
                [::app.effects/hide-splash-screen]
                ;; We flush to render once so we can get the canvas size.
@@ -147,22 +148,6 @@
  ::set-system-fonts
  (fn [db [_ fonts]]
    (assoc db :system-fonts fonts)))
-
-(rf/reg-event-fx
- ::set-lang-attrs
- (fn [{:keys [db]} _]
-   (let [{:keys [lang system-lang]} db
-         lang (utils.i18n/computed-lang lang system-lang)
-         dir (get-in utils.i18n/languages [lang :dir])]
-     {:fx [[::effects/set-document-attr ["lang" lang]]
-           [::effects/set-document-attr ["dir" dir]]]})))
-
-(rf/reg-event-fx
- ::set-lang
- [persist]
- (fn [{:keys [db]} [_ lang]]
-   {:db (assoc db :lang lang)
-    :dispatch [::set-lang-attrs]}))
 
 (rf/reg-event-db
  ::set-repl-mode

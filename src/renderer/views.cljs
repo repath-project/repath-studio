@@ -25,6 +25,7 @@
    [reagent.core :as reagent]
    [renderer.app.subs :as-alias app.subs]
    [renderer.event.impl.keyboard :as event.impl.keyboard]
+   [renderer.i18n.views :as i18n.views]
    [renderer.window.subs :as-alias window.subs]))
 
 (defn merge-with-class
@@ -87,7 +88,8 @@
    [:> Slider/Thumb {:class "flex shadow-sm h-5 w-2 rounded-xs
                              bg-foreground-hovered
                              data-disabled:bg-foreground-muted"
-                     :aria-label "Resize panel thumb"}]])
+                     :aria-label (i18n.views/t [::resize-thumb
+                                                "Resize panel thumb"])}]])
 
 (defn format-shortcut
   [[shortcut]]
@@ -141,14 +143,14 @@
        [:> ContextMenu/ItemIndicator
         {:class "menu-item-indicator"}
         [icon "checkmark"]]
-       [:div label]
+       [:div (i18n.views/t label)]
        (when sm? [shortcuts action])]
 
       [:> ContextMenu/Item
        {:class "menu-item context-menu-item"
         :onSelect #(rf/dispatch action)
         :disabled disabled}
-       [:div label]
+       [:div (i18n.views/t label)]
        (when sm? [shortcuts action])])))
 
 (defn dropdown-menu-item
@@ -168,7 +170,7 @@
        [:> DropdownMenu/ItemIndicator
         {:class "menu-item-indicator"}
         [icon "checkmark"]]
-       [:div label]
+       [:div (i18n.views/t label)]
        (when sm? [shortcuts action])]
 
       [:> DropdownMenu/Item
@@ -177,7 +179,7 @@
        (when (:icon props)
          [icon (:icon props)
           {:class "menu-item-indicator"}])
-       [:div label]
+       [:div (i18n.views/t label)]
        (when sm? [shortcuts action])])))
 
 (defn scroll-area
@@ -297,7 +299,7 @@
                overflow-hidden items-center"
        :disabled disabled}
       [icon (:icon attrs)]
-      [:span.truncate.w-full label]]
+      [:span.truncate.w-full (i18n.views/t label)]]
      [:> Drawer.Portal
       [:> Drawer.Overlay
        {:class "backdrop"}]
