@@ -13,28 +13,27 @@
    [renderer.views :as views]
    [renderer.window.subs :as-alias window.subs]))
 
-(defn menu-option
-  [{:keys [id label]} is-checked]
-  [:> DropdownMenu/CheckboxItem
-   {:class "menu-checkbox-item inset"
-    :on-click #(.stopPropagation %)
-    :onSelect #(do (.preventDefault %)
-                   (rf/dispatch [::snap.events/toggle-option id]))
-    :checked is-checked}
-   [:> DropdownMenu/ItemIndicator
-    {:class "menu-item-indicator"}
-    [views/icon "checkmark"]]
-   (i18n.views/t label)])
-
 (defn snap-options
   []
   [{:id :centers
+    :type :checkbox
+    :action [::snap.events/toggle-option :centers]
+    :checked [::snap.subs/option-enabled? :centers]
     :label [::centers "centers"]}
    {:id :midpoints
+    :type :checkbox
+    :action [::snap.events/toggle-option :midpoints]
+    :checked [::snap.subs/option-enabled? :midpoints]
     :label [::midpoints "midpoints"]}
    {:id :corners
+    :type :checkbox
+    :action [::snap.events/toggle-option :corners]
+    :checked [::snap.subs/option-enabled? :corners]
     :label [::corners "corners"]}
    {:id :nodes
+    :type :checkbox
+    :action [::snap.events/toggle-option :nodes]
+    :checked [::snap.subs/option-enabled? :nodes]
     :label [::nodes "nodes"]}])
 
 (defn root
@@ -51,30 +50,29 @@
         :on-click #(rf/dispatch [::snap.events/toggle])}
        [views/icon "magnet"]
        (when md?
-         (let [options @(rf/subscribe [::snap.subs/options])]
-           [:> DropdownMenu/Root
-            {:on-open-change #(reset! open %)}
-            [:> DropdownMenu/Trigger
-             {:as-child true}
-             [:div.h-full.flex.items-center.hover:pb-1
-              {:class "min-h-[inherit]"
-               :role "button"
-               :title (i18n.views/t [::snap-options "Snap options"])}
-              [views/icon "chevron-up"]]]
-            [:> DropdownMenu/Portal
-             (->> (snap-options)
-                  (map #(menu-option % (contains? options (:id %))))
-                  (into [:> DropdownMenu/Content
-                         {:side "top"
-                          :align "end"
-                          :sideOffset 5
-                          :alignOffset -5
-                          :position "popper"
-                          :class "menu-content rounded-sm select-content"
-                          :on-key-down #(.stopPropagation %)
-                          :on-escape-key-down #(.stopPropagation %)}
-                         [:> DropdownMenu/Arrow
-                          {:class "fill-primary"}]]))]]))])))
+         [:> DropdownMenu/Root
+          {:on-open-change #(reset! open %)}
+          [:> DropdownMenu/Trigger
+           {:as-child true}
+           [:div.h-full.flex.items-center.hover:pb-1
+            {:class "min-h-[inherit]"
+             :role "button"
+             :title (i18n.views/t [::snap-options "Snap options"])}
+            [views/icon "chevron-up"]]]
+          [:> DropdownMenu/Portal
+           (->> (snap-options)
+                (map views/dropdown-menu-item)
+                (into [:> DropdownMenu/Content
+                       {:side "top"
+                        :align "end"
+                        :sideOffset 5
+                        :alignOffset -5
+                        :position "popper"
+                        :class "menu-content rounded-sm select-content"
+                        :on-key-down #(.stopPropagation %)
+                        :on-escape-key-down #(.stopPropagation %)}
+                       [:> DropdownMenu/Arrow
+                        {:class "fill-primary"}]]))]])])))
 
 (defn canvas-label
   [nearest-neighbor]

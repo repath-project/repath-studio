@@ -164,9 +164,10 @@
       :checkbox
       [:> DropdownMenu/CheckboxItem
        {:class "menu-checkbox-item inset"
-        :onSelect #(do (.preventDefault %)
-                       (rf/dispatch action))
-        :checked checked}
+        :on-click #(.stopPropagation %)
+        :on-select #(do (.preventDefault %)
+                        (rf/dispatch action))
+        :checked @(rf/subscribe checked)}
        [:> DropdownMenu/ItemIndicator
         {:class "menu-item-indicator"}
         [icon "checkmark"]]

@@ -19,7 +19,7 @@
   [:> DropdownMenu/CheckboxItem
    {:class "menu-checkbox-item inset"
     :on-select #(rf/dispatch action)
-    :checked checked}
+    :checked @(rf/subscribe checked)}
    [:> DropdownMenu/ItemIndicator
     {:class "menu-item-indicator"}
     [views/icon "checkmark"]]

@@ -61,11 +61,10 @@
          [views/icon-button
           (if repl-history? "chevron-down" "chevron-up")
           {:class "min-h-5"
-           :title (if repl-history?
-                    (i18n.views/t [::hide-command-output
-                                   "Hide command output"])
-                    (i18n.views/t [::show-command-output
-                                   "Show command output"]))
+           :title (i18n.views/t
+                   (if repl-history?
+                     [::hide-command-output "Hide command output"]
+                     [::show-command-output "Show command output"]))
            :on-click #(rf/dispatch [::panel.events/toggle
                                     :repl-history])}]])]]))
 
