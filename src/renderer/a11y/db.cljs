@@ -101,7 +101,7 @@
 
    {:id :achromatopsia
     :tag :feColorMatrix
-    :label [::tritanomaly "tritanomaly"]
+    :label [::achromatopsia "achromatopsia"]
     :attrs {:values [0.299, 0.587, 0.114, 0, 0
                      0.299, 0.587, 0.114, 0, 0
                      0.299, 0.587, 0.114, 0, 0
@@ -109,7 +109,7 @@
 
    {:id :achromatomaly
     :tag :feColorMatrix
-    :label [::achromatopsia "achromatopsia"]
+    :label [::achromatomaly "achromatomaly"]
     :attrs {:values [0.618, 0.320, 0.062, 0, 0
                      0.163, 0.775, 0.062, 0, 0
                      0.163, 0.320, 0.516, 0, 0
