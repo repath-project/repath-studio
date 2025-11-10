@@ -74,7 +74,8 @@
   (let [datum (.-nodeDatum props)
         active? (.-active datum)
         id (.-id datum)
-        color (if active? "var(--color-accent)" (.-color datum))]
+        color (if active? "var(--color-accent)" (.-color datum))
+        title (apply i18n.views/t (.-name datum))]
     (reagent/as-element
      [:circle.transition-fill
       {:class "hover:stroke-accent"
@@ -88,7 +89,7 @@
        :stroke-width 4
        :fill color
        :r 18}
-      [:title (.-name datum)]])))
+      [:title title]])))
 
 (defn on-update
   "https://bkrem.github.io/react-d3-tree/docs/interfaces/TreeProps.html#onupdate"
