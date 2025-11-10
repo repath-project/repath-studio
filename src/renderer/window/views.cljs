@@ -8,14 +8,13 @@
    [renderer.i18n.subs :as-alias i18n.subs]
    [renderer.i18n.views :as i18n.views]
    [renderer.menubar.views :as menubar.views]
-   [renderer.theme.events :as-alias theme.events]
    [renderer.theme.subs :as-alias theme.subs]
    [renderer.views :as views]
    [renderer.window.events :as-alias window.events]
    [renderer.window.subs :as-alias window.subs]))
 
 (defn language-item
-  [{:keys [id label action checked abbr]} system-abbr]
+  [system-abbr {:keys [id label action checked abbr]}]
   [:> DropdownMenu/CheckboxItem
    {:class "menu-checkbox-item inset"
     :on-select #(rf/dispatch action)
@@ -28,37 +27,29 @@
      [:span.uppercase.font-mono.text-foreground-disabled (or system-abbr "EN")]
      [:span.uppercase.font-mono.text-foreground-muted abbr])])
 
-(defn language-dropdown
-  []
-  (let [computed-lang @(rf/subscribe [::i18n.subs/lang])
-        system-lang @(rf/subscribe [::i18n.subs/system-lang])
-        languages @(rf/subscribe [::i18n.subs/languages])
-        system-abbr (get-in languages [system-lang :code])
-        computed-abbr (get-in languages [computed-lang :code])]
-    [:> DropdownMenu/Root
-     [:> DropdownMenu/Trigger
-      {:as-child true}
-      [:button.button
-       {:class "flex gap-1 items-center px-2 uppercase bg-primary font-mono
-                outline-inset"}
-       computed-abbr
-       [views/icon "chevron-down"]]]
-     [:> DropdownMenu/Portal
-      [:> DropdownMenu/Content
-       {:side "bottom"
-        :align "end"
-        :position "popper"
-        :class "menu-content rounded-sm select-content"
-        :on-key-down #(.stopPropagation %)
-        :on-escape-key-down #(.stopPropagation %)}
-       (for [lang (menubar.views/languages-submenu)]
-         ^{:key (:id lang)}
-         [language-item lang system-abbr])
-       [:> DropdownMenu/Arrow {:class "fill-primary"}]]]]))
+(defn dropdown
+  [trigger-content dropdown-items]
+  [:> DropdownMenu/Root
+   [:> DropdownMenu/Trigger
+    {:as-child true}
+    [:button.button
+     {:class "flex gap-1 items-center px-3 uppercase bg-primary font-mono
+                  outline-inset"}
+     trigger-content]]
+   [:> DropdownMenu/Portal
+    (into [:> DropdownMenu/Content
+           {:side "bottom"
+            :align "end"
+            :position "popper"
+            :class "menu-content rounded-sm select-content"
+            :on-key-down #(.stopPropagation %)
+            :on-escape-key-down #(.stopPropagation %)}
+           [:> DropdownMenu/Arrow {:class "fill-primary"}]]
+          dropdown-items)]])
 
 (defn button
   [{:keys [icon action class title]}]
-  [:button.button.px-3.outline-inset
+  [:button.button.px-3.outline-inset.uppercase.font-mono
    {:class class
     :title title
     :on-click #(rf/dispatch action)}
@@ -90,13 +81,18 @@
 (defn app-header
   []
   (let [fullscreen? @(rf/subscribe [::window.subs/fullscreen?])
-        theme-mode (name @(rf/subscribe [::theme.subs/mode]))
+        theme-mode @(rf/subscribe [::theme.subs/computed-mode])
         mac? @(rf/subscribe [::app.subs/mac?])
         web? @(rf/subscribe [::app.subs/web?])
         desktop? @(rf/subscribe [::app.subs/desktop?])
         installable? @(rf/subscribe [::app.subs/installable?])
         title-bar @(rf/subscribe [::document.subs/title-bar])
-        md? @(rf/subscribe [::window.subs/md?])]
+        md? @(rf/subscribe [::window.subs/md?])
+        computed-lang @(rf/subscribe [::i18n.subs/lang])
+        system-lang @(rf/subscribe [::i18n.subs/system-lang])
+        languages @(rf/subscribe [::i18n.subs/languages])
+        system-abbr (get-in languages [system-lang :code])
+        computed-abbr (get-in languages [computed-lang :code])]
     [:div.flex.relative.items-center
      [:div.px-1.gap-1.flex.items-center.shrink-0
       (when-not (or fullscreen? mac?)
@@ -120,12 +116,15 @@
            :on-click #(rf/dispatch [::app.events/install])}])
        (when (or md? mac?)
          [:<>
-          [language-dropdown]
-          [button {:action [::theme.events/cycle-mode]
-                   :title (i18n.views/t [::theme "Theme mode - %1"]
-                                        [theme-mode])
-                   :icon theme-mode
-                   :class "bg-primary"}]])
+          ^{:key @(rf/subscribe [::theme.subs/mode])}
+          [dropdown
+           computed-abbr
+           (->> (menubar.views/languages-submenu)
+                (map (partial language-item system-abbr)))]
+          [dropdown
+           [views/icon (name theme-mode)]
+           (->> menubar.views/theme-mode-submenu
+                (map views/dropdown-menu-item))]])
        (when (or fullscreen? mac? (and web? md?))
          [button {:action [::window.events/toggle-fullscreen]
                   :title (if fullscreen?

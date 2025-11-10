@@ -479,27 +479,25 @@
                :action [::i18n.events/set-user-lang "system"]
                :checked [::i18n.subs/selected-lang? "system"]}])))
 
-(def theme-modes
+(def theme-mode-submenu
   [{:id :dark
+    :type :checkbox
     :label [::dark "Dark"]
+    :action [::theme.events/set-mode :dark]
+    :checked [::theme.subs/selected-mode? :dark]
     :icon "dark"}
    {:id :light
+    :type :checkbox
     :label [::light "Light"]
+    :action [::theme.events/set-mode :light]
+    :checked [::theme.subs/selected-mode? :light]
     :icon "light"}
    {:id :system
+    :type :checkbox
     :label [::system "System"]
+    :action [::theme.events/set-mode :system]
+    :checked [::theme.subs/selected-mode? :system]
     :icon "system"}])
-
-(defn theme-mode-submenu
-  []
-  (->> theme-modes
-       (mapv (fn [{:keys [id icon label]}]
-               {:id id
-                :label label
-                :type :checkbox
-                :icon icon
-                :action [::theme.events/set-mode id]
-                :checked [::theme.subs/selected-mode? id]}))))
 
 (defn panel-submenu
   []
@@ -553,7 +551,7 @@
            {:id :theme-mode
             :label [::theme-mode "Theme mode"]
             :type :sub-menu
-            :items (theme-mode-submenu)}
+            :items theme-mode-submenu}
            {:id :a11y
             :label [::accessibility-filter "Accessibility filter"]
             :type :sub-menu
