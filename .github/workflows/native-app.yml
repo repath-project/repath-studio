@@ -1,4 +1,4 @@
-name: Desktop application
+name: Native applications
 
 on:
   push:
