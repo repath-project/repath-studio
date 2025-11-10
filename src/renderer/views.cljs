@@ -218,9 +218,10 @@
         :align "start"
         :side "top"
         :align-offset (:align-offset props)
-        :on-open-auto-focus #(.preventDefault %)
         :on-escape-key-down #(.stopPropagation %)}
-       [:div {:dir "ltr"}
+       [:div
+        {:dir "ltr"
+         :tab-index 0}
         (if sm?
           [:> PhotoshopPicker props]
           [:> ChromePicker props])]

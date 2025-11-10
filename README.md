@@ -4,7 +4,7 @@
 
 [![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/repath-studio/repath-studio/latest/total?style=for-the-badge)](https://github.com/repath-studio/repath-studio/releases/latest/)
 
-[![Build desktop app](https://github.com/repath-studio/repath-studio/actions/workflows/desktop-app.yml/badge.svg)](https://github.com/repath-studio/repath-studio/actions/workflows/desktop-app.yml)
+[![Build native app](https://github.com/repath-studio/repath-studio/actions/workflows/native-app.yml/badge.svg)](https://github.com/repath-studio/repath-studio/actions/workflows/native-app.yml)
 [![Deploy web app](https://github.com/repath-studio/repath-studio/actions/workflows/web-app.yml/badge.svg)](https://github.com/repath-studio/repath-studio/actions/workflows/web-app.yml)
 
 [![Outdated dependencies](https://github.com/repath-studio/repath-studio/actions/workflows/dependencies.yml/badge.svg)](https://github.com/repath-studio/repath-studio/actions/workflows/dependencies.yml)
