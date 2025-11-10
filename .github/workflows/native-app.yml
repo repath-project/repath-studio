@@ -5,7 +5,6 @@ on:
     tags:
       - '*'
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
@@ -61,14 +60,9 @@ jobs:
       - name: Electron Builder Action
         uses: samuelmeuli/action-electron-builder@v1.6.0
         with:
-          # GitHub token, automatically provided to the action
-          # (No need to define this secret in the repo settings)
           github_token: ${{ secrets.github_token }}
           mac_certs: ${{ secrets.MAC_CERTS }}
           mac_certs_password: ${{ secrets.MAC_CERTS_PASSWORD }}
-
-          # If the commit is tagged with a version (e.g. "v1.0.0"),
-          # release the app after building
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
@@ -76,3 +70,28 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+
+      - name: Build android app
+        env:
+            KEYSTOREALIAS_PASS: ${{ secrets.ANDROID_KEYSTOREALIAS_PASS }}
+            KEYSTORE_PASS: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+            KEYSTOREALIAS: ${{ secrets.ANDROID_KEYSTOREALIAS }}
+            KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
+        if: runner.os == 'Linux'
+        run: |
+            echo "$KEYSTORE" | base64 --decode > android/official.jks
+            npx cap sync
+            npx cap build android --keystorepath official.jks \
+                                  --keystorepass "$KEYSTORE_PASS" \
+                                  --keystorealias $KEYSTOREALIAS \
+                                  --keystorealiaspass "$KEYSTOREALIAS_PASS" \
+                                  --androidreleasetype APK
+
+      - name: Upload android apk to release
+        if: runner.os == 'Linux'
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: android/app/build/outputs/apk/release/app-release-signed.apk
+          asset_name: repath-studio-android.apk
+          tag: ${{ github.ref }}
