@@ -116,15 +116,16 @@
            :on-click #(rf/dispatch [::app.events/install])}])
        (when (or md? mac?)
          [:<>
-          ^{:key @(rf/subscribe [::theme.subs/mode])}
+          ^{:key @(rf/subscribe [::i18n.subs/user-lang])}
           [dropdown
            computed-abbr
            (->> (menubar.views/languages-submenu)
-                (map (partial language-item system-abbr)))]
+                (mapv (partial language-item system-abbr)))]
+          ^{:key @(rf/subscribe [::theme.subs/mode])}
           [dropdown
            [views/icon (name theme-mode)]
            (->> menubar.views/theme-mode-submenu
-                (map views/dropdown-menu-item))]])
+                (mapv views/dropdown-menu-item))]])
        (when (or fullscreen? mac? (and web? md?))
          [button {:action [::window.events/toggle-fullscreen]
                   :title (if fullscreen?

@@ -12,9 +12,9 @@
  [(rf/inject-cofx ::theme.effects/native-mode)]
  (fn [{:keys [db native-mode]} _]
    {:db (theme.handlers/set-native-mode db native-mode)
-    :fx [[:dispatch [::update-data-theme]]
-         [:dispatch [::update-status-bar]]
-         [:dispatch [::update-meta-color]]]}))
+    :dispatch-n [[::update-data-theme]
+                 [::update-status-bar]
+                 [::update-meta-color]]}))
 
 (rf/reg-event-fx
  ::update-data-theme
@@ -41,6 +41,6 @@
  [persist]
  (fn [{:keys [db]} [_ mode]]
    {:db (theme.handlers/set-mode db mode)
-    :fx [[:dispatch [::update-data-theme]]
-         [:dispatch [::update-status-bar]]
-         [:dispatch [::update-meta-color]]]}))
+    :dispatch-n [[::update-data-theme]
+                 [::update-status-bar]
+                 [::update-meta-color]]}))

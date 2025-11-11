@@ -480,7 +480,13 @@
                :checked [::i18n.subs/selected-lang? "system"]}])))
 
 (def theme-mode-submenu
-  [{:id :dark
+  [{:id :system
+    :type :checkbox
+    :label [::system "System"]
+    :action [::theme.events/set-mode :system]
+    :checked [::theme.subs/selected-mode? :system]
+    :icon "system"}
+   {:id :dark
     :type :checkbox
     :label [::dark "Dark"]
     :action [::theme.events/set-mode :dark]
@@ -491,13 +497,7 @@
     :label [::light "Light"]
     :action [::theme.events/set-mode :light]
     :checked [::theme.subs/selected-mode? :light]
-    :icon "light"}
-   {:id :system
-    :type :checkbox
-    :label [::system "System"]
-    :action [::theme.events/set-mode :system]
-    :checked [::theme.subs/selected-mode? :system]
-    :icon "system"}])
+    :icon "light"}])
 
 (defn panel-submenu
   []
