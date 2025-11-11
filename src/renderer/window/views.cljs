@@ -24,8 +24,8 @@
     [views/icon "checkmark"]]
    [:div label]
    (if (= id "system")
-     [:span.uppercase.font-mono.text-foreground-disabled (or system-abbr "EN")]
-     [:span.uppercase.font-mono.text-foreground-muted abbr])])
+     [:span.font-mono.text-foreground-disabled (or system-abbr "EN")]
+     [:span.font-mono.text-foreground-muted abbr])])
 
 (defn dropdown
   [trigger-content dropdown-items]
@@ -88,11 +88,8 @@
         installable? @(rf/subscribe [::app.subs/installable?])
         title-bar @(rf/subscribe [::document.subs/title-bar])
         md? @(rf/subscribe [::window.subs/md?])
-        computed-lang @(rf/subscribe [::i18n.subs/lang])
-        system-lang @(rf/subscribe [::i18n.subs/system-lang])
-        languages @(rf/subscribe [::i18n.subs/languages])
-        system-abbr (get-in languages [system-lang :code])
-        computed-abbr (get-in languages [computed-lang :code])]
+        system-code @(rf/subscribe [::i18n.subs/system-lang-code])
+        code @(rf/subscribe [::i18n.subs/lang-code])]
     [:div.flex.relative.items-center
      [:div.px-1.gap-1.flex.items-center.shrink-0
       (when-not (or fullscreen? mac?)
@@ -117,10 +114,8 @@
        (when (or md? mac?)
          [:<>
           ^{:key @(rf/subscribe [::i18n.subs/user-lang])}
-          [dropdown
-           computed-abbr
-           (->> (menubar.views/languages-submenu)
-                (mapv (partial language-item system-abbr)))]
+          [dropdown code (->> (menubar.views/languages-submenu)
+                              (mapv (partial language-item system-code)))]
           ^{:key @(rf/subscribe [::theme.subs/mode])}
           [dropdown
            [views/icon (name theme-mode)]

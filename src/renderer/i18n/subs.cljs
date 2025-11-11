@@ -36,8 +36,30 @@
    (i18n.handlers/tempura-options languages)))
 
 (rf/reg-sub
- ::lang-dir
+ ::language
  :<- [::languages]
  :<- [::lang]
  (fn [[languages lang] _]
-   (get-in languages [lang :dir])))
+   (get languages lang)))
+
+(rf/reg-sub
+ ::lang-dir
+ :<- [::language]
+ :-> :dir)
+
+(rf/reg-sub
+ ::lang-code
+ :<- [::language]
+ :-> :code)
+
+(rf/reg-sub
+ ::system-language
+ :<- [::languages]
+ :<- [::system-lang]
+ (fn [[languages system-lang] _]
+   (get languages system-lang)))
+
+(rf/reg-sub
+ ::system-lang-code
+ :<- [::system-language]
+ :-> :code)

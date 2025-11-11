@@ -3,7 +3,7 @@
    [malli.core :as m]
    [renderer.app.db :refer [App]]
    [renderer.i18n.db
-    :refer [LanguageCodeIdentifier Languages Translation UserLanguage]]
+    :refer [LanguageCodeIdentifier Languages LanguageId Translation]]
    [taoensso.tempura :as tempura]))
 
 (m/=> supported-lang? [:-> Languages [:maybe LanguageCodeIdentifier] boolean?])
@@ -11,7 +11,7 @@
   [languages lang]
   (contains? languages lang))
 
-(m/=> computed-lang [:-> Languages UserLanguage [:maybe LanguageCodeIdentifier]
+(m/=> computed-lang [:-> Languages LanguageId [:maybe LanguageCodeIdentifier]
                      LanguageCodeIdentifier])
 (defn computed-lang
   [languages user-lang system-lang]

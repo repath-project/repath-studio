@@ -14,7 +14,7 @@
 (def LanguageCodeIdentifier
   [:re #"^[a-z]{2}-[A-Z]{2}$"])
 
-(def UserLanguage
+(def LanguageId
   [:or LanguageCodeIdentifier [:= "system"]])
 
 (def Language

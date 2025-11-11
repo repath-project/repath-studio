@@ -11,7 +11,7 @@
    [renderer.frame.db :refer [DomRect]]
    [renderer.i18n.db
     :as i18n.db
-    :refer [LanguageCodeIdentifier Languages UserLanguage]]
+    :refer [LanguageCodeIdentifier LanguageId Languages]]
    [renderer.menubar.db :refer [Menubar]]
    [renderer.panel.db :as panel.db :refer [Panel PanelId]]
    [renderer.ruler.db :refer [Ruler]]
@@ -80,7 +80,7 @@
    [:pen-mode {:default false} boolean?]
    [:backdrop {:default false} boolean?]
    [:user-lang {:default "system"
-                :persist true} UserLanguage]
+                :persist true} LanguageId]
    [:system-lang {:optional true} LanguageCodeIdentifier]
    [:languages {:default i18n.db/default} Languages]
    [:platform {:optional true} Platform]
