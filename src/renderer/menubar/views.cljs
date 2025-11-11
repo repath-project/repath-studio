@@ -38,7 +38,7 @@
                           (mapv (fn [{:keys [path title id]
                                       :as recent}]
                                   {:id id
-                                   :label (or path title)
+                                   :label [(keyword id) (or path title)]
                                    :icon "folder"
                                    :action [::document.events/open-recent
                                             recent]})))]
