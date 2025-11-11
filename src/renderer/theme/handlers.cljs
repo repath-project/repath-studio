@@ -14,7 +14,7 @@
   [db native-mode]
   (assoc-in db [:theme :native-mode] native-mode))
 
-(m/=> compute-mode [:-> ThemeMode NativeMode])
+(m/=> compute-mode [:-> ThemeMode NativeMode NativeMode])
 (defn compute-mode
   [mode native-mode]
   (if (= mode :system)

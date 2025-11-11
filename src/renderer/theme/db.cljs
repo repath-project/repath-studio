@@ -1,13 +1,10 @@
 (ns renderer.theme.db)
 
-(def modes
-  [:dark :light :system])
-
-(def ThemeMode
-  (into [:enum] modes))
-
 (def NativeMode
   [:enum :dark :light])
+
+(def ThemeMode
+  (conj NativeMode :system))
 
 (def Theme
   [:map {:closed true}

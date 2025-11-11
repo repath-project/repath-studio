@@ -1,16 +1,17 @@
 (ns renderer.i18n.handlers
   (:require
    [malli.core :as m]
+   [renderer.app.db :refer [App]]
    [renderer.i18n.db
     :refer [LanguageCodeIdentifier Languages Translation UserLanguage]]
    [taoensso.tempura :as tempura]))
 
-(m/=> supported-lang? [:-> [:maybe LanguageCodeIdentifier] boolean?])
+(m/=> supported-lang? [:-> Languages [:maybe LanguageCodeIdentifier] boolean?])
 (defn supported-lang?
   [languages lang]
   (contains? languages lang))
 
-(m/=> computed-lang [:-> UserLanguage [:maybe LanguageCodeIdentifier]
+(m/=> computed-lang [:-> Languages UserLanguage [:maybe LanguageCodeIdentifier]
                      LanguageCodeIdentifier])
 (defn computed-lang
   [languages user-lang system-lang]
@@ -33,6 +34,7 @@
   [options lang translation]
   (apply tempura/tr options [lang] translation))
 
+(m/=> t [:-> App [:* any?] any?])
 (defn t
   "Translation function that can be called outside of a reactive context."
   [db & more]

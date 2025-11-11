@@ -9,7 +9,7 @@
   [:enum "ltr" "rtl"])
 
 (def LanguageCode
-  [:re #"^[a-z]{2}"])
+  [:re #"^[A-Z]{2}"])
 
 (def LanguageCodeIdentifier
   [:re #"^[a-z]{2}-[A-Z]{2}$"])
