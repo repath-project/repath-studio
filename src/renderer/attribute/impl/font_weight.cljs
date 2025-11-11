@@ -29,5 +29,5 @@
      (merge attrs
             {:default-value "400"
              :items (mapv #(do {:key %
-                                :label (label %)
+                                :label [k (label %)]
                                 :value %}) weights)})]))

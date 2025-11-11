@@ -468,7 +468,22 @@
 
  :renderer.attribute.impl.font-size
  {:description "font-size 属性是指在多行布局环境中设置多行文本时从基线到
-                基线的字体大小。"}
+                基线的字体大小。"
+  :xx-small "XX小"
+  :x-small "X小"
+  :small "小"
+  :medium "中"
+  :large "大"
+  :x-large "X大"
+  :xx-large "XX大"
+  :xxx-large "XXX大"}
+
+ :renderer.attribute.impl.font-style
+ {:description "font-size 属性是指在多行布局环境中设置多行文本时从基线到
+                基线的字体大小。"
+  :normal "正常"
+  :italic "斜体"
+  :oblique "倾斜"}
 
  :renderer.attribute.impl.font-weight
  {:description "font-weight 属性是指用于渲染文本的字形的粗细或轻重，相对于

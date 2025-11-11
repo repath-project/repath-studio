@@ -19,21 +19,32 @@
         font-size (utils.length/unit->px font-size)]
     (assoc-in el [:attrs attribute] (str (apply f font-size more)))))
 
-(def sizes
-  ["xx-small"
-   "x-small"
-   "small"
-   "medium"
-   "large"
-   "x-large"
-   "xx-large"
-   "xxx-large"])
-
 (defmethod attribute.hierarchy/form-element [:default :font-size]
   [_ k v attrs]
   [attribute.views/select-input k v
    (merge attrs
           {:default-value "medium"
-           :items (mapv #(do {:key %
-                              :label %
-                              :value %}) sizes)})])
+           :items [{:id :xx-small
+                    :label [::xx-small "XX-Small"]
+                    :value "xx-small"}
+                   {:id :x-small
+                    :label [::x-small "X-Small"]
+                    :value "x-small"}
+                   {:id :small
+                    :label [::small "Small"]
+                    :value "small"}
+                   {:id :medium
+                    :label [::medium "Medium"]
+                    :value "medium"}
+                   {:id :large
+                    :label [::large "Large"]
+                    :value "large"}
+                   {:id :x-large
+                    :label [::x-large "X-Large"]
+                    :value "x-large"}
+                   {:id :xx-large
+                    :label [::xx-large "XX-Large"]
+                    :value "xx-large"}
+                   {:id :xxx-large
+                    :label [::xxx-large "XXX-Large"]
+                    :value "xxx-large"}]})])

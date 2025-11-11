@@ -19,16 +19,17 @@
         font-size (utils.length/unit->px font-size)]
     (assoc-in el [:attrs attribute] (str (apply f font-size more)))))
 
-(def styles
-  ["normal"
-   "italic"
-   "oblique"])
-
 (defmethod attribute.hierarchy/form-element [:default :font-style]
   [_ k v attrs]
   [attribute.views/select-input k v
    (merge attrs
           {:default-value "normal"
-           :items (mapv #(do {:key %
-                              :label %
-                              :value %}) styles)})])
+           :items [{:id :normal
+                    :label [::normal "Normal"]
+                    :value "normal"}
+                   {:id :italic
+                    :label [::italic "Italic"]
+                    :value "italic"}
+                   {:id :oblique
+                    :label [::oblique "Oblique"]
+                    :value "oblique"}]})])

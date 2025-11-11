@@ -542,7 +542,23 @@
  :renderer.attribute.impl.font-size
  {:description "Das font-size-Attribut bezieht sich auf die Größe der Schrift
                 von Grundlinie zu Grundlinie, wenn mehrere Textzeilen in einer
-                mehrzeiligen Layout-Umgebung gesetzt werden."}
+                mehrzeiligen Layout-Umgebung gesetzt werden."
+  :xx-small "XX-Klein"
+  :x-small "X-Klein"
+  :small "Klein"
+  :medium "Mittel"
+  :large "Groß"
+  :x-large "X-Groß"
+  :xx-large "XX-Groß"
+  :xxx-large "XXX-Groß"}
+
+ :renderer.attribute.impl.font-style
+ {:description "Das font-size-Attribut bezieht sich auf die Größe der Schrift
+                von Grundlinie zu Grundlinie, wenn mehrere Textzeilen in einer
+                mehrzeiligen Layout-Umgebung gesetzt werden."
+  :normal "Normal"
+  :italic "Kursiv"
+  :oblique "Schräg"}
 
  :renderer.attribute.impl.font-weight
  {:description "Das font-weight-Attribut bezieht sich auf die Fettheit oder

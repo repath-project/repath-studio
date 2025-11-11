@@ -492,7 +492,23 @@
  :renderer.attribute.impl.font-size
  {:description "font-size 속성은 여러 줄의 텍스트가 다중 줄 레이아웃
                 환경에서 단색으로 설정될 때 기준선에서 기준선까지의
-                글꼴 크기를 나타냅니다."}
+                글꼴 크기를 나타냅니다."
+  :xx-small "XX작게"
+  :x-small "X작게"
+  :small "작게"
+  :medium "중간"
+  :large "크게"
+  :x-large "X크게"
+  :xx-large "XX크게"
+  :xxx-large "XXX크게"}
+
+ :renderer.attribute.impl.font-style
+ {:description "font-size 속성은 여러 줄의 텍스트가 다중 줄 레이아웃
+                환경에서 단색으로 설정될 때 기준선에서 기준선까지의
+                글꼴 크기를 나타냅니다."
+  :normal "표준"
+  :italic "기울임"
+  :oblique "비스듬히"}
 
  :renderer.attribute.impl.font-weight
  {:description "font-weight 속성은 같은 글꼴 패밀리의 다른 글꼴과 비교하여

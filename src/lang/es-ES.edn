@@ -531,7 +531,23 @@
  :renderer.attribute.impl.font-size
  {:description "El atributo font-size se refiere al tamaño de la fuente de
                 línea base a línea base cuando múltiples líneas de texto se
-                establecen sólidas en un entorno de diseño multilínea."}
+                establecen sólidas en un entorno de diseño multilínea."
+  :xx-small "XX-Pequeño"
+  :x-small "X-Pequeño"
+  :small "Pequeño"
+  :medium "Medio"
+  :large "Grande"
+  :x-large "X-Grande"
+  :xx-large "XX-Grande"
+  :xxx-large "XXX-Grande"}
+
+ :renderer.attribute.impl.font-style
+ {:description "El atributo font-size se refiere al tamaño de la fuente de
+                línea base a línea base cuando múltiples líneas de texto se
+                establecen sólidas en un entorno de diseño multilínea."
+  :normal "Normal"
+  :italic "Cursiva"
+  :oblique "Oblicua"}
 
  :renderer.attribute.impl.font-weight
  {:description "El atributo font-weight se refiere a la negrita o ligereza

@@ -531,7 +531,23 @@
  :renderer.attribute.impl.font-size
  {:description "Attributet font-size refererar till storleken på typsnittet
                 från baslinje till baslinje när flera textrader är satta fast i
-                en flerradig layoutmiljö."}
+                en flerradig layoutmiljö."
+  :xx-small "XX-Liten"
+  :x-small "X-Liten"
+  :small "Liten"
+  :medium "Medium"
+  :large "Stor"
+  :x-large "X-Stor"
+  :xx-large "XX-Stor"
+  :xxx-large "XXX-Stor"}
+
+ :renderer.attribute.impl.font-style
+ {:description "Attributet font-size refererar till storleken på typsnittet
+                från baslinje till baslinje när flera textrader är satta fast i
+                en flerradig layoutmiljö."
+  :normal "Normal"
+  :italic "Kursiv"
+  :oblique "Sned"}
 
  :renderer.attribute.impl.font-weight
  {:description "Attributet font-weight refererar till tjockleken eller

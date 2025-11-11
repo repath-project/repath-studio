@@ -541,7 +541,24 @@
  {:description "Het font-size attribuut verwijst naar de grootte van het
                 lettertype van baseline tot baseline wanneer meerdere regels
                 tekst vast ingesteld zijn in een meerregelige lay-out
-                omgeving."}
+                omgeving."
+  :xx-small "XX-Klein"
+  :x-small "X-Klein"
+  :small "Klein"
+  :medium "Middel"
+  :large "Groot"
+  :x-large "X-Groot"
+  :xx-large "XX-Groot"
+  :xxx-large "XXX-Groot"}
+
+ :renderer.attribute.impl.font-style
+ {:description "Het font-size attribuut verwijst naar de grootte van het
+                lettertype van baseline tot baseline wanneer meerdere regels
+                tekst vast ingesteld zijn in een meerregelige lay-out
+                omgeving."
+  :normal "Normaal"
+  :italic "Cursief"
+  :oblique "Schuin"}
 
  :renderer.attribute.impl.font-weight
  {:description "Het font-weight attribuut verwijst naar de dikte of lichtheid

@@ -523,7 +523,23 @@
  :renderer.attribute.impl.font-size
  {:description "font-size özniteliği, çok satırlı metin çok satırlı düzen
                 ortamında katı olarak ayarlandığında taban çizgisinden
-                taban çizgisine yazı tipi boyutunu ifade eder."}
+                taban çizgisine yazı tipi boyutunu ifade eder."
+  :xx-small "XX-Küçük"
+  :x-small "X-Küçük"
+  :small "Küçük"
+  :medium "Orta"
+  :large "Büyük"
+  :x-large "X-Büyük"
+  :xx-large "XX-Büyük"
+  :xxx-large "XXX-Büyük"}
+
+ :renderer.attribute.impl.font-style
+ {:description "font-size özniteliği, çok satırlı metin çok satırlı düzen
+                ortamında katı olarak ayarlandığında taban çizgisinden
+                taban çizgisine yazı tipi boyutunu ifade eder."
+  :normal "Normal"
+  :italic "İtalik"
+  :oblique "Eğik"}
 
  :renderer.attribute.impl.font-weight
  {:description "font-weight özniteliği, aynı yazı tipi ailesindeki diğer

@@ -523,7 +523,23 @@
  :renderer.attribute.impl.font-size
  {:description "The font-size attribute refers to the size of the font from
                 baseline to baseline when multiple lines of text are set solid
-                in a multiline layout environment."}
+                in a multiline layout environment."
+  :xx-small "XX-Small"
+  :x-small "X-Small"
+  :small "Small"
+  :medium "Medium"
+  :large "Large"
+  :x-large "X-Large"
+  :xx-large "XX-Large"
+  :xxx-large "XXX-Large"}
+
+ :renderer.attribute.impl.font-style
+ {:description "The font-size attribute refers to the size of the font from
+                 baseline to baseline when multiple lines of text are set solid
+                 in a multiline layout environment."
+  :normal "Normal"
+  :italic "Italic"
+  :oblique "Oblique"}
 
  :renderer.attribute.impl.font-weight
  {:description "The font-weight attribute refers to the boldness or lightness of

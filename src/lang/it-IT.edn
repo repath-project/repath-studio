@@ -540,7 +540,24 @@
  {:description "L'attributo font-size si riferisce alla dimensione del font
                 dalla linea di base alla linea di base quando più righe di
                 testo sono impostate solide in un ambiente di layout
-                multilinea."}
+                multilinea."
+  :xx-small "XX-Piccolo"
+  :x-small "X-Piccolo"
+  :small "Piccolo"
+  :medium "Medio"
+  :large "Grande"
+  :x-large "X-Grande"
+  :xx-large "XX-Grande"
+  :xxx-large "XXX-Grande"}
+
+ :renderer.attribute.impl.font-style
+ {:description "L'attributo font-size si riferisce alla dimensione del font
+                dalla linea di base alla linea di base quando più righe di
+                testo sono impostate solide in un ambiente di layout
+                multilinea."
+  :normal "Normale"
+  :italic "Corsivo"
+  :oblique "Obliquo"}
 
  :renderer.attribute.impl.font-weight
  {:description "L'attributo font-weight si riferisce al grassetto o alla

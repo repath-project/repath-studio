@@ -514,7 +514,23 @@
  :renderer.attribute.impl.font-size
  {:description "خاصية font-size تشير إلى حجم الخط من الخط الأساسي
                 إلى الخط الأساسي عندما يتم تعيين خطوط متعددة من النص
-                صلبة في بيئة تخطيط متعدد الأسطر."}
+                صلبة في بيئة تخطيط متعدد الأسطر."
+  :xx-small "XX-صغير"
+  :x-small "X-صغير"
+  :small "صغير"
+  :medium "متوسط"
+  :large "كبير"
+  :x-large "X-كبير"
+  :xx-large "XX-كبير"
+  :xxx-large "XXX-كبير"}
+
+ :renderer.attribute.impl.font-style
+ {:description "خاصية font-size تشير إلى حجم الخط من الخط الأساسي
+                إلى الخط الأساسي عندما يتم تعيين خطوط متعددة من النص
+                صلبة في بيئة تخطيط متعدد الأسطر."
+  :normal "عادي"
+  :italic "مائل"
+  :oblique "منحرف"}
 
  :renderer.attribute.impl.font-weight
  {:description "خاصية font-weight تشير إلى جرأة أو خفة الرموز

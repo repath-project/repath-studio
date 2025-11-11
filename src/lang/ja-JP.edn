@@ -496,7 +496,23 @@
  :renderer.attribute.impl.font-size
  {:description "font-size属性は、マルチライン配置環境で複数行のテキストを
                 隙間なく設定する際の、ベースラインからベースラインまでの
-                フォントサイズを指します。"}
+                フォントサイズを指します。"
+  :xx-small "XX小"
+  :x-small "X小"
+  :small "小"
+  :medium "中"
+  :large "大"
+  :x-large "X大"
+  :xx-large "XX大"
+  :xxx-large "XXX大"}
+
+ :renderer.attribute.impl.font-style
+ {:description "font-size属性は、マルチライン配置環境で複数行のテキストを
+                隙間なく設定する際の、ベースラインからベースラインまでの
+                フォントサイズを指します。"
+  :normal "標準"
+  :italic "イタリック"
+  :oblique "オブリーク"}
 
  :renderer.attribute.impl.font-weight
  {:description "font-weight属性は、同じフォントファミリーの他のフォントと

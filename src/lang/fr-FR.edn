@@ -537,7 +537,24 @@
  {:description "L'attribut font-size fait référence à la taille de la police de
                 la ligne de base à la ligne de base lorsque plusieurs lignes de
                 texte sont définies solides dans un environnement de mise en
-                page multiligne."}
+                page multiligne."
+  :xx-small "XX-Petit"
+  :x-small "X-Petit"
+  :small "Petit"
+  :medium "Moyen"
+  :large "Grand"
+  :x-large "X-Grand"
+  :xx-large "XX-Grand"
+  :xxx-large "XXX-Grand"}
+
+ :renderer.attribute.impl.font-style
+ {:description "L'attribut font-size fait référence à la taille de la police de
+                la ligne de base à la ligne de base lorsque plusieurs lignes de
+                texte sont définies solides dans un environnement de mise en
+                page multiligne."
+  :normal "Normal"
+  :italic "Italique"
+  :oblique "Oblique"}
 
  :renderer.attribute.impl.font-weight
  {:description "L'attribut font-weight fait référence à la graisse ou à la
