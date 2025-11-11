@@ -3,8 +3,18 @@
    [malli.core :as m]
    [renderer.app.db :refer [App]]
    [renderer.i18n.db
-    :refer [LanguageCodeIdentifier Languages LanguageId Translation]]
+    :refer [LanguageCodeIdentifier Language Languages LanguageId Translation]]
    [taoensso.tempura :as tempura]))
+
+(m/=> register-language [:-> App Language App])
+(defn register-language
+  [db language]
+  (assoc-in db [:languages (:id language)] language))
+
+(m/=> register-language [:-> App LanguageCodeIdentifier App])
+(defn deregister-language
+  [db id]
+  (update db :languages dissoc id))
 
 (m/=> supported-lang? [:-> Languages [:maybe LanguageCodeIdentifier] boolean?])
 (defn supported-lang?

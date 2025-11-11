@@ -20,3 +20,13 @@
  (fn [{:keys [db]} [_ lang]]
    {:db (assoc db :user-lang lang)
     :dispatch [::set-lang-attrs]}))
+
+(rf/reg-event-db
+ ::register-language
+ (fn [db [_ language]]
+   (i18n.handlers/register-language db language)))
+
+(rf/reg-event-db
+ ::deregister-language
+ (fn [db [_ id]]
+   (i18n.handlers/deregister-language db id)))

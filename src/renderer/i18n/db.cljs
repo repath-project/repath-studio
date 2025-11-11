@@ -1,5 +1,6 @@
 (ns renderer.i18n.db
   (:require
+   [malli.core :as m]
    [taoensso.tempura :refer-macros [load-resource-at-compile-time]]))
 
 (def Translation
@@ -24,6 +25,8 @@
    [:dir LanguageDirection]
    [:code LanguageCode]
    [:dictionary map?]])
+
+(def valid-language? (m/validator Language))
 
 (def Languages
   [:map-of LanguageCodeIdentifier Language])

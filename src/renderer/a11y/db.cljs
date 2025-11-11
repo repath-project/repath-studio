@@ -1,5 +1,6 @@
 (ns renderer.a11y.db
   (:require
+    [malli.core :as m]
    [renderer.i18n.db :refer [Translation]]))
 
 (def A11yFilterId keyword?)
@@ -31,6 +32,8 @@
    [:tag FilterTag]
    [:label Translation]
    [:attrs {:default {}} [:map-of keyword? any?]]])
+
+(def valid-filter? (m/validator A11yFilter))
 
 (def default
   [{:id :blur

@@ -5,10 +5,13 @@
    [config :as config]
    [re-frame.core :as rf]
    [re-frame.db :as rf.db]
+   [renderer.a11y.db :as a11y.db]
    [renderer.a11y.events :as-alias a11y.events]
    [renderer.document.events :as-alias document.events]
    [renderer.element.events :as-alias element.events]
    [renderer.history.events :as-alias history.events]
+   [renderer.i18n.db :as i18n.db]
+   [renderer.i18n.events :as-alias i18n.events]
    [renderer.window.events :as-alias window.events]))
 
 (defn ^:export translate
@@ -312,13 +315,27 @@
 
 (defn ^:export register-a11y-filter
   "Registers an accessibility filter."
-  [v]
-  (rf/dispatch [::a11y.events/register-filter v]))
+  [a11y-filter]
+  (if-not (a11y.db/valid-filter? a11y-filter)
+    (throw (js/Error. "Invalid filter schema"))
+    (rf/dispatch [::a11y.events/register-filter filter])))
 
 (defn ^:export deregister-a11y-filter
   "Deregisters an accessibility filter."
-  [v]
-  (rf/dispatch [::a11y.events/deregister-filter v]))
+  [id]
+  (rf/dispatch [::a11y.events/deregister-filter id]))
+
+(defn ^:export register-language
+  "Registers a language."
+  [language]
+  (if-not (i18n.db/valid-language? language)
+    (throw (js/Error. "Invalid language schema"))
+    (rf/dispatch [::i18n.events/register-language language])))
+
+(defn ^:export deregister-language
+  "Deregisters a language."
+  [id]
+  (rf/dispatch [::i18n.events/deregister-language id]))
 
 (defn ^:export help
   "Lists available functions."
