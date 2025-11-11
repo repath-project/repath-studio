@@ -83,7 +83,8 @@
         point (:point nearest-neighbor)
         [x y] (matrix/add point margin)
         label (->> [base-label point-label]
-                   (keep i18n.views/t)
+                   (remove nil?)
+                   (map i18n.views/t)
                    (string/join (i18n.views/t [::to " to "])))]
     [:<>
      [utils.svg/times point]
