@@ -89,7 +89,7 @@ jobs:
 
       - name: Upload android apk to release
         if: ${{ startsWith(github.ref, 'refs/tags/v') && runner.os == 'Linux' }}
-        uses: svenstaro/upload-release-action@v2
+        uses: svenstaro/upload-release-action@2.11.2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: android/app/build/outputs/apk/release/app-release-signed.apk
