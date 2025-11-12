@@ -181,9 +181,10 @@
         (concat (mapv (fn [{:keys [id title]}]
                         {:key id
                          :type :checkbox
-                         :label title
+                         :label [(keyword id) title]
                          :action [::document.events/set-active id]
-                         :checked (= active-id id)}) documents)
+                         :checked [::document.subs/active? id]})
+                      documents)
                 [{:type :separator}])
 
         :always

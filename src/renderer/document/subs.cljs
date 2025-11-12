@@ -48,6 +48,12 @@
             (get documents))))
 
 (rf/reg-sub
+ ::active?
+ :<- [::active-id]
+ (fn [active-id [_ id]]
+   (= active-id id)))
+
+(rf/reg-sub
  ::entity
  :<- [::documents]
  (fn [documents [_ k]]
