@@ -237,6 +237,7 @@
 
  :renderer.element.impl.shape.polygon
  {:label "多角形"
+  :point "点"
   :description "<polygon> SVG要素は、接続された直線セグメントのセットで構成される
                 閉じた形状を定義します。最後の点は最初の点に接続されます。"}
 

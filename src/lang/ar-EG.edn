@@ -238,6 +238,7 @@
 
  :renderer.element.impl.shape.polygon
  {:label "مضلع"
+  :point "نقطة"
   :description "عنصر <polygon> في SVG يُعرف شكلاً مغلقاً يتكون من
                 مجموعة من القطع المستقيمة المتصلة. النقطة الأخيرة متصلة
                 بالنقطة الأولى."}

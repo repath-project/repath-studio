@@ -240,6 +240,7 @@
 
  :renderer.element.impl.shape.polygon
  {:label "Çokgen"
+  :point "nokta"
   :description "<polygon> SVG öğesi, bir dizi bağlı düz çizgi segmentinden
                 oluşan kapalı bir şekil tanımlar. Son nokta ilk noktaya
                 bağlanır."}

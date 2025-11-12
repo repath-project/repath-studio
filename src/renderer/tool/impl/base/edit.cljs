@@ -107,8 +107,7 @@
        (matrix/add [(:x el) (:y el)]
                    (tool.handlers/pointer-delta db))
        {:label (when (= (:type el) :handle)
-                 (or (:label el)
-                     (name (:id el))))})]))
+                 (:label el))})]))
 
 (defmethod tool.hierarchy/snapping-elements :edit
   [db]

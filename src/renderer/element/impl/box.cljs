@@ -78,7 +78,8 @@
     [el]
     (let [{{:keys [x y width height]} :attrs} el
           [x y w h] (mapv utils.length/unit->px [x y width height])]
-      [(with-meta [x y] {:label "box corner"})
-       (with-meta [(+ x w) y] {:label "box corner"})
-       (with-meta [(+ x w) (+ y h)] {:label "box corner"})
-       (with-meta [x (+ y h)] {:label "box corner"})]))
+      (mapv #(with-meta % {:label [::box-corner "box corner"]})
+            [[x y]
+             [(+ x w) y]
+             [(+ x w) (+ y h)]
+             [x (+ y h)]])))

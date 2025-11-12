@@ -240,6 +240,7 @@
 
  :renderer.element.impl.shape.polygon
  {:label "Polígono"
+  :point "punto"
   :description "El elemento SVG <polygon> define una forma cerrada que
                 consiste en un conjunto de segmentos de línea recta
                 conectados. El último punto está conectado al primer punto."}

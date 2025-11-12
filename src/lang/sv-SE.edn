@@ -239,6 +239,7 @@
 
  :renderer.element.impl.shape.polygon
  {:label "Polygon"
+  :point "punkt"
   :description "SVG <polygon> elementet definierar en sluten form bestående av
                 en uppsättning sammankopplade raka linjesegment. Den sista
                 punkten är kopplad till den första punkten."}

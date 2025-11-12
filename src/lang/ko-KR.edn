@@ -237,6 +237,7 @@
 
  :renderer.element.impl.shape.polygon
  {:label "다각형"
+  :point "점"
   :description "<polygon> SVG 요소는 연결된 직선 세그먼트 집합으로
                 구성된 닫힌 모양을 정의합니다. 마지막 점이
                 첫 번째 점에 연결됩니다."}

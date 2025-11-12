@@ -234,6 +234,7 @@
 
  :renderer.element.impl.shape.polygon
  {:label "多边形"
+  :point "点"
   :description "SVG 元素 <polygon> 定义由一组连接的直线段组成的封闭形状。最后一个点
                 连接到第一个点。"}
 
