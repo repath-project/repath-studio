@@ -88,7 +88,7 @@ this spec to generate default values. Full db validation is enabled on dev mode.
 are selectively applied to pure and critical namespaces, such as utils and
 handlers. By default, function schemas are instrumented only during tests to
 avoid performance overhead. However, runtime instrumentation can also be enabled
-in the development environment (see `renderer.dev`).
+in the development environment (see `dev.cljs`).
 
 ## Useful development shortcuts
 
