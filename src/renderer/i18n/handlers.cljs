@@ -11,7 +11,7 @@
   [db language]
   (assoc-in db [:languages (:id language)] language))
 
-(m/=> register-language [:-> App LanguageCodeIdentifier App])
+(m/=> deregister-language [:-> App LanguageCodeIdentifier App])
 (defn deregister-language
   [db id]
   (update db :languages dissoc id))
