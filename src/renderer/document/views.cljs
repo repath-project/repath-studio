@@ -154,7 +154,6 @@
 (defn documents-dropdown-button
   []
   (let [documents @(rf/subscribe [::document.subs/entities])
-        active-id @(rf/subscribe [::document.subs/active-id])
         md? @(rf/subscribe [::window.subs/md?])
         document-count (count documents)]
     [:> DropdownMenu/Root
