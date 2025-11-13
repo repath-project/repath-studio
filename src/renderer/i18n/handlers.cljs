@@ -16,6 +16,13 @@
   [db id]
   (update db :languages dissoc id))
 
+(m/=> set-translation [:-> App LanguageCodeIdentifier keyword? Translation App])
+(defn set-translation
+  [db lang-id k v]
+  (cond-> db
+    (get-in db [:languages lang-id])
+    (assoc-in [:languages lang-id :dictionary k] v)))
+
 (m/=> supported-lang? [:-> Languages [:maybe LanguageCodeIdentifier] boolean?])
 (defn supported-lang?
   [languages lang]

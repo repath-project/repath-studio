@@ -316,9 +316,9 @@
 (defn ^:export register-a11y-filter
   "Registers an accessibility filter."
   [a11y-filter]
-  (if-not (a11y.db/valid-filter? a11y-filter)
-    (throw (js/Error. "Invalid filter schema"))
-    (rf/dispatch [::a11y.events/register-filter filter])))
+  (if (a11y.db/valid-filter? a11y-filter)
+    (rf/dispatch [::a11y.events/register-filter a11y-filter])
+    (throw (js/Error. "Invalid filter schema"))))
 
 (defn ^:export deregister-a11y-filter
   "Deregisters an accessibility filter."
@@ -328,9 +328,14 @@
 (defn ^:export register-language
   "Registers a language."
   [language]
-  (if-not (i18n.db/valid-language? language)
-    (throw (js/Error. "Invalid language schema"))
-    (rf/dispatch [::i18n.events/register-language language])))
+  (if (i18n.db/valid-language? language)
+    (rf/dispatch [::i18n.events/register-language language])
+    (throw (js/Error. "Invalid language schema"))))
+
+(defn ^:export set-translation
+  "Sets a translation for a language."
+  [lang-id k v]
+  (rf/dispatch [::i18n.events/set-translation lang-id k v]))
 
 (defn ^:export deregister-language
   "Deregisters a language."

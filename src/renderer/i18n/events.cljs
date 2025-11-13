@@ -2,7 +2,7 @@
   (:require
    [re-frame.core :as rf]
    [renderer.app.events :refer [persist]]
-   [renderer.effects :as effects]
+   [renderer.effects :as-alias effects]
    [renderer.i18n.handlers :as i18n.handlers]))
 
 (rf/reg-event-fx
@@ -30,3 +30,8 @@
  ::deregister-language
  (fn [db [_ id]]
    (i18n.handlers/deregister-language db id)))
+
+(rf/reg-event-db
+ ::set-translation
+ (fn [db [_ lang-id k v]]
+   (i18n.handlers/set-translation db lang-id k v)))
