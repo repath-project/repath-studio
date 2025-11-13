@@ -20,7 +20,6 @@
    ["sonner" :refer [Toaster]]
    ["tailwind-merge" :refer [twMerge]]
    ["vaul" :refer [Drawer]]
-   [clojure.string :as string]
    [re-frame.core :as rf]
    [reagent.core :as reagent]
    [renderer.app.subs :as-alias app.subs]
@@ -31,7 +30,9 @@
 (defn merge-with-class
   [& props]
   (-> (apply merge props)
-      (assoc :class (apply twMerge (map :class props)))))
+      (assoc :class (->> (map :class props)
+                         (flatten)
+                         (apply twMerge)))))
 
 (defn icon
   [icon-name props]
@@ -122,8 +123,7 @@
 (defn radio-icon-button
   [icon-name active props]
   [icon-button icon-name
-   (merge-with-class {:class (string/join " " ["active:overlay"
-                                               (when active "accent")])}
+   (merge-with-class {:class ["active:overlay" (when active "accent")]}
                      props)])
 
 (defn context-menu-item

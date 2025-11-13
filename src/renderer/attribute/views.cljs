@@ -19,13 +19,13 @@
 
 (defn browser-icon
   [browser]
-  (name (case browser
-          :firefox_android :firefox
-          :chrome_android :chrome
-          :opera_android :opera
-          :safari_ios :safari
-          :webview_ios :safari
-          browser)))
+  (case browser
+    :firefox_android "firefox"
+    :chrome_android "chrome"
+    :opera_android "opera"
+    :safari_ios "safari"
+    :webview_ios "safari"
+    (name browser)))
 
 (defn browser-support
   [browser version-added]

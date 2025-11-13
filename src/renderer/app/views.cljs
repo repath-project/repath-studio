@@ -4,7 +4,6 @@
    ["@radix-ui/react-select" :as Select]
    ["@radix-ui/react-tooltip" :as Tooltip]
    ["path-browserify" :as path-browserify]
-   ["react-fps" :refer [FpsView]]
    ["react-resizable-panels" :refer [Panel PanelGroup]]
    [clojure.string :as string]
    [config :as config]
@@ -96,10 +95,7 @@
          (for [[s v] (debug-rows)]
            [:div.flex
             [:strong.mr-1 s]
-            [:div v]]))
-   [:div.fps-wrapper
-    [:> FpsView #js {:width 240
-                     :height 180}]]])
+            [:div v]]))])
 
 (defn help
   [message]
