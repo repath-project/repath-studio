@@ -245,6 +245,9 @@
                 определения формы. Все базовые формы могут быть созданы с
                 помощью элемента path."}
 
+ :renderer.element.impl.shape.poly
+ {:point "точка"}
+
  :renderer.element.impl.shape.polygon
  {:label "Многоугольник"
   :description "Элемент SVG <polygon> определяет замкнутую форму, состоящую из

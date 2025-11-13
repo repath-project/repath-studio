@@ -246,6 +246,9 @@
                 definiera en form. Alla grundformer kan skapas med ett path
                 element."}
 
+ :renderer.element.impl.shape.poly
+ {:point "punkt"}
+
  :renderer.element.impl.shape.polygon
  {:label "Polygon"
   :description "SVG <polygon> elementet definierar en sluten form bestående av

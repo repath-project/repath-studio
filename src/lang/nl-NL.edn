@@ -248,6 +248,9 @@
                 definiëren. Alle basisvormen kunnen gemaakt worden met een path
                 element."}
 
+ :renderer.element.impl.shape.poly
+ {:point "punt"}
+
  :renderer.element.impl.shape.polygon
  {:label "Polygoon"
   :description "Het SVG <polygon> element definieert een gesloten vorm

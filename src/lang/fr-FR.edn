@@ -248,6 +248,9 @@
                 forme. Toutes les formes de base peuvent être créées avec un
                 élément path."}
 
+ :renderer.element.impl.shape.poly
+ {:point "point"}
+
  :renderer.element.impl.shape.polygon
  {:label "Polygone"
   :description "L'élément SVG <polygon> définit une forme fermée constituée d'un

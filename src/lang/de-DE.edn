@@ -247,6 +247,9 @@
                 einer Form. Alle Grundformen können mit einem Pfad-Element
                 erstellt werden."}
 
+ :renderer.element.impl.shape.poly
+ {:point "Punkt"}
+
  :renderer.element.impl.shape.polygon
  {:label "Polygon"
   :description "Das SVG-Element <polygon> definiert eine geschlossene Form, die

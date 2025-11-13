@@ -248,6 +248,9 @@
                 ορισμό ενός σχήματος. Όλα τα βασικά σχήματα μπορούν να
                 δημιουργηθούν χρησιμοποιώντας ένα path στοιχείο"}
 
+ :renderer.element.impl.shape.poly
+ {:point "σημείο"}
+
  :renderer.element.impl.shape.polygon
  {:label "Πολύγωνο"
   :description "Το στοιχείο <polygon> στο SVG ορίζει ένα κλειστό σχήμα που

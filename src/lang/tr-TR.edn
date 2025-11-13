@@ -247,6 +247,9 @@
                 genel öğedir. Tüm temel şekiller bir path öğesiyle
                 oluşturulabilir."}
 
+ :renderer.element.impl.shape.poly
+ {:point "nokta"}
+
  :renderer.element.impl.shape.polygon
  {:label "Çokgen"
   :description "<polygon> SVG öğesi, bir dizi bağlı düz çizgi segmentinden
@@ -585,10 +588,10 @@
   :help-idle-click [:div "Seçimi değiştirmek için bir öğeye tıklayın"]
   :help-edit [:div "Yönü kısıtlamak için %1 tuşunu basılı tutun."]
   :help-type [:div "Metninizi girin."]
-    :select-element "Eleman seç"
+  :select-element "Eleman seç"
   :edit "Düzenle"
   :centroid "Ağırlık merkezi"
-  :handle "tutamak"}}
+  :handle "tutamak"}
 
  :renderer.tool.impl.base.transform
  {:label "Dönüştür"

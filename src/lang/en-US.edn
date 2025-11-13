@@ -244,6 +244,9 @@
   :description "The <path> SVG element is the generic element to define a shape.
                 All the basic shapes can be created with a path element."}
 
+ :renderer.element.impl.shape.poly
+ {:point "point"}
+
  :renderer.element.impl.shape.polygon
  {:label "Polygon"
   :description "The <polygon> SVG element defines a closed shape consisting of a

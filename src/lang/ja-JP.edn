@@ -244,6 +244,9 @@
   :description "<path> SVG要素は、形状を定義する汎用要素です。すべての基本形状は
                 パス要素で作成できます。"}
 
+ :renderer.element.impl.shape.poly
+ {:point "ポイント"}
+
  :renderer.element.impl.shape.polygon
  {:label "多角形"
   :description "<polygon> SVG要素は、接続された直線セグメントのセットで構成される

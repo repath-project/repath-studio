@@ -245,6 +245,9 @@
   :description "عنصر <path> في SVG هو العنصر العام لتعريف شكل. يمكن
                 إنشاء جميع الأشكال الأساسية باستخدام عنصر مسار."}
 
+ :renderer.element.impl.shape.poly
+ {:point "نقطة"}
+
  :renderer.element.impl.shape.polygon
  {:label "مضلع"
   :description "عنصر <polygon> في SVG يُعرف شكلاً مغلقاً يتكون من
