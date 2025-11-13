@@ -187,6 +187,8 @@
                                                   :x x
                                                   :y y
                                                   :type :handle
+                                                  :label [::brush-point
+                                                          "brush point"]
                                                   :action :edit
                                                   :element-id (:id el)}]))
                    (-> el :attrs :points points->vec))])

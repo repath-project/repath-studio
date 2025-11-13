@@ -51,7 +51,7 @@
   [options lang translation]
   (apply tempura/tr options [lang] translation))
 
-(m/=> t [:-> App [:* any?] any?])
+(m/=> t [:-> App Translation any?])
 (defn t
   "Translation function that can be called outside of a reactive context."
   [db & more]

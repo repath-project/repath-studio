@@ -200,20 +200,25 @@
  {:cut "Kes"
   :copy "Kopyala"
   :paste "Yapıştır"
-  :raise "Öne getir"
-  :lower "Arkaya gönder"
-  :raise-top "En öne getir"
-  :lower-bottom "En arkaya gönder"
+  :raise "Yükselt"
+  :lower "Alçalt"
+  :raise-top "Öne getir"
+  :lower-bottom "Arkaya gönder"
   :animate "Animasyon"
-  :animate-transform "Dönüşüm Animasyonu"
-  :animate-motion "Hareket Animasyonu"
+  :animate-transform "Dönüşüm animasyonu"
+  :animate-motion "Hareket animasyonu"
   :duplicate "Çoğalt"
   :delete "Sil"}
+
+ :renderer.element.impl.box
+ {:position-handle "konum tutamacı"
+  :size-handle "boyut tutamacı"}
 
  :renderer.element.impl.shape.circle
  {:label "Daire"
   :description "<circle> SVG öğesi, merkez nokta ve yarıçapa dayalı olarak
-                daireler çizmek için kullanılan bir SVG temel şeklidir."}
+                daireler çizmek için kullanılan bir SVG temel şeklidir."
+  :r-handle "yarıçap tutamacı"}
 
  :renderer.element.impl.shape.image
  {:label "Resim"
@@ -224,13 +229,17 @@
  :renderer.element.impl.shape.ellipse
  {:label "Elips"
   :description "<ellipse> öğesi, merkez koordinatları ve hem x hem de y
-                yarıçaplarına dayalı olarak elipsler oluşturmak için
-                kullanılan bir SVG temel şeklidir."}
+                yarıçaplarına dayalı olarak elipsler oluşturmak için kullanılan
+                bir SVG temel şeklidir."
+  :rx-handle "x yarıçap tutamacı"
+  :ry-handle "y yarıçap tutamacı"}
 
  :renderer.element.impl.shape.line
  {:label "Çizgi"
   :description "<line> öğesi, iki noktayı birleştiren bir çizgi oluşturmak
-                için kullanılan bir SVG temel şeklidir."}
+                için kullanılan bir SVG temel şeklidir."
+  :starting-point "başlangıç noktası"
+  :ending-point "bitiş noktası"}
 
  :renderer.element.impl.shape.path
  {:label "Yol"
@@ -240,7 +249,6 @@
 
  :renderer.element.impl.shape.polygon
  {:label "Çokgen"
-  :point "nokta"
   :description "<polygon> SVG öğesi, bir dizi bağlı düz çizgi segmentinden
                 oluşan kapalı bir şekil tanımlar. Son nokta ilk noktaya
                 bağlanır."}
@@ -266,17 +274,19 @@
   :randomness "Nokta konumundaki varyasyon miktarını artırır."
   :size "Sınırlayıcı kutunun boyutu."
   :description "Vektör tabanlı blob."
-  :generate-random-seed "Rastgele tohum oluştur"}
+  :generate-random-seed "Rastgele tohum oluştur"
+  :size-handle "boyut tutamacı"}
 
  :renderer.element.impl.custom.brush
  {:label "Fırça"
   :points "Kullanıcının fare hareketinden kaydedilen girdi noktaları."
   :size "Çizginin temel boyutu (çap)."
   :thinning "Çizginin boyutu üzerindeki basıncın etkisi."
-  :smoothing "Çizginin kenarlarını ne kadar yumuşatacağı."
-  :stream-line "Çizgiyi ne kadar akıcı hale getireceği."
-  :description "perfect-freehand kullanarak basınç duyarlı serbest çizgiler
-                çizin."}
+  :smoothing "Vuruşun kenarlarının ne kadar yumuşatılacağı."
+  :stream-line "Vuruşun ne kadar basitleştirileceği."
+  :description "Perfect-freehand kullanarak basınca duyarlı serbest çizim
+                çizgileri çizin."
+  :brush-point "fırça noktası"}
 
  :renderer.element.impl.container.canvas
  {:label "Tuval"
@@ -425,7 +435,8 @@
  {:label "Resim"}
 
  :renderer.tool.impl.element.core
- {:help "Bir öğe oluşturmak için tıklayın ve sürükleyin."}
+ {:help "Bir öğe oluşturmak için tıklayın ve sürükleyin."
+  :edge "kenar"}
 
  :renderer.tool.impl.element.poly
  {:add-points "Daha fazla nokta eklemek için tıklayın."
@@ -574,9 +585,10 @@
   :help-idle-click [:div "Seçimi değiştirmek için bir öğeye tıklayın"]
   :help-edit [:div "Yönü kısıtlamak için %1 tuşunu basılı tutun."]
   :help-type [:div "Metninizi girin."]
-  :select-element "Öğe seç"
+    :select-element "Eleman seç"
   :edit "Düzenle"
-  :centroid "Merkez"}
+  :centroid "Ağırlık merkezi"
+  :handle "tutamak"}}
 
  :renderer.tool.impl.base.transform
  {:label "Dönüştür"
@@ -768,4 +780,4 @@
   :no-thank-you "Hayır, teşekkürler"}
 
  :renderer.effects
- {:permission-denied "Dosyaya erişim izni reddedildi."}}
+ {:permission-denied "Dosyaya erişim izni reddedildi."}

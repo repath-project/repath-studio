@@ -200,20 +200,25 @@
  {:cut "Taglia"
   :copy "Copia"
   :paste "Incolla"
-  :raise "Porta avanti"
-  :lower "Porta dietro"
+  :raise "Alza"
+  :lower "Abbassa"
   :raise-top "Porta in primo piano"
-  :lower-bottom "Porta in fondo"
+  :lower-bottom "Porta in secondo piano"
   :animate "Anima"
   :animate-transform "Anima trasformazione"
   :animate-motion "Anima movimento"
   :duplicate "Duplica"
   :delete "Elimina"}
 
+ :renderer.element.impl.box
+ {:position-handle "maniglia di posizione"
+  :size-handle "maniglia di dimensione"}
+
  :renderer.element.impl.shape.circle
  {:label "Cerchio"
   :description "L'elemento SVG <circle> è una forma SVG di base, utilizzata per
-                disegnare cerchi basati su un punto centrale e un raggio."}
+                disegnare cerchi basati su un punto centrale e un raggio."
+  :r-handle "maniglia di raggio"}
 
  :renderer.element.impl.shape.image
  {:label "Immagine"
@@ -224,13 +229,17 @@
  :renderer.element.impl.shape.ellipse
  {:label "Ellisse"
   :description "L'elemento <ellipse> è una forma SVG di base, utilizzata per
-                creare ellissi basate su coordinate centrali e sui raggi x e
-                y."}
+                creare ellissi basate su una coordinata centrale e sia sul
+                raggio x che y."
+  :rx-handle "maniglia di raggio x"
+  :ry-handle "maniglia di raggio y"}
 
  :renderer.element.impl.shape.line
  {:label "Linea"
   :description "L'elemento <line> è una forma SVG di base utilizzata per creare
-                una linea che collega due punti."}
+                una linea che collega due punti."
+  :starting-point "punto iniziale"
+  :ending-point "punto finale"}
 
  :renderer.element.impl.shape.path
  {:label "Tracciato"
@@ -240,7 +249,6 @@
 
  :renderer.element.impl.shape.polygon
  {:label "Poligono"
-  :point "punto"
   :description "L'elemento SVG <polygon> definisce una forma chiusa costituita
                 da un insieme di segmenti di linea retta collegati. L'ultimo
                 punto è collegato al primo punto."}
@@ -264,9 +272,10 @@
   :seed "Un dato seed produrrà sempre lo stesso blob."
   :extra-points "Il numero effettivo di punti sarà `3 + extraPoints`."
   :randomness "Aumenta la quantità di variazione nella posizione dei punti."
-  :size "La dimensione del rettangolo di delimitazione."
+  :size "La dimensione del riquadro di delimitazione."
   :description "Blob basato su vettori."
-  :generate-random-seed "Genera seed casuale"}
+  :generate-random-seed "Genera seed casuale"
+  :size-handle "maniglia di dimensione"}
 
  :renderer.element.impl.custom.brush
  {:label "Pennello"
@@ -276,7 +285,8 @@
   :smoothing "Quanto ammorbidire i bordi del tratto."
   :stream-line "Quanto fluidificare il tratto."
   :description "Disegna linee a mano libera sensibili alla pressione
-                utilizzando perfect-freehand."}
+                utilizzando perfect-freehand."
+  :brush-point "punto pennello"}
 
  :renderer.element.impl.container.canvas
  {:label "Tela"
@@ -439,7 +449,8 @@
  {:label "Immagine"}
 
  :renderer.tool.impl.element.core
- {:help "Clicca e trascina per creare un elemento."}
+ {:help "Clicca e trascina per creare un elemento."
+  :edge "bordo"}
 
  :renderer.tool.impl.element.poly
  {:add-points "Clicca per aggiungere più punti."
@@ -594,7 +605,8 @@
   :help-type [:div "Inserisci il tuo testo."]
   :select-element "Seleziona elemento"
   :edit "Modifica"
-  :centroid "Centroide"}
+  :centroid "Centroide"
+  :handle "maniglia"}
 
  :renderer.tool.impl.base.transform
  {:label "Trasforma"

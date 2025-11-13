@@ -209,9 +209,14 @@
   :duplicate "复制"
   :delete "删除"}
 
+ :renderer.element.impl.box
+ {:position-handle "位置手柄"
+  :size-handle "大小手柄"}
+
  :renderer.element.impl.shape.circle
  {:label "圆形"
-  :description "SVG 元素 <circle> 是一个 SVG 基本形状，用于绘制基于中心点和半径的圆形。"}
+  :description "SVG 元素 <circle> 是一个 SVG 基本形状，用于绘制基于中心点和半径的圆形。"
+  :r-handle "半径手柄"}
 
  :renderer.element.impl.shape.image
  {:label "图像"
@@ -221,11 +226,15 @@
  :renderer.element.impl.shape.ellipse
  {:label "椭圆"
   :description "元素 <ellipse> 是一个 SVG 基本形状，用于创建基于中心坐标及其 x 和 y
-                半径的椭圆。"}
+                半径的椭圆。"
+  :rx-handle "x 半径手柄"
+  :ry-handle "y 半径手柄"}
 
  :renderer.element.impl.shape.line
  {:label "线条"
-  :description "元素 <line> 是一个 SVG 基本形状，用于创建连接两点的线条。"}
+  :description "元素 <line> 是一个 SVG 基本形状，用于创建连接两点的线条。"
+  :starting-point "起始点"
+  :ending-point "终点"}
 
  :renderer.element.impl.shape.path
  {:label "路径"
@@ -234,7 +243,6 @@
 
  :renderer.element.impl.shape.polygon
  {:label "多边形"
-  :point "点"
   :description "SVG 元素 <polygon> 定义由一组连接的直线段组成的封闭形状。最后一个点
                 连接到第一个点。"}
 
@@ -256,16 +264,18 @@
   :randomness "增加点位置的变化量。"
   :size "边界框的大小。"
   :description "基于矢量的 blob。"
-  :generate-random-seed "生成随机种子"}
+  :generate-random-seed "生成随机种子"
+  :size-handle "大小手柄"}
 
  :renderer.element.impl.custom.brush
  {:label "画笔"
   :points "从用户鼠标移动记录的输入点。"
   :size "笔画的基本大小（直径）。"
   :thinning "压力对笔画大小的影响。"
-  :smoothing "平滑笔画边缘的程度。"
-  :stream-line "简化笔画的程度。"
-  :description "使用 perfect-freehand 绘制压力敏感的手绘线条。"}
+  :smoothing "笔画边缘的平滑程度。"
+  :stream-line "笔画的简化程度。"
+  :description "使用 perfect-freehand 绘制压力敏感的手绘线条。"
+  :brush-point "画笔点"}
 
  :renderer.element.impl.container.canvas
  {:label "画布"
@@ -364,7 +374,8 @@
                           viewBox 的元素如何适合具有不同纵横比的视口。"}
 
  :renderer.tool.impl.element.core
- {:help "点击并拖动以创建元素。"}
+ {:help "点击并拖动以创建元素。"
+  :edge "边缘"}
 
  :renderer.tool.impl.element.poly
  {:add-points "点击添加更多点。"
@@ -514,7 +525,8 @@
   :help-type [:div "输入您的文本。"]
   :select-element "选择元素"
   :edit "编辑"
-  :centroid "质心"}
+  :centroid "质心"
+  :handle "句柄"}
 
  :renderer.tool.impl.base.transform
  {:label "变换"

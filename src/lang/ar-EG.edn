@@ -210,10 +210,15 @@
   :duplicate "مضاعفة"
   :delete "حذف"}
 
+ :renderer.element.impl.box
+ {:position-handle "مقبض الموضع"
+  :size-handle "مقبض الحجم"}
+
  :renderer.element.impl.shape.circle
  {:label "دائرة"
   :description "عنصر <circle> هو شكل SVG أساسي، يُستخدم لرسم الدوائر
-                بناءً على نقطة مركز ونصف قطر."}
+                بناءً على نقطة مركز ونصف قطر."
+  :r-handle "مقبض نصف القطر"}
 
  :renderer.element.impl.shape.image
  {:label "صورة"
@@ -224,12 +229,16 @@
  {:label "قطع ناقص"
   :description "عنصر <ellipse> هو شكل SVG أساسي، يُستخدم لإنشاء القطع
                 الناقص بناءً على إحداثي مركز، ونصف قطر في الاتجاهين x
-                و y."}
+                و y."
+  :rx-handle "مقبض نصف القطر x"
+  :ry-handle "مقبض نصف القطر y"}
 
  :renderer.element.impl.shape.line
  {:label "خط"
   :description "عنصر <line> هو شكل SVG أساسي يُستخدم لإنشاء خط يصل
-                بين نقطتين."}
+                بين نقطتين."
+  :starting-point "نقطة البداية"
+  :ending-point "نقطة النهاية"}
 
  :renderer.element.impl.shape.path
  {:label "مسار"
@@ -238,7 +247,6 @@
 
  :renderer.element.impl.shape.polygon
  {:label "مضلع"
-  :point "نقطة"
   :description "عنصر <polygon> في SVG يُعرف شكلاً مغلقاً يتكون من
                 مجموعة من القطع المستقيمة المتصلة. النقطة الأخيرة متصلة
                 بالنقطة الأولى."}
@@ -264,16 +272,18 @@
   :randomness "يزيد من كمية التنوع في موضع النقطة."
   :size "حجم الصندوق المحيط."
   :description "نقطة قائمة على المتجهات."
-  :generate-random-seed "توليد بذرة عشوائية"}
+  :generate-random-seed "توليد بذرة عشوائية"
+  :size-handle "مقبض الحجم"}
 
  :renderer.element.impl.custom.brush
  {:label "فرشاة"
   :points "نقاط الإدخال المسجلة من حركة فأرة المستخدم."
   :size "الحجم الأساسي (القطر) للخط."
   :thinning "تأثير الضغط على حجم الخط."
-  :smoothing "مقدار تنعيم حواف الخط."
-  :stream-line "مقدار تبسيط الخط."
-  :description "ارسم خطوطاً حساسة للضغط باستخدام perfect-freehand."}
+  :smoothing "مدى نعومة حواف الخط."
+  :stream-line "مدى تبسيط الخط."
+  :description "ارسم خطوطاً حرة حساسة للضغط باستخدام perfect-freehand."
+  :brush-point "نقطة الفرشاة"}
 
  :renderer.element.impl.container.canvas
  {:label "لوحة الرسم"
@@ -406,7 +416,8 @@
                           ارتفاع مختلفة."}
 
  :renderer.tool.impl.element.core
- {:help "انقر واسحب لإنشاء عنصر."}
+ {:help "انقر واسحب لإنشاء عنصر."
+  :edge "حافة"}
 
  :renderer.tool.impl.element.poly
  {:add-points "انقر لإضافة المزيد من النقاط."
@@ -564,7 +575,8 @@
   :help-type [:div "أدخل النص الخاص بك."]
   :select-element "تحديد عنصر"
   :edit "تحرير"
-  :centroid "النقطة المركزية"}
+  :centroid "مركز الكتلة"
+  :handle "مقبض"}
 
  :renderer.tool.impl.base.transform
  {:label "تحويل"

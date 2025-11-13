@@ -76,8 +76,7 @@
                                  (= (:element-id clicked-element) (:id el)))]
               ^{:key id}
               [:g
-               [tool.views/square-handle handle
-                [:title {:key (str id "-title")} (name id)]]
+               [tool.views/square-handle handle]
                (when is-active
                  [utils.svg/label
                   (string/join " " [(utils.length/->fixed x 2 false)
@@ -88,12 +87,14 @@
           [{:x x1
             :y y1
             :id :starting-point
+            :label [::starting-point "starting point"]
             :type :handle
             :action :edit
             :element-id (:id el)}
            {:x x2
             :y y2
             :id :ending-point
+            :label [::ending-point "ending point"]
             :type :handle
             :action :edit
             :element-id (:id el)}])]))

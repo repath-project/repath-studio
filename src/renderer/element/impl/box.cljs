@@ -51,17 +51,17 @@
     [:g
      (for [handle [{:x min-x
                     :y min-y
-                    :id :position}
+                    :id :position
+                    :label [::position-handle "position handle"]}
                    {:x (+ min-x w)
                     :y (+ min-y h)
-                    :id :size}]]
+                    :id :size
+                    :label [::size-handle "size handle"]}]]
        (let [handle (merge handle {:type :handle
                                    :action :edit
                                    :element-id (:id el)})]
          ^{:key (:id handle)}
-         [tool.views/square-handle handle
-          ^{:key (str (:id handle) "-title")}
-          [:title (name (:id handle))]]))]))
+         [tool.views/square-handle handle]))]))
 
 (defmethod element.hierarchy/bbox ::element.hierarchy/box
   [el]

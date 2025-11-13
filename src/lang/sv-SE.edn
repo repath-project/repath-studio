@@ -200,20 +200,25 @@
  {:cut "Klipp ut"
   :copy "Kopiera"
   :paste "Klistra in"
-  :raise "Lyft fram"
-  :lower "Lägg bak"
-  :raise-top "Lyft till toppen"
-  :lower-bottom "Lägg längst bak"
+  :raise "Höj"
+  :lower "Sänk"
+  :raise-top "Flytta längst fram"
+  :lower-bottom "Flytta längst bak"
   :animate "Animera"
   :animate-transform "Animera transformation"
   :animate-motion "Animera rörelse"
   :duplicate "Duplicera"
   :delete "Ta bort"}
 
+ :renderer.element.impl.box
+ {:position-handle "positionshandtag"
+  :size-handle "storlekshandtag"}
+
  :renderer.element.impl.shape.circle
  {:label "Cirkel"
   :description "SVG <circle> elementet är en SVG grundform, använd för att rita
-                cirklar baserat på en mittpunkt och radie."}
+                cirklar baserade på en mittpunkt och en radie."
+  :r-handle "radiehandtag"}
 
  :renderer.element.impl.shape.image
  {:label "Bild"
@@ -223,13 +228,17 @@
  :renderer.element.impl.shape.ellipse
  {:label "Ellips"
   :description "Elementet <ellipse> är en SVG grundform, använd för att skapa
-                ellipser baserat på en mittkoordinat och både deras x- och
-                y-radie."}
+                ellipser baserade på en mittkoordinat och både deras x- och
+                y-radie."
+  :rx-handle "x-radiehandtag"
+  :ry-handle "y-radiehandtag"}
 
  :renderer.element.impl.shape.line
  {:label "Linje"
   :description "Elementet <line> är en SVG grundform använd för att skapa en
-                linje som förbinder två punkter."}
+                linje som förbinder två punkter."
+  :starting-point "startpunkt"
+  :ending-point "slutpunkt"}
 
  :renderer.element.impl.shape.path
  {:label "Bana"
@@ -239,7 +248,6 @@
 
  :renderer.element.impl.shape.polygon
  {:label "Polygon"
-  :point "punkt"
   :description "SVG <polygon> elementet definierar en sluten form bestående av
                 en uppsättning sammankopplade raka linjesegment. Den sista
                 punkten är kopplad till den första punkten."}
@@ -264,18 +272,20 @@
   :extra-points "Det verkliga antalet punkter kommer att vara
                  `3 + extraPoints`."
   :randomness "Ökar mängden variation i punktposition."
-  :size "Storleken på gränsrutan."
+  :size "Storleken på begränsningsrutan."
   :description "Vektorbaserad blob."
-  :generate-random-seed "Generera slumpmässigt frö"}
+  :generate-random-seed "Generera slumpmässigt frö"
+  :size-handle "storlekshandtag"}
 
  :renderer.element.impl.custom.brush
  {:label "Pensel"
   :points "Inmatningspunkter inspelade från användarens musrörelse."
   :size "Basstorleken (diameter) på linjen."
   :thinning "Effekten av tryck på linjens storlek."
-  :smoothing "Hur mycket linjens kanter ska mjukas upp."
+  :smoothing "Hur mycket linjekanterna ska mjukas upp."
   :stream-line "Hur mycket linjen ska strömlinjeformas."
-  :description "Rita tryckkänsliga frihandslinjer med perfect-freehand."}
+  :description "Rita tryckkänsliga frihandslinjer med perfect-freehand."
+  :brush-point "penselpunkt"}
 
  :renderer.element.impl.container.canvas
  {:label "Duk"
@@ -431,7 +441,8 @@
  {:label "Bild"}
 
  :renderer.tool.impl.element.core
- {:help "Klicka och dra för att skapa ett element."}
+ {:help "Klicka och dra för att skapa ett element."
+  :edge "kant"}
 
  :renderer.tool.impl.element.poly
  {:add-points "Klicka för att lägga till fler punkter."
@@ -581,9 +592,10 @@
   :help-idle-click [:div "Klicka på ett element för att ändra markering"]
   :help-edit [:div "Håll %1 för att begränsa riktning."]
   :help-type [:div "Ange din text."]
-  :select-element "Markera element"
+  :select-element "Välj element"
   :edit "Redigera"
-  :centroid "Tyngdpunkt"}
+  :centroid "Centroid"
+  :handle "handtag"}
 
  :renderer.tool.impl.base.transform
  {:label "Transformera"

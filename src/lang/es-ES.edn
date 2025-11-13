@@ -200,20 +200,25 @@
  {:cut "Cortar"
   :copy "Copiar"
   :paste "Pegar"
-  :raise "Subir"
+  :raise "Elevar"
   :lower "Bajar"
-  :raise-top "Subir al frente"
-  :lower-bottom "Enviar al fondo"
+  :raise-top "Elevar al frente"
+  :lower-bottom "Bajar al fondo"
   :animate "Animar"
   :animate-transform "Animar transformación"
   :animate-motion "Animar movimiento"
   :duplicate "Duplicar"
   :delete "Eliminar"}
 
+ :renderer.element.impl.box
+ {:position-handle "manija de posición"
+  :size-handle "manija de tamaño"}
+
  :renderer.element.impl.shape.circle
  {:label "Círculo"
   :description "El elemento SVG <circle> es una forma básica SVG, usado para
-                dibujar círculos basados en un punto central y un radio."}
+                dibujar círculos basados en un punto central y un radio."
+  :r-handle "manija de radio"}
 
  :renderer.element.impl.shape.image
  {:label "Imagen"
@@ -224,13 +229,17 @@
  :renderer.element.impl.shape.ellipse
  {:label "Elipse"
   :description "El elemento <ellipse> es una forma básica SVG, usado para
-                crear elipses basadas en una coordenada central y sus radios
-                x e y."}
+                crear elipses basadas en una coordenada central, y tanto su
+                radio x como y."
+  :rx-handle "manija de radio x"
+  :ry-handle "manija de radio y"}
 
  :renderer.element.impl.shape.line
  {:label "Línea"
   :description "El elemento <line> es una forma básica SVG usado para crear
-                una línea que conecta dos puntos."}
+                una línea que conecta dos puntos."
+  :starting-point "punto inicial"
+  :ending-point "punto final"}
 
  :renderer.element.impl.shape.path
  {:label "Trazado"
@@ -240,7 +249,6 @@
 
  :renderer.element.impl.shape.polygon
  {:label "Polígono"
-  :point "punto"
   :description "El elemento SVG <polygon> define una forma cerrada que
                 consiste en un conjunto de segmentos de línea recta
                 conectados. El último punto está conectado al primer punto."}
@@ -266,7 +274,8 @@
   :randomness "Aumenta la cantidad de variación en la posición de los puntos."
   :size "El tamaño del cuadro delimitador."
   :description "Blob basado en vectores."
-  :generate-random-seed "Generar semilla aleatoria"}
+  :generate-random-seed "Generar semilla aleatoria"
+  :size-handle "manija de tamaño"}
 
  :renderer.element.impl.custom.brush
  {:label "Pincel"
@@ -274,9 +283,10 @@
   :size "El tamaño base (diámetro) del trazo."
   :thinning "El efecto de la presión en el tamaño del trazo."
   :smoothing "Cuánto suavizar los bordes del trazo."
-  :stream-line "Cuánto racionalizar el trazo."
+  :stream-line "Cuánto simplificar el trazo."
   :description "Dibuje líneas a mano alzada sensibles a la presión usando
-                perfect-freehand."}
+                perfect-freehand."
+  :brush-point "punto de pincel"}
 
  :renderer.element.impl.container.canvas
  {:label "Lienzo"
@@ -420,7 +430,8 @@
                           viewport con una proporción de aspecto diferente."}
 
  :renderer.tool.impl.element.core
- {:help "Haga clic y arrastre para crear un elemento."}
+ {:help "Haga clic y arrastre para crear un elemento."
+  :edge "borde"}
 
  :renderer.tool.impl.element.poly
  {:add-points "Haga clic para agregar más puntos."
@@ -584,7 +595,8 @@
   :help-type [:div "Ingrese su texto."]
   :select-element "Seleccionar elemento"
   :edit "Editar"
-  :centroid "Centroide"}
+  :centroid "Centroide"
+  :handle "asa"}
 
  :renderer.tool.impl.base.transform
  {:label "Transformar"

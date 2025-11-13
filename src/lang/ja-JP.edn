@@ -205,15 +205,20 @@
   :raise-top "最前面へ"
   :lower-bottom "最背面へ"
   :animate "アニメーション"
-  :animate-transform "変形をアニメーション"
-  :animate-motion "モーションをアニメーション"
+  :animate-transform "変形アニメーション"
+  :animate-motion "モーションアニメーション"
   :duplicate "複製"
   :delete "削除"}
+
+ :renderer.element.impl.box
+ {:position-handle "位置ハンドル"
+  :size-handle "サイズハンドル"}
 
  :renderer.element.impl.shape.circle
  {:label "円"
   :description "<circle> SVG要素は、中心点と半径に基づいて円を描画するために使用される
-                SVG基本形状です。"}
+                SVG基本形状です。"
+  :r-handle "半径ハンドル"}
 
  :renderer.element.impl.shape.image
  {:label "画像"
@@ -223,12 +228,16 @@
  :renderer.element.impl.shape.ellipse
  {:label "楕円"
   :description "<ellipse>要素は、中心座標とx、y半径に基づいて楕円を作成するために
-                使用されるSVG基本形状です。"}
+                使用されるSVG基本形状です。"
+  :rx-handle "x半径ハンドル"
+  :ry-handle "y半径ハンドル"}
 
  :renderer.element.impl.shape.line
  {:label "線"
   :description "<line>要素は、2つの点を接続する線を作成するために使用される
-                SVG基本形状です。"}
+                SVG基本形状です。"
+  :starting-point "開始点"
+  :ending-point "終了点"}
 
  :renderer.element.impl.shape.path
  {:label "パス"
@@ -237,7 +246,6 @@
 
  :renderer.element.impl.shape.polygon
  {:label "多角形"
-  :point "点"
   :description "<polygon> SVG要素は、接続された直線セグメントのセットで構成される
                 閉じた形状を定義します。最後の点は最初の点に接続されます。"}
 
@@ -257,19 +265,21 @@
   :y "ブロブの中心のY座標。"
   :seed "指定されたシードは常に同じブロブを生成します。"
   :extra-points "実際の点数は `3 + extraPoints` になります。"
-  :randomness "点の位置のバリエーションの量を増加させます。"
-  :size "境界ボックスのサイズ。"
+  :randomness "ポイントの位置のバリエーション量を増やします。"
+  :size "バウンディングボックスのサイズ。"
   :description "ベクターベースのブロブ。"
-  :generate-random-seed "ランダムシードを生成"}
+  :generate-random-seed "ランダムシードを生成"
+  :size-handle "サイズハンドル"}
 
  :renderer.element.impl.custom.brush
  {:label "ブラシ"
   :points "ユーザーのマウス移動から記録された入力点。"
   :size "ストロークの基本サイズ（直径）。"
   :thinning "ストロークのサイズに対する圧力の影響。"
-  :smoothing "ストロークのエッジをどの程度柔らかくするか。"
-  :stream-line "ストロークをどの程度流線化するか。"
-  :description "perfect-freehandを使用して圧力感知フリーハンドラインを描画。"}
+  :smoothing "ストロークのエッジをどの程度滑らかにするか。"
+  :stream-line "ストロークをどの程度合理化するか。"
+  :description "perfect-freehandを使用して、筆圧感応のフリーハンドラインを描画します。"
+  :brush-point "ブラシポイント"}
 
  :renderer.element.impl.container.canvas
  {:label "キャンバス"
@@ -389,7 +399,8 @@
                           示します。"}
 
  :renderer.tool.impl.element.core
- {:help "クリックしてドラッグして要素を作成します。"}
+ {:help "クリックしてドラッグして要素を作成します。"
+  :edge "エッジ"}
 
  :renderer.tool.impl.element.poly
  {:add-points "クリックしてポイントを追加。"
@@ -547,7 +558,8 @@
   :help-type [:div "テキストを入力してください。"]
   :select-element "要素を選択"
   :edit "編集"
-  :centroid "重心"}
+  :centroid "重心"
+  :handle "ハンドル"}
 
  :renderer.tool.impl.base.transform
  {:label "変形"

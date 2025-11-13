@@ -200,20 +200,25 @@
  {:cut "잘라내기"
   :copy "복사"
   :paste "붙여넣기"
-  :raise "앞으로"
-  :lower "뒤로"
-  :raise-top "맨 앞으로"
-  :lower-bottom "맨 뒤로"
+  :raise "앞으로 가져오기"
+  :lower "뒤로 보내기"
+  :raise-top "맨 앞으로 가져오기"
+  :lower-bottom "맨 뒤로 보내기"
   :animate "애니메이션"
-  :animate-transform "변환 애니메이션"
+  :animate-transform "변형 애니메이션"
   :animate-motion "모션 애니메이션"
   :duplicate "복제"
   :delete "삭제"}
 
+ :renderer.element.impl.box
+ {:position-handle "위치 핸들"
+  :size-handle "크기 핸들"}
+
  :renderer.element.impl.shape.circle
  {:label "원"
   :description "<circle> SVG 요소는 중심점과 반지름을 기반으로
-                원을 그리는 데 사용되는 SVG 기본 모양입니다."}
+                원을 그리는 데 사용되는 SVG 기본 형태입니다."
+  :r-handle "반지름 핸들"}
 
  :renderer.element.impl.shape.image
  {:label "이미지"
@@ -223,12 +228,16 @@
  :renderer.element.impl.shape.ellipse
  {:label "타원"
   :description "<ellipse> 요소는 중심 좌표와 x, y 반지름을 기반으로
-                타원을 만드는 데 사용되는 SVG 기본 모양입니다."}
+                타원을 만드는 데 사용되는 SVG 기본 형태입니다."
+  :rx-handle "x 반지름 핸들"
+  :ry-handle "y 반지름 핸들"}
 
  :renderer.element.impl.shape.line
  {:label "선"
   :description "<line> 요소는 두 점을 연결하는 선을 만드는 데
-                사용되는 SVG 기본 모양입니다."}
+                사용되는 SVG 기본 형태입니다."
+  :starting-point "시작점"
+  :ending-point "끝점"}
 
  :renderer.element.impl.shape.path
  {:label "패스"
@@ -237,7 +246,6 @@
 
  :renderer.element.impl.shape.polygon
  {:label "다각형"
-  :point "점"
   :description "<polygon> SVG 요소는 연결된 직선 세그먼트 집합으로
                 구성된 닫힌 모양을 정의합니다. 마지막 점이
                 첫 번째 점에 연결됩니다."}
@@ -261,17 +269,19 @@
   :extra-points "실제 점의 수는 `3 + extraPoints`입니다."
   :randomness "점 위치의 변화량을 증가시킵니다."
   :size "경계 상자의 크기입니다."
-  :description "벡터 기반 블롭입니다."
-  :generate-random-seed "랜덤 시드 생성"}
+  :description "벡터 기반 블롭."
+  :generate-random-seed "랜덤 시드 생성"
+  :size-handle "크기 핸들"}
 
  :renderer.element.impl.custom.brush
  {:label "브러시"
   :points "사용자의 마우스 움직임에서 기록된 입력 점들입니다."
   :size "획의 기본 크기(직경)입니다."
-  :thinning "획의 크기에 대한 압력의 효과입니다."
-  :smoothing "획의 가장자리를 얼마나 부드럽게 할지입니다."
-  :stream-line "획을 얼마나 유선형으로 만들지입니다."
-  :description "perfect-freehand를 사용하여 압력 감지 자유 선을 그립니다."}
+  :thinning "획의 크기에 대한 압력의 영향입니다."
+  :smoothing "스트로크 가장자리를 부드럽게 하는 정도입니다."
+  :stream-line "스트로크를 단순화하는 정도입니다."
+  :description "perfect-freehand를 사용하여 압력 감지 자유 곡선을 그립니다."
+  :brush-point "브러시 포인트"}
 
  :renderer.element.impl.container.canvas
  {:label "캔버스"
@@ -396,7 +406,8 @@
  {:label "이미지"}
 
  :renderer.tool.impl.element.core
- {:help "클릭하고 드래그하여 요소를 생성합니다."}
+ {:help "클릭하고 드래그하여 요소를 생성합니다."
+  :edge "가장자리"}
 
  :renderer.tool.impl.element.poly
  {:add-points "클릭하여 더 많은 점을 추가합니다."
@@ -543,7 +554,8 @@
   :help-type [:div "텍스트를 입력하세요."]
   :select-element "요소 선택"
   :edit "편집"
-  :centroid "중심"}
+  :centroid "도심"
+  :handle "핸들"}
 
  :renderer.tool.impl.base.transform
  {:label "변환"

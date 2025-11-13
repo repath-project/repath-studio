@@ -87,6 +87,7 @@
      [tool.views/square-handle {:x (+ cx r)
                                 :y cy
                                 :id :r
+                                :label [::r-handle "radius handle"]
                                 :type :handle
                                 :action :edit
                                 :element-id (:id el)}

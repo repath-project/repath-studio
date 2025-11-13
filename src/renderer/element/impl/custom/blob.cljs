@@ -176,6 +176,7 @@
      [tool.views/square-handle
       {:type :handle
        :action :edit
+       :label [::size-handle "size handle"]
        :element-id (:id el)
        :x x2
        :y y2

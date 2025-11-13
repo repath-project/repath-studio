@@ -100,13 +100,12 @@
             [tool.views/square-handle
              (merge handle {:type :handle
                             :action :edit
-                            :element-id (:id el)})
-             [:title
-              {:key (str (:id handle) "-title")}
-              (name (:id handle))]])
+                            :element-id (:id el)})])
           [{:x (+ cx rx)
             :y cy
-            :id :rx}
+            :id :rx
+            :label [::rx-handle "x radius handle"]}
            {:x cx
             :y (- cy ry)
-            :id :ry}])]))
+            :id :ry
+            :label [::ry-handle "y radius handle"]}])]))

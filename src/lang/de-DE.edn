@@ -200,21 +200,26 @@
  {:cut "Ausschneiden"
   :copy "Kopieren"
   :paste "Einfügen"
-  :raise "Nach vorne"
-  :lower "Nach hinten"
-  :raise-top "Ganz nach vorne"
-  :lower-bottom "Ganz nach hinten"
+  :raise "Anheben"
+  :lower "Absenken"
+  :raise-top "Ganz nach oben"
+  :lower-bottom "Ganz nach unten"
   :animate "Animieren"
-  :animate-transform "Transformation animieren"
+  :animate-transform "Transform animieren"
   :animate-motion "Bewegung animieren"
   :duplicate "Duplizieren"
   :delete "Löschen"}
+
+ :renderer.element.impl.box
+ {:position-handle "Positionsgriff"
+  :size-handle "Größengriff"}
 
  :renderer.element.impl.shape.circle
  {:label "Kreis"
   :description "Das SVG-Element <circle> ist eine SVG-Grundform, die zum
                 Zeichnen von Kreisen basierend auf einem Mittelpunkt und einem
-                Radius verwendet wird."}
+                Radius verwendet wird."
+  :r-handle "Radiusgriff"}
 
  :renderer.element.impl.shape.image
  {:label "Bild"
@@ -224,13 +229,17 @@
  :renderer.element.impl.shape.ellipse
  {:label "Ellipse"
   :description "Das Element <ellipse> ist eine SVG-Grundform, die zum Erstellen
-                von Ellipsen basierend auf einer Mittelkoordinate und ihren x-
-                und y-Radien verwendet wird."}
+                von Ellipsen basierend auf einer Mittelkoordinate und sowohl
+                ihrem x- als auch y-Radius verwendet wird."
+  :rx-handle "x-Radiusgriff"
+  :ry-handle "y-Radiusgriff"}
 
  :renderer.element.impl.shape.line
  {:label "Linie"
   :description "Das Element <line> ist eine SVG-Grundform, die zum Erstellen
-                einer Linie verwendet wird, die zwei Punkte verbindet."}
+                einer Linie verwendet wird, die zwei Punkte verbindet."
+  :starting-point "Startpunkt"
+  :ending-point "Endpunkt"}
 
  :renderer.element.impl.shape.path
  {:label "Pfad"
@@ -240,7 +249,6 @@
 
  :renderer.element.impl.shape.polygon
  {:label "Polygon"
-  :point "Punkt"
   :description "Das SVG-Element <polygon> definiert eine geschlossene Form, die
                 aus einer Reihe von verbundenen geraden Liniensegmenten besteht.
                 Der letzte Punkt ist mit dem ersten Punkt verbunden."}
@@ -266,9 +274,10 @@
   :extra-points "Die tatsächliche Anzahl der Punkte wird `3 + extraPoints`
                  sein."
   :randomness "Erhöht die Menge der Variation in der Punktposition."
-  :size "Die Größe der Begrenzungsbox."
+  :size "Die Größe des Begrenzungsrahmens."
   :description "Vektorbasierter Blob."
-  :generate-random-seed "Zufälligen Seed generieren"}
+  :generate-random-seed "Zufälligen Seed generieren"
+  :size-handle "Größengriff"}
 
  :renderer.element.impl.custom.brush
  {:label "Pinsel"
@@ -276,10 +285,11 @@
            wurden."
   :size "Die Grundgröße (Durchmesser) des Strichs."
   :thinning "Der Effekt des Drucks auf die Größe des Strichs."
-  :smoothing "Wie viel die Kanten des Strichs geglättet werden sollen."
-  :stream-line "Wie viel der Strich gestrafft werden soll."
+  :smoothing "Wie stark die Kanten der Linie geglättet werden sollen."
+  :stream-line "Wie stark die Linie geglättet werden soll."
   :description "Zeichnen Sie druckempfindliche Freihandlinien mit
-                perfect-freehand."}
+                perfect-freehand."
+  :brush-point "Bürstenpunkt"}
 
  :renderer.element.impl.container.canvas
  {:label "Leinwand"
@@ -431,7 +441,8 @@
                           einem anderen Seitenverhältnis passen muss."}
 
  :renderer.tool.impl.element.core
- {:help "Klicken und ziehen, um ein Element zu erstellen."}
+ {:help "Klicken und ziehen, um ein Element zu erstellen."
+  :edge "Kante"}
 
  :renderer.tool.impl.element.poly
  {:add-points "Klicken, um weitere Punkte hinzuzufügen."
@@ -597,7 +608,8 @@
   :help-type [:div "Geben Sie Ihren Text ein."]
   :select-element "Element auswählen"
   :edit "Bearbeiten"
-  :centroid "Schwerpunkt"}
+  :centroid "Schwerpunkt"
+  :handle "Griff"}
 
  :renderer.tool.impl.base.transform
  {:label "Transformieren"

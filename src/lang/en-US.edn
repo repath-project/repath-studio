@@ -210,10 +210,14 @@
   :duplicate "Duplicate"
   :delete "Delete"}
 
+ :renderer.element.impl.box {:position-handle "position handle"
+                             :size-handle "size handle"}
+
  :renderer.element.impl.shape.circle
  {:label "Circle"
   :description "The <circle> SVG element is an SVG basic shape, used to draw
-                circles based on a center point and a radius."}
+                circles based on a center point and a radius."
+  :r-handle "radius handle"}
 
  :renderer.element.impl.shape.image
  {:label "Image"
@@ -224,12 +228,16 @@
  {:label "Ellipse"
   :description "The <ellipse> element is an SVG basic shape, used to create
                 ellipses based on a center coordinate, and both their x and y
-                radius."}
+                radius."
+  :rx-handle "x radius handle"
+  :ry-handle "y radius handle"}
 
  :renderer.element.impl.shape.line
  {:label "Line"
   :description "The <line> element is an SVG basic shape used to create a line
-                connecting two points."}
+                connecting two points."
+  :starting-point "starting point"
+  :ending-point "ending point"}
 
  :renderer.element.impl.shape.path
  {:label "Path"
@@ -238,7 +246,6 @@
 
  :renderer.element.impl.shape.polygon
  {:label "Polygon"
-  :point "point"
   :description "The <polygon> SVG element defines a closed shape consisting of a
                 set of connected straight line segments. The last point is
                 connected to the first point."}
@@ -264,7 +271,8 @@
   :randomness "Increases the amount of variation in point position."
   :size "The size of the bounding box."
   :description "Vector based blob."
-  :generate-random-seed "Generate random seed"}
+  :generate-random-seed "Generate random seed"
+  :size-handle "size handle"}
 
  :renderer.element.impl.custom.brush
  {:label "Brush"
@@ -273,7 +281,8 @@
   :thinning "The effect of pressure on the stroke's size."
   :smoothing "How much to soften the stroke's edges."
   :stream-line "How much to streamline the stroke."
-  :description "Draw pressure-sensitive freehand lines using perfect-freehand."}
+  :description "Draw pressure-sensitive freehand lines using perfect-freehand."
+  :brush-point "brush point"}
 
  :renderer.element.impl.container.canvas
  {:label "Canvas"
@@ -425,7 +434,8 @@
  {:label "Image"}
 
  :renderer.tool.impl.element.core
- {:help "Click and drag to create an element."}
+ {:help "Click and drag to create an element."
+  :edge "edge"}
 
  :renderer.tool.impl.element.poly
  {:add-points "Click to add more points."
@@ -574,7 +584,8 @@
   :help-type [:div "Enter your text."]
   :select-element "Select element"
   :edit "Edit"
-  :centroid "Centroid"}
+  :centroid "Centroid"
+  :handle "handle"}
 
  :renderer.tool.impl.base.transform
  {:label "Transform"
