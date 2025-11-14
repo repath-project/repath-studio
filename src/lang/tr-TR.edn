@@ -783,4 +783,4 @@
   :no-thank-you "Hayır, teşekkürler"}
 
  :renderer.effects
- {:permission-denied "Dosyaya erişim izni reddedildi."}
+ {:permission-denied "Dosyaya erişim izni reddedildi."}}
