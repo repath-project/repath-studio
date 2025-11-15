@@ -11,10 +11,10 @@
    [renderer.element.subs :as-alias element.subs]
    [renderer.event.impl.keyboard :as event.impl.keyboard]
    [renderer.events :as-alias events]
+   [renderer.i18n.views :as i18n.views]
    [renderer.tool.hierarchy :as tool.hierarchy]
    [renderer.tool.subs :as-alias tool.subs]
    [renderer.utils.attribute :as utils.attribute]
-   [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]))
 
 (defn browser-icon
@@ -34,7 +34,7 @@
     [views/icon (browser-icon browser)]]
    [:div.text-2xs.mt-1.text-primary
     (case version-added
-      true [:div.bg-success (t [::all "all"])]
+      true [:div.bg-success (i18n.views/t [::all "all"])]
       false [:div.bg-error "x"]
       nil [:div.bg-warning "?"]
       [:div.bg-success (str "≥" version-added)])]])
@@ -43,7 +43,7 @@
   [support-data]
   [:<>
    [:h4.font-bold.mb-1
-    (t [::browser-compatibility "Browser compatibility"])]
+    (i18n.views/t [::browser-compatibility "Browser compatibility"])]
    [views/scroll-area
     [:div.flex.mb-4.gap-px
      (for [[browser {:keys [version_added]}] support-data]
@@ -52,11 +52,11 @@
 
 (defn info-button
   ([url]
-   [info-button url (t [::learn-more "Learn more"])])
+   [info-button url [::learn-more "Learn more"]])
   ([url label]
    [:button.button.px-3.flex-1.rounded
     {:on-click #(rf/dispatch [::events/open-remote-url url])}
-    label]))
+    (i18n.views/t label)]))
 
 (defn construct-mdn-url
   [attr]
@@ -85,7 +85,7 @@
       (when mdn-url
         [info-button mdn-url])
       (when spec-url
-        [info-button spec-url (t [::specification "Specification"])])]]))
+        [info-button spec-url [::specification "Specification"]])]]))
 
 (defn on-change-handler!
   ([event k old-v]
@@ -152,6 +152,15 @@
        :on-value-commit (fn [[v]]
                           (rf/dispatch [::element.events/set-attr k v]))})]]])
 
+(defn select-item
+  [{:keys [icon label value]}]
+  [:> Select/Item
+   {:value value
+    :class "menu-item"}
+   (when icon
+     [:div.absolute.left-2 [views/icon icon]])
+   [:> Select/ItemText (i18n.views/t label)]])
+
 (defn select-input
   [k v {:keys [disabled items default-value]
         :as attrs}]
@@ -164,7 +173,7 @@
        :disabled disabled}
       [:> Select/Trigger
        {:class "form-control-button"
-        :aria-label (str "Select " (name k))}
+        :aria-label (i18n.views/t [::select "Select %1"] [(name k)])}
        [:> Select/Value ""]
        [:> Select/Icon
         [views/icon "chevron-down"]]]
@@ -176,16 +185,9 @@
         [:> Select/ScrollUpButton
          {:class "select-scroll-button"}
          [views/icon "chevron-up"]]
-        [:> Select/Viewport
-         {:class "select-viewport"}
-         (for [item items]
-           ^{:key item}
-           [:> Select/Item
-            {:value (:value item)
-             :class "menu-item"}
-            (when (:icon item)
-              [:div.absolute.left-2 [views/icon (:icon item)]])
-            [:> Select/ItemText (:label item)]])]
+        (into [:> Select/Viewport
+               {:class "select-viewport"}]
+              (map select-item items))
         [:> Select/ScrollDownButton
          {:class "select-scroll-button"}
          [views/icon "chevron-down"]]]]])])
@@ -194,25 +196,24 @@
   [property {:keys [id label]}]
   (when-let [v (get property id)]
     [:<>
-     [:h3.font-bold label]
+     [:h3.font-bold (i18n.views/t label)]
      [:p (cond->> v
            (vector? v)
            (string/join " | "))]]))
 
-(defn features
-  []
+(def features
   [{:id :appliesto
-    :label (t [::applies-to "Applies to"])}
+    :label [::applies-to "Applies to"]}
    {:id :computed
-    :label (t [::computed "Computed"])}
+    :label [::computed "Computed"]}
    {:id :percentages
-    :label (t [::percentages "Percentages"])}
+    :label [::percentages "Percentages"]}
    {:id :animatable
-    :label (t [::animatable "Animatable"])}
+    :label [::animatable "Animatable"]}
    {:id :animationType
-    :label (t [::animation-type "Animation Type"])}
+    :label [::animation-type "Animation Type"]}
    {:id :syntax
-    :label (t [::syntax "Syntax"])}])
+    :label [::syntax "Syntax"]}])
 
 (defn title
   [tag k]
@@ -242,13 +243,13 @@
         [:h2.mb-4.text-lg.font-mono.text-foreground-hovered k]
         (when (get-method attribute.hierarchy/description [dispatch-tag k])
           [:p
-           (attribute.hierarchy/description dispatch-tag k)])
+           (i18n.views/t (attribute.hierarchy/description dispatch-tag k))])
         (when (utils.attribute/compatibility tag k)
           [:<>
            (when property
              (into [:<>]
                    (map (partial feature property))
-                   (features)))
+                   features))
            [caniusethis {:tag tag
                          :attr k}]])]
        [:> HoverCard/Arrow
@@ -276,7 +277,7 @@
       [:> HoverCard/Trigger {:as-child true}
        [:div.flex.items-center
         [views/icon-button "info"
-         {:title (t [::mdn-info "MDN Info"])
+         {:title (i18n.views/t [::mdn-info "MDN Info"])
           :class "hover:bg-transparent w-auto h-auto"}]]]
       [:> HoverCard/Portal
        [:> HoverCard/Content
@@ -288,7 +289,7 @@
          [:h2.mb-4.text-lg.font-mono.text-foreground-hovered
           (str "<" (name tag) ">")]
          (when-let [description (:description properties)]
-           [:p description])
+           [:p (i18n.views/t description)])
          [caniusethis {:tag tag}]
          (when-let [url (:url properties)]
            [:div.flex [info-button url]])]
@@ -313,13 +314,15 @@
         [:h1.flex-1.text-lg
          (if-not (next selected-elements)
            (let [el-label (:label el)
-                 properties (element.hierarchy/properties tag)
-                 tag-label (or (:label properties)
-                               (string/capitalize (name tag)))]
-             (if (empty? el-label) tag-label el-label))
-           (t [::attributes-title "%1 %2 elements"] [(count selected-elements)
-                                                     (when-not multitag?
-                                                       (name tag))]))]
+                 properties (element.hierarchy/properties tag)]
+             (if (empty? el-label)
+               (or (some-> properties :label i18n.views/t)
+                   (string/capitalize (name tag)))
+               el-label))
+           (i18n.views/t [::attributes-title "%1 %2 elements"]
+                         [(count selected-elements)
+                          (when-not multitag?
+                            (name tag))]))]
         (when-not multitag?
           [tag-info tag])]
        (when (seq selected-attrs)

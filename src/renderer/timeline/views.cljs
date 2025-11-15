@@ -6,11 +6,11 @@
    [re-frame.core :as rf]
    [reagent.core :as reagent]
    [renderer.element.events :as-alias element.events]
+   [renderer.i18n.views :as i18n.views]
    [renderer.panel.events :as-alias panel.events]
    [renderer.panel.subs :as-alias panel.subs]
    [renderer.timeline.events :as-alias timeline.events]
    [renderer.timeline.subs :as-alias timeline.subs]
-   [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]
    [renderer.window.subs :as-alias window.subs]))
 
@@ -37,16 +37,16 @@
     [:div.inline-flex.items-center.gap-2
      [:label.hidden.md:block
       {:for "animation-speed"}
-      (t [::speed "Speed"])]
+      (i18n.views/t [::speed "Speed"])]
      [:> Select/Root
       {:value speed
        :onValueChange #(.setPlayRate (.-current editor-ref) %)}
       [:> Select/Trigger
        {:class "button px-2 bg-overlay rounded-sm"
         :id "animation-speed"
-        :aria-label (t [::no-filter "No filter"])}
+        :aria-label (i18n.views/t [::no-filter "No filter"])}
        [:> Select/Value
-        {:placeholder (t [::filter "Filter"])}
+        {:placeholder (i18n.views/t [::filter "Filter"])}
         [:div.flex.gap-1.justify-between.items-center
          {:style {:min-width "50px"}}
          [:span (str speed "x")]
@@ -80,12 +80,12 @@
         guide-snap? @(rf/subscribe [::timeline.subs/guide-snap?])]
     [:div.grow.flex.gap-1
      [views/switch
-      (t [::grid-snap "Grid snap"])
+      (i18n.views/t [::grid-snap "Grid snap"])
       {:id "grid-snap"
        :default-checked grid-snap?
        :on-checked-change #(rf/dispatch [::timeline.events/set-grid-snap %])}]
      [views/switch
-      (t [::guide-snap "Guide snap"])
+      (i18n.views/t [::guide-snap "Guide snap"])
       {:id "guide-snap"
        :default-checked guide-snap?
        :on-checked-change #(rf/dispatch [::timeline.events/set-guide-snap
@@ -107,7 +107,9 @@
       {:on-click #(.setTime (.-current timeline-ref) 0)
        :disabled (zero? tm)}]
      [views/radio-icon-button (if paused? "play" "pause") (not paused?)
-      {:title (if paused? (t [::play "Play"]) (t [::pause "Pause"]))
+      {:title (if paused?
+                (i18n.views/t [::play "Play"])
+                (i18n.views/t [::pause "Pause"]))
        :class (when (pos? tm) "border border-accent")
        :on-click #(if paused?
                     (do (.setPlayRate (.-current timeline-ref) speed)
@@ -117,7 +119,7 @@
       {:on-click #(.setTime (.-current timeline-ref) end)
        :disabled (>= tm end)}]
      [views/radio-icon-button "refresh" replay?
-      {:title (t [::replay "Replay"])
+      {:title (i18n.views/t [::replay "Replay"])
        :on-click #(rf/dispatch [::timeline.events/toggle-replay])}]
      [speed-select timeline-ref]
      [:span.font-mono.px-2 time-formatted]
@@ -128,7 +130,7 @@
         (when md?
           [:<>
            [views/icon-button "window-close"
-            {:title (t [::hide-timeline "Hide timeline"])
+            {:title (i18n.views/t [::hide-timeline "Hide timeline"])
              :on-click #(rf/dispatch [::panel.events/toggle :timeline])}]])])]))
 
 (defn register-listeners

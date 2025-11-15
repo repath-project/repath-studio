@@ -8,20 +8,20 @@
    [renderer.effects :as-alias effects]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
+   [renderer.i18n.views :as i18n.views]
    [renderer.tool.handlers :as tool.handlers]
-   [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.i18n :refer [t]]))
+   [renderer.tool.hierarchy :as tool.hierarchy]))
 
 (derive :dropper ::tool.hierarchy/tool)
 
 (defmethod tool.hierarchy/properties :dropper
   []
   {:icon "eye-dropper"
-   :label (t [::label "Dropper"])})
+   :label [::label "Dropper"]})
 
 (defmethod tool.hierarchy/help [:dropper :idle]
   []
-  (t [::help "Click anywhere to pick a color."]))
+  (i18n.views/t [::help "Click anywhere to pick a color."]))
 
 (defmethod tool.hierarchy/on-activate :dropper
   [db]

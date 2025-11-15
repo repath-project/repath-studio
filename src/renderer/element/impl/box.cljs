@@ -51,17 +51,17 @@
     [:g
      (for [handle [{:x min-x
                     :y min-y
-                    :id :position}
+                    :id :position
+                    :label [::position-handle "position handle"]}
                    {:x (+ min-x w)
                     :y (+ min-y h)
-                    :id :size}]]
+                    :id :size
+                    :label [::size-handle "size handle"]}]]
        (let [handle (merge handle {:type :handle
                                    :action :edit
                                    :element-id (:id el)})]
          ^{:key (:id handle)}
-         [tool.views/square-handle handle
-          ^{:key (str (:id handle) "-title")}
-          [:title (name (:id handle))]]))]))
+         [tool.views/square-handle handle]))]))
 
 (defmethod element.hierarchy/bbox ::element.hierarchy/box
   [el]
@@ -78,7 +78,8 @@
     [el]
     (let [{{:keys [x y width height]} :attrs} el
           [x y w h] (mapv utils.length/unit->px [x y width height])]
-      [(with-meta [x y] {:label "box corner"})
-       (with-meta [(+ x w) y] {:label "box corner"})
-       (with-meta [(+ x w) (+ y h)] {:label "box corner"})
-       (with-meta [x (+ y h)] {:label "box corner"})]))
+      (mapv #(with-meta % {:label [::box-corner "box corner"]})
+            [[x y]
+             [(+ x w) y]
+             [(+ x w) (+ y h)]
+             [x (+ y h)]])))

@@ -8,7 +8,6 @@
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]))
 
 (derive :blob ::tool.hierarchy/element)
@@ -16,7 +15,7 @@
 (defmethod tool.hierarchy/properties :blob
   []
   {:icon "blob"
-   :label (t [::label "Blob"])})
+   :label [::label "Blob"]})
 
 (defn pointer-delta
   [db]

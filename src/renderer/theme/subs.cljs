@@ -1,6 +1,7 @@
 (ns renderer.theme.subs
   (:require
-   [re-frame.core :as rf]))
+   [re-frame.core :as rf]
+   [renderer.theme.handlers :as theme.handlers]))
 
 (rf/reg-sub
  ::theme
@@ -13,16 +14,27 @@
  :mode)
 
 (rf/reg-sub
+ ::selected-mode?
+ :<- [::mode]
+ (fn [mode [_ k]]
+   (= mode k)))
+
+(rf/reg-sub
  ::native-mode
  :<- [::theme]
  :native-mode)
 
 (rf/reg-sub
- ::codemirror
+ ::computed-mode
  :<- [::mode]
  :<- [::native-mode]
  (fn [[mode native-mode] _]
-   (let [mode (if (= mode :system) native-mode mode)]
-     (if (= mode :dark)
-       "tomorrow-night-eighties"
-       "default"))))
+   (theme.handlers/compute-mode mode native-mode)))
+
+(rf/reg-sub
+ ::codemirror
+ :<- [::computed-mode]
+ (fn [computed-mode _]
+   (if (= computed-mode :dark)
+     "tomorrow-night-eighties"
+     "default")))

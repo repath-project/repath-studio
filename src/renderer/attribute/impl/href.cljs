@@ -10,17 +10,17 @@
    [renderer.element.effects :as-alias element.effects]
    [renderer.element.events :as-alias element.events]
    [renderer.events :as-alias events]
+   [renderer.i18n.views :as i18n.views]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.subs :as-alias tool.subs]
-   [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]))
 
 (defmethod attribute.hierarchy/description [:default :href]
   []
-  (t [::description
-      "The href attribute defines a link to a resource as a reference URL.
-       The exact meaning of that link depends on the context of each element
-       using it."]))
+  [::description
+   "The href attribute defines a link to a resource as a reference URL.
+    The exact meaning of that link depends on the context of each element
+    using it."])
 
 (defmethod attribute.hierarchy/form-element [:image :href]
   [_ k v {:keys [disabled]}]
@@ -34,7 +34,7 @@
                      (not v)
                      (not state-default?))}]
      [:button.form-control-button
-      {:title (t [::select-file "Select file"])
+      {:title (i18n.views/t [::select-file "Select file"])
        :disabled disabled
        :on-click #(rf/dispatch
                    [::events/file-open

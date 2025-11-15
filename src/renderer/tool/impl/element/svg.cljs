@@ -3,9 +3,9 @@
   (:require
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
+   [renderer.i18n.views :as i18n.views]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]
    [renderer.views :as views]))
 
@@ -14,12 +14,12 @@
 (defmethod tool.hierarchy/properties :svg
   []
   {:icon "svg"
-   :label (t [::label "Svg"])})
+   :label [::label "Svg"]})
 
 (defmethod tool.hierarchy/help [:svg :create]
   []
-  (t [::help [:div "Hold %1 to lock proportions."]]
-     [[views/kbd "Ctrl"]]))
+  (i18n.views/t [::help [:div "Hold %1 to lock proportions."]]
+                [[views/kbd "Ctrl"]]))
 
 (defn attributes
   [db lock-ratio]

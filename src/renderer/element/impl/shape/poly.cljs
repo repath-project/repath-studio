@@ -76,7 +76,7 @@
                            [tool.views/square-handle {:id (keyword (str index))
                                                       :x x
                                                       :y y
-                                                      :label "point"
+                                                      :label [::point "point"]
                                                       :type :handle
                                                       :action :edit
                                                       :element-id (:id el)}]

@@ -12,7 +12,7 @@
    [renderer.element.views :as element.views]
    [renderer.event.impl.wheel :as event.impl.wheel]
    [renderer.frame.events :as-alias frame.events]
-   [renderer.utils.i18n :refer [t]]
+   [renderer.i18n.views :as i18n.views]
    [renderer.views :as views]))
 
 (defn inner-component
@@ -90,7 +90,7 @@
             :on-key-down on-keyboard-event
             :on-key-up on-keyboard-event
             :id "frame"
-            :title (t [::main-canvas "main canvas"])
+            :title (i18n.views/t [::main-canvas "main canvas"])
             :ref ref
             :style {:background (-> root-el :attrs :fill)}}
            [:f> inner-component]

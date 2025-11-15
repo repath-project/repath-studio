@@ -4,17 +4,17 @@
    [renderer.app.effects :as-alias app.effects]
    [renderer.app.handlers :as app.handlers]
    [renderer.frame.handlers :as frame.handlers]
+   [renderer.i18n.views :as i18n.views]
    [renderer.snap.handlers :as snap.handlers]
    [renderer.tool.handlers :as tool.handlers]
-   [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.i18n :refer [t]]))
+   [renderer.tool.hierarchy :as tool.hierarchy]))
 
 (derive :pan ::tool.hierarchy/tool)
 
 (defmethod tool.hierarchy/properties :pan
   []
   {:icon "hand"
-   :label (t [::label "Pan"])})
+   :label [::label "Pan"]})
 
 (defmethod tool.hierarchy/on-activate :pan
   [db]
@@ -22,7 +22,7 @@
 
 (defmethod tool.hierarchy/help [:pan :idle]
   []
-  (t [::idle-help "Click and drag to pan."]))
+  (i18n.views/t [::idle-help "Click and drag to pan."]))
 
 (defmethod tool.hierarchy/on-pointer-up :pan
   [db _e]

@@ -3,15 +3,14 @@
   (:require [renderer.history.handlers :as history.handlers]
             [renderer.tool.handlers :as tool.handlers]
             [renderer.tool.hierarchy :as tool.hierarchy]
-            [renderer.tool.impl.element.poly :as poly]
-            [renderer.utils.i18n :refer [t]]))
+            [renderer.tool.impl.element.poly :as poly]))
 
 (derive :polygon ::tool.hierarchy/poly)
 
 (defmethod tool.hierarchy/properties :polygon
   []
   {:icon "polygon-tool"
-   :label (t [::label "Polygon"])})
+   :label [::label "Polygon"]})
 
 (defmethod tool.hierarchy/on-double-click :polygon
   [db _e]

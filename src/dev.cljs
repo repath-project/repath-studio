@@ -8,7 +8,7 @@
    [renderer.app.events :as app.events]))
 
 (comment
-  ;; Enable full db validation
+  ;; Full db validation
   (rf/reg-global-interceptor app.events/schema-validator)
   (rf/clear-global-interceptor ::app.events/schema-validator)
 

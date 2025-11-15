@@ -20,7 +20,7 @@
        (rf/dispatch [::a11y.events/register-filter
                      {:id :blur-x3
                       :tag :feGaussianBlur
-                      :label [[:a11y-filter/blur-x3 "blur-x3"]]
+                      :label [:a11y-filter/blur-x3 "blur-x3"]
                       :attrs {:in "SourceGraphic"
                               :type "matrix"
                               :stdDeviation "3"}}])

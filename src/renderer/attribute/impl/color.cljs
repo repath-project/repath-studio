@@ -7,7 +7,7 @@
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.attribute.views :as attribute.views]
    [renderer.element.events :as-alias element.events]
-   [renderer.utils.i18n :refer [t]]))
+   [renderer.i18n.views :as i18n.views]))
 
 (derive :stroke ::color)
 (derive :fill ::color)
@@ -30,7 +30,7 @@
      [:button.form-control-button
       {:class "p-1.5"
        :disabled (:disabled attrs)
-       :title (t [::pick-color "Pick color"])}
+       :title (i18n.views/t [::pick-color "Pick color"])}
       [:div.w-full.h-full.bg-overlay
        {:class (when (:disabled attrs) "opacity-30")
         :style {:background v}}]]]

@@ -2,17 +2,17 @@
   "https://svgwg.org/specs/animations/#AnimateElement
    https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/animate"
   (:require
-   [renderer.element.hierarchy :as element.hierarchy]
-   [renderer.utils.i18n :refer [t]]))
+   [renderer.element.hierarchy :as element.hierarchy]))
 
 (derive :animate ::element.hierarchy/animation)
 
 (defmethod element.hierarchy/properties :animate
   []
   {:icon "animation"
-   :label (t [::label "Animate"])
-   :description "The SVG <animate> element provides a way to animate an
-                 attribute of an element over time."
+   :label [::label "Animate"]
+   :description [::description
+                 "The SVG <animate> element provides a way to animate an
+                  attribute of an element over time."]
    :attrs [:href
            :attributeName
            :begin

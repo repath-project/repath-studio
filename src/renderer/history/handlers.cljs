@@ -7,7 +7,7 @@
    [renderer.document.handlers :as document.handlers]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.db :refer [History HistoryIndex HistoryState]]
-   [renderer.utils.i18n :refer [t Translation]]
+   [renderer.i18n.db :refer [Translation]]
    [renderer.utils.vec :as utils.vec]))
 
 (m/=> path [:function
@@ -215,7 +215,7 @@
         (get result-map 0)
         (let [[index parent-obj] (first queue)
               {:keys [index explanation children]} (get states index)
-              js-node #js {:name (apply t explanation)
+              js-node #js {:name explanation
                            :id index
                            :saved (= index saved-index)
                            :active (= index (:position active-history))

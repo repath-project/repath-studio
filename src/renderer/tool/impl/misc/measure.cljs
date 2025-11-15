@@ -6,9 +6,9 @@
    [renderer.app.handlers :as app.handlers]
    [renderer.document.subs :as-alias document.subs]
    [renderer.element.handlers :as element.handlers]
+   [renderer.i18n.views :as i18n.views]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]
    [renderer.utils.math :as utils.math]
    [renderer.utils.svg :as utils.svg]))
@@ -25,11 +25,11 @@
 (defmethod tool.hierarchy/properties :measure
   []
   {:icon "ruler-triangle"
-   :label (t [::label "Measure"])})
+   :label [::label "Measure"]})
 
 (defmethod tool.hierarchy/help [:measure :idle]
   []
-  (t [::help "Click and drag to measure a distance."]))
+  (i18n.views/t [::help "Click and drag to measure a distance."]))
 
 (defmethod tool.hierarchy/on-activate :measure
   [db]
@@ -87,8 +87,8 @@
   [(with-meta
      (:adjusted-pointer-pos db)
      {:label (if @measure-attrs
-               #(t [::measure-end "measure end"])
-               #(t [::measure-start "measure start"]))})])
+               [::measure-end "measure end"]
+               [::measure-start "measure start"])})])
 
 (defmethod tool.hierarchy/snapping-elements :measure
   [db]

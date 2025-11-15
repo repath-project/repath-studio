@@ -1,8 +1,8 @@
 (ns utils.attribute-test
   (:require
    [cljs.test :refer-macros [deftest testing are]]
-   [renderer.utils.attribute :as utils.attribute]
-   [renderer.utils.i18n :refer [t]]))
+   [renderer.i18n.views :refer [t]]
+   [renderer.utils.attribute :as utils.attribute]))
 
 (deftest test-str->seq
   (testing "string to sequence conversion"

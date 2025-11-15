@@ -6,6 +6,7 @@
    [renderer.app.events :as-alias app.events]
    [renderer.app.subs :as-alias app.subs]
    [renderer.events :as-alias events]
+   [renderer.i18n.views :as i18n.views]
    [renderer.panel.events :as-alias panel.events]
    [renderer.panel.subs :as-alias panel.subs]
    [renderer.panel.views :as panel.views]
@@ -18,7 +19,6 @@
    [renderer.reepl.show-value :refer [show-value]]
    [renderer.reepl.subs :as reepl.subs]
    [renderer.theme.subs :as-alias theme.subs]
-   [renderer.utils.i18n :refer [t]]
    [renderer.views :as views]
    [renderer.window.subs :as-alias window.subs]
    [replumb.core :as replumb])
@@ -61,9 +61,10 @@
          [views/icon-button
           (if repl-history? "chevron-down" "chevron-up")
           {:class "min-h-5"
-           :title (if repl-history?
-                    (t [::hide-command-output "Hide command output"])
-                    (t [::show-command-output "Show command output"]))
+           :title (i18n.views/t
+                   (if repl-history?
+                     [::hide-command-output "Hide command output"]
+                     [::show-command-output "Show command output"]))
            :on-click #(rf/dispatch [::panel.events/toggle
                                     :repl-history])}]])]]))
 

@@ -120,6 +120,10 @@
   :zoom-focus-selected "Сфокусировать на выделенном"
   :zoom-fit-selected "Уместить выделенное"
   :zoom-fill-selected "Заполнить выделенным"
+  :theme-mode "Режим темы"
+  :dark "Тёмная"
+  :light "Светлая"
+  :system "Системная"
   :accessibility-filter "Фильтр доступности"
   :language "Язык"
   :grid "Сетка"
@@ -198,18 +202,23 @@
   :paste "Вставить"
   :raise "Поднять"
   :lower "Опустить"
-  :raise-top "Поднять на передний план"
-  :lower-bottom "Отправить на задний план"
+  :raise-top "На передний план"
+  :lower-bottom "На задний план"
   :animate "Анимировать"
-  :animate-transform "Анимировать трансформацию"
-  :animate-motion "Анимировать движение"
+  :animate-transform "Анимация преобразования"
+  :animate-motion "Анимация движения"
   :duplicate "Дублировать"
   :delete "Удалить"}
+
+ :renderer.element.impl.box
+ {:position-handle "маркер позиции"
+  :size-handle "маркер размера"}
 
  :renderer.element.impl.shape.circle
  {:label "Круг"
   :description "Элемент SVG <circle> является базовой формой SVG, используемой
-                для рисования кругов на основе центральной точки и радиуса."}
+                для рисования кругов на основе центральной точки и радиуса."
+  :r-handle "маркер радиуса"}
 
  :renderer.element.impl.shape.image
  {:label "Изображение"
@@ -226,13 +235,18 @@
  :renderer.element.impl.shape.line
  {:label "Линия"
   :description "Элемент <line> является базовой формой SVG, используемой для
-                создания линии, соединяющей две точки."}
+                создания линии, соединяющей две точки."
+  :starting-point "начальная точка"
+  :ending-point "конечная точка"}
 
  :renderer.element.impl.shape.path
  {:label "Контур"
   :description "Элемент SVG <path> является универсальным элементом для
                 определения формы. Все базовые формы могут быть созданы с
                 помощью элемента path."}
+
+ :renderer.element.impl.shape.poly
+ {:point "точка"}
 
  :renderer.element.impl.shape.polygon
  {:label "Многоугольник"
@@ -260,18 +274,20 @@
   :extra-points "Фактическое количество точек будет `3 + дополнительныеТочки`."
   :randomness "Увеличивает количество вариации в позиции точек."
   :size "Размер ограничивающего прямоугольника."
-  :description "Blob на основе векторов."
-  :generate-random-seed "Сгенерировать случайное зерно"}
+  :description "Векторный блоб."
+  :generate-random-seed "Сгенерировать случайное зерно"
+  :size-handle "маркер размера"}
 
  :renderer.element.impl.custom.brush
  {:label "Кисть"
   :points "Входные точки, записанные от движения мыши пользователя."
   :size "Базовый размер (диаметр) штриха."
   :thinning "Влияние давления на размер штриха."
-  :smoothing "Насколько смягчить края штриха."
-  :stream-line "Насколько упростить штрих."
-  :description "Рисуйте чувствительные к давлению линии от руки с помощью
-                perfect-freehand."}
+  :smoothing "Степень смягчения краев штриха."
+  :stream-line "Степень упрощения штриха."
+  :description "Рисуйте чувствительные к давлению произвольные линии с помощью
+                perfect-freehand."
+  :brush-point "точка кисти"}
 
  :renderer.element.impl.container.canvas
  {:label "Холст"
@@ -412,7 +428,8 @@
                           соотношением сторон."}
 
  :renderer.tool.impl.element.core
- {:help "Щёлкните и перетащите для создания элемента."}
+ {:help "Щёлкните и перетащите для создания элемента."
+  :edge "край"}
 
  :renderer.tool.impl.element.poly
  {:add-points "Щёлкните для добавления дополнительных точек."
@@ -524,7 +541,23 @@
  :renderer.attribute.impl.font-size
  {:description "Атрибут font-size относится к размеру шрифта от базовой линии
                 до базовой линии, когда несколько строк текста устанавливаются
-                сплошными в многострочной среде компоновки."}
+                сплошными в многострочной среде компоновки."
+  :xx-small "XX-Маленький"
+  :x-small "X-Маленький"
+  :small "Маленький"
+  :medium "Средний"
+  :large "Большой"
+  :x-large "X-Большой"
+  :xx-large "XX-Большой"
+  :xxx-large "XXX-Большой"}
+
+ :renderer.attribute.impl.font-style
+ {:description "Атрибут font-size относится к размеру шрифта от базовой линии
+                до базовой линии, когда несколько строк текста устанавливаются
+                сплошными в многострочной среде компоновки."
+  :normal "Обычный"
+  :italic "Курсив"
+  :oblique "Наклонный"}
 
  :renderer.attribute.impl.font-weight
  {:description "Атрибут font-weight относится к жирности или лёгкости глифов,
@@ -558,9 +591,10 @@
   :help-idle-click [:div "Щёлкните на элементе для изменения выделения"]
   :help-edit [:div "Удерживайте %1 для ограничения направления."]
   :help-type [:div "Введите ваш текст."]
-  :select-element "Выделить элемент"
+  :select-element "Выбрать элемент"
   :edit "Редактировать"
-  :centroid "Центроид"}
+  :centroid "Центроид"
+  :handle "ручка"}
 
  :renderer.tool.impl.base.transform
  {:label "Трансформация"

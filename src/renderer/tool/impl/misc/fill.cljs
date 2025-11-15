@@ -3,21 +3,21 @@
    [renderer.document.handlers :as document.handlers]
    [renderer.element.handlers :as element.handlers]
    [renderer.history.handlers :as history.handlers]
+   [renderer.i18n.views :as i18n.views]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
-   [renderer.utils.element :as utils.element]
-   [renderer.utils.i18n :refer [t]]))
+   [renderer.utils.element :as utils.element]))
 
 (derive :fill ::tool.hierarchy/tool)
 
 (defmethod tool.hierarchy/properties :fill
   []
   {:icon "fill"
-   :label (t [::label "Fill"])})
+   :label [::label "Fill"]})
 
 (defmethod tool.hierarchy/help [:fill :idle]
   []
-  (t [::help "Click on an element to fill."]))
+  (i18n.views/t [::help "Click on an element to fill."]))
 
 (defmethod tool.hierarchy/on-activate :fill
   [db]

@@ -12,7 +12,6 @@
    [renderer.tool.views :as tool.views]
    [renderer.utils.bounds :as utils.bounds]
    [renderer.utils.element :as utils.element]
-   [renderer.utils.i18n :refer [t]]
    [renderer.utils.length :as utils.length]
    [renderer.utils.svg :as utils.svg]))
 
@@ -21,10 +20,10 @@
 (defmethod element.hierarchy/properties :line
   []
   {:icon "line"
-   :label (t [::label "Line"])
-   :description (t [::description
-                    "The <line> element is an SVG basic shape used to create a
-                     line connecting two points."])
+   :label [::label "Line"]
+   :description [::description
+                 "The <line> element is an SVG basic shape used to create a line
+                  connecting two points."]
    :attrs [:stroke
            :stroke-width
            :stroke-linecap
@@ -77,8 +76,7 @@
                                  (= (:element-id clicked-element) (:id el)))]
               ^{:key id}
               [:g
-               [tool.views/square-handle handle
-                [:title {:key (str id "-title")} (name id)]]
+               [tool.views/square-handle handle]
                (when is-active
                  [utils.svg/label
                   (string/join " " [(utils.length/->fixed x 2 false)
@@ -89,12 +87,14 @@
           [{:x x1
             :y y1
             :id :starting-point
+            :label [::starting-point "starting point"]
             :type :handle
             :action :edit
             :element-id (:id el)}
            {:x x2
             :y y2
             :id :ending-point
+            :label [::ending-point "ending point"]
             :type :handle
             :action :edit
             :element-id (:id el)}])]))
@@ -124,5 +124,5 @@
     [el]
     (let [{{:keys [x1 y1 x2 y2]} :attrs} el
           [x1 y1 x2 y2] (mapv utils.length/unit->px [x1 y1 x2 y2])]
-      [(with-meta [x1 y1] {:label "line start"})
-       (with-meta [x2 y2] {:label "line end"})]))
+      [(with-meta [x1 y1] {:label [::line-start "line start"]})
+       (with-meta [x2 y2] {:label [::line-end "line end"]})]))

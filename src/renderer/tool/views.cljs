@@ -7,6 +7,7 @@
    [renderer.db :refer [BBox]]
    [renderer.document.subs :as-alias document.subs]
    [renderer.event.impl.pointer :as event.impl.pointer]
+   [renderer.i18n.views :as i18n.views]
    [renderer.tool.subs :as-alias tool.subs]
    [renderer.utils.bounds :as utils.bounds]))
 
@@ -31,8 +32,8 @@
                       :on-pointer-move pointer-handler}] children)))
 
 (defn square-handle
-  [el & children]
-  (let [{:keys [x y id cursor element-id]} el
+  [el]
+  (let [{:keys [x y id cursor element-id label]} el
         zoom @(rf/subscribe [::document.subs/zoom])
         clicked-element @(rf/subscribe [::app.subs/clicked-element])
         handle-size @(rf/subscribe [::document.subs/handle-size])
@@ -40,21 +41,22 @@
         pointer-handler (partial event.impl.pointer/handler! el)
         active (and (= (:id clicked-element) id)
                     (= (:element-id clicked-element) element-id))]
-    (into [:rect {:fill (if active
-                          "var(--accent)"
-                          "var(--accent-foreground)")
-                  :stroke (if active "var(--accent)" "gray")
-                  :stroke-width stroke-width
-                  :x (- x (/ handle-size 2))
-                  :y (- y (/ handle-size 2))
-                  :rx (/ 1.5 zoom)
-                  :width handle-size
-                  :height handle-size
-                  :cursor (or cursor "move")
-                  :on-pointer-up pointer-handler
-                  :on-pointer-down pointer-handler
-                  :on-pointer-move pointer-handler}]
-          children)))
+    [:rect {:fill (if active
+                    "var(--accent)"
+                    "var(--accent-foreground)")
+            :stroke (if active "var(--accent)" "gray")
+            :stroke-width stroke-width
+            :x (- x (/ handle-size 2))
+            :y (- y (/ handle-size 2))
+            :rx (/ 1.5 zoom)
+            :width handle-size
+            :height handle-size
+            :cursor (or cursor "move")
+            :on-pointer-up pointer-handler
+            :on-pointer-down pointer-handler
+            :on-pointer-move pointer-handler}
+     (when label
+       [:title (i18n.views/t label)])]))
 
 (defn scale-handle
   [props]
