@@ -82,6 +82,7 @@
 
 (defscene ^:export default
   :title "Icons"
+  []
   [:div.flex
    [:div.flex.flex-wrap.gap-2.p-3
     (for [icon-name icons/default]
