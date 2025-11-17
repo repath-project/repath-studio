@@ -2,10 +2,6 @@
   (:require
    [pages.icons :as icons]
    [portfolio.reagent-18 :refer-macros [defscene]]
-   [re-frame.core :as rf]
-   [re-pressed.core :as rp]
-   [renderer.event.impl.keyboard :as event.impl.keyboard]
-   [renderer.history.events :as-alias history.events]
    [renderer.views :as views]))
 
 (defscene ^:export buttons
@@ -83,24 +79,6 @@
       :on-value-change (fn [v] (reset! store v))}]]
    [:span.v-divider]
    [:div (first @store)]])
-
-(rf/dispatch [::rp/set-keydown-rules event.impl.keyboard/keydown-rules])
-
-(defscene ^:export shortcut
-  :title "Shortcut"
-  [views/toolbar
-   {:class "bg-primary h-10 p-2 gap-2"}
-   [:div.flex.gap-2
-    "Single"
-    [views/shortcuts [::history.events/undo]]]
-   [:span.v-divider]
-   [:div.flex.gap-2
-    "Multiple"
-    [views/shortcuts [::history.events/redo]]]
-   [:span.v-divider]
-   [:div.flex.gap-2
-    "No shortcuts"
-    [views/shortcuts [:event-id-with-no-shortcut]]]])
 
 (defscene ^:export default
   :title "Icons"

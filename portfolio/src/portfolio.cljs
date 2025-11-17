@@ -1,6 +1,5 @@
 (ns portfolio
   (:require [pages.components]
-            [pages.sections]
             [portfolio.ui :as ui]))
 
 (ui/start!

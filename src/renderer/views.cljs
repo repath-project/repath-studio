@@ -127,58 +127,56 @@
 (defn context-menu-item
   [{:keys [label action checked disabled]
     :as props}]
-  (let [sm? @(rf/subscribe [::window.subs/sm?])]
-    (case (:type props)
-      :separator
-      [:> ContextMenu/Separator {:class "menu-separator"}]
+  (case (:type props)
+    :separator
+    [:> ContextMenu/Separator {:class "menu-separator"}]
 
-      :checkbox
-      [:> ContextMenu/CheckboxItem
-       {:class "menu-checkbox-item inset"
-        :onSelect #(rf/dispatch action)
-        :checked checked
-        :disabled disabled}
-       [:> ContextMenu/ItemIndicator
-        {:class "menu-item-indicator"}
-        [icon "checkmark"]]
-       [:div label]
-       (when sm? [shortcuts action])]
+    :checkbox
+    [:> ContextMenu/CheckboxItem
+     {:class "menu-checkbox-item inset"
+      :onSelect #(rf/dispatch action)
+      :checked checked
+      :disabled disabled}
+     [:> ContextMenu/ItemIndicator
+      {:class "menu-item-indicator"}
+      [icon "checkmark"]]
+     [:div label]
+     [shortcuts action]]
 
-      [:> ContextMenu/Item
-       {:class "menu-item context-menu-item"
-        :onSelect #(rf/dispatch action)
-        :disabled disabled}
-       [:div label]
-       (when sm? [shortcuts action])])))
+    [:> ContextMenu/Item
+     {:class "menu-item context-menu-item"
+      :onSelect #(rf/dispatch action)
+      :disabled disabled}
+     [:div label]
+     [shortcuts action]]))
 
 (defn dropdown-menu-item
   [{:keys [label action checked]
     :as props}]
-  (let [sm? @(rf/subscribe [::window.subs/sm?])]
-    (case (:type props)
-      :separator
-      [:> DropdownMenu/Separator {:class "menu-separator"}]
+  (case (:type props)
+    :separator
+    [:> DropdownMenu/Separator {:class "menu-separator"}]
 
-      :checkbox
-      [:> DropdownMenu/CheckboxItem
-       {:class "menu-checkbox-item inset"
-        :onSelect #(do (.preventDefault %)
-                       (rf/dispatch action))
-        :checked checked}
-       [:> DropdownMenu/ItemIndicator
-        {:class "menu-item-indicator"}
-        [icon "checkmark"]]
-       [:div label]
-       (when sm? [shortcuts action])]
+    :checkbox
+    [:> DropdownMenu/CheckboxItem
+     {:class "menu-checkbox-item inset"
+      :onSelect #(do (.preventDefault %)
+                     (rf/dispatch action))
+      :checked checked}
+     [:> DropdownMenu/ItemIndicator
+      {:class "menu-item-indicator"}
+      [icon "checkmark"]]
+     [:div label]
+     [shortcuts action]]
 
-      [:> DropdownMenu/Item
-       {:class "menu-item dropdown-menu-item"
-        :onSelect #(rf/dispatch action)}
-       (when (:icon props)
-         [icon (:icon props)
-          {:class "menu-item-indicator"}])
-       [:div label]
-       (when sm? [shortcuts action])])))
+    [:> DropdownMenu/Item
+     {:class "menu-item dropdown-menu-item"
+      :onSelect #(rf/dispatch action)}
+     (when (:icon props)
+       [icon (:icon props)
+        {:class "menu-item-indicator"}])
+     [:div label]
+     [shortcuts action]]))
 
 (defn scroll-area
   [& more]

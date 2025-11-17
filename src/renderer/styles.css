@@ -59,8 +59,18 @@
   all: unset;
 }
 
+html {
+  @apply h-full p-safe;
+}
+
 body {
+  @apply m-0 text-foreground relative bg-secondary select-none font-sans h-full
+  overflow-hidden;
   font-size: var(--font-size);
+}
+
+#app {
+  @apply h-full;
 }
 
 p {
