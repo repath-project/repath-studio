@@ -142,13 +142,15 @@
      [:> ContextMenu/ItemIndicator
       {:class "menu-item-indicator"}
       [icon "checkmark"]]
-     [:div (i18n.views/t label)]]
+     [:div (i18n.views/t label)]
+     [shortcuts action]]
 
     [:> ContextMenu/Item
      {:class "menu-item context-menu-item"
       :onSelect #(rf/dispatch action)
       :disabled disabled}
-     [:div (i18n.views/t label)]]))
+     [:div (i18n.views/t label)]
+     [shortcuts action]]))
 
 (defn dropdown-menu-item
   [{:keys [label action checked]
