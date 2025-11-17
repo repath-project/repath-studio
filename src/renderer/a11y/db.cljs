@@ -1,6 +1,6 @@
 (ns renderer.a11y.db
   (:require
-    [malli.core :as m]
+   [malli.core :as m]
    [renderer.i18n.db :refer [Translation]]))
 
 (def A11yFilterId keyword?)
