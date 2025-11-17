@@ -113,10 +113,8 @@
            :on-click #(rf/dispatch [::app.events/install])}])
        (when (or md? mac?)
          [:<>
-          ^{:key @(rf/subscribe [::i18n.subs/user-lang])}
           [dropdown code (->> (menubar.views/languages-submenu)
                               (mapv (partial language-item system-code)))]
-          ^{:key @(rf/subscribe [::theme.subs/mode])}
           [dropdown
            [views/icon (name theme-mode)]
            (->> menubar.views/theme-mode-submenu

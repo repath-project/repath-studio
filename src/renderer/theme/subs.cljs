@@ -11,7 +11,7 @@
 (rf/reg-sub
  ::mode
  :<- [::theme]
- :mode)
+ :-> :mode)
 
 (rf/reg-sub
  ::selected-mode?
@@ -22,7 +22,7 @@
 (rf/reg-sub
  ::native-mode
  :<- [::theme]
- :native-mode)
+ :-> :native-mode)
 
 (rf/reg-sub
  ::computed-mode
