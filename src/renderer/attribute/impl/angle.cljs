@@ -23,4 +23,4 @@
        :align "end"
        :on-escape-key-down #(.stopPropagation %)}
       [:div.circular-slider]
-      [:> Popover/Arrow {:class "fill-primary"}]]]]])
+      [views/popover-arrow]]]]])

@@ -4,8 +4,10 @@
   (:require
    ["@radix-ui/react-context-menu" :as ContextMenu]
    ["@radix-ui/react-dropdown-menu" :as DropdownMenu]
+   ["@radix-ui/react-hover-card" :as HoverCard]
    ["@radix-ui/react-popover" :as Popover]
    ["@radix-ui/react-scroll-area" :as ScrollArea]
+   ["@radix-ui/react-select" :as Select]
    ["@radix-ui/react-slider" :as Slider]
    ["@radix-ui/react-switch" :as Switch]
    ["@repath-studio/react-color" :refer [ChromePicker PhotoshopPicker]]
@@ -203,6 +205,18 @@
 
      [:> ScrollArea/Corner]]))
 
+(defn popover-arrow []
+  [:> Popover/Arrow {:class "fill-primary stroke-border"}])
+
+(defn hovercard-arrow []
+  [:> HoverCard/Arrow {:class "fill-primary stroke-border"}])
+
+(defn dropdownmenu-arrow []
+  [:> DropdownMenu/Arrow {:class "fill-primary stroke-border"}])
+
+(defn select-arrow []
+  [:> Select/Arrow {:class "fill-primary stroke-border"}])
+
 (defn color-picker
   [props & children]
   (let [sm? @(rf/subscribe [::window.subs/sm?])]
@@ -222,7 +236,7 @@
         (if sm?
           [:> PhotoshopPicker props]
           [:> ChromePicker props])]
-       [:> Popover/Arrow {:class "fill-primary"}]]]]))
+       [popover-arrow]]]]))
 
 (def cm-defaults
   {:lineNumbers false

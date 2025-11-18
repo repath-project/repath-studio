@@ -166,4 +166,4 @@
            :align "end"
            :on-escape-key-down #(.stopPropagation %)}
           (when idle [edit-form v])
-          [:> Popover/Arrow {:class "fill-primary"}]]]])]))
+          [views/popover-arrow]]]])]))

@@ -52,7 +52,7 @@
      [:> Select/ScrollDownButton
       {:class "select-scroll-button"}
       [views/icon "chevron-down"]]
-     [:> Select/Arrow {:class "fill-primary"}]]]])
+     [views/select-arrow]]]])
 
 (defn action-button
   [args]

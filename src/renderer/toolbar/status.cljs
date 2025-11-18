@@ -74,7 +74,7 @@
      (for [item (zoom-options)]
        ^{:key (:id item)}
        [views/dropdown-menu-item item])
-     [:> DropdownMenu/Arrow {:class "fill-primary"}]]]])
+     [views/dropdownmenu-arrow]]]])
 
 (defn view-radio-buttons []
   (cond-> []
