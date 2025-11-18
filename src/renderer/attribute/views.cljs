@@ -251,8 +251,7 @@
                    (features)))
            [caniusethis {:tag tag
                          :attr k}]])]
-       [:> HoverCard/Arrow
-        {:class "fill-primary"}]]]]))
+       [views/hovercard-arrow]]]]))
 
 (defn row
   [k v locked? tag]
@@ -292,7 +291,7 @@
          [caniusethis {:tag tag}]
          (when-let [url (:url properties)]
            [:div.flex [info-button url]])]
-        [:> HoverCard/Arrow {:class "fill-primary"}]]]]]))
+        [views/hovercard-arrow]]]]]))
 
 (defn form
   []

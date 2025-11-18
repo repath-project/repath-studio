@@ -73,8 +73,7 @@
                           :class "menu-content rounded-sm select-content"
                           :on-key-down #(.stopPropagation %)
                           :on-escape-key-down #(.stopPropagation %)}
-                         [:> DropdownMenu/Arrow
-                          {:class "fill-primary"}]]))]]))])))
+                         [views/dropdownmenu-arrow]]))]]))])))
 
 (defn get-label [label]
   (when label

@@ -52,7 +52,7 @@
        (for [lang (menubar.views/languages-submenu)]
          ^{:key (:id lang)}
          [language-item lang system-abbr])
-       [:> DropdownMenu/Arrow {:class "fill-primary"}]]]]))
+       [views/dropdownmenu-arrow]]]]))
 
 (defn button
   [{:keys [icon action class title]}]
