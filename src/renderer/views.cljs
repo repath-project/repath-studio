@@ -228,7 +228,7 @@
         :side "top"
         :align-offset (:align-offset props)
         :on-escape-key-down #(.stopPropagation %)}
-       [:div
+       [:div.p-2
         {:dir "ltr"
          :tab-index 0}
         (if sm?

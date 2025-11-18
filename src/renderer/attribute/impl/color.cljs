@@ -7,7 +7,8 @@
    [renderer.attribute.hierarchy :as attribute.hierarchy]
    [renderer.attribute.views :as attribute.views]
    [renderer.element.events :as-alias element.events]
-   [renderer.utils.i18n :refer [t]]))
+   [renderer.utils.i18n :refer [t]]
+   [renderer.views :as views]))
 
 (derive :stroke ::color)
 (derive :fill ::color)
@@ -40,7 +41,8 @@
        :class "popover-content"
        :align "end"
        :on-escape-key-down #(.stopPropagation %)}
-      [:div
+      [:div.p-2
        {:dir "ltr"
         :tab-index 0}
-       [picker k v]]]]]])
+       [picker k v]]
+      [views/popover-arrow]]]]])
