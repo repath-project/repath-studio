@@ -154,8 +154,8 @@
         viewbox (string/join " " [min-x min-y w h])]
     (->string [{:tag :svg
                 :children (mapv :id els)
-                :attrs {:width w
-                        :height h
+                :attrs {:width (str w)
+                        :height (str h)
                         :viewBox viewbox
                         :xmlns "http://www.w3.org/2000/svg"}}])))
 

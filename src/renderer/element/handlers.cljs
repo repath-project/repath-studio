@@ -163,7 +163,9 @@
       (-> (reduce refresh-bbox db children)
           (update-in (path db id) assoc :bbox bbox)))))
 
-(m/=> update-el [:-> App ElementId ifn? [:* any?] App])
+(m/=> update-el [:function
+                 [:-> App ElementId ifn? App]
+                 [:-> App ElementId ifn? [:* any?] App]])
 (defn update-el
   ([db id f]
    (if (locked? db id)
