@@ -297,6 +297,10 @@
  {:label "画布"
   :description "画布是承载所有元素的主要 SVG 容器。"}
 
+ :renderer.element.impl.container.group
+ {:label "组"
+  :description "<g> SVG元素是一个用于对其他SVG元素进行分组的容器。"}
+
  :renderer.element.impl.container.svg
  {:description "svg 元素是定义新坐标系统和视口的容器。它用作 SVG 文档的最外层元素，
                 但也可用于在 SVG 或 HTML 文档中嵌入 SVG 片段。"}

@@ -315,6 +315,11 @@
   :description "Le canevas est le conteneur SVG principal qui héberge tous les
                 éléments."}
 
+ :renderer.element.impl.container.group
+ {:label "Groupe"
+  :description "L'élément SVG <g> est un conteneur utilisé pour regrouper
+                d'autres éléments SVG."}
+
  :renderer.element.impl.container.svg
  {:description "L'élément svg est un conteneur qui définit un nouveau système de
                 coordonnées et une fenêtre d'affichage. Il est utilisé comme

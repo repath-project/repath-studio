@@ -316,6 +316,11 @@
   :description "Ο καμβάς είναι το κύριο πλαίσιο SVG που περιέχει όλα τα
                 στοιχεία."}
 
+ :renderer.element.impl.container.group
+ {:label "Ομάδα"
+  :description "Το στοιχείο <g> του SVG είναι ένα δοχείο που χρησιμοποιείται
+                για να ομαδοποιήσει άλλα στοιχεία SVG."}
+
  :renderer.element.impl.container.svg
  {:description "Το στοιχείο svg είναι μια θέση υποδοχής (container) που ορίζει
                 ένα νέο σύστημα συντεταγμένων και μια περιοχή προβολής

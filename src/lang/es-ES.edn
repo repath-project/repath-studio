@@ -313,6 +313,11 @@
   :description "El lienzo es el contenedor SVG principal que aloja todos los
                 elementos."}
 
+ :renderer.element.impl.container.group
+ {:label "Grupo"
+  :description "El elemento <g> de SVG es un contenedor usado para agrupar
+                otros elementos SVG."}
+
  :renderer.element.impl.container.svg
  {:description "El elemento svg es un contenedor que define un nuevo sistema
                 de coordenadas y viewport. Se usa como el elemento más externo

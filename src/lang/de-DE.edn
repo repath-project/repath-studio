@@ -316,6 +316,11 @@
   :description "Die Leinwand ist der Haupt-SVG-Container, der alle Elemente
                 beherbergt."}
 
+ :renderer.element.impl.container.group
+ {:label "Gruppe"
+  :description "Das <g> SVG-Element ist ein Container, der verwendet wird, um
+                andere SVG-Elemente zu gruppieren."}
+
  :renderer.element.impl.container.svg
  {:description "Das svg-Element ist ein Container, der ein neues
                 Koordinatensystem und einen Viewport definiert. Es wird als

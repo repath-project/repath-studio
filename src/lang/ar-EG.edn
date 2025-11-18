@@ -308,6 +308,10 @@
   :description "لوحة الرسم هي حاوية SVG الرئيسية التي تستضيف جميع
                 العناصر."}
 
+ :renderer.element.impl.container.group
+ {:label "مجموعة"
+  :description "عنصر SVG <g> هو حاوية تُستخدم لتجميع عناصر SVG أخرى."}
+
  :renderer.element.impl.container.svg
  {:description "عنصر svg هو حاوية تُعرف نظام إحداثيات جديد ومنفذ عرض.
                 يُستخدم كالعنصر الخارجي لمستندات SVG، ولكن يمكن أيضاً

@@ -312,6 +312,11 @@
  {:label "Tuval"
   :description "Tuval, tüm öğeleri barındıran ana SVG kapsayıcısıdır."}
 
+ :renderer.element.impl.container.group
+ {:label "Grup"
+  :description "<g> SVG öğesi, diğer SVG öğelerini gruplamak için kullanılan
+                bir kapsayıcıdır."}
+
  :renderer.element.impl.container.svg
  {:description "svg öğesi, yeni bir koordinat sistemi ve görünüm alanı
                 tanımlayan bir kapsayıcıdır. SVG belgelerinin en dış öğesi

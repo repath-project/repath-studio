@@ -304,6 +304,11 @@
  {:label "キャンバス"
   :description "キャンバスは、すべての要素をホストするメインのSVGコンテナです。"}
 
+ :renderer.element.impl.container.group
+ {:label "グループ"
+  :description "<g> SVG要素は、他のSVG要素をグループ化するために使用される
+                コンテナです。"}
+
  :renderer.element.impl.container.svg
  {:description "svg要素は、新しい座標系とビューポートを定義するコンテナです。
                 SVGドキュメントの最も外側の要素として使用されますが、SVGまたは

@@ -313,6 +313,11 @@
   :description "La tela è il contenitore SVG principale che ospita tutti gli
                 elementi."}
 
+ :renderer.element.impl.container.group
+ {:label "Gruppo"
+  :description "L'elemento SVG <g> è un contenitore usato per raggruppare altri
+                elementi SVG."}
+
  :renderer.element.impl.container.svg
  {:description "L'elemento svg è un contenitore che definisce un nuovo sistema
                 di coordinate e viewport. È utilizzato come elemento più esterno

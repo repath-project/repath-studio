@@ -313,6 +313,11 @@
  {:label "Canvas"
   :description "Het canvas is de hoofd-SVG container die alle elementen bevat."}
 
+ :renderer.element.impl.container.group
+ {:label "Groep"
+  :description "Het <g> SVG-element is een container die wordt gebruikt om
+                andere SVG-elementen te groeperen."}
+
  :renderer.element.impl.container.svg
  {:description "Het svg element is een container die een nieuw
                 coördinatensysteem en viewport definieert. Het wordt gebruikt

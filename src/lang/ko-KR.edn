@@ -306,6 +306,11 @@
  {:label "캔버스"
   :description "캔버스는 모든 요소를 포함하는 주요 SVG 컨테이너입니다."}
 
+ :renderer.element.impl.container.group
+ {:label "그룹"
+  :description "<g> SVG 요소는 다른 SVG 요소를 그룹화하는 데 사용되는 컨테이너
+                입니다."}
+
  :renderer.element.impl.container.svg
  {:description "svg 요소는 새로운 좌표계와 뷰포트를 정의하는 컨테이너입니다.
                 SVG 문서의 가장 바깥쪽 요소로 사용되지만, SVG나 HTML 문서 내에

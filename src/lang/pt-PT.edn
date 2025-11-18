@@ -313,6 +313,11 @@
   :description "A tela é o contentor SVG principal que aloja todos os
                 elementos."}
 
+ :renderer.element.impl.container.group
+ {:label "Grupo"
+  :description "O elemento SVG <g> é um contentor usado para agrupar outros
+                elementos SVG."}
+
  :renderer.element.impl.container.svg
  {:description "O elemento svg é um contentor que define um novo sistema de
                 coordenadas e viewport. É usado como o elemento mais externo de

@@ -311,6 +311,11 @@
  {:label "Duk"
   :description "Duken är huvud-SVG behållaren som innehåller alla element."}
 
+ :renderer.element.impl.container.group
+ {:label "Grupp"
+  :description "SVG-elementet <g> är en behållare som används för att gruppera
+                andra SVG-element."}
+
  :renderer.element.impl.container.svg
  {:description "SVG elementet är en behållare som definierar ett nytt
                 koordinatsystem och visningsområde. Det används som det
