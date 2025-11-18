@@ -210,6 +210,21 @@
   :duplicate "مضاعفة"
   :delete "حذف"}
 
+ :renderer.element.impl.animation.animate
+ {:label "تحريك"
+  :description "يوفر عنصر SVG <animate> طريقة لتحريك سمة عنصر عبر الزمن."}
+
+ :renderer.element.impl.animation.animate-motion
+ {:label "تحريك الحركة"
+  :description "يتيح عنصر SVG <animateMotion> تحديد كيفية تحرك عنصر على
+                طول مسار الحركة."}
+
+ :renderer.element.impl.animation.animate-transform
+ {:label "تحريك التحويل"
+  :description "يقوم عنصر <animateTransform> بتحريك سمة التحويل على العنصر
+                المستهدف، مما يسمح بالرسوم المتحركة للتحكم في الترجمة
+                والتحجيم والدوران و/أو الانحراف"}
+
  :renderer.element.impl.box
  {:position-handle "مقبض الموضع"
   :size-handle "مقبض الحجم"}

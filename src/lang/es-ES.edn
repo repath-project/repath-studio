@@ -210,6 +210,23 @@
   :duplicate "Duplicar"
   :delete "Eliminar"}
 
+ :renderer.element.impl.animation.animate
+ {:label "Animar"
+  :description "El elemento SVG <animate> proporciona una forma de animar un
+                atributo de un elemento a lo largo del tiempo."}
+
+ :renderer.element.impl.animation.animate-motion
+ {:label "Animar movimiento"
+  :description "El elemento SVG <animateMotion> permite definir cómo un
+                elemento se mueve a lo largo de una trayectoria de movimiento."}
+
+ :renderer.element.impl.animation.animate-transform
+ {:label "Animar transformación"
+  :description "El elemento <animateTransform> anima un atributo de
+                transformación en su elemento objetivo, permitiendo así que las
+                animaciones controlen traslación, escalado, rotación y/o
+                inclinación"}
+
  :renderer.element.impl.box
  {:position-handle "manija de posición"
   :size-handle "manija de tamaño"}

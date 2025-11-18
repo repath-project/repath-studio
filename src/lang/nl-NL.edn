@@ -200,8 +200,8 @@
  {:cut "Knippen"
   :copy "Kopiëren"
   :paste "Plakken"
-  :raise "Omhoog"
-  :lower "Omlaag"
+  :raise "Verhogen"
+  :lower "Verlagen"
   :raise-top "Naar voorgrond"
   :lower-bottom "Naar achtergrond"
   :animate "Animeren"
@@ -209,6 +209,24 @@
   :animate-motion "Beweging animeren"
   :duplicate "Dupliceren"
   :delete "Verwijderen"}
+
+ :renderer.element.impl.animation.animate
+ {:label "Animeren"
+  :description "Het SVG <animate> element biedt een manier om een attribuut van
+                een element in de tijd te animeren."}
+
+ :renderer.element.impl.animation.animate-motion
+ {:label "Beweging animeren"
+  :description "Het SVG <animateMotion> element maakt het mogelijk om te
+                definiëren hoe een element zich langs een bewegingspad
+                beweegt."}
+
+ :renderer.element.impl.animation.animate-transform
+ {:label "Transformatie animeren"
+  :description "Het <animateTransform> element animeert een
+                transformatie-attribuut op het doelelement, waardoor animaties
+                translatie, schaling, rotatie en/of scheeftrekken kunnen
+                besturen"}
 
  :renderer.element.impl.box
  {:position-handle "positiegreep"

@@ -202,13 +202,30 @@
   :paste "Yapıştır"
   :raise "Yükselt"
   :lower "Alçalt"
-  :raise-top "Öne getir"
-  :lower-bottom "Arkaya gönder"
+  :raise-top "En üste yükselt"
+  :lower-bottom "En alta alçalt"
   :animate "Animasyon"
   :animate-transform "Dönüşüm animasyonu"
   :animate-motion "Hareket animasyonu"
   :duplicate "Çoğalt"
   :delete "Sil"}
+
+ :renderer.element.impl.animation.animate
+ {:label "Animasyon"
+  :description "SVG <animate> öğesi, bir öğenin niteliğini zaman içinde
+                canlandırmak için bir yol sağlar."}
+
+ :renderer.element.impl.animation.animate-motion
+ {:label "Hareket animasyonu"
+  :description "SVG <animateMotion> öğesi, bir öğenin bir hareket yolu boyunca
+                nasıl hareket ettiğini tanımlamanıza olanak tanır."}
+
+ :renderer.element.impl.animation.animate-transform
+ {:label "Dönüşüm animasyonu"
+  :description "<animateTransform> öğesi, hedef öğesinde bir dönüşüm
+                niteliğini canlandırır, böylece animasyonların çeviri,
+                ölçekleme, döndürme ve/veya eğmeyi kontrol etmesine olanak
+                tanır"}
 
  :renderer.element.impl.box
  {:position-handle "konum tutamacı"

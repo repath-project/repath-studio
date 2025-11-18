@@ -202,13 +202,30 @@
   :paste "Klistra in"
   :raise "Höj"
   :lower "Sänk"
-  :raise-top "Flytta längst fram"
-  :lower-bottom "Flytta längst bak"
+  :raise-top "Höj till toppen"
+  :lower-bottom "Sänk till botten"
   :animate "Animera"
   :animate-transform "Animera transformation"
   :animate-motion "Animera rörelse"
   :duplicate "Duplicera"
   :delete "Ta bort"}
+
+ :renderer.element.impl.animation.animate
+ {:label "Animera"
+  :description "SVG-elementet <animate> ger ett sätt att animera ett attribut
+                för ett element över tid."}
+
+ :renderer.element.impl.animation.animate-motion
+ {:label "Animera rörelse"
+  :description "SVG-elementet <animateMotion> låter dig definiera hur ett
+                element rör sig längs en rörelseväg."}
+
+ :renderer.element.impl.animation.animate-transform
+ {:label "Animera transformation"
+  :description "Elementet <animateTransform> animerar ett
+                transformationsattribut på sitt målelement, vilket gör det
+                möjligt för animationer att styra translation, skalning,
+                rotation och/eller skevning"}
 
  :renderer.element.impl.box
  {:position-handle "positionshandtag"

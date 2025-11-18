@@ -201,14 +201,31 @@
   :copy "Αντιγραφή"
   :paste "Επικόλληση"
   :raise "Ανύψωση"
-  :lower "Υποβιβασμός"
+  :lower "Χαμήλωμα"
   :raise-top "Ανύψωση στην κορυφή"
-  :lower-bottom "Υποβιβασμός στο κάτω μέρος"
+  :lower-bottom "Χαμήλωμα στο κάτω μέρος"
   :animate "Κίνηση"
   :animate-transform "Κίνηση μετασχηματισμού"
   :animate-motion "Κίνηση κίνησης"
   :duplicate "Δημιουργία αντιγράφου"
   :delete "Διαγραφή"}
+
+ :renderer.element.impl.animation.animate
+ {:label "Κίνηση"
+  :description "Το στοιχείο SVG <animate> παρέχει έναν τρόπο για την κίνηση
+                ενός χαρακτηριστικού ενός στοιχείου με την πάροδο του χρόνου."}
+
+ :renderer.element.impl.animation.animate-motion
+ {:label "Κίνηση κίνησης"
+  :description "Το στοιχείο SVG <animateMotion> επιτρέπει τον ορισμό του πώς
+                ένα στοιχείο κινείται κατά μήκος μιας διαδρομής κίνησης."}
+
+ :renderer.element.impl.animation.animate-transform
+ {:label "Κίνηση μετασχηματισμού"
+  :description "Το στοιχείο <animateTransform> κινεί ένα χαρακτηριστικό
+                μετασχηματισμού στο στοχευόμενο στοιχείο, επιτρέποντας έτσι
+                στις κινήσεις να ελέγχουν τη μετάφραση, την κλιμάκωση, την
+                περιστροφή ή/και την κλίση"}
 
  :renderer.element.impl.box
  {:position-handle "χειριστήριο θέσης"

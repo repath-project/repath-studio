@@ -202,13 +202,29 @@
   :paste "Вставить"
   :raise "Поднять"
   :lower "Опустить"
-  :raise-top "На передний план"
-  :lower-bottom "На задний план"
+  :raise-top "Поднять на передний план"
+  :lower-bottom "Опустить на задний план"
   :animate "Анимировать"
-  :animate-transform "Анимация преобразования"
-  :animate-motion "Анимация движения"
+  :animate-transform "Анимировать трансформацию"
+  :animate-motion "Анимировать движение"
   :duplicate "Дублировать"
   :delete "Удалить"}
+
+ :renderer.element.impl.animation.animate
+ {:label "Анимировать"
+  :description "Элемент SVG <animate> предоставляет способ анимировать атрибут
+                элемента во времени."}
+
+ :renderer.element.impl.animation.animate-motion
+ {:label "Анимировать движение"
+  :description "Элемент SVG <animateMotion> позволяет определить, как элемент
+                перемещается вдоль траектории движения."}
+
+ :renderer.element.impl.animation.animate-transform
+ {:label "Анимировать трансформацию"
+  :description "Элемент <animateTransform> анимирует атрибут трансформации на
+                целевом элементе, позволяя анимациям управлять перемещением,
+                масштабированием, вращением и/или наклоном"}
 
  :renderer.element.impl.box
  {:position-handle "маркер позиции"

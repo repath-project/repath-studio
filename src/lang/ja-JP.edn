@@ -205,10 +205,26 @@
   :raise-top "最前面へ"
   :lower-bottom "最背面へ"
   :animate "アニメーション"
-  :animate-transform "変形アニメーション"
+  :animate-transform "トランスフォームアニメーション"
   :animate-motion "モーションアニメーション"
   :duplicate "複製"
   :delete "削除"}
+
+ :renderer.element.impl.animation.animate
+ {:label "アニメーション"
+  :description "SVG <animate> 要素は、要素の属性を時間とともにアニメーション
+                化する方法を提供します。"}
+
+ :renderer.element.impl.animation.animate-motion
+ {:label "モーションアニメーション"
+  :description "SVG <animateMotion> 要素は、要素がモーションパスに沿ってどの
+                ように移動するかを定義できます。"}
+
+ :renderer.element.impl.animation.animate-transform
+ {:label "トランスフォームアニメーション"
+  :description "<animateTransform> 要素は、ターゲット要素のトランスフォーム
+                属性をアニメーション化し、平行移動、拡大縮小、回転、および/
+                または傾斜を制御するアニメーションを可能にします"}
 
  :renderer.element.impl.box
  {:position-handle "位置ハンドル"

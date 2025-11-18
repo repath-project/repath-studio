@@ -200,15 +200,31 @@
  {:cut "잘라내기"
   :copy "복사"
   :paste "붙여넣기"
-  :raise "앞으로 가져오기"
-  :lower "뒤로 보내기"
-  :raise-top "맨 앞으로 가져오기"
-  :lower-bottom "맨 뒤로 보내기"
+  :raise "앞으로"
+  :lower "뒤로"
+  :raise-top "맨 앞으로"
+  :lower-bottom "맨 뒤로"
   :animate "애니메이션"
-  :animate-transform "변형 애니메이션"
+  :animate-transform "변환 애니메이션"
   :animate-motion "모션 애니메이션"
   :duplicate "복제"
   :delete "삭제"}
+
+ :renderer.element.impl.animation.animate
+ {:label "애니메이션"
+  :description "SVG <animate> 요소는 시간 경과에 따라 요소의 속성을 애니메이션
+                하는 방법을 제공합니다."}
+
+ :renderer.element.impl.animation.animate-motion
+ {:label "모션 애니메이션"
+  :description "SVG <animateMotion> 요소는 요소가 모션 경로를 따라 어떻게
+                이동하는지 정의할 수 있습니다."}
+
+ :renderer.element.impl.animation.animate-transform
+ {:label "변환 애니메이션"
+  :description "<animateTransform> 요소는 대상 요소의 변환 속성을 애니메이션하여
+                애니메이션이 이동, 크기 조정, 회전 및/또는 기울이기를 제어할 수
+                있도록 합니다"}
 
  :renderer.element.impl.box
  {:position-handle "위치 핸들"

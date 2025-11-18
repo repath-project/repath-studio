@@ -202,13 +202,30 @@
   :paste "Colar"
   :raise "Elevar"
   :lower "Baixar"
-  :raise-top "Trazer para a frente"
-  :lower-bottom "Enviar para trás"
+  :raise-top "Elevar para frente"
+  :lower-bottom "Baixar para trás"
   :animate "Animar"
   :animate-transform "Animar transformação"
   :animate-motion "Animar movimento"
   :duplicate "Duplicar"
   :delete "Eliminar"}
+
+ :renderer.element.impl.animation.animate
+ {:label "Animar"
+  :description "O elemento SVG <animate> fornece uma forma de animar um
+                atributo de um elemento ao longo do tempo."}
+
+ :renderer.element.impl.animation.animate-motion
+ {:label "Animar movimento"
+  :description "O elemento SVG <animateMotion> permite definir como um elemento
+                se move ao longo de um caminho de movimento."}
+
+ :renderer.element.impl.animation.animate-transform
+ {:label "Animar transformação"
+  :description "O elemento <animateTransform> anima um atributo de
+                transformação no seu elemento alvo, permitindo assim que as
+                animações controlem translação, dimensionamento, rotação e/ou
+                inclinação"}
 
  :renderer.element.impl.box
  {:position-handle "alça de posição"

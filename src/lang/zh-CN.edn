@@ -199,8 +199,8 @@
  {:cut "剪切"
   :copy "复制"
   :paste "粘贴"
-  :raise "上移"
-  :lower "下移"
+  :raise "提升"
+  :lower "降低"
   :raise-top "置于顶层"
   :lower-bottom "置于底层"
   :animate "动画"
@@ -208,6 +208,19 @@
   :animate-motion "运动动画"
   :duplicate "复制"
   :delete "删除"}
+
+ :renderer.element.impl.animation.animate
+ {:label "动画"
+  :description "SVG <animate> 元素提供了一种随时间为元素的属性设置动画的方法。"}
+
+ :renderer.element.impl.animation.animate-motion
+ {:label "运动动画"
+  :description "SVG <animateMotion> 元素允许定义元素如何沿着运动路径移动。"}
+
+ :renderer.element.impl.animation.animate-transform
+ {:label "变换动画"
+  :description "<animateTransform> 元素在其目标元素上为变换属性设置动画,从而
+                允许动画控制平移、缩放、旋转和/或倾斜"}
 
  :renderer.element.impl.box
  {:position-handle "位置手柄"
