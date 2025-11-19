@@ -4,7 +4,6 @@
    [clojure.core.matrix :as matrix]
    [renderer.document.handlers :as document.handlers]
    [renderer.element.handlers :as element.handlers]
-   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
@@ -19,10 +18,8 @@
 
 (defmethod tool.hierarchy/on-drag-start :line
   [db _e]
-  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
-                                (:adjusted-pointer-offset db))
-        [x y] (or (:point (:nearest-neighbor db))
-                  (:adjusted-pointer-pos db))
+  (let [[offset-x offset-y] (tool.handlers/snapped-offset db)
+        [x y] (tool.handlers/snapped-position db)
         stroke (document.handlers/attr db :stroke)]
     (-> db
         (tool.handlers/set-state :create)
@@ -36,17 +33,14 @@
 
 (defmethod tool.hierarchy/on-drag :line
   [db _e]
-  (let [position (or (:point (:nearest-neighbor db))
-                     (:adjusted-pointer-pos db))
-        {:keys [id parent]} (first (element.handlers/selected db))
-        parent-el (element.handlers/entity db parent)
-        [min-x min-y] (element.hierarchy/bbox parent-el)
+  (let [position (tool.handlers/snapped-position db)
+        [min-x min-y] (element.handlers/parent-offset db)
         [x y] (matrix/sub position [min-x min-y])
         x (utils.length/->fixed x)
         y (utils.length/->fixed y)]
-    (element.handlers/update-el db id #(-> %
-                                           (assoc-in [:attrs :x2] x)
-                                           (assoc-in [:attrs :y2] y)))))
+    (element.handlers/update-selected db #(-> %
+                                              (assoc-in [:attrs :x2] x)
+                                              (assoc-in [:attrs :y2] y)))))
 
 (defmethod tool.hierarchy/on-drag-end :line
   [db _e]

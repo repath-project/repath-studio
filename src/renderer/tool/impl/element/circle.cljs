@@ -18,10 +18,8 @@
 
 (defmethod tool.hierarchy/on-drag-start :circle
   [db _e]
-  (let [offset (or (:nearest-neighbor-offset db)
-                   (:adjusted-pointer-offset db))
-        position (or (:point (:nearest-neighbor db))
-                     (:adjusted-pointer-pos db))
+  (let [offset (tool.handlers/snapped-offset db)
+        position (tool.handlers/snapped-position db)
         radius (matrix/distance position offset)
         [cx cy] offset
         fill (document.handlers/attr db :fill)
@@ -38,13 +36,10 @@
 
 (defmethod tool.hierarchy/on-drag :circle
   [db _e]
-  (let [offset (or (:nearest-neighbor-offset db)
-                   (:adjusted-pointer-offset db))
-        position (or (:point (:nearest-neighbor db))
-                     (:adjusted-pointer-pos db))
-        radius (utils.length/->fixed (matrix/distance position offset))
-        id (-> db element.handlers/selected first :id)]
-    (element.handlers/update-el db id #(assoc-in % [:attrs :r] radius))))
+  (let [offset (tool.handlers/snapped-offset db)
+        position (tool.handlers/snapped-position db)
+        radius (utils.length/->fixed (matrix/distance position offset))]
+    (element.handlers/update-selected db #(assoc-in % [:attrs :r] radius))))
 
 (defmethod tool.hierarchy/on-drag-end :circle
   [db _e]

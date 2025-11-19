@@ -5,7 +5,6 @@
    [clojure.string :as string]
    [renderer.document.handlers :as document.handlers]
    [renderer.element.handlers :as element.handlers]
-   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.i18n.views :as i18n.views]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
@@ -32,40 +31,30 @@
                                        :stroke stroke
                                        :fill fill}}))))
 
-(defn creating-el
-  [db]
-  (-> db element.handlers/selected first))
-
 (defn add-point
   [db point]
-  (let [id (:id (creating-el db))]
-    (if (= (:state db) :create)
-      (element.handlers/update-attr db id
-                                    :points
-                                    str " " (string/join " " point))
-      (create-el db point))))
+  (if (= (:state db) :create)
+    (element.handlers/update-selected db
+                                      update-in [:attrs :points]
+                                      str " " (string/join " " point))
+    (create-el db point)))
 
 (defn drop-last-point
   [db]
-  (let [id (:id (creating-el db))]
-    (element.handlers/update-attr db id
-                                  :points
-                                  #(->> (utils.attribute/points->vec %)
-                                        (drop-last)
-                                        (flatten)
-                                        (string/join " ")))))
+  (element.handlers/update-selected db
+                                    update-in [:attrs :points]
+                                    #(->> (utils.attribute/points->vec %)
+                                          (drop-last)
+                                          (flatten)
+                                          (string/join " "))))
 
 (defn adjusted-point
   [db point]
-  (let [parent-id (:parent (creating-el db))
-        parent-el (element.handlers/entity db parent-id)
-        [min-x min-y] (element.hierarchy/bbox parent-el)]
-    (matrix/sub point [min-x min-y])))
+  (matrix/sub point (element.handlers/parent-offset db)))
 
 (defmethod tool.hierarchy/on-pointer-up ::tool.hierarchy/poly
   [db _e]
-  (let [point (or (:point (:nearest-neighbor db))
-                  (:adjusted-pointer-pos db))
+  (let [point (tool.handlers/snapped-position db)
         point (cond->> point
                 (= (:state db) :create)
                 (adjusted-point db))]
@@ -77,14 +66,12 @@
 
 (defmethod tool.hierarchy/on-pointer-move ::tool.hierarchy/poly
   [db _e]
-  (let [point (or (:point (:nearest-neighbor db))
-                  (:adjusted-pointer-pos db))
-        point (adjusted-point db point)
-        id (:id (first (element.handlers/selected db)))]
+  (let [point (tool.handlers/snapped-position db)
+        point (adjusted-point db point)]
     (cond-> db
       (= (:state db) :create)
-      (element.handlers/update-attr
-       id :points
+      (element.handlers/update-selected
+       update-in [:attrs :points]
        #(let [point-vector (utils.attribute/points->vec %)
               point-vector (cond-> point-vector
                              (second point-vector)

@@ -4,7 +4,6 @@
    [clojure.string :as string]
    [renderer.document.handlers :as document.handlers]
    [renderer.element.handlers :as element.handlers]
-   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
@@ -33,12 +32,12 @@
 
 (defmethod tool.hierarchy/on-drag :pen
   [db _e]
-  (let [{:keys [id parent]} (first (element.handlers/selected db))
-        parent-el (element.handlers/entity db parent)
-        [min-x min-y] (element.hierarchy/bbox parent-el)
+  (let [[min-x min-y] (element.handlers/parent-offset db)
         point (matrix/sub (:adjusted-pointer-pos db) [min-x min-y])
         point (string/join " " point)]
-    (element.handlers/update-attr db id :points str " " point)))
+    (element.handlers/update-selected db
+                                      update-in [:attrs :points]
+                                      str " " point)))
 
 (defmethod tool.hierarchy/on-drag-end :pen
   [db _e]

@@ -52,6 +52,18 @@
   [db]
   (matrix/sub (:adjusted-pointer-pos db) (:adjusted-pointer-offset db)))
 
+(m/=> snapped-offset [:-> App Vec2])
+(defn snapped-offset
+  [db]
+  (or (:nearest-neighbor-offset db)
+      (:adjusted-pointer-offset db)))
+
+(m/=> snapped-position [:-> App Vec2])
+(defn snapped-position
+  [db]
+  (or (:point (:nearest-neighbor db))
+      (:adjusted-pointer-pos db)))
+
 (m/=> axis-pan-offset [:-> number? number? number? number?])
 (defn axis-pan-offset
   [position offset size]

@@ -24,10 +24,8 @@
 
 (defn attributes
   [db lock-ratio]
-  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
-                                (:adjusted-pointer-offset db))
-        [x y] (or (:point (:nearest-neighbor db))
-                  (:adjusted-pointer-pos db))
+  (let [[offset-x offset-y] (tool.handlers/snapped-offset db)
+        [x y] (tool.handlers/snapped-position db)
         rx (abs (- x offset-x))
         ry (abs (- y offset-y))]
     {:rx (utils.length/->fixed (cond-> rx lock-ratio (min ry)))
@@ -35,8 +33,7 @@
 
 (defmethod tool.hierarchy/on-drag-start :ellipse
   [db e]
-  (let [[x y] (or (:nearest-neighbor-offset db)
-                  (:adjusted-pointer-offset db))
+  (let [[x y] (tool.handlers/snapped-position db)
         fill (document.handlers/attr db :fill)
         stroke (document.handlers/attr db :stroke)]
     (-> db
@@ -52,9 +49,8 @@
 (defmethod tool.hierarchy/on-drag :ellipse
   [db e]
   (let [attrs (attributes db (:ctrl-key e))
-        assoc-attr (fn [el [k v]] (assoc-in el [:attrs k] (str v)))
-        id (:id (first (element.handlers/selected db)))]
-    (element.handlers/update-el db id #(reduce assoc-attr % attrs))))
+        assoc-attr (fn [el [k v]] (assoc-in el [:attrs k] (str v)))]
+    (element.handlers/update-selected db #(reduce assoc-attr % attrs))))
 
 (defmethod tool.hierarchy/on-drag-end :ellipse
   [db _e]

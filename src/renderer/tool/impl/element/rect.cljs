@@ -3,7 +3,6 @@
   (:require
    [renderer.document.handlers :as document.handlers]
    [renderer.element.handlers :as element.handlers]
-   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.handlers]
    [renderer.i18n.views :as i18n.views]
    [renderer.tool.handlers :as tool.handlers]
@@ -25,16 +24,16 @@
 
 (defn attributes
   [db lock-ratio]
-  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
-                                (:adjusted-pointer-offset db))
-        [x y] (or (:point (:nearest-neighbor db))
-                  (:adjusted-pointer-pos db))
+  (let [[offset-x offset-y] (tool.handlers/snapped-offset db)
+        [x y] (tool.handlers/snapped-position db)
         width (abs (- x offset-x))
-        height (abs (- y offset-y))]
-    {:x (utils.length/->fixed (min x offset-x))
-     :y (utils.length/->fixed (min y offset-y))
-     :width (utils.length/->fixed (cond-> width lock-ratio (min height)))
-     :height (utils.length/->fixed (cond-> height lock-ratio (min width)))}))
+        height (abs (- y offset-y))
+        width (cond-> width lock-ratio (min height))
+        height (cond-> height lock-ratio (min width))]
+    {:x (utils.length/->fixed (cond-> offset-x (< x offset-x) (- width)))
+     :y (utils.length/->fixed (cond-> offset-y (< y offset-y) (- height)))
+     :width (utils.length/->fixed width)
+     :height (utils.length/->fixed height)}))
 
 (defmethod tool.hierarchy/on-drag-start :rect
   [db e]
@@ -52,11 +51,9 @@
   [db e]
   (let [attrs (attributes db (:ctrl-key e))
         assoc-attr (fn [el [k v]] (assoc-in el [:attrs k] (str v)))
-        {:keys [id parent]} (first (element.handlers/selected db))
-        parent-el (element.handlers/entity db parent)
-        [min-x min-y] (element.hierarchy/bbox parent-el)]
+        [min-x min-y] (element.handlers/parent-offset db)]
     (-> db
-        (element.handlers/update-el id #(reduce assoc-attr % attrs))
+        (element.handlers/update-selected #(reduce assoc-attr % attrs))
         (element.handlers/translate [(- min-x) (- min-y)]))))
 
 (defmethod tool.hierarchy/on-drag-end :rect
