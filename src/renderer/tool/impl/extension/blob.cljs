@@ -20,15 +20,12 @@
 
 (defn pointer-delta
   [db]
-  (matrix/distance (or (:point (:nearest-neighbor db))
-                       (:adjusted-pointer-pos db))
-                   (or (:nearest-neighbor-offset db)
-                       (:adjusted-pointer-offset db))))
+  (matrix/distance (tool.handlers/snapped-position db)
+                   (tool.handlers/snapped-offset db)))
 
 (defn attributes
   [db]
-  (let [[offset-x offset-y] (or (:nearest-neighbor-offset db)
-                                (:adjusted-pointer-offset db))
+  (let [[offset-x offset-y] (tool.handlers/snapped-offset db)
         radius (pointer-delta db)]
     {:x (utils.length/->fixed (- offset-x radius))
      :y (utils.length/->fixed (- offset-y radius))
