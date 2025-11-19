@@ -194,11 +194,11 @@
        :on-change #(rf/dispatch [::document.events/preview-attr :fill
                                  (get-hex %)])}
 
-      [:button.button.border.border-border.button-size.rounded.md:rounded-none
+      [:button.button.border.border-border.button-size.rounded
        {:title (t [::fill-color "Pick fill color"])
         :style {:background fill}}]]
 
-     [:button.button.bg-transparent!.rounded-sm.md:rounded-none
+     [:button.button.bg-transparent!.rounded-sm
       {:title (t [::swap-color "Swap fill with stroke"])
        :on-click #(rf/dispatch [::document.events/swap-colors])}
       [views/icon "swap-horizontal"]]
@@ -211,9 +211,8 @@
        :on-change #(rf/dispatch [::document.events/preview-attr
                                  :stroke
                                  (get-hex %)])}
-      [:button.relative.border.border-border.button-size
-       {:class "rounded-sm md:rounded-none"
-        :title (t [::stroke-color "Pick stroke color"])
+      [:button.relative.border.border-border.button-size.rounded
+       {:title (t [::stroke-color "Pick stroke color"])
         :style {:background stroke}}
        [:div.bg-primary.absolute.border.border-border.rounded-xs
         {:class "w-1/2 h-1/2 bottom-1/4 right-1/4"}]]]]))

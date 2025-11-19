@@ -32,7 +32,7 @@
       {:class "p-1.5"
        :disabled (:disabled attrs)
        :title (t [::pick-color "Pick color"])}
-      [:div.w-full.h-full.bg-overlay
+      [:div.w-full.h-full.bg-overlay.rounded-xs
        {:class (when (:disabled attrs) "opacity-30")
         :style {:background v}}]]]
     [:> Popover/Portal
