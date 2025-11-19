@@ -124,26 +124,6 @@
   }
 }
 
-@utility button-group {
-  @apply flex rounded-sm relative border-border overflow-hidden;
-
-  > *,
-  > * > button {
-    @apply border-l border-border rounded-none! outline-inset!;
-
-    &:first-child,
-    &:first-child > button {
-      @apply border-l-0!;
-    }
-  }
-
-  &:before {
-    @apply absolute inset-0 rounded border border-border;
-    pointer-events: none;
-    content: '';
-  }
-}
-
 @utility popover-content {
   @apply bg-primary drop-shadow-lg z-10 rounded-sm wrap-break-word border
   border-border animate-in fade-in max-w-xs;

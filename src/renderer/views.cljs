@@ -52,9 +52,7 @@
 (defn icon-button
   [icon-name props]
   [:button
-   (merge-with-class {:class "button rounded-sm
-                              group-[&.button-group]:rounded-none"}
-                     props)
+   (merge-with-class {:class "button rounded-sm"} props)
    [icon icon-name]])
 
 (defn loading-indicator
@@ -370,3 +368,20 @@
         props (if has-props (first more) {})]
     (into [:div (merge-with-class {:class "flex gap-1 p-1 items-center"} props)]
           children)))
+
+(defn button-group
+  [& children]
+  (into [:div {:class "flex *:rounded-sm *:border *:border-border
+                       *:outline-inset
+                       [&>*:not(:first-child)]:rounded-l-none
+                       [&>*:not(:last-child)]:border-r-0
+                       [&>*:not(:last-child)]:rounded-r-none
+
+                       rtl:[&>*:first-child]:rounded-r-sm!
+                       rtl:[&>*:first-child]:border-r!
+                       rtl:[&>*:last-child]:rounded-l-sm!
+
+                       rtl:[&>*:not(:last-child)]:rounded-l-none
+                       rtl:[&>*:not(:first-child)]:border-r-0
+                       rtl:[&>*:not(:first-child)]:rounded-r-none"}]
+        children))

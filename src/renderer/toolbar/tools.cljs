@@ -43,8 +43,7 @@
 
 (defn button-group
   [items]
-  (into [:div.flex.justify-center.md:gap-1
-         {:class "gap-0.5"}]
+  (into [:div {:class "flex justify-center md:gap-1 gap-0.5"}]
         (map (partial button false) items)))
 
 (defn dropdown-button
