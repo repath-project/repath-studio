@@ -13,7 +13,7 @@
    [renderer.window.subs :as-alias window.subs]))
 
 (defn button
-  [tool]
+  [bordered tool]
   (let [active-tool @(rf/subscribe [::tool.subs/active])
         cached-tool @(rf/subscribe [::tool.subs/cached])
         active (= active-tool tool)
@@ -27,7 +27,8 @@
         {:as-child true}
         [:span
          [views/radio-icon-button (:icon properties) active
-          {:class (when primary "outline outline-inset outline-accent")
+          {:class [(when primary "outline outline-inset outline-accent")
+                   (when bordered "border border-border")]
            :aria-label label
            :on-click #(rf/dispatch [::tool.events/activate tool])}]]]
        [:> Tooltip/Portal
@@ -44,42 +45,42 @@
   [items]
   (into [:div.flex.justify-center.md:gap-1
          {:class "gap-0.5"}]
-        (map button items)))
+        (map (partial button false) items)))
 
 (defn dropdown-button
   [{:keys [label tools]}]
   (let [active-tool @(rf/subscribe [::tool.subs/active])
-        md? @(rf/subscribe [::window.subs/md?])
         contains-active? (some #{active-tool} tools)
-        top-tool (if contains-active? active-tool (first tools))]
-    [:div.button-group.group
-     [button top-tool]
-     (when (second tools)
-       [:> DropdownMenu/Root
-        [:> DropdownMenu/Trigger
-         {:as-child true}
-         [:button.button.flex.items-center.justify-center.px-2.font-mono
-          {:class (when contains-active?
+        top-tool (if contains-active? active-tool (first tools))
+        icon (:icon (tool.hierarchy/properties top-tool))]
+    (if (second tools)
+      [:> DropdownMenu/Root
+       [:> DropdownMenu/Trigger
+        {:as-child true}
+        [:button.button.flex.items-center.justify-center.px-2.font-mono
+         {:class ["rounded-sm gap-1 border border-border"
+                  (when contains-active?
                     "bg-accent text-accent-foreground! hover:bg-accent-light
-                     aria-expanded:bg-accent-light active:bg-accent-light")
-           :aria-label label}
-          [views/icon "chevron-down"]]]
-        [:> DropdownMenu/Portal
-         (->> tools
-              (mapv (fn [tool]
-                      (let [properties (tool.hierarchy/properties tool)]
-                        {:label (:label properties)
-                         :action [::tool.events/activate tool]
-                         :icon (:icon properties)})))
-              (into [:> DropdownMenu/Content
-                     {:side "bottom"
-                      :align-offset (if md? -33 -35)
-                      :align "start"
-                      :class "menu-content rounded-sm"
-                      :on-key-down #(.stopPropagation %)
-                      :on-escape-key-down #(.stopPropagation %)}
-                     [views/dropdownmenu-arrow]]
-                    (map views/dropdown-menu-item)))]])]))
+                     aria-expanded:bg-accent-light active:bg-accent-light")]
+          :aria-label label}
+         [views/icon icon]
+         [views/icon "chevron-down"]]]
+       [:> DropdownMenu/Portal
+        (->> tools
+             (mapv (fn [tool]
+                     (let [properties (tool.hierarchy/properties tool)]
+                       {:label (:label properties)
+                        :action [::tool.events/activate tool]
+                        :icon (:icon properties)})))
+             (into [:> DropdownMenu/Content
+                    {:side "bottom"
+                     :align "middle"
+                     :class "menu-content rounded-sm"
+                     :on-key-down #(.stopPropagation %)
+                     :on-escape-key-down #(.stopPropagation %)}
+                    [views/dropdownmenu-arrow]]
+                   (map views/dropdown-menu-item)))]]
+      [button true top-tool])))
 
 (defn groups []
   [{:id :transform
