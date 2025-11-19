@@ -60,12 +60,12 @@
 
 (defmethod tool.hierarchy/on-drag :brush
   [db e]
-  (let [{:keys [id parent]} (first (element.handlers/selected db))
-        parent-el (element.handlers/entity db parent)
-        [min-x min-y] (element.hierarchy/bbox parent-el)
+  (let [[min-x min-y] (element.handlers/parent-offset db)
         point (matrix/sub (:adjusted-pointer-pos db) [min-x min-y])
         point (string/join " " (conj point (:pressure e)))]
-    (element.handlers/update-attr db id :points str " " point)))
+    (element.handlers/update-selected db
+                                      update-in [:attrs :points]
+                                      str " " point)))
 
 (defmethod tool.hierarchy/on-drag-end :brush
   [db _e]

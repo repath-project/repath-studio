@@ -133,6 +133,17 @@
       parent-el
       (recur db (:id parent-el)))))
 
+(m/=> parent-offset [:-> App Vec2])
+(defn parent-offset
+  [db]
+  (or (some->> (selected-ids db)
+               (first)
+               (parent-container db)
+               (element.hierarchy/bbox)
+               (take 2)
+               (into []))
+      [0 0]))
+
 (m/=> adjusted-bbox [:-> App ElementId [:maybe BBox]])
 (defn adjusted-bbox
   [db id]
@@ -182,6 +193,19 @@
      db
      (-> (apply update-in db (path db id) f arg more)
          (refresh-bbox id)))))
+
+(m/=> update-selected [:function
+                       [:-> App ifn? App]
+                       [:-> App ifn? [:* any?] App]])
+(defn update-selected
+  ([db f]
+   (reduce (fn [db id] (update-el db id f)) db (selected-ids db)))
+  ([db f arg]
+   (reduce (fn [db id] (update-el db id f arg)) db (selected-ids db)))
+  ([db f arg & more]
+   (reduce (fn [db id] (apply update-el db id f arg more))
+           db
+           (selected-ids db))))
 
 (m/=> siblings-selected? [:-> App [:maybe boolean?]])
 (defn siblings-selected?

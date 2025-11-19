@@ -4,7 +4,6 @@
    [clojure.core.matrix :as matrix]
    [renderer.document.handlers :as document.handlers]
    [renderer.element.handlers :as element.handlers]
-   [renderer.element.hierarchy :as element.hierarchy]
    [renderer.history.handlers :as history.handlers]
    [renderer.tool.handlers :as tool.handlers]
    [renderer.tool.hierarchy :as tool.hierarchy]
@@ -50,11 +49,9 @@
   [db _e]
   (let [attrs (attributes db)
         assoc-attr (fn [el [k v]] (assoc-in el [:attrs k] (str v)))
-        {:keys [id parent]} (first (element.handlers/selected db))
-        el (element.handlers/entity db parent)
-        [min-x min-y] (element.hierarchy/bbox el)]
+        [min-x min-y] (element.handlers/parent-offset db)]
     (-> db
-        (element.handlers/update-el id #(reduce assoc-attr % attrs))
+        (element.handlers/update-selected #(reduce assoc-attr % attrs))
         (element.handlers/translate [(- min-x) (- min-y)]))))
 
 (defmethod tool.hierarchy/on-drag-end :blob

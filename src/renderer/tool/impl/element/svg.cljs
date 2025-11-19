@@ -44,10 +44,9 @@
 
 (defmethod tool.hierarchy/on-drag :svg
   [db e]
-  (let [id (:id (first (element.handlers/selected db)))
-        attrs (attributes db (:ctrl-key e))
+  (let [attrs (attributes db (:ctrl-key e))
         assoc-attr (fn [el [k v]] (assoc-in el [:attrs k] (str v)))]
-    (element.handlers/update-el db id #(reduce assoc-attr % attrs))))
+    (element.handlers/update-selected db #(reduce assoc-attr % attrs))))
 
 (defmethod tool.hierarchy/on-drag-end :svg
   [db _e]
