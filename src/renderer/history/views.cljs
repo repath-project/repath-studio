@@ -167,7 +167,7 @@
 
      [:div.flex.gap-2.flex-col
       [legend]
-      [:div.button-group
+      [views/button-group
        [:button.button.flex-1
         {:on-click #(rf/dispatch [::history.events/tree-view-updated
                                   0.5 (center ref)])}

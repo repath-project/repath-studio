@@ -146,7 +146,8 @@
                                    [::lock "Lock"]))
             :on-click #(rf/dispatch [::ruler.events/toggle-locked])}]]
          [:div.bg-primary.flex-1
-          {:dir "ltr"}
+          {:dir "ltr"
+           :class "rtl:pl-[50px] rtl:md:pl-0"}
           [ruler.views/ruler :horizontal]]])]
      [:div.flex.flex-1.relative.gap-px
       (when ruler-visible?
@@ -367,7 +368,7 @@
   []
   (let [some-selected? @(rf/subscribe [::element.subs/some-selected?])
         active-tool @(rf/subscribe [::tool.subs/active])]
-    [:div.flex.justify-evenly.p-2.gap-1
+    [:div.flex.justify-evenly.p-2.gap-1.rtl:flex-row-reverse
 
      [views/drawer
       {:icon "tree"
