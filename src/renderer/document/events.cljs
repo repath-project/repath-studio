@@ -259,10 +259,10 @@
        (i18n.handlers/t db
                         [::error-loading "Error while loading %1"]
                         [(:title document)])
-       {:description (i18n.handlers/t
-                      db
-                      [::unsupported-or-corrupted
-                       "File appears to be unsupported or corrupted."])}]})))
+       {:description
+        (i18n.handlers/t db
+                         [::unsupported-or-corrupted
+                          "File appears to be unsupported or corrupted."])}]})))
 
 (rf/reg-event-fx
  ::load-or-activate
@@ -315,8 +315,7 @@
 (rf/reg-event-fx
  ::load-multiple
  (fn [_ [_ documents]]
-   {:dispatch-n (->> documents
-                     (mapv (partial vector ::check-if-open)))}))
+   {:dispatch-n (mapv (partial vector ::check-if-open) documents)}))
 
 (defn- file-save-options
   [document on-success on-error]
