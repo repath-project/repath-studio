@@ -3,7 +3,6 @@
    [cognitect.transit :as transit]
    [config :as config]
    [re-frame.core :as rf]
-   [re-pressed.core :as re-pressed]
    [renderer.app.db :as app.db]
    [renderer.app.effects :as-alias app.effects]
    [renderer.app.events :as-alias app.events]
@@ -138,10 +137,7 @@
                [::theme.effects/add-listener [::theme.events/set-native-mode]]
                [::app.effects/setup-paper]
                ;; The status bar needs to be updated later for some reason.
-               [:dispatch [::theme.events/update-status-bar]]
-               [:dispatch [::re-pressed/add-keyboard-event-listener "keydown"]]
-               [:dispatch [::re-pressed/set-keydown-rules
-                           impl.keyboard/keydown-rules]]]
+               [:dispatch [::theme.events/update-status-bar]]]
               listeners)}))
 
 (rf/reg-event-db

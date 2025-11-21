@@ -2,6 +2,7 @@
   (:require
    ["electron-log/renderer"]
    [re-frame.core :as rf]
+   [re-pressed.core :as re-pressed]
    [reagent.dom.client :as ra.dom.client]
    [renderer.a11y.events]
    [renderer.a11y.subs]
@@ -26,6 +27,7 @@
    [renderer.error.views :as error.views]
    [renderer.event.effects]
    [renderer.event.events]
+   [renderer.event.impl.keyboard :as impl.keyboard]
    [renderer.events]
    [renderer.frame.events]
    [renderer.frame.subs]
@@ -98,6 +100,9 @@
                                    :load-on-init '[user]} bootstrap-cb!)
 
   (rf/dispatch-sync [::app.events/initialize])
+
+  (rf/dispatch [::re-pressed/add-keyboard-event-listener "keydown"])
+  (rf/dispatch [::re-pressed/set-keydown-rules impl.keyboard/keydown-rules])
 
   (mount-root!)
   (js/console.log easter-egg))
