@@ -82,6 +82,12 @@ jobs:
                                   --keystorealiaspass "$KEYSTOREALIAS_PASS" \
                                   --androidreleasetype APK
             mv android/app/build/outputs/apk/release/app-release-signed.apk repath-studio-android.apk
+            npx cap build android --keystorepath official.jks \
+                                  --keystorepass "$KEYSTORE_PASS" \
+                                  --keystorealias $KEYSTOREALIAS \
+                                  --keystorealiaspass "$KEYSTOREALIAS_PASS" \
+                                  --androidreleasetype AAB
+            mv android/app/build/outputs/apk/release/app-release-signed.aab repath-studio-android.aab
 
       - name: Upload android apk to release
         uses: actions/upload-artifact@v5
@@ -94,6 +100,6 @@ jobs:
         with:
           serviceAccountJsonPlainText: ${{ secrets.ANDROID_SERVICE_ACCOUNT_JSON }}
           packageName: studio.repath.app
-          releaseFiles: repath-studio-android.apk
+          releaseFiles: repath-studio-android.aab
           track: internal
           status: draft
