@@ -67,7 +67,9 @@ jobs:
                                   --keystorealias $KEYSTOREALIAS \
                                   --keystorealiaspass "$KEYSTOREALIAS_PASS" \
                                   --androidreleasetype APK
-            mv android/app/build/outputs/apk/release/app-release-signed.apk repath-studio-android.apk
+
+      - name: Move apk to root
+        run: mv android/app/build/outputs/apk/release/app-release-signed.apk repath-studio-android.apk
 
       - name: Upload android apk to release
         uses: actions/upload-artifact@v5
